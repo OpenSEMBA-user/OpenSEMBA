@@ -1,0 +1,78 @@
+#ifndef PHYSICALMODEL_H_
+#define PHYSICALMODEL_H_
+
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h>
+#include <complex>
+#include <cmath>
+#include <vector>
+#include "Condition.h"
+#include "../math/Constants.h"
+#include "../math/CartesianVector.h"
+
+using namespace std;
+
+#ifndef PHYSICALMODEL_ERROR
+	#define PHYSICALMODEL_ERROR 74721
+#endif
+
+class PhysicalModel : public Condition {
+	friend class Parser;
+public:
+	PhysicalModel();
+	virtual ~PhysicalModel();
+	virtual unsigned int
+	 getId() const {return id_;}
+	const string&
+	 getName() const;
+	virtual unsigned int
+	 getNumberOfPoles() const {return 0;}
+	virtual complex<double>
+	 getPole(unsigned int p) const;
+	virtual complex<double>
+	 getResidue(unsigned int p) const;
+	virtual double
+	 getImpedance() const;
+	virtual double
+	 getAdmitance() const;
+	bool
+	 isPhysicalModel() const {return true;}
+	virtual bool
+	 isSurfaceImpedance() const {return false;}
+	virtual bool
+	 isSurfaceType() const {return false;}
+	virtual bool
+	 isSMA() const {return false;}
+	virtual bool
+	 isPEC() const {return false;}
+	virtual bool
+	 isPMC() const {return false;}
+	virtual bool
+	 isVolumic() const {return false;}
+	virtual bool
+	 isDispersive() const {return false;}
+	virtual bool
+	 isWire() const {return false;}
+	virtual bool
+	 isMultiport() const {return false;}
+	virtual bool
+	 isMultiportRLC() const {return false;}
+	virtual bool
+	 isPML() const;
+	virtual void
+     printInfo() const = 0;
+protected:
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+	static constexpr double eps0 = VACUUM_PERMITTIVITY;
+	static constexpr double mu0 =VACUUM_PERMEABILITY;
+#else
+	static const double eps0 = VACUUM_PERMITTIVITY;
+	static const double mu0 =VACUUM_PERMEABILITY;
+#endif
+	unsigned int id_;
+	string name_;
+private:
+};
+
+#endif
