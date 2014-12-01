@@ -27,7 +27,7 @@ public:
 	void
 	 write(const MeshVolume& mesh);
 	void
-	 write(const NFDE::NFDEData& mesh);
+	 write(const NFDEData& mesh);
 	void
 	 flush() const;
 private:
