@@ -45,8 +45,9 @@ struct NFDEData {
 
    struct ObjectInLayer {
       string layer;
-      ObjectInLayer()
-      :  layer("") {}
+      string name;
+//      ObjectInLayer()
+//      :  layer("") {}
    };
    
    struct Probe : public ObjectInLayer {

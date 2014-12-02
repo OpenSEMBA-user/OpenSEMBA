@@ -480,7 +480,7 @@ void OutputNFDE::exportIsotropicSurf() {
 		const NFDEData::IsotropicSurf* ent = &nfde->isotropicSurf[i];
       if(!ent->layer.empty())
          output << "* " << ent->layer << endl;
-		output << "!ISOTROPIC SURF" << endl;
+		output << "!ISOTROPIC SURFACE" << endl;
 		output << toString(ent->type) << endl;
 		output << "!!!2PNT" << endl;
 		if(ent->type == NFDEData::MaterialTypes::NONME) {

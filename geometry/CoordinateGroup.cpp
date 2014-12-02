@@ -95,7 +95,7 @@ CoordinateGroup::checkIdsAreConsecutive() const {
 		if (coord[i]->id == currentId + 1) {
 			currentId++;
 		} else {
-			cerr<< "ERROR @ CoordinateGroup: " << endl
+			cerr<< "ERROR @ CoordinateGroup: "
 				<< "Ids are not consecutive" << endl;
 		}
 	}
