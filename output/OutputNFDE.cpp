@@ -478,14 +478,15 @@ void OutputNFDE::exportIsotropicBody() {
 void OutputNFDE::exportIsotropicSurf() {
 	for(uint i = 0; i < nfde->isotropicSurf.size(); i++) {
 		const NFDEData::IsotropicSurf* ent = &nfde->isotropicSurf[i];
-      if(!ent->layer.empty())
-         output << "* " << ent->layer << endl;
+		if(!ent->layer.empty() || !ent->name.empty() ) {
+			output << "* " << ent->layer << "_" << ent->name << endl;
+		}
 		output << "!ISOTROPIC SURFACE" << endl;
 		output << toString(ent->type) << endl;
 		output << "!!!2PNT" << endl;
 		if(ent->type == NFDEData::MaterialTypes::NONME) {
 			output << ent->sigma << space << ent->eps << space
-				<< ent->mu << space << ent->sigmam << endl;
+					<< ent->mu << space << ent->sigmam << endl;
 		}
 		for(uint j = 0; j < ent->entities.size(); j++) {
 			output << toString(ent->entities[j]);
