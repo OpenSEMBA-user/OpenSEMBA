@@ -604,13 +604,13 @@ MeshVolume::checkAreaCoherence() const {
 }
 
 bool
-MeshVolume::isFloatingCoordinate(const Coordinate<double, 3>* param) const {
+MeshVolume::isFloatingCoordinate(const CoordD3* param) const {
 	for (uint i = 0; i < elem.element.size(); i++) {
 		for (uint j = 0; j < elem.element[i]->numberOfCoordinates(); j++) {
 			if (*param == *elem.element[i]->getV(j)) {
-				return true;
+				return false;
 			}
 		}
 	}
-	return false;
+	return true;
 }
