@@ -16,21 +16,17 @@ CoordinateGroup::~CoordinateGroup() {
 }
 
 CoordinateGroup::CoordinateGroup(
- const vector<Coordinate<double,3> >& coord_) {
+ const vector<CoordD3>& coord_) {
 	coord.resize(coord_.size());
 	for (uint i = 0; i < coord_.size(); i++) {
-		coord[i] = new Coordinate<double,3>(coord_[i]);
+		coord[i] = new CoordD3(coord_[i]);
+		index.insert(coord[i]);
 	}
 	offsetId = coord[0]->id;
-	//
-//	for (uint i = 0; i < coord.size(); i++) {
-//		index.insert(coord[i]);
-//	}
-	//
 	check();
 }
 
-const Coordinate<double,3>*
+const CoordD3*
 CoordinateGroup::getPtrToId(const unsigned int id) const {
 	return coord[id - offsetId];
 }
@@ -48,7 +44,8 @@ CoordinateGroup::add(const vector<CVecD3>& newPos) {
 	uint lastId = coord.back()->getId();
 	coord.reserve(coord.size() + newPos.size());
 	for (uint i = 0; i < newPos.size(); i++) {
-		coord.push_back(new Coordinate<double,3>(++lastId, newPos[i]));
+		coord.push_back(new CoordD3(++lastId, newPos[i]));
+		index.insert(coord.back());
 	}
 }
 
@@ -71,13 +68,17 @@ CoordinateGroup::printInfo() const {
 		coord[i]->printInfo();
 		cout << endl;
 	}
+//	for (multiset<CoordD3*>::iterator it=index.begin(); it!=index.end(); ++it) {
+//		(*it)->printInfo();
+//		cout << endl;
+//	}
 	cout<< "Total: " << size() << " coordinates." << endl;
 }
 
 const Coordinate<double, 3>*
 CoordinateGroup::get(const CVecD3& position) const {
 	multiset<CoordD3*, lexCompareCoord>::iterator it;
-	Coordinate<double,3> aux(position);
+	CoordD3 aux(position);
 	it = index.find(&aux);
 	if (it != index.end()) {
 		const CoordD3* res = *it;
@@ -108,7 +109,8 @@ CoordinateGroup::operator =(const CoordinateGroup& rhs) {
 	offsetId = rhs.offsetId;
 	coord.resize(rhs.coord.size());
 	for (uint i = 0; i < coord.size(); i++) {
-		coord[i] = new Coordinate<double,3> (*rhs.coord[i]);
+		coord[i] = new CoordD3 (*rhs.coord[i]);
+		index.insert(coord[i]);
 	}
 	return *this;
 }

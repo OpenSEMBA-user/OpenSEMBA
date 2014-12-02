@@ -40,11 +40,11 @@ public:
 	 operator=(const CoordinateGroup& rhs);
 	long unsigned int
 	 size() const {return coord.size();}
-	const Coordinate<double,3>*
+	const CoordD3*
 	 getPtrToId(const uint i) const;
-	const Coordinate<double,3>*
+	const CoordD3*
 	 operator()(const uint i) const {return coord[i];}
-	const Coordinate<double,3>*
+	const CoordD3*
 	 get(const CVecD3& pos) const;
 	void
 	 applyScalingFactor(const double factor);
