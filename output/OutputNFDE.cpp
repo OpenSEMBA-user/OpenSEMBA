@@ -458,16 +458,17 @@ void OutputNFDE::exportFieldSource() {
 void OutputNFDE::exportIsotropicBody() {
 	for(uint i = 0; i < nfde->isotropicBody.size(); i++) {
 		const NFDEData::IsotropicBody* ent = &nfde->isotropicBody[i];
-      if(!ent->layer.empty())
-         output << "* " << ent->layer << endl;
+		if(!ent->layer.empty() || !ent->name.empty()) {
+			output << "* " << ent->layer << "_" << ent->name << endl;
+		}
 		output << "!ISOTROPIC BODY" << endl;
 		output << toString(ent->type) << endl;
-		output << "!!!2PNT" << endl;
+		output << "!!!1PNT" << endl;
 		if(ent->type == NFDEData::MaterialTypes::NONME) {
 			output << ent->sigma << space
-					 << ent->eps << space
-					 << ent->mu << space
-					 << ent->sigmam << endl;
+					<< ent->eps << space
+					<< ent->mu << space
+					<< ent->sigmam << endl;
 		}
 		for(uint j = 0; j < ent->entities.size(); j++) {
 			output << toString(ent->entities[j]);
@@ -496,17 +497,17 @@ void OutputNFDE::exportIsotropicSurf() {
 }
 void OutputNFDE::exportIsotropicLine() {
 	for(uint i = 0; i < nfde->isotropicLine.size(); i++) {
-      const NFDEData::IsotropicLine* ent = &nfde->isotropicLine[i];
-      if(!ent->layer.empty())
-         output << "* " << ent->layer << endl;
+		const NFDEData::IsotropicLine* ent = &nfde->isotropicLine[i];
+		if(!ent->layer.empty())
+			output << "* " << ent->layer << endl;
 		output << "!ISOTROPIC LINE" << endl;
 		output << toString(nfde->isotropicLine[i].type) << endl;
 		output << "!!!2PNT" << endl;
 		if(ent->type == NFDEData::MaterialTypes::NONME) {
 			output << ent->sigma << space
-					 << ent->eps << space
-					 << ent->mu << space
-					 << ent->sigmam << endl;
+					<< ent->eps << space
+					<< ent->mu << space
+					<< ent->sigmam << endl;
 		}
 		for(uint j = 0; j < ent->entities.size(); j++) {
 			output << toString(ent->entities[j]);
@@ -522,7 +523,7 @@ void OutputNFDE::exportAnisotropicBody() {
       if(!ent->layer.empty())
          output << "* " << ent->layer << endl;
 		output << "!ANISOTROPIC BODY" << endl;
-		output << "!!2PNT" << endl;
+		output << "!!1PNT" << endl;
 		
       for(int d1 = 0; d1 < 3; d1++) {
          for(int d2 = 0; d2 < 3; d2++)
