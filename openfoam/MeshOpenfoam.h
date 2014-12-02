@@ -49,7 +49,7 @@ public:
 	void
 	 addCoordinates(const RectilinearGrid& grid);
 	void
-	 checkAllFacesAreSquare() const;
+	 checkAllFacesAreRectangular() const;
 private:
 	CoordinateGroup cG_;
 	vector<Polygon> face_;

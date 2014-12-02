@@ -282,23 +282,25 @@ RectilinearGrid::getPositionOfNaturalCell(const CVecI3 &coords) const {
 }
 
 bool
-RectilinearGrid::isNaturalCell(const CVecD3 position) const {
+RectilinearGrid::isNaturalCell(const CVecD3 position,
+ const double tol) const {
 	pair<CVecI3, CVecD3> natCell = getNaturalCellPair(position);
 	bool res = true;
 	for (uint i = 0; i < 3; i++) {
 		if (natCell.second(i) < 0.5) {
-			res &= natCell.second(i) < tolerance;
+			res &= natCell.second(i) < tol;
 		} else {
-			res &= (1.0 - natCell.second(i)) < tolerance;
+			res &= (1.0 - natCell.second(i)) < tol;
 		}
 	}
 	return res;
 }
 
 bool
-RectilinearGrid::isNaturalCell(const vector<CVecD3> pos) const {
+RectilinearGrid::isNaturalCell(const vector<CVecD3> pos,
+ const double tol) const {
 	for (uint i = 0; i < pos.size(); i++) {
-		if (!isNaturalCell(pos[i])) {
+		if (!isNaturalCell(pos[i], tol)) {
 			return false;
 		}
 	}

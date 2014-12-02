@@ -129,8 +129,10 @@ public:
 	double getMinimumSpaceStep() const;
 	bool isRegular() const;
 	bool isCartesian() const;
-	bool isNaturalCell(const CVecD3 position) const;
-	bool isNaturalCell(const vector<CVecD3> positions) const;
+	bool isNaturalCell(const CVecD3 position,
+			             const double tol = tolerance) const;
+	bool isNaturalCell(const vector<CVecD3> positions,
+			             const double tol = tolerance) const;
 	void printInfo() const;
 //==============================================================================
 private:

@@ -62,7 +62,7 @@ protected:
 	 readIsotropicSurfaceMaterialFile(
 	  const int id_,
 	  const string& name) const;
-	CoordinateGroup
+	CoordinateGroup*
 	 readCoordinates();
 	ElementsGroup
 	 readElements(const CoordinateGroup&);

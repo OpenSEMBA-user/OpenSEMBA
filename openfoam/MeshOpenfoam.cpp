@@ -185,7 +185,7 @@ MeshOpenfoam::discretizeWithinBoundary(
  const RectilinearGrid& grid,
  const vector<const Polygon*>& surf) const {
 	// --- Preliminar checkings -----------------------------------------------
-	checkAllFacesAreSquare();
+	checkAllFacesAreRectangular();
 	// --- Prorcedures --------------------------------------------------------
 	// Gets pairs of quads that define the volume of the space within them.
 	const vector<pair<const Polygon*, const Polygon*> > pairs
@@ -249,11 +249,11 @@ MeshOpenfoam::discretizeWithinBoundary(
 }
 
 void
-MeshOpenfoam::checkAllFacesAreSquare() const {
+MeshOpenfoam::checkAllFacesAreRectangular() const {
 	for (uint i = 0; i < face_.size(); i++) {
 		if (!face_[i].isRectangular()) {
 			cerr<< "ERROR @ MeshOpenfoam: "
-				<< "The following polygon is not a square." << endl;
+				<< "The following polygon is not a rectangular." << endl;
 			face_[i].printInfo();
 		}
 	}
@@ -273,13 +273,15 @@ MeshOpenfoam::getPairsDefiningVolumeWithin(
 		return res;
 	}
 	// Checks if boundary is belongs to natural faces of the grid.
+	// The tolerance used is a fourth of the cell size.
 	for (uint b = 0; b < nOrigBound; b++) {
 		const uint nV = origBound[b]->numberOfVertices();
 		vector<CVecD3> pos(nV);
 		for (uint i = 0; i < nV; i++) {
 			pos[i] = origBound[b]->getV(i)->pos();
 		}
-		if (!grid.isNaturalCell(pos)) {
+		static const double naturalCellTolerance = 0.25;
+		if (!grid.isNaturalCell(pos, naturalCellTolerance)) {
 			cerr<< "ERROR @ Mesh: "
 				<< "Quads are not aligned with grid." << endl;
 			return res;

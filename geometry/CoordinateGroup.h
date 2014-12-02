@@ -11,25 +11,25 @@
 #include "Coordinate.h"
 #include <set>
 
-//struct lexCompareCoord {
-//	static const double tolerance = 1e-12;
-//    bool
-//     operator() (
-//      const CoordD3* lhs,
-//      const CoordD3* rhs) const {
-//    	for (uint i = 0; i < 3; i++) {
-//    		if (abs(lhs->pos()(i) - rhs->pos()(i)) > tolerance) {
-//				if (lhs->pos()(i) < rhs->pos()(i)) {
-//					return true;
-//				}
-//				if (lhs->pos()(i) > rhs->pos()(i)) {
-//					return false;
-//				}
-//    		}
-//    	}
-//    	return false;
-//    }
-//};
+struct lexCompareCoord {
+	static const double tolerance = 1e-12;
+    bool
+     operator() (
+      const CoordD3* lhs,
+      const CoordD3* rhs) const {
+    	for (uint i = 0; i < 3; i++) {
+    		if (abs(lhs->pos()(i) - rhs->pos()(i)) > tolerance) {
+				if (lhs->pos()(i) < rhs->pos()(i)) {
+					return true;
+				}
+				if (lhs->pos()(i) > rhs->pos()(i)) {
+					return false;
+				}
+    		}
+    	}
+    	return false;
+    }
+};
 
 class CoordinateGroup {
 public:
@@ -57,8 +57,8 @@ public:
 	void
 	 check() const;
 private:
-	vector<Coordinate<double,3>* > coord;
-//	set<Coordinate<double,3>*, lexCompareCoord> index;
+	vector<CoordD3* > coord;
+	multiset<CoordD3*, lexCompareCoord> index;
 	unsigned int offsetId;
 	void
 	 checkIdsAreConsecutive() const;

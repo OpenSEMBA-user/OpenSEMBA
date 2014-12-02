@@ -133,13 +133,12 @@ ParserGiD::readMesh() {
 	// Read Grid
 	RectilinearGrid* grid = readCartesianGrid();
 	// Reads the coordinates.
-	CoordinateGroup coordinates;
-	coordinates = readCoordinates();
+	CoordinateGroup* coordinates = readCoordinates();
 	// Reads elements connectivities.
 	ElementsGroup elements;
-	elements = readElements(coordinates);
+	elements = readElements(*coordinates);
 	// Builds mesh with the read data.
-	return new MeshVolume(coordinates, elements, grid);
+	return new MeshVolume(*coordinates, elements, grid);
 }
 
 EMSourceGroup*
@@ -526,7 +525,7 @@ ParserGiD::readProblemSize() {
 	return res;
 }
 
-CoordinateGroup
+CoordinateGroup*
 ParserGiD::readCoordinates() {
 	string line;
 	unsigned int id;
@@ -569,7 +568,7 @@ ParserGiD::readCoordinates() {
 		exit(INPUT_ERROR);
 	}
 	//
-	return CoordinateGroup(coord);
+	return new CoordinateGroup(coord);
 }
 
 

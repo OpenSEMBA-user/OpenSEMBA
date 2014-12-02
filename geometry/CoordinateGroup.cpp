@@ -76,16 +76,15 @@ CoordinateGroup::printInfo() const {
 
 const Coordinate<double, 3>*
 CoordinateGroup::get(const CVecD3& position) const {
-#	warning "CoordinateGroup get: NOT IMPLEMENTED"
-//	set<CoordD3*, lexCompareCoord>::iterator it;
-//	Coordinate<double,3> aux(position);
-//	it = index.find(&aux);
-//	if (it != index.end()) {
-//		const CoordD3* res = *it;
-//		return getPtrToId(res->getId());
-//	} else {
-//		return NULL;
-//	}
+	multiset<CoordD3*, lexCompareCoord>::iterator it;
+	Coordinate<double,3> aux(position);
+	it = index.find(&aux);
+	if (it != index.end()) {
+		const CoordD3* res = *it;
+		return getPtrToId(res->getId());
+	} else {
+		return NULL;
+	}
 }
 
 void
