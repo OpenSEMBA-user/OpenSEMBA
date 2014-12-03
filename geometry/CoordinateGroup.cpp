@@ -6,72 +6,65 @@
  */
 
 #include "CoordinateGroup.h"
-// =============== CoordinateGroup ============================================
+
 CoordinateGroup::CoordinateGroup() {
-	offsetId = 0;
 }
 
 CoordinateGroup::~CoordinateGroup() {
-
 }
 
 CoordinateGroup::CoordinateGroup(
  const vector<CoordD3>& coord_) {
-	coord.resize(coord_.size());
 	for (uint i = 0; i < coord_.size(); i++) {
-		coord[i] = new CoordD3(coord_[i]);
-		index.insert(coord[i]);
+	    pair<uint,CoordD3*> aux(coord_[i].getId(), new CoordD3(coord_[i]));
+		coord.insert(aux);
+		index.insert(aux.second);
 	}
-	offsetId = coord[0]->id;
-	check();
 }
 
 const CoordD3*
 CoordinateGroup::getPtrToId(const unsigned int id) const {
-	return coord[id - offsetId];
+    return (*this)(id);
 }
 
 void
 CoordinateGroup::applyScalingFactor(const double factor) {
-	for (unsigned int i = 0; i < size(); i++) {
-		*coord[i] *= factor;
+    map<uint,CoordD3*>::iterator it;
+	for (it=coord.begin(); it != coord.end(); ++it) {
+		*(it->second) *= factor;
 	}
 }
 
 void
 CoordinateGroup::add(const vector<CVecD3>& newPos) {
-	checkIdsAreConsecutive();
-	uint lastId = coord.back()->getId();
-	coord.reserve(coord.size() + newPos.size());
 	for (uint i = 0; i < newPos.size(); i++) {
-		coord.push_back(new CoordD3(++lastId, newPos[i]));
-		index.insert(coord.back());
+	    uint newId = coord.rbegin()->first + 1;
+	    pair<uint,CoordD3*> aux(newId, new CoordD3(newId, newPos[i]));
+		coord.insert(aux);
+		index.insert(aux.second);
 	}
 }
 
-//void
-//CoordinateGroup::add(const CVecD3& newPosition) {
-//	vector<CVecD3> aux;
-//	aux.push_back(newPosition);
-//	add(aux);
-//}
-
 void
-CoordinateGroup::check() const {
-	checkIdsAreConsecutive();
+CoordinateGroup::add(const CVecD3& newPosition) {
+	vector<CVecD3> aux;
+	aux.push_back(newPosition);
+	add(aux);
+}
+
+const CoordD3*
+CoordinateGroup::operator () (const uint id) const {
+    return coord.find(id)->second;
 }
 
 void
 CoordinateGroup::printInfo() const {
 	cout<< "--- CoordinateGroup info ---" << endl;
-	for (unsigned int i = 0; i < size(); i++) {
-		coord[i]->printInfo();
+    map<uint,CoordD3*>::const_iterator it;
+    for (it=coord.begin(); it != coord.end(); ++it) {
+		it->second->printInfo();
 		cout << endl;
 	}
-//	for (multiset<CoordD3*>::iterator it=index.begin(); it!=index.end(); ++it) {
-//		(*it)->printInfo();
-//		cout << endl;
-//	}
 	cout<< "Total: " << size() << " coordinates." << endl;
 }
 
@@ -82,22 +75,9 @@ CoordinateGroup::get(const CVecD3& position) const {
 	it = index.find(&aux);
 	if (it != index.end()) {
 		const CoordD3* res = *it;
-		return getPtrToId(res->getId());
+		return (*this)(res->getId());
 	} else {
 		return NULL;
-	}
-}
-
-void
-CoordinateGroup::checkIdsAreConsecutive() const {
-	unsigned int currentId = offsetId;
-	for (unsigned int i = 1; i < size(); i++) {
-		if (coord[i]->id == currentId + 1) {
-			currentId++;
-		} else {
-			cerr<< "ERROR @ CoordinateGroup: "
-				<< "Ids are not consecutive" << endl;
-		}
 	}
 }
 
@@ -106,11 +86,11 @@ CoordinateGroup::operator =(const CoordinateGroup& rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
-	offsetId = rhs.offsetId;
-	coord.resize(rhs.coord.size());
-	for (uint i = 0; i < coord.size(); i++) {
-		coord[i] = new CoordD3 (*rhs.coord[i]);
-		index.insert(coord[i]);
-	}
+	map<uint,CoordD3*>::const_iterator it;
+	for (it=rhs.coord.begin(); it != rhs.coord.end(); ++it) {
+        pair<uint,CoordD3*> aux(it->first, new CoordD3(*(it->second)));
+        coord.insert(aux);
+        index.insert(aux.second);
+    }
 	return *this;
 }

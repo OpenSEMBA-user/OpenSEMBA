@@ -233,7 +233,7 @@ ParserOpenFoam::openFile(
 	string filename = dirPolymesh_ + name;
 	file.open(filename.c_str(), ifstream::in);
 	if (file.fail()) {
-		cerr << "Warning: ParserOpenFoamMesh" << endl;
+		cerr << "WARNING @ ParserOpenFoamMesh" << endl;
 		cerr << "Could not open file: " << endl;
 		cerr << filename << endl;
 	}

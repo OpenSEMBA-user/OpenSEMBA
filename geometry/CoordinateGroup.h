@@ -9,6 +9,7 @@
 #define COORDINATEGROUP_H_
 
 #include "Coordinate.h"
+#include <map>
 #include <set>
 
 struct lexCompareCoord {
@@ -41,27 +42,22 @@ public:
 	long unsigned int
 	 size() const {return coord.size();}
 	const CoordD3*
-	 getPtrToId(const uint i) const;
+	 getPtrToId(const uint id) const;
 	const CoordD3*
-	 operator()(const uint i) const {return coord[i];}
+	 operator()(const uint id) const;
 	const CoordD3*
 	 get(const CVecD3& pos) const;
 	void
 	 applyScalingFactor(const double factor);
 	void
 	 add(const vector<CVecD3>& newPositions);
-//	void
-//	 add(const CVecD3& newPosition);
+	void
+	 add(const CVecD3& newPosition);
 	void
 	 printInfo() const;
-	void
-	 check() const;
 private:
-	vector<CoordD3* > coord;
+	map<uint, CoordD3*> coord;
 	multiset<CoordD3*, lexCompareCoord> index;
-	unsigned int offsetId;
-	void
-	 checkIdsAreConsecutive() const;
 };
 
 #endif /* COORDINATEGROUP_H_ */
