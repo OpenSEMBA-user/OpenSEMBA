@@ -48,6 +48,7 @@ ParserGiD::read() {
 	pSize = readProblemSize();
 	//pSize.printInfo();
 
+	res->layers = readLayers();
 
 	res->mesh = readMesh();
 	//res->mesh->printInfo();
