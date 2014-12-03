@@ -233,8 +233,8 @@ ParserOpenFoam::openFile(
 	string filename = dirPolymesh_ + name;
 	file.open(filename.c_str(), ifstream::in);
 	if (file.fail()) {
-		cerr << "WARNING @ ParserOpenFoamMesh" << endl;
-		cerr << "Could not open file: " << endl;
+		cerr << "WARNING @ ParserOpenFoamMesh: ";
+		cerr << "Could not open file: ";
 		cerr << filename << endl;
 	}
 	return;
@@ -250,8 +250,8 @@ ParserOpenFoam::skipHeader(ifstream& file) const {
 			return;
 		}
 	}
-	cerr << "ERROR @ ParserOpenFoamMesh" << endl;
-	cerr << "End of file reached and EOF was not found." << endl;
+	cerr << "ERROR @ ParserOpenFoamMesh: ";
+	cerr << "End of file reached and EOF was not found.";
 	cerr << "While skipping header. " << endl;
 	return;
 }

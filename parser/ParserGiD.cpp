@@ -103,8 +103,10 @@ ParserGiD::readProblemData() {
 					res.boundTermination[2].first = boundStrToType(value);
 				} else if (label.compare("Boundary padding") == 0) {
 					res.boundaryPadding = atof(value.c_str());
+#warning "This has been modified."
 				} else if (label.compare("Boundary mesh size") == 0) {
 					res.boundaryMeshSize = atof(value.c_str());
+#warning "This has been modified."
 				} else if (label.compare("Number of processes") == 0) {
 					res.numberOfProcesses = atoi(value.c_str());
 				} else if (label.compare("Hosts file") == 0) {
