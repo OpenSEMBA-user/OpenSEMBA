@@ -38,7 +38,10 @@ CoordinateGroup::applyScalingFactor(const double factor) {
 void
 CoordinateGroup::add(const vector<CVecD3>& newPos) {
 	for (uint i = 0; i < newPos.size(); i++) {
-	    uint newId = coord.rbegin()->first + 1;
+	    uint newId = 1;
+	    if (!coord.empty()) {
+	        newId = coord.rbegin()->first + 1;
+	    }
 	    pair<uint,CoordD3*> aux(newId, new CoordD3(newId, newPos[i]));
 		coord.insert(aux);
 		index.insert(aux.second);
