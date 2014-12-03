@@ -217,6 +217,14 @@ ParserOpenFoam::readFacesOwner(
 	return res;
 }
 
+bool
+ParserOpenFoam::isExistingDirectory(const string& dir) const {
+	struct stat sb;
+	bool res = (stat(dir.c_str(), &sb) == 0);
+	res &= S_ISDIR(sb.st_mode);
+	return res;
+}
+
 void
 ParserOpenFoam::openFile(
  ifstream& file,

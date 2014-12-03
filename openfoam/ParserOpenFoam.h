@@ -13,6 +13,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <vector>
+#include <sys/stat.h>
 #include "MeshOpenfoam.h"
 #include "../parser/Parser.h"
 #include "OpenfoamBoundary.h"
@@ -25,6 +26,8 @@ public:
 	virtual ~ParserOpenFoam();
 	virtual MeshOpenfoam
 	 readMeshOpenfoam() const;
+	virtual bool
+	 isExistingDirectory(const string& dir) const;
 	virtual void
 	 printInfo() const;
 private:
