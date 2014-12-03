@@ -40,14 +40,20 @@ string toString(const CartesianVector<T,D>& vec) {
    return res.str();
 }
 
-string toString(const NFDEData::Coords coord) {
+string toString1PNT(const NFDEData::Coords coord) {
 	stringstream res;
-	res << toString(coord.coords.first ) << endl;
 	res << toString(coord.coords.second) << endl;
 	return res.str();
 }
 
-string toString(const NFDEData::CoordsDir coord, int skip = 0) {
+string toString2PNT(const NFDEData::Coords coord) {
+    stringstream res;
+    res << toString(coord.coords.first ) << endl
+        << toString(coord.coords.second) << endl;
+    return res.str();
+}
+
+string toString2PNT(const NFDEData::CoordsDir coord, int skip = 0) {
 	stringstream res;
 	res << toString(coord.coords.first);
    switch(coord.dir) {
@@ -138,7 +144,7 @@ void OutputNFDE::exportNFDE(const string &file) {
 
 	if(!nfde->currentDensitySource.empty() ||
 		!nfde->fieldSource.empty()) {
-      
+
 		output << "********************** NODAL SOURCES ***********************";
       output << endl << endl;
 		exportCurrentDensitySource();
@@ -148,7 +154,7 @@ void OutputNFDE::exportNFDE(const string &file) {
 	if(!nfde->isotropicBody.empty() ||
 		!nfde->isotropicSurf.empty() ||
 		!nfde->isotropicLine.empty()) {
-      
+
       output << "******************* ISOTROPIC MATERIALS ********************";
       output << endl << endl;
       exportIsotropicBody();
@@ -410,7 +416,7 @@ void OutputNFDE::exportPlaneWaveSource() {
 		output << "!PLANE WAVE SOURCE" << endl;
 		output << ent->filename << endl;
       output << "LOCKED" << endl;
-		output << toString(ent->coords);
+		output << toString2PNT(ent->coords);
 		output << ent->theta << space << ent->phi << space
 				 << ent->alpha << space << ent->beta << endl;
 		output << endl;
@@ -471,7 +477,7 @@ void OutputNFDE::exportIsotropicBody() {
 					<< ent->sigmam << endl;
 		}
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString1PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -490,7 +496,7 @@ void OutputNFDE::exportIsotropicSurf() {
 					<< ent->mu << space << ent->sigmam << endl;
 		}
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString2PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -510,7 +516,7 @@ void OutputNFDE::exportIsotropicLine() {
 					<< ent->sigmam << endl;
 		}
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString2PNT(ent->entities[j]);
 		}
 
 		output << endl;
@@ -550,7 +556,7 @@ void OutputNFDE::exportAnisotropicBody() {
       }
       
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString1PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -588,7 +594,7 @@ void OutputNFDE::exportAnisotropicSurf() {
       }
       
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString2PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -626,7 +632,7 @@ void OutputNFDE::exportAnisotropicLine() {
       }
       
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString2PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -638,7 +644,7 @@ void OutputNFDE::exportDispersiveBody() {
       if(!ent->layer.empty())
          output << "* " << ent->layer << endl;
 		output << "!FREQUENCY DEPENDENT BODY" << endl;
-		output << "!!2PNT" << endl;
+		output << "!!1PNT" << endl;
 		
       output << ent->sigma0 << space
              << ent->epsinf << space
@@ -651,7 +657,7 @@ void OutputNFDE::exportDispersiveBody() {
          output << ent->a[k] << space << ent->b[k] << endl;
       
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString1PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -675,7 +681,7 @@ void OutputNFDE::exportDispersiveSurf() {
          output << ent->a[k] << space << ent->b[k] << endl;
       
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString2PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -699,7 +705,7 @@ void OutputNFDE::exportDispersiveLine() {
          output << ent->a[k] << space << ent->b[k] << endl;
       
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString2PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -724,7 +730,7 @@ void OutputNFDE::exportCompositeSurf() {
              << ent->thk << endl;
       
 		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString(ent->entities[j]);
+			output << toString2PNT(ent->entities[j]);
 		}
 		output << endl;
 	}
@@ -850,7 +856,7 @@ void OutputNFDE::exportTraditionalProbe() {
 		output << ent->thStart << " " << ent->thEnd << " " << ent->thStep << endl;
 		output << ent->phStart << " " << ent->phEnd << " " << ent->phStep << endl;
 		output << ent->filename << endl;
-		output << toString(ent->region) << endl;
+		output << toString1PNT(ent->region) << endl;
 	}
 }
 void OutputNFDE::exportNewProbe() {
@@ -982,7 +988,7 @@ void OutputNFDE::exportBulkProbes() {
 		}
 		output << ent->tstart << space << ent->tstop << space <<
 		 ent->tstep << endl;
-		output << toString(ent->coord, ent->skip) << endl;
+		output << toString2PNT(ent->coord, ent->skip) << endl;
       output << endl;
 	}
 }
@@ -1064,6 +1070,6 @@ void OutputNFDE::exportSliceProbes() {
 			break;
 		}
 		output << "CUTAWAY" << endl;
-		output << toString(ent->region) << endl;
+		output << toString1PNT(ent->region) << endl;
 	}
 }
