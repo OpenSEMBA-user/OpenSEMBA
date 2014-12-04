@@ -18,6 +18,10 @@ class LayerGroup {
 public:
     LayerGroup();
     virtual ~LayerGroup();
+    virtual void
+     add(Layer* layer);
+    virtual void
+     printInfo() const;
 private:
     map<uint, const Layer*> layers_;
 };

@@ -17,6 +17,14 @@ public:
     Layer();
     Layer(uint id, const string& name);
     virtual ~Layer();
+    virtual string
+     getParentName() const;
+    virtual string
+     getChildName() const;
+    uint
+     getId() const;
+    const string&
+     getName() const;
 private:
     uint id_;
     string name_;

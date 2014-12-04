@@ -20,3 +20,22 @@ Layer::~Layer() {
     // TODO Auto-generated destructor stub
 }
 
+uint
+Layer::getId() const {
+    return id_;
+}
+
+string
+Layer::getParentName() const {
+#   warning "Layer parent name not implemented."
+}
+
+string
+Layer::getChildName() const {
+#   warning "Layer parent name not implemented."
+}
+
+const string&
+Layer::getName() const {
+    return name_;
+}

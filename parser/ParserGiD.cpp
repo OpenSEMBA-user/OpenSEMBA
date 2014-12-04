@@ -505,6 +505,8 @@ ParserGiD::readProblemSize() {
 					res.v = atoi(value.c_str());
 				} else if (label.compare("Number of materials")==0) {
 					res.mat = atoi(value.c_str());
+				} else if (label.compare("Number of layers")==0) {
+				    res.layers = atoi(value.c_str());
 				} else if(label.find("End of problem size") != label.npos) {
 					finished = true;
 				}
@@ -517,15 +519,42 @@ ParserGiD::readProblemSize() {
 			}
 		}
 	}
-	// Throws error message if label was not found.
 	if (!problemSizeFound) {
-		cerr<< "ERROR @ Parser::readProblemSize: " << endl;
-		cerr<< "Problem size label not found."     << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ Parser::readProblemSize: "
+		    << "Problem size label not found."     << endl;
 	}
-	//
 	return res;
+}
+
+LayerGroup*
+ParserGiD::readLayers() {
+    bool finished = false;
+    bool found = false;
+    string label, value;
+    uint id;
+    LayerGroup res = new LayerGroup();
+    while (!found && !f_in.eof() ) {
+        getNextLabelAndValue(label, value);
+        if (label.compare("Layers")==0) {
+            found = true;
+            for (unsigned int i = 0; i < pSize.layers; i++) {
+                f_in >> id >> value;
+                res.add(new Layer(id, value));
+            }
+            while(!finished && !f_in.eof()) {
+                getline(f_in, label);
+                if (label.find("End of layers") != label.npos) {
+                    finished = true;
+                }
+            }
+        }
+    }
+    if (!found) {
+        cerr<< "ERROR @ Parsing layers: "
+            << "Layers label was not found." << endl;
+        return NULL;
+    }
+    return res;
 }
 
 CoordinateGroup*
@@ -535,7 +564,6 @@ ParserGiD::readCoordinates() {
 	CartesianVector<double,3> pos;
 	vector<Coordinate<double,3> > coord;
 	coord.reserve(pSize.v);
-	// Runs over input data file.
 	bool finished = false;
 	bool found = false;
 	while (!found && !f_in.eof() && !finished) {
@@ -557,20 +585,14 @@ ParserGiD::readCoordinates() {
 			}
 		}
 	}
-	// Shows error messages.
 	if (!found) {
-		cerr<< "ERROR @ GiDParser::readCoordinates()" << endl;
-		cerr<< "Coordinates label was not found."  << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ GiDParser::readCoordinates(): "
+		    << "Coordinates label was not found." << endl;
 	}
 	if (!finished) {
-		cerr<< "ERROR @ GiDParser::readCoordinates()"       << endl;
-		cerr<< "\"End of coordinates\" label not found." << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ GiDParser::readCoordinates(): "
+		    << "End of coordinates label not found." << endl;
 	}
-	//
 	return new CoordinateGroup(coord);
 }
 
@@ -1450,7 +1472,8 @@ ParserGiD::readDomainFromStr(const string& line) const {
 
 bool
 ParserGiD::checkVersionCompatibility(const string version) const {
-	bool versionMatches = atof(version.c_str()) == atof(APP_VERSION);
+	bool versionMatches =
+	 atof(version.c_str()) == atof(string(APP_VERSION).c_str());
 	if (!versionMatches) {
 		cerr<< "ERROR @ ParserGiD: "
 			<< "File version " << version << " is not supported." << endl;

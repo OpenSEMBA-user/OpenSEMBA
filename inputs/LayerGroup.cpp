@@ -8,11 +8,22 @@
 #include "LayerGroup.h"
 
 LayerGroup::LayerGroup() {
-    // TODO Auto-generated constructor stub
-
 }
 
 LayerGroup::~LayerGroup() {
-    // TODO Auto-generated destructor stub
 }
 
+void
+LayerGroup::add(Layer* layer) {
+    layers_.insert(pair<uint, const Layer*>(layer->getId(), layer));
+}
+
+void
+LayerGroup::printInfo() const {
+    cout<< "--- Layers info ---" << endl;
+    map<uint, const Layer*>::const_iterator it;
+    for (it=layers_.begin(); it != layers_.end(); ++it) {
+        it->second->printInfo();
+    }
+    cout<< "--- End of Layers ---" << endl;
+}

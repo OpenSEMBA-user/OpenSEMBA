@@ -8,6 +8,7 @@
 #include "SmbData.h"
 
 SmbData::SmbData() {
+    layers = NULL;
 	mesh = NULL;
 	gData = NULL;
 	pMGroup = NULL;
@@ -24,6 +25,7 @@ SmbData::operator=(const SmbData& rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
+	layers = new LayerGroup(*rhs.layers);
 	mesh = new MeshVolume(*rhs.mesh);
 	gData = new GlobalProblemData(*rhs.gData);
 	pMGroup = new PhysicalModelGroup(*rhs.pMGroup);
@@ -120,6 +122,7 @@ SmbData::detectAndAssignPMLRegions() {
 void
 SmbData::printInfo() const {
 	cout << " --- SEMBA data --- " << endl;
+	layers->printInfo();
 	if (mesh != NULL) {
 		mesh->printInfo();
 	} else {

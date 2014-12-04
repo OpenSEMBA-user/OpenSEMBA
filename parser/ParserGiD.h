@@ -42,6 +42,8 @@ protected:
 	ProblemSize pSize;
 	virtual GlobalProblemData
 	 readProblemData();
+	virtual LayerGroup*
+	 readLayers();
 	virtual MeshVolume*
 	 readMesh();
 	virtual EMSourceGroup*

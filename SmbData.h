@@ -13,10 +13,12 @@
 #include "inputs/electromagneticSources/EMSourceGroup.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
 #include "inputs/OpenFOAMParameters.h"
+#include "inputs/LayerGroup.h"
 
 class SmbData {
 public:
 	GlobalProblemData* gData;
+	LayerGroup* layers;
 	MeshVolume* mesh;
 	PhysicalModelGroup* pMGroup;
 	EMSourceGroup* emSources;
