@@ -15,11 +15,11 @@ Tet4::Tet4() {
 
 Tet4::Tet4(
  const CoordinateGroup& coordGr,
+ const unsigned int vId[4],
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[4]) {
-	id = id_;
-	matId = matId_;
+ const unsigned int layerId_) :
+         Tet(id_, matId_, layerId_) {
 	for (unsigned int i = 0; i < tet.np; i++) {
 		v[i] = coordGr.getPtrToId(vId[i]);
 	}
@@ -27,11 +27,11 @@ Tet4::Tet4(
 }
 
 Tet4::Tet4(
+ const CoordD3* v_[4],
  const unsigned int id_,
  const unsigned int matId_,
- const Coordinate<double,3>* v_[4]) {
-	id = id_;
-	matId = matId_;
+ const unsigned int layerId_) :
+        Tet(id_, matId_, layerId_) {
 	for (unsigned int i = 0; i < tet.np; i++) {
 		v[i] = v_[i];
 	}
@@ -47,8 +47,7 @@ Tet4::operator=(const Tet4& rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
-	id = rhs.id;
-	matId = rhs.matId;
+	Tet::operator=(rhs);
 	for (unsigned int i = 0; i < 4; i++) {
 		v[i] = rhs.v[i];
 	}
@@ -58,7 +57,7 @@ Tet4::operator=(const Tet4& rhs) {
 double
 Tet4::getVolume() const {
 	StaMatrix<double,3,3> mat;
-	CartesianVector<double,3> aux;
+	CVecD3 aux;
 	for (unsigned int i = 1; i < 4; i++) {
 		aux = getV(0)->pos() - getV(i)->pos();
 		for (unsigned int j = 0; j < 3; j++) {
@@ -71,7 +70,7 @@ Tet4::getVolume() const {
 
 double
 Tet4::getAreaOfFace(const unsigned int f) const {
-	CartesianVector<double,3> v1, v2;
+	CVecD3 v1, v2;
 	v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
 	v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
 	return ((double) 0.5 * (v1 ^ v2).norm());
@@ -80,11 +79,11 @@ Tet4::getAreaOfFace(const unsigned int f) const {
 void
 Tet4::setV(
  const unsigned int i,
- const Coordinate<double,3>* vNew) {
+ const CoordD3* vNew) {
 	v[i] = vNew;
 }
 
-const Coordinate<double,3>*
+const CoordD3*
 Tet4::getSideV(const unsigned int f, const unsigned int i) const {
 	return v[tet.sideNode(f,i)];
 }
@@ -94,7 +93,7 @@ Tet4::isCurved() const {
 	return false;
 }
 
-const Coordinate<double,3>*
+const CoordD3*
 Tet4::getSideVertex(const unsigned int f, const unsigned int i) const {
 	return v[tet.sideVertex(f,i)];
 }
@@ -102,10 +101,8 @@ Tet4::getSideVertex(const unsigned int f, const unsigned int i) const {
 void
 Tet4::check() const {
 	if(hasZeroVolume()) {
-		cerr << "ERROR@Tet4::check()" << endl;
-		cerr << "Element " << id << " has null volume."  << endl;
-		cerr << "Terminating"                            << endl;
-		exit(ELEMENT_ERROR);
+		cerr << "ERROR @ Tet4::check():"
+		     << "Element " << id << " has null volume." << endl;
 	}
 }
 
@@ -134,7 +131,7 @@ Tet4::isFaceContainedInPlane(
 
 Tri3
 Tet4::getTri3Face(const unsigned int f) const {
-	const Coordinate<double,3>* sideV[3];
+	const CoordD3* sideV[3];
 	for (unsigned int i = 0; i < 3; i++) {
 		sideV[i] = getSideV(f,i);
 	}
@@ -145,7 +142,7 @@ Tet4::getTri3Face(const unsigned int f) const {
 bool
 Tet4::hasZeroVolume() const {
 	bool zeroVolume;
-	CartesianVector<double, 3> initialVCoord, otherVCoord;
+	CVecD3 initialVCoord, otherVCoord;
 	initialVCoord = *v[0];
 	for (unsigned int d = 0; d < 3; d++) {
 		zeroVolume = true;

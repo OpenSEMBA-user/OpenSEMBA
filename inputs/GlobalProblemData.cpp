@@ -16,8 +16,6 @@ GlobalProblemData::GlobalProblemData () {
 		boundTermination[i].first = pml;
 		boundTermination[i].second = pml;
 	}
-	boundaryPadding = 0.0;
-	boundaryMeshSize = 0.0;
 	// Parallel run configuration.
 	numberOfProcesses = 1;
 }
@@ -66,8 +64,18 @@ GlobalProblemData::printInfo() const {
 	cout<< "Upper Z Bound ";
 	printBoundType(boundTermination[2].second);
 	cout<< endl;
-	cout<< "Boundary padding: " << boundaryPadding << endl;
-	cout<< "Boundary Mesh size: " << boundaryMeshSize << endl;
+	cout<< "Lower boundary padding: ";
+	boundaryPadding.first.printInfo();
+	cout<< endl;
+	cout<< "Upper boundary padding: ";
+	boundaryPadding.second.printInfo();
+	cout << endl;
+	cout<< "Lower boundary mesh size: ";
+	boundaryMeshSize.first.printInfo();
+	cout<< endl;
+	cout<< "Upper boundary mesh size: ";
+	boundaryMeshSize.second.printInfo();
+	cout << endl;
 	cout<< "- Parallel run parameters - " << endl;
 	cout<< "Number of processes: " << numberOfProcesses << endl;
 	cout<< "Hosts file: " << hostsFile << endl;

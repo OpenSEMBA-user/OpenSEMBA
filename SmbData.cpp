@@ -122,17 +122,42 @@ SmbData::detectAndAssignPMLRegions() {
 void
 SmbData::printInfo() const {
 	cout << " --- SEMBA data --- " << endl;
-	layers->printInfo();
+	if (layers != NULL) {
+	    layers->printInfo();
+	} else {
+	    cout << "No info about layers." << endl;
+	}
 	if (mesh != NULL) {
 		mesh->printInfo();
 	} else {
-		cout << "No info about mesh" << endl;
+		cout << "No info about mesh." << endl;
 	}
-	gData->printInfo();
-	pMGroup->printInfo();
-	emSources->printInfo();
-	outputRequests->printInfo();
-	ofParams->printInfo();
+	if (gData != NULL) {
+	    gData->printInfo();
+	} else {
+	    cout << "No info about global data." << endl;
+	}
+	if (pMGroup != NULL) {
+	    pMGroup->printInfo();
+	} else {
+	    cout << "No info about physical models." << endl;
+	}
+	if (emSources != NULL) {
+	    emSources->printInfo();
+	} else {
+	    cout << "No info about electromagnetic sources." << endl;
+	}
+	if (outputRequests != NULL) {
+	    outputRequests->printInfo();
+	} else {
+	    cout << "No info about output requests." << endl;
+	}
+	if (ofParams != NULL) {
+	    ofParams->printInfo();
+	} else {
+	    cout << "No info about openFoam parameters." << endl;
+	}
+
 }
 
 void

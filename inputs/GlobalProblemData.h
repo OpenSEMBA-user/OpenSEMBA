@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <utility>
+#include "../math/CartesianVector.h"
 
 using namespace std;
 
@@ -33,7 +34,7 @@ public:
 	uint numberOfProcesses;
 	string hostsFile;
 	pair<boundType,boundType> boundTermination[3];
-	double boundaryPadding, boundaryMeshSize;
+	pair<CVecD3,CVecD3> boundaryPadding, boundaryMeshSize;
 	GlobalProblemData();
 	GlobalProblemData&
 	 operator=(const GlobalProblemData& rhs);

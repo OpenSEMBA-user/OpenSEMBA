@@ -17,7 +17,6 @@ ProblemSize::ProblemSize() {
     tet10 = 0;
     hex8 = 0;
     mat = 0;
-    layers = 0;
 }
 
 ProblemSize
@@ -34,7 +33,6 @@ ProblemSize::operator=(const ProblemSize& rhs) {
     tet10 = rhs.tet10;
     hex8 = rhs.hex8;
     mat = rhs.mat;
-    layers = rhs.layers;
     return *this;
 }
 
@@ -43,7 +41,6 @@ ProblemSize::printInfo() const {
     cout << " --- Problem size --- " << endl;
     cout << "Number of coordinates:  " << v << endl;
     cout << "Number of materials:    " << mat << endl;
-    cout << "Number of layers:       " << layers << endl;
     cout << "Number of hex8:         " << hex8 << endl;
     cout << "Number of tet10:        " << tet10 << endl;
     cout << "Number of tet4:         " << tet4 << endl;

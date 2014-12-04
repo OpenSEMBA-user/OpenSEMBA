@@ -24,7 +24,6 @@ public:
 	unsigned int tet10; // #
 	unsigned int hex8;
 	unsigned int mat;   // # materials.
-	unsigned int layers;
 	ProblemSize();
 	ProblemSize
 	 operator=(const ProblemSize& rhs);

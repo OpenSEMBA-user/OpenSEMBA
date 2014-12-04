@@ -15,39 +15,41 @@ public:
 	Lin2();
 	Lin2(
 	 const CoordinateGroup&,
-	 const unsigned int id_,
-	 const unsigned int matId_,
-	 const unsigned int vId[2]);
+	 const uint vId[2],
+	 const uint id_,
+     const uint matId_,
+     const uint layerId_);
 	Lin2(
-	 const unsigned int id_,
-	 const unsigned int matId_,
-	 const Coordinate<double,3>* v_[2]);
+     const CoordD3* v_[2],
+     const uint id_,
+	 const uint matId_,
+	 const uint layerId_);
 	virtual ~Lin2();
-	const Coordinate<double,3>*
-	 getV(const unsigned int i) const {return v[i];}
-	const Coordinate<double,3>*
-	 getSideV(const unsigned int face, const unsigned int i) const {
+	const CoordD3*
+	 getV(const uint i) const {return v[i];}
+	const CoordD3*
+	 getSideV(const uint face, const uint i) const {
 		return v[i];
 	 }
-	const Coordinate<double,3>*
-	 getSideVertex(const unsigned int face, const unsigned int i) const {
+	const CoordD3*
+	 getSideVertex(const uint face, const uint i) const {
 		return v[i];
 	 }
 	void
 	 setV(
-	  const unsigned int i,
+	  const uint i,
 	  const Coordinate<double, 3>* constCoordinate);
 	inline bool
 	 isCurved() const {return false;}
-	inline unsigned int
+	inline uint
 	 numberOfCoordinates() const {return 2;}
-	const Coordinate<double,3>*
-	 getVertex(const unsigned int i) const;
+	const CoordD3*
+	 getVertex(const uint i) const;
 	void
 	 printInfo() const;
 private:
 	static const SimplexLin<1> lin;
-	const Coordinate<double,3>* v[2];
+	const CoordD3* v[2];
 };
 const SimplexLin<1> Lin2::lin;
 

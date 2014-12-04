@@ -21,9 +21,10 @@ public:
      const uint matId_ = 0,
      const uint layerId_ = 0);
 	Tet4(
-	 const * v_[4],
+	 const CoordD3* v_[4],
 	 const uint id_ = 0,
-     const uint matId_ = 0,);
+     const uint matId_ = 0,
+     const uint layerId_ = 0);
 	Tet4&
 	 operator=(const Tet4& rhs);
 	bool
@@ -32,15 +33,15 @@ public:
 	 numberOfCoordinates() const {return 4;}
 	uint
 	 numberOfSideCoordinates(const uint f = 0) const {return 3;}
-	const *
+	const CoordD3*
 	 getV(const uint i) const {return v[i];}
-	const *
+	const CoordD3*
 	 getSideV(const uint f, const uint i) const;
 	void
-	 setV(const uint i, const *);
-	const *
+	 setV(const uint i, const CoordD3*);
+	const CoordD3*
 	 getVertex(const uint i) const {return v[tet.vertex(i)];}
-	const *
+	const CoordD3*
 	 getSideVertex(const uint f, const uint i) const;
 	Tri3
 	 getTri3Face(const uint f) const;
@@ -64,7 +65,7 @@ public:
 	  const CartesianPlane plane) const;
 private:
 	static const SimplexTet<1> tet;
-	const * v[4];
+	const CoordD3* v[4];
 	bool
 	 hasZeroVolume() const;
 };

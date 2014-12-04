@@ -122,7 +122,7 @@ Tet10::linearize() const {
 	for (unsigned int i = 0; i < 4; i++) {
 		vertex[i] = getVertex(i);
 	}
-	Tet4 res(id,matId,vertex);
+	Tet4 res(vertex, id, matId, layerId);
 	return res;
 }
 

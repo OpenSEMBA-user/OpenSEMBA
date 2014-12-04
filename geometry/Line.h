@@ -16,6 +16,10 @@ using namespace std;
 class Line : public Element {
 public:
 	Line();
+	Line(
+	 const uint id_,
+	 const uint matId_,
+	 const uint layerId_);
 	virtual ~Line();
 	inline unsigned int
 	 numberOfFaces() const {return 2;}

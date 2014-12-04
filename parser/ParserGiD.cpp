@@ -43,27 +43,28 @@ ParserGiD::read() {
 	GlobalProblemData* gData = new GlobalProblemData;
 	*gData = readProblemData();
 	res->gData = gData;
-	//res->gData->printInfo();
+	res->gData->printInfo();
 
 	pSize = readProblemSize();
-	//pSize.printInfo();
+	pSize.printInfo();
 
 	res->layers = readLayers();
+	res->layers->printInfo();
 
 	res->mesh = readMesh();
-	//res->mesh->printInfo();
+	res->mesh->printInfo();
 
 	res->pMGroup = readMaterials();
-//	res->pMGroup->printInfo();
+	res->pMGroup->printInfo();
 
 	res->emSources = readEMSources();
-	//res->emSources->printInfo();
+	res->emSources->printInfo();
 
 	res->outputRequests = readOutputRequests();
-	//res->outputRequests->printInfo();
+	res->outputRequests->printInfo();
 
 	res->ofParams = readOpenFOAMParameters();
-	//res->ofParams->printInfo();
+	res->ofParams->printInfo();
 
 	res->applyGeometricScalingFactor();
 
@@ -103,11 +104,9 @@ ParserGiD::readProblemData() {
 				} else if (label.compare("Lower z bound") == 0) {
 					res.boundTermination[2].first = boundStrToType(value);
 				} else if (label.compare("Boundary padding") == 0) {
-					res.boundaryPadding = atof(value.c_str());
-#warning "This has been modified."
+					res.boundaryPadding = readBoundFromStr(value);
 				} else if (label.compare("Boundary mesh size") == 0) {
-					res.boundaryMeshSize = atof(value.c_str());
-#warning "This has been modified."
+					res.boundaryMeshSize = readBoundFromStr(value);
 				} else if (label.compare("Number of processes") == 0) {
 					res.numberOfProcesses = atoi(value.c_str());
 				} else if (label.compare("Hosts file") == 0) {
@@ -505,8 +504,6 @@ ParserGiD::readProblemSize() {
 					res.v = atoi(value.c_str());
 				} else if (label.compare("Number of materials")==0) {
 					res.mat = atoi(value.c_str());
-				} else if (label.compare("Number of layers")==0) {
-				    res.layers = atoi(value.c_str());
 				} else if(label.find("End of problem size") != label.npos) {
 					finished = true;
 				}
@@ -537,14 +534,15 @@ ParserGiD::readLayers() {
         getNextLabelAndValue(label, value);
         if (label.compare("Layers")==0) {
             found = true;
-            for (uint i = 0; i < pSize.layers; i++) {
-                f_in >> id >> value;
-                res->add(new Layer(id, value));
-            }
             while(!finished && !f_in.eof()) {
-                getline(f_in, label);
-                if (label.find("End of layers") != label.npos) {
+                string line;
+                getline(f_in, line);
+                if (line.find("End of layers") != line.npos) {
                     finished = true;
+                } else {
+                    stringstream ss(line);
+                    ss >> id >> value;
+                    res->add(new Layer(id, value));
                 }
             }
         }
@@ -690,11 +688,11 @@ vector<Tet4>
 ParserGiD::readTet4Elements(
  const CoordinateGroup& v) {
 	vector<Tet4> res;
-	uint id, matId, vId[4];
+	uint id, matId, layerId, vId[4];
 	res.reserve(pSize.tet4);
 	for (uint i = 0; i < pSize.tet4; i++) {
-		f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId;
-		res.push_back(Tet4(v, id, matId, vId));
+		f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
+		res.push_back(Tet4(v, vId, id, matId, layerId));
 	}
 	return res;
 }
@@ -733,11 +731,11 @@ ParserGiD::readTri3Elements(const CoordinateGroup& v) {
 vector<Lin2>
 ParserGiD::readLin2Elements(const CoordinateGroup& v) {
 	vector<Lin2> res;
-	uint id, matId, vId[2];
+	uint id, matId, layerId, vId[2];
 	res.reserve(pSize.lin2);
 	for (uint i = 0; i < pSize.lin2; i++) {
-		f_in >> id >> vId[0] >> vId[1] >> matId;
-		res.push_back(Lin2(v, id, matId, vId));
+		f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;
+		res.push_back(Lin2(v, vId, id, matId, layerId));
 	}
 	return res;
 }
