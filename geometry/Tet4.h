@@ -16,39 +16,40 @@ public:
 	virtual ~Tet4();
 	Tet4(
 	 const CoordinateGroup&,
-	 const unsigned int id_,
-	 const unsigned int matId_,
-	 const unsigned int vId[4]);
+	 const uint vId[4],
+	 const uint id_ = 0,
+     const uint matId_ = 0,
+     const uint layerId_ = 0);
 	Tet4(
-	 const unsigned int id_,
-	 const unsigned int matId_,
-	 const Coordinate<double,3>* v_[4]);
+	 const * v_[4],
+	 const uint id_ = 0,
+     const uint matId_ = 0,);
 	Tet4&
 	 operator=(const Tet4& rhs);
 	bool
 	 isQuadratic() const {return false;}
-	unsigned int
+	uint
 	 numberOfCoordinates() const {return 4;}
-	unsigned int
+	uint
 	 numberOfSideCoordinates(const uint f = 0) const {return 3;}
-	const Coordinate<double,3>*
-	 getV(const unsigned int i) const {return v[i];}
-	const Coordinate<double,3>*
-	 getSideV(const unsigned int f, const unsigned int i) const;
+	const *
+	 getV(const uint i) const {return v[i];}
+	const *
+	 getSideV(const uint f, const uint i) const;
 	void
-	 setV(const unsigned int i, const Coordinate<double,3>*);
-	const Coordinate<double,3>*
-	 getVertex(const unsigned int i) const {return v[tet.vertex(i)];}
-	const Coordinate<double,3>*
-	 getSideVertex(const unsigned int f, const unsigned int i) const;
+	 setV(const uint i, const *);
+	const *
+	 getVertex(const uint i) const {return v[tet.vertex(i)];}
+	const *
+	 getSideVertex(const uint f, const uint i) const;
 	Tri3
-	 getTri3Face(const unsigned int f) const;
+	 getTri3Face(const uint f) const;
 	bool
 	 isCurved() const;
 	bool
-	 isCurvedFace(const unsigned int face) const;
+	 isCurvedFace(const uint face) const;
 	double
-	 getAreaOfFace(const unsigned int face) const;
+	 getAreaOfFace(const uint face) const;
 	double
 	 getVolume() const;
 	const Simplex&
@@ -59,11 +60,11 @@ public:
 	 printInfo() const;
 	bool
 	 isFaceContainedInPlane(
-	  const unsigned int face,
+	  const uint face,
 	  const CartesianPlane plane) const;
 private:
 	static const SimplexTet<1> tet;
-	const Coordinate<double,3>* v[4];
+	const * v[4];
 	bool
 	 hasZeroVolume() const;
 };

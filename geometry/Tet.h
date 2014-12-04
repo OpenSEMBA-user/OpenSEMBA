@@ -15,6 +15,7 @@
 class Tet : public Volume {
 public:
 	Tet();
+	Tet(const uint id_, const uint matId_, const uint layerId_);
 	virtual ~Tet();
 	inline unsigned int
 	 numberOfFaces() const {return 4;}

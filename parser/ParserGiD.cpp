@@ -200,7 +200,7 @@ ParserGiD::readMaterials(){
 	vector<PMWire*> wires;
 	vector<PMMultiport*> multiport;
 	string label, value;
-	unsigned int materialCount = 0;
+	uint materialCount = 0;
 	bool found = false;
 	while (!found && !f_in.eof() ) {
 		getNextLabelAndValue(label, value);
@@ -210,7 +210,7 @@ ParserGiD::readMaterials(){
 				getNextLabelAndValue(label, value);
 				if (label.compare("Material")==0) {
 					bool materialFinished = false;
-					unsigned int id = atoi(value.c_str());
+					uint id = atoi(value.c_str());
 					string name;
 					PhysicalModelGroup::Type type
 				     = PhysicalModelGroup::undefined;
@@ -368,7 +368,7 @@ ParserGiD::readOutputRequestInstances() {
 			gidOutputType = gidOutputTypeStrToType(trim(value));
 		} else if (label.compare("Number of elements")==0) {
 			nE = atoi(value.c_str());
-			for (unsigned int i = 0; i < nE; i++) {
+			for (uint i = 0; i < nE; i++) {
 				getNextLabelAndValue(label,value);
 				outputName = trim(value);
 				getNextLabelAndValue(label,value);
@@ -532,14 +532,14 @@ ParserGiD::readLayers() {
     bool found = false;
     string label, value;
     uint id;
-    LayerGroup res = new LayerGroup();
+    LayerGroup* res = new LayerGroup();
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Layers")==0) {
             found = true;
-            for (unsigned int i = 0; i < pSize.layers; i++) {
+            for (uint i = 0; i < pSize.layers; i++) {
                 f_in >> id >> value;
-                res.add(new Layer(id, value));
+                res->add(new Layer(id, value));
             }
             while(!finished && !f_in.eof()) {
                 getline(f_in, label);
@@ -560,8 +560,8 @@ ParserGiD::readLayers() {
 CoordinateGroup*
 ParserGiD::readCoordinates() {
 	string line;
-	unsigned int id;
-	CartesianVector<double,3> pos;
+	uint id;
+	CVecD3 pos;
 	vector<Coordinate<double,3> > coord;
 	coord.reserve(pSize.v);
 	bool finished = false;
@@ -571,7 +571,7 @@ ParserGiD::readCoordinates() {
 		if (line.find("Coordinates:") != line.npos) {
 			found = true;
 			// Reads coordinates.
-			for (unsigned int i = 0; i < pSize.v; i++) {
+			for (uint i = 0; i < pSize.v; i++) {
 				f_in >> id >> pos(0) >> pos(1) >> pos(2);
 				coord.push_back(Coordinate<double,3>(id, pos));
 			}
@@ -657,11 +657,11 @@ ParserGiD::readElements(const CoordinateGroup& v) {
 vector<Hex8>
 ParserGiD::readHex8Elements(const CoordinateGroup& v) {
 	vector<Hex8> res;
-	unsigned int id, matId, vId[8];
+	uint id, matId, vId[8];
 	res.reserve(pSize.hex8);
-	for (unsigned int i = 0; i < pSize.hex8; i++) {
+	for (uint i = 0; i < pSize.hex8; i++) {
 		f_in >> id;
-		for (unsigned int j = 0; j < 8; j++) {
+		for (uint j = 0; j < 8; j++) {
 			 f_in >> vId[j];
 		}
 		f_in >> matId;
@@ -673,11 +673,11 @@ ParserGiD::readHex8Elements(const CoordinateGroup& v) {
 vector<Tet10>
 ParserGiD::readTet10Elements(const CoordinateGroup& v) {
 	vector<Tet10> res;
-	unsigned int id, matId, vId[10];
+	uint id, matId, vId[10];
 	res.reserve(pSize.tet10);
-	for (unsigned int i = 0; i < pSize.tet10; i++) {
+	for (uint i = 0; i < pSize.tet10; i++) {
 		f_in >> id;
-		for (unsigned int j = 0; j < 10; j++) {
+		for (uint j = 0; j < 10; j++) {
 			 f_in >> vId[j];
 		}
 		f_in >> matId;
@@ -690,9 +690,9 @@ vector<Tet4>
 ParserGiD::readTet4Elements(
  const CoordinateGroup& v) {
 	vector<Tet4> res;
-	unsigned int id, matId, vId[4];
+	uint id, matId, vId[4];
 	res.reserve(pSize.tet4);
-	for (unsigned int i = 0; i < pSize.tet4; i++) {
+	for (uint i = 0; i < pSize.tet4; i++) {
 		f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId;
 		res.push_back(Tet4(v, id, matId, vId));
 	}
@@ -702,12 +702,12 @@ ParserGiD::readTet4Elements(
 vector<Tri6>
 ParserGiD::readTri6Elements(const CoordinateGroup& v) {
 	vector<Tri6> res;
-	unsigned int id, matId, vId[6];
-	CartesianVector<double,3> normal;
+	uint id, matId, vId[6];
+	CVecD3 normal;
 	res.reserve(pSize.tri6);
-	for (unsigned int i = 0; i < pSize.tri6; i++) {
+	for (uint i = 0; i < pSize.tri6; i++) {
 		f_in >> id;
-		for (unsigned int j = 0; j < 6; j++)
+		for (uint j = 0; j < 6; j++)
 			 f_in >> vId[j];
 		f_in >> matId >> normal(0) >> normal(1) >> normal(2);
 		res.push_back(Tri6(v, id, matId, vId, normal));
@@ -719,13 +719,13 @@ ParserGiD::readTri6Elements(const CoordinateGroup& v) {
 vector<Tri3>
 ParserGiD::readTri3Elements(const CoordinateGroup& v) {
 	vector<Tri3> res;
-	unsigned int id, matId, vId[3];
-	CartesianVector<double,3> normal;
+	uint id, matId, layerId, vId[3];
+	CVecD3 normal;
 	res.reserve(pSize.tri3);
-	for (unsigned int i = 0; i < pSize.tri3; i++) {
-		f_in >> id >> vId[0] >> vId[1] >> vId[2] >>
-		 matId >> normal(0) >> normal(1) >> normal(2);
-		res.push_back(Tri3(v, id, matId, vId, normal));
+	for (uint i = 0; i < pSize.tri3; i++) {
+		f_in >> id >> vId[0] >> vId[1] >> vId[2]
+		 >> normal(0) >> normal(1) >> normal(2) >> matId >> layerId;
+		res.push_back(Tri3(v, vId, normal, id, matId, layerId));
 	}
 	return res;
 }
@@ -733,9 +733,9 @@ ParserGiD::readTri3Elements(const CoordinateGroup& v) {
 vector<Lin2>
 ParserGiD::readLin2Elements(const CoordinateGroup& v) {
 	vector<Lin2> res;
-	unsigned int id, matId, vId[2];
+	uint id, matId, vId[2];
 	res.reserve(pSize.lin2);
-	for (unsigned int i = 0; i < pSize.lin2; i++) {
+	for (uint i = 0; i < pSize.lin2; i++) {
 		f_in >> id >> vId[0] >> vId[1] >> matId;
 		res.push_back(Lin2(v, id, matId, vId));
 	}
@@ -744,12 +744,12 @@ ParserGiD::readLin2Elements(const CoordinateGroup& v) {
 
 PMVolumeDispersive
 ParserGiD::readDispersiveMaterialFile(
- const unsigned int id_, const string& fileName) const {
+ const uint id_, const string& fileName) const {
 	ifstream matFile;
 	string matFileName, line, label, value;
 	string name, model;
 	string poles, epsilon, sigma;
-	unsigned int nPoles, nDrudePoles;
+	uint nPoles, nDrudePoles;
 	double eps, sig;
 	vector<int> poleId, drudePoleId;
 	vector<double> rePK, imPK, reRK, imRK;
@@ -780,7 +780,7 @@ ParserGiD::readDispersiveMaterialFile(
 	// Parses poles.
 	// Stores in line the file line containing headers.
 	getline(matFile, line);
-	for (unsigned int i = 0; i < nPoles; i++) {
+	for (uint i = 0; i < nPoles; i++) {
 		matFile >> tmpPoleId >> tmpRePK >> tmpImPK >> tmpReRK >> tmpImRK;
 		poleId.push_back(tmpPoleId);
 		rePK.push_back(tmpRePK);
@@ -792,7 +792,7 @@ ParserGiD::readDispersiveMaterialFile(
 	label = line.substr(line.find("#") + 2, line.find(":") - 2);
 	value = line.substr(line.find(":") + 2, line.length());
 	nDrudePoles = atoi(value.c_str());
-	for (unsigned int i = 0; i < nDrudePoles; i++) {
+	for (uint i = 0; i < nDrudePoles; i++) {
 		matFile >> tmpPoleId >> tmpRePK >> tmpImPK >> tmpReRK >> tmpImRK;
 		drudePoleId.push_back(tmpPoleId);
 		reDrudePK.push_back(tmpRePK);
@@ -803,13 +803,13 @@ ParserGiD::readDispersiveMaterialFile(
 	// Copies all parsed data into the aux material depending on the model.
 	if (!model.compare("Pole-Residue Model")) {
 		vector<complex<double> > poles, residues, drudePoles, drudeResidues;
-		for (unsigned int i = 0; i < nPoles; i++) {
+		for (uint i = 0; i < nPoles; i++) {
 			complex<double> pole(rePK[i], imPK[i]);
 			poles.push_back(pole);
 			complex<double> residue(reRK[i]/2.0, imRK[i]/2.0);
 			residues.push_back(residue);
 		}
-		for (unsigned int i = 0; i < nDrudePoles; i++) {
+		for (uint i = 0; i < nDrudePoles; i++) {
 			complex<double> pole(reDrudePK[i], imDrudePK[i]);
 			drudePoles.push_back(pole);
 			complex<double> residue(reDrudeRK[i]/2.0, imDrudeRK[i]/2.0);
@@ -853,7 +853,7 @@ ParserGiD::readIsotropicSurfaceMaterialFile(
 	}
 	name = line.substr(8, line.length()-9);
 	getline(matFile, line);
-	unsigned int nPoles = 0;
+	uint nPoles = 0;
 	// Gets number of poles.
 	label = line.substr(0, line.find(":"));
 	if(!label.compare("N")) {
@@ -883,7 +883,7 @@ ParserGiD::readIsotropicSurfaceMaterialFile(
 	// Parses poles.
 	// Stores in line the file line containing headers.
 	getline(matFile, line);
-	for (unsigned int i = 0; i < nPoles; i++) {
+	for (uint i = 0; i < nPoles; i++) {
 		matFile >> tmpP >> tmpZ11 >> tmpZ12 >> tmpZ21 >> tmpZ22;
 		pole.push_back(tmpP);
 		Z11.push_back(tmpZ11);
@@ -971,7 +971,7 @@ ParserGiD::readCartesianGrid() {
 
 PlaneWave
 ParserGiD::readPlaneWaveEMSource() {
-	CartesianVector<double,3> waveDirection, polarization;
+	CVecD3 waveDirection, polarization;
 	double spread = 0.0;
 	double delay = 0.0;
 	string filename;
@@ -1020,10 +1020,10 @@ ParserGiD::readPlaneWaveEMSource() {
 
 Dipole
 ParserGiD::readDipoleEMSource() {
-	vector<unsigned int> elem;
+	vector<uint> elem;
 	double length = 0.0;
-	CartesianVector<double,3> orientation;
-	CartesianVector<double,3> position;
+	CVecD3 orientation;
+	CVecD3 position;
 	bool sinModulation = false, gaussModulation = false;
 	double sinAmplitude = 0.0, frequency = 0.0,
 	 gaussAmplitude = 0.0, spread = 0.0, delay = 0.0;
@@ -1079,14 +1079,14 @@ ParserGiD::readDipoleEMSource() {
 
 Waveport
 ParserGiD::readWaveportEMSource() {
-	vector<unsigned int> elem;
-	unsigned int numElements = 0;
+	vector<uint> elem;
+	uint numElements = 0;
 	bool input = true;
 	double spread = 0.0;
 	double delay = 0.0;
 	Waveport::Shape shape = Waveport::rectangular;
 	Waveport::ExcitationMode excitationMode = Waveport::TE;
-	pair<unsigned int,unsigned int> mode(1,0);
+	pair<uint,uint> mode(1,0);
 	Waveport::Symmetry symXY = Waveport::none;
 	Waveport::Symmetry symYZ = Waveport::none;
 	Waveport::Symmetry symZX = Waveport::none;
@@ -1097,7 +1097,7 @@ ParserGiD::readWaveportEMSource() {
 		label = line.substr(0, line.find(LABEL_ENDING));
 		value = line.substr(line.find(LABEL_ENDING)+1, line.length());
 		if (!label.compare("Input")) {
-			unsigned int oneOrZero;
+			uint oneOrZero;
 			oneOrZero = atoi(value.c_str());
 			if (oneOrZero == 1) {
 				input = true;
@@ -1152,8 +1152,8 @@ ParserGiD::readWaveportEMSource() {
 		} else if (!label.compare("Number of elements")) {
 			numElements = atoi(value.c_str());
 		} else if (!label.compare("Elements")) {
-			unsigned int e;
-			for (unsigned int i = 0; i < numElements; i++) {
+			uint e;
+			for (uint i = 0; i < numElements; i++) {
 				f_in >> e;
 				elem.push_back(e);
 			}
@@ -1354,16 +1354,16 @@ ParserGiD::materialStrToMultiportType(string str) const {
 pair<CVecD3, CVecD3>
 ParserGiD::readBoundFromStr(
  const string& value) const {
-	unsigned int begin = value.find_first_of("{");
-	unsigned int end = value.find_last_of("}");
+	uint begin = value.find_first_of("{");
+	uint end = value.find_last_of("}");
 	istringstream iss(value.substr(begin+1,end-2));
 	string sub;
-	CartesianVector<double,3> max, min;
-	for (unsigned int i = 0; i < 3; i++) {
+	CVecD3 max, min;
+	for (uint i = 0; i < 3; i++) {
 		iss >> sub;
 		max(i) = atof(sub.c_str());
 	}
-	for (unsigned int i = 0; i < 3; i++) {
+	for (uint i = 0; i < 3; i++) {
 		iss >> sub;
 		min(i) = atof(sub.c_str());
 	}

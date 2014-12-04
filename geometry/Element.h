@@ -25,6 +25,7 @@ public:
 		VOLUME
 	} Type;
 	Element();
+	Element(const uint id, const uint matId, const uint layerId);
 	virtual ~Element();
 	virtual bool
 	 isQuadratic() const {return false;}
@@ -47,44 +48,43 @@ public:
 	virtual bool
 	 isTet() const {return false;}
 	virtual void
-	 setV(const unsigned int i, const Coordinate<double,3>*);
+	 setV(const unsigned int i, const CoordD3*);
 	virtual void
 	 setMatId(const unsigned int newMatId);
-	virtual const Coordinate<double,3>*
+	virtual const CoordD3*
 	 getV(const unsigned int i) const = 0;
-	virtual const Coordinate<double,3>*
+	virtual const CoordD3*
 	 getSideV(const unsigned int f, const unsigned int i) const = 0;
 	unsigned int
 	 getId() const {return id;}
 	unsigned int
 	 getMatId() const {return matId;}
-	virtual const Coordinate<double,3>*
+	unsigned int
+	 getLayerId() const {return layerId;}
+	virtual const CoordD3*
 	 getVertex(const unsigned int i) const = 0;
-	virtual const Coordinate<double,3>*
+	virtual const CoordD3*
 	 getSideVertex(const unsigned int f, const unsigned int i) const = 0;
 	pair<CVecD3,CVecD3>
 	 getBound() const;
 	bool
 	 isCoordinate(const CoordD3* coord) const;
 	// Returns ptr to coord with min(max) lexicographical position.
-	virtual const Coordinate<double,3>*
+	virtual const CoordD3*
 	 getMinV() const;
-	virtual const Coordinate<double,3>*
+	virtual const CoordD3*
 	 getMaxV() const;
 	virtual void
-	 printInfo() const = 0;
-
+	 printInfo() const;
 protected:
 	unsigned int id;
 	unsigned int matId;
+	unsigned int layerId;
 	static const double tolerance = 1e-15;
 	void
 	 ascendingOrder(unsigned int nVal, unsigned int* val) const;
 	pair<CVecD3, CVecD3>
 	 getInfinityBound() const;
-
-private:
-
 };
 
 #endif

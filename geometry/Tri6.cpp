@@ -79,7 +79,7 @@ Tri6::linearize() const {
 	for (unsigned int i = 0; i < 3; i++) {
 		vertex[i] = getVertex(i);
 	}
-	Tri3 res(id,matId,vertex,normal);
+	Tri3 res(vertex,normal,id,matId,layerId);
 	return res;
 }
 

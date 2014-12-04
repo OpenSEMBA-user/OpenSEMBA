@@ -13,6 +13,10 @@ Tet::Tet() {
 
 }
 
+Tet::Tet(const uint id_, const uint matId_, const uint layerId_) :
+    Volume(id_, matId_, layerId_) {
+}
+
 Tet::~Tet() {
 
 }
@@ -138,7 +142,7 @@ Tet::getTri3Face(const unsigned int f) const {
 	for (uint i = 0; i < 3; i++) {
 		coord[i] = getSideVertex(f,i);
 	}
-	return Tri3(coord, getMatId());
+	return Tri3(coord, CVecD3(0,0,0), (uint) 0, getMatId(), (uint) 0);
 }
 
 void
@@ -174,3 +178,4 @@ Tet::getCubaturePositions(
 	} 
 	delete[] lagrEv;
 }
+

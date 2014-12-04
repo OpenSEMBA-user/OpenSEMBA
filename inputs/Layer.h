@@ -9,8 +9,11 @@
 #define SRC_COMMON_INPUTS_LAYER_H_
 
 #include <string>
+#include <iostream>
 
 using namespace std;
+
+typedef unsigned int uint;
 
 class Layer {
 public:
@@ -25,6 +28,8 @@ public:
      getId() const;
     const string&
      getName() const;
+    virtual void
+     printInfo() const;
 private:
     uint id_;
     string name_;

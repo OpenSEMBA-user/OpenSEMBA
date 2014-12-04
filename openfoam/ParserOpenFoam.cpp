@@ -84,7 +84,7 @@ ParserOpenFoam::readSurfaceElements(
 		const uint nVertex = vId.size();
 		switch (nVertex) {
 		case 3:
-			tri3.push_back(Tri3(cG, id, matId, &vId.front(), normal));
+			tri3.push_back(Tri3(cG, &vId.front(), normal, id, matId));
 			break;
 		case 4:
 			quad4.push_back(Quad4(cG, id, matId, &vId.front()));

@@ -8,6 +8,15 @@
 #include "Surface.h"
 #endif
 
+Surface::Surface(
+ const CVecD3& normal_,
+ const uint id_,
+ const uint matId_,
+ const uint layerId_) : Element(id_, matId_, layerId_) {
+    normal = normal_;
+}
+
+
 Surface::Surface() {
 
 }
@@ -55,3 +64,4 @@ Surface::isRectangular() const {
 	}
 	return true;
 }
+

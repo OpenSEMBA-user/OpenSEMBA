@@ -26,7 +26,7 @@ MeshSurface::MeshSurface(
 				vId[j] = auxVId++;
 			}
 			tri3.push_back(
-			 Tri3(v, id++, matId, vId, normal[i]));
+			 Tri3(v, vId, normal[i], id++, matId));
 		}
 	} else if (v.size() / 6 == numberOfElements) {
 		tri6.reserve(numberOfElements);

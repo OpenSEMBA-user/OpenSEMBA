@@ -3,8 +3,16 @@
 #endif
 
 Element::Element() {
-	matId = 0;
-	id = 0;
+    id = 0;
+    matId = 0;
+    layerId = 0;
+}
+
+Element::Element(
+ const uint idNew, const uint matIdNew, const uint layerIdNew) {
+    id = idNew;
+    matId = matIdNew;
+    layerId = layerIdNew;
 }
 
 Element::~Element() {
@@ -42,6 +50,12 @@ Element::setMatId(const unsigned int newMatId) {
 	matId = newMatId;
 }
 
+void
+Element::printInfo() const {
+    cout<< "Element. Id: " << getId() << " MatId: " << getMatId()
+        << " LayerId: " << getLayerId() << endl;
+}
+
 pair<CVecD3, CVecD3>
 Element::getInfinityBound() const {
 	// Initializes bound.
@@ -77,10 +91,10 @@ Element::getBound() const {
 	return res;
 }
 
-const Coordinate<double, 3>*
+const CoordD3*
 Element::getMinV() const {
 	assert(getV(0) != NULL);
-	const Coordinate<double, 3>*  res = getV(0);
+	const CoordD3*  res = getV(0);
 	for (uint i = 1; i < numberOfVertices(); i++) {
 		for (uint j = 0; j < 3; j++) {
 			double val1 = getV(i)->pos()(j);
@@ -95,10 +109,10 @@ Element::getMinV() const {
 	return res;
 }
 
-const Coordinate<double, 3>*
+const CoordD3*
 Element::getMaxV() const {
 	assert(getV(0) != NULL);
-	const Coordinate<double, 3>*  res = getV(0);
+	const CoordD3*  res = getV(0);
 	for (uint i = 1; i < numberOfVertices(); i++) {
 		for (uint j = 0; j < 3; j++) {
 			double val1 = getV(i)->pos()(j);
@@ -116,10 +130,10 @@ Element::getMaxV() const {
 void
 Element::setV(
  const unsigned int i,
- const Coordinate<double, 3>* constCoordinate) {
-	cout<< "ERROR @ setV for Element: " << endl;
+ const CoordD3* constCoordinate) {
+	cout<< "ERROR @ setV for Element: "
+	    << "Setting coordinates is not allowed for this element: "<<endl;
 	printInfo();
-	cout<< "Setting coordinates is not allowed for this element."<<endl;
 }
 
 bool

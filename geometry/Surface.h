@@ -14,11 +14,15 @@ using namespace std;
 
 class Surface : public Element {
 public:
-	// Normal at the center of the surface.
+    Surface();
+    virtual ~Surface();
+    Surface(
+     const CVecD3& normal_,
+     const uint id_ = 0,
+     const uint matId_ = 0,
+     const uint layerId_ = 0);
 	virtual const Coordinate<double,3>*
 	 getV(const unsigned int i) const = 0;
-	Surface();
-	virtual ~Surface();
 	bool
 	 isContainedInPlane(
 	  const CartesianPlane plane) const;

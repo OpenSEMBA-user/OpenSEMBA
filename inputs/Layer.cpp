@@ -39,3 +39,8 @@ const string&
 Layer::getName() const {
     return name_;
 }
+
+void
+Layer::printInfo() const {
+    cout<< "Layer. Id: " << getId() << " Name: " << getName() << endl;
+}

@@ -15,6 +15,7 @@
 class Volume : public Element {
 public:
 	Volume();
+	Volume(const uint id_, const uint matId_, const uint layerId_);
 	virtual ~Volume();
 	bool isLocalFace(
 	 const unsigned int f,

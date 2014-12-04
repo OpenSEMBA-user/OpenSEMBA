@@ -7,6 +7,10 @@
 class Tri : public Surface {
 public:
 	Tri();
+	Tri(const CVecD3& normal_,
+     const uint id_ = 0,
+     const uint matId_ = 0,
+     const uint layerId_ = 0);
 	virtual ~Tri();
 	bool
 	 isTri() const {return true;}

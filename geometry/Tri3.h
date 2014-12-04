@@ -9,38 +9,37 @@ public:
 	virtual ~Tri3();
 	Tri3(
 	 const CoordinateGroup&,
-     const unsigned int id_,
-     const unsigned int matId_,
-	 const unsigned int vId[3],
-	 const CartesianVector<double,3>& normal_);
+     const uint vId[3],
+	 const CVecD3& normal_,
+	 const uint id_ = 0,
+     const uint matId_ = 0,
+     const uint layerId_ = 0);
 	Tri3(
-	 const unsigned int id_,
-	 const unsigned int matId_,
-	 const Coordinate<double,3>* v_[3],
-	 const CartesianVector<double,3>& normal_);
-	Tri3(
-	 const Coordinate<double,3>* v_[3],
-	 const uint matId = 0);
+	 const CoordD3* v_[3],
+	 const CVecD3 normal_ = CVecD3(),
+	 const uint id = 0,
+	 const uint matId = 0,
+	 const uint layerId = 0);
 	Tri3&
 	 operator=(const Tri3& rhs);
 	bool
 	 isQuadratic() const {return false;}
 	bool
 	 isCurved() const {return false;}
-	unsigned int
+	uint
 	 numberOfCoordinates() const {return 3;}
-	unsigned int
+	uint
 	 numberOfSideCoordinates(const uint f = 0) const {return 2;}
-	const Coordinate<double,3>*
-	 getV(const unsigned int i) const {return v[i];}
+	const CoordD3*
+	 getV(const uint i) const {return v[i];}
 	void
-	 setV(const unsigned int i, const Coordinate<double,3>*);
-	const Coordinate<double,3>*
-	 getVertex(const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideV(const unsigned int face, const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideVertex(const unsigned int face, const unsigned int i) const;
+	 setV(const uint i, const CoordD3*);
+	const CoordD3*
+	 getVertex(const uint i) const;
+	const CoordD3*
+	 getSideV(const uint face, const uint i) const;
+	const CoordD3*
+	 getSideVertex(const uint face, const uint i) const;
 	double
 	 getArea() const;
 	void
@@ -48,10 +47,10 @@ public:
 	  double csdf[SimplexTri<1>::ncp]) const;
 	void
 	 getCubatureNormals(
-	  CartesianVector<double,3> cn[SimplexTri<1>::ncp]) const;
+	  CVecD3 cn[SimplexTri<1>::ncp]) const;
 	void
 	 getCubatureNodes(
-	  CartesianVector<double,3> nodes[SimplexTri<1>::ncp]) const;
+	  CVecD3 nodes[SimplexTri<1>::ncp]) const;
 	Tri3
 	 linearize() const;
 	void
@@ -60,10 +59,10 @@ public:
 	 check() const;
 protected:
 	static const SimplexTri<1> geo;
-	const Coordinate<double,3>* v[3];
+	const CoordD3* v[3];
 	void
 	 getCubatureTangentsVecProds(
-	  CartesianVector<double,3> csTanVecProd[SimplexTri<1>::ncp]) const;
+	  CVecD3 csTanVecProd[SimplexTri<1>::ncp]) const;
 };
 const SimplexTri<1> Tri3::geo;
 

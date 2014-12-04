@@ -11,6 +11,10 @@ Volume::Volume() {
 
 }
 
+Volume::Volume(const uint id_, const uint matId_, const uint layerId_) :
+    Element(id_, matId_, layerId_) {
+}
+
 Volume::~Volume() {
 
 }
@@ -56,3 +60,4 @@ Volume::isLocalFace(
  const unsigned int f, const Surface& surf) const {
 	return sideNormal(f) == surf.getNormal();
 }
+
