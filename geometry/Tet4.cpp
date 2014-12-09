@@ -156,3 +156,40 @@ Tet4::hasZeroVolume() const {
 	}
 	return false;
 }
+
+bool
+Tet4::isInnerPoint(const CVecD3& pos) const {
+    // Checks if point is inside a tetrahedron using the following algorithm:
+    // http://steve.hollasch.net/cgindex/geometry/ptintet.html
+    StaMatrix<double,4,4> mat;
+    // Builds matrix D0.
+    for (uint i = 0; i < 4; i++) {
+        for (uint j = 0; j < 3; j++) {
+            mat(i,j) = getVertex(i)->pos()(j);
+        }
+        mat(i,3) = (double) 1.0;
+    }
+    double det = mat.getDeterminant4x4();
+    assert(det != 0);
+    bool isPositive = (det > (double) 0.0);
+    // Checks rest of matrices. Last column is always 1.0.
+    for (uint k = 0; k < 4; k++) {
+        // Copies pos in row k.
+        for (uint j = 0; j < 3; j++) {
+            mat(k,j) = pos(j);
+        }
+        // Copies rest of vertices.
+        for (uint i = 0; i < 4; i++) {
+            if (i != k) {
+                for (uint j = 0; j < 3; j++) {
+                    mat(i,j) = getVertex(i)->pos()(j);
+                }
+            }
+        }
+        double det = mat.getDeterminant4x4();
+        if ((det > (double) 0.0) != isPositive) {
+            return false;
+        }
+    }
+    return true;
+}

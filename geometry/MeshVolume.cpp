@@ -170,8 +170,6 @@ MeshVolume::printInfo() const {
 	cout << " --- Elements --- " << endl;
 	elem.printInfo();
 	cout << " --- End of elements --- " << endl;
-	cout << " --- Maps --- " << endl;
-	cout << " --- End of Maps --- " << endl;
 	cout << " --- Grid ---" << endl;
 	if (grid_ != NULL) {
 		grid_->printInfo();
@@ -357,7 +355,9 @@ MeshVolume::getIdsOfCurvedTets() const {
 
 
 vector<Tri3>
-MeshVolume::getTriWithMatId(const uint matId) const {
+MeshVolume::getTriWithMatId(
+        const uint matId,
+        const bool ignoreTet) const {
 	vector<Tri3> res;
 	const uint nTri = elem.tri.size();
 	const uint nTet = elem.tet.size();
@@ -376,22 +376,24 @@ MeshVolume::getTriWithMatId(const uint matId) const {
 		}
 	}
 	// --- Runs over tetrahedrons ---------------------------------------------
-	vector<uint> tetIds;
-	tetIds.reserve(nTet);
-	for (uint i = 0; i < nTet; i++) {
-		// Generates list of tetrahedrons ids.
-		if (elem.tet[i]->getMatId() == matId) {
-			tetIds.push_back(elem.tet[i]->getId());
-		}
-	}
-	// Gets internal border of tetrahedron volume.
-	vector<pair<const Tet*, unsigned int> > internalBorder;
-	internalBorder = getInternalBorder(tetIds);
-	// Converts internal border to Tri3.
-	for (uint i = 0; i < internalBorder.size(); i++) {
-		const Tet* tet = internalBorder[i].first;
-		const uint face = internalBorder[i].second;
-		res.push_back(tet->getTri3Face(face));
+	if (!ignoreTet) {
+	    vector<uint> tetIds;
+	    tetIds.reserve(nTet);
+	    for (uint i = 0; i < nTet; i++) {
+	        // Generates list of tetrahedrons ids.
+	        if (elem.tet[i]->getMatId() == matId) {
+	            tetIds.push_back(elem.tet[i]->getId());
+	        }
+	    }
+	    // Gets internal border of tetrahedron volume.
+	    vector<pair<const Tet*, unsigned int> > internalBorder;
+	    internalBorder = getInternalBorder(tetIds);
+	    // Converts internal border to Tri3.
+	    for (uint i = 0; i < internalBorder.size(); i++) {
+	        const Tet* tet = internalBorder[i].first;
+	        const uint face = internalBorder[i].second;
+	        res.push_back(tet->getTri3Face(face));
+	    }
 	}
 	return res;
 }
@@ -422,6 +424,51 @@ MeshVolume::getTetIds(
 		}
 	}
 	return res;
+}
+
+bool
+MeshVolume::isFloatingCoordinate(const CoordD3* param) const {
+	for (uint i = 0; i < elem.element.size(); i++) {
+		for (uint j = 0; j < elem.element[i]->numberOfCoordinates(); j++) {
+			if (*param == *elem.element[i]->getV(j)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+vector<Hex8>
+MeshVolume::getRectilinearHexesInsideRegion(
+        const vector<const Element*>& region) const {
+//    // Only works with tetrahedrons. Non tetrahedrons will not be considered.
+//    vector<const Tet4*> region;
+//    region.reserve(inputRegion.size());
+//    for (uint i = 0; i < inputRegion.size(); i++) {
+//        const Tet4* auxTet = dynamic_cast<const Tet4*>(inputRegion[i]);
+//        if (auxTet != NULL) {
+//            region.push_back(auxTet);
+//        } else {
+//            cerr<< "ERROR @ MeshVolume: "
+//                << "Conversion to rectilinear hexahedrons from non-tets is "
+//                << "not implemented." << endl;
+//        }
+//    }
+    // Determines positions to query.
+    vector<uint> ids = elem.getIds(region);
+    BoundingBox bound(getBound(ids));
+    vector<CVecD3> center = grid_->getCenterOfNaturalCellsInside(bound);
+    // Determines if positions are inside tetrahedrons.
+    vector<Hex8> res;
+    res.reserve(center.size());
+    for (uint i = 0; i < center.size(); i++) {
+        for (uint j = 0; j < region.size(); j++) {
+            if (region[j]->isInnerPoint(center[i])) {
+                // TODO Build hexahedrons.
+            }
+        }
+    }
+    return res;
 }
 
 void
@@ -603,14 +650,3 @@ MeshVolume::checkAreaCoherence() const {
 	return isOk;
 }
 
-bool
-MeshVolume::isFloatingCoordinate(const CoordD3* param) const {
-	for (uint i = 0; i < elem.element.size(); i++) {
-		for (uint j = 0; j < elem.element[i]->numberOfCoordinates(); j++) {
-			if (*param == *elem.element[i]->getV(j)) {
-				return false;
-			}
-		}
-	}
-	return true;
-}

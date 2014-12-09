@@ -62,6 +62,8 @@ protected:
 	string
 	 getFileNameFromProjectPath(
 	  const string projectPath) const;
+	string
+	 boolToStr(const bool param) const;
 	void
 	 abort(int msg) const;
 private:

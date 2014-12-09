@@ -342,6 +342,33 @@ bool RectilinearGrid::hasZeroSize() const {
 	return res;
 }
 
+vector<CVecD3>
+RectilinearGrid::getCenterOfNaturalCellsInside(
+        const BoundingBox& bound) const {
+    // Determines centers of cells.
+    vector<double> center[3];
+    for (uint dir = 0; dir < 3; dir++) {
+        vector<double> pos
+         = getPosInRange(dir, bound.get_min()(dir), bound.get_max()(dir));
+        center[dir].reserve(pos.size()-1);
+        for (uint i = 1; i < pos.size(); i++) {
+            double auxCenter = (pos[i-1] + pos[i]) / 2.0;
+            center[dir].push_back(auxCenter);
+        }
+    }
+    // Combines centers in a vector of positions.
+    vector<CVecD3> res;
+    res.reserve(center[x].size() * center[y].size() * center[z].size());
+    for (uint i = 0; i < center[x].size(); i++) {
+        for (uint j = 0; j < center[y].size(); j++) {
+            for (uint k = 0; k < center[z].size(); k++) {
+                res.push_back(CVecD3(center[x][i], center[y][j], center[z][k]));
+            }
+        }
+    }
+    return res;
+}
+
 vector<double>
 RectilinearGrid::extractRange(
  const vector<double>& vec,

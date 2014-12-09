@@ -41,11 +41,14 @@ public:
 	MeshVolume&
 	 operator=(const MeshVolume& param);
 	vector<Tri3>
-	 getTriWithMatId(const uint matId) const;
+	 getTriWithMatId(const uint matId, const bool ignoreTet = false) const;
 	vector<Tri3>
 	 getTriWithId(const vector<uint>& Id) const;
 	const Element*
 	 getElementWithId(unsigned int id) const;
+	vector<Hex8>
+	 getRectilinearHexesInsideRegion(
+	  const vector<const Element*>& region) const;
 	pair<const Tet*, unsigned int>
 	 getTetWithLocalSurf(const Element*) const;
 	vector<pair<const Tet*, unsigned int> >
@@ -79,7 +82,7 @@ public:
 	vector<unsigned int>
 	 getIdsOfCurvedTets() const;
 	bool
-	 isFloatingCoordinate(const Coordinate<double,3>* coordinate) const;
+	 isFloatingCoordinate(const CoordD3* coordinate) const;
 	virtual void
 	 printInfo() const;
 private:

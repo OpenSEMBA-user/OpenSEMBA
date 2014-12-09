@@ -63,6 +63,8 @@ public:
 	 isFaceContainedInPlane(
 	  const uint face,
 	  const CartesianPlane plane) const;
+    bool
+     isInnerPoint(const CVecD3& pos) const;
 private:
 	static const SimplexTet<1> tet;
 	const CoordD3* v[4];

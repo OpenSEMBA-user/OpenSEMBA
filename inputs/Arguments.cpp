@@ -138,6 +138,15 @@ Arguments::printGoodbyeMessage(
 }
 
 string
+Arguments::boolToStr(const bool param) const {
+    if (param) {
+        return "true";
+    } else {
+        return "false";
+    }
+}
+
+string
 Arguments::removeExtension(const string& fName) const {
     size_t pos = fName.rfind(".");
     if(pos == string::npos)  //No extension.

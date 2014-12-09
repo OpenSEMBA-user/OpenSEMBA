@@ -145,3 +145,11 @@ Element::isCoordinate(const CoordD3* coord) const {
 	}
 	return false;
 }
+
+bool
+Element::isInnerPoint(const CVecD3& pos) const {
+    cerr << "ERROR @ Element: "
+         << "Can't determine inner point for this element." << endl;
+    printInfo();
+    return false;
+}

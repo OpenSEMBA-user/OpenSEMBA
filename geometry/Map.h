@@ -20,7 +20,6 @@ using namespace std;
 	#define MAP_USE_OPENMP
 #endif
 //#define MAP_DO_NOT_BUILD_SURFACE_MAPS
-//#define MAP_USE_OLD_BUILDMAPS
 
 class Map {
 public:
@@ -129,12 +128,6 @@ private:
 	//
 	pair<const Tet*, const Tet*>
 	 getNeighbours(const Tri* param) const;
-#ifdef MAP_USE_OLD_BUILDMAPS
-	void
-	 buildVolumeMaps(const CoordinateGroup& cG, const ElementsGroup& elem);
-	void
-	 buildSurfaceMaps(const ElementsGroup& elem);
-#endif
 	void
 	 buildMaps(
 	  const CoordinateGroup& cG,

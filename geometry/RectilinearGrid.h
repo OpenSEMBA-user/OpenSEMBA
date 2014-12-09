@@ -73,6 +73,8 @@ public:
 	 const int direction,
 	 const double min,
 	 const double max) const;
+	vector<CVecD3>
+	 getCenterOfNaturalCellsInside(const BoundingBox& bound) const;
 
 	inline vector<double> getStepX() const {return step_[x];};
 	inline vector<double> getStepY() const {return step_[y];};

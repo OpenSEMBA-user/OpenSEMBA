@@ -74,6 +74,8 @@ public:
 	 getMinV() const;
 	virtual const CoordD3*
 	 getMaxV() const;
+	virtual bool
+	 isInnerPoint(const CVecD3& pos) const;
 	virtual void
 	 printInfo() const;
 protected:
