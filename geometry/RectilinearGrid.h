@@ -21,7 +21,7 @@
 #include "BoundingBox.h"
 
 #ifdef compileWithVTK
-#include "vtkLittle.h"
+#include "../../utils/ugrMesher/vtkLittle.h"
 #endif
 
 using namespace std;

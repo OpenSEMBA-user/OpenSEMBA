@@ -93,7 +93,7 @@ OutputNFDE::~OutputNFDE() {
 	output.close();
 }
 
-void OutputNFDE::exportNFDE(const string &file) {
+void OutputNFDE::exportNFDE(const string &file, bool outputHeaders) {
 	output.exceptions(ifstream::failbit);
 
 	try {
@@ -119,21 +119,23 @@ void OutputNFDE::exportNFDE(const string &file) {
 	output << "* " << date << endl;
 	output << endl;
    
-   output << "************************* GENERAL **************************";
-   output << endl << endl;
-   exportTimeSteps();
-   
-   output << "*********************** SPACE STEPS ************************";
-   output << endl << endl;
-   exportSpaceSteps();
-   
-   output << "************************ BACKGROUND ************************";
-   output << endl << endl;
-   exportBackground();
-   
-   output << "******************* BOUNDARY CONDITIONS ********************";
-   output << endl << endl;
-   exportBoundaries();
+   if(outputHeaders) {
+      output << "************************* GENERAL **************************";
+      output << endl << endl;
+      exportTimeSteps();
+      
+      output << "*********************** SPACE STEPS ************************";
+      output << endl << endl;
+      exportSpaceSteps();
+      
+      output << "************************ BACKGROUND ************************";
+      output << endl << endl;
+      exportBackground();
+      
+      output << "******************* BOUNDARY CONDITIONS ********************";
+      output << endl << endl;
+      exportBoundaries();
+   }
    
 	if(!nfde->planeWaveSource.empty()) {
 
@@ -436,6 +438,7 @@ void OutputNFDE::exportCurrentDensitySource() {
          output << "!!MAGNE" << endl;
       }
 		output << "!!!2PNT" << endl;
+      output << ent.filename << endl;
 		for(uint j = 0; j < ent.entities.size(); j++)
 			output << toString(ent.entities[j]);
       
@@ -454,6 +457,7 @@ void OutputNFDE::exportFieldSource() {
          output << "!!MAGNE" << endl;
       }
 		output << "!!!2PNT" << endl;
+      output << ent.filename << endl;
 		for(uint j = 0; j < ent.entities.size(); j++)
 			output << toString(ent.entities[j]);
       

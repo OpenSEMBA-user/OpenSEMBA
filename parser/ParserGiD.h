@@ -108,6 +108,8 @@ private:
 	 readGeneratorEMSource();
 	Generator::Type
 	 generatorStrToType(string label) const;
+   Generator::Hardness
+	 generatorStrToHardness(string label) const;
 	GlobalProblemData::boundType
 	 boundStrToType(string label) const;
 	PhysicalModelGroup::Type

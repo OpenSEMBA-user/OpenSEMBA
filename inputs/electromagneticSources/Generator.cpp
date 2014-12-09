@@ -17,11 +17,13 @@ Generator::~Generator() {
 
 Generator::Generator(
  const Type& generatorType_,
+ const Hardness& generatorHardness_,
  const vector<unsigned int>& elem_,
  const double spread_,
  const double delay_,
  const string& filename_) {
 	type = generatorType_;
+   hardness = generatorHardness_;
 	elem = elem_;
 	spread = spread_;
 	delay = delay_;
@@ -46,6 +48,11 @@ Generator::getType() const {
 	return type;
 }
 
+Generator::Hardness
+Generator::getHardness() const {
+	return hardness;
+}
+
 void
 Generator::printInfo() const {
 	cout<< " --- Generator info --- " << endl;
@@ -55,6 +62,7 @@ Generator::printInfo() const {
 	}
 	cout<<endl;
 	cout<< "Type: " << getTypeStr() << endl;
+   cout<< "Hardness: " << getHardnessStr() << endl;
 	printMagnitude();
 }
 
@@ -70,6 +78,23 @@ Generator::getTypeStr() const {
 		break;
 	default:
 		res = "Undefined";
+		break;
+	}
+	return res;
+}
+
+string
+Generator::getHardnessStr() const {
+	string res;
+	switch (type) {
+	case hard:
+		res = "Hard";
+		break;
+	case current:
+		res = "Soft";
+		break;
+	default:
+		res = "Soft";
 		break;
 	}
 	return res;

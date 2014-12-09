@@ -17,9 +17,14 @@ public:
 		current = 2,
 		undefined = 0
 	} Type;
+   typedef enum {
+		hard = 1,
+		soft = 2
+	} Hardness;
 	Generator();
 	Generator(
 	 const Type& generatorType,
+    const Hardness& generatorHardness,
 	 const vector<unsigned int>& elem,
 	 const double spread,
 	 const double delay,
@@ -29,12 +34,17 @@ public:
 	 operator=(const Generator &rhs);
 	Type
 	 getType() const;
+   Hardness
+	 getHardness() const;
 	virtual void
 	 printInfo() const;
 private:
 	Type type;
+   Hardness hardness;
 	string
 	 getTypeStr() const;
+   string
+	 getHardnessStr() const;
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_ */

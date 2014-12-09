@@ -1182,6 +1182,7 @@ ParserGiD::readGeneratorEMSource() {
 	double spread = 0.0;
 	double delay = 0.0;
 	Generator::Type type;
+   Generator::Hardness hardness;
 	vector<uint> elems;
 	string filename;
 	string label, value;
@@ -1189,6 +1190,8 @@ ParserGiD::readGeneratorEMSource() {
  		getNextLabelAndValue(label, value);
 		if (label.compare("Type")==0) {
 			type = generatorStrToType(value);
+		} else if (label.compare("Hardness")==0) {
+			hardness = generatorStrToHardness(value);
 		} else if (label.compare("Gaussian spread")==0) {
 			spread = atof(value.c_str());
 		} else if (label.compare("Gaussian delay")==0) {
@@ -1204,7 +1207,7 @@ ParserGiD::readGeneratorEMSource() {
 				elems.push_back(e);
 			}
 		} else if (label.compare("End of Generator")==0) {
-			return Generator(type, elems, spread, delay, filename);
+			return Generator(type, hardness, elems, spread, delay, filename);
 		}
 	}
 	// Throws error message if ending label was not found.
@@ -1274,6 +1277,20 @@ ParserGiD::generatorStrToType(string str) const {
 		cerr<< "ERROR @ Parser: "
 			<< "Unreckognized generator type." << endl;
 		return Generator::undefined;
+	}
+}
+
+Generator::Hardness
+ParserGiD::generatorStrToHardness(string str) const {
+	str = trim(str);
+	if (str.compare("soft")==0) {
+		return Generator::soft;
+	} else if (str.compare("hard")==0) {
+		return Generator::hard;
+	} else {
+		cerr<< "ERROR @ Parser: "
+			<< "Unreckognized generator hardness." << endl;
+		return Generator::soft;
 	}
 }
 

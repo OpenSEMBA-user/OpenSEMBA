@@ -18,7 +18,7 @@ class OutputNFDE {
 public:
 	OutputNFDE(const NFDEData *nfde);
 	~OutputNFDE();
-	void exportNFDE(const string &filename);
+	void exportNFDE(const string &filename, bool outputHeaders = true);
 private:
 	const NFDEData *nfde;
 	ofstream output;
