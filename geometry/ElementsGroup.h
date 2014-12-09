@@ -61,6 +61,8 @@ public:
 	  const vector<Hex8>& hex);
 	void
 	 reassignPointers(const CoordinateGroup& vNew);
+	vector<uint>
+	 getIds(const vector<const Element*>& list) const;
 	unsigned int
 	 nSurfaceElements() const;
 	unsigned int

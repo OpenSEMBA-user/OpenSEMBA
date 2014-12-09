@@ -369,6 +369,15 @@ RectilinearGrid::getCenterOfNaturalCellsInside(
     return res;
 }
 
+BoundingBox
+RectilinearGrid::getBoundingBoxContaining(
+        const CVecD3& point) const {
+    CVecI3 naturalMin = getNaturalCell(point, false);
+    CVecD3 min = getPositionOfNaturalCell(naturalMin);
+    CVecD3 max = getPositionOfNaturalCell(naturalMin + 1);
+    return BoundingBox(min, max);
+}
+
 vector<double>
 RectilinearGrid::extractRange(
  const vector<double>& vec,
@@ -384,7 +393,3 @@ RectilinearGrid::extractRange(
 	}
 	return res;
 }
-//==============================================================================
-//   Develop: Miguel D. Ruiz - Cabello N. (University of Granada)
-//==============================================================================
-

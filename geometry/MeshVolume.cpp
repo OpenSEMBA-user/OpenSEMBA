@@ -441,19 +441,6 @@ MeshVolume::isFloatingCoordinate(const CoordD3* param) const {
 vector<Hex8>
 MeshVolume::getRectilinearHexesInsideRegion(
         const vector<const Element*>& region) const {
-//    // Only works with tetrahedrons. Non tetrahedrons will not be considered.
-//    vector<const Tet4*> region;
-//    region.reserve(inputRegion.size());
-//    for (uint i = 0; i < inputRegion.size(); i++) {
-//        const Tet4* auxTet = dynamic_cast<const Tet4*>(inputRegion[i]);
-//        if (auxTet != NULL) {
-//            region.push_back(auxTet);
-//        } else {
-//            cerr<< "ERROR @ MeshVolume: "
-//                << "Conversion to rectilinear hexahedrons from non-tets is "
-//                << "not implemented." << endl;
-//        }
-//    }
     // Determines positions to query.
     vector<uint> ids = elem.getIds(region);
     BoundingBox bound(getBound(ids));
@@ -464,7 +451,8 @@ MeshVolume::getRectilinearHexesInsideRegion(
     for (uint i = 0; i < center.size(); i++) {
         for (uint j = 0; j < region.size(); j++) {
             if (region[j]->isInnerPoint(center[i])) {
-                // TODO Build hexahedrons.
+                BoundingBox box = grid_->getBoundingBoxContaining(center[i]);
+                res.push_back(Hex8(v, box.get_min(), box.get_max()));
             }
         }
     }

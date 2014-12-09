@@ -204,33 +204,6 @@ MeshOpenfoam::discretizeWithinBoundary(
 		}
 		assert(zPos[p].size() > 0);
 	}
-//	// Fills the within pairs with new coordinates aligned with the grid.
-//	uint nPos = 0;
-//	for (uint p = 0; p < pairs.size(); p++) {
-//		nPos += zPos[p].size() * 4;
-//	}
-//	DynMatrix<double> pos(nPos, 3);
-//	uint lPos = 0;
-//	for (uint p = 0; p < pairs.size(); p++) {
-//		for (uint i = 0; i < zPos[p].size(); i++) {
-//			// First vertex.
-//			pos(lPos, 0) = box[p].get_min()(0);
-//			pos(lPos, 1) = box[p].get_min()(1);
-//			pos(lPos++, 2) = zPos[p][i];
-//			// Second vertex.
-//			pos(lPos, 0) = box[p].get_min()(0);
-//			pos(lPos, 1) = box[p].get_max()(1);
-//			pos(lPos++, 2) = zPos[p][i];
-//			// Third vertex.
-//			pos(lPos, 0) = box[p].get_max()(0);
-//			pos(lPos, 1) = box[p].get_min()(1);
-//			pos(lPos++, 2) = zPos[p][i];
-//			// Fourth vertex.
-//			pos(lPos, 0) = box[p].get_max()(0);
-//			pos(lPos, 1) = box[p].get_max()(1);
-//			pos(lPos++, 2) = zPos[p][i];
-//		}
-//	}
 	// Fills the space within pairs with hexahedrons aligned with the grid.
 	uint nHex = 0;
 	for (uint p = 0; p < zPos.size(); p++) {

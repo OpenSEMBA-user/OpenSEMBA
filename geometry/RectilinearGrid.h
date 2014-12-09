@@ -89,6 +89,7 @@ public:
 	}
 
 	BoundingBox getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
+	BoundingBox getBoundingBoxContaining(const CVecD3& point) const;
 
 	inline BoundingBox getFullDomainBoundingBox() const {
 		return getBoundingBox(
