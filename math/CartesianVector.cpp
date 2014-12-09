@@ -198,6 +198,17 @@ CartesianVector<T,D>::operator+(
 	}
 	return res;
 }
+
+template <class T, int D>
+CartesianVector<T,D>
+CartesianVector<T,D>::operator+(
+ const T& param) const {
+    CartesianVector<T,D> res;
+    for (register int i = 0; i < D; i++) {
+        res.val[i] = val[i] + param;
+    }
+    return res;
+}
  
 template <class T, int D>
 CartesianVector<T,D>&

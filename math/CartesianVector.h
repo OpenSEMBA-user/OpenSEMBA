@@ -73,6 +73,8 @@ public:
 	 dot(const CartesianVector<T,D>& param) const;
 	virtual CartesianVector<T,D>
 	 operator+(const CartesianVector<T,D>& param) const;
+    virtual CartesianVector<T,D>
+     operator+(const T& param) const;
 	virtual CartesianVector<T,D>&
 	 operator-();
 	virtual CartesianVector<T,D>

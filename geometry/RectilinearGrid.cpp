@@ -374,7 +374,7 @@ RectilinearGrid::getBoundingBoxContaining(
         const CVecD3& point) const {
     CVecI3 naturalMin = getNaturalCell(point, false);
     CVecD3 min = getPositionOfNaturalCell(naturalMin);
-    CVecD3 max = getPositionOfNaturalCell(naturalMin + 1);
+    CVecD3 max = getPositionOfNaturalCell(naturalMin + (long int) 1);
     return BoundingBox(min, max);
 }
 
