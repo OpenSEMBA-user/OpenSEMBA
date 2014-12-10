@@ -159,9 +159,6 @@ Tet4::hasZeroVolume() const {
 
 bool
 Tet4::isInnerPoint(const CVecD3& pos) const {
-    if (!getBound().isInnerPoint(pos)) {
-        return false;
-    }
     // Checks if point is inside a tetrahedron using the following algorithm:
     // http://steve.hollasch.net/cgindex/geometry/ptintet.html
     StaMatrix<double,4,4> mat;

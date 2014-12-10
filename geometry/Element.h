@@ -6,7 +6,6 @@
 #include "../math/MathMatrix.h"
 #include "../math/CartesianVector.h"
 #include "CoordinateGroup.h"
-#include "BoundingBox.h"
 #include <iostream>
 #include <vector>
 
@@ -66,7 +65,7 @@ public:
 	 getVertex(const unsigned int i) const = 0;
 	virtual const CoordD3*
 	 getSideVertex(const unsigned int f, const unsigned int i) const = 0;
-	BoundingBox
+	pair<CVecD3,CVecD3>
 	 getBound() const;
 	bool
 	 isCoordinate(const CoordD3* coord) const;
