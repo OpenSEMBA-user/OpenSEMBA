@@ -15,11 +15,6 @@ Mesh::~Mesh() {
 }
 
 void
-Mesh::addCoordinates(const RectilinearGrid& grid) {
-    v.add(grid.getPos());
-}
-
-void
 Mesh::setMaterialIds(
  const vector<unsigned int>& id,
  const unsigned int newMatId) {

@@ -50,7 +50,7 @@ public:
 	void
 	 applyScalingFactor(const double factor);
 	void
-	 add(const vector<CVecD3>& newPositions, const bool canOverlap = false);
+	 add(const vector<CVecD3>& newPositions);
 	void
 	 add(const CVecD3& newPosition);
 	void

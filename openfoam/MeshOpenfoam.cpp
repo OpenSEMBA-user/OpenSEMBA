@@ -164,7 +164,20 @@ MeshOpenfoam::discretizeWithinBoundary(
 
 void
 MeshOpenfoam::addCoordinates(const RectilinearGrid& grid) {
-	cG_.add(grid.getPos());
+	vector<CVecD3> posVec;
+	CVecI3 sizes(grid.getPosX().size(), grid.getPosY().size(), grid.getPosZ().size());
+	posVec.reserve(sizes(x) * sizes(y) * sizes(z));
+	for (uint i = 0; i < sizes(x); i++) {
+		for (uint j = 0; j < sizes(y); j++) {
+			for (uint k = 0; k < sizes(z); k++) {
+				CVecD3 pos(grid.getPosX()[i], grid.getPosY()[j], grid.getPosZ()[k]);
+				if (cG_.get(pos) == NULL) {
+					posVec.push_back(pos);
+				}
+			}
+		}
+	}
+	cG_.add(posVec);
 }
 
 vector<Hex8>

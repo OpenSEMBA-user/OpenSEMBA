@@ -453,7 +453,6 @@ MeshVolume::getRectilinearHexesInsideRegion(
             if (region[j]->isInnerPoint(center[i])) {
                 BoundingBox box = grid_->getBoundingBoxContaining(center[i]);
                 res.push_back(Hex8(v, box.get_min(), box.get_max()));
-                break;
             }
         }
     }

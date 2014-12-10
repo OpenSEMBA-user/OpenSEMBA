@@ -36,19 +36,15 @@ CoordinateGroup::applyScalingFactor(const double factor) {
 }
 
 void
-CoordinateGroup::add(const vector<CVecD3>& newPos, const bool canOverlap) {
-    uint newId;
+CoordinateGroup::add(const vector<CVecD3>& newPos) {
 	for (uint i = 0; i < newPos.size(); i++) {
-	    if (get(newPos[i]) == NULL || canOverlap) {
-	        if (!coord.empty()) {
-	            newId = coord.rbegin()->first + 1;
-	        } else {
-	            newId = 1;
-	        }
-	        pair<uint,CoordD3*> aux(newId, new CoordD3(newId, newPos[i]));
-	        coord.insert(aux);
-	        index.insert(aux.second);
+	    uint newId = 1;
+	    if (!coord.empty()) {
+	        newId = coord.rbegin()->first + 1;
 	    }
+	    pair<uint,CoordD3*> aux(newId, new CoordD3(newId, newPos[i]));
+		coord.insert(aux);
+		index.insert(aux.second);
 	}
 }
 
