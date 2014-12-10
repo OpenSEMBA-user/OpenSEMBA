@@ -73,6 +73,8 @@ public:
 	 const int direction,
 	 const double min,
 	 const double max) const;
+	vector<CVecD3> getPos() const;
+
 	vector<CVecD3>
 	 getCenterOfNaturalCellsInside(const BoundingBox& bound) const;
 

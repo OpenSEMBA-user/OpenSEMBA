@@ -108,7 +108,6 @@ bool RectilinearGrid::isInto (const CVecD3& pos) const {
 	return true;
 }
 
-//==============================================================================
 bool RectilinearGrid::getNaturalCellx
 		 (const double &posX,long int &i, double &relativeLen) const{
 	return getNaturalCellDir(i, relativeLen, x, posX);
@@ -356,7 +355,7 @@ RectilinearGrid::getCenterOfNaturalCellsInside(
             center[dir].push_back(auxCenter);
         }
     }
-    // Combines centers in a vector of positions.
+    // Combines centers in a vector of CVecD3 positions.
     vector<CVecD3> res;
     res.reserve(center[x].size() * center[y].size() * center[z].size());
     for (uint i = 0; i < center[x].size(); i++) {
@@ -376,6 +375,21 @@ RectilinearGrid::getBoundingBoxContaining(
     CVecD3 min = getPositionOfNaturalCell(naturalMin);
     CVecD3 max = getPositionOfNaturalCell(naturalMin + (long int) 1);
     return BoundingBox(min, max);
+}
+
+vector<CVecD3>
+RectilinearGrid::getPos() const {
+    // Combines positions in a vector of CVecD3 positions.
+    vector<CVecD3> res;
+    res.reserve(pos_[x].size() * pos_[y].size() * pos_[z].size());
+    for (uint i = 0; i < pos_[x].size(); i++) {
+        for (uint j = 0; j < pos_[y].size(); j++) {
+            for (uint k = 0; k < pos_[z].size(); k++) {
+                res.push_back(CVecD3(pos_[x][i], pos_[y][j], pos_[z][k]));
+            }
+        }
+    }
+    return res;
 }
 
 vector<double>
