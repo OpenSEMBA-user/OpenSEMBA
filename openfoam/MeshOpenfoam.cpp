@@ -151,15 +151,11 @@ MeshOpenfoam::getMaterialBoundary(const uint id) const {
 	return res;
 }
 
-vector<Hex8>
+vector<BoundingBox>
 MeshOpenfoam::discretizeWithinBoundary(
  const RectilinearGrid& grid,
  const PhysicalModel* mat) const {
-	vector<Hex8> res = discretizeWithinBoundary(grid, getMaterialBoundary(mat->getId()));
-	for (uint i = 0; i < res.size(); i++) {
-		res[i].setMatId(mat->getId());
-	}
-	return res;
+	return discretizeWithinBoundary(grid, getMaterialBoundary(mat->getId()));
 }
 
 void
@@ -167,7 +163,7 @@ MeshOpenfoam::addCoordinates(const RectilinearGrid& grid) {
 	cG_.add(grid.getPos());
 }
 
-vector<Hex8>
+vector<BoundingBox>
 MeshOpenfoam::discretizeWithinBoundary(
  const RectilinearGrid& grid,
  const vector<const Polygon*>& surf) const {
@@ -196,13 +192,13 @@ MeshOpenfoam::discretizeWithinBoundary(
 	for (uint p = 0; p < zPos.size(); p++) {
 		nHex += zPos[p].size() - 1;
 	}
-	vector<Hex8> res;
+	vector<BoundingBox> res;
 	res.reserve(nHex);
 	for (uint p = 0; p < pairs.size(); p++) {
 		for (uint i = 1; i < zPos[p].size(); i++) {
 			CVecD3 min(box[p].get_min()(0), box[p].get_min()(1), zPos[p][i-1]);
 			CVecD3 max(box[p].get_max()(0), box[p].get_max()(1), zPos[p][i]);
-			res.push_back(Hex8(cG_, min, max));
+			res.push_back(BoundingBox(min, max));
 		}
 	}
 	return res;

@@ -46,7 +46,7 @@ public:
 	 getTriWithId(const vector<uint>& Id) const;
 	const Element*
 	 getElementWithId(unsigned int id) const;
-	vector<Hex8>
+	vector<BoundingBox>
 	 getRectilinearHexesInsideRegion(
 	  const vector<const Element*>& region) const;
 	pair<const Tet*, unsigned int>

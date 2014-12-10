@@ -438,7 +438,7 @@ MeshVolume::isFloatingCoordinate(const CoordD3* param) const {
 	return true;
 }
 
-vector<Hex8>
+vector<BoundingBox>
 MeshVolume::getRectilinearHexesInsideRegion(
         const vector<const Element*>& region) const {
     // Determines positions to query.
@@ -446,13 +446,12 @@ MeshVolume::getRectilinearHexesInsideRegion(
     BoundingBox bound(getBound(ids));
     vector<CVecD3> center = grid_->getCenterOfNaturalCellsInside(bound);
     // Determines if positions are inside tetrahedrons.
-    vector<Hex8> res;
+    vector<BoundingBox> res;
     res.reserve(center.size());
     for (uint i = 0; i < center.size(); i++) {
         for (uint j = 0; j < region.size(); j++) {
             if (region[j]->isInnerPoint(center[i])) {
-                BoundingBox box = grid_->getBoundingBoxContaining(center[i]);
-                res.push_back(Hex8(v, box.get_min(), box.get_max()));
+                res.push_back(grid_->getBoundingBoxContaining(center[i]));
                 break;
             }
         }

@@ -42,7 +42,7 @@ public:
 	 printInfo() const;
 	vector<const Polygon*>
 	 getMaterialBoundary(const uint id) const;
-	vector<Hex8>
+	vector<BoundingBox>
 	 discretizeWithinBoundary(
 	  const RectilinearGrid& grid,
 	  const PhysicalModel* mat) const;
@@ -56,7 +56,7 @@ private:
 	vector<uint> owner_;
 	vector<uint> neighbour_;
 	vector<OpenfoamBoundary> boundary_;
-	vector<Hex8>
+	vector<BoundingBox>
 	discretizeWithinBoundary(
 			const RectilinearGrid& grid,
 			const vector<const Polygon*>& faces) const;
