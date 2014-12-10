@@ -115,7 +115,6 @@ MeshOpenfoam::printInfo() const {
 	cout<< "--- Mesh Openfoam ---" << endl;
 	cG_.printInfo();
 	cout<< "- Number of faces: " << face_.size() << endl;
-//	cout<< "- Number of polyhedrons: " << elem_.size() << endl;
 }
 
 bool
