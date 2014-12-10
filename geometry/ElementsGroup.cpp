@@ -340,3 +340,16 @@ ElementsGroup::getIds(const vector<const Element*>& list) const {
     }
     return res;
 }
+
+vector<const Element*>
+ElementsGroup::getElementsWithMatId(
+        const uint matId) const {
+    vector<const Element*> res;
+    res.reserve(element.size());
+    for (uint i = 0; i < element.size(); i++) {
+        if (element[i]->getMatId() == matId) {
+            res.push_back(element[i]);
+        }
+    }
+    return res;
+}

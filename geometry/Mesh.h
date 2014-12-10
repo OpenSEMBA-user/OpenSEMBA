@@ -28,6 +28,8 @@ public:
 	CoordinateGroup v;
 	ElementsGroup elem;
 	MapGroup map;
+    void
+     addCoordinates(const RectilinearGrid& grid);
 	Mesh();
 	virtual
 	 ~Mesh();

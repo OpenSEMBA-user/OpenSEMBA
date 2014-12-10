@@ -40,6 +40,7 @@ public:
 	bool operator >=   (const BoundingBox &lBoxMin)const;
 	bool operator ==   (const BoundingBox &lBoxMin)const;
 	bool isIntersected (const BoundingBox &lBox)   const;
+	bool isInnerPoint(const CVecD3& point) const;
 	//.....................................................................
 	void operator = (const BoundingBox &lBoxMin);
 	void operator += (const BoundingBox &lBoxSource);

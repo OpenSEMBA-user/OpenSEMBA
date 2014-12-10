@@ -87,7 +87,7 @@ public:
 	 getHexIds() const;
 	void
 	 removeHex();
-	ElementsGroup
+	vector<const Element*>
 	 getElementsWithMatId(
 	  const uint matId) const;
 	ElementsGroup

@@ -67,7 +67,7 @@ Element::getInfinityBound() const {
 	return res;
 }
 
-pair<CVecD3,CVecD3>
+BoundingBox
 Element::getBound() const {
 	// Initializes bound.
 	pair<CVecD3, CVecD3> res = getInfinityBound();
@@ -88,7 +88,7 @@ Element::getBound() const {
 			swap(res.first(j), res.second(j));
 		}
 	}
-	return res;
+	return BoundingBox(res);
 }
 
 const CoordD3*
