@@ -76,7 +76,7 @@ Mesh::getBound(
 	if (list.size() == 0) {
 		return getInfinityBound();
 	}
-	pair<CVecD3,CVecD3> bound = getElementWithId(list[0])->getBound();
+	BoundingBox bound = getElementWithId(list[0])->getBound();
 	// Runs over border computing the bounding box of each face.
 	const unsigned int nK = list.size();
 	for (unsigned int i = 1; i < nK; i++) {
