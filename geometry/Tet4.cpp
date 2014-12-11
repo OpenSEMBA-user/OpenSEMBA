@@ -129,16 +129,6 @@ Tet4::isFaceContainedInPlane(
 	return getTri3Face(face).isContainedInPlane(plane);
 }
 
-Tri3
-Tet4::getTri3Face(const unsigned int f) const {
-	const CoordD3* sideV[3];
-	for (unsigned int i = 0; i < 3; i++) {
-		sideV[i] = getSideV(f,i);
-	}
-	Tri3 auxFace(sideV);
-	return auxFace;
-}
-
 bool
 Tet4::hasZeroVolume() const {
 	bool zeroVolume;

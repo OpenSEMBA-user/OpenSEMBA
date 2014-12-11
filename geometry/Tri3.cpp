@@ -151,7 +151,7 @@ Tri3::check() const {
 void
 Tri3::printInfo() const {
 	cout << "--- Tri3 info ---" << endl;
-	cout << "Id: " << id << "  Mat Id: " << matId << endl;
+	Element::printInfo();
 	cout << "Coordinates:" << endl;
 	for (uint i = 0; i < numberOfCoordinates(); i++) {
 		v[i]->printInfo();

@@ -43,8 +43,6 @@ public:
 	 getVertex(const uint i) const {return v[tet.vertex(i)];}
 	const CoordD3*
 	 getSideVertex(const uint f, const uint i) const;
-	Tri3
-	 getTri3Face(const uint f) const;
 	bool
 	 isCurved() const;
 	bool
