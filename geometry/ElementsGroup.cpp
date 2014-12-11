@@ -353,3 +353,21 @@ ElementsGroup::getElementsWithMatId(
     }
     return res;
 }
+
+map<uint, vector<const Element*> >
+ElementsGroup::separateLayers(vector<const Element*>& el) const {
+    map<uint, vector<const Element*> > res;
+    for (uint i = 0; i < el.size(); i++) {
+        const uint layerId = el[i]->getLayerId();
+        map<uint, vector<const Element*> >::iterator it = res.find(layerId);
+        if (it == res.end()) {
+            pair<uint, vector<const Element*> > newEntry;
+            newEntry.first = layerId;
+            newEntry.second.push_back(el[i]);
+            res.insert(newEntry);
+        } else {
+            it->second.push_back(el[i]);
+        }
+    }
+    return res;
+}

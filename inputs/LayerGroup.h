@@ -20,6 +20,8 @@ public:
     virtual ~LayerGroup();
     virtual void
      add(Layer* layer);
+    virtual const Layer*
+     get(const uint layerId) const;
     virtual void
      printInfo() const;
 private:

@@ -21,6 +21,8 @@ public:
      const uint id_ = 0,
      const uint matId_ = 0,
      const uint layerId_ = 0);
+    Surface&
+     operator=(const Surface& rhs);
 	virtual const Coordinate<double,3>*
 	 getV(const unsigned int i) const = 0;
 	bool

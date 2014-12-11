@@ -24,3 +24,11 @@ Tri::getOrderedVerticesId(unsigned int val[3]) const {
 	ascendingOrder(3, val);
 }
 
+Tri&
+Tri::operator =(const Tri& rhs) {
+    if (&rhs == this) {
+        return *this;
+    }
+    Surface::operator=(rhs);
+    return *this;
+}

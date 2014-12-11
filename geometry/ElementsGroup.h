@@ -9,6 +9,7 @@
 #define ELEMENTSGROUP_H_
 
 #include <vector>
+#include <set>
 #include "Element.h"
 #include "Lin2.h"
 #include "Tri3.h"
@@ -93,6 +94,8 @@ public:
 	ElementsGroup
 	 removeElementsWithMatId(
 	  const uint matId) const;
+	map<uint, vector<const Element*> >
+     separateLayers(vector<const Element*>& elem) const;
 	void
 	 printInfo() const;
 private:

@@ -153,3 +153,14 @@ Element::isInnerPoint(const CVecD3& pos) const {
     printInfo();
     return false;
 }
+
+Element&
+Element::operator =(const Element& rhs) {
+    if (&rhs == this) {
+        return *this;
+    }
+    id = rhs.id;
+    matId = rhs.matId;
+    layerId = rhs.layerId;
+    return *this;
+}

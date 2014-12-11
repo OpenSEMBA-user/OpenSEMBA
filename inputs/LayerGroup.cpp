@@ -27,3 +27,13 @@ LayerGroup::printInfo() const {
     }
     cout<< "--- End of Layers ---" << endl;
 }
+
+const Layer*
+LayerGroup::get(const uint layerId) const {
+    map<uint, const Layer*>::const_iterator it = layers_.find(layerId);
+    if (it != layers_.end()) {
+        return it->second;
+    } else {
+        return NULL;
+    }
+}

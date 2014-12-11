@@ -65,3 +65,12 @@ Surface::isRectangular() const {
 	return true;
 }
 
+Surface&
+Surface::operator =(const Surface& rhs) {
+    if (&rhs == this) {
+        return *this;
+    }
+    Element::operator=(rhs);
+    normal = rhs.normal;
+    return *this;
+}

@@ -14,6 +14,8 @@ public:
 	virtual ~Tri();
 	bool
 	 isTri() const {return true;}
+	Tri&
+	 operator=(const Tri& rhs);
 	void
 	 getOrderedVerticesId(
 	  unsigned int val[3]) const;

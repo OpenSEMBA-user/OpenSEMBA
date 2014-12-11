@@ -28,6 +28,8 @@ public:
 	Element();
 	Element(const uint id, const uint matId, const uint layerId);
 	virtual ~Element();
+    Element&
+     operator=(const Element& rhs);
 	virtual bool
 	 isQuadratic() const {return false;}
 	virtual bool
