@@ -469,7 +469,7 @@ void OutputNFDE::exportIsotropicBody() {
 	for(uint i = 0; i < nfde->isotropicBody.size(); i++) {
 		const NFDEData::IsotropicBody* ent = &nfde->isotropicBody[i];
 		if(!ent->layer.empty() || !ent->name.empty()) {
-			output << "* " << ent->layer << "_" << ent->name << endl;
+			output << "* " << ent->name << "@"<< ent->layer << endl;
 		}
 		output << "!ISOTROPIC BODY" << endl;
 		output << toString(ent->type) << endl;
@@ -490,7 +490,7 @@ void OutputNFDE::exportIsotropicSurf() {
 	for(uint i = 0; i < nfde->isotropicSurf.size(); i++) {
 		const NFDEData::IsotropicSurf* ent = &nfde->isotropicSurf[i];
 		if(!ent->layer.empty() || !ent->name.empty() ) {
-			output << "* " << ent->layer << "_" << ent->name << endl;
+		    output << "* " << ent->name << "@"<< ent->layer << endl;
 		}
 		output << "!ISOTROPIC SURFACE" << endl;
 		output << toString(ent->type) << endl;

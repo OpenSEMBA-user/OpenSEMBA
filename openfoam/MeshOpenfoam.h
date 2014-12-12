@@ -12,6 +12,7 @@
 #include "../../common/geometry/Hex8.h"
 #include "../../common/geometry/RectilinearGrid.h"
 #include "../../common/inputs/physicalModel/PhysicalModel.h"
+#include "../../common/inputs/Layer.h"
 #include "OpenfoamBoundary.h"
 
 typedef pair<uint, vector<uint> > FaceIdentifier;
@@ -41,11 +42,12 @@ public:
 	void
 	 printInfo() const;
 	vector<const Polygon*>
-	 getMaterialBoundary(const uint id) const;
+	 getMaterialBoundary(const uint matId, const uint layId) const;
 	vector<BoundingBox>
 	 discretizeWithinBoundary(
 	  const RectilinearGrid& grid,
-	  const PhysicalModel* mat) const;
+	  const PhysicalModel* mat,
+	  const Layer* lay) const;
 	void
 	 addCoordinates(const RectilinearGrid& grid);
 	void

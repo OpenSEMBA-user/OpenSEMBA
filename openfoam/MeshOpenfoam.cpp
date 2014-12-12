@@ -136,10 +136,14 @@ MeshOpenfoam::isOnBoundary(const CVecD3 pos) const {
 }
 
 vector<const Polygon*>
-MeshOpenfoam::getMaterialBoundary(const uint id) const {
+MeshOpenfoam::getMaterialBoundary(
+        const uint matId,
+        const uint layId) const {
 	vector<const Polygon*> res;
 	for (uint i = 0; i < boundary_.size(); i++) {
-		if (boundary_[i].isMaterial() && boundary_[i].getMaterialId() == id) {
+		if (boundary_[i].isMaterial()
+		        && boundary_[i].getMaterialId() == matId
+		        && boundary_[i].getLayerId() == layId) {
 			res.reserve(boundary_[i].getFaces());
 			for (uint j = 0; j < boundary_[i].getFaces(); j++) {
 				uint id = j + boundary_[i].getStartFace();
@@ -153,8 +157,10 @@ MeshOpenfoam::getMaterialBoundary(const uint id) const {
 vector<BoundingBox>
 MeshOpenfoam::discretizeWithinBoundary(
  const RectilinearGrid& grid,
- const PhysicalModel* mat) const {
-	return discretizeWithinBoundary(grid, getMaterialBoundary(mat->getId()));
+ const PhysicalModel* mat,
+ const Layer* lay) const {
+	return discretizeWithinBoundary(grid,
+	        getMaterialBoundary(mat->getId(), lay->getId()));
 }
 
 void

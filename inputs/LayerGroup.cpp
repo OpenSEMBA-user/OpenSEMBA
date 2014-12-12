@@ -37,3 +37,13 @@ LayerGroup::get(const uint layerId) const {
         return NULL;
     }
 }
+
+vector<uint>
+LayerGroup::getIds() const {
+    vector<uint> res;
+    map<uint, const Layer*>::const_iterator it;
+    for (it=layers_.begin(); it != layers_.end(); ++it) {
+        res.push_back(it->first);
+    }
+    return res;
+}

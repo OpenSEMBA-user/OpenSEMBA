@@ -22,6 +22,8 @@ public:
      add(Layer* layer);
     virtual const Layer*
      get(const uint layerId) const;
+    virtual vector<uint>
+     getIds() const;
     virtual void
      printInfo() const;
 private:

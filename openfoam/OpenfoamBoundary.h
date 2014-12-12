@@ -9,6 +9,7 @@
 #define OPENFOAMBOUNDARY_H_
 
 #include <string>
+#include <cstring>
 #include <stdlib.h>
 #include <iostream>
 #include <assert.h>
@@ -42,12 +43,16 @@ public:
 	 isOutputRequest() const;
 	uint
 	 getMaterialId() const;
+    uint
+     getLayerId() const;
 	uint
 	 getOutputRequestId() const;
 private:
 	string name_;
 	uint id_;
 	uint nFaces_, startFace_;
+	int
+	 strpos(const char *haystack, char *needle, int nth) const;
 };
 
 #endif /* OPENFOAMBOUNDARY_H_ */
