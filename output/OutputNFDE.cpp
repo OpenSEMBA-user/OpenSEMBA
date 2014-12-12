@@ -268,9 +268,11 @@ void OutputNFDE::exportSpaceSteps() {
 		output << nfde->spacesteps[d].origin << endl;
 		output << nfde->spacesteps[d].m << space << nfde->spacesteps[d].n << endl;
 		output << nfde->spacesteps[d].d[0] << endl;
-		if(!nfde->spacesteps[d].cons)
-			for(int i = 1; i < nfde->spacesteps[d].n-nfde->spacesteps[d].m; i++)
+		if (!nfde->spacesteps[d].cons) {
+			for (uint i = 1; i < nfde->spacesteps[d].d.size(); i++) {
 				output << nfde->spacesteps[d].d[i] << endl;
+			}
+		}
 	}
 	output << endl;
 }
