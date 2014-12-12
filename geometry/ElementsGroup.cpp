@@ -354,6 +354,20 @@ ElementsGroup::getElementsWithMatId(
     return res;
 }
 
+vector<const Element*>
+ElementsGroup::getElementsWithMatLayId(
+        const uint matId, const uint layId) const {
+    vector<const Element*> res;
+    res.reserve(element.size());
+    for (uint i = 0; i < element.size(); i++) {
+        if ((element[i]->getMatId() == matId)
+         && (element[i]->getLayerId() == layId)) {
+            res.push_back(element[i]);
+        }
+    }
+    return res;
+}
+
 map<uint, vector<const Element*> >
 ElementsGroup::separateLayers(vector<const Element*>& el) const {
     map<uint, vector<const Element*> > res;

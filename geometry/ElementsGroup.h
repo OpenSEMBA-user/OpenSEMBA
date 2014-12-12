@@ -91,6 +91,9 @@ public:
 	vector<const Element*>
 	 getElementsWithMatId(
 	  const uint matId) const;
+	vector<const Element*>
+	 getElementsWithMatLayId(
+	  const uint matId, const uint layId) const;
 	ElementsGroup
 	 removeElementsWithMatId(
 	  const uint matId) const;
