@@ -156,3 +156,10 @@ EMSourceGroup::getWithType(
 	assert(false);
 	return NULL;
 }
+
+void
+EMSourceGroup::applyGeometricScalingFactor(const double factor) {
+    for (uint i = 0; i < countPlaneWaves(); i++) {
+        planeWave[i].bound.scale(factor);
+    }
+}

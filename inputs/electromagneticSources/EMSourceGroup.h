@@ -50,6 +50,8 @@ public:
 	 countWithType(const Element::Type type) const;
 	const EMSource*
 	 getWithType(const uint i, const Element::Type type) const;
+    void
+     applyGeometricScalingFactor(const double factor);
 	void
 	 printInfo() const;
 private:

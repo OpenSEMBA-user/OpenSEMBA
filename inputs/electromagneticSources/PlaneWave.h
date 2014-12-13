@@ -12,6 +12,7 @@
 
 class PlaneWave : public EMSource {
 public:
+    BoundingBox bound;
 	PlaneWave(
 	 vector<unsigned int> elem,
 	 CVecD3 waveDirection,
@@ -47,7 +48,7 @@ private:
 	CVecD3 waveDirection;
 	CVecD3 polarization;
 	bool usingBound;
-	BoundingBox bound;
+
 	double spreadSqrt2;
 	void
 	init(

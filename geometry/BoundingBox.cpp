@@ -104,4 +104,10 @@ BoundingBox::isInnerPoint(const CVecD3& point) const {
     }
     return isInner;
 }
+
+void
+BoundingBox::scale(const double factor) {
+    minMax_.first *= factor;
+    minMax_.second *= factor;
+}
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

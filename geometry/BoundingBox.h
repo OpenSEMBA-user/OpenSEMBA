@@ -33,6 +33,7 @@ public:
 	~BoundingBox() {};
 	//.....................................................................
 	void set(const pair<CVecD3,CVecD3>& boundsMinMax);
+	void scale(const double factor);
 	//.....................................................................
 	bool operator >    (const BoundingBox &lBoxMin)const;
 	bool operator <    (const BoundingBox &lBoxMax)const;

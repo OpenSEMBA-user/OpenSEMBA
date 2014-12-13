@@ -164,5 +164,6 @@ void
 SmbData::applyGeometricScalingFactor() {
 	mesh->applyGeometricScalingFactor(gData->scalingFactor);
 	outputRequests->applyGeometricScalingFactor(gData->scalingFactor);
+	emSources->applyGeometricScalingFactor(gData->scalingFactor);
 	gData->scalingFactor = (double) 1.0;
 }
