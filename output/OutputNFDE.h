@@ -51,6 +51,9 @@ private:
 	void exportNewProbe();
 	void exportBulkProbes();
 	void exportSliceProbes();
+
+	string
+	 probeName(const string& name, const string& layer, const bool log = false) const;
 };
 
 #endif /* OUTPUTNFDE_H_ */

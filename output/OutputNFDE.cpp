@@ -855,10 +855,7 @@ void OutputNFDE::exportTraditionalProbe() {
 		const NFDEData::TraditionalProbe* ent = &nfde->traditionalProbe[i];
 		output << "!PROBE" << endl;
 		output << "!!FF" << endl;
-		output << "* " << ent->layer;
-      if(ent->log)
-         output << "_log_";
-      output << endl;
+		output << "* " << probeName(ent->name, ent->layer, ent->log) << endl;
 		output << ent->thStart << " " << ent->thEnd << " " << ent->thStep << endl;
 		output << ent->phStart << " " << ent->phEnd << " " << ent->phStep << endl;
 		output << ent->filename << endl;
@@ -866,127 +863,117 @@ void OutputNFDE::exportTraditionalProbe() {
 	}
 }
 void OutputNFDE::exportNewProbe() {
-	for(uint i = 0; i < nfde->newProbe.size(); i++) {
-      if(!nfde->newProbe[i].layer.empty()) {
-         output << "* " << nfde->newProbe[i].layer;
-         if(nfde->newProbe[i].log)
-            output << "_log_";
-         output << endl;
-      }
-		bool time = false;
-		bool freq = false;
-		bool tran = false;
+    for(uint i = 0; i < nfde->newProbe.size(); i++) {
+        const NFDEData::NewProbe* ent = &nfde->newProbe[i];
+        output << "* " << probeName(ent->name, ent->layer, ent->log) << endl;
+        bool time = false;
+        bool freq = false;
+        bool tran = false;
+        output << "!NEW PROBE" << endl;
+        output << "!!NUMER" << endl;
 
-		output << "!NEW PROBE" << endl;
-      output << "!!NUMER" << endl;
+        switch(ent->domain) {
+        case NFDEData::NewProbe::DomainTypes::TIME:
+            output << "!!!TIME" << endl;
+            time = true;
+            break;
+        case NFDEData::NewProbe::DomainTypes::FREQ:
+            output << "!!!FREQ" << endl;
+            freq = true;
+            break;
+        case NFDEData::NewProbe::DomainTypes::TRAN:
+            output << "!!!TRAN" << endl;
+            freq = true;
+            tran = true;
+            break;
+        case NFDEData::NewProbe::DomainTypes::TIFR:
+            output << "!!!TIFR" << endl;
+            time = true;
+            freq = true;
+            break;
+        case NFDEData::NewProbe::DomainTypes::TITR:
+            output << "!!!TITR" << endl;
+            time = true;
+            freq = true;
+            break;
+        case NFDEData::NewProbe::DomainTypes::FRTR:
+            output << "!!!FRTR" << endl;
+            freq = true;
+            break;
+        case NFDEData::NewProbe::DomainTypes::ALL:
+            output << "!!!ALL" << endl;
+            time = true;
+            freq = true;
+            break;
+        default:
+            output << "!!!TIME" << endl;
+            time = true;
+            break;
+        }
 
-		switch(nfde->newProbe[i].domain) {
-		case NFDEData::NewProbe::DomainTypes::TIME:
-			output << "!!!TIME" << endl;
-			time = true;
-			break;
-		case NFDEData::NewProbe::DomainTypes::FREQ:
-			output << "!!!FREQ" << endl;
-			freq = true;
-			break;
-		case NFDEData::NewProbe::DomainTypes::TRAN:
-			output << "!!!TRAN" << endl;
-			freq = true;
-			tran = true;
-			break;
-		case NFDEData::NewProbe::DomainTypes::TIFR:
-			output << "!!!TIFR" << endl;
-			time = true;
-			freq = true;
-			break;
-		case NFDEData::NewProbe::DomainTypes::TITR:
-			output << "!!!TITR" << endl;
-			time = true;
-			freq = true;
-			break;
-		case NFDEData::NewProbe::DomainTypes::FRTR:
-			output << "!!!FRTR" << endl;
-			freq = true;
-			break;
-		case NFDEData::NewProbe::DomainTypes::ALL:
-			output << "!!!ALL" << endl;
-			time = true;
-			freq = true;
-			break;
-		default:
-			output << "!!!TIME" << endl;
-			time = true;
-			break;
-		}
+        if(time) {
+            output << ent->tstart << space
+                    << ent->tstop << space
+                    << ent->tstep << endl;
+        }
 
-		if(time) {
-			output << nfde->newProbe[i].tstart << space
-			 	 	 << nfde->newProbe[i].tstop << space
-			 	 	 << nfde->newProbe[i].tstep << endl;
-		}
+        if(freq) {
+            output << ent->fstart << space
+                    << ent->fstop << space
+                    << ent->fstep << endl;
+        }
 
-		if(freq) {
-			output << nfde->newProbe[i].fstart << space
-			 	 	 << nfde->newProbe[i].fstop << space
-			 	 	 << nfde->newProbe[i].fstep << endl;
-		}
+        if(tran) {
+            output << ent->filename << endl;
+        }
+        for(uint j = 0; j < ent->probes.size(); j++) {
+            switch(ent->probes[j].type) {
+            case NFDEData::NewProbe::Coords::Types::EX:
+                output << "EX";
+                break;
+            case NFDEData::NewProbe::Coords::Types::EY:
+                output << "EY";
+                break;
+            case NFDEData::NewProbe::Coords::Types::EZ:
+                output << "EZ";
+                break;
+            case NFDEData::NewProbe::Coords::Types::HX:
+                output << "HX";
+                break;
+            case NFDEData::NewProbe::Coords::Types::HY:
+                output << "HY";
+                break;
+            case NFDEData::NewProbe::Coords::Types::HZ:
+                output << "HZ";
+                break;
+            case NFDEData::NewProbe::Coords::Types::IW:
+                output << "IW";
+                break;
+            case NFDEData::NewProbe::Coords::Types::VG:
+                output << "VG";
+                break;
+            default:
+                output << "EX";
+                break;
+            }
 
-		if(tran)
-			output << nfde->newProbe[i].filename << endl;
-
-		for(uint j = 0; j < nfde->newProbe[i].probes.size(); j++) {
-			switch(nfde->newProbe[i].probes[j].type) {
-			case NFDEData::NewProbe::Coords::Types::EX:
-				output << "EX";
-				break;
-			case NFDEData::NewProbe::Coords::Types::EY:
-				output << "EY";
-				break;
-			case NFDEData::NewProbe::Coords::Types::EZ:
-				output << "EZ";
-				break;
-			case NFDEData::NewProbe::Coords::Types::HX:
-				output << "HX";
-				break;
-			case NFDEData::NewProbe::Coords::Types::HY:
-				output << "HY";
-				break;
-			case NFDEData::NewProbe::Coords::Types::HZ:
-				output << "HZ";
-				break;
-			case NFDEData::NewProbe::Coords::Types::IW:
-				output << "IW";
-				break;
-			case NFDEData::NewProbe::Coords::Types::VG:
-				output << "VG";
-				break;
-			default:
-				output << "EX";
-				break;
-			}
-
-			output << space << toString(nfde->newProbe[i].probes[j].coords) << endl;
-		}
-      output << endl;
-	}
+            output << space << toString(ent->probes[j].coords) << endl;
+        }
+        output << endl;
+    }
 }
 void OutputNFDE::exportBulkProbes() {
 	for(uint i = 0; i < nfde->bulkProbe.size(); i++) {
 		const NFDEData::BulkProbe* ent = &nfde->bulkProbe[i];
-      if(ent->layer.empty()) {
-         output << "* " << ent->layer;
-         if(ent->log)
-            output << "_log_";
-         output << endl;
-      }
+		output << "* " << probeName(ent->name, ent->layer, ent->log) << endl;
 		output << "!BULK CURRENT PROBE" << endl;
 		switch (ent->type) {
 		case NFDEData::BulkProbe::Types::ELECT:
-			output << "!!ELECT" << endl;
-			break;
+		    output << "!!ELECT" << endl;
+		    break;
 		case NFDEData::BulkProbe::Types::MAGNE:
-			output << "!!MAGNE" << endl;
-			break;
+		    output << "!!MAGNE" << endl;
+		    break;
 		default:
 			cerr<< "ERROR @ exportBulkProbe: "
 				 << "Undefined type." << endl;
@@ -1001,13 +988,8 @@ void OutputNFDE::exportBulkProbes() {
 void OutputNFDE::exportSliceProbes() {
 	for(uint i = 0; i < nfde->sliceProbe.size(); i++) {
 		const NFDEData::SliceProbe* ent = &nfde->sliceProbe[i];
-      if(ent->layer.empty()) {
-         output << "* " << ent->layer;
-         if(ent->log)
-            output << "_log_";
-         output << endl;
-      }
-		output << "!SLICE PROBE" << endl;
+		output << "* " << probeName(ent->name, ent->layer, ent->log) << endl;
+      output << "!SLICE PROBE" << endl;
 		switch (ent->field) {
 		case NFDEData::SliceProbe::FieldTypes::BC:
 			output << "!!BC" << endl;
@@ -1078,4 +1060,16 @@ void OutputNFDE::exportSliceProbes() {
 		output << "CUTAWAY" << endl;
 		output << toString1PNT(ent->region) << endl;
 	}
+}
+
+string
+OutputNFDE::probeName(const string& name, const string& layer, const bool log) const {
+    string res = name;
+    if (!layer.empty()) {
+        res += "@" + layer;
+    }
+    if (log) {
+        res += "_log_";
+    }
+    return res;
 }

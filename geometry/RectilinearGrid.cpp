@@ -131,8 +131,8 @@ bool RectilinearGrid::getNaturalCellDir(
 		return false;
 	}
 	assert(pos_[dir].size() >= 1);
-	for (uint i = 1; i < pos_[dir].size(); i++) {
-		if (abs(getPos(dir)[i] - xyz) < tolerance) {
+	for (uint i = 1; i < pos_[dir].size() - 1; i++) {
+        if (abs(getPos(dir)[i] - xyz) < tolerance) {
 			ijk = i+offsetGrid_(dir);
 			relativeLen = 0.0;
 			return true;
@@ -143,10 +143,10 @@ bool RectilinearGrid::getNaturalCellDir(
 			relativeLen = (xyz - pos) / step;
 			return true;
 		}
-		if (i == pos_[dir].size()-1) {
-			ijk = getPos(dir).size() - 1 + offsetGrid_(dir);
-			return false;
-		}
+	}
+	if (abs(pos_[dir].back() - xyz) < tolerance) {
+	    ijk = getPos(dir).size() - 2 + offsetGrid_(dir);
+	    return true;
 	}
 	return true;
 }
@@ -157,24 +157,32 @@ RectilinearGrid::getNaturalCellPair(
 		const CVecD3& xyz,
 		const bool approx) const {
 	pair<CVecI3, CVecD3> res;
-	if(!getNaturalCellx(xyz(x), res.first(x), res.second(x))) {
-		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
+	for (int dir = 0; dir < 3; dir++) {
+	    if(!getNaturalCellDir(res.first(dir), res.second(dir), dir, xyz(dir))) {
+	        return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
+	    }
+	    if(res.second(dir) > 0.5 && approx) {
+	        res.first(dir)++;
+	    }
 	}
-	if(res.second(x) > 0.5 && approx) {
-		res.first(x)++;
-	}
-	if(!getNaturalCelly(xyz(y), res.first(y), res.second(y))) {
-		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
-	}
-	if(res.second(y) > 0.5 && approx) {
-		res.first(y)++;
-	}
-	if(!getNaturalCellz(xyz(z), res.first(z), res.second(z))) {
-		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
-	}
-	if(res.second(z) > 0.5 && approx) {
-		res.first(z)++;
-	}
+//	if(!getNaturalCellx(xyz(x), res.first(x), res.second(x))) {
+//		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
+//	}
+//	if(res.second(x) > 0.5 && approx) {
+//		res.first(x)++;
+//	}
+//	if(!getNaturalCelly(xyz(y), res.first(y), res.second(y))) {
+//		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
+//	}
+//	if(res.second(y) > 0.5 && approx) {
+//		res.first(y)++;
+//	}
+//	if(!getNaturalCellz(xyz(z), res.first(z), res.second(z))) {
+//		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
+//	}
+//	if(res.second(z) > 0.5 && approx) {
+//		res.first(z)++;
+//	}
 	return res;
 }
 
