@@ -68,7 +68,7 @@ string toString2PNT(const NFDEData::CoordsDir coord, int skip = 0) {
       break;
    }
 	if (skip != 0) {
-		res << skip;
+		res << " " << skip;
 	}
 	res << endl;
 	res << toString(coord.coords.second) << endl;
