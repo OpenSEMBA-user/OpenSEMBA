@@ -39,6 +39,8 @@ public:
 	GlobalProblemData&
 	 operator=(const GlobalProblemData& rhs);
 	void
+	 applyGeometricScalingFactor(const double& factor);
+	void
 	 printInfo() const;
 private:
 	void

@@ -35,10 +35,10 @@ RectilinearGrid::RectilinearGrid(
 	    if ((boxLength - nCells * dxyz(i)) > tolerance) {
 	        nCells++;
 	    }
-		pos_[i].resize(nCells + 8);
-		step_[i].resize(nCells + 8, dxyz(i));
+		pos_[i].resize(nCells + 1);
+		step_[i].resize(nCells, dxyz(i));
 	}
-	origin_ = boundingBox.get_min() - dxyz * 4.0;
+	origin_ = boundingBox.get_min();
 	offsetGrid_ = CVecI3(0, 0, 0);
 	generatePositionsGrid();
 }
@@ -361,7 +361,9 @@ RectilinearGrid::getCenterOfNaturalCellsInside(
     for (uint dir = 0; dir < 3; dir++) {
         vector<double> pos
          = getPosInRange(dir, bound.get_min()(dir), bound.get_max()(dir));
-        center[dir].reserve(pos.size()-1);
+        if (pos.size() > 0) {
+            center[dir].reserve(pos.size()-1);
+        }
         for (uint i = 1; i < pos.size(); i++) {
             double auxCenter = (pos[i-1] + pos[i]) / 2.0;
             center[dir].push_back(auxCenter);
