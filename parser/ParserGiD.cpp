@@ -899,6 +899,7 @@ void
 ParserGiD::getNextLabelAndValue(string& label, string& value) {
 	string line;
 	getline(f_in, line);
+	line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
 	label = line.substr(0, line.find(LABEL_ENDING));
 	value = line.substr(line.find(LABEL_ENDING) + 1, line.length());
 }
