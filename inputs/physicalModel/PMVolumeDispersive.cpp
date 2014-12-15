@@ -63,6 +63,11 @@ PMVolumeDispersive::PMVolumeDispersive(
 	check();
 }
 
+bool
+PMVolumeDispersive::isSimplyConductive() const {
+    return (pole.size() <= 1 && std::abs(getPole(0)) == 0);
+}
+
 PMVolumeDispersive&
 PMVolumeDispersive::operator=(
  const PMVolumeDispersive &param) {
@@ -92,9 +97,9 @@ PMVolumeDispersive::printInfo() const {
 	cout << "Rel. permeability @ inft freq: " << rPermeability << endl;
 	cout << "Impedance: " << impedance << endl;
 	cout << "Admitance: " << admitance << endl;
-	cout << "Number of pole residue pairs: " << getPoleNumber() << endl;
+	cout << "Number of pole residue pairs: " << pole.size() << endl;
 	cout << "# " << " re_a " << " im_a " << " re_c " << " im_c " << endl;
-	for (unsigned int i = 0; i < getPoleNumber(); i++) {
+	for (unsigned int i = 0; i < pole.size(); i++) {
 		cout << i << " " << pole[i].real() << " " << pole[i].imag()
 		 << " " << residue[i].real()
 		 << " " << residue[i].imag() << endl;
@@ -126,19 +131,17 @@ PMVolumeDispersive::check() const {
 
 double
 PMVolumeDispersive::getElectricConductivity() const {
-	if (getNumberOfPoles() > 1) {
+	if (pole.size() > 1) {
 		cerr<< "WARNING @ getElectricConductivity: "
 			<< "This material is dispersive and its effective permittivity "
 			<< "depends on several parameters."
 			<< "Returning static limit conductivity." << endl;
 	}
-	for (uint i = 0; i < getNumberOfPoles(); i++) {
+	for (uint i = 0; i < pole.size(); i++) {
 		if (std::abs(getPole(i)) == 0) {
 			return getResidue(i).real() * 2.0 * eps0;
 		}
 	}
-	cerr<< "WARNING @ getElectricConductivity: "
-		<< "None of the pole/residues is in the static limit." << endl;
 	return 0.0;
 }
 void

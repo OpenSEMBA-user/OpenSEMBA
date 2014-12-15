@@ -42,7 +42,9 @@ public:
 	//··· constructors ·························································
 	RectilinearGrid();
 	RectilinearGrid(const RectilinearGrid& grid);
-	RectilinearGrid(const BoundingBox &boundingBox, const CVecD3& dxyz);
+	RectilinearGrid(
+	        const BoundingBox &boundingBox,
+	        const CVecD3& dxyz);
 	RectilinearGrid(const BoundingBox &boundingBox, const CVecI3& dims);
    RectilinearGrid(const CVecI3& offset,
                    const CVecD3& origin,

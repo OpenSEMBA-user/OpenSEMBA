@@ -42,9 +42,17 @@ public:
 	virtual bool
 	 isVolumic() const {return true;}
 	virtual bool
+	 isClassic() const {
+	    return true;
+	}
+	virtual bool
 	 isDispersive() const {
 		return false;
 	 }
+	virtual bool
+	 isSimplyConductive() const {
+	    return false;
+	}
 	virtual void
 	 printInfo() const;
 protected:

@@ -26,12 +26,6 @@ public:
 	 getId() const {return id_;}
 	const string&
 	 getName() const;
-	virtual unsigned int
-	 getNumberOfPoles() const {return 0;}
-	virtual complex<double>
-	 getPole(unsigned int p) const;
-	virtual complex<double>
-	 getResidue(unsigned int p) const;
 	virtual double
 	 getImpedance() const;
 	virtual double

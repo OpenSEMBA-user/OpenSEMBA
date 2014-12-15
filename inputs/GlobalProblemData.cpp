@@ -108,3 +108,11 @@ GlobalProblemData::printBoundType(
 		break;
 	}
 }
+
+void
+GlobalProblemData::applyGeometricScalingFactor(const double& factor) {
+    boundaryPadding.first *= factor;
+    boundaryPadding.second *= factor;
+    boundaryMeshSize.first *= factor;
+    boundaryMeshSize.second *= factor;
+}

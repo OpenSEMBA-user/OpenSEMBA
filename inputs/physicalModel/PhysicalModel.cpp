@@ -16,20 +16,6 @@ const string&
 PhysicalModel::getName() const {
 	return name_;
 }
-
-complex<double>
-PhysicalModel::getPole(unsigned int p) const {
-	cerr << "ERROR @ PhysicalModel::getPole" << endl;
-	printInfo();
-	exit(PHYSICALMODEL_ERROR);
-}
-
-complex<double>
-PhysicalModel::getResidue(unsigned int p) const {
-	cerr << "ERROR @ PhysicalModel::getResidue" << endl;
-	printInfo();
-	exit(PHYSICALMODEL_ERROR);
-}
  
 double
 PhysicalModel::getImpedance() const {

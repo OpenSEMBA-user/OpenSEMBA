@@ -899,6 +899,7 @@ void
 ParserGiD::getNextLabelAndValue(string& label, string& value) {
 	string line;
 	getline(f_in, line);
+	line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
 	label = line.substr(0, line.find(LABEL_ENDING));
 	value = line.substr(line.find(LABEL_ENDING) + 1, line.length());
 }
@@ -911,8 +912,9 @@ ParserGiD::readCartesianGrid() {
 	bool gridFound = false;
 	RectilinearGrid* grid = NULL;
 	BoundingBox bound;
-	bool sizesByNumberOfCells = true;
-	CartesianVector<long,3> numElems;
+	bool stepsByNumberOfCells = true;
+	CVecI3 numElems;
+	CVecD3 steps;
 	while (!gridLabelFound && !f_in.eof()) {
 		getline(f_in, line);
 		if (line.find("Grid:") != line.npos ) {
@@ -924,20 +926,18 @@ ParserGiD::readCartesianGrid() {
 					bound = BoundingBox(readBoundFromStr(value));
 				} else if (label.compare("Type")==0) {
 					if (trim(value).compare("by_number_of_cells")==0) {
-						sizesByNumberOfCells = true;
+						stepsByNumberOfCells = true;
 					} else {
-						sizesByNumberOfCells = false;
+						stepsByNumberOfCells = false;
 					}
 				} else if (label.compare("Directions")==0) {
 					CVecD3 aux = strToCartesianVector(value);
-					if (sizesByNumberOfCells) {
+					if (stepsByNumberOfCells) {
 						numElems(0) = (long) aux(0);
 						numElems(1) = (long) aux(1);
 						numElems(2) = (long) aux(2);
 					} else {
-						numElems(0) = (long) (bound.getLength()(0) / aux(0));
-						numElems(1) = (long) (bound.getLength()(1) / aux(1));
-						numElems(2) = (long) (bound.getLength()(2) / aux(2));
+					    steps = aux;
 					}
 				} else if(label.find("End of Grid") != label.npos) {
 					finished = true;
@@ -960,7 +960,11 @@ ParserGiD::readCartesianGrid() {
 		exit(INPUT_ERROR);
 	}
 	if (gridFound) {
-		grid = new RectilinearGrid(bound, numElems.val);
+	    if (stepsByNumberOfCells) {
+		    grid = new RectilinearGrid(bound, numElems);
+	    } else {
+	        grid = new RectilinearGrid(bound, steps);
+	    }
 	} else {
 		grid = NULL;
 	}
@@ -981,15 +985,17 @@ ParserGiD::readPlaneWaveEMSource() {
 		getNextLabelAndValue(label, value);
 		if (label.compare("Direction")==0) {
 			waveDirection = strToCartesianVector(value);
-		} else if (label.compare("Polarization")==0) {
+		} else if (label.compare("Polarization") == 0) {
 			polarization = strToCartesianVector(value);
-		} else if (label.compare("Gaussian spread")==0) {
+//		} else if (label.compare("Excitation") == 0) {
+//		    Magnitude magnitude = readMagnitude(); TODO: Read and write magnitudes.
+		} else if (label.compare("Gaussian spread") == 0) {
 			spread = atof(value.c_str());
-		} else if (label.compare("Gaussian delay")==0) {
+		} else if (label.compare("Gaussian delay") == 0) {
 			delay = atof(value.c_str());
-		} else if (label.compare("Filename")==0) {
+		} else if (label.compare("Filename") == 0) {
 			filename = trim(value);
-		} else if (label.compare("Layer Box")==0) {
+		} else if (label.compare("Layer Box") == 0) {
 			bound = readBoundFromStr(value);
 		} else if (label.compare("Number of elements")==0) {
 			isDefinedOnLayer = false;

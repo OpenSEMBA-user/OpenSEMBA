@@ -39,8 +39,6 @@ public:
 	 operator=(const PMVolumeDispersive &param);
 //	virtual PMVolumeDispersive&
 //	 operator=(const PhysicalModel &param);
-	long unsigned int
-	 getPoleNumber() const {return pole.size();}
 	complex<double>
 	 getPole(unsigned int p) const {return pole[p];}
 	complex<double>
@@ -55,6 +53,11 @@ public:
 	 isDispersive() const {
 		return true;
 	 }
+	bool isClassic() const {
+	    return isSimplyConductive();
+	}
+    bool
+     isSimplyConductive() const;
 	double
 	 getElectricConductivity() const;
 	void
