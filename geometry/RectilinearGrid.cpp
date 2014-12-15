@@ -30,10 +30,13 @@ RectilinearGrid::RectilinearGrid(
  const BoundingBox& boundingBox,
  const CVecD3& dxyz){
 	for (int i = 0; i < 3; i++) {
-		int dim =
-		 ceil((boundingBox.get_max()(i)-boundingBox.get_min()(i))/dxyz(i))+8;
-		pos_[i].resize(dim);
-		step_[i].resize(dim);
+	    double boxLength = boundingBox.get_max()(i)-boundingBox.get_min()(i);
+	    int nCells = ceil(boxLength / dxyz(i));
+	    if ((boxLength - nCells * dxyz(i)) > tolerance) {
+	        nCells++;
+	    }
+		pos_[i].resize(nCells + 8);
+		step_[i].resize(nCells + 8, dxyz(i));
 	}
 	origin_ = boundingBox.get_min() - dxyz * 4.0;
 	offsetGrid_ = CVecI3(0, 0, 0);
@@ -41,7 +44,8 @@ RectilinearGrid::RectilinearGrid(
 }
 
 RectilinearGrid::RectilinearGrid(
- const BoundingBox &boundingBox, const CVecI3& dims) {
+ const BoundingBox &boundingBox,
+ const CVecI3& dims) {
 	for (int i = 0; i < 3; i++) {
 		double step =
 		 (boundingBox.get_max()(i) - boundingBox.get_min()(i)) / dims(i);
