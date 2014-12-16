@@ -128,72 +128,58 @@ bool RectilinearGrid::getNaturalCellz
 }
 
 bool RectilinearGrid::getNaturalCellDir(
- long int &ijk, double &relativeLen, const int& dir, const double &xyz) const {
+ long int &ijk,
+ double &relativeLen,
+ const int& dir,
+ const double &xyz,
+ const double tol) const {
 	relativeLen = -1.0;
-	if(xyz < getPos(dir)[0]){
+	assert(getPos(dir).size() >= 1);
+	double diff = abs(getPos(dir)[0] - xyz);
+	if(diff > tol && xyz < getPos(dir)[0]){
 		ijk=offsetGrid_(dir);
 		return false;
 	}
-	assert(pos_[dir].size() >= 1);
-	for (uint i = 1; i < pos_[dir].size() - 1; i++) {
-        if (abs(getPos(dir)[i] - xyz) < tolerance) {
-			ijk = i+offsetGrid_(dir);
+	for (uint i = 0; i < pos_[dir].size(); i++) {
+	    diff = abs(getPos(dir)[i] - xyz);
+        if (diff < tol) {
+			ijk = i + offsetGrid_(dir);
 			relativeLen = 0.0;
 			return true;
 		} else if (getPos(dir)[i] > xyz) {
-			ijk = i+offsetGrid_(dir)-1;
+			ijk = i - 1 + offsetGrid_(dir);
 			double pos = getPos(dir)[ijk];
 			double step = getStep(dir)[ijk];
 			relativeLen = (xyz - pos) / step;
 			return true;
 		}
 	}
-	if (abs(pos_[dir].back() - xyz) < tolerance) {
-	    ijk = getPos(dir).size() - 2 + offsetGrid_(dir);
-	    return true;
-	}
-	return true;
+	return false;
 }
 
 //========= general setters ====================================================
 pair<CVecI3, CVecD3>
 RectilinearGrid::getNaturalCellPair(
 		const CVecD3& xyz,
-		const bool approx) const {
+		const bool approx,
+		const double tol) const {
 	pair<CVecI3, CVecD3> res;
 	for (int dir = 0; dir < 3; dir++) {
-	    if(!getNaturalCellDir(res.first(dir), res.second(dir), dir, xyz(dir))) {
-	        return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
+	    if(!getNaturalCellDir(res.first(dir), res.second(dir), dir, xyz(dir), tol)) {
+	        return make_pair(CVecI3(-1,-1,-1), CVecD3());
 	    }
 	    if(res.second(dir) > 0.5 && approx) {
 	        res.first(dir)++;
 	    }
 	}
-//	if(!getNaturalCellx(xyz(x), res.first(x), res.second(x))) {
-//		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
-//	}
-//	if(res.second(x) > 0.5 && approx) {
-//		res.first(x)++;
-//	}
-//	if(!getNaturalCelly(xyz(y), res.first(y), res.second(y))) {
-//		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
-//	}
-//	if(res.second(y) > 0.5 && approx) {
-//		res.first(y)++;
-//	}
-//	if(!getNaturalCellz(xyz(z), res.first(z), res.second(z))) {
-//		return make_pair(CVecI3(-1,-1,-1)+offsetGrid_, CVecD3());
-//	}
-//	if(res.second(z) > 0.5 && approx) {
-//		res.first(z)++;
-//	}
 	return res;
 }
 
 CVecI3 RectilinearGrid::getNaturalCell(
  const CVecD3 &coords,
- const bool approx) const {
-	return getNaturalCellPair(coords, approx).first;
+ const bool approx,
+ const double tol) const {
+	return getNaturalCellPair(coords, approx, tol).first;
 }
 
 BoundingBox

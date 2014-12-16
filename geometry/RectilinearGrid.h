@@ -115,12 +115,22 @@ public:
 	bool getNaturalCellz (const double &z, long int &k,
 			              double &relativeLen) const;
 	bool getNaturalCellDir(
-	 long int &i, double &relativeLen, const int& dir, const double &x) const;
+	 long int &i,
+	 double &relativeLen,
+	 const int& dir,
+	 const double &x,
+	 const double tol = tolerance) const;
 	// ----
 	pair<CVecI3, CVecD3>
-	 getNaturalCellPair(const CVecD3& pos, const bool approx = true) const;
+	 getNaturalCellPair(
+	         const CVecD3& pos,
+	         const bool approx = true,
+	         const double tol = tolerance) const;
 	CVecI3
-	 getNaturalCell(const CVecD3 &coords, const bool approx = true) const;
+	 getNaturalCell(
+	         const CVecD3 &coords,
+	         const bool approx = true,
+	         const double tol = tolerance) const;
 
 	//··········································································
 	void
@@ -143,17 +153,16 @@ public:
 	void printInfo() const;
 //==============================================================================
 private:
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+    static constexpr double tolerance = 1e-12;
+#else
+    static const double tolerance = 1e-12;
+#endif
 	//··········································································
    CVecI3 offsetGrid_;
 	CVecD3 origin_;
 	vector<double> step_[3];
 	vector<double> pos_[3];
-	//··········································································
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double tolerance = 1e-12;
-#else
-	static const double tolerance = 1e-12;
-#endif
 	//··········································································
 	void generatePositionsGrid();
 	//··········································································
