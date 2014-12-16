@@ -8,7 +8,8 @@
 #include "Generator.h"
 
 Generator::Generator() {
-	type = undefined;
+	type_ = undefined;
+	hardness_ = soft;
 }
 
 Generator::~Generator() {
@@ -16,18 +17,12 @@ Generator::~Generator() {
 }
 
 Generator::Generator(
- const Type& generatorType_,
- const Hardness& generatorHardness_,
- const vector<unsigned int>& elem_,
- const double spread_,
- const double delay_,
- const string& filename_) {
-	type = generatorType_;
-   hardness = generatorHardness_;
-	elem = elem_;
-	spread = spread_;
-	delay = delay_;
-	filename = filename_;
+ const Type& generatorType,
+ const Hardness& generatorHardness,
+ const vector<unsigned int>& elem,
+ const Magnitude* magnitude) : EMSource(elem, magnitude) {
+	type_ = generatorType;
+    hardness_ = generatorHardness;
 }
 
 Generator&
@@ -35,41 +30,34 @@ Generator::operator=(const Generator &rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
-	type = rhs.type;
-	elem = rhs.elem;
-	spread = rhs.spread;
-	delay = rhs.delay;
-	filename = rhs.filename;
+	EMSource::operator=(rhs);
+	type_ = rhs.type_;
+	hardness_ = rhs.hardness_;
 	return *this;
 }
 
 Generator::Type
 Generator::getType() const {
-	return type;
+	return type_;
 }
 
 Generator::Hardness
 Generator::getHardness() const {
-	return hardness;
+	return hardness_;
 }
 
 void
 Generator::printInfo() const {
 	cout<< " --- Generator info --- " << endl;
-	cout<< " - Assigned on " << elem.size() << " nodes:" << endl;
-	for (uint i = 0; i < elem.size(); i++) {
-		cout<< elem[i] << " ";
-	}
-	cout<<endl;
+	EMSource::printInfo();
 	cout<< "Type: " << getTypeStr() << endl;
-   cout<< "Hardness: " << getHardnessStr() << endl;
-	printMagnitude();
+    cout<< "Hardness: " << getHardnessStr() << endl;
 }
 
 string
 Generator::getTypeStr() const {
 	string res;
-	switch (type) {
+	switch (type_) {
 	case voltage:
 		res = "Voltage";
 		break;
@@ -86,11 +74,11 @@ Generator::getTypeStr() const {
 string
 Generator::getHardnessStr() const {
 	string res;
-	switch (type) {
+	switch (type_) {
 	case hard:
 		res = "Hard";
 		break;
-	case current:
+	case soft:
 		res = "Soft";
 		break;
 	default:

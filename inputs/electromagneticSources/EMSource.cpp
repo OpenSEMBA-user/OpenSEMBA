@@ -1,12 +1,9 @@
 #ifndef ELECTROMAGNETICSOURCE_H_
 #	include "EMSource.h"
 #endif
-// =============== ElectromagneticSource methods ==============================
-// =-=-=-=-=-=-=-= Constructors =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// =-=-=-=-=-=-=-= Destructors =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 EMSource::EMSource() {
-	spread = 0.0;
-	delay = 0.0;
+    magnitude_ = NULL;
 }
 
 EMSource::~EMSource() {
@@ -15,21 +12,8 @@ EMSource::~EMSource() {
 
 vector<unsigned int>
 EMSource::getElem() const {
-	if (elem.size() != 0) {
-		return elem;
-	} else {
-		cerr << "ERROR @ EMSource::getElem" << endl;
-		cerr << "Element Ids vector was not initialized." << endl;
-		assert(false);
-		exit(-1);
-	}
-}
-
-void
-EMSource::printMagnitude() const {
-	cout << " - Gaussian spread: " << spread << endl;
-	cout << " - Gaussian delay:	" << delay << endl;
-	cout << " - Excitation filename: " << filename << endl;
+	assert(elem_.size() != 0);
+	return elem_;
 }
 
 bool
@@ -42,17 +26,24 @@ EMSource::isPlaneWave() const {
 	return false;
 }
 
-double
-EMSource::getDelay() const {
-	return delay;
+EMSource::EMSource(const vector<uint>& elem, const Magnitude* magnitude) {
+    elem_ = elem;
+    magnitude_ = magnitude;
 }
 
-const string&
-EMSource::getFilename() const {
-	return filename;
+EMSource::EMSource(const Magnitude* magnitude) {
+    magnitude_ = magnitude;
 }
 
-double
-EMSource::getSpread() const {
-	return spread;
+void
+EMSource::printInfo() const {
+    cout<< " - Assigned on " << elem_.size() << ":" << endl;
+    for (uint i = 0; i < elem_.size(); i++) {
+        cout<< elem_[i] << " ";
+    }
+    magnitude_->printInfo();
+}
+
+const Magnitude* EMSource::getMagnitude() const {
+    return magnitude_;
 }

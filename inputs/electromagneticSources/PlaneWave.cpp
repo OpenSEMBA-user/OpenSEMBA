@@ -9,28 +9,26 @@
 	#include "PlaneWave.h"
 #endif
 
-PlaneWave::PlaneWave(
- vector<unsigned int> elem_,
- CVecD3 waveDirection_,
- CVecD3 polarization_,
- double spread_,
- double delay_,
- string filename_) {
-	elem = elem_;
-	usingBound = false;
-	init(waveDirection_, polarization_, spread_, delay_, filename_);
+PlaneWave::PlaneWave() {
+    bound_ = NULL;
 }
 
 PlaneWave::PlaneWave(
- pair<CVecD3,CVecD3> bound_,
- CVecD3 waveDirection_,
- CVecD3 polarization_,
- double spread_,
- double delay_,
- string filename_) {
-	usingBound = true;
-	bound = bound_;
-	init(waveDirection_, polarization_, spread_, delay_, filename_);
+ vector<unsigned int> elem,
+ CVecD3 waveDirection,
+ CVecD3 polarization,
+ const Magnitude* magnitude) : EMSource(elem, magnitude) {
+	bound_ = NULL;
+	init(waveDirection, polarization);
+}
+
+PlaneWave::PlaneWave(
+ BoundingBox bound,
+ CVecD3 waveDirection,
+ CVecD3 polarization,
+ const Magnitude* magnitude) : EMSource(magnitude) {
+	bound_ = new BoundingBox(bound);
+	init(waveDirection, polarization);
 }
 
 PlaneWave::~PlaneWave() {
@@ -39,26 +37,18 @@ PlaneWave::~PlaneWave() {
 
 void
 PlaneWave::init(
- const CVecD3& waveDirection_, const CVecD3& polarization_,
- double spread_, double delay_, const string& filename_) {
-	waveDirection = waveDirection_;
-	polarization = polarization_;
-	spread = spread_;
-	delay = delay_;
-	filename = filename_;
-	if (polarization.norm() == 0) {
+ const CVecD3& waveDirection, const CVecD3& polarization) {
+	waveDirection_ = waveDirection;
+	polarization_ = polarization;
+	if (polarization_.norm() == 0) {
+		cout<< "ERROR @ PlaneWave: " << "Polarization can't be zero." << endl;
 		printInfo();
-		cout<< "ERROR@PlaneWave" << endl;
-		cout<< "Polarization can't be zero." << endl;
-		exit(-1);
 	}
-	if (waveDirection.norm() == 0) {
+	if (waveDirection_.norm() == 0) {
+		cout<< "ERROR @ PlaneWave: " << "W. Direction can't be zero." << endl;
 		printInfo();
-		cout<< "ERROR@PlaneWave" << endl;
-		cout<< "Wave direction can't be zero." << endl;
-		exit(-1);
 	}
-	if (waveDirection.norm() == 0.0 || polarization.norm() == 0.0) {
+	if (waveDirection_.norm() == 0.0 || polarization.norm() == 0.0) {
 		cerr<< "ERROR @ Planewave: "
 			<< "Wave direction and polarization cannot be zero" << endl;
 		printInfo();
@@ -69,7 +59,6 @@ PlaneWave::init(
 		cerr<< "ERROR @ Planewave: "
 		    << "Wavedirection is not perpendicular to polarization." << endl;
 	}
-	spreadSqrt2 = getSpread() * sqrt(2.0);
 }
 
 PlaneWave&
@@ -77,68 +66,61 @@ PlaneWave::operator=(const PlaneWave &rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
-	elem = rhs.elem;
-	waveDirection = rhs.waveDirection;
-	polarization = rhs.polarization;
-	spread = rhs.spread;
-	delay = rhs.delay;
-	filename = rhs.filename;
-	usingBound = rhs.usingBound;
-	bound = rhs.bound;
+	EMSource::operator=(rhs);
+	waveDirection_ = rhs.waveDirection_;
+	polarization_ = rhs.polarization_;
+	bound_ = rhs.bound_;
 	return *this;
 }
 
-BoundingBox
+const BoundingBox*
 PlaneWave::getBound() const {
-	if (usingBound) {
-		return bound;
-	} else {
-		cerr << "ERROR @ Planewave" << endl;
-		cerr << "Not using bound." << endl;
-		exit(-1);
-	}
+	return bound_;
 }
 
 void
 PlaneWave::printInfo() const {
 	cout<< " --- PlaneWave info --- " << endl;
-	cout<< " - Assigned on " << elem.size() << " elements." << endl;
+	EMSource::printInfo();
 	cout<< " - Polarization vector: ";
-	polarization.printInfo();
+	polarization_.printInfo();
 	cout<< endl;
 	cout<< " - Wave direction vector: ";
-	waveDirection.printInfo();
+	waveDirection_.printInfo();
 	cout<< endl;
-	cout<< " - Plane wave exc modulated with a gaussian." << endl;
-	cout<< " - Gaussian spread: " << spread << endl;
-	cout<< " - Gaussian delay:	" << delay << endl;
-	cout<< " - Excitation filename: " << filename << endl;
-	if (usingBound) {
-		bound.printInfo();
+	if (bound_ != NULL) {
+	    cout << "Defined on bound: " << endl;
+		bound_->printInfo();
 	}
 }
 
 CVecD3
 PlaneWave::getElectricField(const double time) const {
-	double expArg = (time - delay) / (spreadSqrt2);
-	double amp = exp(-expArg * expArg);
-	CVecD3 res = polarization * amp;
+	CVecD3 res = polarization_ * getMagnitude()->evaluate(time);
 	return res;
 }
 
 pair<CVecD3, CVecD3>
 PlaneWave::getElectromagneticField(const double time) const {
 	CVecD3 electric = getElectricField(time);
-	CVecD3 magnetic = (waveDirection ^ electric) * (double) VACUUM_ADMITANCE;
+	CVecD3 magnetic = (waveDirection_ ^ electric) * (double) VACUUM_ADMITANCE;
 	return pair<CVecD3,CVecD3>(electric, magnetic);
 }
 
 const CVecD3&
 PlaneWave::getPolarization() const {
-	return polarization;
+	return polarization_;
 }
 
 const CVecD3&
 PlaneWave::getWaveDirection() const {
-	return waveDirection;
+	return waveDirection_;
 }
+
+void
+PlaneWave::applyGeometricScalingFactor(const double factor) {
+    if (bound_ != NULL) {
+        bound_->scale(factor);
+    }
+}
+

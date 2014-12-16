@@ -24,11 +24,9 @@ public:
 	Generator();
 	Generator(
 	 const Type& generatorType,
-    const Hardness& generatorHardness,
+     const Hardness& generatorHardness,
 	 const vector<unsigned int>& elem,
-	 const double spread,
-	 const double delay,
-	 const string& filename_);
+	 const Magnitude* magnitude);
 	virtual ~Generator();
 	Generator&
 	 operator=(const Generator &rhs);
@@ -39,8 +37,8 @@ public:
 	virtual void
 	 printInfo() const;
 private:
-	Type type;
-   Hardness hardness;
+	Type type_;
+   Hardness hardness_;
 	string
 	 getTypeStr() const;
    string

@@ -9,6 +9,8 @@
 #define WAVEPORT_H_
 
 #include "EMSource.h"
+#include "MagnitudeGaussian.h"
+#include "MagnitudeNumerical.h"
 
 class Waveport : public EMSource {
 public:
@@ -26,16 +28,15 @@ public:
 		pmc
 	} Symmetry;
 	Waveport(
-	 const vector<unsigned int>& elem_,
-	 const bool input_,
-	 const double spread_,
-	 const double delay_,
-	 const Shape shape_,
-	 const ExcitationMode excMode_,
-	 const pair<unsigned int,unsigned int> mode_,
-	 const Symmetry xy_,
-	 const Symmetry yz_,
-	 const Symmetry zx_);
+	        const vector<unsigned int>& elem,
+	        const MagnitudeGaussian* magnitude,
+	        const bool input,
+	        const Shape shape,
+	        const ExcitationMode excMode,
+	        const pair<unsigned int,unsigned int> mode,
+	        const Symmetry xy,
+	        const Symmetry yz,
+	        const Symmetry zx);
 	virtual ~Waveport();
 	Waveport&
 	 operator=(const Waveport &rhs);
@@ -54,11 +55,11 @@ public:
 	pair<unsigned int, unsigned int>
 	 getMode() const;
 private:
-	bool input;
-	Shape shape;
-	ExcitationMode excitationMode;
-	pair<unsigned int,unsigned int> mode;
-	Symmetry SymXY, SymYZ, SymZX;
+	bool input_;
+	Shape shape_;
+	ExcitationMode excitationMode_;
+	pair<unsigned int,unsigned int> mode_;
+	Symmetry SymXY_, SymYZ_, SymZX_;
 };
 
 #endif /* WAVEPORT_H_ */

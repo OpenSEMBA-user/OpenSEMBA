@@ -12,21 +12,17 @@
 
 class PlaneWave : public EMSource {
 public:
-    BoundingBox bound;
-	PlaneWave(
+    PlaneWave();
+    PlaneWave(
 	 vector<unsigned int> elem,
 	 CVecD3 waveDirection,
 	 CVecD3 polarization,
-	 double spread,
-	 double delay,
-	 string filename_);
+	 const Magnitude* magnitude);
 	PlaneWave(
-	 pair<CVecD3,CVecD3> bound,
+	 BoundingBox bound,
 	 CVecD3 waveDirection,
 	 CVecD3 polarization,
-	 double spread,
-	 double delay,
-	 string filename);
+	 const Magnitude* magnitude);
 	virtual ~PlaneWave();
 	PlaneWave&
 	 operator=(const PlaneWave &rhs);
@@ -34,7 +30,7 @@ public:
 	 isPlaneWave() const {return true;}
 	void
 	 printInfo() const;
-	BoundingBox
+	const BoundingBox*
 	 getBound() const;
 	const CVecD3&
 	 getPolarization() const;
@@ -44,19 +40,16 @@ public:
 	 getElectricField(const double time) const;
 	pair<CVecD3,CVecD3>
 	 getElectromagneticField(const double time) const;
+    void
+     applyGeometricScalingFactor(const double factor);
 private:
-	CVecD3 waveDirection;
-	CVecD3 polarization;
-	bool usingBound;
-
-	double spreadSqrt2;
+	CVecD3 waveDirection_;
+	CVecD3 polarization_;
+	BoundingBox* bound_;
 	void
 	init(
-	 const CVecD3& waveDirection_,
- 	 const CVecD3& polarization_,
- 	 double spread_,
-	 double delay_,
-	 const string& filename_);
+	 const CVecD3& waveDirection,
+ 	 const CVecD3& polarization);
 };
 
 #endif /* PLANEWAVE_H_ */

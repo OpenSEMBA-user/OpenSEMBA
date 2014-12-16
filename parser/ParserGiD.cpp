@@ -973,20 +973,19 @@ ParserGiD::readCartesianGrid() {
 
 PlaneWave
 ParserGiD::readPlaneWaveEMSource() {
-	CVecD3 waveDirection, polarization;
-	double spread = 0.0;
-	double delay = 0.0;
 	string filename;
 	string label, value;
+	CVecD3 dir, pol;
 	pair<CVecD3,CVecD3> bound;
 	vector<uint> elems;
+	Magnitude* mag;
 	bool isDefinedOnLayer = true;
 	while(!f_in.eof()) {
 		getNextLabelAndValue(label, value);
 		if (label.compare("Direction")==0) {
-			waveDirection = strToCartesianVector(value);
+			dir = strToCartesianVector(value);
 		} else if (label.compare("Polarization") == 0) {
-			polarization = strToCartesianVector(value);
+			pol = strToCartesianVector(value);
 //		} else if (label.compare("Excitation") == 0) {
 //		    Magnitude magnitude = readMagnitude(); TODO: Read and write magnitudes.
 		} else if (label.compare("Gaussian spread") == 0) {
@@ -1008,18 +1007,16 @@ ParserGiD::readPlaneWaveEMSource() {
 			}
 		} else if (label.compare("End of Planewave")==0) {
 			if (isDefinedOnLayer) {
-				return PlaneWave(
-				 bound,	 waveDirection, polarization, spread, delay, filename);
+				return PlaneWave(bound,	 dir, pol, mag);
 			} else {
-				return PlaneWave(
-				 elems, waveDirection, polarization, spread, delay, filename);
+				return PlaneWave(elems, dir, pol, mag);
 			}
 		}
 	}
 	// Throws error message if ending label was not found.
-	cerr<< "ERROR @ Parsing planewave:"
+	cerr<< "ERROR @ Parsing planewave: "
 	    << "End of Planewave label not found. " << endl;
-	exit(INPUT_ERROR);
+	return PlaneWave();
 }
 
 Dipole
@@ -1028,9 +1025,7 @@ ParserGiD::readDipoleEMSource() {
 	double length = 0.0;
 	CVecD3 orientation;
 	CVecD3 position;
-	bool sinModulation = false, gaussModulation = false;
-	double sinAmplitude = 0.0, frequency = 0.0,
-	 gaussAmplitude = 0.0, spread = 0.0, delay = 0.0;
+	Magnitude* mag;
 	//
 	string line;
 	bool finished = false;
@@ -1040,29 +1035,7 @@ ParserGiD::readDipoleEMSource() {
 		if (line.find("End of puntual excitation") == line.npos) {
 			elem.push_back(strtol(line.c_str(), &pEnd, 10 ));
 			if (elem.size() == 1) {
-				if (strtol(pEnd, &pEnd, 10) == 1) {
-					// Ignores soft/hard sources.
-				}
-				length = strtod(pEnd, &pEnd);
-				orientation(0) = strtod(pEnd, &pEnd);
-				orientation(1) = strtod(pEnd, &pEnd);
-				orientation(2) = strtod(pEnd, &pEnd);
-				// Reads sinusoidal modulation parameters.
-				if (strtol(pEnd, &pEnd, 10) == 1)
-					sinModulation = true;
-				else
-					sinModulation = false;
-				sinAmplitude = strtod(pEnd, &pEnd);
-				frequency = strtod(pEnd, &pEnd);
-				// Reads gaussian modulation parameters.
-				if (strtol(pEnd, &pEnd, 10) == 1) {
-					gaussModulation = true;
-				} else {
-					gaussModulation = false;
-				}
-				gaussAmplitude = strtod(pEnd, &pEnd);
-				spread = strtod(pEnd, &pEnd);
-				delay = strtod(pEnd, &pEnd);
+				assert(false); // TODO: Not implemented.
 			}
 		} else
 			finished = true;
@@ -1075,9 +1048,7 @@ ParserGiD::readDipoleEMSource() {
 		exit(INPUT_ERROR);
 	}
 	//
-	Dipole res(elem, length, orientation, position,
-	 sinModulation, sinAmplitude, frequency,
-	 gaussModulation, gaussAmplitude, spread, delay);
+	Dipole res(elem, length, orientation, position, mag);
 	return res;
 }
 
@@ -1086,8 +1057,7 @@ ParserGiD::readWaveportEMSource() {
 	vector<uint> elem;
 	uint numElements = 0;
 	bool input = true;
-	double spread = 0.0;
-	double delay = 0.0;
+	MagnitudeGaussian* mag;
 	Waveport::Shape shape = Waveport::rectangular;
 	Waveport::ExcitationMode excitationMode = Waveport::TE;
 	pair<uint,uint> mode(1,0);
@@ -1173,22 +1143,18 @@ ParserGiD::readWaveportEMSource() {
 	}
 	// Throws error message if finished was not updated.
 	if (!finished) {
-		cerr<< "ERROR @ GiDParser::readWaveportEMSource" << endl;
-		cerr<< "End of excitation type label not found. " << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ GiDParser::readWaveportEMSource: "
+		 << "End of excitation type label not found. " << endl;
 	}
-	//
-	Waveport res(elem, input, spread, delay,
-	 shape, excitationMode, mode, symXY, symYZ, symZX);
-	return res;
+	return Waveport(elem, mag, input, shape,
+	 excitationMode, mode, symXY, symYZ, symZX);
 }
 
 Generator
 ParserGiD::readGeneratorEMSource() {
-	double spread = 0.0;
-	double delay = 0.0;
 	Generator::Type type;
-   Generator::Hardness hardness;
+    Generator::Hardness hardness;
+    Magnitude* mag;
 	vector<uint> elems;
 	string filename;
 	string label, value;
@@ -1213,7 +1179,7 @@ ParserGiD::readGeneratorEMSource() {
 				elems.push_back(e);
 			}
 		} else if (label.compare("End of Generator")==0) {
-			return Generator(type, hardness, elems, spread, delay, filename);
+			return Generator(type, hardness, elems, mag);
 		}
 	}
 	// Throws error message if ending label was not found.

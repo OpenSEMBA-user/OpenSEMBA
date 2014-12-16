@@ -50,10 +50,10 @@ public:
 	 countWithType(const Element::Type type) const;
 	const EMSource*
 	 getWithType(const uint i, const Element::Type type) const;
-    void
-     applyGeometricScalingFactor(const double factor);
 	void
 	 printInfo() const;
+	void
+	 applyGeometricScalingFactor(const double factor);
 private:
 	vector<const EMSource*> source;
 	vector<Dipole> dipole;

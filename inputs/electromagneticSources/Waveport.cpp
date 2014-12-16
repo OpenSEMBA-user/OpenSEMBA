@@ -8,26 +8,22 @@
 #include "Waveport.h"
 
 Waveport::Waveport(
- const vector<unsigned int>& elem_,
- const bool input_,
- const double spread_,
- const double delay_,
- const Shape shape_,
- const ExcitationMode excMode_,
- const pair<unsigned int,unsigned int> mode_,
- const Symmetry xy_,
- const Symmetry yz_,
- const Symmetry zx_) {
-	elem = elem_;
-	input = input_;
-	spread = spread_;
-	delay = delay_;
-	shape = shape_;
-	excitationMode = excMode_;
-	mode = mode_;
-	SymXY = xy_;
-	SymYZ = yz_;
-	SymZX = zx_;
+ const vector<unsigned int>& elem,
+ const MagnitudeGaussian* magnitude,
+ const bool input,
+ const Shape shape,
+ const ExcitationMode excMode,
+ const pair<unsigned int,unsigned int> mode,
+ const Symmetry xy,
+ const Symmetry yz,
+ const Symmetry zx) : EMSource(elem, magnitude) {
+	input_ = input;
+	shape_ = shape;
+	excitationMode_ = excMode;
+	mode_ = mode;
+	SymXY_ = xy;
+	SymYZ_ = yz;
+	SymZX_ = zx;
 }
 
 Waveport::~Waveport() {
@@ -39,59 +35,55 @@ Waveport::operator=(const Waveport& rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
-	elem = rhs.elem;
-	input = rhs.input;
-	spread = rhs.spread;
-	delay = rhs.delay;
-	shape = rhs.shape;
-	excitationMode = rhs.excitationMode;
-	mode = rhs.mode;
-	SymXY = rhs.SymXY;
-	SymYZ = rhs.SymYZ;
-	SymZX = rhs.SymZX;
+	EMSource::operator=(rhs);
+	input_ = rhs.input_;
+	shape_ = rhs.shape_;
+	excitationMode_ = rhs.excitationMode_;
+	mode_ = rhs.mode_;
+	SymXY_ = rhs.SymXY_;
+	SymYZ_ = rhs.SymYZ_;
+	SymZX_ = rhs.SymZX_;
 	return *this;
 }
 
 Waveport::Shape
 Waveport::getShape() const {
-	return shape;
+	return shape_;
 }
 
 Waveport::Symmetry
 Waveport::getSymXY() const {
-	return SymXY;
+	return SymXY_;
 }
 
 Waveport::Symmetry
 Waveport::getSymYZ() const {
-	return SymYZ;
+	return SymYZ_;
 }
 
 Waveport::ExcitationMode
 Waveport::getExcitationMode() const {
-	return excitationMode;
+	return excitationMode_;
 }
 
 
 pair<unsigned int, unsigned int>
 Waveport::getMode() const {
-	return mode;
+	return mode_;
 }
 
 Waveport::Symmetry
 Waveport::getSymZX() const {
-	return SymZX;
+	return SymZX_;
 }
 
 void
 Waveport::printInfo() const {
 	cout << "--- Waveport info ---" << endl;
-	cout << "- Assigned on " << elem.size() << " elements." << endl;
-	if (input) {
-		cout << "- Is input." << endl;
+	EMSource::printInfo();
+	if (input_) {
+		cout << "- Is input_." << endl;
 	} else {
 		cout << "- Is output." << endl;
 	}
-	cout << "- Gaussian spread: " << spread << endl;
-	cout << "- Gaussian delay: "	<< delay << endl;
 }
