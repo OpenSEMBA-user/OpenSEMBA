@@ -38,8 +38,9 @@ public:
 	virtual void
 	 printInfo() const;
 protected:
-	string problemTypePath;
-	ProblemSize pSize;
+	string filename_;
+	string problemTypePath_;
+	ProblemSize pSize_;
 	virtual GlobalProblemData
 	 readProblemData();
 	virtual LayerGroup*

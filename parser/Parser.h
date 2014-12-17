@@ -9,21 +9,19 @@
 #define PARSER_H_
 
 #include <stdlib.h>
-#include <iostream>		// Stream I/O
-#include <string>		// String class
-#include <fstream>		// File I/O
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <fstream>
 #include <stdio.h>
 #include <vector>
 #include <complex>
+#include <libgen.h>
 #include <algorithm>
 #include <sys/stat.h>
 #include "../SmbData.h"
 
 using namespace std;
-
-#ifndef INPUT_ERROR
-	#define INPUT_ERROR 14907
-#endif
 
 class Parser {
 public:
@@ -60,6 +58,15 @@ protected:
 		} else {
 			return false;
 		}
+	}
+	string
+	getProjectFolder(const string& name) const {
+	    char *cstr = new char[name.length() + 1];
+	    strcpy(cstr, name.c_str());
+	    string projectDir(dirname(cstr));
+	    projectDir += "/";
+	    delete [] cstr;
+	    return projectDir;
 	}
 };
 #endif

@@ -37,7 +37,7 @@ ParserGiD::read() {
 	res = new SmbData();
 
 	if (!checkVersionCompatibility(readVersion())) {
-		exit(INPUT_ERROR);
+		exit(-1);
 	}
 
 	GlobalProblemData* gData = new GlobalProblemData;
@@ -45,8 +45,8 @@ ParserGiD::read() {
 	res->gData = gData;
 	res->gData->printInfo();
 
-	pSize = readProblemSize();
-	pSize.printInfo();
+	pSize_ = readProblemSize();
+	pSize_.printInfo();
 
 	res->layers = readLayers();
 	res->layers->printInfo();
@@ -312,7 +312,7 @@ ParserGiD::readMaterials(){
 			} // Closes materials section.
 		}
 	} // Closes problemDataFound while.
-	assert(materialCount == pSize.mat);
+	assert(materialCount == pSize_.mat);
 	// Throws error messages if a problem was detected.
 	if (!found) {
 		cerr<< "ERROR @ Parsing materials: "
@@ -508,10 +508,8 @@ ParserGiD::readProblemSize() {
 					finished = true;
 				}
 				if (f_in.eof()) {
-					cerr<< "ERROR @ Parser::readProblemSize()"   << endl;
-					cerr<< "End of problem size label not found" << endl;
-					cerr<< "Terminating" << endl;
-					exit(INPUT_ERROR);
+					cerr<< "ERROR @ Parser::readProblemSize(): "
+					    << "End of problem size label not found" << endl;
 				}
 			}
 		}
@@ -561,7 +559,7 @@ ParserGiD::readCoordinates() {
 	uint id;
 	CVecD3 pos;
 	vector<Coordinate<double,3> > coord;
-	coord.reserve(pSize.v);
+	coord.reserve(pSize_.v);
 	bool finished = false;
 	bool found = false;
 	while (!found && !f_in.eof() && !finished) {
@@ -569,7 +567,7 @@ ParserGiD::readCoordinates() {
 		if (line.find("Coordinates:") != line.npos) {
 			found = true;
 			// Reads coordinates.
-			for (uint i = 0; i < pSize.v; i++) {
+			for (uint i = 0; i < pSize_.v; i++) {
 				f_in >> id >> pos(0) >> pos(1) >> pos(2);
 				coord.push_back(Coordinate<double,3>(id, pos));
 			}
@@ -635,17 +633,13 @@ ParserGiD::readElements(const CoordinateGroup& v) {
 	}
 	// Shows error message if the elements label was not found.
 	if (!found) {
-		cerr<< "ERROR@GiDParser::readElements()" << endl;
-		cerr<< "\"Elements\" label was not found." << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ GiDParser::readElements(): "
+		    << "\"Elements\" label was not found." << endl;
 	}
 	// This code is reached only in case of "End of elements" is not found.
 	if (!finished) {
-		cerr<< "ERROR@GiDParser::readElements()" << endl;
-		cerr<< "\"End of elements\" label was not found." << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ GiDParser::readElements()"
+		 << "\"End of elements\" label was not found." << endl;
 	}
 	//
 	ElementsGroup res(lin2, tri3, tri6, tet4, tet10, hex8);
@@ -656,8 +650,8 @@ vector<Hex8>
 ParserGiD::readHex8Elements(const CoordinateGroup& v) {
 	vector<Hex8> res;
 	uint id, matId, vId[8];
-	res.reserve(pSize.hex8);
-	for (uint i = 0; i < pSize.hex8; i++) {
+	res.reserve(pSize_.hex8);
+	for (uint i = 0; i < pSize_.hex8; i++) {
 		f_in >> id;
 		for (uint j = 0; j < 8; j++) {
 			 f_in >> vId[j];
@@ -672,8 +666,8 @@ vector<Tet10>
 ParserGiD::readTet10Elements(const CoordinateGroup& v) {
 	vector<Tet10> res;
 	uint id, matId, vId[10];
-	res.reserve(pSize.tet10);
-	for (uint i = 0; i < pSize.tet10; i++) {
+	res.reserve(pSize_.tet10);
+	for (uint i = 0; i < pSize_.tet10; i++) {
 		f_in >> id;
 		for (uint j = 0; j < 10; j++) {
 			 f_in >> vId[j];
@@ -689,8 +683,8 @@ ParserGiD::readTet4Elements(
  const CoordinateGroup& v) {
 	vector<Tet4> res;
 	uint id, matId, layerId, vId[4];
-	res.reserve(pSize.tet4);
-	for (uint i = 0; i < pSize.tet4; i++) {
+	res.reserve(pSize_.tet4);
+	for (uint i = 0; i < pSize_.tet4; i++) {
 		f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
 		res.push_back(Tet4(v, vId, id, matId, layerId));
 	}
@@ -702,8 +696,8 @@ ParserGiD::readTri6Elements(const CoordinateGroup& v) {
 	vector<Tri6> res;
 	uint id, matId, vId[6];
 	CVecD3 normal;
-	res.reserve(pSize.tri6);
-	for (uint i = 0; i < pSize.tri6; i++) {
+	res.reserve(pSize_.tri6);
+	for (uint i = 0; i < pSize_.tri6; i++) {
 		f_in >> id;
 		for (uint j = 0; j < 6; j++)
 			 f_in >> vId[j];
@@ -719,8 +713,8 @@ ParserGiD::readTri3Elements(const CoordinateGroup& v) {
 	vector<Tri3> res;
 	uint id, matId, layerId, vId[3];
 	CVecD3 normal;
-	res.reserve(pSize.tri3);
-	for (uint i = 0; i < pSize.tri3; i++) {
+	res.reserve(pSize_.tri3);
+	for (uint i = 0; i < pSize_.tri3; i++) {
 		f_in >> id >> vId[0] >> vId[1] >> vId[2]
 		 >> normal(0) >> normal(1) >> normal(2) >> matId >> layerId;
 		res.push_back(Tri3(v, vId, normal, id, matId, layerId));
@@ -732,8 +726,8 @@ vector<Lin2>
 ParserGiD::readLin2Elements(const CoordinateGroup& v) {
 	vector<Lin2> res;
 	uint id, matId, layerId, vId[2];
-	res.reserve(pSize.lin2);
-	for (uint i = 0; i < pSize.lin2; i++) {
+	res.reserve(pSize_.lin2);
+	for (uint i = 0; i < pSize_.lin2; i++) {
 		f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;
 		res.push_back(Lin2(v, vId, id, matId, layerId));
 	}
@@ -755,13 +749,11 @@ ParserGiD::readDispersiveMaterialFile(
 	int tmpPoleId;
 	double tmpRePK, tmpImPK, tmpReRK, tmpImRK;
 	// Opens file, read only mode.
-	matFileName = problemTypePath + "/material/" + fileName + ".dat";
+	matFileName = problemTypePath_ + "/material/" + fileName + ".dat";
 	matFile.open(matFileName.c_str(), ifstream::in);
 	if (matFile.fail()) {
-		cerr<< "ERROR @ readDispersiveMaterialFile()" << endl;
-		cerr<< "Problem opening file: " << matFileName << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ readDispersiveMaterialFile()"
+		 << "Problem opening file: " << matFileName << endl;
 	}
 	// Parses first line, containing material name.
 	getline(matFile, line);
@@ -816,9 +808,9 @@ ParserGiD::readDispersiveMaterialFile(
 		return PMVolumeDispersive(id_, name, eps, 1.0, sig,
 		 poles, residues, drudePoles, drudeResidues);
 	}
-	cerr<< "ERROR@GiDParser::readDispersiveMaterialFile(...)" << endl;
-	cerr<< "File contains unknown model." << endl;
-	exit(INPUT_ERROR);
+	cerr<< "ERROR@GiDParser::readDispersiveMaterialFile(...)"
+	 << "File contains unknown model." << endl;
+	return PMVolumeDispersive();
 }
 
 PMSurface
@@ -832,22 +824,18 @@ ParserGiD::readIsotropicSurfaceMaterialFile(
 	vector<double> pole, Z11, Z12, Z21, Z22;
 	double tmpP, tmpZ11, tmpZ12, tmpZ21, tmpZ22;
 	// Opens file, read only mode.
-	matFileName = problemTypePath + "/panel/" + fileName + ".dat";
+	matFileName = problemTypePath_ + "/panel/" + fileName + ".dat";
 	matFile.open(matFileName.c_str(), ifstream::in);
 	if (matFile.fail()) {
-		cerr<< "ERROR @ readSurfaceMaterialFile()" << endl;
-		cerr<< "Problem opening file: " << matFileName << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ readSurfaceMaterialFile(): "
+		 << "Problem opening file: " << matFileName << endl;
 	}
 	// Parses first line, containing material name.
 	getline(matFile, line);
 	if (line.find("#PANEL#") == string::npos) {
-		cerr<< "ERROR @ Parser::readSurfaceMaterialFile(...)"   << endl;
-		cerr<< "File: " << matFileName                          << endl;
-		cerr<< "#PANEL# label has not been found in first line" << endl;
-		cerr<< "Terminating"                                    << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ Parser::readSurfaceMaterialFile(...)"
+		 << "File: " << matFileName << "   "
+		 << "#PANEL# label has not been found in first line" << endl;
 	}
 	name = line.substr(8, line.length()-9);
 	getline(matFile, line);
@@ -946,18 +934,16 @@ ParserGiD::readCartesianGrid() {
 					}
 				}
 				if (f_in.eof()) {
-					cerr<< "ERROR @ ParserGiD()"   << endl;
-					cerr<< "End of grid label not found" << endl;
-					exit(INPUT_ERROR);
+					cerr<< "ERROR @ ParserGiD()"
+					 << "End of grid label not found" << endl;
 				}
 			}
 		}
 	}
 	// Throws error message if label was not found.
 	if (!gridLabelFound) {
-		cerr<< "ERROR @ ParserGiD: " << endl;
-		cerr<< "Grid label not found."     << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ ParserGiD: "
+		 << "Grid label not found." << endl;
 	}
 	if (gridFound) {
 	    if (stepsByNumberOfCells) {
@@ -1019,7 +1005,7 @@ ParserGiD::readDipoleEMSource() {
 	double length = 0.0;
 	CVecD3 orientation;
 	CVecD3 position;
-	Magnitude* mag;
+	Magnitude* mag = NULL;
 	//
 	string line;
 	bool finished = false;
@@ -1034,12 +1020,10 @@ ParserGiD::readDipoleEMSource() {
 		} else
 			finished = true;
 	}
-	// Throws error message if finished was not updated.
 	if (!finished) {
-		cerr<< "ERROR @ GiDParser::readDipoleEMSource" << endl;
-		cerr<< "End of excitation type label not found. " << endl;
-		cerr<< "Terminating" << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ ParserGiD::readDipoleEMSource: "
+		    << "End of excitation type label not found. "
+		    << endl;
 	}
 	//
 	Dipole res(elem, length, orientation, position, mag);
@@ -1127,10 +1111,8 @@ ParserGiD::readWaveportEMSource() {
 			finished = true;
 		}
 		if (f_in.eof()) {
-			cerr<< "ERROR @ Parser"   << endl;
-			cerr<< "End of Waveport not found" << endl;
-			cerr<< "Terminating" << endl;
-			exit(INPUT_ERROR);
+			cerr<< "ERROR @ Parser: "
+			 << "End of Waveport not found" << endl;
 		}
 	}
 	// Throws error message if finished was not updated.
@@ -1173,7 +1155,7 @@ ParserGiD::readGeneratorEMSource() {
 	// Throws error message if ending label was not found.
 	cerr<< "ERROR @ Parsing generator: "
 	    << "End of Generator label not found. " << endl;
-	exit(INPUT_ERROR);
+	return Generator();
 }
 
 Element::Type
@@ -1320,9 +1302,9 @@ ParserGiD::materialStrToMultiportType(string str) const {
 	} else if (str.compare("Conn_sLpRC")==0) {
 		return PMMultiport::sLpRC;
 	} else {
-		cerr<< "ERROR @ Parser" << endl;
-		cerr<< "Unreckognized multiport label." << endl;
-		exit(INPUT_ERROR);
+		cerr<< "ERROR @ Parser: "
+		 << "Unreckognized multiport label." << endl;
+		return PMMultiport::undefined;
 	}
 }
 
@@ -1350,8 +1332,8 @@ ParserGiD::readBoundFromStr(
 
 void
 ParserGiD::init(const string& fn, const string& pTPath) {
-	// Check if fn is valid.
-    problemTypePath = pTPath;
+	filename_ = fn;
+    problemTypePath_ = pTPath;
 	struct stat st;
 	if (stat(fn.c_str(), &st) == 0) {
 		if (st.st_mode & S_IFDIR) {
@@ -1460,7 +1442,9 @@ ParserGiD::readMagnitude(const string typeIn) {
                 delayFound = true;
             }
             finished = spreadFound && delayFound;
-            return new MagnitudeGaussian(spread, delay);
+            if (finished) {
+                return new MagnitudeGaussian(spread, delay);
+            }
         }
     } else if (type.compare("File") == 0) {
         string filename;
@@ -1470,11 +1454,14 @@ ParserGiD::readMagnitude(const string typeIn) {
                 filename = trim(value);
                 finished = true;
             }
-            return new MagnitudeNumerical(filename);
+            if (finished) {
+                return new MagnitudeNumerical(
+                        getProjectFolder(filename_) + filename);
+            }
         }
     }
     cerr<< "ERROR @ readMagnitude: "
-        << "Unable to recognize magnitude type when reading excitation."
+//        << "Unable to recognize magnitude type when reading excitation."
         << endl;
     return NULL;
 }

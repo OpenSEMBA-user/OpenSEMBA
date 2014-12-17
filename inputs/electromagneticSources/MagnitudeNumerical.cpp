@@ -45,7 +45,6 @@ MagnitudeNumerical::MagnitudeNumerical(
         file.close();
         initFromFile(name);
     }
-
 }
 
 MagnitudeNumerical::~MagnitudeNumerical() {
@@ -80,10 +79,10 @@ MagnitudeNumerical::printInfo() const {
     cout << " --- Magnitude Numerical Info --- " << endl;
     cout << "File name: " << filename_ << endl;
     cout << "Stored values: " << value_.size() << endl;
-    map<double,double>::const_iterator it;
-    for (it = value_.begin(); it != value_.end(); ++it) {
-        cout << it->first << " " << it->second << endl;
-    }
+//    map<double,double>::const_iterator it;
+//    for (it = value_.begin(); it != value_.end(); ++it) {
+//        cout << it->first << " " << it->second << endl;
+//    }
 }
 
 double
@@ -91,4 +90,5 @@ MagnitudeNumerical::evaluate(const double time) const {
     cerr<< "ERROR @ MagnitudeNumerical: "
         << "Evaluate not implemented." << endl;
     assert(false);
+    return 0.0;
 }
