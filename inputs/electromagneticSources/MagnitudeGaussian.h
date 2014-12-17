@@ -18,12 +18,18 @@ public:
         gaussianDerivative
     } type;
     MagnitudeGaussian();
+    MagnitudeGaussian(
+            const double spread,
+            const double delay,
+            const double freq = 0.0);
     virtual ~MagnitudeGaussian();
     double
      evaluate(const double time) const;
+    void
+     printInfo() const;
 private:
-    double delay_;
     double spread_;
+    double delay_;
     double freq_;
 };
 

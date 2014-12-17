@@ -124,6 +124,8 @@ private:
 	 gidOutputTypeStrToType(string label) const;
 	Domain
 	 readDomainFromStr(const string& line) const;
+	Magnitude*
+	 readMagnitude(const string type);
 	void
 	 init(
 	  const string& fn,

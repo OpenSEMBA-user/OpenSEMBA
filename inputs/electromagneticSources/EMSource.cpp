@@ -44,6 +44,7 @@ EMSource::printInfo() const {
     magnitude_->printInfo();
 }
 
-const Magnitude* EMSource::getMagnitude() const {
+const Magnitude*
+EMSource::getMagnitude() const {
     return magnitude_;
 }

@@ -9,6 +9,8 @@
 #define SRC_COMMON_INPUTS_MAGNITUDE_H_
 
 #include <string>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -19,7 +21,7 @@ public:
     virtual double
      evaluate(const double time) const = 0;
     virtual void
-     printInfo() const;
+     printInfo() const = 0;
 private:
 };
 

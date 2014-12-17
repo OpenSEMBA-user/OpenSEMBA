@@ -986,14 +986,8 @@ ParserGiD::readPlaneWaveEMSource() {
 			dir = strToCartesianVector(value);
 		} else if (label.compare("Polarization") == 0) {
 			pol = strToCartesianVector(value);
-//		} else if (label.compare("Excitation") == 0) {
-//		    Magnitude magnitude = readMagnitude(); TODO: Read and write magnitudes.
-		} else if (label.compare("Gaussian spread") == 0) {
-			spread = atof(value.c_str());
-		} else if (label.compare("Gaussian delay") == 0) {
-			delay = atof(value.c_str());
-		} else if (label.compare("Filename") == 0) {
-			filename = trim(value);
+		} else if (label.compare("Excitation") == 0) {
+		     mag = readMagnitude(value);
 		} else if (label.compare("Layer Box") == 0) {
 			bound = readBoundFromStr(value);
 		} else if (label.compare("Number of elements")==0) {
@@ -1078,10 +1072,6 @@ ParserGiD::readWaveportEMSource() {
 			} else {
 				input = false;
 			}
-		} else if (!label.compare("Spread")) {
-			spread = atof(value.c_str());
-		} else if (!label.compare("Delay")) {
-			delay = atof(value.c_str());
 		} else if (!label.compare("Shape")) {
 			if (value.find("Rectangular") != value.npos) {
 				shape = Waveport::rectangular;
@@ -1089,12 +1079,14 @@ ParserGiD::readWaveportEMSource() {
 				cout << "ERROR @ Unreckognized waveport shape." << endl;
 				exit(-1);
 			}
+		} else if (label.compare("Excitation") == 0) {
+		    mag = dynamic_cast<MagnitudeGaussian*>(readMagnitude(value));
 		} else if (!label.compare("ExcitationMode")) {
-			if (value.find("TE") != value.npos) {
-				excitationMode = Waveport::TE;
-			} else if (value.find("TM") != value.npos) {
-				excitationMode = Waveport::TM;
-			}
+		    if (value.find("TE") != value.npos) {
+		        excitationMode = Waveport::TE;
+		    } else if (value.find("TM") != value.npos) {
+		        excitationMode = Waveport::TM;
+		    }
 		} else if (!label.compare("FirstMode")) {
 			mode.first = atoi(value.c_str());
 		} else if (!label.compare("SecondMode")) {
@@ -1164,14 +1156,10 @@ ParserGiD::readGeneratorEMSource() {
 			type = generatorStrToType(value);
 		} else if (label.compare("Hardness")==0) {
 			hardness = generatorStrToHardness(value);
-		} else if (label.compare("Gaussian spread")==0) {
-			spread = atof(value.c_str());
-		} else if (label.compare("Gaussian delay")==0) {
-			delay = atof(value.c_str());
-		} else if (label.compare("Filename")==0) {
-			filename = trim(value);
+		} else if (label.compare("Excitation") == 0) {
+		    mag = readMagnitude(value);
 		} else if (label.compare("Number of elements")==0) {
-			uint nE = atoi(value.c_str());
+		    uint nE = atoi(value.c_str());
 			elems.reserve(nE);
 			for (uint i = 0; i < nE; i++) {
 				uint e;
@@ -1363,22 +1351,17 @@ ParserGiD::readBoundFromStr(
 void
 ParserGiD::init(const string& fn, const string& pTPath) {
 	// Check if fn is valid.
+    problemTypePath = pTPath;
 	struct stat st;
 	if (stat(fn.c_str(), &st) == 0) {
 		if (st.st_mode & S_IFDIR) {
-			cerr<< "ERROR@GiDParser::GiDParser()" << endl;
-			cerr<< "Problem opening: " << endl;
-			cerr<< fn << endl;
-			cerr<< "It is a directory " << endl;
-			exit(INPUT_ERROR);
+			cerr<< "ERROR@GiDParser::GiDParser(): "
+			 << fn << "It is a directory " << endl;
 		}  else if(st.st_mode & S_IFREG) {
 			f_in.open(fn.c_str(), ifstream::in);
-			problemTypePath = pTPath;
 			if (f_in.fail()) {
-				cerr<< "ERROR @ ParserGiD::GiDParser()" << endl;
-				cerr<< "Problem opening file: " << endl;
-				cerr<< fn << endl;
-				exit(INPUT_ERROR);
+				cerr<< "ERROR @ ParserGiD::GiDParser(): "
+				 << "Problem opening file: " << fn << endl;
 			}
 			return;
 		}
@@ -1455,6 +1438,45 @@ ParserGiD::readDomainFromStr(const string& line) const {
 		toBool(frequencyDomain), initialFrequency, finalFrequency,
 		frequencyStep,	toBool(logFrequencySweep),
 		toBool(usingTransferFunction), transferFunctionFile));
+}
+
+Magnitude*
+ParserGiD::readMagnitude(const string typeIn) {
+    string type = typeIn;
+    type = trim(type);
+    bool finished = false;
+    string label, value;
+    if (type.compare("Gaussian") == 0) {
+        double delay, spread;
+        while (!finished && !f_in.eof()) {
+            getNextLabelAndValue(label, value);
+            bool spreadFound = false;
+            bool delayFound = false;
+            if (label.compare("Gaussian spread") == 0) {
+                spread = atof(value.c_str());
+                spreadFound = true;
+            } else if (label.compare("Gaussian delay") == 0) {
+                delay = atof(value.c_str());
+                delayFound = true;
+            }
+            finished = spreadFound && delayFound;
+            return new MagnitudeGaussian(spread, delay);
+        }
+    } else if (type.compare("File") == 0) {
+        string filename;
+        while (!finished && !f_in.eof()) {
+            getNextLabelAndValue(label, value);
+            if (label.compare("Filename") == 0) {
+                filename = trim(value);
+                finished = true;
+            }
+            return new MagnitudeNumerical(filename);
+        }
+    }
+    cerr<< "ERROR @ readMagnitude: "
+        << "Unable to recognize magnitude type when reading excitation."
+        << endl;
+    return NULL;
 }
 
 bool
