@@ -201,8 +201,8 @@ MeshOpenfoam::discretizeWithinBoundary(
 	res.reserve(nHex);
 	for (uint p = 0; p < pairs.size(); p++) {
 		for (uint i = 1; i < zPos[p].size(); i++) {
-			CVecD3 min(box[p].get_min()(0), box[p].get_min()(1), zPos[p][i-1]);
-			CVecD3 max(box[p].get_max()(0), box[p].get_max()(1), zPos[p][i]);
+			CVecD3 min(box[p].getMin()(0), box[p].getMin()(1), zPos[p][i-1]);
+			CVecD3 max(box[p].getMax()(0), box[p].getMax()(1), zPos[p][i]);
 			res.push_back(BoundingBox(min, max));
 		}
 	}

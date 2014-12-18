@@ -1,27 +1,12 @@
-//=======================================================================================//
-//   Title: limitBox                                                                     //
-//   Author: Miguel D. Ruiz - Cabello N.                                                 //
-//=======================================================================================//
-// HYSTORY & VERSION:                                                                    //
-//    DATE beginning: 10.12.2013                                                         //
-//=======================================================================================//
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#include <omp.h>
 #include <limits>
 #include <utility>
 #include "../math/CartesianVector.h"
 
 using namespace std;
+
 #ifndef _limitBox_hxx
 # define _limitBox_hxx
-# define _limitBox_hxx_version "0.0.0"       //last version tested  
-# define _limitBox_hxx_date    "22.01.2014"  //last version tested
 
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%   class LimitBox  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class BoundingBox {
 public:
 
@@ -49,23 +34,25 @@ public:
 	//.....................................................................
 	void operator << (const CVecD3 &p);
 	//.....................................................................
-	inline CVecD3 get_min(void) const  {return minMax_.first;}
-	inline CVecD3 get_max(void) const  {return minMax_.second;}
+	inline CVecD3 getMin(void) const  {return minMax_.first;}
+	inline CVecD3 getMax(void) const  {return minMax_.second;}
 	inline CVecD3 getLength() const {
 		return (minMax_.second - minMax_.first).abs();
 	 }
 
 	void printInfo() const;
 private:
-	//.....................................................................
 	pair<CVecD3, CVecD3> minMax_;
 	void setDefaultValues(void){
 		minMax_.first.setPlusInfty();
 		minMax_.second.setMinusInfty();
 	};
-	//.....................................................................
+
 };
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+#include "Box.cpp"
+
+typedef Box<double, 3> BoxD3;
 
 #endif

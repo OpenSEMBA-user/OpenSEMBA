@@ -1,98 +1,105 @@
-//============================================================================//
-//   Title: confMeher                                                         //
-//   Author: Miguel D. Ruiz - Cabello N.                                      //
-//============================================================================//
-// HYSTORY & VERSION:                                                         //
-//    DATE beginning: 11.12.2013                                              //
-//============================================================================//
 #include "RectilinearGrid.h"
 
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%   CARTESIAN GRID  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//======== constructors ========================================================
 RectilinearGrid::RectilinearGrid(){
 }
 
 RectilinearGrid::RectilinearGrid(const RectilinearGrid& grid) {
 	origin_ = grid.origin_;
 	offsetGrid_ = grid.offsetGrid_;
-	for (int i = 0; i < 3; i++) {
-		step_[i] = grid.step_[i];
+	for (int i = 0; i < D; i++) {
 		pos_[i] = grid.pos_[i];
 	}
-	generatePositionsGrid();
 }
 
 RectilinearGrid::RectilinearGrid(
- const BoundingBox& boundingBox,
+ const BoundingBox& box,
  const CVecD3& dxyz){
-	for (int i = 0; i < 3; i++) {
-	    double boxLength = boundingBox.get_max()(i)-boundingBox.get_min()(i);
+    origin_ = box.getMin();
+    offsetGrid_ = CVecI3(0, 0, 0);
+    for (int i = 0; i < D; i++) {
+	    double boxLength = box.getMax()(i) - box.getMin()(i);
 	    int nCells = ceil(boxLength / dxyz(i));
 	    if ((boxLength - nCells * dxyz(i)) > tolerance) {
 	        nCells++;
 	    }
-		pos_[i].resize(nCells + 1);
-		step_[i].resize(nCells, dxyz(i));
+		pos_[i].resize(nCells+1, dxyz(i));
 	}
-	origin_ = boundingBox.get_min();
-	offsetGrid_ = CVecI3(0, 0, 0);
-	generatePositionsGrid();
 }
 
 RectilinearGrid::RectilinearGrid(
  const BoundingBox &boundingBox,
  const CVecI3& dims) {
-	for (int i = 0; i < 3; i++) {
+    origin_ = boundingBox.getMin();
+    offsetGrid_ = CVecI3(0, 0, 0);
+	for (int i = 0; i < D; i++) {
 		double step =
-		 (boundingBox.get_max()(i) - boundingBox.get_min()(i)) / dims(i);
-		step_[i].resize(dims(i), step);
+		 (boundingBox.getMax()(i) - boundingBox.getMin()(i)) / dims(i);
+		pos_[i].resize(dims(i)+1, step);
 	}
-	origin_ = boundingBox.get_min();
-	offsetGrid_ = CVecI3(0, 0, 0);
-	generatePositionsGrid();
 }
 
-RectilinearGrid::RectilinearGrid(const CVecI3& offset,
-                                 const CVecD3& origin,
-                                 const vector<double> step[]) {
-
+RectilinearGrid::RectilinearGrid(
+        const CVecI3& offset,
+        const CVecD3& origin,
+        const vector<double>& step[D]) {
    origin_ = origin;
    offsetGrid_ = offset;
-   for(int d = 0; d < 3; d++)
-      step_[d] = step[d];
-   generatePositionsGrid();
+   for(int d = 0; d < D; d++) {
+       pos_[d].resize(step[d].size()+1);
+       pos_[d][0] = origin[d];
+       for (uint i = 1; i < pos_[d].size(); i++) {
+           pos_[d][i] = pos_[d][i-1] + step[d][i];
+       }
+   }
 }
 
 RectilinearGrid::~RectilinearGrid(){
 }
 
-//======== tools methods =======================================================
-void RectilinearGrid::generatePositionsGrid(){
-	CVecI3 dims = getNumCells();
-	for (uint dir = 0; dir < 3; dir++) {
-		pos_[dir].resize(dims(dir) + 1);
-		pos_[dir][0] = origin_(dir);
-		for (long int n=1; n<dims(dir)+1; n++){
-			pos_[dir][n] = pos_[dir][n-1] + step_[dir][n-1];
-		}
+RectilinearGrid&
+RectilinearGrid::operator =(const RectilinearGrid& rhs) {
+	if (this == &rhs) {
+		return *this;
 	}
-
-}
-//==============================================================================
-bool RectilinearGrid::isIntoDirX (const double &dir)const{
-	return isIntoDir(x, dir);
-}
-
-bool RectilinearGrid::isIntoDirY (const double &dir)const{
-	return isIntoDir(y, dir);
+	origin_ = rhs.origin_;
+	offsetGrid_ = rhs.offsetGrid_;
+	for (int i = 0; i < D; i++) {
+		pos_[i] = rhs.pos_[i];
+	}
+	return *this;
 }
 
-bool RectilinearGrid::isIntoDirZ (const double &dir)const{
-	return isIntoDir(z, dir);
+inline vector<double>
+RectilinearGrid::getPos(const int& direction) const {
+    assert(direction >= 0 && direction < D);
+    return pos_[direction];
+};
+
+inline CVecD3
+RectilinearGrid::getPos(const CVecI3& ijk) const {
+    CVecI3 dims = getNumCells();
+    for (int i = 0; i < D; i++) {
+        assert((ijk(i) >= offsetGrid_(i)) &&
+                (ijk(i) <= offsetGrid_(i)+dims(i)));
+    }
+    return CVecD3(getPos(x)[ijk(x)-offsetGrid_(x)],
+            getPos(y)[ijk(y)-offsetGrid_(y)],
+            getPos(z)[ijk(z)-offsetGrid_(z)]);
+};
+
+inline CVecI3
+RectilinearGrid::getNumCells() const {
+    return CVecI3(pos_[x].size()-1,pos_[y].size()-1, pos_[z].size()-1);
+}
+
+vector<double>
+RectilinearGrid::getStep(const int dir) const {
+    assert(dir >= 0 && dir < D);
+    vector<double> res(pos_[dir].size()-1);
+    for (uint i = 0; i < pos_[dir].size()-1; i++) {
+        res[i] = pos_[dir][i+1] - pos_[dir][i];
+    }
+    return res;
 }
 
 bool RectilinearGrid::isIntoDir(
@@ -110,21 +117,6 @@ bool RectilinearGrid::isInto (const CVecD3& pos) const {
 		}
 	}
 	return true;
-}
-
-bool RectilinearGrid::getNaturalCellx
-		 (const double &posX,long int &i, double &relativeLen) const{
-	return getNaturalCellDir(i, relativeLen, x, posX);
-}
-
-bool RectilinearGrid::getNaturalCelly
-		 (const double &posY,long int &j, double &relativeLen) const{
-	return getNaturalCellDir(j, relativeLen, y, posY);
-}
-
-bool RectilinearGrid::getNaturalCellz
-		 (const double &posZ,long int &k, double &relativeLen) const{
-	return getNaturalCellDir(k, relativeLen, z, posZ);
 }
 
 bool RectilinearGrid::getNaturalCellDir(
@@ -157,14 +149,13 @@ bool RectilinearGrid::getNaturalCellDir(
 	return false;
 }
 
-//========= general setters ====================================================
 pair<CVecI3, CVecD3>
 RectilinearGrid::getNaturalCellPair(
 		const CVecD3& xyz,
 		const bool approx,
 		const double tol) const {
 	pair<CVecI3, CVecD3> res;
-	for (int dir = 0; dir < 3; dir++) {
+	for (int dir = 0; dir < D; dir++) {
 	    if(!getNaturalCellDir(res.first(dir), res.second(dir), dir, xyz(dir), tol)) {
 	        return make_pair(CVecI3(-1,-1,-1), CVecD3());
 	    }
@@ -188,26 +179,18 @@ RectilinearGrid::getBoundingBox(
 	return BoundingBox(make_pair(getPos(ijk.first), getPos(ijk.second)));
 }
 
-RectilinearGrid& RectilinearGrid::operator =(const RectilinearGrid& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	origin_ = rhs.origin_;
-	offsetGrid_ = rhs.offsetGrid_;
-	for (int i = 0; i < 3; i++) {
-		step_[i] = rhs.step_[i];
-		pos_[i] = rhs.pos_[i];
-	}
-	return *this;
+inline BoundingBox
+RectilinearGrid::getFullDomainBoundingBox() const {
+    return getBoundingBox(
+            pair<CVecI3,CVecI3> (offsetGrid_, offsetGrid_+getNumCells()) );
 }
 
-bool RectilinearGrid::isRegular() const {
-	double step;
-	CVecI3 dim = getNumCells();
-	for (int i = 0; i < 3; i++) {
-		step = step_[i][0];
-		for (long n = 0; n < dim(i); n++) {
-			if (step_[i][n] != step) {
+bool
+RectilinearGrid::isRegular() const {
+	for (int i = 0; i < D; i++) {
+	    vector<double> step = getStep(i);
+	    for (uint n = 1; n < step.size(); n++) {
+			if (step[n] != step[0]) {
 				return false;
 			}
 		}
@@ -215,13 +198,28 @@ bool RectilinearGrid::isRegular() const {
 	return true;
 }
 
-double RectilinearGrid::getMinimumSpaceStep() const {
-	double minStep = step_[0][0];
-	CVecI3 dim = getNumCells();
-	for (int i = 0; i < 3; i++) {
-		for (long n = 0; n < dim(i); n++) {
-			if (step_[i][n] < minStep) {
-				minStep = step_[i][n];
+bool
+RectilinearGrid::isCartesian() const {
+    double canon = getStep(0)[0];
+    for (int i = 0; i < D; i++) {
+        vector<double> step = getStep(i);
+        for (uint n = 1; n < step.size(); n++) {
+            if (step[n] != canon) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+double
+RectilinearGrid::getMinimumSpaceStep() const {
+	double minStep = numeric_limits<double>::infinity();
+	for (int i = 0; i < D; i++) {
+	    vector<double> step = getStep(i);
+		for (uint n = 0; n < step.size(); n++) {
+			if (step[n] < minStep) {
+				minStep = step[n];
 			}
 		}
 	}
@@ -238,39 +236,11 @@ void RectilinearGrid::printInfo() const {
 	cout << "Max val: " << maxPos(0) << " " << maxPos(1) << " " << maxPos(2) << endl;
 }
 
-double RectilinearGrid::getPositionOfNaturalCellDir(const int dir,
-                                                    long int i) const {
-   
-   switch(dir) {
-   case x:
-      return getPositionOfNaturalCelli(i);
-   case y:
-      return getPositionOfNaturalCellj(i);
-   case z:
-      return getPositionOfNaturalCellk(i);
-   }
-   return 0.0;
-}
-
-double RectilinearGrid::getPositionOfNaturalCelli(long int i) const {
-	CVecD3 coords = getPositionOfNaturalCell(CVecI3(i,
-                                                   offsetGrid_(y),
-                                                   offsetGrid_(z)));
-	return coords(0);
-}
-
-double RectilinearGrid::getPositionOfNaturalCellj(long int j) const {
-	CVecD3 coords = getPositionOfNaturalCell(CVecI3(offsetGrid_(x),
-                                                   j,
-                                                   offsetGrid_(z)));
-	return coords(1);
-}
-
-double RectilinearGrid::getPositionOfNaturalCellk(long int k) const {
-	CVecD3 coords = getPositionOfNaturalCell(CVecI3(offsetGrid_(x),
-                                                   offsetGrid_(y),
-                                                   k));
-	return coords(2);
+double
+RectilinearGrid::getPositionOfNaturalCellDir(
+        const int dir,
+        long int i) const {
+    return getPos(dir)[i];
 }
 
 CVecD3
@@ -283,7 +253,7 @@ RectilinearGrid::isNaturalCell(const CVecD3 position,
  const double tol) const {
 	pair<CVecI3, CVecD3> natCell = getNaturalCellPair(position);
 	bool res = true;
-	for (uint i = 0; i < 3; i++) {
+	for (uint i = 0; i < D; i++) {
 		if (natCell.second(i) < 0.5) {
 			res &= natCell.second(i) < tol;
 		} else {
@@ -312,28 +282,20 @@ RectilinearGrid::getPosInRange(
 	return extractRange(getPos(dir), pair<double, double>(min, max));
 }
 
-void RectilinearGrid::applyScalingFactorToVector(
-		double *vec,
-		const uint dim,
-		const double factor) {
-	for (uint i = 0; i < dim; i++) {
-		vec[i] *= factor;
-	}
-}
-
-void RectilinearGrid::applyScalingFactor(const double factor) {
+void
+RectilinearGrid::applyScalingFactor(const double factor) {
 	origin_ *= factor;
-	for (int i = 0; i < 3; i++) {
-		for (unsigned int j = 0; j < step_[i].size(); j++) {
-			step_[i][j] *= factor;
- 		}
+	for (int d = 0; d < D; d++) {
+	    for (uint i = 0; i < pos_[d].size(); i++) {
+	        pos_[d][i] *= factor;
+	    }
 	}
-	generatePositionsGrid();
 }
 
-bool RectilinearGrid::hasZeroSize() const {
+bool
+RectilinearGrid::hasZeroSize() const {
 	bool res = true;
-	for (uint i = 0; i < 3; i++) {
+	for (uint i = 0; i < D; i++) {
 		res &= (pos_[i].size() <= 1);
 	}
 	return res;
@@ -343,10 +305,10 @@ vector<CVecD3>
 RectilinearGrid::getCenterOfNaturalCellsInside(
         const BoundingBox& bound) const {
     // Determines centers of cells.
-    vector<double> center[3];
-    for (uint dir = 0; dir < 3; dir++) {
+    vector<double> center[D];
+    for (uint dir = 0; dir < D; dir++) {
         vector<double> pos
-         = getPosInRange(dir, bound.get_min()(dir), bound.get_max()(dir));
+         = getPosInRange(dir, bound.getMin()(dir), bound.getMax()(dir));
         if (pos.size() > 0) {
             center[dir].reserve(pos.size()-1);
         }

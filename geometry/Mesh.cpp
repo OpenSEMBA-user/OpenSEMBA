@@ -77,13 +77,13 @@ Mesh::getBound(
 		return getInfinityBound();
 	}
 	BoundingBox aux = getElementWithId(list[0])->getBound();
-	pair<CVecD3,CVecD3> bound(aux.get_min(), aux.get_max());
+	pair<CVecD3,CVecD3> bound(aux.getMin(), aux.getMax());
 	// Runs over border computing the bounding box of each face.
 	const unsigned int nK = list.size();
 	for (unsigned int i = 1; i < nK; i++) {
 		const Element* e = getElementWithId(list[i]);
 		BoundingBox aux = e->getBound();
-		pair<CVecD3,CVecD3> localBound(aux.get_min(), aux.get_max());
+		pair<CVecD3,CVecD3> localBound(aux.getMin(), aux.getMax());
 		bound = enlargeBound(bound, localBound);
 		for (unsigned int j = 0; j < 3; j++) {
 			if (bound.first(j) > bound.second(j)) {
@@ -130,8 +130,8 @@ Mesh::getIdsInsideBound(
 		bool isInside = true;
 		for (unsigned int j = 0; j < 3; j++) {
 			isInside &=
-			 (localBound.get_min()(j) >= bound.first(j)
-			 && localBound.get_max()(j) <= bound.second(j));
+			 (localBound.getMin()(j) >= bound.first(j)
+			 && localBound.getMax()(j) <= bound.second(j));
 		}
 		if (isInside) {
 			res.push_back(e->getId());
@@ -167,7 +167,7 @@ Mesh::getGridFromHexahedrons() const {
 	// Computes cell size.
 	assert(elem.hex8.size() != 0);
 	BoundingBox hexBound = elem.hex8[0].getBound();
-	CVecD3 cellSize = hexBound.get_max() - hexBound.get_min();
+	CVecD3 cellSize = hexBound.getMax() - hexBound.getMin();
 	bool isCartesian = elem.hex8[0].isRegular() ;
 //	for (unsigned int i = 1; i < elem.hex8.size(); i++) {
 //		isCartesian &= elem.hex8[i].isRegular();
@@ -177,7 +177,7 @@ Mesh::getGridFromHexahedrons() const {
 //		isCartesian &= (auxCS == cellSize);
 //	}
 	if (isCartesian) {
-		CVecD3 cellSize = hexBound.get_max() - hexBound.get_min();
+		CVecD3 cellSize = hexBound.getMax() - hexBound.getMin();
 		return RectilinearGrid(bound, cellSize);
 	} else {
 		cerr << "ERROR @ Getting grid from mesh." << endl;

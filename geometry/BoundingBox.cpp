@@ -99,8 +99,8 @@ bool
 BoundingBox::isInnerPoint(const CVecD3& point) const {
     bool isInner = true;
     for (int dir = 0; dir < 3; dir++) {
-        isInner &= (point(dir) <= get_max()(dir));
-        isInner &= (point(dir) >= get_min()(dir));
+        isInner &= (point(dir) <= getMax()(dir));
+        isInner &= (point(dir) >= getMin()(dir));
     }
     return isInner;
 }
