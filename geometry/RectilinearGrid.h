@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <vector>
 #include "BoundingBox.h"
+#include "Box.h"
 
 #ifdef compileWithVTK
 #include "../../utils/ugrMesher/vtkLittle.h"
@@ -34,7 +35,7 @@ public:
     RectilinearGrid(
             const CVecI3& offset,
             const CVecD3& origin,
-            const vector<double>& step[D]);
+            const vector<double> step[D]);
     ~RectilinearGrid ();
     RectilinearGrid&
      operator=(const RectilinearGrid& cGrid);

@@ -307,6 +307,6 @@ template<class T, unsigned int NROWS, unsigned int NCOLS>
 DynMatrix<T>
  operator*(const StaMatrix<T,NROWS,NCOLS>& lhs, const DynMatrix<T>& rhs);
 // ============================================================================
-#include "MathMatrix.cpp"
+#include "MathMatrix.hpp"
 // ============================================================================
 #endif

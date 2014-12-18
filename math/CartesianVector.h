@@ -10,7 +10,7 @@
 using namespace std;
 
 ////typedef unsigned int uint;;
- 
+
 #ifndef CARTESIANVECTOR_ERROR
 #define CARTESIANVECTOR_ERROR 677722
 #endif
@@ -116,9 +116,7 @@ CartesianVector<double,VS>
   const CartesianVector<int,VS>& lhs,
   const double rhs);
 
-
-
-#include "CartesianVector.cpp"
+#include "CartesianVector.hpp"
 
 typedef CartesianVector<double,3> CVecD3;
 typedef CartesianVector<long int, 3> CVecI3;

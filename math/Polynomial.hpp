@@ -1,6 +1,3 @@
-// =============== Includes headers ===========================================
-#include "Polynomial.h"
-// ===============Polynomial methods ==========================================
 template<class T>
 Polynomial<T>::Polynomial() {
 	nv = 0;

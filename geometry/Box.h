@@ -46,7 +46,6 @@ private:
     };
 };
 
-#include "Box.cpp"
 typedef Box<double,3> BoxD3;
 
 #endif /* SRC_COMMON_GEOMETRY_BOX_H_ */

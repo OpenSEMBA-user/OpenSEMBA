@@ -38,7 +38,7 @@ public:
 	 getId() const;
 };
 
-#include "Coordinate.cpp"
+#include "Coordinate.hpp"
 
 typedef Coordinate<double, 3> CoordD3;
 

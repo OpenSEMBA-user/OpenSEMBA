@@ -5,9 +5,8 @@
  *      Author: luis
  */
 
-#ifndef  SRC_COMMON_GEOMETRY_BOX_H_
 #include "Box.h"
-#endif
+#ifdef  SRC_COMMON_GEOMETRY_BOX_H_
 
 template<class T, int D>
 Box<T,D>::Box() {
@@ -16,7 +15,6 @@ Box<T,D>::Box() {
 template<class T, int D>
 Box<T,D>::~Box() {
 }
-
 
 template<class T, int D> Box<T,D>::Box(
  const pair<CVecTD, CVecTD>& bounds) {
@@ -134,3 +132,5 @@ Box<T,D>::scale(const double factor) {
     minMax_.first *= factor;
     minMax_.second *= factor;
 }
+
+#endif

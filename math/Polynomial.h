@@ -5,6 +5,7 @@
    ========================================================================= */
 #ifndef POLYNOMIAL_H_
 #define POLYNOMIAL_H_
+
 // ----------- Libraries ------------------------------------------------------
 #ifndef POLYNOMIAL_ERROR
 	#define POLYNOMIAL_ERROR 9017
@@ -79,6 +80,6 @@ protected:
 	vector<vector<int> > mp; // nm x nv array, containing powers of monomials.
 };
 // ============================================================================
-#include "Polynomial.cpp"
+#include "Polynomial.hpp"
 // ============================================================================
 #endif /* POLYNOMIAL_H_ */

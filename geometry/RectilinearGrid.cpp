@@ -41,12 +41,12 @@ RectilinearGrid::RectilinearGrid(
 RectilinearGrid::RectilinearGrid(
         const CVecI3& offset,
         const CVecD3& origin,
-        const vector<double>& step[D]) {
+        const vector<double> step[D]) {
    origin_ = origin;
    offsetGrid_ = offset;
    for(int d = 0; d < D; d++) {
        pos_[d].resize(step[d].size()+1);
-       pos_[d][0] = origin[d];
+       pos_[d][0] = origin(d);
        for (uint i = 1; i < pos_[d].size(); i++) {
            pos_[d][i] = pos_[d][i-1] + step[d][i];
        }
@@ -253,7 +253,7 @@ RectilinearGrid::isNaturalCell(const CVecD3 position,
  const double tol) const {
 	pair<CVecI3, CVecD3> natCell = getNaturalCellPair(position);
 	bool res = true;
-	for (uint i = 0; i < D; i++) {
+	for (int i = 0; i < D; i++) {
 		if (natCell.second(i) < 0.5) {
 			res &= natCell.second(i) < tol;
 		} else {
@@ -295,7 +295,7 @@ RectilinearGrid::applyScalingFactor(const double factor) {
 bool
 RectilinearGrid::hasZeroSize() const {
 	bool res = true;
-	for (uint i = 0; i < D; i++) {
+	for (int i = 0; i < D; i++) {
 		res &= (pos_[i].size() <= 1);
 	}
 	return res;
@@ -306,7 +306,7 @@ RectilinearGrid::getCenterOfNaturalCellsInside(
         const BoundingBox& bound) const {
     // Determines centers of cells.
     vector<double> center[D];
-    for (uint dir = 0; dir < D; dir++) {
+    for (int dir = 0; dir < D; dir++) {
         vector<double> pos
          = getPosInRange(dir, bound.getMin()(dir), bound.getMax()(dir));
         if (pos.size() > 0) {

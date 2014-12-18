@@ -76,6 +76,6 @@ namespace MathUtils {
 	  const vector<CartesianVector<T,D> >& signal);
 }
 
-#include "MathUtils.cpp"
+#include "MathUtils.hpp"
 
 #endif /* MATHUTILS_H_ */

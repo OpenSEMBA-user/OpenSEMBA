@@ -59,6 +59,6 @@ private:
 	uint size_;
 };
 
-#include "Field.cpp"
+#include "Field.hpp"
 
 #endif /* FIELD_H_ */
