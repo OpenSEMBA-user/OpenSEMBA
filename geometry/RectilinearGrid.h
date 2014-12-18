@@ -28,8 +28,6 @@ using namespace std;
 
 #ifndef  _rectilinearGrid_hxx
 # define _rectilinearGrid_hxx
-# define _rectilinearGrid_hxx_version "0.0.1"
-# define _rectilinearGrid_hxx_date    "09.07.2014"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,9 +52,6 @@ public:
 	//··········································································
 	RectilinearGrid& operator=(const RectilinearGrid& cGrid);
 	//···getters································································
-	inline vector<double> getPosX() const {return pos_[x];};
-	inline vector<double> getPosY() const {return pos_[y];};
-	inline vector<double> getPosZ() const {return pos_[z];};
 	inline vector<double> getPos(const int& direction) const {
 		assert(direction >= 0 && direction < 3);
 		return pos_[direction];
@@ -80,9 +75,6 @@ public:
 	vector<CVecD3>
 	 getCenterOfNaturalCellsInside(const BoundingBox& bound) const;
 
-	inline vector<double> getStepX() const {return step_[x];};
-	inline vector<double> getStepY() const {return step_[y];};
-	inline vector<double> getStepZ() const {return step_[z];};
 	inline vector<double> getStep(const int& direction) const {
 		assert(direction >= 0 && direction < 3);
 		return step_[direction];
@@ -102,10 +94,6 @@ public:
 	bool hasZeroSize() const;
 	bool isIntoDir(const int& direction, const double& pos) const;
 	bool isInto (const CVecD3& pos) const;
-	// Deprecated. ---
-	bool isIntoDirX (const double &x)const;  //deprecated... miguel
-	bool isIntoDirY (const double &y)const;
-	bool isIntoDirZ (const double &z)const;
 
 	bool getNaturalCellx (const double &x, long int &i,
 			              double &relativeLen) const;
@@ -137,9 +125,6 @@ public:
 	 applyScalingFactor(const double factor);
    
    double getPositionOfNaturalCellDir(const int dir, long int i) const;
-	double getPositionOfNaturalCelli(long int i) const;
-	double getPositionOfNaturalCellj(long int j) const;
-	double getPositionOfNaturalCellk(long int k) const;
 	CVecD3 getPositionOfNaturalCell(const CVecI3& ijk) const;
 	CVecD3 getOrigin() const {	return origin_;}
 
