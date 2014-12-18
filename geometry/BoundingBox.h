@@ -50,9 +50,4 @@ private:
 
 };
 
-
-#include "Box.cpp"
-
-typedef Box<double, 3> BoxD3;
-
 #endif
