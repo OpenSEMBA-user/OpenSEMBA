@@ -114,4 +114,4 @@ private:
 
 #include "DynMatrix.hpp"
 
-#endif DYNMATRIX_H_
+#endif

@@ -11,3 +11,70 @@ ProjectFile::ProjectFile() {
 
 }
 
+void ProjectFile::deleteDirIfExists(const string& directory) const {
+   // Checks existence
+   struct stat sb;
+   bool exists = (stat(directory.c_str(), &sb) == 0);
+   exists &= S_ISDIR(sb.st_mode);
+   // Deletes if exists.
+   if (exists) {
+      cerr<< "WARNING @ ProjectFile: "
+            << "An openfoam directory exists and will be deleted." << endl;
+      string command = "rm -r ";
+      command += directory;
+      system(command.c_str());
+   }
+}
+
+void ProjectFile::openFile(
+      const string& fileName,
+      ofstream& file) const {
+   file.open(fileName.c_str());
+   if (!file) {
+      cerr << "ERROR @ ProjectFile:" << endl;
+      cerr << "File for writing could not be opened." << endl;
+      cerr << "File name: " << fileName << endl;
+   }
+}
+
+vector<string>
+ProjectFile::getFilesBasenames(
+      const string& directory,
+      const string& extension) const {
+   DIR *dir;
+   struct dirent *ent;
+   vector<string> files;
+   // Retrieves names of all files.
+   if ((dir = opendir(directory.c_str())) != NULL) {
+      while ((ent = readdir (dir)) != NULL) {
+         files.push_back(ent->d_name);
+      }
+      closedir(dir);
+   } else {
+      cerr << "ERROR @ ProjectFile" << endl;
+      cerr << "Could not open directory to extract basenames." << endl;
+      cerr << "Tried: " << directory << endl;
+   }
+   // Stores files with names matching extension.
+   vector<string> res;
+   for (uint i = 0; i < files.size(); i++) {
+      size_t index = files[i].find(extension);
+      if (string::npos != index) {
+         res.push_back(files[i]);
+      }
+   }
+   return res;
+}
+
+string
+ProjectFile::removeExtension(
+      const string& fName) const {
+   size_t pos = fName.rfind(".");
+   if (pos == string::npos) { //No extension.
+      return fName;
+   }
+   if (pos == 0) {    //. is at the front. Not an extension.
+      return fName;
+   }
+   return fName.substr(0, pos);
+}

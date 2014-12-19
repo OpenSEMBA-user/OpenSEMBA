@@ -37,7 +37,6 @@ Arguments::getArgvpp(const unsigned int i, char* arg) {
 	} else {
 		printHelp();
 		cout << ">>>> A value must follow this last argument <<<<" << endl;
-		abort(ARGUMENTS_ERROR);
 	}
 	return 0;
 }
@@ -95,7 +94,6 @@ Arguments::getFileNameFromProjectPath(
 	} else {
 		cout << "Argument -p " << str << endl;
 		cout << "Does not specify a folder." << endl;
-		abort(ARGUMENTS_ERROR);
 	}
 	return 0;
 }

@@ -13,8 +13,9 @@
 using namespace std;
 
 #include "NFDEData.h"
+#include "ProjectFile.h"
 
-class OutputNFDE {
+class OutputNFDE : public ProjectFile {
 public:
 	OutputNFDE(const NFDEData *nfde);
 	~OutputNFDE();

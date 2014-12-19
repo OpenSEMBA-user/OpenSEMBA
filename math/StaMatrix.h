@@ -2,6 +2,7 @@
 #define STAMATRIX_H_
 
 #include "MathMatrix.h"
+#include "DynMatrix.h"
 
 // Static Matrix class. It can't change its size in run time.
 template<class T,unsigned int NROWS,unsigned int NCOLS>

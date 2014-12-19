@@ -12,7 +12,8 @@
 
 #include <iostream>			// Stream I/O.
 #include <vector>
-#include "MathMatrix.h"
+#include "StaMatrix.h"
+#include "DynMatrix.h"
 #include "CartesianVector.h"
 #include "Polynomial.h"
 

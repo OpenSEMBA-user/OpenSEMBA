@@ -9,11 +9,12 @@
 #define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_
 
 #include "Magnitude.h"
+#include "ProjectFile.h"
 #include <map>
 #include <cmath>
 #include <assert.h>
 
-class MagnitudeNumerical: public Magnitude {
+class MagnitudeNumerical: public Magnitude, ProjectFile {
 public:
     MagnitudeNumerical();
     virtual ~MagnitudeNumerical();

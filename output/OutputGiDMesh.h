@@ -14,9 +14,11 @@
 
 using namespace std;
 
+#include "ProjectFile.h"
+
 #define GIDOUTPUT_ASCII_OUTPUT
 
-class OutputGiDMesh {
+class OutputGiDMesh : public ProjectFile {
 public:
 	OutputGiDMesh();
 	OutputGiDMesh(
