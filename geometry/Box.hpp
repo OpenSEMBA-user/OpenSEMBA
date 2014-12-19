@@ -20,22 +20,24 @@ template<class T, int D> Box<T,D>::Box(
 
 template<class T, int D>
 Box<T,D>::Box(const CVecTD& min, const CVecTD& max) {
-    minMax_ = pair<CVecTD, CVecTD>(min, max);
+    min_ = min;
+    max_ = max;
 }
 
 template<class T, int D>
 void Box<T,D>::set(const pair<CVecTD, CVecTD>& minMax) {
-    minMax_ = minMax;
+    min_ = minMax.first;
+    max_ = minMax.second;
 }
 
 template<class T, int D>
 bool
 Box<T,D>::operator > (const Box<T,D> &rhs)const{
     for (int i = 0; i < D; i++) {
-        if (minMax_.second(i) <= rhs.minMax_.second(i)) {
+        if (max_(i) <= rhs.max_(i)) {
             return false;
         }
-        if (minMax_.first(i) >= rhs.minMax_.first(i)) {
+        if (min_(i) >= rhs.min_(i)) {
             return false;
         }
     }
@@ -51,8 +53,8 @@ Box<T,D>::operator < (const Box<T,D> &lBoxMax) const{
 template<class T, int D>
 bool
 Box<T,D>::operator == (const Box<T,D> &rhs) const{
-    if (minMax_.second != rhs.minMax_.second) {return false;}
-    if (minMax_.first != rhs.minMax_.first) {return false;}
+    if (max_ != rhs.max_) {return false;}
+    if (min_ != rhs.min_) {return false;}
     return true;
 }
 
@@ -60,41 +62,54 @@ template<class T, int D>
 void
 Box<T,D>::operator += (const Box<T,D> &rhs){
     for (int i = 0; i < D; i++) {
-        if (minMax_.second(i) < rhs.minMax_.second(i)) {
-            minMax_.second(i) = rhs.minMax_.second(i);
+        if (max_(i) < rhs.max_(i)) {
+            max_(i) = rhs.max_(i);
         }
-        if (minMax_.first(i) > rhs.minMax_.first(i)) {
-            minMax_.first(i) = rhs.minMax_.first(i);
+        if (min_(i) > rhs.min_(i)) {
+            min_(i) = rhs.min_(i);
         }
     }
 }
 
 template<class T, int D>
-void
+Box<T,D>&
 Box<T,D>::operator = (const Box<T,D> &rhs){
-    minMax_ = rhs.minMax_;
+   if (&rhs == this) {
+      return *this;
+   }
+   min_ = rhs.min_;
+   max_ = rhs.max_;
+   return this;
 }
 
 template<class T, int D>
 void
-Box<T,D>::operator << (const CVecTD &p){
-    if(minMax_.second(0)<p(0)){ minMax_.second(0)=p(0); }
-    if(minMax_.second(1)<p(1)){ minMax_.second(1)=p(1); }
-    if(minMax_.second(2)<p(2)){ minMax_.second(2)=p(2); }
+Box<T,D>::operator << (const CVecTD& p){
+   for (int i = 0; i < D; i++) {
+      if (min_(i) > p(i)) {
+         min_(i) = p(i);
+      }
+      if (max_(i) < p(i)) {
+         max_(i) = p(i);
+      }
+   }
+}
 
-    if(minMax_.first(0)>p(0)){ minMax_.first(0)=p(0); }
-    if(minMax_.first(1)>p(1)){ minMax_.first(1)=p(1); }
-    if(minMax_.first(2)>p(2)){ minMax_.first(2)=p(2); }
+template<class T, int D>
+void
+Box<T,D>::operator << (const Box<T,D>& p){
+   *this << p.min_;
+   *this << p.max_;
 }
 
 template<class T, int D>
 bool
 Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
     for (int i = 0; i < D; i++) {
-        if (minMax_.second(i) < rhs.minMax_.first(i)) {
+        if (max_(i) < rhs.min_(i)) {
             return false;
         }
-        if (rhs.minMax_.second(i) < minMax_.first(i)) {
+        if (rhs.max_(i) < min_(i)) {
             return false;
         }
     }
@@ -102,13 +117,36 @@ Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
 }
 
 template<class T, int D>
+inline Box<T,D>& Box<T,D>::setInfinity() {
+   for (int j = 0; j < D; j++) {
+      min_(j) = - numeric_limits<T>::infinity();
+      max_(j) = numeric_limits<T>::infinity();
+   }
+}
+
+template<class T, int D>
+inline CartesianVector<T,D> Box<T,D>::getMin(void) const {
+   return min_;
+}
+
+template<class T, int D>
+inline CartesianVector<T,D> Box<T,D>::getMax(void) const {
+   return max_;
+}
+
+template<class T, int D>
+inline CartesianVector<T,D> Box<T,D>::getLength() const {
+   return (max_ - min_);
+}
+
+template<class T, int D>
 void
 Box<T,D>::printInfo() const {
     cout<< "Box info" << endl;
     cout<< "Min: ";
-    minMax_.first.printInfo();
+    min_.printInfo();
     cout<< ", Max: ";
-    minMax_.second.printInfo();
+    max_.printInfo();
     cout<< endl;
 }
 
@@ -126,6 +164,6 @@ Box<T,D>::isInnerPoint(const CVecTD& point) const {
 template<class T, int D>
 void
 Box<T,D>::scale(const double factor) {
-    minMax_.first *= factor;
-    minMax_.second *= factor;
+    min_ *= factor;
+    max_ *= factor;
 }

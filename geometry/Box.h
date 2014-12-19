@@ -20,8 +20,8 @@ public:
     Box(const pair<CVecTD,CVecTD>& boundsMinMax);
     Box(const CVecTD& min, const CVecTD& max);
     virtual ~Box();
-    void erase ();
     void set(const pair<CVecTD,CVecTD>& boundsMinMax);
+    Box<T,D>& setInfinity();
     void scale(const double factor);
     bool operator>(const Box<T,D>& lBoxMin) const;
     bool operator<(const Box<T,D>& lBoxMax) const;
@@ -30,24 +30,25 @@ public:
     bool operator==(const Box<T,D>& lBoxMin) const;
     bool isIntersected (const Box<T,D>& lBox)   const;
     bool isInnerPoint(const CVecTD& point) const;
-    void operator= (const Box<T,D>& lBoxMin);
+    Box<T,D>& operator= (const Box<T,D>& lBoxMin);
     void operator+=(const Box<T,D>& lBoxSource);
     void operator+(const Box<T,D>& lBoxSource);
-    void operator<<(const CVecTD &p);
+    void operator<<(const CVecTD& p);
+    void operator<<(const Box<T,D>& p);
     inline CVecTD getMin(void) const;
     inline CVecTD getMax(void) const;
     inline CVecTD getLength() const;
     void printInfo() const;
 private:
-    pair<CVecTD, CVecTD> minMax_;
+    CVecTD min_, max_;
     void setDefaultValues(void){
-        minMax_.first.setPlusInfty();
-        minMax_.second.setMinusInfty();
+        min_.setPlusInfty();
+        max_.setMinusInfty();
     };
 };
 
-typedef Box<double,3> BoxD3;
-
 #include "Box.hpp"
+
+typedef Box<double,3> BoxD3;
 
 #endif /* SRC_COMMON_GEOMETRY_BOX_H_ */

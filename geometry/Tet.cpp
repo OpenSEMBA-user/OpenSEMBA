@@ -119,19 +119,11 @@ Tet::getCubatureJacobianHat(
 	}
 }
 
-pair<CVecD3,CVecD3>
+BoxD3
 Tet::getBoundOfFace(const unsigned int face) const {
-	pair<CVecD3,CVecD3> res = getInfinityBound();
+	BoxD3 res;
 	for (unsigned int i = 0; i < numberOfSideCoordinates(); i++) {
-		Coordinate<double,3> coord = *getSideV(face,i);
-		for (unsigned int j = 0; j < 3; j++) {
-			if (coord(j) > res.first(j)) {
-				res.first(j) = coord(j);
-			}
-			if (coord(j) < res.second(j)) {
-				res.second(j) = coord(j);
-			}
-		}
+		res << getSideV(face,i)->pos();
 	}
 	return res;
 }

@@ -56,39 +56,13 @@ Element::printInfo() const {
         << " LayerId: " << getLayerId() << endl;
 }
 
-pair<CVecD3, CVecD3>
-Element::getInfinityBound() const {
-	// Initializes bound.
-	pair<CVecD3, CVecD3> res;
-	for (unsigned int j = 0; j < 3; j++) {
-		res.first(j) = -numeric_limits<double>::infinity();
-		res.second(j) = +numeric_limits<double>::infinity();
+BoxD3
+Element::getBound() const {
+	BoxD3 res;
+	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
+		res << getV(i)->pos();
 	}
 	return res;
-}
-
-BoundingBox
-Element::getBound() const {
-	// Initializes bound.
-	pair<CVecD3, CVecD3> res = getInfinityBound();
-	// Shrinks bound.
-	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
-		Coordinate<double,3> coord = *getV(i);
-		for (unsigned int j = 0; j < 3; j++) {
-			if (coord(j) > res.first(j)) {
-				res.first(j) = coord(j);
-			}
-			if (coord(j) < res.second(j)) {
-				res.second(j) = coord(j);
-			}
-		}
-	}
-	for (unsigned int j = 0; j < 3; j++) {
-		if (res.first(j) > res.second(j)) {
-			swap(res.first(j), res.second(j));
-		}
-	}
-	return BoundingBox(res);
 }
 
 const CoordD3*

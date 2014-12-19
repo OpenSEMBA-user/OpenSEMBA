@@ -37,10 +37,11 @@ PMVolumePML::PMVolumePML(const unsigned int id, const string& name) {
 PMVolumePML::PMVolumePML(
  const unsigned int id,
  const Direction direction_[3],
- const pair<CVecD3,CVecD3>& bound_) {
+ const BoxD3& bound_) {
 	id_ = id;
 	name_ = "PML";
-	bound = bound_;
+	bound.first = bound_.getMin();
+	bound.second = bound_.getMax();
 	for (unsigned int i = 0; i < 3; i++) {
 		direction[i] = direction_[i];
 		if (direction[i] == plus) {

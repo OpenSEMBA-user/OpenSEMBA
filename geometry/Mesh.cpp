@@ -69,50 +69,39 @@ Mesh::linearize() {
 	map.build(v,elem);
 }
 
-pair<CVecD3,CVecD3>
+BoxD3
 Mesh::getBound(
  const vector<unsigned int>& list) const {
 	// Inits bounding box.
 	if (list.size() == 0) {
-		return getInfinityBound();
+	   return BoxD3().setInfinity();
 	}
-	BoxD3 aux = getElementWithId(list[0])->getBound();
-	pair<CVecD3,CVecD3> bound(aux.getMin(), aux.getMax());
 	// Runs over border computing the bounding box of each face.
+	BoxD3 bound = getElementWithId(list[0])->getBound();
 	const unsigned int nK = list.size();
 	for (unsigned int i = 1; i < nK; i++) {
 		const Element* e = getElementWithId(list[i]);
-		BoxD3 aux = e->getBound();
-		pair<CVecD3,CVecD3> localBound(aux.getMin(), aux.getMax());
-		bound = enlargeBound(bound, localBound);
-		for (unsigned int j = 0; j < 3; j++) {
-			if (bound.first(j) > bound.second(j)) {
-				swap(bound.first(j), bound.second(j));
-			}
-		}
-
+		bound << e->getBound();
 	}
 	return bound;
 }
 
-pair<CVecD3,CVecD3>
+BoxD3
 Mesh::getBound(
  const vector<pair<const Tet*, unsigned int> >& border) const {
 	// Inits bounding box.
+   if (border.size() == 0) {
+      return BoxD3().setInfinity();
+   }
 	const Tet* tet = border[0].first;
 	const unsigned int face = border[0].second;
-	pair<CVecD3,CVecD3> bound = tet->getBoundOfFace(face);
+	BoxD3 bound = tet->getBoundOfFace(face);
 	// Runs over border computing the bounding box of each face.
 	const unsigned int nK = border.size();
 	for (unsigned int i = 1; i < nK; i++) {
 		const Tet* tet = border[i].first;
 		const unsigned int face = border[i].second;
-		bound = enlargeBound(bound, tet->getBoundOfFace(face));
-		for (unsigned int j = 0; j < 3; j++) {
-			if (bound.first(j) > bound.second(j)) {
-				swap(bound.first(j), bound.second(j));
-			}
-		}
+		bound << tet->getBoundOfFace(face);
 	}
 	return bound;
 }
@@ -163,7 +152,7 @@ Grid3
 Mesh::getGridFromHexahedrons() const {
 	// Computes global bound.
 	vector<unsigned int> ids = elem.getHexIds();
-	pair<CVecD3,CVecD3> bound = getBound(ids);
+	BoxD3 bound = getBound(ids);
 	// Computes cell size.
 	assert(elem.hex8.size() != 0);
 	BoxD3 hexBound = elem.hex8[0].getBound();
@@ -230,48 +219,3 @@ const Element*
 Mesh::getElementWithId(const unsigned int id) const {
 	return elem.getPtrToId(id);
 }
-
-
-pair<CVecD3,CVecD3>
-Mesh::getInfinityBound() const {
-	// Inits bounding box.
-	pair<CVecD3,CVecD3> bound;
-	for (unsigned int j = 0; j < 3; j++) {
-		bound.first(j) = - numeric_limits<double>::infinity();
-		bound.second(j) = numeric_limits<double>::infinity();
-	}
-	return bound;
-}
-
-pair<CVecD3,CVecD3>
-Mesh::shrinkBound(
- const pair<CVecD3,CVecD3>& original,
- const pair<CVecD3,CVecD3>& localBound) const {
-	pair<CVecD3,CVecD3> res = original;
-	for (unsigned int j = 0; j < 3; j++) {
-		if (localBound.first(j) > original.first(j)) {
-			res.first(j) = localBound.first(j);
-		}
-		if (localBound.second(j) < original.second(j)) {
-			res.second(j) = localBound.second(j);
-		}
-	}
-	return res;
-}
-
-pair<CVecD3,CVecD3>
-Mesh::enlargeBound(
- const pair<CVecD3,CVecD3>& original,
- const pair<CVecD3,CVecD3>& localBound) const {
-	pair<CVecD3,CVecD3> res = original;
-	for (unsigned int j = 0; j < 3; j++) {
-		if (localBound.first(j) < original.first(j)) {
-			res.first(j) = localBound.first(j);
-		}
-		if (localBound.second(j) > original.second(j)) {
-			res.second(j) = localBound.second(j);
-		}
-	}
-	return res;
-}
-

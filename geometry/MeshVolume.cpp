@@ -429,15 +429,15 @@ MeshVolume::isFloatingCoordinate(const CoordD3* param) const {
 	return true;
 }
 
-vector<BoundingBox>
+vector<BoxD3>
 MeshVolume::getRectilinearHexesInsideRegion(
         const vector<const Element*>& region) const {
     // Determines positions to query.
     vector<uint> ids = elem.getIds(region);
-    BoundingBox bound(getBound(ids));
+    BoxD3 bound(getBound(ids));
     vector<CVecD3> center = grid_->getCenterOfNaturalCellsInside(bound);
     // Determines if positions are inside tetrahedrons.
-    vector<BoundingBox> res;
+    vector<BoxD3> res;
     res.reserve(center.size());
     for (uint i = 0; i < center.size(); i++) {
         for (uint j = 0; j < region.size(); j++) {

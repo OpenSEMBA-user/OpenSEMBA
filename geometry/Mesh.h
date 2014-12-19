@@ -39,10 +39,10 @@ public:
 	 getIdsWithMaterialId(const unsigned int matId) const;
 	vector<unsigned int>
 	 getIdsWithoutMaterialId(const unsigned int matId) const;
-	pair<CVecD3,CVecD3>
+	BoxD3
 	 getBound(
 	  const vector<pair<const Tet*, unsigned int> >& border) const;
-	pair<CVecD3,CVecD3>
+	BoxD3
 	 getBound(
 	  const vector<unsigned int>& list) const;
 	vector<unsigned int>

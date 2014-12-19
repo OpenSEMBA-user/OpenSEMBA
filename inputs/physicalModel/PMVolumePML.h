@@ -36,7 +36,7 @@ public:
 	PMVolumePML(
 	 const unsigned int id,
 	 const Direction direction[3],
-	 const pair<CVecD3,CVecD3>& bound);
+	 const BoxD3& bound);
 	~PMVolumePML();
 	PMVolumePML&
 	 operator=(const PMVolumePML& rhs);

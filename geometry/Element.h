@@ -88,8 +88,6 @@ protected:
 	static const double tolerance = 1e-15;
 	void
 	 ascendingOrder(unsigned int nVal, unsigned int* val) const;
-	pair<CVecD3, CVecD3>
-	 getInfinityBound() const;
 };
 
 #endif

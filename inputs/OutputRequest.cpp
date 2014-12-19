@@ -32,7 +32,7 @@ OutputRequest::OutputRequest(
  const Element::Type elementType,
  const OutputRequest::Type outputType,
  const string& name,
- const BoundingBox& box) : Condition(elementType), Domain(domain) {
+ const BoxD3& box) : Condition(elementType), Domain(domain) {
 	outputType_  = outputType;
 	name_ = name;
 	usingBound_ = true;
@@ -45,7 +45,7 @@ OutputRequest::OutputRequest(
  const Element::Type elementType,
  const OutputRequest::Type outputType,
  const string& name,
- const BoundingBox& box,
+ const BoxD3& box,
  const double iTh, const double fTh, const double sTh,
  const double iPhi, const double fPhi, const double sPhi) : Condition(elementType), Domain(domain) {
 	assert(outputType == OutputRequest::farField);
