@@ -18,10 +18,10 @@ MeshVolume::MeshVolume(
 MeshVolume::MeshVolume(
  const CoordinateGroup& vIn,
  const ElementsGroup& elementIn,
- const RectilinearGrid* grid) {
+ const Grid3* grid) {
 	build(vIn, elementIn);
 	if (grid != NULL) {
-		grid_ = new RectilinearGrid(*grid);
+		grid_ = new Grid3(*grid);
 	} else {
 		grid_ = NULL;
 	}
@@ -45,7 +45,7 @@ MeshVolume::operator=(const MeshVolume& param) {
 	map = param.map;
 	map.reassignPointers(elem);
 	if (param.grid_ != NULL) {
-		grid_ = new RectilinearGrid(*param.grid_);
+		grid_ = new Grid3(*param.grid_);
 	} else {
 		grid_ = NULL;
 	}
@@ -160,22 +160,13 @@ MeshVolume::nVolumeElements() const {
 	return elem.nVolumeElements();
 }
 
-
-
 void
 MeshVolume::printInfo() const {
-	cout << " --- Coordinates --- " << endl;
 	cout << "Coordinates read: " << v.size() << endl;
-	cout << " --- End of Coordinates --- " << endl;
-	cout << " --- Elements --- " << endl;
 	elem.printInfo();
-	cout << " --- End of elements --- " << endl;
-	cout << " --- Grid ---" << endl;
 	if (grid_ != NULL) {
 		grid_->printInfo();
 	}
-	cout << " --- End of Grid ---" << endl;
-
 }
 
 pair<const Tet*, unsigned int>

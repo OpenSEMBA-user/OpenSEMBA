@@ -8,8 +8,8 @@
 #ifndef MESHVOLUME_H_
 #define MESHVOLUME_H_
 
+#include "Grid.h"
 #include "Mesh.h"
-#include "RectilinearGrid.h"
 
 //#define MESH_USE_OLD_ALGORITHM_TO_GETINTERNAL_BORDER
 
@@ -36,7 +36,7 @@ public:
 	MeshVolume(
 	 const CoordinateGroup& vIn,
 	 const ElementsGroup& elementIn,
-	 const RectilinearGrid* grid_);
+	 const Grid3* grid_);
 	virtual ~MeshVolume();
 	MeshVolume&
 	 operator=(const MeshVolume& param);
@@ -46,7 +46,7 @@ public:
 	 getTriWithId(const vector<uint>& Id) const;
 	const Element*
 	 getElementWithId(unsigned int id) const;
-	vector<BoundingBox>
+	vector<BoxD3>
 	 getRectilinearHexesInsideRegion(
 	  const vector<const Element*>& region) const;
 	pair<const Tet*, unsigned int>

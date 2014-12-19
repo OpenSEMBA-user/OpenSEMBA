@@ -13,9 +13,7 @@
 #include <iostream>
 #include "Element.h"
 #include "Map.h"
-#include "BoundingBox.h"
-#include "RectilinearGrid.h"
-#include "../math/MathMatrix.h"
+#include "Grid.h"
 
 using namespace std;
 
@@ -29,7 +27,7 @@ public:
 	ElementsGroup elem;
 	MapGroup map;
     void
-     addCoordinates(const RectilinearGrid& grid);
+     addCoordinates(const Grid3& grid);
 	Mesh();
 	virtual
 	 ~Mesh();
@@ -59,18 +57,18 @@ public:
 	 isLinear() const;
 	bool
 	 isRectilinear() const;
-	RectilinearGrid
+	Grid3
      getGrid() const;
-	RectilinearGrid
+	Grid3
 	 getGridFromHexahedrons() const;
 	void
-	 setGrid(const RectilinearGrid& grid_);
+	 setGrid(const Grid3& grid_);
 	void
 	 removeHexahedrons();
 	bool
 	 canExtractGrid() const;
 protected:
-	RectilinearGrid* grid_;
+	Grid3* grid_;
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
 	static constexpr double areaDiffTolerance = 1e-15;
 #else
@@ -81,16 +79,16 @@ protected:
 	virtual const Element*
 	 getElementWithId(unsigned int id) const;
 private:
-	// DEPRECTATED, should be in BoundingBox.
-	pair<CVecD3,CVecD3>
-	 shrinkBound(
- 	  const pair<CVecD3,CVecD3>& bound,
-	  const pair<CVecD3,CVecD3>& constraint) const;
-	pair<CVecD3,CVecD3>
-	 enlargeBound(
-	  const pair<CVecD3,CVecD3>& bound,
-	  const pair<CVecD3,CVecD3>& constraint) const;
-	pair<CVecD3,CVecD3>
-	 getInfinityBound() const;
+//	// DEPRECTATED, should be in BoundingBox.
+//	pair<CVecD3,CVecD3>
+//	 shrinkBound(
+// 	  const pair<CVecD3,CVecD3>& bound,
+//	  const pair<CVecD3,CVecD3>& constraint) const;
+//	pair<CVecD3,CVecD3>
+//	 enlargeBound(
+//	  const pair<CVecD3,CVecD3>& bound,
+//	  const pair<CVecD3,CVecD3>& constraint) const;
+//	pair<CVecD3,CVecD3>
+//	 getInfinityBound() const;
 };
 #endif /* MESH_H_ */

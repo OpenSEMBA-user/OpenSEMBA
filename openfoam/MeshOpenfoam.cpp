@@ -154,9 +154,9 @@ MeshOpenfoam::getMaterialBoundary(
 	return res;
 }
 
-vector<BoundingBox>
+vector<BoxD3>
 MeshOpenfoam::discretizeWithinBoundary(
- const RectilinearGrid& grid,
+ const Grid3& grid,
  const PhysicalModel* mat,
  const Layer* lay) const {
 	return discretizeWithinBoundary(grid,
@@ -164,13 +164,13 @@ MeshOpenfoam::discretizeWithinBoundary(
 }
 
 void
-MeshOpenfoam::addCoordinates(const RectilinearGrid& grid) {
+MeshOpenfoam::addCoordinates(const Grid3& grid) {
 	cG_.add(grid.getPos());
 }
 
-vector<BoundingBox>
+vector<BoxD3>
 MeshOpenfoam::discretizeWithinBoundary(
- const RectilinearGrid& grid,
+ const Grid3& grid,
  const vector<const Polygon*>& surf) const {
 	// --- Preliminar checkings -----------------------------------------------
 	checkAllFacesAreRectangular();
@@ -179,12 +179,12 @@ MeshOpenfoam::discretizeWithinBoundary(
 	const vector<pair<const Polygon*, const Polygon*> > pairs
 	 = getPairsDefiningVolumeWithin(grid, surf);
 	// Gets positions in z-axis.
-	vector<BoundingBox> box(pairs.size());
+	vector<BoxD3> box(pairs.size());
 	vector<vector<double> > zPos(pairs.size());
 	for (uint p = 0; p < pairs.size(); p++) {
 		CVecD3 min = pairs[p].first->getMinV()->pos();
 		CVecD3 max = pairs[p].second->getMaxV()->pos();
-		box[p] = BoundingBox(min,max);
+		box[p] = BoxD3(min,max);
 		if (min(2) > max(2)) {
 			zPos[p] = grid.getPosInRange(z, max(2), min(2));
 		} else {
@@ -197,13 +197,13 @@ MeshOpenfoam::discretizeWithinBoundary(
 	for (uint p = 0; p < zPos.size(); p++) {
 		nHex += zPos[p].size() - 1;
 	}
-	vector<BoundingBox> res;
+	vector<BoxD3> res;
 	res.reserve(nHex);
 	for (uint p = 0; p < pairs.size(); p++) {
 		for (uint i = 1; i < zPos[p].size(); i++) {
 			CVecD3 min(box[p].getMin()(0), box[p].getMin()(1), zPos[p][i-1]);
 			CVecD3 max(box[p].getMax()(0), box[p].getMax()(1), zPos[p][i]);
-			res.push_back(BoundingBox(min, max));
+			res.push_back(BoxD3(min, max));
 		}
 	}
 	return res;
@@ -222,7 +222,7 @@ MeshOpenfoam::checkAllFacesAreRectangular() const {
 
 vector<pair<const Polygon*, const Polygon*> >
 MeshOpenfoam::getPairsDefiningVolumeWithin(
- const RectilinearGrid& grid,
+ const Grid3& grid,
  const vector<const Polygon*>& origBound) const {
 	vector<pair<const Polygon*, const Polygon*> > res;
 	// --- Preliminar checkings ------------------------------------------------

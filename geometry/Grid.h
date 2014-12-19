@@ -9,7 +9,6 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "BoundingBox.h"
 #include "Box.h"
 
 #ifdef compileWithVTK
@@ -21,24 +20,27 @@ using namespace std;
 #ifndef  _rectilinearGrid_hxx
 # define _rectilinearGrid_hxx
 
-class RectilinearGrid {
+template<int D>
+class Grid {
+    typedef Box<double,D> BoxDD;
+    typedef CartesianVector<double,D> CVecDD;
+    typedef CartesianVector<long,D> CVecID;
 public:
-    static const int D = 3;
-    RectilinearGrid();
-    RectilinearGrid(const RectilinearGrid& grid);
-    RectilinearGrid(
-            const BoundingBox &boundingBox,
+    Grid();
+    Grid(const Grid& grid);
+    Grid(
+            const BoxDD &boundingBox,
             const CVecD3& dxyz);
-    RectilinearGrid(
-            const BoundingBox &boundingBox,
+    Grid(
+            const BoxDD &boundingBox,
             const CVecI3& dims);
-    RectilinearGrid(
+    Grid(
             const CVecI3& offset,
             const CVecD3& origin,
             const vector<double> step[D]);
-    ~RectilinearGrid ();
-    RectilinearGrid&
-     operator=(const RectilinearGrid& cGrid);
+    ~Grid ();
+    Grid&
+     operator=(const Grid& cGrid);
     inline vector<double>
      getPos(const int& direction) const;
     inline CVecD3
@@ -52,17 +54,17 @@ public:
      getPos() const;
     vector<CVecD3>
      getCenterOfNaturalCellsInside(
-            const BoundingBox& bound) const;
+            const BoxDD& bound) const;
     vector<double>
      getStep(
             const int direction) const;
     inline CVecI3
      getNumCells() const;
-    BoundingBox
+    BoxDD
      getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
-    BoundingBox
+    BoxDD
      getBoundingBoxContaining(const CVecD3& point) const;
-    inline BoundingBox
+    inline BoxDD
      getFullDomainBoundingBox() const;
     bool
      hasZeroSize() const;
@@ -118,5 +120,9 @@ private:
             const vector<double>& vec,
             const pair<double,double>& minMax) const;
 };
+
+#include "Grid.hpp"
+
+typedef Grid<3> Grid3;
 
 #endif //_cartesianGrid_hxx

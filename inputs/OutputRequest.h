@@ -55,13 +55,13 @@ public:
 	 const Element::Type elementType,
 	 const OutputRequest::Type outputType_,
 	 const string& name_,
-	 const BoundingBox& box);
+	 const BoxD3& box);
 	OutputRequest(
 	 const Domain& domain,
 	 const Element::Type elementType,
 	 const OutputRequest::Type outputType_,
 	 const string& name_,
-	 const BoundingBox& box,
+	 const BoxD3& box,
 	 const double iTh, const double fTh, const double sTh,
 	 const double iPhi, const double fPhi, const double sPhi);
 	OutputRequest(
@@ -125,7 +125,7 @@ public:
 		return initialTheta_;
 	}
 
-	const BoundingBox& getBound() const {
+	const BoxD3& getBound() const {
 		assert(usingBound_);
 		return bound_;
 	}
@@ -139,7 +139,7 @@ private:
 	double initialTheta_, finalTheta_, stepTheta_;
 	double initialPhi_, finalPhi_, stepPhi_;
 	bool usingBound_;
-	BoundingBox bound_;
+	BoxD3 bound_;
 
 	vector<uint> elem_;
 

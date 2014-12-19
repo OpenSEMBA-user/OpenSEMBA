@@ -5,9 +5,6 @@
  *      Author: luis
  */
 
-#include "Box.h"
-#ifdef  SRC_COMMON_GEOMETRY_BOX_H_
-
 template<class T, int D>
 Box<T,D>::Box() {
 }
@@ -34,7 +31,7 @@ void Box<T,D>::set(const pair<CVecTD, CVecTD>& minMax) {
 template<class T, int D>
 bool
 Box<T,D>::operator > (const Box<T,D> &rhs)const{
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < D; i++) {
         if (minMax_.second(i) <= rhs.minMax_.second(i)) {
             return false;
         }
@@ -62,7 +59,7 @@ Box<T,D>::operator == (const Box<T,D> &rhs) const{
 template<class T, int D>
 void
 Box<T,D>::operator += (const Box<T,D> &rhs){
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < D; i++) {
         if (minMax_.second(i) < rhs.minMax_.second(i)) {
             minMax_.second(i) = rhs.minMax_.second(i);
         }
@@ -93,7 +90,7 @@ Box<T,D>::operator << (const CVecTD &p){
 template<class T, int D>
 bool
 Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < D; i++) {
         if (minMax_.second(i) < rhs.minMax_.first(i)) {
             return false;
         }
@@ -107,7 +104,7 @@ Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
 template<class T, int D>
 void
 Box<T,D>::printInfo() const {
-    cout<< "Bounding box info" << endl;
+    cout<< "Box info" << endl;
     cout<< "Min: ";
     minMax_.first.printInfo();
     cout<< ", Max: ";
@@ -119,7 +116,7 @@ template<class T, int D>
 bool
 Box<T,D>::isInnerPoint(const CVecTD& point) const {
     bool isInner = true;
-    for (int dir = 0; dir < 3; dir++) {
+    for (int dir = 0; dir < D; dir++) {
         isInner &= (point(dir) <= getMax()(dir));
         isInner &= (point(dir) >= getMin()(dir));
     }
@@ -132,5 +129,3 @@ Box<T,D>::scale(const double factor) {
     minMax_.first *= factor;
     minMax_.second *= factor;
 }
-
-#endif

@@ -81,7 +81,7 @@ protected:
 	 readTri3Elements(const CoordinateGroup& v);
 	vector<Lin2>
 	 readLin2Elements(const CoordinateGroup& v);
-	RectilinearGrid*
+	Grid3*
 	 readCartesianGrid();
 	vector<OutputRequest>
 	 readOutputRequestInstances();

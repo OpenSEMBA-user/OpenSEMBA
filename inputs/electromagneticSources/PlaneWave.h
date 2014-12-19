@@ -19,7 +19,7 @@ public:
 	 CVecD3 polarization,
 	 const Magnitude* magnitude);
 	PlaneWave(
-	 BoundingBox bound,
+	 BoxD3 bound,
 	 CVecD3 waveDirection,
 	 CVecD3 polarization,
 	 const Magnitude* magnitude);
@@ -30,7 +30,7 @@ public:
 	 isPlaneWave() const {return true;}
 	void
 	 printInfo() const;
-	const BoundingBox*
+	const BoxD3*
 	 getBound() const;
 	const CVecD3&
 	 getPolarization() const;
@@ -45,7 +45,7 @@ public:
 private:
 	CVecD3 waveDirection_;
 	CVecD3 polarization_;
-	BoundingBox* bound_;
+	BoxD3* bound_;
 	void
 	init(
 	 const CVecD3& waveDirection,

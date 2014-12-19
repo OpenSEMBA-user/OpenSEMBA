@@ -23,11 +23,11 @@ PlaneWave::PlaneWave(
 }
 
 PlaneWave::PlaneWave(
- BoundingBox bound,
+ BoxD3 bound,
  CVecD3 waveDirection,
  CVecD3 polarization,
  const Magnitude* magnitude) : EMSource(magnitude) {
-	bound_ = new BoundingBox(bound);
+	bound_ = new BoxD3(bound);
 	init(waveDirection, polarization);
 }
 
@@ -73,7 +73,7 @@ PlaneWave::operator=(const PlaneWave &rhs) {
 	return *this;
 }
 
-const BoundingBox*
+const BoxD3*
 PlaneWave::getBound() const {
 	return bound_;
 }

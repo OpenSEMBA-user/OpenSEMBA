@@ -15,7 +15,7 @@ Mesh::~Mesh() {
 }
 
 void
-Mesh::addCoordinates(const RectilinearGrid& grid) {
+Mesh::addCoordinates(const Grid3& grid) {
     v.add(grid.getPos());
 }
 
@@ -76,13 +76,13 @@ Mesh::getBound(
 	if (list.size() == 0) {
 		return getInfinityBound();
 	}
-	BoundingBox aux = getElementWithId(list[0])->getBound();
+	BoxD3 aux = getElementWithId(list[0])->getBound();
 	pair<CVecD3,CVecD3> bound(aux.getMin(), aux.getMax());
 	// Runs over border computing the bounding box of each face.
 	const unsigned int nK = list.size();
 	for (unsigned int i = 1; i < nK; i++) {
 		const Element* e = getElementWithId(list[i]);
-		BoundingBox aux = e->getBound();
+		BoxD3 aux = e->getBound();
 		pair<CVecD3,CVecD3> localBound(aux.getMin(), aux.getMax());
 		bound = enlargeBound(bound, localBound);
 		for (unsigned int j = 0; j < 3; j++) {
@@ -123,7 +123,7 @@ Mesh::getIdsInsideBound(
 	const unsigned int nK = elem.element.size();
 	vector<unsigned int> res;
 	res.reserve(nK);
-	BoundingBox localBound;
+	BoxD3 localBound;
 	for (unsigned int i = 0; i < nK; i++) {
 		const Element* e = elem.element[i];
 		localBound = e->getBound();
@@ -147,7 +147,7 @@ Mesh::isRectilinear() const {
 	return (hasCartesianGridDefined && onlyContainsQuad4);
 }
 
-RectilinearGrid
+Grid3
 Mesh::getGrid() const {
 	if (!canExtractGrid()) {
 		exit(-1);
@@ -155,18 +155,18 @@ Mesh::getGrid() const {
 	if (grid_ != NULL) {
 		return *grid_;
 	}
-	RectilinearGrid res = getGridFromHexahedrons();
+	Grid3 res = getGridFromHexahedrons();
 	return res;
 }
 
-RectilinearGrid
+Grid3
 Mesh::getGridFromHexahedrons() const {
 	// Computes global bound.
 	vector<unsigned int> ids = elem.getHexIds();
 	pair<CVecD3,CVecD3> bound = getBound(ids);
 	// Computes cell size.
 	assert(elem.hex8.size() != 0);
-	BoundingBox hexBound = elem.hex8[0].getBound();
+	BoxD3 hexBound = elem.hex8[0].getBound();
 	CVecD3 cellSize = hexBound.getMax() - hexBound.getMin();
 	bool isCartesian = elem.hex8[0].isRegular() ;
 //	for (unsigned int i = 1; i < elem.hex8.size(); i++) {
@@ -178,7 +178,7 @@ Mesh::getGridFromHexahedrons() const {
 //	}
 	if (isCartesian) {
 		CVecD3 cellSize = hexBound.getMax() - hexBound.getMin();
-		return RectilinearGrid(bound, cellSize);
+		return Grid3(bound, cellSize);
 	} else {
 		cerr << "ERROR @ Getting grid from mesh." << endl;
 		cerr << "Hexahedrons do not form a cartesian grid." << endl;
@@ -189,8 +189,8 @@ Mesh::getGridFromHexahedrons() const {
 }
 
 void
-Mesh::setGrid(const RectilinearGrid& grid) {
-	grid_ = new RectilinearGrid(grid);
+Mesh::setGrid(const Grid3& grid) {
+	grid_ = new Grid3(grid);
 }
 
 void

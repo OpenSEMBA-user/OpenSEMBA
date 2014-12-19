@@ -132,8 +132,8 @@ ParserGiD::readProblemData() {
 
 MeshVolume*
 ParserGiD::readMesh() {
-	// Read Grid
-	RectilinearGrid* grid = readCartesianGrid();
+	// Read Grid3
+	Grid3* grid = readCartesianGrid();
 	// Reads the coordinates.
 	CoordinateGroup* coordinates = readCoordinates();
 	// Reads elements connectivities.
@@ -400,12 +400,12 @@ ParserGiD::readOutputRequestInstances() {
 					getline(f_in, line);
 					res.push_back(OutputRequest(domain, Element::VOLUME,
 							outputType, outputName,
-							BoundingBox(readBoundFromStr(line))));
+							BoxD3(readBoundFromStr(line))));
 					break;
 				case ParserGiD::farField:
 				{
 					getline(f_in, line);
-					BoundingBox bbox(readBoundFromStr(line));
+					BoxD3 bbox(readBoundFromStr(line));
 					double iTh, fTh, sTh, iPhi, fPhi, sPhi;
 					f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
 					getline(f_in, line);
@@ -892,26 +892,26 @@ ParserGiD::getNextLabelAndValue(string& label, string& value) {
 	value = line.substr(line.find(LABEL_ENDING) + 1, line.length());
 }
 
-RectilinearGrid*
+Grid3*
 ParserGiD::readCartesianGrid() {
 	string label, line, value;
 	bool finished = false;
 	bool gridLabelFound = false;
 	bool gridFound = false;
-	RectilinearGrid* grid = NULL;
-	BoundingBox bound;
+	Grid3* grid = NULL;
+	BoxD3 bound;
 	bool stepsByNumberOfCells = true;
 	CVecI3 numElems;
 	CVecD3 steps;
 	while (!gridLabelFound && !f_in.eof()) {
 		getline(f_in, line);
-		if (line.find("Grid:") != line.npos ) {
+		if (line.find("Grid3:") != line.npos ) {
 			gridLabelFound = true;
 			while(!finished) {
 				getNextLabelAndValue(label, value);
 				if (label.compare("Layer Box")==0) {
 					gridFound = true;
-					bound = BoundingBox(readBoundFromStr(value));
+					bound = BoxD3(readBoundFromStr(value));
 				} else if (label.compare("Type")==0) {
 					if (trim(value).compare("by_number_of_cells")==0) {
 						stepsByNumberOfCells = true;
@@ -927,7 +927,7 @@ ParserGiD::readCartesianGrid() {
 					} else {
 					    steps = aux;
 					}
-				} else if(label.find("End of Grid") != label.npos) {
+				} else if(label.find("End of Grid3") != label.npos) {
 					finished = true;
 					if (!gridFound) {
 						return NULL;
@@ -943,13 +943,13 @@ ParserGiD::readCartesianGrid() {
 	// Throws error message if label was not found.
 	if (!gridLabelFound) {
 		cerr<< "ERROR @ ParserGiD: "
-		 << "Grid label not found." << endl;
+		 << "Grid3 label not found." << endl;
 	}
 	if (gridFound) {
 	    if (stepsByNumberOfCells) {
-		    grid = new RectilinearGrid(bound, numElems);
+		    grid = new Grid3(bound, numElems);
 	    } else {
-	        grid = new RectilinearGrid(bound, steps);
+	        grid = new Grid3(bound, steps);
 	    }
 	} else {
 		grid = NULL;

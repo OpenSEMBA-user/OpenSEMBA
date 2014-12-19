@@ -10,9 +10,9 @@
 
 #include "../../common/geometry/Polyhedron.h"
 #include "../../common/geometry/Hex8.h"
-#include "../../common/geometry/RectilinearGrid.h"
 #include "../../common/inputs/physicalModel/PhysicalModel.h"
 #include "../../common/inputs/Layer.h"
+#include "../geometry/Grid.h"
 #include "OpenfoamBoundary.h"
 
 typedef pair<uint, vector<uint> > FaceIdentifier;
@@ -43,13 +43,13 @@ public:
 	 printInfo() const;
 	vector<const Polygon*>
 	 getMaterialBoundary(const uint matId, const uint layId) const;
-	vector<BoundingBox>
+	vector<BoxD3>
 	 discretizeWithinBoundary(
-	  const RectilinearGrid& grid,
+	  const Grid3& grid,
 	  const PhysicalModel* mat,
 	  const Layer* lay) const;
 	void
-	 addCoordinates(const RectilinearGrid& grid);
+	 addCoordinates(const Grid3& grid);
 	void
 	 checkAllFacesAreRectangular() const;
 private:
@@ -58,15 +58,15 @@ private:
 	vector<uint> owner_;
 	vector<uint> neighbour_;
 	vector<OpenfoamBoundary> boundary_;
-	vector<BoundingBox>
+	vector<BoxD3>
 	discretizeWithinBoundary(
-			const RectilinearGrid& grid,
+			const Grid3& grid,
 			const vector<const Polygon*>& faces) const;
 	// Returns pairs of surface in boundary define a volume in the region
 	// contained within them.
 	vector<pair<const Polygon*, const Polygon*> >
 	getPairsDefiningVolumeWithin(
-			const RectilinearGrid& grid,
+			const Grid3& grid,
 			const vector<const Polygon*>& boundary) const;
 };
 

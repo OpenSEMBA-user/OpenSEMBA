@@ -5,7 +5,6 @@
 #include <assert.h>
 
 #include "../geometry/Element.h"
-#include "../geometry/BoundingBox.h"
 
 using namespace std;
 
