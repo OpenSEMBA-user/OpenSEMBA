@@ -8,6 +8,7 @@
 #ifndef SMBDATA_H_
 #define SMBDATA_H_
 
+#include "ProjectFile.h"
 #include "GlobalProblemData.h"
 #include "inputs/OutputRequestGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
@@ -15,7 +16,7 @@
 #include "inputs/OpenFOAMParameters.h"
 #include "inputs/LayerGroup.h"
 
-class SmbData {
+class SmbData : public ProjectFile {
 public:
 	GlobalProblemData* gData;
 	LayerGroup* layers;
@@ -25,6 +26,7 @@ public:
 	OutputRequestGroup* outputRequests;
 	OpenFOAMParameters* ofParams;
 	SmbData();
+	SmbData(const string& filename);
 	virtual ~SmbData();
 	virtual SmbData&
 	 operator=(const SmbData& rhs);

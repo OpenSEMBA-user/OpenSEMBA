@@ -10,7 +10,7 @@
 
 #include <string>
 #ifdef USE_MPI
-	#include <mpi.h>
+#include <mpi.h>
 #endif
 
 #include <iostream>
@@ -19,56 +19,35 @@
 #include <libgen.h>
 #include <cstring>
 
-#ifndef ARGUMENTS_ERROR
-	#define ARGUMENTS_ERROR 45601134
-#endif
-
-//typedef unsigned int uint;
-
 using namespace std;
 
 class Arguments {
 public:
-	Arguments();
-	virtual
-	~Arguments();
-	virtual string
-	 getProjectFolder() const;
-	virtual string
-	 getProjectName() const;
-	virtual string
-	 getFilename() const;
-	virtual void
-	 printWelcomeMessage(
-	  const string appName,
-	  const string versionNumber) const;
-	virtual void
-	 printGoodbyeMessage(
-	  const string appName) const;
+   Arguments();
+   virtual ~Arguments();
+   virtual string	 getProjectFolder() const;
+   virtual string	 getProjectName() const;
+   virtual string	 getFilename() const;
+   virtual void printWelcomeMessage(
+         const string appName,
+         const string versionNumber) const;
+   virtual void printGoodbyeMessage(
+         const string appName) const;
 protected:
-	string path;
-	string fileName;
-	int argc;
-	virtual void
-	 printBasicInfo() const;
-	virtual void
-	 printHelp() const = 0;
-	virtual void
-	 printBasicHelp() const;
-	bool
-	 fExists(const string& filename) const;
-	char*
-	 getArgvpp(const unsigned int i, char *arg);
-	string
-	 getFileNameFromProjectPath(
-	  const string projectPath) const;
-	string
-	 boolToStr(const bool param) const;
-	void
-	 abort(int msg) const;
+   string path;
+   string fileName;
+   int argc;
+   virtual void printBasicInfo() const;
+   virtual void printHelp() const = 0;
+   virtual void printBasicHelp() const;
+   bool fExists(const string& filename) const;
+   char* getArgvpp(const unsigned int i, char *arg);
+   string getFileNameFromProjectPath(
+         const string projectPath) const;
+   string  boolToStr(const bool param) const;
+   void abort(int msg) const;
 private:
-	string
- 	 removeExtension(const string& fName) const;
+   string removeExtension(const string& fName) const;
 };
 
 #endif /* ARGUMENTS2_H_ */
