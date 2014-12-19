@@ -25,16 +25,11 @@ ParserGiD::ParserGiD(
 ParserGiD::~ParserGiD() {
 }
 
-void
-ParserGiD::printInfo() const {
-	cout << "--- GiDParser info ---" << endl;
-	cout << "--- End of GiDParser info ---" << endl;
-}
-
 SmbData*
 ParserGiD::read() {
 	SmbData* res;
 	res = new SmbData();
+	res->filename_ = filename_;
 
 	if (!checkVersionCompatibility(readVersion())) {
 		exit(-1);
@@ -69,6 +64,12 @@ ParserGiD::read() {
 	res->applyGeometricScalingFactor();
 
 	return res;
+}
+
+void
+ParserGiD::printInfo() const {
+	cout << "--- GiDParser info ---" << endl;
+	cout << "--- End of GiDParser info ---" << endl;
 }
 
 GlobalProblemData

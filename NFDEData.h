@@ -7,10 +7,11 @@
 
 using namespace std;
 
+#include "ProjectFile.h"
 #include "CartesianVector.h"
 #include "Constants.h"
 
-struct NFDEData {
+struct NFDEData : public ProjectFile {
    //	AUXILIARY TYPES
    struct MaterialTypes {
       enum value {

@@ -47,77 +47,6 @@ void
 SmbData::detectAndAssignPMLRegions() {
    pMGroup->detectAndAssignPMLRegions(mesh);
 }
-//
-//SmbData::SmbData(const SmbData* smb_, const MeshOpenfoam& ofMesh) {
-//	*this = smb_;
-//
-//	// PERFORMANCE: This function can be improved by reading only the
-//	// relevant elements and coordinates from the openFoam data.
-//	mesh->elem = reassignMaterials(mesh->elem, ofMesh.boundaries_);
-//
-//	outputRequests = reassignOutputRequests(outputRequests, ofMesh.boundaries_);
-//	emSources = reassignEMSources(emSources, ofMesh.boundaries_);
-//
-//	mesh->elem = mesh->elem.removeElementsWithMatId(0);
-//}
-//
-//ElementsGroup
-//SmbData::reassignMaterials(
-// const ElementsGroup& elem,
-// const vector<OpenfoamSurface>& b) const {
-//	const uint nB = b.size();
-//	uint lastMatId = 0;
-//	uint id;
-//	// Assigns materials.
-//	for (uint i = 0; i < nB; i++) {
-//		if (b[i].isMaterial()) {
-//			id = b[i].getMaterialId();
-//			if (id > lastMatId) {
-//				lastMatId = id;
-//			}
-//			uint nElem = b[i].getFaces();
-//			uint startFace = b[i].getStartFace();
-//			for (uint e = 0; e < nElem; e++) {
-//				uint bId = startFace + e;
-//				elem.getPtrToId(bId)->setMatId(id);
-//			}
-//		}
-//	}
-//
-//	// For each volumic material creates hex and assigns mat to hex.
-//	vector<uint> volMatId = smb_->pMGroup->getVolumicMatIds();
-//	for (uint i = 0; i < volMatId.size(); i++) {
-//		res.setVolumeElementsFromClosedSurfacesWithMatId(volMatId[i]);
-//	}
-//
-//
-//	// Assigns outputRequests.
-//	for (uint i = 0; i < nB; i++) {
-//		if (b[i].isOutputRequest()) {
-//			id = lastMatId + b[i].getOutputRequestId();
-//			uint nElem = b[i].getFaces();
-//			uint startFace = b[i].getStartFace();
-//			for (uint e = 0; e < nElem; e++) {
-//				uint bId = startFace + e;
-//				elem.getPtrToId(bId)->setMatId(id);
-//			}
-//		}
-//	}
-//	// Assigns Sources on surfaces.
-//	lastMatId = id;
-//	for (uint i = 0; i < nB; i++) {
-//		if (b[i].isEMSource()) {
-//			id = lastMatId + b[i].getEMSourceId();
-//			uint nElem = b[i].getFaces();
-//			uint startFace = b[i].getStartFace();
-//			for (uint e = 0; e < nElem; e++) {
-//				uint bId = startFace + e;
-//				elem.getPtrToId(bId)->setMatId(id);
-//			}
-//		}
-//	}
-//	return elem;
-//}
 
 void
 SmbData::printInfo() const {
@@ -157,7 +86,6 @@ SmbData::printInfo() const {
    } else {
       cout << "No info about openFoam parameters." << endl;
    }
-
 }
 
 void

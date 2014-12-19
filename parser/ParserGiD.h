@@ -17,13 +17,13 @@
 #include "Parser.h"
 #include "SmbData.h"
 #include "ProblemSize.h"
-#include "math/CartesianVector.h"
 
 #define LABEL_ENDING ':'
 #ifndef GIDPARSER_ERROR
 #define GIDPARSER_ERROR 61594
 
 class ParserGiD : public Parser {
+   friend class SmbData;
 public:
 	ParserGiD();
 	ParserGiD(

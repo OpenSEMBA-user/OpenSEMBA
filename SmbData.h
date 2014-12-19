@@ -17,27 +17,22 @@
 #include "inputs/LayerGroup.h"
 
 class SmbData : public ProjectFile {
+   friend class ParserGiD;
 public:
-	GlobalProblemData* gData;
-	LayerGroup* layers;
-	MeshVolume* mesh;
-	PhysicalModelGroup* pMGroup;
-	EMSourceGroup* emSources;
-	OutputRequestGroup* outputRequests;
-	OpenFOAMParameters* ofParams;
-	SmbData();
-	SmbData(const string& filename);
+   GlobalProblemData* gData;
+   LayerGroup* layers;
+   MeshVolume* mesh;
+   PhysicalModelGroup* pMGroup;
+   EMSourceGroup* emSources;
+   OutputRequestGroup* outputRequests;
+   OpenFOAMParameters* ofParams;
+   SmbData();
 	virtual ~SmbData();
-	virtual SmbData&
-	 operator=(const SmbData& rhs);
-	void
-	 applyGeometricScalingFactor();
-	void
-	 ignorePMLs();
-	void
-	 detectAndAssignPMLRegions();
-	virtual void
-	 printInfo() const;
+	virtual SmbData& operator=(const SmbData& rhs);
+	void applyGeometricScalingFactor();
+	void ignorePMLs();
+	void detectAndAssignPMLRegions();
+	virtual void printInfo() const;
 };
 
 #endif /* SMBDATA_H_ */
