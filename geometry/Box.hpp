@@ -79,7 +79,7 @@ Box<T,D>::operator = (const Box<T,D> &rhs){
    }
    min_ = rhs.min_;
    max_ = rhs.max_;
-   return this;
+   return *this;
 }
 
 template<class T, int D>

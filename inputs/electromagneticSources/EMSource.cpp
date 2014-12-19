@@ -41,6 +41,7 @@ EMSource::printInfo() const {
     for (uint i = 0; i < elem_.size(); i++) {
         cout<< elem_[i] << " ";
     }
+    cout << endl;
     magnitude_->printInfo();
 }
 

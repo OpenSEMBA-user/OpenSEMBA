@@ -905,7 +905,7 @@ ParserGiD::readCartesianGrid() {
 	CVecD3 steps;
 	while (!gridLabelFound && !f_in.eof()) {
 		getline(f_in, line);
-		if (line.find("Grid3:") != line.npos ) {
+		if (line.find("Grid:") != line.npos ) {
 			gridLabelFound = true;
 			while(!finished) {
 				getNextLabelAndValue(label, value);
@@ -927,7 +927,7 @@ ParserGiD::readCartesianGrid() {
 					} else {
 					    steps = aux;
 					}
-				} else if(label.find("End of Grid3") != label.npos) {
+				} else if(label.find("End of Grid") != label.npos) {
 					finished = true;
 					if (!gridFound) {
 						return NULL;
@@ -1430,10 +1430,10 @@ ParserGiD::readMagnitude(const string typeIn) {
     string label, value;
     if (type.compare("Gaussian") == 0) {
         double delay, spread;
+        bool spreadFound = false;
+        bool delayFound = false;
         while (!finished && !f_in.eof()) {
             getNextLabelAndValue(label, value);
-            bool spreadFound = false;
-            bool delayFound = false;
             if (label.compare("Gaussian spread") == 0) {
                 spread = atof(value.c_str());
                 spreadFound = true;
