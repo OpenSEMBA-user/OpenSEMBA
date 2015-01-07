@@ -21,6 +21,8 @@
 
 using namespace std;
 
+#define ARGUMENTS_ERROR 1
+
 class Arguments {
 public:
    Arguments();

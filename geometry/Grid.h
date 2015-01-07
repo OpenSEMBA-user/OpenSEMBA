@@ -43,8 +43,8 @@ public:
      operator=(const Grid& cGrid);
     inline vector<double>
      getPos(const int& direction) const;
-    inline CVecD3
-     getPos(const CVecI3& ijk) const;
+    inline CartesianVector<double,D>
+     getPos(const CartesianVector<long,D>& ijk) const;
     vector<double>
      getPosInRange(
             const int direction,

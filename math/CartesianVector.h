@@ -108,6 +108,8 @@ public:
 	 isCoplanar(const CartesianVector<T,D>& param) const;
 	virtual void
 	 printInfo() const;
+	virtual string
+	 toStr() const;
 };
 
 template<int VS>

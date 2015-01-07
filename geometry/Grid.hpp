@@ -25,7 +25,10 @@ Grid<D>::Grid(
       if ((boxLength - nCells * dxyz(i)) > tolerance) {
          nCells++;
       }
-      pos_[i].resize(nCells+1, dxyz(i));
+      pos_[i].resize(nCells+1);
+      for (int j = 0; j < nCells+1; j++) {
+         pos_[i][j] = origin_(i) + j * dxyz(i);
+      }
    }
 }
 
@@ -38,7 +41,11 @@ Grid<D>::Grid(
    for (int i = 0; i < D; i++) {
       double step =
             (boundingBox.getMax()(i) - boundingBox.getMin()(i)) / dims(i);
-      pos_[i].resize(dims(i)+1, step);
+      int nCells = dims(i);
+      pos_[i].resize(nCells+1);
+      for (int j = 0; j < nCells+1; j++) {
+         pos_[i][j] = origin_(i) + j * step;
+      }
    }
 }
 
@@ -83,16 +90,16 @@ Grid<D>::getPos(const int& direction) const {
 };
 
 template<int D>
-inline CVecD3
-Grid<D>::getPos(const CVecI3& ijk) const {
-   CVecI3 dims = getNumCells();
+inline CartesianVector<double,D>
+Grid<D>::getPos(const CartesianVector<long,D>& ijk) const {
+   CVecID dims = getNumCells();
+   CVecDD res;
    for (int i = 0; i < D; i++) {
       assert((ijk(i) >= offsetGrid_(i)) &&
             (ijk(i) <= offsetGrid_(i)+dims(i)));
+      res(i) = pos_[i][ijk(i) - offsetGrid_(i)];
    }
-   return CVecD3(getPos(x)[ijk(x)-offsetGrid_(x)],
-         getPos(y)[ijk(y)-offsetGrid_(y)],
-         getPos(z)[ijk(z)-offsetGrid_(z)]);
+   return res;
 };
 
 template<int D>
@@ -187,9 +194,11 @@ CVecI3 Grid<D>::getNaturalCell(
 }
 
 template<int D>
-Box<double,D> Grid<D>::getBoundingBox(
+inline Box<double,D>
+Grid<D>::getBoundingBox(
       const pair<CVecI3, CVecI3>& ijk) const {
-   return BoxDD(make_pair(getPos(ijk.first), getPos(ijk.second)));
+   BoxDD res(getPos(ijk.first), getPos(ijk.second));
+   return res;
 }
 
 template<int D>
@@ -246,12 +255,11 @@ Grid<D>::getMinimumSpaceStep() const {
 template<int D>
 void Grid<D>::printInfo() const {
    CVecI3 numCells = getNumCells();
-   CVecD3 minPos = getPos(CVecI3(0,0,0));
-   CVecD3 maxPos = getPos(getNumCells());
-   cout << "-- Cartesian Grid<D> --" << endl;
-   cout << "Dims: " << numCells(0) << " " << numCells(1) << " " << numCells(2) << endl;
-   cout << "Min val: " << minPos(0) << " " << minPos(1) << " " << minPos(2) << endl;
-   cout << "Max val: " << maxPos(0) << " " << maxPos(1) << " " << maxPos(2) << endl;
+   BoxDD bound = getFullDomainBoundingBox();
+   cout << "-- Cartesian Grid<" << D << "> --" << endl;
+   cout << "Dims: " << numCells.toStr() << endl;
+   cout << "Min val: " << bound.getMin().toStr() << endl;
+   cout << "Max val: " << bound.getMax().toStr() << endl;
 }
 
 template<int D>

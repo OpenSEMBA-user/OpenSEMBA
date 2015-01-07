@@ -14,61 +14,61 @@ Box<T,D>::~Box() {
 }
 
 template<class T, int D> Box<T,D>::Box(
- const pair<CVecTD, CVecTD>& bounds) {
-    set(bounds);
+      const pair<CVecTD, CVecTD>& bounds) {
+   set(bounds);
 }
 
 template<class T, int D>
 Box<T,D>::Box(const CVecTD& min, const CVecTD& max) {
-    min_ = min;
-    max_ = max;
+   min_ = min;
+   max_ = max;
 }
 
 template<class T, int D>
 void Box<T,D>::set(const pair<CVecTD, CVecTD>& minMax) {
-    min_ = minMax.first;
-    max_ = minMax.second;
+   min_ = minMax.first;
+   max_ = minMax.second;
 }
 
 template<class T, int D>
 bool
 Box<T,D>::operator > (const Box<T,D> &rhs)const{
-    for (int i = 0; i < D; i++) {
-        if (max_(i) <= rhs.max_(i)) {
-            return false;
-        }
-        if (min_(i) >= rhs.min_(i)) {
-            return false;
-        }
-    }
-    return true;
+   for (int i = 0; i < D; i++) {
+      if (max_(i) <= rhs.max_(i)) {
+         return false;
+      }
+      if (min_(i) >= rhs.min_(i)) {
+         return false;
+      }
+   }
+   return true;
 }
 
 template<class T, int D>
 bool
 Box<T,D>::operator < (const Box<T,D> &lBoxMax) const{
-    return lBoxMax > *this;
+   return lBoxMax > *this;
 }
 
 template<class T, int D>
 bool
 Box<T,D>::operator == (const Box<T,D> &rhs) const{
-    if (max_ != rhs.max_) {return false;}
-    if (min_ != rhs.min_) {return false;}
-    return true;
+   if (max_ != rhs.max_) {return false;}
+   if (min_ != rhs.min_) {return false;}
+   return true;
 }
 
 template<class T, int D>
 void
 Box<T,D>::operator += (const Box<T,D> &rhs){
-    for (int i = 0; i < D; i++) {
-        if (max_(i) < rhs.max_(i)) {
-            max_(i) = rhs.max_(i);
-        }
-        if (min_(i) > rhs.min_(i)) {
-            min_(i) = rhs.min_(i);
-        }
-    }
+   for (int i = 0; i < D; i++) {
+      if (max_(i) < rhs.max_(i)) {
+         max_(i) = rhs.max_(i);
+      }
+      if (min_(i) > rhs.min_(i)) {
+         min_(i) = rhs.min_(i);
+      }
+   }
 }
 
 template<class T, int D>
@@ -105,15 +105,15 @@ Box<T,D>::operator << (const Box<T,D>& p){
 template<class T, int D>
 bool
 Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
-    for (int i = 0; i < D; i++) {
-        if (max_(i) < rhs.min_(i)) {
-            return false;
-        }
-        if (rhs.max_(i) < min_(i)) {
-            return false;
-        }
-    }
-    return true;
+   for (int i = 0; i < D; i++) {
+      if (max_(i) < rhs.min_(i)) {
+         return false;
+      }
+      if (rhs.max_(i) < min_(i)) {
+         return false;
+      }
+   }
+   return true;
 }
 
 template<class T, int D>
@@ -142,28 +142,26 @@ inline CartesianVector<T,D> Box<T,D>::getLength() const {
 template<class T, int D>
 void
 Box<T,D>::printInfo() const {
-    cout<< "Box info" << endl;
-    cout<< "Min: ";
-    min_.printInfo();
-    cout<< ", Max: ";
-    max_.printInfo();
-    cout<< endl;
+   cout<< "Box info" << endl;
+   cout<< "Min: " << min_.toStr() << endl;
+   cout<< "Max: " << max_.toStr() << endl;
+   cout<< endl;
 }
 
 template<class T, int D>
 bool
 Box<T,D>::isInnerPoint(const CVecTD& point) const {
-    bool isInner = true;
-    for (int dir = 0; dir < D; dir++) {
-        isInner &= (point(dir) <= getMax()(dir));
-        isInner &= (point(dir) >= getMin()(dir));
-    }
-    return isInner;
+   bool isInner = true;
+   for (int dir = 0; dir < D; dir++) {
+      isInner &= (point(dir) <= getMax()(dir));
+      isInner &= (point(dir) >= getMin()(dir));
+   }
+   return isInner;
 }
 
 template<class T, int D>
 void
 Box<T,D>::scale(const double factor) {
-    min_ *= factor;
-    max_ *= factor;
+   min_ *= factor;
+   max_ *= factor;
 }

@@ -373,14 +373,22 @@ CartesianVector<T,D>::isCoplanar(
 template <class T, int D>
 void
 CartesianVector<T,D>::printInfo() const {
-	cout << "(";
-	for (register int i = 0; i < D; i++) {
-	   cout << val[i];
-	   if (i < D-1) {
-		   cout << " , ";
-	   }
-	}
-	cout << ")" << flush;
+	cout << toStr() << flush;
+}
+
+template <class T, int D>
+string
+CartesianVector<T,D>::toStr() const {
+   stringstream ss;
+   ss << "(";
+   for (register int i = 0; i < D; i++) {
+      ss << val[i];
+      if (i < D-1) {
+         ss << " , ";
+      }
+   }
+   ss << ")";
+   return ss.str();
 }
 
 template<unsigned int VS>
