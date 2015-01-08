@@ -7,6 +7,7 @@
 
 template<class T, int D>
 Box<T,D>::Box() {
+   setDefaultValues();
 }
 
 template<class T, int D>

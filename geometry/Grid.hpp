@@ -137,7 +137,8 @@ bool Grid<D>::isInto (const CVecD3& pos) const {
 }
 
 template<int D>
-bool Grid<D>::getNaturalCellDir(
+bool
+Grid<D>::getNaturalCellDir(
       long int &ijk,
       double &relativeLen,
       const int& dir,
@@ -145,6 +146,7 @@ bool Grid<D>::getNaturalCellDir(
       const double tol) const {
    relativeLen = -1.0;
    assert(getPos(dir).size() >= 1);
+   // Checks if it is below the grid.
    double diff = abs(getPos(dir)[0] - xyz);
    if(diff > tol && xyz < getPos(dir)[0]){
       ijk=offsetGrid_(dir);
@@ -214,7 +216,7 @@ Grid<D>::isRegular() const {
    for (int i = 0; i < D; i++) {
       vector<double> step = getStep(i);
       for (uint n = 1; n < step.size(); n++) {
-         if (step[n] != step[0]) {
+         if (abs(step[n] - step[0]) > tolerance) {
             return false;
          }
       }
