@@ -12,21 +12,24 @@ MagnitudeNumerical::MagnitudeNumerical() {
 
 }
 
-MagnitudeNumerical::MagnitudeNumerical(const string& filename) {
-   initFromFile(filename);
+MagnitudeNumerical::MagnitudeNumerical(const string& filename)
+   : ProjectFile(filename) {
+   initFromFile();
 }
 
 MagnitudeNumerical::MagnitudeNumerical(
+      const string& name,
       const Magnitude* mag,
       const double timeStep,
-      const double finalTime) {
+      const double finalTime) :
+         ProjectFile(name) {
    const MagnitudeNumerical* magNum
     = dynamic_cast<const MagnitudeNumerical*>(mag);
    if (magNum != NULL) {
-      initFromFile(magNum->getFilename());
+      *this = *magNum;
+      initFromFile();
       return;
    }
-   const string name("predefinedExcitation.dat");
    unsigned int nSteps;
    if (timeStep != 0.0) {
       nSteps = abs(finalTime / timeStep);
@@ -41,24 +44,20 @@ MagnitudeNumerical::MagnitudeNumerical(
    file.open(name.c_str());
    double time = 0.0;
    for (unsigned int i = 0; i < nSteps; i++) {
-      file << time << mag->evaluate(time) << endl;
+      file << time << " " << mag->evaluate(time) << endl;
+      time += timeStep;
    }
    file.close();
-   initFromFile(name);
+   initFromFile();
 }
 
 MagnitudeNumerical::~MagnitudeNumerical() {
    // TODO Auto-generated destructor stub
 }
 
-const string& MagnitudeNumerical::getFilename() const {
-   return filename_;
-}
-
-void MagnitudeNumerical::initFromFile(const string& filename) {
-   filename_ = filename;
+void MagnitudeNumerical::initFromFile() {
    ifstream file;
-   file.open(filename_.c_str(), ifstream::in);
+   file.open(getFilename().c_str(), ifstream::in);
    if (file.fail()) {
       cerr << "ERROR @ MagnitudeNumerical ctor: " << "Problem opening file: "
             << file << endl;
@@ -70,14 +69,14 @@ void MagnitudeNumerical::initFromFile(const string& filename) {
    }
    if (value_.size() == 0) {
       cerr << "WARNING @ MagnitudeNumerical: "
-            << "No values where readed from file: " << filename_ << endl;
+            << "No values where readed from file: " << getFilename() << endl;
    }
 }
 
 void
 MagnitudeNumerical::printInfo() const {
    cout << " --- Magnitude Numerical Info --- " << endl;
-   cout << "File name: " << filename_ << endl;
+   ProjectFile::printInfo();
    cout << "Stored values: " << value_.size() << endl;
    //    map<double,double>::const_iterator it;
    //    for (it = value_.begin(); it != value_.end(); ++it) {
@@ -91,4 +90,16 @@ MagnitudeNumerical::evaluate(const double time) const {
          << "Evaluate not implemented." << endl;
    assert(false);
    return 0.0;
+}
+
+MagnitudeNumerical&
+MagnitudeNumerical::operator =(
+      const MagnitudeNumerical& rhs) {
+   if (this == &rhs) {
+      return *this;
+   }
+   value_ = rhs.value_;
+   Magnitude::operator=(rhs);
+   ProjectFile::operator=(rhs);
+   return *this;
 }

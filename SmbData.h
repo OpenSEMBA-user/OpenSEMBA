@@ -8,8 +8,8 @@
 #ifndef SMBDATA_H_
 #define SMBDATA_H_
 
-#include "ProjectFile.h"
 #include "GlobalProblemData.h"
+#include "ProjectFile.h"
 #include "inputs/OutputRequestGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
@@ -17,7 +17,6 @@
 #include "inputs/LayerGroup.h"
 
 class SmbData : public ProjectFile {
-   friend class ParserGiD;
 public:
    GlobalProblemData* gData;
    LayerGroup* layers;

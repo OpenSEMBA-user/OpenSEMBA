@@ -17,8 +17,8 @@
 
 using namespace std;
 
-#ifndef  _rectilinearGrid_hxx
-# define _rectilinearGrid_hxx
+#ifndef  _GRID_H_
+# define _GRID_H_
 
 template<int D>
 class Grid {

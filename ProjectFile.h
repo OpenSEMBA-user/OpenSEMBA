@@ -9,8 +9,10 @@
 #define SRC_COMMON_PROJECTFILE_H_
 
 #include <string>
+#include <cstring>
 #include <stdlib.h>
 #include <stdio.h>
+#include <libgen.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -23,8 +25,18 @@ using namespace std;
 class ProjectFile {
 public:
    ProjectFile();
+   ProjectFile(const string& filename);
+   string
+   getFilename() const;
+   string
+   getProjectFolder() const;
+   void
+   printInfo() const;
+   void
+   setFilename(const string& filename);
+   string
+    getBasename() const;
 protected:
-   string filename_;
    vector<string>
    getFilesBasenames(
          const string& directory,
@@ -35,8 +47,11 @@ protected:
    void
    deleteDirIfExists(
          const string& directory) const;
-   void openFile(
-         const string& fileName, ofstream& file) const;
+   void
+   openFile(
+         const string& fileName,
+         ofstream& file) const;
+private:
+   string filename_;
 };
-
 #endif /* SRC_COMMON_PROJECTFILE_H_ */

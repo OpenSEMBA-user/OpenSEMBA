@@ -59,14 +59,5 @@ protected:
 			return false;
 		}
 	}
-	string
-	getProjectFolder(const string& name) const {
-	    char *cstr = new char[name.length() + 1];
-	    strcpy(cstr, name.c_str());
-	    string projectDir(dirname(cstr));
-	    projectDir += "/";
-	    delete [] cstr;
-	    return projectDir;
-	}
 };
 #endif

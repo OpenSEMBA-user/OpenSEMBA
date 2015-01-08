@@ -14,26 +14,27 @@
 #include <cmath>
 #include <assert.h>
 
-class MagnitudeNumerical: public Magnitude, ProjectFile {
+class MagnitudeNumerical: public Magnitude, public ProjectFile {
 public:
     MagnitudeNumerical();
     virtual ~MagnitudeNumerical();
     MagnitudeNumerical(
             const string& filename);
     MagnitudeNumerical(
+            const string& filename,
             const Magnitude* mag,
             const double timeStep,
             const double finalTime);
+    MagnitudeNumerical&
+     operator=(const MagnitudeNumerical& rhs);
     virtual double
      evaluate(const double time) const;
-    const string& getFilename() const;
     virtual void
      printInfo() const;
 private:
-    string filename_;
     map<double,double> value_;
     static const unsigned int defaultNumberOfSteps = 1e4;
-    void initFromFile(const string& filename);
+    void initFromFile();
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_ */

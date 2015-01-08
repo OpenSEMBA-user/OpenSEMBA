@@ -11,6 +11,21 @@ ProjectFile::ProjectFile() {
 
 }
 
+string ProjectFile::getBasename() const {
+   string res(basename(const_cast<char*>(filename_.c_str())));
+   return res;
+}
+
+
+ProjectFile::ProjectFile(const string& filename) {
+   filename_ = filename;
+}
+
+void
+ProjectFile::setFilename(const string& filename) {
+   filename_ = filename;
+}
+
 void ProjectFile::deleteDirIfExists(const string& directory) const {
    // Checks existence
    struct stat sb;
@@ -31,8 +46,8 @@ void ProjectFile::openFile(
       ofstream& file) const {
    file.open(fileName.c_str());
    if (!file) {
-      cerr << "ERROR @ ProjectFile:" << endl;
-      cerr << "File for writing could not be opened." << endl;
+      cerr << "ERROR @ ProjectFile: ";
+      cerr << "File for writing could not be opened. ";
       cerr << "File name: " << fileName << endl;
    }
 }
@@ -51,8 +66,8 @@ ProjectFile::getFilesBasenames(
       }
       closedir(dir);
    } else {
-      cerr << "ERROR @ ProjectFile" << endl;
-      cerr << "Could not open directory to extract basenames." << endl;
+      cerr << "ERROR @ ProjectFile";
+      cerr << "Could not open directory to extract basenames.";
       cerr << "Tried: " << directory << endl;
    }
    // Stores files with names matching extension.
@@ -77,4 +92,23 @@ ProjectFile::removeExtension(
       return fName;
    }
    return fName.substr(0, pos);
+}
+
+string
+ProjectFile::getFilename() const {
+   return filename_;
+}
+
+string
+ProjectFile::getProjectFolder() const {
+   char *cstr = new char[filename_.length() + 1];
+   strcpy(cstr, filename_.c_str());
+   string projectDir(dirname(cstr));
+   projectDir += "/";
+   delete [] cstr;
+   return projectDir;
+}
+
+void ProjectFile::printInfo() const {
+   cout << "Project file name: " << filename_ << endl;
 }

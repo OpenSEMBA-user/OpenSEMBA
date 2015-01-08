@@ -22,7 +22,7 @@
 #ifndef GIDPARSER_ERROR
 #define GIDPARSER_ERROR 61594
 
-class ParserGiD : public Parser {
+class ParserGiD : public Parser, public ProjectFile {
    friend class SmbData;
 public:
 	ParserGiD();
@@ -38,7 +38,6 @@ public:
 	virtual void
 	 printInfo() const;
 protected:
-	string filename_;
 	string problemTypePath_;
 	ProblemSize pSize_;
 	virtual GlobalProblemData
@@ -129,7 +128,6 @@ private:
 	 readMagnitude(const string type);
 	void
 	 init(
-	  const string& fn,
 	  const string& pTPath);
 	string
 	 readVersion();
