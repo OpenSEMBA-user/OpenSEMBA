@@ -141,6 +141,25 @@ inline CartesianVector<T,D> Box<T,D>::getLength() const {
 }
 
 template<class T, int D>
+inline Box<T,D>
+Box<T,D>::intersect(const Box<T, D>& rhs) const {
+   Box<T,D> res;
+   for (int d = 0; d < D; d++) {
+      if (min_(d) > rhs.min_(d)) {
+         res.min_(d) = min_(d);
+      } else {
+         res.min_(d) = rhs.min_(d);
+      }
+      if (max_(d) < rhs.max_(d)) {
+         res.max_(d) = max_(d);
+      } else {
+         res.max_(d) = rhs.max_(d);
+      }
+   }
+   return res;
+}
+
+template<class T, int D>
 void
 Box<T,D>::printInfo() const {
    cout<< "Box info" << endl;

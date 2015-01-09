@@ -28,13 +28,14 @@ public:
     bool operator<=(const Box<T,D>& lBoxMax) const;
     bool operator>=(const Box<T,D>& lBoxMin) const;
     bool operator==(const Box<T,D>& lBoxMin) const;
-    bool isIntersected (const Box<T,D>& lBox)   const;
+    bool isIntersected (const Box<T,D>& lBox) const;
     bool isInnerPoint(const CVecTD& point) const;
     Box<T,D>& operator= (const Box<T,D>& lBoxMin);
     void operator+=(const Box<T,D>& lBoxSource);
     void operator+(const Box<T,D>& lBoxSource);
     void operator<<(const CVecTD& p);
     void operator<<(const Box<T,D>& p);
+    Box<T,D> intersect(const Box<T,D>& rhs) const;
     inline CVecTD getMin(void) const;
     inline CVecTD getMax(void) const;
     inline CVecTD getLength() const;

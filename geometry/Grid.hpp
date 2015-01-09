@@ -158,6 +158,10 @@ Grid<D>::getNaturalCellDir(
          ijk = i + offsetGrid_(dir);
          relativeLen = 0.0;
          return true;
+      } else if ((diff < tol) && (i == pos_[dir].size() - 1)) {
+         ijk = i + offsetGrid_(dir) - 1;
+         relativeLen = 1.0;
+         return true;
       } else if (getPos(dir)[i] > xyz) {
          ijk = i - 1 + offsetGrid_(dir);
          double pos = getPos(dir)[ijk];
