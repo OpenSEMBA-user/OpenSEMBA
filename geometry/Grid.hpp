@@ -153,14 +153,15 @@ Grid<D>::getNaturalCellDir(
       return false;
    }
    for (uint i = 0; i < pos_[dir].size(); i++) {
-      diff = abs(getPos(dir)[i] - xyz);
-      if (diff < tol) {
-         ijk = i + offsetGrid_(dir);
-         relativeLen = 0.0;
-         return true;
-      } else if ((diff < tol) && (i == pos_[dir].size() - 1)) {
-         ijk = i + offsetGrid_(dir) - 1;
-         relativeLen = 1.0;
+      bool same = abs(getPos(dir)[i] - xyz) < tol;
+      if (same) {
+         if (i == pos_[dir].size()-1) {
+            ijk = i + offsetGrid_(dir) - 1;
+            relativeLen = 1.0;
+         } else {
+            ijk = i + offsetGrid_(dir);
+            relativeLen = 0.0;
+         }
          return true;
       } else if (getPos(dir)[i] > xyz) {
          ijk = i - 1 + offsetGrid_(dir);
