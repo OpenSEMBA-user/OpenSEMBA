@@ -60,7 +60,7 @@ protected:
 	 readDispersiveMaterialFile(
 	  const unsigned int id_,
 	  const string& name) const;
-	PMSurface
+	PMSurfaceSIBC
 	 readIsotropicSurfaceMaterialFile(
 	  const int id_,
 	  const string& name) const;

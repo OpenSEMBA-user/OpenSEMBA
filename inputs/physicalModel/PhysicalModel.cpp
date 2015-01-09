@@ -42,3 +42,8 @@ PhysicalModel::printInfo() const {
 	cerr << "Unable to find printInfo function." << endl;
 	exit(PHYSICALMODEL_ERROR);
 }
+
+PhysicalModel::PhysicalModel(const uint id, const string& name) {
+   id_ = id;
+   name_ = name;
+}

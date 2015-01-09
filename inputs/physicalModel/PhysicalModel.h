@@ -21,6 +21,7 @@ class PhysicalModel : public Condition {
 	friend class Parser;
 public:
 	PhysicalModel();
+	PhysicalModel(const uint id, const string& name);
 	virtual ~PhysicalModel();
 	virtual unsigned int
 	 getId() const {return id_;}

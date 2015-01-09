@@ -218,6 +218,8 @@ ParserGiD::readMaterials(){
                PhysicalModelGroup::Type type
                = PhysicalModelGroup::undefined;
                PMMultiport::Type multiportType = PMMultiport::undefined;
+               PMSurface::Type surfType = PMSurface::undefined;
+               string layersStr;
                double rPermittivity, rPermeability, eCond, mCond;
                double radius, resistance, inductance, capacitance;
                string filename;
@@ -248,8 +250,12 @@ ParserGiD::readMaterials(){
                      inductance = atof(value.c_str());
                   } else if (label.compare("Capacitance")==0) {
                      capacitance = atof(value.c_str());
-                  } else if (label.compare("File name")==0) {
+                  } else if (label.compare("SurfaceType")) {
+                     surfType = surfaceStrToType(value);
+                  } else if (label.compare("Filename")==0) {
                      filename = value;
+                  } else if (label.compare("Layers")) {
+                     layersStr = value;
                   } else if (label.compare("End of Material")==0) {
                      // Creates material.
                      switch (type) {
@@ -283,9 +289,14 @@ ParserGiD::readMaterials(){
                         break;
                      case PhysicalModelGroup::isotropicsibc:
                         PMSurface *aux;
-                        aux = new PMSurface;
-                        *aux = readIsotropicSurfaceMaterialFile(id, name);
-                        aux->printInfo();
+                        switch (surfType) {
+                        case PMSurface::sibc:
+                           aux = readIsotropicSurfaceMaterialFile(id, name);
+                           break;
+                        case PMSurface::multilayer:
+                           aux = readMultilayerSurface(id, name, layersStr);
+                           break;
+                        }
                         surf.push_back(aux);
                         break;
                      case PhysicalModelGroup::wire:
@@ -817,15 +828,16 @@ ParserGiD::readDispersiveMaterialFile(
    return PMVolumeDispersive();
 }
 
-PMSurface
+PMSurfaceSIBC
 ParserGiD::readIsotropicSurfaceMaterialFile(
       const int id_, const string& fileName) const {
    ifstream matFile;
    string matFileName, line, label, value;
    string name, model;
    char *pEnd;
-   double Zstatic[4], Zinfinite[4];
-   vector<double> pole, Z11, Z12, Z21, Z22;
+   StaMatrix<double,2,2> Zstatic, Zinfinite;
+   vector<double> pole;
+   vector<StaMatrix<double,2,2> > Z;
    double tmpP, tmpZ11, tmpZ12, tmpZ21, tmpZ22;
    // Opens file, read only mode.
    matFileName = problemTypePath_ + "/panel/" + fileName + ".dat";
@@ -855,35 +867,37 @@ ParserGiD::readIsotropicSurfaceMaterialFile(
    label = line.substr(0, line.find(":"));
    if(!label.compare("Zinf")) {
       value  = line.substr(line.find(":")+2, line.length());
-      Zinfinite[0] = strtod(value.c_str(), &pEnd);
-      Zinfinite[1] = strtod(pEnd, &pEnd);
-      Zinfinite[2] = strtod(pEnd, &pEnd);
-      Zinfinite[3] = strtod(pEnd, &pEnd);
+      Zinfinite(0,0) = strtod(value.c_str(), &pEnd);
+      Zinfinite(0,1) = strtod(pEnd, &pEnd);
+      Zinfinite(1,0) = strtod(pEnd, &pEnd);
+      Zinfinite(1,1) = strtod(pEnd, &pEnd);
    }
    // Gets Zstatic.
    getline(matFile, line);
    label = line.substr(0, line.find(":"));
    if(!label.compare("Zstatic")) {
       value  = line.substr(line.find(":")+2, line.length());
-      Zstatic[0] = strtod(value.c_str(), &pEnd);
-      Zstatic[1] = strtod(pEnd, &pEnd);
-      Zstatic[2] = strtod(pEnd, &pEnd);
-      Zstatic[3] = strtod(pEnd, &pEnd);
+      Zstatic(0,0) = strtod(value.c_str(), &pEnd);
+      Zstatic(0,1) = strtod(pEnd, &pEnd);
+      Zstatic(1,0) = strtod(pEnd, &pEnd);
+      Zstatic(1,1) = strtod(pEnd, &pEnd);
    }
    // Parses poles.
    // Stores in line the file line containing headers.
    getline(matFile, line);
    for (uint i = 0; i < nPoles; i++) {
       matFile >> tmpP >> tmpZ11 >> tmpZ12 >> tmpZ21 >> tmpZ22;
+      StaMatrix<double,2,2> tmpZ;
+      tmpZ(0,0) = tmpZ11;
+      tmpZ(0,1) = tmpZ12 ;
+      tmpZ(1,0) = tmpZ21;
+      tmpZ(1,1) = tmpZ22;
       pole.push_back(tmpP);
-      Z11.push_back(tmpZ11);
-      Z12.push_back(tmpZ12);
-      Z21.push_back(tmpZ21);
-      Z22.push_back(tmpZ22);
+      Z.push_back(tmpZ);
    }
    // Copies all parsed data into the aux material depending on the model.
-   PMSurface
-   res(id_, name, Zinfinite, Zstatic, pole, Z11, Z12, Z21, Z22);
+   PMSurfaceSIBC
+   res(id_, name, Zinfinite, Zstatic, pole, Z);
    return res;
 }
 
