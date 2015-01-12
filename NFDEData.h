@@ -289,18 +289,11 @@ struct NFDEData : public ProjectFile {
    };
 
    struct CompositeSurf : public ObjectInLayer {
-      double sigma, eps, mu, sigmam, thk;
-      string name;
+      vector<double> sigma, eps, mu, sigmam, thk;
       int numberoflayers;
       vector<CoordsDir> entities;
       CompositeSurf()
-      :	sigma(0.0),
-       	eps(VACUUM_PERMITTIVITY),
-       	mu(VACUUM_PERMEABILITY),
-       	sigmam(0.0),
-       	thk(-1.0),
-       	name(""),
-       	numberoflayers(1),
+      :	numberoflayers(0),
        	entities() {}
    };
 

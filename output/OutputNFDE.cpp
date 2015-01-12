@@ -719,25 +719,29 @@ void OutputNFDE::exportDispersiveLine() {
 
 void OutputNFDE::exportCompositeSurf() {
 	for(uint i = 0; i < nfde->compositeSurf.size(); i++) {
-		const NFDEData::CompositeSurf* ent = &nfde->compositeSurf[i];
-      if(!ent->layer.empty())
-         output << "* " << ent->layer << endl;
-		output << "!ISOTROPIC SURF" << endl;
-		output << "!!COMPO" << endl;
-		output << "!!!2PNT";
-      if(!ent->name.empty())
-         output << space << ent->name << space << ent->numberoflayers;
-      output << endl;
-      
-		output << ent->sigma << space
-             << ent->eps << space
-             << ent->mu << space
-             << ent->sigmam << space
-             << ent->thk << endl;
-      
-		for(uint j = 0; j < ent->entities.size(); j++) {
-			output << toString2PNT(ent->entities[j]);
-		}
+	   const NFDEData::CompositeSurf* ent = &nfde->compositeSurf[i];
+	   if(!ent->layer.empty()) {
+	      output << "* " << ent->name << "@" << ent->layer << endl;
+	   }
+	   output << "!ISOTROPIC SURFACE" << endl;
+	   output << "!!COMPO" << endl;
+	   output << "!!!2PNT";
+	   if(!ent->name.empty()) {
+	      output << space << ent->name;
+	   } else {
+	      output << space << "undefinedName";
+	   }
+	   output << space << ent->numberoflayers << endl;
+	   for (int j = 0; j < ent->numberoflayers; j++) {
+	   output << ent->sigma[i] << space
+	         << ent->eps[i] << space
+	         << ent->mu[i] << space
+	         << ent->sigmam[i] << space
+	         << ent->thk[i] << endl;
+	   }
+	   for(uint j = 0; j < ent->entities.size(); j++) {
+	      output << toString2PNT(ent->entities[j]);
+	   }
 		output << endl;
 	}
 }

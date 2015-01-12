@@ -36,13 +36,13 @@ PMSurfaceMultilayer::PMSurfaceMultilayer(
    }
 }
 
-uint PMSurfaceMultilayer::countLayers() const {
+uint PMSurfaceMultilayer::getNumberOfLayers() const {
    return thickness_.size();
 }
 
 string
 PMSurfaceMultilayer::printLayer(const uint i) const {
-   assert(i < countLayers());
+   assert(i < getNumberOfLayers());
    stringstream ss;
    ss << elecCond_[i] << " " << relPermittivity_[i]*eps0 << " "
       << relPermeability_[i]*mu0 << " " << magnCond_[i] << " "
@@ -50,14 +50,35 @@ PMSurfaceMultilayer::printLayer(const uint i) const {
    return string(ss.str());
 }
 
+double
+PMSurfaceMultilayer::getThickness(const uint i) const {
+   return thickness_[i];
+}
+
+double PMSurfaceMultilayer::getPermittivity(const uint i) const {
+   return relPermittivity_[i] * eps0;
+}
+
+double PMSurfaceMultilayer::getPermeability(const uint i) const {
+   return relPermeability_[i] * mu0;
+}
+
+double PMSurfaceMultilayer::getElecCond(const uint i) const {
+   return elecCond_[i];
+}
+
+double PMSurfaceMultilayer::getMagnCond(const uint i) const {
+   return magnCond_[i];
+}
+
 void
 PMSurfaceMultilayer::printInfo() const {
    cout << " --- PMSurfaceMultilayer info ---" << endl;
    PMSurface::printInfo();
-   cout << "Number of layers: " << countLayers() << endl;
+   cout << "Number of layers: " << getNumberOfLayers() << endl;
    cout <<
     "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << endl;
-   for (uint i = 0; i < countLayers(); i++) {
+   for (uint i = 0; i < getNumberOfLayers(); i++) {
       cout<< i << ": "
           << thickness_[i] << " "
           << relPermittivity_[i] << " "

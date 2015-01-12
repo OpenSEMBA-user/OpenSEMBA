@@ -123,6 +123,7 @@ inline Box<T,D>& Box<T,D>::setInfinity() {
       min_(j) = - numeric_limits<T>::infinity();
       max_(j) = numeric_limits<T>::infinity();
    }
+   return *this;
 }
 
 template<class T, int D>
