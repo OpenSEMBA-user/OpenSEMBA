@@ -23,6 +23,7 @@
 #include "PMMultiportPredefined.h"
 #include "PMMultiportRLC.h"
 #include "PMSurfaceSIBC.h"
+#include "PMSurfaceMultilayer.h"
 #include "PMWire.h"
 
 class PhysicalModelGroup {
@@ -43,7 +44,7 @@ public:
 	vector<PhysicalModel*> pm;
 	vector<PMVolume> volume;
 	vector<PMVolumeDispersive> dispersive;
-	vector<PMSurfaceSIBC*> surface;
+	vector<PMSurface*> surface;
 	vector<PMVolumePML*> pml_;
 	vector<PMMultiport*> multiport_;
 	vector<PMWire*> wire_;
@@ -58,13 +59,13 @@ public:
 	 const vector<PMVolume>& volume,
 	 const vector<PMVolumeDispersive>& dispersive,
 	 const vector<PMVolumePML*> pml,
-	 const vector<PMSurfaceSIBC*>& surface);
+	 const vector<PMSurface*>& surface);
     PhysicalModelGroup(
 	 const vector<const PMPredefined*>& predefined,
 	 const vector<PMVolume>& volume,
 	 const vector<PMVolumeDispersive>& dispersive,
 	 const vector<PMVolumePML*> pml,
-	 const vector<PMSurfaceSIBC*>& surface,
+	 const vector<PMSurface*>& surface,
 	 const vector<PMMultiport*> multiport,
 	 const vector<PMWire*> wire);
 	PhysicalModelGroup&
@@ -93,7 +94,7 @@ public:
 	 getPMVolumeWithId(const unsigned int id) const;
 	const PMVolumeDispersive*
 	 getPMVolumeDispersiveWithId(const unsigned int id) const;
-	const PMSurfaceSIBC*
+	const PMSurface*
 	 getPMSurface(const unsigned int i) const;
 	unsigned int
 	 count() const {
@@ -156,7 +157,7 @@ private:
 	  const vector<PMVolume>& volume,
 	  const vector<PMVolumeDispersive>& dispersive,
 	  const vector<PMVolumePML*> pml,
-	  const vector<PMSurfaceSIBC*>& surface,
+	  const vector<PMSurface*>& surface,
 	  const vector<PMMultiport*> multiport,
 	  const vector<PMWire*> wire);
 	void

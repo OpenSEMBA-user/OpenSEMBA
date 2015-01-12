@@ -57,13 +57,18 @@ protected:
 	ProblemSize
 	 readProblemSize();
 	PMVolumeDispersive
-	 readDispersiveMaterialFile(
+	 readDispersiveMatFile(
 	  const unsigned int id_,
 	  const string& name) const;
-	PMSurfaceSIBC
-	 readIsotropicSurfaceMaterialFile(
-	  const int id_,
+	PMSurfaceSIBC*
+	 readIsotropicSurfMatFile(
+	  const int id,
 	  const string& name) const;
+   PMSurfaceMultilayer*
+    readMultilayerSurf(
+     const int id,
+     const string& name,
+     const string& layersString) const;
 	CoordinateGroup*
 	 readCoordinates();
 	ElementsGroup
@@ -95,6 +100,11 @@ private:
 		farField,
 		undefined
 	} GiDOutputType;
+   typedef enum {
+      sibc,
+      multilayer,
+      undefinedSIBC
+   } SIBCType;
 	pair<CVecD3, CVecD3>
 	 readBoundFromStr(
 	  const string& str) const;
@@ -120,6 +130,8 @@ private:
 	 elementTypeStrToType(string label) const;
 	OutputRequest::Type
 	 outputTypeStrToType(string label) const;
+	SIBCType
+	 SIBCStrToType(string str) const;
 	GiDOutputType
 	 gidOutputTypeStrToType(string label) const;
 	Domain

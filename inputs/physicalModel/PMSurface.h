@@ -12,11 +12,6 @@
 
 class PMSurface: public PhysicalModel {
 public:
-   typedef enum {
-      sibc,
-      multilayer,
-      undefined
-   } Type;
    PMSurface();
    PMSurface(const uint id, const string& name);
    bool

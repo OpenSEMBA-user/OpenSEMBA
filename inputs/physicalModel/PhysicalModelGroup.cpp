@@ -24,7 +24,7 @@ PhysicalModelGroup::PhysicalModelGroup(
       const vector<PMVolume>& volume_,
       const vector<PMVolumeDispersive>& dispVol_,
       const vector<PMVolumePML*> pmlVol_,
-      const vector<PMSurfaceSIBC*>& surface_) {
+      const vector<PMSurface*>& surface_) {
    vector<PMMultiport*> multiport_;
    vector<PMWire*> wire_;
    init(predef, volume_, dispVol_, pmlVol_, surface_, multiport_, wire_);
@@ -34,8 +34,10 @@ PhysicalModelGroup::PhysicalModelGroup(
       const vector<const PMPredefined*>& predefined,
       const vector<PMVolume>& volume,
       const vector<PMVolumeDispersive>& dispersive,
-      const vector<PMVolumePML*> pml, const vector<PMSurfaceSIBC*>& surface,
-      const vector<PMMultiport*> multiport, const vector<PMWire*> wire) {
+      const vector<PMVolumePML*> pml,
+      const vector<PMSurface*>& surface,
+      const vector<PMMultiport*> multiport,
+      const vector<PMWire*> wire) {
    init(predefined, volume, dispersive, pml, surface, multiport, wire);
 }
 
@@ -138,7 +140,7 @@ PhysicalModelGroup::getPMVolumeDispersiveWithId(unsigned int id) const {
    return NULL;
 }
 
-const PMSurfaceSIBC*
+const PMSurface*
 PhysicalModelGroup::getPMSurface(
       const unsigned int i) const {
    return surface[i];
@@ -210,7 +212,7 @@ PhysicalModelGroup::init(
       const vector<PMVolume>& volume_,
       const vector<PMVolumeDispersive>& dispVol,
       const vector<PMVolumePML*> pml,
-      const vector<PMSurfaceSIBC*>& surface_,
+      const vector<PMSurface*>& surface_,
       const vector<PMMultiport*> multiport,
       const vector<PMWire*> wire) {
    volume = volume_;

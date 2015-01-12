@@ -218,7 +218,7 @@ ParserGiD::readMaterials(){
                PhysicalModelGroup::Type type
                = PhysicalModelGroup::undefined;
                PMMultiport::Type multiportType = PMMultiport::undefined;
-               PMSurface::Type surfType = PMSurface::undefined;
+               SIBCType surfType = undefinedSIBC;
                string layersStr;
                double rPermittivity, rPermeability, eCond, mCond;
                double radius, resistance, inductance, capacitance;
@@ -251,7 +251,7 @@ ParserGiD::readMaterials(){
                   } else if (label.compare("Capacitance")==0) {
                      capacitance = atof(value.c_str());
                   } else if (label.compare("SurfaceType")) {
-                     surfType = surfaceStrToType(value);
+                     surfType = SIBCStrToType(value);
                   } else if (label.compare("Filename")==0) {
                      filename = value;
                   } else if (label.compare("Layers")) {
@@ -285,19 +285,22 @@ ParserGiD::readMaterials(){
                         break;
                      case PhysicalModelGroup::elecDispersive:
                         dispVol.push_back(
-                              readDispersiveMaterialFile(id,name));
+                              readDispersiveMatFile(id,name));
                         break;
                      case PhysicalModelGroup::isotropicsibc:
-                        PMSurface *aux;
                         switch (surfType) {
-                        case PMSurface::sibc:
-                           aux = readIsotropicSurfaceMaterialFile(id, name);
+                        case sibc:
+                           surf.push_back(readIsotropicSurfMatFile(id, name));
                            break;
-                        case PMSurface::multilayer:
-                           aux = readMultilayerSurface(id, name, layersStr);
+                        case multilayer:
+                           surf.push_back(
+                                 readMultilayerSurf(id, name, layersStr));
+                           break;
+                        case undefinedSIBC:
+                           cerr << "ERROR @ ParserGiD: "
+                            << "Undefined SIBC Type." << endl;
                            break;
                         }
-                        surf.push_back(aux);
                         break;
                      case PhysicalModelGroup::wire:
                         wires.push_back(new PMWire(id, name, radius,
@@ -750,7 +753,7 @@ ParserGiD::readLin2Elements(const CoordinateGroup& v) {
 }
 
 PMVolumeDispersive
-ParserGiD::readDispersiveMaterialFile(
+ParserGiD::readDispersiveMatFile(
       const uint id_, const string& fileName) const {
    ifstream matFile;
    string matFileName, line, label, value;
@@ -828,8 +831,35 @@ ParserGiD::readDispersiveMaterialFile(
    return PMVolumeDispersive();
 }
 
-PMSurfaceSIBC
-ParserGiD::readIsotropicSurfaceMaterialFile(
+PMSurfaceMultilayer*
+ParserGiD::readMultilayerSurf(
+  const int id,
+  const string& name,
+  const string& layersStr) const {
+   uint begin = layersStr.find_first_of("\"");
+   uint end = layersStr.find_last_of("\"");
+   istringstream ss(layersStr.substr(begin+1,end-2));
+   string sub;
+   vector<double> thick, rEps, rMu, eCond, mCond;
+   uint parameters;
+   string trash;
+   ss >> trash >> parameters;
+   uint nLayers = parameters / 5;
+   for (uint i = 0; i < nLayers; i++) {
+      // Thickness, Permittivity, Permeability, ElecCond, MagnCond.
+      double thick_, rEps_, rMu_, eCond_, mCond_;
+      ss >> thick_ >> rEps_ >> rMu_ >> eCond_ >> mCond_;
+      thick.push_back(thick_);
+      rEps.push_back(rEps_);
+      rMu.push_back(rMu_);
+      eCond.push_back(eCond_);
+      mCond.push_back(mCond_);
+   }
+   return new PMSurfaceMultilayer(id, name, thick, rEps, rMu, eCond, mCond);
+}
+
+PMSurfaceSIBC*
+ParserGiD::readIsotropicSurfMatFile(
       const int id_, const string& fileName) const {
    ifstream matFile;
    string matFileName, line, label, value;
@@ -896,9 +926,7 @@ ParserGiD::readIsotropicSurfaceMaterialFile(
       Z.push_back(tmpZ);
    }
    // Copies all parsed data into the aux material depending on the model.
-   PMSurfaceSIBC
-   res(id_, name, Zinfinite, Zstatic, pole, Z);
-   return res;
+   return new PMSurfaceSIBC (id_, name, Zinfinite, Zstatic, pole, Z);
 }
 
 void
@@ -1223,6 +1251,20 @@ ParserGiD::outputTypeStrToType(string str) const {
       cerr<< "ERROR @ GiDParser::readOutputRequestInstance(): "
             << "Unrecognized output type: " << str << endl;
       return OutputRequest::undefined;
+   }
+}
+
+ParserGiD::SIBCType
+ParserGiD::SIBCStrToType(string str) const {
+   str = trim(str);
+   if (str.compare("File")==0) {
+      return sibc;
+   } else if (str.compare("Layers")==0) {
+      return multilayer;
+   } else {
+      cerr<< "ERROR @ GiDParser: "
+          << "Unrecognized SIBC type: " << str << endl;
+      return undefinedSIBC;
    }
 }
 

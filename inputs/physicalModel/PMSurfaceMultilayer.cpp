@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "PMMultilayer.h"
+#include "PMSurfaceMultilayer.h"
 
 PMSurfaceMultilayer::PMSurfaceMultilayer() {
 }
