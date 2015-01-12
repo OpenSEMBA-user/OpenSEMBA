@@ -193,9 +193,6 @@ ParserGiD::readEMSources() {
 PhysicalModelGroup*
 ParserGiD::readMaterials(){
    vector<const PMPredefined*> predef;
-   PMPMC pmpmc;
-   PMPEC pmpec;
-   PMSMA pmsma;
    vector<PMVolume> vol;
    vector<PMVolumeDispersive> dispVol;
    vector<PMVolumePML*> pmlVol;
@@ -250,26 +247,23 @@ ParserGiD::readMaterials(){
                      inductance = atof(value.c_str());
                   } else if (label.compare("Capacitance")==0) {
                      capacitance = atof(value.c_str());
-                  } else if (label.compare("SurfaceType")) {
+                  } else if (label.compare("SurfaceType")==0) {
                      surfType = SIBCStrToType(value);
                   } else if (label.compare("Filename")==0) {
                      filename = value;
-                  } else if (label.compare("Layers")) {
+                  } else if (label.compare("Layers")==0) {
                      layersStr = value;
                   } else if (label.compare("End of Material")==0) {
                      // Creates material.
                      switch (type) {
                      case PhysicalModelGroup::PEC:
-                        pmpec = PMPEC(id, name);
-                        predef.push_back(&pmpec);
+                        predef.push_back(new PMPEC(id, name));
                         break;
                      case PhysicalModelGroup::PMC:
-                        pmpmc = PMPMC(id, name);
-                        predef.push_back(&pmpmc);
+                        predef.push_back(new PMPMC(id, name));
                         break;
                      case PhysicalModelGroup::SMA:
-                        pmsma = PMSMA(id, name);
-                        predef.push_back(&pmsma);
+                        predef.push_back(new PMSMA(id, name));
                         break;
                      case PhysicalModelGroup::classic:
                         if (eCond == 0 && mCond == 0) {
@@ -844,7 +838,7 @@ ParserGiD::readMultilayerSurf(
    uint parameters;
    string trash;
    ss >> trash >> parameters;
-   uint nLayers = parameters / 5;
+   const uint nLayers = parameters / 5;
    for (uint i = 0; i < nLayers; i++) {
       // Thickness, Permittivity, Permeability, ElecCond, MagnCond.
       double thick_, rEps_, rMu_, eCond_, mCond_;

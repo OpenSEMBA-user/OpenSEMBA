@@ -14,9 +14,9 @@ class PMSurface: public PhysicalModel {
 public:
    PMSurface();
    PMSurface(const uint id, const string& name);
-   bool
+   virtual bool
     isSurface() const {return true;}
-   void
+   virtual void
     printInfo() const;
 };
 

@@ -49,3 +49,21 @@ PMSurfaceMultilayer::printLayer(const uint i) const {
       << thickness_[i];
    return string(ss.str());
 }
+
+void
+PMSurfaceMultilayer::printInfo() const {
+   cout << " --- PMSurfaceMultilayer info ---" << endl;
+   PMSurface::printInfo();
+   cout << "Number of layers: " << countLayers() << endl;
+   cout <<
+    "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << endl;
+   for (uint i = 0; i < countLayers(); i++) {
+      cout<< i << ": "
+          << thickness_[i] << " "
+          << relPermittivity_[i] << " "
+          << relPermeability_[i] << " "
+          << elecCond_[i] << " "
+          << magnCond_[i] << endl;
+   }
+   cout << " --- End of PMSurfaceMultilayer info ---" << endl;
+}

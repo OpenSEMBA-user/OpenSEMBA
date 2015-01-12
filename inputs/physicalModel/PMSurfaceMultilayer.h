@@ -22,9 +22,11 @@ public:
          const vector<double>& elecCond,
          const vector<double>& magnCond);
    uint
-   countLayers() const;
+    countLayers() const;
    string
-   printLayer(const uint i) const;
+    printLayer(const uint i) const;
+   void
+    printInfo() const;
 private:
    vector<double>
     thickness_, relPermittivity_, relPermeability_, elecCond_, magnCond_;
