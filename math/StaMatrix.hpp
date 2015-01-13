@@ -101,6 +101,18 @@ StaMatrix<T,NROWS,NCOLS>::printInfo() const {
    printInfo(NROWS, NCOLS);
 }
 
+template<class T, unsigned int NROWS, unsigned int NCOLS>
+inline StaMatrix<T, NROWS, NCOLS>
+StaMatrix<T,NROWS,NCOLS>::operator +(
+      StaMatrix<T, NROWS, NCOLS>& param) const {
+   StaMatrix<T,NROWS,NCOLS> res;
+   unsigned int n = NROWS*NCOLS;
+   for (unsigned int i = 0; i < n; i++) {
+      res._val[i] = _val[i] + param._val[i];
+   }
+   return res;
+}
+
 template <class T, unsigned int NROWS, unsigned int NCOLS>
 void
 StaMatrix<T,NROWS,NCOLS>::printInfo(unsigned int rows, unsigned int cols) const {
@@ -211,7 +223,8 @@ bool
 StaMatrix<T,NROWS,NCOLS>::operator==(
  const StaMatrix<T,NROWS,NCOLS>& param) const {
    for (unsigned int i = 0; i < NROWS*NCOLS; i++) {
-      if (_val[i] != param._val[i]) {
+      T diff = abs(_val[i] -param._val[i]);
+      if (diff > numeric_limits<T>::epsilon() * 1e2) {
          return false;
       }
    }

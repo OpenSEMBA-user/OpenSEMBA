@@ -1,6 +1,7 @@
 #ifndef DYNMATRIX_H_
 #define DYNMATRIX_H_
 #include "MathMatrix.h"
+#include <utility>
 
 template<class T>
 class DynMatrix : public MathMatrix<T> {
@@ -66,13 +67,15 @@ public:
     operator/(const T param) const;
    DynMatrix<T>
     kron(DynMatrix<T>& param) const;
+   DynMatrix<T>
+    sub(pair<int,int>& rows, pair<int,int>& cols) const;
    bool
     operator==(const DynMatrix<T>& param) const;
    bool
     operator<(const DynMatrix<T>& param) const;
    DynMatrix<T>
     convolute(const DynMatrix<T>& param) const;
-   DynMatrix<T>&
+   DynMatrix<T>
     invert();
    DynMatrix<T>&
     transpose();

@@ -49,6 +49,8 @@ public:
     operator/=(const T param);
    StaMatrix<T,NROWS,NCOLS>
     operator*(T param) const;
+   StaMatrix<T,NROWS,NCOLS>
+    operator+(StaMatrix<T,NROWS,NCOLS> &param) const;
    StaMatrix<T,NCOLS,NROWS>&
     invert();
    StaMatrix<T,NCOLS,NROWS>

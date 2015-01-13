@@ -77,6 +77,20 @@ DynMatrix<T>::nRows() const {
    return _nRows;
 }
 
+template<class T>
+inline DynMatrix<T>
+DynMatrix<T>::sub(pair<int, int>& rows, pair<int, int>& cols) const {
+   int resRows = rows.second-rows.first+1;
+   int resCols = cols.second-cols.first+1;
+   DynMatrix<T> res(resRows, resCols);
+   for (int i = rows.first; i <= rows.second; i++) {
+      for (int j = cols.first; j <= cols.second; j++) {
+         res(i - rows.first,j - cols.first) = val(i,j);
+      }
+   }
+   return res;
+}
+
 template <class T>
 inline void
 DynMatrix<T>::resizeVal(const unsigned int rows, const unsigned int cols) {
@@ -324,11 +338,10 @@ DynMatrix<T>::operator+(DynMatrix<T> &param) const {
 template <class T>
 DynMatrix<T>
 DynMatrix<T>::operator*(const T param) const {
-   unsigned int i, j;
    DynMatrix<T> res(_nRows, _nCols);
-   for (i = 0; i < _nRows; i++) {
-      for (j = 0; j < _nCols; j++) {
-         res._val[i][j] = _val[i][j] * param;
+   for (uint i = 0; i < _nRows; i++) {
+      for (uint j = 0; j < _nCols; j++) {
+         res(i,j) = val(i,j) * param;
       }
    }
    return res;
@@ -386,11 +399,9 @@ DynMatrix<T>::operator+=(const DynMatrix<T>& param) {
 template <class T>
 DynMatrix<T>&
 DynMatrix<T>::operator*=(const T param) {
-   assert(_nRows == param._nRows && _nCols == param._nCols);
-   unsigned int i, j;
-   for (i = 0; i < _nRows; i++) {
-      for (j = 0; j < _nCols; j++) {
-         _val[i][j] *= param;
+   for (unsigned int i = 0; i < _nRows; i++) {
+      for (unsigned int j = 0; j < _nCols; j++) {
+         val(i,j) *= param;
       }
    }
    return *this;
@@ -415,9 +426,12 @@ bool
 DynMatrix<T>::operator==(const DynMatrix<T>& param) const {
    bool res = true;
    if (_nRows == param._nRows && _nCols == param._nCols) {
-      for (unsigned int i = 0; i < _nRows; i++)
-         for (unsigned int j = 0; j < _nCols; j++)
-            res &= (_val[i][j] == param._val[i][j]);
+      for (unsigned int i = 0; i < _nRows; i++) {
+         for (unsigned int j = 0; j < _nCols; j++) {
+            T diff = abs(this->operator()(i,j) - param(i,j));
+            res &= diff < numeric_limits<T>::epsilon() * 1e2;
+         }
+      }
       return res;
    } else
       return false;
@@ -546,10 +560,13 @@ DynMatrix<T>::kron(DynMatrix<T>& rhs) const {
 }
 
 template <class T>
-DynMatrix<T>&
+DynMatrix<T>
 DynMatrix<T>::invert() {
-   this->internalInvert();
-   return *this;
+//   this->internalInvert();
+//   return *this;
+   DynMatrix<T> res(*this);
+   res. internalInvert();
+   return DynMatrix<T>(res);
 }
 
 template <class T>
