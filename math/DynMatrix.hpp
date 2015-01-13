@@ -629,7 +629,7 @@ DynMatrix<T>::transpose() {
    // Assigns values to transposed matrix.
    for (unsigned int i = 0; i < _nRows; i++) {
       for (unsigned int j = 0; j < _nCols; j++) {
-         _val[i][j] = temp._val[j][i];
+         val(i,j) = temp(j,i);
       }
    }
    return *this;
