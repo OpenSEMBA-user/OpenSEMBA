@@ -57,7 +57,7 @@ public:
 	 isLinear() const;
 	bool
 	 isRectilinear() const;
-	Grid3
+	const Grid3*
      getGrid() const;
 	Grid3
 	 getGridFromHexahedrons() const;

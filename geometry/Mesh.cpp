@@ -136,16 +136,9 @@ Mesh::isRectilinear() const {
 	return (hasCartesianGridDefined && onlyContainsQuad4);
 }
 
-Grid3
+const Grid3*
 Mesh::getGrid() const {
-	if (!canExtractGrid()) {
-		exit(-1);
-	}
-	if (grid_ != NULL) {
-		return *grid_;
-	}
-	Grid3 res = getGridFromHexahedrons();
-	return res;
+	return grid_;
 }
 
 Grid3

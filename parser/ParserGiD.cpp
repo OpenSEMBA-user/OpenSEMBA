@@ -244,6 +244,9 @@ ParserGiD::readMaterials(){
                      case PhysicalModelGroup::SMA:
                         predef.push_back(new PMSMA(id, name));
                         break;
+                     case PhysicalModelGroup::PML:
+                        pmlVol.push_back(new PMVolumePML(id, name));
+                        break;
                      case PhysicalModelGroup::classic:
                         if (eCond == 0 && mCond == 0) {
                            vol.push_back(
