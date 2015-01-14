@@ -195,9 +195,6 @@ Mesh::canExtractGrid() const {
 	if (grid_ != NULL) {
 		return true;
 	}
-	cerr << "ERROR @ Getting grid from mesh." << endl;
-	cerr << "Mesh does not contain hexahedrons." << endl;
-	cerr << "No grid information is stored." << endl;
 	return false;
 }
 

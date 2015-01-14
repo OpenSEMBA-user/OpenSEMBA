@@ -30,6 +30,8 @@ public:
    getFilename() const;
    string
    getProjectFolder() const;
+   bool
+   canOpenFile() const;
    void
    printInfo() const;
    void

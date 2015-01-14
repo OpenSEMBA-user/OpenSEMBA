@@ -41,6 +41,19 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
    }
 }
 
+bool ProjectFile::canOpenFile() const {
+   ifstream file;
+   file.open(filename_.c_str());
+   bool res;
+   if (file) {
+      file.close();
+      res = true;
+   } else {
+      res = false;
+   }
+   return res;
+}
+
 void ProjectFile::openFile(
       const string& fileName,
       ofstream& file) const {

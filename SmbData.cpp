@@ -48,6 +48,25 @@ SmbData::detectAndAssignPMLRegions() {
    pMGroup->detectAndAssignPMLRegions(mesh);
 }
 
+bool
+SmbData::isValidForSolver(const Solver& solver) const {
+   bool res = true;
+   switch (solver) {
+   case ugrfdtd:
+      res &= mesh->canExtractGrid();
+      break;
+   case cudg3d:
+      res &= mesh->elem.tet.size() != 0;
+      break;
+   default:
+      cerr<< "ERROR @ SmbData: "
+       << "Trying to validate data for undefined solver." << endl;
+      return false;
+      break;
+   }
+   return res;
+}
+
 void
 SmbData::printInfo() const {
    cout << " --- SEMBA data --- " << endl;

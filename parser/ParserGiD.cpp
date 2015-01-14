@@ -12,7 +12,7 @@ ParserGiD::ParserGiD() {
 
 ParserGiD::ParserGiD(
       const string& fn) :
-          ProjectFile(fn) {
+                ProjectFile(fn) {
    string null;
    init(null);
 }
@@ -20,7 +20,7 @@ ParserGiD::ParserGiD(
 ParserGiD::ParserGiD(
       const string& fn,
       const string& pTPath) :
-          ProjectFile(fn) {
+                ProjectFile(fn) {
    init(pTPath);
 }
 
@@ -29,43 +29,22 @@ ParserGiD::~ParserGiD() {
 
 SmbData*
 ParserGiD::read() {
-   SmbData* res;
-   res = new SmbData();
-
-  res->setFilename(getFilename());
-
    if (!checkVersionCompatibility(readVersion())) {
-      exit(-1);
+      return NULL;
    }
-
+   SmbData* res = new SmbData();
+   res->setFilename(getFilename());
    GlobalProblemData* gData = new GlobalProblemData;
    *gData = readProblemData();
    res->gData = gData;
-   res->gData->printInfo();
-
    pSize_ = readProblemSize();
-   pSize_.printInfo();
-
    res->layers = readLayers();
-   res->layers->printInfo();
-
    res->mesh = readMesh();
-   res->mesh->printInfo();
-
    res->pMGroup = readMaterials();
-   res->pMGroup->printInfo();
-
    res->emSources = readEMSources();
-   res->emSources->printInfo();
-
    res->outputRequests = readOutputRequests();
-   res->outputRequests->printInfo();
-
    res->ofParams = readOpenFOAMParameters();
-   res->ofParams->printInfo();
-
    res->applyGeometricScalingFactor();
-
    return res;
 }
 
@@ -292,29 +271,29 @@ ParserGiD::readMaterials(){
                            break;
                         case undefinedSIBC:
                            cerr << "ERROR @ ParserGiD: "
-                            << "Undefined SIBC Type." << endl;
+                           << "Undefined SIBC Type." << endl;
                            break;
                         }
                         break;
-                     case PhysicalModelGroup::wire:
-                        wires.push_back(new PMWire(id, name, radius,
-                              resistance, inductance));
-                        break;
-                     case PhysicalModelGroup::multiport:
-                        if (multiportType == PMMultiport::shortCircuit) {
-                           multiport.push_back(
-                                 new PMMultiportPredefined(id, name,
-                                       multiportType));
-                        } else {
-                           multiport.push_back(
-                                 new PMMultiportRLC(id, name, multiportType,
-                                       resistance, inductance, capacitance));
-                        }
-                        break;
-                     default:
-                        cerr<< "ERROR @ Parsing materials: ";
-                        cerr<< "Material type not recognized." << endl;
-                        break;
+                        case PhysicalModelGroup::wire:
+                           wires.push_back(new PMWire(id, name, radius,
+                                 resistance, inductance));
+                           break;
+                        case PhysicalModelGroup::multiport:
+                           if (multiportType == PMMultiport::shortCircuit) {
+                              multiport.push_back(
+                                    new PMMultiportPredefined(id, name,
+                                          multiportType));
+                           } else {
+                              multiport.push_back(
+                                    new PMMultiportRLC(id, name, multiportType,
+                                          resistance, inductance, capacitance));
+                           }
+                           break;
+                        default:
+                           cerr<< "ERROR @ Parsing materials: ";
+                           cerr<< "Material type not recognized." << endl;
+                           break;
                      }
                      materialFinished = true;
                      materialCount++;
@@ -827,9 +806,9 @@ ParserGiD::readDispersiveMatFile(
 
 PMSurfaceMultilayer*
 ParserGiD::readMultilayerSurf(
-  const int id,
-  const string& name,
-  const string& layersStr) const {
+      const int id,
+      const string& name,
+      const string& layersStr) const {
    uint begin = layersStr.find_first_of("\"");
    uint end = layersStr.find_last_of("\"");
    istringstream ss(layersStr.substr(begin+1,end-2));
@@ -1257,7 +1236,7 @@ ParserGiD::SIBCStrToType(string str) const {
       return multilayer;
    } else {
       cerr<< "ERROR @ GiDParser: "
-          << "Unrecognized SIBC type: " << str << endl;
+            << "Unrecognized SIBC type: " << str << endl;
       return undefinedSIBC;
    }
 }
