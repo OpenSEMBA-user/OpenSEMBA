@@ -33,8 +33,6 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
    exists &= S_ISDIR(sb.st_mode);
    // Deletes if exists.
    if (exists) {
-      cerr<< "WARNING @ ProjectFile: "
-            << "An openfoam directory exists and will be deleted." << endl;
       string command = "rm -r ";
       command += directory;
       system(command.c_str());
