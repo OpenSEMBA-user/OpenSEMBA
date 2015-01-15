@@ -35,6 +35,8 @@ public:
 	~ParserGiD();
 	virtual SmbData*
 	 read();
+	virtual const ProblemSize*
+	 getProblemSize() const;
 	virtual void
 	 printInfo() const;
 protected:

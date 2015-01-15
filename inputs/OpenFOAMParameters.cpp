@@ -13,6 +13,7 @@ OpenFOAMParameters::OpenFOAMParameters() {
    addLayers_ = false;
    edgeFeatureAngle_ = 180;
    featureRefinementLevel_ = 0;
+   locationInMeshSet_ = false;
 }
 
 OpenFOAMParameters::OpenFOAMParameters(
@@ -21,12 +22,14 @@ OpenFOAMParameters::OpenFOAMParameters(
       const bool addLayers,
       const double edgeFeatureAngle,
       const uint featureRefinementLevel,
+      const bool locationInMeshSet,
       const CVecD3& locationInMesh) {
    castellateMesh_ = castellateMesh;
    snapMesh_ = snapMesh;
    addLayers_ = addLayers;
    edgeFeatureAngle_ = edgeFeatureAngle;
    featureRefinementLevel_ = featureRefinementLevel;
+   locationInMeshSet_ = locationInMeshSet;
    locationInMesh_ = locationInMesh;
 }
 
@@ -69,4 +72,8 @@ OpenFOAMParameters::isSnapMesh() const {
 
 const CVecD3& OpenFOAMParameters::getLocationInMesh() const {
    return locationInMesh_;
+}
+
+bool OpenFOAMParameters::isLocationInMeshSet() const {
+   return locationInMeshSet_;
 }

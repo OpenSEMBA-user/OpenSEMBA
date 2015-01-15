@@ -435,6 +435,7 @@ ParserGiD::readOpenFOAMParameters() {
    bool castellatedMesh, snapMesh, addLayers;
    uint featureRefLevel;
    double edgeFeatureAngle;
+   bool locationInMeshIsSet = false;
    CVecD3 locationInMesh;
    while (!found && !f_in.eof() ) {
       getNextLabelAndValue(label, value);
@@ -455,6 +456,7 @@ ParserGiD::readOpenFOAMParameters() {
                featureRefLevel = atoi(value.c_str());
             } else if (label.compare("Location in mesh")==0) {
                uint id = atoi(value.c_str());
+               locationInMeshIsSet = true;
                locationInMesh = cG_->getPtrToId(id)->pos();
             } else if (label.compare("End of Openfoam parameters")==0) {
                finished = true;
@@ -464,7 +466,7 @@ ParserGiD::readOpenFOAMParameters() {
    }
    //
    return new OpenFOAMParameters(castellatedMesh, snapMesh, addLayers,
-         edgeFeatureAngle, featureRefLevel, locationInMesh);
+         edgeFeatureAngle, featureRefLevel, locationInMeshIsSet, locationInMesh);
 }
 
 ProblemSize
@@ -1514,4 +1516,8 @@ ParserGiD::checkVersionCompatibility(const string version) const {
             << "File version " << version << " is not supported." << endl;
    }
    return versionMatches;
+}
+
+const ProblemSize* ParserGiD::getProblemSize() const {
+   return &pSize_;
 }

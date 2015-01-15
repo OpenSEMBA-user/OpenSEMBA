@@ -24,6 +24,7 @@ public:
 	 const bool addLayers,
 	 const double edgeFeatureAngle,
 	 const uint featureRefinementLevel,
+	 const bool locationInMeshSet,
 	 const CVecD3& locationInMesh);
 	virtual void
 	 printInfo() const;
@@ -38,6 +39,7 @@ public:
 	uint
 	 getFeatureRefinementLevel() const;
    const CVecD3& getLocationInMesh() const;
+   bool isLocationInMeshSet() const;
 
 private:
 	bool castellateMesh_;
@@ -45,6 +47,7 @@ private:
 	bool addLayers_;
 	double edgeFeatureAngle_;
 	uint featureRefinementLevel_;
+	bool locationInMeshSet_;
 	CVecD3 locationInMesh_;
 	// vector<OpenFoamRefinementBox>  refinementBox_;
 	// vector<OpenFoamRefinementeSphere> refinementSphere_;
