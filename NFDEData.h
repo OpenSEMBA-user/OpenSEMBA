@@ -8,8 +8,8 @@
 using namespace std;
 
 #include "ProjectFile.h"
-#include "CartesianVector.h"
-#include "Constants.h"
+#include "math/CartesianVector.h"
+#include "math/Constants.h"
 
 struct NFDEData : public ProjectFile {
    //	AUXILIARY TYPES
