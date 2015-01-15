@@ -52,6 +52,7 @@ public:
 	 addCoordinates(const Grid3& grid);
 	void
 	 checkAllFacesAreRectangular() const;
+	bool areFacesRectangular() const;
 private:
 	CoordinateGroup cG_;
 	vector<Polygon> face_;

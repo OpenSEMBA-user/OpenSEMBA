@@ -15,7 +15,7 @@
 #include <string>
 #include <stdio.h>
 #include "Parser.h"
-#include "SmbData.h"
+#include "../SmbData.h"
 #include "ProblemSize.h"
 
 #define LABEL_ENDING ':'

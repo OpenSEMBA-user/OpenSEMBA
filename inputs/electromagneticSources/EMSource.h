@@ -5,10 +5,10 @@
 #include <iostream>			// Stream I/O.
 #include <cmath>
 #include <vector>
-#include "Condition.h"
+#include "../Condition.h"
 #include "Magnitude.h"
-#include "../math/CartesianVector.h"
-#include "../math/Constants.h"
+#include "../../math/CartesianVector.h"
+#include "../../math/Constants.h"
 
 using namespace std;
 

@@ -115,7 +115,7 @@ OpenfoamBoundary::strpos(const char *haystack, char *needle, int nth) const {
         if (!res) {
             return -1;
         } else if (i != nth) {
-            res = res++;
+           res++;
         }
     }
     return res - haystack;

@@ -9,7 +9,7 @@
 #define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_
 
 #include "Magnitude.h"
-#include "ProjectFile.h"
+#include "../../ProjectFile.h"
 #include <map>
 #include <cmath>
 #include <assert.h>

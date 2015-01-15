@@ -8,8 +8,8 @@
 #ifndef SMBDATA_H_
 #define SMBDATA_H_
 
-#include "GlobalProblemData.h"
 #include "ProjectFile.h"
+#include "inputs/GlobalProblemData.h"
 #include "inputs/OutputRequestGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"

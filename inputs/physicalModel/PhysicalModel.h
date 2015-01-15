@@ -7,9 +7,9 @@
 #include <complex>
 #include <cmath>
 #include <vector>
-#include "Condition.h"
-#include "../math/Constants.h"
-#include "../math/CartesianVector.h"
+#include "../Condition.h"
+#include "../../math/Constants.h"
+#include "../../math/CartesianVector.h"
 
 using namespace std;
 

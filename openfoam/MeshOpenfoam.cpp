@@ -211,13 +211,20 @@ MeshOpenfoam::discretizeWithinBoundary(
 
 void
 MeshOpenfoam::checkAllFacesAreRectangular() const {
-	for (uint i = 0; i < face_.size(); i++) {
-		if (!face_[i].isRectangular()) {
-			cerr<< "ERROR @ MeshOpenfoam: "
-				<< "The following polygon is not a rectangular." << endl;
-			face_[i].printInfo();
-		}
-	}
+   if (!areFacesRectangular()) {
+      cerr<< "ERROR @ MeshOpenfoam: "
+            << "The following polygon is not a rectangular." << endl;
+   }
+}
+
+bool
+MeshOpenfoam::areFacesRectangular() const {
+   for (uint i = 0; i < face_.size(); i++) {
+      if (!face_[i].isRectangular()) {
+         return false;
+      }
+   }
+   return true;
 }
 
 vector<pair<const Polygon*, const Polygon*> >
