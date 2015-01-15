@@ -9,6 +9,7 @@
 #define OPENFOAMPARAMETERS_H_
 
 #include <iostream>
+#include "../math/CartesianVector.h"
 
 using namespace std;
 
@@ -18,12 +19,12 @@ class OpenFOAMParameters {
 public:
 	OpenFOAMParameters();
 	OpenFOAMParameters(
-	 const bool castellateMesh_,
-	 const bool snapMesh_,
-	 const bool addLayers_,
-	 const double edgeFeatureAngle_,
-	 const uint featureRefinementLevel_);
-	virtual ~OpenFOAMParameters();
+	 const bool castellateMesh,
+	 const bool snapMesh,
+	 const bool addLayers,
+	 const double edgeFeatureAngle,
+	 const uint featureRefinementLevel,
+	 const CVecD3& locationInMesh);
 	virtual void
 	 printInfo() const;
 	bool
@@ -36,13 +37,15 @@ public:
 	 getEdgeFeatureAngle() const;
 	uint
 	 getFeatureRefinementLevel() const;
+   const CVecD3& getLocationInMesh() const;
+
 private:
 	bool castellateMesh_;
 	bool snapMesh_;
 	bool addLayers_;
 	double edgeFeatureAngle_;
 	uint featureRefinementLevel_;
-	// CVecD3 locationInMesh_;
+	CVecD3 locationInMesh_;
 	// vector<OpenFoamRefinementBox>  refinementBox_;
 	// vector<OpenFoamRefinementeSphere> refinementSphere_;
 };

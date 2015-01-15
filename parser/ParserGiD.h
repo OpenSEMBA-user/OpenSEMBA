@@ -105,6 +105,7 @@ private:
       multilayer,
       undefinedSIBC
    } SIBCType;
+   const CoordinateGroup* cG_;
 	pair<CVecD3, CVecD3>
 	 readBoundFromStr(
 	  const string& str) const;

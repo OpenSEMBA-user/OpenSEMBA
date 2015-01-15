@@ -119,6 +119,7 @@ ParserGiD::readMesh() {
    Grid3* grid = readCartesianGrid();
    // Reads the coordinates.
    CoordinateGroup* coordinates = readCoordinates();
+   cG_ = coordinates;
    // Reads elements connectivities.
    ElementsGroup elements;
    elements = readElements(*coordinates);
@@ -434,6 +435,7 @@ ParserGiD::readOpenFOAMParameters() {
    bool castellatedMesh, snapMesh, addLayers;
    uint featureRefLevel;
    double edgeFeatureAngle;
+   CVecD3 locationInMesh;
    while (!found && !f_in.eof() ) {
       getNextLabelAndValue(label, value);
       if (label.compare("Openfoam parameters") == 0) {
@@ -451,6 +453,9 @@ ParserGiD::readOpenFOAMParameters() {
                edgeFeatureAngle = atof(value.c_str());
             } else if (label.compare("Feature refinement level") == 0) {
                featureRefLevel = atoi(value.c_str());
+            } else if (label.compare("Location in mesh")==0) {
+               uint id = atoi(value.c_str());
+               locationInMesh = cG_->getPtrToId(id)->pos();
             } else if (label.compare("End of Openfoam parameters")==0) {
                finished = true;
             }
@@ -459,7 +464,7 @@ ParserGiD::readOpenFOAMParameters() {
    }
    //
    return new OpenFOAMParameters(castellatedMesh, snapMesh, addLayers,
-         edgeFeatureAngle, featureRefLevel);
+         edgeFeatureAngle, featureRefLevel, locationInMesh);
 }
 
 ProblemSize
