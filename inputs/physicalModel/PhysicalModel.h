@@ -54,6 +54,8 @@ public:
 	virtual bool
 	 isMultiportRLC() const {return false;}
 	virtual bool
+	 isClassic() const {return false;}
+	virtual bool
 	 isPML() const;
 	virtual void
      printInfo() const = 0;

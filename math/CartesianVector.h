@@ -118,6 +118,14 @@ CartesianVector<double,VS>
   const CartesianVector<int,VS>& lhs,
   const double rhs);
 
+template <class T, int D>
+std::ostream&
+operator<<(
+      ostream& os,
+      const CartesianVector<T,D>& vec) {
+   return os << vec.toStr();
+}
+
 #include "CartesianVector.hpp"
 
 typedef CartesianVector<double,3> CVecD3;

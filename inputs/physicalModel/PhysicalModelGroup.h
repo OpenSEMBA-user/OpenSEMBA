@@ -111,6 +111,16 @@ public:
 		return res;
 	 }
 	unsigned int
+	 countClassic() const {
+	   unsigned int res = 0;
+	   for (unsigned int i = 0; i < count(); i++) {
+	      if (pm[i]->isClassic()) {
+	         res++;
+	      }
+	   }
+	   return res;
+	 }
+	unsigned int
 	 countDispersiveVolumic() const {
 		unsigned int res = 0;
 		for (unsigned int i = 0; i < count(); i++) {
