@@ -30,6 +30,7 @@ public:
    double getPermeability(const uint i) const;
    double getElecCond(const uint i) const;
    double getMagnCond(const uint i) const;
+   bool isSurfaceMultilayer() const {return true;}
    void
     printInfo() const;
 private:

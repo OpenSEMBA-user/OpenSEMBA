@@ -35,6 +35,8 @@ public:
 	 isPhysicalModel() const {return true;}
 	virtual bool
 	 isSurfaceImpedance() const {return false;}
+   virtual bool
+    isSurfaceMultilayer() const {return false;}
 	virtual bool
 	 isSurfaceType() const {return false;}
 	virtual bool

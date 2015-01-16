@@ -110,6 +110,16 @@ public:
 		}
 		return res;
 	 }
+   unsigned int
+    countMultilayers() const {
+      unsigned int res = 0;
+      for (unsigned int i = 0; i < count(); i++) {
+         if (pm[i]->isSurfaceMultilayer()) {
+            res++;
+         }
+      }
+      return res;
+    }
 	unsigned int
 	 countClassic() const {
 	   unsigned int res = 0;

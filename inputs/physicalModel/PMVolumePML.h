@@ -62,6 +62,8 @@ public:
 	 getFirstOrientationIndex() const;
 	CVecD3
 	 getPMLBeginningPosition() const;
+	virtual bool
+	 isClassic() const {return false;}
 private:
 	Direction direction[3];
 	pair<CVecD3,CVecD3> bound;
