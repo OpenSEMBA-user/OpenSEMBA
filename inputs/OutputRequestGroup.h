@@ -10,13 +10,17 @@ public:
 	void
 	 applyGeometricScalingFactor(const double scalingFactor);
 	uint
+	 count() const;
+	uint
 	 countWithType(const Element::Type) const;
+	const OutputRequest*
+	 get(const uint i) const;
 	const OutputRequest*
 	 getWithType(const uint i, const Element::Type type) const;
 	void
 	 printInfo() const;
-//private:
-	vector<OutputRequest> outputRequest;
+private:
+	vector<OutputRequest> oR_;
 };
 
 #	endif

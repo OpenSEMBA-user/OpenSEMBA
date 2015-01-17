@@ -8,18 +8,18 @@ OutputRequestGroup::OutputRequestGroup() {
 
 OutputRequestGroup::OutputRequestGroup(
  const vector<OutputRequest>& in) {
-	outputRequest.clear();
+	oR_.clear();
 	for (uint i = 0; i < in.size(); i++) {
 		// Checks if exists similar output and combines elements if so.
 		bool isSimilar = false;
-		for (uint j = 0; j < outputRequest.size(); j++) {
-			if (in[i].isSimilar(outputRequest[j])) {
+		for (uint j = 0; j < oR_.size(); j++) {
+			if (in[i].isSimilar(oR_[j])) {
 				isSimilar = true;
-				outputRequest[j].setAdditionalElems(in[i].getElem());
+				oR_[j].setAdditionalElems(in[i].getElem());
 			}
 		}
 		if (!isSimilar) {
-			outputRequest.push_back(in[i]);
+			oR_.push_back(in[i]);
 		}
 	}
 }
@@ -27,8 +27,8 @@ OutputRequestGroup::OutputRequestGroup(
 uint
 OutputRequestGroup::countWithType(const Element::Type param) const {
 	uint res = 0;
-	for (uint i = 0; i < outputRequest.size(); i++) {
-		if (outputRequest[i].getElementType() == param) {
+	for (uint i = 0; i < oR_.size(); i++) {
+		if (oR_[i].getElementType() == param) {
 			res++;
 		}
 	}
@@ -41,10 +41,10 @@ OutputRequestGroup::getWithType(
  const Element::Type param) const {
 	assert(j < countWithType(param));
 	uint count = 0;
-	for (uint i = 0; i < outputRequest.size(); i++) {
-		if (outputRequest[i].getElementType() == param) {
+	for (uint i = 0; i < oR_.size(); i++) {
+		if (oR_[i].getElementType() == param) {
 			if (count == j) {
-				return &outputRequest[i];
+				return &oR_[i];
 			} else {
 				count++;
 			}
@@ -56,11 +56,15 @@ OutputRequestGroup::getWithType(
 	return NULL;
 }
 
+const OutputRequest* OutputRequestGroup::get(const uint i) const {
+	return &oR_[i];
+}
+
 void
 OutputRequestGroup::printInfo() const {
 	cout<< " --- OutputRequestGroup info ---" << endl;
-	for (unsigned int i = 0; i < outputRequest.size(); i++) {
-		outputRequest[i].printInfo();
+	for (unsigned int i = 0; i < oR_.size(); i++) {
+		oR_[i].printInfo();
 	}
 	cout<< " --- End of outputrequestGroup info ---" << endl;
 }
@@ -70,3 +74,6 @@ OutputRequestGroup::applyGeometricScalingFactor(
  const double scalingFactor) {
 }
 
+uint OutputRequestGroup::count() const {
+	return oR_.size();
+}
