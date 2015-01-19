@@ -12,7 +12,7 @@
 #include "../../math/StaMatrix.h"
 
 class PMSurfaceSIBC : public PMSurface {
-	friend class SolverSIBC;
+	friend class DGSIBC;
 public:
 	PMSurfaceSIBC();
 	PMSurfaceSIBC(
