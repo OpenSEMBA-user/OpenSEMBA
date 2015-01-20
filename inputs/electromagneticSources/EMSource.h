@@ -7,6 +7,7 @@
 #include <vector>
 #include "../Condition.h"
 #include "Magnitude.h"
+#include "MagnitudeGaussian.h"
 #include "../../math/CartesianVector.h"
 #include "../../math/Constants.h"
 

@@ -16,10 +16,12 @@ Dipole::Dipole(
  double length,
  CVecD3 orientation,
  CVecD3 position,
- const Magnitude* magnitude) : EMSource(elem, magnitude) {
+ const MagnitudeGaussian* magnitude) : EMSource(elem, magnitude) {
 	length_ = length;
 	orientation_ = orientation;
 	position_ = position;
+	gaussDelay_ = magnitude->getDelay();
+	spreadSqrt2_ = magnitude->getSpread() * M_SQRT2;
 }
 
 Dipole::~Dipole() {
@@ -35,6 +37,8 @@ Dipole::operator=(const Dipole& rhs) {
 	length_ = rhs.length_;
 	orientation_ = rhs.orientation_;
 	position_ = rhs.position_;
+	gaussDelay_ = rhs.gaussDelay_;
+	spreadSqrt2_ = rhs.spreadSqrt2_;
 	return *this;
 }
 

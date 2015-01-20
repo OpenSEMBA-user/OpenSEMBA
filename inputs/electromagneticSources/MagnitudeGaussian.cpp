@@ -39,3 +39,15 @@ MagnitudeGaussian::printInfo() const {
     cout << "Spread: " << spread_ << endl;
     cout << "Frequency: " << freq_ << endl;
 }
+
+double MagnitudeGaussian::getDelay() const {
+   return delay_;
+}
+
+double MagnitudeGaussian::getFreq() const {
+   return freq_;
+}
+
+double MagnitudeGaussian::getSpread() const {
+   return spread_;
+}

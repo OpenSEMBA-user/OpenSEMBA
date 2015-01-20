@@ -16,16 +16,18 @@ public:
 	 double length,
 	 CVecD3 orientation,
 	 CVecD3 position,
-	 const Magnitude* magnitude);
+	 const MagnitudeGaussian* magnitude);
 	virtual ~Dipole();
 	Dipole&
 	 operator=(const Dipole &rhs);
 	void
 	 printInfo() const;
-private:
+protected:
 	double length_;
 	CVecD3 orientation_;
 	CVecD3 position_;
+	double gaussDelay_;
+	double spreadSqrt2_;
 };
 
 #endif /* DIPOLE_H_ */

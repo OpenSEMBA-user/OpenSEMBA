@@ -22,23 +22,23 @@ public:
 	 const vector<double>& pole,
 	 const vector<StaMatrix<double,2,2> >& Z);
 	virtual ~PMSurfaceSIBC();
-	PMSurfaceSIBC&
+	virtual PMSurfaceSIBC&
      operator=(const PMSurfaceSIBC &param);
 	void
 	 setZInfinity(const StaMatrix<double,2,2>& Zinf);
 	void
 	 setZStatic(const StaMatrix<double,2,2>& Zsta);
-	void
+	virtual void
 	 addPole(
 	  const double pole,
 	  const StaMatrix<double,2,2>& Z);
-	unsigned int
+	virtual unsigned int
 	 getNumberOfPoles() const {
 		 return pole_.size();
 	 }
-	void
+	virtual void
 	 printInfo() const;
-private:
+protected:
 	StaMatrix<double,2,2> ZInfinity_, ZStatic_;
 	vector<double> pole_; // Impedance poles.
 	vector<StaMatrix<double,2,2> > Z_; // Impedance residuals.

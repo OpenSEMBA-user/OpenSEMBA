@@ -27,6 +27,10 @@ public:
      evaluate(const double time) const;
     void
      printInfo() const;
+   double getDelay() const;
+   double getFreq() const;
+   double getSpread() const;
+
 private:
     double spread_;
     double delay_;
