@@ -1034,7 +1034,7 @@ ParserGiD::readDipoleEMSource() {
    double length = 0.0;
    CVecD3 orientation;
    CVecD3 position;
-   Magnitude* mag = NULL;
+   MagnitudeGaussian* mag = NULL;
    //
    string line;
    bool finished = false;
