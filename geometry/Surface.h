@@ -38,7 +38,9 @@ public:
 	 printInfo() const = 0;
 protected:
 	CVecD3 normal;
-	static const double curvatureTolerance = 1e-12;
+	static const double curvatureTolerance;
 };
+
+const double Surface::curvatureTolerance = 1e-12;
 
 #endif /* SURFACE_H_ */

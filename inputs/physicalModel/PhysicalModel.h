@@ -62,11 +62,15 @@ public:
 	virtual void
      printInfo() const = 0;
 protected:
-	static const double eps0 = VACUUM_PERMITTIVITY;
-	static const double mu0 =VACUUM_PERMEABILITY;
+	static const double eps0;
+	static const double mu0;
 	unsigned int id_;
 	string name_;
 private:
 };
+
+const double PhysicalModel::eps0 = VACUUM_PERMITTIVITY;
+const double PhysicalModel::mu0 =VACUUM_PERMEABILITY;
+
 
 #endif

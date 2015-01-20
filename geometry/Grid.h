@@ -107,7 +107,7 @@ public:
             const double tol = tolerance) const;
     void printInfo() const;
 private:
-    static const double tolerance = 1e-12;
+    static const double tolerance;
     CVecI3 offsetGrid_;
     CVecD3 origin_;
     vector<double> pos_[D];
@@ -116,6 +116,9 @@ private:
             const vector<double>& vec,
             const pair<double,double>& minMax) const;
 };
+
+template<int D>
+const double Grid<D>::tolerance = 1e-12;
 
 #include "Grid.hpp"
 

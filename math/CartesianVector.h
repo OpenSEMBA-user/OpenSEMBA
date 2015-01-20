@@ -32,7 +32,7 @@ template <class T, int D>
 class CartesianVector {
 public:
 	T val[D];
-	static const double tolerance = 1.0e-10;
+	static double tolerance;
 	CartesianVector();
 	virtual ~CartesianVector();
 	CartesianVector<T,D>(T val_[D]);
@@ -108,6 +108,9 @@ public:
 	virtual string
 	 toStr() const;
 };
+
+template<class T, int D>
+double CartesianVector<T,D>::tolerance = 1.0e-10;
 
 template<int VS>
 CartesianVector<double,VS>

@@ -69,7 +69,7 @@ public:
 	 canExtractGrid() const;
 protected:
 	Grid3* grid_;
-	static const double areaDiffTolerance = 1e-15;
+	static const double areaDiffTolerance;
 	virtual Element*
 	 getElementWithId(unsigned int id);
 	virtual const Element*
@@ -87,4 +87,7 @@ private:
 //	pair<CVecD3,CVecD3>
 //	 getInfinityBound() const;
 };
+
+const double Mesh::areaDiffTolerance = 1e-15;
+
 #endif /* MESH_H_ */

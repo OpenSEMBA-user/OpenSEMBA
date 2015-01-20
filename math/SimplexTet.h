@@ -88,7 +88,7 @@ private:
 	  const unsigned int nNodes) const;
 	void
 	 buildSideNodeIndices();
-	static const double sizeFactor = 1.0 / 6.0;
+	static const double sizeFactor;
 	static const unsigned int dimension = 3;
 	CartesianVector<int,nsc> cId[ncp];
 	CartesianVector<double,nsc> cPos[ncp];
@@ -104,7 +104,10 @@ private:
 	int
 	 numberOfNodes(int order) const ;
 };
-// ========================================================================
+
+template<int SIMPTET_N>
+const double SimplexTet<SIMPTET_N>::sizeFactor = 1.0 / 6.0;
+
 #include "SimplexTet.hpp"
 }
 // ========================================================================

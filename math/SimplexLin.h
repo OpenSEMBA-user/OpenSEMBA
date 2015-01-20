@@ -45,7 +45,7 @@ private:
 	Polynomial<double> lagr[np];
 	Polynomial<double> dLagr[np][faces];
 	// --- ca: Cubatured alpha, cda: cub. derived, cwaa: cub. weighted
-	static const double sizeFactor = 1.0;
+	static const double sizeFactor;
 	static const unsigned int dimension = 1;
 	CartesianVector<int,nsc> cId[ncp];
 	CartesianVector<double,nsc> cPos[ncp];
@@ -74,6 +74,9 @@ private:
 	void
 	 buildCubatureLagrange();
 };
+
+template <int SIMPLIN_N>
+const double SimplexLin<SIMPLIN_N>::sizeFactor = 1.0;
 // ====================================================================
 #include "SimplexLin.hpp"
 }

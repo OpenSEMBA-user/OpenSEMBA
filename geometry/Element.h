@@ -85,9 +85,11 @@ protected:
 	unsigned int id;
 	unsigned int matId;
 	unsigned int layerId;
-	static const double tolerance = 1e-15;
+	static const double tolerance;
 	void
 	 ascendingOrder(unsigned int nVal, unsigned int* val) const;
 };
+
+const double Element::tolerance = 1e-15;
 
 #endif

@@ -36,7 +36,7 @@ public:
 //	// Weights can be used to obtain the result of a integral knowing the
 //	// function values on its nodal positions.
 //	double w[np];
-	static const double sizeFactor = 1.0 / 2.0;
+	static const double sizeFactor;
 	static const unsigned int dimension = 2;
 	CartesianVector<int,nsc> cId[ncp];
 	double ca[np][ncp];
@@ -85,7 +85,10 @@ private:
 	void
 	 buildCubatureLagrange();;
 };
-// ========================================================================
+
+template <int SIMPTRI_N>
+const double SimplexTri<SIMPTRI_N>::sizeFactor = 1.0 / 2.0;
+
 #include "SimplexTri.hpp"
 }
 // ========================================================================
