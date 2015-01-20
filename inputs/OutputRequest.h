@@ -44,6 +44,7 @@ public:
 		energy,
 		farField
 	} Type;
+	OutputRequest();
 	OutputRequest(
 	 const Domain& domain,
 	 const Element::Type elementType,
