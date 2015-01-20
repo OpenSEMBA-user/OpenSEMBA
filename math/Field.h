@@ -18,8 +18,8 @@ public:
 	Field();
 	virtual ~Field();
 
-	T* operator()(const uint i);
-	const T* getConst(const uint i) const;
+	const T* operator()(const uint i) const;
+	T* set(const uint i) const;
 	T operator[](const uint i) const;
 	uint
 	 getDOFs() const;

@@ -24,15 +24,15 @@ Field<T,D>::~Field() {
 }
 
 template<class T, int D>
-inline T*
-Field<T,D>::operator()(const uint i) {
+inline const T*
+Field<T,D>::operator()(const uint i) const {
 	assert(i < D);
 	return &val_[size_*i];
 }
 
 template<class T, int D>
-inline const T*
-Field<T,D>::getConst(const uint i) const {
+inline T*
+Field<T,D>::set(const uint i) const {
 	assert(i < D);
 	return &val_[size_*i];
 }
