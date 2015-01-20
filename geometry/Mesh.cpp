@@ -6,6 +6,8 @@
  */
 #include "Mesh.h"
 
+const double Mesh::areaDiffTolerance = 1e-15;
+
 Mesh::Mesh() {
 	grid_ = NULL;
 }

@@ -41,6 +41,4 @@ protected:
 	static const double curvatureTolerance;
 };
 
-const double Surface::curvatureTolerance = 1e-12;
-
 #endif /* SURFACE_H_ */

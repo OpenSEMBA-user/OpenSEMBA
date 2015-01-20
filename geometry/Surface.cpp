@@ -4,9 +4,10 @@
  *  Created on: May 13, 2013
  *      Author: luis
  */
-#ifndef SURFACE_H_
 #include "Surface.h"
-#endif
+
+const double Surface::curvatureTolerance = 1e-12;
+
 
 Surface::Surface(
  const CVecD3& normal_,

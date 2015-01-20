@@ -90,6 +90,4 @@ protected:
 	 ascendingOrder(unsigned int nVal, unsigned int* val) const;
 };
 
-const double Element::tolerance = 1e-15;
-
 #endif

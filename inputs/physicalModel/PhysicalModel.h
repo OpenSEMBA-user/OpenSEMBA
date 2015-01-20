@@ -69,8 +69,4 @@ protected:
 private:
 };
 
-const double PhysicalModel::eps0 = VACUUM_PERMITTIVITY;
-const double PhysicalModel::mu0 =VACUUM_PERMEABILITY;
-
-
 #endif

@@ -88,6 +88,5 @@ private:
 //	 getInfinityBound() const;
 };
 
-const double Mesh::areaDiffTolerance = 1e-15;
 
 #endif /* MESH_H_ */

@@ -1,6 +1,6 @@
-#ifndef ELEMENT_H_
-	#include "Element.h"
-#endif
+#include "Element.h"
+
+const double Element::tolerance = 1e-15;
 
 Element::Element() {
     id = 0;
