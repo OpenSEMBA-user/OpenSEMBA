@@ -374,7 +374,6 @@ CartesianVector<T,D>::isContainedInPlane(
 	}
 	return false;
 	}
-
 }
 
 

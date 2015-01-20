@@ -13,17 +13,11 @@ Waveport::Waveport(
  const bool input,
  const Shape shape,
  const ExcitationMode excMode,
- const pair<unsigned int,unsigned int> mode,
- const Symmetry xy,
- const Symmetry yz,
- const Symmetry zx) : EMSource(elem, magnitude) {
+ const pair<unsigned int,unsigned int> mode) : EMSource(elem, magnitude) {
 	input_ = input;
 	shape_ = shape;
 	excitationMode_ = excMode;
 	mode_ = mode;
-	SymXY_ = xy;
-	SymYZ_ = yz;
-	SymZX_ = zx;
 }
 
 Waveport::~Waveport() {
@@ -40,25 +34,12 @@ Waveport::operator=(const Waveport& rhs) {
 	shape_ = rhs.shape_;
 	excitationMode_ = rhs.excitationMode_;
 	mode_ = rhs.mode_;
-	SymXY_ = rhs.SymXY_;
-	SymYZ_ = rhs.SymYZ_;
-	SymZX_ = rhs.SymZX_;
 	return *this;
 }
 
 Waveport::Shape
 Waveport::getShape() const {
 	return shape_;
-}
-
-Waveport::Symmetry
-Waveport::getSymXY() const {
-	return SymXY_;
-}
-
-Waveport::Symmetry
-Waveport::getSymYZ() const {
-	return SymYZ_;
 }
 
 Waveport::ExcitationMode
@@ -70,11 +51,6 @@ Waveport::getExcitationMode() const {
 pair<unsigned int, unsigned int>
 Waveport::getMode() const {
 	return mode_;
-}
-
-Waveport::Symmetry
-Waveport::getSymZX() const {
-	return SymZX_;
 }
 
 void

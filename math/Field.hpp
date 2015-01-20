@@ -169,7 +169,7 @@ Field<T,D>::swap(
 		for (uint k = first; k < last; k++) {
 			T aux = val_[i*size_ + k];
 			val_[i*size_ + k] = param(i)[k];
-			param(i)[k] = aux;
+			param.set(i)[k] = aux;
 		}
 	}
 }

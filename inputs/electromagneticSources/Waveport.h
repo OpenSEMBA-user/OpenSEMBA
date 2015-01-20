@@ -22,21 +22,13 @@ public:
 		TE,
 		TM
 	} ExcitationMode;
-	typedef enum {
-		none,
-		pec,
-		pmc
-	} Symmetry;
 	Waveport(
 	        const vector<unsigned int>& elem,
 	        const MagnitudeGaussian* magnitude,
 	        const bool input,
 	        const Shape shape,
 	        const ExcitationMode excMode,
-	        const pair<unsigned int,unsigned int> mode,
-	        const Symmetry xy,
-	        const Symmetry yz,
-	        const Symmetry zx);
+	        const pair<unsigned int,unsigned int> mode);
 	virtual ~Waveport();
 	Waveport&
 	 operator=(const Waveport &rhs);
@@ -44,12 +36,6 @@ public:
 	 printInfo() const;
 	Shape
 	 getShape() const;
-	Symmetry
-	 getSymXY() const;
-	Symmetry
-	 getSymYZ() const;
-	Symmetry
-	 getSymZX() const;
 	ExcitationMode
 	 getExcitationMode() const;
 	pair<unsigned int, unsigned int>
@@ -59,7 +45,6 @@ private:
 	Shape shape_;
 	ExcitationMode excitationMode_;
 	pair<unsigned int,unsigned int> mode_;
-	Symmetry SymXY_, SymYZ_, SymZX_;
 };
 
 #endif /* WAVEPORT_H_ */

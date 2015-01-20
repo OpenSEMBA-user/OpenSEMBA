@@ -60,7 +60,7 @@ public:
 	 check() const;
 	void
 	 printInfo() const;
-private:
+protected:
    vector<complex<double> > residue; // Residues for dispers model. c_p.
    vector<complex<double> > pole; // Poles for dispersive model. a_p.
    vector<complex<double> > drudeResidue; // c_p_D

@@ -61,4 +61,6 @@ private:
 
 #include "Field.hpp"
 
+typedef Field<double,3> FieldD3;
+
 #endif /* FIELD_H_ */

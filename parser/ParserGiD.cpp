@@ -1068,9 +1068,6 @@ ParserGiD::readWaveportEMSource() {
    Waveport::Shape shape = Waveport::rectangular;
    Waveport::ExcitationMode excitationMode = Waveport::TE;
    pair<uint,uint> mode(1,0);
-   Waveport::Symmetry symXY = Waveport::none;
-   Waveport::Symmetry symYZ = Waveport::none;
-   Waveport::Symmetry symZX = Waveport::none;
    string line, label, value;
    bool finished = false;
    while (!finished && !f_in.eof()) {
@@ -1104,30 +1101,6 @@ ParserGiD::readWaveportEMSource() {
          mode.first = atoi(value.c_str());
       } else if (!label.compare("SecondMode")) {
          mode.second = atoi(value.c_str());
-      } else if (!label.compare("Symmetry_XY")) {
-         if (value.find("Undefined") != value.npos) {
-            symXY = Waveport::none;
-         } else if (value.find("PMC") != value.npos) {
-            symXY = Waveport::pmc;
-         } else if (value.find("PEC") != value.npos) {
-            symXY = Waveport::pec;
-         }
-      } else if (!label.compare("Symmetry_YZ")) {
-         if (value.find("Undefined") != value.npos) {
-            symYZ = Waveport::none;
-         } else if (value.find("PMC") != value.npos) {
-            symYZ = Waveport::pmc;
-         } else if (value.find("PEC") != value.npos) {
-            symYZ = Waveport::pec;
-         }
-      } else if (!label.compare("Symmetry_ZX")) {
-         if (value.find("Undefined") != value.npos) {
-            symZX = Waveport::none;
-         } else if (value.find("PMC") != value.npos) {
-            symZX = Waveport::pmc;
-         } else if (value.find("PEC") != value.npos) {
-            symZX = Waveport::pec;
-         }
       } else if (!label.compare("Number of elements")) {
          numElements = atoi(value.c_str());
       } else if (!label.compare("Elements")) {
@@ -1149,8 +1122,7 @@ ParserGiD::readWaveportEMSource() {
       cerr<< "ERROR @ GiDParser::readWaveportEMSource: "
             << "End of excitation type label not found. " << endl;
    }
-   return Waveport(elem, mag, input, shape,
-         excitationMode, mode, symXY, symYZ, symZX);
+   return Waveport(elem, mag, input, shape, excitationMode, mode);
 }
 
 Generator
