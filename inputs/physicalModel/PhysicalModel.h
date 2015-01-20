@@ -62,13 +62,8 @@ public:
 	virtual void
      printInfo() const = 0;
 protected:
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double eps0 = VACUUM_PERMITTIVITY;
-	static constexpr double mu0 =VACUUM_PERMEABILITY;
-#else
 	static const double eps0 = VACUUM_PERMITTIVITY;
 	static const double mu0 =VACUUM_PERMEABILITY;
-#endif
 	unsigned int id_;
 	string name_;
 private:

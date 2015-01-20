@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <complex>
 #include <limits>
+#include <type_traits>
 
 using namespace std;
 
@@ -31,11 +32,7 @@ template <class T, int D>
 class CartesianVector {
 public:
 	T val[D];
-#ifndef __GXX_EXPERIMENTAL_CXX0X__
-	static const double tolerance = 1.0e-15;
-#else
-	static constexpr double tolerance = 1.0e-10;
-#endif
+	static const double tolerance = 1.0e-10;
 	CartesianVector();
 	virtual ~CartesianVector();
 	CartesianVector<T,D>(T val_[D]);

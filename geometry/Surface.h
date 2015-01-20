@@ -38,11 +38,7 @@ public:
 	 printInfo() const = 0;
 protected:
 	CVecD3 normal;
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double curvatureTolerance = 1e-12;
-#else
 	static const double curvatureTolerance = 1e-12;
-#endif
 };
 
 #endif /* SURFACE_H_ */

@@ -107,11 +107,7 @@ public:
             const double tol = tolerance) const;
     void printInfo() const;
 private:
-#   ifdef __GXX_EXPERIMENTAL_CXX0X__
-    static constexpr double tolerance = 1e-12;
-#   else
     static const double tolerance = 1e-12;
-#   endif
     CVecI3 offsetGrid_;
     CVecD3 origin_;
     vector<double> pos_[D];

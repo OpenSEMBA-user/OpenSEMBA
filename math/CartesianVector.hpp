@@ -335,24 +335,46 @@ bool
 CartesianVector<T,D>::isContainedInPlane(
  const CartesianPlane plane) const {
 	assert(D == 3);
-	switch (plane) {
-	case xy:
-		if (std::fabs(val[2]) < numeric_limits<double>::epsilon()*1e8) {
-			return true;
+	if (is_same<T, complex<double> >::value) {
+		switch (plane) {
+		case xy:
+			if (std::abs(val[2]) < numeric_limits<double>::epsilon()*1e8) {
+				return true;
+			}
+			break;
+		case yz:
+			if (std::abs(val[0]) < numeric_limits<double>::epsilon()*1e8) {
+				return true;
+			}
+			break;
+		case zx:
+			if (std::abs(val[1]) < numeric_limits<double>::epsilon()*1e8) {
+				return true;
+			}
+			break;
 		}
-		break;
-	case yz:
-		if (std::fabs(val[0]) < numeric_limits<double>::epsilon()*1e8) {
-			return true;
-		}
-		break;
-	case zx:
-		if (std::fabs(val[1]) < numeric_limits<double>::epsilon()*1e8) {
-			return true;
-		}
-		break;
+		return false;
+	} else {
+		switch (plane) {
+		case xy:
+			if (std::fabs(val[2]) < numeric_limits<double>::epsilon()*1e8) {
+				return true;
+			}
+			break;
+		case yz:
+			if (std::fabs(val[0]) < numeric_limits<double>::epsilon()*1e8) {
+				return true;
+			}
+			break;
+		case zx:
+			if (std::fabs(val[1]) < numeric_limits<double>::epsilon()*1e8) {
+				return true;
+			}
+			break;
 	}
 	return false;
+	}
+
 }
 
 

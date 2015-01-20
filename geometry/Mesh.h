@@ -69,11 +69,7 @@ public:
 	 canExtractGrid() const;
 protected:
 	Grid3* grid_;
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double areaDiffTolerance = 1e-15;
-#else
 	static const double areaDiffTolerance = 1e-15;
-#endif
 	virtual Element*
 	 getElementWithId(unsigned int id);
 	virtual const Element*

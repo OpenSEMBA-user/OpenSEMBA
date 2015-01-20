@@ -88,11 +88,7 @@ private:
 	  const unsigned int nNodes) const;
 	void
 	 buildSideNodeIndices();
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double sizeFactor = 1.0 / 6.0;
-#else
 	static const double sizeFactor = 1.0 / 6.0;
-#endif
 	static const unsigned int dimension = 3;
 	CartesianVector<int,nsc> cId[ncp];
 	CartesianVector<double,nsc> cPos[ncp];

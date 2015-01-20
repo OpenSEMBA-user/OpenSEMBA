@@ -36,11 +36,7 @@ public:
 //	// Weights can be used to obtain the result of a integral knowing the
 //	// function values on its nodal positions.
 //	double w[np];
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double sizeFactor = 1.0 / 2.0;
-#else
 	static const double sizeFactor = 1.0 / 2.0;
-#endif
 	static const unsigned int dimension = 2;
 	CartesianVector<int,nsc> cId[ncp];
 	double ca[np][ncp];

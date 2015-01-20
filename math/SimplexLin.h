@@ -45,11 +45,7 @@ private:
 	Polynomial<double> lagr[np];
 	Polynomial<double> dLagr[np][faces];
 	// --- ca: Cubatured alpha, cda: cub. derived, cwaa: cub. weighted
-#ifndef __GXX_EXPERIMENTAL_CXX0X__
 	static const double sizeFactor = 1.0;
-#else
-	static constexpr double sizeFactor = 1.0;
-#endif
 	static const unsigned int dimension = 1;
 	CartesianVector<int,nsc> cId[ncp];
 	CartesianVector<double,nsc> cPos[ncp];
