@@ -171,7 +171,7 @@ inline double
 CartesianVector<T,D>::norm() const {
 	double sum = 0;
 	for (unsigned int i = 0; i < D; i++) {
-		sum += (double) std::abs((double) val[i]) * std::abs((double) val[i]);
+		sum += (double) std::abs(val[i]) * std::abs(val[i]);
 	}
 	return sqrt(sum);
 }
@@ -289,7 +289,7 @@ bool
 CartesianVector<T,D>::operator==(
  const CartesianVector<T, D>& param) const {
 	for (int i = 0; i < D; i++) {
-		if (std::abs((double) (val[i] - param.val[i])) >= tolerance) {
+		if (std::abs(val[i] - param.val[i]) >= tolerance) {
 			return false;
 		}
 	}
@@ -307,7 +307,7 @@ template <class T, int D> inline
 CartesianVector<T,D>&
 CartesianVector<T,D>::abs() {
 	for (int i = 0; i < D; i++) {
-		val[i] = (T) std::abs((double) val[i]);
+		val[i] = (T) std::abs(val[i]);
 	}
 	return *this;
 }
@@ -337,17 +337,17 @@ CartesianVector<T,D>::isContainedInPlane(
 	assert(D == 3);
 	switch (plane) {
 	case xy:
-		if (std::abs((T) val[2]) < numeric_limits<T>::epsilon()*1e8) {
+		if (std::abs(val[2]) < numeric_limits<double>::epsilon()*1e8) {
 			return true;
 		}
 		break;
 	case yz:
-		if (std::abs((T) val[0]) < numeric_limits<T>::epsilon()*1e8) {
+		if (std::abs(val[0]) < numeric_limits<double>::epsilon()*1e8) {
 			return true;
 		}
 		break;
 	case zx:
-		if (std::abs((T) val[1]) < numeric_limits<T>::epsilon()*1e8) {
+		if (std::abs(val[1]) < numeric_limits<double>::epsilon()*1e8) {
 			return true;
 		}
 		break;

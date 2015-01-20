@@ -130,5 +130,6 @@ operator<<(
 
 typedef CartesianVector<double,3> CVecD3;
 typedef CartesianVector<long int, 3> CVecI3;
+typedef CartesianVector<complex<double>,3> CVecC3;
 
 #endif /* MATHVECTOR_H_ */

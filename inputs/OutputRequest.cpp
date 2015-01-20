@@ -2,6 +2,10 @@
 #include "OutputRequest.h"
 #endif
 
+OutputRequest::OutputRequest() {
+   setThetaAndPhi(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+}
+
 OutputRequest::OutputRequest(
  const Domain& domain,
  const Element::Type elementType,

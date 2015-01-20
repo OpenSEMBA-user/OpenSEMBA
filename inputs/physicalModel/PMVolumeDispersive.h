@@ -12,10 +12,6 @@
 
 class PMVolumeDispersive : public PMVolume {
 public:
-	vector<complex<double> > residue; // Residues for dispers model. c_p.
-	vector<complex<double> > pole; // Poles for dispersive model. a_p.
-	vector<complex<double> > drudeResidue; // c_p_D
-	vector<complex<double> > drudePole; // Poles for dispersive model. a_p.
 	PMVolumeDispersive();
 	virtual ~PMVolumeDispersive();
 	PMVolumeDispersive(
@@ -37,8 +33,8 @@ public:
 	 const vector<complex<double> >& drudeResidue_);
 	virtual PMVolumeDispersive&
 	 operator=(const PMVolumeDispersive &param);
-//	virtual PMVolumeDispersive&
-//	 operator=(const PhysicalModel &param);
+	uint
+	 getPoleNumber() const {return pole.size();}
 	complex<double>
 	 getPole(unsigned int p) const {return pole[p];}
 	complex<double>
@@ -65,6 +61,10 @@ public:
 	void
 	 printInfo() const;
 private:
+   vector<complex<double> > residue; // Residues for dispers model. c_p.
+   vector<complex<double> > pole; // Poles for dispersive model. a_p.
+   vector<complex<double> > drudeResidue; // c_p_D
+   vector<complex<double> > drudePole; // Poles for dispersive model. a_p.
 	void
 	 addPole(
 	  const complex<double>& pole_,
