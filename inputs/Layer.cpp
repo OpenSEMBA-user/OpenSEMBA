@@ -27,12 +27,14 @@ Layer::getId() const {
 
 string
 Layer::getParentName() const {
-#   warning "Layer parent name not implemented."
+   assert(false);
+   return string();
 }
 
 string
 Layer::getChildName() const {
-#   warning "Layer parent name not implemented."
+   assert(false);
+   return string();
 }
 
 const string&

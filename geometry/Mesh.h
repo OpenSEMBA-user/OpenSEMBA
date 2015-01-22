@@ -47,7 +47,8 @@ public:
 	  const vector<unsigned int>& list) const;
 	vector<unsigned int>
 	 getIdsInsideBound(
-	  const pair<CVecD3,CVecD3>& bound) const;
+	  const BoxD3& bound,
+	  const Element::Type type = Element::undefined) const;
 	void
 	 applyGeometricScalingFactor(
 	  const double factor);

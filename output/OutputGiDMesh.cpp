@@ -41,9 +41,8 @@ OutputGiDMesh::write(const MeshVolume& mesh) {
 
 void
 OutputGiDMesh::write(const NFDEData& mesh) {
-
-#	warning "Not implemented"
-
+   cerr << "ERROR @ OutputGiDMesh: Not implemented." << endl;
+   assert(false);
 }
 
 void

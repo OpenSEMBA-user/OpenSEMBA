@@ -3,7 +3,20 @@
 #endif
 
 EMSource::EMSource() {
-    magnitude_ = NULL;
+   bound_ = NULL;
+   magnitude_ = NULL;
+}
+
+EMSource::EMSource(const vector<uint>& elem, const Magnitude* magnitude) {
+   bound_ = NULL;
+   elem_ = elem;
+   magnitude_ = magnitude;
+   assert(elem_.size() != 0);
+}
+
+EMSource::EMSource(const BoxD3& bound, const Magnitude* magnitude) {
+   bound_ = new BoxD3(bound);
+   magnitude_ = magnitude;
 }
 
 EMSource::~EMSource() {
@@ -12,40 +25,46 @@ EMSource::~EMSource() {
 
 vector<unsigned int>
 EMSource::getElem() const {
-	assert(elem_.size() != 0);
-	return elem_;
+   return elem_;
 }
 
 bool
 EMSource::isEMSource() const {
-	return true;
+   return true;
+}
+
+const BoxD3*
+EMSource::getBound() const {
+   return bound_;
 }
 
 bool
 EMSource::isPlaneWave() const {
-	return false;
-}
-
-EMSource::EMSource(const vector<uint>& elem, const Magnitude* magnitude) {
-    elem_ = elem;
-    magnitude_ = magnitude;
-}
-
-EMSource::EMSource(const Magnitude* magnitude) {
-    magnitude_ = magnitude;
+   return false;
 }
 
 void
 EMSource::printInfo() const {
-    cout<< " - Assigned on " << elem_.size() << ":" << endl;
-    for (uint i = 0; i < elem_.size(); i++) {
-        cout<< elem_[i] << " ";
-    }
-    cout << endl;
-    magnitude_->printInfo();
+   cout<< " - Assigned on " << elem_.size() << ":" << endl;
+   for (uint i = 0; i < elem_.size(); i++) {
+      cout<< elem_[i] << " ";
+   }
+   if (bound_ != NULL) {
+       cout << "Defined on bound: " << endl;
+      bound_->printInfo();
+   }
+   cout << endl;
+   magnitude_->printInfo();
 }
 
 const Magnitude*
 EMSource::getMagnitude() const {
-    return magnitude_;
+   return magnitude_;
+}
+
+void
+EMSource::applyGeometricScalingFactor(const double factor) {
+    if (bound_ != NULL) {
+        bound_->scale(factor);
+    }
 }

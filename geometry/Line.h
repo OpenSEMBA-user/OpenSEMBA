@@ -21,6 +21,8 @@ public:
 	 const uint matId_,
 	 const uint layerId_);
 	virtual ~Line();
+   virtual Element::Type
+    getType() const {return LINE;}
 	inline unsigned int
 	 numberOfFaces() const {return 2;}
 	inline unsigned int

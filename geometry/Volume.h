@@ -32,6 +32,8 @@ public:
 	 numberOfVertices() const = 0;
 	virtual unsigned int
 	 numberOfFaces() const = 0;
+   virtual Element::Type
+    getType() const {return VOLUME;}
 	virtual double
 	 getAreaOfFace(const unsigned int face) const = 0;
 	unsigned int

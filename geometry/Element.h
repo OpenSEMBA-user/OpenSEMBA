@@ -64,6 +64,8 @@ public:
 	 getMatId() const {return matId;}
 	unsigned int
 	 getLayerId() const {return layerId;}
+	virtual Element::Type
+	 getType() const {return undefined;}
 	virtual const CoordD3*
 	 getVertex(const unsigned int i) const = 0;
 	virtual const CoordD3*

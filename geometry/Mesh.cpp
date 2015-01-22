@@ -110,21 +110,16 @@ Mesh::getBound(
 
 vector<unsigned int>
 Mesh::getIdsInsideBound(
- const pair<CVecD3,CVecD3>& bound) const {
+ const BoxD3& bound, const Element::Type type) const {
 	const unsigned int nK = elem.element.size();
 	vector<unsigned int> res;
 	res.reserve(nK);
 	BoxD3 localBound;
 	for (unsigned int i = 0; i < nK; i++) {
-		const Element* e = elem.element[i];
+	   const Element* e = elem.element[i];
 		localBound = e->getBound();
-		bool isInside = true;
-		for (unsigned int j = 0; j < 3; j++) {
-			isInside &=
-			 (localBound.getMin()(j) >= bound.first(j)
-			 && localBound.getMax()(j) <= bound.second(j));
-		}
-		if (isInside) {
+		if (localBound < bound
+		 && (e->getType() == type || type==Element::undefined)) {
 			res.push_back(e->getId());
 		}
 	}

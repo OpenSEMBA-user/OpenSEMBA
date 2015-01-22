@@ -32,6 +32,8 @@ public:
 	 isContainedInPlane() const;
 	CartesianVector<double,3>
 	 getNormal() const;
+	virtual Element::Type
+	 getType() const {return SURFACE;}
 	bool
 	 isRectangular() const;
 	virtual void

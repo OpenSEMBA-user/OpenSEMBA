@@ -1024,7 +1024,7 @@ ParserGiD::readPlaneWaveEMSource() {
    }
    // Throws error message if ending label was not found.
    cerr<< "ERROR @ Parsing planewave: "
-         << "End of Planewave label not found. " << endl;
+       << "End of Planewave label not found. " << endl;
    return PlaneWave();
 }
 
