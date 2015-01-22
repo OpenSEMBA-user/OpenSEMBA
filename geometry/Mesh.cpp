@@ -118,7 +118,7 @@ Mesh::getIdsInsideBound(
 	for (unsigned int i = 0; i < nK; i++) {
 	   const Element* e = elem.element[i];
 		localBound = e->getBound();
-		if (localBound < bound
+		if (localBound <= bound
 		 && (e->getType() == type || type==Element::undefined)) {
 			res.push_back(e->getId());
 		}

@@ -13,26 +13,20 @@
 using namespace std;
 
 #define NUMBER_OF_VERTEX_LIMIT 2.5E6 // Max. number of vertices.
-#ifndef MAP_ERROR
-	#define MAP_ERROR 66
-#endif
-#ifdef USE_OPENMP
-	#define MAP_USE_OPENMP
-#endif
 //#define MAP_DO_NOT_BUILD_SURFACE_MAPS
 
 class Map {
 public:
-	Map();
+   Map();
 	virtual ~Map();
 	virtual const Tet*
-	 getInnerTet() const;
+	 getInnerTet() const = 0;
 	virtual pair<const Tet*, unsigned int>
-	 getInnerFace() const;
+	 getInnerFace() const = 0;
 	virtual pair<const Tet*, unsigned int>
-	 getOuterFace() const;
+	 getOuterFace() const = 0;
 	virtual unsigned int
-	 getLocalId() const;
+	 getLocalId() const = 0;
 	virtual const Tet*
 	 getLocalTet() const;
 	virtual unsigned int
@@ -40,16 +34,19 @@ public:
 	virtual const Tet*
 	 getVol(unsigned int f) const;
 	virtual bool
-	 isBoundary() const;
+	 isBoundary() const = 0;
+   virtual void
+    reassignPointers(const ElementsGroup& nEG) = 0;
 	virtual bool
 	 faceIsBoundary(unsigned int f) const;
 	virtual void
-	 printInfo() const;
+	 printInfo() const = 0;
+private:
+   const Element* local;
 };
 
 class TriMap : public Map {
 public:
-	const Tri* local;
 	const Tet* vol[2];
 	unsigned int volToF[2];
 	TriMap();
@@ -76,7 +73,6 @@ public:
 
 class TetMap : public Map {
 public:
-	const Tet* local;
 	const Tet* vol[4];
 	unsigned int volToF[4];
 	TetMap();
@@ -105,14 +101,11 @@ public:
 
 class MapGroup {
 public:
-	vector<TriMap> tri;
-	vector<TetMap> tet;
+	map<uint, Map*> maps_;
 	MapGroup();
 	virtual ~MapGroup();
 	void
 	 build(const CoordinateGroup& cG, const ElementsGroup& elem);
-	MapGroup&
-	 operator=(const MapGroup& rhs);
 	const Map*
 	 getPtrToLocalId(unsigned int id) const;
 	const Map*
@@ -121,20 +114,10 @@ public:
 	 reassignPointers(const ElementsGroup& nEG);
 	void
 	 clear();
-	void
-	 check() const;
 private:
-	unsigned int offsetIdTri, offsetIdTet;
-	//
 	pair<const Tet*, const Tet*>
 	 getNeighbours(const Tri* param) const;
-	void
-	 buildMaps(
-	  const CoordinateGroup& cG,
-	  const ElementsGroup& elem);
-	void
+	bool
 	 checkReciprocity() const;
-	void
-	 checkDisconnectedTetrahedrons() const;
 };
 #endif

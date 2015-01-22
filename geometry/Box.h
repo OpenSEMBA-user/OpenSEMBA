@@ -26,7 +26,6 @@ public:
     bool operator>(const Box<T,D>& lBoxMin) const;
     bool operator<(const Box<T,D>& lBoxMax) const;
     bool operator<=(const Box<T,D>& lBoxMax) const;
-    bool operator>=(const Box<T,D>& lBoxMin) const;
     bool operator==(const Box<T,D>& lBoxMin) const;
     bool isIntersected (const Box<T,D>& lBox) const;
     bool isInnerPoint(const CVecTD& point) const;
@@ -47,6 +46,14 @@ private:
         max_.setMinusInfty();
     };
 };
+
+template <class T, int D>
+std::ostream&
+operator<<(
+      ostream& os,
+      const Box<T,D>& rhs) {
+   return os << "Min: " << rhs.getMin() << ", Max: " << rhs.getMax();
+}
 
 #include "Box.hpp"
 

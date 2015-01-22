@@ -35,10 +35,7 @@ template<class T, int D>
 bool
 Box<T,D>::operator > (const Box<T,D> &rhs)const{
    for (int i = 0; i < D; i++) {
-      if (max_(i) <= rhs.max_(i)) {
-         return false;
-      }
-      if (min_(i) >= rhs.min_(i)) {
+      if ( (max_(i) <= rhs.max_(i)) || (min_(i) >= rhs.min_(i)) ) {
          return false;
       }
    }
@@ -49,6 +46,17 @@ template<class T, int D>
 bool
 Box<T,D>::operator < (const Box<T,D> &lBoxMax) const{
    return lBoxMax > *this;
+}
+
+template<class T, int D>
+bool
+Box<T,D>::operator <= (const Box<T,D> &rhs) const{
+   for (int i = 0; i < D; i++) {
+      if ( (max_(i) > rhs.max_(i)) || (min_(i) < rhs.min_(i)) ) {
+         return false;
+      }
+   }
+   return true;
 }
 
 template<class T, int D>
