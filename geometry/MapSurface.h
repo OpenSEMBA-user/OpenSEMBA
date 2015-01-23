@@ -21,17 +21,13 @@ public:
    unsigned int
    getLocalId() const {return local->getId();}
    unsigned int
-   getVolToF(unsigned int f) const;
-   pair<const Tet*, unsigned int>
-   getInnerFace() const;
-   pair<const Tet*, unsigned int>
-   getOuterFace() const;
+    getVolToF(unsigned int f) const;
    void
-   reassignPointers(const ElementsGroup& nEG);
+    reassignPointers(const ElementsGroup& nEG);
    bool
-   isBoundary() const;
+    isBoundary() const;
    void
-   printInfo() const;
+    printInfo() const;
 private:
    const Tri* local;
    const Tet* vol[2];

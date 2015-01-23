@@ -67,7 +67,6 @@ Mesh::isLinear() const {
 void
 Mesh::linearize() {
 	elem.linearize();
-	map.clear();
 	map.build(v,elem);
 }
 

@@ -50,7 +50,7 @@ public:
 	 getRectilinearHexesInsideRegion(
 	  const vector<const Element*>& region) const;
 	pair<const Tet*, unsigned int>
-	 getTetWithLocalSurf(const Element*) const;
+	 getTetWithLocalSurf(const Surface*) const;
 	vector<pair<const Tet*, unsigned int> >
 	 getInternalBorder(const vector<unsigned int>& elemIds) const;
 	vector<pair<const Tet*, unsigned int> >

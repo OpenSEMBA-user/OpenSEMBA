@@ -53,16 +53,6 @@ MapSurface::operator=(const MapSurface& rhs) {
    return *this;
 }
 
-pair<const Tet*, unsigned int>
-MapSurface::getInnerFace() const {
-   return pair<const Tet*, unsigned int>(vol[0], volToF[0]);
-}
-
-pair<const Tet*, unsigned int>
-MapSurface::getOuterFace() const {
-   return pair<const Tet*, unsigned int>(vol[1], volToF[1]);
-}
-
 void
 MapSurface::reassignPointers(const ElementsGroup& nEG) {
    local = nEG.getTriPtrToId(local->getId());

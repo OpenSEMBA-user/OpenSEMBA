@@ -68,7 +68,8 @@ MapGroup::build(const CoordinateGroup& cG, const ElementsGroup& eG) {
          neigh[j] = eG.getTetPtrToId(etoe(k,j) + eG.offsetIdTet);
          neighFaces[j] = etof(k,j);
       }
-      pair<uint, Map*> aux(local->getId(), new MapVolume(local, neigh, neighFaces));
+      pair<uint, MapVolume*>
+       aux(local->getId(), new MapVolume(local, neigh, neighFaces));
       tet_.insert(aux);
    }
    // Now uses the generated ordered fList to build the triangle maps.
@@ -104,27 +105,62 @@ MapGroup::build(const CoordinateGroup& cG, const ElementsGroup& eG) {
          neigh.first = eG.getTetPtrToId(fList(i,0));
          neigh.second = neigh.first;
       }
-      pair<uint, Map*> aux(local->getId(), new MapSurface(local, neigh));
-      tet_.insert(aux);
+      pair<uint, MapSurface*> aux(local->getId(), new MapSurface(local, neigh));
+      tri_.insert(aux);
    }
-}
-
-const Map*
-MapGroup::getPtrToLocalId(const unsigned int id) const {
-   return  tet_.find(id)->second;
 }
 
 void
 MapGroup::reassignPointers(const ElementsGroup& newEG) {
-   map<uint,Map*>::iterator it;
-   for (it=tet_.begin(); it != tet_.end(); ++it) {
-      it->second->reassignPointers(newEG);
+   {
+      map<uint,MapVolume*>::iterator it;
+      for (it=tet_.begin(); it != tet_.end(); ++it) {
+         it->second->reassignPointers(newEG);
+      }
+   }
+   {
+      map<uint,MapSurface*>::iterator it;
+      for (it=tri_.begin(); it != tri_.end(); ++it) {
+         it->second->reassignPointers(newEG);
+      }
    }
 }
 
-void
-MapGroup::clear() {
-   tet_.clear();
+const Tet* MapGroup::getNeighbour(const uint id, const uint face) const {
+   return tet_.find(id)->second->getVol(face);
+}
+
+uint MapGroup::getVolToF(const uint id, const uint face) const {
+   return tet_.find(id)->second->getVolToF(face);
+}
+
+
+pair<const Tet*, unsigned int>
+MapGroup::getInnerFace(const uint id) const {
+   const Tet* vol = tri_.find(id)->second->getVol(0);
+   const uint face = tri_.find(id)->second->getVolToF(0);
+   return pair<const Tet*, uint>(vol, face);
+}
+
+pair<const Tet*, uint>
+MapGroup::getNeighConnection(
+      const uint id,
+      const uint face) const {
+   pair<const Tet*, uint> res;
+   res.first = getNeighbour(id, face);
+   res.second = getVolToF(id, face);
+   return res;
+}
+
+pair<const Tet*, unsigned int>
+MapGroup::getOuterFace(const uint id) const {
+   const Tet* vol = tri_.find(id)->second->getVol(1);
+   const uint face = tri_.find(id)->second->getVolToF(1);
+   return pair<const Tet*, uint>(vol, face);
+}
+
+bool MapGroup::isBoundary(const uint id) const {
+   return tri_.find(id)->second->isBoundary();
 }
 
 //pair<const Tet*, const Tet*>
@@ -193,13 +229,3 @@ MapGroup::clear() {
 //   }
 //   return res;
 //}
-
-const Map*
-MapGroup::getPtrToNeighMap(
-      const Map* inner,
-      unsigned int f) const {
-   unsigned int neighId = inner->getVol(f)->getId();
-   return getPtrToLocalId(neighId);
-}
-
-

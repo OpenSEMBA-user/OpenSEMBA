@@ -59,16 +59,8 @@ MeshVolume::getElementWithId(
 }
 
 pair<const Tet*, unsigned int>
-MeshVolume::getTetWithLocalSurf(
- const Element* tri) const {
-	pair<const Tet*, unsigned int> res;
-	res.first = NULL;
-	res.second = 0;
-	if (!tri->isTri()) {
-		return res;
-	}
-	const Map* triMap = map.getPtrToLocalId(tri->getId());
-	return triMap->getInnerFace();
+MeshVolume::getTetWithLocalSurf(const Surface* surf) const {
+	return map.getInnerFace(surf->getId());
 }
  
 vector<pair<const Tet*, unsigned int> >
@@ -103,9 +95,8 @@ MeshVolume::getExternalBorder(
 	for (unsigned int i = 0; i < nI; i++) {
 		unsigned int inId = internal[i].first->getId();
 		unsigned int inFace = internal[i].second;
-		const Map* inMap = map.getPtrToLocalId(inId);
-		const Tet* outVol = inMap->getVol(inFace);
-		unsigned int outFace = inMap->getVolToF(inFace);
+		const Tet* outVol = map.getNeighbour(inId, inFace);
+		unsigned int outFace = map.getVolToF(inId, inFace);
 		if (outVol->getId() != inId || inFace != outFace)  {
 			pair<const Tet*, unsigned int> aux(outVol, outFace);
 			external.push_back(aux);
@@ -171,12 +162,9 @@ MeshVolume::printInfo() const {
 
 pair<const Tet*, unsigned int>
 MeshVolume::getNeighConnection(pair<const Tet*, const unsigned int> inner) const {
-	const Map* intTetMap = map.getPtrToLocalId(inner.first->getId());
-	unsigned int inFace = inner.second;
-	const Map* extTetMap = map.getPtrToNeighMap(intTetMap, inFace);
-	unsigned int extFace = intTetMap->getVolToF(inFace);
-	pair<const Tet*, unsigned int> outer(extTetMap->getLocalTet(), extFace);
-	return outer;
+   uint inId = inner.first->getId();
+   uint inFace = inner.second;
+	return map.getNeighConnection(inId, inFace);
 }
  
 vector<vector<unsigned int> >
@@ -594,7 +582,9 @@ MeshVolume::getInternalBorderOfTriRegion(
 	unsigned int nE = region.size();
 	vector<pair<const Tet*, unsigned int> > res(nE);
 	for (unsigned int i = 0; i < nE; i++) {
-		res[i] = getTetWithLocalSurf(elem.getPtrToId(region[i]));
+	   const Surface* surf =
+	    dynamic_cast<const Surface*>(elem.getPtrToId(region[i]));
+		res[i] = getTetWithLocalSurf(surf);
 	}
 	return res;
 }

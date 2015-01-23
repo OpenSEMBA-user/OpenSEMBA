@@ -17,24 +17,26 @@ using namespace std;
 
 class MapGroup {
 public:
-   map<uint, Map*> tri_, tet_;
    MapGroup();
    virtual ~MapGroup();
    void
     build(const CoordinateGroup& cG, const ElementsGroup& elem);
-   const Map*
-    getPtrToLocalId(unsigned int id) const;
-   const Map*
-    getPtrToNeighMap(const Map*, unsigned int f) const;
    void
     reassignPointers(const ElementsGroup& nEG);
-   void
-    clear();
+   const Tet*
+    getNeighbour(const uint id, const uint face) const;
+   uint
+    getVolToF(const uint id, const uint face) const;
+   pair<const Tet*, unsigned int>
+    getNeighConnection(const uint id, const uint face) const;
+   pair<const Tet*, unsigned int>
+    getInnerFace(const uint id) const;
+   pair<const Tet*, unsigned int>
+    getOuterFace(const uint id) const;
+   bool isBoundary(const uint id) const;
 private:
-//   pair<const Tet*, const Tet*>
-//    getNeighbours(const Tri* param) const;
-//   bool
-//    checkReciprocity() const;
+   map<uint, MapSurface*> tri_;
+   map<uint, MapVolume*>tet_;
 };
 
 
