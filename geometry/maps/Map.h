@@ -18,14 +18,10 @@ public:
 	virtual ~Map();
 	virtual unsigned int
 	 getVolToF(unsigned int f) const = 0;
-	virtual const Tet*
-	 getVol(unsigned int f) const;
    virtual unsigned int
     getLocalId() const = 0;
    virtual void
     reassignPointers(const ElementsGroup& nEG) = 0;
-	virtual bool
-	 faceIsBoundary(unsigned int f) const;
 	virtual void
 	 printInfo() const = 0;
 };

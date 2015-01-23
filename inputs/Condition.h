@@ -4,13 +4,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "../geometry/Element.h"
+#include "../geometry/elements/Element.h"
 
 using namespace std;
-
-#ifndef CONDITION_ERROR
-	#define CONDITION_ERROR 6911
-#endif
 
 class Condition {
 public:

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "../geometry/Element.h"
+#include "../geometry/elements/Element.h"
 #include "Condition.h"
 #include "Domain.h"
 

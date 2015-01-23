@@ -34,6 +34,7 @@ public:
    pair<const Tet*, unsigned int>
     getOuterFace(const uint id) const;
    bool isBoundary(const uint id) const;
+   bool isBoundary(const uint id, const uint f) const;
 private:
    map<uint, MapSurface*> tri_;
    map<uint, MapVolume*>tet_;

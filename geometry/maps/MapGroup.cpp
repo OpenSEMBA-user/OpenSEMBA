@@ -7,6 +7,12 @@
 
 #include "MapGroup.h"
 
+MapGroup::MapGroup() {
+}
+
+MapGroup::~MapGroup() {
+}
+
 void
 MapGroup::build(const CoordinateGroup& cG, const ElementsGroup& eG) {
    // Builds a list with all tetrahedron faces.
@@ -161,6 +167,10 @@ MapGroup::getOuterFace(const uint id) const {
 
 bool MapGroup::isBoundary(const uint id) const {
    return tri_.find(id)->second->isBoundary();
+}
+
+bool MapGroup::isBoundary(const uint id, const uint f) const {
+   return (getNeighbour(id,f)->getId() == id);
 }
 
 //pair<const Tet*, const Tet*>
