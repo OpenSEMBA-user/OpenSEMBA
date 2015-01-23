@@ -18,85 +18,20 @@ using namespace std;
 class Map {
 public:
    Map();
+   Map(const Element* elem);
 	virtual ~Map();
-	virtual const Tet*
-	 getInnerTet() const = 0;
-	virtual pair<const Tet*, unsigned int>
-	 getInnerFace() const = 0;
-	virtual pair<const Tet*, unsigned int>
-	 getOuterFace() const = 0;
 	virtual unsigned int
-	 getLocalId() const = 0;
-	virtual const Tet*
-	 getLocalTet() const;
-	virtual unsigned int
-	 getVolToF(unsigned int f) const;
+	 getVolToF(unsigned int f) const = 0;
 	virtual const Tet*
 	 getVol(unsigned int f) const;
-	virtual bool
-	 isBoundary() const = 0;
+   virtual unsigned int
+    getLocalId() const = 0;
    virtual void
     reassignPointers(const ElementsGroup& nEG) = 0;
 	virtual bool
 	 faceIsBoundary(unsigned int f) const;
 	virtual void
 	 printInfo() const = 0;
-private:
-   const Element* local;
-};
-
-class TriMap : public Map {
-public:
-	const Tet* vol[2];
-	unsigned int volToF[2];
-	TriMap();
-	virtual ~TriMap();
-	TriMap(
-	 const Tri* localSurf, pair<const Tet*, const Tet*>);
-	TriMap&
-	 operator=(const TriMap& rhs);
-	unsigned int
-	 getVolToF(unsigned int f) const {return volToF[f];}
-	pair<const Tet*, unsigned int>
-	 getInnerFace() const;
-	pair<const Tet*, unsigned int>
-	 getOuterFace() const;
-	unsigned int
-	 getLocalId() const {return local->getId();}
-	void
-	 reassignPointers(const ElementsGroup& nEG);
-	bool
-	 isBoundary() const;
-	void
-	 printInfo() const;
-};
-
-class TetMap : public Map {
-public:
-	const Tet* vol[4];
-	unsigned int volToF[4];
-	TetMap();
-	virtual ~TetMap();
-	TetMap(
-	 const Tet* local,
-	 const Tet* neighboor[4],
-	 const unsigned int neighboorFaces[4]);
-	TetMap&
-	 operator=(const TetMap& rhs);
-	const Tet*
-	 getLocalTet() const;
-	unsigned int
-	 getLocalId() const {return local->getId();}
-	unsigned int
-	 getVolToF(unsigned int f) const {return volToF[f];}
-	void
-	 reassignPointers(const ElementsGroup& nEG);
-	const Tet*
-	 getVol(unsigned int f) const {return vol[f];}
-	bool
-	 faceIsBoundary(unsigned int f) const;
-	void
-	 printInfo() const;
 };
 
 class MapGroup {

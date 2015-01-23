@@ -3,7 +3,6 @@
 #endif
 // =============== Map ========================================================
 Map::Map() {
-
 }
 
 Map::~Map() {
@@ -32,7 +31,7 @@ TriMap::TriMap(
    local = localSurf;
    const Tet* n1 = neighbours.first;
    const Tet* n2 = neighbours.second;
-   unsigned int f = n1->getFaceNumber(local);
+   unsigned int f = n1->getFaceNumber(localSurf);
    if (n1->isLocalFace(f, *local)) {
       vol[0] = n1;
       volToF[0] = f;
