@@ -8,11 +8,90 @@
 #include "MapSurface.h"
 
 MapSurface::MapSurface() {
-   // TODO Auto-generated constructor stub
-
+   local = NULL;
+   for (unsigned int i = 0; i < 2; i++) {
+      vol[i] = NULL;
+   }
 }
 
 MapSurface::~MapSurface() {
-   // TODO Auto-generated destructor stub
+   local = NULL;
+   for (unsigned int i = 0; i < 2; i++) {
+      vol[i] = NULL;
+   }
 }
 
+MapSurface::MapSurface(
+      const Tri* localSurf,
+      pair<const Tet*, const Tet*> neighbours) {
+   local = localSurf;
+   const Tet* n1 = neighbours.first;
+   const Tet* n2 = neighbours.second;
+   unsigned int f = n1->getFaceNumber(localSurf);
+   if (n1->isLocalFace(f, *local)) {
+      vol[0] = n1;
+      volToF[0] = f;
+      vol[1] = n2;
+      volToF[1] = n2->getFaceNumber(local);
+   } else {
+      vol[0] = n2;
+      volToF[0] = n2->getFaceNumber(local);
+      vol[1] = n1;
+      volToF[1] = f;
+   }
+}
+
+MapSurface&
+MapSurface::operator=(const MapSurface& rhs) {
+   if (this == &rhs)
+      return *this;
+   local = rhs.local;
+   for (unsigned int i = 0; i < 2; i++) {
+      vol[i] = rhs.vol[i];
+      volToF[i] = rhs.volToF[i];
+   }
+   return *this;
+}
+
+pair<const Tet*, unsigned int>
+MapSurface::getInnerFace() const {
+   return pair<const Tet*, unsigned int>(vol[0], volToF[0]);
+}
+
+pair<const Tet*, unsigned int>
+MapSurface::getOuterFace() const {
+   return pair<const Tet*, unsigned int>(vol[1], volToF[1]);
+}
+
+void
+MapSurface::reassignPointers(const ElementsGroup& nEG) {
+   local = nEG.getTriPtrToId(local->getId());
+   for (unsigned int i = 0; i < 2; i++) {
+      vol[i] = nEG.getTetPtrToId(vol[i]->getId());
+   }
+}
+
+bool
+MapSurface::isBoundary() const {
+   return (vol[0] == vol[1] && volToF[0] == volToF[1]);
+}
+
+uint MapSurface::getVolToF(unsigned int f) const {
+   return volToF[f];
+}
+
+void
+MapSurface::printInfo() const {
+   cout << "--- MapSurface Info ---" << endl;
+   cout << "Local Id: " << local->getId() << endl;
+   cout << "Neighbours Tet Ids: ";
+   for (unsigned int i = 0; i < 2; i++) {
+      cout << vol[i]->getId() << " ";
+   }
+   cout << endl;
+   cout << "Through faces: ";
+   for (unsigned int i = 0; i < 2; i++) {
+      cout << volToF[i] << " ";
+   }
+   cout << endl;
+}

@@ -12,14 +12,10 @@
 #include <utility>
 #include <iostream>
 #include "Element.h"
-#include "Map.h"
+#include "MapGroup.h"
 #include "Grid.h"
 
 using namespace std;
-
-#ifndef MESH_ERROR
-#define MESH_ERROR 9559
-#endif
 
 class Mesh {
 public:
@@ -60,8 +56,6 @@ public:
 	 isRectilinear() const;
 	const Grid3*
      getGrid() const;
-	Grid3
-	 getGridFromHexahedrons() const;
 	void
 	 setGrid(const Grid3& grid_);
 	void

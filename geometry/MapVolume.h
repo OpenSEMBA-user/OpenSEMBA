@@ -14,12 +14,12 @@ class MapVolume: public Map {
 public:
    MapVolume();
    virtual ~MapVolume();
-   TetMap(
+   MapVolume(
     const Tet* local,
     const Tet* neighboor[4],
     const unsigned int neighboorFaces[4]);
-   TetMap&
-    operator=(const TetMap& rhs);
+   MapVolume&
+    operator=(const MapVolume& rhs);
    unsigned int
     getLocalId() const {return local->getId();}
    const Tet*

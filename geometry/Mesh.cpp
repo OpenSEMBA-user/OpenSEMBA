@@ -138,35 +138,6 @@ Mesh::getGrid() const {
 	return grid_;
 }
 
-Grid3
-Mesh::getGridFromHexahedrons() const {
-	// Computes global bound.
-	vector<unsigned int> ids = elem.getHexIds();
-	BoxD3 bound = getBound(ids);
-	// Computes cell size.
-	assert(elem.hex8.size() != 0);
-	BoxD3 hexBound = elem.hex8[0].getBound();
-	CVecD3 cellSize = hexBound.getMax() - hexBound.getMin();
-	bool isCartesian = elem.hex8[0].isRegular() ;
-//	for (unsigned int i = 1; i < elem.hex8.size(); i++) {
-//		isCartesian &= elem.hex8[i].isRegular();
-//		elem.hex8[i].printInfo();
-//		hexBound = elem.hex8[i].getBound();
-//		CVecD3 auxCS = hexBound.second - hexBound.first;
-//		isCartesian &= (auxCS == cellSize);
-//	}
-	if (isCartesian) {
-		CVecD3 cellSize = hexBound.getMax() - hexBound.getMin();
-		return Grid3(bound, cellSize);
-	} else {
-		cerr << "ERROR @ Getting grid from mesh." << endl;
-		cerr << "Hexahedrons do not form a cartesian grid." << endl;
-		exit(MESH_ERROR);
-	}
-	cerr << "ERROR @ Mesh" << endl;
-	exit(MESH_ERROR);
-}
-
 void
 Mesh::setGrid(const Grid3& grid) {
 	grid_ = new Grid3(grid);

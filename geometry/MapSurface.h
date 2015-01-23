@@ -14,12 +14,10 @@ class MapSurface: public Map {
 public:
    MapSurface();
    virtual ~MapSurface();
-   TriMap();
-   virtual ~TriMap();
-   TriMap(
+   MapSurface(
          const Tri* localSurf, pair<const Tet*, const Tet*>);
-   TriMap&
-   operator=(const TriMap& rhs);
+   MapSurface&
+   operator=(const MapSurface& rhs);
    unsigned int
    getLocalId() const {return local->getId();}
    unsigned int
@@ -37,7 +35,7 @@ public:
 private:
    const Tri* local;
    const Tet* vol[2];
-
+   uint volToF[2];
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MAPSURFACE_H_ */

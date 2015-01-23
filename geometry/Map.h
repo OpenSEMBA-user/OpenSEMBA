@@ -1,11 +1,7 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-#include <vector>
-#include <limits.h>
 #include "ElementsGroup.h"
-#include "../math/MathMatrix.h"		// Matrices class.
-#include "../math/CartesianVector.h"
 #ifdef USE_OPENMP
 #include <omp.h>
 #endif
@@ -34,25 +30,4 @@ public:
 	 printInfo() const = 0;
 };
 
-class MapGroup {
-public:
-	map<uint, Map*> maps_;
-	MapGroup();
-	virtual ~MapGroup();
-	void
-	 build(const CoordinateGroup& cG, const ElementsGroup& elem);
-	const Map*
-	 getPtrToLocalId(unsigned int id) const;
-	const Map*
-	 getPtrToNeighMap(const Map*, unsigned int f) const;
-	void
-	 reassignPointers(const ElementsGroup& nEG);
-	void
-	 clear();
-private:
-	pair<const Tet*, const Tet*>
-	 getNeighbours(const Tri* param) const;
-	bool
-	 checkReciprocity() const;
-};
 #endif
