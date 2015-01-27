@@ -171,8 +171,12 @@ bool MapGroup::isBoundary(const uint id) const {
    return tri_.find(id)->second->isBoundary();
 }
 
-bool MapGroup::isBoundary(const uint id, const uint f) const {
+bool MapGroup::isDomainBoundary(const uint id, const uint f) const {
    return (getNeighbour(id,f)->getId() == id);
+}
+
+bool MapGroup::isDomainBoundary(pair<const Volume*, uint> boundary) const {
+   return isDomainBoundary(boundary.first->getId(), boundary.second);
 }
 
 //pair<const Tet*, const Tet*>

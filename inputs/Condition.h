@@ -10,15 +10,16 @@ using namespace std;
 
 class Condition {
 public:
+   typedef enum {
+      pec,
+      pmc,
+      sma,
+      sibc,
+      emSource
+   } Type;
 	Condition();
 	Condition(Element::Type param);
 	virtual ~Condition();
-	virtual bool
-	 isSMA() const;
-	virtual bool
-	 isPEC() const;
-	virtual bool
-	 isPMC() const;
 	virtual bool
 	 isVacuum() const {return false;}
 	virtual bool

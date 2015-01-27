@@ -24,7 +24,7 @@ public:
 	 isCurved() const = 0;
 	virtual bool
 	 isCurvedFace(const unsigned int face) const = 0;
-	CartesianVector<double,3>
+	CVecD3
 	 sideNormal(const unsigned int f) const;
 	virtual unsigned int
 	 numberOfCoordinates() const = 0;
