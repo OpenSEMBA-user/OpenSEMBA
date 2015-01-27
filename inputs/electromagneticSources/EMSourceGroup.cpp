@@ -71,14 +71,11 @@ EMSourceGroup::get(const unsigned int i) const {
 
 const PlaneWave*
 EMSourceGroup::getPlaneWave() const {
-	assert(countPlaneWaves() == 1);
-	return &planeWave[0];
-}
-
-const PlaneWave*
-EMSourceGroup::getPlaneWave(const uint i) const {
-	assert(i < countPlaneWaves());
-	return &planeWave[i];
+	if (countPlaneWaves() > 0) {
+	   return &planeWave[0];
+	} else {
+	   return NULL;
+	}
 }
 
 const Dipole*

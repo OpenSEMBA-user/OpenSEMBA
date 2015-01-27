@@ -21,7 +21,6 @@ using namespace std;
 template <class T, int D>
 class Coordinate : public CartesianVector<T,D> {
 public:
-	unsigned int id;
 	Coordinate();
 	Coordinate(unsigned int id_, const CartesianVector<T,D>& pos);
 	Coordinate(const CartesianVector<T,D>& pos);
@@ -36,6 +35,8 @@ public:
 	 printInfo() const;
 	unsigned int
 	 getId() const;
+private:
+	unsigned int id;
 };
 
 #include "Coordinate.hpp"

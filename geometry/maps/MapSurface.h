@@ -22,6 +22,8 @@ public:
    getLocalId() const {return local->getId();}
    unsigned int
     getVolToF(unsigned int f) const;
+   const Tet*
+    getVol(unsigned int f) const {return vol[f];}
    void
     reassignPointers(const ElementsGroup& nEG);
    bool

@@ -143,8 +143,17 @@ uint MapGroup::getVolToF(const uint id, const uint face) const {
 
 pair<const Tet*, unsigned int>
 MapGroup::getInnerFace(const uint id) const {
-   const Tet* vol = tri_.find(id)->second->getVol(0);
-   const uint face = tri_.find(id)->second->getVolToF(0);
+   map<uint,MapSurface*>::const_iterator surf = tri_.find(id);
+   assert(surf != tri_.end());
+   const Tet* vol = surf->second->getVol(0);
+   const uint face = surf->second->getVolToF(0);
+   return pair<const Tet*, uint>(vol, face);
+}
+
+pair<const Tet*, unsigned int>
+MapGroup::getOuterFace(const uint id) const {
+   const Tet* vol = tri_.find(id)->second->getVol(1);
+   const uint face = tri_.find(id)->second->getVolToF(1);
    return pair<const Tet*, uint>(vol, face);
 }
 
@@ -156,13 +165,6 @@ MapGroup::getNeighConnection(
    res.first = getNeighbour(id, face);
    res.second = getVolToF(id, face);
    return res;
-}
-
-pair<const Tet*, unsigned int>
-MapGroup::getOuterFace(const uint id) const {
-   const Tet* vol = tri_.find(id)->second->getVol(1);
-   const uint face = tri_.find(id)->second->getVolToF(1);
-   return pair<const Tet*, uint>(vol, face);
 }
 
 bool MapGroup::isBoundary(const uint id) const {

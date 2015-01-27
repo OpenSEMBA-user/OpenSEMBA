@@ -41,6 +41,8 @@ public:
    operator=(const CoordinateGroup& rhs);
    long unsigned int
    size() const {return coord.size();}
+   vector<const CoordD3*>
+   getAll() const;
    const CoordD3*
    getPtrToId(const uint id) const;
    const CoordD3*

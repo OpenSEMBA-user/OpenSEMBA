@@ -61,6 +61,7 @@ CoordinateGroup::add(const CVecD3& newPosition) {
 
 const CoordD3*
 CoordinateGroup::operator () (const uint id) const {
+   assert(coord.find(id) != coord.end());
    return coord.find(id)->second;
 }
 
@@ -100,4 +101,15 @@ CoordinateGroup::operator =(const CoordinateGroup& rhs) {
       index.insert(aux.second);
    }
    return *this;
+}
+
+vector<const CoordD3*>
+CoordinateGroup::getAll() const {
+   vector<const CoordD3*> res;
+   res.reserve(size());
+   map<uint,CoordD3*>::const_iterator it;
+   for (it=coord.begin(); it != coord.end(); ++it) {
+      res.push_back(it->second);
+   }
+   return res;
 }
