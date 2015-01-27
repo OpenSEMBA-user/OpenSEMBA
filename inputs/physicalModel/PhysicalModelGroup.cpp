@@ -166,7 +166,7 @@ PhysicalModelGroup::detectAndAssignPMLRegions(
    const unsigned int pmlId = getPML()->getId();
    vector<unsigned int> notPMLId = mesh->getIdsWithoutMaterialId(pmlId);
    vector<unsigned int> internalId = mesh->getTetIds(notPMLId);
-   vector<pair<const Tet*, unsigned int> > internalBorder =
+   vector<pair<const Volume*, unsigned int> > internalBorder =
          mesh->getInternalBorder(internalId);
    // Creates PML material stretched towards +x.
    PMVolumePML::Direction direction[3];
@@ -301,7 +301,7 @@ PhysicalModelGroup::updatePointers() {
 void
 PhysicalModelGroup::createAndAssignPML(
       const PMVolumePML::Direction direction[3],
-      const vector<pair<const Tet*, unsigned int> >& internalBorder,
+      const vector<pair<const Volume*, unsigned int> >& internalBorder,
       MeshVolume* mesh) {
    // Computes bound of PML pointing in this direction.
    BoxD3 bound = mesh->getBound(internalBorder);

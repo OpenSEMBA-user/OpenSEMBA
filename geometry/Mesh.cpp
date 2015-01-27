@@ -89,7 +89,7 @@ Mesh::getBound(
 
 BoxD3
 Mesh::getBound(
- const vector<pair<const Tet*, unsigned int> >& border) const {
+ const vector<pair<const Volume*, unsigned int> >& border) const {
 	// Inits bounding box.
    if (border.size() == 0) {
       return BoxD3().setInfinity();

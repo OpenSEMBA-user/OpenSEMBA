@@ -63,7 +63,7 @@ MeshVolume::getTetWithLocalSurf(const Surface* surf) const {
 	return map.getInnerFace(surf->getId());
 }
  
-vector<pair<const Tet*, unsigned int> >
+vector<pair<const Volume*, unsigned int> >
 MeshVolume::getInternalBorder(
  const vector<unsigned int>& region) const {
 	// Runs over all elements contained in the region vector detecting
@@ -80,17 +80,17 @@ MeshVolume::getInternalBorder(
 }
 
  
-vector<pair<const Tet*, unsigned int> >
+vector<pair<const Volume*, unsigned int> >
 MeshVolume::getExternalBorder(
  const vector<unsigned int>& elemIds) const {
 	// Generates a vector of pairs pointers to tetrahedrons and faces that
 	// connects with the region specified by the elemIds inputted.
 	// If the element's face in the inputted region is in the computational
 	// border nothing is returned.
-	vector<pair<const Tet*, unsigned int> > internal;
+	vector<pair<const Volume*, unsigned int> > internal;
 	internal = getInternalBorder(elemIds);
 	unsigned int nI = internal.size();
-	vector<pair<const Tet*, unsigned int> > external;
+	vector<pair<const Volume*, unsigned int> > external;
 	external.reserve(nI);
 	for (unsigned int i = 0; i < nI; i++) {
 		unsigned int inId = internal[i].first->getId();
@@ -98,7 +98,7 @@ MeshVolume::getExternalBorder(
 		const Tet* outVol = map.getNeighbour(inId, inFace);
 		unsigned int outFace = map.getVolToF(inId, inFace);
 		if (outVol->getId() != inId || inFace != outFace)  {
-			pair<const Tet*, unsigned int> aux(outVol, outFace);
+			pair<const Volume*, unsigned int> aux(outVol, outFace);
 			external.push_back(aux);
 		}
 	}
@@ -125,7 +125,7 @@ MeshVolume::getBorderWithNormal(
 
 vector<unsigned int>
 MeshVolume::getAdjacentElements(const vector<unsigned int>& region) const {
-	vector<pair<const Tet*, unsigned int> > outer;
+	vector<pair<const Volume*, unsigned int> > outer;
 	outer = getExternalBorder(region);
 	unsigned int nOut = outer.size();
 	// Removes repeated.
@@ -133,11 +133,7 @@ MeshVolume::getAdjacentElements(const vector<unsigned int>& region) const {
 	for (unsigned int i = 0; i < nOut; i++) {
 		aux(i,0) = outer[i].first->getId();
 	}
-	#ifdef USE_OPENMP
-		aux.sortAndRemoveRepeatedRows_omp();
-	#else
-		aux.sortAndRemoveRepeatedRows();
-	#endif
+	aux.sortAndRemoveRepeatedRows_omp();
 	// Prepares result.
 	vector<unsigned int> res(aux.nRows(), 0);
 	for (unsigned int i = 0; i < aux.nRows(); i++) {
@@ -365,11 +361,12 @@ MeshVolume::getTriWithMatId(
 	        }
 	    }
 	    // Gets internal border of tetrahedron volume.
-	    vector<pair<const Tet*, unsigned int> > internalBorder;
+	    vector<pair<const Volume*, unsigned int> > internalBorder;
 	    internalBorder = getInternalBorder(tetIds);
 	    // Converts internal border to Tri3.
 	    for (uint i = 0; i < internalBorder.size(); i++) {
-	        const Tet* tet = internalBorder[i].first;
+	        const Volume* vol = internalBorder[i].first;
+	        const Tet* tet = dynamic_cast<const Tet*>(vol);
 	        const uint face = internalBorder[i].second;
 	        res.push_back(tet->getTri3Face(face));
 	    }
@@ -473,7 +470,7 @@ MeshVolume::check() const {
 	// TODO: MeshVolume::check for overlapping surfaces.
 }
 
-vector<pair<const Tet*, unsigned int> >
+vector<pair<const Volume*, unsigned int> >
 MeshVolume::getInternalBorderOfTetRegion(
  const vector<unsigned int>& region) const {
 #ifndef MESH_USE_OLD_ALGORITHM_TO_GETINTERNAL_BORDER
@@ -499,13 +496,9 @@ MeshVolume::getInternalBorderOfTetRegion(
 	// Sorts according to the coordinates id. Pairing matching faces. ---------
 	// If there is not a pair, then that element is not connected with other
 	// remaining connected with itself.
-	#ifdef USE_OPENMP
-		fList.sortRows_omp(2,4);
-	#else
-		fList.sortRows(2,4);
-	#endif
+	fList.sortRows_omp(2,4);
 	// Copies non repeated faces into result vector.
-	vector<pair<const Tet*, unsigned int> > res;
+	vector<pair<const Volume*, unsigned int> > res;
 	res.reserve(nK);
 	bool matches;
 	for (unsigned int k = 0; k < nList; k++) {
@@ -576,11 +569,11 @@ MeshVolume::getInternalBorderOfTetRegion(
 #endif
 }
 
-vector<pair<const Tet*, unsigned int> >
+vector<pair<const Volume*, unsigned int> >
 MeshVolume::getInternalBorderOfTriRegion(
  const vector<unsigned int>& region) const {
 	unsigned int nE = region.size();
-	vector<pair<const Tet*, unsigned int> > res(nE);
+	vector<pair<const Volume*, unsigned int> > res(nE);
 	for (unsigned int i = 0; i < nE; i++) {
 	   const Surface* surf =
 	    dynamic_cast<const Surface*>(elem.getPtrToId(region[i]));

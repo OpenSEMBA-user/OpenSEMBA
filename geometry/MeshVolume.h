@@ -51,9 +51,9 @@ public:
 	  const vector<const Element*>& region) const;
 	pair<const Tet*, unsigned int>
 	 getTetWithLocalSurf(const Surface*) const;
-	vector<pair<const Tet*, unsigned int> >
+	vector<pair<const Volume*, unsigned int> >
 	 getInternalBorder(const vector<unsigned int>& elemIds) const;
-	vector<pair<const Tet*, unsigned int> >
+	vector<pair<const Volume*, unsigned int> >
 	 getExternalBorder(const vector<unsigned int>& elemIds) const;
 	vector<unsigned int>
 	 getAdjacentElements(const vector<unsigned int>& elemIds) const;
@@ -86,10 +86,10 @@ public:
 	virtual void
 	 printInfo() const;
 private:
-	vector<pair<const Tet*, unsigned int> >
+	vector<pair<const Volume*, unsigned int> >
 	 getInternalBorderOfTetRegion(
 	  const vector<unsigned int>& region) const;
-	vector<pair<const Tet*, unsigned int> >
+	vector<pair<const Volume*, unsigned int> >
 	 getInternalBorderOfTriRegion(
 	  const vector<unsigned int>& region) const;
 	void

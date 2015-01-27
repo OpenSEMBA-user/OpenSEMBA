@@ -185,7 +185,7 @@ private:
 	void
 	 createAndAssignPML(
 	  const PMVolumePML::Direction direction[3],
-	  const vector<pair<const Tet*, unsigned int> >& internalBorder,
+	  const vector<pair<const Volume*, unsigned int> >& internalBorder,
 	  MeshVolume* mesh);
 	void
 	 getDirection(

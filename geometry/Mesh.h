@@ -37,7 +37,7 @@ public:
 	 getIdsWithoutMaterialId(const unsigned int matId) const;
 	BoxD3
 	 getBound(
-	  const vector<pair<const Tet*, unsigned int> >& border) const;
+	  const vector<pair<const Volume*, unsigned int> >& border) const;
 	BoxD3
 	 getBound(
 	  const vector<unsigned int>& list) const;
