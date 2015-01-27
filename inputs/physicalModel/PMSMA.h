@@ -21,6 +21,8 @@ public:
 	 operator=(const PMPredefined &param);
 	bool
 	 isSMA() const;
+   Condition::Type
+    getConditionType() const;
 	void
 	 printInfo() const;
 };

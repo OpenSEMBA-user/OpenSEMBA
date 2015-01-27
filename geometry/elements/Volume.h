@@ -36,6 +36,8 @@ public:
     getType() const {return VOLUME;}
 	virtual double
 	 getAreaOfFace(const unsigned int face) const = 0;
+   virtual BoxD3
+    getBoundOfFace(const unsigned int face) const = 0;
 	unsigned int
 	 getFaceNumber(const Surface*) const;
 	virtual void

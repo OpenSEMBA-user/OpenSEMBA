@@ -54,3 +54,7 @@ PMPEC::printInfo() const {
 	cout << "Name: " << name_ << endl;
 	cout << "Perfect Electric Conductor" << endl;
 }
+
+Condition::Type PMPEC::getConditionType() const {
+   return Condition::pec;
+}

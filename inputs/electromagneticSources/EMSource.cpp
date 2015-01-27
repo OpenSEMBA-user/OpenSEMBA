@@ -68,3 +68,7 @@ EMSource::applyGeometricScalingFactor(const double factor) {
         bound_->scale(factor);
     }
 }
+
+Condition::Type EMSource::getConditionType() const {
+   return Condition::emSource;
+}

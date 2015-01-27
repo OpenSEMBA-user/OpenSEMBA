@@ -13,10 +13,6 @@
 
 //#define MESH_USE_OLD_ALGORITHM_TO_GETINTERNAL_BORDER
 
-#ifndef MESH_ERROR
-	#define MESH_ERROR 77356
-#endif
-
 #ifdef USE_METIS
 	#include <metis.h>
 	#if METIS_VER_MAJOR < 5

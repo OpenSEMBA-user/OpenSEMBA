@@ -52,3 +52,7 @@ PMSMA::printInfo() const {
 	cout << "Name: " << name_ << endl;
 	cout << "Silver-Muller Absorbing" << endl;
 }
+
+Condition::Type PMSMA::getConditionType() const {
+   return Condition::sma;
+}

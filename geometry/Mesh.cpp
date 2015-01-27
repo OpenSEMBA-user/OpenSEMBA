@@ -94,15 +94,12 @@ Mesh::getBound(
    if (border.size() == 0) {
       return BoxD3().setInfinity();
    }
-	const Tet* tet = border[0].first;
-	const unsigned int face = border[0].second;
-	BoxD3 bound = tet->getBoundOfFace(face);
-	// Runs over border computing the bounding box of each face.
-	const unsigned int nK = border.size();
-	for (unsigned int i = 1; i < nK; i++) {
-		const Tet* tet = border[i].first;
+   // Runs over border computing the bounding box of each face.
+	BoxD3 bound;
+	for (unsigned int i = 0; i < border.size(); i++) {
+		const Volume* vol = border[i].first;
 		const unsigned int face = border[i].second;
-		bound << tet->getBoundOfFace(face);
+		bound << vol->getBoundOfFace(face);
 	}
 	return bound;
 }

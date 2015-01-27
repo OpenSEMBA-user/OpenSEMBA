@@ -36,6 +36,8 @@ public:
 	 getNumberOfPoles() const {
 		 return pole_.size();
 	 }
+   Condition::Type
+    getConditionType() const;
 	virtual void
 	 printInfo() const;
 protected:

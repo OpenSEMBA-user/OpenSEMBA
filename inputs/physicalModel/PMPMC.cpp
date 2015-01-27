@@ -52,3 +52,7 @@ PMPMC::printInfo() const {
 	cout << "Name: " << name_ << endl;
 	cout << "Perfect Magnetic Conductor" << endl;
 }
+
+Condition::Type PMPMC::getConditionType() const {
+   return Condition::pmc;
+}

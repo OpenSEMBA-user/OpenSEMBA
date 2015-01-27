@@ -21,6 +21,8 @@ public:
 	 operator=(const PMPredefined &param);
 	bool
 	 isPEC() const;
+	Condition::Type
+	 getConditionType() const;
 	void
 	 printInfo() const;
 };

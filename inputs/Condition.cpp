@@ -18,3 +18,8 @@ unsigned int
 Condition::getId() const {
 	return 0;
 }
+
+Condition::Type
+Condition::getConditionType() const {
+   return Condition::undefined;
+}

@@ -21,6 +21,8 @@ public:
 	 operator=(const PMPredefined &param);
 	bool
 	 isPMC() const;
+   Condition::Type
+    getConditionType() const;
 	void
 	 printInfo() const;
 };

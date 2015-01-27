@@ -15,7 +15,8 @@ public:
       pmc,
       sma,
       sibc,
-      emSource
+      emSource,
+      undefined
    } Type;
 	Condition();
 	Condition(Element::Type param);
@@ -40,6 +41,8 @@ public:
 	 getElementType() const {
 		return elementType;
 	 }
+	virtual Condition::Type
+	 getConditionType() const;
 	virtual void
 	 printInfo() const = 0;
 private:

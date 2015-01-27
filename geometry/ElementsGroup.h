@@ -90,7 +90,10 @@ public:
 	 removeHex();
 	vector<const Element*>
 	 getElementsWithMatId(
-	  const uint matId) const;
+	  const vector<uint>& matId,
+	  const Element::Type type) const;
+   vector<const Surface*>
+    getSurfacesWithMatId(const vector<uint>& matId) const;
 	vector<const Element*>
 	 getElementsWithMatLayId(
 	  const uint matId, const uint layId) const;

@@ -34,6 +34,8 @@ public:
    void
    printInfo() const;
    const Magnitude* getMagnitude() const;
+   Condition::Type
+    getConditionType() const;
    virtual void
    applyGeometricScalingFactor(const double factor);
 private:

@@ -100,6 +100,8 @@ public:
 	 count() const {
 		return pm.size();
 	 }
+	vector<uint>
+	 getMatIds(const Condition::Type type) const;
 	unsigned int
 	 countSIBC() const {
 		unsigned int res = 0;
