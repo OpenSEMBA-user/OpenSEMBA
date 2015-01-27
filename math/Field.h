@@ -9,18 +9,20 @@
 #define FIELD_H_
 
 #include "CartesianVector.h"
-#include "FieldBase.h"
 #include <stdlib.h>
 
 template <class T, int D>
-class Field : public FieldBase {
+class Field {
 public:
 	Field();
+	Field(uint size);
 	virtual ~Field();
 
 	const T* operator()(const uint i) const;
 	T* set(const uint i) const;
 	T operator[](const uint i) const;
+	CartesianVector<T,D>
+	getCVec(const uint i) const;
 	uint
 	 getDOFs() const;
 

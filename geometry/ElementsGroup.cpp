@@ -109,7 +109,7 @@ void
 ElementsGroup::reassignPointers(const CoordinateGroup& vNew) {
 	for (unsigned int i = 0; i < element.size(); i++) {
 		for (unsigned int j = 0; j < element[i]->numberOfCoordinates(); j++) {
-			unsigned int vId = element[i]->getV(j)->id;
+			unsigned int vId = element[i]->getV(j)->getId();
 			element[i]->setV(j, vNew.getPtrToId(vId));
 		}
 	}

@@ -102,7 +102,7 @@ OutputGiDMesh::writeQuad4Mesh(
 	for (uint e = 0; e < mesh.elem.quad4.size(); e++) {
 		const Quad4* quad = &mesh.elem.quad4[e];
 		for (int i = 0; i < nV; i++) {
-			nId[i] = quad->getVertex(GiDOrder[i])->id + 1
+			nId[i] = quad->getVertex(GiDOrder[i])->getId() + 1
 					+ coordCounterPreStart;
 		}
 		nId[nV] = quad->getMatId();
@@ -138,7 +138,7 @@ OutputGiDMesh::writeHex8Mesh(
 	for (uint e = 0; e < mesh.elem.hex8.size(); e++) {
 		const Hex8* hex = &mesh.elem.hex8[e];
 		for (int i = 0; i < nV; i++) {
-			nId[i] = hex->getVertex(GiDOrder[i])->id + 1
+			nId[i] = hex->getVertex(GiDOrder[i])->getId() + 1
 					+ coordCounterPreStart;
 		}
 		nId[nV] = hex->getMatId();

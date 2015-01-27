@@ -17,6 +17,12 @@ Field<T,D>::Field() {
 }
 
 template<class T, int D>
+Field<T,D>::Field(uint size) {
+   size_ = size;
+   val_ = new (T) (size_ * D) ;
+}
+
+template<class T, int D>
 Field<T,D>::~Field() {
 	if (val_ != NULL) {
 		delete [] val_;
@@ -28,6 +34,16 @@ inline const T*
 Field<T,D>::operator()(const uint i) const {
 	assert(i < D);
 	return &val_[size_*i];
+}
+
+template<class T, int D>
+inline CartesianVector<T,D>
+Field<T,D>::getCVec(const uint i) const {
+   CartesianVector<T,D> res;
+   for (uint d = 0; d < D; d++) {
+      res(d) = (*this)(d)[i];
+   }
+   return res;
 }
 
 template<class T, int D>

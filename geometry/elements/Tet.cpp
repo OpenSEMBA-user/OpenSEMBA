@@ -25,7 +25,7 @@ void
 Tet::getOrderedSideVerticesId(
  unsigned int val[3], unsigned int f) const {
 	for (unsigned int i = 0; i < 3; i++) {
-		val[i] = getSideVertex(f,i)->id;
+		val[i] = getSideVertex(f,i)->getId();
 	}
 	ascendingOrder(3, val);
 }
