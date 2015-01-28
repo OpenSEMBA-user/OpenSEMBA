@@ -386,3 +386,18 @@ ElementsGroup::separateLayers(vector<const Element*>& el) const {
    }
    return res;
 }
+
+vector<const Surface*>
+ElementsGroup::getSurfacesWithMatId(
+      const vector<uint>& matId) const {
+   vector<const Surface*> res;
+   res.reserve(tri.size());
+   for (uint m = 0; m < matId.size(); m++) {
+      for (uint i = 0; i < tri.size(); i++) {
+         if (tri[i]->getMatId() == matId[m]) {
+            res.push_back(tri[i]);
+         }
+      }
+   }
+   return res;
+}
