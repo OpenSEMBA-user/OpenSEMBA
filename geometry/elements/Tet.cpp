@@ -119,15 +119,6 @@ Tet::getCubatureJacobianHat(
 	}
 }
 
-BoxD3
-Tet::getBoundOfFace(const unsigned int face) const {
-	BoxD3 res;
-	for (unsigned int i = 0; i < numberOfSideCoordinates(); i++) {
-		res << getSideV(face,i)->pos();
-	}
-	return res;
-}
-
 Tri3
 Tet::getTri3Face(const unsigned int f) const {
 	const CoordD3* coord[3];

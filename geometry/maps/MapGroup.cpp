@@ -141,7 +141,7 @@ uint MapGroup::getVolToF(const uint id, const uint face) const {
 }
 
 
-pair<const Tet*, unsigned int>
+pair<const Volume*, unsigned int>
 MapGroup::getInnerFace(const uint id) const {
    map<uint,MapSurface*>::const_iterator surf = tri_.find(id);
    assert(surf != tri_.end());
@@ -150,11 +150,11 @@ MapGroup::getInnerFace(const uint id) const {
    return pair<const Tet*, uint>(vol, face);
 }
 
-pair<const Tet*, unsigned int>
+pair<const Volume*, unsigned int>
 MapGroup::getOuterFace(const uint id) const {
-   const Tet* vol = tri_.find(id)->second->getVol(1);
+   const Volume* vol = tri_.find(id)->second->getVol(1);
    const uint face = tri_.find(id)->second->getVolToF(1);
-   return pair<const Tet*, uint>(vol, face);
+   return pair<const Volume*, uint>(vol, face);
 }
 
 pair<const Tet*, uint>

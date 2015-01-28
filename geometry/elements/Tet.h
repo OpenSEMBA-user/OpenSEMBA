@@ -33,9 +33,6 @@ public:
 	 getAreaOfFace(const unsigned int face) const = 0;
 	virtual double
 	 getVolume() const = 0;
-	BoxD3
-	 getBoundOfFace(
-	  const unsigned int face) const;
 	virtual const Simplex&
 	 getTet() const = 0;
 	virtual Tri3

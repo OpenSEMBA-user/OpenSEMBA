@@ -58,8 +58,8 @@ MeshVolume::getElementWithId(
 	return elem.getPtrToId(id);
 }
 
-pair<const Tet*, unsigned int>
-MeshVolume::getTetWithLocalSurf(const Surface* surf) const {
+pair<const Volume*, unsigned int>
+MeshVolume::getBoundary(const Surface* surf) const {
 	return map.getInnerFace(surf->getId());
 }
  
@@ -156,13 +156,6 @@ MeshVolume::printInfo() const {
 	}
 }
 
-pair<const Tet*, unsigned int>
-MeshVolume::getNeighConnection(pair<const Tet*, const unsigned int> inner) const {
-   uint inId = inner.first->getId();
-   uint inFace = inner.second;
-	return map.getNeighConnection(inId, inFace);
-}
- 
 vector<vector<unsigned int> >
 MeshVolume::getPartitionsIds(const unsigned int nDivisions) const {
 	// Calls weight balanced partitioner with a zero size weight vector
@@ -309,9 +302,8 @@ MeshVolume::getPartitionsIds(
 	// Returns result.
 	return res;
 #else
-	cerr << "ERROR@Mesh::getPartition()" << endl;
-	cerr << "Mesh partitioning is not allowed." << endl;
-	exit(MESH_ERROR);
+	cerr << "ERROR @ Mesh::getPartition(): "
+	 << "Mesh partitioning is not allowed." << endl;
 #endif
 }
 
@@ -577,7 +569,7 @@ MeshVolume::getInternalBorderOfTriRegion(
 	for (unsigned int i = 0; i < nE; i++) {
 	   const Surface* surf =
 	    dynamic_cast<const Surface*>(elem.getPtrToId(region[i]));
-		res[i] = getTetWithLocalSurf(surf);
+		res[i] = getBoundary(surf);
 	}
 	return res;
 }
@@ -590,10 +582,10 @@ MeshVolume::checkAreaCoherence() const {
 		unsigned int id = elem.tet[e]->getId();
 		const Tet *local = elem.getTetPtrToId(id);
 		for (unsigned int f = 0; f < local->numberOfFaces(); f++) {
-			pair<const Tet*, unsigned int> localFace(local, f);
-			pair<const Tet*, unsigned int> neighFace;
+			pair<const Volume*, unsigned int> localFace(local, f);
+			pair<const Volume*, unsigned int> neighFace;
 			neighFace = getNeighConnection(localFace);
-			const Tet *neigh = neighFace.first;
+			const Volume* neigh = neighFace.first;
 			unsigned int f2 = neighFace.second;
 			double diff =
 			 local->getAreaOfFace(f) - neigh->getAreaOfFace(f2);

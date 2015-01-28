@@ -29,9 +29,9 @@ public:
     getVolToF(const uint id, const uint face) const;
    pair<const Tet*, unsigned int>
     getNeighConnection(const uint id, const uint face) const;
-   pair<const Tet*, unsigned int>
+   pair<const Volume*, unsigned int>
     getInnerFace(const uint id) const;
-   pair<const Tet*, unsigned int>
+   pair<const Volume*, unsigned int>
     getOuterFace(const uint id) const;
    bool isBoundary(const uint id) const;
    bool isDomainBoundary(const uint id, const uint f) const;

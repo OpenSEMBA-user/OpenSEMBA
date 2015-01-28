@@ -26,18 +26,17 @@ public:
 	 isCurvedFace(const unsigned int face) const = 0;
 	CVecD3
 	 sideNormal(const unsigned int f) const;
-	virtual unsigned int
-	 numberOfCoordinates() const = 0;
-	virtual unsigned int
-	 numberOfVertices() const = 0;
-	virtual unsigned int
-	 numberOfFaces() const = 0;
    virtual Element::Type
     getType() const {return VOLUME;}
 	virtual double
 	 getAreaOfFace(const unsigned int face) const = 0;
-   virtual BoxD3
-    getBoundOfFace(const unsigned int face) const = 0;
+   BoxD3
+    getBoundOfFace(
+     const unsigned int face) const;
+   virtual bool
+    isFaceContainedInPlane(
+          const uint face,
+          const CartesianPlane plane) const;
 	unsigned int
 	 getFaceNumber(const Surface*) const;
 	virtual void

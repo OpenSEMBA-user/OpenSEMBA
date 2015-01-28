@@ -61,3 +61,19 @@ Volume::isLocalFace(
 	return sideNormal(f) == surf.getNormal();
 }
 
+BoxD3
+Volume::getBoundOfFace(const unsigned int face) const {
+   BoxD3 res;
+   for (unsigned int i = 0; i < numberOfSideCoordinates(); i++) {
+      res << getSideV(face,i)->pos();
+   }
+   return res;
+}
+
+bool
+Volume::isFaceContainedInPlane(
+      const uint face, const CartesianPlane plane) const {
+   BoxD3 box = getBoundOfFace(face);
+   CVecD3 vec = box.getMax() - box.getMin();
+   return vec.isContainedInPlane(plane);
+}

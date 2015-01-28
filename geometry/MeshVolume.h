@@ -45,8 +45,8 @@ public:
 	vector<BoxD3>
 	 getRectilinearHexesInsideRegion(
 	  const vector<const Element*>& region) const;
-	pair<const Tet*, unsigned int>
-	 getTetWithLocalSurf(const Surface*) const;
+	pair<const Volume*, unsigned int>
+	 getBoundary(const Surface*) const;
 	vector<pair<const Volume*, unsigned int> >
 	 getInternalBorder(const vector<unsigned int>& elemIds) const;
 	vector<pair<const Volume*, unsigned int> >
@@ -59,8 +59,8 @@ public:
 	  const CartesianVector<double,3>& normal);
 	unsigned int
 	 nVolumeElements() const;
-	pair<const Tet*, unsigned int>
-	 getNeighConnection(pair<const Tet*, const unsigned int>) const;
+   pair<const Volume*, unsigned int> getNeighConnection(
+         pair<const Volume*, const unsigned int> inner) const;
 	vector<vector<unsigned int> >
 	 getPartitionsIds(
 	  const unsigned int nDivisions) const;
@@ -95,4 +95,13 @@ private:
 	void
 	 build(const CoordinateGroup& vIn, const ElementsGroup& elementIn);
 };
+
+inline pair<const Volume*, unsigned int>
+MeshVolume::getNeighConnection(
+      pair<const Volume*, const unsigned int> inner) const {
+   uint inId = inner.first->getId();
+   uint inFace = inner.second;
+   return map.getNeighConnection(inId, inFace);
+}
+
 #endif
