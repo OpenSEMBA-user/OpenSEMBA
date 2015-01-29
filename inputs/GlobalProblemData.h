@@ -33,6 +33,7 @@ public:
 	double timeStep;
 	uint numberOfProcesses;
 	string hostsFile;
+	string OutputName;
 	pair<boundType,boundType> boundTermination[3];
 	pair<CVecD3,CVecD3> boundaryPadding, boundaryMeshSize;
 	GlobalProblemData();

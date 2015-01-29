@@ -32,6 +32,7 @@ public:
    SmbData();
 	virtual ~SmbData();
 	virtual SmbData& operator=(const SmbData& rhs);
+	string getOutputName() const;
 	void applyGeometricScalingFactor();
 	void ignorePMLs();
 	void detectAndAssignPMLRegions();
