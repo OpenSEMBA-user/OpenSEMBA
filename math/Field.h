@@ -25,7 +25,7 @@ public:
    getCVec(const uint i) const;
    uint
    getDOFs() const;
-   uint size() const
+   uint size() const;
 
    void
    set(const uint i, const CartesianVector<T,D>& vec);

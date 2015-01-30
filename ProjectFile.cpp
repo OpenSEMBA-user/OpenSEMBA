@@ -53,6 +53,7 @@ bool ProjectFile::canOpenFile() const {
 }
 
 void ProjectFile::openFile(ofstream& file) const {
+   openFile(filename_, file);
 }
 
 void ProjectFile::openFile(
