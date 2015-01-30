@@ -52,6 +52,12 @@ bool ProjectFile::canOpenFile() const {
    return res;
 }
 
+ofstream ProjectFile::openFile() const {
+   ofstream res;
+   openFile(filename_, res);
+   return res;
+}
+
 void ProjectFile::openFile(
       const string& fileName,
       ofstream& file) const {
@@ -123,3 +129,4 @@ ProjectFile::getProjectFolder() const {
 void ProjectFile::printInfo() const {
    cout << "Project file name: " << filename_ << endl;
 }
+

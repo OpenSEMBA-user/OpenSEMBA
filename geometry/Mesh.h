@@ -62,13 +62,13 @@ public:
 	 removeHexahedrons();
 	bool
 	 canExtractGrid() const;
+   virtual const Element*
+    getElementWithId(unsigned int id) const;
 protected:
 	Grid3* grid_;
 	static const double areaDiffTolerance;
 	virtual Element*
 	 getElementWithId(unsigned int id);
-	virtual const Element*
-	 getElementWithId(unsigned int id) const;
 private:
 //	// DEPRECTATED, should be in BoundingBox.
 //	pair<CVecD3,CVecD3>

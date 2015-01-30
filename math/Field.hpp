@@ -178,6 +178,11 @@ Field<T,D>::getDOFs() const {
 }
 
 template<class T, int D>
+inline uint Field<T,D>::size() const {
+   return size_;
+}
+
+template<class T, int D>
 inline void
 Field<T,D>::swap(
  Field<T, D>& param, const uint first, const uint last) {

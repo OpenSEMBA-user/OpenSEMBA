@@ -24,15 +24,10 @@ using namespace std;
 
 #define GRAPH_EXPECTED_SIZE 200000
 
-class ResultGraph : public ProjectFile {
+class ResultGraph : public ProjectFile, public Result {
 public:
 	ResultGraph();
 	ResultGraph(
-	 const string& name,
-	 const string& xLabel,
-	 const string& yLabel);
-	ResultGraph(
-	 const string& projectFolder,
 	 const string& name,
 	 const string& xLabel,
 	 const string& yLabel);
@@ -42,7 +37,7 @@ public:
 	void
 	 writeInFile() const;
 private:
-	string fileName_, name_;
+	string name_;
 	string xLabel_, yLabel_;
 	vector<double> x_, y_;
 };

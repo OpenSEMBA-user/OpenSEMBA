@@ -13,24 +13,10 @@ ResultGraph::ResultGraph() {
 }
 
 ResultGraph::ResultGraph(
- const string& name,
+ const string& filename,
  const string& xLabel,
- const string& yLabel) {
-	fileName_ = name + ".grf";
-	name_ = name;
-	xLabel_ = xLabel;
-	yLabel_ = yLabel;
-	x_.reserve(GRAPH_EXPECTED_SIZE);
-	y_.reserve(GRAPH_EXPECTED_SIZE);
-}
-
-ResultGraph::ResultGraph(
- const string& projectFolder,
- const string& name,
- const string& xLabel,
- const string& yLabel) {
-	fileName_ = projectFolder + name + ".grf";
-	name_ = name;
+ const string& yLabel) : ProjectFile(filename) {
+	name_ = getBasename();
 	xLabel_ = xLabel;
 	yLabel_ = yLabel;
 	x_.reserve(GRAPH_EXPECTED_SIZE);
@@ -49,17 +35,13 @@ ResultGraph::append(double x, double y) {
 
 void
 ResultGraph::writeInFile() const {
-	ofstream file(fileName_.c_str());
-	// Writes data.
+	ofstream file = openFile();
 	file << "#Graph: \"" << name_ << "\"" << endl;
 	file << "#X: \"" << xLabel_ << "\" Y: \"" << yLabel_ << "\"" << endl;
-	// Writes bulk of data.
 	for (uint i = 0; i < x_.size(); i++) {
 		file << x_[i] << " " << y_[i] << endl;
 	}
-	// Writes endings.
 	file << "# End" << endl;
-	//
 	file.close();
 }
 //void Output::writeScalarGraph(const Probe& p) const {

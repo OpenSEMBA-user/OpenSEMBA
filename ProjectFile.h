@@ -39,7 +39,7 @@ public:
    void
    setFilename(const string& filename);
    string
-    getBasename() const;
+   getBasename() const;
 protected:
    vector<string>
    getFilesBasenames(
@@ -51,6 +51,8 @@ protected:
    void
    deleteDirIfExists(
          const string& directory) const;
+   ofstream
+   openFile() const;
    void
    openFile(
          const string& fileName,
