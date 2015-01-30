@@ -19,8 +19,6 @@ ResultGraph::ResultGraph(
 	name_ = getBasename();
 	xLabel_ = xLabel;
 	yLabel_ = yLabel;
-	x_.reserve(GRAPH_EXPECTED_SIZE);
-	y_.reserve(GRAPH_EXPECTED_SIZE);
 }
 
 ResultGraph::~ResultGraph() {
@@ -35,7 +33,8 @@ ResultGraph::append(double x, double y) {
 
 void
 ResultGraph::writeInFile() const {
-	ofstream file = openFile();
+	ofstream file;
+	openFile(file);
 	file << "#Graph: \"" << name_ << "\"" << endl;
 	file << "#X: \"" << xLabel_ << "\" Y: \"" << yLabel_ << "\"" << endl;
 	for (uint i = 0; i < x_.size(); i++) {

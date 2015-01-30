@@ -51,8 +51,9 @@ protected:
    void
    deleteDirIfExists(
          const string& directory) const;
-   ofstream
-   openFile() const;
+   void
+   openFile(
+         ofstream& file) const;
    void
    openFile(
          const string& fileName,

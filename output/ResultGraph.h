@@ -21,8 +21,7 @@
 using namespace std;
 
 #include "ProjectFile.h"
-
-#define GRAPH_EXPECTED_SIZE 200000
+#include "Result.h"
 
 class ResultGraph : public ProjectFile, public Result {
 public:
