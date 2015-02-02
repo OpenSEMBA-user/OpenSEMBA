@@ -64,6 +64,10 @@ public:
 	 canExtractGrid() const;
    virtual const Element*
     getElementWithId(unsigned int id) const;
+   virtual vector<pair<const Element*, uint> >
+    getElementsWithVertex(
+          const uint vertexId,
+          const Element::Type type) const;
 protected:
 	Grid3* grid_;
 	static const double areaDiffTolerance;

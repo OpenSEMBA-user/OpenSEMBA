@@ -8,12 +8,16 @@
 #ifndef SRC_COMMON_OUTPUT_RESULT_H_
 #define SRC_COMMON_OUTPUT_RESULT_H_
 
+#include "../math/Field.h"
+
 class Result {
 public:
    Result();
    virtual ~Result();
-   virtual bool
-    isSamplingTime(const double time) const;
+   virtual void write(
+         const double time,
+         const FieldD3& electric,
+         const FieldD3& magnetic) const = 0;
 };
 
 #endif /* SRC_COMMON_OUTPUT_RESULT_H_ */

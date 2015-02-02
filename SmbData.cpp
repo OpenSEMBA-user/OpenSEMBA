@@ -67,6 +67,14 @@ SmbData::isValidForSolver(const Solver& solver) const {
    return res;
 }
 
+string SmbData::getOutputName() const {
+   return getProjectName();
+}
+
+string SmbData::getProjectName() const {
+   return getBasename();
+}
+
 void
 SmbData::printInfo() const {
    cout << " --- SEMBA data --- " << endl;

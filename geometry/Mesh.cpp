@@ -173,3 +173,20 @@ const Element*
 Mesh::getElementWithId(const unsigned int id) const {
 	return elem.getPtrToId(id);
 }
+
+vector<pair<const Element*, uint> >
+Mesh::getElementsWithVertex(
+      const uint vertexId,
+      const Element::Type type) const {
+   vector<pair<const Element*, uint> > res;
+   for (uint i = 0; i < elem.element.size(); i++) {
+      const Element* e = elem.element[i];
+      for (uint j = 0; j < e->numberOfVertices(); j++) {
+         if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
+            pair<const Element*, uint> aux(e,j);
+            res.push_back(aux);
+         }
+      }
+   }
+   return res;
+}

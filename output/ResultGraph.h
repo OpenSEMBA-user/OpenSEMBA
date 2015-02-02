@@ -18,10 +18,10 @@
 #include <string>
 #include <utility>
 
-using namespace std;
-
 #include "ProjectFile.h"
 #include "Result.h"
+
+using namespace std;
 
 class ResultGraph : public ProjectFile, public Result {
 public:
@@ -31,14 +31,12 @@ public:
 	 const string& xLabel,
 	 const string& yLabel);
 	virtual ~ResultGraph();
-	void
-	 append(double x, double y);
-	void
-	 writeInFile() const;
+   virtual void write(
+         const double time,
+         const FieldD3& electric,
+         const FieldD3& magnetic);
 private:
-	string name_;
-	string xLabel_, yLabel_;
-	vector<double> x_, y_;
+   ofstream file_;
 };
 
 #endif /* GRAPH_H_ */
