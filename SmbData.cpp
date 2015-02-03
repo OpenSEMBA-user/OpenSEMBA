@@ -72,7 +72,7 @@ string SmbData::getOutputName() const {
 }
 
 string SmbData::getProjectName() const {
-   return getBasename();
+   return removeExtension(getBasename());
 }
 
 void
