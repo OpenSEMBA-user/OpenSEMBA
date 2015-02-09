@@ -133,6 +133,7 @@ ParserGiD::readEMSources() {
    vector<PlaneWave> pws;
    vector<Waveport> wps;
    vector<Generator> gen;
+   vector<Nodal> nod;
    //
    bool finished = false;
    bool found = false;
@@ -153,6 +154,8 @@ ParserGiD::readEMSources() {
                pws.push_back(pw);
             } else if (label.compare("Generator")==0) {
                gen.push_back(readGeneratorEMSource());
+            } else if (label.compare("Nodal")==0) {
+               nod.push_back(readNodalEMSource());
             } else if (label.compare("Waveport")==0) {
                Waveport wp = readWaveportEMSource();
                wps.push_back(wp);
@@ -167,7 +170,7 @@ ParserGiD::readEMSources() {
             << "Excitations label was not found." << endl;
    }
    //
-   return new EMSourceGroup(dipoles, pws, wps, gen);
+   return new EMSourceGroup(dipoles, pws, wps, gen, nod);
 }
 
 PhysicalModelGroup*
@@ -375,13 +378,6 @@ ParserGiD::readOutputRequestInstances() {
                elemVec.clear();
                elemVec.push_back(atoi(value.c_str()));
                res.push_back(OutputRequest(domain, Element::NODE,
-                     outputType, outputName, elemVec));
-               break;
-            case ParserGiD::outRqOnLine:
-               getNextLabelAndValue(label,value);
-               elemVec.clear();
-               elemVec.push_back(atoi(value.c_str()));
-               res.push_back(OutputRequest(domain, Element::LINE,
                      outputType, outputName, elemVec));
                break;
             case ParserGiD::outRqOnSurface:
@@ -1156,7 +1152,6 @@ ParserGiD::readWaveportEMSource() {
 Generator
 ParserGiD::readGeneratorEMSource() {
    Generator::Type type;
-   Generator::Hardness hardness;
    Magnitude* mag;
    vector<uint> elems;
    string filename;
@@ -1165,8 +1160,6 @@ ParserGiD::readGeneratorEMSource() {
       getNextLabelAndValue(label, value);
       if (label.compare("Type")==0) {
          type = generatorStrToType(value);
-      } else if (label.compare("Hardness")==0) {
-         hardness = generatorStrToHardness(value);
       } else if (label.compare("Excitation") == 0) {
          mag = readMagnitude(value);
       } else if (label.compare("Number of elements")==0) {
@@ -1178,13 +1171,47 @@ ParserGiD::readGeneratorEMSource() {
             elems.push_back(e);
          }
       } else if (label.compare("End of Generator")==0) {
-         return Generator(type, hardness, elems, mag);
+         return Generator(type, elems, mag);
       }
    }
    // Throws error message if ending label was not found.
    cerr<< "ERROR @ Parsing generator: "
          << "End of Generator label not found. " << endl;
    return Generator();
+}
+
+Nodal
+ParserGiD::readNodalEMSource() {
+   Nodal::Type type;
+   Nodal::Hardness hardness;
+   Magnitude* mag;
+   vector<uint> elems;
+   string filename;
+   string label, value;
+   while(!f_in.eof()) {
+      getNextLabelAndValue(label, value);
+      if (label.compare("Type")==0) {
+         type = nodalStrToType(value);
+      } else if (label.compare("Hardness")==0) {
+         hardness = nodalStrToHardness(value);
+      } else if (label.compare("Excitation") == 0) {
+         mag = readMagnitude(value);
+      } else if (label.compare("Number of elements")==0) {
+         uint nE = atoi(value.c_str());
+         elems.reserve(nE);
+         for (uint i = 0; i < nE; i++) {
+            uint e;
+            f_in >> e;
+            elems.push_back(e);
+         }
+      } else if (label.compare("End of Nodal")==0) {
+         return Nodal(type, hardness, elems, mag);
+      }
+   }
+   // Throws error message if ending label was not found.
+   cerr<< "ERROR @ Parsing nodal: "
+         << "End of Nodal label not found. " << endl;
+   return Nodal();
 }
 
 Element::Type
@@ -1265,17 +1292,31 @@ ParserGiD::generatorStrToType(string str) const {
    }
 }
 
-Generator::Hardness
-ParserGiD::generatorStrToHardness(string str) const {
+Nodal::Type
+ParserGiD::nodalStrToType(string str) const {
    str = trim(str);
-   if (str.compare("soft")==0) {
-      return Generator::soft;
-   } else if (str.compare("hard")==0) {
-      return Generator::hard;
+   if (str.compare("electricField")==0) {
+      return Nodal::electricField;
+   } else if (str.compare("magneticField")==0) {
+      return Nodal::magneticField;
    } else {
       cerr<< "ERROR @ Parser: "
-            << "Unreckognized generator hardness." << endl;
-      return Generator::soft;
+            << "Unreckognized nodal type." << endl;
+      return Nodal::undefined;
+   }
+}
+
+Nodal::Hardness
+ParserGiD::nodalStrToHardness(string str) const {
+   str = trim(str);
+   if (str.compare("soft")==0) {
+      return Nodal::soft;
+   } else if (str.compare("hard")==0) {
+      return Nodal::hard;
+   } else {
+      cerr<< "ERROR @ Parser: "
+            << "Unreckognized nodal hardness." << endl;
+      return Nodal::soft;
    }
 }
 
@@ -1426,8 +1467,6 @@ ParserGiD::gidOutputTypeStrToType(string str) const {
    str = trim(str);
    if (str.compare("OutRq_on_point")==0) {
       return ParserGiD::outRqOnPoint;
-   } else if (str.compare("OutRq_on_line")==0) {
-      return ParserGiD::outRqOnLine;
    } else if (str.compare("OutRq_on_surface")==0) {
       return ParserGiD::outRqOnSurface;
    } else if (str.compare("OutRq_on_volume")==0) {

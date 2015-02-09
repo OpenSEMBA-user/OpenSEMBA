@@ -13,6 +13,7 @@
 #include "Generator.h"
 #include "PlaneWave.h"
 #include "Waveport.h"
+#include "Nodal.h"
 
 class EMSourceGroup {
 public:
@@ -21,7 +22,8 @@ public:
 	 const vector<Dipole>&,
 	 const vector<PlaneWave>&,
 	 const vector<Waveport>&,
-	 const vector<Generator>&);
+	 const vector<Generator>&,
+    const vector<Nodal>&);
 	EMSourceGroup&
 	 operator=(const EMSourceGroup &rhs);
 	unsigned int
@@ -34,6 +36,8 @@ public:
 	 countWaveports() const;
 	unsigned int
 	 countGenerators() const;
+	unsigned int
+	 countNodals() const;
 	const EMSource*
 	 get(const unsigned int i) const;
 	const PlaneWave*
@@ -46,6 +50,8 @@ public:
 	 getWaveport(const unsigned int i) const;
 	const Generator*
 	 getGenerator(const unsigned int i) const;
+	const Nodal*
+	 getNodal(const unsigned int i) const;
 	uint
 	 countWithType(const Element::Type type) const;
 	const EMSource*
@@ -60,6 +66,7 @@ private:
 	vector<PlaneWave> planeWave;
 	vector<Waveport> waveport;
 	vector<Generator> generator;
+	vector<Nodal> nodal;
 	void
 	 updatePointers();
 };

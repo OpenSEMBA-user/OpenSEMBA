@@ -96,7 +96,6 @@ protected:
 private:
 	typedef enum {
 		outRqOnPoint,
-		outRqOnLine,
 		outRqOnSurface,
 		outRqOnVolume,
 		farField,
@@ -119,10 +118,14 @@ private:
 	 readWaveportEMSource();
 	virtual Generator
 	 readGeneratorEMSource();
+	virtual Nodal
+	 readNodalEMSource();
 	Generator::Type
 	 generatorStrToType(string label) const;
-   Generator::Hardness
-	 generatorStrToHardness(string label) const;
+	Nodal::Type
+	 nodalStrToType(string label) const;
+   Nodal::Hardness
+	 nodalStrToHardness(string label) const;
 	GlobalProblemData::boundType
 	 boundStrToType(string label) const;
 	PhysicalModelGroup::Type
