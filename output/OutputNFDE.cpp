@@ -93,7 +93,10 @@ OutputNFDE::~OutputNFDE() {
 	output.close();
 }
 
-void OutputNFDE::exportNFDE(const string &file, bool outputHeaders) {
+void OutputNFDE::exportNFDE(const string &file,
+                            bool outputHeaders,
+                            bool outputEnd) {
+   
 	output.exceptions(ifstream::failbit);
 
 	try {
@@ -236,7 +239,8 @@ void OutputNFDE::exportNFDE(const string &file, bool outputHeaders) {
       }
    }
    
-   output << "!END" << endl;
+   if(outputEnd)
+      output << "!END" << endl;
 }
 
 void OutputNFDE::exportTimeSteps() {
