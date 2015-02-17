@@ -44,15 +44,6 @@ EMSource::isPlaneWave() const {
 	return false;
 }
 
-EMSource::EMSource(const vector<uint>& elem, const Magnitude* magnitude) {
-    elem_ = elem;
-    magnitude_ = magnitude;
-}
-
-EMSource::EMSource(const Magnitude* magnitude) {
-    magnitude_ = magnitude;
-}
-
 void
 EMSource::printInfo() const {
     cout<< " - Assigned on " << elem_.size() << ":" << endl;

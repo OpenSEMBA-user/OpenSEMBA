@@ -72,11 +72,6 @@ PlaneWave::operator=(const PlaneWave &rhs) {
 	return *this;
 }
 
-const BoxD3*
-PlaneWave::getBound() const {
-	return bound_;
-}
-
 void
 PlaneWave::printInfo() const {
 	cout<< " --- PlaneWave info --- " << endl;
@@ -115,11 +110,3 @@ const CVecD3&
 PlaneWave::getWaveDirection() const {
 	return waveDirection_;
 }
-
-void
-PlaneWave::applyGeometricScalingFactor(const double factor) {
-    if (bound_ != NULL) {
-        bound_->scale(factor);
-    }
-}
-

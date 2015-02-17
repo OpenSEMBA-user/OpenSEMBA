@@ -133,6 +133,7 @@ ParserGiD::readEMSources() {
    vector<PlaneWave> pws;
    vector<Waveport> wps;
    vector<Generator> gen;
+   vector<Nodal> nodal;
    //
    bool finished = false;
    bool found = false;
@@ -167,7 +168,7 @@ ParserGiD::readEMSources() {
             << "Excitations label was not found." << endl;
    }
    //
-   return new EMSourceGroup(dipoles, pws, wps, gen);
+   return new EMSourceGroup(dipoles, pws, wps, gen, nodal);
 }
 
 PhysicalModelGroup*

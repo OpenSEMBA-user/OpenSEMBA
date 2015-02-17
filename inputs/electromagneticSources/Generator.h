@@ -17,9 +17,14 @@ public:
 		current = 2,
 		undefined = 0
 	} Type;
+	typedef enum {
+	   soft,
+	   hard
+	} Hardness;
 	Generator();
 	Generator(
 	 const Type& generatorType,
+	 const Hardness& hardness,
 	 const vector<unsigned int>& elem,
 	 const Magnitude* magnitude);
 	virtual ~Generator();
@@ -31,6 +36,7 @@ public:
 	 printInfo() const;
 private:
 	Type type_;
+	Hardness hardness_;
 	string
 	 getTypeStr() const;
 };

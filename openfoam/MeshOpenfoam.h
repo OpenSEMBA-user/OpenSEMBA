@@ -8,8 +8,7 @@
 #ifndef MESHOPENFOAM_H_
 #define MESHOPENFOAM_H_
 
-#include "../../common/geometry/Polyhedron.h"
-#include "../../common/geometry/Hex8.h"
+#include "../../common/geometry/elements/Polyhedron.h"
 #include "../../common/inputs/physicalModel/PhysicalModel.h"
 #include "../../common/inputs/Layer.h"
 #include "../geometry/Grid.h"

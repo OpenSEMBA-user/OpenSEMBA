@@ -9,6 +9,7 @@
 
 Generator::Generator() {
 	type_ = undefined;
+	hardness_ = soft;
 }
 
 Generator::~Generator() {
@@ -17,8 +18,10 @@ Generator::~Generator() {
 
 Generator::Generator(
  const Type& generatorType,
+ const Hardness& hardness,
  const vector<unsigned int>& elem,
  const Magnitude* magnitude) : EMSource(elem, magnitude) {
+   hardness_ = hardness;
 	type_ = generatorType;
 }
 
@@ -29,6 +32,7 @@ Generator::operator=(const Generator &rhs) {
 	}
 	EMSource::operator=(rhs);
 	type_ = rhs.type_;
+	hardness_ = rhs.hardness_;
 	return *this;
 }
 

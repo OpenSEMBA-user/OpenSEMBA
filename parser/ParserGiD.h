@@ -123,6 +123,8 @@ private:
 	 readNodalEMSource();
 	Generator::Type
 	 generatorStrToType(string label) const;
+	Generator::Hardness
+	generatorStrToHardness(string str) const;
 	Nodal::Type
 	 nodalStrToType(string label) const;
    Nodal::Hardness

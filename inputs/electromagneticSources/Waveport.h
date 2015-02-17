@@ -56,7 +56,6 @@ private:
 	Shape shape_;
 	ExcitationMode excitationMode_;
 	pair<unsigned int,unsigned int> mode_;
-	Symmetry SymXY_, SymYZ_, SymZX_;
 };
 
 #endif /* WAVEPORT_H_ */

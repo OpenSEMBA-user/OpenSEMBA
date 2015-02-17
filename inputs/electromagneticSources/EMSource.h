@@ -38,10 +38,11 @@ public:
     getConditionType() const;
    virtual void
    applyGeometricScalingFactor(const double factor);
+protected:
+   BoxD3* bound_;
 private:
 	vector<unsigned int> elem_;
-   BoxD3* bound_;
-	const Magnitude* magnitude_;
+   const Magnitude* magnitude_;
 };
 
 #endif /* ELECTROMAGNETICSOURCE_H_ */
