@@ -133,8 +133,6 @@ public:
 
 	void
 	setAdditionalElems(const vector<uint> elems);
-protected:
-	vector<uint> elem_;
 private:
 	string name_;
 	OutputRequest::Type outputType_;
@@ -142,9 +140,7 @@ private:
 	double initialPhi_, finalPhi_, stepPhi_;
 	bool usingBound_;
 	BoxD3 bound_;
-
 	vector<uint> elem_;
-
 	void
 	 setThetaAndPhi(
 	  double iTh, double fTh, double sTh,

@@ -1,7 +1,7 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-#include "ElementsGroup.h"
+#include "../elements/ElementsGroup.h"
 #ifdef USE_OPENMP
 #include <omp.h>
 #endif

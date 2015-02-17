@@ -96,6 +96,7 @@ protected:
 private:
 	typedef enum {
 		outRqOnPoint,
+		outRqOnLine,
 		outRqOnSurface,
 		outRqOnVolume,
 		farField,

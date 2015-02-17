@@ -11,8 +11,8 @@
 #include <vector>
 #include <utility>
 #include <iostream>
-#include "Element.h"
-#include "MapGroup.h"
+#include "elements/ElementsGroup.h"
+#include "maps/MapGroup.h"
 #include "Grid.h"
 
 using namespace std;

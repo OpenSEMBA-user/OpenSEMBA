@@ -13,8 +13,7 @@
 #include <set>
 
 struct lexCompareCoord {
-	static const double tolerance = 1e-12;
-    bool
+	bool
      operator() (
       const CoordD3* lhs,
       const CoordD3* rhs) const {
