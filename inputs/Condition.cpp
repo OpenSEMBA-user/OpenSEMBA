@@ -14,6 +14,21 @@ Condition::~Condition() {
 
 }
 
+bool
+Condition::isSMA() const {
+	return false;
+}
+
+bool
+Condition::isPEC() const {
+	return false;
+}
+
+bool
+Condition::isPMC() const {
+	return false;
+}
+
 unsigned int
 Condition::getId() const {
 	return 0;

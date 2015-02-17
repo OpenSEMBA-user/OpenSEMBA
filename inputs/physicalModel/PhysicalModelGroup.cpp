@@ -301,7 +301,7 @@ PhysicalModelGroup::updatePointers() {
 void
 PhysicalModelGroup::createAndAssignPML(
       const PMVolumePML::Direction direction[3],
-      const vector<pair<const Volume*, unsigned int> >& internalBorder,
+      const vector<pair<const Tet*, unsigned int> >& internalBorder,
       MeshVolume* mesh) {
    // Computes bound of PML pointing in this direction.
    BoxD3 bound = mesh->getBound(internalBorder);
@@ -361,13 +361,3 @@ PhysicalModelGroup::getDirectionFromInt(
    }
 }
 
-vector<uint>
-PhysicalModelGroup::getMatIds(const Condition::Type type) const {
-   vector<uint> res;
-   for (uint i = 0; i < count(); i++) {
-      if (get(i)->getConditionType() == type) {
-         res.push_back(get(i)->getId());
-      }
-   }
-   return res;
-}

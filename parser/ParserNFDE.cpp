@@ -1327,19 +1327,28 @@ void ParserNFDE::parseCompositeSurf(const string &layer) {
    
 	getline(file, pnt_str);
 	while(true) {
-      getline(file, line);
-      readLine("COMPOSITE SURF", line, surf.sigma,
-                                       surf.eps,
-                                       surf.mu,
-                                       surf.sigmam,
-                                       surf.thk);
-      
+      surf.numberoflayers = 1;
       if(pnt_str.size() > 9)
          readLine("COMPOSITE SURF", pnt_str, type, 
                                              surf.name,
                                              surf.numberoflayers);
       else
          readLine("COMPOSITE SURF", pnt_str, type);
+      
+      surf.sigma.resize(surf.numberoflayers);
+      surf.eps.resize(surf.numberoflayers);
+      surf.mu.resize(surf.numberoflayers);
+      surf.sigmam.resize(surf.numberoflayers);
+      surf.thk.resize(surf.numberoflayers);
+      
+      for(int i = 0; i < surf.numberoflayers; i++) {
+         getline(file, line);
+         readLine("COMPOSITE SURF", line, surf.sigma[i],
+                                          surf.eps[i],
+                                          surf.mu[i],
+                                          surf.sigmam[i],
+                                          surf.thk[i]);
+         }
       
       if(type.find("!!!1PNT") != string::npos) {
          pnt = false;

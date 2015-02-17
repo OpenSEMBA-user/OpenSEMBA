@@ -4,7 +4,7 @@
 
 EMSource::EMSource() {
    bound_ = NULL;
-   magnitude_ = NULL;
+    magnitude_ = NULL;
 }
 
 EMSource::EMSource(const vector<uint>& elem, const Magnitude* magnitude) {
@@ -25,12 +25,13 @@ EMSource::~EMSource() {
 
 vector<unsigned int>
 EMSource::getElem() const {
-   return elem_;
+	assert(elem_.size() != 0);
+	return elem_;
 }
 
 bool
 EMSource::isEMSource() const {
-   return true;
+	return true;
 }
 
 const BoxD3*
@@ -40,26 +41,35 @@ EMSource::getBound() const {
 
 bool
 EMSource::isPlaneWave() const {
-   return false;
+	return false;
+}
+
+EMSource::EMSource(const vector<uint>& elem, const Magnitude* magnitude) {
+    elem_ = elem;
+    magnitude_ = magnitude;
+}
+
+EMSource::EMSource(const Magnitude* magnitude) {
+    magnitude_ = magnitude;
 }
 
 void
 EMSource::printInfo() const {
-   cout<< " - Assigned on " << elem_.size() << ":" << endl;
-   for (uint i = 0; i < elem_.size(); i++) {
-      cout<< elem_[i] << " ";
-   }
+    cout<< " - Assigned on " << elem_.size() << ":" << endl;
+    for (uint i = 0; i < elem_.size(); i++) {
+        cout<< elem_[i] << " ";
+    }
    if (bound_ != NULL) {
        cout << "Defined on bound: " << endl;
       bound_->printInfo();
    }
-   cout << endl;
-   magnitude_->printInfo();
+    cout << endl;
+    magnitude_->printInfo();
 }
 
 const Magnitude*
 EMSource::getMagnitude() const {
-   return magnitude_;
+    return magnitude_;
 }
 
 void

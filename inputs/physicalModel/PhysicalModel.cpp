@@ -1,6 +1,7 @@
 // File: physicalmodel.cpp
 // =============== Includes headers ===========================================
-#include "PhysicalModel.h"
+#ifndef PHYSICALMODEL_H_
+	#include "PhysicalModel.h"
 
 const double PhysicalModel::eps0 = VACUUM_PERMITTIVITY;
 const double PhysicalModel::mu0 =VACUUM_PERMEABILITY;

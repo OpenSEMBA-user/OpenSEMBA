@@ -4,9 +4,13 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "../geometry/elements/Element.h"
+#include "../geometry/Element.h"
 
 using namespace std;
+
+#ifndef CONDITION_ERROR
+	#define CONDITION_ERROR 6911
+#endif
 
 class Condition {
 public:
@@ -21,6 +25,12 @@ public:
 	Condition();
 	Condition(Element::Type param);
 	virtual ~Condition();
+	virtual bool
+	 isSMA() const;
+	virtual bool
+	 isPEC() const;
+	virtual bool
+	 isPMC() const;
 	virtual bool
 	 isVacuum() const {return false;}
 	virtual bool

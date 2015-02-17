@@ -80,7 +80,8 @@ public:
 	 elementTypeStr() const;
 	unsigned int
 	 count() const {return elem_.size();}
-   void
+
+	void
 	 printInfo() const;
 
 	const string& getName() const {
@@ -141,6 +142,9 @@ private:
 	double initialPhi_, finalPhi_, stepPhi_;
 	bool usingBound_;
 	BoxD3 bound_;
+
+	vector<uint> elem_;
+
 	void
 	 setThetaAndPhi(
 	  double iTh, double fTh, double sTh,

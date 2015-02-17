@@ -112,7 +112,7 @@ public:
 		}
 		return res;
 	 }
-   unsigned int
+	unsigned int
     countMultilayers() const {
       unsigned int res = 0;
       for (unsigned int i = 0; i < count(); i++) {

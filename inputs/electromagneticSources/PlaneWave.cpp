@@ -18,6 +18,7 @@ PlaneWave::PlaneWave(
  CVecD3 waveDirection,
  CVecD3 polarization,
  const Magnitude* magnitude) : EMSource(elem, magnitude) {
+	bound_ = NULL;
 	init(waveDirection, polarization);
 }
 
@@ -67,7 +68,13 @@ PlaneWave::operator=(const PlaneWave &rhs) {
 	EMSource::operator=(rhs);
 	waveDirection_ = rhs.waveDirection_;
 	polarization_ = rhs.polarization_;
+	bound_ = rhs.bound_;
 	return *this;
+}
+
+const BoxD3*
+PlaneWave::getBound() const {
+	return bound_;
 }
 
 void
@@ -80,6 +87,10 @@ PlaneWave::printInfo() const {
 	cout<< " - Wave direction vector: ";
 	waveDirection_.printInfo();
 	cout<< endl;
+	if (bound_ != NULL) {
+	    cout << "Defined on bound: " << endl;
+		bound_->printInfo();
+	}
 }
 
 CVecD3
@@ -104,3 +115,11 @@ const CVecD3&
 PlaneWave::getWaveDirection() const {
 	return waveDirection_;
 }
+
+void
+PlaneWave::applyGeometricScalingFactor(const double factor) {
+    if (bound_ != NULL) {
+        bound_->scale(factor);
+    }
+}
+

@@ -26,6 +26,7 @@ public:
     bool operator>(const Box<T,D>& lBoxMin) const;
     bool operator<(const Box<T,D>& lBoxMax) const;
     bool operator<=(const Box<T,D>& lBoxMax) const;
+    bool operator>=(const Box<T,D>& lBoxMin) const;
     bool operator==(const Box<T,D>& lBoxMin) const;
     bool isIntersected (const Box<T,D>& lBox) const;
     bool isInnerPoint(const CVecTD& point) const;
