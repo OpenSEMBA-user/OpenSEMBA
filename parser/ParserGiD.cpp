@@ -1252,6 +1252,40 @@ ParserGiD::generatorStrToHardness(string str) const {
    }
 }
 
+Nodal
+ParserGiD::readNodalEMSource() {
+   Nodal::Type type;
+   Nodal::Hardness hardness;
+   Magnitude* mag;
+   vector<uint> elems;
+   string filename;
+   string label, value;
+   while(!f_in.eof()) {
+      getNextLabelAndValue(label, value);
+      if (label.compare("Type")==0) {
+         type = nodalStrToType(value);
+      } else if (label.compare("Hardness")==0) {
+         hardness = nodalStrToHardness(value);
+      } else if (label.compare("Excitation") == 0) {
+         mag = readMagnitude(value);
+      } else if (label.compare("Number of elements")==0) {
+         uint nE = atoi(value.c_str());
+         elems.reserve(nE);
+         for (uint i = 0; i < nE; i++) {
+            uint e;
+            f_in >> e;
+            elems.push_back(e);
+         }
+      } else if (label.compare("End of Nodal")==0) {
+         return Nodal(type, hardness, elems, mag);
+      }
+   }
+   // Throws error message if ending label was not found.
+   cerr<< "ERROR @ Parsing nodal: "
+         << "End of Nodal label not found. " << endl;
+   return Nodal();
+}
+
 GlobalProblemData::boundType
 ParserGiD::boundStrToType(string str) const {
    str = trim(str);
