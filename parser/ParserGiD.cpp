@@ -1379,6 +1379,33 @@ ParserGiD::readBoundFromStr(
 }
 
 
+Nodal::Type
+ParserGiD::nodalStrToType(string str) const {
+   str = trim(str);
+   if (str.compare("electricField")==0) {
+      return Nodal::electricField;
+   } else if (str.compare("magneticField")==0) {
+      return Nodal::magneticField;
+   } else {
+      cerr<< "ERROR @ Parser: "
+            << "Unreckognized nodal type." << endl;
+      return Nodal::undefined;
+   }
+}
+
+Nodal::Hardness
+ParserGiD::nodalStrToHardness(string str) const {
+   str = trim(str);
+   if (str.compare("soft")==0) {
+      return Nodal::soft;
+   } else if (str.compare("hard")==0) {
+      return Nodal::hard;
+   } else {
+      cerr<< "ERROR @ Parser: "
+            << "Unreckognized nodal hardness." << endl;
+      return Nodal::soft;
+   }
+}
 
 void
 ParserGiD::init(const string& pTPath) {
