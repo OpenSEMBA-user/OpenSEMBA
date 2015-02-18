@@ -6,8 +6,11 @@
 #define OUTPUTGID_H_
 
 #include "Output.h"
-#include "ResultGiD.h"
-#include "../../../common/gidpost/gidpost.h"
+
+#include "../BCGroup.h"
+#include "../SmbData.h"
+#include "../NFDEData.h"
+#include "../gidpost/gidpost.h"
 
 using namespace std;
 
@@ -15,8 +18,7 @@ class OutputGiD : public Output {
 public:
     OutputGiD();
     OutputGiD(
-            const SmbData* smb,
-            const DG* dg);
+            const SmbData* smb);
     OutputGiD(
             const NFDEData* data);
     virtual ~OutputGiD();
@@ -46,8 +48,8 @@ protected:
     GiD_ResultType getGiDResultType(OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
 private:
-    SmbData* smb_;
-    NFDEData* nfde_;
+    const SmbData* smb_;
+    const NFDEData* nfde_;
     GiD_PostMode mode_;
     int coordCounter_;
     int elemCounter_;

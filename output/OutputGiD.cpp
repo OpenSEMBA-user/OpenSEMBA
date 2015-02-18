@@ -11,6 +11,7 @@ OutputGiD::OutputGiD() {
     coordCounter_ = 0;
     elemCounter_ = 0;
     smb_ = NULL;
+    nfde_ = NULL;
 }
 
 OutputGiD::OutputGiD(
@@ -19,6 +20,7 @@ OutputGiD::OutputGiD(
     coordCounter_ = 0;
     elemCounter_ = 0;
     smb_ = smb;
+    nfde_ = NULL;
     openGiDFiles();
     writeMesh();
 }
@@ -93,7 +95,7 @@ void OutputGiD::beginResult(
         compv[i] = new char[cNames[i].length() + 1];
         strcpy(compv[i], cNames[i].c_str());
     }
-    GiD_BeginResult(fName, tName, time, getGiDResultType(),
+    GiD_BeginResult(fName, tName, time, resultType,
             getGiDResultLocation(), gpType, NULL, cNames.size(), compv);
 }
 
@@ -123,26 +125,26 @@ OutputGiD::flushPostFile() const {
 
 void
 OutputGiD::writeGaussPoints() const {
-    {
-        const char* name = "gp_tri";
-        static const SimplexTri<ORDER_N> tri;
-        GiD_BeginGaussPoint((char*) name, GiD_Triangle, NULL,tri.np,0,0);
-        for (uint i = 0; i < tri.np; i++) {
-            CVecD3 pos = tri.coordinate(i);
-            GiD_WriteGaussPoint2D(pos(1), pos(2));
-        }
-        GiD_EndGaussPoint();
-    }
-    {
-        const char* name = "gp_tet";
-        static const SimplexTet<ORDER_N> tet;
-        GiD_BeginGaussPoint((char*) name, GiD_Tetrahedra, NULL,tet.np,0,0);
-        for (uint i = 0; i < tet.np; i++) {
-            CartesianVector<double,4> pos = tet.coordinate(i);
-            GiD_WriteGaussPoint3D(pos(1), pos(2), pos(3));
-        }
-        GiD_EndGaussPoint();
-    }
+//    {
+//        const char* name = "gp_tri";
+//        static const SimplexTri<ORDER_N> tri;
+//        GiD_BeginGaussPoint((char*) name, GiD_Triangle, NULL,tri.np,0,0);
+//        for (uint i = 0; i < tri.np; i++) {
+//            CVecD3 pos = tri.coordinate(i);
+//            GiD_WriteGaussPoint2D(pos(1), pos(2));
+//        }
+//        GiD_EndGaussPoint();
+//    }
+//    {
+//        const char* name = "gp_tet";
+//        static const SimplexTet<ORDER_N> tet;
+//        GiD_BeginGaussPoint((char*) name, GiD_Tetrahedra, NULL,tet.np,0,0);
+//        for (uint i = 0; i < tet.np; i++) {
+//            CartesianVector<double,4> pos = tet.coordinate(i);
+//            GiD_WriteGaussPoint3D(pos(1), pos(2), pos(3));
+//        }
+//        GiD_EndGaussPoint();
+//    }
 }
 
 GiD_ResultType OutputGiD::getGiDResultType(
@@ -323,8 +325,8 @@ OutputGiD::writeOutputRequestsMesh() {
         //         }
         //      }
         //      if (!mshExist) {
-        result_.push_back(
-                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
+//        result_.push_back(
+//                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
         //      }
     }
 }
