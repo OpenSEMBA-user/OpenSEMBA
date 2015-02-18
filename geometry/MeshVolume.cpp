@@ -433,7 +433,7 @@ MeshVolume::build(const CoordinateGroup& vIn,
 	v = vIn;
 	elem = elementIn;
 	elem.reassignPointers(v);
-	map.build(v, elem);
+//	map.build(v, elem);
 }
 
 void
