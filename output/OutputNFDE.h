@@ -15,7 +15,7 @@ using namespace std;
 #include "NFDEData.h"
 #include "ProjectFile.h"
 
-class OutputNFDE : public ProjectFile {
+class OutputNFDE : public ProjectFile, public NFDEData {
 public:
 	OutputNFDE(const NFDEData *nfde);
 	~OutputNFDE();
@@ -25,8 +25,9 @@ public:
 private:
 	const NFDEData *nfde;
 	ofstream output;
+    static const string space;
 
-	void exportTimeSteps();
+    void exportTimeSteps();
 
 	void exportSpaceSteps();
 	void exportBackground();

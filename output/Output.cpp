@@ -3,16 +3,10 @@
 #endif
 
 Output::Output()  {
-   smb_ = NULL;
-   dg_ = NULL;
 }
 
-Output::Output(
-      const SmbData* smb,
-      const DG* dg) : ProjectFile(smb->getFilename()) {
-   smb_ = smb;
-   dg_ = dg;
-//   result_.push_back(new ResultRCS(getOutputfilename() + ".post.rcs", smb_));
+Output::Output(const string& name) : ProjectFile(name) {
+
 }
 
 Output::~Output() {
@@ -24,7 +18,7 @@ Output::~Output() {
 void
 Output::writeResumeFile(
       const double time, const FieldD3& electric, const FieldD3& magnetic) {
-   string auxStr = smb_->getProjectFolder()+smb_->getProjectName()+".resume";
+   string auxStr = getProjectFolder() + getProjectName() + ".resume";
    char *auxChar;
    auxChar = new char[auxStr.length() + 1];
    strcpy(auxChar, auxStr.c_str());
@@ -63,7 +57,7 @@ Output::process(
 
 void
 Output::deleteExistentOutputFiles() const {
-   string fileName = smb_->getProjectFolder() + smb_->getProjectName();
+   string fileName = getProjectFolder() + getProjectName();
    string cmd;
    cmd = "rm -f " + fileName + ".post.msh";
    system(cmd.c_str());
@@ -85,5 +79,5 @@ void Output::writeAllFields(const FieldD3& field) const {
 }
 
 string Output::getOutputfilename() const {
-   return smb_->getProjectFolder() + smb_->getOutputName();
+   return getProjectFolder() + getOutputName();
 }

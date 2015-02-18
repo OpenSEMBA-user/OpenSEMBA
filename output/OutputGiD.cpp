@@ -10,31 +10,49 @@ OutputGiD::OutputGiD() {
     mode_ = GiD_PostAscii;
     coordCounter_ = 0;
     elemCounter_ = 0;
+    smb_ = NULL;
 }
 
 OutputGiD::OutputGiD(
-        const SmbData* smb,
-        const DG* dg) : Output(smb, dg) {
+        const SmbData* smb) : Output(smb->getFilename()) {
     mode_ = GiD_PostAscii;
     coordCounter_ = 0;
     elemCounter_ = 0;
-    deleteExistentOutputFiles();
+    smb_ = smb;
     openGiDFiles();
     writeMesh();
-    if (smb_->outputRequests->count() == 0) {
-        cerr << "WARNING @ OutputGiD: No outputs detected." << endl;
-    }
+}
+
+OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
+    mode_ = GiD_PostAscii;
+    coordCounter_ = 0;
+    elemCounter_ = 0;
+    smb_ = NULL;
+    nfde_ = nfde;
+    openGiDFiles();
+    writeBoundaries();
+//    writeSources();
+//    exportCurrentDensitySource();
+//    writeFieldSource();
+//    writeIsotropicBody();
+//    writeIsotropicSurf();
+//    writeIsotropicLine();
+//    writeAnisotropicBody();
+//    writeAnisotropicSurf();
+//    writeAnisotropicLine();
+//    writeDispersiveBody();
+//    writeDispersiveSurf();
+//    writeCompositeSurf();
+//    writeThinWire();
+//    writeThinGap();
+//    writeTraditionalProbe();
+//    writeNewProbe();
+//    writeBulkProbes();
+//    writeSliceProbes();
 }
 
 OutputGiD::~OutputGiD() {
     GiD_ClosePostResultFile();
-}
-
-void
-OutputGiD::write(const NFDEData& mesh) {
-#   error "sdasd"
-    cerr << "ERROR @ OutputGiDMesh: Not implemented." << endl;
-    assert(false);
 }
 
 void OutputGiD::beginMesh(
@@ -54,8 +72,6 @@ void OutputGiD::beginMesh(
     }
     delete [] tName;
 }
-
-
 
 void OutputGiD::beginResult(
         const string& fieldName,
@@ -129,8 +145,26 @@ OutputGiD::writeGaussPoints() const {
     }
 }
 
-void
-OutputGiD::openGiDFiles() {
+GiD_ResultType OutputGiD::getGiDResultType(
+        OutputRequest::Type type) const {
+   switch (type) {
+   case OutputRequest::electricField:
+      return GiD_ResultType::GiD_Vector;
+   case OutputRequest::magneticField:
+      return GiD_ResultType::GiD_Vector;
+   default:
+      assert(false);
+      return GiD_ResultType::GiD_Scalar;
+   }
+}
+
+GiD_ResultLocation OutputGiD::getGiDResultLocation() const {
+      return GiD_ResultLocation::GiD_OnNodes;
+}
+
+
+void OutputGiD::openGiDFiles() {
+    deleteExistentOutputFiles();
     switch (mode_) {
     case GiD_PostAscii:
         openPostMeshFile(getOutputfilename() + ".post.msh", mode_);
@@ -360,4 +394,8 @@ OutputGiD::writeBCMesh(
     }
     GiD_EndElements();
     GiD_EndMesh();
+}
+
+void OutputGiD::writeBoundaries() const {
+
 }

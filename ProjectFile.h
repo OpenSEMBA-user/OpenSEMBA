@@ -36,6 +36,13 @@ public:
    printInfo() const;
    void
    setFilename(const string& filename);
+
+   string getOutputName() const {
+      return getProjectName();
+   }
+   string getProjectName() const {
+      return removeExtension(getBasename());
+   }
    string
    getBasename() const;
 protected:

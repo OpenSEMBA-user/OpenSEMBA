@@ -9,7 +9,6 @@
 #include "../math/Field.h"
 #include "../../../common/gidpost/gidpost.h"
 #include "../../../common/output/ResultGraph.h"
-#include "ResultRCS.h"
 
 using namespace std;
 
@@ -17,9 +16,7 @@ class Output : public ProjectFile {
    friend class DG;
 public:
    Output();
-   Output(
-         const SmbData* smb,
-         const DG* probes);
+   Output(const string& name);
    virtual ~Output();
    virtual void
    process(
@@ -34,8 +31,6 @@ public:
    virtual void
    printInfo() const;
 protected:
-   const SmbData* smb_;
-   const DG* dg_;
    vector<const Result*> result_;
    void
    deleteExistentOutputFiles() const;

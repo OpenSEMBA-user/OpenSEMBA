@@ -18,27 +18,25 @@
 
 class SmbData : public ProjectFile {
 public:
-   typedef enum {
-      ugrfdtd,
-      cudg3d,
-   } Solver;
-   GlobalProblemData* gData;
-   LayerGroup* layers;
-   MeshVolume* mesh;
-   PhysicalModelGroup* pMGroup;
-   EMSourceGroup* emSources;
-   OutputRequestGroup* outputRequests;
-   OpenFOAMParameters* ofParams;
-   SmbData();
-	virtual ~SmbData();
-	virtual SmbData& operator=(const SmbData& rhs);
-	string getOutputName() const;
-   string getProjectName() const;
-	void applyGeometricScalingFactor();
-	void ignorePMLs();
-	void detectAndAssignPMLRegions();
-	bool isValidForSolver(const Solver& solver) const;
-	virtual void printInfo() const;
+    typedef enum {
+        ugrfdtd,
+        cudg3d,
+    } Solver;
+    GlobalProblemData* gData;
+    LayerGroup* layers;
+    MeshVolume* mesh;
+    PhysicalModelGroup* pMGroup;
+    EMSourceGroup* emSources;
+    OutputRequestGroup* outputRequests;
+    OpenFOAMParameters* ofParams;
+    SmbData();
+    virtual ~SmbData();
+    virtual SmbData& operator=(const SmbData& rhs);
+    void applyGeometricScalingFactor();
+    void ignorePMLs();
+    void detectAndAssignPMLRegions();
+    bool isValidForSolver(const Solver& solver) const;
+    virtual void printInfo() const;
 };
 
 #endif /* SMBDATA_H_ */
