@@ -71,9 +71,7 @@ Tet10::isCurved() const {
 
 bool
 Tet10::isCurvedFace(const unsigned int f) const {
-	Tri6 face;
-	face = getTri6Face(f);
-	return face.isCurved();
+	return getTri6Face(f).isCurved();
 }
 
 double
@@ -90,9 +88,7 @@ Tet10::getVolume() const {
 
 double
 Tet10::getAreaOfFace(const unsigned int face) const {
-	Tri6 auxFace;
-	auxFace = getTri6Face(face);
-	return auxFace.getArea();
+	return getTri6Face(face).getArea();
 }
 
 void

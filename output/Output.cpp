@@ -60,9 +60,15 @@ Output::deleteExistentOutputFiles() const {
    string fileName = getProjectFolder() + getProjectName();
    string cmd;
    cmd = "rm -f " + fileName + ".post.msh";
-   system(cmd.c_str());
+   if (!system(cmd.c_str())) {
+       cerr << "ERROR @ Output: "
+               << "System command failed to execute: " << cmd << endl;
+   }
    cmd = "rm -f " + fileName + ".post.res";
-   system(cmd.c_str());
+   if (!system(cmd.c_str())) {
+       cerr << "ERROR @ Output: "
+               << "System command failed to execute: " << cmd << endl;
+   }
 }
 
 void

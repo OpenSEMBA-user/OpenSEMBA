@@ -14,10 +14,8 @@ using namespace std;
 
 class Surface : public Element {
 public:
-    Surface();
     virtual ~Surface();
     Surface(
-     const CVecD3& normal_,
      const uint id_ = 0,
      const uint matId_ = 0,
      const uint layerId_ = 0);
@@ -25,21 +23,14 @@ public:
      operator=(const Surface& rhs);
 	virtual const Coordinate<double,3>*
 	 getV(const unsigned int i) const = 0;
-	bool
-	 isContainedInPlane(
+	bool isContainedInPlane(
 	  const CartesianPlane plane) const;
-	bool
-	 isContainedInPlane() const;
-	CartesianVector<double,3>
-	 getNormal() const;
-	virtual Element::Type
-	 getType() const {return SURFACE;}
-	bool
-	 isRectangular() const;
-	virtual void
-	 printInfo() const = 0;
+	bool isContainedInPlane() const;
+	virtual CVecD3 getNormal() const;
+	virtual Element::Type getType() const {return SURFACE;}
+	bool isRectangular() const;
+	virtual void printInfo() const;
 protected:
-	CVecD3 normal;
 	static const double curvatureTolerance;
 };
 

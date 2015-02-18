@@ -5,18 +5,15 @@
 
 class Tri3 : public Tri {
 public:
-	Tri3();
 	virtual ~Tri3();
 	Tri3(
 	 const CoordinateGroup&,
      const uint vId[3],
-	 const CVecD3& normal_,
 	 const uint id_ = 0,
      const uint matId_ = 0,
      const uint layerId_ = 0);
 	Tri3(
 	 const CoordD3* v_[3],
-	 const CVecD3 normal_ = CVecD3(),
 	 const uint id = 0,
 	 const uint matId = 0,
 	 const uint layerId = 0);

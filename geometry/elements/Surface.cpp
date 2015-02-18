@@ -10,16 +10,9 @@ const double Surface::curvatureTolerance = 1e-12;
 
 
 Surface::Surface(
- const CVecD3& normal_,
  const uint id_,
  const uint matId_,
  const uint layerId_) : Element(id_, matId_, layerId_) {
-    normal = normal_;
-}
-
-
-Surface::Surface() {
-
 }
 
 Surface::~Surface() {
@@ -44,9 +37,11 @@ Surface::isContainedInPlane(
 	return true;
 }
 
-CartesianVector<double, 3>
+CVecD3
 Surface::getNormal() const {
-	return normal;
+	CVecD3 v0 = getVertex(1)->pos() - getVertex(0)->pos();
+	CVecD3 v1 = getVertex(2)->pos() - getVertex(0)->pos();
+	return (v0 ^ v1).normalize();
 }
 
 bool
@@ -72,6 +67,10 @@ Surface::operator =(const Surface& rhs) {
         return *this;
     }
     Element::operator=(rhs);
-    normal = rhs.normal;
     return *this;
+}
+
+void Surface::printInfo() const {
+    cout << " --- Surface Info ---" << endl;
+    cout << getNormal();
 }

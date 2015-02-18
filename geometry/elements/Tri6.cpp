@@ -2,19 +2,11 @@
 #include "Tri6.h"
 #endif
 
-Tri6::Tri6() {
-
-}
-
 Tri6::Tri6(
  const CoordinateGroup& coordGr,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[6],
- const CartesianVector<double,3>& normal_) {
-	id = id_;
-	matId = matId_;
-	normal = normal_;
+ const unsigned int vId[6]) : Tri(id_, matId_) {
 	for (unsigned int i = 0; i < geo.np; i++) {
 		v[i] = coordGr.getPtrToId(vId[i]);
 	}
@@ -25,7 +17,7 @@ Tri6::setV(const unsigned int i, const Coordinate<double,3>* vNew) {
 	v[i] = vNew;
 }
 
-Tri6::Tri6(const Coordinate<double,3>* auxV[6]) {
+Tri6::Tri6(const Coordinate<double,3>* auxV[6]) : Tri(0) {
 	for (unsigned int i = 0; i < geo.np; i++) {
 		v[i] = auxV[i];
 	}
@@ -79,7 +71,7 @@ Tri6::linearize() const {
 	for (unsigned int i = 0; i < 3; i++) {
 		vertex[i] = getVertex(i);
 	}
-	Tri3 res(vertex,normal,id,matId,layerId);
+	Tri3 res(vertex, id, matId, layerId);
 	return res;
 }
 

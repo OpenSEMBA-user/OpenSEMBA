@@ -161,6 +161,153 @@ void OutputNFDE::exportNFDE(const string &file,
         output << "!END" << endl;
 }
 
+
+inline string OutputNFDE::toString1PNT(const NFDEData::Coords coord) {
+    stringstream res;
+    res << toString(coord.coords.second) << endl;
+    return res.str();
+}
+
+inline string OutputNFDE::toString2PNT(
+        const NFDEData::CoordsDir coord,
+        int skip) {
+    stringstream res;
+    res << toString(coord.coords.first);
+    switch (coord.dir) {
+    case x:
+        res << "X";
+        break;
+    case y:
+        res << "Y";
+        break;
+    case z:
+        res << "Z";
+        break;
+    }
+    if (skip != 0) {
+        res << " " << skip;
+    }
+    res << endl;
+    res << toString(coord.coords.second) << endl;
+    return res.str();
+}
+
+inline string OutputNFDE::toString2PNT(const NFDEData::Coords coord) {
+    stringstream res;
+    res << toString(coord.coords.first) << endl << toString(coord.coords.second)
+            << endl;
+    return res.str();
+}
+
+inline string OutputNFDE::toString(
+        const NFDEData::Boundary& boundary,
+        const uint d,
+        const uint p) {
+    stringstream res;
+    bool pml = false;
+    double lay = 0.0, order = 0.0, ref = 0.0;
+    bool sym = false;
+    string sp;
+    switch (boundary.bctype) {
+    case NFDEData::Boundary::Types::PEC:
+        res << "PEC";
+        break;
+    case NFDEData::Boundary::Types::PMC:
+        res << "PMC";
+        break;
+    case NFDEData::Boundary::Types::SYMMETRIC:
+        sym = true;
+        switch (boundary.bctype) {
+        case NFDEData::Boundary::PeriodicTypes::ETAN:
+            res << "SYMMETRIC";
+            sp = "ETAN";
+            break;
+        case NFDEData::Boundary::PeriodicTypes::HTAN:
+            res << "SYMMETRIC";
+            sp = "HTAN";
+            break;
+        default:
+            res << "PEC" << endl;
+            sym = false;
+            break;
+        }
+        break;
+    case NFDEData::Boundary::Types::PERIODIC:
+        res << "PERIODIC";
+        break;
+    case NFDEData::Boundary::Types::MUR1:
+        res << "MUR1";
+        break;
+    case NFDEData::Boundary::Types::PML:
+        res << "PML";
+        pml = true;
+        lay = boundary.lay;
+        order = boundary.order;
+        ref = boundary.ref;
+        break;
+    default:
+        res << "PEC";
+        break;
+    }
+    if (p == 2) {
+        res << " " << "ALL" << endl;
+    } else {
+        switch (p) {
+        case 0:
+            res << "L";
+            break;
+        case 1:
+            res << "U";
+            break;
+        }
+        res << endl;
+    }
+    if (sym) {
+        res << sp << endl;
+    }
+    if (pml) {
+        res << lay << " " << order << " " << ref << endl;
+    }
+    if (d != 3) {
+        res << space << toString(CartesianAxis(d));
+    }
+    return res.str();
+}
+
+string OutputNFDE::toString(const NFDEData::CoordsMultiplier coord) {
+    stringstream res;
+    res << toString(coord.coords.first) << toString(coord.multiplier) << endl;
+    res << toString(coord.coords.second) << endl;
+    return res.str();
+}
+
+string OutputNFDE::toString(CartesianAxis dir) {
+    switch (dir) {
+    case x:
+        return "X";
+    case y:
+        return "Y";
+    case z:
+        return "Z";
+    default:
+        return "";
+    }
+}
+
+string OutputNFDE::toString(const NFDEData::MaterialTypes::value mat) {
+    switch (mat) {
+    case NFDEData::MaterialTypes::METAL:
+        return "!!METAL";
+    case NFDEData::MaterialTypes::MGMET:
+        return "!!MGMET";
+    case NFDEData::MaterialTypes::NONME:
+        return "!!NONME";
+    default:
+        cerr << "ERROR @ OutputNFDE: " << "Undefined material type." << endl;
+        return "!!NONE";
+    }
+}
+
 void OutputNFDE::exportTimeSteps() {
     output << "!TIMESTEPS" << endl;
     output << nfde->timesteps.dt << space << nfde->timesteps.nmax << endl;
@@ -198,6 +345,7 @@ void OutputNFDE::exportSpaceSteps() {
     }
     output << endl;
 }
+
 void OutputNFDE::exportBackground() {
     output << "!BACKGROUND" << endl;
     output << "!!LINEAR" << endl;
@@ -219,11 +367,9 @@ void OutputNFDE::exportBoundaries() {
     } else {
         for(int d = 0; d < 3; d++)
             for(int p = 0; p < 2; p++) {
-                output << toString(nfde->boundaries[d][p], p);
-                output << space << toString(CartesianAxis(d));
+                output << toString(nfde->boundaries[d][p], d, p);
             }
     }
-
     output << endl;
 }
 

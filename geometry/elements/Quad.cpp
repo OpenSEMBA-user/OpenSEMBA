@@ -7,9 +7,11 @@
 
 #include "Quad.h"
 
-Quad::Quad() {
+Quad::Quad() : Surface() {
 	// TODO Auto-generated constructor stub
 
+}
+Quad::Quad(uint id, uint matId) : Surface(id, matId) {
 }
 
 Quad::~Quad() {

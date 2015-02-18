@@ -13,6 +13,7 @@
 class Quad : public Surface {
 public:
 	Quad();
+	Quad(uint id, uint matId);
 	virtual ~Quad();
 	unsigned int
 	 numberOfFaces() const {return 4;}

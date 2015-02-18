@@ -45,6 +45,7 @@ protected:
             const GiD_PostMode mode) const;
     void flushPostFile() const;
     void writeGaussPoints() const;
+    void writeCoordinates(const uint id, const CVecD3 pos) const;
     GiD_ResultType getGiDResultType(OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
 private:
@@ -78,7 +79,8 @@ private:
             const string& name,
             const CVecD3& colorRGB);
     // NFDEData stuff...
-    void writeBoundaries() const;
+    void writeSpaceSteps();
+    void writeBoundaries();
 };
 
 #endif /* GIDOUTPUT_H_ */

@@ -14,10 +14,8 @@ Polygon::Polygon(
  const CoordinateGroup& cG,
  const uint idIn,
  const vector<uint>& vId,
- const uint matIdNew) {
+ const uint matIdNew) : Surface(idIn, matIdNew) {
 	assert(vId.size() >= 3);
-	id = idIn;
-	matId = matIdNew;
 	v_.resize(vId.size());
 	for (uint i = 0; i < vId.size(); i++) {
 		v_[i] = cG.getPtrToId(vId[i]);

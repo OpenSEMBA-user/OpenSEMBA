@@ -8,6 +8,7 @@
 #include "ParserGiD.h"
 
 ParserGiD::ParserGiD() {
+    cG_ = NULL;
 }
 
 ParserGiD::ParserGiD(
@@ -703,8 +704,8 @@ ParserGiD::readTri6Elements(const CoordinateGroup& v) {
       f_in >> id;
       for (uint j = 0; j < 6; j++)
          f_in >> vId[j];
-      f_in >> matId >> normal(0) >> normal(1) >> normal(2);
-      res.push_back(Tri6(v, id, matId, vId, normal));
+      f_in >> matId;
+      res.push_back(Tri6(v, id, matId, vId));
    }
    return res;
 }
@@ -717,9 +718,8 @@ ParserGiD::readTri3Elements(const CoordinateGroup& v) {
    CVecD3 normal;
    res.reserve(pSize_.tri3);
    for (uint i = 0; i < pSize_.tri3; i++) {
-      f_in >> id >> vId[0] >> vId[1] >> vId[2]
-                                            >> normal(0) >> normal(1) >> normal(2) >> matId >> layerId;
-      res.push_back(Tri3(v, vId, normal, id, matId, layerId));
+      f_in >> id >> vId[0] >> vId[1] >> vId[2] >> matId >> layerId;
+      res.push_back(Tri3(v, vId, id, matId, layerId));
    }
    return res;
 }

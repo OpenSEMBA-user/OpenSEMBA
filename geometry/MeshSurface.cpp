@@ -25,8 +25,7 @@ MeshSurface::MeshSurface(
 			for (unsigned int j = 0; j < 3; j++) {
 				vId[j] = auxVId++;
 			}
-			tri3.push_back(
-			 Tri3(v, vId, normal[i], id++, matId));
+			tri3.push_back(Tri3(v, vId, id++, matId));
 		}
 	} else if (v.size() / 6 == numberOfElements) {
 		tri6.reserve(numberOfElements);
@@ -35,8 +34,7 @@ MeshSurface::MeshSurface(
 			for (unsigned int j = 0; j < 6; j++) {
 				vId[j] = auxVId++;
 			}
-			tri6.push_back(
-			 Tri6(v, id++, matId, vId, normal[i]));
+			tri6.push_back(Tri6(v, id++, matId, vId));
 		}
 	} else {
 		cout << "ERROR @ MeshSurface ctor." << endl;

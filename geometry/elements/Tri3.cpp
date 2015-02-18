@@ -9,10 +9,6 @@
 #include "Tri3.h"
 #endif
 
-Tri3::Tri3() {
-
-}
-
 Tri3::~Tri3() {
 
 }
@@ -20,9 +16,8 @@ Tri3::~Tri3() {
 Tri3::Tri3(
  const CoordinateGroup& coordGr,
  const uint vId[3],
- const CVecD3& normal_,
  const uint id_, const uint matId_, const uint layerId_) :
-         Tri(normal_, id_, matId_, layerId_) {
+         Tri(id_, matId_, layerId_) {
 	for (uint i = 0; i < geo.np; i++) {
 		v[i] = coordGr.getPtrToId(vId[i]);
 	}
@@ -31,9 +26,8 @@ Tri3::Tri3(
 
 Tri3::Tri3(
  const CoordD3* v_[3],
- const CVecD3 normal_,
  const uint id_, const uint matId_, const uint layerId_) :
-        Tri(normal_, id_, matId_, layerId_) {
+        Tri(id_, matId_, layerId_) {
 	for (uint i = 0; i < geo.np; i++) {
 		v[i] = v_[i];
 	}

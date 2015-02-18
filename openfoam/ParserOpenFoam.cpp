@@ -77,14 +77,13 @@ ParserOpenFoam::readSurfaceElements(
 	tri3.reserve(nElem);
 	quad4.reserve(nElem);
 	uint matId = 0;
-	CVecD3 normal;
 	for (uint i = 0; i < nElem; i++) {
 		const uint id = face[i].first;
 		const vector<uint> vId = face[i].second;
 		const uint nVertex = vId.size();
 		switch (nVertex) {
 		case 3:
-			tri3.push_back(Tri3(cG, &vId.front(), normal, id, matId));
+			tri3.push_back(Tri3(cG, &vId.front(), id, matId));
 			break;
 		case 4:
 			quad4.push_back(Quad4(cG, id, matId, &vId.front()));

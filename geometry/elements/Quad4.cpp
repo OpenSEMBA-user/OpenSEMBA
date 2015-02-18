@@ -33,9 +33,7 @@ Quad4::operator =(
 	if (this == &rhs) {
 		return *this;
 	}
-	id = rhs.id;
-	matId = rhs.matId;
-	normal = rhs.normal;
+	Quad::operator =(rhs);
 	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
 		v[i] = rhs.v[i];
 	}
@@ -57,15 +55,7 @@ Quad4::getVertex(const unsigned int i) const {
 void
 Quad4::printInfo() const {
 	cout << "--- Quad4 info ---" << endl;
-	cout << "Id: " << id << "  Mat Id: " << matId << endl;
-	cout << "Normal: ";
-	normal.printInfo();
-	cout << endl;
-	cout << "Coordinates:" << endl;
-	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
-		v[i]->printInfo();
-		cout << endl;
-	}
+	Quad::printInfo();
 }
 
 void

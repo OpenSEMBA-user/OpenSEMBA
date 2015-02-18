@@ -32,7 +32,8 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     smb_ = NULL;
     nfde_ = nfde;
     openGiDFiles();
-    writeBoundaries();
+    writeSpaceSteps();
+//    writeBoundaries();
 //    writeSources();
 //    exportCurrentDensitySource();
 //    writeFieldSource();
@@ -164,6 +165,10 @@ GiD_ResultLocation OutputGiD::getGiDResultLocation() const {
       return GiD_ResultLocation::GiD_OnNodes;
 }
 
+
+void OutputGiD::writeCoordinates(const uint id, const CVecD3 pos) const {
+    GiD_WriteCoordinates(id, pos(x), pos(y), pos(z));
+}
 
 void OutputGiD::openGiDFiles() {
     deleteExistentOutputFiles();
@@ -382,7 +387,7 @@ OutputGiD::writeBCMesh(
             } else {
                 pos = e->getSideV(f,GiDOrder[i])->pos();
             }
-            GiD_WriteCoordinates(++coordCounter_, pos(0), pos(1), pos(2));
+            writeCoordinates(++coordCounter_, pos);
         }
     }
     GiD_EndCoordinates();
@@ -398,6 +403,38 @@ OutputGiD::writeBCMesh(
     GiD_EndMesh();
 }
 
-void OutputGiD::writeBoundaries() const {
+void OutputGiD::writeSpaceSteps() {
+    beginMesh("Space_steps", GiD_3D, GiD_Linear, 2);
+    static const uint GiDOrder[6] = {0, 3, 5, 1, 4, 2};
+    GiD_BeginCoordinates();
+    uint tmpCounter = coordCounter_;
+    for (uint d = 0; d < 3; d++) {
+        uint rX = d;
+        uint rY = (d+1) % 3;
+        uint rZ = (d+2) % 3;
+        CVecD3 init;
+        init(rX) = nfde_->spacesteps[rX].m;
+        init(rY) = nfde_->spacesteps[rY].m;
+        init(rZ) = nfde_->spacesteps[rZ].m;
+        writeCoordinates(++coordCounter_, init);
+        CVecD3 end;
+        end(rX) = nfde_->spacesteps[rX].n;
+        end(rY) = nfde_->spacesteps[rY].n;
+        end(rZ) = nfde_->spacesteps[rZ].n;
+        writeCoordinates(++coordCounter_, end);
+    }
+    GiD_EndCoordinates();
+    GiD_BeginElements();
+    int nId[2];
+    for (uint d = 0; d < 3; d++) {
+        for (uint j = 0; j < 2; j++) {
+            nId[j] = ++tmpCounter;
+        }
+        GiD_WriteElement(++elemCounter_, nId);
+    }
+    GiD_EndMesh();
+}
+
+void OutputGiD::writeBoundaries() {
 
 }
