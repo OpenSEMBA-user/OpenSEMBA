@@ -60,7 +60,8 @@ void MagnitudeNumerical::initFromFile() {
    file.open(getFilename().c_str(), ifstream::in);
    if (file.fail()) {
       cerr << "ERROR @ MagnitudeNumerical ctor: " << "Problem opening file: "
-            << file << endl;
+            << getFilename() << endl;
+      printInfo();
    }
    while (!file.eof()) {
       pair<double, double> value;
