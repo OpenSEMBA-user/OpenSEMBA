@@ -2,9 +2,14 @@
  *  Created on: Aug 23, 2012
  *      Author: luis
  */
-#ifndef OUTPUTGID_H_
 #include "OutputGiD.h"
-#endif
+
+const CVecD3 OutputGiD::pecColor(255, 0, 0);
+const CVecD3 OutputGiD::pmcColor(0, 255, 0);
+const CVecD3 OutputGiD::smaColor(0, 0, 255);
+const CVecD3 OutputGiD::pmlColor(0, 0, 255);
+const CVecD3 OutputGiD::sibcColor(100, 0, 100);
+const CVecD3 OutputGiD::emSourceColor(100, 100, 0);
 
 OutputGiD::OutputGiD() {
     mode_ = GiD_PostAscii;
@@ -33,25 +38,26 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     nfde_ = nfde;
     openGiDFiles();
     writeSpaceSteps();
-//    writeBoundaries();
-//    writeSources();
-//    exportCurrentDensitySource();
-//    writeFieldSource();
-//    writeIsotropicBody();
-//    writeIsotropicSurf();
-//    writeIsotropicLine();
-//    writeAnisotropicBody();
-//    writeAnisotropicSurf();
-//    writeAnisotropicLine();
-//    writeDispersiveBody();
-//    writeDispersiveSurf();
-//    writeCompositeSurf();
-//    writeThinWire();
-//    writeThinGap();
-//    writeTraditionalProbe();
-//    writeNewProbe();
-//    writeBulkProbes();
-//    writeSliceProbes();
+    writeBoundaries();
+    //    writeSources();
+    //    exportCurrentDensitySource();
+    //    writeFieldSource();
+    //    writeIsotropicBody();
+    //    writeIsotropicSurf();
+    //    writeIsotropicLine();
+    //    writeAnisotropicBody();
+    //    writeAnisotropicSurf();
+    //    writeAnisotropicLine();
+    //    writeDispersiveBody();
+    //    writeDispersiveSurf();
+    //    writeCompositeSurf();
+    //    writeThinWire();
+    //    writeThinGap();
+    //    writeTraditionalProbe();
+    //    writeNewProbe();
+    //    writeBulkProbes();
+    //    writeSliceProbes();
+    GiD_ClosePostMeshFile();
 }
 
 OutputGiD::~OutputGiD() {
@@ -105,6 +111,7 @@ void OutputGiD::openPostMeshFile(
         const GiD_PostMode mode) const {
     char *auxChar;
     auxChar = new char[filename.length() + 1];
+    strcpy(auxChar, filename.c_str());
     GiD_OpenPostMeshFile(auxChar, mode);
     delete [] auxChar;
 }
@@ -114,6 +121,7 @@ void OutputGiD::openPostResultFile(
         const GiD_PostMode mode) const {
     char *auxChar;
     auxChar = new char[filename.length() + 1];
+    strcpy(auxChar, filename.c_str());
     GiD_OpenPostResultFile(auxChar, mode);
     delete [] auxChar;
 }
@@ -126,43 +134,43 @@ OutputGiD::flushPostFile() const {
 
 void
 OutputGiD::writeGaussPoints() const {
-//    {
-//        const char* name = "gp_tri";
-//        static const SimplexTri<ORDER_N> tri;
-//        GiD_BeginGaussPoint((char*) name, GiD_Triangle, NULL,tri.np,0,0);
-//        for (uint i = 0; i < tri.np; i++) {
-//            CVecD3 pos = tri.coordinate(i);
-//            GiD_WriteGaussPoint2D(pos(1), pos(2));
-//        }
-//        GiD_EndGaussPoint();
-//    }
-//    {
-//        const char* name = "gp_tet";
-//        static const SimplexTet<ORDER_N> tet;
-//        GiD_BeginGaussPoint((char*) name, GiD_Tetrahedra, NULL,tet.np,0,0);
-//        for (uint i = 0; i < tet.np; i++) {
-//            CartesianVector<double,4> pos = tet.coordinate(i);
-//            GiD_WriteGaussPoint3D(pos(1), pos(2), pos(3));
-//        }
-//        GiD_EndGaussPoint();
-//    }
+    //    {
+    //        const char* name = "gp_tri";
+    //        static const SimplexTri<ORDER_N> tri;
+    //        GiD_BeginGaussPoint((char*) name, GiD_Triangle, NULL,tri.np,0,0);
+    //        for (uint i = 0; i < tri.np; i++) {
+    //            CVecD3 pos = tri.coordinate(i);
+    //            GiD_WriteGaussPoint2D(pos(1), pos(2));
+    //        }
+    //        GiD_EndGaussPoint();
+    //    }
+    //    {
+    //        const char* name = "gp_tet";
+    //        static const SimplexTet<ORDER_N> tet;
+    //        GiD_BeginGaussPoint((char*) name, GiD_Tetrahedra, NULL,tet.np,0,0);
+    //        for (uint i = 0; i < tet.np; i++) {
+    //            CartesianVector<double,4> pos = tet.coordinate(i);
+    //            GiD_WriteGaussPoint3D(pos(1), pos(2), pos(3));
+    //        }
+    //        GiD_EndGaussPoint();
+    //    }
 }
 
 GiD_ResultType OutputGiD::getGiDResultType(
         OutputRequest::Type type) const {
-   switch (type) {
-   case OutputRequest::electricField:
-      return GiD_ResultType::GiD_Vector;
-   case OutputRequest::magneticField:
-      return GiD_ResultType::GiD_Vector;
-   default:
-      assert(false);
-      return GiD_ResultType::GiD_Scalar;
-   }
+    switch (type) {
+    case OutputRequest::electricField:
+        return GiD_ResultType::GiD_Vector;
+    case OutputRequest::magneticField:
+        return GiD_ResultType::GiD_Vector;
+    default:
+        assert(false);
+        return GiD_ResultType::GiD_Scalar;
+    }
 }
 
 GiD_ResultLocation OutputGiD::getGiDResultLocation() const {
-      return GiD_ResultLocation::GiD_OnNodes;
+    return GiD_ResultLocation::GiD_OnNodes;
 }
 
 
@@ -170,12 +178,20 @@ void OutputGiD::writeCoordinates(const uint id, const CVecD3 pos) const {
     GiD_WriteCoordinates(id, pos(x), pos(y), pos(z));
 }
 
+void OutputGiD::writeCoordinates(const vector<CVecD3>& pos)  {
+    GiD_BeginCoordinates();
+    for (uint i = 0; i < pos.size(); i++) {
+        GiD_WriteCoordinates(++coordCounter_, pos[i](x), pos[i](y), pos[i](z));
+    }
+    GiD_EndCoordinates();
+}
+
 void OutputGiD::openGiDFiles() {
     deleteExistentOutputFiles();
     switch (mode_) {
     case GiD_PostAscii:
         openPostMeshFile(getOutputfilename() + ".post.msh", mode_);
-        openPostResultFile(getOutputfilename() + ".post.res", mode_);
+//        openPostResultFile(getOutputfilename() + ".post.res", mode_);
         break;
     case GiD_PostBinary:
         openPostResultFile(getOutputfilename() + ".post.res", mode_);
@@ -186,34 +202,35 @@ void OutputGiD::openGiDFiles() {
     writeGaussPoints();
 }
 
-void
-OutputGiD::writeQuad4Mesh(
-        const string& name,
-        const MeshVolume& mesh) {
-    static const int nV = 4;
-    beginMesh(name, GiD_3D, GiD_Quadrilateral, nV);
-    GiD_BeginCoordinates();
-    double coordCounterPreStart = coordCounter_;
-    for (uint i = 0; i < mesh.v.size(); i++) {
-        CVecD3 pos = mesh.v(i)->pos();
-        GiD_WriteCoordinates(++coordCounter_, pos(0), pos(1), pos(2));
-    }
-    GiD_EndCoordinates();
-    GiD_BeginElements();
-    int nId[nV + 1];
-    static const uint GiDOrder[4] = { 0, 1, 2, 3 };
-    for (uint e = 0; e < mesh.elem.quad4.size(); e++) {
-        const Quad4* quad = &mesh.elem.quad4[e];
-        for (int i = 0; i < nV; i++) {
-            nId[i] = quad->getVertex(GiDOrder[i])->getId() + 1
-                    + coordCounterPreStart;
-        }
-        nId[nV] = quad->getMatId();
-        GiD_WriteElementMat(++elemCounter_, nId);
-    }
-    GiD_EndElements();
-    GiD_EndMesh();
-}
+//void
+//OutputGiD::writeQuad4Mesh(
+//        const string& name,
+//        const CoordinateGroup& cG,
+//        const vector<Quad4*> quad) {
+//    static const int nV = 4;
+//    beginMesh(name, GiD_3D, GiD_Quadrilateral, nV);
+//    GiD_BeginCoordinates();
+//    double coordCounterPreStart = coordCounter_;
+////    for (uint i = 0; i <; i++) {
+////        CVecD3 pos = mesh.v(i)->pos();
+////        GiD_WriteCoordinates(++coordCounter_, pos(0), pos(1), pos(2));
+////    }
+//    GiD_EndCoordinates();
+//    GiD_BeginElements();
+//    int nId[nV + 1];
+//    static const uint GiDOrder[4] = { 0, 1, 2, 3 };
+//    for (uint e = 0; e < mesh.elem.quad4.size(); e++) {
+//        const Quad4* quad = &mesh.elem.quad4[e];
+//        for (int i = 0; i < nV; i++) {
+//            nId[i] = quad->getVertex(GiDOrder[i])->getId() + 1
+//                    + coordCounterPreStart;
+//        }
+//        nId[nV] = quad->getMatId();
+//        GiD_WriteElementMat(++elemCounter_, nId);
+//    }
+//    GiD_EndElements();
+//    GiD_EndMesh();
+//}
 
 void
 OutputGiD::writeHex8Mesh(
@@ -321,7 +338,7 @@ OutputGiD::writeMeshWithIds(
 void
 OutputGiD::writeOutputRequestsMesh() {
     for (uint i = 0; i < smb_->outputRequests->count(); i++) {
-        const OutputRequest* outRq = smb_->outputRequests->get(i);
+//        const OutputRequest* outRq = smb_->outputRequests->get(i);
         //      bool mshExist = false;
         //      for (uint j = 0; j < result_.size(); j++) {
         //         mshExist = result_[i]->hasEquivalentMesh(outRq);
@@ -330,8 +347,8 @@ OutputGiD::writeOutputRequestsMesh() {
         //         }
         //      }
         //      if (!mshExist) {
-//        result_.push_back(
-//                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
+        //        result_.push_back(
+        //                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
         //      }
     }
 }
@@ -358,11 +375,11 @@ OutputGiD::writeMainMesh() {
 void
 OutputGiD::writeBCMesh() {
     BCGroup bc(smb_);
-    writeBCMesh(bc.get(Condition::pec), "PEC", CVecD3(255, 0, 0));
-    writeBCMesh(bc.get(Condition::pmc), "PMC", CVecD3(0, 255, 0));
-    writeBCMesh(bc.get(Condition::sma), "SMA", CVecD3(0, 0, 255));
-    writeBCMesh(bc.get(Condition::sibc), "SIBC", CVecD3(100, 0, 100));
-    writeBCMesh(bc.get(Condition::emSource), "EM Source", CVecD3(100, 100, 0));
+    writeBCMesh(bc.get(Condition::pec), "PEC", pecColor);
+    writeBCMesh(bc.get(Condition::pmc), "PMC", pmcColor);
+    writeBCMesh(bc.get(Condition::sma), "SMA", smaColor);
+    writeBCMesh(bc.get(Condition::sibc), "SIBC", sibcColor);
+    writeBCMesh(bc.get(Condition::emSource), "EM Source", emSourceColor);
 }
 
 void
@@ -405,22 +422,16 @@ OutputGiD::writeBCMesh(
 
 void OutputGiD::writeSpaceSteps() {
     beginMesh("Space_steps", GiD_3D, GiD_Linear, 2);
-    static const uint GiDOrder[6] = {0, 3, 5, 1, 4, 2};
     GiD_BeginCoordinates();
     uint tmpCounter = coordCounter_;
     for (uint d = 0; d < 3; d++) {
-        uint rX = d;
-        uint rY = (d+1) % 3;
-        uint rZ = (d+2) % 3;
         CVecD3 init;
-        init(rX) = nfde_->spacesteps[rX].m;
-        init(rY) = nfde_->spacesteps[rY].m;
-        init(rZ) = nfde_->spacesteps[rZ].m;
+        init(x) = nfde_->spacesteps[x].m;
+        init(y) = nfde_->spacesteps[y].m;
+        init(z) = nfde_->spacesteps[z].m;
         writeCoordinates(++coordCounter_, init);
-        CVecD3 end;
-        end(rX) = nfde_->spacesteps[rX].n;
-        end(rY) = nfde_->spacesteps[rY].n;
-        end(rZ) = nfde_->spacesteps[rZ].n;
+        CVecD3 end(init);
+        end(d) = nfde_->spacesteps[d].n;
         writeCoordinates(++coordCounter_, end);
     }
     GiD_EndCoordinates();
@@ -432,9 +443,34 @@ void OutputGiD::writeSpaceSteps() {
         }
         GiD_WriteElement(++elemCounter_, nId);
     }
+    GiD_EndElements();
     GiD_EndMesh();
 }
 
-void OutputGiD::writeBoundaries() {
+string OutputGiD::makeValid(string name) {
+    name.erase(remove(name.begin(), name.end(), '\n'), name.end());
+    return name;
+}
 
+void OutputGiD::writeBoundaries() {
+    BoxI3 box = nfde_->getFullDomainBox();
+    for (uint d = 0; d < 3; d++) {
+        for (uint p = 0; p < 2; p++) {
+            vector<CVecD3> pos =
+                    box.getPosOfBound(CartesianAxis(d), CartesianBound(p));
+            string name = "Boundaries//"
+              + OutputNFDE::toString(nfde_->boundaries[d][p],d,p);
+            beginMesh(makeValid(name), GiD_3D, GiD_Quadrilateral, 4);
+            double coordCounterPreStart = coordCounter_;
+            writeCoordinates(pos);
+            GiD_BeginElements();
+            int nId[4];
+            for (int i = 0; i < 4; i++) {
+                nId[i] = ++coordCounterPreStart;
+            }
+            GiD_WriteElement(++elemCounter_, nId);
+            GiD_EndElements();
+            GiD_EndMesh();
+        }
+    }
 }

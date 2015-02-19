@@ -35,9 +35,9 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
    if (exists) {
       string command = "rm -r ";
       command += directory;
-      if (!system(command.c_str())) {
+      if (system(command.c_str())) {
           cerr << "ERROR @ ProjectFile: "
-                  << "System command failed to execute " << command << endl;
+           << "System command failed to execute " << command << endl;
       }
    }
 }

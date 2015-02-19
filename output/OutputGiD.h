@@ -10,11 +10,13 @@
 #include "../BCGroup.h"
 #include "../SmbData.h"
 #include "../NFDEData.h"
+#include "../output/OutputNFDE.h"
 #include "../gidpost/gidpost.h"
 
 using namespace std;
 
 class OutputGiD : public Output {
+    friend class OutputNFDE;
 public:
     OutputGiD();
     OutputGiD(
@@ -46,6 +48,7 @@ protected:
     void flushPostFile() const;
     void writeGaussPoints() const;
     void writeCoordinates(const uint id, const CVecD3 pos) const;
+    void writeCoordinates(const vector<CVecD3>& pos);
     GiD_ResultType getGiDResultType(OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
 private:
@@ -54,7 +57,10 @@ private:
     GiD_PostMode mode_;
     int coordCounter_;
     int elemCounter_;
+    static const CVecD3 pecColor, pmcColor, smaColor, pmlColor,
+     sibcColor, emSourceColor;
     void openGiDFiles();
+    static string makeValid(string name);
     // SmbData stuff...
     void writeMesh();
     void writeMeshWithIds(
@@ -65,9 +71,9 @@ private:
             const vector<string>& name);
     void writeMeshWithIds(
             const vector<uint>& ids, string& name);
-    void writeQuad4Mesh(
-            const string& name,
-            const MeshVolume& mesh);
+//    void writeQuad4Mesh(
+//            const string& name,
+//            const MeshVolume& mesh);
     void writeHex8Mesh(
             const string& name,
             const MeshVolume& mesh);

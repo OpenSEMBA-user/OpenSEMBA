@@ -169,6 +169,58 @@ Box<T,D>::intersect(const Box<T, D>& rhs) const {
 }
 
 template<class T, int D>
+inline vector<CartesianVector<double, D> >
+Box<T,D>::getPosOfBound(
+        CartesianAxis d,
+        CartesianBound p) const {
+    assert(D == 3);
+    int rX = d;
+    int rY = (d+1)%D;
+    int rZ = (d+2)%D;
+    vector<CartesianVector<double, D> > res;
+    // TODO: Generalize this...
+    {
+        CartesianVector<double, D> aux;
+        aux(rX) = getBound(CartesianBound(p))(rX);
+        aux(rY) = getBound(L)(rY);
+        aux(rZ) = getBound(L)(rZ);
+        res.push_back(aux);
+    }
+    {
+        CartesianVector<double, D> aux;
+        aux(rX) = getBound(CartesianBound(p))(rX);
+        aux(rY) = getBound(L)(rY);
+        aux(rZ) = getBound(U)(rZ);
+        res.push_back(aux);
+    }
+    {
+        CartesianVector<double, D> aux;
+        aux(rX) = getBound(CartesianBound(p))(rX);
+        aux(rY) = getBound(U)(rY);
+        aux(rZ) = getBound(U)(rZ);
+        res.push_back(aux);
+    }
+    {
+        CartesianVector<double, D> aux;
+        aux(rX) = getBound(CartesianBound(p))(rX);
+        aux(rY) = getBound(U)(rY);
+        aux(rZ) = getBound(L)(rZ);
+        res.push_back(aux);
+    }
+    return res;
+}
+
+template<class T, int D>
+inline CartesianVector<T,D>
+Box<T,D>::getBound(CartesianBound p) const {
+    if (p == L) {
+        return getMin();
+    } else {
+        return getMax();
+    }
+}
+
+template<class T, int D>
 void
 Box<T,D>::printInfo() const {
    cout<< "Box info" << endl;

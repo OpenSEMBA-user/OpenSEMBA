@@ -252,15 +252,7 @@ inline string OutputNFDE::toString(
     if (p == 2) {
         res << " " << "ALL" << endl;
     } else {
-        switch (p) {
-        case 0:
-            res << "L";
-            break;
-        case 1:
-            res << "U";
-            break;
-        }
-        res << endl;
+        res << toString(CartesianBound(p)) << endl;
     }
     if (sym) {
         res << sp << endl;
@@ -279,6 +271,17 @@ string OutputNFDE::toString(const NFDEData::CoordsMultiplier coord) {
     res << toString(coord.coords.first) << toString(coord.multiplier) << endl;
     res << toString(coord.coords.second) << endl;
     return res.str();
+}
+
+string OutputNFDE::toString(CartesianBound pos) {
+    switch (pos) {
+    case 0:
+        return "L";
+    case 1:
+        return "U";
+    default:
+        return "";
+    }
 }
 
 string OutputNFDE::toString(CartesianAxis dir) {

@@ -39,6 +39,12 @@ public:
     inline CVecTD getMin(void) const;
     inline CVecTD getMax(void) const;
     inline CVecTD getLength() const;
+
+    vector<CartesianVector<double, D> >
+    getPosOfBound(CartesianAxis d, CartesianBound p) const;
+
+    CVecTD getBound(CartesianBound p) const;
+
     void printInfo() const;
 private:
     CVecTD min_, max_;
@@ -59,5 +65,6 @@ operator<<(
 #include "Box.hpp"
 
 typedef Box<double,3> BoxD3;
+typedef Box<long,3> BoxI3;
 
 #endif /* SRC_COMMON_GEOMETRY_BOX_H_ */

@@ -10,8 +10,6 @@
 
 using namespace std;
 
-////typedef unsigned int uint;;
-
 #ifndef CARTESIANVECTOR_ERROR
 #define CARTESIANVECTOR_ERROR 677722
 #endif
@@ -28,6 +26,11 @@ typedef enum {
 	z = 2
 } CartesianAxis;
 
+typedef enum {
+    L = 0,
+    U = 1
+} CartesianBound;
+
 template <class T, int D>
 class CartesianVector {
 public:
@@ -38,7 +41,7 @@ public:
 	CartesianVector<T,D>(T val_[D]);
 	CartesianVector<T,D>(const T val_[D]);
 	CartesianVector<T,D>(const T, const T, const T);
-	CartesianVector<T,D>(const CartesianVector<double,D>& begin,
+    CartesianVector<T,D>(const CartesianVector<double,D>& begin,
 						 const CartesianVector<double,D>& end);
 	virtual CartesianVector<T,D>&
 	 operator=(const CartesianVector<double,D>& param);

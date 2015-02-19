@@ -7,6 +7,7 @@
 
 #include "ProjectFile.h"
 #include "math/CartesianVector.h"
+#include "geometry/Box.h"
 #include "math/Constants.h"
 
 using namespace std;
@@ -488,6 +489,13 @@ struct NFDEData : public ProjectFile {
     vector<SliceProbe>       sliceProbe;
 
     NFDEData() {}
+
+    // Helper functions
+    BoxI3 getFullDomainBox() const {
+        CVecI3 min(spacesteps[x].m, spacesteps[y].m, spacesteps[z].m);
+        CVecI3 max(spacesteps[x].n, spacesteps[y].n, spacesteps[z].n);
+        return BoxI3(min,max);
+    }
 };
 
 #endif /* NFDEDATA_H_ */

@@ -16,6 +16,7 @@ using namespace std;
 #include "ProjectFile.h"
 
 class OutputNFDE : public ProjectFile {
+    friend class OutputGiD;
 public:
 	OutputNFDE(const NFDEData *nfde);
 	~OutputNFDE();
@@ -26,15 +27,16 @@ protected:
 
     string toString(const NFDEData::MaterialTypes::value mat);
 
-    string toString(CartesianAxis dir);
+    static string toString(CartesianAxis dir);
+    static string toString(CartesianBound pos);
     template<class T, int D>
-    string toString(const CartesianVector<T, D>& vec);
-    string toString1PNT(const NFDEData::Coords coord);
-    string toString2PNT(const NFDEData::Coords coord);
-    string toString2PNT(const NFDEData::CoordsDir coord, int skip = 0);
+    static string toString(const CartesianVector<T, D>& vec);
+    static string toString1PNT(const NFDEData::Coords coord);
+    static string toString2PNT(const NFDEData::Coords coord);
+    static string toString2PNT(const NFDEData::CoordsDir coord, int skip = 0);
 
-    string toString(const NFDEData::CoordsMultiplier coord);
-    string toString(
+    static string toString(const NFDEData::CoordsMultiplier coord);
+    static string toString(
             const NFDEData::Boundary& boundary,
             const uint d = 3,
             const uint p = 2);
