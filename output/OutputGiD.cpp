@@ -474,3 +474,6 @@ void OutputGiD::writeBoundaries() {
         }
     }
 }
+
+void OutputGiD::writeSources() {
+}
