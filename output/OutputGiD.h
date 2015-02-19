@@ -87,6 +87,7 @@ private:
     // NFDEData stuff...
     void writeSpaceSteps();
     void writeBoundaries();
+    void writeSources();
 };
 
 #endif /* GIDOUTPUT_H_ */

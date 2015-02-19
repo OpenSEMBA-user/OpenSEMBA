@@ -39,7 +39,7 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     openGiDFiles();
     writeSpaceSteps();
     writeBoundaries();
-    //    writeSources();
+    writeSources();
     //    exportCurrentDensitySource();
     //    writeFieldSource();
     //    writeIsotropicBody();
