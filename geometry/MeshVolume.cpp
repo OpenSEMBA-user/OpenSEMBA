@@ -304,6 +304,7 @@ MeshVolume::getPartitionsIds(
 #else
 	cerr << "ERROR @ Mesh::getPartition(): "
 	 << "Mesh partitioning is not allowed." << endl;
+	return vector<vector<uint> >();
 #endif
 }
 
