@@ -71,12 +71,6 @@ private:
             const vector<string>& name);
     void writeMeshWithIds(
             const vector<uint>& ids, string& name);
-//    void writeQuad4Mesh(
-//            const string& name,
-//            const MeshVolume& mesh);
-    void writeHex8Mesh(
-            const string& name,
-            const MeshVolume& mesh);
     void writeOutputRequestsMesh();
     void writeMainMesh();
     void writeBCMesh();

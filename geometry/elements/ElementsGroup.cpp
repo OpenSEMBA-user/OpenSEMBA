@@ -141,6 +141,33 @@ ElementsGroup::getTriPtrToId(const unsigned int id) const {
    return tri[id - offsetIdTri];
 }
 
+
+vector<unsigned int>
+ElementsGroup::getIdsWithMaterialId(
+ const unsigned int matId) const {
+    vector<unsigned int> res;
+    res.reserve(element.size());
+    for (unsigned int i = 0; i < element.size(); i++) {
+        if (element[i]->getMatId() == matId) {
+            res.push_back(element[i]->getId());
+        }
+    }
+    return res;
+}
+
+vector<unsigned int>
+ElementsGroup::getIdsWithoutMaterialId(
+ const unsigned int matId) const {
+    vector<unsigned int> res;
+    res.reserve(element.size());
+    for (unsigned int i = 0; i < element.size(); i++) {
+        if (element[i]->getMatId() != matId) {
+            res.push_back(element[i]->getId());
+        }
+    }
+    return res;
+}
+
 const Tet*
 ElementsGroup::getTetPtrToId(const unsigned int id) const {
    return tet[id - offsetIdTet];
@@ -233,12 +260,6 @@ ElementsGroup::getHexIds() const {
       res[i] = hex8[i].getId();
    }
    return res;
-}
-
-void
-ElementsGroup::removeHex() {
-   hex8.clear();
-   updatePointers();
 }
 
 ElementsGroup

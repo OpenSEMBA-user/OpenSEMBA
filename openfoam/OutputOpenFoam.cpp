@@ -110,7 +110,7 @@ OutputOpenFoam::triToSTL(
       elem.push_back(&tri[i]);
    }
    map<uint, vector<const Element*> > layers =
-         smb_->mesh->elem.separateLayers(elem);
+         smb_->mesh->elem_.separateLayers(elem);
    // Writes a file for each layer.
    map<uint, vector<const Element*> >::iterator it;
    for (it = layers.begin(); it != layers.end(); ++it) {

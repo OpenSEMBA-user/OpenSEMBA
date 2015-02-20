@@ -18,7 +18,7 @@ public:
 	 const uint vId[2],
 	 const uint id_,
      const uint matId_,
-     const uint layerId_);
+     const uint layerId_ = 0);
 	Lin2(
      const CoordD3* v_[2],
      const uint id_,

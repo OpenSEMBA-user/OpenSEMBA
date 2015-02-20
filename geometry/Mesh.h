@@ -19,10 +19,12 @@ using namespace std;
 
 class Mesh {
 public:
-    ElementsGroup elem;
-    MapGroup map;
-    void
-    addCoordinates(const Grid3& grid);
+    ElementsGroup elem_;
+    CoordinateGroup cG_;
+    Mesh(
+            const CoordinateGroup& cG,
+            const ElementsGroup& elem,
+            const Grid3* grid);
     Mesh();
     virtual
     ~Mesh();
@@ -57,8 +59,6 @@ public:
     getGrid() const;
     void
     setGrid(const Grid3& grid_);
-    virtual const Element*
-    getElementWithId(unsigned int id) const;
     virtual vector<pair<const Element*, uint> >
     getElementsWithVertex(
             const uint vertexId,
@@ -73,8 +73,8 @@ public:
     discretizeWithinBoundary(
             const uint matId,
             const uint layerId) const = 0;
+    void printInfo() const;
 protected:
-    CoordinateGroup cG_;
     Grid3* grid_;
     static const double areaDiffTolerance;
     virtual Element* getElementWithId(uint id);

@@ -8,8 +8,7 @@ MeshVolume::MeshVolume() {
 
 MeshVolume::MeshVolume(
  const CoordinateGroup& vIn,
- const ElementsGroup& elementIn) {
-	build(vIn, elementIn);
+ const ElementsGroup& elementIn) : Mesh(vIn, elementIn, NULL) {
 	grid_ = NULL;
 	//
     check();
@@ -18,13 +17,7 @@ MeshVolume::MeshVolume(
 MeshVolume::MeshVolume(
  const CoordinateGroup& vIn,
  const ElementsGroup& elementIn,
- const Grid3* grid) {
-	build(vIn, elementIn);
-	if (grid != NULL) {
-		grid_ = new Grid3(*grid);
-	} else {
-		grid_ = NULL;
-	}
+ const Grid3* grid) : Mesh(vIn, elementIn, grid) {
     check();
 }
  
@@ -39,11 +32,11 @@ MeshVolume::operator=(const MeshVolume& param) {
 	if (this == &param) {
 		return *this;
 	}
-	v = param.v;
-	elem = param.elem;
-	elem.reassignPointers(v);
+	cG_ = param.cG_;
+	elem_ = param.elem_;
+	elem_.reassignPointers(cG_);
 	map = param.map;
-	map.reassignPointers(elem);
+	map.reassignPointers(elem_);
 	if (param.grid_ != NULL) {
 		grid_ = new Grid3(*param.grid_);
 	} else {
@@ -55,7 +48,7 @@ MeshVolume::operator=(const MeshVolume& param) {
 const Element*
 MeshVolume::getElementWithId(
  const unsigned int id) const {
-	return elem.getPtrToId(id);
+	return elem_.getPtrToId(id);
 }
 
 pair<const Volume*, unsigned int>
@@ -69,9 +62,9 @@ MeshVolume::getInternalBorder(
 	// Runs over all elements contained in the region vector detecting
 	// the internal border. Returns a vector containing the element
 	// faces composing the internal border.
-	if (elem.areTetrahedrons(region)) {
+	if (elem_.areTetrahedrons(region)) {
 		return getInternalBorderOfTetRegion(region);
-	} else if (elem.areTriangles(region)) {
+	} else if (elem_.areTriangles(region)) {
 		return getInternalBorderOfTriRegion(region);
 	}
 	cout << "ERROR @ getInternalBorder" << endl;
@@ -142,15 +135,10 @@ MeshVolume::getAdjacentElements(const vector<unsigned int>& region) const {
 	return res;
 }
  
-unsigned int
-MeshVolume::nVolumeElements() const {
-	return elem.nVolumeElements();
-}
-
 void
 MeshVolume::printInfo() const {
-	cout << "Coordinates read: " << v.size() << endl;
-	elem.printInfo();
+	Mesh::printInfo();
+	elem_.printInfo();
 	if (grid_ != NULL) {
 		grid_->printInfo();
 	}
@@ -183,24 +171,24 @@ MeshVolume::getPartitionsIds(
 	res.resize(nDivisions);
 	// Accounts for the one partition case.
 	if (nDivisions == 1) {
-		unsigned int nK = elem.nVolumeElements();
+		unsigned int nK = elem_.nVolumeElements();
 		res[0].resize(nK, 0);
 		for (unsigned int i = 0; i < nK; i++) {
-			res[0][i] = elem.tet[i]->getId();
+			res[0][i] = elem_.tet[i]->getId();
 		}
 		return res;
 	}
 #ifdef MESH_ALLOW_PARTITIONING
 	// Prepares mesh info.
 	cout << " - Preparing mesh info... " << flush;
-	idx_t ne = elem.nVolumeElements();
+	idx_t ne = elem_.nVolumeElements();
 	idx_t *eptr, *eind;
 	eptr = new idx_t[ne+1];
 	eind = new idx_t[ne*4];
 	unsigned int counter = 0;
 	eptr[0] = counter;
 	for (int i = 0; i < (int) ne; i++) {
-		const Tet* vol = elem.tet[i];
+		const Tet* vol = elem_.tet[i];
 		for (unsigned int j = 0; j < vol->numberOfVertices(); j++) {
 			eind[counter++] = vol->getVertex(j)->id - 1;
 		}
@@ -290,7 +278,7 @@ MeshVolume::getPartitionsIds(
 		res[i].reserve(ne);
 	}
 	for (int i = 0; i < ne; i++) {
-		unsigned int id = elem.tet[i]->getId();
+		unsigned int id = elem_.tet[i]->getId();
 		res[epart[i]].push_back(id);
 	}
 	// Frees memory.
@@ -311,10 +299,10 @@ MeshVolume::getPartitionsIds(
 vector<unsigned int>
 MeshVolume::getIdsOfCurvedTets() const {
 	vector<unsigned int> res;
-	unsigned int nK = elem.nVolumeElements();
+	unsigned int nK = elem_.nVolumeElements();
 	for (unsigned int k = 0; k < nK; k++) {
-		if (elem.tet[k]->isCurved()) {
-			res.push_back(elem.tet[k]->getId());
+		if (elem_.tet[k]->isCurved()) {
+			res.push_back(elem_.tet[k]->getId());
 		}
 	}
 	return res;
@@ -327,20 +315,20 @@ MeshVolume::getTriWithMatId(
         const uint matId,
         const bool ignoreTet) const {
 	vector<Tri3> res;
-	const uint nTri = elem.tri.size();
-	const uint nTet = elem.tet.size();
+	const uint nTri = elem_.tri.size();
+	const uint nTet = elem_.tet.size();
 	res.reserve(nTri + nTet);
 	// --- Runs over surfaces -------------------------------------------------
-	const uint nTri3 = elem.tri3.size();
+	const uint nTri3 = elem_.tri3.size();
 	for (uint i = 0; i < nTri3; i++) {
-		if (elem.tri3[i].getMatId() == matId) {
-			res.push_back(elem.tri3[i]);
+		if (elem_.tri3[i].getMatId() == matId) {
+			res.push_back(elem_.tri3[i]);
 		}
 	}
-	const uint nTri6 = elem.tri6.size();
+	const uint nTri6 = elem_.tri6.size();
 	for (uint i = 0; i < nTri6; i++) {
-		if (elem.tri6[i].getMatId() == matId) {
-			res.push_back(elem.tri6[i].linearize());
+		if (elem_.tri6[i].getMatId() == matId) {
+			res.push_back(elem_.tri6[i].linearize());
 		}
 	}
 	// --- Runs over tetrahedrons ---------------------------------------------
@@ -349,8 +337,8 @@ MeshVolume::getTriWithMatId(
 	    tetIds.reserve(nTet);
 	    for (uint i = 0; i < nTet; i++) {
 	        // Generates list of tetrahedrons ids.
-	        if (elem.tet[i]->getMatId() == matId) {
-	            tetIds.push_back(elem.tet[i]->getId());
+	        if (elem_.tet[i]->getMatId() == matId) {
+	            tetIds.push_back(elem_.tet[i]->getId());
 	        }
 	    }
 	    // Gets internal border of tetrahedron volume.
@@ -370,11 +358,11 @@ MeshVolume::getTriWithMatId(
 vector<Tri3>
 MeshVolume::getTriWithId(const vector<uint>& ids) const {
 	vector<Tri3> res;
-	res.reserve(elem.tri3.size());
+	res.reserve(elem_.tri3.size());
 	for (uint i = 0; i < ids.size(); i++) {
-		for (uint j = 0; j < elem.tri3.size(); j++) {
-			if (ids[i] == elem.tri3[j].getId()) {
-				res.push_back(elem.tri3[j]);
+		for (uint j = 0; j < elem_.tri3.size(); j++) {
+			if (ids[i] == elem_.tri3[j].getId()) {
+				res.push_back(elem_.tri3[j]);
 			}
 		}
 	}
@@ -397,9 +385,9 @@ MeshVolume::getTetIds(
 
 bool
 MeshVolume::isFloatingCoordinate(const CoordD3* param) const {
-	for (uint i = 0; i < elem.element.size(); i++) {
-		for (uint j = 0; j < elem.element[i]->numberOfCoordinates(); j++) {
-			if (*param == *elem.element[i]->getV(j)) {
+	for (uint i = 0; i < elem_.element.size(); i++) {
+		for (uint j = 0; j < elem_.element[i]->numberOfCoordinates(); j++) {
+			if (*param == *elem_.element[i]->getV(j)) {
 				return false;
 			}
 		}
@@ -411,7 +399,7 @@ vector<BoxD3>
 MeshVolume::getRectilinearHexesInsideRegion(
         const vector<const Element*>& region) const {
     // Determines positions to query.
-    vector<uint> ids = elem.getIds(region);
+    vector<uint> ids = elem_.getIds(region);
     BoxD3 bound(getBound(ids));
     vector<CVecD3> center = grid_->getCenterOfNaturalCellsInside(bound);
     // Determines if positions are inside tetrahedrons.
@@ -426,15 +414,6 @@ MeshVolume::getRectilinearHexesInsideRegion(
         }
     }
     return res;
-}
-
-void
-MeshVolume::build(const CoordinateGroup& vIn,
-		const ElementsGroup& elementIn) {
-	v = vIn;
-	elem = elementIn;
-	elem.reassignPointers(v);
-//	map.build(v, elem);
 }
 
 void
@@ -474,7 +453,7 @@ MeshVolume::getInternalBorderOfTetRegion(
 	unsigned int nList = nK * faces;
 	DynMatrix<unsigned int> fList(nList, 2 + nVert);
 	for (unsigned int k = 0; k < nK; k++) {
-		const Tet* tet = elem.getTetPtrToId(region[k]);
+		const Tet* tet = elem_.getTetPtrToId(region[k]);
 		for (unsigned int f = 0; f < faces; f++) {
 			unsigned int row = k * faces + f;
 			fList(row, 0) = tet->getId();
@@ -505,7 +484,7 @@ MeshVolume::getInternalBorderOfTetRegion(
 		if (matches) {
 			k++;
 		} else {
-			const Tet* tet = elem.getTetPtrToId(fList(k,0));
+			const Tet* tet = elem_.getTetPtrToId(fList(k,0));
 			unsigned int face = fList(k,1);
 			pair<const Tet*, unsigned int> aux(tet, face);
 			res.push_back(aux);
@@ -514,8 +493,8 @@ MeshVolume::getInternalBorderOfTetRegion(
 	return res;
 #else
 	unsigned int regionSize = region.size();
-	unsigned int nK = elem.tet.size();
-	unsigned int offset = elem.offsetIdTet;
+	unsigned int nK = elem_.tet.size();
+	unsigned int offset = elem_.offsetIdTet;
 	unsigned int nBoundaries = 0;
 	//
 	DynMatrix<long> adjElem(nK, 4);
@@ -552,7 +531,7 @@ MeshVolume::getInternalBorderOfTetRegion(
 		unsigned int e = id - offset;
 		for (unsigned int f = 0; f < 4; f++)
 			if ((adjElem(e,f) == long(id)) || (adjElem(e,f) == -1)) {
-				const Tet* auxTet = elem.getTetPtrToId(id);
+				const Tet* auxTet = elem_.getTetPtrToId(id);
 				pair<const Tet*, unsigned int> bc(auxTet, f);
 				res.push_back(bc);
 			}
@@ -569,7 +548,7 @@ MeshVolume::getInternalBorderOfTriRegion(
 	vector<pair<const Volume*, unsigned int> > res(nE);
 	for (unsigned int i = 0; i < nE; i++) {
 	   const Surface* surf =
-	    dynamic_cast<const Surface*>(elem.getPtrToId(region[i]));
+	    dynamic_cast<const Surface*>(elem_.getPtrToId(region[i]));
 		res[i] = getBoundary(surf);
 	}
 	return res;
@@ -577,11 +556,11 @@ MeshVolume::getInternalBorderOfTriRegion(
 
 bool
 MeshVolume::checkAreaCoherence() const {
-	unsigned int nElem = elem.nVolumeElements();
+	unsigned int nElem = elem_.nVolumeElements();
 	bool isOk = true;
 	for (unsigned int e = 0; e < nElem; e++) {
-		unsigned int id = elem.tet[e]->getId();
-		const Tet *local = elem.getTetPtrToId(id);
+		unsigned int id = elem_.tet[e]->getId();
+		const Tet *local = elem_.getTetPtrToId(id);
 		for (unsigned int f = 0; f < local->numberOfFaces(); f++) {
 			pair<const Volume*, unsigned int> localFace(local, f);
 			pair<const Volume*, unsigned int> neighFace;

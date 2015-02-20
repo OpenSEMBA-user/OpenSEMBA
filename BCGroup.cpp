@@ -37,19 +37,19 @@ BCGroup::buildPhysicalModelBC(
       const PhysicalModelGroup& pm) {
    {
       vector<uint> ids = pm.getMatIds(Condition::pec);
-      addBC(mesh, pm, mesh.elem.getSurfacesWithMatId(ids));
+      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
    }
    {
       vector<uint> ids = pm.getMatIds(Condition::pmc);
-      addBC(mesh, pm, mesh.elem.getSurfacesWithMatId(ids));
+      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
    }
    {
       vector<uint> ids = pm.getMatIds(Condition::sma);
-      addBC(mesh, pm, mesh.elem.getSurfacesWithMatId(ids));
+      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
    }
    {
       vector<uint> ids = pm.getMatIds(Condition::sibc);
-      addBC(mesh, pm, mesh.elem.getSurfacesWithMatId(ids));
+      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
    }
 }
 

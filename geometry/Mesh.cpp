@@ -12,13 +12,22 @@ Mesh::Mesh() {
 	grid_ = NULL;
 }
 
-Mesh::~Mesh() {
-	// TODO Auto-generated destructor stub
+Mesh::Mesh(
+        const CoordinateGroup& cG,
+        const ElementsGroup& elem,
+        const Grid3* grid) {
+    cG_ = cG;
+    elem_ = elem;
+    elem_.reassignPointers(cG_);
+    if (grid != NULL) {
+        grid_ = new Grid3(*grid);
+    } else {
+        grid_ = NULL;
+    }
 }
 
-void
-Mesh::addCoordinates(const Grid3& grid) {
-    v.add(grid.getPos());
+Mesh::~Mesh() {
+	// TODO Auto-generated destructor stub
 }
 
 void
@@ -31,43 +40,14 @@ Mesh::setMaterialIds(
 	}
 }
 
-vector<unsigned int>
-Mesh::getIdsWithMaterialId(
- const unsigned int matId) const {
-	const unsigned int nK = elem.element.size();
-	vector<unsigned int> res;
-	res.reserve(nK);
-	for (unsigned int i = 0; i < nK; i++) {
-		if (elem.element[i]->getMatId() == matId) {
-			res.push_back(elem.element[i]->getId());
-		}
-	}
-	return res;
-}
-
-vector<unsigned int>
-Mesh::getIdsWithoutMaterialId(
- const unsigned int matId) const {
-	const unsigned int nK = elem.element.size();
-	vector<unsigned int> res;
-	res.reserve(nK);
-	for (unsigned int i = 0; i < nK; i++) {
-		if (elem.element[i]->getMatId() != matId) {
-			res.push_back(elem.element[i]->getId());
-		}
-	}
-	return res;
-}
-
 bool
 Mesh::isLinear() const {
-	return (elem.isLinear());
+	return elem_.isLinear();
 }
 
 void
 Mesh::linearize() {
-	elem.linearize();
-	map.build(v,elem);
+	elem_.linearize();
 }
 
 BoxD3
@@ -78,10 +58,10 @@ Mesh::getBound(
 	   return BoxD3().setInfinity();
 	}
 	// Runs over border computing the bounding box of each face.
-	BoxD3 bound = getElementWithId(list[0])->getBound();
+	BoxD3 bound = elem_.getPtrToId(list[0])->getBound();
 	const unsigned int nK = list.size();
 	for (unsigned int i = 1; i < nK; i++) {
-		const Element* e = getElementWithId(list[i]);
+		const Element* e = elem_.getPtrToId(list[i]);
 		bound << e->getBound();
 	}
 	return bound;
@@ -109,12 +89,12 @@ Mesh::getBound(
 vector<unsigned int>
 Mesh::getIdsInsideBound(
  const BoxD3& bound, const Element::Type type) const {
-	const unsigned int nK = elem.element.size();
+	const unsigned int nK = elem_.element.size();
 	vector<unsigned int> res;
 	res.reserve(nK);
 	BoxD3 localBound;
 	for (unsigned int i = 0; i < nK; i++) {
-		const Element* e = elem.element[i];
+		const Element* e = elem_.element[i];
 		localBound = e->getBound();
 		if (localBound <= bound
 		 && (e->getType() == type || type==Element::undefined)) {
@@ -127,7 +107,7 @@ Mesh::getIdsInsideBound(
 bool
 Mesh::isRectilinear() const {
 	bool hasCartesianGridDefined = (grid_ != NULL);
-	bool onlyContainsQuad4 = (elem.quad4.size() == elem.element.size());
+	bool onlyContainsQuad4 = (elem_.quad4.size() == elem_.element.size());
 	return (hasCartesianGridDefined && onlyContainsQuad4);
 }
 
@@ -144,20 +124,10 @@ Mesh::setGrid(const Grid3& grid) {
 void
 Mesh::applyGeometricScalingFactor(
  const double factor) {
-	v.applyScalingFactor(factor);
+	cG_.applyScalingFactor(factor);
 	if (grid_ != NULL) {
 		grid_->applyScalingFactor(factor);
 	}
-}
-
-Element*
-Mesh::getElementWithId(const unsigned int id) {
-	return elem.getPtrToId(id);
-}
-
-const Element*
-Mesh::getElementWithId(const unsigned int id) const {
-	return elem.getPtrToId(id);
 }
 
 vector<pair<const Element*, uint> >
@@ -165,8 +135,8 @@ Mesh::getElementsWithVertex(
       const uint vertexId,
       const Element::Type type) const {
    vector<pair<const Element*, uint> > res;
-   for (uint i = 0; i < elem.element.size(); i++) {
-      const Element* e = elem.element[i];
+   for (uint i = 0; i < elem_.element.size(); i++) {
+      const Element* e = elem_.element[i];
       for (uint j = 0; j < e->numberOfVertices(); j++) {
          if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
             pair<const Element*, uint> aux(e,j);
@@ -175,4 +145,8 @@ Mesh::getElementsWithVertex(
       }
    }
    return res;
+}
+
+void Mesh::printInfo() const {
+    cout << " --- Mesh Info --- " << endl;
 }

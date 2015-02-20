@@ -202,66 +202,6 @@ void OutputGiD::openGiDFiles() {
     writeGaussPoints();
 }
 
-//void
-//OutputGiD::writeQuad4Mesh(
-//        const string& name,
-//        const CoordinateGroup& cG,
-//        const vector<Quad4*> quad) {
-//    static const int nV = 4;
-//    beginMesh(name, GiD_3D, GiD_Quadrilateral, nV);
-//    GiD_BeginCoordinates();
-//    double coordCounterPreStart = coordCounter_;
-////    for (uint i = 0; i <; i++) {
-////        CVecD3 pos = mesh.v(i)->pos();
-////        GiD_WriteCoordinates(++coordCounter_, pos(0), pos(1), pos(2));
-////    }
-//    GiD_EndCoordinates();
-//    GiD_BeginElements();
-//    int nId[nV + 1];
-//    static const uint GiDOrder[4] = { 0, 1, 2, 3 };
-//    for (uint e = 0; e < mesh.elem.quad4.size(); e++) {
-//        const Quad4* quad = &mesh.elem.quad4[e];
-//        for (int i = 0; i < nV; i++) {
-//            nId[i] = quad->getVertex(GiDOrder[i])->getId() + 1
-//                    + coordCounterPreStart;
-//        }
-//        nId[nV] = quad->getMatId();
-//        GiD_WriteElementMat(++elemCounter_, nId);
-//    }
-//    GiD_EndElements();
-//    GiD_EndMesh();
-//}
-
-void
-OutputGiD::writeHex8Mesh(
-        const string& name,
-        const MeshVolume& mesh) {
-    static const int nV = 8;
-    beginMesh(name, GiD_3D, GiD_Hexahedra, nV);
-    GiD_BeginCoordinates();
-    double coordCounterPreStart = coordCounter_;
-    CVecD3 pos;
-    for (uint i = 0; i < mesh.v.size(); i++) {
-        pos = *mesh.v(i);
-        GiD_WriteCoordinates(++coordCounter_, pos(0), pos(1), pos(2));
-    }
-    GiD_EndCoordinates();
-    GiD_BeginElements();
-    int nId[nV + 1];
-    static const uint GiDOrder[8] = { 0, 1, 2, 3, 4, 5, 6, 7};
-    for (uint e = 0; e < mesh.elem.hex8.size(); e++) {
-        const Hex8* hex = &mesh.elem.hex8[e];
-        for (int i = 0; i < nV; i++) {
-            nId[i] = hex->getVertex(GiDOrder[i])->getId() + 1
-                    + coordCounterPreStart;
-        }
-        nId[nV] = hex->getMatId();
-        GiD_WriteElementMat(++elemCounter_, nId);
-    }
-    GiD_EndElements();
-    GiD_EndMesh();
-}
-
 void
 OutputGiD::writeMesh() {
     writeOutputRequestsMesh();

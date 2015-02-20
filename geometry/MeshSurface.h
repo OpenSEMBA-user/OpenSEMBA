@@ -17,6 +17,7 @@ using namespace std;
 
 class MeshSurface : public Mesh {
 public:
+    MapGroup map;
 	MeshSurface(
      const vector<CartesianVector<double,3> >& normals,
      const CoordinateGroup coordinates,

@@ -12,11 +12,11 @@ MeshOpenfoam::MeshOpenfoam() {
 
 MeshOpenfoam::MeshOpenfoam(
  const CoordinateGroup& cG,
+ const Grid3& grid,
  const vector<FaceIdentifier>& face,
  const vector<uint>& owner,
  const vector<uint>& neighbour,
- const vector<OpenfoamBoundary>& boundaries) {
-	cG_ = cG;
+ const vector<OpenfoamBoundary>& boundaries) : Mesh(cG, grid) {
 	face_.resize(face.size());
 	for (uint i = 0; i < face.size(); i++) {
 		face_[i] = Polygon(cG_, face[i].first, face[i].second);
@@ -156,28 +156,18 @@ MeshOpenfoam::getMaterialBoundary(
 
 vector<BoxD3>
 MeshOpenfoam::discretizeWithinBoundary(
- const Grid3& grid,
- const PhysicalModel* mat,
- const Layer* lay) const {
-	return discretizeWithinBoundary(grid,
-	        getMaterialBoundary(mat->getId(), lay->getId()));
-}
-
-void
-MeshOpenfoam::addCoordinates(const Grid3& grid) {
-	cG_.add(grid.getPos());
+ const uint matId,
+ const uint layId) const {
+	return discretizeWithinBoundary(getMaterialBoundary(matId, layId));
 }
 
 vector<BoxD3>
 MeshOpenfoam::discretizeWithinBoundary(
- const Grid3& grid,
  const vector<const Polygon*>& surf) const {
-	// --- Preliminar checkings -----------------------------------------------
 	checkAllFacesAreRectangular();
-	// --- Prorcedures --------------------------------------------------------
 	// Gets pairs of quads that define the volume of the space within them.
 	const vector<pair<const Polygon*, const Polygon*> > pairs
-	 = getPairsDefiningVolumeWithin(grid, surf);
+	 = getPairsDefiningVolumeWithin(surf);
 	// Gets positions in z-axis.
 	vector<BoxD3> box(pairs.size());
 	vector<vector<double> > zPos(pairs.size());
@@ -186,9 +176,9 @@ MeshOpenfoam::discretizeWithinBoundary(
 		CVecD3 max = pairs[p].second->getMaxV()->pos();
 		box[p] = BoxD3(min,max);
 		if (min(2) > max(2)) {
-			zPos[p] = grid.getPosInRange(z, max(2), min(2));
+			zPos[p] = grid_->getPosInRange(z, max(2), min(2));
 		} else {
-			zPos[p] = grid.getPosInRange(z, min(2), max(2));
+			zPos[p] = grid_->getPosInRange(z, min(2), max(2));
 		}
 		assert(zPos[p].size() > 0);
 	}
@@ -229,8 +219,7 @@ MeshOpenfoam::areFacesRectangular() const {
 
 vector<pair<const Polygon*, const Polygon*> >
 MeshOpenfoam::getPairsDefiningVolumeWithin(
- const Grid3& grid,
- const vector<const Polygon*>& origBound) const {
+        const vector<const Polygon*>& origBound) const {
 	vector<pair<const Polygon*, const Polygon*> > res;
 	// --- Preliminar checkings ------------------------------------------------
 	const uint nOrigBound = origBound.size();
@@ -249,7 +238,7 @@ MeshOpenfoam::getPairsDefiningVolumeWithin(
 			pos[i] = origBound[b]->getV(i)->pos();
 		}
 		static const double naturalCellTolerance = 0.25;
-		if (!grid.isNaturalCell(pos, naturalCellTolerance)) {
+		if (!grid_->isNaturalCell(pos, naturalCellTolerance)) {
 			cerr<< "ERROR @ Mesh: "
 				<< "Quads are not aligned with grid." << endl;
 			return res;

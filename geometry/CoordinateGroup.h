@@ -36,11 +36,12 @@ class CoordinateGroup {
 public:
 	CoordinateGroup();
 	virtual ~CoordinateGroup();
-	CoordinateGroup(const vector<Coordinate<double,3> >&);
+	CoordinateGroup(const vector<CoordD3>&);
+	CoordinateGroup(const vector<CVecD3>&);
 	CoordinateGroup&
 	 operator=(const CoordinateGroup& rhs);
 	long unsigned int
-	 size() const {return coord.size();}
+	 size() const {return coord_.size();}
    vector<const CoordD3*>
    getAll() const;
 	const CoordD3*
@@ -58,8 +59,8 @@ public:
 	void
 	 printInfo() const;
 private:
-	map<uint, CoordD3*> coord;
-	multiset<CoordD3*, lexCompareCoord> index;
+	map<uint, CoordD3*> coord_;
+	multiset<CoordD3*, lexCompareCoord> index_;
 };
 
 #endif /* COORDINATEGROUP_H_ */

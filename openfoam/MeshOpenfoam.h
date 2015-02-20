@@ -20,7 +20,7 @@ public:
     MeshOpenfoam();
     MeshOpenfoam(
             const CoordinateGroup& cG,
-            const Grid3& grid,
+            const Grid3* grid,
             const vector<FaceIdentifier>& faceIndentifiers,
             const vector<uint>& faceOwner,
             const vector<uint>& faceNeighbour,
@@ -46,18 +46,12 @@ private:
     vector<uint> owner_;
     vector<uint> neighbour_;
     vector<OpenfoamBoundary> boundary_;
-    const OpenfoamBoundary*
-    getBoundary(
+    const OpenfoamBoundary* getBoundary(
             const string& boundaryName) const;
-    vector<BoxD3>
-    discretizeWithinBoundary(
-            const Grid3& grid,
+    vector<BoxD3> discretizeWithinBoundary(
             const vector<const Polygon*>& faces) const;
-    // Returns pairs of surface in boundary define a volume in the region
-    // contained within them.
     vector<pair<const Polygon*, const Polygon*> >
     getPairsDefiningVolumeWithin(
-            const Grid3& grid,
             const vector<const Polygon*>& boundary) const;
 };
 

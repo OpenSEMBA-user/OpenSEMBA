@@ -25,8 +25,7 @@ ParserOpenFoam::readMeshOpenfoam() const {
 	vector<uint> faceOwner = readFacesOwner(string("owner"));
 	vector<uint> faceNeighbour = readFacesOwner(string("neighbour"));
 	vector<OpenfoamBoundary> boundaries = readBoundaries();
-	MeshOpenfoam res(cG, faces, faceOwner, faceNeighbour, boundaries);
-	return res;
+	return MeshOpenfoam(cG, NULL, faces, faceOwner, faceNeighbour, boundaries);
 }
 
 void
