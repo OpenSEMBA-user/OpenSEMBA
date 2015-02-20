@@ -43,6 +43,8 @@ public:
 	ElementsGroup(
 	 const vector<Tri3>&,
 	 const vector<Quad4>&);
+    ElementsGroup(
+     const vector<Lin2>&);
 	ElementsGroup(
 	 const vector<Lin2>&,
 	 const vector<Tri3>&, const vector<Tri6>&,

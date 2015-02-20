@@ -142,22 +142,6 @@ Mesh::setGrid(const Grid3& grid) {
 }
 
 void
-Mesh::removeHexahedrons() {
-	elem.removeHex();
-}
-
-bool
-Mesh::canExtractGrid() const {
-	if (elem.hex8.size() != 0) {
-		return true;
-	}
-	if (grid_ != NULL) {
-		return true;
-	}
-	return false;
-}
-
-void
 Mesh::applyGeometricScalingFactor(
  const double factor) {
 	v.applyScalingFactor(factor);

@@ -30,6 +30,12 @@ ElementsGroup::ElementsGroup(
    updatePointers();
 }
 
+ElementsGroup::ElementsGroup(const vector<Lin2>& l2) {
+    lin2 = l2;
+    updatePointers();
+}
+
+
 ElementsGroup::ElementsGroup(
       const vector<Lin2>& l2,
       const vector<Tri3>& tr3, const vector<Tri6>& tr6,
@@ -401,3 +407,4 @@ ElementsGroup::getSurfacesWithMatId(
    }
    return res;
 }
+
