@@ -18,6 +18,8 @@
 #include "Tet4.h"
 #include "Tet10.h"
 #include "Hex8.h"
+#include "Polygon.h"
+#include "Polyhedron.h"
 
 using namespace std;
 

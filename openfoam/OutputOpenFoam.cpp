@@ -249,11 +249,6 @@ OutputOpenFoam::writeDecomposeParDict() const {
 
 void
 OutputOpenFoam::writeBlockMeshDict() const {
-   if (!smb_->mesh->canExtractGrid()) {
-      cerr<< "ERROR @ OutputOpenFOAM: "
-            << "Cartesian Grid could not be extracted." << endl;
-      return;
-   }
    // Opens file for writing.
    const string name = "blockMeshDict";
    const string fileName = dirPolymesh_ + "/" + name;

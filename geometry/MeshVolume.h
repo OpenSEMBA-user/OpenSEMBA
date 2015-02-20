@@ -79,6 +79,18 @@ public:
 	 getIdsOfCurvedTets() const;
 	bool
 	 isFloatingCoordinate(const CoordD3* coordinate) const;
+	virtual bool
+	isOnBoundary(const CVecD3 pos) const;
+	virtual CVecD3
+	getClosestPointOnBoundary(const CVecD3 pos) const;
+	virtual vector<const Polygon*>
+	getMaterialBoundary(
+	        const uint matId,
+	        const uint layId) const;
+	virtual vector<BoxD3>
+	discretizeWithinBoundary(
+	        const uint matId,
+	        const uint layId) const;
 	virtual void
 	 printInfo() const;
 private:

@@ -19,7 +19,6 @@ using namespace std;
 
 class Mesh {
 public:
-    CoordinateGroup v;
     ElementsGroup elem;
     MapGroup map;
     void
@@ -64,7 +63,18 @@ public:
     getElementsWithVertex(
             const uint vertexId,
             const Element::Type type) const;
+    virtual bool
+    isOnBoundary(const CVecD3 pos) const = 0;
+    virtual CVecD3
+    getClosestPointOnBoundary(const CVecD3 pos) const = 0;
+    virtual vector<const Polygon*>
+    getMaterialBoundary(const uint matId, const uint layId) const = 0;
+    virtual vector<BoxD3>
+    discretizeWithinBoundary(
+            const uint matId,
+            const uint layerId) const = 0;
 protected:
+    CoordinateGroup cG_;
     Grid3* grid_;
     static const double areaDiffTolerance;
     virtual Element* getElementWithId(uint id);

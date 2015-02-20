@@ -18,10 +18,6 @@
 
 class SmbData : public ProjectFile {
 public:
-    typedef enum {
-        ugrfdtd,
-        cudg3d,
-    } Solver;
     GlobalProblemData* gData;
     LayerGroup* layers;
     MeshVolume* mesh;
@@ -35,7 +31,6 @@ public:
     void applyGeometricScalingFactor();
     void ignorePMLs();
     void detectAndAssignPMLRegions();
-    bool isValidForSolver(const Solver& solver) const;
     virtual void printInfo() const;
 };
 
