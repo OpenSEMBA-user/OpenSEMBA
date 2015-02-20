@@ -50,6 +50,9 @@ struct NFDEData : public ProjectFile {
         string name;
         //      ObjectInLayer()
         //      :  layer("") {}
+        string getNameAtLayer() const {
+            return name + "@" + layer;
+        }
     };
 
     struct Probe : public ObjectInLayer {

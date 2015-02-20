@@ -221,6 +221,22 @@ Box<T,D>::getBound(CartesianBound p) const {
 }
 
 template<class T, int D>
+inline vector<CartesianVector<double,D> >
+Box<T,D>::getPos() const {
+    assert(D == 3);
+    vector<CartesianVector<double,D> > res(8);
+    res[0] = CartesianVector<double,D>(min_(x), min_(y), min_(z));
+    res[1] = CartesianVector<double,D>(max_(x), min_(y), min_(z));
+    res[2] = CartesianVector<double,D>(max_(x), max_(y), min_(z));
+    res[3] = CartesianVector<double,D>(min_(x), max_(y), min_(z));
+    res[4] = CartesianVector<double,D>(min_(x), min_(y), max_(z));
+    res[5] = CartesianVector<double,D>(max_(x), min_(y), max_(z));
+    res[6] = CartesianVector<double,D>(max_(x), max_(y), max_(z));
+    res[7] = CartesianVector<double,D>(min_(x), max_(y), max_(z));
+    return res;
+}
+
+template<class T, int D>
 void
 Box<T,D>::printInfo() const {
    cout<< "Box info" << endl;

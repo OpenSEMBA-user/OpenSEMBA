@@ -39,10 +39,10 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     openGiDFiles();
     writeSpaceSteps();
     writeBoundaries();
-    writeSources();
-    //    exportCurrentDensitySource();
+    writePlaneWaveSource();
+    //    writeCurrentDensitySource();
     //    writeFieldSource();
-    //    writeIsotropicBody();
+    writeIsotropicBody();
     //    writeIsotropicSurf();
     //    writeIsotropicLine();
     //    writeAnisotropicBody();
@@ -458,15 +458,15 @@ void OutputGiD::writeBoundaries() {
         for (uint p = 0; p < 2; p++) {
             vector<CVecD3> pos =
                     box.getPosOfBound(CartesianAxis(d), CartesianBound(p));
-            string name = "Boundaries//"
+            string name = "Boundary//"
               + OutputNFDE::toString(nfde_->boundaries[d][p],d,p);
             beginMesh(makeValid(name), GiD_3D, GiD_Quadrilateral, 4);
-            double coordCounterPreStart = coordCounter_;
+            double tmpCounter = coordCounter_;
             writeCoordinates(pos);
             GiD_BeginElements();
             int nId[4];
             for (int i = 0; i < 4; i++) {
-                nId[i] = ++coordCounterPreStart;
+                nId[i] = ++tmpCounter;
             }
             GiD_WriteElement(++elemCounter_, nId);
             GiD_EndElements();
@@ -475,5 +475,96 @@ void OutputGiD::writeBoundaries() {
     }
 }
 
-void OutputGiD::writeSources() {
+void OutputGiD::writePlaneWaveSource() {
+    if (nfde_->planeWaveSource.size() == 0) {
+        return;
+    }
+    static const int nV = 8;
+    uint tmpCounter = coordCounter_;
+    vector<CVecD3> pos=BoxI3(nfde_->planeWaveSource[0].coords.coords).getPos();
+    beginMesh("Source//Planewave",GiD_3D, GiD_Hexahedra, nV, emSourceColor);
+    writeCoordinates(pos);
+    int nId[nV];
+    for (int i = 0; i < nV; i++) {
+        nId[i] = ++tmpCounter;
+    }
+    GiD_BeginElements();
+    GiD_WriteElement(++elemCounter_, nId);
+    GiD_EndElements();
+    GiD_EndMesh();
+}
+
+void OutputGiD::writeDensitySource() {
+}
+
+void OutputGiD::writeFieldSource() {
+}
+
+void OutputGiD::writeIsotropicBody() {
+    static const int nV = 8;
+    uint tmpCounter = coordCounter_;
+    int nId[nV];
+    for(uint i = 0; i < nfde_->isotropicBody.size(); i++) {
+        const NFDEData::IsotropicBody* ent = &nfde_->isotropicBody[i];
+        const string name = ent->getNameAtLayer();
+        beginMesh(name, GiD_3D, GiD_Hexahedra, nV);
+        vector<CVecD3> pos;
+        for(uint j = 0; j < ent->entities.size(); j++) {
+            vector<CVecD3> auxPos = BoxI3(ent->entities[j].coords).getPos();
+            pos.insert(pos.end(), auxPos.begin(), auxPos.end());
+        }
+        writeCoordinates(pos);
+        GiD_BeginElements();
+        for (uint j = 0; j < ent->entities.size(); j++) {
+            for (int k = 0; k < nV; k++) {
+                nId[k] = ++tmpCounter;
+            }
+            GiD_WriteElement(++elemCounter_, nId);
+
+        }
+        GiD_EndElements();
+        GiD_EndMesh();
+    }
+}
+
+void OutputGiD::writeIsotropicSurf() {
+}
+
+void OutputGiD::writeIsotropicLine() {
+}
+
+void OutputGiD::writeAnisotropicBody() {
+}
+
+void OutputGiD::writeAnisotropicSurf() {
+}
+
+void OutputGiD::writeAnisotropicLine() {
+}
+
+void OutputGiD::writeDispersiveBody() {
+}
+
+void OutputGiD::writeDispersiveSurf() {
+}
+
+void OutputGiD::writeCompositeSurf() {
+}
+
+void OutputGiD::writeThinWire() {
+}
+
+void OutputGiD::writeThinGap() {
+}
+
+void OutputGiD::writeTraditionalProbe() {
+}
+
+void OutputGiD::writeNewProbe() {
+}
+
+void OutputGiD::writeBulkProbes() {
+}
+
+void OutputGiD::writeSliceProbes() {
 }

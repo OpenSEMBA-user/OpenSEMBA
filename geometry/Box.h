@@ -40,6 +40,8 @@ public:
     inline CVecTD getMax(void) const;
     inline CVecTD getLength() const;
 
+
+    vector<CartesianVector<double, D> > getPos() const;
     vector<CartesianVector<double, D> >
     getPosOfBound(CartesianAxis d, CartesianBound p) const;
 

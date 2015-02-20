@@ -87,7 +87,24 @@ private:
     // NFDEData stuff...
     void writeSpaceSteps();
     void writeBoundaries();
-    void writeSources();
+    void writePlaneWaveSource();
+    void writeDensitySource();
+    void writeFieldSource();
+    void writeIsotropicBody();
+    void writeIsotropicSurf();
+    void writeIsotropicLine();
+    void writeAnisotropicBody();
+    void writeAnisotropicSurf();
+    void writeAnisotropicLine();
+    void writeDispersiveBody();
+    void writeDispersiveSurf();
+    void writeCompositeSurf();
+    void writeThinWire();
+    void writeThinGap();
+    void writeTraditionalProbe();
+    void writeNewProbe();
+    void writeBulkProbes();
+    void writeSliceProbes();
 };
 
 #endif /* GIDOUTPUT_H_ */
