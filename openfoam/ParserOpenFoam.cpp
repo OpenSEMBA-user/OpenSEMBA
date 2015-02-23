@@ -19,13 +19,13 @@ ParserOpenFoam::~ParserOpenFoam() {
 }
 
 MeshOpenfoam
-ParserOpenFoam::readMeshOpenfoam() const {
+ParserOpenFoam::readMeshOpenfoam(const Grid3* grid) const {
 	CoordinateGroup cG = readCoordinates();
 	vector<FaceIdentifier> faces = readFaces();
 	vector<uint> faceOwner = readFacesOwner(string("owner"));
 	vector<uint> faceNeighbour = readFacesOwner(string("neighbour"));
 	vector<OpenfoamBoundary> boundaries = readBoundaries();
-	return MeshOpenfoam(cG, NULL, faces, faceOwner, faceNeighbour, boundaries);
+	return MeshOpenfoam(cG, grid, faces, faceOwner, faceNeighbour, boundaries);
 }
 
 void

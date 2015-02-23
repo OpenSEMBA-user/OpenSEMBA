@@ -26,8 +26,8 @@ CoordinateGroup::CoordinateGroup(
         const vector<CVecD3>& pos) {
     uint id = 0;
     for (uint i = 0; i < pos.size(); i++) {
-        ++id;
         pair<uint,CoordD3*> aux(id, new CoordD3(id, pos[i]));
+        id++;
         coord_.insert(aux);
         index_.insert(aux.second);
     }

@@ -40,7 +40,6 @@ public:
     vector<Tri3>
     getTriWithMatId(const uint matId, const bool ignoreTet = false) const;
     vector<Tri3> getTriWithId(const vector<uint>& Id) const;
-    const Element* getElementWithId(unsigned int id) const;
     vector<BoxD3> getRectilinearHexesInsideRegion(
             const vector<const Element*>& region) const;
     pair<const Volume*, unsigned int>
@@ -78,7 +77,7 @@ public:
     virtual bool
     isOnBoundary(const CVecD3 pos) const;
     virtual CVecD3
-    getClosestPointOnBoundary(const CVecD3 pos) const;
+    getClosestVertex(const CVecD3 pos) const;
     virtual vector<const Polygon*>
     getMaterialBoundary(
             const uint matId,

@@ -30,7 +30,7 @@ public:
     vector<const Polygon*> getBoundaryPolygons(
             const string& boundaryName) const;
     bool isOnBoundary(const CVecD3 pos) const;
-    CVecD3 getClosestPointOnBoundary(
+    CVecD3 getClosestVertex(
             const CVecD3 pos) const;
     vector<const Polygon*>  getMaterialBoundary(
             const uint matId,

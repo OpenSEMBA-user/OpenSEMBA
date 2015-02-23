@@ -44,12 +44,6 @@ MeshVolume::operator=(const MeshVolume& param) {
 	}
 	return *this;
 }
- 
-const Element*
-MeshVolume::getElementWithId(
- const unsigned int id) const {
-	return elem_.getPtrToId(id);
-}
 
 pair<const Volume*, unsigned int>
 MeshVolume::getBoundary(const Surface* surf) const {
@@ -376,7 +370,7 @@ MeshVolume::getTetIds(
 	res.reserve(elemIds.size());
 	const unsigned int nId = elemIds.size();
 	for (unsigned int i = 0; i < nId; i++) {
-		if (getElementWithId(elemIds[i])->isTet()) {
+		if (elem_.getPtrToId(elemIds[i])->isTet()) {
 			res.push_back(elemIds[i]);
 		}
 	}
@@ -584,3 +578,23 @@ MeshVolume::checkAreaCoherence() const {
 	return isOk;
 }
 
+bool
+MeshVolume::isOnBoundary(const CVecD3 pos) const {
+#warning "Not implemented"
+}
+
+CVecD3 MeshVolume::getClosestVertex(const CVecD3 pos) const {
+#warning "Not implemented"
+}
+
+vector<const Polygon*> MeshVolume::getMaterialBoundary(
+        const uint matId,
+        const uint layId) const {
+#warning "Not implemented"
+}
+
+vector<BoxD3> MeshVolume::discretizeWithinBoundary(
+        const uint matId,
+        const uint layId) const {
+#warning "Not implemented"
+}

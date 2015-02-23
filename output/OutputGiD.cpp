@@ -38,13 +38,13 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     nfde_ = nfde;
     openGiDFiles();
     writeSpaceSteps();
-    writeBoundaries();
+//    writeBoundaries();
     writePlaneWaveSource();
     //    writeCurrentDensitySource();
     //    writeFieldSource();
     writeIsotropicBody();
     //    writeIsotropicSurf();
-    //    writeIsotropicLine();
+    writeIsotropicLine();
     //    writeAnisotropicBody();
     //    writeAnisotropicSurf();
     //    writeAnisotropicLine();
@@ -191,7 +191,7 @@ void OutputGiD::openGiDFiles() {
     switch (mode_) {
     case GiD_PostAscii:
         openPostMeshFile(getOutputfilename() + ".post.msh", mode_);
-//        openPostResultFile(getOutputfilename() + ".post.res", mode_);
+        //        openPostResultFile(getOutputfilename() + ".post.res", mode_);
         break;
     case GiD_PostBinary:
         openPostResultFile(getOutputfilename() + ".post.res", mode_);
@@ -228,7 +228,7 @@ OutputGiD::writeMeshWithIds(
         int tmpCounter = coordCounter_;
         static const uint GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (uint j = 0; j < ids[t].size(); j++) {
-            const Element* e = smb_->mesh->getElementWithId(ids[t][j]);
+            const Element* e = smb_->mesh->elem_.getPtrToId(ids[t][j]);
             for (int i = 0; i < nV; i++) {
                 CVecD3 pos;
                 if (isLinear) {
@@ -278,7 +278,7 @@ OutputGiD::writeMeshWithIds(
 void
 OutputGiD::writeOutputRequestsMesh() {
     for (uint i = 0; i < smb_->outputRequests->count(); i++) {
-//        const OutputRequest* outRq = smb_->outputRequests->get(i);
+        //        const OutputRequest* outRq = smb_->outputRequests->get(i);
         //      bool mshExist = false;
         //      for (uint j = 0; j < result_.size(); j++) {
         //         mshExist = result_[i]->hasEquivalentMesh(outRq);
@@ -298,14 +298,14 @@ OutputGiD::writeMainMesh() {
     vector<vector<uint> > ids;
     vector<string> name;
     // Gets ids of tets with vacuum material.
-    vector<uint> vacuumIds = smb_->mesh->getIdsWithMaterialId(0);
+    vector<uint> vacuumIds = smb_->mesh->elem_.getIdsWithMaterialId(0);
     ids.push_back(smb_->mesh->getTetIds(vacuumIds));
     name.push_back("Vacuum");
     // Rest of materials.
     vector<uint> volMats = smb_->pMGroup->getVolumicMatIds();
     for (uint i = 0; i < volMats.size(); i++) {
         const uint matId = volMats[i];
-        vector<uint> matIds = smb_->mesh->getIdsWithMaterialId(matId);
+        vector<uint> matIds = smb_->mesh->elem_.getIdsWithMaterialId(matId);
         ids.push_back(smb_->mesh->getTetIds(matIds));
         name.push_back(smb_->pMGroup->getPMVolumeWithId(matId)->getName());
     }
@@ -336,7 +336,7 @@ OutputGiD::writeBCMesh(
     for (uint j = 0; j < bc.size(); j++) {
         const uint id = bc[j]->getCell()->getId();
         const uint f = bc[j]->getFace();
-        const Element* e = smb_->mesh->getElementWithId(id);
+        const Element* e = smb_->mesh->elem_.getPtrToId(id);
         for (int i = 0; i < nV; i++) {
             CVecD3 pos;
             if (smb_->mesh->isLinear()) {
@@ -399,7 +399,7 @@ void OutputGiD::writeBoundaries() {
             vector<CVecD3> pos =
                     box.getPosOfBound(CartesianAxis(d), CartesianBound(p));
             string name = "Boundary//"
-              + OutputNFDE::toString(nfde_->boundaries[d][p],d,p);
+                    + OutputNFDE::toString(nfde_->boundaries[d][p],d,p);
             beginMesh(makeValid(name), GiD_3D, GiD_Quadrilateral, 4);
             double tmpCounter = coordCounter_;
             writeCoordinates(pos);
@@ -471,6 +471,35 @@ void OutputGiD::writeIsotropicSurf() {
 }
 
 void OutputGiD::writeIsotropicLine() {
+    static const int nV = 2;
+    uint tmpCounter = coordCounter_;
+    int nId[nV];
+    for(uint i = 0; i < nfde_->isotropicLine.size(); i++) {
+        const NFDEData::IsotropicLine* ent = &nfde_->isotropicLine[i];
+        const string name = ent->getNameAtLayer();
+        beginMesh(name, GiD_3D, GiD_Linear, nV);
+        vector<CVecD3> pos;
+        for(uint j = 0; j < ent->entities.size(); j++) {
+            CVecD3 aux;
+            aux(x) = (double) ent->entities[j].coords.first(x);
+            aux(y) = (double) ent->entities[j].coords.first(y);
+            aux(z) = (double) ent->entities[j].coords.first(z);
+            pos.push_back(aux);
+            aux(ent->entities[j].dir)++;
+            pos.push_back(aux);
+        }
+        writeCoordinates(pos);
+        GiD_BeginElements();
+        for (uint j = 0; j < ent->entities.size(); j++) {
+            for (int k = 0; k < nV; k++) {
+                nId[k] = ++tmpCounter;
+            }
+            GiD_WriteElement(++elemCounter_, nId);
+
+        }
+        GiD_EndElements();
+        GiD_EndMesh();
+    }
 }
 
 void OutputGiD::writeAnisotropicBody() {

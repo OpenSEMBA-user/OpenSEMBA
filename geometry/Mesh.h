@@ -25,6 +25,9 @@ public:
             const CoordinateGroup& cG,
             const ElementsGroup& elem,
             const Grid3* grid);
+    Mesh(
+            const CoordinateGroup& cG,
+            const Grid3* grid);
     Mesh();
     virtual
     ~Mesh();
@@ -66,7 +69,7 @@ public:
     virtual bool
     isOnBoundary(const CVecD3 pos) const = 0;
     virtual CVecD3
-    getClosestPointOnBoundary(const CVecD3 pos) const = 0;
+    getClosestVertex(const CVecD3 pos) const = 0;
     virtual vector<const Polygon*>
     getMaterialBoundary(const uint matId, const uint layId) const = 0;
     virtual vector<BoxD3>
@@ -77,7 +80,6 @@ public:
 protected:
     Grid3* grid_;
     static const double areaDiffTolerance;
-    virtual Element* getElementWithId(uint id);
 };
 
 

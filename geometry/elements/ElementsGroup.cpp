@@ -18,6 +18,10 @@ ElementsGroup::~ElementsGroup() {
 
 }
 
+ElementsGroup::ElementsGroup(const ElementsGroup& elem) {
+    *this = elem;
+}
+
 ElementsGroup::ElementsGroup(
       const vector<Lin2>& l2,
       const vector<Tri3>& tr3, const vector<Tri6>& tr6,
@@ -429,3 +433,34 @@ ElementsGroup::getSurfacesWithMatId(
    return res;
 }
 
+vector<const Element*> ElementsGroup::get(
+        const Element::Type& type) const {
+    vector<const Element*> res;
+    res.reserve(element.size());
+    for (uint i = 0; i < element.size(); i++) {
+        bool matches = true;
+        matches &= element[i]->getType() == type;
+        if (matches) {
+            res.push_back(element[i]);
+        }
+    }
+    return res;
+}
+
+vector<const Element*> ElementsGroup::get(
+        const Element::Type& type,
+        const uint matId,
+        const uint layerId) const {
+    vector<const Element*> res;
+    res.reserve(element.size());
+    for (uint i = 0; i < element.size(); i++) {
+        bool matches = true;
+        matches &= element[i]->getType() == type;
+        matches &= element[i]->getMatId() == matId;
+        matches &= element[i]->getLayerId() == layerId;
+        if (matches) {
+            res.push_back(element[i]);
+        }
+    }
+    return res;
+}

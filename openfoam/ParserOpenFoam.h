@@ -25,7 +25,7 @@ public:
 	 const string& openfoamDir);
 	virtual ~ParserOpenFoam();
 	virtual MeshOpenfoam
-	 readMeshOpenfoam() const;
+	 readMeshOpenfoam(const Grid3* grid) const;
 	virtual bool
 	 isExistingDirectory(const string& dir) const;
 	virtual void

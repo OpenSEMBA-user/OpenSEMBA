@@ -12,7 +12,7 @@ MeshOpenfoam::MeshOpenfoam() {
 
 MeshOpenfoam::MeshOpenfoam(
  const CoordinateGroup& cG,
- const Grid3& grid,
+ const Grid3* grid,
  const vector<FaceIdentifier>& face,
  const vector<uint>& owner,
  const vector<uint>& neighbour,
@@ -93,7 +93,7 @@ MeshOpenfoam::getBoundary(
 }
 
 CVecD3
-MeshOpenfoam::getClosestPointOnBoundary(const CVecD3 pos) const {
+MeshOpenfoam::getClosestVertex(const CVecD3 pos) const {
 	CVecD3 res;
 	double minDist = numeric_limits<double>::infinity();
 	for (uint b = 0; b < boundary_.size(); b++) {

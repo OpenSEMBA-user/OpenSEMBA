@@ -39,7 +39,7 @@ void
 SmbData::ignorePMLs() {
    const uint pmlId = pMGroup->getPML()->getId();
    const uint vacuumId = pMGroup->getVacuum()->getId();
-   const vector<uint> pmlIds = mesh->getIdsWithMaterialId(pmlId);
+   const vector<uint> pmlIds = mesh->elem_.getIdsWithMaterialId(pmlId);
    mesh->setMaterialIds(pmlIds, vacuumId);
 }
 

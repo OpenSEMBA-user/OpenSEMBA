@@ -41,6 +41,7 @@ public:
     vector<Hex8> hex8;
     unsigned int offsetId, offsetIdLin, offsetIdTri, offsetIdTet;
     ElementsGroup();
+    ElementsGroup(const ElementsGroup& elem);
     virtual ~ElementsGroup();
     ElementsGroup(
             const vector<Tri3>&,
@@ -83,6 +84,12 @@ public:
     vector<unsigned int> getHexIds() const;
     vector<unsigned int> getIdsWithMaterialId(const uint matId) const;
     vector<unsigned int> getIdsWithoutMaterialId(const uint matId) const;
+    vector<const Element*> get(
+            const Element::Type& type,
+            const uint matId,
+            const uint layerId) const;
+    vector<const Element*> get(
+            const Element::Type& type) const;
     vector<const Element*>
     getElementsWithMatId(
             const vector<uint>& matId) const;

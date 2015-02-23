@@ -14,6 +14,17 @@ Mesh::Mesh() {
 
 Mesh::Mesh(
         const CoordinateGroup& cG,
+        const Grid3* grid) {
+    cG_ = cG;
+    if (grid != NULL) {
+        grid_ = new Grid3(*grid);
+    } else {
+        grid_ = NULL;
+    }
+}
+
+Mesh::Mesh(
+        const CoordinateGroup& cG,
         const ElementsGroup& elem,
         const Grid3* grid) {
     cG_ = cG;
@@ -36,7 +47,7 @@ Mesh::setMaterialIds(
  const unsigned int newMatId) {
 	const unsigned int nIds = id.size();
 	for (unsigned int i = 0; i < nIds; i++) {
-		getElementWithId(id[i])->setMatId(newMatId);
+	    elem_.getPtrToId(id[i])->setMatId(newMatId);
 	}
 }
 

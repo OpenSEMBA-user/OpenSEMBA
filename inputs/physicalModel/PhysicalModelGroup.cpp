@@ -164,7 +164,7 @@ PhysicalModelGroup::detectAndAssignPMLRegions(
       return;
    }
    const unsigned int pmlId = getPML()->getId();
-   vector<unsigned int> notPMLId = mesh->getIdsWithoutMaterialId(pmlId);
+   vector<unsigned int> notPMLId = mesh->elem_.getIdsWithoutMaterialId(pmlId);
    vector<unsigned int> internalId = mesh->getTetIds(notPMLId);
    vector<pair<const Volume*, unsigned int> > internalBorder =
          mesh->getInternalBorder(internalId);
