@@ -99,6 +99,9 @@ private:
     void writeNewProbe();
     void writeBulkProbes();
     void writeSliceProbes();
+    void writeCoordDirAsLines(
+            const vector<NFDEData::CoordsDir>& entities,
+            const string& name);
 };
 
 #endif /* GIDOUTPUT_H_ */

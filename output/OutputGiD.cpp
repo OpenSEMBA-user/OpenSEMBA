@@ -51,7 +51,7 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     //    writeDispersiveBody();
     //    writeDispersiveSurf();
     //    writeCompositeSurf();
-    //    writeThinWire();
+    writeThinWire();
     //    writeThinGap();
     //    writeTraditionalProbe();
     //    writeNewProbe();
@@ -471,35 +471,41 @@ void OutputGiD::writeIsotropicSurf() {
 }
 
 void OutputGiD::writeIsotropicLine() {
+    for(uint i = 0; i < nfde_->isotropicLine.size(); i++) {
+        writeCoordDirAsLines(
+                nfde_->isotropicLine[i].entities,
+                nfde_->isotropicLine[i].getNameAtLayer());
+    }
+}
+
+void OutputGiD::writeCoordDirAsLines(
+        const vector<NFDEData::CoordsDir>& entities,
+        const string& name) {
     static const int nV = 2;
     uint tmpCounter = coordCounter_;
     int nId[nV];
-    for(uint i = 0; i < nfde_->isotropicLine.size(); i++) {
-        const NFDEData::IsotropicLine* ent = &nfde_->isotropicLine[i];
-        const string name = ent->getNameAtLayer();
-        beginMesh(name, GiD_3D, GiD_Linear, nV);
-        vector<CVecD3> pos;
-        for(uint j = 0; j < ent->entities.size(); j++) {
-            CVecD3 aux;
-            aux(x) = (double) ent->entities[j].coords.first(x);
-            aux(y) = (double) ent->entities[j].coords.first(y);
-            aux(z) = (double) ent->entities[j].coords.first(z);
-            pos.push_back(aux);
-            aux(ent->entities[j].dir)++;
-            pos.push_back(aux);
-        }
-        writeCoordinates(pos);
-        GiD_BeginElements();
-        for (uint j = 0; j < ent->entities.size(); j++) {
-            for (int k = 0; k < nV; k++) {
-                nId[k] = ++tmpCounter;
-            }
-            GiD_WriteElement(++elemCounter_, nId);
-
-        }
-        GiD_EndElements();
-        GiD_EndMesh();
+    beginMesh(name, GiD_3D, GiD_Linear, nV);
+    vector<CVecD3> pos;
+    for(uint j = 0; j < entities.size(); j++) {
+        CVecD3 aux;
+        aux(x) = (double) entities[j].coords.first(x);
+        aux(y) = (double) entities[j].coords.first(y);
+        aux(z) = (double) entities[j].coords.first(z);
+        pos.push_back(aux);
+        aux(entities[j].dir)++;
+        pos.push_back(aux);
     }
+    writeCoordinates(pos);
+    GiD_BeginElements();
+    for (uint j = 0; j < entities.size(); j++) {
+        for (int k = 0; k < nV; k++) {
+            nId[k] = ++tmpCounter;
+        }
+        GiD_WriteElement(++elemCounter_, nId);
+
+    }
+    GiD_EndElements();
+    GiD_EndMesh();
 }
 
 void OutputGiD::writeAnisotropicBody() {
@@ -521,6 +527,11 @@ void OutputGiD::writeCompositeSurf() {
 }
 
 void OutputGiD::writeThinWire() {
+    for(uint i = 0; i < nfde_->thinWire.size(); i++) {
+        writeCoordDirAsLines(
+                nfde_->thinWire[i].segments,
+                nfde_->thinWire[i].getNameAtLayer());
+    }
 }
 
 void OutputGiD::writeThinGap() {
