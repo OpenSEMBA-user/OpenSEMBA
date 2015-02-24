@@ -719,12 +719,13 @@ void OutputNFDE::exportThinWire() {
         if(nfde->thinWire[i].segments.size() < 1)
             continue;
 
-        if(!nfde->thinWire[i].layer.empty())
-            output << "* " << nfde->thinWire[i].layer << endl;
+        if(!nfde->thinWire[i].layer.empty()) {
+            output << "* " << nfde->thinWire[i].getNameAtLayer() << endl;
+        }
         output << "!NEW THIN WIRE" << endl;
         output << nfde->thinWire[i].rad << space
-                << nfde->thinWire[i].res << space
-                << nfde->thinWire[i].ind << space;
+               << nfde->thinWire[i].res << space
+               << nfde->thinWire[i].ind << space;
 
         switch(nfde->thinWire[i].tl) {
         case NFDEData::ThinWire::Extremes::MATERIAL:
@@ -758,14 +759,16 @@ void OutputNFDE::exportThinWire() {
 
         output << endl;
 
-        if((nfde->thinWire[i].tl == NFDEData::ThinWire::Extremes::SERIES) ||
-                (nfde->thinWire[i].tl == NFDEData::ThinWire::Extremes::PARALLEL))
+        if ((nfde->thinWire[i].tl == NFDEData::ThinWire::Extremes::SERIES) ||
+            (nfde->thinWire[i].tl == NFDEData::ThinWire::Extremes::PARALLEL))
+
             output << nfde->thinWire[i].rtl << space
             << nfde->thinWire[i].itl << space
             << nfde->thinWire[i].ctl << endl;
 
-        if((nfde->thinWire[i].tr == NFDEData::ThinWire::Extremes::SERIES) ||
-                (nfde->thinWire[i].tr == NFDEData::ThinWire::Extremes::PARALLEL))
+        if ((nfde->thinWire[i].tr == NFDEData::ThinWire::Extremes::SERIES) ||
+            (nfde->thinWire[i].tr == NFDEData::ThinWire::Extremes::PARALLEL))
+
             output << nfde->thinWire[i].rtr << space
             << nfde->thinWire[i].itr << space
             << nfde->thinWire[i].ctr << endl;
@@ -776,11 +779,11 @@ void OutputNFDE::exportThinWire() {
         for(uint j = 0; j < nfde->thinWire[i].segments.size(); j++) {
 
             output << nfde->thinWire[i].segments[j].coords(x) << space
-                    << nfde->thinWire[i].segments[j].coords(y) << space
-                    << nfde->thinWire[i].segments[j].coords(z) << space
-                    << toString(nfde->thinWire[i].segments[j].dir) << space
-                    << nfde->thinWire[i].segments[j].multiplier << space
-                    << nfde->thinWire[i].segments[j].node << endl;
+                   << nfde->thinWire[i].segments[j].coords(y) << space
+                   << nfde->thinWire[i].segments[j].coords(z) << space
+                   << toString(nfde->thinWire[i].segments[j].dir) << space
+                   << nfde->thinWire[i].segments[j].multiplier << space
+                   << nfde->thinWire[i].segments[j].node << endl;
 
             if(abs(nfde->thinWire[i].segments[j].multiplier) > 1e-4) {
                 switch(nfde->thinWire[i].segments[j].srctype) {
