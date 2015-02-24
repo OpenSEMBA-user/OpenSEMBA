@@ -38,7 +38,7 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     nfde_ = nfde;
     openGiDFiles();
     writeSpaceSteps();
-//    writeBoundaries();
+    writeBoundaries();
     writePlaneWaveSource();
     //    writeCurrentDensitySource();
     //    writeFieldSource();
@@ -472,14 +472,16 @@ void OutputGiD::writeIsotropicSurf() {
 
 void OutputGiD::writeIsotropicLine() {
     for(uint i = 0; i < nfde_->isotropicLine.size(); i++) {
-        writeCoordDirAsLines(
-                nfde_->isotropicLine[i].entities,
-                nfde_->isotropicLine[i].getNameAtLayer());
+        vector<const NFDEData::CoordsLine*> cD;
+        for (uint j = 0; j < nfde_->isotropicLine[i].entities.size(); j++) {
+            cD.push_back(&nfde_->isotropicLine[i].entities[j]);
+        }
+        writeCoordLines(cD, nfde_->isotropicLine[i].getNameAtLayer());
     }
 }
 
-void OutputGiD::writeCoordDirAsLines(
-        const vector<NFDEData::CoordsDir>& entities,
+void OutputGiD::writeCoordLines(
+        const vector<const NFDEData::CoordsLine*>& entities,
         const string& name) {
     static const int nV = 2;
     uint tmpCounter = coordCounter_;
@@ -488,11 +490,11 @@ void OutputGiD::writeCoordDirAsLines(
     vector<CVecD3> pos;
     for(uint j = 0; j < entities.size(); j++) {
         CVecD3 aux;
-        aux(x) = (double) entities[j].coords.first(x);
-        aux(y) = (double) entities[j].coords.first(y);
-        aux(z) = (double) entities[j].coords.first(z);
+        aux(x) = (double) entities[j]->coords(x);
+        aux(y) = (double) entities[j]->coords(y);
+        aux(z) = (double) entities[j]->coords(z);
         pos.push_back(aux);
-        aux(entities[j].dir)++;
+        aux(entities[j]->dir)++;
         pos.push_back(aux);
     }
     writeCoordinates(pos);
@@ -528,9 +530,11 @@ void OutputGiD::writeCompositeSurf() {
 
 void OutputGiD::writeThinWire() {
     for(uint i = 0; i < nfde_->thinWire.size(); i++) {
-        writeCoordDirAsLines(
-                nfde_->thinWire[i].segments,
-                nfde_->thinWire[i].getNameAtLayer());
+        vector<const NFDEData::CoordsLine*> cD;
+        for (uint j = 0; j < nfde_->thinWire[i].segments.size(); j++) {
+            cD.push_back(&nfde_->thinWire[i].segments[j]);
+        }
+        writeCoordLines(cD, nfde_->thinWire[i].getNameAtLayer());
     }
 }
 

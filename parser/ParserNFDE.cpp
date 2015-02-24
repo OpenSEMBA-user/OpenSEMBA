@@ -696,7 +696,7 @@ void ParserNFDE::parseIsotropicSurf(const string &layer) {
 void ParserNFDE::parseIsotropicLine(const string &layer) {
 	NFDEData::IsotropicLine lin;
    lin.layer = layer;
-	NFDEData::CoordsDir entity;
+	NFDEData::CoordsLine entity;
 	string type1, type2, line, dir;
 	bool pnt = false;
    getline(file, line);
@@ -739,9 +739,9 @@ void ParserNFDE::parseIsotropicLine(const string &layer) {
       
       getline(file, line);
       while(!isHeader(line) && !isEmpty(line) && !isComment(line)) {
-         readLine("ISOTROPIC LINE", line, entity.coords.first(x)
-                                        , entity.coords.first(y)
-                                        , entity.coords.first(z)
+         readLine("ISOTROPIC LINE", line, entity.coords(x)
+                                        , entity.coords(y)
+                                        , entity.coords(z)
                                         , dir);
          
          switch(dir[0]) {
@@ -761,14 +761,15 @@ void ParserNFDE::parseIsotropicLine(const string &layer) {
             continue;
          }
          
-         if(pnt) {
-            getline(file, line);
-            readLine("ISOTROPIC LINE", line, entity.coords.second(x)
-                                           , entity.coords.second(y)
-                                           , entity.coords.second(z));
-         } else {
-            entity.coords.second = entity.coords.first;
-         }
+//         if(pnt) {
+//            getline(file, line);
+//            readLine("ISOTROPIC LINE", line, entity.coords.second(x)
+//                                           , entity.coords.second(y)
+//                                           , entity.coords.second(z));
+//         } else {
+//            entity.coords.second = entity.coords.first;
+//         }
+//luis: Creo que esto ya no hace falta al.
 
          lin.entities.push_back(entity);
          
@@ -1453,7 +1454,7 @@ void ParserNFDE::parseThinWire(const string &layer) {
 	getline(file, line);
 	readLine("THIN WIRE", line, wire.enl, wire.enr);
 
-	NFDEData::ThinWire::Coords segment;
+	NFDEData::CoordsWire segment;
 	string d, type;
 	while(getline(file, line)) {
       if(isEmpty(line) || isComment(line) || isHeader(line))
@@ -1477,19 +1478,19 @@ void ParserNFDE::parseThinWire(const string &layer) {
 			return;
 		}
 
-		segment.srctype = NFDEData::ThinWire::Coords::Types::NONE;
+		segment.srctype = NFDEData::CoordsWire::Types::NONE;
 		if(segment.multiplier != 0.0) {
 			getline(file, line);
          readLine("THIN WIRE", line, type, segment.srcfile, false);
 			if(type.find("CURR") != string::npos)
-				segment.srctype = NFDEData::ThinWire::Coords::Types::CURR;
+				segment.srctype = NFDEData::CoordsWire::Types::CURR;
 			else if(type.find("VOLT") != string::npos)
-				segment.srctype = NFDEData::ThinWire::Coords::Types::VOLT;
+				segment.srctype = NFDEData::CoordsWire::Types::VOLT;
 			else {
 				cerr << "WARNING @ parseNFDE()" << endl;
 				cerr << "THIN WIRE: Incorrect srctype" << endl;
 				cerr << "           Setting NONE by default" << endl;
-				segment.srctype = NFDEData::ThinWire::Coords::Types::NONE;
+				segment.srctype = NFDEData::CoordsWire::Types::NONE;
 			}
 		}
 		wire.segments.push_back(segment);

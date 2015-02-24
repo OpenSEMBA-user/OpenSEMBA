@@ -32,6 +32,7 @@ protected:
     template<class T, int D>
     static string toString(const CartesianVector<T, D>& vec);
     static string toString1PNT(const NFDEData::Coords coord);
+    static string toString1PNT(const NFDEData::CoordsLine coord);
     static string toString2PNT(const NFDEData::Coords coord);
     static string toString2PNT(const NFDEData::CoordsDir coord, int skip = 0);
 

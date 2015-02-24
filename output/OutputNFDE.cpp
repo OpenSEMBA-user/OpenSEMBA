@@ -168,6 +168,12 @@ inline string OutputNFDE::toString1PNT(const NFDEData::Coords coord) {
     return res.str();
 }
 
+inline string OutputNFDE::toString1PNT(const NFDEData::CoordsLine coord) {
+    stringstream res;
+    res << toString(coord.coords) << endl;
+    return res.str();
+}
+
 inline string OutputNFDE::toString2PNT(
         const NFDEData::CoordsDir coord,
         int skip) {
@@ -484,7 +490,7 @@ void OutputNFDE::exportIsotropicLine() {
                     << ent->sigmam << endl;
         }
         for(uint j = 0; j < ent->entities.size(); j++) {
-            output << toString2PNT(ent->entities[j]);
+            output << toString1PNT(ent->entities[j]);
         }
 
         output << endl;
@@ -778,10 +784,10 @@ void OutputNFDE::exportThinWire() {
 
             if(abs(nfde->thinWire[i].segments[j].multiplier) > 1e-4) {
                 switch(nfde->thinWire[i].segments[j].srctype) {
-                case NFDEData::ThinWire::Coords::Types::CURR:
+                case NFDEData::CoordsWire::Types::CURR:
                     output << "CURR";
                     break;
-                case NFDEData::ThinWire::Coords::Types::VOLT:
+                case NFDEData::CoordsWire::Types::VOLT:
                     output << "VOLT";
                     break;
                 default:

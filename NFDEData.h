@@ -43,6 +43,37 @@ struct NFDEData : public ProjectFile {
         CartesianAxis dir;
         CoordsDir()
         : Coords(), dir(x) {}
+        CoordsDir(pair<CVecI3, CVecI3> c, CartesianAxis d) {
+            dir = d;
+            coords = c;
+        }
+    };
+
+    struct CoordsLine {
+        CVecI3 coords;
+        CartesianAxis dir;
+        CoordsLine() {
+            dir = z;
+        }
+    };
+
+    struct CoordsWire : public CoordsLine {
+        struct Types {
+            enum value {
+                NONE, CURR, VOLT
+            };
+        };
+        double multiplier;
+        int node;
+        Types::value srctype;
+        string srcfile;
+        CoordsWire()
+        :   CoordsLine(),
+            multiplier(0.0),
+            node(-1),
+            srctype(Types::NONE),
+            srcfile("") {
+        }
     };
 
     struct ObjectInLayer {
@@ -184,7 +215,7 @@ struct NFDEData : public ProjectFile {
     struct IsotropicLine : public ObjectInLayer {
         MaterialTypes::value type;
         double sigma, eps, mu, sigmam;
-        vector<CoordsDir> entities;
+        vector<CoordsLine> entities;
         IsotropicLine()
         :	type(MaterialTypes::NONE),
          	sigma(0.0),
@@ -307,35 +338,12 @@ struct NFDEData : public ProjectFile {
                 NONE, MATERIAL, PARALLEL, SERIES
             };
         };
-        struct Coords {
-            struct Types {
-                enum value {
-                    NONE, CURR, VOLT
-                };
-            };
-            CVecI3 coords;
-            CartesianAxis dir;
-            double multiplier;
-            int node;
-            Types::value srctype;
-            string srcfile;
-            Coords()
-            :	dir(z),
-             	multiplier(0.0),
-             	node(-1),
-             	srctype(Types::NONE),
-             	srcfile("") {
-
-                for(int i = 0; i < 3; i++)
-                    coords(i) = -1;
-            }
-        };
         double rad, res, ind;
         Extremes::value tl, tr;
         double rtl, itl, ctl;
         double rtr, itr, ctr;
         int enl, enr;
-        vector<Coords> segments;
+        vector<CoordsWire> segments;
         ThinWire()
         :	rad(-1.0), res(0.0), ind(0.0),
          	tl(Extremes::NONE), tr(Extremes::NONE),
@@ -347,17 +355,11 @@ struct NFDEData : public ProjectFile {
         }
     };
     struct ThinGap : public ObjectInLayer {
-        struct Coords {
-            CVecI3 coords;
-            CartesianAxis dir;
+        struct Coords : public CoordsLine {
             int node;
-            Coords()
-            :	dir(x),
-             	node(-1) {
-
-                for(int i = 0; i < 3; i++)
-                    coords(i) = -1;
-            }
+            Coords() :
+                CoordsLine(),
+             	node(-1) {}
         };
         double width;
         vector<Coords> gaps;
