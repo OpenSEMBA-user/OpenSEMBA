@@ -587,7 +587,7 @@ void OutputGiD::writeCoordMultiplier(
         const string& name) {
     vector<const NFDEData::CoordsLine*> lines(entities.size());
     for (uint i = 0; i < entities.size(); i++) {
-           lines.push_back(new NFDEData::CoordsLine(*entities[i]));
+           lines[i] = new NFDEData::CoordsLine(*entities[i]);
     }
     writeCoordLines(lines, name);
     lines.clear();
