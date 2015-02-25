@@ -40,8 +40,8 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     writeSpaceSteps();
     writeBoundaries();
     writePlaneWaveSource();
-    //    writeCurrentDensitySource();
-    //    writeFieldSource();
+        writeCurrentDensitySource();
+        writeFieldSource();
     writeIsotropicBody();
     //    writeIsotropicSurf();
     writeIsotropicLine();
@@ -54,7 +54,7 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     writeThinWire();
     //    writeThinGap();
     //    writeTraditionalProbe();
-    //    writeNewProbe();
+        writeNewProbe();
     //    writeBulkProbes();
     //    writeSliceProbes();
     GiD_ClosePostMeshFile();
@@ -434,10 +434,26 @@ void OutputGiD::writePlaneWaveSource() {
     GiD_EndMesh();
 }
 
-void OutputGiD::writeDensitySource() {
+void OutputGiD::writeCurrentDensitySource() {
+    for(uint i = 0; i < nfde_->currentDensitySource.size(); i++) {
+        const NFDEData::CurrentDensitySource& ent = nfde_->currentDensitySource[i];
+        vector<const NFDEData::Coords*> cD;
+        for (uint j = 0; j < ent.entities.size(); j++) {
+            cD.push_back(&ent.entities[j]);
+        }
+        writeCoordNodes(cD, ent.getNameAtLayer());
+    }
 }
 
 void OutputGiD::writeFieldSource() {
+    for(uint i = 0; i < nfde_->fieldSource.size(); i++) {
+        const NFDEData::FieldSource& ent = nfde_->fieldSource[i];
+        vector<const NFDEData::Coords*> cD;
+        for (uint j = 0; j < ent.entities.size(); j++) {
+            cD.push_back(&ent.entities[j]);
+        }
+        writeCoordNodes(cD, ent.getNameAtLayer());
+    }
 }
 
 void OutputGiD::writeIsotropicBody() {
@@ -445,17 +461,17 @@ void OutputGiD::writeIsotropicBody() {
     uint tmpCounter = coordCounter_;
     int nId[nV];
     for(uint i = 0; i < nfde_->isotropicBody.size(); i++) {
-        const NFDEData::IsotropicBody* ent = &nfde_->isotropicBody[i];
-        const string name = ent->getNameAtLayer();
+        const NFDEData::IsotropicBody& ent = nfde_->isotropicBody[i];
+        const string name = ent.getNameAtLayer();
         beginMesh(name, GiD_3D, GiD_Hexahedra, nV);
         vector<CVecD3> pos;
-        for(uint j = 0; j < ent->entities.size(); j++) {
-            vector<CVecD3> auxPos = BoxI3(ent->entities[j].coords).getPos();
+        for(uint j = 0; j < ent.entities.size(); j++) {
+            vector<CVecD3> auxPos = BoxI3(ent.entities[j].coords).getPos();
             pos.insert(pos.end(), auxPos.begin(), auxPos.end());
         }
         writeCoordinates(pos);
         GiD_BeginElements();
-        for (uint j = 0; j < ent->entities.size(); j++) {
+        for (uint j = 0; j < ent.entities.size(); j++) {
             for (int k = 0; k < nV; k++) {
                 nId[k] = ++tmpCounter;
             }
@@ -478,6 +494,91 @@ void OutputGiD::writeIsotropicLine() {
         }
         writeCoordLines(cD, nfde_->isotropicLine[i].getNameAtLayer());
     }
+}
+
+void OutputGiD::writeAnisotropicBody() {
+}
+
+void OutputGiD::writeAnisotropicSurf() {
+}
+
+void OutputGiD::writeAnisotropicLine() {
+}
+
+void OutputGiD::writeDispersiveBody() {
+}
+
+void OutputGiD::writeDispersiveSurf() {
+}
+
+void OutputGiD::writeCompositeSurf() {
+}
+
+void OutputGiD::writeThinWire() {
+    for(uint i = 0; i < nfde_->thinWire.size(); i++) {
+        const NFDEData::ThinWire& ent = nfde_->thinWire[i];
+        vector<const NFDEData::CoordsLine*> wire, voltage, current;
+        for (uint j = 0; j < ent.segments.size(); j++) {
+            if(abs(ent.segments[j].multiplier) <= 1e-4) {
+                wire.push_back(&ent.segments[j]);
+            } else {
+                switch(ent.segments[j].srctype) {
+                case NFDEData::CoordsWire::Types::VOLT:
+                    voltage.push_back(&ent.segments[j]);
+                    break;
+                default:
+                    current.push_back(&ent.segments[j]);
+                }
+            }
+        }
+        const string name = nfde_->thinWire[i].getNameAtLayer();
+        writeCoordLines(wire, name);
+        writeCoordLines(current, "Source//CurrentGenerator@" + name);
+        writeCoordLines(voltage, "Source//VoltageGenerator@" + name);
+    }
+}
+
+void OutputGiD::writeThinGap() {
+}
+
+void OutputGiD::writeTraditionalProbe() {
+}
+
+void OutputGiD::writeNewProbe() {
+}
+
+void OutputGiD::writeBulkProbes() {
+}
+
+void OutputGiD::writeSliceProbes() {
+}
+
+void OutputGiD::writeCoordNodes(
+        const vector<const NFDEData::Coords*>& entities,
+        const string& name) {
+    static const int nV = 1;
+    uint tmpCounter = coordCounter_;
+    int nId[nV];
+    beginMesh(name, GiD_3D, GiD_Point, nV);
+    vector<CVecD3> pos;
+    for(uint j = 0; j < entities.size(); j++) {
+        CVecD3 aux;
+        aux(x) = (double) entities[j]->coords.first(x);
+        aux(y) = (double) entities[j]->coords.first(y);
+        aux(z) = (double) entities[j]->coords.first(z);
+        pos.push_back(aux);
+    }
+    writeCoordinates(pos);
+    GiD_BeginElements();
+    for (uint j = 0; j < entities.size(); j++) {
+        for (int k = 0; k < nV; k++) {
+            nId[k] = ++tmpCounter;
+        }
+        GiD_WriteElement(++elemCounter_, nId);
+
+    }
+    GiD_EndElements();
+    GiD_EndMesh();
 }
 
 void OutputGiD::writeCoordLines(
@@ -510,45 +611,3 @@ void OutputGiD::writeCoordLines(
     GiD_EndMesh();
 }
 
-void OutputGiD::writeAnisotropicBody() {
-}
-
-void OutputGiD::writeAnisotropicSurf() {
-}
-
-void OutputGiD::writeAnisotropicLine() {
-}
-
-void OutputGiD::writeDispersiveBody() {
-}
-
-void OutputGiD::writeDispersiveSurf() {
-}
-
-void OutputGiD::writeCompositeSurf() {
-}
-
-void OutputGiD::writeThinWire() {
-    for(uint i = 0; i < nfde_->thinWire.size(); i++) {
-        vector<const NFDEData::CoordsLine*> cD;
-        for (uint j = 0; j < nfde_->thinWire[i].segments.size(); j++) {
-            cD.push_back(&nfde_->thinWire[i].segments[j]);
-        }
-        writeCoordLines(cD, nfde_->thinWire[i].getNameAtLayer());
-    }
-}
-
-void OutputGiD::writeThinGap() {
-}
-
-void OutputGiD::writeTraditionalProbe() {
-}
-
-void OutputGiD::writeNewProbe() {
-}
-
-void OutputGiD::writeBulkProbes() {
-}
-
-void OutputGiD::writeSliceProbes() {
-}

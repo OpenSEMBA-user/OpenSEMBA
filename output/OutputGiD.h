@@ -82,7 +82,7 @@ private:
     void writeSpaceSteps();
     void writeBoundaries();
     void writePlaneWaveSource();
-    void writeDensitySource();
+    void writeCurrentDensitySource();
     void writeFieldSource();
     void writeIsotropicBody();
     void writeIsotropicSurf();
@@ -99,6 +99,9 @@ private:
     void writeNewProbe();
     void writeBulkProbes();
     void writeSliceProbes();
+    void writeCoordNodes(
+            const vector<const NFDEData::Coords*>& entities,
+            const string& name);
     void writeCoordLines(
             const vector<const NFDEData::CoordsLine*>& entities,
             const string& name);

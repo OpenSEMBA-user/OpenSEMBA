@@ -27,6 +27,7 @@ class MeshVolume : public Mesh {
 public:
     MapGroup map;
     MeshVolume();
+    MeshVolume(const MeshVolume& meshVol);
     MeshVolume(
             const CoordinateGroup&,
             const ElementsGroup&);
@@ -76,9 +77,9 @@ public:
     isFloatingCoordinate(const CoordD3* coordinate) const;
     virtual bool
     isOnBoundary(const CVecD3 pos) const;
-    virtual CVecD3
+    virtual const CoordD3*
     getClosestVertex(const CVecD3 pos) const;
-    virtual vector<const Polygon*>
+    virtual vector<const Surface*>
     getMaterialBoundary(
             const uint matId,
             const uint layId) const;
@@ -86,7 +87,7 @@ public:
     discretizeWithinBoundary(
             const uint matId,
             const uint layId) const;
-    virtual void
+    void
     printInfo() const;
 private:
     vector<pair<const Volume*, unsigned int> >

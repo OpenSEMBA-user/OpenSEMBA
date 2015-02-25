@@ -20,7 +20,22 @@ MeshVolume::MeshVolume(
  const Grid3* grid) : Mesh(vIn, elementIn, grid) {
     check();
 }
- 
+
+
+MeshVolume::MeshVolume(const MeshVolume& param) {
+    cG_ = param.cG_;
+    elem_ = param.elem_;
+    elem_.reassignPointers(cG_);
+    map = param.map;
+    map.reassignPointers(elem_);
+    if (param.grid_ != NULL) {
+        grid_ = new Grid3(*param.grid_);
+    } else {
+        grid_ = NULL;
+    }
+}
+
+
 MeshVolume::~MeshVolume() {
 	if (grid_ != NULL) {
 		delete grid_;
@@ -132,10 +147,6 @@ MeshVolume::getAdjacentElements(const vector<unsigned int>& region) const {
 void
 MeshVolume::printInfo() const {
 	Mesh::printInfo();
-	elem_.printInfo();
-	if (grid_ != NULL) {
-		grid_->printInfo();
-	}
 }
 
 vector<vector<unsigned int> >
@@ -583,14 +594,34 @@ MeshVolume::isOnBoundary(const CVecD3 pos) const {
 #warning "Not implemented"
 }
 
-CVecD3 MeshVolume::getClosestVertex(const CVecD3 pos) const {
-#warning "Not implemented"
+const CoordD3* MeshVolume::getClosestVertex(const CVecD3 pos) const {
+    const CoordD3* res;
+    double minDist = numeric_limits<double>::infinity();
+    for (uint b = 0; b < elem_.element.size(); b++) {
+        const Element* element = elem_.element[b];
+        for (uint i = 0; i < element->numberOfCoordinates(); i++) {
+            const CoordD3* candidate = element->getV(i);
+            if ((candidate->pos() - res->pos()).norm() < minDist) {
+                res = candidate;
+            }
+        }
+    }
+    return res;
 }
 
-vector<const Polygon*> MeshVolume::getMaterialBoundary(
+vector<const Surface*> MeshVolume::getMaterialBoundary(
         const uint matId,
         const uint layId) const {
-#warning "Not implemented"
+    vector<const Surface*> res;
+    vector<const Element*> e = elem_.get(Element::SURFACE, matId, layId);
+    res.reserve(e.size());
+    for (uint i = 0; i < e.size(); i++) {
+        const Surface* surf = dynamic_cast<const Surface*>(e[i]);
+        if (surf != NULL) {
+            res.push_back(surf);
+        }
+    }
+    return res;
 }
 
 vector<BoxD3> MeshVolume::discretizeWithinBoundary(

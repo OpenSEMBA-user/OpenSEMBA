@@ -160,4 +160,9 @@ Mesh::getElementsWithVertex(
 
 void Mesh::printInfo() const {
     cout << " --- Mesh Info --- " << endl;
+    cG_.printInfo();
+    elem_.printInfo();
+    if (grid_ != NULL) {
+        grid_->printInfo();
+    }
 }

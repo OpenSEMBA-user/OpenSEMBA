@@ -30,9 +30,9 @@ public:
     vector<const Polygon*> getBoundaryPolygons(
             const string& boundaryName) const;
     bool isOnBoundary(const CVecD3 pos) const;
-    CVecD3 getClosestVertex(
+    const CoordD3* getClosestVertex(
             const CVecD3 pos) const;
-    vector<const Polygon*>  getMaterialBoundary(
+    vector<const Surface*> getMaterialBoundary(
             const uint matId,
             const uint layId) const;
     vector<BoxD3> discretizeWithinBoundary(
@@ -49,10 +49,10 @@ private:
     const OpenfoamBoundary* getBoundary(
             const string& boundaryName) const;
     vector<BoxD3> discretizeWithinBoundary(
-            const vector<const Polygon*>& faces) const;
-    vector<pair<const Polygon*, const Polygon*> >
+            const vector<const Surface*>& faces) const;
+    vector<pair<const Surface*, const Surface*> >
     getPairsDefiningVolumeWithin(
-            const vector<const Polygon*>& boundary) const;
+            const vector<const Surface*>& boundary) const;
 };
 
 #endif /* MESHOPENFOAM_H_ */

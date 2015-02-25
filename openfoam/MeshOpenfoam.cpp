@@ -92,16 +92,16 @@ MeshOpenfoam::getBoundary(
 	return NULL;
 }
 
-CVecD3
+const CoordD3*
 MeshOpenfoam::getClosestVertex(const CVecD3 pos) const {
-	CVecD3 res;
+	const CoordD3* res;
 	double minDist = numeric_limits<double>::infinity();
 	for (uint b = 0; b < boundary_.size(); b++) {
 		for (uint f = 0; f < boundary_[b].getFaces(); f++) {
 			const Polygon* surf = &face_[f + boundary_[b].getStartFace()];
 			for (uint i = 0; i < surf->numberOfCoordinates(); i++) {
-				CVecD3 candidate = surf->getV(i)->pos();
-				if ((candidate - res).norm() < minDist) {
+				const CoordD3* candidate = surf->getV(i);
+				if ((candidate->pos() - res->pos()).norm() < minDist) {
 					res = candidate;
 				}
 			}
@@ -135,11 +135,11 @@ MeshOpenfoam::isOnBoundary(const CVecD3 pos) const {
 	}
 }
 
-vector<const Polygon*>
+vector<const Surface*>
 MeshOpenfoam::getMaterialBoundary(
         const uint matId,
         const uint layId) const {
-	vector<const Polygon*> res;
+	vector<const Surface*> res;
 	for (uint i = 0; i < boundary_.size(); i++) {
 		if (boundary_[i].isMaterial()
 		        && boundary_[i].getMaterialId() == matId
@@ -163,10 +163,10 @@ MeshOpenfoam::discretizeWithinBoundary(
 
 vector<BoxD3>
 MeshOpenfoam::discretizeWithinBoundary(
- const vector<const Polygon*>& surf) const {
+ const vector<const Surface*>& surf) const {
 	checkAllFacesAreRectangular();
 	// Gets pairs of quads that define the volume of the space within them.
-	const vector<pair<const Polygon*, const Polygon*> > pairs
+	const vector<pair<const Surface*, const Surface*> > pairs
 	 = getPairsDefiningVolumeWithin(surf);
 	// Gets positions in z-axis.
 	vector<BoxD3> box(pairs.size());
@@ -217,10 +217,10 @@ MeshOpenfoam::areFacesRectangular() const {
    return true;
 }
 
-vector<pair<const Polygon*, const Polygon*> >
+vector<pair<const Surface*, const Surface*> >
 MeshOpenfoam::getPairsDefiningVolumeWithin(
-        const vector<const Polygon*>& origBound) const {
-	vector<pair<const Polygon*, const Polygon*> > res;
+        const vector<const Surface*>& origBound) const {
+	vector<pair<const Surface*, const Surface*> > res;
 	// --- Preliminar checkings ------------------------------------------------
 	const uint nOrigBound = origBound.size();
 	// Checks that bound.size is an even number.
@@ -246,7 +246,7 @@ MeshOpenfoam::getPairsDefiningVolumeWithin(
 	}
 	// --- Procedures ----------------------------------------------------------
 	// Remove Surfaces not lying in a xy plane.
-	vector<const Polygon*> bound;
+	vector<const Surface*> bound;
 	bound.reserve(nOrigBound);
 	for (uint b = 0; b < origBound.size(); b++) {
 		if (origBound[b]->isContainedInPlane(xy)) {

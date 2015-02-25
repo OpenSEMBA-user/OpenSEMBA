@@ -158,7 +158,7 @@ struct NFDEData : public ProjectFile {
          	beta(0.0) {}
     };
 
-    struct CurrentDensitySource {
+    struct CurrentDensitySource : public ObjectInLayer {
         struct Types {
             enum value {
                 NONE, ELECT, MAGNE
@@ -172,7 +172,8 @@ struct NFDEData : public ProjectFile {
          	filename(),
          	entities() {}
     };
-    struct FieldSource {
+
+    struct FieldSource : public ObjectInLayer {
         struct Types {
             enum value {
                 NONE, ELECT, MAGNE

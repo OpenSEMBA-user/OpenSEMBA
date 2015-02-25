@@ -68,9 +68,9 @@ public:
             const Element::Type type) const;
     virtual bool
     isOnBoundary(const CVecD3 pos) const = 0;
-    virtual CVecD3
+    virtual const CoordD3*
     getClosestVertex(const CVecD3 pos) const = 0;
-    virtual vector<const Polygon*>
+    virtual vector<const Surface*>
     getMaterialBoundary(const uint matId, const uint layId) const = 0;
     virtual vector<BoxD3>
     discretizeWithinBoundary(

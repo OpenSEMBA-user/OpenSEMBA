@@ -34,13 +34,13 @@ public:
 	 getType() const;
    Hardness
 	 getHardness() const;
+   string
+       getTypeStr() const;
 	virtual void
 	 printInfo() const;
 private:
 	Type type_;
    Hardness hardness_;
-	string
-	 getTypeStr() const;
    string
 	 getHardnessStr() const;
 };
