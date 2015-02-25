@@ -40,7 +40,6 @@ public:
     inline CVecTD getMax(void) const;
     inline CVecTD getLength() const;
 
-
     vector<CartesianVector<double, D> > getPos() const;
     vector<CartesianVector<double, D> >
     getPosOfBound(CartesianAxis d, CartesianBound p) const;
@@ -67,6 +66,7 @@ operator<<(
 #include "Box.hpp"
 
 typedef Box<double,3> BoxD3;
+typedef Box<long,2> BoxI2;
 typedef Box<long,3> BoxI3;
 
 #endif /* SRC_COMMON_GEOMETRY_BOX_H_ */

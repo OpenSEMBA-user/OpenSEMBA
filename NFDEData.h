@@ -108,11 +108,21 @@ struct NFDEData : public ProjectFile {
     struct ObjectInLayer {
         string layer;
         string name;
-        //      ObjectInLayer()
-        //      :  layer("") {}
         string getNameAtLayer() const {
             return name + "@" + layer;
         }
+    };
+
+    struct Line : public ObjectInLayer {
+        vector<CoordsLine> entities;
+    };
+
+    struct Surf : public ObjectInLayer {
+        vector<CoordsDir> entities;
+    };
+
+    struct Body : public ObjectInLayer {
+        vector<Coords> entities;
     };
 
     struct Probe : public ObjectInLayer {
@@ -217,91 +227,24 @@ struct NFDEData : public ProjectFile {
          	entities() {}
     };
 
-    struct IsotropicBody : public ObjectInLayer {
+    struct IsotropicLine :public Line {
         MaterialTypes::value type;
         double sigma, eps, mu, sigmam;
-        vector<Coords> entities;
-        IsotropicBody()
-        :	type(MaterialTypes::NONE),
-         	sigma(0.0),
-         	eps(VACUUM_PERMITTIVITY),
-         	mu(VACUUM_PERMEABILITY),
-         	sigmam(0.0),
-         	entities() {}
-    };
-
-    struct IsotropicSurf : public ObjectInLayer {
-        MaterialTypes::value type;
-        double sigma, eps, mu, sigmam;
-        vector<CoordsDir> entities;
-        IsotropicSurf()
-        :	type(MaterialTypes::NONE),
-         	sigma(0.0),
-         	eps(VACUUM_PERMITTIVITY),
-         	mu(VACUUM_PERMEABILITY),
-         	sigmam(0.0) {}
-    };
-
-    struct IsotropicLine : public ObjectInLayer {
-        MaterialTypes::value type;
-        double sigma, eps, mu, sigmam;
-        vector<CoordsLine> entities;
         IsotropicLine()
-        :	type(MaterialTypes::NONE),
+        :	Line(),
+         	type(MaterialTypes::NONE),
          	sigma(0.0),
          	eps(VACUUM_PERMITTIVITY),
          	mu(VACUUM_PERMEABILITY),
          	sigmam(0.0) {}
     };
 
-    struct AnisotropicBody : public ObjectInLayer {
+    struct AnisotropicLine : public Line  {
         double sigma[3][3];
         double eps[3][3];
         double mu[3][3];
         double sigmam[3][3];
-        vector<Coords> entities;
-        AnisotropicBody()
-        :	entities() {
-            for(int i = 0; i < 3; i++) {
-                for(int j = 0; j < 3; j++) {
-                    sigma[i][j] = 0.0;
-                    eps[i][j] = 0.0;
-                    mu[i][j] = 0.0;
-                    sigmam[i][j] = 0.0;
-                }
-                eps[i][i] = VACUUM_PERMITTIVITY;
-                mu[i][i] = VACUUM_PERMEABILITY;
-            }
-        }
-    };
-    struct AnisotropicSurf : public ObjectInLayer {
-        double sigma[3][3];
-        double eps[3][3];
-        double mu[3][3];
-        double sigmam[3][3];
-        vector<CoordsDir> entities;
-        AnisotropicSurf()
-        :	entities() {
-            for(int i = 0; i < 3; i++) {
-                for(int j = 0; j < 3; j++) {
-                    sigma[i][j] = 0.0;
-                    eps[i][j] = 0.0;
-                    mu[i][j] = 0.0;
-                    sigmam[i][j] = 0.0;
-                }
-                eps[i][i] = VACUUM_PERMITTIVITY;
-                mu[i][i] = VACUUM_PERMEABILITY;
-            }
-        }
-    };
-    struct AnisotropicLine : public ObjectInLayer {
-        double sigma[3][3];
-        double eps[3][3];
-        double mu[3][3];
-        double sigmam[3][3];
-        vector<CoordsDir> entities;
-        AnisotropicLine()
-        :	entities() {
+        AnisotropicLine() {
             for(int i = 0; i < 3; i++) {
                 for(int j = 0; j < 3; j++) {
                     sigma[i][j] = 0.0;
@@ -315,36 +258,10 @@ struct NFDEData : public ProjectFile {
         }
     };
 
-    struct DispersiveBody : public ObjectInLayer {
+    struct DispersiveLine : public Line {
         double sigma0, epsinf, muinf;
         int K;
         vector< complex<double> > a, b;
-        vector<Coords> entities;
-        DispersiveBody()
-        :	sigma0(0.0),
-         	epsinf(VACUUM_PERMITTIVITY),
-         	muinf(VACUUM_PERMEABILITY),
-         	K(0),
-         	a(), b() {}
-    };
-
-    struct DispersiveSurf : public ObjectInLayer {
-        double sigma0, epsinf, muinf;
-        int K;
-        vector< complex<double> > a, b;
-        vector<CoordsDir> entities;
-        DispersiveSurf()
-        :	sigma0(0.0),
-         	epsinf(VACUUM_PERMITTIVITY),
-         	muinf(VACUUM_PERMEABILITY),
-         	K(0),
-         	a(), b() {}
-    };
-    struct DispersiveLine : public ObjectInLayer {
-        double sigma0, epsinf, muinf;
-        int K;
-        vector< complex<double> > a, b;
-        vector<CoordsDir> entities;
         DispersiveLine()
         :	sigma0(0.0),
          	epsinf(VACUUM_PERMITTIVITY),
@@ -353,13 +270,92 @@ struct NFDEData : public ProjectFile {
          	a(), b() {}
     };
 
-    struct CompositeSurf : public ObjectInLayer {
+    struct IsotropicSurf : public Surf {
+        MaterialTypes::value type;
+        double sigma, eps, mu, sigmam;
+        IsotropicSurf()
+        :	type(MaterialTypes::NONE),
+         	sigma(0.0),
+         	eps(VACUUM_PERMITTIVITY),
+         	mu(VACUUM_PERMEABILITY),
+         	sigmam(0.0) {}
+    };
+
+    struct AnisotropicSurf : public Surf {
+        double sigma[3][3];
+        double eps[3][3];
+        double mu[3][3];
+        double sigmam[3][3];
+        AnisotropicSurf() {
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    sigma[i][j] = 0.0;
+                    eps[i][j] = 0.0;
+                    mu[i][j] = 0.0;
+                    sigmam[i][j] = 0.0;
+                }
+                eps[i][i] = VACUUM_PERMITTIVITY;
+                mu[i][i] = VACUUM_PERMEABILITY;
+            }
+        }
+    };
+    struct DispersiveSurf : public Surf {
+        double sigma0, epsinf, muinf;
+        int K;
+        vector< complex<double> > a, b;
+        DispersiveSurf()
+        :	sigma0(0.0),
+         	epsinf(VACUUM_PERMITTIVITY),
+         	muinf(VACUUM_PERMEABILITY),
+         	K(0),
+         	a(), b() {}
+    };
+    struct CompositeSurf : public Surf {
         vector<double> sigma, eps, mu, sigmam, thk;
         int numberoflayers;
-        vector<CoordsDir> entities;
         CompositeSurf()
-        :	numberoflayers(0),
-         	entities() {}
+        :	numberoflayers(0) {}
+    };
+
+    struct IsotropicBody : public Body {
+        MaterialTypes::value type;
+        double sigma, eps, mu, sigmam;
+        IsotropicBody()
+        :	type(MaterialTypes::NONE),
+         	sigma(0.0),
+         	eps(VACUUM_PERMITTIVITY),
+         	mu(VACUUM_PERMEABILITY),
+         	sigmam(0.0) {}
+    };
+
+    struct AnisotropicBody : public Body {
+        double sigma[3][3];
+        double eps[3][3];
+        double mu[3][3];
+        double sigmam[3][3];
+        AnisotropicBody() {
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    sigma[i][j] = 0.0;
+                    eps[i][j] = 0.0;
+                    mu[i][j] = 0.0;
+                    sigmam[i][j] = 0.0;
+                }
+                eps[i][i] = VACUUM_PERMITTIVITY;
+                mu[i][i] = VACUUM_PERMEABILITY;
+            }
+        }
+    };
+    struct DispersiveBody : public Body {
+        double sigma0, epsinf, muinf;
+        int K;
+        vector< complex<double> > a, b;
+        DispersiveBody()
+        :	sigma0(0.0),
+         	epsinf(VACUUM_PERMITTIVITY),
+         	muinf(VACUUM_PERMEABILITY),
+         	K(0),
+         	a(), b() {}
     };
 
     struct ThinWire : public ObjectInLayer {
@@ -389,7 +385,7 @@ struct NFDEData : public ProjectFile {
             int node;
             Coords() :
                 CoordsLine(),
-             	node(-1) {}
+                node(-1) {}
         };
         double width;
         vector<Coords> gaps;
@@ -501,7 +497,7 @@ struct NFDEData : public ProjectFile {
     vector<CompositeSurf> compositeSurf;
     //	THIN MATERIALS
     vector<ThinWire> thinWire;
-    vector<ThinGap>  thinGap;
+    vector<ThinGap> thinGap;
     //	PROBES
     vector<TraditionalProbe> traditionalProbe;
     vector<NewProbe>         newProbe;
@@ -516,6 +512,7 @@ struct NFDEData : public ProjectFile {
         CVecI3 max(spacesteps[x].n, spacesteps[y].n, spacesteps[z].n);
         return BoxI3(min,max);
     }
+
 };
 
 #endif /* NFDEDATA_H_ */

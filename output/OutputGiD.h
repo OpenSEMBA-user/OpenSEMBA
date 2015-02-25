@@ -84,15 +84,9 @@ private:
     void writePlaneWaveSource();
     void writeCurrentDensitySource();
     void writeFieldSource();
-    void writeIsotropicBody();
-    void writeIsotropicSurf();
-    void writeIsotropicLine();
-    void writeAnisotropicBody();
-    void writeAnisotropicSurf();
-    void writeAnisotropicLine();
-    void writeDispersiveBody();
-    void writeDispersiveSurf();
-    void writeCompositeSurf();
+    void writeLine(const NFDEData::Line*);
+    void writeSurf(const NFDEData::Surf*);
+    void writeBody(const NFDEData::Body*);
     void writeThinWire();
     void writeThinGap();
     void writeTraditionalProbe();
