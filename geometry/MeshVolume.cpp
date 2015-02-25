@@ -581,20 +581,24 @@ MeshVolume::checkAreaCoherence() const {
 bool
 MeshVolume::isOnBoundary(const CVecD3 pos) const {
 #warning "Not implemented"
+    return false;
 }
 
 CVecD3 MeshVolume::getClosestVertex(const CVecD3 pos) const {
 #warning "Not implemented"
+    return CVecD3();
 }
 
 vector<const Polygon*> MeshVolume::getMaterialBoundary(
         const uint matId,
         const uint layId) const {
 #warning "Not implemented"
+    return vector<const Polygon*>();
 }
 
 vector<BoxD3> MeshVolume::discretizeWithinBoundary(
         const uint matId,
         const uint layId) const {
 #warning "Not implemented"
+    return vector<BoxD3>();
 }
