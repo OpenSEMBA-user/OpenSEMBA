@@ -10,7 +10,7 @@
 
 #include "EMSource.h"
 
-class Nodal : public EMSource {
+class SourceOnLine : public EMSource {
 public:
 	typedef enum {
 		electricField = 1,
@@ -21,15 +21,15 @@ public:
 		hard = 1,
 		soft = 2
 	} Hardness;
-	Nodal();
-	Nodal(
+	SourceOnLine();
+	SourceOnLine(
 	 const Type& sourceType,
      const Hardness& sourceHardness,
 	 const vector<unsigned int>& elem,
 	 const Magnitude* magnitude);
-	virtual ~Nodal();
-	Nodal&
-	 operator=(const Nodal &rhs);
+	virtual ~SourceOnLine();
+	SourceOnLine&
+	 operator=(const SourceOnLine &rhs);
 	Type
 	 getType() const;
    Hardness

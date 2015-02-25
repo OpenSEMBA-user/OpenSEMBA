@@ -18,7 +18,7 @@ EMSourceGroup::EMSourceGroup(
  const vector<PlaneWave>& planeWave_,
  const vector<Waveport>& waveport_,
  const vector<Generator>& generator_,
-    const vector<Nodal>& nodal_) {
+    const vector<SourceOnLine>& nodal_) {
 	dipole = dipole_;
 	planeWave = planeWave_;
 	waveport = waveport_;
@@ -104,7 +104,7 @@ EMSourceGroup::getGenerator(const unsigned int i) const {
 	return &generator[i];
 }
 
-const Nodal*
+const SourceOnLine*
 EMSourceGroup::getNodal(const unsigned int i) const {
 	assert (i < countNodals());
 	return &nodal[i];

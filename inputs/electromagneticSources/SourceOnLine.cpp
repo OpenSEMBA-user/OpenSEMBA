@@ -5,18 +5,18 @@
  *      Author: luis
  */
 
-#include "Nodal.h"
+#include "SourceOnLine.h"
 
-Nodal::Nodal() {
+SourceOnLine::SourceOnLine() {
 	type_ = undefined;
 	hardness_ = soft;
 }
 
-Nodal::~Nodal() {
+SourceOnLine::~SourceOnLine() {
 	// TODO Auto-generated destructor stub
 }
 
-Nodal::Nodal(
+SourceOnLine::SourceOnLine(
  const Type& sourceType,
  const Hardness& sourceHardness,
  const vector<unsigned int>& elem,
@@ -25,8 +25,8 @@ Nodal::Nodal(
     hardness_ = sourceHardness;
 }
 
-Nodal&
-Nodal::operator=(const Nodal &rhs) {
+SourceOnLine&
+SourceOnLine::operator=(const SourceOnLine &rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
@@ -36,18 +36,18 @@ Nodal::operator=(const Nodal &rhs) {
 	return *this;
 }
 
-Nodal::Type
-Nodal::getType() const {
+SourceOnLine::Type
+SourceOnLine::getType() const {
 	return type_;
 }
 
-Nodal::Hardness
-Nodal::getHardness() const {
+SourceOnLine::Hardness
+SourceOnLine::getHardness() const {
 	return hardness_;
 }
 
 void
-Nodal::printInfo() const {
+SourceOnLine::printInfo() const {
 	cout<< " --- Nodal info --- " << endl;
 	EMSource::printInfo();
 	cout<< "Type: " << getTypeStr() << endl;
@@ -55,7 +55,7 @@ Nodal::printInfo() const {
 }
 
 string
-Nodal::getTypeStr() const {
+SourceOnLine::getTypeStr() const {
 	string res;
 	switch (type_) {
 	case electricField:
@@ -72,7 +72,7 @@ Nodal::getTypeStr() const {
 }
 
 string
-Nodal::getHardnessStr() const {
+SourceOnLine::getHardnessStr() const {
 	string res;
 	switch (type_) {
 	case hard:

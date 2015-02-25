@@ -119,15 +119,15 @@ private:
 	 readWaveportEMSource();
 	virtual Generator
 	 readGeneratorEMSource();
-	virtual Nodal
-	 readNodalEMSource();
+	virtual SourceOnLine
+	 readSourceOnLineEMSource();
 	Generator::Type
 	 generatorStrToType(string label) const;
 	Generator::Hardness
 	generatorStrToHardness(string str) const;
-	Nodal::Type
+	SourceOnLine::Type
 	 nodalStrToType(string label) const;
-   Nodal::Hardness
+   SourceOnLine::Hardness
 	 nodalStrToHardness(string label) const;
 	GlobalProblemData::boundType
 	 boundStrToType(string label) const;
