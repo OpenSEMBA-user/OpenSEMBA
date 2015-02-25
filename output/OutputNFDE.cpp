@@ -903,28 +903,28 @@ void OutputNFDE::exportNewProbe() {
         }
         for(uint j = 0; j < ent->probes.size(); j++) {
             switch(ent->probes[j].type) {
-            case NFDEData::NewProbe::Coords::Types::EX:
+            case NFDEData::CoordsNewProbe::Types::EX:
                 output << "EX";
                 break;
-            case NFDEData::NewProbe::Coords::Types::EY:
+            case NFDEData::CoordsNewProbe::Types::EY:
                 output << "EY";
                 break;
-            case NFDEData::NewProbe::Coords::Types::EZ:
+            case NFDEData::CoordsNewProbe::Types::EZ:
                 output << "EZ";
                 break;
-            case NFDEData::NewProbe::Coords::Types::HX:
+            case NFDEData::CoordsNewProbe::Types::HX:
                 output << "HX";
                 break;
-            case NFDEData::NewProbe::Coords::Types::HY:
+            case NFDEData::CoordsNewProbe::Types::HY:
                 output << "HY";
                 break;
-            case NFDEData::NewProbe::Coords::Types::HZ:
+            case NFDEData::CoordsNewProbe::Types::HZ:
                 output << "HZ";
                 break;
-            case NFDEData::NewProbe::Coords::Types::IW:
+            case NFDEData::CoordsNewProbe::Types::IW:
                 output << "IW";
                 break;
-            case NFDEData::NewProbe::Coords::Types::VG:
+            case NFDEData::CoordsNewProbe::Types::VG:
                 output << "VG";
                 break;
             default:

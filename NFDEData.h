@@ -20,13 +20,29 @@ struct NFDEData : public ProjectFile {
         };
     };
 
+    struct CoordsNode {
+        CVecI3 coords;
+        CoordsNode() {
+            coords = CVecI3(-1,-1,-1);
+        }
+    };
+
+    struct CoordsNewProbe : public CoordsNode {
+        struct Types {
+            enum value {
+                NONE, EX, EY, EZ, HX, HY, HZ, IW, VG
+            };
+        };
+        Types::value type;
+        CoordsNewProbe()
+        :  CoordsNode(), type(Types::NONE) {}
+    };
+
     struct Coords {
         pair<CVecI3, CVecI3> coords;
         Coords() {
-            for(int d = 0; d < 3; d++) {
-                coords.first (d) = 0;
-                coords.second(d) = -1;
-            }
+            coords.first = CVecI3(0,0,0);
+            coords.second = CVecI3(-1,-1,-1);
         }
     };
 
@@ -52,6 +68,19 @@ struct NFDEData : public ProjectFile {
     struct CoordsLine {
         CVecI3 coords;
         CartesianAxis dir;
+        CoordsLine(CoordsMultiplier c) {
+            coords = c.coords.first;
+            dir = z;
+            for (uint d = 0; d < 3; d++) {
+                if (c.multiplier(d) != 0.0) {
+                    dir = CartesianAxis(d);
+                }
+            }
+        }
+        CoordsLine(CVecI3 c, CartesianAxis d) {
+            coords = c;
+            dir = d;
+        }
         CoordsLine() {
             dir = z;
         }
@@ -389,26 +418,11 @@ struct NFDEData : public ProjectFile {
                 NONE, TIME, FREQ, TRAN, TIFR, TITR, FRTR, ALL
             };
         };
-        struct Coords {
-            struct Types {
-                enum value {
-                    NONE, EX, EY, EZ, HX, HY, HZ, IW, VG
-                };
-            };
-            Types::value type;
-            CVecI3 coords;
-            Coords()
-            :	type(Types::NONE) {
-
-                for(int i = 0; i < 3; i++)
-                    coords(i) = -1;
-            }
-        };
         DomainTypes::value domain;
         double tstart, tstop, tstep;
         double fstart, fstop, fstep;
         string filename, transFilename;
-        vector<Coords> probes;
+        vector<CoordsNewProbe> probes;
         NewProbe()
         : 	domain(DomainTypes::NONE),
           	tstart(0.0), tstop(-1.0), tstep(0.0),

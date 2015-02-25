@@ -99,8 +99,11 @@ private:
     void writeNewProbe();
     void writeBulkProbes();
     void writeSliceProbes();
+    void writeCoordMultiplier(
+                const vector<const NFDEData::CoordsMultiplier*>& entities,
+                const string& name);
     void writeCoordNodes(
-            const vector<const NFDEData::Coords*>& entities,
+            const vector<const NFDEData::CoordsNode*>& entities,
             const string& name);
     void writeCoordLines(
             const vector<const NFDEData::CoordsLine*>& entities,

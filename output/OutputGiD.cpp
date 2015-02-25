@@ -40,8 +40,8 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     writeSpaceSteps();
     writeBoundaries();
     writePlaneWaveSource();
-        writeCurrentDensitySource();
-        writeFieldSource();
+    writeCurrentDensitySource();
+    writeFieldSource();
     writeIsotropicBody();
     //    writeIsotropicSurf();
     writeIsotropicLine();
@@ -54,7 +54,7 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     writeThinWire();
     //    writeThinGap();
     //    writeTraditionalProbe();
-        writeNewProbe();
+    writeNewProbe();
     //    writeBulkProbes();
     //    writeSliceProbes();
     GiD_ClosePostMeshFile();
@@ -437,22 +437,22 @@ void OutputGiD::writePlaneWaveSource() {
 void OutputGiD::writeCurrentDensitySource() {
     for(uint i = 0; i < nfde_->currentDensitySource.size(); i++) {
         const NFDEData::CurrentDensitySource& ent = nfde_->currentDensitySource[i];
-        vector<const NFDEData::Coords*> cD;
+        vector<const NFDEData::CoordsMultiplier*> cD;
         for (uint j = 0; j < ent.entities.size(); j++) {
             cD.push_back(&ent.entities[j]);
         }
-        writeCoordNodes(cD, ent.getNameAtLayer());
+        writeCoordMultiplier(cD, "Source//" + ent.getNameAtLayer());
     }
 }
 
 void OutputGiD::writeFieldSource() {
     for(uint i = 0; i < nfde_->fieldSource.size(); i++) {
         const NFDEData::FieldSource& ent = nfde_->fieldSource[i];
-        vector<const NFDEData::Coords*> cD;
+        vector<const NFDEData::CoordsMultiplier*> cD;
         for (uint j = 0; j < ent.entities.size(); j++) {
             cD.push_back(&ent.entities[j]);
         }
-        writeCoordNodes(cD, ent.getNameAtLayer());
+        writeCoordMultiplier(cD, "Source//" + ent.getNameAtLayer());
     }
 }
 
@@ -545,6 +545,7 @@ void OutputGiD::writeTraditionalProbe() {
 }
 
 void OutputGiD::writeNewProbe() {
+
 }
 
 void OutputGiD::writeBulkProbes() {
@@ -554,7 +555,7 @@ void OutputGiD::writeSliceProbes() {
 }
 
 void OutputGiD::writeCoordNodes(
-        const vector<const NFDEData::Coords*>& entities,
+        const vector<const NFDEData::CoordsNode*>& entities,
         const string& name) {
     static const int nV = 1;
     uint tmpCounter = coordCounter_;
@@ -563,9 +564,9 @@ void OutputGiD::writeCoordNodes(
     vector<CVecD3> pos;
     for(uint j = 0; j < entities.size(); j++) {
         CVecD3 aux;
-        aux(x) = (double) entities[j]->coords.first(x);
-        aux(y) = (double) entities[j]->coords.first(y);
-        aux(z) = (double) entities[j]->coords.first(z);
+        aux(x) = (double) entities[j]->coords(x);
+        aux(y) = (double) entities[j]->coords(y);
+        aux(z) = (double) entities[j]->coords(z);
         pos.push_back(aux);
     }
     writeCoordinates(pos);
@@ -579,6 +580,17 @@ void OutputGiD::writeCoordNodes(
     }
     GiD_EndElements();
     GiD_EndMesh();
+}
+
+void OutputGiD::writeCoordMultiplier(
+        const vector<const NFDEData::CoordsMultiplier*>& entities,
+        const string& name) {
+    vector<const NFDEData::CoordsLine*> lines(entities.size());
+    for (uint i = 0; i < entities.size(); i++) {
+           lines.push_back(new NFDEData::CoordsLine(*entities[i]));
+    }
+    writeCoordLines(lines, name);
+    lines.clear();
 }
 
 void OutputGiD::writeCoordLines(
