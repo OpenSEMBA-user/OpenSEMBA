@@ -42,15 +42,14 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     writePlaneWaveSource();
     writeCurrentDensitySource();
     writeFieldSource();
-
-
+    // Lines.
     for (uint i = 0; i < nfde->isotropicLine.size(); i++) {
         writeLine(&nfde->isotropicLine[i]);
     }
     for (uint i = 0; i < nfde->anisotropicLine.size(); i++) {
         writeLine(&nfde->anisotropicLine[i]);
     }
-
+    // Surfs.
     for (uint i = 0; i < nfde->isotropicSurf.size(); i++) {
         writeSurf(&nfde->isotropicSurf[i]);
     }
@@ -63,7 +62,7 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     for (uint i = 0; i < nfde->compositeSurf.size(); i++) {
         writeSurf(&nfde->compositeSurf[i]);
     }
-
+    // Bodies.
     for (uint i = 0; i < nfde->isotropicBody.size(); i++) {
         writeBody(&nfde->isotropicBody[i]);
     }
@@ -75,11 +74,9 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     }
 
     writeThinWire();
-    //    writeThinGap();
-    //    writeTraditionalProbe();
     writeNewProbe();
-    //    writeBulkProbes();
-    //    writeSliceProbes();
+    writeBulkProbes();
+    writeSliceProbes();
     GiD_ClosePostMeshFile();
 }
 
@@ -479,60 +476,35 @@ void OutputGiD::writeFieldSource() {
     }
 }
 
-void OutputGiD::writeLine(const NFDEData::Line* line) {
+void OutputGiD::writeLine(const NFDEData::Line* ent) {
     vector<const NFDEData::CoordsLine*> cD;
-    for (uint j = 0; j < line->entities.size(); j++) {
-        cD.push_back(&line->entities[j]);
+    for (uint j = 0; j < ent->entities.size(); j++) {
+        cD.push_back(&ent->entities[j]);
     }
-    writeCoordLines(cD, line->getNameAtLayer());
+    writeCoordLines(cD, ent->getNameAtLayer());
 }
 
-void OutputGiD::writeSurf(const NFDEData::Surf* surf) {
-    static const uint nV = 4;
-    double tmpCounter = coordCounter_;
-    beginMesh(surf->getNameAtLayer(), GiD_3D, GiD_Quadrilateral, nV);
-    vector<CVecD3> pos;
-    for(uint j = 0; j < surf->entities.size(); j++) {
-        vector<CVecD3> auxPos = BoxI3(surf->entities[j].coords).getPos();
-        pos.insert(pos.end(), auxPos.begin(), auxPos.begin()+4);
+void OutputGiD::writeSurf(const NFDEData::Surf* ent) {
+    vector<const NFDEData::CoordsDir*> cD;
+    for (uint j = 0; j < ent->entities.size(); j++) {
+        cD.push_back(&ent->entities[j]);
     }
-    GiD_BeginElements();
-    int nId[nV];
-    for (uint i = 0; i < nV; i++) {
-        nId[i] = ++tmpCounter;
-    }
-    GiD_WriteElement(++elemCounter_, nId);
-    GiD_EndElements();
-    GiD_EndMesh();
+    writeCoordDirs(cD, ent->getNameAtLayer());
 }
 
-void OutputGiD::writeBody(const NFDEData::Body* body) {
-    static const int nV = 8;
-    uint tmpCounter = coordCounter_;
-    beginMesh(body->getNameAtLayer(), GiD_3D, GiD_Hexahedra, nV);
-    vector<CVecD3> pos;
-    for(uint j = 0; j < body->entities.size(); j++) {
-        vector<CVecD3> auxPos = BoxI3(body->entities[j].coords).getPos();
-        pos.insert(pos.end(), auxPos.begin(), auxPos.end());
+void OutputGiD::writeBody(const NFDEData::Body* ent) {
+    vector<const NFDEData::Coords*> cD;
+    for (uint j = 0; j < ent->entities.size(); j++) {
+        cD.push_back(&ent->entities[j]);
     }
-    writeCoordinates(pos);
-    int nId[nV];
-    GiD_BeginElements();
-    for (uint j = 0; j < body->entities.size(); j++) {
-        for (int k = 0; k < nV; k++) {
-            nId[k] = ++tmpCounter;
-        }
-        GiD_WriteElement(++elemCounter_, nId);
+    writeCoords(cD, ent->getNameAtLayer());
 
-    }
-    GiD_EndElements();
-    GiD_EndMesh();
 }
 
 void OutputGiD::writeThinWire() {
     for(uint i = 0; i < nfde_->thinWire.size(); i++) {
         const NFDEData::ThinWire& ent = nfde_->thinWire[i];
-        vector<const NFDEData::CoordsLine*> wire, voltage, current;
+        vector<const NFDEData::CoordsLine*> wire, voltage, current, ext;
         for (uint j = 0; j < ent.segments.size(); j++) {
             if(abs(ent.segments[j].multiplier) <= 1e-4) {
                 wire.push_back(&ent.segments[j]);
@@ -546,27 +518,59 @@ void OutputGiD::writeThinWire() {
                 }
             }
         }
-        const string name = nfde_->thinWire[i].getNameAtLayer();
+        const string name = ent.getNameAtLayer();
         writeCoordLines(wire, name);
-        writeCoordLines(current, "Current_generator@" + name);
-        writeCoordLines(voltage, "Voltage_generator@" + name);
+        writeCoordLines(current, name + "_Current_generator");
+        writeCoordLines(voltage, name + "_Voltage_generator" );
+        if (ent.tl != NFDEData::ThinWire::Extremes::NONE) {
+            vector<const NFDEData::CoordsLine*> ext;
+            ext.push_back(&ent.segments[0]);
+            writeCoordLines(ext, name + "_TL_" + OutputNFDE::toString(ent.tl));
+        }
+        if (ent.tr != NFDEData::ThinWire::Extremes::NONE) {
+            vector<const NFDEData::CoordsLine*> ext;
+            ext.push_back(&ent.segments.back());
+            writeCoordLines(ext, name + "_TR_" + OutputNFDE::toString(ent.tr));
+        }
     }
 }
 
-void OutputGiD::writeThinGap() {
-}
-
-void OutputGiD::writeTraditionalProbe() {
-}
-
 void OutputGiD::writeNewProbe() {
-
+    for (uint i = 0; i < nfde_->newProbe.size(); i++) {
+        const NFDEData::NewProbe& out = nfde_->newProbe[i];
+        vector<const NFDEData::CoordsNode*> node(out.entities.size());
+        for (uint i = 0; i < out.entities.size(); i++) {
+            node[i] = &out.entities[i];
+        }
+        writeCoordNodes(node, "OutRq//NewProbe_" + out.name);
+    }
 }
 
 void OutputGiD::writeBulkProbes() {
+    for (uint i = 0; i < nfde_->bulkProbe.size(); i++) {
+        const NFDEData::BulkProbe& out = nfde_->bulkProbe[i];
+        vector<const NFDEData::CoordsDir*> cD;
+        cD.push_back(&out.entities);
+        writeCoordDirs(cD, "OutRq//BulkProbe_" + out.name);
+    }
 }
 
 void OutputGiD::writeSliceProbes() {
+    for (uint i = 0; i < nfde_->sliceProbe.size(); i++) {
+        const NFDEData::SliceProbe& out = nfde_->sliceProbe[i];
+        vector<const NFDEData::Coords*> cD;
+        cD.push_back(&out.entities);
+        writeCoords(cD, "OutRq//SliceProbe_" + out.filename);
+    }
+}
+
+void OutputGiD::writeTraditionalProbe() {
+    for (uint i = 0; i < nfde_->traditionalProbe.size(); i++) {
+        const NFDEData::TraditionalProbe& out = nfde_->traditionalProbe[i];
+        vector<const NFDEData::Coords*> cD;
+        cD.push_back(&out.entities);
+        writeCoords(cD, "OutRq//TraditionalProbe_" + out.filename);
+    }
 }
 
 void OutputGiD::writeCoordNodes(
@@ -639,3 +643,48 @@ void OutputGiD::writeCoordLines(
     GiD_EndMesh();
 }
 
+void OutputGiD::writeCoordDirs(
+        const vector<const NFDEData::CoordsDir*>& entities,
+        const string& name) {
+    static const uint nV = 4;
+    double tmpCounter = coordCounter_;
+    beginMesh(name, GiD_3D, GiD_Quadrilateral, nV);
+    vector<CVecD3> pos;
+    for(uint j = 0; j < entities.size(); j++) {
+        vector<CVecD3> auxPos = BoxI3(entities[j]->coords).getPos();
+        pos.insert(pos.end(), auxPos.begin(), auxPos.begin()+4);
+    }
+    GiD_BeginElements();
+    int nId[nV];
+    for (uint i = 0; i < nV; i++) {
+        nId[i] = ++tmpCounter;
+    }
+    GiD_WriteElement(++elemCounter_, nId);
+    GiD_EndElements();
+    GiD_EndMesh();
+}
+
+void OutputGiD::writeCoords(
+        const vector<const NFDEData::Coords*>& entities,
+        const string& name) {
+    static const int nV = 8;
+    uint tmpCounter = coordCounter_;
+    beginMesh(name, GiD_3D, GiD_Hexahedra, nV);
+    vector<CVecD3> pos;
+    for(uint j = 0; j < entities.size(); j++) {
+        vector<CVecD3> auxPos = BoxI3(entities[j]->coords).getPos();
+        pos.insert(pos.end(), auxPos.begin(), auxPos.end());
+    }
+    writeCoordinates(pos);
+    int nId[nV];
+    GiD_BeginElements();
+    for (uint j = 0; j < entities.size(); j++) {
+        for (int k = 0; k < nV; k++) {
+            nId[k] = ++tmpCounter;
+        }
+        GiD_WriteElement(++elemCounter_, nId);
+
+    }
+    GiD_EndElements();
+    GiD_EndMesh();
+}

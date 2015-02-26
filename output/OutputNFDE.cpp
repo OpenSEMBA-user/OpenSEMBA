@@ -122,14 +122,15 @@ void OutputNFDE::exportNFDE(const string &file,
         exportThinWire();
     }
 
-    if(!nfde->thinGap.empty()) {
+//    if(!nfde->thinGap.empty()) {
+//
+//        output << "************************* THIN GAPS ************************";
+//        output << endl << endl;
+//        exportThinGap();
+//    }
 
-        output << "************************* THIN GAPS ************************";
-        output << endl << endl;
-        exportThinGap();
-    }
-
-    if(!nfde->traditionalProbe.empty() ||
+    if(
+            !nfde->traditionalProbe.empty() ||
             !nfde->newProbe.empty() ||
             !nfde->bulkProbe.empty() ||
             !nfde->sliceProbe.empty()) {
@@ -303,7 +304,7 @@ string OutputNFDE::toString(CartesianAxis dir) {
     }
 }
 
-string OutputNFDE::toString(const NFDEData::MaterialTypes::value mat) {
+string OutputNFDE::toString(const NFDEData::MaterialTypes mat) {
     switch (mat) {
     case NFDEData::MaterialTypes::METAL:
         return "!!METAL";
@@ -314,6 +315,29 @@ string OutputNFDE::toString(const NFDEData::MaterialTypes::value mat) {
     default:
         cerr << "ERROR @ OutputNFDE: " << "Undefined material type." << endl;
         return "!!NONE";
+    }
+}
+
+string OutputNFDE::toString(const NFDEData::CoordsNewProbe::Types type) {
+    switch (type) {
+    case NFDEData::CoordsNewProbe::Types::EX:
+        return "EX";
+    case NFDEData::CoordsNewProbe::Types::EY:
+        return "EY";
+    case NFDEData::CoordsNewProbe::Types::EZ:
+        return "EZ";
+    case NFDEData::CoordsNewProbe::Types::HX:
+        return "HX";
+    case NFDEData::CoordsNewProbe::Types::HY:
+        return "HY";
+    case NFDEData::CoordsNewProbe::Types::HZ:
+        return "HZ";
+    case NFDEData::CoordsNewProbe::Types::IW:
+        return "IW";
+    case NFDEData::CoordsNewProbe::Types::VG:
+        return "VG";
+    default:
+        return "EX";
     }
 }
 
@@ -606,7 +630,7 @@ void OutputNFDE::exportAnisotropicLine() {
         }
 
         for(uint j = 0; j < ent->entities.size(); j++) {
-            output << toString2PNT(ent->entities[j]);
+            output << toString1PNT(ent->entities[j]);
         }
         output << endl;
     }
@@ -679,7 +703,7 @@ void OutputNFDE::exportDispersiveLine() {
             output << ent->a[k] << space << ent->b[k] << endl;
 
         for(uint j = 0; j < ent->entities.size(); j++) {
-            output << toString2PNT(ent->entities[j]);
+            output << toString1PNT(ent->entities[j]);
         }
         output << endl;
     }
@@ -714,6 +738,19 @@ void OutputNFDE::exportCompositeSurf() {
     }
 }
 
+string OutputNFDE::toString(const NFDEData::ThinWire::Extremes extreme) {
+    switch(extreme) {
+    case NFDEData::ThinWire::Extremes::MATERIAL:
+        return "MATERIAL";
+    case NFDEData::ThinWire::Extremes::SERIES:
+        return "SERIES";
+    case NFDEData::ThinWire::Extremes::PARALLEL:
+        return "PARALLEL";
+    default:
+        return "MATERIAL";
+    }
+}
+
 void OutputNFDE::exportThinWire() {
     for(uint i = 0; i < nfde->thinWire.size(); i++) {
         if(nfde->thinWire[i].segments.size() < 1)
@@ -727,37 +764,8 @@ void OutputNFDE::exportThinWire() {
                << nfde->thinWire[i].res << space
                << nfde->thinWire[i].ind << space;
 
-        switch(nfde->thinWire[i].tl) {
-        case NFDEData::ThinWire::Extremes::MATERIAL:
-            output << "MATERIAL";
-            break;
-        case NFDEData::ThinWire::Extremes::SERIES:
-            output << "SERIES";
-            break;
-        case NFDEData::ThinWire::Extremes::PARALLEL:
-            output << "PARALLEL";
-            break;
-        default:
-            output << "MATERIAL";
-        }
-
-        output << space;
-
-        switch(nfde->thinWire[i].tr) {
-        case NFDEData::ThinWire::Extremes::MATERIAL:
-            output << "MATERIAL";
-            break;
-        case NFDEData::ThinWire::Extremes::SERIES:
-            output << "SERIES";
-            break;
-        case NFDEData::ThinWire::Extremes::PARALLEL:
-            output << "PARALLEL";
-            break;
-        default:
-            output << "MATERIAL";
-        }
-
-        output << endl;
+        output << toString(nfde->thinWire[i].tl) << space
+               << toString(nfde->thinWire[i].tr) << endl;
 
         if ((nfde->thinWire[i].tl == NFDEData::ThinWire::Extremes::SERIES) ||
             (nfde->thinWire[i].tl == NFDEData::ThinWire::Extremes::PARALLEL))
@@ -804,25 +812,26 @@ void OutputNFDE::exportThinWire() {
         output << endl;
     }
 }
-void OutputNFDE::exportThinGap() {
-    for(uint i = 0; i < nfde->thinGap.size(); i++) {
-        const NFDEData::ThinGap* ent = &nfde->thinGap[i];
-        if(!ent->layer.empty())
-            output << "* " << ent->layer << endl;
-        output << "!THIN GAP" << endl;
 
-        output << ent->width << endl;
-
-        for(uint j = 0; j < ent->gaps.size(); j++) {
-            output << ent->gaps[j].coords(x) << space
-                    << ent->gaps[j].coords(y) << space
-                    << ent->gaps[j].coords(z) << space
-                    << toString(ent->gaps[j].dir) << space
-                    << ent->gaps[j].node << endl;
-        }
-        output << endl;
-    }
-}
+//void OutputNFDE::exportThinGap() {
+//    for(uint i = 0; i < nfde->thinGap.size(); i++) {
+//        const NFDEData::ThinGap* ent = &nfde->thinGap[i];
+//        if(!ent->layer.empty())
+//            output << "* " << ent->layer << endl;
+//        output << "!THIN GAP" << endl;
+//
+//        output << ent->width << endl;
+//
+//        for(uint j = 0; j < ent->gaps.size(); j++) {
+//            output << ent->gaps[j].coords(x) << space
+//                    << ent->gaps[j].coords(y) << space
+//                    << ent->gaps[j].coords(z) << space
+//                    << toString(ent->gaps[j].dir) << space
+//                    << ent->gaps[j].node << endl;
+//        }
+//        output << endl;
+//    }
+//}
 
 void OutputNFDE::exportTraditionalProbe() {
     // Only supports far field electric probes.
@@ -834,9 +843,10 @@ void OutputNFDE::exportTraditionalProbe() {
         output << ent->thStart << " " << ent->thEnd << " " << ent->thStep << endl;
         output << ent->phStart << " " << ent->phEnd << " " << ent->phStep << endl;
         output << ent->filename << endl;
-        output << toString1PNT(ent->region) << endl;
+        output << toString1PNT(ent->entities) << endl;
     }
 }
+
 void OutputNFDE::exportNewProbe() {
     for(uint i = 0; i < nfde->newProbe.size(); i++) {
         const NFDEData::NewProbe* ent = &nfde->newProbe[i];
@@ -901,62 +911,38 @@ void OutputNFDE::exportNewProbe() {
         if(tran) {
             output << ent->filename << endl;
         }
-        for(uint j = 0; j < ent->probes.size(); j++) {
-            switch(ent->probes[j].type) {
-            case NFDEData::CoordsNewProbe::Types::EX:
-                output << "EX";
-                break;
-            case NFDEData::CoordsNewProbe::Types::EY:
-                output << "EY";
-                break;
-            case NFDEData::CoordsNewProbe::Types::EZ:
-                output << "EZ";
-                break;
-            case NFDEData::CoordsNewProbe::Types::HX:
-                output << "HX";
-                break;
-            case NFDEData::CoordsNewProbe::Types::HY:
-                output << "HY";
-                break;
-            case NFDEData::CoordsNewProbe::Types::HZ:
-                output << "HZ";
-                break;
-            case NFDEData::CoordsNewProbe::Types::IW:
-                output << "IW";
-                break;
-            case NFDEData::CoordsNewProbe::Types::VG:
-                output << "VG";
-                break;
-            default:
-                output << "EX";
-                break;
-            }
-
-            output << space << toString(ent->probes[j].coords) << endl;
+        for(uint j = 0; j < ent->entities.size(); j++) {
+            output << toString(ent->entities[j].type);
+            output << space << toString(ent->entities[j].coords) << endl;
         }
         output << endl;
     }
 }
-void OutputNFDE::exportBulkProbes() {
-    for(uint i = 0; i < nfde->bulkProbe.size(); i++) {
-        const NFDEData::BulkProbe* ent = &nfde->bulkProbe[i];
-        output << "* " << probeName(ent->name, ent->layer, ent->log) << endl;
-        output << "!BULK CURRENT PROBE" << endl;
-        switch (ent->type) {
+
+string OutputNFDE::toString(const NFDEData::BulkProbe::Types type) {
+    switch (type) {
         case NFDEData::BulkProbe::Types::ELECT:
-            output << "!!ELECT" << endl;
+            return "ELECT";
             break;
         case NFDEData::BulkProbe::Types::MAGNE:
-            output << "!!MAGNE" << endl;
+            return "MAGNE";
             break;
         default:
             cerr<< "ERROR @ exportBulkProbe: "
             << "Undefined type." << endl;
             break;
         }
+}
+
+void OutputNFDE::exportBulkProbes() {
+    for(uint i = 0; i < nfde->bulkProbe.size(); i++) {
+        const NFDEData::BulkProbe* ent = &nfde->bulkProbe[i];
+        output << "* " << probeName(ent->name, ent->layer, ent->log) << endl;
+        output << "!BULK CURRENT PROBE" << endl;
+        output << "!!" << toString(ent->type) << endl;
         output << ent->tstart << space << ent->tstop << space <<
                 ent->tstep << endl;
-        output << toString2PNT(ent->coord, ent->skip) << endl;
+        output << toString2PNT(ent->entities, ent->skip) << endl;
         output << endl;
     }
 }
@@ -1033,7 +1019,7 @@ void OutputNFDE::exportSliceProbes() {
             break;
         }
         output << "CUTAWAY" << endl;
-        output << toString1PNT(ent->region) << endl;
+        output << toString1PNT(ent->entities) << endl;
     }
 }
 

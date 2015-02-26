@@ -88,11 +88,10 @@ private:
     void writeSurf(const NFDEData::Surf*);
     void writeBody(const NFDEData::Body*);
     void writeThinWire();
-    void writeThinGap();
-    void writeTraditionalProbe();
     void writeNewProbe();
     void writeBulkProbes();
     void writeSliceProbes();
+    void writeTraditionalProbe();
     void writeCoordMultiplier(
                 const vector<const NFDEData::CoordsMultiplier*>& entities,
                 const string& name);
@@ -101,6 +100,12 @@ private:
             const string& name);
     void writeCoordLines(
             const vector<const NFDEData::CoordsLine*>& entities,
+            const string& name);
+    void writeCoordDirs(
+            const vector<const NFDEData::CoordsDir*>& entities,
+            const string& name);
+    void writeCoords(
+            const vector<const NFDEData::Coords*>& entities,
             const string& name);
 };
 

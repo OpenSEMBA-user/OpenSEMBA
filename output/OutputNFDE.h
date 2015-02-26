@@ -25,8 +25,7 @@ public:
                    bool outputEnd = true);
 protected:
 
-    string toString(const NFDEData::MaterialTypes::value mat);
-
+    static string toString(const NFDEData::MaterialTypes mat);
     static string toString(CartesianAxis dir);
     static string toString(CartesianBound pos);
     template<class T, int D>
@@ -41,6 +40,9 @@ protected:
             const NFDEData::Boundary& boundary,
             const uint d = 3,
             const uint p = 2);
+    static string toString(const NFDEData::CoordsNewProbe::Types type);
+    static string toString(const NFDEData::BulkProbe::Types type);
+    static string toString(const NFDEData::ThinWire::Extremes extremes);
 private:
 	const NFDEData *nfde;
 	ofstream output;

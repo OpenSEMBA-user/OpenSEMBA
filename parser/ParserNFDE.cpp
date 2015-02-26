@@ -1567,13 +1567,13 @@ void ParserNFDE::parseTraditionalProbe(const string &layer) {
    getline(file, line);
 	readLine("TRADITIONAL PROBE", line, probe.filename);
    getline(file, line);
-	readLine("TRADITIONAL PROBE", line, probe.region.coords.first (x),
-                                       probe.region.coords.first (y),
-                                       probe.region.coords.first (z));
+	readLine("TRADITIONAL PROBE", line, probe.entities.coords.first (x),
+                                       probe.entities.coords.first (y),
+                                       probe.entities.coords.first (z));
    getline(file, line);
-	readLine("TRADITIONAL PROBE", line, probe.region.coords.second(x),
-                                       probe.region.coords.second(y),
-                                       probe.region.coords.second(z));
+	readLine("TRADITIONAL PROBE", line, probe.entities.coords.second(x),
+                                       probe.entities.coords.second(y),
+                                       probe.entities.coords.second(z));
 
 	nfde->traditionalProbe.push_back(probe);
 }
@@ -1678,7 +1678,7 @@ void ParserNFDE::parseNewProbe(const string &layer) {
 			continue;
 		}
       
-		probe.probes.push_back(coords);
+		probe.entities.push_back(coords);
 	}
    
 	nfde->newProbe.push_back(probe);
@@ -1719,22 +1719,22 @@ void ParserNFDE::parseBulkProbe(const string &layer) {
 	readLine("BULK PROBE", line, probe.tstart, probe.tstop, probe.tstep);
    
    getline(file, line);
-	readLine("BULK PROBE", line, probe.coord.coords.first (x),
-                                probe.coord.coords.first (y),
-                                probe.coord.coords.first (z), nml);
+	readLine("BULK PROBE", line, probe.entities.coords.first (x),
+                                probe.entities.coords.first (y),
+                                probe.entities.coords.first (z), nml);
    getline(file, line);
-	readLine("BULK PROBE", line, probe.coord.coords.second(x),
-                                probe.coord.coords.second(y),
-                                probe.coord.coords.second(z));
+	readLine("BULK PROBE", line, probe.entities.coords.second(x),
+                                probe.entities.coords.second(y),
+                                probe.entities.coords.second(z));
    switch(nml[0]) {
 	case 'X':
-		probe.coord.dir = x;
+		probe.entities.dir = x;
 		break;
 	case 'Y':
-		probe.coord.dir = y;
+		probe.entities.dir = y;
 		break;
 	case 'Z':
-		probe.coord.dir = z;
+		probe.entities.dir = z;
 		break;
 	default:
    	cerr << "ERROR @ parseNFDE()" << endl;
@@ -1827,13 +1827,13 @@ void ParserNFDE::parseSliceProbe(const string &layer) {
    }
    
    getline(file, line);
-	readLine("SLICE PROBE", line, probe.region.coords.first (x),
-                                 probe.region.coords.first (y),
-                                 probe.region.coords.first (z));
+	readLine("SLICE PROBE", line, probe.entities.coords.first (x),
+                                 probe.entities.coords.first (y),
+                                 probe.entities.coords.first (z));
    getline(file, line);
-	readLine("SLICE PROBE", line, probe.region.coords.second(x),
-                                 probe.region.coords.second(y),
-                                 probe.region.coords.second(z));
+	readLine("SLICE PROBE", line, probe.entities.coords.second(x),
+                                 probe.entities.coords.second(y),
+                                 probe.entities.coords.second(z));
 
    
    nfde->sliceProbe.push_back(probe);

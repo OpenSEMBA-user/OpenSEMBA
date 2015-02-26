@@ -14,11 +14,9 @@ using namespace std;
 
 struct NFDEData : public ProjectFile {
     //	AUXILIARY TYPES
-    struct MaterialTypes {
-        enum value {
-            NONE, METAL, MGMET, NONME
-        };
-    };
+    typedef enum  {
+        NONE, METAL, MGMET, NONME
+    } MaterialTypes;
 
     struct CoordsNode {
         CVecI3 coords;
@@ -28,12 +26,10 @@ struct NFDEData : public ProjectFile {
     };
 
     struct CoordsNewProbe : public CoordsNode {
-        struct Types {
-            enum value {
-                NONE, EX, EY, EZ, HX, HY, HZ, IW, VG
-            };
-        };
-        Types::value type;
+        typedef enum {
+            NONE, EX, EY, EZ, HX, HY, HZ, IW, VG
+        } Types;
+        Types type;
         CoordsNewProbe()
         :  CoordsNode(), type(Types::NONE) {}
     };
@@ -228,7 +224,7 @@ struct NFDEData : public ProjectFile {
     };
 
     struct IsotropicLine :public Line {
-        MaterialTypes::value type;
+        MaterialTypes type;
         double sigma, eps, mu, sigmam;
         IsotropicLine()
         :	Line(),
@@ -271,7 +267,7 @@ struct NFDEData : public ProjectFile {
     };
 
     struct IsotropicSurf : public Surf {
-        MaterialTypes::value type;
+        MaterialTypes type;
         double sigma, eps, mu, sigmam;
         IsotropicSurf()
         :	type(MaterialTypes::NONE),
@@ -318,7 +314,7 @@ struct NFDEData : public ProjectFile {
     };
 
     struct IsotropicBody : public Body {
-        MaterialTypes::value type;
+        MaterialTypes type;
         double sigma, eps, mu, sigmam;
         IsotropicBody()
         :	type(MaterialTypes::NONE),
@@ -359,13 +355,11 @@ struct NFDEData : public ProjectFile {
     };
 
     struct ThinWire : public ObjectInLayer {
-        struct Extremes {
-            enum value {
-                NONE, MATERIAL, PARALLEL, SERIES
-            };
-        };
+        typedef enum  {
+            NONE, MATERIAL, PARALLEL, SERIES
+        } Extremes;
         double rad, res, ind;
-        Extremes::value tl, tr;
+        Extremes tl, tr;
         double rtl, itl, ctl;
         double rtr, itr, ctr;
         int enl, enr;
@@ -380,6 +374,7 @@ struct NFDEData : public ProjectFile {
 
         }
     };
+
     struct ThinGap : public ObjectInLayer {
         struct Coords : public CoordsLine {
             int node;
@@ -394,20 +389,6 @@ struct NFDEData : public ProjectFile {
          	gaps() {}
     };
 
-    struct TraditionalProbe : public Probe {
-        double fstart, fstop, fstep;
-        double thStart, thEnd, thStep;
-        double phStart, phEnd, phStep;
-        string filename;
-        Coords region;
-        TraditionalProbe()
-        :	fstart(0.0), fstop(-1.0), fstep(0.0),
-         	thStart(0.0), thEnd(-1.0), thStep(0.0),
-         	phStart(0.0), phEnd(-1.0), phStep(0.0),
-         	filename(""),
-         	region() {}
-    };
-
     struct NewProbe : public Probe {
         struct DomainTypes {
             enum value {
@@ -418,29 +399,27 @@ struct NFDEData : public ProjectFile {
         double tstart, tstop, tstep;
         double fstart, fstop, fstep;
         string filename, transFilename;
-        vector<CoordsNewProbe> probes;
+        vector<CoordsNewProbe> entities;
         NewProbe()
         : 	domain(DomainTypes::NONE),
           	tstart(0.0), tstop(-1.0), tstep(0.0),
           	fstart(0.0), fstop(-1.0), fstep(0.0),
           	filename(""),
-          	probes() {
+          	entities() {
 
         }
     };
     struct BulkProbe : public Probe {
-        struct Types {
-            enum value {
-                NONE, ELECT, MAGNE
-            };
-        };
-        Types::value type;
+        typedef enum {
+            NONE, ELECT, MAGNE
+        } Types;
+        Types type;
         double tstart, tstop, tstep;
-        CoordsDir coord;
+        CoordsDir entities;
         int skip;
         BulkProbe()
         :	type(Types::NONE), tstart(0.0), tstop(-1.0), tstep(0.0),
-         	coord(), skip(0) {}
+         	entities(), skip(0) {}
     };
 
     struct SliceProbe : public Probe {
@@ -459,29 +438,39 @@ struct NFDEData : public ProjectFile {
         double tstart, tstop, tstep;
         double fstart, fstop, fstep;
         string filename;
-        Coords region;
+        Coords entities;
         SliceProbe()
         :	field(FieldTypes::NONE),
          	domain(DomainTypes::NONE),
          	tstart(0.0), tstop(-1.0), tstep(0.0),
          	fstart(0.0), fstop(-1.0), fstep(0.0),
          	filename(""),
-         	region() {}
+         	entities() {}
     };
 
-    //	MAIN
+    struct TraditionalProbe : public Probe {
+        double fstart, fstop, fstep;
+        double thStart, thEnd, thStep;
+        double phStart, phEnd, phStep;
+        string filename;
+        Coords entities;
+        TraditionalProbe()
+        :	fstart(0.0), fstop(-1.0), fstep(0.0),
+         	thStart(0.0), thEnd(-1.0), thStep(0.0),
+         	phStart(0.0), phEnd(-1.0), phStep(0.0),
+         	filename(""),
+         	entities() {}
+    };
 
-    //	GENERAL INFORMATION
     TimeSteps  timesteps;
-    //	SPATIAL INFORMATION
     SpaceSteps spacesteps[3];
     Background background;
     Boundary   boundaries[3][2];
-    //	SOURCES
+
     vector<PlaneWaveSource>      planeWaveSource;
     vector<CurrentDensitySource> currentDensitySource;
     vector<FieldSource>          fieldSource;
-    //	MATERIALS
+
     vector<IsotropicBody> isotropicBody;
     vector<IsotropicSurf> isotropicSurf;
     vector<IsotropicLine> isotropicLine;
@@ -495,10 +484,10 @@ struct NFDEData : public ProjectFile {
     vector<DispersiveLine> dispersiveLine;
 
     vector<CompositeSurf> compositeSurf;
-    //	THIN MATERIALS
+
     vector<ThinWire> thinWire;
-    vector<ThinGap> thinGap;
-    //	PROBES
+    //    vector<ThinGap> thinGap;
+
     vector<TraditionalProbe> traditionalProbe;
     vector<NewProbe>         newProbe;
     vector<BulkProbe>        bulkProbe;
