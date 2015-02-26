@@ -20,7 +20,7 @@ MeshVolume::MeshVolume(
  const Grid3* grid) : Mesh(vIn, elementIn, grid) {
     check();
 }
-
+ 
 
 MeshVolume::MeshVolume(const MeshVolume& param) {
     cG_ = param.cG_;
@@ -147,6 +147,10 @@ MeshVolume::getAdjacentElements(const vector<unsigned int>& region) const {
 void
 MeshVolume::printInfo() const {
 	Mesh::printInfo();
+	elem_.printInfo();
+	if (grid_ != NULL) {
+		grid_->printInfo();
+	}
 }
 
 vector<vector<unsigned int> >
