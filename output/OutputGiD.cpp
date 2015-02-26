@@ -654,6 +654,7 @@ void OutputGiD::writeCoordDirs(
         vector<CVecD3> auxPos = BoxI3(entities[j]->coords).getPos();
         pos.insert(pos.end(), auxPos.begin(), auxPos.begin()+4);
     }
+    writeCoordinates(pos);
     GiD_BeginElements();
     int nId[nV];
     for (uint i = 0; i < nV; i++) {

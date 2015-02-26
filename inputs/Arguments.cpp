@@ -108,7 +108,8 @@ Arguments::printWelcomeMessage(
 		<< " This is a proprietary software of:                     " << endl
 		<< "             The University of Granada                  " << endl
 		<< "                     www.ugr.es                         " << endl
-    	<< "  Authors: L. D. Angulo           ( lm@diazangulo.com ) " << endl
+		<< "  Authors: S. G. Garcia           ( salva@ugr.es )      " << endl
+    	<< "           L. D. Angulo           ( lm@diazangulo.com ) " << endl
     	<< "           Miguel Ruiz-Cabello N. ( mcabello@ugr.es )   " << endl
     	<< "           Daniel Mateos          ( damarro@gmail.com ) " << endl
 		<< "========================================================" << endl
