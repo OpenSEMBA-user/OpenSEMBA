@@ -107,6 +107,7 @@ private:
     void writeCoords(
             const vector<const NFDEData::Coords*>& entities,
             const string& name);
+    void initDefault();
 };
 
 #endif /* GIDOUTPUT_H_ */

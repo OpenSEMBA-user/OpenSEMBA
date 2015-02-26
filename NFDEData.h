@@ -59,6 +59,34 @@ struct NFDEData : public ProjectFile {
             dir = d;
             coords = c;
         }
+        vector<CVecD3> getPos() const {
+            vector<CVecI3> pos(4);
+            uint rX = dir;
+            uint rY = (dir + 1) % 3;
+            uint rZ = (dir + 2) % 3;
+
+            pos[0] = coords.first;
+
+            pos[1](rX) = coords.first(rX);
+            pos[1](rY) = coords.first(rY);
+            pos[1](rZ) = coords.second(rZ);
+
+            pos[2](rX) = coords.first(rX);
+            pos[2](rY) = coords.second(rY);
+            pos[2](rZ) = coords.second(rZ);
+
+            pos[3](rX) = coords.first(rX);
+            pos[3](rY) = coords.second(rY);
+            pos[3](rZ) = coords.first(rZ);
+
+            vector<CVecD3> res(4);
+            for (uint i = 0; i < 4; i++) {
+                for (uint d = 0; d < 3; d++) {
+                    res[i](d) = (double) pos[i](d);
+                }
+            }
+            return res;
+        }
     };
 
     struct CoordsLine {

@@ -100,6 +100,22 @@ public:
 	 count() const {
 		return pm.size();
 	 }
+	bool hasPEC() const {
+	    for (uint i = 0; i < pm.size(); i++) {
+	        if (pm[i]->isPEC()) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	uint getPECId() const {
+	    for (uint i = 0; i < pm.size(); i++) {
+	        if (pm[i]->isPEC()) {
+	            return pm[i]->getId();
+	        }
+	    }
+	    return 0;
+	}
 	vector<uint>
 	 getMatIds(const Condition::Type type) const;
 	unsigned int

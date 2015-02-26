@@ -12,31 +12,20 @@ const CVecD3 OutputGiD::sibcColor(100, 0, 100);
 const CVecD3 OutputGiD::emSourceColor(100, 100, 0);
 
 OutputGiD::OutputGiD() {
-    mode_ = GiD_PostAscii;
-    coordCounter_ = 0;
-    elemCounter_ = 0;
-    smb_ = NULL;
-    nfde_ = NULL;
+    initDefault();
 }
 
 OutputGiD::OutputGiD(const SmbData* smb) : Output(smb->getFilename()) {
-    mode_ = GiD_PostAscii;
-    coordCounter_ = 0;
-    elemCounter_ = 0;
+    initDefault();
     smb_ = smb;
-    nfde_ = NULL;
     openGiDFiles();
     writeMesh();
 }
 
 OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
-    mode_ = GiD_PostAscii;
-    coordCounter_ = 0;
-    elemCounter_ = 0;
-    smb_ = NULL;
+    initDefault();
     nfde_ = nfde;
     openGiDFiles();
-
     writeSpaceSteps();
     writeBoundaries();
     writePlaneWaveSource();
@@ -204,6 +193,14 @@ void OutputGiD::writeCoordinates(const vector<CVecD3>& pos)  {
         GiD_WriteCoordinates(++coordCounter_, pos[i](x), pos[i](y), pos[i](z));
     }
     GiD_EndCoordinates();
+}
+
+void OutputGiD::initDefault() {
+    mode_ = GiD_PostAscii;
+    coordCounter_ = 0;
+    elemCounter_ = 0;
+    smb_ = NULL;
+    nfde_ = NULL;
 }
 
 void OutputGiD::openGiDFiles() {
@@ -651,16 +648,18 @@ void OutputGiD::writeCoordDirs(
     beginMesh(name, GiD_3D, GiD_Quadrilateral, nV);
     vector<CVecD3> pos;
     for(uint j = 0; j < entities.size(); j++) {
-        vector<CVecD3> auxPos = BoxI3(entities[j]->coords).getPos();
-        pos.insert(pos.end(), auxPos.begin(), auxPos.begin()+4);
+        vector<CVecD3> auxPos = entities[j]->getPos();
+        pos.insert(pos.end(), auxPos.begin(), auxPos.end());
     }
     writeCoordinates(pos);
     GiD_BeginElements();
     int nId[nV];
-    for (uint i = 0; i < nV; i++) {
-        nId[i] = ++tmpCounter;
+    for (uint j = 0; j < entities.size(); j++) {
+        for (uint i = 0; i < nV; i++) {
+            nId[i] = ++tmpCounter;
+        }
+        GiD_WriteElement(++elemCounter_, nId);
     }
-    GiD_WriteElement(++elemCounter_, nId);
     GiD_EndElements();
     GiD_EndMesh();
 }
