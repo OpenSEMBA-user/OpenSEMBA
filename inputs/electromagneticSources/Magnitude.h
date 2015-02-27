@@ -14,6 +14,11 @@
 
 using namespace std;
 
+#ifndef M_SQRT2
+#   define M_PI    (acos(-1))
+#   define M_SQRT2 (sqrt(2))
+#endif
+
 class Magnitude {
 public:
     Magnitude();
