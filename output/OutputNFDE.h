@@ -45,7 +45,15 @@ protected:
     static string toString(const NFDEData::ThinWire::Extremes extremes);
 private:
 	const NFDEData *nfde;
-	ofstream output;
+
+	string nfdeName;
+	string confName;
+	string cmshName;
+
+	ofstream outputNfde;
+	ofstream outputConf;
+	ofstream outputCmsh;
+
     static const string space;
 
     void exportTimeSteps();
@@ -57,6 +65,8 @@ private:
 	void exportPlaneWaveSource();
 	void exportCurrentDensitySource();
 	void exportFieldSource();
+
+	void exportConformalLines();
 
 	void exportIsotropicBody();
 	void exportIsotropicSurf();

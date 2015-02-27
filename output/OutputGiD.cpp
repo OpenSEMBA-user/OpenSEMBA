@@ -476,9 +476,11 @@ void OutputGiD::writeFieldSource() {
 void OutputGiD::writeLine(const NFDEData::Line* ent) {
     vector<const NFDEData::CoordsLine*> cD;
     for (uint j = 0; j < ent->entities.size(); j++) {
-        cD.push_back(&ent->entities[j]);
+        cD.push_back(new NFDEData::CoordsLine(ent->entities[j]));
     }
     writeCoordLines(cD, ent->getNameAtLayer());
+    for(uint j = 0; j < cD.size(); j++)
+        delete cD[j];
 }
 
 void OutputGiD::writeSurf(const NFDEData::Surf* ent) {
