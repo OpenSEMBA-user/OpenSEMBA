@@ -13,18 +13,18 @@
 #include "inputs/OutputRequestGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
-#include "inputs/OpenFOAMParameters.h"
 #include "inputs/LayerGroup.h"
+#include "inputs/MeshingParameters.h"
 
 class SmbData : public ProjectFile {
 public:
     GlobalProblemData* gData;
     LayerGroup* layers;
-    MeshVolume* mesh;
     PhysicalModelGroup* pMGroup;
     EMSourceGroup* emSources;
     OutputRequestGroup* outputRequests;
-    OpenFOAMParameters* ofParams;
+    MeshingParameters* meshingParams;
+    MeshVolume* mesh;
     SmbData();
     virtual ~SmbData();
     virtual SmbData& operator=(const SmbData& rhs);

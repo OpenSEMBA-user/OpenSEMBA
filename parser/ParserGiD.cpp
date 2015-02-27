@@ -35,16 +35,14 @@ ParserGiD::read() {
     }
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
-    GlobalProblemData* gData = new GlobalProblemData;
-    *gData = readProblemData();
-    res->gData = gData;
+    res->gData = readProblemData();
+    res->meshingParams = readMeshingParameters();
     pSize_ = readProblemSize();
     res->layers = readLayers();
-    res->mesh = readMesh();
     res->pMGroup = readMaterials();
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
-    res->ofParams = readOpenFOAMParameters();
+    res->mesh = readMesh();
     res->applyGeometricScalingFactor();
     return res;
 }
@@ -55,9 +53,9 @@ ParserGiD::printInfo() const {
     cout << "--- End of GiDParser info ---" << endl;
 }
 
-GlobalProblemData
+GlobalProblemData*
 ParserGiD::readProblemData() {
-    GlobalProblemData res;
+    GlobalProblemData* res = new GlobalProblemData();
     string line, label, value;
     bool finished = false;
     bool problemDataFound = false;
@@ -68,33 +66,29 @@ ParserGiD::readProblemData() {
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
                 if (label.compare("Final time") == 0) {
-                    res.finalTime = atof(value.c_str());
+                    res->finalTime = atof(value.c_str());
                 } else if (label.compare("Time step") == 0) {
-                    res.timeStep = atof(value.c_str());
+                    res->timeStep = atof(value.c_str());
                 } else if (label.compare("Default sampling period") == 0) {
-                    res.samplingPeriod = atof(value.c_str());
+                    res->samplingPeriod = atof(value.c_str());
                 } else if (label.compare("Geometry scaling factor") == 0) {
-                    res.scalingFactor = atof(value.c_str());
+                    res->scalingFactor = atof(value.c_str());
                 } else if (label.compare("Upper x bound") == 0) {
-                    res.boundTermination[0].second = boundStrToType(value);
+                    res->boundTermination[0].second = boundStrToType(value);
                 } else if (label.compare("Lower x bound") == 0) {
-                    res.boundTermination[0].first = boundStrToType(value);
+                    res->boundTermination[0].first = boundStrToType(value);
                 } else if (label.compare("Upper y bound") == 0) {
-                    res.boundTermination[1].second = boundStrToType(value);
+                    res->boundTermination[1].second = boundStrToType(value);
                 } else if (label.compare("Lower y bound") == 0) {
-                    res.boundTermination[1].first = boundStrToType(value);
+                    res->boundTermination[1].first = boundStrToType(value);
                 } else if (label.compare("Upper z bound") == 0) {
-                    res.boundTermination[2].second = boundStrToType(value);
+                    res->boundTermination[2].second = boundStrToType(value);
                 } else if (label.compare("Lower z bound") == 0) {
-                    res.boundTermination[2].first = boundStrToType(value);
+                    res->boundTermination[2].first = boundStrToType(value);
                 } else if (label.compare("Boundary padding") == 0) {
-                    res.boundaryPadding = readBoundFromStr(value);
+                    res->boundaryPadding = readBoundFromStr(value);
                 } else if (label.compare("Boundary mesh size") == 0) {
-                    res.boundaryMeshSize = readBoundFromStr(value);
-                } else if (label.compare("Number of processes") == 0) {
-                    res.numberOfProcesses = atoi(value.c_str());
-                } else if (label.compare("Hosts file") == 0) {
-                    res.hostsFile = trim(value);
+                    res->boundaryMeshSize = readBoundFromStr(value);
                 } else if(label.find("End of problem data") != label.npos) {
                     finished = true;
                 }
@@ -428,8 +422,8 @@ ParserGiD::readOutputRequestInstances() {
     return res;
 }
 
-OpenFOAMParameters*
-ParserGiD::readOpenFOAMParameters() {
+MeshingParameters*
+ParserGiD::readMeshingParameters() {
     bool finished;
     bool found = false;
     string line, label, value;
@@ -466,7 +460,7 @@ ParserGiD::readOpenFOAMParameters() {
         }
     }
     //
-    return new OpenFOAMParameters(castellatedMesh, snapMesh, addLayers,
+    return new MeshingParameters(castellatedMesh, snapMesh, addLayers,
             edgeFeatureAngle, featureRefLevel, locationInMeshIsSet, locationInMesh);
 }
 

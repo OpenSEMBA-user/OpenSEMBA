@@ -356,7 +356,7 @@ OutputOpenFoam::writeSurfaceFeatureExtractDict() const {
             << "    extractFromSurfaceCoeffs" << endl
             << "    {" << endl
             << "        includedAngle "
-            << smb_->ofParams->getEdgeFeatureAngle() << ";" << endl
+            << smb_->meshingParams->getEdgeFeatureAngle() << ";" << endl
             << "    }" << endl
             << "    writeObj true;" << endl
             << "}" << endl
@@ -380,11 +380,11 @@ OutputOpenFoam::writeSnappyHexMeshDict() const {
    file << writeOpenFoamHeader("system", name) << endl;
    file << endl;
    file << "castellatedMesh "
-         << boolToStr(smb_->ofParams->isCastellateMesh()) << ";" << endl;
+         << boolToStr(smb_->meshingParams->isCastellateMesh()) << ";" << endl;
    file << "snap            "
-         << boolToStr(smb_->ofParams->isSnapMesh()) << ";" << endl;
+         << boolToStr(smb_->meshingParams->isSnapMesh()) << ";" << endl;
    file << "addLayers       "
-         << boolToStr(smb_->ofParams->isAddLayers()) << ";" << endl;
+         << boolToStr(smb_->meshingParams->isAddLayers()) << ";" << endl;
    file << endl;
    // ---- Geometry ----
    file << "geometry" << endl;
@@ -632,8 +632,8 @@ OutputOpenFoam::boolToStr(const bool constBool) const {
 
 CVecD3
 OutputOpenFoam::computeLocationInMesh() const {
-   if (smb_->ofParams->isLocationInMeshSet()) {
-      return smb_->ofParams->getLocationInMesh();
+   if (smb_->meshingParams->isLocationInMeshSet()) {
+      return smb_->meshingParams->getLocationInMesh();
    } else {
       const Grid3* grid = smb_->mesh->getGrid();
       return grid->getPositionOfNaturalCell(grid->getNumCells() - 1);

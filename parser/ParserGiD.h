@@ -42,7 +42,7 @@ public:
 protected:
 	string problemTypePath_;
 	ProblemSize pSize_;
-	virtual GlobalProblemData
+	virtual GlobalProblemData*
 	 readProblemData();
 	virtual LayerGroup*
 	 readLayers();
@@ -52,8 +52,8 @@ protected:
 	 readEMSources();
 	virtual OutputRequestGroup*
 	 readOutputRequests();
-	virtual OpenFOAMParameters*
-	 readOpenFOAMParameters();
+	virtual MeshingParameters*
+	 readMeshingParameters();
 	virtual PhysicalModelGroup*
 	 readMaterials();
 	ProblemSize

@@ -5,9 +5,9 @@
  *      Author: luis
  */
 
-#include "OpenFOAMParameters.h"
+#include "MeshingParameters.h"
 
-OpenFOAMParameters::OpenFOAMParameters() {
+MeshingParameters::MeshingParameters() {
    castellateMesh_ = false;
    snapMesh_ = false;
    addLayers_ = false;
@@ -16,7 +16,7 @@ OpenFOAMParameters::OpenFOAMParameters() {
    locationInMeshSet_ = false;
 }
 
-OpenFOAMParameters::OpenFOAMParameters(
+MeshingParameters::MeshingParameters(
       const bool castellateMesh,
       const bool snapMesh,
       const bool addLayers,
@@ -34,7 +34,7 @@ OpenFOAMParameters::OpenFOAMParameters(
 }
 
 void
-OpenFOAMParameters::printInfo() const {
+MeshingParameters::printInfo() const {
    cout<< " --- OpenFOAMParameters info --- " << endl
          << " Castellated Mesh:   " << castellateMesh_ << endl
          << " Snap Mesh:          " << snapMesh_ << endl
@@ -46,34 +46,34 @@ OpenFOAMParameters::printInfo() const {
 }
 
 bool
-OpenFOAMParameters::isAddLayers() const {
+MeshingParameters::isAddLayers() const {
    return addLayers_;
 }
 
 bool
-OpenFOAMParameters::isCastellateMesh() const {
+MeshingParameters::isCastellateMesh() const {
    return castellateMesh_;
 }
 
 double
-OpenFOAMParameters::getEdgeFeatureAngle() const {
+MeshingParameters::getEdgeFeatureAngle() const {
    return edgeFeatureAngle_;
 }
 
 uint
-OpenFOAMParameters::getFeatureRefinementLevel() const {
+MeshingParameters::getFeatureRefinementLevel() const {
    return featureRefinementLevel_;
 }
 
 bool
-OpenFOAMParameters::isSnapMesh() const {
+MeshingParameters::isSnapMesh() const {
    return snapMesh_;
 }
 
-const CVecD3& OpenFOAMParameters::getLocationInMesh() const {
+const CVecD3& MeshingParameters::getLocationInMesh() const {
    return locationInMesh_;
 }
 
-bool OpenFOAMParameters::isLocationInMeshSet() const {
+bool MeshingParameters::isLocationInMeshSet() const {
    return locationInMeshSet_;
 }

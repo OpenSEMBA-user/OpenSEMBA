@@ -14,7 +14,7 @@ SmbData::SmbData() {
    pMGroup = NULL;
    emSources = NULL;
    outputRequests = NULL;
-   ofParams = NULL;
+   meshingParams = NULL;
 }
 
 SmbData::~SmbData() {
@@ -31,7 +31,7 @@ SmbData::operator=(const SmbData& rhs) {
    pMGroup = new PhysicalModelGroup(*rhs.pMGroup);
    emSources = new EMSourceGroup(*rhs.emSources);
    outputRequests = new OutputRequestGroup(*rhs.outputRequests);
-   ofParams = new OpenFOAMParameters(*rhs.ofParams);
+   meshingParams = new MeshingParameters(*rhs.meshingParams);
    return *this;
 }
 
@@ -81,8 +81,8 @@ SmbData::printInfo() const {
    } else {
       cout << "No info about output requests." << endl;
    }
-   if (ofParams != NULL) {
-      ofParams->printInfo();
+   if (meshingParams != NULL) {
+      meshingParams->printInfo();
    } else {
       cout << "No info about openFoam parameters." << endl;
    }
