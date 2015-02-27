@@ -23,7 +23,6 @@ public:
         ugrMesher
     } Mesher;
     typedef enum {
-        none,
         structured,
         relaxed,
         slanted
