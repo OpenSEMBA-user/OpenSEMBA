@@ -34,6 +34,25 @@ struct NFDEData : public ProjectFile {
         :  CoordsNode(), type(Types::NONE) {}
     };
 
+    struct CoordsConfNode : public CoordsNode {
+        unsigned dir;
+        double len;
+        CoordsConfNode() {
+            dir = 0;
+            len = 0.0;
+        }
+    };
+
+    struct CoordsConfLine {
+        unsigned long node[2];
+        CVecD3 norm;
+        long label;
+        CoordsConfLine() {
+            node[0] = node[1] = -1;
+            label = 0;
+        }
+    };
+
     struct Coords {
         pair<CVecI3, CVecI3> coords;
         Coords() {
@@ -89,8 +108,7 @@ struct NFDEData : public ProjectFile {
         }
     };
 
-    struct CoordsLine {
-        CVecI3 coords;
+    struct CoordsLine : public CoordsNode {
         CartesianAxis dir;
         CoordsLine(CoordsMultiplier c) {
             coords = c.coords.first;
@@ -100,6 +118,10 @@ struct NFDEData : public ProjectFile {
                     dir = CartesianAxis(d);
                 }
             }
+        }
+        CoordsLine(CoordsDir c) {
+            coords = c.coords.first;
+            dir = c.dir;
         }
         CoordsLine(CVecI3 c, CartesianAxis d) {
             coords = c;
@@ -138,7 +160,7 @@ struct NFDEData : public ProjectFile {
     };
 
     struct Line : public ObjectInLayer {
-        vector<CoordsLine> entities;
+        vector<CoordsDir> entities;
     };
 
     struct Surf : public ObjectInLayer {
@@ -249,6 +271,11 @@ struct NFDEData : public ProjectFile {
         :	type(Types::NONE),
          	filename(),
          	entities() {}
+    };
+
+    struct ConformalLines {
+        vector<CoordsConfNode> nodes;
+        vector<CoordsConfLine> lines;
     };
 
     struct IsotropicLine :public Line {
@@ -498,6 +525,8 @@ struct NFDEData : public ProjectFile {
     vector<PlaneWaveSource>      planeWaveSource;
     vector<CurrentDensitySource> currentDensitySource;
     vector<FieldSource>          fieldSource;
+
+    vector<ConformalLines> conformalLines;
 
     vector<IsotropicBody> isotropicBody;
     vector<IsotropicSurf> isotropicSurf;
