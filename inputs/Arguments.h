@@ -21,15 +21,13 @@
 
 using namespace std;
 
-#define ARGUMENTS_ERROR 1
-
 class Arguments {
 public:
    Arguments();
    virtual ~Arguments();
-   virtual string	 getProjectFolder() const;
-   virtual string	 getProjectName() const;
-   virtual string	 getFilename() const;
+   virtual string getProjectFolder() const;
+   virtual string getProjectName() const;
+   virtual string getFilename() const;
    virtual void printWelcomeMessage(
          const string appName,
          const string versionNumber) const;
@@ -39,9 +37,8 @@ protected:
    string path;
    string fileName;
    int argc;
-   virtual void printBasicInfo() const;
-   virtual void printHelp() const = 0;
-   virtual void printBasicHelp() const;
+   virtual void printInfo() const;
+   virtual void printHelp() const;
    bool fExists(const string& filename) const;
    char* getArgvpp(const unsigned int i, char *arg);
    string getFileNameFromProjectPath(

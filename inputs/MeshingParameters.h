@@ -28,36 +28,49 @@ public:
         slanted
     } Mode;
     MeshingParameters();
-	MeshingParameters(
-	        Mesher mesher,
-	        bool locationInMeshSet,
-	        CVecD3 locationInMesh,
-	        bool bruteForceVolumes,
-	        Mode mode,
-	        bool effectiveParameter,
-	        string th,
-	        string sigma,
-	        string edgeFraction,
-	        bool scaleFactor,
-	        string scaleFactorValue,
-	        bool swfForze);
-	virtual const CVecD3& getLocationInMesh() const;
-	virtual bool isLocationInMeshSet() const;
+    MeshingParameters(
+            Mesher mesher,
+            bool locationInMeshSet,
+            CVecD3 locationInMesh,
+            bool bruteForceVolumes,
+            Mode mode,
+            bool effectiveParameter,
+            string th,
+            string sigma,
+            string edgeFraction,
+            bool scaleFactor,
+            string scaleFactorValue,
+            string swfForze);
+    virtual const CVecD3& getLocationInMesh() const;
+    virtual bool isLocationInMeshSet() const;
+    bool useOpenFoam() const;
+    bool isBruteForceVolumes() const;
+    bool isStructured() const;
+    bool hasEffParams() const;
+    string getEffThick() const;
+    string getEffSigma() const;
+    bool isRelaxed() const;
+    bool isSlanted() const;
+    string getEdgeFraction() const;
+    bool hasScaleFactor() const;
+    string getScaleFactor() const;
+    string getSWFForce() const;
     virtual void
-     printInfo() const;
+    printInfo() const;
 protected:
-	Mesher mesher_;
-	Mode mode_;
-	bool bruteForceVolumes_;
-	bool effectiveParameter_;
-	string th_;
-	string sigma_;
-	string edgeFraction_;
-	bool scaleFactor_;
-	string scaleFactorValue_;
-	bool swfForze_;
+    Mesher mesher_;
+    Mode mode_;
+    bool bruteForceVolumes_;
+    bool effectiveParameter_;
+    string th_;
+    string sigma_;
+    string edgeFraction_;
+    bool scaleFactor_;
+    string scaleFactorValue_;
+    string swfForze_;
     bool locationInMeshSet_;
     CVecD3 locationInMesh_;
+    string confOutput_;
 };
 
 #endif /* OPENFOAMPARAMETERS_H_ */

@@ -23,137 +23,101 @@
 #define GIDPARSER_ERROR 61594
 
 class ParserGiD : public Parser, public ProjectFile {
-   friend class SmbData;
+    friend class SmbData;
 public:
-	ParserGiD();
-	ParserGiD(
-	 const string& fn);
-	ParserGiD(
-	 const string& fn,
-	 const string& pTPath);
-	virtual
-	~ParserGiD();
-	virtual SmbData*
-	 read();
-	virtual const ProblemSize*
-	 getProblemSize() const;
-	virtual void
-	 printInfo() const;
+    ParserGiD();
+    ParserGiD(
+            const string& fn);
+    ParserGiD(
+            const string& fn,
+            const string& pTPath);
+    virtual
+    ~ParserGiD();
+    virtual SmbData*
+    read();
+    virtual const ProblemSize*
+    getProblemSize() const;
+    virtual void
+    printInfo() const;
 protected:
-	string problemTypePath_;
-	ProblemSize pSize_;
-	virtual GlobalProblemData*
-	 readProblemData();
-	virtual LayerGroup*
-	 readLayers();
-	virtual MeshVolume*
-	 readMesh();
-	virtual EMSourceGroup*
-	 readEMSources();
-	virtual OutputRequestGroup*
-	 readOutputRequests();
-	virtual MeshingParameters*
-	 readMeshingParameters();
-	virtual PhysicalModelGroup*
-	 readMaterials();
-	ProblemSize
-	 readProblemSize();
-	PMVolumeDispersive
-	 readDispersiveMatFile(
-	  const unsigned int id_,
-	  const string& name) const;
-	PMSurfaceSIBC*
-	 readIsotropicSurfMatFile(
-	  const int id,
-	  const string& name) const;
-   PMSurfaceMultilayer*
-    readMultilayerSurf(
-     const int id,
-     const string& name,
-     const string& layersString) const;
-	CoordinateGroup*
-	 readCoordinates();
-	ElementsGroup
-	 readElements(const CoordinateGroup&);
-	vector<Hex8>
-	 readHex8Elements(const CoordinateGroup& v);
-	vector<Tet10>
-	 readTet10Elements(const CoordinateGroup& v);
-	vector<Tet4>
-	 readTet4Elements(const CoordinateGroup& v);
-	vector<Tri6>
-	 readTri6Elements(const CoordinateGroup& v);
-	vector<Tri3>
-	 readTri3Elements(const CoordinateGroup& v);
-	vector<Lin2>
-	 readLin2Elements(const CoordinateGroup& v);
-	Grid3*
-	 readCartesianGrid();
-	vector<OutputRequest>
-	 readOutputRequestInstances();
-	void
-	 getNextLabelAndValue(string& label, string& value);
+    string problemTypePath_;
+    ProblemSize pSize_;
+    virtual GlobalProblemData*
+    readProblemData();
+    virtual LayerGroup*
+    readLayers();
+    virtual MeshVolume*
+    readMesh();
+    virtual EMSourceGroup*
+    readEMSources();
+    virtual OutputRequestGroup*
+    readOutputRequests();
+    virtual MeshingParameters*
+    readMeshingParameters();
+    virtual PhysicalModelGroup*
+    readMaterials();
+    ProblemSize
+    readProblemSize();
+    PMVolumeDispersive readDispersiveMatFile(
+            const unsigned int id_,
+            const string& name) const;
+    PMSurfaceSIBC* readIsotropicSurfMatFile(
+            const int id,
+            const string& name) const;
+    PMSurfaceMultilayer*  readMultilayerSurf(
+            const int id,
+            const string& name,
+            const string& layersString) const;
+    CoordinateGroup* readCoordinates();
+    ElementsGroup readElements(const CoordinateGroup&);
+    vector<Hex8> readHex8Elements(const CoordinateGroup& v);
+    vector<Tet10> readTet10Elements(const CoordinateGroup& v);
+    vector<Tet4> readTet4Elements(const CoordinateGroup& v);
+    vector<Tri6> readTri6Elements(const CoordinateGroup& v);
+    vector<Tri3> readTri3Elements(const CoordinateGroup& v);
+    vector<Lin2> readLin2Elements(const CoordinateGroup& v);
+    Grid3* readCartesianGrid();
+    vector<OutputRequest> readOutputRequestInstances();
+    void getNextLabelAndValue(string& label, string& value);
 private:
-	typedef enum {
-		outRqOnPoint,
-		outRqOnLine,
-		outRqOnSurface,
-		outRqOnVolume,
-		farField,
-		undefined
-	} GiDOutputType;
-   typedef enum {
-      sibc,
-      multilayer,
-      undefinedSIBC
-   } SIBCType;
-   const CoordinateGroup* cG_;
-	pair<CVecD3, CVecD3>
-	 readBoundFromStr(
-	  const string& str) const;
-	virtual PlaneWave
-	 readPlaneWaveEMSource();
-	virtual Dipole
-	 readDipoleEMSource();
-	virtual Waveport
-	 readWaveportEMSource();
-	virtual Generator
-	 readGeneratorEMSource();
-	virtual SourceOnLine
-	 readSourceOnLineEMSource();
-	Generator::Type
-	 generatorStrToType(string label) const;
-	Generator::Hardness
-	generatorStrToHardness(string str) const;
-	SourceOnLine::Type
-	 nodalStrToType(string label) const;
-   SourceOnLine::Hardness
-	 nodalStrToHardness(string label) const;
-	GlobalProblemData::boundType
-	 boundStrToType(string label) const;
-	PhysicalModelGroup::Type
-	 materialStrToType(string label) const;
-	PMMultiport::Type
-	 materialStrToMultiportType(string label) const;
-	Element::Type
-	 elementTypeStrToType(string label) const;
-	OutputRequest::Type
-	 outputTypeStrToType(string label) const;
-	SIBCType
-	 SIBCStrToType(string str) const;
-	GiDOutputType
-	 gidOutputTypeStrToType(string label) const;
-	Domain
-	 readDomainFromStr(const string& line) const;
-	Magnitude*
-	 readMagnitude(const string type);
-	void
-	 init(
-	  const string& pTPath);
-	string
-	 readVersion();
-	bool
-	 checkVersionCompatibility(const string version) const;
+    typedef enum {
+        outRqOnPoint,
+        outRqOnLine,
+        outRqOnSurface,
+        outRqOnVolume,
+        farField,
+        undefined
+    } GiDOutputType;
+    typedef enum {
+        sibc,
+        multilayer,
+        undefinedSIBC
+    } SIBCType;
+    const CoordinateGroup* cG_;
+    virtual PlaneWave readPlaneWave();
+    virtual Dipole readDipole();
+    virtual Waveport readWaveport();
+    virtual Generator readGenerator();
+    virtual SourceOnLine readSourceOnLine();
+    Magnitude* readMagnitude(const string type);
+    pair<CVecD3, CVecD3> strToBound(const string& str) const;
+    Generator::Type strToGeneratorType(string label) const;
+    Generator::Hardness strToGeneratorHardness(string str) const;
+    SourceOnLine::Type strToNodalType(string label) const;
+    SourceOnLine::Hardness strToNodalHardness(string label) const;
+    GlobalProblemData::boundType strToBoundType(string label) const;
+    PhysicalModelGroup::Type strToMaterialType(string label) const;
+    PMMultiport::Type strToMultiportType(string label) const;
+    Element::Type strToElementType(string label) const;
+    OutputRequest::Type strToOutputType(string label) const;
+    SIBCType strToSIBCType(string str) const;
+    GiDOutputType strToGidOutputType(string label) const;
+    Domain strToDomain(string line) const;
+    MeshingParameters::Mesher strToMesher(string) const;
+    MeshingParameters::Mode strToMesherMode(string) const;
+    void init(const string& pTPath);
+    string readVersion();
+    bool checkVersionCompatibility(const string version) const;
 };
 
 #endif /* PARSERGID_H_ */

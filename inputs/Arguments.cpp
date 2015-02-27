@@ -22,7 +22,7 @@ Arguments::fExists(const string& filename) const {
 }
 
 void
-Arguments::printBasicInfo() const {
+Arguments::printInfo() const {
 	cout<< " -- Arguments info ---" << endl;
 	cout<< "Path: " << path << endl;
 	cout<< "Filename: " << fileName << endl;
@@ -123,9 +123,9 @@ Arguments::printWelcomeMessage(
 }
 
 void
-Arguments::printBasicHelp() const {
-	cout<< " -n <folder>" << endl;
-	cout<< "     Specifes a path to case folder." << endl;
+Arguments::printHelp() const {
+	cout<< " -n <FILE>" << endl;
+	cout<< "     Specifes a path to input file." << endl;
 	cout<< " -h, --help" << endl;
 	cout<< "     Prints this help." << endl;
 }

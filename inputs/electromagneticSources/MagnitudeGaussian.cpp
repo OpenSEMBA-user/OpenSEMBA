@@ -28,8 +28,10 @@ MagnitudeGaussian::~MagnitudeGaussian() {
 
 double
 MagnitudeGaussian::evaluate(const double time) const {
-    double expArg = (time - delay_) / (spread_ * M_SQRT2);
-    return exp(-expArg * expArg) * cos(freq_ * M_PI * 2.0 * time);
+    static const double pi = acos(-1.0);
+    static const double sqrt2 = sqrt(2.0);
+    double expArg = (time - delay_) / (spread_ * sqrt2);
+    return exp(-expArg * expArg) * cos(freq_ * pi * 2.0 * time);
 }
 
 void

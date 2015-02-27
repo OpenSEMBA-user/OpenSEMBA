@@ -21,7 +21,7 @@ Dipole::Dipole(
 	orientation_ = orientation;
 	position_ = position;
 	gaussDelay_ = magnitude->getDelay();
-	spreadSqrt2_ = magnitude->getSpread() * M_SQRT2;
+	spreadSqrt2_ = magnitude->getSpread() * sqrt(2.0);
 }
 
 Dipole::~Dipole() {

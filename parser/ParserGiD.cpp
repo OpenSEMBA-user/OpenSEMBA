@@ -13,7 +13,7 @@ ParserGiD::ParserGiD() {
 
 ParserGiD::ParserGiD(
         const string& fn) :
-                        ProjectFile(fn) {
+                                ProjectFile(fn) {
     string null;
     init(null);
 }
@@ -21,7 +21,7 @@ ParserGiD::ParserGiD(
 ParserGiD::ParserGiD(
         const string& fn,
         const string& pTPath) :
-                        ProjectFile(fn) {
+                                ProjectFile(fn) {
     init(pTPath);
 }
 
@@ -74,21 +74,21 @@ ParserGiD::readProblemData() {
                 } else if (label.compare("Geometry scaling factor") == 0) {
                     res->scalingFactor = atof(value.c_str());
                 } else if (label.compare("Upper x bound") == 0) {
-                    res->boundTermination[0].second = boundStrToType(value);
+                    res->boundTermination[0].second = strToBoundType(value);
                 } else if (label.compare("Lower x bound") == 0) {
-                    res->boundTermination[0].first = boundStrToType(value);
+                    res->boundTermination[0].first = strToBoundType(value);
                 } else if (label.compare("Upper y bound") == 0) {
-                    res->boundTermination[1].second = boundStrToType(value);
+                    res->boundTermination[1].second = strToBoundType(value);
                 } else if (label.compare("Lower y bound") == 0) {
-                    res->boundTermination[1].first = boundStrToType(value);
+                    res->boundTermination[1].first = strToBoundType(value);
                 } else if (label.compare("Upper z bound") == 0) {
-                    res->boundTermination[2].second = boundStrToType(value);
+                    res->boundTermination[2].second = strToBoundType(value);
                 } else if (label.compare("Lower z bound") == 0) {
-                    res->boundTermination[2].first = boundStrToType(value);
+                    res->boundTermination[2].first = strToBoundType(value);
                 } else if (label.compare("Boundary padding") == 0) {
-                    res->boundaryPadding = readBoundFromStr(value);
+                    res->boundaryPadding = strToBound(value);
                 } else if (label.compare("Boundary mesh size") == 0) {
-                    res->boundaryMeshSize = readBoundFromStr(value);
+                    res->boundaryMeshSize = strToBound(value);
                 } else if(label.find("End of problem data") != label.npos) {
                     finished = true;
                 }
@@ -142,15 +142,15 @@ ParserGiD::readEMSources() {
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label,value);
                 if (label.compare("Puntual excitation")==0) {
-                    dipoles.push_back(readDipoleEMSource());
+                    dipoles.push_back(readDipole());
                 } else if (label.compare("Planewave")==0) {
-                    pws.push_back(readPlaneWaveEMSource());
+                    pws.push_back(readPlaneWave());
                 } else if (label.compare("Generator")==0) {
-                    gen.push_back(readGeneratorEMSource());
+                    gen.push_back(readGenerator());
                 } else if (label.compare("Waveport")==0) {
-                    wps.push_back(readWaveportEMSource());
+                    wps.push_back(readWaveport());
                 } else if (label.compare("Source_on_line")==0) {
-                    nodal.push_back(readSourceOnLineEMSource());
+                    nodal.push_back(readSourceOnLine());
                 } else if (label.compare("End of Excitations")==0) {
                     finished = true;
                 } // if: end of boundary conditions label was found.
@@ -201,10 +201,10 @@ ParserGiD::readMaterials(){
                         if (label.compare("Name")==0) {
                             name = trim(value);
                         } else if (label.compare("TypeId")==0) {
-                            type = materialStrToType(value);
+                            type = strToMaterialType(value);
                             if (type == PhysicalModelGroup::multiport) {
                                 multiportType =
-                                        materialStrToMultiportType(value);
+                                        strToMultiportType(value);
                             }
                         } else if (label.compare("Permittivity")==0) {
                             rPermittivity = atof(value.c_str());
@@ -223,7 +223,7 @@ ParserGiD::readMaterials(){
                         } else if (label.compare("Capacitance")==0) {
                             capacitance = atof(value.c_str());
                         } else if (label.compare("SurfaceType")==0) {
-                            surfType = SIBCStrToType(value);
+                            surfType = strToSIBCType(value);
                         } else if (label.compare("Filename")==0) {
                             filename = value;
                         } else if (label.compare("Layers")==0) {
@@ -354,16 +354,16 @@ ParserGiD::readOutputRequestInstances() {
     while (!finished && !f_in.eof()) {
         getNextLabelAndValue(label,value);
         if (label.compare("GiDOutputType")==0) {
-            gidOutputType = gidOutputTypeStrToType(trim(value));
+            gidOutputType = strToGidOutputType(trim(value));
         } else if (label.compare("Number of elements")==0) {
             nE = atoi(value.c_str());
             for (uint i = 0; i < nE; i++) {
                 getNextLabelAndValue(label,value);
                 outputName = trim(value);
                 getNextLabelAndValue(label,value);
-                outputType = outputTypeStrToType(trim(value));
+                outputType = strToOutputType(trim(value));
                 getNextLabelAndValue(label,value);
-                domain = readDomainFromStr(value);
+                domain = strToDomain(value);
                 switch (gidOutputType) {
                 case ParserGiD::outRqOnPoint:
                     getNextLabelAndValue(label,value);
@@ -390,12 +390,12 @@ ParserGiD::readOutputRequestInstances() {
                     getline(f_in, line);
                     res.push_back(OutputRequest(domain, Element::VOLUME,
                             outputType, outputName,
-                            BoxD3(readBoundFromStr(line))));
+                            BoxD3(strToBound(line))));
                     break;
                 case ParserGiD::farField:
                 {
                     getline(f_in, line);
-                    BoxD3 bbox(readBoundFromStr(line));
+                    BoxD3 bbox(strToBound(line));
                     double iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
@@ -427,41 +427,58 @@ ParserGiD::readMeshingParameters() {
     bool finished;
     bool found = false;
     string line, label, value;
-    bool castellatedMesh, snapMesh, addLayers;
-    uint featureRefLevel;
-    double edgeFeatureAngle;
+    MeshingParameters::Mesher mesher = MeshingParameters::ugrMesher;
+    MeshingParameters::Mode mode = MeshingParameters::structured;
+    bool bruteForceVolumes = true;
+    string edgeFraction;
+    string swzForce;
+    bool scaleFactor = false;
+    string scaleFactorValue;
+    bool effectiveParameters = false;
+    string thickness, sigma;
     bool locationInMeshIsSet = false;
     CVecD3 locationInMesh;
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
-        if (label.compare("Openfoam parameters") == 0) {
+        if (label.compare("Meshing parameters") == 0) {
             found = true;
             finished = false;
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
-                if (label.compare("Castellated mesh") == 0) {
-                    castellatedMesh = strToBool(value);
-                } else if (label.compare("Snap mesh") == 0) {
-                    snapMesh = strToBool(value);
-                } else if (label.compare("Add layers") == 0) {
-                    addLayers = strToBool(value);
-                } else if (label.compare("Edge feature angle") == 0) {
-                    edgeFeatureAngle = atof(value.c_str());
-                } else if (label.compare("Feature refinement level") == 0) {
-                    featureRefLevel = atoi(value.c_str());
+                if (label.compare("Mesher") == 0) {
+                    mesher = strToMesher(value);
+                } else if (label.compare("Brute force volumes") == 0) {
+                    bruteForceVolumes = strToBool(value);
+                } else if (label.compare("Mode") == 0) {
+                    mode = strToMesherMode(value);
+                } else if (label.compare("Edge fraction") == 0) {
+                    edgeFraction = trim(value);;
+                } else if (label.compare("SWZ force") == 0) {
+                    swzForce = trim(value);
+                } else if (label.compare("Scale factor") == 0) {
+                    scaleFactor = strToBool(value);
+                } else if (label.compare("Scale factor value") == 0) {
+                    scaleFactorValue = trim(value);
+                } else if (label.compare("Effective parameters") == 0) {
+                    effectiveParameters = strToBool(value);
+                } else if (label.compare("Thickness") == 0) {
+                    thickness = trim(value);
+                } else if (label.compare("Sigma") == 0) {
+                    sigma = trim(value);;
                 } else if (label.compare("Location in mesh")==0) {
-                    uint id = atoi(value.c_str());
                     locationInMeshIsSet = true;
+                    uint id = atoi(value.c_str());
                     locationInMesh = cG_->getPtrToId(id)->pos();
-                } else if (label.compare("End of Openfoam parameters")==0) {
+                } else if (label.compare("End of Meshing parameters")==0) {
                     finished = true;
                 }
             }
         }
     }
     //
-    return new MeshingParameters(castellatedMesh, snapMesh, addLayers,
-            edgeFeatureAngle, featureRefLevel, locationInMeshIsSet, locationInMesh);
+    return new MeshingParameters(mesher, locationInMeshIsSet, locationInMesh,
+            bruteForceVolumes, mode, effectiveParameters, thickness, sigma,
+            edgeFraction, scaleFactor, scaleFactorValue, swzForce);
 }
 
 ProblemSize
@@ -934,7 +951,7 @@ ParserGiD::readCartesianGrid() {
                 getNextLabelAndValue(label, value);
                 if (label.compare("Layer Box")==0) {
                     gridFound = true;
-                    bound = BoxD3(readBoundFromStr(value));
+                    bound = BoxD3(strToBound(value));
                 } else if (label.compare("Type")==0) {
                     if (trim(value).compare("by_number_of_cells")==0) {
                         stepsByNumberOfCells = true;
@@ -980,8 +997,27 @@ ParserGiD::readCartesianGrid() {
     return grid;
 }
 
+void
+ParserGiD::init(const string& pTPath) {
+    problemTypePath_ = pTPath;
+    struct stat st;
+    if (stat(getFilename().c_str(), &st) == 0) {
+        if (st.st_mode & S_IFDIR) {
+            cerr<< "ERROR@GiDParser::GiDParser(): "
+                    << getFilename() << "It is a directory " << endl;
+        }  else if(st.st_mode & S_IFREG) {
+            f_in.open(getFilename().c_str(), ifstream::in);
+            if (f_in.fail()) {
+                cerr<< "ERROR @ ParserGiD::GiDParser(): "
+                        << "Problem opening file: " << getFilename() << endl;
+            }
+            return;
+        }
+    }
+}
+
 PlaneWave
-ParserGiD::readPlaneWaveEMSource() {
+ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
     CVecD3 dir, pol;
@@ -998,7 +1034,7 @@ ParserGiD::readPlaneWaveEMSource() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
-            bound = readBoundFromStr(value);
+            bound = strToBound(value);
         } else if (label.compare("Number of elements")==0) {
             isDefinedOnLayer = false;
             uint nE = atoi(value.c_str());
@@ -1023,7 +1059,7 @@ ParserGiD::readPlaneWaveEMSource() {
 }
 
 Dipole
-ParserGiD::readDipoleEMSource() {
+ParserGiD::readDipole() {
     vector<uint> elem;
     double length = 0.0;
     CVecD3 orientation;
@@ -1054,7 +1090,7 @@ ParserGiD::readDipoleEMSource() {
 }
 
 Waveport
-ParserGiD::readWaveportEMSource() {
+ParserGiD::readWaveport() {
     vector<uint> elem;
     uint numElements = 0;
     bool input = true;
@@ -1120,7 +1156,7 @@ ParserGiD::readWaveportEMSource() {
 }
 
 Generator
-ParserGiD::readGeneratorEMSource() {
+ParserGiD::readGenerator() {
     Generator::Type type;
     Generator::Hardness hardness;
     Magnitude* mag;
@@ -1130,9 +1166,9 @@ ParserGiD::readGeneratorEMSource() {
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
         if (label.compare("Type")==0) {
-            type = generatorStrToType(value);
+            type = strToGeneratorType(value);
         } else if (label.compare("Hardness")==0) {
-            hardness = generatorStrToHardness(value);
+            hardness = strToGeneratorHardness(value);
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Number of elements")==0) {
@@ -1154,7 +1190,7 @@ ParserGiD::readGeneratorEMSource() {
 }
 
 SourceOnLine
-ParserGiD::readSourceOnLineEMSource() {
+ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
     Magnitude* mag;
@@ -1164,9 +1200,9 @@ ParserGiD::readSourceOnLineEMSource() {
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
         if (label.compare("Type")==0) {
-            type = nodalStrToType(value);
+            type = strToNodalType(value);
         } else if (label.compare("Hardness")==0) {
-            hardness = nodalStrToHardness(value);
+            hardness = strToNodalHardness(value);
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Number of elements")==0) {
@@ -1188,7 +1224,7 @@ ParserGiD::readSourceOnLineEMSource() {
 }
 
 Element::Type
-ParserGiD::elementTypeStrToType(string str) const {
+ParserGiD::strToElementType(string str) const {
     str = trim(str);
     if (str.compare("point")==0) {
         return Element::NODE;
@@ -1206,7 +1242,7 @@ ParserGiD::elementTypeStrToType(string str) const {
 }
 
 OutputRequest::Type
-ParserGiD::outputTypeStrToType(string str) const {
+ParserGiD::strToOutputType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
         return OutputRequest::electricField;
@@ -1238,7 +1274,7 @@ ParserGiD::outputTypeStrToType(string str) const {
 }
 
 ParserGiD::SIBCType
-ParserGiD::SIBCStrToType(string str) const {
+ParserGiD::strToSIBCType(string str) const {
     str = trim(str);
     if (str.compare("File")==0) {
         return sibc;
@@ -1252,7 +1288,7 @@ ParserGiD::SIBCStrToType(string str) const {
 }
 
 Generator::Type
-ParserGiD::generatorStrToType(string str) const {
+ParserGiD::strToGeneratorType(string str) const {
     str = trim(str);
     if (str.compare("voltage")==0) {
         return Generator::voltage;
@@ -1266,7 +1302,7 @@ ParserGiD::generatorStrToType(string str) const {
 }
 
 Generator::Hardness
-ParserGiD::generatorStrToHardness(string str) const {
+ParserGiD::strToGeneratorHardness(string str) const {
     str = trim(str);
     if (str.compare("soft")==0) {
         return Generator::soft;
@@ -1280,7 +1316,7 @@ ParserGiD::generatorStrToHardness(string str) const {
 }
 
 GlobalProblemData::boundType
-ParserGiD::boundStrToType(string str) const {
+ParserGiD::strToBoundType(string str) const {
     str = trim(str);
     if (str.compare("PEC")==0) {
         return GlobalProblemData::pec;
@@ -1302,7 +1338,7 @@ ParserGiD::boundStrToType(string str) const {
 }
 
 PhysicalModelGroup::Type
-ParserGiD::materialStrToType(string str) const {
+ParserGiD::strToMaterialType(string str) const {
     str = trim(str);
     if (str.compare("PEC")==0) {
         return PhysicalModelGroup::PEC;
@@ -1330,7 +1366,7 @@ ParserGiD::materialStrToType(string str) const {
 }
 
 PMMultiport::Type
-ParserGiD::materialStrToMultiportType(string str) const {
+ParserGiD::strToMultiportType(string str) const {
     str = trim(str);
     if (str.compare("Conn_short")==0) {
         return PMMultiport::shortCircuit;
@@ -1352,7 +1388,7 @@ ParserGiD::materialStrToMultiportType(string str) const {
 }
 
 pair<CVecD3, CVecD3>
-ParserGiD::readBoundFromStr(
+ParserGiD::strToBound(
         const string& value) const {
     uint begin = value.find_first_of("{");
     uint end = value.find_last_of("}");
@@ -1373,7 +1409,7 @@ ParserGiD::readBoundFromStr(
 
 
 SourceOnLine::Type
-ParserGiD::nodalStrToType(string str) const {
+ParserGiD::strToNodalType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
         return SourceOnLine::electricField;
@@ -1387,7 +1423,7 @@ ParserGiD::nodalStrToType(string str) const {
 }
 
 SourceOnLine::Hardness
-ParserGiD::nodalStrToHardness(string str) const {
+ParserGiD::strToNodalHardness(string str) const {
     str = trim(str);
     if (str.compare("soft")==0) {
         return SourceOnLine::soft;
@@ -1397,25 +1433,6 @@ ParserGiD::nodalStrToHardness(string str) const {
         cerr<< "ERROR @ Parser: "
                 << "Unreckognized nodal hardness." << endl;
         return SourceOnLine::soft;
-    }
-}
-
-void
-ParserGiD::init(const string& pTPath) {
-    problemTypePath_ = pTPath;
-    struct stat st;
-    if (stat(getFilename().c_str(), &st) == 0) {
-        if (st.st_mode & S_IFDIR) {
-            cerr<< "ERROR@GiDParser::GiDParser(): "
-                    << getFilename() << "It is a directory " << endl;
-        }  else if(st.st_mode & S_IFREG) {
-            f_in.open(getFilename().c_str(), ifstream::in);
-            if (f_in.fail()) {
-                cerr<< "ERROR @ ParserGiD::GiDParser(): "
-                        << "Problem opening file: " << getFilename() << endl;
-            }
-            return;
-        }
     }
 }
 
@@ -1449,7 +1466,7 @@ ParserGiD::readVersion() {
 }
 
 ParserGiD::GiDOutputType
-ParserGiD::gidOutputTypeStrToType(string str) const {
+ParserGiD::strToGidOutputType(string str) const {
     str = trim(str);
     if (str.compare("OutRq_on_point")==0) {
         return ParserGiD::outRqOnPoint;
@@ -1469,7 +1486,7 @@ ParserGiD::gidOutputTypeStrToType(string str) const {
 }
 
 Domain
-ParserGiD::readDomainFromStr(const string& line) const {
+ParserGiD::strToDomain(string line) const {
     uint timeDomain;
     double initialTime;
     double finalTime;
@@ -1532,6 +1549,36 @@ ParserGiD::readMagnitude(const string typeIn) {
             << "Unable to recognize magnitude type when reading excitation."
             << endl;
     return NULL;
+}
+
+MeshingParameters::Mesher ParserGiD::strToMesher(string str) const {
+    str = trim(str);
+    if (str.compare("ugrMesher")==0) {
+        return MeshingParameters::ugrMesher;
+    } else if (str.compare("OpenFOAM")==0) {
+        return MeshingParameters::openfoam;
+    } else if (str.compare("None")==0) {
+        return MeshingParameters::none;
+    } else {
+        cerr<< "ERROR @ Parser: ";
+        cerr<< "Unreckognized label: " << str<< endl;
+        return MeshingParameters::none;
+    }
+}
+
+MeshingParameters::Mode ParserGiD::strToMesherMode(string str) const {
+    str = trim(str);
+    if (str.compare("Structured")==0) {
+        return MeshingParameters::structured;
+    } else if (str.compare("Relaxed")==0) {
+        return MeshingParameters::relaxed;
+    } else if (str.compare("Slanted")==0) {
+        return MeshingParameters::slanted;
+    } else {
+        cerr<< "ERROR @ Parser: ";
+        cerr<< "Unreckognized label: " << str<< endl;
+        return MeshingParameters::structured;
+    }
 }
 
 bool
