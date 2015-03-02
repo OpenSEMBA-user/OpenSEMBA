@@ -7,22 +7,15 @@
 
 #include "Output.h"
 
-#include "../BCGroup.h"
-#include "../SmbData.h"
-#include "../NFDEData.h"
-#include "../output/OutputNFDE.h"
 #include "../gidpost/gidpost.h"
+#include "../SmbData.h"
 
 using namespace std;
 
 class OutputGiD : public Output {
-    friend class OutputNFDE;
 public:
     OutputGiD();
-    OutputGiD(
-            const SmbData* smb);
-    OutputGiD(
-            const NFDEData* data);
+    OutputGiD(const string& filename);
     virtual ~OutputGiD();
 protected:
     void beginMesh(
@@ -51,63 +44,15 @@ protected:
     void writeCoordinates(const vector<CVecD3>& pos);
     GiD_ResultType getGiDResultType(OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
-private:
-    const SmbData* smb_;
-    const NFDEData* nfde_;
-    GiD_PostMode mode_;
+protected:
     int coordCounter_;
     int elemCounter_;
+    static string makeValid(string name);
     static const CVecD3 pecColor, pmcColor, smaColor, pmlColor,
      sibcColor, emSourceColor;
+    GiD_PostMode mode_;
+private:
     void openGiDFiles();
-    static string makeValid(string name);
-    // SmbData stuff...
-    void writeMesh();
-    void writeMeshWithIds(
-            const vector<vector<uint> >& ids,
-            string& name);
-    void writeMeshWithIds(
-            const vector<vector<uint> >& ids,
-            const vector<string>& name);
-    void writeMeshWithIds(
-            const vector<uint>& ids, string& name);
-    void writeOutputRequestsMesh();
-    void writeMainMesh();
-    void writeBCMesh();
-    void writeBCMesh(
-            const vector<const BoundaryCondition*>& list,
-            const string& name,
-            const CVecD3& colorRGB);
-    // NFDEData stuff...
-    void writeSpaceSteps();
-    void writeBoundaries();
-    void writePlaneWaveSource();
-    void writeCurrentDensitySource();
-    void writeFieldSource();
-    void writeLine(const NFDEData::Line*);
-    void writeSurf(const NFDEData::Surf*);
-    void writeBody(const NFDEData::Body*);
-    void writeConformalLines();
-    void writeThinWire();
-    void writeNewProbe();
-    void writeBulkProbes();
-    void writeSliceProbes();
-    void writeTraditionalProbe();
-    void writeCoordMultiplier(
-                const vector<const NFDEData::CoordsMultiplier*>& entities,
-                const string& name);
-    void writeCoordNodes(
-            const vector<const NFDEData::CoordsNode*>& entities,
-            const string& name);
-    void writeCoordLines(
-            const vector<const NFDEData::CoordsLine*>& entities,
-            const string& name);
-    void writeCoordDirs(
-            const vector<const NFDEData::CoordsDir*>& entities,
-            const string& name);
-    void writeCoords(
-            const vector<const NFDEData::Coords*>& entities,
-            const string& name);
     void initDefault();
 };
 
