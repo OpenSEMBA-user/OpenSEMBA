@@ -27,8 +27,8 @@ Output::writeResumeFile(
         const char * compv[] = {"Ex", "Ey", "Ez", "|E|"};
         const char * fName = "Electric Field";
         const char * tName = "Time";
-        GiD_BeginResult((char*)fName, (char*)tName, time,
-                GiD_Vector, GiD_OnNodes, NULL, NULL, 4, (char**)compv);
+        GiD_BeginResult(fName, tName, time,
+                GiD_Vector, GiD_OnNodes, NULL, NULL, 4, compv);
         writeAllFields(electric);
         GiD_EndResult();
     }
@@ -36,8 +36,8 @@ Output::writeResumeFile(
         const char * compv[] = {"Hx", "Hy", "Hz", "|H|"};
         const char * fName = "Magnetic Field";
         const char * tName = "Time";
-        GiD_BeginResult((char*)fName, (char*)tName, time,
-                GiD_Vector, GiD_OnNodes, NULL, NULL, 4, (char**)compv);
+        GiD_BeginResult(fName, tName, time,
+                GiD_Vector, GiD_OnNodes, NULL, NULL, 4, compv);
         writeAllFields(magnetic);
         GiD_EndResult();
     }

@@ -56,10 +56,11 @@ void OutputGiD::beginResult(
     char gpType[gaussPointType.length() + 1];
     strcpy(gpType, gaussPointType.c_str());
     vector<string> cNames = componentsNames;
-    char *compv[cNames.size()];
+    const char *compv[cNames.size()];
     for (uint i = 0; i < cNames.size(); i++) {
-        compv[i] = new char[cNames[i].length() + 1];
-        strcpy(compv[i], cNames[i].c_str());
+        compv[i] = cNames[i].c_str();
+//        compv[i] = new char[cNames[i].length() + 1];
+//        strcpy(compv[i], cNames[i].c_str());
     }
     GiD_BeginResult(fName, tName, time, resultType,
             getGiDResultLocation(), gpType, NULL, cNames.size(), compv);
