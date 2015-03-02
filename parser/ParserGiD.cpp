@@ -478,7 +478,8 @@ ParserGiD::readMeshingParameters() {
     //
     return new MeshingParameters(mesher, locationInMeshIsSet, locationInMesh,
             bruteForceVolumes, mode, effectiveParameters, thickness, sigma,
-            edgeFraction, scaleFactor, scaleFactorValue, swzForce);
+            edgeFraction, scaleFactor, scaleFactorValue, swzForce,
+            getProjectFolder() + getProjectName());
 }
 
 ProblemSize

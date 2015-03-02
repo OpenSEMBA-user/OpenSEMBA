@@ -23,7 +23,7 @@ using namespace std;
 
 class Arguments {
 public:
-   Arguments();
+   Arguments(const int argc, const char* argv[]);
    virtual ~Arguments();
    virtual string getProjectFolder() const;
    virtual string getProjectName() const;
@@ -34,16 +34,18 @@ public:
    virtual void printGoodbyeMessage(
          const string appName) const;
 protected:
-   string path;
-   string fileName;
-   int argc;
+   string path_;
+   string fileName_;
    virtual void printInfo() const;
    virtual void printHelp() const;
    bool fExists(const string& filename) const;
-   char* getArgvpp(const unsigned int i, char *arg);
+   const char* getArgvpp(
+           const unsigned int i,
+           const int argc,
+           const char *arg);
    string getFileNameFromProjectPath(
-         const string projectPath) const;
-   string  boolToStr(const bool param) const;
+           const string projectPath) const;
+   string boolToStr(const bool param) const;
    void abort(int msg) const;
 private:
    string removeExtension(const string& fName) const;

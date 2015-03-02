@@ -7,8 +7,30 @@
 
 #include "Arguments.h"
 
-Arguments::Arguments() {
-	argc = 0;
+Arguments::Arguments(const int argc,  const char* argv[]) {
+    path_ = *argv++;
+    if (argc == 1) {
+        cout << " >>>> No arguments where given <<<< " << endl;
+        printHelp();
+        abort(EXIT_FAILURE);
+    }
+    for (int i = 1; i < argc; i++) {
+        string str = *argv++;
+        if (!str.compare("-n")) { // "-n" file name
+            fileName_ = getArgvpp(++i, argc, *argv++);
+        } else if (!str.compare("-h") || !str.compare("--help")) {
+            printHelp();
+            abort(EXIT_SUCCESS);
+        }
+    }
+    if (!fExists(fileName_)) {
+        printInfo();
+        cerr<< "ERROR @ Arguments::getArguments(): "
+            << "No input file was found. "
+            << "These files existence were checked: "
+            << fileName_ << endl;
+        abort(EXIT_FAILURE);
+    }
 }
 
 Arguments::~Arguments() {
@@ -24,16 +46,19 @@ Arguments::fExists(const string& filename) const {
 void
 Arguments::printInfo() const {
 	cout<< " -- Arguments info ---" << endl;
-	cout<< "Path: " << path << endl;
-	cout<< "Filename: " << fileName << endl;
+	cout<< "Path: " << path_ << endl;
+	cout<< "Filename: " << fileName_ << endl;
 	cout<< "Project Folder: " << getProjectFolder() << endl;
 	cout<< "Project Name: " << getProjectName() << endl;
 }
 
-char*
-Arguments::getArgvpp(const unsigned int i, char* arg) {
+const char*
+Arguments::getArgvpp(
+        const unsigned int i,
+        const int argc,
+        const char* argv) {
 	if (argc != (int) i) {
-		return arg;
+		return argv;
 	} else {
 		printHelp();
 		cout << ">>>> A value must follow this last argument <<<<" << endl;
@@ -43,8 +68,8 @@ Arguments::getArgvpp(const unsigned int i, char* arg) {
 
 string
 Arguments::getProjectFolder() const {
-	char *cstr = new char[fileName.length() + 1];
-	strcpy(cstr, fileName.c_str());
+	char *cstr = new char[fileName_.length() + 1];
+	strcpy(cstr, fileName_.c_str());
 	string projectDir(dirname(cstr));
 	projectDir += "/";
 	delete [] cstr;
@@ -53,8 +78,8 @@ Arguments::getProjectFolder() const {
 
 string
 Arguments::getProjectName() const {
-	char *cstr = new char[fileName.length() + 1];
-	strcpy(cstr, fileName.c_str());
+	char *cstr = new char[fileName_.length() + 1];
+	strcpy(cstr, fileName_.c_str());
 	string projectFile(basename(cstr));
 	delete [] cstr;
 	return removeExtension(projectFile);
@@ -62,7 +87,7 @@ Arguments::getProjectName() const {
 
 string
 Arguments::getFilename() const {
-	return fileName;
+	return fileName_;
 }
 
 void

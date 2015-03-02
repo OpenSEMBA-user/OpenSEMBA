@@ -28,7 +28,8 @@ MeshingParameters::MeshingParameters(
         string edgeFraction,
         bool scaleFactor,
         string scaleFactorValue,
-        string  swfForze) {
+        string swfForze,
+        string confOutput) {
     mesher_ = mesher;
     locationInMeshSet_ = locationInMeshSet;
     locationInMesh_ = locationInMesh;
@@ -41,12 +42,13 @@ MeshingParameters::MeshingParameters(
     scaleFactor_ = scaleFactor;
     scaleFactorValue_ = scaleFactorValue;
     swfForze_ = swfForze;
+    confOutput_ = confOutput;
 }
 
 void
 MeshingParameters::printInfo() const {
     cout<< " --- Meshing parameters info --- " << endl;
-    if (useOpenFoam()) {
+    if (mesher_ == openfoam) {
         cout << "- Using openfoam mesher." << endl;
         if (locationInMeshSet_) {
             cout << "- Location in mesh:   " << locationInMesh_ << endl;
@@ -64,11 +66,6 @@ const CVecD3& MeshingParameters::getLocationInMesh() const {
 
 bool MeshingParameters::isLocationInMeshSet() const {
     return locationInMeshSet_;
-}
-
-
-bool MeshingParameters::useOpenFoam() const {
-    return (mesher_ == openfoam);
 }
 
 bool MeshingParameters::isBruteForceVolumes() const {
@@ -111,4 +108,69 @@ string MeshingParameters::getScaleFactor() const {
 
 string MeshingParameters::getSWFForce() const {
     return swfForze_;
+}
+
+void MeshingParameters::setBruteForceVolumes(bool bruteForceVolumes) {
+    bruteForceVolumes_ = bruteForceVolumes;
+}
+
+const string& MeshingParameters::getMeshOutputName() const {
+    return confOutput_;
+}
+
+void MeshingParameters::setConfOutput(const string& confOutput) {
+    confOutput_ = confOutput;
+}
+
+void MeshingParameters::setEdgeFraction(const string& edgeFraction) {
+    edgeFraction_ = edgeFraction;
+}
+
+bool MeshingParameters::isEffectiveParameter() const {
+    return effectiveParameter_;
+}
+
+void MeshingParameters::setEffectiveParameter(bool effectiveParameter) {
+    effectiveParameter_ = effectiveParameter;
+}
+
+void MeshingParameters::setLocationInMesh(const CVecD3& locationInMesh) {
+    locationInMesh_ = locationInMesh;
+    locationInMeshSet_ = true;
+}
+
+MeshingParameters::Mesher MeshingParameters::getMesher() const {
+    return mesher_;
+}
+
+void MeshingParameters::setMesher(Mesher mesher) {
+    mesher_ = mesher;
+}
+
+MeshingParameters::Mode MeshingParameters::getMode() const {
+    return mode_;
+}
+
+void MeshingParameters::setMode(Mode mode) {
+    mode_ = mode;
+}
+
+void MeshingParameters::setScaleFactor(bool scaleFactor) {
+    scaleFactor_ = scaleFactor;
+}
+
+void MeshingParameters::setScaleFactorValue(const string& scaleFactorValue) {
+    scaleFactorValue_ = scaleFactorValue;
+}
+
+void MeshingParameters::setSigma(const string& sigma) {
+    sigma_ = sigma;
+}
+
+void MeshingParameters::setSwfForze(const string& swfForze) {
+    swfForze_ = swfForze;
+}
+
+void MeshingParameters::setTh(const string& th) {
+    th_ = th;
 }

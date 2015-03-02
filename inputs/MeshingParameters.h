@@ -8,7 +8,8 @@
 #ifndef OPENFOAMPARAMETERS_H_
 #define OPENFOAMPARAMETERS_H_
 
-#include <iostream>
+#include <string>
+
 #include "../math/CartesianVector.h"
 
 using namespace std;
@@ -40,24 +41,40 @@ public:
             string edgeFraction,
             bool scaleFactor,
             string scaleFactorValue,
-            string swfForze);
+            string swfForze,
+            string confOutput);
+    Mesher getMesher() const;
+    void setMesher(Mesher mesher);
     virtual const CVecD3& getLocationInMesh() const;
     virtual bool isLocationInMeshSet() const;
-    bool useOpenFoam() const;
-    bool isBruteForceVolumes() const;
+    Mode getMode() const;
+    void setMode(Mode mode);
+    void setBruteForceVolumes(bool bruteForceVolumes);
     bool isStructured() const;
-    bool hasEffParams() const;
-    string getEffThick() const;
-    string getEffSigma() const;
     bool isRelaxed() const;
     bool isSlanted() const;
+    bool isBruteForceVolumes() const;
+    bool isEffectiveParameter() const;
+    void setEffectiveParameter(bool effectiveParameter);
+    bool hasEffParams() const;
+    string getEffThick() const;
+    void setTh(const string& th);
+    string getEffSigma() const;
+    void setSigma(const string& sigma);
     string getEdgeFraction() const;
+    void setEdgeFraction(const string& edgeFraction);
     bool hasScaleFactor() const;
     string getScaleFactor() const;
+    void setScaleFactor(bool scaleFactor);
+    void setScaleFactorValue(const string& scaleFactorValue);
     string getSWFForce() const;
-    virtual void
-    printInfo() const;
-protected:
+    void setSwfForze(const string& swfForze);
+    void setLocationInMesh(const CVecD3& locationInMesh);
+    const string& getMeshOutputName() const;
+    void setConfOutput(const string& confOutput);
+    virtual void printInfo() const;
+
+private:
     Mesher mesher_;
     Mode mode_;
     bool bruteForceVolumes_;
