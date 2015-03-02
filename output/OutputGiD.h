@@ -87,6 +87,7 @@ private:
     void writeLine(const NFDEData::Line*);
     void writeSurf(const NFDEData::Surf*);
     void writeBody(const NFDEData::Body*);
+    void writeConformalLines();
     void writeThinWire();
     void writeNewProbe();
     void writeBulkProbes();

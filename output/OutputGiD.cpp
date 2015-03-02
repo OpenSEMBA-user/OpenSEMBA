@@ -61,7 +61,7 @@ OutputGiD::OutputGiD(const NFDEData* nfde) : Output(nfde->getFilename()) {
     for (uint i = 0; i < nfde->dispersiveBody.size(); i++) {
         writeBody(&nfde->dispersiveBody[i]);
     }
-
+    writeConformalLines();
     writeThinWire();
     writeNewProbe();
     writeBulkProbes();
@@ -481,6 +481,37 @@ void OutputGiD::writeLine(const NFDEData::Line* ent) {
     writeCoordLines(cD, ent->getNameAtLayer());
     for(uint j = 0; j < cD.size(); j++)
         delete cD[j];
+}
+
+void OutputGiD::writeConformalLines() {
+    static const int nV = 2;
+    uint tmpCounter = coordCounter_;
+    int nId[nV];
+    for (uint e = 0; e < nfde_->conformalLines.size(); e++) {
+        const NFDEData::ConformalLines& ent = nfde_->conformalLines[e];
+        beginMesh(ent.getNameAtLayer(), GiD_3D, GiD_Linear, nV);
+        vector<CVecD3> pos;
+        for(uint j = 0; j < entities.size(); j++) {
+            CVecD3 aux;
+            aux(x) = (double) entities[j]->coords(x);
+            aux(y) = (double) entities[j]->coords(y);
+            aux(z) = (double) entities[j]->coords(z);
+            pos.push_back(aux);
+            aux(entities[j]->dir)++;
+            pos.push_back(aux);
+        }
+        writeCoordinates(pos);
+        GiD_BeginElements();
+        for (uint j = 0; j < entities.size(); j++) {
+            for (int k = 0; k < nV; k++) {
+                nId[k] = ++tmpCounter;
+            }
+            GiD_WriteElement(++elemCounter_, nId);
+
+        }
+        GiD_EndElements();
+        GiD_EndMesh();
+    }
 }
 
 void OutputGiD::writeSurf(const NFDEData::Surf* ent) {
