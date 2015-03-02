@@ -21,7 +21,6 @@ OutputGiD::OutputGiD(const string& fn) : Output(fn) {
 }
 
 OutputGiD::~OutputGiD() {
-    GiD_ClosePostResultFile();
 }
 
 void OutputGiD::beginMesh(

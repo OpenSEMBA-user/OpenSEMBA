@@ -16,6 +16,7 @@ class OutputGiDSmb : public OutputGiD {
 public:
     OutputGiDSmb();
     OutputGiDSmb(const SmbData* smb);
+    OutputGiDSmb(const SmbData* smb, const string& fn);
     virtual ~OutputGiDSmb();
 private:
     const SmbData* smb_;

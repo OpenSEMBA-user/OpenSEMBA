@@ -11,16 +11,21 @@ OutputGiDSmb::OutputGiDSmb() {
     smb_ = NULL;
 }
 
-OutputGiDSmb::~OutputGiDSmb() {
-    // TODO Auto-generated destructor stub
-}
-
 OutputGiDSmb::OutputGiDSmb(const SmbData* smb) :
         OutputGiD(smb->getFilename()) {
     smb_ = smb;
     writeMesh();
 }
 
+OutputGiDSmb::OutputGiDSmb(const SmbData* smb, const string& fn) :
+        OutputGiD(fn) {
+    smb_ = smb;
+    writeMesh();
+}
+
+OutputGiDSmb::~OutputGiDSmb() {
+    GiD_ClosePostMeshFile();
+}
 
 void
 OutputGiDSmb::writeMesh() {

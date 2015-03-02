@@ -1,77 +1,116 @@
-# Modified from the provided by GiD.
-SOURCE_DIR := $(SRCDIR)/gidpost
-INC_FLAGS := -I${SOURCE_DIR} 
 
-ifeq (${mode},debug)
-CFLAGS   := -g2 -Wall ${CFLAGS}
-CXXFLAGS := -g2 -Wall ${CXXFLAGS}
-LDFLAGS  := -g2
-LIB_NAME_SUFFIX := d.a
-else
-CFLAGS     := -O2 -W -funroll-loops ${CFLAGS}
-CXXFLAGS   := -O2 -W -funroll-loops ${CXXFLAGS}
-LDFLAGS    := -O2
-LIB_NAME_SUFFIX := .a
+# -*- mode: Makefile;-*-
+
+# to compile debug version, do: make DEBUG=yes
+
+HOST = $(shell hostname)
+OS = $(shell if [ -e /usr/include/linux ]; then echo linux; else echo mac; fi)
+ifeq ($(WINDOWS),yes)
+OS = windows
 endif
 
-LIB_NAME := $(OBJDIR)/libgidpost${LIB_NAME_SUFFIX}
+ifeq ($(HOST),rrg7.local)
+  LIBSDIR=/Users/ramsan/gidproject/libs
+else ifeq ($(HOST),hoschi)
+  LIBSDIR=/Users/miguel
+else
+  LIBSDIR=
+endif
 
-LST_INCLUDES = gidpost.h gidpostInt.h zlib.h zlibint1.h zlibint2.h
+OBJDIR = $(if $(filter yes,$(DEBUG)),debug,release)
 
-vpath %cpp ${SOURCE_DIR}
-vpath %c ${SOURCE_DIR}
-vpath %o ${OUTPUT_DIR}
+ifeq ($(USER),ramsan)
+HDF5_DIRECTORY = /home/ramsan/gidproject/gid/hdf5-1.8.3/hdf5
+else
+TCL_DIRECTORY = /opt/hdf5
+endif
 
-CPP_SRCS = gidpost.cpp gidpostInt.cpp
-C_SRCS   = zlibint1.c zlibint2.c
+CC = gcc
+CPPFLAGS=-DUSE_TCL_STUBS -DTCLVERSION
+STRIP=strip
 
-OBJS = ${CPP_SRCS:%.cpp=${OBJDIR}/%.o} ${C_SRCS:%.c=${OBJDIR}/%.o}
+INCLUDE_DIRECTORIES = $(HDF5_DIRECTORY)/include
+LDFLAGS= -static-libgcc
 
-lib: check $(LIB_NAME)
-	@echo "======================================================="
-	@echo "GIDPOST has compiled succesfully. :-)"
-	@echo "======================================================="
+ifeq ($(OS),mac)
+  INCLUDE_DIRECTORIES +=  /opt/local/include
+  CPPFLAGS += -fast -arch i386
+  LDFLAGS += -dynamiclib -arch i386
+  LIB_DIRECTORIES = $(LIBSDIR)/lib /opt/local/lib
+  LIBEXT = dylib
+  LD = g++
+else
+  CPPFLAGS += -fPIC
+  LDFLAGS += -shared -fPIC
+  LIB_DIRECTORIES = /usr/local/ActiveTcl-8.5/lib
+  LIBEXT = so
+  LD = gcc
+endif
 
-$(LIB_NAME): $(OBJS)
-	@echo "Archiving:" $<
-	@ar cr $(LIB_NAME) $(OBJS)
+CPPFLAGS += $(addprefix -I ,$(INCLUDE_DIRECTORIES))
+LDFLAGS += $(addprefix -L,$(LIB_DIRECTORIES)) -lz
+
+LIBS+ = $(HDF5_DIRECTORY)/lib/libhdf5_hl.a $(HDF5_DIRECTORY)/lib/libhdf5.a
+
+EXE = $(OBJDIR)/gidpost.$(LIBEXT)
+EXE_INSTALL = 
+
+ifeq ($(OBJDIR),debug)
+CPPFLAGS += -g -D_DEBUG -DDEBUG -Wall
+LDFLAGS  += -g
+endif
+ifeq ($(OBJDIR),release)
+CPPFLAGS += -O3
+LDFLAGS  += -O3
+endif
+
+ifeq ($(OS),windows)
+  CC = i586-mingw32msvc-gcc
+  LD = i586-mingw32msvc-g++
+  STRIP = i586-mingw32msvc-strip
+  CPPFLAGS += -D_WINDOWS -DNO_SIGACTION -DWIN32 -D_WIN32 -I ~/code/mingw/include
+  OBJDIR = release_mingw
+  LDFLAGS = -m32 -shared
+  LIBS0 =  kernel32 user32 gdi32 win32k ntdll ntoskrnl \
+	advapi32 uuid mpr netapi32 winmm ws2_32 rpcrt4 \
+	ole32 shell32 comdlg32 odbc32 odbccp32
+  LIBS = -L ~/code/mingw/lib $(addprefix -l,$(LIBS0))
+  EXE = $(OBJDIR)/reporter.dll
+  EXE_INSTALL =
+endif
+
+SRCS = \
+    gidpost.c     gidpostHash.c  gidpostInt.c  hdf5c.c    recycle.c \
+    gidpostHDF5.c  hashtab.c lookupa.c
+#    zlibint2.c  zlibint1.c
+
+OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
+
+all: compile $(EXE_INSTALL)
+compile: $(OBJDIR) $(EXE)
+
+-include $(addprefix $(OBJDIR)/,$(SRCS:.c=.d))
+
+$(EXE): $(OBJS)
+	$(LD) $(LDFLAGS) -o $(EXE) $(OBJS) $(LIBS)
+ifneq ($(OBJDIR),debug)
+	 $(STRIP) $(EXE)
+endif
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
+
+$(OBJDIR)/%.o: %.c
+	$(CC) -MMD -c $(CPPFLAGS) $< -o $@
+
+$(EXE_INSTALL): $(EXE)
+ifneq ($(OBJDIR),debug)
+	cp $(EXE) $(EXE_INSTALL)
+endif
 
 clean:
-	rm $(OBJS)
+	rm -f $(OBJDIR)/*.o $(OBJDIR)/*.d $(EXE)
 
-clobber:
-	rm $(LIB_NAME) $(OBJS)
+copy: compile
+	cp $(EXE) $(EXE_INSTALL)
 
-depend: 
-	@echo "Compiling:" $<
-	@${CC} -MM -Df2cFortran ${CPP_SRCS} ${C_SRCS}
-
-.SUFFIXES : .o .cpp .c .f
-
-${OBJDIR}/%.o: %.c
-	@echo "Compiling:" $<
-	@${CC} -c $(CFLAGS) -Df2cFortran $(INC_FLAGS) -o $@ $< 2> $@.err
-
-${OBJDIR}/%.o: %.cpp
-	@echo "Compiling:" $<
-	@${CXX} -c $(CXXFLAGS) $(INC_FLAGS) -o $@ $< 2> $@.err
-
-check:
-	@echo "======================================================="
-	@echo "--- Compiling gidpost --- "
-	@echo "-- With the following options: "
-	@echo "Mode:             " $(mode)
-	@echo "Compiler:         " $(compiler)
-	@echo "MPI:              " $(mpi)
-	@echo "-- Using the following paths tools: "
-	@echo "C Compiler:       " `which $(CC)`
-	@echo "C Flags:          " $(CFLAGS)
-	@echo "C++ Compiler:     " `which $(CXX)`
-	@echo "C++ Flags:        " $(CXXFLAGS)
-	@echo "Defines:          " $(DEFINES)
-	@echo "======================================================="
-
-gidpost.o: gidpost.cpp gidpostInt.h zlib.h gidpost.h
-gidpostInt.o: gidpostInt.cpp gidpostInt.h zlib.h
-zlibint1.o: zlibint1.c zlib.h zlibint1.h
-zlibint2.o: zlibint2.c zlibint1.h zlib.h zlibint2.h

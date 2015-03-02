@@ -15,8 +15,9 @@
 #include "inputs/physicalModel/PhysicalModelGroup.h"
 #include "inputs/LayerGroup.h"
 #include "inputs/MeshingParameters.h"
+#include "Data.h"
 
-class SmbData : public ProjectFile {
+class SmbData : public ProjectFile, public Data {
 public:
     GlobalProblemData* gData;
     LayerGroup* layers;
