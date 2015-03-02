@@ -52,6 +52,7 @@ protected:
      sibcColor, emSourceColor;
     GiD_PostMode mode_;
 private:
+    GiD_FILE fId_;
     void openGiDFiles();
     void initDefault();
 };

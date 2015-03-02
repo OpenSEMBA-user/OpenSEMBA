@@ -33,7 +33,7 @@ void OutputGiD::beginMesh(
     tName = new char[name.length() + 1];
     strcpy(tName, name.c_str());
     if (colorRGB == CVecD3(0.0, 0.0, 0.0)) {
-        GiD_BeginMesh(tName, dim, elementType, nNode);
+        GiD_fBeginMesh(fId_, tName, dim, elementType, nNode);
     } else {
         GiD_BeginMeshColor(tName, dim, elementType, nNode,
                 (float) colorRGB(0), (float) colorRGB(1), (float) colorRGB(2));
