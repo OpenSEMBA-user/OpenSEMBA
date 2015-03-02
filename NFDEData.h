@@ -276,6 +276,8 @@ struct NFDEData : public ProjectFile {
     struct ConformalLines : public ObjectInLayer {
         vector<CoordsConfNode> nodes;
         vector<CoordsConfLine> lines;
+
+
     };
 
     struct IsotropicLine :public Line {
