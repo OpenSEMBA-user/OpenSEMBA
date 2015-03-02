@@ -42,7 +42,7 @@ protected:
    const char* getArgvpp(
            const unsigned int i,
            const int argc,
-           const char *arg);
+           const char *arg) const;
    string getFileNameFromProjectPath(
            const string projectPath) const;
    string boolToStr(const bool param) const;

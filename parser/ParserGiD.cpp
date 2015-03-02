@@ -431,7 +431,7 @@ ParserGiD::readMeshingParameters() {
     MeshingParameters::Mode mode = MeshingParameters::structured;
     bool bruteForceVolumes = true;
     string edgeFraction;
-    string swzForce;
+    string swfForce;
     bool scaleFactor = false;
     string scaleFactorValue;
     bool effectiveParameters = false;
@@ -453,8 +453,8 @@ ParserGiD::readMeshingParameters() {
                     mode = strToMesherMode(value);
                 } else if (label.compare("Edge fraction") == 0) {
                     edgeFraction = trim(value);;
-                } else if (label.compare("SWZ force") == 0) {
-                    swzForce = trim(value);
+                } else if (label.compare("SWF force") == 0) {
+                    swfForce = trim(value);
                 } else if (label.compare("Scale factor") == 0) {
                     scaleFactor = strToBool(value);
                 } else if (label.compare("Scale factor value") == 0) {
@@ -478,7 +478,7 @@ ParserGiD::readMeshingParameters() {
     //
     return new MeshingParameters(mesher, locationInMeshIsSet, locationInMesh,
             bruteForceVolumes, mode, effectiveParameters, thickness, sigma,
-            edgeFraction, scaleFactor, scaleFactorValue, swzForce,
+            edgeFraction, scaleFactor, scaleFactorValue, swfForce,
             getProjectFolder() + getProjectName());
 }
 

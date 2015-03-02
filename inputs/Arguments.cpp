@@ -56,7 +56,7 @@ const char*
 Arguments::getArgvpp(
         const unsigned int i,
         const int argc,
-        const char* argv) {
+        const char* argv) const {
 	if (argc != (int) i) {
 		return argv;
 	} else {
