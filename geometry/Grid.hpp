@@ -214,13 +214,22 @@ template<int D>
 bool
 Grid<D>::isRegular() const {
    for (int i = 0; i < D; i++) {
-      vector<double> step = getStep(i);
-      for (uint n = 1; n < step.size(); n++) {
-         if (abs(step[n] - step[0]) > tolerance) {
-            return false;
-         }
+      if (!isRegular(i)) {
+          return false;
       }
    }
+   return true;
+}
+
+template<int D>
+bool
+Grid<D>::isRegular(const int d) const {
+    vector<double> step = getStep(d);
+    for (uint n = 1; n < step.size(); n++) {
+        if (abs(step[n] - step[0]) > tolerance) {
+            return false;
+        }
+    }
    return true;
 }
 

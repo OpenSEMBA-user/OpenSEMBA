@@ -169,7 +169,7 @@ Box<T,D>::intersect(const Box<T, D>& rhs) const {
 }
 
 template<class T, int D>
-inline vector<CartesianVector<double, D> >
+inline vector<CartesianVector<T, D> >
 Box<T,D>::getPosOfBound(
         CartesianAxis d,
         CartesianBound p) const {
@@ -177,31 +177,31 @@ Box<T,D>::getPosOfBound(
     int rX = d;
     int rY = (d+1)%D;
     int rZ = (d+2)%D;
-    vector<CartesianVector<double, D> > res;
+    vector<CVecTD> res;
     // TODO: Generalize this...
     {
-        CartesianVector<double, D> aux;
+        CVecTD aux;
         aux(rX) = getBound(CartesianBound(p))(rX);
         aux(rY) = getBound(L)(rY);
         aux(rZ) = getBound(L)(rZ);
         res.push_back(aux);
     }
     {
-        CartesianVector<double, D> aux;
+        CVecTD aux;
         aux(rX) = getBound(CartesianBound(p))(rX);
         aux(rY) = getBound(L)(rY);
         aux(rZ) = getBound(U)(rZ);
         res.push_back(aux);
     }
     {
-        CartesianVector<double, D> aux;
+        CVecTD aux;
         aux(rX) = getBound(CartesianBound(p))(rX);
         aux(rY) = getBound(U)(rY);
         aux(rZ) = getBound(U)(rZ);
         res.push_back(aux);
     }
     {
-        CartesianVector<double, D> aux;
+        CVecTD aux;
         aux(rX) = getBound(CartesianBound(p))(rX);
         aux(rY) = getBound(U)(rY);
         aux(rZ) = getBound(L)(rZ);
@@ -221,18 +221,18 @@ Box<T,D>::getBound(CartesianBound p) const {
 }
 
 template<class T, int D>
-inline vector<CartesianVector<double,D> >
+inline vector<CartesianVector<T,D> >
 Box<T,D>::getPos() const {
     assert(D == 3);
-    vector<CartesianVector<double,D> > res(8);
-    res[0] = CartesianVector<double,D>(min_(x), min_(y), min_(z));
-    res[1] = CartesianVector<double,D>(max_(x), min_(y), min_(z));
-    res[2] = CartesianVector<double,D>(max_(x), max_(y), min_(z));
-    res[3] = CartesianVector<double,D>(min_(x), max_(y), min_(z));
-    res[4] = CartesianVector<double,D>(min_(x), min_(y), max_(z));
-    res[5] = CartesianVector<double,D>(max_(x), min_(y), max_(z));
-    res[6] = CartesianVector<double,D>(max_(x), max_(y), max_(z));
-    res[7] = CartesianVector<double,D>(min_(x), max_(y), max_(z));
+    vector<CVecTD> res(8);
+    res[0] = CVecTD(min_(x), min_(y), min_(z));
+    res[1] = CVecTD(max_(x), min_(y), min_(z));
+    res[2] = CVecTD(max_(x), max_(y), min_(z));
+    res[3] = CVecTD(min_(x), max_(y), min_(z));
+    res[4] = CVecTD(min_(x), min_(y), max_(z));
+    res[5] = CVecTD(max_(x), min_(y), max_(z));
+    res[6] = CVecTD(max_(x), max_(y), max_(z));
+    res[7] = CVecTD(min_(x), max_(y), max_(z));
     return res;
 }
 

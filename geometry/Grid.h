@@ -98,6 +98,7 @@ public:
 
     double getMinimumSpaceStep() const;
     bool isRegular() const;
+    bool isRegular(const int d) const;
     bool isCartesian() const;
     bool isNaturalCell(
             const CVecD3 position,
