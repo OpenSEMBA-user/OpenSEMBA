@@ -4,6 +4,8 @@
  */
 #include "OutputGiD.h"
 
+int OutputGiD::numberOfFiles_ = 0;
+
 const CVecD3 OutputGiD::pecColor(255, 0, 0);
 const CVecD3 OutputGiD::pmcColor(0, 255, 0);
 const CVecD3 OutputGiD::smaColor(0, 0, 255);
@@ -11,16 +13,44 @@ const CVecD3 OutputGiD::pmlColor(0, 0, 255);
 const CVecD3 OutputGiD::sibcColor(100, 0, 100);
 const CVecD3 OutputGiD::emSourceColor(100, 100, 0);
 
-OutputGiD::OutputGiD() {
-    initDefault();
-}
-
-OutputGiD::OutputGiD(const string& fn) : Output(fn) {
-    initDefault();
-    openGiDFiles();
+OutputGiD::OutputGiD(const string& fn, GiD_PostMode mode) : Output(fn) {
+    // Sets default values.
+    mode_ = mode;
+    meshFile_ = 0;
+    resultFile_ = 0;
+    coordCounter_ = 0;
+    elemCounter_ = 0;
+    if (numberOfFiles_ == 0) {
+        GiD_PostInit();
+    }
+    numberOfFiles_++;
+    // Opens files.
+    deleteExistentOutputFiles();
+    switch (mode_) {
+    case GiD_PostAscii:
+        openPostMeshFile(fn + ".post.msh");
+        break;
+    case GiD_PostBinary:
+        openPostResultFile(fn + ".post.res");
+        break;
+    default:
+        cerr << "ERROR @ GiDOutput::openFiles() " << endl;
+    }
+    writeGaussPoints();
 }
 
 OutputGiD::~OutputGiD() {
+    switch (mode_) {
+    case GiD_PostAscii:
+        GiD_ClosePostMeshFile();
+        break;
+    default:
+        GiD_ClosePostResultFile();
+    }
+    if (numberOfFiles_ == 1) {
+        GiD_PostDone();
+    }
+    numberOfFiles_--;
 }
 
 void OutputGiD::beginMesh(
@@ -33,9 +63,9 @@ void OutputGiD::beginMesh(
     tName = new char[name.length() + 1];
     strcpy(tName, name.c_str());
     if (colorRGB == CVecD3(0.0, 0.0, 0.0)) {
-        GiD_fBeginMesh(fId_, tName, dim, elementType, nNode);
+        GiD_fBeginMesh(meshFile_, tName, dim, elementType, nNode);
     } else {
-        GiD_BeginMeshColor(tName, dim, elementType, nNode,
+        GiD_fBeginMeshColor(meshFile_, tName, dim, elementType, nNode,
                 (float) colorRGB(0), (float) colorRGB(1), (float) colorRGB(2));
     }
     delete [] tName;
@@ -62,33 +92,39 @@ void OutputGiD::beginResult(
 //        compv[i] = new char[cNames[i].length() + 1];
 //        strcpy(compv[i], cNames[i].c_str());
     }
-    GiD_BeginResult(fName, tName, time, resultType,
+    GiD_fBeginResult(resultFile_, fName, tName, time, resultType,
             getGiDResultLocation(), gpType, NULL, cNames.size(), compv);
 }
 
 void OutputGiD::openPostMeshFile(
-        const string& filename,
-        const GiD_PostMode mode) const {
+        const string& filename) {
     char *auxChar;
     auxChar = new char[filename.length() + 1];
     strcpy(auxChar, filename.c_str());
-    GiD_OpenPostMeshFile(auxChar, mode);
+    meshFile_ = GiD_fOpenPostMeshFile(auxChar, mode_);
     delete [] auxChar;
 }
 
 void OutputGiD::openPostResultFile(
-        const string& filename,
-        const GiD_PostMode mode) const {
+        const string& filename)  {
     char *auxChar;
     auxChar = new char[filename.length() + 1];
     strcpy(auxChar, filename.c_str());
-    GiD_OpenPostResultFile(auxChar, mode);
+    resultFile_ = GiD_fOpenPostResultFile(auxChar, mode_);
+    if (mode_ == GiD_PostBinary) {
+        meshFile_ = resultFile_;
+    }
     delete [] auxChar;
 }
 
 void
 OutputGiD::flushPostFile() const {
-    GiD_FlushPostFile();
+    if (meshFile_ != 0) {
+        GiD_fFlushPostFile(meshFile_);
+    }
+    if (resultFile_ != 0) {
+        GiD_fFlushPostFile(resultFile_);
+    }
 }
 
 
@@ -135,40 +171,42 @@ GiD_ResultLocation OutputGiD::getGiDResultLocation() const {
 
 
 void OutputGiD::writeCoordinates(const uint id, const CVecD3 pos) const {
-    GiD_WriteCoordinates(id, pos(x), pos(y), pos(z));
+    GiD_fWriteCoordinates(meshFile_, id, pos(x), pos(y), pos(z));
 }
 
 void OutputGiD::writeCoordinates(const vector<CVecD3>& pos)  {
-    GiD_BeginCoordinates();
+    GiD_fBeginCoordinates(meshFile_);
     for (uint i = 0; i < pos.size(); i++) {
-        GiD_WriteCoordinates(++coordCounter_, pos[i](x), pos[i](y), pos[i](z));
+        writeCoordinates(++coordCounter_, pos[i]);
     }
-    GiD_EndCoordinates();
+    GiD_fEndCoordinates(meshFile_);
 }
 
-void OutputGiD::initDefault() {
-    mode_ = GiD_PostAscii;
-    coordCounter_ = 0;
-    elemCounter_ = 0;
-}
-
-void OutputGiD::openGiDFiles() {
-    deleteExistentOutputFiles();
-    switch (mode_) {
-    case GiD_PostAscii:
-        openPostMeshFile(getOutputfilename() + ".post.msh", mode_);
-        //        openPostResultFile(getOutputfilename() + ".post.res", mode_);
-        break;
-    case GiD_PostBinary:
-        openPostResultFile(getOutputfilename() + ".post.res", mode_);
-        break;
-    default:
-        cerr << "ERROR @ GiDOutput::openFiles() " << endl;
-    }
-    writeGaussPoints();
+void OutputGiD::writeElement(int elemId, int nId[]) const {
+    GiD_fWriteElement(meshFile_, elemId, nId);
 }
 
 string OutputGiD::makeValid(string name) {
     name.erase(remove(name.begin(), name.end(), '\n'), name.end());
     return name;
+}
+
+void OutputGiD::beginCoordinates() const {
+    GiD_fBeginCoordinates(meshFile_);
+}
+
+void OutputGiD::endCoordinates() const {
+    GiD_fEndCoordinates(meshFile_);
+}
+
+void OutputGiD::beginElements() const {
+    GiD_fBeginElements(meshFile_);
+}
+
+void OutputGiD::endElements() const {
+    GiD_fEndElements(meshFile_);
+}
+
+void OutputGiD::endMesh() const {
+    GiD_fEndMesh(meshFile_);
 }

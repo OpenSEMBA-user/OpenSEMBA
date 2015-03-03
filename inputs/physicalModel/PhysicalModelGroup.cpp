@@ -157,25 +157,6 @@ PhysicalModelGroup::removePMLs() {
    pml_.clear();
 }
 
-void
-PhysicalModelGroup::detectAndAssignPMLRegions(
-      MeshVolume* mesh) {
-   if (countPML() == 0) {
-      return;
-   }
-   const unsigned int pmlId = getPML()->getId();
-   vector<unsigned int> notPMLId = mesh->elem_.getIdsWithoutMaterialId(pmlId);
-   vector<unsigned int> internalId = mesh->getTetIds(notPMLId);
-   vector<pair<const Volume*, unsigned int> > internalBorder =
-         mesh->getInternalBorder(internalId);
-   // Creates PML material stretched towards +x.
-   PMVolumePML::Direction direction[3];
-   for (unsigned int i = 0; i < PMVolumePML::possibleDirections; i++) {
-      getDirection(direction, i);
-      createAndAssignPML(direction, internalBorder, mesh);
-   }
-}
-
 vector<uint>
 PhysicalModelGroup::getSurfaceMatIds() const {
    vector<uint> res;
@@ -295,38 +276,6 @@ PhysicalModelGroup::updatePointers() {
          pm.push_back(&sma);
          lastId++;
       }
-   }
-}
-
-void
-PhysicalModelGroup::createAndAssignPML(
-      const PMVolumePML::Direction direction[3],
-      const vector<pair<const Volume*, unsigned int> >& internalBorder,
-      MeshVolume* mesh) {
-   // Computes bound of PML pointing in this direction.
-   BoxD3 bound = mesh->getBound(internalBorder);
-   pair<CVecD3,CVecD3> pmlBound;
-   for (unsigned int i = 0; i < 3; i++) {
-      if (direction[i] == PMVolumePML::minus) {
-         pmlBound.second(i) = bound.getMin()(i);
-         pmlBound.first(i) = - numeric_limits<double>::infinity() ;
-      } else if (direction[i] == PMVolumePML::plus) {
-         pmlBound.first(i) = bound.getMax()(i);
-         pmlBound.first(i) = numeric_limits<double>::infinity() ;
-      } else {
-         pmlBound.first(i) = bound.getMin()(i);
-         pmlBound.second(i) = bound.getMax()(i);
-      }
-   }
-   // Gets ids of PMLs inside the pml bound. Removes non-tet.
-   vector<unsigned int> allPMLIds = mesh->getIdsInsideBound(pmlBound);
-   vector<unsigned int> PMLIds = mesh->getTetIds(allPMLIds);
-   // Creates new PML material for that bound and sets in mesh.
-   if (PMLIds.size() != 0) {
-      unsigned int lastId = count();
-      pml_.push_back(new PMVolumePML(lastId+1, direction, mesh->getBound(PMLIds)));
-      updatePointers();
-      mesh->setMaterialIds(PMLIds, lastId+1);
    }
 }
 

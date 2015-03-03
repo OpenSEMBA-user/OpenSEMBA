@@ -25,13 +25,12 @@ public:
     EMSourceGroup* emSources;
     OutputRequestGroup* outputRequests;
     MeshingParameters* meshingParams;
-    MeshVolume* mesh;
+    Mesh* mesh;
     SmbData();
     virtual ~SmbData();
     virtual SmbData& operator=(const SmbData& rhs);
     void applyGeometricScalingFactor();
     void ignorePMLs();
-    void detectAndAssignPMLRegions();
     virtual void printInfo() const;
 };
 

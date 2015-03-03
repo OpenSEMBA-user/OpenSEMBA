@@ -26,7 +26,7 @@ SmbData::operator=(const SmbData& rhs) {
       return *this;
    }
    layers = new LayerGroup(*rhs.layers);
-   mesh = new MeshVolume(*rhs.mesh);
+   mesh = new Mesh(*rhs.mesh);
    gData = new GlobalProblemData(*rhs.gData);
    pMGroup = new PhysicalModelGroup(*rhs.pMGroup);
    emSources = new EMSourceGroup(*rhs.emSources);
@@ -41,11 +41,6 @@ SmbData::ignorePMLs() {
    const uint vacuumId = pMGroup->getVacuum()->getId();
    const vector<uint> pmlIds = mesh->elem_.getIdsWithMaterialId(pmlId);
    mesh->setMaterialIds(pmlIds, vacuumId);
-}
-
-void
-SmbData::detectAndAssignPMLRegions() {
-   pMGroup->detectAndAssignPMLRegions(mesh);
 }
 
 void

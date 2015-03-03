@@ -9,7 +9,6 @@
 #define SRC_COMMON_OUTPUT_OUTPUTGIDSMB_H_
 
 #include "OutputGiD.h"
-#include "../BCGroup.h"
 #include "../SmbData.h"
 
 class OutputGiDSmb : public OutputGiD {
@@ -31,11 +30,11 @@ private:
             const vector<uint>& ids, string& name);
     void writeOutputRequestsMesh();
     void writeMainMesh();
-    void writeBCMesh();
-    void writeBCMesh(
-            const vector<const BoundaryCondition*>& list,
-            const string& name,
-            const CVecD3& colorRGB);
+//    void writeBCMesh();
+//    void writeBCMesh(
+//            const vector<const BoundaryCondition*>& list,
+//            const string& name,
+//            const CVecD3& colorRGB);
 };
 
 #endif /* SRC_COMMON_OUTPUT_OUTPUTGIDSMB_H_ */

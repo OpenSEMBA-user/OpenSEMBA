@@ -12,7 +12,7 @@
 #include <cmath>
 #include <vector>
 #include <assert.h>
-#include "../../geometry/MeshVolume.h"
+#include "../../geometry/Mesh.h"
 #include "PhysicalModel.h"
 #include "PMPEC.h"
 #include "PMPMC.h"
@@ -178,9 +178,6 @@ public:
 		}
 	 	return res;
 	 }
-	void
-	 detectAndAssignPMLRegions(
-	  MeshVolume* mesh);
 	vector<uint>
 	 getVolumicMatIds() const;
 	vector<uint>
@@ -200,11 +197,6 @@ private:
 	  const vector<PMWire*> wire);
 	void
 	 updatePointers();
-	void
-	 createAndAssignPML(
-	  const PMVolumePML::Direction direction[3],
-	  const vector<pair<const Volume*, unsigned int> >& internalBorder,
-	  MeshVolume* mesh);
 	void
 	 getDirection(
 	  PMVolumePML::Direction direction[3],

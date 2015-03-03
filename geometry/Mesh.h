@@ -29,6 +29,7 @@ public:
             const CoordinateGroup& cG,
             const Grid3* grid);
     Mesh();
+    Mesh(Mesh& param);
     virtual
     ~Mesh();
     void
@@ -52,6 +53,17 @@ public:
     void
     applyGeometricScalingFactor(
             const double factor);
+    vector<unsigned int>
+    getTetIds(const vector<unsigned int> elemIds) const;
+    vector<unsigned int>
+    getIdsOfCurvedTets() const;
+    vector<Tri3>
+    getTriWithMatId(const uint matId, const bool ignoreTet = false) const;
+    vector<Tri3> getTriWithId(const vector<uint>& Id) const;
+    vector<pair<const Volume*, unsigned int> >
+    getInternalBorder(const vector<unsigned int>& elemIds) const;
+    vector<pair<const Volume*, unsigned int> >
+    getExternalBorder(const vector<unsigned int>& elemIds) const;
     void
     linearize();
     bool
@@ -66,18 +78,41 @@ public:
     getElementsWithVertex(
             const uint vertexId,
             const Element::Type type) const;
+    vector<BoxD3> getRectilinearHexesInsideRegion(
+            const vector<const Element*>& region) const;
+    pair<const Volume*, unsigned int>
+    getBoundary(const Surface*) const;
+    vector<unsigned int>
+    getAdjacentElements(const vector<unsigned int>& elemIds) const;
+    vector<pair<const Tet*, unsigned int> >
+    getBorderWithNormal(
+            const vector<pair<const Tet*, unsigned int> >& border,
+            const CartesianVector<double,3>& normal);
+    bool
+    isFloatingCoordinate(const CoordD3* coordinate) const;
     virtual bool
-    isOnBoundary(const CVecD3 pos) const = 0;
+    isOnBoundary(const CVecD3 pos) const;
     virtual const CoordD3*
-    getClosestVertex(const CVecD3 pos) const = 0;
+    getClosestVertex(const CVecD3 pos) const;
     virtual vector<const Surface*>
-    getMaterialBoundary(const uint matId, const uint layId) const = 0;
+    getMaterialBoundary(
+            const uint matId,
+            const uint layId) const;
     virtual vector<BoxD3>
     discretizeWithinBoundary(
             const uint matId,
-            const uint layerId) const = 0;
-    void printInfo() const;
+            const uint layId) const;
+    pair<const Volume*, unsigned int> getNeighConnection(
+            pair<const Volume*, const unsigned int> inner) const;
+    virtual void printInfo() const;
 protected:
+    MapGroup map;
+    vector<pair<const Volume*, unsigned int> >
+    getInternalBorderOfTetRegion(
+            const vector<unsigned int>& region) const;
+    vector<pair<const Volume*, unsigned int> >
+    getInternalBorderOfTriRegion(
+            const vector<unsigned int>& region) const;
     Grid3* grid_;
     static const double areaDiffTolerance;
 };

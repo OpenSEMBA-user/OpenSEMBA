@@ -108,18 +108,16 @@ ParserGiD::readProblemData() {
     return res;
 }
 
-MeshVolume*
+Mesh*
 ParserGiD::readMesh() {
     // Read Grid3
     Grid3* grid = readCartesianGrid();
     // Reads the coordinates.
-    CoordinateGroup* coordinates = readCoordinates();
-    cG_ = coordinates;
+    cG_ = readCoordinates();
     // Reads elements connectivities.
-    ElementsGroup elements;
-    elements = readElements(*coordinates);
+    ElementsGroup elements = readElements(*cG_);
     // Builds mesh with the read data.
-    return new MeshVolume(*coordinates, elements, grid);
+    return new Mesh(*cG_, elements, grid);
 }
 
 EMSourceGroup*

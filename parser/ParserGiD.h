@@ -46,7 +46,7 @@ protected:
     readProblemData();
     virtual LayerGroup*
     readLayers();
-    virtual MeshVolume*
+    virtual Mesh*
     readMesh();
     virtual EMSourceGroup*
     readEMSources();

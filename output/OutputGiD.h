@@ -14,8 +14,7 @@ using namespace std;
 
 class OutputGiD : public Output {
 public:
-    OutputGiD();
-    OutputGiD(const string& filename);
+    OutputGiD(const string& filename, GiD_PostMode mode = GiD_PostAscii);
     virtual ~OutputGiD();
 protected:
     void beginMesh(
@@ -32,29 +31,31 @@ protected:
             GiD_ResultLocation resultLocaltion,
             const string gaussPointType,
             const vector<string>& componentsNames) const;
-    void openPostMeshFile(
-            const string& filename,
-            const GiD_PostMode mode) const;
-    void openPostResultFile(
-            const string& filename,
-            const GiD_PostMode mode) const;
+    void openPostMeshFile(const string& filename);
+    void openPostResultFile(const string& filename);
     void flushPostFile() const;
+    void beginCoordinates() const;
     void writeGaussPoints() const;
     void writeCoordinates(const uint id, const CVecD3 pos) const;
     void writeCoordinates(const vector<CVecD3>& pos);
+    void endCoordinates() const;
+    void beginElements() const;
+    void writeElement(int elemId, int nId[]) const;
+    void endElements() const;
+    void endMesh() const;
     GiD_ResultType getGiDResultType(OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
 protected:
     int coordCounter_;
     int elemCounter_;
-    static string makeValid(string name);
     static const CVecD3 pecColor, pmcColor, smaColor, pmlColor,
      sibcColor, emSourceColor;
-    GiD_PostMode mode_;
+    static string makeValid(string name);
 private:
-    GiD_FILE fId_;
-    void openGiDFiles();
-    void initDefault();
+    static int numberOfFiles_;
+    GiD_FILE meshFile_;
+    GiD_FILE resultFile_;
+    GiD_PostMode mode_;
 };
 
 #endif /* GIDOUTPUT_H_ */
