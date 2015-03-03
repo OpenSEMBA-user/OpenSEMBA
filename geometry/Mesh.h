@@ -87,7 +87,7 @@ public:
     vector<pair<const Tet*, unsigned int> >
     getBorderWithNormal(
             const vector<pair<const Tet*, unsigned int> >& border,
-            const CartesianVector<double,3>& normal);
+            const CVecD3& normal);
     bool
     isFloatingCoordinate(const CoordD3* coordinate) const;
     virtual bool
@@ -106,15 +106,15 @@ public:
             pair<const Volume*, const unsigned int> inner) const;
     virtual void printInfo() const;
 protected:
-    MapGroup map;
+    MapGroup map_;
+    Grid3* grid_;
+    static const double areaDiffTolerance;
     vector<pair<const Volume*, unsigned int> >
     getInternalBorderOfTetRegion(
             const vector<unsigned int>& region) const;
     vector<pair<const Volume*, unsigned int> >
     getInternalBorderOfTriRegion(
             const vector<unsigned int>& region) const;
-    Grid3* grid_;
-    static const double areaDiffTolerance;
 };
 
 

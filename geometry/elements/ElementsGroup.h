@@ -96,7 +96,7 @@ public:
     vector<const Surface*>
     getSurfacesWithMatId(const vector<uint>& matId) const;
     vector<const Element*>
-    getElementsWithMatLayId(
+    get(
             const uint matId, const uint layId) const;
     ElementsGroup
     removeElementsWithMatId(

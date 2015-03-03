@@ -117,7 +117,7 @@ public:
 	    return 0;
 	}
 	vector<uint>
-	 getMatIds(const Condition::Type type) const;
+	 getIds(const Condition::Type type = Condition::undefined) const;
 	unsigned int
 	 countSIBC() const {
 		unsigned int res = 0;

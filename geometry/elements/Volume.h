@@ -27,7 +27,7 @@ public:
 	CVecD3
 	 sideNormal(const unsigned int f) const;
    virtual Element::Type
-    getType() const {return VOLUME;}
+    getType() const {return volume;}
 	virtual double
 	 getAreaOfFace(const unsigned int face) const = 0;
    BoxD3

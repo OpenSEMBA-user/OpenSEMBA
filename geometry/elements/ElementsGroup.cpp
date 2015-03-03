@@ -387,7 +387,7 @@ ElementsGroup::getElementsWithMatId(const vector<uint>& matId) const {
 }
 
 vector<const Element*>
-ElementsGroup::getElementsWithMatLayId(
+ElementsGroup::get(
       const uint matId, const uint layId) const {
    vector<const Element*> res;
    res.reserve(element.size());

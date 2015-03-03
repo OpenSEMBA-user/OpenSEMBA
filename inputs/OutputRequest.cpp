@@ -97,13 +97,13 @@ OutputRequest::elementTypeStr() const {
 	case Element::NODE:
 		res = "node";
 		break;
-	case Element::LINE:
+	case Element::line:
 		res = "line";
 		break;
-	case Element::SURFACE:
+	case Element::surface:
 		res = "surface";
 		break;
-	case Element::VOLUME:
+	case Element::volume:
 		res = "volume";
 		break;
 	default:

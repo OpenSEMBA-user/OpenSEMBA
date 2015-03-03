@@ -27,8 +27,22 @@ OutputGiDSmb::~OutputGiDSmb() {
 void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
-    writeMainMesh();
-//    writeBCMesh();
+    vector<uint> layId = smb_->layers->getIds();
+    vector<uint> matId = smb_->pMGroup->getIds();
+    for (uint i = 0; i < layId.size(); i++) {
+        for (uint j = 0; j < matId.size(); j++) {
+            const Layer* layer = smb_->layers->get(layId[i]);
+            const PhysicalModel* mat = smb_->pMGroup->getPMWithId(matId[j]);
+            const string name = mat->getName() + "@" + layer->getName();
+            vector<const Element*> elem;
+            elem = smb_->mesh->elem_.get(Element::line, matId[j], layId[i]);
+            writeElements(elem, name, GiD_Linear, 2);
+            elem = smb_->mesh->elem_.get(Element::surface, matId[j], layId[i]);
+            writeElements(elem, name, GiD_Triangle, 3);
+            elem = smb_->mesh->elem_.get(Element::volume, matId[j], layId[i]);
+            writeElements(elem, name, GiD_Tetrahedra, 4);
+        }
+    }
 }
 
 void
@@ -110,24 +124,52 @@ OutputGiDSmb::writeOutputRequestsMesh() {
     }
 }
 
-void
-OutputGiDSmb::writeMainMesh() {
-    vector<vector<uint> > ids;
-    vector<string> name;
-    // Gets ids of tets with vacuum material.
-    vector<uint> vacuumIds = smb_->mesh->elem_.getIdsWithMaterialId(0);
-    ids.push_back(smb_->mesh->getTetIds(vacuumIds));
-    name.push_back("Vacuum");
-    // Rest of materials.
-    vector<uint> volMats = smb_->pMGroup->getVolumicMatIds();
-    for (uint i = 0; i < volMats.size(); i++) {
-        const uint matId = volMats[i];
-        vector<uint> matIds = smb_->mesh->elem_.getIdsWithMaterialId(matId);
-        ids.push_back(smb_->mesh->getTetIds(matIds));
-        name.push_back(smb_->pMGroup->getPMVolumeWithId(matId)->getName());
+void OutputGiDSmb::writeElements(
+        const vector<const Element*>& elem,
+        const string& name,
+        const GiD_ElementType type,
+        const int nV) {
+    uint tmpCounter = coordCounter_;
+    int nId[nV];
+    beginMesh(name, GiD_3D, type, nV);
+    vector<CVecD3> pos;
+    for(uint i = 0; i < elem.size(); i++) {
+        for (uint j = 0; j < nV; j++) {
+            pos.push_back(elem[i]->getVertex(j)->pos());
+        }
     }
-    writeMeshWithIds(ids, name);
+    writeCoordinates(pos);
+    beginElements();
+    for (uint j = 0; j < elem.size(); j++) {
+        for (int k = 0; k < nV; k++) {
+            nId[k] = ++tmpCounter;
+        }
+        writeElement(++elemCounter_, nId);
+
+    }
+    endElements();
+    endMesh();
 }
+
+//
+//void
+//OutputGiDSmb::writeMaterialsMesh() {
+//    vector<vector<uint> > ids;
+//    vector<string> name;
+//    // Gets ids of tets with vacuum material.
+//    vector<uint> vacuumIds = smb_->mesh->elem_.getIdsWithMaterialId(0);
+//    ids.push_back(smb_->mesh->getTetIds(vacuumIds));
+//    name.push_back("Vacuum");
+//    // Rest of materials.
+//    vector<uint> volMats = smb_->pMGroup->getVolumicMatIds();
+//    for (uint i = 0; i < volMats.size(); i++) {
+//        const uint matId = volMats[i];
+//        vector<uint> matIds = smb_->mesh->elem_.getIdsWithMaterialId(matId);
+//        ids.push_back(smb_->mesh->getTetIds(matIds));
+//        name.push_back(smb_->pMGroup->getPMVolumeWithId(matId)->getName());
+//    }
+//    writeMeshWithIds(ids, name);
+//}
 
 //void
 //OutputGiDSmb::writeBCMesh() {

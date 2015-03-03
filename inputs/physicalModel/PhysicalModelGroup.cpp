@@ -311,10 +311,10 @@ PhysicalModelGroup::getDirectionFromInt(
 }
 
 vector<uint>
-PhysicalModelGroup::getMatIds(const Condition::Type type) const {
+PhysicalModelGroup::getIds(const Condition::Type type) const {
     vector<uint> res;
     for (uint i = 0; i < pm.size(); i++) {
-        if (pm[i]->getConditionType() == type) {
+        if (pm[i]->getConditionType() == type || type == Condition::undefined) {
             res.push_back(pm[i]->getId());
         }
     }

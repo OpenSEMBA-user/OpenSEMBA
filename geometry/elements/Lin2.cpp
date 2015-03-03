@@ -43,7 +43,7 @@ Lin2::~Lin2() {
 
 const CoordD3*
 Lin2::getVertex(const uint i) const {
-	return v[lin.vertex(i)];
+	return v[i];
 }
 
 void

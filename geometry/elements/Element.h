@@ -21,9 +21,9 @@ public:
 	typedef enum{
 		undefined,
 		NODE,
-		LINE,
-		SURFACE,
-		VOLUME
+		line,
+		surface,
+		volume
 	} Type;
 	Element();
 	Element(const uint id, const uint matId, const uint layerId);

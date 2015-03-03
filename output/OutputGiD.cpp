@@ -4,7 +4,9 @@
  */
 #include "OutputGiD.h"
 
-int OutputGiD::numberOfFiles_ = 0;
+int OutputGiD::numberOfOutputGiD_ = 0;
+int OutputGiD::coordCounter_ = 0;
+int OutputGiD::elemCounter_ = 0;
 
 const CVecD3 OutputGiD::pecColor(255, 0, 0);
 const CVecD3 OutputGiD::pmcColor(0, 255, 0);
@@ -18,12 +20,10 @@ OutputGiD::OutputGiD(const string& fn, GiD_PostMode mode) : Output(fn) {
     mode_ = mode;
     meshFile_ = 0;
     resultFile_ = 0;
-    coordCounter_ = 0;
-    elemCounter_ = 0;
-    if (numberOfFiles_ == 0) {
+    if (numberOfOutputGiD_ == 0) {
         GiD_PostInit();
     }
-    numberOfFiles_++;
+    numberOfOutputGiD_++;
     // Opens files.
     deleteExistentOutputFiles();
     switch (mode_) {
@@ -47,10 +47,10 @@ OutputGiD::~OutputGiD() {
     default:
         GiD_ClosePostResultFile();
     }
-    if (numberOfFiles_ == 1) {
+    if (numberOfOutputGiD_ == 1) {
         GiD_PostDone();
     }
-    numberOfFiles_--;
+    numberOfOutputGiD_--;
 }
 
 void OutputGiD::beginMesh(

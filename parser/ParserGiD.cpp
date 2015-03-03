@@ -374,19 +374,19 @@ ParserGiD::readOutputRequestInstances() {
                     getNextLabelAndValue(label,value);
                     elemVec.clear();
                     elemVec.push_back(atoi(value.c_str()));
-                    res.push_back(OutputRequest(domain, Element::LINE,
+                    res.push_back(OutputRequest(domain, Element::line,
                             outputType, outputName, elemVec));
                     break;
                 case ParserGiD::outRqOnSurface:
                     getNextLabelAndValue(label,value);
                     elemVec.clear();
                     elemVec.push_back(atoi(value.c_str()));
-                    res.push_back(OutputRequest(domain, Element::SURFACE,
+                    res.push_back(OutputRequest(domain, Element::surface,
                             outputType, outputName, elemVec));
                     break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
-                    res.push_back(OutputRequest(domain, Element::VOLUME,
+                    res.push_back(OutputRequest(domain, Element::volume,
                             outputType, outputName,
                             BoxD3(strToBound(line))));
                     break;
@@ -397,7 +397,7 @@ ParserGiD::readOutputRequestInstances() {
                     double iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
-                    res.push_back(OutputRequest(domain, Element::VOLUME,
+                    res.push_back(OutputRequest(domain, Element::volume,
                             outputType, outputName, bbox,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
 
@@ -1228,11 +1228,11 @@ ParserGiD::strToElementType(string str) const {
     if (str.compare("point")==0) {
         return Element::NODE;
     } else if (str.compare("line")==0) {
-        return Element::LINE;
+        return Element::line;
     } else if (str.compare("surface")==0) {
-        return Element::SURFACE;
+        return Element::surface;
     } else if (str.compare("volume")==0) {
-        return Element::VOLUME;
+        return Element::volume;
     } else {
         cerr<< "ERROR @ GiDParser::readOutputRequestInstance(): "
                 << "Unreckognized element type: " << str << endl;

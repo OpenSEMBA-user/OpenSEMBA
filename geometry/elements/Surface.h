@@ -27,7 +27,7 @@ public:
 	  const CartesianPlane plane) const;
 	bool isContainedInPlane() const;
 	virtual CVecD3 getNormal() const;
-	virtual Element::Type getType() const {return SURFACE;}
+	virtual Element::Type getType() const {return surface;}
 	bool isRectangular() const;
 	virtual void printInfo() const;
 protected:

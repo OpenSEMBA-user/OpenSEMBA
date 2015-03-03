@@ -57,14 +57,13 @@ Output::process(
 
 void
 Output::deleteExistentOutputFiles() const {
-    string fileName = getProjectFolder() + getProjectName();
     string cmd;
-    cmd = "rm -f " + fileName + ".post.msh";
+    cmd = "rm -f " + getFilename() + ".post.msh";
     if (system(cmd.c_str())) {
         cerr << "ERROR @ Output: "
                 << "System command failed to execute: " << cmd << endl;
     }
-    cmd = "rm -f " + fileName + ".post.res";
+    cmd = "rm -f " + getFilename() + ".post.res";
     if (system(cmd.c_str())) {
         cerr << "ERROR @ Output: "
                 << "System command failed to execute: " << cmd << endl;

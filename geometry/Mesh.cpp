@@ -41,8 +41,8 @@ Mesh::Mesh(Mesh& param) {
     cG_ = param.cG_;
     elem_ = param.elem_;
     elem_.reassignPointers(cG_);
-    map = param.map;
-    map.reassignPointers(elem_);
+    map_ = param.map_;
+    map_.reassignPointers(elem_);
     if (param.grid_ != NULL) {
         grid_ = new Grid3(*param.grid_);
     } else {
@@ -57,7 +57,7 @@ Mesh::~Mesh() {
 
 pair<const Volume*, unsigned int>
 Mesh::getBoundary(const Surface* surf) const {
-    return map.getInnerFace(surf->getId());
+    return map_.getInnerFace(surf->getId());
 }
 
 vector<pair<const Tet*, unsigned int> >
@@ -101,7 +101,7 @@ pair<const Volume*, unsigned int> Mesh::getNeighConnection(
         pair<const Volume*, const unsigned int> inner) const {
     uint inId = inner.first->getId();
     uint inFace = inner.second;
-    return map.getNeighConnection(inId, inFace);
+    return map_.getNeighConnection(inId, inFace);
 }
 
 bool
@@ -161,7 +161,7 @@ vector<const Surface*> Mesh::getMaterialBoundary(
         const uint matId,
         const uint layId) const {
     vector<const Surface*> res;
-    vector<const Element*> e = elem_.get(Element::SURFACE, matId, layId);
+    vector<const Element*> e = elem_.get(Element::surface, matId, layId);
     res.reserve(e.size());
     for (uint i = 0; i < e.size(); i++) {
         const Surface* surf = dynamic_cast<const Surface*>(e[i]);
@@ -306,8 +306,8 @@ Mesh::getExternalBorder(
     for (uint i = 0; i < nI; i++) {
         uint inId = internal[i].first->getId();
         uint inFace = internal[i].second;
-        const Tet* outVol = map.getNeighbour(inId, inFace);
-        uint outFace = map.getVolToF(inId, inFace);
+        const Tet* outVol = map_.getNeighbour(inId, inFace);
+        uint outFace = map_.getVolToF(inId, inFace);
         if (outVol->getId() != inId || inFace != outFace)  {
             pair<const Volume*, uint> aux(outVol, outFace);
             external.push_back(aux);

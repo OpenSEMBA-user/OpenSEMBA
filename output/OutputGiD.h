@@ -31,9 +31,13 @@ protected:
             GiD_ResultLocation resultLocaltion,
             const string gaussPointType,
             const vector<string>& componentsNames) const;
-    void openPostMeshFile(const string& filename);
-    void openPostResultFile(const string& filename);
     void flushPostFile() const;
+protected:
+    static int coordCounter_;
+    static int elemCounter_;
+    static const CVecD3 pecColor, pmcColor, smaColor, pmlColor,
+     sibcColor, emSourceColor;
+    static string makeValid(string name);
     void beginCoordinates() const;
     void writeGaussPoints() const;
     void writeCoordinates(const uint id, const CVecD3 pos) const;
@@ -45,17 +49,13 @@ protected:
     void endMesh() const;
     GiD_ResultType getGiDResultType(OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
-protected:
-    int coordCounter_;
-    int elemCounter_;
-    static const CVecD3 pecColor, pmcColor, smaColor, pmlColor,
-     sibcColor, emSourceColor;
-    static string makeValid(string name);
 private:
-    static int numberOfFiles_;
+    static int numberOfOutputGiD_;
     GiD_FILE meshFile_;
     GiD_FILE resultFile_;
     GiD_PostMode mode_;
+    void openPostMeshFile(const string& filename);
+    void openPostResultFile(const string& filename);
 };
 
 #endif /* GIDOUTPUT_H_ */

@@ -37,6 +37,9 @@ public:
    void
    setFilename(const string& filename);
 
+   string getOutputFilename() const {
+       return getProjectFolder() + getOutputName();
+   }
    string getOutputName() const {
       return getProjectName();
    }

@@ -13,7 +13,6 @@
 
 class OutputGiDSmb : public OutputGiD {
 public:
-    OutputGiDSmb();
     OutputGiDSmb(const SmbData* smb);
     OutputGiDSmb(const SmbData* smb, const string& fn);
     virtual ~OutputGiDSmb();
@@ -29,12 +28,16 @@ private:
     void writeMeshWithIds(
             const vector<uint>& ids, string& name);
     void writeOutputRequestsMesh();
-    void writeMainMesh();
-//    void writeBCMesh();
-//    void writeBCMesh(
-//            const vector<const BoundaryCondition*>& list,
-//            const string& name,
-//            const CVecD3& colorRGB);
+    void writeElements(
+            const vector<const Element*>& entities,
+            const string& name,
+            const GiD_ElementType type,
+            const int nV);
+    //    void writeBCMesh();
+    //    void writeBCMesh(
+    //            const vector<const BoundaryCondition*>& list,
+    //            const string& name,
+    //            const CVecD3& colorRGB);
 };
 
 #endif /* SRC_COMMON_OUTPUT_OUTPUTGIDSMB_H_ */
