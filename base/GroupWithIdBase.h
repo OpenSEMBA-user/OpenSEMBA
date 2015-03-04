@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#include "IdBase.h"
+
 #include "GroupBase.h"
 
 template<typename T, class Id>
