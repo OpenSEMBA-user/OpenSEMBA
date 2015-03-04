@@ -9,37 +9,13 @@
 
 
 // =============== PMPEC ======================================================
-PMPEC::PMPEC() {
+PMPEC::PMPEC(const unsigned int id, const string name)
+: PMPredefined(id, name) {
 
 }
 
 PMPEC::~PMPEC() {
 
-}
-
-PMPEC::PMPEC(const unsigned int id, const string name) {
-	id_ = id;
-	name_ = name;
-}
-
-PMPEC&
-PMPEC::operator=(const PMPEC& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	id_ = rhs.id_;
-	name_ = rhs.name_;
-	return *this;
-}
-
-PMPEC&
-PMPEC::operator=(const PMPredefined& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	id_ = rhs.getId();
-	name_ = rhs.getName();
-	return *this;
 }
 
 bool
@@ -50,8 +26,7 @@ PMPEC::isPEC() const {
 void
 PMPEC::printInfo() const {
 	cout << "--- PMPEC info ---" << endl;
-	cout << "Id: " << id_ << endl;
-	cout << "Name: " << name_ << endl;
+	PMPredefined::printInfo();
 	cout << "Perfect Electric Conductor" << endl;
 }
 

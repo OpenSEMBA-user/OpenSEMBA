@@ -12,19 +12,11 @@
 
 class PMPEC : public PMPredefined {
 public:
-	PMPEC();
+	PMPEC(const uint id, const string name);
 	virtual ~PMPEC();
-	PMPEC(const unsigned int id, const string name);
-	PMPEC&
-	 operator=(const PMPEC &param);
-	PMPEC&
-	 operator=(const PMPredefined &param);
-	bool
-	 isPEC() const;
-	Condition::Type
-	 getConditionType() const;
-	void
-	 printInfo() const;
+	bool isPEC() const;
+	Condition::Type getConditionType() const;
+	void printInfo() const;
 };
 
 #endif /* PMPEC_H_ */

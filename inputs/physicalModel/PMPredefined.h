@@ -12,20 +12,9 @@
 
 class PMPredefined : public PhysicalModel {
 public:
-	PMPredefined() {};
-	virtual ~PMPredefined() {};
-	virtual PMPredefined&
-	 operator=(const PMPredefined &param);
-	bool
-	 isPMPredefined() const {return true;}
-	virtual bool
-	 isSMA() const {return false;}
-	virtual bool
-	 isPEC() const {return false;}
-	virtual bool
-	 isPMC() const {return false;}
-	virtual void
-	 printInfo() const;
+    PMPredefined(const uint id, const string name);
+	virtual ~PMPredefined();
+	virtual void printInfo() const;
 };
 
 #endif /* PMPREDEFINED_H_ */

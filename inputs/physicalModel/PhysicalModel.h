@@ -10,63 +10,42 @@
 #include "../Condition.h"
 #include "../../math/Constants.h"
 #include "../../math/CartesianVector.h"
+#include "ClassWithIdBase.h"
 
 using namespace std;
 
-#ifndef PHYSICALMODEL_ERROR
-	#define PHYSICALMODEL_ERROR 74721
-#endif
-
-class PhysicalModel : public Condition {
+class PhysicalModel : public ClassWithIdBase<uint>, public Condition {
 	friend class Parser;
 public:
-	PhysicalModel();
 	PhysicalModel(const uint id, const string& name);
 	virtual ~PhysicalModel();
-	virtual unsigned int
-	 getId() const {return id_;}
-	const string&
-	 getName() const;
-	virtual double
-	 getImpedance() const;
-	virtual double
-	 getAdmitance() const;
-	bool
-	 isPhysicalModel() const {return true;}
-	virtual bool
-	 isSurfaceImpedance() const {return false;}
-	virtual bool
-    isSurfaceMultilayer() const {return false;}
-	virtual bool
-	 isSurfaceType() const {return false;}
-	virtual bool
-	 isSMA() const {return false;}
-	virtual bool
-	 isPEC() const {return false;}
-	virtual bool
-	 isPMC() const {return false;}
-	virtual bool
-	 isVolumic() const {return false;}
-	virtual bool
-	 isDispersive() const {return false;}
-	virtual bool
-	 isWire() const {return false;}
-	virtual bool
-	 isMultiport() const {return false;}
-	virtual bool
-	 isMultiportRLC() const {return false;}
-	virtual bool
-	 isClassic() const {return false;}
-	virtual bool
-	 isPML() const;
-	virtual void
-     printInfo() const = 0;
-protected:
-	static const double eps0;
-	static const double mu0;
-	unsigned int id_;
-	string name_;
+	const string& getName() const;
+	bool isPhysicalModel() const {return true;}
+
+	virtual bool isSurfaceImpedance() const {return false;}
+	virtual bool isSurfaceMultilayer() const {return false;}
+	virtual bool isSurfaceType() const {return false;}
+
+	virtual bool isSMA() const {return false;}
+	virtual bool isPEC() const {return false;}
+	virtual bool isPMC() const {return false;}
+	virtual bool isPML() const {return false;};
+
+	virtual bool isVolumic() const {return false;}
+	virtual bool isClassic() const {return false;}
+	virtual bool isDispersive() const {return false;}
+
+	virtual bool isWire() const {return false;}
+	virtual bool isMultiport() const {return false;}
+	virtual bool isMultiportRLC() const {return false;}
+
+	virtual void printInfo() const;
+
+	virtual ClassBase* clone() const;
+    virtual ClassBase* clone(const uint id) const;
 private:
+    string name_;
 };
+
 
 #endif

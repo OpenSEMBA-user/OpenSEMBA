@@ -1,6 +1,6 @@
-#ifndef GROUPWITHIDBASE_H_
-#include "GroupWithIdBase.h"
-#endif
+//#ifndef GROUPWITHIDBASE_H_
+//#include "GroupWithIdBase.h"
+//#endif
 
 template<typename T, class Id>
 GroupWithIdBase<T, Id>::GroupWithIdBase()

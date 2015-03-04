@@ -1,6 +1,6 @@
-#ifndef GROUPBASE_H_
-#include "GroupBase.h"
-#endif
+//#ifndef GROUPBASE_H_
+//#include "GroupBase.h"
+//#endif
 
 template<typename T>
 GroupBase<T>::GroupBase() {
