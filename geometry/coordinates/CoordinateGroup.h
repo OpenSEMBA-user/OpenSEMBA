@@ -52,22 +52,20 @@ public:
     CoordinateGroup();
     CoordinateGroup(const vector<C*>&);
     CoordinateGroup(const vector<CVecD3>&);
-    CoordinateGroup(const CoordinateGroup<C>& rhs);
+    CoordinateGroup(const GroupBase<C>& rhs);
     virtual ~CoordinateGroup();
     
-    CoordinateGroup<C>& operator=(const CoordinateGroup<C>& rhs);
-    
-    vector<const CoordD3*> getAll() const;
+    CoordinateGroup<C>& operator=(const GroupBase<C>& rhs);
     
     const CoordD3* get(const CVecD3& pos) const;
     const CoordI3* get(const CVecI3& pos) const;
     
-    template<class C2 = CoordinateBase>
-    CoordinateGroup<C2> getCoordinatesOf() const;
-    
-    CoordinateId add(const CVecD3& newPosition);
-    vector<CoordinateId> add(const vector<CVecD3>& newPositions,
-                             const bool canOverlap = false);
+    const C*          add(C* newElem);
+    vector<const C* > add(const vector<C*>&);
+    const C*          add(const CVecD3& newPosition,
+                          const bool canOverlap = false);
+    vector<const C* > add(const vector<CVecD3>& newPositions,
+                          const bool canOverlap = false);
     
     void applyScalingFactor(const double factor);
     
@@ -75,6 +73,9 @@ public:
     
 private:
     multiset<const CoordD3*, lexCompareCoord> index_;
+    
+    void buildIndex(const vector<C*>& coords);
+    void buildIndex(const vector<const C*>& coords);
 };
 
 #include "CoordinateGroup.hpp"

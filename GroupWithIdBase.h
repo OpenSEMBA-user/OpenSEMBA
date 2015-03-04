@@ -8,26 +8,25 @@ using namespace std;
 #include "GroupBase.h"
 
 template<typename T, class Id>
-class GroupWithIdBase : public GroupBase<T, Id> {
+class GroupWithIdBase : public GroupBase<T> {
 public:
-   GroupWithIdBase();
-   GroupWithIdBase(const vector<T*>&);
-   GroupWithIdBase(const GroupWithIdBase<T, Id>& rhs);
-   virtual ~GroupWithIdBase();
-   
-   GroupWithIdBase<T, Id>& operator=(const GroupWithIdBase<T, Id>& rhs);
-   
-   const T* getPtrToId(const Id id) const;
-   
-   template<class T2>
-   GroupWithIdBase<T2, Id> getGroupOf() const;
-   
-   virtual Id         add(const T* newElem);
-   virtual vector<Id> add(const vector<T*>&);
-   
+    GroupWithIdBase();
+    GroupWithIdBase(const vector<T*>&);
+    GroupWithIdBase(const GroupBase<T>& rhs);
+    virtual ~GroupWithIdBase();
+
+    GroupWithIdBase<T, Id>& operator=(const GroupBase<T>& rhs);
+
+    const T* getPtrToId(const Id id) const;
+
+    const T*          add(T* newElem);
+    vector<const T* > add(const vector<T*>&);
+
 protected:
-   Id lastId_;
-   map<Id, unsigned> mapId_;
+    Id lastId_;
+    map<Id, unsigned> mapId_;
+
+    void buildMapId();
 };
 
 #include "GroupWithIdBase.hpp"

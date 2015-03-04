@@ -3,6 +3,10 @@
 
 #include "ClassWithIdBase.h"
 
+#ifndef COORDINATE_ERROR
+#define COORDINATE_ERROR 13
+#endif
+
 typedef unsigned CoordinateId;
 
 class CoordinateBase : public ClassWithIdBase<CoordinateId> {

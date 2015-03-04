@@ -17,10 +17,6 @@ using namespace std;
 
 #include "CoordinateBase.h"
 
-#ifndef COORDINATE_ERROR
-#define COORDINATE_ERROR 13
-#endif
-// ====================================================================
 template <class T, int D>
 class Coordinate : public CoordinateBase,
                    public CartesianVector<T,D> {
