@@ -100,7 +100,7 @@ ElementsGroup::add(
    checkIdsAreConsecutive();
    uint lastId = element[element.size()]->getId();
    hex8.reserve(hex8.size() + newHex.size());
-   uint vId[8];
+   CoordinateId vId[8];
    for (uint i = 0; i < newHex.size(); i++) {
       // Determines coordinates ids.
       // PERFORMANCE This is O(N^2). It can be improved by creating a
@@ -119,7 +119,7 @@ void
 ElementsGroup::reassignPointers(const CoordinateGroup<>& vNew) {
    for (unsigned int i = 0; i < element.size(); i++) {
       for (unsigned int j = 0; j < element[i]->numberOfCoordinates(); j++) {
-         unsigned int vId = element[i]->getV(j)->getId();
+         CoordinateId vId = element[i]->getV(j)->getId();
          const CoordinateBase* coord = vNew.getPtrToId(vId);
          if (coord == NULL) {
             cerr << "ERROR @ ElementsGroup::reassignPointers(): "

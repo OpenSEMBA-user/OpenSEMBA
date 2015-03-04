@@ -15,7 +15,7 @@ Lin2::Lin2() {
 
 Lin2::Lin2(
  const CoordinateGroup<>& coordGr,
- const uint vId[2],
+ const CoordinateId vId[2],
  const uint id_,
  const uint matId_,
  const uint layerId_) :

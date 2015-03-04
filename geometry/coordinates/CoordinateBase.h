@@ -7,16 +7,16 @@
 #define COORDINATE_ERROR 13
 #endif
 
-typedef unsigned CoordinateId;
+CreateId(CoordinateId);
 
 class CoordinateBase : public ClassWithIdBase<CoordinateId> {
 public:
-   CoordinateBase();
-   CoordinateBase(const CoordinateId id);
-   CoordinateBase(const CoordinateBase& rhs);
-   virtual ~CoordinateBase();
-   
-   virtual void printInfo() const = 0;
+    CoordinateBase();
+    CoordinateBase(const CoordinateId id);
+    CoordinateBase(const CoordinateBase& rhs);
+    virtual ~CoordinateBase();
+    
+    virtual void printInfo() const = 0;
 };
 
 #endif /* COORDINATEBASE_H_ */

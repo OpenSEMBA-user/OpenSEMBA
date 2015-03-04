@@ -13,7 +13,7 @@ Tet10::Tet10(
  const CoordinateGroup<>& coordGr,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[10]) {
+ const CoordinateId vId[10]) {
 	id = id_;
 	matId = matId_;
 	for (unsigned int i = 0; i < tet.np; i++) {

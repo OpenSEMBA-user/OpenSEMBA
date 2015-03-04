@@ -16,7 +16,7 @@ Hex8::Hex8(
  const CoordinateGroup<>& coordGr,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[8]) {
+ const CoordinateId vId[8]) {
 	id = id_;
 	matId = matId_;
 	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {

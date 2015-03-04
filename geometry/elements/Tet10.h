@@ -17,7 +17,7 @@ public:
 	 const CoordinateGroup<>&,
      const unsigned int id_,
      const unsigned int matId_,
-	 const unsigned int vId[10]);
+	 const CoordinateId vId[10]);
 	~Tet10();
 	Tet10&
 	 operator=(const Tet10& rhs);

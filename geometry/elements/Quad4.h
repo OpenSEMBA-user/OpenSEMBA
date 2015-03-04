@@ -17,7 +17,7 @@ public:
 	 const CoordinateGroup<>&,
      const unsigned int id_,
      const unsigned int matId_,
-	 const unsigned int vId[4]);
+	 const CoordinateId vId[4]);
 	virtual ~Quad4();
 	Quad4&
 	 operator=(const Quad4& rhs);

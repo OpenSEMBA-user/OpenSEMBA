@@ -17,7 +17,7 @@ Quad4::Quad4(
  const CoordinateGroup<>& cG,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[4]) {
+ const CoordinateId vId[4]) {
 	id = id_;
 	matId = matId_;
 	for (uint i = 0; i < numberOfCoordinates(); i++) {

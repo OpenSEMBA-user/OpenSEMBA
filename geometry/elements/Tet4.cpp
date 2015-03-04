@@ -15,7 +15,7 @@ Tet4::Tet4() {
 
 Tet4::Tet4(
  const CoordinateGroup<>& coordGr,
- const unsigned int vId[4],
+ const CoordinateId vId[4],
  const unsigned int id_,
  const unsigned int matId_,
  const unsigned int layerId_) :

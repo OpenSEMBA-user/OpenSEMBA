@@ -22,7 +22,7 @@ public:
 	 const CoordinateGroup<>&,
 	 const unsigned int id_,
 	 const unsigned int matId_,
-	 const unsigned int vId[8]);
+	 const CoordinateId vId[8]);
 	Hex8(
 	 const CoordinateGroup<>& v,
 	 const CVecD3& min,

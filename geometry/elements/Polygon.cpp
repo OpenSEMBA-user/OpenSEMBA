@@ -13,7 +13,7 @@ Polygon::Polygon() {
 Polygon::Polygon(
  const CoordinateGroup<>& cG,
  const uint idIn,
- const vector<uint>& vId,
+ const vector<CoordinateId>& vId,
  const uint matIdNew) : Surface(idIn, matIdNew) {
 	assert(vId.size() >= 3);
 	v_.resize(vId.size());

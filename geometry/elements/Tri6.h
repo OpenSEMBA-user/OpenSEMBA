@@ -10,7 +10,7 @@ public:
 	 const CoordinateGroup<>&,
      const unsigned int id_,
      const unsigned int mattiId_,
-	 const unsigned int vId[6]);
+	 const CoordinateId vId[6]);
 	Tri6(
 	 const Coordinate<double,3>*[6]);
 	bool

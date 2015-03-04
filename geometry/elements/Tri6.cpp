@@ -6,7 +6,7 @@ Tri6::Tri6(
  const CoordinateGroup<>& coordGr,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[6]) : Tri(id_, matId_) {
+ const CoordinateId vId[6]) : Tri(id_, matId_) {
 	for (unsigned int i = 0; i < geo.np; i++) {
 		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
