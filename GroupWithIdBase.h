@@ -8,7 +8,7 @@ using namespace std;
 #include "GroupBase.h"
 
 template<typename T, class Id>
-class GroupWithIdBase : public GroupBase<T> {
+class GroupWithIdBase : public GroupBase<T, Id> {
 public:
    GroupWithIdBase();
    GroupWithIdBase(const vector<T*>&);
@@ -22,8 +22,8 @@ public:
    template<class T2>
    GroupWithIdBase<T2, Id> getGroupOf() const;
    
-   Id         add(const T* newElem);
-   vector<Id> add(const vector<T*>&);
+   virtual Id         add(const T* newElem);
+   virtual vector<Id> add(const vector<T*>&);
    
 protected:
    Id lastId_;

@@ -3,15 +3,15 @@
 
 #include "ClassBase.h"
 
-template<typename T>
+template<typename T, class Id = unsigned>
 class GroupBase {
 public:
     GroupBase();
     GroupBase(const vector<T*>&);
-    GroupBase(const GroupBase<T>& rhs);
+    GroupBase(const GroupBase<T, Id>& rhs);
     virtual ~GroupBase();
 
-    GroupBase<T>& operator=(const GroupBase<T>& rhs);
+    GroupBase<T>& operator=(const GroupBase<T, Id>& rhs);
 
     unsigned size() const { return element_.size(); }
 
@@ -20,8 +20,8 @@ public:
     template<class T2>
     GroupBase<T2> getGroupOf() const;
 
-    virtual void add(const T* newElem);
-    virtual void add(const vector<T*>&);
+    virtual Id         add(const T* newElem);
+    virtual vector<Id> add(const vector<T*>&);
 
 protected:
     vector<T*> element_;
