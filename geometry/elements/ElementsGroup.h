@@ -63,10 +63,10 @@ public:
     operator=(const ElementsGroup& param);
     ElementsGroup&
     add(
-            const CoordinateGroup& coord,
+            const CoordinateGroup<>& coord,
             const vector<Hex8>& hex);
     void
-    reassignPointers(const CoordinateGroup& vNew);
+    reassignPointers(const CoordinateGroup<>& vNew);
     vector<uint>
     getIds(const vector<const Element*>& list) const;
     unsigned int

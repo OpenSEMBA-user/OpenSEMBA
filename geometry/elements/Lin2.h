@@ -14,7 +14,7 @@ class Lin2 : public Line {
 public:
 	Lin2();
 	Lin2(
-	 const CoordinateGroup&,
+	 const CoordinateGroup<>&,
 	 const uint vId[2],
 	 const uint id_,
      const uint matId_,

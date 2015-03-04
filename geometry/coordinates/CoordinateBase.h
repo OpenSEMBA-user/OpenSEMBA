@@ -11,6 +11,8 @@ public:
    CoordinateBase(const CoordinateId id);
    CoordinateBase(const CoordinateBase& rhs);
    virtual ~CoordinateBase();
+   
+   virtual void printInfo() const = 0;
 };
 
 #endif /* COORDINATEBASE_H_ */

@@ -14,7 +14,7 @@ class Quad4: public Quad {
 public:
 	Quad4();
 	Quad4(
-	 const CoordinateGroup&,
+	 const CoordinateGroup<>&,
      const unsigned int id_,
      const unsigned int matId_,
 	 const unsigned int vId[4]);

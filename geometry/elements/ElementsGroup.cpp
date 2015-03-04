@@ -95,7 +95,7 @@ ElementsGroup::operator=(const ElementsGroup& rhs) {
 
 ElementsGroup&
 ElementsGroup::add(
-      const CoordinateGroup& coord,
+      const CoordinateGroup<>& coord,
       const vector<Hex8>& newHex) {
    checkIdsAreConsecutive();
    uint lastId = element[element.size()]->getId();
@@ -116,11 +116,26 @@ ElementsGroup::add(
 }
 
 void
-ElementsGroup::reassignPointers(const CoordinateGroup& vNew) {
+ElementsGroup::reassignPointers(const CoordinateGroup<>& vNew) {
    for (unsigned int i = 0; i < element.size(); i++) {
       for (unsigned int j = 0; j < element[i]->numberOfCoordinates(); j++) {
          unsigned int vId = element[i]->getV(j)->getId();
-         element[i]->setV(j, vNew.getPtrToId(vId));
+         const CoordinateBase* coord = vNew.getPtrToId(vId);
+         if (coord == NULL) {
+            cerr << "ERROR @ ElementsGroup::reassignPointers(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+         }
+         if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ ElementsGroup::reassignPointers(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+         }
+         element[i]->setV(j, coord->castTo<CoordD3>());
       }
    }
 }

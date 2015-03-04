@@ -7,7 +7,6 @@
 
 #ifndef PARSERGID_H_
 #define PARSERGID_H_
-#endif
 
 #include <stdlib.h>
 #include <iostream>
@@ -21,6 +20,7 @@
 #define LABEL_ENDING ':'
 #ifndef GIDPARSER_ERROR
 #define GIDPARSER_ERROR 61594
+#endif
 
 class ParserGiD : public Parser, public ProjectFile {
     friend class SmbData;
@@ -68,14 +68,14 @@ protected:
             const int id,
             const string& name,
             const string& layersString) const;
-    CoordinateGroup* readCoordinates();
-    ElementsGroup readElements(const CoordinateGroup&);
-    vector<Hex8> readHex8Elements(const CoordinateGroup& v);
-    vector<Tet10> readTet10Elements(const CoordinateGroup& v);
-    vector<Tet4> readTet4Elements(const CoordinateGroup& v);
-    vector<Tri6> readTri6Elements(const CoordinateGroup& v);
-    vector<Tri3> readTri3Elements(const CoordinateGroup& v);
-    vector<Lin2> readLin2Elements(const CoordinateGroup& v);
+    CoordinateGroup<>* readCoordinates();
+    ElementsGroup readElements(const CoordinateGroup<>&);
+    vector<Hex8> readHex8Elements(const CoordinateGroup<>& v);
+    vector<Tet10> readTet10Elements(const CoordinateGroup<>& v);
+    vector<Tet4> readTet4Elements(const CoordinateGroup<>& v);
+    vector<Tri6> readTri6Elements(const CoordinateGroup<>& v);
+    vector<Tri3> readTri3Elements(const CoordinateGroup<>& v);
+    vector<Lin2> readLin2Elements(const CoordinateGroup<>& v);
     Grid3* readCartesianGrid();
     vector<OutputRequest> readOutputRequestInstances();
     void getNextLabelAndValue(string& label, string& value);
@@ -93,7 +93,7 @@ private:
         multilayer,
         undefinedSIBC
     } SIBCType;
-    const CoordinateGroup* cG_;
+    const CoordinateGroup<>* cG_;
     virtual PlaneWave readPlaneWave();
     virtual Dipole readDipole();
     virtual Waveport readWaveport();

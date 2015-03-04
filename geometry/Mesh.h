@@ -20,13 +20,13 @@ using namespace std;
 class Mesh {
 public:
     ElementsGroup elem_;
-    CoordinateGroup cG_;
+    CoordinateGroup<> cG_;
     Mesh(
-            const CoordinateGroup& cG,
+            const CoordinateGroup<>& cG,
             const ElementsGroup& elem,
             const Grid3* grid);
     Mesh(
-            const CoordinateGroup& cG,
+            const CoordinateGroup<>& cG,
             const Grid3* grid);
     Mesh();
     Mesh(Mesh& param);

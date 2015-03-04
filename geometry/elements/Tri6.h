@@ -7,7 +7,7 @@
 class Tri6 : public Tri {
 public:
 	Tri6(
-	 const CoordinateGroup&,
+	 const CoordinateGroup<>&,
      const unsigned int id_,
      const unsigned int mattiId_,
 	 const unsigned int vId[6]);

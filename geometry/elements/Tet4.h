@@ -15,7 +15,7 @@ public:
 	Tet4();
 	virtual ~Tet4();
 	Tet4(
-	 const CoordinateGroup&,
+	 const CoordinateGroup<>&,
 	 const uint vId[4],
 	 const uint id_ = 0,
      const uint matId_ = 0,
