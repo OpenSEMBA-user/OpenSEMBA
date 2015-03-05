@@ -14,14 +14,29 @@ Lin2::Lin2() {
 }
 
 Lin2::Lin2(
- const CoordinateGroup& coordGr,
- const uint vId[2],
+ const CoordinateGroup<>& coordGr,
+ const CoordinateId vId[2],
  const uint id_,
  const uint matId_,
  const uint layerId_) :
          Line(id_, matId_, layerId_) {
 	for (uint i = 0; i < numberOfCoordinates(); i++) {
-		v[i] = coordGr.getPtrToId(vId[i]);
+		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
+        if (coord == NULL) {
+            cerr << "ERROR @ Lin2::Lin2(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ Lin2::Lin2(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        v[i] = coord->castTo<CoordD3>();
 	}
 }
 

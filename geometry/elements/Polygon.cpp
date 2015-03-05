@@ -11,14 +11,29 @@ Polygon::Polygon() {
 }
 
 Polygon::Polygon(
- const CoordinateGroup& cG,
+ const CoordinateGroup<>& cG,
  const uint idIn,
- const vector<uint>& vId,
+ const vector<CoordinateId>& vId,
  const uint matIdNew) : Surface(idIn, matIdNew) {
 	assert(vId.size() >= 3);
 	v_.resize(vId.size());
 	for (uint i = 0; i < vId.size(); i++) {
-		v_[i] = cG.getPtrToId(vId[i]);
+		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
+        if (coord == NULL) {
+            cerr << "ERROR @ Polygon::Polygon(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ Polygon::Polygon(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        v_[i] = coord->castTo<CoordD3>();
 	}
 }
 

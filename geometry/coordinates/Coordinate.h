@@ -17,10 +17,6 @@ using namespace std;
 
 #include "CoordinateBase.h"
 
-#ifndef COORDINATE_ERROR
-#define COORDINATE_ERROR 13
-#endif
-// ====================================================================
 template <class T, int D>
 class Coordinate : public CoordinateBase,
                    public CartesianVector<T,D> {
@@ -37,13 +33,14 @@ public:
 
     bool operator==(const Coordinate& rhs) const;
 
-    CartesianVector<double,3> pos() const;
+    CartesianVector<T,3> pos() const;
 
     void printInfo() const;
 };
 
 #include "Coordinate.hpp"
 
-typedef Coordinate<double, 3> CoordD3;
+typedef Coordinate<double  , 3> CoordD3;
+typedef Coordinate<long int, 3> CoordI3;
 
 #endif /* COORDINATE_H_ */

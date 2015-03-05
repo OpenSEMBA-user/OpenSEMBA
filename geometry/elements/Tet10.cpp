@@ -10,14 +10,29 @@
 #endif
 
 Tet10::Tet10(
- const CoordinateGroup& coordGr,
+ const CoordinateGroup<>& coordGr,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[10]) {
+ const CoordinateId vId[10]) {
 	id = id_;
 	matId = matId_;
 	for (unsigned int i = 0; i < tet.np; i++) {
-		v[i] = coordGr.getPtrToId(vId[i]);
+		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
+        if (coord == NULL) {
+            cerr << "ERROR @ Tet10::Tet10(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ Tet10::Tet10(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        v[i] = coord->castTo<CoordD3>();
 	}
 	//
 	check();

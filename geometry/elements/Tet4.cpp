@@ -14,14 +14,29 @@ Tet4::Tet4() {
 }
 
 Tet4::Tet4(
- const CoordinateGroup& coordGr,
- const unsigned int vId[4],
+ const CoordinateGroup<>& coordGr,
+ const CoordinateId vId[4],
  const unsigned int id_,
  const unsigned int matId_,
  const unsigned int layerId_) :
          Tet(id_, matId_, layerId_) {
 	for (unsigned int i = 0; i < tet.np; i++) {
-		v[i] = coordGr.getPtrToId(vId[i]);
+		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
+        if (coord == NULL) {
+            cerr << "ERROR @ Tet4::Tet4(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ Tet4::Tet4(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        v[i] = coord->castTo<CoordD3>();
 	}
 	check();
 }

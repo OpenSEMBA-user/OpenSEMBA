@@ -1,6 +1,8 @@
 #ifndef CASSWITHIDBASE_H_
 #define CASSWITHIDBASE_H_
 
+#include "IdBase.h"
+
 #include "ClassBase.h"
 
 template<class Id>

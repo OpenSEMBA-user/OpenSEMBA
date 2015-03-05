@@ -7,8 +7,8 @@ class Tri3 : public Tri {
 public:
 	virtual ~Tri3();
 	Tri3(
-	 const CoordinateGroup&,
-     const uint vId[3],
+	 const CoordinateGroup<>&,
+     const CoordinateId vId[3],
 	 const uint id_ = 0,
      const uint matId_ = 0,
      const uint layerId_ = 0);

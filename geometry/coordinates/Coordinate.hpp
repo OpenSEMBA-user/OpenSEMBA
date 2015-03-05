@@ -59,7 +59,7 @@ bool Coordinate<T,D>::operator==(const Coordinate& rhs) const {
 }
 
 template<class T, int D>
-CartesianVector<double,3> Coordinate<T,D>::pos() const {
+CartesianVector<T,3> Coordinate<T,D>::pos() const {
     CartesianVector<T,D> res;
     for (unsigned int i = 0; i < D; i++) {
         res.val[i] = this->val[i];

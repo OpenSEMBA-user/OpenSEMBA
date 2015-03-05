@@ -20,7 +20,7 @@ public:
    MapGroup();
    virtual ~MapGroup();
    void
-    build(const CoordinateGroup& cG, const ElementsGroup& elem);
+    build(const CoordinateGroup<>& cG, const ElementsGroup& elem);
    void
     reassignPointers(const ElementsGroup& nEG);
    const Tet*

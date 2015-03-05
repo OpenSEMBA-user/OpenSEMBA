@@ -13,7 +13,7 @@ Mesh::Mesh() {
 }
 
 Mesh::Mesh(
-        const CoordinateGroup& cG,
+        const CoordinateGroup<>& cG,
         const Grid3* grid) {
     cG_ = cG;
     if (grid != NULL) {
@@ -24,7 +24,7 @@ Mesh::Mesh(
 }
 
 Mesh::Mesh(
-        const CoordinateGroup& cG,
+        const CoordinateGroup<>& cG,
         const ElementsGroup& elem,
         const Grid3* grid) {
     cG_ = cG;

@@ -15,9 +15,9 @@ class Polygon: public Surface {
 public:
 	Polygon();
 	Polygon(
-	 const CoordinateGroup& cG,
+	 const CoordinateGroup<>& cG,
 	 const uint id,
-	 const vector<uint>& vId,
+	 const vector<CoordinateId>& vId,
 	 const uint matId = 0);
 	virtual ~Polygon();
 	unsigned int

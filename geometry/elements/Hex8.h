@@ -19,12 +19,12 @@ class Hex8 : public Volume {
 public:
 	Hex8();
 	Hex8(
-	 const CoordinateGroup&,
+	 const CoordinateGroup<>&,
 	 const unsigned int id_,
 	 const unsigned int matId_,
-	 const unsigned int vId[8]);
+	 const CoordinateId vId[8]);
 	Hex8(
-	 const CoordinateGroup& v,
+	 const CoordinateGroup<>& v,
 	 const CVecD3& min,
 	 const CVecD3& max,
 	 const uint matId = 0);

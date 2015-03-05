@@ -1,8 +1,6 @@
 #ifndef GROUPBASE_H_
 #define GROUPBASE_H_
 
-#include "ClassBase.h"
-
 template<typename T>
 class GroupBase {
 public:
@@ -19,12 +17,21 @@ public:
 
     template<class T2>
     GroupBase<T2> getGroupOf() const;
+    
+    template<class T2>
+    vector<const T2*> getVectorOf() const;
+    
+    template<class T2>
+    unsigned numberOf() const;
 
-    virtual void add(const T* newElem);
-    virtual void add(const vector<T*>&);
+    virtual const T*         add(T* newElem);
+    virtual vector<const T*> add(const vector<T*>&);
 
 protected:
     vector<T*> element_;
+
+    void cloneElements(const vector<T*>& elems);
+    void deleteElements();
 };
 
 #include "GroupBase.hpp"

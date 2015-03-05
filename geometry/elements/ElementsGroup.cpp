@@ -95,12 +95,12 @@ ElementsGroup::operator=(const ElementsGroup& rhs) {
 
 ElementsGroup&
 ElementsGroup::add(
-      const CoordinateGroup& coord,
+      const CoordinateGroup<>& coord,
       const vector<Hex8>& newHex) {
    checkIdsAreConsecutive();
    uint lastId = element[element.size()]->getId();
    hex8.reserve(hex8.size() + newHex.size());
-   uint vId[8];
+   CoordinateId vId[8];
    for (uint i = 0; i < newHex.size(); i++) {
       // Determines coordinates ids.
       // PERFORMANCE This is O(N^2). It can be improved by creating a
@@ -116,11 +116,26 @@ ElementsGroup::add(
 }
 
 void
-ElementsGroup::reassignPointers(const CoordinateGroup& vNew) {
+ElementsGroup::reassignPointers(const CoordinateGroup<>& vNew) {
    for (unsigned int i = 0; i < element.size(); i++) {
       for (unsigned int j = 0; j < element[i]->numberOfCoordinates(); j++) {
-         unsigned int vId = element[i]->getV(j)->getId();
-         element[i]->setV(j, vNew.getPtrToId(vId));
+         CoordinateId vId = element[i]->getV(j)->getId();
+         const CoordinateBase* coord = vNew.getPtrToId(vId);
+         if (coord == NULL) {
+            cerr << "ERROR @ ElementsGroup::reassignPointers(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+         }
+         if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ ElementsGroup::reassignPointers(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+         }
+         element[i]->setV(j, coord->castTo<CoordD3>());
       }
    }
 }

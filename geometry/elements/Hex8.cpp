@@ -13,19 +13,34 @@ Hex8::Hex8() {
 }
 
 Hex8::Hex8(
- const CoordinateGroup& coordGr,
+ const CoordinateGroup<>& coordGr,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[8]) {
+ const CoordinateId vId[8]) {
 	id = id_;
 	matId = matId_;
 	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
-		v[i] = coordGr.getPtrToId(vId[i]);
+		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
+        if (coord == NULL) {
+            cerr << "ERROR @ Hex8::Hex8(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ Hex8::Hex8(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        v[i] = coord->castTo<CoordD3>();
 	}
 }
 
 Hex8::Hex8(
- const CoordinateGroup& cG,
+ const CoordinateGroup<>& cG,
  const CVecD3& min,
  const CVecD3& max,
  const uint matId_) {
@@ -43,6 +58,8 @@ Hex8::Hex8(
 		if (v[i] == NULL) {
 			cerr<< "ERROR @ Hex8 ctor: "
 				<< "Coordinate " << i << " pointer is null." << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
 		}
 	}
 }

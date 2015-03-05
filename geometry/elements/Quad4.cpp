@@ -14,14 +14,29 @@ Quad4::~Quad4() {
 }
 
 Quad4::Quad4(
- const CoordinateGroup& cG,
+ const CoordinateGroup<>& cG,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[4]) {
+ const CoordinateId vId[4]) {
 	id = id_;
 	matId = matId_;
 	for (uint i = 0; i < numberOfCoordinates(); i++) {
-		v[i] = cG.getPtrToId(vId[i]);
+		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
+        if (coord == NULL) {
+            cerr << "ERROR @ Quad4::Quad4(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ Quad4::Quad4(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        v[i] = coord->castTo<CoordD3>();
 	}
 	// TODO Normals are not handled.
 	check();

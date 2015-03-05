@@ -3,12 +3,27 @@
 #endif
 
 Tri6::Tri6(
- const CoordinateGroup& coordGr,
+ const CoordinateGroup<>& coordGr,
  const unsigned int id_,
  const unsigned int matId_,
- const unsigned int vId[6]) : Tri(id_, matId_) {
+ const CoordinateId vId[6]) : Tri(id_, matId_) {
 	for (unsigned int i = 0; i < geo.np; i++) {
-		v[i] = coordGr.getPtrToId(vId[i]);
+		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
+        if (coord == NULL) {
+            cerr << "ERROR @ Tri6::Tri6(): "
+                 << "Coord in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        if (!coord->isOf<CoordD3>()) {
+            cerr << "ERROR @ Tri6::Tri6(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << endl;
+            assert(false);
+            exit(ELEMENT_ERROR);
+        }
+        v[i] = coord->castTo<CoordD3>();
 	}
 }
 

@@ -5,12 +5,12 @@ CoordinateBase::CoordinateBase() {
 }
 
 CoordinateBase::CoordinateBase(const CoordinateId id)
-:  ClassWithIdBase<CoordinateId>(id) {
+:   ClassWithIdBase<CoordinateId>(id) {
 
 }
 
 CoordinateBase::CoordinateBase(const CoordinateBase& rhs)
-:  ClassWithIdBase<CoordinateId>(rhs) {
+:   ClassWithIdBase<CoordinateId>(rhs) {
 
 }
 
