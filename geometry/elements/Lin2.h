@@ -12,6 +12,7 @@
 
 class Lin2 : public Line {
 public:
+    Lin2();
 	Lin2(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[2],

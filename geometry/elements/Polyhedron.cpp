@@ -7,6 +7,10 @@
 
 #include "Polyhedron.h"
 
+Polyhedron::Polyhedron() {
+
+}
+
 Polyhedron::Polyhedron(const ElementId id,
                        const vector<const Polygon*>& face,
                        const uint layerId,

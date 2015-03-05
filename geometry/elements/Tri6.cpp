@@ -2,6 +2,10 @@
 #include "Tri6.h"
 #endif
 
+Tri6::Tri6() {
+
+}
+
 Tri6::Tri6(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[6],

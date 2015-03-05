@@ -9,6 +9,10 @@
 #include "Lin2.h"
 #endif
 
+Lin2::Lin2() {
+
+}
+
 Lin2::Lin2(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[2],

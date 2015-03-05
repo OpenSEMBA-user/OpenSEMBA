@@ -12,6 +12,7 @@
 
 class Quad4: public Quad {
 public:
+    Quad4();
 	Quad4(const CoordinateGroup<>&,
           const ElementId id,
           const CoordinateId vId[4],

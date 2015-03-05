@@ -6,6 +6,7 @@
 
 class Tri6 : public Tri {
 public:
+    Tri6();
     Tri6(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[6],

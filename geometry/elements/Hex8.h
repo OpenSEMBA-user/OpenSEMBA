@@ -12,6 +12,7 @@
 
 class Hex8 : public Volume {
 public:
+    Hex8();
     Hex8(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[8],

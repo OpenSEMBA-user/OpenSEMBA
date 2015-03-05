@@ -7,6 +7,10 @@
 
 #include "Polygon.h"
 
+Polygon::Polygon() {
+
+}
+
 Polygon::Polygon(const CoordinateGroup<>& cG,
                  const ElementId id,
                  const vector<CoordinateId>& vId,

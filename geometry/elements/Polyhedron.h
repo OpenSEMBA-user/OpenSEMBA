@@ -13,6 +13,7 @@
 
 class Polyhedron : public Volume {
 public:
+    Polyhedron();
     Polyhedron(const ElementId id,
                const vector<const Polygon*>& faces,
                const uint layerId = 0,

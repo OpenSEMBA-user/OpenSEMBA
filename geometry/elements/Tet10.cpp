@@ -9,6 +9,10 @@
 #include "Tet10.h"
 #endif
 
+Tet10::Tet10() {
+
+}
+
 Tet10::Tet10(const CoordinateGroup<>& coordGr,
              const ElementId id,
              const CoordinateId vId[10],

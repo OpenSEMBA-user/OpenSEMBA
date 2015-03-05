@@ -5,6 +5,7 @@
 
 class Tri3 : public Tri {
 public:
+    Tri3();
 	Tri3(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[3],

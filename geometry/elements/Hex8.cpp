@@ -9,6 +9,10 @@
 
 const double Hex8::tolerance = 1e-15;
 
+Hex8::Hex8() {
+
+}
+
 Hex8::Hex8(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[8],

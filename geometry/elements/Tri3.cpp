@@ -9,6 +9,10 @@
 #include "Tri3.h"
 #endif
 
+Tri3::Tri3() {
+
+}
+
 Tri3::Tri3(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[3],

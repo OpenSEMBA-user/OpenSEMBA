@@ -13,6 +13,7 @@
 
 class Polygon: public Surface {
 public:
+    Polygon();
 	Polygon(const CoordinateGroup<>& cG,
             const ElementId id,
             const vector<CoordinateId>& vId,

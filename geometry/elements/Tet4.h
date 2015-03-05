@@ -12,6 +12,7 @@
 
 class Tet4 : public Tet {
 public:
+    Tet4();
     Tet4(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[4],
