@@ -11,7 +11,7 @@
 #include "ProjectFile.h"
 #include "Mesh.h"
 #include "inputs/GlobalProblemData.h"
-#include "inputs/OutputRequestGroup.h"
+#include "OutputRequestGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
 #include "LayerGroup.h"

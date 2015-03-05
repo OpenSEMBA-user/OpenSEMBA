@@ -12,7 +12,7 @@
 
 using namespace std;
 
-class OutputRequest : public Condition, public Domain {
+class OutputRequest : public Condition, public Domain, public ClassBase {
 public:
     typedef enum {
         undefined,
@@ -37,7 +37,6 @@ public:
         energy,
         farField
     } Type;
-    OutputRequest();
     OutputRequest(
             const Domain& domain,
             const Element::Type elementType,
@@ -51,7 +50,7 @@ public:
             const string& name_,
             const BoxD3& box);
     OutputRequest& operator=(const OutputRequest& rhs);
-    bool isSimilar(const OutputRequest& rhs) const;
+    virtual bool isSimilar(const OutputRequest& rhs) const;
     string outputTypeStr() const;
     string elementTypeStr() const;
     const string& getName() const;
@@ -60,16 +59,16 @@ public:
     const BoxD3& getBound() const;
     void setAdditionalElems(const vector<uint> elems);
     void printInfo() const;
+
+    virtual ClassBase* clone() const;
+    virtual ClassBase* clone(const uint id) const;
+
 private:
     string name_;
     OutputRequest::Type outputType_;
     bool usingBound_;
     BoxD3 bound_;
     vector<uint> elem_;
-    void
-    setThetaAndPhi(
-            double iTh, double fTh, double sTh,
-            double iPhi, double fPhi, double sPhi);
 };
 
 #	endif

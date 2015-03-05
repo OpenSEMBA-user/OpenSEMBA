@@ -1,10 +1,4 @@
-#ifndef OUTPUTREQUEST_H_
 #include "OutputRequest.h"
-#endif
-
-OutputRequest::OutputRequest() {
-   setThetaAndPhi(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-}
 
 OutputRequest::OutputRequest(
  const Domain& domain,
@@ -16,7 +10,6 @@ OutputRequest::OutputRequest(
 	name_ = name;
 	usingBound_ = false;
 	elem_ = elements_;
-	setThetaAndPhi(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
 OutputRequest::OutputRequest(
@@ -29,23 +22,6 @@ OutputRequest::OutputRequest(
 	name_ = name;
 	usingBound_ = true;
 	bound_ = box;
-	setThetaAndPhi(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-}
-
-OutputRequest::OutputRequest(
- const Domain& domain,
- const Element::Type elementType,
- const OutputRequest::Type outputType,
- const string& name,
- const BoxD3& box,
- const double iTh, const double fTh, const double sTh,
- const double iPhi, const double fPhi, const double sPhi) : Condition(elementType), Domain(domain) {
-	assert(outputType == OutputRequest::farField);
-	outputType_  = outputType;
-	name_ = name;
-	usingBound_ = true;
-	bound_ = box;
-	setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 
 string
@@ -127,36 +103,6 @@ inline const vector<unsigned int>& OutputRequest::getElem() const {
     return elem_;
 }
 
-inline double OutputRequest::getStepPhi() const {
-    assert(outputType_ == OutputRequest::farField);
-    return stepPhi_;
-}
-
-inline double OutputRequest::getStepTheta() const {
-    assert(outputType_ == OutputRequest::farField);
-    return stepTheta_;
-}
-
-inline double OutputRequest::getFinalPhi() const {
-    assert(outputType_ == OutputRequest::farField);
-    return finalPhi_;
-}
-
-inline double OutputRequest::getFinalTheta() const {
-    assert(outputType_ == OutputRequest::farField);
-    return finalTheta_;
-}
-
-inline double OutputRequest::getInitialPhi() const {
-    assert(outputType_ == OutputRequest::farField);
-    return initialPhi_;
-}
-
-inline double OutputRequest::getInitialTheta() const {
-    assert(outputType_ == OutputRequest::farField);
-    return initialTheta_;
-}
-
 inline const BoxD3& OutputRequest::getBound() const {
     assert(usingBound_);
     return bound_;
@@ -183,12 +129,6 @@ OutputRequest::isSimilar(const OutputRequest& rhs) const {
 	bool isSimilar = true;
 	isSimilar &= name_ == rhs.name_;
 	isSimilar &= outputType_ == rhs.outputType_;
-	isSimilar &= initialTheta_ == rhs.initialTheta_;
-	isSimilar &= finalTheta_ == rhs.finalTheta_;
-	isSimilar &= stepTheta_ == rhs.stepTheta_;
-	isSimilar &= initialPhi_ == rhs.initialPhi_;
-	isSimilar &= finalPhi_ == rhs.finalPhi_;
-	isSimilar &= stepPhi_ == rhs.stepPhi_;
 	isSimilar &= Domain::operator==(rhs);
 	isSimilar &= !usingBound_;
 	return isSimilar;
@@ -199,16 +139,4 @@ OutputRequest::setAdditionalElems(const vector<uint> elems) {
 	for (uint i = 0; i < elems.size(); i++) {
 		elem_.push_back(elems[i]);
 	}
-}
-
-void
-OutputRequest::setThetaAndPhi(
-		double iTh, double fTh, double sTh,
-		double iPhi, double fPhi, double sPhi) {
-	initialTheta_ = iTh;
-	finalTheta_ = fTh;
-	stepTheta_ = sTh;
-	initialPhi_ = iPhi;
-	finalPhi_ = fPhi;
-	stepPhi_ = sPhi;
 }
