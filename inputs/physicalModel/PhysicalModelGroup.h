@@ -12,7 +12,7 @@
 #include <cmath>
 #include <vector>
 #include <assert.h>
-#include "../../GroupWithIdBase.h"
+#include "GroupWithIdBase.h"
 #include "PhysicalModel.h"
 #include "PMPEC.h"
 #include "PMPMC.h"
@@ -26,7 +26,7 @@
 #include "PMSurfaceMultilayer.h"
 #include "PMWire.h"
 
-class PhysicalModelGroup : GroupWithIdBase<PhysicalModel,int> {
+class PhysicalModelGroup : public GroupWithIdBase<PhysicalModel,uint> {
 public:
     typedef enum {
         vacuum = 1,

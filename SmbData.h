@@ -9,6 +9,7 @@
 #define SMBDATA_H_
 
 #include "ProjectFile.h"
+#include "Mesh.h"
 #include "inputs/GlobalProblemData.h"
 #include "inputs/OutputRequestGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"

@@ -2,6 +2,7 @@
 #define GROUPWITHIDBASE_H_
 
 #include <iostream>
+#include <map>
 
 using namespace std;
 
@@ -23,6 +24,9 @@ public:
 
     const T*          add(T* newElem);
     vector<const T* > add(const vector<T*>&);
+
+    template<class T2>
+    vector<Id> getVectorIdsOf() const;
 
 protected:
     Id lastId_;

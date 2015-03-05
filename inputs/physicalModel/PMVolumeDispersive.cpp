@@ -43,7 +43,8 @@ PMVolumeDispersive::PMVolumeDispersive(
  const vector<complex<double> >& pole_,
  const vector<complex<double> >& residue_,
  const vector<complex<double> >& drudePole_,
- const vector<complex<double> >& drudeResidue_) {
+ const vector<complex<double> >& drudeResidue_)
+  : PMVolume(id, name, rEps, rMu) {
 	*this = PMVolumeDispersive(id, name, rEps, rMu, elecCond, 0.0);
 	pole.insert(pole.end(), pole_.begin(), pole_.end());
 	residue.insert(residue.end(), residue_.begin(), residue_.end());
@@ -89,7 +90,7 @@ PMVolumeDispersive::getElectricConductivity() const {
 	}
 	for (uint i = 0; i < pole.size(); i++) {
 		if (std::abs(getPole(i)) == 0) {
-			return getResidue(i).real() * 2.0 * eps0;
+			return getResidue(i).real() * 2.0 * Constants::eps0;
 		}
 	}
 	return 0.0;

@@ -58,7 +58,7 @@ protected:
     readMaterials();
     ProblemSize
     readProblemSize();
-    PMVolumeDispersive readDispersiveMatFile(
+    PMVolumeDispersive* readDispersiveMatFile(
             const unsigned int id_,
             const string& name) const;
     PMSurfaceSIBC* readIsotropicSurfMatFile(
@@ -99,6 +99,7 @@ private:
     virtual Waveport readWaveport();
     virtual Generator readGenerator();
     virtual SourceOnLine readSourceOnLine();
+    virtual PhysicalModel* readPhysicalModel(const uint id);
     Magnitude* readMagnitude(const string type);
     pair<CVecD3, CVecD3> strToBound(const string& str) const;
     Generator::Type strToGeneratorType(string label) const;

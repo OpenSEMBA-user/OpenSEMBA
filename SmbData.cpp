@@ -37,9 +37,8 @@ SmbData::operator=(const SmbData& rhs) {
 
 void
 SmbData::ignorePMLs() {
-   const uint pmlId = pMGroup->getPML()->getId();
+   vector<uint> pmlIds = pMGroup->getVectorIdsOf<PMVolumePML>();
    const uint vacuumId = pMGroup->getVacuum()->getId();
-   const vector<uint> pmlIds = mesh->elem_.getIdsWithMaterialId(pmlId);
    mesh->setMaterialIds(pmlIds, vacuumId);
 }
 

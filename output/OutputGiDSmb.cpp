@@ -32,7 +32,7 @@ OutputGiDSmb::writeMesh() {
     for (uint i = 0; i < layId.size(); i++) {
         for (uint j = 0; j < matId.size(); j++) {
             const Layer* layer = smb_->layers->get(layId[i]);
-            const PhysicalModel* mat = smb_->pMGroup->getPMWithId(matId[j]);
+            const PhysicalModel* mat = smb_->pMGroup->getPtrToId(matId[j]);
             const string name = mat->getName() + "@" + layer->getName();
             vector<const Element*> elem;
             elem = smb_->mesh->elem_.get(Element::line, matId[j], layId[i]);

@@ -12,8 +12,6 @@
 
 class PMVolume : public PhysicalModel {
 public:
-	double rEps_; // Rel. permittivity @ infte. freq.
-	double rMu_; // Rel. permeability @ infte. freq.
 	PMVolume(
      const uint id, const string name,
      const double rEps, const double rMu);
@@ -30,6 +28,9 @@ public:
     virtual bool isDispersive() const;
     virtual bool isSimplyConductive() const;
 	virtual void printInfo() const;
+private:
+    double rEps_; // Rel. permittivity @ infte. freq.
+    double rMu_; // Rel. permeability @ infte. freq.
 };
 
 #endif /* PMVOLUME_H_ */

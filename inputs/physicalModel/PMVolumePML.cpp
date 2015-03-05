@@ -7,28 +7,8 @@
 
 #include "PMVolumePML.h"
 
-
-PMVolumePML::PMVolumePML() {
-	name_ = "";
-	id_ = 0;
-	rEps_ = 1.0;
-	rMu_ = 1.0;
-	impedance = sqrt(double(rMu_*mu0)
-	 / double(rEps_*eps0));
-	admitance = 1 / impedance;
-	for (unsigned int i = 0; i < 3; i++) {
-		direction[i] = none;
-	}
-}
-
-PMVolumePML::PMVolumePML(const unsigned int id, const string& name) {
-	name_ = name;
-	id_ = id;
-	rEps_ = 1.0;
-	rMu_ = 1.0;
-	impedance = sqrt(double(rMu_*mu0)
-	 / double(rEps_*eps0));
-	admitance = 1 / impedance;
+PMVolumePML::PMVolumePML(const unsigned int id, const string& name)
+: PMVolume(id, name, 1.0, 1.0){
 	for (unsigned int i = 0; i < 3; i++) {
 		direction[i] = none;
 	}
@@ -37,26 +17,19 @@ PMVolumePML::PMVolumePML(const unsigned int id, const string& name) {
 PMVolumePML::PMVolumePML(
  const unsigned int id,
  const Direction direction_[3],
- const BoxD3& bound_) {
-	id_ = id;
-	name_ = "PML";
+ const BoxD3& bound_) : PMVolume(id, "PML", 1.0, 1.0){
 	bound.first = bound_.getMin();
 	bound.second = bound_.getMax();
 	for (unsigned int i = 0; i < 3; i++) {
 		direction[i] = direction_[i];
 		if (direction[i] == plus) {
-			name_ += "+";
+			setName(getName() + "+");
 		} else if (direction[i] == minus) {
-			name_ += "-";
+			setName(getName() + "-");
 		} else {
-			name_ += "0";
+		    setName(getName() + "0");
 		}
 	}
-	rEps_ = 1.0;
-	rMu_ = 1.0;
-	impedance = sqrt(double(rMu_*mu0)
-	 / double(rEps_*eps0));
-	admitance = 1 / impedance;
 }
 
 PMVolumePML::~PMVolumePML() {
@@ -68,24 +41,6 @@ PMVolumePML::getDirection() const {
 	return direction;
 }
 
-PMVolumePML&
-PMVolumePML::operator=(const PMVolumePML &rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	id_ = rhs.id_;
-	name_ = rhs.name_;
-	rEps_ = rhs.rEps_;
-	rMu_ = rhs.rMu_;
-	impedance = rhs.impedance;
-	admitance = rhs.admitance;
-	bound = rhs.bound;
-	for (unsigned int i = 0; i < 3; i++) {
-		direction[i] = rhs.direction[i];
-	}
-	return *this;
-}
-
 bool
 PMVolumePML::isPML() const {
 	return true;
@@ -94,8 +49,7 @@ PMVolumePML::isPML() const {
 void
 PMVolumePML::printInfo() const {
 	cout << "--- PMVolume info ---" << endl;
-	cout << "Id: " << id_ << endl;
-	cout << "Name: " << name_ << endl;
+	PMVolume::printInfo();
 	cout << "Type: " << "PML" << endl;
 }
 
@@ -216,18 +170,4 @@ PMVolumePML::getPMLBeginningPosition() const {
 		}
 	}
 	return res;
-}
-
-void
-PMVolumePML::check() const {
-	// Checks validity of parameters.
-	if (id_ == 0) {
-		cerr << "ERROR @ PMVolumePML ctor" << endl;
-		cerr << "Invalid id value." << endl;
-		exit(PHYSICALMODEL_ERROR);
-	}
-	assert(
-	 !(direction[x] == none
-	 && direction[y] == none
-	 && direction[z] == none));
 }

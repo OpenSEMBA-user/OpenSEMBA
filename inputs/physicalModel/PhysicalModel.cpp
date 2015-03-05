@@ -31,3 +31,7 @@ ClassBase* PhysicalModel::clone() const {
 ClassBase* PhysicalModel::clone(const uint id) const {
     return new PhysicalModel(id, name_);
 }
+
+void PhysicalModel::setName(const string& newName) {
+    name_ = newName;
+}

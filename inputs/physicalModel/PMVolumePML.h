@@ -28,47 +28,28 @@ public:
 		PMLxyz,
 		undefined
 	} Orientation;
-	static const unsigned int possibleDirections = 26;
-	PMVolumePML();
+	static const uint possibleDirections = 26;
+	PMVolumePML(const uint id, const string& name_);
 	PMVolumePML(
-	 const unsigned int id,
-	 const string& name_);
-	PMVolumePML(
-	 const unsigned int id,
+	 const uint id,
 	 const Direction direction[3],
 	 const BoxD3& bound);
 	~PMVolumePML();
-	PMVolumePML&
-	 operator=(const PMVolumePML& rhs);
-	bool
-	 isPML() const;
-	void
-	 printInfo() const;
-	const Direction*
-	 getDirection() const;
-	Orientation
-	 getOrientation() const;
-	bool
-	 isUniaxial() const;
-	bool
-	 isBiaxial() const;
-	bool
-	 isTriaxial() const;
-	const pair<CVecD3, CVecD3>&
- 	 getBound() const;
-	CVecD3
-	 getWidth() const;
-	unsigned int
-	 getFirstOrientationIndex() const;
-	CVecD3
-	 getPMLBeginningPosition() const;
-	virtual bool
-	 isClassic() const {return false;}
+	bool isPML() const;
+	void printInfo() const;
+	const Direction* getDirection() const;
+	Orientation getOrientation() const;
+	bool isUniaxial() const;
+	bool isBiaxial() const;
+	bool isTriaxial() const;
+	const pair<CVecD3, CVecD3>& getBound() const;
+	CVecD3 getWidth() const;
+	uint getFirstOrientationIndex() const;
+	CVecD3 getPMLBeginningPosition() const;
+	virtual bool isClassic() const {return false;}
 private:
 	Direction direction[3];
 	pair<CVecD3,CVecD3> bound;
-	void
-	 check() const;
 };
 
 #endif /* PMVOLUMEPML_H_ */

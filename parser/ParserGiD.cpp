@@ -13,19 +13,19 @@ ParserGiD::ParserGiD() {
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-    
+
     string null;
     init(null);
 }
 
 ParserGiD::ParserGiD(const string& fn, const string& pTPath)
 :   ProjectFile(fn) {
-    
+
     init(pTPath);
 }
 
 ParserGiD::~ParserGiD() {
-    
+
 }
 
 SmbData*
@@ -165,150 +165,112 @@ ParserGiD::readEMSources() {
 
 PhysicalModelGroup*
 ParserGiD::readMaterials(){
-    vector<const PMPredefined*> predef;
-    vector<PMVolume> vol;
-    vector<PMVolumeDispersive> dispVol;
-    vector<PMVolumePML*> pmlVol;
-    vector<PMSurface*> surf;
-    vector<PMWire*> wires;
-    vector<PMMultiport*> multiport;
+    PhysicalModelGroup* res = new PhysicalModelGroup();
     string label, value;
     uint materialCount = 0;
-    bool found = false;
-    while (!found && !f_in.eof() ) {
+    while (!f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Materials")==0) {
-            found = true;
             while (!f_in.eof() && label.compare("End of materials")!=0) {
                 getNextLabelAndValue(label, value);
                 if (label.compare("Material")==0) {
-                    bool materialFinished = false;
+                    materialCount++;
                     uint id = atoi(value.c_str());
-                    string name;
-                    PhysicalModelGroup::Type type
-                    = PhysicalModelGroup::undefined;
-                    PMMultiport::Type multiportType = PMMultiport::undefined;
-                    SIBCType surfType = undefinedSIBC;
-                    string layersStr;
-                    double rPermittivity, rPermeability, eCond, mCond;
-                    double radius, resistance, inductance, capacitance;
-                    string filename;
-                    while (!f_in.eof() && !materialFinished) {
-                        // Reads parameters.
-                        getNextLabelAndValue(label, value);
-                        if (label.compare("Name")==0) {
-                            name = trim(value);
-                        } else if (label.compare("TypeId")==0) {
-                            type = strToMaterialType(value);
-                            if (type == PhysicalModelGroup::multiport) {
-                                multiportType =
-                                        strToMultiportType(value);
-                            }
-                        } else if (label.compare("Permittivity")==0) {
-                            rPermittivity = atof(value.c_str());
-                        } else if (label.compare("Permeability")==0) {
-                            rPermeability = atof(value.c_str());
-                        } else if (label.compare("Electric Conductivity")==0) {
-                            eCond = atof(value.c_str());
-                        } else if (label.compare("Magnetic Conductivity")==0) {
-                            mCond = atof(value.c_str());
-                        } else if (label.compare("Radius")==0) {
-                            radius = atof(value.c_str());
-                        } else if (label.compare("Resistance")==0) {
-                            resistance = atof(value.c_str());
-                        } else if (label.compare("Inductance")==0) {
-                            inductance = atof(value.c_str());
-                        } else if (label.compare("Capacitance")==0) {
-                            capacitance = atof(value.c_str());
-                        } else if (label.compare("SurfaceType")==0) {
-                            surfType = strToSIBCType(value);
-                        } else if (label.compare("Filename")==0) {
-                            filename = value;
-                        } else if (label.compare("Layers")==0) {
-                            layersStr = value;
-                        } else if (label.compare("End of Material")==0) {
-                            // Creates material.
-                            switch (type) {
-                            case PhysicalModelGroup::PEC:
-                                predef.push_back(new PMPEC(id, name));
-                                break;
-                            case PhysicalModelGroup::PMC:
-                                predef.push_back(new PMPMC(id, name));
-                                break;
-                            case PhysicalModelGroup::SMA:
-                                predef.push_back(new PMSMA(id, name));
-                                break;
-                            case PhysicalModelGroup::PML:
-                                pmlVol.push_back(new PMVolumePML(id, name));
-                                break;
-                            case PhysicalModelGroup::classic:
-                                if (eCond == 0 && mCond == 0) {
-                                    vol.push_back(
-                                            PMVolume(id, name,
-                                                    rPermittivity, rPermeability));
-                                } else {
-                                    dispVol.push_back(
-                                            PMVolumeDispersive(id, name,
-                                                    rPermittivity, rPermeability,
-                                                    eCond, mCond));
-                                }
-                                break;
-                            case PhysicalModelGroup::elecDispersive:
-                                dispVol.push_back(
-                                        readDispersiveMatFile(id,name));
-                                break;
-                            case PhysicalModelGroup::isotropicsibc:
-                                switch (surfType) {
-                                case sibc:
-                                    surf.push_back(readIsotropicSurfMatFile(id, name));
-                                    break;
-                                case multilayer:
-                                    surf.push_back(
-                                            readMultilayerSurf(id, name, layersStr));
-                                    break;
-                                case undefinedSIBC:
-                                    cerr << "ERROR @ ParserGiD: "
-                                    << "Undefined SIBC Type." << endl;
-                                    break;
-                                }
-                                break;
-                                case PhysicalModelGroup::wire:
-                                    wires.push_back(new PMWire(id, name, radius,
-                                            resistance, inductance));
-                                    break;
-                                case PhysicalModelGroup::multiport:
-                                    if (multiportType == PMMultiport::shortCircuit) {
-                                        multiport.push_back(
-                                                new PMMultiportPredefined(id, name,
-                                                        multiportType));
-                                    } else {
-                                        multiport.push_back(
-                                                new PMMultiportRLC(id, name, multiportType,
-                                                        resistance, inductance, capacitance));
-                                    }
-                                    break;
-                                default:
-                                    cerr<< "ERROR @ Parsing materials: ";
-                                    cerr<< "Material type not recognized." << endl;
-                                    break;
-                            }
-                            materialFinished = true;
-                            materialCount++;
-                        }
-                    } // Closes material.
+                    res->add(readPhysicalModel(id));
                 }
-            } // Closes materials section.
+            }
         }
-    } // Closes problemDataFound while.
-    assert(materialCount == pSize_.mat);
-    // Throws error messages if a problem was detected.
-    if (!found) {
-        cerr<< "ERROR @ Parsing materials: "
-                << "EoF was reached and label was not found." << endl;
     }
-    //
-    return new PhysicalModelGroup(predef, vol, dispVol, pmlVol, surf,
-            multiport, wires);
+    assert(materialCount == pSize_.mat);
+    return res;
+}
+
+PhysicalModel*
+ParserGiD::readPhysicalModel(const uint id) {
+    bool materialFinished = false;
+    string name;
+    PhysicalModelGroup::Type type = PhysicalModelGroup::undefined;
+    PMMultiport::Type mpType = PMMultiport::undefined;
+    SIBCType surfType = undefinedSIBC;
+    string layersStr;
+    double rEps, rMu, eC, mC;
+    double radius, R, L, C;
+    string filename;
+    while (!f_in.eof() && !materialFinished) {
+        string label, value;
+        getNextLabelAndValue(label, value);
+        if (label.compare("Name")==0) {
+            name = trim(value);
+        } else if (label.compare("TypeId")==0) {
+            type = strToMaterialType(value);
+            if (type == PhysicalModelGroup::multiport) {
+                mpType = strToMultiportType(value);
+            }
+        } else if (label.compare("Permittivity")==0) {
+            rEps = atof(value.c_str());
+        } else if (label.compare("Permeability")==0) {
+            rMu = atof(value.c_str());
+        } else if (label.compare("Electric Conductivity")==0) {
+            eC = atof(value.c_str());
+        } else if (label.compare("Magnetic Conductivity")==0) {
+            mC = atof(value.c_str());
+        } else if (label.compare("Radius")==0) {
+            radius = atof(value.c_str());
+        } else if (label.compare("Resistance")==0) {
+            R = atof(value.c_str());
+        } else if (label.compare("Inductance")==0) {
+            L = atof(value.c_str());
+        } else if (label.compare("Capacitance")==0) {
+            C = atof(value.c_str());
+        } else if (label.compare("SurfaceType")==0) {
+            surfType = strToSIBCType(value);
+        } else if (label.compare("Filename")==0) {
+            filename = value;
+        } else if (label.compare("Layers")==0) {
+            layersStr = value;
+        } else if (label.compare("End of Material")==0) {
+            // Creates material.
+            switch (type) {
+            case PhysicalModelGroup::PEC:
+                return new PMPEC(id, name);
+            case PhysicalModelGroup::PMC:
+                return new PMPMC(id, name);
+            case PhysicalModelGroup::SMA:
+                return new PMSMA(id, name);
+            case PhysicalModelGroup::PML:
+                return new PMVolumePML(id, name);
+            case PhysicalModelGroup::classic:
+                if (eC == 0 && mC == 0) {
+                    return new PMVolume(id, name, rEps, rMu);
+                }
+                return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
+            case PhysicalModelGroup::elecDispersive:
+                return readDispersiveMatFile(id,name);
+            case PhysicalModelGroup::isotropicsibc:
+                switch (surfType) {
+                case sibc:
+                    return readIsotropicSurfMatFile(id, name);
+                case multilayer:
+                    return readMultilayerSurf(id, name, layersStr);
+                default:
+                    cerr << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
+                }
+                break;
+            case PhysicalModelGroup::wire:
+                return new PMWire(id, name, radius, R, L);
+            case PhysicalModelGroup::multiport:
+                if (mpType == PMMultiport::shortCircuit) {
+                    return new PMMultiportPredefined(id, name, mpType);
+                } else {
+                    return new PMMultiportRLC(id, name, mpType, R, L, C);
+                }
+            default:
+                cerr<< "ERROR @ Parsing materials: ";
+                cerr<< "Material type not recognized." << endl;
+            }
+            materialFinished = true;
+        }
+    }
 }
 
 OutputRequestGroup*
@@ -472,7 +434,7 @@ ParserGiD::readMeshingParameters() {
                             locationInMesh = coord->castTo<CoordD3>()->pos();
                         }
                     }
-                    
+
                 } else if (label.compare("End of Meshing parameters")==0) {
                     finished = true;
                 }
@@ -607,12 +569,12 @@ ParserGiD::readCoordinates() {
         cerr<< "ERROR @ GiDParser::readCoordinates(): "
                 << "End of coordinates label not found." << endl;
     }
-    
+
     CoordinateGroup<>* cG = new CoordinateGroup<>(coord);
-    
+
     for(unsigned i = 0; i < coord.size(); i++)
         delete coord[i];
-    
+
     return cG;
 }
 
@@ -763,7 +725,7 @@ ParserGiD::readLin2Elements(const CoordinateGroup<>& v) {
     return res;
 }
 
-PMVolumeDispersive
+PMVolumeDispersive*
 ParserGiD::readDispersiveMatFile(
         const uint id_, const string& fileName) const {
     ifstream matFile;
@@ -834,7 +796,7 @@ ParserGiD::readDispersiveMatFile(
             complex<double> residue(reDrudeRK[i]/2.0, imDrudeRK[i]/2.0);
             drudeResidues.push_back(residue);
         }
-        return PMVolumeDispersive(id_, name, eps, 1.0, sig,
+        return return PMVolumeDispersive(id_, name, eps, 1.0, sig,
                 poles, residues, drudePoles, drudeResidues);
     }
     cerr<< "ERROR@GiDParser::readDispersiveMaterialFile(...)"

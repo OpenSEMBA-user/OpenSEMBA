@@ -7,9 +7,6 @@
 
 #include "PMSurfaceMultilayer.h"
 
-PMSurfaceMultilayer::PMSurfaceMultilayer() {
-}
-
 PMSurfaceMultilayer::PMSurfaceMultilayer(
       const uint id,
       const string& name,
@@ -44,8 +41,8 @@ string
 PMSurfaceMultilayer::printLayer(const uint i) const {
    assert(i < getNumberOfLayers());
    stringstream ss;
-   ss << elecCond_[i] << " " << relPermittivity_[i]*eps0 << " "
-      << relPermeability_[i]*mu0 << " " << magnCond_[i] << " "
+   ss << elecCond_[i] << " " << relPermittivity_[i]*Constants::eps0 << " "
+      << relPermeability_[i] * Constants::mu0 << " " << magnCond_[i] << " "
       << thickness_[i];
    return string(ss.str());
 }
@@ -56,11 +53,11 @@ PMSurfaceMultilayer::getThickness(const uint i) const {
 }
 
 double PMSurfaceMultilayer::getPermittivity(const uint i) const {
-   return relPermittivity_[i] * eps0;
+   return relPermittivity_[i] * Constants::eps0;
 }
 
 double PMSurfaceMultilayer::getPermeability(const uint i) const {
-   return relPermeability_[i] * mu0;
+   return relPermeability_[i] * Constants::mu0;
 }
 
 double PMSurfaceMultilayer::getElecCond(const uint i) const {
