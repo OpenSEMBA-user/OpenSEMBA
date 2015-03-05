@@ -6,25 +6,21 @@
 
 class Tri : public Surface {
 public:
-	Tri();
-	Tri(
-     const uint id_ = 0,
-     const uint matId_ = 0,
-     const uint layerId_ = 0);
-	virtual ~Tri();
-	bool
-	 isTri() const {return true;}
-	Tri&
-	 operator=(const Tri& rhs);
-	void
-	 getOrderedVerticesId(
-	  unsigned int val[3]) const;
-	unsigned int
-	 numberOfFaces() const {return 3;}
-	unsigned int
-	 numberOfVertices() const {return 3;}
-	unsigned int
-	 numberOfSideVertices(const uint f = 0) const {return 2;}
+	Tri(const uint layerId = 0,
+	    const uint matId   = 0);
+    Tri(const ElementId id,
+        const uint layerId = 0,
+        const uint matId   = 0);
+    Tri(const Tri& rhs);
+    Tri(const ElementId id, const Tri& rhs);
+    virtual ~Tri();
+    
+	uint numberOfFaces   () const { return 3; }
+	uint numberOfVertices() const { return 3; }
+    
+	uint numberOfSideVertices(const uint f = 0) const { return 2; }
+    
+    void getOrderedVerticesId(uint val[3]) const;
 };
 
 #endif

@@ -13,41 +13,40 @@
 
 class Polygon: public Surface {
 public:
-	Polygon();
-	Polygon(
-	 const CoordinateGroup<>& cG,
-	 const uint id,
-	 const vector<CoordinateId>& vId,
-	 const uint matId = 0);
+	Polygon(const CoordinateGroup<>& cG,
+            const ElementId id,
+            const vector<CoordinateId>& vId,
+            const uint layerId = 0,
+            const uint matId   = 0);
+    Polygon(const Polygon& rhs);
+    Polygon(const ElementId id, const Polygon& rhs);
 	virtual ~Polygon();
-	unsigned int
-	 numberOfCoordinates() const;
-	unsigned int
-	 numberOfVertices() const;
-	unsigned int
-	 numberOfFaces() const;
-	unsigned int
-	 numberOfSideVertices(const uint face) const;
-	unsigned int
-	 numberOfSideCoordinates(const uint face) const;
-	void
-	 setV(const unsigned int i, const Coordinate<double,3>*);
-	const Coordinate<double,3>*
-	 getV(const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideV(const unsigned int f, const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getVertex(const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideVertex(const unsigned int f, const unsigned int i) const;
-	bool
-	 isCurved() const;
-	double
-	 getArea() const;
-	void
-	 printInfo() const;
+    
+    ClassBase* clone()                   const;
+    ClassBase* clone(const ElementId id) const;
+    
+	uint numberOfFaces      () const;
+	uint numberOfVertices   () const;
+	uint numberOfCoordinates() const;
+    
+	uint numberOfSideVertices   (const uint f) const;
+	uint numberOfSideCoordinates(const uint f) const;
+    
+	const CoordD3* getV    (const uint i) const;
+	const CoordD3* getSideV(const uint f,
+                            const uint i) const;
+    
+	const CoordD3* getVertex    (const uint i) const;
+	const CoordD3* getSideVertex(const uint f,
+                                 const uint i) const;
+    
+	double getArea() const;
+	
+	void setV(const uint i, const CoordD3*);
+    
+    void printInfo() const;
 private:
-	vector<const Coordinate<double,3>*> v_;
+	vector<const CoordD3*> v_;
 	// TODO void checkVertexCoplanarity() const;
 
 };

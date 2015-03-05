@@ -7,19 +7,13 @@
 
 #include "Quad4.h"
 
-Quad4::Quad4() {
-}
-
-Quad4::~Quad4() {
-}
-
-Quad4::Quad4(
- const CoordinateGroup<>& cG,
- const unsigned int id_,
- const unsigned int matId_,
- const CoordinateId vId[4]) {
-	id = id_;
-	matId = matId_;
+Quad4::Quad4(const CoordinateGroup<>& cG,
+             const ElementId id,
+             const CoordinateId vId[4],
+             const uint layerId,
+             const uint matId)
+:   Quad(id, layerId, matId) {
+    
 	for (uint i = 0; i < numberOfCoordinates(); i++) {
 		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
         if (coord == NULL) {
@@ -36,62 +30,67 @@ Quad4::Quad4(
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        v[i] = coord->castTo<CoordD3>();
+        v_[i] = coord->castTo<CoordD3>();
 	}
 	// TODO Normals are not handled.
 	check();
 }
 
-Quad4&
-Quad4::operator =(
- const Quad4& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	Quad::operator =(rhs);
-	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
-		v[i] = rhs.v[i];
-	}
-	return *this;
+Quad4::Quad4(const Quad4& rhs)
+:   Quad(rhs) {
+    
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = rhs.v_[i];
+    }
 }
 
-void
-Quad4::setV(
- const unsigned int i,
- const Coordinate<double, 3>* constCoordinate) {
-	v[i] = constCoordinate;
+Quad4::Quad4(const ElementId id, const Quad4& rhs)
+:   Quad(id, rhs) {
+    
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = rhs.v_[i];
+    }
 }
 
-const Coordinate<double, 3>*
-Quad4::getVertex(const unsigned int i) const {
-	return v[i];
+Quad4::~Quad4() {
+    
 }
 
-void
-Quad4::printInfo() const {
+ClassBase* Quad4::clone() const {
+    return new Quad4(*this);
+}
+
+ClassBase* Quad4::clone(const ElementId id) const {
+    return new Quad4(id, *this);
+}
+
+const CoordD3* Quad4::getVertex(const uint i) const {
+	return v_[i];
+}
+
+const CoordD3* Quad4::getSideV(const uint f,
+                               const uint i) const {
+	assert(f < numberOfFaces());
+	assert(i < numberOfSideCoordinates());
+	return v_[(f + i) % 4];
+}
+
+const CoordD3* Quad4::getSideVertex(const uint f,
+                                    const uint i) const {
+	assert(f < numberOfFaces());
+	assert(i < numberOfSideVertices());
+	return v_[(f + i) % 4];
+}
+
+void Quad4::setV(const uint i, const CoordD3* coord) {
+    v_[i] = coord;
+}
+
+void Quad4::printInfo() const {
 	cout << "--- Quad4 info ---" << endl;
 	Quad::printInfo();
 }
 
-void
-Quad4::check() const {
+void Quad4::check() const {
 	// TODO Auto-generated
-}
-
-const Coordinate<double, 3>*
-Quad4::getSideV(
- const unsigned int face,
- const unsigned int i) const {
-	assert(face < numberOfFaces());
-	assert(i < numberOfSideCoordinates());
-	return v[(face + i) % 4];
-}
-
-const Coordinate<double, 3>*
-Quad4::getSideVertex(
- const unsigned int face,
- const unsigned int i) const {
-	assert(face < numberOfFaces());
-	assert(i < numberOfSideVertices());
-	return v[(face + i) % 4];
 }

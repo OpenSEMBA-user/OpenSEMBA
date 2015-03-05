@@ -2,6 +2,7 @@
 #define GROUPWITHIDBASE_H_
 
 #include <iostream>
+#include <map>
 
 using namespace std;
 

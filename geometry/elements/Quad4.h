@@ -12,39 +12,37 @@
 
 class Quad4: public Quad {
 public:
-	Quad4();
-	Quad4(
-	 const CoordinateGroup<>&,
-     const unsigned int id_,
-     const unsigned int matId_,
-	 const CoordinateId vId[4]);
+	Quad4(const CoordinateGroup<>&,
+          const ElementId id,
+          const CoordinateId vId[4],
+          const uint layerId = 0,
+          const uint matId   = 0);
+    Quad4(const Quad4& rhs);
+    Quad4(const ElementId id, const Quad4& rhs);
 	virtual ~Quad4();
-	Quad4&
-	 operator=(const Quad4& rhs);
-	bool
-	 isQuadratic() const {return false;}
-	bool
-	 isCurved() const {return false;}
-	unsigned int
-	 numberOfCoordinates() const {return 4;}
-	unsigned int
-	 numberOfSideCoordinates(const uint f = 0) const {return 2;}
-	const Coordinate<double,3>*
-	 getV(const unsigned int i) const {return v[i];}
-	void
-	 setV(const unsigned int i, const Coordinate<double,3>*);
-	const Coordinate<double,3>*
-	 getVertex(const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideV(const unsigned int face, const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideVertex(const unsigned int face, const unsigned int i) const;
-	void
-	 printInfo() const;
-	void
-	 check() const;
+    
+    ClassBase* clone()                   const;
+    ClassBase* clone(const ElementId id) const;
+    
+	uint numberOfCoordinates() const { return 4; }
+    
+	uint numberOfSideCoordinates(const uint f = 0) const { return 2; }
+	
+    const CoordD3* getV    (const uint i) const { return v_[i]; }
+	const CoordD3* getSideV(const uint f,
+                            const uint i) const;
+    
+	const CoordD3* getVertex    (const uint i) const;
+	const CoordD3* getSideVertex(const uint f,
+                                 const uint i) const;
+    
+    void setV(const uint i, const CoordD3*);
+    
+	void printInfo() const;
+	void check() const;
+
 private:
-	const Coordinate<double,3>* v[4];
+	const CoordD3* v_[4];
 };
 
 #endif /* QUAD4_H_ */

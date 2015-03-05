@@ -8,25 +8,40 @@
 
 const double Surface::curvatureTolerance = 1e-12;
 
+Surface::Surface(const uint layerId,
+                 const uint matId)
+:   Element(layerId, matId) {
 
-Surface::Surface(
- const uint id_,
- const uint matId_,
- const uint layerId_) : Element(id_, matId_, layerId_) {
+}
+
+Surface::Surface(const ElementId id,
+                 const uint layerId,
+                 const uint matId)
+:   Element(id, layerId, matId) {
+
+}
+
+Surface::Surface(const Surface& rhs)
+:   Element(rhs) {
+
+}
+
+Surface::Surface(const ElementId id, const Surface& rhs)
+:   Element(id, rhs) {
+
 }
 
 Surface::~Surface() {
 
 }
 
-bool
-Surface::isContainedInPlane() const {
-	return (isContainedInPlane(xy)
-	 || isContainedInPlane(yz) || isContainedInPlane(zx));
+bool Surface::isContainedInPlane() const {
+	return (isContainedInPlane(xy) ||
+            isContainedInPlane(yz) ||
+            isContainedInPlane(zx));
 }
 
-bool
-Surface::isContainedInPlane(
+bool Surface::isContainedInPlane(
  const CartesianPlane plane) const {
 	// Checks if any vertex lies out of the plane.
 	for (uint i = 1; i < numberOfCoordinates(); i++) {
@@ -37,15 +52,13 @@ Surface::isContainedInPlane(
 	return true;
 }
 
-CVecD3
-Surface::getNormal() const {
+CVecD3 Surface::getNormal() const {
 	CVecD3 v0 = getVertex(1)->pos() - getVertex(0)->pos();
 	CVecD3 v1 = getVertex(2)->pos() - getVertex(0)->pos();
 	return (v0 ^ v1).normalize();
 }
 
-bool
-Surface::isRectangular() const {
+bool Surface::isRectangular() const {
 	if (numberOfCoordinates() != 4 || numberOfFaces() != 4) {
 		return false;
 	}
@@ -59,15 +72,6 @@ Surface::isRectangular() const {
 		}
 	}
 	return true;
-}
-
-Surface&
-Surface::operator =(const Surface& rhs) {
-    if (&rhs == this) {
-        return *this;
-    }
-    Element::operator=(rhs);
-    return *this;
 }
 
 void Surface::printInfo() const {

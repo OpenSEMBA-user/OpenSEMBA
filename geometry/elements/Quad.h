@@ -12,15 +12,19 @@
 
 class Quad : public Surface {
 public:
-	Quad();
-	Quad(uint id, uint matId);
-	virtual ~Quad();
-	unsigned int
-	 numberOfFaces() const {return 4;}
-	unsigned int
-	 numberOfVertices() const {return 4;}
-	unsigned int
-	 numberOfSideVertices(const uint f = 0) const {return 2;}
+	Quad(const uint layerId = 0,
+	     const uint matId   = 0);
+    Quad(const ElementId id,
+         const uint layerId = 0,
+         const uint matId   = 0);
+    Quad(const Quad& rhs);
+    Quad(const ElementId id, const Quad& rhs);
+    virtual ~Quad();
+    
+	uint numberOfFaces   () const { return 4; }
+	uint numberOfVertices() const { return 4; }
+    
+	uint numberOfSideVertices(const uint f = 0) const { return 2; }
 };
 
 #endif /* QUAD4_H_ */

@@ -9,19 +9,15 @@
 #include "Tet4.h"
 #endif
 
-Tet4::Tet4() {
+Tet4::Tet4(const CoordinateGroup<>& coordGr,
+           const ElementId id,
+           const CoordinateId vId[4],
+           const uint layerId,
+           const uint matId)
+:   Tet(id, layerId, matId) {
 
-}
-
-Tet4::Tet4(
- const CoordinateGroup<>& coordGr,
- const CoordinateId vId[4],
- const unsigned int id_,
- const unsigned int matId_,
- const unsigned int layerId_) :
-         Tet(id_, matId_, layerId_) {
-	for (unsigned int i = 0; i < tet.np; i++) {
-		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
+    for (uint i = 0; i < tet.np; i++) {
+        const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << "ERROR @ Tet4::Tet4(): "
                  << "Coord in new CoordinateGroup inexistent"
@@ -36,134 +32,52 @@ Tet4::Tet4(
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        v[i] = coord->castTo<CoordD3>();
-	}
-	check();
+        v_[i] = coord->castTo<CoordD3>();
+    }
+    check();
 }
 
-Tet4::Tet4(
- const CoordD3* v_[4],
- const unsigned int id_,
- const unsigned int matId_,
- const unsigned int layerId_) :
-        Tet(id_, matId_, layerId_) {
-	for (unsigned int i = 0; i < tet.np; i++) {
-		v[i] = v_[i];
-	}
-	check();
+Tet4::Tet4(const ElementId id,
+           const CoordD3* v[4],
+           const uint layerId,
+           const uint matId)
+:   Tet(id, layerId, matId) {
+
+    for (uint i = 0; i < tet.np; i++) {
+        v_[i] = v[i];
+    }
+    check();
+}
+
+Tet4::Tet4(const Tet4& rhs)
+:   Tet(rhs) {
+
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = rhs.v_[i];
+    }
+}
+
+Tet4::Tet4(const ElementId id, const Tet4& rhs)
+:   Tet(id, rhs) {
+
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = rhs.v_[i];
+    }
 }
 
 Tet4::~Tet4() {
 
 }
 
-Tet4&
-Tet4::operator=(const Tet4& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	Tet::operator=(rhs);
-	for (unsigned int i = 0; i < 4; i++) {
-		v[i] = rhs.v[i];
-	}
-	return *this;
+ClassBase* Tet4::clone() const {
+    return new Tet4(*this);
 }
 
-double
-Tet4::getVolume() const {
-	StaMatrix<double,3,3> mat;
-	CVecD3 aux;
-	for (unsigned int i = 1; i < 4; i++) {
-		aux = getV(0)->pos() - getV(i)->pos();
-		for (unsigned int j = 0; j < 3; j++) {
-			mat(i-1,j) = aux(j);
-		}
-	}
-	double det = mat.getDeterminant3x3();
-	return (det / ((double) 6.0));
+ClassBase* Tet4::clone(const ElementId id) const {
+    return new Tet4(id, *this);
 }
 
-double
-Tet4::getAreaOfFace(const unsigned int f) const {
-	CVecD3 v1, v2;
-	v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
-	v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
-	return ((double) 0.5 * (v1 ^ v2).norm());
-}
-
-void
-Tet4::setV(
- const unsigned int i,
- const CoordD3* vNew) {
-	v[i] = vNew;
-}
-
-const CoordD3*
-Tet4::getSideV(const unsigned int f, const unsigned int i) const {
-	return v[tet.sideNode(f,i)];
-}
-
-bool
-Tet4::isCurved() const {
-	return false;
-}
-
-const CoordD3*
-Tet4::getSideVertex(const unsigned int f, const unsigned int i) const {
-	return v[tet.sideVertex(f,i)];
-}
-
-void
-Tet4::check() const {
-	if(hasZeroVolume()) {
-		cerr << "ERROR @ Tet4::check():"
-		     << "Element " << id << " has null volume." << endl;
-	}
-}
-
-void
-Tet4::printInfo() const {
-	cout << "--- Tet4 info ---" << endl;
-	cout << "Id: " << id << endl;
-	cout << "Coordinates:" << endl;
-	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
-		v[i]->printInfo();
-		cout << endl;
-	}
-}
-
-bool
-Tet4::isCurvedFace(const unsigned int face) const {
-	return false;
-}
-
-bool
-Tet4::isFaceContainedInPlane(
- const unsigned int face,
- const CartesianPlane plane) const {
-	return getTri3Face(face).isContainedInPlane(plane);
-}
-
-bool
-Tet4::hasZeroVolume() const {
-	bool zeroVolume;
-	CVecD3 initialVCoord, otherVCoord;
-	initialVCoord = *v[0];
-	for (unsigned int d = 0; d < 3; d++) {
-		zeroVolume = true;
-		for (unsigned int i = 1; i < tet.np; i++) {
-			otherVCoord = *v[i];
-			zeroVolume &= (initialVCoord(d) == otherVCoord(d));
-		}
-		if (zeroVolume) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool
-Tet4::isInnerPoint(const CVecD3& pos) const {
+bool Tet4::isInnerPoint(const CVecD3& pos) const {
     if (!getBound().isInnerPoint(pos)) {
         return false;
     }
@@ -200,4 +114,80 @@ Tet4::isInnerPoint(const CVecD3& pos) const {
         }
     }
     return true;
+}
+
+bool Tet4::isCurvedFace(const uint face) const {
+    return false;
+}
+
+bool Tet4::isFaceContainedInPlane(
+const uint face,
+const CartesianPlane plane) const {
+    return getTri3Face(face).isContainedInPlane(plane);
+}
+
+const CoordD3* Tet4::getSideV(const uint f, const uint i) const {
+    return v_[tet.sideNode(f,i)];
+}
+
+const CoordD3* Tet4::getSideVertex(const uint f, const uint i) const {
+    return v_[tet.sideVertex(f,i)];
+}
+
+double Tet4::getVolume() const {
+    StaMatrix<double,3,3> mat;
+    CVecD3 aux;
+    for (uint i = 1; i < 4; i++) {
+        aux = getV(0)->pos() - getV(i)->pos();
+        for (uint j = 0; j < 3; j++) {
+            mat(i-1,j) = aux(j);
+        }
+    }
+    double det = mat.getDeterminant3x3();
+    return (det / ((double) 6.0));
+}
+
+double Tet4::getAreaOfFace(const uint f) const {
+    CVecD3 v1, v2;
+    v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
+    v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
+    return ((double) 0.5 * (v1 ^ v2).norm());
+}
+
+void Tet4::setV(const uint i, const CoordD3* v) {
+    v_[i] = v;
+}
+
+void Tet4::check() const {
+    if(hasZeroVolume()) {
+        cerr << "ERROR @ Tet4::check():"
+             << "Element " << getId() << " has null volume." << endl;
+    }
+}
+
+void Tet4::printInfo() const {
+    cout << "--- Tet4 info ---" << endl;
+    cout << "Id: " << getId() << endl;
+    cout << "Coordinates:" << endl;
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i]->printInfo();
+        cout << endl;
+    }
+}
+
+bool Tet4::hasZeroVolume() const {
+    bool zeroVolume;
+    CVecD3 initialVCoord, otherVCoord;
+    initialVCoord = *v_[0];
+    for (uint d = 0; d < 3; d++) {
+        zeroVolume = true;
+        for (uint i = 1; i < tet.np; i++) {
+            otherVCoord = *v_[i];
+            zeroVolume &= (initialVCoord(d) == otherVCoord(d));
+        }
+        if (zeroVolume) {
+            return true;
+        }
+    }
+    return false;
 }
