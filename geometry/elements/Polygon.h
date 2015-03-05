@@ -17,7 +17,7 @@ public:
 	Polygon(const CoordinateGroup<>& cG,
             const ElementId id,
             const vector<CoordinateId>& vId,
-            const uint layerId = 0,
+            const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Polygon(const Polygon& rhs);
     Polygon(const ElementId id, const Polygon& rhs);

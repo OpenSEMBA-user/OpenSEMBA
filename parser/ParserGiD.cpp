@@ -539,13 +539,13 @@ ParserGiD::readProblemSize() {
     return res;
 }
 
-LayerGroup*
+LayerGroup<>*
 ParserGiD::readLayers() {
     bool finished = false;
     bool found = false;
     string label, value;
-    uint id;
-    LayerGroup* res = new LayerGroup();
+    LayerId id;
+    LayerGroup<>* res = new LayerGroup<>();
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Layers")==0) {
@@ -574,7 +574,7 @@ ParserGiD::readLayers() {
 CoordinateGroup<>*
 ParserGiD::readCoordinates() {
     string line;
-    uint id;
+    CoordinateId id;
     CVecD3 pos;
     vector<CoordinateBase*> coord;
     coord.reserve(pSize_.v);
@@ -587,7 +587,7 @@ ParserGiD::readCoordinates() {
             // Reads coordinates.
             for (uint i = 0; i < pSize_.v; i++) {
                 f_in >> id >> pos(0) >> pos(1) >> pos(2);
-                coord.push_back(new Coordinate<double,3>(CoordinateId(id),pos));
+                coord.push_back(new Coordinate<double,3>(id, pos));
             }
             // Checks "end of coordinates" label.
             finished = false;
@@ -674,8 +674,8 @@ vector<Hex8>
 ParserGiD::readHex8Elements(const CoordinateGroup<>& v) {
     vector<Hex8> res;
     ElementId id;
-    uint matId;
     CoordinateId vId[8];
+    uint matId;
     res.reserve(pSize_.hex8);
     for (uint i = 0; i < pSize_.hex8; i++) {
         f_in >> id;
@@ -683,7 +683,7 @@ ParserGiD::readHex8Elements(const CoordinateGroup<>& v) {
             f_in >> vId[j];
         }
         f_in >> matId;
-        res.push_back(Hex8(v, id, vId, 0, matId));
+        res.push_back(Hex8(v, id, vId, LayerId(0), matId));
     }
     return res;
 }
@@ -692,8 +692,8 @@ vector<Tet10>
 ParserGiD::readTet10Elements(const CoordinateGroup<>& v) {
     vector<Tet10> res;
     ElementId id;
-    uint matId;
     CoordinateId vId[10];
+    uint matId;
     res.reserve(pSize_.tet10);
     for (uint i = 0; i < pSize_.tet10; i++) {
         f_in >> id;
@@ -701,7 +701,7 @@ ParserGiD::readTet10Elements(const CoordinateGroup<>& v) {
             f_in >> vId[j];
         }
         f_in >> matId;
-        res.push_back(Tet10(v, id, vId, 0, matId));
+        res.push_back(Tet10(v, id, vId, LayerId(0), matId));
     }
     return res;
 }
@@ -711,8 +711,9 @@ ParserGiD::readTet4Elements(
         const CoordinateGroup<>& v) {
     vector<Tet4> res;
     ElementId id;
-    uint matId, layerId;
     CoordinateId vId[4];
+    LayerId layerId;
+    uint matId;
     res.reserve(pSize_.tet4);
     for (uint i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
@@ -725,8 +726,8 @@ vector<Tri6>
 ParserGiD::readTri6Elements(const CoordinateGroup<>& v) {
     vector<Tri6> res;
     ElementId id;
-    uint matId;
     CoordinateId vId[6];
+    uint matId;
     CVecD3 normal;
     res.reserve(pSize_.tri6);
     for (uint i = 0; i < pSize_.tri6; i++) {
@@ -734,7 +735,7 @@ ParserGiD::readTri6Elements(const CoordinateGroup<>& v) {
         for (uint j = 0; j < 6; j++)
             f_in >> vId[j];
         f_in >> matId;
-        res.push_back(Tri6(v, id, vId, 0, matId));
+        res.push_back(Tri6(v, id, vId, LayerId(0), matId));
     }
     return res;
 }
@@ -744,8 +745,9 @@ vector<Tri3>
 ParserGiD::readTri3Elements(const CoordinateGroup<>& v) {
     vector<Tri3> res;
     ElementId id;
-    uint matId, layerId;
     CoordinateId vId[3];
+    LayerId layerId;
+    uint matId;
     CVecD3 normal;
     res.reserve(pSize_.tri3);
     for (uint i = 0; i < pSize_.tri3; i++) {
@@ -759,8 +761,9 @@ vector<Lin2>
 ParserGiD::readLin2Elements(const CoordinateGroup<>& v) {
     vector<Lin2> res;
     ElementId id;
-    uint matId, layerId;
     CoordinateId vId[2];
+    LayerId layerId;
+    uint matId;
     res.reserve(pSize_.lin2);
     for (uint i = 0; i < pSize_.lin2; i++) {
         f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;

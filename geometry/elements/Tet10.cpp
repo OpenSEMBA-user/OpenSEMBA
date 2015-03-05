@@ -16,7 +16,7 @@ Tet10::Tet10() {
 Tet10::Tet10(const CoordinateGroup<>& coordGr,
              const ElementId id,
              const CoordinateId vId[10],
-             const uint layerId,
+             const LayerId layerId,
              const uint matId)
 :   Tet(id, layerId, matId) {
 

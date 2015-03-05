@@ -16,11 +16,11 @@ public:
 	Lin2(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[2],
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId = 0);
 	Lin2(const ElementId id,
          const CoordD3* v[2],
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId = 0);
     Lin2(const Lin2& rhs);
     Lin2(const ElementId id, const Lin2& rhs);

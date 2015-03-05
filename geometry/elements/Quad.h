@@ -12,10 +12,10 @@
 
 class Quad : public Surface {
 public:
-	Quad(const uint layerId = 0,
+	Quad(const LayerId layerId = LayerId(0),
 	     const uint matId   = 0);
     Quad(const ElementId id,
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Quad(const Quad& rhs);
     Quad(const ElementId id, const Quad& rhs);

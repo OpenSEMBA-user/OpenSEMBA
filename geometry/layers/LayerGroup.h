@@ -14,20 +14,25 @@
 
 using namespace std;
 
-class LayerGroup {
+#include "GroupWithIdBase.h"
+
+template<typename L = Layer>
+class LayerGroup : public GroupWithIdBase<L, LayerId> {
 public:
     LayerGroup();
+    LayerGroup(const vector<L*>&);
+    LayerGroup(const GroupBase<L>& rhs);
     virtual ~LayerGroup();
-    virtual void
-     add(Layer* layer);
-    virtual const Layer*
-     get(const uint layerId) const;
-    virtual vector<uint>
-     getIds() const;
-    virtual void
-     printInfo() const;
+
+    LayerGroup<L>& operator=(const GroupBase<L>& rhs);
+
+    virtual vector<LayerId> getIds() const;
+
+    virtual void printInfo() const;
 private:
     map<uint, const Layer*> layers_;
 };
+
+#include "LayerGroup.hpp"
 
 #endif /* SRC_COMMON_INPUTS_LAYERGROUP_H_ */

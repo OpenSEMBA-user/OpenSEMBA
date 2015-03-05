@@ -13,7 +13,7 @@ Polyhedron::Polyhedron() {
 
 Polyhedron::Polyhedron(const ElementId id,
                        const vector<const Polygon*>& face,
-                       const uint layerId,
+                       const LayerId layerId,
                        const uint matId)
 :   Volume(id, layerId, matId) {
     face_ = face;

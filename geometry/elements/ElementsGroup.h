@@ -101,7 +101,7 @@ public:
     ElementsGroup
     removeElementsWithMatId(
             const uint matId) const;
-    map<uint, vector<const Element*> >
+    map<LayerId, vector<const Element*> >
     separateLayers(vector<const Element*>& elem) const;
     void
     printInfo() const;

@@ -16,13 +16,13 @@ public:
     Hex8(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[8],
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Hex8(const CoordinateGroup<>&,
          const ElementId id,
          const CVecD3& min,
          const CVecD3& max,
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Hex8(const Hex8& rhs);
     Hex8(const ElementId id, const Hex8& rhs);

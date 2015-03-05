@@ -19,7 +19,7 @@
 class SmbData : public ProjectFile {
 public:
     GlobalProblemData* gData;
-    LayerGroup* layers;
+    LayerGroup<>* layers;
     PhysicalModelGroup* pMGroup;
     EMSourceGroup* emSources;
     OutputRequestGroup* outputRequests;

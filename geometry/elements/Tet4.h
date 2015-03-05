@@ -16,11 +16,11 @@ public:
     Tet4(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[4],
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Tet4(const ElementId id,
          const CoordD3* v[4],
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId = 0);
     Tet4(const Tet4& rhs);
     Tet4(const ElementId id, const Tet4& rhs);

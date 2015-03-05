@@ -14,9 +14,9 @@ Polygon::Polygon() {
 Polygon::Polygon(const CoordinateGroup<>& cG,
                  const ElementId id,
                  const vector<CoordinateId>& vId,
-                 const uint layerId,
+                 const LayerId layerId,
                  const uint matId)
-:   Surface(id, matId, layerId) {
+:   Surface(id, layerId, matId) {
     
 	assert(vId.size() >= 3);
 	v_.resize(vId.size());

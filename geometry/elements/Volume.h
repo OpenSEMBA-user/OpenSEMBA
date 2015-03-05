@@ -14,10 +14,10 @@
 
 class Volume : public Element {
 public:
-	Volume(const uint layerId = 0,
+	Volume(const LayerId layerId = LayerId(0),
            const uint matId   = 0);
 	Volume(const ElementId id,
-           const uint layerId = 0,
+           const LayerId layerId = LayerId(0),
            const uint matId   = 0);
     Volume(const Volume& rhs);
     Volume(const ElementId id, const Volume& rhs);
