@@ -7,14 +7,13 @@
 
 #include "Polygon.h"
 
-Polygon::Polygon() {
-}
-
-Polygon::Polygon(
- const CoordinateGroup<>& cG,
- const uint idIn,
- const vector<CoordinateId>& vId,
- const uint matIdNew) : Surface(idIn, matIdNew) {
+Polygon::Polygon(const CoordinateGroup<>& cG,
+                 const ElementId id,
+                 const vector<CoordinateId>& vId,
+                 const uint layerId,
+                 const uint matId)
+:   Surface(id, matId, layerId) {
+    
 	assert(vId.size() >= 3);
 	v_.resize(vId.size());
 	for (uint i = 0; i < vId.size(); i++) {
@@ -37,74 +36,83 @@ Polygon::Polygon(
 	}
 }
 
-Polygon::~Polygon() {
+Polygon::Polygon(const Polygon& rhs)
+:   Surface(rhs) {
+    
+    v_ = rhs.v_;
 }
 
-unsigned int
-Polygon::numberOfCoordinates() const {
+Polygon::Polygon(const ElementId id, const Polygon& rhs)
+:   Surface(id, rhs) {
+    
+    v_ = rhs.v_;
+}
+
+Polygon::~Polygon() {
+    
+}
+
+ClassBase* Polygon::clone() const {
+    return new Polygon(*this);
+}
+
+ClassBase* Polygon::clone(const ElementId id) const {
+    return new Polygon(id, *this);
+}
+
+uint Polygon::numberOfFaces() const {
 	return v_.size();
 }
 
-unsigned int
-Polygon::numberOfVertices() const {
+uint Polygon::numberOfVertices() const {
 	return numberOfCoordinates();
 }
 
-unsigned int
-Polygon::numberOfFaces() const {
+uint Polygon::numberOfCoordinates() const {
 	return v_.size();
 }
 
-unsigned int
+uint
 Polygon::numberOfSideVertices(const uint f = 0) const {
 	return 2;
 }
 
-unsigned int
+uint
 Polygon::numberOfSideCoordinates(const uint f = 0) const {
 	return 2;
 }
 
-void
-Polygon::setV(
- const unsigned int i,
- const Coordinate<double, 3>* constCoordinate) {
-	assert(i < numberOfCoordinates());
-	v_[i] = constCoordinate;
-}
-
-const Coordinate<double, 3>*
-Polygon::getV(const unsigned int i) const {
+const CoordD3* Polygon::getV(const uint i) const {
 	assert(i < numberOfCoordinates());
 	return v_[i];
 }
 
-const Coordinate<double, 3>*
-Polygon::getSideV(
- const unsigned int f,
- const unsigned int i) const {
+const CoordD3* Polygon::getSideV(const uint f,
+                                 const uint i) const {
+    
 	return v_[(f + i) % numberOfCoordinates()];
 }
 
-const Coordinate<double, 3>*
-Polygon::getVertex(const unsigned int i) const {
+const CoordD3* Polygon::getVertex(const uint i) const {
 	return getV(i);
 }
 
-const Coordinate<double, 3>*
-Polygon::getSideVertex(
- const unsigned int f,
- const unsigned int i) const {
+const CoordD3* Polygon::getSideVertex(const uint f, const uint i) const {
 	return getSideV(f,i);
 }
 
-bool
-Polygon::isCurved() const {
-	return false;
+double Polygon::getArea() const {
+	cerr<< "ERROR @ Polygon getArea: "
+		<< "Not implemented" << endl;
+	exit(ELEMENT_ERROR);
 }
 
-void
-Polygon::printInfo() const {
+void Polygon::setV(const uint i, const CoordD3* coord) {
+	assert(i < numberOfCoordinates());
+	v_[i] = coord;
+}
+
+void Polygon::printInfo() const {
 	cout<< "--- Polygon info ---" << endl
 		<< "Number of coordinates: " << numberOfCoordinates() << endl;
 	cout<< "Id: " << getId() << ", MatId: " << getMatId() << endl;
@@ -114,11 +122,4 @@ Polygon::printInfo() const {
 		cout<< endl;
 	}
 	cout<< "--- End of polygon info ---" << endl;
-}
-
-double
-Polygon::getArea() const {
-	cerr<< "ERROR @ Polygon getArea: "
-		<< "Not implemented" << endl;
-	exit(ELEMENT_ERROR);
 }

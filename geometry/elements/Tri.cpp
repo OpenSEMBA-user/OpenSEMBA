@@ -2,32 +2,36 @@
 #include "Tri.h"
 #endif
 
-Tri::Tri() : Surface() {
+Tri::Tri(const uint layerId,
+         const uint matId)
+:   Surface(layerId, matId) {
 
 }
 
-Tri::Tri(
- const uint id_, const uint matId_, const uint layerId_) :
-         Surface(id_, matId_, layerId_) {
+Tri::Tri(const ElementId id,
+         const uint layerId,
+         const uint matId)
+:   Surface(id, layerId, matId) {
+
+}
+
+Tri::Tri(const Tri& rhs)
+:   Surface(rhs) {
+
+}
+
+Tri::Tri(const ElementId id, const Tri& rhs)
+:   Surface(id, rhs) {
+
 }
 
 Tri::~Tri() {
 
 }
 
-void
-Tri::getOrderedVerticesId(unsigned int val[3]) const {
-	for (unsigned int i = 0; i < 3; i++) {
+void Tri::getOrderedVerticesId(uint val[3]) const {
+	for (uint i = 0; i < 3; i++) {
 		val[i] = getVertex(i)->getId();
 	}
 	ascendingOrder(3, val);
-}
-
-Tri&
-Tri::operator =(const Tri& rhs) {
-    if (&rhs == this) {
-        return *this;
-    }
-    Surface::operator=(rhs);
-    return *this;
 }

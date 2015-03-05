@@ -14,7 +14,7 @@
 #include "inputs/OutputRequestGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
-#include "inputs/LayerGroup.h"
+#include "LayerGroup.h"
 #include "inputs/MeshingParameters.h"
 
 class SmbData : public ProjectFile {

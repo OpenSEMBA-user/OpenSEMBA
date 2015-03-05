@@ -11,52 +11,43 @@
 #include "Volume.h"
 #include "Polygon.h"
 
-class Polyhedron: public Volume {
+class Polyhedron : public Volume {
 public:
-	Polyhedron();
-	Polyhedron(
-	 const uint id,
-	 const vector<const Polygon*>& faces);
-	virtual ~Polyhedron();
+    Polyhedron(const ElementId id,
+               const vector<const Polygon*>& faces,
+               const uint layerId = 0,
+               const uint matId   = 0);
+    Polyhedron(const Polyhedron& rhs);
+    Polyhedron(const ElementId id, const Polyhedron& rhs);
+    virtual ~Polyhedron();
 
-	const Polygon*
-	 getFace(const uint f) const;
-	unsigned int
-	 numberOfCoordinates() const;
-	unsigned int
-	 numberOfVertices() const;
-	unsigned int
-	 numberOfFaces() const;
-	unsigned int
-	 numberOfSideVertices(
-	  const uint face = 0) const;
-	unsigned int
-	 numberOfSideCoordinates(
- 	  const uint face = 0) const;
-	const Coordinate<double,3>*
-	 getV(const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideV(const unsigned int f, const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getVertex(const unsigned int i) const;
-	const Coordinate<double,3>*
-	 getSideVertex(const unsigned int f, const unsigned int i) const;
-	bool
-	 isCurved() const;
-	bool
-	 isCurvedFace(const unsigned int face) const;
-	double
-	 getAreaOfFace(const unsigned int face) const;
-	void
-	 printInfo() const;
+    ClassBase* clone()                   const;
+    ClassBase* clone(const ElementId id) const;
+
+    bool isCurvedFace(const uint f) const;
+
+    uint numberOfFaces      () const;
+    uint numberOfVertices   () const;
+    uint numberOfCoordinates() const;
+
+    uint numberOfSideVertices   (const uint f = 0) const;
+    uint numberOfSideCoordinates(const uint f = 0) const;
+    const CoordD3* getV(const uint i) const;
+    const CoordD3* getSideV(const uint f, const uint i) const;
+    const CoordD3* getVertex(const uint i) const;
+    const CoordD3* getSideVertex(const uint f, const uint i) const;
+
+    const Polygon* getFace(const uint f) const;
+    double getAreaOfFace(const uint f) const;
+
+    void printInfo() const;
 
 private:
-	vector<const Coordinate<double,3>*> v_;
-	vector<const Polygon*> face_;
-	void
-	 addV(const Coordinate<double,3>*);
-	void
-	 checkClosedness() const;
+    vector<const CoordD3*> v_;
+    vector<const Polygon*> face_;
+
+    void addV(const CoordD3*);
+    void checkClosedness() const;
 };
 
 #endif /* POLYHEDRON_H_ */

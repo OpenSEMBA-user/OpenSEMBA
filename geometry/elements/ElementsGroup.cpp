@@ -98,7 +98,7 @@ ElementsGroup::add(
       const CoordinateGroup<>& coord,
       const vector<Hex8>& newHex) {
    checkIdsAreConsecutive();
-   uint lastId = element[element.size()]->getId();
+   ElementId lastId = element[element.size()]->getId();
    hex8.reserve(hex8.size() + newHex.size());
    CoordinateId vId[8];
    for (uint i = 0; i < newHex.size(); i++) {
@@ -109,7 +109,7 @@ ElementsGroup::add(
          vId[j] = newHex[i].getV(j)->getId();
       }
       uint matId = newHex[i].getMatId();
-      hex8.push_back(Hex8(coord, ++lastId, matId, vId));
+      hex8.push_back(Hex8(coord, ++lastId, vId, 0, matId));
    }
    updatePointers();
    return *this;
@@ -253,7 +253,7 @@ ElementsGroup::areTetrahedrons(const vector<unsigned int>& elemId) const {
    for (unsigned int i = 0; i < nE; i++) {
       const unsigned int id = elemId[i];
       const Element* e = getPtrToId(id);
-      if (!e->isTet()) {
+      if (!e->isOf<Tet>()) {
          return false;
       }
    }
@@ -264,7 +264,7 @@ bool
 ElementsGroup::areTriangles(const vector<unsigned int>& elemId) const {
    unsigned int nE = elemId.size();
    for (unsigned int i = 0; i < nE; i++) {
-      if (!getPtrToId(elemId[i])->isTri()) {
+      if (!getPtrToId(elemId[i])->isOf<Tri>()) {
          return false;
       }
    }

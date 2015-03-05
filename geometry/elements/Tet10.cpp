@@ -9,15 +9,15 @@
 #include "Tet10.h"
 #endif
 
-Tet10::Tet10(
- const CoordinateGroup<>& coordGr,
- const unsigned int id_,
- const unsigned int matId_,
- const CoordinateId vId[10]) {
-	id = id_;
-	matId = matId_;
-	for (unsigned int i = 0; i < tet.np; i++) {
-		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
+Tet10::Tet10(const CoordinateGroup<>& coordGr,
+             const ElementId id,
+             const CoordinateId vId[10],
+             const uint layerId,
+             const uint matId)
+:   Tet(id, layerId, matId) {
+
+    for (uint i = 0; i < tet.np; i++) {
+        const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << "ERROR @ Tet10::Tet10(): "
                  << "Coord in new CoordinateGroup inexistent"
@@ -32,119 +32,120 @@ Tet10::Tet10(
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        v[i] = coord->castTo<CoordD3>();
-	}
-	//
-	check();
+        v_[i] = coord->castTo<CoordD3>();
+    }
+    //
+    check();
+}
+
+Tet10::Tet10(const Tet10& rhs)
+:   Tet(rhs) {
+
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = rhs.v_[i];
+    }
+}
+
+Tet10::Tet10(const ElementId id, const Tet10& rhs)
+:   Tet(id, rhs) {
+
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = rhs.v_[i];
+    }
 }
 
 Tet10::~Tet10() {
 
 }
 
-Tet10&
-Tet10::operator=(const Tet10& rhs) {
-	if (this == &rhs)
-		return *this;
-	id = rhs.id;
-	matId = rhs.matId;
-	for (unsigned int i = 0; i < 10; i++) {
-		v[i] = rhs.v[i];
-	}
-	return *this;
+ClassBase* Tet10::clone() const {
+    return new Tet10(*this);
 }
 
-void
-Tet10::setV(const unsigned int i, const Coordinate<double,3>* vNew) {
-	v[i] = vNew;
+ClassBase* Tet10::clone(const ElementId id) const {
+    return new Tet10(id, *this);
 }
 
-const Coordinate<double,3>*
-Tet10::getSideV(const unsigned int f, const unsigned int i) const {
-	return v[tet.sideNode(f,i)];
+bool Tet10::isCurved() const {
+    for (uint f = 0; f < tet.faces; f++) {
+        if(isCurvedFace(f)) {
+            return true;
+        }
+    }
+    return false;
 }
 
-const Coordinate<double,3>*
-Tet10::getVertex(const unsigned int i) const {
-	return v[tet.vertex(i)];
-}
-
-const Coordinate<double,3>*
-Tet10::getSideVertex(const unsigned int f, const unsigned int i) const {
-	return v[tet.sideVertex(f, i)];
+bool Tet10::isCurvedFace(const uint f) const {
+    return getTri6Face(f).isCurved();
 }
 
 bool
-Tet10::isCurved() const {
-	for (unsigned int f = 0; f < tet.faces; f++) {
-		if(isCurvedFace(f)) {
-			return true;
-		}
-	}
-	return false;
+Tet10::isFaceContainedInPlane(
+ const uint face,
+ const CartesianPlane plane) const {
+    return getTri6Face(face).isContainedInPlane(plane);
 }
 
-bool
-Tet10::isCurvedFace(const unsigned int f) const {
-	return getTri6Face(f).isCurved();
+const CoordD3* Tet10::getSideV(const uint f, const uint i) const {
+	return v_[tet.sideNode(f,i)];
 }
 
-double
-Tet10::getVolume() const {
+const CoordD3*
+Tet10::getVertex(const uint i) const {
+	return v_[tet.vertex(i)];
+}
+
+const CoordD3* Tet10::getSideVertex(const uint f, const uint i) const {
+	return v_[tet.sideVertex(f, i)];
+}
+
+double Tet10::getVolume() const {
 	double cJDet[SimplexTet<2>::ncp];
 	getCubatureJacobianDeterminant(cJDet);
 	double res = 0.0;
-	for (register unsigned int c = 0; c < SimplexTet<2>::ncp; c++) {
+	for (register uint c = 0; c < SimplexTet<2>::ncp; c++) {
 		res += tet.cw[c] * cJDet[c];
 	}
 	res *= double(1.0 / 6.0);
 	return res;
 }
 
-double
-Tet10::getAreaOfFace(const unsigned int face) const {
-	return getTri6Face(face).getArea();
+double Tet10::getAreaOfFace(const uint f) const {
+	return getTri6Face(f).getArea();
 }
 
-void
-Tet10::printInfo() const {
-	cout << "--- Tet10 info ---" << endl;
-	cout << "Id: " << id << endl;
-	cout << "Coordinates:" << endl;
-	for (unsigned int i = 0; i < numberOfCoordinates(); i++) {
-		v[i]->printInfo();
-		cout << endl;
-	}
-}
-
-Tri6
-Tet10::getTri6Face(const unsigned int f) const {
-	const Coordinate<double,3>* sideV[6];
-	for (unsigned int i = 0; i < 6; i++) {
+Tri6 Tet10::getTri6Face(const uint f) const {
+	const CoordD3* sideV[6];
+	for (uint i = 0; i < 6; i++) {
 		sideV[i] = getSideV(f,i);
 	}
-	Tri6 auxFace(sideV);
+	Tri6 auxFace(ElementId(0), sideV);
 	return auxFace;
 }
 
-Tet4
-Tet10::linearize() const {
-	const Coordinate<double,3>* vertex[4];
-	for (unsigned int i = 0; i < 4; i++) {
-		vertex[i] = getVertex(i);
-	}
-	Tet4 res(vertex, id, matId, layerId);
-	return res;
+void Tet10::setV(const uint i, const CoordD3* vNew) {
+    v_[i] = vNew;
 }
 
-bool
-Tet10::isFaceContainedInPlane(
- const unsigned int face,
- const CartesianPlane plane) const {
-	return getTri6Face(face).isContainedInPlane(plane);
+Tet4 Tet10::linearize() const {
+    const Coordinate<double,3>* vertex[4];
+    for (uint i = 0; i < 4; i++) {
+        vertex[i] = getVertex(i);
+    }
+    Tet4 res(getId(), vertex, getLayerId(), getMatId());
+    return res;
 }
 
-void
-Tet10::check() const {
+void Tet10::printInfo() const {
+    cout << "--- Tet10 info ---" << endl;
+    cout << "Id: " << getId() << endl;
+    cout << "Coordinates:" << endl;
+    for (uint i = 0; i < numberOfCoordinates(); i++) {
+        v_[i]->printInfo();
+        cout << endl;
+    }
+}
+
+void Tet10::check() const {
 
 }

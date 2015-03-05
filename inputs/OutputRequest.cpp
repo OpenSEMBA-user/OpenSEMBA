@@ -94,7 +94,7 @@ string
 OutputRequest::elementTypeStr() const {
 	string res;
 	switch (getElementType()) {
-	case Element::NODE:
+	case Element::node:
 		res = "node";
 		break;
 	case Element::line:

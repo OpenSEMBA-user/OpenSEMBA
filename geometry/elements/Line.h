@@ -15,22 +15,22 @@ using namespace std;
 
 class Line : public Element {
 public:
-    Line();
-    Line(
-            const uint id_,
-            const uint matId_,
-            const uint layerId_);
+    Line(const uint layerId = 0,
+         const uint matId   = 0);
+    Line(const ElementId id,
+         const uint layerId = 0,
+         const uint matId   = 0);
+    Line(const Line& rhs);
+    Line(const ElementId id, const Line& rhs);
     virtual ~Line();
-    virtual Element::Type
-    getType() const {return line;}
-    inline unsigned int
-    numberOfFaces() const {return 2;}
-    inline unsigned int
-    numberOfVertices() const {return 2;}
-    inline unsigned int
-    numberOfSideVertices(const uint f = 0) const {return 1;}
-    inline unsigned int
-    numberOfSideCoordinates(const uint f = 0) const {return 1;}
+    
+    inline uint numberOfFaces   () const { return 2; }
+    inline uint numberOfVertices() const { return 2; }
+    
+    inline uint numberOfSideVertices   (const uint f = 0) const { return 1; }
+    inline uint numberOfSideCoordinates(const uint f = 0) const { return 1; }
+    
+    virtual ElementBase::Type getType() const { return line; }
 };
 
 #endif /* LINE_H_ */

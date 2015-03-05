@@ -269,7 +269,7 @@ Mesh::getTetIds(
     res.reserve(elemIds.size());
     const uint nId = elemIds.size();
     for (uint i = 0; i < nId; i++) {
-        if (elem_.getPtrToId(elemIds[i])->isTet()) {
+        if (elem_.getPtrToId(elemIds[i])->isOf<Tet>()) {
             res.push_back(elemIds[i]);
         }
     }

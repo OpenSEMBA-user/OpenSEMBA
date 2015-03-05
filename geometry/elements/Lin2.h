@@ -12,44 +12,38 @@
 
 class Lin2 : public Line {
 public:
-	Lin2();
-	Lin2(
-	 const CoordinateGroup<>&,
-	 const CoordinateId vId[2],
-	 const uint id_,
-     const uint matId_,
-     const uint layerId_ = 0);
-	Lin2(
-     const CoordD3* v_[2],
-     const uint id_,
-	 const uint matId_,
-	 const uint layerId_);
+	Lin2(const CoordinateGroup<>&,
+         const ElementId id,
+         const CoordinateId vId[2],
+         const uint layerId = 0,
+         const uint matId = 0);
+	Lin2(const ElementId id,
+         const CoordD3* v[2],
+         const uint layerId = 0,
+         const uint matId = 0);
+    Lin2(const Lin2& rhs);
+    Lin2(const ElementId id, const Lin2& rhs);
 	virtual ~Lin2();
-	const CoordD3*
-	 getV(const uint i) const {return v[i];}
-	const CoordD3*
-	 getSideV(const uint face, const uint i) const {
-		return v[i];
-	 }
-	const CoordD3*
-	 getSideVertex(const uint face, const uint i) const {
-		return v[i];
-	 }
-	void
-	 setV(
-	  const uint i,
-	  const Coordinate<double, 3>* constCoordinate);
-	inline bool
-	 isCurved() const {return false;}
-	inline uint
-	 numberOfCoordinates() const {return 2;}
-	const CoordD3*
-	 getVertex(const uint i) const;
-	void
-	 printInfo() const;
+    
+    ClassBase* clone()                   const;
+    ClassBase* clone(const ElementId id) const;
+    
+    inline uint numberOfCoordinates() const { return 2; }
+    
+	const CoordD3* getV    (const uint i) const { return v_[i]; }
+	const CoordD3* getSideV(const uint f,
+                            const uint i) const;
+    
+    const CoordD3* getVertex    (const uint i) const;
+	const CoordD3* getSideVertex(const uint f,
+                                 const uint i) const;
+	
+    void setV(const uint i, const CoordD3* coord);
+	
+	void printInfo() const;
 private:
 	static const SimplexLin<1> lin;
-	const CoordD3* v[2];
+	const CoordD3* v_[2];
 };
 const SimplexLin<1> Lin2::lin;
 

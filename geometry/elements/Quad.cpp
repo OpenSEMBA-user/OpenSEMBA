@@ -7,14 +7,29 @@
 
 #include "Quad.h"
 
-Quad::Quad() : Surface() {
-	// TODO Auto-generated constructor stub
+Quad::Quad(const uint layerId,
+           const uint matId)
+:   Surface(layerId, matId) {
 
 }
-Quad::Quad(uint id, uint matId) : Surface(id, matId) {
+
+Quad::Quad(const ElementId id,
+           const uint layerId,
+           const uint matId)
+:   Surface(id, layerId, matId) {
+
+}
+
+Quad::Quad(const Quad& rhs)
+:   Surface(rhs) {
+
+}
+
+Quad::Quad(const ElementId id, const Quad& rhs)
+:   Surface(id, rhs) {
+
 }
 
 Quad::~Quad() {
-	// TODO Auto-generated destructor stub
-}
 
+}

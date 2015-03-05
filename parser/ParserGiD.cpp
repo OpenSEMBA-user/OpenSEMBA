@@ -329,7 +329,7 @@ ParserGiD::readOutputRequestInstances() {
                     getNextLabelAndValue(label,value);
                     elemVec.clear();
                     elemVec.push_back(atoi(value.c_str()));
-                    res.push_back(OutputRequest(domain, Element::NODE,
+                    res.push_back(OutputRequest(domain, Element::node,
                             outputType, outputName, elemVec));
                     break;
                 case ParserGiD::outRqOnLine:
@@ -635,7 +635,8 @@ ParserGiD::readElements(const CoordinateGroup<>& v) {
 vector<Hex8>
 ParserGiD::readHex8Elements(const CoordinateGroup<>& v) {
     vector<Hex8> res;
-    uint id, matId;
+    ElementId id;
+    uint matId;
     CoordinateId vId[8];
     res.reserve(pSize_.hex8);
     for (uint i = 0; i < pSize_.hex8; i++) {
@@ -644,7 +645,7 @@ ParserGiD::readHex8Elements(const CoordinateGroup<>& v) {
             f_in >> vId[j];
         }
         f_in >> matId;
-        res.push_back(Hex8(v, id, matId, vId));
+        res.push_back(Hex8(v, id, vId, 0, matId));
     }
     return res;
 }
@@ -652,7 +653,8 @@ ParserGiD::readHex8Elements(const CoordinateGroup<>& v) {
 vector<Tet10>
 ParserGiD::readTet10Elements(const CoordinateGroup<>& v) {
     vector<Tet10> res;
-    uint id, matId;
+    ElementId id;
+    uint matId;
     CoordinateId vId[10];
     res.reserve(pSize_.tet10);
     for (uint i = 0; i < pSize_.tet10; i++) {
@@ -661,7 +663,7 @@ ParserGiD::readTet10Elements(const CoordinateGroup<>& v) {
             f_in >> vId[j];
         }
         f_in >> matId;
-        res.push_back(Tet10(v, id, matId, vId));
+        res.push_back(Tet10(v, id, vId, 0, matId));
     }
     return res;
 }
@@ -670,12 +672,13 @@ vector<Tet4>
 ParserGiD::readTet4Elements(
         const CoordinateGroup<>& v) {
     vector<Tet4> res;
-    uint id, matId, layerId;
+    ElementId id;
+    uint matId, layerId;
     CoordinateId vId[4];
     res.reserve(pSize_.tet4);
     for (uint i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
-        res.push_back(Tet4(v, vId, id, matId, layerId));
+        res.push_back(Tet4(v, id, vId, layerId, matId));
     }
     return res;
 }
@@ -683,7 +686,8 @@ ParserGiD::readTet4Elements(
 vector<Tri6>
 ParserGiD::readTri6Elements(const CoordinateGroup<>& v) {
     vector<Tri6> res;
-    uint id, matId;
+    ElementId id;
+    uint matId;
     CoordinateId vId[6];
     CVecD3 normal;
     res.reserve(pSize_.tri6);
@@ -692,7 +696,7 @@ ParserGiD::readTri6Elements(const CoordinateGroup<>& v) {
         for (uint j = 0; j < 6; j++)
             f_in >> vId[j];
         f_in >> matId;
-        res.push_back(Tri6(v, id, matId, vId));
+        res.push_back(Tri6(v, id, vId, 0, matId));
     }
     return res;
 }
@@ -701,13 +705,14 @@ ParserGiD::readTri6Elements(const CoordinateGroup<>& v) {
 vector<Tri3>
 ParserGiD::readTri3Elements(const CoordinateGroup<>& v) {
     vector<Tri3> res;
-    uint id, matId, layerId;
+    ElementId id;
+    uint matId, layerId;
     CoordinateId vId[3];
     CVecD3 normal;
     res.reserve(pSize_.tri3);
     for (uint i = 0; i < pSize_.tri3; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> matId >> layerId;
-        res.push_back(Tri3(v, vId, id, matId, layerId));
+        res.push_back(Tri3(v, id, vId, layerId, matId));
     }
     return res;
 }
@@ -715,12 +720,13 @@ ParserGiD::readTri3Elements(const CoordinateGroup<>& v) {
 vector<Lin2>
 ParserGiD::readLin2Elements(const CoordinateGroup<>& v) {
     vector<Lin2> res;
-    uint id, matId, layerId;
+    ElementId id;
+    uint matId, layerId;
     CoordinateId vId[2];
     res.reserve(pSize_.lin2);
     for (uint i = 0; i < pSize_.lin2; i++) {
         f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;
-        res.push_back(Lin2(v, vId, id, matId, layerId));
+        res.push_back(Lin2(v, id, vId, layerId, matId));
     }
     return res;
 }
@@ -1206,7 +1212,7 @@ Element::Type
 ParserGiD::strToElementType(string str) const {
     str = trim(str);
     if (str.compare("point")==0) {
-        return Element::NODE;
+        return Element::node;
     } else if (str.compare("line")==0) {
         return Element::line;
     } else if (str.compare("surface")==0) {
