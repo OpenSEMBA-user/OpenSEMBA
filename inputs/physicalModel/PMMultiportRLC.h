@@ -11,9 +11,7 @@
 #include "PMMultiport.h"
 
 class PMMultiportRLC: public PMMultiport {
-	// From Amelet HDF 1.5.3.
 public:
-	PMMultiportRLC();
 	PMMultiportRLC(
 	 const uint idIn,
 	 const string nameIn,

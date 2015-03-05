@@ -10,11 +10,10 @@ GroupWithIdBase<T, Id>::GroupWithIdBase()
 
 template<typename T, class Id>
 GroupWithIdBase<T, Id>::GroupWithIdBase(const vector<T*>& elems)
-:   GroupBase<T>(elems),
-    lastId_(0) {
+:   GroupBase<T>(elems), lastId_(0) {
 
     element_.resize(elems.size());
-    for(UInt i = 0; i < elems.size(); i++) {
+    for(uint i = 0; i < elems.size(); i++) {
         if(elems[i]->getId() > this->lastId_)
             lastId_ = elems[i]->getId();
 
@@ -46,7 +45,7 @@ GroupWithIdBase<T, Id>::operator=(const GroupWithIdBase<T, Id>& rhs) {
     if(this == &rhs)
         return *this;
 
-    GroupBase<E>::operator=(rhs);
+    GroupBase<T>::operator=(rhs);
 
     this->lastId_ = rhs.lastId_;
     this->mapId_  = rhs.mapId_;
@@ -64,7 +63,7 @@ const T* GroupWithIdBase<T, Id>::getPtrToId(const Id id) const {
 template<typename T, class Id> template<typename T2>
 GroupWithIdBase<T2, Id> GroupWithIdBase<T, Id>::getGroupOf() const {
     vector<T2*> elems;
-    for (UInt i = 0; i < this->size(); i++)
+    for (uint i = 0; i < this->size(); i++)
         if(isOf<T2>(this->element_[i]))
             elems.push_back(this->element_[i]->castTo<T2>());
 
@@ -89,7 +88,7 @@ vector<Id> GroupWithIdBase<T, Id>::add(const vector<T*>& newElems) {
     vector<Id> newIds;
     this->element_.reserve(this->element_.size() + newElems.size());
     newIds.reserve(newElems.size());
-    for (UInt i = 0; i < newElems.size(); i++) {
+    for (uint i = 0; i < newElems.size(); i++) {
         this->element_.push_back(
             newElems[i]->clone(++this->lastId_)->castTo<T>());
         newIds.push_back(this->lastId_);

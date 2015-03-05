@@ -7,37 +7,12 @@
 
 #include "PMPMC.h"
 
-PMPMC::PMPMC() {
-
-}
-
 PMPMC::~PMPMC() {
 
 }
 
-PMPMC::PMPMC(const unsigned int id, const string name) {
-	id_ = id;
-	name_ = name;
-}
-
-PMPMC&
-PMPMC::operator=(const PMPMC& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	id_ = rhs.id_;
-	name_ = rhs.name_;
-	return *this;
-}
-
-PMPMC&
-PMPMC::operator=(const PMPredefined& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	id_ = rhs.getId();
-	name_ = rhs.getName();
-	return *this;
+PMPMC::PMPMC(const unsigned int id, const string name)
+: PMPredefined(id, name){
 }
 
 bool
@@ -45,14 +20,13 @@ PMPMC::isPMC() const {
 	return true;
 }
 
+Condition::Type PMPMC::getConditionType() const {
+   return Condition::pmc;
+}
+
 void
 PMPMC::printInfo() const {
 	cout << "--- PMPMC info ---" << endl;
-	cout << "Id: " << id_ << endl;
-	cout << "Name: " << name_ << endl;
+	PMPredefined::printInfo();
 	cout << "Perfect Magnetic Conductor" << endl;
-}
-
-Condition::Type PMPMC::getConditionType() const {
-   return Condition::pmc;
 }

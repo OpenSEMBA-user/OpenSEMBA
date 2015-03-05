@@ -7,16 +7,10 @@
 
 #include "PMMultiportPredefined.h"
 
-PMMultiportPredefined::PMMultiportPredefined() {
-	type_ = undefined;
-}
-
 PMMultiportPredefined::PMMultiportPredefined(
- const uint idIn,
- const string nameIn,
- const PMMultiport::Type type) {
-	id_ = idIn;
-	name_ = nameIn;
+ const uint id,
+ const string name,
+ const PMMultiport::Type type) : PMMultiport(id, name) {
 	type_ = type;
 }
 
@@ -25,8 +19,7 @@ PMMultiportPredefined::~PMMultiportPredefined() {
 
 void
 PMMultiportPredefined::printInfo() const {
-	cout<< " --- Multiport Info --- " << endl
-	    << " Id: " << id_ << endl
-	    << " Name: " << name_ << endl
-	    << " Type: " << getTypeStr() << endl;
+	cout<< " --- Multiport Info --- " << endl;
+	PMMultiport::printInfo();
+	cout<< " Type: " << getTypeStr() << endl;
 }

@@ -12,19 +12,11 @@
 
 class PMSMA : public PMPredefined {
 public:
-	PMSMA();
-	virtual ~PMSMA();
-	PMSMA(const unsigned int id_, const string name_);
-	PMSMA&
-	 operator=(const PMSMA &param);
-	PMSMA&
-	 operator=(const PMPredefined &param);
-	bool
-	 isSMA() const;
-   Condition::Type
-    getConditionType() const;
-	void
-	 printInfo() const;
+    virtual ~PMSMA();
+    PMSMA(const unsigned int id_, const string name_);
+    bool isSMA() const;
+    Condition::Type getConditionType() const;
+    void printInfo() const;
 };
 
 #endif /* PMSMA_H_ */

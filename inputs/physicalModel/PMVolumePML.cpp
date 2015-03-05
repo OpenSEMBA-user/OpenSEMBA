@@ -11,10 +11,10 @@
 PMVolumePML::PMVolumePML() {
 	name_ = "";
 	id_ = 0;
-	rPermittivity = 1.0;
-	rPermeability = 1.0;
-	impedance = sqrt(double(rPermeability*mu0)
-	 / double(rPermittivity*eps0));
+	rEps_ = 1.0;
+	rMu_ = 1.0;
+	impedance = sqrt(double(rMu_*mu0)
+	 / double(rEps_*eps0));
 	admitance = 1 / impedance;
 	for (unsigned int i = 0; i < 3; i++) {
 		direction[i] = none;
@@ -24,10 +24,10 @@ PMVolumePML::PMVolumePML() {
 PMVolumePML::PMVolumePML(const unsigned int id, const string& name) {
 	name_ = name;
 	id_ = id;
-	rPermittivity = 1.0;
-	rPermeability = 1.0;
-	impedance = sqrt(double(rPermeability*mu0)
-	 / double(rPermittivity*eps0));
+	rEps_ = 1.0;
+	rMu_ = 1.0;
+	impedance = sqrt(double(rMu_*mu0)
+	 / double(rEps_*eps0));
 	admitance = 1 / impedance;
 	for (unsigned int i = 0; i < 3; i++) {
 		direction[i] = none;
@@ -52,10 +52,10 @@ PMVolumePML::PMVolumePML(
 			name_ += "0";
 		}
 	}
-	rPermittivity = 1.0;
-	rPermeability = 1.0;
-	impedance = sqrt(double(rPermeability*mu0)
-	 / double(rPermittivity*eps0));
+	rEps_ = 1.0;
+	rMu_ = 1.0;
+	impedance = sqrt(double(rMu_*mu0)
+	 / double(rEps_*eps0));
 	admitance = 1 / impedance;
 }
 
@@ -75,8 +75,8 @@ PMVolumePML::operator=(const PMVolumePML &rhs) {
 	}
 	id_ = rhs.id_;
 	name_ = rhs.name_;
-	rPermittivity = rhs.rPermittivity;
-	rPermeability = rhs.rPermeability;
+	rEps_ = rhs.rEps_;
+	rMu_ = rhs.rMu_;
 	impedance = rhs.impedance;
 	admitance = rhs.admitance;
 	bound = rhs.bound;

@@ -28,16 +28,13 @@ public:
 		pRLC = 18,     // R//L//C.
 		undefined = 0
  	} Type;
-	PMMultiport();
+ 	PMMultiport(const uint id, const string name);
 	virtual ~PMMultiport();
-	virtual bool
-	 isMultiport() const {return true;}
-	virtual Type
-	 getType() const;
+	virtual bool isMultiport() const {return true;}
+	virtual Type getType() const;
 protected:
 	Type type_;
-	string
-	 getTypeStr() const;
+	string getTypeStr() const;
 };
 
 #endif /* PMMULTIPORT_H_ */

@@ -26,39 +26,39 @@
 #include "PMSurfaceMultilayer.h"
 #include "PMWire.h"
 
-class PhysicalModelGroup : GroupWithIdBase<PhysicalModel,uint> {
+class PhysicalModelGroup : GroupWithIdBase<PhysicalModel,int> {
 public:
-	typedef enum {
-		vacuum = 1,
-		PEC = 2,
-		PMC = 3,
-		SMA = 4,
-		classic = 5,
-		elecDispersive = 6,
-		isotropicsibc = 7,
-		PML = 8,
-		wire = 9,
-		multiport = 10,
-		undefined = 0
-	} Type;
-	PhysicalModelGroup();
-	virtual ~PhysicalModelGroup();
-	const PMVolume* getVacuum() const;
-	bool hasPEC() const;
+    typedef enum {
+        vacuum = 1,
+        PEC = 2,
+        PMC = 3,
+        SMA = 4,
+        classic = 5,
+        elecDispersive = 6,
+        isotropicsibc = 7,
+        PML = 8,
+        wire = 9,
+        multiport = 10,
+        undefined = 0
+    } Type;
+    PhysicalModelGroup();
+    virtual ~PhysicalModelGroup();
+    const PMVolume* getVacuum() const;
+    bool hasPEC() const;
     uint getPECId() const;
-	vector<uint> getIds(
-	        const Condition::Type type = Condition::undefined) const;
+    vector<uint> getIds(
+            const Condition::Type type = Condition::undefined) const;
     uint countSIBC() const;
     uint countMultilayers() const;
     uint countClassic() const;
     uint countDispersiveVolumic() const;
-//	GroupWithIdBase<PMVolumePML,uint> getAssignedPMLs() const;
-	void printInfo() const;
+    //	GroupWithIdBase<PMVolumePML,uint> getAssignedPMLs() const;
+    void printInfo() const;
 private:
-	void getDirection(
-	  PMVolumePML::Direction direction[3],
-	  const uint i) const;
-	PMVolumePML::Direction getDirectionFromInt(const uint i) const;
+    void getDirection(
+            PMVolumePML::Direction direction[3],
+            const uint i) const;
+    PMVolumePML::Direction getDirectionFromInt(const uint i) const;
 };
 
 #endif /* PHYSICALMODELGROUP_H_ */

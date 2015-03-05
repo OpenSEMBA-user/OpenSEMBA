@@ -12,54 +12,24 @@
 
 class PMVolume : public PhysicalModel {
 public:
-	double rPermittivity; // Rel. permittivity @ infte. freq.
-	double rPermeability; // Rel. permeability @ infte. freq.
-	double impedance; // Impedance @ infte. freq.
-	double admitance; // Admitance @ infte. freq.
-	PMVolume();
+	double rEps_; // Rel. permittivity @ infte. freq.
+	double rMu_; // Rel. permeability @ infte. freq.
 	PMVolume(
-     const int id_, const string name_,
+     const uint id, const string name,
      const double rEps, const double rMu);
 	virtual ~PMVolume();
-	virtual PMVolume&
-	 operator=(const PMVolume &param);
-	double
-	 getRelativePermittivity() const {return rPermittivity;}
-	double
-	 getRelativePermeability() const {return rPermeability;}
-	double
-	 getImpedance() const {return impedance;}
-	double
-	 getAdmitance() const {return admitance;}
-	virtual double
-	 getElectricConductivity() const {return (double) 0.0;}
-	virtual double
-	 getMagneticConductivity() const {return (double) 0.0;}
-	bool
-	 isVacuum() const {
-	 	return (rPermittivity==1.0 && rPermeability==1.0);
-	 }
-	virtual bool
-	 isVolumic() const {return true;}
-	virtual bool
-	 isClassic() const {
-	    return true;
-	}
-	virtual bool
-	 isDispersive() const {
-		return false;
-	 }
-	virtual bool
-	 isSimplyConductive() const {
-	    return false;
-	}
-	virtual void
-	 printInfo() const;
-protected:
-private:
-	virtual void
-	 check() const;
+    double getRelativePermittivity() const;
+    double getRelativePermeability() const;
+    double getImpedance() const;
+    double getAdmitance() const;
+    virtual double getElectricConductivity() const;
+    virtual double getMagneticConductivity() const;
+    bool isVacuum() const;
+    virtual bool isVolumic() const;
+    virtual bool isClassic() const;
+    virtual bool isDispersive() const;
+    virtual bool isSimplyConductive() const;
+	virtual void printInfo() const;
 };
-
 
 #endif /* PMVOLUME_H_ */

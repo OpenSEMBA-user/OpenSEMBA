@@ -7,20 +7,12 @@
 
 #include "PMWire.h"
 
-PMWire::PMWire() {
-	radius_ = 0.0;
-	resistance_ = 0.0;
-	inductance_ = 0.0;
-}
-
 PMWire::PMWire(
- const uint idIN,
- const string nameIN,
+ const uint id,
+ const string name,
  const double radius,
  const double resistance,
- const double inductance) {
-	id_ = idIN;
-	name_ = nameIN;
+ const double inductance) : PhysicalModel(id, name) {
 	radius_ = radius;
 	resistance_ = resistance;
 	inductance_ = inductance;
@@ -46,10 +38,9 @@ double
 
 void
 PMWire::printInfo() const {
-	cout<< " --- Wire info ---" << endl
-	    << " Id: " << id_ << endl
-	    << " Name: " << name_ << endl
-	    << " Radius: " << radius_ << endl
+	cout<< " --- Wire info ---" << endl;
+	PhysicalModel::printInfo();
+	cout << " Radius: " << radius_ << endl
 	    << " Resistance: " << resistance_ << endl
 		<< " Inductance: " << inductance_ << endl;
 }

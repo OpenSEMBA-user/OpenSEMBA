@@ -15,7 +15,6 @@
 using namespace std;
 
 class PhysicalModel : public ClassWithIdBase<uint>, public Condition {
-	friend class Parser;
 public:
 	PhysicalModel(const uint id, const string& name);
 	virtual ~PhysicalModel();

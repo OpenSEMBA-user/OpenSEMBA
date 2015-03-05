@@ -12,7 +12,6 @@
 
 class PMWire: public PhysicalModel {
 public:
-	PMWire();
 	PMWire(
 	 const uint id,
 	 const string name,

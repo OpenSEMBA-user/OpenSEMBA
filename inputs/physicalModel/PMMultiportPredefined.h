@@ -12,7 +12,6 @@
 
 class PMMultiportPredefined: public PMMultiport {
 public:
-	PMMultiportPredefined();
 	PMMultiportPredefined(
 	 const uint idIn,
 	 const string nameIn,

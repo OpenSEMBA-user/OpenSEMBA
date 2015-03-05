@@ -31,8 +31,6 @@ public:
 	 const vector<complex<double> >& residue_,
 	 const vector<complex<double> >& drudePole_,
 	 const vector<complex<double> >& drudeResidue_);
-	virtual PMVolumeDispersive&
-	 operator=(const PMVolumeDispersive &param);
 	uint
 	 getPoleNumber() const {return pole.size();}
 	complex<double>

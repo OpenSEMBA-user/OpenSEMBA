@@ -7,8 +7,9 @@
 
 #include "PMMultiport.h"
 
-PMMultiport::PMMultiport() {
-	type_ = undefined;
+PMMultiport::PMMultiport(const uint id, const string name)
+: PhysicalModel(id, name) {
+
 }
 
 PMMultiport::~PMMultiport() {
@@ -63,3 +64,4 @@ PMMultiport::getTypeStr() const {
 	}
 	return res;
 }
+
