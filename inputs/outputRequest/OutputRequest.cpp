@@ -20,18 +20,6 @@ OutputRequest::OutputRequest(
 }
 
 OutputRequest::OutputRequest(
- const Element::Type elementType,
- const OutputRequest::Type outputType,
- const string& name,
- const vector<unsigned int>& elements_) : Condition(elementType) {
-	outputType_  = outputType;
-	name_ = name;
-	usingBound_ = false;
-	elem_ = elements_;
-	setThetaAndPhi(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-}
-
-OutputRequest::OutputRequest(
  const Domain& domain,
  const Element::Type elementType,
  const OutputRequest::Type outputType,
@@ -125,6 +113,53 @@ OutputRequest::operator=(const OutputRequest& rhs) {
 	name_ = rhs.name_;
 	elem_ = rhs.elem_;
 	return *this;
+}
+
+inline const string& OutputRequest::getName() const {
+    return name_;
+}
+
+inline OutputRequest::Type OutputRequest::getOutputType() const {
+    return outputType_;
+}
+
+inline const vector<unsigned int>& OutputRequest::getElem() const {
+    return elem_;
+}
+
+inline double OutputRequest::getStepPhi() const {
+    assert(outputType_ == OutputRequest::farField);
+    return stepPhi_;
+}
+
+inline double OutputRequest::getStepTheta() const {
+    assert(outputType_ == OutputRequest::farField);
+    return stepTheta_;
+}
+
+inline double OutputRequest::getFinalPhi() const {
+    assert(outputType_ == OutputRequest::farField);
+    return finalPhi_;
+}
+
+inline double OutputRequest::getFinalTheta() const {
+    assert(outputType_ == OutputRequest::farField);
+    return finalTheta_;
+}
+
+inline double OutputRequest::getInitialPhi() const {
+    assert(outputType_ == OutputRequest::farField);
+    return initialPhi_;
+}
+
+inline double OutputRequest::getInitialTheta() const {
+    assert(outputType_ == OutputRequest::farField);
+    return initialTheta_;
+}
+
+inline const BoxD3& OutputRequest::getBound() const {
+    assert(usingBound_);
+    return bound_;
 }
 
 void
