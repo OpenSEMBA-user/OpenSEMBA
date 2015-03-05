@@ -29,19 +29,9 @@ EMSource::getElem() const {
 	return elem_;
 }
 
-bool
-EMSource::isEMSource() const {
-	return true;
-}
-
 const BoxD3*
 EMSource::getBound() const {
    return bound_;
-}
-
-bool
-EMSource::isPlaneWave() const {
-	return false;
 }
 
 void

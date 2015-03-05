@@ -12,19 +12,9 @@
 
 class PMPMC : public PMPredefined {
 public:
-	PMPMC();
 	virtual ~PMPMC();
 	PMPMC(const unsigned int id, const string name);
-	PMPMC&
-	 operator=(const PMPMC &param);
-	PMPMC&
-	 operator=(const PMPredefined &param);
-	bool
-	 isPMC() const;
-   Condition::Type
-    getConditionType() const;
-	void
-	 printInfo() const;
+	void printInfo() const;
 };
 
 

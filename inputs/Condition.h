@@ -11,26 +11,14 @@ using namespace std;
 class Condition {
 public:
     typedef enum {
-        pec,
-        pmc,
-        sma,
-        sibc,
+        physicalModel,
         emSource,
+        outputRequest,
         undefined
     } Type;
     Condition();
     Condition(Element::Type param);
     virtual ~Condition();
-    virtual bool isSMA() const;
-    virtual bool isPEC() const;
-    virtual bool isPMC() const;
-    virtual bool isVacuum() const {return false;}
-    virtual bool isPMPredefined() const {return false;}
-    virtual bool isSurface() const {return false;}
-    virtual bool isSurfaceImpedance() const {return false;}
-    virtual bool isPhysicalModel() const {return false;}
-    virtual bool isEMSource() const {return false;}
-    virtual bool isElectricalDispersive() const {return false;}
     Element::Type getElementType() const;
     virtual Condition::Type getConditionType() const;
 private:

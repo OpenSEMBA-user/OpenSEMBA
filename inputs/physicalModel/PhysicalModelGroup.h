@@ -43,7 +43,6 @@ public:
     } Type;
     PhysicalModelGroup();
     virtual ~PhysicalModelGroup();
-    const PMVolume* getVacuum() const;
     bool hasPEC() const;
     uint getPECId() const;
     vector<uint> getIds(

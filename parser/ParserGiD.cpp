@@ -801,7 +801,7 @@ ParserGiD::readDispersiveMatFile(
     }
     cerr<< "ERROR@GiDParser::readDispersiveMaterialFile(...)"
             << "File contains unknown model." << endl;
-    return new PMVolumeDispersive();
+    return NULL;
 }
 
 PMSurfaceMultilayer*

@@ -75,3 +75,11 @@ PMVolume::printInfo() const {
     cout << "Rel. permeability @ inft freq: " << rMu_ << endl;
 	cout << "Type: " << "Classical material" << endl;
 }
+
+double PMVolume::getPermittivity() const {
+    return (rEps_ * Constants::eps0);
+}
+
+double PMVolume::getPermeability() const {
+    return (rMu_ * Constants::mu0);
+}

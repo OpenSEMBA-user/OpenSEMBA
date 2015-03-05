@@ -18,10 +18,8 @@ public:
 	 CVecD3 position,
 	 const MagnitudeGaussian* magnitude);
 	virtual ~Dipole();
-	Dipole&
-	 operator=(const Dipole &rhs);
-	void
-	 printInfo() const;
+	Dipole& operator=(const Dipole &rhs);
+	void printInfo() const;
 protected:
 	double length_;
 	CVecD3 orientation_;

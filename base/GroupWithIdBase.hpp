@@ -53,14 +53,12 @@ const T* GroupWithIdBase<T, Id>::getPtrToId(const Id id) const {
 template<typename T, class Id> template<typename T2>
 vector<Id> GroupWithIdBase<T, Id>::getVectorIdsOf() const {
     vector<Id> res;
-
-    typename map<Id, unsigned>::iterator it;
+    typename map<Id, unsigned>::const_iterator it;
     for (it = mapId_.begin(); it != mapId_.end(); ++it) {
         if(this->element_[it->second]->template isOf<T2>()) {
             res.push_back(it->first);
         }
     }
-
     return res;
 }
 

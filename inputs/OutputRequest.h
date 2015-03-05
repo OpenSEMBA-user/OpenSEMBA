@@ -12,10 +12,6 @@
 
 using namespace std;
 
-#ifndef OUTPUTREQUEST_ERROR
-#define OUTPUTREQUEST_ERROR 7907
-#endif
-
 class OutputRequest : public Condition, public Domain {
 public:
 	typedef enum {

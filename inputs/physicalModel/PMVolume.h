@@ -17,7 +17,9 @@ public:
      const double rEps, const double rMu);
 	virtual ~PMVolume();
     double getRelativePermittivity() const;
+    double getPermittivity() const;
     double getRelativePermeability() const;
+    double getPermeability() const;
     double getImpedance() const;
     double getAdmitance() const;
     virtual double getElectricConductivity() const;

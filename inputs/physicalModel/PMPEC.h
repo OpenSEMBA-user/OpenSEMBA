@@ -14,8 +14,6 @@ class PMPEC : public PMPredefined {
 public:
 	PMPEC(const uint id, const string name);
 	virtual ~PMPEC();
-	bool isPEC() const;
-	Condition::Type getConditionType() const;
 	void printInfo() const;
 };
 

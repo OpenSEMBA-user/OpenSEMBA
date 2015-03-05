@@ -80,4 +80,6 @@ DynMatrix<T>
  operator*(const StaMatrix<T,NROWS,NCOLS>& lhs, const DynMatrix<T>& rhs);
 
 #include "StaMatrix.hpp"
+
+typedef StaMatrix<double,2,2> MatD22;
 #endif

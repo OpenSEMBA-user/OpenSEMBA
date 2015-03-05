@@ -18,18 +18,9 @@ PMPEC::~PMPEC() {
 
 }
 
-bool
-PMPEC::isPEC() const {
-	return true;
-}
-
 void
 PMPEC::printInfo() const {
 	cout << "--- PMPEC info ---" << endl;
 	PMPredefined::printInfo();
 	cout << "Perfect Electric Conductor" << endl;
-}
-
-Condition::Type PMPEC::getConditionType() const {
-   return Condition::pec;
 }

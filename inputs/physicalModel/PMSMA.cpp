@@ -16,18 +16,9 @@ PMSMA::PMSMA(const uint id, const string name)
 
 }
 
-bool
-PMSMA::isSMA() const {
-	return true;
-}
-
-Condition::Type PMSMA::getConditionType() const {
-   return Condition::sma;
-}
-
 void
 PMSMA::printInfo() const {
 	cout << "--- PMSMA info ---" << endl;
-	PMPredefined::printInfo();
 	cout << "Silver-Muller Absorbing" << endl;
+	PMPredefined::printInfo();
 }

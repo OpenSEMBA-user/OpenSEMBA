@@ -15,34 +15,25 @@ using namespace std;
 
 class EMSource : public Condition {
 public:
-	EMSource();
-	EMSource(
-	        const vector<uint>& elem,
-	        const Magnitude* magnitude);
+    EMSource();
     EMSource(
-         const BoxD3& bound,
+            const vector<uint>& elem,
             const Magnitude* magnitude);
-	virtual ~EMSource();
-	bool
-	 isEMSource() const;
-	virtual bool
-	 isPlaneWave() const;
-	vector<unsigned int>
-	 getElem() const;
-   const BoxD3*
-   getBound() const;
-	void
-	 printInfo() const;
+    EMSource(
+            const BoxD3& bound,
+            const Magnitude* magnitude);
+    virtual ~EMSource();
+    vector<unsigned int> getElem() const;
+    const BoxD3* getBound() const;
+    void printInfo() const;
     const Magnitude* getMagnitude() const;
-   Condition::Type
-    getConditionType() const;
-   virtual void
-   applyGeometricScalingFactor(const double factor);
+    Condition::Type getConditionType() const;
+    virtual void applyGeometricScalingFactor(const double factor);
 protected:
-   BoxD3* bound_;
+    BoxD3* bound_;
 private:
-	vector<unsigned int> elem_;
-   const Magnitude* magnitude_;
+    vector<unsigned int> elem_;
+    const Magnitude* magnitude_;
 };
 
 #endif /* ELECTROMAGNETICSOURCE_H_ */

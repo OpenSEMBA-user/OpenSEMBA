@@ -36,13 +36,6 @@ SmbData::operator=(const SmbData& rhs) {
 }
 
 void
-SmbData::ignorePMLs() {
-   vector<uint> pmlIds = pMGroup->getVectorIdsOf<PMVolumePML>();
-   const uint vacuumId = pMGroup->getVacuum()->getId();
-   mesh->setMaterialIds(pmlIds, vacuumId);
-}
-
-void
 SmbData::printInfo() const {
    cout << " --- SEMBA data --- " << endl;
    if (layers != NULL) {

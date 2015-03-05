@@ -55,8 +55,6 @@ public:
 	double
 	 getElectricConductivity() const;
 	void
-	 check() const;
-	void
 	 printInfo() const;
 protected:
    vector<complex<double> > residue; // Residues for dispers model. c_p.

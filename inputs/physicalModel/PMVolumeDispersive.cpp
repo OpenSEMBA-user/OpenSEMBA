@@ -30,8 +30,6 @@ PMVolumeDispersive::PMVolumeDispersive(
 			<< "Magnetic conductive materials are not supported." << endl;
 		printInfo();
 	}
-	//
-	check();
 }
 
 PMVolumeDispersive::PMVolumeDispersive(
@@ -50,7 +48,6 @@ PMVolumeDispersive::PMVolumeDispersive(
 	residue.insert(residue.end(), residue_.begin(), residue_.end());
 	drudePole.insert(drudePole.end(), drudePole_.begin(), drudePole_.end());
 	drudeResidue.insert(drudeResidue.end(), drudeResidue_.begin(), drudeResidue_.end());
-	check();
 }
 
 bool

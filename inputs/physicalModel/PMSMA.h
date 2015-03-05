@@ -13,9 +13,7 @@
 class PMSMA : public PMPredefined {
 public:
     virtual ~PMSMA();
-    PMSMA(const unsigned int id_, const string name_);
-    bool isSMA() const;
-    Condition::Type getConditionType() const;
+    PMSMA(const unsigned int id, const string name);
     void printInfo() const;
 };
 

@@ -16,34 +16,31 @@ class PMSurfaceSIBC : public PMSurface {
 public:
 	PMSurfaceSIBC();
 	PMSurfaceSIBC(
-	 const unsigned int id, const string& name,
-	 const StaMatrix<double,2,2>& Zinfinite,
-	 const StaMatrix<double,2,2>& Zstatic,
+	 const uint id,
+	 const string& name,
+	 const MatD22& Zinfinite,
+	 const MatD22& Zstatic,
 	 const vector<double>& pole,
-	 const vector<StaMatrix<double,2,2> >& Z);
+	 const vector<MatD22>& Z);
 	virtual ~PMSurfaceSIBC();
 	virtual PMSurfaceSIBC&
      operator=(const PMSurfaceSIBC &param);
 	void
-	 setZInfinity(const StaMatrix<double,2,2>& Zinf);
+	 setZInfinity(const MatD22& Zinf);
 	void
-	 setZStatic(const StaMatrix<double,2,2>& Zsta);
+	 setZStatic(const MatD22& Zsta);
 	virtual void
 	 addPole(
 	  const double pole,
-	  const StaMatrix<double,2,2>& Z);
-	virtual unsigned int
-	 getNumberOfPoles() const {
+	  const MatD22& Z);
+	virtual uint getNumberOfPoles() const {
 		 return pole_.size();
 	 }
-   Condition::Type
-    getConditionType() const;
-	virtual void
-	 printInfo() const;
+	virtual void printInfo() const;
 protected:
-	StaMatrix<double,2,2> ZInfinity_, ZStatic_;
+	MatD22 ZInfinity_, ZStatic_;
 	vector<double> pole_; // Impedance poles.
-	vector<StaMatrix<double,2,2> > Z_; // Impedance residuals.
+	vector<MatD22> Z_; // Impedance residuals.
 };
 
 #endif /* PMSURFACE_H_ */

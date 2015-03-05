@@ -15,15 +15,6 @@ PMPMC::PMPMC(const unsigned int id, const string name)
 : PMPredefined(id, name){
 }
 
-bool
-PMPMC::isPMC() const {
-	return true;
-}
-
-Condition::Type PMPMC::getConditionType() const {
-   return Condition::pmc;
-}
-
 void
 PMPMC::printInfo() const {
 	cout << "--- PMPMC info ---" << endl;

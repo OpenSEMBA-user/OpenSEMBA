@@ -30,7 +30,6 @@ public:
     virtual ~SmbData();
     virtual SmbData& operator=(const SmbData& rhs);
     void applyGeometricScalingFactor();
-    void ignorePMLs();
     virtual void printInfo() const;
 };
 
