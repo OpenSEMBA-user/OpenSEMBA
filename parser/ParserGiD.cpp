@@ -796,12 +796,12 @@ ParserGiD::readDispersiveMatFile(
             complex<double> residue(reDrudeRK[i]/2.0, imDrudeRK[i]/2.0);
             drudeResidues.push_back(residue);
         }
-        return return PMVolumeDispersive(id_, name, eps, 1.0, sig,
+        return new PMVolumeDispersive(id_, name, eps, 1.0, sig,
                 poles, residues, drudePoles, drudeResidues);
     }
     cerr<< "ERROR@GiDParser::readDispersiveMaterialFile(...)"
             << "File contains unknown model." << endl;
-    return PMVolumeDispersive();
+    return new PMVolumeDispersive();
 }
 
 PMSurfaceMultilayer*
