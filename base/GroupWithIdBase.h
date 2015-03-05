@@ -1,6 +1,7 @@
 #ifndef GROUPWITHIDBASE_H_
 #define GROUPWITHIDBASE_H_
 
+#include <cstdlib>
 #include <iostream>
 #include <map>
 

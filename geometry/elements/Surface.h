@@ -14,10 +14,10 @@ using namespace std;
 
 class Surface : public Element {
 public:
-    Surface(const uint layerId = 0,
+    Surface(const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Surface(const ElementId id,
-            const uint layerId = 0,
+            const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Surface(const Surface& rhs);
     Surface(const ElementId id, const Surface& rhs);

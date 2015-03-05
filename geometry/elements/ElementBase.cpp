@@ -1,6 +1,6 @@
 #include "ElementBase.h"
 
-ElementBase::ElementBase(const uint layerId,
+ElementBase::ElementBase(const LayerId layerId,
                          const uint matId)
 :   layerId_(layerId),
     matId_  (matId  ) {
@@ -8,7 +8,7 @@ ElementBase::ElementBase(const uint layerId,
 }
 
 ElementBase::ElementBase(const ElementId id,
-                         const uint layerId,
+                         const LayerId layerId,
                          const uint matId)
 :   ClassWithIdBase<ElementId>(id),
     layerId_(layerId),

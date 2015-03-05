@@ -14,10 +14,10 @@
 
 class Tet : public Volume {
 public:
-    Tet(const uint layerId = 0,
+    Tet(const LayerId layerId = LayerId(0),
         const uint matId   = 0);
     Tet(const ElementId id,
-        const uint layerId = 0,
+        const LayerId layerId = LayerId(0),
         const uint matId   = 0);
     Tet(const Tet& rhs);
     Tet(const ElementId id, const Tet& rhs);

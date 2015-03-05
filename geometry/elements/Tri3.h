@@ -5,14 +5,15 @@
 
 class Tri3 : public Tri {
 public:
+    Tri3();
 	Tri3(const CoordinateGroup<>&,
          const ElementId id,
          const CoordinateId vId[3],
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId   = 0);
 	Tri3(const ElementId id,
          const CoordD3* v[3],
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Tri3(const Tri3& rhs);
     Tri3(const ElementId id, const Tri3& rhs);

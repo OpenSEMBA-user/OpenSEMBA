@@ -7,6 +7,8 @@
 #define ELEMENT_ERROR 37311347
 #endif
 
+#include "Layer.h"
+
 typedef unsigned int uint;
 
 CreateId(ElementId);
@@ -21,10 +23,10 @@ public:
 		volume
 	};
     
-    ElementBase(const uint layerId = 0,
+    ElementBase(const LayerId layerId = LayerId(0),
                 const uint matId   = 0);
     ElementBase(const ElementId id,
-                const uint layerId = 0,
+                const LayerId layerId = LayerId(0),
                 const uint matId   = 0);
     ElementBase(const ElementBase& rhs);
     ElementBase(const ElementId id, const ElementBase& rhs);
@@ -42,16 +44,16 @@ public:
     
     virtual Type getType() const { return undefined; }
 
-    uint getLayerId() const { return layerId_; }
-    uint getMatId  () const { return matId_;   }
+    LayerId getLayerId() const { return layerId_; }
+    uint    getMatId  () const { return matId_;   }
 
-    virtual void setLayerId(const uint layerId) { layerId_= layerId; }
-    virtual void setMatId  (const uint matId  ) { matId_  = matId;   }
+    virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }
+    virtual void setMatId  (const uint    matId  ) { matId_  = matId;   }
     
     virtual void printInfo() const = 0;
     
 private:
-    uint layerId_;
+    LayerId layerId_;
     uint matId_;
 };
 

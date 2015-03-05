@@ -16,10 +16,10 @@ using namespace std;
 
 class Element : public ElementBase {
 public:
-    Element(const uint layerId = 0,
+    Element(const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Element(const ElementId id,
-            const uint layerId = 0,
+            const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Element(const Element& rhs);
     Element(const ElementId id, const Element& rhs);

@@ -25,7 +25,7 @@ SmbData::operator=(const SmbData& rhs) {
    if (this == &rhs) {
       return *this;
    }
-   layers = new LayerGroup(*rhs.layers);
+   layers = new LayerGroup<>(*rhs.layers);
    mesh = new Mesh(*rhs.mesh);
    gData = new GlobalProblemData(*rhs.gData);
    pMGroup = new PhysicalModelGroup(*rhs.pMGroup);
