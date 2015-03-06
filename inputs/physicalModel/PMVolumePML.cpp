@@ -41,11 +41,6 @@ PMVolumePML::getDirection() const {
 	return direction;
 }
 
-bool
-PMVolumePML::isPML() const {
-	return true;
-}
-
 void
 PMVolumePML::printInfo() const {
 	cout << "--- PMVolume info ---" << endl;

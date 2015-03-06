@@ -19,16 +19,14 @@ public:
 	 const double resistance,
 	 const double inductance);
 	virtual ~PMWire();
-	virtual double
-	 getRadius() const;
-	virtual double
-	 getResistance() const;
-	virtual double
-	 getInductance() const;
-	virtual bool
-	 isWire() const {return true;}
-	virtual void
-	 printInfo() const;
+
+    ClassBase* clone() const;
+    ClassBase* clone(const uint id) const;
+
+	virtual double	 getRadius() const;
+	virtual double	 getResistance() const;
+	virtual double	 getInductance() const;
+	virtual void printInfo() const;
 private:
 	double radius_;
 	double resistance_; // Resistance per meter.

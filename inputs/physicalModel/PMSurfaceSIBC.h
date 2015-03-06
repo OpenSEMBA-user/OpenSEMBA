@@ -23,19 +23,16 @@ public:
 	 const vector<double>& pole,
 	 const vector<MatD22>& Z);
 	virtual ~PMSurfaceSIBC();
+
+    ClassBase* clone() const;
+    ClassBase* clone(const uint id) const;
+
 	virtual PMSurfaceSIBC&
      operator=(const PMSurfaceSIBC &param);
-	void
-	 setZInfinity(const MatD22& Zinf);
-	void
-	 setZStatic(const MatD22& Zsta);
-	virtual void
-	 addPole(
-	  const double pole,
-	  const MatD22& Z);
-	virtual uint getNumberOfPoles() const {
-		 return pole_.size();
-	 }
+	void setZInfinity(const MatD22& Zinf);
+	void setZStatic(const MatD22& Zsta);
+	virtual void addPole(const double pole, const MatD22& Z);
+    virtual uint getNumberOfPoles() const;
 	virtual void printInfo() const;
 protected:
 	MatD22 ZInfinity_, ZStatic_;

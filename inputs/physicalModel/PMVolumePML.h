@@ -35,8 +35,10 @@ public:
 	 const Direction direction[3],
 	 const BoxD3& bound);
 	~PMVolumePML();
-	bool isPML() const;
-	void printInfo() const;
+
+    ClassBase* clone() const;
+    ClassBase* clone(const uint id) const;
+
 	const Direction* getDirection() const;
 	Orientation getOrientation() const;
 	bool isUniaxial() const;
@@ -46,7 +48,7 @@ public:
 	CVecD3 getWidth() const;
 	uint getFirstOrientationIndex() const;
 	CVecD3 getPMLBeginningPosition() const;
-	virtual bool isClassic() const {return false;}
+	void printInfo() const;
 private:
 	Direction direction[3];
 	pair<CVecD3,CVecD3> bound;

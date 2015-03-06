@@ -21,18 +21,19 @@ public:
          const vector<double>& relPermeability,
          const vector<double>& elecCond,
          const vector<double>& magnCond);
-   uint
-    getNumberOfLayers() const;
-   string
-    printLayer(const uint i) const;
+
+   ClassBase* clone() const;
+   ClassBase* clone(const uint id) const;
+
+   uint getNumberOfLayers() const;
+   string printLayer(const uint i) const;
    double getThickness(const uint i) const;
    double getPermittivity(const uint i) const;
    double getPermeability(const uint i) const;
    double getElecCond(const uint i) const;
    double getMagnCond(const uint i) const;
-   bool isSurfaceMultilayer() const {return true;}
-   void
-    printInfo() const;
+
+   void printInfo() const;
 private:
    vector<double>
     thickness_, relPermittivity_, relPermeability_, elecCond_, magnCond_;

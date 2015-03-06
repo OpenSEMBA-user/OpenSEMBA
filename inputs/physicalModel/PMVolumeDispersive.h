@@ -15,52 +15,44 @@ public:
 	PMVolumeDispersive();
 	virtual ~PMVolumeDispersive();
 	PMVolumeDispersive(
-	 const unsigned int id_,
+	 const uint id_,
 	 const string& name_,
 	 const double rEps,
 	 const double rMu,
 	 const double elecCond,
 	 const double magnCond);
 	PMVolumeDispersive(
-	 const unsigned int id_,
+	 const uint id_,
 	 const string& name_,
 	 const double rEps,
 	 const double rMu,
 	 const double elecCond,
-	 const vector<complex<double> >& pole_,
-	 const vector<complex<double> >& residue_,
-	 const vector<complex<double> >& drudePole_,
-	 const vector<complex<double> >& drudeResidue_);
-	uint
-	 getPoleNumber() const {return pole.size();}
-	complex<double>
-	 getPole(unsigned int p) const {return pole[p];}
-	complex<double>
-	 getResidue(unsigned int p) const {return  residue[p];}
-	unsigned int
-	 getDrudePoleNumber() const {return drudePole.size();}
-	complex<double>
-	 getDrudePole(unsigned int p) const {return drudePole[p];}
-	complex<double>
-	 getDrudeResidue(unsigned int p) const {return drudeResidue[p];}
-	virtual bool
-	 isDispersive() const {
-		return true;
-	 }
-	bool isClassic() const {
-	    return isSimplyConductive();
-	}
-    bool
-     isSimplyConductive() const;
-	double
-	 getElectricConductivity() const;
-	void
-	 printInfo() const;
+	 const vector<complex<double> >& pole,
+	 const vector<complex<double> >& residue,
+	 const vector<complex<double> >& drudePole,
+	 const vector<complex<double> >& drudeResidue);
+
+	virtual ClassBase* clone() const;
+    virtual ClassBase* clone(const uint id) const;
+
+    uint getPoleNumber() const;
+    complex<double> getPole(uint p) const;
+    complex<double> getResidue(uint p) const;
+    uint getDrudePoleNumber() const;
+    complex<double> getDrudePole(uint p) const;
+    complex<double> getDrudeResidue(uint p) const;
+    virtual double getElectricConductivity() const;
+
+    virtual bool isDispersive() const;
+    bool isClassic() const;
+    bool isSimplyConductive() const;
+
+	void printInfo() const;
 protected:
-   vector<complex<double> > residue; // Residues for dispers model. c_p.
-   vector<complex<double> > pole; // Poles for dispersive model. a_p.
-   vector<complex<double> > drudeResidue; // c_p_D
-   vector<complex<double> > drudePole; // Poles for dispersive model. a_p.
+   vector<complex<double> > residue_; // Residues for dispers model. c_p.
+   vector<complex<double> > pole_; // Poles for dispersive model. a_p.
+   vector<complex<double> > drudeResidue_; // c_p_D
+   vector<complex<double> > drudePole_; // Poles for dispersive model. a_p_D.
 	void
 	 addPole(
 	  const complex<double>& pole_,

@@ -1,5 +1,6 @@
+
 #ifndef OUTPUTREQUESTGROUP_H_
-#	include "OutputRequestGroup.h"
+#	include "OutRqGroup.h"
 #endif
 
 OutRqGroup::OutRqGroup(

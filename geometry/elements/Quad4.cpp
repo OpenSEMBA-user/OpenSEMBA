@@ -23,7 +23,7 @@ Quad4::Quad4(const CoordinateGroup<>& cG,
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        if (!coord->isOf<CoordD3>()) {
+        if (!coord->is<CoordD3>()) {
             cerr << "ERROR @ Quad4::Quad4(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;

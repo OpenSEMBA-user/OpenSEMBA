@@ -30,7 +30,6 @@ public:
  	} Type;
  	PMMultiport(const uint id, const string name);
 	virtual ~PMMultiport();
-	virtual bool isMultiport() const {return true;}
 	virtual Type getType() const;
 protected:
 	Type type_;

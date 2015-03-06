@@ -14,6 +14,10 @@ class PMPEC : public PMPredefined {
 public:
 	PMPEC(const uint id, const string name);
 	virtual ~PMPEC();
+
+    ClassBase* clone() const;
+    ClassBase* clone(const uint id) const;
+
 	void printInfo() const;
 };
 

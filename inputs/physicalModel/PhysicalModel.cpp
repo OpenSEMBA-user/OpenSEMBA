@@ -17,6 +17,10 @@ PhysicalModel::getName() const {
 	return name_;
 }
  
+void PhysicalModel::setName(const string& newName) {
+    name_ = newName;
+}
+
 void
 PhysicalModel::printInfo() const {
 	cout << " --- Physical Model Info ---" << endl;
@@ -24,14 +28,3 @@ PhysicalModel::printInfo() const {
 	cout << "Name: " << name_ << endl;
 }
 
-ClassBase* PhysicalModel::clone() const {
-    return new PhysicalModel(*this);
-}
-
-ClassBase* PhysicalModel::clone(const uint id) const {
-    return new PhysicalModel(id, name_);
-}
-
-void PhysicalModel::setName(const string& newName) {
-    name_ = newName;
-}

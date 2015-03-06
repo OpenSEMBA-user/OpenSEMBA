@@ -13,9 +13,13 @@
 class PMVolume : public PhysicalModel {
 public:
 	PMVolume(
-     const uint id, const string name,
-     const double rEps, const double rMu);
+	        const uint id, const string name,
+	        const double rEps, const double rMu);
 	virtual ~PMVolume();
+
+    virtual ClassBase* clone() const;
+    virtual ClassBase* clone(const uint id) const;
+
     double getRelativePermittivity() const;
     double getPermittivity() const;
     double getRelativePermeability() const;
@@ -30,6 +34,8 @@ public:
     virtual bool isDispersive() const;
     virtual bool isSimplyConductive() const;
 	virtual void printInfo() const;
+
+
 private:
     double rEps_; // Rel. permittivity @ infte. freq.
     double rMu_; // Rel. permeability @ infte. freq.

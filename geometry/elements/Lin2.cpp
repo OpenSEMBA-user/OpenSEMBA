@@ -25,7 +25,7 @@ Lin2::Lin2(const CoordinateGroup<>& coordGr,
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        if (!coord->isOf<CoordD3>()) {
+        if (!coord->is<CoordD3>()) {
             cerr << "ERROR @ Lin2::Lin2(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;

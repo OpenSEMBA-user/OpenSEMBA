@@ -75,3 +75,7 @@ PMSurfaceSIBC::printInfo() const {
                 << Z_[i](1,0) << " " << Z_[i](1,1) << endl;
     }
 }
+
+uint PMSurfaceSIBC::getNumberOfPoles() const {
+    return pole_.size();
+}

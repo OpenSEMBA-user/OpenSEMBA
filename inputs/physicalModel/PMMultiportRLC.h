@@ -20,16 +20,14 @@ public:
 	 const double inductance,
 	 const double capacitance);
 	virtual ~PMMultiportRLC();
-	virtual double
-	 getR() const;
-	virtual double
-	 getL() const;
-	virtual double
-	 getC() const;
-	virtual bool
-	 isMultiportRLC() const {return true;}
-	virtual void
-	 printInfo() const;
+
+    ClassBase* clone() const;
+    ClassBase* clone(const uint id) const;
+
+	virtual double getR() const;
+	virtual double	 getL() const;
+	virtual double	 getC() const;
+	virtual void printInfo() const;
 private:
 	double R_, L_, C_;
 };

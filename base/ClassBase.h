@@ -13,7 +13,7 @@ public:
     virtual ClassBase* clone() const = 0;
 
     template<typename T>
-    bool isOf() const {
+    bool is() const {
         if(dynamic_cast<const T*>(this) != nullptr)
             return true;
         return false;
@@ -21,7 +21,7 @@ public:
 
     template<typename T>
     T* castTo() {
-        if(!this->isOf<T>()) {
+        if(!this->is<T>()) {
             return NULL;
         }
         return dynamic_cast<T*>(const_cast<ClassBase*>(this));
@@ -29,7 +29,7 @@ public:
 
     template<typename T>
     const T* castTo() const {
-        if(!this->isOf<T>()) {
+        if(!this->is<T>()) {
             return NULL;
         }
         return dynamic_cast<const T*>(this);

@@ -42,7 +42,7 @@ template<typename T> template<typename T2>
 GroupBase<T2> GroupBase<T>::getGroupOf() const {
     vector<T2*> elems;
     for (unsigned i = 0; i < this->size(); i++)
-        if(this->element_[i]->template isOf<T2>())
+        if(this->element_[i]->template is<T2>())
             elems.push_back(this->element_[i]->template castTo<T2>());
 
     return GroupBase<T2>(elems);
@@ -52,7 +52,7 @@ template<typename T> template<typename T2>
 vector<const T2*> GroupBase<T>::getVectorOf() const {
     vector<const T2*> elems;
     for (unsigned i = 0; i < this->size(); i++)
-        if(this->element_[i]->template isOf<T2>())
+        if(this->element_[i]->template is<T2>())
             elems.push_back(this->element_[i]->template castTo<T2>());
 
     return elems;
@@ -62,7 +62,7 @@ template<typename T> template<typename T2>
 unsigned GroupBase<T>::numberOf() const {
     unsigned res = 0;
     for (unsigned i = 0; i < this->size(); i++)
-        if(this->element_[i]->template isOf<T2>())
+        if(this->element_[i]->template is<T2>())
             res++;
 
     return res;

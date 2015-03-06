@@ -1,7 +1,7 @@
 #ifndef OUTPUTREQUESTGROUP_H_
 #define OUTPUTREQUESTGROUP_H_
 
-#include "OutputRequest.h"
+#include "OutRq.h"
 #include "OutRqFarField.h"
 
 class OutRqGroup : public GroupBase<OutRq> {

@@ -18,9 +18,6 @@
 #include "ProblemSize.h"
 
 #define LABEL_ENDING ':'
-#ifndef GIDPARSER_ERROR
-#define GIDPARSER_ERROR 61594
-#endif
 
 class ParserGiD : public Parser, public ProjectFile {
     friend class SmbData;
@@ -42,22 +39,14 @@ public:
 protected:
     string problemTypePath_;
     ProblemSize pSize_;
-    virtual GlobalProblemData*
-    readProblemData();
-    virtual LayerGroup*
-    readLayers();
-    virtual Mesh*
-    readMesh();
-    virtual EMSourceGroup*
-    readEMSources();
-    virtual OutRqGroup*
-    readOutputRequests();
-    virtual MeshingParameters*
-    readMeshingParameters();
-    virtual PhysicalModelGroup*
-    readMaterials();
-    ProblemSize
-    readProblemSize();
+    virtual GlobalProblemData* readProblemData();
+    virtual LayerGroup* readLayers();
+    virtual Mesh* readMesh();
+    virtual EMSourceGroup* readEMSources();
+    virtual OutRqGroup* readOutputRequests();
+    virtual MeshingParameters* readMeshingParameters();
+    virtual PhysicalModelGroup<>* readMaterials();
+    ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
             const unsigned int id_,
             const string& name) const;
@@ -107,7 +96,7 @@ private:
     SourceOnLine::Type strToNodalType(string label) const;
     SourceOnLine::Hardness strToNodalHardness(string label) const;
     GlobalProblemData::boundType strToBoundType(string label) const;
-    PhysicalModelGroup::Type strToMaterialType(string label) const;
+    PhysicalModelGroup<>::Type strToMaterialType(string label) const;
     PMMultiport::Type strToMultiportType(string label) const;
     Element::Type strToElementType(string label) const;
     OutRq::Type strToOutputType(string label) const;

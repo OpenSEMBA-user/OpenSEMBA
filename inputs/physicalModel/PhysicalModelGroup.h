@@ -17,7 +17,6 @@
 #include "PMPEC.h"
 #include "PMPMC.h"
 #include "PMSMA.h"
-#include "PMVolume.h"
 #include "PMVolumeDispersive.h"
 #include "PMVolumePML.h"
 #include "PMMultiportPredefined.h"
@@ -26,7 +25,8 @@
 #include "PMSurfaceMultilayer.h"
 #include "PMWire.h"
 
-class PhysicalModelGroup : public GroupWithIdBase<PhysicalModel,uint> {
+template<typename P = PhysicalModel>
+class PhysicalModelGroup : public GroupWithIdBase<P,uint> {
 public:
     typedef enum {
         vacuum = 1,
@@ -41,8 +41,14 @@ public:
         multiport = 10,
         undefined = 0
     } Type;
+
     PhysicalModelGroup();
+    PhysicalModelGroup(const vector<P*>&);
+    PhysicalModelGroup(const GroupBase<P>& rhs);
     virtual ~PhysicalModelGroup();
+
+    PhysicalModelGroup<P>& operator=(const GroupBase<P>& rhs);
+
     bool hasPEC() const;
     uint getPECId() const;
     vector<uint> getIds(
@@ -51,7 +57,6 @@ public:
     uint countMultilayers() const;
     uint countClassic() const;
     uint countDispersiveVolumic() const;
-    //	GroupWithIdBase<PMVolumePML,uint> getAssignedPMLs() const;
     void printInfo() const;
 private:
     void getDirection(

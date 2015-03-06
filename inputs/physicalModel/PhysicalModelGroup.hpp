@@ -9,25 +9,17 @@
 #include "PhysicalModelGroup.h"
 #endif
 
-PhysicalModelGroup::PhysicalModelGroup() {
+template<typename P = PhysicalModel>
+PhysicalModelGroup<P>::PhysicalModelGroup() {
 }
 
-PhysicalModelGroup::~PhysicalModelGroup() {
+template<typename P = PhysicalModel>
+PhysicalModelGroup<P>::~PhysicalModelGroup() {
 }
 
-//GroupWithIdBase<PMVolumePML,uint> getAssignedPMLs() const {
-//    GroupWithIdBase<PMVolumePML,uint> pmls, res;
-//    pmls = this->getGroupOf();
-//    for (uint i = 0; i < pmls.size(); i++) {
-//        if (pmls(i)->getOrientation() != PMVolumePML::undefined) {
-//            res.add(pmls(i));
-//        }
-//    }
-//    return res;
-//}
-
+template<typename P = PhysicalModel>
 void
-PhysicalModelGroup::printInfo() const {
+PhysicalModelGroup<P>::printInfo() const {
     cout << "---- Physical Models ----" << endl;
     cout << "Number of physical models: " << size() << endl;
     for (uint i = 0; i < size(); i++) {
@@ -36,8 +28,9 @@ PhysicalModelGroup::printInfo() const {
 }
 
 
+template<typename P = PhysicalModel>
 void
-PhysicalModelGroup::getDirection(
+PhysicalModelGroup<P>::getDirection(
         PMVolumePML::Direction direction[3],
         const uint i) const {
     assert(i < PMVolumePML::possibleDirections);
@@ -49,8 +42,9 @@ PhysicalModelGroup::getDirection(
             && direction[2] == PMVolumePML::none) );
 }
 
+template<typename P = PhysicalModel>
 PMVolumePML::Direction
-PhysicalModelGroup::getDirectionFromInt(
+PhysicalModelGroup<P>::getDirectionFromInt(
         const uint i) const {
     assert(PMVolumePML::plus == 0);
     assert(PMVolumePML::minus == 1);
@@ -67,8 +61,9 @@ PhysicalModelGroup::getDirectionFromInt(
     }
 }
 
+template<typename P = PhysicalModel>
 vector<uint>
-PhysicalModelGroup::getIds(const Condition::Type type) const {
+PhysicalModelGroup<P>::getIds(const Condition::Type type) const {
     vector<uint> res;
     for (uint i = 0; i < size(); i++) {
         if (element_[i]->getConditionType() == type || type == Condition::undefined) {
@@ -79,7 +74,9 @@ PhysicalModelGroup::getIds(const Condition::Type type) const {
 }
 
 
-inline bool PhysicalModelGroup::hasPEC() const {
+template<typename P = PhysicalModel>
+inline bool
+PhysicalModelGroup<P>::hasPEC() const {
     for (uint i = 0; i < size(); i++) {
         if (element_[i]->isPEC()) {
             return true;
@@ -88,7 +85,9 @@ inline bool PhysicalModelGroup::hasPEC() const {
     return false;
 }
 
-inline uint PhysicalModelGroup::getPECId() const {
+template<typename P = PhysicalModel>
+inline uint
+PhysicalModelGroup<P>::getPECId() const {
     for (uint i = 0; i < size(); i++) {
         if (element_[i]->isPEC()) {
             return element_[i]->getId();
@@ -97,7 +96,9 @@ inline uint PhysicalModelGroup::getPECId() const {
     return 0;
 }
 
-inline uint PhysicalModelGroup::countSIBC() const {
+template<typename P = PhysicalModel>
+inline uint
+PhysicalModelGroup<P>::countSIBC() const {
     uint res = 0;
     for (uint i = 0; i < size(); i++) {
         if (element_[i]->isSurfaceImpedance()) {
@@ -107,7 +108,9 @@ inline uint PhysicalModelGroup::countSIBC() const {
     return res;
 }
 
-inline uint PhysicalModelGroup::countMultilayers() const {
+template<typename P = PhysicalModel>
+inline uint
+PhysicalModelGroup<P>::countMultilayers() const {
     uint res = 0;
     for (uint i = 0; i < size(); i++) {
         if (element_[i]->isSurfaceMultilayer()) {
@@ -117,7 +120,9 @@ inline uint PhysicalModelGroup::countMultilayers() const {
     return res;
 }
 
-inline uint PhysicalModelGroup::countClassic() const {
+template<typename P = PhysicalModel>
+inline uint
+PhysicalModelGroup<P>::countClassic() const {
     uint res = 0;
     for (uint i = 0; i < size(); i++) {
         if (element_[i]->isClassic()) {
@@ -127,7 +132,9 @@ inline uint PhysicalModelGroup::countClassic() const {
     return res;
 }
 
-inline uint PhysicalModelGroup::countDispersiveVolumic() const {
+template<typename P = PhysicalModel>
+inline uint
+PhysicalModelGroup<P>::countDispersiveVolumic() const {
     uint res = 0;
     for (uint i = 0; i < size(); i++) {
         if (element_[i]->isDispersive()) {

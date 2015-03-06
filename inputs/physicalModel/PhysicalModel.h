@@ -22,25 +22,7 @@ public:
 	const string& getName() const;
 	void setName(const string& newName);
 
-	bool isPhysicalModel() const {return true;}
-	virtual bool isSurfaceImpedance() const {return false;}
-	virtual bool isSurfaceMultilayer() const {return false;}
-	virtual bool isSurfaceType() const {return false;}
-	virtual bool isSMA() const {return false;}
-	virtual bool isPEC() const {return false;}
-	virtual bool isPMC() const {return false;}
-	virtual bool isPML() const {return false;};
-	virtual bool isVolumic() const {return false;}
-	virtual bool isClassic() const {return false;}
-	virtual bool isDispersive() const {return false;}
-	virtual bool isWire() const {return false;}
-	virtual bool isMultiport() const {return false;}
-	virtual bool isMultiportRLC() const {return false;}
-
 	virtual void printInfo() const;
-
-	virtual ClassBase* clone() const;
-    virtual ClassBase* clone(const uint id) const;
 private:
     string name_;
 };

@@ -163,9 +163,9 @@ ParserGiD::readEMSources() {
     return new EMSourceGroup(dipoles, pws, wps, gen, nodal);
 }
 
-PhysicalModelGroup*
+PhysicalModelGroup<>*
 ParserGiD::readMaterials(){
-    PhysicalModelGroup* res = new PhysicalModelGroup();
+    PhysicalModelGroup<>* res = new PhysicalModelGroup<>();
     string label, value;
     uint materialCount = 0;
     while (!f_in.eof() ) {
@@ -189,7 +189,7 @@ PhysicalModel*
 ParserGiD::readPhysicalModel(const uint id) {
     bool materialFinished = false;
     string name;
-    PhysicalModelGroup::Type type = PhysicalModelGroup::undefined;
+    PhysicalModelGroup<>::Type type = PhysicalModelGroup<>::undefined;
     PMMultiport::Type mpType = PMMultiport::undefined;
     SIBCType surfType = undefinedSIBC;
     string layersStr;
@@ -203,7 +203,7 @@ ParserGiD::readPhysicalModel(const uint id) {
             name = trim(value);
         } else if (label.compare("TypeId")==0) {
             type = strToMaterialType(value);
-            if (type == PhysicalModelGroup::multiport) {
+            if (type == PhysicalModelGroup<>::multiport) {
                 mpType = strToMultiportType(value);
             }
         } else if (label.compare("Permittivity")==0) {
@@ -231,22 +231,22 @@ ParserGiD::readPhysicalModel(const uint id) {
         } else if (label.compare("End of Material")==0) {
             // Creates material.
             switch (type) {
-            case PhysicalModelGroup::PEC:
+            case PhysicalModelGroup<>::PEC:
                 return new PMPEC(id, name);
-            case PhysicalModelGroup::PMC:
+            case PhysicalModelGroup<>::PMC:
                 return new PMPMC(id, name);
-            case PhysicalModelGroup::SMA:
+            case PhysicalModelGroup<>::SMA:
                 return new PMSMA(id, name);
-            case PhysicalModelGroup::PML:
+            case PhysicalModelGroup<>::PML:
                 return new PMVolumePML(id, name);
-            case PhysicalModelGroup::classic:
+            case PhysicalModelGroup<>::classic:
                 if (eC == 0 && mC == 0) {
                     return new PMVolume(id, name, rEps, rMu);
                 }
                 return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
-            case PhysicalModelGroup::elecDispersive:
+            case PhysicalModelGroup<>::elecDispersive:
                 return readDispersiveMatFile(id,name);
-            case PhysicalModelGroup::isotropicsibc:
+            case PhysicalModelGroup<>::isotropicsibc:
                 switch (surfType) {
                 case sibc:
                     return readIsotropicSurfMatFile(id, name);
@@ -256,9 +256,9 @@ ParserGiD::readPhysicalModel(const uint id) {
                     cerr << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
                 }
                 break;
-            case PhysicalModelGroup::wire:
+            case PhysicalModelGroup<>::wire:
                 return new PMWire(id, name, radius, R, L);
-            case PhysicalModelGroup::multiport:
+            case PhysicalModelGroup<>::multiport:
                 if (mpType == PMMultiport::shortCircuit) {
                     return new PMMultiportPredefined(id, name, mpType);
                 } else {
@@ -1320,31 +1320,31 @@ ParserGiD::strToBoundType(string str) const {
     }
 }
 
-PhysicalModelGroup::Type
+PhysicalModelGroup<>::Type
 ParserGiD::strToMaterialType(string str) const {
     str = trim(str);
     if (str.compare("PEC")==0) {
-        return PhysicalModelGroup::PEC;
+        return PhysicalModelGroup<>::PEC;
     } else if (str.compare("PMC")==0) {
-        return PhysicalModelGroup::PMC;
+        return PhysicalModelGroup<>::PMC;
     } else if (str.compare("PML")==0) {
-        return PhysicalModelGroup::PML;
+        return PhysicalModelGroup<>::PML;
     } else if (str.compare("SMA")==0) {
-        return PhysicalModelGroup::SMA;
+        return PhysicalModelGroup<>::SMA;
     } else if (str.compare("Classic")==0) {
-        return PhysicalModelGroup::classic;
+        return PhysicalModelGroup<>::classic;
     } else if (str.compare("Dispersive")==0) {
-        return PhysicalModelGroup::elecDispersive;
+        return PhysicalModelGroup<>::elecDispersive;
     } else if (str.compare("SIBC")==0) {
-        return PhysicalModelGroup::isotropicsibc;
+        return PhysicalModelGroup<>::isotropicsibc;
     } else if (str.compare("Wire")==0) {
-        return PhysicalModelGroup::wire;
+        return PhysicalModelGroup<>::wire;
     } else if (str.find("Conn_") != string::npos) {
-        return PhysicalModelGroup::multiport;
+        return PhysicalModelGroup<>::multiport;
     } else {
         cerr<< "ERROR @ Parser: "
                 << "Unreckognized material label." << endl;
-        return PhysicalModelGroup::undefined;
+        return PhysicalModelGroup<>::undefined;
     }
 }
 

@@ -8,7 +8,7 @@
 #ifndef SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_
 #define SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_
 
-#include "OutputRequest.h"
+#include "OutRq.h"
 
 class OutRqFarField : public OutRq {
 public:

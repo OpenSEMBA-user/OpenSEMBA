@@ -14,6 +14,10 @@ class PMSMA : public PMPredefined {
 public:
     virtual ~PMSMA();
     PMSMA(const unsigned int id, const string name);
+
+    ClassBase* clone() const;
+    ClassBase* clone(const uint id) const;
+
     void printInfo() const;
 };
 
