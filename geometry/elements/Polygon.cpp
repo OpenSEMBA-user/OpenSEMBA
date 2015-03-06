@@ -29,7 +29,7 @@ Polygon::Polygon(const CoordinateGroup<>& cG,
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        if (!coord->isOf<CoordD3>()) {
+        if (!coord->is<CoordD3>()) {
             cerr << "ERROR @ Polygon::Polygon(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;

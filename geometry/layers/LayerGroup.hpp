@@ -14,13 +14,13 @@ LayerGroup<L>::LayerGroup() {
 
 template<typename L>
 LayerGroup<L>::LayerGroup(const vector<L*>& layers)
-:   GroupWithIdBase<L, LayerId>(layers) {
+:   GroupId<L, LayerId>(layers) {
 
 }
 
 template<typename L>
-LayerGroup<L>::LayerGroup(const GroupBase<L>& rhs)
-:   GroupWithIdBase<L, LayerId>(rhs) {
+LayerGroup<L>::LayerGroup(const Group<L>& rhs)
+:   GroupId<L, LayerId>(rhs) {
 
 }
 
@@ -30,12 +30,12 @@ LayerGroup<L>::~LayerGroup() {
 }
 
 template<typename L>
-LayerGroup<L>& LayerGroup<L>::operator=(const GroupBase<L>& rhs) {
+LayerGroup<L>& LayerGroup<L>::operator=(const Group<L>& rhs) {
     if (this == &rhs) {
         return *this;
     }
 
-    GroupWithIdBase<L, LayerId>::operator=(rhs);
+    GroupId<L, LayerId>::operator=(rhs);
 
     return *this;
 }

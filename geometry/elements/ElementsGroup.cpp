@@ -128,7 +128,7 @@ ElementsGroup::reassignPointers(const CoordinateGroup<>& vNew) {
             assert(false);
             exit(ELEMENT_ERROR);
          }
-         if (!coord->isOf<CoordD3>()) {
+         if (!coord->is<CoordD3>()) {
             cerr << "ERROR @ ElementsGroup::reassignPointers(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
@@ -253,7 +253,7 @@ ElementsGroup::areTetrahedrons(const vector<unsigned int>& elemId) const {
    for (unsigned int i = 0; i < nE; i++) {
       const unsigned int id = elemId[i];
       const Element* e = getPtrToId(id);
-      if (!e->isOf<Tet>()) {
+      if (!e->is<Tet>()) {
          return false;
       }
    }
@@ -264,7 +264,7 @@ bool
 ElementsGroup::areTriangles(const vector<unsigned int>& elemId) const {
    unsigned int nE = elemId.size();
    for (unsigned int i = 0; i < nE; i++) {
-      if (!getPtrToId(elemId[i])->isOf<Tri>()) {
+      if (!getPtrToId(elemId[i])->is<Tri>()) {
          return false;
       }
    }

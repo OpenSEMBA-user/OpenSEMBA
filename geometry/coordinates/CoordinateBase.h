@@ -1,7 +1,7 @@
 #ifndef COORDINATEBASE_H_
 #define COORDINATEBASE_H_
 
-#include "ClassWithIdBase.h"
+#include "ClassIdBase.h"
 
 #ifndef COORDINATE_ERROR
 #define COORDINATE_ERROR 13
@@ -9,7 +9,7 @@
 
 CreateId(CoordinateId);
 
-class CoordinateBase : public ClassWithIdBase<CoordinateId> {
+class CoordinateBase : public ClassIdBase<CoordinateId> {
 public:
     CoordinateBase();
     CoordinateBase(const CoordinateId id);

@@ -29,7 +29,7 @@ Tet10::Tet10(const CoordinateGroup<>& coordGr,
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        if (!coord->isOf<CoordD3>()) {
+        if (!coord->is<CoordD3>()) {
             cerr << "ERROR @ Tet10::Tet10(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;

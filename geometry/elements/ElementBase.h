@@ -1,19 +1,20 @@
 #ifndef ELEMENTBASE_H_
 #define ELEMENTBASE_H_
 
-#include "ClassWithIdBase.h"
+#include "ClassIdBase.h"
 
 #ifndef ELEMENT_ERROR
 #define ELEMENT_ERROR 37311347
 #endif
 
+#include "IdBase.h"
 #include "Layer.h"
 
 typedef unsigned int uint;
 
 CreateId(ElementId);
 
-class ElementBase : public ClassWithIdBase<ElementId> {
+class ElementBase : public ClassIdBase<ElementId> {
 public:
     enum Type {
 		undefined,

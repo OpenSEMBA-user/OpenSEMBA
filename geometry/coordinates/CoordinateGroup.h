@@ -16,7 +16,7 @@ using namespace std;
 #include "CoordinateBase.h"
 #include "Coordinate.h"
 
-#include "GroupWithIdBase.h"
+#include "GroupId.h"
 
 struct lexCompareCoord {
     bool operator() (const CoordD3* lhs, const CoordD3* rhs) const {
@@ -47,25 +47,23 @@ struct lexCompareCoord {
 };
 
 template<typename C = CoordinateBase>
-class CoordinateGroup : public GroupWithIdBase<C, CoordinateId> {
+class CoordinateGroup : public GroupId<C, CoordinateId> {
 public:
     CoordinateGroup();
     CoordinateGroup(const vector<C*>&);
     CoordinateGroup(const vector<CVecD3>&);
-    CoordinateGroup(const GroupBase<C>& rhs);
+    CoordinateGroup(const Group<C>& rhs);
     virtual ~CoordinateGroup();
     
-    CoordinateGroup<C>& operator=(const GroupBase<C>& rhs);
+    CoordinateGroup<C>& operator=(const Group<C>& rhs);
     
     const CoordD3* get(const CVecD3& pos) const;
     const CoordI3* get(const CVecI3& pos) const;
     
-    const C*          add(C* newElem);
-    vector<const C* > add(const vector<C*>&);
-    const C*          add(const CVecD3& newPosition,
-                          const bool canOverlap = false);
-    vector<const C* > add(const vector<CVecD3>& newPositions,
-                          const bool canOverlap = false);
+    void add(C* newElem , bool newId = false);
+    void add(vector<C*>&, bool newId = false);
+    C*         add(const CVecD3&        , const bool canOverlap = false);
+    vector<C*> add(const vector<CVecD3>&, const bool canOverlap = false);
     
     void applyScalingFactor(const double factor);
     
@@ -75,7 +73,6 @@ private:
     multiset<const CoordD3*, lexCompareCoord> index_;
     
     void buildIndex(const vector<C*>& coords);
-    void buildIndex(const vector<const C*>& coords);
 };
 
 #include "CoordinateGroup.hpp"

@@ -467,7 +467,7 @@ ParserGiD::readMeshingParameters() {
                     CoordinateId id(atoi(value.c_str()));
                     const CoordinateBase* coord = cG_->getPtrToId(id);
                     if(coord != NULL) {
-                        if(coord->isOf<CoordD3>()) {
+                        if(coord->is<CoordD3>()) {
                             locationInMeshIsSet = true;
                             locationInMesh = coord->castTo<CoordD3>()->pos();
                         }
@@ -608,12 +608,7 @@ ParserGiD::readCoordinates() {
                 << "End of coordinates label not found." << endl;
     }
     
-    CoordinateGroup<>* cG = new CoordinateGroup<>(coord);
-    
-    for(unsigned i = 0; i < coord.size(); i++)
-        delete coord[i];
-    
-    return cG;
+    return new CoordinateGroup<>(coord);
 }
 
 
