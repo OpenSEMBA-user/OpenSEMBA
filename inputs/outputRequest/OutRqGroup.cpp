@@ -1,7 +1,7 @@
-
-#ifndef OUTPUTREQUESTGROUP_H_
 #	include "OutRqGroup.h"
-#endif
+
+OutRqGroup::OutRqGroup() {
+}
 
 OutRqGroup::OutRqGroup(
  const vector<OutRq>& in) {
@@ -51,6 +51,8 @@ OutRqGroup::getWithType(
 	assert(false);
 	return NULL;
 }
+
+
 
 void
 OutRqGroup::printInfo() const {

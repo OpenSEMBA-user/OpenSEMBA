@@ -91,19 +91,19 @@ OutRq::operator=(const OutRq& rhs) {
 	return *this;
 }
 
-inline const string& OutRq::getName() const {
+const string& OutRq::getName() const {
     return name_;
 }
 
-inline OutRq::Type OutRq::getOutputType() const {
+OutRq::Type OutRq::getOutputType() const {
     return outputType_;
 }
 
-inline const vector<unsigned int>& OutRq::getElem() const {
+const vector<unsigned int>& OutRq::getElem() const {
     return elem_;
 }
 
-inline const BoxD3& OutRq::getBound() const {
+const BoxD3& OutRq::getBound() const {
     assert(usingBound_);
     return bound_;
 }

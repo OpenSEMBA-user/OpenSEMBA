@@ -15,13 +15,12 @@ public:
 	PMMultiportPredefined(
 	 const uint idIn,
 	 const string nameIn,
-	 const PMMultiport::Type
-	 );
+	 const PMMultiport::Type);
+	virtual ~PMMultiportPredefined();
 
     virtual ClassBase* clone() const;
     virtual ClassBase* clone(const uint id) const;
 
-	virtual ~PMMultiportPredefined();
 	virtual void printInfo() const;
 };
 

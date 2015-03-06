@@ -427,7 +427,7 @@ ParserGiD::readMeshingParameters() {
                     CoordinateId id(atoi(value.c_str()));
                     const CoordinateBase* coord = cG_->getPtrToId(id);
                     if(coord != NULL) {
-                        if(coord->isOf<CoordD3>()) {
+                        if(coord->is<CoordD3>()) {
                             locationInMeshIsSet = true;
                             locationInMesh = coord->castTo<CoordD3>()->pos();
                         }

@@ -22,27 +22,27 @@ OutRqFarField::OutRqFarField(
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 
-inline double OutRqFarField::getStepPhi() const {
+double OutRqFarField::getStepPhi() const {
     return stepPhi_;
 }
 
-inline double OutRqFarField::getStepTheta() const {
+double OutRqFarField::getStepTheta() const {
     return stepTheta_;
 }
 
-inline double OutRqFarField::getFinalPhi() const {
+double OutRqFarField::getFinalPhi() const {
     return finalPhi_;
 }
 
-inline double OutRqFarField::getFinalTheta() const {
+double OutRqFarField::getFinalTheta() const {
     return finalTheta_;
 }
 
-inline double OutRqFarField::getInitialPhi() const {
+double OutRqFarField::getInitialPhi() const {
     return initialPhi_;
 }
 
-inline double OutRqFarField::getInitialTheta() const {
+double OutRqFarField::getInitialTheta() const {
     return initialTheta_;
 }
 
