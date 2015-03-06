@@ -1,9 +1,9 @@
 #include "OutputRequest.h"
 
-OutputRequest::OutputRequest(
+OutRq::OutRq(
  const Domain& domain,
  const Element::Type elementType,
- const OutputRequest::Type outputType,
+ const OutRq::Type outputType,
  const string& name,
  const vector<unsigned int>& elements_) : Condition(elementType), Domain(domain) {
 	outputType_ = outputType;
@@ -12,10 +12,10 @@ OutputRequest::OutputRequest(
 	elem_ = elements_;
 }
 
-OutputRequest::OutputRequest(
+OutRq::OutRq(
  const Domain& domain,
  const Element::Type elementType,
- const OutputRequest::Type outputType,
+ const OutRq::Type outputType,
  const string& name,
  const BoxD3& box) : Condition(elementType), Domain(domain) {
 	outputType_  = outputType;
@@ -25,7 +25,7 @@ OutputRequest::OutputRequest(
 }
 
 string
-OutputRequest::outputTypeStr() const {
+OutRq::outputTypeStr() const {
 	switch (outputType_) {
 	case electricField:
 		return "Electric field";
@@ -55,7 +55,7 @@ OutputRequest::outputTypeStr() const {
 }
  
 string
-OutputRequest::elementTypeStr() const {
+OutRq::elementTypeStr() const {
 	string res;
 	switch (getElementType()) {
 	case Element::node:
@@ -76,8 +76,8 @@ OutputRequest::elementTypeStr() const {
 	return res;
 }
 
-OutputRequest&
-OutputRequest::operator=(const OutputRequest& rhs) {
+OutRq&
+OutRq::operator=(const OutRq& rhs) {
 	if (this == &rhs) {
 		return *this;
 	}
@@ -91,25 +91,25 @@ OutputRequest::operator=(const OutputRequest& rhs) {
 	return *this;
 }
 
-inline const string& OutputRequest::getName() const {
+inline const string& OutRq::getName() const {
     return name_;
 }
 
-inline OutputRequest::Type OutputRequest::getOutputType() const {
+inline OutRq::Type OutRq::getOutputType() const {
     return outputType_;
 }
 
-inline const vector<unsigned int>& OutputRequest::getElem() const {
+inline const vector<unsigned int>& OutRq::getElem() const {
     return elem_;
 }
 
-inline const BoxD3& OutputRequest::getBound() const {
+inline const BoxD3& OutRq::getBound() const {
     assert(usingBound_);
     return bound_;
 }
 
 void
-OutputRequest::printInfo() const {
+OutRq::printInfo() const {
 	cout<< "--- Output request instance ---" << endl;
 	cout<< "Name: " << name_.c_str() << endl;
 	Domain::printInfo();
@@ -125,7 +125,7 @@ OutputRequest::printInfo() const {
 }
 
 bool
-OutputRequest::isSimilar(const OutputRequest& rhs) const {
+OutRq::isSimilar(const OutRq& rhs) const {
 	bool isSimilar = true;
 	isSimilar &= name_ == rhs.name_;
 	isSimilar &= outputType_ == rhs.outputType_;
@@ -135,7 +135,7 @@ OutputRequest::isSimilar(const OutputRequest& rhs) const {
 }
 
 void
-OutputRequest::setAdditionalElems(const vector<uint> elems) {
+OutRq::setAdditionalElems(const vector<uint> elems) {
 	for (uint i = 0; i < elems.size(); i++) {
 		elem_.push_back(elems[i]);
 	}

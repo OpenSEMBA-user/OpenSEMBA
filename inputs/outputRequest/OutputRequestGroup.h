@@ -2,12 +2,14 @@
 #define OUTPUTREQUESTGROUP_H_
 
 #include "OutputRequest.h"
+#include "OutRqFarField.h"
 
-class OutputRequestGroup : GroupBase<OutputRequest> {
+class OutRqGroup : public GroupBase<OutRq> {
 public:
-	OutputRequestGroup(const vector<OutputRequest>&);
+    OutRqGroup();
+	OutRqGroup(const vector<OutRq>&);
 	uint countWithType(const Element::Type) const;
-	const OutputRequest* getWithType(const uint i, const Element::Type type) const;
+	const OutRq* getWithType(const uint i, const Element::Type type) const;
 	void printInfo() const;
 };
 

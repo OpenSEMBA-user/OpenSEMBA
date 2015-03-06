@@ -47,7 +47,7 @@ protected:
     void writeElement(int elemId, int nId[]) const;
     void endElements() const;
     void endMesh() const;
-    GiD_ResultType getGiDResultType(OutputRequest::Type type) const;
+    GiD_ResultType getGiDResultType(OutRq::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
 private:
     static int numberOfOutputGiD_;

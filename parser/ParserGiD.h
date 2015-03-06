@@ -50,7 +50,7 @@ protected:
     readMesh();
     virtual EMSourceGroup*
     readEMSources();
-    virtual OutputRequestGroup*
+    virtual OutRqGroup*
     readOutputRequests();
     virtual MeshingParameters*
     readMeshingParameters();
@@ -77,7 +77,7 @@ protected:
     vector<Tri3> readTri3Elements(const CoordinateGroup<>& v);
     vector<Lin2> readLin2Elements(const CoordinateGroup<>& v);
     Grid3* readCartesianGrid();
-    vector<OutputRequest> readOutputRequestInstances();
+    void readOutRqInstances(OutRqGroup* res);
     void getNextLabelAndValue(string& label, string& value);
 private:
     typedef enum {
@@ -110,7 +110,7 @@ private:
     PhysicalModelGroup::Type strToMaterialType(string label) const;
     PMMultiport::Type strToMultiportType(string label) const;
     Element::Type strToElementType(string label) const;
-    OutputRequest::Type strToOutputType(string label) const;
+    OutRq::Type strToOutputType(string label) const;
     SIBCType strToSIBCType(string str) const;
     GiDOutputType strToGidOutputType(string label) const;
     Domain strToDomain(string line) const;

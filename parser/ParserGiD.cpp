@@ -273,9 +273,9 @@ ParserGiD::readPhysicalModel(const uint id) {
     }
 }
 
-OutputRequestGroup*
+OutRqGroup*
 ParserGiD::readOutputRequests() {
-    vector<OutputRequest> oR;
+    OutRqGroup* res = new OutRqGroup();
     bool finished;
     bool found = false;
     string line, label, value;
@@ -287,27 +287,23 @@ ParserGiD::readOutputRequests() {
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
                 if (label.compare("Output request instance")==0) {
-                    vector<OutputRequest> aux = readOutputRequestInstances();
-                    for (uint i = 0; i < aux.size(); i++) {
-                        oR.push_back(aux[i]);
-                    }
+                    readOutRqInstances(res);
                 } else if (label.compare("End of Output Requests")==0) {
                     finished = true;
                 }
             }
         }
     }
-    return (new OutputRequestGroup(oR));
+    return res;
 }
 
-vector<OutputRequest>
-ParserGiD::readOutputRequestInstances() {
+void
+ParserGiD::readOutRqInstances(OutRqGroup* res) {
     GiDOutputType gidOutputType = ParserGiD::undefined;
     string line, label, value;
-    vector<OutputRequest> res;
     bool finished = false;
-    string outputName;
-    OutputRequest::Type outputType = OutputRequest::undefined;
+    string name;
+    OutRq::Type type = OutRq::undefined;
     Domain domain;
     vector<uint> elemVec;
     uint nE = 0;
@@ -319,9 +315,9 @@ ParserGiD::readOutputRequestInstances() {
             nE = atoi(value.c_str());
             for (uint i = 0; i < nE; i++) {
                 getNextLabelAndValue(label,value);
-                outputName = trim(value);
+                name = trim(value);
                 getNextLabelAndValue(label,value);
-                outputType = strToOutputType(trim(value));
+                type = strToOutputType(trim(value));
                 getNextLabelAndValue(label,value);
                 domain = strToDomain(value);
                 switch (gidOutputType) {
@@ -329,27 +325,29 @@ ParserGiD::readOutputRequestInstances() {
                     getNextLabelAndValue(label,value);
                     elemVec.clear();
                     elemVec.push_back(atoi(value.c_str()));
-                    res.push_back(OutputRequest(domain, Element::node,
-                            outputType, outputName, elemVec));
+                    res->add(new OutRq(
+                            domain, Element::node, type, name, elemVec));
                     break;
                 case ParserGiD::outRqOnLine:
                     getNextLabelAndValue(label,value);
                     elemVec.clear();
                     elemVec.push_back(atoi(value.c_str()));
-                    res.push_back(OutputRequest(domain, Element::line,
-                            outputType, outputName, elemVec));
+                    res->add(new OutRq(domain, Element::line,
+                            type, name, elemVec));
                     break;
                 case ParserGiD::outRqOnSurface:
                     getNextLabelAndValue(label,value);
                     elemVec.clear();
                     elemVec.push_back(atoi(value.c_str()));
-                    res.push_back(OutputRequest(domain, Element::surface,
-                            outputType, outputName, elemVec));
+                    res->add(new OutRq(
+                            domain, Element::surface,
+                            type, name, elemVec));
                     break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
-                    res.push_back(OutputRequest(domain, Element::volume,
-                            outputType, outputName,
+                    res->add(
+                            new OutRq(domain, Element::volume,
+                            type, name,
                             BoxD3(strToBound(line))));
                     break;
                 case ParserGiD::farField:
@@ -359,8 +357,9 @@ ParserGiD::readOutputRequestInstances() {
                     double iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
-                    res.push_back(OutputRequest(domain, Element::volume,
-                            outputType, outputName, bbox,
+                    res->add(new OutRqFarField(
+                            domain, Element::volume,
+                            name, bbox,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
 
                 }
@@ -368,7 +367,7 @@ ParserGiD::readOutputRequestInstances() {
                 case ParserGiD::undefined:
                     cerr<< "ERROR @ GiDParser: "
                     << "Unreckognized GiD Output request type:"
-                    << outputType << endl;
+                    << type << endl;
                     break;
                 }
             } // End of loop running over the elements.
@@ -379,7 +378,6 @@ ParserGiD::readOutputRequestInstances() {
                     << "Label not identified: " << label << endl;
         } // End of condition comparing labels.
     }
-    return res;
 }
 
 MeshingParameters*
@@ -1226,35 +1224,35 @@ ParserGiD::strToElementType(string str) const {
     }
 }
 
-OutputRequest::Type
+OutRq::Type
 ParserGiD::strToOutputType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
-        return OutputRequest::electricField;
+        return OutRq::electricField;
     } else if (str.compare("magneticField")==0) {
-        return OutputRequest::magneticField;
+        return OutRq::magneticField;
     } else if (str.compare("electricFieldNormals")==0) {
-        return OutputRequest::electricFieldNormals;
+        return OutRq::electricFieldNormals;
     } else if (str.compare("magneticFieldNormals")==0) {
-        return OutputRequest::magneticFieldNormals;
+        return OutRq::magneticFieldNormals;
         //	} else if (str.compare("powerDensity")==0) {
         //		return OutputRequest::powerDensity;
         //	} else if (str.compare("power")==0) {
         //		return OutputRequest::power;
     } else if (str.compare("current")==0) {
-        return OutputRequest::current;
+        return OutRq::current;
     } else if (str.compare("voltage")==0) {
-        return OutputRequest::voltage;
+        return OutRq::voltage;
     } else if (str.compare("bulkCurrentElectric")==0) {
-        return OutputRequest::bulkCurrentElectric;
+        return OutRq::bulkCurrentElectric;
     } else if (str.compare("bulkCurrentMagnetic")==0) {
-        return OutputRequest::bulkCurrentMagnetic;
+        return OutRq::bulkCurrentMagnetic;
     } else if (str.compare("farField")==0) {
-        return OutputRequest::farField;
+        return OutRq::farField;
     } else {
         cerr<< "ERROR @ GiDParser::readOutputRequestInstance(): "
                 << "Unrecognized output type: " << str << endl;
-        return OutputRequest::undefined;
+        return OutRq::undefined;
     }
 }
 

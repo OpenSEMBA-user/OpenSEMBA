@@ -153,11 +153,11 @@ OutputGiD::writeGaussPoints() const {
 }
 
 GiD_ResultType OutputGiD::getGiDResultType(
-        OutputRequest::Type type) const {
+        OutRq::Type type) const {
     switch (type) {
-    case OutputRequest::electricField:
+    case OutRq::electricField:
         return GiD_ResultType::GiD_Vector;
-    case OutputRequest::magneticField:
+    case OutRq::magneticField:
         return GiD_ResultType::GiD_Vector;
     default:
         assert(false);

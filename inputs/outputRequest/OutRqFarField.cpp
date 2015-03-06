@@ -18,7 +18,7 @@ OutRqFarField::OutRqFarField(
  const BoxD3& box,
  const double iTh, const double fTh, const double sTh,
  const double iPhi, const double fPhi, const double sPhi)
-: OutputRequest(domain, elementType, farField, name, box) {
+: OutRq(domain, elementType, farField, name, box) {
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 
@@ -47,7 +47,7 @@ inline double OutRqFarField::getInitialTheta() const {
 }
 
 bool OutRqFarField::isSimilar(const OutRqFarField& rhs) const {
-    bool isSimilar = OutputRequest::isSimilar(rhs);
+    bool isSimilar = OutRq::isSimilar(rhs);
     isSimilar &= initialTheta_ == rhs.initialTheta_;
     isSimilar &= finalTheta_ == rhs.finalTheta_;
     isSimilar &= stepTheta_ == rhs.stepTheta_;

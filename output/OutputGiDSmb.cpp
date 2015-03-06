@@ -108,7 +108,7 @@ OutputGiDSmb::writeMeshWithIds(
 
 void
 OutputGiDSmb::writeOutputRequestsMesh() {
-    for (uint i = 0; i < smb_->outputRequests->count(); i++) {
+    for (uint i = 0; i < smb_->outputRequests->size(); i++) {
         //        const OutputRequest* outRq = smb_->outputRequests->get(i);
         //      bool mshExist = false;
         //      for (uint j = 0; j < result_.size(); j++) {

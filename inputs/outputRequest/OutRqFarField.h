@@ -10,7 +10,7 @@
 
 #include "OutputRequest.h"
 
-class OutRqFarField : public OutputRequest {
+class OutRqFarField : public OutRq {
 public:
     virtual ~OutRqFarField();
     OutRqFarField(

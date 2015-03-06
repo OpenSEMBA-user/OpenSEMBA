@@ -12,7 +12,7 @@
 
 using namespace std;
 
-class OutputRequest : public Condition, public Domain, public ClassBase {
+class OutRq : public Condition, public Domain, public ClassBase {
 public:
     typedef enum {
         undefined,
@@ -37,24 +37,24 @@ public:
         energy,
         farField
     } Type;
-    OutputRequest(
+    OutRq(
             const Domain& domain,
             const Element::Type elementType,
-            const OutputRequest::Type outputType,
+            const OutRq::Type outputType,
             const string& name,
             const vector<uint>& elements);
-    OutputRequest(
+    OutRq(
             const Domain& domain,
             const Element::Type elementType,
-            const OutputRequest::Type outputType_,
+            const OutRq::Type outputType_,
             const string& name_,
             const BoxD3& box);
-    OutputRequest& operator=(const OutputRequest& rhs);
-    virtual bool isSimilar(const OutputRequest& rhs) const;
+    OutRq& operator=(const OutRq& rhs);
+    virtual bool isSimilar(const OutRq& rhs) const;
     string outputTypeStr() const;
     string elementTypeStr() const;
     const string& getName() const;
-    OutputRequest::Type getOutputType() const;
+    OutRq::Type getOutputType() const;
     const vector<uint>& getElem() const;
     const BoxD3& getBound() const;
     void setAdditionalElems(const vector<uint> elems);
@@ -65,7 +65,7 @@ public:
 
 private:
     string name_;
-    OutputRequest::Type outputType_;
+    OutRq::Type outputType_;
     bool usingBound_;
     BoxD3 bound_;
     vector<uint> elem_;

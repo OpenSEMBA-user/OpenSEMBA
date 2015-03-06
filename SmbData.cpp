@@ -30,7 +30,7 @@ SmbData::operator=(const SmbData& rhs) {
    gData = new GlobalProblemData(*rhs.gData);
    pMGroup = new PhysicalModelGroup(*rhs.pMGroup);
    emSources = new EMSourceGroup(*rhs.emSources);
-   outputRequests = new OutputRequestGroup(*rhs.outputRequests);
+   outputRequests = new OutRqGroup(*rhs.outputRequests);
    meshingParams = new MeshingParameters(*rhs.meshingParams);
    return *this;
 }

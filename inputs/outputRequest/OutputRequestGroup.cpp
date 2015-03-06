@@ -2,8 +2,8 @@
 #	include "OutputRequestGroup.h"
 #endif
 
-OutputRequestGroup::OutputRequestGroup(
- const vector<OutputRequest>& in) {
+OutRqGroup::OutRqGroup(
+ const vector<OutRq>& in) {
 	for (uint i = 0; i < in.size(); i++) {
 		// Checks if exists similar output and combines elements if so.
 		bool isSimilar = false;
@@ -14,13 +14,13 @@ OutputRequestGroup::OutputRequestGroup(
 			}
 		}
 		if (!isSimilar) {
-			add(new OutputRequest(in[i]));
+			add(new OutRq(in[i]));
 		}
 	}
 }
 
 uint
-OutputRequestGroup::countWithType(const Element::Type param) const {
+OutRqGroup::countWithType(const Element::Type param) const {
 	uint res = 0;
 	for (uint i = 0; i < size(); i++) {
 		if (element_[i]->getElementType() == param) {
@@ -30,8 +30,8 @@ OutputRequestGroup::countWithType(const Element::Type param) const {
 	return res;
 }
 
-const OutputRequest*
-OutputRequestGroup::getWithType(
+const OutRq*
+OutRqGroup::getWithType(
  const uint j,
  const Element::Type param) const {
 	assert(j < countWithType(param));
@@ -52,7 +52,7 @@ OutputRequestGroup::getWithType(
 }
 
 void
-OutputRequestGroup::printInfo() const {
+OutRqGroup::printInfo() const {
 	cout<< " --- OutputRequestGroup info ---" << endl;
 	for (unsigned int i = 0; i < element_.size(); i++) {
 		element_[i]->printInfo();

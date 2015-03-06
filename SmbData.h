@@ -23,7 +23,7 @@ public:
     LayerGroup* layers;
     PhysicalModelGroup* pMGroup;
     EMSourceGroup* emSources;
-    OutputRequestGroup* outputRequests;
+    OutRqGroup* outputRequests;
     MeshingParameters* meshingParams;
     Mesh* mesh;
     SmbData();
