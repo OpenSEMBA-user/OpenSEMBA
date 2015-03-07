@@ -31,6 +31,8 @@ typedef enum {
     U = 1
 } CartesianBound;
 
+typedef unsigned int uint;
+
 template <class T, int D>
 class CartesianVector {
 public:

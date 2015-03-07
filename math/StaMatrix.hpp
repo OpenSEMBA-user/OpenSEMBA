@@ -1,3 +1,5 @@
+#include "StaMatrix.h"
+
 template <class T, unsigned int NROWS, unsigned int NCOLS>
 StaMatrix<T,NROWS,NCOLS>::StaMatrix() {
    for (unsigned int i = 0; i < NROWS*NCOLS; i++) {

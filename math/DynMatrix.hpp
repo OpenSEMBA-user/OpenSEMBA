@@ -1,3 +1,4 @@
+#include "DynMatrix.h"
 
 template <class T>
 DynMatrix<T>::DynMatrix() {

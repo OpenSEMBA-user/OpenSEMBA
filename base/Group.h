@@ -7,6 +7,8 @@
 
 using namespace std;
 
+typedef unsigned int uint;
+
 template<typename T>
 class Group {
 public:
