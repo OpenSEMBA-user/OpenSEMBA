@@ -17,11 +17,9 @@ public:
          const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Tri6(const Tri6& rhs);
-    Tri6(const ElementId id_, const Tri6& rhs);
     virtual ~Tri6();
 
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+    ClassBase* clone() const;
 
     bool isCurved   () const;
     bool isQuadratic() const { return true; }

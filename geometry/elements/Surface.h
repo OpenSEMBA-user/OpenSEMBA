@@ -20,7 +20,6 @@ public:
             const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Surface(const Surface& rhs);
-    Surface(const ElementId id, const Surface& rhs);
     virtual ~Surface();
     
 	bool isContainedInPlane() const;

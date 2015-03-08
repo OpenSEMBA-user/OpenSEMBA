@@ -19,11 +19,9 @@ public:
           const LayerId layerId = LayerId(0),
           const uint matId   = 0);
     Quad4(const Quad4& rhs);
-    Quad4(const ElementId id, const Quad4& rhs);
 	virtual ~Quad4();
     
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+	ClassBase* clone() const;
     
 	uint numberOfCoordinates() const { return 4; }
     

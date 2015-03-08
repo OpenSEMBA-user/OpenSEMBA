@@ -16,11 +16,9 @@ public:
          const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Tri3(const Tri3& rhs);
-    Tri3(const ElementId id, const Tri3& rhs);
 	virtual ~Tri3();
     
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+	ClassBase* clone() const;
     
 	uint numberOfCoordinates() const { return 3; }
     

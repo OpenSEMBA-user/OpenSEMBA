@@ -18,7 +18,6 @@ public:
          const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Quad(const Quad& rhs);
-    Quad(const ElementId id, const Quad& rhs);
     virtual ~Quad();
     
 	uint numberOfFaces   () const { return 4; }

@@ -20,11 +20,6 @@ Element::Element(const Element& rhs)
 
 }
 
-Element::Element(const ElementId id, const Element& rhs)
-:   ElementBase(id, rhs) {
-
-}
-
 Element::~Element() {
 
 }

@@ -25,11 +25,9 @@ public:
          const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Hex8(const Hex8& rhs);
-    Hex8(const ElementId id, const Hex8& rhs);
     virtual ~Hex8();
 
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+    ClassBase* clone() const;
 
     bool        isRegular() const;
     inline bool isQuadratic() const { return false; }

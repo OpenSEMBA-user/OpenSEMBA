@@ -23,11 +23,9 @@ public:
          const LayerId layerId = LayerId(0),
          const uint matId = 0);
     Lin2(const Lin2& rhs);
-    Lin2(const ElementId id, const Lin2& rhs);
 	virtual ~Lin2();
     
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+    ClassBase* clone() const;
     
     inline uint numberOfCoordinates() const { return 2; }
     

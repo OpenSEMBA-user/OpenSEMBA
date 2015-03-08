@@ -61,24 +61,12 @@ Tet4::Tet4(const Tet4& rhs)
     }
 }
 
-Tet4::Tet4(const ElementId id, const Tet4& rhs)
-:   Tet(id, rhs) {
-
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = rhs.v_[i];
-    }
-}
-
 Tet4::~Tet4() {
 
 }
 
 ClassBase* Tet4::clone() const {
     return new Tet4(*this);
-}
-
-ClassBase* Tet4::clone(const ElementId id) const {
-    return new Tet4(id, *this);
 }
 
 bool Tet4::isInnerPoint(const CVecD3& pos) const {

@@ -30,7 +30,6 @@ public:
                 const LayerId layerId = LayerId(0),
                 const uint matId   = 0);
     ElementBase(const ElementBase& rhs);
-    ElementBase(const ElementId id, const ElementBase& rhs);
     virtual ~ElementBase();
     
     virtual bool isCurved   () const { return false; }

@@ -27,7 +27,7 @@ OutputGiDSmb::~OutputGiDSmb() {
 void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
-    vector<LayerId> layId = smb_->layers->getIds();
+    vector<LayerId> layId = smb_->layers->getIdsOf<Layer>();
     vector<uint> matId = smb_->pMGroup->getIds();
     for (uint i = 0; i < layId.size(); i++) {
         for (uint j = 0; j < matId.size(); j++) {

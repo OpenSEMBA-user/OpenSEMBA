@@ -48,24 +48,12 @@ Quad4::Quad4(const Quad4& rhs)
     }
 }
 
-Quad4::Quad4(const ElementId id, const Quad4& rhs)
-:   Quad(id, rhs) {
-    
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = rhs.v_[i];
-    }
-}
-
 Quad4::~Quad4() {
     
 }
 
 ClassBase* Quad4::clone() const {
     return new Quad4(*this);
-}
-
-ClassBase* Quad4::clone(const ElementId id) const {
-    return new Quad4(id, *this);
 }
 
 const CoordD3* Quad4::getVertex(const uint i) const {

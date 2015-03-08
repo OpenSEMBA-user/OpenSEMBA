@@ -25,11 +25,6 @@ Line::Line(const Line& rhs)
 
 }
 
-Line::Line(const ElementId id, const Line& rhs)
-:   Element(id, rhs) {
-
-}
-
 Line::~Line() {
 
 }

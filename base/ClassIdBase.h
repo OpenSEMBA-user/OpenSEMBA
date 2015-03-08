@@ -20,9 +20,6 @@ public:
 
     Id getId() const;
 
-    virtual ClassBase* clone()            const = 0;
-    virtual ClassBase* clone(const Id id) const = 0;
-
 protected:
     void setId(const Id id);
 

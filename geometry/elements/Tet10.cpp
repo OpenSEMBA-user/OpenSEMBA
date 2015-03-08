@@ -50,24 +50,12 @@ Tet10::Tet10(const Tet10& rhs)
     }
 }
 
-Tet10::Tet10(const ElementId id, const Tet10& rhs)
-:   Tet(id, rhs) {
-
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = rhs.v_[i];
-    }
-}
-
 Tet10::~Tet10() {
 
 }
 
 ClassBase* Tet10::clone() const {
     return new Tet10(*this);
-}
-
-ClassBase* Tet10::clone(const ElementId id) const {
-    return new Tet10(id, *this);
 }
 
 bool Tet10::isCurved() const {

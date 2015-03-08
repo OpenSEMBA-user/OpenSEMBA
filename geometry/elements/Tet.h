@@ -20,7 +20,6 @@ public:
         const LayerId layerId = LayerId(0),
         const uint matId   = 0);
     Tet(const Tet& rhs);
-    Tet(const ElementId id, const Tet& rhs);
     virtual ~Tet();
 
     virtual bool isCurvedFace(const uint face) const = 0;

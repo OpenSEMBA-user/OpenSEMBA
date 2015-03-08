@@ -24,10 +24,6 @@ ClassBase* Layer::clone() const {
    return new Layer(*this);
 }
 
-ClassBase* Layer::clone(const LayerId id) const {
-   return new Layer(id, getName());
-}
-
 string Layer::getName() const {
     return name_;
 }

@@ -20,11 +20,9 @@ public:
             const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Polygon(const Polygon& rhs);
-    Polygon(const ElementId id, const Polygon& rhs);
 	virtual ~Polygon();
     
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+    ClassBase* clone() const;
     
 	uint numberOfFaces      () const;
 	uint numberOfVertices   () const;

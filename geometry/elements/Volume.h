@@ -20,7 +20,6 @@ public:
            const LayerId layerId = LayerId(0),
            const uint matId   = 0);
     Volume(const Volume& rhs);
-    Volume(const ElementId id, const Volume& rhs);
     virtual ~Volume();
     
 	bool isLocalFace(const uint f,

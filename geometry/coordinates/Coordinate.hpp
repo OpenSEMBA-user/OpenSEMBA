@@ -37,11 +37,6 @@ ClassBase* Coordinate<T,D>::clone() const {
    return new Coordinate<T,D>(*this);
 }
 
-template <class T, int D>
-ClassBase* Coordinate<T,D>::clone(const CoordinateId id) const {
-   return new Coordinate<T,D>(id,pos());
-}
-
 template<class T, int D>
 Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
     if (this == &rhs)

@@ -23,13 +23,6 @@ ElementBase::ElementBase(const ElementBase& rhs)
 
 }
 
-ElementBase::ElementBase(const ElementId id, const ElementBase& rhs)
-:   ClassIdBase<ElementId>(id),
-    layerId_(rhs.layerId_),
-    matId_  (rhs.matId_  ) {
-
-}
-
 ElementBase::~ElementBase() {
 
 }

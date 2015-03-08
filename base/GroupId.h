@@ -20,6 +20,9 @@ public:
 
     const T* getPtrToId(const Id id) const;
 
+    template<class T2>
+    vector<Id> getIdsOf() const;
+
     void add(T* newElem , bool newId = false);
     void add(vector<T*>&, bool newId = false);
 

@@ -36,27 +36,12 @@ Polyhedron::Polyhedron(const Polyhedron& rhs)
     }
 }
 
-Polyhedron::Polyhedron(const ElementId id, const Polyhedron& rhs)
-:   Volume(id, rhs) {
-
-    face_ = rhs.face_;
-    for (uint f = 0; f < numberOfFaces(); f++) {
-        for (uint i = 0; i < face_[f]->numberOfCoordinates(); i++) {
-            addV(face_[f]->getV(i));
-        }
-    }
-}
-
 Polyhedron::~Polyhedron() {
 
 }
 
 ClassBase* Polyhedron::clone() const {
     return new Polyhedron(*this);
-}
-
-ClassBase* Polyhedron::clone(const ElementId id) const {
-    return new Polyhedron(id, *this);
 }
 
 bool Polyhedron::isCurvedFace(const uint f) const {

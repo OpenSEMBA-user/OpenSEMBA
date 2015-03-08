@@ -19,11 +19,9 @@ public:
                const LayerId layerId = LayerId(0),
                const uint matId   = 0);
     Polyhedron(const Polyhedron& rhs);
-    Polyhedron(const ElementId id, const Polyhedron& rhs);
     virtual ~Polyhedron();
 
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+    ClassBase* clone() const;
 
     bool isCurvedFace(const uint f) const;
 

@@ -26,8 +26,6 @@ public:
 
     LayerGroup<L>& operator=(const Group<L>& rhs);
 
-    virtual vector<LayerId> getIds() const;
-
     virtual void printInfo() const;
 private:
     map<uint, const Layer*> layers_;

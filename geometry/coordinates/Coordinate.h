@@ -26,8 +26,7 @@ public:
     Coordinate(const CartesianVector<T,D>& pos);
     virtual ~Coordinate();
 
-    virtual ClassBase* clone()                      const;
-    virtual ClassBase* clone(const CoordinateId id) const;
+    virtual ClassBase* clone() const;
 
     Coordinate& operator=(const Coordinate& rhs);
 

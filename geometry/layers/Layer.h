@@ -24,8 +24,7 @@ public:
     Layer(const LayerId id, const string& name);
     virtual ~Layer();
 
-    virtual ClassBase* clone()                 const;
-    virtual ClassBase* clone(const LayerId id) const;
+    virtual ClassBase* clone() const;
 
     string getName() const;
 
