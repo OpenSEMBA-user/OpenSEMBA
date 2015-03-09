@@ -13,19 +13,19 @@ ParserGiD::ParserGiD() {
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-    
+
     string null;
     init(null);
 }
 
 ParserGiD::ParserGiD(const string& fn, const string& pTPath)
 :   ProjectFile(fn) {
-    
+
     init(pTPath);
 }
 
 ParserGiD::~ParserGiD() {
-    
+
 }
 
 SmbData*
@@ -163,17 +163,12 @@ ParserGiD::readMaterials(){
     PhysicalModelGroup<>* res = new PhysicalModelGroup<>();
     string label, value;
     uint materialCount = 0;
-    while (!f_in.eof() ) {
+    while (!f_in.eof() && label.compare("End of materials")!=0) {
         getNextLabelAndValue(label, value);
-        if (label.compare("Materials")==0) {
-            while (!f_in.eof() && label.compare("End of materials")!=0) {
-                getNextLabelAndValue(label, value);
-                if (label.compare("Material")==0) {
-                    materialCount++;
-                    uint id = atoi(value.c_str());
-                    res->add(readPhysicalModel(id));
-                }
-            }
+        if (label.compare("Material")==0) {
+            materialCount++;
+            uint id = atoi(value.c_str());
+            res->add(readPhysicalModel(id));
         }
     }
     assert(materialCount == pSize_.mat);
@@ -182,50 +177,49 @@ ParserGiD::readMaterials(){
 
 PhysicalModel*
 ParserGiD::readPhysicalModel(const uint id) {
-                    bool materialFinished = false;
-                    string name;
+    string name;
     PhysicalModelGroup<>::Type type = PhysicalModelGroup<>::undefined;
     PMMultiport::Type mpType = PMMultiport::undefined;
-                    SIBCType surfType = undefinedSIBC;
-                    string layersStr;
+    SIBCType surfType = undefinedSIBC;
+    string layersStr;
     double rEps, rMu, eC, mC;
     double radius, R, L, C;
-                    string filename;
-                    while (!f_in.eof() && !materialFinished) {
+    string filename;
+    while (!f_in.eof()) {
         string label, value;
-                        getNextLabelAndValue(label, value);
-                        if (label.compare("Name")==0) {
-                            name = trim(value);
-                        } else if (label.compare("TypeId")==0) {
-                            type = strToMaterialType(value);
+        getNextLabelAndValue(label, value);
+        if (label.compare("Name")==0) {
+            name = trim(value);
+        } else if (label.compare("TypeId")==0) {
+            type = strToMaterialType(value);
             if (type == PhysicalModelGroup<>::multiport) {
                 mpType = strToMultiportType(value);
-                            }
-                        } else if (label.compare("Permittivity")==0) {
+            }
+        } else if (label.compare("Permittivity")==0) {
             rEps = atof(value.c_str());
-                        } else if (label.compare("Permeability")==0) {
+        } else if (label.compare("Permeability")==0) {
             rMu = atof(value.c_str());
-                        } else if (label.compare("Electric Conductivity")==0) {
+        } else if (label.compare("Electric Conductivity")==0) {
             eC = atof(value.c_str());
-                        } else if (label.compare("Magnetic Conductivity")==0) {
+        } else if (label.compare("Magnetic Conductivity")==0) {
             mC = atof(value.c_str());
-                        } else if (label.compare("Radius")==0) {
-                            radius = atof(value.c_str());
-                        } else if (label.compare("Resistance")==0) {
+        } else if (label.compare("Radius")==0) {
+            radius = atof(value.c_str());
+        } else if (label.compare("Resistance")==0) {
             R = atof(value.c_str());
-                        } else if (label.compare("Inductance")==0) {
+        } else if (label.compare("Inductance")==0) {
             L = atof(value.c_str());
-                        } else if (label.compare("Capacitance")==0) {
+        } else if (label.compare("Capacitance")==0) {
             C = atof(value.c_str());
-                        } else if (label.compare("SurfaceType")==0) {
-                            surfType = strToSIBCType(value);
-                        } else if (label.compare("Filename")==0) {
-                            filename = value;
-                        } else if (label.compare("Layers")==0) {
-                            layersStr = value;
-                        } else if (label.compare("End of Material")==0) {
-                            // Creates material.
-                            switch (type) {
+        } else if (label.compare("SurfaceType")==0) {
+            surfType = strToSIBCType(value);
+        } else if (label.compare("Filename")==0) {
+            filename = value;
+        } else if (label.compare("Layers")==0) {
+            layersStr = value;
+        } else if (label.compare("End of Material")==0) {
+            // Creates material.
+            switch (type) {
             case PhysicalModelGroup<>::PEC:
                 return new PMPEC(id, name);
             case PhysicalModelGroup<>::PMC:
@@ -237,35 +231,36 @@ ParserGiD::readPhysicalModel(const uint id) {
             case PhysicalModelGroup<>::classic:
                 if (eC == 0 && mC == 0) {
                     return new PMVolume(id, name, rEps, rMu);
-                                }
+                }
                 return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
             case PhysicalModelGroup<>::elecDispersive:
                 return readDispersiveMatFile(id,name);
             case PhysicalModelGroup<>::isotropicsibc:
-                                switch (surfType) {
-                                case sibc:
+                switch (surfType) {
+                case sibc:
                     return readIsotropicSurfMatFile(id, name);
-                                case multilayer:
+                case multilayer:
                     return readMultilayerSurf(id, name, layersStr);
                 default:
                     cerr << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
-                                }
-                                break;
+                }
+                break;
             case PhysicalModelGroup<>::wire:
                 return new PMWire(id, name, radius, R, L);
             case PhysicalModelGroup<>::multiport:
                 if (mpType == PMMultiport::shortCircuit) {
                     return new PMMultiportPredefined(id, name, mpType);
-                                    } else {
+                } else {
                     return new PMMultiportRLC(id, name, mpType, R, L, C);
-                                    }
-                                default:
-                                    cerr<< "ERROR @ Parsing materials: ";
-                                    cerr<< "Material type not recognized." << endl;
-                            }
-                            materialFinished = true;
-                        }
                 }
+            default:
+                cerr<< "ERROR @ Parsing materials: ";
+                cerr<< "Material type not recognized." << endl;
+                return NULL;
+            }
+        }
+    }
+    return NULL;
 }
 
 OutRqGroup<>*
@@ -342,8 +337,8 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     getline(f_in, line);
                     res->add(
                             new OutRq(domain, Element::volume,
-                            type, name,
-                            BoxD3(strToBound(line))));
+                                    type, name,
+                                    BoxD3(strToBound(line))));
                     break;
                 case ParserGiD::farField:
                 {
@@ -427,7 +422,7 @@ ParserGiD::readMeshingParameters() {
                             locationInMesh = coord->castTo<CoordD3>()->pos();
                         }
                     }
-                    
+
                 } else if (label.compare("End of Meshing parameters")==0) {
                     finished = true;
                 }
@@ -562,7 +557,7 @@ ParserGiD::readCoordinates() {
         cerr<< "ERROR @ GiDParser::readCoordinates(): "
                 << "End of coordinates label not found." << endl;
     }
-    
+
     return new CoordinateGroup<>(coord);
 }
 
