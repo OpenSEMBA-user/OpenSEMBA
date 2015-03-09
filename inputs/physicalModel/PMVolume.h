@@ -18,7 +18,6 @@ public:
 	virtual ~PMVolume();
 
     virtual ClassBase* clone() const;
-    virtual ClassBase* clone(const uint id) const;
 
     double getRelativePermittivity() const;
     double getPermittivity() const;

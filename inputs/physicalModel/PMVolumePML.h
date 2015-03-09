@@ -37,7 +37,6 @@ public:
 	~PMVolumePML();
 
     ClassBase* clone() const;
-    ClassBase* clone(const uint id) const;
 
 	const Direction* getDirection() const;
 	Orientation getOrientation() const;

@@ -12,7 +12,7 @@
 #include <cmath>
 #include <vector>
 #include <assert.h>
-#include "GroupWithIdBase.h"
+#include "GroupId.h"
 #include "PhysicalModel.h"
 #include "PMPEC.h"
 #include "PMPMC.h"
@@ -26,7 +26,7 @@
 #include "PMWire.h"
 
 template<typename P = PhysicalModel>
-class PhysicalModelGroup : public GroupWithIdBase<P,uint> {
+class PhysicalModelGroup : public GroupId<P,uint> {
 public:
     typedef enum {
         vacuum = 1,
@@ -44,19 +44,13 @@ public:
 
     PhysicalModelGroup();
     PhysicalModelGroup(const vector<P*>&);
-    PhysicalModelGroup(const GroupBase<P>& rhs);
+    PhysicalModelGroup(const Group<P>& rhs);
     virtual ~PhysicalModelGroup();
 
-    PhysicalModelGroup<P>& operator=(const GroupBase<P>& rhs);
+    PhysicalModelGroup<P>& operator=(const Group<P>& rhs);
 
-    bool hasPEC() const;
-    uint getPECId() const;
     vector<uint> getIds(
             const Condition::Type type = Condition::undefined) const;
-    uint countSIBC() const;
-    uint countMultilayers() const;
-    uint countClassic() const;
-    uint countDispersiveVolumic() const;
     void printInfo() const;
 private:
     void getDirection(
@@ -64,5 +58,7 @@ private:
             const uint i) const;
     PMVolumePML::Direction getDirectionFromInt(const uint i) const;
 };
+
+#include "PhysicalModelGroup.hpp"
 
 #endif /* PHYSICALMODELGROUP_H_ */

@@ -17,6 +17,10 @@ PMVolume::~PMVolume() {
 
 }
 
+ClassBase* PMVolume::clone() const {
+   return new PMVolume(*this);
+}
+
 double PMVolume::getImpedance() const {
     if (rEps_ <= 0.0) {
         return numeric_limits<double>::infinity();

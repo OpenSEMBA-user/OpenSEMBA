@@ -301,7 +301,6 @@ void
 ParserGiD::readOutRqInstances(OutRqGroup* res) {
     GiDOutputType gidOutputType = ParserGiD::undefined;
     string line, label, value;
-    vector<OutputRequest> res;
     bool finished = false;
     string name;
     OutRq::Type type = OutRq::undefined;

@@ -10,11 +10,11 @@
 #include "../Condition.h"
 #include "../../math/Constants.h"
 #include "../../math/CartesianVector.h"
-#include "ClassWithIdBase.h"
+#include "ClassIdBase.h"
 
 using namespace std;
 
-class PhysicalModel : public ClassWithIdBase<uint>, public Condition {
+class PhysicalModel : public ClassIdBase<uint>, public Condition {
 public:
 	PhysicalModel(const uint id, const string& name);
 	virtual ~PhysicalModel();

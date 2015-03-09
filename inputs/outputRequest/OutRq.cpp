@@ -24,6 +24,10 @@ OutRq::OutRq(
 	bound_ = box;
 }
 
+ClassBase* OutRq::clone() const {
+   return new OutRq(*this);
+}
+
 string
 OutRq::outputTypeStr() const {
 	switch (outputType_) {

@@ -22,10 +22,6 @@ ClassBase* PMPEC::clone() const {
     return new PMPEC(*this);
 }
 
-ClassBase* PMPEC::clone(const uint id) const {
-    return new PMPEC(id, getName());
-}
-
 void
 PMPEC::printInfo() const {
 	cout << "--- PMPEC info ---" << endl;

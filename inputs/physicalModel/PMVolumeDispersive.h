@@ -33,7 +33,6 @@ public:
 	 const vector<complex<double> >& drudeResidue);
 
 	virtual ClassBase* clone() const;
-    virtual ClassBase* clone(const uint id) const;
 
     uint getPoleNumber() const;
     complex<double> getPole(uint p) const;

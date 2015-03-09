@@ -19,7 +19,6 @@ public:
 	virtual ~PMMultiportPredefined();
 
     virtual ClassBase* clone() const;
-    virtual ClassBase* clone(const uint id) const;
 
 	virtual void printInfo() const;
 };

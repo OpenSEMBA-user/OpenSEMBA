@@ -13,8 +13,6 @@
 class PMSurface: public PhysicalModel {
 public:
    PMSurface(const uint id, const string& name);
-   virtual bool
-    isSurface() const {return true;}
 };
 
 #endif /* SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACE_H_ */

@@ -16,7 +16,6 @@ public:
     PMSMA(const unsigned int id, const string name);
 
     ClassBase* clone() const;
-    ClassBase* clone(const uint id) const;
 
     void printInfo() const;
 };

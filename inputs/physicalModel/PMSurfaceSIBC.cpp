@@ -7,10 +7,6 @@
 
 #include "PMSurfaceSIBC.h"
 
-PMSurfaceSIBC::~PMSurfaceSIBC() {
-
-}
-
 PMSurfaceSIBC::PMSurfaceSIBC(
         const uint id,
         const string& name,
@@ -23,6 +19,14 @@ PMSurfaceSIBC::PMSurfaceSIBC(
     ZStatic_ = Zstatic;
     pole_ = pole;
     Z_ = Z;
+}
+
+PMSurfaceSIBC::~PMSurfaceSIBC() {
+
+}
+
+ClassBase* PMSurfaceSIBC::clone() const {
+   return new PMSurfaceSIBC(*this);
 }
 
 PMSurfaceSIBC&

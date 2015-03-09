@@ -15,6 +15,10 @@ PMPMC::PMPMC(const unsigned int id, const string name)
 : PMPredefined(id, name){
 }
 
+ClassBase* PMPMC::clone() const {
+   return new PMPMC(*this);
+}
+
 void
 PMPMC::printInfo() const {
 	cout << "--- PMPMC info ---" << endl;

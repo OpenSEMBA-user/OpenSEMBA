@@ -4,7 +4,7 @@
 #include "OutRq.h"
 #include "OutRqFarField.h"
 
-class OutRqGroup : public GroupBase<OutRq> {
+class OutRqGroup : public Group<OutRq> {
 public:
     OutRqGroup();
 	OutRqGroup(const vector<OutRq>&);

@@ -5,30 +5,25 @@
  *      Author: luis
  */
 
-#ifndef PHYSICALMODELGROUP_H_
-#include "PhysicalModelGroup.h"
-#endif
-
-template<typename P = PhysicalModel>
+template<typename P>
 PhysicalModelGroup<P>::PhysicalModelGroup() {
 }
 
-template<typename P = PhysicalModel>
+template<typename P>
 PhysicalModelGroup<P>::~PhysicalModelGroup() {
 }
 
-template<typename P = PhysicalModel>
+template<typename P>
 void
 PhysicalModelGroup<P>::printInfo() const {
     cout << "---- Physical Models ----" << endl;
-    cout << "Number of physical models: " << size() << endl;
-    for (uint i = 0; i < size(); i++) {
-        element_[i]->printInfo();
+    cout << "Number of physical models: " << this->size() << endl;
+    for (uint i = 0; i < this->size(); i++) {
+        this->element_[i]->printInfo();
     }
 }
 
-
-template<typename P = PhysicalModel>
+template<typename P>
 void
 PhysicalModelGroup<P>::getDirection(
         PMVolumePML::Direction direction[3],
@@ -42,7 +37,7 @@ PhysicalModelGroup<P>::getDirection(
             && direction[2] == PMVolumePML::none) );
 }
 
-template<typename P = PhysicalModel>
+template<typename P>
 PMVolumePML::Direction
 PhysicalModelGroup<P>::getDirectionFromInt(
         const uint i) const {
@@ -61,84 +56,13 @@ PhysicalModelGroup<P>::getDirectionFromInt(
     }
 }
 
-template<typename P = PhysicalModel>
+template<typename P>
 vector<uint>
 PhysicalModelGroup<P>::getIds(const Condition::Type type) const {
     vector<uint> res;
-    for (uint i = 0; i < size(); i++) {
-        if (element_[i]->getConditionType() == type || type == Condition::undefined) {
-            res.push_back(element_[i]->getId());
-        }
-    }
-    return res;
-}
-
-
-template<typename P = PhysicalModel>
-inline bool
-PhysicalModelGroup<P>::hasPEC() const {
-    for (uint i = 0; i < size(); i++) {
-        if (element_[i]->isPEC()) {
-            return true;
-        }
-    }
-    return false;
-}
-
-template<typename P = PhysicalModel>
-inline uint
-PhysicalModelGroup<P>::getPECId() const {
-    for (uint i = 0; i < size(); i++) {
-        if (element_[i]->isPEC()) {
-            return element_[i]->getId();
-        }
-    }
-    return 0;
-}
-
-template<typename P = PhysicalModel>
-inline uint
-PhysicalModelGroup<P>::countSIBC() const {
-    uint res = 0;
-    for (uint i = 0; i < size(); i++) {
-        if (element_[i]->isSurfaceImpedance()) {
-            res++;
-        }
-    }
-    return res;
-}
-
-template<typename P = PhysicalModel>
-inline uint
-PhysicalModelGroup<P>::countMultilayers() const {
-    uint res = 0;
-    for (uint i = 0; i < size(); i++) {
-        if (element_[i]->isSurfaceMultilayer()) {
-            res++;
-        }
-    }
-    return res;
-}
-
-template<typename P = PhysicalModel>
-inline uint
-PhysicalModelGroup<P>::countClassic() const {
-    uint res = 0;
-    for (uint i = 0; i < size(); i++) {
-        if (element_[i]->isClassic()) {
-            res++;
-        }
-    }
-    return res;
-}
-
-template<typename P = PhysicalModel>
-inline uint
-PhysicalModelGroup<P>::countDispersiveVolumic() const {
-    uint res = 0;
-    for (uint i = 0; i < size(); i++) {
-        if (element_[i]->isDispersive()) {
-            res++;
+    for (uint i = 0; i < this->size(); i++) {
+        if (this->element_[i]->getConditionType() == type || type == Condition::undefined) {
+            res.push_back(this->element_[i]->getId());
         }
     }
     return res;

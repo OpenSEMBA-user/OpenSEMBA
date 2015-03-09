@@ -28,7 +28,7 @@ void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
     vector<LayerId> layId = smb_->layers->getIdsOf<Layer>();
-    vector<uint> matId = smb_->pMGroup->getIds();
+    vector<uint> matId = smb_->pMGroup->getIdsOf<PhysicalModel>();
     for (uint i = 0; i < layId.size(); i++) {
         for (uint j = 0; j < matId.size(); j++) {
             const Layer* layer = smb_->layers->getPtrToId(layId[i]);

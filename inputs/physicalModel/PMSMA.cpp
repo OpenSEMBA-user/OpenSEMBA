@@ -16,6 +16,10 @@ PMSMA::PMSMA(const uint id, const string name)
 
 }
 
+ClassBase* PMSMA::clone() const {
+   return new PMSMA(*this);
+}
+
 void
 PMSMA::printInfo() const {
 	cout << "--- PMSMA info ---" << endl;

@@ -4,7 +4,7 @@
 #include "PhysicalModel.h"
 
 PhysicalModel::PhysicalModel(const uint id, const string& name)
-:  ClassWithIdBase<uint>(id) {
+:  ClassIdBase<uint>(id) {
    name_ = name;
 }
 

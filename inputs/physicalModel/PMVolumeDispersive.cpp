@@ -7,10 +7,6 @@
 
 #include "PMVolumeDispersive.h"
 
-PMVolumeDispersive::~PMVolumeDispersive() {
-
-}
-
 PMVolumeDispersive::PMVolumeDispersive(
  const uint id,
  const string& name,
@@ -48,6 +44,14 @@ PMVolumeDispersive::PMVolumeDispersive(
 	residue_.insert(residue_.end(), residue.begin(), residue.end());
 	drudePole_.insert(drudePole_.end(), drudePole.begin(), drudePole.end());
 	drudeResidue_.insert(drudeResidue_.end(), drudeResidue.begin(), drudeResidue.end());
+}
+
+PMVolumeDispersive::~PMVolumeDispersive() {
+
+}
+
+ClassBase* PMVolumeDispersive::clone() const {
+   return new PMVolumeDispersive(*this);
 }
 
 uint PMVolumeDispersive::getDrudePoleNumber() const {

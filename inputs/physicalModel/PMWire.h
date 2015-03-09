@@ -21,7 +21,6 @@ public:
 	virtual ~PMWire();
 
     ClassBase* clone() const;
-    ClassBase* clone(const uint id) const;
 
 	virtual double	 getRadius() const;
 	virtual double	 getResistance() const;

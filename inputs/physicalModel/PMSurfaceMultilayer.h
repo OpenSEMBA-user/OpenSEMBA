@@ -23,7 +23,6 @@ public:
          const vector<double>& magnCond);
 
    ClassBase* clone() const;
-   ClassBase* clone(const uint id) const;
 
    uint getNumberOfLayers() const;
    string printLayer(const uint i) const;

@@ -61,7 +61,6 @@ public:
     void printInfo() const;
 
     virtual ClassBase* clone() const;
-    virtual ClassBase* clone(const uint id) const;
 
 private:
     string name_;

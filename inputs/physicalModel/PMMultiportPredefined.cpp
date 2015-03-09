@@ -17,6 +17,10 @@ PMMultiportPredefined::PMMultiportPredefined(
 PMMultiportPredefined::~PMMultiportPredefined() {
 }
 
+ClassBase* PMMultiportPredefined::clone() const {
+   return new PMMultiportPredefined(*this);
+}
+
 void
 PMMultiportPredefined::printInfo() const {
 	cout<< " --- Multiport Info --- " << endl;
