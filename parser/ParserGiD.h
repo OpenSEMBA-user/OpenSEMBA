@@ -39,11 +39,11 @@ public:
 protected:
     string problemTypePath_;
     ProblemSize pSize_;
-    virtual GlobalProblemData* readProblemData();
+    virtual SolverParameters* readSolverParameters();
     virtual LayerGroup<>* readLayers();
     virtual EMSourceGroup<>* readEMSources();
     virtual OutRqGroup<>* readOutputRequests();
-    virtual MeshingParameters* readMeshingParameters();
+    virtual MesherParameters* readMesherParameters();
     virtual PhysicalModelGroup<>* readMaterials();
     virtual Mesh* readMesh();
     ProblemSize readProblemSize();
@@ -95,7 +95,7 @@ private:
     Generator::Hardness strToGeneratorHardness(string str) const;
     SourceOnLine::Type strToNodalType(string label) const;
     SourceOnLine::Hardness strToNodalHardness(string label) const;
-    GlobalProblemData::boundType strToBoundType(string label) const;
+    SolverParameters::boundType strToBoundType(string label) const;
     PhysicalModelGroup<>::Type strToMaterialType(string label) const;
     PMMultiport::Type strToMultiportType(string label) const;
     Element::Type strToElementType(string label) const;
@@ -103,8 +103,9 @@ private:
     SIBCType strToSIBCType(string str) const;
     GiDOutputType strToGidOutputType(string label) const;
     Domain strToDomain(string line) const;
-    MeshingParameters::Mesher strToMesher(string) const;
-    MeshingParameters::Mode strToMesherMode(string) const;
+    MesherParameters::Mesher strToMesher(string) const;
+    MesherParameters::Mode strToMesherMode(string) const;
+    SolverParameters::Solver strToSover(string) const;
     void init(const string& pTPath);
     string readVersion();
     bool checkVersionCompatibility(const string version) const;

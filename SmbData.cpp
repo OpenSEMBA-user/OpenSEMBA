@@ -10,7 +10,7 @@
 SmbData::SmbData() {
    layers = NULL;
    mesh = NULL;
-   gData = NULL;
+   solverParams = NULL;
    pMGroup = NULL;
    emSources = NULL;
    outputRequests = NULL;
@@ -27,11 +27,11 @@ SmbData::operator=(const SmbData& rhs) {
    }
    layers = new LayerGroup<>(*rhs.layers);
    mesh = new Mesh(*rhs.mesh);
-   gData = new GlobalProblemData(*rhs.gData);
+   solverParams = new SolverParameters(*rhs.solverParams);
    pMGroup = new PhysicalModelGroup<>(*rhs.pMGroup);
    emSources = new EMSourceGroup<>(*rhs.emSources);
    outputRequests = new OutRqGroup<>(*rhs.outputRequests);
-   meshingParams = new MeshingParameters(*rhs.meshingParams);
+   meshingParams = new MesherParameters(*rhs.meshingParams);
    return *this;
 }
 
@@ -48,8 +48,8 @@ SmbData::printInfo() const {
    } else {
       cout << "No info about mesh." << endl;
    }
-   if (gData != NULL) {
-      gData->printInfo();
+   if (solverParams != NULL) {
+      solverParams->printInfo();
    } else {
       cout << "No info about global data." << endl;
    }
@@ -77,7 +77,7 @@ SmbData::printInfo() const {
 
 void
 SmbData::applyGeometricScalingFactor() {
-   mesh->applyGeometricScalingFactor(gData->scalingFactor);
-   gData->applyGeometricScalingFactor(gData->scalingFactor);
-   gData->scalingFactor = (double) 1.0;
+   mesh->applyGeometricScalingFactor(solverParams->getScalingFactor());
+   solverParams->applyGeometricScalingFactor(solverParams->getScalingFactor());
+   solverParams->setScalingFactor((double) 1.0);
 }

@@ -5,9 +5,9 @@
  *      Author: luis
  */
 
-#include "MeshingParameters.h"
+#include "MesherParameters.h"
 
-MeshingParameters::MeshingParameters() {
+MesherParameters::MesherParameters() {
     locationInMeshSet_ = false;
     mesher_ = ugrMesher;
     mode_ = structured;
@@ -16,7 +16,7 @@ MeshingParameters::MeshingParameters() {
     effectiveParameter_ = false;
 }
 
-MeshingParameters::MeshingParameters(
+MesherParameters::MesherParameters(
         Mesher mesher,
         bool locationInMeshSet,
         CVecD3 locationInMesh,
@@ -46,7 +46,7 @@ MeshingParameters::MeshingParameters(
 }
 
 void
-MeshingParameters::printInfo() const {
+MesherParameters::printInfo() const {
     cout<< " --- Meshing parameters info --- " << endl;
     if (mesher_ == openfoam) {
         cout << "- Using openfoam mesher." << endl;
@@ -60,117 +60,117 @@ MeshingParameters::printInfo() const {
     cout << " --- End of Meshing parameters info ---" << endl;
 }
 
-const CVecD3& MeshingParameters::getLocationInMesh() const {
+const CVecD3& MesherParameters::getLocationInMesh() const {
     return locationInMesh_;
 }
 
-bool MeshingParameters::isLocationInMeshSet() const {
+bool MesherParameters::isLocationInMeshSet() const {
     return locationInMeshSet_;
 }
 
-bool MeshingParameters::isBruteForceVolumes() const {
+bool MesherParameters::isBruteForceVolumes() const {
     return bruteForceVolumes_;
 }
 
-bool MeshingParameters::hasEffParams() const {
+bool MesherParameters::hasEffParams() const {
     return effectiveParameter_;
 }
-string MeshingParameters::getEffThick() const {
+string MesherParameters::getEffThick() const {
     return th_;
 }
-string MeshingParameters::getEffSigma() const {
+string MesherParameters::getEffSigma() const {
     return sigma_;
 }
 
-bool MeshingParameters::isStructured() const {
+bool MesherParameters::isStructured() const {
     return (mode_ == structured);
 }
 
-bool MeshingParameters::isRelaxed() const {
+bool MesherParameters::isRelaxed() const {
     return (mode_ == relaxed);
 }
 
-bool MeshingParameters::isSlanted() const {
+bool MesherParameters::isSlanted() const {
     return (mode_ == slanted);
 }
 
-string MeshingParameters::getEdgeFraction() const {
+string MesherParameters::getEdgeFraction() const {
     return edgeFraction_;
 }
 
-bool MeshingParameters::hasScaleFactor() const {
+bool MesherParameters::hasScaleFactor() const {
     return scaleFactor_;
 }
 
-string MeshingParameters::getScaleFactor() const {
+string MesherParameters::getScaleFactor() const {
     return scaleFactorValue_;
 }
 
-string MeshingParameters::getSWFForce() const {
+string MesherParameters::getSWFForce() const {
     return swfForze_;
 }
 
-void MeshingParameters::setBruteForceVolumes(bool bruteForceVolumes) {
+void MesherParameters::setBruteForceVolumes(bool bruteForceVolumes) {
     bruteForceVolumes_ = bruteForceVolumes;
 }
 
-const string& MeshingParameters::getMeshOutputName() const {
+const string& MesherParameters::getMeshOutputName() const {
     return confOutput_;
 }
 
-void MeshingParameters::setConfOutput(const string& confOutput) {
+void MesherParameters::setConfOutput(const string& confOutput) {
     confOutput_ = confOutput;
 }
 
-void MeshingParameters::setEdgeFraction(const string& edgeFraction) {
+void MesherParameters::setEdgeFraction(const string& edgeFraction) {
     edgeFraction_ = edgeFraction;
 }
 
-bool MeshingParameters::isEffectiveParameter() const {
+bool MesherParameters::isEffectiveParameter() const {
     return effectiveParameter_;
 }
 
-void MeshingParameters::setEffectiveParameter(bool effectiveParameter) {
+void MesherParameters::setEffectiveParameter(bool effectiveParameter) {
     effectiveParameter_ = effectiveParameter;
 }
 
-void MeshingParameters::setLocationInMesh(const CVecD3& locationInMesh) {
+void MesherParameters::setLocationInMesh(const CVecD3& locationInMesh) {
     locationInMesh_ = locationInMesh;
     locationInMeshSet_ = true;
 }
 
-MeshingParameters::Mesher MeshingParameters::getMesher() const {
+MesherParameters::Mesher MesherParameters::getMesher() const {
     return mesher_;
 }
 
-void MeshingParameters::setMesher(Mesher mesher) {
+void MesherParameters::setMesher(Mesher mesher) {
     mesher_ = mesher;
 }
 
-MeshingParameters::Mode MeshingParameters::getMode() const {
+MesherParameters::Mode MesherParameters::getMode() const {
     return mode_;
 }
 
-void MeshingParameters::setMode(Mode mode) {
+void MesherParameters::setMode(Mode mode) {
     mode_ = mode;
 }
 
-void MeshingParameters::setScaleFactor(bool scaleFactor) {
+void MesherParameters::setScaleFactor(bool scaleFactor) {
     scaleFactor_ = scaleFactor;
 }
 
-void MeshingParameters::setScaleFactorValue(const string& scaleFactorValue) {
+void MesherParameters::setScaleFactorValue(const string& scaleFactorValue) {
     scaleFactorValue_ = scaleFactorValue;
 }
 
-void MeshingParameters::setSigma(const string& sigma) {
+void MesherParameters::setSigma(const string& sigma) {
     sigma_ = sigma;
 }
 
-void MeshingParameters::setSwfForze(const string& swfForze) {
+void MesherParameters::setSwfForze(const string& swfForze) {
     swfForze_ = swfForze;
 }
 
-void MeshingParameters::setTh(const string& th) {
+void MesherParameters::setTh(const string& th) {
     th_ = th;
 }

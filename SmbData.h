@@ -11,20 +11,20 @@
 #include "ProjectFile.h"
 #include "Mesh.h"
 #include "LayerGroup.h"
-#include "inputs/GlobalProblemData.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
+#include "inputs/MesherParameters.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
-#include "inputs/MeshingParameters.h"
 #include "inputs/outputRequest/OutRqGroup.h"
+#include "inputs/SolverParameters.h"
 
 class SmbData : public ProjectFile {
 public:
-    GlobalProblemData* gData;
-    LayerGroup<>* layers;
+    SolverParameters* solverParams;
+    MesherParameters* meshingParams;
     PhysicalModelGroup<>* pMGroup;
     EMSourceGroup<>* emSources;
     OutRqGroup<>* outputRequests;
-    MeshingParameters* meshingParams;
+    LayerGroup<>* layers;
     Mesh* mesh;
     SmbData();
     virtual ~SmbData();

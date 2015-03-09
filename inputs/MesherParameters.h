@@ -16,7 +16,7 @@ using namespace std;
 
 typedef unsigned int uint;
 
-class MeshingParameters {
+class MesherParameters {
 public:
     typedef enum {
         none,
@@ -28,8 +28,8 @@ public:
         relaxed,
         slanted
     } Mode;
-    MeshingParameters();
-    MeshingParameters(
+    MesherParameters();
+    MesherParameters(
             Mesher mesher,
             bool locationInMeshSet,
             CVecD3 locationInMesh,
