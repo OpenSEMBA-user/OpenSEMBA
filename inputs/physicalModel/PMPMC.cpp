@@ -11,7 +11,7 @@ PMPMC::~PMPMC() {
 
 }
 
-PMPMC::PMPMC(const unsigned int id, const string name)
+PMPMC::PMPMC(const MatId id, const string name)
 : PMPredefined(id, name){
 }
 

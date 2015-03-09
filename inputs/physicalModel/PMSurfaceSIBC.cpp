@@ -8,7 +8,7 @@
 #include "PMSurfaceSIBC.h"
 
 PMSurfaceSIBC::PMSurfaceSIBC(
-        const uint id,
+        const MatId id,
         const string& name,
         const MatD22& Zinfinite,
         const MatD22& Zstatic,

@@ -8,14 +8,14 @@
 #include "Volume.h"
 
 Volume::Volume(const LayerId layerId,
-               const uint matId)
+               const MatId   matId)
 :   Element(layerId, matId) {
 
 }
 
 Volume::Volume(const ElementId id,
                const LayerId layerId,
-               const uint matId)
+               const MatId   matId)
 :   Element(id, layerId, matId) {
 
 }

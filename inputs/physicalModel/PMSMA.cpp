@@ -11,7 +11,7 @@ PMSMA::~PMSMA() {
 
 }
 
-PMSMA::PMSMA(const uint id, const string name)
+PMSMA::PMSMA(const MatId id, const string name)
 : PMPredefined(id, name) {
 
 }

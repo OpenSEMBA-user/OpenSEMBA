@@ -3,14 +3,14 @@
 #endif
 
 Tri::Tri(const LayerId layerId,
-         const uint matId)
+         const MatId   matId)
 :   Surface(layerId, matId) {
 
 }
 
 Tri::Tri(const ElementId id,
          const LayerId layerId,
-         const uint matId)
+         const MatId   matId)
 :   Surface(id, layerId, matId) {
 
 }

@@ -8,7 +8,7 @@
 #include "PMVolumeDispersive.h"
 
 PMVolumeDispersive::PMVolumeDispersive(
- const uint id,
+ const MatId id,
  const string& name,
  const double rEps,
  const double rMu,
@@ -29,7 +29,7 @@ PMVolumeDispersive::PMVolumeDispersive(
 }
 
 PMVolumeDispersive::PMVolumeDispersive(
- const unsigned int id,
+ const MatId id,
  const string& name,
  const double rEps,
  const double rMu,

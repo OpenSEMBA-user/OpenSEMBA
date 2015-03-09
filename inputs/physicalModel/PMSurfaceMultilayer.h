@@ -14,7 +14,7 @@ class PMSurfaceMultilayer : public PMSurface {
 public:
    PMSurfaceMultilayer();
    PMSurfaceMultilayer(
-         const uint id,
+         const MatId id,
          const string& name,
          const vector<double>& thickness,
          const vector<double>& relPermittivity,

@@ -17,7 +17,7 @@ Hex8::Hex8(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[8],
            const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Volume(id, layerId, matId) {
 
 	for (uint i = 0; i < numberOfCoordinates(); i++) {
@@ -45,7 +45,7 @@ Hex8::Hex8(const CoordinateGroup<>& cG,
            const CVecD3& min,
            const CVecD3& max,
            const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Volume(id, layerId, matId) {
 
     v_[0] = cG.get(CVecD3(min(0), min(1), min(2)));

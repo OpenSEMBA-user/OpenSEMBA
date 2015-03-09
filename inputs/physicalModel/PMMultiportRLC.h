@@ -13,7 +13,7 @@
 class PMMultiportRLC: public PMMultiport {
 public:
 	PMMultiportRLC(
-	 const uint idIn,
+	 const MatId idIn,
 	 const string nameIn,
 	 const PMMultiport::Type typeIn,
 	 const double resistance,
@@ -22,7 +22,6 @@ public:
 	virtual ~PMMultiportRLC();
 
     ClassBase* clone() const;
-    ClassBase* clone(const uint id) const;
 
 	virtual double getR() const;
 	virtual double	 getL() const;

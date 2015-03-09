@@ -10,14 +10,14 @@
 #endif
 
 Tet::Tet(const LayerId layerId,
-         const uint matId)
+         const MatId   matId)
 :   Volume(layerId, matId) {
 
 }
 
 Tet::Tet(const ElementId id,
          const LayerId layerId,
-         const uint matId)
+         const MatId   matId)
 :   Volume(id, layerId, matId) {
 
 }

@@ -17,7 +17,7 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[4],
            const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Tet(id, layerId, matId) {
 
     for (uint i = 0; i < tet.np; i++) {
@@ -44,7 +44,7 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
 Tet4::Tet4(const ElementId id,
            const CoordD3* v[4],
            const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Tet(id, layerId, matId) {
 
     for (uint i = 0; i < tet.np; i++) {

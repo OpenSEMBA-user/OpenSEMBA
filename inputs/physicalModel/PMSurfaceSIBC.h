@@ -16,7 +16,7 @@ class PMSurfaceSIBC : public PMSurface {
 public:
 	PMSurfaceSIBC();
 	PMSurfaceSIBC(
-	 const uint id,
+	 const MatId id,
 	 const string& name,
 	 const MatD22& Zinfinite,
 	 const MatD22& Zstatic,
@@ -25,7 +25,6 @@ public:
 	virtual ~PMSurfaceSIBC();
 
     ClassBase* clone() const;
-    ClassBase* clone(const uint id) const;
 
 	virtual PMSurfaceSIBC&
      operator=(const PMSurfaceSIBC &param);

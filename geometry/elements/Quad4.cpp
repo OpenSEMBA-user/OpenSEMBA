@@ -15,7 +15,7 @@ Quad4::Quad4(const CoordinateGroup<>& cG,
              const ElementId id,
              const CoordinateId vId[4],
              const LayerId layerId,
-             const uint matId)
+             const MatId   matId)
 :   Quad(id, layerId, matId) {
     
 	for (uint i = 0; i < numberOfCoordinates(); i++) {

@@ -234,7 +234,7 @@ ParserGiD::readMaterials(){
         getNextLabelAndValue(label, value);
         if (label.compare("Material")==0) {
             materialCount++;
-            uint id = atoi(value.c_str());
+            MatId id = MatId(atoi(value.c_str()));
             res->add(readPhysicalModel(id));
         }
     }
@@ -243,7 +243,7 @@ ParserGiD::readMaterials(){
 }
 
 PhysicalModel*
-ParserGiD::readPhysicalModel(const uint id) {
+ParserGiD::readPhysicalModel(const MatId id) {
     string name;
     PhysicalModelGroup<>::Type type = PhysicalModelGroup<>::undefined;
     PMMultiport::Type mpType = PMMultiport::undefined;
@@ -621,7 +621,7 @@ ParserGiD::readHex8Elements(const CoordinateGroup<>& v) {
     vector<Hex8> res;
     ElementId id;
     CoordinateId vId[8];
-    uint matId;
+    MatId matId;
     res.reserve(pSize_.hex8);
     for (uint i = 0; i < pSize_.hex8; i++) {
         f_in >> id;
@@ -639,7 +639,7 @@ ParserGiD::readTet10Elements(const CoordinateGroup<>& v) {
     vector<Tet10> res;
     ElementId id;
     CoordinateId vId[10];
-    uint matId;
+    MatId matId;
     res.reserve(pSize_.tet10);
     for (uint i = 0; i < pSize_.tet10; i++) {
         f_in >> id;
@@ -659,7 +659,7 @@ ParserGiD::readTet4Elements(
     ElementId id;
     CoordinateId vId[4];
     LayerId layerId;
-    uint matId;
+    MatId matId;
     res.reserve(pSize_.tet4);
     for (uint i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
@@ -673,7 +673,7 @@ ParserGiD::readTri6Elements(const CoordinateGroup<>& v) {
     vector<Tri6> res;
     ElementId id;
     CoordinateId vId[6];
-    uint matId;
+    MatId matId;
     CVecD3 normal;
     res.reserve(pSize_.tri6);
     for (uint i = 0; i < pSize_.tri6; i++) {
@@ -693,7 +693,7 @@ ParserGiD::readTri3Elements(const CoordinateGroup<>& v) {
     ElementId id;
     CoordinateId vId[3];
     LayerId layerId;
-    uint matId;
+    MatId matId;
     CVecD3 normal;
     res.reserve(pSize_.tri3);
     for (uint i = 0; i < pSize_.tri3; i++) {
@@ -709,7 +709,7 @@ ParserGiD::readLin2Elements(const CoordinateGroup<>& v) {
     ElementId id;
     CoordinateId vId[2];
     LayerId layerId;
-    uint matId;
+    MatId matId;
     res.reserve(pSize_.lin2);
     for (uint i = 0; i < pSize_.lin2; i++) {
         f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;
@@ -720,7 +720,7 @@ ParserGiD::readLin2Elements(const CoordinateGroup<>& v) {
 
 PMVolumeDispersive*
 ParserGiD::readDispersiveMatFile(
-        const uint id_, const string& fileName) const {
+        const MatId id_, const string& fileName) const {
     ifstream matFile;
     string matFileName, line, label, value;
     string name, model;
@@ -799,7 +799,7 @@ ParserGiD::readDispersiveMatFile(
 
 PMSurfaceMultilayer*
 ParserGiD::readMultilayerSurf(
-        const int id,
+        const MatId id,
         const string& name,
         const string& layersStr) const {
     uint begin = layersStr.find_first_of("\"");
@@ -826,7 +826,7 @@ ParserGiD::readMultilayerSurf(
 
 PMSurfaceSIBC*
 ParserGiD::readIsotropicSurfMatFile(
-        const int id_, const string& fileName) const {
+        const MatId id_, const string& fileName) const {
     ifstream matFile;
     string matFileName, line, label, value;
     string name, model;

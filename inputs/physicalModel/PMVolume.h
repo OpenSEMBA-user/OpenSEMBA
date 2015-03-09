@@ -13,7 +13,7 @@
 class PMVolume : public PhysicalModel {
 public:
 	PMVolume(
-	        const uint id, const string name,
+	        const MatId id, const string name,
 	        const double rEps, const double rMu);
 	virtual ~PMVolume();
 

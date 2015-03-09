@@ -13,7 +13,7 @@
 class PMPMC : public PMPredefined {
 public:
 	virtual ~PMPMC();
-	PMPMC(const unsigned int id, const string name);
+	PMPMC(const MatId id, const string name);
 
     ClassBase* clone() const;
 

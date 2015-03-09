@@ -7,7 +7,7 @@
 
 #include "PMVolume.h"
 
-PMVolume::PMVolume(const uint id, const string name,
+PMVolume::PMVolume(const MatId id, const string name,
         const double rEps, const double rMu) : PhysicalModel(id, name) {
 	rEps_ = rEps;
 	rMu_ =  rMu;

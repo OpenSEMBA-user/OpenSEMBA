@@ -15,10 +15,10 @@
 class Volume : public Element {
 public:
 	Volume(const LayerId layerId = LayerId(0),
-           const uint matId   = 0);
+           const MatId   matId   = MatId(0));
 	Volume(const ElementId id,
            const LayerId layerId = LayerId(0),
-           const uint matId   = 0);
+           const MatId   matId   = MatId(0));
     Volume(const Volume& rhs);
     virtual ~Volume();
     

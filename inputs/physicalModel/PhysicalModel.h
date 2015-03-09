@@ -14,9 +14,9 @@
 
 using namespace std;
 
-class PhysicalModel : public ClassIdBase<uint>, public Condition {
+class PhysicalModel : public ClassIdBase<MatId>, public Condition {
 public:
-	PhysicalModel(const uint id, const string& name);
+	PhysicalModel(const MatId id, const string& name);
 	virtual ~PhysicalModel();
 
 	const string& getName() const;

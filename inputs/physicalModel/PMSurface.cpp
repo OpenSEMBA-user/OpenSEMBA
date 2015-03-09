@@ -7,6 +7,6 @@
 
 #include "PMSurface.h"
 
-PMSurface::PMSurface(const uint id, const string& name) :
+PMSurface::PMSurface(const MatId id, const string& name) :
    PhysicalModel(id, name) {
 }

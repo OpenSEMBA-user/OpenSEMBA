@@ -15,10 +15,10 @@ using namespace std;
 class Surface : public Element {
 public:
     Surface(const LayerId layerId = LayerId(0),
-            const uint matId   = 0);
+            const MatId   matId   = MatId(0));
     Surface(const ElementId id,
             const LayerId layerId = LayerId(0),
-            const uint matId   = 0);
+            const MatId   matId   = MatId(0));
     Surface(const Surface& rhs);
     virtual ~Surface();
     

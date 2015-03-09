@@ -26,7 +26,7 @@
 #include "PMWire.h"
 
 template<typename P = PhysicalModel>
-class PhysicalModelGroup : public GroupId<P,uint> {
+class PhysicalModelGroup : public GroupId<P,MatId> {
 public:
     typedef enum {
         vacuum = 1,
@@ -49,7 +49,7 @@ public:
 
     PhysicalModelGroup<P>& operator=(const Group<P>& rhs);
 
-    vector<uint> getIds(
+    vector<MatId> getIds(
             const Condition::Type type = Condition::undefined) const;
     void printInfo() const;
 private:

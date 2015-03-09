@@ -29,9 +29,9 @@ public:
 		undefined
 	} Orientation;
 	static const uint possibleDirections = 26;
-	PMVolumePML(const uint id, const string& name_);
+	PMVolumePML(const MatId id, const string& name_);
 	PMVolumePML(
-	 const uint id,
+	 const MatId id,
 	 const Direction direction[3],
 	 const BoxD3& bound);
 	~PMVolumePML();

@@ -3,14 +3,14 @@
 const double Element::tolerance = 1e-15;
 
 Element::Element(const LayerId layerId,
-                 const uint matId)
+                 const MatId   matId)
 :   ElementBase(layerId, matId) {
 
 }
 
 Element::Element(const ElementId id,
                  const LayerId layerId,
-                 const uint matId)
+                 const MatId   matId)
 :   ElementBase(id, layerId, matId) {
 
 }

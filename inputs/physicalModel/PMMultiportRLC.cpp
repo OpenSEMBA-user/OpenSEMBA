@@ -8,7 +8,7 @@
 #include "PMMultiportRLC.h"
 
 PMMultiportRLC::PMMultiportRLC(
-        const uint id,
+        const MatId id,
         const string name,
         const PMMultiport::Type type,
         const double resistance,

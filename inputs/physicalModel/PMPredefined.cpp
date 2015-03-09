@@ -7,7 +7,7 @@
 
 #include "PMPredefined.h"
 
-PMPredefined::PMPredefined(const uint id, const string name)
+PMPredefined::PMPredefined(const MatId id, const string name)
 : PhysicalModel(id, name) {
 }
 
