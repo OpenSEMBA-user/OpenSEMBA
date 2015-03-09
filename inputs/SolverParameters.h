@@ -49,7 +49,8 @@ public:
     void setSolver(Solver solver);
     double getTimeStep() const;
     void setTimeStep(double timeStep);
-
+    pair<boundType,boundType> getBoundTermination(const uint i) const;
+    void setBoundTermination(const uint i, uint j, boundType bound);
 private:
 	Solver solver_;
 	double finalTime_;

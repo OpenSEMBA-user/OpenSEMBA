@@ -120,7 +120,7 @@ void SolverParameters::setScalingFactor(double scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
 
-Solver SolverParameters::getSolver() const {
+SolverParameters::Solver SolverParameters::getSolver() const {
     return solver_;
 }
 
@@ -134,4 +134,24 @@ double SolverParameters::getTimeStep() const {
 
 void SolverParameters::setTimeStep(double timeStep) {
     timeStep_ = timeStep;
+}
+
+pair<SolverParameters::boundType, SolverParameters::boundType>
+SolverParameters::getBoundTermination(
+        const uint i) const {
+    assert(i < 3);
+    return boundTermination_[i];
+}
+
+void SolverParameters::setBoundTermination(
+        const uint i,
+        uint j,
+        boundType bound) {
+    assert(i < 3);
+    assert(j < 2);
+    if (j == 0) {
+        boundTermination_[i].first = bound;
+    } else {
+        boundTermination_[i].second = bound;
+    }
 }

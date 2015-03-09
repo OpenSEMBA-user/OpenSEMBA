@@ -66,31 +66,31 @@ ParserGiD::readSolverParameters() {
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
                 if (label.compare("Solver") == 0) {
-                    res->setSolver(strToSolver(trim(value)));
+                    res->setSolver(strToSolver(value));
                 } else if (label.compare("Final time") == 0) {
-                    res->setFinalTime(atof(value.c_str());
+                    res->setFinalTime(atof(value.c_str()));
                 } else if (label.compare("Time step") == 0) {
-                    res->setTimeStep(atof(value.c_str());
+                    res->setTimeStep(atof(value.c_str()));
                 } else if (label.compare("Default sampling period") == 0) {
-                    res->samplingPeriod_ = atof(value.c_str());
+                    res->setSamplingPeriod(atof(value.c_str()));
                 } else if (label.compare("Geometry scaling factor") == 0) {
-                    res->scalingFactor_ = atof(value.c_str());
+                    res->setScalingFactor(atof(value.c_str()));
                 } else if (label.compare("Upper x bound") == 0) {
-                    res->boundTermination_[0].second = strToBoundType(value);
+                    res->setBoundTermination(x,1,strToBoundType(value));
                 } else if (label.compare("Lower x bound") == 0) {
-                    res->boundTermination_[0].first = strToBoundType(value);
+                    res->setBoundTermination(x,0,strToBoundType(value));
                 } else if (label.compare("Upper y bound") == 0) {
-                    res->boundTermination_[1].second = strToBoundType(value);
+                    res->setBoundTermination(y,1,strToBoundType(value));
                 } else if (label.compare("Lower y bound") == 0) {
-                    res->boundTermination_[1].first = strToBoundType(value);
+                    res->setBoundTermination(y,0,strToBoundType(value));
                 } else if (label.compare("Upper z bound") == 0) {
-                    res->boundTermination_[2].second = strToBoundType(value);
+                    res->setBoundTermination(z,1,strToBoundType(value));
                 } else if (label.compare("Lower z bound") == 0) {
-                    res->boundTermination_[2].first = strToBoundType(value);
+                    res->setBoundTermination(z,0,strToBoundType(value));
                 } else if (label.compare("Boundary padding") == 0) {
-                    res->boundaryPadding_ = strToBound(value);
+                    res->setBoundaryPadding(strToBound(value));
                 } else if (label.compare("Boundary mesh size") == 0) {
-                    res->boundaryMeshSize_ = strToBound(value);
+                    res->setBoundaryMeshSize(strToBound(value));
                 } else if(label.find("End of solver parameters") != label.npos) {
                     finished = true;
                 }
@@ -1551,6 +1551,21 @@ MesherParameters::Mode ParserGiD::strToMesherMode(string str) const {
         cerr<< "ERROR @ Parser: ";
         cerr<< "Unreckognized label: " << str<< endl;
         return MesherParameters::structured;
+    }
+}
+
+SolverParameters::Solver ParserGiD::strToSolver(string str) const {
+    str = trim(str);
+    if (str.compare("ugrfdtd")==0) {
+        return SolverParameters::ugrfdtd;
+    } else if (str.compare("cudg3d")==0) {
+        return SolverParameters::cudg3d;
+    } else if (str.compare("none")==0) {
+        return SolverParameters::none;
+    } else {
+        cerr << endl << "ERROR @ Parser: ";
+        cerr << "Unreckognized label: " << str<< endl;
+        return SolverParameters::none;
     }
 }
 

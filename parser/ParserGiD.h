@@ -105,7 +105,7 @@ private:
     Domain strToDomain(string line) const;
     MesherParameters::Mesher strToMesher(string) const;
     MesherParameters::Mode strToMesherMode(string) const;
-    SolverParameters::Solver strToSover(string) const;
+    SolverParameters::Solver strToSolver(string) const;
     void init(const string& pTPath);
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
