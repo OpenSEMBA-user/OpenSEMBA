@@ -109,7 +109,7 @@ ElementsGroup::add(
          vId[j] = newHex[i].getV(j)->getId();
       }
       uint matId = newHex[i].getMatId();
-      hex8.push_back(Hex8(coord, ++lastId, vId, 0, matId));
+      hex8.push_back(Hex8(coord, ++lastId, vId, LayerId(0), matId));
    }
    updatePointers();
    return *this;
@@ -415,14 +415,14 @@ ElementsGroup::get(
    return res;
 }
 
-map<uint, vector<const Element*> >
+map<LayerId, vector<const Element*> >
 ElementsGroup::separateLayers(vector<const Element*>& el) const {
-   map<uint, vector<const Element*> > res;
+   map<LayerId, vector<const Element*> > res;
    for (uint i = 0; i < el.size(); i++) {
-      const uint layerId = el[i]->getLayerId();
-      map<uint, vector<const Element*> >::iterator it = res.find(layerId);
+      const LayerId layerId = el[i]->getLayerId();
+      map<LayerId, vector<const Element*> >::iterator it = res.find(layerId);
       if (it == res.end()) {
-         pair<uint, vector<const Element*> > newEntry;
+         pair<LayerId, vector<const Element*> > newEntry;
          newEntry.first = layerId;
          newEntry.second.push_back(el[i]);
          res.insert(newEntry);

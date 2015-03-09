@@ -9,10 +9,14 @@
 
 const double Hex8::tolerance = 1e-15;
 
+Hex8::Hex8() {
+
+}
+
 Hex8::Hex8(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[8],
-           const uint layerId,
+           const LayerId layerId,
            const uint matId)
 :   Volume(id, layerId, matId) {
 
@@ -40,7 +44,7 @@ Hex8::Hex8(const CoordinateGroup<>& cG,
            const ElementId id,
            const CVecD3& min,
            const CVecD3& max,
-           const uint layerId,
+           const LayerId layerId,
            const uint matId)
 :   Volume(id, layerId, matId) {
 

@@ -18,6 +18,9 @@
 #include "ProblemSize.h"
 
 #define LABEL_ENDING ':'
+#ifndef GIDPARSER_ERROR
+#define GIDPARSER_ERROR 61594
+#endif
 
 class ParserGiD : public Parser, public ProjectFile {
     friend class SmbData;

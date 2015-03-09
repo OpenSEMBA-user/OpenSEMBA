@@ -14,25 +14,27 @@
 
 using namespace std;
 
-typedef unsigned int uint;
+#include "ClassWithIdBase.h"
 
-class Layer {
+CreateId(LayerId);
+
+class Layer : public ClassWithIdBase<LayerId> {
 public:
     Layer();
-    Layer(uint id, const string& name);
+    Layer(const LayerId id, const string& name);
     virtual ~Layer();
-    virtual string
-     getParentName() const;
-    virtual string
-     getChildName() const;
-    uint
-     getId() const;
-    const string&
-     getName() const;
-    virtual void
-     printInfo() const;
+
+    virtual ClassBase* clone()                 const;
+    virtual ClassBase* clone(const LayerId id) const;
+
+    const string& getName() const;
+
+    virtual string getParentName() const;
+    virtual string getChildName() const;
+
+    virtual void printInfo() const;
+
 private:
-    uint id_;
     string name_;
 };
 

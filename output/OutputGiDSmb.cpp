@@ -27,11 +27,11 @@ OutputGiDSmb::~OutputGiDSmb() {
 void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
-    vector<uint> layId = smb_->layers->getIds();
+    vector<LayerId> layId = smb_->layers->getIds();
     vector<uint> matId = smb_->pMGroup->getIds();
     for (uint i = 0; i < layId.size(); i++) {
         for (uint j = 0; j < matId.size(); j++) {
-            const Layer* layer = smb_->layers->get(layId[i]);
+            const Layer* layer = smb_->layers->getPtrToId(layId[i]);
             const PhysicalModel* mat = smb_->pMGroup->getPtrToId(matId[j]);
             const string name = mat->getName() + "@" + layer->getName();
             vector<const Element*> elem;

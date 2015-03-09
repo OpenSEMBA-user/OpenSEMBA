@@ -6,10 +6,10 @@
 
 class Tri : public Surface {
 public:
-	Tri(const uint layerId = 0,
+	Tri(const LayerId layerId = LayerId(0),
 	    const uint matId   = 0);
     Tri(const ElementId id,
-        const uint layerId = 0,
+        const LayerId layerId = LayerId(0),
         const uint matId   = 0);
     Tri(const Tri& rhs);
     Tri(const ElementId id, const Tri& rhs);

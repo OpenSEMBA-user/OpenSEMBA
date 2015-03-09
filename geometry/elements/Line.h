@@ -15,10 +15,10 @@ using namespace std;
 
 class Line : public Element {
 public:
-    Line(const uint layerId = 0,
+    Line(const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Line(const ElementId id,
-         const uint layerId = 0,
+         const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Line(const Line& rhs);
     Line(const ElementId id, const Line& rhs);

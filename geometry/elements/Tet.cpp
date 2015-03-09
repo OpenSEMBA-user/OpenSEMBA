@@ -9,14 +9,14 @@
 #include "Tet.h"
 #endif
 
-Tet::Tet(const uint layerId,
+Tet::Tet(const LayerId layerId,
          const uint matId)
 :   Volume(layerId, matId) {
 
 }
 
 Tet::Tet(const ElementId id,
-         const uint layerId,
+         const LayerId layerId,
          const uint matId)
 :   Volume(id, layerId, matId) {
 
@@ -41,7 +41,7 @@ Tri3 Tet::getTri3Face(const uint f) const {
     for (uint i = 0; i < 3; i++) {
         coord[i] = getSideVertex(f,i);
     }
-    return Tri3(ElementId(0), coord, getMatId(), getLayerId());
+    return Tri3(ElementId(0), coord, getLayerId(), getMatId());
 }
 
 void Tet::getOrderedSideVerticesId(

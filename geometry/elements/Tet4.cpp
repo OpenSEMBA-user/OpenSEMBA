@@ -9,10 +9,14 @@
 #include "Tet4.h"
 #endif
 
+Tet4::Tet4() {
+
+}
+
 Tet4::Tet4(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[4],
-           const uint layerId,
+           const LayerId layerId,
            const uint matId)
 :   Tet(id, layerId, matId) {
 
@@ -39,7 +43,7 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
 
 Tet4::Tet4(const ElementId id,
            const CoordD3* v[4],
-           const uint layerId,
+           const LayerId layerId,
            const uint matId)
 :   Tet(id, layerId, matId) {
 

@@ -9,10 +9,14 @@
 #include "Tri3.h"
 #endif
 
+Tri3::Tri3() {
+
+}
+
 Tri3::Tri3(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[3],
-           const uint layerId,
+           const LayerId layerId,
            const uint matId)
 :   Tri(id, layerId, matId) {
     
@@ -39,7 +43,7 @@ Tri3::Tri3(const CoordinateGroup<>& coordGr,
 
 Tri3::Tri3(const ElementId id,
            const CoordD3* v[3],
-           const uint layerId,
+           const LayerId layerId,
            const uint matId)
 :   Tri(id, layerId, matId) {
     for (uint i = 0; i < geo.np; i++) {

@@ -7,14 +7,14 @@
 
 #include "Line.h"
 
-Line::Line(const uint layerId,
+Line::Line(const LayerId layerId,
            const uint matId)
 :   Element(layerId, matId) {
 
 }
 
 Line::Line(const ElementId id,
-           const uint layerId,
+           const LayerId layerId,
            const uint matId)
 :   Element(id, layerId, matId) {
 

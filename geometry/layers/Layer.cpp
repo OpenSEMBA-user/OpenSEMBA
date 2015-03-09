@@ -8,11 +8,11 @@
 #include "Layer.h"
 
 Layer::Layer() {
-    id_ = 0;
+
 }
 
-Layer::Layer(uint id, const string& name) {
-    id_ = id;
+Layer::Layer(const LayerId id, const string& name)
+:   ClassWithIdBase<LayerId>(id) {
     name_ = name;
 }
 
@@ -20,21 +20,12 @@ Layer::~Layer() {
     // TODO Auto-generated destructor stub
 }
 
-uint
-Layer::getId() const {
-    return id_;
+ClassBase* Layer::clone() const {
+   return new Layer(*this);
 }
 
-string
-Layer::getParentName() const {
-   assert(false);
-   return string();
-}
-
-string
-Layer::getChildName() const {
-   assert(false);
-   return string();
+ClassBase* Layer::clone(const LayerId id) const {
+   return new Layer(id, getName());
 }
 
 const string&
@@ -42,7 +33,16 @@ Layer::getName() const {
     return name_;
 }
 
-void
-Layer::printInfo() const {
+string Layer::getParentName() const {
+   assert(false);
+   return string();
+}
+
+string Layer::getChildName() const {
+   assert(false);
+   return string();
+}
+
+void Layer::printInfo() const {
     cout<< "Layer. Id: " << getId() << " Name: " << getName() << endl;
 }

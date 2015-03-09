@@ -13,12 +13,12 @@
 
 class Tet10 : public Tet {
 public:
-    Tet10(
-    const CoordinateGroup<>&,
-    const ElementId id,
-    const CoordinateId vId[10],
-    const uint layerId = 0,
-    const uint matId   = 0);
+    Tet10();
+    Tet10(const CoordinateGroup<>&,
+          const ElementId id,
+          const CoordinateId vId[10],
+          const LayerId layerId = LayerId(0),
+          const uint matId   = 0);
     Tet10(const Tet10& rhs);
     Tet10(const ElementId id, const Tet10& rhs);
     virtual ~Tet10();

@@ -2,14 +2,14 @@
 #include "Tri.h"
 #endif
 
-Tri::Tri(const uint layerId,
+Tri::Tri(const LayerId layerId,
          const uint matId)
 :   Surface(layerId, matId) {
 
 }
 
 Tri::Tri(const ElementId id,
-         const uint layerId,
+         const LayerId layerId,
          const uint matId)
 :   Surface(id, layerId, matId) {
 
