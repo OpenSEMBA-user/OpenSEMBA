@@ -13,7 +13,7 @@
 class PMSMA : public PMPredefined {
 public:
     virtual ~PMSMA();
-    PMSMA(const unsigned int id, const string name);
+    PMSMA(const MatId id, const string name);
 
     ClassBase* clone() const;
 

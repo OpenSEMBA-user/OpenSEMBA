@@ -13,7 +13,7 @@
 class PMMultiportPredefined: public PMMultiport {
 public:
 	PMMultiportPredefined(
-	 const uint idIn,
+	 const MatId idIn,
 	 const string nameIn,
 	 const PMMultiport::Type);
 	virtual ~PMMultiportPredefined();

@@ -9,7 +9,7 @@
 
 
 // =============== PMPEC ======================================================
-PMPEC::PMPEC(const unsigned int id, const string name)
+PMPEC::PMPEC(const MatId id, const string name)
 : PMPredefined(id, name) {
 
 }

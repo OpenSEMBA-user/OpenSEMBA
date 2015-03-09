@@ -15,10 +15,10 @@
 class Tet : public Volume {
 public:
     Tet(const LayerId layerId = LayerId(0),
-        const uint matId   = 0);
+        const MatId   matId   = MatId(0));
     Tet(const ElementId id,
         const LayerId layerId = LayerId(0),
-        const uint matId   = 0);
+        const MatId   matId   = MatId(0));
     Tet(const Tet& rhs);
     virtual ~Tet();
 

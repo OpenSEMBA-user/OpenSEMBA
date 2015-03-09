@@ -17,7 +17,7 @@ Lin2::Lin2(const CoordinateGroup<>& coordGr,
            const ElementId id,
            const CoordinateId vId[2],
            const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Line(id, layerId, matId) {
     
 	for (uint i = 0; i < numberOfCoordinates(); i++) {
@@ -43,7 +43,7 @@ Lin2::Lin2(const CoordinateGroup<>& coordGr,
 Lin2::Lin2(const ElementId id,
            const CoordD3* v[2],
            const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Line(id, layerId, matId) {
     
 	for (uint i = 0; i < lin.np; i++) {

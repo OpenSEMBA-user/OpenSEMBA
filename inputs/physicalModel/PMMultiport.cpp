@@ -7,7 +7,7 @@
 
 #include "PMMultiport.h"
 
-PMMultiport::PMMultiport(const uint id, const string name)
+PMMultiport::PMMultiport(const MatId id, const string name)
 : PhysicalModel(id, name) {
 
 }

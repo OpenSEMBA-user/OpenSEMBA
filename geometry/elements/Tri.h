@@ -7,10 +7,10 @@
 class Tri : public Surface {
 public:
 	Tri(const LayerId layerId = LayerId(0),
-	    const uint matId   = 0);
+	    const MatId   matId   = MatId(0));
     Tri(const ElementId id,
         const LayerId layerId = LayerId(0),
-        const uint matId   = 0);
+        const MatId   matId   = MatId(0));
     Tri(const Tri& rhs);
     virtual ~Tri();
     

@@ -12,7 +12,7 @@
 
 class PMSurface: public PhysicalModel {
 public:
-   PMSurface(const uint id, const string& name);
+   PMSurface(const MatId id, const string& name);
 };
 
 #endif /* SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACE_H_ */

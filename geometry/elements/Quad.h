@@ -13,10 +13,10 @@
 class Quad : public Surface {
 public:
 	Quad(const LayerId layerId = LayerId(0),
-	     const uint matId   = 0);
+	     const MatId   matId   = MatId(0));
     Quad(const ElementId id,
          const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Quad(const Quad& rhs);
     virtual ~Quad();
     

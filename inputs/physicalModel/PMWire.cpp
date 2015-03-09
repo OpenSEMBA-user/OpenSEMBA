@@ -8,7 +8,7 @@
 #include "PMWire.h"
 
 PMWire::PMWire(
- const uint id,
+ const MatId id,
  const string name,
  const double radius,
  const double resistance,

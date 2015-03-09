@@ -17,7 +17,7 @@ public:
     Polyhedron(const ElementId id,
                const vector<const Polygon*>& faces,
                const LayerId layerId = LayerId(0),
-               const uint matId   = 0);
+               const MatId   matId   = MatId(0));
     Polyhedron(const Polyhedron& rhs);
     virtual ~Polyhedron();
 

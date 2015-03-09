@@ -7,7 +7,7 @@
 
 #include "PMVolumePML.h"
 
-PMVolumePML::PMVolumePML(const unsigned int id, const string& name)
+PMVolumePML::PMVolumePML(const MatId id, const string& name)
 : PMVolume(id, name, 1.0, 1.0){
 	for (unsigned int i = 0; i < 3; i++) {
 		direction[i] = none;
@@ -15,7 +15,7 @@ PMVolumePML::PMVolumePML(const unsigned int id, const string& name)
 }
 
 PMVolumePML::PMVolumePML(
- const unsigned int id,
+ const MatId id,
  const Direction direction_[3],
  const BoxD3& bound_) : PMVolume(id, "PML", 1.0, 1.0){
 	bound.first = bound_.getMin();

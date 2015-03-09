@@ -17,11 +17,11 @@ public:
          const ElementId id,
          const CoordinateId vId[4],
          const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Tet4(const ElementId id,
          const CoordD3* v[4],
          const LayerId layerId = LayerId(0),
-         const uint matId = 0);
+         const MatId   matId   = MatId(0));
     Tet4(const Tet4& rhs);
     virtual ~Tet4();
 

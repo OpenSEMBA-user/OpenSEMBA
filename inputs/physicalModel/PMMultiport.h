@@ -28,7 +28,7 @@ public:
 		pRLC = 18,     // R//L//C.
 		undefined = 0
  	} Type;
- 	PMMultiport(const uint id, const string name);
+ 	PMMultiport(const MatId id, const string name);
 	virtual ~PMMultiport();
 	virtual Type getType() const;
 protected:

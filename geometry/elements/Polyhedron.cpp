@@ -14,7 +14,7 @@ Polyhedron::Polyhedron() {
 Polyhedron::Polyhedron(const ElementId id,
                        const vector<const Polygon*>& face,
                        const LayerId layerId,
-                       const uint matId)
+                       const MatId   matId)
 :   Volume(id, layerId, matId) {
     face_ = face;
     for (uint f = 0; f < numberOfFaces(); f++) {

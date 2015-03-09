@@ -48,13 +48,13 @@ protected:
     virtual Mesh* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
-            const unsigned int id_,
+            const MatId id_,
             const string& name) const;
     PMSurfaceSIBC* readIsotropicSurfMatFile(
-            const int id,
+            const MatId id,
             const string& name) const;
     PMSurfaceMultilayer*  readMultilayerSurf(
-            const int id,
+            const MatId id,
             const string& name,
             const string& layersString) const;
     CoordinateGroup<>* readCoordinates();
@@ -88,7 +88,7 @@ private:
     Waveport* readWaveport();
     Generator* readGenerator();
     SourceOnLine* readSourceOnLine();
-    PhysicalModel* readPhysicalModel(const uint id);
+    PhysicalModel* readPhysicalModel(const MatId id);
     Magnitude* readMagnitude(const string type);
     pair<CVecD3, CVecD3> strToBound(const string& str) const;
     Generator::Type strToGeneratorType(string label) const;

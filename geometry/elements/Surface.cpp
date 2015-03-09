@@ -9,14 +9,14 @@
 const double Surface::curvatureTolerance = 1e-12;
 
 Surface::Surface(const LayerId layerId,
-                 const uint matId)
+                 const MatId   matId)
 :   Element(layerId, matId) {
 
 }
 
 Surface::Surface(const ElementId id,
                  const LayerId layerId,
-                 const uint matId)
+                 const MatId   matId)
 :   Element(id, layerId, matId) {
 
 }

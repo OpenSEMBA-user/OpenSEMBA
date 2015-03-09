@@ -17,7 +17,7 @@ public:
           const ElementId id,
           const CoordinateId vId[4],
           const LayerId layerId = LayerId(0),
-          const uint matId   = 0);
+          const MatId   matId   = MatId(0));
     Quad4(const Quad4& rhs);
 	virtual ~Quad4();
     

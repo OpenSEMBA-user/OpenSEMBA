@@ -12,7 +12,7 @@
 
 class PMPredefined : public PhysicalModel {
 public:
-    PMPredefined(const uint id, const string name);
+    PMPredefined(const MatId id, const string name);
 	virtual ~PMPredefined();
 	virtual void printInfo() const;
 };

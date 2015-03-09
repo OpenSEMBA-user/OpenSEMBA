@@ -17,13 +17,13 @@ public:
          const ElementId id,
          const CoordinateId vId[8],
          const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Hex8(const CoordinateGroup<>&,
          const ElementId id,
          const CVecD3& min,
          const CVecD3& max,
          const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Hex8(const Hex8& rhs);
     virtual ~Hex8();
 

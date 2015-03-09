@@ -8,7 +8,7 @@
 #include "PMMultiportPredefined.h"
 
 PMMultiportPredefined::PMMultiportPredefined(
- const uint id,
+ const MatId id,
  const string name,
  const PMMultiport::Type type) : PMMultiport(id, name) {
 	type_ = type;

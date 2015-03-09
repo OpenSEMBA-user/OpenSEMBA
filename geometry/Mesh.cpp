@@ -181,8 +181,8 @@ vector<BoxD3> Mesh::discretizeWithinBoundary(
 
 void
 Mesh::setMaterialIds(
- const vector<uint>& id,
- const uint newMatId) {
+ const vector<ElementId>& id,
+ const MatId newMatId) {
 	const uint nIds = id.size();
 	for (uint i = 0; i < nIds; i++) {
 	    elem_.getPtrToId(id[i])->setMatId(newMatId);

@@ -34,8 +34,8 @@ public:
     ~Mesh();
     void
     setMaterialIds(
-            const vector<unsigned int>& ids,
-            const unsigned int newMatId);
+            const vector<ElementId>& ids,
+            const MatId newMatId);
     vector<unsigned int>
     getIdsWithMaterialId(const unsigned int matId) const;
     vector<unsigned int>

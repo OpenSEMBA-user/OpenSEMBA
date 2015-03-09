@@ -16,10 +16,10 @@ using namespace std;
 class Line : public Element {
 public:
     Line(const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Line(const ElementId id,
          const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Line(const Line& rhs);
     virtual ~Line();
     

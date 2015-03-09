@@ -12,7 +12,7 @@
 
 class PMPEC : public PMPredefined {
 public:
-	PMPEC(const uint id, const string name);
+	PMPEC(const MatId id, const string name);
 	virtual ~PMPEC();
 
     ClassBase* clone() const;

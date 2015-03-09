@@ -18,7 +18,7 @@ public:
             const ElementId id,
             const vector<CoordinateId>& vId,
             const LayerId layerId = LayerId(0),
-            const uint matId   = 0);
+            const MatId   matId   = MatId(0));
     Polygon(const Polygon& rhs);
 	virtual ~Polygon();
     

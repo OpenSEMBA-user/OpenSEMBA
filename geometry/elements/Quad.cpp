@@ -8,14 +8,14 @@
 #include "Quad.h"
 
 Quad::Quad(const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Surface(layerId, matId) {
 
 }
 
 Quad::Quad(const ElementId id,
            const LayerId layerId,
-           const uint matId)
+           const MatId   matId)
 :   Surface(id, layerId, matId) {
 
 }

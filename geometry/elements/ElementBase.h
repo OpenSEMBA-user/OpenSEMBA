@@ -13,6 +13,7 @@
 typedef unsigned int uint;
 
 CreateId(ElementId);
+CreateId(MatId);
 
 class ElementBase : public ClassIdBase<ElementId> {
 public:
@@ -25,10 +26,10 @@ public:
 	};
     
     ElementBase(const LayerId layerId = LayerId(0),
-                const uint matId   = 0);
+                const MatId   matId   = MatId(0));
     ElementBase(const ElementId id,
                 const LayerId layerId = LayerId(0),
-                const uint matId   = 0);
+                const MatId   matId   = MatId(0));
     ElementBase(const ElementBase& rhs);
     virtual ~ElementBase();
     
@@ -45,16 +46,16 @@ public:
     virtual Type getType() const { return undefined; }
 
     LayerId getLayerId() const { return layerId_; }
-    uint    getMatId  () const { return matId_;   }
+    MatId   getMatId  () const { return matId_;   }
 
     virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }
-    virtual void setMatId  (const uint    matId  ) { matId_  = matId;   }
+    virtual void setMatId  (const MatId   matId  ) { matId_  = matId;   }
     
     virtual void printInfo() const = 0;
     
 private:
     LayerId layerId_;
-    uint matId_;
+    MatId   matId_;
 };
 
 #endif /* ELEMENTBASE_H_ */

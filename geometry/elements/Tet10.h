@@ -18,7 +18,7 @@ public:
           const ElementId id,
           const CoordinateId vId[10],
           const LayerId layerId = LayerId(0),
-          const uint matId   = 0);
+          const MatId   matId   = MatId(0));
     Tet10(const Tet10& rhs);
     virtual ~Tet10();
 

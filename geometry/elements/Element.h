@@ -17,10 +17,10 @@ using namespace std;
 class Element : public ElementBase {
 public:
     Element(const LayerId layerId = LayerId(0),
-            const uint matId   = 0);
+            const MatId   matId   = MatId(0));
     Element(const ElementId id,
             const LayerId layerId = LayerId(0),
-            const uint matId   = 0);
+            const MatId   matId   = MatId(0));
     Element(const Element& rhs);
     virtual ~Element();
 

@@ -108,7 +108,7 @@ ElementsGroup::add(
       for (uint j = 0; j < 8; j++) {
          vId[j] = newHex[i].getV(j)->getId();
       }
-      uint matId = newHex[i].getMatId();
+      MatId matId = newHex[i].getMatId();
       hex8.push_back(Hex8(coord, ++lastId, vId, LayerId(0), matId));
    }
    updatePointers();

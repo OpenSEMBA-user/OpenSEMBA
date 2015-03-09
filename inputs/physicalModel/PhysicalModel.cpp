@@ -3,8 +3,8 @@
 
 #include "PhysicalModel.h"
 
-PhysicalModel::PhysicalModel(const uint id, const string& name)
-:  ClassIdBase<uint>(id) {
+PhysicalModel::PhysicalModel(const MatId id, const string& name)
+:  ClassIdBase<MatId>(id) {
    name_ = name;
 }
 

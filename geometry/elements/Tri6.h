@@ -11,11 +11,11 @@ public:
          const ElementId id,
          const CoordinateId vId[6],
          const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Tri6(const ElementId id,
          const CoordD3*[6],
          const LayerId layerId = LayerId(0),
-         const uint matId   = 0);
+         const MatId   matId   = MatId(0));
     Tri6(const Tri6& rhs);
     virtual ~Tri6();
 

@@ -15,14 +15,14 @@ public:
 	PMVolumeDispersive();
 	virtual ~PMVolumeDispersive();
 	PMVolumeDispersive(
-	 const uint id_,
+	 const MatId id_,
 	 const string& name_,
 	 const double rEps,
 	 const double rMu,
 	 const double elecCond,
 	 const double magnCond);
 	PMVolumeDispersive(
-	 const uint id_,
+	 const MatId id_,
 	 const string& name_,
 	 const double rEps,
 	 const double rMu,
