@@ -26,11 +26,6 @@ Surface::Surface(const Surface& rhs)
 
 }
 
-Surface::Surface(const ElementId id, const Surface& rhs)
-:   Element(id, rhs) {
-
-}
-
 Surface::~Surface() {
 
 }

@@ -20,11 +20,9 @@ public:
           const LayerId layerId = LayerId(0),
           const uint matId   = 0);
     Tet10(const Tet10& rhs);
-    Tet10(const ElementId id, const Tet10& rhs);
     virtual ~Tet10();
 
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+    ClassBase* clone() const;
 
     bool isCurved() const;
     bool isQuadratic() const {return true;}

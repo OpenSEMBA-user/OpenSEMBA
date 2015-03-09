@@ -22,7 +22,6 @@ public:
             const LayerId layerId = LayerId(0),
             const uint matId   = 0);
     Element(const Element& rhs);
-    Element(const ElementId id, const Element& rhs);
     virtual ~Element();
 
     bool isCoordinate(const CoordD3* coord) const;

@@ -74,24 +74,12 @@ Hex8::Hex8(const Hex8& rhs)
     }
 }
 
-Hex8::Hex8(const ElementId id, const Hex8& rhs)
-:   Volume(id, rhs) {
-
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = rhs.v_[i];
-    }
-}
-
 Hex8::~Hex8() {
 
 }
 
 ClassBase* Hex8::clone() const {
     return new Hex8(*this);
-}
-
-ClassBase* Hex8::clone(const ElementId id) const {
-    return new Hex8(id, *this);
 }
 
 bool Hex8::isRegular() const {

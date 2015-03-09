@@ -23,11 +23,9 @@ public:
          const LayerId layerId = LayerId(0),
          const uint matId = 0);
     Tet4(const Tet4& rhs);
-    Tet4(const ElementId id, const Tet4& rhs);
     virtual ~Tet4();
 
-    ClassBase* clone()                   const;
-    ClassBase* clone(const ElementId id) const;
+    ClassBase* clone() const;
 
     bool isInnerPoint(const CVecD3& pos) const;
     bool isCurvedFace(const uint face) const;

@@ -22,6 +22,8 @@
 
 using namespace std;
 
+typedef unsigned int uint;
+
 class ProjectFile {
 public:
    ProjectFile();

@@ -33,7 +33,11 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
    exists &= S_ISDIR(sb.st_mode);
    // Deletes if exists.
    if (exists) {
+#ifdef _WIN32
+      string command = "rmdir /s /q ";
+#else
       string command = "rm -r ";
+#endif
       command += directory;
       if (system(command.c_str())) {
           cerr << "ERROR @ ProjectFile: "
@@ -122,7 +126,11 @@ ProjectFile::getProjectFolder() const {
    char *cstr = new char[filename_.length() + 1];
    strcpy(cstr, filename_.c_str());
    string projectDir(dirname(cstr));
+#ifdef _WIN32
+   projectDir += "\\";
+#else
    projectDir += "/";
+#endif
    delete [] cstr;
    return projectDir;
 }

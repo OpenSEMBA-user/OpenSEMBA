@@ -27,11 +27,6 @@ Tet::Tet(const Tet& rhs)
 
 }
 
-Tet::Tet(const ElementId id, const Tet& rhs)
-:   Volume(id, rhs) {
-
-}
-
 Tet::~Tet() {
 
 }

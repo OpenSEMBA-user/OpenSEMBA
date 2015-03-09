@@ -59,25 +59,12 @@ Lin2::Lin2(const Lin2& rhs)
 	}
 }
 
-Lin2::Lin2(const ElementId id,
-           const Lin2& rhs)
-:   Line(id, rhs) {
-    
-    for (uint i = 0; i < lin.np; i++) {
-		v_[i] = rhs.v_[i];
-	}
-}
-
 Lin2::~Lin2() {
 
 }
 
 ClassBase* Lin2::clone() const {
     return new Lin2(*this);
-}
-
-ClassBase* Lin2::clone(const ElementId id) const {
-    return new Lin2(id, *this);
 }
 
 const CoordD3* Lin2::getSideV(const uint f, const uint i) const {

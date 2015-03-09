@@ -14,19 +14,17 @@
 
 using namespace std;
 
-#include "GroupWithIdBase.h"
+#include "GroupId.h"
 
 template<typename L = Layer>
-class LayerGroup : public GroupWithIdBase<L, LayerId> {
+class LayerGroup : public GroupId<L, LayerId> {
 public:
     LayerGroup();
     LayerGroup(const vector<L*>&);
-    LayerGroup(const GroupBase<L>& rhs);
+    LayerGroup(const Group<L>& rhs);
     virtual ~LayerGroup();
 
-    LayerGroup<L>& operator=(const GroupBase<L>& rhs);
-
-    virtual vector<LayerId> getIds() const;
+    LayerGroup<L>& operator=(const Group<L>& rhs);
 
     virtual void printInfo() const;
 private:

@@ -21,7 +21,6 @@ public:
          const LayerId layerId = LayerId(0),
          const uint matId   = 0);
     Line(const Line& rhs);
-    Line(const ElementId id, const Line& rhs);
     virtual ~Line();
     
     inline uint numberOfFaces   () const { return 2; }

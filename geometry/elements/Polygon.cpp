@@ -46,22 +46,12 @@ Polygon::Polygon(const Polygon& rhs)
     v_ = rhs.v_;
 }
 
-Polygon::Polygon(const ElementId id, const Polygon& rhs)
-:   Surface(id, rhs) {
-    
-    v_ = rhs.v_;
-}
-
 Polygon::~Polygon() {
     
 }
 
 ClassBase* Polygon::clone() const {
     return new Polygon(*this);
-}
-
-ClassBase* Polygon::clone(const ElementId id) const {
-    return new Polygon(id, *this);
 }
 
 uint Polygon::numberOfFaces() const {

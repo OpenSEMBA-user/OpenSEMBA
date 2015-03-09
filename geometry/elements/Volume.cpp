@@ -25,11 +25,6 @@ Volume::Volume(const Volume& rhs)
 
 }
 
-Volume::Volume(const ElementId id, const Volume& rhs)
-:   Element(id, rhs) {
-
-}
-
 Volume::~Volume() {
 
 }

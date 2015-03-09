@@ -50,24 +50,12 @@ Tri6::Tri6(const Tri6& rhs)
     }
 }
 
-Tri6::Tri6(const ElementId id, const Tri6& rhs)
-:   Tri(id, rhs) {
-
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = rhs.v_[i];
-    }
-}
-
 Tri6::~Tri6() {
 
 }
 
 ClassBase* Tri6::clone() const {
     return new Tri6(*this);
-}
-
-ClassBase* Tri6::clone(const ElementId id) const {
-    return new Tri6(id, *this);
 }
 
 bool Tri6::isCurved() const {

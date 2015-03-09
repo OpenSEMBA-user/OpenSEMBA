@@ -595,13 +595,8 @@ int CPostAsciiZ_Open(CPostFile *this, GP_CONST char * name)
   assert(this->ptr_Close);
   
   CPostAsciiZ_Close(this);
-#ifdef _WIN32  
-  /* convert from utf-8 */
-  MultiByteToWideChar(CP_UTF8,0,name,-1,wname,MAX_PATH);  
-  this->m_FILE = gzopen_w(wname, "w1");  
-#else  
-  this->m_FILE = gzopen(name, "w1");  
-#endif
+
+  this->m_FILE = gzopen(name, "w1");
   return this->m_FILE == NULL;
 }
 
@@ -820,20 +815,7 @@ static
 int CPostBinary_Open(CPostFile *this, GP_CONST char * name)
 {
 
-#ifdef _WIN32
-  wchar_t wname[MAX_PATH];
-#endif  
-  assert(this);
-  assert(this->ptr_Close);
-  
-  CPostBinary_Close(this);
-#ifdef _WIN32  
-  /* convert from utf-8 */
-  MultiByteToWideChar(CP_UTF8,0,name,-1,wname,MAX_PATH);  
-  this->m_FILE = gzopen_w(wname, "wb1");  
-#else  
-  this->m_FILE = gzopen(name, "wb1");  
-#endif
+  this->m_FILE = gzopen(name, "wb1");
   
   /* escribir el numero magico */
   if (this->m_FILE) {

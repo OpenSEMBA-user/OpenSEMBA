@@ -25,11 +25,6 @@ Quad::Quad(const Quad& rhs)
 
 }
 
-Quad::Quad(const ElementId id, const Quad& rhs)
-:   Surface(id, rhs) {
-
-}
-
 Quad::~Quad() {
 
 }

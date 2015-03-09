@@ -1,7 +1,7 @@
 #ifndef CLASSBASE_H_
 #define CLASSBASE_H_
 
-#include <cstdlib>
+#include <cstddef>
 
 using namespace std;
 
@@ -14,7 +14,7 @@ public:
 
     template<typename T>
     bool is() const {
-        if(dynamic_cast<const T*>(this) != nullptr)
+        if(dynamic_cast<const T*>(this) != NULL)
             return true;
         return false;
     }

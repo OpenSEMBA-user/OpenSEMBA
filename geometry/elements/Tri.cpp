@@ -20,11 +20,6 @@ Tri::Tri(const Tri& rhs)
 
 }
 
-Tri::Tri(const ElementId id, const Tri& rhs)
-:   Surface(id, rhs) {
-
-}
-
 Tri::~Tri() {
 
 }

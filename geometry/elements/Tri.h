@@ -12,7 +12,6 @@ public:
         const LayerId layerId = LayerId(0),
         const uint matId   = 0);
     Tri(const Tri& rhs);
-    Tri(const ElementId id, const Tri& rhs);
     virtual ~Tri();
     
 	uint numberOfFaces   () const { return 3; }

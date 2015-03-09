@@ -12,7 +12,7 @@ Layer::Layer() {
 }
 
 Layer::Layer(const LayerId id, const string& name)
-:   ClassWithIdBase<LayerId>(id) {
+:   ClassIdBase<LayerId>(id) {
     name_ = name;
 }
 
@@ -24,12 +24,7 @@ ClassBase* Layer::clone() const {
    return new Layer(*this);
 }
 
-ClassBase* Layer::clone(const LayerId id) const {
-   return new Layer(id, getName());
-}
-
-const string&
-Layer::getName() const {
+string Layer::getName() const {
     return name_;
 }
 

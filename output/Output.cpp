@@ -57,17 +57,11 @@ Output::process(
 
 void
 Output::deleteExistentOutputFiles() const {
-    string cmd;
-    cmd = "rm -f " + getFilename() + ".post.msh";
-    if (system(cmd.c_str())) {
-        cerr << "ERROR @ Output: "
-                << "System command failed to execute: " << cmd << endl;
-    }
-    cmd = "rm -f " + getFilename() + ".post.res";
-    if (system(cmd.c_str())) {
-        cerr << "ERROR @ Output: "
-                << "System command failed to execute: " << cmd << endl;
-    }
+    string file;
+    file = getFilename() + ".post.msh";
+    remove(file.c_str());
+    file = getFilename() + ".post.res";
+    remove(file.c_str());
 }
 
 void

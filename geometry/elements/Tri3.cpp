@@ -60,24 +60,12 @@ Tri3::Tri3(const Tri3& rhs)
     }
 }
 
-Tri3::Tri3(const ElementId id, const Tri3& rhs)
-:   Tri(id, rhs) {
-    
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = rhs.v_[i];
-    }
-}
-
 Tri3::~Tri3() {
 
 }
 
 ClassBase* Tri3::clone() const {
     return new Tri3(*this);
-}
-
-ClassBase* Tri3::clone(const ElementId id) const {
-    return new Tri3(id, *this);
 }
 
 const CoordD3* Tri3::getSideV(const uint f, const uint i) const {
