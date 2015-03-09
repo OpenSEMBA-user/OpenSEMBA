@@ -1008,6 +1008,8 @@ ParserGiD::readPlaneWave() {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
             bound = strToBound(value);
+            cerr << endl << "ERROR @ ParserGiD ";
+#warning "Bounding box of planewave is being ignored."
         } else if (label.compare("Number of elements")==0) {
             isDefinedOnLayer = false;
             uint nE = atoi(value.c_str());
@@ -1018,11 +1020,7 @@ ParserGiD::readPlaneWave() {
                 elems.push_back(e);
             }
         } else if (label.compare("End of Planewave")==0) {
-            if (isDefinedOnLayer) {
-                return new PlaneWave(bound,	 dir, pol, mag);
-            } else {
-                return new PlaneWave(elems, dir, pol, mag);
-            }
+            return new PlaneWave(elems, dir, pol, mag);
         }
     }
     // Throws error message if ending label was not found.

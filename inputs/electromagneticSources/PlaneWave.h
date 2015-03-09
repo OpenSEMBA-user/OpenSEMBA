@@ -18,16 +18,9 @@ public:
 	 CVecD3 waveDirection,
 	 CVecD3 polarization,
 	 const Magnitude* magnitude);
-	PlaneWave(
-	 BoxD3 bound,
-	 CVecD3 waveDirection,
-	 CVecD3 polarization,
-	 const Magnitude* magnitude);
 	virtual ~PlaneWave();
 
 	virtual ClassBase* clone() const;
-
-	PlaneWave& operator=(const PlaneWave &rhs);
 
 	const CVecD3& getPolarization() const;
 	const CVecD3& getWaveDirection() const;
@@ -37,10 +30,6 @@ public:
 private:
 	CVecD3 waveDirection_;
 	CVecD3 polarization_;
-	void
-	init(
-	 const CVecD3& waveDirection,
- 	 const CVecD3& polarization);
 };
 
 #endif /* PLANEWAVE_H_ */

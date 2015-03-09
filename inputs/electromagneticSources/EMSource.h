@@ -19,18 +19,11 @@ public:
     EMSource(
             const vector<uint>& elem,
             const Magnitude* magnitude);
-    EMSource(
-            const BoxD3& bound,
-            const Magnitude* magnitude);
     virtual ~EMSource();
     vector<unsigned int> getElem() const;
-    const BoxD3* getBound() const;
-    void printInfo() const;
     const Magnitude* getMagnitude() const;
     Condition::Type getConditionType() const;
-    virtual void applyGeometricScalingFactor(const double factor);
-protected:
-    BoxD3* bound_;
+    void printInfo() const;
 private:
     vector<unsigned int> elem_;
     const Magnitude* magnitude_;
