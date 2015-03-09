@@ -43,7 +43,7 @@ protected:
     string problemTypePath_;
     ProblemSize pSize_;
     virtual GlobalProblemData* readProblemData();
-    virtual LayerGroup* readLayers();
+    virtual LayerGroup<>* readLayers();
     virtual Mesh* readMesh();
     virtual EMSourceGroup* readEMSources();
     virtual OutRqGroup* readOutputRequests();
