@@ -28,18 +28,8 @@ Dipole::~Dipole() {
 
 }
 
-Dipole&
-Dipole::operator=(const Dipole& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	EMSource::operator=(rhs);
-	length_ = rhs.length_;
-	orientation_ = rhs.orientation_;
-	position_ = rhs.position_;
-	gaussDelay_ = rhs.gaussDelay_;
-	spreadSqrt2_ = rhs.spreadSqrt2_;
-	return *this;
+ClassBase* Dipole::clone() const {
+    return new Dipole(*this);
 }
 
 void

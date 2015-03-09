@@ -21,7 +21,6 @@ public:
 
 	virtual ClassBase* clone() const;
 
-	Dipole& operator=(const Dipole &rhs);
 	void printInfo() const;
 protected:
 	double length_;

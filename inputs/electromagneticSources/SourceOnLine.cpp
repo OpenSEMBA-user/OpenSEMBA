@@ -25,6 +25,11 @@ SourceOnLine::SourceOnLine(
     hardness_ = sourceHardness;
 }
 
+
+ClassBase* SourceOnLine::clone() const {
+    return new SourceOnLine(*this);
+}
+
 SourceOnLine&
 SourceOnLine::operator=(const SourceOnLine &rhs) {
 	if (this == &rhs) {

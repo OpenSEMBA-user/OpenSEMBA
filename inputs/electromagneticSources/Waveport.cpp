@@ -24,18 +24,10 @@ Waveport::~Waveport() {
 
 }
 
-Waveport&
-Waveport::operator=(const Waveport& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	EMSource::operator=(rhs);
-	input_ = rhs.input_;
-	shape_ = rhs.shape_;
-	excitationMode_ = rhs.excitationMode_;
-	mode_ = rhs.mode_;
-	return *this;
+ClassBase* Waveport::clone() const {
+    return new Waveport(*this);
 }
+
 
 Waveport::Shape
 Waveport::getShape() const {

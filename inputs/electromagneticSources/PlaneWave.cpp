@@ -34,6 +34,10 @@ PlaneWave::~PlaneWave() {
 
 }
 
+ClassBase* PlaneWave::clone() const {
+    return new PlaneWave(*this);
+}
+
 void
 PlaneWave::init(
  const CVecD3& waveDirection, const CVecD3& polarization) {
@@ -58,18 +62,6 @@ PlaneWave::init(
 		cerr<< "ERROR @ Planewave: "
 		    << "Wavedirection is not perpendicular to polarization." << endl;
 	}
-}
-
-PlaneWave&
-PlaneWave::operator=(const PlaneWave &rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	EMSource::operator=(rhs);
-	waveDirection_ = rhs.waveDirection_;
-	polarization_ = rhs.polarization_;
-	bound_ = rhs.bound_;
-	return *this;
 }
 
 void

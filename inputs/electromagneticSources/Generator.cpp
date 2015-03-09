@@ -8,12 +8,8 @@
 #include "Generator.h"
 
 Generator::Generator() {
-	type_ = undefined;
-	hardness_ = soft;
-}
-
-Generator::~Generator() {
-	// TODO Auto-generated destructor stub
+    type_ = undefined;
+    hardness_ = soft;
 }
 
 Generator::Generator(
@@ -25,15 +21,13 @@ Generator::Generator(
 	type_ = generatorType;
 }
 
-Generator&
-Generator::operator=(const Generator &rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	EMSource::operator=(rhs);
-	type_ = rhs.type_;
-	hardness_ = rhs.hardness_;
-	return *this;
+Generator::~Generator() {
+	// TODO Auto-generated destructor stub
+}
+
+
+ClassBase* Generator::clone() const {
+    return new Generator(*this);
 }
 
 Generator::Type

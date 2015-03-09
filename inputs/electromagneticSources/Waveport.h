@@ -33,7 +33,6 @@ public:
 
 	virtual ClassBase* clone() const;
 
-	Waveport& operator=(const Waveport &rhs);
 	void printInfo() const;
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;
