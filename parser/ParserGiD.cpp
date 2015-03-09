@@ -40,9 +40,9 @@ ParserGiD::read() {
     pSize_ = readProblemSize();
     res->layers = readLayers();
     res->pMGroup = readMaterials();
+    res->mesh = readMesh();
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
-    res->mesh = readMesh();
     res->applyGeometricScalingFactor();
     return res;
 }
@@ -177,12 +177,12 @@ ParserGiD::readMesherParameters() {
 
 Mesh*
 ParserGiD::readMesh() {
-    // Read Grid3
-    Grid3* grid = readCartesianGrid();
     // Reads the coordinates.
     cG_ = readCoordinates();
     // Reads elements connectivities.
     ElementsGroup elements = readElements(*cG_);
+    // Read Grid3
+    Grid3* grid = readCartesianGrid();
     // Builds mesh with the read data.
     return new Mesh(*cG_, elements, grid);
 }
