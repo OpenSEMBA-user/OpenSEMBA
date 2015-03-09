@@ -29,8 +29,8 @@ SmbData::operator=(const SmbData& rhs) {
    mesh = new Mesh(*rhs.mesh);
    gData = new GlobalProblemData(*rhs.gData);
    pMGroup = new PhysicalModelGroup<>(*rhs.pMGroup);
-   emSources = new EMSourceGroup(*rhs.emSources);
-   outputRequests = new OutRqGroup(*rhs.outputRequests);
+   emSources = new EMSourceGroup<>(*rhs.emSources);
+   outputRequests = new OutRqGroup<>(*rhs.outputRequests);
    meshingParams = new MeshingParameters(*rhs.meshingParams);
    return *this;
 }
@@ -78,7 +78,6 @@ SmbData::printInfo() const {
 void
 SmbData::applyGeometricScalingFactor() {
    mesh->applyGeometricScalingFactor(gData->scalingFactor);
-   emSources->applyGeometricScalingFactor(gData->scalingFactor);
    gData->applyGeometricScalingFactor(gData->scalingFactor);
    gData->scalingFactor = (double) 1.0;
 }

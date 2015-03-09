@@ -24,20 +24,16 @@ public:
 	 CVecD3 polarization,
 	 const Magnitude* magnitude);
 	virtual ~PlaneWave();
-	PlaneWave&
-	 operator=(const PlaneWave &rhs);
-	bool
-	 isPlaneWave() const {return true;}
-	void
-	 printInfo() const;
-	const CVecD3&
-	 getPolarization() const;
-	const CVecD3&
-	 getWaveDirection() const;
-	CVecD3
-	 getElectricField(const double time) const;
-	pair<CVecD3,CVecD3>
-	 getElectromagneticField(const double time) const;
+
+	virtual ClassBase* clone() const;
+
+	PlaneWave& operator=(const PlaneWave &rhs);
+
+	const CVecD3& getPolarization() const;
+	const CVecD3& getWaveDirection() const;
+	CVecD3 getElectricField(const double time) const;
+	pair<CVecD3,CVecD3> getElectromagneticField(const double time) const;
+	void printInfo() const;
 private:
 	CVecD3 waveDirection_;
 	CVecD3 polarization_;

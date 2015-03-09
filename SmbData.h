@@ -22,8 +22,8 @@ public:
     GlobalProblemData* gData;
     LayerGroup<>* layers;
     PhysicalModelGroup<>* pMGroup;
-    EMSourceGroup* emSources;
-    OutRqGroup* outputRequests;
+    EMSourceGroup<>* emSources;
+    OutRqGroup<>* outputRequests;
     MeshingParameters* meshingParams;
     Mesh* mesh;
     SmbData();

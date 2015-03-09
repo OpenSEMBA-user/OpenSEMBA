@@ -28,17 +28,16 @@ public:
 	 const vector<unsigned int>& elem,
 	 const Magnitude* magnitude);
 	virtual ~Generator();
-	Generator&
-	 operator=(const Generator &rhs);
-	Type
-	 getType() const;
-	virtual void
-	 printInfo() const;
+
+	virtual ClassBase* clone() const;
+
+	Generator& operator=(const Generator &rhs);
+	Type getType() const;
+	virtual void printInfo() const;
 private:
 	Type type_;
 	Hardness hardness_;
-	string
-	 getTypeStr() const;
+	string getTypeStr() const;
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_ */

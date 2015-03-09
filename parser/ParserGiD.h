@@ -18,9 +18,6 @@
 #include "ProblemSize.h"
 
 #define LABEL_ENDING ':'
-#ifndef GIDPARSER_ERROR
-#define GIDPARSER_ERROR 61594
-#endif
 
 class ParserGiD : public Parser, public ProjectFile {
     friend class SmbData;
@@ -44,11 +41,11 @@ protected:
     ProblemSize pSize_;
     virtual GlobalProblemData* readProblemData();
     virtual LayerGroup<>* readLayers();
-    virtual Mesh* readMesh();
-    virtual EMSourceGroup* readEMSources();
-    virtual OutRqGroup* readOutputRequests();
+    virtual EMSourceGroup<>* readEMSources();
+    virtual OutRqGroup<>* readOutputRequests();
     virtual MeshingParameters* readMeshingParameters();
     virtual PhysicalModelGroup<>* readMaterials();
+    virtual Mesh* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
             const unsigned int id_,
@@ -69,7 +66,7 @@ protected:
     vector<Tri3> readTri3Elements(const CoordinateGroup<>& v);
     vector<Lin2> readLin2Elements(const CoordinateGroup<>& v);
     Grid3* readCartesianGrid();
-    void readOutRqInstances(OutRqGroup* res);
+    void readOutRqInstances(OutRqGroup<>* res);
     void getNextLabelAndValue(string& label, string& value);
 private:
     typedef enum {
@@ -86,12 +83,12 @@ private:
         undefinedSIBC
     } SIBCType;
     const CoordinateGroup<>* cG_;
-    virtual PlaneWave readPlaneWave();
-    virtual Dipole readDipole();
-    virtual Waveport readWaveport();
-    virtual Generator readGenerator();
-    virtual SourceOnLine readSourceOnLine();
-    virtual PhysicalModel* readPhysicalModel(const uint id);
+    PlaneWave* readPlaneWave();
+    Dipole* readDipole();
+    Waveport* readWaveport();
+    Generator* readGenerator();
+    SourceOnLine* readSourceOnLine();
+    PhysicalModel* readPhysicalModel(const uint id);
     Magnitude* readMagnitude(const string type);
     pair<CVecD3, CVecD3> strToBound(const string& str) const;
     Generator::Type strToGeneratorType(string label) const;

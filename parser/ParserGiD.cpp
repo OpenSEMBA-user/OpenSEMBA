@@ -120,14 +120,9 @@ ParserGiD::readMesh() {
     return new Mesh(*cG_, elements, grid);
 }
 
-EMSourceGroup*
+EMSourceGroup<>*
 ParserGiD::readEMSources() {
-    vector<Dipole> dipoles;
-    vector<PlaneWave> pws;
-    vector<Waveport> wps;
-    vector<Generator> gen;
-    vector<SourceOnLine> nodal;
-    //
+    EMSourceGroup<>* res = new EMSourceGroup<>();
     bool finished = false;
     bool found = false;
     string label, value;
@@ -140,15 +135,15 @@ ParserGiD::readEMSources() {
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label,value);
                 if (label.compare("Puntual excitation")==0) {
-                    dipoles.push_back(readDipole());
+                    res->add(readDipole());
                 } else if (label.compare("Planewave")==0) {
-                    pws.push_back(readPlaneWave());
+                    res->add(readPlaneWave());
                 } else if (label.compare("Generator")==0) {
-                    gen.push_back(readGenerator());
+                    res->add(readGenerator());
                 } else if (label.compare("Waveport")==0) {
-                    wps.push_back(readWaveport());
+                    res->add(readWaveport());
                 } else if (label.compare("Source_on_line")==0) {
-                    nodal.push_back(readSourceOnLine());
+                    res->add(readSourceOnLine());
                 } else if (label.compare("End of Excitations")==0) {
                     finished = true;
                 } // if: end of boundary conditions label was found.
@@ -160,7 +155,7 @@ ParserGiD::readEMSources() {
                 << "Excitations label was not found." << endl;
     }
     //
-    return new EMSourceGroup(dipoles, pws, wps, gen, nodal);
+    return res;
 }
 
 PhysicalModelGroup<>*
@@ -273,9 +268,9 @@ ParserGiD::readPhysicalModel(const uint id) {
                 }
 }
 
-OutRqGroup*
+OutRqGroup<>*
 ParserGiD::readOutputRequests() {
-    OutRqGroup* res = new OutRqGroup();
+    OutRqGroup<>* res = new OutRqGroup<>();
     bool finished;
     bool found = false;
     string line, label, value;
@@ -298,7 +293,7 @@ ParserGiD::readOutputRequests() {
 }
 
 void
-ParserGiD::readOutRqInstances(OutRqGroup* res) {
+ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
     GiDOutputType gidOutputType = ParserGiD::undefined;
     string line, label, value;
     bool finished = false;
@@ -998,7 +993,7 @@ ParserGiD::init(const string& pTPath) {
     }
 }
 
-PlaneWave
+PlaneWave*
 ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
@@ -1028,19 +1023,19 @@ ParserGiD::readPlaneWave() {
             }
         } else if (label.compare("End of Planewave")==0) {
             if (isDefinedOnLayer) {
-                return PlaneWave(bound,	 dir, pol, mag);
+                return new PlaneWave(bound,	 dir, pol, mag);
             } else {
-                return PlaneWave(elems, dir, pol, mag);
+                return new PlaneWave(elems, dir, pol, mag);
             }
         }
     }
     // Throws error message if ending label was not found.
     cerr<< "ERROR @ Parsing planewave: "
             << "End of Planewave label not found. " << endl;
-    return PlaneWave();
+    return new PlaneWave();
 }
 
-Dipole
+Dipole*
 ParserGiD::readDipole() {
     vector<uint> elem;
     double length = 0.0;
@@ -1067,11 +1062,11 @@ ParserGiD::readDipole() {
                 << endl;
     }
     //
-    Dipole res(elem, length, orientation, position, mag);
-    return res;
+
+    return new Dipole(elem, length, orientation, position, mag);;
 }
 
-Waveport
+Waveport*
 ParserGiD::readWaveport() {
     vector<uint> elem;
     uint numElements = 0;
@@ -1134,10 +1129,10 @@ ParserGiD::readWaveport() {
         cerr<< "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
-    return Waveport(elem, mag, input, shape, excitationMode, mode);
+    return new Waveport(elem, mag, input, shape, excitationMode, mode);
 }
 
-Generator
+Generator*
 ParserGiD::readGenerator() {
     Generator::Type type;
     Generator::Hardness hardness;
@@ -1162,16 +1157,16 @@ ParserGiD::readGenerator() {
                 elems.push_back(e);
             }
         } else if (label.compare("End of Generator")==0) {
-            return Generator(type, hardness, elems, mag);
+            return new Generator(type, hardness, elems, mag);
         }
     }
     // Throws error message if ending label was not found.
     cerr<< "ERROR @ Parsing generator: "
             << "End of Generator label not found. " << endl;
-    return Generator();
+    return new Generator();
 }
 
-SourceOnLine
+SourceOnLine*
 ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
@@ -1196,13 +1191,13 @@ ParserGiD::readSourceOnLine() {
                 elems.push_back(e);
             }
         } else if (label.compare("End of Source_on_line")==0) {
-            return SourceOnLine(type, hardness, elems, mag);
+            return new SourceOnLine(type, hardness, elems, mag);
         }
     }
     // Throws error message if ending label was not found.
     cerr<< "ERROR @ Parsing nodal: "
             << "End of Nodal label not found. " << endl;
-    return SourceOnLine();
+    return new SourceOnLine();
 }
 
 Element::Type

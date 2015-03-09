@@ -49,6 +49,7 @@ public:
             const OutRq::Type outputType_,
             const string& name_,
             const BoxD3& box);
+    virtual ClassBase* clone() const;
     OutRq& operator=(const OutRq& rhs);
     virtual bool isSimilar(const OutRq& rhs) const;
     string outputTypeStr() const;
@@ -60,7 +61,6 @@ public:
     void setAdditionalElems(const vector<uint> elems);
     void printInfo() const;
 
-    virtual ClassBase* clone() const;
 
 private:
     string name_;

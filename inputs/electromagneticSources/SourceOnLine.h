@@ -12,37 +12,35 @@
 
 class SourceOnLine : public EMSource {
 public:
-	typedef enum {
-		electricField = 1,
-		magneticField = 2,
-		undefined = 0
-	} Type;
-   typedef enum {
-		hard = 1,
-		soft = 2
-	} Hardness;
-	SourceOnLine();
-	SourceOnLine(
-	 const Type& sourceType,
-     const Hardness& sourceHardness,
-	 const vector<unsigned int>& elem,
-	 const Magnitude* magnitude);
-	virtual ~SourceOnLine();
-	SourceOnLine&
-	 operator=(const SourceOnLine &rhs);
-	Type
-	 getType() const;
-   Hardness
-	 getHardness() const;
-   string
-       getTypeStr() const;
-	virtual void
-	 printInfo() const;
+    typedef enum {
+        electricField = 1,
+        magneticField = 2,
+        undefined = 0
+    } Type;
+    typedef enum {
+        hard = 1,
+        soft = 2
+    } Hardness;
+    SourceOnLine();
+    SourceOnLine(
+            const Type& sourceType,
+            const Hardness& sourceHardness,
+            const vector<unsigned int>& elem,
+            const Magnitude* magnitude);
+    virtual ~SourceOnLine();
+
+    virtual ClassBase* clone() const;
+
+    SourceOnLine& operator=(const SourceOnLine &rhs);
+    Type getType() const;
+    Hardness getHardness() const;
+    string getTypeStr() const;
+    virtual void
+    printInfo() const;
 private:
-	Type type_;
-   Hardness hardness_;
-   string
-	 getHardnessStr() const;
+    Type type_;
+    Hardness hardness_;
+    string getHardnessStr() const;
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_ */

@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class EMSource : public Condition {
+class EMSource : public Condition,  public ClassBase {
 public:
     EMSource();
     EMSource(

@@ -1,9 +1,9 @@
-#	include "OutRqGroup.h"
-
-OutRqGroup::OutRqGroup() {
+template<typename C>
+OutRqGroup<C>::OutRqGroup() {
 }
 
-OutRqGroup::OutRqGroup(
+template<typename C>
+OutRqGroup<C>::OutRqGroup(
  const vector<OutRq>& in) {
 	for (uint i = 0; i < in.size(); i++) {
 		// Checks if exists similar output and combines elements if so.
@@ -20,8 +20,9 @@ OutRqGroup::OutRqGroup(
 	}
 }
 
+template<typename C>
 uint
-OutRqGroup::countWithType(const Element::Type param) const {
+OutRqGroup<C>::countWithType(const Element::Type param) const {
 	uint res = 0;
 	for (uint i = 0; i < size(); i++) {
 		if (element_[i]->getElementType() == param) {
@@ -31,8 +32,9 @@ OutRqGroup::countWithType(const Element::Type param) const {
 	return res;
 }
 
+template<typename C>
 const OutRq*
-OutRqGroup::getWithType(
+OutRqGroup<C>::getWithType(
  const uint j,
  const Element::Type param) const {
 	assert(j < countWithType(param));
@@ -52,10 +54,9 @@ OutRqGroup::getWithType(
 	return NULL;
 }
 
-
-
+template<typename C>
 void
-OutRqGroup::printInfo() const {
+OutRqGroup<C>::printInfo() const {
 	cout<< " --- OutputRequestGroup info ---" << endl;
 	for (unsigned int i = 0; i < element_.size(); i++) {
 		element_[i]->printInfo();

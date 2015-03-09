@@ -4,6 +4,7 @@
 #include "OutRq.h"
 #include "OutRqFarField.h"
 
+template<typename C = OutRq>
 class OutRqGroup : public Group<OutRq> {
 public:
     OutRqGroup();
@@ -13,4 +14,6 @@ public:
 	void printInfo() const;
 };
 
-#	endif
+#include "OutRqGroup.hpp"
+
+#endif

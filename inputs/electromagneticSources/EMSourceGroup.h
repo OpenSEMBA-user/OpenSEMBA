@@ -15,60 +15,17 @@
 #include "SourceOnLine.h"
 #include "Waveport.h"
 
-class EMSourceGroup {
+template<typename C = EMSource>
+class EMSourceGroup : public Group<EMSource> {
 public:
 	EMSourceGroup();
-	EMSourceGroup(
-	 const vector<Dipole>&,
-	 const vector<PlaneWave>&,
-	 const vector<Waveport>&,
-	 const vector<Generator>&,
-    const vector<SourceOnLine>&);
-	EMSourceGroup&
-	 operator=(const EMSourceGroup &rhs);
-	unsigned int
-	 count() const;
-	unsigned int
-	 countPlaneWaves() const;
-	unsigned int
-	 countDipoles() const;
-	unsigned int
-	 countWaveports() const;
-	unsigned int
-	 countGenerators() const;
-	unsigned int
-	 countNodals() const;
-	const EMSource*
-	 get(const unsigned int i) const;
-	const PlaneWave*
-	 getPlaneWave() const;
-	const PlaneWave*
-	 getPlaneWave(const uint i) const;
-	const Dipole*
-	 getDipole(const unsigned int i) const;
-	const Waveport*
-	 getWaveport(const unsigned int i) const;
-	const Generator*
-	 getGenerator(const unsigned int i) const;
-	const SourceOnLine*
-	 getNodal(const unsigned int i) const;
-	uint
-	 countWithType(const Element::Type type) const;
-	const EMSource*
-	 getWithType(const uint i, const Element::Type type) const;
-	void
-	 printInfo() const;
-	void
-	 applyGeometricScalingFactor(const double factor);
-private:
-	vector<const EMSource*> source;
-	vector<Dipole> dipole;
-	vector<PlaneWave> planeWave;
-	vector<Waveport> waveport;
-	vector<Generator> generator;
-	vector<SourceOnLine> nodal;
-	void
-	 updatePointers();
+	EMSourceGroup& operator=(const EMSourceGroup &rhs);
+	EMSourceGroup<C>& operator=(const Group<C>& rhs);
+	uint countWithType(const Element::Type type) const;
+	const EMSource* getWithType(const uint i, const Element::Type type) const;
+	void printInfo() const;
 };
+
+#include "EMSourceGroup.hpp"
 
 #endif /* EMSOURCEGROUP_H_ */
