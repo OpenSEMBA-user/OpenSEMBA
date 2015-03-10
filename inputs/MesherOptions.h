@@ -11,12 +11,13 @@
 #include <string>
 
 #include "../math/CartesianVector.h"
+#include "Options.h"
 
 using namespace std;
 
 typedef unsigned int uint;
 
-class MesherParameters {
+class MesherOptions : public Options {
 public:
     typedef enum {
         none,
@@ -28,8 +29,17 @@ public:
         relaxed,
         slanted
     } Mode;
-    MesherParameters();
-    MesherParameters(
+    typedef enum {
+        pec,
+        pmc,
+        pml,
+        mur1,
+        mur2,
+        periodic,
+        undefined
+    } BoundType;
+    MesherOptions();
+    MesherOptions(
             Mesher mesher,
             bool locationInMeshSet,
             CVecD3 locationInMesh,
@@ -44,6 +54,7 @@ public:
             string swfForze,
             string confOutput);
     Mesher getMesher() const;
+
     void setMesher(Mesher mesher);
     virtual const CVecD3& getLocationInMesh() const;
     virtual bool isLocationInMeshSet() const;
@@ -72,6 +83,17 @@ public:
     void setLocationInMesh(const CVecD3& locationInMesh);
     const string& getMeshOutputName() const;
     void setConfOutput(const string& confOutput);
+
+    const pair<CVecD3, CVecD3>& getBoundaryMeshSize() const;
+    void setBoundaryMeshSize(const pair<CVecD3, CVecD3>& boundaryMeshSize);
+    const pair<CVecD3, CVecD3>& getBoundaryPadding() const;
+    void setBoundaryPadding(const pair<CVecD3, CVecD3>& boundaryPadding);
+    double getScalingFactor() const;
+    void setScalingFactor(double scalingFactor);
+    pair<BoundType,BoundType> getBoundTermination(const uint i) const;
+    void setBoundTermination(const uint i, uint j, BoundType bound);
+
+    void applyGeometricScalingFactor(const double& factor);
     virtual void printInfo() const;
 
 private:
@@ -88,6 +110,11 @@ private:
     bool locationInMeshSet_;
     CVecD3 locationInMesh_;
     string confOutput_;
+
+    double scalingFactor_;
+    pair<BoundType,BoundType> boundTermination_[3];
+    pair<CVecD3,CVecD3> boundaryPadding_, boundaryMeshSize_;
+    string toStr(const BoundType) const;
 };
 
 #endif /* OPENFOAMPARAMETERS_H_ */

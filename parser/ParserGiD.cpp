@@ -35,8 +35,8 @@ ParserGiD::read() {
     }
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
-    res->solverParams = readSolverParameters();
-    res->meshingParams = readMesherParameters();
+    res->solverOptions = readSolverParameters();
+    res->mesherOptions = readMesherOptions();
     pSize_ = readProblemSize();
     res->layers = readLayers();
     res->pMGroup = readMaterials();
@@ -54,15 +54,15 @@ ParserGiD::printInfo() const {
     cout << "--- End of GiDParser info ---" << endl;
 }
 
-SolverParameters*
+SolverOptions*
 ParserGiD::readSolverParameters() {
-    SolverParameters* res = new SolverParameters();
+    SolverOptions* res = new SolverOptions();
     string line, label, value;
     bool finished = false;
     bool problemDataFound = false;
     while (!problemDataFound && !f_in.eof()) {
         getNextLabelAndValue(label, value);
-        if (label.compare("Solver parameters") == 0) {
+        if (label.compare("Solver options") == 0) {
             problemDataFound = true;
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
@@ -74,6 +74,67 @@ ParserGiD::readSolverParameters() {
                     res->setTimeStep(atof(value.c_str()));
                 } else if (label.compare("Default sampling period") == 0) {
                     res->setSamplingPeriod(atof(value.c_str()));
+                } else if(label.find("End of solver options") != label.npos) {
+                    finished = true;
+                }
+            } // Closes ( !finished && !f_in.eof() ) while.
+        } // Closes problem data found if.
+    } // Closes problemDataFound while.
+    // Throws error messages if a problem was detected.
+    if (!problemDataFound) {
+        cerr << endl << "ERROR @ readSolverOptions(): "
+                << "EoF was reached but problem data was not found." << endl;
+    }
+    if (!finished) {
+        cerr << endl << "ERROR @ readSolverOptions(): "
+                << "EoF reached, \"end of problem data\" not found." << endl;
+    }
+    //
+    return res;
+}
+
+MesherOptions*
+ParserGiD::readMesherOptions() {
+    bool finished;
+    bool found = false;
+    string line, label, value;
+    MesherOptions* res = new MesherOptions();
+    while (!found && !f_in.eof() ) {
+        getNextLabelAndValue(label, value);
+        if (label.compare("Mesher options") == 0) {
+            found = true;
+            finished = false;
+            while (!finished && !f_in.eof() ) {
+                getNextLabelAndValue(label, value);
+                if (label.compare("Mesher") == 0) {
+                    res->setMesher(strToMesher(value));
+                } else if (label.compare("Brute force volumes") == 0) {
+                    res->setBruteForceVolumes(strToBool(value));
+                } else if (label.compare("Mode") == 0) {
+                    res->setMode(strToMesherMode(value));
+                } else if (label.compare("Edge fraction") == 0) {
+                    res->setEdgeFraction(trim(value));
+                } else if (label.compare("SWF force") == 0) {
+                    res->setSwfForze(trim(value));
+                } else if (label.compare("Scale factor") == 0) {
+                    res->setScaleFactor(strToBool(value));
+                } else if (label.compare("Scale factor value") == 0) {
+                    res->setScaleFactorValue(trim(value));
+                } else if (label.compare("Effective parameters") == 0) {
+                    res->setEffectiveParameter(strToBool(value));
+                } else if (label.compare("Thickness") == 0) {
+                    res->setTh(trim(value));
+                } else if (label.compare("Sigma") == 0) {
+                    res->setSigma(trim(value));
+                } else if (label.compare("Location in mesh")==0) {
+                    CoordinateId id(atoi(value.c_str()));
+                    const CoordinateBase* coord = cG_->getPtrToId(id);
+                    if(coord != NULL) {
+                        if(coord->is<CoordD3>()) {
+                            res->setLocationInMesh(
+                                    coord->castTo<CoordD3>()->pos());
+                        }
+                    }
                 } else if (label.compare("Geometry scaling factor") == 0) {
                     res->setScalingFactor(atof(value.c_str()));
                 } else if (label.compare("Upper x bound") == 0) {
@@ -92,88 +153,14 @@ ParserGiD::readSolverParameters() {
                     res->setBoundaryPadding(strToBound(value));
                 } else if (label.compare("Boundary mesh size") == 0) {
                     res->setBoundaryMeshSize(strToBound(value));
-                } else if(label.find("End of solver parameters") != label.npos) {
-                    finished = true;
-                }
-            } // Closes ( !finished && !f_in.eof() ) while.
-        } // Closes problem data found if.
-    } // Closes problemDataFound while.
-    // Throws error messages if a problem was detected.
-    if (!problemDataFound) {
-        cerr << endl << "ERROR @ readSolverParameters(): "
-                << "EoF was reached but problem data was not found." << endl;
-    }
-    if (!finished) {
-        cerr << endl << "ERROR @ readSolverParameters(): "
-                << "EoF reached, \"end of problem data\" not found." << endl;
-    }
-    //
-    return res;
-}
-
-MesherParameters*
-ParserGiD::readMesherParameters() {
-    bool finished;
-    bool found = false;
-    string line, label, value;
-    MesherParameters::Mesher mesher = MesherParameters::ugrMesher;
-    MesherParameters::Mode mode = MesherParameters::structured;
-    bool bruteForceVolumes = true;
-    string edgeFraction;
-    string swfForce;
-    bool scaleFactor = false;
-    string scaleFactorValue;
-    bool effectiveParameters = false;
-    string thickness, sigma;
-    bool locationInMeshIsSet = false;
-    CVecD3 locationInMesh;
-    while (!found && !f_in.eof() ) {
-        getNextLabelAndValue(label, value);
-        if (label.compare("Mesher parameters") == 0) {
-            found = true;
-            finished = false;
-            while (!finished && !f_in.eof() ) {
-                getNextLabelAndValue(label, value);
-                if (label.compare("Mesher") == 0) {
-                    mesher = strToMesher(value);
-                } else if (label.compare("Brute force volumes") == 0) {
-                    bruteForceVolumes = strToBool(value);
-                } else if (label.compare("Mode") == 0) {
-                    mode = strToMesherMode(value);
-                } else if (label.compare("Edge fraction") == 0) {
-                    edgeFraction = trim(value);;
-                } else if (label.compare("SWF force") == 0) {
-                    swfForce = trim(value);
-                } else if (label.compare("Scale factor") == 0) {
-                    scaleFactor = strToBool(value);
-                } else if (label.compare("Scale factor value") == 0) {
-                    scaleFactorValue = trim(value);
-                } else if (label.compare("Effective parameters") == 0) {
-                    effectiveParameters = strToBool(value);
-                } else if (label.compare("Thickness") == 0) {
-                    thickness = trim(value);
-                } else if (label.compare("Sigma") == 0) {
-                    sigma = trim(value);;
-                } else if (label.compare("Location in mesh")==0) {
-                    CoordinateId id(atoi(value.c_str()));
-                    const CoordinateBase* coord = cG_->getPtrToId(id);
-                    if(coord != NULL) {
-                        if(coord->is<CoordD3>()) {
-                            locationInMeshIsSet = true;
-                            locationInMesh = coord->castTo<CoordD3>()->pos();
-                        }
-                    }
-                } else if (label.compare("End of mesher parameters")==0) {
+                } else if (label.compare("End of mesher options")==0) {
                     finished = true;
                 }
             }
         }
     }
     //
-    return new MesherParameters(mesher, locationInMeshIsSet, locationInMesh,
-            bruteForceVolumes, mode, effectiveParameters, thickness, sigma,
-            edgeFraction, scaleFactor, scaleFactorValue, swfForce,
-            getProjectFolder() + getProjectName());
+    return res;
 }
 
 Mesh*
@@ -289,38 +276,38 @@ ParserGiD::readPhysicalModel(const MatId id) {
             // Creates material.
             switch (type) {
             case PhysicalModelGroup<>::PEC:
-                return new PMPEC(id, name);
+            return new PMPEC(id, name);
             case PhysicalModelGroup<>::PMC:
-                return new PMPMC(id, name);
+            return new PMPMC(id, name);
             case PhysicalModelGroup<>::SMA:
-                return new PMSMA(id, name);
+            return new PMSMA(id, name);
             case PhysicalModelGroup<>::PML:
-                return new PMVolumePML(id, name);
+            return new PMVolumePML(id, name);
             case PhysicalModelGroup<>::classic:
-                if (eC == 0 && mC == 0) {
-                    return new PMVolume(id, name, rEps, rMu);
-                }
-                return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
+            if (eC == 0 && mC == 0) {
+                return new PMVolume(id, name, rEps, rMu);
+            }
+            return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
             case PhysicalModelGroup<>::elecDispersive:
-                return readDispersiveMatFile(id,name);
+            return readDispersiveMatFile(id,name);
             case PhysicalModelGroup<>::isotropicsibc:
-                switch (surfType) {
-                case sibc:
-                    return readIsotropicSurfMatFile(id, name);
-                case multilayer:
-                    return readMultilayerSurf(id, name, layersStr);
-                default:
-                    cerr << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
-                }
-                break;
+            switch (surfType) {
+            case sibc:
+                return readIsotropicSurfMatFile(id, name);
+            case multilayer:
+                return readMultilayerSurf(id, name, layersStr);
+            default:
+                cerr << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
+            }
+            break;
             case PhysicalModelGroup<>::wire:
-                return new PMWire(id, name, radius, R, L);
+            return new PMWire(id, name, radius, R, L);
             case PhysicalModelGroup<>::multiport:
-                if (mpType == PMMultiport::shortCircuit) {
-                    return new PMMultiportPredefined(id, name, mpType);
-                } else {
-                    return new PMMultiportRLC(id, name, mpType, R, L, C);
-                }
+            if (mpType == PMMultiport::shortCircuit) {
+                return new PMMultiportPredefined(id, name, mpType);
+            } else {
+                return new PMMultiportRLC(id, name, mpType, R, L, C);
+            }
             default:
                 cerr<< "ERROR @ Parsing materials: ";
                 cerr<< "Material type not recognized." << endl;
@@ -1272,25 +1259,25 @@ ParserGiD::strToGeneratorHardness(string str) const {
     }
 }
 
-SolverParameters::boundType
+MesherOptions::BoundType
 ParserGiD::strToBoundType(string str) const {
     str = trim(str);
     if (str.compare("PEC")==0) {
-        return SolverParameters::pec;
+        return MesherOptions::pec;
     } else if (str.compare("PMC")==0) {
-        return SolverParameters::pmc;
+        return MesherOptions::pmc;
     } else if (str.compare("PML")==0) {
-        return SolverParameters::pml;
+        return MesherOptions::pml;
     } else if (str.compare("Periodic")==0) {
-        return SolverParameters::periodic;
+        return MesherOptions::periodic;
     } else if (str.compare("MUR1")==0) {
-        return SolverParameters::mur1;
+        return MesherOptions::mur1;
     } else if (str.compare("MUR2")==0) {
-        return SolverParameters::mur2;
+        return MesherOptions::mur2;
     } else {
         cerr<< "ERROR @ Parser: "
                 << "Unreckognized bound label." << endl;
-        return SolverParameters::undefined;
+        return MesherOptions::undefined;
     }
 }
 
@@ -1508,48 +1495,48 @@ ParserGiD::readMagnitude(const string typeIn) {
     return NULL;
 }
 
-MesherParameters::Mesher ParserGiD::strToMesher(string str) const {
+MesherOptions::Mesher ParserGiD::strToMesher(string str) const {
     str = trim(str);
     if (str.compare("ugrMesher")==0) {
-        return MesherParameters::ugrMesher;
+        return MesherOptions::ugrMesher;
     } else if (str.compare("OpenFOAM")==0) {
-        return MesherParameters::openfoam;
+        return MesherOptions::openfoam;
     } else if (str.compare("None")==0) {
-        return MesherParameters::none;
+        return MesherOptions::none;
     } else {
         cerr<< "ERROR @ Parser: ";
         cerr<< "Unreckognized label: " << str<< endl;
-        return MesherParameters::none;
+        return MesherOptions::none;
     }
 }
 
-MesherParameters::Mode ParserGiD::strToMesherMode(string str) const {
+MesherOptions::Mode ParserGiD::strToMesherMode(string str) const {
     str = trim(str);
     if (str.compare("Structured")==0) {
-        return MesherParameters::structured;
+        return MesherOptions::structured;
     } else if (str.compare("Relaxed")==0) {
-        return MesherParameters::relaxed;
+        return MesherOptions::relaxed;
     } else if (str.compare("Slanted")==0) {
-        return MesherParameters::slanted;
+        return MesherOptions::slanted;
     } else {
         cerr<< "ERROR @ Parser: ";
         cerr<< "Unreckognized label: " << str<< endl;
-        return MesherParameters::structured;
+        return MesherOptions::structured;
     }
 }
 
-SolverParameters::Solver ParserGiD::strToSolver(string str) const {
+SolverOptions::Solver ParserGiD::strToSolver(string str) const {
     str = trim(str);
     if (str.compare("ugrfdtd")==0) {
-        return SolverParameters::ugrfdtd;
+        return SolverOptions::ugrfdtd;
     } else if (str.compare("cudg3d")==0) {
-        return SolverParameters::cudg3d;
+        return SolverOptions::cudg3d;
     } else if (str.compare("none")==0) {
-        return SolverParameters::none;
+        return SolverOptions::none;
     } else {
         cerr << endl << "ERROR @ Parser: ";
         cerr << "Unreckognized label: " << str<< endl;
-        return SolverParameters::none;
+        return SolverOptions::none;
     }
 }
 

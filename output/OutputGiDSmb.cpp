@@ -134,7 +134,7 @@ void OutputGiDSmb::writeElements(
     beginMesh(name, GiD_3D, type, nV);
     vector<CVecD3> pos;
     for(uint i = 0; i < elem.size(); i++) {
-        for (uint j = 0; j < nV; j++) {
+        for (int j = 0; j < nV; j++) {
             pos.push_back(elem[i]->getVertex(j)->pos());
         }
     }
