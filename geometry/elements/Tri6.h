@@ -42,7 +42,7 @@ public:
 
     void setV(const uint i, const CoordD3*);
 
-    Tri3 linearize() const;
+    Tri3* linearize() const;
 
     void printInfo() const;
 

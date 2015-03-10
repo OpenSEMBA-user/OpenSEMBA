@@ -134,8 +134,8 @@ void Tri3::printInfo() const {
 	}
 }
 
-Tri3 Tri3::linearize() const {
-	return *this;
+Tri3* Tri3::linearize() const {
+	return new Tri3(*this);
 }
 
 void Tri3::getCubatureTangentsVecProds(

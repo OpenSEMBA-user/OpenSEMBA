@@ -181,7 +181,7 @@ ParserGiD::readMesh() {
     // Reads the coordinates.
     cG_ = readCoordinates();
     // Reads elements connectivities.
-    ElementsGroup elements = readElements(*cG_);
+    ElementsGroup<> elements = readElements(*cG_);
     // Read Grid3
     Grid3* grid = readCartesianGrid();
     // Builds mesh with the read data.
@@ -554,17 +554,12 @@ ParserGiD::readCoordinates() {
 }
 
 
-ElementsGroup
+ElementsGroup<>
 ParserGiD::readElements(const CoordinateGroup<>& v) {
     string line, label;
     bool finished = false;
     bool found = false;
-    vector<Lin2> lin2;
-    vector<Tri3> tri3;
-    vector<Tri6> tri6;
-    vector<Tet4> tet4;
-    vector<Tet10> tet10;
-    vector<Hex8> hex8;
+    vector<ElementBase*> elems;
     while (!finished && !f_in.eof()) {
         getline(f_in, line);
         if (line.find("Elements:") != line.npos) {
@@ -574,139 +569,118 @@ ParserGiD::readElements(const CoordinateGroup<>& v) {
         label = line.substr(0, line.find(LABEL_ENDING));
         if (label.compare("Linear Hexahedral Elements")==0 ||
                 label.compare("Hexahedral Elements")==0) {
-            hex8 = readHex8Elements(v);
+            readHex8Elements(v, elems);
         } else if (label.compare("Quadratic Tetrahedral Elements")==0) {
-            tet10 = readTet10Elements(v);
+            readTet10Elements(v, elems);
         } else if (label.compare("Linear Tetrahedral Elements")==0 ||
                 label.compare("Tetrahedral Elements")==0) {
-            tet4 = readTet4Elements(v);
+            readTet4Elements(v, elems);
         } else if (label.compare("Quadratic Triangle Elements")==0) {
-            tri6 = readTri6Elements(v);
+            readTri6Elements(v, elems);
         } else if (label.compare("Linear Triangle Elements")==0 ||
                 label.compare("Triangle Elements")==0) {
-            tri3 = readTri3Elements(v);
+            readTri3Elements(v, elems);
         } else if (label.compare("Linear Line Elements")==0 ||
                 label.compare("Line Elements")==0) {
-            lin2 = readLin2Elements(v);
+            readLin2Elements(v, elems);
         } else if(label.find("End of Elements") != label.npos) {
             finished = true;
         }
     }
     // Shows error message if the elements label was not found.
     if (!found) {
-        cerr<< "ERROR @ GiDParser::readElements(): "
-                << "\"Elements\" label was not found." << endl;
+        cerr << "ERROR @ GiDParser::readElements(): "
+             << "\"Elements\" label was not found." << endl;
     }
     // This code is reached only in case of "End of elements" is not found.
     if (!finished) {
-        cerr<< "ERROR @ GiDParser::readElements()"
-                << "\"End of elements\" label was not found." << endl;
+        cerr << "ERROR @ GiDParser::readElements()"
+             << "\"End of elements\" label was not found." << endl;
     }
     //
-    ElementsGroup res(lin2, tri3, tri6, tet4, tet10, hex8);
-    return res;
+    return ElementsGroup<>(elems);
 }
 
-vector<Hex8>
-ParserGiD::readHex8Elements(const CoordinateGroup<>& v) {
-    vector<Hex8> res;
+void ParserGiD::readHex8Elements(const CoordinateGroup<>& v,
+                                 vector<ElementBase*>& elems) {
     ElementId id;
     CoordinateId vId[8];
     MatId matId;
-    res.reserve(pSize_.hex8);
     for (uint i = 0; i < pSize_.hex8; i++) {
         f_in >> id;
         for (uint j = 0; j < 8; j++) {
             f_in >> vId[j];
         }
         f_in >> matId;
-        res.push_back(Hex8(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Hex8(v, id, vId, LayerId(0), matId));
     }
-    return res;
 }
 
-vector<Tet10>
-ParserGiD::readTet10Elements(const CoordinateGroup<>& v) {
-    vector<Tet10> res;
+void ParserGiD::readTet10Elements(const CoordinateGroup<>& v,
+                                  vector<ElementBase*>& elems) {
     ElementId id;
     CoordinateId vId[10];
     MatId matId;
-    res.reserve(pSize_.tet10);
     for (uint i = 0; i < pSize_.tet10; i++) {
         f_in >> id;
         for (uint j = 0; j < 10; j++) {
             f_in >> vId[j];
         }
         f_in >> matId;
-        res.push_back(Tet10(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Tet10(v, id, vId, LayerId(0), matId));
     }
-    return res;
 }
 
-vector<Tet4>
-ParserGiD::readTet4Elements(
-        const CoordinateGroup<>& v) {
-    vector<Tet4> res;
+void ParserGiD::readTet4Elements(const CoordinateGroup<>& v,
+                                 vector<ElementBase*>& elems) {
     ElementId id;
     CoordinateId vId[4];
     LayerId layerId;
     MatId matId;
-    res.reserve(pSize_.tet4);
     for (uint i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
-        res.push_back(Tet4(v, id, vId, layerId, matId));
+        elems.push_back(new Tet4(v, id, vId, layerId, matId));
     }
-    return res;
 }
 
-vector<Tri6>
-ParserGiD::readTri6Elements(const CoordinateGroup<>& v) {
-    vector<Tri6> res;
+void ParserGiD::readTri6Elements(const CoordinateGroup<>& v,
+                                 vector<ElementBase*>& elems) {
     ElementId id;
     CoordinateId vId[6];
     MatId matId;
     CVecD3 normal;
-    res.reserve(pSize_.tri6);
     for (uint i = 0; i < pSize_.tri6; i++) {
         f_in >> id;
         for (uint j = 0; j < 6; j++)
             f_in >> vId[j];
         f_in >> matId;
-        res.push_back(Tri6(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Tri6(v, id, vId, LayerId(0), matId));
     }
-    return res;
 }
 
-
-vector<Tri3>
-ParserGiD::readTri3Elements(const CoordinateGroup<>& v) {
-    vector<Tri3> res;
+void ParserGiD::readTri3Elements(const CoordinateGroup<>& v,
+                                 vector<ElementBase*>& elems) {
     ElementId id;
     CoordinateId vId[3];
     LayerId layerId;
     MatId matId;
     CVecD3 normal;
-    res.reserve(pSize_.tri3);
     for (uint i = 0; i < pSize_.tri3; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> matId >> layerId;
-        res.push_back(Tri3(v, id, vId, layerId, matId));
+        elems.push_back(new Tri3(v, id, vId, layerId, matId));
     }
-    return res;
 }
 
-vector<Lin2>
-ParserGiD::readLin2Elements(const CoordinateGroup<>& v) {
-    vector<Lin2> res;
+void ParserGiD::readLin2Elements(const CoordinateGroup<>& v,
+                                 vector<ElementBase*>& elems) {
     ElementId id;
     CoordinateId vId[2];
     LayerId layerId;
     MatId matId;
-    res.reserve(pSize_.lin2);
     for (uint i = 0; i < pSize_.lin2; i++) {
         f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;
-        res.push_back(Lin2(v, id, vId, layerId, matId));
+        elems.push_back(new Lin2(v, id, vId, layerId, matId));
     }
-    return res;
 }
 
 PMVolumeDispersive*

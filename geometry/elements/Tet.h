@@ -34,7 +34,7 @@ public:
     virtual const Simplex& getTet() const = 0;
     virtual double getVolume() const = 0;
     virtual double getAreaOfFace(const uint face) const = 0;
-    virtual Tri3 getTri3Face(const uint f) const;
+    virtual Tri3* getTri3Face(const uint f) const;
     virtual void getOrderedSideVerticesId(uint val[3], uint f) const;
 
     void getCubaturePositions(

@@ -54,11 +54,11 @@ MapSurface::operator=(const MapSurface& rhs) {
 }
 
 void
-MapSurface::reassignPointers(const ElementsGroup& nEG) {
-   local = nEG.getTriPtrToId(local->getId());
-   for (unsigned int i = 0; i < 2; i++) {
-      vol[i] = nEG.getTetPtrToId(vol[i]->getId());
-   }
+MapSurface::reassignPointers(const ElementsGroup<>& nEG) {
+    local = nEG.getPtrToId(local->getId())->castTo<Tri>();
+    for (unsigned int i = 0; i < 2; i++) {
+        vol[i] = nEG.getPtrToId(vol[i]->getId())->castTo<Tet>();
+    }
 }
 
 bool

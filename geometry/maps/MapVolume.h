@@ -27,7 +27,7 @@ public:
    unsigned int
     getVolToF(unsigned int f) const {return volToF[f];}
    void
-    reassignPointers(const ElementsGroup& nEG);
+    reassignPointers(const ElementsGroup<>& nEG);
    const Tet*
     getVol(unsigned int f) const {return vol[f];}
    bool

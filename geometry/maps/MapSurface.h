@@ -25,7 +25,7 @@ public:
    const Tet*
     getVol(unsigned int f) const {return vol[f];}
    void
-    reassignPointers(const ElementsGroup& nEG);
+    reassignPointers(const ElementsGroup<>& nEG);
    bool
     isBoundary() const;
    void

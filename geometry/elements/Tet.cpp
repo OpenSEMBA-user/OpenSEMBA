@@ -31,12 +31,12 @@ Tet::~Tet() {
 
 }
 
-Tri3 Tet::getTri3Face(const uint f) const {
+Tri3* Tet::getTri3Face(const uint f) const {
     const CoordD3* coord[3];
     for (uint i = 0; i < 3; i++) {
         coord[i] = getSideVertex(f,i);
     }
-    return Tri3(ElementId(0), coord, getLayerId(), getMatId());
+    return new Tri3(ElementId(0), coord, getLayerId(), getMatId());
 }
 
 void Tet::getOrderedSideVerticesId(

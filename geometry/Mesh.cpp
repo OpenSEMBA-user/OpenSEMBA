@@ -25,7 +25,7 @@ Mesh::Mesh(
 
 Mesh::Mesh(
         const CoordinateGroup<>& cG,
-        const ElementsGroup& elem,
+        const ElementsGroup<>& elem,
         const Grid3* grid) {
     cG_ = cG;
     elem_ = elem;
@@ -79,7 +79,7 @@ Mesh::getBorderWithNormal(
 }
 
 vector<uint>
-Mesh::getAdjacentElements(const vector<uint>& region) const {
+Mesh::getAdjacentElements(const vector<ElementId>& region) const {
     vector<pair<const Volume*, uint> > outer;
     outer = getExternalBorder(region);
     uint nOut = outer.size();
@@ -106,9 +106,12 @@ pair<const Volume*, uint> Mesh::getNeighConnection(
 
 bool
 Mesh::isFloatingCoordinate(const CoordD3* param) const {
-    for (uint i = 0; i < elem_.element.size(); i++) {
-        for (uint j = 0; j < elem_.element[i]->numberOfCoordinates(); j++) {
-            if (*param == *elem_.element[i]->getV(j)) {
+    for (uint i = 0; i < elem_.size(); i++) {
+        if(!elem_(i)->is<Element>())
+            continue;
+        const Element* elem = elem_(i)->castTo<Element>();
+        for (uint j = 0; j < elem->numberOfCoordinates(); j++) {
+            if (*param == *elem->getV(j)) {
                 return false;
             }
         }
@@ -145,8 +148,10 @@ Mesh::isOnBoundary(const CVecD3 pos) const {
 const CoordD3* Mesh::getClosestVertex(const CVecD3 pos) const {
     const CoordD3* res;
     double minDist = numeric_limits<double>::infinity();
-    for (uint b = 0; b < elem_.element.size(); b++) {
-        const Element* element = elem_.element[b];
+    for (uint b = 0; b < elem_.size(); b++) {
+        if(!elem_(b)->is<Element>())
+            continue;
+        const Element* element = elem_(b)->castTo<Element>();
         for (uint i = 0; i < element->numberOfCoordinates(); i++) {
             const CoordD3* candidate = element->getV(i);
             if ((candidate->pos() - res->pos()).norm() < minDist) {
@@ -158,8 +163,8 @@ const CoordD3* Mesh::getClosestVertex(const CVecD3 pos) const {
 }
 
 vector<const Surface*> Mesh::getMaterialBoundary(
-        const uint matId,
-        const uint layId) const {
+        const MatId   matId,
+        const LayerId layId) const {
     vector<const Surface*> res;
     vector<const Element*> e = elem_.get(Element::surface, matId, layId);
     res.reserve(e.size());
@@ -192,45 +197,49 @@ Mesh::setMaterialIds(
 vector<uint>
 Mesh::getIdsOfCurvedTets() const {
     vector<uint> res;
-    uint nK = elem_.nVolumeElements();
+    vector<const Tet*> tet = elem_.getVectorOf<Tet>();
+    uint nK = tet.size();
     for (uint k = 0; k < nK; k++) {
-        if (elem_.tet[k]->isCurved()) {
-            res.push_back(elem_.tet[k]->getId());
+        if (tet[k]->isCurved()) {
+            res.push_back(tet[k]->getId());
         }
     }
     return res;
 }
 
 
-vector<Tri3>
+vector<const Tri3*>
 Mesh::getTriWithMatId(
         const uint matId,
         const bool ignoreTet) const {
-    vector<Tri3> res;
-    const uint nTri = elem_.tri.size();
-    const uint nTet = elem_.tet.size();
+    vector<const Tri3*> res;
+    const uint nTri = elem_.sizeOf<Tri>();
+    const uint nTet = elem_.sizeOf<Tet>();
     res.reserve(nTri + nTet);
     // --- Runs over surfaces -------------------------------------------------
-    const uint nTri3 = elem_.tri3.size();
+    vector<const Tri3*> tri3 = elem_.getVectorOf<Tri3>();
+    const uint nTri3 = tri3.size();
     for (uint i = 0; i < nTri3; i++) {
-        if (elem_.tri3[i].getMatId() == matId) {
-            res.push_back(elem_.tri3[i]);
+        if (tri3[i]->getMatId() == matId) {
+            res.push_back(tri3[i]);
         }
     }
-    const uint nTri6 = elem_.tri6.size();
+    vector<const Tri6*> tri6 = elem_.getVectorOf<Tri6>();
+    const uint nTri6 = tri6.size();
     for (uint i = 0; i < nTri6; i++) {
-        if (elem_.tri6[i].getMatId() == matId) {
-            res.push_back(elem_.tri6[i].linearize());
+        if (tri6[i]->getMatId() == matId) {
+            res.push_back(tri6[i]->linearize());
         }
     }
     // --- Runs over tetrahedrons ---------------------------------------------
     if (!ignoreTet) {
-        vector<uint> tetIds;
+        vector<const Tet*> tet = elem_.getVectorOf<Tet>();
+        vector<ElementId> tetIds;
         tetIds.reserve(nTet);
         for (uint i = 0; i < nTet; i++) {
             // Generates list of tetrahedrons ids.
-            if (elem_.tet[i]->getMatId() == matId) {
-                tetIds.push_back(elem_.tet[i]->getId());
+            if (tet[i]->getMatId() == matId) {
+                tetIds.push_back(tet[i]->getId());
             }
         }
         // Gets internal border of tetrahedron volume.
@@ -248,24 +257,25 @@ Mesh::getTriWithMatId(
 }
 
 
-vector<Tri3>
+vector<const Tri3*>
 Mesh::getTriWithId(const vector<ElementId>& ids) const {
-    vector<Tri3> res;
-    res.reserve(elem_.tri3.size());
+    vector<const Tri3*> res;
+    vector<const Tri3*> tri3 = elem_.getVectorOf<Tri3>();
+    res.reserve(tri3.size());
     for (uint i = 0; i < ids.size(); i++) {
-        for (uint j = 0; j < elem_.tri3.size(); j++) {
-            if (ids[i] == elem_.tri3[j].getId()) {
-                res.push_back(elem_.tri3[j]);
+        for (uint j = 0; j < tri3.size(); j++) {
+            if (ids[i] == tri3[j]->getId()) {
+                res.push_back(tri3[j]);
             }
         }
     }
     return res;
 }
 
-vector<uint>
+vector<ElementId>
 Mesh::getTetIds(
- const vector<uint> elemIds) const {
-    vector<uint> res;
+ const vector<ElementId> elemIds) const {
+    vector<ElementId> res;
     res.reserve(elemIds.size());
     const uint nId = elemIds.size();
     for (uint i = 0; i < nId; i++) {
@@ -278,7 +288,7 @@ Mesh::getTetIds(
 
 vector<pair<const Volume*, uint> >
 Mesh::getInternalBorder(
- const vector<uint>& region) const {
+ const vector<ElementId>& region) const {
     // Runs over all elements contained in the region vector detecting
     // the internal border. Returns a vector containing the element
     // faces composing the internal border.
@@ -293,7 +303,7 @@ Mesh::getInternalBorder(
 
 vector<pair<const Volume*, uint> >
 Mesh::getExternalBorder(
- const vector<uint>& elemIds) const {
+ const vector<ElementId>& elemIds) const {
     // Generates a vector of pairs pointers to tetrahedrons and faces that
     // connects with the region specified by the elemIds inputted.
     // If the element's face in the inputted region is in the computational
@@ -319,7 +329,7 @@ Mesh::getExternalBorder(
 
 vector<pair<const Volume*, uint> >
 Mesh::getInternalBorderOfTetRegion(
- const vector<uint>& region) const {
+ const vector<ElementId>& region) const {
     // Builds a list with all tetrahedron faces.
     static const uint faces = 4;
     static const uint nVert = 3;
@@ -327,7 +337,9 @@ Mesh::getInternalBorderOfTetRegion(
     uint nList = nK * faces;
     DynMatrix<uint> fList(nList, 2 + nVert);
     for (uint k = 0; k < nK; k++) {
-        const Tet* tet = elem_.getTetPtrToId(region[k]);
+        if(!elem_.getPtrToId(region[k])->is<Tet>())
+            continue;
+        const Tet* tet = elem_.getPtrToId(region[k])->castTo<Tet>();
         for (uint f = 0; f < faces; f++) {
             uint row = k * faces + f;
             fList(row, 0) = tet->getId();
@@ -358,7 +370,10 @@ Mesh::getInternalBorderOfTetRegion(
         if (matches) {
             k++;
         } else {
-            const Tet* tet = elem_.getTetPtrToId(fList(k,0));
+            if(!elem_.getPtrToId(ElementId(fList(k,0)))->is<Tet>())
+                continue;
+            const Tet* tet = elem_.getPtrToId(
+                                 ElementId(fList(k,0)))->castTo<Tet>();
             uint face = fList(k,1);
             pair<const Tet*, uint> aux(tet, face);
             res.push_back(aux);
@@ -369,7 +384,7 @@ Mesh::getInternalBorderOfTetRegion(
 
 vector<pair<const Volume*, uint> >
 Mesh::getInternalBorderOfTriRegion(
- const vector<uint>& region) const {
+ const vector<ElementId>& region) const {
     uint nE = region.size();
     vector<pair<const Volume*, uint> > res(nE);
     for (uint i = 0; i < nE; i++) {
@@ -397,11 +412,16 @@ Mesh::getBound(const vector<ElementId>& list) const {
 	   return BoxD3().setInfinity();
 	}
 	// Runs over border computing the bounding box of each face.
-	BoxD3 bound = elem_.getPtrToId(list[0])->getBound();
+	if(!elem_.getPtrToId(list[0])->is<Element>())
+	    return BoxD3();
+	const Element* elem = elem_.getPtrToId(list[0])->castTo<Element>();
+	BoxD3 bound = elem->getBound();
 	const uint nK = list.size();
 	for (uint i = 1; i < nK; i++) {
-		const Element* e = elem_.getPtrToId(list[i]);
-		bound << e->getBound();
+	    if(!elem_.getPtrToId(list[i])->is<Element>())
+            continue;
+	    const Element* elem = elem_.getPtrToId(list[i])->castTo<Element>();
+		bound << elem->getBound();
 	}
 	return bound;
 }
@@ -425,28 +445,29 @@ Mesh::getBound(
 	return bound;
 }
 
-vector<uint>
-Mesh::getIdsInsideBound(
- const BoxD3& bound, const Element::Type type) const {
-	const uint nK = elem_.element.size();
-	vector<uint> res;
-	res.reserve(nK);
-	BoxD3 localBound;
-	for (uint i = 0; i < nK; i++) {
-		const Element* e = elem_.element[i];
-		localBound = e->getBound();
-		if (localBound <= bound
-		 && (e->getType() == type || type==Element::undefined)) {
-			res.push_back(e->getId());
-		}
-	}
-	return res;
+vector<ElementId>
+Mesh::getIdsInsideBound(const BoxD3& bound, const Element::Type type) const {
+    const uint nK = elem_.size();
+    vector<ElementId> res;
+    res.reserve(nK);
+    BoxD3 localBound;
+    for (uint i = 0; i < nK; i++) {
+        if (!elem_(i)->is<Element>())
+            continue;
+        const Element* e = elem_(i)->castTo<Element>();
+        localBound = e->getBound();
+        if (localBound <= bound
+        && (e->getType() == type || type==Element::undefined)) {
+            res.push_back(e->getId());
+        }
+    }
+    return res;
 }
 
 bool
 Mesh::isRectilinear() const {
 	bool hasCartesianGridDefined = (grid_ != NULL);
-	bool onlyContainsQuad4 = (elem_.quad4.size() == elem_.element.size());
+	bool onlyContainsQuad4 = (elem_.sizeOf<Quad4>() == elem_.size());
 	return (hasCartesianGridDefined && onlyContainsQuad4);
 }
 
@@ -470,20 +491,22 @@ Mesh::applyGeometricScalingFactor(
 }
 
 vector<pair<const Element*, uint> >
-Mesh::getElementsWithVertex(
-      const uint vertexId,
-      const Element::Type type) const {
-   vector<pair<const Element*, uint> > res;
-   for (uint i = 0; i < elem_.element.size(); i++) {
-      const Element* e = elem_.element[i];
-      for (uint j = 0; j < e->numberOfVertices(); j++) {
-         if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
-            pair<const Element*, uint> aux(e,j);
-            res.push_back(aux);
-         }
-      }
-   }
-   return res;
+Mesh::getElementsWithVertex(const uint vertexId,
+                            const Element::Type type) const {
+
+    vector<pair<const Element*, uint> > res;
+    for (uint i = 0; i < elem_.size(); i++) {
+        if(!elem_(i)->is<Element>())
+            continue;
+        const Element* e = elem_(i)->castTo<Element>();
+        for (uint j = 0; j < e->numberOfVertices(); j++) {
+            if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
+                pair<const Element*, uint> aux(e,j);
+                res.push_back(aux);
+            }
+        }
+    }
+    return res;
 }
 
 void Mesh::printInfo() const {

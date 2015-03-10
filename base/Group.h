@@ -21,6 +21,7 @@ public:
 
     unsigned size() const { return element_.size(); }
 
+    T*       operator()(const unsigned i);
     const T* operator()(const unsigned i) const;
 
     template<class T2>

@@ -18,6 +18,7 @@ public:
 
     GroupId<T, Id>& operator=(const Group<T>& rhs);
 
+    T*       getPtrToId(const Id id);
     const T* getPtrToId(const Id id) const;
 
     template<class T2>

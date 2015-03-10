@@ -46,6 +46,11 @@ Group<T>& Group<T>::operator=(const Group<T>& rhs) {
 }
 
 template<typename T>
+T* Group<T>::operator()(const unsigned i) {
+    return element_[i];
+}
+
+template<typename T>
 const T* Group<T>::operator()(const unsigned i) const {
     return element_[i];
 }

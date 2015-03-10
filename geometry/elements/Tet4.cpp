@@ -115,7 +115,7 @@ bool Tet4::isCurvedFace(const uint face) const {
 bool Tet4::isFaceContainedInPlane(
 const uint face,
 const CartesianPlane plane) const {
-    return getTri3Face(face).isContainedInPlane(plane);
+    return getTri3Face(face)->isContainedInPlane(plane);
 }
 
 const CoordD3* Tet4::getSideV(const uint f, const uint i) const {

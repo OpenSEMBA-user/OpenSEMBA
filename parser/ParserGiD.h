@@ -66,13 +66,19 @@ private:
             const string& name,
             const string& layersString) const;
     CoordinateGroup<>* readCoordinates();
-    ElementsGroup readElements(const CoordinateGroup<>&);
-    vector<Hex8> readHex8Elements(const CoordinateGroup<>& v);
-    vector<Tet10> readTet10Elements(const CoordinateGroup<>& v);
-    vector<Tet4> readTet4Elements(const CoordinateGroup<>& v);
-    vector<Tri6> readTri6Elements(const CoordinateGroup<>& v);
-    vector<Tri3> readTri3Elements(const CoordinateGroup<>& v);
-    vector<Lin2> readLin2Elements(const CoordinateGroup<>& v);
+    ElementsGroup<> readElements(const CoordinateGroup<>&);
+    void readHex8Elements (const CoordinateGroup<>& v,
+                           vector<ElementBase*>& elems);
+    void readTet10Elements(const CoordinateGroup<>& v,
+                           vector<ElementBase*>& elems);
+    void readTet4Elements (const CoordinateGroup<>& v,
+                           vector<ElementBase*>& elems);
+    void readTri6Elements (const CoordinateGroup<>& v,
+                           vector<ElementBase*>& elems);
+    void readTri3Elements (const CoordinateGroup<>& v,
+                           vector<ElementBase*>& elems);
+    void readLin2Elements (const CoordinateGroup<>& v,
+                           vector<ElementBase*>& elems);
     Grid3* readCartesianGrid();
     void readOutRqInstances(OutRqGroup<>* res);
     void getNextLabelAndValue(string& label, string& value);

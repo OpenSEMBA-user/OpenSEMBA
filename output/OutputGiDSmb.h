@@ -20,13 +20,13 @@ private:
     const SmbData* smb_;
     void writeMesh();
     void writeMeshWithIds(
-            const vector<vector<uint> >& ids,
+            const vector<vector<ElementId> >& ids,
             string& name);
     void writeMeshWithIds(
-            const vector<vector<uint> >& ids,
+            const vector<vector<ElementId> >& ids,
             const vector<string>& name);
     void writeMeshWithIds(
-            const vector<uint>& ids, string& name);
+            const vector<ElementId>& ids, string& name);
     void writeOutputRequestsMesh();
     void writeElements(
             const vector<const Element*>& entities,

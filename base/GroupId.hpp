@@ -42,6 +42,14 @@ GroupId<T, Id>::operator=(const Group<T>& rhs) {
 }
 
 template<typename T, class Id>
+T* GroupId<T, Id>::getPtrToId(const Id id) {
+    if(mapId_.count(id) != 0)
+        return this->element_[mapId_.at(id)];
+
+    return NULL;
+}
+
+template<typename T, class Id>
 const T* GroupId<T, Id>::getPtrToId(const Id id) const {
     if(mapId_.count(id) != 0)
         return this->element_[mapId_.at(id)];

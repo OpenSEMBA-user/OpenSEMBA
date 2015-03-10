@@ -119,13 +119,12 @@ void Tet10::setV(const uint i, const CoordD3* vNew) {
     v_[i] = vNew;
 }
 
-Tet4 Tet10::linearize() const {
+Tet4* Tet10::linearize() const {
     const Coordinate<double,3>* vertex[4];
     for (uint i = 0; i < 4; i++) {
         vertex[i] = getVertex(i);
     }
-    Tet4 res(getId(), vertex, getLayerId(), getMatId());
-    return res;
+    return new Tet4(getId(), vertex, getLayerId(), getMatId());
 }
 
 void Tet10::printInfo() const {

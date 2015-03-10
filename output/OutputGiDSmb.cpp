@@ -47,7 +47,7 @@ OutputGiDSmb::writeMesh() {
 
 void
 OutputGiDSmb::writeMeshWithIds(
-        const vector<vector<uint> >& ids,
+        const vector<vector<ElementId> >& ids,
         const vector<string>& name) {
     assert(ids.size() == name.size());
     const bool isLinear = smb_->mesh->isLinear();
@@ -59,7 +59,8 @@ OutputGiDSmb::writeMeshWithIds(
         int tmpCounter = coordCounter_;
         static const uint GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (uint j = 0; j < ids[t].size(); j++) {
-            const Element* e = smb_->mesh->elem_.getPtrToId(ids[t][j]);
+            const Element* e = smb_->mesh->elem_.getPtrToId(ids[t][j])
+                                   ->castTo<Element>();
             for (int i = 0; i < nV; i++) {
                 CVecD3 pos;
                 if (isLinear) {
@@ -87,7 +88,7 @@ OutputGiDSmb::writeMeshWithIds(
 
 void
 OutputGiDSmb::writeMeshWithIds(
-        const vector<vector<uint> >& ids,
+        const vector<vector<ElementId> >& ids,
         string& name) {
     vector<string> names;
     for (uint i = 0; i < ids.size(); i++) {
@@ -100,8 +101,8 @@ OutputGiDSmb::writeMeshWithIds(
 
 void
 OutputGiDSmb::writeMeshWithIds(
-        const vector<uint>& ids, string& name) {
-    vector<vector<uint> > aux;
+        const vector<ElementId>& ids, string& name) {
+    vector<vector<ElementId> > aux;
     aux.push_back(ids);
     writeMeshWithIds(aux, name);
 }
@@ -134,7 +135,7 @@ void OutputGiDSmb::writeElements(
     beginMesh(name, GiD_3D, type, nV);
     vector<CVecD3> pos;
     for(uint i = 0; i < elem.size(); i++) {
-        for (uint j = 0; j < nV; j++) {
+        for (int j = 0; j < nV; j++) {
             pos.push_back(elem[i]->getVertex(j)->pos());
         }
     }

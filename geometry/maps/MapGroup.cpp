@@ -14,16 +14,17 @@ MapGroup::~MapGroup() {
 }
 
 void
-MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup& eG) {
+MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
    // Builds a list with all tetrahedron faces.
    static const unsigned int faces = 4;
    static const unsigned int nVert = 3;
-   unsigned int nK = eG.nVolumeElements();
+   vector<const Tet*> tet = eG.getVectorOf<Tet>();
+   unsigned int nK = tet.size();
    unsigned int nList = nK * faces;
    DynMatrix<unsigned int> fList(nList, 2 + nVert);
    for (unsigned int k = 0; k < nK; k++) {
-      unsigned int id = eG.tet[k]->getId();
-      const Tet* aux = eG.getTetPtrToId(id);
+      ElementId id = tet[k]->getId();
+      const Tet* aux = eG.getPtrToId(id)->castTo<Tet>();
       for (unsigned int f = 0; f < faces; f++) {
          unsigned int row = k * faces + f;
          fList(row, 0) = id;
@@ -55,9 +56,9 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup& eG) {
       matches &= fList(i,3) == fList(i+1,3);
       matches &= fList(i,4) == fList(i+1,4);
       if (matches) {
-         unsigned int k1 = fList(i,0) - eG.offsetIdTet;
+         unsigned int k1 = fList(i,0);
          unsigned int f1 = fList(i,1);
-         unsigned int k2 = fList(i+1,0) - eG.offsetIdTet;
+         unsigned int k2 = fList(i+1,0);
          unsigned int f2 = fList(i+1,1);
          etoe(k1,f1) = k2;
          etof(k1,f1) = f2;
@@ -67,11 +68,11 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup& eG) {
    }
    // Generates tetrahedron maps.
    for (unsigned int k = 0; k < nK; k++) {
-      const Tet *local = eG.getTetPtrToId(k + eG.offsetIdTet);
+      const Tet *local = eG.getPtrToId(tet[k]->getId())->castTo<Tet>();
       const Tet *neigh[4];
       unsigned int neighFaces[4];
       for (unsigned int j = 0; j < 4; j++) {
-         neigh[j] = eG.getTetPtrToId(etoe(k,j) + eG.offsetIdTet);
+         neigh[j] = eG.getPtrToId(ElementId(etoe(k,j)))->castTo<Tet>();
          neighFaces[j] = etof(k,j);
       }
       pair<uint, MapVolume*>
@@ -79,10 +80,11 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup& eG) {
       tet_.insert(aux);
    }
    // Now uses the generated ordered fList to build the triangle maps.
-   const unsigned int nS = eG.nSurfaceElements();
+   vector<const Tri*> tri = eG.getVectorOf<Tri>();
+   const unsigned int nS = tri.size();
    for (unsigned int s = 0; s < nS; s++) {
-      unsigned int id = eG.tri[s]->getId();
-      const Tri *local = eG.getTriPtrToId(id);
+      ElementId id = tri[s]->getId();
+      const Tri* local = eG.getPtrToId(id)->castTo<Tri>();
       pair<const Tet*, const Tet*> neigh;
       unsigned int ordered[nVert];
       local->getOrderedVerticesId(ordered);
@@ -105,10 +107,10 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup& eG) {
          matches = false;
       }
       if (matches) {
-         neigh.first = eG.getTetPtrToId(fList(i,0));
-         neigh.second = eG.getTetPtrToId(fList(i+1,0));
+         neigh.first = eG.getPtrToId(ElementId(fList(i,0)))->castTo<Tet>();
+         neigh.second = eG.getPtrToId(ElementId(fList(i+1,0)))->castTo<Tet>();
       } else {
-         neigh.first = eG.getTetPtrToId(fList(i,0));
+         neigh.first = eG.getPtrToId(ElementId(fList(i,0)))->castTo<Tet>();
          neigh.second = neigh.first;
       }
       pair<uint, MapSurface*> aux(local->getId(), new MapSurface(local, neigh));
@@ -117,7 +119,7 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup& eG) {
 }
 
 void
-MapGroup::reassignPointers(const ElementsGroup& newEG) {
+MapGroup::reassignPointers(const ElementsGroup<>& newEG) {
    {
       map<uint,MapVolume*>::iterator it;
       for (it=tet_.begin(); it != tet_.end(); ++it) {

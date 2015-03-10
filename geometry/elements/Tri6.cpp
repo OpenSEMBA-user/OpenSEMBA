@@ -150,13 +150,12 @@ void Tri6::setV(const uint i, const CoordD3* vNew) {
     v_[i] = vNew;
 }
 
-Tri3 Tri6::linearize() const {
+Tri3* Tri6::linearize() const {
 	const CoordD3* vertex[3];
 	for (uint i = 0; i < 3; i++) {
 		vertex[i] = getVertex(i);
 	}
-	Tri3 res(getId(), vertex, getLayerId(), getMatId());
-	return res;
+	return new Tri3(getId(), vertex, getLayerId(), getMatId());
 }
 
 void Tri6::printInfo() const {

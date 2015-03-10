@@ -20,9 +20,9 @@ public:
    MapGroup();
    virtual ~MapGroup();
    void
-    build(const CoordinateGroup<>& cG, const ElementsGroup& elem);
+    build(const CoordinateGroup<>& cG, const ElementsGroup<>& elem);
    void
-    reassignPointers(const ElementsGroup& nEG);
+    reassignPointers(const ElementsGroup<>& nEG);
    const Tet*
     getNeighbour(const uint id, const uint face) const;
    uint

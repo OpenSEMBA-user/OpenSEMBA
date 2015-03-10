@@ -47,7 +47,7 @@ public:
 
     void setV(const uint i, const CoordD3*);
 
-    Tet4 linearize() const;
+    Tet4* linearize() const;
 
     void printInfo() const;
     void check() const;
