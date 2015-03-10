@@ -14,19 +14,19 @@ class PMVolume : public PhysicalModel {
 public:
 	PMVolume(
 	        const MatId id, const string name,
-	        const double rEps, const double rMu);
+	        const Real rEps, const Real rMu);
 	virtual ~PMVolume();
 
     virtual ClassBase* clone() const;
 
-    double getRelativePermittivity() const;
-    double getPermittivity() const;
-    double getRelativePermeability() const;
-    double getPermeability() const;
-    double getImpedance() const;
-    double getAdmitance() const;
-    virtual double getElectricConductivity() const;
-    virtual double getMagneticConductivity() const;
+    Real getRelativePermittivity() const;
+    Real getPermittivity() const;
+    Real getRelativePermeability() const;
+    Real getPermeability() const;
+    Real getImpedance() const;
+    Real getAdmitance() const;
+    virtual Real getElectricConductivity() const;
+    virtual Real getMagneticConductivity() const;
     bool isVacuum() const;
     virtual bool isVolumic() const;
     virtual bool isClassic() const;
@@ -36,8 +36,8 @@ public:
 
 
 private:
-    double rEps_; // Rel. permittivity @ infte. freq.
-    double rMu_; // Rel. permeability @ infte. freq.
+    Real rEps_; // Rel. permittivity @ infte. freq.
+    Real rMu_; // Rel. permeability @ infte. freq.
 };
 
 #endif /* PMVOLUME_H_ */

@@ -94,7 +94,7 @@ ProjectFile::getFilesBasenames(
    }
    // Stores files with names matching extension.
    vector<string> res;
-   for (uint i = 0; i < files.size(); i++) {
+   for (UInt i = 0; i < files.size(); i++) {
       size_t index = files[i].find(extension);
       if (string::npos != index) {
          res.push_back(files[i]);

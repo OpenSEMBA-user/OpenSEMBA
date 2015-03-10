@@ -10,8 +10,6 @@
 #include "IdBase.h"
 #include "Layer.h"
 
-typedef unsigned int uint;
-
 CreateId(ElementId);
 CreateId(MatId);
 
@@ -36,12 +34,12 @@ public:
     virtual bool isCurved   () const { return false; }
     virtual bool isQuadratic() const { return false; }
     
-    virtual uint numberOfFaces      () const = 0;
-    virtual uint numberOfVertices   () const = 0;
-    virtual uint numberOfCoordinates() const = 0;
+    virtual UInt numberOfFaces      () const = 0;
+    virtual UInt numberOfVertices   () const = 0;
+    virtual UInt numberOfCoordinates() const = 0;
     
-    virtual uint numberOfSideVertices   (const uint f = 0) const = 0;
-    virtual uint numberOfSideCoordinates(const uint f = 0) const = 0;
+    virtual UInt numberOfSideVertices   (const UInt f = 0) const = 0;
+    virtual UInt numberOfSideCoordinates(const UInt f = 0) const = 0;
     
     virtual Type getType() const { return undefined; }
 

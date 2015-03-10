@@ -32,12 +32,12 @@ private:
             const vector<const Element*>& entities,
             const string& name,
             const GiD_ElementType type,
-            const int nV);
+            const Int nV);
     //    void writeBCMesh();
     //    void writeBCMesh(
     //            const vector<const BoundaryCondition*>& list,
     //            const string& name,
-    //            const CVecD3& colorRGB);
+    //            const CVecR3& colorRGB);
 };
 
 #endif /* SRC_COMMON_OUTPUT_OUTPUTGIDSMB_H_ */

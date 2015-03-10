@@ -24,28 +24,28 @@ public:
     
     ClassBase* clone() const;
     
-	uint numberOfFaces      () const;
-	uint numberOfVertices   () const;
-	uint numberOfCoordinates() const;
+	UInt numberOfFaces      () const;
+	UInt numberOfVertices   () const;
+	UInt numberOfCoordinates() const;
     
-	uint numberOfSideVertices   (const uint f) const;
-	uint numberOfSideCoordinates(const uint f) const;
+	UInt numberOfSideVertices   (const UInt f) const;
+	UInt numberOfSideCoordinates(const UInt f) const;
     
-	const CoordD3* getV    (const uint i) const;
-	const CoordD3* getSideV(const uint f,
-                            const uint i) const;
+	const CoordR3* getV    (const UInt i) const;
+	const CoordR3* getSideV(const UInt f,
+                            const UInt i) const;
     
-	const CoordD3* getVertex    (const uint i) const;
-	const CoordD3* getSideVertex(const uint f,
-                                 const uint i) const;
+	const CoordR3* getVertex    (const UInt i) const;
+	const CoordR3* getSideVertex(const UInt f,
+                                 const UInt i) const;
     
-	double getArea() const;
+	Real getArea() const;
 	
-	void setV(const uint i, const CoordD3*);
+	void setV(const UInt i, const CoordR3*);
     
     void printInfo() const;
 private:
-	vector<const CoordD3*> v_;
+	vector<const CoordR3*> v_;
 	// TODO void checkVertexCoplanarity() const;
 
 };

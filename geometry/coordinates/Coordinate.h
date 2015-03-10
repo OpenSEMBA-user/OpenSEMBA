@@ -17,7 +17,7 @@ using namespace std;
 
 #include "CoordinateBase.h"
 
-template <class T, int D>
+template <class T, Int D>
 class Coordinate : public CoordinateBase,
                    public CartesianVector<T,D> {
 public:
@@ -39,7 +39,10 @@ public:
 
 #include "Coordinate.hpp"
 
-typedef Coordinate<double  , 3> CoordD3;
-typedef Coordinate<long int, 3> CoordI3;
+template <class T, Int D>
+using Coord = Coordinate<T,D>;
+
+typedef Coordinate<Real, 3> CoordR3;
+typedef Coordinate<Int , 3> CoordI3;
 
 #endif /* COORDINATE_H_ */

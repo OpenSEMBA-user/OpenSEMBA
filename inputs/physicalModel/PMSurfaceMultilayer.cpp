@@ -10,17 +10,17 @@
 PMSurfaceMultilayer::PMSurfaceMultilayer(
       const MatId id,
       const string& name,
-      const vector<double>& thickness,
-      const vector<double>& relPermittivity,
-      const vector<double>& relPermeability,
-      const vector<double>& elecCond,
-      const vector<double>& magnCond) : PMSurface(id, name) {
+      const vector<Real>& thickness,
+      const vector<Real>& relPermittivity,
+      const vector<Real>& relPermeability,
+      const vector<Real>& elecCond,
+      const vector<Real>& magnCond) : PMSurface(id, name) {
    thickness_ = thickness;
    relPermittivity_ = relPermittivity;
    relPermeability_ = relPermeability;
    elecCond_ = elecCond;
    magnCond_ = magnCond;
-   const uint nLayers = thickness_.size();
+   const UInt nLayers = thickness_.size();
    if (relPermittivity_.size() != nLayers
          || relPermeability_.size() != nLayers
          || elecCond_.size() != nLayers
@@ -37,12 +37,12 @@ ClassBase* PMSurfaceMultilayer::clone() const {
    return new PMSurfaceMultilayer(*this);
 }
 
-uint PMSurfaceMultilayer::getNumberOfLayers() const {
+UInt PMSurfaceMultilayer::getNumberOfLayers() const {
    return thickness_.size();
 }
 
 string
-PMSurfaceMultilayer::printLayer(const uint i) const {
+PMSurfaceMultilayer::printLayer(const UInt i) const {
    assert(i < getNumberOfLayers());
    stringstream ss;
    ss << elecCond_[i] << " " << relPermittivity_[i]*Constants::eps0 << " "
@@ -51,24 +51,24 @@ PMSurfaceMultilayer::printLayer(const uint i) const {
    return string(ss.str());
 }
 
-double
-PMSurfaceMultilayer::getThickness(const uint i) const {
+Real
+PMSurfaceMultilayer::getThickness(const UInt i) const {
    return thickness_[i];
 }
 
-double PMSurfaceMultilayer::getPermittivity(const uint i) const {
+Real PMSurfaceMultilayer::getPermittivity(const UInt i) const {
    return relPermittivity_[i] * Constants::eps0;
 }
 
-double PMSurfaceMultilayer::getPermeability(const uint i) const {
+Real PMSurfaceMultilayer::getPermeability(const UInt i) const {
    return relPermeability_[i] * Constants::mu0;
 }
 
-double PMSurfaceMultilayer::getElecCond(const uint i) const {
+Real PMSurfaceMultilayer::getElecCond(const UInt i) const {
    return elecCond_[i];
 }
 
-double PMSurfaceMultilayer::getMagnCond(const uint i) const {
+Real PMSurfaceMultilayer::getMagnCond(const UInt i) const {
    return magnCond_[i];
 }
 
@@ -79,7 +79,7 @@ PMSurfaceMultilayer::printInfo() const {
    cout << "Number of layers: " << getNumberOfLayers() << endl;
    cout <<
     "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << endl;
-   for (uint i = 0; i < getNumberOfLayers(); i++) {
+   for (UInt i = 0; i < getNumberOfLayers(); i++) {
       cout<< i << ": "
           << thickness_[i] << " "
           << relPermittivity_[i] << " "

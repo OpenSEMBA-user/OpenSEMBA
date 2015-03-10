@@ -9,8 +9,8 @@ class OutRqGroup : public Group<OutRq> {
 public:
     OutRqGroup();
 	OutRqGroup(const vector<OutRq>&);
-	uint countWithType(const Element::Type) const;
-	const OutRq* getWithType(const uint i, const Element::Type type) const;
+	UInt countWithType(const Element::Type) const;
+	const OutRq* getWithType(const UInt i, const Element::Type type) const;
 	void printInfo() const;
 };
 

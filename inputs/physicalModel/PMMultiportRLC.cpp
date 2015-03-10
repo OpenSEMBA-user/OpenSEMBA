@@ -11,9 +11,9 @@ PMMultiportRLC::PMMultiportRLC(
         const MatId id,
         const string name,
         const PMMultiport::Type type,
-        const double resistance,
-        const double inductance,
-        const double capacitance) : PMMultiport(id, name) {
+        const Real resistance,
+        const Real inductance,
+        const Real capacitance) : PMMultiport(id, name) {
     type_ = type;
     R_ = resistance;
     L_ = inductance;
@@ -28,17 +28,17 @@ ClassBase* PMMultiportRLC::clone() const {
    return new PMMultiportRLC(*this);
 }
 
-double
+Real
 PMMultiportRLC::getR() const {
     return R_;
 }
 
-double
+Real
 PMMultiportRLC::getL() const {
     return L_;
 }
 
-double
+Real
 PMMultiportRLC::getC() const {
     return C_;
 }

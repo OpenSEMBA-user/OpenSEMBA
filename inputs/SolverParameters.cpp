@@ -13,7 +13,7 @@ SolverParameters::SolverParameters () {
 	samplingPeriod_ = 0.0;
 	scalingFactor_ = 1.0;
 	timeStep_ = 0.0;
-	for (unsigned int i = 0; i < 3; i++) {
+	for (UInt i = 0; i < 3; i++) {
 		boundTermination_[i].first = pml;
 		boundTermination_[i].second = pml;
 	}
@@ -60,7 +60,7 @@ SolverParameters::toStr(const boundType val) const {
 }
 
 void
-SolverParameters::applyGeometricScalingFactor(const double& factor) {
+SolverParameters::applyGeometricScalingFactor(const Real& factor) {
     boundaryPadding_.first *= factor;
     boundaryPadding_.second *= factor;
     boundaryMeshSize_.first *= factor;
@@ -78,45 +78,45 @@ string SolverParameters::toStr(const Solver solver) const {
     }
 }
 
-const pair<CVecD3, CVecD3>& SolverParameters::getBoundaryMeshSize() const {
+const pair<CVecR3, CVecR3>& SolverParameters::getBoundaryMeshSize() const {
     return boundaryMeshSize_;
 }
 
 void SolverParameters::setBoundaryMeshSize(
-        const pair<CVecD3, CVecD3>& boundaryMeshSize) {
+        const pair<CVecR3, CVecR3>& boundaryMeshSize) {
     boundaryMeshSize_ = boundaryMeshSize;
 }
 
-const pair<CVecD3, CVecD3>& SolverParameters::getBoundaryPadding() const {
+const pair<CVecR3, CVecR3>& SolverParameters::getBoundaryPadding() const {
     return boundaryPadding_;
 }
 
 void SolverParameters::setBoundaryPadding(
-        const pair<CVecD3, CVecD3>& boundaryPadding) {
+        const pair<CVecR3, CVecR3>& boundaryPadding) {
     boundaryPadding_ = boundaryPadding;
 }
 
-double SolverParameters::getFinalTime() const {
+Real SolverParameters::getFinalTime() const {
     return finalTime_;
 }
 
-void SolverParameters::setFinalTime(double finalTime) {
+void SolverParameters::setFinalTime(Real finalTime) {
     finalTime_ = finalTime;
 }
 
-double SolverParameters::getSamplingPeriod() const {
+Real SolverParameters::getSamplingPeriod() const {
     return samplingPeriod_;
 }
 
-void SolverParameters::setSamplingPeriod(double samplingPeriod) {
+void SolverParameters::setSamplingPeriod(Real samplingPeriod) {
     samplingPeriod_ = samplingPeriod;
 }
 
-double SolverParameters::getScalingFactor() const {
+Real SolverParameters::getScalingFactor() const {
     return scalingFactor_;
 }
 
-void SolverParameters::setScalingFactor(double scalingFactor) {
+void SolverParameters::setScalingFactor(Real scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
 
@@ -128,24 +128,24 @@ void SolverParameters::setSolver(Solver solver) {
     solver_ = solver;
 }
 
-double SolverParameters::getTimeStep() const {
+Real SolverParameters::getTimeStep() const {
     return timeStep_;
 }
 
-void SolverParameters::setTimeStep(double timeStep) {
+void SolverParameters::setTimeStep(Real timeStep) {
     timeStep_ = timeStep;
 }
 
 pair<SolverParameters::boundType, SolverParameters::boundType>
 SolverParameters::getBoundTermination(
-        const uint i) const {
+        const UInt i) const {
     assert(i < 3);
     return boundTermination_[i];
 }
 
 void SolverParameters::setBoundTermination(
-        const uint i,
-        uint j,
+        const UInt i,
+        UInt j,
         boundType bound) {
     assert(i < 3);
     assert(j < 2);

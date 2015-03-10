@@ -21,7 +21,7 @@ CoordinateGroup<C>::CoordinateGroup(const vector<C*>& coord)
 }
 
 template<typename C>
-CoordinateGroup<C>::CoordinateGroup(const vector<CVecD3>& pos) {
+CoordinateGroup<C>::CoordinateGroup(const vector<CVecR3>& pos) {
     add(pos, true);
 }
 
@@ -51,12 +51,12 @@ CoordinateGroup<C>& CoordinateGroup<C>::operator=(const Group<C>& rhs) {
 }
 
 template<typename C>
-const CoordD3* CoordinateGroup<C>::get(const CVecD3& position) const {
-    multiset<const CoordD3*, lexCompareCoord>::iterator it;
-    CoordD3 aux(position);
+const CoordR3* CoordinateGroup<C>::get(const CVecR3& position) const {
+    multiset<const CoordR3*, lexCompareCoord>::iterator it;
+    CoordR3 aux(position);
     it = index_.find(&aux);
     if (it != index_.end()) {
-        const CoordD3* res = *it;
+        const CoordR3* res = *it;
         return res;
     } else {
         return NULL;
@@ -74,10 +74,10 @@ void CoordinateGroup<C>::add(vector<C*>& newCoords, bool newId) {
 }
 
 template<typename C>
-C* CoordinateGroup<C>::add(const CVecD3& newPosition,
+C* CoordinateGroup<C>::add(const CVecR3& newPosition,
                                  const bool canOverlap) {
     vector<const C*> res;
-    vector<CVecD3> aux;
+    vector<CVecR3> aux;
     aux.push_back(newPosition);
     res = add(aux, canOverlap);
     if(!res.empty())
@@ -86,12 +86,12 @@ C* CoordinateGroup<C>::add(const CVecD3& newPosition,
 }
 
 template<typename C>
-vector<C*> CoordinateGroup<C>::add(const vector<CVecD3>& newPos,
+vector<C*> CoordinateGroup<C>::add(const vector<CVecR3>& newPos,
                                          const bool canOverlap) {
     vector<C*> newCoords;
-    for(uint i = 0; i < newPos.size(); i++) {
+    for(UInt i = 0; i < newPos.size(); i++) {
         if (get(newPos[i]) == NULL || canOverlap) {
-            CoordD3* newCoord = new CoordD3(newPos[i]);
+            CoordR3* newCoord = new CoordR3(newPos[i]);
             if (newCoord->template is<C>()) {
                 newCoords.push_back(newCoord->template castTo<C>());
             } else {
@@ -105,10 +105,10 @@ vector<C*> CoordinateGroup<C>::add(const vector<CVecD3>& newPos,
 }
 
 template<typename C>
-void CoordinateGroup<C>::applyScalingFactor(const double factor) {
-    for(unsigned i = 0; i < this->size(); i++) {
-        if (this->element_[i]->template is<CoordD3>()) {
-            CoordD3* ptr = this->element_[i]->template castTo<CoordD3>();
+void CoordinateGroup<C>::applyScalingFactor(const Real factor) {
+    for(UInt i = 0; i < this->size(); i++) {
+        if (this->element_[i]->template is<CoordR3>()) {
+            CoordR3* ptr = this->element_[i]->template castTo<CoordR3>();
             *ptr *= factor;
         }
     }
@@ -117,7 +117,7 @@ void CoordinateGroup<C>::applyScalingFactor(const double factor) {
 template<typename C>
 void CoordinateGroup<C>::printInfo() const {
     cout<< "--- CoordinateGroup info ---" << endl;
-    for (unsigned i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         this->element_[i]->printInfo();
         cout << endl;
     }
@@ -126,8 +126,8 @@ void CoordinateGroup<C>::printInfo() const {
 
 template<typename C>
 void CoordinateGroup<C>::buildIndex(const vector<C*>& coords) {
-    for (unsigned i = 0; i < coords.size(); i++) {
-        if (coords[i]->template is<CoordD3>())
-            index_.insert(coords[i]->template castTo<CoordD3>());
+    for (UInt i = 0; i < coords.size(); i++) {
+        if (coords[i]->template is<CoordR3>())
+            index_.insert(coords[i]->template castTo<CoordR3>());
     }
 }

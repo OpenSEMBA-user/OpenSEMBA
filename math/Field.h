@@ -11,59 +11,59 @@
 #include "CartesianVector.h"
 #include <stdlib.h>
 
-template <class T, int D>
+template <class T, Int D>
 class Field {
 public:
    Field();
-   Field(uint size);
+   Field(UInt size);
    virtual ~Field();
 
-   const T* operator()(const uint i) const;
-   T* set(const uint i) const;
-   T operator[](const uint i) const;
+   const T* operator()(const UInt i) const;
+   T* set(const UInt i) const;
+   T operator[](const UInt i) const;
    CartesianVector<T,D>
-   getCVec(const uint i) const;
-   uint
+   getCVec(const UInt i) const;
+   UInt
    getDOFs() const;
-   uint size() const;
+   UInt size() const;
 
    void
-   set(const uint i, const CartesianVector<T,D>& vec);
+   set(const UInt i, const CartesianVector<T,D>& vec);
    void
-   set(const uint i, const T& num);
+   set(const UInt i, const T& num);
    void
-   setSize(const uint siz);
+   setSize(const UInt siz);
    void
    setToZero();
    void
    setToOne();
    void
-   setToRandom(const double min, const double max);
+   setToRandom(const Real min, const Real max);
 
    void
-   prod(const uint init, const uint end, const T param);
+   prod(const UInt init, const UInt end, const T param);
    void
-   prod_omp(const uint init, const uint end, const T param);
+   prod_omp(const UInt init, const UInt end, const T param);
    void
    addProd(
-         const uint init, const uint end,
+         const UInt init, const UInt end,
          const Field<T,D>& field, const T param);
    void
    addProd_omp(
-         const uint init, const uint end,
+         const UInt init, const UInt end,
          const Field<T,D>& field, const T param);
    void
-   copy(const uint init, const uint end, const Field<T,D>& param);
+   copy(const UInt init, const UInt end, const Field<T,D>& param);
 
    void
-   swap(Field<T,D>& param, const uint first, const uint last);
+   swap(Field<T,D>& param, const UInt first, const UInt last);
 private:
    T* val_;
-   uint size_;
+   UInt size_;
 };
 
 #include "Field.hpp"
 
-typedef Field<double,3> FieldD3;
+typedef Field<Real,3> FieldR3;
 
 #endif /* FIELD_H_ */

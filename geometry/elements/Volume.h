@@ -22,19 +22,19 @@ public:
     Volume(const Volume& rhs);
     virtual ~Volume();
     
-	bool isLocalFace(const uint f,
+	bool isLocalFace(const UInt f,
                      const Surface& surf) const;
-	virtual bool isCurvedFace(const uint face) const = 0;
-    virtual bool isFaceContainedInPlane(const uint face,
+	virtual bool isCurvedFace(const UInt face) const = 0;
+    virtual bool isFaceContainedInPlane(const UInt face,
                                         const CartesianPlane plane) const;
     
-	CVecD3 sideNormal(const uint f) const;
+	CVecR3 sideNormal(const UInt f) const;
    
     ElementBase::Type getType() const {return volume;}
 	
-    virtual double getAreaOfFace(const uint face) const = 0;
-    BoxD3 getBoundOfFace(const uint face) const;
-	uint getFaceNumber(const Surface*) const;
+    virtual Real getAreaOfFace(const UInt face) const = 0;
+    BoxR3 getBoundOfFace(const UInt face) const;
+	UInt getFaceNumber(const Surface*) const;
 };
 
 #endif /* VOLUME_H_ */

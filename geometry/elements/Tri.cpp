@@ -24,8 +24,8 @@ Tri::~Tri() {
 
 }
 
-void Tri::getOrderedVerticesId(uint val[3]) const {
-	for (uint i = 0; i < 3; i++) {
+void Tri::getOrderedVerticesId(UInt val[3]) const {
+	for (UInt i = 0; i < 3; i++) {
 		val[i] = getVertex(i)->getId();
 	}
 	ascendingOrder(3, val);

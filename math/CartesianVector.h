@@ -31,32 +31,30 @@ typedef enum {
     U = 1
 } CartesianBound;
 
-typedef unsigned int uint;
+#include "Types.h"
 
-template <class T, int D>
+template <class T, Int D>
 class CartesianVector {
 public:
 	T val[D];
-	static double tolerance;
+	static Real tolerance;
 	CartesianVector();
 	virtual ~CartesianVector();
 	CartesianVector<T,D>(T val_[D]);
 	CartesianVector<T,D>(const T val_[D]);
 	CartesianVector<T,D>(const T, const T, const T);
-    CartesianVector<T,D>(const CartesianVector<double,D>& begin,
-						 const CartesianVector<double,D>& end);
+    CartesianVector<T,D>(const CartesianVector<Real,D>& begin,
+						 const CartesianVector<Real,D>& end);
 	virtual CartesianVector<T,D>&
-	 operator=(const CartesianVector<double,D>& param);
+	 operator=(const CartesianVector<Real,D>& param);
 	virtual CartesianVector<T,D>&
-	 operator=(const CartesianVector<float,D>& param);
-	virtual CartesianVector<T,D>&
-	 operator=(const CartesianVector<int,D>& param);
+	 operator=(const CartesianVector<Int,D>& param);
 	virtual CartesianVector<T,D>&
 	 operator=(const T);
 	virtual T&
-	 operator() (unsigned int pos);
+	 operator() (UInt pos);
 	virtual T
-	 operator() (unsigned int pos) const;
+	 operator() (UInt pos) const;
 	virtual CartesianVector<T,D>&
 	 operator+=(const CartesianVector<T,D>& param);
 	virtual CartesianVector<T,D>&
@@ -69,7 +67,7 @@ public:
 	 operator/=(const T param);
 	virtual CartesianVector<T,D>&
 	 normalize();
-	virtual double
+	virtual Real
 	 norm() const;
 	virtual T
 	 dot(const CartesianVector<T,D>& param) const;
@@ -114,16 +112,16 @@ public:
 	 toStr() const;
 };
 
-template<class T, int D>
-double CartesianVector<T,D>::tolerance = 1.0e-10;
+template<class T, Int D>
+Real CartesianVector<T,D>::tolerance = 1.0e-10;
 
-template<int VS>
-CartesianVector<double,VS>
+template<Int VS>
+CartesianVector<Real,VS>
  operator/(
-  const CartesianVector<int,VS>& lhs,
-  const double rhs);
+  const CartesianVector<Int,VS>& lhs,
+  const Real rhs);
 
-template <class T, int D>
+template <class T, Int D>
 std::ostream&
 operator<<(
       ostream& os,
@@ -133,9 +131,13 @@ operator<<(
 
 #include "CartesianVector.hpp"
 
-typedef CartesianVector<double,3> CVecD3;
-typedef CartesianVector<long int,2> CVecI2;
-typedef CartesianVector<long int,3> CVecI3;
-typedef CartesianVector<complex<double>,3> CVecC3;
+template <class T, Int D>
+using CVec = CartesianVector<T,D>;
+
+typedef CartesianVector<Real,3> CVecR3;
+typedef CartesianVector<Int ,2> CVecI2;
+typedef CartesianVector<Int ,3> CVecI3;
+
+typedef CartesianVector<complex<Real>,3> CVecC3;
 
 #endif /* MATHVECTOR_H_ */

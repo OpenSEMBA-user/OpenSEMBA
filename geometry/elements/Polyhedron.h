@@ -23,29 +23,29 @@ public:
 
     ClassBase* clone() const;
 
-    bool isCurvedFace(const uint f) const;
+    bool isCurvedFace(const UInt f) const;
 
-    uint numberOfFaces      () const;
-    uint numberOfVertices   () const;
-    uint numberOfCoordinates() const;
+    UInt numberOfFaces      () const;
+    UInt numberOfVertices   () const;
+    UInt numberOfCoordinates() const;
 
-    uint numberOfSideVertices   (const uint f = 0) const;
-    uint numberOfSideCoordinates(const uint f = 0) const;
-    const CoordD3* getV(const uint i) const;
-    const CoordD3* getSideV(const uint f, const uint i) const;
-    const CoordD3* getVertex(const uint i) const;
-    const CoordD3* getSideVertex(const uint f, const uint i) const;
+    UInt numberOfSideVertices   (const UInt f = 0) const;
+    UInt numberOfSideCoordinates(const UInt f = 0) const;
+    const CoordR3* getV(const UInt i) const;
+    const CoordR3* getSideV(const UInt f, const UInt i) const;
+    const CoordR3* getVertex(const UInt i) const;
+    const CoordR3* getSideVertex(const UInt f, const UInt i) const;
 
-    const Polygon* getFace(const uint f) const;
-    double getAreaOfFace(const uint f) const;
+    const Polygon* getFace(const UInt f) const;
+    Real getAreaOfFace(const UInt f) const;
 
     void printInfo() const;
 
 private:
-    vector<const CoordD3*> v_;
+    vector<const CoordR3*> v_;
     vector<const Polygon*> face_;
 
-    void addV(const CoordD3*);
+    void addV(const CoordR3*);
     void checkClosedness() const;
 };
 

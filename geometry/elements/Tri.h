@@ -14,12 +14,12 @@ public:
     Tri(const Tri& rhs);
     virtual ~Tri();
     
-	uint numberOfFaces   () const { return 3; }
-	uint numberOfVertices() const { return 3; }
+	UInt numberOfFaces   () const { return 3; }
+	UInt numberOfVertices() const { return 3; }
     
-	uint numberOfSideVertices(const uint f = 0) const { return 2; }
+	UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
     
-    void getOrderedVerticesId(uint val[3]) const;
+    void getOrderedVerticesId(UInt val[3]) const;
 };
 
 #endif

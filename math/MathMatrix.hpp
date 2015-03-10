@@ -53,7 +53,7 @@ template <class T>
 void
 MathMatrix<T>::internalInvert() {
 	assert(MathMatrix<T>::isSquare());
-	int *pivot = new int[nRows()];
+	Int *pivot = new Int[nRows()];
 	factorizeLU(pivot);
 	invertFactorized(pivot);
 	delete [] pivot;
@@ -61,12 +61,12 @@ MathMatrix<T>::internalInvert() {
  
 template<class T>
 void
-MathMatrix<T>::factorizeLU(int pivot[]) {
+MathMatrix<T>::factorizeLU(Int pivot[]) {
 	// Performs a LINPACK-style PLU factorization of a general matrix.
-	// Output, unsigned int PIVOT[N], a vector of pivot indices.
+	// Output, UInt PIVOT[N], a vector of pivot indices.
 	assert(nRows() == nCols());
-	unsigned int n = nRows();
-	unsigned int i, j, k, l;
+	UInt n = nRows();
+	UInt i, j, k, l;
 	T t;
 	for (k = 0; k < n-1; k++) {
 		//  Find L, the index of the pivot row.
@@ -119,15 +119,15 @@ MathMatrix<T>::factorizeLU(int pivot[]) {
 
 template <class T>
 void
-MathMatrix<T>::invertFactorized(const int pivot[]) {
+MathMatrix<T>::invertFactorized(const Int pivot[]) {
 	// Computes inverse of a general matrix factored by factorize.
-	// Input, int PIVOT(N), the pivot vector from R8GE_FA.
+	// Input, Int PIVOT(N), the pivot vector from R8GE_FA.
 	assert(nRows() == nCols());
-	int n = nRows();
-	int nn = n * n;
-	int i, j, k;
+	Int n = nRows();
+	Int nn = n * n;
+	Int i, j, k;
 	T temp;
-	double *b = new double[nn];
+	Real *b = new Real[nn];
 	// Compute Inverse(U).
 	for (k = 0; k < n; k++) {
 		for (i = 0; i < k; i++) {
@@ -161,8 +161,8 @@ MathMatrix<T>::invertFactorized(const int pivot[]) {
 	    }
 	}
 	// Stores inverted matrix in res.
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
+	for (Int i = 0; i < n; i++) {
+		for (Int j = 0; j < n; j++) {
 			val(i,j) = (T) b[i+j*n];
 		}
 	}
@@ -174,8 +174,8 @@ template <class T>
 T
 MathMatrix<T>::maxVal() const {
 	T res = val(0,0);
-	for (unsigned int i = 0; i < nRows(); i++) {
-		for (unsigned int j = 0; j < nCols(); j++) {
+	for (UInt i = 0; i < nRows(); i++) {
+		for (UInt j = 0; j < nCols(); j++) {
 			if (val(i,j) > res)
 				res = val(i,j);
 		}
@@ -185,9 +185,9 @@ MathMatrix<T>::maxVal() const {
  
 template <class T>
 T
-MathMatrix<T>::maxValInCol(unsigned int col) const {
+MathMatrix<T>::maxValInCol(UInt col) const {
 	T res = val(0,col);
-	for (unsigned int i = 0; i < nRows(); i++)
+	for (UInt i = 0; i < nRows(); i++)
 		if (val(i,col) > res)
 			res = val(i,col);
 	return res;
@@ -196,10 +196,10 @@ MathMatrix<T>::maxValInCol(unsigned int col) const {
 template <class T>
 void
 MathMatrix<T>::randomize(T min, T max) {
-	double range = (double) max - (double) min;
-	for (unsigned int i = 0; i < nRows(); i++) {
-		for (unsigned int j = 0; j < nCols(); j++) {
-			double aux = range * rand() / (RAND_MAX + (double) 1) + min;
+	Real range = (Real) max - (Real) min;
+	for (UInt i = 0; i < nRows(); i++) {
+		for (UInt j = 0; j < nCols(); j++) {
+			Real aux = range * rand() / (RAND_MAX + (Real) 1) + min;
 			val(i,j) = (T) aux;
 		}
 	}
@@ -215,7 +215,7 @@ MathMatrix<T>::sortRows() {
  
 template <class T>
 void
-MathMatrix<T>::sortRows(const unsigned int iCol, const unsigned int lCol) {
+MathMatrix<T>::sortRows(const UInt iCol, const UInt lCol) {
 	// Orders array a with nr rows and nc columns. Ordering is performed
 	// using column indicated in orCol as reference. In ascending order.
 	if (nRows() <= 1) {
@@ -229,8 +229,8 @@ bool
 MathMatrix<T>::isEQ(
  const T* x1,
  const T* x2,
- const unsigned int vS) const {
-	for (unsigned int i = 0; i < vS; i++) {
+ const UInt vS) const {
+	for (UInt i = 0; i < vS; i++) {
 		if (x1[i] != x2[i]) {
 			return false;
 		}
@@ -243,8 +243,8 @@ bool
 MathMatrix<T>::isGEQ(
  const T* x1,
  const T* x2,
- const unsigned int vS) const {
-	for (unsigned int i = 0; i < vS; i++) {
+ const UInt vS) const {
+	for (UInt i = 0; i < vS; i++) {
 		if (x1[i] < x2[i]) {
 			return false;
 		}
@@ -260,8 +260,8 @@ bool
 MathMatrix<T>::isLEQ(
  const T* x1,
  const T* x2,
- const unsigned int vS) const {
-	for (unsigned int i = 0; i < vS; i++) {
+ const UInt vS) const {
+	for (UInt i = 0; i < vS; i++) {
 		if (x1[i] > x2[i]) {
 			return false;
 		}
@@ -273,23 +273,23 @@ MathMatrix<T>::isLEQ(
 }
 
 template <class T>
-long
+Int
 MathMatrix<T>::partitionRows(
- long p, long r,
- const unsigned int iCol, const unsigned int lCol) {
-	long j = p - 1;
-	for (long i = p; i < r; i++) {
+ Int p, Int r,
+ const UInt iCol, const UInt lCol) {
+	Int j = p - 1;
+	for (Int i = p; i < r; i++) {
 		bool geq = isGEQ(&val(r,iCol), &val(i,iCol), lCol - iCol + 1);
 		if (geq) {
 			j++;
-			for (unsigned int k = 0; k < nCols(); k++) {
+			for (UInt k = 0; k < nCols(); k++) {
 				T temp = val(j,k);
 				val(j,k) = val(i,k);
 				val(i,k) = temp;
 			}
 		}
 	}
-	for (unsigned int k = 0; k < nCols(); k++) {
+	for (UInt k = 0; k < nCols(); k++) {
 		T x = val(r, k);
 		val(r, k) = val(j+1, k);
 		val(j+1, k) = x;
@@ -300,22 +300,22 @@ MathMatrix<T>::partitionRows(
 template <class T>
 void
 MathMatrix<T>::QSRows(
- long p, long r, const unsigned int iCol, const unsigned int lCol) {
+ Int p, Int r, const UInt iCol, const UInt lCol) {
 	if (p < r) {
-		long q = partitionRows(p, r, iCol, lCol);
+		Int q = partitionRows(p, r, iCol, lCol);
 		QSRows(p, q - 1, iCol, lCol);
 		QSRows(q + 1, r, iCol, lCol);
 	}
 }
 
 template <class T>
-unsigned int
+UInt
 MathMatrix<T>::binarySearch(
  const T* key,
- const unsigned int col,
- const unsigned int vecSize,
- unsigned int imin,
- unsigned int imax) const {
+ const UInt col,
+ const UInt vecSize,
+ UInt imin,
+ UInt imax) const {
 	// NOTE: Just for ascending order!!!
 	if (imax == imin) {
 		if (nRows() == imin) {
@@ -325,7 +325,7 @@ MathMatrix<T>::binarySearch(
 		T *value;
 		value = new T [vecSize];
 
-		for (unsigned int i = 0; i < vecSize; i++) {
+		for (UInt i = 0; i < vecSize; i++) {
 			value[i] = val(imin, col+i);
 		}
 		bool iseq;
@@ -337,10 +337,10 @@ MathMatrix<T>::binarySearch(
 			return nRows();
 		}
 	} else {
-		unsigned int imid = (unsigned int) (imin + imax) / 2;
+		UInt imid = (UInt) (imin + imax) / 2;
 		T *value;
 		value = new T [vecSize];
-		for (unsigned int i = 0; i < vecSize; i++) {
+		for (UInt i = 0; i < vecSize; i++) {
 			value[i] = val(imid, col+i);
 		}
 		bool geq = isGEQ(value, key, vecSize);
@@ -354,20 +354,20 @@ MathMatrix<T>::binarySearch(
 }
  
 template <class T>
-unsigned int
+UInt
 MathMatrix<T>::findFirstOcurrenceInColumns(
  const T* key,
- const unsigned int col,
- const unsigned int vecSize) const {
+ const UInt col,
+ const UInt vecSize) const {
 	// Performs binary search -------------------------------------------------
-	unsigned int row = binarySearch(key, col, vecSize, 0, nRows());
+	UInt row = binarySearch(key, col, vecSize, 0, nRows());
 	if (row == nRows()) {
 		return row; // Returns this is value was not found.
 	}
 	// Goes back to find the first occurrence ---------------------------------
-	for (unsigned int i = row; i > 0; i--) {
+	for (UInt i = row; i > 0; i--) {
 		bool isEqual = true;
-		for (unsigned int j = 0; j < vecSize; j++) {
+		for (UInt j = 0; j < vecSize; j++) {
 			isEqual &= val(i,j+col) == key[j];
 		}
 		if (!isEqual) {
@@ -383,7 +383,7 @@ MathMatrix<T>::findFirstOcurrenceInColumns(
 template <class T>
 void
 MathMatrix<T>::cpLowerTri2UpperTri() {
-	unsigned int i, j;
+	UInt i, j;
 	for (i = 0; i < nRows(); i++)
 		for (j = i+1; j < nCols(); j++)
 			val(i,j) = val(j,i);
@@ -392,22 +392,22 @@ MathMatrix<T>::cpLowerTri2UpperTri() {
 template <class T>
 void
 MathMatrix<T>::zeros() {
-	for (unsigned int i = 0; i < nRows(); i++)
-		for (unsigned int j = 0; j < nCols(); j++)
+	for (UInt i = 0; i < nRows(); i++)
+		for (UInt j = 0; j < nCols(); j++)
  			val(i,j) = (T) 0;
 }
  
 template <class T>
 void
-MathMatrix<T>::convertToArray(const int mode, double *res) const {
+MathMatrix<T>::convertToArray(const Int mode, Real *res) const {
 	if (mode == MATRICES_COL_MAJOR) {
-		for (unsigned int j = 0; j < nCols(); j++)
-			for (unsigned int i = 0; i < nRows(); i++)
+		for (UInt j = 0; j < nCols(); j++)
+			for (UInt i = 0; i < nRows(); i++)
 				res[i + j * nRows()] = val(i,j);
 		return;
 	} else if (mode == MATRICES_ROW_MAJOR) {
-		for (unsigned int i = 0; i < nRows(); i++)
-			for (unsigned int j = 0; j < nCols(); j++)
+		for (UInt i = 0; i < nRows(); i++)
+			for (UInt j = 0; j < nCols(); j++)
 				res[i * nCols() + j] = val(i,j);
 		return;
 	} else {
@@ -427,8 +427,8 @@ MathMatrix<T>::isSquare() const {
 template <class T>
 bool
 MathMatrix<T>::isSymmetric() const {
-	for (unsigned int i = 0; i < nRows(); i++) {
-		for (unsigned int j = 0; j < nRows(); j++) {
+	for (UInt i = 0; i < nRows(); i++) {
+		for (UInt j = 0; j < nRows(); j++) {
 			if (val(i,j) != val(j,i)) {
 				return false;
 			}
@@ -443,15 +443,15 @@ MathMatrix<T>::eye() {
 	assert(isSquare());
 	// Sets 1 in main diagonal or 0 otherwise.
 	zeros();
-	for (unsigned int i = 0; i < nRows(); i++)
+	for (UInt i = 0; i < nRows(); i++)
 		val(i,i) = T(1);
 }
  
 template <class T>
 vector<T>
-MathMatrix<T>::cpRowToVector(const unsigned int row) const {
+MathMatrix<T>::cpRowToVector(const UInt row) const {
 	vector<T> res(nCols());
-	for (unsigned int i = 0; i < nCols(); i++) {
+	for (UInt i = 0; i < nCols(); i++) {
 		res[i] = val(row,i);
 	}
 	return res;
@@ -462,7 +462,7 @@ vector<CartesianVector<T,3> >
 MathMatrix<T>::convertToCartesianVector() const {
 	assert(nCols() == 3);
 	vector<CartesianVector<T,3> > res(nRows());
-	for (uint r = 0; r < nRows(); r++) {
+	for (UInt r = 0; r < nRows(); r++) {
 		res[r] = CartesianVector<T,3>(val(r,0), val(r,1), val(r,2));
 	}
 	return res;

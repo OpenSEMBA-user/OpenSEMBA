@@ -18,25 +18,25 @@ public:
 	PMSurfaceSIBC(
 	 const MatId id,
 	 const string& name,
-	 const MatD22& Zinfinite,
-	 const MatD22& Zstatic,
-	 const vector<double>& pole,
-	 const vector<MatD22>& Z);
+	 const MatR22& Zinfinite,
+	 const MatR22& Zstatic,
+	 const vector<Real>& pole,
+	 const vector<MatR22>& Z);
 	virtual ~PMSurfaceSIBC();
 
     ClassBase* clone() const;
 
 	virtual PMSurfaceSIBC&
      operator=(const PMSurfaceSIBC &param);
-	void setZInfinity(const MatD22& Zinf);
-	void setZStatic(const MatD22& Zsta);
-	virtual void addPole(const double pole, const MatD22& Z);
-    virtual uint getNumberOfPoles() const;
+	void setZInfinity(const MatR22& Zinf);
+	void setZStatic(const MatR22& Zsta);
+	virtual void addPole(const Real pole, const MatR22& Z);
+    virtual UInt getNumberOfPoles() const;
 	virtual void printInfo() const;
 protected:
-	MatD22 ZInfinity_, ZStatic_;
-	vector<double> pole_; // Impedance poles.
-	vector<MatD22> Z_; // Impedance residuals.
+	MatR22 ZInfinity_, ZStatic_;
+	vector<Real> pole_; // Impedance poles.
+	vector<MatR22> Z_; // Impedance residuals.
 };
 
 #endif /* PMSURFACE_H_ */

@@ -16,9 +16,9 @@ public:
    Map();
    Map(const Element* elem);
 	virtual ~Map();
-	virtual unsigned int
-	 getVolToF(unsigned int f) const = 0;
-   virtual unsigned int
+	virtual UInt
+	 getVolToF(UInt f) const = 0;
+   virtual UInt
     getLocalId() const = 0;
    virtual void
     reassignPointers(const ElementsGroup<>& nEG) = 0;

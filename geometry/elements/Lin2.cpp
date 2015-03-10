@@ -20,7 +20,7 @@ Lin2::Lin2(const CoordinateGroup<>& coordGr,
            const MatId   matId)
 :   Line(id, layerId, matId) {
     
-	for (uint i = 0; i < numberOfCoordinates(); i++) {
+	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << "ERROR @ Lin2::Lin2(): "
@@ -29,24 +29,24 @@ Lin2::Lin2(const CoordinateGroup<>& coordGr,
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        if (!coord->is<CoordD3>()) {
+        if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Lin2::Lin2(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        v_[i] = coord->castTo<CoordD3>();
+        v_[i] = coord->castTo<CoordR3>();
 	}
 }
 
 Lin2::Lin2(const ElementId id,
-           const CoordD3* v[2],
+           const CoordR3* v[2],
            const LayerId layerId,
            const MatId   matId)
 :   Line(id, layerId, matId) {
     
-	for (uint i = 0; i < lin.np; i++) {
+	for (UInt i = 0; i < lin.np; i++) {
 		v_[i] = v[i];
 	}
 }
@@ -54,7 +54,7 @@ Lin2::Lin2(const ElementId id,
 Lin2::Lin2(const Lin2& rhs)
 :   Line(rhs) {
     
-    for (uint i = 0; i < lin.np; i++) {
+    for (UInt i = 0; i < lin.np; i++) {
 		v_[i] = rhs.v_[i];
 	}
 }
@@ -67,19 +67,19 @@ ClassBase* Lin2::clone() const {
     return new Lin2(*this);
 }
 
-const CoordD3* Lin2::getSideV(const uint f, const uint i) const {
+const CoordR3* Lin2::getSideV(const UInt f, const UInt i) const {
     return v_[i];
 }
 
-const CoordD3* Lin2::getVertex(const uint i) const {
+const CoordR3* Lin2::getVertex(const UInt i) const {
 	return v_[i];
 }
 
-const CoordD3* Lin2::getSideVertex(const uint f, const uint i) const {
+const CoordR3* Lin2::getSideVertex(const UInt f, const UInt i) const {
     return v_[i];
 }
 
-void Lin2::setV(const uint i, const CoordD3* coord) {
+void Lin2::setV(const UInt i, const CoordR3* coord) {
     
 	assert(i < numberOfCoordinates());
 	v_[i] = coord;
@@ -88,7 +88,7 @@ void Lin2::setV(const uint i, const CoordD3* coord) {
 void Lin2::printInfo() const {
 	cout << "--- Lin2 info ---" << endl;
 	cout << "Id: " << getId() << endl;
-	for (uint i = 0; i < numberOfCoordinates(); i++) {
+	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		v_[i]->printInfo();
 		cout << endl;
 	}

@@ -48,8 +48,8 @@ bool ElementsGroup<E>::isLinear() const {
 
 template<typename E>
 bool ElementsGroup<E>::areTetrahedrons(const vector<ElementId>& elemId) const {
-    uint nE = elemId.size();
-    for (uint i = 0; i < nE; i++) {
+    UInt nE = elemId.size();
+    for (UInt i = 0; i < nE; i++) {
         if (!this->getPtrToId(elemId[i])->template is<Tet>()) {
             return false;
         }
@@ -59,8 +59,8 @@ bool ElementsGroup<E>::areTetrahedrons(const vector<ElementId>& elemId) const {
 
 template<typename E>
 bool ElementsGroup<E>::areTriangles(const vector<ElementId>& elemId) const {
-    uint nE = elemId.size();
-    for (uint i = 0; i < nE; i++) {
+    UInt nE = elemId.size();
+    for (UInt i = 0; i < nE; i++) {
         if (!this->getPtrToId(elemId[i])->template is<Tri>()) {
             return false;
         }
@@ -72,7 +72,7 @@ template<typename E>
 vector<const Element*> ElementsGroup<E>::get(const Element::Type& type) const {
     vector<const Element*> res;
     res.reserve(this->size());
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         bool matches = true;
         matches &= this->element_[i]->getType() == type;
         if (matches && this->element_[i]->template is<Element>()) {
@@ -88,7 +88,7 @@ vector<const Element*> ElementsGroup<E>::get(const MatId   matId,
 
     vector<const Element*> res;
     res.reserve(this->size());
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         if ((this->element_[i]->getMatId()   == matId) &&
             (this->element_[i]->getLayerId() == layId) &&
             this->element_[i]->template is<Element>()) {
@@ -106,7 +106,7 @@ vector<const Element*> ElementsGroup<E>::get(const Element::Type& type,
 
     vector<const Element*> res;
     res.reserve(this->size());
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         bool matches = true;
         matches &= this->element_[i]->getType() == type;
         matches &= this->element_[i]->getMatId() == matId;
@@ -125,7 +125,7 @@ vector<ElementId> ElementsGroup<E>::getIds(
 
     vector<ElementId> res;
     res.reserve(list.size());
-    for (uint i = 0; i < list.size(); i++) {
+    for (UInt i = 0; i < list.size(); i++) {
         res.push_back(list[i]->getId());
     }
     return res;
@@ -134,9 +134,9 @@ vector<ElementId> ElementsGroup<E>::getIds(
 template<typename E>
 vector<ElementId> ElementsGroup<E>::getHexIds() const {
     vector<const Hex8*> hex8 = this->template getVectorOf<Hex8>();
-    const uint nK = hex8.size();
+    const UInt nK = hex8.size();
     vector<ElementId> res(nK);
-    for (uint i = 0; i < nK; i++) {
+    for (UInt i = 0; i < nK; i++) {
         res[i] = hex8[i]->getId();
     }
     return res;
@@ -148,7 +148,7 @@ vector<ElementId> ElementsGroup<E>::getIdsWithMaterialId(
 
     vector<ElementId> res;
     res.reserve(this->size());
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getMatId() == matId) {
             res.push_back(this->element_[i]->getId());
         }
@@ -162,7 +162,7 @@ vector<ElementId> ElementsGroup<E>::getIdsWithoutMaterialId(
 
     vector<ElementId> res;
     res.reserve(this->size());
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getMatId() != matId) {
             res.push_back(this->element_[i]->getId());
         }
@@ -176,8 +176,8 @@ vector<const Element*> ElementsGroup<E>::getElementsWithMatId(
 
     vector<const Element*> res;
     res.reserve(this->size());
-    for (uint m = 0; m < matId.size(); m++) {
-        for (uint i = 0; i < this->size(); i++) {
+    for (UInt m = 0; m < matId.size(); m++) {
+        for (UInt i = 0; i < this->size(); i++) {
             if (this->element_[i]->getMatId() == matId[m] &&
                 this->element_[i]->template is<Element>()) {
                 res.push_back(this->element_[i]->template castTo<Element>());
@@ -194,8 +194,8 @@ vector<const Surface*> ElementsGroup<E>::getSurfacesWithMatId(
     vector<const Surface*> res;
     vector<const Surface*> tri = this->template getVectorOf<Surface>();
     res.reserve(this->size());
-    for (uint m = 0; m < matId.size(); m++) {
-        for (uint i = 0; i < tri.size(); i++) {
+    for (UInt m = 0; m < matId.size(); m++) {
+        for (UInt i = 0; i < tri.size(); i++) {
             if (tri[i]->getMatId() == matId[m] &&
                 tri[i]->is<Surface>()) {
                 res.push_back(tri[i]->castTo<Surface>());
@@ -221,11 +221,11 @@ vector<ElementId> ElementsGroup<E>::add(const CoordinateGroup<>& coord,
     CoordinateId vId[8];
     MatId matId;
     vector<ElementId> res;
-    for (uint i = 0; i < newHex.size(); i++) {
+    for (UInt i = 0; i < newHex.size(); i++) {
         // Determines coordinates ids.
         // PERFORMANCE This is O(N^2). It can be improved by creating a
         //               lexicographically sorted list of coordinates positions.
-        for (uint j = 0; j < 8; j++) {
+        for (UInt j = 0; j < 8; j++) {
             vId[j] = newHex[i].getV(j)->getId();
         }
         matId = newHex[i].getMatId();
@@ -245,7 +245,7 @@ map<LayerId, vector<const Element*> > ElementsGroup<E>::separateLayers(
     vector<const Element*>& el) const {
 
     map<LayerId, vector<const Element*> > res;
-    for (uint i = 0; i < el.size(); i++) {
+    for (UInt i = 0; i < el.size(); i++) {
         const LayerId layerId = el[i]->getLayerId();
         map<LayerId, vector<const Element*> >::iterator it = res.find(layerId);
         if (it == res.end()) {
@@ -266,7 +266,7 @@ ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
 
     vector<E*> elems;
     elems.reserve(this->size());
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getMatId() != matId) {
             elems.push_back(this->element_[i]);
         }
@@ -276,10 +276,10 @@ ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
 
 template<typename E>
 void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->template is<Element>()) {
             Element* elem = this->element_[i]->template castTo<Element>();
-            for (uint j = 0; j < elem->numberOfCoordinates(); j++) {
+            for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordinateId vId = elem->getV(j)->getId();
                 const CoordinateBase* coord = vNew.getPtrToId(vId);
                 if (coord == NULL) {
@@ -289,14 +289,14 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
                     assert(false);
                     exit(ELEMENT_ERROR);
                 }
-                if (!coord->is<CoordD3>()) {
+                if (!coord->is<CoordR3>()) {
                     cerr << "ERROR @ ElementsGroup<E>::reassignPointers(): "
                          << "Coord in new CoordinateGroup is not a valid Coord"
                          << endl;
                     assert(false);
                     exit(ELEMENT_ERROR);
                 }
-                elem->setV(j, coord->castTo<CoordD3>());
+                elem->setV(j, coord->castTo<CoordR3>());
             }
         }
     }
@@ -318,7 +318,7 @@ void ElementsGroup<E>::linearize() {
     assert(this->template sizeOf<Tri3>() == 0);
     assert(this->template sizeOf<Tet4>() == 0);
 
-    for(uint i = 0; i < this->size(); i++) {
+    for(UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->template is<Tri6> ()) {
             Tri6* tmpPtr = this->element_[i]->template castTo<Tri6>();
             this->element_[i] = tmpPtr->linearize();
@@ -336,7 +336,7 @@ template<typename E>
 void ElementsGroup<E>::printInfo() const {
     cout << "--- Elements Group info ---" << endl;
     cout << "Total number of elements: " << this->size() << endl;
-    for(unsigned i = 0; i < this->size(); i++) {
+    for(UInt i = 0; i < this->size(); i++) {
         this->element_[i]->printInfo();
         cout << endl;
     }

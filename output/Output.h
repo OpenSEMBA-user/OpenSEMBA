@@ -20,28 +20,28 @@ public:
    virtual ~Output();
    virtual void
    process(
-         const double time,
-         const FieldD3& electric,
-         const FieldD3& magnetic);
+         const Real time,
+         const FieldR3& electric,
+         const FieldR3& magnetic);
    virtual void
    writeResumeFile(
-         const double time,
-         const FieldD3& electric,
-         const FieldD3& magnetic);
+         const Real time,
+         const FieldR3& electric,
+         const FieldR3& magnetic);
    virtual void
    printInfo() const;
 protected:
    vector<const Result*> result_;
    void
    deleteExistentOutputFiles() const;
-   uint
+   UInt
    determineStepsSaved(
-         const double savingPeriod,
-         const double dt) const;
+         const Real savingPeriod,
+         const Real dt) const;
 protected:
    string getOutputfilename() const;
 private:
-   void writeAllFields(const FieldD3& field) const;
+   void writeAllFields(const FieldR3& field) const;
 };
 
 #endif /* OUTPUT_H_ */

@@ -79,5 +79,5 @@ void
 SmbData::applyGeometricScalingFactor() {
    mesh->applyGeometricScalingFactor(solverParams->getScalingFactor());
    solverParams->applyGeometricScalingFactor(solverParams->getScalingFactor());
-   solverParams->setScalingFactor((double) 1.0);
+   solverParams->setScalingFactor((Real) 1.0);
 }

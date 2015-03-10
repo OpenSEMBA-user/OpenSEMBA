@@ -126,7 +126,7 @@ ParserGiD::readMesherParameters() {
     bool effectiveParameters = false;
     string thickness, sigma;
     bool locationInMeshIsSet = false;
-    CVecD3 locationInMesh;
+    CVecR3 locationInMesh;
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Mesher parameters") == 0) {
@@ -158,9 +158,9 @@ ParserGiD::readMesherParameters() {
                     CoordinateId id(atoi(value.c_str()));
                     const CoordinateBase* coord = cG_->getPtrToId(id);
                     if(coord != NULL) {
-                        if(coord->is<CoordD3>()) {
+                        if(coord->is<CoordR3>()) {
                             locationInMeshIsSet = true;
-                            locationInMesh = coord->castTo<CoordD3>()->pos();
+                            locationInMesh = coord->castTo<CoordR3>()->pos();
                         }
                     }
                 } else if (label.compare("End of mesher parameters")==0) {
@@ -230,7 +230,7 @@ PhysicalModelGroup<>*
 ParserGiD::readMaterials(){
     PhysicalModelGroup<>* res = new PhysicalModelGroup<>();
     string label, value;
-    uint materialCount = 0;
+    UInt materialCount = 0;
     while (!f_in.eof() && label.compare("End of materials")!=0) {
         getNextLabelAndValue(label, value);
         if (label.compare("Material")==0) {
@@ -250,8 +250,8 @@ ParserGiD::readPhysicalModel(const MatId id) {
     PMMultiport::Type mpType = PMMultiport::undefined;
     SIBCType surfType = undefinedSIBC;
     string layersStr;
-    double rEps, rMu, eC, mC;
-    double radius, R, L, C;
+    Real rEps, rMu, eC, mC;
+    Real radius, R, L, C;
     string filename;
     while (!f_in.eof()) {
         string label, value;
@@ -365,8 +365,8 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
         if (label.compare("GiDOutputType")==0) {
             gidOutputType = strToGidOutputType(trim(value));
         } else if (label.compare("Number of elements")==0) {
-            uint nE = atoi(value.c_str());
-            for (uint i = 0; i < nE; i++) {
+            UInt nE = atoi(value.c_str());
+            for (UInt i = 0; i < nE; i++) {
                 getNextLabelAndValue(label,value);
                 string name = trim(value);
                 getNextLabelAndValue(label,value);
@@ -398,14 +398,14 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
-                    elem = mesh_->addAsHex8(BoxD3(strToBound(line)));
+                    elem = mesh_->addAsHex8(BoxR3(strToBound(line)));
                     res->add(new OutRq(
                             domain, Element::volume, type, name, elem));
                     break;
                 case ParserGiD::farField:
                     getline(f_in, line);
-                    elem = mesh_->addAsHex8(BoxD3(strToBound(line)));
-                    double iTh, fTh, sTh, iPhi, fPhi, sPhi;
+                    elem = mesh_->addAsHex8(BoxR3(strToBound(line)));
+                    Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
                     res->add(new OutRqFarField(
@@ -517,7 +517,7 @@ CoordinateGroup<>*
 ParserGiD::readCoordinates() {
     string line;
     CoordinateId id;
-    CVecD3 pos;
+    CVecR3 pos;
     vector<CoordinateBase*> coord;
     coord.reserve(pSize_.v);
     bool finished = false;
@@ -527,9 +527,9 @@ ParserGiD::readCoordinates() {
         if (line.find("Coordinates:") != line.npos) {
             found = true;
             // Reads coordinates.
-            for (uint i = 0; i < pSize_.v; i++) {
+            for (UInt i = 0; i < pSize_.v; i++) {
                 f_in >> id >> pos(0) >> pos(1) >> pos(2);
-                coord.push_back(new Coordinate<double,3>(id, pos));
+                coord.push_back(new Coordinate<Real,3>(id, pos));
             }
             // Checks "end of coordinates" label.
             finished = false;
@@ -606,9 +606,9 @@ void ParserGiD::readHex8Elements(const CoordinateGroup<>& v,
     ElementId id;
     CoordinateId vId[8];
     MatId matId;
-    for (uint i = 0; i < pSize_.hex8; i++) {
+    for (UInt i = 0; i < pSize_.hex8; i++) {
         f_in >> id;
-        for (uint j = 0; j < 8; j++) {
+        for (UInt j = 0; j < 8; j++) {
             f_in >> vId[j];
         }
         f_in >> matId;
@@ -621,9 +621,9 @@ void ParserGiD::readTet10Elements(const CoordinateGroup<>& v,
     ElementId id;
     CoordinateId vId[10];
     MatId matId;
-    for (uint i = 0; i < pSize_.tet10; i++) {
+    for (UInt i = 0; i < pSize_.tet10; i++) {
         f_in >> id;
-        for (uint j = 0; j < 10; j++) {
+        for (UInt j = 0; j < 10; j++) {
             f_in >> vId[j];
         }
         f_in >> matId;
@@ -637,7 +637,7 @@ void ParserGiD::readTet4Elements(const CoordinateGroup<>& v,
     CoordinateId vId[4];
     LayerId layerId;
     MatId matId;
-    for (uint i = 0; i < pSize_.tet4; i++) {
+    for (UInt i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
         elems.push_back(new Tet4(v, id, vId, layerId, matId));
     }
@@ -648,10 +648,10 @@ void ParserGiD::readTri6Elements(const CoordinateGroup<>& v,
     ElementId id;
     CoordinateId vId[6];
     MatId matId;
-    CVecD3 normal;
-    for (uint i = 0; i < pSize_.tri6; i++) {
+    CVecR3 normal;
+    for (UInt i = 0; i < pSize_.tri6; i++) {
         f_in >> id;
-        for (uint j = 0; j < 6; j++)
+        for (UInt j = 0; j < 6; j++)
             f_in >> vId[j];
         f_in >> matId;
         elems.push_back(new Tri6(v, id, vId, LayerId(0), matId));
@@ -664,8 +664,8 @@ void ParserGiD::readTri3Elements(const CoordinateGroup<>& v,
     CoordinateId vId[3];
     LayerId layerId;
     MatId matId;
-    CVecD3 normal;
-    for (uint i = 0; i < pSize_.tri3; i++) {
+    CVecR3 normal;
+    for (UInt i = 0; i < pSize_.tri3; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> matId >> layerId;
         elems.push_back(new Tri3(v, id, vId, layerId, matId));
     }
@@ -677,7 +677,7 @@ void ParserGiD::readLin2Elements(const CoordinateGroup<>& v,
     CoordinateId vId[2];
     LayerId layerId;
     MatId matId;
-    for (uint i = 0; i < pSize_.lin2; i++) {
+    for (UInt i = 0; i < pSize_.lin2; i++) {
         f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;
         elems.push_back(new Lin2(v, id, vId, layerId, matId));
     }
@@ -690,13 +690,13 @@ ParserGiD::readDispersiveMatFile(
     string matFileName, line, label, value;
     string name, model;
     string poles, epsilon, sigma;
-    uint nPoles, nDrudePoles;
-    double eps, sig;
-    vector<int> poleId, drudePoleId;
-    vector<double> rePK, imPK, reRK, imRK;
-    vector<double> reDrudePK, imDrudePK, reDrudeRK, imDrudeRK;
-    int tmpPoleId;
-    double tmpRePK, tmpImPK, tmpReRK, tmpImRK;
+    UInt nPoles, nDrudePoles;
+    Real eps, sig;
+    vector<Int> poleId, drudePoleId;
+    vector<Real> rePK, imPK, reRK, imRK;
+    vector<Real> reDrudePK, imDrudePK, reDrudeRK, imDrudeRK;
+    Int tmpPoleId;
+    Real tmpRePK, tmpImPK, tmpReRK, tmpImRK;
     // Opens file, read only mode.
     matFileName = problemTypePath_ + "/material/" + fileName + ".dat";
     matFile.open(matFileName.c_str(), ifstream::in);
@@ -719,7 +719,7 @@ ParserGiD::readDispersiveMatFile(
     // Parses poles.
     // Stores in line the file line containing headers.
     getline(matFile, line);
-    for (uint i = 0; i < nPoles; i++) {
+    for (UInt i = 0; i < nPoles; i++) {
         matFile >> tmpPoleId >> tmpRePK >> tmpImPK >> tmpReRK >> tmpImRK;
         poleId.push_back(tmpPoleId);
         rePK.push_back(tmpRePK);
@@ -731,7 +731,7 @@ ParserGiD::readDispersiveMatFile(
     label = line.substr(line.find("#") + 2, line.find(":") - 2);
     value = line.substr(line.find(":") + 2, line.length());
     nDrudePoles = atoi(value.c_str());
-    for (uint i = 0; i < nDrudePoles; i++) {
+    for (UInt i = 0; i < nDrudePoles; i++) {
         matFile >> tmpPoleId >> tmpRePK >> tmpImPK >> tmpReRK >> tmpImRK;
         drudePoleId.push_back(tmpPoleId);
         reDrudePK.push_back(tmpRePK);
@@ -741,17 +741,17 @@ ParserGiD::readDispersiveMatFile(
     }
     // Copies all parsed data into the aux material depending on the model.
     if (!model.compare("Pole-Residue Model")) {
-        vector<complex<double> > poles, residues, drudePoles, drudeResidues;
-        for (uint i = 0; i < nPoles; i++) {
-            complex<double> pole(rePK[i], imPK[i]);
+        vector<complex<Real> > poles, residues, drudePoles, drudeResidues;
+        for (UInt i = 0; i < nPoles; i++) {
+            complex<Real> pole(rePK[i], imPK[i]);
             poles.push_back(pole);
-            complex<double> residue(reRK[i]/2.0, imRK[i]/2.0);
+            complex<Real> residue(reRK[i]/2.0, imRK[i]/2.0);
             residues.push_back(residue);
         }
-        for (uint i = 0; i < nDrudePoles; i++) {
-            complex<double> pole(reDrudePK[i], imDrudePK[i]);
+        for (UInt i = 0; i < nDrudePoles; i++) {
+            complex<Real> pole(reDrudePK[i], imDrudePK[i]);
             drudePoles.push_back(pole);
-            complex<double> residue(reDrudeRK[i]/2.0, imDrudeRK[i]/2.0);
+            complex<Real> residue(reDrudeRK[i]/2.0, imDrudeRK[i]/2.0);
             drudeResidues.push_back(residue);
         }
         return new PMVolumeDispersive(id_, name, eps, 1.0, sig,
@@ -767,18 +767,18 @@ ParserGiD::readMultilayerSurf(
         const MatId id,
         const string& name,
         const string& layersStr) const {
-    uint begin = layersStr.find_first_of("\"");
-    uint end = layersStr.find_last_of("\"");
+    UInt begin = layersStr.find_first_of("\"");
+    UInt end = layersStr.find_last_of("\"");
     istringstream ss(layersStr.substr(begin+1,end-2));
     string sub;
-    vector<double> thick, rEps, rMu, eCond, mCond;
-    uint parameters;
+    vector<Real> thick, rEps, rMu, eCond, mCond;
+    UInt parameters;
     string trash;
     ss >> trash >> parameters;
-    const uint nLayers = parameters / 5;
-    for (uint i = 0; i < nLayers; i++) {
+    const UInt nLayers = parameters / 5;
+    for (UInt i = 0; i < nLayers; i++) {
         // Thickness, Permittivity, Permeability, ElecCond, MagnCond.
-        double thick_, rEps_, rMu_, eCond_, mCond_;
+        Real thick_, rEps_, rMu_, eCond_, mCond_;
         ss >> thick_ >> rEps_ >> rMu_ >> eCond_ >> mCond_;
         thick.push_back(thick_);
         rEps.push_back(rEps_);
@@ -796,10 +796,10 @@ ParserGiD::readIsotropicSurfMatFile(
     string matFileName, line, label, value;
     string name, model;
     char *pEnd;
-    StaMatrix<double,2,2> Zstatic, Zinfinite;
-    vector<double> pole;
-    vector<StaMatrix<double,2,2> > Z;
-    double tmpP, tmpZ11, tmpZ12, tmpZ21, tmpZ22;
+    StaMatrix<Real,2,2> Zstatic, Zinfinite;
+    vector<Real> pole;
+    vector<StaMatrix<Real,2,2> > Z;
+    Real tmpP, tmpZ11, tmpZ12, tmpZ21, tmpZ22;
     // Opens file, read only mode.
     matFileName = problemTypePath_ + "/panel/" + fileName + ".dat";
     matFile.open(matFileName.c_str(), ifstream::in);
@@ -816,7 +816,7 @@ ParserGiD::readIsotropicSurfMatFile(
     }
     name = line.substr(8, line.length()-9);
     getline(matFile, line);
-    uint nPoles = 0;
+    UInt nPoles = 0;
     // Gets number of poles.
     label = line.substr(0, line.find(":"));
     if(!label.compare("N")) {
@@ -846,9 +846,9 @@ ParserGiD::readIsotropicSurfMatFile(
     // Parses poles.
     // Stores in line the file line containing headers.
     getline(matFile, line);
-    for (uint i = 0; i < nPoles; i++) {
+    for (UInt i = 0; i < nPoles; i++) {
         matFile >> tmpP >> tmpZ11 >> tmpZ12 >> tmpZ21 >> tmpZ22;
-        StaMatrix<double,2,2> tmpZ;
+        StaMatrix<Real,2,2> tmpZ;
         tmpZ(0,0) = tmpZ11;
         tmpZ(0,1) = tmpZ12 ;
         tmpZ(1,0) = tmpZ21;
@@ -877,10 +877,10 @@ ParserGiD::readCartesianGrid() {
     bool gridLabelFound = false;
     bool gridFound = false;
     Grid3* grid = NULL;
-    BoxD3 bound;
+    BoxR3 bound;
     bool stepsByNumberOfCells = true;
     CVecI3 numElems;
-    CVecD3 steps;
+    CVecR3 steps;
     while (!gridLabelFound && !f_in.eof()) {
         getline(f_in, line);
         if (line.find("Grid:") != line.npos ) {
@@ -889,7 +889,7 @@ ParserGiD::readCartesianGrid() {
                 getNextLabelAndValue(label, value);
                 if (label.compare("Layer Box")==0) {
                     gridFound = true;
-                    bound = BoxD3(strToBound(value));
+                    bound = BoxR3(strToBound(value));
                 } else if (label.compare("Type")==0) {
                     if (trim(value).compare("by_number_of_cells")==0) {
                         stepsByNumberOfCells = true;
@@ -897,11 +897,11 @@ ParserGiD::readCartesianGrid() {
                         stepsByNumberOfCells = false;
                     }
                 } else if (label.compare("Directions")==0) {
-                    CVecD3 aux = strToCartesianVector(value);
+                    CVecR3 aux = strToCartesianVector(value);
                     if (stepsByNumberOfCells) {
-                        numElems(0) = (long) aux(0);
-                        numElems(1) = (long) aux(1);
-                        numElems(2) = (long) aux(2);
+                        numElems(0) = (Int) aux(0);
+                        numElems(1) = (Int) aux(1);
+                        numElems(2) = (Int) aux(2);
                     } else {
                         steps = aux;
                     }
@@ -958,7 +958,7 @@ PlaneWave*
 ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
-    CVecD3 dir, pol;
+    CVecR3 dir, pol;
     vector<ElementId> elems;
     Magnitude* mag;
     while(!f_in.eof()) {
@@ -970,12 +970,12 @@ ParserGiD::readPlaneWave() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
-            elems = mesh_->addAsHex8(BoxD3(strToBound(value)));
+            elems = mesh_->addAsHex8(BoxR3(strToBound(value)));
         } else if (label.compare("Number of elements")==0) {
-            uint nE = atoi(value.c_str());
+            UInt nE = atoi(value.c_str());
             elems.reserve(nE);
-            for (uint i = 0; i < nE; i++) {
-                uint e;
+            for (UInt i = 0; i < nE; i++) {
+                UInt e;
                 f_in >> e;
                 elems.push_back(ElementId(e));
             }
@@ -992,9 +992,9 @@ ParserGiD::readPlaneWave() {
 Dipole*
 ParserGiD::readDipole() {
     vector<ElementId> elem;
-    double length = 0.0;
-    CVecD3 orientation;
-    CVecD3 position;
+    Real length = 0.0;
+    CVecR3 orientation;
+    CVecR3 position;
     MagnitudeGaussian* mag = NULL;
     //
     string line;
@@ -1023,12 +1023,12 @@ ParserGiD::readDipole() {
 Waveport*
 ParserGiD::readWaveport() {
     vector<ElementId> elem;
-    uint numElements = 0;
+    UInt numElements = 0;
     bool input = true;
     MagnitudeGaussian* mag;
     Waveport::Shape shape = Waveport::rectangular;
     Waveport::ExcitationMode excitationMode = Waveport::TE;
-    pair<uint,uint> mode(1,0);
+    pair<UInt,UInt> mode(1,0);
     string line, label, value;
     bool finished = false;
     while (!finished && !f_in.eof()) {
@@ -1036,7 +1036,7 @@ ParserGiD::readWaveport() {
         label = line.substr(0, line.find(LABEL_ENDING));
         value = line.substr(line.find(LABEL_ENDING)+1, line.length());
         if (!label.compare("Input")) {
-            uint oneOrZero;
+            UInt oneOrZero;
             oneOrZero = atoi(value.c_str());
             if (oneOrZero == 1) {
                 input = true;
@@ -1065,8 +1065,8 @@ ParserGiD::readWaveport() {
         } else if (!label.compare("Number of elements")) {
             numElements = atoi(value.c_str());
         } else if (!label.compare("Elements")) {
-            uint e;
-            for (uint i = 0; i < numElements; i++) {
+            UInt e;
+            for (UInt i = 0; i < numElements; i++) {
                 f_in >> e;
                 elem.push_back(ElementId(e));
             }
@@ -1103,10 +1103,10 @@ ParserGiD::readGenerator() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Number of elements")==0) {
-            uint nE = atoi(value.c_str());
+            UInt nE = atoi(value.c_str());
             elems.reserve(nE);
-            for (uint i = 0; i < nE; i++) {
-                uint e;
+            for (UInt i = 0; i < nE; i++) {
+                UInt e;
                 f_in >> e;
                 elems.push_back(ElementId(e));
             }
@@ -1137,10 +1137,10 @@ ParserGiD::readSourceOnLine() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Number of elements")==0) {
-            uint nE = atoi(value.c_str());
+            UInt nE = atoi(value.c_str());
             elems.reserve(nE);
-            for (uint i = 0; i < nE; i++) {
-                uint e;
+            for (UInt i = 0; i < nE; i++) {
+                UInt e;
                 f_in >> e;
                 elems.push_back(ElementId(e));
             }
@@ -1318,23 +1318,23 @@ ParserGiD::strToMultiportType(string str) const {
     }
 }
 
-pair<CVecD3, CVecD3>
+pair<CVecR3, CVecR3>
 ParserGiD::strToBound(
         const string& value) const {
-    uint begin = value.find_first_of("{");
-    uint end = value.find_last_of("}");
+    UInt begin = value.find_first_of("{");
+    UInt end = value.find_last_of("}");
     istringstream iss(value.substr(begin+1,end-2));
     string sub;
-    CVecD3 max, min;
-    for (uint i = 0; i < 3; i++) {
+    CVecR3 max, min;
+    for (UInt i = 0; i < 3; i++) {
         iss >> sub;
         max(i) = atof(sub.c_str());
     }
-    for (uint i = 0; i < 3; i++) {
+    for (UInt i = 0; i < 3; i++) {
         iss >> sub;
         min(i) = atof(sub.c_str());
     }
-    pair<CVecD3,CVecD3> bound(min, max);
+    pair<CVecR3,CVecR3> bound(min, max);
     return bound;
 }
 
@@ -1418,16 +1418,16 @@ ParserGiD::strToGidOutputType(string str) const {
 
 Domain
 ParserGiD::strToDomain(string line) const {
-    uint timeDomain;
-    double initialTime;
-    double finalTime;
-    double samplingPeriod;
-    uint frequencyDomain;
-    double initialFrequency;
-    double finalFrequency;
-    double frequencyStep;
-    uint logFrequencySweep;
-    uint usingTransferFunction;
+    UInt timeDomain;
+    Real initialTime;
+    Real finalTime;
+    Real samplingPeriod;
+    UInt frequencyDomain;
+    Real initialFrequency;
+    Real finalFrequency;
+    Real frequencyStep;
+    UInt logFrequencySweep;
+    UInt usingTransferFunction;
     string transferFunctionFile;
     stringstream ss(line);
     ss >> timeDomain >> initialTime >> finalTime >> samplingPeriod
@@ -1446,7 +1446,7 @@ ParserGiD::readMagnitude(const string typeIn) {
     bool finished = false;
     string label, value;
     if (type.compare("Gaussian") == 0) {
-        double delay, spread;
+        Real delay, spread;
         bool spreadFound = false;
         bool delayFound = false;
         while (!finished && !f_in.eof()) {

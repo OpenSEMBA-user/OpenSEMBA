@@ -20,8 +20,8 @@ MagnitudeNumerical::MagnitudeNumerical(const string& filename)
 MagnitudeNumerical::MagnitudeNumerical(
       const string& name,
       const Magnitude* mag,
-      const double timeStep,
-      const double finalTime) :
+      const Real timeStep,
+      const Real finalTime) :
          ProjectFile(name) {
    const MagnitudeNumerical* magNum
     = dynamic_cast<const MagnitudeNumerical*>(mag);
@@ -30,7 +30,7 @@ MagnitudeNumerical::MagnitudeNumerical(
       initFromFile();
       return;
    }
-   unsigned int nSteps;
+   UInt nSteps;
    if (timeStep != 0.0) {
       nSteps = abs(finalTime / timeStep);
    } else {
@@ -42,8 +42,8 @@ MagnitudeNumerical::MagnitudeNumerical(
    }
    ofstream file;
    file.open(name.c_str());
-   double time = 0.0;
-   for (unsigned int i = 0; i < nSteps; i++) {
+   Real time = 0.0;
+   for (UInt i = 0; i < nSteps; i++) {
       file << time << " " << mag->evaluate(time) << endl;
       time += timeStep;
    }
@@ -64,7 +64,7 @@ void MagnitudeNumerical::initFromFile() {
       printInfo();
    }
    while (!file.eof()) {
-      pair<double, double> value;
+      pair<Real, Real> value;
       file >> value.first >> value.second;
       value_.insert(value);
    }
@@ -79,14 +79,14 @@ MagnitudeNumerical::printInfo() const {
    cout << " --- Magnitude Numerical Info --- " << endl;
    ProjectFile::printInfo();
    cout << "Stored values: " << value_.size() << endl;
-   //    map<double,double>::const_iterator it;
+   //    map<Real,Real>::const_iterator it;
    //    for (it = value_.begin(); it != value_.end(); ++it) {
    //        cout << it->first << " " << it->second << endl;
    //    }
 }
 
-double
-MagnitudeNumerical::evaluate(const double time) const {
+Real
+MagnitudeNumerical::evaluate(const Real time) const {
    cerr<< "ERROR @ MagnitudeNumerical: "
          << "Evaluate not implemented." << endl;
    assert(false);

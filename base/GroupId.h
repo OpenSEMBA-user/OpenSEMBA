@@ -29,7 +29,7 @@ public:
 
 protected:
     Id lastId_;
-    map<Id, unsigned> mapId_;
+    map<Id, UInt> mapId_;
 
     void buildMapId();
 };

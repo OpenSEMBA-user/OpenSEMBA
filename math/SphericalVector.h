@@ -15,20 +15,20 @@ using namespace std;
 
 class SphericalVector {
 public:
-	double radius;
-	double theta, phi;
+	Real radius;
+	Real theta, phi;
 	SphericalVector();
-	SphericalVector(const double theta, const double phi);
+	SphericalVector(const Real theta, const Real phi);
 	SphericalVector&
-	 operator=(const CartesianVector<double,3>& param);
-	CartesianVector<double,3>
+	 operator=(const CartesianVector<Real,3>& param);
+	CartesianVector<Real,3>
 	 convertSphericalVectorField(
-	  const double ar,
-	  const double at,
-	  const double ap) const;
-	CartesianVector<double,3>
+	  const Real ar,
+	  const Real at,
+	  const Real ap) const;
+	CartesianVector<Real,3>
 	 convertToCartesian() const;
-	double
+	Real
 	 norm() const;
 	void
 	 printInfo() const;

@@ -19,22 +19,22 @@ public:
     } type;
     MagnitudeGaussian();
     MagnitudeGaussian(
-            const double spread,
-            const double delay,
-            const double freq = 0.0);
+            const Real spread,
+            const Real delay,
+            const Real freq = 0.0);
     virtual ~MagnitudeGaussian();
-    double
-     evaluate(const double time) const;
+    Real
+     evaluate(const Real time) const;
     void
      printInfo() const;
-   double getDelay() const;
-   double getFreq() const;
-   double getSpread() const;
+   Real getDelay() const;
+   Real getFreq() const;
+   Real getSpread() const;
 
 private:
-    double spread_;
-    double delay_;
-    double freq_;
+    Real spread_;
+    Real delay_;
+    Real freq_;
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDEGAUSSIAN_H_ */

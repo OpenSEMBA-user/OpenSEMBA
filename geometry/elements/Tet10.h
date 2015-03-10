@@ -26,26 +26,26 @@ public:
 
     bool isCurved() const;
     bool isQuadratic() const {return true;}
-    bool isCurvedFace(const uint f) const;
-    bool isFaceContainedInPlane(const uint face,
+    bool isCurvedFace(const UInt f) const;
+    bool isFaceContainedInPlane(const UInt face,
                                 const CartesianPlane plane) const;
 
-    uint numberOfCoordinates() const { return 10; }
+    UInt numberOfCoordinates() const { return 10; }
 
-    uint numberOfSideCoordinates(const uint f = 0) const { return 6; }
+    UInt numberOfSideCoordinates(const UInt f = 0) const { return 6; }
 
-    const CoordD3* getV(const uint i) const {return v_[i];}
-    const CoordD3* getSideV(const uint f, const uint i) const;
+    const CoordR3* getV(const UInt i) const {return v_[i];}
+    const CoordR3* getSideV(const UInt f, const UInt i) const;
 
-    const CoordD3* getVertex(const uint i) const;
-    const CoordD3* getSideVertex(const uint f, const uint i) const;
+    const CoordR3* getVertex(const UInt i) const;
+    const CoordR3* getSideVertex(const UInt f, const UInt i) const;
 
-    double getVolume() const;
+    Real getVolume() const;
     const Simplex& getTet() const {return tet;}
-    double getAreaOfFace(const uint face) const;
-    Tri6 getTri6Face(const uint f) const;
+    Real getAreaOfFace(const UInt face) const;
+    Tri6 getTri6Face(const UInt f) const;
 
-    void setV(const uint i, const CoordD3*);
+    void setV(const UInt i, const CoordR3*);
 
     Tet4* linearize() const;
 
@@ -54,7 +54,7 @@ public:
 private:
     static const SimplexTri<2> tri;
     static const SimplexTet<2> tet;
-    const CoordD3* v_[10];
+    const CoordR3* v_[10];
 };
 const SimplexTri<2> Tet10::tri;
 const SimplexTet<2> Tet10::tet;

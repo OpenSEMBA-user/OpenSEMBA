@@ -14,8 +14,6 @@
 
 using namespace std;
 
-typedef unsigned int uint;
-
 class MesherParameters {
 public:
     typedef enum {
@@ -32,7 +30,7 @@ public:
     MesherParameters(
             Mesher mesher,
             bool locationInMeshSet,
-            CVecD3 locationInMesh,
+            CVecR3 locationInMesh,
             bool bruteForceVolumes,
             Mode mode,
             bool effectiveParameter,
@@ -45,7 +43,7 @@ public:
             string confOutput);
     Mesher getMesher() const;
     void setMesher(Mesher mesher);
-    virtual const CVecD3& getLocationInMesh() const;
+    virtual const CVecR3& getLocationInMesh() const;
     virtual bool isLocationInMeshSet() const;
     Mode getMode() const;
     void setMode(Mode mode);
@@ -69,7 +67,7 @@ public:
     void setScaleFactorValue(const string& scaleFactorValue);
     string getSWFForce() const;
     void setSwfForze(const string& swfForze);
-    void setLocationInMesh(const CVecD3& locationInMesh);
+    void setLocationInMesh(const CVecR3& locationInMesh);
     const string& getMeshOutputName() const;
     void setConfOutput(const string& confOutput);
     virtual void printInfo() const;
@@ -86,7 +84,7 @@ private:
     string scaleFactorValue_;
     string swfForze_;
     bool locationInMeshSet_;
-    CVecD3 locationInMesh_;
+    CVecR3 locationInMesh_;
     string confOutput_;
 };
 

@@ -5,7 +5,7 @@ IdBase::IdBase()
 
 }
 
-IdBase::IdBase(const unsigned id)
+IdBase::IdBase(const UInt id)
 :   id_(id) {
 
 }
@@ -19,6 +19,6 @@ IdBase::~IdBase() {
     
 }
 
-IdBase::operator unsigned() const {
+IdBase::operator UInt() const {
     return id_;
 }

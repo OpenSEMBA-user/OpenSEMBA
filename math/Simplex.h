@@ -28,46 +28,46 @@ class Simplex {
 public:
 	Simplex();
 	virtual ~Simplex();
-	virtual double
-	 getCda(unsigned int i, unsigned int j, unsigned int k) const;
-	virtual const Polynomial<double>&
-	 getLagr(const unsigned int i) const;
-	virtual const Polynomial<double>&
-	 getDLagr(const unsigned int i, const unsigned int f) const;
-	virtual unsigned int
-	 nodeIndex(const unsigned int i, const unsigned int j) const;
-	virtual unsigned int
-	 cubatureNodeIndex(const unsigned int i, const unsigned int j) const;
-	virtual const CartesianVector<double, 4>
-	 cubatureCoordinate(const unsigned int c) const {
+	virtual Real
+	 getCda(UInt i, UInt j, UInt k) const;
+	virtual const Polynomial<Real>&
+	 getLagr(const UInt i) const;
+	virtual const Polynomial<Real>&
+	 getDLagr(const UInt i, const UInt f) const;
+	virtual UInt
+	 nodeIndex(const UInt i, const UInt j) const;
+	virtual UInt
+	 cubatureNodeIndex(const UInt i, const UInt j) const;
+	virtual const CartesianVector<Real, 4>
+	 cubatureCoordinate(const UInt c) const {
 		 cerr << "ERROR @ cubatureCoordinate" << endl;
 		 exit(SIMPLEX_ERROR);
 	 }
 protected:
-	static const unsigned int cubatureOrder = SIMPLEX_CUBATURE_ORDER;
-	Polynomial<double>
+	static const UInt cubatureOrder = SIMPLEX_CUBATURE_ORDER;
+	Polynomial<Real>
 	 silvesterPol(
-	  const unsigned int m,
-	  const unsigned int n) const;
+	  const UInt m,
+	  const UInt n) const;
 	void
 	 lagrangePolynomials(
-	  Polynomial<double>* lagr,
-	  const unsigned int n,
-	  const unsigned int np,
-	  const unsigned int nsc) const;
+	  Polynomial<Real>* lagr,
+	  const UInt n,
+	  const UInt np,
+	  const UInt nsc) const;
 	void
 	 cubatureLagrangePolynomials(
-	  Polynomial<double>* lagr,
-	  const unsigned int n,
-	  const unsigned int np,
-	  const unsigned int nsc) const;
-	double
+	  Polynomial<Real>* lagr,
+	  const UInt n,
+	  const UInt np,
+	  const UInt nsc) const;
+	Real
      integrate(
-      const Polynomial<double> pol,
-      const unsigned int dimension,
-      const double sizeFactor) const;
-	unsigned int
-	 factorial(unsigned int n) const;
+      const Polynomial<Real> pol,
+      const UInt dimension,
+      const Real sizeFactor) const;
+	UInt
+	 factorial(UInt n) const;
 };
 // ========================================================================
 #endif

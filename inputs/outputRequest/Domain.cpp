@@ -20,9 +20,9 @@ Domain::Domain() {
 	usingTransferFunction_ = false;
 }
 
-Domain::Domain(bool timeDomain, double initialTime, double finalTime,
-		double samplingPeriod, bool frequencyDomain, double initialFrequency,
-		double finalFrequency, double frequencyStep, bool logFrequencySweep,
+Domain::Domain(bool timeDomain, Real initialTime, Real finalTime,
+		Real samplingPeriod, bool frequencyDomain, Real initialFrequency,
+		Real finalFrequency, Real frequencyStep, bool logFrequencySweep,
 		bool usingTransferFunction, string transferFunctionFile) {
 	timeDomain_ = timeDomain;
 	initialTime_ = initialTime;

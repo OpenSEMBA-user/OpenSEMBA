@@ -19,7 +19,7 @@ MesherParameters::MesherParameters() {
 MesherParameters::MesherParameters(
         Mesher mesher,
         bool locationInMeshSet,
-        CVecD3 locationInMesh,
+        CVecR3 locationInMesh,
         bool bruteForceVolumes,
         Mode mode,
         bool effectiveParameter,
@@ -60,7 +60,7 @@ MesherParameters::printInfo() const {
     cout << " --- End of Meshing parameters info ---" << endl;
 }
 
-const CVecD3& MesherParameters::getLocationInMesh() const {
+const CVecR3& MesherParameters::getLocationInMesh() const {
     return locationInMesh_;
 }
 
@@ -134,7 +134,7 @@ void MesherParameters::setEffectiveParameter(bool effectiveParameter) {
     effectiveParameter_ = effectiveParameter;
 }
 
-void MesherParameters::setLocationInMesh(const CVecD3& locationInMesh) {
+void MesherParameters::setLocationInMesh(const CVecR3& locationInMesh) {
     locationInMesh_ = locationInMesh;
     locationInMeshSet_ = true;
 }

@@ -5,95 +5,95 @@
 #include "SimplexTri.h"
 // =========== SimplexTet class ===============================================
 namespace {
-template <int SIMPTET_N>
+template <Int SIMPTET_N>
 class SimplexTet : public Simplex {
 #define SIMPTET_NP ((SIMPTET_N+1)*(SIMPTET_N+2)*(SIMPTET_N+3)/6)
 #define SIMPTET_NFP ((SIMPTET_N+1)*(SIMPTET_N+2)/2)
 #define SIMPTET_FACES (4)
 public:
-	static const unsigned int faces = 4;
-	static const unsigned int nsc = 4;
-	static const unsigned int n = SIMPTET_N;
-	static const unsigned int np = SIMPTET_NP;
-	static const unsigned int nfp = SIMPTET_NFP;
+	static const UInt faces = 4;
+	static const UInt nsc = 4;
+	static const UInt n = SIMPTET_N;
+	static const UInt np = SIMPTET_NP;
+	static const UInt nfp = SIMPTET_NFP;
 	const SimplexTri<SIMPTET_N> tri;
-	StaMatrix<double,np,nfp> LIFT[faces];
-	static const unsigned int nc = SIMPLEX_CUBATURE_ORDER;
-	static const unsigned int ncp =
+	StaMatrix<Real,np,nfp> LIFT[faces];
+	static const UInt nc = SIMPLEX_CUBATURE_ORDER;
+	static const UInt ncp =
 	 (SIMPLEX_CUBATURE_ORDER+1)*(SIMPLEX_CUBATURE_ORDER+2)
 	  *(SIMPLEX_CUBATURE_ORDER+3)/6;
-	double cw[ncp];
-	StaMatrix<double,np,np> cwaa[ncp];
-	StaMatrix<double,np,np> cwada[ncp][faces];
+	Real cw[ncp];
+	StaMatrix<Real,np,np> cwaa[ncp];
+	StaMatrix<Real,np,np> cwada[ncp][faces];
 	// R: Extraction matrices.
-	StaMatrix<int,nfp,np> R[faces];
+	StaMatrix<Int,nfp,np> R[faces];
 	// ------- Methods --------------------------------------------------------
 	SimplexTet();
-	StaMatrix<double,SIMPTET_NP,SIMPTET_NP>
+	StaMatrix<Real,SIMPTET_NP,SIMPTET_NP>
 	 getMassMatrix() const;
-	unsigned int
-	 vertex(const unsigned int) const;
-	unsigned int
-	 sideVertex(const unsigned int f, const unsigned int i) const;
-	unsigned int
-	 nodeIndex(const unsigned int i, const unsigned int j) const;
-	unsigned int
-	 cubatureNodeIndex(const unsigned int i, const unsigned int j) const;
-	unsigned int
-	 sideNode(const unsigned int f, const unsigned int i) const;
-	const Polynomial<double>&
-	 getLagr(const unsigned int i) const;
-	const Polynomial<double>&
-	 getDLagr(const unsigned int i, const unsigned int f) const;
-	double
-	 getCda(unsigned int i, unsigned int j, unsigned int k) const;
-	CartesianVector<double,4>
-	 coordinate(const unsigned int i) const;
-	CartesianVector<double,4>
-	 sideCoordinate(const unsigned int f, const unsigned int i) const;
-	double
+	UInt
+	 vertex(const UInt) const;
+	UInt
+	 sideVertex(const UInt f, const UInt i) const;
+	UInt
+	 nodeIndex(const UInt i, const UInt j) const;
+	UInt
+	 cubatureNodeIndex(const UInt i, const UInt j) const;
+	UInt
+	 sideNode(const UInt f, const UInt i) const;
+	const Polynomial<Real>&
+	 getLagr(const UInt i) const;
+	const Polynomial<Real>&
+	 getDLagr(const UInt i, const UInt f) const;
+	Real
+	 getCda(UInt i, UInt j, UInt k) const;
+	CartesianVector<Real,4>
+	 coordinate(const UInt i) const;
+	CartesianVector<Real,4>
+	 sideCoordinate(const UInt f, const UInt i) const;
+	Real
 	 integrateScalarsOnFace(
-	  const double x[SIMPTET_NP],
-	  const unsigned int f,
-	  const double area) const;
-	double
+	  const Real x[SIMPTET_NP],
+	  const UInt f,
+	  const Real area) const;
+	Real
 	 integrateScalars(
-	  const double x[SIMPTET_NP],
-	  const double volume) const;
+	  const Real x[SIMPTET_NP],
+	  const Real volume) const;
 	void
 	 printInfo() const;
-	const CartesianVector<double, nsc>
-	 cubatureCoordinate(const unsigned int c) const {
+	const CartesianVector<Real, nsc>
+	 cubatureCoordinate(const UInt c) const {
 		 return cPos[c];
 	 }
 private:
 	// P: Rotation matrices.
-	StaMatrix<int,np,np> P[faces];
+	StaMatrix<Int,np,np> P[faces];
 	// lagr: Non-zero Lagrange's pol. coeffs.
-	Polynomial<double> lagr[np];
+	Polynomial<Real> lagr[np];
 	// Non-zero Lagrange's pol. coeffs of derivatives. Size is NP, NFACES.
-	Polynomial<double> dLagr[np][faces];
+	Polynomial<Real> dLagr[np][faces];
 	// nId: List of node indices.
-	CartesianVector<int,nsc> nId[np];
+	CartesianVector<Int,nsc> nId[np];
 	// sNId: List of side nodes.
-	StaMatrix<int,faces,nfp> sNId;
-	StaMatrix<int,SIMPTET_NFP,SIMPTET_NP>
-	 RMatrix(const unsigned int s) const;
-	DynMatrix<int>
-	 PMatrix(const unsigned int n, const unsigned int s) const;
+	StaMatrix<Int,faces,nfp> sNId;
+	StaMatrix<Int,SIMPTET_NFP,SIMPTET_NP>
+	 RMatrix(const UInt s) const;
+	DynMatrix<Int>
+	 PMatrix(const UInt n, const UInt s) const;
 	void
 	 buildNodeIndices(
-	  CartesianVector<int,nsc> *res,
-	  const unsigned int order,
-	  const unsigned int nNodes) const;
+	  CartesianVector<Int,nsc> *res,
+	  const UInt order,
+	  const UInt nNodes) const;
 	void
 	 buildSideNodeIndices();
-	static const double sizeFactor;
-	static const unsigned int dimension = 3;
-	CartesianVector<int,nsc> cId[ncp];
-	CartesianVector<double,nsc> cPos[ncp];
-	double ca[np][ncp];
-	double cda[np][faces][ncp];
+	static const Real sizeFactor;
+	static const UInt dimension = 3;
+	CartesianVector<Int,nsc> cId[ncp];
+	CartesianVector<Real,nsc> cPos[ncp];
+	Real ca[np][ncp];
+	Real cda[np][faces][ncp];
 	// --- Cubature build functions -------------------------------------------
 	void
 	 buildCubaturePositionsAndWeights();
@@ -101,12 +101,12 @@ private:
 	 buildCubatureLagrange();
 	void
 	 buildLIFTMatrix();
-	int
-	 numberOfNodes(int order) const ;
+	Int
+	 numberOfNodes(Int order) const ;
 };
 
-template<int SIMPTET_N>
-const double SimplexTet<SIMPTET_N>::sizeFactor = 1.0 / 6.0;
+template<Int SIMPTET_N>
+const Real SimplexTet<SIMPTET_N>::sizeFactor = 1.0 / 6.0;
 
 #include "SimplexTet.hpp"
 }

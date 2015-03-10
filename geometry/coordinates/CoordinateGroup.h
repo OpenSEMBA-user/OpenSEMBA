@@ -19,9 +19,9 @@ using namespace std;
 #include "GroupId.h"
 
 struct lexCompareCoord {
-    bool operator() (const CoordD3* lhs, const CoordD3* rhs) const {
-        static const double tolerance = 1e-12;
-        for (uint i = 0; i < 3; i++) {
+    bool operator() (const CoordR3* lhs, const CoordR3* rhs) const {
+        static const Real tolerance = 1e-12;
+        for (UInt i = 0; i < 3; i++) {
             if (abs(lhs->pos()(i) - rhs->pos()(i)) > tolerance) {
                 if (lhs->pos()(i) < rhs->pos()(i)) {
                     return true;
@@ -34,7 +34,7 @@ struct lexCompareCoord {
         return false;
     }
     bool operator() (const CoordI3* lhs, const CoordI3* rhs) const {
-        for (uint i = 0; i < 3; i++) {
+        for (UInt i = 0; i < 3; i++) {
             if (lhs->pos()(i) < rhs->pos()(i)) {
                 return true;
             }
@@ -51,26 +51,26 @@ class CoordinateGroup : public GroupId<C, CoordinateId> {
 public:
     CoordinateGroup();
     CoordinateGroup(const vector<C*>&);
-    CoordinateGroup(const vector<CVecD3>&);
+    CoordinateGroup(const vector<CVecR3>&);
     CoordinateGroup(const Group<C>& rhs);
     virtual ~CoordinateGroup();
     
     CoordinateGroup<C>& operator=(const Group<C>& rhs);
     
-    const CoordD3* get(const CVecD3& pos) const;
+    const CoordR3* get(const CVecR3& pos) const;
     const CoordI3* get(const CVecI3& pos) const;
     
     void add(C* newElem , bool newId = false);
     void add(vector<C*>&, bool newId = false);
-    C*         add(const CVecD3&        , const bool canOverlap = false);
-    vector<C*> add(const vector<CVecD3>&, const bool canOverlap = false);
+    C*         add(const CVecR3&        , const bool canOverlap = false);
+    vector<C*> add(const vector<CVecR3>&, const bool canOverlap = false);
     
-    void applyScalingFactor(const double factor);
+    void applyScalingFactor(const Real factor);
     
     void printInfo() const;
     
 private:
-    multiset<const CoordD3*, lexCompareCoord> index_;
+    multiset<const CoordR3*, lexCompareCoord> index_;
     
     void buildIndex(const vector<C*>& coords);
 };

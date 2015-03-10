@@ -10,58 +10,58 @@
 #endif
 
 
-template<class T, int D>
+template<class T, Int D>
 inline CartesianVector<complex<T>,D>
 MathUtils::convertToComplex(
  const CartesianVector<T,D>& rhs) {
 	CartesianVector<complex<T>,D> res;
-	for (int d = 0; d < D; d++) {
+	for (Int d = 0; d < D; d++) {
 		res(d) = complex<T>(rhs(d), (T) 0.0);
 	}
 	return res;
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline void
 MathUtils::convertToComplex(
  CartesianVector<complex<T>,D> *res,
  const CartesianVector<T,D> *rhs,
- const unsigned int vS) {
-	for (unsigned int i = 0; i < vS; i++) {
+ const UInt vS) {
+	for (UInt i = 0; i < vS; i++) {
 		res[i] = convertToComplex(rhs[i]);
 	}
 }
 
 
-template<class T, int D>
+template<class T, Int D>
 inline vector<CartesianVector<complex<T>,D> >
 MathUtils::convertToComplex(
  const vector<CartesianVector<T,D> >& rhs) {
-	const unsigned int vS = rhs.size();
+	const UInt vS = rhs.size();
 	vector<CartesianVector<complex<T>,D> > res(vS);
-	for (unsigned int i = 0; i < vS; i++) {
+	for (UInt i = 0; i < vS; i++) {
 		res[i] = convertToComplex(rhs[i]);
 	}
 	return res;
 }
 
 template<class T>
-vector<double>
+vector<Real>
 MathUtils::logspace(
- const pair<double,double>& rangeExponents,
+ const pair<Real,Real>& rangeExponents,
  const T nPoints) {
-	vector<double> res;
-	const double base = (double) 10;
+	vector<Real> res;
+	const Real base = (Real) 10;
 	res.reserve(nPoints);
 	if (nPoints == 1) {
 		res.push_back(pow(base, rangeExponents.second));
 	} else {
-		double jump =
+		Real jump =
 		 (rangeExponents.second - rangeExponents.first)
-    	 / (double) (nPoints - 1);
-		for (unsigned int i = 0; i < nPoints; i++) {
+    	 / (Real) (nPoints - 1);
+		for (UInt i = 0; i < nPoints; i++) {
 			res.push_back(
-			 pow(base, rangeExponents.first + (double) i * jump));
+			 pow(base, rangeExponents.first + (Real) i * jump));
 		}
 	}
 	return res;
@@ -71,14 +71,14 @@ template<class T>
 vector<T>
 MathUtils::linspace(
  const pair<T,T>& range,
- const unsigned int nPoints) {
+ const UInt nPoints) {
 	vector<T> res;
 	res.reserve(nPoints);
 	if (nPoints == 1) {
 		res.push_back(range.second);
 	} else {
 		T jump = (range.second - range.first) / (T) (nPoints - 1);
-		for (unsigned int i = 0; i < nPoints; i++) {
+		for (UInt i = 0; i < nPoints; i++) {
 			res.push_back(range.first + (T) i * jump);
 		}
 	}
@@ -92,9 +92,9 @@ MathUtils::meanDifference(
 	if (vec.size() == 1) {
 		return (T) 0.0;
 	}
-	const unsigned int vS = vec.size();
+	const UInt vS = vec.size();
 	vector<T> diff(vS-1, 0.0);
-	for (unsigned int i = 1; i < vS; i++) {
+	for (UInt i = 1; i < vS; i++) {
 		diff[i-1] = vec[i] - vec[i-1];
 	}
 	return mean(diff);
@@ -103,16 +103,16 @@ MathUtils::meanDifference(
 template<class T>
 T
 MathUtils::mean(const vector<T>& vec) {
-	const unsigned int vS = vec.size();
+	const UInt vS = vec.size();
 	return sum(vec) / vS;
 }
 
 template<class T>
 T
 MathUtils::sum(const vector<T>& vec) {
-	const unsigned int vS = vec.size();
+	const UInt vS = vec.size();
 	T res = 0.0;
-	for (unsigned int i = 0; i < vS; i++) {
+	for (UInt i = 0; i < vS; i++) {
 		res += vec[i];
 	}
 	return res;
@@ -121,30 +121,30 @@ MathUtils::sum(const vector<T>& vec) {
 template<class T>
 complex<T>
 MathUtils::getDFT(
- const double frequency,
+ const Real frequency,
  const vector<T>& time,
  const vector<T>& signal) {
-	const unsigned int N = signal.size();
+	const UInt N = signal.size();
 	const complex<T> constPart(0.0, -(T)(2.0 * M_PI * frequency));
 	complex<T> res(0.0, 0.0);
-	for (unsigned int i = 0; i < N; i++) {
+	for (UInt i = 0; i < N; i++) {
 		res += signal[i] * exp(constPart * time[i]);
 	}
-	res /= (double) N;
+	res /= (Real) N;
 	return conj(res);
 }
 
-template<class T, int D>
+template<class T, Int D>
 CartesianVector<complex<T>,D>
 MathUtils::getDFT(
- const double frequency,
+ const Real frequency,
  const vector<T>& time,
  const vector<CartesianVector<T,D> >& signal) {
 	CartesianVector<complex<T>,D> res;
-	const unsigned int N = signal.size();
+	const UInt N = signal.size();
 	vector<T> auxSignal(N);
-	for (int d = 0; d < D; d++) {
-		for (unsigned int i = 0; i < N; i++) {
+	for (Int d = 0; d < D; d++) {
+		for (UInt i = 0; i < N; i++) {
 			auxSignal[i] = signal[i](d);
 		}
 		res(d) = getDFT(frequency, time, auxSignal);

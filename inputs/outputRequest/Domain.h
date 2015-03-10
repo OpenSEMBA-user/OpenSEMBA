@@ -13,18 +13,20 @@
 
 using namespace std;
 
+#include "Types.h"
+
 class Domain {
 public:
 	Domain();
 	Domain(
 	 bool timeDomain,
-	 double initialTime,
-	 double finalTime,
-	 double samplingPeriod,
+	 Real initialTime,
+	 Real finalTime,
+	 Real samplingPeriod,
 	 bool frequencyDomain,
- 	 double initialFrequency,
-	 double finalFrequency,
-	 double frequencyStep,
+ 	 Real initialFrequency,
+	 Real finalFrequency,
+	 Real frequencyStep,
 	 bool logFrequencySweep,
 	 bool usingTransferFunction,
 	 string transferFunctionFile);
@@ -36,17 +38,17 @@ public:
 	bool
 	operator==(const Domain& rhs) const;
 
-	double
+	Real
 	getSamplingPeriod() const {
 		return samplingPeriod_;
 	}
 
-	double
+	Real
 	getFinalTime() const {
 		return finalTime_;
 	}
 
-	double
+	Real
 	getInitialTime() const {
 		return initialTime_;
 	}
@@ -54,7 +56,7 @@ public:
 	void
 	printInfo() const;
 
-	double getFinalFrequency() const {
+	Real getFinalFrequency() const {
 		return finalFrequency_;
 	}
 
@@ -62,11 +64,11 @@ public:
 		return frequencyDomain_;
 	}
 
-	double getFrequencyStep() const {
+	Real getFrequencyStep() const {
 		return frequencyStep_;
 	}
 
-	double getInitialFrequency() const {
+	Real getInitialFrequency() const {
 		return initialFrequency_;
 	}
 
@@ -88,13 +90,13 @@ public:
 
 private:
 	bool timeDomain_;
-	double initialTime_;
-	double finalTime_;
-	double samplingPeriod_;
+	Real initialTime_;
+	Real finalTime_;
+	Real samplingPeriod_;
 	bool frequencyDomain_;
-	double initialFrequency_;
-	double finalFrequency_;
-	double frequencyStep_;
+	Real initialFrequency_;
+	Real finalFrequency_;
+	Real frequencyStep_;
 	bool logFrequencySweep_;
 	bool usingTransferFunction_;
 	string transferFunctionFile_;

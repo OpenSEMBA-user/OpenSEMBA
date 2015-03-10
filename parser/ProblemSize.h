@@ -11,19 +11,20 @@
 #include <iostream>
 
 using namespace std;
-//typedef unsigned int uint;;
+
+#include "Types.h"
 
 class ProblemSize {
 public:
-	unsigned int v;	    // Number of coordinate points.
-	unsigned int lin2;  // # linear segment lines.
-	unsigned int lin3;  // # quadratic segment lines.
-	unsigned int tri3;  // # triangular elements.
-	unsigned int tri6;  // #
-	unsigned int tet4;  // # tetrahedron elements.
-	unsigned int tet10; // #
-	unsigned int hex8;
-	unsigned int mat;   // # materials.
+	UInt v;	    // Number of coordinate points.
+	UInt lin2;  // # linear segment lines.
+	UInt lin3;  // # quadratic segment lines.
+	UInt tri3;  // # triangular elements.
+	UInt tri6;  // #
+	UInt tet4;  // # tetrahedron elements.
+	UInt tet10; // #
+	UInt hex8;
+	UInt mat;   // # materials.
 	ProblemSize();
 	ProblemSize
 	 operator=(const ProblemSize& rhs);

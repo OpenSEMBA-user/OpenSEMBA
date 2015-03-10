@@ -19,7 +19,7 @@ public:
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
     Tet4(const ElementId id,
-         const CoordD3* v[4],
+         const CoordR3* v[4],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
     Tet4(const Tet4& rhs);
@@ -27,32 +27,32 @@ public:
 
     ClassBase* clone() const;
 
-    bool isInnerPoint(const CVecD3& pos) const;
-    bool isCurvedFace(const uint face) const;
-    bool isFaceContainedInPlane(const uint face,
+    bool isInnerPoint(const CVecR3& pos) const;
+    bool isCurvedFace(const UInt face) const;
+    bool isFaceContainedInPlane(const UInt face,
                                 const CartesianPlane plane) const;
 
-	uint numberOfCoordinates() const { return 4; }
+	UInt numberOfCoordinates() const { return 4; }
 
-	uint numberOfSideCoordinates(const uint f = 0) const { return 3; }
+	UInt numberOfSideCoordinates(const UInt f = 0) const { return 3; }
 
-	const CoordD3* getV(const uint i) const { return v_[i]; }
-	const CoordD3* getSideV(const uint f, const uint i) const;
+	const CoordR3* getV(const UInt i) const { return v_[i]; }
+	const CoordR3* getSideV(const UInt f, const UInt i) const;
 
-	const CoordD3* getVertex(const uint i) const { return v_[tet.vertex(i)]; }
-	const CoordD3* getSideVertex(const uint f, const uint i) const;
+	const CoordR3* getVertex(const UInt i) const { return v_[tet.vertex(i)]; }
+	const CoordR3* getSideVertex(const UInt f, const UInt i) const;
 
-    double getVolume() const;
+    Real getVolume() const;
     const Simplex& getTet() const { return tet; }
-	double getAreaOfFace(const uint face) const;
+	Real getAreaOfFace(const UInt face) const;
 
-    void setV(const uint i, const CoordD3*);
+    void setV(const UInt i, const CoordR3*);
 
     void printInfo() const;
     void check() const;
 private:
 	static const SimplexTet<1> tet;
-	const CoordD3* v_[4];
+	const CoordR3* v_[4];
 
 	bool hasZeroVolume() const;
 };

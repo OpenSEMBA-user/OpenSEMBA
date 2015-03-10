@@ -28,7 +28,7 @@ public:
 
     virtual void printInfo() const;
 private:
-    map<uint, const Layer*> layers_;
+    map<UInt, const Layer*> layers_;
 };
 
 #include "LayerGroup.hpp"

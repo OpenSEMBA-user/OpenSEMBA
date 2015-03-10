@@ -30,7 +30,7 @@ public:
 	 printInfo() const = 0;
 protected:
 	ifstream f_in; // Input file stream.
-	CVecD3
+	CVecR3
 	 strToCartesianVector(const string& str) const;
 	bool
 	 strToBool(const string& value) const;
@@ -51,7 +51,7 @@ protected:
 		return ltrim(rtrim(s));
 	}
 	static inline bool
-	toBool(const uint param) {
+	toBool(const UInt param) {
 		assert(param == 0 || param == 1);
 		if (param == 1) {
 			return true;

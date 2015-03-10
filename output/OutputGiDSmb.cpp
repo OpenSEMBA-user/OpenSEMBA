@@ -29,8 +29,8 @@ OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
     vector<LayerId> layId = smb_->layers->getIdsOf<Layer>();
     vector<MatId> matId = smb_->pMGroup->getIdsOf<PhysicalModel>();
-    for (uint i = 0; i < layId.size(); i++) {
-        for (uint j = 0; j < matId.size(); j++) {
+    for (UInt i = 0; i < layId.size(); i++) {
+        for (UInt j = 0; j < matId.size(); j++) {
             const Layer* layer = smb_->layers->getPtrToId(layId[i]);
             const PhysicalModel* mat = smb_->pMGroup->getPtrToId(matId[j]);
             const string name = mat->getName() + "@" + layer->getName();
@@ -51,18 +51,18 @@ OutputGiDSmb::writeMeshWithIds(
         const vector<string>& name) {
     assert(ids.size() == name.size());
     const bool isLinear = smb_->mesh->isLinear();
-    int nV;
+    Int nV;
     isLinear? nV = 4 : nV = 10;
-    for (uint t = 0; t < ids.size(); t++) {
+    for (UInt t = 0; t < ids.size(); t++) {
         beginMesh(name[t], GiD_3D, GiD_Tetrahedra, nV);
         beginCoordinates();
-        int tmpCounter = coordCounter_;
-        static const uint GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
-        for (uint j = 0; j < ids[t].size(); j++) {
+        Int tmpCounter = coordCounter_;
+        static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
+        for (UInt j = 0; j < ids[t].size(); j++) {
             const Element* e = smb_->mesh->elem_.getPtrToId(ids[t][j])
                                    ->castTo<Element>();
-            for (int i = 0; i < nV; i++) {
-                CVecD3 pos;
+            for (Int i = 0; i < nV; i++) {
+                CVecR3 pos;
                 if (isLinear) {
                     pos = e->getVertex(i)->pos();
                 } else {
@@ -75,8 +75,8 @@ OutputGiDSmb::writeMeshWithIds(
         // Writes elements.
         beginElements();
         int nId[nV];
-        for (uint j = 0; j < ids[t].size(); j++) {
-            for (int i = 0; i < nV; i++) {
+        for (UInt j = 0; j < ids[t].size(); j++) {
+            for (Int i = 0; i < nV; i++) {
                 nId[i] = ++tmpCounter;
             }
             writeElement(++elemCounter_, nId);
@@ -91,7 +91,7 @@ OutputGiDSmb::writeMeshWithIds(
         const vector<vector<ElementId> >& ids,
         string& name) {
     vector<string> names;
-    for (uint i = 0; i < ids.size(); i++) {
+    for (UInt i = 0; i < ids.size(); i++) {
         stringstream ss;
         ss << name << " " << i;
         names.push_back(ss.str());
@@ -109,10 +109,10 @@ OutputGiDSmb::writeMeshWithIds(
 
 void
 OutputGiDSmb::writeOutputRequestsMesh() {
-    for (uint i = 0; i < smb_->outputRequests->size(); i++) {
+    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
         //        const OutputRequest* outRq = smb_->outputRequests->get(i);
         //      bool mshExist = false;
-        //      for (uint j = 0; j < result_.size(); j++) {
+        //      for (UInt j = 0; j < result_.size(); j++) {
         //         mshExist = result_[i]->hasEquivalentMesh(outRq);
         //         if (mshExist) {
         //            result_.push_back(new ResultGiD(outRq, *result_[j]));
@@ -129,20 +129,20 @@ void OutputGiDSmb::writeElements(
         const vector<const Element*>& elem,
         const string& name,
         const GiD_ElementType type,
-        const int nV) {
-    uint tmpCounter = coordCounter_;
+        const Int nV) {
+    UInt tmpCounter = coordCounter_;
     int nId[nV];
     beginMesh(name, GiD_3D, type, nV);
-    vector<CVecD3> pos;
-    for(uint i = 0; i < elem.size(); i++) {
-        for (int j = 0; j < nV; j++) {
+    vector<CVecR3> pos;
+    for(UInt i = 0; i < elem.size(); i++) {
+        for (Int j = 0; j < nV; j++) {
             pos.push_back(elem[i]->getVertex(j)->pos());
         }
     }
     writeCoordinates(pos);
     beginElements();
-    for (uint j = 0; j < elem.size(); j++) {
-        for (int k = 0; k < nV; k++) {
+    for (UInt j = 0; j < elem.size(); j++) {
+        for (Int k = 0; k < nV; k++) {
             nId[k] = ++tmpCounter;
         }
         writeElement(++elemCounter_, nId);
@@ -155,17 +155,17 @@ void OutputGiDSmb::writeElements(
 //
 //void
 //OutputGiDSmb::writeMaterialsMesh() {
-//    vector<vector<uint> > ids;
+//    vector<vector<UInt> > ids;
 //    vector<string> name;
 //    // Gets ids of tets with vacuum material.
-//    vector<uint> vacuumIds = smb_->mesh->elem_.getIdsWithMaterialId(0);
+//    vector<UInt> vacuumIds = smb_->mesh->elem_.getIdsWithMaterialId(0);
 //    ids.push_back(smb_->mesh->getTetIds(vacuumIds));
 //    name.push_back("Vacuum");
 //    // Rest of materials.
-//    vector<uint> volMats = smb_->pMGroup->getVolumicMatIds();
-//    for (uint i = 0; i < volMats.size(); i++) {
-//        const uint matId = volMats[i];
-//        vector<uint> matIds = smb_->mesh->elem_.getIdsWithMaterialId(matId);
+//    vector<UInt> volMats = smb_->pMGroup->getVolumicMatIds();
+//    for (UInt i = 0; i < volMats.size(); i++) {
+//        const UInt matId = volMats[i];
+//        vector<UInt> matIds = smb_->mesh->elem_.getIdsWithMaterialId(matId);
 //        ids.push_back(smb_->mesh->getTetIds(matIds));
 //        name.push_back(smb_->pMGroup->getPMVolumeWithId(matId)->getName());
 //    }
@@ -186,19 +186,19 @@ void OutputGiDSmb::writeElements(
 //OutputGiDSmb::writeBCMesh(
 //        const vector<const BoundaryCondition*>& bc,
 //        const string& nameIn,
-//        const CVecD3& RGB) {
-//    int nV;
+//        const CVecR3& RGB) {
+//    Int nV;
 //    smb_->mesh->isLinear() ?  nV = 3 :  nV = 6;
 //    beginMesh(nameIn, GiD_3D, GiD_Triangle, nV, RGB);
-//    static const uint GiDOrder[6] = {0, 3, 5, 1, 4, 2};
+//    static const UInt GiDOrder[6] = {0, 3, 5, 1, 4, 2};
 //    beginCoordinates();
-//    uint tmpCounter = coordCounter_;
-//    for (uint j = 0; j < bc.size(); j++) {
-//        const uint id = bc[j]->getCell()->getId();
-//        const uint f = bc[j]->getFace();
+//    UInt tmpCounter = coordCounter_;
+//    for (UInt j = 0; j < bc.size(); j++) {
+//        const UInt id = bc[j]->getCell()->getId();
+//        const UInt f = bc[j]->getFace();
 //        const Element* e = smb_->mesh->elem_.getPtrToId(id);
-//        for (int i = 0; i < nV; i++) {
-//            CVecD3 pos;
+//        for (Int i = 0; i < nV; i++) {
+//            CVecR3 pos;
 //            if (smb_->mesh->isLinear()) {
 //                pos = e->getSideVertex(f,i)->pos();
 //            } else {
@@ -209,9 +209,9 @@ void OutputGiDSmb::writeElements(
 //    }
 //    endCoordinates();
 //    beginElements();
-//    int nId[nV];
-//    for (uint i = 0; i < bc.size(); i++) {
-//        for (uint j = 0; j < (uint) nV; j++) {
+//    Int nId[nV];
+//    for (UInt i = 0; i < bc.size(); i++) {
+//        for (UInt j = 0; j < (UInt) nV; j++) {
 //            nId[j] = ++tmpCounter;
 //        }
 //        writeElement(++elemCounter_, nId);

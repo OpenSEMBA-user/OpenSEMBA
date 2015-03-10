@@ -22,7 +22,7 @@
 
 using namespace std;
 
-typedef unsigned int uint;
+#include "Types.h"
 
 class ProjectFile {
 public:

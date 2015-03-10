@@ -10,14 +10,14 @@ Output::Output(const string& name) : ProjectFile(name) {
 }
 
 Output::~Output() {
-    for (uint i = 0; i < result_.size(); i++) {
+    for (UInt i = 0; i < result_.size(); i++) {
         delete result_[i];
     }
 }
 
 void
 Output::writeResumeFile(
-        const double time, const FieldD3& electric, const FieldD3& magnetic) {
+        const Real time, const FieldR3& electric, const FieldR3& magnetic) {
     string auxStr = getProjectFolder() + getProjectName() + ".resume";
     char *auxChar;
     auxChar = new char[auxStr.length() + 1];
@@ -47,10 +47,10 @@ Output::writeResumeFile(
 
 void
 Output::process(
-        const double time,
-        const FieldD3& electric,
-        const FieldD3& magnetic) {
-    for (uint i = 0; i < result_.size(); i++) {
+        const Real time,
+        const FieldR3& electric,
+        const FieldR3& magnetic) {
+    for (UInt i = 0; i < result_.size(); i++) {
         result_[i]->write(time, electric, magnetic);
     }
 }
@@ -70,9 +70,9 @@ Output::printInfo() const {
     cout << " --- End of output info --- " << endl;
 }
 
-void Output::writeAllFields(const FieldD3& field) const {
-    for (uint i = 0; i < field.size(); i++) {
-        CVecD3 vec = field.getCVec(i);
+void Output::writeAllFields(const FieldR3& field) const {
+    for (UInt i = 0; i < field.size(); i++) {
+        CVecR3 vec = field.getCVec(i);
         GiD_WriteVector(i, vec(0), vec(1), vec(2));
     }
 }

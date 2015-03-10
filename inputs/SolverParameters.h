@@ -14,8 +14,6 @@
 
 using namespace std;
 
-typedef unsigned int uint;
-
 class SolverParameters {
 public:
 	typedef enum {
@@ -33,32 +31,32 @@ public:
 	    none
 	} Solver;
 	SolverParameters();
-	void applyGeometricScalingFactor(const double& factor);
+	void applyGeometricScalingFactor(const Real& factor);
 	void printInfo() const;
-    const pair<CVecD3, CVecD3>& getBoundaryMeshSize() const;
-    void setBoundaryMeshSize(const pair<CVecD3, CVecD3>& boundaryMeshSize);
-    const pair<CVecD3, CVecD3>& getBoundaryPadding() const;
-    void setBoundaryPadding(const pair<CVecD3, CVecD3>& boundaryPadding);
-    double getFinalTime() const;
-    void setFinalTime(double finalTime);
-    double getSamplingPeriod() const;
-    void setSamplingPeriod(double samplingPeriod);
-    double getScalingFactor() const;
-    void setScalingFactor(double scalingFactor);
+    const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
+    void setBoundaryMeshSize(const pair<CVecR3, CVecR3>& boundaryMeshSize);
+    const pair<CVecR3, CVecR3>& getBoundaryPadding() const;
+    void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
+    Real getFinalTime() const;
+    void setFinalTime(Real finalTime);
+    Real getSamplingPeriod() const;
+    void setSamplingPeriod(Real samplingPeriod);
+    Real getScalingFactor() const;
+    void setScalingFactor(Real scalingFactor);
     Solver getSolver() const;
     void setSolver(Solver solver);
-    double getTimeStep() const;
-    void setTimeStep(double timeStep);
-    pair<boundType,boundType> getBoundTermination(const uint i) const;
-    void setBoundTermination(const uint i, uint j, boundType bound);
+    Real getTimeStep() const;
+    void setTimeStep(Real timeStep);
+    pair<boundType,boundType> getBoundTermination(const UInt i) const;
+    void setBoundTermination(const UInt i, UInt j, boundType bound);
 private:
 	Solver solver_;
-	double finalTime_;
-	double samplingPeriod_;
-	double scalingFactor_;
-	double timeStep_;
+	Real finalTime_;
+	Real samplingPeriod_;
+	Real scalingFactor_;
+	Real timeStep_;
 	pair<boundType,boundType> boundTermination_[3];
-	pair<CVecD3,CVecD3> boundaryPadding_, boundaryMeshSize_;
+	pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
 	string toStr(const boundType) const;
 	string toStr(const Solver solver) const;
 };

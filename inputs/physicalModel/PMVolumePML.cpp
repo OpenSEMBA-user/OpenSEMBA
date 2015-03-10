@@ -9,7 +9,7 @@
 
 PMVolumePML::PMVolumePML(const MatId id, const string& name)
 : PMVolume(id, name, 1.0, 1.0){
-	for (unsigned int i = 0; i < 3; i++) {
+	for (UInt i = 0; i < 3; i++) {
 		direction[i] = none;
 	}
 }
@@ -17,10 +17,10 @@ PMVolumePML::PMVolumePML(const MatId id, const string& name)
 PMVolumePML::PMVolumePML(
  const MatId id,
  const Direction direction_[3],
- const BoxD3& bound_) : PMVolume(id, "PML", 1.0, 1.0){
+ const BoxR3& bound_) : PMVolume(id, "PML", 1.0, 1.0){
 	bound.first = bound_.getMin();
 	bound.second = bound_.getMax();
-	for (unsigned int i = 0; i < 3; i++) {
+	for (UInt i = 0; i < 3; i++) {
 		direction[i] = direction_[i];
 		if (direction[i] == plus) {
 			setName(getName() + "+");
@@ -54,10 +54,10 @@ PMVolumePML::printInfo() const {
 
 PMVolumePML::Orientation
 PMVolumePML::getOrientation() const {
-	for (unsigned int i = 0; i < 3; i++) {
-		unsigned int first = i;
-		unsigned int second = (i+1) % 3;
-		unsigned int third = (i+2) % 3;
+	for (UInt i = 0; i < 3; i++) {
+		UInt first = i;
+		UInt second = (i+1) % 3;
+		UInt third = (i+2) % 3;
 		// Is uniaxial?.
 		bool isUniaxial =
 		 (direction[first] == plus || direction[first] == minus)
@@ -118,21 +118,21 @@ PMVolumePML::isTriaxial() const {
 	return (getOrientation() == PMLxyz);
 }
 
-const pair<CVecD3, CVecD3>&
+const pair<CVecR3, CVecR3>&
 PMVolumePML::getBound() const {
 	return bound;
 }
 
-CVecD3
+CVecR3
 PMVolumePML::getWidth() const {
-	CVecD3 res;
-	for (unsigned int i = 0; i < 3; i++) {
+	CVecR3 res;
+	for (UInt i = 0; i < 3; i++) {
 		res(i) = abs(bound.second(i) - bound.first(i));
 	}
 	return res;
 }
 
-unsigned int
+UInt
 PMVolumePML::getFirstOrientationIndex() const {
 	Orientation orientation = getOrientation();
 	switch (orientation) {
@@ -158,10 +158,10 @@ PMVolumePML::getFirstOrientationIndex() const {
 	}
 }
 
-CVecD3
+CVecR3
 PMVolumePML::getPMLBeginningPosition() const {
-	CVecD3 res;
-	for (unsigned int i = 0; i < 3; i++) {
+	CVecR3 res;
+	for (UInt i = 0; i < 3; i++) {
 		if (direction[i] == plus) {
 			res(i) = bound.first(i);
 		} else if (direction[i] == minus) {

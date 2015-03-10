@@ -43,7 +43,7 @@ LayerGroup<L>& LayerGroup<L>::operator=(const Group<L>& rhs) {
 template<typename L>
 void LayerGroup<L>::printInfo() const {
     cout<< "--- Layers info ---" << endl;
-    map<uint, const Layer*>::const_iterator it;
+    map<UInt, const Layer*>::const_iterator it;
     for (it=layers_.begin(); it != layers_.end(); ++it) {
         it->second->printInfo();
     }

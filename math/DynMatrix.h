@@ -8,27 +8,27 @@ class DynMatrix : public MathMatrix<T> {
 public:
    DynMatrix();
    DynMatrix(const DynMatrix<T>& param);
-   DynMatrix(unsigned int rows, unsigned int cols);
-   DynMatrix(unsigned int rows, unsigned int cols, T** values);
+   DynMatrix(UInt rows, UInt cols);
+   DynMatrix(UInt rows, UInt cols, T** values);
    virtual ~DynMatrix();
-   unsigned int
+   UInt
     nCols() const;
-   unsigned int
+   UInt
     nRows() const;
    T
-    operator()(const unsigned int row, const unsigned int col) const;
+    operator()(const UInt row, const UInt col) const;
    T&
-    operator()(const unsigned int row, const unsigned int col);
+    operator()(const UInt row, const UInt col);
    T
-    val(const unsigned int ind) const;
+    val(const UInt ind) const;
    T&
-    val(const unsigned int ind);
+    val(const UInt ind);
    T
-    val(const unsigned int row, const unsigned int col) const;
+    val(const UInt row, const UInt col) const;
    T&
-    val(const unsigned int row, const unsigned int col);
+    val(const UInt row, const UInt col);
    const T*
-    valPtr(const unsigned int row, const unsigned int col) const;
+    valPtr(const UInt row, const UInt col) const;
    // ----------- assignment, copy -------------------------------------------
    DynMatrix<T>&
     operator=(const DynMatrix<T> &param);
@@ -41,13 +41,13 @@ public:
      vector<vector<T> > values);
    void
     copy(
-     const DynMatrix<double> &param);
+     const DynMatrix<Real> &param);
    DynMatrix<T>
     copy(
-     const unsigned int fRow,
-     const unsigned int lRow,
-     const unsigned int fCol,
-     const unsigned int lCol) const;
+     const UInt fRow,
+     const UInt lRow,
+     const UInt fCol,
+     const UInt lCol) const;
    // ----------- operations -------------------------------------------------
    DynMatrix<T>
     operator+(DynMatrix<T> &param) const;
@@ -68,7 +68,7 @@ public:
    DynMatrix<T>
     kron(DynMatrix<T>& param) const;
    DynMatrix<T>
-    sub(pair<int,int>& rows, pair<int,int>& cols) const;
+    sub(pair<Int,Int>& rows, pair<Int,Int>& cols) const;
    bool
     operator==(const DynMatrix<T>& param) const;
    bool
@@ -80,11 +80,11 @@ public:
    DynMatrix<T>&
     transpose();
    DynMatrix<T>
-    reshape(unsigned int rows, unsigned int cols);
+    reshape(UInt rows, UInt cols);
    DynMatrix<T>
-    reshape(unsigned int rows, unsigned int cols, int order);
+    reshape(UInt rows, UInt cols, Int order);
    DynMatrix<T>
-    eliminateColumns(unsigned int first, unsigned int last) const;
+    eliminateColumns(UInt first, UInt last) const;
    DynMatrix<T>&
     sortAndRemoveRepeatedRows_omp();
    void
@@ -92,27 +92,27 @@ public:
    void
     removeRepeatedSortedRows();
    void
-    sortRows_omp(const unsigned int iCol, const unsigned int lCol);
+    sortRows_omp(const UInt iCol, const UInt lCol);
    void
     mergeSortedRows(
      const DynMatrix<T>& a,
-     const unsigned int iCol,
-     const unsigned int lCol);
+     const UInt iCol,
+     const UInt lCol);
    void
     printInfo() const;
    void
-    printInfo(unsigned int, unsigned int) const;
+    printInfo(UInt, UInt) const;
    void
     printInfo(
-     unsigned int firstRow,
-     unsigned int lastRow,
-     unsigned int firstCol,
-     unsigned int lastCol) const;
+     UInt firstRow,
+     UInt lastRow,
+     UInt firstCol,
+     UInt lastCol) const;
 private:
    T * _val;
-   unsigned int _nRows, _nCols;
+   UInt _nRows, _nCols;
    void
-    resizeVal(const unsigned int rows, const unsigned int cols);
+    resizeVal(const UInt rows, const UInt cols);
 };
 
 #include "DynMatrix.hpp"

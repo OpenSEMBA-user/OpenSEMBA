@@ -13,8 +13,8 @@ PlaneWave::PlaneWave() {
 
 PlaneWave::PlaneWave(
  vector<ElementId> elem,
- CVecD3 waveDirection,
- CVecD3 polarization,
+ CVecR3 waveDirection,
+ CVecR3 polarization,
  const Magnitude* magnitude) : EMSource(elem, magnitude) {
     waveDirection_ = waveDirection;
     polarization_ = polarization;
@@ -55,25 +55,25 @@ PlaneWave::printInfo() const {
 	cout<< " - Wave direction vector: " << waveDirection_ << endl;
 }
 
-CVecD3
-PlaneWave::getElectricField(const double time) const {
-	CVecD3 res = polarization_ * getMagnitude()->evaluate(time);
+CVecR3
+PlaneWave::getElectricField(const Real time) const {
+	CVecR3 res = polarization_ * getMagnitude()->evaluate(time);
 	return res;
 }
 
-pair<CVecD3, CVecD3>
-PlaneWave::getElectromagneticField(const double time) const {
-	CVecD3 electric = getElectricField(time);
-	CVecD3 magnetic = (waveDirection_ ^ electric) * (double) VACUUM_ADMITANCE;
-	return pair<CVecD3,CVecD3>(electric, magnetic);
+pair<CVecR3, CVecR3>
+PlaneWave::getElectromagneticField(const Real time) const {
+	CVecR3 electric = getElectricField(time);
+	CVecR3 magnetic = (waveDirection_ ^ electric) * (Real) VACUUM_ADMITANCE;
+	return pair<CVecR3,CVecR3>(electric, magnetic);
 }
 
-const CVecD3&
+const CVecR3&
 PlaneWave::getPolarization() const {
 	return polarization_;
 }
 
-const CVecD3&
+const CVecR3&
 PlaneWave::getWaveDirection() const {
 	return waveDirection_;
 }

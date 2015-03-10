@@ -19,7 +19,7 @@ public:
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
 	Lin2(const ElementId id,
-         const CoordD3* v[2],
+         const CoordR3* v[2],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
     Lin2(const Lin2& rhs);
@@ -27,22 +27,22 @@ public:
     
     ClassBase* clone() const;
     
-    inline uint numberOfCoordinates() const { return 2; }
+    inline UInt numberOfCoordinates() const { return 2; }
     
-	const CoordD3* getV    (const uint i) const { return v_[i]; }
-	const CoordD3* getSideV(const uint f,
-                            const uint i) const;
+	const CoordR3* getV    (const UInt i) const { return v_[i]; }
+	const CoordR3* getSideV(const UInt f,
+                            const UInt i) const;
     
-    const CoordD3* getVertex    (const uint i) const;
-	const CoordD3* getSideVertex(const uint f,
-                                 const uint i) const;
+    const CoordR3* getVertex    (const UInt i) const;
+	const CoordR3* getSideVertex(const UInt f,
+                                 const UInt i) const;
 	
-    void setV(const uint i, const CoordD3* coord);
+    void setV(const UInt i, const CoordR3* coord);
 	
 	void printInfo() const;
 private:
 	static const SimplexLin<1> lin;
-	const CoordD3* v_[2];
+	const CoordR3* v_[2];
 };
 const SimplexLin<1> Lin2::lin;
 

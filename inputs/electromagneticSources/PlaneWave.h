@@ -15,21 +15,21 @@ public:
     PlaneWave();
     PlaneWave(
 	 vector<ElementId> elem,
-	 CVecD3 waveDirection,
-	 CVecD3 polarization,
+	 CVecR3 waveDirection,
+	 CVecR3 polarization,
 	 const Magnitude* magnitude);
 	virtual ~PlaneWave();
 
 	virtual ClassBase* clone() const;
 
-	const CVecD3& getPolarization() const;
-	const CVecD3& getWaveDirection() const;
-	CVecD3 getElectricField(const double time) const;
-	pair<CVecD3,CVecD3> getElectromagneticField(const double time) const;
+	const CVecR3& getPolarization() const;
+	const CVecR3& getWaveDirection() const;
+	CVecR3 getElectricField(const Real time) const;
+	pair<CVecR3,CVecR3> getElectromagneticField(const Real time) const;
 	void printInfo() const;
 private:
-	CVecD3 waveDirection_;
-	CVecD3 polarization_;
+	CVecR3 waveDirection_;
+	CVecR3 polarization_;
 };
 
 #endif /* PLANEWAVE_H_ */

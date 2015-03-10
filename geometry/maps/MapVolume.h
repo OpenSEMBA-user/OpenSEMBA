@@ -17,27 +17,27 @@ public:
    MapVolume(
     const Tet* local,
     const Tet* neighboor[4],
-    const unsigned int neighboorFaces[4]);
+    const UInt neighboorFaces[4]);
    MapVolume&
     operator=(const MapVolume& rhs);
-   unsigned int
+   UInt
     getLocalId() const {return local->getId();}
    const Tet*
     getLocalTet() const;
-   unsigned int
-    getVolToF(unsigned int f) const {return volToF[f];}
+   UInt
+    getVolToF(UInt f) const {return volToF[f];}
    void
     reassignPointers(const ElementsGroup<>& nEG);
    const Tet*
-    getVol(unsigned int f) const {return vol[f];}
+    getVol(UInt f) const {return vol[f];}
    bool
-    faceIsBoundary(unsigned int f) const;
+    faceIsBoundary(UInt f) const;
    void
     printInfo() const;
 private:
    const Tet* local;
    const Tet* vol[4];
-   unsigned int volToF[4];
+   UInt volToF[4];
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MAPVOLUME_H_ */
