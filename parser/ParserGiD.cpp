@@ -35,7 +35,7 @@ ParserGiD::read() {
     }
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
-    res->solverOptions = readSolverParameters();
+    res->solverOptions = readSolverOptions();
     res->mesherOptions = readMesherOptions();
     pSize_ = readProblemSize();
     res->layers = readLayers();
@@ -55,25 +55,71 @@ ParserGiD::printInfo() const {
 }
 
 SolverOptions*
-ParserGiD::readSolverParameters() {
+ParserGiD::readSolverOptions() {
     SolverOptions* res = new SolverOptions();
-    string line, label, value;
     bool finished = false;
-    bool problemDataFound = false;
-    while (!problemDataFound && !f_in.eof()) {
+    bool optionsFound = false;
+    while (!optionsFound && !f_in.eof()) {
+        string label, value;
         getNextLabelAndValue(label, value);
         if (label.compare("Solver options") == 0) {
-            problemDataFound = true;
+            optionsFound = true;
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
+                // Global options.
                 if (label.compare("Solver") == 0) {
                     res->setSolver(strToSolver(value));
                 } else if (label.compare("Final time") == 0) {
                     res->setFinalTime(atof(value.c_str()));
+                } else if (label.compare("Number of time steps") == 0) {
+                    res->setNumberOfTimeSteps(atoi(value.c_str()));
                 } else if (label.compare("Time step") == 0) {
                     res->setTimeStep(atof(value.c_str()));
+                } else if (label.compare("CFL") == 0) {
+                    res->setCFL(atof(value.c_str()));
                 } else if (label.compare("Default sampling period") == 0) {
                     res->setSamplingPeriod(atof(value.c_str()));
+                // Ugrfdtd.
+                } else if (label.compare("Composites model") == 0) {
+                    res->setCompositeModel(strToCompositeModel(value));
+                } else if (label.compare("Composites attenuation factor") == 0) {
+                    res->setCompositesAttenuationFactor(atof(value.c_str()));
+                } else if (label.compare("Metals") == 0) {
+                    res->setMetalModel(strToMetalModel(value));
+                } else if (label.compare("PML alpha factor") == 0) {
+                    double factor = atof(value.c_str());
+                    getNextLabelAndValue(label, value);
+                    double order = atof(value.c_str());
+                    res->setPMLAlpha(pair<double,double>(factor, order));
+                } else if (label.compare("PML kappa") == 0) {
+                    res->setPMLKappa(atof(value.c_str()));
+                } else if (label.compare("PML correction factor") == 0) {
+                    double factor = atof(value.c_str());
+                    getNextLabelAndValue(label, value);
+                    double depth = atof(value.c_str());
+                    res->setPMLCorrection(pair<double,double>(factor, depth));
+                } else if (label.compare("Wires flavor") == 0) {
+                    res->setWireModel(strToWireModel(value));
+                } else if (label.compare("Self inductance model") == 0) {
+                    res->setSelfInductanceModel(strToSelfInductanceModel(value));
+                } else if (label.compare("Taparrabos") == 0) {
+                    res->setTaparrabos(strToBool(value));
+                } else if (label.compare("Intra wire simplification") == 0) {
+                    res->setIntraWireSimplifications(strToBool(value));
+                } else if (label.compare("MTLN") == 0) {
+                    res->setMTLN(strToBool(value));
+                } else if (label.compare("Join wires") == 0) {
+                    res->setJoinWires(strToBool(value));
+                } else if (label.compare("Ground wires") == 0) {
+                    res->setGroundWires(strToBool(value));
+                } else if (label.compare("Connect endings") == 0) {
+                    res->setConnectEndings(strToBool(value));
+                } else if (label.compare("Isolate group groups") == 0) {
+                    res->setIsolateGroupGroups(strToBool(value));
+                } else if (label.compare("Make holes") == 0) {
+                    res->setMakeHoles(strToBool(value));
+                } else if (label.compare("Wires attenuation factor") == 0) {
+                    res->setWiresAttenuationFactor(atof(value.c_str()));
                 } else if(label.find("End of solver options") != label.npos) {
                     finished = true;
                 }
@@ -81,7 +127,7 @@ ParserGiD::readSolverParameters() {
         } // Closes problem data found if.
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
-    if (!problemDataFound) {
+    if (!optionsFound) {
         cerr << endl << "ERROR @ readSolverOptions(): "
                 << "EoF was reached but problem data was not found." << endl;
     }
@@ -1537,6 +1583,72 @@ SolverOptions::Solver ParserGiD::strToSolver(string str) const {
         cerr << endl << "ERROR @ Parser: ";
         cerr << "Unreckognized label: " << str<< endl;
         return SolverOptions::Solver::none;
+    }
+}
+
+SolverOptions::CompositeModel
+ParserGiD::strToCompositeModel(string str) const {
+    str = trim(str);
+    if (str.compare("Default")==0) {
+        return SolverOptions::CompositeModel::Default;
+    } else if (str.compare("DigFilt")==0) {
+        return SolverOptions::CompositeModel::digFilt;
+    } else if (str.compare("MIBC")==0) {
+        return SolverOptions::CompositeModel::MIBC;
+    } else if (str.compare("ADE-MIBC")==0) {
+        return SolverOptions::CompositeModel::ADEMIBC;
+    } else if (str.compare("URM-MMT")==0) {
+        return SolverOptions::CompositeModel::URMMMT;
+    } else {
+        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        return SolverOptions::CompositeModel::Default;
+    }
+}
+
+SolverOptions::MetalModel
+ParserGiD::strToMetalModel(string str) const {
+    str = trim(str);
+    if (str.compare("Default")==0) {
+        return SolverOptions::MetalModel::Default;
+    } else if (str.compare("Maloney")==0) {
+        return SolverOptions::MetalModel::maloney;
+    } else if (str.compare("Maloney_skin_depth")==0) {
+        return SolverOptions::MetalModel::maloneySkinDepth;
+    } else if (str.compare("Conformal_skin_depth")==0) {
+        return SolverOptions::MetalModel::conformalSkinDepth;
+    } else {
+        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        return SolverOptions::MetalModel::Default;
+    }
+}
+
+SolverOptions::WireModel
+ParserGiD::strToWireModel(string str) const {
+    str = trim(str);
+    if (str.compare("Default")==0) {
+        return SolverOptions::WireModel::Default;
+    } else if (str.compare("Transition")==0) {
+        return SolverOptions::WireModel::transition;
+    } else if (str.compare("New")==0) {
+        return SolverOptions::WireModel::New;
+    } else {
+        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        return SolverOptions::WireModel::Default;
+    }
+}
+
+SolverOptions::SelfInductanceModel
+ParserGiD::strToSelfInductanceModel(string str) const {
+    str = trim(str);
+    if (str.compare("Default")==0) {
+        return SolverOptions::SelfInductanceModel::boutayeb;
+    } else if (str.compare("Ledfelt")==0) {
+        return SolverOptions::SelfInductanceModel::ledfelt;
+    } else if (str.compare("Berenger")==0) {
+        return SolverOptions::SelfInductanceModel::berenger;
+    } else {
+        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        return SolverOptions::SelfInductanceModel::boutayeb;
     }
 }
 

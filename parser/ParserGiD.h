@@ -47,7 +47,7 @@ private:
     string problemTypePath_;
     ProblemSize pSize_;
     const ProblemSize* getProblemSize() const;
-    SolverOptions* readSolverParameters();
+    SolverOptions* readSolverOptions();
     MesherOptions* readMesherOptions();
     LayerGroup<>* readLayers();
     EMSourceGroup<>* readEMSources();
@@ -99,6 +99,10 @@ private:
     MesherOptions::Mesher strToMesher(string) const;
     MesherOptions::Mode strToMesherMode(string) const;
     SolverOptions::Solver strToSolver(string) const;
+    SolverOptions::CompositeModel strToCompositeModel(string) const;
+    SolverOptions::MetalModel strToMetalModel(string) const;
+    SolverOptions::WireModel strToWireModel(string) const;
+    SolverOptions::SelfInductanceModel strToSelfInductanceModel(string) const;
     void init(const string& pTPath);
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
