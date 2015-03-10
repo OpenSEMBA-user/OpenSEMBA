@@ -23,29 +23,37 @@ class ParserGiD : public Parser, public ProjectFile {
     friend class SmbData;
 public:
     ParserGiD();
-    ParserGiD(
-            const string& fn);
-    ParserGiD(
-            const string& fn,
-            const string& pTPath);
-    virtual
-    ~ParserGiD();
-    virtual SmbData*
-    read();
-    virtual const ProblemSize*
-    getProblemSize() const;
-    virtual void
-    printInfo() const;
-protected:
+    ParserGiD(const string& fn);
+    ParserGiD(const string& fn, const string& pTPath);
+    virtual ~ParserGiD();
+    virtual SmbData* read();
+    void printInfo() const;
+private:
+    typedef enum {
+        outRqOnPoint,
+        outRqOnLine,
+        outRqOnSurface,
+        outRqOnVolume,
+        farField,
+        undefined
+    } GiDOutputType;
+    typedef enum {
+        sibc,
+        multilayer,
+        undefinedSIBC
+    } SIBCType;
+    const CoordinateGroup<>* cG_;
+    Mesh* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;
-    virtual SolverParameters* readSolverParameters();
-    virtual LayerGroup<>* readLayers();
-    virtual EMSourceGroup<>* readEMSources();
-    virtual OutRqGroup<>* readOutputRequests();
-    virtual MesherParameters* readMesherParameters();
-    virtual PhysicalModelGroup<>* readMaterials();
-    virtual Mesh* readMesh();
+    const ProblemSize* getProblemSize() const;
+    SolverParameters* readSolverParameters();
+    MesherParameters* readMesherParameters();
+    LayerGroup<>* readLayers();
+    EMSourceGroup<>* readEMSources();
+    OutRqGroup<>* readOutputRequests();
+    PhysicalModelGroup<>* readMaterials();
+    Mesh* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
             const MatId id_,
@@ -68,21 +76,6 @@ protected:
     Grid3* readCartesianGrid();
     void readOutRqInstances(OutRqGroup<>* res);
     void getNextLabelAndValue(string& label, string& value);
-private:
-    typedef enum {
-        outRqOnPoint,
-        outRqOnLine,
-        outRqOnSurface,
-        outRqOnVolume,
-        farField,
-        undefined
-    } GiDOutputType;
-    typedef enum {
-        sibc,
-        multilayer,
-        undefinedSIBC
-    } SIBCType;
-    const CoordinateGroup<>* cG_;
     PlaneWave* readPlaneWave();
     Dipole* readDipole();
     Waveport* readWaveport();

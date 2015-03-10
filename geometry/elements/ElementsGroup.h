@@ -39,7 +39,7 @@ public:
     vector<Tet4> tet4;
     vector<Tet10> tet10;
     vector<Hex8> hex8;
-    unsigned int offsetId, offsetIdLin, offsetIdTri, offsetIdTet;
+    uint offsetId, offsetIdLin, offsetIdTri, offsetIdTet;
     ElementsGroup();
     ElementsGroup(const ElementsGroup& elem);
     virtual ~ElementsGroup();
@@ -61,29 +61,25 @@ public:
             const vector<Tri3>&, const vector<Tri6>&);
     ElementsGroup&
     operator=(const ElementsGroup& param);
-    ElementsGroup&
-    add(
+    vector<ElementId> add(
             const CoordinateGroup<>& coord,
             const vector<Hex8>& hex);
-    void
-    reassignPointers(const CoordinateGroup<>& vNew);
-    vector<uint>
-    getIds(const vector<const Element*>& list) const;
-    unsigned int
-    nSurfaceElements() const;
-    unsigned int
+    void reassignPointers(const CoordinateGroup<>& vNew);
+    vector<uint> getIds(const vector<const Element*>& list) const;
+    uint nSurfaceElements() const;
+    uint
     nVolumeElements() const;
-    Element* getPtrToId(const unsigned int id);
-    const Element* getPtrToId(const unsigned int id) const;
-    const Tri* getTriPtrToId(const unsigned int id) const;
-    const Tet* getTetPtrToId(const unsigned int id) const;
+    Element* getPtrToId(const uint id);
+    const Element* getPtrToId(const uint id) const;
+    const Tri* getTriPtrToId(const uint id) const;
+    const Tet* getTetPtrToId(const uint id) const;
     void linearize();
     bool isLinear() const;
-    bool areTetrahedrons(const vector<unsigned int>& elemIds) const;
-    bool areTriangles(const vector<unsigned int>& elemIds) const;
-    vector<unsigned int> getHexIds() const;
-    vector<unsigned int> getIdsWithMaterialId(const uint matId) const;
-    vector<unsigned int> getIdsWithoutMaterialId(const uint matId) const;
+    bool areTetrahedrons(const vector<uint>& elemIds) const;
+    bool areTriangles(const vector<uint>& elemIds) const;
+    vector<uint> getHexIds() const;
+    vector<uint> getIdsWithMaterialId(const uint matId) const;
+    vector<uint> getIdsWithoutMaterialId(const uint matId) const;
     vector<const Element*> get(
             const Element::Type& type,
             const uint matId,

@@ -42,32 +42,23 @@ public:
             const Element::Type elementType,
             const OutRq::Type outputType,
             const string& name,
-            const vector<uint>& elements);
-    OutRq(
-            const Domain& domain,
-            const Element::Type elementType,
-            const OutRq::Type outputType_,
-            const string& name_,
-            const BoxD3& box);
+            const vector<ElementId>& elements);
+
     virtual ClassBase* clone() const;
+
     OutRq& operator=(const OutRq& rhs);
     virtual bool isSimilar(const OutRq& rhs) const;
     string outputTypeStr() const;
     string elementTypeStr() const;
     const string& getName() const;
     OutRq::Type getOutputType() const;
-    const vector<uint>& getElem() const;
-    const BoxD3& getBound() const;
-    void setAdditionalElems(const vector<uint> elems);
+    const vector<ElementId>& getElem() const;
+    void setAdditionalElems(const vector<ElementId> elems);
     void printInfo() const;
-
-
 private:
     string name_;
     OutRq::Type outputType_;
-    bool usingBound_;
-    BoxD3 bound_;
-    vector<uint> elem_;
+    vector<ElementId> elem_;
 };
 
 #	endif

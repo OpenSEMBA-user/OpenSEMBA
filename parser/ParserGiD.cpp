@@ -41,6 +41,7 @@ ParserGiD::read() {
     res->layers = readLayers();
     res->pMGroup = readMaterials();
     res->mesh = readMesh();
+    mesh_ = res->mesh;
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
     res->applyGeometricScalingFactor();
@@ -356,71 +357,69 @@ ParserGiD::readOutputRequests() {
 
 void
 ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
-    GiDOutputType gidOutputType = ParserGiD::undefined;
-    string line, label, value;
     bool finished = false;
-    string name;
-    OutRq::Type type = OutRq::undefined;
-    Domain domain;
-    vector<uint> elemVec;
-    uint nE = 0;
     while (!finished && !f_in.eof()) {
+        string line, label, value;
+        GiDOutputType gidOutputType = ParserGiD::undefined;
         getNextLabelAndValue(label,value);
         if (label.compare("GiDOutputType")==0) {
             gidOutputType = strToGidOutputType(trim(value));
         } else if (label.compare("Number of elements")==0) {
-            nE = atoi(value.c_str());
+            uint nE = atoi(value.c_str());
             for (uint i = 0; i < nE; i++) {
                 getNextLabelAndValue(label,value);
-                name = trim(value);
+                string name = trim(value);
                 getNextLabelAndValue(label,value);
-                type = strToOutputType(trim(value));
+                OutRq::Type type = strToOutputType(trim(value));
                 getNextLabelAndValue(label,value);
-                domain = strToDomain(value);
+                Domain domain = strToDomain(value);
+                vector<ElementId> elem;
                 switch (gidOutputType) {
                 case ParserGiD::outRqOnPoint:
                     getNextLabelAndValue(label,value);
-                    elemVec.clear();
-                    elemVec.push_back(atoi(value.c_str()));
+                    elem.clear();
+                    elem.push_back(ElementId(atoi(value.c_str())));
                     res->add(new OutRq(
-                            domain, Element::node, type, name, elemVec));
+                            domain, Element::node, type, name, elem));
                     break;
                 case ParserGiD::outRqOnLine:
                     getNextLabelAndValue(label,value);
-                    elemVec.clear();
-                    elemVec.push_back(atoi(value.c_str()));
-                    res->add(new OutRq(domain, Element::line,
-                            type, name, elemVec));
+                    elem.clear();
+                    elem.push_back(ElementId(atoi(value.c_str())));
+                    res->add(new OutRq(
+                            domain, Element::line, type, name, elem));
                     break;
                 case ParserGiD::outRqOnSurface:
                     getNextLabelAndValue(label,value);
-                    elemVec.clear();
-                    elemVec.push_back(atoi(value.c_str()));
+                    elem.clear();
+                    elem.push_back(ElementId(atoi(value.c_str())));
                     res->add(new OutRq(
-                            domain, Element::surface,
-                            type, name, elemVec));
+                            domain, Element::surface, type, name, elem));
                     break;
                 case ParserGiD::outRqOnVolume:
+                {
                     getline(f_in, line);
-                    res->add(
-                            new OutRq(domain, Element::volume,
-                                    type, name,
-                                    BoxD3(strToBound(line))));
+                    ElementId id(mesh_->addAsHex8(BoxD3(strToBound(line))));
+                    elem.clear();
+                    elem.push_back(id);
+                    res->add(new OutRq(
+                            domain, Element::volume, type, name, elem));
                     break;
+                }
                 case ParserGiD::farField:
                 {
                     getline(f_in, line);
-                    BoxD3 bbox(strToBound(line));
+                    ElementId id(mesh_->addAsHex8(BoxD3(strToBound(line))));
+                    elem.clear();
+                    elem.push_back(id);
                     double iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
                     res->add(new OutRqFarField(
-                            domain, Element::volume,
-                            name, bbox,
+                            domain, Element::volume, name, elem,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
-
+                    break;
                 }
-                break;
                 case ParserGiD::undefined:
                     cerr<< "ERROR @ GiDParser: "
                     << "Unreckognized GiD Output request type:"
@@ -994,10 +993,8 @@ ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
     CVecD3 dir, pol;
-    pair<CVecD3,CVecD3> bound;
     vector<uint> elems;
     Magnitude* mag;
-    bool isDefinedOnLayer = true;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
         if (label.compare("Direction")==0) {
@@ -1007,11 +1004,9 @@ ParserGiD::readPlaneWave() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
-            bound = strToBound(value);
-            cerr << endl << "ERROR @ ParserGiD ";
-#warning "Bounding box of planewave is being ignored."
+            ElementId id = mesh_->addAsHex8(BoxD3(strToBound(value)));
+            elems.push_back(id);
         } else if (label.compare("Number of elements")==0) {
-            isDefinedOnLayer = false;
             uint nE = atoi(value.c_str());
             elems.reserve(nE);
             for (uint i = 0; i < nE; i++) {

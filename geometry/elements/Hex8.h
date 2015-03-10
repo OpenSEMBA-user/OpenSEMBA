@@ -29,7 +29,7 @@ public:
 
     ClassBase* clone() const;
 
-    bool        isRegular() const;
+    bool isRegular() const;
     inline bool isQuadratic() const { return false; }
     inline bool isCurvedFace(const uint f) const { return false; }
 

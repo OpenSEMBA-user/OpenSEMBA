@@ -495,3 +495,10 @@ void Mesh::printInfo() const {
         grid_->printInfo();
     }
 }
+
+vector<ElementId> Mesh::addAsHex8(const BoxD3& box) {
+    cG_.add(box.getPos());
+    vector<Hex8> hexes;
+    hexes.push_back(Hex8(cG_, ElementId(0), box.getMin(), box.getMax()));
+    return elem_.add(cG_, hexes);
+}

@@ -5,23 +5,10 @@ OutRq::OutRq(
  const Element::Type elementType,
  const OutRq::Type outputType,
  const string& name,
- const vector<unsigned int>& elements_) : Condition(elementType), Domain(domain) {
+ const vector<ElementId>& elements_) : Condition(elementType), Domain(domain) {
+ 	name_ = name;
 	outputType_ = outputType;
-	name_ = name;
-	usingBound_ = false;
 	elem_ = elements_;
-}
-
-OutRq::OutRq(
- const Domain& domain,
- const Element::Type elementType,
- const OutRq::Type outputType,
- const string& name,
- const BoxD3& box) : Condition(elementType), Domain(domain) {
-	outputType_  = outputType;
-	name_ = name;
-	usingBound_ = true;
-	bound_ = box;
 }
 
 ClassBase* OutRq::clone() const {
@@ -88,8 +75,6 @@ OutRq::operator=(const OutRq& rhs) {
 	Condition::operator=(rhs);
 	Domain::operator=(rhs);
 	outputType_ = rhs.outputType_;
-	usingBound_ = rhs.usingBound_;
-	bound_ = rhs.bound_;
 	name_ = rhs.name_;
 	elem_ = rhs.elem_;
 	return *this;
@@ -103,13 +88,8 @@ OutRq::Type OutRq::getOutputType() const {
     return outputType_;
 }
 
-const vector<unsigned int>& OutRq::getElem() const {
+const vector<ElementId>& OutRq::getElem() const {
     return elem_;
-}
-
-const BoxD3& OutRq::getBound() const {
-    assert(usingBound_);
-    return bound_;
 }
 
 void
@@ -119,12 +99,7 @@ OutRq::printInfo() const {
 	Domain::printInfo();
 	cout<< "Output type: " << outputTypeStr() << " over "<<
 		elementTypeStr() << ". " << endl;
-	if (usingBound_) {
-		cout << "Using bound_: ";
-		bound_.printInfo();
-	} else {
-		cout<< "Number of elements: " << elem_.size() << endl;
-	}
+	cout<< "Number of elements: " << elem_.size() << endl;
 	cout<< "--- End of Output Request Instance ---" << endl;
 }
 
@@ -134,12 +109,11 @@ OutRq::isSimilar(const OutRq& rhs) const {
 	isSimilar &= name_ == rhs.name_;
 	isSimilar &= outputType_ == rhs.outputType_;
 	isSimilar &= Domain::operator==(rhs);
-	isSimilar &= !usingBound_;
 	return isSimilar;
 }
 
 void
-OutRq::setAdditionalElems(const vector<uint> elems) {
+OutRq::setAdditionalElems(const vector<ElementId> elems) {
 	for (uint i = 0; i < elems.size(); i++) {
 		elem_.push_back(elems[i]);
 	}

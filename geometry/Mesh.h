@@ -30,76 +30,52 @@ public:
             const Grid3* grid);
     Mesh();
     Mesh(Mesh& param);
-    virtual
-    ~Mesh();
-    void
-    setMaterialIds(
+    virtual ~Mesh();
+    void setMaterialIds(
             const vector<ElementId>& ids,
             const MatId newMatId);
-    vector<unsigned int>
-    getIdsWithMaterialId(const unsigned int matId) const;
-    vector<unsigned int>
-    getIdsWithoutMaterialId(const unsigned int matId) const;
-    BoxD3
-    getBound(
+    vector<ElementId> addAsHex8(const BoxD3& box);
+    BoxD3 getBound(
             const vector<pair<const Volume*, unsigned int> >& border) const;
-    BoxD3
-    getBound(
+    BoxD3 getBound(
             const vector<unsigned int>& list) const;
-    vector<unsigned int>
-    getIdsInsideBound(
+    vector<unsigned int> getIdsInsideBound(
             const BoxD3& bound,
             const Element::Type type = Element::undefined) const;
-    void
-    applyGeometricScalingFactor(
+    void applyGeometricScalingFactor(
             const double factor);
-    vector<unsigned int>
-    getTetIds(const vector<unsigned int> elemIds) const;
-    vector<unsigned int>
-    getIdsOfCurvedTets() const;
-    vector<Tri3>
-    getTriWithMatId(const uint matId, const bool ignoreTet = false) const;
+    vector<unsigned int> getTetIds(
+            const vector<unsigned int> elemIds) const;
+    vector<unsigned int> getIdsOfCurvedTets() const;
+    vector<Tri3> getTriWithMatId(
+            const uint matId, const bool ignoreTet = false) const;
     vector<Tri3> getTriWithId(const vector<uint>& Id) const;
-    vector<pair<const Volume*, unsigned int> >
-    getInternalBorder(const vector<unsigned int>& elemIds) const;
-    vector<pair<const Volume*, unsigned int> >
-    getExternalBorder(const vector<unsigned int>& elemIds) const;
-    void
-    linearize();
-    bool
-    isLinear() const;
-    bool
-    isRectilinear() const;
-    const Grid3*
-    getGrid() const;
-    void
-    setGrid(const Grid3& grid_);
-    virtual vector<pair<const Element*, uint> >
-    getElementsWithVertex(
+    vector<pair<const Volume*, unsigned int> > getInternalBorder(
+            const vector<unsigned int>& elemIds) const;
+    vector<pair<const Volume*, unsigned int> > getExternalBorder(
+            const vector<unsigned int>& elemIds) const;
+    void linearize();
+    bool isLinear() const;
+    bool isRectilinear() const;
+    const Grid3* getGrid() const;
+    void setGrid(const Grid3& grid_);
+    virtual vector<pair<const Element*, uint> > getElementsWithVertex(
             const uint vertexId,
             const Element::Type type) const;
     vector<BoxD3> getRectilinearHexesInsideRegion(
             const vector<const Element*>& region) const;
-    pair<const Volume*, unsigned int>
-    getBoundary(const Surface*) const;
-    vector<unsigned int>
-    getAdjacentElements(const vector<unsigned int>& elemIds) const;
-    vector<pair<const Tet*, unsigned int> >
-    getBorderWithNormal(
+    pair<const Volume*, unsigned int> getBoundary(const Surface*) const;
+    vector<unsigned int> getAdjacentElements(const vector<unsigned int>& elemIds) const;
+    vector<pair<const Tet*, unsigned int> > getBorderWithNormal(
             const vector<pair<const Tet*, unsigned int> >& border,
             const CVecD3& normal);
-    bool
-    isFloatingCoordinate(const CoordD3* coordinate) const;
-    virtual bool
-    isOnBoundary(const CVecD3 pos) const;
-    virtual const CoordD3*
-    getClosestVertex(const CVecD3 pos) const;
-    virtual vector<const Surface*>
-    getMaterialBoundary(
+    bool isFloatingCoordinate(const CoordD3* coordinate) const;
+    virtual bool isOnBoundary(const CVecD3 pos) const;
+    virtual const CoordD3* getClosestVertex(const CVecD3 pos) const;
+    virtual vector<const Surface*> getMaterialBoundary(
             const uint matId,
             const uint layId) const;
-    virtual vector<BoxD3>
-    discretizeWithinBoundary(
+    virtual vector<BoxD3> discretizeWithinBoundary(
             const uint matId,
             const uint layId) const;
     pair<const Volume*, unsigned int> getNeighConnection(

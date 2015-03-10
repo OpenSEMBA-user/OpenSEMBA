@@ -17,7 +17,7 @@ public:
             const Domain& domain,
             const Element::Type elementType,
             const string& name_,
-            const BoxD3& box,
+            const vector<ElementId>& box,
             const double iTh, const double fTh, const double sTh,
             const double iPhi, const double fPhi, const double sPhi);
     double getStepPhi() const;

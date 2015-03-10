@@ -93,7 +93,7 @@ ElementsGroup::operator=(const ElementsGroup& rhs) {
    return *this;
 }
 
-ElementsGroup&
+vector<ElementId>
 ElementsGroup::add(
       const CoordinateGroup<>& coord,
       const vector<Hex8>& newHex) {
@@ -101,6 +101,7 @@ ElementsGroup::add(
    ElementId lastId = element[element.size()]->getId();
    hex8.reserve(hex8.size() + newHex.size());
    CoordinateId vId[8];
+   vector<ElementId> res;
    for (uint i = 0; i < newHex.size(); i++) {
       // Determines coordinates ids.
       // PERFORMANCE This is O(N^2). It can be improved by creating a
@@ -110,15 +111,16 @@ ElementsGroup::add(
       }
       MatId matId = newHex[i].getMatId();
       hex8.push_back(Hex8(coord, ++lastId, vId, LayerId(0), matId));
+      res.push_back(lastId);
    }
    updatePointers();
-   return *this;
+   return res;
 }
 
 void
 ElementsGroup::reassignPointers(const CoordinateGroup<>& vNew) {
-   for (unsigned int i = 0; i < element.size(); i++) {
-      for (unsigned int j = 0; j < element[i]->numberOfCoordinates(); j++) {
+   for (uint i = 0; i < element.size(); i++) {
+      for (uint j = 0; j < element[i]->numberOfCoordinates(); j++) {
          CoordinateId vId = element[i]->getV(j)->getId();
          const CoordinateBase* coord = vNew.getPtrToId(vId);
          if (coord == NULL) {
@@ -146,27 +148,27 @@ ElementsGroup::isLinear() const {
 }
 
 Element*
-ElementsGroup::getPtrToId(const unsigned int id) {
+ElementsGroup::getPtrToId(const uint id) {
    return element[id - offsetId];
 }
 
 const Element*
-ElementsGroup::getPtrToId(const unsigned int id) const {
+ElementsGroup::getPtrToId(const uint id) const {
    return element[id - offsetId];
 }
 
 const Tri*
-ElementsGroup::getTriPtrToId(const unsigned int id) const {
+ElementsGroup::getTriPtrToId(const uint id) const {
    return tri[id - offsetIdTri];
 }
 
 
-vector<unsigned int>
+vector<uint>
 ElementsGroup::getIdsWithMaterialId(
- const unsigned int matId) const {
-    vector<unsigned int> res;
+ const uint matId) const {
+    vector<uint> res;
     res.reserve(element.size());
-    for (unsigned int i = 0; i < element.size(); i++) {
+    for (uint i = 0; i < element.size(); i++) {
         if (element[i]->getMatId() == matId) {
             res.push_back(element[i]->getId());
         }
@@ -174,12 +176,12 @@ ElementsGroup::getIdsWithMaterialId(
     return res;
 }
 
-vector<unsigned int>
+vector<uint>
 ElementsGroup::getIdsWithoutMaterialId(
- const unsigned int matId) const {
-    vector<unsigned int> res;
+ const uint matId) const {
+    vector<uint> res;
     res.reserve(element.size());
-    for (unsigned int i = 0; i < element.size(); i++) {
+    for (uint i = 0; i < element.size(); i++) {
         if (element[i]->getMatId() != matId) {
             res.push_back(element[i]->getId());
         }
@@ -188,7 +190,7 @@ ElementsGroup::getIdsWithoutMaterialId(
 }
 
 const Tet*
-ElementsGroup::getTetPtrToId(const unsigned int id) const {
+ElementsGroup::getTetPtrToId(const uint id) const {
    return tet[id - offsetIdTet];
 }
 
@@ -212,12 +214,12 @@ ElementsGroup::printInfo() const {
    cout << "Hex8: " << hex8.size() << endl;
 }
 
-unsigned int
+uint
 ElementsGroup::nSurfaceElements() const {
    return tri.size();
 }
 
-unsigned int
+uint
 ElementsGroup::nVolumeElements() const {
    return tet.size();
 }
@@ -231,16 +233,16 @@ ElementsGroup::linearize() {
    assert(tri3.size() == 0);
    assert(tet4.size() == 0);
    // Linearizes surfaces --------------------------------------------
-   unsigned int nTri6 = tri6.size();
+   uint nTri6 = tri6.size();
    tri3.reserve(nTri6);
-   for (unsigned int i = 0; i < nTri6; i++) {
+   for (uint i = 0; i < nTri6; i++) {
       tri3.push_back(tri6[i].linearize());
    }
    tri6.clear();
    // Linearizes volumes ---------------------------------------------
-   unsigned int nTet10 = tet10.size();
+   uint nTet10 = tet10.size();
    tet4.reserve(nTet10);
-   for (unsigned int i = 0; i < nTet10; i++) {
+   for (uint i = 0; i < nTet10; i++) {
       tet4.push_back(tet10[i].linearize());
    }
    tet10.clear();
@@ -248,10 +250,10 @@ ElementsGroup::linearize() {
 }
 
 bool
-ElementsGroup::areTetrahedrons(const vector<unsigned int>& elemId) const {
-   unsigned int nE = elemId.size();
-   for (unsigned int i = 0; i < nE; i++) {
-      const unsigned int id = elemId[i];
+ElementsGroup::areTetrahedrons(const vector<uint>& elemId) const {
+   uint nE = elemId.size();
+   for (uint i = 0; i < nE; i++) {
+      const uint id = elemId[i];
       const Element* e = getPtrToId(id);
       if (!e->is<Tet>()) {
          return false;
@@ -261,9 +263,9 @@ ElementsGroup::areTetrahedrons(const vector<unsigned int>& elemId) const {
 }
 
 bool
-ElementsGroup::areTriangles(const vector<unsigned int>& elemId) const {
-   unsigned int nE = elemId.size();
-   for (unsigned int i = 0; i < nE; i++) {
+ElementsGroup::areTriangles(const vector<uint>& elemId) const {
+   uint nE = elemId.size();
+   for (uint i = 0; i < nE; i++) {
       if (!getPtrToId(elemId[i])->is<Tri>()) {
          return false;
       }
@@ -271,11 +273,11 @@ ElementsGroup::areTriangles(const vector<unsigned int>& elemId) const {
    return true;
 }
 
-vector<unsigned int>
+vector<uint>
 ElementsGroup::getHexIds() const {
-   const unsigned int nK = hex8.size();
-   vector<unsigned int> res(nK);
-   for (unsigned int i = 0; i < nK; i++) {
+   const uint nK = hex8.size();
+   vector<uint> res(nK);
+   for (uint i = 0; i < nK; i++) {
       res[i] = hex8[i].getId();
    }
    return res;
@@ -311,8 +313,8 @@ ElementsGroup::removeElementsWithMatId(
 
 void
 ElementsGroup::checkIdsAreConsecutive() {
-   unsigned int currentId = offsetId;
-   for (unsigned int i = 1; i < element.size(); i++) {
+   uint currentId = offsetId;
+   for (uint i = 1; i < element.size(); i++) {
       if (element[i]->getId() == currentId + 1) {
          currentId++;
       } else {
@@ -332,33 +334,33 @@ ElementsGroup::updatePointers() {
          + tri6.size() + tet4.size() + tet10.size()
          + quad4.size() + hex8.size());
    tet.reserve(tet4.size() + tet10.size());
-   for (unsigned int i = 0; i < tet4.size(); i++) {
+   for (uint i = 0; i < tet4.size(); i++) {
       tet.push_back(&tet4[i]);
       element.push_back(&tet4[i]);
    }
-   for (unsigned int i = 0; i < tet10.size(); i++) {
+   for (uint i = 0; i < tet10.size(); i++) {
       tet.push_back(&tet10[i]);
       element.push_back(&tet10[i]);
    }
    tri.reserve(tri3.size() + tri6.size());
-   for (unsigned int i = 0; i < tri3.size(); i++) {
+   for (uint i = 0; i < tri3.size(); i++) {
       tri.push_back(&tri3[i]);
       element.push_back(&tri3[i]);
    }
-   for (unsigned int i = 0; i < tri6.size(); i++) {
+   for (uint i = 0; i < tri6.size(); i++) {
       tri.push_back(&tri6[i]);
       element.push_back(&tri6[i]);
    }
    // --- **
-   for (unsigned int i = 0; i < hex8.size(); i++) {
+   for (uint i = 0; i < hex8.size(); i++) {
       element.push_back(&hex8[i]);
    }
-   for (unsigned int i = 0; i < quad4.size(); i++) {
+   for (uint i = 0; i < quad4.size(); i++) {
       element.push_back(&quad4[i]);
    }
    // --- **
    lineElement.reserve(lin2.size());
-   for (unsigned int i = 0; i < lin2.size(); i++) {
+   for (uint i = 0; i < lin2.size(); i++) {
       lineElement.push_back(&lin2[i]);
       element.push_back(&lin2[i]);
    }

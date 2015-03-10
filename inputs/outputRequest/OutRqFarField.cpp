@@ -15,10 +15,10 @@ OutRqFarField::OutRqFarField(
  const Domain& domain,
  const Element::Type elementType,
  const string& name,
- const BoxD3& box,
+ const vector<ElementId>& elem,
  const double iTh, const double fTh, const double sTh,
  const double iPhi, const double fPhi, const double sPhi)
-: OutRq(domain, elementType, farField, name, box) {
+: OutRq(domain, elementType, farField, name, elem) {
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 
