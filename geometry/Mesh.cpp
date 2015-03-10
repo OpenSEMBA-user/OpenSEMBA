@@ -55,21 +55,21 @@ Mesh::~Mesh() {
 }
 
 
-pair<const Volume*, unsigned int>
+pair<const Volume*, uint>
 Mesh::getBoundary(const Surface* surf) const {
     return map_.getInnerFace(surf->getId());
 }
 
-vector<pair<const Tet*, unsigned int> >
+vector<pair<const Tet*, uint> >
 Mesh::getBorderWithNormal(
- const vector<pair<const Tet*, unsigned int> >& border,
+ const vector<pair<const Tet*, uint> >& border,
  const CartesianVector<double, 3>& normal) {
-    const unsigned int nK = border.size();
-    vector<pair<const Tet*, unsigned int> > res;
+    const uint nK = border.size();
+    vector<pair<const Tet*, uint> > res;
     res.reserve(nK);
-    for (unsigned int i = 0; i < nK; i++) {
+    for (uint i = 0; i < nK; i++) {
         const Tet* tet = border[i].first;
-        const unsigned int face = border[i].second;
+        const uint face = border[i].second;
         CartesianVector<double,3> tetNormal = tet->sideNormal(face);
         if (tetNormal == normal && !tet->isCurvedFace(face)) {
             res.push_back(border[i]);
@@ -78,27 +78,27 @@ Mesh::getBorderWithNormal(
     return res;
 }
 
-vector<unsigned int>
-Mesh::getAdjacentElements(const vector<unsigned int>& region) const {
-    vector<pair<const Volume*, unsigned int> > outer;
+vector<uint>
+Mesh::getAdjacentElements(const vector<uint>& region) const {
+    vector<pair<const Volume*, uint> > outer;
     outer = getExternalBorder(region);
-    unsigned int nOut = outer.size();
+    uint nOut = outer.size();
     // Removes repeated.
-    DynMatrix<unsigned int> aux(nOut,1);
-    for (unsigned int i = 0; i < nOut; i++) {
+    DynMatrix<uint> aux(nOut,1);
+    for (uint i = 0; i < nOut; i++) {
         aux(i,0) = outer[i].first->getId();
     }
     aux.sortAndRemoveRepeatedRows_omp();
     // Prepares result.
-    vector<unsigned int> res(aux.nRows(), 0);
-    for (unsigned int i = 0; i < aux.nRows(); i++) {
+    vector<uint> res(aux.nRows(), 0);
+    for (uint i = 0; i < aux.nRows(); i++) {
         res[i] = aux(i,0);
     }
     return res;
 }
 
-pair<const Volume*, unsigned int> Mesh::getNeighConnection(
-        pair<const Volume*, const unsigned int> inner) const {
+pair<const Volume*, uint> Mesh::getNeighConnection(
+        pair<const Volume*, const uint> inner) const {
     uint inId = inner.first->getId();
     uint inFace = inner.second;
     return map_.getNeighConnection(inId, inFace);
@@ -120,7 +120,7 @@ vector<BoxD3>
 Mesh::getRectilinearHexesInsideRegion(
         const vector<const Element*>& region) const {
     // Determines positions to query.
-    vector<uint> ids = elem_.getIds(region);
+    vector<ElementId> ids = elem_.getIds(region);
     BoxD3 bound(getBound(ids));
     vector<CVecD3> center = grid_->getCenterOfNaturalCellsInside(bound);
     // Determines if positions are inside tetrahedrons.
@@ -391,8 +391,7 @@ Mesh::linearize() {
 }
 
 BoxD3
-Mesh::getBound(
- const vector<uint>& list) const {
+Mesh::getBound(const vector<ElementId>& list) const {
 	// Inits bounding box.
 	if (list.size() == 0) {
 	   return BoxD3().setInfinity();

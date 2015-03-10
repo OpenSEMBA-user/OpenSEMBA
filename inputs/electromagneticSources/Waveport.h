@@ -23,7 +23,7 @@ public:
 		TM
 	} ExcitationMode;
 	Waveport(
-	        const vector<uint>& elem,
+	        const vector<ElementId>& elem,
 	        const MagnitudeGaussian* magnitude,
 	        const bool input,
 	        const Shape shape,

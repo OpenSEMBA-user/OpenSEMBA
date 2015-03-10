@@ -15,7 +15,7 @@ Generator::Generator() {
 Generator::Generator(
  const Type& generatorType,
  const Hardness& hardness,
- const vector<unsigned int>& elem,
+ const vector<ElementId>& elem,
  const Magnitude* magnitude) : EMSource(elem, magnitude) {
    hardness_ = hardness;
 	type_ = generatorType;

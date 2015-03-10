@@ -19,7 +19,7 @@ SourceOnLine::~SourceOnLine() {
 SourceOnLine::SourceOnLine(
  const Type& sourceType,
  const Hardness& sourceHardness,
- const vector<unsigned int>& elem,
+ const vector<ElementId>& elem,
  const Magnitude* magnitude) : EMSource(elem, magnitude) {
 	type_ = sourceType;
     hardness_ = sourceHardness;
@@ -56,7 +56,7 @@ SourceOnLine::printInfo() const {
 	cout<< " --- Nodal info --- " << endl;
 	EMSource::printInfo();
 	cout<< "Type: " << getTypeStr() << endl;
-    cout<< "Hardness: " << getHardnessStr() << endl;
+    cout<< "Hardness: " << hardnessToStr() << endl;
 }
 
 string
@@ -77,7 +77,7 @@ SourceOnLine::getTypeStr() const {
 }
 
 string
-SourceOnLine::getHardnessStr() const {
+SourceOnLine::hardnessToStr() const {
 	string res;
 	switch (type_) {
 	case hard:

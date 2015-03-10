@@ -6,7 +6,7 @@ EMSource::EMSource() {
     magnitude_ = NULL;
 }
 
-EMSource::EMSource(const vector<uint>& elem, const Magnitude* magnitude) {
+EMSource::EMSource(const vector<ElementId>& elem, const Magnitude* magnitude) {
     elem_ = elem;
     magnitude_ = magnitude;
     assert(elem_.size() != 0);
@@ -17,7 +17,7 @@ EMSource::~EMSource() {
 
 }
 
-vector<unsigned int>
+vector<ElementId>
 EMSource::getElem() const {
     assert(elem_.size() != 0);
     return elem_;

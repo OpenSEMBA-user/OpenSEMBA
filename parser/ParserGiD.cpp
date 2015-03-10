@@ -397,21 +397,14 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                             domain, Element::surface, type, name, elem));
                     break;
                 case ParserGiD::outRqOnVolume:
-                {
                     getline(f_in, line);
-                    ElementId id(mesh_->addAsHex8(BoxD3(strToBound(line))));
-                    elem.clear();
-                    elem.push_back(id);
+                    elem = mesh_->addAsHex8(BoxD3(strToBound(line)));
                     res->add(new OutRq(
                             domain, Element::volume, type, name, elem));
                     break;
-                }
                 case ParserGiD::farField:
-                {
                     getline(f_in, line);
-                    ElementId id(mesh_->addAsHex8(BoxD3(strToBound(line))));
-                    elem.clear();
-                    elem.push_back(id);
+                    elem = mesh_->addAsHex8(BoxD3(strToBound(line)));
                     double iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
@@ -419,7 +412,6 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                             domain, Element::volume, name, elem,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
                     break;
-                }
                 case ParserGiD::undefined:
                     cerr<< "ERROR @ GiDParser: "
                     << "Unreckognized GiD Output request type:"
@@ -993,7 +985,7 @@ ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
     CVecD3 dir, pol;
-    vector<uint> elems;
+    vector<ElementId> elems;
     Magnitude* mag;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
@@ -1004,15 +996,14 @@ ParserGiD::readPlaneWave() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
-            ElementId id = mesh_->addAsHex8(BoxD3(strToBound(value)));
-            elems.push_back(id);
+            elems = mesh_->addAsHex8(BoxD3(strToBound(value)));
         } else if (label.compare("Number of elements")==0) {
             uint nE = atoi(value.c_str());
             elems.reserve(nE);
             for (uint i = 0; i < nE; i++) {
                 uint e;
                 f_in >> e;
-                elems.push_back(e);
+                elems.push_back(ElementId(e));
             }
         } else if (label.compare("End of Planewave")==0) {
             return new PlaneWave(elems, dir, pol, mag);
@@ -1026,7 +1017,7 @@ ParserGiD::readPlaneWave() {
 
 Dipole*
 ParserGiD::readDipole() {
-    vector<uint> elem;
+    vector<ElementId> elem;
     double length = 0.0;
     CVecD3 orientation;
     CVecD3 position;
@@ -1038,7 +1029,7 @@ ParserGiD::readDipole() {
     while(!finished && !f_in.eof()) {
         getline(f_in, line);
         if (line.find("End of puntual excitation") == line.npos) {
-            elem.push_back(strtol(line.c_str(), &pEnd, 10 ));
+            elem.push_back(ElementId(strtol(line.c_str(), &pEnd, 10)));
             if (elem.size() == 1) {
                 assert(false); // TODO: Not implemented.
             }
@@ -1057,7 +1048,7 @@ ParserGiD::readDipole() {
 
 Waveport*
 ParserGiD::readWaveport() {
-    vector<uint> elem;
+    vector<ElementId> elem;
     uint numElements = 0;
     bool input = true;
     MagnitudeGaussian* mag;
@@ -1103,7 +1094,7 @@ ParserGiD::readWaveport() {
             uint e;
             for (uint i = 0; i < numElements; i++) {
                 f_in >> e;
-                elem.push_back(e);
+                elem.push_back(ElementId(e));
             }
         } else if (label.find("End of Waveport") != label.npos) {
             finished = true;
@@ -1126,7 +1117,7 @@ ParserGiD::readGenerator() {
     Generator::Type type;
     Generator::Hardness hardness;
     Magnitude* mag;
-    vector<uint> elems;
+    vector<ElementId> elems;
     string filename;
     string label, value;
     while(!f_in.eof()) {
@@ -1143,7 +1134,7 @@ ParserGiD::readGenerator() {
             for (uint i = 0; i < nE; i++) {
                 uint e;
                 f_in >> e;
-                elems.push_back(e);
+                elems.push_back(ElementId(e));
             }
         } else if (label.compare("End of Generator")==0) {
             return new Generator(type, hardness, elems, mag);
@@ -1160,7 +1151,7 @@ ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
     Magnitude* mag;
-    vector<uint> elems;
+    vector<ElementId> elems;
     string filename;
     string label, value;
     while(!f_in.eof()) {
@@ -1177,7 +1168,7 @@ ParserGiD::readSourceOnLine() {
             for (uint i = 0; i < nE; i++) {
                 uint e;
                 f_in >> e;
-                elems.push_back(e);
+                elems.push_back(ElementId(e));
             }
         } else if (label.compare("End of Source_on_line")==0) {
             return new SourceOnLine(type, hardness, elems, mag);

@@ -36,24 +36,24 @@ public:
             const MatId newMatId);
     vector<ElementId> addAsHex8(const BoxD3& box);
     BoxD3 getBound(
-            const vector<pair<const Volume*, unsigned int> >& border) const;
+            const vector<pair<const Volume*, uint> >& border) const;
     BoxD3 getBound(
-            const vector<unsigned int>& list) const;
-    vector<unsigned int> getIdsInsideBound(
+            const vector<ElementId>& list) const;
+    vector<uint> getIdsInsideBound(
             const BoxD3& bound,
             const Element::Type type = Element::undefined) const;
     void applyGeometricScalingFactor(
             const double factor);
-    vector<unsigned int> getTetIds(
-            const vector<unsigned int> elemIds) const;
-    vector<unsigned int> getIdsOfCurvedTets() const;
+    vector<uint> getTetIds(
+            const vector<uint> elemIds) const;
+    vector<uint> getIdsOfCurvedTets() const;
     vector<Tri3> getTriWithMatId(
             const uint matId, const bool ignoreTet = false) const;
     vector<Tri3> getTriWithId(const vector<uint>& Id) const;
-    vector<pair<const Volume*, unsigned int> > getInternalBorder(
-            const vector<unsigned int>& elemIds) const;
-    vector<pair<const Volume*, unsigned int> > getExternalBorder(
-            const vector<unsigned int>& elemIds) const;
+    vector<pair<const Volume*, uint> > getInternalBorder(
+            const vector<uint>& elemIds) const;
+    vector<pair<const Volume*, uint> > getExternalBorder(
+            const vector<uint>& elemIds) const;
     void linearize();
     bool isLinear() const;
     bool isRectilinear() const;
@@ -64,10 +64,10 @@ public:
             const Element::Type type) const;
     vector<BoxD3> getRectilinearHexesInsideRegion(
             const vector<const Element*>& region) const;
-    pair<const Volume*, unsigned int> getBoundary(const Surface*) const;
-    vector<unsigned int> getAdjacentElements(const vector<unsigned int>& elemIds) const;
-    vector<pair<const Tet*, unsigned int> > getBorderWithNormal(
-            const vector<pair<const Tet*, unsigned int> >& border,
+    pair<const Volume*, uint> getBoundary(const Surface*) const;
+    vector<uint> getAdjacentElements(const vector<uint>& elemIds) const;
+    vector<pair<const Tet*, uint> > getBorderWithNormal(
+            const vector<pair<const Tet*, uint> >& border,
             const CVecD3& normal);
     bool isFloatingCoordinate(const CoordD3* coordinate) const;
     virtual bool isOnBoundary(const CVecD3 pos) const;
@@ -78,19 +78,19 @@ public:
     virtual vector<BoxD3> discretizeWithinBoundary(
             const uint matId,
             const uint layId) const;
-    pair<const Volume*, unsigned int> getNeighConnection(
-            pair<const Volume*, const unsigned int> inner) const;
+    pair<const Volume*, uint> getNeighConnection(
+            pair<const Volume*, const uint> inner) const;
     virtual void printInfo() const;
 protected:
     MapGroup map_;
     Grid3* grid_;
     static const double areaDiffTolerance;
-    vector<pair<const Volume*, unsigned int> >
+    vector<pair<const Volume*, uint> >
     getInternalBorderOfTetRegion(
-            const vector<unsigned int>& region) const;
-    vector<pair<const Volume*, unsigned int> >
+            const vector<uint>& region) const;
+    vector<pair<const Volume*, uint> >
     getInternalBorderOfTriRegion(
-            const vector<unsigned int>& region) const;
+            const vector<uint>& region) const;
 };
 
 

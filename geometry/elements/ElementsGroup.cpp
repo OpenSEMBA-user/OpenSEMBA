@@ -379,9 +379,9 @@ ElementsGroup::updatePointers() {
    }
 }
 
-vector<uint>
+vector<ElementId>
 ElementsGroup::getIds(const vector<const Element*>& list) const {
-   vector<uint> res;
+   vector<ElementId> res;
    res.reserve(list.size());
    for (uint i = 0; i < list.size(); i++) {
       res.push_back(list[i]->getId());

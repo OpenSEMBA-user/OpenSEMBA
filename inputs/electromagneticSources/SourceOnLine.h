@@ -25,7 +25,7 @@ public:
     SourceOnLine(
             const Type& sourceType,
             const Hardness& sourceHardness,
-            const vector<unsigned int>& elem,
+            const vector<ElementId>& elem,
             const Magnitude* magnitude);
     virtual ~SourceOnLine();
 
@@ -35,12 +35,11 @@ public:
     Type getType() const;
     Hardness getHardness() const;
     string getTypeStr() const;
-    virtual void
-    printInfo() const;
+    virtual void printInfo() const;
 private:
     Type type_;
     Hardness hardness_;
-    string getHardnessStr() const;
+    string hardnessToStr() const;
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_ */

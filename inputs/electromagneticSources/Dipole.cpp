@@ -12,7 +12,7 @@
 
 
 Dipole::Dipole(
- vector<unsigned int> elem,
+ vector<ElementId> elem,
  double length,
  CVecD3 orientation,
  CVecD3 position,

@@ -65,7 +65,7 @@ public:
             const CoordinateGroup<>& coord,
             const vector<Hex8>& hex);
     void reassignPointers(const CoordinateGroup<>& vNew);
-    vector<uint> getIds(const vector<const Element*>& list) const;
+    vector<ElementId> getIds(const vector<const Element*>& list) const;
     uint nSurfaceElements() const;
     uint
     nVolumeElements() const;

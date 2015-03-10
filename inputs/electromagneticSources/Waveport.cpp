@@ -8,7 +8,7 @@
 #include "Waveport.h"
 
 Waveport::Waveport(
- const vector<unsigned int>& elem,
+ const vector<ElementId>& elem,
  const MagnitudeGaussian* magnitude,
  const bool input,
  const Shape shape,

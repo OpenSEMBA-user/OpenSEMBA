@@ -25,7 +25,7 @@ public:
 	Generator(
 	 const Type& generatorType,
 	 const Hardness& hardness,
-	 const vector<unsigned int>& elem,
+	 const vector<ElementId>& elem,
 	 const Magnitude* magnitude);
 	virtual ~Generator();
 

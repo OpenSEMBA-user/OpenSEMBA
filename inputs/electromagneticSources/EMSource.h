@@ -17,15 +17,15 @@ class EMSource : public Condition,  public ClassBase {
 public:
     EMSource();
     EMSource(
-            const vector<uint>& elem,
+            const vector<ElementId>& elem,
             const Magnitude* magnitude);
     virtual ~EMSource();
-    vector<unsigned int> getElem() const;
+    vector<ElementId> getElem() const;
     const Magnitude* getMagnitude() const;
     Condition::Type getConditionType() const;
     void printInfo() const;
 private:
-    vector<unsigned int> elem_;
+    vector<ElementId> elem_;
     const Magnitude* magnitude_;
 };
 

@@ -14,7 +14,7 @@ class PlaneWave : public EMSource {
 public:
     PlaneWave();
     PlaneWave(
-	 vector<unsigned int> elem,
+	 vector<ElementId> elem,
 	 CVecD3 waveDirection,
 	 CVecD3 polarization,
 	 const Magnitude* magnitude);
