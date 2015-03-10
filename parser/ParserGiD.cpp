@@ -9,11 +9,11 @@
 
 ParserGiD::ParserGiD() {
     cG_ = NULL;
+    mesh_ = NULL;
 }
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-
     string null;
     init(null);
 }
@@ -358,9 +358,9 @@ ParserGiD::readOutputRequests() {
 void
 ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
     bool finished = false;
+    GiDOutputType gidOutputType = ParserGiD::undefined;
     while (!finished && !f_in.eof()) {
         string line, label, value;
-        GiDOutputType gidOutputType = ParserGiD::undefined;
         getNextLabelAndValue(label,value);
         if (label.compare("GiDOutputType")==0) {
             gidOutputType = strToGidOutputType(trim(value));

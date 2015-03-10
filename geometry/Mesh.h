@@ -49,7 +49,7 @@ public:
     vector<uint> getIdsOfCurvedTets() const;
     vector<Tri3> getTriWithMatId(
             const uint matId, const bool ignoreTet = false) const;
-    vector<Tri3> getTriWithId(const vector<uint>& Id) const;
+    vector<Tri3> getTriWithId(const vector<ElementId>& Id) const;
     vector<pair<const Volume*, uint> > getInternalBorder(
             const vector<uint>& elemIds) const;
     vector<pair<const Volume*, uint> > getExternalBorder(
