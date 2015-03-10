@@ -8,7 +8,7 @@
 #include "SolverOptions.h"
 
 SolverOptions::SolverOptions () {
-    solver_ = none;
+    solver_ = Solver::none;
 	finalTime_ = 0;
 	samplingPeriod_ = 0.0;
 	timeStep_ = 0.0;
@@ -25,9 +25,9 @@ SolverOptions::printInfo() const {
 
 string SolverOptions::toStr(const Solver solver) const {
     switch (solver) {
-    case ugrfdtd:
+    case Solver::ugrfdtd:
         return "ugrfdtd";
-    case cudg3d:
+    case Solver::cudg3d:
         return "cudg3d";
     default:
         return "none";

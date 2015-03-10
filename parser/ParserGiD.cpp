@@ -1528,15 +1528,15 @@ MesherOptions::Mode ParserGiD::strToMesherMode(string str) const {
 SolverOptions::Solver ParserGiD::strToSolver(string str) const {
     str = trim(str);
     if (str.compare("ugrfdtd")==0) {
-        return SolverOptions::ugrfdtd;
+        return SolverOptions::Solver::ugrfdtd;
     } else if (str.compare("cudg3d")==0) {
-        return SolverOptions::cudg3d;
+        return SolverOptions::Solver::cudg3d;
     } else if (str.compare("none")==0) {
-        return SolverOptions::none;
+        return SolverOptions::Solver::none;
     } else {
         cerr << endl << "ERROR @ Parser: ";
         cerr << "Unreckognized label: " << str<< endl;
-        return SolverOptions::none;
+        return SolverOptions::Solver::none;
     }
 }
 

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <utility>
 #include "../math/CartesianVector.h"
+#include "Options.h"
 
 using namespace std;
 
@@ -18,25 +19,23 @@ typedef unsigned int uint;
 
 class SolverOptions : public Options {
 public:
-	typedef enum {
-	    ugrfdtd,
-	    cudg3d,
-	    none
-	} Solver;
-	typedef enum {
-
-	} CompositesModel;
-    typedef enum {
-
-    } MetalsModel;
-    typedef enum {
-
-    } WiresModel;
-    typedef enum {
-
-    } WiresSelfinductance;
+    enum class Solver {
+        ugrfdtd, cudg3d, none
+    };
+    enum class CompositeModel {
+        Default, digFilt, MIBC, ADEMIBC, URMMMT
+    };
+    enum class MetalModel {
+        Default, maloney, maloneySkinDepth, conformalSkinDepth
+    };
+    enum class WireModel {
+        Default, transition, New
+    };
+    enum class SelfInductanceModel {
+        boutayeb, ledfelt, berenger
+    };
     SolverOptions();
-	void printInfo() const;
+
     double getFinalTime() const;
     void setFinalTime(double finalTime);
     double getSamplingPeriod() const;
@@ -45,15 +44,21 @@ public:
     void setSolver(Solver solver);
     double getTimeStep() const;
     void setTimeStep(double timeStep);
+
+    void printInfo() const;
 private:
     // Global
-	Solver solver_;
-	double finalTime_;
-	uint numberOfTimeSteps_;
-	double samplingPeriod_;
-	double timeStep_;
-	double cfl_;
-	string toStr(const Solver solver) const;
+    Solver solver_;
+    double finalTime_;
+    uint numberOfTimeSteps_;
+    double samplingPeriod_;
+    double timeStep_;
+    double cfl_;
+    // ugrfdtd
+    CompositeModel compositeModel_;
+
+    //
+    string toStr(const Solver solver) const;
 };
 
 #endif /* GLOBALPROBLEMDATA_H_ */
