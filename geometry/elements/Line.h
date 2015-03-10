@@ -23,11 +23,11 @@ public:
     Line(const Line& rhs);
     virtual ~Line();
     
-    inline uint numberOfFaces   () const { return 2; }
-    inline uint numberOfVertices() const { return 2; }
+    inline UInt numberOfFaces   () const { return 2; }
+    inline UInt numberOfVertices() const { return 2; }
     
-    inline uint numberOfSideVertices   (const uint f = 0) const { return 1; }
-    inline uint numberOfSideCoordinates(const uint f = 0) const { return 1; }
+    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 1; }
+    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 1; }
     
     virtual ElementBase::Type getType() const { return line; }
 };

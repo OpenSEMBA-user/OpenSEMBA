@@ -4,70 +4,70 @@
 #include "Simplex.h"
 
 namespace {
-template <int SIMPLIN_N>
+template <Int SIMPLIN_N>
 class SimplexLin : public Simplex {
 #define SIMPLIN_NP (SIMPLIN_N+1)
 #define SIMPLIN_NFP (1)
 #define SIMPLIN_FACES (2)
 public:
-	static const unsigned int faces = 2;
-	static const unsigned int nsc = 2;
-	static const unsigned int n = SIMPLIN_N;
-	static const unsigned int np = SIMPLIN_NP;
-	static const unsigned int nfp = SIMPLIN_NFP;
-	static const unsigned int nc = SIMPLEX_CUBATURE_ORDER;
-	static const unsigned int ncp = SIMPLEX_CUBATURE_ORDER + 1;
+	static const UInt faces = 2;
+	static const UInt nsc = 2;
+	static const UInt n = SIMPLIN_N;
+	static const UInt np = SIMPLIN_NP;
+	static const UInt nfp = SIMPLIN_NFP;
+	static const UInt nc = SIMPLEX_CUBATURE_ORDER;
+	static const UInt ncp = SIMPLEX_CUBATURE_ORDER + 1;
 	// ------- Methods ------------------------------------------------
 	SimplexLin();
-	unsigned int
-	 vertex(const unsigned int) const;
-	unsigned int
-	 sideVertex(const unsigned int f, const unsigned int i) const;
-	unsigned int
-	 nodeIndex(const unsigned int i, const unsigned int j) const;
-	unsigned int
-	 cubatureNodeIndex(const unsigned int i, const unsigned int j) const;
-	unsigned int
-	 sideNode(const unsigned int f, const unsigned int i) const;
-	const Polynomial<double>&
-	 getLagr(const unsigned int i) const;
-	const Polynomial<double>&
-	 getDLagr(const unsigned int i, const unsigned int f) const;
+	UInt
+	 vertex(const UInt) const;
+	UInt
+	 sideVertex(const UInt f, const UInt i) const;
+	UInt
+	 nodeIndex(const UInt i, const UInt j) const;
+	UInt
+	 cubatureNodeIndex(const UInt i, const UInt j) const;
+	UInt
+	 sideNode(const UInt f, const UInt i) const;
+	const Polynomial<Real>&
+	 getLagr(const UInt i) const;
+	const Polynomial<Real>&
+	 getDLagr(const UInt i, const UInt f) const;
 	void
 	 printInfo() const;
 private:
 	// --- Rotation and extraction matrices ---------------------------
-	StaMatrix<int,np,np> P[faces];
-	StaMatrix<int,nfp,np> R[faces];
-	CartesianVector<int,nsc> nId[np];
-	StaMatrix<int,faces,nfp> sNId;
+	StaMatrix<Int,np,np> P[faces];
+	StaMatrix<Int,nfp,np> R[faces];
+	CartesianVector<Int,nsc> nId[np];
+	StaMatrix<Int,faces,nfp> sNId;
 	// --- Lagrange polynomials ---------------------------------------
-	Polynomial<double> lagr[np];
-	Polynomial<double> dLagr[np][faces];
+	Polynomial<Real> lagr[np];
+	Polynomial<Real> dLagr[np][faces];
 	// --- ca: Cubatured alpha, cda: cub. derived, cwaa: cub. weighted
-	static const double sizeFactor;
-	static const unsigned int dimension = 1;
-	CartesianVector<int,nsc> cId[ncp];
-	CartesianVector<double,nsc> cPos[ncp];
-	double cw[ncp];
-	double ca[np][ncp];
-	double cda[np][faces][ncp];
-	StaMatrix<double,np,np> cwaa[ncp];
-	StaMatrix<double,np,np> cwada[ncp][faces];
+	static const Real sizeFactor;
+	static const UInt dimension = 1;
+	CartesianVector<Int,nsc> cId[ncp];
+	CartesianVector<Real,nsc> cPos[ncp];
+	Real cw[ncp];
+	Real ca[np][ncp];
+	Real cda[np][faces][ncp];
+	StaMatrix<Real,np,np> cwaa[ncp];
+	StaMatrix<Real,np,np> cwada[ncp][faces];
 	// =========== Methods ============================================
-	StaMatrix<int,SIMPLIN_NFP,SIMPLIN_NP>
-	 RMatrix(const unsigned int s) const;
-	DynMatrix<int>
-	 PMatrix(const unsigned int n, const unsigned int s) const;
+	StaMatrix<Int,SIMPLIN_NFP,SIMPLIN_NP>
+	 RMatrix(const UInt s) const;
+	DynMatrix<Int>
+	 PMatrix(const UInt n, const UInt s) const;
 	void
 	 buildNodeIndices(
-	  CartesianVector<int,nsc> *res,
-	  const unsigned int order,
-	  const unsigned int nNodes) const;
+	  CartesianVector<Int,nsc> *res,
+	  const UInt order,
+	  const UInt nNodes) const;
 	void
 	 buildSideNodeIndices();
-	unsigned int
-	 numberOfNodes(const unsigned int order) const ;
+	UInt
+	 numberOfNodes(const UInt order) const ;
 	// --- Cubature build functions -----------------------------------
 	void
 	 buildCubaturePositionsAndWeights();
@@ -75,8 +75,8 @@ private:
 	 buildCubatureLagrange();
 };
 
-template <int SIMPLIN_N>
-const double SimplexLin<SIMPLIN_N>::sizeFactor = 1.0;
+template <Int SIMPLIN_N>
+const Real SimplexLin<SIMPLIN_N>::sizeFactor = 1.0;
 // ====================================================================
 #include "SimplexLin.hpp"
 }

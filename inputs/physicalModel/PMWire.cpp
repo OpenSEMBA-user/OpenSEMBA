@@ -10,9 +10,9 @@
 PMWire::PMWire(
  const MatId id,
  const string name,
- const double radius,
- const double resistance,
- const double inductance) : PhysicalModel(id, name) {
+ const Real radius,
+ const Real resistance,
+ const Real inductance) : PhysicalModel(id, name) {
 	radius_ = radius;
 	resistance_ = resistance;
 	inductance_ = inductance;
@@ -25,17 +25,17 @@ ClassBase* PMWire::clone() const {
    return new PMWire(*this);
 }
 
-double
+Real
  PMWire::getRadius() const {
 	return radius_;
 }
 
-double
+Real
  PMWire::getResistance() const {
 	return resistance_;
 }
 
-double
+Real
  PMWire::getInductance() const {
 	return inductance_;
 }

@@ -55,19 +55,19 @@ string SolverOptions::toStr(const Solver solver) const {
     }
 }
 
-double SolverOptions::getFinalTime() const {
+Real SolverOptions::getFinalTime() const {
     return finalTime_;
 }
 
-void SolverOptions::setFinalTime(double finalTime) {
+void SolverOptions::setFinalTime(Real finalTime) {
     finalTime_ = finalTime;
 }
 
-double SolverOptions::getSamplingPeriod() const {
+Real SolverOptions::getSamplingPeriod() const {
     return samplingPeriod_;
 }
 
-void SolverOptions::setSamplingPeriod(double samplingPeriod) {
+void SolverOptions::setSamplingPeriod(Real samplingPeriod) {
     samplingPeriod_ = samplingPeriod;
 }
 
@@ -79,11 +79,11 @@ void SolverOptions::setSolver(Solver solver) {
     solver_ = solver;
 }
 
-double SolverOptions::getTimeStep() const {
+Real SolverOptions::getTimeStep() const {
     return timeStep_;
 }
 
-void SolverOptions::setTimeStep(double timeStep) {
+void SolverOptions::setTimeStep(Real timeStep) {
     timeStep_ = timeStep;
 }
 

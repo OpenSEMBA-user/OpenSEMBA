@@ -15,8 +15,6 @@
 
 using namespace std;
 
-typedef unsigned int uint;
-
 class SolverOptions : public Options {
 public:
     enum class Solver {
@@ -36,14 +34,14 @@ public:
     };
     SolverOptions();
 
-    double getFinalTime() const;
-    void setFinalTime(double finalTime);
-    double getSamplingPeriod() const;
-    void setSamplingPeriod(double samplingPeriod);
+    Real getFinalTime() const;
+    void setFinalTime(Real finalTime);
+    Real getSamplingPeriod() const;
+    void setSamplingPeriod(Real samplingPeriod);
     Solver getSolver() const;
     void setSolver(Solver solver);
-    double getTimeStep() const;
-    void setTimeStep(double timeStep);
+    Real getTimeStep() const;
+    void setTimeStep(Real timeStep);
 
     void printInfo() const;
     double getCfl() const;
@@ -88,11 +86,11 @@ public:
 private:
     // Global
     Solver solver_;
-    double finalTime_;
-    uint numberOfTimeSteps_;
-    double samplingPeriod_;
-    double timeStep_;
-    double cfl_;
+    Real finalTime_;
+    UInt numberOfTimeSteps_;
+    Real samplingPeriod_;
+    Real timeStep_;
+    Real cfl_;
     // ugrfdtd
     CompositeModel compositeModel_;
     double compositesAttenuationFactor_;

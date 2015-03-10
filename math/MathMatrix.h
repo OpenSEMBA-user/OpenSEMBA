@@ -42,18 +42,18 @@ class MathMatrix {
 public:
 	MathMatrix();
 	virtual ~MathMatrix();
-	virtual unsigned int
+	virtual UInt
 	 nCols() const = 0;
-	virtual unsigned int
+	virtual UInt
 	 nRows() const = 0;
 	virtual T
-	 val(const unsigned int ind) const = 0;
+	 val(const UInt ind) const = 0;
 	virtual T&
-	 val(const unsigned int ind) = 0;
+	 val(const UInt ind) = 0;
 	virtual T
-	 val(const unsigned int row, const unsigned int col) const = 0;
+	 val(const UInt row, const UInt col) const = 0;
 	virtual T&
-	 val(const unsigned int row, const unsigned int col) = 0;
+	 val(const UInt row, const UInt col) = 0;
 	virtual void
 	 copy(vector<vector<T> > values) = 0;
 	void
@@ -63,7 +63,7 @@ public:
 	void
 	 cpLowerTri2UpperTri();
 	void
-	 convertToArray(const int mode, double *res) const;
+	 convertToArray(const Int mode, Real *res) const;
 	vector<CartesianVector<T,3> >
 	 convertToCartesianVector() const;
 	T
@@ -73,53 +73,53 @@ public:
 	T
 	 maxVal() const;
 	T
-	 maxValInCol(unsigned int col) const;
+	 maxValInCol(UInt col) const;
 	virtual void
 	 randomize(T min, T max);
 	void
 	 sortRows();
 	void
-	 sortRows(const unsigned int iCol, const unsigned int lCol);
-	unsigned int
+	 sortRows(const UInt iCol, const UInt lCol);
+	UInt
 	 findFirstOcurrenceInColumns(
 	  const T* vec,
-	  const unsigned int col,
-	  const unsigned int vecSize) const;
+	  const UInt col,
+	  const UInt vecSize) const;
 	bool
 	 isSquare() const;
 	bool
 	 isSymmetric() const;
 	vector<T>
-	 cpRowToVector(const unsigned int row) const;
+	 cpRowToVector(const UInt row) const;
 	virtual void
 	 printInfo() const = 0;
 protected:
 	void
 	 internalInvert();
 	bool
-	 isEQ(const T* x1, const T* x2, const unsigned int vS) const;
+	 isEQ(const T* x1, const T* x2, const UInt vS) const;
 	bool
-	 isGEQ(const T* x1, const T* x2, const unsigned int vS) const;
+	 isGEQ(const T* x1, const T* x2, const UInt vS) const;
 	bool
-	 isLEQ(const T* x1, const T* x2, const unsigned int vS) const;
+	 isLEQ(const T* x1, const T* x2, const UInt vS) const;
 private:
 	void
-	 QSRows(long p, long r,
-	  const unsigned int iCol, const unsigned int lCol);
-	long
-	 partitionRows(long p, long r,
-	  const unsigned int iCol, const unsigned int lCol);
-	unsigned int
+	 QSRows(Int p, Int r,
+	  const UInt iCol, const UInt lCol);
+	Int
+	 partitionRows(Int p, Int r,
+	  const UInt iCol, const UInt lCol);
+	UInt
 	 binarySearch(
 	  const T* key,
-	  const unsigned int col,
-	  const unsigned int vecSize,
-	  unsigned int imin,
-	  unsigned int imax) const;
+	  const UInt col,
+	  const UInt vecSize,
+	  UInt imin,
+	  UInt imax) const;
 	void
-	 factorizeLU(int pivot[]);
+	 factorizeLU(Int pivot[]);
 	void
-	 invertFactorized(const int pivot[]);
+	 invertFactorized(const Int pivot[]);
 };
 
 #include "MathMatrix.hpp"

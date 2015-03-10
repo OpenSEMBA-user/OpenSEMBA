@@ -14,58 +14,58 @@ Simplex::~Simplex() {
 
 }
  
-const Polynomial<double>&
-Simplex::getLagr(const unsigned int i) const {
+const Polynomial<Real>&
+Simplex::getLagr(const UInt i) const {
 	exit(SIMPLEX_ERROR);
 }
  
-const Polynomial<double>&
-Simplex::getDLagr(const unsigned int i, const unsigned int f) const {
+const Polynomial<Real>&
+Simplex::getDLagr(const UInt i, const UInt f) const {
 	exit(SIMPLEX_ERROR);
 }
  
-double
-Simplex::getCda(unsigned int i, unsigned int j, unsigned int k) const {
+Real
+Simplex::getCda(UInt i, UInt j, UInt k) const {
 	exit(SIMPLEX_ERROR);
 }
  
-inline unsigned int
-Simplex::nodeIndex(unsigned int i, unsigned int j) const {
+inline UInt
+Simplex::nodeIndex(UInt i, UInt j) const {
 	exit(SIMPLEX_ERROR);
 }
  
-inline unsigned int
-Simplex::cubatureNodeIndex(unsigned int i, unsigned int j) const {
+inline UInt
+Simplex::cubatureNodeIndex(UInt i, UInt j) const {
 	exit(SIMPLEX_ERROR);
 }
  
-unsigned int
-Simplex::factorial(unsigned int n) const {
+UInt
+Simplex::factorial(UInt n) const {
 	return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
  
-Polynomial<double>
-Simplex::silvesterPol(const unsigned int m, const unsigned int n) const {
+Polynomial<Real>
+Simplex::silvesterPol(const UInt m, const UInt n) const {
     // Purpose: Generates coefficients of the R polynomial as are defined in
 	// Sylvester's book page 130. These polynomials have m equispace zeros to
 	// the left of m/n and none to the right. These are necessary to build
 	// Lagrange's polynomial.
-   	// Inputs:  Through arguments: Family member int number "m". From Simplex
+   	// Inputs:  Through arguments: Family member Int number "m". From Simplex
 	// class: Simplex order "N".
-	Polynomial<double> res(1);
+	Polynomial<Real> res(1);
 	res.addMonomial(1.0, 0);
 	if (m != 0) {
 		// Computes polynomial product.
-		for (int k = 0 ; k < int(m); k++) {
-			Polynomial<double> aux(1);
-			aux.addMonomial(double(-k), 0);
-			aux.addMonomial(double(n), 1);
+		for (Int k = 0 ; k < Int(m); k++) {
+			Polynomial<Real> aux(1);
+			aux.addMonomial(Real(-k), 0);
+			aux.addMonomial(Real(n), 1);
 			aux.removeZeros();
 			res *= aux;
 		}
 		// Computes factorial and divides by it.
-		double fact = 1.0;
-		for (unsigned int k = 1; k <= m; k++)
+		Real fact = 1.0;
+		for (UInt k = 1; k <= m; k++)
 			fact *= k;
 		res /= fact;
 	}
@@ -74,18 +74,18 @@ Simplex::silvesterPol(const unsigned int m, const unsigned int n) const {
  
 void
 Simplex::lagrangePolynomials(
- Polynomial<double>* res,
- const unsigned int n,
- const unsigned int np,
- const unsigned int nsc) const {
+ Polynomial<Real>* res,
+ const UInt n,
+ const UInt np,
+ const UInt nsc) const {
 	// Computes Sylvester's polynomials.
-	Polynomial<double> pol[n+1];
-	for (unsigned int i = 0; i < (n+1); i++) {
+	Polynomial<Real> pol[n+1];
+	for (UInt i = 0; i < (n+1); i++) {
 		pol[i] = silvesterPol(i,n);
 	}
 	// Computes Lagrange's polynomials.
-	for (unsigned int i = 0; i < np; i++) {
-		for (unsigned int j = 0; j < nsc; j++) {
+	for (UInt i = 0; i < np; i++) {
+		for (UInt j = 0; j < nsc; j++) {
 			if (j == 0) {
 				res[i] = pol[nodeIndex(i,j)];
 			} else {
@@ -97,36 +97,36 @@ Simplex::lagrangePolynomials(
  
 void
 Simplex::cubatureLagrangePolynomials(
- Polynomial<double>* res,
- const unsigned int n,
- const unsigned int np,
- const unsigned int nsc) const {
+ Polynomial<Real>* res,
+ const UInt n,
+ const UInt np,
+ const UInt nsc) const {
 	// Computes Sylvester's polynomials.
-	Polynomial<double> pol[10+1];
-	for (unsigned int i = 0; i < (n+1); i++)
+	Polynomial<Real> pol[10+1];
+	for (UInt i = 0; i < (n+1); i++)
 		pol[i] = silvesterPol(i,n);
 	// Computes Lagrange's polynomials.
-	for (unsigned int i = 0; i < np; i++)
-		for (unsigned int j = 0; j < nsc; j++)
+	for (UInt i = 0; i < np; i++)
+		for (UInt j = 0; j < nsc; j++)
 			if (j == 0)
 				res[i] = pol[cubatureNodeIndex(i,j)];
 			else
 				res[i] ^= pol[cubatureNodeIndex(i,j)];
 }
  
-double
+Real
 Simplex::integrate(
-  const Polynomial<double> pol,
-  const unsigned int dim,
-  const double sizeFactor) const {
+  const Polynomial<Real> pol,
+  const UInt dim,
+  const Real sizeFactor) const {
 	assert(pol.numberOfVariables() == dim + 1);
-	unsigned int nsc = dim + 1;
-	double sum = 0.0;
-	double auxNum, auxDen;
-	for (unsigned int i = 0; i < pol.numberOfMonomials(); i++) {
+	UInt nsc = dim + 1;
+	Real sum = 0.0;
+	Real auxNum, auxDen;
+	for (UInt i = 0; i < pol.numberOfMonomials(); i++) {
 		auxNum = pol.monomialValue(i);
 		auxDen = 0.0;
-		for (unsigned int j = 0; j < nsc; j++) {
+		for (UInt j = 0; j < nsc; j++) {
 			auxNum *= factorial(pol.monomialPower(i,j));
 			auxDen += pol.monomialPower(i,j);
 		}

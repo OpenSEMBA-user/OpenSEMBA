@@ -8,7 +8,7 @@
 #include "PMVolume.h"
 
 PMVolume::PMVolume(const MatId id, const string name,
-        const double rEps, const double rMu) : PhysicalModel(id, name) {
+        const Real rEps, const Real rMu) : PhysicalModel(id, name) {
 	rEps_ = rEps;
 	rMu_ =  rMu;
 }
@@ -21,34 +21,34 @@ ClassBase* PMVolume::clone() const {
    return new PMVolume(*this);
 }
 
-double PMVolume::getImpedance() const {
+Real PMVolume::getImpedance() const {
     if (rEps_ <= 0.0) {
-        return numeric_limits<double>::infinity();
+        return numeric_limits<Real>::infinity();
     }
     return sqrt((rMu_ * Constants::mu0) / (rEps_ * Constants::eps0));
 }
 
-double PMVolume::getAdmitance() const {
+Real PMVolume::getAdmitance() const {
     if (rMu_ <= 0.0) {
-        return numeric_limits<double>::infinity();
+        return numeric_limits<Real>::infinity();
     }
     return (1.0 / getImpedance());
 }
 
-inline double PMVolume::getRelativePermittivity() const {
+inline Real PMVolume::getRelativePermittivity() const {
     return rEps_;
 }
 
-inline double PMVolume::getRelativePermeability() const {
+inline Real PMVolume::getRelativePermeability() const {
     return rMu_;
 }
 
-inline double PMVolume::getElectricConductivity() const {
-    return (double) (0.0);
+inline Real PMVolume::getElectricConductivity() const {
+    return (Real) (0.0);
 }
 
-inline double PMVolume::getMagneticConductivity() const {
-    return (double) (0.0);
+inline Real PMVolume::getMagneticConductivity() const {
+    return (Real) (0.0);
 }
 
 inline bool PMVolume::isVacuum() const {
@@ -80,10 +80,10 @@ PMVolume::printInfo() const {
 	cout << "Type: " << "Classical material" << endl;
 }
 
-double PMVolume::getPermittivity() const {
+Real PMVolume::getPermittivity() const {
     return (rEps_ * Constants::eps0);
 }
 
-double PMVolume::getPermeability() const {
+Real PMVolume::getPermeability() const {
     return (rMu_ * Constants::mu0);
 }

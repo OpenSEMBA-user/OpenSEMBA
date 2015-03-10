@@ -32,9 +32,9 @@ public:
 	 const string& yLabel);
 	virtual ~ResultGraph();
    virtual void write(
-         const double time,
-         const FieldD3& electric,
-         const FieldD3& magnetic);
+         const Real time,
+         const FieldR3& electric,
+         const FieldR3& magnetic);
 private:
    ofstream file_;
 };

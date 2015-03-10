@@ -55,8 +55,8 @@ public:
 private:
     void getDirection(
             PMVolumePML::Direction direction[3],
-            const uint i) const;
-    PMVolumePML::Direction getDirectionFromInt(const uint i) const;
+            const UInt i) const;
+    PMVolumePML::Direction getDirectionFromInt(const UInt i) const;
 };
 
 #include "PhysicalModelGroup.hpp"

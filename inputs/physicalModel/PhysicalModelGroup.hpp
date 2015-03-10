@@ -18,7 +18,7 @@ void
 PhysicalModelGroup<P>::printInfo() const {
     cout << "---- Physical Models ----" << endl;
     cout << "Number of physical models: " << this->size() << endl;
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         this->element_[i]->printInfo();
     }
 }
@@ -27,7 +27,7 @@ template<typename P>
 void
 PhysicalModelGroup<P>::getDirection(
         PMVolumePML::Direction direction[3],
-        const uint i) const {
+        const UInt i) const {
     assert(i < PMVolumePML::possibleDirections);
     direction[x] = getDirectionFromInt((i/9) % 3);
     direction[y] = getDirectionFromInt((i/3) % 3);
@@ -40,7 +40,7 @@ PhysicalModelGroup<P>::getDirection(
 template<typename P>
 PMVolumePML::Direction
 PhysicalModelGroup<P>::getDirectionFromInt(
-        const uint i) const {
+        const UInt i) const {
     assert(PMVolumePML::plus == 0);
     assert(PMVolumePML::minus == 1);
     assert(PMVolumePML::none == 2);
@@ -60,7 +60,7 @@ template<typename P>
 vector<MatId>
 PhysicalModelGroup<P>::getIds(const Condition::Type type) const {
     vector<MatId> res;
-    for (uint i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getConditionType() == type || type == Condition::undefined) {
             res.push_back(this->element_[i]->getId());
         }

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-typedef unsigned int uint;
+#include "Types.h"
 
 template<typename T>
 class Group {
@@ -19,9 +19,10 @@ public:
 
     Group<T>& operator=(const Group<T>& rhs);
 
-    unsigned size() const { return element_.size(); }
+    UInt size() const { return element_.size(); }
 
-    const T* operator()(const unsigned i) const;
+    T*       operator()(const UInt i);
+    const T* operator()(const UInt i) const;
 
     template<class T2>
     Group<T2> newGroupOf() const;
@@ -33,7 +34,7 @@ public:
     vector<const T2*> getVectorOf() const;
     
     template<class T2>
-    unsigned sizeOf() const;
+    UInt sizeOf() const;
 
     virtual void add(T* newElem);
     virtual void add(vector<T*>&);

@@ -16,25 +16,25 @@ public:
    PMSurfaceMultilayer(
          const MatId id,
          const string& name,
-         const vector<double>& thickness,
-         const vector<double>& relPermittivity,
-         const vector<double>& relPermeability,
-         const vector<double>& elecCond,
-         const vector<double>& magnCond);
+         const vector<Real>& thickness,
+         const vector<Real>& relPermittivity,
+         const vector<Real>& relPermeability,
+         const vector<Real>& elecCond,
+         const vector<Real>& magnCond);
 
    ClassBase* clone() const;
 
-   uint getNumberOfLayers() const;
-   string printLayer(const uint i) const;
-   double getThickness(const uint i) const;
-   double getPermittivity(const uint i) const;
-   double getPermeability(const uint i) const;
-   double getElecCond(const uint i) const;
-   double getMagnCond(const uint i) const;
+   UInt getNumberOfLayers() const;
+   string printLayer(const UInt i) const;
+   Real getThickness(const UInt i) const;
+   Real getPermittivity(const UInt i) const;
+   Real getPermeability(const UInt i) const;
+   Real getElecCond(const UInt i) const;
+   Real getMagnCond(const UInt i) const;
 
    void printInfo() const;
 private:
-   vector<double>
+   vector<Real>
     thickness_, relPermittivity_, relPermeability_, elecCond_, magnCond_;
 };
 

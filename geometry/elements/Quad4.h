@@ -23,25 +23,25 @@ public:
     
 	ClassBase* clone() const;
     
-	uint numberOfCoordinates() const { return 4; }
+	UInt numberOfCoordinates() const { return 4; }
     
-	uint numberOfSideCoordinates(const uint f = 0) const { return 2; }
+	UInt numberOfSideCoordinates(const UInt f = 0) const { return 2; }
 	
-    const CoordD3* getV    (const uint i) const { return v_[i]; }
-	const CoordD3* getSideV(const uint f,
-                            const uint i) const;
+    const CoordR3* getV    (const UInt i) const { return v_[i]; }
+	const CoordR3* getSideV(const UInt f,
+                            const UInt i) const;
     
-	const CoordD3* getVertex    (const uint i) const;
-	const CoordD3* getSideVertex(const uint f,
-                                 const uint i) const;
+	const CoordR3* getVertex    (const UInt i) const;
+	const CoordR3* getSideVertex(const UInt f,
+                                 const UInt i) const;
     
-    void setV(const uint i, const CoordD3*);
+    void setV(const UInt i, const CoordR3*);
     
 	void printInfo() const;
 	void check() const;
 
 private:
-	const CoordD3* v_[4];
+	const CoordR3* v_[4];
 };
 
 #endif /* QUAD4_H_ */

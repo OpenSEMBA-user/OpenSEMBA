@@ -21,36 +21,36 @@ protected:
             const string& tName,
             GiD_Dimension dim,
             GiD_ElementType elementType,
-            int nNode,
-            const CVecD3& ColorRGB = CVecD3()) const;
+            Int nNode,
+            const CVecR3& ColorRGB = CVecR3()) const;
     void beginResult(
             const string& fieldName,
             const string& timeName,
-            const double time,
+            const Real time,
             GiD_ResultType resultType,
             GiD_ResultLocation resultLocaltion,
             const string gaussPointType,
             const vector<string>& componentsNames) const;
     void flushPostFile() const;
 protected:
-    static int coordCounter_;
-    static int elemCounter_;
-    static const CVecD3 pecColor, pmcColor, smaColor, pmlColor,
+    static Int coordCounter_;
+    static Int elemCounter_;
+    static const CVecR3 pecColor, pmcColor, smaColor, pmlColor,
      sibcColor, emSourceColor;
     static string makeValid(string name);
     void beginCoordinates() const;
     void writeGaussPoints() const;
-    void writeCoordinates(const uint id, const CVecD3 pos) const;
-    void writeCoordinates(const vector<CVecD3>& pos);
+    void writeCoordinates(const UInt id, const CVecR3 pos) const;
+    void writeCoordinates(const vector<CVecR3>& pos);
     void endCoordinates() const;
     void beginElements() const;
-    void writeElement(int elemId, int nId[]) const;
+    void writeElement(Int elemId, int nId[]) const;
     void endElements() const;
     void endMesh() const;
     GiD_ResultType getGiDResultType(OutRq::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
 private:
-    static int numberOfOutputGiD_;
+    static Int numberOfOutputGiD_;
     GiD_FILE meshFile_;
     GiD_FILE resultFile_;
     GiD_PostMode mode_;

@@ -24,31 +24,31 @@ public:
     Element(const Element& rhs);
     virtual ~Element();
 
-    bool isCoordinate(const CoordD3* coord) const;
+    bool isCoordinate(const CoordR3* coord) const;
 
-    virtual bool isInnerPoint(const CVecD3& pos) const;
+    virtual bool isInnerPoint(const CVecR3& pos) const;
 
-    virtual const CoordD3* getV    (const uint i) const = 0;
-    virtual const CoordD3* getSideV(const uint f,
-            const uint i) const = 0;
+    virtual const CoordR3* getV    (const UInt i) const = 0;
+    virtual const CoordR3* getSideV(const UInt f,
+            const UInt i) const = 0;
 
-    virtual const CoordD3* getVertex    (const uint i) const = 0;
-    virtual const CoordD3* getSideVertex(const uint f,
-            const uint i) const = 0;
+    virtual const CoordR3* getVertex    (const UInt i) const = 0;
+    virtual const CoordR3* getSideVertex(const UInt f,
+            const UInt i) const = 0;
 
-    BoxD3 getBound() const;
+    BoxR3 getBound() const;
     // Returns ptr to coord with min(max) lexicographical position.
-    virtual const CoordD3* getMinV() const;
-    virtual const CoordD3* getMaxV() const;
+    virtual const CoordR3* getMinV() const;
+    virtual const CoordR3* getMaxV() const;
 
-    virtual void setV(const uint i, const CoordD3*);
+    virtual void setV(const UInt i, const CoordR3*);
 
     virtual void printInfo() const;
 
 protected:
-    static const double tolerance;
+    static const Real tolerance;
 
-    void ascendingOrder(uint nVal, uint* val) const;
+    void ascendingOrder(UInt nVal, UInt* val) const;
 };
 
 #endif

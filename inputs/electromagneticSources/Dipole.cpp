@@ -13,9 +13,9 @@
 
 Dipole::Dipole(
  vector<ElementId> elem,
- double length,
- CVecD3 orientation,
- CVecD3 position,
+ Real length,
+ CVecR3 orientation,
+ CVecR3 position,
  const MagnitudeGaussian* magnitude) : EMSource(elem, magnitude) {
 	length_ = length;
 	orientation_ = orientation;

@@ -20,10 +20,10 @@ public:
     Quad(const Quad& rhs);
     virtual ~Quad();
     
-	uint numberOfFaces   () const { return 4; }
-	uint numberOfVertices() const { return 4; }
+	UInt numberOfFaces   () const { return 4; }
+	UInt numberOfVertices() const { return 4; }
     
-	uint numberOfSideVertices(const uint f = 0) const { return 2; }
+	UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
 };
 
 #endif /* QUAD4_H_ */

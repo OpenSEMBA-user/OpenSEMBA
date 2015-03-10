@@ -18,14 +18,14 @@ public:
          const Tri* localSurf, pair<const Tet*, const Tet*>);
    MapSurface&
    operator=(const MapSurface& rhs);
-   unsigned int
+   UInt
    getLocalId() const {return local->getId();}
-   unsigned int
-    getVolToF(unsigned int f) const;
+   UInt
+    getVolToF(UInt f) const;
    const Tet*
-    getVol(unsigned int f) const {return vol[f];}
+    getVol(UInt f) const {return vol[f];}
    void
-    reassignPointers(const ElementsGroup& nEG);
+    reassignPointers(const ElementsGroup<>& nEG);
    bool
     isBoundary() const;
    void
@@ -33,7 +33,7 @@ public:
 private:
    const Tri* local;
    const Tet* vol[2];
-   uint volToF[2];
+   UInt volToF[2];
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MAPSURFACE_H_ */

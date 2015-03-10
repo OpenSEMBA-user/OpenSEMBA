@@ -1,124 +1,124 @@
 #include "StaMatrix.h"
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>::StaMatrix() {
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++) {
+   for (UInt i = 0; i < NROWS*NCOLS; i++) {
       _val[i] = T(0);
    }
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>::StaMatrix(
  const StaMatrix<T,NROWS,NCOLS>& param) {
-   unsigned int nRnC = NROWS * NCOLS;
-   for (unsigned int i = 0; i < nRnC; i++) {
+   UInt nRnC = NROWS * NCOLS;
+   for (UInt i = 0; i < nRnC; i++) {
       _val[i] = (T) param._val[i];
    }
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>::~StaMatrix() {
 }
 // =-=-=-=-=-=-=-= General methods =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
 StaMatrix<T,NROWS,NCOLS>::operator=(
  const StaMatrix<T,NROWS,NCOLS>& param) {
    if (this == &param)
       return *this;
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++)
+   for (UInt i = 0; i < NROWS*NCOLS; i++)
       _val[i] = param._val[i];
    return *this;
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 inline T
-StaMatrix<T,NROWS,NCOLS>::val(const unsigned int i) const {
+StaMatrix<T,NROWS,NCOLS>::val(const UInt i) const {
    return _val[i];
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 inline T&
-StaMatrix<T,NROWS,NCOLS>::val(const unsigned int i) {
+StaMatrix<T,NROWS,NCOLS>::val(const UInt i) {
    return _val[i];
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 inline T
-StaMatrix<T,NROWS,NCOLS>::val(const unsigned int row, const unsigned int col) const {
+StaMatrix<T,NROWS,NCOLS>::val(const UInt row, const UInt col) const {
    return _val[row * NCOLS + col];
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 inline T&
-StaMatrix<T,NROWS,NCOLS>::val(const unsigned int row, const unsigned int col) {
+StaMatrix<T,NROWS,NCOLS>::val(const UInt row, const UInt col) {
    return _val[row * NCOLS + col];
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 inline const T*
 StaMatrix<T,NROWS,NCOLS>::val() const {
    return _val;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 inline T
 StaMatrix<T,NROWS,NCOLS>::operator()(
- const unsigned int row,
- const unsigned int col) const {
+ const UInt row,
+ const UInt col) const {
    return _val[row * NCOLS + col];
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 inline T&
-StaMatrix<T,NROWS,NCOLS>::operator()(const unsigned int row, const unsigned int col) {
+StaMatrix<T,NROWS,NCOLS>::operator()(const UInt row, const UInt col) {
    return _val[row * NCOLS + col];
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
 StaMatrix<T,NROWS,NCOLS>::assign(
- const StaMatrix<int,NROWS,NCOLS>& param) {
-   for (unsigned int i = 0; i < NROWS; i++) {
-      for (unsigned int j = 0; j < NCOLS; j++) {
+ const StaMatrix<Int,NROWS,NCOLS>& param) {
+   for (UInt i = 0; i < NROWS; i++) {
+      for (UInt j = 0; j < NCOLS; j++) {
          val(i,j) = param(i,j);
       }
    }
    return *this;
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
-StaMatrix<T,NROWS,NCOLS>::operator=(const DynMatrix<double>& param) {
+StaMatrix<T,NROWS,NCOLS>::operator=(const DynMatrix<Real>& param) {
    assert(NROWS == param.nRows() && NCOLS == param.nCols());
-   for (unsigned int i = 0; i < NROWS; i++)
-      for (unsigned int j = 0; j < NCOLS; j++)
+   for (UInt i = 0; i < NROWS; i++)
+      for (UInt j = 0; j < NCOLS; j++)
          val(i,j) = param(i,j);
    return *this;
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 void
 StaMatrix<T,NROWS,NCOLS>::printInfo() const {
    printInfo(NROWS, NCOLS);
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 inline StaMatrix<T, NROWS, NCOLS>
 StaMatrix<T,NROWS,NCOLS>::operator +(
       StaMatrix<T, NROWS, NCOLS>& param) const {
    StaMatrix<T,NROWS,NCOLS> res;
-   unsigned int n = NROWS*NCOLS;
-   for (unsigned int i = 0; i < n; i++) {
+   UInt n = NROWS*NCOLS;
+   for (UInt i = 0; i < n; i++) {
       res._val[i] = _val[i] + param._val[i];
    }
    return res;
 }
 
-template <class T, unsigned int NROWS, unsigned int NCOLS>
+template <class T, UInt NROWS, UInt NCOLS>
 void
-StaMatrix<T,NROWS,NCOLS>::printInfo(unsigned int rows, unsigned int cols) const {
-   unsigned int i, j;
+StaMatrix<T,NROWS,NCOLS>::printInfo(UInt rows, UInt cols) const {
+   UInt i, j;
    if (rows > NROWS || cols > NCOLS) {
       cerr << "ERROR: Unable print more rows or cols than available" << endl;
       cerr << "Terminating."                                         << endl;
@@ -134,97 +134,97 @@ StaMatrix<T,NROWS,NCOLS>::printInfo(unsigned int rows, unsigned int cols) const 
    }
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NCOLS,NROWS>&
 StaMatrix<T,NROWS,NCOLS>::invert() {
    this->internalInvert();
    return *this;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
-inline unsigned int
+template<class T, UInt NROWS, UInt NCOLS>
+inline UInt
 StaMatrix<T,NROWS,NCOLS>::nCols() const {
    return NCOLS;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
-inline unsigned int
+template<class T, UInt NROWS, UInt NCOLS>
+inline UInt
 StaMatrix<T,NROWS,NCOLS>::nRows() const {
    return NROWS;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NCOLS,NROWS>
 StaMatrix<T,NROWS,NCOLS>::transpose() {
    StaMatrix<T,NCOLS,NROWS> res;
-   for (unsigned int i = 0; i < NROWS; i++) {
-      for (unsigned int j = 0; j < NCOLS; j++) {
+   for (UInt i = 0; i < NROWS; i++) {
+      for (UInt j = 0; j < NCOLS; j++) {
          res(j,i) = val(i,j);
       }
    }
    return res;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
-StaMatrix<T,NROWS,NCOLS>::operator+=(const double param) {
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++)
+StaMatrix<T,NROWS,NCOLS>::operator+=(const Real param) {
+   for (UInt i = 0; i < NROWS*NCOLS; i++)
       _val[i] += param;
    return *this;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
 StaMatrix<T,NROWS,NCOLS>::operator+=(
  const StaMatrix<T,NROWS,NCOLS>& param) {
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++) {
+   for (UInt i = 0; i < NROWS*NCOLS; i++) {
       _val[i] += param._val[i];
    }
    return *this;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
 StaMatrix<T,NROWS,NCOLS>::operator-=(
  const StaMatrix<T,NROWS,NCOLS>& param) {
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++) {
+   for (UInt i = 0; i < NROWS*NCOLS; i++) {
       _val[i] -= param._val[i];
    }
    return *this;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
 StaMatrix<T,NROWS,NCOLS>::operator*=(const T param) {
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++) {
+   for (UInt i = 0; i < NROWS*NCOLS; i++) {
       _val[i] *= param;
    }
    return *this;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
 StaMatrix<T,NROWS,NCOLS>::operator/=(const T param) {
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++) {
+   for (UInt i = 0; i < NROWS*NCOLS; i++) {
       _val[i] /= param;
    }
    return *this;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>
 StaMatrix<T,NROWS,NCOLS>::operator*(T param) const {
    StaMatrix<T,NROWS,NCOLS> res;
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++)
+   for (UInt i = 0; i < NROWS*NCOLS; i++)
       res._val[i] = _val[i] * param;
    return res;
 }
 
-template<class T, unsigned int NROWS, unsigned NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 bool
 StaMatrix<T,NROWS,NCOLS>::operator==(
  const StaMatrix<T,NROWS,NCOLS>& param) const {
-   for (unsigned int i = 0; i < NROWS*NCOLS; i++) {
+   for (UInt i = 0; i < NROWS*NCOLS; i++) {
       T diff = abs(_val[i] -param._val[i]);
       if (diff > numeric_limits<T>::epsilon() * 1e2) {
          return false;
@@ -233,11 +233,11 @@ StaMatrix<T,NROWS,NCOLS>::operator==(
    return true;
 }
 
-template<class T, unsigned int NROWS, unsigned NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 bool
 StaMatrix<T,NROWS,NCOLS>::operator<(
  const StaMatrix<T,NROWS,NCOLS>& param) const {
-   for (uint i = 0; i < (NROWS*NCOLS); i++) {
+   for (UInt i = 0; i < (NROWS*NCOLS); i++) {
       if (val(i) < param.val(i)) {
          return true;
       }
@@ -248,34 +248,34 @@ StaMatrix<T,NROWS,NCOLS>::operator<(
    return false;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
-StaMatrix<T,NROWS,NCOLS>::operator=(const DynMatrix<int>& rhs) {
+StaMatrix<T,NROWS,NCOLS>::operator=(const DynMatrix<Int>& rhs) {
    assert(NROWS == rhs.nRows() && NCOLS == rhs.nCols());
-   for (unsigned int i = 0; i < NROWS; i++)
-      for (unsigned int j = 0; j < NCOLS; j++)
+   for (UInt i = 0; i < NROWS; i++)
+      for (UInt j = 0; j < NCOLS; j++)
          val(i,j) = (T) rhs(i,j);
    return *this;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 void
 StaMatrix<T,NROWS,NCOLS>::copy(vector<vector<T> > values) {
    assert(NROWS == values.size());
-   for (unsigned int i = 0; i < NROWS; i++) {
+   for (UInt i = 0; i < NROWS; i++) {
       assert(values[i].size() == NCOLS);
-      for (unsigned int j = 0; j < NCOLS; j++) {
+      for (UInt j = 0; j < NCOLS; j++) {
          val(i,j) = values[i][j];
       }
    }
 }
 
 // =============== Not member functions =======================================
-template<class T, class S, unsigned int NROWS, unsigned int NCOLS, unsigned int NCOLSB>
+template<class T, class S, UInt NROWS, UInt NCOLS, UInt NCOLSB>
 StaMatrix<T,NROWS,NCOLSB>
 operator*(const StaMatrix<T,NROWS,NCOLS>& lhs,
           const StaMatrix<S,NCOLS,NCOLSB>& rhs) {
-   unsigned int i, j, k;
+   UInt i, j, k;
    StaMatrix<T,NROWS,NCOLSB> res;
    for (i = 0; i < NROWS; i++) {
       for (k = 0; k < NCOLS; k++) {
@@ -287,11 +287,11 @@ operator*(const StaMatrix<T,NROWS,NCOLS>& lhs,
    return res;
 }
 
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 DynMatrix<T>
 operator*(const StaMatrix<T,NROWS,NCOLS>& lhs, const DynMatrix<T>& rhs) {
    assert(NCOLS == rhs.nRows());
-   unsigned int i, j, k;
+   UInt i, j, k;
    DynMatrix<T> res(NROWS, rhs.nCols());
    for (i = 0; i < NROWS; i++) {
       for (k = 0; k < NCOLS; k++) {

@@ -14,7 +14,7 @@ Arguments::Arguments(const int argc,  const char* argv[]) {
         printHelp();
         abort(EXIT_FAILURE);
     }
-    for (int i = 1; i < argc; i++) {
+    for (Int i = 1; i < argc; i++) {
         string str = *argv++;
         if (!str.compare("-n")) { // "-n" file name
             fileName_ = getArgvpp(++i, argc, *argv++);
@@ -54,10 +54,10 @@ Arguments::printInfo() const {
 
 const char*
 Arguments::getArgvpp(
-        const unsigned int i,
-        const int argc,
+        const UInt i,
+        const Int argc,
         const char* argv) const {
-	if (argc != (int) i) {
+	if (argc != (Int) i) {
 		return argv;
 	} else {
 		printHelp();
@@ -71,7 +71,11 @@ Arguments::getProjectFolder() const {
 	char *cstr = new char[fileName_.length() + 1];
 	strcpy(cstr, fileName_.c_str());
 	string projectDir(dirname(cstr));
-	projectDir += "/";
+#ifdef _WIN32
+   projectDir += "\\";
+#else
+   projectDir += "/";
+#endif
 	delete [] cstr;
 	return projectDir;
 }
@@ -91,7 +95,7 @@ Arguments::getFilename() const {
 }
 
 void
-Arguments::abort(int msg) const {
+Arguments::abort(Int msg) const {
 #ifdef USE_MPI
 	MPI_Finalize();
 #endif
@@ -102,15 +106,15 @@ string
 Arguments::getFileNameFromProjectPath(
  const string str) const {
 	string aux = str;
-	unsigned int found = aux.find_last_of("/\\");
-	while (found + 1 == aux.length() && aux.length() > 1) {
+	UInt found = aux.find_last_of("/\\");
+	while (UInt(found + 1) == aux.length() && aux.length() > 1) {
 		aux = aux.substr(0, found);
 		found = aux.find_last_of("/\\");
 	}
 	string folderName;
 	if (found != string::npos) {
 		folderName = aux.substr(found+1);
-		unsigned int extension = folderName.find(".gid");
+		UInt extension = folderName.find(".gid");
 		if (extension != string::npos) {
 			return folderName.substr(0, extension);
 		} else {

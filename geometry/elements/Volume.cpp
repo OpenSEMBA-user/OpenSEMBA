@@ -29,39 +29,39 @@ Volume::~Volume() {
 
 }
 
-bool Volume::isLocalFace(const uint f, const Surface& surf) const {
+bool Volume::isLocalFace(const UInt f, const Surface& surf) const {
 	return sideNormal(f) == surf.getNormal();
 }
 
-bool Volume::isFaceContainedInPlane(const uint face,
+bool Volume::isFaceContainedInPlane(const UInt face,
                                     const CartesianPlane plane) const {
-   BoxD3 box = getBoundOfFace(face);
-   CVecD3 vec = box.getMax() - box.getMin();
+   BoxR3 box = getBoundOfFace(face);
+   CVecR3 vec = box.getMax() - box.getMin();
    return vec.isContainedInPlane(plane);
 }
 
-CVecD3 Volume::sideNormal(const uint f) const {
-	CartesianVector<double,3> vec1, vec2, res;
+CVecR3 Volume::sideNormal(const UInt f) const {
+	CartesianVector<Real,3> vec1, vec2, res;
 	vec1 = *getSideVertex(f,1) - *getSideVertex(f,0);
 	vec2 = *getSideVertex(f,2) - *getSideVertex(f,0);
 	res = (vec1 ^ vec2).normalize();
 	return res;
 }
 
-BoxD3 Volume::getBoundOfFace(const uint face) const {
-   BoxD3 res;
-   for (uint i = 0; i < numberOfSideCoordinates(); i++) {
+BoxR3 Volume::getBoundOfFace(const UInt face) const {
+   BoxR3 res;
+   for (UInt i = 0; i < numberOfSideCoordinates(); i++) {
       res << getSideV(face,i)->pos();
    }
    return res;
 }
 
-uint Volume::getFaceNumber(const Surface* surf) const {
+UInt Volume::getFaceNumber(const Surface* surf) const {
 	// Checks each face. Order is not important.
-	for (uint f = 0; f < numberOfFaces(); f++) {
-		uint vPresent = 0;
-		for (uint i = 0; i < surf->numberOfVertices(); i++) {
-			for (uint j = 0; j < surf->numberOfVertices(); j++) {
+	for (UInt f = 0; f < numberOfFaces(); f++) {
+		UInt vPresent = 0;
+		for (UInt i = 0; i < surf->numberOfVertices(); i++) {
+			for (UInt j = 0; j < surf->numberOfVertices(); j++) {
 				if (surf->getVertex(j) == getSideVertex(f, i)) {
 					vPresent++;
 				}

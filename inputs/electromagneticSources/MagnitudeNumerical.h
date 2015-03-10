@@ -23,17 +23,17 @@ public:
     MagnitudeNumerical(
             const string& filename,
             const Magnitude* mag,
-            const double timeStep,
-            const double finalTime);
+            const Real timeStep,
+            const Real finalTime);
     MagnitudeNumerical&
      operator=(const MagnitudeNumerical& rhs);
-    virtual double
-     evaluate(const double time) const;
+    virtual Real
+     evaluate(const Real time) const;
     virtual void
      printInfo() const;
 private:
-    map<double,double> value_;
-    static const unsigned int defaultNumberOfSteps = 1e4;
+    map<Real,Real> value_;
+    static const UInt defaultNumberOfSteps = 1e4;
     void initFromFile();
 };
 

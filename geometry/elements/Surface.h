@@ -27,14 +27,14 @@ public:
 	
 	virtual ElementBase::Type getType() const { return surface; }
     
-    virtual CVecD3 getNormal() const;
+    virtual CVecR3 getNormal() const;
 	
     bool isRectangular() const;
 	
     virtual void printInfo() const;
 
 protected:
-	static const double curvatureTolerance;
+	static const Real curvatureTolerance;
 };
 
 #endif /* SURFACE_H_ */

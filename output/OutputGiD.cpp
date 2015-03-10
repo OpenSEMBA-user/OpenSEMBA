@@ -4,16 +4,16 @@
  */
 #include "OutputGiD.h"
 
-int OutputGiD::numberOfOutputGiD_ = 0;
-int OutputGiD::coordCounter_ = 0;
-int OutputGiD::elemCounter_ = 0;
+Int OutputGiD::numberOfOutputGiD_ = 0;
+Int OutputGiD::coordCounter_ = 0;
+Int OutputGiD::elemCounter_ = 0;
 
-const CVecD3 OutputGiD::pecColor(255, 0, 0);
-const CVecD3 OutputGiD::pmcColor(0, 255, 0);
-const CVecD3 OutputGiD::smaColor(0, 0, 255);
-const CVecD3 OutputGiD::pmlColor(0, 0, 255);
-const CVecD3 OutputGiD::sibcColor(100, 0, 100);
-const CVecD3 OutputGiD::emSourceColor(100, 100, 0);
+const CVecR3 OutputGiD::pecColor(255, 0, 0);
+const CVecR3 OutputGiD::pmcColor(0, 255, 0);
+const CVecR3 OutputGiD::smaColor(0, 0, 255);
+const CVecR3 OutputGiD::pmlColor(0, 0, 255);
+const CVecR3 OutputGiD::sibcColor(100, 0, 100);
+const CVecR3 OutputGiD::emSourceColor(100, 100, 0);
 
 OutputGiD::OutputGiD(const string& fn, GiD_PostMode mode) : Output(fn) {
     // Sets default values.
@@ -57,16 +57,16 @@ void OutputGiD::beginMesh(
         const string& name,
         GiD_Dimension dim,
         GiD_ElementType elementType,
-        int nNode,
-        const CVecD3& colorRGB) const {
+        Int nNode,
+        const CVecR3& colorRGB) const {
     char *tName;
     tName = new char[name.length() + 1];
     strcpy(tName, name.c_str());
-    if (colorRGB == CVecD3(0.0, 0.0, 0.0)) {
+    if (colorRGB == CVecR3(0.0, 0.0, 0.0)) {
         GiD_fBeginMesh(meshFile_, tName, dim, elementType, nNode);
     } else {
         GiD_fBeginMeshColor(meshFile_, tName, dim, elementType, nNode,
-                (float) colorRGB(0), (float) colorRGB(1), (float) colorRGB(2));
+                (Real) colorRGB(0), (Real) colorRGB(1), (Real) colorRGB(2));
     }
     delete [] tName;
 }
@@ -74,7 +74,7 @@ void OutputGiD::beginMesh(
 void OutputGiD::beginResult(
         const string& fieldName,
         const string& timeName,
-        const double time,
+        const Real time,
         GiD_ResultType resultType,
         GiD_ResultLocation resultLocaltion,
         const string gaussPointType,
@@ -87,7 +87,7 @@ void OutputGiD::beginResult(
     strcpy(gpType, gaussPointType.c_str());
     vector<string> cNames = componentsNames;
     const char *compv[cNames.size()];
-    for (uint i = 0; i < cNames.size(); i++) {
+    for (UInt i = 0; i < cNames.size(); i++) {
         compv[i] = cNames[i].c_str();
 //        compv[i] = new char[cNames[i].length() + 1];
 //        strcpy(compv[i], cNames[i].c_str());
@@ -134,8 +134,8 @@ OutputGiD::writeGaussPoints() const {
     //        const char* name = "gp_tri";
     //        static const SimplexTri<ORDER_N> tri;
     //        GiD_BeginGaussPoint((char*) name, GiD_Triangle, NULL,tri.np,0,0);
-    //        for (uint i = 0; i < tri.np; i++) {
-    //            CVecD3 pos = tri.coordinate(i);
+    //        for (UInt i = 0; i < tri.np; i++) {
+    //            CVecR3 pos = tri.coordinate(i);
     //            GiD_WriteGaussPoint2D(pos(1), pos(2));
     //        }
     //        GiD_EndGaussPoint();
@@ -144,8 +144,8 @@ OutputGiD::writeGaussPoints() const {
     //        const char* name = "gp_tet";
     //        static const SimplexTet<ORDER_N> tet;
     //        GiD_BeginGaussPoint((char*) name, GiD_Tetrahedra, NULL,tet.np,0,0);
-    //        for (uint i = 0; i < tet.np; i++) {
-    //            CartesianVector<double,4> pos = tet.coordinate(i);
+    //        for (UInt i = 0; i < tet.np; i++) {
+    //            CartesianVector<Real,4> pos = tet.coordinate(i);
     //            GiD_WriteGaussPoint3D(pos(1), pos(2), pos(3));
     //        }
     //        GiD_EndGaussPoint();
@@ -170,19 +170,19 @@ GiD_ResultLocation OutputGiD::getGiDResultLocation() const {
 }
 
 
-void OutputGiD::writeCoordinates(const uint id, const CVecD3 pos) const {
+void OutputGiD::writeCoordinates(const UInt id, const CVecR3 pos) const {
     GiD_fWriteCoordinates(meshFile_, id, pos(x), pos(y), pos(z));
 }
 
-void OutputGiD::writeCoordinates(const vector<CVecD3>& pos)  {
+void OutputGiD::writeCoordinates(const vector<CVecR3>& pos)  {
     GiD_fBeginCoordinates(meshFile_);
-    for (uint i = 0; i < pos.size(); i++) {
+    for (UInt i = 0; i < pos.size(); i++) {
         writeCoordinates(++coordCounter_, pos[i]);
     }
     GiD_fEndCoordinates(meshFile_);
 }
 
-void OutputGiD::writeElement(int elemId, int nId[]) const {
+void OutputGiD::writeElement(Int elemId, int nId[]) const {
     GiD_fWriteElement(meshFile_, elemId, nId);
 }
 

@@ -24,15 +24,15 @@ template<class T>
 class Polynomial {
 public:
 	Polynomial();
-	Polynomial(const unsigned int nvar);
-	unsigned int
+	Polynomial(const UInt nvar);
+	UInt
 	 numberOfVariables() const;
-	unsigned int
+	UInt
 	 numberOfMonomials() const;
 	T
-	 monomialValue(const unsigned int i) const;
-	unsigned int
-	 monomialPower(const unsigned int monomial, const unsigned int variable) const;
+	 monomialValue(const UInt i) const;
+	UInt
+	 monomialPower(const UInt monomial, const UInt variable) const;
 	Polynomial<T>&
 	 operator=(const Polynomial<T> &param);
 	// Products between polynomials assuming variables are the same.
@@ -48,10 +48,10 @@ public:
 	Polynomial<T>&
 	 operator/=(const T param );
 	void
-	 addMonomial(T val, vector<int> pow);
+	 addMonomial(T val, vector<Int> pow);
 	void
-	 addMonomial(T val, int pow);
-	int
+	 addMonomial(T val, Int pow);
+	Int
 	 maxPower() const;
 	T
 	 eval(const CartesianVector<T,1>& pos) const;
@@ -62,9 +62,9 @@ public:
 	T
 	 eval(const CartesianVector<T,4>& pos) const;
 	void
-	 derive(int coord);
+	 derive(Int coord);
 	Polynomial<T>
-	 vectorToPolynomial(T *v,  int sv, int nvar);
+	 vectorToPolynomial(T *v,  Int sv, Int nvar);
 	Polynomial<T>
 	 matrixToPolynomial(const DynMatrix<T> &param) const;
 	DynMatrix<T>
@@ -74,10 +74,10 @@ public:
 	void
 	 printInfo() const;
 protected:
-	unsigned int nv; // Number of variables.
-	unsigned int nm; // Number of monomials.
+	UInt nv; // Number of variables.
+	UInt nm; // Number of monomials.
 	vector<T> mv; // Value of constant monomials coefficients.
-	vector<vector<int> > mp; // nm x nv array, containing powers of monomials.
+	vector<vector<Int> > mp; // nm x nv array, containing powers of monomials.
 };
 // ============================================================================
 #include "Polynomial.hpp"

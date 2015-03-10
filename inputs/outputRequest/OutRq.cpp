@@ -114,7 +114,7 @@ OutRq::isSimilar(const OutRq& rhs) const {
 
 void
 OutRq::setAdditionalElems(const vector<ElementId> elems) {
-	for (uint i = 0; i < elems.size(); i++) {
+	for (UInt i = 0; i < elems.size(); i++) {
 		elem_.push_back(elems[i]);
 	}
 }

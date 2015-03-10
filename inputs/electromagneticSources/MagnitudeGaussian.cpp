@@ -14,9 +14,9 @@ MagnitudeGaussian::MagnitudeGaussian() {
 }
 
 MagnitudeGaussian::MagnitudeGaussian(
-        const double spread,
-        const double delay,
-        const double freq) {
+        const Real spread,
+        const Real delay,
+        const Real freq) {
     spread_ = spread;
     delay_ = delay;
     freq_ = freq;
@@ -26,11 +26,11 @@ MagnitudeGaussian::~MagnitudeGaussian() {
     // TODO Auto-generated destructor stub
 }
 
-double
-MagnitudeGaussian::evaluate(const double time) const {
-    static const double pi = acos(-1.0);
-    static const double sqrt2 = sqrt(2.0);
-    double expArg = (time - delay_) / (spread_ * sqrt2);
+Real
+MagnitudeGaussian::evaluate(const Real time) const {
+    static const Real pi = acos(-1.0);
+    static const Real sqrt2 = sqrt(2.0);
+    Real expArg = (time - delay_) / (spread_ * sqrt2);
     return exp(-expArg * expArg) * cos(freq_ * pi * 2.0 * time);
 }
 
@@ -42,14 +42,14 @@ MagnitudeGaussian::printInfo() const {
     cout << "Frequency: " << freq_ << endl;
 }
 
-double MagnitudeGaussian::getDelay() const {
+Real MagnitudeGaussian::getDelay() const {
    return delay_;
 }
 
-double MagnitudeGaussian::getFreq() const {
+Real MagnitudeGaussian::getFreq() const {
    return freq_;
 }
 
-double MagnitudeGaussian::getSpread() const {
+Real MagnitudeGaussian::getSpread() const {
    return spread_;
 }

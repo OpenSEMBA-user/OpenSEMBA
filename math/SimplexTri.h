@@ -7,87 +7,87 @@
 #include "Polynomial.h"
 // =========== SimplexTri class ===========================================
 namespace {
-template <int SIMPTRI_N>
+template <Int SIMPTRI_N>
 class SimplexTri : public Simplex {
 	#define SIMPTRI_NP ((SIMPTRI_N+1)*(SIMPTRI_N+2)/2)
 	#define SIMPTRI_NFP (SIMPTRI_N+1)
 	#define SIMPTRI_FACES (3)
 public:
-	static const unsigned int faces = 3;
-	static const unsigned int n = SIMPTRI_N;
-	static const unsigned int nsc = 3;
-	static const unsigned int vertices = 3;
-	static const unsigned int np = SIMPTRI_NP;
-	static const unsigned int nfp = SIMPTRI_NFP;
-	static const unsigned int nc = SIMPLEX_CUBATURE_ORDER;
-	static const unsigned int ncp =
+	static const UInt faces = 3;
+	static const UInt n = SIMPTRI_N;
+	static const UInt nsc = 3;
+	static const UInt vertices = 3;
+	static const UInt np = SIMPTRI_NP;
+	static const UInt nfp = SIMPTRI_NFP;
+	static const UInt nc = SIMPLEX_CUBATURE_ORDER;
+	static const UInt ncp =
 	 (SIMPLEX_CUBATURE_ORDER+1)*(SIMPLEX_CUBATURE_ORDER+2)/2;
-	double cw[ncp];
-	CartesianVector<double,nsc> cPos[ncp];
+	Real cw[ncp];
+	CartesianVector<Real,nsc> cPos[ncp];
 	// Rotation and extraction matrices.
-	StaMatrix<int,np,np> P[faces];
-	StaMatrix<int,nfp,np> R[faces];
-	CartesianVector<int,nsc> nId[np];
-	StaMatrix<int,faces,nfp> sNId;
-	Polynomial<double> lagr[np];
-	Polynomial<double> dLagr[np][faces];
+	StaMatrix<Int,np,np> P[faces];
+	StaMatrix<Int,nfp,np> R[faces];
+	CartesianVector<Int,nsc> nId[np];
+	StaMatrix<Int,faces,nfp> sNId;
+	Polynomial<Real> lagr[np];
+	Polynomial<Real> dLagr[np][faces];
 //	// weight: This is the relative weight of a node. Is computed
 //	// integrating over the simplex area. The sum of all must be one.
 //	// Weights can be used to obtain the result of a integral knowing the
 //	// function values on its nodal positions.
-//	double w[np];
-	static const double sizeFactor;
-	static const unsigned int dimension = 2;
-	CartesianVector<int,nsc> cId[ncp];
-	double ca[np][ncp];
-	double cda[np][faces][ncp];
-	StaMatrix<double,np,np> cwaa[ncp];
-	StaMatrix<double,np,np> cwada[ncp][faces];
+//	Real w[np];
+	static const Real sizeFactor;
+	static const UInt dimension = 2;
+	CartesianVector<Int,nsc> cId[ncp];
+	Real ca[np][ncp];
+	Real cda[np][faces][ncp];
+	StaMatrix<Real,np,np> cwaa[ncp];
+	StaMatrix<Real,np,np> cwada[ncp][faces];
 	SimplexTri();
-	unsigned int
-	 vertex(const unsigned int) const;
-	unsigned int
-	 sideVertex(const unsigned int f, const unsigned int i) const;
-	unsigned int
-	 nodeIndex(const unsigned int i, const unsigned int j) const;
-	unsigned int
-	 cubatureNodeIndex(const unsigned int i, const unsigned int j) const;
-	unsigned int
-	 sideNode(const unsigned int f, const unsigned int i) const;
-	CartesianVector<double,3>
-	 coordinate(const unsigned int i) const;
-	const Polynomial<double>&
-	 getLagr(const unsigned int i) const;
-	const Polynomial<double>&
-	 getDLagr(const unsigned int i, const unsigned int f) const;
-	StaMatrix<double,SIMPTRI_NP,SIMPTRI_NP>
+	UInt
+	 vertex(const UInt) const;
+	UInt
+	 sideVertex(const UInt f, const UInt i) const;
+	UInt
+	 nodeIndex(const UInt i, const UInt j) const;
+	UInt
+	 cubatureNodeIndex(const UInt i, const UInt j) const;
+	UInt
+	 sideNode(const UInt f, const UInt i) const;
+	CartesianVector<Real,3>
+	 coordinate(const UInt i) const;
+	const Polynomial<Real>&
+	 getLagr(const UInt i) const;
+	const Polynomial<Real>&
+	 getDLagr(const UInt i, const UInt f) const;
+	StaMatrix<Real,SIMPTRI_NP,SIMPTRI_NP>
 	 getMassMatrix() const;
-	DynMatrix<int>
-	 PMatrix(const unsigned int n, const unsigned int s) const;
+	DynMatrix<Int>
+	 PMatrix(const UInt n, const UInt s) const;
 	void
 	 printInfo() const;
 private:
-	unsigned int
-	 numberOfNodes(const unsigned int order) const;
-	StaMatrix<int,SIMPTRI_NFP,SIMPTRI_NP>
-	 RMatrix(const unsigned int s) const;
+	UInt
+	 numberOfNodes(const UInt order) const;
+	StaMatrix<Int,SIMPTRI_NFP,SIMPTRI_NP>
+	 RMatrix(const UInt s) const;
 	void
 	 buildNodeIndices(
-	  CartesianVector<int,nsc> *res,
-	  const unsigned int order,
-	  const unsigned int nNodes) const;
+	  CartesianVector<Int,nsc> *res,
+	  const UInt order,
+	  const UInt nNodes) const;
 	void
 	 buildSideNodeIndices();
-	int
-	 numberOfNodes(int order) const ;
+	Int
+	 numberOfNodes(Int order) const ;
 	void
 	 buildCubaturePositionsAndWeights();
 	void
 	 buildCubatureLagrange();;
 };
 
-template <int SIMPTRI_N>
-const double SimplexTri<SIMPTRI_N>::sizeFactor = 1.0 / 2.0;
+template <Int SIMPTRI_N>
+const Real SimplexTri<SIMPTRI_N>::sizeFactor = 1.0 / 2.0;
 
 #include "SimplexTri.hpp"
 }

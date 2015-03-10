@@ -15,8 +15,6 @@
 
 using namespace std;
 
-typedef unsigned int uint;
-
 class MesherOptions : public Options {
 public:
     typedef enum {
@@ -42,7 +40,7 @@ public:
     MesherOptions(
             Mesher mesher,
             bool locationInMeshSet,
-            CVecD3 locationInMesh,
+            CVecR3 locationInMesh,
             bool bruteForceVolumes,
             Mode mode,
             bool effectiveParameter,
@@ -56,7 +54,7 @@ public:
     Mesher getMesher() const;
 
     void setMesher(Mesher mesher);
-    virtual const CVecD3& getLocationInMesh() const;
+    virtual const CVecR3& getLocationInMesh() const;
     virtual bool isLocationInMeshSet() const;
     Mode getMode() const;
     void setMode(Mode mode);
@@ -80,20 +78,20 @@ public:
     void setScaleFactorValue(const string& scaleFactorValue);
     string getSWFForce() const;
     void setSwfForze(const string& swfForze);
-    void setLocationInMesh(const CVecD3& locationInMesh);
+    void setLocationInMesh(const CVecR3& locationInMesh);
     const string& getMeshOutputName() const;
     void setConfOutput(const string& confOutput);
 
-    const pair<CVecD3, CVecD3>& getBoundaryMeshSize() const;
-    void setBoundaryMeshSize(const pair<CVecD3, CVecD3>& boundaryMeshSize);
-    const pair<CVecD3, CVecD3>& getBoundaryPadding() const;
-    void setBoundaryPadding(const pair<CVecD3, CVecD3>& boundaryPadding);
-    double getScalingFactor() const;
-    void setScalingFactor(double scalingFactor);
-    pair<BoundType,BoundType> getBoundTermination(const uint i) const;
-    void setBoundTermination(const uint i, uint j, BoundType bound);
+    const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
+    void setBoundaryMeshSize(const pair<CVecR3, CVecR3>& boundaryMeshSize);
+    const pair<CVecR3, CVecR3>& getBoundaryPadding() const;
+    void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
+    Real getScalingFactor() const;
+    void setScalingFactor(Real scalingFactor);
+    pair<BoundType,BoundType> getBoundTermination(const UInt i) const;
+    void setBoundTermination(const UInt i, UInt j, BoundType bound);
 
-    void applyGeometricScalingFactor(const double& factor);
+    void applyGeometricScalingFactor(const Real& factor);
     virtual void printInfo() const;
 
 private:
@@ -108,12 +106,12 @@ private:
     string scaleFactorValue_;
     string swfForze_;
     bool locationInMeshSet_;
-    CVecD3 locationInMesh_;
+    CVecR3 locationInMesh_;
     string confOutput_;
 
-    double scalingFactor_;
+    Real scalingFactor_;
     pair<BoundType,BoundType> boundTermination_[3];
-    pair<CVecD3,CVecD3> boundaryPadding_, boundaryMeshSize_;
+    pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
     string toStr(const BoundType) const;
 };
 

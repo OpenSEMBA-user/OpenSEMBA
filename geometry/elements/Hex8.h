@@ -20,8 +20,8 @@ public:
          const MatId   matId   = MatId(0));
     Hex8(const CoordinateGroup<>&,
          const ElementId id,
-         const CVecD3& min,
-         const CVecD3& max,
+         const CVecR3& min,
+         const CVecR3& max,
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
     Hex8(const Hex8& rhs);
@@ -31,30 +31,30 @@ public:
 
     bool isRegular() const;
     inline bool isQuadratic() const { return false; }
-    inline bool isCurvedFace(const uint f) const { return false; }
+    inline bool isCurvedFace(const UInt f) const { return false; }
 
-    inline uint numberOfFaces      () const { return 6; }
-    inline uint numberOfVertices   () const { return 8; }
-    inline uint numberOfCoordinates() const { return 8; }
+    inline UInt numberOfFaces      () const { return 6; }
+    inline UInt numberOfVertices   () const { return 8; }
+    inline UInt numberOfCoordinates() const { return 8; }
 
-    inline uint numberOfSideVertices   (const uint f = 0) const { return 4; }
-    inline uint numberOfSideCoordinates(const uint f = 0) const { return 4; }
+    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 4; }
+    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 4; }
 
-    const CoordD3* getV    (const uint i) const { return v_[i]; }
-    const CoordD3* getSideV(const uint f, const uint i) const;
+    const CoordR3* getV    (const UInt i) const { return v_[i]; }
+    const CoordR3* getSideV(const UInt f, const UInt i) const;
 
-    const CoordD3* getVertex    (const uint i) const { return v_[i]; }
-    const CoordD3* getSideVertex(const uint f, const uint i) const;
+    const CoordR3* getVertex    (const UInt i) const { return v_[i]; }
+    const CoordR3* getSideVertex(const UInt f, const UInt i) const;
 
-    double getAreaOfFace(const uint face) const;
+    Real getAreaOfFace(const UInt face) const;
 
-    void setV(const uint i, const CoordD3*);
+    void setV(const UInt i, const CoordR3*);
 
     void printInfo() const;
 private:
-    const CoordD3* v_[8];
+    const CoordR3* v_[8];
 
-    const static double tolerance;
+    const static Real tolerance;
 };
 
 #endif /* HEX8_H_ */

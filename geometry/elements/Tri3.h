@@ -12,7 +12,7 @@ public:
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
 	Tri3(const ElementId id,
-         const CoordD3* v[3],
+         const CoordR3* v[3],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
     Tri3(const Tri3& rhs);
@@ -20,25 +20,25 @@ public:
     
 	ClassBase* clone() const;
     
-	uint numberOfCoordinates() const { return 3; }
+	UInt numberOfCoordinates() const { return 3; }
     
-	uint numberOfSideCoordinates(const uint f = 0) const { return 2; }
+	UInt numberOfSideCoordinates(const UInt f = 0) const { return 2; }
     
-	const CoordD3* getV     (const uint i) const {return v_[i];}
-	const CoordD3* getVertex(const uint i) const;
+	const CoordR3* getV     (const UInt i) const {return v_[i];}
+	const CoordR3* getVertex(const UInt i) const;
     
-	const CoordD3* getSideV     (const uint face, const uint i) const;
-	const CoordD3* getSideVertex(const uint face, const uint i) const;
+	const CoordR3* getSideV     (const UInt face, const UInt i) const;
+	const CoordR3* getSideVertex(const UInt face, const UInt i) const;
     
-	double getArea() const;
+	Real getArea() const;
     
-	void getCubatureDifferentials(double  csdf[SimplexTri<1>::ncp]) const;
-	void getCubatureNormals      (CVecD3    cn[SimplexTri<1>::ncp]) const;
-	void getCubatureNodes        (CVecD3 nodes[SimplexTri<1>::ncp]) const;
+	void getCubatureDifferentials(Real  csdf[SimplexTri<1>::ncp]) const;
+	void getCubatureNormals      (CVecR3    cn[SimplexTri<1>::ncp]) const;
+	void getCubatureNodes        (CVecR3 nodes[SimplexTri<1>::ncp]) const;
     
-	void setV(const uint i, const CoordD3*);
+	void setV(const UInt i, const CoordR3*);
     
-	Tri3 linearize() const;
+	Tri3* linearize() const;
     
 	void printInfo() const;
 	
@@ -46,10 +46,10 @@ public:
 
 protected:
 	static const SimplexTri<1> geo;
-	const CoordD3* v_[3];
+	const CoordR3* v_[3];
 	
     void getCubatureTangentsVecProds(
-        CVecD3 csTanVecProd[SimplexTri<1>::ncp]) const;
+        CVecR3 csTanVecProd[SimplexTri<1>::ncp]) const;
 };
 const SimplexTri<1> Tri3::geo;
 

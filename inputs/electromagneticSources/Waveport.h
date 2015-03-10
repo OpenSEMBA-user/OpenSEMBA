@@ -28,7 +28,7 @@ public:
 	        const bool input,
 	        const Shape shape,
 	        const ExcitationMode excMode,
-	        const pair<uint,uint> mode);
+	        const pair<UInt,UInt> mode);
 	virtual ~Waveport();
 
 	virtual ClassBase* clone() const;
@@ -36,12 +36,12 @@ public:
 	void printInfo() const;
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;
-	pair<uint, uint> getMode() const;
+	pair<UInt, UInt> getMode() const;
 private:
 	bool input_;
 	Shape shape_;
 	ExcitationMode excitationMode_;
-	pair<uint,uint> mode_;
+	pair<UInt,UInt> mode_;
 };
 
 #endif /* WAVEPORT_H_ */

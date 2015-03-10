@@ -13,7 +13,7 @@ Waveport::Waveport(
  const bool input,
  const Shape shape,
  const ExcitationMode excMode,
- const pair<unsigned int,unsigned int> mode) : EMSource(elem, magnitude) {
+ const pair<UInt,UInt> mode) : EMSource(elem, magnitude) {
 	input_ = input;
 	shape_ = shape;
 	excitationMode_ = excMode;
@@ -40,7 +40,7 @@ Waveport::getExcitationMode() const {
 }
 
 
-pair<unsigned int, unsigned int>
+pair<UInt, UInt>
 Waveport::getMode() const {
 	return mode_;
 }

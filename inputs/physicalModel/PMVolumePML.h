@@ -28,12 +28,12 @@ public:
 		PMLxyz,
 		undefined
 	} Orientation;
-	static const uint possibleDirections = 26;
+	static const UInt possibleDirections = 26;
 	PMVolumePML(const MatId id, const string& name_);
 	PMVolumePML(
 	 const MatId id,
 	 const Direction direction[3],
-	 const BoxD3& bound);
+	 const BoxR3& bound);
 	~PMVolumePML();
 
     ClassBase* clone() const;
@@ -43,14 +43,14 @@ public:
 	bool isUniaxial() const;
 	bool isBiaxial() const;
 	bool isTriaxial() const;
-	const pair<CVecD3, CVecD3>& getBound() const;
-	CVecD3 getWidth() const;
-	uint getFirstOrientationIndex() const;
-	CVecD3 getPMLBeginningPosition() const;
+	const pair<CVecR3, CVecR3>& getBound() const;
+	CVecR3 getWidth() const;
+	UInt getFirstOrientationIndex() const;
+	CVecR3 getPMLBeginningPosition() const;
 	void printInfo() const;
 private:
 	Direction direction[3];
-	pair<CVecD3,CVecD3> bound;
+	pair<CVecR3,CVecR3> bound;
 };
 
 #endif /* PMVOLUMEPML_H_ */

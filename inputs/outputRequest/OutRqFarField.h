@@ -18,22 +18,22 @@ public:
             const Element::Type elementType,
             const string& name_,
             const vector<ElementId>& box,
-            const double iTh, const double fTh, const double sTh,
-            const double iPhi, const double fPhi, const double sPhi);
-    double getStepPhi() const;
-    double getStepTheta() const;
-    double getFinalPhi() const;
-    double getFinalTheta() const;
-    double getInitialPhi() const;
-    double getInitialTheta() const;
+            const Real iTh, const Real fTh, const Real sTh,
+            const Real iPhi, const Real fPhi, const Real sPhi);
+    Real getStepPhi() const;
+    Real getStepTheta() const;
+    Real getFinalPhi() const;
+    Real getFinalTheta() const;
+    Real getInitialPhi() const;
+    Real getInitialTheta() const;
     bool isSimilar(const OutRqFarField& rhs) const;
 private:
-    double initialTheta_, finalTheta_, stepTheta_;
-    double initialPhi_, finalPhi_, stepPhi_;
+    Real initialTheta_, finalTheta_, stepTheta_;
+    Real initialPhi_, finalPhi_, stepPhi_;
     void
     setThetaAndPhi(
-            double iTh, double fTh, double sTh,
-            double iPhi, double fPhi, double sPhi);
+            Real iTh, Real fTh, Real sTh,
+            Real iPhi, Real fPhi, Real sPhi);
 };
 
 #endif /* SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_ */

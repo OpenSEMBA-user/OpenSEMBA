@@ -8,13 +8,13 @@ Parser::~Parser() {
 
 }
 
-CVecD3
+CVecR3
 Parser::strToCartesianVector(
  const string& str) const {
 	istringstream iss(str);
 	string sub;
-	CartesianVector<double,3> res;
-	for (unsigned int i = 0; i < 3; i++) {
+	CartesianVector<Real,3> res;
+	for (UInt i = 0; i < 3; i++) {
 		iss >> sub;
 		res(i) = atof(sub.c_str());
 	}

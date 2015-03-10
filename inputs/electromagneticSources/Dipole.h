@@ -13,9 +13,9 @@ class Dipole : public EMSource {
 public:
 	Dipole(
 	 vector<ElementId> elem,
-	 double length,
-	 CVecD3 orientation,
-	 CVecD3 position,
+	 Real length,
+	 CVecR3 orientation,
+	 CVecR3 position,
 	 const MagnitudeGaussian* magnitude);
 	virtual ~Dipole();
 
@@ -23,11 +23,11 @@ public:
 
 	void printInfo() const;
 protected:
-	double length_;
-	CVecD3 orientation_;
-	CVecD3 position_;
-	double gaussDelay_;
-	double spreadSqrt2_;
+	Real length_;
+	CVecR3 orientation_;
+	CVecR3 position_;
+	Real gaussDelay_;
+	Real spreadSqrt2_;
 };
 
 #endif /* DIPOLE_H_ */

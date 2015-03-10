@@ -20,7 +20,7 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
            const MatId   matId)
 :   Tet(id, layerId, matId) {
 
-    for (uint i = 0; i < tet.np; i++) {
+    for (UInt i = 0; i < tet.np; i++) {
         const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << "ERROR @ Tet4::Tet4(): "
@@ -29,25 +29,25 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        if (!coord->is<CoordD3>()) {
+        if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Tet4::Tet4(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        v_[i] = coord->castTo<CoordD3>();
+        v_[i] = coord->castTo<CoordR3>();
     }
     check();
 }
 
 Tet4::Tet4(const ElementId id,
-           const CoordD3* v[4],
+           const CoordR3* v[4],
            const LayerId layerId,
            const MatId   matId)
 :   Tet(id, layerId, matId) {
 
-    for (uint i = 0; i < tet.np; i++) {
+    for (UInt i = 0; i < tet.np; i++) {
         v_[i] = v[i];
     }
     check();
@@ -56,7 +56,7 @@ Tet4::Tet4(const ElementId id,
 Tet4::Tet4(const Tet4& rhs)
 :   Tet(rhs) {
 
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
 }
@@ -69,84 +69,84 @@ ClassBase* Tet4::clone() const {
     return new Tet4(*this);
 }
 
-bool Tet4::isInnerPoint(const CVecD3& pos) const {
+bool Tet4::isInnerPoint(const CVecR3& pos) const {
     if (!getBound().isInnerPoint(pos)) {
         return false;
     }
     // Checks if point is inside a tetrahedron using the following algorithm:
     // http://steve.hollasch.net/cgindex/geometry/ptintet.html
-    StaMatrix<double,4,4> mat;
+    StaMatrix<Real,4,4> mat;
     // Builds matrix D0.
-    for (uint i = 0; i < 4; i++) {
-        for (uint j = 0; j < 3; j++) {
+    for (UInt i = 0; i < 4; i++) {
+        for (UInt j = 0; j < 3; j++) {
             mat(i,j) = getVertex(i)->pos()(j);
         }
-        mat(i,3) = (double) 1.0;
+        mat(i,3) = (Real) 1.0;
     }
-    double det = mat.getDeterminant4x4();
+    Real det = mat.getDeterminant4x4();
     assert(det != 0);
-    bool isPositive = (det > (double) 0.0);
+    bool isPositive = (det > (Real) 0.0);
     // Checks rest of matrices. Last column is always 1.0.
-    for (uint k = 0; k < 4; k++) {
+    for (UInt k = 0; k < 4; k++) {
         // Copies pos in row k.
-        for (uint j = 0; j < 3; j++) {
+        for (UInt j = 0; j < 3; j++) {
             mat(k,j) = pos(j);
         }
         // Copies rest of vertices.
-        for (uint i = 0; i < 4; i++) {
+        for (UInt i = 0; i < 4; i++) {
             if (i != k) {
-                for (uint j = 0; j < 3; j++) {
+                for (UInt j = 0; j < 3; j++) {
                     mat(i,j) = getVertex(i)->pos()(j);
                 }
             }
         }
-        double det = mat.getDeterminant4x4();
-        if ((det > (double) 0.0) != isPositive) {
+        Real det = mat.getDeterminant4x4();
+        if ((det > (Real) 0.0) != isPositive) {
             return false;
         }
     }
     return true;
 }
 
-bool Tet4::isCurvedFace(const uint face) const {
+bool Tet4::isCurvedFace(const UInt face) const {
     return false;
 }
 
 bool Tet4::isFaceContainedInPlane(
-const uint face,
+const UInt face,
 const CartesianPlane plane) const {
-    return getTri3Face(face).isContainedInPlane(plane);
+    return getTri3Face(face)->isContainedInPlane(plane);
 }
 
-const CoordD3* Tet4::getSideV(const uint f, const uint i) const {
+const CoordR3* Tet4::getSideV(const UInt f, const UInt i) const {
     return v_[tet.sideNode(f,i)];
 }
 
-const CoordD3* Tet4::getSideVertex(const uint f, const uint i) const {
+const CoordR3* Tet4::getSideVertex(const UInt f, const UInt i) const {
     return v_[tet.sideVertex(f,i)];
 }
 
-double Tet4::getVolume() const {
-    StaMatrix<double,3,3> mat;
-    CVecD3 aux;
-    for (uint i = 1; i < 4; i++) {
+Real Tet4::getVolume() const {
+    StaMatrix<Real,3,3> mat;
+    CVecR3 aux;
+    for (UInt i = 1; i < 4; i++) {
         aux = getV(0)->pos() - getV(i)->pos();
-        for (uint j = 0; j < 3; j++) {
+        for (UInt j = 0; j < 3; j++) {
             mat(i-1,j) = aux(j);
         }
     }
-    double det = mat.getDeterminant3x3();
-    return (det / ((double) 6.0));
+    Real det = mat.getDeterminant3x3();
+    return (det / ((Real) 6.0));
 }
 
-double Tet4::getAreaOfFace(const uint f) const {
-    CVecD3 v1, v2;
+Real Tet4::getAreaOfFace(const UInt f) const {
+    CVecR3 v1, v2;
     v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
     v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
-    return ((double) 0.5 * (v1 ^ v2).norm());
+    return ((Real) 0.5 * (v1 ^ v2).norm());
 }
 
-void Tet4::setV(const uint i, const CoordD3* v) {
+void Tet4::setV(const UInt i, const CoordR3* v) {
     v_[i] = v;
 }
 
@@ -161,7 +161,7 @@ void Tet4::printInfo() const {
     cout << "--- Tet4 info ---" << endl;
     cout << "Id: " << getId() << endl;
     cout << "Coordinates:" << endl;
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
         cout << endl;
     }
@@ -169,11 +169,11 @@ void Tet4::printInfo() const {
 
 bool Tet4::hasZeroVolume() const {
     bool zeroVolume;
-    CVecD3 initialVCoord, otherVCoord;
+    CVecR3 initialVCoord, otherVCoord;
     initialVCoord = *v_[0];
-    for (uint d = 0; d < 3; d++) {
+    for (UInt d = 0; d < 3; d++) {
         zeroVolume = true;
-        for (uint i = 1; i < tet.np; i++) {
+        for (UInt i = 1; i < tet.np; i++) {
             otherVCoord = *v_[i];
             zeroVolume &= (initialVCoord(d) == otherVCoord(d));
         }

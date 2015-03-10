@@ -31,80 +31,80 @@ Tet::~Tet() {
 
 }
 
-Tri3 Tet::getTri3Face(const uint f) const {
-    const CoordD3* coord[3];
-    for (uint i = 0; i < 3; i++) {
+Tri3* Tet::getTri3Face(const UInt f) const {
+    const CoordR3* coord[3];
+    for (UInt i = 0; i < 3; i++) {
         coord[i] = getSideVertex(f,i);
     }
-    return Tri3(ElementId(0), coord, getLayerId(), getMatId());
+    return new Tri3(ElementId(0), coord, getLayerId(), getMatId());
 }
 
 void Tet::getOrderedSideVerticesId(
-uint val[3], uint f) const {
-    for (uint i = 0; i < 3; i++) {
+UInt val[3], UInt f) const {
+    for (UInt i = 0; i < 3; i++) {
         val[i] = getSideVertex(f,i)->getId();
     }
     ascendingOrder(3, val);
 }
 
-void Tet::getCubaturePositions(CVecD3 res[SimplexTet<1>::ncp]) const {
-    static const uint ncp = SimplexTet<1>::ncp;
-    for (uint c = 0; c < ncp; c++) {
-        for (uint i = 0; i < 3; i++) {
+void Tet::getCubaturePositions(CVecR3 res[SimplexTet<1>::ncp]) const {
+    static const UInt ncp = SimplexTet<1>::ncp;
+    for (UInt c = 0; c < ncp; c++) {
+        for (UInt i = 0; i < 3; i++) {
             res[c](i) = 0.0;
         }
     }
     // Evaluates Lagrange's functions in positions specified by the
     // simplex coordinates of tet.
-    double **lagrEv;
-    lagrEv = new double*[ncp];
-    for (uint i = 0; i < ncp; i++) {
-        lagrEv[i] = new double[numberOfCoordinates()];
+    Real **lagrEv;
+    lagrEv = new Real*[ncp];
+    for (UInt i = 0; i < ncp; i++) {
+        lagrEv[i] = new Real[numberOfCoordinates()];
     }
-    for (uint c = 0; c < ncp; c++) {
-        for (uint i = 0; i < numberOfCoordinates(); i++) {
+    for (UInt c = 0; c < ncp; c++) {
+        for (UInt i = 0; i < numberOfCoordinates(); i++) {
             lagrEv[c][i]= getTet().getLagr(i).eval(
             getTet().cubatureCoordinate(c));
         }
     }
     // Computes nodes.
-    for (uint c = 0; c < ncp; c++) {
-        for (uint i = 0; i < numberOfCoordinates(); i++) {
+    for (UInt c = 0; c < ncp; c++) {
+        for (UInt i = 0; i < numberOfCoordinates(); i++) {
             res[c] += *(getV(i)) * lagrEv[c][i];
         }
     }
-    for (uint i = 0; i < ncp; i++) {
+    for (UInt i = 0; i < ncp; i++) {
         delete[] lagrEv[i];
     }
     delete[] lagrEv;
 }
 
 void Tet::getCubatureJacobianDeterminant(
-    double cJDet[SimplexTet<2>::ncp],
-    const StaMatrix<double,4,4> cJ[SimplexTet<2>::ncp]) const {
+    Real cJDet[SimplexTet<2>::ncp],
+    const StaMatrix<Real,4,4> cJ[SimplexTet<2>::ncp]) const {
 
-    for (uint c = 0; c < SimplexTet<2>::ncp; c++) {
+    for (UInt c = 0; c < SimplexTet<2>::ncp; c++) {
         cJDet[c] = cJ[c].getDeterminant4x4();
     }
 }
 
 void Tet::getCubatureJacobianDeterminant(
-    double cJDet[SimplexTet<2>::ncp]) const {
+    Real cJDet[SimplexTet<2>::ncp]) const {
 
-    StaMatrix<double,4,4> cJ[SimplexTet<2>::ncp];
+    StaMatrix<Real,4,4> cJ[SimplexTet<2>::ncp];
     getCubatureJacobian(cJ);
-    for (uint c = 0; c < SimplexTet<2>::ncp; c++) {
+    for (UInt c = 0; c < SimplexTet<2>::ncp; c++) {
         cJDet[c] = cJ[c].getDeterminant4x4();
     }
 }
 
 void Tet::getCubatureJacobian(
-    StaMatrix<double,4,4> res[SimplexTet<2>::ncp]) const {
+    StaMatrix<Real,4,4> res[SimplexTet<2>::ncp]) const {
 
-    for (uint s = 0; s < numberOfFaces(); s++)
-        for (uint i = 0; i < numberOfCoordinates(); i++) {
-            const CartesianVector<double,3> v = *(getV(i));
-            for (uint c = 0; c < SimplexTet<2>::ncp; c++) {
+    for (UInt s = 0; s < numberOfFaces(); s++)
+        for (UInt i = 0; i < numberOfCoordinates(); i++) {
+            const CartesianVector<Real,3> v = *(getV(i));
+            for (UInt c = 0; c < SimplexTet<2>::ncp; c++) {
                 res[c](0,s) += v(0) * getTet().getCda(i,s,c);
                 res[c](1,s) += v(1) * getTet().getCda(i,s,c);
                 res[c](2,s) += v(2) * getTet().getCda(i,s,c);
@@ -114,17 +114,17 @@ void Tet::getCubatureJacobian(
 }
 
 void Tet::getCubatureJacobianHat(
-    StaMatrix<double,4,3> cJHat[SimplexTet<2>::ncp],
-    const StaMatrix<double,4,4> cJ[SimplexTet<2>::ncp],
-    const double cJDet[SimplexTet<2>::ncp]) const {
+    StaMatrix<Real,4,3> cJHat[SimplexTet<2>::ncp],
+    const StaMatrix<Real,4,4> cJ[SimplexTet<2>::ncp],
+    const Real cJDet[SimplexTet<2>::ncp]) const {
 
     // PURPOSE:
     // See chapter 17.3.1 of Filippa's course on Advanced FEM.
-    int ind[3];
-    StaMatrix<double,3,3> Jred, invJred;
-    StaMatrix<double,4,3> res;
+    Int ind[3];
+    StaMatrix<Real,3,3> Jred, invJred;
+    StaMatrix<Real,4,3> res;
     // Main loop, runs over all simplex coordinates.
-    for (uint j = 0; j < numberOfFaces(); j++) {
+    for (UInt j = 0; j < numberOfFaces(); j++) {
         // Chooses columns indices that will be substracted from the Jacobian.
         switch (j) {
         case 0:
@@ -145,25 +145,25 @@ void Tet::getCubatureJacobianHat(
             exit(-1);
         }
         // Builds reduced jacobian for all cubature points.
-        for (uint c = 0; c < SimplexTet<1>::ncp; c++) {
+        for (UInt c = 0; c < SimplexTet<1>::ncp; c++) {
             // Substracts column j to column ind[c], to build J reduced.
-            for (uint k = 0; k < 3; k++) {
-                for (uint i = 0; i < 3; i++) {
+            for (UInt k = 0; k < 3; k++) {
+                for (UInt i = 0; i < 3; i++) {
                     Jred(k,i) = cJ[c](k,ind[i]) - cJ[c](k,j);
                 }
             }
             // Computes reduced jacobian inverse.
             invJred = Jred.invert();
             // Gets Jhat from the summation of reduced jacobians.
-            for (uint m = 0; m < 3; m++) {
-                for (uint n = 0; n < 3; n++) {
+            for (UInt m = 0; m < 3; m++) {
+                for (UInt n = 0; n < 3; n++) {
                     cJHat[c](j,m) -= invJred(n,m);
                 }
             }
         }
     } // Ends j loop, running over faces.
     // Multiplies by Jacobian determinant.
-    for (uint c = 0; c < SimplexTet<1>::ncp; c++) {
+    for (UInt c = 0; c < SimplexTet<1>::ncp; c++) {
         cJHat[c] *= cJDet[c];
     }
 }

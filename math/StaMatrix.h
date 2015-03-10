@@ -5,40 +5,40 @@
 #include "DynMatrix.h"
 
 // Static Matrix class. It can't change its size in run time.
-template<class T,unsigned int NROWS,unsigned int NCOLS>
+template<class T,UInt NROWS,UInt NCOLS>
 class StaMatrix : public MathMatrix<T> {
 public:
    StaMatrix();
    StaMatrix(const StaMatrix<T,NROWS,NCOLS>& param);
    ~StaMatrix();
    T
-    operator()(const unsigned int row, const unsigned int col) const;
+    operator()(const UInt row, const UInt col) const;
    T&
-    operator()(const unsigned int row, const unsigned int col);
+    operator()(const UInt row, const UInt col);
    T
-    val(const unsigned int ind) const;
+    val(const UInt ind) const;
    T&
-    val(const unsigned int ind);
+    val(const UInt ind);
    T
-    val(const unsigned int row, const unsigned int col) const;
+    val(const UInt row, const UInt col) const;
    T&
-    val(const unsigned int row, const unsigned int col);
+    val(const UInt row, const UInt col);
    const T*
     val() const;
-   unsigned int
+   UInt
     nRows() const;
-   unsigned int
+   UInt
     nCols() const;
    StaMatrix<T,NROWS,NCOLS>&
     operator=(const StaMatrix<T,NROWS,NCOLS>& param);
    StaMatrix<T,NROWS,NCOLS>&
-    operator=(const DynMatrix<int>& rhs);
+    operator=(const DynMatrix<Int>& rhs);
    StaMatrix<T,NROWS,NCOLS>&
-    assign(const StaMatrix<int,NROWS,NCOLS>& param);
+    assign(const StaMatrix<Int,NROWS,NCOLS>& param);
    StaMatrix<T,NROWS,NCOLS>&
-    operator=(const DynMatrix<double>& param);
+    operator=(const DynMatrix<Real>& param);
    StaMatrix<T,NROWS,NCOLS>&
-    operator+=(const double param);
+    operator+=(const Real param);
    StaMatrix<T,NROWS,NCOLS>&
     operator+=(const StaMatrix<T,NROWS,NCOLS>& param);
    StaMatrix<T,NROWS,NCOLS>&
@@ -64,22 +64,22 @@ public:
    void
     printInfo() const;
    void
-    printInfo(unsigned int, unsigned int) const;
+    printInfo(UInt, UInt) const;
 private:
    T _val[NROWS*NCOLS];
 };
 // =========== Not member functions ===========================================
 // Products between different sized StaMatrices.
-template<class T, class S, unsigned int NROWS, unsigned int NCOLS, unsigned int NCOLSB>
+template<class T, class S, UInt NROWS, UInt NCOLS, UInt NCOLSB>
 StaMatrix<T,NROWS,NCOLSB>
  operator*(const StaMatrix<T,NROWS,NCOLS>& lhs,
         const StaMatrix<S,NCOLS,NCOLSB>& rhs);
 // Products between StaMatrix and DynMatrix
-template<class T, unsigned int NROWS, unsigned int NCOLS>
+template<class T, UInt NROWS, UInt NCOLS>
 DynMatrix<T>
  operator*(const StaMatrix<T,NROWS,NCOLS>& lhs, const DynMatrix<T>& rhs);
 
 #include "StaMatrix.hpp"
 
-typedef StaMatrix<double,2,2> MatD22;
+typedef StaMatrix<Real,2,2> MatR22;
 #endif

@@ -12,7 +12,7 @@
 #ifndef SRC_COMMON_GEOMETRY_BOX_H_
 #define SRC_COMMON_GEOMETRY_BOX_H_
 
-template <class T, int D>
+template <class T, Int D>
 class Box {
     typedef CartesianVector<T,D> CVecTD;
 public:
@@ -22,7 +22,7 @@ public:
     virtual ~Box();
     void set(const pair<CVecTD,CVecTD>& boundsMinMax);
     Box<T,D>& setInfinity();
-    void scale(const double factor);
+    void scale(const Real factor);
     bool operator>(const Box<T,D>& lBoxMin) const;
     bool operator<(const Box<T,D>& lBoxMax) const;
     bool operator<=(const Box<T,D>& lBoxMax) const;
@@ -54,7 +54,7 @@ private:
     };
 };
 
-template <class T, int D>
+template <class T, Int D>
 std::ostream&
 operator<<(
       ostream& os,
@@ -64,8 +64,8 @@ operator<<(
 
 #include "Box.hpp"
 
-typedef Box<double,3> BoxD3;
-typedef Box<long,2> BoxI2;
-typedef Box<long,3> BoxI3;
+typedef Box<Real,3> BoxR3;
+typedef Box<Int ,2> BoxI2;
+typedef Box<Int ,3> BoxI3;
 
 #endif /* SRC_COMMON_GEOMETRY_BOX_H_ */

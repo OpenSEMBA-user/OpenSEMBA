@@ -42,6 +42,14 @@ GroupId<T, Id>::operator=(const Group<T>& rhs) {
 }
 
 template<typename T, class Id>
+T* GroupId<T, Id>::getPtrToId(const Id id) {
+    if(mapId_.count(id) != 0)
+        return this->element_[mapId_.at(id)];
+
+    return NULL;
+}
+
+template<typename T, class Id>
 const T* GroupId<T, Id>::getPtrToId(const Id id) const {
     if(mapId_.count(id) != 0)
         return this->element_[mapId_.at(id)];
@@ -52,7 +60,7 @@ const T* GroupId<T, Id>::getPtrToId(const Id id) const {
 template<typename T, class Id> template<typename T2>
 vector<Id> GroupId<T, Id>::getIdsOf() const {
     vector<Id> ids;
-    for (unsigned i = 0; i < this->size(); i++) {
+    for (UInt i = 0; i < this->size(); i++) {
         if(this->element_[i]->template is<T2>()) {
             ids.push_back(this->element_[i]->getId());
         }
@@ -78,7 +86,7 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
     }
 
     this->element_.reserve(this->size() + newElems.size());
-    for (unsigned i = 0; i < newElems.size(); i++) {
+    for (UInt i = 0; i < newElems.size(); i++) {
         if(newId) {
             newElems[i]->setId(++this->lastId_);
         }
@@ -96,7 +104,7 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
 
 template<typename T, class Id>
 void GroupId<T, Id>::buildMapId() {
-    for(unsigned i = 0; i < this->size(); i++) {
+    for(UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getId() > this->lastId_)
             lastId_ = this->element_[i]->getId();
 

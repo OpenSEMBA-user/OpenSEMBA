@@ -5,36 +5,36 @@
  *      Author: luis
  */
 
-template<class T, int D>
+template<class T, Int D>
 Box<T,D>::Box() {
    setDefaultValues();
 }
 
-template<class T, int D>
+template<class T, Int D>
 Box<T,D>::~Box() {
 }
 
-template<class T, int D> Box<T,D>::Box(
+template<class T, Int D> Box<T,D>::Box(
       const pair<CVecTD, CVecTD>& bounds) {
    set(bounds);
 }
 
-template<class T, int D>
+template<class T, Int D>
 Box<T,D>::Box(const CVecTD& min, const CVecTD& max) {
    min_ = min;
    max_ = max;
 }
 
-template<class T, int D>
+template<class T, Int D>
 void Box<T,D>::set(const pair<CVecTD, CVecTD>& minMax) {
    min_ = minMax.first;
    max_ = minMax.second;
 }
 
-template<class T, int D>
+template<class T, Int D>
 bool
 Box<T,D>::operator > (const Box<T,D> &rhs)const{
-   for (int i = 0; i < D; i++) {
+   for (Int i = 0; i < D; i++) {
       if ( (max_(i) <= rhs.max_(i)) || (min_(i) >= rhs.min_(i)) ) {
          return false;
       }
@@ -42,16 +42,16 @@ Box<T,D>::operator > (const Box<T,D> &rhs)const{
    return true;
 }
 
-template<class T, int D>
+template<class T, Int D>
 bool
 Box<T,D>::operator < (const Box<T,D> &lBoxMax) const{
    return lBoxMax > *this;
 }
 
-template<class T, int D>
+template<class T, Int D>
 bool
 Box<T,D>::operator <= (const Box<T,D> &rhs) const{
-   for (int i = 0; i < D; i++) {
+   for (Int i = 0; i < D; i++) {
       if ( (max_(i) > rhs.max_(i)) || (min_(i) < rhs.min_(i)) ) {
          return false;
       }
@@ -59,7 +59,7 @@ Box<T,D>::operator <= (const Box<T,D> &rhs) const{
    return true;
 }
 
-template<class T, int D>
+template<class T, Int D>
 bool
 Box<T,D>::operator == (const Box<T,D> &rhs) const{
    if (max_ != rhs.max_) {return false;}
@@ -67,10 +67,10 @@ Box<T,D>::operator == (const Box<T,D> &rhs) const{
    return true;
 }
 
-template<class T, int D>
+template<class T, Int D>
 void
 Box<T,D>::operator += (const Box<T,D> &rhs){
-   for (int i = 0; i < D; i++) {
+   for (Int i = 0; i < D; i++) {
       if (max_(i) < rhs.max_(i)) {
          max_(i) = rhs.max_(i);
       }
@@ -80,7 +80,7 @@ Box<T,D>::operator += (const Box<T,D> &rhs){
    }
 }
 
-template<class T, int D>
+template<class T, Int D>
 Box<T,D>&
 Box<T,D>::operator = (const Box<T,D> &rhs){
    if (&rhs == this) {
@@ -91,10 +91,10 @@ Box<T,D>::operator = (const Box<T,D> &rhs){
    return *this;
 }
 
-template<class T, int D>
+template<class T, Int D>
 void
 Box<T,D>::operator << (const CVecTD& p){
-   for (int i = 0; i < D; i++) {
+   for (Int i = 0; i < D; i++) {
       if (min_(i) > p(i)) {
          min_(i) = p(i);
       }
@@ -104,17 +104,17 @@ Box<T,D>::operator << (const CVecTD& p){
    }
 }
 
-template<class T, int D>
+template<class T, Int D>
 void
 Box<T,D>::operator << (const Box<T,D>& p){
    *this << p.min_;
    *this << p.max_;
 }
 
-template<class T, int D>
+template<class T, Int D>
 bool
 Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
-   for (int i = 0; i < D; i++) {
+   for (Int i = 0; i < D; i++) {
       if (max_(i) < rhs.min_(i)) {
          return false;
       }
@@ -125,35 +125,35 @@ Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
    return true;
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline Box<T,D>& Box<T,D>::setInfinity() {
-   for (int j = 0; j < D; j++) {
+   for (Int j = 0; j < D; j++) {
       min_(j) = - numeric_limits<T>::infinity();
       max_(j) = numeric_limits<T>::infinity();
    }
    return *this;
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline CartesianVector<T,D> Box<T,D>::getMin(void) const {
    return min_;
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline CartesianVector<T,D> Box<T,D>::getMax(void) const {
    return max_;
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline CartesianVector<T,D> Box<T,D>::getLength() const {
    return (max_ - min_);
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline Box<T,D>
 Box<T,D>::intersect(const Box<T, D>& rhs) const {
    Box<T,D> res;
-   for (int d = 0; d < D; d++) {
+   for (Int d = 0; d < D; d++) {
       if (min_(d) > rhs.min_(d)) {
          res.min_(d) = min_(d);
       } else {
@@ -168,15 +168,15 @@ Box<T,D>::intersect(const Box<T, D>& rhs) const {
    return res;
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline vector<CartesianVector<T, D> >
 Box<T,D>::getPosOfBound(
         CartesianAxis d,
         CartesianBound p) const {
     assert(D == 3);
-    int rX = d;
-    int rY = (d+1)%D;
-    int rZ = (d+2)%D;
+    Int rX = d;
+    Int rY = (d+1)%D;
+    Int rZ = (d+2)%D;
     vector<CVecTD> res;
     // TODO: Generalize this...
     {
@@ -210,7 +210,7 @@ Box<T,D>::getPosOfBound(
     return res;
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline CartesianVector<T,D>
 Box<T,D>::getBound(CartesianBound p) const {
     if (p == L) {
@@ -220,7 +220,7 @@ Box<T,D>::getBound(CartesianBound p) const {
     }
 }
 
-template<class T, int D>
+template<class T, Int D>
 inline vector<CartesianVector<T,D> >
 Box<T,D>::getPos() const {
     assert(D == 3);
@@ -236,7 +236,7 @@ Box<T,D>::getPos() const {
     return res;
 }
 
-template<class T, int D>
+template<class T, Int D>
 void
 Box<T,D>::printInfo() const {
    cout<< "Box info" << endl;
@@ -245,20 +245,20 @@ Box<T,D>::printInfo() const {
    cout<< endl;
 }
 
-template<class T, int D>
+template<class T, Int D>
 bool
 Box<T,D>::isInnerPoint(const CVecTD& point) const {
    bool isInner = true;
-   for (int dir = 0; dir < D; dir++) {
+   for (Int dir = 0; dir < D; dir++) {
       isInner &= (point(dir) <= getMax()(dir));
       isInner &= (point(dir) >= getMin()(dir));
    }
    return isInner;
 }
 
-template<class T, int D>
+template<class T, Int D>
 void
-Box<T,D>::scale(const double factor) {
+Box<T,D>::scale(const Real factor) {
    min_ *= factor;
    max_ *= factor;
 }

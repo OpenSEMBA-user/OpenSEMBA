@@ -18,7 +18,7 @@ Quad4::Quad4(const CoordinateGroup<>& cG,
              const MatId   matId)
 :   Quad(id, layerId, matId) {
     
-	for (uint i = 0; i < numberOfCoordinates(); i++) {
+	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << "ERROR @ Quad4::Quad4(): "
@@ -27,14 +27,14 @@ Quad4::Quad4(const CoordinateGroup<>& cG,
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        if (!coord->is<CoordD3>()) {
+        if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Quad4::Quad4(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
             assert(false);
             exit(ELEMENT_ERROR);
         }
-        v_[i] = coord->castTo<CoordD3>();
+        v_[i] = coord->castTo<CoordR3>();
 	}
 	// TODO Normals are not handled.
 	check();
@@ -43,7 +43,7 @@ Quad4::Quad4(const CoordinateGroup<>& cG,
 Quad4::Quad4(const Quad4& rhs)
 :   Quad(rhs) {
     
-    for (uint i = 0; i < numberOfCoordinates(); i++) {
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
 }
@@ -56,25 +56,25 @@ ClassBase* Quad4::clone() const {
     return new Quad4(*this);
 }
 
-const CoordD3* Quad4::getVertex(const uint i) const {
+const CoordR3* Quad4::getVertex(const UInt i) const {
 	return v_[i];
 }
 
-const CoordD3* Quad4::getSideV(const uint f,
-                               const uint i) const {
+const CoordR3* Quad4::getSideV(const UInt f,
+                               const UInt i) const {
 	assert(f < numberOfFaces());
 	assert(i < numberOfSideCoordinates());
 	return v_[(f + i) % 4];
 }
 
-const CoordD3* Quad4::getSideVertex(const uint f,
-                                    const uint i) const {
+const CoordR3* Quad4::getSideVertex(const UInt f,
+                                    const UInt i) const {
 	assert(f < numberOfFaces());
 	assert(i < numberOfSideVertices());
 	return v_[(f + i) % 4];
 }
 
-void Quad4::setV(const uint i, const CoordD3* coord) {
+void Quad4::setV(const UInt i, const CoordR3* coord) {
     v_[i] = coord;
 }
 

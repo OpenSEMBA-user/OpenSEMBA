@@ -28,9 +28,9 @@ ResultGraph::~ResultGraph() {
 
 void
 ResultGraph::write(
-      const double time,
-      const FieldD3& electric,
-      const FieldD3& magnetic) {
+      const Real time,
+      const FieldR3& electric,
+      const FieldR3& magnetic) {
    assert(electric.size() == 1);
    assert(magnetic.size() == 0);
 	file_ << time << " " << electric.getCVec(0).norm() << endl;

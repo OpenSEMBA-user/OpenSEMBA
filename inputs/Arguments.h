@@ -21,6 +21,8 @@
 
 using namespace std;
 
+#include "Types.h"
+
 class Arguments {
 public:
    Arguments(const int argc, const char* argv[]);
@@ -40,13 +42,13 @@ protected:
    virtual void printHelp() const;
    bool fExists(const string& filename) const;
    const char* getArgvpp(
-           const unsigned int i,
-           const int argc,
+           const UInt i,
+           const Int argc,
            const char *arg) const;
    string getFileNameFromProjectPath(
            const string projectPath) const;
    string boolToStr(const bool param) const;
-   void abort(int msg) const;
+   void abort(Int msg) const;
 private:
    string removeExtension(const string& fName) const;
 };

@@ -24,7 +24,7 @@ MesherOptions::MesherOptions() {
 MesherOptions::MesherOptions(
         Mesher mesher,
         bool locationInMeshSet,
-        CVecD3 locationInMesh,
+        CVecR3 locationInMesh,
         bool bruteForceVolumes,
         Mode mode,
         bool effectiveParameter,
@@ -97,14 +97,14 @@ MesherOptions::toStr(const BoundType val) const {
 }
 
 void
-MesherOptions::applyGeometricScalingFactor(const double& factor) {
+MesherOptions::applyGeometricScalingFactor(const Real& factor) {
     boundaryPadding_.first *= factor;
     boundaryPadding_.second *= factor;
     boundaryMeshSize_.first *= factor;
     boundaryMeshSize_.second *= factor;
 }
 
-const CVecD3& MesherOptions::getLocationInMesh() const {
+const CVecR3& MesherOptions::getLocationInMesh() const {
     return locationInMesh_;
 }
 
@@ -178,7 +178,7 @@ void MesherOptions::setEffectiveParameter(bool effectiveParameter) {
     effectiveParameter_ = effectiveParameter;
 }
 
-void MesherOptions::setLocationInMesh(const CVecD3& locationInMesh) {
+void MesherOptions::setLocationInMesh(const CVecR3& locationInMesh) {
     locationInMesh_ = locationInMesh;
     locationInMeshSet_ = true;
 }
@@ -219,41 +219,41 @@ void MesherOptions::setTh(const string& th) {
     th_ = th;
 }
 
-const pair<CVecD3, CVecD3>& MesherOptions::getBoundaryMeshSize() const {
+const pair<CVecR3, CVecR3>& MesherOptions::getBoundaryMeshSize() const {
     return boundaryMeshSize_;
 }
 
 void MesherOptions::setBoundaryMeshSize(
-        const pair<CVecD3, CVecD3>& boundaryMeshSize) {
+        const pair<CVecR3, CVecR3>& boundaryMeshSize) {
     boundaryMeshSize_ = boundaryMeshSize;
 }
 
-const pair<CVecD3, CVecD3>& MesherOptions::getBoundaryPadding() const {
+const pair<CVecR3, CVecR3>& MesherOptions::getBoundaryPadding() const {
     return boundaryPadding_;
 }
 
 void MesherOptions::setBoundaryPadding(
-        const pair<CVecD3, CVecD3>& boundaryPadding) {
+        const pair<CVecR3, CVecR3>& boundaryPadding) {
     boundaryPadding_ = boundaryPadding;
 }
 
-double MesherOptions::getScalingFactor() const {
+Real MesherOptions::getScalingFactor() const {
     return scalingFactor_;
 }
 
-void MesherOptions::setScalingFactor(double scalingFactor) {
+void MesherOptions::setScalingFactor(Real scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
 pair<MesherOptions::BoundType, MesherOptions::BoundType>
 MesherOptions::getBoundTermination(
-        const uint i) const {
+        const UInt i) const {
     assert(i < 3);
     return boundTermination_[i];
 }
 
 void MesherOptions::setBoundTermination(
-        const uint i,
-        uint j,
+        const UInt i,
+        UInt j,
         BoundType bound) {
     assert(i < 3);
     assert(j < 2);

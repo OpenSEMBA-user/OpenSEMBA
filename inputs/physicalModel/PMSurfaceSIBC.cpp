@@ -10,10 +10,10 @@
 PMSurfaceSIBC::PMSurfaceSIBC(
         const MatId id,
         const string& name,
-        const MatD22& Zinfinite,
-        const MatD22& Zstatic,
-        const vector<double>& pole,
-        const vector<MatD22 >& Z)
+        const MatR22& Zinfinite,
+        const MatR22& Zstatic,
+        const vector<Real>& pole,
+        const vector<MatR22 >& Z)
 : PMSurface(id, name) {
     ZInfinity_ = Zinfinite;
     ZStatic_ = Zstatic;
@@ -44,17 +44,17 @@ PMSurfaceSIBC::operator=(
 }
 
 void
-PMSurfaceSIBC::setZInfinity(const MatD22& ZInf) {
+PMSurfaceSIBC::setZInfinity(const MatR22& ZInf) {
     ZInfinity_ = ZInf;
 }
 
 void
-PMSurfaceSIBC::setZStatic(const MatD22& ZSta) {
+PMSurfaceSIBC::setZStatic(const MatR22& ZSta) {
     ZStatic_ = ZSta;
 }
 
 void
-PMSurfaceSIBC::addPole(const double vP, const MatD22& Z) {
+PMSurfaceSIBC::addPole(const Real vP, const MatR22& Z) {
     pole_.push_back(vP);
     Z_.push_back(Z);
 }
@@ -72,7 +72,7 @@ PMSurfaceSIBC::printInfo() const {
         cout << "Number of poles: " << pole_.size() << endl;
         cout << "# Pole Z11 Z12 Z21 Z22 " << endl;
     }
-    for (register uint i = 0; i < pole_.size(); i++) {
+    for (register UInt i = 0; i < pole_.size(); i++) {
         cout << i << " "
                 << pole_[i] << " "
                 << Z_[i](0,0) << " " << Z_[i](0,1) << " "
@@ -80,6 +80,6 @@ PMSurfaceSIBC::printInfo() const {
     }
 }
 
-uint PMSurfaceSIBC::getNumberOfPoles() const {
+UInt PMSurfaceSIBC::getNumberOfPoles() const {
     return pole_.size();
 }

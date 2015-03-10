@@ -9,14 +9,14 @@
 
 MapSurface::MapSurface() {
    local = NULL;
-   for (unsigned int i = 0; i < 2; i++) {
+   for (UInt i = 0; i < 2; i++) {
       vol[i] = NULL;
    }
 }
 
 MapSurface::~MapSurface() {
    local = NULL;
-   for (unsigned int i = 0; i < 2; i++) {
+   for (UInt i = 0; i < 2; i++) {
       vol[i] = NULL;
    }
 }
@@ -27,7 +27,7 @@ MapSurface::MapSurface(
    local = localSurf;
    const Tet* n1 = neighbours.first;
    const Tet* n2 = neighbours.second;
-   unsigned int f = n1->getFaceNumber(localSurf);
+   UInt f = n1->getFaceNumber(localSurf);
    if (n1->isLocalFace(f, *local)) {
       vol[0] = n1;
       volToF[0] = f;
@@ -46,7 +46,7 @@ MapSurface::operator=(const MapSurface& rhs) {
    if (this == &rhs)
       return *this;
    local = rhs.local;
-   for (unsigned int i = 0; i < 2; i++) {
+   for (UInt i = 0; i < 2; i++) {
       vol[i] = rhs.vol[i];
       volToF[i] = rhs.volToF[i];
    }
@@ -54,11 +54,11 @@ MapSurface::operator=(const MapSurface& rhs) {
 }
 
 void
-MapSurface::reassignPointers(const ElementsGroup& nEG) {
-   local = nEG.getTriPtrToId(local->getId());
-   for (unsigned int i = 0; i < 2; i++) {
-      vol[i] = nEG.getTetPtrToId(vol[i]->getId());
-   }
+MapSurface::reassignPointers(const ElementsGroup<>& nEG) {
+    local = nEG.getPtrToId(local->getId())->castTo<Tri>();
+    for (UInt i = 0; i < 2; i++) {
+        vol[i] = nEG.getPtrToId(vol[i]->getId())->castTo<Tet>();
+    }
 }
 
 bool
@@ -66,7 +66,7 @@ MapSurface::isBoundary() const {
    return (vol[0] == vol[1] && volToF[0] == volToF[1]);
 }
 
-uint MapSurface::getVolToF(unsigned int f) const {
+UInt MapSurface::getVolToF(UInt f) const {
    return volToF[f];
 }
 
@@ -75,12 +75,12 @@ MapSurface::printInfo() const {
    cout << "--- MapSurface Info ---" << endl;
    cout << "Local Id: " << local->getId() << endl;
    cout << "Neighbours Tet Ids: ";
-   for (unsigned int i = 0; i < 2; i++) {
+   for (UInt i = 0; i < 2; i++) {
       cout << vol[i]->getId() << " ";
    }
    cout << endl;
    cout << "Through faces: ";
-   for (unsigned int i = 0; i < 2; i++) {
+   for (UInt i = 0; i < 2; i++) {
       cout << volToF[i] << " ";
    }
    cout << endl;

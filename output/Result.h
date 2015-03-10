@@ -15,9 +15,9 @@ public:
    Result();
    virtual ~Result();
    virtual void write(
-         const double time,
-         const FieldD3& electric,
-         const FieldD3& magnetic) const = 0;
+         const Real time,
+         const FieldR3& electric,
+         const FieldR3& magnetic) const = 0;
 };
 
 #endif /* SRC_COMMON_OUTPUT_RESULT_H_ */

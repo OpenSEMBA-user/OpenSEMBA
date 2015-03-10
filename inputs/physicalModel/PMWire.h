@@ -15,21 +15,21 @@ public:
 	PMWire(
 	 const MatId id,
 	 const string name,
-	 const double radius,
-	 const double resistance,
-	 const double inductance);
+	 const Real radius,
+	 const Real resistance,
+	 const Real inductance);
 	virtual ~PMWire();
 
     ClassBase* clone() const;
 
-	virtual double	 getRadius() const;
-	virtual double	 getResistance() const;
-	virtual double	 getInductance() const;
+	virtual Real	 getRadius() const;
+	virtual Real	 getResistance() const;
+	virtual Real	 getInductance() const;
 	virtual void printInfo() const;
 private:
-	double radius_;
-	double resistance_; // Resistance per meter.
-	double inductance_; // Inductance per meter.
+	Real radius_;
+	Real resistance_; // Resistance per meter.
+	Real inductance_; // Inductance per meter.
 };
 
 #endif /* PMWIRE_H_ */

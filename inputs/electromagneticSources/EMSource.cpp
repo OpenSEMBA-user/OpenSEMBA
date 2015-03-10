@@ -36,7 +36,7 @@ Condition::Type EMSource::getConditionType() const {
 void
 EMSource::printInfo() const {
     cout<< " - Assigned on " << elem_.size() << ":" << endl;
-    for (uint i = 0; i < elem_.size(); i++) {
+    for (UInt i = 0; i < elem_.size(); i++) {
         cout<< elem_[i] << " ";
     }
     cout << endl;

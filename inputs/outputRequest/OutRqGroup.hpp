@@ -5,10 +5,10 @@ OutRqGroup<C>::OutRqGroup() {
 template<typename C>
 OutRqGroup<C>::OutRqGroup(
  const vector<OutRq>& in) {
-	for (uint i = 0; i < in.size(); i++) {
+	for (UInt i = 0; i < in.size(); i++) {
 		// Checks if exists similar output and combines elements if so.
 		bool isSimilar = false;
-		for (uint j = 0; j < size(); j++) {
+		for (UInt j = 0; j < size(); j++) {
 			if (in[i].isSimilar(*element_[j])) {
 				isSimilar = true;
 				element_[j]->setAdditionalElems(in[i].getElem());
@@ -21,10 +21,10 @@ OutRqGroup<C>::OutRqGroup(
 }
 
 template<typename C>
-uint
+UInt
 OutRqGroup<C>::countWithType(const Element::Type param) const {
-	uint res = 0;
-	for (uint i = 0; i < size(); i++) {
+	UInt res = 0;
+	for (UInt i = 0; i < size(); i++) {
 		if (element_[i]->getElementType() == param) {
 			res++;
 		}
@@ -35,11 +35,11 @@ OutRqGroup<C>::countWithType(const Element::Type param) const {
 template<typename C>
 const OutRq*
 OutRqGroup<C>::getWithType(
- const uint j,
+ const UInt j,
  const Element::Type param) const {
 	assert(j < countWithType(param));
-	uint count = 0;
-	for (uint i = 0; i < size(); i++) {
+	UInt count = 0;
+	for (UInt i = 0; i < size(); i++) {
 		if (element_[i]->getElementType() == param) {
 			if (count == j) {
 				return element_[i];
@@ -58,7 +58,7 @@ template<typename C>
 void
 OutRqGroup<C>::printInfo() const {
 	cout<< " --- OutputRequestGroup info ---" << endl;
-	for (unsigned int i = 0; i < element_.size(); i++) {
+	for (UInt i = 0; i < element_.size(); i++) {
 		element_[i]->printInfo();
 	}
 	cout<< " --- End of outputrequestGroup info ---" << endl;

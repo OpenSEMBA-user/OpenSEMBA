@@ -5,28 +5,30 @@
 
 using namespace std;
 
+#include "Types.h"
+
 class IdBase {
 public:
     IdBase();
-    explicit IdBase(const unsigned id);
+    explicit IdBase(const UInt id);
     IdBase(const IdBase& rhs);
     virtual ~IdBase();
     
-    operator unsigned() const;
+    operator UInt() const;
     
 protected:
-    unsigned id_;
+    UInt id_;
 };
 
 #define CreateId(name)                                      \
 class name : public IdBase {                                \
 public:                                                     \
     name()                                         {}       \
-    explicit name(const unsigned id) : IdBase( id) {}       \
+    explicit name(const UInt id) : IdBase( id) {}           \
     name(const name& rhs)            : IdBase(rhs) {}       \
     virtual ~name()                                {}       \
                                                             \
-    name& operator=(const unsigned id) {                    \
+    name& operator=(const UInt id) {                        \
         id_ = id;                                           \
         return *this;                                       \
     }                                                       \
