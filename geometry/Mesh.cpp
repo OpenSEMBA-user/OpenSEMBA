@@ -249,7 +249,7 @@ Mesh::getTriWithMatId(
 
 
 vector<Tri3>
-Mesh::getTriWithId(const vector<uint>& ids) const {
+Mesh::getTriWithId(const vector<ElementId>& ids) const {
     vector<Tri3> res;
     res.reserve(elem_.tri3.size());
     for (uint i = 0; i < ids.size(); i++) {
