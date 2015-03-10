@@ -16,14 +16,26 @@ using namespace std;
 
 typedef unsigned int uint;
 
-class SolverOptions {
+class SolverOptions : public Options {
 public:
 	typedef enum {
 	    ugrfdtd,
 	    cudg3d,
 	    none
 	} Solver;
-	SolverOptions();
+	typedef enum {
+
+	} CompositesModel;
+    typedef enum {
+
+    } MetalsModel;
+    typedef enum {
+
+    } WiresModel;
+    typedef enum {
+
+    } WiresSelfinductance;
+    SolverOptions();
 	void printInfo() const;
     double getFinalTime() const;
     void setFinalTime(double finalTime);
@@ -34,10 +46,13 @@ public:
     double getTimeStep() const;
     void setTimeStep(double timeStep);
 private:
+    // Global
 	Solver solver_;
 	double finalTime_;
+	uint numberOfTimeSteps_;
 	double samplingPeriod_;
 	double timeStep_;
+	double cfl_;
 	string toStr(const Solver solver) const;
 };
 
