@@ -10,11 +10,11 @@
 SmbData::SmbData() {
    layers = NULL;
    mesh = NULL;
-   solverParams = NULL;
+   solverOptions = NULL;
    pMGroup = NULL;
    emSources = NULL;
    outputRequests = NULL;
-   meshingParams = NULL;
+   mesherOptions = NULL;
 }
 
 SmbData::~SmbData() {
@@ -27,11 +27,11 @@ SmbData::operator=(const SmbData& rhs) {
    }
    layers = new LayerGroup<>(*rhs.layers);
    mesh = new Mesh(*rhs.mesh);
-   solverParams = new SolverParameters(*rhs.solverParams);
+   solverOptions = new SolverOptions(*rhs.solverOptions);
    pMGroup = new PhysicalModelGroup<>(*rhs.pMGroup);
    emSources = new EMSourceGroup<>(*rhs.emSources);
    outputRequests = new OutRqGroup<>(*rhs.outputRequests);
-   meshingParams = new MesherParameters(*rhs.meshingParams);
+   mesherOptions = new MesherOptions(*rhs.mesherOptions);
    return *this;
 }
 
@@ -48,8 +48,8 @@ SmbData::printInfo() const {
    } else {
       cout << "No info about mesh." << endl;
    }
-   if (solverParams != NULL) {
-      solverParams->printInfo();
+   if (solverOptions != NULL) {
+      solverOptions->printInfo();
    } else {
       cout << "No info about global data." << endl;
    }
@@ -68,16 +68,16 @@ SmbData::printInfo() const {
    } else {
       cout << "No info about output requests." << endl;
    }
-   if (meshingParams != NULL) {
-      meshingParams->printInfo();
+   if (mesherOptions != NULL) {
+      mesherOptions->printInfo();
    } else {
-      cout << "No info about openFoam parameters." << endl;
+      cout << "No info about mesher options." << endl;
    }
 }
 
 void
 SmbData::applyGeometricScalingFactor() {
-   mesh->applyGeometricScalingFactor(solverParams->getScalingFactor());
-   solverParams->applyGeometricScalingFactor(solverParams->getScalingFactor());
-   solverParams->setScalingFactor((Real) 1.0);
+   mesh->applyGeometricScalingFactor(mesherOptions->getScalingFactor());
+   mesherOptions->applyGeometricScalingFactor(mesherOptions->getScalingFactor());
+   mesherOptions->setScalingFactor((Real) 1.0);
 }

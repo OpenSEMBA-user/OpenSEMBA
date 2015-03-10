@@ -12,15 +12,15 @@
 #include "Mesh.h"
 #include "LayerGroup.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
-#include "inputs/MesherParameters.h"
+#include "inputs/MesherOptions.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
 #include "inputs/outputRequest/OutRqGroup.h"
-#include "inputs/SolverParameters.h"
+#include "inputs/SolverOptions.h"
 
 class SmbData : public ProjectFile {
 public:
-    SolverParameters* solverParams;
-    MesherParameters* meshingParams;
+    SolverOptions* solverOptions;
+    MesherOptions* mesherOptions;
     PhysicalModelGroup<>* pMGroup;
     EMSourceGroup<>* emSources;
     OutRqGroup<>* outputRequests;

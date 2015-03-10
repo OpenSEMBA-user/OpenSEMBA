@@ -299,6 +299,7 @@ Mesh::getInternalBorder(
     }
     cerr << endl << "ERROR @ getInternalBorder: "
       << "Unable to detect region." << endl;
+    return vector<pair<const Volume*, UInt> >();
 }
 
 vector<pair<const Volume*, UInt> >

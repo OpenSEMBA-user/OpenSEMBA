@@ -11,10 +11,11 @@
 #include <string>
 
 #include "../math/CartesianVector.h"
+#include "Options.h"
 
 using namespace std;
 
-class MesherParameters {
+class MesherOptions : public Options {
 public:
     typedef enum {
         none,
@@ -26,8 +27,17 @@ public:
         relaxed,
         slanted
     } Mode;
-    MesherParameters();
-    MesherParameters(
+    typedef enum {
+        pec,
+        pmc,
+        pml,
+        mur1,
+        mur2,
+        periodic,
+        undefined
+    } BoundType;
+    MesherOptions();
+    MesherOptions(
             Mesher mesher,
             bool locationInMeshSet,
             CVecR3 locationInMesh,
@@ -42,6 +52,7 @@ public:
             string swfForze,
             string confOutput);
     Mesher getMesher() const;
+
     void setMesher(Mesher mesher);
     virtual const CVecR3& getLocationInMesh() const;
     virtual bool isLocationInMeshSet() const;
@@ -70,6 +81,17 @@ public:
     void setLocationInMesh(const CVecR3& locationInMesh);
     const string& getMeshOutputName() const;
     void setConfOutput(const string& confOutput);
+
+    const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
+    void setBoundaryMeshSize(const pair<CVecR3, CVecR3>& boundaryMeshSize);
+    const pair<CVecR3, CVecR3>& getBoundaryPadding() const;
+    void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
+    Real getScalingFactor() const;
+    void setScalingFactor(Real scalingFactor);
+    pair<BoundType,BoundType> getBoundTermination(const UInt i) const;
+    void setBoundTermination(const UInt i, UInt j, BoundType bound);
+
+    void applyGeometricScalingFactor(const Real& factor);
     virtual void printInfo() const;
 
 private:
@@ -86,6 +108,11 @@ private:
     bool locationInMeshSet_;
     CVecR3 locationInMesh_;
     string confOutput_;
+
+    Real scalingFactor_;
+    pair<BoundType,BoundType> boundTermination_[3];
+    pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
+    string toStr(const BoundType) const;
 };
 
 #endif /* OPENFOAMPARAMETERS_H_ */
