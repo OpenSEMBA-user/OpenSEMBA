@@ -16,7 +16,7 @@ Arguments::Arguments(const int argc,  const char* argv[]) {
     }
     for (Int i = 1; i < argc; i++) {
         string str = *argv++;
-        if (!str.compare("-n")) { // "-n" file name
+        if (!str.compare("-i")) {
             fileName_ = getArgvpp(++i, argc, *argv++);
         } else if (!str.compare("-h") || !str.compare("--help")) {
             printHelp();
