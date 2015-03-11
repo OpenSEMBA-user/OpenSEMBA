@@ -29,8 +29,8 @@ ElementsGroup<E>::~ElementsGroup() {
 
 }
 
-template<typename E> template<typename E2>
-ElementsGroup<E>& ElementsGroup<E>::operator=(const Group<E2>& rhs) {
+template<typename E>
+ElementsGroup<E>& ElementsGroup<E>::operator=(const Group<E>& rhs) {
     if (this == &rhs) {
         return *this;
     }

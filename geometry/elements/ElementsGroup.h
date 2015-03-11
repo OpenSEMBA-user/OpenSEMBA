@@ -35,8 +35,7 @@ public:
     ElementsGroup(const Group<E>& rhs);
     virtual ~ElementsGroup();
 
-    template <typename E2>
-    ElementsGroup<E>& operator=(const Group<E2>& rhs);
+    ElementsGroup<E>& operator=(const Group<E>& rhs);
 
     vector<const Element*> get(const Element::Type& type) const;
     vector<const Element*> get(const MatId matId, const LayerId layId) const;

@@ -43,7 +43,7 @@ public:
     const Grid3* getGrid() const;
     void setGrid(const Grid3& grid_);
 
-    vector<const Tri3*> getTriWithMatId(const UInt matId, const bool ignoreTet) const;
+    vector<const Tri3*> getTriWithMatId(MatId, bool ignoreTet = false) const;
     Face getBoundary(const Surface*) const;
     vector<Face> getBorderWithNormal(const vector<Face>& border, const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
@@ -66,8 +66,8 @@ protected:
     MapGroup map_;
     Grid3* grid_;
     static const Real areaDiffTolerance;
-    vector<Face> getInternalBorderOfTet(const ElementsGroup<>& tet) const;
-    vector<Face> getInternalBorderOfTri(const ElementsGroup<>& tri) const;
+    vector<Face> getInternalBorder(const ElementsGroup<Tet>& tet) const;
+    vector<Face> getInternalBorder(const ElementsGroup<Tri>& tri) const;
 };
 
 

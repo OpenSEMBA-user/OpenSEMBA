@@ -165,30 +165,30 @@ vector<BoxR3> Mesh::discretizeWithinBoundary(
 
 vector<const Tri3*>
 Mesh::getTriWithMatId(
-        const UInt matId,
-        const bool ignoreTet) const {
+        MatId matId,
+        bool ignoreTet) const {
     vector<const Tri3*> res;
-    ElementsGroup<> tri3 = getGroupOf<Tri3>();
+    ElementsGroup<Tri3> tri3 = getGroupOf<Tri3>();
     for (UInt i = 0; i < tri3.size(); i++) {
         if (tri3(i)->getMatId() == matId) {
-            res.push_back(new Tri3(tri3(i)->castTo<Tri3()));
+            res.push_back(new Tri3(*tri3(i)));
         }
     }
-    ElementsGroup<> tri6 = getGroupOf<Tri6>();
+    ElementsGroup<Tri6> tri6 = getGroupOf<Tri6>();
     for (UInt i = 0; i < tri6.size(); i++) {
         if (tri6(i)->getMatId() == matId) {
-            res.push_back(new Tri3(tri6(i)->castTo<Tri6>()->linearize()));
+            res.push_back(new Tri3(*tri6(i)->linearize()));
         }
     }
     if (!ignoreTet) {
-        ElementsGroup<> tetGrp = getGroupOf<Tet>();
-        ElementsGroup<> tet;
-        for (UInt i = 0; i < tetGrp.size(); i++) {
-            if (tetGrp(i)->getMatId() == matId) {
-                tet.add(tetGrp(i));
+        ElementsGroup<Tet> tet = getGroupOf<Tet>();
+        ElementsGroup<> region;
+        for (UInt i = 0; i < tet.size(); i++) {
+            if (tet(i)->getMatId() == matId) {
+                region.add(tet(i)->castTo<ElementBase>());
             }
         }
-        vector<Face> internalBorder = getInternalBorder(tet);
+        vector<Face> internalBorder = getInternalBorder(region);
         for (UInt i = 0; i < internalBorder.size(); i++) {
             const Volume* vol = internalBorder[i].first;
             const UInt face = internalBorder[i].second;
@@ -204,9 +204,8 @@ Mesh::getInternalBorder(const ElementsGroup<>& region) const {
     // the internal border. Returns a vector containing the element
     // faces composing the internal border.
     vector<Face> tri, res;
-    ElementsGroup<> tetRegion = region.getGroupOf<Tet>();
-    res = getInternalBorderOfTet(tetRegion);
-    tri = getInternalBorderOfTri(region.getGroupOf<Tri>());
+    res = getInternalBorder(region.getGroupOf<Tet>());
+    tri = getInternalBorder(region.getGroupOf<Tri>());
     res.insert(res.end(), tri.begin(), tri.end());
     return res;
 }
@@ -234,7 +233,7 @@ Mesh::getExternalBorder(const ElementsGroup<>& region) const {
 
 
 vector<Face>
-Mesh::getInternalBorderOfTet(const ElementsGroup<>& region) const {
+Mesh::getInternalBorder(const ElementsGroup<Tet>& region) const {
     // Builds a list with all tetrahedron faces.
     static const UInt faces = 4;
     static const UInt nVert = 3;
@@ -284,7 +283,7 @@ Mesh::getInternalBorderOfTet(const ElementsGroup<>& region) const {
 }
 
 vector<Face>
-Mesh::getInternalBorderOfTri(const ElementsGroup<>& region) const {
+Mesh::getInternalBorder(const ElementsGroup<Tri>& region) const {
     UInt nE = region.size();
     vector<Face> res(nE);
     for (UInt i = 0; i < nE; i++) {
