@@ -7,55 +7,59 @@
 
 #include "Hex8.h"
 
-const Real Hex8::tolerance = 1e-15;
+template<class T>
+const Real Hex8<T>::tolerance = 1e-15;
 
-Hex8::Hex8() {
+template<class T>
+Hex8<T>::Hex8() {
 
 }
 
-Hex8::Hex8(const CoordinateGroup<>& coordGr,
-           const ElementId id,
-           const CoordinateId vId[8],
-           const LayerId layerId,
-           const MatId   matId)
-:   Volume(id, layerId, matId) {
+template<class T>
+Hex8<T>::Hex8(const CoordinateGroup<>& coordGr,
+              const ElementId id,
+              const CoordinateId vId[8],
+              const LayerId layerId,
+              const MatId   matId)
+:   Volume<T>(id, layerId, matId) {
 
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << "ERROR @ Hex8::Hex8(): "
-                 << "Coord in new CoordinateGroup inexistent"
+            cerr << "ERROR @ Hex8<T>::Hex8(): "
+                 << "Coordinate in new CoordinateGroup inexistent"
                  << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
-        if (!coord->is<CoordR3>()) {
-            cerr << "ERROR @ Hex8::Hex8(): "
-                 << "Coord in new CoordinateGroup is not a valid Coord"
+        if (!coord->is< Coordinate<T,3> >()) {
+            cerr << "ERROR @ Hex8<T>::Hex8(): "
+                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
                  << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
-        v_[i] = coord->castTo<CoordR3>();
+        v_[i] = coord->castTo< Coordinate<T,3> >();
 	}
 }
 
-Hex8::Hex8(const CoordinateGroup<>& cG,
-           const ElementId id,
-           const CVecR3& min,
-           const CVecR3& max,
-           const LayerId layerId,
-           const MatId   matId)
-:   Volume(id, layerId, matId) {
+template<class T>
+Hex8<T>::Hex8(const CoordinateGroup<>& cG,
+              const ElementId id,
+              const CartesianVector<T,3>& min,
+              const CartesianVector<T,3>& max,
+              const LayerId layerId,
+              const MatId   matId)
+:   Volume<T>(id, layerId, matId) {
 
-    v_[0] = cG.get(CVecR3(min(0), min(1), min(2)));
-    v_[1] = cG.get(CVecR3(min(0), min(1), max(2)));
-    v_[2] = cG.get(CVecR3(min(0), max(1), min(2)));
-    v_[3] = cG.get(CVecR3(min(0), max(1), max(2)));
-    v_[4] = cG.get(CVecR3(max(0), min(1), min(2)));
-    v_[5] = cG.get(CVecR3(max(0), min(1), max(2)));
-    v_[6] = cG.get(CVecR3(max(0), max(1), min(2)));
-    v_[7] = cG.get(CVecR3(max(0), max(1), max(2)));
+    v_[0] = cG.get(CartesianVector<T,3>(min(0), min(1), min(2)));
+    v_[1] = cG.get(CartesianVector<T,3>(min(0), min(1), max(2)));
+    v_[2] = cG.get(CartesianVector<T,3>(min(0), max(1), min(2)));
+    v_[3] = cG.get(CartesianVector<T,3>(min(0), max(1), max(2)));
+    v_[4] = cG.get(CartesianVector<T,3>(max(0), min(1), min(2)));
+    v_[5] = cG.get(CartesianVector<T,3>(max(0), min(1), max(2)));
+    v_[6] = cG.get(CartesianVector<T,3>(max(0), max(1), min(2)));
+    v_[7] = cG.get(CartesianVector<T,3>(max(0), max(1), max(2)));
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		if (v_[i] == NULL) {
 			cerr<< "ERROR @ Hex8 ctor: "
@@ -66,30 +70,34 @@ Hex8::Hex8(const CoordinateGroup<>& cG,
 	}
 }
 
-Hex8::Hex8(const Hex8& rhs)
-:   Volume(rhs) {
+template<class T>
+Hex8<T>::Hex8(const Hex8<T>& rhs)
+:   Volume<T>(rhs) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
 }
 
-Hex8::~Hex8() {
+template<class T>
+Hex8<T>::~Hex8() {
 
 }
 
-ClassBase* Hex8::clone() const {
-    return new Hex8(*this);
+template<class T>
+ClassBase* Hex8<T>::clone() const {
+    return new Hex8<T>(*this);
 }
 
-bool Hex8::isRegular() const {
+template<class T>
+bool Hex8<T>::isRegular() const {
     // Checks that all edges are aligned with one of the axis.
-    static const CVecR3 xAxe(1.0, 0.0, 0.0);
-    static const CVecR3 yAxe(0.0, 1.0, 0.0);
-    static const CVecR3 zAxe(1.0, 0.0, 1.0);
+    static const CartesianVector<T,3> xAxe(1.0, 0.0, 0.0);
+    static const CartesianVector<T,3> yAxe(0.0, 1.0, 0.0);
+    static const CartesianVector<T,3> zAxe(1.0, 0.0, 1.0);
     for (UInt f = 0; f < numberOfFaces(); f++) {
-        CVecR3 first, second;
-        CVecR3 inc;
+        CartesianVector<T,3> first, second;
+        CartesianVector<T,3> inc;
         for (UInt i = 0; i < numberOfSideVertices(); i++) {
             first = *getSideV(f, i);
             second = *getSideV(f, (i+1) % numberOfSideVertices());
@@ -105,7 +113,8 @@ bool Hex8::isRegular() const {
     return true;
 }
 
-const CoordR3* Hex8::getSideV(const UInt f, const UInt i) const {
+template<class T>
+const Coordinate<T,3>* Hex8<T>::getSideV(const UInt f, const UInt i) const {
 	assert(f < numberOfFaces());
 	assert(i < numberOfSideCoordinates());
 	switch (f) {
@@ -211,25 +220,29 @@ const CoordR3* Hex8::getSideV(const UInt f, const UInt i) const {
 	exit(-1);
 }
 
-const CoordR3* Hex8::getSideVertex(const UInt f, const UInt i) const {
+template<class T>
+const Coordinate<T,3>* Hex8<T>::getSideVertex(const UInt f, const UInt i) const {
 	return getSideV(f,i);
 }
 
-Real Hex8::getAreaOfFace(const UInt f) const {
-    CartesianVector<Real,3> v1, v2;
+template<class T>
+Real Hex8<T>::getAreaOfFace(const UInt f) const {
+    CartesianVector<T,3> v1, v2;
     v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
     v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
     return ((Real) 0.5 * (v1 ^ v2).norm());
 }
 
-void Hex8::setV(const UInt i, const CoordR3* coord) {
+template<class T>
+void Hex8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 	assert(i < numberOfCoordinates());
 	v_[i] = coord;
 }
 
-void Hex8::printInfo() const {
+template<class T>
+void Hex8<T>::printInfo() const {
 	cout << "--- Hex8 Info ---" << endl;
-	cout << "Id: " << getId() << endl;
+	cout << "Id: " << this->getId() << endl;
 	cout << "Coordinates:" << endl;
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		getV(i)->printInfo();

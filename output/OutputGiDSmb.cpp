@@ -33,18 +33,18 @@ OutputGiDSmb::writeMesh() {
     for (UInt i = 0; i < lay.size(); i++) {
         for (UInt j = 0; j < mat.size(); j++) {
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
-            ElementsGroup<Element> elem;
-            elem = smb_->mesh->elem_.get(Element::line,
+            ElementsGroup<ElemR> elem;
+            elem = smb_->mesh->elem_.get(ElementBase::line,
                                          mat(j)->getId(),
-                                         lay(i)->getId()).getGroupOf<Element>();
+                                         lay(i)->getId()).getGroupOf<ElemR>();
             writeElements(elem, name, GiD_Linear, 2);
-            elem = smb_->mesh->elem_.get(Element::surface,
+            elem = smb_->mesh->elem_.get(ElementBase::surface,
                                          mat(j)->getId(),
-                                         lay(i)->getId()).getGroupOf<Element>();
+                                         lay(i)->getId()).getGroupOf<ElemR>();
             writeElements(elem, name, GiD_Triangle, 3);
-            elem = smb_->mesh->elem_.get(Element::volume,
+            elem = smb_->mesh->elem_.get(ElementBase::volume,
                                          mat(j)->getId(),
-                                         lay(i)->getId()).getGroupOf<Element>();
+                                         lay(i)->getId()).getGroupOf<ElemR>();
             writeElements(elem, name, GiD_Tetrahedra, 4);
         }
     }
@@ -64,8 +64,7 @@ OutputGiDSmb::writeMeshWithIds(
         Int tmpCounter = coordCounter_;
         static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (UInt j = 0; j < ids[t].size(); j++) {
-            const Element* e = smb_->mesh->elem_.getPtrToId(ids[t][j])
-                                   ->castTo<Element>();
+            const ElemR* e = smb_->mesh->elem_.getPtrToId(ids[t][j])->castTo<ElemR>();
             for (Int i = 0; i < nV; i++) {
                 CVecR3 pos;
                 if (isLinear) {
@@ -131,7 +130,7 @@ OutputGiDSmb::writeOutputRequestsMesh() {
 }
 
 void OutputGiDSmb::writeElements(
-        const ElementsGroup<Element>& elem,
+        const ElementsGroup<ElemR>& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {

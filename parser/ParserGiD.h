@@ -97,7 +97,7 @@ private:
     MesherOptions::BoundType strToBoundType(string label) const;
     PhysicalModelGroup<>::Type strToMaterialType(string label) const;
     PMMultiport::Type strToMultiportType(string label) const;
-    Element::Type strToElementType(string label) const;
+    ElementBase::Type strToElementType(string label) const;
     OutRq::Type strToOutputType(string label) const;
     SIBCType strToSIBCType(string str) const;
     GiDOutputType strToGidOutputType(string label) const;

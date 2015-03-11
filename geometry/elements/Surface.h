@@ -12,22 +12,23 @@
 
 using namespace std;
 
-class Surface : public Element {
+template<class T>
+class Surface : public Element<T> {
 public:
     Surface(const LayerId layerId = LayerId(0),
             const MatId   matId   = MatId(0));
     Surface(const ElementId id,
             const LayerId layerId = LayerId(0),
             const MatId   matId   = MatId(0));
-    Surface(const Surface& rhs);
+    Surface(const Surface<T>& rhs);
     virtual ~Surface();
     
 	bool isContainedInPlane() const;
 	bool isContainedInPlane(const CartesianPlane plane) const;
 	
-	virtual ElementBase::Type getType() const { return surface; }
+	virtual ElementBase::Type getType() const { return ElementBase::surface; }
     
-    virtual CVecR3 getNormal() const;
+    virtual CartesianVector<T,3> getNormal() const;
 	
     bool isRectangular() const;
 	
@@ -36,5 +37,10 @@ public:
 protected:
 	static const Real curvatureTolerance;
 };
+
+#include "Surface.hpp"
+
+typedef Surface<Real> SurfR;
+typedef Surface<Int > SurfI;
 
 #endif /* SURFACE_H_ */

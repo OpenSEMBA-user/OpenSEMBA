@@ -11,7 +11,7 @@
 #include "Surface.h"
 #include <stdlib.h>
 
-class Polygon: public Surface {
+class Polygon: public Surface<Real> {
 public:
     Polygon();
 	Polygon(const CoordinateGroup<>& cG,

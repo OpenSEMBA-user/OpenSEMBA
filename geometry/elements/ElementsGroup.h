@@ -60,7 +60,7 @@ public:
     void add(E* newElem , bool newId = false);
     void add(vector<E*>&, bool newId = false);
     vector<ElementId> add(const CoordinateGroup<>& coord,
-                          const vector<Hex8>& hex);
+                          const vector<HexR8>& hex);
 
     map<LayerId, ElementsGroup<E> > separateLayers() const;
     ElementsGroup<E> removeElementsWithMatId(const MatId matId) const;

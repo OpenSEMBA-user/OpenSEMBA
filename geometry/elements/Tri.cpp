@@ -4,19 +4,19 @@
 
 Tri::Tri(const LayerId layerId,
          const MatId   matId)
-:   Surface(layerId, matId) {
+:   SurfR(layerId, matId) {
 
 }
 
 Tri::Tri(const ElementId id,
          const LayerId layerId,
          const MatId   matId)
-:   Surface(id, layerId, matId) {
+:   SurfR(id, layerId, matId) {
 
 }
 
 Tri::Tri(const Tri& rhs)
-:   Surface(rhs) {
+:   SurfR(rhs) {
 
 }
 

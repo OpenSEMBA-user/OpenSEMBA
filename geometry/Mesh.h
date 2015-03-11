@@ -36,12 +36,12 @@ public:
             const MatId newMatId);
     vector<ElementId> addAsHex8(const BoxR3& box);
     BoxR3 getBound(
-            const vector<pair<const Volume*, UInt> >& border) const;
+            const vector<pair<const Volume<Real>*, UInt> >& border) const;
     BoxR3 getBound(
             const vector<ElementId>& list) const;
     vector<ElementId> getIdsInsideBound(
             const BoxR3& bound,
-            const Element::Type type = Element::undefined) const;
+            const ElementBase::Type type = ElementBase::undefined) const;
     void applyGeometricScalingFactor(
             const Real factor);
     vector<ElementId> getTetIds(
@@ -59,11 +59,11 @@ public:
     bool isRectilinear() const;
     const Grid3* getGrid() const;
     void setGrid(const Grid3& grid_);
-    virtual vector<pair<const Element*, UInt> > getElementsWithVertex(
+    virtual vector<pair<const ElemR*, UInt> > getElementsWithVertex(
             const UInt vertexId,
-            const Element::Type type) const;
+            const ElementBase::Type type) const;
     vector<BoxR3> getRectilinearHexesInsideRegion(
-            const ElementsGroup<Element>& region) const;
+            const ElementsGroup<ElemR>& region) const;
 //    pair<const Volume*, UInt> getBoundary(const Surface*) const;
 //    vector<UInt> getAdjacentElements(const vector<ElementId>& elemIds) const;
     vector<pair<const Tet*, UInt> > getBorderWithNormal(
@@ -72,7 +72,7 @@ public:
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
     virtual bool isOnBoundary(const CVecR3 pos) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
-    virtual ElementsGroup<Surface> getMaterialBoundary(
+    virtual ElementsGroup<SurfR> getMaterialBoundary(
             const MatId   matId,
             const LayerId layId) const;
     virtual vector<BoxR3> discretizeWithinBoundary(

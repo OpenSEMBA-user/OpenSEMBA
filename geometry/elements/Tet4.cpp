@@ -24,14 +24,14 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
         const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << "ERROR @ Tet4::Tet4(): "
-                 << "Coord in new CoordinateGroup inexistent"
+                 << "Coordinate in new CoordinateGroup inexistent"
                  << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Tet4::Tet4(): "
-                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
                  << endl;
             assert(false);
             exit(EXIT_FAILURE);

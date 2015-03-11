@@ -14,6 +14,7 @@ using namespace std;
 
 #include "ElementBase.h"
 
+template<class T>
 class Element : public ElementBase {
 public:
     Element(const LayerId layerId = LayerId(0),
@@ -21,27 +22,27 @@ public:
     Element(const ElementId id,
             const LayerId layerId = LayerId(0),
             const MatId   matId   = MatId(0));
-    Element(const Element& rhs);
+    Element(const Element<T>& rhs);
     virtual ~Element();
 
-    bool isCoordinate(const CoordR3* coord) const;
+    bool isCoordinate(const Coordinate<T,3>* coord) const;
 
-    virtual bool isInnerPoint(const CVecR3& pos) const;
+    virtual bool isInnerPoint(const CartesianVector<T,3>& pos) const;
 
-    virtual const CoordR3* getV    (const UInt i) const = 0;
-    virtual const CoordR3* getSideV(const UInt f,
-            const UInt i) const = 0;
+    virtual const Coordinate<T,3>* getV    (const UInt i) const = 0;
+    virtual const Coordinate<T,3>* getSideV(const UInt f,
+                                            const UInt i) const = 0;
 
-    virtual const CoordR3* getVertex    (const UInt i) const = 0;
-    virtual const CoordR3* getSideVertex(const UInt f,
-            const UInt i) const = 0;
+    virtual const Coordinate<T,3>* getVertex    (const UInt i) const = 0;
+    virtual const Coordinate<T,3>* getSideVertex(const UInt f,
+                                                 const UInt i) const = 0;
 
-    BoxR3 getBound() const;
+    Box<T,3> getBound() const;
     // Returns ptr to coord with min(max) lexicographical position.
-    virtual const CoordR3* getMinV() const;
-    virtual const CoordR3* getMaxV() const;
+    virtual const Coordinate<T,3>* getMinV() const;
+    virtual const Coordinate<T,3>* getMaxV() const;
 
-    virtual void setV(const UInt i, const CoordR3*);
+    virtual void setV(const UInt i, const Coordinate<T,3>*);
 
     virtual void printInfo() const;
 
@@ -50,5 +51,10 @@ protected:
 
     void ascendingOrder(UInt nVal, UInt* val) const;
 };
+
+#include "Element.hpp"
+
+typedef Element<Real> ElemR;
+typedef Element<Int>  ElemI;
 
 #endif

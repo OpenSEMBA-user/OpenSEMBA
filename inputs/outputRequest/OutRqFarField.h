@@ -15,7 +15,7 @@ public:
     virtual ~OutRqFarField();
     OutRqFarField(
             const Domain& domain,
-            const Element::Type elementType,
+            const ElementBase::Type elementType,
             const string& name_,
             const vector<ElementId>& box,
             const Real iTh, const Real fTh, const Real sTh,

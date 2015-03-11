@@ -54,9 +54,22 @@ template<typename C>
 const CoordR3* CoordinateGroup<C>::get(const CVecR3& position) const {
     multiset<const CoordR3*, lexCompareCoord>::iterator it;
     CoordR3 aux(position);
-    it = index_.find(&aux);
-    if (it != index_.end()) {
+    it = indexUnstr_.find(&aux);
+    if (it != indexUnstr_.end()) {
         const CoordR3* res = *it;
+        return res;
+    } else {
+        return NULL;
+    }
+}
+
+template<typename C>
+const CoordI3* CoordinateGroup<C>::get(const CVecI3& position) const {
+    multiset<const CoordI3*, lexCompareCoord>::iterator it;
+    CoordI3 aux(position);
+    it = indexStr_.find(&aux);
+    if (it != indexStr_.end()) {
+        const CoordI3* res = *it;
         return res;
     } else {
         return NULL;
@@ -75,7 +88,7 @@ void CoordinateGroup<C>::add(vector<C*>& newCoords, bool newId) {
 
 template<typename C>
 C* CoordinateGroup<C>::add(const CVecR3& newPosition,
-                                 const bool canOverlap) {
+                           const bool canOverlap) {
     vector<const C*> res;
     vector<CVecR3> aux;
     aux.push_back(newPosition);
@@ -87,11 +100,42 @@ C* CoordinateGroup<C>::add(const CVecR3& newPosition,
 
 template<typename C>
 vector<C*> CoordinateGroup<C>::add(const vector<CVecR3>& newPos,
-                                         const bool canOverlap) {
+                                   const bool canOverlap) {
     vector<C*> newCoords;
     for(UInt i = 0; i < newPos.size(); i++) {
         if (get(newPos[i]) == NULL || canOverlap) {
             CoordR3* newCoord = new CoordR3(newPos[i]);
+            if (newCoord->template is<C>()) {
+                newCoords.push_back(newCoord->template castTo<C>());
+            } else {
+                delete newCoord;
+            }
+        }
+    }
+    add(newCoords, true);
+    buildIndex(newCoords);
+    return newCoords;
+}
+
+template<typename C>
+C* CoordinateGroup<C>::add(const CVecI3& newPosition,
+                           const bool canOverlap) {
+    vector<const C*> res;
+    vector<CVecI3> aux;
+    aux.push_back(newPosition);
+    res = add(aux, canOverlap);
+    if(!res.empty())
+        return res[0];
+    return NULL;
+}
+
+template<typename C>
+vector<C*> CoordinateGroup<C>::add(const vector<CVecI3>& newPos,
+                                   const bool canOverlap) {
+    vector<C*> newCoords;
+    for(UInt i = 0; i < newPos.size(); i++) {
+        if (get(newPos[i]) == NULL || canOverlap) {
+            CoordI3* newCoord = new CoordI3(newPos[i]);
             if (newCoord->template is<C>()) {
                 newCoords.push_back(newCoord->template castTo<C>());
             } else {
@@ -128,6 +172,10 @@ template<typename C>
 void CoordinateGroup<C>::buildIndex(const vector<C*>& coords) {
     for (UInt i = 0; i < coords.size(); i++) {
         if (coords[i]->template is<CoordR3>())
-            index_.insert(coords[i]->template castTo<CoordR3>());
+            indexUnstr_.insert(coords[i]->template castTo<CoordR3>());
+    }
+    for (UInt i = 0; i < coords.size(); i++) {
+        if (coords[i]->template is<CoordI3>())
+            indexStr_.insert(coords[i]->template castTo<CoordI3>());
     }
 }

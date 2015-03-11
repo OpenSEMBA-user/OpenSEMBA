@@ -13,7 +13,7 @@ OutRqFarField::~OutRqFarField() {
 
 OutRqFarField::OutRqFarField(
  const Domain& domain,
- const Element::Type elementType,
+ const ElementBase::Type elementType,
  const string& name,
  const vector<ElementId>& elem,
  const Real iTh, const Real fTh, const Real sTh,

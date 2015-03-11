@@ -16,7 +16,7 @@ Polygon::Polygon(const CoordinateGroup<>& cG,
                  const vector<CoordinateId>& vId,
                  const LayerId layerId,
                  const MatId   matId)
-:   Surface(id, layerId, matId) {
+:   Surface<Real>(id, layerId, matId) {
     
 	assert(vId.size() >= 3);
 	v_.resize(vId.size());
@@ -24,14 +24,14 @@ Polygon::Polygon(const CoordinateGroup<>& cG,
 		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << "ERROR @ Polygon::Polygon(): "
-                 << "Coord in new CoordinateGroup inexistent"
+                 << "Coordinate in new CoordinateGroup inexistent"
                  << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Polygon::Polygon(): "
-                 << "Coord in new CoordinateGroup is not a valid Coord"
+                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
                  << endl;
             assert(false);
             exit(EXIT_FAILURE);
@@ -41,7 +41,7 @@ Polygon::Polygon(const CoordinateGroup<>& cG,
 }
 
 Polygon::Polygon(const Polygon& rhs)
-:   Surface(rhs) {
+:   Surface<Real>(rhs) {
     
     v_ = rhs.v_;
 }

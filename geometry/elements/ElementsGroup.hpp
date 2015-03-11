@@ -148,7 +148,8 @@ vector<ElementId> ElementsGroup<E>::getIds() const {
 
 template<typename E>
 vector<ElementId> ElementsGroup<E>::getHexIds() const {
-    vector<const Hex8*> hex8 = this->template getVectorOf<Hex8>();
+    vector<const HexR8*> hex8 =
+        this->template getVectorOf<HexR8>();
     const UInt nK = hex8.size();
     vector<ElementId> res(nK);
     for (UInt i = 0; i < nK; i++) {
@@ -197,7 +198,7 @@ void ElementsGroup<E>::add(vector<E*>& newElems, bool newId) {
 
 template<typename E>
 vector<ElementId> ElementsGroup<E>::add(const CoordinateGroup<>& coord,
-                                        const vector<Hex8>& newHex) {
+                                        const vector<HexR8>& newHex) {
     CoordinateId vId[8];
     MatId matId;
     vector<ElementId> res;
@@ -209,7 +210,8 @@ vector<ElementId> ElementsGroup<E>::add(const CoordinateGroup<>& coord,
             vId[j] = newHex[i].getV(j)->getId();
         }
         matId = newHex[i].getMatId();
-        Hex8* newhex = new Hex8(coord, ElementId(0), vId, LayerId(0), matId);
+        HexR8* newhex =
+            new HexR8(coord, ElementId(0), vId, LayerId(0), matId);
         if(newhex->is<E>()) {
             this->add(newhex->template castTo<E>(), true);
             res.push_back(newhex->getId());
@@ -256,21 +258,21 @@ ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
 template<typename E>
 void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
     for (UInt i = 0; i < this->size(); i++) {
-        if (this->element_[i]->template is<Element>()) {
-            Element* elem = this->element_[i]->template castTo<Element>();
+        if (this->element_[i]->template is<ElemR>()) {
+            ElemR* elem = this->element_[i]->template castTo<ElemR>();
             for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordinateId vId = elem->getV(j)->getId();
                 const CoordinateBase* coord = vNew.getPtrToId(vId);
                 if (coord == NULL) {
                     cerr << "ERROR @ ElementsGroup<E>::reassignPointers(): "
-                         << "Coord in new CoordinateGroup inexistent"
+                         << "Coordinate in new CoordinateGroup inexistent"
                          << endl;
                     assert(false);
                     exit(EXIT_FAILURE);
                 }
                 if (!coord->is<CoordR3>()) {
                     cerr << "ERROR @ ElementsGroup<E>::reassignPointers(): "
-                         << "Coord in new CoordinateGroup is not a valid Coord"
+                         << "Coordinate in new CoordinateGroup is not a valid Coordinate"
                          << endl;
                     assert(false);
                     exit(EXIT_FAILURE);

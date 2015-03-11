@@ -39,7 +39,7 @@ public:
     } Type;
     OutRq(
             const Domain& domain,
-            const Element::Type elementType,
+            const ElementBase::Type elementType,
             const OutRq::Type outputType,
             const string& name,
             const vector<ElementId>& elements);

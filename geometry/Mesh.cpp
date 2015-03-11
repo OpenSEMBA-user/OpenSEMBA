@@ -107,9 +107,9 @@ Mesh::getBorderWithNormal(
 bool
 Mesh::isFloatingCoordinate(const CoordR3* param) const {
     for (UInt i = 0; i < elem_.size(); i++) {
-        if(!elem_(i)->is<Element>())
+        if(!elem_(i)->is<ElemR>())
             continue;
-        const Element* elem = elem_(i)->castTo<Element>();
+        const ElemR* elem = elem_(i)->castTo<ElemR>();
         for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
             if (*param == *elem->getV(j)) {
                 return false;
@@ -121,7 +121,7 @@ Mesh::isFloatingCoordinate(const CoordR3* param) const {
 
 vector<BoxR3>
 Mesh::getRectilinearHexesInsideRegion(
-        const ElementsGroup<Element>& region) const {
+        const ElementsGroup<ElemR>& region) const {
     // Determines positions to query.
     vector<ElementId> ids = region.getIds();
     BoxR3 bound(getBound(ids));
@@ -149,9 +149,9 @@ const CoordR3* Mesh::getClosestVertex(const CVecR3 pos) const {
     const CoordR3* res;
     Real minDist = numeric_limits<Real>::infinity();
     for (UInt b = 0; b < elem_.size(); b++) {
-        if(!elem_(b)->is<Element>())
+        if(!elem_(b)->is<ElemR>())
             continue;
-        const Element* element = elem_(b)->castTo<Element>();
+        const ElemR* element = elem_(b)->castTo<ElemR>();
         for (UInt i = 0; i < element->numberOfCoordinates(); i++) {
             const CoordR3* candidate = element->getV(i);
             if ((candidate->pos() - res->pos()).norm() < minDist) {
@@ -162,10 +162,10 @@ const CoordR3* Mesh::getClosestVertex(const CVecR3 pos) const {
     return res;
 }
 
-ElementsGroup<Surface> Mesh::getMaterialBoundary(
+ElementsGroup<SurfR> Mesh::getMaterialBoundary(
         const MatId   matId,
         const LayerId layId) const {
-    return elem_.get(matId, layId).getGroupOf<Surface>();
+    return elem_.get(matId, layId).getGroupOf<SurfR>();
 }
 
 vector<BoxR3> Mesh::discretizeWithinBoundary(
@@ -404,15 +404,15 @@ Mesh::getBound(const vector<ElementId>& list) const {
 	   return BoxR3().setInfinity();
 	}
 	// Runs over border computing the bounding box of each face.
-	if(!elem_.getPtrToId(list[0])->is<Element>())
+	if(!elem_.getPtrToId(list[0])->is<ElemR>())
 	    return BoxR3();
-	const Element* elem = elem_.getPtrToId(list[0])->castTo<Element>();
+	const ElemR* elem = elem_.getPtrToId(list[0])->castTo<ElemR>();
 	BoxR3 bound = elem->getBound();
 	const UInt nK = list.size();
 	for (UInt i = 1; i < nK; i++) {
-	    if(!elem_.getPtrToId(list[i])->is<Element>())
+	    if(!elem_.getPtrToId(list[i])->is<ElemR>())
             continue;
-	    const Element* elem = elem_.getPtrToId(list[i])->castTo<Element>();
+	    const ElemR* elem = elem_.getPtrToId(list[i])->castTo<ElemR>();
 		bound << elem->getBound();
 	}
 	return bound;
@@ -420,17 +420,17 @@ Mesh::getBound(const vector<ElementId>& list) const {
 
 BoxR3
 Mesh::getBound(
- const vector<pair<const Volume*, UInt> >& border) const {
+ const vector<pair<const Volume<Real>*, UInt> >& border) const {
 	// Inits bounding box.
    if (border.size() == 0) {
       return BoxR3().setInfinity();
    }
-	const Volume* tet = border[0].first;
+	const Volume<Real>* tet = border[0].first;
 	const UInt face = border[0].second;
 	BoxR3 bound = tet->getBoundOfFace(face);
 	// Runs over border computing the bounding box of each face.
 	for (UInt i = 1; i < border.size(); i++) {
-		const Volume* vol = border[i].first;
+		const Volume<Real>* vol = border[i].first;
 		const UInt face = border[i].second;
 		bound << vol->getBoundOfFace(face);
 	}
@@ -438,18 +438,18 @@ Mesh::getBound(
 }
 
 vector<ElementId>
-Mesh::getIdsInsideBound(const BoxR3& bound, const Element::Type type) const {
+Mesh::getIdsInsideBound(const BoxR3& bound, const ElementBase::Type type) const {
     const UInt nK = elem_.size();
     vector<ElementId> res;
     res.reserve(nK);
     BoxR3 localBound;
     for (UInt i = 0; i < nK; i++) {
-        if (!elem_(i)->is<Element>())
+        if (!elem_(i)->is<ElemR>())
             continue;
-        const Element* e = elem_(i)->castTo<Element>();
+        const ElemR* e = elem_(i)->castTo<ElemR>();
         localBound = e->getBound();
         if (localBound <= bound
-        && (e->getType() == type || type==Element::undefined)) {
+        && (e->getType() == type || type==ElementBase::undefined)) {
             res.push_back(e->getId());
         }
     }
@@ -459,7 +459,7 @@ Mesh::getIdsInsideBound(const BoxR3& bound, const Element::Type type) const {
 bool
 Mesh::isRectilinear() const {
 	bool hasCartesianGridDefined = (grid_ != NULL);
-	bool onlyContainsQuad4 = (elem_.sizeOf<Quad4>() == elem_.size());
+	bool onlyContainsQuad4 = (elem_.sizeOf< Quad4<Real> >() == elem_.size());
 	return (hasCartesianGridDefined && onlyContainsQuad4);
 }
 
@@ -482,18 +482,18 @@ Mesh::applyGeometricScalingFactor(
 	}
 }
 
-vector<pair<const Element*, UInt> >
+vector<pair<const ElemR*, UInt> >
 Mesh::getElementsWithVertex(const UInt vertexId,
-                            const Element::Type type) const {
+                            const ElementBase::Type type) const {
 
-    vector<pair<const Element*, UInt> > res;
+    vector<pair<const ElemR*, UInt> > res;
     for (UInt i = 0; i < elem_.size(); i++) {
-        if(!elem_(i)->is<Element>())
+        if(!elem_(i)->is<ElemR>())
             continue;
-        const Element* e = elem_(i)->castTo<Element>();
+        const ElemR* e = elem_(i)->castTo<ElemR>();
         for (UInt j = 0; j < e->numberOfVertices(); j++) {
             if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
-                pair<const Element*, UInt> aux(e,j);
+                pair<const ElemR*, UInt> aux(e,j);
                 res.push_back(aux);
             }
         }
@@ -512,7 +512,7 @@ void Mesh::printInfo() const {
 
 vector<ElementId> Mesh::addAsHex8(const BoxR3& box) {
     cG_.add(box.getPos());
-    vector<Hex8> hexes;
-    hexes.push_back(Hex8(cG_, ElementId(0), box.getMin(), box.getMax()));
+    vector<HexR8> hexes;
+    hexes.push_back(HexR8(cG_, ElementId(0), box.getMin(), box.getMax()));
     return elem_.add(cG_, hexes);
 }

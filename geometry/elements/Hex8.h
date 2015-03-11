@@ -10,7 +10,8 @@
 
 #include "Volume.h"
 
-class Hex8 : public Volume {
+template<class T>
+class Hex8 : public Volume<T> {
 public:
     Hex8();
     Hex8(const CoordinateGroup<>&,
@@ -20,11 +21,11 @@ public:
          const MatId   matId   = MatId(0));
     Hex8(const CoordinateGroup<>&,
          const ElementId id,
-         const CVecR3& min,
-         const CVecR3& max,
+         const CartesianVector<T,3>& min,
+         const CartesianVector<T,3>& max,
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Hex8(const Hex8& rhs);
+    Hex8(const Hex8<T>& rhs);
     virtual ~Hex8();
 
     ClassBase* clone() const;
@@ -40,21 +41,26 @@ public:
     inline UInt numberOfSideVertices   (const UInt f = 0) const { return 4; }
     inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 4; }
 
-    const CoordR3* getV    (const UInt i) const { return v_[i]; }
-    const CoordR3* getSideV(const UInt f, const UInt i) const;
+    const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
+    const Coordinate<T,3>* getSideV(const UInt f, const UInt i) const;
 
-    const CoordR3* getVertex    (const UInt i) const { return v_[i]; }
-    const CoordR3* getSideVertex(const UInt f, const UInt i) const;
+    const Coordinate<T,3>* getVertex    (const UInt i) const { return v_[i]; }
+    const Coordinate<T,3>* getSideVertex(const UInt f, const UInt i) const;
 
     Real getAreaOfFace(const UInt face) const;
 
-    void setV(const UInt i, const CoordR3*);
+    void setV(const UInt i, const Coordinate<T,3>*);
 
     void printInfo() const;
 private:
-    const CoordR3* v_[8];
+    const Coordinate<T,3>* v_[8];
 
     const static Real tolerance;
 };
+
+#include "Hex8.hpp"
+
+typedef Hex8<Real> HexR8;
+typedef Hex8<Int > HexI8;
 
 #endif /* HEX8_H_ */
