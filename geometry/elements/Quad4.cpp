@@ -21,18 +21,14 @@ Quad4::Quad4(const CoordinateGroup<>& cG,
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << "ERROR @ Quad4::Quad4(): "
+            cerr << endl << "ERROR @ Quad4::Quad4(): "
                  << "Coord in new CoordinateGroup inexistent"
                  << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
         }
         if (!coord->is<CoordR3>()) {
-            cerr << "ERROR @ Quad4::Quad4(): "
+            cerr << endl << "ERROR @ Quad4::Quad4(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
         }
         v_[i] = coord->castTo<CoordR3>();
 	}

@@ -23,18 +23,14 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
     for (UInt i = 0; i < tet.np; i++) {
         const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << "ERROR @ Tet4::Tet4(): "
+            cerr << endl << "ERROR @ Tet4::Tet4(): "
                  << "Coord in new CoordinateGroup inexistent"
                  << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
         }
         if (!coord->is<CoordR3>()) {
-            cerr << "ERROR @ Tet4::Tet4(): "
+            cerr << endl << "ERROR @ Tet4::Tet4(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
         }
         v_[i] = coord->castTo<CoordR3>();
     }

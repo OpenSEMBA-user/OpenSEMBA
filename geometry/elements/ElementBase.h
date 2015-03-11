@@ -43,6 +43,7 @@ public:
     LayerId getLayerId() const { return layerId_; }
     MatId   getMatId  () const { return matId_;   }
 
+    virtual BoxR3 getBound() const = 0;
     virtual const CoordR3* getV    (const UInt i) const = 0;
 
     virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }

@@ -38,8 +38,8 @@ public:
     ElementsGroup<E>& operator=(const Group<E>& rhs);
 
     bool isLinear() const;
-    bool areTriangles   (const vector<ElementId>& elemIds) const;
-    bool areTetrahedrons(const vector<ElementId>& elemIds) const;
+//    bool areTriangles   (const vector<ElementId>& elemIds) const;
+//    bool areTetrahedrons(const vector<ElementId>& elemIds) const;
 
     vector<const Element*> get(const Element::Type& type) const;
     vector<const Element*> get(const MatId matId, const LayerId layId) const;

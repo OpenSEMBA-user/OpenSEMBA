@@ -47,17 +47,6 @@ bool ElementsGroup<E>::isLinear() const {
 }
 
 template<typename E>
-bool ElementsGroup<E>::areTetrahedrons(const vector<ElementId>& elemId) const {
-    UInt nE = elemId.size();
-    for (UInt i = 0; i < nE; i++) {
-        if (!this->getPtrToId(elemId[i])->template is<Tet>()) {
-            return false;
-        }
-    }
-    return true;
-}
-
-template<typename E>
 void ElementsGroup<E>::setMaterialIds(
  const vector<ElementId>& id,
  const MatId newMatId) {
@@ -92,17 +81,6 @@ BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
         bound << vol->getBoundOfFace(face);
     }
     return bound;
-}
-
-template<typename E>
-bool ElementsGroup<E>::areTriangles(const vector<ElementId>& elemId) const {
-    UInt nE = elemId.size();
-    for (UInt i = 0; i < nE; i++) {
-        if (!this->getPtrToId(elemId[i])->template is<Tri>()) {
-            return false;
-        }
-    }
-    return true;
 }
 
 template<typename E>

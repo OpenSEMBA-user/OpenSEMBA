@@ -91,7 +91,7 @@ Mesh::getAdjacentRegion(const ElementsGroup<>& region) const {
     // Prepares result.
     ElementsGroup<> res;
     for (UInt i = 0; i < aux.nRows(); i++) {
-        res.add(*getPtrToId(ElementId(aux(i,0))));
+        res.add(getPtrToId(ElementId(aux(i,0))));
     }
     return res;
 }

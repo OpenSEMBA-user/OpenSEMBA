@@ -23,18 +23,14 @@ Lin2::Lin2(const CoordinateGroup<>& coordGr,
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << "ERROR @ Lin2::Lin2(): "
+            cerr << endl << "ERROR @ Lin2::Lin2(): "
                  << "Coord in new CoordinateGroup inexistent"
                  << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
         }
         if (!coord->is<CoordR3>()) {
-            cerr << "ERROR @ Lin2::Lin2(): "
+            cerr << endl << "ERROR @ Lin2::Lin2(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
         }
         v_[i] = coord->castTo<CoordR3>();
 	}

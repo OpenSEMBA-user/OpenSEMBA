@@ -15,18 +15,12 @@ Tri6::Tri6(const CoordinateGroup<>& coordGr,
 	for (UInt i = 0; i < geo.np; i++) {
 		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << "ERROR @ Tri6::Tri6(): "
-                 << "Coord in new CoordinateGroup inexistent"
-                 << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
+            cerr << endl << "ERROR @ Tri6::Tri6(): "
+                 << "Coord in new CoordinateGroup inexistent" << endl;
         }
         if (!coord->is<CoordR3>()) {
-            cerr << "ERROR @ Tri6::Tri6(): "
-                 << "Coord in new CoordinateGroup is not a valid Coord"
-                 << endl;
-            assert(false);
-            exit(ELEMENT_ERROR);
+            cerr << endl << "ERROR @ Tri6::Tri6(): "
+                 << "Coord in new CoordinateGroup is not a valid Coord" << endl;
         }
         v_[i] = coord->castTo<CoordR3>();
 	}
