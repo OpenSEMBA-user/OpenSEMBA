@@ -201,7 +201,7 @@ SimplexTet<SIMPTET_N>::integrateScalarsOnFace(
     res *= area;
     cerr << "ERROR@SimplexTet::integrateScalarsOnFace" << endl;
     cerr << "This has to be redone." << endl;
-    exit(SIMPLEX_ERROR);
+    exit(EXIT_FAILURE);
 	return res;
 }
  

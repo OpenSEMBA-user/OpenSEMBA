@@ -16,27 +16,27 @@ Simplex::~Simplex() {
  
 const Polynomial<Real>&
 Simplex::getLagr(const UInt i) const {
-	exit(SIMPLEX_ERROR);
+	exit(EXIT_FAILURE);
 }
  
 const Polynomial<Real>&
 Simplex::getDLagr(const UInt i, const UInt f) const {
-	exit(SIMPLEX_ERROR);
+	exit(EXIT_FAILURE);
 }
  
 Real
 Simplex::getCda(UInt i, UInt j, UInt k) const {
-	exit(SIMPLEX_ERROR);
+	exit(EXIT_FAILURE);
 }
  
 inline UInt
 Simplex::nodeIndex(UInt i, UInt j) const {
-	exit(SIMPLEX_ERROR);
+	exit(EXIT_FAILURE);
 }
  
 inline UInt
 Simplex::cubatureNodeIndex(UInt i, UInt j) const {
-	exit(SIMPLEX_ERROR);
+	exit(EXIT_FAILURE);
 }
  
 UInt

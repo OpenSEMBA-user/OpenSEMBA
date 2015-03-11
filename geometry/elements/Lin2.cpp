@@ -27,14 +27,14 @@ Lin2::Lin2(const CoordinateGroup<>& coordGr,
                  << "Coord in new CoordinateGroup inexistent"
                  << endl;
             assert(false);
-            exit(ELEMENT_ERROR);
+            exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Lin2::Lin2(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
             assert(false);
-            exit(ELEMENT_ERROR);
+            exit(EXIT_FAILURE);
         }
         v_[i] = coord->castTo<CoordR3>();
 	}

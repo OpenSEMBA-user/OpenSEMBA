@@ -13,8 +13,8 @@ ElementsGroup<E>::ElementsGroup() {
 }
 
 template<typename E>
-ElementsGroup<E>::ElementsGroup(const vector<E*>& elems)
-:   GroupId<E, ElementId>(elems) {
+ElementsGroup<E>::ElementsGroup(const vector<E*>& elems, bool ownership)
+:   GroupId<E, ElementId>(elems, ownership) {
 
 }
 
@@ -42,7 +42,7 @@ ElementsGroup<E>& ElementsGroup<E>::operator=(const Group<E>& rhs) {
 
 template<typename E>
 bool ElementsGroup<E>::isLinear() const {
-    return (this->template sizeOf<Tri6>() == 0 &&
+    return (this->template sizeOf<Tri6> () == 0 &&
             this->template sizeOf<Tet10>() == 0);
 }
 
@@ -271,7 +271,7 @@ ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
             elems.push_back(this->element_[i]->clone()->template castTo<E>());
         }
     }
-    return ElementsGroup<E>(elems);
+    return ElementsGroup<E>(elems, false);
 }
 
 template<typename E>
@@ -287,14 +287,14 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
                          << "Coord in new CoordinateGroup inexistent"
                          << endl;
                     assert(false);
-                    exit(ELEMENT_ERROR);
+                    exit(EXIT_FAILURE);
                 }
                 if (!coord->is<CoordR3>()) {
                     cerr << "ERROR @ ElementsGroup<E>::reassignPointers(): "
                          << "Coord in new CoordinateGroup is not a valid Coord"
                          << endl;
                     assert(false);
-                    exit(ELEMENT_ERROR);
+                    exit(EXIT_FAILURE);
                 }
                 elem->setV(j, coord->castTo<CoordR3>());
             }
@@ -314,9 +314,6 @@ void ElementsGroup<E>::linearize() {
         assert(false);
         exit(EXIT_FAILURE);
     }
-    assert(this->template sizeOf<Lin2>() == 0);
-    assert(this->template sizeOf<Tri3>() == 0);
-    assert(this->template sizeOf<Tet4>() == 0);
 
     for(UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->template is<Tri6> ()) {

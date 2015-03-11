@@ -3,10 +3,6 @@
 
 #include "ClassIdBase.h"
 
-#ifndef COORDINATE_ERROR
-#define COORDINATE_ERROR 13
-#endif
-
 CreateId(CoordinateId);
 
 class CoordinateBase : public ClassIdBase<CoordinateId> {

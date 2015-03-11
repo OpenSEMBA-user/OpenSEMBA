@@ -27,14 +27,14 @@ Tet4::Tet4(const CoordinateGroup<>& coordGr,
                  << "Coord in new CoordinateGroup inexistent"
                  << endl;
             assert(false);
-            exit(ELEMENT_ERROR);
+            exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Tet4::Tet4(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
             assert(false);
-            exit(ELEMENT_ERROR);
+            exit(EXIT_FAILURE);
         }
         v_[i] = coord->castTo<CoordR3>();
     }

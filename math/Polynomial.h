@@ -7,10 +7,6 @@
 #define POLYNOMIAL_H_
 
 // ----------- Libraries ------------------------------------------------------
-#ifndef POLYNOMIAL_ERROR
-	#define POLYNOMIAL_ERROR 9017
-#endif
-// ----------- Libraries ------------------------------------------------------
 #include <iostream> // Stream I/O
 #include <stdlib.h> // Included because of gcc compatibility issue.
 #include <cmath>

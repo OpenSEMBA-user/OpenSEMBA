@@ -29,7 +29,7 @@ template<typename E = ElementBase>
 class ElementsGroup : public GroupId<E, ElementId> {
 public:
     ElementsGroup();
-    ElementsGroup(const vector<E*>&);
+    ElementsGroup(const vector<E*>&, bool ownership = true);
     ElementsGroup(const Group<E>& rhs);
     virtual ~ElementsGroup();
 

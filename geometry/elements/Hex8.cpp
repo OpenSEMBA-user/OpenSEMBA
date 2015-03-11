@@ -27,14 +27,14 @@ Hex8::Hex8(const CoordinateGroup<>& coordGr,
                  << "Coord in new CoordinateGroup inexistent"
                  << endl;
             assert(false);
-            exit(ELEMENT_ERROR);
+            exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
             cerr << "ERROR @ Hex8::Hex8(): "
                  << "Coord in new CoordinateGroup is not a valid Coord"
                  << endl;
             assert(false);
-            exit(ELEMENT_ERROR);
+            exit(EXIT_FAILURE);
         }
         v_[i] = coord->castTo<CoordR3>();
 	}
@@ -61,7 +61,7 @@ Hex8::Hex8(const CoordinateGroup<>& cG,
 			cerr<< "ERROR @ Hex8 ctor: "
 				<< "Coordinate " << i << " pointer is null." << endl;
             assert(false);
-            exit(ELEMENT_ERROR);
+            exit(EXIT_FAILURE);
 		}
 	}
 }

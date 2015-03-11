@@ -45,10 +45,10 @@ Group<T>& Group<T>::operator=(const Group<T>& rhs) {
     return *this;
 }
 
-template<typename T>
-T* Group<T>::operator()(const UInt i) {
-    return element_[i];
-}
+//template<typename T>
+//T* Group<T>::operator()(const UInt i) {
+//    return element_[i];
+//}
 
 template<typename T>
 const T* Group<T>::operator()(const UInt i) const {
@@ -113,7 +113,7 @@ void Group<T>::add(vector<T*>& newElems) {
              << "Forbidden to add elements to a Group without ownership "
              << "of elements on it" << endl;
         assert(false);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     this->element_.reserve(this->element_.size() + newElems.size());

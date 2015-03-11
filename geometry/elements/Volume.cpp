@@ -79,5 +79,5 @@ UInt Volume::getFaceNumber(const Surface* surf) const {
 	printInfo();
 	cerr << "Surface: " << endl;
 	surf->printInfo();
-	exit(ELEMENT_ERROR);
+	exit(EXIT_FAILURE);
 }

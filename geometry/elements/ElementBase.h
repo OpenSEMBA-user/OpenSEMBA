@@ -3,10 +3,6 @@
 
 #include "ClassIdBase.h"
 
-#ifndef ELEMENT_ERROR
-#define ELEMENT_ERROR 37311347
-#endif
-
 #include "IdBase.h"
 #include "Layer.h"
 
