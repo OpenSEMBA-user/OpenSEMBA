@@ -3,6 +3,7 @@
 
 #include "ClassIdBase.h"
 #include "../coordinates/Coordinate.h"
+#include "../Box.h"
 
 #include "IdBase.h"
 #include "Layer.h"

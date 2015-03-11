@@ -34,7 +34,7 @@ public:
 
     vector<Face> getInternalBorder(const ElementsGroup<>& region) const;
     vector<Face> getExternalBorder(const ElementsGroup<>& region) const;
-    ElementsGroup<> getAdjacentRegion(const ElementsGroup<>& region) const;
+    ElementsGroup<> getAdjacentRegion(const ElementsGroup<>& region);
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const ElementsGroup<>& region) const;
 

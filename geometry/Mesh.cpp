@@ -79,7 +79,7 @@ Mesh::getBorderWithNormal(
 }
 
 ElementsGroup<>
-Mesh::getAdjacentRegion(const ElementsGroup<>& region) const {
+Mesh::getAdjacentRegion(const ElementsGroup<>& region) {
     vector<Face> outer = getExternalBorder(region);
     UInt nOut = outer.size();
     // Removes repeated.
@@ -171,7 +171,7 @@ Mesh::getTriWithMatId(
     ElementsGroup<> tri3 = getGroupOf<Tri3>();
     for (UInt i = 0; i < tri3.size(); i++) {
         if (tri3(i)->getMatId() == matId) {
-            res.push_back(new Tri3(tri3(i)));
+            res.push_back(new Tri3(tri3(i)->castTo<Tri3()));
         }
     }
     ElementsGroup<> tri6 = getGroupOf<Tri6>();
