@@ -68,19 +68,38 @@ BoxR3 ElementsGroup<E>::getBound() const {
 }
 
 template<typename E>
+BoxR3 ElementsGroup<E>::getBound(const vector<ElementId>& ids) const {
+    if (this->size() == 0) {
+        return BoxR3().setInfinity();
+    }
+    BoxR3 bound;
+    for (UInt i = 0; i < ids.size(); i++) {
+        bound << this->getPtrToId(ids[i])->getBound();
+    }
+    return bound;
+}
+
+template<typename E>
 BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
     if (border.size() == 0) {
         return BoxR3().setInfinity();
     }
-    const VolumeR tet = border[0].first;
+    const VolR* tet = border[0].first;
     const UInt face = border[0].second;
     BoxR3 bound = tet->getBoundOfFace(face);
     for (UInt i = 1; i < border.size(); i++) {
-        const VolumeR* vol = border[i].first;
+        const VolR* vol = border[i].first;
         const UInt face = border[i].second;
         bound << vol->getBoundOfFace(face);
     }
     return bound;
+}
+
+template<typename E>
+GroupId<E, ElementId> ElementsGroup<E>::get(
+    const vector<ElementId>& ids) const {
+
+    return GroupId<E, ElementId>::get(ids);
 }
 
 template<typename E>
@@ -192,23 +211,6 @@ vector<ElementId> ElementsGroup<E>::getIdsWithoutMaterialId(
     for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getMatId() != matId) {
             res.push_back(this->element_[i]->getId());
-        }
-    }
-    return res;
-}
-
-template<typename E>
-vector<const Element*> ElementsGroup<E>::getElementsWithMatId(
-    const vector<MatId>& matId) const {
-
-    vector<const Element*> res;
-    res.reserve(this->size());
-    for (UInt m = 0; m < matId.size(); m++) {
-        for (UInt i = 0; i < this->size(); i++) {
-            if (this->element_[i]->getMatId() == matId[m] &&
-                this->element_[i]->template is<Element>()) {
-                res.push_back(this->element_[i]->template castTo<Element>());
-            }
         }
     }
     return res;

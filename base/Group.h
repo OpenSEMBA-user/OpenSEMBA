@@ -21,7 +21,7 @@ public:
 
     UInt size() const { return element_.size(); }
 
-//    T*       operator()(const UInt i);
+    T*       operator()(const UInt i);
     const T* operator()(const UInt i) const;
 
     template<class T2>

@@ -66,8 +66,8 @@ public:
     void setMetalModel(MetalModel metalModel);
     bool isMTLN() const;
     void setMTLN(bool mtln);
-    uint getNumberOfTimeSteps() const;
-    void setNumberOfTimeSteps(uint numberOfTimeSteps);
+    UInt getNumberOfTimeSteps() const;
+    void setNumberOfTimeSteps(UInt numberOfTimeSteps);
     const pair<double, double>& getPmlAlpha() const;
     void setPMLAlpha(const pair<double, double>& pmlAlpha);
     const pair<double, double>& getPmlCorrection() const;

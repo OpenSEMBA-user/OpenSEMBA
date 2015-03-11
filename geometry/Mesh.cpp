@@ -42,7 +42,7 @@ Mesh::Mesh(Mesh& rhs) {
     ElementsGroup<>::operator=(rhs);
     reassignPointers(cG_);
     map_ = rhs.map_;
-    map_.reassignPointers(element_);
+    map_.reassignPointers(*this);
     if (rhs.grid_ != NULL) {
         grid_ = new Grid3(*rhs.grid_);
     } else {
@@ -142,19 +142,9 @@ Mesh::isOnBoundary(const CVecR3 pos) const {
 #warning "Not implemented"
 }
 
-vector<const SurfR*> Mesh::getMaterialBoundary(
-        const MatId   matId,
-        const LayerId layId) const {
-    vector<const SurfR*> res;
-    vector<const Element*> e = get(ElementBase::surface, matId, layId);
-    res.reserve(e.size());
-    for (UInt i = 0; i < e.size(); i++) {
-        const SurfR* surf = dynamic_cast<const SurfR*>(e[i]);
-        if (surf != NULL) {
-            res.push_back(surf);
-        }
-    }
-    return res;
+ElementsGroup<SurfR> Mesh::getMaterialBoundary(const MatId   matId,
+                                               const LayerId layId) const {
+    return get(ElementBase::surface, matId, layId).getGroupOf<SurfR>();
 }
 
 vector<BoxR3> Mesh::discretizeWithinBoundary(
@@ -163,11 +153,11 @@ vector<BoxR3> Mesh::discretizeWithinBoundary(
 #warning "Not implemented"
 }
 
-vector<const Tri3*>
+ElementsGroup<Tri3>
 Mesh::getTriWithMatId(
         MatId matId,
         bool ignoreTet) const {
-    vector<const Tri3*> res;
+    vector<Tri3*> res;
     ElementsGroup<Tri3> tri3 = getGroupOf<Tri3>();
     for (UInt i = 0; i < tri3.size(); i++) {
         if (tri3(i)->getMatId() == matId) {
@@ -177,7 +167,7 @@ Mesh::getTriWithMatId(
     ElementsGroup<Tri6> tri6 = getGroupOf<Tri6>();
     for (UInt i = 0; i < tri6.size(); i++) {
         if (tri6(i)->getMatId() == matId) {
-            res.push_back(new Tri3(*tri6(i)->linearize()));
+            res.push_back(tri6(i)->linearize());
         }
     }
     if (!ignoreTet) {
@@ -195,7 +185,7 @@ Mesh::getTriWithMatId(
             res.push_back(vol->castTo<Tet>()->getTri3Face(face));
         }
     }
-    return res;
+    return ElementsGroup<Tri3>(res);
 }
 
 vector<Face>
@@ -318,18 +308,18 @@ Mesh::applyGeometricScalingFactor(
 	}
 }
 
-vector<pair<const Element*, UInt> >
+vector<pair<const ElemR*, UInt> >
 Mesh::getElementsWithVertex(const UInt vertexId,
                             const ElementBase::Type type) const {
 
-    vector<pair<const Element*, UInt> > res;
+    vector<pair<const ElemR*, UInt> > res;
     for (UInt i = 0; i < element_.size(); i++) {
-        if(!element_[i]->is<ElementBase>())
+        if(!element_[i]->is<ElemR>())
             continue;
-        const ElementBase* e = element_[i]->castTo<ElementBase>();
+        const ElemR* e = element_[i]->castTo<ElemR>();
         for (UInt j = 0; j < e->numberOfVertices(); j++) {
             if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
-                pair<const Element*, UInt> aux(e,j);
+                pair<const ElemR*, UInt> aux(e,j);
                 res.push_back(aux);
             }
         }

@@ -69,7 +69,7 @@ const Coordinate<T,3>* Quad4<T>::getVertex(const UInt i) const {
 template<class T>
 const Coordinate<T,3>* Quad4<T>::getSideV(const UInt f,
                                const UInt i) const {
-	assert(f < numberOfFaces());
+	assert(f < this->numberOfFaces());
 	assert(i < numberOfSideCoordinates());
 	return v_[(f + i) % 4];
 }
@@ -77,8 +77,8 @@ const Coordinate<T,3>* Quad4<T>::getSideV(const UInt f,
 template<class T>
 const Coordinate<T,3>* Quad4<T>::getSideVertex(const UInt f,
                                     const UInt i) const {
-	assert(f < numberOfFaces());
-	assert(i < numberOfSideVertices());
+	assert(f < this->numberOfFaces());
+	assert(i < this->numberOfSideVertices());
 	return v_[(f + i) % 4];
 }
 

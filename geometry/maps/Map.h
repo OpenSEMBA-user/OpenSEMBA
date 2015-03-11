@@ -14,7 +14,7 @@ using namespace std;
 class Map {
 public:
    Map();
-   Map(const Element* elem);
+   Map(const ElemR* elem);
 	virtual ~Map();
 	virtual UInt
 	 getVolToF(UInt f) const = 0;

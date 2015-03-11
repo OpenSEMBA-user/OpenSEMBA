@@ -143,7 +143,7 @@ UInt MapGroup::getVolToF(const UInt id, const UInt face) const {
 }
 
 
-pair<const Volume*, UInt>
+pair<const VolR*, UInt>
 MapGroup::getInnerFace(const UInt id) const {
    map<UInt,MapSurface*>::const_iterator surf = tri_.find(id);
    assert(surf != tri_.end());
@@ -152,11 +152,11 @@ MapGroup::getInnerFace(const UInt id) const {
    return pair<const Tet*, UInt>(vol, face);
 }
 
-pair<const Volume*, UInt>
+pair<const VolR*, UInt>
 MapGroup::getOuterFace(const UInt id) const {
-   const Volume* vol = tri_.find(id)->second->getVol(1);
+   const VolR* vol = tri_.find(id)->second->getVol(1);
    const UInt face = tri_.find(id)->second->getVolToF(1);
-   return pair<const Volume*, UInt>(vol, face);
+   return pair<const VolR*, UInt>(vol, face);
 }
 
 pair<const Tet*, UInt>
@@ -177,7 +177,7 @@ bool MapGroup::isDomainBoundary(const UInt id, const UInt f) const {
    return (getNeighbour(id,f)->getId() == id);
 }
 
-bool MapGroup::isDomainBoundary(pair<const Volume*, UInt> boundary) const {
+bool MapGroup::isDomainBoundary(Face boundary) const {
    return isDomainBoundary(boundary.first->getId(), boundary.second);
 }
 

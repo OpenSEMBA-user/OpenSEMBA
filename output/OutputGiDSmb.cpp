@@ -27,19 +27,24 @@ OutputGiDSmb::~OutputGiDSmb() {
 void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
-    vector<LayerId> layId = smb_->layers->getIdsOf<Layer>();
-    vector<MatId> matId = smb_->pMGroup->getIdsOf<PhysicalModel>();
-    for (UInt i = 0; i < layId.size(); i++) {
-        for (UInt j = 0; j < matId.size(); j++) {
-            const Layer* layer = smb_->layers->getPtrToId(layId[i]);
-            const PhysicalModel* mat = smb_->pMGroup->getPtrToId(matId[j]);
-            const string name = mat->getName() + "@" + layer->getName();
-            vector<const Element*> elem;
-            elem = smb_->mesh->get(Element::line, matId[j], layId[i]);
+    LayerGroup<Layer> lay = smb_->layers->getGroupOf<Layer>();
+    PhysicalModelGroup<PhysicalModel> mat =
+        smb_->pMGroup->getGroupOf<PhysicalModel>();
+    for (UInt i = 0; i < lay.size(); i++) {
+        for (UInt j = 0; j < mat.size(); j++) {
+            const string name = mat(j)->getName() + "@" + lay(i)->getName();
+            ElementsGroup<ElemR> elem;
+            elem = smb_->mesh->get(ElementBase::line,
+                                   mat(j)->getId(),
+                                   lay(i)->getId()).getGroupOf<ElemR>();
             writeElements(elem, name, GiD_Linear, 2);
-            elem = smb_->mesh->get(Element::surface, matId[j], layId[i]);
+            elem = smb_->mesh->get(ElementBase::surface,
+                                   mat(j)->getId(),
+                                   lay(i)->getId()).getGroupOf<ElemR>();
             writeElements(elem, name, GiD_Triangle, 3);
-            elem = smb_->mesh->get(Element::volume, matId[j], layId[i]);
+            elem = smb_->mesh->get(ElementBase::volume,
+                                   mat(j)->getId(),
+                                   lay(i)->getId()).getGroupOf<ElemR>();
             writeElements(elem, name, GiD_Tetrahedra, 4);
         }
     }
@@ -59,7 +64,7 @@ OutputGiDSmb::writeMeshWithIds(
         Int tmpCounter = coordCounter_;
         static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (UInt j = 0; j < ids[t].size(); j++) {
-            const ElemR* e = smb_->mesh->elem_.getPtrToId(ids[t][j])->castTo<ElemR>();
+            const ElemR* e = smb_->mesh->getPtrToId(ids[t][j])->castTo<ElemR>();
             for (Int i = 0; i < nV; i++) {
                 CVecR3 pos;
                 if (isLinear) {

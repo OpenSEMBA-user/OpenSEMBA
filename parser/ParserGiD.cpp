@@ -411,7 +411,7 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                 case ParserGiD::outRqOnPoint:
                     getNextLabelAndValue(label,value);
                     elem.clear();
-#error "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
+#warning "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
                     elem.push_back(ElementId(atoi(value.c_str())));
                     res->add(new OutRq(
                             domain, ElementBase::node, type, name, elem));
@@ -1142,7 +1142,7 @@ ParserGiD::readGenerator() {
             for (UInt i = 0; i < nE; i++) {
                 UInt e;
                 f_in >> e;
-#error "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
+#warning "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
                 elems.push_back(ElementId(e));
             }
         } else if (label.compare("End of Generator")==0) {
@@ -1633,8 +1633,8 @@ ParserGiD::checkVersionCompatibility(const string version) const {
     bool versionMatches =
             atof(version.c_str()) == atof(string(APP_VERSION).c_str());
     if (!versionMatches) {
-        cerr<< "ERROR @ ParserGiD: "
-                << "File version " << version << " is not supported." << endl;
+        cerr << "ERROR @ ParserGiD: "
+             << "File version " << version << " is not supported." << endl;
     }
     return versionMatches;
 }

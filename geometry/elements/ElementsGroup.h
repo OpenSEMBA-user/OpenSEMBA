@@ -26,7 +26,7 @@ using namespace std;
 
 #include "GroupId.h"
 
-typedef pair<const Volume*, UInt> Face;
+typedef pair<const VolR*, UInt> Face;
 
 template<typename E = ElementBase>
 class ElementsGroup : public GroupId<E, ElementId> {
@@ -38,6 +38,7 @@ public:
 
     ElementsGroup<E>& operator=(const Group<E>& rhs);
 
+    GroupId<E, ElementId> get(const vector<ElementId>&) const;
     ElementsGroup<E> get(const ElementBase::Type type) const;
     ElementsGroup<E> get(const MatId matId) const;
     ElementsGroup<E> get(const vector<MatId>& matId) const;
@@ -56,11 +57,9 @@ public:
             const BoxR3& bound,
             const ElementBase::Type type = ElementBase::undefined) const;
 
-    vector<const Element*> getElementsWithMatId(const vector<MatId>& matId) const;
-    vector<const Surface*> getSurfacesWithMatId(const vector<MatId>& matId) const;
-
-    BoxR3 getBound(const vector<Face>& border) const;
     BoxR3 getBound() const;
+    BoxR3 getBound(const vector<ElementId>&) const;
+    BoxR3 getBound(const vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
 
     void add(E* newElem , bool newId = false);

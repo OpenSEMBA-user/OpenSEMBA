@@ -176,11 +176,11 @@ void SolverOptions::setMTLN(bool mtln) {
     MTLN_ = mtln;
 }
 
-uint SolverOptions::getNumberOfTimeSteps() const {
+UInt SolverOptions::getNumberOfTimeSteps() const {
     return numberOfTimeSteps_;
 }
 
-void SolverOptions::setNumberOfTimeSteps(uint numberOfTimeSteps) {
+void SolverOptions::setNumberOfTimeSteps(UInt numberOfTimeSteps) {
     numberOfTimeSteps_ = numberOfTimeSteps;
 }
 

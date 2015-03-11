@@ -43,17 +43,16 @@ public:
     const Grid3* getGrid() const;
     void setGrid(const Grid3& grid_);
 
-    vector<const Tri3*> getTriWithMatId(MatId, bool ignoreTet = false) const;
+    ElementsGroup<Tri3> getTriWithMatId(MatId, bool ignoreTet = false) const;
     Face getBoundary(const SurfR*) const;
     vector<Face> getBorderWithNormal(const vector<Face>& border, const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
-    virtual vector<pair<const Element*, UInt> > getElementsWithVertex(
+    virtual vector<pair<const ElemR*, UInt> > getElementsWithVertex(
             const UInt vertexId,
             const ElementBase::Type type) const;
     virtual bool isOnBoundary(const CVecR3 pos) const;
-    virtual vector<const SurfR*> getMaterialBoundary(
-            const MatId   matId,
-            const LayerId layId) const;
+    ElementsGroup<SurfR> getMaterialBoundary(const MatId   matId,
+                                             const LayerId layId) const;
     virtual vector<BoxR3> discretizeWithinBoundary(
             const UInt matId,
             const UInt layId) const;

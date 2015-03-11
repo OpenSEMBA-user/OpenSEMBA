@@ -16,7 +16,7 @@ using namespace std;
 #include "MapSurface.h"
 #include "MapVolume.h"
 
-typedef pair<const Volume*, UInt> Face;
+typedef pair<const VolR*, UInt> Face;
 
 class MapGroup {
 public:
