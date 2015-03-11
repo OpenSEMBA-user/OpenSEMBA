@@ -12,7 +12,7 @@
 #include <utility>
 #include <iostream>
 #include "elements/ElementsGroup.h"
-#include "maps/MapGroup.h"
+//#include "maps/MapGroup.h"
 #include "Grid.h"
 
 using namespace std;
@@ -50,10 +50,10 @@ public:
     ElementsGroup<Tri3> getTriWithMatId(
             const UInt matId, const bool ignoreTet = false) const;
     ElementsGroup<Tri3> getTriWithId(const vector<ElementId>& Id) const;
-    vector<pair<const Volume*, UInt> > getInternalBorder(
-            const vector<ElementId>& elemIds) const;
-    vector<pair<const Volume*, UInt> > getExternalBorder(
-            const vector<ElementId>& elemIds) const;
+//    vector<pair<const Volume*, UInt> > getInternalBorder(
+//            const vector<ElementId>& elemIds) const;
+//    vector<pair<const Volume*, UInt> > getExternalBorder(
+//            const vector<ElementId>& elemIds) const;
     void linearize();
     bool isLinear() const;
     bool isRectilinear() const;
@@ -64,8 +64,8 @@ public:
             const Element::Type type) const;
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const vector<const Element*>& region) const;
-    pair<const Volume*, UInt> getBoundary(const Surface*) const;
-    vector<UInt> getAdjacentElements(const vector<ElementId>& elemIds) const;
+//    pair<const Volume*, UInt> getBoundary(const Surface*) const;
+//    vector<UInt> getAdjacentElements(const vector<ElementId>& elemIds) const;
     vector<pair<const Tet*, UInt> > getBorderWithNormal(
             const vector<pair<const Tet*, UInt> >& border,
             const CVecR3& normal);
@@ -78,19 +78,19 @@ public:
     virtual vector<BoxR3> discretizeWithinBoundary(
             const UInt matId,
             const UInt layId) const;
-    pair<const Volume*, UInt> getNeighConnection(
-            pair<const Volume*, const UInt> inner) const;
+//    pair<const Volume*, UInt> getNeighConnection(
+//            pair<const Volume*, const UInt> inner) const;
     virtual void printInfo() const;
 protected:
-    MapGroup map_;
+//    MapGroup map_;
     Grid3* grid_;
     static const Real areaDiffTolerance;
-    vector<pair<const Volume*, UInt> >
-    getInternalBorderOfTetRegion(
-            const vector<ElementId>& region) const;
-    vector<pair<const Volume*, UInt> >
-    getInternalBorderOfTriRegion(
-            const vector<ElementId>& region) const;
+//    vector<pair<const Volume*, UInt> >
+//    getInternalBorderOfTetRegion(
+//            const vector<ElementId>& region) const;
+//    vector<pair<const Volume*, UInt> >
+//    getInternalBorderOfTriRegion(
+//            const vector<ElementId>& region) const;
 };
 
 
