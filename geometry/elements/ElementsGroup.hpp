@@ -58,6 +58,43 @@ bool ElementsGroup<E>::areTetrahedrons(const vector<ElementId>& elemId) const {
 }
 
 template<typename E>
+void ElementsGroup<E>::setMaterialIds(
+ const vector<ElementId>& id,
+ const MatId newMatId) {
+    for (UInt i = 0; i < id.size(); i++) {
+        this->getPtrToId(id[i])->setMatId(newMatId);
+    }
+}
+
+template<typename E>
+BoxR3 ElementsGroup<E>::getBound() const {
+    if (this->size() == 0) {
+        return BoxR3().setInfinity();
+    }
+    BoxR3 bound = this->element_[0]->getBound();
+    for (UInt i = 1; i < this->size(); i++) {
+        bound << this->element_[i]->getBound();
+    }
+    return bound;
+}
+
+template<typename E>
+BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
+    if (border.size() == 0) {
+        return BoxR3().setInfinity();
+    }
+    const Volume* tet = border[0].first;
+    const UInt face = border[0].second;
+    BoxR3 bound = tet->getBoundOfFace(face);
+    for (UInt i = 1; i < border.size(); i++) {
+        const Volume* vol = border[i].first;
+        const UInt face = border[i].second;
+        bound << vol->getBoundOfFace(face);
+    }
+    return bound;
+}
+
+template<typename E>
 bool ElementsGroup<E>::areTriangles(const vector<ElementId>& elemId) const {
     UInt nE = elemId.size();
     for (UInt i = 0; i < nE; i++) {
@@ -83,16 +120,50 @@ vector<const Element*> ElementsGroup<E>::get(const Element::Type& type) const {
 }
 
 template<typename E>
+const CoordR3*
+ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
+    const CoordR3* res;
+    Real minDist = numeric_limits<Real>::infinity();
+    for (UInt b = 0; b < this->size(); b++) {
+        for (UInt i = 0; i < this->element_[b]->numberOfCoordinates(); i++) {
+            const CoordR3* candidate = this->element_[b]->getV(i);
+            if ((candidate->pos() - res->pos()).norm() < minDist) {
+                res = candidate;
+            }
+        }
+    }
+    return res;
+}
+
+template<typename E>
+vector<ElementId>
+ElementsGroup<E>::getIdsInsideBound(
+        const BoxR3& bound,
+        const Element::Type type) const {
+    const UInt nK = this->size();
+    vector<ElementId> res;
+    res.reserve(nK);
+    for (UInt i = 0; i < nK; i++) {
+        const Element* e = this->element_[i];
+        BoxR3 localBound = e->getBound();
+        if (localBound <= bound &&
+                (e->getType() == type || type==Element::undefined)) {
+            res.push_back(e->getId());
+        }
+    }
+    return res;
+}
+
+
+template<typename E>
 vector<const Element*> ElementsGroup<E>::get(const MatId   matId,
                                              const LayerId layId) const {
-
     vector<const Element*> res;
     res.reserve(this->size());
     for (UInt i = 0; i < this->size(); i++) {
         if ((this->element_[i]->getMatId()   == matId) &&
             (this->element_[i]->getLayerId() == layId) &&
             this->element_[i]->template is<Element>()) {
-
             res.push_back(this->element_[i]->template castTo<Element>());
         }
     }
@@ -103,7 +174,6 @@ template<typename E>
 vector<const Element*> ElementsGroup<E>::get(const Element::Type& type,
                                              const MatId   matId,
                                              const LayerId layerId) const {
-
     vector<const Element*> res;
     res.reserve(this->size());
     for (UInt i = 0; i < this->size(); i++) {
@@ -119,28 +189,6 @@ vector<const Element*> ElementsGroup<E>::get(const Element::Type& type,
     return res;
 }
 
-template<typename E>
-vector<ElementId> ElementsGroup<E>::getIds(
-    const vector<const Element*>& list) const {
-
-    vector<ElementId> res;
-    res.reserve(list.size());
-    for (UInt i = 0; i < list.size(); i++) {
-        res.push_back(list[i]->getId());
-    }
-    return res;
-}
-
-template<typename E>
-vector<ElementId> ElementsGroup<E>::getHexIds() const {
-    vector<const Hex8*> hex8 = this->template getVectorOf<Hex8>();
-    const UInt nK = hex8.size();
-    vector<ElementId> res(nK);
-    for (UInt i = 0; i < nK; i++) {
-        res[i] = hex8[i]->getId();
-    }
-    return res;
-}
 
 template<typename E>
 vector<ElementId> ElementsGroup<E>::getIdsWithMaterialId(
@@ -283,18 +331,14 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
                 CoordinateId vId = elem->getV(j)->getId();
                 const CoordinateBase* coord = vNew.getPtrToId(vId);
                 if (coord == NULL) {
-                    cerr << "ERROR @ ElementsGroup<E>::reassignPointers(): "
+                    cerr << endl << "ERROR @ ElementsGroup<E>: "
                          << "Coord in new CoordinateGroup inexistent"
                          << endl;
-                    assert(false);
-                    exit(ELEMENT_ERROR);
                 }
                 if (!coord->is<CoordR3>()) {
-                    cerr << "ERROR @ ElementsGroup<E>::reassignPointers(): "
+                    cerr << endl << "ERROR @ ElementsGroup<E>: "
                          << "Coord in new CoordinateGroup is not a valid Coord"
                          << endl;
-                    assert(false);
-                    exit(ELEMENT_ERROR);
                 }
                 elem->setV(j, coord->castTo<CoordR3>());
             }

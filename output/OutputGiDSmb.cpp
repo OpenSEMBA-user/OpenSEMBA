@@ -35,11 +35,11 @@ OutputGiDSmb::writeMesh() {
             const PhysicalModel* mat = smb_->pMGroup->getPtrToId(matId[j]);
             const string name = mat->getName() + "@" + layer->getName();
             vector<const Element*> elem;
-            elem = smb_->mesh->elem_.get(Element::line, matId[j], layId[i]);
+            elem = smb_->mesh->get(Element::line, matId[j], layId[i]);
             writeElements(elem, name, GiD_Linear, 2);
-            elem = smb_->mesh->elem_.get(Element::surface, matId[j], layId[i]);
+            elem = smb_->mesh->get(Element::surface, matId[j], layId[i]);
             writeElements(elem, name, GiD_Triangle, 3);
-            elem = smb_->mesh->elem_.get(Element::volume, matId[j], layId[i]);
+            elem = smb_->mesh->get(Element::volume, matId[j], layId[i]);
             writeElements(elem, name, GiD_Tetrahedra, 4);
         }
     }
@@ -59,8 +59,7 @@ OutputGiDSmb::writeMeshWithIds(
         Int tmpCounter = coordCounter_;
         static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (UInt j = 0; j < ids[t].size(); j++) {
-            const Element* e = smb_->mesh->elem_.getPtrToId(ids[t][j])
-                                   ->castTo<Element>();
+            const Element* e = smb_->mesh->getPtrToId(ids[t][j])->castTo<Element>();
             for (Int i = 0; i < nV; i++) {
                 CVecR3 pos;
                 if (isLinear) {

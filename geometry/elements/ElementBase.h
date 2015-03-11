@@ -2,10 +2,7 @@
 #define ELEMENTBASE_H_
 
 #include "ClassIdBase.h"
-
-#ifndef ELEMENT_ERROR
-#define ELEMENT_ERROR 37311347
-#endif
+#include "../coordinates/Coordinate.h"
 
 #include "IdBase.h"
 #include "Layer.h"
@@ -45,6 +42,8 @@ public:
 
     LayerId getLayerId() const { return layerId_; }
     MatId   getMatId  () const { return matId_;   }
+
+    virtual const CoordR3* getV    (const UInt i) const = 0;
 
     virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }
     virtual void setMatId  (const MatId   matId  ) { matId_  = matId;   }

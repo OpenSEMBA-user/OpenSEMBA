@@ -25,6 +25,8 @@ using namespace std;
 
 #include "GroupId.h"
 
+typedef pair<const Volume*, UInt> Face;
+
 template<typename E = ElementBase>
 class ElementsGroup : public GroupId<E, ElementId> {
 public:
@@ -45,15 +47,20 @@ public:
                                const MatId   matId,
                                const LayerId layerId) const;
 
-    vector<ElementId> getIds(const vector<const Element*>& list) const;
-    vector<ElementId> getHexIds() const;
+    void setMaterialIds(
+            const vector<ElementId>& ids,
+            const MatId newMatId);
+
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
+    vector<ElementId> getIdsInsideBound(const BoxR3& bound, const Element::Type type = Element::undefined) const;
 
-    vector<const Element*>
-    getElementsWithMatId(const vector<MatId>& matId) const;
-    vector<const Surface*>
-    getSurfacesWithMatId(const vector<MatId>& matId) const;
+    vector<const Element*> getElementsWithMatId(const vector<MatId>& matId) const;
+    vector<const Surface*> getSurfacesWithMatId(const vector<MatId>& matId) const;
+
+    BoxR3 getBound(const vector<Face>& border) const;
+    BoxR3 getBound() const;
+    virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
 
     void add(E* newElem , bool newId = false);
     void add(vector<E*>&, bool newId = false);
