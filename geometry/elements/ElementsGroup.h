@@ -10,6 +10,9 @@
 
 #include <vector>
 #include <set>
+
+using namespace std;
+
 #include "Element.h"
 #include "Lin2.h"
 #include "Tri3.h"
@@ -20,8 +23,6 @@
 #include "Hex8.h"
 #include "Polygon.h"
 #include "Polyhedron.h"
-
-using namespace std;
 
 #include "GroupId.h"
 
@@ -39,29 +40,29 @@ public:
     bool areTriangles   (const vector<ElementId>& elemIds) const;
     bool areTetrahedrons(const vector<ElementId>& elemIds) const;
 
-    vector<const Element*> get(const Element::Type& type) const;
-    vector<const Element*> get(const MatId matId, const LayerId layId) const;
-    vector<const Element*> get(const Element::Type& type,
-                               const MatId   matId,
-                               const LayerId layerId) const;
+    ElementsGroup<E> get(const ElementBase::Type type) const;
+    ElementsGroup<E> get(const MatId matId   ) const;
+    ElementsGroup<E> get(const LayerId layerId ) const;
 
-    vector<ElementId> getIds(const vector<const Element*>& list) const;
+    ElementsGroup<E> get(const vector<MatId>&) const;
+    ElementsGroup<E> get(const vector<LayerId>&) const;
+
+    ElementsGroup<E> get(const MatId matId, const LayerId layId) const;
+    ElementsGroup<E> get(const ElementBase::Type type,
+                         const MatId matId,
+                         const LayerId layId) const;
+
+    vector<ElementId> getIds   () const;
     vector<ElementId> getHexIds() const;
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
-
-    vector<const Element*>
-    getElementsWithMatId(const vector<MatId>& matId) const;
-    vector<const Surface*>
-    getSurfacesWithMatId(const vector<MatId>& matId) const;
 
     void add(E* newElem , bool newId = false);
     void add(vector<E*>&, bool newId = false);
     vector<ElementId> add(const CoordinateGroup<>& coord,
                           const vector<Hex8>& hex);
 
-    map<LayerId, vector<const Element*> > separateLayers(
-        vector<const Element*>& elem) const;
+    map<LayerId, ElementsGroup<E> > separateLayers() const;
     ElementsGroup<E> removeElementsWithMatId(const MatId matId) const;
 
     void reassignPointers(const CoordinateGroup<>& vNew);

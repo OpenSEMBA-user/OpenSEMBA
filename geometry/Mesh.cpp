@@ -121,9 +121,9 @@ Mesh::isFloatingCoordinate(const CoordR3* param) const {
 
 vector<BoxR3>
 Mesh::getRectilinearHexesInsideRegion(
-        const vector<const Element*>& region) const {
+        const ElementsGroup<Element>& region) const {
     // Determines positions to query.
-    vector<ElementId> ids = elem_.getIds(region);
+    vector<ElementId> ids = region.getIds();
     BoxR3 bound(getBound(ids));
     vector<CVecR3> center = grid_->getCenterOfNaturalCellsInside(bound);
     // Determines if positions are inside tetrahedrons.
@@ -131,7 +131,7 @@ Mesh::getRectilinearHexesInsideRegion(
     res.reserve(center.size());
     for (UInt i = 0; i < center.size(); i++) {
         for (UInt j = 0; j < region.size(); j++) {
-            if (region[j]->isInnerPoint(center[i])) {
+            if (region(j)->isInnerPoint(center[i])) {
                 res.push_back(grid_->getBoundingBoxContaining(center[i]));
                 break;
             }
@@ -162,19 +162,10 @@ const CoordR3* Mesh::getClosestVertex(const CVecR3 pos) const {
     return res;
 }
 
-vector<const Surface*> Mesh::getMaterialBoundary(
+ElementsGroup<Surface> Mesh::getMaterialBoundary(
         const MatId   matId,
         const LayerId layId) const {
-    vector<const Surface*> res;
-    vector<const Element*> e = elem_.get(Element::surface, matId, layId);
-    res.reserve(e.size());
-    for (UInt i = 0; i < e.size(); i++) {
-        const Surface* surf = dynamic_cast<const Surface*>(e[i]);
-        if (surf != NULL) {
-            res.push_back(surf);
-        }
-    }
-    return res;
+    return elem_.get(matId, layId).getGroupOf<Surface>();
 }
 
 vector<BoxR3> Mesh::discretizeWithinBoundary(

@@ -69,64 +69,79 @@ bool ElementsGroup<E>::areTriangles(const vector<ElementId>& elemId) const {
 }
 
 template<typename E>
-vector<const Element*> ElementsGroup<E>::get(const Element::Type& type) const {
-    vector<const Element*> res;
+ElementsGroup<E> ElementsGroup<E>::get(const ElementBase::Type type) const {
+    vector<E*> res;
     res.reserve(this->size());
     for (UInt i = 0; i < this->size(); i++) {
-        bool matches = true;
-        matches &= this->element_[i]->getType() == type;
-        if (matches && this->element_[i]->template is<Element>()) {
-            res.push_back(this->element_[i]->template castTo<Element>());
+        if (this->element_[i]->getType() == type) {
+            res.push_back(this->element_[i]);
         }
     }
-    return res;
+    return ElementsGroup<E>(res, false);
 }
 
 template<typename E>
-vector<const Element*> ElementsGroup<E>::get(const MatId   matId,
-                                             const LayerId layId) const {
-
-    vector<const Element*> res;
-    res.reserve(this->size());
-    for (UInt i = 0; i < this->size(); i++) {
-        if ((this->element_[i]->getMatId()   == matId) &&
-            (this->element_[i]->getLayerId() == layId) &&
-            this->element_[i]->template is<Element>()) {
-
-            res.push_back(this->element_[i]->template castTo<Element>());
-        }
-    }
-    return res;
+ElementsGroup<E> ElementsGroup<E>::get(const MatId matId) const {
+    vector<MatId> aux;
+    aux.push_back(matId);
+    return get(aux);
 }
 
 template<typename E>
-vector<const Element*> ElementsGroup<E>::get(const Element::Type& type,
-                                             const MatId   matId,
-                                             const LayerId layerId) const {
-
-    vector<const Element*> res;
+ElementsGroup<E> ElementsGroup<E>::get(const vector<MatId>& matIds_) const {
+    set<MatId> matIds(matIds_.begin(), matIds_.end());
+    vector<E*> res;
     res.reserve(this->size());
     for (UInt i = 0; i < this->size(); i++) {
-        bool matches = true;
-        matches &= this->element_[i]->getType() == type;
-        matches &= this->element_[i]->getMatId() == matId;
-        matches &= this->element_[i]->getLayerId() == layerId;
-        matches &= this->element_[i]->template is<Element>();
-        if (matches) {
-            res.push_back(this->element_[i]->template castTo<Element>());
+        if (matIds.count(this->element_[i]->getMatId()) == 1) {
+            res.push_back(this->element_[i]);
         }
     }
-    return res;
+    return ElementsGroup<E>(res, false);
 }
 
 template<typename E>
-vector<ElementId> ElementsGroup<E>::getIds(
-    const vector<const Element*>& list) const {
+ElementsGroup<E> ElementsGroup<E>::get(const LayerId layerId) const {
+    vector<LayerId> aux;
+    aux.push_back(layerId);
+    return get(aux);
+}
+
+template<typename E>
+ElementsGroup<E> ElementsGroup<E>::get(const vector<LayerId>& layIds_) const {
+    set<LayerId> layIds(layIds_.begin(), layIds_.end());
+    vector<E*> res;
+    res.reserve(this->size());
+    for (UInt i = 0; i < this->size(); i++) {
+        if (layIds.count(this->element_[i]->getLayerId()) == 1) {
+            res.push_back(this->element_[i]);
+        }
+    }
+    return ElementsGroup<E>(res, false);
+}
+
+template<typename E>
+ElementsGroup<E> ElementsGroup<E>::get(const MatId   matId,
+                                       const LayerId layId) const {
+
+    return get(matId).get(layId);
+}
+
+template<typename E>
+ElementsGroup<E> ElementsGroup<E>::get(const ElementBase::Type type,
+                                       const MatId   matId,
+                                       const LayerId layId) const {
+
+    return get(type).get(matId, layId);
+}
+
+template<typename E>
+vector<ElementId> ElementsGroup<E>::getIds() const {
 
     vector<ElementId> res;
-    res.reserve(list.size());
-    for (UInt i = 0; i < list.size(); i++) {
-        res.push_back(list[i]->getId());
+    res.reserve(this->size());
+    for (UInt i = 0; i < this->size(); i++) {
+        res.push_back(this->element_[i]->getId());
     }
     return res;
 }
@@ -171,41 +186,6 @@ vector<ElementId> ElementsGroup<E>::getIdsWithoutMaterialId(
 }
 
 template<typename E>
-vector<const Element*> ElementsGroup<E>::getElementsWithMatId(
-    const vector<MatId>& matId) const {
-
-    vector<const Element*> res;
-    res.reserve(this->size());
-    for (UInt m = 0; m < matId.size(); m++) {
-        for (UInt i = 0; i < this->size(); i++) {
-            if (this->element_[i]->getMatId() == matId[m] &&
-                this->element_[i]->template is<Element>()) {
-                res.push_back(this->element_[i]->template castTo<Element>());
-            }
-        }
-    }
-    return res;
-}
-
-template<typename E>
-vector<const Surface*> ElementsGroup<E>::getSurfacesWithMatId(
-    const vector<MatId>& matId) const {
-
-    vector<const Surface*> res;
-    vector<const Surface*> tri = this->template getVectorOf<Surface>();
-    res.reserve(this->size());
-    for (UInt m = 0; m < matId.size(); m++) {
-        for (UInt i = 0; i < tri.size(); i++) {
-            if (tri[i]->getMatId() == matId[m] &&
-                tri[i]->is<Surface>()) {
-                res.push_back(tri[i]->castTo<Surface>());
-            }
-        }
-    }
-    return res;
-}
-
-template<typename E>
 void ElementsGroup<E>::add(E* newElem, bool newId) {
     return GroupId<E, ElementId>::add(newElem, newId);
 }
@@ -241,20 +221,19 @@ vector<ElementId> ElementsGroup<E>::add(const CoordinateGroup<>& coord,
 }
 
 template<typename E>
-map<LayerId, vector<const Element*> > ElementsGroup<E>::separateLayers(
-    vector<const Element*>& el) const {
-
-    map<LayerId, vector<const Element*> > res;
-    for (UInt i = 0; i < el.size(); i++) {
-        const LayerId layerId = el[i]->getLayerId();
-        map<LayerId, vector<const Element*> >::iterator it = res.find(layerId);
+map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateLayers() const {
+    map<LayerId, ElementsGroup<E> > res;
+    for (UInt i = 0; i < this->size(); i++) {
+        const LayerId layerId = this->element_[i]->getLayerId();
+        typename map<LayerId, ElementsGroup<E> >::iterator it =
+            res.find(layerId);
         if (it == res.end()) {
-            pair<LayerId, vector<const Element*> > newEntry;
+            pair<LayerId, ElementsGroup<E> > newEntry;
             newEntry.first = layerId;
-            newEntry.second.push_back(el[i]);
+            newEntry.second.add(this->element_[i]);
             res.insert(newEntry);
         } else {
-            it->second.push_back(el[i]);
+            it->second.add(this->element_[i]);
         }
     }
     return res;

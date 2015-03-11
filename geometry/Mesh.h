@@ -63,7 +63,7 @@ public:
             const UInt vertexId,
             const Element::Type type) const;
     vector<BoxR3> getRectilinearHexesInsideRegion(
-            const vector<const Element*>& region) const;
+            const ElementsGroup<Element>& region) const;
 //    pair<const Volume*, UInt> getBoundary(const Surface*) const;
 //    vector<UInt> getAdjacentElements(const vector<ElementId>& elemIds) const;
     vector<pair<const Tet*, UInt> > getBorderWithNormal(
@@ -72,7 +72,7 @@ public:
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
     virtual bool isOnBoundary(const CVecR3 pos) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
-    virtual vector<const Surface*> getMaterialBoundary(
+    virtual ElementsGroup<Surface> getMaterialBoundary(
             const MatId   matId,
             const LayerId layId) const;
     virtual vector<BoxR3> discretizeWithinBoundary(

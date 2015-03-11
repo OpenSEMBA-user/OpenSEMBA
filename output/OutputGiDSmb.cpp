@@ -33,18 +33,18 @@ OutputGiDSmb::writeMesh() {
     for (UInt i = 0; i < lay.size(); i++) {
         for (UInt j = 0; j < mat.size(); j++) {
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
-            vector<const Element*> elem;
+            ElementsGroup<Element> elem;
             elem = smb_->mesh->elem_.get(Element::line,
                                          mat(j)->getId(),
-                                         lay(i)->getId());
+                                         lay(i)->getId()).getGroupOf<Element>();
             writeElements(elem, name, GiD_Linear, 2);
             elem = smb_->mesh->elem_.get(Element::surface,
                                          mat(j)->getId(),
-                                         lay(i)->getId());
+                                         lay(i)->getId()).getGroupOf<Element>();
             writeElements(elem, name, GiD_Triangle, 3);
             elem = smb_->mesh->elem_.get(Element::volume,
                                          mat(j)->getId(),
-                                         lay(i)->getId());
+                                         lay(i)->getId()).getGroupOf<Element>();
             writeElements(elem, name, GiD_Tetrahedra, 4);
         }
     }
@@ -131,7 +131,7 @@ OutputGiDSmb::writeOutputRequestsMesh() {
 }
 
 void OutputGiDSmb::writeElements(
-        const vector<const Element*>& elem,
+        const ElementsGroup<Element>& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {
@@ -141,7 +141,7 @@ void OutputGiDSmb::writeElements(
     vector<CVecR3> pos;
     for(UInt i = 0; i < elem.size(); i++) {
         for (Int j = 0; j < nV; j++) {
-            pos.push_back(elem[i]->getVertex(j)->pos());
+            pos.push_back(elem(i)->getVertex(j)->pos());
         }
     }
     writeCoordinates(pos);
