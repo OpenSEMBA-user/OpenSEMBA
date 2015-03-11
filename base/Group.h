@@ -30,8 +30,8 @@ public:
     template<class T2>
     Group<T2> getGroupOf() const;
 
-    template<class T2>
-    vector<const T2*> getVectorOf() const;
+//    template<class T2>
+//    vector<const T2*> getVectorOf() const;
     
     template<class T2>
     UInt sizeOf() const;

@@ -57,16 +57,16 @@ const T* GroupId<T, Id>::getPtrToId(const Id id) const {
     return NULL;
 }
 
-template<typename T, class Id> template<typename T2>
-vector<Id> GroupId<T, Id>::getIdsOf() const {
-    vector<Id> ids;
-    for (UInt i = 0; i < this->size(); i++) {
-        if(this->element_[i]->template is<T2>()) {
-            ids.push_back(this->element_[i]->getId());
-        }
-    }
-    return ids;
-}
+//template<typename T, class Id> template<typename T2>
+//vector<Id> GroupId<T, Id>::getIdsOf() const {
+//    vector<Id> ids;
+//    for (UInt i = 0; i < this->size(); i++) {
+//        if(this->element_[i]->template is<T2>()) {
+//            ids.push_back(this->element_[i]->getId());
+//        }
+//    }
+//    return ids;
+//}
 
 template<typename T, class Id>
 void GroupId<T, Id>::add(T* newElem, bool newId) {

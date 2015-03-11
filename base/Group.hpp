@@ -77,16 +77,16 @@ Group<T2> Group<T>::getGroupOf() const {
     return Group<T2>(elems, false);
 }
 
-template<typename T> template<typename T2>
-vector<const T2*> Group<T>::getVectorOf() const {
-    vector<const T2*> elems;
-    for (UInt i = 0; i < this->size(); i++) {
-        if(this->element_[i]->template is<T2>()) {
-            elems.push_back(this->element_[i]->template castTo<T2>());
-        }
-    }
-    return elems;
-}
+//template<typename T> template<typename T2>
+//vector<const T2*> Group<T>::getVectorOf() const {
+//    vector<const T2*> elems;
+//    for (UInt i = 0; i < this->size(); i++) {
+//        if(this->element_[i]->template is<T2>()) {
+//            elems.push_back(this->element_[i]->template castTo<T2>());
+//        }
+//    }
+//    return elems;
+//}
 
 template<typename T> template<typename T2>
 UInt Group<T>::sizeOf() const {

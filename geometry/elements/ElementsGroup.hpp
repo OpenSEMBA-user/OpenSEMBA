@@ -268,7 +268,7 @@ ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
     elems.reserve(this->size());
     for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getMatId() != matId) {
-            elems.push_back(this->element_[i]);
+            elems.push_back(this->element_[i]->clone()->template castTo<E>());
         }
     }
     return ElementsGroup<E>(elems);

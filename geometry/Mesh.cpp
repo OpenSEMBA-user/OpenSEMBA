@@ -197,49 +197,49 @@ Mesh::setMaterialIds(
 vector<UInt>
 Mesh::getIdsOfCurvedTets() const {
     vector<UInt> res;
-    vector<const Tet*> tet = elem_.getVectorOf<Tet>();
+    ElementsGroup<Tet> tet = elem_.getGroupOf<Tet>();
     UInt nK = tet.size();
     for (UInt k = 0; k < nK; k++) {
-        if (tet[k]->isCurved()) {
-            res.push_back(tet[k]->getId());
+        if (tet(k)->isCurved()) {
+            res.push_back(tet(k)->getId());
         }
     }
     return res;
 }
 
 
-vector<const Tri3*>
+ElementsGroup<Tri3>
 Mesh::getTriWithMatId(
         const UInt matId,
         const bool ignoreTet) const {
-    vector<const Tri3*> res;
+    vector<Tri3*> elems;
     const UInt nTri = elem_.sizeOf<Tri>();
     const UInt nTet = elem_.sizeOf<Tet>();
-    res.reserve(nTri + nTet);
+    elems.reserve(nTri + nTet);
     // --- Runs over surfaces -------------------------------------------------
-    vector<const Tri3*> tri3 = elem_.getVectorOf<Tri3>();
+    ElementsGroup<Tri3> tri3 = elem_.getGroupOf<Tri3>();
     const UInt nTri3 = tri3.size();
     for (UInt i = 0; i < nTri3; i++) {
-        if (tri3[i]->getMatId() == matId) {
-            res.push_back(tri3[i]);
+        if (tri3(i)->getMatId() == matId) {
+        	elems.push_back(tri3(i)->linearize());
         }
     }
-    vector<const Tri6*> tri6 = elem_.getVectorOf<Tri6>();
+    ElementsGroup<Tri6> tri6 = elem_.getGroupOf<Tri6>();
     const UInt nTri6 = tri6.size();
     for (UInt i = 0; i < nTri6; i++) {
-        if (tri6[i]->getMatId() == matId) {
-            res.push_back(tri6[i]->linearize());
+        if (tri6(i)->getMatId() == matId) {
+        	elems.push_back(tri6(i)->linearize());
         }
     }
     // --- Runs over tetrahedrons ---------------------------------------------
     if (!ignoreTet) {
-        vector<const Tet*> tet = elem_.getVectorOf<Tet>();
+    	ElementsGroup<Tet> tet = elem_.getGroupOf<Tet>();
         vector<ElementId> tetIds;
         tetIds.reserve(nTet);
         for (UInt i = 0; i < nTet; i++) {
             // Generates list of tetrahedrons ids.
-            if (tet[i]->getMatId() == matId) {
-                tetIds.push_back(tet[i]->getId());
+            if (tet(i)->getMatId() == matId) {
+                tetIds.push_back(tet(i)->getId());
             }
         }
         // Gets internal border of tetrahedron volume.
@@ -250,26 +250,26 @@ Mesh::getTriWithMatId(
             const Volume* vol = internalBorder[i].first;
             const Tet* tet = dynamic_cast<const Tet*>(vol);
             const UInt face = internalBorder[i].second;
-            res.push_back(tet->getTri3Face(face));
+            elems.push_back(tet->getTri3Face(face));
         }
     }
-    return res;
+    return ElementsGroup<Tri3>(elems);
 }
 
 
-vector<const Tri3*>
+ElementsGroup<Tri3>
 Mesh::getTriWithId(const vector<ElementId>& ids) const {
-    vector<const Tri3*> res;
-    vector<const Tri3*> tri3 = elem_.getVectorOf<Tri3>();
-    res.reserve(tri3.size());
+    vector<Tri3*> elems;
+    ElementsGroup<Tri3> tri3 = elem_.getGroupOf<Tri3>();
+    elems.reserve(tri3.size());
     for (UInt i = 0; i < ids.size(); i++) {
         for (UInt j = 0; j < tri3.size(); j++) {
-            if (ids[i] == tri3[j]->getId()) {
-                res.push_back(tri3[j]);
+            if (ids[i] == tri3(j)->getId()) {
+            	elems.push_back(tri3(j)->linearize());
             }
         }
     }
-    return res;
+    return ElementsGroup<Tri3>(elems);
 }
 
 vector<ElementId>

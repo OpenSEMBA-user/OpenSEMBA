@@ -7,10 +7,35 @@
 
 template<typename P>
 PhysicalModelGroup<P>::PhysicalModelGroup() {
+
+}
+
+template<typename P>
+PhysicalModelGroup<P>::PhysicalModelGroup(const vector<P*>& elems)
+:   GroupId<P, MatId>(elems) {
+
+}
+
+template<typename P>
+PhysicalModelGroup<P>::PhysicalModelGroup(const Group<P>& rhs)
+:   GroupId<P, MatId>(rhs) {
+
 }
 
 template<typename P>
 PhysicalModelGroup<P>::~PhysicalModelGroup() {
+
+}
+
+template<typename P>
+PhysicalModelGroup<P>& PhysicalModelGroup<P>::operator=(const Group<P>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+
+    GroupId<P, MatId>::operator=(rhs);
+
+    return *this;
 }
 
 template<typename P>

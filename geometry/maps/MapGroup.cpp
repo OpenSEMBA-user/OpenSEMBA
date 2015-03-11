@@ -18,13 +18,13 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
    // Builds a list with all tetrahedron faces.
    static const UInt faces = 4;
    static const UInt nVert = 3;
-   vector<const Tet*> tet = eG.getVectorOf<Tet>();
+   ElementsGroup<Tet> tet = eG.getGroupOf<Tet>();
    UInt nK = tet.size();
    UInt nList = nK * faces;
    DynMatrix<UInt> fList(nList, 2 + nVert);
    for (UInt k = 0; k < nK; k++) {
-      ElementId id = tet[k]->getId();
-      const Tet* aux = eG.getPtrToId(id)->castTo<Tet>();
+	  const Tet* aux = tet(k);
+      ElementId id = aux->getId();
       for (UInt f = 0; f < faces; f++) {
          UInt row = k * faces + f;
          fList(row, 0) = id;
@@ -68,7 +68,7 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
    }
    // Generates tetrahedron maps.
    for (UInt k = 0; k < nK; k++) {
-      const Tet *local = eG.getPtrToId(tet[k]->getId())->castTo<Tet>();
+      const Tet *local = tet(k);
       const Tet *neigh[4];
       UInt neighFaces[4];
       for (UInt j = 0; j < 4; j++) {
@@ -80,11 +80,11 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
       tet_.insert(aux);
    }
    // Now uses the generated ordered fList to build the triangle maps.
-   vector<const Tri*> tri = eG.getVectorOf<Tri>();
+   ElementsGroup<Tri> tri = eG.getGroupOf<Tri>();
    const UInt nS = tri.size();
    for (UInt s = 0; s < nS; s++) {
-      ElementId id = tri[s]->getId();
-      const Tri* local = eG.getPtrToId(id)->castTo<Tri>();
+	  const Tri* local = tri(s);
+      ElementId id = local->getId();
       pair<const Tet*, const Tet*> neigh;
       UInt ordered[nVert];
       local->getOrderedVerticesId(ordered);

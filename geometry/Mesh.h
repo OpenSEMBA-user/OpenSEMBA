@@ -47,9 +47,9 @@ public:
     vector<ElementId> getTetIds(
             const vector<ElementId> elemIds) const;
     vector<UInt> getIdsOfCurvedTets() const;
-    vector<const Tri3*> getTriWithMatId(
+    ElementsGroup<Tri3> getTriWithMatId(
             const UInt matId, const bool ignoreTet = false) const;
-    vector<const Tri3*> getTriWithId(const vector<ElementId>& Id) const;
+    ElementsGroup<Tri3> getTriWithId(const vector<ElementId>& Id) const;
     vector<pair<const Volume*, UInt> > getInternalBorder(
             const vector<ElementId>& elemIds) const;
     vector<pair<const Volume*, UInt> > getExternalBorder(

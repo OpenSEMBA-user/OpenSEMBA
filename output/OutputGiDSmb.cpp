@@ -27,19 +27,24 @@ OutputGiDSmb::~OutputGiDSmb() {
 void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
-    vector<LayerId> layId = smb_->layers->getIdsOf<Layer>();
-    vector<MatId> matId = smb_->pMGroup->getIdsOf<PhysicalModel>();
-    for (UInt i = 0; i < layId.size(); i++) {
-        for (UInt j = 0; j < matId.size(); j++) {
-            const Layer* layer = smb_->layers->getPtrToId(layId[i]);
-            const PhysicalModel* mat = smb_->pMGroup->getPtrToId(matId[j]);
-            const string name = mat->getName() + "@" + layer->getName();
+    LayerGroup<Layer> lay = smb_->layers->getGroupOf<Layer>();
+    PhysicalModelGroup<PhysicalModel> mat =
+        smb_->pMGroup->getGroupOf<PhysicalModel>();
+    for (UInt i = 0; i < lay.size(); i++) {
+        for (UInt j = 0; j < mat.size(); j++) {
+            const string name = mat(j)->getName() + "@" + lay(i)->getName();
             vector<const Element*> elem;
-            elem = smb_->mesh->elem_.get(Element::line, matId[j], layId[i]);
+            elem = smb_->mesh->elem_.get(Element::line,
+                                         mat(j)->getId(),
+                                         lay(i)->getId());
             writeElements(elem, name, GiD_Linear, 2);
-            elem = smb_->mesh->elem_.get(Element::surface, matId[j], layId[i]);
+            elem = smb_->mesh->elem_.get(Element::surface,
+                                         mat(j)->getId(),
+                                         lay(i)->getId());
             writeElements(elem, name, GiD_Triangle, 3);
-            elem = smb_->mesh->elem_.get(Element::volume, matId[j], layId[i]);
+            elem = smb_->mesh->elem_.get(Element::volume,
+                                         mat(j)->getId(),
+                                         lay(i)->getId());
             writeElements(elem, name, GiD_Tetrahedra, 4);
         }
     }
