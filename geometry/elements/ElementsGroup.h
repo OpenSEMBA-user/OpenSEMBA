@@ -32,17 +32,19 @@ template<typename E = ElementBase>
 class ElementsGroup : public GroupId<E, ElementId> {
 public:
     ElementsGroup();
-    ElementsGroup(const vector<E*>&);
+    ElementsGroup(const vector<E*>& elems, bool ownership);
     ElementsGroup(const Group<E>& rhs);
     virtual ~ElementsGroup();
 
     ElementsGroup<E>& operator=(const Group<E>& rhs);
 
-    vector<const Element*> get(const Element::Type& type) const;
-    vector<const Element*> get(const MatId matId, const LayerId layId) const;
-    vector<const Element*> get(const Element::Type& type,
-                               const MatId   matId,
-                               const LayerId layerId) const;
+    ElementsGroup<E> get(const ElementBase::Type type) const;
+    ElementsGroup<E> get(const MatId matId) const;
+    ElementsGroup<E> get(const vector<MatId>& matId) const;
+    ElementsGroup<E> get(const LayerId layerId) const;
+    ElementsGroup<E> get(const vector<LayerId>& layerId) const;
+    ElementsGroup<E> get(const MatId, const LayerId) const;
+    ElementsGroup<E> get(const ElementBase::Type, const MatId, const LayerId) const;
 
     void setMaterialIds(
             const vector<ElementId>& ids,
@@ -50,7 +52,9 @@ public:
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
-    vector<ElementId> getIdsInsideBound(const BoxR3& bound, const Element::Type type = Element::undefined) const;
+    vector<ElementId> getIdsInsideBound(
+            const BoxR3& bound,
+            const ElementBase::Type type = ElementBase::undefined) const;
 
     vector<const Element*> getElementsWithMatId(const vector<MatId>& matId) const;
     vector<const Surface*> getSurfacesWithMatId(const vector<MatId>& matId) const;
@@ -62,10 +66,9 @@ public:
     void add(E* newElem , bool newId = false);
     void add(vector<E*>&, bool newId = false);
     vector<ElementId> add(const CoordinateGroup<>& coord,
-                          const vector<Hex8>& hex);
+                          const vector<HexR8>& hex);
 
-    map<LayerId, vector<const Element*> > separateLayers(
-        vector<const Element*>& elem) const;
+    map<LayerId, ElementsGroup<E> > separateLayers() const;
     ElementsGroup<E> removeElementsWithMatId(const MatId matId) const;
 
     bool isLinear() const;

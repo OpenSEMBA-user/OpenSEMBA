@@ -72,11 +72,11 @@ BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
     if (border.size() == 0) {
         return BoxR3().setInfinity();
     }
-    const Volume* tet = border[0].first;
+    const VolumeR tet = border[0].first;
     const UInt face = border[0].second;
     BoxR3 bound = tet->getBoundOfFace(face);
     for (UInt i = 1; i < border.size(); i++) {
-        const Volume* vol = border[i].first;
+        const VolumeR* vol = border[i].first;
         const UInt face = border[i].second;
         bound << vol->getBoundOfFace(face);
     }
@@ -138,7 +138,6 @@ ElementsGroup<E> ElementsGroup<E>::get(const vector<LayerId>& layIds_) const {
 template<typename E>
 ElementsGroup<E> ElementsGroup<E>::get(const MatId   matId,
                                        const LayerId layId) const {
-
     return get(matId).get(layId);
 }
 
@@ -146,7 +145,6 @@ template<typename E>
 ElementsGroup<E> ElementsGroup<E>::get(const ElementBase::Type type,
                                        const MatId   matId,
                                        const LayerId layId) const {
-
     return get(type).get(matId, layId);
 }
 
@@ -170,15 +168,15 @@ template<typename E>
 vector<ElementId>
 ElementsGroup<E>::getIdsInsideBound(
         const BoxR3& bound,
-        const Element::Type type) const {
+        const ElementBase::Type type) const {
     const UInt nK = this->size();
     vector<ElementId> res;
     res.reserve(nK);
     for (UInt i = 0; i < nK; i++) {
-        const Element* e = this->element_[i];
+        const ElementBase* e = this->element_[i];
         BoxR3 localBound = e->getBound();
         if (localBound <= bound &&
-                (e->getType() == type || type==Element::undefined)) {
+                (e->getType() == type || type==ElementBase::undefined)) {
             res.push_back(e->getId());
         }
     }

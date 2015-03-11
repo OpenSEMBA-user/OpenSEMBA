@@ -36,7 +36,7 @@ public:
     vector<Face> getExternalBorder(const ElementsGroup<>& region) const;
     ElementsGroup<> getAdjacentRegion(const ElementsGroup<>& region);
     vector<BoxR3> getRectilinearHexesInsideRegion(
-            const ElementsGroup<>& region) const;
+            const ElementsGroup<ElemR>& region) const;
 
     bool isRectilinear() const;
 
@@ -44,14 +44,14 @@ public:
     void setGrid(const Grid3& grid_);
 
     vector<const Tri3*> getTriWithMatId(MatId, bool ignoreTet = false) const;
-    Face getBoundary(const Surface*) const;
+    Face getBoundary(const SurfR*) const;
     vector<Face> getBorderWithNormal(const vector<Face>& border, const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
     virtual vector<pair<const Element*, UInt> > getElementsWithVertex(
             const UInt vertexId,
-            const Element::Type type) const;
+            const ElementBase::Type type) const;
     virtual bool isOnBoundary(const CVecR3 pos) const;
-    virtual vector<const Surface*> getMaterialBoundary(
+    virtual vector<const SurfR*> getMaterialBoundary(
             const MatId   matId,
             const LayerId layId) const;
     virtual vector<BoxR3> discretizeWithinBoundary(

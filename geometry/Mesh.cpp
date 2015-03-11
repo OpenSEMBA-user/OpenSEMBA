@@ -56,7 +56,7 @@ Mesh::~Mesh() {
 
 
 Face
-Mesh::getBoundary(const Surface* surf) const {
+Mesh::getBoundary(const SurfR* surf) const {
     return map_.getInnerFace(surf->getId());
 }
 
@@ -68,7 +68,7 @@ Mesh::getBorderWithNormal(
     vector<Face> res;
     res.reserve(nK);
     for (UInt i = 0; i < nK; i++) {
-        const Volume * tet = border[i].first;
+        const VolR * tet = border[i].first;
         const UInt face = border[i].second;
         CartesianVector<Real,3> tetNormal = tet->sideNormal(face);
         if (tetNormal == normal && !tet->isCurvedFace(face)) {
@@ -105,9 +105,9 @@ Face Mesh::getNeighConnection(Face inner) const {
 bool
 Mesh::isFloatingCoordinate(const CoordR3* param) const {
     for (UInt i = 0; i < element_.size(); i++) {
-        if(!element_[i]->is<Element>())
+        if(!element_[i]->is<ElementBase>())
             continue;
-        const Element* elem = element_[i]->castTo<Element>();
+        const ElementBase* elem = element_[i]->castTo<ElementBase>();
         for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
             if (*param == *elem->getV(j)) {
                 return false;
@@ -119,7 +119,7 @@ Mesh::isFloatingCoordinate(const CoordR3* param) const {
 
 vector<BoxR3>
 Mesh::getRectilinearHexesInsideRegion(
-        const ElementsGroup<>& region) const {
+        const ElementsGroup<ElemR>& region) const {
     // Determines positions to query.
     vector<CVecR3> center =
             grid_->getCenterOfNaturalCellsInside(region.getBound());
@@ -128,7 +128,7 @@ Mesh::getRectilinearHexesInsideRegion(
     res.reserve(center.size());
     for (UInt i = 0; i < center.size(); i++) {
         for (UInt j = 0; j < region.size(); j++) {
-            if (region(j)->castTo<Volume>()->isInnerPoint(center[i])) {
+            if (region(j)->castTo<VolR>()->isInnerPoint(center[i])) {
                 res.push_back(grid_->getBoundingBoxContaining(center[i]));
                 break;
             }
@@ -142,14 +142,14 @@ Mesh::isOnBoundary(const CVecR3 pos) const {
 #warning "Not implemented"
 }
 
-vector<const Surface*> Mesh::getMaterialBoundary(
+vector<const SurfR*> Mesh::getMaterialBoundary(
         const MatId   matId,
         const LayerId layId) const {
-    vector<const Surface*> res;
-    vector<const Element*> e = get(Element::surface, matId, layId);
+    vector<const SurfR*> res;
+    vector<const Element*> e = get(ElementBase::surface, matId, layId);
     res.reserve(e.size());
     for (UInt i = 0; i < e.size(); i++) {
-        const Surface* surf = dynamic_cast<const Surface*>(e[i]);
+        const SurfR* surf = dynamic_cast<const SurfR*>(e[i]);
         if (surf != NULL) {
             res.push_back(surf);
         }
@@ -190,7 +190,7 @@ Mesh::getTriWithMatId(
         }
         vector<Face> internalBorder = getInternalBorder(region);
         for (UInt i = 0; i < internalBorder.size(); i++) {
-            const Volume* vol = internalBorder[i].first;
+            const VolR* vol = internalBorder[i].first;
             const UInt face = internalBorder[i].second;
             res.push_back(vol->castTo<Tet>()->getTri3Face(face));
         }
@@ -222,7 +222,7 @@ Mesh::getExternalBorder(const ElementsGroup<>& region) const {
     for (UInt i = 0; i < internal.size(); i++) {
         UInt inId = internal[i].first->getId();
         UInt inFace = internal[i].second;
-        const Volume* outVol = map_.getNeighbour(inId, inFace);
+        const VolR* outVol = map_.getNeighbour(inId, inFace);
         UInt outFace = map_.getVolToF(inId, inFace);
         if (outVol->getId() != inId || inFace != outFace)  {
             external.push_back(Face(outVol, outFace));
@@ -295,7 +295,7 @@ Mesh::getInternalBorder(const ElementsGroup<Tri>& region) const {
 bool
 Mesh::isRectilinear() const {
 	bool hasCartesianGridDefined = (grid_ != NULL);
-    bool onlyContainsQuad4 = (sizeOf<Quad4>() == size());
+    bool onlyContainsQuad4 = (sizeOf<QuadR4>() == size());
 	return (hasCartesianGridDefined && onlyContainsQuad4);
 }
 
@@ -320,13 +320,13 @@ Mesh::applyGeometricScalingFactor(
 
 vector<pair<const Element*, UInt> >
 Mesh::getElementsWithVertex(const UInt vertexId,
-                            const Element::Type type) const {
+                            const ElementBase::Type type) const {
 
     vector<pair<const Element*, UInt> > res;
     for (UInt i = 0; i < element_.size(); i++) {
-        if(!element_[i]->is<Element>())
+        if(!element_[i]->is<ElementBase>())
             continue;
-        const Element* e = element_[i]->castTo<Element>();
+        const ElementBase* e = element_[i]->castTo<ElementBase>();
         for (UInt j = 0; j < e->numberOfVertices(); j++) {
             if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
                 pair<const Element*, UInt> aux(e,j);
@@ -340,8 +340,8 @@ Mesh::getElementsWithVertex(const UInt vertexId,
 
 vector<ElementId> Mesh::addAsHex8(const BoxR3& box) {
     cG_.add(box.getPos());
-    vector<Hex8> hexes;
-    hexes.push_back(Hex8(cG_, ElementId(0), box.getMin(), box.getMax()));
+    vector<HexR8> hexes;
+    hexes.push_back(HexR8(cG_, ElementId(0), box.getMin(), box.getMax()));
     return add(cG_, hexes);
 }
 
