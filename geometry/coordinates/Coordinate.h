@@ -39,9 +39,6 @@ public:
 
 #include "Coordinate.hpp"
 
-template <class T, Int D>
-using Coord = Coordinate<T,D>;
-
 typedef Coordinate<Real, 3> CoordR3;
 typedef Coordinate<Int , 3> CoordI3;
 
