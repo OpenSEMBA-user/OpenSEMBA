@@ -4,7 +4,7 @@
 #include "Surface.h"
 #include "../math/SimplexTri.h"
 
-class Tri : public Surface {
+class Tri : public Surface<Real> {
 public:
 	Tri(const LayerId layerId = LayerId(0),
 	    const MatId   matId   = MatId(0));

@@ -10,7 +10,8 @@
 
 #include "Quad.h"
 
-class Quad4: public Quad {
+template<class T>
+class Quad4: public Quad<T> {
 public:
     Quad4();
 	Quad4(const CoordinateGroup<>&,
@@ -18,7 +19,7 @@ public:
           const CoordinateId vId[4],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-    Quad4(const Quad4& rhs);
+    Quad4(const Quad4<T>& rhs);
 	virtual ~Quad4();
     
 	ClassBase* clone() const;
@@ -27,21 +28,26 @@ public:
     
 	UInt numberOfSideCoordinates(const UInt f = 0) const { return 2; }
 	
-    const CoordR3* getV    (const UInt i) const { return v_[i]; }
-	const CoordR3* getSideV(const UInt f,
-                            const UInt i) const;
-    
-	const CoordR3* getVertex    (const UInt i) const;
-	const CoordR3* getSideVertex(const UInt f,
-                                 const UInt i) const;
-    
-    void setV(const UInt i, const CoordR3*);
+	const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
+	const Coordinate<T,3>* getSideV(const UInt f,
+	                           const UInt i) const;
+
+	const Coordinate<T,3>* getVertex    (const UInt i) const;
+	const Coordinate<T,3>* getSideVertex(const UInt f,
+	                                const UInt i) const;
+
+    void setV(const UInt i, const Coordinate<T,3>*);
     
 	void printInfo() const;
 	void check() const;
 
 private:
-	const CoordR3* v_[4];
+	const Coordinate<T,3>* v_[4];
 };
+
+#include "Quad4.hpp"
+
+typedef Quad4<Real> QuadR4;
+typedef Quad4<Int > QuadI4;
 
 #endif /* QUAD4_H_ */

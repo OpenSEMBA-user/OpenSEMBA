@@ -22,7 +22,7 @@ OutRqGroup<C>::OutRqGroup(
 
 template<typename C>
 UInt
-OutRqGroup<C>::countWithType(const Element::Type param) const {
+OutRqGroup<C>::countWithType(const ElementBase::Type param) const {
 	UInt res = 0;
 	for (UInt i = 0; i < size(); i++) {
 		if (element_[i]->getElementType() == param) {
@@ -36,7 +36,7 @@ template<typename C>
 const OutRq*
 OutRqGroup<C>::getWithType(
  const UInt j,
- const Element::Type param) const {
+ const ElementBase::Type param) const {
 	assert(j < countWithType(param));
 	UInt count = 0;
 	for (UInt i = 0; i < size(); i++) {

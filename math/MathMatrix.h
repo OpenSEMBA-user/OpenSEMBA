@@ -10,9 +10,7 @@
 #ifndef _DEBUG
 	#define NDEBUG
 #endif
-#ifndef MATRICES_ERROR
-#	define MATRICES_ERROR 2
-#endif
+
 #define MATRICES_ASCENDING          0
 #define MATRICES_DESCENDING         1
 #ifndef MATRICES_MODES

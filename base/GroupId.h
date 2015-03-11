@@ -12,7 +12,7 @@ template<typename T, class Id>
 class GroupId : public Group<T> {
 public:
     GroupId();
-    GroupId(const vector<T*>&);
+    GroupId(const vector<T*>&, bool ownership = true);
     GroupId(const Group<T>& rhs);
     virtual ~GroupId();
 
@@ -21,8 +21,10 @@ public:
     T*       getPtrToId(const Id id);
     const T* getPtrToId(const Id id) const;
 
-    template<class T2>
-    vector<Id> getIdsOf() const;
+//    template<class T2>
+//    vector<Id> getIdsOf() const;
+
+    GroupId<T, Id> get(const vector<Id>&) const;
 
     void add(T* newElem , bool newId = false);
     void add(vector<T*>&, bool newId = false);

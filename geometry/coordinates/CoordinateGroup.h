@@ -56,7 +56,7 @@ public:
     virtual ~CoordinateGroup();
     
     CoordinateGroup<C>& operator=(const Group<C>& rhs);
-    
+
     const CoordR3* get(const CVecR3& pos) const;
     const CoordI3* get(const CVecI3& pos) const;
     
@@ -64,13 +64,16 @@ public:
     void add(vector<C*>&, bool newId = false);
     C*         add(const CVecR3&        , const bool canOverlap = false);
     vector<C*> add(const vector<CVecR3>&, const bool canOverlap = false);
+    C*         add(const CVecI3&        , const bool canOverlap = false);
+    vector<C*> add(const vector<CVecI3>&, const bool canOverlap = false);
     
     void applyScalingFactor(const Real factor);
     
     void printInfo() const;
     
 private:
-    multiset<const CoordR3*, lexCompareCoord> index_;
+    multiset<const CoordR3*, lexCompareCoord> indexUnstr_;
+    multiset<const CoordI3*, lexCompareCoord> indexStr_;
     
     void buildIndex(const vector<C*>& coords);
 };

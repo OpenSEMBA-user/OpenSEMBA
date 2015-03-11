@@ -12,7 +12,7 @@
 #include "Tri6.h"
 #include "../math/SimplexTet.h"
 
-class Tet : public Volume {
+class Tet : public Volume<Real> {
 public:
     Tet(const LayerId layerId = LayerId(0),
         const MatId   matId   = MatId(0));

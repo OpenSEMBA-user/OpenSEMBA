@@ -83,7 +83,7 @@ MathMatrix<T>::factorizeLU(Int pivot[]) {
 			cout << "  Zero pivot on step " << k << endl;
 			printInfo();
 			assert(false);
-			exit (MATRICES_ERROR);
+			exit (EXIT_FAILURE);
 		}
 		//  Interchange rows L and K if necessary.
 		if (l != k) {
@@ -113,7 +113,7 @@ MathMatrix<T>::factorizeLU(Int pivot[]) {
 		cout << "  Zero pivot on step " << n-1 << endl;
 		printInfo();
 		assert(false);
-		exit (MATRICES_ERROR);
+		exit (EXIT_FAILURE);
 	}
 }
 
@@ -414,7 +414,7 @@ MathMatrix<T>::convertToArray(const Int mode, Real *res) const {
 		cerr << "ERROR: DynMatrix<T>::converToArray "     << endl;
 		cerr << "Inserted mode is not defined."           << endl;
 		cerr << "Terminating."                            << endl;
-		exit(MATRICES_ERROR);
+		exit(EXIT_FAILURE);
 	}
 }
  

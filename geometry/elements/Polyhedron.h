@@ -11,7 +11,7 @@
 #include "Volume.h"
 #include "Polygon.h"
 
-class Polyhedron : public Volume {
+class Polyhedron : public Volume<Real> {
 public:
     Polyhedron();
     Polyhedron(const ElementId id,

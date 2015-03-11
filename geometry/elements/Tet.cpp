@@ -11,19 +11,19 @@
 
 Tet::Tet(const LayerId layerId,
          const MatId   matId)
-:   Volume(layerId, matId) {
+:   Volume<Real>(layerId, matId) {
 
 }
 
 Tet::Tet(const ElementId id,
          const LayerId layerId,
          const MatId   matId)
-:   Volume(id, layerId, matId) {
+:   Volume<Real>(id, layerId, matId) {
 
 }
 
 Tet::Tet(const Tet& rhs)
-:   Volume(rhs) {
+:   Volume<Real>(rhs) {
 
 }
 

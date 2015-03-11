@@ -11,10 +11,6 @@
 
 using namespace std;
 
-#ifndef CARTESIANVECTOR_ERROR
-#define CARTESIANVECTOR_ERROR 677722
-#endif
-
 typedef enum {
 	xy = 0,
 	yz = 1,

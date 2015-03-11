@@ -21,8 +21,9 @@ public:
 	EMSourceGroup();
 	EMSourceGroup& operator=(const EMSourceGroup &rhs);
 	EMSourceGroup<C>& operator=(const Group<C>& rhs);
-	UInt countWithType(const Element::Type type) const;
-	const EMSource* getWithType(const UInt i, const Element::Type type) const;
+	UInt countWithType(const ElementBase::Type type) const;
+	const EMSource* getWithType(const UInt i,
+	                            const ElementBase::Type type) const;
 	void printInfo() const;
 };
 

@@ -6,10 +6,6 @@
 #ifndef SIMPLEX_H_
 #define SIMPLEX_H_
 
-#ifndef SIMPLEX_ERROR
-	#define SIMPLEX_ERROR 4
-#endif
-
 #include <iostream>			// Stream I/O.
 #include <vector>
 #include "StaMatrix.h"
@@ -41,7 +37,7 @@ public:
 	virtual const CartesianVector<Real, 4>
 	 cubatureCoordinate(const UInt c) const {
 		 cerr << "ERROR @ cubatureCoordinate" << endl;
-		 exit(SIMPLEX_ERROR);
+		 exit(EXIT_FAILURE);
 	 }
 protected:
 	static const UInt cubatureOrder = SIMPLEX_CUBATURE_ORDER;

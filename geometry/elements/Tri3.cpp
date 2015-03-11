@@ -23,12 +23,18 @@ Tri3::Tri3(const CoordinateGroup<>& coordGr,
 	for (UInt i = 0; i < geo.np; i++) {
 		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << endl << "ERROR @ Tri3::Tri3(): "
-                 << "Coord in new CoordinateGroup inexistent" << endl;
+            cerr << "ERROR @ Tri3::Tri3(): "
+                 << "Coordinate in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
-            cerr << endl << "ERROR @ Tri3::Tri3(): "
-                 << "Coord in new CoordinateGroup is not a valid Coord" << endl;
+            cerr << "ERROR @ Tri3::Tri3(): "
+                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
+                 << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
         }
         v_[i] = coord->castTo<CoordR3>();
 	}

@@ -1,7 +1,10 @@
 #ifndef CLASSBASE_H_
 #define CLASSBASE_H_
 
+#include <cassert>
 #include <cstddef>
+#include <cstdlib>
+#include <iostream>
 
 using namespace std;
 
@@ -22,6 +25,10 @@ public:
     template<typename T>
     T* castTo() {
         if(!this->is<T>()) {
+            cerr << "ERROR @ ClassBase::castTo():"
+                 << "Invalid cast" << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
             return NULL;
         }
         return dynamic_cast<T*>(const_cast<ClassBase*>(this));
@@ -30,6 +37,10 @@ public:
     template<typename T>
     const T* castTo() const {
         if(!this->is<T>()) {
+            cerr << "ERROR @ ClassBase::castTo():"
+                 << "Invalid cast" << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
             return NULL;
         }
         return dynamic_cast<const T*>(this);

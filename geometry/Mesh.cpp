@@ -9,7 +9,7 @@
 const Real Mesh::areaDiffTolerance = 1e-15;
 
 Mesh::Mesh() {
-    grid_ = NULL;
+	grid_ = NULL;
 }
 
 Mesh::Mesh(
@@ -294,33 +294,33 @@ Mesh::getInternalBorder(const ElementsGroup<Tri>& region) const {
 
 bool
 Mesh::isRectilinear() const {
-    bool hasCartesianGridDefined = (grid_ != NULL);
+	bool hasCartesianGridDefined = (grid_ != NULL);
     bool onlyContainsQuad4 = (sizeOf<Quad4>() == size());
-    return (hasCartesianGridDefined && onlyContainsQuad4);
+	return (hasCartesianGridDefined && onlyContainsQuad4);
 }
 
 const Grid3*
 Mesh::getGrid() const {
-    return grid_;
+	return grid_;
 }
 
 void
 Mesh::setGrid(const Grid3& grid) {
-    grid_ = new Grid3(grid);
+	grid_ = new Grid3(grid);
 }
 
 void
 Mesh::applyGeometricScalingFactor(
-        const Real factor) {
-    cG_.applyScalingFactor(factor);
-    if (grid_ != NULL) {
-        grid_->applyScalingFactor(factor);
-    }
+ const Real factor) {
+	cG_.applyScalingFactor(factor);
+	if (grid_ != NULL) {
+		grid_->applyScalingFactor(factor);
+	}
 }
 
 vector<pair<const Element*, UInt> >
 Mesh::getElementsWithVertex(const UInt vertexId,
-        const Element::Type type) const {
+                            const Element::Type type) const {
 
     vector<pair<const Element*, UInt> > res;
     for (UInt i = 0; i < element_.size(); i++) {

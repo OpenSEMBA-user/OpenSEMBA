@@ -59,7 +59,7 @@ OutputGiDSmb::writeMeshWithIds(
         Int tmpCounter = coordCounter_;
         static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (UInt j = 0; j < ids[t].size(); j++) {
-            const Element* e = smb_->mesh->getPtrToId(ids[t][j])->castTo<Element>();
+            const ElemR* e = smb_->mesh->elem_.getPtrToId(ids[t][j])->castTo<ElemR>();
             for (Int i = 0; i < nV; i++) {
                 CVecR3 pos;
                 if (isLinear) {
@@ -125,7 +125,7 @@ OutputGiDSmb::writeOutputRequestsMesh() {
 }
 
 void OutputGiDSmb::writeElements(
-        const vector<const Element*>& elem,
+        const ElementsGroup<ElemR>& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {
@@ -135,7 +135,7 @@ void OutputGiDSmb::writeElements(
     vector<CVecR3> pos;
     for(UInt i = 0; i < elem.size(); i++) {
         for (Int j = 0; j < nV; j++) {
-            pos.push_back(elem[i]->getVertex(j)->pos());
+            pos.push_back(elem(i)->getVertex(j)->pos());
         }
     }
     writeCoordinates(pos);

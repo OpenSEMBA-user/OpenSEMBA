@@ -29,7 +29,7 @@ private:
             const vector<ElementId>& ids, string& name);
     void writeOutputRequestsMesh();
     void writeElements(
-            const vector<const Element*>& entities,
+            const ElementsGroup<ElemR>& entities,
             const string& name,
             const GiD_ElementType type,
             const Int nV);

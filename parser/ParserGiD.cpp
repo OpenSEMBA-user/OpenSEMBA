@@ -414,27 +414,27 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
 #error "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
                     elem.push_back(ElementId(atoi(value.c_str())));
                     res->add(new OutRq(
-                            domain, Element::node, type, name, elem));
+                            domain, ElementBase::node, type, name, elem));
                     break;
                 case ParserGiD::outRqOnLine:
                     getNextLabelAndValue(label,value);
                     elem.clear();
                     elem.push_back(ElementId(atoi(value.c_str())));
                     res->add(new OutRq(
-                            domain, Element::line, type, name, elem));
+                            domain, ElementBase::line, type, name, elem));
                     break;
                 case ParserGiD::outRqOnSurface:
                     getNextLabelAndValue(label,value);
                     elem.clear();
                     elem.push_back(ElementId(atoi(value.c_str())));
                     res->add(new OutRq(
-                            domain, Element::surface, type, name, elem));
+                            domain, ElementBase::surface, type, name, elem));
                     break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
                     elem = mesh_->addAsHex8(BoxR3(strToBound(line)));
                     res->add(new OutRq(
-                            domain, Element::volume, type, name, elem));
+                            domain, ElementBase::volume, type, name, elem));
                     break;
                 case ParserGiD::farField:
                     getline(f_in, line);
@@ -443,7 +443,7 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
                     res->add(new OutRqFarField(
-                            domain, Element::volume, name, elem,
+                            domain, ElementBase::volume, name, elem,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
                     break;
                 case ParserGiD::undefined:
@@ -646,7 +646,7 @@ void ParserGiD::readHex8Elements(const CoordinateGroup<>& v,
             f_in >> vId[j];
         }
         f_in >> matId;
-        elems.push_back(new Hex8(v, id, vId, LayerId(0), matId));
+        elems.push_back(new HexR8(v, id, vId, LayerId(0), matId));
     }
 }
 
@@ -713,7 +713,7 @@ void ParserGiD::readLin2Elements(const CoordinateGroup<>& v,
     MatId matId;
     for (UInt i = 0; i < pSize_.lin2; i++) {
         f_in >> id >> vId[0] >> vId[1] >> matId >> layerId;
-        elems.push_back(new Lin2(v, id, vId, layerId, matId));
+        elems.push_back(new LinR2(v, id, vId, layerId, matId));
     }
 }
 
@@ -1018,8 +1018,8 @@ ParserGiD::readPlaneWave() {
         }
     }
     // Throws error message if ending label was not found.
-    cerr<< "ERROR @ Parsing planewave: "
-            << "End of Planewave label not found. " << endl;
+    cerr << "ERROR @ Parsing planewave: "
+         << "End of Planewave label not found. " << endl;
     return new PlaneWave();
 }
 
@@ -1189,21 +1189,21 @@ ParserGiD::readSourceOnLine() {
     return new SourceOnLine();
 }
 
-Element::Type
+ElementBase::Type
 ParserGiD::strToElementType(string str) const {
     str = trim(str);
     if (str.compare("point")==0) {
-        return Element::node;
+        return ElementBase::node;
     } else if (str.compare("line")==0) {
-        return Element::line;
+        return ElementBase::line;
     } else if (str.compare("surface")==0) {
-        return Element::surface;
+        return ElementBase::surface;
     } else if (str.compare("volume")==0) {
-        return Element::volume;
+        return ElementBase::volume;
     } else {
         cerr<< "ERROR @ GiDParser::readOutputRequestInstance(): "
                 << "Unreckognized element type: " << str << endl;
-        return Element::undefined;
+        return ElementBase::undefined;
     }
 }
 

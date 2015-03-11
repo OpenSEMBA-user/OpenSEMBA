@@ -17,12 +17,12 @@ public:
         undefined
     } Type;
     Condition();
-    Condition(Element::Type param);
+    Condition(ElementBase::Type param);
     virtual ~Condition();
-    Element::Type getElementType() const;
+    ElementBase::Type getElementType() const;
     virtual Condition::Type getConditionType() const;
 private:
-    Element::Type elementType;
+    ElementBase::Type elementType;
 };
 
 #endif /* CONDITION_H_ */

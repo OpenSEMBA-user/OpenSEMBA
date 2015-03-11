@@ -16,28 +16,32 @@ Polygon::Polygon(const CoordinateGroup<>& cG,
                  const vector<CoordinateId>& vId,
                  const LayerId layerId,
                  const MatId   matId)
-:   Surface(id, layerId, matId) {
+:   Surface<Real>(id, layerId, matId) {
     
 	assert(vId.size() >= 3);
 	v_.resize(vId.size());
 	for (UInt i = 0; i < vId.size(); i++) {
 		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << endl << "ERROR @ Polygon::Polygon(): "
-                 << "Coord in new CoordinateGroup inexistent"
+            cerr << "ERROR @ Polygon::Polygon(): "
+                 << "Coordinate in new CoordinateGroup inexistent"
                  << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
-            cerr << endl << "ERROR @ Polygon::Polygon(): "
-                 << "Coord in new CoordinateGroup is not a valid Coord"
+            cerr << "ERROR @ Polygon::Polygon(): "
+                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
                  << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
         }
         v_[i] = coord->castTo<CoordR3>();
 	}
 }
 
 Polygon::Polygon(const Polygon& rhs)
-:   Surface(rhs) {
+:   Surface<Real>(rhs) {
     
     v_ = rhs.v_;
 }
@@ -92,8 +96,9 @@ const CoordR3* Polygon::getSideVertex(const UInt f, const UInt i) const {
 }
 
 Real Polygon::getArea() const {
-	cerr << endl << "ERROR @ Polygon getArea: Not implemented" << endl;
-	return 0.0;
+	cerr<< "ERROR @ Polygon getArea: "
+		<< "Not implemented" << endl;
+	exit(EXIT_FAILURE);
 }
 
 void Polygon::setV(const UInt i, const CoordR3* coord) {

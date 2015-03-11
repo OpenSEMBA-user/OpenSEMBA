@@ -23,12 +23,18 @@ Tet10::Tet10(const CoordinateGroup<>& coordGr,
     for (UInt i = 0; i < tet.np; i++) {
         const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << endl << "ERROR @ Tet10::Tet10(): "
-                 << "Coord in new CoordinateGroup inexistent" << endl;
+            cerr << "ERROR @ Tet10::Tet10(): "
+                 << "Coordinate in new CoordinateGroup inexistent"
+                 << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
-            cerr << endl << "ERROR @ Tet10::Tet10(): "
-                 << "Coord in new CoordinateGroup is not a valid Coord" << endl;
+            cerr << "ERROR @ Tet10::Tet10(): "
+                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
+                 << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
         }
         v_[i] = coord->castTo<CoordR3>();
     }

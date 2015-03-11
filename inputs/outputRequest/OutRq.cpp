@@ -2,7 +2,7 @@
 
 OutRq::OutRq(
  const Domain& domain,
- const Element::Type elementType,
+ const ElementBase::Type elementType,
  const OutRq::Type outputType,
  const string& name,
  const vector<ElementId>& elements_) : Condition(elementType), Domain(domain) {
@@ -49,16 +49,16 @@ string
 OutRq::elementTypeStr() const {
 	string res;
 	switch (getElementType()) {
-	case Element::node:
+	case ElementBase::node:
 		res = "node";
 		break;
-	case Element::line:
+	case ElementBase::line:
 		res = "line";
 		break;
-	case Element::surface:
+	case ElementBase::surface:
 		res = "surface";
 		break;
-	case Element::volume:
+	case ElementBase::volume:
 		res = "volume";
 		break;
 	default:

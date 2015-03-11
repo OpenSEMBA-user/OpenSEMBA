@@ -13,7 +13,7 @@ EMSourceGroup<C>::EMSourceGroup() {
 
 template<typename C>
 UInt
-EMSourceGroup<C>::countWithType(const Element::Type type) const {
+EMSourceGroup<C>::countWithType(const ElementBase::Type type) const {
 	UInt res = 0;
 	for (UInt i = 0; i < this->size(); i++) {
 		if (this->element_[i]->getElementType() == type) {
@@ -25,9 +25,8 @@ EMSourceGroup<C>::countWithType(const Element::Type type) const {
 
 template<typename C>
 const EMSource*
-EMSourceGroup<C>::getWithType(
- const UInt j,
- const Element::Type param) const {
+EMSourceGroup<C>::getWithType(const UInt j,
+                              const ElementBase::Type param) const {
 	assert(j < countWithType(param));
 	UInt count = 0;
 	for (UInt i = 0; i < this->size(); i++) {

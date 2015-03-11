@@ -21,7 +21,7 @@ public:
 
     UInt size() const { return element_.size(); }
 
-    T*       operator()(const UInt i);
+//    T*       operator()(const UInt i);
     const T* operator()(const UInt i) const;
 
     template<class T2>
@@ -30,8 +30,8 @@ public:
     template<class T2>
     Group<T2> getGroupOf() const;
 
-    template<class T2>
-    vector<const T2*> getVectorOf() const;
+//    template<class T2>
+//    vector<const T2*> getVectorOf() const;
     
     template<class T2>
     UInt sizeOf() const;

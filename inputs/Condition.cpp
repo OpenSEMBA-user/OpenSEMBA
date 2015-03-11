@@ -3,10 +3,10 @@
 #endif
 
 Condition::Condition() {
-	elementType = Element::undefined;
+	elementType = ElementBase::undefined;
 }
 
-Condition::Condition(Element::Type param) {
+Condition::Condition(ElementBase::Type param) {
 	elementType = param;
 }
 
@@ -18,6 +18,6 @@ Condition::Type Condition::getConditionType() const {
    return Condition::undefined;
 }
 
-Element::Type Condition::getElementType() const {
+ElementBase::Type Condition::getElementType() const {
     return elementType;
 }

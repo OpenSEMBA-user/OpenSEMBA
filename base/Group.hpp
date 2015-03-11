@@ -45,10 +45,10 @@ Group<T>& Group<T>::operator=(const Group<T>& rhs) {
     return *this;
 }
 
-template<typename T>
-T* Group<T>::operator()(const UInt i) {
-    return element_[i];
-}
+//template<typename T>
+//T* Group<T>::operator()(const UInt i) {
+//    return element_[i];
+//}
 
 template<typename T>
 const T* Group<T>::operator()(const UInt i) const {
@@ -77,16 +77,16 @@ Group<T2> Group<T>::getGroupOf() const {
     return Group<T2>(elems, false);
 }
 
-template<typename T> template<typename T2>
-vector<const T2*> Group<T>::getVectorOf() const {
-    vector<const T2*> elems;
-    for (UInt i = 0; i < this->size(); i++) {
-        if(this->element_[i]->template is<T2>()) {
-            elems.push_back(this->element_[i]->template castTo<T2>());
-        }
-    }
-    return elems;
-}
+//template<typename T> template<typename T2>
+//vector<const T2*> Group<T>::getVectorOf() const {
+//    vector<const T2*> elems;
+//    for (UInt i = 0; i < this->size(); i++) {
+//        if(this->element_[i]->template is<T2>()) {
+//            elems.push_back(this->element_[i]->template castTo<T2>());
+//        }
+//    }
+//    return elems;
+//}
 
 template<typename T> template<typename T2>
 UInt Group<T>::sizeOf() const {
@@ -113,7 +113,7 @@ void Group<T>::add(vector<T*>& newElems) {
              << "Forbidden to add elements to a Group without ownership "
              << "of elements on it" << endl;
         assert(false);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     this->element_.reserve(this->element_.size() + newElems.size());

@@ -12,29 +12,35 @@
 #include "Surface.h"
 #include "../math/Simplex.h"
 
-class Volume : public Element {
+template<class T>
+class Volume : public Element<T> {
 public:
 	Volume(const LayerId layerId = LayerId(0),
            const MatId   matId   = MatId(0));
 	Volume(const ElementId id,
            const LayerId layerId = LayerId(0),
            const MatId   matId   = MatId(0));
-    Volume(const Volume& rhs);
+    Volume(const Volume<T>& rhs);
     virtual ~Volume();
     
 	bool isLocalFace(const UInt f,
-                     const Surface& surf) const;
+                     const Surface<T>& surf) const;
 	virtual bool isCurvedFace(const UInt face) const = 0;
     virtual bool isFaceContainedInPlane(const UInt face,
                                         const CartesianPlane plane) const;
     
-	CVecR3 sideNormal(const UInt f) const;
+    CartesianVector<T,3> sideNormal(const UInt f) const;
    
-    ElementBase::Type getType() const {return volume;}
+    ElementBase::Type getType() const {return ElementBase::volume;}
 	
     virtual Real getAreaOfFace(const UInt face) const = 0;
-    BoxR3 getBoundOfFace(const UInt face) const;
-	UInt getFaceNumber(const Surface*) const;
+    Box<T,3> getBoundOfFace(const UInt face) const;
+	UInt getFaceNumber(const Surface<T>*) const;
 };
+
+#include "Volume.hpp"
+
+typedef Volume<Real> VolR;
+typedef Volume<Int > VolI;
 
 #endif /* VOLUME_H_ */

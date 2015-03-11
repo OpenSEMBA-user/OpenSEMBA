@@ -10,6 +10,9 @@
 
 #include <vector>
 #include <set>
+
+using namespace std;
+
 #include "Element.h"
 #include "Lin2.h"
 #include "Tri3.h"
@@ -20,8 +23,6 @@
 #include "Hex8.h"
 #include "Polygon.h"
 #include "Polyhedron.h"
-
-using namespace std;
 
 #include "GroupId.h"
 
