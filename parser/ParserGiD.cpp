@@ -413,28 +413,24 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     elem.clear();
 #warning "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
                     elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRq(
-                            domain, ElementBase::node, type, name, elem));
+                    res->add(new OutRq(domain, type, name, elem));
                     break;
                 case ParserGiD::outRqOnLine:
                     getNextLabelAndValue(label,value);
                     elem.clear();
                     elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRq(
-                            domain, ElementBase::line, type, name, elem));
+                    res->add(new OutRq(domain, type, name, elem));
                     break;
                 case ParserGiD::outRqOnSurface:
                     getNextLabelAndValue(label,value);
                     elem.clear();
                     elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRq(
-                            domain, ElementBase::surface, type, name, elem));
+                    res->add(new OutRq(domain, type, name, elem));
                     break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
                     elem = mesh_->addAsHex8(BoxR3(strToBound(line)));
-                    res->add(new OutRq(
-                            domain, ElementBase::volume, type, name, elem));
+                    res->add(new OutRq(domain, type, name, elem));
                     break;
                 case ParserGiD::farField:
                     getline(f_in, line);
@@ -442,8 +438,7 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
-                    res->add(new OutRqFarField(
-                            domain, ElementBase::volume, name, elem,
+                    res->add(new OutRqFarField(domain, name, elem,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
                     break;
                 case ParserGiD::undefined:
@@ -1187,24 +1182,6 @@ ParserGiD::readSourceOnLine() {
     cerr << endl << "ERROR @ Parsing nodal: "
             << "End of Nodal label not found. " << endl;
     return new SourceOnLine();
-}
-
-ElementBase::Type
-ParserGiD::strToElementType(string str) const {
-    str = trim(str);
-    if (str.compare("point")==0) {
-        return ElementBase::node;
-    } else if (str.compare("line")==0) {
-        return ElementBase::line;
-    } else if (str.compare("surface")==0) {
-        return ElementBase::surface;
-    } else if (str.compare("volume")==0) {
-        return ElementBase::volume;
-    } else {
-        cerr << endl << "ERROR @ GiDParser::readOutputRequestInstance(): "
-                << "Unreckognized element type: " << str << endl;
-        return ElementBase::undefined;
-    }
 }
 
 OutRq::Type

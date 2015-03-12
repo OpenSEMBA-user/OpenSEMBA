@@ -39,7 +39,6 @@ public:
     } Type;
     OutRq(
             const Domain& domain,
-            const ElementBase::Type elementType,
             const OutRq::Type outputType,
             const string& name,
             const vector<ElementId>& elements);
@@ -49,7 +48,6 @@ public:
     OutRq& operator=(const OutRq& rhs);
     virtual bool isSimilar(const OutRq& rhs) const;
     string outputTypeStr() const;
-    string elementTypeStr() const;
     const string& getName() const;
     OutRq::Type getOutputType() const;
     const vector<ElementId>& getElem() const;

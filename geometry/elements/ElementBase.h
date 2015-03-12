@@ -13,14 +13,6 @@ CreateId(MatId);
 
 class ElementBase : public ClassIdBase<ElementId> {
 public:
-    enum Type {
-		undefined,
-		node,
-		line,
-		surface,
-		volume
-	};
-    
     ElementBase(const LayerId layerId = LayerId(0),
                 const MatId   matId   = MatId(0));
     ElementBase(const ElementId id,
@@ -39,13 +31,12 @@ public:
     virtual UInt numberOfSideVertices   (const UInt f = 0) const = 0;
     virtual UInt numberOfSideCoordinates(const UInt f = 0) const = 0;
     
-    virtual Type getType() const { return undefined; }
-
     LayerId getLayerId() const { return layerId_; }
     MatId   getMatId  () const { return matId_;   }
 
     virtual BoxR3 getBound() const = 0;
     virtual const CoordR3* getV    (const UInt i) const = 0;
+    virtual const CoordR3* getVertex    (const UInt i) const = 0;
     virtual bool isCoordinate(const CoordR3*) const = 0;
 
     virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }

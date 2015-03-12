@@ -32,20 +32,13 @@ OutputGiDSmb::writeMesh() {
         smb_->pMGroup->getGroupOf<PhysicalModel>();
     for (UInt i = 0; i < lay.size(); i++) {
         for (UInt j = 0; j < mat.size(); j++) {
+            const MatId matId = mat(j)->getId();
+            const LayerId layId = lay(i)->getId();
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
-            ElementsGroup<ElemR> elem;
-            elem = smb_->mesh->get(ElementBase::line,
-                                   mat(j)->getId(),
-                                   lay(i)->getId()).getGroupOf<ElemR>();
-            writeElements(elem, name, GiD_Linear, 2);
-            elem = smb_->mesh->get(ElementBase::surface,
-                                   mat(j)->getId(),
-                                   lay(i)->getId()).getGroupOf<ElemR>();
-            writeElements(elem, name, GiD_Triangle, 3);
-            elem = smb_->mesh->get(ElementBase::volume,
-                                   mat(j)->getId(),
-                                   lay(i)->getId()).getGroupOf<ElemR>();
-            writeElements(elem, name, GiD_Tetrahedra, 4);
+            ElementsGroup<> elem = smb_->mesh->get(matId, layId);
+            writeElements(elem.getGroupOf<LinR2>().getGroupOf<ElementBase>(), name, GiD_Linear, 2);
+            writeElements(elem.getGroupOf<Tri3>().getGroupOf<ElementBase>(), name, GiD_Triangle, 3);
+            writeElements(elem.getGroupOf<Tet4>().getGroupOf<ElementBase>(), name, GiD_Tetrahedra, 4);
         }
     }
 }
@@ -130,7 +123,7 @@ OutputGiDSmb::writeOutputRequestsMesh() {
 }
 
 void OutputGiDSmb::writeElements(
-        const ElementsGroup<ElemR>& elem,
+        const ElementsGroup<>& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {

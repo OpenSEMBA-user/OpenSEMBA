@@ -48,8 +48,7 @@ public:
     vector<Face> getBorderWithNormal(const vector<Face>& border, const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
     virtual vector<pair<const ElemR*, UInt> > getElementsWithVertex(
-            const UInt vertexId,
-            const ElementBase::Type type) const;
+            const UInt vertexId) const;
     virtual bool isOnBoundary(const CVecR3 pos) const;
     ElementsGroup<SurfR> getMaterialBoundary(const MatId   matId,
                                              const LayerId layId) const;

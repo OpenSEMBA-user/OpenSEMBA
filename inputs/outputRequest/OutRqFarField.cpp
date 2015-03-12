@@ -13,12 +13,11 @@ OutRqFarField::~OutRqFarField() {
 
 OutRqFarField::OutRqFarField(
  const Domain& domain,
- const ElementBase::Type elementType,
  const string& name,
  const vector<ElementId>& elem,
  const Real iTh, const Real fTh, const Real sTh,
  const Real iPhi, const Real fPhi, const Real sPhi)
-: OutRq(domain, elementType, farField, name, elem) {
+: OutRq(domain, farField, name, elem) {
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 

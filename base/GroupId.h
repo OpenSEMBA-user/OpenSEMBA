@@ -21,9 +21,6 @@ public:
     T*       getPtrToId(const Id id);
     const T* getPtrToId(const Id id) const;
 
-//    template<class T2>
-//    vector<Id> getIdsOf() const;
-
     GroupId<T, Id> get(const vector<Id>&) const;
 
     void add(T* newElem , bool newId = false);

@@ -21,40 +21,6 @@ OutRqGroup<C>::OutRqGroup(
 }
 
 template<typename C>
-UInt
-OutRqGroup<C>::countWithType(const ElementBase::Type param) const {
-	UInt res = 0;
-	for (UInt i = 0; i < size(); i++) {
-		if (element_[i]->getElementType() == param) {
-			res++;
-		}
-	}
-	return res;
-}
-
-template<typename C>
-const OutRq*
-OutRqGroup<C>::getWithType(
- const UInt j,
- const ElementBase::Type param) const {
-	assert(j < countWithType(param));
-	UInt count = 0;
-	for (UInt i = 0; i < size(); i++) {
-		if (element_[i]->getElementType() == param) {
-			if (count == j) {
-				return element_[i];
-			} else {
-				count++;
-			}
-		}
-	}
-	cerr << endl << "ERROR @ OutputRequestGroup: "
-		<< "Output Request was not found in group." << endl;
-	assert(false);
-	return NULL;
-}
-
-template<typename C>
 void
 OutRqGroup<C>::printInfo() const {
 	cout<< " --- OutputRequestGroup info ---" << endl;

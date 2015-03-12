@@ -31,8 +31,6 @@ public:
     
     CartesianVector<T,3> sideNormal(const UInt f) const;
    
-    ElementBase::Type getType() const {return ElementBase::volume;}
-	
     virtual Real getAreaOfFace(const UInt face) const = 0;
     Box<T,3> getBoundOfFace(const UInt face) const;
 	UInt getFaceNumber(const Surface<T>*) const;

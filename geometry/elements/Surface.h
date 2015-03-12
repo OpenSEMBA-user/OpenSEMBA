@@ -25,9 +25,7 @@ public:
     
 	bool isContainedInPlane() const;
 	bool isContainedInPlane(const CartesianPlane plane) const;
-	
-	virtual ElementBase::Type getType() const { return ElementBase::surface; }
-    
+
     virtual CartesianVector<T,3> getNormal() const;
 	
     bool isRectangular() const;

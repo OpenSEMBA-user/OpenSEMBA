@@ -144,7 +144,7 @@ Mesh::isOnBoundary(const CVecR3 pos) const {
 
 ElementsGroup<SurfR> Mesh::getMaterialBoundary(const MatId   matId,
                                                const LayerId layId) const {
-    return get(ElementBase::surface, matId, layId).getGroupOf<SurfR>();
+    return get(matId, layId).getGroupOf<SurfR>();
 }
 
 vector<BoxR3> Mesh::discretizeWithinBoundary(
@@ -309,8 +309,7 @@ Mesh::applyGeometricScalingFactor(
 }
 
 vector<pair<const ElemR*, UInt> >
-Mesh::getElementsWithVertex(const UInt vertexId,
-                            const ElementBase::Type type) const {
+Mesh::getElementsWithVertex(const UInt vertexId) const {
 
     vector<pair<const ElemR*, UInt> > res;
     for (UInt i = 0; i < element_.size(); i++) {
@@ -318,7 +317,7 @@ Mesh::getElementsWithVertex(const UInt vertexId,
             continue;
         const ElemR* e = element_[i]->castTo<ElemR>();
         for (UInt j = 0; j < e->numberOfVertices(); j++) {
-            if (e->getType() == type && e->getVertex(j)->getId() == vertexId) {
+            if (e->getVertex(j)->getId() == vertexId) {
                 pair<const ElemR*, UInt> aux(e,j);
                 res.push_back(aux);
             }

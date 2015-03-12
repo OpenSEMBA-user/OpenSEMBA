@@ -14,6 +14,7 @@
 using namespace std;
 
 #include "Element.h"
+#include "Node.h"
 #include "Lin2.h"
 #include "Tri3.h"
 #include "Tri6.h"
@@ -39,13 +40,11 @@ public:
     ElementsGroup<E>& operator=(const Group<E>& rhs);
 
     ElementsGroup<E> get(const vector<ElementId>&) const;
-    ElementsGroup<E> get(const ElementBase::Type type) const;
     ElementsGroup<E> get(const MatId matId) const;
     ElementsGroup<E> get(const vector<MatId>& matId) const;
     ElementsGroup<E> get(const LayerId layerId) const;
     ElementsGroup<E> get(const vector<LayerId>& layerId) const;
     ElementsGroup<E> get(const MatId, const LayerId) const;
-    ElementsGroup<E> get(const ElementBase::Type, const MatId, const LayerId) const;
 
     void setMaterialIds(
             const vector<ElementId>& ids,
@@ -53,9 +52,7 @@ public:
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
-    vector<ElementId> getIdsInsideBound(
-            const BoxR3& bound,
-            const ElementBase::Type type = ElementBase::undefined) const;
+    vector<ElementId> getIdsInsideBound(const BoxR3& bound) const;
 
     BoxR3 getBound() const;
     BoxR3 getBound(const vector<Face>& border) const;

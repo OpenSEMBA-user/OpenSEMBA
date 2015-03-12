@@ -2,10 +2,9 @@
 
 OutRq::OutRq(
  const Domain& domain,
- const ElementBase::Type elementType,
  const OutRq::Type outputType,
  const string& name,
- const vector<ElementId>& elements_) : Condition(elementType), Domain(domain) {
+ const vector<ElementId>& elements_) : Domain(domain) {
  	name_ = name;
 	outputType_ = outputType;
 	elem_ = elements_;
@@ -44,28 +43,6 @@ OutRq::outputTypeStr() const {
 		return "Undefined";
 	}
 }
- 
-string
-OutRq::elementTypeStr() const {
-	string res;
-	switch (getElementType()) {
-	case ElementBase::node:
-		res = "node";
-		break;
-	case ElementBase::line:
-		res = "line";
-		break;
-	case ElementBase::surface:
-		res = "surface";
-		break;
-	case ElementBase::volume:
-		res = "volume";
-		break;
-	default:
-		res = "Unreckognized";
-	}
-	return res;
-}
 
 OutRq&
 OutRq::operator=(const OutRq& rhs) {
@@ -97,8 +74,6 @@ OutRq::printInfo() const {
 	cout<< "--- Output request instance ---" << endl;
 	cout<< "Name: " << name_.c_str() << endl;
 	Domain::printInfo();
-	cout<< "Output type: " << outputTypeStr() << " over "<<
-		elementTypeStr() << ". " << endl;
 	cout<< "Number of elements: " << elem_.size() << endl;
 	cout<< "--- End of Output Request Instance ---" << endl;
 }

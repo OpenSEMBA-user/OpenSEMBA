@@ -91,18 +91,6 @@ ElementsGroup<E> ElementsGroup<E>::get(
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::get(const ElementBase::Type type) const {
-    vector<E*> res;
-    res.reserve(this->size());
-    for (UInt i = 0; i < this->size(); i++) {
-        if (this->element_[i]->getType() == type) {
-            res.push_back(this->element_[i]);
-        }
-    }
-    return ElementsGroup<E>(res, false);
-}
-
-template<typename E>
 ElementsGroup<E> ElementsGroup<E>::get(const MatId matId) const {
     vector<MatId> aux;
     aux.push_back(matId);
@@ -149,13 +137,6 @@ ElementsGroup<E> ElementsGroup<E>::get(const MatId   matId,
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::get(const ElementBase::Type type,
-                                       const MatId   matId,
-                                       const LayerId layId) const {
-    return get(type).get(matId, layId);
-}
-
-template<typename E>
 const CoordR3*
 ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
     const CoordR3* res;
@@ -173,17 +154,14 @@ ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
 
 template<typename E>
 vector<ElementId>
-ElementsGroup<E>::getIdsInsideBound(
-        const BoxR3& bound,
-        const ElementBase::Type type) const {
+ElementsGroup<E>::getIdsInsideBound(const BoxR3& bound) const {
     const UInt nK = this->size();
     vector<ElementId> res;
     res.reserve(nK);
     for (UInt i = 0; i < nK; i++) {
         const ElementBase* e = this->element_[i];
         BoxR3 localBound = e->getBound();
-        if (localBound <= bound &&
-                (e->getType() == type || type==ElementBase::undefined)) {
+        if (localBound <= bound) {
             res.push_back(e->getId());
         }
     }

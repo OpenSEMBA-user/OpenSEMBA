@@ -30,7 +30,6 @@ public:
     inline UInt numberOfSideVertices   (const UInt f = 0) const { return 1; }
     inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 1; }
     
-    virtual ElementBase::Type getType() const { return ElementBase::line; }
 };
 
 #include "Line.hpp"
