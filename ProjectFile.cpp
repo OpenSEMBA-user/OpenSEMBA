@@ -40,7 +40,7 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
 #endif
       command += directory;
       if (system(command.c_str())) {
-          cerr << "ERROR @ ProjectFile: "
+          cerr << endl << "ERROR @ ProjectFile: "
            << "System command failed to execute " << command << endl;
       }
    }
@@ -68,9 +68,9 @@ void ProjectFile::openFile(
       ofstream& file) const {
    file.open(fileName.c_str());
    if (!file) {
-      cerr << "ERROR @ ProjectFile: ";
-      cerr << "File for writing could not be opened. ";
-      cerr << "File name: " << fileName << endl;
+      cerr << endl << "ERROR @ ProjectFile: ";
+      cerr << endl << "File for writing could not be opened. ";
+      cerr << endl << "File name: " << fileName << endl;
    }
 }
 
@@ -88,9 +88,9 @@ ProjectFile::getFilesBasenames(
       }
       closedir(dir);
    } else {
-      cerr << "ERROR @ ProjectFile";
-      cerr << "Could not open directory to extract basenames.";
-      cerr << "Tried: " << directory << endl;
+      cerr << endl << "ERROR @ ProjectFile";
+      cerr << endl << "Could not open directory to extract basenames.";
+      cerr << endl << "Tried: " << directory << endl;
    }
    // Stores files with names matching extension.
    vector<string> res;

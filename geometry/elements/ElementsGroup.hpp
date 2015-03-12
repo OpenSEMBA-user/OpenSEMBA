@@ -68,18 +68,6 @@ BoxR3 ElementsGroup<E>::getBound() const {
 }
 
 template<typename E>
-BoxR3 ElementsGroup<E>::getBound(const vector<ElementId>& ids) const {
-    if (this->size() == 0) {
-        return BoxR3().setInfinity();
-    }
-    BoxR3 bound;
-    for (UInt i = 0; i < ids.size(); i++) {
-        bound << this->getPtrToId(ids[i])->getBound();
-    }
-    return bound;
-}
-
-template<typename E>
 BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
     if (border.size() == 0) {
         return BoxR3().setInfinity();
@@ -96,7 +84,7 @@ BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
 }
 
 template<typename E>
-GroupId<E, ElementId> ElementsGroup<E>::get(
+ElementsGroup<E> ElementsGroup<E>::get(
     const vector<ElementId>& ids) const {
 
     return GroupId<E, ElementId>::get(ids);
@@ -315,7 +303,7 @@ void ElementsGroup<E>::linearize() {
         return;
     }
     if(!this->ownership_) {
-        cerr << "ERROR @ ElementsGroup::linearize(): "
+        cerr << endl << "ERROR @ ElementsGroup::linearize(): "
              << "Forbidden to linearize without ownership "
              << "of elements on it" << endl;
         assert(false);

@@ -23,14 +23,14 @@ Polygon::Polygon(const CoordinateGroup<>& cG,
 	for (UInt i = 0; i < vId.size(); i++) {
 		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
         if (coord == NULL) {
-            cerr << "ERROR @ Polygon::Polygon(): "
+            cerr << endl << "ERROR @ Polygon::Polygon(): "
                  << "Coordinate in new CoordinateGroup inexistent"
                  << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
         if (!coord->is<CoordR3>()) {
-            cerr << "ERROR @ Polygon::Polygon(): "
+            cerr << endl << "ERROR @ Polygon::Polygon(): "
                  << "Coordinate in new CoordinateGroup is not a valid Coordinate"
                  << endl;
             assert(false);
@@ -96,7 +96,7 @@ const CoordR3* Polygon::getSideVertex(const UInt f, const UInt i) const {
 }
 
 Real Polygon::getArea() const {
-	cerr<< "ERROR @ Polygon getArea: "
+	cerr << endl << "ERROR @ Polygon getArea: "
 		<< "Not implemented" << endl;
 	exit(EXIT_FAILURE);
 }

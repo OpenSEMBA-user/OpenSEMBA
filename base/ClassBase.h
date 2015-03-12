@@ -25,7 +25,7 @@ public:
     template<typename T>
     T* castTo() {
         if(!this->is<T>()) {
-            cerr << "ERROR @ ClassBase::castTo():"
+            cerr << endl << "ERROR @ ClassBase::castTo():"
                  << "Invalid cast" << endl;
             assert(false);
             exit(EXIT_FAILURE);
@@ -37,7 +37,7 @@ public:
     template<typename T>
     const T* castTo() const {
         if(!this->is<T>()) {
-            cerr << "ERROR @ ClassBase::castTo():"
+            cerr << endl << "ERROR @ ClassBase::castTo():"
                  << "Invalid cast" << endl;
             assert(false);
             exit(EXIT_FAILURE);

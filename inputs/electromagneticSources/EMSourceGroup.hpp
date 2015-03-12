@@ -38,7 +38,7 @@ EMSourceGroup<C>::getWithType(const UInt j,
 			}
 		}
 	}
-	cerr<< "ERROR @ EMSourceGroup: "
+	cerr << endl << "ERROR @ EMSourceGroup: "
 		<< "EMSource was not found in group." << endl;
 	assert(false);
 	return NULL;

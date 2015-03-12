@@ -252,7 +252,7 @@ ParserGiD::readEMSources() {
         } // if: boundary condition label was found.
     } // while: information was found or eof was reached.
     if (!found) {
-        cerr<< "ERROR @ Parsing sources: "
+        cerr << endl << "ERROR @ Parsing sources: "
                 << "Excitations label was not found." << endl;
     }
     //
@@ -343,7 +343,7 @@ ParserGiD::readPhysicalModel(const MatId id) {
             case multilayer:
                 return readMultilayerSurf(id, name, layersStr);
             default:
-                cerr << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
+                cerr << endl << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
             }
             break;
             case PhysicalModelGroup<>::wire:
@@ -355,8 +355,8 @@ ParserGiD::readPhysicalModel(const MatId id) {
                 return new PMMultiportRLC(id, name, mpType, R, L, C);
             }
             default:
-                cerr<< "ERROR @ Parsing materials: ";
-                cerr<< "Material type not recognized." << endl;
+                cerr << endl << "ERROR @ Parsing materials: ";
+                cerr << endl << "Material type not recognized." << endl;
                 return NULL;
             }
         }
@@ -447,7 +447,7 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
                     break;
                 case ParserGiD::undefined:
-                    cerr<< "ERROR @ GiDParser: "
+                    cerr << endl << "ERROR @ GiDParser: "
                     << "Unreckognized GiD Output request type:"
                     << type << endl;
                     break;
@@ -456,7 +456,7 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
         } else if (label.compare("End of Output request instance")==0) {
             finished = true;
         } else {
-            cerr<< "ERROR @ GiDParser::readOutputRequestsInstance(): "
+            cerr << endl << "ERROR @ GiDParser::readOutputRequestsInstance(): "
                     << "Label not identified: " << label << endl;
         } // End of condition comparing labels.
     }
@@ -502,14 +502,14 @@ ParserGiD::readProblemSize() {
                     finished = true;
                 }
                 if (f_in.eof()) {
-                    cerr<< "ERROR @ Parser::readProblemSize(): "
+                    cerr << endl << "ERROR @ Parser::readProblemSize(): "
                             << "End of problem size label not found" << endl;
                 }
             }
         }
     }
     if (!problemSizeFound) {
-        cerr<< "ERROR @ Parser::readProblemSize: "
+        cerr << endl << "ERROR @ Parser::readProblemSize: "
                 << "Problem size label not found."     << endl;
     }
     return res;
@@ -540,7 +540,7 @@ ParserGiD::readLayers() {
         }
     }
     if (!found) {
-        cerr<< "ERROR @ Parsing layers: "
+        cerr << endl << "ERROR @ Parsing layers: "
                 << "Layers label was not found." << endl;
         return NULL;
     }
@@ -576,11 +576,11 @@ ParserGiD::readCoordinates() {
         }
     }
     if (!found) {
-        cerr<< "ERROR @ GiDParser::readCoordinates(): "
+        cerr << endl << "ERROR @ GiDParser::readCoordinates(): "
                 << "Coordinates label was not found." << endl;
     }
     if (!finished) {
-        cerr<< "ERROR @ GiDParser::readCoordinates(): "
+        cerr << endl << "ERROR @ GiDParser::readCoordinates(): "
                 << "End of coordinates label not found." << endl;
     }
 
@@ -623,12 +623,12 @@ ParserGiD::readElements(const CoordinateGroup<>& v) {
     }
     // Shows error message if the elements label was not found.
     if (!found) {
-        cerr << "ERROR @ GiDParser::readElements(): "
+        cerr << endl << "ERROR @ GiDParser::readElements(): "
              << "\"Elements\" label was not found." << endl;
     }
     // This code is reached only in case of "End of elements" is not found.
     if (!finished) {
-        cerr << "ERROR @ GiDParser::readElements()"
+        cerr << endl << "ERROR @ GiDParser::readElements()"
              << "\"End of elements\" label was not found." << endl;
     }
     //
@@ -735,7 +735,7 @@ ParserGiD::readDispersiveMatFile(
     matFileName = problemTypePath_ + "/material/" + fileName + ".dat";
     matFile.open(matFileName.c_str(), ifstream::in);
     if (matFile.fail()) {
-        cerr<< "ERROR @ readDispersiveMaterialFile()"
+        cerr << endl << "ERROR @ readDispersiveMaterialFile()"
                 << "Problem opening file: " << matFileName << endl;
     }
     // Parses first line, containing material name.
@@ -791,7 +791,7 @@ ParserGiD::readDispersiveMatFile(
         return new PMVolumeDispersive(id_, name, eps, 1.0, sig,
                 poles, residues, drudePoles, drudeResidues);
     }
-    cerr<< "ERROR@GiDParser::readDispersiveMaterialFile(...)"
+    cerr << endl << "ERROR@GiDParser::readDispersiveMaterialFile(...)"
             << "File contains unknown model." << endl;
     return NULL;
 }
@@ -838,13 +838,13 @@ ParserGiD::readIsotropicSurfMatFile(
     matFileName = problemTypePath_ + "/panel/" + fileName + ".dat";
     matFile.open(matFileName.c_str(), ifstream::in);
     if (matFile.fail()) {
-        cerr<< "ERROR @ readSurfaceMaterialFile(): "
+        cerr << endl << "ERROR @ readSurfaceMaterialFile(): "
                 << "Problem opening file: " << matFileName << endl;
     }
     // Parses first line, containing material name.
     getline(matFile, line);
     if (line.find("#PANEL#") == string::npos) {
-        cerr<< "ERROR @ Parser::readSurfaceMaterialFile(...)"
+        cerr << endl << "ERROR @ Parser::readSurfaceMaterialFile(...)"
                 << "File: " << matFileName << "   "
                 << "#PANEL# label has not been found in first line" << endl;
     }
@@ -946,7 +946,7 @@ ParserGiD::readCartesianGrid() {
                     }
                 }
                 if (f_in.eof()) {
-                    cerr<< "ERROR @ ParserGiD()"
+                    cerr << endl << "ERROR @ ParserGiD()"
                             << "End of grid label not found" << endl;
                 }
             }
@@ -954,7 +954,7 @@ ParserGiD::readCartesianGrid() {
     }
     // Throws error message if label was not found.
     if (!gridLabelFound) {
-        cerr<< "ERROR @ ParserGiD: "
+        cerr << endl << "ERROR @ ParserGiD: "
                 << "Grid3 label not found." << endl;
     }
     if (gridFound) {
@@ -975,12 +975,12 @@ ParserGiD::init(const string& pTPath) {
     struct stat st;
     if (stat(getFilename().c_str(), &st) == 0) {
         if (st.st_mode & S_IFDIR) {
-            cerr<< "ERROR@GiDParser::GiDParser(): "
+            cerr << endl << "ERROR@GiDParser::GiDParser(): "
                     << getFilename() << "It is a directory " << endl;
         }  else if(st.st_mode & S_IFREG) {
             f_in.open(getFilename().c_str(), ifstream::in);
             if (f_in.fail()) {
-                cerr<< "ERROR @ ParserGiD::GiDParser(): "
+                cerr << endl << "ERROR @ ParserGiD::GiDParser(): "
                         << "Problem opening file: " << getFilename() << endl;
             }
             return;
@@ -1018,7 +1018,7 @@ ParserGiD::readPlaneWave() {
         }
     }
     // Throws error message if ending label was not found.
-    cerr << "ERROR @ Parsing planewave: "
+    cerr << endl << "ERROR @ Parsing planewave: "
          << "End of Planewave label not found. " << endl;
     return new PlaneWave();
 }
@@ -1045,7 +1045,7 @@ ParserGiD::readDipole() {
             finished = true;
     }
     if (!finished) {
-        cerr<< "ERROR @ ParserGiD::readDipoleEMSource: "
+        cerr << endl << "ERROR @ ParserGiD::readDipoleEMSource: "
                 << "End of excitation type label not found. "
                 << endl;
     }
@@ -1108,13 +1108,13 @@ ParserGiD::readWaveport() {
             finished = true;
         }
         if (f_in.eof()) {
-            cerr<< "ERROR @ Parser: "
+            cerr << endl << "ERROR @ Parser: "
                     << "End of Waveport not found" << endl;
         }
     }
     // Throws error message if finished was not updated.
     if (!finished) {
-        cerr<< "ERROR @ GiDParser::readWaveportEMSource: "
+        cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
     return new Waveport(elem, mag, input, shape, excitationMode, mode);
@@ -1150,7 +1150,7 @@ ParserGiD::readGenerator() {
         }
     }
     // Throws error message if ending label was not found.
-    cerr<< "ERROR @ Parsing generator: "
+    cerr << endl << "ERROR @ Parsing generator: "
             << "End of Generator label not found. " << endl;
     return new Generator();
 }
@@ -1184,7 +1184,7 @@ ParserGiD::readSourceOnLine() {
         }
     }
     // Throws error message if ending label was not found.
-    cerr<< "ERROR @ Parsing nodal: "
+    cerr << endl << "ERROR @ Parsing nodal: "
             << "End of Nodal label not found. " << endl;
     return new SourceOnLine();
 }
@@ -1201,7 +1201,7 @@ ParserGiD::strToElementType(string str) const {
     } else if (str.compare("volume")==0) {
         return ElementBase::volume;
     } else {
-        cerr<< "ERROR @ GiDParser::readOutputRequestInstance(): "
+        cerr << endl << "ERROR @ GiDParser::readOutputRequestInstance(): "
                 << "Unreckognized element type: " << str << endl;
         return ElementBase::undefined;
     }
@@ -1233,7 +1233,7 @@ ParserGiD::strToOutputType(string str) const {
     } else if (str.compare("farField")==0) {
         return OutRq::farField;
     } else {
-        cerr<< "ERROR @ GiDParser::readOutputRequestInstance(): "
+        cerr << endl << "ERROR @ GiDParser::readOutputRequestInstance(): "
                 << "Unrecognized output type: " << str << endl;
         return OutRq::undefined;
     }
@@ -1247,7 +1247,7 @@ ParserGiD::strToSIBCType(string str) const {
     } else if (str.compare("Layers")==0) {
         return multilayer;
     } else {
-        cerr<< "ERROR @ GiDParser: "
+        cerr << endl << "ERROR @ GiDParser: "
                 << "Unrecognized SIBC type: " << str << endl;
         return undefinedSIBC;
     }
@@ -1261,7 +1261,7 @@ ParserGiD::strToGeneratorType(string str) const {
     } else if (str.compare("current")==0) {
         return Generator::current;
     } else {
-        cerr<< "ERROR @ Parser: "
+        cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized generator type." << endl;
         return Generator::undefined;
     }
@@ -1275,7 +1275,7 @@ ParserGiD::strToGeneratorHardness(string str) const {
     } else if (str.compare("hard")==0) {
         return Generator::hard;
     } else {
-        cerr<< "ERROR @ Parser: "
+        cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized generator hardness." << endl;
         return Generator::soft;
     }
@@ -1297,7 +1297,7 @@ ParserGiD::strToBoundType(string str) const {
     } else if (str.compare("MUR2")==0) {
         return MesherOptions::mur2;
     } else {
-        cerr<< "ERROR @ Parser: "
+        cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized bound label." << endl;
         return MesherOptions::undefined;
     }
@@ -1325,7 +1325,7 @@ ParserGiD::strToMaterialType(string str) const {
     } else if (str.find("Conn_") != string::npos) {
         return PhysicalModelGroup<>::multiport;
     } else {
-        cerr<< "ERROR @ Parser: "
+        cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized material label." << endl;
         return PhysicalModelGroup<>::undefined;
     }
@@ -1347,7 +1347,7 @@ ParserGiD::strToMultiportType(string str) const {
     } else if (str.compare("Conn_sLpRC")==0) {
         return PMMultiport::sLpRC;
     } else {
-        cerr<< "ERROR @ Parser: "
+        cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized multiport label." << endl;
         return PMMultiport::undefined;
     }
@@ -1382,7 +1382,7 @@ ParserGiD::strToNodalType(string str) const {
     } else if (str.compare("magneticField")==0) {
         return SourceOnLine::magneticField;
     } else {
-        cerr<< "ERROR @ Parser: "
+        cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized nodal type." << endl;
         return SourceOnLine::undefined;
     }
@@ -1396,7 +1396,7 @@ ParserGiD::strToNodalHardness(string str) const {
     } else if (str.compare("hard")==0) {
         return SourceOnLine::hard;
     } else {
-        cerr<< "ERROR @ Parser: "
+        cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized nodal hardness." << endl;
         return SourceOnLine::soft;
     }
@@ -1421,11 +1421,11 @@ ParserGiD::readVersion() {
     }
     // Shows error messages.
     if (!formatFound) {
-        cerr<< "ERROR @ ParserGiD: "
+        cerr << endl << "ERROR @ ParserGiD: "
                 << "EoF was reached but format label was not found." << endl;
     }
     if (!versionFound) {
-        cerr<< "ERROR @ ParserGiD: "
+        cerr << endl << "ERROR @ ParserGiD: "
                 << "EoF was reached but version label was not found." << endl;
     }
     return version;
@@ -1445,8 +1445,8 @@ ParserGiD::strToGidOutputType(string str) const {
     } else if (str.compare("farField")) {
         return ParserGiD::farField;
     } else {
-        cerr<< "ERROR @ Parser: ";
-        cerr<< "Unreckognized label." << endl;
+        cerr << endl << "ERROR @ Parser: ";
+        cerr << endl << "Unreckognized label." << endl;
         return ParserGiD::undefined;
     }
 }
@@ -1511,7 +1511,7 @@ ParserGiD::readMagnitude(const string typeIn) {
             }
         }
     }
-    cerr<< "ERROR @ readMagnitude: "
+    cerr << endl << "ERROR @ readMagnitude: "
             << "Unable to recognize magnitude type when reading excitation."
             << endl;
     return NULL;
@@ -1526,8 +1526,8 @@ MesherOptions::Mesher ParserGiD::strToMesher(string str) const {
     } else if (str.compare("None")==0) {
         return MesherOptions::none;
     } else {
-        cerr<< "ERROR @ Parser: ";
-        cerr<< "Unreckognized label: " << str<< endl;
+        cerr << endl << "ERROR @ Parser: ";
+        cerr << endl << "Unreckognized label: " << str<< endl;
         return MesherOptions::none;
     }
 }
@@ -1541,8 +1541,8 @@ MesherOptions::Mode ParserGiD::strToMesherMode(string str) const {
     } else if (str.compare("Slanted")==0) {
         return MesherOptions::slanted;
     } else {
-        cerr<< "ERROR @ Parser: ";
-        cerr<< "Unreckognized label: " << str<< endl;
+        cerr << endl << "ERROR @ Parser: ";
+        cerr << endl << "Unreckognized label: " << str<< endl;
         return MesherOptions::structured;
     }
 }
@@ -1557,7 +1557,7 @@ SolverOptions::Solver ParserGiD::strToSolver(string str) const {
         return SolverOptions::Solver::none;
     } else {
         cerr << endl << "ERROR @ Parser: ";
-        cerr << "Unreckognized label: " << str<< endl;
+        cerr << endl << "Unreckognized label: " << str<< endl;
         return SolverOptions::Solver::none;
     }
 }
@@ -1576,7 +1576,7 @@ ParserGiD::strToCompositeModel(string str) const {
     } else if (str.compare("URM-MMT")==0) {
         return SolverOptions::CompositeModel::URMMMT;
     } else {
-        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
         return SolverOptions::CompositeModel::Default;
     }
 }
@@ -1593,7 +1593,7 @@ ParserGiD::strToMetalModel(string str) const {
     } else if (str.compare("Conformal_skin_depth")==0) {
         return SolverOptions::MetalModel::conformalSkinDepth;
     } else {
-        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
         return SolverOptions::MetalModel::Default;
     }
 }
@@ -1608,7 +1608,7 @@ ParserGiD::strToWireModel(string str) const {
     } else if (str.compare("New")==0) {
         return SolverOptions::WireModel::New;
     } else {
-        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
         return SolverOptions::WireModel::Default;
     }
 }
@@ -1623,7 +1623,7 @@ ParserGiD::strToSelfInductanceModel(string str) const {
     } else if (str.compare("Berenger")==0) {
         return SolverOptions::SelfInductanceModel::berenger;
     } else {
-        cerr<< "ERROR @ Parser: Unreckognized label: " << str << endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
         return SolverOptions::SelfInductanceModel::boutayeb;
     }
 }
@@ -1633,7 +1633,7 @@ ParserGiD::checkVersionCompatibility(const string version) const {
     bool versionMatches =
             atof(version.c_str()) == atof(string(APP_VERSION).c_str());
     if (!versionMatches) {
-        cerr << "ERROR @ ParserGiD: "
+        cerr << endl << "ERROR @ ParserGiD: "
              << "File version " << version << " is not supported." << endl;
     }
     return versionMatches;

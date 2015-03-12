@@ -25,7 +25,7 @@ Arguments::Arguments(const int argc,  const char* argv[]) {
     }
     if (!fExists(fileName_)) {
         printInfo();
-        cerr<< "ERROR @ Arguments::getArguments(): "
+        cerr << endl << "ERROR @ Arguments::getArguments(): "
             << "No input file was found. "
             << "These files existence were checked: "
             << fileName_ << endl;

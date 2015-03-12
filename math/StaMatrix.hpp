@@ -120,8 +120,8 @@ void
 StaMatrix<T,NROWS,NCOLS>::printInfo(UInt rows, UInt cols) const {
    UInt i, j;
    if (rows > NROWS || cols > NCOLS) {
-      cerr << "ERROR: Unable print more rows or cols than available" << endl;
-      cerr << "Terminating."                                         << endl;
+      cerr << endl << "ERROR: Unable print more rows or cols than available" << endl;
+      cerr << endl << "Terminating."                                         << endl;
       exit(EXIT_FAILURE);
    }
    cout << "Matrix type: Double";

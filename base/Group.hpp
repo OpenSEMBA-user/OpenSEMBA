@@ -109,7 +109,7 @@ void Group<T>::add(T* newElem) {
 template<typename T>
 void Group<T>::add(vector<T*>& newElems) {
     if(!this->ownership_) {
-        cerr << "ERROR @ Group::add(): "
+        cerr << endl << "ERROR @ Group::add(): "
              << "Forbidden to add elements to a Group without ownership "
              << "of elements on it" << endl;
         assert(false);

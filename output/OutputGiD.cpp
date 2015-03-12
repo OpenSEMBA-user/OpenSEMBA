@@ -34,7 +34,7 @@ OutputGiD::OutputGiD(const string& fn, GiD_PostMode mode) : Output(fn) {
         openPostResultFile(fn + ".post.res");
         break;
     default:
-        cerr << "ERROR @ GiDOutput::openFiles() " << endl;
+        cerr << endl << "ERROR @ GiDOutput::openFiles() " << endl;
     }
     writeGaussPoints();
 }

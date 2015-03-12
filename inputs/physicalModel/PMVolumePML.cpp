@@ -151,8 +151,8 @@ PMVolumePML::getFirstOrientationIndex() const {
 	case PMLxyz:
 		return 0;
 	default:
-		cerr << "ERROR @ PMVolumePML " << endl;
-		cerr << "Unreckognized orientation" << endl;
+		cerr << endl << "ERROR @ PMVolumePML " << endl;
+		cerr << endl << "Unreckognized orientation" << endl;
 		assert(false);
 		exit(-1);
 	}

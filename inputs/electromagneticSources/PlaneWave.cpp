@@ -27,14 +27,14 @@ PlaneWave::PlaneWave(
         printInfo();
     }
     if (waveDirection_.norm() == 0.0 || polarization.norm() == 0.0) {
-        cerr<< "ERROR @ Planewave: "
+        cerr << endl << "ERROR @ Planewave: "
             << "Wave direction and polarization cannot be zero" << endl;
         printInfo();
     }
     //
     if ((waveDirection ^ polarization).norm() !=
      waveDirection.norm() * polarization.norm()) {
-        cerr<< "ERROR @ Planewave: "
+        cerr << endl << "ERROR @ Planewave: "
             << "Wavedirection is not perpendicular to polarization." << endl;
     }
 }

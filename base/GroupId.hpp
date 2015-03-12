@@ -46,7 +46,7 @@ T* GroupId<T, Id>::getPtrToId(const Id id) {
     if(mapId_.count(id) != 0)
         return this->element_[mapId_.at(id)];
 
-    cerr << "ERROR @ GroupId::getPtrToId():"
+    cerr << endl << "ERROR @ GroupId::getPtrToId():"
          << "Inexistent Id: " << id << endl;
     assert(false);
     exit(EXIT_FAILURE);
@@ -58,7 +58,7 @@ const T* GroupId<T, Id>::getPtrToId(const Id id) const {
     if(mapId_.count(id) != 0)
         return this->element_[mapId_.at(id)];
     
-    cerr << "ERROR @ GroupId::getPtrToId():"
+    cerr << endl << "ERROR @ GroupId::getPtrToId():"
          << "Inexistent Id: " << id << endl;
     assert(false);
     exit(EXIT_FAILURE);
@@ -82,7 +82,7 @@ GroupId<T, Id> GroupId<T, Id>::get(const vector<Id>& ids) const {
     elems.resize(ids.size());
     for(UInt i = 0; i < ids.size(); i++) {
         if (mapId_.count(ids[i]) == 0) {
-            cerr << "ERROR @ GroupId::get():"
+            cerr << endl << "ERROR @ GroupId::get():"
                  << "Inexistent Id: " << ids[i] << endl;
             assert(false);
             exit(EXIT_FAILURE);
@@ -103,7 +103,7 @@ void GroupId<T, Id>::add(T* newElem, bool newId) {
 template<typename T, class Id>
 void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
     if(!this->ownership_) {
-        cerr << "ERROR @ Group::add(): "
+        cerr << endl << "ERROR @ Group::add(): "
              << "Forbidden to add elements to a Group without ownership "
              << "of elements on it" << endl;
         assert(false);
@@ -119,7 +119,7 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
         if(mapId_.count(this->element_.back()->getId()) == 0) {
             mapId_[this->element_.back()->getId()] = this->size()-1;
         } else {
-            cerr << "ERROR @ GroupId::add():"
+            cerr << endl << "ERROR @ GroupId::add():"
                  << "Duplicated Ids" << endl;
             assert(false);
             exit(EXIT_FAILURE);
@@ -134,7 +134,7 @@ void GroupId<T, Id>::buildMapId() {
             lastId_ = this->element_[i]->getId();
 
         if (lastId_ == 0) {
-            cerr << "ERROR @ GroupId::buildMapId():"
+            cerr << endl << "ERROR @ GroupId::buildMapId():"
                  << "Element with id = 0" << endl;
             assert(false);
             exit(EXIT_FAILURE);
@@ -143,7 +143,7 @@ void GroupId<T, Id>::buildMapId() {
         if (mapId_.count(this->element_[i]->getId()) == 0) {
             mapId_[this->element_[i]->getId()] = i;
         } else {
-            cerr << "ERROR @ GroupId::buildMapId():"
+            cerr << endl << "ERROR @ GroupId::buildMapId():"
                  << "Duplicated Ids" << endl;
             assert(false);
             exit(EXIT_FAILURE);

@@ -411,9 +411,9 @@ MathMatrix<T>::convertToArray(const Int mode, Real *res) const {
 				res[i * nCols() + j] = val(i,j);
 		return;
 	} else {
-		cerr << "ERROR: DynMatrix<T>::converToArray "     << endl;
-		cerr << "Inserted mode is not defined."           << endl;
-		cerr << "Terminating."                            << endl;
+		cerr << endl << "ERROR: DynMatrix<T>::converToArray "     << endl;
+		cerr << endl << "Inserted mode is not defined."           << endl;
+		cerr << endl << "Terminating."                            << endl;
 		exit(EXIT_FAILURE);
 	}
 }

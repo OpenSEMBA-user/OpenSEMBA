@@ -140,8 +140,8 @@ void Tet::getCubatureJacobianHat(
             ind[0] = 0;	ind[1] = 1;	ind[2] = 2;
             break;
         default:
-            cerr << "ERROR @ Tet" << endl;
-            cerr << "Invalid face." << endl;
+            cerr << endl << "ERROR @ Tet" << endl;
+            cerr << endl << "Invalid face." << endl;
             exit(-1);
         }
         // Builds reduced jacobian for all cubature points.

@@ -143,7 +143,7 @@ void Polyhedron::checkClosedness() const {
     list.sortRows(0,1);
     for (UInt i = 0; i < nSidesInFaces; i += 2) {
         if (list(i,0) != list(i+1,0) || list(i,1) != list(i+1,1)) {
-            cerr << "ERROR @ Polyhedron: "
+            cerr << endl << "ERROR @ Polyhedron: "
                  << "Polyhedron is not closed." << endl;
             printInfo();
         }

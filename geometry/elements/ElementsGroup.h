@@ -38,7 +38,7 @@ public:
 
     ElementsGroup<E>& operator=(const Group<E>& rhs);
 
-    GroupId<E, ElementId> get(const vector<ElementId>&) const;
+    ElementsGroup<E> get(const vector<ElementId>&) const;
     ElementsGroup<E> get(const ElementBase::Type type) const;
     ElementsGroup<E> get(const MatId matId) const;
     ElementsGroup<E> get(const vector<MatId>& matId) const;
@@ -58,7 +58,6 @@ public:
             const ElementBase::Type type = ElementBase::undefined) const;
 
     BoxR3 getBound() const;
-    BoxR3 getBound(const vector<ElementId>&) const;
     BoxR3 getBound(const vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
 

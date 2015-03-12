@@ -36,7 +36,7 @@ public:
 	 cubatureNodeIndex(const UInt i, const UInt j) const;
 	virtual const CartesianVector<Real, 4>
 	 cubatureCoordinate(const UInt c) const {
-		 cerr << "ERROR @ cubatureCoordinate" << endl;
+		 cerr << endl << "ERROR @ cubatureCoordinate" << endl;
 		 exit(EXIT_FAILURE);
 	 }
 protected:

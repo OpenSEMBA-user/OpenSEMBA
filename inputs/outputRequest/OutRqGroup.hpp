@@ -48,7 +48,7 @@ OutRqGroup<C>::getWithType(
 			}
 		}
 	}
-	cerr<< "ERROR @ OutputRequestGroup: "
+	cerr << endl << "ERROR @ OutputRequestGroup: "
 		<< "Output Request was not found in group." << endl;
 	assert(false);
 	return NULL;

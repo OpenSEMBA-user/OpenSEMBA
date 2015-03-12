@@ -35,7 +35,7 @@ MagnitudeNumerical::MagnitudeNumerical(
       nSteps = abs(finalTime / timeStep);
    } else {
       nSteps = defaultNumberOfSteps;
-      cerr<< "WARNING @ MagnitudeNumerical: "
+      cerr << endl << "WARNING @ MagnitudeNumerical: "
             << "Attempting to build a numerical magnitude with a 0.0 step."
             << "Using default number of steps instead: " << nSteps << endl;
       mag->printInfo();
@@ -59,7 +59,7 @@ void MagnitudeNumerical::initFromFile() {
    ifstream file;
    file.open(getFilename().c_str(), ifstream::in);
    if (file.fail()) {
-      cerr << "ERROR @ MagnitudeNumerical ctor: " << "Problem opening file: "
+      cerr << endl << "ERROR @ MagnitudeNumerical ctor: " << "Problem opening file: "
             << getFilename() << endl;
       printInfo();
    }
@@ -69,7 +69,7 @@ void MagnitudeNumerical::initFromFile() {
       value_.insert(value);
    }
    if (value_.size() == 0) {
-      cerr << "WARNING @ MagnitudeNumerical: "
+      cerr << endl << "WARNING @ MagnitudeNumerical: "
             << "No values where readed from file: " << getFilename() << endl;
    }
 }
@@ -87,7 +87,7 @@ MagnitudeNumerical::printInfo() const {
 
 Real
 MagnitudeNumerical::evaluate(const Real time) const {
-   cerr<< "ERROR @ MagnitudeNumerical: "
+   cerr << endl << "ERROR @ MagnitudeNumerical: "
          << "Evaluate not implemented." << endl;
    assert(false);
    return 0.0;

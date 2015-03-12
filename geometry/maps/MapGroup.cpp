@@ -90,11 +90,11 @@ MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
       local->getOrderedVerticesId(ordered);
       UInt i = fList.findFirstOcurrenceInColumns(ordered, 2, 3);
       if (i == fList.nRows()) {
-         cerr << "Faces list." << endl;
+         cerr << endl << "Faces list." << endl;
          fList.printInfo();
-         cerr << "Surface:" << endl;
+         cerr << endl << "Surface:" << endl;
          local->printInfo();
-         cerr << "ERROR @ building maps: "
+         cerr << endl << "ERROR @ building maps: "
                << "A surface has a hanging node." << endl;
       }
       //
@@ -212,9 +212,9 @@ bool MapGroup::isDomainBoundary(Face boundary) const {
 //      }
 //   }
 //   //
-//   cerr << "ERROR @ Mesh::getNeighbours(...)" << endl;
+//   cerr << endl << "ERROR @ Mesh::getNeighbours(...)" << endl;
 //   param->printInfo();
-//   cerr << " Tri " << param->getId() << " is disconnected.";
+//   cerr << endl << " Tri " << param->getId() << " is disconnected.";
 //}
 
 //bool
@@ -229,17 +229,17 @@ bool MapGroup::isDomainBoundary(Face boundary) const {
 //         const Map* m2 = getPtrToLocalId(e2->getId());
 //         if (m2->getVol(f2) != e1) {
 //            if (!res) {
-//               cerr << "ERROR @ MapGroup::check()"<< endl;
-//               cerr << "Map fail reciprocity check:"    << endl;
+//               cerr << endl << "ERROR @ MapGroup::check()"<< endl;
+//               cerr << endl << "Map fail reciprocity check:"    << endl;
 //            }
-//            cerr << "Elem " << e1->getId() << ", face " << f << endl;
-//            cerr << "connects with element "
+//            cerr << endl << "Elem " << e1->getId() << ", face " << f << endl;
+//            cerr << endl << "connects with element "
 //                  << e2->getId() << " face " << f2 << endl;
-//            cerr << "But that face connects with element "
+//            cerr << endl << "But that face connects with element "
 //                  << m2->getVol(f2)->getId() << endl;
 //            count++;
 //            if (count == 10) {
-//               cerr << "And maybe more..." << endl;
+//               cerr << endl << "And maybe more..." << endl;
 //            }
 //            res = false;
 //         }

@@ -22,7 +22,7 @@ PMVolumeDispersive::PMVolumeDispersive(
 	}
 	//
 	if (magnCond != 0.0) {
-		cerr<< "ERROR @ PMVolumeDispersive ctor: "
+		cerr << endl << "ERROR @ PMVolumeDispersive ctor: "
 			<< "Magnetic conductive materials are not supported." << endl;
 		printInfo();
 	}
@@ -118,7 +118,7 @@ PMVolumeDispersive::printInfo() const {
 Real
 PMVolumeDispersive::getElectricConductivity() const {
 	if (pole_.size() > 1) {
-		cerr<< "WARNING @ getElectricConductivity: "
+		cerr << endl << "WARNING @ getElectricConductivity: "
 			<< "This material is dispersive and its effective permittivity "
 			<< "depends on several parameters."
 			<< "Returning static limit conductivity." << endl;

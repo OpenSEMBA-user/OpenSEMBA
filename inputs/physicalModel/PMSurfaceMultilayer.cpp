@@ -25,7 +25,7 @@ PMSurfaceMultilayer::PMSurfaceMultilayer(
          || relPermeability_.size() != nLayers
          || elecCond_.size() != nLayers
          || magnCond_.size() != nLayers) {
-      cerr << "ERROR @ PMSurfaceMultilayer: "
+      cerr << endl << "ERROR @ PMSurfaceMultilayer: "
            << "Incompatible sizes of layers parameters. "
            << "In multilayer: " << endl;
       printInfo();
