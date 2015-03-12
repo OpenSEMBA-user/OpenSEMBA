@@ -9,6 +9,7 @@ class OutRqGroup : public Group<OutRq> {
 public:
     OutRqGroup();
 	OutRqGroup(const vector<OutRq>&);
+	void add (OutRq*);
 	void printInfo() const;
 };
 

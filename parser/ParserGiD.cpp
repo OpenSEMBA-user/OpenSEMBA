@@ -1593,7 +1593,7 @@ ParserGiD::strToWireModel(string str) const {
 SolverOptions::SelfInductanceModel
 ParserGiD::strToSelfInductanceModel(string str) const {
     str = trim(str);
-    if (str.compare("Default")==0) {
+    if (str.compare("Boutayeb")==0) {
         return SolverOptions::SelfInductanceModel::boutayeb;
     } else if (str.compare("Ledfelt")==0) {
         return SolverOptions::SelfInductanceModel::ledfelt;
