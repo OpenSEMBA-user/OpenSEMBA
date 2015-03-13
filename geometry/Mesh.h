@@ -14,6 +14,7 @@
 #include "elements/ElementsGroup.h"
 #include "layers/LayerGroup.h"
 
+#include "Grid.h"
 #include "maps/MapGroup.h"
 
 using namespace std;
@@ -29,6 +30,13 @@ public:
     virtual ~Mesh();
 
     vector<ElementId> addAsHex8(const BoxR3& box);
+    virtual vector<BoxR3> getRectilinearHexesInsideRegion(
+            const Grid3* grid,
+            const ElementsGroup<ElemR>& region) const;
+    virtual vector<BoxR3> discretizeWithinBoundary(
+            const Grid3* grid,
+            const UInt matId,
+            const UInt layId) const = 0;
 
     vector<Face> getBorderWithNormal(
             const vector<Face>& border,

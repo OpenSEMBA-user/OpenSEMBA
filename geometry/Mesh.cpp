@@ -169,6 +169,25 @@ Mesh::getAdjacentRegion(const ElementsGroup<>& region) {
     return res;
 }
 
+
+vector<BoxR3>
+Mesh::getRectilinearHexesInsideRegion(
+        const Grid3* grid,
+        const ElementsGroup<ElemR>& region) const {
+    vector<CVecR3> center = grid->getCenterOfNaturalCellsInside(region.getBound());
+    vector<BoxR3> res;
+    res.reserve(center.size());
+    for (UInt i = 0; i < center.size(); i++) {
+        for (UInt j = 0; j < region.size(); j++) {
+            if (region(j)->castTo<VolR>()->isInnerPoint(center[i])) {
+                res.push_back(grid->getBoundingBoxContaining(center[i]));
+                break;
+            }
+        }
+    }
+    return res;
+}
+
 bool
 Mesh::isFloatingCoordinate(const CoordR3* param) const {
     for (UInt i = 0; i < ElementsGroup<>::size(); i++) {
