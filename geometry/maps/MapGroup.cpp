@@ -13,8 +13,7 @@ MapGroup::MapGroup() {
 MapGroup::~MapGroup() {
 }
 
-void
-MapGroup::build(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
+MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
    // Builds a list with all tetrahedron faces.
    static const UInt faces = 4;
    static const UInt nVert = 3;

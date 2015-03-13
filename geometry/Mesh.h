@@ -12,8 +12,9 @@
 #include <utility>
 #include <iostream>
 #include "elements/ElementsGroup.h"
-#include "maps/MapGroup.h"
 #include "Grid.h"
+
+#include "maps/MapGroup.h"
 
 using namespace std;
 
@@ -32,9 +33,6 @@ public:
 
     vector<ElementId> addAsHex8(const BoxR3& box);
 
-    vector<Face> getInternalBorder(const ElementsGroup<>& region) const;
-    vector<Face> getExternalBorder(const ElementsGroup<>& region) const;
-    ElementsGroup<> getAdjacentRegion(const ElementsGroup<>& region);
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const ElementsGroup<ElemR>& region) const;
 
@@ -43,8 +41,6 @@ public:
     const Grid3* getGrid() const;
     void setGrid(const Grid3& grid_);
 
-    ElementsGroup<Tri3> getTriWithMatId(MatId, bool ignoreTet = false) const;
-    Face getBoundary(const SurfR*) const;
     vector<Face> getBorderWithNormal(const vector<Face>& border, const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
     virtual vector<pair<const ElemR*, UInt> > getElementsWithVertex(
@@ -56,12 +52,15 @@ public:
             const UInt matId,
             const UInt layId) const;
 
-    Face getNeighConnection(Face inner) const;
+    ElementsGroup<Tri3>* newTriGroup(bool ignoreTet = false) const;
+    vector<Face> getInternalBorder(const ElementsGroup<>& region) const;
+    vector<Face> getExternalBorder(const ElementsGroup<>& region) const;
+    ElementsGroup<> getAdjacentRegion(const ElementsGroup<>& region);
+
     void applyGeometricScalingFactor(const Real factor);
     virtual void printInfo() const;
 protected:
     CoordinateGroup<> cG_;
-    MapGroup map_;
     Grid3* grid_;
     static const Real areaDiffTolerance;
     vector<Face> getInternalBorder(const ElementsGroup<Tet>& tet) const;

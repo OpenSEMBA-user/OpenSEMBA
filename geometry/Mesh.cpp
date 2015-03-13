@@ -41,8 +41,6 @@ Mesh::Mesh(Mesh& rhs) {
     cG_ = rhs.cG_;
     ElementsGroup<>::operator=(rhs);
     reassignPointers(cG_);
-    map_ = rhs.map_;
-    map_.reassignPointers(*this);
     if (rhs.grid_ != NULL) {
         grid_ = new Grid3(*rhs.grid_);
     } else {
@@ -52,12 +50,6 @@ Mesh::Mesh(Mesh& rhs) {
 
 Mesh::~Mesh() {
 
-}
-
-
-Face
-Mesh::getBoundary(const SurfR* surf) const {
-    return map_.getInnerFace(surf->getId());
 }
 
 vector<Face>
@@ -78,105 +70,22 @@ Mesh::getBorderWithNormal(
     return res;
 }
 
-ElementsGroup<>
-Mesh::getAdjacentRegion(const ElementsGroup<>& region) {
-    vector<Face> outer = getExternalBorder(region);
-    UInt nOut = outer.size();
-    // Removes repeated.
-    DynMatrix<UInt> aux(nOut,1);
-    for (UInt i = 0; i < nOut; i++) {
-        aux(i,0) = outer[i].first->getId();
-    }
-    aux.sortAndRemoveRepeatedRows_omp();
-    // Prepares result.
-    ElementsGroup<> res;
-    for (UInt i = 0; i < aux.nRows(); i++) {
-        res.add(getPtrToId(ElementId(aux(i,0))));
-    }
-    return res;
-}
-
-Face Mesh::getNeighConnection(Face inner) const {
-    UInt inId = inner.first->getId();
-    UInt inFace = inner.second;
-    return map_.getNeighConnection(inId, inFace);
-}
-
-bool
-Mesh::isFloatingCoordinate(const CoordR3* param) const {
-    for (UInt i = 0; i < element_.size(); i++) {
-        if(!element_[i]->is<ElementBase>())
-            continue;
-        const ElementBase* elem = element_[i]->castTo<ElementBase>();
-        for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
-            if (*param == *elem->getV(j)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-vector<BoxR3>
-Mesh::getRectilinearHexesInsideRegion(
-        const ElementsGroup<ElemR>& region) const {
-    // Determines positions to query.
-    vector<CVecR3> center =
-            grid_->getCenterOfNaturalCellsInside(region.getBound());
-    // Determines if positions are inside tetrahedrons.
-    vector<BoxR3> res;
-    res.reserve(center.size());
-    for (UInt i = 0; i < center.size(); i++) {
-        for (UInt j = 0; j < region.size(); j++) {
-            if (region(j)->castTo<VolR>()->isInnerPoint(center[i])) {
-                res.push_back(grid_->getBoundingBoxContaining(center[i]));
-                break;
-            }
-        }
-    }
-    return res;
-}
-
-bool
-Mesh::isOnBoundary(const CVecR3 pos) const {
-#warning "Not implemented"
-}
-
-ElementsGroup<SurfR> Mesh::getMaterialBoundary(const MatId   matId,
-                                               const LayerId layId) const {
-    return get(matId, layId).getGroupOf<SurfR>();
-}
-
-vector<BoxR3> Mesh::discretizeWithinBoundary(
-        const UInt matId,
-        const UInt layId) const {
-#warning "Not implemented"
-}
-
-ElementsGroup<Tri3>
-Mesh::getTriWithMatId(
-        MatId matId,
-        bool ignoreTet) const {
+ElementsGroup<Tri3>*
+Mesh::newTriGroup(bool ignoreTet) const {
     vector<Tri3*> res;
     ElementsGroup<Tri3> tri3 = getGroupOf<Tri3>();
     for (UInt i = 0; i < tri3.size(); i++) {
-        if (tri3(i)->getMatId() == matId) {
-            res.push_back(new Tri3(*tri3(i)));
-        }
+        res.push_back(new Tri3(*tri3(i)));
     }
     ElementsGroup<Tri6> tri6 = getGroupOf<Tri6>();
     for (UInt i = 0; i < tri6.size(); i++) {
-        if (tri6(i)->getMatId() == matId) {
-            res.push_back(tri6(i)->linearize());
-        }
+        res.push_back(tri6(i)->linearize());
     }
     if (!ignoreTet) {
         ElementsGroup<Tet> tet = getGroupOf<Tet>();
         ElementsGroup<> region;
         for (UInt i = 0; i < tet.size(); i++) {
-            if (tet(i)->getMatId() == matId) {
-                region.add(tet(i)->castTo<ElementBase>());
-            }
+            region.add(tet(i)->castTo<ElementBase>());
         }
         vector<Face> internalBorder = getInternalBorder(region);
         for (UInt i = 0; i < internalBorder.size(); i++) {
@@ -185,7 +94,7 @@ Mesh::getTriWithMatId(
             res.push_back(vol->castTo<Tet>()->getTri3Face(face));
         }
     }
-    return ElementsGroup<Tri3>(res);
+    return new ElementsGroup<Tri3>(res);
 }
 
 vector<Face>
@@ -208,19 +117,19 @@ Mesh::getExternalBorder(const ElementsGroup<>& region) const {
     // border nothing is returned.
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
+    const MapGroup mapGroup(cG_, region);
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
-        UInt inId = internal[i].first->getId();
+        ElementId inId = internal[i].first->getId();
         UInt inFace = internal[i].second;
-        const VolR* outVol = map_.getNeighbour(inId, inFace);
-        UInt outFace = map_.getVolToF(inId, inFace);
+        const VolR* outVol = mapGroup.getNeighbour(inId, inFace);
+        UInt outFace = mapGroup.getVolToF(inId, inFace);
         if (outVol->getId() != inId || inFace != outFace)  {
             external.push_back(Face(outVol, outFace));
         }
     }
     return external;
 }
-
 
 vector<Face>
 Mesh::getInternalBorder(const ElementsGroup<Tet>& region) const {
@@ -280,6 +189,75 @@ Mesh::getInternalBorder(const ElementsGroup<Tri>& region) const {
         res[i] = getBoundary(region(i)->castTo<Tri>());
     }
     return res;
+}
+
+ElementsGroup<>
+Mesh::getAdjacentRegion(const ElementsGroup<>& region) {
+    vector<Face> outer = getExternalBorder(region);
+    UInt nOut = outer.size();
+    // Removes repeated.
+    DynMatrix<UInt> aux(nOut,1);
+    for (UInt i = 0; i < nOut; i++) {
+        aux(i,0) = outer[i].first->getId();
+    }
+    aux.sortAndRemoveRepeatedRows_omp();
+    // Prepares result.
+    ElementsGroup<> res;
+    for (UInt i = 0; i < aux.nRows(); i++) {
+        res.add(getPtrToId(ElementId(aux(i,0))));
+    }
+    return res;
+}
+
+bool
+Mesh::isFloatingCoordinate(const CoordR3* param) const {
+    for (UInt i = 0; i < element_.size(); i++) {
+        if(!element_[i]->is<ElementBase>())
+            continue;
+        const ElementBase* elem = element_[i]->castTo<ElementBase>();
+        for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
+            if (*param == *elem->getV(j)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+vector<BoxR3>
+Mesh::getRectilinearHexesInsideRegion(
+        const ElementsGroup<ElemR>& region) const {
+    // Determines positions to query.
+    vector<CVecR3> center =
+            grid_->getCenterOfNaturalCellsInside(region.getBound());
+    // Determines if positions are inside tetrahedrons.
+    vector<BoxR3> res;
+    res.reserve(center.size());
+    for (UInt i = 0; i < center.size(); i++) {
+        for (UInt j = 0; j < region.size(); j++) {
+            if (region(j)->castTo<VolR>()->isInnerPoint(center[i])) {
+                res.push_back(grid_->getBoundingBoxContaining(center[i]));
+                break;
+            }
+        }
+    }
+    return res;
+}
+
+bool
+Mesh::isOnBoundary(const CVecR3 pos) const {
+#warning "Not implemented"
+}
+
+ElementsGroup<SurfR> Mesh::getMaterialBoundary(const MatId   matId,
+                                               const LayerId layId) const {
+    return get(matId, layId).getGroupOf<SurfR>();
+}
+
+vector<BoxR3> Mesh::discretizeWithinBoundary(
+        const UInt matId,
+        const UInt layId) const {
+#warning "Not implemented"
 }
 
 bool

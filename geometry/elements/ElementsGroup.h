@@ -46,13 +46,13 @@ public:
     ElementsGroup<E> get(const vector<LayerId>& layerId) const;
     ElementsGroup<E> get(const MatId, const LayerId) const;
 
-    void setMaterialIds(
-            const vector<ElementId>& ids,
-            const MatId newMatId);
+
+    void setMaterialIds(const vector<ElementId>& ids, const MatId newMatId);
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
     vector<ElementId> getIdsInsideBound(const BoxR3& bound) const;
+
 
     BoxR3 getBound() const;
     BoxR3 getBound(const vector<Face>& border) const;

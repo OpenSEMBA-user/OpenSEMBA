@@ -21,8 +21,8 @@ typedef pair<const VolR*, UInt> Face;
 class MapGroup {
 public:
    MapGroup();
+   MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& elem);
    virtual ~MapGroup();
-   void build(const CoordinateGroup<>& cG, const ElementsGroup<>& elem);
    void reassignPointers(const ElementsGroup<>& nEG);
    const Tet* getNeighbour(const UInt id, const UInt face) const;
    UInt getVolToF(const UInt id, const UInt face) const;
