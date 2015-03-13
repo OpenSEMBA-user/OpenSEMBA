@@ -41,6 +41,21 @@ ElementsGroup<E>& ElementsGroup<E>::operator=(const Group<E>& rhs) {
 }
 
 template<typename E>
+vector<pair<const ElementBase*, UInt> >
+ElementsGroup<E>::getElementsWithVertex(const CoordinateId vertexId) const {
+    vector<pair<const ElementBase*, UInt> > res;
+    for (UInt i = 0; i < this->size(); i++) {
+        for (UInt j = 0; j < this->element_[i]->numberOfVertices(); j++) {
+            if (this->element_[i]->getVertex(j)->getId() == vertexId) {
+                pair<const ElemR*, UInt> aux(this->element_[i], j);
+                res.push_back(aux);
+            }
+        }
+    }
+    return res;
+}
+
+template<typename E>
 bool ElementsGroup<E>::isLinear() const {
     return (this->template sizeOf<Tri6>() == 0 &&
             this->template sizeOf<Tet10>() == 0);
@@ -219,7 +234,7 @@ vector<ElementId> ElementsGroup<E>::add(const CoordinateGroup<>& coord,
 }
 
 template<typename E>
-map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateLayers() const {
+map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateByLayers() const {
     map<LayerId, ElementsGroup<E> > res;
     for (UInt i = 0; i < this->size(); i++) {
         const LayerId layerId = this->element_[i]->getLayerId();

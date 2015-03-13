@@ -22,10 +22,12 @@ public:
     vector<BoxR3> discretizeWithinBoundary(
             const UInt matId,
             const UInt layId) const;
-    bool isRectilinear() const;
 
     const Grid3* getGrid() const;
     void setGrid(const Grid3& grid_);
+
+    void applyScalingFactor(const Real factor);
+    virtual void printInfo() const;
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */

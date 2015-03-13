@@ -9,43 +9,21 @@
 const Real Mesh::areaDiffTolerance = 1e-15;
 
 Mesh::Mesh() {
-	grid_ = NULL;
-}
-
-Mesh::Mesh(
-        const CoordinateGroup<>& cG,
-        const Grid3* grid) {
-    cG_ = cG;
-    if (grid != NULL) {
-        grid_ = new Grid3(*grid);
-    } else {
-        grid_ = NULL;
-    }
 }
 
 Mesh::Mesh(
         const CoordinateGroup<>& cG,
         const ElementsGroup<>& elem,
-        const Grid3* grid)
-: ElementsGroup<>(elem) {
+        const LayerGroup<>& layers)
+:  LayerGroup<>(layers), ElementsGroup<>(elem) {
     cG_ = cG;
     reassignPointers(cG_);
-    if (grid != NULL) {
-        grid_ = new Grid3(*grid);
-    } else {
-        grid_ = NULL;
-    }
 }
 
 Mesh::Mesh(Mesh& rhs) {
     cG_ = rhs.cG_;
     ElementsGroup<>::operator=(rhs);
     reassignPointers(cG_);
-    if (rhs.grid_ != NULL) {
-        grid_ = new Grid3(*rhs.grid_);
-    } else {
-        grid_ = NULL;
-    }
 }
 
 Mesh::~Mesh() {
@@ -70,38 +48,23 @@ Mesh::getBorderWithNormal(
     return res;
 }
 
-ElementsGroup<Tri3>*
-Mesh::newTriGroup(bool ignoreTet) const {
-    vector<Tri3*> res;
-    ElementsGroup<Tri3> tri3 = getGroupOf<Tri3>();
-    for (UInt i = 0; i < tri3.size(); i++) {
-        res.push_back(new Tri3(*tri3(i)));
-    }
-    ElementsGroup<Tri6> tri6 = getGroupOf<Tri6>();
-    for (UInt i = 0; i < tri6.size(); i++) {
-        res.push_back(tri6(i)->linearize());
-    }
-    if (!ignoreTet) {
-        ElementsGroup<Tet> tet = getGroupOf<Tet>();
-        ElementsGroup<> region;
-        for (UInt i = 0; i < tet.size(); i++) {
-            region.add(tet(i)->castTo<ElementBase>());
-        }
-        vector<Face> internalBorder = getInternalBorder(region);
-        for (UInt i = 0; i < internalBorder.size(); i++) {
-            const VolR* vol = internalBorder[i].first;
-            const UInt face = internalBorder[i].second;
-            res.push_back(vol->castTo<Tet>()->getTri3Face(face));
+ElementsGroup<Tri>*
+Mesh::convertToTri(const ElementsGroup<>& region, bool includeTets) const {
+    ElementsGroup<Tri>* res = new ElementsGroup<Tri>(region.newGroupOf<Tri>());
+    if (includeTets) {
+        ElementsGroup<Tet> tet = region.getGroupOf<Tet>();
+        vector<Face> border = getInternalBorder(tet);
+        for (UInt i = 0; i < border.size(); i++) {
+            const VolR* vol = border[i].first;
+            const UInt face = border[i].second;
+            res->add(vol->castTo<Tet>()->getTri3Face(face));
         }
     }
-    return new ElementsGroup<Tri3>(res);
+    return res;
 }
 
 vector<Face>
 Mesh::getInternalBorder(const ElementsGroup<>& region) const {
-    // Runs over all elements contained in the region vector detecting
-    // the internal border. Returns a vector containing the element
-    // faces composing the internal border.
     vector<Face> tri, res;
     res = getInternalBorder(region.getGroupOf<Tet>());
     tri = getInternalBorder(region.getGroupOf<Tri>());
@@ -111,10 +74,6 @@ Mesh::getInternalBorder(const ElementsGroup<>& region) const {
 
 vector<Face>
 Mesh::getExternalBorder(const ElementsGroup<>& region) const {
-    // Generates a vector of pairs pointers to tetrahedrons and faces that
-    // connects with the region specified by the elemIds inputted.
-    // If the element's face in the inputted region is in the computational
-    // border nothing is returned.
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
     const MapGroup mapGroup(cG_, region);
@@ -170,9 +129,9 @@ Mesh::getInternalBorder(const ElementsGroup<Tet>& region) const {
         if (matches) {
             k++;
         } else {
-            if(!getPtrToId(ElementId(fList(k,0)))->is<Tet>())
+            if(!ElementsGroup<>::getPtrToId(ElementId(fList(k,0)))->is<Tet>())
                 continue;
-            const Tet* tet = getPtrToId(ElementId(fList(k,0)))->castTo<Tet>();
+            const Tet* tet = ElementsGroup<>::getPtrToId(ElementId(fList(k,0)))->castTo<Tet>();
             UInt face = fList(k,1);
             Face aux(tet, face);
             res.push_back(aux);
@@ -185,8 +144,9 @@ vector<Face>
 Mesh::getInternalBorder(const ElementsGroup<Tri>& region) const {
     UInt nE = region.size();
     vector<Face> res(nE);
+    MapGroup mapGroup(cG_, region.getGroupOf<ElementBase>());
     for (UInt i = 0; i < nE; i++) {
-        res[i] = getBoundary(region(i)->castTo<Tri>());
+        res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
     return res;
 }
@@ -204,17 +164,15 @@ Mesh::getAdjacentRegion(const ElementsGroup<>& region) {
     // Prepares result.
     ElementsGroup<> res;
     for (UInt i = 0; i < aux.nRows(); i++) {
-        res.add(getPtrToId(ElementId(aux(i,0))));
+        res.add(ElementsGroup<>::getPtrToId(ElementId(aux(i,0))));
     }
     return res;
 }
 
 bool
 Mesh::isFloatingCoordinate(const CoordR3* param) const {
-    for (UInt i = 0; i < element_.size(); i++) {
-        if(!element_[i]->is<ElementBase>())
-            continue;
-        const ElementBase* elem = element_[i]->castTo<ElementBase>();
+    for (UInt i = 0; i < ElementsGroup<>::size(); i++) {
+        const ElementBase* elem = ElementsGroup<>::operator()(i);
         for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
             if (*param == *elem->getV(j)) {
                 return false;
@@ -224,99 +182,31 @@ Mesh::isFloatingCoordinate(const CoordR3* param) const {
     return true;
 }
 
-vector<BoxR3>
-Mesh::getRectilinearHexesInsideRegion(
-        const ElementsGroup<ElemR>& region) const {
-    // Determines positions to query.
-    vector<CVecR3> center =
-            grid_->getCenterOfNaturalCellsInside(region.getBound());
-    // Determines if positions are inside tetrahedrons.
-    vector<BoxR3> res;
-    res.reserve(center.size());
-    for (UInt i = 0; i < center.size(); i++) {
-        for (UInt j = 0; j < region.size(); j++) {
-            if (region(j)->castTo<VolR>()->isInnerPoint(center[i])) {
-                res.push_back(grid_->getBoundingBoxContaining(center[i]));
-                break;
-            }
-        }
-    }
-    return res;
-}
-
 bool
 Mesh::isOnBoundary(const CVecR3 pos) const {
 #warning "Not implemented"
 }
 
-ElementsGroup<SurfR> Mesh::getMaterialBoundary(const MatId   matId,
-                                               const LayerId layId) const {
-    return get(matId, layId).getGroupOf<SurfR>();
-}
-
-vector<BoxR3> Mesh::discretizeWithinBoundary(
-        const UInt matId,
-        const UInt layId) const {
-#warning "Not implemented"
-}
-
-bool
-Mesh::isRectilinear() const {
-	bool hasCartesianGridDefined = (grid_ != NULL);
-    bool onlyContainsQuad4 = (sizeOf<QuadR4>() == size());
-	return (hasCartesianGridDefined && onlyContainsQuad4);
-}
-
-const Grid3*
-Mesh::getGrid() const {
-	return grid_;
+ElementsGroup<SurfR>
+Mesh::getMaterialBoundary(const MatId matId, const LayerId layId) const {
+    return ElementsGroup<>::get(matId, layId).getGroupOf<SurfR>();
 }
 
 void
-Mesh::setGrid(const Grid3& grid) {
-	grid_ = new Grid3(grid);
+Mesh::applyScalingFactor(
+        const Real factor) {
+    cG_.applyScalingFactor(factor);
 }
-
-void
-Mesh::applyGeometricScalingFactor(
- const Real factor) {
-	cG_.applyScalingFactor(factor);
-	if (grid_ != NULL) {
-		grid_->applyScalingFactor(factor);
-	}
-}
-
-vector<pair<const ElemR*, UInt> >
-Mesh::getElementsWithVertex(const UInt vertexId) const {
-
-    vector<pair<const ElemR*, UInt> > res;
-    for (UInt i = 0; i < element_.size(); i++) {
-        if(!element_[i]->is<ElemR>())
-            continue;
-        const ElemR* e = element_[i]->castTo<ElemR>();
-        for (UInt j = 0; j < e->numberOfVertices(); j++) {
-            if (e->getVertex(j)->getId() == vertexId) {
-                pair<const ElemR*, UInt> aux(e,j);
-                res.push_back(aux);
-            }
-        }
-    }
-    return res;
-}
-
 
 vector<ElementId> Mesh::addAsHex8(const BoxR3& box) {
     cG_.add(box.getPos());
     vector<HexR8> hexes;
     hexes.push_back(HexR8(cG_, ElementId(0), box.getMin(), box.getMax()));
-    return add(cG_, hexes);
+    return ElementsGroup<>::add(cG_, hexes);
 }
 
 void Mesh::printInfo() const {
     cout << " --- Mesh Info --- " << endl;
     cG_.printInfo();
     ElementsGroup<>::printInfo();
-    if (grid_ != NULL) {
-        grid_->printInfo();
-    }
 }

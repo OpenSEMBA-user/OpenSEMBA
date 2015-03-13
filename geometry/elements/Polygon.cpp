@@ -18,23 +18,18 @@ Polygon::Polygon(const CoordinateGroup<>& cG,
                  const MatId   matId)
 :   Surface<Real>(id, layerId, matId) {
     
+    const UInt vSize = vId.size();
 	assert(vId.size() >= 3);
-	v_.resize(vId.size());
-	for (UInt i = 0; i < vId.size(); i++) {
+	v_.resize(vSize);
+	for (UInt i = 0; i < vSize; i++) {
 		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
         if (coord == NULL) {
             cerr << endl << "ERROR @ Polygon::Polygon(): "
-                 << "Coordinate in new CoordinateGroup inexistent"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
+                 << "Coordinate in new CoordinateGroup inexistent" << endl;
         }
         if (!coord->is<CoordR3>()) {
             cerr << endl << "ERROR @ Polygon::Polygon(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
+                 << "Coordinate is not valid" << endl;
         }
         v_[i] = coord->castTo<CoordR3>();
 	}

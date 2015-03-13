@@ -52,7 +52,8 @@ public:
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
     vector<ElementId> getIdsInsideBound(const BoxR3& bound) const;
-
+    vector<pair<const ElementBase*, UInt> > getElementsWithVertex(
+                const CoordinateId) const;
 
     BoxR3 getBound() const;
     BoxR3 getBound(const vector<Face>& border) const;
@@ -63,7 +64,7 @@ public:
     vector<ElementId> add(const CoordinateGroup<>& coord,
                           const vector<HexR8>& hex);
 
-    map<LayerId, ElementsGroup<E> > separateLayers() const;
+    map<LayerId, ElementsGroup<E> > separateByLayers() const;
     ElementsGroup<E> removeElementsWithMatId(const MatId matId) const;
 
     bool isLinear() const;

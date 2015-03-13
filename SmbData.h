@@ -10,11 +10,11 @@
 
 #include "ProjectFile.h"
 #include "Mesh.h"
-#include "LayerGroup.h"
+#include "Grid.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
-#include "inputs/MesherOptions.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
 #include "inputs/outputRequest/OutRqGroup.h"
+#include "inputs/MesherOptions.h"
 #include "inputs/SolverOptions.h"
 
 class SmbData : public ProjectFile {
@@ -24,8 +24,8 @@ public:
     PhysicalModelGroup<>* pMGroup;
     EMSourceGroup<>* emSources;
     OutRqGroup<>* outputRequests;
-    LayerGroup<>* layers;
     Mesh* mesh;
+    Grid3* grid;
     SmbData();
     virtual ~SmbData();
     virtual SmbData& operator=(const SmbData& rhs);

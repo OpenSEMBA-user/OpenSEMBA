@@ -8,7 +8,6 @@
 #include "SmbData.h"
 
 SmbData::SmbData() {
-   layers = NULL;
    mesh = NULL;
    solverOptions = NULL;
    pMGroup = NULL;
@@ -25,7 +24,6 @@ SmbData::operator=(const SmbData& rhs) {
    if (this == &rhs) {
       return *this;
    }
-   layers = new LayerGroup<>(*rhs.layers);
    mesh = new Mesh(*rhs.mesh);
    solverOptions = new SolverOptions(*rhs.solverOptions);
    pMGroup = new PhysicalModelGroup<>(*rhs.pMGroup);
@@ -38,11 +36,6 @@ SmbData::operator=(const SmbData& rhs) {
 void
 SmbData::printInfo() const {
    cout << " --- SEMBA data --- " << endl;
-   if (layers != NULL) {
-      layers->printInfo();
-   } else {
-      cout << "No info about layers." << endl;
-   }
    if (mesh != NULL) {
       mesh->printInfo();
    } else {
@@ -77,7 +70,7 @@ SmbData::printInfo() const {
 
 void
 SmbData::applyGeometricScalingFactor() {
-   mesh->applyGeometricScalingFactor(mesherOptions->getScalingFactor());
+   mesh->applyScalingFactor(mesherOptions->getScalingFactor());
    mesherOptions->applyGeometricScalingFactor(mesherOptions->getScalingFactor());
    mesherOptions->setScalingFactor((Real) 1.0);
 }
