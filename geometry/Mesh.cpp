@@ -9,21 +9,26 @@
 const Real Mesh::areaDiffTolerance = 1e-15;
 
 Mesh::Mesh() {
+
 }
 
 Mesh::Mesh(
         const CoordinateGroup<>& cG,
         const ElementsGroup<>& elem,
         const LayerGroup<>& layers)
-:  LayerGroup<>(layers), ElementsGroup<>(elem) {
-    cG_ = cG;
-    reassignPointers(cG_);
+:   CoordinateGroup<>(cG),
+    ElementsGroup<>(elem),
+    LayerGroup<>(layers) {
+
+    reassignPointers(*this);
 }
 
-Mesh::Mesh(Mesh& rhs) {
-    cG_ = rhs.cG_;
-    ElementsGroup<>::operator=(rhs);
-    reassignPointers(cG_);
+Mesh::Mesh(Mesh& rhs)
+:   CoordinateGroup<>(rhs),
+    ElementsGroup<>(rhs),
+    LayerGroup<>(rhs) {
+
+    reassignPointers(*this);
 }
 
 Mesh::~Mesh() {
@@ -76,7 +81,7 @@ vector<Face>
 Mesh::getExternalBorder(const ElementsGroup<>& region) const {
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
-    const MapGroup mapGroup(cG_, region);
+    const MapGroup mapGroup(*this, region);
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
         ElementId inId = internal[i].first->getId();
@@ -144,7 +149,7 @@ vector<Face>
 Mesh::getInternalBorder(const ElementsGroup<Tri>& region) const {
     UInt nE = region.size();
     vector<Face> res(nE);
-    MapGroup mapGroup(cG_, region.getGroupOf<ElementBase>());
+    MapGroup mapGroup(*this, region.getGroupOf<ElementBase>());
     for (UInt i = 0; i < nE; i++) {
         res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
@@ -164,7 +169,8 @@ Mesh::getAdjacentRegion(const ElementsGroup<>& region) {
     // Prepares result.
     ElementsGroup<> res;
     for (UInt i = 0; i < aux.nRows(); i++) {
-        res.add(ElementsGroup<>::getPtrToId(ElementId(aux(i,0))));
+        res.add(ElementsGroup<>::getPtrToId(ElementId(aux(i,0)))->
+                    clone()->castTo<ElementBase>());
     }
     return res;
 }
@@ -211,21 +217,16 @@ Mesh::getMaterialBoundary(const MatId matId, const LayerId layId) const {
     return ElementsGroup<>::get(matId, layId).getGroupOf<SurfR>();
 }
 
-void
-Mesh::applyScalingFactor(
-        const Real factor) {
-    cG_.applyScalingFactor(factor);
-}
-
 vector<ElementId> Mesh::addAsHex8(const BoxR3& box) {
-    cG_.add(box.getPos());
+    CoordinateGroup<>::add(box.getPos());
     vector<HexR8> hexes;
-    hexes.push_back(HexR8(cG_, ElementId(0), box.getMin(), box.getMax()));
-    return ElementsGroup<>::add(cG_, hexes);
+    hexes.push_back(HexR8(*this, ElementId(0), box.getMin(), box.getMax()));
+    return ElementsGroup<>::add(*this, hexes);
 }
 
 void Mesh::printInfo() const {
     cout << " --- Mesh Info --- " << endl;
-    cG_.printInfo();
+    CoordinateGroup<>::printInfo();
     ElementsGroup<>::printInfo();
+    LayerGroup<>::printInfo();
 }

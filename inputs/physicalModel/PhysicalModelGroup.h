@@ -28,20 +28,6 @@
 template<typename P = PhysicalModel>
 class PhysicalModelGroup : public GroupId<P,MatId> {
 public:
-    typedef enum {
-        vacuum = 1,
-        PEC = 2,
-        PMC = 3,
-        SMA = 4,
-        classic = 5,
-        elecDispersive = 6,
-        isotropicsibc = 7,
-        PML = 8,
-        wire = 9,
-        multiport = 10,
-        undefined = 0
-    } Type;
-
     PhysicalModelGroup();
     PhysicalModelGroup(const vector<P*>&);
     PhysicalModelGroup(const Group<P>& rhs);

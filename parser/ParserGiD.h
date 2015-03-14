@@ -42,14 +42,13 @@ private:
         multilayer,
         undefinedSIBC
     } SIBCType;
-    const CoordinateGroup<>* cG_;
+    CoordinateGroup<> cG_;
     Mesh* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;
     const ProblemSize* getProblemSize() const;
     SolverOptions* readSolverOptions();
     MesherOptions* readMesherOptions();
-    LayerGroup<>* readLayers();
     EMSourceGroup<>* readEMSources();
     OutRqGroup<>* readOutputRequests();
     PhysicalModelGroup<>* readMaterials();
@@ -65,7 +64,8 @@ private:
             const MatId id,
             const string& name,
             const string& layersString) const;
-    CoordinateGroup<>* readCoordinates();
+    LayerGroup<> readLayers();
+    CoordinateGroup<> readCoordinates();
     ElementsGroup<> readElements(const CoordinateGroup<>&);
     void readHex8Elements (const CoordinateGroup<>& v,
                            vector<ElementBase*>& elems);
@@ -95,7 +95,7 @@ private:
     SourceOnLine::Type strToNodalType(string label) const;
     SourceOnLine::Hardness strToNodalHardness(string label) const;
     MesherOptions::BoundType strToBoundType(string label) const;
-    PhysicalModelGroup<>::Type strToMaterialType(string label) const;
+    PhysicalModel::Type strToMaterialType(string label) const;
     PMMultiport::Type strToMultiportType(string label) const;
     OutRq::Type strToOutputType(string label) const;
     SIBCType strToSIBCType(string str) const;

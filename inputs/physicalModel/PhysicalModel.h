@@ -16,6 +16,20 @@ using namespace std;
 
 class PhysicalModel : public ClassIdBase<MatId>, public Condition {
 public:
+    enum Type {
+        vacuum = 1,
+        PEC = 2,
+        PMC = 3,
+        SMA = 4,
+        classic = 5,
+        elecDispersive = 6,
+        isotropicsibc = 7,
+        PML = 8,
+        wire = 9,
+        multiport = 10,
+        undefined = 0
+    };
+
 	PhysicalModel(const MatId id, const string& name);
 	virtual ~PhysicalModel();
 
