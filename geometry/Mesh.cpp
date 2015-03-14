@@ -197,10 +197,12 @@ Mesh::getRectilinearHexesInsideRegion(
 bool
 Mesh::isFloatingCoordinate(const CoordR3* param) const {
     for (UInt i = 0; i < ElementsGroup<>::size(); i++) {
-        const ElementBase* elem = ElementsGroup<>::operator()(i);
-        for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
-            if (*param == *elem->getV(j)) {
-                return false;
+        if(ElementsGroup<>::element_[i]->is<ElemR>()) {
+            const ElemR* elem = ElementsGroup<>::element_[i]->castTo<ElemR>();
+            for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
+                if (*param == *elem->getV(j)) {
+                    return false;
+                }
             }
         }
     }

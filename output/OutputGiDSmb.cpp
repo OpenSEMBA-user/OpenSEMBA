@@ -132,8 +132,11 @@ void OutputGiDSmb::writeElements(
     beginMesh(name, GiD_3D, type, nV);
     vector<CVecR3> pos;
     for(UInt i = 0; i < elem.size(); i++) {
-        for (Int j = 0; j < nV; j++) {
-            pos.push_back(elem(i)->getVertex(j)->pos());
+        if(elem(i)->is<ElemR>()) {
+            const ElemR* e = elem(i)->castTo<ElemR>();
+            for (Int j = 0; j < nV; j++) {
+                pos.push_back(e->getVertex(j)->pos());
+            }
         }
     }
     writeCoordinates(pos);

@@ -41,13 +41,14 @@ ElementsGroup<E>& ElementsGroup<E>::operator=(const Group<E>& rhs) {
 }
 
 template<typename E>
-vector<pair<const ElementBase*, UInt> >
-ElementsGroup<E>::getElementsWithVertex(const CoordinateId vertexId) const {
-    vector<pair<const ElementBase*, UInt> > res;
+vector<pair<const E*, UInt> > ElementsGroup<E>::getElementsWithVertex(
+        const CoordinateId vertexId) const {
+
+    vector<pair<const E*, UInt> > res;
     for (UInt i = 0; i < this->size(); i++) {
         for (UInt j = 0; j < this->element_[i]->numberOfVertices(); j++) {
             if (this->element_[i]->getVertex(j)->getId() == vertexId) {
-                pair<const ElemR*, UInt> aux(this->element_[i], j);
+                pair<const E*, UInt> aux(this->element_[i], j);
                 res.push_back(aux);
             }
         }
@@ -57,16 +58,15 @@ ElementsGroup<E>::getElementsWithVertex(const CoordinateId vertexId) const {
 
 template<typename E>
 bool ElementsGroup<E>::isLinear() const {
-    return (this->template sizeOf<Tri6>() == 0 &&
+    return (this->template sizeOf<Tri6 >() == 0 &&
             this->template sizeOf<Tet10>() == 0);
 }
 
 template<typename E>
-void ElementsGroup<E>::setMaterialIds(
- const vector<ElementId>& id,
- const MatId newMatId) {
+void ElementsGroup<E>::setMaterialIds(const vector<ElementId>& id,
+                                      const MatId newMatId) {
     for (UInt i = 0; i < id.size(); i++) {
-        this->getPtrToId(id[i])->setMatId(newMatId);
+        this->elements_[this->mapId_[id[i]]]->setMatId(newMatId);
     }
 }
 
@@ -75,9 +75,12 @@ BoxR3 ElementsGroup<E>::getBound() const {
     if (this->size() == 0) {
         return BoxR3().setInfinity();
     }
-    BoxR3 bound = this->element_[0]->getBound();
-    for (UInt i = 1; i < this->size(); i++) {
-        bound << this->element_[i]->getBound();
+    BoxR3 bound;
+    for (UInt i = 0; i < this->size(); i++) {
+        if(this->element_[i]->template is<ElemR>()) {
+            const ElemR* elem = this->element_[i]->template castTo<ElemR>();
+            bound << elem->getBound();
+        }
     }
     return bound;
 }
@@ -99,8 +102,7 @@ BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::get(
-    const vector<ElementId>& ids) const {
+ElementsGroup<E> ElementsGroup<E>::get(const vector<ElementId>& ids) const {
 
     return GroupId<E, ElementId>::get(ids);
 }
@@ -152,15 +154,18 @@ ElementsGroup<E> ElementsGroup<E>::get(const MatId   matId,
 }
 
 template<typename E>
-const CoordR3*
-ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
+const CoordR3* ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
     const CoordR3* res;
     Real minDist = numeric_limits<Real>::infinity();
     for (UInt b = 0; b < this->size(); b++) {
-        for (UInt i = 0; i < this->element_[b]->numberOfCoordinates(); i++) {
-            const CoordR3* candidate = this->element_[b]->getV(i);
-            if ((candidate->pos() - res->pos()).norm() < minDist) {
-                res = candidate;
+        if(this->element_[b]->template is<ElemR>()) {
+            const ElemR* elem = this->element_[b]->template castTo<ElemR>();
+            for (UInt i = 0; i < elem->numberOfCoordinates(); i++) {
+                const CoordR3* candidate = elem->getV(i);
+                if ((candidate->pos() - res->pos()).norm() < minDist) {
+                    res = candidate;
+                    minDist = (candidate->pos() - res->pos()).norm();
+                }
             }
         }
     }
@@ -168,13 +173,14 @@ ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
 }
 
 template<typename E>
-vector<ElementId>
-ElementsGroup<E>::getIdsInsideBound(const BoxR3& bound) const {
+vector<ElementId> ElementsGroup<E>::getIdsInsideBound(
+        const BoxR3& bound) const {
+
     const UInt nK = this->size();
     vector<ElementId> res;
     res.reserve(nK);
     for (UInt i = 0; i < nK; i++) {
-        const ElementBase* e = this->element_[i];
+        const E* e = this->element_[i];
         BoxR3 localBound = e->getBound();
         if (localBound <= bound) {
             res.push_back(e->getId());
@@ -185,7 +191,7 @@ ElementsGroup<E>::getIdsInsideBound(const BoxR3& bound) const {
 
 template<typename E>
 vector<ElementId> ElementsGroup<E>::getIdsWithoutMaterialId(
-    const MatId matId) const {
+        const MatId matId) const {
 
     vector<ElementId> res;
     res.reserve(this->size());
@@ -254,7 +260,7 @@ map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateByLayers() const {
 
 template<typename E>
 ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
-    const MatId matId) const {
+        const MatId matId) const {
 
     vector<E*> elems;
     elems.reserve(this->size());
@@ -263,7 +269,7 @@ ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
             elems.push_back(this->element_[i]->clone()->template castTo<E>());
         }
     }
-    return ElementsGroup<E>(elems, false);
+    return ElementsGroup<E>(elems);
 }
 
 template<typename E>
@@ -286,6 +292,23 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
                 }
                 elem->setV(j, coord->castTo<CoordR3>());
             }
+        } else if (this->element_[i]->template is<ElemI>()) {
+            ElemI* elem = this->element_[i]->template castTo<ElemI>();
+            for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
+                CoordinateId vId = elem->getV(j)->getId();
+                const CoordinateBase* coord = vNew.getPtrToId(vId);
+                if (coord == NULL) {
+                    cerr << endl << "ERROR @ ElementsGroup<E>: "
+                         << "Coordinate in new CoordinateGroup inexistent"
+                         << endl;
+                }
+                if (!coord->is<CoordI3>()) {
+                    cerr << endl << "ERROR @ ElementsGroup<E>: "
+                         << "Coord in new CoordinateGroup is not a valid Coord"
+                         << endl;
+                }
+                elem->setV(j, coord->castTo<CoordI3>());
+            }
         }
     }
 }
@@ -302,9 +325,6 @@ void ElementsGroup<E>::linearize() {
         assert(false);
         exit(EXIT_FAILURE);
     }
-    assert(this->template sizeOf<Lin2>() == 0);
-    assert(this->template sizeOf<Tri3>() == 0);
-    assert(this->template sizeOf<Tet4>() == 0);
 
     for(UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->template is<Tri6> ()) {

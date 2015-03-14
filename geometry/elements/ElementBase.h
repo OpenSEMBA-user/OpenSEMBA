@@ -34,11 +34,6 @@ public:
     LayerId getLayerId() const { return layerId_; }
     MatId   getMatId  () const { return matId_;   }
 
-    virtual BoxR3 getBound() const = 0;
-    virtual const CoordR3* getV    (const UInt i) const = 0;
-    virtual const CoordR3* getVertex    (const UInt i) const = 0;
-    virtual bool isCoordinate(const CoordR3*) const = 0;
-
     virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }
     virtual void setMatId  (const MatId   matId  ) { matId_  = matId;   }
     
