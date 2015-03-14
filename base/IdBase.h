@@ -23,15 +23,11 @@ protected:
 #define CreateId(name)                                      \
 class name : public IdBase {                                \
 public:                                                     \
-    name()                                         {}       \
+    name() {}                                               \
     explicit name(const UInt id) : IdBase( id) {}           \
-    name(const name& rhs)            : IdBase(rhs) {}       \
-    virtual ~name()                                {}       \
+    name(const name& rhs)        : IdBase(rhs) {}           \
+    virtual ~name() {}                                      \
                                                             \
-    name& operator=(const UInt id) {                        \
-        id_ = id;                                           \
-        return *this;                                       \
-    }                                                       \
     name& operator=(const name& rhs) {                      \
         if(this == &rhs)                                    \
             return *this;                                   \

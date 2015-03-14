@@ -45,10 +45,10 @@ Group<T>& Group<T>::operator=(const Group<T>& rhs) {
     return *this;
 }
 
-template<typename T>
-T* Group<T>::operator()(const UInt i) {
-    return element_[i];
-}
+//template<typename T>
+//T* Group<T>::operator()(const UInt i) {
+//    return element_[i];
+//}
 
 template<typename T>
 const T* Group<T>::operator()(const UInt i) const {

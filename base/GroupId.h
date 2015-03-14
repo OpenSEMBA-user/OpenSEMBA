@@ -18,7 +18,7 @@ public:
 
     GroupId<T, Id>& operator=(const Group<T>& rhs);
 
-    T*       getPtrToId(const Id id);
+//    T*       getPtrToId(const Id id);
     const T* getPtrToId(const Id id) const;
 
     GroupId<T, Id> get(const vector<Id>&) const;

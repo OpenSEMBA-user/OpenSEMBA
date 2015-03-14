@@ -29,8 +29,7 @@ GroupId<T, Id>::~GroupId() {
 }
 
 template<typename T, class Id>
-GroupId<T, Id>&
-GroupId<T, Id>::operator=(const Group<T>& rhs) {
+GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T>& rhs) {
     if(this == &rhs)
         return *this;
 
@@ -41,17 +40,17 @@ GroupId<T, Id>::operator=(const Group<T>& rhs) {
     return *this;
 }
 
-template<typename T, class Id>
-T* GroupId<T, Id>::getPtrToId(const Id id) {
-    if(mapId_.count(id) != 0)
-        return this->element_[mapId_.at(id)];
-
-    cerr << endl << "ERROR @ GroupId::getPtrToId():"
-         << "Inexistent Id: " << id << endl;
-    assert(false);
-    exit(EXIT_FAILURE);
-    return NULL;
-}
+//template<typename T, class Id>
+//T* GroupId<T, Id>::getPtrToId(const Id id) {
+//    if(mapId_.count(id) != 0)
+//        return this->element_[mapId_.at(id)];
+//
+//    cerr << endl << "ERROR @ GroupId::getPtrToId():"
+//         << "Inexistent Id: " << id << endl;
+//    assert(false);
+//    exit(EXIT_FAILURE);
+//    return NULL;
+//}
 
 template<typename T, class Id>
 const T* GroupId<T, Id>::getPtrToId(const Id id) const {
@@ -116,6 +115,14 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
             newElems[i]->setId(++this->lastId_);
         }
         this->element_.push_back(newElems[i]);
+
+        if (this->element_.back()->getId() == 0) {
+            cerr << endl << "ERROR @ GroupId::add():"
+                 << "Element with id = 0" << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+
         if(mapId_.count(this->element_.back()->getId()) == 0) {
             mapId_[this->element_.back()->getId()] = this->size()-1;
         } else {
@@ -133,7 +140,7 @@ void GroupId<T, Id>::buildMapId() {
         if (this->element_[i]->getId() > this->lastId_)
             lastId_ = this->element_[i]->getId();
 
-        if (lastId_ == 0) {
+        if (this->element_[i]->getId() == 0) {
             cerr << endl << "ERROR @ GroupId::buildMapId():"
                  << "Element with id = 0" << endl;
             assert(false);
