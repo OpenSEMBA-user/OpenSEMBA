@@ -24,19 +24,27 @@ public:
     Mesh(
             const CoordinateGroup<>& cG,
             const ElementsGroup<>& elem,
-            const LayerGroup<>& layer);
+            const LayerGroup<>& layer = LayerGroup<>());
     Mesh();
     Mesh(Mesh& param);
     virtual ~Mesh();
+
+    CoordinateGroup<>& coords() { return cG_;   }
+    ElementsGroup<>&   elems () { return *this; }
+    LayerGroup<>&      layers() { return *this; }
+
+    const CoordinateGroup<>& coords() const { return cG_;   }
+    const ElementsGroup<>&   elems () const { return *this; }
+    const LayerGroup<>&      layers() const { return *this; }
 
     vector<ElementId> addAsHex8(const BoxR3& box);
     virtual vector<BoxR3> getRectilinearHexesInsideRegion(
             const Grid3* grid,
             const ElementsGroup<ElemR>& region) const;
-    virtual vector<BoxR3> discretizeWithinBoundary(
-            const Grid3* grid,
-            const UInt matId,
-            const UInt layId) const = 0;
+//    virtual vector<BoxR3> discretizeWithinBoundary(
+//            const Grid3* grid,
+//            const UInt matId,
+//            const UInt layId) const = 0;
 
     vector<Face> getBorderWithNormal(
             const vector<Face>& border,

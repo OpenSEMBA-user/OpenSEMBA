@@ -27,7 +27,7 @@ OutputGiDSmb::~OutputGiDSmb() {
 void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
-    LayerGroup<Layer> lay = smb_->layers->getGroupOf<Layer>();
+    LayerGroup<Layer> lay = smb_->mesh->layers().getGroupOf<Layer>();
     PhysicalModelGroup<PhysicalModel> mat =
         smb_->pMGroup->getGroupOf<PhysicalModel>();
     for (UInt i = 0; i < lay.size(); i++) {
@@ -35,7 +35,7 @@ OutputGiDSmb::writeMesh() {
             const MatId matId = mat(j)->getId();
             const LayerId layId = lay(i)->getId();
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
-            ElementsGroup<> elem = smb_->mesh->get(matId, layId);
+            ElementsGroup<> elem = smb_->mesh->elems().get(matId, layId);
             writeElements(elem.getGroupOf<LinR2>().getGroupOf<ElementBase>(), name, GiD_Linear, 2);
             writeElements(elem.getGroupOf<Tri3>().getGroupOf<ElementBase>(), name, GiD_Triangle, 3);
             writeElements(elem.getGroupOf<Tet4>().getGroupOf<ElementBase>(), name, GiD_Tetrahedra, 4);
@@ -57,7 +57,7 @@ OutputGiDSmb::writeMeshWithIds(
         Int tmpCounter = coordCounter_;
         static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (UInt j = 0; j < ids[t].size(); j++) {
-            const ElemR* e = smb_->mesh->getPtrToId(ids[t][j])->castTo<ElemR>();
+            const ElemR* e = smb_->mesh->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
             for (Int i = 0; i < nV; i++) {
                 CVecR3 pos;
                 if (isLinear) {
