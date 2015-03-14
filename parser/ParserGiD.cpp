@@ -208,7 +208,7 @@ ParserGiD::readMesherOptions() {
     return res;
 }
 
-Mesh*
+Mesh<>*
 ParserGiD::readMesh() {
     LayerGroup<> lG_ = readLayers();
     // Reads the coordinates.
@@ -216,7 +216,7 @@ ParserGiD::readMesh() {
     // Reads elements connectivities.
     ElementsGroup<> elements = readElements(cG_);
     // Builds mesh with the read data.
-    return new Mesh(cG_, elements, lG_);
+    return new Mesh<>(cG_, elements, lG_);
 }
 
 EMSourceGroup<>*

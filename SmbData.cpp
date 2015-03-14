@@ -9,6 +9,7 @@
 
 SmbData::SmbData() {
    mesh = NULL;
+   grid = NULL;
    solverOptions = NULL;
    pMGroup = NULL;
    emSources = NULL;
@@ -24,7 +25,7 @@ SmbData::operator=(const SmbData& rhs) {
    if (this == &rhs) {
       return *this;
    }
-   mesh = new Mesh(*rhs.mesh);
+   mesh = new Mesh<>(*rhs.mesh);
    solverOptions = new SolverOptions(*rhs.solverOptions);
    pMGroup = new PhysicalModelGroup<>(*rhs.pMGroup);
    emSources = new EMSourceGroup<>(*rhs.emSources);

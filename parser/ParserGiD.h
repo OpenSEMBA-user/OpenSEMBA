@@ -43,7 +43,7 @@ private:
         undefinedSIBC
     } SIBCType;
     CoordinateGroup<> cG_;
-    Mesh* mesh_;
+    Mesh<>* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;
     const ProblemSize* getProblemSize() const;
@@ -52,7 +52,7 @@ private:
     EMSourceGroup<>* readEMSources();
     OutRqGroup<>* readOutputRequests();
     PhysicalModelGroup<>* readMaterials();
-    Mesh* readMesh();
+    Mesh<>* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
             const MatId id_,

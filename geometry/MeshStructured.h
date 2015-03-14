@@ -11,7 +11,7 @@
 #include "Mesh.h"
 #include "Grid.h"
 
-class MeshStructured: public Mesh, public Grid3 {
+class MeshStructured: public Mesh<>, public Grid3 {
 public:
     virtual ~MeshStructured();
     MeshStructured();

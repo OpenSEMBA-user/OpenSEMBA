@@ -19,24 +19,27 @@
 
 using namespace std;
 
-class Mesh : public CoordinateGroup<>,
-             public ElementsGroup<>,
-             public LayerGroup<> {
+template<typename C = CoordinateBase,
+         typename E = ElementBase,
+         typename L = Layer>
+class Mesh : public CoordinateGroup<C>,
+             public ElementsGroup<E>,
+             public LayerGroup<L> {
 public:
     Mesh();
-    Mesh(const CoordinateGroup<>& cG,
-         const ElementsGroup<>& elem,
-         const LayerGroup<>& layer = LayerGroup<>());
-    Mesh(Mesh& param);
+    Mesh(const CoordinateGroup<C>& cG,
+         const ElementsGroup<E>& elem,
+         const LayerGroup<L>& layer = LayerGroup<L>());
+    Mesh(Mesh<C,E,L>& param);
     virtual ~Mesh();
 
-    CoordinateGroup<>& coords() { return *this; }
-    ElementsGroup<>&   elems () { return *this; }
-    LayerGroup<>&      layers() { return *this; }
+    CoordinateGroup<C>& coords() { return *this; }
+    ElementsGroup<E>&   elems () { return *this; }
+    LayerGroup<L>&      layers() { return *this; }
 
-    const CoordinateGroup<>& coords() const { return *this; }
-    const ElementsGroup<>&   elems () const { return *this; }
-    const LayerGroup<>&      layers() const { return *this; }
+    const CoordinateGroup<C>& coords() const { return *this; }
+    const ElementsGroup<E>&   elems () const { return *this; }
+    const LayerGroup<L>&      layers() const { return *this; }
 
     vector<ElementId> addAsHex8(const BoxR3& box);
     virtual vector<BoxR3> getRectilinearHexesInsideRegion(
@@ -53,11 +56,11 @@ public:
     virtual bool isOnBoundary(const CVecR3 pos) const;
     ElementsGroup<SurfR> getMaterialBoundary(const MatId   matId,
                                              const LayerId layId) const;
-    ElementsGroup<Tri>* convertToTri(const ElementsGroup<>& region,
-                                     bool ignoreTets) const;
-    vector<Face> getInternalBorder(const ElementsGroup<>& region) const;
-    vector<Face> getExternalBorder(const ElementsGroup<>& region) const;
-    ElementsGroup<> getAdjacentRegion(const ElementsGroup<>& region);
+    ElementsGroup<Tri> convertToTri(const ElementsGroup<E>& region,
+                                    bool ignoreTets) const;
+    vector<Face> getInternalBorder(const ElementsGroup<E>& region) const;
+    vector<Face> getExternalBorder(const ElementsGroup<E>& region) const;
+    ElementsGroup<E> getAdjacentRegion(const ElementsGroup<E>& region);
 
     virtual void printInfo() const;
 protected:
@@ -66,5 +69,6 @@ protected:
     vector<Face> getInternalBorder(const ElementsGroup<Tri>& tri) const;
 };
 
+#include "Mesh.hpp"
 
 #endif /* MESH_H_ */
