@@ -4,17 +4,45 @@
  *  Created on: Jun 28, 2013
  *      Author: luis
  */
+#include "EMSourceGroup.h"
 
-template<typename C>
-EMSourceGroup<C>::EMSourceGroup() {
+template<typename E>
+EMSourceGroup<E>::EMSourceGroup() {
 
 }
 
-template<typename C>
-void
-EMSourceGroup<C>::printInfo() const {
-	cout << " --- EMSourceGroup info --- " << endl;
-	for (UInt i = 0; i < this->size(); i++) {
-		this->element_[i]->printInfo();
-	}
+template<typename E>
+EMSourceGroup<E>::EMSourceGroup(const vector<E*>& coord)
+:   Group<E>(coord) {
+
+}
+
+template<typename E>
+EMSourceGroup<E>::EMSourceGroup(const Group<E>& rhs)
+:   Group<E>(rhs) {
+
+}
+
+template<typename E>
+EMSourceGroup<E>::~EMSourceGroup() {
+
+}
+
+template<typename E>
+EMSourceGroup<E>& EMSourceGroup<E>::operator=(const Group<E>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+
+    Group<E>::operator=(rhs);
+
+    return *this;
+}
+
+template<typename E>
+void EMSourceGroup<E>::printInfo() const {
+    cout << " --- EMSourceGroup info --- " << endl;
+    for (UInt i = 0; i < this->size(); i++) {
+        this->element_[i]->printInfo();
+    }
 }
