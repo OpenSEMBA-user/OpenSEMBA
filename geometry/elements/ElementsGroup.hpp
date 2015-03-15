@@ -76,11 +76,9 @@ BoxR3 ElementsGroup<E>::getBound() const {
         return BoxR3().setInfinity();
     }
     BoxR3 bound;
-    for (UInt i = 0; i < this->size(); i++) {
-        if(this->element_[i]->template is<ElemR>()) {
-            const ElemR* elem = this->element_[i]->template castTo<ElemR>();
-            bound << elem->getBound();
-        }
+    ElementsGroup<ElemR> elems = this->template getGroupOf<ElemR>();
+    for (UInt i = 0; i < elems.size(); i++) {
+        bound << elems(i)->getBound();
     }
     return bound;
 }
@@ -157,15 +155,13 @@ template<typename E>
 const CoordR3* ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
     const CoordR3* res;
     Real minDist = numeric_limits<Real>::infinity();
-    for (UInt b = 0; b < this->size(); b++) {
-        if(this->element_[b]->template is<ElemR>()) {
-            const ElemR* elem = this->element_[b]->template castTo<ElemR>();
-            for (UInt i = 0; i < elem->numberOfCoordinates(); i++) {
-                const CoordR3* candidate = elem->getV(i);
-                if ((candidate->pos() - res->pos()).norm() < minDist) {
-                    res = candidate;
-                    minDist = (candidate->pos() - res->pos()).norm();
-                }
+    ElementsGroup<ElemR> elems = this->template getGroupOf<ElemR>();
+    for (UInt b = 0; b < elems.size(); b++) {
+        for (UInt i = 0; i < elems(i)->numberOfCoordinates(); i++) {
+            const CoordR3* candidate = elems(i)->getV(i);
+            if ((candidate->pos() - res->pos()).norm() < minDist) {
+                res = candidate;
+                minDist = (candidate->pos() - res->pos()).norm();
             }
         }
     }
@@ -176,14 +172,13 @@ template<typename E>
 vector<ElementId> ElementsGroup<E>::getIdsInsideBound(
         const BoxR3& bound) const {
 
-    const UInt nK = this->size();
+    ElementsGroup<ElemR> elems = this->template getGroupOf<ElemR>();
     vector<ElementId> res;
-    res.reserve(nK);
-    for (UInt i = 0; i < nK; i++) {
-        const E* e = this->element_[i];
-        BoxR3 localBound = e->getBound();
+    res.reserve(elems.size());
+    for (UInt i = 0; i < elems.size(); i++) {
+        BoxR3 localBound = elems(i)->getBound();
         if (localBound <= bound) {
-            res.push_back(e->getId());
+            res.push_back(elems(i)->getId());
         }
     }
     return res;
