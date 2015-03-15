@@ -45,10 +45,24 @@ vector<pair<const E*, UInt> > ElementsGroup<E>::getElementsWithVertex(
         const CoordinateId vertexId) const {
 
     vector<pair<const E*, UInt> > res;
-    for (UInt i = 0; i < this->size(); i++) {
-        for (UInt j = 0; j < this->element_[i]->numberOfVertices(); j++) {
-            if (this->element_[i]->getVertex(j)->getId() == vertexId) {
-                pair<const E*, UInt> aux(this->element_[i], j);
+    ElementsGroup<ElemR> elemsR = this->template getGroupOf<ElemR>();
+    for (UInt i = 0; i < elemsR.size(); i++) {
+        for (UInt j = 0; j < elemsR(i)->numberOfVertices(); j++) {
+            if ((elemsR(i)->getVertex(j)->getId() == vertexId) &&
+                elemsR(i)->template is<E>()) {
+
+                pair<const E*, UInt> aux(elemsR(i)->template castTo<E>(), j);
+                res.push_back(aux);
+            }
+        }
+    }
+    ElementsGroup<ElemI> elemsI = this->template getGroupOf<ElemI>();
+    for (UInt i = 0; i < elemsI.size(); i++) {
+        for (UInt j = 0; j < elemsI(i)->numberOfVertices(); j++) {
+            if ((elemsI(i)->getVertex(j)->getId() == vertexId) &&
+                elemsI(i)->template is<E>()) {
+
+                pair<const E*, UInt> aux(elemsI(i)->template castTo<E>(), j);
                 res.push_back(aux);
             }
         }
@@ -101,7 +115,6 @@ BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
 
 template<typename E>
 ElementsGroup<E> ElementsGroup<E>::get(const vector<ElementId>& ids) const {
-
     return GroupId<E, ElementId>::get(ids);
 }
 

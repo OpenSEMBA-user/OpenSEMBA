@@ -19,8 +19,8 @@
 
 using namespace std;
 
-template<typename C = CoordinateBase,
-         typename E = ElementBase,
+template<typename E = ElementBase,
+         typename C = CoordinateBase,
          typename L = Layer>
 class Mesh : public CoordinateGroup<C>,
              public ElementsGroup<E>,
@@ -30,8 +30,20 @@ public:
     Mesh(const CoordinateGroup<C>& cG,
          const ElementsGroup<E>& elem,
          const LayerGroup<L>& layer = LayerGroup<L>());
-    Mesh(Mesh<C,E,L>& param);
+    Mesh(const Mesh<E,C,L>& param);
     virtual ~Mesh();
+
+    Mesh<E,C,L>& operator=(const Mesh<E,C,L>& rhs);
+
+    template<typename E2 = ElementBase,
+             typename C2 = CoordinateBase,
+             typename L2 = Layer>
+    Mesh<E2,C2,L2> getMeshOf();
+
+    template<typename E2 = ElementBase,
+             typename C2 = CoordinateBase,
+             typename L2 = Layer>
+    Mesh<E2,C2,L2> newMeshOf();
 
     CoordinateGroup<C>& coords() { return *this; }
     ElementsGroup<E>&   elems () { return *this; }
@@ -44,7 +56,7 @@ public:
     vector<ElementId> addAsHex8(const BoxR3& box);
     virtual vector<BoxR3> getRectilinearHexesInsideRegion(
             const Grid3* grid,
-            const ElementsGroup<ElemR>& region) const;
+            const ElementsGroup<VolR>& region) const;
 //    virtual vector<BoxR3> discretizeWithinBoundary(
 //            const Grid3* grid,
 //            const UInt matId,
