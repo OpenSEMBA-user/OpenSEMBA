@@ -19,6 +19,11 @@ public:
           const CoordinateId vId[4],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
+	Quad4(CoordinateGroup<>&,
+	      const ElementId id,
+	      const Box<T,3>& box,
+	      const LayerId layerId = LayerId(0),
+	      const MatId   matId   = MatId(0));
     Quad4(const Quad4<T>& rhs);
 	virtual ~Quad4();
     

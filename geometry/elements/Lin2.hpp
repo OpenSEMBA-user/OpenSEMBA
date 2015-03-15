@@ -36,8 +36,8 @@ Lin2<T>::Lin2(const CoordinateGroup<>& coordGr,
         }
         if (!coord->is< Coordinate<T,3> >()) {
             cerr << "ERROR @ Lin2<T>::Lin2(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
+                 << "Coordinate in new CoordinateGroup "
+                 << "is not a valid Coordinate" << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
@@ -55,6 +55,29 @@ Lin2<T>::Lin2(const ElementId id,
 	for (UInt i = 0; i < lin.np; i++) {
 		v_[i] = v[i];
 	}
+}
+
+template<class T>
+Lin2<T>::Lin2(CoordinateGroup<>& cG,
+              const ElementId id,
+              const Box<T,3>& box,
+              const LayerId layerId,
+              const MatId   matId)
+:   Line<T>(id, layerId, matId) {
+
+    if(!box.isLine()) {
+        cerr << endl << "ERROR @ Lin2::Lin2(): "
+                     << "Box is not a Line" << endl;
+        assert(false);
+        exit(EXIT_FAILURE);
+    }
+    vector<CartesianVector<T,3> > pos = box.getPos();
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = cG.get(pos[i]);
+        if (v_[i] == NULL) {
+            v_[i] = cG.add(pos[i]);
+        }
+    }
 }
 
 template<class T>
@@ -87,7 +110,8 @@ const Coordinate<T,3>* Lin2<T>::getVertex(const UInt i) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Lin2<T>::getSideVertex(const UInt f, const UInt i) const {
+const Coordinate<T,3>* Lin2<T>::getSideVertex(const UInt f,
+                                              const UInt i) const {
     return v_[i];
 }
 

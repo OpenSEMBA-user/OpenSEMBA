@@ -19,10 +19,9 @@ public:
          const CoordinateId vId[8],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Hex8(const CoordinateGroup<>&,
+    Hex8(CoordinateGroup<>&,
          const ElementId id,
-         const CartesianVector<T,3>& min,
-         const CartesianVector<T,3>& max,
+         const Box<T,3>& box,
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
     Hex8(const Hex8<T>& rhs);

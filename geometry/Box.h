@@ -20,45 +20,58 @@ public:
     Box(const pair<CVecTD,CVecTD>& boundsMinMax);
     Box(const CVecTD& min, const CVecTD& max);
     virtual ~Box();
-    void set(const pair<CVecTD,CVecTD>& boundsMinMax);
-    Box<T,D>& setInfinity();
-    void scale(const Real factor);
+
+    Box<T,D>& operator= (const Box<T,D>& lBoxMin);
+
     bool operator>(const Box<T,D>& lBoxMin) const;
     bool operator<(const Box<T,D>& lBoxMax) const;
-    bool operator<=(const Box<T,D>& lBoxMax) const;
     bool operator>=(const Box<T,D>& lBoxMin) const;
+    bool operator<=(const Box<T,D>& lBoxMax) const;
     bool operator==(const Box<T,D>& lBoxMin) const;
-    bool isIntersected (const Box<T,D>& lBox) const;
-    bool isInnerPoint(const CVecTD& point) const;
-    Box<T,D>& operator= (const Box<T,D>& lBoxMin);
+
     void operator+=(const Box<T,D>& lBoxSource);
     void operator+(const Box<T,D>& lBoxSource);
+
     void operator<<(const CVecTD& p);
     void operator<<(const Box<T,D>& p);
+
+    bool isLine   () const { return (numberOfDifferentCoords() == 1); }
+    bool isSurface() const { return (numberOfDifferentCoords() == 2); }
+    bool isVolume () const { return (numberOfDifferentCoords() == 3); }
+
+    CartesianAxis  getDirection() const;
+    CartesianPlane getNormal   () const;
+
     Box<T,D> intersect(const Box<T,D>& rhs) const;
-    inline CVecTD getMin(void) const;
-    inline CVecTD getMax(void) const;
+    bool isIntersected (const Box<T,D>& lBox) const;
+    bool isInnerPoint(const CVecTD& point) const;
+
+    inline CVecTD getMin() const;
+    inline CVecTD getMax() const;
     inline CVecTD getLength() const;
 
     vector<CVecTD> getPos() const;
     vector<CVecTD> getPosOfBound(CartesianAxis d, CartesianBound p) const;
-
     CVecTD getBound(CartesianBound p) const;
+
+    void set(const pair<CVecTD,CVecTD>& boundsMinMax);
+    Box<T,D>& setInfinity();
+    void scale(const Real factor);
 
     void printInfo() const;
 private:
     CVecTD min_, max_;
-    void setDefaultValues(void){
+
+    void setDefaultValues() {
         min_.setPlusInfty();
         max_.setMinusInfty();
     };
+
+    UInt numberOfDifferentCoords() const;
 };
 
 template <class T, Int D>
-std::ostream&
-operator<<(
-      ostream& os,
-      const Box<T,D>& rhs) {
+std::ostream& operator<<(ostream& os, const Box<T,D>& rhs) {
    return os << "Min: " << rhs.getMin() << ", Max: " << rhs.getMax();
 }
 

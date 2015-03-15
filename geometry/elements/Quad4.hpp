@@ -31,8 +31,8 @@ Quad4<T>::Quad4(const CoordinateGroup<>& cG,
         }
         if (!coord->is< Coordinate<T,3> >()) {
             cerr << "ERROR @ Quad4<T>::Quad4(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
+                 << "Coordinate in new CoordinateGroup "
+                 << "is not a valid Coordinate" << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
@@ -40,6 +40,29 @@ Quad4<T>::Quad4(const CoordinateGroup<>& cG,
 	}
 	// TODO Normals are not handled.
 	check();
+}
+
+template<class T>
+Quad4<T>::Quad4(CoordinateGroup<>& cG,
+                const ElementId id,
+                const Box<T,3>& box,
+                const LayerId layerId,
+                const MatId   matId)
+:   Surface<T>(id, layerId, matId) {
+
+    if(!box.isSurface()) {
+        cerr << endl << "ERROR @ Quad4::Quad4(): "
+                     << "Box is not a Surface" << endl;
+        assert(false);
+        exit(EXIT_FAILURE);
+    }
+    vector<CartesianVector<T,3> > pos = box.getPos();
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = cG.get(pos[i]);
+        if (v_[i] == NULL) {
+            v_[i] = cG.add(pos[i]);
+        }
+    }
 }
 
 template<class T>
@@ -68,7 +91,7 @@ const Coordinate<T,3>* Quad4<T>::getVertex(const UInt i) const {
 
 template<class T>
 const Coordinate<T,3>* Quad4<T>::getSideV(const UInt f,
-                               const UInt i) const {
+                                          const UInt i) const {
 	assert(f < this->numberOfFaces());
 	assert(i < numberOfSideCoordinates());
 	return v_[(f + i) % 4];
@@ -76,7 +99,7 @@ const Coordinate<T,3>* Quad4<T>::getSideV(const UInt f,
 
 template<class T>
 const Coordinate<T,3>* Quad4<T>::getSideVertex(const UInt f,
-                                    const UInt i) const {
+                                               const UInt i) const {
 	assert(f < this->numberOfFaces());
 	assert(i < this->numberOfSideVertices());
 	return v_[(f + i) % 4];

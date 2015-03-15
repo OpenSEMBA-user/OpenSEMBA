@@ -62,10 +62,10 @@ public:
     
     void add(C* newElem , bool newId = false);
     void add(vector<C*>&, bool newId = false);
-    C*         add(const CVecR3&        , const bool canOverlap = false);
-    vector<C*> add(const vector<CVecR3>&, const bool canOverlap = false);
-    C*         add(const CVecI3&        , const bool canOverlap = false);
-    vector<C*> add(const vector<CVecI3>&, const bool canOverlap = false);
+    CoordR3*         add(const CVecR3&        , const bool canOverlap = false);
+    vector<CoordR3*> add(const vector<CVecR3>&, const bool canOverlap = false);
+    CoordI3*         add(const CVecI3&        , const bool canOverlap = false);
+    vector<CoordI3*> add(const vector<CVecI3>&, const bool canOverlap = false);
     
     void applyScalingFactor(const Real factor);
     

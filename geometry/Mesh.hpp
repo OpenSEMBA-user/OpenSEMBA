@@ -279,10 +279,11 @@ ElementsGroup<SurfR> Mesh<E,C,L>::getMaterialBoundary(
 
 template<typename E, typename C, typename L>
 vector<ElementId> Mesh<E,C,L>::addAsHex8(const BoxR3& box) {
-    CoordinateGroup<C>::add(box.getPos());
-    vector<HexR8> hexes;
-    hexes.push_back(HexR8(*this, ElementId(0), box.getMin(), box.getMax()));
-    return ElementsGroup<E>::add(*this, hexes);
+    vector<ElementId> res;
+    Hex8<Real>* hex = new Hex8<Real>(*this, ElementId(0), box);
+    ElementsGroup<E>::add(hex->castTo<E>(), true);
+    res.push_back(hex->getId());
+    return res;
 }
 
 template<typename E, typename C, typename L>

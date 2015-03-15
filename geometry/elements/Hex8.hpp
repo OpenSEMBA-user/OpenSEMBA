@@ -17,10 +17,10 @@ Hex8<T>::Hex8() {
 
 template<class T>
 Hex8<T>::Hex8(const CoordinateGroup<>& coordGr,
-           const ElementId id,
-           const CoordinateId vId[8],
-           const LayerId layerId,
-           const MatId   matId)
+              const ElementId id,
+              const CoordinateId vId[8],
+              const LayerId layerId,
+              const MatId   matId)
 :   Volume<T>(id, layerId, matId) {
 
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
@@ -34,8 +34,8 @@ Hex8<T>::Hex8(const CoordinateGroup<>& coordGr,
         }
         if (!coord->is< Coordinate<T,3> >()) {
             cerr << "ERROR @ Hex8<T>::Hex8(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
+                 << "Coordinate in new CoordinateGroup "
+                 << "is not a valid Coordinate" << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
@@ -44,28 +44,24 @@ Hex8<T>::Hex8(const CoordinateGroup<>& coordGr,
 }
 
 template<class T>
-Hex8<T>::Hex8(const CoordinateGroup<>& cG,
-           const ElementId id,
-              const CartesianVector<T,3>& min,
-              const CartesianVector<T,3>& max,
-           const LayerId layerId,
-           const MatId   matId)
+Hex8<T>::Hex8(CoordinateGroup<>& cG,
+              const ElementId id,
+              const Box<T,3>& box,
+              const LayerId layerId,
+              const MatId   matId)
 :   Volume<T>(id, layerId, matId) {
 
-    v_[0] = cG.get(CartesianVector<T,3>(min(0), min(1), min(2)));
-    v_[1] = cG.get(CartesianVector<T,3>(min(0), min(1), max(2)));
-    v_[2] = cG.get(CartesianVector<T,3>(min(0), max(1), min(2)));
-    v_[3] = cG.get(CartesianVector<T,3>(min(0), max(1), max(2)));
-    v_[4] = cG.get(CartesianVector<T,3>(max(0), min(1), min(2)));
-    v_[5] = cG.get(CartesianVector<T,3>(max(0), min(1), max(2)));
-    v_[6] = cG.get(CartesianVector<T,3>(max(0), max(1), min(2)));
-    v_[7] = cG.get(CartesianVector<T,3>(max(0), max(1), max(2)));
+    if(!box.isVolume()) {
+        cerr << endl << "ERROR @ Hex8::Hex8(): "
+                     << "Box is not a Volume" << endl;
+        assert(false);
+        exit(EXIT_FAILURE);
+    }
+    vector<CartesianVector<T,3> > pos = box.getPos();
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
+	    v_[i] = cG.get(pos[i]);
 		if (v_[i] == NULL) {
-			cerr<< "ERROR @ Hex8 ctor: "
-				<< "Coordinate " << i << " pointer is null." << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
+			v_[i] = cG.add(pos[i]);
 		}
 	}
 }
@@ -221,7 +217,8 @@ const Coordinate<T,3>* Hex8<T>::getSideV(const UInt f, const UInt i) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Hex8<T>::getSideVertex(const UInt f, const UInt i) const {
+const Coordinate<T,3>* Hex8<T>::getSideVertex(const UInt f,
+                                              const UInt i) const {
 	return getSideV(f,i);
 }
 

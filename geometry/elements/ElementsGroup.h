@@ -58,11 +58,6 @@ public:
     BoxR3 getBound(const vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
 
-    void add(E* newElem , bool newId = false);
-    void add(vector<E*>&, bool newId = false);
-    vector<ElementId> add(const CoordinateGroup<>& coord,
-                          const vector<HexR8>& hex);
-
     map<LayerId, ElementsGroup<E> > separateByLayers() const;
     ElementsGroup<E> removeElementsWithMatId(const MatId matId) const;
 

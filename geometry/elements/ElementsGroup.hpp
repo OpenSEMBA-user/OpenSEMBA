@@ -212,42 +212,6 @@ vector<ElementId> ElementsGroup<E>::getIdsWithoutMaterialId(
 }
 
 template<typename E>
-void ElementsGroup<E>::add(E* newElem, bool newId) {
-    return GroupId<E, ElementId>::add(newElem, newId);
-}
-
-template<typename E>
-void ElementsGroup<E>::add(vector<E*>& newElems, bool newId) {
-    return GroupId<E, ElementId>::add(newElems, newId);
-}
-
-template<typename E>
-vector<ElementId> ElementsGroup<E>::add(const CoordinateGroup<>& coord,
-                                        const vector<HexR8>& newHex) {
-    CoordinateId vId[8];
-    MatId matId;
-    vector<ElementId> res;
-    for (UInt i = 0; i < newHex.size(); i++) {
-        // Determines coordinates ids.
-        // PERFORMANCE This is O(N^2). It can be improved by creating a
-        //               lexicographically sorted list of coordinates positions.
-        for (UInt j = 0; j < 8; j++) {
-            vId[j] = newHex[i].getV(j)->getId();
-        }
-        matId = newHex[i].getMatId();
-        HexR8* newhex =
-            new HexR8(coord, ElementId(0), vId, LayerId(0), matId);
-        if(newhex->is<E>()) {
-            this->add(newhex->template castTo<E>(), true);
-            res.push_back(newhex->getId());
-        } else {
-            delete newhex;
-        }
-    }
-    return res;
-}
-
-template<typename E>
 map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateByLayers() const {
     map<LayerId, ElementsGroup<E> > res;
     for (UInt i = 0; i < this->size(); i++) {

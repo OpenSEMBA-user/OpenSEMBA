@@ -23,6 +23,11 @@ public:
          const Coordinate<T,3>* v[2],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
+	Lin2(CoordinateGroup<>&,
+         const ElementId id,
+         const Box<T,3>& box,
+         const LayerId layerId = LayerId(0),
+         const MatId   matId   = MatId(0));
     Lin2(const Lin2<T>& rhs);
 	virtual ~Lin2();
     
