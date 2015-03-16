@@ -89,11 +89,12 @@ vector<Face> Mesh<E,C,L>::getBorderWithNormal(const vector<Face>& border,
 }
 
 template<typename E, typename C, typename L>
-ElementsGroup<Tri>
+ElementsGroup<Tri>*
     Mesh<E,C,L>::convertToTri(
-        const ElementsGroup<E>& region, bool includeTets) const {
+            const ElementsGroup<E>& region, bool includeTets) const {
 
-    ElementsGroup<Tri> res = region.template newGroupOf<Tri>();
+    ElementsGroup<Tri>* res =
+            new ElementsGroup<Tri>(region.template getGroupOf<Tri>());
     if (includeTets) {
         ElementsGroup<Tet> tet = region.template getGroupOf<Tet>();
         vector<Face> border = getInternalBorder(tet);
@@ -101,7 +102,7 @@ ElementsGroup<Tri>
             if (border[i].first->template is<Tet>()) {
                 const Tet* tet = border[i].first->template castTo<Tet>();
                 const UInt face = border[i].second;
-                res.add(tet->getTri3Face(face));
+                res->add(tet->getTri3Face(face));
             }
         }
     }
@@ -261,20 +262,6 @@ bool Mesh<E,C,L>::isFloatingCoordinate(const CoordR3* param) const {
         }
     }
     return true;
-}
-
-template<typename E, typename C, typename L>
-bool Mesh<E,C,L>::isOnBoundary(const CVecR3 pos) const {
-#warning "Not implemented"
-}
-
-template<typename E, typename C, typename L>
-ElementsGroup<SurfR> Mesh<E,C,L>::getMaterialBoundary(
-        const MatId matId,
-        const LayerId layId) const {
-
-    return ElementsGroup<E>::get(matId, layId).
-               template getGroupOf<SurfR>();
 }
 
 template<typename E, typename C, typename L>

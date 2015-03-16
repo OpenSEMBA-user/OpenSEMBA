@@ -49,7 +49,7 @@ vector<pair<const E*, UInt> > ElementsGroup<E>::getElementsWithVertex(
     for (UInt i = 0; i < elemsR.size(); i++) {
         for (UInt j = 0; j < elemsR(i)->numberOfVertices(); j++) {
             if ((elemsR(i)->getVertex(j)->getId() == vertexId) &&
-                elemsR(i)->template is<E>()) {
+                    elemsR(i)->template is<E>()) {
 
                 pair<const E*, UInt> aux(elemsR(i)->template castTo<E>(), j);
                 res.push_back(aux);
@@ -60,7 +60,7 @@ vector<pair<const E*, UInt> > ElementsGroup<E>::getElementsWithVertex(
     for (UInt i = 0; i < elemsI.size(); i++) {
         for (UInt j = 0; j < elemsI(i)->numberOfVertices(); j++) {
             if ((elemsI(i)->getVertex(j)->getId() == vertexId) &&
-                elemsI(i)->template is<E>()) {
+                    elemsI(i)->template is<E>()) {
 
                 pair<const E*, UInt> aux(elemsI(i)->template castTo<E>(), j);
                 res.push_back(aux);
@@ -77,11 +77,17 @@ bool ElementsGroup<E>::isLinear() const {
 }
 
 template<typename E>
-void ElementsGroup<E>::setMaterialIds(const vector<ElementId>& id,
-                                      const MatId newMatId) {
-    for (UInt i = 0; i < id.size(); i++) {
-        this->elements_[this->mapId_[id[i]]]->setMatId(newMatId);
-    }
+void ElementsGroup<E>::setMatId(
+        const ElementId& id,
+        const MatId newMatId) {
+    this->element_[this->mapId_[id]]->setMatId(newMatId);
+}
+
+template<typename E>
+void ElementsGroup<E>::setLayerId(
+        const ElementId& id,
+        const LayerId newId) {
+    this->element_[this->mapId_[id]]->setLayerId(newId);
 }
 
 template<typename E>
@@ -160,7 +166,7 @@ ElementsGroup<E> ElementsGroup<E>::get(const vector<LayerId>& layIds_) const {
 
 template<typename E>
 ElementsGroup<E> ElementsGroup<E>::get(const MatId   matId,
-                                       const LayerId layId) const {
+        const LayerId layId) const {
     return get(matId).get(layId);
 }
 
@@ -217,7 +223,7 @@ map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateByLayers() const {
     for (UInt i = 0; i < this->size(); i++) {
         const LayerId layerId = this->element_[i]->getLayerId();
         typename map<LayerId, ElementsGroup<E> >::iterator it =
-            res.find(layerId);
+                res.find(layerId);
         if (it == res.end()) {
             pair<LayerId, ElementsGroup<E> > newEntry;
             newEntry.first = layerId;
@@ -254,13 +260,13 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
                 const CoordinateBase* coord = vNew.getPtrToId(vId);
                 if (coord == NULL) {
                     cerr << endl << "ERROR @ ElementsGroup<E>: "
-                         << "Coordinate in new CoordinateGroup inexistent"
-                         << endl;
+                            << "Coordinate in new CoordinateGroup inexistent"
+                            << endl;
                 }
                 if (!coord->is<CoordR3>()) {
                     cerr << endl << "ERROR @ ElementsGroup<E>: "
-                         << "Coord in new CoordinateGroup is not a valid Coord"
-                         << endl;
+                            << "Coord in new CoordinateGroup is not a valid Coord"
+                            << endl;
                 }
                 elem->setV(j, coord->castTo<CoordR3>());
             }
@@ -271,13 +277,13 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
                 const CoordinateBase* coord = vNew.getPtrToId(vId);
                 if (coord == NULL) {
                     cerr << endl << "ERROR @ ElementsGroup<E>: "
-                         << "Coordinate in new CoordinateGroup inexistent"
-                         << endl;
+                            << "Coordinate in new CoordinateGroup inexistent"
+                            << endl;
                 }
                 if (!coord->is<CoordI3>()) {
                     cerr << endl << "ERROR @ ElementsGroup<E>: "
-                         << "Coord in new CoordinateGroup is not a valid Coord"
-                         << endl;
+                            << "Coord in new CoordinateGroup is not a valid Coord"
+                            << endl;
                 }
                 elem->setV(j, coord->castTo<CoordI3>());
             }
@@ -292,8 +298,8 @@ void ElementsGroup<E>::linearize() {
     }
     if(!this->ownership_) {
         cerr << endl << "ERROR @ ElementsGroup::linearize(): "
-             << "Forbidden to linearize without ownership "
-             << "of elements on it" << endl;
+                << "Forbidden to linearize without ownership "
+                << "of elements on it" << endl;
         assert(false);
         exit(EXIT_FAILURE);
     }

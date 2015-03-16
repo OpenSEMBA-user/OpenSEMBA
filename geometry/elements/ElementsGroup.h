@@ -46,7 +46,8 @@ public:
     ElementsGroup<E> get(const vector<LayerId>& layerId) const;
     ElementsGroup<E> get(const MatId, const LayerId) const;
 
-    void setMaterialIds(const vector<ElementId>& ids, const MatId newMatId);
+    void setMatId(const ElementId& id, const MatId newMatId);
+    void setLayerId(const ElementId& id, const LayerId newLayerId);
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;

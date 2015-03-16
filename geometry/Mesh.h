@@ -65,10 +65,8 @@ public:
     vector<Face> getBorderWithNormal(const vector<Face>& border,
                                      const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
-    virtual bool isOnBoundary(const CVecR3 pos) const;
-    ElementsGroup<SurfR> getMaterialBoundary(const MatId   matId,
-                                             const LayerId layId) const;
-    ElementsGroup<Tri> convertToTri(const ElementsGroup<E>& region,
+
+    ElementsGroup<Tri>* convertToTri(const ElementsGroup<E>& region,
                                     bool ignoreTets) const;
     vector<Face> getInternalBorder(const ElementsGroup<E>& region) const;
     vector<Face> getExternalBorder(const ElementsGroup<E>& region) const;

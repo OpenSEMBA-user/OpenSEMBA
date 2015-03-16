@@ -24,6 +24,8 @@ public:
     LayerGroup(const Group<L>& rhs);
     virtual ~LayerGroup();
 
+    const L* get(const string name) const;
+
     LayerGroup<L>& operator=(const Group<L>& rhs);
 
     virtual void printInfo() const;
