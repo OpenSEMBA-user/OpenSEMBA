@@ -93,7 +93,7 @@ template<Int D>
 inline CartesianVector<Real,D>
 Grid<D>::getPos(const CartesianVector<Int,D>& ijk) const {
    CVecID dims = getNumCells();
-   CVecDD res;
+   CVecRD res;
    for (Int i = 0; i < D; i++) {
       assert((ijk(i) >= offsetGrid_(i)) &&
             (ijk(i) <= offsetGrid_(i)+dims(i)));
@@ -108,7 +108,7 @@ inline CVecI3 Grid<D>::getNumCells() const {
 }
 
 template<Int D>
-vector<Real> Grid<D>::getStep(const Int dir) const {
+vector<Real> Grid<D>::getStep(const CartesianAxis dir) const {
    assert(dir >= 0 && dir < D);
    vector<Real> res(pos_[dir].size()-1);
    for (UInt i = 0; i < pos_[dir].size()-1; i++) {
@@ -316,7 +316,7 @@ bool Grid<D>::isNaturalCell(const vector<CVecR3> pos,
 
 template<Int D>
 vector<Real> Grid<D>::getPosInRange(
-      const Int dir,
+      const CartesianAxis dir,
       const Real min,
       const Real max) const {
    return extractRange(getPos(dir), pair<Real, Real>(min, max));

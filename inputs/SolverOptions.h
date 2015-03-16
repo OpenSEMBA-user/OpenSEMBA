@@ -87,10 +87,9 @@ private:
     // Global
     Solver solver_;
     Real finalTime_;
-    UInt numberOfTimeSteps_;
-    Real samplingPeriod_;
     Real timeStep_;
     Real cfl_;
+    Real samplingPeriod_;
     // ugrfdtd
     CompositeModel compositeModel_;
     double compositesAttenuationFactor_;

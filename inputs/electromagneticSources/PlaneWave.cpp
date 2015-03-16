@@ -47,6 +47,22 @@ ClassBase* PlaneWave::clone() const {
     return new PlaneWave(*this);
 }
 
+Real PlaneWave::getTheta() const {
+    return cartesianToPolar (waveDirection_).first;
+}
+
+Real PlaneWave::getPhi() const {
+    return cartesianToPolar (waveDirection_).second;
+}
+
+Real PlaneWave::getAlpha() const {
+    return cartesianToPolar (polarization_).first;
+}
+
+Real PlaneWave::getBeta() const {
+    return cartesianToPolar (polarization_).second;
+}
+
 void
 PlaneWave::printInfo() const {
 	cout<< " --- PlaneWave info --- " << endl;
@@ -77,3 +93,35 @@ const CVecR3&
 PlaneWave::getWaveDirection() const {
 	return waveDirection_;
 }
+
+pair<Real,Real> PlaneWave::cartesianToPolar(const CVecR3& v) const {
+    Real vx_, vy_,vz_;
+    Real vmxyz, vmxy_, alpha_aux, beta_aux;
+    vmxyz = sqrt(v(x)*v(x)+v(y)*v(y)+v(z)*v(z));
+    vx_ = v(x)/vmxyz;
+    vy_ = v(y)/vmxyz;
+    vz_= v(z)/vmxyz;
+    vmxy_  = sqrt(vx_*vx_+vy_*vy_);
+    alpha_aux = acos(vz_); //acos(Ez) [0, pi]
+    if(vy_>0.0){
+        beta_aux = abs(acos(vx_/vmxy_));
+    } else if(v(y)==0.0){
+        beta_aux = 0.0;
+    } else {
+        beta_aux = -abs(acos(vx_/vmxy_));
+    }
+    pair<Real,Real> res;
+    res.first = reduceRadians(alpha_aux); // alpha_aux % (2*M_PI) ?
+    res.second = reduceRadians(beta_aux);  // beta_aux % (2*M_PI) ?
+    return res;
+}
+
+Real PlaneWave::reduceRadians(const Real radianIn) const {
+    Real nVueltas, nVueltasComp, radianOut, Val2Pi;
+    Val2Pi = (Real) 2.0 * (Real) acos((Real) 0.0);
+    nVueltas = radianIn/(Val2Pi);
+    nVueltasComp = (Real) floor(nVueltas);
+    radianOut = radianIn - nVueltasComp*Val2Pi;
+    return  radianOut;
+}
+

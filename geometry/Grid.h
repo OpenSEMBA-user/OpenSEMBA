@@ -23,7 +23,7 @@ using namespace std;
 template<Int D>
 class Grid {
     typedef Box<Real,D> BoxDD;
-    typedef CartesianVector<Real,D> CVecDD;
+    typedef CartesianVector<Real,D> CVecRD;
     typedef CartesianVector<Int,D> CVecID;
 public:
     Grid();
@@ -39,58 +39,40 @@ public:
             const CVecR3& origin,
             const vector<Real> step[D]);
     ~Grid ();
-    Grid&
-     operator=(const Grid& cGrid);
-    inline vector<Real>
-     getPos(const Int& direction) const;
-    inline CartesianVector<Real,D>
-     getPos(const CartesianVector<Int,D>& ijk) const;
-    vector<Real>
-     getPosInRange(
-            const Int direction,
+    Grid& operator=(const Grid& cGrid);
+    inline vector<Real> getPos(const Int& direction) const;
+    inline CVecRD getPos(const CVecID& ijk) const;
+    vector<Real> getPosInRange(
+            const CartesianAxis dir,
             const Real min,
             const Real max) const;
-    vector<CVecR3>
-     getPos() const;
-    vector<CVecR3>
-     getCenterOfNaturalCellsInside(
+    vector<CVecR3> getPos() const;
+    vector<CVecR3> getCenterOfNaturalCellsInside(
             const BoxDD& bound) const;
-    vector<Real>
-     getStep(
-            const Int direction) const;
-    inline CVecI3
-     getNumCells() const;
-    BoxDD
-     getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
-    BoxDD
-     getBoundingBoxContaining(const CVecR3& point) const;
-    inline BoxDD
-     getFullDomainBoundingBox() const;
-    bool
-     hasZeroSize() const;
-    bool
-     isIntoDir(const Int& direction, const Real& pos) const;
-    bool
-     isInto (const CVecR3& pos) const;
-    bool
-     getNaturalCellDir(
+    vector<Real> getStep(const CartesianAxis dir) const;
+    inline CVecI3 getNumCells() const;
+    BoxDD getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
+    BoxDD getBoundingBoxContaining(const CVecR3& point) const;
+    inline BoxDD getFullDomainBoundingBox() const;
+    bool hasZeroSize() const;
+    bool isIntoDir(const Int& direction, const Real& pos) const;
+    bool isInto (const CVecR3& pos) const;
+
+    bool getNaturalCellDir(
             Int &i,
             Real &relativeLen,
             const Int& dir,
             const Real &x,
             const Real tol = tolerance) const;
-    pair<CVecI3, CVecR3>
-    getNaturalCellPair(
+    pair<CVecI3, CVecR3> getNaturalCellPair(
             const CVecR3& pos,
             const bool approx = true,
             const Real tol = tolerance) const;
-    CVecI3
-    getNaturalCell(
+    CVecI3 getNaturalCell(
             const CVecR3 &coords,
             const bool approx = true,
             const Real tol = tolerance) const;
-    void
-     applyScalingFactor(const Real factor);
+    void applyScalingFactor(const Real factor);
 
     Real getPositionOfNaturalCellDir(const Int dir, Int i) const;
     CVecR3 getPositionOfNaturalCell(const CVecI3& ijk) const;

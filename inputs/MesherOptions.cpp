@@ -244,11 +244,16 @@ Real MesherOptions::getScalingFactor() const {
 void MesherOptions::setScalingFactor(Real scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
-pair<MesherOptions::BoundType, MesherOptions::BoundType>
+MesherOptions::BoundType
 MesherOptions::getBoundTermination(
-        const UInt i) const {
+        const UInt i, const UInt p) const {
     assert(i < 3);
-    return boundTermination_[i];
+    assert(p < 2);
+    if (p == 0) {
+        return boundTermination_[i].first;
+    } else {
+        return boundTermination_[i].second;
+    }
 }
 
 void MesherOptions::setBoundTermination(
