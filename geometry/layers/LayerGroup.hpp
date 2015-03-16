@@ -49,6 +49,7 @@ LayerGroup<L>::get(const string name) const {
             return it->second;
         }
     }
+    return NULL;
 }
 
 template<typename L>

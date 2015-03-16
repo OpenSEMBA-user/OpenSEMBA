@@ -57,10 +57,6 @@ public:
     virtual vector<BoxR3> getRectilinearHexesInsideRegion(
             const Grid3* grid,
             const ElementsGroup<VolR>& region) const;
-//    virtual vector<BoxR3> discretizeWithinBoundary(
-//            const Grid3* grid,
-//            const UInt matId,
-//            const UInt layId) const = 0;
 
     vector<Face> getBorderWithNormal(const vector<Face>& border,
                                      const CVecR3& normal);
