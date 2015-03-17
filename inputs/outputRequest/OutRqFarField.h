@@ -10,7 +10,7 @@
 
 #include "OutRq.h"
 
-class OutRqFarField : public OutRq {
+class OutRqFarField : public OutRq, public ElementsGroup<VolR> {
 public:
     virtual ~OutRqFarField();
     OutRqFarField(

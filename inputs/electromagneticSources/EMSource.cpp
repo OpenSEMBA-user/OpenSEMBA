@@ -6,23 +6,15 @@ EMSource::EMSource() {
     magnitude_ = NULL;
 }
 
-EMSource::EMSource(const vector<ElementId>& elem, const Magnitude* magnitude) {
-    elem_ = elem;
+EMSource::EMSource(const ElementsGroup<>& elem, const Magnitude* magnitude)
+: ElementsGroup<>(elem) {
     magnitude_ = magnitude;
-    assert(elem_.size() != 0);
 }
 
 
 EMSource::~EMSource() {
 
 }
-
-vector<ElementId>
-EMSource::getElem() const {
-    assert(elem_.size() != 0);
-    return elem_;
-}
-
 
 const Magnitude*
 EMSource::getMagnitude() const {
@@ -35,10 +27,6 @@ Condition::Type EMSource::getConditionType() const {
 
 void
 EMSource::printInfo() const {
-    cout<< " - Assigned on " << elem_.size() << ":" << endl;
-    for (UInt i = 0; i < elem_.size(); i++) {
-        cout<< elem_[i] << " ";
-    }
-    cout << endl;
+    cout<< " - Assigned on " << size() << " elements." << endl;
     magnitude_->printInfo();
 }

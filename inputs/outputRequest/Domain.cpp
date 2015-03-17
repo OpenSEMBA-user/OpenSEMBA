@@ -62,29 +62,6 @@ Domain::operator =(const Domain& rhs) {
 	return *this;
 }
 
-void Domain::printInfo() const {
-	cout<< "-- Domain info: " << endl;
-	if (timeDomain_) {
-		cout<< "Requesting time output: ";
-		cout<< initialTime_ << " " << finalTime_ << " " << samplingPeriod_
-				<< endl;
-	}
-	if (frequencyDomain_) {
-		cout<< "Requesting frequency output: "
-			<< initialFrequency_ << " " << finalFrequency_ << " "
-			<< frequencyStep_ << endl;
-		if (logFrequencySweep_) {
-			cout<< "Logarithmic frequency sweep." << endl;
-		} else {
-			cout<< "Linear frequency sweep." << endl;
-		}
-		if (usingTransferFunction_) {
-			cout<< "Using transfer function file: " << transferFunctionFile_
-					<< endl;
-		}
-	}
-}
-
 bool
 Domain::operator ==(const Domain& rhs) const {
 	bool isSame = true;
@@ -100,4 +77,91 @@ Domain::operator ==(const Domain& rhs) const {
 	isSame &= usingTransferFunction_ == rhs.usingTransferFunction_;
 	isSame &= transferFunctionFile_ == rhs.transferFunctionFile_;
 	return isSame;
+}
+
+
+Real Domain::getSamplingPeriod() const {
+    return samplingPeriod_;
+}
+
+Real Domain::getFinalTime() const {
+    return finalTime_;
+}
+
+Real Domain::getInitialTime() const {
+    return initialTime_;
+}
+
+Domain::Type Domain::getDomainType() const {
+    if (timeDomain_ && frequencyDomain_ && usingTransferFunction_) {
+        return ALL;
+    } else if (timeDomain_ && frequencyDomain_ && !usingTransferFunction_) {
+        return TIFR;
+    } else if (timeDomain_ && !frequencyDomain_ && usingTransferFunction_) {
+        return TITR;
+    } else if (timeDomain_ && !frequencyDomain_ && !usingTransferFunction_) {
+        return TIME;
+    } else if (!timeDomain_ && frequencyDomain_ && usingTransferFunction_) {
+        return FRTR;
+    } else if (!timeDomain_ && frequencyDomain_ && !usingTransferFunction_) {
+        return FREQ;
+    } else if (!timeDomain_ && !frequencyDomain_ && usingTransferFunction_) {
+        return TRAN;
+    } else {
+        return NONE;
+    }
+}
+
+void Domain::printInfo() const {
+    cout << "-- Domain info: " << endl;
+    if (timeDomain_) {
+        cout << "Requesting time output: ";
+        cout << initialTime_ << " " << finalTime_ << " " << samplingPeriod_
+                << endl;
+    }
+    if (frequencyDomain_) {
+        cout << "Requesting frequency output: " << initialFrequency_ << " "
+                << finalFrequency_ << " " << frequencyStep_ << endl;
+        if (logFrequencySweep_) {
+            cout << "Logarithmic frequency sweep." << endl;
+        } else {
+            cout << "Linear frequency sweep." << endl;
+        }
+        if (usingTransferFunction_) {
+            cout << "Using transfer function file: " << transferFunctionFile_
+                    << endl;
+        }
+    }
+}
+
+Real Domain::getFinalFrequency() const {
+    return finalFrequency_;
+}
+
+bool Domain::isFrequencyDomain() const {
+    return frequencyDomain_;
+}
+
+Real Domain::getFrequencyStep() const {
+    return frequencyStep_;
+}
+
+Real Domain::getInitialFrequency() const {
+    return initialFrequency_;
+}
+
+bool Domain::isLogFrequencySweep() const {
+    return logFrequencySweep_;
+}
+
+bool Domain::isTimeDomain() const {
+    return timeDomain_;
+}
+
+const string& Domain::getTransferFunctionFile() const {
+    return transferFunctionFile_;
+}
+
+bool Domain::isUsingTransferFunction() const {
+    return usingTransferFunction_;
 }

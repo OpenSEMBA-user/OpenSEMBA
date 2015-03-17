@@ -4,10 +4,10 @@ OutRq::OutRq(
  const Domain& domain,
  const OutRq::Type outputType,
  const string& name,
- const vector<ElementId>& elements_) : Domain(domain) {
+ const ElementsGroup<>& elements)
+: Domain(domain), ElementsGroup<>(elements) {
  	name_ = name;
 	outputType_ = outputType;
-	elem_ = elements_;
 }
 
 ClassBase* OutRq::clone() const {
@@ -17,9 +17,9 @@ ClassBase* OutRq::clone() const {
 string
 OutRq::outputTypeStr() const {
 	switch (outputType_) {
-	case electricField:
+	case electric:
 		return "Electric field";
-	case magneticField:
+	case magnetic:
 		return "Magnetic field";
 	case electricFieldNormals:
 		return "Electric field normals";
@@ -51,9 +51,9 @@ OutRq::operator=(const OutRq& rhs) {
 	}
 	Condition::operator=(rhs);
 	Domain::operator=(rhs);
+	ElementsGroup<>::operator=(rhs);
 	outputType_ = rhs.outputType_;
 	name_ = rhs.name_;
-	elem_ = rhs.elem_;
 	return *this;
 }
 
@@ -65,16 +65,12 @@ OutRq::Type OutRq::getOutputType() const {
     return outputType_;
 }
 
-const vector<ElementId>& OutRq::getElem() const {
-    return elem_;
-}
-
 void
 OutRq::printInfo() const {
 	cout<< "--- Output request instance ---" << endl;
 	cout<< "Name: " << name_.c_str() << endl;
 	Domain::printInfo();
-	cout<< "Number of elements: " << elem_.size() << endl;
+	cout<< "Number of elements: " << size() << endl;
 	cout<< "--- End of Output Request Instance ---" << endl;
 }
 
@@ -85,11 +81,4 @@ OutRq::isSimilar(const OutRq& rhs) const {
 	isSimilar &= outputType_ == rhs.outputType_;
 	isSimilar &= Domain::operator==(rhs);
 	return isSimilar;
-}
-
-void
-OutRq::setAdditionalElems(const vector<ElementId> elems) {
-	for (UInt i = 0; i < elems.size(); i++) {
-		elem_.push_back(elems[i]);
-	}
 }

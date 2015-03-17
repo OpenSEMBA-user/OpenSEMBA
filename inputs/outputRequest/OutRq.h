@@ -16,16 +16,14 @@ class OutRq : public Condition, public Domain, public ClassBase {
 public:
     typedef enum {
         undefined,
-        electricField,
-        magneticField,
+        electric,
+        magnetic,
         electricFieldNormals,
         magneticFieldNormals,
         powerDensity,
         planeWaveDecomposition,
         current,
         voltage,
-        bulkCurrentElectric,
-        bulkCurrentMagnetic,
         power,
         sParameter,
         zParameter,
@@ -35,13 +33,12 @@ public:
         couplingCrossSection,
         poyntingVector,
         energy,
-        farField
     } Type;
     OutRq(
             const Domain& domain,
             const OutRq::Type outputType,
             const string& name,
-            const vector<ElementId>& elements);
+            const ElementsGroup<>& elements);
 
     virtual ClassBase* clone() const;
 
@@ -50,13 +47,10 @@ public:
     string outputTypeStr() const;
     const string& getName() const;
     OutRq::Type getOutputType() const;
-    const vector<ElementId>& getElem() const;
-    void setAdditionalElems(const vector<ElementId> elems);
     void printInfo() const;
 private:
     string name_;
     OutRq::Type outputType_;
-    vector<ElementId> elem_;
 };
 
 #	endif

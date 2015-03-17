@@ -17,89 +17,56 @@ using namespace std;
 
 class Domain {
 public:
-	Domain();
-	Domain(
-	 bool timeDomain,
-	 Real initialTime,
-	 Real finalTime,
-	 Real samplingPeriod,
-	 bool frequencyDomain,
- 	 Real initialFrequency,
-	 Real finalFrequency,
-	 Real frequencyStep,
-	 bool logFrequencySweep,
-	 bool usingTransferFunction,
-	 string transferFunctionFile);
+    typedef enum {
+        NONE, TIME, FREQ, TRAN, TIFR, TITR, FRTR, ALL
+    } Type;
+    Domain();
+    Domain(
+            bool timeDomain,
+            Real initialTime,
+            Real finalTime,
+            Real samplingPeriod,
+            bool frequencyDomain,
+            Real initialFrequency,
+            Real finalFrequency,
+            Real frequencyStep,
+            bool logFrequencySweep,
+            bool usingTransferFunction,
+            string transferFunctionFile);
+    virtual ~Domain();
 
-	virtual ~Domain();
+    Domain& operator=(const Domain& rhs);
 
-	Domain&
-	operator=(const Domain& rhs);
-	bool
-	operator==(const Domain& rhs) const;
+    bool operator==(const Domain& rhs) const;
 
-	Real
-	getSamplingPeriod() const {
-		return samplingPeriod_;
-	}
+    Real getSamplingPeriod() const;
+    Real getFinalTime() const;
+    Real getInitialTime() const;
+    Real getFinalFrequency() const;
+    bool isFrequencyDomain() const;
+    Real getFrequencyStep() const;
+    Real getInitialFrequency() const;
+    bool isLogFrequencySweep() const;
+    bool isTimeDomain() const;
+    const string& getTransferFunctionFile() const;
+    bool isUsingTransferFunction() const;
 
-	Real
-	getFinalTime() const {
-		return finalTime_;
-	}
+    Type getDomainType() const;
 
-	Real
-	getInitialTime() const {
-		return initialTime_;
-	}
-
-	void
-	printInfo() const;
-
-	Real getFinalFrequency() const {
-		return finalFrequency_;
-	}
-
-	bool isFrequencyDomain() const {
-		return frequencyDomain_;
-	}
-
-	Real getFrequencyStep() const {
-		return frequencyStep_;
-	}
-
-	Real getInitialFrequency() const {
-		return initialFrequency_;
-	}
-
-	bool isLogFrequencySweep() const {
-		return logFrequencySweep_;
-	}
-
-	bool isTimeDomain() const {
-		return timeDomain_;
-	}
-
-	const string& getTransferFunctionFile() const {
-		return transferFunctionFile_;
-	}
-
-	bool isUsingTransferFunction() const {
-		return usingTransferFunction_;
-	}
-
+    void printInfo() const;
 private:
-	bool timeDomain_;
-	Real initialTime_;
-	Real finalTime_;
-	Real samplingPeriod_;
-	bool frequencyDomain_;
-	Real initialFrequency_;
-	Real finalFrequency_;
-	Real frequencyStep_;
-	bool logFrequencySweep_;
-	bool usingTransferFunction_;
-	string transferFunctionFile_;
+    bool timeDomain_;
+    Real initialTime_;
+    Real finalTime_;
+    Real samplingPeriod_;
+    bool frequencyDomain_;
+    Real initialFrequency_;
+    Real finalFrequency_;
+    Real frequencyStep_;
+    bool logFrequencySweep_;
+    bool usingTransferFunction_;
+    string transferFunctionFile_;
 };
+
 
 #endif /* SRC_COMMON_INPUTS_DOMAIN_H_ */
