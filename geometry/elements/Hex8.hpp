@@ -16,7 +16,7 @@ Hex8<T>::Hex8() {
 }
 
 template<class T>
-Hex8<T>::Hex8(const CoordinateGroup<>& coordGr,
+Hex8<T>::Hex8(const CoordinateGroup<Coordinate<T,3> >& coordGr,
               const ElementId id,
               const CoordinateId vId[8],
               const LayerId layerId,
@@ -24,27 +24,12 @@ Hex8<T>::Hex8(const CoordinateGroup<>& coordGr,
 :   Volume<T>(id, layerId, matId) {
 
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
-        if (coord == NULL) {
-            cerr << "ERROR @ Hex8<T>::Hex8(): "
-                 << "Coordinate in new CoordinateGroup inexistent"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        if (!coord->is< Coordinate<T,3> >()) {
-            cerr << "ERROR @ Hex8<T>::Hex8(): "
-                 << "Coordinate in new CoordinateGroup "
-                 << "is not a valid Coordinate" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        v_[i] = coord->castTo< Coordinate<T,3> >();
+        v_[i] = coordGr.getPtrToId(vId[i]);
 	}
 }
 
 template<class T>
-Hex8<T>::Hex8(CoordinateGroup<>& cG,
+Hex8<T>::Hex8(CoordinateGroup<Coordinate<T,3> >& cG,
               const ElementId id,
               const Box<T,3>& box,
               const LayerId layerId,

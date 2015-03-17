@@ -19,39 +19,26 @@
 
 using namespace std;
 
-template<typename E = ElementBase,
-         typename C = CoordinateBase,
-         typename L = Layer>
-class Mesh : public CoordinateGroup<C>,
-             public ElementsGroup<E>,
-             public LayerGroup<L> {
+class Mesh : public CoordinateGroup<CoordR3>,
+             public ElementsGroup<ElemR>,
+             public LayerGroup<> {
 public:
     Mesh();
-    Mesh(const CoordinateGroup<C>& cG,
-         const ElementsGroup<E>& elem,
-         const LayerGroup<L>& layer = LayerGroup<L>());
-    Mesh(const Mesh<E,C,L>& param);
+    Mesh(const CoordinateGroup<CoordR3>& cG,
+         const ElementsGroup<ElemR>& elem,
+         const LayerGroup<>& layer = LayerGroup<>());
+    Mesh(const Mesh& param);
     virtual ~Mesh();
 
-    Mesh<E,C,L>& operator=(const Mesh<E,C,L>& rhs);
+    Mesh& operator=(const Mesh& rhs);
 
-    template<typename E2 = ElementBase,
-             typename C2 = CoordinateBase,
-             typename L2 = Layer>
-    Mesh<E2,C2,L2> getMeshOf();
+    CoordinateGroup<CoordR3>& coords() { return *this; }
+    ElementsGroup<ElemR>&     elems () { return *this; }
+    LayerGroup<>&             layers() { return *this; }
 
-    template<typename E2 = ElementBase,
-             typename C2 = CoordinateBase,
-             typename L2 = Layer>
-    Mesh<E2,C2,L2> newMeshOf();
-
-    CoordinateGroup<C>& coords() { return *this; }
-    ElementsGroup<E>&   elems () { return *this; }
-    LayerGroup<L>&      layers() { return *this; }
-
-    const CoordinateGroup<C>& coords() const { return *this; }
-    const ElementsGroup<E>&   elems () const { return *this; }
-    const LayerGroup<L>&      layers() const { return *this; }
+    const CoordinateGroup<CoordR3>& coords() const { return *this; }
+    const ElementsGroup<ElemR>&     elems () const { return *this; }
+    const LayerGroup<>&             layers() const { return *this; }
 
     vector<ElementId> addAsHex8(const BoxR3& box);
     virtual vector<BoxR3> getRectilinearHexesInsideRegion(
@@ -68,11 +55,11 @@ public:
     virtual bool isOnBoundary(const CVecR3 pos) const;
     ElementsGroup<SurfR> getMaterialBoundary(const MatId   matId,
                                              const LayerId layId) const;
-    ElementsGroup<Tri> convertToTri(const ElementsGroup<E>& region,
+    ElementsGroup<Tri> convertToTri(const ElementsGroup<ElemR>& region,
                                     bool ignoreTets) const;
-    vector<Face> getInternalBorder(const ElementsGroup<E>& region) const;
-    vector<Face> getExternalBorder(const ElementsGroup<E>& region) const;
-    ElementsGroup<E> getAdjacentRegion(const ElementsGroup<E>& region);
+    vector<Face> getInternalBorder(const ElementsGroup<ElemR>& region) const;
+    vector<Face> getExternalBorder(const ElementsGroup<ElemR>& region) const;
+    ElementsGroup<ElemR> getAdjacentRegion(const ElementsGroup<ElemR>& region);
 
     virtual void printInfo() const;
 protected:
@@ -80,7 +67,5 @@ protected:
     vector<Face> getInternalBorder(const ElementsGroup<Tet>& tet) const;
     vector<Face> getInternalBorder(const ElementsGroup<Tri>& tri) const;
 };
-
-#include "Mesh.hpp"
 
 #endif /* MESH_H_ */

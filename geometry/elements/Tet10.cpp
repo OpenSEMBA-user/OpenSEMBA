@@ -13,7 +13,7 @@ Tet10::Tet10() {
 
 }
 
-Tet10::Tet10(const CoordinateGroup<>& coordGr,
+Tet10::Tet10(const CoordinateGroup<CoordR3>& coordGr,
              const ElementId id,
              const CoordinateId vId[10],
              const LayerId layerId,
@@ -21,22 +21,7 @@ Tet10::Tet10(const CoordinateGroup<>& coordGr,
 :   Tet(id, layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
-        const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
-        if (coord == NULL) {
-            cerr << endl << "ERROR @ Tet10::Tet10(): "
-                 << "Coordinate in new CoordinateGroup inexistent"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        if (!coord->is<CoordR3>()) {
-            cerr << endl << "ERROR @ Tet10::Tet10(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        v_[i] = coord->castTo<CoordR3>();
+        v_[i] = coordGr.getPtrToId(vId[i]);
     }
     //
     check();

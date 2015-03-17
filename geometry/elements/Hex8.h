@@ -14,12 +14,12 @@ template<class T>
 class Hex8 : public Volume<T> {
 public:
     Hex8();
-    Hex8(const CoordinateGroup<>&,
+    Hex8(const CoordinateGroup<Coordinate<T,3> >&,
          const ElementId id,
          const CoordinateId vId[8],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Hex8(CoordinateGroup<>&,
+    Hex8(CoordinateGroup<Coordinate<T,3> >&,
          const ElementId id,
          const Box<T,3>& box,
          const LayerId layerId = LayerId(0),

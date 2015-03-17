@@ -208,15 +208,15 @@ ParserGiD::readMesherOptions() {
     return res;
 }
 
-Mesh<>*
+Mesh*
 ParserGiD::readMesh() {
     LayerGroup<> lG_ = readLayers();
     // Reads the coordinates.
     cG_ = readCoordinates();
     // Reads elements connectivities.
-    ElementsGroup<> elements = readElements(cG_);
+    ElementsGroup<ElemR> elements = readElements(cG_);
     // Builds mesh with the read data.
-    return new Mesh<>(cG_, elements, lG_);
+    return new Mesh(cG_, elements, lG_);
 }
 
 EMSourceGroup<>*
@@ -539,11 +539,11 @@ LayerGroup<> ParserGiD::readLayers() {
     return res;
 }
 
-CoordinateGroup<> ParserGiD::readCoordinates() {
+CoordinateGroup<CoordR3> ParserGiD::readCoordinates() {
     string line;
     CoordinateId id;
     CVecR3 pos;
-    vector<CoordinateBase*> coord;
+    vector<CoordR3*> coord;
     coord.reserve(pSize_.v);
     bool finished = false;
     bool found = false;
@@ -575,15 +575,15 @@ CoordinateGroup<> ParserGiD::readCoordinates() {
                 << "End of coordinates label not found." << endl;
     }
 
-    return CoordinateGroup<>(coord);
+    return CoordinateGroup<CoordR3>(coord);
 }
 
-
-ElementsGroup<> ParserGiD::readElements(const CoordinateGroup<>& v) {
+ElementsGroup<ElemR> ParserGiD::readElements(
+        const CoordinateGroup<CoordR3>& v) {
     string line, label;
     bool finished = false;
     bool found = false;
-    vector<ElementBase*> elems;
+    vector<ElemR*> elems;
     while (!finished && !f_in.eof()) {
         getline(f_in, line);
         if (line.find("Elements:") != line.npos) {
@@ -622,11 +622,11 @@ ElementsGroup<> ParserGiD::readElements(const CoordinateGroup<>& v) {
              << "\"End of elements\" label was not found." << endl;
     }
     //
-    return ElementsGroup<>(elems);
+    return ElementsGroup<ElemR>(elems);
 }
 
-void ParserGiD::readHex8Elements(const CoordinateGroup<>& v,
-                                 vector<ElementBase*>& elems) {
+void ParserGiD::readHex8Elements(const CoordinateGroup<CoordR3>& v,
+                                 vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[8];
     MatId matId;
@@ -640,8 +640,8 @@ void ParserGiD::readHex8Elements(const CoordinateGroup<>& v,
     }
 }
 
-void ParserGiD::readTet10Elements(const CoordinateGroup<>& v,
-                                  vector<ElementBase*>& elems) {
+void ParserGiD::readTet10Elements(const CoordinateGroup<CoordR3>& v,
+                                  vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[10];
     MatId matId;
@@ -655,8 +655,8 @@ void ParserGiD::readTet10Elements(const CoordinateGroup<>& v,
     }
 }
 
-void ParserGiD::readTet4Elements(const CoordinateGroup<>& v,
-                                 vector<ElementBase*>& elems) {
+void ParserGiD::readTet4Elements(const CoordinateGroup<CoordR3>& v,
+                                 vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[4];
     LayerId layerId;
@@ -667,8 +667,8 @@ void ParserGiD::readTet4Elements(const CoordinateGroup<>& v,
     }
 }
 
-void ParserGiD::readTri6Elements(const CoordinateGroup<>& v,
-                                 vector<ElementBase*>& elems) {
+void ParserGiD::readTri6Elements(const CoordinateGroup<CoordR3>& v,
+                                 vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[6];
     MatId matId;
@@ -682,8 +682,8 @@ void ParserGiD::readTri6Elements(const CoordinateGroup<>& v,
     }
 }
 
-void ParserGiD::readTri3Elements(const CoordinateGroup<>& v,
-                                 vector<ElementBase*>& elems) {
+void ParserGiD::readTri3Elements(const CoordinateGroup<CoordR3>& v,
+                                 vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[3];
     LayerId layerId;
@@ -695,8 +695,8 @@ void ParserGiD::readTri3Elements(const CoordinateGroup<>& v,
     }
 }
 
-void ParserGiD::readLin2Elements(const CoordinateGroup<>& v,
-                                 vector<ElementBase*>& elems) {
+void ParserGiD::readLin2Elements(const CoordinateGroup<CoordR3>& v,
+                                 vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[2];
     LayerId layerId;

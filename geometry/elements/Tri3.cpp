@@ -13,7 +13,7 @@ Tri3::Tri3() {
 
 }
 
-Tri3::Tri3(const CoordinateGroup<>& coordGr,
+Tri3::Tri3(const CoordinateGroup<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[3],
            const LayerId layerId,
@@ -21,22 +21,7 @@ Tri3::Tri3(const CoordinateGroup<>& coordGr,
 :   Tri(id, layerId, matId) {
     
 	for (UInt i = 0; i < geo.np; i++) {
-		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
-        if (coord == NULL) {
-            cerr << endl << "ERROR @ Tri3::Tri3(): "
-                 << "Coordinate in new CoordinateGroup inexistent"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        if (!coord->is<CoordR3>()) {
-            cerr << endl << "ERROR @ Tri3::Tri3(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        v_[i] = coord->castTo<CoordR3>();
+        v_[i] = coordGr.getPtrToId(vId[i]);
 	}
 	check();
 }

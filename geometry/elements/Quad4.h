@@ -14,12 +14,12 @@ template<class T>
 class Quad4: public Quad<T> {
 public:
     Quad4();
-	Quad4(const CoordinateGroup<>&,
+	Quad4(const CoordinateGroup<Coordinate<T,3> >&,
           const ElementId id,
           const CoordinateId vId[4],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-	Quad4(CoordinateGroup<>&,
+	Quad4(CoordinateGroup<Coordinate<T,3> >&,
 	      const ElementId id,
 	      const Box<T,3>& box,
 	      const LayerId layerId = LayerId(0),
