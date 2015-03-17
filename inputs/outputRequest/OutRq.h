@@ -16,6 +16,8 @@ class OutRq : public Condition, public Domain, public ClassBase {
 public:
     typedef enum {
         undefined,
+        bulkCurrentElectric,
+        bulkCurrentMagnetic,
         electric,
         magnetic,
         electricFieldNormals,
