@@ -13,8 +13,6 @@
 #include <iostream>
 #include "elements/ElementsGroup.h"
 #include "layers/LayerGroup.h"
-
-#include "Grid.h"
 #include "maps/MapGroup.h"
 
 using namespace std;

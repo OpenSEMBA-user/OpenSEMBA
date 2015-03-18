@@ -26,6 +26,8 @@ public:
     Real getInitialPhi() const;
     Real getInitialTheta() const;
     bool isSimilar(const OutRqFarField& rhs) const;
+    void setElements(const ElementsGroup<VolR>&); // TODO VolR->Vol
+    void setElements(const ElementsGroup<VolI>&); // TODO VolR->Vol
 private:
     Real initialTheta_, finalTheta_, stepTheta_;
     Real initialPhi_, finalPhi_, stepPhi_;
