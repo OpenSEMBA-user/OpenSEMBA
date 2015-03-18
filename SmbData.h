@@ -13,8 +13,8 @@
 #include "Grid.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"
 #include "inputs/physicalModel/PhysicalModelGroup.h"
-#include "inputs/outputRequest/OutRqGroup.h"
 #include "inputs/MesherOptions.h"
+#include "inputs/outRq/OutRqGroup.h"
 #include "inputs/SolverOptions.h"
 
 class SmbData : public ProjectFile {

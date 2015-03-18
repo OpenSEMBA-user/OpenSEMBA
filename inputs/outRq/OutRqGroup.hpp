@@ -1,4 +1,4 @@
-#include "OutRqGroup.h"
+#include "../outRq/OutRqGroup.h"
 
 template<typename O>
 OutRqGroup<O>::OutRqGroup() {
@@ -50,7 +50,7 @@ void OutRqGroup<C>::add (OutRq* in) {
     for (UInt j = 0; j < this->size(); j++) {
         if (in->isSimilar(*this->element_[j])) {
             foundSimilar = true;
-            this->element_[j]->setAdditionalElems(in->getElem());
+            this->element_[j]->setAdditionalElements(in);
             delete in;
             break;
         }

@@ -7,12 +7,14 @@
 
 #ifndef DIPOLE_H_
 #define DIPOLE_H_
-#include "EMSource.h"
 
-class Dipole : public EMSource {
+#include "EMSource.h"
+#include "ElementsGroup.h"
+
+class Dipole : public EMSource, public ElementsGroup<Volume<> > {
 public:
 	Dipole(
-	 vector<ElementId> elem,
+	 const ElementsGroup<Volume<> >& elem,
 	 Real length,
 	 CVecR3 orientation,
 	 CVecR3 position,

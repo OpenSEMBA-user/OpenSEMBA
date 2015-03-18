@@ -6,9 +6,9 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "../geometry/elements/Element.h"
 #include "Condition.h"
 #include "Domain.h"
+#include "ElementsGroup.h"
 
 using namespace std;
 
@@ -16,8 +16,6 @@ class OutRq : public Condition, public Domain, public ClassBase {
 public:
     typedef enum {
         undefined,
-        bulkCurrentElectric,
-        bulkCurrentMagnetic,
         electric,
         magnetic,
         electricFieldNormals,
@@ -36,16 +34,12 @@ public:
         poyntingVector,
         energy,
     } Type;
-    OutRq(
-            const Domain& domain,
-            const OutRq::Type outputType,
-            const string& name,
-            const ElementsGroup<>& elements);
-
-    virtual ClassBase* clone() const;
+    OutRq(const Domain& domain, const Type outputType, const string& name);
+    virtual ~OutRq() = 0;
 
     OutRq& operator=(const OutRq& rhs);
     virtual bool isSimilar(const OutRq& rhs) const;
+    virtual void setAdditionalElements(const ElementsGroup<>& elems);
     string outputTypeStr() const;
     const string& getName() const;
     OutRq::Type getOutputType() const;

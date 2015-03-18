@@ -421,12 +421,12 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
-                    elem = mesh_->addAsHex8(BoxR3(strToBound(line)));
+                    elem = mesh_->add(HexR8(BoxR3(strToBound(line))));
                     res->add(new OutRq(domain, type, name, elem));
                     break;
                 case ParserGiD::farField:
                     getline(f_in, line);
-                    elem = mesh_->addAsHex8(BoxR3(strToBound(line)));
+                    elem = mesh_->add(HexR8(BoxR3(strToBound(line))));
                     Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
@@ -1009,7 +1009,7 @@ ParserGiD::readPlaneWave() {
 
 Dipole*
 ParserGiD::readDipole() {
-    vector<ElementId> elem;
+    ElementsGroup<Volume<> > elem;
     Real length = 0.0;
     CVecR3 orientation;
     CVecR3 position;
@@ -1021,10 +1021,8 @@ ParserGiD::readDipole() {
     while(!finished && !f_in.eof()) {
         getline(f_in, line);
         if (line.find("End of puntual excitation") == line.npos) {
-            elem.push_back(ElementId(strtol(line.c_str(), &pEnd, 10)));
-            if (elem.size() == 1) {
-                assert(false); // TODO: Not implemented.
-            }
+            ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
+            elem.add(mesh_->elems().getPtrToId(id));
         } else
             finished = true;
     }
@@ -1034,8 +1032,7 @@ ParserGiD::readDipole() {
                 << endl;
     }
     //
-
-    return new Dipole(elem, length, orientation, position, mag);;
+    return new Dipole(elem, length, orientation, position, mag);
 }
 
 Waveport*

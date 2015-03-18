@@ -9,6 +9,7 @@
 #include "Magnitude.h"
 #include "MagnitudeGaussian.h"
 #include "MagnitudeNumerical.h"
+#include "ElementsGroup.h"
 #include "../../math/CartesianVector.h"
 #include "../../math/Constants.h"
 
@@ -19,13 +20,15 @@ public:
     EMSource();
     EMSource(const Magnitude* magnitude);
     virtual ~EMSource();
-    const Magnitude* getMagnitude() const;
+    virtual string getMagnitudeFilename() const;
     Condition::Type getConditionType() const;
     void printInfo() const;
     void convertToNumerical(
             const string file,
             const double step,
             const double finalTime);
+protected:
+    const Magnitude* getMagnitude() const;
 private:
     const Magnitude* magnitude_;
 };

@@ -15,4 +15,3 @@ Magnitude::Magnitude() {
 Magnitude::~Magnitude() {
     // TODO Auto-generated destructor stub
 }
-

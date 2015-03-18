@@ -25,12 +25,9 @@ public:
             const Magnitude* mag,
             const Real timeStep,
             const Real finalTime);
-    MagnitudeNumerical&
-     operator=(const MagnitudeNumerical& rhs);
-    virtual Real
-     evaluate(const Real time) const;
-    virtual void
-     printInfo() const;
+    MagnitudeNumerical& operator=(const MagnitudeNumerical& rhs);
+    virtual Real evaluate(const Real time) const;
+    virtual void printInfo() const;
 private:
     map<Real,Real> value_;
     static const UInt defaultNumberOfSteps = 1e4;

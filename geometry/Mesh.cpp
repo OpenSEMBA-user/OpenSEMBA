@@ -202,25 +202,6 @@ ElementsGroup<ElemR> Mesh::getAdjacentRegion(
     return res;
 }
 
-vector<BoxR3> Mesh::getRectilinearHexesInsideRegion(
-        const Grid3* grid,
-        const ElementsGroup<VolR>& region) const {
-
-    vector<CVecR3> center =
-        grid->getCenterOfNaturalCellsInside(region.getBound());
-    vector<BoxR3> res;
-    res.reserve(center.size());
-    for (UInt i = 0; i < center.size(); i++) {
-        for (UInt j = 0; j < region.size(); j++) {
-            if (region(j)->isInnerPoint(center[i])) {
-                res.push_back(grid->getBoundingBoxContaining(center[i]));
-                break;
-            }
-        }
-    }
-    return res;
-}
-
 bool Mesh::isFloatingCoordinate(const CoordR3* param) const {
     ElementsGroup<ElemR> elems =
         ElementsGroup<ElemR>::getGroupOf<ElemR>();
@@ -244,14 +225,6 @@ ElementsGroup<SurfR> Mesh::getMaterialBoundary(
 
     return ElementsGroup<ElemR>::get(matId, layId).
                getGroupOf<SurfR>();
-}
-
-vector<ElementId> Mesh::addAsHex8(const BoxR3& box) {
-    vector<ElementId> res;
-    Hex8<Real>* hex = new Hex8<Real>(*this, ElementId(0), box);
-    ElementsGroup<ElemR>::add(hex->castTo<ElemR>(), true);
-    res.push_back(hex->getId());
-    return res;
 }
 
 void Mesh::printInfo() const {

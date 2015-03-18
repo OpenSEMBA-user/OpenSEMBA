@@ -22,17 +22,17 @@ using namespace std;
 
 template<Int D>
 class Grid {
-    typedef Box<Real,D> BoxRD;
+    typedef Box<Real,D> BoxDD;
     typedef CartesianVector<Real,D> CVecRD;
     typedef CartesianVector<Int,D> CVecID;
 public:
     Grid();
     Grid(const Grid& grid);
     Grid(
-            const BoxRD &boundingBox,
+            const BoxDD &boundingBox,
             const CVecR3& dxyz);
     Grid(
-            const BoxRD &boundingBox,
+            const BoxDD &boundingBox,
             const CVecI3& dims);
     Grid(
             const CVecI3& offset,
@@ -48,12 +48,12 @@ public:
             const Real max) const;
     vector<CVecR3> getPos() const;
     vector<CVecR3> getCenterOfNaturalCellsInside(
-            const BoxRD& bound) const;
+            const BoxDD& bound) const;
     vector<Real> getStep(const CartesianAxis dir) const;
     inline CVecI3 getNumCells() const;
-    BoxRD getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
-    BoxRD getBoundingBoxContaining(const CVecR3& point) const;
-    inline BoxRD getFullDomainBoundingBox() const;
+    BoxDD getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
+    BoxDD getBoundingBoxContaining(const CVecR3& point) const;
+    inline BoxDD getFullDomainBoundingBox() const;
     bool hasZeroSize() const;
     bool isIntoDir(const Int& direction, const Real& pos) const;
     bool isInto (const CVecR3& pos) const;
@@ -107,8 +107,8 @@ private:
 template<Int D>
 const Real Grid<D>::tolerance = 1e-12;
 
-#include "Grid.hpp"
-
 typedef Grid<3> Grid3;
 
-#endif //_cartesianGrid_hxx
+#include "Grid.hpp"
+
+#endif

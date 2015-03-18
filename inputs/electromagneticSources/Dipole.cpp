@@ -5,18 +5,14 @@
  *      Author: luis
  */
 
-#ifndef DIPOLE_H_
-	#include "Dipole.h"
-#endif
-
-
+#include "Dipole.h"
 
 Dipole::Dipole(
- vector<ElementId> elem,
+ const ElementsGroup<Volume<> >& elem,
  Real length,
  CVecR3 orientation,
  CVecR3 position,
- const MagnitudeGaussian* magnitude) : EMSource(elem, magnitude) {
+ const MagnitudeGaussian* magnitude): EMSource(magnitude), ElementsGroup<Volume<> >(elem) {
 	length_ = length;
 	orientation_ = orientation;
 	position_ = position;

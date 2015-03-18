@@ -31,7 +31,8 @@ public:
 
     const Grid3* getGrid() const;
     void setGrid(const Grid3& grid_);
-
+    vector<BoxR3> getRectilinearHexesInsideRegion(
+            const ElementsGroup<VolR>& region) const;
     ElementsGroup<NodeI> add(const ElementsGroup<NodeR>&);
     ElementsGroup<SurfI> add(const ElementsGroup<SurfR>&);
     ElementsGroup<VolI> add(const VolR&);

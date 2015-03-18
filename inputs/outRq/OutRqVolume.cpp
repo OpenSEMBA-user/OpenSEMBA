@@ -1,18 +1,18 @@
 /*
- * OutRqBulkCurrent.cpp
+ * OutRqVolume.cpp
  *
  *  Created on: Mar 17, 2015
  *      Author: luis
  */
 
-#include "OutRqBulkCurrent.h"
+#include "../outRq/OutRqVolume.h"
 
-OutRqBulkCurrent::OutRqBulkCurrent() {
+OutRqVolume::OutRqVolume() {
     // TODO Auto-generated constructor stub
 
 }
 
-OutRqBulkCurrent::~OutRqBulkCurrent() {
+OutRqVolume::~OutRqVolume() {
     // TODO Auto-generated destructor stub
 }
 

@@ -5,20 +5,20 @@
  *      Author: luis
  */
 
-#ifndef SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_
-#define SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_
+#ifndef SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
+#define SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
 
-#include "OutRq.h"
+#include "../outRq/OutRq.h"
 
-class OutRqFarField : public OutRq, public ElementsGroup<VolR> {
+class OutRqFarField : public OutRq, public ElementsGroup<Volume<> > {
 public:
-    virtual ~OutRqFarField();
     OutRqFarField(
+            const ElementsGroup<Volume<> >& box,
             const Domain& domain,
-            const string& name_,
-            const vector<ElementId>& box,
+            const string& name,
             const Real iTh, const Real fTh, const Real sTh,
             const Real iPhi, const Real fPhi, const Real sPhi);
+    virtual ~OutRqFarField();
     Real getStepPhi() const;
     Real getStepTheta() const;
     Real getFinalPhi() const;
@@ -37,4 +37,4 @@ private:
             Real iPhi, Real fPhi, Real sPhi);
 };
 
-#endif /* SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_ */
+#endif /* SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_ */

@@ -5,19 +5,19 @@
  *      Author: luis
  */
 
-#include "OutRqFarField.h"
+#include "../outRq/OutRqFarField.h"
 
 OutRqFarField::~OutRqFarField() {
 
 }
 
 OutRqFarField::OutRqFarField(
+ const ElementsGroup<Volume<> >& elem,
  const Domain& domain,
  const string& name,
- const vector<ElementId>& elem,
  const Real iTh, const Real fTh, const Real sTh,
  const Real iPhi, const Real fPhi, const Real sPhi)
-: OutRq(domain, farField, name, elem) {
+: OutRq(domain, electric, name), ElementsGroup<Volume<> >(elem) {
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 

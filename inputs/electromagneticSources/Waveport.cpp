@@ -8,12 +8,13 @@
 #include "Waveport.h"
 
 Waveport::Waveport(
- const vector<ElementId>& elem,
+ const ElementsGroup<Surface<> >& elem,
  const MagnitudeGaussian* magnitude,
  const bool input,
  const Shape shape,
  const ExcitationMode excMode,
- const pair<UInt,UInt> mode) : EMSource(elem, magnitude) {
+ const pair<UInt,UInt> mode)
+: EMSource(magnitude), ElementsGroup<Surface<> >(elem) {
 	input_ = input;
 	shape_ = shape;
 	excitationMode_ = excMode;

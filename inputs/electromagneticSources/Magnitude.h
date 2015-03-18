@@ -20,10 +20,8 @@ class Magnitude {
 public:
     Magnitude();
     virtual ~Magnitude();
-    virtual Real
-     evaluate(const Real time) const = 0;
-    virtual void
-     printInfo() const = 0;
+    virtual Real evaluate(const Real time) const = 0;
+    virtual void printInfo() const = 0;
 private:
 };
 

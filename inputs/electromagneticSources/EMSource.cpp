@@ -30,6 +30,17 @@ EMSource::printInfo() const {
     magnitude_->printInfo();
 }
 
+string EMSource::getMagnitudeFilename() const {
+    const MagnitudeNumerical* mag =
+            dynamic_cast<const MagnitudeNumerical*>(magnitude_);
+    if (mag != NULL) {
+        return mag->getFilename();
+    }
+    cerr << endl << "ERROR @ EMSource: Magnitude is not numerical." << endl;
+    printInfo();
+    return string();
+}
+
 void EMSource::convertToNumerical(
         const string file,
         const double step,

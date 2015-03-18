@@ -9,10 +9,9 @@
 #define WAVEPORT_H_
 
 #include "EMSource.h"
-#include "MagnitudeGaussian.h"
-#include "MagnitudeNumerical.h"
+#include "ElementsGroup.h"
 
-class Waveport : public EMSource {
+class Waveport : public EMSource, public ElementsGroup<Surface<> > {
 public:
 	typedef enum {
 		undefined,
@@ -23,7 +22,7 @@ public:
 		TM
 	} ExcitationMode;
 	Waveport(
-	        const vector<ElementId>& elem,
+	        const ElementsGroup<Surface<> >& elem,
 	        const MagnitudeGaussian* magnitude,
 	        const bool input,
 	        const Shape shape,

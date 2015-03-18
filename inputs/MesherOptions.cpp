@@ -48,6 +48,7 @@ MesherOptions::MesherOptions(
     scaleFactorValue_ = scaleFactorValue;
     swfForze_ = swfForze;
     confOutput_ = confOutput;
+    scalingFactor_ = 0.0;
 }
 
 void

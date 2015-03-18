@@ -10,31 +10,31 @@
 
 #include "EMSource.h"
 
-class PlaneWave : public EMSource {
+class PlaneWave : public EMSource, public ElementsGroup<Volume<> > {
 public:
     PlaneWave();
     PlaneWave(
-	 vector<ElementId> elem,
-	 CVecR3 waveDirection,
-	 CVecR3 polarization,
-	 const Magnitude* magnitude);
-	virtual ~PlaneWave();
+            ElementsGroup<Volume<> > elem,
+            CVecR3 direction,
+            CVecR3 polarization,
+            const Magnitude* magnitude);
+    virtual ~PlaneWave();
 
-	virtual ClassBase* clone() const;
+    virtual ClassBase* clone() const;
 
-	const CVecR3& getPolarization() const;
-	const CVecR3& getWaveDirection() const;
-	Real getTheta() const;
-	Real getPhi() const;
-	Real getAlpha() const;
-	Real getBeta() const;
+    const CVecR3& getPolarization() const;
+    const CVecR3& getWaveDirection() const;
+    Real getTheta() const;
+    Real getPhi() const;
+    Real getAlpha() const;
+    Real getBeta() const;
 
-	CVecR3 getElectricField(const Real time) const;
-	pair<CVecR3,CVecR3> getElectromagneticField(const Real time) const;
-	void printInfo() const;
+    CVecR3 getElectricField(const Real time) const;
+    pair<CVecR3,CVecR3> getElectromagneticField(const Real time) const;
+    void printInfo() const;
 private:
-	CVecR3 waveDirection_;
-	CVecR3 polarization_;
+    CVecR3 direction_;
+    CVecR3 polarization_;
     pair<Real,Real> cartesianToPolar(const CVecR3& vec) const;
     Real reduceRadians(const Real radianIn) const;
 };

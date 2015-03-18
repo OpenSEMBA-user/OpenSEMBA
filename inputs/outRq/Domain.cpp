@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "Domain.h"
+#include "../outRq/Domain.h"
 
 Domain::Domain() {
 	timeDomain_ = false;
