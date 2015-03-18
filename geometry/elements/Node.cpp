@@ -1,4 +1,3 @@
-
 #include "Node.h"
 
 template<class T>
@@ -12,7 +11,7 @@ Node<T>::Node(const CoordinateGroup< Coordinate<T,3> >& coordGr,
               const CoordinateId vId[1],
               const LayerId layerId,
               const MatId   matId)
-:   Element<T>(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = coordGr.getPtrToId(vId[i]);
 	}
@@ -23,13 +22,13 @@ Node<T>::Node(const ElementId id,
               const Coordinate<T,3>* v[1],
               const LayerId layerId,
               const MatId   matId)
-:   Element<T>(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     v_[0] = v[0];
 }
 
 template<class T>
 Node<T>::Node(const Node<T>& rhs)
-:   Element<T>(rhs) {
+:   Elem(rhs) {
     	v_[0] = rhs.v_[0];
 }
 
@@ -76,3 +75,6 @@ void Node<T>::printInfo() const {
 		cout << endl;
 	}
 }
+
+template class Node<Real>;
+template class Node<Int >;

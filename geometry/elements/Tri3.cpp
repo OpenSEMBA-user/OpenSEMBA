@@ -18,7 +18,7 @@ Tri3::Tri3(const CoordinateGroup<CoordR3>& coordGr,
            const CoordinateId vId[3],
            const LayerId layerId,
            const MatId   matId)
-:   Tri(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     
 	for (UInt i = 0; i < geo.np; i++) {
         v_[i] = coordGr.getPtrToId(vId[i]);
@@ -30,7 +30,7 @@ Tri3::Tri3(const ElementId id,
            const CoordR3* v[3],
            const LayerId layerId,
            const MatId   matId)
-:   Tri(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     for (UInt i = 0; i < geo.np; i++) {
         v_[i] = v[i];
     }
@@ -38,7 +38,7 @@ Tri3::Tri3(const ElementId id,
 }
 
 Tri3::Tri3(const Tri3& rhs)
-:   Tri(rhs) {
+:   Elem(rhs) {
     
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];

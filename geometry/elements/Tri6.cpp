@@ -11,7 +11,7 @@ Tri6::Tri6(const CoordinateGroup<CoordR3>& coordGr,
            const CoordinateId vId[6],
            const LayerId layerId,
            const MatId   matId)
-:   Tri(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
 	for (UInt i = 0; i < geo.np; i++) {
         v_[i] = coordGr.getPtrToId(vId[i]);
 	}
@@ -21,14 +21,14 @@ Tri6::Tri6(const ElementId id,
            const CoordR3* v[6],
            const LayerId layerId,
            const MatId   matId)
-:   Tri(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     for (UInt i = 0; i < geo.np; i++) {
         v_[i] = v[i];
     }
 }
 
 Tri6::Tri6(const Tri6& rhs)
-:   Tri(rhs) {
+:   Elem(rhs) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];

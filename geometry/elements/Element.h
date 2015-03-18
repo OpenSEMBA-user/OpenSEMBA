@@ -12,17 +12,54 @@
 
 using namespace std;
 
-#include "ElementBase.h"
+#include "IdBase.h"
+#include "Layer.h"
+
+#include "ClassIdBase.h"
+
+CreateId(ElementId);
+CreateId(MatId);
+
+template<class T = void>
+class Element;
+
+template<>
+class Element<void> : public ClassIdBase<ElementId> {
+public:
+    Element();
+    Element(const ElementId id,
+            const LayerId layId = LayerId(0),
+            const MatId   matId = MatId(0));
+    Element(const Element& rhs);
+    virtual ~Element();
+
+    virtual bool isCurved   () const { return false; }
+    virtual bool isQuadratic() const { return false; }
+
+    virtual UInt numberOfFaces      () const = 0;
+    virtual UInt numberOfVertices   () const = 0;
+    virtual UInt numberOfCoordinates() const = 0;
+
+    virtual UInt numberOfSideVertices   (const UInt f = 0) const = 0;
+    virtual UInt numberOfSideCoordinates(const UInt f = 0) const = 0;
+
+    LayerId getLayerId() const { return layerId_; }
+    MatId   getMatId  () const { return matId_;   }
+
+    virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }
+    virtual void setMatId  (const MatId   matId  ) { matId_  = matId;   }
+
+    virtual void printInfo() const = 0;
+
+private:
+    LayerId layerId_;
+    MatId   matId_;
+};
 
 template<class T>
-class Element : public ElementBase {
+class Element : public virtual Element<void> {
 public:
-    Element(const LayerId layerId = LayerId(0),
-            const MatId   matId   = MatId(0));
-    Element(const ElementId id,
-            const LayerId layerId = LayerId(0),
-            const MatId   matId   = MatId(0));
-    Element(const Element<T>& rhs);
+    Element();
     virtual ~Element();
 
     bool isCoordinate(const Coordinate<T,3>* coord) const;
@@ -52,8 +89,7 @@ protected:
     void ascendingOrder(UInt nVal, UInt* val) const;
 };
 
-#include "Element.hpp"
-
+typedef Element<void> Elem;
 typedef Element<Real> ElemR;
 typedef Element<Int>  ElemI;
 

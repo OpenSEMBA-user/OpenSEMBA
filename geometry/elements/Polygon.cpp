@@ -16,7 +16,7 @@ Polygon::Polygon(const CoordinateGroup<CoordR3>& cG,
                  const vector<CoordinateId>& vId,
                  const LayerId layerId,
                  const MatId   matId)
-:   Surface<Real>(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     
     const UInt vSize = vId.size();
 	assert(vId.size() >= 3);
@@ -27,7 +27,7 @@ Polygon::Polygon(const CoordinateGroup<CoordR3>& cG,
 }
 
 Polygon::Polygon(const Polygon& rhs)
-:   Surface<Real>(rhs) {
+:   Elem(rhs) {
     
     v_ = rhs.v_;
 }

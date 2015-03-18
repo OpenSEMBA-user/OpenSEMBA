@@ -36,11 +36,10 @@ OutputGiDSmb::writeMesh() {
             const LayerId layId = lay(i)->getId();
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
             ElementsGroup<> elem =
-                smb_->mesh->elems().get(matId, layId).
-                                        getGroupOf<ElementBase>();
-            writeElements(elem.getGroupOf<LinR2>().getGroupOf<ElementBase>(), name, GiD_Linear, 2);
-            writeElements(elem.getGroupOf<Tri3>().getGroupOf<ElementBase>(), name, GiD_Triangle, 3);
-            writeElements(elem.getGroupOf<Tet4>().getGroupOf<ElementBase>(), name, GiD_Tetrahedra, 4);
+                smb_->mesh->elems().get(matId, layId).getGroupOf<Elem>();
+            writeElements(elem.getGroupOf<LinR2>().getGroupOf<Elem>(), name, GiD_Linear, 2);
+            writeElements(elem.getGroupOf<Tri3> ().getGroupOf<Elem>(), name, GiD_Triangle, 3);
+            writeElements(elem.getGroupOf<Tet4> ().getGroupOf<Elem>(), name, GiD_Tetrahedra, 4);
         }
     }
 }

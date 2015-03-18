@@ -1,10 +1,27 @@
 #ifndef NODE_H_
 #define NODE_H_
 
-#include "Node.h"
+#include "Element.h"
+
+template<class T = void>
+class Node;
+
+template<>
+class Node<void> : public virtual Elem {
+public:
+    Node() {};
+    virtual ~Node() {};
+
+    inline UInt numberOfCoordinates() const { return 1; }
+    inline UInt numberOfFaces   () const { return 1; }
+    inline UInt numberOfVertices() const { return 1; }
+    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 1; }
+    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 1; }
+};
 
 template<class T>
-class Node : public Element<T>{
+class Node : public Element<T>,
+             public Node<void> {
 public:
     Node();
 	Node(const CoordinateGroup< Coordinate<T,3> >&,
@@ -20,12 +37,6 @@ public:
 	virtual ~Node();
     
     ClassBase* clone() const;
-    
-    inline UInt numberOfCoordinates() const { return 1; }
-    inline UInt numberOfFaces   () const { return 1; }
-    inline UInt numberOfVertices() const { return 1; }
-    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 1; }
-    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 1; }
 
     const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
     const Coordinate<T,3>* getSideV(const UInt f, const UInt i) const;
@@ -39,8 +50,6 @@ public:
 private:
 	const Coordinate<T,3>* v_[1];
 };
-
-#include "Node.hpp"
 
 typedef Node<Real> NodeR;
 typedef Node<Int > NodeI;

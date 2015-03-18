@@ -10,8 +10,28 @@
 
 #include "Volume.h"
 
+template<class T = void>
+class Hex8;
+
+template<>
+class Hex8<void> : public virtual Vol {
+public:
+    Hex8() {}
+    virtual ~Hex8() {}
+
+    inline bool isQuadratic() const { return false; }
+
+    inline UInt numberOfFaces      () const { return 6; }
+    inline UInt numberOfVertices   () const { return 8; }
+    inline UInt numberOfCoordinates() const { return 8; }
+
+    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 4; }
+    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 4; }
+};
+
 template<class T>
-class Hex8 : public Volume<T> {
+class Hex8 : public virtual Volume<T>,
+             public virtual Hex8<void> {
 public:
     Hex8();
     Hex8(const CoordinateGroup<Coordinate<T,3> >&,
@@ -30,15 +50,7 @@ public:
     ClassBase* clone() const;
 
     bool isRegular() const;
-    inline bool isQuadratic() const { return false; }
     inline bool isCurvedFace(const UInt f) const { return false; }
-
-    inline UInt numberOfFaces      () const { return 6; }
-    inline UInt numberOfVertices   () const { return 8; }
-    inline UInt numberOfCoordinates() const { return 8; }
-
-    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 4; }
-    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 4; }
 
     const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
     const Coordinate<T,3>* getSideV(const UInt f, const UInt i) const;
@@ -56,8 +68,6 @@ private:
 
     const static Real tolerance;
 };
-
-#include "Hex8.hpp"
 
 typedef Hex8<Real> HexR8;
 typedef Hex8<Int > HexI8;

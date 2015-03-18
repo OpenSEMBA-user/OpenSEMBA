@@ -102,7 +102,7 @@ vector<Face> Mesh::getExternalBorder(
     vector<Face> external;
     const MapGroup mapGroup(
         CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
-        region.getGroupOf<ElementBase>());
+        region.getGroupOf<Elem>());
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
         ElementId inId = internal[i].first->getId();
@@ -176,7 +176,7 @@ vector<Face> Mesh::getInternalBorder(
     UInt nE = region.size();
     vector<Face> res(nE);
     MapGroup mapGroup(CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
-                      region.getGroupOf<ElementBase>());
+                      region.getGroupOf<Elem>());
     for (UInt i = 0; i < nE; i++) {
         res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
