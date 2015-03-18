@@ -44,7 +44,7 @@ public:
     void setTimeStep(Real timeStep);
 
     void printInfo() const;
-    double getCfl() const;
+    double getCFL() const;
     void setCFL(double cfl);
     CompositeModel getCompositeModel() const;
     void setCompositeModel(CompositeModel compositeModel);

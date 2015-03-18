@@ -6,8 +6,7 @@ EMSource::EMSource() {
     magnitude_ = NULL;
 }
 
-EMSource::EMSource(const ElementsGroup<>& elem, const Magnitude* magnitude)
-: ElementsGroup<>(elem) {
+EMSource::EMSource(const Magnitude* magnitude) {
     magnitude_ = magnitude;
 }
 
@@ -27,7 +26,7 @@ Condition::Type EMSource::getConditionType() const {
 
 void
 EMSource::printInfo() const {
-    cout<< " - Assigned on " << size() << " elements." << endl;
+    cout << " --- EMSource info --- " << endl;
     magnitude_->printInfo();
 }
 
@@ -40,7 +39,7 @@ void EMSource::convertToNumerical(
     if(mag != NULL) {
         return;
     }
-    Magnitude* orig = magnitude_;
+    const Magnitude* orig = magnitude_;
     magnitude_ = new MagnitudeNumerical(file, magnitude_, step, finalTime);
     delete orig;
 }

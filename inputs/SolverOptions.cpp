@@ -11,10 +11,9 @@ SolverOptions::SolverOptions () {
     // Global
     solver_ = Solver::none;
 	finalTime_ = 0;
-	numberOfTimeSteps_ = 0;
 	samplingPeriod_ = 0.0;
 	timeStep_ = 0.0;
-	cfl_ = 0.0;
+	cfl_ = 0.8;
 	// ugrfdtd
 	compositeModel_ = CompositeModel::Default;
     compositesAttenuationFactor_ = 1.0;
@@ -87,7 +86,7 @@ void SolverOptions::setTimeStep(Real timeStep) {
     timeStep_ = timeStep;
 }
 
-double SolverOptions::getCfl() const {
+double SolverOptions::getCFL() const {
     return cfl_;
 }
 
@@ -174,14 +173,6 @@ bool SolverOptions::isMTLN() const {
 
 void SolverOptions::setMTLN(bool mtln) {
     MTLN_ = mtln;
-}
-
-UInt SolverOptions::getNumberOfTimeSteps() const {
-    return numberOfTimeSteps_;
-}
-
-void SolverOptions::setNumberOfTimeSteps(UInt numberOfTimeSteps) {
-    numberOfTimeSteps_ = numberOfTimeSteps;
 }
 
 const pair<double, double>& SolverOptions::getPmlAlpha() const {
