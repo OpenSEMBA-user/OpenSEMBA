@@ -14,6 +14,8 @@ class OutRqBulkCurrent: public OutRq, public ElementsGroup<SurfR> {
 public:
     OutRqBulkCurrent();
     virtual ~OutRqBulkCurrent();
+    void setElements(const ElementsGroup<SurfR>&); // TODO SurfR -> Surf
+    void setElements(const ElementsGroup<SurfI>&);
 };
 
 #endif /* SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQBULKCURRENT_H_ */

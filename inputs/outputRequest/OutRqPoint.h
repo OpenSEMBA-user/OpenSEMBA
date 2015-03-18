@@ -10,10 +10,13 @@
 
 #include "OutRq.h"
 
+
 class OutRqPoint: public OutRq, public ElementsGroup<NodeR> {
 public:
     OutRqPoint();
     virtual ~OutRqPoint();
+    void setElements(const ElementsGroup<NodeR>&); // TODO NodeR -> Node
+    void setElements(const ElementsGroup<NodeI>&); // TODO NodeR -> Node
 };
 
 #endif /* SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQPOINT_H_ */
