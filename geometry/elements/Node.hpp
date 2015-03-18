@@ -7,25 +7,14 @@ Node<T>::Node() {
 }
 
 template<class T>
-Node<T>::Node(const CoordinateGroup<>& coordGr,
+Node<T>::Node(const CoordinateGroup< Coordinate<T,3> >& coordGr,
               const ElementId id,
               const CoordinateId vId[1],
               const LayerId layerId,
               const MatId   matId)
 :   Element<T>(id, layerId, matId) {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-		const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
-        if (coord == NULL) {
-            cerr << "ERROR @ Node<T>::Node(): "
-                 << "Coordinate in new CoordinateGroup inexistent"
-                 << endl;
-        }
-        if (!coord->is< Coordinate<T,3> >()) {
-            cerr << "ERROR @ Node<T>::Node(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
-        }
-        v_[i] = coord->castTo< Coordinate<T,3> >();
+        v_[i] = coordGr.getPtrToId(vId[i]);
 	}
 }
 

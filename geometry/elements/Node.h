@@ -7,7 +7,7 @@ template<class T>
 class Node : public Element<T>{
 public:
     Node();
-	Node(const CoordinateGroup<>&,
+	Node(const CoordinateGroup< Coordinate<T,3> >&,
          const ElementId id,
          const CoordinateId vId[1],
          const LayerId layerId = LayerId(0),

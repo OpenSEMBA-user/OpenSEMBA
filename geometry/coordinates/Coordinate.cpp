@@ -4,10 +4,26 @@
  *  Created on: Aug 26, 2012
  *      Author: luis
  */
-#ifndef COORDINATE_H_
 #include "Coordinate.h"
-#endif
-// =============== Coordinate =================================================
+
+Coordinate<void,0>::Coordinate() {
+
+}
+
+Coordinate<void,0>::Coordinate(const CoordinateId id)
+:   ClassIdBase<CoordinateId>(id) {
+
+}
+
+Coordinate<void,0>::Coordinate(const Coordinate& rhs)
+:   ClassIdBase<CoordinateId>(rhs) {
+
+}
+
+Coordinate<void,0>::~Coordinate() {
+
+}
+
 template<class T, Int D>
 Coordinate<T,D>::Coordinate() {
 
@@ -16,7 +32,7 @@ Coordinate<T,D>::Coordinate() {
 template<class T, Int D>
 Coordinate<T,D>::Coordinate(const CoordinateId id_,
                             const CartesianVector<T,D>& pos)
-:   CoordinateBase(id_),
+:   Coordinate<void,0>(id_),
     CartesianVector<T,D>(pos) {
 
 }
@@ -50,7 +66,7 @@ Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
 
 template<class T, Int D>
 bool Coordinate<T,D>::operator==(const Coordinate& rhs) const {
-    return CoordinateBase::operator==(rhs);
+    return Coordinate<void,0>::operator==(rhs);
 }
 
 template<class T, Int D>
@@ -74,3 +90,6 @@ Coordinate<T,D>::printInfo() const {
     }
     cout << ")";
 }
+
+template class Coordinate<Real,3>;
+template class Coordinate<Int ,3>;

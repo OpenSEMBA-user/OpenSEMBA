@@ -20,7 +20,7 @@ Mesh::Mesh(const CoordinateGroup<CoordR3>& cG,
     LayerGroup<>(layers) {
 
     ElementsGroup<ElemR>::reassignPointers(
-        CoordinateGroup<CoordR3>::getGroupOf<CoordinateBase>());
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
 }
 
 Mesh::Mesh(const Mesh& rhs)
@@ -29,7 +29,7 @@ Mesh::Mesh(const Mesh& rhs)
     LayerGroup<>(rhs) {
 
     ElementsGroup<ElemR>::reassignPointers(
-        CoordinateGroup<CoordR3>::getGroupOf<CoordinateBase>());
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
 }
 
 Mesh::~Mesh() {
@@ -46,7 +46,7 @@ Mesh& Mesh::operator=(const Mesh& rhs) {
     LayerGroup<>::operator=(rhs);
 
     ElementsGroup<ElemR>::reassignPointers(
-        CoordinateGroup<CoordR3>::getGroupOf<CoordinateBase>());
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
 
     return *this;
 }
@@ -101,7 +101,7 @@ vector<Face> Mesh::getExternalBorder(
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
     const MapGroup mapGroup(
-        CoordinateGroup<CoordR3>::getGroupOf<CoordinateBase>(),
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
         region.getGroupOf<ElementBase>());
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
@@ -175,7 +175,7 @@ vector<Face> Mesh::getInternalBorder(
 
     UInt nE = region.size();
     vector<Face> res(nE);
-    MapGroup mapGroup(CoordinateGroup<CoordR3>::getGroupOf<CoordinateBase>(),
+    MapGroup mapGroup(CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
                       region.getGroupOf<ElementBase>());
     for (UInt i = 0; i < nE; i++) {
         res[i] = mapGroup.getInnerFace(region(i)->getId());

@@ -173,13 +173,7 @@ ParserGiD::readMesherOptions() {
                     res->setSigma(trim(value));
                 } else if (label.compare("Location in mesh")==0) {
                     CoordinateId id(atoi(value.c_str()));
-                    const CoordinateBase* coord = cG_.getPtrToId(id);
-                    if(coord != NULL) {
-                        if(coord->is<CoordR3>()) {
-                            res->setLocationInMesh(
-                                    coord->castTo<CoordR3>()->pos());
-                        }
-                    }
+                    res->setLocationInMesh(*cG_.getPtrToId(id));
                 } else if (label.compare("Geometry scaling factor") == 0) {
                     res->setScalingFactor(atof(value.c_str()));
                 } else if (label.compare("Upper x bound") == 0) {
