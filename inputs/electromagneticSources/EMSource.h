@@ -13,17 +13,18 @@
 
 using namespace std;
 
-class EMSource
-        : public Condition,  public ClassBase, public ElementsGroup<> {
+class EMSource: public Condition,  public ClassBase{
 public:
     EMSource();
-    EMSource(
-            const ElementsGroup<>& elem,
-            const Magnitude* magnitude);
+    EMSource(const Magnitude* magnitude);
     virtual ~EMSource();
     const Magnitude* getMagnitude() const;
     Condition::Type getConditionType() const;
     void printInfo() const;
+    void convertToNumerical(
+            const string file,
+            const double step,
+            const double finalTime);
 private:
     const Magnitude* magnitude_;
 };

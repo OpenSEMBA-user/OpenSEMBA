@@ -10,7 +10,7 @@
 
 #include "EMSource.h"
 
-class SourceOnLine : public EMSource {
+class SourceOnLine : public EMSource, public ElementsGroup<LinR2> {
 public:
     typedef enum {
         electricField = 1,
