@@ -11,10 +11,6 @@
 #include <vector>
 #include "Box.h"
 
-#ifdef compileWithVTK
-#include "../../utils/ugrMesher/vtkLittle.h"
-#endif
-
 using namespace std;
 
 #ifndef  _GRID_H_
@@ -22,104 +18,91 @@ using namespace std;
 
 template<Int D>
 class Grid {
-    typedef Box<Real,D> BoxDD;
-    typedef CartesianVector<Real,D> CVecDD;
+    typedef Box<Real,D> BoxRD;
+    typedef Box<Int ,D> BoxID;
+    typedef CartesianVector<Real,D> CVecRD;
     typedef CartesianVector<Int,D> CVecID;
 public:
     Grid();
+    Grid(const BoxRD&  boundingBox,
+         const CVecRD& dxyz);
+    Grid(const BoxRD&  boundingBox,
+         const CVecID& dims);
+    Grid(const CVecID& offset,
+         const CVecRD& origin,
+         const vector<Real> step[D]);
     Grid(const Grid& grid);
-    Grid(
-            const BoxDD &boundingBox,
-            const CVecR3& dxyz);
-    Grid(
-            const BoxDD &boundingBox,
-            const CVecI3& dims);
-    Grid(
-            const CVecI3& offset,
-            const CVecR3& origin,
-            const vector<Real> step[D]);
-    ~Grid ();
-    Grid&
-     operator=(const Grid& cGrid);
-    inline vector<Real>
-     getPos(const Int& direction) const;
-    inline CartesianVector<Real,D>
-     getPos(const CartesianVector<Int,D>& ijk) const;
-    vector<Real>
-     getPosInRange(
-            const Int direction,
-            const Real min,
-            const Real max) const;
-    vector<CVecR3>
-     getPos() const;
-    vector<CVecR3>
-     getCenterOfNaturalCellsInside(
-            const BoxDD& bound) const;
-    vector<Real>
-     getStep(
-            const Int direction) const;
-    inline CVecI3
-     getNumCells() const;
-    BoxDD
-     getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
-    BoxDD
-     getBoundingBoxContaining(const CVecR3& point) const;
-    inline BoxDD
-     getFullDomainBoundingBox() const;
-    bool
-     hasZeroSize() const;
-    bool
-     isIntoDir(const Int& direction, const Real& pos) const;
-    bool
-     isInto (const CVecR3& pos) const;
-    bool
-     getNaturalCellDir(
-            Int &i,
-            Real &relativeLen,
-            const Int& dir,
-            const Real &x,
-            const Real tol = tolerance) const;
-    pair<CVecI3, CVecR3>
-    getNaturalCellPair(
-            const CVecR3& pos,
-            const bool approx = true,
-            const Real tol = tolerance) const;
-    CVecI3
-    getNaturalCell(
-            const CVecR3 &coords,
-            const bool approx = true,
-            const Real tol = tolerance) const;
-    void
-     applyScalingFactor(const Real factor);
+    ~Grid();
 
-    Real getPositionOfNaturalCellDir(const Int dir, Int i) const;
-    CVecR3 getPositionOfNaturalCell(const CVecI3& ijk) const;
-    CVecR3 getOrigin() const {	return origin_;}
+    Grid& operator=(const Grid& cGrid);
 
-    Real getMinimumSpaceStep() const;
+    bool hasZeroSize() const;
+
+    bool isInto(const CVecRD& pos) const;
+    bool isInto(const Int dir, const Real pos) const;
     bool isRegular() const;
     bool isRegular(const Int d) const;
     bool isCartesian() const;
-    bool isNaturalCell(
-            const CVecR3 position,
-            const Real tol = tolerance) const;
-    bool isNaturalCell(
-            const vector<CVecR3> positions,
-            const Real tol = tolerance) const;
+    bool isCell(const CVecRD& position,
+                const Real tol = tolerance) const;
+    bool isCell(const vector<CVecRD>& positions,
+                const Real tol = tolerance) const;
+
+    CVecID getNumCells() const;
+    CVecRD getOffset() const { return offsetGrid_; }
+    CVecRD getOrigin() const { return origin_;     }
+
+    vector<Real> getStep(const Int dir) const;
+    Real getMinimumSpaceStep() const;
+
+    BoxRD getFullDomainBoundingBox() const;
+    BoxRD getBoundingBox(const BoxID& bound) const;
+    BoxRD getBoundingBoxContaining(const CVecRD& point) const;
+
+    vector<CVecRD> getCenterOfCellsInside(const BoxRD& bound) const;
+    vector<Real> getPosInRange(const Int dir,
+                               const Real min,
+                               const Real max) const;
+
+    vector<CVecRD> getPos() const;
+    vector<Real>   getPos(const Int dir) const;
+    Real           getPos(const Int dir, const Int i) const;
+    CVecRD         getPos(const CVecID& ijk) const;
+
+    pair<Int, Real>      getCellPair(const Int  dir,
+                                     const Real x,
+                                     const bool approx = true,
+                                     bool* err = NULL,
+                                     const Real tol = tolerance) const;
+    pair<CVecID, CVecRD> getCellPair(const CVecRD& pos,
+                                     const bool approx = true,
+                                     bool* err = NULL,
+                                     const Real tol = tolerance) const;
+    Int    getCell(const Int   dir,
+                   const Real  x,
+                   const bool  approx = true,
+                   bool* err = NULL,
+                   const Real  tol = tolerance) const;
+    CVecID getCell(const CVecRD& pos,
+                   const bool  approx = true,
+                   bool* err = NULL,
+                   const Real  tol = tolerance) const;
+
+    void applyScalingFactor(const Real factor);
+    void enlarge(const pair<CVecID,CVecID>& additionalCells,
+                 const pair<CVecRD,CVecRD>& sizesOfNewCells);
+
     void printInfo() const;
 private:
     static const Real tolerance;
-    CVecI3 offsetGrid_;
-    CVecR3 origin_;
-    vector<Real> pos_[D];
-    vector<Real>
-    extractRange(
-            const vector<Real>& vec,
-            const pair<Real,Real>& minMax) const;
-};
 
-template<Int D>
-const Real Grid<D>::tolerance = 1e-12;
+    CVecID offsetGrid_;
+    CVecRD origin_;
+    vector<Real> pos_[D];
+
+    vector<Real> extractRange(const vector<Real>& vec,
+                              const pair<Real,Real>& minMax) const;
+};
 
 #include "Grid.hpp"
 

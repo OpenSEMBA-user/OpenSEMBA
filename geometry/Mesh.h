@@ -14,8 +14,8 @@
 #include "elements/ElementsGroup.h"
 #include "layers/LayerGroup.h"
 
-#include "Grid.h"
 #include "maps/MapGroup.h"
+#include "Grid.h"
 
 using namespace std;
 

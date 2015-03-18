@@ -24,12 +24,10 @@ MeshStructured::discretizeWithinBoundary(
 
 void
 MeshStructured::applyScalingFactor(const Real factor) {
-    Mesh<>::applyScalingFactor(factor);
     Grid3::applyScalingFactor(factor);
 }
 
 void MeshStructured::printInfo() const {
     cout << " --- Mesh structured info --- " << endl;
-    Mesh<>::printInfo();
     Grid3::printInfo();
 }

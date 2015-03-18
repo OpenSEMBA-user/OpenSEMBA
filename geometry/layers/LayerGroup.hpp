@@ -41,11 +41,21 @@ LayerGroup<L>& LayerGroup<L>::operator=(const Group<L>& rhs) {
 }
 
 template<typename L>
+const L* LayerGroup<L>::get(const string name) const {
+    for (UInt i = 0; i < this->size(); i++) {
+        if (this->element_[i]->getName() == name) {
+            return this->element_[i];
+        }
+    }
+    return NULL;
+}
+
+template<typename L>
 void LayerGroup<L>::printInfo() const {
     cout<< "--- Layers info ---" << endl;
     map<UInt, const Layer*>::const_iterator it;
-    for (it=layers_.begin(); it != layers_.end(); ++it) {
-        it->second->printInfo();
+    for (UInt i = 0; i < this->size(); i++) {
+        this->element_[i]->printInfo();
     }
     cout<< "--- End of Layers ---" << endl;
 }

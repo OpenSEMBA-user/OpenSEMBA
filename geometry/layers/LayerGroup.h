@@ -24,11 +24,11 @@ public:
     LayerGroup(const Group<L>& rhs);
     virtual ~LayerGroup();
 
+    const L* get(const string name) const;
+
     LayerGroup<L>& operator=(const Group<L>& rhs);
 
     virtual void printInfo() const;
-private:
-    map<UInt, const Layer*> layers_;
 };
 
 #include "LayerGroup.hpp"

@@ -39,14 +39,14 @@ public:
 
     ElementsGroup<E>& operator=(const Group<E>& rhs);
 
+    bool isLinear() const;
+
     ElementsGroup<E> get(const vector<ElementId>&) const;
     ElementsGroup<E> get(const MatId matId) const;
     ElementsGroup<E> get(const vector<MatId>& matId) const;
     ElementsGroup<E> get(const LayerId layerId) const;
     ElementsGroup<E> get(const vector<LayerId>& layerId) const;
     ElementsGroup<E> get(const MatId, const LayerId) const;
-
-    void setMaterialIds(const vector<ElementId>& ids, const MatId newMatId);
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
@@ -58,10 +58,12 @@ public:
     BoxR3 getBound(const vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
 
+    void setMatId  (const ElementId id, const MatId   newMatId);
+    void setLayerId(const ElementId id, const LayerId newLayerId);
+
     map<LayerId, ElementsGroup<E> > separateByLayers() const;
     ElementsGroup<E> removeElementsWithMatId(const MatId matId) const;
 
-    bool isLinear() const;
     void linearize();
 
     void printInfo() const;

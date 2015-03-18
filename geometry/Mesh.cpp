@@ -52,7 +52,7 @@ Mesh& Mesh::operator=(const Mesh& rhs) {
 }
 
 vector<Face> Mesh::getBorderWithNormal(const vector<Face>& border,
-                                       const CVecR3& normal) {
+                                              const CVecR3& normal) {
     const UInt nK = border.size();
     vector<Face> res;
     res.reserve(nK);
@@ -207,7 +207,7 @@ vector<BoxR3> Mesh::getRectilinearHexesInsideRegion(
         const ElementsGroup<VolR>& region) const {
 
     vector<CVecR3> center =
-        grid->getCenterOfNaturalCellsInside(region.getBound());
+        grid->getCenterOfCellsInside(region.getBound());
     vector<BoxR3> res;
     res.reserve(center.size());
     for (UInt i = 0; i < center.size(); i++) {
