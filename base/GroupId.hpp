@@ -135,6 +135,38 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
 }
 
 template<typename T, class Id>
+void GroupId<T, Id>::add(const Group<T>& rhs) {
+    if(!this->ownership_) {
+        cerr << endl << "ERROR @ Group::add(): "
+             << "Forbidden to add elements to a Group without ownership "
+             << "of elements on it" << endl;
+        assert(false);
+        exit(EXIT_FAILURE);
+    }
+
+    this->element_.reserve(this->size() + rhs.size());
+    for (UInt i = 0; i < rhs.size(); i++) {
+        this->element_.push_back(rhs(i)->clone()->template castTo<T>());
+
+        if (this->element_.back()->getId() == 0) {
+            cerr << endl << "ERROR @ GroupId::add():"
+                 << "Element with id = 0" << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+
+        if(mapId_.count(this->element_.back()->getId()) == 0) {
+            mapId_[this->element_.back()->getId()] = this->size()-1;
+        } else {
+            cerr << endl << "ERROR @ GroupId::add():"
+                 << "Duplicated Ids" << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+template<typename T, class Id>
 void GroupId<T, Id>::buildMapId() {
     for(UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getId() > this->lastId_)

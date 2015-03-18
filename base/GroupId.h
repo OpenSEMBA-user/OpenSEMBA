@@ -25,6 +25,7 @@ public:
 
     void add(T* newElem , bool newId = false);
     void add(vector<T*>&, bool newId = false);
+    void add(const Group<T>&);
 
 protected:
     Id lastId_;

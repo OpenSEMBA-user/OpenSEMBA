@@ -35,6 +35,7 @@ public:
 
     virtual void add(T* newElem);
     virtual void add(vector<T*>&);
+    virtual void add(const Group<T>&);
 
 protected:
     bool ownership_;

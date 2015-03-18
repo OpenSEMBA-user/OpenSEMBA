@@ -123,6 +123,22 @@ void Group<T>::add(vector<T*>& newElems) {
 }
 
 template<typename T>
+void Group<T>::add(const Group<T>& rhs) {
+    if(!this->ownership_) {
+        cerr << endl << "ERROR @ Group::add(): "
+             << "Forbidden to add elements to a Group without ownership "
+             << "of elements on it" << endl;
+        assert(false);
+        exit(EXIT_FAILURE);
+    }
+
+    this->element_.reserve(this->element_.size() + rhs.size());
+    for (UInt i = 0; i < rhs.size(); i++) {
+        this->element_.push_back(rhs(i)->clone()->template castTo<T>());
+    }
+}
+
+template<typename T>
 void Group<T>::initElements(const vector<T*>& elems) {
     this->element_.resize(elems.size());
     for(UInt i = 0; i < elems.size(); i++) {
