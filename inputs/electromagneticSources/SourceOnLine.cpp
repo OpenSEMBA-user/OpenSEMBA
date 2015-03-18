@@ -7,15 +7,11 @@
 
 #include "SourceOnLine.h"
 
-SourceOnLine::~SourceOnLine() {
-	// TODO Auto-generated destructor stub
-}
-
 SourceOnLine::SourceOnLine(
  const ElementsGroup<Line<> >& elem,
- const Magnitude* magnitude) :
+ const Magnitude* magnitude,
  const Type& sourceType,
- const Hardness& sourceHardness,
+ const Hardness& sourceHardness) :
          EMSource(magnitude), ElementsGroup<Line<> >(elem) {
 	type_ = sourceType;
     hardness_ = sourceHardness;
@@ -58,7 +54,7 @@ SourceOnLine::hardnessToStr() const {
 	switch (type_) {
 	case hard:
 		return "Hard";
-	default
+	default:
 		return "Soft";
 	}
 }

@@ -31,8 +31,10 @@ public:
 
     const Grid3* getGrid() const;
     void setGrid(const Grid3& grid_);
+
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const ElementsGroup<VolR>& region) const;
+
     ElementsGroup<NodeI> add(const ElementsGroup<NodeR>&);
     ElementsGroup<SurfI> add(const ElementsGroup<SurfR>&);
     ElementsGroup<VolI> add(const VolR&);
@@ -40,6 +42,12 @@ public:
 
     void applyScalingFactor(const Real factor);
     virtual void printInfo() const;
+private:
+    vector<BoxR3> discretizeWithinBoundary(
+            const Grid3* grid,
+            const ElementsGroup<SurfR>& faces) const;
+    vector<pair<const SurfR*, const SurfR*> > getPairsDefiningVolumeWithin(
+            const ElementsGroup<SurfR>& faces) const;
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */

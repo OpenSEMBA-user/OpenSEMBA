@@ -7,12 +7,10 @@
 
 #include "../outRq/OutRqVolume.h"
 
-OutRqVolume::OutRqVolume() {
-    // TODO Auto-generated constructor stub
-
+OutRqVolume::OutRqVolume(
+        const ElementsGroup<Volume<> >& box,
+        const Domain& domain,
+        const Type& type,
+        const string& name) :
+        OutRq(domain, type, name), ElementsGroup<Volume<> >(box) {
 }
-
-OutRqVolume::~OutRqVolume() {
-    // TODO Auto-generated destructor stub
-}
-

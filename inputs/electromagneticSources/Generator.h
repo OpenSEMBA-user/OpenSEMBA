@@ -9,7 +9,6 @@
 #define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_
 
 #include "EMSource.h"
-#include "ElementsGroup.h"
 
 class Generator : public EMSource, public ElementsGroup<Node<> > {
 public:
@@ -27,7 +26,6 @@ public:
 	 const Type& generatorType,
 	 const Hardness& hardness,
 	 const Magnitude* magnitude);
-	virtual ~Generator();
 
 	virtual ClassBase* clone() const;
 

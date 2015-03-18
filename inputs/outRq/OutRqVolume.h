@@ -15,8 +15,8 @@ public:
     OutRqVolume(
             const ElementsGroup<Volume<> >& box,
             const Domain& domain,
+            const Type& type,
             const string& name);
-    virtual ~OutRqVolume();
     void setElements(const ElementsGroup<Volume<> >&);
 };
 

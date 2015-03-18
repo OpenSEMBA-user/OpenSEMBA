@@ -8,7 +8,7 @@
 #include "Generator.h"
 
 Generator::Generator() {
-    type_ = undefined;
+    type_ = current;
     hardness_ = soft;
 }
 
@@ -20,10 +20,6 @@ Generator::Generator(
                  EMSource(magnitude), ElementsGroup<Node<> >(elems) {
     hardness_ = hardness;
     type_ = generatorType;
-}
-
-Generator::~Generator() {
-    // TODO Auto-generated destructor stub
 }
 
 ClassBase* Generator::clone() const {

@@ -405,7 +405,7 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     elem.clear();
 #warning "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
                     elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRq(domain, type, name, elem));
+                    res->add(new OutRqPoint(elem, domain, type, name));
                     break;
                 case ParserGiD::outRqOnLine:
                     getNextLabelAndValue(label,value);

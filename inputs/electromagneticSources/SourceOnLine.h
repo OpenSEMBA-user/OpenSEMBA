@@ -20,12 +20,11 @@ public:
         hard = 1,
         soft = 2
     } Hardness;
-    SourceOnLine();
     SourceOnLine(
             const ElementsGroup<Line<> >& elem,
+            const Magnitude* magnitude,
             const Type& sourceType,
-            const Hardness& sourceHardness,
-            const Magnitude* magnitude);
+            const Hardness& sourceHardness);
     virtual ~SourceOnLine();
 
     virtual ClassBase* clone() const;
