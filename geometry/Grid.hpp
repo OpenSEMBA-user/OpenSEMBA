@@ -395,6 +395,49 @@ vector<CVecR3> Grid<D>::getPos() const {
 }
 
 template<Int D>
+inline void Grid<D>::enlarge(
+        const pair<CVecI3, CVecI3>& additionalCells,
+        const pair<CVecR3, CVecR3>& sizesOfNewCells) {
+    // TODO
+    //    const vector<Real> pos = grid.getPos(dir);
+    //    const vector<Real> step = grid.getStep(dir);
+    //    if ((padding.first(dir) != 0.0 && finalSize.first(dir) == 0.0)
+    //            || (padding.second(dir) != 0.0 && finalSize.second(dir) == 0.0)) {
+    //        cerr << endl << "WARNING @ writeRectilinearSpaceStep: "
+    //                << "Boundary final size can not be 0.0. "
+    //                << "Defaulting to first step size." << endl;
+    //    }
+    //    if (finalSize.first(dir) == 0.0) {
+    //        finalSize.first(dir) = *step.begin();
+    //    }
+    //    if (finalSize.second(dir) == 0.0) {
+    //        finalSize.second(dir) = step.back();
+    //    }
+    //    const Int nCellsLowest
+    //    = abs(padding.first(dir)) / abs(finalSize.first(dir));
+    //    const Int nCellsHighest
+    //    = abs(padding.second(dir)) / abs(finalSize.second(dir));
+    //    // Writes data.
+    //    SmbData::SpaceSteps* res = &nfde.spacesteps[dir];
+    //    res->m = - nCellsLowest;
+    //    res->n = grid.getNumCells()(dir) + nCellsLowest + nCellsHighest;
+    //    res->d.resize(res->n);
+    //    for (Int i = 0; i < nCellsLowest; i++) {
+    //        res->d[i] = finalSize.first(dir);
+    //    }
+    //    for (Int i = 0; i < (grid.getNumCells()(dir)); i++) {
+    //        res->d[i + nCellsLowest] = step[i];
+    //    }
+    //    for (Int i = 0; i < nCellsHighest; i++) {
+    //        res->d[i + nCellsLowest + grid.getNumCells()(dir)]
+    //               = finalSize.second(dir);
+    //    }
+    //    res->origin = grid.getOrigin()(dir);
+    //    res->cons = false;
+    //}
+}
+
+template<Int D>
 vector<Real> Grid<D>::extractRange(
       const vector<Real>& vec,
       const pair<Real, Real>& minMax) const {

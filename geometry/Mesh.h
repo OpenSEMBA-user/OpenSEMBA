@@ -68,6 +68,8 @@ public:
     vector<Face> getExternalBorder(const ElementsGroup<E>& region) const;
     ElementsGroup<E> getAdjacentRegion(const ElementsGroup<E>& region);
 
+    Real getMinimumSpaceStep() const;
+
     virtual void printInfo() const;
 protected:
     static const Real areaDiffTolerance;

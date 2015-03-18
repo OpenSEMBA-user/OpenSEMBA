@@ -22,17 +22,17 @@ using namespace std;
 
 template<Int D>
 class Grid {
-    typedef Box<Real,D> BoxDD;
+    typedef Box<Real,D> BoxRD;
     typedef CartesianVector<Real,D> CVecRD;
     typedef CartesianVector<Int,D> CVecID;
 public:
     Grid();
     Grid(const Grid& grid);
     Grid(
-            const BoxDD &boundingBox,
+            const BoxRD &boundingBox,
             const CVecR3& dxyz);
     Grid(
-            const BoxDD &boundingBox,
+            const BoxRD &boundingBox,
             const CVecI3& dims);
     Grid(
             const CVecI3& offset,
@@ -48,15 +48,19 @@ public:
             const Real max) const;
     vector<CVecR3> getPos() const;
     vector<CVecR3> getCenterOfNaturalCellsInside(
-            const BoxDD& bound) const;
+            const BoxRD& bound) const;
     vector<Real> getStep(const CartesianAxis dir) const;
     inline CVecI3 getNumCells() const;
-    BoxDD getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
-    BoxDD getBoundingBoxContaining(const CVecR3& point) const;
-    inline BoxDD getFullDomainBoundingBox() const;
+    BoxRD getBoundingBox(const pair<CVecI3, CVecI3>& ijkMinMax) const;
+    BoxRD getBoundingBoxContaining(const CVecR3& point) const;
+    inline BoxRD getFullDomainBoundingBox() const;
     bool hasZeroSize() const;
     bool isIntoDir(const Int& direction, const Real& pos) const;
     bool isInto (const CVecR3& pos) const;
+
+    void enlarge(
+            const pair<CVecI3,CVecI3>& additionalCells,
+            const pair<CVecR3,CVecR3>& sizesOfNewCells);
 
     bool getNaturalCellDir(
             Int &i,
