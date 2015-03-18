@@ -29,7 +29,7 @@ using namespace std;
 
 typedef pair<const VolR*, UInt> Face;
 
-template<typename E = ElementBase>
+template<typename E = Elem>
 class ElementsGroup : public GroupId<E, ElementId> {
 public:
     ElementsGroup();

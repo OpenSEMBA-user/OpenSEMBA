@@ -13,7 +13,6 @@
 
 using namespace std;
 
-#include "CoordinateBase.h"
 #include "Coordinate.h"
 
 #include "GroupId.h"
@@ -46,7 +45,7 @@ struct lexCompareCoord {
     }
 };
 
-template<typename C = CoordinateBase>
+template<typename C = Coord>
 class CoordinateGroup : public GroupId<C, CoordinateId> {
 public:
     CoordinateGroup();

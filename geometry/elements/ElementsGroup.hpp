@@ -257,7 +257,7 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
             ElemR* elem = this->element_[i]->template castTo<ElemR>();
             for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordinateId vId = elem->getV(j)->getId();
-                const CoordinateBase* coord = vNew.getPtrToId(vId);
+                const Coord* coord = vNew.getPtrToId(vId);
                 if (coord == NULL) {
                     cerr << endl << "ERROR @ ElementsGroup<E>: "
                             << "Coordinate in new CoordinateGroup inexistent"
@@ -274,7 +274,7 @@ void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
             ElemI* elem = this->element_[i]->template castTo<ElemI>();
             for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordinateId vId = elem->getV(j)->getId();
-                const CoordinateBase* coord = vNew.getPtrToId(vId);
+                const Coord* coord = vNew.getPtrToId(vId);
                 if (coord == NULL) {
                     cerr << endl << "ERROR @ ElementsGroup<E>: "
                             << "Coordinate in new CoordinateGroup inexistent"

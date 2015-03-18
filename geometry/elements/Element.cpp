@@ -1,26 +1,34 @@
 #include "Element.h"
 
+Element<void>::Element() {
+
+}
+
+Element<void>::Element(const ElementId id,
+                       const LayerId layId,
+                       const MatId   matId)
+:   ClassIdBase<ElementId>(id),
+    layerId_(layId),
+    matId_  (matId  ) {
+
+}
+
+Element<void>::Element(const Element& rhs)
+:   ClassIdBase<ElementId>(rhs),
+    layerId_(rhs.layerId_),
+    matId_  (rhs.matId_  ) {
+
+}
+
+Element<void>::~Element() {
+
+}
+
 template<class T>
 const Real Element<T>::tolerance = 1e-15;
 
 template<class T>
-Element<T>::Element(const LayerId layerId,
-                    const MatId   matId)
-:   ElementBase(layerId, matId) {
-
-}
-
-template<class T>
-Element<T>::Element(const ElementId id,
-                    const LayerId layerId,
-                    const MatId   matId)
-:   ElementBase(id, layerId, matId) {
-
-}
-
-template<class T>
-Element<T>::Element(const Element<T>& rhs)
-:   ElementBase(rhs) {
+Element<T>::Element() {
 
 }
 
@@ -103,8 +111,8 @@ void Element<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 
 template<class T>
 void Element<T>::printInfo() const {
-    cout<< "Element. Id: " << getId() << " MatId: " << getMatId()
-        << " LayerId: " << getLayerId() << endl;
+    cout<< "Element. Id: " << this->getId() << " MatId: " << getMatId()
+        << " LayerId: " << this->getLayerId() << endl;
 }
 
 template<class T>
@@ -132,3 +140,6 @@ void Element<T>::ascendingOrder(UInt nVal, UInt* val) const {
     }
     delete[] res;
 }
+
+template class Element<Real>;
+template class Element<Int >;

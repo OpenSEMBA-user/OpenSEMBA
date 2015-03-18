@@ -9,21 +9,7 @@
 #include "Tet.h"
 #endif
 
-Tet::Tet(const LayerId layerId,
-         const MatId   matId)
-:   Volume<Real>(layerId, matId) {
-
-}
-
-Tet::Tet(const ElementId id,
-         const LayerId layerId,
-         const MatId   matId)
-:   Volume<Real>(id, layerId, matId) {
-
-}
-
-Tet::Tet(const Tet& rhs)
-:   Volume<Real>(rhs) {
+Tet::Tet() {
 
 }
 

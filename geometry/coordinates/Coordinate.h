@@ -15,10 +15,26 @@ using namespace std;
 
 #include "../math/CartesianVector.h"
 
-#include "CoordinateBase.h"
+#include "ClassIdBase.h"
+
+CreateId(CoordinateId);
+
+template <class T = void, Int D = 0>
+class Coordinate;
+
+template <>
+class Coordinate<void,0> : public ClassIdBase<CoordinateId> {
+public:
+    Coordinate();
+    Coordinate(const CoordinateId id);
+    Coordinate(const Coordinate& rhs);
+    virtual ~Coordinate();
+
+    virtual void printInfo() const = 0;
+};
 
 template <class T, Int D>
-class Coordinate : public CoordinateBase,
+class Coordinate : public Coordinate<void,0>,
                    public CartesianVector<T,D> {
 public:
     Coordinate();
@@ -37,8 +53,7 @@ public:
     void printInfo() const;
 };
 
-#include "Coordinate.hpp"
-
+typedef Coordinate<void, 0> Coord;
 typedef Coordinate<Real, 3> CoordR3;
 typedef Coordinate<Int , 3> CoordI3;
 

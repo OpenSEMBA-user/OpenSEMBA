@@ -13,42 +13,27 @@ Quad4<T>::Quad4() {
 }
 
 template<class T>
-Quad4<T>::Quad4(const CoordinateGroup<>& cG,
+Quad4<T>::Quad4(const CoordinateGroup<Coordinate<T,3> >& cG,
                 const ElementId id,
                 const CoordinateId vId[4],
                 const LayerId layerId,
                 const MatId   matId)
-:   Quad<T>(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
-        if (coord == NULL) {
-            cerr << "ERROR @ Quad4<T>::Quad4(): "
-                 << "Coordinate in new CoordinateGroup inexistent"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        if (!coord->is< Coordinate<T,3> >()) {
-            cerr << "ERROR @ Quad4<T>::Quad4(): "
-                 << "Coordinate in new CoordinateGroup "
-                 << "is not a valid Coordinate" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        v_[i] = coord->castTo< Coordinate<T,3> >();
+        v_[i] = cG.getPtrToId(vId[i]);
 	}
 	// TODO Normals are not handled.
 	check();
 }
 
 template<class T>
-Quad4<T>::Quad4(CoordinateGroup<>& cG,
+Quad4<T>::Quad4(CoordinateGroup<Coordinate<T,3> >& cG,
                 const ElementId id,
                 const Box<T,3>& box,
                 const LayerId layerId,
                 const MatId   matId)
-:   Surface<T>(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
 
     if(!box.isSurface()) {
         cerr << endl << "ERROR @ Quad4::Quad4(): "
@@ -67,7 +52,7 @@ Quad4<T>::Quad4(CoordinateGroup<>& cG,
 
 template<class T>
 Quad4<T>::Quad4(const Quad4<T>& rhs)
-:   Quad<T>(rhs) {
+:   Elem(rhs) {
     
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
@@ -120,3 +105,6 @@ template<class T>
 void Quad4<T>::check() const {
 	// TODO Auto-generated
 }
+
+template class Quad4<Real>;
+template class Quad4<Int >;

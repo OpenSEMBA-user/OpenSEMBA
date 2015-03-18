@@ -14,7 +14,7 @@
 class Polygon: public Surface<Real> {
 public:
     Polygon();
-	Polygon(const CoordinateGroup<>& cG,
+	Polygon(const CoordinateGroup<CoordR3>& cG,
             const ElementId id,
             const vector<CoordinateId>& vId,
             const LayerId layerId = LayerId(0),

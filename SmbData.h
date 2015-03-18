@@ -24,7 +24,7 @@ public:
     PhysicalModelGroup<>* pMGroup;
     EMSourceGroup<>* emSources;
     OutRqGroup<>* outputRequests;
-    Mesh<>* mesh;
+    Mesh* mesh;
     Grid3* grid;
     SmbData();
     virtual ~SmbData();

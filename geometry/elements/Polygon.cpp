@@ -11,32 +11,23 @@ Polygon::Polygon() {
 
 }
 
-Polygon::Polygon(const CoordinateGroup<>& cG,
+Polygon::Polygon(const CoordinateGroup<CoordR3>& cG,
                  const ElementId id,
                  const vector<CoordinateId>& vId,
                  const LayerId layerId,
                  const MatId   matId)
-:   Surface<Real>(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
     
     const UInt vSize = vId.size();
 	assert(vId.size() >= 3);
 	v_.resize(vSize);
 	for (UInt i = 0; i < vSize; i++) {
-		const CoordinateBase* coord = cG.getPtrToId(vId[i]);
-        if (coord == NULL) {
-            cerr << endl << "ERROR @ Polygon::Polygon(): "
-                 << "Coordinate in new CoordinateGroup inexistent" << endl;
-        }
-        if (!coord->is<CoordR3>()) {
-            cerr << endl << "ERROR @ Polygon::Polygon(): "
-                 << "Coordinate is not valid" << endl;
-        }
-        v_[i] = coord->castTo<CoordR3>();
+        v_[i] = cG.getPtrToId(vId[i]);
 	}
 }
 
 Polygon::Polygon(const Polygon& rhs)
-:   Surface<Real>(rhs) {
+:   Elem(rhs) {
     
     v_ = rhs.v_;
 }

@@ -8,23 +8,7 @@
 #include "Volume.h"
 
 template<class T>
-Volume<T>::Volume(const LayerId layerId,
-                  const MatId   matId)
-:   Element<T>(layerId, matId) {
-
-}
-
-template<class T>
-Volume<T>::Volume(const ElementId id,
-                  const LayerId layerId,
-                  const MatId   matId)
-:   Element<T>(id, layerId, matId) {
-
-}
-
-template<class T>
-Volume<T>::Volume(const Volume<T>& rhs)
-:   Element<T>(rhs) {
+Volume<T>::Volume() {
 
 }
 
@@ -66,27 +50,30 @@ Box<T,3> Volume<T>::getBoundOfFace(const UInt face) const {
 
 template<class T>
 UInt Volume<T>::getFaceNumber(const Surface<T>* surf) const {
-	// Checks each face. Order is not important.
-	for (UInt f = 0; f < this->numberOfFaces(); f++) {
-		UInt vPresent = 0;
-		for (UInt i = 0; i < surf->numberOfVertices(); i++) {
-			for (UInt j = 0; j < surf->numberOfVertices(); j++) {
-				if (surf->getVertex(j) == this->getSideVertex(f, i)) {
-					vPresent++;
-				}
-			}
-			if (vPresent == surf->numberOfVertices()) {
-				return f;
-			}
-		}
-	}
-	// If face was not found, shows error message.
-	cerr << "ERROR @ VolumeElement::getFaceNumber()"      << endl;
-	cerr << "Surf " << surf->getId() << " is not part of VolumeElement "
-	     << this->getId() << endl;
-	cerr << "Volume: " << endl;
-	this->printInfo();
-	cerr << "Surface: " << endl;
-	surf->printInfo();
-	exit(EXIT_FAILURE);
+    // Checks each face. Order is not important.
+    for (UInt f = 0; f < this->numberOfFaces(); f++) {
+        UInt vPresent = 0;
+        for (UInt i = 0; i < surf->numberOfVertices(); i++) {
+            for (UInt j = 0; j < surf->numberOfVertices(); j++) {
+                if (surf->getVertex(j) == this->getSideVertex(f, i)) {
+                    vPresent++;
+                }
+            }
+            if (vPresent == surf->numberOfVertices()) {
+                return f;
+            }
+        }
+    }
+    // If face was not found, shows error message.
+    cerr << "ERROR @ VolumeElement::getFaceNumber()"      << endl;
+    cerr << "Surf " << surf->getId() << " is not part of VolumeElement "
+         << this->getId() << endl;
+    cerr << "Volume: " << endl;
+    this->printInfo();
+    cerr << "Surface: " << endl;
+    surf->printInfo();
+    exit(EXIT_FAILURE);
 }
+
+template class Volume<Real>;
+template class Volume<Int >;

@@ -38,7 +38,6 @@ public:
     ElementsGroup<VolI> add(const ElementsGroup<VolR>&);
 
     void applyScalingFactor(const Real factor);
-
     virtual void printInfo() const;
 };
 

@@ -13,30 +13,15 @@ Tet4::Tet4() {
 
 }
 
-Tet4::Tet4(const CoordinateGroup<>& coordGr,
+Tet4::Tet4(const CoordinateGroup<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[4],
            const LayerId layerId,
            const MatId   matId)
-:   Tet(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
-        const CoordinateBase* coord = coordGr.getPtrToId(vId[i]);
-        if (coord == NULL) {
-            cerr << endl << "ERROR @ Tet4::Tet4(): "
-                 << "Coordinate in new CoordinateGroup inexistent"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        if (!coord->is<CoordR3>()) {
-            cerr << endl << "ERROR @ Tet4::Tet4(): "
-                 << "Coordinate in new CoordinateGroup is not a valid Coordinate"
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        v_[i] = coord->castTo<CoordR3>();
+        v_[i] = coordGr.getPtrToId(vId[i]);
     }
     check();
 }
@@ -45,7 +30,7 @@ Tet4::Tet4(const ElementId id,
            const CoordR3* v[4],
            const LayerId layerId,
            const MatId   matId)
-:   Tet(id, layerId, matId) {
+:   Elem(id, layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
         v_[i] = v[i];
@@ -54,7 +39,7 @@ Tet4::Tet4(const ElementId id,
 }
 
 Tet4::Tet4(const Tet4& rhs)
-:   Tet(rhs) {
+:   Elem(rhs) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];

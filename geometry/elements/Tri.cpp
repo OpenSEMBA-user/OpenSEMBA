@@ -2,21 +2,7 @@
 #include "Tri.h"
 #endif
 
-Tri::Tri(const LayerId layerId,
-         const MatId   matId)
-:   SurfR(layerId, matId) {
-
-}
-
-Tri::Tri(const ElementId id,
-         const LayerId layerId,
-         const MatId   matId)
-:   SurfR(id, layerId, matId) {
-
-}
-
-Tri::Tri(const Tri& rhs)
-:   SurfR(rhs) {
+Tri::Tri() {
 
 }
 

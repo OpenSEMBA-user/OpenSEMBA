@@ -42,8 +42,8 @@ private:
         multilayer,
         undefinedSIBC
     } SIBCType;
-    CoordinateGroup<> cG_;
-    Mesh<>* mesh_;
+    CoordinateGroup<CoordR3> cG_;
+    Mesh* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;
     const ProblemSize* getProblemSize() const;
@@ -52,7 +52,7 @@ private:
     EMSourceGroup<>* readEMSources();
     OutRqGroup<>* readOutputRequests();
     PhysicalModelGroup<>* readMaterials();
-    Mesh<>* readMesh();
+    Mesh* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
             const MatId id_,
@@ -65,20 +65,20 @@ private:
             const string& name,
             const string& layersString) const;
     LayerGroup<> readLayers();
-    CoordinateGroup<> readCoordinates();
-    ElementsGroup<> readElements(const CoordinateGroup<>&);
-    void readHex8Elements (const CoordinateGroup<>& v,
-                           vector<ElementBase*>& elems);
-    void readTet10Elements(const CoordinateGroup<>& v,
-                           vector<ElementBase*>& elems);
-    void readTet4Elements (const CoordinateGroup<>& v,
-                           vector<ElementBase*>& elems);
-    void readTri6Elements (const CoordinateGroup<>& v,
-                           vector<ElementBase*>& elems);
-    void readTri3Elements (const CoordinateGroup<>& v,
-                           vector<ElementBase*>& elems);
-    void readLin2Elements (const CoordinateGroup<>& v,
-                           vector<ElementBase*>& elems);
+    CoordinateGroup<CoordR3> readCoordinates();
+    ElementsGroup<ElemR> readElements(const CoordinateGroup<CoordR3>&);
+    void readHex8Elements (const CoordinateGroup<CoordR3>& v,
+                           vector<ElemR*>& elems);
+    void readTet10Elements(const CoordinateGroup<CoordR3>& v,
+                           vector<ElemR*>& elems);
+    void readTet4Elements (const CoordinateGroup<CoordR3>& v,
+                           vector<ElemR*>& elems);
+    void readTri6Elements (const CoordinateGroup<CoordR3>& v,
+                           vector<ElemR*>& elems);
+    void readTri3Elements (const CoordinateGroup<CoordR3>& v,
+                           vector<ElemR*>& elems);
+    void readLin2Elements (const CoordinateGroup<CoordR3>& v,
+                           vector<ElemR*>& elems);
     Grid3* readCartesianGrid();
     void readOutRqInstances(OutRqGroup<>* res);
     void getNextLabelAndValue(string& label, string& value);

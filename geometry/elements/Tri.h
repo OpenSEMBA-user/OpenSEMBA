@@ -6,12 +6,7 @@
 
 class Tri : public Surface<Real> {
 public:
-	Tri(const LayerId layerId = LayerId(0),
-	    const MatId   matId   = MatId(0));
-    Tri(const ElementId id,
-        const LayerId layerId = LayerId(0),
-        const MatId   matId   = MatId(0));
-    Tri(const Tri& rhs);
+	Tri();
     virtual ~Tri();
     
 	UInt numberOfFaces   () const { return 3; }

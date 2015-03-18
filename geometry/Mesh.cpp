@@ -6,73 +6,52 @@
  */
 #include "Mesh.h"
 
-template<typename E, typename C, typename L>
-const Real Mesh<E,C,L>::areaDiffTolerance = 1e-15;
+const Real Mesh::areaDiffTolerance = 1e-15;
 
-template<typename E, typename C, typename L>
-Mesh<E,C,L>::Mesh() {
+Mesh::Mesh() {
 
 }
 
-template<typename E, typename C, typename L>
-Mesh<E,C,L>::Mesh(
-        const CoordinateGroup<C>& cG,
-        const ElementsGroup<E>& elem,
-        const LayerGroup<L>& layers)
-:   CoordinateGroup<C>(cG),
-    ElementsGroup<E>(elem),
-    LayerGroup<L>(layers) {
+Mesh::Mesh(const CoordinateGroup<CoordR3>& cG,
+           const ElementsGroup<ElemR>& elem,
+           const LayerGroup<>& layers)
+:   CoordinateGroup<CoordR3>(cG),
+    ElementsGroup<ElemR>(elem),
+    LayerGroup<>(layers) {
 
-    ElementsGroup<E>::reassignPointers(*this);
+    ElementsGroup<ElemR>::reassignPointers(
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
 }
 
-template<typename E, typename C, typename L>
-Mesh<E,C,L>::Mesh(const Mesh<E,C,L>& rhs)
-:   CoordinateGroup<C>(rhs),
-    ElementsGroup<E>(rhs),
-    LayerGroup<L>(rhs) {
+Mesh::Mesh(const Mesh& rhs)
+:   CoordinateGroup<CoordR3>(rhs),
+    ElementsGroup<ElemR>(rhs),
+    LayerGroup<>(rhs) {
 
-    ElementsGroup<E>::reassignPointers(*this);
+    ElementsGroup<ElemR>::reassignPointers(
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
 }
 
-template<typename E, typename C, typename L>
-Mesh<E,C,L>::~Mesh() {
+Mesh::~Mesh() {
 
 }
 
-template<typename E, typename C, typename L>
-Mesh<E,C,L>& Mesh<E,C,L>::operator=(const Mesh<E,C,L>& rhs) {
+Mesh& Mesh::operator=(const Mesh& rhs) {
     if(this == &rhs) {
         return *this;
     }
 
-    CoordinateGroup<C>::operator=(rhs);
-    ElementsGroup<E>::operator=(rhs);
-    LayerGroup<L>::operator=(rhs);
+    CoordinateGroup<CoordR3>::operator=(rhs);
+    ElementsGroup<ElemR>::operator=(rhs);
+    LayerGroup<>::operator=(rhs);
 
-    ElementsGroup<E>::reassignPointers(*this);
+    ElementsGroup<ElemR>::reassignPointers(
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
 
     return *this;
 }
 
-template<typename E, typename C, typename L>
-template<typename E2, typename C2, typename L2>
-Mesh<E2,C2,L2> Mesh<E,C,L>::getMeshOf() {
-    return Mesh<E2,C2,L2>(CoordinateGroup<C>::template getGroupOf<C2>(),
-                          ElementsGroup<E>::template getGroupOf<E2>(),
-                          LayerGroup<L>::template getGroupOf<L2>());
-}
-
-template<typename E, typename C, typename L>
-template<typename E2, typename C2, typename L2>
-Mesh<E2,C2,L2> Mesh<E,C,L>::newMeshOf() {
-    return Mesh<E2,C2,L2>(CoordinateGroup<C>::template newGroupOf<C2>(),
-                          ElementsGroup<E>::template newGroupOf<E2>(),
-                          LayerGroup<L>::template newGroupOf<L2>());
-}
-
-template<typename E, typename C, typename L>
-vector<Face> Mesh<E,C,L>::getBorderWithNormal(const vector<Face>& border,
+vector<Face> Mesh::getBorderWithNormal(const vector<Face>& border,
                                               const CVecR3& normal) {
     const UInt nK = border.size();
     vector<Face> res;
@@ -88,47 +67,42 @@ vector<Face> Mesh<E,C,L>::getBorderWithNormal(const vector<Face>& border,
     return res;
 }
 
-template<typename E, typename C, typename L>
-ElementsGroup<Tri>*
-    Mesh<E,C,L>::convertToTri(
-            const ElementsGroup<E>& region, bool includeTets) const {
+ElementsGroup<Tri> Mesh::convertToTri(
+        const ElementsGroup<ElemR>& region, bool includeTets) const {
 
-    ElementsGroup<Tri>* res =
-            new ElementsGroup<Tri>(region.template getGroupOf<Tri>());
+    ElementsGroup<Tri> res = region.newGroupOf<Tri>();
     if (includeTets) {
-        ElementsGroup<Tet> tet = region.template getGroupOf<Tet>();
+        ElementsGroup<Tet> tet = region.getGroupOf<Tet>();
         vector<Face> border = getInternalBorder(tet);
         for (UInt i = 0; i < border.size(); i++) {
-            if (border[i].first->template is<Tet>()) {
-                const Tet* tet = border[i].first->template castTo<Tet>();
+            if (border[i].first->is<Tet>()) {
+                const Tet* tet = border[i].first->castTo<Tet>();
                 const UInt face = border[i].second;
-                res->add(tet->getTri3Face(face));
+                res.add(tet->getTri3Face(face));
             }
         }
     }
     return res;
 }
 
-template<typename E, typename C, typename L>
-vector<Face> Mesh<E,C,L>::getInternalBorder(
-        const ElementsGroup<E>& region) const {
+vector<Face> Mesh::getInternalBorder(
+        const ElementsGroup<ElemR>& region) const {
 
     vector<Face> tri, res;
-    res = getInternalBorder(region.template getGroupOf<Tet>());
-    tri = getInternalBorder(region.template getGroupOf<Tri>());
+    res = getInternalBorder(region.getGroupOf<Tet>());
+    tri = getInternalBorder(region.getGroupOf<Tri>());
     res.insert(res.end(), tri.begin(), tri.end());
     return res;
 }
 
-template<typename E, typename C, typename L>
-vector<Face> Mesh<E,C,L>::getExternalBorder(
-        const ElementsGroup<E>& region) const {
+vector<Face> Mesh::getExternalBorder(
+        const ElementsGroup<ElemR>& region) const {
 
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
     const MapGroup mapGroup(
-        CoordinateGroup<C>::template getGroupOf<CoordinateBase>(),
-        region.template getGroupOf<ElementBase>());
+        CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
+        region.getGroupOf<Elem>());
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
         ElementId inId = internal[i].first->getId();
@@ -142,8 +116,7 @@ vector<Face> Mesh<E,C,L>::getExternalBorder(
     return external;
 }
 
-template<typename E, typename C, typename L>
-vector<Face> Mesh<E,C,L>::getInternalBorder(
+vector<Face> Mesh::getInternalBorder(
         const ElementsGroup<Tet>& region) const {
 
     // Builds a list with all tetrahedron faces.
@@ -183,12 +156,12 @@ vector<Face> Mesh<E,C,L>::getInternalBorder(
         if (matches) {
             k++;
         } else {
-            if(!ElementsGroup<E>::getPtrToId(ElementId(fList(k,0)))->
-                    template is<Tet>())
+            if(!ElementsGroup<ElemR>::getPtrToId(ElementId(fList(k,0)))->
+                    is<Tet>())
                 continue;
             const Tet* tet =
-                ElementsGroup<E>::getPtrToId(ElementId(fList(k,0)))->
-                    template castTo<Tet>();
+                ElementsGroup<ElemR>::getPtrToId(ElementId(fList(k,0)))->
+                    castTo<Tet>();
             UInt face = fList(k,1);
             Face aux(tet, face);
             res.push_back(aux);
@@ -197,22 +170,21 @@ vector<Face> Mesh<E,C,L>::getInternalBorder(
     return res;
 }
 
-template<typename E, typename C, typename L>
-vector<Face> Mesh<E,C,L>::getInternalBorder(
+vector<Face> Mesh::getInternalBorder(
         const ElementsGroup<Tri>& region) const {
 
     UInt nE = region.size();
     vector<Face> res(nE);
-    MapGroup mapGroup(*this, region.getGroupOf<ElementBase>());
+    MapGroup mapGroup(CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
+                      region.getGroupOf<Elem>());
     for (UInt i = 0; i < nE; i++) {
         res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
     return res;
 }
 
-template<typename E, typename C, typename L>
-ElementsGroup<E> Mesh<E,C,L>::getAdjacentRegion(
-        const ElementsGroup<E>& region) {
+ElementsGroup<ElemR> Mesh::getAdjacentRegion(
+        const ElementsGroup<ElemR>& region) {
     vector<Face> outer = getExternalBorder(region);
     UInt nOut = outer.size();
     // Removes repeated.
@@ -222,16 +194,15 @@ ElementsGroup<E> Mesh<E,C,L>::getAdjacentRegion(
     }
     aux.sortAndRemoveRepeatedRows_omp();
     // Prepares result.
-    ElementsGroup<E> res;
+    ElementsGroup<ElemR> res;
     for (UInt i = 0; i < aux.nRows(); i++) {
-        res.add(ElementsGroup<E>::getPtrToId(ElementId(aux(i,0)))->
-                    clone()->template castTo<ElementBase>());
+        res.add(ElementsGroup<ElemR>::getPtrToId(ElementId(aux(i,0)))->
+                    clone()->castTo<ElemR>());
     }
     return res;
 }
 
-template<typename E, typename C, typename L>
-vector<BoxR3> Mesh<E,C,L>::getRectilinearHexesInsideRegion(
+vector<BoxR3> Mesh::getRectilinearHexesInsideRegion(
         const Grid3* grid,
         const ElementsGroup<VolR>& region) const {
 
@@ -250,10 +221,9 @@ vector<BoxR3> Mesh<E,C,L>::getRectilinearHexesInsideRegion(
     return res;
 }
 
-template<typename E, typename C, typename L>
-bool Mesh<E,C,L>::isFloatingCoordinate(const CoordR3* param) const {
+bool Mesh::isFloatingCoordinate(const CoordR3* param) const {
     ElementsGroup<ElemR> elems =
-        ElementsGroup<E>::template getGroupOf<ElemR>();
+        ElementsGroup<ElemR>::getGroupOf<ElemR>();
     for (UInt i = 0; i < elems.size(); i++) {
         for (UInt j = 0; j < elems(i)->numberOfCoordinates(); j++) {
             if (*param == *elems(i)->getV(j)) {
@@ -264,19 +234,29 @@ bool Mesh<E,C,L>::isFloatingCoordinate(const CoordR3* param) const {
     return true;
 }
 
-template<typename E, typename C, typename L>
-vector<ElementId> Mesh<E,C,L>::addAsHex8(const BoxR3& box) {
+bool Mesh::isOnBoundary(const CVecR3 pos) const {
+#warning "Not implemented"
+}
+
+ElementsGroup<SurfR> Mesh::getMaterialBoundary(
+        const MatId matId,
+        const LayerId layId) const {
+
+    return ElementsGroup<ElemR>::get(matId, layId).
+               getGroupOf<SurfR>();
+}
+
+vector<ElementId> Mesh::addAsHex8(const BoxR3& box) {
     vector<ElementId> res;
     Hex8<Real>* hex = new Hex8<Real>(*this, ElementId(0), box);
-    ElementsGroup<E>::add(hex->castTo<E>(), true);
+    ElementsGroup<ElemR>::add(hex->castTo<ElemR>(), true);
     res.push_back(hex->getId());
     return res;
 }
 
-template<typename E, typename C, typename L>
-void Mesh<E,C,L>::printInfo() const {
+void Mesh::printInfo() const {
     cout << " --- Mesh Info --- " << endl;
-    CoordinateGroup<C>::printInfo();
-    ElementsGroup<E>::printInfo();
-    LayerGroup<L>::printInfo();
+    CoordinateGroup<CoordR3>::printInfo();
+    ElementsGroup<ElemR>::printInfo();
+    LayerGroup<>::printInfo();
 }

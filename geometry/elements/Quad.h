@@ -10,23 +10,30 @@
 
 #include "Surface.h"
 
-template<class T>
-class Quad : public Surface<T> {
+template<class T = void>
+class Quad;
+
+template<>
+class Quad<void> : public virtual Surf {
 public:
-	Quad(const LayerId layerId = LayerId(0),
-	     const MatId   matId   = MatId(0));
-    Quad(const ElementId id,
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-    Quad(const Quad<T>& rhs);
-    virtual ~Quad();
-    
-	UInt numberOfFaces   () const { return 4; }
-	UInt numberOfVertices() const { return 4; }
-    
-	UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
+    Quad() {}
+    virtual ~Quad() {}
+
+    UInt numberOfFaces   () const { return 4; }
+    UInt numberOfVertices() const { return 4; }
+
+    UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
 };
 
-#include "Quad.hpp"
+template<class T>
+class Quad : public virtual Surface<T>,
+             public virtual Quad<void> {
+public:
+	Quad();
+    virtual ~Quad();
+};
+
+typedef Quad<Real> QuadR;
+typedef Quad<Int > QuadI;
 
 #endif /* QUAD4_H_ */

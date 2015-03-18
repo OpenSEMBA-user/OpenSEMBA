@@ -14,12 +14,7 @@
 
 class Tet : public Volume<Real> {
 public:
-    Tet(const LayerId layerId = LayerId(0),
-        const MatId   matId   = MatId(0));
-    Tet(const ElementId id,
-        const LayerId layerId = LayerId(0),
-        const MatId   matId   = MatId(0));
-    Tet(const Tet& rhs);
+    Tet();
     virtual ~Tet();
 
     virtual bool isCurvedFace(const UInt face) const = 0;
