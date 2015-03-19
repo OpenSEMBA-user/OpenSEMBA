@@ -67,8 +67,10 @@ public:
     void linearize();
 
     void printInfo() const;
+
 protected:
-    void reassignPointers(const CoordinateGroup<>& vNew);
+    template<class T>
+    void reassignPointers(const CoordinateGroup< Coordinate<T,3> >& vNew);
 };
 
 #include "ElementsGroup.hpp"

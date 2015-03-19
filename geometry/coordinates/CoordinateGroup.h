@@ -61,6 +61,7 @@ public:
     
     void add(C* newElem , bool newId = false);
     void add(vector<C*>&, bool newId = false);
+    void add(const Group<C*>&);
     CoordR3*         add(const CVecR3&        , const bool canOverlap = false);
     vector<CoordR3*> add(const vector<CVecR3>&, const bool canOverlap = false);
     CoordI3*         add(const CVecI3&        , const bool canOverlap = false);

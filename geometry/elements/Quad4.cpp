@@ -96,6 +96,38 @@ void Quad4<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
+ElemI* Quad4<T>::toStructured(CoordinateGroup<CoordI3>& cG,
+                              const Grid3& grid) const {
+    if (this->template is<ElemI>()) {
+        return NULL;
+    }
+    CVecI3 cell;
+    const CoordI3* coord;
+    CoordinateId* vIds = new CoordinateId[this->numberOfCoordinates()];
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        if (!grid.isCell(*this->getV(i))) {
+            cerr << endl << "ERROR @ Element::toStructured(): "
+                 << "Element with vertex not Structured" << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+        cell  = grid.getCell(*this->getV(i));
+        coord = cG.get(cell);
+        if (coord == NULL) {
+            coord = cG.add(cell);
+        }
+        vIds[i] = coord->getId();
+    }
+    Element<Int>* res =  new QuadI4(cG,
+                                    this->getId(),
+                                    vIds,
+                                    this->getLayerId(),
+                                    this->getMatId());
+    delete vIds;
+    return res;
+}
+
+template<class T>
 void Quad4<T>::printInfo() const {
 	cout << "--- Quad4 info ---" << endl;
 	Quad<T>::printInfo();

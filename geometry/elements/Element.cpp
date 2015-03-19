@@ -102,13 +102,18 @@ const Coordinate<T,3>* Element<T>::getMaxV() const {
 
 template<class T>
 void Element<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
-    cout << "ERROR @ setV for Element: "
-         << "Setting coordinates is not allowed for this element: "
+    cout << "ERROR @ Element::setV(): "
+         << "Setting coordinates is not allowed for this element"
          << endl;
     
 	printInfo();
 }
 
+template<class T>
+ElemI* Element<T>::toStructured(CoordinateGroup<CoordI3>& cG,
+                                const Grid3& grid) const {
+    return NULL;
+}
 template<class T>
 void Element<T>::printInfo() const {
     cout<< "Element. Id: " << this->getId() << " MatId: " << getMatId()

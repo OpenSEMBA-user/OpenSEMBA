@@ -222,6 +222,38 @@ void Hex8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
+ElemI* Hex8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
+                             const Grid3& grid) const {
+    if (this->template is<ElemI>()) {
+        return NULL;
+    }
+    CVecI3 cell;
+    const CoordI3* coord;
+    CoordinateId* vIds = new CoordinateId[this->numberOfCoordinates()];
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        if (!grid.isCell(*this->getV(i))) {
+            cerr << endl << "ERROR @ Element::toStructured(): "
+                 << "Element with vertex not Structured" << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+        cell  = grid.getCell(*this->getV(i));
+        coord = cG.get(cell);
+        if (coord == NULL) {
+            coord = cG.add(cell);
+        }
+        vIds[i] = coord->getId();
+    }
+    ElemI* res =  new HexI8(cG,
+                            this->getId(),
+                            vIds,
+                            this->getLayerId(),
+                            this->getMatId());
+    delete vIds;
+    return res;
+}
+
+template<class T>
 void Hex8<T>::printInfo() const {
     cout << "--- Hex8 Info ---" << endl;
     cout << "Id: " << this->getId() << endl;

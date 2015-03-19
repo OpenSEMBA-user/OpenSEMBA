@@ -87,6 +87,11 @@ void CoordinateGroup<C>::add(vector<C*>& newCoords, bool newId) {
 }
 
 template<typename C>
+void CoordinateGroup<C>::add(const Group<C*>& rhs) {
+    return GroupId<C, CoordinateId>::add(rhs);
+}
+
+template<typename C>
 CoordR3* CoordinateGroup<C>::add(const CVecR3& newPosition,
                                  const bool canOverlap) {
     vector<CoordR3*> res;

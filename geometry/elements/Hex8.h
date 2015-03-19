@@ -62,6 +62,8 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>*);
 
+    ElemI* toStructured(CoordinateGroup<CoordI3>&, const Grid3&) const;
+
     void printInfo() const;
 private:
     const Coordinate<T,3>* v_[8];

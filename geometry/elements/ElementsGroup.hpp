@@ -93,7 +93,7 @@ ElementsGroup<E> ElementsGroup<E>::get(const vector<LayerId>& layIds_) const {
 
 template<typename E>
 ElementsGroup<E> ElementsGroup<E>::get(const MatId   matId,
-        const LayerId layId) const {
+                                       const LayerId layId) const {
     return get(matId).get(layId);
 }
 
@@ -242,48 +242,23 @@ ElementsGroup<E> ElementsGroup<E>::removeElementsWithMatId(
     elems.reserve(this->size());
     for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getMatId() != matId) {
-            elems.push_back(this->element_[i]->clone()->template castTo<E>());
+            elems.push_back(this->element_[i]);
         }
     }
-    return ElementsGroup<E>(elems);
+    return ElementsGroup<E>(elems, false);
 }
 
-template<typename E>
-void ElementsGroup<E>::reassignPointers(const CoordinateGroup<>& vNew) {
+template<typename E> template<class T>
+void ElementsGroup<E>::reassignPointers(
+        const CoordinateGroup< Coordinate<T,3> >& vNew) {
+
     for (UInt i = 0; i < this->size(); i++) {
-        if (this->element_[i]->template is<ElemR>()) {
-            ElemR* elem = this->element_[i]->template castTo<ElemR>();
+        if (this->element_[i]->template is< Element<T> >()) {
+            Element<T>* elem =
+                this->element_[i]->template castTo< Element<T> >();
             for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordinateId vId = elem->getV(j)->getId();
-                const Coord* coord = vNew.getPtrToId(vId);
-                if (coord == NULL) {
-                    cerr << endl << "ERROR @ ElementsGroup<E>: "
-                            << "Coordinate in new CoordinateGroup inexistent"
-                            << endl;
-                }
-                if (!coord->is<CoordR3>()) {
-                    cerr << endl << "ERROR @ ElementsGroup<E>: "
-                            << "Coord in new CoordinateGroup is not a valid Coord"
-                            << endl;
-                }
-                elem->setV(j, coord->castTo<CoordR3>());
-            }
-        } else if (this->element_[i]->template is<ElemI>()) {
-            ElemI* elem = this->element_[i]->template castTo<ElemI>();
-            for (UInt j = 0; j < elem->numberOfCoordinates(); j++) {
-                CoordinateId vId = elem->getV(j)->getId();
-                const Coord* coord = vNew.getPtrToId(vId);
-                if (coord == NULL) {
-                    cerr << endl << "ERROR @ ElementsGroup<E>: "
-                            << "Coordinate in new CoordinateGroup inexistent"
-                            << endl;
-                }
-                if (!coord->is<CoordI3>()) {
-                    cerr << endl << "ERROR @ ElementsGroup<E>: "
-                            << "Coord in new CoordinateGroup is not a valid Coord"
-                            << endl;
-                }
-                elem->setV(j, coord->castTo<CoordI3>());
+                elem->setV(j, vNew.getPtrToId(vId));
             }
         }
     }

@@ -1,17 +1,17 @@
 #ifndef ELEMENT_H_
 #define ELEMENT_H_
 
+#include <iostream>
 #include <limits>
+#include <vector>
+
+using namespace std;
 
 #include "../math/MathMatrix.h"
 #include "../math/CartesianVector.h"
 #include "CoordinateGroup.h"
 #include "Box.h"
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
+#include "Grid.h"
 #include "IdBase.h"
 #include "Layer.h"
 
@@ -64,6 +64,7 @@ public:
 
     bool isCoordinate(const Coordinate<T,3>* coord) const;
 
+    virtual bool isStructured(const Grid3&) const { return false; }
     virtual bool isInnerPoint(const CartesianVector<T,3>& pos) const;
 
     virtual const Coordinate<T,3>* getV    (const UInt i) const = 0;
@@ -80,6 +81,9 @@ public:
     virtual const Coordinate<T,3>* getMaxV() const;
 
     virtual void setV(const UInt i, const Coordinate<T,3>*);
+
+    virtual Element<Int>* toStructured(CoordinateGroup<CoordI3>&,
+                                       const Grid3&) const;
 
     virtual void printInfo() const;
 

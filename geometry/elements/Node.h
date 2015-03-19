@@ -45,7 +45,9 @@ public:
     const Coordinate<T,3>* getSideVertex(const UInt f, const UInt i) const;
 
     void setV(const UInt i, const Coordinate<T,3>* coord);
-	
+
+    ElemI* toStructured(CoordinateGroup<CoordI3>&, const Grid3&) const;
+
 	void printInfo() const;
 private:
 	const Coordinate<T,3>* v_[1];

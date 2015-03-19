@@ -19,7 +19,8 @@ public:
 
     Group<T>& operator=(const Group<T>& rhs);
 
-    UInt size() const { return element_.size(); }
+    bool empty() const { return element_.empty(); }
+    UInt size () const { return element_.size();  }
 
 //    T*       operator()(const UInt i);
     const T* operator()(const UInt i) const;

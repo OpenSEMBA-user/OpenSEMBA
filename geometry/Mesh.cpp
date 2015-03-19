@@ -15,21 +15,19 @@ Mesh::Mesh() {
 Mesh::Mesh(const CoordinateGroup<CoordR3>& cG,
            const ElementsGroup<ElemR>& elem,
            const LayerGroup<>& layers)
-:   CoordinateGroup<CoordR3>(cG),
-    ElementsGroup<ElemR>(elem),
-    LayerGroup<>(layers) {
+:   CoordinateGroup<CoordR3>(cG.newGroupOf<CoordR3>()),
+    ElementsGroup<ElemR>(elem.newGroupOf<ElemR>()),
+    LayerGroup<>(layers.newGroupOf<Layer>()) {
 
-    ElementsGroup<ElemR>::reassignPointers(
-        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
+    ElementsGroup<ElemR>::reassignPointers(*this);
 }
 
 Mesh::Mesh(const Mesh& rhs)
-:   CoordinateGroup<CoordR3>(rhs),
-    ElementsGroup<ElemR>(rhs),
-    LayerGroup<>(rhs) {
+:   CoordinateGroup<CoordR3>(rhs.coords().newGroupOf<CoordR3>()),
+    ElementsGroup<ElemR>(rhs.elems().newGroupOf<ElemR>()),
+    LayerGroup<>(rhs.layers().newGroupOf<Layer>()) {
 
-    ElementsGroup<ElemR>::reassignPointers(
-        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
+    ElementsGroup<ElemR>::reassignPointers(*this);
 }
 
 Mesh::~Mesh() {
@@ -41,12 +39,11 @@ Mesh& Mesh::operator=(const Mesh& rhs) {
         return *this;
     }
 
-    CoordinateGroup<CoordR3>::operator=(rhs);
-    ElementsGroup<ElemR>::operator=(rhs);
-    LayerGroup<>::operator=(rhs);
+    CoordinateGroup<CoordR3>::operator=(rhs.coords().newGroupOf<CoordR3>());
+    ElementsGroup<ElemR>::operator=(rhs.elems().newGroupOf<ElemR>());
+    LayerGroup<>::operator=(rhs.layers().newGroupOf<Layer>());
 
-    ElementsGroup<ElemR>::reassignPointers(
-        CoordinateGroup<CoordR3>::getGroupOf<Coord>());
+    ElementsGroup<ElemR>::reassignPointers(*this);
 
     return *this;
 }

@@ -56,6 +56,8 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>* coord);
 
+    ElemI* toStructured(CoordinateGroup<CoordI3>&, const Grid3&) const;
+
     void printInfo() const;
 private:
     static const SimplexLin<1> lin;
