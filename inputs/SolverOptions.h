@@ -44,7 +44,7 @@ public:
     void setTimeStep(Real timeStep);
 
     void printInfo() const;
-    double getCfl() const;
+    double getCFL() const;
     void setCFL(double cfl);
     CompositeModel getCompositeModel() const;
     void setCompositeModel(CompositeModel compositeModel);
@@ -87,10 +87,9 @@ private:
     // Global
     Solver solver_;
     Real finalTime_;
-    UInt numberOfTimeSteps_;
-    Real samplingPeriod_;
     Real timeStep_;
     Real cfl_;
+    Real samplingPeriod_;
     // ugrfdtd
     CompositeModel compositeModel_;
     double compositesAttenuationFactor_;

@@ -34,11 +34,6 @@ private:
             const string& name,
             const GiD_ElementType type,
             const Int nV);
-    //    void writeBCMesh();
-    //    void writeBCMesh(
-    //            const vector<const BoundaryCondition*>& list,
-    //            const string& name,
-    //            const CVecR3& colorRGB);
 };
 
 #endif /* SRC_COMMON_OUTPUT_OUTPUTGIDSMB_H_ */

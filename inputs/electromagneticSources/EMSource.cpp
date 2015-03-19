@@ -6,23 +6,14 @@ EMSource::EMSource() {
     magnitude_ = NULL;
 }
 
-EMSource::EMSource(const vector<ElementId>& elem, const Magnitude* magnitude) {
-    elem_ = elem;
+EMSource::EMSource(const Magnitude* magnitude) {
     magnitude_ = magnitude;
-    assert(elem_.size() != 0);
 }
 
 
 EMSource::~EMSource() {
 
 }
-
-vector<ElementId>
-EMSource::getElem() const {
-    assert(elem_.size() != 0);
-    return elem_;
-}
-
 
 const Magnitude*
 EMSource::getMagnitude() const {
@@ -35,10 +26,31 @@ Condition::Type EMSource::getConditionType() const {
 
 void
 EMSource::printInfo() const {
-    cout<< " - Assigned on " << elem_.size() << ":" << endl;
-    for (UInt i = 0; i < elem_.size(); i++) {
-        cout<< elem_[i] << " ";
-    }
-    cout << endl;
+    cout << " --- EMSource info --- " << endl;
     magnitude_->printInfo();
+}
+
+string EMSource::getMagnitudeFilename() const {
+    const MagnitudeNumerical* mag =
+            dynamic_cast<const MagnitudeNumerical*>(magnitude_);
+    if (mag != NULL) {
+        return mag->getFilename();
+    }
+    cerr << endl << "ERROR @ EMSource: Magnitude is not numerical." << endl;
+    printInfo();
+    return string();
+}
+
+void EMSource::convertToNumerical(
+        const string file,
+        const double step,
+        const double finalTime) {
+    const MagnitudeNumerical* mag =
+            dynamic_cast<const MagnitudeNumerical*>(magnitude_);
+    if(mag != NULL) {
+        return;
+    }
+    const Magnitude* orig = magnitude_;
+    magnitude_ = new MagnitudeNumerical(file, magnitude_, step, finalTime);
+    delete orig;
 }

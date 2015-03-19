@@ -5,20 +5,20 @@
  *      Author: luis
  */
 
-#include "OutRqFarField.h"
-
-OutRqFarField::~OutRqFarField() {
-
-}
+#include "../outRq/OutRqFarField.h"
 
 OutRqFarField::OutRqFarField(
+ const ElementsGroup<Volume<> >& elem,
  const Domain& domain,
  const string& name,
- const vector<ElementId>& elem,
  const Real iTh, const Real fTh, const Real sTh,
  const Real iPhi, const Real fPhi, const Real sPhi)
-: OutRq(domain, farField, name, elem) {
+: OutRqVolume(elem, domain, electric, name) {
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
+}
+
+ClassBase* OutRqFarField::clone() const {
+   return new OutRqFarField(*this);
 }
 
 Real OutRqFarField::getStepPhi() const {
@@ -59,10 +59,10 @@ bool OutRqFarField::isSimilar(const OutRqFarField& rhs) const {
 void OutRqFarField::setThetaAndPhi(
         Real iTh, Real fTh, Real sTh,
         Real iPhi, Real fPhi, Real sPhi) {
-    initialTheta_ = iTh;
-    finalTheta_ = fTh;
-    stepTheta_ = sTh;
-    initialPhi_ = iPhi;
-    finalPhi_ = fPhi;
-    stepPhi_ = sPhi;
+    initialTheta_ = iTh * acos(-1.0);
+    finalTheta_ = fTh * acos(-1.0);
+    stepTheta_ = sTh * acos(-1.0);
+    initialPhi_ = iPhi * acos(-1.0);
+    finalPhi_ = fPhi * acos(-1.0);
+    stepPhi_ = sPhi* acos(-1.0);
 }

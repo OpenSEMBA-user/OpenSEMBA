@@ -5,20 +5,22 @@
  *      Author: luis
  */
 
-#ifndef SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_
-#define SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_
+#ifndef SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
+#define SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
 
-#include "OutRq.h"
+#include "OutRqVolume.h"
 
-class OutRqFarField : public OutRq {
+class OutRqFarField : public OutRqVolume {
 public:
-    virtual ~OutRqFarField();
     OutRqFarField(
+            const ElementsGroup<Volume<> >& box,
             const Domain& domain,
-            const string& name_,
-            const vector<ElementId>& box,
+            const string& name,
             const Real iTh, const Real fTh, const Real sTh,
             const Real iPhi, const Real fPhi, const Real sPhi);
+
+    virtual ClassBase* clone() const;
+
     Real getStepPhi() const;
     Real getStepTheta() const;
     Real getFinalPhi() const;
@@ -26,6 +28,8 @@ public:
     Real getInitialPhi() const;
     Real getInitialTheta() const;
     bool isSimilar(const OutRqFarField& rhs) const;
+    void setElements(const ElementsGroup<VolR>&); // TODO VolR->Vol
+    void setElements(const ElementsGroup<VolI>&); // TODO VolR->Vol
 private:
     Real initialTheta_, finalTheta_, stepTheta_;
     Real initialPhi_, finalPhi_, stepPhi_;
@@ -35,4 +39,4 @@ private:
             Real iPhi, Real fPhi, Real sPhi);
 };
 
-#endif /* SRC_COMMON_INPUTS_OUTPUTREQUEST_OUTRQFARFIELD_H_ */
+#endif /* SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_ */

@@ -28,16 +28,11 @@ class ProjectFile {
 public:
    ProjectFile();
    ProjectFile(const string& filename);
-   string
-   getFilename() const;
-   string
-   getProjectFolder() const;
-   bool
-   canOpenFile() const;
-   void
-   printInfo() const;
-   void
-   setFilename(const string& filename);
+   string getFilename() const;
+   string getProjectFolder() const;
+   bool canOpenFile() const;
+   void printInfo() const;
+   void setFilename(const string& filename);
 
    string getOutputFilename() const {
        return getProjectFolder() + getOutputName();

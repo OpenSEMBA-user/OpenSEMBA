@@ -7,38 +7,18 @@
 
 #include "SourceOnLine.h"
 
-SourceOnLine::SourceOnLine() {
-	type_ = undefined;
-	hardness_ = soft;
-}
-
-SourceOnLine::~SourceOnLine() {
-	// TODO Auto-generated destructor stub
-}
-
 SourceOnLine::SourceOnLine(
+ const ElementsGroup<Line<> >& elem,
+ const Magnitude* magnitude,
  const Type& sourceType,
- const Hardness& sourceHardness,
- const vector<ElementId>& elem,
- const Magnitude* magnitude) : EMSource(elem, magnitude) {
+ const Hardness& sourceHardness) :
+         EMSource(magnitude), ElementsGroup<Line<> >(elem) {
 	type_ = sourceType;
     hardness_ = sourceHardness;
 }
 
-
 ClassBase* SourceOnLine::clone() const {
     return new SourceOnLine(*this);
-}
-
-SourceOnLine&
-SourceOnLine::operator=(const SourceOnLine &rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	EMSource::operator=(rhs);
-	type_ = rhs.type_;
-	hardness_ = rhs.hardness_;
-	return *this;
 }
 
 SourceOnLine::Type
@@ -61,34 +41,20 @@ SourceOnLine::printInfo() const {
 
 string
 SourceOnLine::getTypeStr() const {
-	string res;
 	switch (type_) {
-	case electricField:
-		res = "Electric Field";
-		break;
-	case magneticField:
-		res = "Magnetic Field";
-		break;
+	case electric:
+		return "Electric Field";
 	default:
-		res = "Undefined";
-		break;
+		return "Magnetic Field";
 	}
-	return res;
 }
 
 string
 SourceOnLine::hardnessToStr() const {
-	string res;
 	switch (type_) {
 	case hard:
-		res = "Hard";
-		break;
-	case soft:
-		res = "Soft";
-		break;
+		return "Hard";
 	default:
-		res = "Soft";
-		break;
+		return "Soft";
 	}
-	return res;
 }

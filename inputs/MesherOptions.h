@@ -34,6 +34,8 @@ public:
         mur1,
         mur2,
         periodic,
+        symmetricETan,
+        symmetricHTan,
         undefined
     } BoundType;
     MesherOptions();
@@ -88,7 +90,7 @@ public:
     void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
     Real getScalingFactor() const;
     void setScalingFactor(Real scalingFactor);
-    pair<BoundType,BoundType> getBoundTermination(const UInt i) const;
+    BoundType getBoundTermination(const UInt i, const UInt p) const;
     void setBoundTermination(const UInt i, UInt j, BoundType bound);
 
     void applyGeometricScalingFactor(const Real& factor);

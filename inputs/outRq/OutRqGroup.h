@@ -1,8 +1,11 @@
 #ifndef OUTPUTREQUESTGROUP_H_
 #define OUTPUTREQUESTGROUP_H_
 
-#include "OutRq.h"
-#include "OutRqFarField.h"
+#include "../outRq/OutRq.h"
+#include "../outRq/OutRqVolume.h"
+#include "../outRq/OutRqFarField.h"
+#include "OutRqNode.h"
+#include "OutRqSurface.h"
 
 template<typename O = OutRq>
 class OutRqGroup : public Group<O> {
@@ -18,6 +21,6 @@ public:
     void printInfo() const;
 };
 
-#include "OutRqGroup.hpp"
+#include "../outRq/OutRqGroup.hpp"
 
 #endif

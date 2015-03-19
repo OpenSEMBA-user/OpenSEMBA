@@ -17,7 +17,7 @@
 #include "ClassBase.h"
 
 class Mesh : public ClassBase,
-             public LayerGroup<>{
+             public LayerGroup<> {
 public:
     Mesh(const LayerGroup<>& layer = LayerGroup<>());
     Mesh(const Mesh& rhs);
@@ -25,8 +25,8 @@ public:
 
     Mesh& operator=(const Mesh& rhs);
 
-    LayerGroup<>&       layers()       { return *this; }
-    const LayerGroup<>& layers() const { return *this; }
+    LayerGroup<>&             layers() { return *this; }
+    const LayerGroup<>&             layers() const { return *this; }
 
     virtual void applyScalingFactor(const Real factor) = 0;
 

@@ -8,24 +8,28 @@
 #include "../Condition.h"
 #include "Magnitude.h"
 #include "MagnitudeGaussian.h"
+#include "MagnitudeNumerical.h"
+#include "ElementsGroup.h"
 #include "../../math/CartesianVector.h"
 #include "../../math/Constants.h"
 
 using namespace std;
 
-class EMSource : public Condition,  public ClassBase {
+class EMSource: public Condition,  public ClassBase{
 public:
     EMSource();
-    EMSource(
-            const vector<ElementId>& elem,
-            const Magnitude* magnitude);
+    EMSource(const Magnitude* magnitude);
     virtual ~EMSource();
-    vector<ElementId> getElem() const;
-    const Magnitude* getMagnitude() const;
+    virtual string getMagnitudeFilename() const;
     Condition::Type getConditionType() const;
     void printInfo() const;
+    void convertToNumerical(
+            const string file,
+            const double step,
+            const double finalTime);
+protected:
+    const Magnitude* getMagnitude() const;
 private:
-    vector<ElementId> elem_;
     const Magnitude* magnitude_;
 };
 

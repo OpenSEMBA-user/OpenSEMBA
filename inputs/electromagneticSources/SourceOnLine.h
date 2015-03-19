@@ -10,31 +10,29 @@
 
 #include "EMSource.h"
 
-class SourceOnLine : public EMSource {
+class SourceOnLine : public EMSource, public ElementsGroup<Line<> > {
 public:
     typedef enum {
-        electricField = 1,
-        magneticField = 2,
-        undefined = 0
+        electric = 1,
+        magnetic = 2
     } Type;
     typedef enum {
         hard = 1,
         soft = 2
     } Hardness;
-    SourceOnLine();
     SourceOnLine(
+            const ElementsGroup<Line<> >& elem,
+            const Magnitude* magnitude,
             const Type& sourceType,
-            const Hardness& sourceHardness,
-            const vector<ElementId>& elem,
-            const Magnitude* magnitude);
+            const Hardness& sourceHardness);
     virtual ~SourceOnLine();
 
     virtual ClassBase* clone() const;
 
-    SourceOnLine& operator=(const SourceOnLine &rhs);
     Type getType() const;
     Hardness getHardness() const;
     string getTypeStr() const;
+
     virtual void printInfo() const;
 private:
     Type type_;

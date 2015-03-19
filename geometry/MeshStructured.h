@@ -59,8 +59,13 @@ public:
             const UInt layId) const;
 
     void applyScalingFactor(const Real factor);
-
-    void printInfo() const;
+    virtual void printInfo() const;
+private:
+    vector<BoxR3> discretizeWithinBoundary(
+            const Grid3* grid,
+            const ElementsGroup<SurfR>& faces) const;
+    vector<pair<const SurfR*, const SurfR*> > getPairsDefiningVolumeWithin(
+            const ElementsGroup<SurfR>& faces) const;
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */

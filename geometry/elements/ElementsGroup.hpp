@@ -221,7 +221,7 @@ map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateByLayers() const {
     for (UInt i = 0; i < this->size(); i++) {
         const LayerId layerId = this->element_[i]->getLayerId();
         typename map<LayerId, ElementsGroup<E> >::iterator it =
-                res.find(layerId);
+            res.find(layerId);
         if (it == res.end()) {
             pair<LayerId, ElementsGroup<E> > newEntry;
             newEntry.first = layerId;
@@ -271,8 +271,8 @@ void ElementsGroup<E>::linearize() {
     }
     if(!this->ownership_) {
         cerr << endl << "ERROR @ ElementsGroup::linearize(): "
-                << "Forbidden to linearize without ownership "
-                << "of elements on it" << endl;
+             << "Forbidden to linearize without ownership "
+             << "of elements on it" << endl;
         assert(false);
         exit(EXIT_FAILURE);
     }

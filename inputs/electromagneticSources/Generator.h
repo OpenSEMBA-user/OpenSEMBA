@@ -10,12 +10,11 @@
 
 #include "EMSource.h"
 
-class Generator : public EMSource {
+class Generator : public EMSource, public ElementsGroup<Node<> > {
 public:
 	typedef enum {
 		voltage = 1,
-		current = 2,
-		undefined = 0
+		current = 2
 	} Type;
 	typedef enum {
 	   soft,
@@ -23,11 +22,10 @@ public:
 	} Hardness;
 	Generator();
 	Generator(
+	 const ElementsGroup<Node<> >& elem,
 	 const Type& generatorType,
 	 const Hardness& hardness,
-	 const vector<ElementId>& elem,
 	 const Magnitude* magnitude);
-	virtual ~Generator();
 
 	virtual ClassBase* clone() const;
 

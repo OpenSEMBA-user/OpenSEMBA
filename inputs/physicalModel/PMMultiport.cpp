@@ -9,7 +9,7 @@
 
 PMMultiport::PMMultiport(const MatId id, const string name)
 : PhysicalModel(id, name) {
-
+    type_ = undefined;
 }
 
 PMMultiport::~PMMultiport() {

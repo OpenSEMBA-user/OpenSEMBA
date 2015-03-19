@@ -32,7 +32,7 @@ public:
          const CVecRD& origin,
          const vector<Real> step[D]);
     Grid(const Grid& grid);
-    ~Grid();
+    ~Grid ();
 
     Grid& operator=(const Grid& cGrid);
 
@@ -44,9 +44,9 @@ public:
     bool isRegular(const Int d) const;
     bool isCartesian() const;
     bool isCell(const CVecRD& position,
-                const Real tol = tolerance) const;
+            const Real tol = tolerance) const;
     bool isCell(const vector<CVecRD>& positions,
-                const Real tol = tolerance) const;
+            const Real tol = tolerance) const;
     bool isCell(const CVecID& pos,
                 const Real tol = tolerance) const { return true; }
 
