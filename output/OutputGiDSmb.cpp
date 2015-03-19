@@ -27,7 +27,11 @@ OutputGiDSmb::~OutputGiDSmb() {
 void
 OutputGiDSmb::writeMesh() {
     writeOutputRequestsMesh();
-    LayerGroup<Layer> lay = smb_->mesh->layers().getGroupOf<Layer>();
+    if(!smb_->mesh->is<MeshUnstructured>()) {
+        return;
+    }
+    mesh_ = smb_->mesh->castTo<MeshUnstructured>();
+    LayerGroup<Layer> lay = mesh_->layers().getGroupOf<Layer>();
     PhysicalModelGroup<PhysicalModel> mat =
         smb_->pMGroup->getGroupOf<PhysicalModel>();
     for (UInt i = 0; i < lay.size(); i++) {
@@ -36,7 +40,7 @@ OutputGiDSmb::writeMesh() {
             const LayerId layId = lay(i)->getId();
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
             ElementsGroup<> elem =
-                smb_->mesh->elems().get(matId, layId).getGroupOf<Elem>();
+                mesh_->elems().get(matId, layId).getGroupOf<Elem>();
             writeElements(elem.getGroupOf<LinR2>().getGroupOf<Elem>(), name, GiD_Linear, 2);
             writeElements(elem.getGroupOf<Tri3> ().getGroupOf<Elem>(), name, GiD_Triangle, 3);
             writeElements(elem.getGroupOf<Tet4> ().getGroupOf<Elem>(), name, GiD_Tetrahedra, 4);
@@ -49,7 +53,7 @@ OutputGiDSmb::writeMeshWithIds(
         const vector<vector<ElementId> >& ids,
         const vector<string>& name) {
     assert(ids.size() == name.size());
-    const bool isLinear = smb_->mesh->isLinear();
+    const bool isLinear = mesh_->isLinear();
     Int nV;
     isLinear? nV = 4 : nV = 10;
     for (UInt t = 0; t < ids.size(); t++) {
@@ -58,7 +62,7 @@ OutputGiDSmb::writeMeshWithIds(
         Int tmpCounter = coordCounter_;
         static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
         for (UInt j = 0; j < ids[t].size(); j++) {
-            const ElemR* e = smb_->mesh->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
+            const ElemR* e = mesh_->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
             for (Int i = 0; i < nV; i++) {
                 CVecR3 pos;
                 if (isLinear) {

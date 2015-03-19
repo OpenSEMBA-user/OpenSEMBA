@@ -18,6 +18,7 @@ public:
     virtual ~OutputGiDSmb();
 private:
     const SmbData* smb_;
+    const MeshUnstructured* mesh_;
     void writeMesh();
     void writeMeshWithIds(
             const vector<vector<ElementId> >& ids,

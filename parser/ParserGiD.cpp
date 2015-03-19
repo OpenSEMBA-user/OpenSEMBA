@@ -38,8 +38,8 @@ ParserGiD::read() {
     res->mesherOptions = readMesherOptions();
     pSize_ = readProblemSize();
     res->pMGroup = readMaterials();
-    res->mesh = readMesh();
-    mesh_ = res->mesh;
+    mesh_ = readMesh();
+    res->mesh = mesh_;
     res->grid = readCartesianGrid();
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
@@ -202,7 +202,7 @@ ParserGiD::readMesherOptions() {
     return res;
 }
 
-Mesh*
+MeshUnstructured*
 ParserGiD::readMesh() {
     LayerGroup<> lG_ = readLayers();
     // Reads the coordinates.
@@ -210,7 +210,7 @@ ParserGiD::readMesh() {
     // Reads elements connectivities.
     ElementsGroup<ElemR> elements = readElements(cG_);
     // Builds mesh with the read data.
-    return new Mesh(cG_, elements, lG_);
+    return new MeshUnstructured(cG_, elements, lG_);
 }
 
 EMSourceGroup<>*

@@ -1,70 +1,36 @@
 /*
  * Mesh.h
  *
- *  Created on: Jul 23, 2013
- *      Author: luis
+ *  Created on: Mar 19, 2015
+ *      Author: damarro
  */
 
-#ifndef MESH_H_
-#define MESH_H_
-#include <limits>
-#include <vector>
-#include <utility>
-#include <iostream>
+#ifndef SRC_COMMON_GEOMETRY_MESH_H_
+#define SRC_COMMON_GEOMETRY_MESH_H_
+
+#include "Types.h"
+#include "coordinates/CoordinateGroup.h"
 #include "elements/ElementsGroup.h"
 #include "layers/LayerGroup.h"
-
-#include "maps/MapGroup.h"
 #include "Grid.h"
 
-using namespace std;
+#include "ClassBase.h"
 
-class Mesh : public CoordinateGroup<CoordR3>,
-             public ElementsGroup<ElemR>,
-             public LayerGroup<> {
+class Mesh : public ClassBase,
+             public LayerGroup<>{
 public:
-    Mesh();
-    Mesh(const CoordinateGroup<CoordR3>& cG,
-         const ElementsGroup<ElemR>& elem,
-         const LayerGroup<>& layer = LayerGroup<>());
-    Mesh(const Mesh& param);
-    virtual ~Mesh();
+    Mesh(const LayerGroup<>& layer = LayerGroup<>());
+    Mesh(const Mesh& rhs);
+    ~Mesh();
 
     Mesh& operator=(const Mesh& rhs);
 
-    CoordinateGroup<CoordR3>& coords() { return *this; }
-    ElementsGroup<ElemR>&     elems () { return *this; }
-    LayerGroup<>&             layers() { return *this; }
+    LayerGroup<>&       layers()       { return *this; }
+    const LayerGroup<>& layers() const { return *this; }
 
-    const CoordinateGroup<CoordR3>& coords() const { return *this; }
-    const ElementsGroup<ElemR>&     elems () const { return *this; }
-    const LayerGroup<>&             layers() const { return *this; }
-
-    vector<ElementId> addAsHex8(const BoxR3& box);
-    virtual vector<BoxR3> getRectilinearHexesInsideRegion(
-            const Grid3* grid,
-            const ElementsGroup<VolR>& region) const;
-//    virtual vector<BoxR3> discretizeWithinBoundary(
-//            const Grid3* grid,
-//            const UInt matId,
-//            const UInt layId) const = 0;
-
-    vector<Face> getBorderWithNormal(const vector<Face>& border,
-                                     const CVecR3& normal);
-    bool isFloatingCoordinate(const CoordR3* coordinate) const;
-    virtual bool isOnBoundary(const CVecR3 pos) const;
-    ElementsGroup<SurfR> getMaterialBoundary(const MatId   matId,
-                                             const LayerId layId) const;
-    ElementsGroup<Tri> convertToTri(const ElementsGroup<ElemR>& region,
-                                    bool ignoreTets) const;
-    vector<Face> getInternalBorder(const ElementsGroup<ElemR>& region) const;
-    vector<Face> getExternalBorder(const ElementsGroup<ElemR>& region) const;
-    ElementsGroup<ElemR> getAdjacentRegion(const ElementsGroup<ElemR>& region);
+    virtual void applyScalingFactor(const Real factor) = 0;
 
     virtual void printInfo() const;
-protected:
-    vector<Face> getInternalBorder(const ElementsGroup<Tet>& tet) const;
-    vector<Face> getInternalBorder(const ElementsGroup<Tri>& tri) const;
 };
 
-#endif /* MESH_H_ */
+#endif /* SRC_COMMON_GEOMETRY_MESH_H_ */

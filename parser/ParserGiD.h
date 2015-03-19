@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include "Parser.h"
 #include "../SmbData.h"
+#include "MeshUnstructured.h"
 #include "ProblemSize.h"
 
 #define LABEL_ENDING ':'
@@ -43,7 +44,7 @@ private:
         undefinedSIBC
     } SIBCType;
     CoordinateGroup<CoordR3> cG_;
-    Mesh* mesh_;
+    MeshUnstructured* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;
     const ProblemSize* getProblemSize() const;
@@ -52,7 +53,7 @@ private:
     EMSourceGroup<>* readEMSources();
     OutRqGroup<>* readOutputRequests();
     PhysicalModelGroup<>* readMaterials();
-    Mesh* readMesh();
+    MeshUnstructured* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
             const MatId id_,

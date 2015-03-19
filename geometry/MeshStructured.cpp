@@ -15,19 +15,19 @@ MeshStructured::MeshStructured(const Grid3& grid,
                                const CoordinateGroup<CoordI3>& cG,
                                const ElementsGroup<ElemI>& elem,
                                const LayerGroup<>& layers)
-:   Grid3(grid),
+:   Mesh(layers),
+    Grid3(grid),
     CoordinateGroup<CoordI3>(cG.newGroupOf<CoordI3>()),
-    ElementsGroup<ElemI>(elem.newGroupOf<ElemI>()),
-    LayerGroup<>(layers.newGroupOf<Layer>()) {
+    ElementsGroup<ElemI>(elem.newGroupOf<ElemI>()) {
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 }
 
 MeshStructured::MeshStructured(const MeshStructured& rhs)
-:   Grid3(rhs),
+:   Mesh(rhs),
+    Grid3(rhs),
     CoordinateGroup<CoordI3>(rhs.coords().newGroupOf<CoordI3>()),
-    ElementsGroup<ElemI>(rhs.elems().newGroupOf<ElemI>()),
-    LayerGroup<>(rhs.layers().newGroupOf<Layer>()) {
+    ElementsGroup<ElemI>(rhs.elems().newGroupOf<ElemI>()) {
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 }
@@ -41,14 +41,18 @@ MeshStructured& MeshStructured::operator=(const MeshStructured& rhs) {
         return *this;
     }
 
+    Mesh::operator=(rhs);
     Grid3::operator=(rhs);
     CoordinateGroup<CoordI3>::operator=(rhs.coords().newGroupOf<CoordI3>());
     ElementsGroup<ElemI>::operator=(rhs.elems().newGroupOf<ElemI>());
-    LayerGroup<>::operator=(rhs.layers().newGroupOf<Layer>());
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 
     return *this;
+}
+
+ClassBase* MeshStructured::clone() const {
+    return new MeshStructured(*this);
 }
 
 vector<BoxR3>
@@ -66,5 +70,5 @@ void MeshStructured::printInfo() const {
     Grid3::printInfo();
     CoordinateGroup<CoordI3>::printInfo();
     ElementsGroup<ElemI>::printInfo();
-    LayerGroup<>::printInfo();
+    Mesh::printInfo();
 }

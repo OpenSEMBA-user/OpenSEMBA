@@ -8,14 +8,12 @@
 #ifndef SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_
 #define SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_
 
-#include "elements/ElementsGroup.h"
-#include "layers/LayerGroup.h"
-#include "Grid.h"
+#include "Mesh.h"
 
-class MeshStructured : public Grid3,
+class MeshStructured : public virtual Mesh,
+                       public Grid3,
                        public CoordinateGroup<CoordI3>,
-                       public ElementsGroup<ElemI>,
-                       public LayerGroup<> {
+                       public ElementsGroup<ElemI> {
 public:
     MeshStructured();
     MeshStructured(const Grid3& grid,
@@ -27,20 +25,16 @@ public:
 
     MeshStructured& operator=(const MeshStructured& rhs);
 
+    ClassBase* clone() const;
+
     CoordinateGroup<CoordI3>& coords() { return *this; }
     ElementsGroup<ElemI>&     elems () { return *this; }
-    LayerGroup<>&             layers() { return *this; }
 
     const CoordinateGroup<CoordI3>& coords() const { return *this; }
     const ElementsGroup<ElemI>&     elems () const { return *this; }
-    const LayerGroup<>&             layers() const { return *this; }
 
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const ElementsGroup<ElemR>& region) const;
-
-    vector<BoxR3> discretizeWithinBoundary(
-            const UInt matId,
-            const UInt layId) const;
 
     const Grid3& getGrid() const;
     void setGrid(const Grid3&);
@@ -60,8 +54,13 @@ public:
         return ElementsGroup< E<Int> >(elems, false);
     }
 
+    vector<BoxR3> discretizeWithinBoundary(
+            const UInt matId,
+            const UInt layId) const;
+
     void applyScalingFactor(const Real factor);
-    virtual void printInfo() const;
+
+    void printInfo() const;
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */
