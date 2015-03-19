@@ -125,7 +125,7 @@ template<Int D>
 bool Grid<D>::isRegular(const Int d) const {
     vector<Real> step = getStep(d);
     for (UInt n = 1; n < step.size(); n++) {
-        if (abs((step[n]-step[0])/step[0]) > tolerance) {
+        if (abs(step[n]-step[0]) > tolerance*step[0]) {
             return false;
         }
     }
@@ -138,7 +138,7 @@ bool Grid<D>::isCartesian() const {
     for (Int i = 0; i < D; i++) {
         vector<Real> step = getStep(i);
         for (UInt n = 1; n < step.size(); n++) {
-            if (step[n] != canon) {
+            if (abs(step[n]-canon) > tolerance*canon) {
                 return false;
             }
         }
@@ -260,9 +260,9 @@ vector<Real> Grid<D>::getPosInRange(const Int dir,
         } else {
             step = steps.back();
         }
-        if ((abs(pos[i] - min)/step < tolerance) ||
+        if ((abs(pos[i] - min) < tolerance*step) ||
             (pos[i] >= min && pos[i] <= max)     ||
-            (abs(pos[i] - max)/step < tolerance)) {
+            (abs(pos[i] - max) < tolerance*step)) {
             res.push_back(pos[i]);
         }
     }
@@ -341,7 +341,7 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
         } else {
             step = steps.back();
         }
-        if (abs(pos[i] - x)/step < tol) {
+        if (abs(pos[i] - x) < tol*step) {
             cell = i + offsetGrid_(dir);
             dist = 0.0;
             if (err != NULL) {

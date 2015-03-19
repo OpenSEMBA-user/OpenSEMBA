@@ -88,8 +88,6 @@ public:
     virtual void printInfo() const;
 
 protected:
-    static const Real tolerance;
-
     void ascendingOrder(UInt nVal, UInt* val) const;
 };
 

@@ -25,9 +25,6 @@ Element<void>::~Element() {
 }
 
 template<class T>
-const Real Element<T>::tolerance = 1e-15;
-
-template<class T>
 Element<T>::Element() {
 
 }
@@ -69,10 +66,13 @@ const Coordinate<T,3>* Element<T>::getMinV() const {
     assert(getV(0) != NULL);
     const Coordinate<T,3>* res = getV(0);
     for (UInt i = 1; i < numberOfVertices(); i++) {
+        if(res->pos() == getV(0)->pos()) {
+            continue;
+        }
         for (UInt j = 0; j < 3; j++) {
             Real val1 = getV(i)->pos()(j);
             Real val2 = res->pos()(j);
-            if(abs(val1 - val2) > tolerance) {
+            if(abs(val1 - val2) > CVecR3::tolerance*res->pos().norm()) {
                 if(val1 < val2) {
                     res = getV(i);
                 }
@@ -87,10 +87,13 @@ const Coordinate<T,3>* Element<T>::getMaxV() const {
     assert(getV(0) != NULL);
     const Coordinate<T,3>* res = getV(0);
     for (UInt i = 1; i < numberOfVertices(); i++) {
+        if(res->pos() == getV(0)->pos()) {
+            continue;
+        }
         for (UInt j = 0; j < 3; j++) {
             Real val1 = getV(i)->pos()(j);
             Real val2 = res->pos()(j);
-            if(abs(val1 - val2) > tolerance) {
+            if(abs(val1 - val2) > CVecR3::tolerance*res->pos().norm()) {
                 if(val1 > val2) {
                     res = getV(i);
                 }
