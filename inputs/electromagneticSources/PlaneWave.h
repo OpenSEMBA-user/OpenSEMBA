@@ -28,9 +28,11 @@ public:
     Real getPhi() const;
     Real getAlpha() const;
     Real getBeta() const;
-
-    CVecR3 getElectricField(const Real time) const;
+        CVecR3 getElectricField(const Real time) const;
     pair<CVecR3,CVecR3> getElectromagneticField(const Real time) const;
+
+    void setElements(const ElementsGroup<Volume<> >&);
+
     void printInfo() const;
 private:
     CVecR3 direction_;

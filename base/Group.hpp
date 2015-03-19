@@ -139,6 +139,11 @@ void Group<T>::add(const Group<T>& rhs) {
 }
 
 template<typename T>
+void Group<T>::reserve(const UInt nS) {
+    this->element_.reserve(nS);
+}
+
+template<typename T>
 void Group<T>::initElements(const vector<T*>& elems) {
     this->element_.resize(elems.size());
     for(UInt i = 0; i < elems.size(); i++) {

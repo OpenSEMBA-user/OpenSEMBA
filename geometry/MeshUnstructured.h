@@ -32,7 +32,7 @@ public:
 
     MeshUnstructured& operator=(const MeshUnstructured& rhs);
 
-    ClassBase* clone() const;
+    virtual ClassBase* clone() const;
 
     CoordinateGroup<CoordR3>& coords() { return *this; }
     ElementsGroup<ElemR>&     elems () { return *this; }

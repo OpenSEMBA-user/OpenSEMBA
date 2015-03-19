@@ -8,8 +8,8 @@
 #ifndef SMBDATA_H_
 #define SMBDATA_H_
 
-#include "geometry/Mesh.h"
 #include "MeshUnstructured.h"
+#include "MeshStructured.h"
 #include "ProjectFile.h"
 #include "Grid.h"
 #include "inputs/electromagneticSources/EMSourceGroup.h"

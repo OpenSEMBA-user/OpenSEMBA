@@ -38,6 +38,8 @@ public:
     virtual void add(vector<T*>&);
     virtual void add(const Group<T>&);
 
+    virtual void reserve(const UInt nS);
+
 protected:
     bool ownership_;
     vector<T*> element_;

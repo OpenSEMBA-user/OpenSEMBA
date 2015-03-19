@@ -78,7 +78,7 @@ ParserGiD::readSolverOptions() {
                     res->setCFL(atof(value.c_str()));
                 } else if (label.compare("Default sampling period") == 0) {
                     res->setSamplingPeriod(atof(value.c_str()));
-                // Ugrfdtd.
+                    // Ugrfdtd.
                 } else if (label.compare("Composites model") == 0) {
                     res->setCompositeModel(strToCompositeModel(value));
                 } else if (label.compare("Composites attenuation factor") == 0) {
@@ -314,42 +314,42 @@ ParserGiD::readPhysicalModel(const MatId id) {
             // Creates material.
             switch (type) {
             case PhysicalModel::PEC:
-            return new PMPEC(id, name);
+                return new PMPEC(id, name);
             case PhysicalModel::PMC:
-            return new PMPMC(id, name);
+                return new PMPMC(id, name);
             case PhysicalModel::SMA:
-            return new PMSMA(id, name);
+                return new PMSMA(id, name);
             case PhysicalModel::PML:
-            return new PMVolumePML(id, name);
+                return new PMVolumePML(id, name);
             case PhysicalModel::classic:
-            if (eC == 0 && mC == 0) {
-                return new PMVolume(id, name, rEps, rMu);
-            }
-            return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
+                if (eC == 0 && mC == 0) {
+                    return new PMVolume(id, name, rEps, rMu);
+                }
+                return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
             case PhysicalModel::elecDispersive:
-            return readDispersiveMatFile(id,name);
+                return readDispersiveMatFile(id,name);
             case PhysicalModel::isotropicsibc:
-            switch (surfType) {
-            case sibc:
-                return readIsotropicSurfMatFile(id, name);
-            case multilayer:
-                return readMultilayerSurf(id, name, layersStr);
-            default:
-                cerr << endl << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
-            }
-            break;
-            case PhysicalModel::wire:
-            return new PMWire(id, name, radius, R, L);
-            case PhysicalModel::multiport:
-            if (mpType == PMMultiport::shortCircuit) {
-                return new PMMultiportPredefined(id, name, mpType);
-            } else {
-                return new PMMultiportRLC(id, name, mpType, R, L, C);
-            }
-            default:
-                cerr << endl << "ERROR @ Parsing materials: ";
-                cerr << endl << "Material type not recognized." << endl;
-                return NULL;
+                switch (surfType) {
+                case sibc:
+                    return readIsotropicSurfMatFile(id, name);
+                case multilayer:
+                    return readMultilayerSurf(id, name, layersStr);
+                default:
+                    cerr << endl << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
+                }
+                break;
+                case PhysicalModel::wire:
+                    return new PMWire(id, name, radius, R, L);
+                case PhysicalModel::multiport:
+                    if (mpType == PMMultiport::shortCircuit) {
+                        return new PMMultiportPredefined(id, name, mpType);
+                    } else {
+                        return new PMMultiportRLC(id, name, mpType, R, L, C);
+                    }
+                default:
+                    cerr << endl << "ERROR @ Parsing materials: ";
+                    cerr << endl << "Material type not recognized." << endl;
+                    return NULL;
             }
         }
     }
@@ -398,35 +398,43 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                 OutRq::Type type = strToOutputType(trim(value));
                 getNextLabelAndValue(label,value);
                 Domain domain = strToDomain(value);
-                vector<ElementId> elem;
                 switch (gidOutputType) {
                 case ParserGiD::outRqOnPoint:
+                {
                     getNextLabelAndValue(label,value);
-                    elem.clear();
-#warning "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
-                    elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRqNode(elem, domain, type, name));
-                    break;
-//                case ParserGiD::outRqOnLine:
-//                    getNextLabelAndValue(label,value);
-//                    elem.clear();
-//                    elem.push_back(ElementId(atoi(value.c_str())));
-//                    res->add(new OutRq(elem, domain, type, name));
-//                    break;
+                    CoordinateId id(atoi(value.c_str()));
+                    ElementsGroup<NodeR> node = mesh_->elems().add(new NodeR(cG_, id));
+                    res->add(new OutRqNode(node, domain, type, name));
+                }
+                break;
+                //                case ParserGiD::outRqOnLine:
+                //                    getNextLabelAndValue(label,value);
+                //                    elem.clear();
+                //                    elem.push_back(ElementId(atoi(value.c_str())));
+                //                    res->add(new OutRq(elem, domain, type, name));
+                //                    break;
                 case ParserGiD::outRqOnSurface:
+                {
                     getNextLabelAndValue(label,value);
-                    elem.clear();
-                    elem.push_back(ElementId(atoi(value.c_str())));
+                    ElementId id(atoi(value.c_str()));
+                    SurfR* elem = mesh_->elems().getPtrToId(id)->castTo<SurfR>();
+                    ElementsGroup<SurfR> elems(elem);
                     res->add(new OutRqSurface(elem, domain, type, name));
-                    break;
+                }
+                break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
-                    elem = mesh_->add(HexR8(BoxR3(strToBound(line))));
-                    res->add(new OutRqVolume(elem, domain, type, name));
+                    HexR8 elem = mesh_->elems().add(new HexR8(BoxR3(strToBound(line))));
+                    ElementsGroup<VolR> elems;
+                    elems.add(elem.castTo<VolR>());
+                    res->add(new OutRqVolume(elems, domain, type, name));
                     break;
                 case ParserGiD::farField:
                     getline(f_in, line);
-                    elem = mesh_->add(HexR8(BoxR3(strToBound(line))));
+                    HexR8* hex = new HexR8(BoxR3(strToBound(line)));
+                    HexR8 elem = mesh_->elems().add(hex);
+                    ElementsGroup<VolR> elems;
+                    elems.add(elem.castTo<VolR>());
                     Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
@@ -608,19 +616,19 @@ ElementsGroup<ElemR> ParserGiD::readElements(
     // Shows error message if the elements label was not found.
     if (!found) {
         cerr << endl << "ERROR @ GiDParser::readElements(): "
-             << "\"Elements\" label was not found." << endl;
+                << "\"Elements\" label was not found." << endl;
     }
     // This code is reached only in case of "End of elements" is not found.
     if (!finished) {
         cerr << endl << "ERROR @ GiDParser::readElements()"
-             << "\"End of elements\" label was not found." << endl;
+                << "\"End of elements\" label was not found." << endl;
     }
     //
     return ElementsGroup<ElemR>(elems);
 }
 
 void ParserGiD::readHex8Elements(const CoordinateGroup<CoordR3>& v,
-                                 vector<ElemR*>& elems) {
+        vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[8];
     MatId matId;
@@ -635,7 +643,7 @@ void ParserGiD::readHex8Elements(const CoordinateGroup<CoordR3>& v,
 }
 
 void ParserGiD::readTet10Elements(const CoordinateGroup<CoordR3>& v,
-                                  vector<ElemR*>& elems) {
+        vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[10];
     MatId matId;
@@ -650,7 +658,7 @@ void ParserGiD::readTet10Elements(const CoordinateGroup<CoordR3>& v,
 }
 
 void ParserGiD::readTet4Elements(const CoordinateGroup<CoordR3>& v,
-                                 vector<ElemR*>& elems) {
+        vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[4];
     LayerId layerId;
@@ -662,7 +670,7 @@ void ParserGiD::readTet4Elements(const CoordinateGroup<CoordR3>& v,
 }
 
 void ParserGiD::readTri6Elements(const CoordinateGroup<CoordR3>& v,
-                                 vector<ElemR*>& elems) {
+        vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[6];
     MatId matId;
@@ -677,7 +685,7 @@ void ParserGiD::readTri6Elements(const CoordinateGroup<CoordR3>& v,
 }
 
 void ParserGiD::readTri3Elements(const CoordinateGroup<CoordR3>& v,
-                                 vector<ElemR*>& elems) {
+        vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[3];
     LayerId layerId;
@@ -690,7 +698,7 @@ void ParserGiD::readTri3Elements(const CoordinateGroup<CoordR3>& v,
 }
 
 void ParserGiD::readLin2Elements(const CoordinateGroup<CoordR3>& v,
-                                 vector<ElemR*>& elems) {
+        vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[2];
     LayerId layerId;
@@ -995,7 +1003,8 @@ ParserGiD::readPlaneWave() {
             for (UInt i = 0; i < nE; i++) {
                 UInt e;
                 f_in >> e;
-                elems.add(mesh_->elems().getPtrToId(ElementId(e)));
+                Volume<>* elem = mesh_->elems().getPtrToId(ElementId(e));
+                elems.add(elem);
             }
         } else if (label.compare("End of Planewave")==0) {
             return new PlaneWave(elems, dir, pol, mag);
@@ -1003,13 +1012,13 @@ ParserGiD::readPlaneWave() {
     }
     // Throws error message if ending label was not found.
     cerr << endl << "ERROR @ Parsing planewave: "
-         << "End of Planewave label not found. " << endl;
+            << "End of Planewave label not found. " << endl;
     return new PlaneWave();
 }
 
 Dipole*
 ParserGiD::readDipole() {
-    ElementsGroup<Volume<> > elem;
+    ElementsGroup<Volume<> > elems;
     Real length = 0.0;
     CVecR3 orientation;
     CVecR3 position;
@@ -1022,7 +1031,8 @@ ParserGiD::readDipole() {
         getline(f_in, line);
         if (line.find("End of puntual excitation") == line.npos) {
             ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
-            elem.add(mesh_->elems().getPtrToId(id));
+            Volume<>* elem = mesh_->elems().getPtrToId(id);
+            elems.add(elem);
         } else
             finished = true;
     }
@@ -1032,7 +1042,7 @@ ParserGiD::readDipole() {
                 << endl;
     }
     //
-    return new Dipole(elem, length, orientation, position, mag);
+    return new Dipole(elems, length, orientation, position, mag);
 }
 
 Waveport*
@@ -1141,7 +1151,7 @@ ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
     Magnitude* mag;
-    vector<ElementId> elems;
+    ElementsGroup<Line<> > elems;
     string filename;
     string label, value;
     while(!f_in.eof()) {
@@ -1158,16 +1168,17 @@ ParserGiD::readSourceOnLine() {
             for (UInt i = 0; i < nE; i++) {
                 UInt e;
                 f_in >> e;
-                elems.push_back(ElementId(e));
+                Line<>* elem = mesh_->elems().getPtrToId(ElementId(e));
+                elems.add(elem);
             }
         } else if (label.compare("End of Source_on_line")==0) {
-            return new SourceOnLine(type, hardness, elems, mag);
+            return new SourceOnLine(elems, type, hardness, mag);
         }
     }
     // Throws error message if ending label was not found.
     cerr << endl << "ERROR @ Parsing nodal: "
             << "End of Nodal label not found. " << endl;
-    return new SourceOnLine();
+    return new SourceOnLine(elems, type, hardness, mag);
 }
 
 OutRq::Type
@@ -1226,7 +1237,7 @@ ParserGiD::strToGeneratorType(string str) const {
     } else {
         cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized generator type." << endl;
-        return Generator::undefined;
+        return Generator::voltage;
     }
 }
 
@@ -1596,7 +1607,7 @@ ParserGiD::checkVersionCompatibility(const string version) const {
             atof(version.c_str()) == atof(string(APP_VERSION).c_str());
     if (!versionMatches) {
         cerr << endl << "ERROR @ ParserGiD: "
-             << "File version " << version << " is not supported." << endl;
+                << "File version " << version << " is not supported." << endl;
     }
     return versionMatches;
 }
