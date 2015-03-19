@@ -29,7 +29,7 @@ bool Surface<T>::isRectangular() const {
         CartesianVector<T,3> p1 = this->getSideVertex(f % 4, 1)->pos();
         CartesianVector<T,3> p2 = this->getSideVertex((f+1) % 4, 1)->pos();
         Real sProd = (Real)(p2-p1).dot(p1 - p0);
-        if (sProd > this->tolerance) {
+        if (sProd > CVecR3::tolerance) {
             return false;
         }
     }

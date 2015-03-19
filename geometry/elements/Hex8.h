@@ -49,6 +49,8 @@ public:
 
     ClassBase* clone() const;
 
+    bool isStructured(const Grid3&) const;
+
     bool isRegular() const;
     inline bool isCurvedFace(const UInt f) const { return false; }
 

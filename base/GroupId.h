@@ -18,6 +18,8 @@ public:
 
     GroupId<T, Id>& operator=(const Group<T>& rhs);
 
+    bool existId(const Id id) const;
+
 //    T*       getPtrToId(const Id id);
     const T* getPtrToId(const Id id) const;
 

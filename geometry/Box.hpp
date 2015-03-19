@@ -110,7 +110,7 @@ CartesianAxis Box<T,D>::getDirection() const {
     }
     CartesianAxis res;
     for(Int d = 0; d < D; d++) {
-        if (min_(d) != max_(d)) {
+        if (fabs(max_(d)-min_(d)) > CVecR3::tolerance*min_.norm()) {
             res = CartesianAxis(d);
             break;
         }
@@ -129,7 +129,7 @@ CartesianPlane Box<T,D>::getNormal() const {
     assert(D == 3);
     CartesianPlane res;
     for(Int d = 0; d < D; d++) {
-        if (min_(d) == max_(d)) {
+        if (fabs(max_(d)-min_(d)) <= CVecR3::tolerance*min_.norm()) {
             res = CartesianPlane((d+D-1)%D);
             break;
         }
@@ -198,12 +198,15 @@ inline vector<CartesianVector<T,D> > Box<T,D>::getPos() const {
     assert(D == 3);
     vector<CVecTD> res;
     // TODO: Generalize this...
-    if (isLine()) {
+    if (isPoint()) {
+        res.push_back(min_);
+        return res;
+    } else if (isLine()) {
         res.resize(2);
         res[0] = min_;
         res[1] = min_;
         for(Int d = 0; d < D; d++) {
-            if (min_(d) != max_(d)) {
+            if (fabs(max_(d)-min_(d)) > CVecR3::tolerance*min_.norm()) {
                 res[0](d) = min_(d);
                 res[1](d) = max_(d);
             }
@@ -330,7 +333,7 @@ template<class T, Int D>
 UInt Box<T,D>::numberOfDifferentCoords() const {
     UInt res = 0;
     for(Int d = 0; d < D; d++) {
-        if (min_(d) != max_(d)) {
+        if (fabs(max_(d)-min_(d)) > CVecR3::tolerance*min_.norm()) {
             res++;
         }
     }

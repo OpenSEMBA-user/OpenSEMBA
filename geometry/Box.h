@@ -35,6 +35,7 @@ public:
     void operator<<(const CVecTD& p);
     void operator<<(const Box<T,D>& p);
 
+    bool isPoint  () const { return (numberOfDifferentCoords() == 0); }
     bool isLine   () const { return (numberOfDifferentCoords() == 1); }
     bool isSurface() const { return (numberOfDifferentCoords() == 2); }
     bool isVolume () const { return (numberOfDifferentCoords() == 3); }

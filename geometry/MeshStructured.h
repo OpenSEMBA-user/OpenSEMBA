@@ -53,7 +53,7 @@ public:
         for(UInt i = 0; i < rhs.size(); i++) {
             elem = rhs(i)->toStructured(*this, *this);
             if (elem != NULL) {
-                ElementsGroup<ElemI>::add(elem->template castTo<ElemI>(),true);
+                ElementsGroup<ElemI>::add(elem->template castTo<ElemI>());
                 elems.push_back(elem);
             }
         }

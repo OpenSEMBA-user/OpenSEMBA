@@ -44,7 +44,9 @@ public:
 	virtual ~Quad4();
     
 	ClassBase* clone() const;
-    
+
+    bool isStructured(const Grid3&) const;
+
 	const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
 	const Coordinate<T,3>* getSideV(const UInt f,
 	                           const UInt i) const;

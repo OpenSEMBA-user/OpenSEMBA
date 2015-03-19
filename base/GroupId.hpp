@@ -40,6 +40,11 @@ GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T>& rhs) {
     return *this;
 }
 
+template<typename T, class Id>
+bool GroupId<T, Id>::existId(const Id id) const {
+    return (mapId_.count(id) != 0);
+}
+
 //template<typename T, class Id>
 //T* GroupId<T, Id>::getPtrToId(const Id id) {
 //    if(mapId_.count(id) != 0)

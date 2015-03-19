@@ -71,6 +71,42 @@ ClassBase* Hex8<T>::clone() const {
 }
 
 template<class T>
+bool Hex8<T>::isStructured(const Grid3& grid) const {
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        if (!grid.isCell(*this->getV(i))) {
+            return false;
+        }
+    }
+    Box<T,3> bound(*this->getMinV(), *this->getMaxV());
+    if (!bound.isVolume()) {
+        return false;
+    }
+    vector< CartesianVector<T,3> > pos = bound.getPos();
+    vector<bool> found(pos.size(), false);
+    if (pos.size() != this->numberOfCoordinates()) {
+        return false;
+    }
+    bool foundCoord;
+    for(UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        foundCoord = false;
+        for(UInt j= 0; j < pos.size(); j++) {
+            if (found[j]) {
+                continue;
+            }
+            if (*this->getV(i) == pos[j]) {
+                foundCoord = true;
+                found[j] = true;
+                break;
+            }
+        }
+        if (!foundCoord) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<class T>
 bool Hex8<T>::isRegular() const {
     // Checks that all edges are aligned with one of the axis.
     static const CartesianVector<T,3> xAxe(1.0, 0.0, 0.0);
@@ -227,22 +263,27 @@ ElemI* Hex8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
     if (this->template is<ElemI>()) {
         return NULL;
     }
+    if (!isStructured(grid)) {
+        return NULL;
+    }
     CVecI3 cell;
     const CoordI3* coord;
+    CoordinateId coordId;
     CoordinateId* vIds = new CoordinateId[this->numberOfCoordinates()];
     for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        if (!grid.isCell(*this->getV(i))) {
+        cell  = grid.getCell(*this->getV(i));
+        coordId = this->getV(i)->getId();
+        if (!cG.existId(coordId)) {
+            cG.add(new CoordI3(coordId, cell));
+        }
+        coord = cG.getPtrToId(coordId);
+        if (*coord != cell) {
             cerr << endl << "ERROR @ Element::toStructured(): "
-                 << "Element with vertex not Structured" << endl;
+                 << "Existent Coordinate not coincident." << endl;
             assert(false);
             exit(EXIT_FAILURE);
         }
-        cell  = grid.getCell(*this->getV(i));
-        coord = cG.get(cell);
-        if (coord == NULL) {
-            coord = cG.add(cell);
-        }
-        vIds[i] = coord->getId();
+        vIds[i] = coordId;
     }
     ElemI* res =  new HexI8(cG,
                             this->getId(),
