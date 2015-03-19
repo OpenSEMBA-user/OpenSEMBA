@@ -25,6 +25,28 @@ Node<T>::Node(const ElementId id,
 :   Elem(id, layerId, matId) {
     v_[0] = v[0];
 }
+template<class T>
+Node<T>::Node(CoordinateGroup<Coordinate<T,3> >& cG,
+              const ElementId id,
+              const Box<T,3>& box,
+              const LayerId layerId,
+              const MatId   matId)
+:   Elem(id, layerId, matId) {
+
+    if(!box.isPoint()) {
+        cerr << endl << "ERROR @ Node::Node(): "
+                     << "Box is not a Point" << endl;
+        assert(false);
+        exit(EXIT_FAILURE);
+    }
+    vector<CartesianVector<T,3> > pos = box.getPos();
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = cG.get(pos[i]);
+        if (v_[i] == NULL) {
+            v_[i] = cG.add(pos[i]);
+        }
+    }
+}
 
 template<class T>
 Node<T>::Node(const Node<T>& rhs)

@@ -33,6 +33,11 @@ public:
          const Coordinate<T,3>* v[1],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
+	Node(CoordinateGroup<Coordinate<T,3> >&,
+         const ElementId id,
+         const Box<T,3>& box,
+         const LayerId layerId = LayerId(0),
+         const MatId   matId   = MatId(0));
     Node(const Node<T>& rhs);
 	virtual ~Node();
     
