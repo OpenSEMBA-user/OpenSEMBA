@@ -19,15 +19,12 @@ using namespace std;
 
 struct lexCompareCoord {
     bool operator() (const CoordR3* lhs, const CoordR3* rhs) const {
-        static const Real tolerance = 1e-12;
         for (UInt i = 0; i < 3; i++) {
-            if (abs(lhs->pos()(i) - rhs->pos()(i)) > tolerance) {
-                if (lhs->pos()(i) < rhs->pos()(i)) {
-                    return true;
-                }
-                if (lhs->pos()(i) > rhs->pos()(i)) {
-                    return false;
-                }
+            if (MathUtils::lower   (lhs->pos()(i),rhs->pos()(i),lhs->norm())) {
+                return true;
+            }
+            if (MathUtils::greather(lhs->pos()(i),rhs->pos()(i),lhs->norm())) {
+                return false;
             }
         }
         return false;

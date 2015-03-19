@@ -1,12 +1,16 @@
 #include "CartesianVector.h"
 
-template<class T, Int D>
-const Real CartesianVector<T,D>::tolerance = 1.0e-7;
-
 template <class T, Int D>
 CartesianVector<T,D>::CartesianVector() {
     for (Int i = 0; i < D; i++) {
         val[i] = T(0);
+    }
+}
+
+template <class T, Int D>
+CartesianVector<T,D>::CartesianVector(const T val_) {
+    for (Int i = 0; i < D; i++) {
+        val[i] = val_;
     }
 }
 
@@ -237,10 +241,7 @@ inline T CartesianVector<T,D>::dot(const CartesianVector<T,D>& param) const {
 template <class T, Int D>
 bool CartesianVector<T,D>::operator==(
         const CartesianVector<T, D>& param) const {
-    if ((*this-param).norm() >= tolerance*norm()) {
-        return false;
-    }
-    return true;
+    return MathUtils::equal(norm(), param.norm());
 }
 
 template <class T, Int D>
@@ -263,17 +264,17 @@ bool CartesianVector<T,D>::isContainedInPlane(
     if (is_same<T, complex<Real> >::value) {
         switch (plane) {
         case xy:
-            if (std::abs(val[2]) < numeric_limits<Real>::epsilon()*1e8) {
+            if (MathUtils::equal(std::abs(val[2]), 0.0, 1.0)) {
                 return true;
             }
             break;
         case yz:
-            if (std::abs(val[0]) < numeric_limits<Real>::epsilon()*1e8) {
+            if (MathUtils::equal(std::abs(val[0]), 0.0, 1.0)) {
                 return true;
             }
             break;
         case zx:
-            if (std::abs(val[1]) < numeric_limits<Real>::epsilon()*1e8) {
+            if (MathUtils::equal(std::abs(val[1]), 0.0, 1.0)) {
                 return true;
             }
             break;
@@ -282,17 +283,17 @@ bool CartesianVector<T,D>::isContainedInPlane(
     } else {
         switch (plane) {
         case xy:
-            if (std::fabs(val[2]) < numeric_limits<Real>::epsilon()*1e8) {
+            if (MathUtils::equal(std::fabs(val[2]), 0.0, 1.0)) {
                 return true;
             }
             break;
         case yz:
-            if (std::fabs(val[0]) < numeric_limits<Real>::epsilon()*1e8) {
+            if (MathUtils::equal(std::fabs(val[0]), 0.0, 1.0)) {
                 return true;
             }
             break;
         case zx:
-            if (std::fabs(val[1]) < numeric_limits<Real>::epsilon()*1e8) {
+            if (MathUtils::equal(std::fabs(val[1]), 0.0, 1.0)) {
                 return true;
             }
             break;

@@ -64,7 +64,8 @@ public:
 
     bool isCoordinate(const Coordinate<T,3>* coord) const;
 
-    virtual bool isStructured(const Grid3&) const { return false; }
+    virtual bool isStructured(const Grid3&,
+                              const Real = Grid3::tolerance) const;
     virtual bool isInnerPoint(const CartesianVector<T,3>& pos) const;
 
     virtual const Coordinate<T,3>* getV    (const UInt i) const = 0;
@@ -83,7 +84,8 @@ public:
     virtual void setV(const UInt i, const Coordinate<T,3>*);
 
     virtual Element<Int>* toStructured(CoordinateGroup<CoordI3>&,
-                                       const Grid3&) const;
+                                       const Grid3&,
+                                       const Real = Grid3::tolerance) const;
 
     virtual void printInfo() const;
 

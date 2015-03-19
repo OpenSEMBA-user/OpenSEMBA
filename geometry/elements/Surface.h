@@ -36,9 +36,6 @@ public:
     virtual CartesianVector<T,3> getNormal() const;
 	
     virtual void printInfo() const;
-
-protected:
-	static const Real curvatureTolerance;
 };
 
 typedef Surface<void> Surf;

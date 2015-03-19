@@ -63,7 +63,6 @@ public:
 
     virtual void printInfo() const;
 protected:
-    static const Real areaDiffTolerance;
     vector<Face> getInternalBorder(const ElementsGroup<Tet>& tet) const;
     vector<Face> getInternalBorder(const ElementsGroup<Tri>& tri) const;
 };

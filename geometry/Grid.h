@@ -47,7 +47,8 @@ public:
                 const Real tol = tolerance) const;
     bool isCell(const vector<CVecRD>& positions,
                 const Real tol = tolerance) const;
-    bool isCell(const CVecID& pos) const { return true; }
+    bool isCell(const CVecID& pos,
+                const Real tol = tolerance) const { return true; }
 
     CVecID getNumCells() const;
     CVecID getOffset() const { return offsetGrid_; }
@@ -73,21 +74,21 @@ public:
     pair<Int, Real>      getCellPair(const Int  dir,
                                      const Real x,
                                      const bool approx = true,
-                                     bool* err = NULL,
-                                     const Real tol = tolerance) const;
+                                     const Real tol = tolerance,
+                                     bool* err = NULL) const;
     pair<CVecID, CVecRD> getCellPair(const CVecRD& pos,
                                      const bool approx = true,
-                                     bool* err = NULL,
-                                     const Real tol = tolerance) const;
+                                     const Real tol = tolerance,
+                                     bool* err = NULL) const;
     Int    getCell(const Int   dir,
                    const Real  x,
                    const bool  approx = true,
-                   bool* err = NULL,
-                   const Real  tol = tolerance) const;
+                   const Real  tol = tolerance,
+                   bool* err = NULL) const;
     CVecID getCell(const CVecRD& pos,
                    const bool  approx = true,
-                   bool* err = NULL,
-                   const Real  tol = tolerance) const;
+                   const Real  tol = tolerance,
+                   bool* err = NULL) const;
     CVecID getCell(const CVecID& pos) const { return pos; }
 
     void applyScalingFactor(const Real factor);

@@ -45,6 +45,11 @@ bool Element<T>::isCoordinate(const Coordinate<T,3>* coord) const {
 }
 
 template<class T>
+bool Element<T>::isStructured(const Grid3& grid, const Real tol) const {
+    return false;
+}
+
+template<class T>
 bool Element<T>::isInnerPoint(const CartesianVector<T,3>& pos) const {
     cerr << "ERROR @ Element: "
          << "Can't determine inner point for this element." << endl;
@@ -72,10 +77,8 @@ const Coordinate<T,3>* Element<T>::getMinV() const {
         for (UInt j = 0; j < 3; j++) {
             Real val1 = getV(i)->pos()(j);
             Real val2 = res->pos()(j);
-            if(abs(val1 - val2) > CVecR3::tolerance*res->pos().norm()) {
-                if(val1 < val2) {
-                    res = getV(i);
-                }
+            if(MathUtils::lower(val1, val2, res->pos().norm())) {
+                res = getV(i);
             }
         }
     }
@@ -93,10 +96,8 @@ const Coordinate<T,3>* Element<T>::getMaxV() const {
         for (UInt j = 0; j < 3; j++) {
             Real val1 = getV(i)->pos()(j);
             Real val2 = res->pos()(j);
-            if(abs(val1 - val2) > CVecR3::tolerance*res->pos().norm()) {
-                if(val1 > val2) {
-                    res = getV(i);
-                }
+            if(MathUtils::greather(val1, val2, res->pos().norm())) {
+                res = getV(i);
             }
         }
     }
@@ -114,9 +115,10 @@ void Element<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 
 template<class T>
 ElemI* Element<T>::toStructured(CoordinateGroup<CoordI3>& cG,
-                                const Grid3& grid) const {
+                                const Grid3& grid, const Real tol) const {
     return NULL;
 }
+
 template<class T>
 void Element<T>::printInfo() const {
     cout<< "Element. Id: " << this->getId() << " MatId: " << getMatId()

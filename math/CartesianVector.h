@@ -1,15 +1,17 @@
 #ifndef CARTESIANVECTOR_H_
 #define CARTESIANVECTOR_H_
 
-#include <iostream>
+#include <cassert>
 #include <cmath>
-#include <assert.h>
 #include <complex>
+#include <cstdlib>
+#include <iostream>
 #include <limits>
 #include <type_traits>
-#include "Types.h"
 
 using namespace std;
+
+#include "RealUtils.h"
 
 typedef enum {
 	xy = 0,
@@ -28,15 +30,12 @@ typedef enum {
     U = 1
 } CartesianBound;
 
-#include "Types.h"
-
 template <class T, Int D>
 class CartesianVector {
 public:
-    static const Real tolerance;
-
     T val[D];
     CartesianVector();
+    CartesianVector<T,D>(const T val_);
     CartesianVector<T,D>(T val_[D]);
     CartesianVector<T,D>(const T val_[D]);
     CartesianVector<T,D>(const T, const T, const T);

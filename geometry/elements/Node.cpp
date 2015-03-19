@@ -43,9 +43,9 @@ ClassBase* Node<T>::clone() const {
 }
 
 template<class T>
-bool Node<T>::isStructured(const Grid3& grid) const {
+bool Node<T>::isStructured(const Grid3& grid, const Real tol) const {
     for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        if (!grid.isCell(*this->getV(i))) {
+        if (!grid.isCell(*this->getV(i), tol)) {
             return false;
         }
     }
@@ -104,11 +104,11 @@ void Node<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 
 template<class T>
 ElemI* Node<T>::toStructured(CoordinateGroup<CoordI3>& cG,
-                             const Grid3& grid) const {
+                             const Grid3& grid, const Real tol) const {
     if (this->template is<ElemI>()) {
         return NULL;
     }
-    if (!isStructured(grid)) {
+    if (!isStructured(grid, tol)) {
         return NULL;
     }
     CVecI3 cell;

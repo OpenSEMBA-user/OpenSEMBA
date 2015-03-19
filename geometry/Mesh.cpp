@@ -6,8 +6,6 @@
  */
 #include "Mesh.h"
 
-const Real Mesh::areaDiffTolerance = 1e-15;
-
 Mesh::Mesh() {
 
 }

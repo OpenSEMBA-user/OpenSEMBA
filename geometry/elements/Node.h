@@ -38,7 +38,7 @@ public:
     
     ClassBase* clone() const;
 
-    bool isStructured(const Grid3&) const;
+    bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
 
     const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
     const Coordinate<T,3>* getSideV(const UInt f, const UInt i) const;
@@ -48,7 +48,8 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>* coord);
 
-    ElemI* toStructured(CoordinateGroup<CoordI3>&, const Grid3&) const;
+    ElemI* toStructured(CoordinateGroup<CoordI3>&,
+                        const Grid3&, const Real = Grid3::tolerance) const;
 
 	void printInfo() const;
 private:

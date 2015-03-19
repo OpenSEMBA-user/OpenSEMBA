@@ -7,9 +7,6 @@
 #include "Surface.h"
 
 template<class T>
-const Real Surface<T>::curvatureTolerance = 1e-12;
-
-template<class T>
 Surface<T>::Surface() {
 
 }
@@ -29,7 +26,7 @@ bool Surface<T>::isRectangular() const {
         CartesianVector<T,3> p1 = this->getSideVertex(f % 4, 1)->pos();
         CartesianVector<T,3> p2 = this->getSideVertex((f+1) % 4, 1)->pos();
         Real sProd = (Real)(p2-p1).dot(p1 - p0);
-        if (sProd > CVecR3::tolerance) {
+        if (MathUtils::greather(sProd, 0.0, 1.0)) {
             return false;
         }
     }

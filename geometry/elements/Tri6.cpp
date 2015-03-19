@@ -54,7 +54,7 @@ bool Tri6::isCurved() const {
     for (UInt c = 0; c < geo.ncp; c++) {
         curvature += geo.cw[c] * (1.0 - abs(cn[c].dot(pN)));
     }
-    if (curvature >= curvatureTolerance) {
+    if (MathUtils::notEqual(curvature, 0.0, 1.0)) {
         return true;
     }
     return false;

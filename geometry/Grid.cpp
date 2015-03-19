@@ -16,7 +16,8 @@ Grid<D>::Grid(const BoxRD& box,
     for (Int i = 0; i < D; i++) {
         Real boxLength = box.getMax()(i) - box.getMin()(i);
         Int nCells = ceil(boxLength / dxyz(i));
-        if ((boxLength - nCells*dxyz(i))/dxyz(i) > tolerance) {
+        if (MathUtils::notEqual(boxLength, nCells*dxyz(i),
+                                dxyz(i), tolerance)) {
             nCells++;
         }
         pos_[i].resize(nCells+1);
@@ -125,7 +126,7 @@ template<Int D>
 bool Grid<D>::isRegular(const Int d) const {
     vector<Real> step = getStep(d);
     for (UInt n = 1; n < step.size(); n++) {
-        if (abs(step[n]-step[0]) > tolerance*step[0]) {
+        if (MathUtils::notEqual(step[n], step[0], step[0], tolerance)) {
             return false;
         }
     }
@@ -138,7 +139,7 @@ bool Grid<D>::isCartesian() const {
     for (Int i = 0; i < D; i++) {
         vector<Real> step = getStep(i);
         for (UInt n = 1; n < step.size(); n++) {
-            if (abs(step[n]-canon) > tolerance*canon) {
+            if (MathUtils::notEqual(step[n], canon, canon, tolerance)) {
                 return false;
             }
         }
@@ -148,12 +149,8 @@ bool Grid<D>::isCartesian() const {
 
 template<Int D>
 bool Grid<D>::isCell(const CVecRD& position, const Real tol) const {
-    pair<CVecID, CVecRD> natCell = getCellPair(position);
-    bool res = true;
-    for (Int i = 0; i < D; i++) {
-        res &= abs(natCell.second(i)) < tol;
-    }
-    return res;
+    pair<CVecID, CVecRD> natCell = getCellPair(position, true, tol);
+    return natCell.second == CVecRD(0.0);
 }
 
 template<Int D>
@@ -260,9 +257,9 @@ vector<Real> Grid<D>::getPosInRange(const Int dir,
         } else {
             step = steps.back();
         }
-        if ((abs(pos[i] - min) < tolerance*step) ||
-            (pos[i] >= min && pos[i] <= max)     ||
-            (abs(pos[i] - max) < tolerance*step)) {
+        if (MathUtils::equal(pos[i], min, step, tolerance) ||
+            (pos[i] >= min && pos[i] <= max)               ||
+            MathUtils::equal(pos[i], max, step, tolerance)) {
             res.push_back(pos[i]);
         }
     }
@@ -311,8 +308,8 @@ template<Int D>
 pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
                                      const Real x,
                                      const bool approx,
-                                     bool* err,
-                                     const Real tol) const {
+                                     const Real tol,
+                                     bool* err) const {
     if (err != NULL) {
         *err = false;
     }
@@ -323,16 +320,15 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
     vector<Real> steps = getStep(dir);
     assert(pos_[dir].size() >= 1);
     // Checks if it is below the grid.
-    Real diff = abs(pos[0] - x)/steps[0];
-    if(diff > tol && x < pos[0]) {
+    if (MathUtils::lower(x, pos[0], steps[0], tol)) {
         cell = offsetGrid_(dir);
-        dist = -diff;
+        dist = (x-pos[0])/steps[0];
         if (err != NULL) {
             *err = true;
         }
         return make_pair(cell, dist);
     }
-    for (UInt i = 0; i < pos.size(); i++) {
+    for(UInt i = 0; i < pos.size(); i++) {
         Real step;
         if (i == 0) {
             step = steps.front();
@@ -341,14 +337,14 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
         } else {
             step = steps.back();
         }
-        if (abs(pos[i] - x) < tol*step) {
+        if (MathUtils::equal(x, pos[i], step, tol)) {
             cell = i + offsetGrid_(dir);
             dist = 0.0;
             if (err != NULL) {
                 *err = false;
             }
             return make_pair(cell, dist);
-        } else if (pos[i] > x) {
+        } else if (MathUtils::lower(x, pos[i], step, tol)) {
             cell = i - 1 + offsetGrid_(dir);
             dist = (x - pos[i-1])/step;
             if(dist > 0.5 && approx) {
@@ -373,8 +369,8 @@ template<Int D>
 pair<CartesianVector<Int,D>, CartesianVector<Real,D> >
     Grid<D>::getCellPair(const CVecRD& xyz,
                          const bool approx,
-                         bool* err,
-                         const Real tol) const {
+                         const Real tol,
+                         bool* err) const {
     if (err != NULL) {
         *err = false;
     }
@@ -383,7 +379,7 @@ pair<CartesianVector<Int,D>, CartesianVector<Real,D> >
     CVecID cell;
     CVecRD dist;
     for (Int dir = 0; dir < D; dir++) {
-        pair<Int, Real> res = getCellPair(dir,xyz(dir),approx,&stepErr,tol);
+        pair<Int, Real> res = getCellPair(dir,xyz(dir),approx,tol,&stepErr);
         cell(dir) = res.first;
         dist(dir) = res.second;
         if (err != NULL) {
@@ -397,17 +393,17 @@ template<Int D>
 Int Grid<D>::getCell(const Int dir,
                      const Real x,
                      const bool approx,
-                     bool* err,
-                     const Real tol) const {
-    return getCellPair(dir, x, approx, err, tol).first;
+                     const Real tol,
+                     bool* err) const {
+    return getCellPair(dir, x, approx, tol, err).first;
 }
 
 template<Int D>
 CartesianVector<Int,D> Grid<D>::getCell(const CVecRD &coords,
                                         const bool approx,
-                                        bool* err,
-                                        const Real tol) const {
-    return getCellPair(coords, approx, err, tol).first;
+                                        const Real tol,
+                                        bool* err) const {
+    return getCellPair(coords, approx, tol, err).first;
 }
 
 template<Int D>
@@ -422,7 +418,7 @@ void Grid<D>::applyScalingFactor(const Real factor) {
 
 template<Int D>
 void Grid<D>::enlarge(const pair<CVecID, CVecID>& additionalCells,
-                             const pair<CVecRD, CVecRD>& sizesOfNewCells) {
+                      const pair<CVecRD, CVecRD>& sizesOfNewCells) {
     // TODO
     //    const vector<Real> pos = grid.getPos(dir);
     //    const vector<Real> step = grid.getStep(dir);
