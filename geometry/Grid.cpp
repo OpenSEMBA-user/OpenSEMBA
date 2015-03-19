@@ -1,12 +1,10 @@
 #include "Grid.h"
 
+template<Int D>
+const Real Grid<D>::tolerance = 1e-2;
 
 template<Int D>
-const Real Grid<D>::tolerance = 1e-12;
-
-
-template<Int D>
-Grid<D>::Grid(){
+Grid<D>::Grid() {
 
 }
 
@@ -18,7 +16,7 @@ Grid<D>::Grid(const BoxRD& box,
     for (Int i = 0; i < D; i++) {
         Real boxLength = box.getMax()(i) - box.getMin()(i);
         Int nCells = ceil(boxLength / dxyz(i));
-        if ((boxLength - nCells * dxyz(i)) > tolerance) {
+        if ((boxLength - nCells*dxyz(i))/dxyz(i) > tolerance) {
             nCells++;
         }
         pos_[i].resize(nCells+1);
@@ -106,7 +104,7 @@ bool Grid<D>::isInto(const Int dir, const Real pos) const {
 template<Int D>
 bool Grid<D>::isInto(const CVecRD& pos) const {
     for (Int i = 0; i < 3; i++) {
-        if (!isIntoDir(i, pos(i))) {
+        if (!isInto(i, pos(i))) {
             return false;
         }
     }
@@ -127,7 +125,7 @@ template<Int D>
 bool Grid<D>::isRegular(const Int d) const {
     vector<Real> step = getStep(d);
     for (UInt n = 1; n < step.size(); n++) {
-        if (abs(step[n] - step[0]) > tolerance) {
+        if (abs((step[n]-step[0])/step[0]) > tolerance) {
             return false;
         }
     }
@@ -150,14 +148,10 @@ bool Grid<D>::isCartesian() const {
 
 template<Int D>
 bool Grid<D>::isCell(const CVecRD& position, const Real tol) const {
-    pair<CVecID, CVecRD> natCell = getNaturalCellPair(position);
+    pair<CVecID, CVecRD> natCell = getCellPair(position);
     bool res = true;
     for (Int i = 0; i < D; i++) {
-        if (natCell.second(i) < 0.5) {
-            res &= natCell.second(i) < tol;
-        } else {
-            res &= (1.0 - natCell.second(i)) < tol;
-        }
+        res &= abs(natCell.second(i)) < tol;
     }
     return res;
 }
@@ -165,7 +159,7 @@ bool Grid<D>::isCell(const CVecRD& position, const Real tol) const {
 template<Int D>
 bool Grid<D>::isCell(const vector<CVecRD>& pos, const Real tol) const {
     for (UInt i = 0; i < pos.size(); i++) {
-        if (!isNaturalCell(pos[i], tol)) {
+        if (!isCell(pos[i], tol)) {
             return false;
         }
     }
@@ -255,7 +249,24 @@ template<Int D>
 vector<Real> Grid<D>::getPosInRange(const Int dir,
                                     const Real min,
                                     const Real max) const {
-    return extractRange(getPos(dir), pair<Real, Real>(min, max));
+    vector<Real> pos   = getPos (dir);
+    vector<Real> steps = getStep(dir);
+    vector<Real> res;
+    res.reserve(pos.size());
+    for (UInt i = 0; i < pos.size(); i++) {
+        Real step;
+        if (i < steps.size()) {
+            step = steps[i];
+        } else {
+            step = steps.back();
+        }
+        if ((abs(pos[i] - min)/step < tolerance) ||
+            (pos[i] >= min && pos[i] <= max)     ||
+            (abs(pos[i] - max)/step < tolerance)) {
+            res.push_back(pos[i]);
+        }
+    }
+    return res;
 }
 
 template<Int D>
@@ -312,17 +323,25 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
     vector<Real> steps = getStep(dir);
     assert(pos_[dir].size() >= 1);
     // Checks if it is below the grid.
-    Real diff = abs(pos[0] - x);
+    Real diff = abs(pos[0] - x)/steps[0];
     if(diff > tol && x < pos[0]) {
         cell = offsetGrid_(dir);
-        dist = -diff/steps[0];
+        dist = -diff;
         if (err != NULL) {
             *err = true;
         }
         return make_pair(cell, dist);
     }
     for (UInt i = 0; i < pos.size(); i++) {
-        if (abs(pos[i] - x) < tol) {
+        Real step;
+        if (i == 0) {
+            step = steps.front();
+        } else if (i <= steps.size()) {
+            step = steps[i-1];
+        } else {
+            step = steps.back();
+        }
+        if (abs(pos[i] - x)/step < tol) {
             cell = i + offsetGrid_(dir);
             dist = 0.0;
             if (err != NULL) {
@@ -331,7 +350,7 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
             return make_pair(cell, dist);
         } else if (pos[i] > x) {
             cell = i - 1 + offsetGrid_(dir);
-            dist = (x - pos[i-1])/steps[i-1];
+            dist = (x - pos[i-1])/step;
             if(dist > 0.5 && approx) {
                 cell++;
                 dist -= 1.0;
@@ -453,17 +472,6 @@ void Grid<D>::printInfo() const {
     cout << "Max val: " << bound.getMax().toStr() << endl;
 }
 
-template<Int D>
-vector<Real> Grid<D>::extractRange(const vector<Real>& vec,
-                                   const pair<Real, Real>& minMax) const {
-    vector<Real> res;
-    res.reserve(vec.size());
-    for (UInt i = 0; i < vec.size(); i++) {
-        if ((abs(vec[i] - minMax.first) < tolerance)
-        || (vec[i] >= minMax.first && vec[i] <= minMax.second)
-        || (abs(vec[i] - minMax.second) < tolerance)) {
-            res.push_back(vec[i]);
-        }
-    }
-    return res;
-}
+template class Grid<1>;
+template class Grid<2>;
+template class Grid<3>;

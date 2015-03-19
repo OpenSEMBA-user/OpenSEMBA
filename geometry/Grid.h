@@ -47,9 +47,10 @@ public:
                 const Real tol = tolerance) const;
     bool isCell(const vector<CVecRD>& positions,
                 const Real tol = tolerance) const;
+    bool isCell(const CVecID& pos) const { return true; }
 
     CVecID getNumCells() const;
-    CVecRD getOffset() const { return offsetGrid_; }
+    CVecID getOffset() const { return offsetGrid_; }
     CVecRD getOrigin() const { return origin_;     }
 
     vector<Real> getStep(const Int dir) const;
@@ -87,6 +88,7 @@ public:
                    const bool  approx = true,
                    bool* err = NULL,
                    const Real  tol = tolerance) const;
+    CVecID getCell(const CVecID& pos) const { return pos; }
 
     void applyScalingFactor(const Real factor);
     void enlarge(const pair<CVecID,CVecID>& additionalCells,
@@ -99,12 +101,7 @@ private:
     CVecID offsetGrid_;
     CVecRD origin_;
     vector<Real> pos_[D];
-
-    vector<Real> extractRange(const vector<Real>& vec,
-                              const pair<Real,Real>& minMax) const;
 };
-
-#include "Grid.hpp"
 
 typedef Grid<3> Grid3;
 
