@@ -5,12 +5,16 @@
  *      Author: luis
  */
 
-#include "../outRq/OutRqBulkCurrent.h"
+#include "OutRqSurface.h"
 
-OutRqBulkCurrent::OutRqBulkCurrent(
+OutRqSurface::OutRqSurface(
         const ElementsGroup<Surface<> >& elems,
         const Domain& domain,
         const OutRq::Type& type,
         const string& name) :
         OutRq(domain, type, name), ElementsGroup<Surface<> >(elems){
+}
+
+ClassBase* OutRqSurface::clone() const {
+   return new OutRqSurface(*this);
 }

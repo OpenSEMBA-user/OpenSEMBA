@@ -5,9 +5,9 @@
  *      Author: luis
  */
 
-#include "../outRq/OutRqPoint.h"
+#include "OutRqNode.h"
 
-OutRqPoint::OutRqPoint(
+OutRqNode::OutRqNode(
         const ElementsGroup<Node<> >& elems,
         const Domain& domain,
         const Type& type,
@@ -15,11 +15,6 @@ OutRqPoint::OutRqPoint(
         OutRq(domain, type, name), ElementsGroup<Node<> >(elems) {
 }
 
-OutRqPoint::~OutRqPoint() {
-    // TODO Auto-generated destructor stub
-}
-
-
-ClassBase* OutRqPoint::clone() const {
-   return new OutRqPoint(*this);
+ClassBase* OutRqNode::clone() const {
+   return new OutRqNode(*this);
 }

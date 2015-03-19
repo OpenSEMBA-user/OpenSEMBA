@@ -17,7 +17,11 @@ public:
             const Domain& domain,
             const Type& type,
             const string& name);
+
+    virtual ClassBase* clone() const;
+
     void setElements(const ElementsGroup<Volume<> >&);
+
 };
 
 #endif /* SRC_COMMON_INPUTS_OUTRQ_OUTRQVOLUME_H_ */

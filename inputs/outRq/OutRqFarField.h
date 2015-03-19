@@ -8,9 +8,9 @@
 #ifndef SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
 #define SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
 
-#include "../outRq/OutRq.h"
+#include "OutRqVolume.h"
 
-class OutRqFarField : public OutRq, public ElementsGroup<Volume<> > {
+class OutRqFarField : public OutRqVolume {
 public:
     OutRqFarField(
             const ElementsGroup<Volume<> >& box,
@@ -18,7 +18,9 @@ public:
             const string& name,
             const Real iTh, const Real fTh, const Real sTh,
             const Real iPhi, const Real fPhi, const Real sPhi);
-    virtual ~OutRqFarField();
+
+    virtual ClassBase* clone() const;
+
     Real getStepPhi() const;
     Real getStepTheta() const;
     Real getFinalPhi() const;

@@ -2,10 +2,10 @@
 #define OUTPUTREQUESTGROUP_H_
 
 #include "../outRq/OutRq.h"
-#include "../outRq/OutRqPoint.h"
-#include "../outRq/OutRqBulkCurrent.h"
 #include "../outRq/OutRqVolume.h"
 #include "../outRq/OutRqFarField.h"
+#include "OutRqNode.h"
+#include "OutRqSurface.h"
 
 template<typename O = OutRq>
 class OutRqGroup : public Group<O> {

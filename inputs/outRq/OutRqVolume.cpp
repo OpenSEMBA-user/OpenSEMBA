@@ -14,3 +14,7 @@ OutRqVolume::OutRqVolume(
         const string& name) :
         OutRq(domain, type, name), ElementsGroup<Volume<> >(box) {
 }
+
+ClassBase* OutRqVolume::clone() const {
+   return new OutRqVolume(*this);
+}

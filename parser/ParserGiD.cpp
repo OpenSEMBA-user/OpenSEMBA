@@ -405,24 +405,24 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     elem.clear();
 #warning "This must be added as an element, not as a coordinate. Currently is converting a coordinate id into an ElementId."
                     elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRqPoint(elem, domain, type, name));
+                    res->add(new OutRqNode(elem, domain, type, name));
                     break;
-                case ParserGiD::outRqOnLine:
-                    getNextLabelAndValue(label,value);
-                    elem.clear();
-                    elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRq(domain, type, name, elem));
-                    break;
+//                case ParserGiD::outRqOnLine:
+//                    getNextLabelAndValue(label,value);
+//                    elem.clear();
+//                    elem.push_back(ElementId(atoi(value.c_str())));
+//                    res->add(new OutRq(elem, domain, type, name));
+//                    break;
                 case ParserGiD::outRqOnSurface:
                     getNextLabelAndValue(label,value);
                     elem.clear();
                     elem.push_back(ElementId(atoi(value.c_str())));
-                    res->add(new OutRq(domain, type, name, elem));
+                    res->add(new OutRqSurface(elem, domain, type, name));
                     break;
                 case ParserGiD::outRqOnVolume:
                     getline(f_in, line);
                     elem = mesh_->add(HexR8(BoxR3(strToBound(line))));
-                    res->add(new OutRq(domain, type, name, elem));
+                    res->add(new OutRqVolume(elem, domain, type, name));
                     break;
                 case ParserGiD::farField:
                     getline(f_in, line);
@@ -430,7 +430,7 @@ ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
-                    res->add(new OutRqFarField(domain, name, elem,
+                    res->add(new OutRqFarField(elem, domain, name,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
                     break;
                 case ParserGiD::undefined:
@@ -977,7 +977,7 @@ ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
     CVecR3 dir, pol;
-    vector<ElementId> elems;
+    ElementsGroup<Volume<> > elems;
     Magnitude* mag;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
@@ -995,7 +995,7 @@ ParserGiD::readPlaneWave() {
             for (UInt i = 0; i < nE; i++) {
                 UInt e;
                 f_in >> e;
-                elems.push_back(ElementId(e));
+                elems.add(mesh_->elems().getPtrToId(ElementId(e)));
             }
         } else if (label.compare("End of Planewave")==0) {
             return new PlaneWave(elems, dir, pol, mag);
@@ -1174,9 +1174,9 @@ OutRq::Type
 ParserGiD::strToOutputType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
-        return OutRq::electricField;
+        return OutRq::electric;
     } else if (str.compare("magneticField")==0) {
-        return OutRq::magneticField;
+        return OutRq::magnetic;
     } else if (str.compare("electricFieldNormals")==0) {
         return OutRq::electricFieldNormals;
     } else if (str.compare("magneticFieldNormals")==0) {
@@ -1194,7 +1194,7 @@ ParserGiD::strToOutputType(string str) const {
     } else if (str.compare("bulkCurrentMagnetic")==0) {
         return OutRq::bulkCurrentMagnetic;
     } else if (str.compare("farField")==0) {
-        return OutRq::farField;
+        return OutRq::electric;
     } else {
         cerr << endl << "ERROR @ GiDParser::readOutputRequestInstance(): "
                 << "Unrecognized output type: " << str << endl;
@@ -1340,9 +1340,9 @@ SourceOnLine::Type
 ParserGiD::strToNodalType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
-        return SourceOnLine::electricField;
+        return SourceOnLine::electric;
     } else if (str.compare("magneticField")==0) {
-        return SourceOnLine::magneticField;
+        return SourceOnLine::magnetic;
     } else {
         cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized nodal type." << endl;

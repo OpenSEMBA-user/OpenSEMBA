@@ -20,6 +20,8 @@ public:
         magnetic,
         electricFieldNormals,
         magneticFieldNormals,
+        bulkCurrentElectric,
+        bulkCurrentMagnetic,
         powerDensity,
         planeWaveDecomposition,
         current,

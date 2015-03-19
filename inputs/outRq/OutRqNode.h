@@ -5,22 +5,21 @@
  *      Author: luis
  */
 
-#ifndef SRC_COMMON_INPUTS_OUTRQ_OUTRQPOINT_H_
-#define SRC_COMMON_INPUTS_OUTRQ_OUTRQPOINT_H_
+#ifndef SRC_COMMON_INPUTS_OUTRQ_OUTRQNODE_H_
+#define SRC_COMMON_INPUTS_OUTRQ_OUTRQNODE_H_
 
-#include "../outRq/OutRq.h"
+#include "OutRq.h"
 
-class OutRqPoint: public OutRq, public ElementsGroup<Node<> > {
+class OutRqNode: public OutRq, public ElementsGroup<Node<> > {
 public:
-    OutRqPoint(
+    OutRqNode(
             const ElementsGroup<Node<> >& point,
             const Domain& domain,
             const OutRq::Type& type,
             const string& name);
-    virtual ~OutRqPoint();
 
     virtual ClassBase* clone() const;
     void setElements(const ElementsGroup<Node<> >&);
 };
 
-#endif /* SRC_COMMON_INPUTS_OUTRQ_OUTRQPOINT_H_ */
+#endif /* SRC_COMMON_INPUTS_OUTRQ_OUTRQNODE_H_ */

@@ -7,18 +7,18 @@
 
 #include "../outRq/OutRqFarField.h"
 
-OutRqFarField::~OutRqFarField() {
-
-}
-
 OutRqFarField::OutRqFarField(
  const ElementsGroup<Volume<> >& elem,
  const Domain& domain,
  const string& name,
  const Real iTh, const Real fTh, const Real sTh,
  const Real iPhi, const Real fPhi, const Real sPhi)
-: OutRq(domain, electric, name), ElementsGroup<Volume<> >(elem) {
+: OutRqVolume(elem, domain, electric, name) {
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
+}
+
+ClassBase* OutRqFarField::clone() const {
+   return new OutRqFarField(*this);
 }
 
 Real OutRqFarField::getStepPhi() const {
