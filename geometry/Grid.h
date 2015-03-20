@@ -23,6 +23,8 @@ class Grid {
     typedef CartesianVector<Real,D> CVecRD;
     typedef CartesianVector<Int,D> CVecID;
 public:
+    static const Real tolerance;
+
     Grid();
     Grid(const BoxRD&  boundingBox,
          const CVecRD& dxyz);
@@ -97,7 +99,6 @@ public:
 
     void printInfo() const;
 private:
-    static const Real tolerance;
 
     CVecID offsetGrid_;
     CVecRD origin_;

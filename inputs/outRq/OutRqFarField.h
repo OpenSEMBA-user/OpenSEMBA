@@ -10,7 +10,7 @@
 
 #include "OutRq.h"
 
-class OutRqFarField : public virtual OutRq<Volume<> > {
+class OutRqFarField : public virtual OutRq<Vol> {
 public:
     OutRqFarField(const Domain& domain,
                   const string& name,
@@ -21,6 +21,8 @@ public:
     ~OutRqFarField();
 
     virtual ClassBase* clone() const;
+
+    virtual OutRqFarField& operator=(const ElementsGroup<Vol>& rhs);
 
     Real getInitialTheta() const;
     Real getFinalTheta() const;

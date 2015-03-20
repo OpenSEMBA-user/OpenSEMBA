@@ -47,7 +47,7 @@ void OutRqGroup<O>::add(vector<O*>& newOutRqs) {
             if (newOutRqs[i]->isSimilar(*this->element_[j])) {
                 isSimilar = true;
                 this->element_[j]->setAdditionalElems(
-                                       newOutRqs[i]->getElems());
+                        newOutRqs[i]->getElems());
                 break;
             }
         }

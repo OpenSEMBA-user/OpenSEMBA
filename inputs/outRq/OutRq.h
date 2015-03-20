@@ -83,7 +83,7 @@ public:
     virtual bool isSimilar(const OutRq& rhs) const;
 
     virtual OutRq<T>& operator=(const ElementsGroup<T>& rhs);
-//    virtual ElementsGroup<T> getElems() const { return *this; }
+    virtual ElementsGroup<T> getElems() const { return *this; }
 
     virtual void setAdditionalElems(const ElementsGroup<T>& elems);
 

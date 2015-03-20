@@ -37,6 +37,7 @@ public:
     virtual ~Line();
 };
 
+typedef Line<> Lin;
 typedef Line<Real> LineR;
 typedef Line<Int > LineI;
 
