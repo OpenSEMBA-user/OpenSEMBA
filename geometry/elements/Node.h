@@ -61,6 +61,7 @@ private:
 	const Coordinate<T,3>* v_[1];
 };
 
+typedef Node<> Nod;
 typedef Node<Real> NodeR;
 typedef Node<Int > NodeI;
 

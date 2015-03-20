@@ -82,7 +82,8 @@ public:
 
     virtual bool isSimilar(const OutRq& rhs) const;
 
-    virtual ElementsGroup<T> getElems() const { return *this; }
+    virtual OutRq<T>& operator=(const ElementsGroup<T>& rhs);
+//    virtual ElementsGroup<T> getElems() const { return *this; }
 
     virtual void setAdditionalElems(const ElementsGroup<T>& elems);
 
@@ -90,5 +91,9 @@ public:
 };
 
 #include "OutRq.hpp"
+
+typedef OutRq<Node<> > OutRqNode;
+typedef OutRq<Surface<> > OutRqSurface;
+typedef OutRq<Volume<> > OutRqVolume;
 
 #endif
