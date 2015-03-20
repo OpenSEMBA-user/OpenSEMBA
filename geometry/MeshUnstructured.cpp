@@ -13,17 +13,17 @@ MeshUnstructured::MeshUnstructured() {
 MeshUnstructured::MeshUnstructured(const CoordinateGroup<CoordR3>& cG,
                                    const ElementsGroup<ElemR>& elem,
                                    const LayerGroup<>& layers)
-:   Mesh(layers),
-    CoordinateGroup<CoordR3>(cG.newGroupOf<CoordR3>()),
-    ElementsGroup<ElemR>(elem.newGroupOf<ElemR>()) {
+:   CoordinateGroup<CoordR3>(cG.newGroupOf<CoordR3>()),
+    ElementsGroup<ElemR>(elem.newGroupOf<ElemR>()),
+    LayerGroup<>(layers.newGroupOf<Layer>()) {
 
     ElementsGroup<ElemR>::reassignPointers(*this);
 }
 
 MeshUnstructured::MeshUnstructured(const MeshUnstructured& rhs)
-:   Mesh(rhs),
-    CoordinateGroup<CoordR3>(rhs.coords().newGroupOf<CoordR3>()),
-    ElementsGroup<ElemR>(rhs.elems().newGroupOf<ElemR>()) {
+:   CoordinateGroup<CoordR3>(rhs.coords().newGroupOf<CoordR3>()),
+    ElementsGroup<ElemR>(rhs.elems().newGroupOf<ElemR>()),
+    LayerGroup<>(rhs.layers().newGroupOf<Layer>()) {
 
     ElementsGroup<ElemR>::reassignPointers(*this);
 }
@@ -37,10 +37,9 @@ MeshUnstructured& MeshUnstructured::operator=(const MeshUnstructured& rhs) {
         return *this;
     }
 
-
-    Mesh::operator=(rhs);
     CoordinateGroup<CoordR3>::operator=(rhs.coords().newGroupOf<CoordR3>());
     ElementsGroup<ElemR>::operator=(rhs.elems().newGroupOf<ElemR>());
+    LayerGroup<>::operator=(rhs.layers().newGroupOf<Layer>());
 
     ElementsGroup<ElemR>::reassignPointers(*this);
 
@@ -262,5 +261,5 @@ void MeshUnstructured::printInfo() const {
     cout << " --- Mesh unstructured Info --- " << endl;
     CoordinateGroup<CoordR3>::printInfo();
     ElementsGroup<ElemR>::printInfo();
-    Mesh::printInfo();
+    LayerGroup<>::printInfo();
 }

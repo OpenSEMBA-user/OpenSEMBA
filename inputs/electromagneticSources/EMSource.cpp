@@ -1,36 +1,22 @@
-#ifndef ELECTROMAGNETICSOURCE_H_
-#	include "EMSource.h"
-#endif
+#include "EMSource.h"
 
-EMSource::EMSource() {
+EMSource<void>::EMSource() {
     magnitude_ = NULL;
 }
 
-EMSource::EMSource(const Magnitude* magnitude) {
+EMSource<void>::EMSource(const Magnitude* magnitude) {
     magnitude_ = magnitude;
 }
 
+EMSource<void>::EMSource(const EMSource& rhs) {
+    magnitude_ = rhs.magnitude_->clone()->castTo<Magnitude>();
+}
 
-EMSource::~EMSource() {
+EMSource<void>::~EMSource() {
 
 }
 
-const Magnitude*
-EMSource::getMagnitude() const {
-    return magnitude_;
-}
-
-Condition::Type EMSource::getConditionType() const {
-    return Condition::emSource;
-}
-
-void
-EMSource::printInfo() const {
-    cout << " --- EMSource info --- " << endl;
-    magnitude_->printInfo();
-}
-
-string EMSource::getMagnitudeFilename() const {
+string EMSource<void>::getMagnitudeFilename() const {
     const MagnitudeNumerical* mag =
             dynamic_cast<const MagnitudeNumerical*>(magnitude_);
     if (mag != NULL) {
@@ -38,19 +24,25 @@ string EMSource::getMagnitudeFilename() const {
     }
     cerr << endl << "ERROR @ EMSource: Magnitude is not numerical." << endl;
     printInfo();
+    assert(false);
     return string();
 }
 
-void EMSource::convertToNumerical(
-        const string file,
-        const double step,
-        const double finalTime) {
-    const MagnitudeNumerical* mag =
-            dynamic_cast<const MagnitudeNumerical*>(magnitude_);
-    if(mag != NULL) {
+void EMSource<void>::convertToNumerical(const string file,
+                                        const double step,
+                                        const double finalTime) {
+    if(magnitude_->is<MagnitudeNumerical>()) {
         return;
     }
     const Magnitude* orig = magnitude_;
     magnitude_ = new MagnitudeNumerical(file, magnitude_, step, finalTime);
     delete orig;
+}
+
+void EMSource<void>::printInfo() const {
+    magnitude_->printInfo();
+}
+
+const Magnitude* EMSource<void>::getMagnitude() const {
+    return magnitude_;
 }

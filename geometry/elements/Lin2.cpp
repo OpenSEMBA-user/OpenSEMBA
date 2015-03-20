@@ -23,7 +23,8 @@ Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& coordGr,
               const CoordinateId vId[2],
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
     
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 	    v_[i] = coordGr.getPtrToId(vId[i]);
@@ -35,7 +36,8 @@ Lin2<T>::Lin2(const ElementId id,
               const Coordinate<T,3>* v[2],
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
     
 	for (UInt i = 0; i < lin.np; i++) {
 		v_[i] = v[i];
@@ -48,7 +50,8 @@ Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
               const Box<T,3>& box,
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
     if(!box.isLine()) {
         cerr << endl << "ERROR @ Lin2::Lin2(): "
@@ -67,7 +70,8 @@ Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
 
 template<class T>
 Lin2<T>::Lin2(const Lin2<T>& rhs)
-:   Elem(rhs) {
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
     
     for (UInt i = 0; i < lin.np; i++) {
 		v_[i] = rhs.v_[i];

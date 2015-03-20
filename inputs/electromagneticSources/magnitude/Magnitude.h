@@ -16,13 +16,17 @@ using namespace std;
 
 #include "Types.h"
 
-class Magnitude {
+#include "ClassBase.h"
+
+class Magnitude : public virtual ClassBase {
 public:
     Magnitude();
     virtual ~Magnitude();
+
     virtual Real evaluate(const Real time) const = 0;
+
     virtual void printInfo() const = 0;
-private:
+
 };
 
 #endif /* SRC_COMMON_INPUTS_MAGNITUDE_H_ */

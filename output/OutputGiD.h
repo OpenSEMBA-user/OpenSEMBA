@@ -14,7 +14,13 @@ using namespace std;
 
 class OutputGiD : public Output {
 public:
-    OutputGiD(const string& filename, GiD_PostMode mode = GiD_PostAscii);
+    OutputGiD(
+            const SmbData* smb,
+            GiD_PostMode mode = GiD_PostAscii);
+    OutputGiD(
+            const SmbData* smb,
+            const string& fn,
+            GiD_PostMode mode = GiD_PostAscii);
     virtual ~OutputGiD();
 protected:
     void beginMesh(
@@ -32,11 +38,32 @@ protected:
             const string gaussPointType,
             const vector<string>& componentsNames) const;
     void flushPostFile() const;
-protected:
+private:
     static Int coordCounter_;
     static Int elemCounter_;
     static const CVecR3 pecColor, pmcColor, smaColor, pmlColor,
      sibcColor, emSourceColor;
+    static Int numberOfOutputGiD_;
+    GiD_FILE meshFile_;
+    GiD_FILE resultFile_;
+    GiD_PostMode mode_;
+    const SmbData* smb_;
+    const MeshUnstructured* mesh_;
+    void writeMesh();
+    void writeMeshWithIds(
+            const vector<vector<ElementId> >& ids,
+            string& name);
+    void writeMeshWithIds(
+            const vector<vector<ElementId> >& ids,
+            const vector<string>& name);
+    void writeMeshWithIds(
+            const vector<ElementId>& ids, string& name);
+    void writeOutputRequestsMesh();
+    void writeElements(
+            const ElementsGroup<>& entities,
+            const string& name,
+            const GiD_ElementType type,
+            const Int nV);
     static string makeValid(string name);
     void beginCoordinates() const;
     void writeGaussPoints() const;
@@ -47,13 +74,8 @@ protected:
     void writeElement(Int elemId, int nId[]) const;
     void endElements() const;
     void endMesh() const;
-    GiD_ResultType getGiDResultType(OutRq::Type type) const;
+    GiD_ResultType getGiDResultType(OutRq<>::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
-private:
-    static Int numberOfOutputGiD_;
-    GiD_FILE meshFile_;
-    GiD_FILE resultFile_;
-    GiD_PostMode mode_;
     void openPostMeshFile(const string& filename);
     void openPostResultFile(const string& filename);
 };

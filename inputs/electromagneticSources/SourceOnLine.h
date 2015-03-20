@@ -10,7 +10,7 @@
 
 #include "EMSource.h"
 
-class SourceOnLine : public EMSource, public ElementsGroup<Line<> > {
+class SourceOnLine : public EMSource<Line<> > {
 public:
     typedef enum {
         electric = 1,
@@ -20,24 +20,25 @@ public:
         hard = 1,
         soft = 2
     } Hardness;
-    SourceOnLine(
-            const ElementsGroup<Line<> >& elem,
-            const Magnitude* magnitude,
-            const Type& sourceType,
-            const Hardness& sourceHardness);
+    SourceOnLine(const Magnitude* magnitude,
+                 const ElementsGroup<Line<> >& elem,
+                 const Type& sourceType,
+                 const Hardness& sourceHardness);
+    SourceOnLine(const SourceOnLine& rhs);
     virtual ~SourceOnLine();
 
     virtual ClassBase* clone() const;
 
     Type getType() const;
     Hardness getHardness() const;
-    string getTypeStr() const;
 
     virtual void printInfo() const;
 private:
     Type type_;
     Hardness hardness_;
-    string hardnessToStr() const;
+
+    string getTypeStr() const;
+    string getHardnessStr() const;
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_ */

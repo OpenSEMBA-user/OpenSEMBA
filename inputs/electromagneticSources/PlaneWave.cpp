@@ -11,12 +11,13 @@ PlaneWave::PlaneWave() {
 
 }
 
-PlaneWave::PlaneWave(
- ElementsGroup<Volume<> > elem,
- CVecR3 direction,
- CVecR3 polarization,
- const Magnitude* magnitude):
-         EMSource(magnitude), ElementsGroup<Volume<> >(elem) {
+PlaneWave::PlaneWave(const Magnitude* magnitude,
+                     ElementsGroup<Volume<> > elem,
+                     CVecR3 direction,
+                     CVecR3 polarization)
+:   EMSource<>(magnitude),
+    ElementsGroup<Volume<> >(elem) {
+
     direction_ = direction;
     polarization_ = polarization;
     if (polarization_.norm() == 0) {
@@ -40,12 +41,28 @@ PlaneWave::PlaneWave(
     }
 }
 
+PlaneWave::PlaneWave(const PlaneWave& rhs)
+:   EMSource<>(rhs),
+    ElementsGroup<Volume<> >(rhs) {
+
+    direction_ = rhs.direction_;
+    polarization_ = rhs.polarization_;
+}
+
 PlaneWave::~PlaneWave() {
 
 }
 
 ClassBase* PlaneWave::clone() const {
     return new PlaneWave(*this);
+}
+
+const CVecR3& PlaneWave::getPolarization() const {
+    return polarization_;
+}
+
+const CVecR3& PlaneWave::getWaveDirection() const {
+    return direction_;
 }
 
 Real PlaneWave::getTheta() const {
@@ -64,35 +81,28 @@ Real PlaneWave::getBeta() const {
     return cartesianToPolar (polarization_).second;
 }
 
-void
-PlaneWave::printInfo() const {
-	cout<< " --- PlaneWave info --- " << endl;
-	EMSource::printInfo();
-	cout<< " - Polarization vector: " << polarization_ << endl;
-	cout<< " - Wave direction vector: " << direction_ << endl;
-}
-
 CVecR3
 PlaneWave::getElectricField(const Real time) const {
-	CVecR3 res = polarization_ * getMagnitude()->evaluate(time);
-	return res;
+    CVecR3 res = polarization_ * getMagnitude()->evaluate(time);
+    return res;
 }
 
 pair<CVecR3, CVecR3>
 PlaneWave::getElectromagneticField(const Real time) const {
-	CVecR3 electric = getElectricField(time);
-	CVecR3 magnetic = (direction_ ^ electric) * (Real) VACUUM_ADMITANCE;
-	return pair<CVecR3,CVecR3>(electric, magnetic);
+    CVecR3 electric = getElectricField(time);
+    CVecR3 magnetic = (direction_ ^ electric) * (Real) VACUUM_ADMITANCE;
+    return pair<CVecR3,CVecR3>(electric, magnetic);
 }
 
-const CVecR3&
-PlaneWave::getPolarization() const {
-	return polarization_;
+void PlaneWave::setElements(const ElementsGroup<Volume<> >& elems) {
+    ElementsGroup<Volume<> >::operator=(elems);
 }
 
-const CVecR3&
-PlaneWave::getWaveDirection() const {
-	return direction_;
+void PlaneWave::printInfo() const {
+	cout<< " --- PlaneWave info --- " << endl;
+	EMSource::printInfo();
+	cout<< " - Polarization vector: " << polarization_ << endl;
+	cout<< " - Wave direction vector: " << direction_ << endl;
 }
 
 pair<Real,Real> PlaneWave::cartesianToPolar(const CVecR3& v) const {
@@ -125,4 +135,3 @@ Real PlaneWave::reduceRadians(const Real radianIn) const {
     radianOut = radianIn - nVueltasComp*Val2Pi;
     return  radianOut;
 }
-

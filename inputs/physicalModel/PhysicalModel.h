@@ -7,14 +7,14 @@
 #include <complex>
 #include <cmath>
 #include <vector>
-#include "../Condition.h"
 #include "../../math/Constants.h"
 #include "../../math/CartesianVector.h"
+#include "Element.h"
 #include "ClassIdBase.h"
 
 using namespace std;
 
-class PhysicalModel : public ClassIdBase<MatId>, public Condition {
+class PhysicalModel : public ClassIdBase<MatId> {
 public:
     enum Type {
         vacuum = 1,

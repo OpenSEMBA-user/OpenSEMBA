@@ -77,4 +77,6 @@ private:
 
 #include "CoordinateGroup.hpp"
 
+typedef CoordinateGroup<CoordR3> CoordR3Group;
+
 #endif /* COORDINATEGROUP_H_ */

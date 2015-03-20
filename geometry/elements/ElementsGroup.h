@@ -51,9 +51,9 @@ public:
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
     vector<ElementId> getIdsInsideBound(const BoxR3& bound) const;
+
     vector<pair<const E*, UInt> > getElementsWithVertex(
             const CoordinateId) const;
-
     BoxR3 getBound() const;
     BoxR3 getBound(const vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
@@ -74,5 +74,7 @@ protected:
 };
 
 #include "ElementsGroup.hpp"
+
+typedef ElementsGroup<ElemR> ElemRGroup;
 
 #endif /* ELEMENTSGROUP_H_ */

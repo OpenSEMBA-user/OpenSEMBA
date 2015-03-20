@@ -11,25 +11,28 @@
 #include "Magnitude.h"
 #include <math.h>
 
-class MagnitudeGaussian: public Magnitude {
+class MagnitudeGaussian: public virtual Magnitude {
 public:
     typedef enum {
         gaussian,
         gaussianDerivative
     } type;
     MagnitudeGaussian();
-    MagnitudeGaussian(
-            const Real spread,
-            const Real delay,
-            const Real freq = 0.0);
+    MagnitudeGaussian(const Real spread,
+                      const Real delay,
+                      const Real freq = 0.0);
+    MagnitudeGaussian(const MagnitudeGaussian& rhs);
     virtual ~MagnitudeGaussian();
-    Real
-     evaluate(const Real time) const;
-    void
-     printInfo() const;
-   Real getDelay() const;
-   Real getFreq() const;
-   Real getSpread() const;
+
+    ClassBase* clone() const;
+
+    Real getDelay() const;
+    Real getFreq() const;
+    Real getSpread() const;
+
+    Real evaluate(const Real time) const;
+
+    void printInfo() const;
 
 private:
     Real spread_;

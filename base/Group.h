@@ -9,18 +9,25 @@ using namespace std;
 
 #include "Types.h"
 
+#include "ClassBase.h"
+
 template<typename T>
-class Group {
+class Group : public virtual ClassBase {
 public:
     Group();
     Group(const vector<T*>& , bool ownership = true);
     Group(const Group<T>& rhs);
     virtual ~Group();
 
+    ClassBase* clone() const;
+
     Group<T>& operator=(const Group<T>& rhs);
 
     bool empty() const { return element_.empty(); }
     UInt size () const { return element_.size();  }
+
+    template<class T2>
+    UInt sizeOf() const;
 
 //    T*       operator()(const UInt i);
     const T* operator()(const UInt i) const;
@@ -30,15 +37,14 @@ public:
     
     template<class T2>
     Group<T2> getGroupOf() const;
-    
-    template<class T2>
-    UInt sizeOf() const;
+
+    virtual void reserve(const UInt nS);
 
     virtual void add(T* newElem);
     virtual void add(vector<T*>&);
     virtual void add(const Group<T>&);
 
-    virtual void reserve(const UInt nS);
+    void printInfo() const;
 
 protected:
     bool ownership_;

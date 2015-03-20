@@ -24,11 +24,9 @@ template<class T = void>
 class Element;
 
 template<>
-class Element<void> : public ClassIdBase<ElementId> {
+class Element<void> : public virtual ClassIdBase<ElementId> {
 public:
-    Element();
-    Element(const ElementId id,
-            const LayerId layId = LayerId(0),
+    Element(const LayerId layId = LayerId(0),
             const MatId   matId = MatId(0));
     Element(const Element& rhs);
     virtual ~Element();
@@ -87,7 +85,7 @@ public:
                                        const Grid3&,
                                        const Real = Grid3::tolerance) const;
 
-    virtual void printInfo() const;
+    void printInfo() const;
 
 protected:
     void ascendingOrder(UInt nVal, UInt* val) const;

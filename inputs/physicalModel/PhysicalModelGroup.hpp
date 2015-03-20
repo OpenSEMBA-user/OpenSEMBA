@@ -82,13 +82,10 @@ PhysicalModelGroup<P>::getDirectionFromInt(
 }
 
 template<typename P>
-vector<MatId>
-PhysicalModelGroup<P>::getIds(const Condition::Type type) const {
+vector<MatId> PhysicalModelGroup<P>::getIds() const {
     vector<MatId> res;
     for (UInt i = 0; i < this->size(); i++) {
-        if (this->element_[i]->getConditionType() == type || type == Condition::undefined) {
-            res.push_back(this->element_[i]->getId());
-        }
+        res.push_back(this->element_[i]->getId());
     }
     return res;
 }

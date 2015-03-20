@@ -20,40 +20,44 @@ public:
     typedef enum {
         NONE, TIME, FREQ, TRAN, TIFR, TITR, FRTR, ALL
     } Type;
+
     Domain();
-    Domain(
-            bool timeDomain,
-            Real initialTime,
-            Real finalTime,
-            Real samplingPeriod,
-            bool frequencyDomain,
-            Real initialFrequency,
-            Real finalFrequency,
-            Real frequencyStep,
-            bool logFrequencySweep,
-            bool usingTransferFunction,
-            string transferFunctionFile);
+    Domain(bool timeDomain,
+           Real initialTime,
+           Real finalTime,
+           Real samplingPeriod,
+           bool frequencyDomain,
+           Real initialFrequency,
+           Real finalFrequency,
+           Real frequencyStep,
+           bool logFrequencySweep,
+           bool usingTransferFunction,
+           string transferFunctionFile);
+    Domain(const Domain& rhs);
     virtual ~Domain();
 
     Domain& operator=(const Domain& rhs);
 
     bool operator==(const Domain& rhs) const;
 
-    Real getSamplingPeriod() const;
-    Real getFinalTime() const;
-    Real getInitialTime() const;
-    Real getFinalFrequency() const;
-    bool isFrequencyDomain() const;
-    Real getFrequencyStep() const;
-    Real getInitialFrequency() const;
-    bool isLogFrequencySweep() const;
     bool isTimeDomain() const;
-    const string& getTransferFunctionFile() const;
+    Real getInitialTime() const;
+    Real getFinalTime() const;
+    Real getSamplingPeriod() const;
+
+    bool isFrequencyDomain() const;
+    Real getInitialFrequency() const;
+    Real getFinalFrequency() const;
+    Real getFrequencyStep() const;
+    bool isLogFrequencySweep() const;
+
     bool isUsingTransferFunction() const;
+    const string& getTransferFunctionFile() const;
 
     Type getDomainType() const;
 
     void printInfo() const;
+
 private:
     bool timeDomain_;
     Real initialTime_;

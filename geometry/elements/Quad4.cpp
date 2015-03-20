@@ -18,7 +18,8 @@ Quad4<T>::Quad4(const CoordinateGroup<Coordinate<T,3> >& cG,
                 const CoordinateId vId[4],
                 const LayerId layerId,
                 const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
     
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPtrToId(vId[i]);
@@ -33,7 +34,8 @@ Quad4<T>::Quad4(CoordinateGroup<Coordinate<T,3> >& cG,
                 const Box<T,3>& box,
                 const LayerId layerId,
                 const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
     if(!box.isSurface()) {
         cerr << endl << "ERROR @ Quad4::Quad4(): "
@@ -52,7 +54,8 @@ Quad4<T>::Quad4(CoordinateGroup<Coordinate<T,3> >& cG,
 
 template<class T>
 Quad4<T>::Quad4(const Quad4<T>& rhs)
-:   Elem(rhs) {
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
     
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];

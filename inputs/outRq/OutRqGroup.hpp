@@ -6,20 +6,8 @@ OutRqGroup<O>::OutRqGroup() {
 }
 
 template<typename O>
-OutRqGroup<O>::OutRqGroup(const vector<O*>& in) {
-    for (UInt i = 0; i < in.size(); i++) {
-        bool isSimilar = false;
-        for (UInt j = 0; j < this->size(); j++) {
-            if (in[i]->isSimilar(*this->element_[j])) {
-                isSimilar = true;
-                this->element_[j]->setAdditionalElems(in[i]->getElem());
-                break;
-            }
-        }
-        if (!isSimilar) {
-            add(in[i]);
-        }
-    }
+OutRqGroup<O>::OutRqGroup(const vector<O*>& outRqs) {
+    add(outRqs);
 }
 
 template<typename O>
@@ -44,20 +32,34 @@ OutRqGroup<O>& OutRqGroup<O>::operator=(const Group<O>& rhs) {
     return *this;
 }
 
-template<typename C>
-void OutRqGroup<C>::add (OutRq* in) {
-    bool foundSimilar = false;
-    for (UInt j = 0; j < this->size(); j++) {
-        if (in->isSimilar(*this->element_[j])) {
-            foundSimilar = true;
-            this->element_[j]->setAdditionalElements(*in->castTo<ElementsGroup<> >());
-            delete in;
-            break;
+template<typename O>
+void OutRqGroup<O>::add(O* newOutRq) {
+    vector<O*> aux;
+    aux.push_back(newOutRq);
+    add(aux);
+}
+
+template<typename O>
+void OutRqGroup<O>::add(vector<O*>& newOutRqs) {
+    for (UInt i = 0; i < newOutRqs.size(); i++) {
+        bool isSimilar = false;
+        for (UInt j = 0; j < this->size(); j++) {
+            if (newOutRqs[i]->isSimilar(*this->element_[j])) {
+                isSimilar = true;
+                this->element_[j]->setAdditionalElems(
+                                       newOutRqs[i]->getElems());
+                break;
+            }
+        }
+        if (!isSimilar) {
+            this->element_.push_back(newOutRqs[i]);
         }
     }
-    if (!foundSimilar) {
-        Group<C>::add(in);
-    }
+}
+
+template<typename O>
+void OutRqGroup<O>::add(const Group<O>& rhs) {
+    Group<O>::add(rhs);
 }
 
 template<typename C>

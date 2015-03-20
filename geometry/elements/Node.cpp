@@ -11,7 +11,9 @@ Node<T>::Node(const CoordinateGroup< Coordinate<T,3> >& coordGr,
               const CoordinateId vId[1],
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
+
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = coordGr.getPtrToId(vId[i]);
 	}
@@ -22,7 +24,9 @@ Node<T>::Node(const ElementId id,
               const Coordinate<T,3>* v[1],
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
+
     v_[0] = v[0];
 }
 template<class T>
@@ -31,7 +35,8 @@ Node<T>::Node(CoordinateGroup<Coordinate<T,3> >& cG,
               const Box<T,3>& box,
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
     if(!box.isPoint()) {
         cerr << endl << "ERROR @ Node::Node(): "
@@ -50,8 +55,10 @@ Node<T>::Node(CoordinateGroup<Coordinate<T,3> >& cG,
 
 template<class T>
 Node<T>::Node(const Node<T>& rhs)
-:   Elem(rhs) {
-    	v_[0] = rhs.v_[0];
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
+
+    v_[0] = rhs.v_[0];
 }
 
 template<class T>

@@ -6,33 +6,15 @@
  */
 #include "Coordinate.h"
 
-Coordinate<void,0>::Coordinate() {
-
-}
-
-Coordinate<void,0>::Coordinate(const CoordinateId id)
-:   ClassIdBase<CoordinateId>(id) {
-
-}
-
-Coordinate<void,0>::Coordinate(const Coordinate& rhs)
-:   ClassIdBase<CoordinateId>(rhs) {
-
-}
-
-Coordinate<void,0>::~Coordinate() {
-
-}
-
 template<class T, Int D>
 Coordinate<T,D>::Coordinate() {
 
 }
 
 template<class T, Int D>
-Coordinate<T,D>::Coordinate(const CoordinateId id_,
+Coordinate<T,D>::Coordinate(const CoordinateId id,
                             const CartesianVector<T,D>& pos)
-:   Coordinate<void,0>(id_),
+:   ClassIdBase<CoordinateId>(id),
     CartesianVector<T,D>(pos) {
 
 }
@@ -40,6 +22,13 @@ Coordinate<T,D>::Coordinate(const CoordinateId id_,
 template<class T, Int D>
 Coordinate<T,D>::Coordinate(const CartesianVector<T,D>& pos)
 :   CartesianVector<T,D>(pos) {
+
+}
+
+template<class T, Int D>
+Coordinate<T,D>::Coordinate(const Coordinate& rhs)
+:   ClassIdBase<CoordinateId>(rhs),
+    CartesianVector<T,D>(rhs) {
 
 }
 
@@ -58,24 +47,19 @@ Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
     if (this == &rhs)
         return *this;
     setId(rhs.getId());
-    for (UInt i = 0; i < D; i++) {
-        this->val[i] = rhs.val[i];
-    }
+    CartesianVector<T,D>::operator=(rhs);
+
     return *this;
 }
 
 template<class T, Int D>
 bool Coordinate<T,D>::operator==(const Coordinate& rhs) const {
-    return Coordinate<void,0>::operator==(rhs);
+    return ClassIdBase<CoordinateId>::operator==(rhs);
 }
 
 template<class T, Int D>
-CartesianVector<T,3> Coordinate<T,D>::pos() const {
-    CartesianVector<T,D> res;
-    for (UInt i = 0; i < D; i++) {
-        res.val[i] = this->val[i];
-    }
-    return res;
+CartesianVector<T,D> Coordinate<T,D>::pos() const {
+    return *this;
 }
 
 template<class T, Int D>

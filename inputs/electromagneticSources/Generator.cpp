@@ -12,14 +12,26 @@ Generator::Generator() {
     hardness_ = soft;
 }
 
-Generator::Generator(
-        const ElementsGroup<Node<> >& elems,
-        const Type& generatorType,
-        const Hardness& hardness,
-        const Magnitude* magnitude):
-                 EMSource(magnitude), ElementsGroup<Node<> >(elems) {
+Generator::Generator(const Magnitude* magnitude,
+                     const ElementsGroup<Node<> >& elems,
+                     const Type& generatorType,
+                     const Hardness& hardness)
+:   EMSource<>(magnitude),
+    ElementsGroup<Node<> >(elems) {
     hardness_ = hardness;
     type_ = generatorType;
+}
+
+Generator::Generator(const Generator& rhs)
+:   EMSource<>(rhs),
+    ElementsGroup<Node<> >(rhs) {
+
+    hardness_ = rhs.hardness_;
+    type_ = rhs.type_;
+}
+
+Generator::~Generator() {
+
 }
 
 ClassBase* Generator::clone() const {

@@ -98,7 +98,7 @@ private:
     MesherOptions::BoundType strToBoundType(string label) const;
     PhysicalModel::Type strToMaterialType(string label) const;
     PMMultiport::Type strToMultiportType(string label) const;
-    OutRq::Type strToOutputType(string label) const;
+    OutRq<void>::Type strToOutputType(string label) const;
     SIBCType strToSIBCType(string str) const;
     GiDOutputType strToGidOutputType(string label) const;
     Domain strToDomain(string line) const;
@@ -112,6 +112,7 @@ private:
     void init(const string& pTPath);
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
+    ElementsGroup<Volume<> > boundToElemGroup(const string& line);
 };
 
 #endif /* PARSERGID_H_ */

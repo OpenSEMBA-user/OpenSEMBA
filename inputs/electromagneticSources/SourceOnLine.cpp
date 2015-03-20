@@ -7,40 +7,49 @@
 
 #include "SourceOnLine.h"
 
-SourceOnLine::SourceOnLine(
- const ElementsGroup<Line<> >& elem,
- const Magnitude* magnitude,
- const Type& sourceType,
- const Hardness& sourceHardness) :
-         EMSource(magnitude), ElementsGroup<Line<> >(elem) {
+SourceOnLine::SourceOnLine(const Magnitude* magnitude,
+                           const ElementsGroup<Line<> >& elem,
+                           const Type& sourceType,
+                           const Hardness& sourceHardness)
+:   EMSource<>(magnitude),
+    ElementsGroup<Line<> >(elem) {
+
 	type_ = sourceType;
     hardness_ = sourceHardness;
+}
+
+SourceOnLine::SourceOnLine(const SourceOnLine& rhs)
+:   EMSource<>(rhs),
+    ElementsGroup<Line<> >(rhs) {
+
+    type_ = rhs.type_;
+    hardness_ = rhs.hardness_;
+}
+
+SourceOnLine::~SourceOnLine() {
+
 }
 
 ClassBase* SourceOnLine::clone() const {
     return new SourceOnLine(*this);
 }
 
-SourceOnLine::Type
-SourceOnLine::getType() const {
+SourceOnLine::Type SourceOnLine::getType() const {
 	return type_;
 }
 
-SourceOnLine::Hardness
-SourceOnLine::getHardness() const {
+SourceOnLine::Hardness SourceOnLine::getHardness() const {
 	return hardness_;
 }
 
-void
-SourceOnLine::printInfo() const {
+void SourceOnLine::printInfo() const {
 	cout<< " --- Nodal info --- " << endl;
 	EMSource::printInfo();
 	cout<< "Type: " << getTypeStr() << endl;
-    cout<< "Hardness: " << hardnessToStr() << endl;
+    cout<< "Hardness: " << getHardnessStr() << endl;
 }
 
-string
-SourceOnLine::getTypeStr() const {
+string SourceOnLine::getTypeStr() const {
 	switch (type_) {
 	case electric:
 		return "Electric Field";
@@ -49,8 +58,7 @@ SourceOnLine::getTypeStr() const {
 	}
 }
 
-string
-SourceOnLine::hardnessToStr() const {
+string SourceOnLine::getHardnessStr() const {
 	switch (type_) {
 	case hard:
 		return "Hard";

@@ -15,19 +15,19 @@ MeshStructured::MeshStructured(const Grid3& grid,
                                const CoordinateGroup<CoordI3>& cG,
                                const ElementsGroup<ElemI>& elem,
                                const LayerGroup<>& layers)
-:   Mesh(layers),
-    Grid3(grid),
+:   Grid3(grid),
     CoordinateGroup<CoordI3>(cG.newGroupOf<CoordI3>()),
-    ElementsGroup<ElemI>(elem.newGroupOf<ElemI>()) {
+    ElementsGroup<ElemI>(elem.newGroupOf<ElemI>()),
+    LayerGroup<>(layers.newGroupOf<Layer>()) {
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 }
 
 MeshStructured::MeshStructured(const MeshStructured& rhs)
-:   Mesh(rhs),
-    Grid3(rhs),
+:   Grid3(rhs),
     CoordinateGroup<CoordI3>(rhs.coords().newGroupOf<CoordI3>()),
-    ElementsGroup<ElemI>(rhs.elems().newGroupOf<ElemI>()) {
+    ElementsGroup<ElemI>(rhs.elems().newGroupOf<ElemI>()),
+    LayerGroup<>(rhs.layers().newGroupOf<Layer>()) {
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 }
@@ -45,6 +45,7 @@ MeshStructured& MeshStructured::operator=(const MeshStructured& rhs) {
     Grid3::operator=(rhs);
     CoordinateGroup<CoordI3>::operator=(rhs.coords().newGroupOf<CoordI3>());
     ElementsGroup<ElemI>::operator=(rhs.elems().newGroupOf<ElemI>());
+    LayerGroup<>::operator=(rhs.layers().newGroupOf<Layer>());
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 
@@ -55,21 +56,15 @@ ClassBase* MeshStructured::clone() const {
     return new MeshStructured(*this);
 }
 
-vector<BoxR3>
-MeshStructured::discretizeWithinBoundary(
-        const UInt matId, const UInt layId) const {
-#warning "Not implemented"
-}
-
 void MeshStructured::applyScalingFactor(const Real factor) {
     Grid3::applyScalingFactor(factor);
 }
 
 vector<BoxR3>
 MeshStructured::getRectilinearHexesInsideRegion(
-        const ElementsGroup<VolR>& region) const {
+        const ElementsGroup<ElemR>& region) const {
 
-    vector<CVecR3> center = getCenterOfNaturalCellsInside(region.getBound());
+    vector<CVecR3> center = getCenterOfCellsInside(region.getBound());
     vector<BoxR3> res;
     res.reserve(center.size());
     for (UInt i = 0; i < center.size(); i++) {
@@ -85,10 +80,10 @@ MeshStructured::getRectilinearHexesInsideRegion(
 
 void MeshStructured::printInfo() const {
     cout << " --- Mesh structured info --- " << endl;
-    Mesh<>::printInfo();
     Grid3::printInfo();
     CoordinateGroup<CoordI3>::printInfo();
     ElementsGroup<ElemI>::printInfo();
+    LayerGroup<>::printInfo();
     Mesh::printInfo();
 }
 
@@ -97,15 +92,15 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
         const MatId matId,
         const LayerId layId) const {
     ElementsGroup<SurfR> surfs = elems().get(matId, layId).getGroupOf<SurfR>();
-    return discretizeWithinBoundary(grid, surfs);
+    return discretizeWithinBoundary(this, surfs);
 }
 
 vector<BoxR3> MeshStructured::discretizeWithinBoundary(
-        const ElementsGroup<SurfR>& surf) const {
-    checkAllFacesAreRectangular();
+        const ElementsGroup<SurfI>& surf) const {
+//    checkAllFacesAreRectangular();
     // Gets pairs of quads that define the volume of the space within them.
-    const vector<pair<const SurfR*, const SurfR*> > pairs =
-            getPairsDefiningVolumeWithin(grid, surf);
+    const vector<pair<const SurfI*, const SurfI*> > pairs =
+            getPairsDefiningVolumeWithin(surf);
     // Gets positions in z-axis.
     vector<BoxR3> box(pairs.size());
     vector<vector<Real> > zPos(pairs.size());
@@ -114,9 +109,9 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
         CVecR3 max = pairs[p].second->getMaxV()->pos();
         box[p] = BoxR3(min,max);
         if (min(2) > max(2)) {
-            zPos[p] = grid->getPosInRange(z, max(2), min(2));
+            zPos[p] = getPosInRange(z, max(2), min(2));
         } else {
-            zPos[p] = grid->getPosInRange(z, min(2), max(2));
+            zPos[p] = getPosInRange(z, min(2), max(2));
         }
         assert(zPos[p].size() > 0);
     }
@@ -132,6 +127,56 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
             CVecR3 min(box[p].getMin()(0), box[p].getMin()(1), zPos[p][i-1]);
             CVecR3 max(box[p].getMax()(0), box[p].getMax()(1), zPos[p][i]);
             res.push_back(BoxR3(min, max));
+        }
+    }
+    return res;
+}
+
+
+vector<pair<const SurfI*, const SurfI*> >
+MeshStructured::getPairsDefiningVolumeWithin(
+        const ElementsGroup<SurfI>& origBound) const {
+    vector<pair<const SurfI*, const SurfI*> > res;
+    const UInt nOrigBound = origBound.size();
+    // Checks that bound.size is an even number.
+    if (nOrigBound % 2 != 0) {
+        cerr << endl << "ERROR @ Mesh:"
+                << "Bound size must be an even number to be closed." << endl;
+        return res;
+    }
+    // Remove Surfaces not lying in a xy plane.
+    vector<const SurfI*> bound;
+    bound.reserve(nOrigBound);
+    for (UInt b = 0; b < origBound.size(); b++) {
+        if (origBound(b)->isContainedInPlane(xy)) {
+            bound.push_back(origBound(b));
+        }
+    }
+    // Sort remaining quad Ids using coordinates as a lexicographical order.
+    // Pairs quadrilaterals that are aligned in the same Z natural axe.
+    const UInt nBound = bound.size();
+    assert(nBound % 2 == 0);
+    res.reserve(nBound / 2);
+    // Sorts.
+    DynMatrix<Real> quads(nBound, 4);
+    for (UInt b = 0; b < nBound; b++) {
+        CVecR3 minPos = bound[b]->getMinV()->pos();
+        // Stores boundary at quad list.
+        quads(b, 0) = (Real) bound[b]->getId();
+        for (UInt i = 0; i < 3; i++) {
+            quads(b, i+1) = minPos(i);
+        }
+    }
+    quads.sortRows_omp(1,3);
+    // Performs pairing.
+    pair<const SurfI*, const SurfI*> aux;
+    for (UInt b = 0; b < nBound; b++) {
+        const ElementId id(quads(b,0));
+        if (b % 2 == 0) {
+            aux.first = elems().getPtrToId(id)->castTo<SurfI>();
+        } else {
+            aux.second = elems().getPtrToId(id)->castTo<SurfI>();
+            res.push_back(aux);
         }
     }
     return res;

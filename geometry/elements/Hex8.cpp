@@ -21,7 +21,8 @@ Hex8<T>::Hex8(const CoordinateGroup<Coordinate<T,3> >& coordGr,
               const CoordinateId vId[8],
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = coordGr.getPtrToId(vId[i]);
@@ -34,7 +35,8 @@ Hex8<T>::Hex8(CoordinateGroup<Coordinate<T,3> >& cG,
               const Box<T,3>& box,
               const LayerId layerId,
               const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
     if(!box.isVolume()) {
         cerr << endl << "ERROR @ Hex8::Hex8(): "
@@ -53,7 +55,8 @@ Hex8<T>::Hex8(CoordinateGroup<Coordinate<T,3> >& cG,
 
 template<class T>
 Hex8<T>::Hex8(const Hex8<T>& rhs)
-:   Elem(rhs) {
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];

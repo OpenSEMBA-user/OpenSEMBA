@@ -18,10 +18,12 @@ using namespace std;
 
 CreateId(LayerId);
 
-class Layer : public ClassIdBase<LayerId> {
+class Layer : public virtual ClassIdBase<LayerId> {
 public:
     Layer();
     Layer(const LayerId id, const string& name);
+    Layer(const string& name);
+    Layer(const Layer& rhs);
     virtual ~Layer();
 
     virtual ClassBase* clone() const;

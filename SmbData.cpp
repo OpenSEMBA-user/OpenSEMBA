@@ -17,8 +17,22 @@ SmbData::SmbData() {
     mesherOptions = NULL;
 }
 
+SmbData::SmbData(const SmbData& rhs) {
+    mesh = rhs.mesh->clone()->castTo<Mesh>();
+    grid = new Grid3(*rhs.grid);
+    solverOptions = new SolverOptions(*rhs.solverOptions);
+    pMGroup = new PhysicalModelGroup<>(*rhs.pMGroup);
+    emSources = new EMSourceGroup<>(*rhs.emSources);
+    outputRequests = new OutRqGroup<>(*rhs.outputRequests);
+    mesherOptions = new MesherOptions(*rhs.mesherOptions);
+}
+
 SmbData::~SmbData() {
 
+}
+
+ClassBase* SmbData::clone() const {
+    return new SmbData(*this);
 }
 
 SmbData& SmbData::operator=(const SmbData& rhs) {
@@ -26,12 +40,20 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
         return *this;
     }
     mesh = rhs.mesh->clone()->castTo<Mesh>();
+    grid = new Grid3(*rhs.grid);
     solverOptions = new SolverOptions(*rhs.solverOptions);
     pMGroup = new PhysicalModelGroup<>(*rhs.pMGroup);
     emSources = new EMSourceGroup<>(*rhs.emSources);
     outputRequests = new OutRqGroup<>(*rhs.outputRequests);
     mesherOptions = new MesherOptions(*rhs.mesherOptions);
     return *this;
+}
+
+void SmbData::applyScalingFactor() {
+
+    mesh->applyScalingFactor(mesherOptions->getScalingFactor());
+    mesherOptions->applyGeometricScalingFactor(mesherOptions->getScalingFactor());
+    mesherOptions->setScalingFactor((Real) 1.0);
 }
 
 void SmbData::printInfo() const {
@@ -66,12 +88,4 @@ void SmbData::printInfo() const {
     } else {
         cout << "No info about mesher options." << endl;
     }
-}
-
-void
-SmbData::applyGeometricScalingFactor() {
-
-    mesh->applyScalingFactor(mesherOptions->getScalingFactor());
-    mesherOptions->applyGeometricScalingFactor(mesherOptions->getScalingFactor());
-    mesherOptions->setScalingFactor((Real) 1.0);
 }

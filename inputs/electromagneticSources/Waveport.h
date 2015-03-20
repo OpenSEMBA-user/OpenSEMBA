@@ -11,7 +11,7 @@
 #include "EMSource.h"
 #include "ElementsGroup.h"
 
-class Waveport : public EMSource, public ElementsGroup<Surface<> > {
+class Waveport : public EMSource<Surface<> > {
 public:
 	typedef enum {
 		undefined,
@@ -21,21 +21,23 @@ public:
 		TE,
 		TM
 	} ExcitationMode;
-	Waveport(
-	        const ElementsGroup<Surface<> >& elem,
-	        const MagnitudeGaussian* magnitude,
-	        const bool input,
-	        const Shape shape,
-	        const ExcitationMode excMode,
-	        const pair<UInt,UInt> mode);
+
+	Waveport(const MagnitudeGaussian* magnitude,
+             const ElementsGroup<Surface<> >& elem,
+	         const bool input,
+	         const Shape shape,
+	         const ExcitationMode excMode,
+	         const pair<UInt,UInt> mode);
+	Waveport(const Waveport& rhs);
 	virtual ~Waveport();
 
 	virtual ClassBase* clone() const;
 
-	void printInfo() const;
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;
 	pair<UInt, UInt> getMode() const;
+
+    void printInfo() const;
 private:
 	bool input_;
 	Shape shape_;

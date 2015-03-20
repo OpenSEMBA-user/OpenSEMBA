@@ -16,8 +16,17 @@ Layer::Layer(const LayerId id, const string& name)
     name_ = name;
 }
 
+Layer::Layer(const string& name) {
+    name_ = name;
+}
+
+Layer::Layer(const Layer& rhs)
+:   ClassIdBase<LayerId>(rhs) {
+    name_ = rhs.name_;
+}
+
 Layer::~Layer() {
-    // TODO Auto-generated destructor stub
+
 }
 
 ClassBase* Layer::clone() const {

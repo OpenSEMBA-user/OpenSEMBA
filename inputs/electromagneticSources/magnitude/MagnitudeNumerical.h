@@ -14,23 +14,31 @@
 #include <cmath>
 #include <assert.h>
 
-class MagnitudeNumerical: public Magnitude, public ProjectFile {
+class MagnitudeNumerical : public virtual Magnitude,
+                           public virtual ProjectFile {
 public:
     MagnitudeNumerical();
+    MagnitudeNumerical(const string& filename);
+    MagnitudeNumerical(const string& filename,
+                       const Magnitude* mag,
+                       const Real timeStep,
+                       const Real finalTime);
+    MagnitudeNumerical(const MagnitudeNumerical& rhs);
     virtual ~MagnitudeNumerical();
-    MagnitudeNumerical(
-            const string& filename);
-    MagnitudeNumerical(
-            const string& filename,
-            const Magnitude* mag,
-            const Real timeStep,
-            const Real finalTime);
+
+    ClassBase* clone() const;
+
     MagnitudeNumerical& operator=(const MagnitudeNumerical& rhs);
-    virtual Real evaluate(const Real time) const;
-    virtual void printInfo() const;
+
+    Real evaluate(const Real time) const;
+
+    void printInfo() const;
+
 private:
+    static const UInt defaultNumberOfSteps = 1000;
+
     map<Real,Real> value_;
-    static const UInt defaultNumberOfSteps = 1e4;
+
     void initFromFile();
 };
 

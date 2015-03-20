@@ -10,32 +10,36 @@
 
 #include "EMSource.h"
 
-class Generator : public EMSource, public ElementsGroup<Node<> > {
+class Generator : public EMSource< Node<> > {
 public:
-	typedef enum {
-		voltage = 1,
-		current = 2
-	} Type;
-	typedef enum {
-	   soft,
-	   hard
-	} Hardness;
-	Generator();
-	Generator(
-	 const ElementsGroup<Node<> >& elem,
-	 const Type& generatorType,
-	 const Hardness& hardness,
-	 const Magnitude* magnitude);
+    typedef enum {
+        voltage = 1,
+        current = 2
+    } Type;
+    typedef enum {
+        soft,
+        hard
+    } Hardness;
 
-	virtual ClassBase* clone() const;
+    Generator();
+    Generator(const Magnitude* magnitude,
+              const ElementsGroup<Node<> >& elem,
+              const Type& generatorType,
+              const Hardness& hardness);
+    Generator(const Generator& rhs);
+    virtual ~Generator();
 
-	Generator& operator=(const Generator &rhs);
-	Type getType() const;
-	virtual void printInfo() const;
+    virtual ClassBase* clone() const;
+
+    Type getType() const;
+
+    void printInfo() const;
+
 private:
-	Type type_;
-	Hardness hardness_;
-	string getTypeStr() const;
+    Type type_;
+    Hardness hardness_;
+
+    string getTypeStr() const;
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_ */

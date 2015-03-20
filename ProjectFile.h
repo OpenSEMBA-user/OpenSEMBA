@@ -24,46 +24,47 @@ using namespace std;
 
 #include "Types.h"
 
-class ProjectFile {
-public:
-   ProjectFile();
-   ProjectFile(const string& filename);
-   string getFilename() const;
-   string getProjectFolder() const;
-   bool canOpenFile() const;
-   void printInfo() const;
-   void setFilename(const string& filename);
+#include "ClassBase.h"
 
-   string getOutputFilename() const {
-       return getProjectFolder() + getOutputName();
-   }
-   string getOutputName() const {
-      return getProjectName();
-   }
-   string getProjectName() const {
-      return removeExtension(getBasename());
-   }
-   string
-   getBasename() const;
+class ProjectFile : public virtual ClassBase {
+public:
+    ProjectFile();
+    ProjectFile(const string& filename);
+    ProjectFile(const ProjectFile& rhs);
+    virtual ~ProjectFile();
+
+    ClassBase* clone() const;
+
+    ProjectFile& operator=(const ProjectFile& rhs);
+
+    bool canOpenFile() const;
+
+    string getFilename() const;
+    string getBasename() const;
+    string getProjectFolder() const;
+    string getOutputFilename() const {
+        return getProjectFolder() + getOutputName();
+    }
+    string getOutputName() const {
+        return getProjectName();
+    }
+    string getProjectName() const {
+        return removeExtension(getBasename());
+    }
+
+    void setFilename(const string& filename);
+
+    void printInfo() const;
+
 protected:
-   vector<string>
-   getFilesBasenames(
-         const string& directory,
-         const string& extension) const;
-   string
-   removeExtension(
-         const string& filename) const;
-   void
-   deleteDirIfExists(
-         const string& directory) const;
-   void
-   openFile(
-         ofstream& file) const;
-   void
-   openFile(
-         const string& fileName,
-         ofstream& file) const;
+    vector<string> getFilesBasenames(const string& directory,
+                                     const string& extension) const;
+    void openFile(ofstream& file) const;
+    void openFile(const string& fileName, ofstream& file) const;
+    string removeExtension(const string& filename) const;
+    void deleteDirIfExists(const string& directory) const;
+
 private:
-   string filename_;
+    string filename_;
 };
 #endif /* SRC_COMMON_PROJECTFILE_H_ */

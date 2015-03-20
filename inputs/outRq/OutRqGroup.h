@@ -1,13 +1,10 @@
 #ifndef OUTPUTREQUESTGROUP_H_
 #define OUTPUTREQUESTGROUP_H_
 
-#include "../outRq/OutRq.h"
-#include "../outRq/OutRqVolume.h"
-#include "../outRq/OutRqFarField.h"
-#include "OutRqNode.h"
-#include "OutRqSurface.h"
+#include "OutRq.h"
+#include "OutRqFarField.h"
 
-template<typename O = OutRq>
+template<typename O = OutRq<> >
 class OutRqGroup : public Group<O> {
 public:
     OutRqGroup();
@@ -17,7 +14,10 @@ public:
 
     OutRqGroup<O>& operator=(const Group<O>& rhs);
 
-    void add(OutRq*);
+    void add(O* newElem);
+    void add(vector<O*>&);
+    void add(const Group<O>&);
+
     void printInfo() const;
 };
 

@@ -8,10 +8,9 @@
 #include "Magnitude.h"
 
 Magnitude::Magnitude() {
-    // TODO Auto-generated constructor stub
 
 }
 
 Magnitude::~Magnitude() {
-    // TODO Auto-generated destructor stub
+
 }

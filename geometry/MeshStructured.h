@@ -55,8 +55,8 @@ public:
     }
 
     vector<BoxR3> discretizeWithinBoundary(
-            const UInt matId,
-            const UInt layId) const;
+            const MatId matId,
+            const LayerId layId) const;
 
     void applyScalingFactor(const Real factor);
     virtual void printInfo() const;
@@ -64,8 +64,10 @@ private:
     vector<BoxR3> discretizeWithinBoundary(
             const Grid3* grid,
             const ElementsGroup<SurfR>& faces) const;
-    vector<pair<const SurfR*, const SurfR*> > getPairsDefiningVolumeWithin(
-            const ElementsGroup<SurfR>& faces) const;
+    vector<BoxR3> discretizeWithinBoundary(
+            const ElementsGroup<SurfI>& faces) const;
+    vector<pair<const SurfI*, const SurfI*> > getPairsDefiningVolumeWithin(
+            const ElementsGroup<SurfI>& faces) const;
 };
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */

@@ -1,21 +1,14 @@
 #include "Element.h"
 
-Element<void>::Element() {
-
-}
-
-Element<void>::Element(const ElementId id,
-                       const LayerId layId,
+Element<void>::Element(const LayerId layId,
                        const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    layerId_(layId),
+:   layerId_(layId),
     matId_  (matId  ) {
 
 }
 
 Element<void>::Element(const Element& rhs)
-:   ClassIdBase<ElementId>(rhs),
-    layerId_(rhs.layerId_),
+:   layerId_(rhs.layerId_),
     matId_  (rhs.matId_  ) {
 
 }
@@ -121,7 +114,7 @@ ElemI* Element<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 
 template<class T>
 void Element<T>::printInfo() const {
-    cout<< "Element. Id: " << this->getId() << " MatId: " << getMatId()
+    cout<< "Element. Id: " << this->getId() << " MatId: " << this->getMatId()
         << " LayerId: " << this->getLayerId() << endl;
 }
 

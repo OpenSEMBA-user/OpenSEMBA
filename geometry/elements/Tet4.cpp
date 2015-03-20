@@ -18,7 +18,8 @@ Tet4::Tet4(const CoordinateGroup<CoordR3>& coordGr,
            const CoordinateId vId[4],
            const LayerId layerId,
            const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
         v_[i] = coordGr.getPtrToId(vId[i]);
@@ -30,7 +31,8 @@ Tet4::Tet4(const ElementId id,
            const CoordR3* v[4],
            const LayerId layerId,
            const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
         v_[i] = v[i];
@@ -39,7 +41,8 @@ Tet4::Tet4(const ElementId id,
 }
 
 Tet4::Tet4(const Tet4& rhs)
-:   Elem(rhs) {
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];

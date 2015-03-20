@@ -15,7 +15,9 @@ Polyhedron::Polyhedron(const ElementId id,
                        const vector<const Polygon*>& face,
                        const LayerId layerId,
                        const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
+
     face_ = face;
     for (UInt f = 0; f < numberOfFaces(); f++) {
         for (UInt i = 0; i < face[f]->numberOfCoordinates(); i++) {
@@ -26,7 +28,8 @@ Polyhedron::Polyhedron(const ElementId id,
 }
 
 Polyhedron::Polyhedron(const Polyhedron& rhs)
-:   Elem(rhs) {
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
 
     face_ = rhs.face_;
     for (UInt f = 0; f < numberOfFaces(); f++) {

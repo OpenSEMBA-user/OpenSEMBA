@@ -6,13 +6,17 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "Condition.h"
 #include "Domain.h"
 #include "ElementsGroup.h"
 
 using namespace std;
 
-class OutRq : public Condition, public Domain, public ClassBase {
+template<class T = void>
+class OutRq;
+
+template<>
+class OutRq<void> : public virtual Domain,
+                    public virtual ClassBase {
 public:
     typedef enum {
         undefined,
@@ -36,19 +40,55 @@ public:
         poyntingVector,
         energy,
     } Type;
-    OutRq(const Domain& domain, const Type outputType, const string& name);
-    virtual ~OutRq() = 0;
 
-    OutRq& operator=(const OutRq& rhs);
-    virtual bool isSimilar(const OutRq& rhs) const;
-    virtual void setAdditionalElements(const ElementsGroup<>& elems);
-    string outputTypeStr() const;
+    OutRq();
+    OutRq(const Type outputType, const string& name);
+    OutRq(const OutRq& rhs);
+    virtual ~OutRq();
+
+    bool isSimilar(const OutRq& rhs) const { return false; }
+
+    ElementsGroup<> getElems() const { return ElementsGroup<>(); }
+
     const string& getName() const;
     OutRq::Type getOutputType() const;
+
+    template<class T2>
+    void setAdditionalElems(const ElementsGroup<T2>& elems) {}
+
     void printInfo() const;
+
 private:
     string name_;
     OutRq::Type outputType_;
+
+    string getTypeStr() const;
 };
 
-#	endif
+
+template<class T>
+class OutRq : public virtual OutRq<void>,
+              public virtual ElementsGroup<T> {
+public:
+    OutRq() {}
+    OutRq(const Domain& domain,
+          const Type outputType,
+          const string& name,
+          const ElementsGroup<T>& elems);
+    OutRq(const OutRq& rhs);
+    virtual ~OutRq();
+
+    ClassBase* clone() const;
+
+    virtual bool isSimilar(const OutRq& rhs) const;
+
+    virtual ElementsGroup<T> getElems() const { return *this; }
+
+    virtual void setAdditionalElems(const ElementsGroup<T>& elems);
+
+    void printInfo() const { OutRq<void>::printInfo(); }
+};
+
+#include "OutRq.hpp"
+
+#endif

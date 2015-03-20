@@ -8,6 +8,7 @@
 #ifndef GLOBALPROBLEMDATA_H_
 #define GLOBALPROBLEMDATA_H_
 
+#include <cmath>
 #include <iostream>
 #include <utility>
 #include "../math/CartesianVector.h"

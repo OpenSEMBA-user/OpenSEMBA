@@ -114,7 +114,6 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
         exit(EXIT_FAILURE);
     }
 
-    this->element_.reserve(this->size() + newElems.size());
     for (UInt i = 0; i < newElems.size(); i++) {
         if(newId) {
             newElems[i]->setId(++this->lastId_);
@@ -149,7 +148,6 @@ void GroupId<T, Id>::add(const Group<T>& rhs) {
         exit(EXIT_FAILURE);
     }
 
-    this->element_.reserve(this->size() + rhs.size());
     for (UInt i = 0; i < rhs.size(); i++) {
         this->element_.push_back(rhs(i)->clone()->template castTo<T>());
 

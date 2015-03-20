@@ -18,7 +18,8 @@ Tet10::Tet10(const CoordinateGroup<CoordR3>& coordGr,
              const CoordinateId vId[10],
              const LayerId layerId,
              const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
         v_[i] = coordGr.getPtrToId(vId[i]);
@@ -28,7 +29,8 @@ Tet10::Tet10(const CoordinateGroup<CoordR3>& coordGr,
 }
 
 Tet10::Tet10(const Tet10& rhs)
-:   Elem(rhs) {
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];

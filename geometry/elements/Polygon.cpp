@@ -16,7 +16,8 @@ Polygon::Polygon(const CoordinateGroup<CoordR3>& cG,
                  const vector<CoordinateId>& vId,
                  const LayerId layerId,
                  const MatId   matId)
-:   Elem(id, layerId, matId) {
+:   ClassIdBase<ElementId>(id),
+    Elem(layerId, matId) {
     
     const UInt vSize = vId.size();
 	assert(vId.size() >= 3);
@@ -27,7 +28,8 @@ Polygon::Polygon(const CoordinateGroup<CoordR3>& cG,
 }
 
 Polygon::Polygon(const Polygon& rhs)
-:   Elem(rhs) {
+:   ClassIdBase<ElementId>(rhs),
+    Elem(rhs) {
     
     v_ = rhs.v_;
 }

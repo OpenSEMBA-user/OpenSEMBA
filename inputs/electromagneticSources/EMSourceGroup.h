@@ -15,7 +15,7 @@
 #include "SourceOnLine.h"
 #include "Waveport.h"
 
-template<typename E = EMSource>
+template<typename E = EMSource<> >
 class EMSourceGroup : public Group<E> {
 public:
     EMSourceGroup();

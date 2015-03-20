@@ -45,6 +45,8 @@ public:
         }
         return dynamic_cast<const T*>(this);
     }
+
+    virtual void printInfo() const = 0;
 };
 
 #endif /* CLASSBASE_H_ */

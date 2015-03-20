@@ -35,8 +35,7 @@ public:
 
     PhysicalModelGroup<P>& operator=(const Group<P>& rhs);
 
-    vector<MatId> getIds(
-            const Condition::Type type = Condition::undefined) const;
+    vector<MatId> getIds() const;
     void printInfo() const;
 private:
     void getDirection(

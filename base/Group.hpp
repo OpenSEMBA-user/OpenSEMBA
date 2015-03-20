@@ -45,6 +45,22 @@ Group<T>& Group<T>::operator=(const Group<T>& rhs) {
     return *this;
 }
 
+template<typename T>
+ClassBase* Group<T>::clone() const {
+    return new Group<T>(*this);
+}
+
+template<typename T> template<typename T2>
+UInt Group<T>::sizeOf() const {
+    UInt res = 0;
+    for (UInt i = 0; i < this->size(); i++) {
+        if(this->element_[i]->template is<T2>()) {
+            res++;
+        }
+    }
+    return res;
+}
+
 //template<typename T>
 //T* Group<T>::operator()(const UInt i) {
 //    return element_[i];
@@ -88,15 +104,9 @@ Group<T2> Group<T>::getGroupOf() const {
 //    return elems;
 //}
 
-template<typename T> template<typename T2>
-UInt Group<T>::sizeOf() const {
-    UInt res = 0;
-    for (UInt i = 0; i < this->size(); i++) {
-        if(this->element_[i]->template is<T2>()) {
-            res++;
-        }
-    }
-    return res;
+template<typename T>
+void Group<T>::reserve(const UInt nS) {
+    this->element_.reserve(nS);
 }
 
 template<typename T>
@@ -116,7 +126,6 @@ void Group<T>::add(vector<T*>& newElems) {
         exit(EXIT_FAILURE);
     }
 
-    this->element_.reserve(this->element_.size() + newElems.size());
     for (UInt i = 0; i < newElems.size(); i++) {
         this->element_.push_back(newElems[i]->template castTo<T>());
     }
@@ -132,15 +141,9 @@ void Group<T>::add(const Group<T>& rhs) {
         exit(EXIT_FAILURE);
     }
 
-    this->element_.reserve(this->element_.size() + rhs.size());
     for (UInt i = 0; i < rhs.size(); i++) {
         this->element_.push_back(rhs(i)->clone()->template castTo<T>());
     }
-}
-
-template<typename T>
-void Group<T>::reserve(const UInt nS) {
-    this->element_.reserve(nS);
 }
 
 template<typename T>
@@ -166,5 +169,14 @@ void Group<T>::deleteElements() {
         for(UInt i = 0; i < element_.size(); i++) {
             delete element_[i];
         }
+    }
+}
+
+template<typename T>
+void Group<T>::printInfo() const {
+    cout<< "--- Group info ---" << endl;
+    for (UInt i = 0; i < this->size(); i++) {
+        this->element_[i]->printInfo();
+        cout << endl;
     }
 }

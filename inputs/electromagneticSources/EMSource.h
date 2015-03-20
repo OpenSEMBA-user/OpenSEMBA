@@ -5,7 +5,6 @@
 #include <iostream>			// Stream I/O.
 #include <cmath>
 #include <vector>
-#include "../Condition.h"
 #include "Magnitude.h"
 #include "MagnitudeGaussian.h"
 #include "MagnitudeNumerical.h"
@@ -15,22 +14,47 @@
 
 using namespace std;
 
-class EMSource: public Condition,  public ClassBase{
+template<class T = void>
+class EMSource;
+
+template<>
+class EMSource<void> : public virtual ClassBase {
 public:
     EMSource();
     EMSource(const Magnitude* magnitude);
+    EMSource(const EMSource& rhs);
     virtual ~EMSource();
+
+    template<class T>
+    bool magnitudeIs() {
+        return magnitude_->is<T>();
+    }
+
     virtual string getMagnitudeFilename() const;
-    Condition::Type getConditionType() const;
+
+    void convertToNumerical(const string file,
+                            const double step,
+                            const double finalTime);
+
     void printInfo() const;
-    void convertToNumerical(
-            const string file,
-            const double step,
-            const double finalTime);
+
 protected:
     const Magnitude* getMagnitude() const;
+
 private:
     const Magnitude* magnitude_;
+};
+
+template<class T>
+class EMSource : public virtual EMSource<void>,
+                 public virtual ElementsGroup<T> {
+public:
+    EMSource() {}
+    virtual ~EMSource() {}
+
+    virtual ClassBase* clone() const = 0;
+
+    void printInfo() const { EMSource<void>::printInfo(); }
 };
 
 #endif /* ELECTROMAGNETICSOURCE_H_ */

@@ -7,42 +7,61 @@
 
 #include "../outRq/OutRqFarField.h"
 
-OutRqFarField::OutRqFarField(
- const ElementsGroup<Volume<> >& elem,
- const Domain& domain,
- const string& name,
- const Real iTh, const Real fTh, const Real sTh,
- const Real iPhi, const Real fPhi, const Real sPhi)
-: OutRqVolume(elem, domain, electric, name) {
+OutRqFarField::OutRqFarField(const Domain& domain,
+                             const string& name,
+                             const ElementsGroup<Volume<> >& elem,
+                             const Real iTh, const Real fTh, const Real sTh,
+                             const Real iPhi, const Real fPhi, const Real sPhi)
+:   Domain(domain),
+    OutRq<void>(electric, name),
+    ElementsGroup<Volume<> >(elem) {
+
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
+}
+
+OutRqFarField::OutRqFarField(const OutRqFarField& rhs)
+:   Domain(rhs),
+    OutRq<void>(rhs),
+    ElementsGroup<Volume<> >(rhs) {
+
+    initialTheta_ = rhs.initialTheta_;
+    finalTheta_ = rhs.finalTheta_;
+    stepTheta_ = rhs.stepTheta_;
+    initialPhi_ = rhs.initialPhi_;
+    finalPhi_ = rhs.finalPhi_;
+    stepPhi_ = rhs.stepPhi_;
+}
+
+OutRqFarField::~OutRqFarField() {
+
+}
+
+Real OutRqFarField::getInitialTheta() const {
+    return initialTheta_;
 }
 
 ClassBase* OutRqFarField::clone() const {
    return new OutRqFarField(*this);
 }
 
-Real OutRqFarField::getStepPhi() const {
-    return stepPhi_;
+Real OutRqFarField::getFinalTheta() const {
+    return finalTheta_;
 }
 
 Real OutRqFarField::getStepTheta() const {
     return stepTheta_;
 }
 
-Real OutRqFarField::getFinalPhi() const {
-    return finalPhi_;
-}
-
-Real OutRqFarField::getFinalTheta() const {
-    return finalTheta_;
-}
-
 Real OutRqFarField::getInitialPhi() const {
     return initialPhi_;
 }
 
-Real OutRqFarField::getInitialTheta() const {
-    return initialTheta_;
+Real OutRqFarField::getFinalPhi() const {
+    return finalPhi_;
+}
+
+Real OutRqFarField::getStepPhi() const {
+    return stepPhi_;
 }
 
 bool OutRqFarField::isSimilar(const OutRqFarField& rhs) const {
@@ -56,9 +75,8 @@ bool OutRqFarField::isSimilar(const OutRqFarField& rhs) const {
     return isSimilar;
 }
 
-void OutRqFarField::setThetaAndPhi(
-        Real iTh, Real fTh, Real sTh,
-        Real iPhi, Real fPhi, Real sPhi) {
+void OutRqFarField::setThetaAndPhi(Real iTh, Real fTh, Real sTh,
+                                   Real iPhi, Real fPhi, Real sPhi) {
     initialTheta_ = iTh * acos(-1.0);
     finalTheta_ = fTh * acos(-1.0);
     stepTheta_ = sTh * acos(-1.0);

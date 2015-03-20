@@ -7,7 +7,7 @@
 #include "ClassBase.h"
 
 template<class Id>
-class ClassIdBase : public ClassBase {
+class ClassIdBase : public virtual ClassBase {
     template<typename T, class GId>
     friend class GroupId;
 public:

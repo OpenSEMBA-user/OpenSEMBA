@@ -8,6 +8,8 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+#include "Types.h"
+
 #define SPEED_OF_LIGHT_SQ 8.98755179E+16
 #define INVC0 3.33564095E-9
 #define VACUUM_IMPEDANCE 3.76730313E+2

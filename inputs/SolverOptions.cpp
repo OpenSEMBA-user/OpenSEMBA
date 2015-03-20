@@ -175,6 +175,14 @@ void SolverOptions::setMTLN(bool mtln) {
     MTLN_ = mtln;
 }
 
+UInt SolverOptions::getNumberOfTimeSteps() const {
+    return (UInt)ceil(finalTime_/timeStep_);
+}
+
+void SolverOptions::setNumberOfTimeSteps(UInt numberOfTimeSteps) {
+    finalTime_ = timeStep_*numberOfTimeSteps;
+}
+
 const pair<double, double>& SolverOptions::getPmlAlpha() const {
     return pmlAlpha_;
 }
