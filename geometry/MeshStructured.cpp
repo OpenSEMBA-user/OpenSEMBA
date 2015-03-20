@@ -105,8 +105,8 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
     vector<BoxR3> box(pairs.size());
     vector<vector<Real> > zPos(pairs.size());
     for (UInt p = 0; p < pairs.size(); p++) {
-        CVecR3 min = pairs[p].first->getMinV()->pos();
-        CVecR3 max = pairs[p].second->getMaxV()->pos();
+        CVecR3 min = getPos(*pairs[p].first->getMinV());
+        CVecR3 max = getPos(*pairs[p].second->getMaxV());
         box[p] = BoxR3(min,max);
         if (min(2) > max(2)) {
             zPos[p] = getPosInRange(z, max(2), min(2));
@@ -158,9 +158,9 @@ MeshStructured::getPairsDefiningVolumeWithin(
     assert(nBound % 2 == 0);
     res.reserve(nBound / 2);
     // Sorts.
-    DynMatrix<Real> quads(nBound, 4);
+    DynMatrix<Int> quads(nBound, 4);
     for (UInt b = 0; b < nBound; b++) {
-        CVecR3 minPos = bound[b]->getMinV()->pos();
+        CVecI3 minPos = bound[b]->getMinV()->pos();
         // Stores boundary at quad list.
         quads(b, 0) = (Real) bound[b]->getId();
         for (UInt i = 0; i < 3; i++) {
