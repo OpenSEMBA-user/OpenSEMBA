@@ -63,8 +63,7 @@ CartesianVector<T,D> Coordinate<T,D>::pos() const {
 }
 
 template<class T, Int D>
-void
-Coordinate<T,D>::printInfo() const {
+void Coordinate<T,D>::printInfo() const {
     cout << "Id: ("<< getId() << ")  Pos: (";
     for (register Int i = 0; i < D; i++) {
         cout << this->val[i];

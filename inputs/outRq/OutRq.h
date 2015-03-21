@@ -46,7 +46,7 @@ public:
     OutRq(const OutRq& rhs);
     virtual ~OutRq();
 
-    virtual bool operator==(const OutRq& rhs) const { return false; }
+    virtual bool isSimilar(const OutRq& rhs, const bool rev = false) const;
 
     const string& getName() const;
     OutRq::Type getOutputType() const;
@@ -75,7 +75,7 @@ public:
 
     ClassBase* clone() const;
 
-    bool operator==(const OutRq<void>& rhs) const;
+    bool isSimilar(const OutRq<void>& rhs, const bool rev = false) const;
 
     virtual ElementsGroup<T> getElems() const { return *this; }
 

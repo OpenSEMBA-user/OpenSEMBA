@@ -19,6 +19,17 @@ OutRq<void>::~OutRq() {
 
 }
 
+bool OutRq<void>::isSimilar(const OutRq<void>& rhs, const bool rev) const {
+    bool isSimilar = true;
+    isSimilar &= getName() == rhs.getName();
+    isSimilar &= getOutputType() == rhs.getOutputType();
+    isSimilar &= Domain::operator==(rhs);
+    if (!rev) {
+        isSimilar &= rhs.isSimilar(rhs, true);
+    }
+    return isSimilar;
+}
+
 const string& OutRq<void>::getName() const {
     return name_;
 }

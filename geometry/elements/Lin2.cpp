@@ -18,7 +18,7 @@ Lin2<T>::Lin2() {
 }
 
 template<class T>
-Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& coordGr,
+Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& cG,
               const ElementId id,
               const CoordinateId vId[2],
               const LayerId layerId,
@@ -26,9 +26,7 @@ Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& coordGr,
 :   ClassIdBase<ElementId>(id),
     Elem(layerId, matId) {
     
-	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-	    v_[i] = coordGr.getPtrToId(vId[i]);
-	}
+    setCoordinates(cG, vId);
 }
 
 template<class T>
@@ -39,9 +37,7 @@ Lin2<T>::Lin2(const ElementId id,
 :   ClassIdBase<ElementId>(id),
     Elem(layerId, matId) {
     
-	for (UInt i = 0; i < lin.np; i++) {
-		v_[i] = v[i];
-	}
+    setCoordinates(v);
 }
 
 template<class T>
@@ -53,20 +49,28 @@ Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
 :   ClassIdBase<ElementId>(id),
     Elem(layerId, matId) {
 
-    if(!box.isLine()) {
-        cerr << endl << "ERROR @ Lin2::Lin2(): "
-                     << "Box is not a Line" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-    }
-    vector<CartesianVector<T,3> > pos = box.getPos();
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.get(pos[i]);
-        if (v_[i] == NULL) {
-            v_[i] = cG.add(pos[i]);
-        }
-    }
+    setCoordinates(cG, box);
 }
+
+
+template<class T>
+Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& cG,
+              const CoordinateId vId[2]) {
+    setCoordinates(cG, vId);
+}
+
+template<class T>
+Lin2<T>::Lin2(const Coordinate<T,3>* v[2]) {
+    setCoordinates(v);
+}
+
+template<class T>
+Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
+              const Box<T,3>& box) {
+
+    setCoordinates(cG, box);
+}
+
 
 template<class T>
 Lin2<T>::Lin2(const Lin2<T>& rhs)
@@ -191,6 +195,39 @@ void Lin2<T>::printInfo() const {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
         cout << endl;
+    }
+}
+
+template<class T>
+void Lin2<T>::setCoordinates(const CoordinateGroup<Coordinate<T,3> >& cG,
+                             const CoordinateId vId[2]) {
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = cG.getPtrToId(vId[i]);
+    }
+}
+
+template<class T>
+void Lin2<T>::setCoordinates(const Coordinate<T,3>* v[2]) {
+    for (UInt i = 0; i < lin.np; i++) {
+        v_[i] = v[i];
+    }
+}
+
+template<class T>
+void Lin2<T>::setCoordinates(CoordinateGroup<Coordinate<T,3> >& cG,
+                             const Box<T,3>& box) {
+    if(!box.isLine()) {
+        cerr << endl << "ERROR @ Lin2::Lin2(): "
+                     << "Box is not a Line" << endl;
+        assert(false);
+        exit(EXIT_FAILURE);
+    }
+    vector<CartesianVector<T,3> > pos = box.getPos();
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = cG.get(pos[i]);
+        if (v_[i] == NULL) {
+            v_[i] = cG.add(pos[i]);
+        }
     }
 }
 

@@ -27,20 +27,25 @@ class Lin2 : public virtual Line<T>,
              public virtual Lin2<void> {
 public:
     Lin2();
-	Lin2(const CoordinateGroup<Coordinate<T,3> >&,
+    Lin2(const CoordinateGroup<Coordinate<T,3> >&,
          const ElementId id,
          const CoordinateId vId[2],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-	Lin2(const ElementId id,
+    Lin2(const ElementId id,
          const Coordinate<T,3>* v[2],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-	Lin2(CoordinateGroup<Coordinate<T,3> >&,
+    Lin2(CoordinateGroup<Coordinate<T,3> >&,
          const ElementId id,
          const Box<T,3>& box,
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
+    Lin2(const CoordinateGroup<Coordinate<T,3> >&,
+         const CoordinateId vId[2]);
+    Lin2(const Coordinate<T,3>* v[2]);
+    Lin2(CoordinateGroup<Coordinate<T,3> >&,
+         const Box<T,3>& box);
     Lin2(const Lin2<T>& rhs);
 	virtual ~Lin2();
     
@@ -65,6 +70,12 @@ public:
 private:
     static const SimplexLin<1> lin;
     const Coordinate<T,3>* v_[2];
+
+    void setCoordinates(const CoordinateGroup<Coordinate<T,3> >&,
+                        const CoordinateId vId[2]);
+    void setCoordinates(const Coordinate<T,3>* v[2]);
+    void setCoordinates(CoordinateGroup<Coordinate<T,3> >&,
+                        const Box<T,3>& box);
 };
 
 typedef Lin2<Real> LinR2;
