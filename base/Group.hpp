@@ -8,15 +8,15 @@ Group<T>::Group()
 
 }
 
-template<typename T>
-Group<T>::Group(const vector<T*>& elems, bool ownership)
+template<typename T> template<typename T2>
+Group<T>::Group(const vector<T2*>& elems, bool ownership)
 :   ownership_(ownership) {
 
     initElements(elems);
 }
 
-template<typename T>
-Group<T>::Group(const Group<T>& rhs)
+template<typename T> template<typename T2>
+Group<T>::Group(const Group<T2>& rhs)
 :   ownership_(false) {
 
     if(rhs.ownership_)
@@ -30,11 +30,8 @@ Group<T>::~Group() {
     deleteElements();
 }
 
-template<typename T>
-Group<T>& Group<T>::operator=(const Group<T>& rhs) {
-    if(this == &rhs)
-        return *this;
-
+template<typename T> template<typename T2>
+Group<T>& Group<T>::operator=(const Group<T2>& rhs) {
     deleteElements();
     this->ownership_ = false;
     if(rhs.ownership_)
@@ -109,15 +106,15 @@ void Group<T>::reserve(const UInt nS) {
     this->element_.reserve(nS);
 }
 
-template<typename T>
-void Group<T>::add(T* newElem) {
-    vector<T*> aux;
+template<typename T> template<typename T2>
+void Group<T>::add(T2* newElem) {
+    vector<T2*> aux;
     aux.push_back(newElem);
     add(aux);
 }
 
-template<typename T>
-void Group<T>::add(vector<T*>& newElems) {
+template<typename T> template<typename T2>
+void Group<T>::add(vector<T2*>& newElems) {
     if(!this->ownership_) {
         cerr << endl << "ERROR @ Group::add(): "
              << "Forbidden to add elements to a Group without ownership "
@@ -127,12 +124,14 @@ void Group<T>::add(vector<T*>& newElems) {
     }
 
     for (UInt i = 0; i < newElems.size(); i++) {
-        this->element_.push_back(newElems[i]->template castTo<T>());
+        if (newElems[i]->template is<T>()) {
+            this->element_.push_back(newElems[i]->template castTo<T>());
+        }
     }
 }
 
-template<typename T>
-void Group<T>::add(const Group<T>& rhs) {
+template<typename T> template<typename T2>
+void Group<T>::add(const Group<T2>& rhs) {
     if(!this->ownership_) {
         cerr << endl << "ERROR @ Group::add(): "
              << "Forbidden to add elements to a Group without ownership "
@@ -142,24 +141,30 @@ void Group<T>::add(const Group<T>& rhs) {
     }
 
     for (UInt i = 0; i < rhs.size(); i++) {
-        this->element_.push_back(rhs(i)->clone()->template castTo<T>());
+        if (rhs(i)->template is<T>()) {
+            this->element_.push_back(rhs(i)->clone()->template castTo<T>());
+        }
     }
 }
 
-template<typename T>
-void Group<T>::initElements(const vector<T*>& elems) {
-    this->element_.resize(elems.size());
+template<typename T> template<typename T2>
+void Group<T>::initElements(const vector<T2*>& elems) {
+    this->element_.reserve(elems.size());
     for(UInt i = 0; i < elems.size(); i++) {
-        this->element_[i] = elems[i];
+        if (elems[i]->template is<T>()) {
+            this->element_.push_back(elems[i]->template castTo<T>());
+        }
     }
 }
 
-template<typename T>
-void Group<T>::cloneElements(const vector<T*>& elems) {
+template<typename T> template<typename T2>
+void Group<T>::cloneElements(const vector<T2*>& elems) {
     this->ownership_ = true;
     this->element_.resize(elems.size());
     for(UInt i = 0; i < elems.size(); i++) {
-        this->element_[i] = elems[i]->clone()->template castTo<T>();
+        if (elems[i]->template is<T>()) {
+            this->element_.push_back(elems[i]->clone()->template castTo<T>());
+        }
     }
 }
 

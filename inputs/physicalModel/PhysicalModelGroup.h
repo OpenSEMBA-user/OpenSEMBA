@@ -29,18 +29,20 @@ template<typename P = PhysicalModel>
 class PhysicalModelGroup : public GroupId<P,MatId> {
 public:
     PhysicalModelGroup();
-    PhysicalModelGroup(const vector<P*>&);
-    PhysicalModelGroup(const Group<P>& rhs);
+    template<typename P2>
+    PhysicalModelGroup(const vector<P2*>&);
+    template<typename P2>
+    PhysicalModelGroup(const Group<P2>& rhs);
     virtual ~PhysicalModelGroup();
 
-    PhysicalModelGroup<P>& operator=(const Group<P>& rhs);
+    template<typename P2>
+    PhysicalModelGroup<P>& operator=(const Group<P2>& rhs);
 
     vector<MatId> getIds() const;
     void printInfo() const;
 private:
-    void getDirection(
-            PMVolumePML::Direction direction[3],
-            const UInt i) const;
+    void getDirection(PMVolumePML::Direction direction[3],
+                      const UInt i) const;
     PMVolumePML::Direction getDirectionFromInt(const UInt i) const;
 };
 

@@ -30,15 +30,13 @@ ClassBase* OutRq<T>::clone() const {
 }
 
 template<class T>
-bool OutRq<T>::isSimilar(const OutRq& rhs) const {
+bool OutRq<T>::operator==(const OutRq<void>& rhs) const {
+    if(!rhs.template is<OutRq<T> >()) {
+        return false;
+    }
 	bool isSimilar = true;
 	isSimilar &= getName() == rhs.getName();
 	isSimilar &= getOutputType() == rhs.getOutputType();
 	isSimilar &= Domain::operator==(rhs);
 	return isSimilar;
-}
-
-template<class T>
-void OutRq<T>::setAdditionalElems(const ElementsGroup<T>& elems) {
-    ElementsGroup<T>::add(elems);
 }

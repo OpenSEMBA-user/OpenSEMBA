@@ -12,14 +12,14 @@ ElementsGroup<E>::ElementsGroup() {
 
 }
 
-template<typename E>
-ElementsGroup<E>::ElementsGroup(const vector<E*>& elems, bool ownership)
+template<typename E> template<typename E2>
+ElementsGroup<E>::ElementsGroup(const vector<E2*>& elems, bool ownership)
 :   GroupId<E, ElementId>(elems, ownership) {
 
 }
 
-template<typename E>
-ElementsGroup<E>::ElementsGroup(const Group<E>& rhs)
+template<typename E> template<typename E2>
+ElementsGroup<E>::ElementsGroup(const Group<E2>& rhs)
 :   GroupId<E, ElementId>(rhs) {
 
 }
@@ -29,12 +29,8 @@ ElementsGroup<E>::~ElementsGroup() {
 
 }
 
-template<typename E>
-ElementsGroup<E>& ElementsGroup<E>::operator=(const Group<E>& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-
+template<typename E> template<typename E2>
+ElementsGroup<E>& ElementsGroup<E>::operator=(const Group<E2>& rhs) {
     GroupId<E, ElementId>::operator=(rhs);
 
     return *this;

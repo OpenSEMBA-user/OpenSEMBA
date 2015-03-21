@@ -20,15 +20,18 @@ template<typename L = Layer>
 class LayerGroup : public GroupId<L, LayerId> {
 public:
     LayerGroup();
-    LayerGroup(const vector<L*>&);
-    LayerGroup(const Group<L>& rhs);
+    template<typename L2>
+    LayerGroup(const vector<L2*>&);
+    template<typename L2>
+    LayerGroup(const Group<L2>& rhs);
     virtual ~LayerGroup();
+
+    template<typename L2>
+    LayerGroup<L>& operator=(const Group<L2>& rhs);
 
     const L* get(const string name) const;
 
-    LayerGroup<L>& operator=(const Group<L>& rhs);
-
-    virtual void printInfo() const;
+    void printInfo() const;
 };
 
 #include "LayerGroup.hpp"

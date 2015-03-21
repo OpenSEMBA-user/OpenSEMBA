@@ -10,14 +10,14 @@ PhysicalModelGroup<P>::PhysicalModelGroup() {
 
 }
 
-template<typename P>
-PhysicalModelGroup<P>::PhysicalModelGroup(const vector<P*>& elems)
+template<typename P> template<typename P2>
+PhysicalModelGroup<P>::PhysicalModelGroup(const vector<P2*>& elems)
 :   GroupId<P, MatId>(elems) {
 
 }
 
-template<typename P>
-PhysicalModelGroup<P>::PhysicalModelGroup(const Group<P>& rhs)
+template<typename P> template<typename P2>
+PhysicalModelGroup<P>::PhysicalModelGroup(const Group<P2>& rhs)
 :   GroupId<P, MatId>(rhs) {
 
 }
@@ -27,12 +27,8 @@ PhysicalModelGroup<P>::~PhysicalModelGroup() {
 
 }
 
-template<typename P>
-PhysicalModelGroup<P>& PhysicalModelGroup<P>::operator=(const Group<P>& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-
+template<typename P> template<typename P2>
+PhysicalModelGroup<P>& PhysicalModelGroup<P>::operator=(const Group<P2>& rhs) {
     GroupId<P, MatId>::operator=(rhs);
 
     return *this;
@@ -49,10 +45,17 @@ PhysicalModelGroup<P>::printInfo() const {
 }
 
 template<typename P>
-void
-PhysicalModelGroup<P>::getDirection(
-        PMVolumePML::Direction direction[3],
-        const UInt i) const {
+vector<MatId> PhysicalModelGroup<P>::getIds() const {
+    vector<MatId> res;
+    for (UInt i = 0; i < this->size(); i++) {
+        res.push_back(this->element_[i]->getId());
+    }
+    return res;
+}
+
+template<typename P>
+void PhysicalModelGroup<P>::getDirection(PMVolumePML::Direction direction[3],
+                                         const UInt i) const {
     assert(i < PMVolumePML::possibleDirections);
     direction[x] = getDirectionFromInt((i/9) % 3);
     direction[y] = getDirectionFromInt((i/3) % 3);
@@ -63,8 +66,7 @@ PhysicalModelGroup<P>::getDirection(
 }
 
 template<typename P>
-PMVolumePML::Direction
-PhysicalModelGroup<P>::getDirectionFromInt(
+PMVolumePML::Direction PhysicalModelGroup<P>::getDirectionFromInt(
         const UInt i) const {
     assert(PMVolumePML::plus == 0);
     assert(PMVolumePML::minus == 1);
@@ -79,13 +81,4 @@ PhysicalModelGroup<P>::getDirectionFromInt(
     } else {
         return PMVolumePML::none;
     }
-}
-
-template<typename P>
-vector<MatId> PhysicalModelGroup<P>::getIds() const {
-    vector<MatId> res;
-    for (UInt i = 0; i < this->size(); i++) {
-        res.push_back(this->element_[i]->getId());
-    }
-    return res;
 }

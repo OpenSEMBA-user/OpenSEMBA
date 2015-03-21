@@ -22,7 +22,7 @@ public:
 
     virtual ClassBase* clone() const;
 
-    virtual OutRqFarField& operator=(const ElementsGroup<Vol>& rhs);
+    bool operator==(const OutRq<void>& rhs) const;
 
     Real getInitialTheta() const;
     Real getFinalTheta() const;
@@ -30,8 +30,6 @@ public:
     Real getInitialPhi() const;
     Real getFinalPhi() const;
     Real getStepPhi() const;
-
-    bool isSimilar(const OutRqFarField& rhs) const;
 private:
     Real initialTheta_, finalTheta_, stepTheta_;
     Real initialPhi_, finalPhi_, stepPhi_;

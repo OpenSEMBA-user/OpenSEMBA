@@ -49,7 +49,7 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
     return *this;
 }
 
-void SmbData::applyScalingFactor() {
+void SmbData::applyGeometricScalingFactor() {
 
     mesh->applyScalingFactor(mesherOptions->getScalingFactor());
     mesherOptions->applyGeometricScalingFactor(mesherOptions->getScalingFactor());

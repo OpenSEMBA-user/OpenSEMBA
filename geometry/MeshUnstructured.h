@@ -65,8 +65,8 @@ public:
 
     void printInfo() const;
 protected:
-    vector<Face> getInternalBorder(const ElementsGroup<Tet>& tet) const;
-    vector<Face> getInternalBorder(const ElementsGroup<Tri>& tri) const;
+    vector<Face> getTetInternalBorder(const ElementsGroup<Tet>& tet) const;
+    vector<Face> getTriInternalBorder(const ElementsGroup<Tri>& tri) const;
 };
 
 #endif /* MESHUNSTRUCTURED_H_ */

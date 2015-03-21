@@ -46,15 +46,10 @@ public:
     OutRq(const OutRq& rhs);
     virtual ~OutRq();
 
-    bool isSimilar(const OutRq& rhs) const { return false; }
-
-    ElementsGroup<> getElems() const { return ElementsGroup<>(); }
+    virtual bool operator==(const OutRq& rhs) const { return false; }
 
     const string& getName() const;
     OutRq::Type getOutputType() const;
-
-    template<class T2>
-    void setAdditionalElems(const ElementsGroup<T2>& elems) {}
 
     void printInfo() const;
 
@@ -80,12 +75,9 @@ public:
 
     ClassBase* clone() const;
 
-    virtual bool isSimilar(const OutRq& rhs) const;
+    bool operator==(const OutRq<void>& rhs) const;
 
-    virtual OutRq<T>& operator=(const ElementsGroup<T>& rhs);
     virtual ElementsGroup<T> getElems() const { return *this; }
-
-    virtual void setAdditionalElems(const ElementsGroup<T>& elems);
 
     void printInfo() const { OutRq<void>::printInfo(); }
 };

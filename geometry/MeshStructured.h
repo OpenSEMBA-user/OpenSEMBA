@@ -42,13 +42,13 @@ public:
     template<template<typename> class E>
     ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >& rhs) {
         vector< E<Int>* > elems;
-        E<Int>* elem;
+        ElemI* elem;
         elems.reserve(rhs.size());
         for(UInt i = 0; i < rhs.size(); i++) {
             elem = rhs(i)->toStructured(*this, *this);
             if (elem != NULL) {
-                ElementsGroup<ElemI>::add(elem->template castTo<ElemI>());
-                elems.push_back(elem);
+                ElementsGroup<ElemI>::add(elem);
+                elems.push_back(elem->castTo< E<Int> >());
             }
         }
         return ElementsGroup< E<Int> >(elems, false);
@@ -59,6 +59,7 @@ public:
             const LayerId layId) const;
 
     void applyScalingFactor(const Real factor);
+
     virtual void printInfo() const;
 private:
     vector<BoxR3> discretizeWithinBoundary(

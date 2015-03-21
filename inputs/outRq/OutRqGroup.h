@@ -8,15 +8,14 @@ template<typename O = OutRq<> >
 class OutRqGroup : public Group<O> {
 public:
     OutRqGroup();
-    OutRqGroup(const vector<O*>&);
-    OutRqGroup(const Group<O>& rhs);
+    template<typename O2>
+    OutRqGroup(const vector<O2*>&);
+    template<typename O2>
+    OutRqGroup(const Group<O2>& rhs);
     virtual ~OutRqGroup();
 
-    OutRqGroup<O>& operator=(const Group<O>& rhs);
-
-    void add(O* newElem);
-    void add(vector<O*>&);
-    void add(const Group<O>&);
+    template<typename O2>
+    OutRqGroup<O>& operator=(const Group<O2>& rhs);
 
     void printInfo() const;
 };

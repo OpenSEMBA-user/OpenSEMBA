@@ -43,7 +43,7 @@ ParserGiD::read() {
     res->grid = readCartesianGrid();
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
-    res->applyScalingFactor();
+    res->applyGeometricScalingFactor();
     return res;
 }
 

@@ -13,8 +13,8 @@ CoordinateGroup<C>::CoordinateGroup() {
 
 }
 
-template<typename C>
-CoordinateGroup<C>::CoordinateGroup(const vector<C*>& coord)
+template<typename C> template<typename C2>
+CoordinateGroup<C>::CoordinateGroup(const vector<C2*>& coord)
 :   GroupId<C, CoordinateId>(coord) {
     
     buildIndex(this->element_);
@@ -25,8 +25,8 @@ CoordinateGroup<C>::CoordinateGroup(const vector<CVecR3>& pos) {
     add(pos, true);
 }
 
-template<typename C>
-CoordinateGroup<C>::CoordinateGroup(const Group<C>& rhs)
+template<typename C> template<typename C2>
+CoordinateGroup<C>::CoordinateGroup(const Group<C2>& rhs)
 :   GroupId<C, CoordinateId>(rhs) {
     
     buildIndex(this->element_);
@@ -37,17 +37,20 @@ CoordinateGroup<C>::~CoordinateGroup() {
 
 }
 
-template<typename C>
-CoordinateGroup<C>& CoordinateGroup<C>::operator=(const Group<C>& rhs) {
-    
-    if (this == &rhs) {
-        return *this;
-    }
-    
+template<typename C> template<typename C2>
+CoordinateGroup<C>& CoordinateGroup<C>::operator=(const Group<C2>& rhs) {
+    indexStr_.clear();
+    indexUnstr_.clear();
     GroupId<C, CoordinateId>::operator=(rhs);
     buildIndex(this->element_);
     
     return *this;
+}
+
+template<typename C>
+CoordinateGroup<C> CoordinateGroup<C>::get(
+        const vector<CoordinateId>& ids) const {
+    return GroupId<C, CoordinateId>::get(ids);
 }
 
 template<typename C>
@@ -76,19 +79,24 @@ const CoordI3* CoordinateGroup<C>::get(const CVecI3& position) const {
     }
 }
 
-template<typename C>
-void CoordinateGroup<C>::add(C* newCoord, bool newId) {
-    return GroupId<C, CoordinateId>::add(newCoord, newId);
+template<typename C> template<typename C2>
+void CoordinateGroup<C>::add(C2* newCoord, bool newId) {
+    vector<C2*> aux;
+    aux.push_back(newCoord);
+    add(aux, newId);
 }
 
-template<typename C>
-void CoordinateGroup<C>::add(vector<C*>& newCoords, bool newId) {
-    return GroupId<C, CoordinateId>::add(newCoords, newId);
+template<typename C> template<typename C2>
+void CoordinateGroup<C>::add(vector<C2*>& newCoords, bool newId) {
+
+    GroupId<C, CoordinateId>::add(newCoords, newId);
+    buildIndex(newCoords);
 }
 
-template<typename C>
-void CoordinateGroup<C>::add(const Group<C*>& rhs) {
-    return GroupId<C, CoordinateId>::add(rhs);
+template<typename C> template<typename C2>
+void CoordinateGroup<C>::add(const Group<C2>& rhs) {
+    GroupId<C, CoordinateId>::add(rhs);
+    buildIndex(rhs);
 }
 
 template<typename C>
@@ -182,8 +190,8 @@ void CoordinateGroup<C>::printInfo() const {
     cout<< "Total: " << this->size() << " coordinates." << endl;
 }
 
-template<typename C>
-void CoordinateGroup<C>::buildIndex(const vector<C*>& coords) {
+template<typename C>  template<typename C2>
+void CoordinateGroup<C>::buildIndex(const vector<C2*>& coords) {
     for (UInt i = 0; i < coords.size(); i++) {
         if (coords[i]->template is<CoordR3>())
             indexUnstr_.insert(coords[i]->template castTo<CoordR3>());
@@ -191,5 +199,17 @@ void CoordinateGroup<C>::buildIndex(const vector<C*>& coords) {
     for (UInt i = 0; i < coords.size(); i++) {
         if (coords[i]->template is<CoordI3>())
             indexStr_.insert(coords[i]->template castTo<CoordI3>());
+    }
+}
+
+template<typename C>  template<typename C2>
+void CoordinateGroup<C>::buildIndex(const Group<C2>& rhs) {
+    for (UInt i = 0; i < rhs.size(); i++) {
+        if (rhs(i)->template is<CoordR3>())
+            indexUnstr_.insert(rhs(i)->template castTo<CoordR3>());
+    }
+    for (UInt i = 0; i < rhs.size(); i++) {
+        if (rhs(i)->template is<CoordI3>())
+            indexStr_.insert(rhs(i)->template castTo<CoordI3>());
     }
 }

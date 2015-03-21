@@ -64,14 +64,18 @@ Real OutRqFarField::getStepPhi() const {
     return stepPhi_;
 }
 
-bool OutRqFarField::isSimilar(const OutRqFarField& rhs) const {
-    bool isSimilar = OutRq::isSimilar(rhs);
-    isSimilar &= initialTheta_ == rhs.initialTheta_;
-    isSimilar &= finalTheta_ == rhs.finalTheta_;
-    isSimilar &= stepTheta_ == rhs.stepTheta_;
-    isSimilar &= initialPhi_ == rhs.initialPhi_;
-    isSimilar &= finalPhi_ == rhs.finalPhi_;
-    isSimilar &= stepPhi_ == rhs.stepPhi_;
+bool OutRqFarField::operator==(const OutRq<void>& rhs) const {
+    if(!rhs.is<OutRqFarField>()) {
+        return false;
+    }
+    const OutRqFarField* out = rhs.castTo<OutRqFarField>();
+    bool isSimilar = OutRq<Vol>::operator==(*out);
+    isSimilar &= initialTheta_ == out->initialTheta_;
+    isSimilar &= finalTheta_ == out->finalTheta_;
+    isSimilar &= stepTheta_ == out->stepTheta_;
+    isSimilar &= initialPhi_ == out->initialPhi_;
+    isSimilar &= finalPhi_ == out->finalPhi_;
+    isSimilar &= stepPhi_ == out->stepPhi_;
     return isSimilar;
 }
 

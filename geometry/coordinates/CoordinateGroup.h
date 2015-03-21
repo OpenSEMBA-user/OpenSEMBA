@@ -46,19 +46,26 @@ template<typename C = Coord>
 class CoordinateGroup : public GroupId<C, CoordinateId> {
 public:
     CoordinateGroup();
-    CoordinateGroup(const vector<C*>&);
+    template<typename C2>
+    CoordinateGroup(const vector<C2*>&);
     CoordinateGroup(const vector<CVecR3>&);
-    CoordinateGroup(const Group<C>& rhs);
+    template<typename C2>
+    CoordinateGroup(const Group<C2>& rhs);
     virtual ~CoordinateGroup();
     
-    CoordinateGroup<C>& operator=(const Group<C>& rhs);
+    template<typename C2>
+    CoordinateGroup<C>& operator=(const Group<C2>& rhs);
 
+    CoordinateGroup<C> get(const vector<CoordinateId>&) const;
     const CoordR3* get(const CVecR3& pos) const;
     const CoordI3* get(const CVecI3& pos) const;
     
-    void add(C* newElem , bool newId = false);
-    void add(vector<C*>&, bool newId = false);
-    void add(const Group<C*>&);
+    template<typename C2>
+    void add(C2* newElem , bool newId = false);
+    template<typename C2>
+    void add(vector<C2*>&, bool newId = false);
+    template<typename C2>
+    void add(const Group<C2>&);
     CoordR3*         add(const CVecR3&        , const bool canOverlap = false);
     vector<CoordR3*> add(const vector<CVecR3>&, const bool canOverlap = false);
     CoordI3*         add(const CVecI3&        , const bool canOverlap = false);
@@ -72,7 +79,10 @@ private:
     multiset<const CoordR3*, lexCompareCoord> indexUnstr_;
     multiset<const CoordI3*, lexCompareCoord> indexStr_;
     
-    void buildIndex(const vector<C*>& coords);
+    template<typename C2>
+    void buildIndex(const vector<C2*>& coords);
+    template<typename C2>
+    void buildIndex(const Group<C2>& rhs);
 };
 
 #include "CoordinateGroup.hpp"

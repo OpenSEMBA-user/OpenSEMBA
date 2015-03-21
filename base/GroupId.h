@@ -12,11 +12,14 @@ template<typename T, class Id>
 class GroupId : public Group<T> {
 public:
     GroupId();
-    GroupId(const vector<T*>&, bool ownership = true);
-    GroupId(const Group<T>& rhs);
+    template<typename T2>
+    GroupId(const vector<T2*>&, bool ownership = true);
+    template<typename T2>
+    GroupId(const Group<T2>& rhs);
     virtual ~GroupId();
 
-    GroupId<T, Id>& operator=(const Group<T>& rhs);
+    template<typename T2>
+    GroupId<T, Id>& operator=(const Group<T2>& rhs);
 
     bool existId(const Id id) const;
 
@@ -25,9 +28,12 @@ public:
 
     GroupId<T, Id> get(const vector<Id>&) const;
 
-    void add(T* newElem , bool newId = false);
-    void add(vector<T*>&, bool newId = false);
-    void add(const Group<T>&);
+    template<typename T2>
+    void add(T2* newElem , bool newId = false);
+    template<typename T2>
+    void add(vector<T2*>&, bool newId = false);
+    template<typename T2>
+    void add(const Group<T2>&);
 
 protected:
     Id lastId_;

@@ -88,8 +88,8 @@ vector<Face> MeshUnstructured::getInternalBorder(
         const ElementsGroup<ElemR>& region) const {
 
     vector<Face> tri, res;
-    res = getInternalBorder(region.getGroupOf<Tet>());
-    tri = getInternalBorder(region.getGroupOf<Tri>());
+    res = getTetInternalBorder(region.getGroupOf<Tet>());
+    tri = getTriInternalBorder(region.getGroupOf<Tri>());
     res.insert(res.end(), tri.begin(), tri.end());
     return res;
 }
@@ -115,7 +115,7 @@ vector<Face> MeshUnstructured::getExternalBorder(
     return external;
 }
 
-vector<Face> MeshUnstructured::getInternalBorder(
+vector<Face> MeshUnstructured::getTetInternalBorder(
         const ElementsGroup<Tet>& region) const {
 
     // Builds a list with all tetrahedron faces.
@@ -169,7 +169,7 @@ vector<Face> MeshUnstructured::getInternalBorder(
     return res;
 }
 
-vector<Face> MeshUnstructured::getInternalBorder(
+vector<Face> MeshUnstructured::getTriInternalBorder(
         const ElementsGroup<Tri>& region) const {
 
     UInt nE = region.size();

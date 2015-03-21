@@ -8,16 +8,16 @@ GroupId<T, Id>::GroupId()
 
 }
 
-template<typename T, class Id>
-GroupId<T, Id>::GroupId(const vector<T*>& elems, bool ownership)
+template<typename T, class Id> template<typename T2>
+GroupId<T, Id>::GroupId(const vector<T2*>& elems, bool ownership)
 :   Group<T>(elems, ownership),
     lastId_(0) {
 
     buildMapId();
 }
 
-template<typename T, class Id>
-GroupId<T, Id>::GroupId(const Group<T>& rhs)
+template<typename T, class Id> template<typename T2>
+GroupId<T, Id>::GroupId(const Group<T2>& rhs)
 :   Group<T>(rhs) {
 
     buildMapId();
@@ -28,13 +28,9 @@ GroupId<T, Id>::~GroupId() {
 
 }
 
-template<typename T, class Id>
-GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T>& rhs) {
-    if(this == &rhs)
-        return *this;
-
+template<typename T, class Id> template<typename T2>
+GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T2>& rhs) {
     Group<T>::operator=(rhs);
-
     buildMapId();
 
     return *this;
@@ -97,15 +93,15 @@ GroupId<T, Id> GroupId<T, Id>::get(const vector<Id>& ids) const {
     return GroupId<T, Id>(elems, false);
 }
 
-template<typename T, class Id>
-void GroupId<T, Id>::add(T* newElem, bool newId) {
+template<typename T, class Id> template<typename T2>
+void GroupId<T, Id>::add(T2* newElem, bool newId) {
     vector<T*> aux;
     aux.push_back(newElem);
     add(aux, newId);
 }
 
-template<typename T, class Id>
-void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
+template<typename T, class Id> template<typename T2>
+void GroupId<T, Id>::add(vector<T2*>& newElems, bool newId) {
     if(!this->ownership_) {
         cerr << endl << "ERROR @ Group::add(): "
              << "Forbidden to add elements to a Group without ownership "
@@ -115,6 +111,9 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
     }
 
     for (UInt i = 0; i < newElems.size(); i++) {
+        if(!newElems[i]->template is<T>()) {
+            continue;
+        }
         if(newId) {
             newElems[i]->setId(++this->lastId_);
         }
@@ -138,8 +137,8 @@ void GroupId<T, Id>::add(vector<T*>& newElems, bool newId) {
     }
 }
 
-template<typename T, class Id>
-void GroupId<T, Id>::add(const Group<T>& rhs) {
+template<typename T, class Id> template<typename T2>
+void GroupId<T, Id>::add(const Group<T2>& rhs) {
     if(!this->ownership_) {
         cerr << endl << "ERROR @ Group::add(): "
              << "Forbidden to add elements to a Group without ownership "
@@ -149,6 +148,9 @@ void GroupId<T, Id>::add(const Group<T>& rhs) {
     }
 
     for (UInt i = 0; i < rhs.size(); i++) {
+        if(!rhs(i)->template is<T>()) {
+            continue;
+        }
         this->element_.push_back(rhs(i)->clone()->template castTo<T>());
 
         if (this->element_.back()->getId() == 0) {

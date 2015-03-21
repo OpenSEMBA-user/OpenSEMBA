@@ -41,7 +41,6 @@ MeshStructured& MeshStructured::operator=(const MeshStructured& rhs) {
         return *this;
     }
 
-    Mesh::operator=(rhs);
     Grid3::operator=(rhs);
     CoordinateGroup<CoordI3>::operator=(rhs.coords().newGroupOf<CoordI3>());
     ElementsGroup<ElemI>::operator=(rhs.elems().newGroupOf<ElemI>());
@@ -92,7 +91,7 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
         const MatId matId,
         const LayerId layId) const {
     ElementsGroup<SurfR> surfs = elems().get(matId, layId).getGroupOf<SurfR>();
-    return discretizeWithinBoundary(this, surfs);
+//    return discretizeWithinBoundary(this, surfs);
 }
 
 vector<BoxR3> MeshStructured::discretizeWithinBoundary(

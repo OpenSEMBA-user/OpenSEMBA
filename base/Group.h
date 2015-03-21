@@ -13,15 +13,20 @@ using namespace std;
 
 template<typename T>
 class Group : public virtual ClassBase {
+    template<typename T2>
+    friend class Group;
 public:
     Group();
-    Group(const vector<T*>& , bool ownership = true);
-    Group(const Group<T>& rhs);
+    template<typename T2>
+    Group(const vector<T2*>& , bool ownership = true);
+    template<typename T2>
+    Group(const Group<T2>& rhs);
     virtual ~Group();
 
     ClassBase* clone() const;
 
-    Group<T>& operator=(const Group<T>& rhs);
+    template<typename T2>
+    Group<T>& operator=(const Group<T2>& rhs);
 
     bool empty() const { return element_.empty(); }
     UInt size () const { return element_.size();  }
@@ -40,9 +45,12 @@ public:
 
     virtual void reserve(const UInt nS);
 
-    virtual void add(T* newElem);
-    virtual void add(vector<T*>&);
-    virtual void add(const Group<T>&);
+    template<typename T2>
+    void add(T2* newElem);
+    template<typename T2>
+    void add(vector<T2*>&);
+    template<typename T2>
+    void add(const Group<T2>&);
 
     void printInfo() const;
 
@@ -50,8 +58,10 @@ protected:
     bool ownership_;
     vector<T*> element_;
 
-    void initElements(const vector<T*>& elems);
-    void cloneElements(const vector<T*>& elems);
+    template<typename T2>
+    void initElements(const vector<T2*>& elems);
+    template<typename T2>
+    void cloneElements(const vector<T2*>& elems);
     void deleteElements();
 };
 
