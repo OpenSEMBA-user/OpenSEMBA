@@ -59,31 +59,31 @@ UInt PMVolumeDispersive::getDrudePoleNumber() const {
 }
 
 
-inline UInt PMVolumeDispersive::getPoleNumber() const {
+UInt PMVolumeDispersive::getPoleNumber() const {
     return pole_.size();
 }
 
-inline complex<Real> PMVolumeDispersive::getPole(UInt p) const {
+complex<Real> PMVolumeDispersive::getPole(UInt p) const {
     return pole_[p];
 }
 
-inline complex<Real> PMVolumeDispersive::getResidue(UInt p) const {
+complex<Real> PMVolumeDispersive::getResidue(UInt p) const {
     return residue_[p];
 }
 
-inline complex<Real> PMVolumeDispersive::getDrudePole(UInt p) const {
+complex<Real> PMVolumeDispersive::getDrudePole(UInt p) const {
     return drudePole_[p];
 }
 
-inline complex<Real> PMVolumeDispersive::getDrudeResidue(UInt p) const {
+complex<Real> PMVolumeDispersive::getDrudeResidue(UInt p) const {
     return drudeResidue_[p];
 }
 
-inline bool PMVolumeDispersive::isDispersive() const {
+bool PMVolumeDispersive::isDispersive() const {
     return true;
 }
 
-inline bool PMVolumeDispersive::isClassic() const {
+bool PMVolumeDispersive::isClassic() const {
     return isSimplyConductive();
 }
 

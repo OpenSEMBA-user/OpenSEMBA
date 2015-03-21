@@ -27,17 +27,16 @@ public:
 
     ClassBase* clone() const;
 
+    Grid3&                    grid  () { return *this; }
     CoordinateGroup<CoordI3>& coords() { return *this; }
     ElementsGroup<ElemI>&     elems () { return *this; }
 
+    const Grid3&                    grid  () const { return *this; }
     const CoordinateGroup<CoordI3>& coords() const { return *this; }
     const ElementsGroup<ElemI>&     elems () const { return *this; }
 
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const ElementsGroup<ElemR>& region) const;
-
-    const Grid3& getGrid() const;
-    void setGrid(const Grid3&);
 
     template<template<typename> class E>
     ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >& rhs) {

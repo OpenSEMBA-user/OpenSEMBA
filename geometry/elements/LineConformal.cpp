@@ -13,6 +13,8 @@ LineConformal::LineConformal() {
 
 LineConformal::LineConformal(const ElementId id,
                                const CoordI3* v[2],
+                               const CVecR3& norm,
+                               const Int label,
                                const LayerId layerId,
                                const MatId   matId)
 :   ClassIdBase<ElementId>(id),
@@ -20,10 +22,18 @@ LineConformal::LineConformal(const ElementId id,
     LinI2(v) {
 
     checkCoordinates();
+
+    norm_  = norm;
+    label_ = label;
 }
 
-LineConformal::LineConformal(const CoordI3* v[2]) {
+LineConformal::LineConformal(const CoordI3* v[2],
+                             const CVecR3& norm,
+                             const Int label) {
     checkCoordinates();
+
+    norm_  = norm;
+    label_ = label;
 }
 
 LineConformal::LineConformal(const LineConformal& rhs)
@@ -31,6 +41,8 @@ LineConformal::LineConformal(const LineConformal& rhs)
     Elem(rhs),
     LinI2(rhs) {
 
+    norm_  = rhs.norm_;
+    label_ = rhs.label_;
 }
 
 LineConformal::~LineConformal() {

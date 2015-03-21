@@ -75,17 +75,21 @@ public:
 
     ClassBase* clone() const;
 
+    template<class T2>
+    OutRq<T>& operator=(const Group<T2>& rhs);
+
     bool isSimilar(const OutRq<void>& rhs, const bool rev = false) const;
 
-    virtual ElementsGroup<T> getElems() const { return *this; }
+    ElementsGroup<T>&       elems()       { return *this; }
+    const ElementsGroup<T>& elems() const { return *this; }
 
     void printInfo() const { OutRq<void>::printInfo(); }
 };
 
 #include "OutRq.hpp"
 
-typedef OutRq<Node<> > OutRqNode;
-typedef OutRq<Surface<> > OutRqSurface;
-typedef OutRq<Volume<> > OutRqVolume;
+typedef OutRq<Nod > OutRqNode;
+typedef OutRq<Surf> OutRqSurface;
+typedef OutRq<Vol > OutRqVolume;
 
 #endif
