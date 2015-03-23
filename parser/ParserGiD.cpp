@@ -383,7 +383,7 @@ ElementsGroup<Vol> ParserGiD::boundToElemGroup(const string& line) {
     mesh_->elems().add(hex, true);
     vector<Vol*> hexes;
     hexes.push_back(hex->castTo<Vol>());
-    ElementsGroup<Vol> elems(hexes);
+    ElementsGroup<Vol> elems(hexes, true);
     return elems;
 }
 
