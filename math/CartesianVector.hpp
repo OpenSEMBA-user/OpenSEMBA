@@ -241,7 +241,7 @@ inline T CartesianVector<T,D>::dot(const CartesianVector<T,D>& param) const {
 template <class T, Int D>
 bool CartesianVector<T,D>::operator==(
         const CartesianVector<T, D>& param) const {
-    return MathUtils::equal(norm(), param.norm());
+    return MathUtils::equal((*this-param).norm(), 0.0, norm());
 }
 
 template <class T, Int D>
