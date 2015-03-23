@@ -10,18 +10,20 @@
 
 template<typename C>
 CoordinateGroup<C>::CoordinateGroup() {
-
+    lastPosIndex_ = 0;
 }
 
 template<typename C> template<typename C2>
 CoordinateGroup<C>::CoordinateGroup(const vector<C2*>& coord)
 :   GroupId<C, CoordinateId>(coord) {
     
-    buildIndex(this->element_);
+    lastPosIndex_ = 0;
+    buildIndex();
 }
 
 template<typename C>
 CoordinateGroup<C>::CoordinateGroup(const vector<CVecR3>& pos) {
+    lastPosIndex_ = 0;
     add(pos, true);
 }
 
@@ -29,19 +31,21 @@ template<typename C>
 CoordinateGroup<C>::CoordinateGroup(const Group<C>& rhs)
 :   GroupId<C, CoordinateId>(rhs) {
 
-    buildIndex(this->element_);
+    lastPosIndex_ = 0;
+    buildIndex();
 }
 
 template<typename C> template<typename C2>
 CoordinateGroup<C>::CoordinateGroup(const Group<C2>& rhs)
 :   GroupId<C, CoordinateId>(rhs) {
     
-    buildIndex(this->element_);
+    lastPosIndex_ = 0;
+    buildIndex();
 }
 
 template<typename C>
 CoordinateGroup<C>::~CoordinateGroup() {
-
+    clearIndex();
 }
 
 template<typename C>
@@ -49,20 +53,18 @@ CoordinateGroup<C>& CoordinateGroup<C>::operator=(const Group<C>& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    indexStr_.clear();
-    indexUnstr_.clear();
+    clearIndex();
     GroupId<C, CoordinateId>::operator=(rhs);
-    buildIndex(this->element_);
+    buildIndex();
 
     return *this;
 }
 
 template<typename C> template<typename C2>
 CoordinateGroup<C>& CoordinateGroup<C>::operator=(const Group<C2>& rhs) {
-    indexStr_.clear();
-    indexUnstr_.clear();
+    clearIndex();
     GroupId<C, CoordinateId>::operator=(rhs);
-    buildIndex(this->element_);
+    buildIndex();
     
     return *this;
 }
@@ -108,15 +110,14 @@ void CoordinateGroup<C>::add(C2* newCoord, bool newId) {
 
 template<typename C> template<typename C2>
 void CoordinateGroup<C>::add(vector<C2*>& newCoords, bool newId) {
-
     GroupId<C, CoordinateId>::add(newCoords, newId);
-    buildIndex(newCoords);
+    buildIndex();
 }
 
 template<typename C> template<typename C2>
 void CoordinateGroup<C>::add(const Group<C2>& rhs) {
     GroupId<C, CoordinateId>::add(rhs);
-    buildIndex(rhs);
+    buildIndex();
 }
 
 template<typename C>
@@ -151,7 +152,6 @@ vector<CoordR3*> CoordinateGroup<C>::add(const vector<CVecR3>& newPos,
         }
     }
     add(newCoords, true);
-    buildIndex(newCoords);
     return res;
 }
 
@@ -186,7 +186,6 @@ vector<CoordI3*> CoordinateGroup<C>::add(const vector<CVecI3>& newPos,
         }
     }
     add(newCoords, true);
-    buildIndex(newCoords);
     return res;
 }
 
@@ -210,26 +209,22 @@ void CoordinateGroup<C>::printInfo() const {
     cout<< "Total: " << this->size() << " coordinates." << endl;
 }
 
-template<typename C>  template<typename C2>
-void CoordinateGroup<C>::buildIndex(const vector<C2*>& coords) {
-    for (UInt i = 0; i < coords.size(); i++) {
-        if (coords[i]->template is<CoordR3>())
-            indexUnstr_.insert(coords[i]->template castTo<CoordR3>());
+template<typename C>
+void CoordinateGroup<C>::buildIndex() {
+    for (UInt i = lastPosIndex_; i < this->size(); i++) {
+        if (this->element_[i]->template is<CoordR3>()) {
+            indexUnstr_.insert(this->element_[i]->template castTo<CoordR3>());
+        }
+        if (this->element_[i]->template is<CoordI3>()) {
+            indexStr_.insert(this->element_[i]->template castTo<CoordI3>());
+        }
     }
-    for (UInt i = 0; i < coords.size(); i++) {
-        if (coords[i]->template is<CoordI3>())
-            indexStr_.insert(coords[i]->template castTo<CoordI3>());
-    }
+    lastPosIndex_ = this->size();
 }
 
-template<typename C>  template<typename C2>
-void CoordinateGroup<C>::buildIndex(const Group<C2>& rhs) {
-    for (UInt i = 0; i < rhs.size(); i++) {
-        if (rhs(i)->template is<CoordR3>())
-            indexUnstr_.insert(rhs(i)->template castTo<CoordR3>());
-    }
-    for (UInt i = 0; i < rhs.size(); i++) {
-        if (rhs(i)->template is<CoordI3>())
-            indexStr_.insert(rhs(i)->template castTo<CoordI3>());
-    }
+template<typename C>
+void CoordinateGroup<C>::clearIndex() {
+    lastPosIndex_ = 0;
+    indexStr_.clear();
+    indexUnstr_.clear();
 }

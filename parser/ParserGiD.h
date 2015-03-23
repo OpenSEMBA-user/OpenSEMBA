@@ -46,7 +46,6 @@ private:
         multilayer,
         undefinedSIBC
     } SIBCType;
-    CoordinateGroup<CoordR3> cG_;
     MeshUnstructured* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;

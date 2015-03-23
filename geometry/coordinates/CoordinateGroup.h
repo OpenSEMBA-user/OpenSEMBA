@@ -80,10 +80,10 @@ private:
     multiset<const CoordR3*, lexCompareCoord> indexUnstr_;
     multiset<const CoordI3*, lexCompareCoord> indexStr_;
     
-    template<typename C2>
-    void buildIndex(const vector<C2*>& coords);
-    template<typename C2>
-    void buildIndex(const Group<C2>& rhs);
+    UInt lastPosIndex_;
+    void buildIndex();
+    void clearIndex();
+
 };
 
 #include "CoordinateGroup.hpp"

@@ -173,7 +173,7 @@ ParserGiD::readMesherOptions() {
                     res->setSigma(trim(value));
                 } else if (label.compare("Location in mesh")==0) {
                     CoordinateId id(atoi(value.c_str()));
-                    res->setLocationInMesh(*cG_.getPtrToId(id));
+//                    res->setLocationInMesh(*cG_.getPtrToId(id));
                 } else if (label.compare("Geometry scaling factor") == 0) {
                     res->setScalingFactor(atof(value.c_str()));
                 } else if (label.compare("Upper x bound") == 0) {
@@ -205,9 +205,9 @@ ParserGiD::readMesherOptions() {
 MeshUnstructured*
 ParserGiD::readMesh() {
     LayerGroup<> lG = readLayers();
-    cG_ = readCoordinates();
-    ElementsGroup<ElemR> elements = readElements(cG_);
-    return new MeshUnstructured(cG_, elements, lG);
+    CoordinateGroup<CoordR3> cG = readCoordinates();
+    ElementsGroup<ElemR> eG = readElements(cG);
+    return new MeshUnstructured(cG, eG, lG);
 }
 
 EMSourceGroup<>*
@@ -379,7 +379,7 @@ ParserGiD::readOutputRequests() {
 
 ElementsGroup<Vol> ParserGiD::boundToElemGroup(const string& line) {
     BoxR3 bound = strToBound(line);
-    HexR8* hex = new HexR8(cG_, ElementId(0), bound);
+    HexR8* hex = new HexR8(*mesh_, ElementId(0), bound);
     mesh_->elems().add(hex, true);
     vector<Vol*> hexes;
     hexes.push_back(hex->castTo<Vol>());
@@ -409,7 +409,7 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                 {
                     getNextLabelAndValue(label,value);
                     CoordinateId coordId(atoi(value.c_str()));
-                    NodeR* node = new NodeR(cG_, ElementId(0), &coordId);
+                    NodeR* node = new NodeR(*mesh_, ElementId(0), &coordId);
                     mesh_->elems().add(node, true);
                     vector<Node<>*> nodes;
                     nodes.push_back(node->castTo<Nod>());
@@ -1151,7 +1151,7 @@ ParserGiD::readGenerator() {
                 UInt e;
                 f_in >> e;
                 CoordinateId id = CoordinateId(e);
-                NodeR* node = new NodeR(cG_, ElementId(0), &id);
+                NodeR* node = new NodeR(*mesh_, ElementId(0), &id);
                 mesh_->elems().add(node, true);
                 nodes.push_back(node);
             }
