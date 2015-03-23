@@ -18,6 +18,12 @@ LayerGroup<L>::LayerGroup(const vector<L2*>& layers)
 
 }
 
+template<typename L>
+LayerGroup<L>::LayerGroup(const Group<L>& rhs)
+:   GroupId<L, LayerId>(rhs) {
+
+}
+
 template<typename L> template<typename L2>
 LayerGroup<L>::LayerGroup(const Group<L2>& rhs)
 :   GroupId<L, LayerId>(rhs) {
@@ -27,6 +33,16 @@ LayerGroup<L>::LayerGroup(const Group<L2>& rhs)
 template<typename L>
 LayerGroup<L>::~LayerGroup() {
 
+}
+
+template<typename L>
+LayerGroup<L>& LayerGroup<L>::operator=(const Group<L>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    GroupId<L, LayerId>::operator=(rhs);
+
+    return *this;
 }
 
 template<typename L> template<typename L2>

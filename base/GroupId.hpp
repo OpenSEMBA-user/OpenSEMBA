@@ -9,9 +9,24 @@ GroupId<T, Id>::GroupId()
 }
 
 template<typename T, class Id> template<typename T2>
+GroupId<T, Id>::GroupId(const vector<T2*>& elems)
+:   Group<T>(elems),
+    lastId_(0) {
+
+    buildMapId();
+}
+
+template<typename T, class Id> template<typename T2>
 GroupId<T, Id>::GroupId(const vector<T2*>& elems, bool ownership)
 :   Group<T>(elems, ownership),
     lastId_(0) {
+
+    buildMapId();
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::GroupId(const Group<T>& rhs)
+:   Group<T>(rhs) {
 
     buildMapId();
 }
@@ -26,6 +41,17 @@ GroupId<T, Id>::GroupId(const Group<T2>& rhs)
 template<typename T, class Id>
 GroupId<T, Id>::~GroupId() {
 
+}
+
+template<typename T, class Id>
+GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    Group<T>::operator=(rhs);
+    buildMapId();
+
+    return *this;
 }
 
 template<typename T, class Id> template<typename T2>
@@ -95,7 +121,7 @@ GroupId<T, Id> GroupId<T, Id>::get(const vector<Id>& ids) const {
 
 template<typename T, class Id> template<typename T2>
 void GroupId<T, Id>::add(T2* newElem, bool newId) {
-    vector<T*> aux;
+    vector<T2*> aux;
     aux.push_back(newElem);
     add(aux, newId);
 }

@@ -34,11 +34,15 @@ class ElementsGroup : public GroupId<E, ElementId> {
 public:
     ElementsGroup();
     template<typename E2>
-    ElementsGroup(const vector<E2*>& elems, bool ownership = true);
+    ElementsGroup(const vector<E2*>& elems);
+    template<typename E2>
+    ElementsGroup(const vector<E2*>& elems, bool ownership);
+    ElementsGroup(const Group<E>& rhs);
     template<typename E2>
     ElementsGroup(const Group<E2>& rhs);
     virtual ~ElementsGroup();
 
+    ElementsGroup<E>& operator=(const Group<E>& rhs);
     template<typename E2>
     ElementsGroup<E>& operator=(const Group<E2>& rhs);
 

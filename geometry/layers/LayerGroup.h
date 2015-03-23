@@ -22,10 +22,12 @@ public:
     LayerGroup();
     template<typename L2>
     LayerGroup(const vector<L2*>&);
+    LayerGroup(const Group<L>& rhs);
     template<typename L2>
     LayerGroup(const Group<L2>& rhs);
     virtual ~LayerGroup();
 
+    LayerGroup<L>& operator=(const Group<L>& rhs);
     template<typename L2>
     LayerGroup<L>& operator=(const Group<L2>& rhs);
 

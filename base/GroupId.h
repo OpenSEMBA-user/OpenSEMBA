@@ -13,11 +13,15 @@ class GroupId : public Group<T> {
 public:
     GroupId();
     template<typename T2>
-    GroupId(const vector<T2*>&, bool ownership = true);
+    GroupId(const vector<T2*>&);
+    template<typename T2>
+    GroupId(const vector<T2*>&, bool ownership);
+    GroupId(const Group<T>& rhs);
     template<typename T2>
     GroupId(const Group<T2>& rhs);
     virtual ~GroupId();
 
+    GroupId<T, Id>& operator=(const Group<T>& rhs);
     template<typename T2>
     GroupId<T, Id>& operator=(const Group<T2>& rhs);
 
@@ -39,6 +43,7 @@ protected:
     Id lastId_;
     map<Id, UInt> mapId_;
 
+private:
     void buildMapId();
 };
 

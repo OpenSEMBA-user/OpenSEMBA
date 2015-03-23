@@ -48,10 +48,12 @@ public:
     template<typename C2>
     CoordinateGroup(const vector<C2*>&);
     CoordinateGroup(const vector<CVecR3>&);
+    CoordinateGroup(const Group<C>& rhs);
     template<typename C2>
     CoordinateGroup(const Group<C2>& rhs);
     virtual ~CoordinateGroup();
     
+    CoordinateGroup<C>& operator=(const Group<C>& rhs);
     template<typename C2>
     CoordinateGroup<C>& operator=(const Group<C2>& rhs);
 

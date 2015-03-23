@@ -18,18 +18,23 @@ class Group : public virtual ClassBase {
 public:
     Group();
     template<typename T2>
-    Group(const vector<T2*>& , bool ownership = true);
+    Group(const vector<T2*>&);
+    template<typename T2>
+    Group(const vector<T2*>& , bool ownership);
+    Group(const Group<T>& rhs);
     template<typename T2>
     Group(const Group<T2>& rhs);
     virtual ~Group();
 
     ClassBase* clone() const;
 
+    Group<T>& operator=(const Group<T>& rhs);
     template<typename T2>
     Group<T>& operator=(const Group<T2>& rhs);
 
     bool empty() const { return element_.empty(); }
     UInt size () const { return element_.size();  }
+    void clear();
 
     template<class T2>
     UInt sizeOf() const;
@@ -58,11 +63,11 @@ protected:
     bool ownership_;
     vector<T*> element_;
 
+private:
     template<typename T2>
     void initElements(const vector<T2*>& elems);
     template<typename T2>
     void cloneElements(const vector<T2*>& elems);
-    void deleteElements();
 };
 
 #include "Group.hpp"

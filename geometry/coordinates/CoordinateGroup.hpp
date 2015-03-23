@@ -25,6 +25,13 @@ CoordinateGroup<C>::CoordinateGroup(const vector<CVecR3>& pos) {
     add(pos, true);
 }
 
+template<typename C>
+CoordinateGroup<C>::CoordinateGroup(const Group<C>& rhs)
+:   GroupId<C, CoordinateId>(rhs) {
+
+    buildIndex(this->element_);
+}
+
 template<typename C> template<typename C2>
 CoordinateGroup<C>::CoordinateGroup(const Group<C2>& rhs)
 :   GroupId<C, CoordinateId>(rhs) {
@@ -35,6 +42,19 @@ CoordinateGroup<C>::CoordinateGroup(const Group<C2>& rhs)
 template<typename C>
 CoordinateGroup<C>::~CoordinateGroup() {
 
+}
+
+template<typename C>
+CoordinateGroup<C>& CoordinateGroup<C>::operator=(const Group<C>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    indexStr_.clear();
+    indexUnstr_.clear();
+    GroupId<C, CoordinateId>::operator=(rhs);
+    buildIndex(this->element_);
+
+    return *this;
 }
 
 template<typename C> template<typename C2>

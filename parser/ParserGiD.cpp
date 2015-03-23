@@ -206,9 +206,9 @@ MeshUnstructured*
 ParserGiD::readMesh() {
     LayerGroup<> lG = readLayers();
     cG_ = readCoordinates();
-    cG_.printInfo();
+//    cG_.printInfo();
     ElementsGroup<ElemR> elements = readElements(cG_);
-    elements.printInfo();
+//    elements.printInfo();
     return new MeshUnstructured(cG_, elements, lG);
 }
 
@@ -412,7 +412,7 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     getNextLabelAndValue(label,value);
                     CoordinateId coordId(atoi(value.c_str()));
                     NodeR* node = new NodeR(cG_, ElementId(0), &coordId);
-                    mesh_->elems().add(node);
+                    mesh_->elems().add(node, true);
                     vector<Node<>*> nodes;
                     nodes.push_back(node->castTo<Nod>());
                     ElementsGroup<Nod> elems(nodes);
@@ -590,9 +590,7 @@ CoordinateGroup<CoordR3> ParserGiD::readCoordinates() {
         cerr << endl << "ERROR @ GiDParser::readCoordinates(): "
                 << "End of coordinates label not found." << endl;
     }
-    CoordinateGroup<CoordR3> res(coord);
-    res.printInfo();
-    return res;
+    return CoordinateGroup<CoordR3>(coord);
 }
 
 ElementsGroup<ElemR> ParserGiD::readElements(
@@ -1156,7 +1154,7 @@ ParserGiD::readGenerator() {
                 f_in >> e;
                 CoordinateId id = CoordinateId(e);
                 NodeR* node = new NodeR(cG_, ElementId(0), &id);
-                mesh_->elems().add(node);
+                mesh_->elems().add(node, true);
                 nodes.push_back(node);
             }
             elems.add(nodes);

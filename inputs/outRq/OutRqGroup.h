@@ -10,10 +10,12 @@ public:
     OutRqGroup();
     template<typename O2>
     OutRqGroup(const vector<O2*>&);
+    OutRqGroup(const Group<O>& rhs);
     template<typename O2>
     OutRqGroup(const Group<O2>& rhs);
     virtual ~OutRqGroup();
 
+    OutRqGroup<O>& operator=(const Group<O>& rhs);
     template<typename O2>
     OutRqGroup<O>& operator=(const Group<O2>& rhs);
 
