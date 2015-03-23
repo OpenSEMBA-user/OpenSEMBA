@@ -206,9 +206,7 @@ MeshUnstructured*
 ParserGiD::readMesh() {
     LayerGroup<> lG = readLayers();
     cG_ = readCoordinates();
-//    cG_.printInfo();
     ElementsGroup<ElemR> elements = readElements(cG_);
-//    elements.printInfo();
     return new MeshUnstructured(cG_, elements, lG);
 }
 
@@ -382,7 +380,7 @@ ParserGiD::readOutputRequests() {
 ElementsGroup<Vol> ParserGiD::boundToElemGroup(const string& line) {
     BoxR3 bound = strToBound(line);
     HexR8* hex = new HexR8(cG_, ElementId(0), bound);
-    mesh_->elems().add(hex);
+    mesh_->elems().add(hex, true);
     vector<Vol*> hexes;
     hexes.push_back(hex->castTo<Vol>());
     ElementsGroup<Vol> elems(hexes);
