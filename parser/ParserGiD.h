@@ -27,7 +27,11 @@ public:
     ParserGiD(const string& fn);
     ParserGiD(const string& fn, const string& pTPath);
     virtual ~ParserGiD();
+
+    const ProblemSize* getProblemSize() const;
+
     virtual SmbData* read();
+
     void printInfo() const;
 private:
     typedef enum {
@@ -46,7 +50,6 @@ private:
     MeshUnstructured* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;
-    const ProblemSize* getProblemSize() const;
     SolverOptions* readSolverOptions();
     MesherOptions* readMesherOptions();
     EMSourceGroup<>* readEMSources();

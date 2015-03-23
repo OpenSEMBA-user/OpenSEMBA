@@ -15,6 +15,7 @@ public:
     virtual ~IdBase();
     
     operator UInt() const;
+
     
 protected:
     UInt id_;
@@ -43,6 +44,9 @@ public:                                                     \
         id_++;                                              \
         return *this;                                       \
     }                                                       \
+    bool operator==(const name& rhs) const {              \
+        return id_ == rhs.id_;                              \
+    }                                                        \
     friend istream &operator>>(istream  &input, name &id) { \
         input >> id.id_;                                    \
         return input;                                       \
