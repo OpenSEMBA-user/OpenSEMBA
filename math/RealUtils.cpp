@@ -5,7 +5,7 @@ bool MathUtils::equal(const Real lhs, const Real rhs,
     if (rel == 0.0) {
         rel = lhs;
     }
-    if (abs(lhs-rhs) < tol*rel) {
+    if (abs(lhs-rhs) <= tol*rel) {
         return true;
     }
     return false;
