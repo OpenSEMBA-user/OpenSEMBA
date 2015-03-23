@@ -21,10 +21,12 @@ public:
     EMSourceGroup();
     template<typename E2>
     EMSourceGroup(const vector<E2*>&);
+    EMSourceGroup(const Group<E>& rhs);
     template<typename E2>
     EMSourceGroup(const Group<E2>& rhs);
     virtual ~EMSourceGroup();
 
+    EMSourceGroup<E>& operator=(const Group<E>& rhs);
     template<typename E2>
     EMSourceGroup<E>& operator=(const Group<E2>& rhs);
 

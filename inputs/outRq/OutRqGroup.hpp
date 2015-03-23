@@ -11,6 +11,12 @@ OutRqGroup<O>::OutRqGroup(const vector<O2*>& outRqs)
 
 }
 
+template<typename O>
+OutRqGroup<O>::OutRqGroup(const Group<O>& rhs)
+:   Group<O>(rhs) {
+
+}
+
 template<typename O> template<typename O2>
 OutRqGroup<O>::OutRqGroup(const Group<O2>& rhs)
 :   Group<O>(rhs) {
@@ -20,6 +26,16 @@ OutRqGroup<O>::OutRqGroup(const Group<O2>& rhs)
 template<typename O>
 OutRqGroup<O>::~OutRqGroup() {
 
+}
+
+template<typename O>
+OutRqGroup<O>& OutRqGroup<O>::operator=(const Group<O>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    Group<O>::operator=(rhs);
+
+    return *this;
 }
 
 template<typename O> template<typename O2>

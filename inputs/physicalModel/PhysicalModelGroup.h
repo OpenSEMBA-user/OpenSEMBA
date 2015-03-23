@@ -31,10 +31,12 @@ public:
     PhysicalModelGroup();
     template<typename P2>
     PhysicalModelGroup(const vector<P2*>&);
+    PhysicalModelGroup(const Group<P>& rhs);
     template<typename P2>
     PhysicalModelGroup(const Group<P2>& rhs);
     virtual ~PhysicalModelGroup();
 
+    PhysicalModelGroup<P>& operator=(const Group<P>& rhs);
     template<typename P2>
     PhysicalModelGroup<P>& operator=(const Group<P2>& rhs);
 
