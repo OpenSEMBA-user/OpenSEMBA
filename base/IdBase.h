@@ -40,13 +40,14 @@ public:                                                     \
         id_++;                                              \
         return *this;                                       \
     }                                                       \
-    name& operator++(int) {                                 \
+    name operator++(int) {                                  \
+        name copy(*this);                                   \
         id_++;                                              \
-        return *this;                                       \
+        return copy;                                        \
     }                                                       \
-    bool operator==(const name& rhs) const {              \
+    bool operator==(const name& rhs) const {                \
         return id_ == rhs.id_;                              \
-    }                                                        \
+    }                                                       \
     friend istream &operator>>(istream  &input, name &id) { \
         input >> id.id_;                                    \
         return input;                                       \
