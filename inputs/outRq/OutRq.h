@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "Domain.h"
-#include "ElementsGroup.h"
+#include "../../geometry/elements/ElementsGroup.h"
 
 using namespace std;
 

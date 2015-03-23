@@ -15,19 +15,19 @@ MeshStructured::MeshStructured(const Grid3& grid,
                                const CoordinateGroup<CoordI3>& cG,
                                const ElementsGroup<ElemI>& elem,
                                const LayerGroup<>& layers)
-:   Grid3(grid),
+:   LayerGroup<>(layers.newGroupOf<Layer>()),
+    Grid3(grid),
     CoordinateGroup<CoordI3>(cG.newGroupOf<CoordI3>()),
-    ElementsGroup<ElemI>(elem.newGroupOf<ElemI>()),
-    LayerGroup<>(layers.newGroupOf<Layer>()) {
+    ElementsGroup<ElemI>(elem.newGroupOf<ElemI>()) {
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 }
 
 MeshStructured::MeshStructured(const MeshStructured& rhs)
-:   Grid3(rhs),
+:   LayerGroup<>(rhs.layers().newGroupOf<Layer>()),
+    Grid3(rhs),
     CoordinateGroup<CoordI3>(rhs.coords().newGroupOf<CoordI3>()),
-    ElementsGroup<ElemI>(rhs.elems().newGroupOf<ElemI>()),
-    LayerGroup<>(rhs.layers().newGroupOf<Layer>()) {
+    ElementsGroup<ElemI>(rhs.elems().newGroupOf<ElemI>()) {
 
     ElementsGroup<ElemI>::reassignPointers(*this);
 }

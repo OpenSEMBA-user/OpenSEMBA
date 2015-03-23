@@ -9,13 +9,13 @@ using namespace std;
 
 #include "../math/MathMatrix.h"
 #include "../math/CartesianVector.h"
-#include "CoordinateGroup.h"
+#include "coordinates/CoordinateGroup.h"
 #include "Box.h"
 #include "Grid.h"
-#include "IdBase.h"
-#include "Layer.h"
+#include "../../base/IdBase.h"
+#include "../layers/Layer.h"
 
-#include "ClassIdBase.h"
+#include "../../base/ClassIdBase.h"
 
 CreateId(ElementId);
 CreateId(MatId);

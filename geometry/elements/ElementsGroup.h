@@ -25,7 +25,7 @@ using namespace std;
 #include "Polygon.h"
 #include "Polyhedron.h"
 
-#include "GroupId.h"
+#include "../../base/GroupId.h"
 
 typedef pair<const VolR*, UInt> Face;
 

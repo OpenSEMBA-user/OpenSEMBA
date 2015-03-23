@@ -11,19 +11,19 @@ MeshUnstructured::MeshUnstructured() {
 }
 
 MeshUnstructured::MeshUnstructured(const CoordinateGroup<CoordR3>& cG,
-                                   const ElementsGroup<ElemR>& elem,
-                                   const LayerGroup<>& layers)
-:   CoordinateGroup<CoordR3>(cG.newGroupOf<CoordR3>()),
-    ElementsGroup<ElemR>(elem.newGroupOf<ElemR>()),
-    LayerGroup<>(layers.newGroupOf<Layer>()) {
+        const ElementsGroup<ElemR>& elem,
+        const LayerGroup<>& layers)
+:   LayerGroup<>(layers.newGroupOf<Layer>()),
+    CoordinateGroup<CoordR3>(cG.newGroupOf<CoordR3>()),
+    ElementsGroup<ElemR>(elem.newGroupOf<ElemR>()) {
 
     ElementsGroup<ElemR>::reassignPointers(*this);
 }
 
 MeshUnstructured::MeshUnstructured(const MeshUnstructured& rhs)
-:   CoordinateGroup<CoordR3>(rhs.coords().newGroupOf<CoordR3>()),
-    ElementsGroup<ElemR>(rhs.elems().newGroupOf<ElemR>()),
-    LayerGroup<>(rhs.layers().newGroupOf<Layer>()) {
+:   LayerGroup<>(rhs.layers().newGroupOf<Layer>()),
+    CoordinateGroup<CoordR3>(rhs.coords().newGroupOf<CoordR3>()),
+    ElementsGroup<ElemR>(rhs.elems().newGroupOf<ElemR>()) {
 
     ElementsGroup<ElemR>::reassignPointers(*this);
 }
@@ -51,7 +51,7 @@ ClassBase* MeshUnstructured::clone() const {
 }
 
 vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
-                                                   const CVecR3& normal) {
+        const CVecR3& normal) {
     const UInt nK = border.size();
     vector<Face> res;
     res.reserve(nK);
@@ -100,8 +100,8 @@ vector<Face> MeshUnstructured::getExternalBorder(
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
     const MapGroup mapGroup(
-        CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
-        region.getGroupOf<Elem>());
+            CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
+            region.getGroupOf<Elem>());
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
         ElementId inId = internal[i].first->getId();
@@ -159,7 +159,7 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
                     is<Tet>())
                 continue;
             const Tet* tet =
-                ElementsGroup<ElemR>::getPtrToId(ElementId(fList(k,0)))->
+                    ElementsGroup<ElemR>::getPtrToId(ElementId(fList(k,0)))->
                     castTo<Tet>();
             UInt face = fList(k,1);
             Face aux(tet, face);
@@ -175,7 +175,7 @@ vector<Face> MeshUnstructured::getTriInternalBorder(
     UInt nE = region.size();
     vector<Face> res(nE);
     MapGroup mapGroup(CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
-                      region.getGroupOf<Elem>());
+            region.getGroupOf<Elem>());
     for (UInt i = 0; i < nE; i++) {
         res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
@@ -196,7 +196,7 @@ ElementsGroup<ElemR> MeshUnstructured::getAdjacentRegion(
     ElementsGroup<ElemR> res;
     for (UInt i = 0; i < aux.nRows(); i++) {
         res.add(ElementsGroup<ElemR>::getPtrToId(ElementId(aux(i,0)))->
-                    clone()->castTo<ElemR>());
+                clone()->castTo<ElemR>());
     }
     return res;
 }
@@ -206,7 +206,7 @@ vector<BoxR3> MeshUnstructured::getRectilinearHexesInsideRegion(
         const ElementsGroup<VolR>& region) const {
 
     vector<CVecR3> center =
-        grid->getCenterOfCellsInside(region.getBound());
+            grid->getCenterOfCellsInside(region.getBound());
     vector<BoxR3> res;
     res.reserve(center.size());
     for (UInt i = 0; i < center.size(); i++) {
@@ -222,7 +222,7 @@ vector<BoxR3> MeshUnstructured::getRectilinearHexesInsideRegion(
 
 bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
     ElementsGroup<ElemR> elems =
-        ElementsGroup<ElemR>::getGroupOf<ElemR>();
+            ElementsGroup<ElemR>::getGroupOf<ElemR>();
     for (UInt i = 0; i < elems.size(); i++) {
         for (UInt j = 0; j < elems(i)->numberOfCoordinates(); j++) {
             if (*param == *elems(i)->getV(j)) {
@@ -242,7 +242,7 @@ ElementsGroup<SurfR> MeshUnstructured::getMaterialBoundary(
         const LayerId layId) const {
 
     return ElementsGroup<ElemR>::get(matId, layId).
-               getGroupOf<SurfR>();
+            getGroupOf<SurfR>();
 }
 
 vector<ElementId> MeshUnstructured::addAsHex8(const BoxR3& box) {

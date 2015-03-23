@@ -14,7 +14,7 @@
 
 using namespace std;
 
-#include "GroupId.h"
+#include "../../base/GroupId.h"
 
 template<typename L = Layer>
 class LayerGroup : public GroupId<L, LayerId> {

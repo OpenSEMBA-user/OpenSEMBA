@@ -9,7 +9,6 @@
 #define DIPOLE_H_
 
 #include "EMSource.h"
-#include "ElementsGroup.h"
 
 class Dipole : public EMSource<Vol> {
 public:

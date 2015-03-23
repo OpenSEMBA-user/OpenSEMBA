@@ -14,7 +14,7 @@
 #include "layers/LayerGroup.h"
 #include "Grid.h"
 
-#include "ClassBase.h"
+#include "../../base/ClassBase.h"
 
 class Mesh : public virtual ClassBase,
              public virtual LayerGroup<> {

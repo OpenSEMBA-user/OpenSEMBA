@@ -12,7 +12,7 @@
 #include <cmath>
 #include <vector>
 #include <assert.h>
-#include "GroupId.h"
+#include "../../base/GroupId.h"
 #include "PhysicalModel.h"
 #include "PMPEC.h"
 #include "PMPMC.h"

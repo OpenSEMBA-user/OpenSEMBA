@@ -204,13 +204,12 @@ ParserGiD::readMesherOptions() {
 
 MeshUnstructured*
 ParserGiD::readMesh() {
-    LayerGroup<> lG_ = readLayers();
-    // Reads the coordinates.
+    LayerGroup<> lG = readLayers();
     cG_ = readCoordinates();
-    // Reads elements connectivities.
+    cG_.printInfo();
     ElementsGroup<ElemR> elements = readElements(cG_);
-    // Builds mesh with the read data.
-    return new MeshUnstructured(cG_, elements, lG_);
+    elements.printInfo();
+    return new MeshUnstructured(cG_, elements, lG);
 }
 
 EMSourceGroup<>*
@@ -392,7 +391,7 @@ ElementsGroup<Vol> ParserGiD::boundToElemGroup(const string& line) {
 
 void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
     bool finished = false;
-    GiDOutputType gidOutputType = ParserGiD::undefined;
+    GiDOutputType gidOutputType;
     while (!finished && !f_in.eof()) {
         string line, label, value;
         getNextLabelAndValue(label,value);
@@ -418,8 +417,9 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     nodes.push_back(node->castTo<Nod>());
                     ElementsGroup<Nod> elems(nodes);
                     res->add(new OutRq<Nod>(domain, type, name, elems));
+                    break;
                 }
-                break;
+
                 //                case ParserGiD::outRqOnLine:
                 //                    getNextLabelAndValue(label,value);
                 //                    elem.clear();
@@ -434,15 +434,16 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     ElemRGroup elems = mesh_->elems().get(ids);
                     ElementsGroup<Surf> surfs = elems.getGroupOf<Surf>();
                     res->add(new OutRq<Surf>(domain, type, name, surfs));
+                    break;
                 }
-                break;
+
                 case ParserGiD::outRqOnVolume:
                 {
                     getline(f_in, line);
                     ElementsGroup<Vol> elems = boundToElemGroup(line);
                     res->add(new OutRq<Vol>(domain, type, name, elems));
-                }
                     break;
+                }
                 case ParserGiD::farField:
                 {
                     getline(f_in, line);
@@ -452,12 +453,12 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     getline(f_in, line);
                     res->add(new OutRqFarField(domain, name, elems,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi));
-                }
                     break;
-                case ParserGiD::undefined:
+                }
+                default:
                     cerr << endl << "ERROR @ GiDParser: "
                     << "Unreckognized GiD Output request type:"
-                         << type << endl;
+                    << type << endl;
                     break;
                 }
             } // End of loop running over the elements.
@@ -549,7 +550,7 @@ LayerGroup<> ParserGiD::readLayers() {
     if (!found) {
         cerr << endl << "ERROR @ Parsing layers: "
                 << "Layers label was not found." << endl;
-        return LayerGroup<>();
+        return res;
     }
     return res;
 }
@@ -569,7 +570,7 @@ CoordinateGroup<CoordR3> ParserGiD::readCoordinates() {
             // Reads coordinates.
             for (UInt i = 0; i < pSize_.v; i++) {
                 f_in >> id >> pos(0) >> pos(1) >> pos(2);
-                coord.push_back(new Coordinate<Real,3>(id, pos));
+                coord.push_back(new CoordR3(id, pos));
             }
             // Checks "end of coordinates" label.
             finished = false;
@@ -589,8 +590,9 @@ CoordinateGroup<CoordR3> ParserGiD::readCoordinates() {
         cerr << endl << "ERROR @ GiDParser::readCoordinates(): "
                 << "End of coordinates label not found." << endl;
     }
-
-    return CoordinateGroup<CoordR3>(coord);
+    CoordinateGroup<CoordR3> res(coord);
+    res.printInfo();
+    return res;
 }
 
 ElementsGroup<ElemR> ParserGiD::readElements(
@@ -1046,8 +1048,8 @@ ParserGiD::readDipole() {
         getline(f_in, line);
         if (line.find("End of puntual excitation") == line.npos) {
             ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
-//            Volume<>* elem = mesh_->elems().getPtrToId(id);
-//            elems.add(elem);
+            //            Volume<>* elem = mesh_->elems().getPtrToId(id);
+            //            elems.add(elem);
         } else
             finished = true;
     }
@@ -1442,9 +1444,8 @@ ParserGiD::strToGidOutputType(string str) const {
     } else if (str.compare("farField")) {
         return ParserGiD::farField;
     } else {
-        cerr << endl << "ERROR @ Parser: ";
-        cerr << endl << "Unreckognized label." << endl;
-        return ParserGiD::undefined;
+        cerr << endl << "ERROR @ Parser: Unreckognized label." << endl;
+        return ParserGiD::outRqOnPoint;
     }
 }
 

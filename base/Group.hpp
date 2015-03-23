@@ -11,18 +11,21 @@ Group<T>::Group()
 template<typename T> template<typename T2>
 Group<T>::Group(const vector<T2*>& elems, bool ownership)
 :   ownership_(ownership) {
-
-    initElements(elems);
+    if (ownership_) {
+        cloneElements(elems);
+    } else {
+        initElements(elems);
+    }
 }
 
 template<typename T> template<typename T2>
 Group<T>::Group(const Group<T2>& rhs)
-:   ownership_(false) {
-
-    if(rhs.ownership_)
+:   ownership_(rhs.ownership_) {
+    if(rhs.ownership_) {
         cloneElements(rhs.element_);
-    else
+    } else {
         initElements(rhs.element_);
+    }
 }
 
 template<typename T>
@@ -33,12 +36,12 @@ Group<T>::~Group() {
 template<typename T> template<typename T2>
 Group<T>& Group<T>::operator=(const Group<T2>& rhs) {
     deleteElements();
-    this->ownership_ = false;
-    if(rhs.ownership_)
+    this->ownership_ = rhs.ownership_;
+    if(rhs.ownership_) {
         cloneElements(rhs.element_);
-    else
+    } else {
         initElements(rhs.element_);
-
+    }
     return *this;
 }
 
@@ -160,7 +163,7 @@ void Group<T>::initElements(const vector<T2*>& elems) {
 template<typename T> template<typename T2>
 void Group<T>::cloneElements(const vector<T2*>& elems) {
     this->ownership_ = true;
-    this->element_.resize(elems.size());
+    this->element_.reserve(elems.size());
     for(UInt i = 0; i < elems.size(); i++) {
         if (elems[i]->template is<T>()) {
             this->element_.push_back(elems[i]->clone()->template castTo<T>());

@@ -15,7 +15,7 @@ using namespace std;
 
 #include "../math/CartesianVector.h"
 
-#include "ClassIdBase.h"
+#include "../../base/ClassIdBase.h"
 
 CreateId(CoordinateId);
 

@@ -14,8 +14,7 @@
 using namespace std;
 
 #include "Coordinate.h"
-
-#include "GroupId.h"
+#include "../../base/GroupId.h"
 
 struct lexCompareCoord {
     bool operator() (const CoordR3* lhs, const CoordR3* rhs) const {

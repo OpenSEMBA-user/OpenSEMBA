@@ -9,7 +9,6 @@
 #define WAVEPORT_H_
 
 #include "EMSource.h"
-#include "ElementsGroup.h"
 
 class Waveport : public EMSource<Surface<> > {
 public:

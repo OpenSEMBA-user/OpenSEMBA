@@ -5,10 +5,9 @@
 #include <iostream>			// Stream I/O.
 #include <cmath>
 #include <vector>
-#include "Magnitude.h"
-#include "MagnitudeGaussian.h"
-#include "MagnitudeNumerical.h"
-#include "ElementsGroup.h"
+#include "magnitude/MagnitudeGaussian.h"
+#include "magnitude/MagnitudeNumerical.h"
+#include "../../geometry/elements/ElementsGroup.h"
 #include "../../math/CartesianVector.h"
 #include "../../math/Constants.h"
 

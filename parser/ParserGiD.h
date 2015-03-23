@@ -35,8 +35,7 @@ private:
         outRqOnLine,
         outRqOnSurface,
         outRqOnVolume,
-        farField,
-        undefined
+        farField
     } GiDOutputType;
     typedef enum {
         sibc,
