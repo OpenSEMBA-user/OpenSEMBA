@@ -30,23 +30,18 @@ OutRq<T>::OutRq(const OutRq<T>& rhs)
 }
 
 template <class T> template<class T2>
-bool OutRq<T>::isSimilar(const OutRq<T2>* rhs, const bool rev) const {
+bool OutRq<T>::isSimilar(const T2* rhs, const bool rev) const {
+    if (!rhs->is<OutRq<T> >() || !this->is<T2>()) {
+        return false;
+    }
     bool isSimilar = true;
     isSimilar &= getName() == rhs->getName();
     isSimilar &= getOutputType() == rhs->getOutputType();
     isSimilar &= Domain::operator==(*rhs);
     if (!rev) {
-        isSimilar &= rhs->isSimilar(rhs, true);
+        isSimilar &= rhs->isSimilar(this->castTo<T2>(), true);
     }
     return isSimilar;
-}
-
-template<class T> template<class T2>
-void OutRq<T>::add(OutRq<T2>* rhs) {
-    if (this->isSimilar(rhs)) {
-        ElementsGroup<T> elems = rhs->elems();
-        this->ElementsGroup<T>::add(elems);
-    }
 }
 
 template<class T>

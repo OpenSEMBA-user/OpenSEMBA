@@ -46,7 +46,6 @@ public:
     OutRq(const OutRq& rhs);
     virtual ~OutRq();
 
-
     const string& getName() const;
     OutRq::Type getOutputType() const;
 
@@ -75,15 +74,7 @@ public:
     ClassBase* clone() const;
 
     template<class T2>
-    OutRq<T>& operator=(const Group<T2>& rhs);
-
-    template<class T2>
-    bool isSimilar(
-            const OutRq<T2>* rhs,
-            const bool rev = false) const;
-
-    template<class T2>
-    void add(OutRq<T2>* outRq);
+    bool isSimilar(const T2* rhs, const bool rev = false) const;
 
     ElementsGroup<T>&       elems()       { return *this; }
     const ElementsGroup<T>& elems() const { return *this; }
