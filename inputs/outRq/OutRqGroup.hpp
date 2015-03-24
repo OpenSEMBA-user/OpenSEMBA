@@ -45,6 +45,16 @@ OutRqGroup<O>& OutRqGroup<O>::operator=(const Group<O2>& rhs) {
     return *this;
 }
 
+template<typename O> template<typename O2>
+void OutRqGroup<O>::add(O2* newORq) {
+    for (UInt i = 0; i < size(); i++) {
+        if (this->element_[i]->isSimilar(newORq)) {
+            this->element_[i]->add(newORq->getGroupOf<>());
+        }
+    }
+    this->Group<O>::add(newORq);
+}
+
 template<typename O>
 void OutRqGroup<O>::printInfo() const {
     cout<< " --- OutputRequestGroup info ---" << endl;
