@@ -52,3 +52,7 @@ void Dipole::printInfo() const {
     position_.printInfo();
     cout << endl;
 }
+
+string Dipole::getName() const {
+    return "Dipole";
+}

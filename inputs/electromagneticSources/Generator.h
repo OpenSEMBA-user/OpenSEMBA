@@ -10,7 +10,7 @@
 
 #include "EMSource.h"
 
-class Generator : public EMSource< Node<> > {
+class Generator : public EMSource<Nod> {
 public:
     typedef enum {
         voltage = 1,
@@ -32,6 +32,7 @@ public:
     virtual ClassBase* clone() const;
 
     Type getType() const;
+    string getName() const;
 
     void printInfo() const;
 

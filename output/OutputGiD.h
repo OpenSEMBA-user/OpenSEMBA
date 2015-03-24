@@ -78,6 +78,8 @@ private:
     GiD_ResultLocation getGiDResultLocation() const;
     void openPostMeshFile(const string& filename);
     void openPostResultFile(const string& filename);
+    void writeMaterialsInLayer(const Layer* lay);
+    void writeAllElements(const ElemRGroup& elem, const string& name);
 };
 
 #endif /* GIDOUTPUT_H_ */

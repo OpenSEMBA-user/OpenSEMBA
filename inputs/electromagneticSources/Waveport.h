@@ -10,7 +10,7 @@
 
 #include "EMSource.h"
 
-class Waveport : public EMSource<Surface<> > {
+class Waveport : public EMSource<Surf> {
 public:
 	typedef enum {
 		undefined,
@@ -35,6 +35,7 @@ public:
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;
 	pair<UInt, UInt> getMode() const;
+	string getName() const;
 
     void printInfo() const;
 private:

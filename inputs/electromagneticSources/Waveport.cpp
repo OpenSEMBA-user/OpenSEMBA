@@ -66,3 +66,7 @@ void Waveport::printInfo() const {
 		cout << "- Is output." << endl;
 	}
 }
+
+string Waveport::getName() const {
+    return "Waveport";
+}

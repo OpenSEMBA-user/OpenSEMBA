@@ -135,3 +135,7 @@ Real PlaneWave::reduceRadians(const Real radianIn) const {
     radianOut = radianIn - nVueltasComp*Val2Pi;
     return  radianOut;
 }
+
+string PlaneWave::getName() const {
+    return "Planewave";
+}

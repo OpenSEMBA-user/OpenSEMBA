@@ -10,7 +10,7 @@
 
 #include "EMSource.h"
 
-class PlaneWave : public EMSource<Volume<> > {
+class PlaneWave : public EMSource<Vol> {
 public:
     PlaneWave();
     PlaneWave(const Magnitude* magnitude,
@@ -30,6 +30,7 @@ public:
     Real getBeta() const;
     CVecR3 getElectricField(const Real time) const;
     pair<CVecR3,CVecR3> getElectromagneticField(const Real time) const;
+    string getName() const;
 
     void setElements(const ElementsGroup<Volume<> >&);
 

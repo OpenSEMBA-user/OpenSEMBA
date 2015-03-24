@@ -66,3 +66,7 @@ string SourceOnLine::getHardnessStr() const {
 		return "Soft";
 	}
 }
+
+string SourceOnLine::getName() const {
+    return "SourceOnLine";
+}

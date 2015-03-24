@@ -44,16 +44,24 @@ OutputGiD::OutputGiD(const SmbData* smb, const string& fn, GiD_PostMode mode) : 
 OutputGiD::~OutputGiD() {
     switch (mode_) {
     case GiD_PostAscii:
-        GiD_ClosePostMeshFile();
+        GiD_fClosePostMeshFile(meshFile_);
         break;
     default:
-        GiD_ClosePostResultFile();
+        GiD_fClosePostResultFile(resultFile_);
     }
     if (numberOfOutputGiD_ == 1) {
         GiD_PostDone();
     }
     numberOfOutputGiD_--;
-    GiD_ClosePostMeshFile();
+    GiD_fClosePostMeshFile(meshFile_);
+}
+
+void OutputGiD::writeAllElements(const ElemRGroup& elem, const string& name) {
+    writeElements(elem.getGroupOf<NodeR>(), name, GiD_Point, 1);
+    writeElements(elem.getGroupOf<LinR2>(), name, GiD_Linear, 2);
+    writeElements(elem.getGroupOf<Tri3>(),  name, GiD_Triangle, 3);
+    writeElements(elem.getGroupOf<Tet4>(),  name, GiD_Tetrahedra, 4);
+    writeElements(elem.getGroupOf<HexR8>(), name, GiD_Hexahedra, 8);
 }
 
 void
@@ -63,20 +71,31 @@ OutputGiD::writeMesh() {
         return;
     }
     mesh_ = smb_->mesh->castTo<MeshUnstructured>();
-    LayerGroup<Layer> lay = mesh_->layers().getGroupOf<Layer>();
-    PhysicalModelGroup<PhysicalModel> mat =
-        smb_->pMGroup->getGroupOf<PhysicalModel>();
+    // Writes materials.
+    LayerGroup<> lay = mesh_->layers();
     for (UInt i = 0; i < lay.size(); i++) {
+        PhysicalModelGroup<PhysicalModel> mat = *smb_->pMGroup;
         for (UInt j = 0; j < mat.size(); j++) {
             const MatId matId = mat(j)->getId();
             const LayerId layId = lay(i)->getId();
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
-            ElementsGroup<> elem =
-                mesh_->elems().get(matId, layId).getGroupOf<Elem>();
-            writeElements(elem.getGroupOf<LinR2>().getGroupOf<Elem>(), name, GiD_Linear, 2);
-            writeElements(elem.getGroupOf<Tri3> ().getGroupOf<Elem>(), name, GiD_Triangle, 3);
-            writeElements(elem.getGroupOf<Tet4> ().getGroupOf<Elem>(), name, GiD_Tetrahedra, 4);
+            ElemRGroup elem = mesh_->elems().get(matId, layId);
+            writeAllElements(elem, name);
         }
+    }
+    // Writes EM Sources.
+    for (UInt i = 0; i < smb_->emSources->size(); i++) {
+        const EMSource<>* src =  (*smb_->emSources)(i);
+        const string name = "EMSource_" + src->getName();
+        ElemRGroup elem = src->elems();
+        writeAllElements(elem, name);
+    }
+    // Writes output requests.
+    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
+        const OutRq<>* oRq = (*smb_->outputRequests)(i);
+        const string name = "OutRq_" + oRq->getName();
+        ElemRGroup elem = oRq->elems();
+        writeAllElements(elem, name);
     }
 }
 

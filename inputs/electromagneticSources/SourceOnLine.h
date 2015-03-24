@@ -10,7 +10,7 @@
 
 #include "EMSource.h"
 
-class SourceOnLine : public EMSource<Line<> > {
+class SourceOnLine : public EMSource<Lin> {
 public:
     typedef enum {
         electric = 1,
@@ -31,6 +31,7 @@ public:
 
     Type getType() const;
     Hardness getHardness() const;
+    string getName() const;
 
     virtual void printInfo() const;
 private:

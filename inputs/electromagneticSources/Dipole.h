@@ -22,6 +22,7 @@ public:
 
     virtual ClassBase* clone() const;
 
+    string getName() const;
     void printInfo() const;
 protected:
     Real length_;

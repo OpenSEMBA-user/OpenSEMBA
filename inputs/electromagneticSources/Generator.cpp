@@ -59,3 +59,7 @@ Generator::getTypeStr() const {
         return "Current";
     }
 }
+
+string Generator::getName() const {
+    return "Generator";
+}

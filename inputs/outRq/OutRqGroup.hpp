@@ -50,7 +50,7 @@ void OutRqGroup<O>::add(T2* newORq) {
         if (this->element_[i]->template is<T2>()) {
             T2* oRq = this->element_[i]->template castTo<T2>();
             if (oRq->isSimilar(newORq)) {
-                oRq->elems().add(newORq->elems());
+                oRq->add(newORq->elems());
                 return;
             }
         }

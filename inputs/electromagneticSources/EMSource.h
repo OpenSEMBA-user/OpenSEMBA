@@ -30,10 +30,13 @@ public:
     }
 
     virtual string getMagnitudeFilename() const;
+    virtual string getName() const = 0;
 
     void convertToNumerical(const string file,
                             const double step,
                             const double finalTime);
+
+    virtual ElementsGroup<> elems() const = 0;
 
     void printInfo() const;
 
@@ -52,6 +55,9 @@ public:
     virtual ~EMSource() {}
 
     virtual ClassBase* clone() const = 0;
+    ElementsGroup<> elems() const {
+        return *this;
+    }
 
     void printInfo() const { EMSource<void>::printInfo(); }
 };
