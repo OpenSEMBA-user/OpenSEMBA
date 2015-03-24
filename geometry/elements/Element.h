@@ -92,6 +92,13 @@ public:
 
 protected:
     void ascendingOrder(UInt nVal, UInt* val) const;
+
+    bool vertexInCell (const Grid3& grid, const Real tol) const;
+    bool vertexInBound() const;
+    CoordinateId* vertexToStructured(CoordinateGroup<CoordI3>& cG,
+                                     const Grid3& grid,
+                                     const Real tol) const;
+
 };
 
 typedef Element<void> Elem;

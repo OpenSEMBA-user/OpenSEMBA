@@ -94,36 +94,14 @@ ClassBase* Lin2<T>::clone() const {
 
 template<class T>
 bool Lin2<T>::isStructured(const Grid3& grid, const Real tol) const {
-    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        if (!grid.isCell(*this->getV(i)), tol) {
-            return false;
-        }
-    }
-    Box<T,3> bound(*this->getMinV(), *this->getMaxV());
-    if (!bound.isLine()) {
+    if (!this->vertexInCell(grid,tol)) {
         return false;
     }
-    vector< CartesianVector<T,3> > pos = bound.getPos();
-    vector<bool> found(pos.size(), false);
-    if (pos.size() != this->numberOfCoordinates()) {
+    if (!this->getBound().isLine()) {
         return false;
     }
-    bool foundCoord;
-    for(UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        foundCoord = false;
-        for(UInt j= 0; j < pos.size(); j++) {
-            if (found[j]) {
-                continue;
-            }
-            if (*this->getV(i) == pos[j]) {
-                foundCoord = true;
-                found[j] = true;
-                break;
-            }
-        }
-        if (!foundCoord) {
-            return false;
-        }
+    if (!this->vertexInBound()) {
+        return false;
     }
     return true;
 }
@@ -154,37 +132,16 @@ void Lin2<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 template<class T>
 ElemI* Lin2<T>::toStructured(CoordinateGroup<CoordI3>& cG,
                              const Grid3& grid, const Real tol) const {
-    if (this->template is<ElemI>()) {
+    CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
+    if (vIds == NULL) {
         return NULL;
-    }
-    if (!isStructured(grid, tol)) {
-        return NULL;
-    }
-    CVecI3 cell;
-    const CoordI3* coord;
-    CoordinateId coordId;
-    CoordinateId* vIds = new CoordinateId[this->numberOfCoordinates()];
-    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        cell  = grid.getCell(*this->getV(i), true, tol);
-        coordId = this->getV(i)->getId();
-        if (!cG.existId(coordId)) {
-            cG.add(new CoordI3(coordId, cell));
-        }
-        coord = cG.getPtrToId(coordId);
-        if (*coord != cell) {
-            cerr << endl << "ERROR @ Element::toStructured(): "
-                 << "Existent Coordinate not coincident." << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-        vIds[i] = coordId;
     }
     ElemI* res =  new LinI2(cG,
                             this->getId(),
                             vIds,
                             this->getLayerId(),
                             this->getMatId());
-    delete vIds;
+    delete[] vIds;
     return res;
 }
 

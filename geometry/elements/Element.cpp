@@ -104,16 +104,17 @@ Box<T,3> Element<T>::getBound() const {
 template<class T>
 const Coordinate<T,3>* Element<T>::getMinV() const {
     assert(getV(0) != NULL);
-    const Coordinate<T,3>* res = getV(0);
+    const Coordinate<T,3>* res = getVertex(0);
     for (UInt i = 1; i < numberOfVertices(); i++) {
-        if(res->pos() == getV(0)->pos()) {
+        if(res->pos() == getVertex(i)->pos()) {
             continue;
         }
         for (UInt j = 0; j < 3; j++) {
-            Real val1 = getV(i)->pos()(j);
+            Real val1 = getVertex(i)->pos()(j);
             Real val2 = res->pos()(j);
             if(MathUtils::lower(val1, val2, res->pos().norm())) {
-                res = getV(i);
+                res = getVertex(i);
+                break;
             }
         }
     }
@@ -123,16 +124,17 @@ const Coordinate<T,3>* Element<T>::getMinV() const {
 template<class T>
 const Coordinate<T,3>* Element<T>::getMaxV() const {
     assert(getV(0) != NULL);
-    const Coordinate<T,3>* res = getV(0);
+    const Coordinate<T,3>* res = getVertex(0);
     for (UInt i = 1; i < numberOfVertices(); i++) {
-        if(res->pos() == getV(0)->pos()) {
+        if(res->pos() == getVertex(i)->pos()) {
             continue;
         }
         for (UInt j = 0; j < 3; j++) {
-            Real val1 = getV(i)->pos()(j);
+            Real val1 = getVertex(i)->pos()(j);
             Real val2 = res->pos()(j);
             if(MathUtils::greather(val1, val2, res->pos().norm())) {
-                res = getV(i);
+                res = getVertex(i);
+                break;
             }
         }
     }
@@ -184,6 +186,76 @@ void Element<T>::ascendingOrder(UInt nVal, UInt* val) const {
         val[i] = res[i];
     }
     delete[] res;
+}
+
+template<class T>
+bool Element<T>::vertexInCell(const Grid3& grid, const Real tol) const {
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        if (!grid.isCell(*this->getV(i), tol)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<class T>
+bool Element<T>::vertexInBound() const {
+    Box<T,3> bound = this->getBound();
+    vector< CartesianVector<T,3> > pos = bound.getPos();
+    if (pos.size() != this->numberOfCoordinates()) {
+        return false;
+    }
+    vector<bool> found(pos.size(), false);
+    bool foundCoord;
+    for(UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        foundCoord = false;
+        for(UInt j= 0; j < pos.size(); j++) {
+            if (found[j]) {
+                continue;
+            }
+            if (this->getV(i)->pos() == pos[j]) {
+                foundCoord = true;
+                found[j] = true;
+                break;
+            }
+        }
+        if (!foundCoord) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<class T>
+CoordinateId* Element<T>::vertexToStructured(CoordinateGroup<CoordI3>& cG,
+                                             const Grid3& grid,
+                                             const Real tol) const {
+    if (!this->is<ElemR>()) {
+        return NULL;
+    }
+    if (!this->isStructured(grid, tol)) {
+        return NULL;
+    }
+    CVecI3 cell;
+    const CoordI3* coord;
+    CoordinateId coordId;
+    CoordinateId* vIds = new CoordinateId[this->numberOfCoordinates()];
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        cell  = grid.getCell(*this->getV(i), true, tol);
+        coordId = this->getV(i)->getId();
+        if (!cG.existId(coordId)) {
+            cG.add(new CoordI3(coordId, cell));
+        }
+        coord = cG.getPtrToId(coordId);
+        if (coord->pos() != cell) {
+            cerr << endl << "ERROR @ Element::vertexToStructured(): "
+                 << "Existent Coordinate not coincident." << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+        vIds[i] = coordId;
+    }
+    return vIds;
 }
 
 template class Element<Real>;
