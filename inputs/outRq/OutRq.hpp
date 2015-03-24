@@ -44,6 +44,14 @@ bool OutRq<T>::isSimilar(const OutRq<T2>* rhs, const bool rev) const {
 template<class T> template<class T2>
 void OutRq<T>::add(OutRq<T2>* rhs) {
     if (this->isSimilar(rhs)) {
-        this->add(rhs);
+        ElementsGroup<T> elems = rhs->elems();
+        this->ElementsGroup<T>::add(elems);
     }
+}
+
+template<class T>
+inline void OutRq<T>::printInfo() const {
+    cout << " --- OutRq Info --- " << endl;
+    OutRq<void>::printInfo();
+    ElementsGroup<T>::printInfo();
 }

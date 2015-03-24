@@ -88,7 +88,7 @@ public:
     ElementsGroup<T>&       elems()       { return *this; }
     const ElementsGroup<T>& elems() const { return *this; }
 
-    void printInfo() const { OutRq<void>::printInfo(); }
+    void printInfo() const;
 };
 
 #include "OutRq.hpp"
