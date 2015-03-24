@@ -36,12 +36,12 @@ OutRqFarField::~OutRqFarField() {
 
 }
 
-Real OutRqFarField::getInitialTheta() const {
-    return initialTheta_;
-}
-
 ClassBase* OutRqFarField::clone() const {
    return new OutRqFarField(*this);
+}
+
+Real OutRqFarField::getInitialTheta() const {
+    return initialTheta_;
 }
 
 Real OutRqFarField::getFinalTheta() const {
@@ -62,25 +62,6 @@ Real OutRqFarField::getFinalPhi() const {
 
 Real OutRqFarField::getStepPhi() const {
     return stepPhi_;
-}
-
-bool OutRqFarField::isSimilar(const OutRqFarField& rhs, const bool rev) const {
-    if(!rhs.is<OutRqFarField>()) {
-        return false;
-    }
-    const OutRqVolume* oRqVol = this->castTo<OutRqVolume>();
-    const OutRqVolume* rhsVol = this->castTo<OutRqVolume>();
-    bool isSimilar = oRqVol->isSimilar(rhsVol, true);
-    isSimilar &= initialTheta_ == rhs.initialTheta_;
-    isSimilar &= finalTheta_ == rhs.finalTheta_;
-    isSimilar &= stepTheta_ == rhs.stepTheta_;
-    isSimilar &= initialPhi_ == rhs.initialPhi_;
-    isSimilar &= finalPhi_ == rhs.finalPhi_;
-    isSimilar &= stepPhi_ == rhs.stepPhi_;
-    if (!rev) {
-        isSimilar &= rhs.isSimilar(rhs, true);
-    }
-    return isSimilar;
 }
 
 void OutRqFarField::setThetaAndPhi(Real iTh, Real fTh, Real sTh,
