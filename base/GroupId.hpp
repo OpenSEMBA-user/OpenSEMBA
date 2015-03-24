@@ -3,24 +3,23 @@
 #endif
 
 template<typename T, class Id>
-GroupId<T, Id>::GroupId()
-:   lastId_(0) {
-
+GroupId<T, Id>::GroupId() {
+    clearMapId();
 }
 
 template<typename T, class Id> template<typename T2>
 GroupId<T, Id>::GroupId(const vector<T2*>& elems)
-:   Group<T>(elems),
-    lastId_(0) {
+:   Group<T>(elems) {
 
+    clearMapId();
     buildMapId();
 }
 
 template<typename T, class Id> template<typename T2>
 GroupId<T, Id>::GroupId(const vector<T2*>& elems, bool ownership)
-:   Group<T>(elems, ownership),
-    lastId_(0) {
+:   Group<T>(elems, ownership) {
 
+    clearMapId();
     buildMapId();
 }
 
@@ -28,6 +27,7 @@ template<typename T, class Id>
 GroupId<T, Id>::GroupId(const Group<T>& rhs)
 :   Group<T>(rhs) {
 
+    clearMapId();
     buildMapId();
 }
 
@@ -35,12 +35,13 @@ template<typename T, class Id> template<typename T2>
 GroupId<T, Id>::GroupId(const Group<T2>& rhs)
 :   Group<T>(rhs) {
 
+    clearMapId();
     buildMapId();
 }
 
 template<typename T, class Id>
 GroupId<T, Id>::~GroupId() {
-
+    clearMapId();
 }
 
 template<typename T, class Id>
@@ -48,6 +49,7 @@ GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T>& rhs) {
     if (this == &rhs) {
         return *this;
     }
+    clearMapId();
     Group<T>::operator=(rhs);
     buildMapId();
 
@@ -56,6 +58,7 @@ GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T>& rhs) {
 
 template<typename T, class Id> template<typename T2>
 GroupId<T, Id>& GroupId<T, Id>::operator=(const Group<T2>& rhs) {
+    clearMapId();
     Group<T>::operator=(rhs);
     buildMapId();
 
@@ -103,6 +106,13 @@ const T* GroupId<T, Id>::getPtrToId(const Id id) const {
 //}
 
 template<typename T, class Id>
+GroupId<T, Id> GroupId<T, Id>::get(const Id& id) const {
+    vector<Id> aux;
+    aux.push_back(id);
+    return get(aux);
+}
+
+template<typename T, class Id>
 GroupId<T, Id> GroupId<T, Id>::get(const vector<Id>& ids) const {
     vector<T*> elems;
     elems.resize(ids.size());
@@ -128,78 +138,26 @@ void GroupId<T, Id>::add(T2* newElem, bool newId) {
 
 template<typename T, class Id> template<typename T2>
 void GroupId<T, Id>::add(vector<T2*>& newElems, bool newId) {
-    if(!this->ownership_) {
-        cerr << endl << "ERROR @ Group::add(): "
-             << "Forbidden to add elements to a Group without ownership "
-             << "of elements on it" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-    }
-
     for (UInt i = 0; i < newElems.size(); i++) {
         if(!newElems[i]->template is<T>()) {
             continue;
-        }
-        if(newId) {
+        } else if(newId) {
             newElems[i]->setId(++this->lastId_);
         }
-        this->element_.push_back(newElems[i]);
-
-        if (this->element_.back()->getId() == 0) {
-            cerr << endl << "ERROR @ GroupId::add():"
-                 << "Element with id = 0" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-
-        if(mapId_.count(this->element_.back()->getId()) == 0) {
-            mapId_[this->element_.back()->getId()] = this->size()-1;
-        } else {
-            cerr << endl << "ERROR @ GroupId::add():"
-                 << "Duplicated Ids" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
     }
+    Group<T>::add(newElems);
+    buildMapId();
 }
 
 template<typename T, class Id> template<typename T2>
 void GroupId<T, Id>::add(const Group<T2>& rhs) {
-    if(!this->ownership_) {
-        cerr << endl << "ERROR @ Group::add(): "
-             << "Forbidden to add elements to a Group without ownership "
-             << "of elements on it" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-    }
-
-    for (UInt i = 0; i < rhs.size(); i++) {
-        if(!rhs(i)->template is<T>()) {
-            continue;
-        }
-        this->element_.push_back(rhs(i)->clone()->template castTo<T>());
-
-        if (this->element_.back()->getId() == 0) {
-            cerr << endl << "ERROR @ GroupId::add():"
-                 << "Element with id = 0" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-
-        if(mapId_.count(this->element_.back()->getId()) == 0) {
-            mapId_[this->element_.back()->getId()] = this->size()-1;
-        } else {
-            cerr << endl << "ERROR @ GroupId::add():"
-                 << "Duplicated Ids" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
-        }
-    }
+    Group<T>::add(rhs);
+    buildMapId();
 }
 
 template<typename T, class Id>
 void GroupId<T, Id>::buildMapId() {
-    for(UInt i = 0; i < this->size(); i++) {
+    for(UInt i = lastPosMap_; i < this->size(); i++) {
         if (this->element_[i]->getId() > this->lastId_)
             lastId_ = this->element_[i]->getId();
 
@@ -219,4 +177,12 @@ void GroupId<T, Id>::buildMapId() {
             exit(EXIT_FAILURE);
         }
     }
+    lastPosMap_ = this->size();
+}
+
+template<typename T, class Id>
+void GroupId<T, Id>::clearMapId() {
+    lastId_ = Id(0);
+    lastPosMap_ = 0;
+    mapId_.clear();
 }

@@ -10,20 +10,20 @@
 
 template<typename C>
 CoordinateGroup<C>::CoordinateGroup() {
-    lastPosIndex_ = 0;
+    clearIndex();
 }
 
 template<typename C> template<typename C2>
 CoordinateGroup<C>::CoordinateGroup(const vector<C2*>& coord)
 :   GroupId<C, CoordinateId>(coord) {
     
-    lastPosIndex_ = 0;
+    clearIndex();
     buildIndex();
 }
 
 template<typename C>
 CoordinateGroup<C>::CoordinateGroup(const vector<CVecR3>& pos) {
-    lastPosIndex_ = 0;
+    clearIndex();
     add(pos, true);
 }
 
@@ -31,7 +31,7 @@ template<typename C>
 CoordinateGroup<C>::CoordinateGroup(const Group<C>& rhs)
 :   GroupId<C, CoordinateId>(rhs) {
 
-    lastPosIndex_ = 0;
+    clearIndex();
     buildIndex();
 }
 
@@ -39,7 +39,7 @@ template<typename C> template<typename C2>
 CoordinateGroup<C>::CoordinateGroup(const Group<C2>& rhs)
 :   GroupId<C, CoordinateId>(rhs) {
     
-    lastPosIndex_ = 0;
+    clearIndex();
     buildIndex();
 }
 
@@ -67,6 +67,11 @@ CoordinateGroup<C>& CoordinateGroup<C>::operator=(const Group<C2>& rhs) {
     buildIndex();
     
     return *this;
+}
+
+template<typename C>
+CoordinateGroup<C> CoordinateGroup<C>::get(const CoordinateId& id) const {
+    return GroupId<C, CoordinateId>::get(id);
 }
 
 template<typename C>

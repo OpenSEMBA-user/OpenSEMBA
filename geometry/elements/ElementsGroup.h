@@ -48,6 +48,7 @@ public:
 
     bool isLinear() const;
 
+    ElementsGroup<E> get(const ElementId&)         const;
     ElementsGroup<E> get(const vector<ElementId>&) const;
     ElementsGroup<E> get(const MatId matId) const;
     ElementsGroup<E> get(const vector<MatId>& matId) const;

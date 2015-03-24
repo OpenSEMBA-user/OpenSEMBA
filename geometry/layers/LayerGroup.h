@@ -31,6 +31,8 @@ public:
     template<typename L2>
     LayerGroup<L>& operator=(const Group<L2>& rhs);
 
+    LayerGroup<L> get(const LayerId&)         const;
+    LayerGroup<L> get(const vector<LayerId>&) const;
     const L* get(const string name) const;
 
     void printInfo() const;

@@ -57,6 +57,7 @@ public:
     template<typename C2>
     CoordinateGroup<C>& operator=(const Group<C2>& rhs);
 
+    CoordinateGroup<C> get(const CoordinateId&)         const;
     CoordinateGroup<C> get(const vector<CoordinateId>&) const;
     const CoordR3* get(const CVecR3& pos) const;
     const CoordI3* get(const CVecI3& pos) const;

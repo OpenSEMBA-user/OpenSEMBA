@@ -53,6 +53,17 @@ LayerGroup<L>& LayerGroup<L>::operator=(const Group<L2>& rhs) {
 }
 
 template<typename L>
+LayerGroup<L> LayerGroup<L>::get(const LayerId& id) const {
+    return GroupId<L, LayerId>::get(id);
+}
+
+template<typename L>
+LayerGroup<L> LayerGroup<L>::get(
+        const vector<LayerId>& ids) const {
+    return GroupId<L, LayerId>::get(ids);
+}
+
+template<typename L>
 const L* LayerGroup<L>::get(const string name) const {
     for (UInt i = 0; i < this->size(); i++) {
         if (this->element_[i]->getName() == name) {

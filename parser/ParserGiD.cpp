@@ -381,9 +381,7 @@ ElementsGroup<Vol> ParserGiD::boundToElemGroup(const string& line) {
     BoxR3 bound = strToBound(line);
     HexR8* hex = new HexR8(*mesh_, ElementId(0), bound);
     mesh_->elems().add(hex, true);
-    vector<Vol*> hexes;
-    hexes.push_back(hex->castTo<Vol>());
-    ElementsGroup<Vol> elems(hexes);
+    ElementsGroup<Vol> elems = mesh_->elems().get(hex->getId());
     return elems;
 }
 
@@ -411,19 +409,17 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     CoordinateId coordId(atoi(value.c_str()));
                     NodeR* node = new NodeR(*mesh_, ElementId(0), &coordId);
                     mesh_->elems().add(node, true);
-                    vector<Node<>*> nodes;
-                    nodes.push_back(node->castTo<Nod>());
-                    ElementsGroup<Nod> elems(nodes);
+                    ElementsGroup<Nod> elems = mesh_->elems().get(node->getId());
                     res->add(new OutRq<Nod>(domain, type, name, elems));
                     break;
                 }
 
-                //                case ParserGiD::outRqOnLine:
-                //                    getNextLabelAndValue(label,value);
-                //                    elem.clear();
-                //                    elem.push_back(ElementId(atoi(value.c_str())));
-                //                    res->add(new OutRq(elem, domain, type, name));
-                //                    break;
+                //case ParserGiD::outRqOnLine:
+                //    getNextLabelAndValue(label,value);
+                //    elem.clear();
+                //    elem.push_back(ElementId(atoi(value.c_str())));
+                //    res->add(new OutRq(elem, domain, type, name));
+                //    break;
                 case ParserGiD::outRqOnSurface:
                 {
                     getNextLabelAndValue(label,value);
@@ -1145,7 +1141,7 @@ ParserGiD::readGenerator() {
             mag = readMagnitude(value);
         } else if (label.compare("Number of elements")==0) {
             UInt nE = atoi(value.c_str());
-            vector<Node<>*> nodes;
+            vector<ElementId> nodes;
             nodes.reserve(nE);
             for (UInt i = 0; i < nE; i++) {
                 UInt e;
@@ -1153,9 +1149,9 @@ ParserGiD::readGenerator() {
                 CoordinateId id = CoordinateId(e);
                 NodeR* node = new NodeR(*mesh_, ElementId(0), &id);
                 mesh_->elems().add(node, true);
-                nodes.push_back(node);
+                nodes.push_back(node->getId());
             }
-            elems.add(nodes);
+            elems = mesh_->elems().get(nodes);
         } else if (label.compare("End of Generator")==0) {
             return new Generator(mag, elems, type, hardness);
         }

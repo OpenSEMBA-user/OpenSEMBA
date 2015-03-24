@@ -30,6 +30,7 @@ public:
 //    T*       getPtrToId(const Id id);
     const T* getPtrToId(const Id id) const;
 
+    GroupId<T, Id> get(const Id&)         const;
     GroupId<T, Id> get(const vector<Id>&) const;
 
     template<typename T2>
@@ -44,7 +45,9 @@ protected:
     map<Id, UInt> mapId_;
 
 private:
+    UInt lastPosMap_;
     void buildMapId();
+    void clearMapId();
 };
 
 #include "GroupId.hpp"

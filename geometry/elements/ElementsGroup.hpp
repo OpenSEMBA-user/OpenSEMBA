@@ -62,6 +62,11 @@ bool ElementsGroup<E>::isLinear() const {
 }
 
 template<typename E>
+ElementsGroup<E> ElementsGroup<E>::get(const ElementId& id) const {
+    return GroupId<E, ElementId>::get(id);
+}
+
+template<typename E>
 ElementsGroup<E> ElementsGroup<E>::get(const vector<ElementId>& ids) const {
     return GroupId<E, ElementId>::get(ids);
 }
