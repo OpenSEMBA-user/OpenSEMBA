@@ -28,6 +28,48 @@ Element<T>::~Element() {
 }
 
 template<class T>
+bool Element<T>::operator==(const Element<T>& rhs) const {
+    bool res = true;
+    res &= this->getLayerId() == rhs.getLayerId();
+    res &= this->getMatId() == rhs.getMatId();
+    res &= this->isCurved() == rhs.isCurved();
+    res &= this->isQuadratic() == rhs.isQuadratic();
+    res &= this->numberOfFaces() == rhs.numberOfFaces();
+    res &= this->numberOfVertices() == rhs.numberOfVertices();
+    res &= this->numberOfCoordinates() == rhs.numberOfCoordinates();
+    if (!res) {
+        return false;
+    }
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        res &= (*this->getV(i) == *rhs.getV(i));
+    }
+    for (UInt i = 0; i < this->numberOfVertices(); i++) {
+        res &= (*this->getVertex(i) == *rhs.getVertex(i));
+    }
+    for (UInt f = 0; f < this->numberOfFaces(); f++) {
+        res &= this->numberOfSideCoordinates(f) ==
+                   rhs.numberOfSideCoordinates(f);
+        res &= this->numberOfSideVertices(f) ==
+                   rhs.numberOfSideVertices(f);
+        if (!res) {
+            return false;
+        }
+        for (UInt i = 0; i < this->numberOfSideCoordinates(f); i++) {
+            res &= (*this->getSideV(f,i) == *rhs.getSideV(f,i));
+        }
+        for (UInt i = 0; i < this->numberOfSideVertices(f); i++) {
+            res &= (*this->getSideVertex(f,i) == *rhs.getSideVertex(f,i));
+        }
+    }
+    return res;
+}
+
+template<class T>
+bool Element<T>::operator!=(const Element<T>& rhs) const {
+    return !(*this == rhs);
+}
+
+template<class T>
 bool Element<T>::isCoordinate(const Coordinate<T,3>* coord) const {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         if (*getV(i) == *coord) {

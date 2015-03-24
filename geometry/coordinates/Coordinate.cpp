@@ -54,7 +54,13 @@ Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
 
 template<class T, Int D>
 bool Coordinate<T,D>::operator==(const Coordinate& rhs) const {
-    return ClassIdBase<CoordinateId>::operator==(rhs);
+    return (ClassIdBase<CoordinateId>::operator==(rhs) &&
+            CartesianVector<T,D>::operator==(rhs));
+}
+
+template<class T, Int D>
+bool Coordinate<T,D>::operator!=(const Coordinate& rhs) const {
+    return !(*this == rhs);
 }
 
 template<class T, Int D>

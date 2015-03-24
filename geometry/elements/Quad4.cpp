@@ -148,7 +148,7 @@ ElemI* Quad4<T>::toStructured(CoordinateGroup<CoordI3>& cG,
     CoordinateId coordId;
     CoordinateId* vIds = new CoordinateId[this->numberOfCoordinates()];
     for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        cell  = grid.getCell(*this->getV(i));
+        cell  = grid.getCell(*this->getV(i), true, tol);
         coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
             cG.add(new CoordI3(coordId, cell));

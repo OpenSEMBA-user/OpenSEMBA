@@ -26,6 +26,11 @@ bool ClassIdBase<Id>::operator==(const ClassIdBase<Id>& rhs) const {
 }
 
 template<class Id>
+bool ClassIdBase<Id>::operator!=(const ClassIdBase<Id>& rhs) const {
+    return this->id_ != rhs.id_;
+}
+
+template<class Id>
 Id ClassIdBase<Id>::getId() const {
     return this->id_;
 }

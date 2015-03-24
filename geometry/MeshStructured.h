@@ -39,19 +39,7 @@ public:
             const ElementsGroup<ElemR>& region) const;
 
     template<template<typename> class E>
-    ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >& rhs) {
-        vector< E<Int>* > elems;
-        ElemI* elem;
-        elems.reserve(rhs.size());
-        for(UInt i = 0; i < rhs.size(); i++) {
-            elem = rhs(i)->toStructured(*this, *this);
-            if (elem != NULL) {
-                ElementsGroup<ElemI>::add(elem);
-                elems.push_back(elem->castTo< E<Int> >());
-            }
-        }
-        return ElementsGroup< E<Int> >(elems, false);
-    }
+    ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >&);
 
     vector<BoxR3> discretizeWithinBoundary(
             const MatId matId,
@@ -69,5 +57,7 @@ private:
     vector<pair<const SurfI*, const SurfI*> > getPairsDefiningVolumeWithin(
             const ElementsGroup<SurfI>& faces) const;
 };
+
+#include "MeshStructured.hpp"
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */

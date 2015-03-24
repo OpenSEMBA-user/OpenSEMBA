@@ -17,6 +17,7 @@ public:
     virtual ~ClassIdBase();
 
     bool operator==(const ClassIdBase<Id>& rhs) const;
+    bool operator!=(const ClassIdBase<Id>& rhs) const;
 
     Id getId() const;
 

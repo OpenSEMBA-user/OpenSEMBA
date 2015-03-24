@@ -60,6 +60,9 @@ public:
     Element();
     virtual ~Element();
 
+    bool operator==(const Element<T>& rhs) const;
+    bool operator!=(const Element<T>& rhs) const;
+
     bool isCoordinate(const Coordinate<T,3>* coord) const;
 
     virtual bool isStructured(const Grid3&,

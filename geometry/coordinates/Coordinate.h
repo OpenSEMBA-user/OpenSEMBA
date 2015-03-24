@@ -44,6 +44,7 @@ public:
     Coordinate& operator=(const Coordinate& rhs);
 
     bool operator==(const Coordinate& rhs) const;
+    bool operator!=(const Coordinate& rhs) const;
 
     CartesianVector<T,D> pos() const;
 

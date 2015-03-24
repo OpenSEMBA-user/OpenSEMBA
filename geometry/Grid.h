@@ -91,7 +91,9 @@ public:
                    const bool  approx = true,
                    const Real  tol = tolerance,
                    bool* err = NULL) const;
-    CVecID getCell(const CVecID& pos) const { return pos; }
+    CVecID getCell(const CVecID& pos,
+                   const bool  approx = true,
+                   const Real  tol = tolerance) const { return pos; }
 
     void applyScalingFactor(const Real factor);
     void enlarge(const pair<CVecID,CVecID>& additionalCells,
