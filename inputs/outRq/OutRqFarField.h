@@ -22,7 +22,7 @@ public:
 
     virtual ClassBase* clone() const;
 
-    bool isSimilar(const OutRq<void>& rhs, const bool rev = false) const;
+    bool isSimilar(const OutRqFarField& rhs, const bool rev = false) const;
 
     Real getInitialTheta() const;
     Real getFinalTheta() const;

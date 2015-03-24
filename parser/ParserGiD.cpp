@@ -445,8 +445,9 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
-                    res->add(new OutRqFarField(domain, name, elems,
-                            iTh, fTh, sTh, iPhi, fPhi, sPhi));
+                    OutRqVolume* oRFF = new OutRqFarField(domain, name, elems,
+                            iTh, fTh, sTh, iPhi, fPhi, sPhi);
+                    res->add(oRFF);
                     break;
                 }
                 default:

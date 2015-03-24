@@ -46,7 +46,6 @@ public:
     OutRq(const OutRq& rhs);
     virtual ~OutRq();
 
-    virtual bool isSimilar(const OutRq& rhs, const bool rev = false) const;
 
     const string& getName() const;
     OutRq::Type getOutputType() const;
@@ -78,7 +77,13 @@ public:
     template<class T2>
     OutRq<T>& operator=(const Group<T2>& rhs);
 
-    bool isSimilar(const OutRq<void>& rhs, const bool rev = false) const;
+    template<class T2>
+    bool isSimilar(
+            const OutRq<T2>* rhs,
+            const bool rev = false) const;
+
+    template<class T2>
+    void add(OutRq<T2>* outRq);
 
     ElementsGroup<T>&       elems()       { return *this; }
     const ElementsGroup<T>& elems() const { return *this; }
@@ -88,8 +93,8 @@ public:
 
 #include "OutRq.hpp"
 
-typedef OutRq<Nod > OutRqNode;
+typedef OutRq<Nod> OutRqNode;
 typedef OutRq<Surf> OutRqSurface;
-typedef OutRq<Vol > OutRqVolume;
+typedef OutRq<Vol> OutRqVolume;
 
 #endif

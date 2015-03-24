@@ -45,11 +45,16 @@ OutRqGroup<O>& OutRqGroup<O>::operator=(const Group<O2>& rhs) {
     return *this;
 }
 
-template<typename O> template<typename O2>
-void OutRqGroup<O>::add(O2* newORq) {
-    for (UInt i = 0; i < size(); i++) {
-        if (this->element_[i]->isSimilar(newORq)) {
-            this->element_[i]->add(newORq->getGroupOf<>());
+template<typename O> template<typename T2>
+void OutRqGroup<O>::add(OutRq<T2>* newORq) {
+    for (UInt i = 0; i < this->size(); i++) {
+        OutRq<>* local = this->element_[i];
+        if (local->is<OutRq<T2> >()) {
+            OutRq<T2>* oRq = local->castTo<OutRq<T2> >();
+            if (oRq->isSimilar(newORq)) {
+                oRq->add(newORq);
+                return;
+            }
         }
     }
     this->Group<O>::add(newORq);

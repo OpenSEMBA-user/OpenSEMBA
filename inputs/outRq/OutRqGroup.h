@@ -20,7 +20,7 @@ public:
     OutRqGroup<O>& operator=(const Group<O2>& rhs);
 
     template<typename T2>
-    void add(T2* newElem);
+    void add(OutRq<T2>* newElem);
 
     void printInfo() const;
 };
