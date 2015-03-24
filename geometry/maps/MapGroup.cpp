@@ -49,7 +49,7 @@ MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
       }
    }
    // Inserts information of pairings into the connectivity matrix.
-   for (UInt i = 0; i < (nList-1); i++) {
+   for (UInt i = 0; i < (nList-1) && (nList != 0); i++) {
       bool matches;
       matches = fList(i,2) == fList(i+1,2);
       matches &= fList(i,3) == fList(i+1,3);
@@ -98,7 +98,7 @@ MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
       }
       //
       bool matches;
-      if (i < nList - 1) {
+      if (i < nList - 1 && nList != 0) {
          matches = fList(i,2) == fList(i+1,2);
          matches &= fList(i,3) == fList(i+1,3);
          matches &= fList(i,4) == fList(i+1,4);

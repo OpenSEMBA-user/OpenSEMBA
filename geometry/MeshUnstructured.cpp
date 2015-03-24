@@ -66,10 +66,10 @@ vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
     return res;
 }
 
-ElementsGroup<Tri> MeshUnstructured::convertToTri(
+ElementsGroup<Tri>* MeshUnstructured::convertToTri(
         const ElementsGroup<ElemR>& region, bool includeTets) const {
 
-    ElementsGroup<Tri> res = region.newGroupOf<Tri>();
+    ElementsGroup<Tri>* res = new ElementsGroup<Tri>(region.newGroupOf<Tri>());
     if (includeTets) {
         ElementsGroup<Tet> tet = region.getGroupOf<Tet>();
         vector<Face> border = getInternalBorder(tet);
@@ -77,7 +77,7 @@ ElementsGroup<Tri> MeshUnstructured::convertToTri(
             if (border[i].first->is<Tet>()) {
                 const Tet* tet = border[i].first->castTo<Tet>();
                 const UInt face = border[i].second;
-                res.add(tet->getTri3Face(face));
+                res->add(tet->getTri3Face(face), true);
             }
         }
     }
