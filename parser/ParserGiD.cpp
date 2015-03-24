@@ -833,7 +833,7 @@ ParserGiD::readIsotropicSurfMatFile(
     StaMatrix<Real,2,2> Zstatic, Zinfinite;
     vector<Real> pole;
     vector<StaMatrix<Real,2,2> > Z;
-    Real tmpP, tmpZ11, tmpZ12, tmpZ21, tmpZ22;
+    Real tmpP;
     // Opens file, read only mode.
     matFileName = problemTypePath_ + "/panel/" + fileName + ".dat";
     matFile.open(matFileName.c_str(), ifstream::in);
@@ -881,12 +881,8 @@ ParserGiD::readIsotropicSurfMatFile(
     // Stores in line the file line containing headers.
     getline(matFile, line);
     for (UInt i = 0; i < nPoles; i++) {
-        matFile >> tmpP >> tmpZ11 >> tmpZ12 >> tmpZ21 >> tmpZ22;
         StaMatrix<Real,2,2> tmpZ;
-        tmpZ(0,0) = tmpZ11;
-        tmpZ(0,1) = tmpZ12 ;
-        tmpZ(1,0) = tmpZ21;
-        tmpZ(1,1) = tmpZ22;
+        matFile >> tmpP >> tmpZ(0,0) >> tmpZ(0,1) >> tmpZ(1,0) >> tmpZ(1,1);
         pole.push_back(tmpP);
         Z.push_back(tmpZ);
     }

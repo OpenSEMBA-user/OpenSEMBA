@@ -171,6 +171,9 @@ CartesianVector<Int,D> Grid<D>::getNumCells() const {
 template<Int D>
 vector<Real> Grid<D>::getStep(const Int dir) const {
     assert(dir >= 0 && dir < D);
+    if (pos_[dir].size() == 0) {
+        return vector<Real>();
+    }
     vector<Real> res(pos_[dir].size()-1);
     for (UInt i = 0; i < pos_[dir].size()-1; i++) {
         res[i] = pos_[dir][i+1] - pos_[dir][i];
