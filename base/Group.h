@@ -62,7 +62,6 @@ public:
 protected:
     bool ownership_;
     vector<T*> element_;
-
 private:
     template<typename T2>
     void initElements(const vector<T2*>& elems);

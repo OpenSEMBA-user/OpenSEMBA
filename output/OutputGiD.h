@@ -48,19 +48,18 @@ private:
     GiD_FILE resultFile_;
     GiD_PostMode mode_;
     const SmbData* smb_;
-    const MeshUnstructured* mesh_;
     void writeMesh();
-    void writeMeshWithIds(
-            const vector<vector<ElementId> >& ids,
-            string& name);
-    void writeMeshWithIds(
-            const vector<vector<ElementId> >& ids,
-            const vector<string>& name);
-    void writeMeshWithIds(
-            const vector<ElementId>& ids, string& name);
-    void writeOutputRequestsMesh();
+//    void writeMeshWithIds(
+//            const vector<vector<ElementId> >& ids,
+//            string& name);
+//    void writeMeshWithIds(
+//            const vector<vector<ElementId> >& ids,
+//            const vector<string>& name);
+//    void writeMeshWithIds(
+//            const vector<ElementId>& ids, string& name);
+//    void writeOutputRequestsMesh();
     void writeElements(
-            const ElementsGroup<>& entities,
+            const ElemRGroup& entities,
             const string& name,
             const GiD_ElementType type,
             const Int nV);

@@ -66,6 +66,8 @@ public:
     BoxR3 getBound(const vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
 
+    void setMatId  (const MatId   newId);
+    void setLayerId  (const LayerId   newId);
     void setMatId  (const ElementId id, const MatId   newMatId);
     void setLayerId(const ElementId id, const LayerId newLayerId);
 

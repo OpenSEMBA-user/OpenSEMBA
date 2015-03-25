@@ -66,20 +66,21 @@ void OutputGiD::writeAllElements(const ElemRGroup& elem, const string& name) {
 
 void
 OutputGiD::writeMesh() {
-    writeOutputRequestsMesh();
-    if(!smb_->mesh->is<MeshUnstructured>()) {
-        return;
+    const MeshUnstructured* mesh;
+    if (smb_->mesh->is<MeshStructured>()) {
+        mesh = smb_->mesh->castTo<MeshStructured>()->getMeshUnstructured();
+    } else {
+        mesh = new MeshUnstructured(*smb_->mesh->castTo<MeshUnstructured>());
     }
-    mesh_ = smb_->mesh->castTo<MeshUnstructured>();
     // Writes materials.
-    LayerGroup<> lay = mesh_->layers();
+    LayerGroup<> lay = mesh->layers();
     for (UInt i = 0; i < lay.size(); i++) {
         PhysicalModelGroup<PhysicalModel> mat = *smb_->pMGroup;
         for (UInt j = 0; j < mat.size(); j++) {
             const MatId matId = mat(j)->getId();
             const LayerId layId = lay(i)->getId();
             const string name = mat(j)->getName() + "@" + lay(i)->getName();
-            ElemRGroup elem = mesh_->elems().get(matId, layId);
+            ElemRGroup elem = mesh->elems().get(matId, layId);
             writeAllElements(elem, name);
         }
     }
@@ -97,102 +98,104 @@ OutputGiD::writeMesh() {
         ElemRGroup elem = oRq->elems();
         writeAllElements(elem, name);
     }
+    //
+    delete mesh;
 }
 
-void
-OutputGiD::writeMeshWithIds(
-        const vector<vector<ElementId> >& ids,
-        const vector<string>& name) {
-    assert(ids.size() == name.size());
-    const bool isLinear = mesh_->isLinear();
-    Int nV;
-    isLinear? nV = 4 : nV = 10;
-    for (UInt t = 0; t < ids.size(); t++) {
-        beginMesh(name[t], GiD_3D, GiD_Tetrahedra, nV);
-        beginCoordinates();
-        Int tmpCounter = coordCounter_;
-        static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
-        for (UInt j = 0; j < ids[t].size(); j++) {
-            const ElemR* e = mesh_->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
-            for (Int i = 0; i < nV; i++) {
-                CVecR3 pos;
-                if (isLinear) {
-                    pos = e->getVertex(i)->pos();
-                } else {
-                    pos = e->getV(GiDTetOrder[i])->pos();
-                }
-                writeCoordinates(++coordCounter_, pos);
-            }
-        }
-        endCoordinates();
-        // Writes elements.
-        beginElements();
-        int nId[nV];
-        for (UInt j = 0; j < ids[t].size(); j++) {
-            for (Int i = 0; i < nV; i++) {
-                nId[i] = ++tmpCounter;
-            }
-            writeElement(++elemCounter_, nId);
-        }
-        endElements();
-        endMesh();
-    }
-}
-
-void
-OutputGiD::writeMeshWithIds(
-        const vector<vector<ElementId> >& ids,
-        string& name) {
-    vector<string> names;
-    for (UInt i = 0; i < ids.size(); i++) {
-        stringstream ss;
-        ss << name << " " << i;
-        names.push_back(ss.str());
-    }
-    writeMeshWithIds(ids, names);
-}
-
-void
-OutputGiD::writeMeshWithIds(
-        const vector<ElementId>& ids, string& name) {
-    vector<vector<ElementId> > aux;
-    aux.push_back(ids);
-    writeMeshWithIds(aux, name);
-}
-
-void
-OutputGiD::writeOutputRequestsMesh() {
-    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
-        //        const OutputRequest* outRq = smb_->outputRequests->get(i);
-        //      bool mshExist = false;
-        //      for (UInt j = 0; j < result_.size(); j++) {
-        //         mshExist = result_[i]->hasEquivalentMesh(outRq);
-        //         if (mshExist) {
-        //            result_.push_back(new ResultGiD(outRq, *result_[j]));
-        //         }
-        //      }
-        //      if (!mshExist) {
-        //        result_.push_back(
-        //                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
-        //      }
-    }
-}
+//void
+//OutputGiD::writeMeshWithIds(
+//        const vector<vector<ElementId> >& ids,
+//        const vector<string>& name) {
+//    assert(ids.size() == name.size());
+//    const bool isLinear = mesh_->isLinear();
+//    Int nV;
+//    isLinear? nV = 4 : nV = 10;
+//    for (UInt t = 0; t < ids.size(); t++) {
+//        beginMesh(name[t], GiD_3D, GiD_Tetrahedra, nV);
+//        beginCoordinates();
+//        Int tmpCounter = coordCounter_;
+//        static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
+//        for (UInt j = 0; j < ids[t].size(); j++) {
+//            const ElemR* e = mesh_->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
+//            for (Int i = 0; i < nV; i++) {
+//                CVecR3 pos;
+//                if (isLinear) {
+//                    pos = e->getVertex(i)->pos();
+//                } else {
+//                    pos = e->getV(GiDTetOrder[i])->pos();
+//                }
+//                writeCoordinates(++coordCounter_, pos);
+//            }
+//        }
+//        endCoordinates();
+//        // Writes elements.
+//        beginElements();
+//        int nId[nV];
+//        for (UInt j = 0; j < ids[t].size(); j++) {
+//            for (Int i = 0; i < nV; i++) {
+//                nId[i] = ++tmpCounter;
+//            }
+//            writeElement(++elemCounter_, nId);
+//        }
+//        endElements();
+//        endMesh();
+//    }
+//}
+//
+//void
+//OutputGiD::writeMeshWithIds(
+//        const vector<vector<ElementId> >& ids,
+//        string& name) {
+//    vector<string> names;
+//    for (UInt i = 0; i < ids.size(); i++) {
+//        stringstream ss;
+//        ss << name << " " << i;
+//        names.push_back(ss.str());
+//    }
+//    writeMeshWithIds(ids, names);
+//}
+//
+//void
+//OutputGiD::writeMeshWithIds(
+//        const vector<ElementId>& ids, string& name) {
+//    vector<vector<ElementId> > aux;
+//    aux.push_back(ids);
+//    writeMeshWithIds(aux, name);
+//}
+//
+//void
+//OutputGiD::writeOutputRequestsMesh() {
+//    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
+//        //        const OutputRequest* outRq = smb_->outputRequests->get(i);
+//        //      bool mshExist = false;
+//        //      for (UInt j = 0; j < result_.size(); j++) {
+//        //         mshExist = result_[i]->hasEquivalentMesh(outRq);
+//        //         if (mshExist) {
+//        //            result_.push_back(new ResultGiD(outRq, *result_[j]));
+//        //         }
+//        //      }
+//        //      if (!mshExist) {
+//        //        result_.push_back(
+//        //                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
+//        //      }
+//    }
+//}
 
 void OutputGiD::writeElements(
-        const ElementsGroup<>& elem,
+        const ElemRGroup& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {
+    if (elem.size() == 0) {
+        return;
+    }
     UInt tmpCounter = coordCounter_;
     int nId[nV];
     beginMesh(name, GiD_3D, type, nV);
     vector<CVecR3> pos;
     for(UInt i = 0; i < elem.size(); i++) {
-        if(elem(i)->is<ElemR>()) {
-            const ElemR* e = elem(i)->castTo<ElemR>();
-            for (Int j = 0; j < nV; j++) {
-                pos.push_back(e->getVertex(j)->pos());
-            }
+        for (Int j = 0; j < nV; j++) {
+            pos.push_back(elem(i)->getVertex(j)->pos());
         }
     }
     writeCoordinates(pos);

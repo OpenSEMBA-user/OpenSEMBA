@@ -224,6 +224,20 @@ const CoordR3* ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
 }
 
 template<typename E>
+void ElementsGroup<E>::setMatId(const MatId newId) {
+    for (UInt i = 0; i < this->size(); i++) {
+        this->element_[i]->setMatId(newId);
+    }
+}
+
+template<typename E>
+void ElementsGroup<E>::setLayerId(const LayerId newId) {
+    for (UInt i = 0; i < this->size(); i++) {
+        this->element_[i]->setLayerId(newId);
+    }
+}
+
+template<typename E>
 void ElementsGroup<E>::setMatId(const ElementId id,
                                 const MatId newMatId) {
     this->element_[this->mapId_[id]]->setMatId(newMatId);
@@ -233,25 +247,6 @@ template<typename E>
 void ElementsGroup<E>::setLayerId(const ElementId id,
                                   const LayerId newId) {
     this->element_[this->mapId_[id]]->setLayerId(newId);
-}
-
-template<typename E>
-map<LayerId, ElementsGroup<E> > ElementsGroup<E>::separateByLayers() const {
-    map<LayerId, ElementsGroup<E> > res;
-    for (UInt i = 0; i < this->size(); i++) {
-        const LayerId layerId = this->element_[i]->getLayerId();
-        typename map<LayerId, ElementsGroup<E> >::iterator it =
-            res.find(layerId);
-        if (it == res.end()) {
-            pair<LayerId, ElementsGroup<E> > newEntry;
-            newEntry.first = layerId;
-            newEntry.second.add(this->element_[i]);
-            res.insert(newEntry);
-        } else {
-            it->second.add(this->element_[i]);
-        }
-    }
-    return res;
 }
 
 template<typename E>
