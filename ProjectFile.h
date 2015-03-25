@@ -41,9 +41,9 @@ public:
 
     string getFilename() const;
     string getBasename() const;
-    string getProjectFolder() const;
+    string getFolder() const;
     string getOutputFilename() const {
-        return getProjectFolder() + getOutputName();
+        return getFolder() + getOutputName();
     }
     string getOutputName() const {
         return getProjectName();

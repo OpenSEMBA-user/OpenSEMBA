@@ -148,6 +148,10 @@ template<class T>
 void Quad4<T>::printInfo() const {
 	cout << "--- Quad4 info ---" << endl;
 	Quad<T>::printInfo();
+	for (UInt i = 0; i < numberOfCoordinates(); i++) {
+	    v_[i]->printInfo();
+	    cout << endl;
+	}
 }
 
 template<class T>

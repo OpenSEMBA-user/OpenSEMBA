@@ -18,7 +18,7 @@ Output::~Output() {
 void
 Output::writeResumeFile(
         const Real time, const FieldR3& electric, const FieldR3& magnetic) {
-    string auxStr = getProjectFolder() + getProjectName() + ".resume";
+    string auxStr = getFolder() + getProjectName() + ".resume";
     char *auxChar;
     auxChar = new char[auxStr.length() + 1];
     strcpy(auxChar, auxStr.c_str());
@@ -78,7 +78,7 @@ void Output::writeAllFields(const FieldR3& field) const {
 }
 
 string Output::getOutputfilename() const {
-    string folder = getProjectFolder();
+    string folder = getFolder();
     string output = getOutputName();
     return folder + output;
 }

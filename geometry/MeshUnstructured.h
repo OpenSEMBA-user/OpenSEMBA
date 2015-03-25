@@ -55,7 +55,7 @@ public:
     virtual bool isOnBoundary(const CVecR3 pos) const;
     ElementsGroup<SurfR> getMaterialBoundary(const MatId   matId,
                                              const LayerId layId) const;
-    ElementsGroup<Tri>* convertToTri(const ElementsGroup<ElemR>& region,
+    ElementsGroup<Tri> convertToTri(const ElementsGroup<ElemR>& region,
                                     bool ignoreTets) const;
     vector<Face> getInternalBorder(const ElementsGroup<ElemR>& region) const;
     vector<Face> getExternalBorder(const ElementsGroup<ElemR>& region) const;

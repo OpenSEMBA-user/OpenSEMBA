@@ -164,8 +164,9 @@ ElemR* Element<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
 
 template<class T>
 void Element<T>::printInfo() const {
-    cout<< "Element. Id: " << this->getId() << " MatId: " << this->getMatId()
-        << " LayerId: " << this->getLayerId() << endl;
+    cout << "Element. Id: " << this->getId()
+                 << " MatId: " << this->getMatId()
+                 << " LayerId: " << this->getLayerId() << endl;
 }
 
 template<class T>

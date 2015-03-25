@@ -164,7 +164,7 @@ ElemR* Lin2<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
 template<class T>
 void Lin2<T>::printInfo() const {
     cout << "--- Lin2 info ---" << endl;
-    cout << "Id: " << this->getId() << endl;
+    Line<T>::printInfo();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
         cout << endl;

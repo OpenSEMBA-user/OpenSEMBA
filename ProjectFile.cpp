@@ -57,7 +57,7 @@ string ProjectFile::getBasename() const {
     return res;
 }
 
-string ProjectFile::getProjectFolder() const {
+string ProjectFile::getFolder() const {
     char *cstr = new char[filename_.length() + 1];
     strcpy(cstr, filename_.c_str());
     string projectDir(dirname(cstr));

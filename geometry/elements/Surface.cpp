@@ -63,7 +63,8 @@ CartesianVector<T,3> Surface<T>::getNormal() const {
 template<class T>
 void Surface<T>::printInfo() const {
     cout << " --- Surface Info ---" << endl;
-    cout << getNormal();
+    cout << getNormal() << endl;
+    Element<T>::printInfo();
 }
 
 template class Surface<Real>;

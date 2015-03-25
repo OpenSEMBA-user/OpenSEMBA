@@ -15,7 +15,9 @@ const CVecR3 OutputGiD::pmlColor(0, 0, 255);
 const CVecR3 OutputGiD::sibcColor(100, 0, 100);
 const CVecR3 OutputGiD::emSourceColor(100, 100, 0);
 
-OutputGiD::OutputGiD(const SmbData* smb, const string& fn, GiD_PostMode mode) : Output(fn) {
+void OutputGiD::initDefault(
+        GiD_PostMode mode,
+        const string& fn) {
     // Sets default values.
     mode_ = mode;
     meshFile_ = 0;
@@ -37,8 +39,22 @@ OutputGiD::OutputGiD(const SmbData* smb, const string& fn, GiD_PostMode mode) : 
         cerr << endl << "ERROR @ GiDOutput::openFiles() " << endl;
     }
     writeGaussPoints();
-    smb_ = smb;
-    writeMesh();
+}
+
+OutputGiD::OutputGiD(
+        const SmbData* smb,
+        const string& fn,
+        GiD_PostMode mode) : Output(fn) {
+    initDefault(mode, fn);
+    writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
+}
+
+OutputGiD::OutputGiD(
+        const MeshUnstructured* mesh,
+        const PhysicalModelGroup<>* mat,
+        const string& fn, GiD_PostMode mode) : Output(fn) {
+    initDefault(mode, fn);
+    writeMesh(mesh, mat);
 }
 
 OutputGiD::~OutputGiD() {
@@ -57,142 +73,155 @@ OutputGiD::~OutputGiD() {
 }
 
 void OutputGiD::writeAllElements(const ElemRGroup& elem, const string& name) {
-    writeElements(elem.getGroupOf<NodeR>(), name, GiD_Point, 1);
-    writeElements(elem.getGroupOf<LinR2>(), name, GiD_Linear, 2);
-    writeElements(elem.getGroupOf<Tri3>(),  name, GiD_Triangle, 3);
-    writeElements(elem.getGroupOf<Tet4>(),  name, GiD_Tetrahedra, 4);
-    writeElements(elem.getGroupOf<HexR8>(), name, GiD_Hexahedra, 8);
+    writeElements(elem.getGroupOf<NodeR>(),  name, GiD_Point, 1);
+    writeElements(elem.getGroupOf<LinR2>(),  name, GiD_Linear, 2);
+    writeElements(elem.getGroupOf<Tri3>(),   name, GiD_Triangle, 3);
+    writeElements(elem.getGroupOf<QuadR4>(), name, GiD_Quadrilateral, 4);
+    writeElements(elem.getGroupOf<Tet4>(),   name, GiD_Tetrahedra, 4);
+    writeElements(elem.getGroupOf<HexR8>(),  name, GiD_Hexahedra, 8);
 }
 
 void
-OutputGiD::writeMesh() {
-    writeOutputRequestsMesh();
-    if(!smb_->mesh->is<MeshUnstructured>()) {
-        return;
+OutputGiD::writeMesh(
+        const Mesh* inMesh,
+        const PhysicalModelGroup<>* mat,
+        const EMSourceGroup<>* srcs,
+        const OutRqGroup<>* oRqs) {
+    assert(inMesh != NULL);
+    assert(mat != NULL);
+    const MeshUnstructured* mesh;
+    if (inMesh->is<MeshStructured>()) {
+        mesh = inMesh->castTo<MeshStructured>()->getMeshUnstructured();
+    } else {
+        mesh = new MeshUnstructured(*inMesh->castTo<MeshUnstructured>());
     }
-    mesh_ = smb_->mesh->castTo<MeshUnstructured>();
     // Writes materials.
-    LayerGroup<> lay = mesh_->layers();
+    LayerGroup<> lay = mesh->layers();
     for (UInt i = 0; i < lay.size(); i++) {
-        PhysicalModelGroup<PhysicalModel> mat = *smb_->pMGroup;
-        for (UInt j = 0; j < mat.size(); j++) {
-            const MatId matId = mat(j)->getId();
+        for (UInt j = 0; j < mat->size(); j++) {
+            const MatId matId = (*mat)(j)->getId();
             const LayerId layId = lay(i)->getId();
-            const string name = mat(j)->getName() + "@" + lay(i)->getName();
-            ElemRGroup elem = mesh_->elems().get(matId, layId);
+            const string name = (*mat)(j)->getName() + "@" + lay(i)->getName();
+            ElemRGroup elem = mesh->elems().get(matId, layId);
             writeAllElements(elem, name);
         }
     }
     // Writes EM Sources.
-    for (UInt i = 0; i < smb_->emSources->size(); i++) {
-        const EMSource<>* src =  (*smb_->emSources)(i);
-        const string name = "EMSource_" + src->getName();
-        ElemRGroup elem = src->elems();
-        writeAllElements(elem, name);
+    if (srcs != NULL) {
+        for (UInt i = 0; i < srcs->size(); i++) {
+            const EMSource<>* src =  (*srcs)(i);
+            const string name = "EMSource_" + src->getName();
+            ElemRGroup elem = src->elems();
+            writeAllElements(elem, name);
+        }
     }
     // Writes output requests.
-    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
-        const OutRq<>* oRq = (*smb_->outputRequests)(i);
-        const string name = "OutRq_" + oRq->getName();
-        ElemRGroup elem = oRq->elems();
-        writeAllElements(elem, name);
-    }
-}
-
-void
-OutputGiD::writeMeshWithIds(
-        const vector<vector<ElementId> >& ids,
-        const vector<string>& name) {
-    assert(ids.size() == name.size());
-    const bool isLinear = mesh_->isLinear();
-    Int nV;
-    isLinear? nV = 4 : nV = 10;
-    for (UInt t = 0; t < ids.size(); t++) {
-        beginMesh(name[t], GiD_3D, GiD_Tetrahedra, nV);
-        beginCoordinates();
-        Int tmpCounter = coordCounter_;
-        static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
-        for (UInt j = 0; j < ids[t].size(); j++) {
-            const ElemR* e = mesh_->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
-            for (Int i = 0; i < nV; i++) {
-                CVecR3 pos;
-                if (isLinear) {
-                    pos = e->getVertex(i)->pos();
-                } else {
-                    pos = e->getV(GiDTetOrder[i])->pos();
-                }
-                writeCoordinates(++coordCounter_, pos);
-            }
+    if (oRqs != NULL) {
+        for (UInt i = 0; i < oRqs->size(); i++) {
+            const OutRq<>* oRq = (*oRqs)(i);
+            const string name = "OutRq_" + oRq->getName();
+            ElemRGroup elem = oRq->elems();
+            writeAllElements(elem, name);
         }
-        endCoordinates();
-        // Writes elements.
-        beginElements();
-        int nId[nV];
-        for (UInt j = 0; j < ids[t].size(); j++) {
-            for (Int i = 0; i < nV; i++) {
-                nId[i] = ++tmpCounter;
-            }
-            writeElement(++elemCounter_, nId);
-        }
-        endElements();
-        endMesh();
     }
+    //
+    delete mesh;
 }
 
-void
-OutputGiD::writeMeshWithIds(
-        const vector<vector<ElementId> >& ids,
-        string& name) {
-    vector<string> names;
-    for (UInt i = 0; i < ids.size(); i++) {
-        stringstream ss;
-        ss << name << " " << i;
-        names.push_back(ss.str());
-    }
-    writeMeshWithIds(ids, names);
-}
-
-void
-OutputGiD::writeMeshWithIds(
-        const vector<ElementId>& ids, string& name) {
-    vector<vector<ElementId> > aux;
-    aux.push_back(ids);
-    writeMeshWithIds(aux, name);
-}
-
-void
-OutputGiD::writeOutputRequestsMesh() {
-    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
-        //        const OutputRequest* outRq = smb_->outputRequests->get(i);
-        //      bool mshExist = false;
-        //      for (UInt j = 0; j < result_.size(); j++) {
-        //         mshExist = result_[i]->hasEquivalentMesh(outRq);
-        //         if (mshExist) {
-        //            result_.push_back(new ResultGiD(outRq, *result_[j]));
-        //         }
-        //      }
-        //      if (!mshExist) {
-        //        result_.push_back(
-        //                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
-        //      }
-    }
-}
+//void
+//OutputGiD::writeMeshWithIds(
+//        const vector<vector<ElementId> >& ids,
+//        const vector<string>& name) {
+//    assert(ids.size() == name.size());
+//    const bool isLinear = mesh_->isLinear();
+//    Int nV;
+//    isLinear? nV = 4 : nV = 10;
+//    for (UInt t = 0; t < ids.size(); t++) {
+//        beginMesh(name[t], GiD_3D, GiD_Tetrahedra, nV);
+//        beginCoordinates();
+//        Int tmpCounter = coordCounter_;
+//        static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
+//        for (UInt j = 0; j < ids[t].size(); j++) {
+//            const ElemR* e = mesh_->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
+//            for (Int i = 0; i < nV; i++) {
+//                CVecR3 pos;
+//                if (isLinear) {
+//                    pos = e->getVertex(i)->pos();
+//                } else {
+//                    pos = e->getV(GiDTetOrder[i])->pos();
+//                }
+//                writeCoordinates(++coordCounter_, pos);
+//            }
+//        }
+//        endCoordinates();
+//        // Writes elements.
+//        beginElements();
+//        int nId[nV];
+//        for (UInt j = 0; j < ids[t].size(); j++) {
+//            for (Int i = 0; i < nV; i++) {
+//                nId[i] = ++tmpCounter;
+//            }
+//            writeElement(++elemCounter_, nId);
+//        }
+//        endElements();
+//        endMesh();
+//    }
+//}
+//
+//void
+//OutputGiD::writeMeshWithIds(
+//        const vector<vector<ElementId> >& ids,
+//        string& name) {
+//    vector<string> names;
+//    for (UInt i = 0; i < ids.size(); i++) {
+//        stringstream ss;
+//        ss << name << " " << i;
+//        names.push_back(ss.str());
+//    }
+//    writeMeshWithIds(ids, names);
+//}
+//
+//void
+//OutputGiD::writeMeshWithIds(
+//        const vector<ElementId>& ids, string& name) {
+//    vector<vector<ElementId> > aux;
+//    aux.push_back(ids);
+//    writeMeshWithIds(aux, name);
+//}
+//
+//void
+//OutputGiD::writeOutputRequestsMesh() {
+//    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
+//        //        const OutputRequest* outRq = smb_->outputRequests->get(i);
+//        //      bool mshExist = false;
+//        //      for (UInt j = 0; j < result_.size(); j++) {
+//        //         mshExist = result_[i]->hasEquivalentMesh(outRq);
+//        //         if (mshExist) {
+//        //            result_.push_back(new ResultGiD(outRq, *result_[j]));
+//        //         }
+//        //      }
+//        //      if (!mshExist) {
+//        //        result_.push_back(
+//        //                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
+//        //      }
+//    }
+//}
 
 void OutputGiD::writeElements(
-        const ElementsGroup<>& elem,
+        const ElemRGroup& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {
+    if (elem.size() == 0) {
+        return;
+    }
     UInt tmpCounter = coordCounter_;
     int nId[nV];
     beginMesh(name, GiD_3D, type, nV);
     vector<CVecR3> pos;
     for(UInt i = 0; i < elem.size(); i++) {
-        if(elem(i)->is<ElemR>()) {
-            const ElemR* e = elem(i)->castTo<ElemR>();
-            for (Int j = 0; j < nV; j++) {
-                pos.push_back(e->getVertex(j)->pos());
-            }
+        for (Int j = 0; j < nV; j++) {
+            pos.push_back(elem(i)->getVertex(j)->pos());
         }
     }
     writeCoordinates(pos);
