@@ -47,9 +47,9 @@ public:
     virtual ~OutRq();
 
     const string& getName() const;
+    Domain getDomain() const;
     OutRq::Type getOutputType() const;
 
-//    virtual ElementsGroup<>& elems() = 0;
     virtual ElementsGroup<> elems() const = 0;
 
     void printInfo() const;
@@ -79,7 +79,6 @@ public:
     template<class T2>
     bool isSimilar(const T2* rhs, const bool rev = false) const;
 
-//    ElementsGroup<>&       elems()       { return *this; }
     ElementsGroup<> elems() const { return *this; }
 
     void printInfo() const;

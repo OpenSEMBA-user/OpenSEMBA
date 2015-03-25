@@ -44,6 +44,10 @@ public:
     template<template<typename> class E>
     ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >&,
                                 const Real tol = Grid3::tolerance);
+    template<template<typename> class E>
+    ElementsGroup< E<Int> > add(E<Real>*,
+                                const Real tol = Grid3::tolerance);
+
 
     vector<BoxR3> discretizeWithinBoundary(
             const MatId matId,

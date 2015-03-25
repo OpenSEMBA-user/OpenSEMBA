@@ -27,6 +27,10 @@ OutRq<void>::Type OutRq<void>::getOutputType() const {
     return outputType_;
 }
 
+Domain OutRq<void>::getDomain() const {
+    return *this;
+}
+
 
 void OutRq<void>::printInfo() const {
     cout<< "--- Output request instance ---" << endl;

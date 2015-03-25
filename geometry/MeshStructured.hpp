@@ -13,10 +13,7 @@ ElementsGroup< E<Int> > MeshStructured::add(
             if (elems().existId(elem->getId())) {
                 const ElemI* orig = elems().getPtrToId(elem->getId());
                 if (*elem != *orig) {
-                    cerr << endl << "ERROR @ MeshStructured::add(): "
-                    << "Existent Element not coincident." << endl;
-                    assert(false);
-                    exit(EXIT_FAILURE);
+                    elems().add(elem, true);
                 }
                 elemIds.push_back(elem->getId());
             } else {
@@ -26,4 +23,13 @@ ElementsGroup< E<Int> > MeshStructured::add(
         }
     }
     return elems().get(elemIds);
+}
+
+template<template<typename> class E>
+ElementsGroup< E<Int> > MeshStructured::add(
+        E<Real>* rhs,
+        const Real tol) {
+    ElementsGroup<E<Real> > aux;
+    aux.add(rhs, true);
+    return this->add(aux, tol);
 }

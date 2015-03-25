@@ -86,5 +86,6 @@ protected:
 #include "ElementsGroup.hpp"
 
 typedef ElementsGroup<ElemR> ElemRGroup;
+typedef ElementsGroup<SurfI> SurfIGroup;
 
 #endif /* ELEMENTSGROUP_H_ */
