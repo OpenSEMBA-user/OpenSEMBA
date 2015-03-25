@@ -1494,7 +1494,7 @@ ParserGiD::readMagnitude(const string typeIn) {
                 finished = true;
             }
             if (finished) {
-                return new MagnitudeNumerical(getProjectFolder() + excName);
+                return new MagnitudeNumerical(getFolder() + excName);
             }
         }
     }
