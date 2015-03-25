@@ -126,6 +126,22 @@ ElemI* Node<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
+ElemR* Node<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
+                               const Grid3& grid) const {
+    CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
+    if (vIds == NULL) {
+        return NULL;
+    }
+    ElemR* res =  new NodeR(cG,
+                            this->getId(),
+                            vIds,
+                            this->getLayerId(),
+                            this->getMatId());
+    delete[] vIds;
+    return res;
+}
+
+template<class T>
 void Node<T>::printInfo() const {
 	cout << "--- Node info ---" << endl;
 	Element<T>::printInfo();

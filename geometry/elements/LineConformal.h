@@ -36,6 +36,8 @@ public:
 
     void setV(const UInt i, const CoordI3* coord);
 
+    ElemR* toUnstructured(CoordinateGroup<CoordR3>&, const Grid3&) const;
+
     void printInfo() const;
 
 private:

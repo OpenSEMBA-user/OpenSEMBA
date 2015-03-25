@@ -65,6 +65,7 @@ public:
 
     ElemI* toStructured(CoordinateGroup<CoordI3>&,
                         const Grid3&, const Real = Grid3::tolerance) const;
+    ElemR* toUnstructured(CoordinateGroup<CoordR3>&, const Grid3&) const;
 
     void printInfo() const;
 private:

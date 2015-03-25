@@ -9,6 +9,7 @@
 #define SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_
 
 #include "Mesh.h"
+#include "MeshUnstructured.h"
 
 class MeshStructured : public virtual Mesh,
                        public Grid3,
@@ -38,8 +39,11 @@ public:
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const ElementsGroup<ElemR>& region) const;
 
+    MeshUnstructured* getMeshUnstructured() const;
+
     template<template<typename> class E>
-    ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >&);
+    ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >&,
+                                const Real tol = Grid3::tolerance);
 
     vector<BoxR3> discretizeWithinBoundary(
             const MatId matId,

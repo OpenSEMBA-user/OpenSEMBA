@@ -72,6 +72,7 @@ public:
     vector<Real>   getPos(const Int dir) const;
     Real           getPos(const Int dir, const Int i) const;
     CVecRD         getPos(const CVecID& ijk) const;
+    CVecRD         getPos(const CVecRD& ijk) const { return ijk; }
 
     pair<Int, Real>      getCellPair(const Int  dir,
                                      const Real x,

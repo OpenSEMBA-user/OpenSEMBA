@@ -255,6 +255,22 @@ ElemI* Hex8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
+ElemR* Hex8<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
+                               const Grid3& grid) const {
+    CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
+    if (vIds == NULL) {
+        return NULL;
+    }
+    ElemR* res =  new HexR8(cG,
+                            this->getId(),
+                            vIds,
+                            this->getLayerId(),
+                            this->getMatId());
+    delete[] vIds;
+    return res;
+}
+
+template<class T>
 void Hex8<T>::printInfo() const {
     cout << "--- Hex8 Info ---" << endl;
     cout << "Id: " << this->getId() << endl;

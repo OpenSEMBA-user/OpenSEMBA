@@ -68,6 +68,44 @@ void LineConformal::setV(const UInt i, const CoordI3* coord) {
     LinI2::setV(i, coord);
 }
 
+ElemR* LineConformal::toUnstructured(CoordinateGroup<CoordR3>& cG,
+                                     const Grid3& grid) const {
+    const CoordConf* vConf[2];
+    vConf[0] = getConfV(0);
+    vConf[1] = getConfV(1);
+
+    CVecR3 pos;
+    const CoordR3* coord[2];
+    CoordinateId coordId;
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        pos = grid.getPos(vConf[i]->pos());
+        if (MathUtils::greather(vConf[i]->getLength(), 0.0, 1.0)) {
+            Int dir = vConf[i]->getDir();
+            Real length = vConf[i]->getLength();
+            CVecI3 cellAux = vConf[i]->pos();
+            cellAux(dir)++;
+            CVecR3 posAux = grid.getPos(cellAux);
+            Real step = posAux(dir)-pos(dir);
+            pos(dir) += step*length;
+        }
+        coordId = this->getV(i)->getId();
+        if (!cG.existId(coordId)) {
+            cG.add(new CoordR3(coordId, pos));
+        }
+        coord[i] = cG.getPtrToId(coordId);
+        if (coord[i]->pos() != pos) {
+            cerr << endl << "ERROR @ LineConformal::toUnstructured(): "
+                 << "Existent Coordinate not coincident." << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+    }
+    return new LinR2(this->getId(),
+                     coord,
+                     this->getLayerId(),
+                     this->getMatId());
+}
+
 void LineConformal::printInfo() const {
     cout << "--- LinI2Conformal info ---" << endl;
     cout << "Id: " << this->getId() << endl;

@@ -35,7 +35,7 @@ class Coordinate : public virtual Coordinate<void,0>,
 public:
     Coordinate();
     Coordinate(const CoordinateId id_, const CartesianVector<T,D>& pos);
-    Coordinate(const CartesianVector<T,D>& pos);
+    explicit Coordinate(const CartesianVector<T,D>& pos);
     Coordinate(const Coordinate& rhs);
     virtual ~Coordinate();
 

@@ -1,29 +1,29 @@
 #include "MeshStructured.h"
 
 template<template<typename> class E>
-ElementsGroup< E<Int> > MeshStructured::add(const ElementsGroup< E<Real> >& rhs) {
-    vector< E<Int>* > elems;
+ElementsGroup< E<Int> > MeshStructured::add(
+        const ElementsGroup< E<Real> >& rhs,
+        const Real tol) {
+    vector<ElementId> elemIds;
     ElemI* elem;
-    elems.reserve(rhs.size());
+    elemIds.reserve(rhs.size());
     for(UInt i = 0; i < rhs.size(); i++) {
-        elem = rhs(i)->toStructured(*this, *this);
+        elem = rhs(i)->toStructured(*this, *this, tol);
         if (elem != NULL) {
-            if (ElementsGroup<ElemI>::existId(elem->getId())) {
-                ElemI* orig =
-                ElementsGroup<ElemI>::element_[
-                                               ElementsGroup<ElemI>::mapId_[elem->getId()]];
+            if (elems().existId(elem->getId())) {
+                const ElemI* orig = elems().getPtrToId(elem->getId());
                 if (*elem != *orig) {
                     cerr << endl << "ERROR @ MeshStructured::add(): "
                     << "Existent Element not coincident." << endl;
                     assert(false);
                     exit(EXIT_FAILURE);
                 }
-                elems.push_back(orig->castTo< E<Int> >());
+                elemIds.push_back(elem->getId());
             } else {
-                ElementsGroup<ElemI>::add(elem);
-                elems.push_back(elem->castTo< E<Int> >());
+                elems().add(elem);
+                elemIds.push_back(elem->getId());
             }
         }
     }
-    return ElementsGroup< E<Int> >(elems, false);
+    return elems().get(elemIds);
 }

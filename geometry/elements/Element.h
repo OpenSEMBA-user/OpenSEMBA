@@ -87,6 +87,8 @@ public:
     virtual Element<Int>* toStructured(CoordinateGroup<CoordI3>&,
                                        const Grid3&,
                                        const Real = Grid3::tolerance) const;
+    virtual Element<Real>* toUnstructured(CoordinateGroup<CoordR3>&,
+                                          const Grid3&) const;
 
     void printInfo() const;
 
@@ -98,6 +100,8 @@ protected:
     CoordinateId* vertexToStructured(CoordinateGroup<CoordI3>& cG,
                                      const Grid3& grid,
                                      const Real tol) const;
+    CoordinateId* vertexToUnstructured(CoordinateGroup<CoordR3>& cG,
+                                       const Grid3& grid) const;
 
 };
 

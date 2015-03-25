@@ -129,6 +129,22 @@ ElemI* Quad4<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
+ElemR* Quad4<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
+                               const Grid3& grid) const {
+    CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
+    if (vIds == NULL) {
+        return NULL;
+    }
+    ElemR* res =  new QuadR4(cG,
+                             this->getId(),
+                             vIds,
+                             this->getLayerId(),
+                             this->getMatId());
+    delete[] vIds;
+    return res;
+}
+
+template<class T>
 void Quad4<T>::printInfo() const {
 	cout << "--- Quad4 info ---" << endl;
 	Quad<T>::printInfo();

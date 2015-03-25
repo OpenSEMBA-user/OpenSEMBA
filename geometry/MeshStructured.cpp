@@ -77,13 +77,35 @@ MeshStructured::getRectilinearHexesInsideRegion(
     return res;
 }
 
+MeshUnstructured* MeshStructured::getMeshUnstructured() const {
+    MeshUnstructured* res = new MeshUnstructured;
+    for (UInt i = 0; i < ElementsGroup<ElemI>::size(); i++) {
+        ElemR* elem = elems()(i)->toUnstructured(*res, *this);
+        if (elem != NULL) {
+            if (res->elems().existId(elem->getId())) {
+                const ElemR* orig = res->elems().getPtrToId(elem->getId());
+                if (*elem != *orig) {
+                    cerr << endl
+                    << "ERROR @ MeshStructured::getMeshUnstructured(): "
+                    << "Existent Element not coincident." << endl;
+                    assert(false);
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                res->elems().add(elem);
+            }
+        }
+    }
+    res->layers() = layers();
+    return res;
+}
+
 void MeshStructured::printInfo() const {
     cout << " --- Mesh structured info --- " << endl;
     Grid3::printInfo();
     CoordinateGroup<CoordI3>::printInfo();
     ElementsGroup<ElemI>::printInfo();
     LayerGroup<>::printInfo();
-    Mesh::printInfo();
 }
 
 

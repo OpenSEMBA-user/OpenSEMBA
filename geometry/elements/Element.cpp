@@ -157,6 +157,12 @@ ElemI* Element<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
+ElemR* Element<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
+                                  const Grid3& grid) const {
+    return NULL;
+}
+
+template<class T>
 void Element<T>::printInfo() const {
     cout<< "Element. Id: " << this->getId() << " MatId: " << this->getMatId()
         << " LayerId: " << this->getLayerId() << endl;
@@ -249,6 +255,34 @@ CoordinateId* Element<T>::vertexToStructured(CoordinateGroup<CoordI3>& cG,
         coord = cG.getPtrToId(coordId);
         if (coord->pos() != cell) {
             cerr << endl << "ERROR @ Element::vertexToStructured(): "
+                 << "Existent Coordinate not coincident." << endl;
+            assert(false);
+            exit(EXIT_FAILURE);
+        }
+        vIds[i] = coordId;
+    }
+    return vIds;
+}
+
+template<class T>
+CoordinateId* Element<T>::vertexToUnstructured(CoordinateGroup<CoordR3>& cG,
+                                               const Grid3& grid) const {
+    if (!this->is<ElemI>()) {
+        return NULL;
+    }
+    CVecR3 pos;
+    const CoordR3* coord;
+    CoordinateId coordId;
+    CoordinateId* vIds = new CoordinateId[this->numberOfCoordinates()];
+    for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+        pos = grid.getPos(*this->getV(i));
+        coordId = this->getV(i)->getId();
+        if (!cG.existId(coordId)) {
+            cG.add(new CoordR3(coordId, pos));
+        }
+        coord = cG.getPtrToId(coordId);
+        if (coord->pos() != pos) {
+            cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
                  << "Existent Coordinate not coincident." << endl;
             assert(false);
             exit(EXIT_FAILURE);

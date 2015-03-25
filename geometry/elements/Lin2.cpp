@@ -146,6 +146,22 @@ ElemI* Lin2<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
+ElemR* Lin2<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
+                               const Grid3& grid) const {
+    CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
+    if (vIds == NULL) {
+        return NULL;
+    }
+    ElemR* res =  new LinR2(cG,
+                            this->getId(),
+                            vIds,
+                            this->getLayerId(),
+                            this->getMatId());
+    delete[] vIds;
+    return res;
+}
+
+template<class T>
 void Lin2<T>::printInfo() const {
     cout << "--- Lin2 info ---" << endl;
     cout << "Id: " << this->getId() << endl;
