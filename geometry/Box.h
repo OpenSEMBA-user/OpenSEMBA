@@ -40,8 +40,8 @@ public:
     bool isSurface() const { return (numberOfDifferentCoords() == 2); }
     bool isVolume () const { return (numberOfDifferentCoords() == 3); }
 
-    CartesianAxis  getDirection() const;
-    CartesianPlane getNormal   () const;
+    CartesianAxis getDirection() const;
+    CartesianAxis getNormal   () const;
 
     Box<T,D> intersect(const Box<T,D>& rhs) const;
     bool isIntersected (const Box<T,D>& lBox) const;

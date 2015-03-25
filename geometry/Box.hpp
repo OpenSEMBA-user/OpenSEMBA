@@ -119,7 +119,7 @@ CartesianAxis Box<T,D>::getDirection() const {
 }
 
 template<class T, Int D>
-CartesianPlane Box<T,D>::getNormal() const {
+CartesianAxis Box<T,D>::getNormal() const {
     if (!isSurface()) {
         cerr << endl << "ERROR @ Box::getNormal(): "
                      << "Box is not a Surface" << endl;
@@ -127,10 +127,10 @@ CartesianPlane Box<T,D>::getNormal() const {
         exit(EXIT_FAILURE);
     }
     assert(D == 3);
-    CartesianPlane res;
+    CartesianAxis res;
     for(Int d = 0; d < D; d++) {
         if (MathUtils::equal(max_(d),min_(d),max_.norm())) {
-            res = CartesianPlane((d+D-1)%D);
+            res = CartesianAxis(d);
             break;
         }
     }
@@ -214,23 +214,23 @@ inline vector<CartesianVector<T,D> > Box<T,D>::getPos() const {
     } else if (isSurface()) {
         res.resize(4);
         switch(getNormal()) {
-        case xy:
-            res[0] = CVecTD(min_(x), min_(y), min_(z));
-            res[1] = CVecTD(max_(x), min_(y), min_(z));
-            res[2] = CVecTD(max_(x), max_(y), min_(z));
-            res[3] = CVecTD(min_(x), max_(y), min_(z));
-            break;
-        case yz:
+        case x:
             res[0] = CVecTD(min_(x), min_(y), min_(z));
             res[1] = CVecTD(min_(x), max_(y), min_(z));
             res[2] = CVecTD(min_(x), max_(y), max_(z));
             res[3] = CVecTD(min_(x), min_(y), max_(z));
             break;
-        case zx:
+        case y:
             res[0] = CVecTD(min_(x), min_(y), min_(z));
             res[1] = CVecTD(max_(x), min_(y), min_(z));
             res[2] = CVecTD(max_(x), min_(y), max_(z));
             res[3] = CVecTD(min_(x), min_(y), max_(z));
+            break;
+        case z:
+            res[0] = CVecTD(min_(x), min_(y), min_(z));
+            res[1] = CVecTD(max_(x), min_(y), min_(z));
+            res[2] = CVecTD(max_(x), max_(y), min_(z));
+            res[3] = CVecTD(min_(x), max_(y), min_(z));
             break;
         }
     } else if (isVolume()) {
