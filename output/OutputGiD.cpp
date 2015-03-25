@@ -15,7 +15,9 @@ const CVecR3 OutputGiD::pmlColor(0, 0, 255);
 const CVecR3 OutputGiD::sibcColor(100, 0, 100);
 const CVecR3 OutputGiD::emSourceColor(100, 100, 0);
 
-OutputGiD::OutputGiD(const SmbData* smb, const string& fn, GiD_PostMode mode) : Output(fn) {
+void OutputGiD::initDefault(
+        GiD_PostMode mode,
+        const string& fn) {
     // Sets default values.
     mode_ = mode;
     meshFile_ = 0;
@@ -37,8 +39,22 @@ OutputGiD::OutputGiD(const SmbData* smb, const string& fn, GiD_PostMode mode) : 
         cerr << endl << "ERROR @ GiDOutput::openFiles() " << endl;
     }
     writeGaussPoints();
-    smb_ = smb;
-    writeMesh();
+}
+
+OutputGiD::OutputGiD(
+        const SmbData* smb,
+        const string& fn,
+        GiD_PostMode mode) : Output(fn) {
+    initDefault(mode, fn);
+    writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
+}
+
+OutputGiD::OutputGiD(
+        const MeshUnstructured* mesh,
+        const PhysicalModelGroup<>* mat,
+        const string& fn, GiD_PostMode mode) : Output(fn) {
+    initDefault(mode, fn);
+    writeMesh(mesh, mat);
 }
 
 OutputGiD::~OutputGiD() {
@@ -57,46 +73,56 @@ OutputGiD::~OutputGiD() {
 }
 
 void OutputGiD::writeAllElements(const ElemRGroup& elem, const string& name) {
-    writeElements(elem.getGroupOf<NodeR>(), name, GiD_Point, 1);
-    writeElements(elem.getGroupOf<LinR2>(), name, GiD_Linear, 2);
-    writeElements(elem.getGroupOf<Tri3>(),  name, GiD_Triangle, 3);
-    writeElements(elem.getGroupOf<Tet4>(),  name, GiD_Tetrahedra, 4);
-    writeElements(elem.getGroupOf<HexR8>(), name, GiD_Hexahedra, 8);
+    writeElements(elem.getGroupOf<NodeR>(),  name, GiD_Point, 1);
+    writeElements(elem.getGroupOf<LinR2>(),  name, GiD_Linear, 2);
+    writeElements(elem.getGroupOf<Tri3>(),   name, GiD_Triangle, 3);
+    writeElements(elem.getGroupOf<QuadR4>(), name, GiD_Quadrilateral, 4);
+    writeElements(elem.getGroupOf<Tet4>(),   name, GiD_Tetrahedra, 4);
+    writeElements(elem.getGroupOf<HexR8>(),  name, GiD_Hexahedra, 8);
 }
 
 void
-OutputGiD::writeMesh() {
+OutputGiD::writeMesh(
+        const Mesh* inMesh,
+        const PhysicalModelGroup<>* mat,
+        const EMSourceGroup<>* srcs,
+        const OutRqGroup<>* oRqs) {
+    assert(inMesh != NULL);
+    assert(mat != NULL);
     const MeshUnstructured* mesh;
-    if (smb_->mesh->is<MeshStructured>()) {
-        mesh = smb_->mesh->castTo<MeshStructured>()->getMeshUnstructured();
+    if (inMesh->is<MeshStructured>()) {
+        mesh = inMesh->castTo<MeshStructured>()->getMeshUnstructured();
     } else {
-        mesh = new MeshUnstructured(*smb_->mesh->castTo<MeshUnstructured>());
+        mesh = new MeshUnstructured(*inMesh->castTo<MeshUnstructured>());
     }
     // Writes materials.
     LayerGroup<> lay = mesh->layers();
     for (UInt i = 0; i < lay.size(); i++) {
-        PhysicalModelGroup<PhysicalModel> mat = *smb_->pMGroup;
-        for (UInt j = 0; j < mat.size(); j++) {
-            const MatId matId = mat(j)->getId();
+        for (UInt j = 0; j < mat->size(); j++) {
+            const MatId matId = (*mat)(j)->getId();
             const LayerId layId = lay(i)->getId();
-            const string name = mat(j)->getName() + "@" + lay(i)->getName();
+            const string name = (*mat)(j)->getName() + "@" + lay(i)->getName();
             ElemRGroup elem = mesh->elems().get(matId, layId);
             writeAllElements(elem, name);
         }
     }
     // Writes EM Sources.
-    for (UInt i = 0; i < smb_->emSources->size(); i++) {
-        const EMSource<>* src =  (*smb_->emSources)(i);
-        const string name = "EMSource_" + src->getName();
-        ElemRGroup elem = src->elems();
-        writeAllElements(elem, name);
+    if (srcs != NULL) {
+        for (UInt i = 0; i < srcs->size(); i++) {
+            const EMSource<>* src =  (*srcs)(i);
+            const string name = "EMSource_" + src->getName();
+            ElemRGroup elem = src->elems();
+            writeAllElements(elem, name);
+        }
     }
     // Writes output requests.
-    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
-        const OutRq<>* oRq = (*smb_->outputRequests)(i);
-        const string name = "OutRq_" + oRq->getName();
-        ElemRGroup elem = oRq->elems();
-        writeAllElements(elem, name);
+    if (oRqs != NULL) {
+        for (UInt i = 0; i < oRqs->size(); i++) {
+            const OutRq<>* oRq = (*oRqs)(i);
+            const string name = "OutRq_" + oRq->getName();
+            ElemRGroup elem = oRq->elems();
+            writeAllElements(elem, name);
+        }
     }
     //
     delete mesh;

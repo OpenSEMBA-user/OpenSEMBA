@@ -43,11 +43,11 @@ public:
 protected:
     Id lastId_;
     map<Id, UInt> mapId_;
+    void buildMapId();
+    void clearMapId();
 
 private:
     UInt lastPosMap_;
-    void buildMapId();
-    void clearMapId();
 };
 
 #include "GroupId.hpp"
