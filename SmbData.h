@@ -21,13 +21,14 @@
 
 class SmbData : public virtual ProjectFile {
 public:
-    SolverOptions*        solverOptions;
     MesherOptions*        mesherOptions;
+    Grid3*                grid;
+    Mesh*                 mesh;
+
+    SolverOptions*        solverOptions;
     PhysicalModelGroup<>* pMGroup;
     EMSourceGroup<>*      emSources;
     OutRqGroup<>*         outputRequests;
-    Mesh*                 mesh;
-    Grid3*                grid;
 
     SmbData();
     SmbData(const SmbData& rhs);

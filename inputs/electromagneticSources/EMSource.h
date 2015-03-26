@@ -31,6 +31,7 @@ public:
 
     virtual string getMagnitudeFilename() const;
     virtual string getName() const = 0;
+    virtual ClassBase* clone() const = 0;
 
     void convertToNumerical(const string file,
                             const double step,
@@ -54,7 +55,6 @@ public:
     EMSource() {}
     virtual ~EMSource() {}
 
-    virtual ClassBase* clone() const = 0;
     ElementsGroup<> elems() const {
         return *this;
     }

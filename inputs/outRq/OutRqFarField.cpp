@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "../outRq/OutRqFarField.h"
+#include "OutRqFarField.h"
 
 OutRqFarField::OutRqFarField(const Domain& domain,
                              const string& name,

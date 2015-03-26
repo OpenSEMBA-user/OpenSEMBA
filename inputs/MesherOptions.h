@@ -18,7 +18,6 @@ using namespace std;
 class MesherOptions : public Options {
 public:
     typedef enum {
-        none,
         openfoam,
         ugrMesher
     } Mesher;
