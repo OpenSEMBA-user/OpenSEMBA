@@ -3,14 +3,10 @@
 
 #include "Element.h"
 
-template<class T = void>
-class Node;
-
-template<>
-class Node<void> : public virtual Elem {
+class NodeBase : public virtual ElementBase {
 public:
-    Node() {};
-    virtual ~Node() {};
+    NodeBase() {};
+    virtual ~NodeBase() {};
 
     inline UInt numberOfCoordinates() const { return 1; }
     inline UInt numberOfFaces   () const { return 1; }
@@ -20,8 +16,8 @@ public:
 };
 
 template<class T>
-class Node : public Element<T>,
-             public Node<void> {
+class Node : public virtual Element<T>,
+             public virtual NodeBase {
 public:
     Node();
 	Node(const CoordinateGroup< Coordinate<T,3> >&,
@@ -41,7 +37,7 @@ public:
     Node(const Node<T>& rhs);
 	virtual ~Node();
     
-    ClassBase* clone() const;
+    DEFINE_CLONE(Node<T>);
 
     bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
 
@@ -58,12 +54,13 @@ public:
     ElemR* toUnstructured(CoordinateGroup<CoordR3>&, const Grid3&) const;
 
 	void printInfo() const;
+
 private:
 	const Coordinate<T,3>* v_[1];
 };
 
-typedef Node<>     Nod;
-typedef Node<Real> NodeR;
-typedef Node<Int > NodeI;
+typedef NodeBase   Nod;
+typedef Node<Real> NodR;
+typedef Node<Int > NodI;
 
 #endif

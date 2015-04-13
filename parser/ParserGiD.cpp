@@ -173,7 +173,7 @@ ParserGiD::readMesherOptions() {
                     res->setSigma(trim(value));
                 } else if (label.compare("Location in mesh")==0) {
                     CoordinateId id(atoi(value.c_str()));
-//                    res->setLocationInMesh(*cG_.getPtrToId(id));
+//                    res->setLocationInMesh(*cG_.get(id));
                 } else if (label.compare("Geometry scaling factor") == 0) {
                     res->setScalingFactor(atof(value.c_str()));
                 } else if (label.compare("Upper x bound") == 0) {
@@ -381,7 +381,7 @@ ElementsGroup<Vol> ParserGiD::boundToElemGroup(const string& line) {
     BoxR3 bound = strToBound(line);
     HexR8* hex = new HexR8(*mesh_, ElementId(0), bound);
     mesh_->elems().add(hex, true);
-    ElementsGroup<Vol> elems = mesh_->elems().get(hex->getId());
+    ElementsGroup<Vol> elems = mesh_->elems().getGroupWith(hex->getId());
     return elems;
 }
 
@@ -399,7 +399,7 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                 getNextLabelAndValue(label,value);
                 string name = trim(value);
                 getNextLabelAndValue(label,value);
-                OutRq<>::Type type = strToOutputType(trim(value));
+                OutRqBase::Type type = strToOutputType(trim(value));
                 getNextLabelAndValue(label,value);
                 Domain domain = strToDomain(value);
                 switch (gidOutputType) {
@@ -407,9 +407,9 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                 {
                     getNextLabelAndValue(label,value);
                     CoordinateId coordId(atoi(value.c_str()));
-                    NodeR* node = new NodeR(*mesh_, ElementId(0), &coordId);
+                    NodR* node = new NodR(*mesh_, ElementId(0), &coordId);
                     mesh_->elems().add(node, true);
-                    ElementsGroup<Nod> elems = mesh_->elems().get(node->getId());
+                    ElementsGroup<Nod> elems = mesh_->elems().getGroupWith(node->getId());
                     res->add(new OutRq<Nod>(domain, type, name, elems));
                     break;
                 }
@@ -425,7 +425,7 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     getNextLabelAndValue(label,value);
                     vector<ElementId> ids;
                     ids.push_back(ElementId(atoi(value.c_str())));
-                    ElemRGroup elems = mesh_->elems().get(ids);
+                    ElementsGroup<ElemR> elems = mesh_->elems().getGroupWith(ids);
                     ElementsGroup<Surf> surfs = elems.getGroupOf<Surf>();
                     res->add(new OutRq<Surf>(domain, type, name, surfs));
                     break;
@@ -1000,17 +1000,14 @@ ParserGiD::readPlaneWave() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
-            elems = boundToElemGroup(value);;
+            elems = boundToElemGroup(value);
         } else if (label.compare("Number of elements")==0) {
             UInt nE = atoi(value.c_str());
             elems.reserve(nE);
             for (UInt i = 0; i < nE; i++) {
-                UInt e;
-                f_in >> e;
-                vector<ElementId> ids;
-                ids.push_back(ElementId(e));
-                ElemRGroup elem = mesh_->elems().get(ids);
-                elems.add(elem.getGroupOf<Vol>());
+                ElementId id;
+                f_in >> id;
+                elems = mesh_->elems().getGroupWith(id);
             }
         } else if (label.compare("End of Planewave")==0) {
             return new PlaneWave(mag, elems, dir, pol);
@@ -1037,7 +1034,7 @@ ParserGiD::readDipole() {
         getline(f_in, line);
         if (line.find("End of puntual excitation") == line.npos) {
             ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
-            //            Volume<>* elem = mesh_->elems().getPtrToId(id);
+            //            Volume<>* elem = mesh_->elems().get(id);
             //            elems.add(elem);
         } else
             finished = true;
@@ -1114,9 +1111,7 @@ ParserGiD::readWaveport() {
         cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
-    ElemRGroup elem = mesh_->elems().get(ids);
-    ElementsGroup<Surf> surfs;
-    surfs.add(elem.getGroupOf<Surf>());
+    ElementsGroup<Surf> surfs = mesh_->elems().getGroupWith(ids);
     return new Waveport(mag, surfs, input, shape, excitationMode, mode);
 }
 
@@ -1144,11 +1139,11 @@ ParserGiD::readGenerator() {
                 UInt e;
                 f_in >> e;
                 CoordinateId id = CoordinateId(e);
-                NodeR* node = new NodeR(*mesh_, ElementId(0), &id);
+                NodR* node = new NodR(*mesh_, ElementId(0), &id);
                 mesh_->elems().add(node, true);
                 nodes.push_back(node->getId());
             }
-            elems = mesh_->elems().get(nodes);
+            elems = mesh_->elems().getGroupWith(nodes);
         } else if (label.compare("End of Generator")==0) {
             return new Generator(mag, elems, type, hardness);
         }
@@ -1177,16 +1172,14 @@ ParserGiD::readSourceOnLine() {
             mag = readMagnitude(value);
         } else if (label.compare("Number of elements")==0) {
             UInt nE = atoi(value.c_str());
-            ids.reserve(nE);
+            ids.reserve(ids.size() + nE);
             for (UInt i = 0; i < nE; i++) {
                 UInt e;
                 f_in >> e;
-                vector<ElementId> ids;
                 ids.push_back(ElementId(atoi(value.c_str())));
             }
         } else if (label.compare("End of Source_on_line")==0) {
-            ElemRGroup elems = mesh_->elems().get(ids);
-            ElementsGroup<Lin> lines = elems.getGroupOf<Lin>();
+            ElementsGroup<Lin> lines = mesh_->elems().getGroupWith(ids);
             return new SourceOnLine(mag, lines, type, hardness);
         }
     }
@@ -1200,31 +1193,31 @@ ParserGiD::readSourceOnLine() {
 OutRq<void>::Type ParserGiD::strToOutputType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
-        return OutRq<>::electric;
+        return OutRqBase::electric;
     } else if (str.compare("magneticField")==0) {
-        return OutRq<>::magnetic;
+        return OutRqBase::magnetic;
     } else if (str.compare("electricFieldNormals")==0) {
-        return OutRq<>::electricFieldNormals;
+        return OutRqBase::electricFieldNormals;
     } else if (str.compare("magneticFieldNormals")==0) {
-        return OutRq<>::magneticFieldNormals;
+        return OutRqBase::magneticFieldNormals;
         //	} else if (str.compare("powerDensity")==0) {
         //		return OutputRequest::powerDensity;
         //	} else if (str.compare("power")==0) {
         //		return OutputRequest::power;
     } else if (str.compare("current")==0) {
-        return OutRq<>::current;
+        return OutRqBase::current;
     } else if (str.compare("voltage")==0) {
-        return OutRq<>::voltage;
+        return OutRqBase::voltage;
     } else if (str.compare("bulkCurrentElectric")==0) {
-        return OutRq<>::bulkCurrentElectric;
+        return OutRqBase::bulkCurrentElectric;
     } else if (str.compare("bulkCurrentMagnetic")==0) {
-        return OutRq<>::bulkCurrentMagnetic;
+        return OutRqBase::bulkCurrentMagnetic;
     } else if (str.compare("farField")==0) {
-        return OutRq<>::electric;
+        return OutRqBase::electric;
     } else {
         cerr << endl << "ERROR @ GiDParser::readOutputRequestInstance(): "
                 << "Unrecognized output type: " << str << endl;
-        return OutRq<>::undefined;
+        return OutRqBase::undefined;
     }
 }
 

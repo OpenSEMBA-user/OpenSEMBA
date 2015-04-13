@@ -10,14 +10,10 @@
 
 #include "Volume.h"
 
-template<class T = void>
-class Hex8;
-
-template<>
-class Hex8<void> : public virtual Vol {
+class Hexa8Base : public virtual VolumeBase {
 public:
-    Hex8() {}
-    virtual ~Hex8() {}
+    Hexa8Base() {}
+    virtual ~Hexa8Base() {}
 
     inline bool isQuadratic() const { return false; }
 
@@ -30,24 +26,24 @@ public:
 };
 
 template<class T>
-class Hex8 : public virtual Volume<T>,
-             public virtual Hex8<void> {
+class Hexa8 : public virtual Volume<T>,
+              public virtual Hexa8Base {
 public:
-    Hex8();
-    Hex8(const CoordinateGroup<Coordinate<T,3> >&,
-         const ElementId id,
-         const CoordinateId vId[8],
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-    Hex8(CoordinateGroup<Coordinate<T,3> >&,
-         const ElementId id,
-         const Box<T,3>& box,
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-    Hex8(const Hex8<T>& rhs);
-    virtual ~Hex8();
+    Hexa8();
+    Hexa8(const CoordinateGroup<Coordinate<T,3> >&,
+          const ElementId id,
+          const CoordinateId vId[8],
+          const LayerId layerId = LayerId(0),
+          const MatId   matId   = MatId(0));
+    Hexa8(CoordinateGroup<Coordinate<T,3> >&,
+          const ElementId id,
+          const Box<T,3>& box,
+          const LayerId layerId = LayerId(0),
+          const MatId   matId   = MatId(0));
+    Hexa8(const Hexa8<T>& rhs);
+    virtual ~Hexa8();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(Hexa8<T>);
 
     bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
 
@@ -69,13 +65,15 @@ public:
     ElemR* toUnstructured(CoordinateGroup<CoordR3>&, const Grid3&) const;
 
     void printInfo() const;
+
 private:
     const Coordinate<T,3>* v_[8];
 
     const static Real tolerance;
 };
 
-typedef Hex8<Real> HexR8;
-typedef Hex8<Int > HexI8;
+typedef Hexa8Base   Hex8;
+typedef Hexa8<Real> HexR8;
+typedef Hexa8<Int > HexI8;
 
 #endif /* HEX8_H_ */

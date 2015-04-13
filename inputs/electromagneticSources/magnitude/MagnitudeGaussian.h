@@ -24,7 +24,7 @@ public:
     MagnitudeGaussian(const MagnitudeGaussian& rhs);
     virtual ~MagnitudeGaussian();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(MagnitudeGaussian);
 
     Real getDelay() const;
     Real getFreq() const;

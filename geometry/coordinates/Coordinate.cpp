@@ -37,11 +37,6 @@ Coordinate<T,D>::~Coordinate() {
 
 }
 
-template <class T, Int D>
-ClassBase* Coordinate<T,D>::clone() const {
-   return new Coordinate<T,D>(*this);
-}
-
 template<class T, Int D>
 Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
     if (this == &rhs)
@@ -53,18 +48,39 @@ Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
 }
 
 template<class T, Int D>
-bool Coordinate<T,D>::operator==(const Coordinate& rhs) const {
-    return (ClassIdBase<CoordinateId>::operator==(rhs) &&
-            CartesianVector<T,D>::operator==(rhs));
+bool Coordinate<T,D>::operator==(const ClassCompBase& rhs) const {
+    return ClassCompBase::operator==(rhs);
 }
 
 template<class T, Int D>
-bool Coordinate<T,D>::operator!=(const Coordinate& rhs) const {
-    return !(*this == rhs);
+bool Coordinate<T,D>::operator!=(const ClassCompBase& rhs) const {
+    return ClassCompBase::operator!=(rhs);
 }
 
 template<class T, Int D>
-CartesianVector<T,D> Coordinate<T,D>::pos() const {
+bool Coordinate<T,D>::operator<(const ClassCompBase& rhs) const {
+    if (ClassCompBase::operator<(rhs)) {
+        return true;
+    }
+    const Coordinate<T,D>* rhsPtr = rhs.castTo<Coordinate<T,D> >();
+    if (this->getId() < rhsPtr->getId()) {
+        return true;
+    }
+    for (Int d = 0; d < D; d++) {
+        if (this->pos()(d) < this->pos()(d)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+template<class T, Int D>
+CartesianVector<T,D>& Coordinate<T,D>::pos() {
+    return *this;
+}
+
+template<class T, Int D>
+const CartesianVector<T,D>& Coordinate<T,D>::pos() const {
     return *this;
 }
 
@@ -77,7 +93,7 @@ void Coordinate<T,D>::printInfo() const {
             cout << " , ";
         }
     }
-    cout << ")";
+    cout << ")" << endl;
 }
 
 template class Coordinate<Real,3>;

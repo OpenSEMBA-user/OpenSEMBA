@@ -43,10 +43,6 @@ Polyhedron::~Polyhedron() {
 
 }
 
-ClassBase* Polyhedron::clone() const {
-    return new Polyhedron(*this);
-}
-
 bool Polyhedron::isCurvedFace(const UInt f) const {
     return getFace(f)->isCurved();
 }

@@ -9,20 +9,20 @@
 
 OutRqFarField::OutRqFarField(const Domain& domain,
                              const string& name,
-                             const ElementsGroup<Volume<> >& elem,
+                             const ElementsGroup<Vol>& elem,
                              const Real iTh, const Real fTh, const Real sTh,
                              const Real iPhi, const Real fPhi, const Real sPhi)
 :   Domain(domain),
-    OutRq<void>(electric, name),
-    ElementsGroup<Volume<> >(elem) {
+    OutRqBase(electric, name),
+    ElementsGroup<const Vol>(elem) {
 
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 
 OutRqFarField::OutRqFarField(const OutRqFarField& rhs)
 :   Domain(rhs),
-    OutRq<void>(rhs),
-    ElementsGroup<Volume<> >(rhs) {
+    OutRqBase(rhs),
+    ElementsGroup<const Vol>(rhs) {
 
     initialTheta_ = rhs.initialTheta_;
     finalTheta_ = rhs.finalTheta_;
@@ -36,8 +36,19 @@ OutRqFarField::~OutRqFarField() {
 
 }
 
-ClassBase* OutRqFarField::clone() const {
-   return new OutRqFarField(*this);
+bool OutRqFarField::isSimilar(const ClassCompBase& rhs) const {
+    if(!OutRq<Vol>::isSimilar(rhs)) {
+        return false;
+    }
+    const OutRqFarField* rhsPtr = rhs.castTo<OutRqFarField>();
+    bool isSimilar = true;
+    isSimilar &= initialTheta_ == rhsPtr->initialTheta_;
+    isSimilar &= finalTheta_ == rhsPtr->finalTheta_;
+    isSimilar &= stepTheta_ == rhsPtr->stepTheta_;
+    isSimilar &= initialPhi_ == rhsPtr->initialPhi_;
+    isSimilar &= finalPhi_ == rhsPtr->finalPhi_;
+    isSimilar &= stepPhi_ == rhsPtr->stepPhi_;
+    return isSimilar;
 }
 
 Real OutRqFarField::getInitialTheta() const {

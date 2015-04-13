@@ -33,10 +33,6 @@ PMSurfaceMultilayer::PMSurfaceMultilayer(
    }
 }
 
-ClassBase* PMSurfaceMultilayer::clone() const {
-   return new PMSurfaceMultilayer(*this);
-}
-
 UInt PMSurfaceMultilayer::getNumberOfLayers() const {
    return thickness_.size();
 }

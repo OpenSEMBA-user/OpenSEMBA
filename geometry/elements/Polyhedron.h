@@ -21,7 +21,7 @@ public:
     Polyhedron(const Polyhedron& rhs);
     virtual ~Polyhedron();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(Polyhedron);
 
     bool isCurvedFace(const UInt f) const;
 

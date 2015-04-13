@@ -21,7 +21,7 @@ public:
    virtual UInt
     getLocalId() const = 0;
    virtual void
-    reassignPointers(const ElementsGroup<>& nEG) = 0;
+    reassignPointers(const ElementsGroup<const Elem>& nEG) = 0;
 	virtual void
 	 printInfo() const = 0;
 };

@@ -27,7 +27,7 @@ public:
    UInt
     getVolToF(UInt f) const {return volToF[f];}
    void
-    reassignPointers(const ElementsGroup<>& nEG);
+    reassignPointers(const ElementsGroup<const Elem>& nEG);
    const Tet*
     getVol(UInt f) const {return vol[f];}
    bool

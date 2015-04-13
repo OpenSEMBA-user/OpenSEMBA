@@ -1,22 +1,20 @@
 #ifndef OUTPUTREQUEST_H_
 #define OUTPUTREQUEST_H_
 
-#include <stdio.h>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
-#include <stdlib.h>
 #include <vector>
+
+using namespace std;
 
 #include "Domain.h"
 #include "../../geometry/elements/ElementsGroup.h"
 
-using namespace std;
+#include "ClassGroupBase.h"
 
-template<class T = void>
-class OutRq;
-
-template<>
-class OutRq<void> : public virtual Domain,
-                    public virtual ClassBase {
+class OutRqBase : public virtual Domain,
+                  public virtual ClassGroupBase<Elem> {
 public:
     typedef enum {
         undefined,
@@ -41,30 +39,27 @@ public:
         energy,
     } Type;
 
-    OutRq();
-    OutRq(const Type outputType, const string& name);
-    OutRq(const OutRq& rhs);
-    virtual ~OutRq();
+    OutRqBase();
+    OutRqBase(const Type outputType, const string& name);
+    OutRqBase(const OutRqBase& rhs);
+    virtual ~OutRqBase();
 
     const string& getName() const;
-    OutRq::Type getOutputType() const;
+    OutRqBase::Type getOutputType() const;
 
-//    virtual ElementsGroup<>& elems() = 0;
-    virtual ElementsGroup<> elems() const = 0;
-
-    void printInfo() const;
+    virtual void printInfo() const = 0;
 
 private:
     string name_;
-    OutRq::Type outputType_;
+    OutRqBase::Type outputType_;
 
     string getTypeStr() const;
 };
 
 
 template<class T>
-class OutRq : public virtual OutRq<void>,
-              public virtual ElementsGroup<T> {
+class OutRq : public virtual OutRqBase,
+              public virtual ElementsGroup<const T> {
 public:
     OutRq() {}
     OutRq(const Domain& domain,
@@ -74,21 +69,22 @@ public:
     OutRq(const OutRq& rhs);
     virtual ~OutRq();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(OutRq<T>);
 
-    template<class T2>
-    bool isSimilar(const T2* rhs, const bool rev = false) const;
+    bool isSimilar(const ClassCompBase& rhs) const;
 
-//    ElementsGroup<>&       elems()       { return *this; }
-    ElementsGroup<> elems() const { return *this; }
+    Group<const Elem> elems() const { return *this; }
+
+    void set(const Group<const Elem>&);
+    void add(const Group<const Elem>&);
 
     void printInfo() const;
 };
 
 #include "OutRq.hpp"
 
-typedef OutRq<Nod> OutRqNode;
+typedef OutRq<Nod > OutRqNode;
 typedef OutRq<Surf> OutRqSurface;
-typedef OutRq<Vol> OutRqVolume;
+typedef OutRq<Vol > OutRqVolume;
 
 #endif

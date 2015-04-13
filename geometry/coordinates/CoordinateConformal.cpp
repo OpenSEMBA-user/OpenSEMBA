@@ -41,10 +41,6 @@ CoordinateConformal::~CoordinateConformal() {
 
 }
 
-ClassBase* CoordinateConformal::clone() const {
-    return new CoordinateConformal(*this);
-}
-
 CoordinateConformal& CoordinateConformal::operator=(
         const CoordinateConformal& rhs) {
     if (this == &rhs)
@@ -55,6 +51,17 @@ CoordinateConformal& CoordinateConformal::operator=(
     length_ = rhs.length_;
 
     return *this;
+}
+
+bool CoordinateConformal::operator<(const ClassCompBase& rhs) const {
+    if (!Coordinate<Int,3>::operator<(rhs)) {
+        return false;
+    }
+    const CoordinateConformal* rhsPtr = rhs.castTo<CoordinateConformal>();
+    if (!(this->length_ < rhsPtr->length_)) {
+        return false;
+    }
+    return (this->dir_ < rhsPtr->dir_);
 }
 
 void CoordinateConformal::printInfo() const {

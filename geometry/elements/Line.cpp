@@ -7,14 +7,6 @@
 
 #include "Line.h"
 
-Line<void>::Line() {
-
-}
-
-Line<void>::~Line() {
-
-}
-
 template<class T>
 Line<T>::Line() {
 

@@ -381,12 +381,31 @@ void CartesianVector<T,D>::printInfo() const {
     cout << toStr() << flush;
 }
 
-template<UInt VS>
-CartesianVector<Real,VS> operator/(const CartesianVector<Int,VS>& lhs,
-                                   const Real rhs) {
-    CartesianVector<Real,VS> res;
-    for (UInt i = 0; i < VS; i++) {
+template<Int D>
+CartesianVector<Real,D> operator+(const CartesianVector<Int,D> & lhs,
+                                  const CartesianVector<Real,D>& rhs) {
+    CartesianVector<Real,D> res;
+    for (UInt i = 0; i < D; i++) {
+        res(i) = lhs(i) + rhs(i);
+    }
+    return res;
+}
+
+template<Int D>
+CartesianVector<Real,D> operator/(const CartesianVector<Int,D>& lhs,
+                                  const Real rhs) {
+    CartesianVector<Real,D> res;
+    for (Int i = 0; i < D; i++) {
         res(i) = (Real) lhs(i) / rhs;
+    }
+    return  res;
+}
+
+template<Int D>
+CartesianVector<Real,D> round(const CartesianVector<Real,D>& vec) {
+    CartesianVector<Real,D> res;
+    for (UInt i = 0; i < D; i++) {
+        res(i) = round(vec(i));
     }
     return  res;
 }

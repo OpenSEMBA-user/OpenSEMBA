@@ -22,7 +22,7 @@ Tri3::Tri3(const CoordinateGroup<CoordR3>& coordGr,
     Elem(layerId, matId) {
     
 	for (UInt i = 0; i < geo.np; i++) {
-        v_[i] = coordGr.getPtrToId(vId[i]);
+        v_[i] = coordGr.get(vId[i]);
 	}
 	check();
 }
@@ -50,10 +50,6 @@ Tri3::Tri3(const Tri3& rhs)
 
 Tri3::~Tri3() {
 
-}
-
-ClassBase* Tri3::clone() const {
-    return new Tri3(*this);
 }
 
 const CoordR3* Tri3::getSideV(const UInt f, const UInt i) const {
@@ -114,11 +110,10 @@ void Tri3::check() const {
 
 void Tri3::printInfo() const {
 	cout << "--- Tri3 info ---" << endl;
-	Element::printInfo();
+	ElementBase::printInfo();
 	cout << "Coordinates:" << endl;
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 	    v_[i]->printInfo();
-		cout << endl;
 	}
 }
 

@@ -8,13 +8,13 @@
 #include "Waveport.h"
 
 Waveport::Waveport(const MagnitudeGaussian* magnitude,
-                   const ElementsGroup<Surface<> >& elem,
+                   const ElementsGroup<Surf>& elem,
                    const bool input,
                    const Shape shape,
                    const ExcitationMode excMode,
                    const pair<UInt,UInt> mode)
-:   EMSource<>(magnitude),
-    ElementsGroup<Surface<> >(elem) {
+:   EMSourceBase(magnitude),
+    ElementsGroup<const Surf>(elem) {
 
 	input_ = input;
 	shape_ = shape;
@@ -23,8 +23,8 @@ Waveport::Waveport(const MagnitudeGaussian* magnitude,
 }
 
 Waveport::Waveport(const Waveport& rhs)
-:   EMSource<>(rhs),
-    ElementsGroup<Surface<> >(rhs) {
+:   EMSourceBase(rhs),
+    ElementsGroup<const Surf>(rhs) {
 
     input_ = rhs.input_;
     shape_ = rhs.shape_;
@@ -36,10 +36,10 @@ Waveport::~Waveport() {
 
 }
 
-ClassBase* Waveport::clone() const {
-    return new Waveport(*this);
+const string& Waveport::getName() const {
+    const static string res = "Waveport";
+    return res;
 }
-
 
 Waveport::Shape
 Waveport::getShape() const {
@@ -59,14 +59,10 @@ Waveport::getMode() const {
 
 void Waveport::printInfo() const {
 	cout << "--- Waveport info ---" << endl;
-	EMSource::printInfo();
+	EMSourceBase::printInfo();
 	if (input_) {
 		cout << "- Is input_." << endl;
 	} else {
 		cout << "- Is output." << endl;
 	}
-}
-
-string Waveport::getName() const {
-    return "Waveport";
 }

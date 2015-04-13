@@ -18,10 +18,6 @@ PMPEC::~PMPEC() {
 
 }
 
-ClassBase* PMPEC::clone() const {
-    return new PMPEC(*this);
-}
-
 void
 PMPEC::printInfo() const {
 	cout << "--- PMPEC info ---" << endl;

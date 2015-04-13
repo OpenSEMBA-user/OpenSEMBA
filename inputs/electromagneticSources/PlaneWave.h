@@ -14,14 +14,15 @@ class PlaneWave : public EMSource<Vol> {
 public:
     PlaneWave();
     PlaneWave(const Magnitude* magnitude,
-              ElementsGroup<Volume<> > elem,
+              ElementsGroup<Vol> elem,
               CVecR3 direction,
               CVecR3 polarization);
     PlaneWave(const PlaneWave& rhs);
     virtual ~PlaneWave();
 
-    virtual ClassBase* clone() const;
+    DEFINE_CLONE(PlaneWave);
 
+    const string& getName() const;
     const CVecR3& getPolarization() const;
     const CVecR3& getWaveDirection() const;
     Real getTheta() const;
@@ -30,9 +31,6 @@ public:
     Real getBeta() const;
     CVecR3 getElectricField(const Real time) const;
     pair<CVecR3,CVecR3> getElectromagneticField(const Real time) const;
-    string getName() const;
-
-    void setElements(const ElementsGroup<Volume<> >&);
 
     void printInfo() const;
 

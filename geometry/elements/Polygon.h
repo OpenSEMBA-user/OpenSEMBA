@@ -22,7 +22,7 @@ public:
     Polygon(const Polygon& rhs);
 	virtual ~Polygon();
     
-    ClassBase* clone() const;
+    DEFINE_CLONE(Polygon);
     
 	UInt numberOfFaces      () const;
 	UInt numberOfVertices   () const;
@@ -44,6 +44,7 @@ public:
 	void setV(const UInt i, const CoordR3*);
     
     void printInfo() const;
+
 private:
 	vector<const CoordR3*> v_;
 	// TODO void checkVertexCoplanarity() const;

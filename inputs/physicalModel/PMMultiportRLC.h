@@ -21,11 +21,11 @@ public:
 	 const Real capacitance);
 	virtual ~PMMultiportRLC();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(PMMultiportRLC);
 
 	virtual Real getR() const;
-	virtual Real	 getL() const;
-	virtual Real	 getC() const;
+	virtual Real getL() const;
+	virtual Real getC() const;
 	virtual void printInfo() const;
 private:
 	Real R_, L_, C_;

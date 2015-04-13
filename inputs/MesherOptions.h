@@ -53,6 +53,9 @@ public:
             string scaleFactorValue,
             string swfForze,
             string confOutput);
+
+    DEFINE_CLONE(MesherOptions);
+
     Mesher getMesher() const;
 
     void setMesher(Mesher mesher);

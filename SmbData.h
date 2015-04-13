@@ -19,7 +19,10 @@
 
 #include "ProjectFile.h"
 
-class SmbData : public virtual ProjectFile {
+#include "base/class/ClassBase.h"
+
+class SmbData : public virtual ProjectFile,
+                public virtual ClassBase {
 public:
     SolverOptions*        solverOptions;
     MesherOptions*        mesherOptions;
@@ -33,7 +36,7 @@ public:
     SmbData(const SmbData& rhs);
     virtual ~SmbData();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(SmbData);
 
     SmbData& operator=(const SmbData& rhs);
 

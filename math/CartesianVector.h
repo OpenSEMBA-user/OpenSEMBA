@@ -86,14 +86,20 @@ public:
     virtual void printInfo() const;
 };
 
-template<Int VS>
-CartesianVector<Real,VS> operator/(const CartesianVector<Int,VS>& lhs,
-                                   const Real rhs);
+template<Int D>
+CartesianVector<Real,D> operator+(const CartesianVector<Int ,D>& lhs,
+                                  const CartesianVector<Real,D>& rhs);
+template<Int D>
+CartesianVector<Real,D> operator/(const CartesianVector<Int,D>& lhs,
+                                  const Real rhs);
 
 template <class T, Int D>
 std::ostream& operator<<(ostream& os, const CartesianVector<T,D>& vec) {
    return os << vec.toStr();
 }
+
+template<Int D>
+CartesianVector<Real,D> round(const CartesianVector<Real,D>& vec);
 
 #include "CartesianVector.hpp"
 

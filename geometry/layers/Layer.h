@@ -14,9 +14,9 @@
 
 using namespace std;
 
-#include "../../base/ClassIdBase.h"
+#include "../../base/class/ClassIdBase.h"
 
-CreateId(LayerId);
+CREATE_ID(LayerId);
 
 class Layer : public virtual ClassIdBase<LayerId> {
 public:
@@ -26,7 +26,7 @@ public:
     Layer(const Layer& rhs);
     virtual ~Layer();
 
-    virtual ClassBase* clone() const;
+    DEFINE_CLONE(Layer);
 
     string getName() const;
 

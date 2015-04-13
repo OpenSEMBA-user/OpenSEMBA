@@ -15,7 +15,7 @@ public:
     virtual ~PMSMA();
     PMSMA(const MatId id, const string name);
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(PMSMA);
 
     void printInfo() const;
 };

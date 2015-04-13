@@ -15,7 +15,7 @@ Tri6::Tri6(const CoordinateGroup<CoordR3>& coordGr,
     Elem(layerId, matId) {
 
 	for (UInt i = 0; i < geo.np; i++) {
-        v_[i] = coordGr.getPtrToId(vId[i]);
+        v_[i] = coordGr.get(vId[i]);
 	}
 }
 
@@ -42,10 +42,6 @@ Tri6::Tri6(const Tri6& rhs)
 
 Tri6::~Tri6() {
 
-}
-
-ClassBase* Tri6::clone() const {
-    return new Tri6(*this);
 }
 
 bool Tri6::isCurved() const {
@@ -154,7 +150,6 @@ void Tri6::printInfo() const {
     cout << "Coordinates:" << endl;
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
-        cout << endl;
     }
 }
 

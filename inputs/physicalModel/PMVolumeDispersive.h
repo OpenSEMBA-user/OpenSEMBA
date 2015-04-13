@@ -32,7 +32,7 @@ public:
 	 const vector<complex<Real> >& drudePole,
 	 const vector<complex<Real> >& drudeResidue);
 
-	virtual ClassBase* clone() const;
+    DEFINE_CLONE(PMVolumeDispersive);
 
     UInt getPoleNumber() const;
     complex<Real> getPole(UInt p) const;

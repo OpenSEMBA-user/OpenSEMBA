@@ -10,14 +10,10 @@
 
 #include "Surface.h"
 
-template<class T = void>
-class Quad;
-
-template<>
-class Quad<void> : public virtual Surf {
+class QuadBase : public virtual SurfaceBase {
 public:
-    Quad() {}
-    virtual ~Quad() {}
+    QuadBase() {}
+    virtual ~QuadBase() {}
 
     UInt numberOfFaces   () const { return 4; }
     UInt numberOfVertices() const { return 4; }
@@ -27,13 +23,14 @@ public:
 
 template<class T>
 class Quad : public virtual Surface<T>,
-             public virtual Quad<void> {
+             public virtual QuadBase {
 public:
 	Quad();
     virtual ~Quad();
 };
 
-typedef Quad<Real> QuadR;
-typedef Quad<Int > QuadI;
+typedef QuadBase   Qua;
+typedef Quad<Real> QuaR;
+typedef Quad<Int > QuaI;
 
 #endif /* QUAD4_H_ */

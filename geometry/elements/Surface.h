@@ -12,19 +12,15 @@
 
 using namespace std;
 
-template<class T = void>
-class Surface;
-
-template<>
-class Surface<void> : public virtual Elem {
+class SurfaceBase : public virtual ElementBase {
 public:
-    Surface() {};
-    virtual ~Surface() {};
+    SurfaceBase() {};
+    virtual ~SurfaceBase() {};
 };
 
 template<class T>
 class Surface : public virtual Element<T>,
-                public virtual Surface<void> {
+                public virtual SurfaceBase {
 public:
     Surface();
     virtual ~Surface();
@@ -38,7 +34,7 @@ public:
     virtual void printInfo() const;
 };
 
-typedef Surface<void> Surf;
+typedef SurfaceBase   Surf;
 typedef Surface<Real> SurfR;
 typedef Surface<Int > SurfI;
 

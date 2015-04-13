@@ -18,7 +18,7 @@ public:
 	 const PMMultiport::Type);
 	virtual ~PMMultiportPredefined();
 
-    virtual ClassBase* clone() const;
+    DEFINE_CLONE(PMMultiportPredefined);
 
 	virtual void printInfo() const;
 };

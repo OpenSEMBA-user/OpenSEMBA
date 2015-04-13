@@ -10,24 +10,19 @@
 
 #include "Quad.h"
 
-template<class T = void>
-class Quad4;
-
-template<>
-class Quad4<void> : public virtual Surf {
+class Quad4Base : public virtual SurfaceBase {
 public:
-    Quad4() {}
-    virtual ~Quad4() {}
+    Quad4Base() {}
+    virtual ~Quad4Base() {}
 
     UInt numberOfCoordinates() const { return 4; }
 
     UInt numberOfSideCoordinates(const UInt f = 0) const { return 2; }
-
 };
 
 template<class T>
 class Quad4: public virtual Quad<T>,
-             public virtual Quad4<void> {
+             public virtual Quad4Base {
 public:
     Quad4();
 	Quad4(const CoordinateGroup<Coordinate<T,3> >&,
@@ -43,17 +38,17 @@ public:
     Quad4(const Quad4<T>& rhs);
 	virtual ~Quad4();
     
-	ClassBase* clone() const;
+    DEFINE_CLONE(Quad4<T>);
 
     bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
 
 	const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
 	const Coordinate<T,3>* getSideV(const UInt f,
-	                           const UInt i) const;
+	                                const UInt i) const;
 
 	const Coordinate<T,3>* getVertex    (const UInt i) const;
 	const Coordinate<T,3>* getSideVertex(const UInt f,
-	                                const UInt i) const;
+	                                     const UInt i) const;
 
     void setV(const UInt i, const Coordinate<T,3>*);
 
@@ -68,7 +63,8 @@ private:
 	const Coordinate<T,3>* v_[4];
 };
 
-typedef Quad4<Real> QuadR4;
-typedef Quad4<Int > QuadI4;
+typedef Quad4Base   Qua4;
+typedef Quad4<Real> QuaR4;
+typedef Quad4<Int > QuaI4;
 
 #endif /* QUAD4_H_ */

@@ -17,7 +17,7 @@ public:
 	        const Real rEps, const Real rMu);
 	virtual ~PMVolume();
 
-    virtual ClassBase* clone() const;
+	DEFINE_CLONE(PMVolume);
 
     Real getRelativePermittivity() const;
     Real getPermittivity() const;

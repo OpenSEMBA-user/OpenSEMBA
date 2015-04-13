@@ -25,10 +25,6 @@ PMSurfaceSIBC::~PMSurfaceSIBC() {
 
 }
 
-ClassBase* PMSurfaceSIBC::clone() const {
-   return new PMSurfaceSIBC(*this);
-}
-
 PMSurfaceSIBC&
 PMSurfaceSIBC::operator=(
         const PMSurfaceSIBC &rhs) {

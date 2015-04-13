@@ -22,7 +22,7 @@ public:
          const vector<Real>& elecCond,
          const vector<Real>& magnCond);
 
-   ClassBase* clone() const;
+   DEFINE_CLONE(PMSurfaceMultilayer);
 
    UInt getNumberOfLayers() const;
    string printLayer(const UInt i) const;

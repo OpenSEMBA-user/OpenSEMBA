@@ -1,22 +1,22 @@
 #include "EMSource.h"
 
-EMSource<void>::EMSource() {
+EMSourceBase::EMSourceBase() {
     magnitude_ = NULL;
 }
 
-EMSource<void>::EMSource(const Magnitude* magnitude) {
+EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
     magnitude_ = magnitude;
 }
 
-EMSource<void>::EMSource(const EMSource& rhs) {
-    magnitude_ = rhs.magnitude_->clone()->castTo<Magnitude>();
+EMSourceBase::EMSourceBase(const EMSourceBase& rhs) {
+    magnitude_ = rhs.magnitude_->cloneTo<Magnitude>();
 }
 
-EMSource<void>::~EMSource() {
+EMSourceBase::~EMSourceBase() {
 
 }
 
-string EMSource<void>::getMagnitudeFilename() const {
+string EMSourceBase::getMagnitudeFilename() const {
     const MagnitudeNumerical* mag =
             dynamic_cast<const MagnitudeNumerical*>(magnitude_);
     if (mag != NULL) {
@@ -28,9 +28,9 @@ string EMSource<void>::getMagnitudeFilename() const {
     return string();
 }
 
-void EMSource<void>::convertToNumerical(const string file,
-                                        const double step,
-                                        const double finalTime) {
+void EMSourceBase::convertToNumerical(const string file,
+                                      const double step,
+                                      const double finalTime) {
     if(magnitude_->is<MagnitudeNumerical>()) {
         return;
     }
@@ -39,10 +39,10 @@ void EMSource<void>::convertToNumerical(const string file,
     delete orig;
 }
 
-void EMSource<void>::printInfo() const {
+void EMSourceBase::printInfo() const {
     magnitude_->printInfo();
 }
 
-const Magnitude* EMSource<void>::getMagnitude() const {
+const Magnitude* EMSourceBase::getMagnitude() const {
     return magnitude_;
 }

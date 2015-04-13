@@ -72,13 +72,14 @@ OutputGiD::~OutputGiD() {
     GiD_fClosePostMeshFile(meshFile_);
 }
 
-void OutputGiD::writeAllElements(const ElemRGroup& elem, const string& name) {
-    writeElements(elem.getGroupOf<NodeR>(),  name, GiD_Point, 1);
-    writeElements(elem.getGroupOf<LinR2>(),  name, GiD_Linear, 2);
-    writeElements(elem.getGroupOf<Tri3>(),   name, GiD_Triangle, 3);
-    writeElements(elem.getGroupOf<QuadR4>(), name, GiD_Quadrilateral, 4);
-    writeElements(elem.getGroupOf<Tet4>(),   name, GiD_Tetrahedra, 4);
-    writeElements(elem.getGroupOf<HexR8>(),  name, GiD_Hexahedra, 8);
+void OutputGiD::writeAllElements(const ElementsGroup<const ElemR>& elem,
+                                 const string& name) {
+    writeElements(elem.getGroupOf<NodR>() , name, GiD_Point, 1);
+    writeElements(elem.getGroupOf<LinR2>(), name, GiD_Linear, 2);
+    writeElements(elem.getGroupOf<Tri3>() , name, GiD_Triangle, 3);
+    writeElements(elem.getGroupOf<QuaR4>(), name, GiD_Quadrilateral, 4);
+    writeElements(elem.getGroupOf<Tet4>() , name, GiD_Tetrahedra, 4);
+    writeElements(elem.getGroupOf<HexR8>(), name, GiD_Hexahedra, 8);
 }
 
 void
@@ -93,34 +94,34 @@ OutputGiD::writeMesh(
     if (inMesh->is<MeshStructured>()) {
         mesh = inMesh->castTo<MeshStructured>()->getMeshUnstructured();
     } else {
-        mesh = new MeshUnstructured(*inMesh->castTo<MeshUnstructured>());
+        mesh = inMesh->cloneTo<MeshUnstructured>();
     }
     // Writes materials.
-    LayerGroup<> lay = mesh->layers();
+    LayerGroup<const Layer> lay = mesh->layers();
     for (UInt i = 0; i < lay.size(); i++) {
         for (UInt j = 0; j < mat->size(); j++) {
             const MatId matId = (*mat)(j)->getId();
             const LayerId layId = lay(i)->getId();
             const string name = (*mat)(j)->getName() + "@" + lay(i)->getName();
-            ElemRGroup elem = mesh->elems().get(matId, layId);
+            ElementsGroup<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
             writeAllElements(elem, name);
         }
     }
     // Writes EM Sources.
     if (srcs != NULL) {
         for (UInt i = 0; i < srcs->size(); i++) {
-            const EMSource<>* src =  (*srcs)(i);
+            const EMSourceBase* src =  (*srcs)(i);
             const string name = "EMSource_" + src->getName();
-            ElemRGroup elem = src->elems();
+            ElementsGroup<const ElemR> elem = src->elems();
             writeAllElements(elem, name);
         }
     }
     // Writes output requests.
     if (oRqs != NULL) {
         for (UInt i = 0; i < oRqs->size(); i++) {
-            const OutRq<>* oRq = (*oRqs)(i);
+            const OutRqBase* oRq = (*oRqs)(i);
             const string name = "OutRq_" + oRq->getName();
-            ElemRGroup elem = oRq->elems();
+            ElementsGroup<const ElemR> elem = oRq->elems();
             writeAllElements(elem, name);
         }
     }
@@ -142,7 +143,7 @@ OutputGiD::writeMesh(
 //        Int tmpCounter = coordCounter_;
 //        static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
 //        for (UInt j = 0; j < ids[t].size(); j++) {
-//            const ElemR* e = mesh_->elems().getPtrToId(ids[t][j])->castTo<ElemR>();
+//            const ElemR* e = mesh_->elems().get(ids[t][j])->castTo<ElemR>();
 //            for (Int i = 0; i < nV; i++) {
 //                CVecR3 pos;
 //                if (isLinear) {
@@ -208,7 +209,7 @@ OutputGiD::writeMesh(
 //}
 
 void OutputGiD::writeElements(
-        const ElemRGroup& elem,
+        const ElementsGroup<const ElemR>& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {
@@ -281,7 +282,7 @@ void OutputGiD::writeElements(
 //    for (UInt j = 0; j < bc.size(); j++) {
 //        const UInt id = bc[j]->getCell()->getId();
 //        const UInt f = bc[j]->getFace();
-//        const Element* e = smb_->mesh->elem_.getPtrToId(id);
+//        const Element* e = smb_->mesh->elem_.get(id);
 //        for (Int i = 0; i < nV; i++) {
 //            CVecR3 pos;
 //            if (smb_->mesh->isLinear()) {
@@ -405,11 +406,11 @@ OutputGiD::writeGaussPoints() const {
     //    }
 }
 
-GiD_ResultType OutputGiD::getGiDResultType(OutRq<>::Type type) const {
+GiD_ResultType OutputGiD::getGiDResultType(OutRqBase::Type type) const {
     switch (type) {
-    case OutRq<>::electric:
+    case OutRqBase::electric:
         return GiD_ResultType::GiD_Vector;
-    case OutRq<>::magnetic:
+    case OutRqBase::magnetic:
         return GiD_ResultType::GiD_Vector;
     default:
         assert(false);
@@ -420,7 +421,6 @@ GiD_ResultType OutputGiD::getGiDResultType(OutRq<>::Type type) const {
 GiD_ResultLocation OutputGiD::getGiDResultLocation() const {
     return GiD_ResultLocation::GiD_OnNodes;
 }
-
 
 void OutputGiD::writeCoordinates(const UInt id, const CVecR3 pos) const {
     GiD_fWriteCoordinates(meshFile_, id, pos(x), pos(y), pos(z));

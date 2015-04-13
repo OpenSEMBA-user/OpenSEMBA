@@ -8,29 +8,29 @@
 #ifndef COORDINATE_H_
 #define COORDINATE_H_
 
+#include <cstdlib>
+#include <sstream>
+#include <type_traits>
 #include <vector>
-#include <stdlib.h>
 
 using namespace std;
 
 #include "../math/CartesianVector.h"
 
-#include "../../base/ClassIdBase.h"
+#include "../../base/class/ClassIdBase.h"
+#include "../../base/class/ClassCompBase.h"
 
-CreateId(CoordinateId);
+CREATE_ID(CoordinateId);
 
-template <class T = void, Int D = 0>
-class Coordinate;
-
-template <>
-class Coordinate<void,0> : public virtual ClassIdBase<CoordinateId> {
+class CoordinateBase : public virtual ClassIdBase<CoordinateId>,
+                       public virtual ClassCompBase {
 public:
-    Coordinate() {}
-    virtual ~Coordinate() {}
+    CoordinateBase() {}
+    virtual ~CoordinateBase() {}
 };
 
 template <class T, Int D>
-class Coordinate : public virtual Coordinate<void,0>,
+class Coordinate : public virtual CoordinateBase,
                    public virtual CartesianVector<T,D> {
 public:
     Coordinate();
@@ -39,19 +39,21 @@ public:
     Coordinate(const Coordinate& rhs);
     virtual ~Coordinate();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE((Coordinate<T,D>));
 
     Coordinate& operator=(const Coordinate& rhs);
 
-    bool operator==(const Coordinate& rhs) const;
-    bool operator!=(const Coordinate& rhs) const;
+    bool operator==(const ClassCompBase& rhs) const;
+    bool operator!=(const ClassCompBase& rhs) const;
+    bool operator< (const ClassCompBase& rhs) const;
 
-    CartesianVector<T,D> pos() const;
+    CartesianVector<T,D>& pos();
+    const CartesianVector<T,D>& pos() const;
 
     void printInfo() const;
 };
 
-typedef Coordinate<void, 0> Coord;
+typedef CoordinateBase      Coord;
 typedef Coordinate<Real, 3> CoordR3;
 typedef Coordinate<Int , 3> CoordI3;
 

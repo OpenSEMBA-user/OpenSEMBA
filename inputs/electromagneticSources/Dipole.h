@@ -20,9 +20,9 @@ public:
     Dipole(const Dipole& rhs);
     virtual ~Dipole();
 
-    virtual ClassBase* clone() const;
+    DEFINE_CLONE(Dipole);
 
-    string getName() const;
+    const string& getName() const;
     void printInfo() const;
 protected:
     Real length_;

@@ -8,12 +8,12 @@
 #include "Dipole.h"
 
 Dipole::Dipole(const MagnitudeGaussian* magnitude,
-               const ElementsGroup<Volume<> >& elem,
+               const ElementsGroup<Vol>& elem,
                Real length,
                CVecR3 orientation,
                CVecR3 position)
-:   EMSource<>(magnitude),
-    ElementsGroup<Volume<> >(elem) {
+:   EMSourceBase(magnitude),
+    ElementsGroup<const Vol>(elem) {
 
     length_ = length;
     orientation_ = orientation;
@@ -23,8 +23,8 @@ Dipole::Dipole(const MagnitudeGaussian* magnitude,
 }
 
 Dipole::Dipole(const Dipole& rhs)
-:   EMSource<>(rhs),
-    ElementsGroup<Volume<> >(rhs) {
+:   EMSourceBase(rhs),
+    ElementsGroup<const Vol>(rhs) {
 
     length_ = rhs.length_;
     orientation_ = rhs.orientation_;
@@ -37,13 +37,14 @@ Dipole::~Dipole() {
 
 }
 
-ClassBase* Dipole::clone() const {
-    return new Dipole(*this);
+const string& Dipole::getName() const {
+    const static string res = "Dipole";
+    return res;
 }
 
 void Dipole::printInfo() const {
     cout << " ---- Dipole information ---- " << endl;
-    EMSource<>::printInfo();
+    EMSourceBase::printInfo();
     cout << " - Length: " << length_ << endl;
     cout << " - Orientation vector:";;
     orientation_.printInfo();
@@ -51,8 +52,4 @@ void Dipole::printInfo() const {
     cout << " - Position vector:";
     position_.printInfo();
     cout << endl;
-}
-
-string Dipole::getName() const {
-    return "Dipole";
 }

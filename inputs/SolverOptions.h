@@ -35,6 +35,8 @@ public:
     };
     SolverOptions();
 
+    DEFINE_CLONE(SolverOptions);
+
     Real getFinalTime() const;
     void setFinalTime(Real finalTime);
     Real getSamplingPeriod() const;

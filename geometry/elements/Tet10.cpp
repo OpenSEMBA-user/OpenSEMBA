@@ -22,7 +22,7 @@ Tet10::Tet10(const CoordinateGroup<CoordR3>& coordGr,
     Elem(layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
-        v_[i] = coordGr.getPtrToId(vId[i]);
+        v_[i] = coordGr.get(vId[i]);
     }
     //
     check();
@@ -39,10 +39,6 @@ Tet10::Tet10(const Tet10& rhs)
 
 Tet10::~Tet10() {
 
-}
-
-ClassBase* Tet10::clone() const {
-    return new Tet10(*this);
 }
 
 bool Tet10::isCurved() const {
@@ -120,7 +116,6 @@ void Tet10::printInfo() const {
     cout << "Coordinates:" << endl;
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
-        cout << endl;
     }
 }
 

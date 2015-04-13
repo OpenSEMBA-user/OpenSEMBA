@@ -36,7 +36,7 @@ public:
 	 const BoxR3& bound);
 	~PMVolumePML();
 
-    ClassBase* clone() const;
+	DEFINE_CLONE(PMVolumePML);
 
 	const Direction* getDirection() const;
 	Orientation getOrientation() const;

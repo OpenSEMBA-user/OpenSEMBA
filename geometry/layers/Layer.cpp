@@ -29,10 +29,6 @@ Layer::~Layer() {
 
 }
 
-ClassBase* Layer::clone() const {
-   return new Layer(*this);
-}
-
 string Layer::getName() const {
     return name_;
 }

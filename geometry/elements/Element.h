@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <limits>
+#include <string>
+#include <type_traits>
 #include <vector>
 
 using namespace std;
@@ -12,24 +14,22 @@ using namespace std;
 #include "coordinates/CoordinateGroup.h"
 #include "Box.h"
 #include "Grid.h"
-#include "../../base/IdBase.h"
+#include "../../base/class/IdBase.h"
 #include "../layers/Layer.h"
 
-#include "../../base/ClassIdBase.h"
+#include "../../base/class/ClassIdBase.h"
+#include "../../base/class/ClassCompBase.h"
 
-CreateId(ElementId);
-CreateId(MatId);
+CREATE_ID(ElementId);
+CREATE_ID(MatId);
 
-template<class T = void>
-class Element;
-
-template<>
-class Element<void> : public virtual ClassIdBase<ElementId> {
+class ElementBase : public virtual ClassIdBase<ElementId>,
+                    public virtual ClassCompBase {
 public:
-    Element(const LayerId layId = LayerId(0),
-            const MatId   matId = MatId(0));
-    Element(const Element& rhs);
-    virtual ~Element();
+    ElementBase(const LayerId layId = LayerId(0),
+                const MatId   matId = MatId(0));
+    ElementBase(const ElementBase& rhs);
+    virtual ~ElementBase();
 
     virtual bool isCurved   () const { return false; }
     virtual bool isQuadratic() const { return false; }
@@ -41,27 +41,25 @@ public:
     virtual UInt numberOfSideVertices   (const UInt f = 0) const = 0;
     virtual UInt numberOfSideCoordinates(const UInt f = 0) const = 0;
 
-    LayerId getLayerId() const { return layerId_; }
+    LayerId getLayerId() const { return layId_; }
     MatId   getMatId  () const { return matId_;   }
 
-    virtual void setLayerId(const LayerId layerId) { layerId_= layerId; }
-    virtual void setMatId  (const MatId   matId  ) { matId_  = matId;   }
+    virtual void setLayerId(const LayerId layId) { layId_ = layId; }
+    virtual void setMatId  (const MatId   matId) { matId_ = matId; }
 
     virtual void printInfo() const = 0;
-
 private:
-    LayerId layerId_;
+    LayerId layId_;
     MatId   matId_;
 };
 
 template<class T>
-class Element : public virtual Element<void> {
+class Element : public virtual ElementBase {
 public:
     Element();
     virtual ~Element();
 
-    bool operator==(const Element<T>& rhs) const;
-    bool operator!=(const Element<T>& rhs) const;
+    bool operator<(const ClassCompBase& rhs) const;
 
     bool isCoordinate(const Coordinate<T,3>* coord) const;
 
@@ -90,8 +88,6 @@ public:
     virtual Element<Real>* toUnstructured(CoordinateGroup<CoordR3>&,
                                           const Grid3&) const;
 
-    void printInfo() const;
-
 protected:
     void ascendingOrder(UInt nVal, UInt* val) const;
 
@@ -105,7 +101,7 @@ protected:
 
 };
 
-typedef Element<void> Elem;
+typedef ElementBase   Elem;
 typedef Element<Real> ElemR;
 typedef Element<Int>  ElemI;
 

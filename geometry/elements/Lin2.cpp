@@ -1,24 +1,22 @@
 /*
- * Lin2.cpp
+ * Line2.cpp
  *
  *  Created on: Sep 24, 2013
  *      Author: luis
  */
 
-#ifndef LIN2_H_
 #include "Lin2.h"
-#endif
 
 template<class T>
-const SimplexLin<1> Lin2<T>::lin;
+const SimplexLin<1> Line2<T>::lin;
 
 template<class T>
-Lin2<T>::Lin2() {
+Line2<T>::Line2() {
 
 }
 
 template<class T>
-Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(const CoordinateGroup<Coordinate<T,3> >& cG,
               const ElementId id,
               const CoordinateId vId[2],
               const LayerId layerId,
@@ -30,7 +28,7 @@ Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& cG,
 }
 
 template<class T>
-Lin2<T>::Lin2(const ElementId id,
+Line2<T>::Line2(const ElementId id,
               const Coordinate<T,3>* v[2],
               const LayerId layerId,
               const MatId   matId)
@@ -41,7 +39,7 @@ Lin2<T>::Lin2(const ElementId id,
 }
 
 template<class T>
-Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(CoordinateGroup<Coordinate<T,3> >& cG,
               const ElementId id,
               const Box<T,3>& box,
               const LayerId layerId,
@@ -54,18 +52,18 @@ Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
 
 
 template<class T>
-Lin2<T>::Lin2(const CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(const CoordinateGroup<Coordinate<T,3> >& cG,
               const CoordinateId vId[2]) {
     setCoordinates(cG, vId);
 }
 
 template<class T>
-Lin2<T>::Lin2(const Coordinate<T,3>* v[2]) {
+Line2<T>::Line2(const Coordinate<T,3>* v[2]) {
     setCoordinates(v);
 }
 
 template<class T>
-Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(CoordinateGroup<Coordinate<T,3> >& cG,
               const Box<T,3>& box) {
 
     setCoordinates(cG, box);
@@ -73,7 +71,7 @@ Lin2<T>::Lin2(CoordinateGroup<Coordinate<T,3> >& cG,
 
 
 template<class T>
-Lin2<T>::Lin2(const Lin2<T>& rhs)
+Line2<T>::Line2(const Line2<T>& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
     
@@ -83,17 +81,12 @@ Lin2<T>::Lin2(const Lin2<T>& rhs)
 }
 
 template<class T>
-Lin2<T>::~Lin2() {
+Line2<T>::~Line2() {
 
 }
 
 template<class T>
-ClassBase* Lin2<T>::clone() const {
-    return new Lin2<T>(*this);
-}
-
-template<class T>
-bool Lin2<T>::isStructured(const Grid3& grid, const Real tol) const {
+bool Line2<T>::isStructured(const Grid3& grid, const Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
     }
@@ -107,30 +100,30 @@ bool Lin2<T>::isStructured(const Grid3& grid, const Real tol) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Lin2<T>::getSideV(const UInt f, const UInt i) const {
+const Coordinate<T,3>* Line2<T>::getSideV(const UInt f, const UInt i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Lin2<T>::getVertex(const UInt i) const {
+const Coordinate<T,3>* Line2<T>::getVertex(const UInt i) const {
 	return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Lin2<T>::getSideVertex(const UInt f,
+const Coordinate<T,3>* Line2<T>::getSideVertex(const UInt f,
                                               const UInt i) const {
     return v_[i];
 }
 
 template<class T>
-void Lin2<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
+void Line2<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 
     assert(i < numberOfCoordinates());
     v_[i] = coord;
 }
 
 template<class T>
-ElemI* Lin2<T>::toStructured(CoordinateGroup<CoordI3>& cG,
+ElemI* Line2<T>::toStructured(CoordinateGroup<CoordI3>& cG,
                              const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -146,7 +139,7 @@ ElemI* Lin2<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Lin2<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
+ElemR* Line2<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
                                const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
@@ -162,35 +155,34 @@ ElemR* Lin2<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
 }
 
 template<class T>
-void Lin2<T>::printInfo() const {
+void Line2<T>::printInfo() const {
     cout << "--- Lin2 info ---" << endl;
     Line<T>::printInfo();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
-        cout << endl;
     }
 }
 
 template<class T>
-void Lin2<T>::setCoordinates(const CoordinateGroup<Coordinate<T,3> >& cG,
+void Line2<T>::setCoordinates(const CoordinateGroup<Coordinate<T,3> >& cG,
                              const CoordinateId vId[2]) {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.getPtrToId(vId[i]);
+        v_[i] = cG.get(vId[i]);
     }
 }
 
 template<class T>
-void Lin2<T>::setCoordinates(const Coordinate<T,3>* v[2]) {
+void Line2<T>::setCoordinates(const Coordinate<T,3>* v[2]) {
     for (UInt i = 0; i < lin.np; i++) {
         v_[i] = v[i];
     }
 }
 
 template<class T>
-void Lin2<T>::setCoordinates(CoordinateGroup<Coordinate<T,3> >& cG,
+void Line2<T>::setCoordinates(CoordinateGroup<Coordinate<T,3> >& cG,
                              const Box<T,3>& box) {
     if(!box.isLine()) {
-        cerr << endl << "ERROR @ Lin2::Lin2(): "
+        cerr << endl << "ERROR @ Line2::Line2(): "
                      << "Box is not a Line" << endl;
         assert(false);
         exit(EXIT_FAILURE);
@@ -204,5 +196,5 @@ void Lin2<T>::setCoordinates(CoordinateGroup<Coordinate<T,3> >& cG,
     }
 }
 
-template class Lin2<Real>;
-template class Lin2<Int >;
+template class Line2<Real>;
+template class Line2<Int >;
