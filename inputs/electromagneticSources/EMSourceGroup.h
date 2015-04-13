@@ -15,20 +15,14 @@
 #include "SourceOnLine.h"
 #include "Waveport.h"
 
-template<typename E = EMSource<> >
-class EMSourceGroup : public Group<E> {
+template<typename E = EMSourceBase>
+class EMSourceGroup : public virtual Group<E> {
 public:
-    EMSourceGroup();
-    template<typename E2>
-    EMSourceGroup(const vector<E2*>&);
-    EMSourceGroup(const Group<E>& rhs);
-    template<typename E2>
-    EMSourceGroup(const Group<E2>& rhs);
-    virtual ~EMSourceGroup();
+    USE_GROUP_CONSTRUCTS(EMSourceGroup, E);
 
-    EMSourceGroup<E>& operator=(const Group<E>& rhs);
-    template<typename E2>
-    EMSourceGroup<E>& operator=(const Group<E2>& rhs);
+    DEFINE_GROUP_CLONE(EMSourceGroup, E);
+
+    USE_GROUP_ASSIGN(E);
 
     void printInfo() const;
 };

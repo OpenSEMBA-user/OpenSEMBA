@@ -13,11 +13,12 @@ MapGroup::MapGroup() {
 MapGroup::~MapGroup() {
 }
 
-MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
+MapGroup::MapGroup(const CoordinateGroup<const Coord>& cG,
+                   const ElementsGroup  <const Elem> & eG) {
    // Builds a list with all tetrahedron faces.
    static const UInt faces = 4;
    static const UInt nVert = 3;
-   ElementsGroup<Tet> tet = eG.getGroupOf<Tet>();
+   ElementsGroup<const Tet> tet = eG.getGroupOf<Tet>();
    UInt nK = tet.size();
    UInt nList = nK * faces;
    DynMatrix<UInt> fList(nList, 2 + nVert);
@@ -71,7 +72,7 @@ MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
       const Tet *neigh[4];
       UInt neighFaces[4];
       for (UInt j = 0; j < 4; j++) {
-         neigh[j] = eG.getPtrToId(ElementId(etoe(k,j)))->castTo<Tet>();
+         neigh[j] = eG.get(ElementId(etoe(k,j)))->castTo<Tet>();
          neighFaces[j] = etof(k,j);
       }
       pair<UInt, MapVolume*>
@@ -79,7 +80,7 @@ MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
       tet_.insert(aux);
    }
    // Now uses the generated ordered fList to build the triangle maps.
-   ElementsGroup<Tri> tri = eG.getGroupOf<Tri>();
+   ElementsGroup<const Tri> tri = eG.getGroupOf<Tri>();
    const UInt nS = tri.size();
    for (UInt s = 0; s < nS; s++) {
 	  const Tri* local = tri(s);
@@ -106,10 +107,10 @@ MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
          matches = false;
       }
       if (matches) {
-         neigh.first = eG.getPtrToId(ElementId(fList(i,0)))->castTo<Tet>();
-         neigh.second = eG.getPtrToId(ElementId(fList(i+1,0)))->castTo<Tet>();
+         neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
+         neigh.second = eG.get(ElementId(fList(i+1,0)))->castTo<Tet>();
       } else {
-         neigh.first = eG.getPtrToId(ElementId(fList(i,0)))->castTo<Tet>();
+         neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
          neigh.second = neigh.first;
       }
       pair<UInt, MapSurface*> aux(local->getId(), new MapSurface(local, neigh));
@@ -118,7 +119,7 @@ MapGroup::MapGroup(const CoordinateGroup<>& cG, const ElementsGroup<>& eG) {
 }
 
 void
-MapGroup::reassignPointers(const ElementsGroup<>& newEG) {
+MapGroup::reassignPointers(const ElementsGroup<const Elem>& newEG) {
    {
       map<UInt,MapVolume*>::iterator it;
       for (it=tet_.begin(); it != tet_.end(); ++it) {

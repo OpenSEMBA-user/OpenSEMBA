@@ -2,7 +2,15 @@
 
 template<template<typename> class E>
 ElementsGroup< E<Int> > MeshStructured::add(
-        const ElementsGroup< E<Real> >& rhs,
+        const ElementsGroup<E<Real> >& rhs,
+        const Real tol) {
+    const ElementsGroup<const E<Real> > aux = rhs;
+    return add(aux, tol);
+}
+
+template<template<typename> class E>
+ElementsGroup< E<Int> > MeshStructured::add(
+        const ElementsGroup<const E<Real> >& rhs,
         const Real tol) {
     vector<ElementId> elemIds;
     ElemI* elem;
@@ -11,7 +19,7 @@ ElementsGroup< E<Int> > MeshStructured::add(
         elem = rhs(i)->toStructured(*this, *this, tol);
         if (elem != NULL) {
             if (elems().existId(elem->getId())) {
-                const ElemI* orig = elems().getPtrToId(elem->getId());
+                const ElemI* orig = elems().get(elem->getId());
                 if (*elem != *orig) {
                     elems().add(elem, true);
                 }
@@ -22,7 +30,7 @@ ElementsGroup< E<Int> > MeshStructured::add(
             }
         }
     }
-    return elems().get(elemIds);
+    return elems().getGroupWith(elemIds);
 }
 
 template<template<typename> class E>

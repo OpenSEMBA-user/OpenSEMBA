@@ -1,5 +1,5 @@
 /*
- * Hex8.cpp
+ * Hexa8.cpp
  *
  *  Created on: Sep 24, 2013
  *      Author: luis
@@ -8,15 +8,15 @@
 #include "Hex8.h"
 
 template<class T>
-const Real Hex8<T>::tolerance = 1e-15;
+const Real Hexa8<T>::tolerance = 1e-15;
 
 template<class T>
-Hex8<T>::Hex8() {
+Hexa8<T>::Hexa8() {
 
 }
 
 template<class T>
-Hex8<T>::Hex8(const CoordinateGroup<Coordinate<T,3> >& coordGr,
+Hexa8<T>::Hexa8(const CoordinateGroup<Coordinate<T,3> >& coordGr,
               const ElementId id,
               const CoordinateId vId[8],
               const LayerId layerId,
@@ -25,12 +25,12 @@ Hex8<T>::Hex8(const CoordinateGroup<Coordinate<T,3> >& coordGr,
     Elem(layerId, matId) {
 
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = coordGr.getPtrToId(vId[i]);
+        v_[i] = coordGr.get(vId[i]);
 	}
 }
 
 template<class T>
-Hex8<T>::Hex8(CoordinateGroup<Coordinate<T,3> >& cG,
+Hexa8<T>::Hexa8(CoordinateGroup<Coordinate<T,3> >& cG,
               const ElementId id,
               const Box<T,3>& box,
               const LayerId layerId,
@@ -39,7 +39,7 @@ Hex8<T>::Hex8(CoordinateGroup<Coordinate<T,3> >& cG,
     Elem(layerId, matId) {
 
     if(!box.isVolume()) {
-        cerr << endl << "ERROR @ Hex8::Hex8(): "
+        cerr << endl << "ERROR @ Hexa8::Hexa8(): "
                      << "Box is not a Volume" << endl;
         assert(false);
         exit(EXIT_FAILURE);
@@ -54,7 +54,7 @@ Hex8<T>::Hex8(CoordinateGroup<Coordinate<T,3> >& cG,
 }
 
 template<class T>
-Hex8<T>::Hex8(const Hex8<T>& rhs)
+Hexa8<T>::Hexa8(const Hexa8<T>& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
 
@@ -64,17 +64,12 @@ Hex8<T>::Hex8(const Hex8<T>& rhs)
 }
 
 template<class T>
-Hex8<T>::~Hex8() {
+Hexa8<T>::~Hexa8() {
 
 }
 
 template<class T>
-ClassBase* Hex8<T>::clone() const {
-    return new Hex8<T>(*this);
-}
-
-template<class T>
-bool Hex8<T>::isStructured(const Grid3& grid, const Real tol) const {
+bool Hexa8<T>::isStructured(const Grid3& grid, const Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
     }
@@ -88,7 +83,7 @@ bool Hex8<T>::isStructured(const Grid3& grid, const Real tol) const {
 }
 
 template<class T>
-bool Hex8<T>::isRegular() const {
+bool Hexa8<T>::isRegular() const {
     // Checks that all edges are aligned with one of the axis.
     static const CartesianVector<T,3> xAxe(1.0, 0.0, 0.0);
     static const CartesianVector<T,3> yAxe(0.0, 1.0, 0.0);
@@ -112,7 +107,7 @@ bool Hex8<T>::isRegular() const {
 }
 
 template<class T>
-const Coordinate<T,3>* Hex8<T>::getSideV(const UInt f, const UInt i) const {
+const Coordinate<T,3>* Hexa8<T>::getSideV(const UInt f, const UInt i) const {
     assert(f < numberOfFaces());
     assert(i < numberOfSideCoordinates());
     switch (f) {
@@ -213,19 +208,19 @@ const Coordinate<T,3>* Hex8<T>::getSideV(const UInt f, const UInt i) const {
         }
         break;
     }
-    cerr << "ERROR @ Hex8" << endl;
+    cerr << "ERROR @ Hexa8" << endl;
     cerr << "Side vertex not found." << endl;
     exit(-1);
 }
 
 template<class T>
-const Coordinate<T,3>* Hex8<T>::getSideVertex(const UInt f,
+const Coordinate<T,3>* Hexa8<T>::getSideVertex(const UInt f,
                                               const UInt i) const {
 	return getSideV(f,i);
 }
 
 template<class T>
-Real Hex8<T>::getAreaOfFace(const UInt f) const {
+Real Hexa8<T>::getAreaOfFace(const UInt f) const {
     CartesianVector<T,3> v1, v2;
     v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
     v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
@@ -233,13 +228,13 @@ Real Hex8<T>::getAreaOfFace(const UInt f) const {
 }
 
 template<class T>
-void Hex8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
+void Hexa8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
     assert(i < numberOfCoordinates());
     v_[i] = coord;
 }
 
 template<class T>
-ElemI* Hex8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
+ElemI* Hexa8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
                              const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -255,7 +250,7 @@ ElemI* Hex8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Hex8<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
+ElemR* Hexa8<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
                                const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
@@ -271,13 +266,12 @@ ElemR* Hex8<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
 }
 
 template<class T>
-void Hex8<T>::printInfo() const {
+void Hexa8<T>::printInfo() const {
     cout << "--- Hex8 Info ---" << endl;
     cout << "Id: " << this->getId() << endl;
     cout << "Coordinates:" << endl;
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         getV(i)->printInfo();
-        cout << endl;
     }
     if (isRegular()) {
         cout << "Is regular Hex." << endl;
@@ -286,6 +280,6 @@ void Hex8<T>::printInfo() const {
     }
 }
 
-template class Hex8<Real>;
-template class Hex8<Int >;
+template class Hexa8<Real>;
+template class Hexa8<Int >;
 

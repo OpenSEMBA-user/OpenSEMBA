@@ -24,10 +24,6 @@ PMMultiportRLC::~PMMultiportRLC() {
 
 }
 
-ClassBase* PMMultiportRLC::clone() const {
-   return new PMMultiportRLC(*this);
-}
-
 Real
 PMMultiportRLC::getR() const {
     return R_;

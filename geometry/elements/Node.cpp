@@ -15,7 +15,7 @@ Node<T>::Node(const CoordinateGroup< Coordinate<T,3> >& coordGr,
     Elem(layerId, matId) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = coordGr.getPtrToId(vId[i]);
+        v_[i] = coordGr.get(vId[i]);
 	}
 }
 
@@ -67,11 +67,6 @@ Node<T>::~Node() {
 }
 
 template<class T>
-ClassBase* Node<T>::clone() const {
-    return new Node<T>(*this);
-}
-
-template<class T>
 bool Node<T>::isStructured(const Grid3& grid, const Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
@@ -116,11 +111,11 @@ ElemI* Node<T>::toStructured(CoordinateGroup<CoordI3>& cG,
     if (vIds == NULL) {
         return NULL;
     }
-    ElemI* res =  new NodeI(cG,
-                            this->getId(),
-                            vIds,
-                            this->getLayerId(),
-                            this->getMatId());
+    ElemI* res =  new NodI(cG,
+                           this->getId(),
+                           vIds,
+                           this->getLayerId(),
+                           this->getMatId());
     delete[] vIds;
     return res;
 }
@@ -132,11 +127,11 @@ ElemR* Node<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
     if (vIds == NULL) {
         return NULL;
     }
-    ElemR* res =  new NodeR(cG,
-                            this->getId(),
-                            vIds,
-                            this->getLayerId(),
-                            this->getMatId());
+    ElemR* res =  new NodR(cG,
+                           this->getId(),
+                           vIds,
+                           this->getLayerId(),
+                           this->getMatId());
     delete[] vIds;
     return res;
 }
@@ -147,7 +142,6 @@ void Node<T>::printInfo() const {
 	Element<T>::printInfo();
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		v_[i]->printInfo();
-		cout << endl;
 	}
 }
 

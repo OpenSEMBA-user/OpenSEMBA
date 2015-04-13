@@ -13,14 +13,10 @@
 
 using namespace std;
 
-template<class T = void>
-class Line;
-
-template<>
-class Line<void> : public virtual Elem {
+class LineBase : public virtual ElementBase {
 public:
-    Line();
-    virtual ~Line();
+    LineBase() {}
+    virtual ~LineBase() {}
 
     inline UInt numberOfFaces   () const { return 2; }
     inline UInt numberOfVertices() const { return 2; }
@@ -31,14 +27,14 @@ public:
 
 template<class T>
 class Line : public virtual Element<T>,
-             public virtual Line<void> {
+             public virtual LineBase {
 public:
     Line();
     virtual ~Line();
 };
 
-typedef Line<> Lin;
-typedef Line<Real> LineR;
-typedef Line<Int > LineI;
+typedef LineBase   Lin;
+typedef Line<Real> LinR;
+typedef Line<Int > LinI;
 
 #endif /* LINE_H_ */

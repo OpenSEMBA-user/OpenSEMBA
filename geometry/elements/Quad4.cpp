@@ -22,7 +22,7 @@ Quad4<T>::Quad4(const CoordinateGroup<Coordinate<T,3> >& cG,
     Elem(layerId, matId) {
     
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.getPtrToId(vId[i]);
+        v_[i] = cG.get(vId[i]);
 	}
 	// TODO Normals are not handled.
 	check();
@@ -65,11 +65,6 @@ Quad4<T>::Quad4(const Quad4<T>& rhs)
 template<class T>
 Quad4<T>::~Quad4() {
     
-}
-
-template<class T>
-ClassBase* Quad4<T>::clone() const {
-    return new Quad4<T>(*this);
 }
 
 template<class T>
@@ -119,27 +114,27 @@ ElemI* Quad4<T>::toStructured(CoordinateGroup<CoordI3>& cG,
     if (vIds == NULL) {
         return NULL;
     }
-    Element<Int>* res =  new QuadI4(cG,
-                                    this->getId(),
-                                    vIds,
-                                    this->getLayerId(),
-                                    this->getMatId());
+    Element<Int>* res =  new QuaI4(cG,
+                                   this->getId(),
+                                   vIds,
+                                   this->getLayerId(),
+                                   this->getMatId());
     delete[] vIds;
     return res;
 }
 
 template<class T>
 ElemR* Quad4<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
-                               const Grid3& grid) const {
+                                const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
         return NULL;
     }
-    ElemR* res =  new QuadR4(cG,
-                             this->getId(),
-                             vIds,
-                             this->getLayerId(),
-                             this->getMatId());
+    ElemR* res =  new QuaR4(cG,
+                            this->getId(),
+                            vIds,
+                            this->getLayerId(),
+                            this->getMatId());
     delete[] vIds;
     return res;
 }
@@ -150,7 +145,6 @@ void Quad4<T>::printInfo() const {
 	Quad<T>::printInfo();
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 	    v_[i]->printInfo();
-	    cout << endl;
 	}
 }
 

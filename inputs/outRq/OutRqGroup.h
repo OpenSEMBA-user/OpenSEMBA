@@ -4,27 +4,19 @@
 #include "OutRq.h"
 #include "OutRqFarField.h"
 
-template<typename O = OutRq<> >
-class OutRqGroup : public Group<O> {
+template<typename O = OutRqBase>
+class OutRqGroup : public virtual Group<O> {
 public:
-    OutRqGroup();
-    template<typename O2>
-    OutRqGroup(const vector<O2*>&);
-    OutRqGroup(const Group<O>& rhs);
-    template<typename O2>
-    OutRqGroup(const Group<O2>& rhs);
-    virtual ~OutRqGroup();
+    USE_GROUP_CONSTRUCTS(OutRqGroup, O);
 
-    OutRqGroup<O>& operator=(const Group<O>& rhs);
-    template<typename O2>
-    OutRqGroup<O>& operator=(const Group<O2>& rhs);
+    USE_GROUP_ASSIGN(O);
 
-    template<typename T2>
-    void add(T2* newElem);
-    template<typename T2>
-    void add(vector<T2*>&);
-    template<typename T2>
-    void add(const Group<T2>&);
+    template<typename O2>
+    O* add(O2* newElem);
+    template<typename O2>
+    vector<O*> add(vector<O2*>&);
+    template<typename O2>
+    vector<O*> add(Group<O2>&);
 
     void printInfo() const;
 };

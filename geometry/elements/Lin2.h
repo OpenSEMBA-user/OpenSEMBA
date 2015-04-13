@@ -10,46 +10,42 @@
 
 #include "Line.h"
 
-template<class T = void>
-class Lin2;
-
-template<>
-class Lin2<void> : public virtual Line<void> {
+class Line2Base : public virtual LineBase {
 public:
-    Lin2() {};
-    virtual ~Lin2() {};
+    Line2Base() {};
+    virtual ~Line2Base() {};
 
     inline UInt numberOfCoordinates() const { return 2; }
 };
 
 template<class T>
-class Lin2 : public virtual Line<T>,
-             public virtual Lin2<void> {
+class Line2 : public virtual Line<T>,
+              public virtual Line2Base {
 public:
-    Lin2();
-    Lin2(const CoordinateGroup<Coordinate<T,3> >&,
-         const ElementId id,
-         const CoordinateId vId[2],
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-    Lin2(const ElementId id,
-         const Coordinate<T,3>* v[2],
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-    Lin2(CoordinateGroup<Coordinate<T,3> >&,
-         const ElementId id,
-         const Box<T,3>& box,
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-    Lin2(const CoordinateGroup<Coordinate<T,3> >&,
-         const CoordinateId vId[2]);
-    Lin2(const Coordinate<T,3>* v[2]);
-    Lin2(CoordinateGroup<Coordinate<T,3> >&,
-         const Box<T,3>& box);
-    Lin2(const Lin2<T>& rhs);
-	virtual ~Lin2();
+    Line2();
+    Line2(const CoordinateGroup<Coordinate<T,3> >&,
+          const ElementId id,
+          const CoordinateId vId[2],
+          const LayerId layerId = LayerId(0),
+          const MatId   matId   = MatId(0));
+    Line2(const ElementId id,
+          const Coordinate<T,3>* v[2],
+          const LayerId layerId = LayerId(0),
+          const MatId   matId   = MatId(0));
+    Line2(CoordinateGroup<Coordinate<T,3> >&,
+          const ElementId id,
+          const Box<T,3>& box,
+          const LayerId layerId = LayerId(0),
+          const MatId   matId   = MatId(0));
+    Line2(const CoordinateGroup<Coordinate<T,3> >&,
+          const CoordinateId vId[2]);
+    Line2(const Coordinate<T,3>* v[2]);
+    Line2(CoordinateGroup<Coordinate<T,3> >&,
+          const Box<T,3>& box);
+    Line2(const Line2<T>& rhs);
+    virtual ~Line2();
     
-    ClassBase* clone() const;
+    DEFINE_CLONE(Line2<T>);
 
     bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
 
@@ -68,6 +64,7 @@ public:
     ElemR* toUnstructured(CoordinateGroup<CoordR3>&, const Grid3&) const;
 
     void printInfo() const;
+
 private:
     static const SimplexLin<1> lin;
     const Coordinate<T,3>* v_[2];
@@ -79,7 +76,8 @@ private:
                         const Box<T,3>& box);
 };
 
-typedef Lin2<Real> LinR2;
-typedef Lin2<Int > LinI2;
+typedef Line2Base   Lin2;
+typedef Line2<Real> LinR2;
+typedef Line2<Int > LinI2;
 
 #endif /* LIN2_H_ */

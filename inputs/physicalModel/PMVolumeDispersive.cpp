@@ -50,10 +50,6 @@ PMVolumeDispersive::~PMVolumeDispersive() {
 
 }
 
-ClassBase* PMVolumeDispersive::clone() const {
-   return new PMVolumeDispersive(*this);
-}
-
 UInt PMVolumeDispersive::getDrudePoleNumber() const {
     return drudePole_.size();
 }

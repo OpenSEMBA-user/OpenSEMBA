@@ -15,7 +15,7 @@ public:
 	virtual ~PMPMC();
 	PMPMC(const MatId id, const string name);
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(PMPMC);
 
 	void printInfo() const;
 };

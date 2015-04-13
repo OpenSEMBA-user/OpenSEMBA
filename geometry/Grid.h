@@ -1,3 +1,6 @@
+#ifndef  _GRID_H_
+# define _GRID_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -9,15 +12,14 @@
 #include <cmath>
 #include <iomanip>
 #include <vector>
-#include "Box.h"
 
 using namespace std;
 
-#ifndef  _GRID_H_
-# define _GRID_H_
+#include "Box.h"
+#include "ClassBase.h"
 
 template<Int D>
-class Grid {
+class Grid : public virtual ClassBase {
     typedef Box<Real,D> BoxRD;
     typedef Box<Int ,D> BoxID;
     typedef CartesianVector<Real,D> CVecRD;
@@ -35,6 +37,8 @@ public:
          const vector<Real> step[D]);
     Grid(const Grid& grid);
     ~Grid ();
+
+    DEFINE_CLONE(Grid<D>);
 
     Grid& operator=(const Grid& cGrid);
 

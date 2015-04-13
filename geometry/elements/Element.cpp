@@ -1,20 +1,24 @@
 #include "Element.h"
 
-Element<void>::Element(const LayerId layId,
-                       const MatId   matId)
-:   layerId_(layId),
-    matId_  (matId  ) {
+ElementBase::ElementBase(const LayerId layId,
+                         const MatId   matId) {
+    layId_ = layId;
+    matId_ = matId;
+}
+
+ElementBase::ElementBase(const ElementBase& rhs) {
+    layId_ = rhs.layId_;
+    matId_ = rhs.matId_;
+}
+
+ElementBase::~ElementBase() {
 
 }
 
-Element<void>::Element(const Element& rhs)
-:   layerId_(rhs.layerId_),
-    matId_  (rhs.matId_  ) {
-
-}
-
-Element<void>::~Element() {
-
+void ElementBase::printInfo() const {
+    cout << "Element. Id: " << this->getId()
+         << " MatId: " << this->getMatId()
+         << " LayerId: " << this->getLayerId() << endl;
 }
 
 template<class T>
@@ -28,45 +32,24 @@ Element<T>::~Element() {
 }
 
 template<class T>
-bool Element<T>::operator==(const Element<T>& rhs) const {
-    bool res = true;
-    res &= this->getLayerId() == rhs.getLayerId();
-    res &= this->getMatId() == rhs.getMatId();
-    res &= this->isCurved() == rhs.isCurved();
-    res &= this->isQuadratic() == rhs.isQuadratic();
-    res &= this->numberOfFaces() == rhs.numberOfFaces();
-    res &= this->numberOfVertices() == rhs.numberOfVertices();
-    res &= this->numberOfCoordinates() == rhs.numberOfCoordinates();
-    if (!res) {
-        return false;
+bool Element<T>::operator<(const ClassCompBase& rhs) const {
+    if (ClassCompBase::operator<(rhs)) {
+        return true;
+    }
+    const Element<T>* rhsPtr = rhs.castTo<Element<T> >();
+    if (this->getId() < rhsPtr->getId()) {
+        return true;
     }
     for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        res &= (*this->getV(i) == *rhs.getV(i));
-    }
-    for (UInt i = 0; i < this->numberOfVertices(); i++) {
-        res &= (*this->getVertex(i) == *rhs.getVertex(i));
-    }
-    for (UInt f = 0; f < this->numberOfFaces(); f++) {
-        res &= this->numberOfSideCoordinates(f) ==
-                   rhs.numberOfSideCoordinates(f);
-        res &= this->numberOfSideVertices(f) ==
-                   rhs.numberOfSideVertices(f);
-        if (!res) {
-            return false;
-        }
-        for (UInt i = 0; i < this->numberOfSideCoordinates(f); i++) {
-            res &= (*this->getSideV(f,i) == *rhs.getSideV(f,i));
-        }
-        for (UInt i = 0; i < this->numberOfSideVertices(f); i++) {
-            res &= (*this->getSideVertex(f,i) == *rhs.getSideVertex(f,i));
+        if (*this->getV(i) < *rhsPtr->getV(i)) {
+            return true;
         }
     }
-    return res;
-}
 
-template<class T>
-bool Element<T>::operator!=(const Element<T>& rhs) const {
-    return !(*this == rhs);
+    if (this->getLayerId() < rhsPtr->getLayerId()) {
+        return true;
+    }
+    return (this->getMatId() < rhsPtr->getMatId());
 }
 
 template<class T>
@@ -163,13 +146,6 @@ ElemR* Element<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
 }
 
 template<class T>
-void Element<T>::printInfo() const {
-    cout << "Element. Id: " << this->getId()
-                 << " MatId: " << this->getMatId()
-                 << " LayerId: " << this->getLayerId() << endl;
-}
-
-template<class T>
 void Element<T>::ascendingOrder(UInt nVal, UInt* val) const {
     UInt *res;
     res = new UInt [nVal];
@@ -253,7 +229,7 @@ CoordinateId* Element<T>::vertexToStructured(CoordinateGroup<CoordI3>& cG,
         if (!cG.existId(coordId)) {
             cG.add(new CoordI3(coordId, cell));
         }
-        coord = cG.getPtrToId(coordId);
+        coord = cG.get(coordId);
         if (coord->pos() != cell) {
             cerr << endl << "ERROR @ Element::vertexToStructured(): "
                  << "Existent Coordinate not coincident." << endl;
@@ -281,7 +257,7 @@ CoordinateId* Element<T>::vertexToUnstructured(CoordinateGroup<CoordR3>& cG,
         if (!cG.existId(coordId)) {
             cG.add(new CoordR3(coordId, pos));
         }
-        coord = cG.getPtrToId(coordId);
+        coord = cG.get(coordId);
         if (coord->pos() != pos) {
             cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
                  << "Existent Coordinate not coincident." << endl;

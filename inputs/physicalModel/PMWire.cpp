@@ -21,10 +21,6 @@ PMWire::PMWire(
 PMWire::~PMWire() {
 }
 
-ClassBase* PMWire::clone() const {
-   return new PMWire(*this);
-}
-
 Real
  PMWire::getRadius() const {
 	return radius_;

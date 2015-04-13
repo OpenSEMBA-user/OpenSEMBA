@@ -8,19 +8,19 @@
 #include "SourceOnLine.h"
 
 SourceOnLine::SourceOnLine(const Magnitude* magnitude,
-                           const ElementsGroup<Line<> >& elem,
+                           const ElementsGroup<Lin>& elem,
                            const Type& sourceType,
                            const Hardness& sourceHardness)
-:   EMSource<>(magnitude),
-    ElementsGroup<Line<> >(elem) {
+:   EMSourceBase(magnitude),
+    ElementsGroup<const Lin>(elem) {
 
 	type_ = sourceType;
     hardness_ = sourceHardness;
 }
 
 SourceOnLine::SourceOnLine(const SourceOnLine& rhs)
-:   EMSource<>(rhs),
-    ElementsGroup<Line<> >(rhs) {
+:   EMSourceBase(rhs),
+    ElementsGroup<const Lin>(rhs) {
 
     type_ = rhs.type_;
     hardness_ = rhs.hardness_;
@@ -30,8 +30,9 @@ SourceOnLine::~SourceOnLine() {
 
 }
 
-ClassBase* SourceOnLine::clone() const {
-    return new SourceOnLine(*this);
+const string& SourceOnLine::getName() const {
+    const static string res = "SourceOnLine";
+    return res;
 }
 
 SourceOnLine::Type SourceOnLine::getType() const {
@@ -44,7 +45,7 @@ SourceOnLine::Hardness SourceOnLine::getHardness() const {
 
 void SourceOnLine::printInfo() const {
 	cout<< " --- Nodal info --- " << endl;
-	EMSource::printInfo();
+	EMSourceBase::printInfo();
 	cout<< "Type: " << getTypeStr() << endl;
     cout<< "Hardness: " << getHardnessStr() << endl;
 }
@@ -65,8 +66,4 @@ string SourceOnLine::getHardnessStr() const {
 	default:
 		return "Soft";
 	}
-}
-
-string SourceOnLine::getName() const {
-    return "SourceOnLine";
 }

@@ -19,7 +19,7 @@ public:
     Tri6(const Tri6& rhs);
     virtual ~Tri6();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(Tri6);
 
     bool isCurved   () const;
     bool isQuadratic() const { return true; }

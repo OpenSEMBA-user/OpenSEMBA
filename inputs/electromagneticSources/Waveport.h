@@ -22,7 +22,7 @@ public:
 	} ExcitationMode;
 
 	Waveport(const MagnitudeGaussian* magnitude,
-             const ElementsGroup<Surface<> >& elem,
+             const ElementsGroup<Surf>& elem,
 	         const bool input,
 	         const Shape shape,
 	         const ExcitationMode excMode,
@@ -30,12 +30,12 @@ public:
 	Waveport(const Waveport& rhs);
 	virtual ~Waveport();
 
-	virtual ClassBase* clone() const;
+    DEFINE_CLONE(Waveport);
 
+    const string& getName() const;
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;
 	pair<UInt, UInt> getMode() const;
-	string getName() const;
 
     void printInfo() const;
 private:

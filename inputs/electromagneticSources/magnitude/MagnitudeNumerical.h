@@ -26,7 +26,7 @@ public:
     MagnitudeNumerical(const MagnitudeNumerical& rhs);
     virtual ~MagnitudeNumerical();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(MagnitudeNumerical);
 
     MagnitudeNumerical& operator=(const MagnitudeNumerical& rhs);
 

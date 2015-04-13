@@ -59,10 +59,6 @@ MagnitudeNumerical::~MagnitudeNumerical() {
 
 }
 
-ClassBase* MagnitudeNumerical::clone() const {
-    return new MagnitudeNumerical(*this);
-}
-
 MagnitudeNumerical& MagnitudeNumerical::operator=(
         const MagnitudeNumerical& rhs) {
     if (this == &rhs) {

@@ -22,7 +22,7 @@ public:
     Tet10(const Tet10& rhs);
     virtual ~Tet10();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(Tet10);
 
     bool isCurved() const;
     bool isQuadratic() const {return true;}
@@ -51,6 +51,7 @@ public:
 
     void printInfo() const;
     void check() const;
+
 private:
     static const SimplexTri<2> tri;
     static const SimplexTet<2> tet;

@@ -1,46 +1,44 @@
 #include "OutRq.h"
 
-OutRq<void>::OutRq() {
+OutRqBase::OutRqBase() {
     outputType_ = undefined;
 }
 
-OutRq<void>::OutRq(const OutRq<void>::Type outputType,
-                   const string& name) {
+OutRqBase::OutRqBase(const OutRqBase::Type outputType,
+                     const string& name) {
     name_ = name;
     outputType_ = outputType;
 }
 
-OutRq<void>::OutRq(const OutRq& rhs) {
+OutRqBase::OutRqBase(const OutRqBase& rhs) {
     name_ = rhs.name_;
     outputType_ = rhs.outputType_;
 }
 
-OutRq<void>::~OutRq() {
+OutRqBase::~OutRqBase() {
 
 }
 
-const string& OutRq<void>::getName() const {
+const string& OutRqBase::getName() const {
     return name_;
 }
 
-OutRq<void>::Type OutRq<void>::getOutputType() const {
+OutRqBase::Type OutRqBase::getOutputType() const {
     return outputType_;
 }
 
-Domain OutRq<void>::getDomain() const {
+Domain OutRqBase::getDomain() const {
     return *this;
 }
 
 
-void OutRq<void>::printInfo() const {
-    cout<< "--- Output request instance ---" << endl;
+void OutRqBase::printInfo() const {
     cout<< "Name: " << name_.c_str() << endl;
     cout<< "Type: " << getTypeStr() << endl;
-    this->Domain::printInfo();
-    cout<< "--- End of Output Request Instance ---" << endl;
+    Domain::printInfo();
 }
 
-string OutRq<void>::getTypeStr() const {
+string OutRqBase::getTypeStr() const {
     switch (outputType_) {
     case electric:
         return "Electric field";

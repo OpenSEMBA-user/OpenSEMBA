@@ -14,25 +14,18 @@
 
 using namespace std;
 
-#include "../../base/GroupId.h"
+#include "../../base/group/GroupId.h"
 
 template<typename L = Layer>
-class LayerGroup : public GroupId<L, LayerId> {
+class LayerGroup : public virtual GroupId<L, LayerId> {
 public:
-    LayerGroup();
-    template<typename L2>
-    LayerGroup(const vector<L2*>&);
-    LayerGroup(const Group<L>& rhs);
-    template<typename L2>
-    LayerGroup(const Group<L2>& rhs);
-    virtual ~LayerGroup();
+    USE_GROUP_CONSTRUCTS(LayerGroup, L);
 
-    LayerGroup<L>& operator=(const Group<L>& rhs);
-    template<typename L2>
-    LayerGroup<L>& operator=(const Group<L2>& rhs);
+    DEFINE_GROUP_CLONE(LayerGroup, L);
 
-    LayerGroup<L> get(const LayerId&)         const;
-    LayerGroup<L> get(const vector<LayerId>&) const;
+    USE_GROUP_ASSIGN(L);
+
+    USE_GROUP_GET(L);
     const L* get(const string name) const;
 
     void printInfo() const;

@@ -23,7 +23,7 @@ Polygon::Polygon(const CoordinateGroup<CoordR3>& cG,
 	assert(vId.size() >= 5); // Polygons of 3 or 4 vertices are treated as triangles or quads.
 	v_.resize(vSize);
 	for (UInt i = 0; i < vSize; i++) {
-        v_[i] = cG.getPtrToId(vId[i]);
+        v_[i] = cG.get(vId[i]);
 	}
 }
 
@@ -36,10 +36,6 @@ Polygon::Polygon(const Polygon& rhs)
 
 Polygon::~Polygon() {
     
-}
-
-ClassBase* Polygon::clone() const {
-    return new Polygon(*this);
 }
 
 UInt Polygon::numberOfFaces() const {
@@ -101,7 +97,6 @@ void Polygon::printInfo() const {
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 		cout<< "#" << i << ": ";
 		v_[i]->printInfo();
-		cout<< endl;
 	}
 	cout<< "--- End of polygon info ---" << endl;
 }

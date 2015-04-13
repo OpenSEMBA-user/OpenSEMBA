@@ -31,10 +31,6 @@ MagnitudeGaussian::~MagnitudeGaussian() {
 
 }
 
-ClassBase* MagnitudeGaussian::clone() const {
-    return new MagnitudeGaussian(*this);
-}
-
 Real MagnitudeGaussian::getSpread() const {
    return spread_;
 }

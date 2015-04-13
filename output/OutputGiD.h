@@ -67,7 +67,7 @@ private:
 //            const vector<ElementId>& ids, string& name);
 //    void writeOutputRequestsMesh();
     void writeElements(
-            const ElemRGroup& entities,
+            const ElementsGroup<const ElemR>& entities,
             const string& name,
             const GiD_ElementType type,
             const Int nV);
@@ -81,12 +81,13 @@ private:
     void writeElement(Int elemId, int nId[]) const;
     void endElements() const;
     void endMesh() const;
-    GiD_ResultType getGiDResultType(OutRq<>::Type type) const;
+    GiD_ResultType getGiDResultType(OutRqBase::Type type) const;
     GiD_ResultLocation getGiDResultLocation() const;
     void openPostMeshFile(const string& filename);
     void openPostResultFile(const string& filename);
     void writeMaterialsInLayer(const Layer* lay);
-    void writeAllElements(const ElemRGroup& elem, const string& name);
+    void writeAllElements(const ElementsGroup<const ElemR>& elem,
+                          const string& name);
     void initDefault(GiD_PostMode mode, const string& fn);
 };
 

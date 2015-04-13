@@ -12,7 +12,7 @@
 
 #include "Lin2.h"
 
-class LineConformal : public virtual LinI2 {
+class LineConformal : public virtual Line2<Int> {
 public:
     LineConformal();
     LineConformal(const ElementId id,
@@ -27,7 +27,7 @@ public:
     LineConformal(const LineConformal& rhs);
     virtual ~LineConformal();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(LineConformal);
 
     CVecR3 getNorm () const { return norm_;  }
     Int    getLabel() const { return label_; }

@@ -113,7 +113,7 @@ private:
     void init(const string& pTPath);
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
-    ElementsGroup<Volume<> > boundToElemGroup(const string& line);
+    ElementsGroup<Vol> boundToElemGroup(const string& line);
 };
 
 #endif /* PARSERGID_H_ */

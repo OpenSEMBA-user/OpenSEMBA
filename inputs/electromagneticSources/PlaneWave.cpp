@@ -12,11 +12,11 @@ PlaneWave::PlaneWave() {
 }
 
 PlaneWave::PlaneWave(const Magnitude* magnitude,
-                     ElementsGroup<Volume<> > elem,
+                     ElementsGroup<Vol> elem,
                      CVecR3 direction,
                      CVecR3 polarization)
-:   EMSource<>(magnitude),
-    ElementsGroup<Volume<> >(elem) {
+:   EMSourceBase(magnitude),
+    ElementsGroup<const Vol>(elem) {
 
     direction_ = direction;
     polarization_ = polarization;
@@ -42,8 +42,8 @@ PlaneWave::PlaneWave(const Magnitude* magnitude,
 }
 
 PlaneWave::PlaneWave(const PlaneWave& rhs)
-:   EMSource<>(rhs),
-    ElementsGroup<Volume<> >(rhs) {
+:   EMSourceBase(rhs),
+    ElementsGroup<const Vol>(rhs) {
 
     direction_ = rhs.direction_;
     polarization_ = rhs.polarization_;
@@ -53,8 +53,9 @@ PlaneWave::~PlaneWave() {
 
 }
 
-ClassBase* PlaneWave::clone() const {
-    return new PlaneWave(*this);
+const string& PlaneWave::getName() const {
+    const static string res = "PlaneWave";
+    return res;
 }
 
 const CVecR3& PlaneWave::getPolarization() const {
@@ -94,13 +95,9 @@ PlaneWave::getElectromagneticField(const Real time) const {
     return pair<CVecR3,CVecR3>(electric, magnetic);
 }
 
-void PlaneWave::setElements(const ElementsGroup<Volume<> >& elems) {
-    ElementsGroup<Volume<> >::operator=(elems);
-}
-
 void PlaneWave::printInfo() const {
 	cout<< " --- PlaneWave info --- " << endl;
-	EMSource::printInfo();
+	EMSourceBase::printInfo();
 	cout<< " - Polarization vector: " << polarization_ << endl;
 	cout<< " - Wave direction vector: " << direction_ << endl;
 }
@@ -134,8 +131,4 @@ Real PlaneWave::reduceRadians(const Real radianIn) const {
     nVueltasComp = (Real) floor(nVueltas);
     radianOut = radianIn - nVueltasComp*Val2Pi;
     return  radianOut;
-}
-
-string PlaneWave::getName() const {
-    return "Planewave";
 }

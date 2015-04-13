@@ -14,18 +14,12 @@
 #include "layers/LayerGroup.h"
 #include "Grid.h"
 
-#include "../../base/ClassBase.h"
+#include "../../base/class/ClassBase.h"
 
-class Mesh : public virtual ClassBase,
-             public virtual LayerGroup<> {
+class Mesh : public virtual ClassBase {
 public:
     Mesh();
     ~Mesh();
-
-    Mesh& operator=(const Mesh& rhs);
-
-    LayerGroup<>&       layers()       { return *this; }
-    const LayerGroup<>& layers() const { return *this; }
 
     virtual void applyScalingFactor(const Real factor) = 0;
 };

@@ -12,29 +12,32 @@
 #include "MeshUnstructured.h"
 
 class MeshStructured : public virtual Mesh,
-                       public Grid3,
-                       public CoordinateGroup<CoordI3>,
-                       public ElementsGroup<ElemI> {
+                       public virtual Grid3,
+                       public virtual CoordinateGroup<CoordI3>,
+                       public virtual ElementsGroup<ElemI>,
+                       public virtual LayerGroup<Layer> {
 public:
-    MeshStructured();
+    MeshStructured(const Grid3& grid);
     MeshStructured(const Grid3& grid,
-                   const CoordinateGroup<CoordI3>& cG,
-                   const ElementsGroup<ElemI>& elem,
-                   const LayerGroup<>& layer = LayerGroup<>());
+                   const CoordinateGroup<const CoordI3>& cG,
+                   const ElementsGroup<const ElemI>& elem,
+                   const LayerGroup<const Layer>& layer = LayerGroup<>());
     MeshStructured(const MeshStructured& param);
     virtual ~MeshStructured();
 
     MeshStructured& operator=(const MeshStructured& rhs);
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(MeshStructured);
 
     Grid3&                    grid  () { return *this; }
     CoordinateGroup<CoordI3>& coords() { return *this; }
     ElementsGroup<ElemI>&     elems () { return *this; }
+    LayerGroup<>&             layers() { return *this; }
 
     const Grid3&                    grid  () const { return *this; }
     const CoordinateGroup<CoordI3>& coords() const { return *this; }
     const ElementsGroup<ElemI>&     elems () const { return *this; }
+    const LayerGroup<>&             layers() const { return *this; }
 
     vector<BoxR3> getRectilinearHexesInsideRegion(
             const ElementsGroup<ElemR>& region) const;
@@ -42,7 +45,10 @@ public:
     MeshUnstructured* getMeshUnstructured() const;
 
     template<template<typename> class E>
-    ElementsGroup< E<Int> > add(const ElementsGroup< E<Real> >&,
+    ElementsGroup< E<Int> > add(const ElementsGroup<E<Real> >&,
+                                const Real tol = Grid3::tolerance);
+    template<template<typename> class E>
+    ElementsGroup< E<Int> > add(const ElementsGroup<const E<Real> >&,
                                 const Real tol = Grid3::tolerance);
     template<template<typename> class E>
     ElementsGroup< E<Int> > add(E<Real>*,

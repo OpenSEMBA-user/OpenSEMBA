@@ -23,10 +23,6 @@ ProjectFile::~ProjectFile() {
 
 }
 
-ClassBase* ProjectFile::clone() const {
-    return new ProjectFile(*this);
-}
-
 ProjectFile& ProjectFile::operator=(const ProjectFile& rhs) {
     if (this == &rhs) {
         return *this;

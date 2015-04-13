@@ -24,7 +24,7 @@ public:
 	 const vector<MatR22>& Z);
 	virtual ~PMSurfaceSIBC();
 
-    ClassBase* clone() const;
+	DEFINE_CLONE(PMSurfaceSIBC);
 
 	virtual PMSurfaceSIBC&
      operator=(const PMSurfaceSIBC &param);

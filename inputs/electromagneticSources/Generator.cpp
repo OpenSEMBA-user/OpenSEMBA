@@ -13,29 +13,31 @@ Generator::Generator() {
 }
 
 Generator::Generator(const Magnitude* magnitude,
-                     const ElementsGroup<Node<> >& elems,
+                     ElementsGroup<Nod>& elems,
                      const Type& generatorType,
                      const Hardness& hardness)
-:   EMSource<>(magnitude),
-    ElementsGroup<Node<> >(elems) {
-    hardness_ = hardness;
+:   EMSourceBase(magnitude),
+    ElementsGroup<const Nod>(elems) {
+
     type_ = generatorType;
+    hardness_ = hardness;
 }
 
 Generator::Generator(const Generator& rhs)
-:   EMSource<>(rhs),
-    ElementsGroup<Node<> >(rhs) {
+:   EMSourceBase(rhs),
+    ElementsGroup<const Nod>(rhs) {
 
-    hardness_ = rhs.hardness_;
     type_ = rhs.type_;
+    hardness_ = rhs.hardness_;
 }
 
 Generator::~Generator() {
 
 }
 
-ClassBase* Generator::clone() const {
-    return new Generator(*this);
+const string& Generator::getName() const {
+    const static string res = "Generator";
+    return res;
 }
 
 Generator::Type
@@ -46,7 +48,7 @@ Generator::getType() const {
 void
 Generator::printInfo() const {
     cout<< " --- Generator info --- " << endl;
-    EMSource::printInfo();
+    EMSourceBase::printInfo();
     cout<< "Type: " << getTypeStr() << endl;
 }
 
@@ -58,8 +60,4 @@ Generator::getTypeStr() const {
     default:
         return "Current";
     }
-}
-
-string Generator::getName() const {
-    return "Generator";
 }

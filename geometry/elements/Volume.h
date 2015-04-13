@@ -12,19 +12,15 @@
 #include "Surface.h"
 #include "../math/Simplex.h"
 
-template<class T = void>
-class Volume;
-
-template<>
-class Volume<void> : public virtual Elem {
+class VolumeBase : public virtual ElementBase {
 public:
-    Volume() {};
-    virtual ~Volume() {};
+    VolumeBase() {};
+    virtual ~VolumeBase() {};
 };
 
 template<class T>
 class Volume : public virtual Element<T>,
-               public virtual Volume<void> {
+               public virtual VolumeBase {
 public:
 	Volume();
     virtual ~Volume();
@@ -42,7 +38,7 @@ public:
 	UInt getFaceNumber(const Surface<T>*) const;
 };
 
-typedef Volume<void> Vol;
+typedef VolumeBase   Vol;
 typedef Volume<Real> VolR;
 typedef Volume<Int > VolI;
 

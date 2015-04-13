@@ -24,16 +24,12 @@ using namespace std;
 
 #include "Types.h"
 
-#include "base/ClassBase.h"
-
-class ProjectFile : public virtual ClassBase {
+class ProjectFile {
 public:
     ProjectFile();
     ProjectFile(const string& filename);
     ProjectFile(const ProjectFile& rhs);
     virtual ~ProjectFile();
-
-    ClassBase* clone() const;
 
     ProjectFile& operator=(const ProjectFile& rhs);
 

@@ -25,7 +25,7 @@ public:
     Tet4(const Tet4& rhs);
     virtual ~Tet4();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(Tet4);
 
     bool isInnerPoint(const CVecR3& pos) const;
     bool isCurvedFace(const UInt face) const;
@@ -50,6 +50,7 @@ public:
 
     void printInfo() const;
     void check() const;
+
 private:
 	static const SimplexTet<1> tet;
 	const CoordR3* v_[4];

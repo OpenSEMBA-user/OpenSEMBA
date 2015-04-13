@@ -20,7 +20,7 @@ public:
 	 const Real inductance);
 	virtual ~PMWire();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(PMWire);
 
 	virtual Real	 getRadius() const;
 	virtual Real	 getResistance() const;

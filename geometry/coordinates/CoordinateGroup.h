@@ -14,7 +14,8 @@
 using namespace std;
 
 #include "Coordinate.h"
-#include "../../base/GroupId.h"
+#include "../../base/group/GroupId.h"
+#include "../../base/group/GroupComp.h"
 
 struct lexCompareCoord {
     bool operator() (const CoordR3* lhs, const CoordR3* rhs) const {
@@ -42,49 +43,41 @@ struct lexCompareCoord {
 };
 
 template<typename C = Coord>
-class CoordinateGroup : public GroupId<C, CoordinateId> {
+class CoordinateGroup : public virtual GroupId<C, CoordinateId>,
+                        public virtual GroupComp<C> {
 public:
-    CoordinateGroup();
-    template<typename C2>
-    CoordinateGroup(const vector<C2*>&);
-    CoordinateGroup(const vector<CVecR3>&);
-    CoordinateGroup(const Group<C>& rhs);
-    template<typename C2>
-    CoordinateGroup(const Group<C2>& rhs);
-    virtual ~CoordinateGroup();
-    
-    CoordinateGroup<C>& operator=(const Group<C>& rhs);
-    template<typename C2>
-    CoordinateGroup<C>& operator=(const Group<C2>& rhs);
+    USE_GROUP_CONSTRUCTS(CoordinateGroup, C);
 
-    CoordinateGroup<C> get(const CoordinateId&)         const;
-    CoordinateGroup<C> get(const vector<CoordinateId>&) const;
+    CoordinateGroup(const vector<CVecR3>&);
+    CoordinateGroup(const vector<CVecI3>&);
+    
+    DEFINE_GROUP_CLONE(CoordinateGroup, C);
+
+    USE_GROUP_ASSIGN(C);
+
+    USE_GROUPID_GET(C, CoordinateId);
     const CoordR3* get(const CVecR3& pos) const;
     const CoordI3* get(const CVecI3& pos) const;
     
-    template<typename C2>
-    void add(C2* newElem , bool newId = false);
-    template<typename C2>
-    void add(vector<C2*>&, bool newId = false);
-    template<typename C2>
-    void add(const Group<C2>&);
-    CoordR3*         add(const CVecR3&        , const bool canOverlap = false);
-    vector<CoordR3*> add(const vector<CVecR3>&, const bool canOverlap = false);
-    CoordI3*         add(const CVecI3&        , const bool canOverlap = false);
-    vector<CoordI3*> add(const vector<CVecI3>&, const bool canOverlap = false);
+    USE_GROUPID_ADD(C, CoordinateId);
+    C*         add(const CVecR3&        , const bool canOverlap = false);
+    vector<C*> add(const vector<CVecR3>&, const bool canOverlap = false);
+    C*         add(const CVecI3&        , const bool canOverlap = false);
+    vector<C*> add(const vector<CVecI3>&, const bool canOverlap = false);
     
     void applyScalingFactor(const Real factor);
     
     void printInfo() const;
     
+protected:
+    void construct();
+    void destruct ();
+
+    void postprocess(const UInt i);
+
 private:
     multiset<const CoordR3*, lexCompareCoord> indexUnstr_;
     multiset<const CoordI3*, lexCompareCoord> indexStr_;
-    
-    UInt lastPosIndex_;
-    void buildIndex();
-    void clearIndex();
-
 };
 
 #include "CoordinateGroup.hpp"

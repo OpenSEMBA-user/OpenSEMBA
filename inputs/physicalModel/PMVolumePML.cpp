@@ -36,10 +36,6 @@ PMVolumePML::~PMVolumePML() {
 
 }
 
-ClassBase* PMVolumePML::clone() const {
-   return new PMVolumePML(*this);
-}
-
 const PMVolumePML::Direction*
 PMVolumePML::getDirection() const {
 	return direction;

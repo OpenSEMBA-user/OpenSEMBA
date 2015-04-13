@@ -6,8 +6,16 @@ OutRq<T>::OutRq(const Domain& domain,
                 const string& name,
                 const ElementsGroup<T>& elems)
 :   Domain(domain),
-    OutRq<void>(outputType, name),
-    ElementsGroup<T>(elems) {
+    OutRqBase(outputType, name),
+    ElementsGroup<const T>(elems) {
+
+}
+
+template<class T>
+OutRq<T>::OutRq(const OutRq<T>& rhs)
+:   Domain(rhs),
+    OutRqBase(rhs),
+    ElementsGroup<const T>(rhs) {
 
 }
 
@@ -16,37 +24,32 @@ OutRq<T>::~OutRq() {
 
 }
 
-template<class T>
-ClassBase* OutRq<T>::clone() const {
-    return new OutRq<T>(*this);
-}
-
-template<class T>
-OutRq<T>::OutRq(const OutRq<T>& rhs)
-:   Domain(rhs),
-    OutRq<void>(rhs),
-    ElementsGroup<T>(rhs) {
-
-}
-
-template <class T> template<class T2>
-bool OutRq<T>::isSimilar(const T2* rhs, const bool rev) const {
-    if (!rhs->is<OutRq<T> >() || !this->is<T2>()) {
+template <class T>
+bool OutRq<T>::isSimilar(const ClassCompBase& rhs) const {
+    if (!ClassCompBase::isSameType(rhs)) {
         return false;
     }
+    const OutRq<T>* rhsPtr = rhs.template castTo<OutRq<T> >();
     bool isSimilar = true;
-    isSimilar &= getName() == rhs->getName();
-    isSimilar &= getOutputType() == rhs->getOutputType();
-    isSimilar &= Domain::operator==(*rhs);
-    if (!rev) {
-        isSimilar &= rhs->isSimilar(this->castTo<T2>(), true);
-    }
+    isSimilar &= getName() == rhsPtr->getName();
+    isSimilar &= getOutputType() == rhsPtr->getOutputType();
+    isSimilar &= Domain::operator==(*rhsPtr);
     return isSimilar;
+}
+
+template <class T>
+void OutRq<T>::set(const Group<const Elem>& elems) {
+    ElementsGroup<const T>::operator=(elems);
+}
+
+template <class T>
+void OutRq<T>::add(const Group<const Elem>& elems) {
+    ElementsGroup<const T>::add(elems);
 }
 
 template<class T>
 inline void OutRq<T>::printInfo() const {
-    cout << " --- OutRq Info --- " << endl;
-    OutRq<void>::printInfo();
-    ElementsGroup<T>::printInfo();
+    cout << " --- Output request instance --- " << endl;
+    OutRqBase::printInfo();
+    ElementsGroup<const T>::printInfo();
 }

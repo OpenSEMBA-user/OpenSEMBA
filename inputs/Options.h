@@ -8,7 +8,9 @@
 #ifndef SRC_COMMON_INPUTS_OPTIONS_H_
 #define SRC_COMMON_INPUTS_OPTIONS_H_
 
-class Options {
+#include "ClassBase.h"
+
+class Options : public virtual ClassBase {
 public:
     virtual ~Options();
 };

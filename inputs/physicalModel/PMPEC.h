@@ -15,7 +15,7 @@ public:
 	PMPEC(const MatId id, const string name);
 	virtual ~PMPEC();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(PMPEC);
 
 	void printInfo() const;
 };

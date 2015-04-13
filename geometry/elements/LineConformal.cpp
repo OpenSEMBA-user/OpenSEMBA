@@ -53,10 +53,6 @@ const CoordConf* LineConformal::getConfV(const UInt i) const {
     return this->getV(i)->castTo<CoordConf>();
 }
 
-ClassBase* LineConformal::clone() const {
-    return new LineConformal(*this);
-}
-
 void LineConformal::setV(const UInt i, const CoordI3* coord) {
     if (!coord->is<CoordConf>()) {
         cerr << endl << "ERROR @ Lin2Conformal::setV(): "
@@ -92,7 +88,7 @@ ElemR* LineConformal::toUnstructured(CoordinateGroup<CoordR3>& cG,
         if (!cG.existId(coordId)) {
             cG.add(new CoordR3(coordId, pos));
         }
-        coord[i] = cG.getPtrToId(coordId);
+        coord[i] = cG.get(coordId);
         if (coord[i]->pos() != pos) {
             cerr << endl << "ERROR @ LineConformal::toUnstructured(): "
                  << "Existent Coordinate not coincident." << endl;

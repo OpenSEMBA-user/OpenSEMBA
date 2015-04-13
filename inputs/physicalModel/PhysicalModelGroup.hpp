@@ -6,67 +6,11 @@
  */
 
 template<typename P>
-PhysicalModelGroup<P>::PhysicalModelGroup() {
-
-}
-
-template<typename P> template<typename P2>
-PhysicalModelGroup<P>::PhysicalModelGroup(const vector<P2*>& elems)
-:   GroupId<P, MatId>(elems) {
-
-}
-
-template<typename P>
-PhysicalModelGroup<P>::PhysicalModelGroup(const Group<P>& rhs)
-:   GroupId<P, MatId>(rhs) {
-
-}
-
-template<typename P> template<typename P2>
-PhysicalModelGroup<P>::PhysicalModelGroup(const Group<P2>& rhs)
-:   GroupId<P, MatId>(rhs) {
-
-}
-
-template<typename P>
-PhysicalModelGroup<P>::~PhysicalModelGroup() {
-
-}
-
-template<typename P>
-PhysicalModelGroup<P>& PhysicalModelGroup<P>::operator=(const Group<P>& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    GroupId<P, MatId>::operator=(rhs);
-
-    return *this;
-}
-
-template<typename P> template<typename P2>
-PhysicalModelGroup<P>& PhysicalModelGroup<P>::operator=(const Group<P2>& rhs) {
-    GroupId<P, MatId>::operator=(rhs);
-
-    return *this;
-}
-
-template<typename P>
 void
 PhysicalModelGroup<P>::printInfo() const {
     cout << "---- Physical Models ----" << endl;
     cout << "Number of physical models: " << this->size() << endl;
-    for (UInt i = 0; i < this->size(); i++) {
-        this->element_[i]->printInfo();
-    }
-}
-
-template<typename P>
-vector<MatId> PhysicalModelGroup<P>::getIds() const {
-    vector<MatId> res;
-    for (UInt i = 0; i < this->size(); i++) {
-        res.push_back(this->element_[i]->getId());
-    }
-    return res;
+    Group<P>::printInfo();
 }
 
 template<typename P>

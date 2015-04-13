@@ -23,16 +23,16 @@ public:
 
     Generator();
     Generator(const Magnitude* magnitude,
-              const ElementsGroup<Node<> >& elem,
+              ElementsGroup<Nod>& elem,
               const Type& generatorType,
               const Hardness& hardness);
     Generator(const Generator& rhs);
     virtual ~Generator();
 
-    virtual ClassBase* clone() const;
+    DEFINE_CLONE(Generator);
 
+    const string& getName() const;
     Type getType() const;
-    string getName() const;
 
     void printInfo() const;
 

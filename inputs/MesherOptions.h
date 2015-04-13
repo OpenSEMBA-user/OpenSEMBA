@@ -19,7 +19,8 @@ class MesherOptions : public Options {
 public:
     typedef enum {
         openfoam,
-        ugrMesher
+        ugrMesher,
+        none
     } Mesher;
     typedef enum {
         structured,
@@ -52,6 +53,9 @@ public:
             string scaleFactorValue,
             string swfForze,
             string confOutput);
+
+    DEFINE_CLONE(MesherOptions);
+
     Mesher getMesher() const;
 
     void setMesher(Mesher mesher);

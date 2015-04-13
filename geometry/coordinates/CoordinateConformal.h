@@ -10,7 +10,7 @@
 
 #include <Coordinate.h>
 
-class CoordinateConformal : public virtual CoordI3 {
+class CoordinateConformal : public virtual Coordinate<Int,3> {
 public:
     CoordinateConformal();
     CoordinateConformal(const CoordinateId id_,
@@ -20,13 +20,14 @@ public:
     CoordinateConformal(const CoordinateConformal& rhs);
     virtual ~CoordinateConformal();
 
-    ClassBase* clone() const;
+    DEFINE_CLONE(CoordinateConformal);
 
     CoordinateConformal& operator=(const CoordinateConformal& rhs);
 
+    bool operator<(const ClassCompBase& rhs) const;
+
     CartesianAxis getDir   () const { return dir_;    }
     Real          getLength() const { return length_; }
-
     void printInfo() const;
 
 private:
