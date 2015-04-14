@@ -166,6 +166,29 @@ Group<const T> Group<T>::getGroupNotOf() const {
     return Group<const T>(getElemsNotOf_<T2>());
 }
 
+template<typename T> template<class T2>
+Group<typename conditional<is_const<T>::value, const T2, T2>::type>
+    Group<T>::getGroupOfOnly() {
+
+    return getGroupWith(getElemsWith_<T2>()).template getGroupOf<T2>();
+}
+
+template<typename T> template<class T2>
+Group<const T2> Group<T>::getGroupOfOnly() const {
+    return getGroupWith(getElemsWith_<T2>()).template getGroupOf<T2>();
+}
+
+template<typename T> template<class T2>
+Group<T> Group<T>::getGroupNotOfOnly() {
+
+    return getGroupWithout(getElemsWith_<T2>());
+}
+
+template<typename T> template<class T2>
+Group<const T> Group<T>::getGroupNotOfOnly() const {
+    return getGroupWithout(getElemsWith_<T2>());
+}
+
 template<typename T>
 Group<T> Group<T>::getGroupWith(const UInt elem) {
     vector<UInt> aux;
@@ -395,6 +418,18 @@ vector<T*> Group<T>::getElemsNotOf_() const {
         }
     }
     return res;
+}
+
+template<typename T> template<class T2>
+vector<UInt> Group<T>::getElemsWith_() const {
+    vector<UInt> elems;
+    elems.reserve(this->size());
+    for(UInt i = 0; i < this->size(); i++) {
+        if (typeid(*this->get(i)) == typeid(T2)) {
+            elems.push_back(i);
+        }
+    }
+    return elems;
 }
 
 template<typename T>

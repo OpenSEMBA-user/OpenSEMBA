@@ -44,6 +44,8 @@ public:
     OutRqBase(const OutRqBase& rhs);
     virtual ~OutRqBase();
 
+    virtual bool isSimilar(const OutRqBase& rhs) const;
+
     const string& getName() const;
     OutRqBase::Type getOutputType() const;
     Domain getDomain() const;
@@ -72,7 +74,7 @@ public:
 
     DEFINE_CLONE(OutRq<T>);
 
-    bool isSimilar(const ClassCompBase& rhs) const;
+    bool isSimilar(const OutRqBase& rhs) const;
 
     Group<const Elem> elems() const { return *this; }
 

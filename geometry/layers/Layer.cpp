@@ -29,6 +29,20 @@ Layer::~Layer() {
 
 }
 
+bool Layer::operator ==(const Layer& rhs) const {
+    if (typeid(*this) != typeid(rhs)) {
+        return false;
+    }
+    bool res = true;
+    res &= (this->getId() == rhs.getId());
+    res &= (this->getName() == rhs.getName());
+    return res;
+}
+
+bool Layer::operator !=(const Layer& rhs) const {
+    return !(*this == rhs);
+}
+
 string Layer::getName() const {
     return name_;
 }

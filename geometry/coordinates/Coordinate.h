@@ -18,15 +18,16 @@ using namespace std;
 #include "../math/CartesianVector.h"
 
 #include "../../base/class/ClassIdBase.h"
-#include "../../base/class/ClassCompBase.h"
 
 CREATE_ID(CoordinateId);
 
-class CoordinateBase : public virtual ClassIdBase<CoordinateId>,
-                       public virtual ClassCompBase {
+class CoordinateBase : public virtual ClassIdBase<CoordinateId> {
 public:
-    CoordinateBase() {}
-    virtual ~CoordinateBase() {}
+    CoordinateBase();
+    virtual ~CoordinateBase();
+
+    virtual bool operator==(const CoordinateBase& rhs) const;
+    virtual bool operator!=(const CoordinateBase& rhs) const;
 };
 
 template <class T, Int D>
@@ -43,9 +44,8 @@ public:
 
     Coordinate& operator=(const Coordinate& rhs);
 
-    bool operator==(const ClassCompBase& rhs) const;
-    bool operator!=(const ClassCompBase& rhs) const;
-    bool operator< (const ClassCompBase& rhs) const;
+    bool operator==(const CoordinateBase& rhs) const;
+    bool operator!=(const CoordinateBase& rhs) const;
 
     CartesianVector<T,D>& pos();
     const CartesianVector<T,D>& pos() const;
@@ -55,6 +55,6 @@ public:
 
 typedef CoordinateBase      Coord;
 typedef Coordinate<Real, 3> CoordR3;
-typedef Coordinate<Int , 3> CoordI3;
+typedef Coordinate<Int, 3> CoordI3;
 
 #endif /* COORDINATE_H_ */

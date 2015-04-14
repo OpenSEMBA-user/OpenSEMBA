@@ -15,7 +15,6 @@ using namespace std;
 
 #include "Coordinate.h"
 #include "../../base/group/GroupId.h"
-#include "../../base/group/GroupComp.h"
 
 struct lexCompareCoord {
     bool operator() (const CoordR3* lhs, const CoordR3* rhs) const {
@@ -43,8 +42,7 @@ struct lexCompareCoord {
 };
 
 template<typename C = Coord>
-class CoordinateGroup : public virtual GroupId<C, CoordinateId>,
-                        public virtual GroupComp<C> {
+class CoordinateGroup : public virtual GroupId<C, CoordinateId> {
 public:
     USE_GROUP_CONSTRUCTS(CoordinateGroup, C);
 

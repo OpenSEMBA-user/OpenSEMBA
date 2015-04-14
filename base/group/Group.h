@@ -71,6 +71,16 @@ public:
     template<class T2>
     Group<const T>  getGroupNotOf() const;
 
+    template<class T2>
+    Group<typename conditional<is_const<T>::value, const T2, T2>::type>
+                    getGroupOfOnly();
+    template<class T2>
+    Group<const T2> getGroupOfOnly() const;
+    template<class T2>
+    Group<T>        getGroupNotOfOnly();
+    template<class T2>
+    Group<const T>  getGroupNotOfOnly() const;
+
     Group<T> getGroupWith(const UInt);
     Group<T> getGroupWith(const vector<UInt>&);
     Group<const T> getGroupWith(const UInt) const;
@@ -124,6 +134,8 @@ private:
     template<typename T2>
     vector<T*>      getElemsNotOf_() const;
 
+    template<class T2>
+    vector<UInt> getElemsWith_() const;
     vector<T*>  getElemsWith_   (const vector<UInt>&) const;
     vector<T*>  getElemsWithout_(const vector<UInt>&) const;
 
@@ -136,26 +148,26 @@ private:
 
 #include "Group.hpp"
 
-#define USE_GROUP_CONSTRUCTS(NAME, T)                           \
-    NAME() {}                                                   \
-    template<typename T2>                                       \
-    NAME(T2*& elems)            { this->add(elems);          }  \
-    template<typename T2>                                       \
-    NAME(vector<T2*>& elems)    { this->add(elems);          }  \
-    NAME(Group<T>& rhs)         { this->add(rhs);            }  \
-    template<typename T2>                                       \
-    NAME(Group<T2>& rhs)        { this->add(rhs);            }  \
-    template<typename T2>                                       \
-    NAME(const Group<T2>& rhs)  { this->add(rhs);            }  \
+#define USE_GROUP_CONSTRUCTS(NAME, T)                               \
+    NAME() {}                                                       \
+    template<typename T2>                                           \
+    NAME(T2*& elems)            { this->add(elems);              }  \
+    template<typename T2>                                           \
+    NAME(vector<T2*>& elems)    { this->add(elems);              }  \
+    NAME(Group<T>& rhs)         { this->add(rhs);                }  \
+    template<typename T2>                                           \
+    NAME(Group<T2>& rhs)        { this->add(rhs);                }  \
+    template<typename T2>                                           \
+    NAME(const Group<T2>& rhs)  { this->add(rhs);                }  \
     NAME(Group<T>&& rhs)        { Group<T>::add(std::move(rhs)); }  \
-    template<typename T2>                                       \
+    template<typename T2>                                           \
     NAME(Group<T2>&& rhs)       { Group<T>::add(std::move(rhs)); }  \
     virtual ~NAME() {}
 
 #define DEFINE_GROUP_CLONE(NAME, T)                         \
     ClassBase* clone() const {                              \
         return new NAME<typename remove_const<T>::type>(    \
-                       this->newGroup());                  \
+                       this->newGroup());                   \
     }
 
 #define USE_GROUP_ASSIGN(T)                         \
@@ -195,6 +207,23 @@ private:
     template<class T2>                                                  \
     Group<const T> getGroupNotOf() const {                              \
         return Group<T>::getGroupNotOf<T2>();                           \
+    }                                                                   \
+    template<class T2>                                                  \
+    Group<typename conditional<is_const<T>::value, const T2, T2>::type> \
+        getGroupOfOnly() {                                              \
+        return Group<T>::getGroupOfOnly<T2>();                          \
+    }                                                                   \
+    template<class T2>                                                  \
+    Group<const T2> getGroupOfOnly() const {                            \
+        return Group<T>::getGroupOfOnly<T2>();                          \
+    }                                                                   \
+    template<class T2>                                                  \
+    Group<T> getGroupNotOfOnly() {                                      \
+        return Group<T>::getGroupNotOfOnly<T2>();                       \
+    }                                                                   \
+    template<class T2>                                                  \
+    Group<const T> getGroupNotOfOnly() const {                          \
+        return Group<T>::getGroupNotOfOnly<T2>();                       \
     }
 
 #define USE_GROUP_GETGROUPWITH(T)                                       \

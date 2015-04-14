@@ -18,18 +18,19 @@ using namespace std;
 #include "../layers/Layer.h"
 
 #include "../../base/class/ClassIdBase.h"
-#include "../../base/class/ClassCompBase.h"
 
 CREATE_ID(ElementId);
 CREATE_ID(MatId);
 
-class ElementBase : public virtual ClassIdBase<ElementId>,
-                    public virtual ClassCompBase {
+class ElementBase : public virtual ClassIdBase<ElementId> {
 public:
     ElementBase(const LayerId layId = LayerId(0),
                 const MatId   matId = MatId(0));
     ElementBase(const ElementBase& rhs);
     virtual ~ElementBase();
+
+    virtual bool operator==(const ElementBase& rhs) const;
+    virtual bool operator!=(const ElementBase& rhs) const;
 
     virtual bool isCurved   () const { return false; }
     virtual bool isQuadratic() const { return false; }
@@ -59,7 +60,7 @@ public:
     Element();
     virtual ~Element();
 
-    bool operator<(const ClassCompBase& rhs) const;
+    bool operator== (const ElementBase& rhs) const;
 
     bool isCoordinate(const Coordinate<T,3>* coord) const;
 

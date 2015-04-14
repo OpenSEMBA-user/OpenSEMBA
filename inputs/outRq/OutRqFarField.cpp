@@ -36,7 +36,7 @@ OutRqFarField::~OutRqFarField() {
 
 }
 
-bool OutRqFarField::isSimilar(const ClassCompBase& rhs) const {
+bool OutRqFarField::isSimilar(const OutRqBase& rhs) const {
     if(!OutRq<Vol>::isSimilar(rhs)) {
         return false;
     }
