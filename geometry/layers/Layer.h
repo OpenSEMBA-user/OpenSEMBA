@@ -28,6 +28,9 @@ public:
 
     DEFINE_CLONE(Layer);
 
+    virtual bool operator==(const Layer& rhs) const;
+    virtual bool operator!=(const Layer& rhs) const;
+
     string getName() const;
 
     virtual string getParentName() const;

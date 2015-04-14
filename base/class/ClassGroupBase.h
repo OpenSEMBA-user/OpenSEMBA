@@ -10,10 +10,10 @@
 
 #include "Group.h"
 
-#include "ClassCompBase.h"
+#include "ClassBase.h"
 
 template<typename T>
-class ClassGroupBase : public virtual ClassCompBase {
+class ClassGroupBase : public virtual ClassBase {
 public:
     ClassGroupBase();
     virtual ~ClassGroupBase();

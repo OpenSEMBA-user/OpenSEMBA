@@ -19,6 +19,17 @@ OutRqBase::~OutRqBase() {
 
 }
 
+bool OutRqBase::isSimilar(const OutRqBase& rhs) const {
+    if (typeid(*this) != typeid(rhs)) {
+        return false;
+    }
+    bool isSimilar = true;
+    isSimilar &= getName() == rhs.getName();
+    isSimilar &= getOutputType() == rhs.getOutputType();
+    isSimilar &= Domain::operator==(rhs);
+    return isSimilar;
+}
+
 const string& OutRqBase::getName() const {
     return name_;
 }

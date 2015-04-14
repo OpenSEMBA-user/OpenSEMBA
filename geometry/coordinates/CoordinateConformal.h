@@ -24,7 +24,7 @@ public:
 
     CoordinateConformal& operator=(const CoordinateConformal& rhs);
 
-    bool operator<(const ClassCompBase& rhs) const;
+    bool operator==(const CoordinateBase& rhs) const;
 
     CartesianAxis getDir   () const { return dir_;    }
     Real          getLength() const { return length_; }

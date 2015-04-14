@@ -15,6 +15,17 @@ ElementBase::~ElementBase() {
 
 }
 
+bool ElementBase::operator==(const ElementBase& rhs) const {
+    if (typeid(*this) == typeid(rhs)) {
+        return true;
+    }
+    return false;
+}
+
+bool ElementBase::operator!=(const ElementBase& rhs) const {
+    return !(*this == rhs);
+}
+
 void ElementBase::printInfo() const {
     cout << "Element. Id: " << this->getId()
          << " MatId: " << this->getMatId()
@@ -32,24 +43,20 @@ Element<T>::~Element() {
 }
 
 template<class T>
-bool Element<T>::operator<(const ClassCompBase& rhs) const {
-    if (ClassCompBase::operator<(rhs)) {
-        return true;
+bool Element<T>::operator==(const ElementBase& rhs) const {
+    if (!ElementBase::operator==(rhs)) {
+        return false;
     }
-    const Element<T>* rhsPtr = rhs.castTo<Element<T> >();
-    if (this->getId() < rhsPtr->getId()) {
-        return true;
-    }
+    const Element<T>* rhsPtr = rhs.castTo<Element<T>>();
+    bool res = true;
+    res &= (this->getId() == rhsPtr->getId());
     for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
-        if (*this->getV(i) < *rhsPtr->getV(i)) {
-            return true;
-        }
+        res &= (*this->getV(i) == *rhsPtr->getV(i));
     }
+    res &= (this->getLayerId() == rhsPtr->getLayerId());
+    res &= (this->getMatId() == rhsPtr->getMatId());
 
-    if (this->getLayerId() < rhsPtr->getLayerId()) {
-        return true;
-    }
-    return (this->getMatId() < rhsPtr->getMatId());
+    return res;
 }
 
 template<class T>

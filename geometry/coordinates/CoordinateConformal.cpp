@@ -53,15 +53,15 @@ CoordinateConformal& CoordinateConformal::operator=(
     return *this;
 }
 
-bool CoordinateConformal::operator<(const ClassCompBase& rhs) const {
-    if (!Coordinate<Int,3>::operator<(rhs)) {
+bool CoordinateConformal::operator==(const CoordinateBase& rhs) const {
+    if (!Coordinate<Int,3>::operator==(rhs)) {
         return false;
     }
     const CoordinateConformal* rhsPtr = rhs.castTo<CoordinateConformal>();
-    if (!(this->length_ < rhsPtr->length_)) {
-        return false;
-    }
-    return (this->dir_ < rhsPtr->dir_);
+    bool res = true;
+    res &= (this->length_ == rhsPtr->length_);
+    res &= (this->dir_ == rhsPtr->dir_);
+    return res;
 }
 
 void CoordinateConformal::printInfo() const {

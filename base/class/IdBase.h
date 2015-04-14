@@ -7,9 +7,9 @@ using namespace std;
 
 #include "Types.h"
 
-#include "ClassCompBase.h"
+#include "ClassBase.h"
 
-class IdBase : public ClassCompBase {
+class IdBase : public ClassBase {
 public:
     IdBase();
     explicit IdBase(const UInt id);
@@ -41,13 +41,6 @@ public:                                                     \
         return *this;                                       \
     }                                                       \
                                                             \
-    bool operator<(const ClassCompBase& rhs) const {        \
-        if (ClassCompBase::operator<(rhs)) {                \
-            return true;                                    \
-        }                                                   \
-        const NAME* rhsPtr = rhs.castTo<NAME>();            \
-        return (id_ < rhsPtr->id_);                         \
-    }                                                       \
     NAME operator+(const NAME& rhs) const {                 \
         return NAME(id_ + rhs.id_);                         \
     }                                                       \
@@ -72,10 +65,6 @@ public:                                                     \
         return copy;                                        \
     }                                                       \
                                                             \
-    const string& getOwnTypeNameStr() const {               \
-        static const string res = #NAME;                    \
-        return res;                                         \
-    }                                                       \
     void printInfo() const {                                \
         cout << "Id (" << id_ << ")";                       \
     }                                                       \

@@ -26,13 +26,11 @@ using namespace std;
 #include "Polyhedron.h"
 
 #include "../../base/group/GroupId.h"
-#include "../../base/group/GroupComp.h"
 
 typedef pair<const VolR*, UInt> Face;
 
 template<typename E = Elem>
-class ElementsGroup : public virtual GroupId<E, ElementId>,
-                      public virtual GroupComp<E> {
+class ElementsGroup : public virtual GroupId<E, ElementId> {
 public:
     USE_GROUP_CONSTRUCTS(ElementsGroup, E);
 
