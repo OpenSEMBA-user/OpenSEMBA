@@ -121,7 +121,6 @@ OutputOpenFoam::triToSTL(
         string solidName(name);
         const MeshUnstructured* mesh = smb_->mesh->castTo<MeshUnstructured>();
         if (mesh->layers().get(layerId) != NULL) {
-            mesh->layers().get(layerId)->printInfo();
             solidName += "@" + mesh->layers().get(layerId)->getName();
         }
         file << "solid " << solidName << endl;
