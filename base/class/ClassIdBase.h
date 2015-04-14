@@ -16,7 +16,7 @@ public:
     Id   getId() const;
     void setId(const Id id);
 
-    bool operator==(const ClassIdBase& rhs) const;
+    virtual bool operator==(const ClassIdBase& rhs) const;
 
 private:
     Id id_;
