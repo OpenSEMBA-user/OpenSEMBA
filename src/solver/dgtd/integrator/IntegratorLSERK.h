@@ -27,7 +27,7 @@ public:
 	IntegratorLSERK(
 	 const MeshVolume& mesh,
 	 const PhysicalModelGroup& pmGroup,
-	 const ArgumentsDGTD* arg);
+	 const OptionsSolverDGTD* arg);
 	void
 	 timeIntegrate(const double time) const;
 protected:

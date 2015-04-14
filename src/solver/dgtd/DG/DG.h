@@ -117,7 +117,7 @@ protected:
 #endif
    void
    init(
-         const ArgumentsDGTD* arg,
+         const OptionsSolverDGTD* arg,
          const PhysicalModelGroup* pm_,
          const CellGroup* cells, Comm* comm_);
    virtual void
@@ -159,7 +159,7 @@ protected:
    virtual void
    buildMaterials(
          const CellGroup& cells,
-         const ArgumentsDGTD* arg) = 0;
+         const OptionsSolverDGTD* arg) = 0;
    virtual void
    computeRHS(
          const uint e1,

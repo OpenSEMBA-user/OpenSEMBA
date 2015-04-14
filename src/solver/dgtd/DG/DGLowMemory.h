@@ -17,7 +17,7 @@ public:
 	 const CellGroup* cells,
 	 const BCGroup* bc,
 	 Comm* comm,
-	 const ArgumentsDGTD* arg);
+	 const OptionsSolverDGTD* arg);
 	virtual ~DGLowMemory();
 	void
 	 printInfo() const;
@@ -95,7 +95,7 @@ private:
 	virtual void
 	 buildMaterials(
 	  const CellGroup& cells,
-	  const ArgumentsDGTD* arg);
+	  const OptionsSolverDGTD* arg);
 
 };
 

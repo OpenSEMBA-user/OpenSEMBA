@@ -23,7 +23,7 @@ public:
 	IntegratorLF2(
 	 const MeshVolume& mesh,
 	 const PhysicalModelGroup& pmGroup,
-	 const ArgumentsDGTD* arg);
+	 const OptionsSolverDGTD* arg);
 	void
 	 setSolver(DG* solver);
 	void

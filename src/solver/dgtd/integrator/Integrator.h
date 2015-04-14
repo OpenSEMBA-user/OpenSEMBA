@@ -68,7 +68,7 @@ protected:
 	 init(
 	  const MeshVolume& mesh,
 	  const PhysicalModelGroup& pmGroup,
-	  const ArgumentsDGTD* arg);
+	  const OptionsSolverDGTD* arg);
 	uint
 	 getNumberOfCellsInTier(const uint tier) const;
 	virtual uint

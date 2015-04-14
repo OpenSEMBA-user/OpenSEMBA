@@ -53,9 +53,9 @@ ParserGiD::printInfo() const {
     cout << "--- End of GiDParser info ---" << endl;
 }
 
-SolverOptions*
+OptionsSolver*
 ParserGiD::readSolverOptions() {
-    SolverOptions* res = new SolverOptions();
+    OptionsSolver* res = new OptionsSolver();
     bool finished = false;
     bool optionsFound = false;
     while (!optionsFound && !f_in.eof()) {
@@ -138,12 +138,12 @@ ParserGiD::readSolverOptions() {
     return res;
 }
 
-MesherOptions*
+OptionsMesher*
 ParserGiD::readMesherOptions() {
     bool finished;
     bool found = false;
     string line, label, value;
-    MesherOptions* res = new MesherOptions();
+    OptionsMesher* res = new OptionsMesher();
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Mesher options") == 0) {
@@ -1263,25 +1263,25 @@ ParserGiD::strToGeneratorHardness(string str) const {
     }
 }
 
-MesherOptions::BoundType
+OptionsMesher::BoundType
 ParserGiD::strToBoundType(string str) const {
     str = trim(str);
     if (str.compare("PEC")==0) {
-        return MesherOptions::pec;
+        return OptionsMesher::pec;
     } else if (str.compare("PMC")==0) {
-        return MesherOptions::pmc;
+        return OptionsMesher::pmc;
     } else if (str.compare("PML")==0) {
-        return MesherOptions::pml;
+        return OptionsMesher::pml;
     } else if (str.compare("Periodic")==0) {
-        return MesherOptions::periodic;
+        return OptionsMesher::periodic;
     } else if (str.compare("MUR1")==0) {
-        return MesherOptions::mur1;
+        return OptionsMesher::mur1;
     } else if (str.compare("MUR2")==0) {
-        return MesherOptions::mur2;
+        return OptionsMesher::mur2;
     } else {
         cerr << endl << "ERROR @ Parser: "
                 << "Unreckognized bound label." << endl;
-        return MesherOptions::undefined;
+        return OptionsMesher::undefined;
     }
 }
 
@@ -1497,114 +1497,114 @@ ParserGiD::readMagnitude(const string typeIn) {
     return NULL;
 }
 
-MesherOptions::Mesher ParserGiD::strToMesher(string str) const {
+OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
     str = trim(str);
     if (str.compare("ugrMesher")==0) {
-        return MesherOptions::ugrMesher;
+        return OptionsMesher::ugrMesher;
     } else if (str.compare("OpenFOAM")==0) {
-        return MesherOptions::openfoam;
+        return OptionsMesher::openfoam;
     } else if (str.compare("None")==0) {
-        return MesherOptions::none;
+        return OptionsMesher::none;
     } else {
         cerr << endl << "ERROR @ Parser: ";
         cerr << endl << "Unreckognized label: " << str<< endl;
-        return MesherOptions::none;
+        return OptionsMesher::none;
     }
 }
 
-MesherOptions::Mode ParserGiD::strToMesherMode(string str) const {
+OptionsMesher::Mode ParserGiD::strToMesherMode(string str) const {
     str = trim(str);
     if (str.compare("Structured")==0) {
-        return MesherOptions::structured;
+        return OptionsMesher::structured;
     } else if (str.compare("Relaxed")==0) {
-        return MesherOptions::relaxed;
+        return OptionsMesher::relaxed;
     } else if (str.compare("Slanted")==0) {
-        return MesherOptions::slanted;
+        return OptionsMesher::slanted;
     } else {
         cerr << endl << "ERROR @ Parser: ";
         cerr << endl << "Unreckognized label: " << str<< endl;
-        return MesherOptions::structured;
+        return OptionsMesher::structured;
     }
 }
 
-SolverOptions::Solver ParserGiD::strToSolver(string str) const {
+OptionsSolver::Solver ParserGiD::strToSolver(string str) const {
     str = trim(str);
     if (str.compare("ugrfdtd")==0) {
-        return SolverOptions::Solver::ugrfdtd;
+        return OptionsSolver::Solver::ugrfdtd;
     } else if (str.compare("cudg3d")==0) {
-        return SolverOptions::Solver::cudg3d;
+        return OptionsSolver::Solver::cudg3d;
     } else if (str.compare("none")==0) {
-        return SolverOptions::Solver::none;
+        return OptionsSolver::Solver::none;
     } else {
         cerr << endl << "ERROR @ Parser: ";
         cerr << endl << "Unreckognized label: " << str<< endl;
-        return SolverOptions::Solver::none;
+        return OptionsSolver::Solver::none;
     }
 }
 
-SolverOptions::CompositeModel
+OptionsSolver::CompositeModel
 ParserGiD::strToCompositeModel(string str) const {
     str = trim(str);
     if (str.compare("Default")==0) {
-        return SolverOptions::CompositeModel::Default;
+        return OptionsSolver::CompositeModel::Default;
     } else if (str.compare("DigFilt")==0) {
-        return SolverOptions::CompositeModel::digFilt;
+        return OptionsSolver::CompositeModel::digFilt;
     } else if (str.compare("MIBC")==0) {
-        return SolverOptions::CompositeModel::MIBC;
+        return OptionsSolver::CompositeModel::MIBC;
     } else if (str.compare("ADE-MIBC")==0) {
-        return SolverOptions::CompositeModel::ADEMIBC;
+        return OptionsSolver::CompositeModel::ADEMIBC;
     } else if (str.compare("URM-MMT")==0) {
-        return SolverOptions::CompositeModel::URMMMT;
+        return OptionsSolver::CompositeModel::URMMMT;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return SolverOptions::CompositeModel::Default;
+        return OptionsSolver::CompositeModel::Default;
     }
 }
 
-SolverOptions::MetalModel
+OptionsSolver::MetalModel
 ParserGiD::strToMetalModel(string str) const {
     str = trim(str);
     if (str.compare("Default")==0) {
-        return SolverOptions::MetalModel::Default;
+        return OptionsSolver::MetalModel::Default;
     } else if (str.compare("Maloney")==0) {
-        return SolverOptions::MetalModel::maloney;
+        return OptionsSolver::MetalModel::maloney;
     } else if (str.compare("Maloney_skin_depth")==0) {
-        return SolverOptions::MetalModel::maloneySkinDepth;
+        return OptionsSolver::MetalModel::maloneySkinDepth;
     } else if (str.compare("Conformal_skin_depth")==0) {
-        return SolverOptions::MetalModel::conformalSkinDepth;
+        return OptionsSolver::MetalModel::conformalSkinDepth;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return SolverOptions::MetalModel::Default;
+        return OptionsSolver::MetalModel::Default;
     }
 }
 
-SolverOptions::WireModel
+OptionsSolver::WireModel
 ParserGiD::strToWireModel(string str) const {
     str = trim(str);
     if (str.compare("Default")==0) {
-        return SolverOptions::WireModel::Default;
+        return OptionsSolver::WireModel::Default;
     } else if (str.compare("Transition")==0) {
-        return SolverOptions::WireModel::transition;
+        return OptionsSolver::WireModel::transition;
     } else if (str.compare("New")==0) {
-        return SolverOptions::WireModel::New;
+        return OptionsSolver::WireModel::New;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return SolverOptions::WireModel::Default;
+        return OptionsSolver::WireModel::Default;
     }
 }
 
-SolverOptions::SelfInductanceModel
+OptionsSolver::SelfInductanceModel
 ParserGiD::strToSelfInductanceModel(string str) const {
     str = trim(str);
     if (str.compare("Boutayeb")==0) {
-        return SolverOptions::SelfInductanceModel::boutayeb;
+        return OptionsSolver::SelfInductanceModel::boutayeb;
     } else if (str.compare("Ledfelt")==0) {
-        return SolverOptions::SelfInductanceModel::ledfelt;
+        return OptionsSolver::SelfInductanceModel::ledfelt;
     } else if (str.compare("Berenger")==0) {
-        return SolverOptions::SelfInductanceModel::berenger;
+        return OptionsSolver::SelfInductanceModel::berenger;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return SolverOptions::SelfInductanceModel::boutayeb;
+        return OptionsSolver::SelfInductanceModel::boutayeb;
     }
 }
 

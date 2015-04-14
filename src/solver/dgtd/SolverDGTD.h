@@ -33,13 +33,13 @@
 class SolverCudg3d : public Solver {
 public:
    SolverCudg3d(SmbData*);
-	SolverCudg3d(const ArgumentsDGTD*);
-	SolverCudg3d(SmbData*, const ArgumentsDGTD*);
+	SolverCudg3d(const OptionsSolverDGTD*);
+	SolverCudg3d(SmbData*, const OptionsSolverDGTD*);
 	~SolverCudg3d();
 	void
 	 run();
 private:
-	const ArgumentsDGTD* arg_;
+	const OptionsSolverDGTD* arg_;
 	SmbData* smb_;
 	Comm *comm_;
 	Integrator *integrator_;
@@ -48,7 +48,7 @@ private:
 	Integrator* initIntegrator(
 	  const MeshVolume* mesh,
 	  const PhysicalModelGroup* pMGroup,
-	  const ArgumentsDGTD* args);
+	  const OptionsSolverDGTD* args);
 	Comm* initMPI();
 	void initOpenMP();
 	void init();

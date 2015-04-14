@@ -5,20 +5,20 @@
 
 SolverCudg3d::SolverCudg3d(
       SmbData* smb,
-      const ArgumentsDGTD* arg) {
+      const OptionsSolverDGTD* arg) {
    arg_ = arg;
    smb_ = smb;
    init();
 }
 
-SolverCudg3d::SolverCudg3d(const ArgumentsDGTD* arg) {
+SolverCudg3d::SolverCudg3d(const OptionsSolverDGTD* arg) {
    arg_ = arg;
    smb_ = NULL;
    init();
 }
 
 SolverCudg3d::SolverCudg3d(SmbData* smb) {
-   arg_ = new ArgumentsDGTD();
+   arg_ = new OptionsSolverDGTD();
    smb_ = smb;
    init();
 }
@@ -90,22 +90,22 @@ Integrator*
 SolverCudg3d::initIntegrator(
       const MeshVolume* mesh,
       const PhysicalModelGroup* pMGroup,
-      const ArgumentsDGTD* arg) {
+      const OptionsSolverDGTD* arg) {
    Integrator* res;
    switch (arg->getTimeIntegrator()) {
-   case ArgumentsDGTD::lserk4:
+   case OptionsSolverDGTD::lserk4:
       cout<< "- Initializing LSERK Integrator." << endl;
       res = new IntegratorLSERK(*mesh, *pMGroup, arg);
       break;
-   case ArgumentsDGTD::lf2:
+   case OptionsSolverDGTD::lf2:
       cout<< "- Initializing LF2 Integrator." << endl;
       res = new IntegratorLF2(*mesh, *pMGroup, arg);
       break;
-   case ArgumentsDGTD::lf2full:
+   case OptionsSolverDGTD::lf2full:
       cout<< "- Initializing LF2Full Integrator." << endl;
       res = new IntegratorLF2Full(*mesh, *pMGroup, arg);
       break;
-   case ArgumentsDGTD::verlet:
+   case OptionsSolverDGTD::verlet:
       cout<< "- Initializing Verlet Integrator." << endl;
       res = new IntegratorVerlet(*mesh, *pMGroup, arg);
       break;

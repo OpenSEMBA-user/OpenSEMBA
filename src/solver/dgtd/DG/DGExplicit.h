@@ -20,7 +20,7 @@ public:
 	DGExplicit(
 	 const SmbData* smb,
 	 Comm* comm,
-	 const ArgumentsDGTD* arg);
+	 const OptionsSolverDGTD* arg);
 	virtual ~DGExplicit();
     uint
      getFieldDOFs();
@@ -164,11 +164,11 @@ private:
 	void
 	 buildMaterials(
 	  const CellGroup& cells,
-	  const ArgumentsDGTD* arg);
+	  const OptionsSolverDGTD* arg);
 	void
 	 deduplicateVMaps(const CellGroup& cells);
 	void
-	 allocateRHSAndJumps(const ArgumentsDGTD* args);
+	 allocateRHSAndJumps(const OptionsSolverDGTD* args);
 	void
 	 allocateMaps();
 	void
