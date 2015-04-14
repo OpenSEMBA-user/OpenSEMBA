@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "../../../apps/smbToNFDE/openfoam/OutputOpenFoam.h"
+#include "OutputOpenFoam.h"
 
 OutputOpenFoam::OutputOpenFoam() {
     smb_ = NULL;

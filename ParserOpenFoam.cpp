@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "../../../apps/smbToNFDE/openfoam/ParserOpenFoam.h"
+#include "ParserOpenFoam.h"
 
 ParserOpenFoam::ParserOpenFoam() {
 }

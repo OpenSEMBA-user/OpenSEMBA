@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "../../../apps/smbToNFDE/openfoam/OpenfoamBoundary.h"
+#include "OpenfoamBoundary.h"
 
 OpenfoamBoundary::OpenfoamBoundary() {
     nFaces_ = 0;

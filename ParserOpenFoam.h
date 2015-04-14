@@ -15,8 +15,8 @@
 #include <vector>
 #include <sys/stat.h>
 
-#include "../../../apps/smbToNFDE/openfoam/OpenfoamBoundary.h"
-#include "../parser/Parser.h"
+#include "OpenfoamBoundary.h"
+#include "Parser.h"
 
 typedef pair<ElementId,vector<CoordinateId> > FaceIdentifier;
 
