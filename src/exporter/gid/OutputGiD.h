@@ -5,9 +5,9 @@
 #ifndef OUTPUTGID_H_
 #define OUTPUTGID_H_
 
-#include "../common/exporter/Output.h"
-#include "../gidpost/gidpost.h"
-#include "../SmbData.h"
+#include "Output.h"
+#include "SmbData.h"
+#include "gidpost.h"
 
 using namespace std;
 
