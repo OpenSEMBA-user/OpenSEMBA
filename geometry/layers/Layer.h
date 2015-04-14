@@ -36,9 +36,6 @@ public:
 
     virtual string getParentName() const;
     virtual string getChildName() const;
-
-    bool operator==(const Layer& rhs) const;
-    bool operator!=(const Layer& rhs) const;
     string toStr() const;
 
     virtual void printInfo() const;
