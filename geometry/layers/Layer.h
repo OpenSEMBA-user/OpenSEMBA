@@ -39,14 +39,12 @@ public:
     string toStr() const;
 
     virtual void printInfo() const;
+    friend std::ostream& operator<<(ostream& os, const Layer& lay) {
+       return os << lay.toStr();
+    }
 
 private:
     string name_;
 };
-
-template <class T, Int D>
-std::ostream& operator<<(ostream& os, const Layer& lay) {
-   return os << lay.toStr();
-}
 
 #endif /* SRC_COMMON_INPUTS_LAYER_H_ */
