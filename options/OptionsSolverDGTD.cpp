@@ -5,19 +5,18 @@
  *  Created on: Aug 24, 2012
  *      Author: luis
  */
-#include "ArgumentsDGTD.h"
+#include "OptionsSolverDGTD.h"
 
-ArgumentsDGTD::ArgumentsDGTD() {
+OptionsSolverDGTD::OptionsSolverDGTD() {
 	initDefaultValues();
 }
 
-ArgumentsDGTD::~ArgumentsDGTD() {
+OptionsSolverDGTD::~OptionsSolverDGTD() {
 
 }
 
-ArgumentsDGTD::ArgumentsDGTD(int argc_, char* argv[]) {
+OptionsSolverDGTD::OptionsSolverDGTD(int argc_, char* argv[]) {
 	initDefaultValues();
-	argc = argc_;
 	path_ = *argv++;
 	if (argc == 1) {
 		cout<< " >>>> No arguments where given <<<< " << endl;
@@ -80,7 +79,7 @@ ArgumentsDGTD::ArgumentsDGTD(int argc_, char* argv[]) {
 }
 
 void
-ArgumentsDGTD::printInfo() const {
+OptionsSolverDGTD::printInfo() const {
 	cout<< " -- Arguments info -- " << endl;
 	cout<< "Solver path: " << path_ << endl;
 	cout<< "Project name: " << getProjectName() << endl;
@@ -131,69 +130,69 @@ ArgumentsDGTD::printInfo() const {
 
 }
 
-bool ArgumentsDGTD::isDontRun() const {
+bool OptionsSolverDGTD::isDontRun() const {
 	return dontRun;
 }
 
-uint ArgumentsDGTD::getGrowSmallerTiers() const {
+uint OptionsSolverDGTD::getGrowSmallerTiers() const {
 	return growSmallerTiers;
 }
 
-bool ArgumentsDGTD::isLinearizeMesh() const {
+bool OptionsSolverDGTD::isLinearizeMesh() const {
 	return linearizeMesh;
 }
 
-uint ArgumentsDGTD::getMaxNumberOfTiers() const {
+uint OptionsSolverDGTD::getMaxNumberOfTiers() const {
 	return maxNumberOfTiers;
 }
 
-bool ArgumentsDGTD::isNoLTS() const {
+bool OptionsSolverDGTD::isNoLTS() const {
 	return noLTS;
 }
 
-string ArgumentsDGTD::getOutputFolder() const {
+string OptionsSolverDGTD::getOutputFolder() const {
 	return getProjectFolder() + outputFolderName + "/";
 }
 
-double ArgumentsDGTD::getPmlConductivity() const {
+double OptionsSolverDGTD::getPmlConductivity() const {
 	return PMLConductivity;
 }
 
-bool ArgumentsDGTD::isPmlIgnore() const {
+bool OptionsSolverDGTD::isPmlIgnore() const {
 	return PMLIgnore;
 }
 
-bool ArgumentsDGTD::isPmlUseConstantConductivity() const {
+bool OptionsSolverDGTD::isPmlUseConstantConductivity() const {
 	return PMLUseConstantConductivity;
 }
 
-string ArgumentsDGTD::getProblemTypePath() const {
+string OptionsSolverDGTD::getProblemTypePath() const {
 	return problemTypePath;
 }
 
-bool ArgumentsDGTD::isResume() const {
+bool OptionsSolverDGTD::isResume() const {
 	return resume;
 }
 
-ArgumentsDGTD::TimeIntegrator
-ArgumentsDGTD::getTimeIntegrator() const {
+OptionsSolverDGTD::TimeIntegrator
+OptionsSolverDGTD::getTimeIntegrator() const {
 	return timeIntegrator;
 }
 
-double ArgumentsDGTD::getTimeStepSize() const {
+double OptionsSolverDGTD::getTimeStepSize() const {
 	return timeStepSize;
 }
 
-double ArgumentsDGTD::getUpwinding() const {
+double OptionsSolverDGTD::getUpwinding() const {
 	return upwinding;
 }
 
-bool ArgumentsDGTD::isUseMaxStageSizeForLts() const {
+bool OptionsSolverDGTD::isUseMaxStageSizeForLts() const {
 	return useMaxStageSizeForLTS;
 }
 
 void
-ArgumentsDGTD::initDefaultValues() {
+OptionsSolverDGTD::initDefaultValues() {
 	resume = false;
 	dontRun = false;
 	timeIntegrator = lserk4;
@@ -210,7 +209,7 @@ ArgumentsDGTD::initDefaultValues() {
 }
 
 void
-ArgumentsDGTD::printHelp() const {
+OptionsSolverDGTD::printHelp() const {
 	cout<< ">>>>>> cudg3d usage <<<<<<" << endl;
 	cout<< " === Synopsis === " << endl;
 	cout<< "cudg3d [OPTIONS] -n projectFolder -t problemTypeFolder " << endl;
@@ -255,8 +254,8 @@ ArgumentsDGTD::printHelp() const {
 	cout<< " >>>> AND MORE <<<< " << endl;
 }
 
-ArgumentsDGTD::TimeIntegrator
-ArgumentsDGTD::getTimeIntegratorFromStr(
+OptionsSolverDGTD::TimeIntegrator
+OptionsSolverDGTD::getTimeIntegratorFromStr(
  const string& str) const {
 	if (!str.compare("lserk4")) {
 		return lserk4;
@@ -275,7 +274,7 @@ ArgumentsDGTD::getTimeIntegratorFromStr(
 }
 
 string
-ArgumentsDGTD::getOutputFolderName() const {
+OptionsSolverDGTD::getOutputFolderName() const {
    if (outputFolderName.empty()) {
       return getProjectName();
    } else {

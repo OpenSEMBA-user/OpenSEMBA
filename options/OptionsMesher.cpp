@@ -5,9 +5,9 @@
  *      Author: luis
  */
 
-#include "MesherOptions.h"
+#include "OptionsMesher.h"
 
-MesherOptions::MesherOptions() {
+OptionsMesher::OptionsMesher() {
     locationInMeshSet_ = false;
     mesher_ = ugrMesher;
     mode_ = structured;
@@ -21,7 +21,7 @@ MesherOptions::MesherOptions() {
     }
 }
 
-MesherOptions::MesherOptions(
+OptionsMesher::OptionsMesher(
         Mesher mesher,
         bool locationInMeshSet,
         CVecR3 locationInMesh,
@@ -52,16 +52,16 @@ MesherOptions::MesherOptions(
 }
 
 void
-MesherOptions::printInfo() const {
+OptionsMesher::printInfo() const {
     cout<< " --- Meshing parameters info --- " << endl;
     if (mesher_ == openfoam) {
-        cout << "- Using openfoam mesher." << endl;
+        cout << " Using openfoam mesher." << endl;
         if (locationInMeshSet_) {
-            cout << "- Location in mesh:   " << locationInMesh_ << endl;
+            cout << " Location in mesh:   " << locationInMesh_ << endl;
         }
     }
     if (isStructured()) {
-        cout << "- Generating structured mesh." << endl;
+        cout << " Generating structured mesh." << endl;
     }
     cout<< "Geom. scaling factor: " << scalingFactor_ << endl;
     cout<< "Lower X Bound: " << toStr(boundTermination_[0].first) << endl;
@@ -78,7 +78,7 @@ MesherOptions::printInfo() const {
 }
 
 string
-MesherOptions::toStr(const BoundType val) const {
+OptionsMesher::toStr(const BoundType val) const {
     switch (val) {
     case pec:
         return "PEC";
@@ -98,155 +98,102 @@ MesherOptions::toStr(const BoundType val) const {
 }
 
 void
-MesherOptions::applyGeometricScalingFactor(const Real& factor) {
+OptionsMesher::applyGeometricScalingFactor(const Real& factor) {
     boundaryPadding_.first *= factor;
     boundaryPadding_.second *= factor;
     boundaryMeshSize_.first *= factor;
     boundaryMeshSize_.second *= factor;
 }
 
-const CVecR3& MesherOptions::getLocationInMesh() const {
+const CVecR3& OptionsMesher::getLocationInMesh() const {
     return locationInMesh_;
 }
 
-bool MesherOptions::isLocationInMeshSet() const {
+bool OptionsMesher::isLocationInMeshSet() const {
     return locationInMeshSet_;
 }
 
-bool MesherOptions::isBruteForceVolumes() const {
+bool OptionsMesher::isBruteForceVolumes() const {
     return bruteForceVolumes_;
 }
 
-bool MesherOptions::hasEffParams() const {
+bool OptionsMesher::hasEffParams() const {
     return effectiveParameter_;
 }
-string MesherOptions::getEffThick() const {
+string OptionsMesher::getEffThick() const {
     return th_;
 }
-string MesherOptions::getEffSigma() const {
+string OptionsMesher::getEffSigma() const {
     return sigma_;
 }
 
-bool MesherOptions::isStructured() const {
+bool OptionsMesher::isStructured() const {
     return (mode_ == structured);
 }
 
-bool MesherOptions::isRelaxed() const {
+bool OptionsMesher::isRelaxed() const {
     return (mode_ == relaxed);
 }
 
-bool MesherOptions::isSlanted() const {
+bool OptionsMesher::isSlanted() const {
     return (mode_ == slanted);
 }
 
-string MesherOptions::getEdgeFraction() const {
+string OptionsMesher::getEdgeFraction() const {
     return edgeFraction_;
 }
 
-bool MesherOptions::hasScaleFactor() const {
+bool OptionsMesher::hasScaleFactor() const {
     return scaleFactor_;
 }
 
-string MesherOptions::getScaleFactor() const {
+string OptionsMesher::getScaleFactor() const {
     return scaleFactorValue_;
 }
 
-string MesherOptions::getSWFForce() const {
+string OptionsMesher::getSWFForce() const {
     return swfForze_;
 }
 
-void MesherOptions::setBruteForceVolumes(bool bruteForceVolumes) {
-    bruteForceVolumes_ = bruteForceVolumes;
-}
-
-const string& MesherOptions::getMeshOutputName() const {
+const string& OptionsMesher::getMeshOutputName() const {
     return confOutput_;
 }
 
-void MesherOptions::setConfOutput(const string& confOutput) {
-    confOutput_ = confOutput;
-}
-
-void MesherOptions::setEdgeFraction(const string& edgeFraction) {
-    edgeFraction_ = edgeFraction;
-}
-
-bool MesherOptions::isEffectiveParameter() const {
+bool OptionsMesher::isEffectiveParameter() const {
     return effectiveParameter_;
 }
 
-void MesherOptions::setEffectiveParameter(bool effectiveParameter) {
-    effectiveParameter_ = effectiveParameter;
-}
-
-void MesherOptions::setLocationInMesh(const CVecR3& locationInMesh) {
-    locationInMesh_ = locationInMesh;
-    locationInMeshSet_ = true;
-}
-
-MesherOptions::Mesher MesherOptions::getMesher() const {
+OptionsMesher::Mesher OptionsMesher::getMesher() const {
     return mesher_;
 }
 
-void MesherOptions::setMesher(Mesher mesher) {
-    mesher_ = mesher;
-}
-
-MesherOptions::Mode MesherOptions::getMode() const {
-    return mode_;
-}
-
-void MesherOptions::setMode(Mode mode) {
-    mode_ = mode;
-}
-
-void MesherOptions::setScaleFactor(bool scaleFactor) {
-    scaleFactor_ = scaleFactor;
-}
-
-void MesherOptions::setScaleFactorValue(const string& scaleFactorValue) {
-    scaleFactorValue_ = scaleFactorValue;
-}
-
-void MesherOptions::setSigma(const string& sigma) {
-    sigma_ = sigma;
-}
-
-void MesherOptions::setSwfForze(const string& swfForze) {
-    swfForze_ = swfForze;
-}
-
-void MesherOptions::setTh(const string& th) {
-    th_ = th;
-}
-
-const pair<CVecR3, CVecR3>& MesherOptions::getBoundaryMeshSize() const {
+const pair<CVecR3, CVecR3>& OptionsMesher::getBoundaryMeshSize() const {
     return boundaryMeshSize_;
 }
 
-void MesherOptions::setBoundaryMeshSize(
+void OptionsMesher::setBoundaryMeshSize(
         const pair<CVecR3, CVecR3>& boundaryMeshSize) {
     boundaryMeshSize_ = boundaryMeshSize;
 }
 
-const pair<CVecR3, CVecR3>& MesherOptions::getBoundaryPadding() const {
+const pair<CVecR3, CVecR3>& OptionsMesher::getBoundaryPadding() const {
     return boundaryPadding_;
 }
 
-void MesherOptions::setBoundaryPadding(
+void OptionsMesher::setBoundaryPadding(
         const pair<CVecR3, CVecR3>& boundaryPadding) {
     boundaryPadding_ = boundaryPadding;
 }
 
-Real MesherOptions::getScalingFactor() const {
+Real OptionsMesher::getScalingFactor() const {
     return scalingFactor_;
 }
 
-void MesherOptions::setScalingFactor(Real scalingFactor) {
+void OptionsMesher::setScalingFactor(Real scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
-MesherOptions::BoundType
-MesherOptions::getBoundTermination(
+OptionsMesher::BoundType
+OptionsMesher::getBoundTermination(
         const UInt i, const UInt p) const {
     assert(i < 3);
     assert(p < 2);
@@ -257,7 +204,7 @@ MesherOptions::getBoundTermination(
     }
 }
 
-void MesherOptions::setBoundTermination(
+void OptionsMesher::setBoundTermination(
         const UInt i,
         UInt j,
         BoundType bound) {
@@ -268,4 +215,96 @@ void MesherOptions::setBoundTermination(
     } else {
         boundTermination_[i].second = bound;
     }
+}
+
+void OptionsMesher::set(Arguments& args) {
+    if (args.have("h") || args.have("help")) {
+        printHelp();
+        exit(EXIT_SUCCESS);
+    }
+    if (args.have("openfoam")) {
+        mesher_ = openfoam;
+    }
+    if (args.have("bruteForceVolumes")) {
+        bruteForceVolumes_ = true;
+    }
+    if (args.have("structured")) {
+        #ifndef compileOnlyWithStructured
+        #ifdef compileWithstaircase
+            mode_  = structured;
+        #endif
+        #endif
+    }
+    if (args.have("eff")) {
+        #ifdef effectiveParameterMethods
+            effectiveParameter_ = true;
+            th_    = args.get("eff",0);
+            sigma_ = args.get("eff",1);
+        #endif
+    }
+    if (args.have("slanted")) {
+        #ifndef compileOnlyWithStructured
+            mode_ = slanted;
+            edgeFraction_ = args.get("slanted");
+        #endif
+    }
+    if (args.have("relaxed")) {
+        #ifndef compileOnlyWithStructured
+            mode_ = relaxed;
+            edgeFraction_ = args.get("relaxed");
+        #endif
+    }
+    if (args.have("scalefactor")) {
+        #ifdef compileWithTesting
+        scaleFactor_ = true;
+        scaleFactorValue_ = args.get("scalefactor");
+        #endif
+    }
+    if (args.have("swff")) {
+        swfForze_ = args.get("swff");
+    }
+}
+
+void OptionsMesher::setBruteForceVolumes(bool bruteForceVolumes) {
+    bruteForceVolumes_ = bruteForceVolumes;
+}
+
+void OptionsMesher::setConfOutput(const string& confOutput) {
+    confOutput_ = confOutput;
+}
+
+void OptionsMesher::setEdgeFraction(const string& edgeFraction) {
+    edgeFraction_ = edgeFraction;
+}
+
+void OptionsMesher::setLocationInMesh(const CVecR3& locationInMesh) {
+    locationInMesh_ = locationInMesh;
+}
+
+void OptionsMesher::setLocationInMeshSet(bool locationInMeshSet) {
+    locationInMeshSet_ = locationInMeshSet;
+}
+
+void OptionsMesher::setMesher(Mesher mesher) {
+    mesher_ = mesher;
+}
+
+void OptionsMesher::setMode(Mode mode) {
+    mode_ = mode;
+}
+
+void OptionsMesher::setScaleFactor(bool scaleFactor) {
+    scaleFactor_ = scaleFactor;
+}
+
+void OptionsMesher::setScaleFactorValue(const string& scaleFactorValue) {
+    scaleFactorValue_ = scaleFactorValue;
+}
+
+void OptionsMesher::setSigma(const string& sigma) {
+    sigma_ = sigma;
+}
+
+void OptionsMesher::setSwfForze(const string& swfForze) {
+    swfForze_ = swfForze;
 }

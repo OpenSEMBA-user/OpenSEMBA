@@ -16,7 +16,7 @@
 
 using namespace std;
 
-class SolverOptions : public Options {
+class OptionsSolver : public Options {
 public:
     enum class Solver {
         ugrfdtd, cudg3d, none
@@ -33,58 +33,61 @@ public:
     enum class SelfInductanceModel {
         boutayeb, ledfelt, berenger
     };
-    SolverOptions();
+    OptionsSolver();
 
-    DEFINE_CLONE(SolverOptions);
+    DEFINE_CLONE(OptionsSolver);
 
-    Real getFinalTime() const;
+    void set(Arguments& args);
     void setFinalTime(Real finalTime);
-    Real getSamplingPeriod() const;
     void setSamplingPeriod(Real samplingPeriod);
-    Solver getSolver() const;
     void setSolver(Solver solver);
-    Real getTimeStep() const;
+    void setCFL(double cfl);
+    void setCompositeModel(CompositeModel compositeModel);
+    void setCompositesAttenuationFactor(double compositesAttenuationFactor);
+    void setConnectEndings(bool connectEndings);
+    void setGroundWires(bool groundWires);
+    void setIntraWireSimplifications(bool intraWireSimplifications);
+    void setIsolateGroupGroups(bool isolateGroupGroups);
+    void setJoinWires(bool joinWires);
+    void setMakeHoles(bool makeHoles);
+    void setMetalModel(MetalModel metalModel);
+    void setMTLN(bool mtln);
+    void setNumberOfTimeSteps(UInt numberOfTimeSteps);
+    void setPMLAlpha(const pair<double, double>& pmlAlpha);
+    void setPMLCorrection(const pair<double, double>& pmlCorrection);
+    void setPMLKappa(double pmlKappa);
+    void setSelfInductanceModel(SelfInductanceModel selfInductanceModel);
+    void setTaparrabos(bool taparrabos);
+    void setWireModel(WireModel wireModel);
+    void setWiresAttenuationFactor(double wiresAttenuationFactor);
     void setTimeStep(Real timeStep);
 
-    void printInfo() const;
+    Real getFinalTime() const;
+    Real getSamplingPeriod() const;
+    Solver getSolver() const;
+    Real getTimeStep() const;
     double getCFL() const;
-    void setCFL(double cfl);
     CompositeModel getCompositeModel() const;
-    void setCompositeModel(CompositeModel compositeModel);
     double getCompositesAttenuationFactor() const;
-    void setCompositesAttenuationFactor(double compositesAttenuationFactor);
     bool isConnectEndings() const;
-    void setConnectEndings(bool connectEndings);
     bool isGroundWires() const;
-    void setGroundWires(bool groundWires);
     bool isIntraWireSimplifications() const;
-    void setIntraWireSimplifications(bool intraWireSimplifications);
     bool isIsolateGroupGroups() const;
-    void setIsolateGroupGroups(bool isolateGroupGroups);
     bool isJoinWires() const;
-    void setJoinWires(bool joinWires);
     bool isMakeHoles() const;
-    void setMakeHoles(bool makeHoles);
     MetalModel getMetalModel() const;
-    void setMetalModel(MetalModel metalModel);
     bool isMTLN() const;
-    void setMTLN(bool mtln);
     UInt getNumberOfTimeSteps() const;
-    void setNumberOfTimeSteps(UInt numberOfTimeSteps);
     const pair<double, double>& getPmlAlpha() const;
-    void setPMLAlpha(const pair<double, double>& pmlAlpha);
     const pair<double, double>& getPmlCorrection() const;
-    void setPMLCorrection(const pair<double, double>& pmlCorrection);
     double getPmlKappa() const;
-    void setPMLKappa(double pmlKappa);
     SelfInductanceModel getSelfInductanceModel() const;
-    void setSelfInductanceModel(SelfInductanceModel selfInductanceModel);
     bool isTaparrabos() const;
-    void setTaparrabos(bool taparrabos);
     WireModel getWireModel() const;
-    void setWireModel(WireModel wireModel);
     double getWiresAttenuationFactor() const;
-    void setWiresAttenuationFactor(double wiresAttenuationFactor);
+
+    void printInfo() const;
+    void printHelp() const;
 
 private:
     // Global

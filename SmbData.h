@@ -13,22 +13,21 @@
 #include "Grid.h"
 #include "EMSourceGroup.h"
 #include "PhysicalModelGroup.h"
-#include "MesherOptions.h"
 #include "OutRqGroup.h"
-#include "SolverOptions.h"
-
 #include "ProjectFile.h"
 
 #include "base/class/ClassBase.h"
+#include "options/OptionsMesher.h"
+#include "options/OptionsSolver.h"
 
 class SmbData : public virtual ProjectFile,
                 public virtual ClassBase {
 public:
-    MesherOptions*        mesherOptions;
+    OptionsMesher*        mesherOptions;
     Grid3*                grid;
     Mesh*                 mesh;
 
-    SolverOptions*        solverOptions;
+    OptionsSolver*        solverOptions;
     PhysicalModelGroup<>* pMGroup;
     EMSourceGroup<>*      emSources;
     OutRqGroup<>*         outputRequests;

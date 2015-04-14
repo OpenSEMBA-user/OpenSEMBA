@@ -18,14 +18,14 @@
 using namespace std;
 typedef unsigned int uint;
 
-class ArgumentsDGTD : public Arguments {
+class OptionsSolverDGTD : public Arguments {
 public:
 	typedef enum  {
 		lserk4, verlet, lf2, lf2full
 	} TimeIntegrator;
-	ArgumentsDGTD();
-	ArgumentsDGTD(int argc, char* argv[]);
-	virtual ~ArgumentsDGTD();
+	OptionsSolverDGTD();
+	OptionsSolverDGTD(int argc, char* argv[]);
+	virtual ~OptionsSolverDGTD();
 	void printInfo() const;
 	string getOutputFolderName() const;
 	bool isDontRun() const;

@@ -36,11 +36,16 @@ public:
             const string versionNumber) const;
     virtual void printGoodbyeMessage(
             const string appName) const;
+
+    bool have(const string& arg) const;
+    string get(const string& arg, const UInt i = 0) const;
+
+    void printInfo() const;
+    void printHelp() const;
+
 protected:
     string path_;
     string fileName_;
-    virtual void printInfo() const;
-    virtual void printHelp() const;
     bool fExists(const string& filename) const;
     const char* getArgvpp(
             const UInt i,

@@ -9,13 +9,14 @@
 #define OPENFOAMPARAMETERS_H_
 
 #include <string>
+#include <stdlib.h>
 
-#include "../math/CartesianVector.h"
+#include "CartesianVector.h"
 #include "Options.h"
 
 using namespace std;
 
-class MesherOptions : public Options {
+class OptionsMesher : public Options {
 public:
     typedef enum {
         openfoam,
@@ -38,8 +39,8 @@ public:
         symmetricHTan,
         undefined
     } BoundType;
-    MesherOptions();
-    MesherOptions(
+    OptionsMesher();
+    OptionsMesher(
             Mesher mesher,
             bool locationInMeshSet,
             CVecR3 locationInMesh,
@@ -54,50 +55,54 @@ public:
             string swfForze,
             string confOutput);
 
-    DEFINE_CLONE(MesherOptions);
+    DEFINE_CLONE(OptionsMesher);
+
+    virtual void set(Arguments& args);
+    void setBoundaryMeshSize(const pair<CVecR3, CVecR3>& boundaryMeshSize);
+    void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
+    void setScalingFactor(Real scalingFactor);
+    void setBoundTermination(const UInt i, UInt j, BoundType bound);
+    void setBruteForceVolumes(bool bruteForceVolumes);
+    void setConfOutput(const string& confOutput);
+    void setEdgeFraction(const string& edgeFraction);
+    void setLocationInMesh(const CVecR3& locationInMesh);
+    void setLocationInMeshSet(bool locationInMeshSet);
+    void setMesher(Mesher mesher);
+    void setMode(Mode mode);
+    void setScaleFactor(bool scaleFactor);
+    void setScaleFactorValue(const string& scaleFactorValue);
+    void setSigma(const string& sigma);
+    void setSwfForze(const string& swfForze);
+    void setEffectiveParameter(bool effectiveParameter);
+    void applyGeometricScalingFactor(const Real& factor);
 
     Mesher getMesher() const;
-
-    void setMesher(Mesher mesher);
     virtual const CVecR3& getLocationInMesh() const;
     virtual bool isLocationInMeshSet() const;
     Mode getMode() const;
-    void setMode(Mode mode);
-    void setBruteForceVolumes(bool bruteForceVolumes);
     bool isStructured() const;
     bool isRelaxed() const;
     bool isSlanted() const;
     bool isBruteForceVolumes() const;
     bool isEffectiveParameter() const;
-    void setEffectiveParameter(bool effectiveParameter);
     bool hasEffParams() const;
     string getEffThick() const;
     void setTh(const string& th);
     string getEffSigma() const;
-    void setSigma(const string& sigma);
     string getEdgeFraction() const;
-    void setEdgeFraction(const string& edgeFraction);
     bool hasScaleFactor() const;
     string getScaleFactor() const;
-    void setScaleFactor(bool scaleFactor);
-    void setScaleFactorValue(const string& scaleFactorValue);
     string getSWFForce() const;
-    void setSwfForze(const string& swfForze);
-    void setLocationInMesh(const CVecR3& locationInMesh);
     const string& getMeshOutputName() const;
-    void setConfOutput(const string& confOutput);
 
     const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
-    void setBoundaryMeshSize(const pair<CVecR3, CVecR3>& boundaryMeshSize);
     const pair<CVecR3, CVecR3>& getBoundaryPadding() const;
-    void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
     Real getScalingFactor() const;
-    void setScalingFactor(Real scalingFactor);
     BoundType getBoundTermination(const UInt i, const UInt p) const;
-    void setBoundTermination(const UInt i, UInt j, BoundType bound);
 
-    void applyGeometricScalingFactor(const Real& factor);
-    virtual void printInfo() const;
+    void printHelp() const;
+    void printInfo() const;
+
 
 private:
     Mesher mesher_;
@@ -119,5 +124,9 @@ private:
     pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
     string toStr(const BoundType) const;
 };
+
+inline void OptionsMesher::setEffectiveParameter(bool effectiveParameter) {
+    effectiveParameter_ = effectiveParameter;
+}
 
 #endif /* OPENFOAMPARAMETERS_H_ */
