@@ -8,8 +8,8 @@
 #ifndef ARGUMENTSMESHER_H_
 #define ARGUMENTSMESHER_H_
 
-#include "../../common/inputs/Arguments.h"
-#include "../../common/inputs/MesherOptions.h"
+#include "Arguments.h"
+#include "MesherOptions.h"
 
 class ArgumentsMesher: public Arguments {
 public:

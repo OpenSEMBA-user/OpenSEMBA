@@ -5,9 +5,7 @@
  *  Created on: Aug 24, 2012
  *      Author: luis
  */
-#ifndef ARGUMENTSCUDG3D_H_
 #include "ArgumentsDGTD.h"
-#endif
 
 ArgumentsDGTD::ArgumentsDGTD() {
 	initDefaultValues();

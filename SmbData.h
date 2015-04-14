@@ -11,11 +11,11 @@
 #include "MeshUnstructured.h"
 #include "MeshStructured.h"
 #include "Grid.h"
-#include "inputs/electromagneticSources/EMSourceGroup.h"
-#include "inputs/physicalModel/PhysicalModelGroup.h"
-#include "inputs/MesherOptions.h"
-#include "inputs/outRq/OutRqGroup.h"
-#include "inputs/SolverOptions.h"
+#include "EMSourceGroup.h"
+#include "PhysicalModelGroup.h"
+#include "MesherOptions.h"
+#include "OutRqGroup.h"
+#include "SolverOptions.h"
 
 #include "ProjectFile.h"
 

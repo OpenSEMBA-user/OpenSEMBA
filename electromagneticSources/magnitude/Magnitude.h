@@ -16,7 +16,7 @@ using namespace std;
 
 #include "Types.h"
 
-#include "../../../base/class/ClassBase.h"
+#include "ClassBase.h"
 
 class Magnitude : public virtual ClassBase {
 public:

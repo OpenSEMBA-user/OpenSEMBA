@@ -25,7 +25,7 @@ public:
 
     USE_GROUP_ASSIGN(L);
 
-    USE_GROUP_GET(L);
+    USE_GROUPID_GET(L,LayerId);
     const L* get(const string name) const;
 
     void printInfo() const;

@@ -5,15 +5,15 @@
  *      Author: luis
  */
 
-#ifndef ARGUMENTSINTERSECTOR_H_
-#define ARGUMENTSINTERSECTOR_H_
+#ifndef ARGUMENTSDGTD_H_
+#define ARGUMENTSDGTD_H_
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <stdlib.h>
 #include <omp.h>
-#include "../../../common/inputs/Arguments.h"
+#include "Arguments.h"
 
 using namespace std;
 typedef unsigned int uint;
@@ -26,39 +26,23 @@ public:
 	ArgumentsDGTD();
 	ArgumentsDGTD(int argc, char* argv[]);
 	virtual ~ArgumentsDGTD();
-	void
-	 printInfo() const;
-	string
-	 getOutputFolderName() const;
-	bool
-	 isDontRun() const;
-	uint
-	 getGrowSmallerTiers() const;
-	bool
-	 isLinearizeMesh() const;
-	uint
-	 getMaxNumberOfTiers() const;
-	bool
-	 isNoLTS() const;
+	void printInfo() const;
+	string getOutputFolderName() const;
+	bool isDontRun() const;
+	uint getGrowSmallerTiers() const;
+	bool isLinearizeMesh() const;
+	uint getMaxNumberOfTiers() const;
+	bool isNoLTS() const;
 	string getOutputFolder() const;
-	double
-	 getPmlConductivity() const;
-	bool
-	 isPmlIgnore() const;
-	bool
-	 isPmlUseConstantConductivity() const;
-	string
-	 getProblemTypePath() const;
-	bool
-	 isResume() const;
-	TimeIntegrator
-	 getTimeIntegrator() const;
-	double
-	 getTimeStepSize() const;
-	double
-	 getUpwinding() const;
-	bool
-	 isUseMaxStageSizeForLts() const;
+	double getPmlConductivity() const;
+	bool isPmlIgnore() const;
+	bool isPmlUseConstantConductivity() const;
+	string getProblemTypePath() const;
+	bool isResume() const;
+	TimeIntegrator getTimeIntegrator() const;
+	double getTimeStepSize() const;
+	double getUpwinding() const;
+	bool isUseMaxStageSizeForLts() const;
 private:
 	string outputFolderName;
 	string problemTypePath;
