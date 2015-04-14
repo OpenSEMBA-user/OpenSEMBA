@@ -10,6 +10,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <assert.h>
 
 using namespace std;
@@ -33,10 +34,19 @@ public:
     virtual string getParentName() const;
     virtual string getChildName() const;
 
+    bool operator==(const Layer& rhs) const;
+    bool operator!=(const Layer& rhs) const;
+    string toStr() const;
+
     virtual void printInfo() const;
 
 private:
     string name_;
 };
+
+template <class T, Int D>
+std::ostream& operator<<(ostream& os, const Layer& lay) {
+   return os << lay.toStr();
+}
 
 #endif /* SRC_COMMON_INPUTS_LAYER_H_ */

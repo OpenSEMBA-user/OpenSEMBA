@@ -10,10 +10,10 @@
 
 #include <vector>
 #include <map>
-#include "Layer.h"
 
 using namespace std;
 
+#include "Layer.h"
 #include "../../base/group/GroupId.h"
 
 template<typename L = Layer>

@@ -44,5 +44,22 @@ string Layer::getChildName() const {
 }
 
 void Layer::printInfo() const {
-    cout<< "Layer. Id: " << getId() << " Name: " << getName() << endl;
+    cout << toStr() << endl;
+}
+
+bool Layer::operator ==(const Layer& rhs) const {
+    bool res = true;
+    res &= ClassIdBase<LayerId>::operator==(rhs);
+    res &= (name_ == rhs.name_);
+    return res;
+}
+
+bool Layer::operator !=(const Layer& rhs) const {
+    return !(*this == rhs);
+}
+
+string Layer::toStr() const {
+    stringstream ss;
+    ss << "Layer. Id: " << getId() << " Name: " << getName();
+    return ss.str();
 }

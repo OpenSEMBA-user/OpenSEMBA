@@ -29,3 +29,8 @@ template<class Id>
 void ClassIdBase<Id>::setId(const Id id) {
     this->id_ = id;
 }
+
+template<class Id>
+bool ClassIdBase<Id>::operator==(const ClassIdBase& rhs) const {
+    return (this->id_ == rhs.id_);
+}
