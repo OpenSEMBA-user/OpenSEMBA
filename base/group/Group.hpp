@@ -370,12 +370,13 @@ void Group<T>::destruct() {
 
 template<typename T>
 vector<T*> Group<T>::preprocess(const vector<T*>& elems) const {
-    set<const T*> auxSet = set_;
+    set<const T*> auxSet;
     vector<T*> res;
     res.reserve(elems.size());
     for (UInt i = 0; i < elems.size(); i++) {
-        if (auxSet.count(elems[i]) == 0) {
+        if ((set_.count(elems[i]) == 0) && (auxSet.count(elems[i]) == 0)) {
             res.push_back(elems[i]);
+            auxSet.insert(elems[i]);
         }
     }
     return res;
