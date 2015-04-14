@@ -173,15 +173,18 @@ void GroupId<T, Id>::destruct() {
 template<typename T, class Id>
 vector<T*> GroupId<T, Id>::preprocess(const vector<T*>& v) const {
     vector<T*> res = Group<T>::preprocess(v);
-    map<Id, UInt> map = mapId_;
+    set<Id> auxSet;
     for (typename vector<T*>::iterator
          it = res.begin(); it != res.end(); it++) {
 
-        if (((*it)->getId() == 0) || (map.count((*it)->getId()) == 1)) {
+        if (((*it)->getId() == 0) ||
+            (mapId_.count((*it)->getId()) == 1) ||
+            (auxSet.count((*it)->getId()) == 1)) {
+
             it = res.erase(it);
             it--;
         } else {
-            map[(*it)->getId()] = 1;
+            auxSet.insert((*it)->getId());
         }
     }
     return res;
