@@ -57,7 +57,7 @@ public:
 
     DEFINE_CLONE(OptionsMesher);
 
-    virtual void set(Arguments& args);
+    virtual void set(const Arguments& args);
     void setBoundaryMeshSize(const pair<CVecR3, CVecR3>& boundaryMeshSize);
     void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
     void setScalingFactor(Real scalingFactor);

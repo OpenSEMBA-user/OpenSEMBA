@@ -37,7 +37,7 @@ public:
 
     DEFINE_CLONE(OptionsSolver);
 
-    void set(Arguments& args);
+    void set(const Arguments& args);
     void setFinalTime(Real finalTime);
     void setSamplingPeriod(Real samplingPeriod);
     void setSolver(Solver solver);

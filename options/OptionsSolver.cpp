@@ -43,8 +43,95 @@ OptionsSolver::printInfo() const {
     cout<< "Time step: " << timeStep_ << endl;
 }
 
-void OptionsSolver::set(Arguments& args) {
-    // TODO OptionsSolver Set
+void OptionsSolver::set(const Arguments& arg) {
+    if (arg.has("h") || arg.has("help")) {
+        printHelp();
+    }
+    if (arg.has("cfl")) {
+        setCFL(atof(arg.get("cfl").c_str()));
+    }
+    if (arg.has("n")) {
+        setNumberOfTimeSteps(atoi(arg.get("n").c_str())));
+    }
+    if (arg.has("digfilt")) {
+        setCompositeModel(CompositeModel::digFilt);
+    }
+    if (arg.has("mibc")) {
+        setCompositeModel(CompositeModel::MIBC);
+    }
+    if (arg.has("ade")) {
+        setCompositeModel(CompositeModel::ADEMIBC);
+    }
+    if (arg.has("nocompomur")) {
+        setCompositeModel(CompositeModel::URMMMT);
+    }
+    if (arg.has("attc")) {
+        setCompositesAttenuationFactor(atof(arg.get("attc").c_str()));
+    }
+    if (arg.has("pmlalpha")) {
+        pair<double,double> factorOrder;
+        factorOrder.first = atof(arg.get("pmlalpha",0).c_str());
+        factorOrder.second = atof(arg.get("pmlalpha",1).c_str());
+        setPMLAlpha(factorOrder);
+    }
+    if (arg.has("pmlkappa")) {
+        setPMLKappa(atof(arg.get("pmlkappa").c_str()));
+    }
+    if (arg.has("pmlcorr")) {
+        pair<double,double> factorDepth;
+        factorDepth.first = atof(arg.get("pmlcorr",0).c_str());
+        factorDepth.second = atof(arg.get("pmlcorr",1).c_str());
+        setPMLCorrection(factorDepth);
+    }
+    if (arg.has("wiresflavor")) {
+        string flavor = arg.get("wiresflavor");
+        switch (flavor) {
+        case "transition":
+            setWireModel(WireModel::transition);
+        case "new":
+            setWireModel(WireModel::New);
+        default:
+            setWireModel(WireModel::Default);
+        }
+    }
+    if (arg.has("taparrabos")) {
+        setTaparrabos(true);
+    }
+    if (arg.has("intrawiresimplify")) {
+        setIntraWireSimplifications(true);
+    }
+    if (arg.has("mtln")) {
+        setMTLN(true);
+    }
+    if (arg.has("groundwires")) {
+        setGroundWires(true);
+    }
+    if (arg.has("connectendings")) {
+        setConnectEndings(true);
+    }
+    if (arg.has("isolategrougroups")) {
+        setIsolateGroupGroups(true);
+    }
+    if (arg.has("joinwires")) {
+        setJoinWires(true);
+    }
+    if (arg.has("makeholes")) {
+        setMakeHoles(true);
+    }
+    if (arg.has("inductance")) {
+        string model = arg.get("inductance");
+        switch (model) {
+        case "ledfelt":
+            setSelfInductanceModel(SelfInductanceModel::ledfelt);
+        case "berenger":
+            setSelfInductanceModel(SelfInductanceModel::berenger);
+        default:
+            setSelfInductanceModel(SelfInductanceModel::boutayeb);
+        }
+    }
+    if (arg.has("attw")) {
+        setWiresAttenuationFactor(atof(arg.get("attw").c_str()));
+    }
 }
 
 void OptionsSolver::printHelp() const {
