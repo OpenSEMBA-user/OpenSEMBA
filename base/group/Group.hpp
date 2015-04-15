@@ -334,21 +334,28 @@ vector<T*> Group<T>::add(Group<T2>&& rhs) {
 
 template<typename T>
 void Group<T>::remove(const UInt elemPos) {
-    const ClassBase* elem = get(elemPos)->castTo<ClassBase>();
-    if (SuperGroup::elems[elem].use_count() == 2) {
-        SuperGroup::elems.erase(elem);
-    }
-    set_.erase(get(elemPos));
-    element_.erase(element_.begin() + elemPos);
+    vector<UInt> aux;
+    aux.push_back(elemPos);
+    remove(aux);
 }
 
 template<typename T>
 void Group<T>::remove(const vector<UInt>& elems_) {
-    set<UInt> aux(elems_.begin(), elems_.end());
-    vector<UInt> elems(aux.begin(), aux.end());
-    for (UInt i = 0; i < elems.size(); i++) {
-        remove(elems[i]-i);
+    set<UInt> elems(elems_.begin(), elems_.end());
+    vector<shared_ptr<T>> newElems;
+    newElems.reserve(size());
+    for (UInt i = 0; i < size(); i++) {
+        if (elems.count(i) == 0) {
+            newElems.push_back(element_[i]);
+        } else {
+            const ClassBase* elem = get(i)->castTo<ClassBase>();
+            if (SuperGroup::elems[elem].use_count() == 2) {
+                SuperGroup::elems.erase(elem);
+            }
+            set_.erase(get(i));
+        }
     }
+    element_ = newElems;
 }
 
 template<typename T>
