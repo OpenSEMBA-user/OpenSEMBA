@@ -9,10 +9,9 @@
 #define ARGUMENTS_H_
 
 #include <string>
-#ifdef USE_MPI
-#include <mpi.h>
-#endif
-
+#include <map>
+#include <vector>
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -25,38 +24,37 @@ using namespace std;
 
 class Arguments {
 public:
-    Arguments();
     Arguments(const int argc, const char* argv[]);
     virtual ~Arguments();
+
+    bool has(const string& arg) const;
+    string get(const string& arg, const UInt i = 0) const;
     virtual string getProjectFolder() const;
     virtual string getProjectName() const;
     virtual string getFilename() const;
+    UInt size() const;
+
+
     virtual void printWelcomeMessage(
             const string appName,
             const string versionNumber) const;
     virtual void printGoodbyeMessage(
             const string appName) const;
-
-    bool have(const string& arg) const;
-    string get(const string& arg, const UInt i = 0) const;
-
     void printInfo() const;
     void printHelp() const;
 
 protected:
     string path_;
-    string fileName_;
+    map<string, vector<string>> args_;
     bool fExists(const string& filename) const;
-    const char* getArgvpp(
-            const UInt i,
-            const Int argc,
-            const char *arg) const;
-    string getFileNameFromProjectPath(
-            const string projectPath) const;
+    string getFileNameFromProjectPath(const string projectPath) const;
     string boolToStr(const bool param) const;
-    void abort(Int msg) const;
 private:
+    pair<string, vector<string>> readArgument(
+            const int i, const int argc,  const char* argv[]) const;
     string removeExtension(const string& fName) const;
+    string removeChars(const string& str, char* charsToRemove) const;
+    bool isKey(string) const;
 };
 
 #endif /* ARGUMENTS2_H_ */

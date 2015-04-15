@@ -9,27 +9,22 @@
 
 Arguments::Arguments(const int argc,  const char* argv[]) {
     path_ = *argv++;
+    for (Int i = 1; i < argc; i++) {
+        const string str = argv[i];
+        if (isKey(str)) {
+            args_.insert(readArgument(i, argc, argv));
+        }
+    }
     if (argc == 1) {
         cout << " >>>> No arguments where given <<<< " << endl;
         printHelp();
-        abort(EXIT_FAILURE);
     }
-    for (Int i = 1; i < argc; i++) {
-        string str = *argv++;
-        if (!str.compare("-i")) {
-            fileName_ = getArgvpp(++i, argc, *argv++);
-        } else if (!str.compare("-h") || !str.compare("--help")) {
-            printHelp();
-            abort(EXIT_SUCCESS);
-        }
-    }
-    if (!fExists(fileName_)) {
+    if (!fExists(getFilename())) {
         printInfo();
         cerr << endl << "ERROR @ Arguments::getArguments(): "
             << "No input file was found. "
             << "These files existence were checked: "
-            << fileName_ << endl;
-        abort(EXIT_FAILURE);
+            << getFilename() << endl;
     }
 }
 
@@ -47,29 +42,25 @@ void
 Arguments::printInfo() const {
 	cout<< " -- Arguments info ---" << endl;
 	cout<< "Path: " << path_ << endl;
-	cout<< "Filename: " << fileName_ << endl;
+	cout<< "Filename: " << getFilename() << endl;
 	cout<< "Project Folder: " << getProjectFolder() << endl;
 	cout<< "Project Name: " << getProjectName() << endl;
-}
-
-const char*
-Arguments::getArgvpp(
-        const UInt i,
-        const Int argc,
-        const char* argv) const {
-	if (argc != (Int) i) {
-		return argv;
-	} else {
-		printHelp();
-		cout << ">>>> A value must follow this last argument <<<<" << endl;
+	cout<< "Arguments read: " << size() << endl;
+	map<string,vector<string>>::const_iterator it;
+	cout << " - Key --- Values -" << endl;
+	for (it = args_.begin(); it != args_.end(); ++it) {
+	    cout << it->first << ": ";
+	    for (UInt i = 0; i < it->second.size(); i++) {
+	        cout << it->second[i] << " ";
+	    }
+	    cout << endl;
 	}
-	return 0;
 }
 
 string
 Arguments::getProjectFolder() const {
-	char *cstr = new char[fileName_.length() + 1];
-	strcpy(cstr, fileName_.c_str());
+	char *cstr = new char[getFilename().length() + 1];
+	strcpy(cstr, getFilename().c_str());
 	string projectDir(dirname(cstr));
 #ifdef _WIN32
    projectDir += "\\";
@@ -82,8 +73,8 @@ Arguments::getProjectFolder() const {
 
 string
 Arguments::getProjectName() const {
-	char *cstr = new char[fileName_.length() + 1];
-	strcpy(cstr, fileName_.c_str());
+	char *cstr = new char[getFilename().length() + 1];
+	strcpy(cstr, getFilename().c_str());
 	string projectFile(basename(cstr));
 	delete [] cstr;
 	return removeExtension(projectFile);
@@ -91,15 +82,11 @@ Arguments::getProjectName() const {
 
 string
 Arguments::getFilename() const {
-	return fileName_;
-}
-
-void
-Arguments::abort(Int msg) const {
-#ifdef USE_MPI
-	MPI_Finalize();
-#endif
-	exit(msg);
+    if (has("i")) {
+        return get("i");
+    }
+    cerr << endl << "ERROR @ Arguments: No filename read." << endl;
+    return string();
 }
 
 string
@@ -151,22 +138,17 @@ Arguments::printWelcomeMessage(
 	 	<< "========================================================" << endl;
 }
 
-void
-Arguments::printHelp() const {
-	cout<< " -n <FILE>" << endl;
+void Arguments::printHelp() const {
+	cout<< " -i <FILE> [OPTIONS]" << endl;
 	cout<< "     Specifes a path to input file." << endl;
-	cout<< " -h, --help" << endl;
-	cout<< "     Prints this help." << endl;
 }
 
-void
-Arguments::printGoodbyeMessage(
+void Arguments::printGoodbyeMessage(
  const string appName) const {
 	cout << appName << " finished succesfully. :-)" << endl;
 }
 
-string
-Arguments::boolToStr(const bool param) const {
+string Arguments::boolToStr(const bool param) const {
     if (param) {
         return "true";
     } else {
@@ -174,8 +156,7 @@ Arguments::boolToStr(const bool param) const {
     }
 }
 
-string
-Arguments::removeExtension(const string& fName) const {
+string Arguments::removeExtension(const string& fName) const {
     size_t pos = fName.rfind(".");
     if(pos == string::npos)  //No extension.
         return fName;
@@ -184,3 +165,54 @@ Arguments::removeExtension(const string& fName) const {
     return fName.substr(0, pos);
 }
 
+string
+Arguments::removeChars(const string& in, char* charsToRemove) const {
+    string res = in;
+    for (unsigned int i = 0; i < strlen(charsToRemove); ++i) {
+        res.erase(remove(res.begin(), res.end(), charsToRemove[i]), res.end());
+    }
+    return res;
+}
+
+bool Arguments::has(const string& arg) const {
+    return (args_.find(arg) != args_.end());
+}
+
+string Arguments::get(const string& arg, const UInt i) const {
+    if (!has(arg)) {
+        cerr << endl << "ERROR @ Arguments: "
+                << "Argument " << arg << " does not exist." << endl;
+    }
+    return args_.find(arg)->second[i];
+}
+
+UInt Arguments::size() const {
+    return args_.size();
+}
+
+pair<string, vector<string>> Arguments::readArgument(
+        const int pos,
+        const int argc,
+        const char* argv[]) const {
+    string key;
+    vector<string> value;
+    string str = argv[pos];
+    key = removeChars(str, "-");
+    transform(key.begin(), key.end(), key.begin(), ::tolower);
+    if (pos == argc) {
+        return pair<string, vector<string>> (key,value);
+    }
+    for (int i = pos+1; i < argc; i++) {
+        string str = argv[i];
+        transform(str.begin(), str.end(), str.begin(), ::tolower);
+        if (isKey(str)) {
+            break;
+        }
+        value.push_back(str);
+    }
+    return pair<string, vector<string>> (key,value);
+}
+
+bool Arguments::isKey(const string str) const {
+    return (str.find("-") == 0 || str.find("--") == 0);
+}

@@ -77,6 +77,13 @@ OptionsMesher::printInfo() const {
     cout << " --- End of Meshing parameters info ---" << endl;
 }
 
+void OptionsMesher::setTh(const string& th) {
+    th_ = th;
+}
+
+void OptionsMesher::printHelp() const {
+}
+
 string
 OptionsMesher::toStr(const BoundType val) const {
     switch (val) {
@@ -218,49 +225,49 @@ void OptionsMesher::setBoundTermination(
 }
 
 void OptionsMesher::set(Arguments& args) {
-    if (args.have("h") || args.have("help")) {
+    if (args.has("h") || args.has("help")) {
         printHelp();
         exit(EXIT_SUCCESS);
     }
-    if (args.have("openfoam")) {
+    if (args.has("openfoam")) {
         mesher_ = openfoam;
     }
-    if (args.have("bruteForceVolumes")) {
+    if (args.has("bruteForceVolumes")) {
         bruteForceVolumes_ = true;
     }
-    if (args.have("structured")) {
+    if (args.has("structured")) {
         #ifndef compileOnlyWithStructured
         #ifdef compileWithstaircase
             mode_  = structured;
         #endif
         #endif
     }
-    if (args.have("eff")) {
+    if (args.has("eff")) {
         #ifdef effectiveParameterMethods
             effectiveParameter_ = true;
             th_    = args.get("eff",0);
             sigma_ = args.get("eff",1);
         #endif
     }
-    if (args.have("slanted")) {
+    if (args.has("slanted")) {
         #ifndef compileOnlyWithStructured
             mode_ = slanted;
             edgeFraction_ = args.get("slanted");
         #endif
     }
-    if (args.have("relaxed")) {
+    if (args.has("relaxed")) {
         #ifndef compileOnlyWithStructured
             mode_ = relaxed;
             edgeFraction_ = args.get("relaxed");
         #endif
     }
-    if (args.have("scalefactor")) {
+    if (args.has("scalefactor")) {
         #ifdef compileWithTesting
         scaleFactor_ = true;
         scaleFactorValue_ = args.get("scalefactor");
         #endif
     }
-    if (args.have("swff")) {
+    if (args.has("swff")) {
         swfForze_ = args.get("swff");
     }
 }
@@ -307,4 +314,8 @@ void OptionsMesher::setSigma(const string& sigma) {
 
 void OptionsMesher::setSwfForze(const string& swfForze) {
     swfForze_ = swfForze;
+}
+
+void OptionsMesher::setEffectiveParameter(bool effectiveParameter) {
+    effectiveParameter_ = effectiveParameter;
 }

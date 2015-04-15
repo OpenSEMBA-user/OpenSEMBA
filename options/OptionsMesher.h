@@ -73,6 +73,7 @@ public:
     void setScaleFactorValue(const string& scaleFactorValue);
     void setSigma(const string& sigma);
     void setSwfForze(const string& swfForze);
+    void setTh(const string& th);
     void setEffectiveParameter(bool effectiveParameter);
     void applyGeometricScalingFactor(const Real& factor);
 
@@ -87,7 +88,6 @@ public:
     bool isEffectiveParameter() const;
     bool hasEffParams() const;
     string getEffThick() const;
-    void setTh(const string& th);
     string getEffSigma() const;
     string getEdgeFraction() const;
     bool hasScaleFactor() const;
@@ -102,7 +102,6 @@ public:
 
     void printHelp() const;
     void printInfo() const;
-
 
 private:
     Mesher mesher_;
@@ -125,8 +124,5 @@ private:
     string toStr(const BoundType) const;
 };
 
-inline void OptionsMesher::setEffectiveParameter(bool effectiveParameter) {
-    effectiveParameter_ = effectiveParameter;
-}
 
 #endif /* OPENFOAMPARAMETERS_H_ */
