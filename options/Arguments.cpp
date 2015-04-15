@@ -8,7 +8,7 @@
 #include "Arguments.h"
 
 Arguments::Arguments(const int argc,  const char* argv[]) {
-    path_ = *argv++;
+    path_ = argv[0];
     for (Int i = 1; i < argc; i++) {
         const string str = argv[i];
         if (isKey(str)) {
