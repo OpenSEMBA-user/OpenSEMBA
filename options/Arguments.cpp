@@ -7,8 +7,25 @@
 
 #include "Arguments.h"
 
+
+Arguments::Arguments(const string& args) {
+    stringstream iss(args);
+    vector<string> arg;
+    string str;
+    while (getline(iss, str, ' ')) {
+      arg.push_back(str);
+    }
+    build(arg);
+}
+
 Arguments::Arguments(const int argc,  const char* argv[]) {
+    vector<string> arg(argv, argv + argc);
+    build(arg);
+}
+
+void Arguments::build(const vector<string>& argv) {
     path_ = argv[0];
+    int argc = argv.size();
     for (Int i = 1; i < argc; i++) {
         const string str = argv[i];
         if (isKey(str)) {
@@ -193,7 +210,7 @@ UInt Arguments::size() const {
 pair<string, vector<string>> Arguments::readArgument(
         const int pos,
         const int argc,
-        const char* argv[]) const {
+        const vector<string>& argv) const {
     string key;
     vector<string> value;
     string str = argv[pos];
@@ -216,3 +233,4 @@ pair<string, vector<string>> Arguments::readArgument(
 bool Arguments::isKey(const string str) const {
     return (str.find("-") == 0 || str.find("--") == 0);
 }
+

@@ -34,15 +34,6 @@ OptionsSolver::OptionsSolver () {
     wiresAttenuationFactor_ = false;
 }
 
-void
-OptionsSolver::printInfo() const {
-    cout<< " --- Solver parameters --- " << endl;
-    cout<< "Solver: " << toStr(solver_) << endl;
-    cout<< "Final time: " << finalTime_ << endl;
-    cout<< "Default sampling period: " << samplingPeriod_ << endl;
-    cout<< "Time step: " << timeStep_ << endl;
-}
-
 void OptionsSolver::set(const Arguments& arg) {
     if (arg.has("h") || arg.has("help")) {
         printHelp();
@@ -51,7 +42,7 @@ void OptionsSolver::set(const Arguments& arg) {
         setCFL(atof(arg.get("cfl").c_str()));
     }
     if (arg.has("n")) {
-        setNumberOfTimeSteps(atoi(arg.get("n").c_str())));
+        setNumberOfTimeSteps(atoi(arg.get("n").c_str()));
     }
     if (arg.has("digfilt")) {
         setCompositeModel(CompositeModel::digFilt);
@@ -85,12 +76,11 @@ void OptionsSolver::set(const Arguments& arg) {
     }
     if (arg.has("wiresflavor")) {
         string flavor = arg.get("wiresflavor");
-        switch (flavor) {
-        case "transition":
+        if (flavor == "transition") {
             setWireModel(WireModel::transition);
-        case "new":
+        } else if (flavor == "new") {
             setWireModel(WireModel::New);
-        default:
+        } else {
             setWireModel(WireModel::Default);
         }
     }
@@ -120,12 +110,11 @@ void OptionsSolver::set(const Arguments& arg) {
     }
     if (arg.has("inductance")) {
         string model = arg.get("inductance");
-        switch (model) {
-        case "ledfelt":
+        if (model == "ledfelt") {
             setSelfInductanceModel(SelfInductanceModel::ledfelt);
-        case "berenger":
+        } else if (model == "berenger") {
             setSelfInductanceModel(SelfInductanceModel::berenger);
-        default:
+        } else {
             setSelfInductanceModel(SelfInductanceModel::boutayeb);
         }
     }
@@ -335,4 +324,17 @@ double OptionsSolver::getWiresAttenuationFactor() const {
 
 void OptionsSolver::setWiresAttenuationFactor(double wiresAttenuationFactor) {
     wiresAttenuationFactor_ = wiresAttenuationFactor;
+}
+
+void
+OptionsSolver::printInfo() const {
+    cout<< " --- Solver parameters --- " << endl;
+    cout<< "Solver: " << toStr(solver_) << endl;
+    cout<< "Final time: " << finalTime_ << endl;
+    cout<< "Default sampling period: " << samplingPeriod_ << endl;
+    cout<< "Time step: " << timeStep_ << endl;
+}
+
+string OptionsSolver::toStr() const {
+    // TODO OptionsSolver toStr
 }

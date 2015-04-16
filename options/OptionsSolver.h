@@ -86,6 +86,7 @@ public:
     WireModel getWireModel() const;
     double getWiresAttenuationFactor() const;
 
+    string toStr() const;
     void printInfo() const;
     void printHelp() const;
 

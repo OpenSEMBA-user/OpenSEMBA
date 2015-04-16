@@ -11,6 +11,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <sstream>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -24,6 +25,7 @@ using namespace std;
 
 class Arguments {
 public:
+    Arguments(const string& arg);
     Arguments(const int argc, const char* argv[]);
     virtual ~Arguments();
 
@@ -51,10 +53,11 @@ protected:
     string boolToStr(const bool param) const;
 private:
     pair<string, vector<string>> readArgument(
-            const int i, const int argc,  const char* argv[]) const;
+            const int i, const int argc,  const vector<string>& argv) const;
     string removeExtension(const string& fName) const;
     string removeChars(const string& str, char* charsToRemove) const;
     bool isKey(string) const;
+    void build(const vector<string>& args);
 };
 
 #endif /* ARGUMENTS2_H_ */
