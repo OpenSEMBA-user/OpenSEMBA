@@ -234,3 +234,21 @@ bool Arguments::isKey(const string str) const {
     return (str.find("-") == 0 || str.find("--") == 0);
 }
 
+bool Arguments::contains(const Arguments& rhs) const {
+    map<string,vector<string>>::const_iterator itRHS, it;
+    for (itRHS = rhs.args_.begin(); itRHS != rhs.args_.end(); ++itRHS) {
+        it = args_.find(itRHS->first);
+        if (it == args_.end()) {
+            return false;
+        }
+        if (it->second.size() != itRHS->second.size()) {
+            return false;
+        }
+        for (UInt i = 0; i < it->second.size(); i++) {
+            if (it->second[i] != itRHS->second[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}

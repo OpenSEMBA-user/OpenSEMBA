@@ -335,8 +335,31 @@ OptionsSolver::printInfo() const {
     cout<< "Time step: " << timeStep_ << endl;
 }
 
-string OptionsSolver::toStr() const {
-    string res;
-    // TODO OptionsSolver toStr
-    return res;
+string OptionsSolver::toArgsStr() const {
+    stringstream ss;
+    ss << " -cfl " << getCFL();
+    ss << " -n " << getNumberOfTimeSteps();
+    ss << " -attc " << getCompositesAttenuationFactor();
+    ss << " -attw " << getWiresAttenuationFactor();
+    ss << " -pmlalpha " << getPmlAlpha();
+    ss << " -pmlkappa " << getPmlKappa();
+    ss << " -pmlcorr " << getPmlCorrection();
+    ss << toStrIfTrue(" -taparrabos", isTaparrabos()));
+    ss << toStrIfTrue(" -intrawiressimplify", isIntraWireSimplifications());
+    ss << toStrIfTrue(" -mtln", isMTLN());
+    ss << toStrIfTrue(" -joinwires", isJoinWires());
+    ss << toStrIfTrue(" -groundwires", isGroundWires());
+    ss << toStrIfTrue(" -connectendings", isConnectEndings());
+    ss << toStrIfTrue(" -isolategroupgroups", isIsolateGroupGroups());
+    ss << toStrIfTrue(" -makeholes", isMakeHoles());
+    return ss.str();
+}
+
+string
+OptionsSolver::toStrIfTrue(const string str, const bool param) const {
+    if (param) {
+        return str;
+    } else {
+        return string();
+    }
 }

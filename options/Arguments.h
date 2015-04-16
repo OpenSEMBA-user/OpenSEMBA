@@ -36,6 +36,7 @@ public:
     virtual string getFilename() const;
     UInt size() const;
 
+    bool contains(const Arguments& rhs) const;
 
     virtual void printWelcomeMessage(
             const string appName,

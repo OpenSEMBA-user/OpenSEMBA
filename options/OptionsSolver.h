@@ -86,7 +86,7 @@ public:
     WireModel getWireModel() const;
     double getWiresAttenuationFactor() const;
 
-    string toStr() const;
+    string toArgsStr() const;
     void printInfo() const;
     void printHelp() const;
 
@@ -99,13 +99,14 @@ private:
     Real samplingPeriod_;
     // ugrfdtd
     CompositeModel compositeModel_;
-    double compositesAttenuationFactor_;
     MetalModel metalModel_;
+    WireModel wireModel_;
+    SelfInductanceModel selfInductanceModel_;
+    double compositesAttenuationFactor_;
     pair<double,double> pmlAlpha_;
     double pmlKappa_;
     pair<double,double> pmlCorrection_;
-    WireModel wireModel_;
-    SelfInductanceModel selfInductanceModel_;
+    double wiresAttenuationFactor_;
     bool taparrabos_;
     bool intraWireSimplifications_;
     bool MTLN_;
@@ -114,9 +115,9 @@ private:
     bool connectEndings_;
     bool isolateGroupGroups_;
     bool makeHoles_;
-    double wiresAttenuationFactor_;
     //
     string toStr(const Solver solver) const;
+    string toStrIfTrue(const string str, const bool param) const;
 };
 
 #endif /* GLOBALPROBLEMDATA_H_ */
