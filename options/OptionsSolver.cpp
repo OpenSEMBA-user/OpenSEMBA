@@ -336,5 +336,7 @@ OptionsSolver::printInfo() const {
 }
 
 string OptionsSolver::toStr() const {
+    string res;
     // TODO OptionsSolver toStr
+    return res;
 }
