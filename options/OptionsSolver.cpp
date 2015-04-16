@@ -340,9 +340,55 @@ string OptionsSolver::toArgsStr() const {
     ss << " -cfl " << getCFL();
     ss << " -n " << getNumberOfTimeSteps();
     switch (getCompositeModel()) {
-    case CompositeModel::Default:
-        ss << "-"
-#error "adasdasds"
+    case CompositeModel::digFilt:
+        ss << " -digfilt";
+        break;
+    case CompositeModel::MIBC:
+        ss << " -mibc";
+        break;
+    case CompositeModel::ADEMIBC:
+        ss << " -ade";
+        break;
+    case CompositeModel::URMMMT:
+        ss << " -nocompomur";
+        break;
+    default:
+        break;
+    }
+    switch (getMetalModel()) {
+    case MetalModel::maloney:
+        ss << " -skindepth";
+        break;
+    case MetalModel::maloneySkinDepth:
+        ss << " -skindepthpre";
+        break;
+    case MetalModel::conformalSkinDepth:
+        ss << " -conformalskin";
+        break;
+    default:
+        break;
+    }
+    switch (getWireModel()) {
+    case WireModel::New:
+        ss << " -wiresflavor new";
+        break;
+    case WireModel::transition:
+        ss << " -wiresflavor transition";
+        break;
+    default:
+        ss << " -wiresflavor old";
+        break;
+    }
+    switch (getSelfInductanceModel()) {
+    case SelfInductanceModel::ledfelt:
+        ss << " -inductance ledfelt";
+        break;
+    case SelfInductanceModel::berenger:
+        ss << " -inductance berenger";
+        break;
+    default:
+        ss << " -inductance boutayeb";
+        break;
     }
     ss << " -attc " << getCompositesAttenuationFactor();
     ss << " -attw " << getWiresAttenuationFactor();
