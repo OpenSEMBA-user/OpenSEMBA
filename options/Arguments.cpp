@@ -55,25 +55,6 @@ Arguments::fExists(const string& filename) const {
    return ifile;
 }
 
-void
-Arguments::printInfo() const {
-	cout<< " -- Arguments info ---" << endl;
-	cout<< "Path: " << path_ << endl;
-	cout<< "Filename: " << getFilename() << endl;
-	cout<< "Project Folder: " << getProjectFolder() << endl;
-	cout<< "Project Name: " << getProjectName() << endl;
-	cout<< "Arguments read: " << size() << endl;
-	map<string,vector<string>>::const_iterator it;
-	cout << " - Key --- Values -" << endl;
-	for (it = args_.begin(); it != args_.end(); ++it) {
-	    cout << it->first << ": ";
-	    for (UInt i = 0; i < it->second.size(); i++) {
-	        cout << it->second[i] << " ";
-	    }
-	    cout << endl;
-	}
-}
-
 string
 Arguments::getProjectFolder() const {
 	char *cstr = new char[getFilename().length() + 1];
@@ -225,7 +206,7 @@ pair<string, vector<string>> Arguments::readArgument(
         if (isKey(str)) {
             break;
         }
-        value.push_back(str);
+        value.push_back(trim(str));
     }
     return pair<string, vector<string>> (key,value);
 }
@@ -252,3 +233,35 @@ bool Arguments::contains(const Arguments& rhs) const {
     }
     return true;
 }
+
+string Arguments::toStr() const {
+    stringstream ss;
+    map<string,vector<string>>::const_iterator it;
+    for (it = args_.begin(); it != args_.end(); ++it) {
+        ss << " -" << it->first;
+        for (UInt i = 0; i < it->second.size(); i++) {
+            ss  << " " << it->second[i];
+        }
+    }
+    return ss.str();
+}
+
+void
+Arguments::printInfo() const {
+    cout<< " -- Arguments info ---" << endl;
+    cout<< "Path: " << path_ << endl;
+    cout<< "Filename: " << getFilename() << endl;
+    cout<< "Project Folder: " << getProjectFolder() << endl;
+    cout<< "Project Name: " << getProjectName() << endl;
+    cout<< "Arguments read: " << size() << endl;
+    map<string,vector<string>>::const_iterator it;
+    cout << " - Key --- Values -" << endl;
+    for (it = args_.begin(); it != args_.end(); ++it) {
+        cout << it->first << ": ";
+        for (UInt i = 0; i < it->second.size(); i++) {
+            cout << it->second[i] << " ";
+        }
+        cout << endl;
+    }
+}
+

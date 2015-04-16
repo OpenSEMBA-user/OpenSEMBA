@@ -339,12 +339,17 @@ string OptionsSolver::toArgsStr() const {
     stringstream ss;
     ss << " -cfl " << getCFL();
     ss << " -n " << getNumberOfTimeSteps();
+    switch (getCompositeModel()) {
+    case CompositeModel::Default:
+        ss << "-"
+#error "adasdasds"
+    }
     ss << " -attc " << getCompositesAttenuationFactor();
     ss << " -attw " << getWiresAttenuationFactor();
-    ss << " -pmlalpha " << getPmlAlpha();
+    ss << " -pmlalpha " << getPmlAlpha().first << " " << getPmlAlpha().second;
     ss << " -pmlkappa " << getPmlKappa();
-    ss << " -pmlcorr " << getPmlCorrection();
-    ss << toStrIfTrue(" -taparrabos", isTaparrabos()));
+    ss << " -pmlcorr " << getPmlCorrection().first << " " << getPmlCorrection().second;
+    ss << toStrIfTrue(" -taparrabos", isTaparrabos());
     ss << toStrIfTrue(" -intrawiressimplify", isIntraWireSimplifications());
     ss << toStrIfTrue(" -mtln", isMTLN());
     ss << toStrIfTrue(" -joinwires", isJoinWires());

@@ -43,8 +43,15 @@ public:
             const string versionNumber) const;
     virtual void printGoodbyeMessage(
             const string appName) const;
+
+    string toStr() const;
     void printInfo() const;
     void printHelp() const;
+
+    friend std::ostream& operator<<(ostream& os, const Arguments& lay) {
+       return os << lay.toStr();
+    }
+
 
 protected:
     string path_;
@@ -59,6 +66,23 @@ private:
     string removeChars(const string& str, char* charsToRemove) const;
     bool isKey(string) const;
     void build(const vector<string>& args);
+
+    static inline string
+     &ltrim(string &s) {
+        s.erase(s.begin(), find_if(s.begin(),
+         s.end(), not1(ptr_fun<int, int>(isspace))));
+        return s;
+    }
+    static inline string
+     &rtrim(string &s) {
+        s.erase(find_if(s.rbegin(), s.rend(),
+         not1(ptr_fun<int, int>(isspace))).base(), s.end());
+        return s;
+    }
+    static inline string
+    &trim(string &s) {
+        return ltrim(rtrim(s));
+    }
 };
 
 #endif /* ARGUMENTS2_H_ */
