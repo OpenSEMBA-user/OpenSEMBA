@@ -29,14 +29,24 @@ string EMSourceBase::getMagnitudeFilename() const {
 }
 
 void EMSourceBase::convertToNumerical(const string file,
-                                      const double step,
-                                      const double finalTime) {
+                                      const Real step,
+                                      const Real finalTime) {
     if(magnitude_->is<MagnitudeNumerical>()) {
         return;
     }
     const Magnitude* orig = magnitude_;
     magnitude_ = new MagnitudeNumerical(file, magnitude_, step, finalTime);
     delete orig;
+}
+
+MagnitudeNumerical* EMSourceBase::exportToFile(const string file,
+                                               const Real step,
+                                               const Real finalTime) const {
+
+    if(magnitude_->is<MagnitudeNumerical>()) {
+        return magnitude_->cloneTo<MagnitudeNumerical>();
+    }
+    return new MagnitudeNumerical(file, magnitude_, step, finalTime);
 }
 
 void EMSourceBase::printInfo() const {

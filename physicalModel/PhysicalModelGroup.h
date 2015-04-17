@@ -24,6 +24,7 @@
 #include "PMSurfaceSIBC.h"
 #include "PMSurfaceMultilayer.h"
 #include "PMWire.h"
+#include "PMWireExtremes.h"
 
 template<typename P = PhysicalModel>
 class PhysicalModelGroup : public virtual GroupId<P,MatId> {

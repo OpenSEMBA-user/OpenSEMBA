@@ -108,7 +108,7 @@ CartesianAxis Box<T,D>::getDirection() const {
         assert(false);
         exit(EXIT_FAILURE);
     }
-    CartesianAxis res;
+    CartesianAxis res = x;
     for(Int d = 0; d < D; d++) {
         if (MathUtils::notEqual(max_(d),min_(d),max_.norm())) {
             res = CartesianAxis(d);
@@ -127,7 +127,7 @@ CartesianAxis Box<T,D>::getNormal() const {
         exit(EXIT_FAILURE);
     }
     assert(D == 3);
-    CartesianAxis res;
+    CartesianAxis res = x;
     for(Int d = 0; d < D; d++) {
         if (MathUtils::equal(max_(d),min_(d),max_.norm())) {
             res = CartesianAxis(d);

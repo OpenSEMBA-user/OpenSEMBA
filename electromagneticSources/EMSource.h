@@ -24,7 +24,7 @@ public:
     virtual ~EMSourceBase();
 
     template<class T>
-    bool magnitudeIs() {
+    bool magnitudeIs() const {
         return magnitude_->is<T>();
     }
 
@@ -32,8 +32,11 @@ public:
     virtual const string& getName() const = 0;
 
     void convertToNumerical(const string file,
-                            const double step,
-                            const double finalTime);
+                            const Real step,
+                            const Real finalTime);
+    MagnitudeNumerical* exportToFile(const string file,
+                                     const Real step,
+                                     const Real finalTime) const;
 
     virtual void printInfo() const = 0;
 
