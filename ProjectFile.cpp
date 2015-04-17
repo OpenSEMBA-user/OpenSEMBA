@@ -44,6 +44,17 @@ bool ProjectFile::canOpenFile() const {
     return res;
 }
 
+bool ProjectFile::canExecute() const {
+    struct stat st;
+    if (stat(filename_.c_str(), &st) < 0) {
+        return false;
+    }
+    if ((st.st_mode & S_IEXEC) != 0) {
+        return true;
+    }
+    return false;
+}
+
 string ProjectFile::getFilename() const {
     return filename_;
 }

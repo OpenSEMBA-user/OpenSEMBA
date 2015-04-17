@@ -111,11 +111,16 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
         const LayerId layId) const {
     ElementsGroup<const SurfR> surfs =
         elems().getGroupWith(matId, layId).getGroupOf<SurfR>();
-//    return discretizeWithinBoundary(this, surfs);
+    return discretizeWithinBoundary(this, surfs);
 }
 
 vector<BoxR3> MeshStructured::discretizeWithinBoundary(
-        const ElementsGroup<SurfI>& surf) const {
+const Grid3* grid, const ElementsGroup<const SurfR>& faces) const {
+#warning "Not implemented"
+}
+
+vector<BoxR3> MeshStructured::discretizeWithinBoundary(
+        const ElementsGroup<const SurfI>& surf) const {
 //    checkAllFacesAreRectangular();
     // Gets pairs of quads that define the volume of the space within them.
     const vector<pair<const SurfI*, const SurfI*> > pairs =
@@ -151,10 +156,9 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
     return res;
 }
 
-
 vector<pair<const SurfI*, const SurfI*> >
 MeshStructured::getPairsDefiningVolumeWithin(
-        const ElementsGroup<SurfI>& origBound) const {
+        const ElementsGroup<const SurfI>& origBound) const {
     vector<pair<const SurfI*, const SurfI*> > res;
     const UInt nOrigBound = origBound.size();
     // Checks that bound.size is an even number.

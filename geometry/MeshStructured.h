@@ -65,11 +65,11 @@ public:
 private:
     vector<BoxR3> discretizeWithinBoundary(
             const Grid3* grid,
-            const ElementsGroup<SurfR>& faces) const;
+            const ElementsGroup<const SurfR>& faces) const;
     vector<BoxR3> discretizeWithinBoundary(
-            const ElementsGroup<SurfI>& faces) const;
+            const ElementsGroup<const SurfI>& faces) const;
     vector<pair<const SurfI*, const SurfI*> > getPairsDefiningVolumeWithin(
-            const ElementsGroup<SurfI>& faces) const;
+            const ElementsGroup<const SurfI>& faces) const;
 };
 
 #include "MeshStructured.hpp"

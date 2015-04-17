@@ -34,6 +34,7 @@ public:
     ProjectFile& operator=(const ProjectFile& rhs);
 
     bool canOpenFile() const;
+    bool canExecute() const;
 
     string getFilename() const;
     string getBasename() const;
@@ -63,4 +64,7 @@ protected:
 private:
     string filename_;
 };
+
+
+
 #endif /* SRC_COMMON_PROJECTFILE_H_ */

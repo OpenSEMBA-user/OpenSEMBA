@@ -111,7 +111,6 @@ template<class T>
 void WiresGroup<T>::fillWiresInfo_(const GraphLines<T>& graph,
                                    const SmbData& smb) {
 
-    const PhysicalModelGroup<>& mats = *smb.pMGroup;
     vector<vector<const Line<T>*>> wires;
     const PMWire* wireMat;
     const PMMultiport *extremeL, *extremeR;

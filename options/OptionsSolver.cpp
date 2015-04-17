@@ -34,17 +34,93 @@ OptionsSolver::OptionsSolver () {
     wiresAttenuationFactor_ = false;
 }
 
-void
-OptionsSolver::printInfo() const {
-    cout<< " --- Solver parameters --- " << endl;
-    cout<< "Solver: " << toStr(solver_) << endl;
-    cout<< "Final time: " << finalTime_ << endl;
-    cout<< "Default sampling period: " << samplingPeriod_ << endl;
-    cout<< "Time step: " << timeStep_ << endl;
-}
-
-void OptionsSolver::set(Arguments& args) {
-    // TODO OptionsSolver Set
+void OptionsSolver::set(const Arguments& arg) {
+    if (arg.has("h") || arg.has("help")) {
+        printHelp();
+    }
+    if (arg.has("cfl")) {
+        setCFL(atof(arg.get("cfl").c_str()));
+    }
+    if (arg.has("n")) {
+        setNumberOfTimeSteps(atoi(arg.get("n").c_str()));
+    }
+    if (arg.has("digfilt")) {
+        setCompositeModel(CompositeModel::digFilt);
+    }
+    if (arg.has("mibc")) {
+        setCompositeModel(CompositeModel::MIBC);
+    }
+    if (arg.has("ade")) {
+        setCompositeModel(CompositeModel::ADEMIBC);
+    }
+    if (arg.has("nocompomur")) {
+        setCompositeModel(CompositeModel::URMMMT);
+    }
+    if (arg.has("attc")) {
+        setCompositesAttenuationFactor(atof(arg.get("attc").c_str()));
+    }
+    if (arg.has("pmlalpha")) {
+        pair<double,double> factorOrder;
+        factorOrder.first = atof(arg.get("pmlalpha",0).c_str());
+        factorOrder.second = atof(arg.get("pmlalpha",1).c_str());
+        setPMLAlpha(factorOrder);
+    }
+    if (arg.has("pmlkappa")) {
+        setPMLKappa(atof(arg.get("pmlkappa").c_str()));
+    }
+    if (arg.has("pmlcorr")) {
+        pair<double,double> factorDepth;
+        factorDepth.first = atof(arg.get("pmlcorr",0).c_str());
+        factorDepth.second = atof(arg.get("pmlcorr",1).c_str());
+        setPMLCorrection(factorDepth);
+    }
+    if (arg.has("wiresflavor")) {
+        string flavor = arg.get("wiresflavor");
+        if (flavor == "transition") {
+            setWireModel(WireModel::transition);
+        } else if (flavor == "new") {
+            setWireModel(WireModel::New);
+        } else {
+            setWireModel(WireModel::Default);
+        }
+    }
+    if (arg.has("taparrabos")) {
+        setTaparrabos(true);
+    }
+    if (arg.has("intrawiresimplify")) {
+        setIntraWireSimplifications(true);
+    }
+    if (arg.has("mtln")) {
+        setMTLN(true);
+    }
+    if (arg.has("groundwires")) {
+        setGroundWires(true);
+    }
+    if (arg.has("connectendings")) {
+        setConnectEndings(true);
+    }
+    if (arg.has("isolategrougroups")) {
+        setIsolateGroupGroups(true);
+    }
+    if (arg.has("joinwires")) {
+        setJoinWires(true);
+    }
+    if (arg.has("makeholes")) {
+        setMakeHoles(true);
+    }
+    if (arg.has("inductance")) {
+        string model = arg.get("inductance");
+        if (model == "ledfelt") {
+            setSelfInductanceModel(SelfInductanceModel::ledfelt);
+        } else if (model == "berenger") {
+            setSelfInductanceModel(SelfInductanceModel::berenger);
+        } else {
+            setSelfInductanceModel(SelfInductanceModel::boutayeb);
+        }
+    }
+    if (arg.has("attw")) {
+        setWiresAttenuationFactor(atof(arg.get("attw").c_str()));
+    }
 }
 
 void OptionsSolver::printHelp() const {
@@ -248,4 +324,93 @@ double OptionsSolver::getWiresAttenuationFactor() const {
 
 void OptionsSolver::setWiresAttenuationFactor(double wiresAttenuationFactor) {
     wiresAttenuationFactor_ = wiresAttenuationFactor;
+}
+
+void
+OptionsSolver::printInfo() const {
+    cout<< " --- Solver parameters --- " << endl;
+    cout<< "Solver: " << toStr(solver_) << endl;
+    cout<< "Final time: " << finalTime_ << endl;
+    cout<< "Default sampling period: " << samplingPeriod_ << endl;
+    cout<< "Time step: " << timeStep_ << endl;
+}
+
+string OptionsSolver::toArgsStr() const {
+    stringstream ss;
+    ss << " -cfl " << getCFL();
+    ss << " -n " << getNumberOfTimeSteps();
+    switch (getCompositeModel()) {
+    case CompositeModel::digFilt:
+        ss << " -digfilt";
+        break;
+    case CompositeModel::MIBC:
+        ss << " -mibc";
+        break;
+    case CompositeModel::ADEMIBC:
+        ss << " -ade";
+        break;
+    case CompositeModel::URMMMT:
+        ss << " -nocompomur";
+        break;
+    default:
+        break;
+    }
+    switch (getMetalModel()) {
+    case MetalModel::maloney:
+        ss << " -skindepth";
+        break;
+    case MetalModel::maloneySkinDepth:
+        ss << " -skindepthpre";
+        break;
+    case MetalModel::conformalSkinDepth:
+        ss << " -conformalskin";
+        break;
+    default:
+        break;
+    }
+    switch (getWireModel()) {
+    case WireModel::New:
+        ss << " -wiresflavor new";
+        break;
+    case WireModel::transition:
+        ss << " -wiresflavor transition";
+        break;
+    default:
+        ss << " -wiresflavor old";
+        break;
+    }
+    switch (getSelfInductanceModel()) {
+    case SelfInductanceModel::ledfelt:
+        ss << " -inductance ledfelt";
+        break;
+    case SelfInductanceModel::berenger:
+        ss << " -inductance berenger";
+        break;
+    default:
+        ss << " -inductance boutayeb";
+        break;
+    }
+    ss << " -attc " << getCompositesAttenuationFactor();
+    ss << " -attw " << getWiresAttenuationFactor();
+    ss << " -pmlalpha " << getPmlAlpha().first << " " << getPmlAlpha().second;
+    ss << " -pmlkappa " << getPmlKappa();
+    ss << " -pmlcorr " << getPmlCorrection().first << " " << getPmlCorrection().second;
+    ss << toStrIfTrue(" -taparrabos", isTaparrabos());
+    ss << toStrIfTrue(" -intrawiressimplify", isIntraWireSimplifications());
+    ss << toStrIfTrue(" -mtln", isMTLN());
+    ss << toStrIfTrue(" -joinwires", isJoinWires());
+    ss << toStrIfTrue(" -groundwires", isGroundWires());
+    ss << toStrIfTrue(" -connectendings", isConnectEndings());
+    ss << toStrIfTrue(" -isolategroupgroups", isIsolateGroupGroups());
+    ss << toStrIfTrue(" -makeholes", isMakeHoles());
+    return ss.str();
+}
+
+string
+OptionsSolver::toStrIfTrue(const string str, const bool param) const {
+    if (param) {
+        return str;
+    } else {
+        return string();
+    }
 }

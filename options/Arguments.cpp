@@ -7,9 +7,25 @@
 
 #include "Arguments.h"
 
+
+Arguments::Arguments(const string& args) {
+    stringstream iss(args);
+    vector<string> arg;
+    string str;
+    while (getline(iss, str, ' ')) {
+      arg.push_back(str);
+    }
+    build(arg);
+}
+
 Arguments::Arguments(const int argc,  const char* argv[]) {
-    path_ = argv[0];
-    for (Int i = 1; i < argc; i++) {
+    vector<string> arg(argv, argv + argc);
+    build(arg);
+}
+
+void Arguments::build(const vector<string>& argv) {
+    int argc = argv.size();
+    for (Int i = 0; i < argc; i++) {
         const string str = argv[i];
         if (isKey(str)) {
             args_.insert(readArgument(i, argc, argv));
@@ -18,13 +34,6 @@ Arguments::Arguments(const int argc,  const char* argv[]) {
     if (argc == 1) {
         cout << " >>>> No arguments where given <<<< " << endl;
         printHelp();
-    }
-    if (!fExists(getFilename())) {
-        printInfo();
-        cerr << endl << "ERROR @ Arguments::getArguments(): "
-            << "No input file was found. "
-            << "These files existence were checked: "
-            << getFilename() << endl;
     }
 }
 
@@ -36,25 +45,6 @@ bool
 Arguments::fExists(const string& filename) const {
    ifstream ifile(filename.c_str());
    return ifile;
-}
-
-void
-Arguments::printInfo() const {
-	cout<< " -- Arguments info ---" << endl;
-	cout<< "Path: " << path_ << endl;
-	cout<< "Filename: " << getFilename() << endl;
-	cout<< "Project Folder: " << getProjectFolder() << endl;
-	cout<< "Project Name: " << getProjectName() << endl;
-	cout<< "Arguments read: " << size() << endl;
-	map<string,vector<string>>::const_iterator it;
-	cout << " - Key --- Values -" << endl;
-	for (it = args_.begin(); it != args_.end(); ++it) {
-	    cout << it->first << ": ";
-	    for (UInt i = 0; i < it->second.size(); i++) {
-	        cout << it->second[i] << " ";
-	    }
-	    cout << endl;
-	}
 }
 
 string
@@ -166,7 +156,7 @@ string Arguments::removeExtension(const string& fName) const {
 }
 
 string
-Arguments::removeChars(const string& in, char* charsToRemove) const {
+Arguments::removeChars(const string& in, const char* charsToRemove) const {
     string res = in;
     for (unsigned int i = 0; i < strlen(charsToRemove); ++i) {
         res.erase(remove(res.begin(), res.end(), charsToRemove[i]), res.end());
@@ -193,7 +183,7 @@ UInt Arguments::size() const {
 pair<string, vector<string>> Arguments::readArgument(
         const int pos,
         const int argc,
-        const char* argv[]) const {
+        const vector<string>& argv) const {
     string key;
     vector<string> value;
     string str = argv[pos];
@@ -208,7 +198,7 @@ pair<string, vector<string>> Arguments::readArgument(
         if (isKey(str)) {
             break;
         }
-        value.push_back(str);
+        value.push_back(trim(str));
     }
     return pair<string, vector<string>> (key,value);
 }
@@ -216,3 +206,53 @@ pair<string, vector<string>> Arguments::readArgument(
 bool Arguments::isKey(const string str) const {
     return (str.find("-") == 0 || str.find("--") == 0);
 }
+
+bool Arguments::contains(const Arguments& rhs) const {
+    map<string,vector<string>>::const_iterator itRHS, it;
+    for (itRHS = rhs.args_.begin(); itRHS != rhs.args_.end(); ++itRHS) {
+        it = args_.find(itRHS->first);
+        if (it == args_.end()) {
+            return false;
+        }
+        if (it->second.size() != itRHS->second.size()) {
+            return false;
+        }
+        for (UInt i = 0; i < it->second.size(); i++) {
+            if (it->second[i] != itRHS->second[i]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+string Arguments::toStr() const {
+    stringstream ss;
+    map<string,vector<string>>::const_iterator it;
+    for (it = args_.begin(); it != args_.end(); ++it) {
+        ss << " -" << it->first;
+        for (UInt i = 0; i < it->second.size(); i++) {
+            ss  << " " << it->second[i];
+        }
+    }
+    return ss.str();
+}
+
+void
+Arguments::printInfo() const {
+    cout<< " -- Arguments info ---" << endl;
+    cout<< "Filename: " << getFilename() << endl;
+    cout<< "Project Folder: " << getProjectFolder() << endl;
+    cout<< "Project Name: " << getProjectName() << endl;
+    cout<< "Arguments read: " << size() << endl;
+    map<string,vector<string>>::const_iterator it;
+    cout << " - Key --- Values -" << endl;
+    for (it = args_.begin(); it != args_.end(); ++it) {
+        cout << it->first << ": ";
+        for (UInt i = 0; i < it->second.size(); i++) {
+            cout << it->second[i] << " ";
+        }
+        cout << endl;
+    }
+}
+

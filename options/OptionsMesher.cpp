@@ -224,7 +224,7 @@ void OptionsMesher::setBoundTermination(
     }
 }
 
-void OptionsMesher::set(Arguments& args) {
+void OptionsMesher::set(const Arguments& args) {
     if (args.has("h") || args.has("help")) {
         printHelp();
         exit(EXIT_SUCCESS);

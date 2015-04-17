@@ -15,7 +15,7 @@ class Options : public virtual ClassBase {
 public:
     virtual ~Options();
 
-    virtual void set(Arguments& args) = 0;
+    virtual void set(const Arguments& args) = 0;
 
     virtual void printHelp() const = 0;
 };
