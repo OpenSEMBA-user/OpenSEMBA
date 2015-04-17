@@ -128,6 +128,7 @@ OutputGiD::writeMesh(
         }
     }
     //
+    GiD_FlushPostFile();
     delete mesh;
 }
 
