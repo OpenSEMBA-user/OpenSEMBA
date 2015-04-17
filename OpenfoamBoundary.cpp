@@ -72,8 +72,9 @@ OpenfoamBoundary::getLayerIdFromName() const {
 }
 
 Int
-OpenfoamBoundary::strpos(const char *haystack, char *needle, Int nth) const {
-    char *res = const_cast<char*>(haystack);
+OpenfoamBoundary::strpos(const char *haystack,
+                         const char *needle, Int nth) const {
+    const char *res = haystack;
     for(Int i = 1; i <= nth; i++)
     {
         res = strstr(res, needle);

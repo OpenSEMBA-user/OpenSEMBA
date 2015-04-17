@@ -38,7 +38,7 @@ protected:
 private:
 	UInt nFaces_;
 	UInt startFace_;
-	Int strpos(const char *haystack, char *needle, Int nth) const;
+	Int strpos(const char *haystack, const char *needle, Int nth) const;
     LayerId getLayerIdFromName() const;
 };
 
