@@ -15,16 +15,14 @@ Semba::Semba(const Arguments& arg) {
     smb->mesherOptions->set(arg);
     smb->solverOptions->set(arg);
 
-    Solver* solver;
     switch (smb->solverOptions->getSolver()) {
     case OptionsSolver::Solver::ugrfdtd:
-        solver = new SolverFDTD(smb);
-        solver->run();
+        solver_ = new SolverFDTD(smb);
         break;
     case OptionsSolver::Solver::cudg3d:
         break;
     default:
-        solver = new SolverFDTD(smb);
+        solver_ = new SolverFDTD(smb);
     }
 }
 
@@ -32,3 +30,6 @@ Semba::~Semba() {
     // TODO Auto-generated destructor stub
 }
 
+void Semba::run() {
+    solver_->run();
+}

@@ -24,9 +24,8 @@ Arguments::Arguments(const int argc,  const char* argv[]) {
 }
 
 void Arguments::build(const vector<string>& argv) {
-    path_ = argv[0];
     int argc = argv.size();
-    for (Int i = 1; i < argc; i++) {
+    for (Int i = 0; i < argc; i++) {
         const string str = argv[i];
         if (isKey(str)) {
             args_.insert(readArgument(i, argc, argv));
@@ -35,13 +34,6 @@ void Arguments::build(const vector<string>& argv) {
     if (argc == 1) {
         cout << " >>>> No arguments where given <<<< " << endl;
         printHelp();
-    }
-    if (!fExists(getFilename())) {
-        printInfo();
-        cerr << endl << "ERROR @ Arguments::getArguments(): "
-            << "No input file was found. "
-            << "These files existence were checked: "
-            << getFilename() << endl;
     }
 }
 
@@ -249,7 +241,6 @@ string Arguments::toStr() const {
 void
 Arguments::printInfo() const {
     cout<< " -- Arguments info ---" << endl;
-    cout<< "Path: " << path_ << endl;
     cout<< "Filename: " << getFilename() << endl;
     cout<< "Project Folder: " << getProjectFolder() << endl;
     cout<< "Project Name: " << getProjectName() << endl;

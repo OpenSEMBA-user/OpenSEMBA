@@ -54,7 +54,6 @@ public:
 
 
 protected:
-    string path_;
     map<string, vector<string>> args_;
     bool fExists(const string& filename) const;
     string getFileNameFromProjectPath(const string projectPath) const;
