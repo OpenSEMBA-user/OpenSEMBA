@@ -5,6 +5,7 @@
  *      Author: damarro
  */
 
+#include "VertexLine.h"
 #include "VertexCoord.h"
 
 template<class T>
@@ -50,6 +51,17 @@ void VertexCoord<T>::setLine(UInt i, const VertexLine<T>* line)        {
 template<class T>
 void VertexCoord<T>::addLine(const VertexLine<T>* line) {
     lines_.push_back(line);
+}
+
+template<class T>
+void VertexCoord<T>::printInfo() const {
+    cout << "--- VertexCoord Info ---" << endl;
+    coord_->printInfo();
+    cout << "AdjacentLines:";
+    for (UInt i = 0; i < lines_.size(); i++) {
+        cout << " " << lines_[i]->line()->getId();
+    }
+    cout << endl;
 }
 
 template class VertexCoord<Real>;

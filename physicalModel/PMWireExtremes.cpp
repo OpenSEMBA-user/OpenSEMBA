@@ -54,9 +54,11 @@ void PMWireExtremes::printInfo() const {
     cout<< " --- WireExtremes info ---" << endl;
     PMWire::printInfo();
     if (extreme_[0] != NULL) {
+        cout << "ExtremeL:" << endl;
         extreme_[0]->printInfo();
     }
     if (extreme_[1] != NULL) {
+        cout << "ExtremeR:" << endl;
         extreme_[1]->printInfo();
     }
 }

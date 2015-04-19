@@ -8,6 +8,7 @@
 #ifndef SRC_MESHER_FDTD_MESHLINES_VERTEXCOORD_H_
 #define SRC_MESHER_FDTD_MESHLINES_VERTEXCOORD_H_
 
+#include <iostream>
 #include <vector>
 using namespace std;
 
@@ -37,6 +38,8 @@ public:
     void setLine(UInt i, const VertexLine<T>* line);
 
     void addLine(const VertexLine<T>* line);
+
+    void printInfo() const;
 
 private:
     const Coordinate<T,3>* coord_;

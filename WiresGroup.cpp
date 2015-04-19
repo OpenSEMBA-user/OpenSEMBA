@@ -24,6 +24,20 @@ WiresGroup<T>::~WiresGroup() {
 }
 
 template<class T>
+void WiresGroup<T>::printInfo() const {
+    cout << "--- WiresGroup Info ---" << endl;
+    cout << "Wires:" << endl;
+    for (UInt i = 0; i < wires_.size(); i++) {
+        wires_[i]->printInfo();
+    }
+    cout << "Mats:" << endl;
+    for (map<MatId, PMWireExtremes*>::const_iterator
+         it = mats_.begin(); it != mats_.end(); ++it) {
+        it->second->printInfo();
+    }
+}
+
+template<class T>
 void WiresGroup<T>::init_(const SmbData& smb) {
     const GraphLines<T>& graph = constructGraph_(smb);
     fillWiresInfo_(graph, smb);
@@ -36,19 +50,26 @@ GraphLines<T> WiresGroup<T>::constructGraph_(const SmbData& smb) {
     {
         ElementsGroup<const Line<T>> lines;
         if (is_floating_point<T>::value) {
-            lines = smb.mesh->castTo<MeshStructured>()
+            lines = smb.mesh->castTo<MeshUnstructured>()
                         ->elems().getGroupOf<Line<T>>();
         } else if (is_integral<T>::value) {
-            lines = smb.mesh->castTo<MeshUnstructured>()
+            lines = smb.mesh->castTo<MeshStructured>()
                         ->elems().getGroupOf<Line<T>>();
         }
         PhysicalModelGroup<const PMWire> pmwires =
             smb.pMGroup->getGroupOf<PMWire>();
-        wires.add(lines.getGroupWith(pmwires.getIds()));
+        vector<MatId> pmwiresIds = pmwires.getIds();
 
         PhysicalModelGroup<const PMMultiport> pmmults =
                 mats.getGroupOf<PMMultiport>();
-        wires.add(lines.getGroupWith(pmmults.getIds()));
+        vector<MatId> pmmultsIds = pmmults.getIds();
+
+        vector<MatId> matIds;
+        matIds.reserve(pmwiresIds.size()+pmmultsIds.size());
+        matIds.insert(matIds.end(), pmwiresIds.begin(), pmwiresIds.end());
+        matIds.insert(matIds.end(), pmmultsIds.begin(), pmmultsIds.end());
+
+        wires = lines.getGroupWith(matIds);
     }
 
     GraphLines<T> graph(wires);
@@ -57,7 +78,6 @@ GraphLines<T> WiresGroup<T>::constructGraph_(const SmbData& smb) {
 
     for(UInt i = 0; i < graph.numCoords(); i++) {
         nodePtr = graph.coord(i);
-
         if(nodePtr->numLines() > 2) {
             graph.splitNode(i);
         } else if(nodePtr->numLines() == 2) {
@@ -111,7 +131,7 @@ template<class T>
 void WiresGroup<T>::fillWiresInfo_(const GraphLines<T>& graph,
                                    const SmbData& smb) {
 
-    vector<vector<const Line<T>*>> wires;
+    vector<vector<const Line<T>*>> wires = getLines_(graph);
     const PMWire* wireMat;
     const PMMultiport *extremeL, *extremeR;
     for (UInt i = 0; i < wires.size(); i++) {
@@ -141,26 +161,28 @@ vector<vector<const Line<T>*>> WiresGroup<T>::getLines_(
         const GraphLines<T>& graph) {
 
     vector<vector<const Line<T>*>> res;
-    set<const VertexLine<T>*> visLines;
+    set<ElementId> visLines;
     const VertexLine<T> *prevSegment, *nextSegment;
     ElementId prvNodeId;
     for(unsigned int n = 1; n < 3; n++) {
-        for(unsigned int i = 0; i < graph.numCoords(); i++) {
-            if ((graph.coord(i)->numLines() == n) &&
-                (visLines.count(graph.coord(i)->getLine(0)) == 0)) {
+        for(unsigned int i = 0; i < graph.numLines(); i++) {
+            if (((graph.line(i)->getCoord(0)->numLines() == n) ||
+                  graph.line(i)->getCoord(1)->numLines() == n) &&
+                (visLines.count(graph.line(i)->line()->getId()) == 0)) {
 
                 vector<const Line<T>*> wireLines;
-                nextSegment = graph.coord(i)->getLine(0);
+                nextSegment = graph.line(i);
                 while(nextSegment != NULL) {
-                    if(visLines.count(nextSegment) != 0) {
+                    if(visLines.count(nextSegment->line()->getId()) != 0) {
                         break;
                     }
                     wireLines.push_back(nextSegment->line());
-                    visLines.insert(nextSegment);
+                    visLines.insert(nextSegment->line()->getId());
                     prevSegment = nextSegment;
                     nextSegment = NULL;
                     for(UInt j = 0; j < prevSegment->numLines(); j++) {
-                        if(visLines.count(prevSegment->getLine(j)) == 0) {
+                        if (visLines.count(
+                                prevSegment->getLine(j)->line()->getId()) == 0) {
                             nextSegment = prevSegment->getLine(j);
                         }
                     }
@@ -179,15 +201,13 @@ vector<vector<const Line<T>*>> WiresGroup<T>::getLines_(
 }
 
 template<class T>
-void WiresGroup<T>::getWireMats_(const PMWire* wireMat,
-                                 const PMMultiport* extremeL,
-                                 const PMMultiport* extremeR,
+void WiresGroup<T>::getWireMats_(const PMWire*& wireMat,
+                                 const PMMultiport*& extremeL,
+                                 const PMMultiport*& extremeR,
                                  const vector<const Line<T> *>& lines,
                                  const SmbData& smb) {
 
     const PhysicalModelGroup<>& mats = *smb.pMGroup;
-    wireMat = NULL;
-    extremeL = extremeR = NULL;
     if (lines.empty()) {
         return;
     }
@@ -199,16 +219,16 @@ void WiresGroup<T>::getWireMats_(const PMWire* wireMat,
         }
     }
 
-    Int extremeLPos = -1;
-    Int wireMatPos  = -1;
-    Int extremeRPos = -1;
-    for (UInt m = 0; m < mats.size(); m++) {
+    wireMat = NULL;
+    extremeL = NULL;
+    extremeR = NULL;
+    for (UInt m = 0; m < matIds.size(); m++) {
         if (mats.get(matIds[m])->is<PMMultiport>()) {
-            if ((extremeLPos == -1) &&
-                (wireMatPos  == -1)) {
-                extremeLPos = m;
-            } else if ((extremeLPos >  -1) &&
-                       (wireMatPos  == -1)) {
+            if ((extremeL == NULL) &&
+                (wireMat  == NULL)) {
+                extremeL = mats.get(matIds[m])->castTo<PMMultiport>();
+            } else if ((extremeL != NULL) &&
+                       (wireMat  == NULL)) {
                 cerr << "WARNING @ WireGroup: ";
                 cerr << " Wire: " << wires_.size()+1;
                 cerr << ". Two node materials together. ";
@@ -216,10 +236,10 @@ void WiresGroup<T>::getWireMats_(const PMWire* wireMat,
                 cerr << endl;
                 assert(false);
                 continue;
-            } else if ((wireMatPos  >  -1) &&
-                       (extremeRPos == -1)) {
-                extremeRPos = m;
-            } else if (extremeRPos > -1) {
+            } else if ((wireMat  != NULL) &&
+                       (extremeR == NULL)) {
+                extremeR = mats.get(matIds[m])->castTo<PMMultiport>();
+            } else if (extremeR != NULL) {
                 cerr << "WARNING @ WireGroup: ";
                 cerr << " Wire: " << wires_.size()+1;
                 cerr << ". Two node materials together. ";
@@ -229,9 +249,9 @@ void WiresGroup<T>::getWireMats_(const PMWire* wireMat,
                 continue;
             }
         } else if (mats.get(matIds[m])->is<PMWire>()) {
-            if (wireMatPos == -1) {
-                wireMatPos = m;
-            } else if (wireMatPos > -1) {
+            if (wireMat == NULL) {
+                wireMat = mats.get(matIds[m])->castTo<PMWire>();
+            } else if (wireMat != NULL) {
                 cerr << "WARNING @ WireGroup: ";
                 cerr << " Wire: " << wires_.size()+1;
                 cerr << ". Too many wire materials. ";
@@ -242,20 +262,13 @@ void WiresGroup<T>::getWireMats_(const PMWire* wireMat,
             }
         }
     }
-    if (wireMatPos < 0) {
+    if (wireMat == NULL) {
         cerr << "WARNING @ WireGroup: ";
         cerr << " Wire: " << wires_.size()+1;
         cerr << ". No wire material. Ignoring wire.";
         cerr << endl;
         assert(false);
         return;
-    }
-    wireMat = mats.get(wireMatPos)->castTo<PMWire>();
-    if (extremeLPos >= 0) {
-        extremeL = mats.get(extremeLPos)->castTo<PMMultiport>();
-    }
-    if (extremeRPos >= 0) {
-        extremeR = mats.get(extremeRPos)->castTo<PMMultiport>();
     }
 }
 
@@ -278,9 +291,6 @@ Polyline<T>* WiresGroup<T>::newWire_(const vector<const Line<T>*>& lines,
     v.push_back(prev);
     for (UInt i = 0; i < lines.size(); i++) {
         wireIds.push_back(lines[i]->getId());
-        if (prev->getId() == lines[i]->getV(1)->getId()) {
-            revIds_.insert(lines[i]->getId());
-        }
         if (prev->getId() != lines[i]->getV(0)->getId()) {
             prev = lines[i]->getV(0);
             v.push_back(prev);

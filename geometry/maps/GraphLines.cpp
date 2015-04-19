@@ -43,8 +43,7 @@ void GraphLines<T>::splitNode(UInt i) {
 }
 
 template<class T>
-void GraphLines<T>::init_(
-        const ElementsGroup<const Line<T>>& lines) {
+void GraphLines<T>::init_(const ElementsGroup<const Line<T>>& lines) {
     LayerId layId;
     const Coordinate<T,3>* v[2];
     VertexLine<T>* segmentPtr;
@@ -74,6 +73,19 @@ void GraphLines<T>::init_(
     map.clear();
     for (UInt i = 0; i < lines_.size(); i++) {
         lines_[i]->constructLines();
+    }
+}
+
+template<class T>
+void GraphLines<T>::printInfo() const {
+    cout << "--- GraphLines Info ---" << endl;
+    cout << "Coords:" << endl;
+    for (UInt i = 0; i < coords_.size(); i++) {
+        coords_[i]->printInfo();
+    }
+    cout << "Lines:" << endl;
+    for (UInt i = 0; i < lines_.size(); i++) {
+        lines_[i]->printInfo();
     }
 }
 

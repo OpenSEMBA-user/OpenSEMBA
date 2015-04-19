@@ -32,6 +32,8 @@ public:
 
     void splitNode(UInt i);
 
+    void printInfo() const;
+
 private:
     vector<VertexCoord<T>*> coords_;
     vector<VertexLine <T>*> lines_;

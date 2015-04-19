@@ -35,6 +35,8 @@ public:
 
     void constructLines();
 
+    void printInfo() const;
+
 private:
     const Line<T>* line_;
     const VertexCoord<T>* coords_[2];

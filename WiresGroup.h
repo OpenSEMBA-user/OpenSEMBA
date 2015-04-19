@@ -32,12 +32,12 @@ public:
     const PMWireExtremes* getMat(MatId id) const { return mats_.at(id); }
 
     const vector<ElementId>& getIdsOfWire(UInt i) const { return wiresIds_[i]; }
-    bool isReversed(const ElementId id) const { return revIds_.count(id) == 1; }
+
+    void printInfo() const;
 
 private:
     vector<Polyline<T>*> wires_;
     vector<vector<ElementId>> wiresIds_;
-    set<ElementId> revIds_;
 
     map<MatId, PMWireExtremes*> mats_;
 
@@ -46,9 +46,9 @@ private:
     void fillWiresInfo_(const GraphLines<T>&,
                         const SmbData&);
     vector<vector<const Line<T>*> > getLines_(const GraphLines<T>&);
-    void getWireMats_(const PMWire* wireMat,
-                      const PMMultiport* extremeL,
-                      const PMMultiport* extremeR,
+    void getWireMats_(const PMWire*& wireMat,
+                      const PMMultiport*& extremeL,
+                      const PMMultiport*& extremeR,
                       const vector<const Line<T>*>&,
                       const SmbData&);
     Polyline<T>* newWire_(const vector<const Line<T>*>& lines,

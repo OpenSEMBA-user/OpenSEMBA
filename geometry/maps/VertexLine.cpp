@@ -47,5 +47,19 @@ void VertexLine<T>::constructLines() {
     }
 }
 
+template<class T>
+void VertexLine<T>::printInfo() const {
+    cout << "--- VertexLine Info ---" << endl;
+    line_->printInfo();
+    cout << "AdjacentCoords: "
+         << coords_[0]->coord()->getId() << " "
+         << coords_[1]->coord()->getId() << endl;
+    cout << "AdjacentLines:";
+    for (UInt i = 0; i < lines_.size(); i++) {
+        cout << " " << lines_[i]->line()->getId();
+    }
+    cout << endl;
+}
+
 template class VertexLine<Real>;
 template class VertexLine<Int >;
