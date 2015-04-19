@@ -13,8 +13,8 @@
 #include <fstream>
 #include <string>
 #include <stdio.h>
-#include "Parser.h"
-#include "../SmbData.h"
+#include "../../common/parser/Parser.h"
+#include "../../common/SmbData.h"
 #include "MeshUnstructured.h"
 #include "ProblemSize.h"
 
