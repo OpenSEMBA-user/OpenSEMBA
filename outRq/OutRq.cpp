@@ -4,7 +4,7 @@ OutRqBase::OutRqBase() {
     outputType_ = undefined;
 }
 
-OutRqBase::OutRqBase(const OutRqBase::Type outputType,
+OutRqBase::OutRqBase(const Type outputType,
                      const string& name) {
     name_ = name;
     outputType_ = outputType;
