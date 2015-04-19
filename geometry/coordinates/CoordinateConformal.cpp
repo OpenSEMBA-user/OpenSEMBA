@@ -64,6 +64,20 @@ bool CoordinateConformal::operator==(const CoordinateBase& rhs) const {
     return res;
 }
 
+CoordR3* CoordinateConformal::toUnstructured(const Grid3& grid) const {
+    CVecR3 pos = grid.getPos(*this);
+    if (MathUtils::greather(getLength(), 0.0, 1.0)) {
+        Int dir = getDir();
+        Real length = getLength();
+        CVecI3 cellAux = *this;
+        cellAux(dir)++;
+        CVecR3 posAux = grid.getPos(cellAux);
+        Real step = posAux(dir)-pos(dir);
+        pos(dir) += step*length;
+    }
+    return new CoordR3(this->getId(), pos);
+}
+
 void CoordinateConformal::printInfo() const {
     CoordI3::printInfo();
     cout << " Dir: (";

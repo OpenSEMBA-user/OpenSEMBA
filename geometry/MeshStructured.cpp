@@ -5,6 +5,7 @@
  *      Author: luis
  */
 
+#include "MeshUnstructured.h"
 #include "MeshStructured.h"
 
 MeshStructured::MeshStructured(const Grid3& grid)
@@ -76,23 +77,26 @@ MeshStructured::getRectilinearHexesInsideRegion(
 
 MeshUnstructured* MeshStructured::getMeshUnstructured() const {
     MeshUnstructured* res = new MeshUnstructured;
-    for (UInt i = 0; i < ElementsGroup<ElemI>::size(); i++) {
-        ElemR* elem = elems()(i)->toUnstructured(*res, *this);
-        if (elem != NULL) {
-            if (res->elems().existId(elem->getId())) {
-                const ElemR* orig = res->elems().get(elem->getId());
-                if (*elem != *orig) {
-                    cerr << endl
-                    << "ERROR @ MeshStructured::getMeshUnstructured(): "
-                    << "Existent Element not coincident." << endl;
-                    assert(false);
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                res->elems().add(elem);
-            }
+
+    vector<CoordR3*> newCoords;
+    newCoords.reserve(coords().size());
+    for (UInt i = 0; i < coords().size(); i++) {
+        CoordR3* newCoord = coords()(i)->toUnstructured(*this);
+        if (newCoord != NULL) {
+            newCoords.push_back(newCoord);
         }
     }
+    res->coords().add(newCoords);
+
+    vector<ElemR*> newElems;
+    newElems.reserve(elems().size());
+    for (UInt i = 0; i < elems().size(); i++) {
+        ElemR* newElem = elems()(i)->toUnstructured(*res, *this);
+        if (newElem != NULL) {
+            newElems.push_back(newElem);
+        }
+    }
+    res->elems().add(newElems);
     res->layers() = layers().newGroup();
     return res;
 }

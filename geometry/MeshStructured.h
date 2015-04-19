@@ -9,7 +9,8 @@
 #define SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_
 
 #include "Mesh.h"
-#include "MeshUnstructured.h"
+
+class MeshUnstructured;
 
 class MeshStructured : public virtual Mesh,
                        public virtual Grid3,
@@ -44,17 +45,6 @@ public:
 
     MeshUnstructured* getMeshUnstructured() const;
 
-    template<template<typename> class E>
-    ElementsGroup< E<Int> > add(const ElementsGroup<E<Real> >&,
-                                const Real tol = Grid3::tolerance);
-    template<template<typename> class E>
-    ElementsGroup< E<Int> > add(const ElementsGroup<const E<Real> >&,
-                                const Real tol = Grid3::tolerance);
-    template<template<typename> class E>
-    ElementsGroup< E<Int> > add(E<Real>*,
-                                const Real tol = Grid3::tolerance);
-
-
     vector<BoxR3> discretizeWithinBoundary(
             const MatId matId,
             const LayerId layId) const;
@@ -71,7 +61,5 @@ private:
     vector<pair<const SurfI*, const SurfI*> > getPairsDefiningVolumeWithin(
             const ElementsGroup<const SurfI>& faces) const;
 };
-
-#include "MeshStructured.hpp"
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */

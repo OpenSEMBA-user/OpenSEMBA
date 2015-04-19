@@ -16,8 +16,11 @@
 using namespace std;
 
 #include "maps/MapGroup.h"
+#include "Grid.h"
 
 #include "Mesh.h"
+
+class MeshStructured;
 
 class MeshUnstructured : public virtual Mesh,
                          public virtual CoordinateGroup<CoordR3>,
@@ -42,6 +45,9 @@ public:
     const CoordinateGroup<CoordR3>& coords() const { return *this; }
     const ElementsGroup<ElemR>&     elems () const { return *this; }
     const LayerGroup<Layer>&        layers() const { return *this; }
+
+    MeshStructured* getMeshStructured(const Grid3& grid,
+                                      const Real tol = Grid3::tolerance) const;
 
     vector<ElementId> addAsHex8(const BoxR3& box);
     virtual vector<BoxR3> getRectilinearHexesInsideRegion(

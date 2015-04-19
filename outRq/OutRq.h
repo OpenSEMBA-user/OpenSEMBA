@@ -14,7 +14,7 @@ using namespace std;
 #include "ClassGroupBase.h"
 
 class OutRqBase : public virtual Domain,
-                  public virtual ClassGroupBase<Elem> {
+                  public virtual ClassGroupBase<ElementsGroup<const Elem>> {
 public:
     typedef enum {
         undefined,
@@ -76,10 +76,10 @@ public:
 
     bool isSimilar(const OutRqBase& rhs) const;
 
-    Group<const Elem> elems() const { return *this; }
+    ElementsGroup<const Elem> elems() const { return *this; }
 
-    void set(const Group<const Elem>&);
-    void add(const Group<const Elem>&);
+    void set(const ElementsGroup<const Elem>&);
+    void add(const ElementsGroup<const Elem>&);
 
     void printInfo() const;
 };

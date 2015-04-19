@@ -234,8 +234,8 @@ void Hexa8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
-ElemI* Hexa8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
-                             const Grid3& grid, const Real tol) const {
+ElemI* Hexa8<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
+                              const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
         return NULL;
@@ -250,8 +250,8 @@ ElemI* Hexa8<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Hexa8<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
-                               const Grid3& grid) const {
+ElemR* Hexa8<T>::toUnstructured(const CoordinateGroup<CoordR3>& cG,
+                                const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
         return NULL;

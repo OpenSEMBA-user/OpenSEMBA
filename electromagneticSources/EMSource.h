@@ -16,7 +16,7 @@ using namespace std;
 
 #include "ClassGroupBase.h"
 
-class EMSourceBase : public virtual ClassGroupBase<Elem> {
+class EMSourceBase : public virtual ClassGroupBase<ElementsGroup<const Elem>> {
 public:
     EMSourceBase();
     EMSourceBase(const Magnitude* magnitude);
@@ -56,10 +56,10 @@ public:
 
     virtual ClassBase* clone() const = 0;
 
-    Group<const Elem> elems() const { return *this; }
+    ElementsGroup<const Elem> elems() const { return *this; }
 
-    void set(const Group<const Elem>&);
-    void add(const Group<const Elem>&);
+    void set(const ElementsGroup<const Elem>&);
+    void add(const ElementsGroup<const Elem>&);
 
     virtual void printInfo() const = 0;
 };

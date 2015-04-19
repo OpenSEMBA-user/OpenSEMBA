@@ -38,12 +38,12 @@ bool OutRq<T>::isSimilar(const OutRqBase& rhs) const {
 }
 
 template <class T>
-void OutRq<T>::set(const Group<const Elem>& elems) {
+void OutRq<T>::set(const ElementsGroup<const Elem>& elems) {
     ElementsGroup<const T>::operator=(elems);
 }
 
 template <class T>
-void OutRq<T>::add(const Group<const Elem>& elems) {
+void OutRq<T>::add(const ElementsGroup<const Elem>& elems) {
     ElementsGroup<const T>::add(elems);
 }
 

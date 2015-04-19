@@ -59,9 +59,9 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>* coord);
 
-    ElemI* toStructured(CoordinateGroup<CoordI3>&,
+    ElemI* toStructured(const CoordinateGroup<CoordI3>&,
                         const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(CoordinateGroup<CoordR3>&, const Grid3&) const;
+    ElemR* toUnstructured(const CoordinateGroup<CoordR3>&, const Grid3&) const;
 
     void printInfo() const;
 
