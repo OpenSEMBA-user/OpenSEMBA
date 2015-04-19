@@ -114,7 +114,8 @@ OutputGiD::writeMesh(
         for (UInt i = 0; i < srcs->size(); i++) {
             const EMSourceBase* src =  (*srcs)(i);
             const string name = preName + "EMSource_" + src->getName();
-            ElementsGroup<const ElemR> elem = src->elems();
+            ElementsGroup<const ElemR> elem =
+                    mesh->elems().getGroupWith(src->elems().getIds());
             writeAllElements(elem, name);
         }
     }
@@ -123,7 +124,8 @@ OutputGiD::writeMesh(
         for (UInt i = 0; i < oRqs->size(); i++) {
             const OutRqBase* oRq = (*oRqs)(i);
             const string name = preName + "OutRq_" + oRq->getName();
-            ElementsGroup<const ElemR> elem = oRq->elems();
+            ElementsGroup<const ElemR> elem =
+                    mesh->elems().getGroupWith(oRq->elems().getIds());
             writeAllElements(elem, name);
         }
     }
