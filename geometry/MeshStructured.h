@@ -39,8 +39,6 @@ public:
     const ElementsGroup<ElemI>&     elems () const { return *this; }
     const LayerGroup<>&             layers() const { return *this; }
 
-    vector<BoxR3> getRectilinearHexesInsideRegion(
-            const ElementsGroup<ElemR>& region) const;
 
     MeshUnstructured* getMeshUnstructured() const;
 
@@ -54,15 +52,20 @@ public:
     ElementsGroup< E<Int> > add(E<Real>*,
                                 const Real tol = Grid3::tolerance);
 
+    void addAsHex(const )
 
-    vector<BoxR3> discretizeWithinBoundary(
-            const MatId matId,
-            const LayerId layId) const;
 
     void applyScalingFactor(const Real factor);
 
     virtual void printInfo() const;
 private:
+    vector<BoxR3> discretizeWithinBoundary(
+            const MatId matId,
+            const LayerId layId) const;
+
+    vector<BoxR3> getRectilinearHexesInsideRegion(
+            const ElementsGroup<ElemR>& region) const;
+    vector<ElementId> addAsHex8(const BoxR3& box);
     vector<BoxR3> discretizeWithinBoundary(
             const Grid3* grid,
             const ElementsGroup<SurfR>& faces) const;
