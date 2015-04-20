@@ -28,6 +28,9 @@ public:
 
     CartesianAxis getDir   () const { return dir_;    }
     Real          getLength() const { return length_; }
+
+    CoordR3* toUnstructured(const Grid3&) const;
+
     void printInfo() const;
 
 private:

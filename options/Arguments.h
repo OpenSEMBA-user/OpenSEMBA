@@ -62,7 +62,7 @@ private:
     pair<string, vector<string>> readArgument(
             const int i, const int argc,  const vector<string>& argv) const;
     string removeExtension(const string& fName) const;
-    string removeChars(const string& str, char* charsToRemove) const;
+    string removeChars(const string& str, const char* charsToRemove) const;
     bool isKey(string) const;
     void build(const vector<string>& args);
 

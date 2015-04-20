@@ -156,7 +156,7 @@ string Arguments::removeExtension(const string& fName) const {
 }
 
 string
-Arguments::removeChars(const string& in, char* charsToRemove) const {
+Arguments::removeChars(const string& in, const char* charsToRemove) const {
     string res = in;
     for (unsigned int i = 0; i < strlen(charsToRemove); ++i) {
         res.erase(remove(res.begin(), res.end(), charsToRemove[i]), res.end());

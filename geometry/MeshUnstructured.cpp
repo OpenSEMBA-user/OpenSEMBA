@@ -4,6 +4,7 @@
  *  Created on: Jul 23, 2013
  *      Author: luis
  */
+#include "MeshStructured.h"
 #include "MeshUnstructured.h"
 
 MeshUnstructured::MeshUnstructured() {
@@ -46,6 +47,32 @@ MeshUnstructured& MeshUnstructured::operator=(const MeshUnstructured& rhs) {
     return *this;
 }
 
+MeshStructured* MeshUnstructured::getMeshStructured(const Grid3& grid,
+                                                    const Real tol) const {
+    MeshStructured* res = new MeshStructured(grid);
+
+    vector<CoordI3*> newCoords;
+    newCoords.reserve(coords().size());
+    for (UInt i = 0; i < coords().size(); i++) {
+        CoordI3* newCoord = coords()(i)->toStructured(grid);
+        if (newCoord != NULL) {
+            newCoords.push_back(newCoord);
+        }
+    }
+    res->coords().add(newCoords);
+
+    vector<ElemI*> newElems;
+    newElems.reserve(elems().size());
+    for (UInt i = 0; i < elems().size(); i++) {
+        ElemI* newElem = elems()(i)->toStructured(*res, grid, tol);
+        if (newElem != NULL) {
+            newElems.push_back(newElem);
+        }
+    }
+    res->elems().add(newElems);
+    res->layers() = layers().newGroup();
+    return res;
+}
 vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
         const CVecR3& normal) {
     const UInt nK = border.size();

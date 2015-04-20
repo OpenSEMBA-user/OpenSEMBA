@@ -64,7 +64,7 @@ void LineConformal::setV(const UInt i, const CoordI3* coord) {
     LinI2::setV(i, coord);
 }
 
-ElemR* LineConformal::toUnstructured(CoordinateGroup<CoordR3>& cG,
+ElemR* LineConformal::toUnstructured(const CoordinateGroup<CoordR3>& cG,
                                      const Grid3& grid) const {
     const CoordConf* vConf[2];
     vConf[0] = getConfV(0);
@@ -86,14 +86,18 @@ ElemR* LineConformal::toUnstructured(CoordinateGroup<CoordR3>& cG,
         }
         coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
-            cG.add(new CoordR3(coordId, pos));
+            cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
+                 << "Inexistent Coordinate: " << coordId << endl;
+            assert(false);
+            return NULL;
         }
         coord[i] = cG.get(coordId);
         if (coord[i]->pos() != pos) {
-            cerr << endl << "ERROR @ LineConformal::toUnstructured(): "
-                 << "Existent Coordinate not coincident." << endl;
+            cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
+                 << "Existent Coordinate " << coordId
+                 << " not coincident." << endl;
             assert(false);
-            exit(EXIT_FAILURE);
+            return NULL;
         }
     }
     return new LinR2(this->getId(),
@@ -103,7 +107,7 @@ ElemR* LineConformal::toUnstructured(CoordinateGroup<CoordR3>& cG,
 }
 
 void LineConformal::printInfo() const {
-    cout << "--- LinI2Conformal info ---" << endl;
+    cout << "--- LineConformal info ---" << endl;
     cout << "Id: " << this->getId() << endl;
     for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
         getV(i)->printInfo();

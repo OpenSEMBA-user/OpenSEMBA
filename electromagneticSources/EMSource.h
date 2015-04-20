@@ -16,7 +16,7 @@ using namespace std;
 
 #include "ClassGroupBase.h"
 
-class EMSourceBase : public virtual ClassGroupBase<Elem> {
+class EMSourceBase : public virtual ClassGroupBase<ElementsGroup<const Elem>> {
 public:
     EMSourceBase();
     EMSourceBase(const Magnitude* magnitude);
@@ -24,7 +24,7 @@ public:
     virtual ~EMSourceBase();
 
     template<class T>
-    bool magnitudeIs() {
+    bool magnitudeIs() const {
         return magnitude_->is<T>();
     }
 
@@ -32,8 +32,11 @@ public:
     virtual const string& getName() const = 0;
 
     void convertToNumerical(const string file,
-                            const double step,
-                            const double finalTime);
+                            const Real step,
+                            const Real finalTime);
+    MagnitudeNumerical* exportToFile(const string file,
+                                     const Real step,
+                                     const Real finalTime) const;
 
     virtual void printInfo() const = 0;
 
@@ -53,10 +56,10 @@ public:
 
     virtual ClassBase* clone() const = 0;
 
-    Group<const Elem> elems() const { return *this; }
+    ElementsGroup<const Elem> elems() const { return *this; }
 
-    void set(const Group<const Elem>&);
-    void add(const Group<const Elem>&);
+    void set(const ElementsGroup<const Elem>&);
+    void add(const ElementsGroup<const Elem>&);
 
     virtual void printInfo() const = 0;
 };

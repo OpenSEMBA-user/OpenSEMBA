@@ -17,7 +17,8 @@ SmbData::SmbData() {
     mesherOptions = NULL;
 }
 
-SmbData::SmbData(const SmbData& rhs) {
+SmbData::SmbData(const SmbData& rhs)
+:   ProjectFile(rhs) {
     mesh = rhs.mesh->cloneTo<Mesh>();
     grid = rhs.grid->cloneTo<Grid3>();
     solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
@@ -35,6 +36,7 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
     if (this == &rhs) {
         return *this;
     }
+    ProjectFile::operator =(rhs);
     mesh = rhs.mesh->cloneTo<Mesh>();
     grid = rhs.grid->cloneTo<Grid3>();
     solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();

@@ -9,6 +9,8 @@ class OutRqGroup : public virtual Group<O> {
 public:
     USE_GROUP_CONSTRUCTS(OutRqGroup, O);
 
+    DEFINE_GROUP_CLONE(OutRqGroup, O);
+
     USE_GROUP_ASSIGN(O);
 
     template<typename O2>

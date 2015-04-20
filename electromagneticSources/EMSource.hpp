@@ -8,11 +8,11 @@
 #include "EMSource.h"
 
 template <class T>
-void EMSource<T>::set(const Group<const Elem>& elems) {
+void EMSource<T>::set(const ElementsGroup<const Elem>& elems) {
     ElementsGroup<const T>::operator=(elems);
 }
 
 template <class T>
-void EMSource<T>::add(const Group<const Elem>& elems) {
+void EMSource<T>::add(const ElementsGroup<const Elem>& elems) {
     ElementsGroup<const T>::add(elems);
 }

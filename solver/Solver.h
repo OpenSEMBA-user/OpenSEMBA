@@ -14,13 +14,15 @@
 
 using namespace std;
 
+#include "Types.h"
+
 class Solver {
 public:
    Solver();
    virtual ~Solver();
    virtual void run() = 0;
 protected:
-   static const uint printStep = 100;
+   static const UInt printStep = 100;
    void
     printTime(const double originalSeconds) const;
    double
@@ -29,8 +31,8 @@ protected:
     printTimeProfilingInfo(
      double tSum,
      double tRunning,
-     const uint tStep,
-     const uint Ntsteps) const;
+     const UInt tStep,
+     const UInt Ntsteps) const;
 };
 
 #endif /* SRC_SOLVER_H_ */

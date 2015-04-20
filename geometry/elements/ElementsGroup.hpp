@@ -173,7 +173,7 @@ BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
 
 template<typename E>
 const CoordR3* ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
-    const CoordR3* res;
+    const CoordR3* res = NULL;
     Real minDist = numeric_limits<Real>::infinity();
     ElementsGroup<const ElemR> elems = this->template getGroupOf<ElemR>();
     for (UInt b = 0; b < elems.size(); b++) {

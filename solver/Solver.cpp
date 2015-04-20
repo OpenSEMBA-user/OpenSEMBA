@@ -24,8 +24,8 @@ void
 Solver::printTimeProfilingInfo(
  double tSum,
  double tRunning,
- const uint tStep,
- const uint NtSteps) const {
+ const UInt tStep,
+ const UInt NtSteps) const {
    if (tStep % printStep == 0) {
       // Prints information on how much took to complete the current
       // set of time steps.

@@ -5,6 +5,7 @@
  *      Author: luis
  */
 
+#include "MeshUnstructured.h"
 #include "MeshStructured.h"
 
 MeshStructured::MeshStructured(const Grid3& grid)
@@ -76,23 +77,26 @@ MeshStructured::getRectilinearHexesInsideRegion(
 
 MeshUnstructured* MeshStructured::getMeshUnstructured() const {
     MeshUnstructured* res = new MeshUnstructured;
-    for (UInt i = 0; i < ElementsGroup<ElemI>::size(); i++) {
-        ElemR* elem = elems()(i)->toUnstructured(*res, *this);
-        if (elem != NULL) {
-            if (res->elems().existId(elem->getId())) {
-                const ElemR* orig = res->elems().get(elem->getId());
-                if (*elem != *orig) {
-                    cerr << endl
-                    << "ERROR @ MeshStructured::getMeshUnstructured(): "
-                    << "Existent Element not coincident." << endl;
-                    assert(false);
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                res->elems().add(elem);
-            }
+
+    vector<CoordR3*> newCoords;
+    newCoords.reserve(coords().size());
+    for (UInt i = 0; i < coords().size(); i++) {
+        CoordR3* newCoord = coords()(i)->toUnstructured(*this);
+        if (newCoord != NULL) {
+            newCoords.push_back(newCoord);
         }
     }
+    res->coords().add(newCoords);
+
+    vector<ElemR*> newElems;
+    newElems.reserve(elems().size());
+    for (UInt i = 0; i < elems().size(); i++) {
+        ElemR* newElem = elems()(i)->toUnstructured(*res, *this);
+        if (newElem != NULL) {
+            newElems.push_back(newElem);
+        }
+    }
+    res->elems().add(newElems);
     res->layers() = layers().newGroup();
     return res;
 }
@@ -111,11 +115,16 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
         const LayerId layId) const {
     ElementsGroup<const SurfR> surfs =
         elems().getGroupWith(matId, layId).getGroupOf<SurfR>();
-//    return discretizeWithinBoundary(this, surfs);
+    return discretizeWithinBoundary(this, surfs);
 }
 
 vector<BoxR3> MeshStructured::discretizeWithinBoundary(
-        const ElementsGroup<SurfI>& surf) const {
+const Grid3* grid, const ElementsGroup<const SurfR>& faces) const {
+#warning "Not implemented"
+}
+
+vector<BoxR3> MeshStructured::discretizeWithinBoundary(
+        const ElementsGroup<const SurfI>& surf) const {
 //    checkAllFacesAreRectangular();
     // Gets pairs of quads that define the volume of the space within them.
     const vector<pair<const SurfI*, const SurfI*> > pairs =
@@ -151,10 +160,9 @@ vector<BoxR3> MeshStructured::discretizeWithinBoundary(
     return res;
 }
 
-
 vector<pair<const SurfI*, const SurfI*> >
 MeshStructured::getPairsDefiningVolumeWithin(
-        const ElementsGroup<SurfI>& origBound) const {
+        const ElementsGroup<const SurfI>& origBound) const {
     vector<pair<const SurfI*, const SurfI*> > res;
     const UInt nOrigBound = origBound.size();
     // Checks that bound.size is an even number.

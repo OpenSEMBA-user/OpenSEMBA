@@ -83,10 +83,10 @@ public:
 
     virtual void setV(const UInt i, const Coordinate<T,3>*);
 
-    virtual Element<Int>* toStructured(CoordinateGroup<CoordI3>&,
+    virtual Element<Int>* toStructured(const CoordinateGroup<CoordI3>&,
                                        const Grid3&,
                                        const Real = Grid3::tolerance) const;
-    virtual Element<Real>* toUnstructured(CoordinateGroup<CoordR3>&,
+    virtual Element<Real>* toUnstructured(const CoordinateGroup<CoordR3>&,
                                           const Grid3&) const;
 
 protected:
@@ -94,10 +94,10 @@ protected:
 
     bool vertexInCell (const Grid3& grid, const Real tol) const;
     bool vertexInBound() const;
-    CoordinateId* vertexToStructured(CoordinateGroup<CoordI3>& cG,
+    CoordinateId* vertexToStructured(const CoordinateGroup<CoordI3>& cG,
                                      const Grid3& grid,
                                      const Real tol) const;
-    CoordinateId* vertexToUnstructured(CoordinateGroup<CoordR3>& cG,
+    CoordinateId* vertexToUnstructured(const CoordinateGroup<CoordR3>& cG,
                                        const Grid3& grid) const;
 
 };

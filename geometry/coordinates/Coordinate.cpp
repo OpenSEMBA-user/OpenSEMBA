@@ -85,13 +85,21 @@ bool Coordinate<T,D>::operator!=(const CoordinateBase& rhs) const {
 }
 
 template<class T, Int D>
-CartesianVector<T,D>& Coordinate<T,D>::pos() {
-    return *this;
+bool Coordinate<T,D>::isStructured(const Grid<D>& grid, const Real tol) const {
+    if (!grid.isCell(*this, tol)) {
+        return false;
+    }
+    return true;
 }
 
 template<class T, Int D>
-const CartesianVector<T,D>& Coordinate<T,D>::pos() const {
-    return *this;
+Coordinate<Int,D>* Coordinate<T,D>::toStructured(const Grid<D>& grid) const {
+    return new Coordinate<Int,D>(this->getId(), grid.getCell(*this));
+}
+
+template<class T, Int D>
+Coordinate<Real,D>* Coordinate<T,D>::toUnstructured(const Grid<D>& grid) const {
+    return new Coordinate<Real,D>(this->getId(), grid.getPos(*this));
 }
 
 template<class T, Int D>
@@ -107,4 +115,4 @@ void Coordinate<T,D>::printInfo() const {
 }
 
 template class Coordinate<Real,3>;
-template class Coordinate<Int, 3> ;
+template class Coordinate<Int ,3>;

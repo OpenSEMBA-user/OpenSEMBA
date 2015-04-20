@@ -16,6 +16,7 @@
 using namespace std;
 
 #include "../math/CartesianVector.h"
+#include "Grid.h"
 
 #include "../../base/class/ClassIdBase.h"
 
@@ -47,8 +48,14 @@ public:
     bool operator==(const CoordinateBase& rhs) const;
     bool operator!=(const CoordinateBase& rhs) const;
 
-    CartesianVector<T,D>& pos();
-    const CartesianVector<T,D>& pos() const;
+    virtual bool isStructured(const Grid<D>&,
+                              const Real = Grid<D>::tolerance) const;
+
+    CartesianVector<T,D>&       pos()       { return *this; }
+    const CartesianVector<T,D>& pos() const { return *this; }
+
+    virtual Coordinate<Int ,D>* toStructured  (const Grid<D>&) const;
+    virtual Coordinate<Real,D>* toUnstructured(const Grid<D>&) const;
 
     void printInfo() const;
 };

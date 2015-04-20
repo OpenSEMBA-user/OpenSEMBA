@@ -123,8 +123,8 @@ void Line2<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
-ElemI* Line2<T>::toStructured(CoordinateGroup<CoordI3>& cG,
-                             const Grid3& grid, const Real tol) const {
+ElemI* Line2<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
+                              const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
         return NULL;
@@ -139,8 +139,8 @@ ElemI* Line2<T>::toStructured(CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Line2<T>::toUnstructured(CoordinateGroup<CoordR3>& cG,
-                               const Grid3& grid) const {
+ElemR* Line2<T>::toUnstructured(const CoordinateGroup<CoordR3>& cG,
+                                const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
         return NULL;
@@ -165,7 +165,7 @@ void Line2<T>::printInfo() const {
 
 template<class T>
 void Line2<T>::setCoordinates(const CoordinateGroup<Coordinate<T,3> >& cG,
-                             const CoordinateId vId[2]) {
+                              const CoordinateId vId[2]) {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.get(vId[i]);
     }

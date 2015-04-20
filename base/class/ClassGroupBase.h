@@ -12,16 +12,16 @@
 
 #include "ClassBase.h"
 
-template<typename T>
+template<typename G>
 class ClassGroupBase : public virtual ClassBase {
 public:
     ClassGroupBase();
     virtual ~ClassGroupBase();
 
-    virtual Group<const T> elems() const = 0;
+    virtual G elems() const = 0;
 
-    virtual void set(const Group<const T>&) = 0;
-    virtual void add(const Group<const T>&) = 0;
+    virtual void set(const G&) = 0;
+    virtual void add(const G&) = 0;
 };
 
 #include "ClassGroupBase.hpp"
