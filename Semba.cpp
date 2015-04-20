@@ -30,6 +30,10 @@ Semba::~Semba() {
     // TODO Auto-generated destructor stub
 }
 
-void Semba::run() {
-    solver_->run();
+bool Semba::run() {
+    return solver_->run();
+}
+
+bool Semba::canRun() const {
+    return solver_->canRun();
 }

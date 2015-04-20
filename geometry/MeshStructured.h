@@ -40,9 +40,6 @@ public:
     const ElementsGroup<ElemI>&     elems () const { return *this; }
     const LayerGroup<>&             layers() const { return *this; }
 
-    vector<BoxR3> getRectilinearHexesInsideRegion(
-            const ElementsGroup<ElemR>& region) const;
-
     MeshUnstructured* getMeshUnstructured() const;
 
     template<template<typename> class E>
@@ -55,24 +52,17 @@ public:
     ElementsGroup< E<Int> > add(E<Real>*,
                                 const Real tol = Grid3::tolerance);
 
-
-    vector<BoxR3> discretizeWithinBoundary(
-            const MatId matId,
-            const LayerId layId) const;
+    void convertToHex(ElementsGroup<const SurfI> surfs);
+    void addAsHex(ElementsGroup<const VolR> vols);
 
     void applyScalingFactor(const Real factor);
 
     virtual void printInfo() const;
 private:
-    vector<BoxR3> discretizeWithinBoundary(
-            const Grid3* grid,
-            const ElementsGroup<const SurfR>& faces) const;
-    vector<BoxR3> discretizeWithinBoundary(
-            const ElementsGroup<const SurfI>& faces) const;
+    vector<HexI8*> discretizeWithinBoundary(
+            const ElementsGroup<const SurfI>& faces);
     vector<pair<const SurfI*, const SurfI*> > getPairsDefiningVolumeWithin(
             const ElementsGroup<const SurfI>& faces) const;
 };
-
-#include "MeshStructured.hpp"
 
 #endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */

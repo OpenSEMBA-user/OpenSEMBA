@@ -31,7 +31,7 @@ ProjectFile& ProjectFile::operator=(const ProjectFile& rhs) {
     return *this;
 }
 
-bool ProjectFile::canOpenFile() const {
+bool ProjectFile::canOpen() const {
     ifstream file;
     file.open(filename_.c_str());
     bool res;

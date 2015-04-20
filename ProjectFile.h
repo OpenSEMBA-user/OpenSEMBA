@@ -33,7 +33,7 @@ public:
 
     ProjectFile& operator=(const ProjectFile& rhs);
 
-    bool canOpenFile() const;
+    bool canOpen() const;
     bool canExecute() const;
 
     string getFilename() const;

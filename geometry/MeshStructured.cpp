@@ -57,24 +57,6 @@ void MeshStructured::applyScalingFactor(const Real factor) {
     Grid3::applyScalingFactor(factor);
 }
 
-vector<BoxR3>
-MeshStructured::getRectilinearHexesInsideRegion(
-        const ElementsGroup<ElemR>& region) const {
-
-    vector<CVecR3> center = getCenterOfCellsInside(region.getBound());
-    vector<BoxR3> res;
-    res.reserve(center.size());
-    for (UInt i = 0; i < center.size(); i++) {
-        for (UInt j = 0; j < region.size(); j++) {
-            if (region(j)->isInnerPoint(center[i])) {
-                res.push_back(getBoundingBoxContaining(center[i]));
-                break;
-            }
-        }
-    }
-    return res;
-}
-
 MeshUnstructured* MeshStructured::getMeshUnstructured() const {
     MeshUnstructured* res = new MeshUnstructured;
 
@@ -109,53 +91,51 @@ void MeshStructured::printInfo() const {
     LayerGroup<>::printInfo();
 }
 
-
-vector<BoxR3> MeshStructured::discretizeWithinBoundary(
-        const MatId matId,
-        const LayerId layId) const {
-    ElementsGroup<const SurfR> surfs =
-        elems().getGroupWith(matId, layId).getGroupOf<SurfR>();
-    return discretizeWithinBoundary(this, surfs);
+void MeshStructured::convertToHex(ElementsGroup<const SurfI> surfs) {
+    vector<HexI8*> hexes = discretizeWithinBoundary(surfs);
+    this->ElementsGroup<ElemI>::remove(surfs.getIds());
+    elems().add(hexes, true);
 }
 
-vector<BoxR3> MeshStructured::discretizeWithinBoundary(
-const Grid3* grid, const ElementsGroup<const SurfR>& faces) const {
-#warning "Not implemented"
+void MeshStructured::addAsHex(ElementsGroup<const VolR> region) {
+    vector<CVecR3> center = getCenterOfCellsInside(region.getBound());
+    vector<HexI8*> hexes;
+    hexes.reserve(center.size());
+    for (UInt i = 0; i < center.size(); i++) {
+        for (UInt j = 0; j < region.size(); j++) {
+            if (region(j)->isInnerPoint(center[i])) {
+                ElementId id = region(j)->getId();
+                BoxI3 box = getBoxIContaining(center[i]);
+                LayerId layId = region(j)->getLayerId();
+                MatId matId = region(j)->getMatId();
+                hexes.push_back(new HexI8(coords(), id, box, layId, matId));
+                break;
+            }
+        }
+    }
+    elems().add(hexes);
 }
 
-vector<BoxR3> MeshStructured::discretizeWithinBoundary(
-        const ElementsGroup<const SurfI>& surf) const {
-//    checkAllFacesAreRectangular();
-    // Gets pairs of quads that define the volume of the space within them.
-    const vector<pair<const SurfI*, const SurfI*> > pairs =
+vector<HexI8*> MeshStructured::discretizeWithinBoundary(
+        const ElementsGroup<const SurfI>& surf) {
+    const vector<pair<const SurfI*, const SurfI*>> pair =
             getPairsDefiningVolumeWithin(surf);
-    // Gets positions in z-axis.
-    vector<BoxR3> box(pairs.size());
-    vector<vector<Real> > zPos(pairs.size());
-    for (UInt p = 0; p < pairs.size(); p++) {
-        CVecR3 min = getPos(*pairs[p].first->getMinV());
-        CVecR3 max = getPos(*pairs[p].second->getMaxV());
-        box[p] = BoxR3(min,max);
-        if (min(2) > max(2)) {
-            zPos[p] = getPosInRange(z, max(2), min(2));
-        } else {
-            zPos[p] = getPosInRange(z, min(2), max(2));
+    vector<HexI8*> res;
+    res.reserve(pair.size());
+    for (UInt i = 0; i < pair.size(); i++) {
+        ElementId id(0);
+        BoxI3 box(*pair[i].first->getMinV(), *pair[i].second->getMaxV());
+        LayerId layId = pair[i].first->getLayerId();
+        if (pair[i].first->getLayerId() != pair[i].second->getLayerId()) {
+            cerr << endl << "ERROR @ MeshStructured: "
+                    << "Volumic boundary has different layers. " << endl;
         }
-        assert(zPos[p].size() > 0);
-    }
-    // Fills the space within pairs with hexahedrons aligned with the grid.
-    UInt nHex = 0;
-    for (UInt p = 0; p < zPos.size(); p++) {
-        nHex += zPos[p].size() - 1;
-    }
-    vector<BoxR3> res;
-    res.reserve(nHex);
-    for (UInt p = 0; p < pairs.size(); p++) {
-        for (UInt i = 1; i < zPos[p].size(); i++) {
-            CVecR3 min(box[p].getMin()(0), box[p].getMin()(1), zPos[p][i-1]);
-            CVecR3 max(box[p].getMax()(0), box[p].getMax()(1), zPos[p][i]);
-            res.push_back(BoxR3(min, max));
+        MatId matId = pair[i].first->getMatId();
+        if (pair[i].first->getMatId() != pair[i].second->getMatId()) {
+            cerr << endl << "ERROR @ MeshStructured: "
+                    << "Volumic boundary has different materials. " << endl;
         }
+        res.push_back(new HexI8(coords(), id, box, layId, matId));
     }
     return res;
 }
@@ -208,3 +188,4 @@ MeshStructured::getPairsDefiningVolumeWithin(
     }
     return res;
 }
+

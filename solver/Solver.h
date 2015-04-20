@@ -20,7 +20,8 @@ class Solver {
 public:
    Solver();
    virtual ~Solver();
-   virtual void run() = 0;
+   virtual bool run() = 0;
+   virtual bool canRun() const = 0;
 protected:
    static const UInt printStep = 100;
    void

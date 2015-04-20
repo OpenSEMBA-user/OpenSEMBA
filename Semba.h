@@ -16,7 +16,8 @@ public:
     Semba(const Arguments& args);
     virtual ~Semba();
 
-    void run();
+    bool run();
+    bool canRun() const;
 private:
     Solver* solver_;
 };
