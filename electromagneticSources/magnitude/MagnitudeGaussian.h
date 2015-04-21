@@ -28,6 +28,8 @@ public:
 
     DEFINE_CLONE(MagnitudeGaussian);
 
+    bool operator==(const Magnitude& rhs) const;
+
     Real getDelay() const;
     Real getFreq() const;
     Real getSpread() const;

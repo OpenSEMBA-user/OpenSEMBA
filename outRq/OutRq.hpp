@@ -24,17 +24,19 @@ OutRq<T>::~OutRq() {
 
 }
 
-template <class T>
+template<class T>
 bool OutRq<T>::isSimilar(const OutRqBase& rhs) const {
-    if (!OutRqBase::hasSameProperties(rhs)) {
+    if (!this->hasSameProperties(rhs)) {
         return false;
     }
-    const OutRq<T>* rhsPtr = rhs.template castTo<OutRq<T> >();
-    bool isSimilar = true;
-    isSimilar &= getName() == rhsPtr->getName();
-    isSimilar &= getOutputType() == rhsPtr->getOutputType();
-    isSimilar &= Domain::operator==(*rhsPtr);
-    return isSimilar;
+    UInt sizeLhs = this->elems().size();
+    UInt sizeRhs = rhs.elems().size();
+    if ((sizeLhs == 0) && (sizeRhs == 0)) {
+        return true;
+    } else if ((sizeLhs == 0) || (sizeRhs == 0)) {
+        return false;
+    }
+    return true;
 }
 
 template <class T>

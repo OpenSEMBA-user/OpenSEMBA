@@ -70,6 +70,14 @@ MagnitudeNumerical& MagnitudeNumerical::operator=(
     return *this;
 }
 
+bool MagnitudeNumerical::operator==(const Magnitude& rhs) const {
+    if (typeid(*this) != typeid(rhs)) {
+        return false;
+    }
+    const MagnitudeNumerical* rhsPtr = rhs.castTo<MagnitudeNumerical>();
+    return (this->value_ == rhsPtr->value_);
+}
+
 Real MagnitudeNumerical::evaluate(const Real time) const {
     cerr << endl << "ERROR @ MagnitudeNumerical: "
          << "Evaluate not implemented." << endl;

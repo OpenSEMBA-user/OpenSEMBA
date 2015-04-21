@@ -32,6 +32,8 @@ public:
 
     DEFINE_CLONE(Waveport);
 
+    bool hasSameProperties(const EMSourceBase& rhs) const;
+
     const string& getName() const;
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;

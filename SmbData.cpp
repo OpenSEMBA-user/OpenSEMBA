@@ -87,10 +87,3 @@ void SmbData::printInfo() const {
         cout << "No info about mesher options." << endl;
     }
 }
-
-bool SmbData::isSimilar(const SmbData& rhs) const {
-    bool res = true;
-    res &= emSources->isSimilar(*rhs.emSources);
-//    res &= outputRequests->isSimilar(rhs.outputRequests);
-    return res;
-}

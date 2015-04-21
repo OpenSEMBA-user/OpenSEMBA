@@ -43,8 +43,6 @@ public:
 
     SmbData& operator=(const SmbData& rhs);
 
-    bool isSimilar(const SmbData& rhs) const;
-
     void applyGeometricScalingFactor();
 
     void printInfo() const;

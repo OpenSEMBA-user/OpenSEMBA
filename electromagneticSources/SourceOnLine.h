@@ -29,6 +29,8 @@ public:
 
     DEFINE_CLONE(SourceOnLine);
 
+    bool hasSameProperties(const EMSourceBase& rhs) const;
+
     const string& getName() const;
     Type getType() const;
     Hardness getHardness() const;

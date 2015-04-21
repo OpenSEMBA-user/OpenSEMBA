@@ -23,11 +23,11 @@ bool OutRqBase::hasSameProperties(const OutRqBase& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }
-    bool isSimilar = true;
-    isSimilar &= getName() == rhs.getName();
-    isSimilar &= getOutputType() == rhs.getOutputType();
-    isSimilar &= Domain::operator==(rhs);
-    return isSimilar;
+    bool hasSameProperties = true;
+    hasSameProperties &= getName() == rhs.getName();
+    hasSameProperties &= getOutputType() == rhs.getOutputType();
+    hasSameProperties &= Domain::operator==(rhs);
+    return hasSameProperties;
 }
 
 const string& OutRqBase::getName() const {

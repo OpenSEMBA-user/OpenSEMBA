@@ -22,6 +22,9 @@ public:
     EMSourceBase(const EMSourceBase& rhs);
     virtual ~EMSourceBase();
 
+    virtual bool hasSameProperties(const EMSourceBase& rhs) const;
+    virtual bool isSimilar(const EMSourceBase& rhs) const = 0;
+
     template<class T>
     bool magnitudeIs() const {
         return magnitude_->is<T>();
@@ -58,8 +61,7 @@ public:
 
     ElementsGroup<const Elem> elems() const { return *this; }
 
-    template<typename T2>
-    bool isSimilar(const EMSource<T2>& rhs) const;
+    bool isSimilar(const EMSourceBase& rhs) const;
 
     void set(const ElementsGroup<const Elem>&);
     void add(const ElementsGroup<const Elem>&);

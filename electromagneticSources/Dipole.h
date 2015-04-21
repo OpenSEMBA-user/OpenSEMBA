@@ -22,6 +22,8 @@ public:
 
     DEFINE_CLONE(Dipole);
 
+    bool hasSameProperties(const EMSourceBase& rhs) const;
+
     const string& getName() const;
     void printInfo() const;
 protected:

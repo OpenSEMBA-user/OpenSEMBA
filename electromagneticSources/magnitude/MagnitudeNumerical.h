@@ -33,6 +33,8 @@ public:
 
     MagnitudeNumerical& operator=(const MagnitudeNumerical& rhs);
 
+    bool operator==(const Magnitude&) const;
+
     Real evaluate(const Real time) const;
 
     void printInfo() const;

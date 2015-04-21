@@ -37,6 +37,20 @@ Dipole::~Dipole() {
 
 }
 
+bool Dipole::hasSameProperties(const EMSourceBase& rhs) const {
+    if(!EMSourceBase::hasSameProperties(rhs)) {
+        return false;
+    }
+    const Dipole* rhsPtr = rhs.castTo<Dipole>();
+    bool hasSameProperties = true;
+    hasSameProperties &= length_ == rhsPtr->length_;
+    hasSameProperties &= orientation_ == rhsPtr->orientation_;
+    hasSameProperties &= position_ == rhsPtr->position_;
+    hasSameProperties &= gaussDelay_ == rhsPtr->gaussDelay_;
+    hasSameProperties &= spreadSqrt2_ == rhsPtr->spreadSqrt2_;
+    return hasSameProperties;
+}
+
 const string& Dipole::getName() const {
     const static string res = "Dipole";
     return res;

@@ -30,6 +30,17 @@ SourceOnLine::~SourceOnLine() {
 
 }
 
+bool SourceOnLine::hasSameProperties(const EMSourceBase& rhs) const {
+    if(!EMSourceBase::hasSameProperties(rhs)) {
+        return false;
+    }
+    const SourceOnLine* rhsPtr = rhs.castTo<SourceOnLine>();
+    bool hasSameProperties = true;
+    hasSameProperties &= type_ == rhsPtr->type_;
+    hasSameProperties &= hardness_ == rhsPtr->hardness_;
+    return hasSameProperties;
+}
+
 const string& SourceOnLine::getName() const {
     const static string res = "SourceOnLine";
     return res;

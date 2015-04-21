@@ -22,7 +22,7 @@ public:
 
     DEFINE_CLONE(OutRqFarField);
 
-    bool isSimilar(const OutRqBase& rhs) const;
+    bool hasSameProperties(const OutRqBase& rhs) const;
 
     Real getInitialTheta() const;
     Real getFinalTheta() const;

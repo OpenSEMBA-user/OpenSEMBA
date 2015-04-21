@@ -35,6 +35,17 @@ Generator::~Generator() {
 
 }
 
+bool Generator::hasSameProperties(const EMSourceBase& rhs) const {
+    if(!EMSourceBase::hasSameProperties(rhs)) {
+        return false;
+    }
+    const Generator* rhsPtr = rhs.castTo<Generator>();
+    bool hasSameProperties = true;
+    hasSameProperties &= type_ == rhsPtr->type_;
+    hasSameProperties &= hardness_ == rhsPtr->hardness_;
+    return hasSameProperties;
+}
+
 const string& Generator::getName() const {
     const static string res = "Generator";
     return res;

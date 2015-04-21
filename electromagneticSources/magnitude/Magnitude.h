@@ -22,6 +22,8 @@ public:
     Magnitude();
     virtual ~Magnitude();
 
+    virtual bool operator==(const Magnitude&) const = 0;
+
     virtual Real evaluate(const Real time) const = 0;
 
     virtual void printInfo() const = 0;

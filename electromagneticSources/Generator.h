@@ -31,6 +31,8 @@ public:
 
     DEFINE_CLONE(Generator);
 
+    bool hasSameProperties(const EMSourceBase& rhs) const;
+
     const string& getName() const;
     Type getType() const;
 

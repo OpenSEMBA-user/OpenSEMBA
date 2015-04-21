@@ -36,19 +36,19 @@ OutRqFarField::~OutRqFarField() {
 
 }
 
-bool OutRqFarField::isSimilar(const OutRqBase& rhs) const {
-    if(!OutRq<Vol>::isSimilar(rhs)) {
+bool OutRqFarField::hasSameProperties(const OutRqBase& rhs) const {
+    if(!OutRqBase::hasSameProperties(rhs)) {
         return false;
     }
     const OutRqFarField* rhsPtr = rhs.castTo<OutRqFarField>();
-    bool isSimilar = true;
-    isSimilar &= initialTheta_ == rhsPtr->initialTheta_;
-    isSimilar &= finalTheta_ == rhsPtr->finalTheta_;
-    isSimilar &= stepTheta_ == rhsPtr->stepTheta_;
-    isSimilar &= initialPhi_ == rhsPtr->initialPhi_;
-    isSimilar &= finalPhi_ == rhsPtr->finalPhi_;
-    isSimilar &= stepPhi_ == rhsPtr->stepPhi_;
-    return isSimilar;
+    bool hasSameProperties = true;
+    hasSameProperties &= initialTheta_ == rhsPtr->initialTheta_;
+    hasSameProperties &= finalTheta_ == rhsPtr->finalTheta_;
+    hasSameProperties &= stepTheta_ == rhsPtr->stepTheta_;
+    hasSameProperties &= initialPhi_ == rhsPtr->initialPhi_;
+    hasSameProperties &= finalPhi_ == rhsPtr->finalPhi_;
+    hasSameProperties &= stepPhi_ == rhsPtr->stepPhi_;
+    return hasSameProperties;
 }
 
 Real OutRqFarField::getInitialTheta() const {

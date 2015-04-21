@@ -53,6 +53,17 @@ PlaneWave::~PlaneWave() {
 
 }
 
+bool PlaneWave::hasSameProperties(const EMSourceBase& rhs) const {
+    if(!EMSourceBase::hasSameProperties(rhs)) {
+        return false;
+    }
+    const PlaneWave* rhsPtr = rhs.castTo<PlaneWave>();
+    bool hasSameProperties = true;
+    hasSameProperties &= direction_ == rhsPtr->direction_;
+    hasSameProperties &= polarization_ == rhsPtr->polarization_;
+    return hasSameProperties;
+}
+
 const string& PlaneWave::getName() const {
     const static string res = "PlaneWave";
     return res;

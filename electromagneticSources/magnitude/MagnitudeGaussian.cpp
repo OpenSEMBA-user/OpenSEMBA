@@ -31,6 +31,16 @@ MagnitudeGaussian::~MagnitudeGaussian() {
 
 }
 
+bool MagnitudeGaussian::operator==(const Magnitude& rhs) const {
+    if (typeid(*this) != typeid(rhs)) {
+        return false;
+    }
+    const MagnitudeGaussian* rhsPtr = rhs.castTo<MagnitudeGaussian>();
+    return ((this->getSpread() == rhsPtr->getSpread()) &&
+            (this->getDelay()  == rhsPtr->getDelay())  &&
+            (this->getFreq()   == rhsPtr->getFreq()));
+}
+
 Real MagnitudeGaussian::getSpread() const {
    return spread_;
 }

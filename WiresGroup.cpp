@@ -164,8 +164,8 @@ vector<vector<const Line<T>*>> WiresGroup<T>::getLines_(
     set<ElementId> visLines;
     const VertexLine<T> *prevSegment, *nextSegment;
     ElementId prvNodeId;
-    for(unsigned int n = 1; n < 3; n++) {
-        for(unsigned int i = 0; i < graph.numLines(); i++) {
+    for(UInt n = 1; n < 3; n++) {
+        for(UInt i = 0; i < graph.numLines(); i++) {
             if (((graph.line(i)->getCoord(0)->numLines() == n)  ||
                  (graph.line(i)->getCoord(1)->numLines() == n)) &&
                 (visLines.count(graph.line(i)->line()->getId()) == 0)) {

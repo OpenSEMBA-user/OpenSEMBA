@@ -44,6 +44,7 @@ public:
     virtual ~OutRqBase();
 
     virtual bool hasSameProperties(const OutRqBase& rhs) const;
+    virtual bool isSimilar(const OutRqBase& rhs) const = 0;
 
     const string& getName() const;
     OutRqBase::Type getOutputType() const;
@@ -85,8 +86,9 @@ public:
 
 #include "OutRq.hpp"
 
-typedef OutRq<Nod> OutRqNode;
+typedef OutRq<Nod > OutRqNode;
+typedef OutRq<Lin > OutRqLine;
 typedef OutRq<Surf> OutRqSurface;
-typedef OutRq<Vol> OutRqVolume;
+typedef OutRq<Vol > OutRqVolume;
 
 #endif

@@ -15,7 +15,7 @@ OptionsMesher::OptionsMesher() {
     scaleFactor_ = false;
     effectiveParameter_ = false;
     scalingFactor_ = 1.0;
-    for (unsigned int i = 0; i < 3; i++) {
+    for (UInt i = 0; i < 3; i++) {
         boundTermination_[i].first = pml;
         boundTermination_[i].second = pml;
     }

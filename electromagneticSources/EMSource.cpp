@@ -16,6 +16,13 @@ EMSourceBase::~EMSourceBase() {
 
 }
 
+bool EMSourceBase::hasSameProperties(const EMSourceBase& rhs) const {
+    if (typeid(*this) != typeid(rhs)) {
+        return false;
+    }
+    return (*magnitude_ == *rhs.magnitude_);
+}
+
 string EMSourceBase::getMagnitudeFilename() const {
     const MagnitudeNumerical* mag =
             dynamic_cast<const MagnitudeNumerical*>(magnitude_);
@@ -53,12 +60,3 @@ void EMSourceBase::printInfo() const {
 const Magnitude* EMSourceBase::getMagnitude() const {
     return magnitude_;
 }
-
-template<typename T> template<typename T2>
-bool EMSource<T>::isSimilar(const EMSource<T2>& rhs) const {
-    if (!EMSourceBase::isSimilar(rhs) ||
-            ElementsGroup<T>::isSimilar(rhs.elems())) {
-        return false;
-    }
-    return true;
- }

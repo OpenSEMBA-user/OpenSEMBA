@@ -22,6 +22,8 @@ public:
 
     DEFINE_CLONE(PlaneWave);
 
+    bool hasSameProperties(const EMSourceBase& rhs) const;
+
     const string& getName() const;
     const CVecR3& getPolarization() const;
     const CVecR3& getWaveDirection() const;
