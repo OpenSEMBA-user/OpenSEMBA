@@ -40,24 +40,28 @@ public:
     const ElementsGroup<ElemI>&     elems () const { return *this; }
     const LayerGroup<>&             layers() const { return *this; }
 
-    vector<BoxR3> getRectilinearHexesInsideRegion(
-            const ElementsGroup<ElemR>& region) const;
-
     MeshUnstructured* getMeshUnstructured() const;
 
-    vector<BoxR3> discretizeWithinBoundary(
-            const MatId matId,
-            const LayerId layId) const;
+    template<template<typename> class E>
+    ElementsGroup< E<Int> > add(const ElementsGroup<E<Real> >&,
+                                const Real tol = Grid3::tolerance);
+    template<template<typename> class E>
+    ElementsGroup< E<Int> > add(const ElementsGroup<const E<Real> >&,
+                                const Real tol = Grid3::tolerance);
+    template<template<typename> class E>
+    ElementsGroup< E<Int> > add(E<Real>*,
+                                const Real tol = Grid3::tolerance);
 
+    void convertToHex(ElementsGroup<const SurfI> surfs);
+    void addAsHex(ElementsGroup<const VolR> vols);
+
+    Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
 
     virtual void printInfo() const;
 private:
-    vector<BoxR3> discretizeWithinBoundary(
-            const Grid3* grid,
-            const ElementsGroup<const SurfR>& faces) const;
-    vector<BoxR3> discretizeWithinBoundary(
-            const ElementsGroup<const SurfI>& faces) const;
+    vector<HexI8*> discretizeWithinBoundary(
+            const ElementsGroup<const SurfI>& faces);
     vector<pair<const SurfI*, const SurfI*> > getPairsDefiningVolumeWithin(
             const ElementsGroup<const SurfI>& faces) const;
 };

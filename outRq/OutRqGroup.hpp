@@ -5,7 +5,7 @@ O* OutRqGroup<O>::add(O2* newORq) {
     for (UInt i = 0; i < this->size(); i++) {
         if (this->get(i)->template is<O2>()) {
             O2* oRq = this->get(i)->template castTo<O2>();
-            if (oRq->isSimilar(*newORq)) {
+            if (oRq->hasSameProperties(*newORq)) {
                 oRq->add(newORq->elems());
                 delete newORq;
                 return NULL;

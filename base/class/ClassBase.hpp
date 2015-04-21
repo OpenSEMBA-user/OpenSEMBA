@@ -7,6 +7,11 @@ bool ClassBase::is() const {
     return false;
 }
 
+template<typename T> template<typename T2>
+bool isSimilar(const T2& rhs) const {
+    return rhs.is<T>(rhs);
+}
+
 template<typename T>
 typename add_pointer<typename remove_const<T>::type>::type
     ClassBase::cloneTo() const {

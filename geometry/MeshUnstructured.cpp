@@ -220,25 +220,6 @@ ElementsGroup<ElemR> MeshUnstructured::getAdjacentRegion(
     return res;
 }
 
-vector<BoxR3> MeshUnstructured::getRectilinearHexesInsideRegion(
-        const Grid3* grid,
-        const ElementsGroup<const VolR>& region) const {
-
-    vector<CVecR3> center =
-            grid->getCenterOfCellsInside(region.getBound());
-    vector<BoxR3> res;
-    res.reserve(center.size());
-    for (UInt i = 0; i < center.size(); i++) {
-        for (UInt j = 0; j < region.size(); j++) {
-            if (region(j)->isInnerPoint(center[i])) {
-                res.push_back(grid->getBoundingBoxContaining(center[i]));
-                break;
-            }
-        }
-    }
-    return res;
-}
-
 bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
     ElementsGroup<const ElemR> elems =
             ElementsGroup<ElemR>::getGroupOf<ElemR>();
@@ -263,14 +244,6 @@ ElementsGroup<const SurfR> MeshUnstructured::getMaterialBoundary(
     return elems().getGroupWith(matId, layId).getGroupOf<SurfR>();
 }
 
-vector<ElementId> MeshUnstructured::addAsHex8(const BoxR3& box) {
-    vector<ElementId> res;
-    HexR8* hex = new HexR8(*this, ElementId(0), box);
-    elems().add(hex->castTo<ElemR>(), true);
-    res.push_back(hex->getId());
-    return res;
-}
-
 void MeshUnstructured::applyScalingFactor(const Real factor) {
     CoordinateGroup<CoordR3>::applyScalingFactor(factor);
 }
@@ -280,4 +253,8 @@ void MeshUnstructured::printInfo() const {
     CoordinateGroup<CoordR3>::printInfo();
     ElementsGroup<ElemR>::printInfo();
     LayerGroup<>::printInfo();
+}
+
+Real MeshUnstructured::getMinimumSpaceStep() const {
+    // TODO Unstr minimum space step.
 }

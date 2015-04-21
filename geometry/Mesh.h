@@ -21,6 +21,7 @@ public:
     Mesh();
     ~Mesh();
 
+    virtual Real getMinimumSpaceStep() const = 0;
     virtual void applyScalingFactor(const Real factor) = 0;
 };
 

@@ -208,11 +208,17 @@ Box<Real,D> Grid<D>::getBoundingBox(const BoxID& bound) const {
 }
 
 template<Int D>
-Box<Real,D> Grid<D>::getBoundingBoxContaining(const CVecRD& point) const {
-    CVecID naturalMin = getCell(point, false);
-    CVecRD min = getPos(naturalMin);
-    CVecRD max = getPos(naturalMin + (Int)1);
-    return BoxRD(min, max);
+Box<Real,D> Grid<D>::getBoxRContaining(const CVecRD& point) const {
+    BoxID boxI = getBoxIContaining(point);
+    return getBoundingBox(boxI);
+}
+
+
+template<Int D>
+Box<Int,D> Grid<D>::getBoxIContaining(const CVecRD& point) const {
+    CVecID min = getCell(point, false);
+    CVecID max = min + (Int)1;
+    return BoxID(min, max);
 }
 
 template<Int D>

@@ -65,7 +65,8 @@ public:
 
     BoxRD getFullDomainBoundingBox() const;
     BoxRD getBoundingBox(const BoxID& bound) const;
-    BoxRD getBoundingBoxContaining(const CVecRD& point) const;
+    BoxRD getBoxRContaining(const CVecRD& point) const;
+    BoxID getBoxIContaining(const CVecRD& point) const;
 
     vector<CVecRD> getCenterOfCellsInside(const BoxRD& bound) const;
     vector<Real> getPosInRange(const Int dir,

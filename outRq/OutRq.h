@@ -43,7 +43,7 @@ public:
     OutRqBase(const OutRqBase& rhs);
     virtual ~OutRqBase();
 
-    virtual bool isSimilar(const OutRqBase& rhs) const;
+    virtual bool hasSameProperties(const OutRqBase& rhs) const;
 
     const string& getName() const;
     OutRqBase::Type getOutputType() const;

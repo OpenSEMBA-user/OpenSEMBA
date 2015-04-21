@@ -48,15 +48,6 @@ public:
     MeshStructured* getMeshStructured(const Grid3& grid,
                                       const Real tol = Grid3::tolerance) const;
 
-    vector<ElementId> addAsHex8(const BoxR3& box);
-    virtual vector<BoxR3> getRectilinearHexesInsideRegion(
-            const Grid3* grid,
-            const ElementsGroup<const VolR>& region) const;
-//    virtual vector<BoxR3> discretizeWithinBoundary(
-//            const Grid3* grid,
-//            const UInt matId,
-//            const UInt layId) const = 0;
-
     vector<Face> getBorderWithNormal(const vector<Face>& border,
                                      const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
@@ -73,6 +64,7 @@ public:
     ElementsGroup<ElemR> getAdjacentRegion(
             const ElementsGroup<const ElemR>& region);
 
+    Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
 
     void printInfo() const;

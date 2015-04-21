@@ -26,7 +26,7 @@ OutRq<T>::~OutRq() {
 
 template <class T>
 bool OutRq<T>::isSimilar(const OutRqBase& rhs) const {
-    if (!OutRqBase::isSimilar(rhs)) {
+    if (!OutRqBase::hasSameProperties(rhs)) {
         return false;
     }
     const OutRq<T>* rhsPtr = rhs.template castTo<OutRq<T> >();
