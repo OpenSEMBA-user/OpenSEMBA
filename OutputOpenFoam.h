@@ -8,7 +8,7 @@
 #ifndef OUTOPENFOAM_H_
 #define OUTOPENFOAM_H_
 
-#include "../../common/SmbData.h"
+#include "SmbData.h"
 
 class OutputOpenFoam : public ProjectFile {
 public:

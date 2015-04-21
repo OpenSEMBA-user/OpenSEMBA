@@ -16,8 +16,8 @@
 
 using namespace std;
 
-#include "../../../common/geometry/layers/Layer.h"
-#include "PhysicalModel.h"
+#include "geometry/layers/Layer.h"
+#include "physicalModel/PhysicalModel.h"
 #include "Types.h"
 
 class OpenfoamBoundary : public Layer {
