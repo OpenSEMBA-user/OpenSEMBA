@@ -285,6 +285,7 @@ void OptionsMesher::setEdgeFraction(const string& edgeFraction) {
 }
 
 void OptionsMesher::setLocationInMesh(const CVecR3& locationInMesh) {
+    locationInMeshSet_ = true;
     locationInMesh_ = locationInMesh;
 }
 

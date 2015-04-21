@@ -189,3 +189,6 @@ MeshStructured::getPairsDefiningVolumeWithin(
     return res;
 }
 
+Real MeshStructured::getMinimumSpaceStep() const {
+    return Grid3::getMinimumSpaceStep();
+}

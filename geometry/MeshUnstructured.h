@@ -65,6 +65,7 @@ public:
     ElementsGroup<ElemR> getAdjacentRegion(
             const ElementsGroup<const ElemR>& region);
 
+    Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
 
     void printInfo() const;

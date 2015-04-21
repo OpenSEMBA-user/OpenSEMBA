@@ -254,3 +254,7 @@ void MeshUnstructured::printInfo() const {
     ElementsGroup<ElemR>::printInfo();
     LayerGroup<>::printInfo();
 }
+
+Real MeshUnstructured::getMinimumSpaceStep() const {
+    // TODO Unstr minimum space step.
+}

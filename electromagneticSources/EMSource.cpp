@@ -22,9 +22,6 @@ string EMSourceBase::getMagnitudeFilename() const {
     if (mag != NULL) {
         return mag->getFilename();
     }
-    cerr << endl << "ERROR @ EMSource: Magnitude is not numerical." << endl;
-    printInfo();
-    assert(false);
     return string();
 }
 

@@ -55,6 +55,7 @@ public:
     void convertToHex(ElementsGroup<const SurfI> surfs);
     void addAsHex(ElementsGroup<const VolR> vols);
 
+    Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
 
     virtual void printInfo() const;
