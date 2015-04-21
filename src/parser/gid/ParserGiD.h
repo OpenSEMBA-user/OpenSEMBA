@@ -8,14 +8,16 @@
 #ifndef PARSERGID_H_
 #define PARSERGID_H_
 
-#include <stdlib.h>
-#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 #include <fstream>
+#include <iostream>
 #include <string>
-#include <stdio.h>
-#include "../../common/parser/Parser.h"
-#include "../../common/SmbData.h"
-#include "MeshUnstructured.h"
+using namespace std;
+
+#include "parser/Parser.h"
+#include "SmbData.h"
+
 #include "ProblemSize.h"
 
 #define LABEL_ENDING ':'
