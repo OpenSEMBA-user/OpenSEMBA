@@ -8,8 +8,9 @@
 #ifndef LINE_H_
 #define LINE_H_
 
+#include "math/SimplexLin.h"
+
 #include "Element.h"
-#include "../math/SimplexLin.h"
 
 using namespace std;
 

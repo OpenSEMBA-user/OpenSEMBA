@@ -19,21 +19,21 @@
 #	define MATRICES_ROW_MAJOR      1
 #endif
 
+#include <cassert>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <iomanip>
-#include <stdlib.h>
-#include <ctime>
-#include <stdio.h>
-#include <cmath>
 #include <vector>
-#include <limits.h>
-#include <assert.h>
+using namespace std;
+
 #include "CartesianVector.h"
 #ifdef USE_OPENMP
 	#include <omp.h>
 #endif
-
-using namespace std;
 
 template<class T>
 class MathMatrix {

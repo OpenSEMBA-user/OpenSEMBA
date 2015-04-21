@@ -1,8 +1,9 @@
 #ifndef TRI_H_
 #define TRI_H_
 
+#include "math/SimplexTri.h"
+
 #include "Surface.h"
-#include "../math/SimplexTri.h"
 
 class Tri : public Surface<Real> {
 public:

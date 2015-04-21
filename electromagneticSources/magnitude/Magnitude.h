@@ -8,15 +8,14 @@
 #ifndef SRC_COMMON_INPUTS_MAGNITUDE_H_
 #define SRC_COMMON_INPUTS_MAGNITUDE_H_
 
-#include <string>
 #include <iostream>
 #include <fstream>
-
+#include <string>
 using namespace std;
 
 #include "Types.h"
 
-#include "ClassBase.h"
+#include "base/class/ClassBase.h"
 
 class Magnitude : public virtual ClassBase {
 public:

@@ -15,10 +15,10 @@
 
 using namespace std;
 
-#include "../math/CartesianVector.h"
-#include "Grid.h"
+#include "geometry/Grid.h"
+#include "math/CartesianVector.h"
 
-#include "../../base/class/ClassIdBase.h"
+#include "base/class/ClassIdBase.h"
 
 CREATE_ID(CoordinateId);
 

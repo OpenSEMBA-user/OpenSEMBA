@@ -8,13 +8,13 @@
 #ifndef MATHUTILS_H_
 #define MATHUTILS_H_
 
+#include <cmath>
+#include <complex>
 #include <utility>
 #include <vector>
-#include <math.h>
-#include <complex>
-#include "CartesianVector.h"
-
 using namespace std;
+
+#include "CartesianVector.h"
 
 namespace MathUtils {
 

@@ -2,19 +2,18 @@
 #ifndef ELECTROMAGNETICSOURCE_H_
 #define ELECTROMAGNETICSOURCE_H_
 
-#include <iostream>			// Stream I/O.
 #include <cmath>
+#include <iostream>
 #include <vector>
-
 using namespace std;
 
+#include "geometry/elements/ElementsGroup.h"
 #include "magnitude/MagnitudeGaussian.h"
 #include "magnitude/MagnitudeNumerical.h"
-#include "../../geometry/elements/ElementsGroup.h"
-#include "../../math/CartesianVector.h"
-#include "../../math/Constants.h"
+#include "math/CartesianVector.h"
+#include "math/Constants.h"
 
-#include "ClassGroupBase.h"
+#include "base/class/ClassGroupBase.h"
 
 class EMSourceBase : public virtual ClassGroupBase<ElementsGroup<const Elem>> {
 public:

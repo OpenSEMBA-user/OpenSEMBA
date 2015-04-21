@@ -2,7 +2,6 @@
 #define IDBASE_H_
 
 #include <iostream>
-
 using namespace std;
 
 #include "Types.h"

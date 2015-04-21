@@ -8,11 +8,14 @@
 #ifndef SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_
 #define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_
 
-#include "Magnitude.h"
-#include "../../ProjectFile.h"
-#include <map>
+#include <cassert>
 #include <cmath>
-#include <assert.h>
+#include <map>
+using namespace std;
+
+#include "ProjectFile.h"
+
+#include "Magnitude.h"
 
 class MagnitudeNumerical : public virtual Magnitude,
                            public virtual ProjectFile {

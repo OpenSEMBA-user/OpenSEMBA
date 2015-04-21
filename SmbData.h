@@ -8,17 +8,18 @@
 #ifndef SMBDATA_H_
 #define SMBDATA_H_
 
-#include "MeshUnstructured.h"
-#include "MeshStructured.h"
-#include "Grid.h"
-#include "EMSourceGroup.h"
-#include "PhysicalModelGroup.h"
-#include "OutRqGroup.h"
+#include "electromagneticSources/EMSourceGroup.h"
+#include "geometry/MeshUnstructured.h"
+#include "geometry/MeshStructured.h"
+#include "geometry/Grid.h"
+#include "physicalModel/PhysicalModelGroup.h"
+#include "options/OptionsMesher.h"
+#include "options/OptionsSolver.h"
+#include "outRq/OutRqGroup.h"
+
 #include "ProjectFile.h"
 
 #include "base/class/ClassBase.h"
-#include "options/OptionsMesher.h"
-#include "options/OptionsSolver.h"
 
 class SmbData : public virtual ProjectFile,
                 public virtual ClassBase {

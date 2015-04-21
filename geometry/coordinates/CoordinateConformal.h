@@ -8,7 +8,7 @@
 #ifndef SRC_COMMON_GEOMETRY_COORDINATES_COORDINATECONFORMAL_H_
 #define SRC_COMMON_GEOMETRY_COORDINATES_COORDINATECONFORMAL_H_
 
-#include <Coordinate.h>
+#include "Coordinate.h"
 
 class CoordinateConformal : public virtual Coordinate<Int,3> {
 public:

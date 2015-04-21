@@ -11,10 +11,11 @@
 #include <cmath>
 #include <iostream>
 #include <utility>
-#include "../math/CartesianVector.h"
-#include "Options.h"
-
 using namespace std;
+
+#include "math/CartesianVector.h"
+
+#include "Options.h"
 
 class OptionsSolver : public Options {
 public:

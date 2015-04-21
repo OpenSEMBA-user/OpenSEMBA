@@ -1,15 +1,16 @@
 #ifndef OUTPUT_H_
 #define OUTPUT_H_
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <vector>
-#include <stdio.h>
-#include "CartesianVector.h"
-#include "Field.h"
-#include "ResultGraph.h"
-
 using namespace std;
+
+#include "math/CartesianVector.h"
+#include "math/Field.h"
+
+#include "ResultGraph.h"
 
 class Output : public ProjectFile {
    friend class DG;

@@ -15,9 +15,9 @@
 #include <type_traits>
 using namespace std;
 
-#include "../../../common/SmbData.h"
-#include "Polyline.h"
-#include "GraphLines.h"
+#include "SmbData.h"
+#include "geometry/elements/Polyline.h"
+#include "geometry/maps/GraphLines.h"
 
 template<class T>
 class WiresGroup {

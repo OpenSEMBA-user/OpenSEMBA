@@ -8,9 +8,10 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
-#include "Element.h"
 #include "Surface.h"
-#include "../math/Simplex.h"
+#include "math/Simplex.h"
+
+#include "Element.h"
 
 class VolumeBase : public virtual ElementBase {
 public:

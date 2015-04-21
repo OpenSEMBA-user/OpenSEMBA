@@ -8,7 +8,7 @@
 #ifndef SRC_COMMON_EXPORTER_RESULT_H_
 #define SRC_COMMON_EXPORTER_RESULT_H_
 
-#include "../math/Field.h"
+#include "math/Field.h"
 
 class Result {
 public:

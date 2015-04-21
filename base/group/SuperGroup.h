@@ -10,10 +10,9 @@
 
 #include <map>
 #include <memory>
-
 using namespace std;
 
-#include "ClassBase.h"
+#include "base/class/ClassBase.h"
 
 class SuperGroup {
     template<typename T>

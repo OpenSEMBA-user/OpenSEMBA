@@ -8,20 +8,21 @@
 #ifndef PARSER_H_
 #define PARSER_H_
 
-#include <stdlib.h>
-#include <iostream>
-#include <string>
+#include <algorithm>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
-#include <stdio.h>
+#include <iostream>
+#include <string>
 #include <vector>
-#include <complex>
-#include <libgen.h>
-#include <algorithm>
-#include <sys/stat.h>
-#include "../SmbData.h"
-
 using namespace std;
+
+#include <libgen.h>
+#include <sys/stat.h>
+
+#include "SmbData.h"
 
 class Parser {
 public:

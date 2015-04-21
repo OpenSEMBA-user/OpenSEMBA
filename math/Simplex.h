@@ -6,8 +6,10 @@
 #ifndef SIMPLEX_H_
 #define SIMPLEX_H_
 
-#include <iostream>			// Stream I/O.
+#include <iostream>
 #include <vector>
+using namespace std;
+
 #include "StaMatrix.h"
 #include "DynMatrix.h"
 #include "CartesianVector.h"

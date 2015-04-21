@@ -8,7 +8,7 @@
 #ifndef SRC_COMMON_GEOMETRY_ELEMENTS_LINECONFORMAL_H_
 #define SRC_COMMON_GEOMETRY_ELEMENTS_LINECONFORMAL_H_
 
-#include "CoordinateConformal.h"
+#include "geometry/coordinates/CoordinateConformal.h"
 
 #include "Lin2.h"
 

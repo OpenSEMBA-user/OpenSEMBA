@@ -8,18 +8,18 @@
 #ifndef ARGUMENTS_H_
 #define ARGUMENTS_H_
 
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
 #include <algorithm>
-#include <iostream>
-#include <fstream>
-#include <stdlib.h>
-#include <libgen.h>
+#include <cstdlib>
 #include <cstring>
-
+#include <map>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 using namespace std;
+
+#include <libgen.h>
 
 #include "Types.h"
 

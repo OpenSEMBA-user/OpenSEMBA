@@ -8,11 +8,11 @@
 #ifndef SRC_SOLVER_H_
 #define SRC_SOLVER_H_
 
+#include <ctime>
 #include <iostream>
-#include <time.h>
-#include <sys/time.h>
-
 using namespace std;
+
+#include <sys/time.h>
 
 #include "Types.h"
 

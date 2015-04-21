@@ -8,8 +8,9 @@
 #ifndef PMSURFACESIBC_H_
 #define PMSURFACESIBC_H_
 
+#include "math/StaMatrix.h"
+
 #include "PMSurface.h"
-#include "../../math/StaMatrix.h"
 
 class PMSurfaceSIBC : public PMSurface {
 	friend class DGSIBC;

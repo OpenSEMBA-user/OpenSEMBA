@@ -1,7 +1,10 @@
 #ifndef DYNMATRIX_H_
 #define DYNMATRIX_H_
-#include "MathMatrix.h"
+
 #include <utility>
+using namespace std;
+
+#include "MathMatrix.h"
 
 template<class T>
 class DynMatrix : public MathMatrix<T> {

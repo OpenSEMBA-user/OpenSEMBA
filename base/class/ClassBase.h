@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 #include <type_traits>
-
 using namespace std;
 
 class ClassBase {

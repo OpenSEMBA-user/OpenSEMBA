@@ -8,7 +8,7 @@
 #ifndef SRC_COMMON_BASE_CLASSGROUPBASE_H_
 #define SRC_COMMON_BASE_CLASSGROUPBASE_H_
 
-#include "Group.h"
+#include "base/group/Group.h"
 
 #include "ClassBase.h"
 

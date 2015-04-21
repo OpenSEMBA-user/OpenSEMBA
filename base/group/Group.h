@@ -9,11 +9,11 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
-
 using namespace std;
 
 #include "SuperGroup.h"
-#include "ClassBase.h"
+
+#include "base/class/ClassBase.h"
 
 template<typename T>
 class Group : public virtual ClassBase {

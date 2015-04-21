@@ -9,15 +9,14 @@
 
 using namespace std;
 
-#include "../math/MathMatrix.h"
-#include "../math/CartesianVector.h"
-#include "coordinates/CoordinateGroup.h"
-#include "Box.h"
-#include "Grid.h"
-#include "../../base/class/IdBase.h"
-#include "../layers/Layer.h"
+#include "math/MathMatrix.h"
+#include "math/CartesianVector.h"
+#include "geometry/Box.h"
+#include "geometry/Grid.h"
+#include "geometry/coordinates/CoordinateGroup.h"
+#include "geometry/layers/Layer.h"
 
-#include "../../base/class/ClassIdBase.h"
+#include "base/class/ClassIdBase.h"
 
 CREATE_ID(ElementId);
 CREATE_ID(MatId);

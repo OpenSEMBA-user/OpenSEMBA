@@ -8,7 +8,6 @@
 #include <iostream>
 #include <limits>
 #include <type_traits>
-
 using namespace std;
 
 #include "RealUtils.h"

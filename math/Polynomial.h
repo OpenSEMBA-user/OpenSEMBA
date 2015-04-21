@@ -7,14 +7,14 @@
 #define POLYNOMIAL_H_
 
 // ----------- Libraries ------------------------------------------------------
-#include <iostream> // Stream I/O
-#include <stdlib.h> // Included because of gcc compatibility issue.
+#include <cstdlib>
 #include <cmath>
+#include <iostream>
 #include <vector>
+using namespace std;
+
 #include "MathMatrix.h"
 #include "CartesianVector.h"
-// ----------- Namespace ------------------------------------------------------
-using namespace std;
 // =========== Polynomial class ===============================================
 template<class T>
 class Polynomial {

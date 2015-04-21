@@ -8,17 +8,20 @@
 #ifndef ARGUMENTSDGTD_H_
 #define ARGUMENTSDGTD_H_
 
-#include <iostream>
+#include <cstdlib>
 #include <fstream>
+#include <iostream>
 #include <string>
-#include <stdlib.h>
+using namespace std;
+
 #include <omp.h>
-#include "Arguments.h"
+
+#include "Options.h"
 
 using namespace std;
 typedef unsigned int uint;
 
-class OptionsSolverDGTD : public Arguments {
+class OptionsSolverDGTD : public Options {
 public:
 	typedef enum  {
 		lserk4, verlet, lf2, lf2full

@@ -7,11 +7,11 @@
 #ifndef SPHERICALVECTOR_H_
 #define SPHERICALVECTOR_H_
 
-#include <iostream>
 #include <cmath>
-#include "CartesianVector.h"
-
+#include <iostream>
 using namespace std;
+
+#include "CartesianVector.h"
 
 class SphericalVector {
 public:

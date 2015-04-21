@@ -1,22 +1,22 @@
 #ifndef  _GRID_H_
 # define _GRID_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
+#include <algorithm>
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
 #include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <string>
 #include <sstream>
-#include <algorithm>
-#include <assert.h>
-#include <cmath>
-#include <iomanip>
 #include <vector>
-
 using namespace std;
 
 #include "Box.h"
-#include "ClassBase.h"
+
+#include "base/class/ClassBase.h"
 
 template<Int D>
 class Grid : public virtual ClassBase {

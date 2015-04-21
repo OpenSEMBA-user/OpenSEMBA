@@ -8,11 +8,11 @@
 #ifndef PHYSICALMODELGROUP_H_
 #define PHYSICALMODELGROUP_H_
 
-#include <math.h>
+#include <cassert>
 #include <cmath>
 #include <vector>
-#include <assert.h>
-#include "../../base/group/GroupId.h"
+using namespace std;
+
 #include "PhysicalModel.h"
 #include "PMPEC.h"
 #include "PMPMC.h"
@@ -25,6 +25,8 @@
 #include "PMSurfaceMultilayer.h"
 #include "PMWire.h"
 #include "PMWireExtremes.h"
+
+#include "base/group/GroupId.h"
 
 template<typename P = PhysicalModel>
 class PhysicalModelGroup : public virtual GroupId<P,MatId> {

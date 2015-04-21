@@ -5,13 +5,12 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
-
 using namespace std;
 
 #include "Domain.h"
-#include "../../geometry/elements/ElementsGroup.h"
+#include "geometry/elements/ElementsGroup.h"
 
-#include "ClassGroupBase.h"
+#include "base/class/ClassGroupBase.h"
 
 class OutRqBase : public virtual Domain,
                   public virtual ClassGroupBase<ElementsGroup<const Elem>> {

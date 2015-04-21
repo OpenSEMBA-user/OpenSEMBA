@@ -8,13 +8,13 @@
 #ifndef OPENFOAMPARAMETERS_H_
 #define OPENFOAMPARAMETERS_H_
 
+#include <cstdlib>
 #include <string>
-#include <stdlib.h>
-
-#include "CartesianVector.h"
-#include "Options.h"
-
 using namespace std;
+
+#include "math/CartesianVector.h"
+
+#include "Options.h"
 
 class OptionsMesher : public Options {
 public:

@@ -1,18 +1,19 @@
 #ifndef PHYSICALMODEL_H_
 #define PHYSICALMODEL_H_
 
-#include <stdio.h>
-#include <iostream>
-#include <stdlib.h>
-#include <complex>
 #include <cmath>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
 #include <vector>
-#include "../../math/Constants.h"
-#include "../../math/CartesianVector.h"
-#include "../../geometry/elements/ElementsGroup.h"
-#include "ClassIdBase.h"
-
 using namespace std;
+
+#include "geometry/elements/ElementsGroup.h"
+#include "math/Constants.h"
+#include "math/CartesianVector.h"
+
+#include "base/class/ClassIdBase.h"
 
 class PhysicalModel : public ClassIdBase<MatId> {
 public:

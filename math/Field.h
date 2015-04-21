@@ -8,8 +8,10 @@
 #ifndef FIELD_H_
 #define FIELD_H_
 
+#include <cstdlib>
+using namespace std;
+
 #include "CartesianVector.h"
-#include <stdlib.h>
 
 template <class T, Int D>
 class Field {

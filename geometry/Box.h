@@ -7,7 +7,9 @@
 
 #include <limits>
 #include <utility>
-#include "../math/CartesianVector.h"
+using namespace std;
+
+#include "math/CartesianVector.h"
 
 #ifndef SRC_COMMON_GEOMETRY_BOX_H_
 #define SRC_COMMON_GEOMETRY_BOX_H_

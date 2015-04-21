@@ -8,18 +8,20 @@
 #ifndef RESULTGRAPH_H_
 #define RESULTGRAPH_H_
 
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include <stdlib.h>
-#include <complex>
 #include <cmath>
-#include <vector>
+#include <complex>
+#include <cstdio>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
 #include <string>
 #include <utility>
+#include <vector>
+using namespace std;
 
-#include "../exporter/Result.h"
 #include "ProjectFile.h"
+
+#include "Result.h"
 
 using namespace std;
 

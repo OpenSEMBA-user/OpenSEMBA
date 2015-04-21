@@ -8,8 +8,10 @@
 #ifndef SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDEGAUSSIAN_H_
 #define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDEGAUSSIAN_H_
 
+#include <cmath>
+using namespace std;
+
 #include "Magnitude.h"
-#include <math.h>
 
 class MagnitudeGaussian: public virtual Magnitude {
 public:

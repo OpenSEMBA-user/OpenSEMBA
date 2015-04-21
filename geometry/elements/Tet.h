@@ -8,9 +8,10 @@
 #ifndef TET_H_
 #define TET_H_
 
-#include "Volume.h"
 #include "Tri6.h"
-#include "../math/SimplexTet.h"
+#include "math/SimplexTet.h"
+
+#include "Volume.h"
 
 class Tet : public Volume<Real> {
 public:
