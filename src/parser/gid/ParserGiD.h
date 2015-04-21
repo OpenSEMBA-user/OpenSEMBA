@@ -94,6 +94,7 @@ private:
     PhysicalModel* readPhysicalModel(const MatId id);
     Magnitude* readMagnitude(const string type);
     pair<CVecR3, CVecR3> strToBound(const string& str) const;
+    CVecR3 strToCVecR3(const string& str) const;
     Generator::Type strToGeneratorType(string label) const;
     Generator::Hardness strToGeneratorHardness(string str) const;
     SourceOnLine::Type strToNodalType(string label) const;

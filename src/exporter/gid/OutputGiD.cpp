@@ -15,6 +15,7 @@ const CVecR3 OutputGiD::pmlColor(0, 0, 255);
 const CVecR3 OutputGiD::sibcColor(100, 0, 100);
 const CVecR3 OutputGiD::emSourceColor(100, 100, 0);
 
+
 void OutputGiD::initDefault(
         GiD_PostMode mode,
         const string& fn) {
@@ -39,6 +40,12 @@ void OutputGiD::initDefault(
         cerr << endl << "ERROR @ GiDOutput::openFiles() " << endl;
     }
     writeGaussPoints();
+}
+
+OutputGiD::OutputGiD(const SmbData* smb, GiD_PostMode mode) :
+        Output(smb->getFilename()) {
+    initDefault(mode, getFilename());
+    writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
 }
 
 OutputGiD::OutputGiD(

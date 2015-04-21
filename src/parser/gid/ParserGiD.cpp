@@ -172,8 +172,8 @@ ParserGiD::readMesherOptions() {
                 } else if (label.compare("Sigma") == 0) {
                     res->setSigma(trim(value));
                 } else if (label.compare("Location in mesh")==0) {
-                    CoordinateId id(atoi(value.c_str()));
-//                    res->setLocationInMesh(*cG_.get(id));
+                    CVecR3 location = strToCVecR3(trim(value));
+                    res->setLocationInMesh(location);
                 } else if (label.compare("Geometry scaling factor") == 0) {
                     res->setScalingFactor(atof(value.c_str()));
                 } else if (label.compare("Upper x bound") == 0) {
@@ -1334,9 +1334,7 @@ ParserGiD::strToMultiportType(string str) const {
     }
 }
 
-pair<CVecR3, CVecR3>
-ParserGiD::strToBound(
-        const string& value) const {
+pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) const {
     UInt begin = value.find_first_of("{");
     UInt end = value.find_last_of("}");
     istringstream iss(value.substr(begin+1,end-2));
@@ -1354,6 +1352,13 @@ ParserGiD::strToBound(
     return bound;
 }
 
+
+CVecR3 ParserGiD::strToCVecR3(const string& str) const {
+    stringstream ss(str);
+    CVecR3 res;
+    ss >> res(x) >> res(y) >> res(z);
+    return res;
+}
 
 SourceOnLine::Type
 ParserGiD::strToNodalType(string str) const {
