@@ -63,6 +63,19 @@ Group<typename remove_const<T>::type> Group<T>::newGroup() const {
     return Group<typename remove_const<T>::type>(cloneElems_());
 }
 
+template<typename T> template<typename T2>
+bool Group<T>::isSimilar(const Group<T2>& rhs) const {
+    if (this->size() != rhs.size()) {
+        return false;
+    }
+    for (UInt i = 0; i < this->size(); i++) {
+        if (!this->element_[i]->isSimilar(*rhs(i))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 template<typename T>
 Group<T>& Group<T>::operator=(Group<T>& rhs) {
     if (this == &rhs) {

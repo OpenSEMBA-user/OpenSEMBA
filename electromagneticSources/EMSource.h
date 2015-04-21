@@ -38,6 +38,7 @@ public:
                                      const Real step,
                                      const Real finalTime) const;
 
+
     virtual void printInfo() const = 0;
 
 protected:
@@ -57,6 +58,9 @@ public:
     virtual ClassBase* clone() const = 0;
 
     ElementsGroup<const Elem> elems() const { return *this; }
+
+    template<typename T2>
+    bool isSimilar(const EMSource<T2>& rhs) const;
 
     void set(const ElementsGroup<const Elem>&);
     void add(const ElementsGroup<const Elem>&);

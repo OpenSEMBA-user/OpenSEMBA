@@ -23,12 +23,14 @@
 class SmbData : public virtual ProjectFile,
                 public virtual ClassBase {
 public:
-    OptionsMesher*        mesherOptions;
     Grid3*                grid;
     Mesh*                 mesh;
 
+    OptionsMesher*        mesherOptions;
     OptionsSolver*        solverOptions;
+
     PhysicalModelGroup<>* pMGroup;
+
     EMSourceGroup<>*      emSources;
     OutRqGroup<>*         outputRequests;
 
@@ -40,9 +42,13 @@ public:
 
     SmbData& operator=(const SmbData& rhs);
 
+    bool isSimilar(const SmbData& rhs) const;
+
     void applyGeometricScalingFactor();
 
     void printInfo() const;
+
+private:
 };
 
 #endif /* SMBDATA_H_ */

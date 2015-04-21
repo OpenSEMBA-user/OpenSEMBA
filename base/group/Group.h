@@ -60,6 +60,9 @@ public:
     bool emptyOf() const;
     template<class T2>
     UInt sizeOf() const;
+    template<class T2>
+    bool isSimilar(const Group<T2>& rhs) const;
+
 
     template<class T2>
     Group<typename conditional<is_const<T>::value, const T2, T2>::type>
@@ -106,6 +109,7 @@ public:
     vector<T*> add(const Group<T2>&);
     template<typename T2>
     vector<T*> add(Group<T2>&&);
+
 
     void remove(const UInt);
     void remove(const vector<UInt>&);

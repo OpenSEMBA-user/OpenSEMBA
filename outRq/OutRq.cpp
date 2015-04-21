@@ -19,7 +19,7 @@ OutRqBase::~OutRqBase() {
 
 }
 
-bool OutRqBase::isSimilar(const OutRqBase& rhs) const {
+bool OutRqBase::hasSameProperties(const OutRqBase& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }

@@ -53,3 +53,12 @@ void EMSourceBase::printInfo() const {
 const Magnitude* EMSourceBase::getMagnitude() const {
     return magnitude_;
 }
+
+template<typename T> template<typename T2>
+bool EMSource<T>::isSimilar(const EMSource<T2>& rhs) const {
+    if (!EMSourceBase::isSimilar(rhs) ||
+            ElementsGroup<T>::isSimilar(rhs.elems())) {
+        return false;
+    }
+    return true;
+ }
