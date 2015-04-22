@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "ProjectFile.h"
 #include "options/Arguments.h"
-//#include "Semba.h"
+#include "semba/Semba.h"
 
 class SembaTest : public ::testing::Test {
 
