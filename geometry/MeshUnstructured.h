@@ -50,10 +50,12 @@ public:
 
     vector<Face> getBorderWithNormal(const vector<Face>& border,
                                      const CVecR3& normal);
+
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
     virtual bool isOnBoundary(const CVecR3 pos) const;
     ElementsGroup<const SurfR> getMaterialBoundary(const MatId   matId,
                                                    const LayerId layId) const;
+    ElementsGroup<Surf> getSurfsMatching(const vector<Face>& faces) const;
     ElementsGroup<const Tri> convertToTri(
             const ElementsGroup<const ElemR>& region,
             bool ignoreTets) const;

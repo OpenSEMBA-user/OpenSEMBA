@@ -234,7 +234,7 @@ bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
 }
 
 bool MeshUnstructured::isOnBoundary(const CVecR3 pos) const {
-#warning "Not implemented"
+    // TODO Unstr isOnBoundary
 }
 
 ElementsGroup<const SurfR> MeshUnstructured::getMaterialBoundary(
@@ -257,4 +257,14 @@ void MeshUnstructured::printInfo() const {
 
 Real MeshUnstructured::getMinimumSpaceStep() const {
     // TODO Unstr minimum space step.
+}
+
+ElementsGroup<Surf> MeshUnstructured::getSurfsMatching(
+        const vector<Face>& faces) const {
+    ElementsGroup<Surf> res;
+    for (UInt i = 0; i < faces.size(); i++) {
+        vector<CoordR3*> coords = faces[i].first->getSideV();
+// TODO MeshUnstructured get Surfs Matching.
+#warning " TO BE DONE"
+    }
 }
