@@ -897,7 +897,9 @@ ParserGiD::getNextLabelAndValue(string& label, string& value) {
     line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
     line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
     label = line.substr(0, line.find(LABEL_ENDING));
+    label = trim(label);
     value = line.substr(line.find(LABEL_ENDING) + 1, line.length());
+    value = trim(value);
 }
 
 Grid3*
@@ -1050,7 +1052,7 @@ ParserGiD::readDipole() {
 
 Waveport*
 ParserGiD::readWaveport() {
-    vector<ElementId> ids;
+    vector<Face> faces;
     UInt numElements = 0;
     bool input = true;
     MagnitudeGaussian* mag;
@@ -1093,10 +1095,11 @@ ParserGiD::readWaveport() {
         } else if (!label.compare("Number of elements")) {
             numElements = atoi(value.c_str());
         } else if (!label.compare("Elements")) {
-            UInt e;
+            UInt e, f;
             for (UInt i = 0; i < numElements; i++) {
                 f_in >> e;
-                ids.push_back(ElementId(e));
+                VolR* vol = mesh_->elems().get(ElementId(e));
+                faces.push_back(Face(vol,f));
             }
         } else if (label.find("End of Waveport") != label.npos) {
             finished = true;
@@ -1111,7 +1114,7 @@ ParserGiD::readWaveport() {
         cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
-    ElementsGroup<Surf> surfs = mesh_->elems().getGroupWith(ids);
+    ElementsGroup<Surf> surfs = mesh_->getSurfsMatching(faces);
     return new Waveport(mag, surfs, input, shape, excitationMode, mode);
 }
 
