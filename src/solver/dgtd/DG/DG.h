@@ -47,7 +47,7 @@ struct lexCompareMat {
 #endif
 
 class DG : public Ordering {
-   friend class Output;
+   friend class Exporter;
    friend class IntegratorLSERK;
    friend class IntegratorLF2;
    friend class IntegratorLF2Full;

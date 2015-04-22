@@ -1,9 +1,9 @@
-#include "ElementsGroupTest.h"
+#include "GroupElementsTest.h"
 
 TEST_F(GeometryElementsGroupTest, Copy){
     vector<CoordR3*> coords = newCoordR3Vector();
-    CoordinateGroup<>* original = new CoordinateGroup<>(coords);
-    CoordinateGroup<> copied;
+    GroupCoordinates<>* original = new GroupCoordinates<>(coords);
+    GroupCoordinates<> copied;
     copied = *original;
 
     EXPECT_TRUE(checkTypes(*original));
@@ -15,7 +15,7 @@ TEST_F(GeometryElementsGroupTest, Copy){
 }
 
 TEST_F(GeometryElementsGroupTest, CopyCtor){
-    CoordinateGroup<> grp;
+    GroupCoordinates<> grp;
     {
         vector<CoordR3*> coords = newCoordR3Vector();
         grp.add(coords);
@@ -25,7 +25,7 @@ TEST_F(GeometryElementsGroupTest, CopyCtor){
 
 TEST_F(GeometryElementsGroupTest, idsConservation){
     vector<CoordR3*> coords = newCoordR3Vector();
-    CoordinateGroup<> grp(coords);
+    GroupCoordinates<> grp(coords);
     EXPECT_EQ(coords.size(), grp.size());
     for (UInt i = 0; i < grp.size(); i++) {
         EXPECT_EQ(coords[i]->getId(), grp(i)->getId());

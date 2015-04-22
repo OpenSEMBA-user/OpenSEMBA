@@ -44,7 +44,7 @@ ResultGiD::ResultGiD(
 
 void
 ResultGiD::writePointProbeMesh(int& coordCounter, int& elemCounter) {
-   OutputGiD::beginMesh(getName(), GiD_3D, GiD_Point, 1);
+   ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Point, 1);
    GiD_BeginCoordinates();
    assert(getElem().size() == 1);
    const CVecD3 pos = mesh_->v.getPtrToId(getElem()[0])->pos();
@@ -68,7 +68,7 @@ ResultGiD::writeTriProbeMesh(
       int& elemCounter) {
    uint nV;
    mesh_->isLinear() ? nV = 3 : nV = 6;
-   OutputGiD::beginMesh(getName(), GiD_3D, GiD_Triangle, nV);
+   ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Triangle, nV);
    GiD_BeginCoordinates();
    int tmpCounter = coordCounter;
    static const uint GiDTriOrder[6] = {0, 3, 5, 1, 4, 2};
@@ -110,7 +110,7 @@ ResultGiD::writeTetProbeMesh(int& coordCounter, int& elemCounter) {
    uint nV;
    mesh_->isLinear() ? nV = 4 : nV = 10;
    assert(nV == 4); // TODO Implemented only for linear meshes.
-   OutputGiD::beginMesh(getName(), GiD_3D, GiD_Tetrahedra, nV);
+   ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Tetrahedra, nV);
    GiD_BeginCoordinates();
    int tmpCounter = coordCounter;
    for (uint j = 0; j < elem_.size(); j++) {
@@ -143,7 +143,7 @@ ResultGiD::write(
       const double time,
       const FieldD3& electric,
       const FieldD3& magnetic) const {
-   OutputGiD::beginResult(
+   ExporterGiD::beginResult(
          getName() + " "  + outputTypeStr(),
          "Time", time, getGiDResultType(),
          getGiDResultLocation(), getGiDGaussPointType(), getComponentNames());

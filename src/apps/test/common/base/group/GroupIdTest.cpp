@@ -8,7 +8,7 @@
 #include "gtest/gtest.h"
 #include "base/class/IdBase.h"
 #include "base/group/GroupId.h"
-#include "geometry/layers/LayerGroup.h"
+#include "geometry/layers/GroupLayers.h"
 
 class BaseGroupGroupIdTest : public ::testing::Test {
 public:
@@ -24,7 +24,7 @@ protected:
         return res;
     }
 
-    void areEqual(const vector<Layer*>& vec, const LayerGroup<>& layers) {
+    void areEqual(const vector<Layer*>& vec, const GroupLayers<>& layers) {
         for (UInt i = 0; i < vec.size(); i++) {
             EXPECT_EQ(*vec[i], *layers.get(vec[i]->getId()));
         }
@@ -33,6 +33,6 @@ protected:
 
 TEST_F(BaseGroupGroupIdTest, ctor) {
     vector<Layer*> vecLayers = newLayersVector();
-    LayerGroup<> layers(vecLayers);
+    GroupLayers<> layers(vecLayers);
     areEqual(vecLayers, layers);
 }

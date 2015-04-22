@@ -44,7 +44,7 @@ private:
 	Comm *comm_;
 	Integrator *integrator_;
 	DG *dg_;
-	Output* out_;
+	Exporter* out_;
 	Integrator* initIntegrator(
 	  const MeshVolume* mesh,
 	  const PhysicalModelGroup* pMGroup,

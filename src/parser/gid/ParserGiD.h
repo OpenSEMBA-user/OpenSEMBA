@@ -53,9 +53,9 @@ private:
     ProblemSize pSize_;
     OptionsSolver* readSolverOptions();
     OptionsMesher* readMesherOptions();
-    EMSourceGroup<>* readEMSources();
-    OutRqGroup<>* readOutputRequests();
-    PhysicalModelGroup<>* readMaterials();
+    GroupEMSources<>* readEMSources();
+    GroupOutRqs<>* readOutputRequests();
+    GroupPhysicalModels<>* readMaterials();
     MeshUnstructured* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
@@ -68,23 +68,23 @@ private:
             const MatId id,
             const string& name,
             const string& layersString) const;
-    LayerGroup<> readLayers();
-    CoordinateGroup<CoordR3> readCoordinates();
-    ElementsGroup<ElemR> readElements(const CoordinateGroup<CoordR3>&);
-    void readHex8Elements (const CoordinateGroup<CoordR3>& v,
+    GroupLayers<> readLayers();
+    GroupCoordinates<CoordR3> readCoordinates();
+    GroupElements<ElemR> readElements(const GroupCoordinates<CoordR3>&);
+    void readHex8Elements (const GroupCoordinates<CoordR3>& v,
                            vector<ElemR*>& elems);
-    void readTet10Elements(const CoordinateGroup<CoordR3>& v,
+    void readTet10Elements(const GroupCoordinates<CoordR3>& v,
                            vector<ElemR*>& elems);
-    void readTet4Elements (const CoordinateGroup<CoordR3>& v,
+    void readTet4Elements (const GroupCoordinates<CoordR3>& v,
                            vector<ElemR*>& elems);
-    void readTri6Elements (const CoordinateGroup<CoordR3>& v,
+    void readTri6Elements (const GroupCoordinates<CoordR3>& v,
                            vector<ElemR*>& elems);
-    void readTri3Elements (const CoordinateGroup<CoordR3>& v,
+    void readTri3Elements (const GroupCoordinates<CoordR3>& v,
                            vector<ElemR*>& elems);
-    void readLin2Elements (const CoordinateGroup<CoordR3>& v,
+    void readLin2Elements (const GroupCoordinates<CoordR3>& v,
                            vector<ElemR*>& elems);
     Grid3* readCartesianGrid();
-    void readOutRqInstances(OutRqGroup<>* res);
+    void readOutRqInstances(GroupOutRqs<>* res);
     void getNextLabelAndValue(string& label, string& value);
     PlaneWave* readPlaneWave();
     Dipole* readDipole();
@@ -116,7 +116,7 @@ private:
     void init(const string& pTPath);
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
-    ElementsGroup<Vol> boundToElemGroup(const string& line);
+    GroupElements<Vol> boundToElemGroup(const string& line);
 };
 
 #endif /* PARSERGID_H_ */

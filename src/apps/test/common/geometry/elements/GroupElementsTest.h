@@ -2,12 +2,12 @@
 #define SRC_TEST_ELEMENTSGROUPTEST_H_
 
 #include "gtest/gtest.h"
-#include "geometry/elements/ElementsGroup.h"
+#include "geometry/elements/GroupElements.h"
 
 class GeometryElementsGroupTest : public ::testing::Test {
 
 protected:
-    bool checkTypes(const ElementsGroup<>& rhs) {
+    bool checkTypes(const GroupElements<>& rhs) {
         bool res = true;
         for (UInt i = 0; i < rhs.size(); i++) {
             res &= rhs(i)->is<Elem>();

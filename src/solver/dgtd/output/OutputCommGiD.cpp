@@ -28,5 +28,5 @@ OutputCommGiD::process(
       comm_->gatherFieldsMaster(electric, magnetic, localElec, localMagn);
       lastSyncing_ = time;
    }
-   Output::process(time, electric, magnetic);
+   Exporter::process(time, electric, magnetic);
 }

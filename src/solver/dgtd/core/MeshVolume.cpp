@@ -7,14 +7,14 @@ MeshVolume::MeshVolume() {
 }
 
 MeshVolume::MeshVolume(
- const CoordinateGroup& vIn,
- const ElementsGroup& elementIn) : Mesh(vIn, elementIn, NULL) {
+ const GroupCoordinates& vIn,
+ const GroupElements& elementIn) : Mesh(vIn, elementIn, NULL) {
 	grid_ = NULL;
 }
 
 MeshVolume::MeshVolume(
- const CoordinateGroup& vIn,
- const ElementsGroup& elementIn,
+ const GroupCoordinates& vIn,
+ const GroupElements& elementIn,
  const Grid3* grid) : Mesh(vIn, elementIn, grid) {
 }
  

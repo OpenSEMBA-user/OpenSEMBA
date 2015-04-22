@@ -16,7 +16,7 @@
 using namespace std;
 
 class ResultGiD : public Result, public OutRq {
-    friend class OutputGiD;
+    friend class ExporterGiD;
 public:
     ResultGiD();
     ResultGiD(

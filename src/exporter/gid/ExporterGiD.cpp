@@ -2,21 +2,21 @@
  *  Created on: Aug 23, 2012
  *      Author: luis
  */
-#include "OutputGiD.h"
+#include "ExporterGiD.h"
 
-Int OutputGiD::numberOfOutputGiD_ = 0;
-Int OutputGiD::coordCounter_ = 0;
-Int OutputGiD::elemCounter_ = 0;
+Int ExporterGiD::numberOfOutputGiD_ = 0;
+Int ExporterGiD::coordCounter_ = 0;
+Int ExporterGiD::elemCounter_ = 0;
 
-const CVecR3 OutputGiD::pecColor(255, 0, 0);
-const CVecR3 OutputGiD::pmcColor(0, 255, 0);
-const CVecR3 OutputGiD::smaColor(0, 0, 255);
-const CVecR3 OutputGiD::pmlColor(0, 0, 255);
-const CVecR3 OutputGiD::sibcColor(100, 0, 100);
-const CVecR3 OutputGiD::emSourceColor(100, 100, 0);
+const CVecR3 ExporterGiD::pecColor(255, 0, 0);
+const CVecR3 ExporterGiD::pmcColor(0, 255, 0);
+const CVecR3 ExporterGiD::smaColor(0, 0, 255);
+const CVecR3 ExporterGiD::pmlColor(0, 0, 255);
+const CVecR3 ExporterGiD::sibcColor(100, 0, 100);
+const CVecR3 ExporterGiD::emSourceColor(100, 100, 0);
 
 
-void OutputGiD::initDefault(
+void ExporterGiD::initDefault(
         GiD_PostMode mode,
         const string& fn) {
     // Sets default values.
@@ -42,29 +42,29 @@ void OutputGiD::initDefault(
     writeGaussPoints();
 }
 
-OutputGiD::OutputGiD(const SmbData* smb, GiD_PostMode mode) :
-        Output(smb->getFilename()) {
+ExporterGiD::ExporterGiD(const SmbData* smb, GiD_PostMode mode) :
+        Exporter(smb->getFilename()) {
     initDefault(mode, getFilename());
     writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
 }
 
-OutputGiD::OutputGiD(
+ExporterGiD::ExporterGiD(
         const SmbData* smb,
         const string& fn,
-        GiD_PostMode mode) : Output(fn) {
+        GiD_PostMode mode) : Exporter(fn) {
     initDefault(mode, fn);
     writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
 }
 
-OutputGiD::OutputGiD(
+ExporterGiD::ExporterGiD(
         const MeshUnstructured* mesh,
-        const PhysicalModelGroup<>* mat,
-        const string& fn, GiD_PostMode mode) : Output(fn) {
+        const GroupPhysicalModels<>* mat,
+        const string& fn, GiD_PostMode mode) : Exporter(fn) {
     initDefault(mode, fn);
     writeMesh(mesh, mat);
 }
 
-OutputGiD::~OutputGiD() {
+ExporterGiD::~ExporterGiD() {
     switch (mode_) {
     case GiD_PostAscii:
         GiD_fClosePostMeshFile(meshFile_);
@@ -79,7 +79,7 @@ OutputGiD::~OutputGiD() {
     GiD_fClosePostMeshFile(meshFile_);
 }
 
-void OutputGiD::writeAllElements(const ElementsGroup<const ElemR>& elem,
+void ExporterGiD::writeAllElements(const GroupElements<const ElemR>& elem,
                                  const string& name) {
     writeElements(elem.getGroupOf<NodR>() , name, GiD_Point, 1);
     writeElements(elem.getGroupOf<LinR2>(), name, GiD_Linear, 2);
@@ -90,11 +90,11 @@ void OutputGiD::writeAllElements(const ElementsGroup<const ElemR>& elem,
 }
 
 void
-OutputGiD::writeMesh(
+ExporterGiD::writeMesh(
         const Mesh* inMesh,
-        const PhysicalModelGroup<>* mat,
-        const EMSourceGroup<>* srcs,
-        const OutRqGroup<>* oRqs) {
+        const GroupPhysicalModels<>* mat,
+        const GroupEMSources<>* srcs,
+        const GroupOutRqs<>* oRqs) {
     assert(inMesh != NULL);
     assert(mat != NULL);
     const MeshUnstructured* mesh;
@@ -106,13 +106,13 @@ OutputGiD::writeMesh(
         mesh = inMesh->cloneTo<MeshUnstructured>();
     }
     // Writes materials.
-    LayerGroup<const Layer> lay = mesh->layers();
+    GroupLayers<const Layer> lay = mesh->layers();
     for (UInt i = 0; i < lay.size(); i++) {
         for (UInt j = 0; j < mat->size(); j++) {
             const MatId matId = (*mat)(j)->getId();
             const LayerId layId = lay(i)->getId();
             const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
-            ElementsGroup<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
+            GroupElements<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
             writeAllElements(elem, name);
         }
     }
@@ -121,7 +121,7 @@ OutputGiD::writeMesh(
         for (UInt i = 0; i < srcs->size(); i++) {
             const EMSourceBase* src =  (*srcs)(i);
             const string name = preName + "EMSource_" + src->getName();
-            ElementsGroup<const ElemR> elem =
+            GroupElements<const ElemR> elem =
                     mesh->elems().getGroupWith(src->elems().getIds());
             writeAllElements(elem, name);
         }
@@ -131,7 +131,7 @@ OutputGiD::writeMesh(
         for (UInt i = 0; i < oRqs->size(); i++) {
             const OutRqBase* oRq = (*oRqs)(i);
             const string name = preName + "OutRq_" + oRq->getName();
-            ElementsGroup<const ElemR> elem =
+            GroupElements<const ElemR> elem =
                     mesh->elems().getGroupWith(oRq->elems().getIds());
             writeAllElements(elem, name);
         }
@@ -220,8 +220,8 @@ OutputGiD::writeMesh(
 //    }
 //}
 
-void OutputGiD::writeElements(
-        const ElementsGroup<const ElemR>& elem,
+void ExporterGiD::writeElements(
+        const GroupElements<const ElemR>& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {
@@ -319,7 +319,7 @@ void OutputGiD::writeElements(
 //}
 
 
-void OutputGiD::beginMesh(
+void ExporterGiD::beginMesh(
         const string& name,
         GiD_Dimension dim,
         GiD_ElementType elementType,
@@ -337,7 +337,7 @@ void OutputGiD::beginMesh(
     delete [] tName;
 }
 
-void OutputGiD::beginResult(
+void ExporterGiD::beginResult(
         const string& fieldName,
         const string& timeName,
         const Real time,
@@ -362,7 +362,7 @@ void OutputGiD::beginResult(
             getGiDResultLocation(), gpType, NULL, cNames.size(), compv);
 }
 
-void OutputGiD::openPostMeshFile(
+void ExporterGiD::openPostMeshFile(
         const string& filename) {
     char *auxChar;
     auxChar = new char[filename.length() + 1];
@@ -371,7 +371,7 @@ void OutputGiD::openPostMeshFile(
     delete [] auxChar;
 }
 
-void OutputGiD::openPostResultFile(
+void ExporterGiD::openPostResultFile(
         const string& filename)  {
     char *auxChar;
     auxChar = new char[filename.length() + 1];
@@ -384,7 +384,7 @@ void OutputGiD::openPostResultFile(
 }
 
 void
-OutputGiD::flushPostFile() const {
+ExporterGiD::flushPostFile() const {
     if (meshFile_ != 0) {
         GiD_fFlushPostFile(meshFile_);
     }
@@ -395,7 +395,7 @@ OutputGiD::flushPostFile() const {
 
 
 void
-OutputGiD::writeGaussPoints() const {
+ExporterGiD::writeGaussPoints() const {
     //    {
     //        const char* name = "gp_tri";
     //        static const SimplexTri<ORDER_N> tri;
@@ -418,7 +418,7 @@ OutputGiD::writeGaussPoints() const {
     //    }
 }
 
-GiD_ResultType OutputGiD::getGiDResultType(OutRqBase::Type type) const {
+GiD_ResultType ExporterGiD::getGiDResultType(OutRqBase::Type type) const {
     switch (type) {
     case OutRqBase::electric:
         return GiD_ResultType::GiD_Vector;
@@ -430,15 +430,15 @@ GiD_ResultType OutputGiD::getGiDResultType(OutRqBase::Type type) const {
     }
 }
 
-GiD_ResultLocation OutputGiD::getGiDResultLocation() const {
+GiD_ResultLocation ExporterGiD::getGiDResultLocation() const {
     return GiD_ResultLocation::GiD_OnNodes;
 }
 
-void OutputGiD::writeCoordinates(const UInt id, const CVecR3 pos) const {
+void ExporterGiD::writeCoordinates(const UInt id, const CVecR3 pos) const {
     GiD_fWriteCoordinates(meshFile_, id, pos(x), pos(y), pos(z));
 }
 
-void OutputGiD::writeCoordinates(const vector<CVecR3>& pos)  {
+void ExporterGiD::writeCoordinates(const vector<CVecR3>& pos)  {
     GiD_fBeginCoordinates(meshFile_);
     for (UInt i = 0; i < pos.size(); i++) {
         writeCoordinates(++coordCounter_, pos[i]);
@@ -446,31 +446,31 @@ void OutputGiD::writeCoordinates(const vector<CVecR3>& pos)  {
     GiD_fEndCoordinates(meshFile_);
 }
 
-void OutputGiD::writeElement(Int elemId, int nId[]) const {
+void ExporterGiD::writeElement(Int elemId, int nId[]) const {
     GiD_fWriteElement(meshFile_, elemId, nId);
 }
 
-string OutputGiD::makeValid(string name) {
+string ExporterGiD::makeValid(string name) {
     name.erase(remove(name.begin(), name.end(), '\n'), name.end());
     return name;
 }
 
-void OutputGiD::beginCoordinates() const {
+void ExporterGiD::beginCoordinates() const {
     GiD_fBeginCoordinates(meshFile_);
 }
 
-void OutputGiD::endCoordinates() const {
+void ExporterGiD::endCoordinates() const {
     GiD_fEndCoordinates(meshFile_);
 }
 
-void OutputGiD::beginElements() const {
+void ExporterGiD::beginElements() const {
     GiD_fBeginElements(meshFile_);
 }
 
-void OutputGiD::endElements() const {
+void ExporterGiD::endElements() const {
     GiD_fEndElements(meshFile_);
 }
 
-void OutputGiD::endMesh() const {
+void ExporterGiD::endMesh() const {
     GiD_fEndMesh(meshFile_);
 }

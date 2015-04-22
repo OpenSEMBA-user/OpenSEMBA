@@ -55,7 +55,7 @@ SolverCudg3d::init() {
    integrator_->setSolver(dg_);
 
 #ifndef USE_MPI
-   out_ = new OutputGiD(smb_, dg_);
+   out_ = new ExporterGiD(smb_, dg_);
 #else
    if (comm_->isMaster()) {
       out_ = new OutputCommGiD(smb_, dg_, comm_);

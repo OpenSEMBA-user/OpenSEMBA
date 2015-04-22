@@ -11,7 +11,7 @@
 #include "OutputGiD.h"
 #include "../core/Comm.h"
 
-class OutputCommGiD : public OutputGiD {
+class OutputCommGiD : public ExporterGiD {
 public:
    OutputCommGiD(
          const SmbData* smb,

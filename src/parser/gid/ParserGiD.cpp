@@ -204,15 +204,15 @@ ParserGiD::readMesherOptions() {
 
 MeshUnstructured*
 ParserGiD::readMesh() {
-    LayerGroup<> lG = readLayers();
-    CoordinateGroup<CoordR3> cG = readCoordinates();
-    ElementsGroup<ElemR> eG = readElements(cG);
+    GroupLayers<> lG = readLayers();
+    GroupCoordinates<CoordR3> cG = readCoordinates();
+    GroupElements<ElemR> eG = readElements(cG);
     return new MeshUnstructured(cG, eG, lG);
 }
 
-EMSourceGroup<>*
+GroupEMSources<>*
 ParserGiD::readEMSources() {
-    EMSourceGroup<>* res = new EMSourceGroup<>();
+    GroupEMSources<>* res = new GroupEMSources<>();
     bool finished = false;
     bool found = false;
     string label, value;
@@ -248,9 +248,9 @@ ParserGiD::readEMSources() {
     return res;
 }
 
-PhysicalModelGroup<>*
+GroupPhysicalModels<>*
 ParserGiD::readMaterials(){
-    PhysicalModelGroup<>* res = new PhysicalModelGroup<>();
+    GroupPhysicalModels<>* res = new GroupPhysicalModels<>();
     string label, value;
     UInt materialCount = 0;
     while (!f_in.eof() && label.compare("End of materials")!=0) {
@@ -353,9 +353,9 @@ ParserGiD::readPhysicalModel(const MatId id) {
     return NULL;
 }
 
-OutRqGroup<>*
+GroupOutRqs<>*
 ParserGiD::readOutputRequests() {
-    OutRqGroup<>* res = new OutRqGroup<>();
+    GroupOutRqs<>* res = new GroupOutRqs<>();
     bool finished;
     bool found = false;
     string line, label, value;
@@ -377,15 +377,15 @@ ParserGiD::readOutputRequests() {
     return res;
 }
 
-ElementsGroup<Vol> ParserGiD::boundToElemGroup(const string& line) {
+GroupElements<Vol> ParserGiD::boundToElemGroup(const string& line) {
     BoxR3 bound = strToBound(line);
     HexR8* hex = new HexR8(*mesh_, ElementId(0), bound);
     mesh_->elems().add(hex, true);
-    ElementsGroup<Vol> elems = mesh_->elems().getGroupWith(hex->getId());
+    GroupElements<Vol> elems = mesh_->elems().getGroupWith(hex->getId());
     return elems;
 }
 
-void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
+void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
     bool finished = false;
     GiDOutputType gidOutputType;
     while (!finished && !f_in.eof()) {
@@ -409,7 +409,7 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     CoordinateId coordId(atoi(value.c_str()));
                     NodR* node = new NodR(*mesh_, ElementId(0), &coordId);
                     mesh_->elems().add(node, true);
-                    ElementsGroup<Nod> elems = mesh_->elems().getGroupWith(node->getId());
+                    GroupElements<Nod> elems = mesh_->elems().getGroupWith(node->getId());
                     res->add(new OutRq<Nod>(domain, type, name, elems));
                     break;
                 }
@@ -425,8 +425,8 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                     getNextLabelAndValue(label,value);
                     vector<ElementId> ids;
                     ids.push_back(ElementId(atoi(value.c_str())));
-                    ElementsGroup<ElemR> elems = mesh_->elems().getGroupWith(ids);
-                    ElementsGroup<Surf> surfs = elems.getGroupOf<Surf>();
+                    GroupElements<ElemR> elems = mesh_->elems().getGroupWith(ids);
+                    GroupElements<Surf> surfs = elems.getGroupOf<Surf>();
                     res->add(new OutRq<Surf>(domain, type, name, surfs));
                     break;
                 }
@@ -434,14 +434,14 @@ void ParserGiD::readOutRqInstances(OutRqGroup<>* res) {
                 case ParserGiD::outRqOnVolume:
                 {
                     getline(f_in, line);
-                    ElementsGroup<Vol> elems = boundToElemGroup(line);
+                    GroupElements<Vol> elems = boundToElemGroup(line);
                     res->add(new OutRq<Vol>(domain, type, name, elems));
                     break;
                 }
                 case ParserGiD::farField:
                 {
                     getline(f_in, line);
-                    ElementsGroup<Vol> elems = boundToElemGroup(line);
+                    GroupElements<Vol> elems = boundToElemGroup(line);
                     Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
@@ -519,12 +519,12 @@ ParserGiD::readProblemSize() {
     return res;
 }
 
-LayerGroup<> ParserGiD::readLayers() {
+GroupLayers<> ParserGiD::readLayers() {
     bool finished = false;
     bool found = false;
     string label, value;
     LayerId id;
-    LayerGroup<> res;
+    GroupLayers<> res;
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Layers")==0) {
@@ -550,7 +550,7 @@ LayerGroup<> ParserGiD::readLayers() {
     return res;
 }
 
-CoordinateGroup<CoordR3> ParserGiD::readCoordinates() {
+GroupCoordinates<CoordR3> ParserGiD::readCoordinates() {
     string line;
     CoordinateId id;
     CVecR3 pos;
@@ -585,11 +585,11 @@ CoordinateGroup<CoordR3> ParserGiD::readCoordinates() {
         cerr << endl << "ERROR @ GiDParser::readCoordinates(): "
                 << "End of coordinates label not found." << endl;
     }
-    return CoordinateGroup<CoordR3>(coord);
+    return GroupCoordinates<CoordR3>(coord);
 }
 
-ElementsGroup<ElemR> ParserGiD::readElements(
-        const CoordinateGroup<CoordR3>& v) {
+GroupElements<ElemR> ParserGiD::readElements(
+        const GroupCoordinates<CoordR3>& v) {
     string line, label;
     bool finished = false;
     bool found = false;
@@ -632,10 +632,10 @@ ElementsGroup<ElemR> ParserGiD::readElements(
                 << "\"End of elements\" label was not found." << endl;
     }
     //
-    return ElementsGroup<ElemR>(elems);
+    return GroupElements<ElemR>(elems);
 }
 
-void ParserGiD::readHex8Elements(const CoordinateGroup<CoordR3>& v,
+void ParserGiD::readHex8Elements(const GroupCoordinates<CoordR3>& v,
         vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[8];
@@ -650,7 +650,7 @@ void ParserGiD::readHex8Elements(const CoordinateGroup<CoordR3>& v,
     }
 }
 
-void ParserGiD::readTet10Elements(const CoordinateGroup<CoordR3>& v,
+void ParserGiD::readTet10Elements(const GroupCoordinates<CoordR3>& v,
         vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[10];
@@ -665,7 +665,7 @@ void ParserGiD::readTet10Elements(const CoordinateGroup<CoordR3>& v,
     }
 }
 
-void ParserGiD::readTet4Elements(const CoordinateGroup<CoordR3>& v,
+void ParserGiD::readTet4Elements(const GroupCoordinates<CoordR3>& v,
         vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[4];
@@ -677,7 +677,7 @@ void ParserGiD::readTet4Elements(const CoordinateGroup<CoordR3>& v,
     }
 }
 
-void ParserGiD::readTri6Elements(const CoordinateGroup<CoordR3>& v,
+void ParserGiD::readTri6Elements(const GroupCoordinates<CoordR3>& v,
         vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[6];
@@ -692,7 +692,7 @@ void ParserGiD::readTri6Elements(const CoordinateGroup<CoordR3>& v,
     }
 }
 
-void ParserGiD::readTri3Elements(const CoordinateGroup<CoordR3>& v,
+void ParserGiD::readTri3Elements(const GroupCoordinates<CoordR3>& v,
         vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[3];
@@ -705,7 +705,7 @@ void ParserGiD::readTri3Elements(const CoordinateGroup<CoordR3>& v,
     }
 }
 
-void ParserGiD::readLin2Elements(const CoordinateGroup<CoordR3>& v,
+void ParserGiD::readLin2Elements(const GroupCoordinates<CoordR3>& v,
         vector<ElemR*>& elems) {
     ElementId id;
     CoordinateId vId[2];
@@ -989,7 +989,7 @@ ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
     CVecR3 dir, pol;
-    ElementsGroup<Vol> elems;
+    GroupElements<Vol> elems;
     Magnitude* mag;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
@@ -1021,7 +1021,7 @@ ParserGiD::readPlaneWave() {
 
 Dipole*
 ParserGiD::readDipole() {
-    ElementsGroup<Vol> elems;
+    GroupElements<Vol> elems;
     Real length = 0.0;
     CVecR3 orientation;
     CVecR3 position;
@@ -1111,13 +1111,13 @@ ParserGiD::readWaveport() {
         cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
-    ElementsGroup<Surf> surfs = mesh_->elems().getGroupWith(ids);
+    GroupElements<Surf> surfs = mesh_->elems().getGroupWith(ids);
     return new Waveport(mag, surfs, input, shape, excitationMode, mode);
 }
 
 Generator*
 ParserGiD::readGenerator() {
-    ElementsGroup<Nod> elems;
+    GroupElements<Nod> elems;
     Magnitude* mag;
     Generator::Type type;
     Generator::Hardness hardness;
@@ -1179,14 +1179,14 @@ ParserGiD::readSourceOnLine() {
                 ids.push_back(ElementId(atoi(value.c_str())));
             }
         } else if (label.compare("End of Source_on_line")==0) {
-            ElementsGroup<Lin> lines = mesh_->elems().getGroupWith(ids);
+            GroupElements<Lin> lines = mesh_->elems().getGroupWith(ids);
             return new SourceOnLine(mag, lines, type, hardness);
         }
     }
     // Throws error message if ending label was not found.
     cerr << endl << "ERROR @ Parsing nodal: "
             << "End of Nodal label not found. " << endl;
-    ElementsGroup<Lin> lines;
+    GroupElements<Lin> lines;
     return new SourceOnLine(mag, lines, type, hardness);
 }
 

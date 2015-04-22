@@ -2,30 +2,30 @@
  *  Created on: Aug 23, 2012
  *      Author: luis
  */
-#ifndef OUTPUTGID_H_
-#define OUTPUTGID_H_
+#ifndef EXPORTER_GID_EXPORTERGID_H_
+#define EXPORTER_GID_EXPORTERGID_H_
 
-#include "exporter/Output.h"
+#include "exporter/Exporter.h"
 #include "SmbData.h"
 #include "gidpost/gidpost.h"
 
 using namespace std;
 
-class OutputGiD : public Output {
+class ExporterGiD : public Exporter {
 public:
-    OutputGiD(
+    ExporterGiD(
             const SmbData* smb,
             GiD_PostMode mode = GiD_PostAscii);
-    OutputGiD(
+    ExporterGiD(
             const SmbData* smb,
             const string& fn,
             GiD_PostMode mode = GiD_PostAscii);
-    OutputGiD(
+    ExporterGiD(
             const MeshUnstructured* mesh,
-            const PhysicalModelGroup<>* mat,
+            const GroupPhysicalModels<>* mat,
             const string& fn,
             GiD_PostMode mode = GiD_PostAscii);
-    virtual ~OutputGiD();
+    virtual ~ExporterGiD();
 protected:
     void beginMesh(
             const string& tName,
@@ -53,9 +53,9 @@ private:
     GiD_PostMode mode_;
     void writeMesh(
             const Mesh* inMesh,
-            const PhysicalModelGroup<>* mat,
-            const EMSourceGroup<>* src = NULL,
-            const OutRqGroup<>* oRq = NULL);
+            const GroupPhysicalModels<>* mat,
+            const GroupEMSources<>* src = NULL,
+            const GroupOutRqs<>* oRq = NULL);
 //    void writeMeshWithIds(
 //            const vector<vector<ElementId> >& ids,
 //            string& name);
@@ -66,7 +66,7 @@ private:
 //            const vector<ElementId>& ids, string& name);
 //    void writeOutputRequestsMesh();
     void writeElements(
-            const ElementsGroup<const ElemR>& entities,
+            const GroupElements<const ElemR>& entities,
             const string& name,
             const GiD_ElementType type,
             const Int nV);
@@ -85,9 +85,9 @@ private:
     void openPostMeshFile(const string& filename);
     void openPostResultFile(const string& filename);
     void writeMaterialsInLayer(const Layer* lay);
-    void writeAllElements(const ElementsGroup<const ElemR>& elem,
+    void writeAllElements(const GroupElements<const ElemR>& elem,
                           const string& name);
     void initDefault(GiD_PostMode mode, const string& fn);
 };
 
-#endif /* GIDOUTPUT_H_ */
+#endif /* EXPORTER_GID_EXPORTERGID_H_ */

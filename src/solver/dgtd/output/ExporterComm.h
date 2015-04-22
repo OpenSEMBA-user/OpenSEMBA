@@ -13,7 +13,7 @@
 
 using namespace std;
 
-class OutputComm : public Output {
+class OutputComm : public Exporter {
 public:
    OutputComm(
          const SmbData* smb,

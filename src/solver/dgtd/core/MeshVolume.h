@@ -26,11 +26,11 @@ public:
     MeshVolume();
     MeshVolume(const MeshVolume& meshVol);
     MeshVolume(
-            const CoordinateGroup&,
-            const ElementsGroup&);
+            const GroupCoordinates&,
+            const GroupElements&);
     MeshVolume(
-            const CoordinateGroup& vIn,
-            const ElementsGroup& elementIn,
+            const GroupCoordinates& vIn,
+            const GroupElements& elementIn,
             const Grid3* grid_);
     virtual ~MeshVolume();
     MeshVolume&

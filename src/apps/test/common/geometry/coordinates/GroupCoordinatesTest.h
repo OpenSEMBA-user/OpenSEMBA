@@ -2,7 +2,7 @@
 #define SRC_TEST_COORDINATEGROUPTEST_H_
 
 #include "gtest/gtest.h"
-#include "geometry/coordinates/CoordinateGroup.h"
+#include "geometry/coordinates/GroupCoordinates.h"
 
 class GeometryCoordinateGroupTest : public ::testing::Test {
 
@@ -18,7 +18,7 @@ protected:
         return res;
     }
 
-    bool checkTypes(const CoordinateGroup<>& rhs) {
+    bool checkTypes(const GroupCoordinates<>& rhs) {
         bool res = true;
         for (UInt i = 0; i < rhs.size(); i++) {
             res &= rhs(i)->is<Coord>();

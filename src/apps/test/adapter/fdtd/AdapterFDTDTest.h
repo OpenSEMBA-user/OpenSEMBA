@@ -11,9 +11,8 @@
 #include "gtest/gtest.h"
 #include "../../parser/ParserGiDTest.h"
 #include "adapter/fdtd/AdapterFDTD.h"
-#include "exporter/gid/OutputGiD.h"
-#include "exporter/nfde/OutputNFDE.h"
-
+#include "exporter/gid/ExporterGiD.h"
+#include "exporter/nfde/ExporterNFDE.h"
 
 class AdapterFDTDTest :
 public ::ParserGiDTest,
@@ -29,11 +28,11 @@ protected:
    void runProject(const SmbData* smb) const {
        SmbData* nfde = new SmbData();
        AdapterFDTD(*smb).convert(*nfde);
-       smb->isSimilar(*nfde);
+//       smb->isSimilar(*nfde);
        {
-           OutputGiD outGiD(nfde);
-           OutputGiD outGiDSmb(smb, smb->getOutputFilename() + ".smb");
-           OutputNFDE outNFDE(*nfde);
+           ExporterGiD outGiD(nfde);
+           ExporterGiD outGiDSmb(smb, smb->getOutputFilename() + ".smb");
+           ExporterNFDE outNFDE(*nfde);
        }
        delete nfde;
    }

@@ -10,7 +10,7 @@
 
 #include "../../../common/exporter/Output.h"
 
-class OutputResume: public Output {
+class OutputResume: public Exporter {
 public:
 	OutputResume();
 	virtual ~OutputResume();
