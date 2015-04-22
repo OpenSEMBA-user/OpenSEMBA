@@ -34,6 +34,19 @@ vector<O*> OutRqGroup<O>::add(Group<O2>& rhs) {
 }
 
 template<typename O>
+bool OutRqGroup<O>::isSimilar(const OutRqGroup& rhs) const {
+    if (this->size() != rhs.size()) {
+        return false;
+    }
+    for (UInt i = 0; i < this->size(); i++) {
+        if (!this->get(i)->isSimilar(*rhs(i))) {
+            return false;
+        }
+     }
+    return true;
+}
+
+template<typename O>
 void OutRqGroup<O>::printInfo() const {
     cout<< " --- OutputRequestGroup info ---" << endl;
     Group<O>::printInfo();

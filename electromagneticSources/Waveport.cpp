@@ -72,10 +72,10 @@ Waveport::getMode() const {
 
 void Waveport::printInfo() const {
 	cout << "--- Waveport info ---" << endl;
-	EMSourceBase::printInfo();
 	if (input_) {
-		cout << "- Is input_." << endl;
+		cout << "- Is input." << endl;
 	} else {
 		cout << "- Is output." << endl;
 	}
+	EMSource<Surf>::printInfo();
 }

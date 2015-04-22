@@ -360,6 +360,7 @@ void Group<T>::remove(const vector<UInt>& elems_) {
 
 template<typename T>
 void Group<T>::printInfo() const {
+    cout << "Number of elements in group: " << size() << endl;
     for (UInt i = 0; i < size(); i++) {
         element_[i]->printInfo();
     }

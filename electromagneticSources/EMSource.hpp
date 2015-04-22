@@ -12,6 +12,16 @@ void EMSource<T>::set(const ElementsGroup<const Elem>& elems) {
     ElementsGroup<const T>::operator=(elems);
 }
 
+template<class T>
+bool EMSource<T>::check() const {
+    if (this->size() == 0) {
+        cerr << endl << "ERROR @ EMSource: "
+                << "EMSource has no elements." << endl;
+        this->printInfo();
+        return false;
+    }
+}
+
 template <class T>
 void EMSource<T>::add(const ElementsGroup<const Elem>& elems) {
     ElementsGroup<const T>::add(elems);
@@ -30,4 +40,10 @@ bool EMSource<T>::isSimilar(const EMSourceBase& rhs) const {
         return false;
     }
     return true;
+}
+
+template<class T>
+void EMSource<T>::printInfo() const {
+    EMSourceBase::printInfo();
+    this->ElementsGroup<const T>::printInfo();
 }

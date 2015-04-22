@@ -20,6 +20,8 @@ public:
     template<typename O2>
     vector<O*> add(Group<O2>&);
 
+    bool isSimilar(const OutRqGroup& rhs) const;
+
     void printInfo() const;
 };
 
