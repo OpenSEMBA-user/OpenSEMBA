@@ -37,7 +37,7 @@ private:
 	vector<FaceIdentifier> readFaces() const;
 	vector<UInt> readFacesOwner(const string& ownerOrNeighbour) const;
 	vector<OpenfoamBoundary> readBoundaries() const;
-	LayerGroup<> assignAsLayers(
+	GroupLayers<> assignAsLayers(
 	        ElemRGroup& elems,
 	        const vector<OpenfoamBoundary>& boundaries) const;
 	void openFile(ifstream& file, const string& name) const;

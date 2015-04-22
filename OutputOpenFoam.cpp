@@ -72,7 +72,7 @@ OutputOpenFoam::writeSTLs() const {
             MatId matId = mat->getId();
             const MeshUnstructured* mesh = smb_->mesh->castTo<MeshUnstructured>();
             ConstElemRGroup elems = mesh->elems().getGroupWith(matId);
-            ElementsGroup<const Tri> tri = mesh->convertToTri(elems, includeTets);
+            GroupElements<const Tri> tri = mesh->convertToTri(elems, includeTets);
             triToSTL(tri, dirTriSurface_, "mat", matId, mat->getName());
         }
     }
@@ -92,7 +92,7 @@ OutputOpenFoam::writeSTLs() const {
     //   const UInt nEM = smb_->emSources->countWithType(ElementBase::surface);
     //   for (UInt i = 0; i < nEM; i++) {
     //      const EMSource* em = smb_->emSources->getWithType(i, ElementBase::surface);
-    //      ElementsGroup<Tri3> tri = smb_->mesh->get(em->getElem()).getGroupOf<Tri3>();
+    //      GroupElements<Tri3> tri = smb_->mesh->get(em->getElem()).getGroupOf<Tri3>();
     //      const string name = "Waveport";
     //      triToSTL(tri, dirTriSurface_, "src", i, name);
     //   }
@@ -100,7 +100,7 @@ OutputOpenFoam::writeSTLs() const {
 
 void
 OutputOpenFoam::triToSTL(
-        const ElementsGroup<const Tri>& tri,
+        const GroupElements<const Tri>& tri,
         const string& folder,
         const string& type,
         const UInt& typeId,

@@ -27,7 +27,7 @@ private:
 //	void writeAllRunParallel() const;
 	void writeSTLs() const;
 	void triToSTL(
-	  const ElementsGroup<const Tri>& tri,
+	  const GroupElements<const Tri>& tri,
 	  const string& folder,
 	  const string& type,
 	  const UInt& typeId,

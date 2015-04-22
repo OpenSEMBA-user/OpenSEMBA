@@ -40,7 +40,7 @@ ParserOpenFoam::readMeshUnstructured() const {
     ElemRGroup elems(pol);
 
     vector<OpenfoamBoundary> boundaries = readBoundaries();
-    LayerGroup<> layers = assignAsLayers(elems, boundaries);
+    GroupLayers<> layers = assignAsLayers(elems, boundaries);
     elems.remove(MatId(0));
 
     return MeshUnstructured(cG, elems, layers);
@@ -268,10 +268,10 @@ ParserOpenFoam::skipHeader(ifstream& file) const {
     return;
 }
 
-LayerGroup<> ParserOpenFoam::assignAsLayers(
+GroupLayers<> ParserOpenFoam::assignAsLayers(
         ElemRGroup& elems,
         const vector<OpenfoamBoundary>& bound) const {
-    LayerGroup<> layers;
+    GroupLayers<> layers;
     for (UInt b = 0; b < bound.size(); b++) {
         if (bound[b].isMaterial()) {
             layers.add(new Layer(bound[b]), true);
