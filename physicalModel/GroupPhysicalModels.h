@@ -5,8 +5,8 @@
  *      Author: luis
  */
 
-#ifndef PHYSICALMODELGROUP_H_
-#define PHYSICALMODELGROUP_H_
+#ifndef COMMON_PHYSICALMODEL_GROUPPHYSICALMODELS_H_
+#define COMMON_PHYSICALMODEL_GROUPPHYSICALMODELS_H_
 
 #include <cassert>
 #include <cmath>
@@ -29,11 +29,11 @@ using namespace std;
 #include "base/group/GroupId.h"
 
 template<typename P = PhysicalModel>
-class PhysicalModelGroup : public virtual GroupId<P,MatId> {
+class GroupPhysicalModels : public virtual GroupId<P,MatId> {
 public:
-    USE_GROUP_CONSTRUCTS(PhysicalModelGroup, P);
+    USE_GROUP_CONSTRUCTS(GroupPhysicalModels, P);
 
-    DEFINE_GROUP_CLONE(PhysicalModelGroup, P);
+    DEFINE_GROUP_CLONE(GroupPhysicalModels, P);
 
     USE_GROUP_ASSIGN(P);
 
@@ -44,6 +44,6 @@ private:
     PMVolumePML::Direction getDirectionFromInt(const UInt i) const;
 };
 
-#include "PhysicalModelGroup.hpp"
+#include "GroupPhysicalModels.hpp"
 
-#endif /* PHYSICALMODELGROUP_H_ */
+#endif /* COMMON_PHYSICALMODEL_GROUPPHYSICALMODELS_H_ */

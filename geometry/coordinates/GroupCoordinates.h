@@ -1,12 +1,12 @@
 /*
- * CoordinateGroup.h
+ * GroupCoordinates.h
  *
  *  Created on: Aug 29, 2012
  *      Author: luis
  */
 
-#ifndef COORDINATEGROUP_H_
-#define COORDINATEGROUP_H_
+#ifndef COMMON_GEOMETRY_COORDINATES_GROUPCOORDINATES_H_
+#define COMMON_GEOMETRY_COORDINATES_GROUPCOORDINATES_H_
 
 #include <map>
 #include <set>
@@ -14,7 +14,7 @@
 using namespace std;
 
 #include "Coordinate.h"
-#include "../../base/group/GroupId.h"
+#include "base/group/GroupId.h"
 
 struct lexCompareCoord {
     bool operator() (const CoordR3* lhs, const CoordR3* rhs) const {
@@ -42,14 +42,14 @@ struct lexCompareCoord {
 };
 
 template<typename C = Coord>
-class CoordinateGroup : public virtual GroupId<C, CoordinateId> {
+class GroupCoordinates : public virtual GroupId<C, CoordinateId> {
 public:
-    USE_GROUP_CONSTRUCTS(CoordinateGroup, C);
+    USE_GROUP_CONSTRUCTS(GroupCoordinates, C);
 
-    CoordinateGroup(const vector<CVecR3>&);
-    CoordinateGroup(const vector<CVecI3>&);
+    GroupCoordinates(const vector<CVecR3>&);
+    GroupCoordinates(const vector<CVecI3>&);
     
-    DEFINE_GROUP_CLONE(CoordinateGroup, C);
+    DEFINE_GROUP_CLONE(GroupCoordinates, C);
 
     USE_GROUP_ASSIGN(C);
 
@@ -78,8 +78,8 @@ private:
     multiset<const CoordI3*, lexCompareCoord> indexStr_;
 };
 
-#include "CoordinateGroup.hpp"
+#include "GroupCoordinates.hpp"
 
-typedef CoordinateGroup<CoordR3> CoordR3Group;
+typedef GroupCoordinates<CoordR3> CoordR3Group;
 
-#endif /* COORDINATEGROUP_H_ */
+#endif /* COMMON_GEOMETRY_COORDINATES_GROUPCOORDINATES_H_ */

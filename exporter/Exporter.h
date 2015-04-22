@@ -1,5 +1,5 @@
-#ifndef OUTPUT_H_
-#define OUTPUT_H_
+#ifndef COMMON_EXPORTER_EXPORTER_H_
+#define COMMON_EXPORTER_EXPORTER_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -12,12 +12,12 @@ using namespace std;
 
 #include "ResultGraph.h"
 
-class Output : public ProjectFile {
+class Exporter : public ProjectFile {
    friend class DG;
 public:
-   Output();
-   Output(const string& name);
-   virtual ~Output();
+   Exporter();
+   Exporter(const string& name);
+   virtual ~Exporter();
    virtual void process(
          const Real time,
          const FieldR3& electric,
@@ -42,4 +42,4 @@ private:
 //   void writeAllFields(const FieldR3& field) const;
 };
 
-#endif /* OUTPUT_H_ */
+#endif /* COMMON_EXPORTER_EXPORTER_H_ */

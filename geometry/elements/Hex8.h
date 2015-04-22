@@ -30,12 +30,12 @@ class Hexa8 : public virtual Volume<T>,
               public virtual Hexa8Base {
 public:
     Hexa8();
-    Hexa8(const CoordinateGroup<Coordinate<T,3> >&,
+    Hexa8(const GroupCoordinates<Coordinate<T,3> >&,
           const ElementId id,
           const CoordinateId vId[8],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-    Hexa8(CoordinateGroup<Coordinate<T,3> >&,
+    Hexa8(GroupCoordinates<Coordinate<T,3> >&,
           const ElementId id,
           const Box<T,3>& box,
           const LayerId layerId = LayerId(0),
@@ -60,9 +60,9 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>*);
 
-    ElemI* toStructured(const CoordinateGroup<CoordI3>&,
+    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
                         const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const CoordinateGroup<CoordR3>&, const Grid3&) const;
+    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
 
     void printInfo() const;
 

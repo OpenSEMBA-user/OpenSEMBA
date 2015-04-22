@@ -21,7 +21,7 @@ public:
         soft = 2
     } Hardness;
     SourceOnLine(const Magnitude* magnitude,
-                 const ElementsGroup<Lin>& elem,
+                 const GroupElements<Lin>& elem,
                  const Type& sourceType,
                  const Hardness& sourceHardness);
     SourceOnLine(const SourceOnLine& rhs);

@@ -53,7 +53,7 @@ MapVolume::operator=(const MapVolume& rhs) {
 }
 
 void
-MapVolume::reassignPointers(const ElementsGroup<const Elem>& nEG) {
+MapVolume::reassignPointers(const GroupElements<const Elem>& nEG) {
    local = nEG.get(local->getId())->castTo<Tet>();
    for (UInt i = 0; i < 4; i++) {
       vol[i] = nEG.get(vol[i]->getId())->castTo<Tet>();

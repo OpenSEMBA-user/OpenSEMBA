@@ -12,11 +12,11 @@ PlaneWave::PlaneWave() {
 }
 
 PlaneWave::PlaneWave(const Magnitude* magnitude,
-                     ElementsGroup<Vol> elem,
+                     GroupElements<Vol> elem,
                      CVecR3 direction,
                      CVecR3 polarization)
 :   EMSourceBase(magnitude),
-    ElementsGroup<const Vol>(elem) {
+    GroupElements<const Vol>(elem) {
 
     direction_ = direction;
     polarization_ = polarization;
@@ -43,7 +43,7 @@ PlaneWave::PlaneWave(const Magnitude* magnitude,
 
 PlaneWave::PlaneWave(const PlaneWave& rhs)
 :   EMSourceBase(rhs),
-    ElementsGroup<const Vol>(rhs) {
+    GroupElements<const Vol>(rhs) {
 
     direction_ = rhs.direction_;
     polarization_ = rhs.polarization_;

@@ -13,7 +13,7 @@ Tet4::Tet4() {
 
 }
 
-Tet4::Tet4(const CoordinateGroup<CoordR3>& coordGr,
+Tet4::Tet4(const GroupCoordinates<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[4],
            const LayerId layerId,

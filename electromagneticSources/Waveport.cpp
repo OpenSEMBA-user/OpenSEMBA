@@ -8,13 +8,13 @@
 #include "Waveport.h"
 
 Waveport::Waveport(const MagnitudeGaussian* magnitude,
-                   const ElementsGroup<Surf>& elem,
+                   const GroupElements<Surf>& elem,
                    const bool input,
                    const Shape shape,
                    const ExcitationMode excMode,
                    const pair<UInt,UInt> mode)
 :   EMSourceBase(magnitude),
-    ElementsGroup<const Surf>(elem) {
+    GroupElements<const Surf>(elem) {
 
 	input_ = input;
 	shape_ = shape;
@@ -24,7 +24,7 @@ Waveport::Waveport(const MagnitudeGaussian* magnitude,
 
 Waveport::Waveport(const Waveport& rhs)
 :   EMSourceBase(rhs),
-    ElementsGroup<const Surf>(rhs) {
+    GroupElements<const Surf>(rhs) {
 
     input_ = rhs.input_;
     shape_ = rhs.shape_;

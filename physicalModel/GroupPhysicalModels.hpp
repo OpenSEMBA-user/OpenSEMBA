@@ -1,20 +1,21 @@
 /*
- * PhysicalModelGroup.cpp
+ * GroupPhysicalModels.hpp
  *
  *  Created on: Jul 1, 2013
  *      Author: luis
  */
+#include "GroupPhysicalModels.h"
 
 template<typename P>
 void
-PhysicalModelGroup<P>::printInfo() const {
-    cout << "---- Physical Models ----" << endl;
+GroupPhysicalModels<P>::printInfo() const {
+    cout << "---- GroupPhysicalModels info ----" << endl;
     cout << "Number of physical models: " << this->size() << endl;
     Group<P>::printInfo();
 }
 
 template<typename P>
-void PhysicalModelGroup<P>::getDirection(PMVolumePML::Direction direction[3],
+void GroupPhysicalModels<P>::getDirection(PMVolumePML::Direction direction[3],
                                          const UInt i) const {
     assert(i < PMVolumePML::possibleDirections);
     direction[x] = getDirectionFromInt((i/9) % 3);
@@ -26,7 +27,7 @@ void PhysicalModelGroup<P>::getDirection(PMVolumePML::Direction direction[3],
 }
 
 template<typename P>
-PMVolumePML::Direction PhysicalModelGroup<P>::getDirectionFromInt(
+PMVolumePML::Direction GroupPhysicalModels<P>::getDirectionFromInt(
         const UInt i) const {
     assert(PMVolumePML::plus == 0);
     assert(PMVolumePML::minus == 1);

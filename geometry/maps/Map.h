@@ -1,7 +1,7 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-#include "../elements/ElementsGroup.h"
+#include "../elements/GroupElements.h"
 #ifdef USE_OPENMP
 #include <omp.h>
 #endif
@@ -21,7 +21,7 @@ public:
    virtual UInt
     getLocalId() const = 0;
    virtual void
-    reassignPointers(const ElementsGroup<const Elem>& nEG) = 0;
+    reassignPointers(const GroupElements<const Elem>& nEG) = 0;
 	virtual void
 	 printInfo() const = 0;
 };

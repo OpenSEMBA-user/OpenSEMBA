@@ -8,12 +8,12 @@
 #include "Dipole.h"
 
 Dipole::Dipole(const MagnitudeGaussian* magnitude,
-               const ElementsGroup<Vol>& elem,
+               const GroupElements<Vol>& elem,
                Real length,
                CVecR3 orientation,
                CVecR3 position)
 :   EMSourceBase(magnitude),
-    ElementsGroup<const Vol>(elem) {
+    GroupElements<const Vol>(elem) {
 
     length_ = length;
     orientation_ = orientation;
@@ -24,7 +24,7 @@ Dipole::Dipole(const MagnitudeGaussian* magnitude,
 
 Dipole::Dipole(const Dipole& rhs)
 :   EMSourceBase(rhs),
-    ElementsGroup<const Vol>(rhs) {
+    GroupElements<const Vol>(rhs) {
 
     length_ = rhs.length_;
     orientation_ = rhs.orientation_;

@@ -11,7 +11,7 @@ Polygon::Polygon() {
 
 }
 
-Polygon::Polygon(const CoordinateGroup<CoordR3>& cG,
+Polygon::Polygon(const GroupCoordinates<CoordR3>& cG,
                  const ElementId id,
                  const vector<CoordinateId>& vId,
                  const LayerId layerId,

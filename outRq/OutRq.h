@@ -8,12 +8,12 @@
 using namespace std;
 
 #include "Domain.h"
-#include "geometry/elements/ElementsGroup.h"
+#include "geometry/elements/GroupElements.h"
 
 #include "base/class/ClassGroupBase.h"
 
 class OutRqBase : public virtual Domain,
-                  public virtual ClassGroupBase<ElementsGroup<const Elem>> {
+                  public virtual ClassGroupBase<GroupElements<const Elem>> {
 public:
     typedef enum {
         undefined,
@@ -62,13 +62,13 @@ private:
 
 template<class T>
 class OutRq : public virtual OutRqBase,
-              public virtual ElementsGroup<const T> {
+              public virtual GroupElements<const T> {
 public:
     OutRq() {}
     OutRq(const Domain& domain,
           const Type outputType,
           const string& name,
-          const ElementsGroup<T>& elems);
+          const GroupElements<T>& elems);
     OutRq(const OutRq& rhs);
     virtual ~OutRq();
 
@@ -76,10 +76,10 @@ public:
 
     bool isSimilar(const OutRqBase& rhs) const;
 
-    ElementsGroup<const Elem> elems() const { return *this; }
+    GroupElements<const Elem> elems() const { return *this; }
 
-    void set(const ElementsGroup<const Elem>&);
-    void add(const ElementsGroup<const Elem>&);
+    void set(const GroupElements<const Elem>&);
+    void add(const GroupElements<const Elem>&);
 
     void printInfo() const;
 };

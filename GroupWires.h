@@ -1,12 +1,12 @@
 /*
- * WireGroup.h
+ * GroupWires.h
  *
  *  Created on: Jun 16, 2014
  *      Author: damarro
  */
 
-#ifndef SRC_MESHER_FDTD_MESHLINES_WIRESGROUP_H_
-#define SRC_MESHER_FDTD_MESHLINES_WIRESGROUP_H_
+#ifndef COMMON_GROUPWIRES_H_
+#define COMMON_GROUPWIRES_H_
 
 #include <algorithm>
 #include <iostream>
@@ -20,10 +20,10 @@ using namespace std;
 #include "geometry/maps/GraphLines.h"
 
 template<class T>
-class WiresGroup {
+class GroupWires {
 public:
-    WiresGroup(const SmbData&);
-    ~WiresGroup();
+    GroupWires(const SmbData&);
+    ~GroupWires();
 
     UInt numberOfWires() const { return wires_.size(); }
     const Polyline<T>* getWire(UInt i) const { return wires_[i]; }

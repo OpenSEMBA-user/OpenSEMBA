@@ -8,14 +8,14 @@
 #ifndef SMBDATA_H_
 #define SMBDATA_H_
 
-#include "electromagneticSources/EMSourceGroup.h"
+#include "electromagneticSources/GroupEMSources.h"
 #include "geometry/MeshUnstructured.h"
 #include "geometry/MeshStructured.h"
 #include "geometry/Grid.h"
-#include "physicalModel/PhysicalModelGroup.h"
+#include "physicalModel/GroupPhysicalModels.h"
 #include "options/OptionsMesher.h"
 #include "options/OptionsSolver.h"
-#include "outRq/OutRqGroup.h"
+#include "outRq/GroupOutRqs.h"
 
 #include "ProjectFile.h"
 
@@ -24,16 +24,16 @@
 class SmbData : public virtual ProjectFile,
                 public virtual ClassBase {
 public:
-    Grid3*                grid;
-    Mesh*                 mesh;
+    Grid3*                 grid;
+    Mesh*                  mesh;
 
-    OptionsMesher*        mesherOptions;
-    OptionsSolver*        solverOptions;
+    OptionsMesher*         mesherOptions;
+    OptionsSolver*         solverOptions;
 
-    PhysicalModelGroup<>* pMGroup;
+    GroupPhysicalModels<>* pMGroup;
 
-    EMSourceGroup<>*      emSources;
-    OutRqGroup<>*         outputRequests;
+    GroupEMSources<>*      emSources;
+    GroupOutRqs<>*         outputRequests;
 
     SmbData();
     SmbData(const SmbData& rhs);

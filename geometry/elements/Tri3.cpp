@@ -13,7 +13,7 @@ Tri3::Tri3() {
 
 }
 
-Tri3::Tri3(const CoordinateGroup<CoordR3>& coordGr,
+Tri3::Tri3(const GroupCoordinates<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[3],
            const LayerId layerId,

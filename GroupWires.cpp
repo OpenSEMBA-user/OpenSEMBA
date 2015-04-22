@@ -1,19 +1,19 @@
 /*
- * WireGroup.cpp
+ * GroupWires.cpp
  *
  *  Created on: Jun 16, 2014
  *      Author: damarro
  */
 
-#include "WiresGroup.h"
+#include "GroupWires.h"
 
 template<class T>
-WiresGroup<T>::WiresGroup(const SmbData& smb) {
+GroupWires<T>::GroupWires(const SmbData& smb) {
     init_(smb);
 }
 
 template<class T>
-WiresGroup<T>::~WiresGroup() {
+GroupWires<T>::~GroupWires() {
     for (UInt i = 0; i < wires_.size(); i++) {
         delete wires_[i];
     }
@@ -24,8 +24,8 @@ WiresGroup<T>::~WiresGroup() {
 }
 
 template<class T>
-void WiresGroup<T>::printInfo() const {
-    cout << "--- WiresGroup Info ---" << endl;
+void GroupWires<T>::printInfo() const {
+    cout << "--- GroupWires Info ---" << endl;
     cout << "Wires:" << endl;
     for (UInt i = 0; i < wires_.size(); i++) {
         wires_[i]->printInfo();
@@ -38,17 +38,17 @@ void WiresGroup<T>::printInfo() const {
 }
 
 template<class T>
-void WiresGroup<T>::init_(const SmbData& smb) {
+void GroupWires<T>::init_(const SmbData& smb) {
     const GraphLines<T>& graph = constructGraph_(smb);
     fillWiresInfo_(graph, smb);
 }
 
 template<class T>
-GraphLines<T> WiresGroup<T>::constructGraph_(const SmbData& smb) {
-    ElementsGroup<const Line<T>> wires;
-    const PhysicalModelGroup<>& mats = *smb.pMGroup;
+GraphLines<T> GroupWires<T>::constructGraph_(const SmbData& smb) {
+    GroupElements<const Line<T>> wires;
+    const GroupPhysicalModels<>& mats = *smb.pMGroup;
     {
-        ElementsGroup<const Line<T>> lines;
+        GroupElements<const Line<T>> lines;
         if (is_floating_point<T>::value) {
             lines = smb.mesh->castTo<MeshUnstructured>()
                         ->elems().getGroupOf<Line<T>>();
@@ -56,11 +56,11 @@ GraphLines<T> WiresGroup<T>::constructGraph_(const SmbData& smb) {
             lines = smb.mesh->castTo<MeshStructured>()
                         ->elems().getGroupOf<Line<T>>();
         }
-        PhysicalModelGroup<const PMWire> pmwires =
+        GroupPhysicalModels<const PMWire> pmwires =
             smb.pMGroup->getGroupOf<PMWire>();
         vector<MatId> pmwiresIds = pmwires.getIds();
 
-        PhysicalModelGroup<const PMMultiport> pmmults =
+        GroupPhysicalModels<const PMMultiport> pmmults =
                 mats.getGroupOf<PMMultiport>();
         vector<MatId> pmmultsIds = pmmults.getIds();
 
@@ -128,7 +128,7 @@ GraphLines<T> WiresGroup<T>::constructGraph_(const SmbData& smb) {
 }
 
 template<class T>
-void WiresGroup<T>::fillWiresInfo_(const GraphLines<T>& graph,
+void GroupWires<T>::fillWiresInfo_(const GraphLines<T>& graph,
                                    const SmbData& smb) {
 
     vector<vector<const Line<T>*>> wires = getLines_(graph);
@@ -157,7 +157,7 @@ void WiresGroup<T>::fillWiresInfo_(const GraphLines<T>& graph,
 }
 
 template<class T>
-vector<vector<const Line<T>*>> WiresGroup<T>::getLines_(
+vector<vector<const Line<T>*>> GroupWires<T>::getLines_(
         const GraphLines<T>& graph) {
 
     vector<vector<const Line<T>*>> res;
@@ -201,13 +201,13 @@ vector<vector<const Line<T>*>> WiresGroup<T>::getLines_(
 }
 
 template<class T>
-void WiresGroup<T>::getWireMats_(const PMWire*& wireMat,
+void GroupWires<T>::getWireMats_(const PMWire*& wireMat,
                                  const PMMultiport*& extremeL,
                                  const PMMultiport*& extremeR,
                                  const vector<const Line<T> *>& lines,
                                  const SmbData& smb) {
 
-    const PhysicalModelGroup<>& mats = *smb.pMGroup;
+    const GroupPhysicalModels<>& mats = *smb.pMGroup;
     if (lines.empty()) {
         return;
     }
@@ -273,7 +273,7 @@ void WiresGroup<T>::getWireMats_(const PMWire*& wireMat,
 }
 
 template<class T>
-Polyline<T>* WiresGroup<T>::newWire_(const vector<const Line<T>*>& lines,
+Polyline<T>* GroupWires<T>::newWire_(const vector<const Line<T>*>& lines,
                                      const MatId matId) {
     if (lines.empty()) {
         return NULL;
@@ -304,5 +304,5 @@ Polyline<T>* WiresGroup<T>::newWire_(const vector<const Line<T>*>& lines,
     return new Polyline<T>(ElementId(wires_.size()+1), v, layId, matId);
 }
 
-template class WiresGroup<Real>;
-template class WiresGroup<Int >;
+template class GroupWires<Real>;
+template class GroupWires<Int >;

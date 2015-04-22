@@ -11,22 +11,22 @@ MeshUnstructured::MeshUnstructured() {
 
 }
 
-MeshUnstructured::MeshUnstructured(const CoordinateGroup<const CoordR3>& cG,
-                                   const ElementsGroup<const ElemR>& elem,
-                                   const LayerGroup<const Layer>& layers)
-:   CoordinateGroup<CoordR3>(cG.newGroup()),
-    ElementsGroup<ElemR>(elem.newGroup()),
-    LayerGroup<Layer>(layers.newGroup()) {
+MeshUnstructured::MeshUnstructured(const GroupCoordinates<const CoordR3>& cG,
+                                   const GroupElements<const ElemR>& elem,
+                                   const GroupLayers<const Layer>& layers)
+:   GroupCoordinates<CoordR3>(cG.newGroup()),
+    GroupElements<ElemR>(elem.newGroup()),
+    GroupLayers<Layer>(layers.newGroup()) {
 
-    ElementsGroup<ElemR>::reassignPointers(*this);
+    GroupElements<ElemR>::reassignPointers(*this);
 }
 
 MeshUnstructured::MeshUnstructured(const MeshUnstructured& rhs)
-:   CoordinateGroup<CoordR3>(rhs.coords().newGroup()),
-    ElementsGroup<ElemR>(rhs.elems().newGroup()),
-    LayerGroup<Layer>(rhs.layers().newGroup()) {
+:   GroupCoordinates<CoordR3>(rhs.coords().newGroup()),
+    GroupElements<ElemR>(rhs.elems().newGroup()),
+    GroupLayers<Layer>(rhs.layers().newGroup()) {
 
-    ElementsGroup<ElemR>::reassignPointers(*this);
+    GroupElements<ElemR>::reassignPointers(*this);
 }
 
 MeshUnstructured::~MeshUnstructured() {
@@ -38,11 +38,11 @@ MeshUnstructured& MeshUnstructured::operator=(const MeshUnstructured& rhs) {
         return *this;
     }
 
-    CoordinateGroup<CoordR3>::operator=(rhs.coords().newGroup());
-    ElementsGroup<ElemR>::operator=(rhs.elems().newGroup());
-    LayerGroup<Layer>::operator=(rhs.layers().newGroup());
+    GroupCoordinates<CoordR3>::operator=(rhs.coords().newGroup());
+    GroupElements<ElemR>::operator=(rhs.elems().newGroup());
+    GroupLayers<Layer>::operator=(rhs.layers().newGroup());
 
-    ElementsGroup<ElemR>::reassignPointers(*this);
+    GroupElements<ElemR>::reassignPointers(*this);
 
     return *this;
 }
@@ -89,13 +89,13 @@ vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
     return res;
 }
 
-ElementsGroup<const Tri> MeshUnstructured::convertToTri(
-        const ElementsGroup<const ElemR>& region,
+GroupElements<const Tri> MeshUnstructured::convertToTri(
+        const GroupElements<const ElemR>& region,
         bool includeTets) const {
 
-    ElementsGroup<Tri> res(region.newGroup());
+    GroupElements<Tri> res(region.newGroup());
     if (includeTets) {
-        ElementsGroup<const Tet> tet = region.getGroupOf<Tet>();
+        GroupElements<const Tet> tet = region.getGroupOf<Tet>();
         vector<Face> border = getInternalBorder(tet);
         for (UInt i = 0; i < border.size(); i++) {
             if (border[i].first->is<Tet>()) {
@@ -109,7 +109,7 @@ ElementsGroup<const Tri> MeshUnstructured::convertToTri(
 }
 
 vector<Face> MeshUnstructured::getInternalBorder(
-        const ElementsGroup<const ElemR>& region) const {
+        const GroupElements<const ElemR>& region) const {
 
     vector<Face> tri, res;
     res = getTetInternalBorder(region.getGroupOf<Tet>());
@@ -119,12 +119,12 @@ vector<Face> MeshUnstructured::getInternalBorder(
 }
 
 vector<Face> MeshUnstructured::getExternalBorder(
-        const ElementsGroup<const ElemR>& region) const {
+        const GroupElements<const ElemR>& region) const {
 
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
     const MapGroup mapGroup(
-            CoordinateGroup<CoordR3>::getGroupOf<Coord>(),
+            GroupCoordinates<CoordR3>::getGroupOf<Coord>(),
             region.getGroupOf<Elem>());
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
@@ -140,7 +140,7 @@ vector<Face> MeshUnstructured::getExternalBorder(
 }
 
 vector<Face> MeshUnstructured::getTetInternalBorder(
-        const ElementsGroup<const Tet>& region) const {
+        const GroupElements<const Tet>& region) const {
 
     // Builds a list with all tetrahedron faces.
     static const UInt faces = 4;
@@ -191,7 +191,7 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
 }
 
 vector<Face> MeshUnstructured::getTriInternalBorder(
-        const ElementsGroup<const Tri>& region) const {
+        const GroupElements<const Tri>& region) const {
 
     UInt nE = region.size();
     vector<Face> res(nE);
@@ -202,8 +202,8 @@ vector<Face> MeshUnstructured::getTriInternalBorder(
     return res;
 }
 
-ElementsGroup<ElemR> MeshUnstructured::getAdjacentRegion(
-        const ElementsGroup<const ElemR>& region) {
+GroupElements<ElemR> MeshUnstructured::getAdjacentRegion(
+        const GroupElements<const ElemR>& region) {
     vector<Face> outer = getExternalBorder(region);
     UInt nOut = outer.size();
     // Removes repeated.
@@ -213,7 +213,7 @@ ElementsGroup<ElemR> MeshUnstructured::getAdjacentRegion(
     }
     aux.sortAndRemoveRepeatedRows_omp();
     // Prepares result.
-    ElementsGroup<ElemR> res;
+    GroupElements<ElemR> res;
     for (UInt i = 0; i < aux.nRows(); i++) {
         res.add(elems().get(ElementId(aux(i,0)))->cloneTo<ElemR>());
     }
@@ -221,8 +221,8 @@ ElementsGroup<ElemR> MeshUnstructured::getAdjacentRegion(
 }
 
 bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
-    ElementsGroup<const ElemR> elems =
-            ElementsGroup<ElemR>::getGroupOf<ElemR>();
+    GroupElements<const ElemR> elems =
+            GroupElements<ElemR>::getGroupOf<ElemR>();
     for (UInt i = 0; i < elems.size(); i++) {
         for (UInt j = 0; j < elems(i)->numberOfCoordinates(); j++) {
             if (*param == *elems(i)->getV(j)) {
@@ -237,7 +237,7 @@ bool MeshUnstructured::isOnBoundary(const CVecR3 pos) const {
 #warning "Not implemented"
 }
 
-ElementsGroup<const SurfR> MeshUnstructured::getMaterialBoundary(
+GroupElements<const SurfR> MeshUnstructured::getMaterialBoundary(
         const MatId matId,
         const LayerId layId) const {
 
@@ -245,14 +245,14 @@ ElementsGroup<const SurfR> MeshUnstructured::getMaterialBoundary(
 }
 
 void MeshUnstructured::applyScalingFactor(const Real factor) {
-    CoordinateGroup<CoordR3>::applyScalingFactor(factor);
+    GroupCoordinates<CoordR3>::applyScalingFactor(factor);
 }
 
 void MeshUnstructured::printInfo() const {
     cout << " --- Mesh unstructured Info --- " << endl;
-    CoordinateGroup<CoordR3>::printInfo();
-    ElementsGroup<ElemR>::printInfo();
-    LayerGroup<>::printInfo();
+    GroupCoordinates<CoordR3>::printInfo();
+    GroupElements<ElemR>::printInfo();
+    GroupLayers<>::printInfo();
 }
 
 Real MeshUnstructured::getMinimumSpaceStep() const {

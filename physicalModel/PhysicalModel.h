@@ -9,7 +9,7 @@
 #include <vector>
 using namespace std;
 
-#include "geometry/elements/ElementsGroup.h"
+#include "geometry/elements/GroupElements.h"
 #include "math/Constants.h"
 #include "math/CartesianVector.h"
 

@@ -13,7 +13,7 @@ Quad4<T>::Quad4() {
 }
 
 template<class T>
-Quad4<T>::Quad4(const CoordinateGroup<Coordinate<T,3> >& cG,
+Quad4<T>::Quad4(const GroupCoordinates<Coordinate<T,3> >& cG,
                 const ElementId id,
                 const CoordinateId vId[4],
                 const LayerId layerId,
@@ -29,7 +29,7 @@ Quad4<T>::Quad4(const CoordinateGroup<Coordinate<T,3> >& cG,
 }
 
 template<class T>
-Quad4<T>::Quad4(CoordinateGroup<Coordinate<T,3> >& cG,
+Quad4<T>::Quad4(GroupCoordinates<Coordinate<T,3> >& cG,
                 const ElementId id,
                 const Box<T,3>& box,
                 const LayerId layerId,
@@ -108,7 +108,7 @@ void Quad4<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
-ElemI* Quad4<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
+ElemI* Quad4<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
                               const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -124,7 +124,7 @@ ElemI* Quad4<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Quad4<T>::toUnstructured(const CoordinateGroup<CoordR3>& cG,
+ElemR* Quad4<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                 const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {

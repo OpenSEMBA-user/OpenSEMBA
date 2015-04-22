@@ -9,12 +9,12 @@
 
 OutRqFarField::OutRqFarField(const Domain& domain,
                              const string& name,
-                             const ElementsGroup<Vol>& elem,
+                             const GroupElements<Vol>& elem,
                              const Real iTh, const Real fTh, const Real sTh,
                              const Real iPhi, const Real fPhi, const Real sPhi)
 :   Domain(domain),
     OutRqBase(electric, name),
-    ElementsGroup<const Vol>(elem) {
+    GroupElements<const Vol>(elem) {
 
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
@@ -22,7 +22,7 @@ OutRqFarField::OutRqFarField(const Domain& domain,
 OutRqFarField::OutRqFarField(const OutRqFarField& rhs)
 :   Domain(rhs),
     OutRqBase(rhs),
-    ElementsGroup<const Vol>(rhs) {
+    GroupElements<const Vol>(rhs) {
 
     initialTheta_ = rhs.initialTheta_;
     finalTheta_ = rhs.finalTheta_;

@@ -22,9 +22,9 @@ SmbData::SmbData(const SmbData& rhs)
     mesh = rhs.mesh->cloneTo<Mesh>();
     grid = rhs.grid->cloneTo<Grid3>();
     solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
-    pMGroup = rhs.pMGroup->cloneTo<PhysicalModelGroup<>>();
-    emSources = rhs.emSources->cloneTo<EMSourceGroup<>>();
-    outputRequests = rhs.outputRequests->cloneTo<OutRqGroup<>>();
+    pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
+    emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
+    outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
     mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
 }
 
@@ -40,9 +40,9 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
     mesh = rhs.mesh->cloneTo<Mesh>();
     grid = rhs.grid->cloneTo<Grid3>();
     solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
-    pMGroup = rhs.pMGroup->cloneTo<PhysicalModelGroup<>>();
-    emSources = rhs.emSources->cloneTo<EMSourceGroup<>>();
-    outputRequests = rhs.outputRequests->cloneTo<OutRqGroup<>>();
+    pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
+    emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
+    outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
     mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
     return *this;
 }

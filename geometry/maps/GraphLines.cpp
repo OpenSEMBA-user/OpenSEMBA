@@ -13,7 +13,7 @@ GraphLines<T>::GraphLines() {
 }
 
 template<class T>
-GraphLines<T>::GraphLines(const ElementsGroup<const Line<T>>& lines) {
+GraphLines<T>::GraphLines(const GroupElements<const Line<T>>& lines) {
     init_(lines);
 }
 
@@ -43,7 +43,7 @@ void GraphLines<T>::splitNode(UInt i) {
 }
 
 template<class T>
-void GraphLines<T>::init_(const ElementsGroup<const Line<T>>& lines) {
+void GraphLines<T>::init_(const GroupElements<const Line<T>>& lines) {
     LayerId layId;
     const Coordinate<T,3>* v[2];
     VertexLine<T>* segmentPtr;

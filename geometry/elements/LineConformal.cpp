@@ -64,7 +64,7 @@ void LineConformal::setV(const UInt i, const CoordI3* coord) {
     LinI2::setV(i, coord);
 }
 
-ElemR* LineConformal::toUnstructured(const CoordinateGroup<CoordR3>& cG,
+ElemR* LineConformal::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                      const Grid3& grid) const {
     const CoordConf* vConf[2];
     vConf[0] = getConfV(0);

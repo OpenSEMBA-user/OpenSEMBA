@@ -7,7 +7,7 @@
 #include <vector>
 using namespace std;
 
-#include "geometry/elements/ElementsGroup.h"
+#include "geometry/elements/GroupElements.h"
 #include "magnitude/MagnitudeGaussian.h"
 #include "magnitude/MagnitudeNumerical.h"
 #include "math/CartesianVector.h"
@@ -15,7 +15,7 @@ using namespace std;
 
 #include "base/class/ClassGroupBase.h"
 
-class EMSourceBase : public virtual ClassGroupBase<ElementsGroup<const Elem>> {
+class EMSourceBase : public virtual ClassGroupBase<GroupElements<const Elem>> {
 public:
     EMSourceBase();
     EMSourceBase(const Magnitude* magnitude);
@@ -52,19 +52,19 @@ private:
 
 template<class T>
 class EMSource : public virtual EMSourceBase,
-                 public virtual ElementsGroup<const T> {
+                 public virtual GroupElements<const T> {
 public:
     EMSource() {}
     virtual ~EMSource() {}
 
     virtual ClassBase* clone() const = 0;
 
-    ElementsGroup<const Elem> elems() const { return *this; }
+    GroupElements<const Elem> elems() const { return *this; }
 
     bool isSimilar(const EMSourceBase& rhs) const;
 
-    void set(const ElementsGroup<const Elem>&);
-    void add(const ElementsGroup<const Elem>&);
+    void set(const GroupElements<const Elem>&);
+    void add(const GroupElements<const Elem>&);
 
     virtual void printInfo() const = 0;
 };

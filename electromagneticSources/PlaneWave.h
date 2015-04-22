@@ -14,7 +14,7 @@ class PlaneWave : public EMSource<Vol> {
 public:
     PlaneWave();
     PlaneWave(const Magnitude* magnitude,
-              ElementsGroup<Vol> elem,
+              GroupElements<Vol> elem,
               CVecR3 direction,
               CVecR3 polarization);
     PlaneWave(const PlaneWave& rhs);

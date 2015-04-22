@@ -1,15 +1,15 @@
-#ifndef OUTPUTREQUESTGROUP_H_
-#define OUTPUTREQUESTGROUP_H_
+#ifndef COMMON_OUTRQ_GROUPOUTRQS_H_
+#define COMMON_OUTRQ_GROUPOUTRQS_H_
 
 #include "OutRq.h"
 #include "OutRqFarField.h"
 
 template<typename O = OutRqBase>
-class OutRqGroup : public virtual Group<O> {
+class GroupOutRqs : public virtual Group<O> {
 public:
-    USE_GROUP_CONSTRUCTS(OutRqGroup, O);
+    USE_GROUP_CONSTRUCTS(GroupOutRqs, O);
 
-    DEFINE_GROUP_CLONE(OutRqGroup, O);
+    DEFINE_GROUP_CLONE(GroupOutRqs, O);
 
     USE_GROUP_ASSIGN(O);
 
@@ -23,6 +23,6 @@ public:
     void printInfo() const;
 };
 
-#include "../outRq/OutRqGroup.hpp"
+#include "GroupOutRqs.hpp"
 
 #endif

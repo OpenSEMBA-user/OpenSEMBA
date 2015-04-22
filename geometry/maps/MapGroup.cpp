@@ -13,12 +13,12 @@ MapGroup::MapGroup() {
 MapGroup::~MapGroup() {
 }
 
-MapGroup::MapGroup(const CoordinateGroup<const Coord>& cG,
-                   const ElementsGroup  <const Elem> & eG) {
+MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
+                   const GroupElements  <const Elem> & eG) {
    // Builds a list with all tetrahedron faces.
    static const UInt faces = 4;
    static const UInt nVert = 3;
-   ElementsGroup<const Tet> tet = eG.getGroupOf<Tet>();
+   GroupElements<const Tet> tet = eG.getGroupOf<Tet>();
    UInt nK = tet.size();
    UInt nList = nK * faces;
    DynMatrix<UInt> fList(nList, 2 + nVert);
@@ -80,7 +80,7 @@ MapGroup::MapGroup(const CoordinateGroup<const Coord>& cG,
       tet_.insert(aux);
    }
    // Now uses the generated ordered fList to build the triangle maps.
-   ElementsGroup<const Tri> tri = eG.getGroupOf<Tri>();
+   GroupElements<const Tri> tri = eG.getGroupOf<Tri>();
    const UInt nS = tri.size();
    for (UInt s = 0; s < nS; s++) {
 	  const Tri* local = tri(s);
@@ -119,7 +119,7 @@ MapGroup::MapGroup(const CoordinateGroup<const Coord>& cG,
 }
 
 void
-MapGroup::reassignPointers(const ElementsGroup<const Elem>& newEG) {
+MapGroup::reassignPointers(const GroupElements<const Elem>& newEG) {
    {
       map<UInt,MapVolume*>::iterator it;
       for (it=tet_.begin(); it != tet_.end(); ++it) {

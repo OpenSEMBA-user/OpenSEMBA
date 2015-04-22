@@ -13,7 +13,7 @@
 class Dipole : public EMSource<Vol> {
 public:
     Dipole(const MagnitudeGaussian* magnitude,
-           const ElementsGroup<Vol>& elem,
+           const GroupElements<Vol>& elem,
            Real   length,
            CVecR3 orientation,
            CVecR3 position);

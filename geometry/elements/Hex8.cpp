@@ -16,7 +16,7 @@ Hexa8<T>::Hexa8() {
 }
 
 template<class T>
-Hexa8<T>::Hexa8(const CoordinateGroup<Coordinate<T,3> >& coordGr,
+Hexa8<T>::Hexa8(const GroupCoordinates<Coordinate<T,3> >& coordGr,
               const ElementId id,
               const CoordinateId vId[8],
               const LayerId layerId,
@@ -30,7 +30,7 @@ Hexa8<T>::Hexa8(const CoordinateGroup<Coordinate<T,3> >& coordGr,
 }
 
 template<class T>
-Hexa8<T>::Hexa8(CoordinateGroup<Coordinate<T,3> >& cG,
+Hexa8<T>::Hexa8(GroupCoordinates<Coordinate<T,3> >& cG,
               const ElementId id,
               const Box<T,3>& box,
               const LayerId layerId,
@@ -234,7 +234,7 @@ void Hexa8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
-ElemI* Hexa8<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
+ElemI* Hexa8<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
                               const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -250,7 +250,7 @@ ElemI* Hexa8<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Hexa8<T>::toUnstructured(const CoordinateGroup<CoordR3>& cG,
+ElemR* Hexa8<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                 const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {

@@ -23,7 +23,7 @@ class Line2 : public virtual Line<T>,
               public virtual Line2Base {
 public:
     Line2();
-    Line2(const CoordinateGroup<Coordinate<T,3> >&,
+    Line2(const GroupCoordinates<Coordinate<T,3> >&,
           const ElementId id,
           const CoordinateId vId[2],
           const LayerId layerId = LayerId(0),
@@ -32,15 +32,15 @@ public:
           const Coordinate<T,3>* v[2],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-    Line2(CoordinateGroup<Coordinate<T,3> >&,
+    Line2(GroupCoordinates<Coordinate<T,3> >&,
           const ElementId id,
           const Box<T,3>& box,
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-    Line2(const CoordinateGroup<Coordinate<T,3> >&,
+    Line2(const GroupCoordinates<Coordinate<T,3> >&,
           const CoordinateId vId[2]);
     Line2(const Coordinate<T,3>* v[2]);
-    Line2(CoordinateGroup<Coordinate<T,3> >&,
+    Line2(GroupCoordinates<Coordinate<T,3> >&,
           const Box<T,3>& box);
     Line2(const Line2<T>& rhs);
     virtual ~Line2();
@@ -59,9 +59,9 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>* coord);
 
-    ElemI* toStructured(const CoordinateGroup<CoordI3>&,
+    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
                         const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const CoordinateGroup<CoordR3>&, const Grid3&) const;
+    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
 
     void printInfo() const;
 
@@ -69,10 +69,10 @@ private:
     static const SimplexLin<1> lin;
     const Coordinate<T,3>* v_[2];
 
-    void setCoordinates(const CoordinateGroup<Coordinate<T,3> >&,
+    void setCoordinates(const GroupCoordinates<Coordinate<T,3> >&,
                         const CoordinateId vId[2]);
     void setCoordinates(const Coordinate<T,3>* v[2]);
-    void setCoordinates(CoordinateGroup<Coordinate<T,3> >&,
+    void setCoordinates(GroupCoordinates<Coordinate<T,3> >&,
                         const Box<T,3>& box);
 };
 

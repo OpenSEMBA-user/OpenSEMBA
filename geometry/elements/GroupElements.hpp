@@ -1,54 +1,54 @@
 /*
- * ElementsGroup.hpp
+ * GroupElements.hpp
  *
  *  Created on: Mar 28, 2013
  *      Author: luis
  */
 
-#include "ElementsGroup.h"
+#include "GroupElements.h"
 
 template<typename E>
-bool ElementsGroup<E>::isLinear() const {
+bool GroupElements<E>::isLinear() const {
     return (this->template sizeOf<Tri6 >() == 0 &&
             this->template sizeOf<Tet10>() == 0);
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::getGroupWith(const MatId matId) {
+GroupElements<E> GroupElements<E>::getGroupWith(const MatId matId) {
     vector<MatId> aux;
     aux.push_back(matId);
     return getGroupWith(aux);
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::getGroupWith(
+GroupElements<E> GroupElements<E>::getGroupWith(
         const vector<MatId>& matIds) {
 
     return this->getGroupWith(getElemsWith_(matIds));
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::getGroupWith(const LayerId layerId) {
+GroupElements<E> GroupElements<E>::getGroupWith(const LayerId layerId) {
     vector<LayerId> aux;
     aux.push_back(layerId);
     return getGroupWith(aux);
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::getGroupWith(
+GroupElements<E> GroupElements<E>::getGroupWith(
         const vector<LayerId>& layIds) {
 
     return this->getGroupWith(getElemsWith_(layIds));
 }
 
 template<typename E>
-ElementsGroup<E> ElementsGroup<E>::getGroupWith(const MatId   matId,
+GroupElements<E> GroupElements<E>::getGroupWith(const MatId   matId,
                                                 const LayerId layId) {
     return getGroupWith(matId).getGroupWith(layId);
 }
 
 template<typename E>
-ElementsGroup<const E> ElementsGroup<E>::getGroupWith(
+GroupElements<const E> GroupElements<E>::getGroupWith(
         const MatId matId) const {
     vector<MatId> aux;
     aux.push_back(matId);
@@ -56,14 +56,14 @@ ElementsGroup<const E> ElementsGroup<E>::getGroupWith(
 }
 
 template<typename E>
-ElementsGroup<const E> ElementsGroup<E>::getGroupWith(
+GroupElements<const E> GroupElements<E>::getGroupWith(
         const vector<MatId>& matIds) const {
 
     return this->getGroupWith(getElemsWith_(matIds));
 }
 
 template<typename E>
-ElementsGroup<const E> ElementsGroup<E>::getGroupWith(
+GroupElements<const E> GroupElements<E>::getGroupWith(
         const LayerId layerId) const {
     vector<LayerId> aux;
     aux.push_back(layerId);
@@ -71,21 +71,21 @@ ElementsGroup<const E> ElementsGroup<E>::getGroupWith(
 }
 
 template<typename E>
-ElementsGroup<const E> ElementsGroup<E>::getGroupWith(
+GroupElements<const E> GroupElements<E>::getGroupWith(
         const vector<LayerId>& layIds) const {
 
     return this->getGroupWith(getElemsWith_(layIds));
 }
 
 template<typename E>
-ElementsGroup<const E> ElementsGroup<E>::getGroupWith(
+GroupElements<const E> GroupElements<E>::getGroupWith(
         const MatId   matId,
         const LayerId layId) const {
     return getGroupWith(matId).getGroupWith(layId);
 }
 
 template<typename E>
-vector<ElementId> ElementsGroup<E>::getIdsWithoutMaterialId(
+vector<ElementId> GroupElements<E>::getIdsWithoutMaterialId(
         const MatId matId) const {
 
     vector<ElementId> res;
@@ -99,10 +99,10 @@ vector<ElementId> ElementsGroup<E>::getIdsWithoutMaterialId(
 }
 
 template<typename E>
-vector<ElementId> ElementsGroup<E>::getIdsInsideBound(
+vector<ElementId> GroupElements<E>::getIdsInsideBound(
         const BoxR3& bound) const {
 
-    ElementsGroup<ElemR> elems = this->template getGroupOf<ElemR>();
+    GroupElements<ElemR> elems = this->template getGroupOf<ElemR>();
     vector<ElementId> res;
     res.reserve(elems.size());
     for (UInt i = 0; i < elems.size(); i++) {
@@ -115,11 +115,11 @@ vector<ElementId> ElementsGroup<E>::getIdsInsideBound(
 }
 
 template<typename E>
-vector<pair<const E*, UInt> > ElementsGroup<E>::getElementsWithVertex(
+vector<pair<const E*, UInt> > GroupElements<E>::getElementsWithVertex(
         const CoordinateId vertexId) const {
 
     vector<pair<const E*, UInt> > res;
-    ElementsGroup<ElemR> elemsR = this->template getGroupOf<ElemR>();
+    GroupElements<ElemR> elemsR = this->template getGroupOf<ElemR>();
     for (UInt i = 0; i < elemsR.size(); i++) {
         for (UInt j = 0; j < elemsR(i)->numberOfVertices(); j++) {
             if ((elemsR(i)->getVertex(j)->getId() == vertexId) &&
@@ -130,7 +130,7 @@ vector<pair<const E*, UInt> > ElementsGroup<E>::getElementsWithVertex(
             }
         }
     }
-    ElementsGroup<ElemI> elemsI = this->template getGroupOf<ElemI>();
+    GroupElements<ElemI> elemsI = this->template getGroupOf<ElemI>();
     for (UInt i = 0; i < elemsI.size(); i++) {
         for (UInt j = 0; j < elemsI(i)->numberOfVertices(); j++) {
             if ((elemsI(i)->getVertex(j)->getId() == vertexId) &&
@@ -145,12 +145,12 @@ vector<pair<const E*, UInt> > ElementsGroup<E>::getElementsWithVertex(
 }
 
 template<typename E>
-BoxR3 ElementsGroup<E>::getBound() const {
+BoxR3 GroupElements<E>::getBound() const {
     if (this->size() == 0) {
         return BoxR3().setInfinity();
     }
     BoxR3 bound;
-    ElementsGroup<const ElemR> elems = this->template getGroupOf<ElemR>();
+    GroupElements<const ElemR> elems = this->template getGroupOf<ElemR>();
     for (UInt i = 0; i < elems.size(); i++) {
         bound << elems(i)->getBound();
     }
@@ -158,7 +158,7 @@ BoxR3 ElementsGroup<E>::getBound() const {
 }
 
 template<typename E>
-BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
+BoxR3 GroupElements<E>::getBound(const vector<Face>& border) const {
     if (border.size() == 0) {
         return BoxR3().setInfinity();
     }
@@ -172,10 +172,10 @@ BoxR3 ElementsGroup<E>::getBound(const vector<Face>& border) const {
 }
 
 template<typename E>
-const CoordR3* ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
+const CoordR3* GroupElements<E>::getClosestVertex(const CVecR3 pos) const {
     const CoordR3* res = NULL;
     Real minDist = numeric_limits<Real>::infinity();
-    ElementsGroup<const ElemR> elems = this->template getGroupOf<ElemR>();
+    GroupElements<const ElemR> elems = this->template getGroupOf<ElemR>();
     for (UInt b = 0; b < elems.size(); b++) {
         for (UInt i = 0; i < elems(i)->numberOfCoordinates(); i++) {
             const CoordR3* candidate = elems(i)->getV(i);
@@ -189,46 +189,46 @@ const CoordR3* ElementsGroup<E>::getClosestVertex(const CVecR3 pos) const {
 }
 
 template<typename E>
-void ElementsGroup<E>::setMatId(const MatId newId) {
+void GroupElements<E>::setMatId(const MatId newId) {
     for (UInt i = 0; i < this->size(); i++) {
         this->get(i)->setMatId(newId);
     }
 }
 
 template<typename E>
-void ElementsGroup<E>::setLayerId(const LayerId newId) {
+void GroupElements<E>::setLayerId(const LayerId newId) {
     for (UInt i = 0; i < this->size(); i++) {
         this->get(i)->setLayerId(newId);
     }
 }
 
 template<typename E>
-void ElementsGroup<E>::setMatId(const ElementId id,
+void GroupElements<E>::setMatId(const ElementId id,
                                 const MatId newMatId) {
     this->get(id)->setMatId(newMatId);
 }
 
 template<typename E>
-void ElementsGroup<E>::setLayerId(const ElementId id,
+void GroupElements<E>::setLayerId(const ElementId id,
                                   const LayerId newId) {
     this->get(id)->setLayerId(newId);
 }
 
 template<typename E>
-void ElementsGroup<E>::remove(const MatId matId) {
+void GroupElements<E>::remove(const MatId matId) {
     vector<MatId> aux;
     aux.push_back(matId);
     remove(aux);
 }
 
 template<typename E>
-void ElementsGroup<E>::remove(const vector<MatId>& matId) {
+void GroupElements<E>::remove(const vector<MatId>& matId) {
     Group<E>::remove(getElemsWith_(matId));
 }
 
 template<typename E> template<class T>
-void ElementsGroup<E>::reassignPointers(
-        const CoordinateGroup< Coordinate<T,3> >& vNew) {
+void GroupElements<E>::reassignPointers(
+        const GroupCoordinates< Coordinate<T,3> >& vNew) {
 
     for (UInt i = 0; i < this->size(); i++) {
         if (this->get(i)->template is< Element<T> >()) {
@@ -243,7 +243,7 @@ void ElementsGroup<E>::reassignPointers(
 
 template<typename E>
 map<LayerId, vector<const E*> >
-ElementsGroup<E>::separateByLayers() const {
+GroupElements<E>::separateByLayers() const {
     map<LayerId, vector<const E*> > res;
     for (UInt i = 0; i < this->size(); i++) {
         const LayerId layerId = this->get(i)->getLayerId();
@@ -262,12 +262,12 @@ ElementsGroup<E>::separateByLayers() const {
 }
 
 template<typename E>
-void ElementsGroup<E>::linearize() {
+void GroupElements<E>::linearize() {
     if (isLinear()) {
         return;
     }
     if(!this->ownership_) {
-        cerr << endl << "ERROR @ ElementsGroup::linearize(): "
+        cerr << endl << "ERROR @ GroupElements::linearize(): "
              << "Forbidden to linearize without ownership "
              << "of elements on it" << endl;
         assert(false);
@@ -293,13 +293,13 @@ void ElementsGroup<E>::linearize() {
 }
 
 template<typename E>
-void ElementsGroup<E>::printInfo() const {
-    cout << "--- Elements Group info ---" << endl;
+void GroupElements<E>::printInfo() const {
+    cout << "--- GroupElements info ---" << endl;
     Group<E>::printInfo();
 }
 
 template<typename E>
-vector<UInt> ElementsGroup<E>::getElemsWith_(
+vector<UInt> GroupElements<E>::getElemsWith_(
         const vector<MatId>& mats) const {
 
     set<MatId> matIds(mats.begin(), mats.end());
@@ -314,7 +314,7 @@ vector<UInt> ElementsGroup<E>::getElemsWith_(
 }
 
 template<typename E>
-vector<UInt> ElementsGroup<E>::getElemsWith_(
+vector<UInt> GroupElements<E>::getElemsWith_(
         const vector<LayerId>& lays) const {
 
     set<LayerId> layIds(lays.begin(), lays.end());

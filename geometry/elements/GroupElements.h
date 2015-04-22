@@ -1,12 +1,12 @@
 /*
- * ElementsGroup.h
+ * GroupElements.h
  *
  *  Created on: Mar 28, 2013
  *      Author: luis
  */
 
-#ifndef ELEMENTSGROUP_H_
-#define ELEMENTSGROUP_H_
+#ifndef COMMON_GEOMETRY_ELEMENTS_GROUPELEMENTS_H_
+#define COMMON_GEOMETRY_ELEMENTS_GROUPELEMENTS_H_
 
 #include <vector>
 #include <set>
@@ -25,32 +25,32 @@ using namespace std;
 #include "Polygon.h"
 #include "Polyhedron.h"
 
-#include "../../base/group/GroupId.h"
+#include "base/group/GroupId.h"
 
 typedef pair<const VolR*, UInt> Face;
 
 template<typename E = Elem>
-class ElementsGroup : public virtual GroupId<E, ElementId> {
+class GroupElements : public virtual GroupId<E, ElementId> {
 public:
-    USE_GROUP_CONSTRUCTS(ElementsGroup, E);
+    USE_GROUP_CONSTRUCTS(GroupElements, E);
 
-    DEFINE_GROUP_CLONE(ElementsGroup, E);
+    DEFINE_GROUP_CLONE(GroupElements, E);
 
     USE_GROUP_ASSIGN(E);
 
     bool isLinear() const;
 
     USE_GROUPID_GETGROUPWITH(E, ElementId);
-    ElementsGroup<E> getGroupWith(const MatId matId);
-    ElementsGroup<E> getGroupWith(const vector<MatId>& matId);
-    ElementsGroup<E> getGroupWith(const LayerId layerId);
-    ElementsGroup<E> getGroupWith(const vector<LayerId>& layerId);
-    ElementsGroup<E> getGroupWith(const MatId, const LayerId);
-    ElementsGroup<const E> getGroupWith(const MatId matId) const;
-    ElementsGroup<const E> getGroupWith(const vector<MatId>& matId) const;
-    ElementsGroup<const E> getGroupWith(const LayerId layerId) const;
-    ElementsGroup<const E> getGroupWith(const vector<LayerId>& layerId) const;
-    ElementsGroup<const E> getGroupWith(const MatId, const LayerId) const;
+    GroupElements<E> getGroupWith(const MatId matId);
+    GroupElements<E> getGroupWith(const vector<MatId>& matId);
+    GroupElements<E> getGroupWith(const LayerId layerId);
+    GroupElements<E> getGroupWith(const vector<LayerId>& layerId);
+    GroupElements<E> getGroupWith(const MatId, const LayerId);
+    GroupElements<const E> getGroupWith(const MatId matId) const;
+    GroupElements<const E> getGroupWith(const vector<MatId>& matId) const;
+    GroupElements<const E> getGroupWith(const LayerId layerId) const;
+    GroupElements<const E> getGroupWith(const vector<LayerId>& layerId) const;
+    GroupElements<const E> getGroupWith(const MatId, const LayerId) const;
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
@@ -79,16 +79,16 @@ public:
 
 protected:
     template<class T>
-    void reassignPointers(const CoordinateGroup< Coordinate<T,3> >& vNew);
+    void reassignPointers(const GroupCoordinates< Coordinate<T,3> >& vNew);
 
 private:
     vector<UInt> getElemsWith_(const vector<MatId>&) const;
     vector<UInt> getElemsWith_(const vector<LayerId>&) const;
 };
 
-#include "ElementsGroup.hpp"
+#include "GroupElements.hpp"
 
-typedef ElementsGroup<ElemR> ElemRGroup;
-typedef ElementsGroup<const ElemR> ConstElemRGroup;
+typedef GroupElements<ElemR> ElemRGroup;
+typedef GroupElements<const ElemR> ConstElemRGroup;
 
-#endif /* ELEMENTSGROUP_H_ */
+#endif /* COMMON_GEOMETRY_ELEMENTS_GROUPELEMENTS_H_ */

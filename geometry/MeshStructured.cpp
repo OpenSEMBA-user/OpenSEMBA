@@ -14,24 +14,24 @@ MeshStructured::MeshStructured(const Grid3& grid)
 }
 
 MeshStructured::MeshStructured(const Grid3& grid,
-                               const CoordinateGroup<const CoordI3>& cG,
-                               const ElementsGroup<const ElemI>& elem,
-                               const LayerGroup<const Layer>& layers)
+                               const GroupCoordinates<const CoordI3>& cG,
+                               const GroupElements<const ElemI>& elem,
+                               const GroupLayers<const Layer>& layers)
 :   Grid3(grid),
-    CoordinateGroup<CoordI3>(cG.newGroup()),
-    ElementsGroup<ElemI>(elem.newGroup()),
-    LayerGroup<Layer>(layers.newGroup()) {
+    GroupCoordinates<CoordI3>(cG.newGroup()),
+    GroupElements<ElemI>(elem.newGroup()),
+    GroupLayers<Layer>(layers.newGroup()) {
 
-    ElementsGroup<ElemI>::reassignPointers(*this);
+    GroupElements<ElemI>::reassignPointers(*this);
 }
 
 MeshStructured::MeshStructured(const MeshStructured& rhs)
 :   Grid3(rhs),
-    CoordinateGroup<CoordI3>(rhs.coords().newGroup()),
-    ElementsGroup<ElemI>(rhs.elems().newGroup()),
-    LayerGroup<Layer>(rhs.layers().newGroup()) {
+    GroupCoordinates<CoordI3>(rhs.coords().newGroup()),
+    GroupElements<ElemI>(rhs.elems().newGroup()),
+    GroupLayers<Layer>(rhs.layers().newGroup()) {
 
-    ElementsGroup<ElemI>::reassignPointers(*this);
+    GroupElements<ElemI>::reassignPointers(*this);
 }
 
 MeshStructured::~MeshStructured() {
@@ -44,11 +44,11 @@ MeshStructured& MeshStructured::operator=(const MeshStructured& rhs) {
     }
 
     Grid3::operator=(rhs);
-    CoordinateGroup<CoordI3>::operator=(rhs.coords().newGroup());
-    ElementsGroup<ElemI>::operator=(rhs.elems().newGroup());
-    LayerGroup<Layer>::operator=(rhs.layers().newGroup());
+    GroupCoordinates<CoordI3>::operator=(rhs.coords().newGroup());
+    GroupElements<ElemI>::operator=(rhs.elems().newGroup());
+    GroupLayers<Layer>::operator=(rhs.layers().newGroup());
 
-    ElementsGroup<ElemI>::reassignPointers(*this);
+    GroupElements<ElemI>::reassignPointers(*this);
 
     return *this;
 }
@@ -86,18 +86,18 @@ MeshUnstructured* MeshStructured::getMeshUnstructured() const {
 void MeshStructured::printInfo() const {
     cout << " --- Mesh structured info --- " << endl;
     Grid3::printInfo();
-    CoordinateGroup<CoordI3>::printInfo();
-    ElementsGroup<ElemI>::printInfo();
-    LayerGroup<>::printInfo();
+    GroupCoordinates<CoordI3>::printInfo();
+    GroupElements<ElemI>::printInfo();
+    GroupLayers<>::printInfo();
 }
 
-void MeshStructured::convertToHex(ElementsGroup<const SurfI> surfs) {
+void MeshStructured::convertToHex(GroupElements<const SurfI> surfs) {
     vector<HexI8*> hexes = discretizeWithinBoundary(surfs);
-    this->ElementsGroup<ElemI>::remove(surfs.getIds());
+    this->GroupElements<ElemI>::remove(surfs.getIds());
     elems().add(hexes, true);
 }
 
-void MeshStructured::addAsHex(ElementsGroup<const VolR> region) {
+void MeshStructured::addAsHex(GroupElements<const VolR> region) {
     vector<CVecR3> center = getCenterOfCellsInside(region.getBound());
     vector<HexI8*> hexes;
     hexes.reserve(center.size());
@@ -117,7 +117,7 @@ void MeshStructured::addAsHex(ElementsGroup<const VolR> region) {
 }
 
 vector<HexI8*> MeshStructured::discretizeWithinBoundary(
-        const ElementsGroup<const SurfI>& surf) {
+        const GroupElements<const SurfI>& surf) {
     const vector<pair<const SurfI*, const SurfI*>> pair =
             getPairsDefiningVolumeWithin(surf);
     vector<HexI8*> res;
@@ -142,7 +142,7 @@ vector<HexI8*> MeshStructured::discretizeWithinBoundary(
 
 vector<pair<const SurfI*, const SurfI*> >
 MeshStructured::getPairsDefiningVolumeWithin(
-        const ElementsGroup<const SurfI>& origBound) const {
+        const GroupElements<const SurfI>& origBound) const {
     vector<pair<const SurfI*, const SurfI*> > res;
     const UInt nOrigBound = origBound.size();
     // Checks that bound.size is an even number.

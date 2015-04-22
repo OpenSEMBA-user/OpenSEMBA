@@ -14,7 +14,7 @@
 class Tet10 : public Tet {
 public:
     Tet10();
-    Tet10(const CoordinateGroup<CoordR3>&,
+    Tet10(const GroupCoordinates<CoordR3>&,
           const ElementId id,
           const CoordinateId vId[10],
           const LayerId layerId = LayerId(0),

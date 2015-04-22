@@ -13,7 +13,7 @@ Tet10::Tet10() {
 
 }
 
-Tet10::Tet10(const CoordinateGroup<CoordR3>& coordGr,
+Tet10::Tet10(const GroupCoordinates<CoordR3>& coordGr,
              const ElementId id,
              const CoordinateId vId[10],
              const LayerId layerId,

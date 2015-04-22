@@ -1,24 +1,24 @@
 /*
- * CoordinateGroup.hpp
+ * GroupCoordinates.hpp
  *
  *  Created on: Aug 29, 2012
  *      Author: luis
  */
 
-#include "CoordinateGroup.h"
+#include "GroupCoordinates.h"
 
 template<typename C>
-CoordinateGroup<C>::CoordinateGroup(const vector<CVecR3>& pos) {
+GroupCoordinates<C>::GroupCoordinates(const vector<CVecR3>& pos) {
     GroupId<C,CoordinateId>::add(pos, true);
 }
 
 template<typename C>
-CoordinateGroup<C>::CoordinateGroup(const vector<CVecI3>& pos) {
+GroupCoordinates<C>::GroupCoordinates(const vector<CVecI3>& pos) {
     GroupId<C,CoordinateId>::add(pos, true);
 }
 
 template<typename C>
-const CoordR3* CoordinateGroup<C>::get(const CVecR3& position) const {
+const CoordR3* GroupCoordinates<C>::get(const CVecR3& position) const {
     multiset<const CoordR3*, lexCompareCoord>::iterator it;
     CoordR3 aux(position);
     it = indexUnstr_.find(&aux);
@@ -30,7 +30,7 @@ const CoordR3* CoordinateGroup<C>::get(const CVecR3& position) const {
 }
 
 template<typename C>
-const CoordI3* CoordinateGroup<C>::get(const CVecI3& position) const {
+const CoordI3* GroupCoordinates<C>::get(const CVecI3& position) const {
     multiset<const CoordI3*, lexCompareCoord>::iterator it;
     CoordI3 aux(position);
     it = indexStr_.find(&aux);
@@ -42,7 +42,7 @@ const CoordI3* CoordinateGroup<C>::get(const CVecI3& position) const {
 }
 
 template<typename C>
-C* CoordinateGroup<C>::add(const CVecR3& newPosition, const bool canOverlap) {
+C* GroupCoordinates<C>::add(const CVecR3& newPosition, const bool canOverlap) {
     vector<C*> res;
     vector<CVecR3> aux;
     aux.push_back(newPosition);
@@ -54,7 +54,7 @@ C* CoordinateGroup<C>::add(const CVecR3& newPosition, const bool canOverlap) {
 }
 
 template<typename C>
-vector<C*> CoordinateGroup<C>::add(const vector<CVecR3>& newPos,
+vector<C*> GroupCoordinates<C>::add(const vector<CVecR3>& newPos,
                                    const bool canOverlap) {
     vector<C*> newCoords;
     newCoords.reserve(newPos.size());
@@ -72,7 +72,7 @@ vector<C*> CoordinateGroup<C>::add(const vector<CVecR3>& newPos,
 }
 
 template<typename C>
-C* CoordinateGroup<C>::add(const CVecI3& newPosition, const bool canOverlap) {
+C* GroupCoordinates<C>::add(const CVecI3& newPosition, const bool canOverlap) {
     vector<C*> res;
     vector<CVecI3> aux;
     aux.push_back(newPosition);
@@ -84,7 +84,7 @@ C* CoordinateGroup<C>::add(const CVecI3& newPosition, const bool canOverlap) {
 }
 
 template<typename C>
-vector<C*> CoordinateGroup<C>::add(const vector<CVecI3>& newPos,
+vector<C*> GroupCoordinates<C>::add(const vector<CVecI3>& newPos,
                                               const bool canOverlap) {
     vector<C*> newCoords;
     for(UInt i = 0; i < newPos.size(); i++) {
@@ -101,7 +101,7 @@ vector<C*> CoordinateGroup<C>::add(const vector<CVecI3>& newPos,
 }
 
 template<typename C>
-void CoordinateGroup<C>::applyScalingFactor(const Real factor) {
+void GroupCoordinates<C>::applyScalingFactor(const Real factor) {
     for(UInt i = 0; i < this->size(); i++) {
         if (this->get(i)->template is<CoordR3>()) {
             CoordR3* ptr = this->get(i)->template castTo<CoordR3>();
@@ -111,28 +111,28 @@ void CoordinateGroup<C>::applyScalingFactor(const Real factor) {
 }
 
 template<typename C>
-void CoordinateGroup<C>::printInfo() const {
-    cout<< "--- CoordinateGroup info ---" << endl;
+void GroupCoordinates<C>::printInfo() const {
+    cout<< "--- GroupCoordinates info ---" << endl;
     cout<< "Total: " << this->size() << " coordinates." << endl;
     Group<C>::printInfo();
 }
 
 template<typename C>
-void CoordinateGroup<C>::construct() {
+void GroupCoordinates<C>::construct() {
     GroupId<C, CoordinateId>::construct();
     indexStr_.clear();
     indexUnstr_.clear();
 }
 
 template<typename C>
-void CoordinateGroup<C>::destruct() {
+void GroupCoordinates<C>::destruct() {
     indexStr_.clear();
     indexUnstr_.clear();
     GroupId<C, CoordinateId>::destruct();
 }
 
 template<typename C>
-void CoordinateGroup<C>::postprocess(const UInt fistStep) {
+void GroupCoordinates<C>::postprocess(const UInt fistStep) {
     GroupId<C, CoordinateId>::postprocess(fistStep);
     for (UInt i = fistStep; i < this->size(); i++) {
         if (this->get(i)->template is<CoordR3>()) {

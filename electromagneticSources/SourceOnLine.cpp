@@ -8,11 +8,11 @@
 #include "SourceOnLine.h"
 
 SourceOnLine::SourceOnLine(const Magnitude* magnitude,
-                           const ElementsGroup<Lin>& elem,
+                           const GroupElements<Lin>& elem,
                            const Type& sourceType,
                            const Hardness& sourceHardness)
 :   EMSourceBase(magnitude),
-    ElementsGroup<const Lin>(elem) {
+    GroupElements<const Lin>(elem) {
 
 	type_ = sourceType;
     hardness_ = sourceHardness;
@@ -20,7 +20,7 @@ SourceOnLine::SourceOnLine(const Magnitude* magnitude,
 
 SourceOnLine::SourceOnLine(const SourceOnLine& rhs)
 :   EMSourceBase(rhs),
-    ElementsGroup<const Lin>(rhs) {
+    GroupElements<const Lin>(rhs) {
 
     type_ = rhs.type_;
     hardness_ = rhs.hardness_;

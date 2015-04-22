@@ -13,7 +13,7 @@ using namespace std;
 #include "math/CartesianVector.h"
 #include "geometry/Box.h"
 #include "geometry/Grid.h"
-#include "geometry/coordinates/CoordinateGroup.h"
+#include "geometry/coordinates/GroupCoordinates.h"
 #include "geometry/layers/Layer.h"
 
 #include "base/class/ClassIdBase.h"
@@ -82,10 +82,10 @@ public:
 
     virtual void setV(const UInt i, const Coordinate<T,3>*);
 
-    virtual Element<Int>* toStructured(const CoordinateGroup<CoordI3>&,
+    virtual Element<Int>* toStructured(const GroupCoordinates<CoordI3>&,
                                        const Grid3&,
                                        const Real = Grid3::tolerance) const;
-    virtual Element<Real>* toUnstructured(const CoordinateGroup<CoordR3>&,
+    virtual Element<Real>* toUnstructured(const GroupCoordinates<CoordR3>&,
                                           const Grid3&) const;
 
 protected:
@@ -93,10 +93,10 @@ protected:
 
     bool vertexInCell (const Grid3& grid, const Real tol) const;
     bool vertexInBound() const;
-    CoordinateId* vertexToStructured(const CoordinateGroup<CoordI3>& cG,
+    CoordinateId* vertexToStructured(const GroupCoordinates<CoordI3>& cG,
                                      const Grid3& grid,
                                      const Real tol) const;
-    CoordinateId* vertexToUnstructured(const CoordinateGroup<CoordR3>& cG,
+    CoordinateId* vertexToUnstructured(const GroupCoordinates<CoordR3>& cG,
                                        const Grid3& grid) const;
 
 };

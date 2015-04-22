@@ -16,7 +16,7 @@ Line2<T>::Line2() {
 }
 
 template<class T>
-Line2<T>::Line2(const CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(const GroupCoordinates<Coordinate<T,3> >& cG,
               const ElementId id,
               const CoordinateId vId[2],
               const LayerId layerId,
@@ -39,7 +39,7 @@ Line2<T>::Line2(const ElementId id,
 }
 
 template<class T>
-Line2<T>::Line2(CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(GroupCoordinates<Coordinate<T,3> >& cG,
               const ElementId id,
               const Box<T,3>& box,
               const LayerId layerId,
@@ -52,7 +52,7 @@ Line2<T>::Line2(CoordinateGroup<Coordinate<T,3> >& cG,
 
 
 template<class T>
-Line2<T>::Line2(const CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(const GroupCoordinates<Coordinate<T,3> >& cG,
               const CoordinateId vId[2]) {
     setCoordinates(cG, vId);
 }
@@ -63,7 +63,7 @@ Line2<T>::Line2(const Coordinate<T,3>* v[2]) {
 }
 
 template<class T>
-Line2<T>::Line2(CoordinateGroup<Coordinate<T,3> >& cG,
+Line2<T>::Line2(GroupCoordinates<Coordinate<T,3> >& cG,
               const Box<T,3>& box) {
 
     setCoordinates(cG, box);
@@ -123,7 +123,7 @@ void Line2<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
-ElemI* Line2<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
+ElemI* Line2<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
                               const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -139,7 +139,7 @@ ElemI* Line2<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Line2<T>::toUnstructured(const CoordinateGroup<CoordR3>& cG,
+ElemR* Line2<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                 const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
@@ -164,7 +164,7 @@ void Line2<T>::printInfo() const {
 }
 
 template<class T>
-void Line2<T>::setCoordinates(const CoordinateGroup<Coordinate<T,3> >& cG,
+void Line2<T>::setCoordinates(const GroupCoordinates<Coordinate<T,3> >& cG,
                               const CoordinateId vId[2]) {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.get(vId[i]);
@@ -179,7 +179,7 @@ void Line2<T>::setCoordinates(const Coordinate<T,3>* v[2]) {
 }
 
 template<class T>
-void Line2<T>::setCoordinates(CoordinateGroup<Coordinate<T,3> >& cG,
+void Line2<T>::setCoordinates(GroupCoordinates<Coordinate<T,3> >& cG,
                              const Box<T,3>& box) {
     if(!box.isLine()) {
         cerr << endl << "ERROR @ Line2::Line2(): "

@@ -22,7 +22,7 @@ public:
 	} ExcitationMode;
 
 	Waveport(const MagnitudeGaussian* magnitude,
-             const ElementsGroup<Surf>& elem,
+             const GroupElements<Surf>& elem,
 	         const bool input,
 	         const Shape shape,
 	         const ExcitationMode excMode,

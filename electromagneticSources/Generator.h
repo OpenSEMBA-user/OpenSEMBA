@@ -23,7 +23,7 @@ public:
 
     Generator();
     Generator(const Magnitude* magnitude,
-              ElementsGroup<Nod>& elem,
+              GroupElements<Nod>& elem,
               const Type& generatorType,
               const Hardness& hardness);
     Generator(const Generator& rhs);

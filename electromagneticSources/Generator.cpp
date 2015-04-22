@@ -13,11 +13,11 @@ Generator::Generator() {
 }
 
 Generator::Generator(const Magnitude* magnitude,
-                     ElementsGroup<Nod>& elems,
+                     GroupElements<Nod>& elems,
                      const Type& generatorType,
                      const Hardness& hardness)
 :   EMSourceBase(magnitude),
-    ElementsGroup<const Nod>(elems) {
+    GroupElements<const Nod>(elems) {
 
     type_ = generatorType;
     hardness_ = hardness;
@@ -25,7 +25,7 @@ Generator::Generator(const Magnitude* magnitude,
 
 Generator::Generator(const Generator& rhs)
 :   EMSourceBase(rhs),
-    ElementsGroup<const Nod>(rhs) {
+    GroupElements<const Nod>(rhs) {
 
     type_ = rhs.type_;
     hardness_ = rhs.hardness_;

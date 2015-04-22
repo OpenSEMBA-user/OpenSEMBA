@@ -9,9 +9,9 @@
 #define SRC_COMMON_GEOMETRY_MESH_H_
 
 #include "Types.h"
-#include "coordinates/CoordinateGroup.h"
-#include "elements/ElementsGroup.h"
-#include "layers/LayerGroup.h"
+#include "coordinates/GroupCoordinates.h"
+#include "elements/GroupElements.h"
+#include "layers/GroupLayers.h"
 #include "Grid.h"
 
 #include "base/class/ClassBase.h"

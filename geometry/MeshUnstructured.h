@@ -22,14 +22,14 @@ using namespace std;
 class MeshStructured;
 
 class MeshUnstructured : public virtual Mesh,
-                         public virtual CoordinateGroup<CoordR3>,
-                         public virtual ElementsGroup<ElemR>,
-                         public virtual LayerGroup<Layer> {
+                         public virtual GroupCoordinates<CoordR3>,
+                         public virtual GroupElements<ElemR>,
+                         public virtual GroupLayers<Layer> {
 public:
     MeshUnstructured();
-    MeshUnstructured(const CoordinateGroup<const CoordR3>& cG,
-                     const ElementsGroup<const ElemR>& elem,
-                     const LayerGroup<const Layer>& layer = LayerGroup<>());
+    MeshUnstructured(const GroupCoordinates<const CoordR3>& cG,
+                     const GroupElements<const ElemR>& elem,
+                     const GroupLayers<const Layer>& layer = GroupLayers<>());
     MeshUnstructured(const MeshUnstructured& param);
     virtual ~MeshUnstructured();
 
@@ -37,13 +37,13 @@ public:
 
     DEFINE_CLONE(MeshUnstructured);
 
-    CoordinateGroup<CoordR3>& coords() { return *this; }
-    ElementsGroup<ElemR>&     elems () { return *this; }
-    LayerGroup<Layer>&        layers() { return *this; }
+    GroupCoordinates<CoordR3>& coords() { return *this; }
+    GroupElements<ElemR>&     elems () { return *this; }
+    GroupLayers<Layer>&        layers() { return *this; }
 
-    const CoordinateGroup<CoordR3>& coords() const { return *this; }
-    const ElementsGroup<ElemR>&     elems () const { return *this; }
-    const LayerGroup<Layer>&        layers() const { return *this; }
+    const GroupCoordinates<CoordR3>& coords() const { return *this; }
+    const GroupElements<ElemR>&     elems () const { return *this; }
+    const GroupLayers<Layer>&        layers() const { return *this; }
 
     MeshStructured* getMeshStructured(const Grid3& grid,
                                       const Real tol = Grid3::tolerance) const;
@@ -52,17 +52,17 @@ public:
                                      const CVecR3& normal);
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
     virtual bool isOnBoundary(const CVecR3 pos) const;
-    ElementsGroup<const SurfR> getMaterialBoundary(const MatId   matId,
+    GroupElements<const SurfR> getMaterialBoundary(const MatId   matId,
                                                    const LayerId layId) const;
-    ElementsGroup<const Tri> convertToTri(
-            const ElementsGroup<const ElemR>& region,
+    GroupElements<const Tri> convertToTri(
+            const GroupElements<const ElemR>& region,
             bool ignoreTets) const;
     vector<Face> getInternalBorder(
-            const ElementsGroup<const ElemR>& region) const;
+            const GroupElements<const ElemR>& region) const;
     vector<Face> getExternalBorder(
-            const ElementsGroup<const ElemR>& region) const;
-    ElementsGroup<ElemR> getAdjacentRegion(
-            const ElementsGroup<const ElemR>& region);
+            const GroupElements<const ElemR>& region) const;
+    GroupElements<ElemR> getAdjacentRegion(
+            const GroupElements<const ElemR>& region);
 
     Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
@@ -70,9 +70,9 @@ public:
     void printInfo() const;
 protected:
     vector<Face> getTetInternalBorder(
-            const ElementsGroup<const Tet>& tet) const;
+            const GroupElements<const Tet>& tet) const;
     vector<Face> getTriInternalBorder(
-            const ElementsGroup<const Tri>& tri) const;
+            const GroupElements<const Tri>& tri) const;
 };
 
 #endif /* MESHUNSTRUCTURED_H_ */

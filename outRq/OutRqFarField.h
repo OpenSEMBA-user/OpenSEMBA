@@ -14,7 +14,7 @@ class OutRqFarField : public virtual OutRq<Vol> {
 public:
     OutRqFarField(const Domain& domain,
                   const string& name,
-                  const ElementsGroup<Vol>& box,
+                  const GroupElements<Vol>& box,
                   const Real iTh, const Real fTh, const Real sTh,
                   const Real iPhi, const Real fPhi, const Real sPhi);
     OutRqFarField(const OutRqFarField& rhs);

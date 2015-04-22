@@ -12,7 +12,7 @@
 #include <utility>
 using namespace std;
 
-#include "../elements/ElementsGroup.h"
+#include "../elements/GroupElements.h"
 
 #include "VertexCoord.h"
 #include "VertexLine.h"
@@ -21,7 +21,7 @@ template<class T>
 class GraphLines {
 public:
     GraphLines();
-    GraphLines(const ElementsGroup<const Line<T>>& lines);
+    GraphLines(const GroupElements<const Line<T>>& lines);
     virtual ~GraphLines();
 
     UInt numCoords() const { return coords_.size(); }
@@ -39,7 +39,7 @@ private:
     vector<VertexLine <T>*> lines_;
     map<ElementId,VertexLine<T>*> mapLines_;
 
-    void init_(const ElementsGroup<const Line<T>>& lines);
+    void init_(const GroupElements<const Line<T>>& lines);
 };
 
 #endif /* SRC_MESHER_FDTD_MESHLINES_GRAPHLINES_H_ */

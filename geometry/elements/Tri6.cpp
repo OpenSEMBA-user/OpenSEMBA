@@ -6,7 +6,7 @@ Tri6::Tri6() {
 
 }
 
-Tri6::Tri6(const CoordinateGroup<CoordR3>& coordGr,
+Tri6::Tri6(const GroupCoordinates<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[6],
            const LayerId layerId,

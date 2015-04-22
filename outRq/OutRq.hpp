@@ -4,10 +4,10 @@ template<class T>
 OutRq<T>::OutRq(const Domain& domain,
                 const Type outputType,
                 const string& name,
-                const ElementsGroup<T>& elems)
+                const GroupElements<T>& elems)
 :   Domain(domain),
     OutRqBase(outputType, name),
-    ElementsGroup<const T>(elems) {
+    GroupElements<const T>(elems) {
 
 }
 
@@ -15,7 +15,7 @@ template<class T>
 OutRq<T>::OutRq(const OutRq<T>& rhs)
 :   Domain(rhs),
     OutRqBase(rhs),
-    ElementsGroup<const T>(rhs) {
+    GroupElements<const T>(rhs) {
 
 }
 
@@ -40,18 +40,18 @@ bool OutRq<T>::isSimilar(const OutRqBase& rhs) const {
 }
 
 template <class T>
-void OutRq<T>::set(const ElementsGroup<const Elem>& elems) {
-    ElementsGroup<const T>::operator=(elems);
+void OutRq<T>::set(const GroupElements<const Elem>& elems) {
+    GroupElements<const T>::operator=(elems);
 }
 
 template <class T>
-void OutRq<T>::add(const ElementsGroup<const Elem>& elems) {
-    ElementsGroup<const T>::add(elems);
+void OutRq<T>::add(const GroupElements<const Elem>& elems) {
+    GroupElements<const T>::add(elems);
 }
 
 template<class T>
 inline void OutRq<T>::printInfo() const {
     cout << " --- Output request instance --- " << endl;
     OutRqBase::printInfo();
-    ElementsGroup<const T>::printInfo();
+    GroupElements<const T>::printInfo();
 }

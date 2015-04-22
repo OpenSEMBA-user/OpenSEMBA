@@ -6,7 +6,7 @@ Node<T>::Node() {
 }
 
 template<class T>
-Node<T>::Node(const CoordinateGroup< Coordinate<T,3> >& coordGr,
+Node<T>::Node(const GroupCoordinates< Coordinate<T,3> >& coordGr,
               const ElementId id,
               const CoordinateId vId[1],
               const LayerId layerId,
@@ -30,7 +30,7 @@ Node<T>::Node(const ElementId id,
     v_[0] = v[0];
 }
 template<class T>
-Node<T>::Node(CoordinateGroup<Coordinate<T,3> >& cG,
+Node<T>::Node(GroupCoordinates<Coordinate<T,3> >& cG,
               const ElementId id,
               const Box<T,3>& box,
               const LayerId layerId,
@@ -105,7 +105,7 @@ void Node<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
 }
 
 template<class T>
-ElemI* Node<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
+ElemI* Node<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
                              const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -121,7 +121,7 @@ ElemI* Node<T>::toStructured(const CoordinateGroup<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Node<T>::toUnstructured(const CoordinateGroup<CoordR3>& cG,
+ElemR* Node<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {

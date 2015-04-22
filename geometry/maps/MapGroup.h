@@ -21,10 +21,10 @@ typedef pair<const VolR*, UInt> Face;
 class MapGroup {
 public:
    MapGroup();
-   MapGroup(const CoordinateGroup<const Coord>& cG,
-            const ElementsGroup  <const Elem> & eG);
+   MapGroup(const GroupCoordinates<const Coord>& cG,
+            const GroupElements  <const Elem> & eG);
    virtual ~MapGroup();
-   void reassignPointers(const ElementsGroup<const Elem>& nEG);
+   void reassignPointers(const GroupElements<const Elem>& nEG);
    const Tet* getNeighbour(const UInt id, const UInt face) const;
    UInt getVolToF(const UInt id, const UInt face) const;
    pair<const Tet*, UInt> getNeighConnection(const UInt id, const UInt face) const;

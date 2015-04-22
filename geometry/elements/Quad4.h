@@ -25,12 +25,12 @@ class Quad4: public virtual Quad<T>,
              public virtual Quad4Base {
 public:
     Quad4();
-	Quad4(const CoordinateGroup<Coordinate<T,3> >&,
+	Quad4(const GroupCoordinates<Coordinate<T,3> >&,
           const ElementId id,
           const CoordinateId vId[4],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-	Quad4(CoordinateGroup<Coordinate<T,3> >&,
+	Quad4(GroupCoordinates<Coordinate<T,3> >&,
 	      const ElementId id,
 	      const Box<T,3>& box,
 	      const LayerId layerId = LayerId(0),
@@ -52,9 +52,9 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>*);
 
-    ElemI* toStructured(const CoordinateGroup<CoordI3>&,
+    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
                         const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const CoordinateGroup<CoordR3>&, const Grid3&) const;
+    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
 
 	void printInfo() const;
 	void check() const;

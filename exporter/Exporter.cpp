@@ -1,16 +1,13 @@
+#include "../exporter/Exporter.h"
 
-#ifndef OUTPUT_H_
-#include "../exporter/Output.h"
-#endif
-
-Output::Output()  {
+Exporter::Exporter()  {
 }
 
-Output::Output(const string& name) : ProjectFile(name) {
+Exporter::Exporter(const string& name) : ProjectFile(name) {
 
 }
 
-Output::~Output() {
+Exporter::~Exporter() {
     for (UInt i = 0; i < result_.size(); i++) {
         delete result_[i];
     }
@@ -47,7 +44,7 @@ Output::~Output() {
 //}
 
 void
-Output::process(
+Exporter::process(
         const Real time,
         const FieldR3& electric,
         const FieldR3& magnetic) {
@@ -57,7 +54,7 @@ Output::process(
 }
 
 void
-Output::deleteExistentOutputFiles() const {
+Exporter::deleteExistentOutputFiles() const {
     string file;
     file = getFilename() + ".post.msh";
     remove(file.c_str());
@@ -66,9 +63,9 @@ Output::deleteExistentOutputFiles() const {
 }
 
 void
-Output::printInfo() const {
-    cout << " --- Output info --- " << endl;
-    cout << " --- End of output info --- " << endl;
+Exporter::printInfo() const {
+    cout << " --- Exporter info --- " << endl;
+    cout << " --- End of Exporter info --- " << endl;
 }
 
 //void Output::writeAllFields(const FieldR3& field) const {
@@ -78,7 +75,7 @@ Output::printInfo() const {
 //    }
 //}
 
-string Output::getOutputfilename() const {
+string Exporter::getOutputfilename() const {
     string folder = getFolder();
     string output = getOutputName();
     return folder + output;

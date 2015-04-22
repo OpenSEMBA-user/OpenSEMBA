@@ -20,7 +20,7 @@ class Node : public virtual Element<T>,
              public virtual NodeBase {
 public:
     Node();
-	Node(const CoordinateGroup< Coordinate<T,3> >&,
+	Node(const GroupCoordinates< Coordinate<T,3> >&,
          const ElementId id,
          const CoordinateId vId[1],
          const LayerId layerId = LayerId(0),
@@ -29,7 +29,7 @@ public:
          const Coordinate<T,3>* v[1],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-	Node(CoordinateGroup<Coordinate<T,3> >&,
+	Node(GroupCoordinates<Coordinate<T,3> >&,
          const ElementId id,
          const Box<T,3>& box,
          const LayerId layerId = LayerId(0),
@@ -49,9 +49,9 @@ public:
 
     void setV(const UInt i, const Coordinate<T,3>* coord);
 
-    ElemI* toStructured(const CoordinateGroup<CoordI3>&,
+    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
                         const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const CoordinateGroup<CoordR3>&, const Grid3&) const;
+    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
 
 	void printInfo() const;
 

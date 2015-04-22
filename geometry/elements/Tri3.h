@@ -6,7 +6,7 @@
 class Tri3 : public Tri {
 public:
     Tri3();
-    Tri3(const CoordinateGroup<CoordR3>&,
+    Tri3(const GroupCoordinates<CoordR3>&,
          const ElementId id,
          const CoordinateId vId[3],
          const LayerId layerId = LayerId(0),
