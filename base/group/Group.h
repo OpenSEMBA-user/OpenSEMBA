@@ -12,6 +12,8 @@
 using namespace std;
 
 #include "SuperGroup.h"
+#include "GroupIterator.h"
+#include "GroupConstIterator.h"
 
 #include "base/class/ClassBase.h"
 
@@ -20,6 +22,9 @@ class Group : public virtual ClassBase {
     template<typename T2>
     friend class Group;
 public:
+    typedef GroupIterator<T> Iterator;
+    typedef GroupIterator<T> ConstIterator;
+
     Group();
 
     template<typename T2>
@@ -60,6 +65,12 @@ public:
     bool emptyOf() const;
     template<class T2>
     UInt sizeOf() const;
+
+    Iterator      begin()       { return Iterator     (*this, 0); }
+    ConstIterator begin() const { return ConstIterator(*this, 0); }
+
+    Iterator      end()       { return Iterator     (*this, size()); }
+    ConstIterator end() const { return ConstIterator(*this, size()); }
 
     template<class T2>
     Group<typename conditional<is_const<T>::value, const T2, T2>::type>
@@ -148,6 +159,8 @@ private:
 };
 
 #include "Group.hpp"
+#include "GroupIterator.hpp"
+#include "GroupConstIterator.hpp"
 
 #define USE_GROUP_CONSTRUCTS(NAME, T)                               \
     NAME() {}                                                       \
