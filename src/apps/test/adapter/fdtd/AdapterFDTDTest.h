@@ -19,23 +19,12 @@ public ::ParserGiDTest,
 public ::testing::WithParamInterface<const char*> {
 
 protected:
-   AdapterFDTDTest() {
+    AdapterFDTDTest() {
 
-   }
+    }
 
-   void compare(const SmbData* smb, const SmbData* nfde) const;
-
-   void runProject(const SmbData* smb) const {
-       SmbData* nfde = new SmbData();
-       AdapterFDTD(*smb).convert(*nfde);
-//       smb->isSimilar(*nfde);
-       {
-           ExporterGiD outGiD(nfde);
-           ExporterGiD outGiDSmb(smb, smb->getOutputFilename() + ".smb");
-           ExporterNFDE outNFDE(*nfde);
-       }
-       delete nfde;
-   }
+    void compare(const SmbData* smb, const SmbData* nfde) const;
+    void runProject(const SmbData* smb) const;
 };
 
 #endif /* SRC_TEST_UTILS_SMBTONFDE_ADAPTERFDTDTEST_H_ */

@@ -21,9 +21,9 @@ protected:
       EXPECT_TRUE(parser.canOpen());
       SmbData* res = parser.read();
       EXPECT_TRUE(res != NULL);
+      EXPECT_TRUE(res->check());
       return res;
    }
-
 };
 
 #endif
