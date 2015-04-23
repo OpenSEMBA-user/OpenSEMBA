@@ -26,6 +26,13 @@ bool ElementBase::operator!=(const ElementBase& rhs) const {
     return !(*this == rhs);
 }
 
+vector<CoordinateId> ElementBase::ascendingIdOrder(
+        const vector<CoordinateId>& in) {
+    vector<CoordinateId> res = in;
+    sort(res.begin(), res.end());
+    return res;
+}
+
 void ElementBase::printInfo() const {
     cout << "Element. Id: " << this->getId()
          << " MatId: " << this->getMatId()
@@ -150,32 +157,6 @@ template<class T>
 ElemR* Element<T>::toUnstructured(const CoordinateGroup<CoordR3>& cG,
                                   const Grid3& grid) const {
     return NULL;
-}
-
-template<class T>
-void Element<T>::ascendingOrder(UInt nVal, UInt* val) const {
-    UInt *res;
-    res = new UInt [nVal];
-    UInt maxV = 0;
-    for (UInt i = 0; i < 3; i++) {
-        val[i] > maxV ? maxV = val[i] : maxV;
-    }
-    for (UInt j = 0; j < 3; j++) {
-        UInt iMin = 0;
-        UInt currentMinV = maxV;
-        for (UInt i = 0; i < 3; i++) {
-            if (val[i] < currentMinV) {
-                currentMinV = val[i];
-                iMin = i;
-            }
-        }
-        res[j] = val[iMin];
-        val[iMin] = maxV;
-    }
-    for (UInt i = 0; i < nVal; i++) {
-        val[i] = res[i];
-    }
-    delete[] res;
 }
 
 template<class T>

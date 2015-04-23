@@ -42,6 +42,9 @@ public:
 	const CoordR3* getVertex(const UInt i) const { return v_[tet.vertex(i)]; }
 	const CoordR3* getSideVertex(const UInt f, const UInt i) const;
 
+    vector<const CoordR3*> getVertices() const;
+    vector<const CoordR3*> getSideVertices(const UInt face) const;
+
     Real getVolume() const;
     const Simplex& getTet() const { return tet; }
 	Real getAreaOfFace(const UInt face) const;

@@ -12,8 +12,8 @@ MeshUnstructured::MeshUnstructured() {
 }
 
 MeshUnstructured::MeshUnstructured(const CoordinateGroup<const CoordR3>& cG,
-                                   const ElementsGroup<const ElemR>& elem,
-                                   const LayerGroup<const Layer>& layers)
+        const ElementsGroup<const ElemR>& elem,
+        const LayerGroup<const Layer>& layers)
 :   CoordinateGroup<CoordR3>(cG.newGroup()),
     ElementsGroup<ElemR>(elem.newGroup()),
     LayerGroup<Layer>(layers.newGroup()) {
@@ -48,7 +48,7 @@ MeshUnstructured& MeshUnstructured::operator=(const MeshUnstructured& rhs) {
 }
 
 MeshStructured* MeshUnstructured::getMeshStructured(const Grid3& grid,
-                                                    const Real tol) const {
+        const Real tol) const {
     MeshStructured* res = new MeshStructured(grid);
 
     vector<CoordI3*> newCoords;
@@ -153,7 +153,7 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
             UInt row = k * faces + f;
             fList(row, 0) = region(k)->getId();
             fList(row, 1) = f;
-            UInt ordered[nVert];
+            vector<CoordinateId> ordered[nVert];
             region(k)->castTo<Tet>()->getOrderedSideVerticesId(ordered, f);
             for (UInt i = 0; i < nVert; i++) {
                 fList(row, i + 2) = ordered[i];
@@ -259,12 +259,29 @@ Real MeshUnstructured::getMinimumSpaceStep() const {
     // TODO Unstr minimum space step.
 }
 
-ElementsGroup<Surf> MeshUnstructured::getSurfsMatching(
+ElementsGroup<const SurfR> MeshUnstructured::getSurfsMatching(
         const vector<Face>& faces) const {
-    ElementsGroup<Surf> res;
+    ElementsGroup<const SurfR> res;
+    IndexByVertexId index = getIndexByVertexIds();
     for (UInt i = 0; i < faces.size(); i++) {
-        vector<CoordR3*> coords = faces[i].first->getSideV();
-// TODO MeshUnstructured get Surfs Matching.
-#warning " TO BE DONE"
+        const VolR* vol = faces[i].first;
+        const UInt f = faces[i].second;
+        vector<const CoordR3*> vertices = vol->getSideVertices(f);
+        vector<CoordinateId> ids(vertices.size());
+        for (UInt j = 0; j < vertices.size(); j++) {
+            ids[j] = vertices[j]->getId();
+        }
+        IndexByVertexId::const_iterator it = index.find(ids);
+        if (it == index.end()) {
+            cerr << "ERROR @ MeshUnstrctured:"
+                    << "Unable to find surf for face." << endl;
+        }
+        res.add(it->second);
     }
+    return res;
 }
+
+
+
+
+

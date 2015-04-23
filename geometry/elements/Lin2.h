@@ -57,6 +57,9 @@ public:
     const Coordinate<T,3>* getSideVertex(const UInt f,
                                          const UInt i) const;
 
+    vector<const Coordinate<T,3>*> getVertices() const;
+    vector<const Coordinate<T,3>*> getSideVertices(const UInt face) const;
+
     void setV(const UInt i, const Coordinate<T,3>* coord);
 
     ElemI* toStructured(const CoordinateGroup<CoordI3>&,

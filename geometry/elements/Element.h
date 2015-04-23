@@ -43,11 +43,14 @@ public:
 
     LayerId getLayerId() const { return layId_; }
     MatId   getMatId  () const { return matId_;   }
+    static vector<CoordinateId> ascendingIdOrder(
+            const vector<CoordinateId>& rhs);
 
     virtual void setLayerId(const LayerId layId) { layId_ = layId; }
     virtual void setMatId  (const MatId   matId) { matId_ = matId; }
 
     virtual void printInfo() const = 0;
+
 private:
     LayerId layId_;
     MatId   matId_;
@@ -75,6 +78,9 @@ public:
     virtual const Coordinate<T,3>* getSideVertex(const UInt f,
                                                  const UInt i) const = 0;
 
+    virtual vector<const Coordinate<T,3>*> getVertices() const = 0;
+    virtual vector<const Coordinate<T,3>*> getSideVertices(const UInt f) const = 0;
+
     Box<T,3> getBound() const;
     // Returns ptr to coord with min(max) lexicographical position.
     virtual const Coordinate<T,3>* getMinV() const;
@@ -89,7 +95,6 @@ public:
                                           const Grid3&) const;
 
 protected:
-    void ascendingOrder(UInt nVal, UInt* val) const;
 
     bool vertexInCell (const Grid3& grid, const Real tol) const;
     bool vertexInBound() const;

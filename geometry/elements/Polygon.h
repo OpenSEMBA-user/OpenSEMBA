@@ -39,6 +39,9 @@ public:
 	const CoordR3* getSideVertex(const UInt f,
                                  const UInt i) const;
     
+    vector<const CoordR3*> getVertices() const;
+    vector<const CoordR3*> getSideVertices(const UInt face) const;
+
 	Real getArea() const;
 	
 	void setV(const UInt i, const CoordR3*);

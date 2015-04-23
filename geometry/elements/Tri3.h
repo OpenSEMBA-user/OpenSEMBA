@@ -30,6 +30,9 @@ public:
     const CoordR3* getSideV     (const UInt face, const UInt i) const;
     const CoordR3* getSideVertex(const UInt face, const UInt i) const;
 
+    vector<const CoordR3*> getVertices() const;
+    vector<const CoordR3*> getSideVertices(const UInt face) const;
+
     Real getArea() const;
 
     void getCubatureDifferentials(Real  csdf[SimplexTri<1>::ncp]) const;
