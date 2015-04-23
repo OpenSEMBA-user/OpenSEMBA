@@ -1098,7 +1098,7 @@ ParserGiD::readWaveport() {
             UInt e, f;
             for (UInt i = 0; i < numElements; i++) {
                 f_in >> e;
-                VolR* vol = mesh_->elems().get(ElementId(e));
+                const VolR* vol = mesh_->elems().get(ElementId(e))->castTo<VolR>();
                 faces.push_back(Face(vol,f));
             }
         } else if (label.find("End of Waveport") != label.npos) {
@@ -1114,7 +1114,7 @@ ParserGiD::readWaveport() {
         cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
-    ElementsGroup<Surf> surfs = mesh_->getSurfsMatching(faces);
+    ElementsGroup<const Surf> surfs = mesh_->getSurfsMatching(faces);
     return new Waveport(mag, surfs, input, shape, excitationMode, mode);
 }
 
