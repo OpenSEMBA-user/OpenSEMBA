@@ -139,6 +139,25 @@ const Coordinate<T,3>* Element<T>::getMaxV() const {
 }
 
 template<class T>
+vector<const Coordinate<T,3>*> Element<T>::getVertices() const {
+    vector<const Coordinate<T,3>*> res(numberOfVertices());
+    for (UInt i = 0; i < numberOfVertices(); i++) {
+        res[i] = getVertex(i);
+    }
+    return res;
+}
+
+template<class T>
+vector<const Coordinate<T,3>*> Element<T>::getSideVertices(
+        const UInt face) const {
+    vector<const Coordinate<T,3>*> res(numberOfSideVertices());
+    for (UInt i = 0; i < numberOfSideVertices(); i++) {
+        res[i] = getSideVertex(face,i);
+    }
+    return res;
+}
+
+template<class T>
 void Element<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
     cout << "ERROR @ Element::setV(): "
          << "Setting coordinates is not allowed for this element"

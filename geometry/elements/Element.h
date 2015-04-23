@@ -43,8 +43,18 @@ public:
 
     LayerId getLayerId() const { return layId_; }
     MatId   getMatId  () const { return matId_;   }
+
     static vector<CoordinateId> ascendingIdOrder(
             const vector<CoordinateId>& rhs);
+
+    template<class T>
+    static vector<CoordinateId> getIds(vector<const Coordinate<T,3>*> in) {
+        vector<CoordinateId> res(in.size());
+        for  (UInt i = 0; i < in.size(); i++) {
+            res[i] = in[i]->getId();
+        }
+        return res;
+    }
 
     virtual void setLayerId(const LayerId layId) { layId_ = layId; }
     virtual void setMatId  (const MatId   matId) { matId_ = matId; }
@@ -78,13 +88,13 @@ public:
     virtual const Coordinate<T,3>* getSideVertex(const UInt f,
                                                  const UInt i) const = 0;
 
-    virtual vector<const Coordinate<T,3>*> getVertices() const = 0;
-    virtual vector<const Coordinate<T,3>*> getSideVertices(const UInt f) const = 0;
-
     Box<T,3> getBound() const;
     // Returns ptr to coord with min(max) lexicographical position.
     virtual const Coordinate<T,3>* getMinV() const;
     virtual const Coordinate<T,3>* getMaxV() const;
+
+    vector<const Coordinate<T,3>*> getVertices() const;
+    vector<const Coordinate<T,3>*> getSideVertices(const UInt face) const;
 
     virtual void setV(const UInt i, const Coordinate<T,3>*);
 

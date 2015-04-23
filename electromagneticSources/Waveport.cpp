@@ -8,7 +8,7 @@
 #include "Waveport.h"
 
 Waveport::Waveport(const MagnitudeGaussian* magnitude,
-                   const ElementsGroup<Surf>& elem,
+                   const ElementsGroup<const Surf>& elem,
                    const bool input,
                    const Shape shape,
                    const ExcitationMode excMode,

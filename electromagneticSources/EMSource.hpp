@@ -20,6 +20,7 @@ bool EMSource<T>::check() const {
         this->printInfo();
         return false;
     }
+    return true;
 }
 
 template <class T>

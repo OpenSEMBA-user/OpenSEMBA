@@ -153,8 +153,9 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
             UInt row = k * faces + f;
             fList(row, 0) = region(k)->getId();
             fList(row, 1) = f;
-            vector<CoordinateId> ordered[nVert];
-            region(k)->castTo<Tet>()->getOrderedSideVerticesId(ordered, f);
+            vector<CoordinateId> ordered(nVert);
+            ordered = ElementBase::getIds(region(k)->getSideVertices(f));
+            ordered = ElementBase::ascendingIdOrder(ordered);
             for (UInt i = 0; i < nVert; i++) {
                 fList(row, i + 2) = ordered[i];
             }
@@ -261,8 +262,8 @@ Real MeshUnstructured::getMinimumSpaceStep() const {
 
 ElementsGroup<const SurfR> MeshUnstructured::getSurfsMatching(
         const vector<Face>& faces) const {
-    ElementsGroup<const SurfR> res;
-    IndexByVertexId index = getIndexByVertexIds();
+    vector<const SurfR*> res;
+    IndexByVertexId index = getIndexByVertexId();
     for (UInt i = 0; i < faces.size(); i++) {
         const VolR* vol = faces[i].first;
         const UInt f = faces[i].second;
@@ -276,9 +277,9 @@ ElementsGroup<const SurfR> MeshUnstructured::getSurfsMatching(
             cerr << "ERROR @ MeshUnstrctured:"
                     << "Unable to find surf for face." << endl;
         }
-        res.add(it->second);
+        res.push_back(it->second->castTo<SurfR>());
     }
-    return res;
+    return ElementsGroup<const SurfR>(res);
 }
 
 

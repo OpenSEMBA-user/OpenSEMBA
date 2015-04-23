@@ -152,14 +152,14 @@ private:
 #define USE_GROUP_CONSTRUCTS(NAME, T)                               \
     NAME() {}                                                       \
     template<typename T2>                                           \
-    NAME(T2*& elems)            { this->add(elems);              }  \
+    NAME(T2*& elems)            { Group<T>::add(elems);          }  \
     template<typename T2>                                           \
-    NAME(vector<T2*>& elems)    { this->add(elems);              }  \
-    NAME(Group<T>& rhs)         { this->add(rhs);                }  \
+    NAME(vector<T2*>& elems)    { Group<T>::add(elems);          }  \
+    NAME(Group<T>& rhs)         { Group<T>::add(rhs);            }  \
     template<typename T2>                                           \
-    NAME(Group<T2>& rhs)        { this->add(rhs);                }  \
+    NAME(Group<T2>& rhs)        { Group<T>::add(rhs);            }  \
     template<typename T2>                                           \
-    NAME(const Group<T2>& rhs)  { this->add(rhs);                }  \
+    NAME(const Group<T2>& rhs)  { Group<T>::add(rhs);            }  \
     NAME(Group<T>&& rhs)        { Group<T>::add(std::move(rhs)); }  \
     template<typename T2>                                           \
     NAME(Group<T2>&& rhs)       { Group<T>::add(std::move(rhs)); }  \

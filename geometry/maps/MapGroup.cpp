@@ -29,8 +29,9 @@ MapGroup::MapGroup(const CoordinateGroup<const Coord>& cG,
          UInt row = k * faces + f;
          fList(row, 0) = id;
          fList(row, 1) = f;
-         UInt ordered[nVert];
-         aux->getOrderedSideVerticesId(ordered, f);
+         vector<CoordinateId> ordered(nVert);
+         ordered = ElementBase::getIds(aux->getSideVertices(f));
+         ordered = ElementBase::ascendingIdOrder(ordered);
          for (UInt i = 0; i < nVert; i++) {
             fList(row, i + 2) = ordered[i];
          }
@@ -86,9 +87,14 @@ MapGroup::MapGroup(const CoordinateGroup<const Coord>& cG,
 	  const Tri* local = tri(s);
       ElementId id = local->getId();
       pair<const Tet*, const Tet*> neigh;
-      UInt ordered[nVert];
-      local->getOrderedVerticesId(ordered);
-      UInt i = fList.findFirstOcurrenceInColumns(ordered, 2, 3);
+      vector<CoordinateId> ordered(nVert);
+      ordered = ElementBase::getIds(local->getVertices());
+      ordered = ElementBase::ascendingIdOrder(ordered);
+      vector<UInt> orderedInt(ordered.size());
+      for (UInt i = 0; i < orderedInt.size(); i++) {
+          orderedInt[i] = (UInt) ordered[i];
+      }
+      UInt i = fList.findFirstOcurrenceInColumns(&orderedInt[0], 2, 3);
       if (i == fList.nRows()) {
          cerr << endl << "Faces list." << endl;
          fList.printInfo();

@@ -36,9 +36,6 @@ public:
     const CoordR3* getVertex(const UInt i) const;
     const CoordR3* getSideVertex(const UInt f, const UInt i) const;
 
-    vector<const CoordR3*> getVertices() const;
-    vector<const CoordR3*> getSideVertices(const UInt face) const;
-
     const Polygon* getFace(const UInt f) const;
     Real getAreaOfFace(const UInt f) const;
 

@@ -318,8 +318,8 @@ IndexByVertexId ElementsGroup<E>::getIndexByVertexId() const {
     IndexByVertexId res;
     for (UInt i = 0; i < this->size(); i++) {
         const E* e = this->get(i);
-        vector<CoordinateId> ids(e->getNumberOfVertices());
-        for (UInt j = 0; j < e->getNumberOfVertices(); j++) {
+        vector<CoordinateId> ids(e->numberOfVertices());
+        for (UInt j = 0; j < e->numberOfVertices(); j++) {
             ids[j] = e->getVertex(j)->getId();
         }
         res.insert(pair<vector<CoordinateId>,const E*>(ids,e));
