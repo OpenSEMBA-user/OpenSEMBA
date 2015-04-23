@@ -31,7 +31,6 @@ public:
     virtual Real getVolume() const = 0;
     virtual Real getAreaOfFace(const UInt face) const = 0;
     virtual Tri3* getTri3Face(const UInt f) const;
-    virtual void getOrderedSideVerticesId(UInt val[3], UInt f) const;
 
     void getCubaturePositions(
         CVecR3 cubaturePositions[SimplexTet<1>::ncp]) const;

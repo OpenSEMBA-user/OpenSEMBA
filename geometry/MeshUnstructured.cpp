@@ -48,7 +48,7 @@ MeshUnstructured& MeshUnstructured::operator=(const MeshUnstructured& rhs) {
 }
 
 MeshStructured* MeshUnstructured::getMeshStructured(const Grid3& grid,
-                                                    const Real tol) const {
+        const Real tol) const {
     MeshStructured* res = new MeshStructured(grid);
 
     vector<CoordI3*> newCoords;
@@ -153,8 +153,9 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
             UInt row = k * faces + f;
             fList(row, 0) = region(k)->getId();
             fList(row, 1) = f;
-            UInt ordered[nVert];
-            region(k)->castTo<Tet>()->getOrderedSideVerticesId(ordered, f);
+            vector<CoordinateId> ordered(nVert);
+            ordered = ElementBase::getIds(region(k)->getSideVertices(f));
+            ordered = ElementBase::ascendingIdOrder(ordered);
             for (UInt i = 0; i < nVert; i++) {
                 fList(row, i + 2) = ordered[i];
             }
@@ -234,7 +235,7 @@ bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
 }
 
 bool MeshUnstructured::isOnBoundary(const CVecR3 pos) const {
-#warning "Not implemented"
+    // TODO Unstr isOnBoundary
 }
 
 GroupElements<const SurfR> MeshUnstructured::getMaterialBoundary(
@@ -258,3 +259,30 @@ void MeshUnstructured::printInfo() const {
 Real MeshUnstructured::getMinimumSpaceStep() const {
     // TODO Unstr minimum space step.
 }
+
+GroupElements<const SurfR> MeshUnstructured::getSurfsMatching(
+        const vector<Face>& faces) const {
+    vector<const SurfR*> res;
+    IndexByVertexId index = getIndexByVertexId();
+    for (UInt i = 0; i < faces.size(); i++) {
+        const VolR* vol = faces[i].first;
+        const UInt f = faces[i].second;
+        vector<const CoordR3*> vertices = vol->getSideVertices(f);
+        vector<CoordinateId> ids(vertices.size());
+        for (UInt j = 0; j < vertices.size(); j++) {
+            ids[j] = vertices[j]->getId();
+        }
+        IndexByVertexId::const_iterator it = index.find(ids);
+        if (it == index.end()) {
+            cerr << "ERROR @ MeshUnstrctured:"
+                    << "Unable to find surf for face." << endl;
+        }
+        res.push_back(it->second->castTo<SurfR>());
+    }
+    return GroupElements<const SurfR>(res);
+}
+
+
+
+
+

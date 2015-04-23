@@ -24,6 +24,9 @@ public:
 
     USE_GROUP_ASSIGN(E);
 
+    bool isSimilar(const GroupEMSources& rhs) const;
+    bool check() const;
+
     void printInfo() const;
 };
 

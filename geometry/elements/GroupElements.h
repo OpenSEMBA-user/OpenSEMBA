@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <set>
+#include <map>
 
 using namespace std;
 
@@ -28,6 +29,29 @@ using namespace std;
 #include "base/group/GroupId.h"
 
 typedef pair<const VolR*, UInt> Face;
+
+struct CompVecIds {
+    bool operator()(const vector<CoordinateId>& lhs,
+            const vector<CoordinateId>& rhs) const {
+        vector<CoordinateId> lhsOrdered, rhsOrdered;
+        lhsOrdered = ElementBase::ascendingIdOrder(lhs);
+        rhsOrdered = ElementBase::ascendingIdOrder(rhs);
+        if (lhsOrdered.size() < rhsOrdered.size()) {
+            return true;
+        } else if (lhsOrdered.size() > rhsOrdered.size()) {
+            return false;
+        } else {
+            for (UInt i = 0; i < lhsOrdered.size(); i++) {
+                if (lhsOrdered[i] < rhsOrdered[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+};
+
+typedef map<vector<CoordinateId>,const Elem*,CompVecIds> IndexByVertexId;
 
 template<typename E = Elem>
 class GroupElements : public virtual GroupId<E, ElementId> {
@@ -68,6 +92,7 @@ public:
     void setLayerId(const ElementId id, const LayerId newLayerId);
 
     map<LayerId, vector<const E*> > separateByLayers() const;
+    IndexByVertexId getIndexByVertexId() const;
 
     USE_GROUPID_REMOVE(E, ElementId);
     void remove(const MatId matId);

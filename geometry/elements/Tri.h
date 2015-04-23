@@ -15,7 +15,6 @@ public:
     
 	UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
     
-    void getOrderedVerticesId(UInt val[3]) const;
 };
 
 #endif

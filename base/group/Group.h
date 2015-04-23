@@ -136,9 +136,6 @@ private:
     set<const T*> set_;
 
     template<typename T2>
-    Group(const vector<shared_ptr<T2>>&);
-
-    template<typename T2>
     vector<typename add_pointer<
                typename conditional<is_const<T>::value,
                                     const T2, T2>::type>::type>
@@ -165,14 +162,14 @@ private:
 #define USE_GROUP_CONSTRUCTS(NAME, T)                               \
     NAME() {}                                                       \
     template<typename T2>                                           \
-    NAME(T2*& elems)            { this->add(elems);              }  \
+    NAME(T2*& elems)            { Group<T>::add(elems);          }  \
     template<typename T2>                                           \
-    NAME(vector<T2*>& elems)    { this->add(elems);              }  \
-    NAME(Group<T>& rhs)         { this->add(rhs);                }  \
+    NAME(vector<T2*>& elems)    { Group<T>::add(elems);          }  \
+    NAME(Group<T>& rhs)         { Group<T>::add(rhs);            }  \
     template<typename T2>                                           \
-    NAME(Group<T2>& rhs)        { this->add(rhs);                }  \
+    NAME(Group<T2>& rhs)        { Group<T>::add(rhs);            }  \
     template<typename T2>                                           \
-    NAME(const Group<T2>& rhs)  { this->add(rhs);                }  \
+    NAME(const Group<T2>& rhs)  { Group<T>::add(rhs);            }  \
     NAME(Group<T>&& rhs)        { Group<T>::add(std::move(rhs)); }  \
     template<typename T2>                                           \
     NAME(Group<T2>&& rhs)       { Group<T>::add(std::move(rhs)); }  \

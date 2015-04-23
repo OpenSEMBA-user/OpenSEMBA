@@ -34,7 +34,20 @@ vector<O*> GroupOutRqs<O>::add(Group<O2>& rhs) {
 }
 
 template<typename O>
+bool GroupOutRqs<O>::isSimilar(const GroupOutRqs& rhs) const {
+    if (this->size() != rhs.size()) {
+        return false;
+    }
+    for (UInt i = 0; i < this->size(); i++) {
+        if (!this->get(i)->isSimilar(*rhs(i))) {
+            return false;
+        }
+     }
+    return true;
+}
+
+template<typename O>
 void GroupOutRqs<O>::printInfo() const {
-    cout<< " --- GroupOutRqs info ---" << endl;
+    cout<< " --- OutputRequestGroup info ---" << endl;
     Group<O>::printInfo();
 }

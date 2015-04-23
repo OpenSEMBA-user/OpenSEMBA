@@ -87,3 +87,10 @@ void SmbData::printInfo() const {
         cout << "No info about mesher options." << endl;
     }
 }
+
+bool SmbData::check() const {
+    bool res = true;
+    res &= emSources->check();
+//    res &= outputRequests->check();
+    return res;
+}

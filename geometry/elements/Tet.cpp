@@ -25,14 +25,6 @@ Tri3* Tet::getTri3Face(const UInt f) const {
     return new Tri3(ElementId(0), coord, getLayerId(), getMatId());
 }
 
-void Tet::getOrderedSideVerticesId(
-UInt val[3], UInt f) const {
-    for (UInt i = 0; i < 3; i++) {
-        val[i] = getSideVertex(f,i)->getId();
-    }
-    ascendingOrder(3, val);
-}
-
 void Tet::getCubaturePositions(CVecR3 res[SimplexTet<1>::ncp]) const {
     static const UInt ncp = SimplexTet<1>::ncp;
     for (UInt c = 0; c < ncp; c++) {

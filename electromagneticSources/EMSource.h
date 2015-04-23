@@ -24,6 +24,7 @@ public:
 
     virtual bool hasSameProperties(const EMSourceBase& rhs) const;
     virtual bool isSimilar(const EMSourceBase& rhs) const = 0;
+    virtual bool check() const = 0;
 
     template<class T>
     bool magnitudeIs() const {
@@ -41,7 +42,7 @@ public:
                                      const Real finalTime) const;
 
 
-    virtual void printInfo() const = 0;
+    virtual void printInfo() const;
 
 protected:
     const Magnitude* getMagnitude() const;
@@ -62,12 +63,15 @@ public:
     GroupElements<const Elem> elems() const { return *this; }
 
     bool isSimilar(const EMSourceBase& rhs) const;
+    bool check() const;
 
     void set(const GroupElements<const Elem>&);
     void add(const GroupElements<const Elem>&);
 
-    virtual void printInfo() const = 0;
+    void printInfo() const;
 };
+
+
 
 #include "EMSource.hpp"
 

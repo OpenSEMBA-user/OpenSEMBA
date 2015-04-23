@@ -26,6 +26,13 @@ bool ElementBase::operator!=(const ElementBase& rhs) const {
     return !(*this == rhs);
 }
 
+vector<CoordinateId> ElementBase::ascendingIdOrder(
+        const vector<CoordinateId>& in) {
+    vector<CoordinateId> res = in;
+    sort(res.begin(), res.end());
+    return res;
+}
+
 void ElementBase::printInfo() const {
     cout << "Element. Id: " << this->getId()
          << " MatId: " << this->getMatId()
@@ -132,6 +139,25 @@ const Coordinate<T,3>* Element<T>::getMaxV() const {
 }
 
 template<class T>
+vector<const Coordinate<T,3>*> Element<T>::getVertices() const {
+    vector<const Coordinate<T,3>*> res(numberOfVertices());
+    for (UInt i = 0; i < numberOfVertices(); i++) {
+        res[i] = getVertex(i);
+    }
+    return res;
+}
+
+template<class T>
+vector<const Coordinate<T,3>*> Element<T>::getSideVertices(
+        const UInt face) const {
+    vector<const Coordinate<T,3>*> res(numberOfSideVertices());
+    for (UInt i = 0; i < numberOfSideVertices(); i++) {
+        res[i] = getSideVertex(face,i);
+    }
+    return res;
+}
+
+template<class T>
 void Element<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
     cout << "ERROR @ Element::setV(): "
          << "Setting coordinates is not allowed for this element"
@@ -150,32 +176,6 @@ template<class T>
 ElemR* Element<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                   const Grid3& grid) const {
     return NULL;
-}
-
-template<class T>
-void Element<T>::ascendingOrder(UInt nVal, UInt* val) const {
-    UInt *res;
-    res = new UInt [nVal];
-    UInt maxV = 0;
-    for (UInt i = 0; i < 3; i++) {
-        val[i] > maxV ? maxV = val[i] : maxV;
-    }
-    for (UInt j = 0; j < 3; j++) {
-        UInt iMin = 0;
-        UInt currentMinV = maxV;
-        for (UInt i = 0; i < 3; i++) {
-            if (val[i] < currentMinV) {
-                currentMinV = val[i];
-                iMin = i;
-            }
-        }
-        res[j] = val[iMin];
-        val[iMin] = maxV;
-    }
-    for (UInt i = 0; i < nVal; i++) {
-        val[i] = res[i];
-    }
-    delete[] res;
 }
 
 template<class T>
