@@ -268,16 +268,11 @@ GroupElements<const SurfR> MeshUnstructured::getSurfsMatching(
         const VolR* vol = faces[i].first;
         const UInt f = faces[i].second;
         vector<const CoordR3*> vertices = vol->getSideVertices(f);
-        vector<CoordinateId> ids(vertices.size());
-        for (UInt j = 0; j < vertices.size(); j++) {
-            ids[j] = vertices[j]->getId();
-        }
+        vector<CoordinateId> ids = ElementBase::getIds(vertices);
         IndexByVertexId::const_iterator it = index.find(ids);
-        if (it == index.end()) {
-            cerr << "ERROR @ MeshUnstrctured:"
-                    << "Unable to find surf for face." << endl;
+        if (it != index.end()) {
+            res.push_back(it->second->castTo<SurfR>());
         }
-        res.push_back(it->second->castTo<SurfR>());
     }
     return GroupElements<const SurfR>(res);
 }

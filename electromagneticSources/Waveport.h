@@ -21,7 +21,7 @@ public:
 		TM
 	} ExcitationMode;
 
-	Waveport(const MagnitudeGaussian* magnitude,
+	Waveport(const Magnitude* magnitude,
              const GroupElements<const Surf>& elem,
 	         const bool input,
 	         const Shape shape,
