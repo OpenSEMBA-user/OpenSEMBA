@@ -1055,16 +1055,14 @@ ParserGiD::readWaveport() {
     vector<Face> faces;
     UInt numElements = 0;
     bool input = true;
-    MagnitudeGaussian* mag;
+    Magnitude* mag;
     Waveport::Shape shape = Waveport::rectangular;
     Waveport::ExcitationMode excitationMode = Waveport::TE;
     pair<UInt,UInt> mode(1,0);
     string line, label, value;
     bool finished = false;
     while (!finished && !f_in.eof()) {
-        getline(f_in, line);
-        label = line.substr(0, line.find(LABEL_ENDING));
-        value = line.substr(line.find(LABEL_ENDING)+1, line.length());
+        getNextLabelAndValue(label,value);
         if (!label.compare("Input")) {
             UInt oneOrZero;
             oneOrZero = atoi(value.c_str());
@@ -1081,7 +1079,7 @@ ParserGiD::readWaveport() {
                 exit(-1);
             }
         } else if (label.compare("Excitation") == 0) {
-            mag = dynamic_cast<MagnitudeGaussian*>(readMagnitude(value));
+            mag = readMagnitude(value);
         } else if (!label.compare("ExcitationMode")) {
             if (value.find("TE") != value.npos) {
                 excitationMode = Waveport::TE;
@@ -1097,9 +1095,9 @@ ParserGiD::readWaveport() {
         } else if (!label.compare("Elements")) {
             UInt e, f;
             for (UInt i = 0; i < numElements; i++) {
-                f_in >> e;
+                f_in >> e >> f;
                 const VolR* vol = mesh_->elems().get(ElementId(e))->castTo<VolR>();
-                faces.push_back(Face(vol,f));
+                faces.push_back(Face(vol,f-1));
             }
         } else if (label.find("End of Waveport") != label.npos) {
             finished = true;
@@ -1115,6 +1113,11 @@ ParserGiD::readWaveport() {
                 << "End of excitation type label not found. " << endl;
     }
     GroupElements<const Surf> surfs = mesh_->getSurfsMatching(faces);
+    if (surfs.size() != faces.size()) {
+        cerr << endl << "ERROR @ ParserGiD:"
+                << "Could not find surfaces matching element faces." << endl;
+        surfs.printInfo();
+    }
     return new Waveport(mag, surfs, input, shape, excitationMode, mode);
 }
 

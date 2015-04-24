@@ -1,10 +1,20 @@
 #include <stdio.h>
 #include <gtest/gtest.h>
+#include <string>
+
+using namespace std;
 
 GTEST_API_ int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
 
-  ::testing::GTEST_FLAG(filter) = "*AdapterFDTD*";
+  string tests;
+
+//  tests += "*MeshUnstructuredTest*:";
+
+  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
+//  tests += "*AdapterFDTDTest.ugrMesherConversion*:";
+
+  ::testing::GTEST_FLAG(filter) = tests.c_str();
 
   return RUN_ALL_TESTS();
 }

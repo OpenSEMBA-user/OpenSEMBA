@@ -23,14 +23,14 @@ void AdapterFDTDTest::compare(
     EXPECT_TRUE(smb->outputRequests->isSimilar(*nfde->outputRequests));
 }
 
-//TEST_P(AdapterFDTDTest, OpenFOAMConversion){
-//   SmbData* smb = newSmb(GetParam());
-//   smb->mesherOptions->setMesher(OptionsMesher::openfoam);
-//   runProject(smb);
-//   delete smb;
-//}
+TEST_P(AdapterFDTDTest,OpenFOAMConversion){
+   SmbData* smb = newSmb(GetParam());
+   smb->mesherOptions->setMesher(OptionsMesher::openfoam);
+   runProject(smb);
+   delete smb;
+}
 
-TEST_P(AdapterFDTDTest, ugrMesherConversion){
+TEST_P(AdapterFDTDTest,ugrMesherConversion){
    SmbData* smb = newSmb(GetParam());
    runProject(smb);
    delete smb;
