@@ -11,7 +11,6 @@
 #include <vector>
 using namespace std;
 
-#include "SuperGroup.h"
 #include "GroupIterator.h"
 #include "GroupConstIterator.h"
 

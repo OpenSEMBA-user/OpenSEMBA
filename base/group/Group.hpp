@@ -116,12 +116,6 @@ Group<T>& Group<T>::operator=(Group<T2>&& rhs) {
 
 template<typename T>
 void Group<T>::clear() {
-    for (UInt i = 0; i < size(); i++) {
-        const ClassBase* elem = get(i)->castTo<ClassBase>();
-        if (SuperGroup::elems[elem].use_count() == 2) {
-            SuperGroup::elems.erase(elem);
-        }
-    }
     element_.clear();
     set_.clear();
 }
@@ -257,14 +251,8 @@ vector<T*> Group<T>::add(const vector<T2*>& newElems) {
     vector<T*> res = preprocess(compatElems_(newElems));
     UInt lastSize = size();
     for (UInt i = 0; i < res.size(); i++) {
-        const ClassBase* elem = res[i]->castTo<ClassBase>();
         if (set_.count(res[i]) == 0) {
-            if (SuperGroup::elems.count(elem) == 0) {
-                SuperGroup::elems[elem] =
-                    shared_ptr<ClassBase>(const_cast<ClassBase*>(elem));
-            }
-            shared_ptr<T> newSharedElem =
-                dynamic_pointer_cast<T>(SuperGroup::elems[elem]);
+            shared_ptr<T> newSharedElem = res[i]->castToSharedPtr<T>();
             element_.push_back(newSharedElem);
             set_.insert(newSharedElem.get());
         }
@@ -281,7 +269,7 @@ vector<T*> Group<T>::add(Group<T2>& rhs) {
     UInt lastSize = size();
     for (UInt i = 0; i < rhs.size(); i++) {
         if (rhs(i)->template is<T>()) {
-            shared_ptr<T> newElem = dynamic_pointer_cast<T>(rhs.element_[i]);
+            shared_ptr<T> newElem = rhs.element_[i]->castToSharedPtr<T>();
             if (set_.count(newElem.get()) == 0) {
                 element_.push_back(newElem);
                 set_.insert(newElem.get());
@@ -300,7 +288,7 @@ vector<T*> Group<T>::add(const Group<T2>& rhs) {
     UInt lastSize = size();
     for (UInt i = 0; i < rhs.size(); i++) {
         if (rhs(i)->template is<T>()) {
-            shared_ptr<T> newElem = dynamic_pointer_cast<T>(rhs.element_[i]);
+            shared_ptr<T> newElem = rhs.element_[i]->castToSharedPtr<T>();
             if (set_.count(newElem.get()) == 0) {
                 element_.push_back(newElem);
                 set_.insert(newElem.get());
@@ -320,7 +308,7 @@ vector<T*> Group<T>::add(Group<T2>&& rhs) {
     UInt lastSize = size();
     for (UInt i = 0; i < rhs.size(); i++) {
         if (rhs(i)->template is<T>()) {
-            shared_ptr<T> newElem = dynamic_pointer_cast<T>(rhs.element_[i]);
+            shared_ptr<T> newElem = rhs.element_[i]->castToSharedPtr<T>();
             if (set_.count(newElem.get()) == 0) {
                 element_.push_back(newElem);
                 set_.insert(newElem.get());
@@ -348,10 +336,6 @@ void Group<T>::remove(const vector<UInt>& elems_) {
         if (elems.count(i) == 0) {
             newElems.push_back(element_[i]);
         } else {
-            const ClassBase* elem = get(i)->castTo<ClassBase>();
-            if (SuperGroup::elems[elem].use_count() == 2) {
-                SuperGroup::elems.erase(elem);
-            }
             set_.erase(get(i));
         }
     }
