@@ -16,6 +16,7 @@ protected:
 
    SmbData*
    newSmb(const string project) {
+      cout << "Project: " << project << endl;
       const string testFolder("./projects/test/");
       ParserGiD parser(testFolder+project+".gid/"+project+".smb");
       EXPECT_TRUE(parser.canOpen());
