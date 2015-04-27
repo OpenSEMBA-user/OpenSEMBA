@@ -241,7 +241,7 @@ inline T CartesianVector<T,D>::dot(const CartesianVector<T,D>& param) const {
 template <class T, Int D>
 bool CartesianVector<T,D>::operator==(
         const CartesianVector<T, D>& param) const {
-    return MathUtils::equal((*this-param).norm(), 0.0, norm());
+    return MathUtils::equal((*this-param).norm(), 0.0, (*this+param).norm());
 }
 
 template <class T, Int D>
@@ -264,17 +264,17 @@ bool CartesianVector<T,D>::isContainedInPlane(
     if (is_same<T, complex<Real> >::value) {
         switch (plane) {
         case xy:
-            if (MathUtils::equal(std::abs(val[2]), 0.0, 1.0)) {
+            if (MathUtils::equal(std::abs(val[2]), 0.0)) {
                 return true;
             }
             break;
         case yz:
-            if (MathUtils::equal(std::abs(val[0]), 0.0, 1.0)) {
+            if (MathUtils::equal(std::abs(val[0]), 0.0)) {
                 return true;
             }
             break;
         case zx:
-            if (MathUtils::equal(std::abs(val[1]), 0.0, 1.0)) {
+            if (MathUtils::equal(std::abs(val[1]), 0.0)) {
                 return true;
             }
             break;
@@ -283,17 +283,17 @@ bool CartesianVector<T,D>::isContainedInPlane(
     } else {
         switch (plane) {
         case xy:
-            if (MathUtils::equal(std::fabs(val[2]), 0.0, 1.0)) {
+            if (MathUtils::equal(std::fabs(val[2]), 0.0)) {
                 return true;
             }
             break;
         case yz:
-            if (MathUtils::equal(std::fabs(val[0]), 0.0, 1.0)) {
+            if (MathUtils::equal(std::fabs(val[0]), 0.0)) {
                 return true;
             }
             break;
         case zx:
-            if (MathUtils::equal(std::fabs(val[1]), 0.0, 1.0)) {
+            if (MathUtils::equal(std::fabs(val[1]), 0.0)) {
                 return true;
             }
             break;
@@ -399,6 +399,38 @@ CartesianVector<Real,D> operator/(const CartesianVector<Int,D>& lhs,
         res(i) = (Real) lhs(i) / rhs;
     }
     return  res;
+}
+
+template<class T, Int D>
+bool operator< (const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs) {
+    for (Int i = 0; i < D; i++) {
+        if (MathUtils::lower   (lhs(i), rhs(i))) {
+            return true;
+        }
+        if (MathUtils::greather(lhs(i), rhs(i))) {
+            return false;
+        }
+    }
+    return false;
+}
+
+template<class T, Int D>
+bool operator<=(const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs) {
+    return !(rhs < lhs);
+}
+
+template<class T, Int D>
+bool operator> (const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs) {
+    return rhs < lhs;
+}
+
+template<class T, Int D>
+bool operator>=(const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs) {
+    return !(lhs < rhs);
 }
 
 template<Int D>

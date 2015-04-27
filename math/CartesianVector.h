@@ -91,6 +91,18 @@ CartesianVector<Real,D> operator+(const CartesianVector<Int ,D>& lhs,
 template<Int D>
 CartesianVector<Real,D> operator/(const CartesianVector<Int,D>& lhs,
                                   const Real rhs);
+template<class T, Int D>
+bool operator< (const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs);
+template<class T, Int D>
+bool operator<=(const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs);
+template<class T, Int D>
+bool operator> (const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs);
+template<class T, Int D>
+bool operator>=(const CartesianVector<T,D>& lhs,
+                const CartesianVector<T,D>& rhs);
 
 template <class T, Int D>
 std::ostream& operator<<(ostream& os, const CartesianVector<T,D>& vec) {
