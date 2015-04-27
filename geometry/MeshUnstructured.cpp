@@ -277,7 +277,6 @@ GroupElements<const SurfR> MeshUnstructured::getSurfsMatching(
     return GroupElements<const SurfR>(res);
 }
 
-
-
-
-
+BoxR3 MeshUnstructured::getBoundingBox() const {
+    return elems().getBound();
+}

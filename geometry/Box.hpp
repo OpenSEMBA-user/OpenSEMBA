@@ -290,6 +290,15 @@ inline vector<CartesianVector<T, D> > Box<T,D>::getPosOfBound(
 }
 
 template<class T, Int D>
+Box<T,D> Box<T,D>::getBoundAsBox(CartesianAxis d, CartesianBound p) const {
+    vector<CartesianVector<T,D>> pos = getPosOfBound(d,p);
+    vector<CartesianVector<T,D>> min, max;
+    min = *min_element(pos.begin(), pos.end());
+    max = *max_element(pos.begin(), pos.end());
+    return Box<T,D>(min,max);
+}
+
+template<class T, Int D>
 inline CartesianVector<T,D> Box<T,D>::getBound(CartesianBound p) const {
     if (p == L) {
         return getMin();

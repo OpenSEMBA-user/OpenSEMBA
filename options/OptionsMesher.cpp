@@ -85,7 +85,7 @@ void OptionsMesher::printHelp() const {
 }
 
 string
-OptionsMesher::toStr(const BoundType val) const {
+OptionsMesher::toStr(const BoundType val) {
     switch (val) {
     case pec:
         return "PEC";

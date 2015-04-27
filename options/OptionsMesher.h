@@ -102,6 +102,7 @@ public:
 
     void printHelp() const;
     void printInfo() const;
+    static string toStr(const BoundType);
 
 private:
     Mesher mesher_;
@@ -121,7 +122,6 @@ private:
     Real scalingFactor_;
     pair<BoundType,BoundType> boundTermination_[3];
     pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
-    string toStr(const BoundType) const;
 };
 
 

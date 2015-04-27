@@ -57,6 +57,7 @@ public:
 
     Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
+    BoxR3 getBoundingBox() const;
 
     virtual void printInfo() const;
 private:

@@ -192,3 +192,7 @@ MeshStructured::getPairsDefiningVolumeWithin(
 Real MeshStructured::getMinimumSpaceStep() const {
     return Grid3::getMinimumSpaceStep();
 }
+
+BoxR3 MeshStructured::getBoundingBox() const {
+    return Grid3::getFullDomainBoundingBox();
+}
