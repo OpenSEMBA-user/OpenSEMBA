@@ -42,7 +42,7 @@ INSTANTIATE_TEST_CASE_P(
         ::testing::Values(
 //                "planewave",
 //                "sphere",
-                "rcs_1m",
-                "dmcwf"
+//                "rcs_1m",
+                "dmcwf",
                 "table"
         ));

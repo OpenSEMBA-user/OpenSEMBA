@@ -243,7 +243,8 @@ void ExporterGiD::writeBoundaries(
                 stringstream name;
                 name << boundName + " @ Boundary " << i << " " << j;
                 GroupElements<const ElemR> elem;
-                elem.add(new QuaR4(cG, ElementId(0), quadBox));
+                elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
+                assert(elem.size() != 0);
                 writeAllElements(elem, name.str());
             }
         }
