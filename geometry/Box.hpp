@@ -292,10 +292,13 @@ inline vector<CartesianVector<T, D> > Box<T,D>::getPosOfBound(
 template<class T, Int D>
 Box<T,D> Box<T,D>::getBoundAsBox(CartesianAxis d, CartesianBound p) const {
     vector<CartesianVector<T,D>> pos = getPosOfBound(d,p);
-    vector<CartesianVector<T,D>> min, max;
-    min = *min_element(pos.begin(), pos.end());
-    max = *max_element(pos.begin(), pos.end());
-    return Box<T,D>(min,max);
+    assert(pos.size() == 4);
+    Box<T,D> res(pos[0],pos[1]);
+    for (UInt i = 2; i < pos.size(); i++) {
+        res << pos[i];
+    }
+    assert(res.isSurface());
+    return res;
 }
 
 template<class T, Int D>
