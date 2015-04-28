@@ -8,5 +8,6 @@ TEST(MathUtilsTest, equal) {
 
     for (UInt i = 0; i < num.size(); i++) {
         EXPECT_TRUE(MathUtils::equal(num[i], num[i]));
+        EXPECT_TRUE(MathUtils::equal(num[i], num[i], 0.0, 0.25));
     }
 }

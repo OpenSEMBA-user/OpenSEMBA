@@ -9,8 +9,8 @@ GTEST_API_ int main(int argc, char **argv) {
 
   string tests;
 
-//  tests += "*MeshUnstructuredTest*:";
   tests += "*Math*:";
+  tests += "*Geometry*:";
   tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
   tests += "*AdapterFDTDTest.ugrMesherConversion*:";
 

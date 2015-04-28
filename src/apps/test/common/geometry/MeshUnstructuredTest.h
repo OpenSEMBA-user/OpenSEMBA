@@ -5,7 +5,7 @@
 #include "ProjectFile.h"
 #include "geometry/MeshUnstructured.h"
 
-class MeshUnstructuredTest : public ::testing::Test {
+class GeometryMeshUnstructuredTest : public ::testing::Test {
     void SetUp() {
         vector<CoordR3*> coord;
         CoordinateId coordId(1);

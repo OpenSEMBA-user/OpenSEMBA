@@ -1,12 +1,12 @@
 #include "MeshUnstructuredTest.h"
 
-TEST_F(MeshUnstructuredTest, ctor) {
+TEST_F(GeometryMeshUnstructuredTest, ctor) {
     EXPECT_EQ(mesh_.elems().size(), 2);
     EXPECT_EQ(mesh_.elems().getGroupOf<Tet>().size(), 1);
     EXPECT_EQ(mesh_.elems().getGroupOf<Tri>().size(), 1);
 }
 
-TEST_F(MeshUnstructuredTest, matchingFaces) {
+TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
     const Tet4* tet = mesh_.elems().getGroupOf<Tet4>()(0);
     vector<Face> faces;
     for (UInt f = 0; f < tet->numberOfFaces(); f++) {
