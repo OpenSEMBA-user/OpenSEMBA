@@ -10,8 +10,8 @@ GTEST_API_ int main(int argc, char **argv) {
   string tests;
 
 //  tests += "*MeshUnstructuredTest*:";
-
-//  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
+  tests += "*Math*:";
+  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
   tests += "*AdapterFDTDTest.ugrMesherConversion*:";
 
   ::testing::GTEST_FLAG(filter) = tests.c_str();

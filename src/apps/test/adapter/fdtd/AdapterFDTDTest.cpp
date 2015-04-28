@@ -2,11 +2,13 @@
 
 void AdapterFDTDTest::runProject(const SmbData* smb) const {
     SmbData* nfde = new SmbData();
+    {
+        ExporterGiD outGiDSmb(smb, smb->getOutputFilename() + ".smb");
+    }
     AdapterFDTD(*smb).convert(*nfde);
     compare(smb, nfde);
     {
         ExporterGiD outGiD(nfde);
-        ExporterGiD outGiDSmb(smb, smb->getOutputFilename() + ".smb");
         ExporterNFDE outNFDE(*nfde);
     }
     delete nfde;
