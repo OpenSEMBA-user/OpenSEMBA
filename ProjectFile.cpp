@@ -67,10 +67,10 @@ string ProjectFile::getBasename() const {
 string ProjectFile::getFolder() const {
     char *cstr = new char[filename_.length() + 1];
     strcpy(cstr, filename_.c_str());
-    string projectDir(dirname(cstr));
-    projectDir += "/";
+    string folder(dirname(cstr));
+    folder += "/";
     delete [] cstr;
-    return projectDir;
+    return folder;
 }
 
 void ProjectFile::setFilename(const string& filename) {
@@ -82,7 +82,7 @@ void ProjectFile::printInfo() const {
 }
 
 vector<string> ProjectFile::getFilesBasenames(const string& directory,
-                                              const string& extension) const {
+        const string& extension) const {
     DIR *dir;
     struct dirent *ent;
     vector<string> files;
@@ -113,11 +113,12 @@ void ProjectFile::openFile(ofstream& file) const {
 }
 
 void ProjectFile::openFile(const string& fileName, ofstream& file) const {
-    file.open(fileName.c_str());
-    if (!file) {
-        cerr << endl << "ERROR @ ProjectFile: ";
-        cerr << "File for writing could not be opened. ";
-        cerr << "File name: " << fileName << endl;
+    try {
+        file.open(fileName.c_str());
+    }
+    catch(exception &e) {
+        cerr << endl << "ERROR @ ProjectFile: "
+                << "File can't be opened: " << fileName << endl;
     }
 }
 
@@ -150,4 +151,26 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
             cerr << "System command failed to execute " << command << endl;
         }
     }
+}
+
+string ProjectFile::getFilenameRelativeTo(const ProjectFile& rhs) const {
+#ifndef _WIN32
+    string rhsFolder = rhs.getFolder();
+    if (this->getFolder() != rhsFolder) {
+        cerr << endl << "ERROR @ ProjectFile: "
+                << "Rel. paths not implemented for diff folders." << endl;
+        this->printInfo();
+        rhs.printInfo();
+        return string();
+    }
+    string name = getFilename();
+    string res = name.substr(name.find(rhsFolder), rhsFolder.length());
+    return "./" + res + "/";
+#else
+    #warning "getFilenameRelativeTo not implemented."
+    // TODO Win version for getFilenameRelativeTo.
+    cerr << endl << "ERROR @ ProjectFile: "
+            << "Rel. paths not implemented in windows." << endl;
+    return string();
+#endif
 }

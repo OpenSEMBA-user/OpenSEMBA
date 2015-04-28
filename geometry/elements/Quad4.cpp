@@ -40,6 +40,8 @@ Quad4<T>::Quad4(GroupCoordinates<Coordinate<T,3> >& cG,
     if(!box.isSurface()) {
         cerr << endl << "ERROR @ Quad4::Quad4(): "
                      << "Box is not a Surface" << endl;
+        box.printInfo();
+        box.isSurface();
         assert(false);
         exit(EXIT_FAILURE);
     }

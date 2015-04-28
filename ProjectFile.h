@@ -37,6 +37,7 @@ public:
     bool canExecute() const;
 
     string getFilename() const;
+    string getFilenameRelativeTo(const ProjectFile& rhs) const;
     string getBasename() const;
     string getFolder() const;
     string getOutputFilename() const {
@@ -50,13 +51,13 @@ public:
     }
 
     void setFilename(const string& filename);
+    void openFile(ofstream& file) const;
 
     void printInfo() const;
 
 protected:
     vector<string> getFilesBasenames(const string& directory,
                                      const string& extension) const;
-    void openFile(ofstream& file) const;
     void openFile(const string& fileName, ofstream& file) const;
     string removeExtension(const string& filename) const;
     void deleteDirIfExists(const string& directory) const;
