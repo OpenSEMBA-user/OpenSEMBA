@@ -8,7 +8,8 @@ using namespace std;
 #include "Types.h"
 
 namespace MathUtils {
-    const Real tolerance = numeric_limits<Real>::epsilon()*1.0e2;
+    const Real epsilon = numeric_limits<Real>::epsilon()*1.0e2;
+    const Real tolerance = 1e-10;
 
     bool equal        (const Real lhs, const Real rhs,
                        Real rel = 0.0, const Real tol = tolerance);

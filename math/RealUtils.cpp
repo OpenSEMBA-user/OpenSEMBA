@@ -5,9 +5,9 @@ bool MathUtils::equal(const Real lhs, const Real rhs,
     if (rel == 0.0) {
         rel = abs(lhs+rhs);
     }
-    if ((abs(lhs) <= tol) && (abs(rhs) <= tol)) {
+    if ((abs(lhs) <= epsilon) && (abs(rhs) <= epsilon)) {
         return true;
-    } else if ((abs(lhs) <= tol) || (abs(rhs) <= tol)) {
+    } else if ((abs(lhs) <= epsilon) || (abs(rhs) <= epsilon)) {
         return false;
     } else if (abs(lhs-rhs) <= tol*rel) {
         return true;
