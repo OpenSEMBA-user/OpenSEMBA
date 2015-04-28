@@ -29,8 +29,8 @@ public:                                                     \
     NAME(const NAME& rhs)        : IdBase(rhs) {}           \
     virtual ~NAME() {}                                      \
                                                             \
-    ClassBase* clone() const {  \
-        return new NAME(*this); \
+    ClassBase* clone() const {                              \
+        return new NAME(*this);                             \
     }                                                       \
                                                             \
     NAME& operator=(const NAME& rhs) {                      \
