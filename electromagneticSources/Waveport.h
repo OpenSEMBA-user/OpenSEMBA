@@ -38,6 +38,8 @@ public:
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;
 	pair<UInt, UInt> getMode() const;
+	map<const Surf*, CVecR3> getElectricWeights(
+	        BoundTerminations& termination) const;
 
     void printInfo() const;
 private:

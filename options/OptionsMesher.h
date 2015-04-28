@@ -10,10 +10,10 @@
 
 #include <cstdlib>
 #include <string>
+
 using namespace std;
 
 #include "math/CartesianVector.h"
-
 #include "Options.h"
 
 class OptionsMesher : public Options {
@@ -98,6 +98,7 @@ public:
     const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
     const pair<CVecR3, CVecR3>& getBoundaryPadding() const;
     Real getScalingFactor() const;
+    vector<pair<BoundType,BoundType>> getBoundTerminations() const;
     BoundType getBoundTermination(const UInt i, const UInt p) const;
 
     void printHelp() const;
@@ -120,9 +121,11 @@ private:
     string confOutput_;
 
     Real scalingFactor_;
-    pair<BoundType,BoundType> boundTermination_[3];
+    vector<pair<BoundType,BoundType>> boundTermination_;
     pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
 };
 
+typedef vector<pair<OptionsMesher::BoundType,OptionsMesher::BoundType>>
+        BoundTerminations;
 
 #endif /* OPENFOAMPARAMETERS_H_ */

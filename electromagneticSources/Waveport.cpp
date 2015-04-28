@@ -70,6 +70,16 @@ Waveport::getMode() const {
 	return mode_;
 }
 
+map<const Surf*, CVecR3> Waveport::getElectricWeights(
+        BoundTerminations& termination) const {
+    map<const Surf*, CVecR3> res;
+
+    // TODO Waveport getElectricWeights
+    #warning "To be implemented."
+
+    return res;
+}
+
 void Waveport::printInfo() const {
 	cout << "--- Waveport info ---" << endl;
 	if (input_) {
