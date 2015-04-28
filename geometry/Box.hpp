@@ -311,6 +311,15 @@ inline CartesianVector<T,D> Box<T,D>::getBound(CartesianBound p) const {
 }
 
 template<class T, Int D>
+vector<Box<T,D>> Box<T,D>::chop(const T step) const {
+    vector<Box<T,D>> res;
+
+    // TODO Chop.
+
+    return res;
+}
+
+template<class T, Int D>
 void Box<T,D>::set(const pair<CVecTD, CVecTD>& minMax) {
     min_ = minMax.first;
     max_ = minMax.second;
