@@ -3,13 +3,13 @@
 bool MathUtils::equal(const Real lhs, const Real rhs,
                       Real rel, const Real tol) {
     if (rel == 0.0) {
-        rel = lhs+rhs;
+        rel = abs(lhs+rhs);
     }
-    if ((abs(lhs) < tol) && (abs(rhs) < tol)) {
+    if ((abs(lhs) <= tol) && (abs(rhs) <= tol)) {
         return true;
-    } else if ((abs(lhs) < tol) || (abs(rhs) < tol)) {
+    } else if ((abs(lhs) <= tol) || (abs(rhs) <= tol)) {
         return false;
-    } else if (abs(lhs-rhs) < tol*rel) {
+    } else if (abs(lhs-rhs) <= tol*rel) {
         return true;
     }
     return false;
