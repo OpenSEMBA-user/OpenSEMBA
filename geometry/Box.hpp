@@ -110,7 +110,7 @@ CartesianAxis Box<T,D>::getDirection() const {
     }
     CartesianAxis res = x;
     for(Int d = 0; d < D; d++) {
-        if (MathUtils::notEqual(max_(d),min_(d),max_.norm())) {
+        if (MathUtils::notEqual(max_(d),min_(d))) {
             res = CartesianAxis(d);
             break;
         }
@@ -129,7 +129,7 @@ CartesianAxis Box<T,D>::getNormal() const {
     assert(D == 3);
     CartesianAxis res = x;
     for(Int d = 0; d < D; d++) {
-        if (MathUtils::equal(max_(d),min_(d),max_.norm())) {
+        if (MathUtils::equal(max_(d),min_(d))) {
             res = CartesianAxis(d);
             break;
         }
@@ -206,7 +206,7 @@ inline vector<CartesianVector<T,D> > Box<T,D>::getPos() const {
         res[0] = min_;
         res[1] = min_;
         for(Int d = 0; d < D; d++) {
-            if (MathUtils::notEqual(max_(d),min_(d),max_.norm())) {
+            if (MathUtils::notEqual(max_(d),min_(d))) {
                 res[0](d) = min_(d);
                 res[1](d) = max_(d);
             }
@@ -345,7 +345,7 @@ template<class T, Int D>
 UInt Box<T,D>::numberOfDifferentCoords() const {
     UInt res = 0;
     for(Int d = 0; d < D; d++) {
-        if (MathUtils::notEqual(max_(d),min_(d),max_.norm())) {
+        if (MathUtils::notEqual(max_(d),min_(d))) {
             res++;
         }
     }

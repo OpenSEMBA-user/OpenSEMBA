@@ -66,7 +66,7 @@ bool CoordinateConformal::operator==(const CoordinateBase& rhs) const {
 
 CoordR3* CoordinateConformal::toUnstructured(const Grid3& grid) const {
     CVecR3 pos = grid.getPos(*this);
-    if (MathUtils::greather(getLength(), 0.0, 1.0)) {
+    if (MathUtils::greather(getLength(), 0.0)) {
         Int dir = getDir();
         Real length = getLength();
         CVecI3 cellAux = *this;
@@ -81,13 +81,13 @@ CoordR3* CoordinateConformal::toUnstructured(const Grid3& grid) const {
 void CoordinateConformal::printInfo() const {
     CoordI3::printInfo();
     cout << " Dir: (";
-    if(MathUtils::equal(length_, 0.0, 1.0)) {
+    if(MathUtils::equal(length_, 0.0)) {
         cout << "0";
     } else {
         cout << ('x'+dir_);
     }
     cout << ")";
-    if(MathUtils::notEqual(length_, 0.0, 1.0)) {
+    if(MathUtils::notEqual(length_, 0.0)) {
         cout << " Length: (" << length_ << ")";
     }
 }

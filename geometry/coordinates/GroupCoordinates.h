@@ -17,27 +17,10 @@ using namespace std;
 #include "base/group/GroupId.h"
 
 struct lexCompareCoord {
-    bool operator() (const CoordR3* lhs, const CoordR3* rhs) const {
-        for (UInt i = 0; i < 3; i++) {
-            if (MathUtils::lower   (lhs->pos()(i),rhs->pos()(i),lhs->norm())) {
-                return true;
-            }
-            if (MathUtils::greather(lhs->pos()(i),rhs->pos()(i),lhs->norm())) {
-                return false;
-            }
-        }
-        return false;
-    }
-    bool operator() (const CoordI3* lhs, const CoordI3* rhs) const {
-        for (UInt i = 0; i < 3; i++) {
-            if (lhs->pos()(i) < rhs->pos()(i)) {
-                return true;
-            }
-            if (lhs->pos()(i) > rhs->pos()(i)) {
-                return false;
-            }
-        }
-        return false;
+    template<class T, Int D>
+    bool operator() (const Coordinate<T,D>* lhs,
+                     const Coordinate<T,D>* rhs) const {
+        return (lhs->pos() < rhs->pos());
     }
 };
 
