@@ -311,11 +311,32 @@ inline CartesianVector<T,D> Box<T,D>::getBound(CartesianBound p) const {
 }
 
 template<class T, Int D>
-vector<Box<T,D>> Box<T,D>::chop(const T step) const {
+vector<Box<T,D>> Box<T,D>::chop(const CVecTD origStep) const {
+    static_assert(D == 3, "Chop can't be used for Boxes with D != 3");
+    CVecTD length = getLength();
+    CVecTD step = origStep;
+    for (UInt d = 0; d < D; d++) {
+        if (length(d) < origStep(d)) {
+            step(d) = length(d);
+        }
+        if (origStep(d) <= (T) 0) {
+            step(d) = length(d);
+        }
+    }
+    CartesianVector<Real,D> stepR = step;
+    Grid<D> grid(*this, stepR);
+    CartesianVector<Int,D> numBoxes = grid.getNumCells();
     vector<Box<T,D>> res;
-
-    // TODO Chop.
-
+    res.reserve(numBoxes(x)*numBoxes(y)*numBoxes(z));
+    for (UInt i = 0; i < numBoxes(x); i++) {
+        for (UInt j = 0; j < numBoxes(y); j++) {
+            for (UInt k = 0; k < numBoxes(z); k++) {
+                CVecTD min = (T) grid.getPos(CVecI3(i,j,k));
+                CVecTD max = (T) grid.getPos(CVecI3(i+1,j+1,k+1));
+                res.push_back(Box<T,D>(min,max));
+            }
+        }
+    }
     return res;
 }
 

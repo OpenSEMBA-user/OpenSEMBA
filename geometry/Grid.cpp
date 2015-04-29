@@ -165,7 +165,11 @@ bool Grid<D>::isCell(const vector<CVecRD>& pos, const Real tol) const {
 
 template<Int D>
 CartesianVector<Int,D> Grid<D>::getNumCells() const {
-    return CVecID(pos_[x].size()-1,pos_[y].size()-1, pos_[z].size()-1);
+    CVecID res;
+    for (UInt d = 0; d < D; d++) {
+        res(d) = getPos(d).size() - 1;
+    }
+    return res;
 }
 
 template<Int D>
