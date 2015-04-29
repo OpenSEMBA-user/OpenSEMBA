@@ -43,10 +43,12 @@ TYPED_TEST(GeometryBoxTest, VolumeBoxChop) {
     BoxI3 box(min,max);
     EXPECT_TRUE(box.isVolume());
     EXPECT_EQ(box.chop().size(), 64);
+    EXPECT_EQ(box.chop()[0], BoxI3(CVecI3(0,0,0), CVecI3(1,1,1)));
     EXPECT_EQ(box.chop(2).size(), 8);
-    EXPECT_EQ(box.chop(3).size(), box.chop(4).size());
+    EXPECT_EQ(box.chop(3).size(), 1);
     EXPECT_EQ(box.chop(4).size(), 1);
     EXPECT_EQ(box.chop(5).size(), 1);
+    EXPECT_EQ(box.chop(5)[0], box);
 }
 
 TYPED_TEST(GeometryBoxTest, SurfaceBoxChop) {
