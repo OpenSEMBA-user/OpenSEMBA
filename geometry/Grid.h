@@ -116,4 +116,6 @@ private:
 
 typedef Grid<3> Grid3;
 
+#include "Grid.hpp"
+
 #endif //_cartesianGrid_hxx

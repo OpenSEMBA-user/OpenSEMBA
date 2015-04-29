@@ -84,10 +84,11 @@ std::ostream& operator<<(ostream& os, const Box<T,D>& rhs) {
    return os << "Min: " << rhs.getMin() << ", Max: " << rhs.getMax();
 }
 
-#include "Box.hpp"
-
 typedef Box<Real,3> BoxR3;
 typedef Box<Int ,2> BoxI2;
 typedef Box<Int ,3> BoxI3;
+
+#include "Box.hpp"
+
 
 #endif /* SRC_COMMON_GEOMETRY_BOX_H_ */

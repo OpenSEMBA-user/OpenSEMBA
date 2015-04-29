@@ -323,17 +323,27 @@ vector<Box<T,D>> Box<T,D>::chop(const CVecTD origStep) const {
             step(d) = length(d);
         }
     }
-    CartesianVector<Real,D> stepR = step;
-    Grid<D> grid(*this, stepR);
+    CartesianVector<Real,3> minR, maxR, stepR;
+    for (UInt d = 0; d < D; d++) {
+        stepR(d) = step(d);
+        minR(d) = min_(d);
+        maxR(d) = max_(d);
+    }
+    Grid<D> grid(Box<Real,3>(minR,maxR), stepR);
     CartesianVector<Int,D> numBoxes = grid.getNumCells();
     vector<Box<T,D>> res;
     res.reserve(numBoxes(x)*numBoxes(y)*numBoxes(z));
-    for (UInt i = 0; i < numBoxes(x); i++) {
-        for (UInt j = 0; j < numBoxes(y); j++) {
-            for (UInt k = 0; k < numBoxes(z); k++) {
-                CVecTD min = (T) grid.getPos(CVecI3(i,j,k));
-                CVecTD max = (T) grid.getPos(CVecI3(i+1,j+1,k+1));
-                res.push_back(Box<T,D>(min,max));
+    for (Int i = 0; i < numBoxes(x); i++) {
+        for (Int j = 0; j < numBoxes(y); j++) {
+            for (Int k = 0; k < numBoxes(z); k++) {
+                CVecR3 min = grid.getPos(CartesianVector<Int,3>(i,j,k));
+                CVecR3 max = grid.getPos(CartesianVector<Int,3>(i+1,j+1,k+1));
+                CVecI3 minI, maxI;
+                for (UInt d = 0; d < D; d++) {
+                    minI(d) = (T) min(d);
+                    maxI(d) = (T) max(d);
+                }
+                res.push_back(Box<T,D>(minI,maxI));
             }
         }
     }
