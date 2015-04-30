@@ -44,8 +44,8 @@ public:
 	CVecR3 getNormal() const;
 	CVecR3 getLocalAxis() const;
 	CVecR3 getOffset() const;
-	Real getWidth(const BoundTerminations& symmetries) const;
-	Real getHeight(const BoundTerminations& symmetries) const;
+	Real getWidth() const;
+	Real getHeight() const;
 
 	vector<CVecR3> toLocalAxis(const vector<CVecR3>& rhs) const;
 	vector<CVecR3> toGlobalAxis(const vector<CVecR3>& rhs) const;

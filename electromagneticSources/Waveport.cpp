@@ -113,29 +113,27 @@ void Waveport::printInfo() const {
 }
 
 CVecR3 Waveport::getNormal() const {
-    CVecR3 res;
     if (this->size() > 0) {
-        return this->get(0)->getNormal();
+        return this->get(0)->getNormalR();
     } else {
         cerr << endl << "ERROR @ Waveport: Does not contain surfaces." << endl;
         printInfo();
     }
-    return res;
+    return CVecR3();
 }
 
 CVecR3 Waveport::getLocalAxis() const {
-    CVecR3 localZ = getNormal();
+    CVecR3 localX, localY, localZ;
+    localZ = getNormal();
+    BoxR3 box = getBound();
 
-    CVecR3 localX = getWidthDir();
+
 }
 
-CVecR3 Waveport::getOffset() const {
+Real Waveport::getWidth() const {
 }
 
-Real Waveport::getWidth(const BoundTerminations& symmetries) const {
-}
-
-Real Waveport::getHeight(const BoundTerminations& symmetries) const {
+Real Waveport::getHeight() const {
 }
 
 vector<CVecR3> Waveport::toLocalAxis(const vector<CVecR3>& rhs) const {
