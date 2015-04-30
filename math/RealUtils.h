@@ -19,7 +19,7 @@ namespace MathUtils {
                        Real rel = 0.0, const Real tol = tolerance);
     bool lowerEqual   (const Real lhs, const Real rhs,
                        Real rel = 0.0, const Real tol = tolerance);
-    bool greather     (const Real lhs, const Real rhs,
+    bool greater     (const Real lhs, const Real rhs,
                        Real rel = 0.0, const Real tol = tolerance);
     bool greatherEqual(const Real lhs, const Real rhs,
                        Real rel = 0.0, const Real tol = tolerance);

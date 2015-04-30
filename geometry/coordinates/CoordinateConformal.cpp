@@ -66,7 +66,7 @@ bool CoordinateConformal::operator==(const CoordinateBase& rhs) const {
 
 CoordR3* CoordinateConformal::toUnstructured(const Grid3& grid) const {
     CVecR3 pos = grid.getPos(*this);
-    if (MathUtils::greather(getLength(), 0.0)) {
+    if (MathUtils::greater(getLength(), 0.0)) {
         Int dir = getDir();
         Real length = getLength();
         CVecI3 cellAux = *this;

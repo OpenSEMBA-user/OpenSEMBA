@@ -75,7 +75,7 @@ ElemR* LineConformal::toUnstructured(const GroupCoordinates<CoordR3>& cG,
     CoordinateId coordId;
     for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
         pos = grid.getPos(vConf[i]->pos());
-        if (MathUtils::greather(vConf[i]->getLength(), 0.0, 1.0)) {
+        if (MathUtils::greater(vConf[i]->getLength(), 0.0, 1.0)) {
             Int dir = vConf[i]->getDir();
             Real length = vConf[i]->getLength();
             CVecI3 cellAux = vConf[i]->pos();

@@ -129,7 +129,7 @@ const Coordinate<T,3>* Element<T>::getMaxV() const {
         for (UInt j = 0; j < 3; j++) {
             Real val1 = getVertex(i)->pos()(j);
             Real val2 = res->pos()(j);
-            if(MathUtils::greather(val1, val2, res->pos().norm())) {
+            if(MathUtils::greater(val1, val2, res->pos().norm())) {
                 res = getVertex(i);
                 break;
             }

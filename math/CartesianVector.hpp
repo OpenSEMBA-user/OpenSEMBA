@@ -408,7 +408,7 @@ bool operator< (const CartesianVector<T,D>& lhs,
         if (MathUtils::lower   (lhs(i), rhs(i))) {
             return true;
         }
-        if (MathUtils::greather(lhs(i), rhs(i))) {
+        if (MathUtils::greater(lhs(i), rhs(i))) {
             return false;
         }
     }

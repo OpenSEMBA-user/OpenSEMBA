@@ -16,7 +16,7 @@ Grid<D>::Grid(const BoxRD& box,
     for (Int i = 0; i < D; i++) {
         Real boxLength = box.getMax()(i) - box.getMin()(i);
         Int nCells = ceil(boxLength / dxyz(i));
-        if (MathUtils::notEqual(boxLength, nCells*dxyz(i),
+        if (MathUtils::greater(boxLength, nCells*dxyz(i),
                                 dxyz(i), tolerance)) {
             nCells++;
         }

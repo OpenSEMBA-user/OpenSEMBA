@@ -13,7 +13,7 @@ Box<T,D>::Box() {
 }
 
 template<class T, Int D> Box<T,D>::Box(
-const pair<CVecTD, CVecTD>& bounds) {
+        const pair<CVecTD, CVecTD>& bounds) {
     set(bounds);
 }
 
@@ -104,7 +104,7 @@ template<class T, Int D>
 CartesianAxis Box<T,D>::getDirection() const {
     if (!isLine()) {
         cerr << endl << "ERROR @ Box::getDirection(): "
-                     << "Box is not a Line" << endl;
+                << "Box is not a Line" << endl;
         assert(false);
         exit(EXIT_FAILURE);
     }
@@ -122,7 +122,7 @@ template<class T, Int D>
 CartesianAxis Box<T,D>::getNormal() const {
     if (!isSurface()) {
         cerr << endl << "ERROR @ Box::getNormal(): "
-                     << "Box is not a Surface" << endl;
+                << "Box is not a Surface" << endl;
         assert(false);
         exit(EXIT_FAILURE);
     }
@@ -326,8 +326,15 @@ vector<Box<T,D>> Box<T,D>::chop(const CVecTD origStep) const {
     CartesianVector<Real,3> minR, maxR, stepR;
     for (UInt d = 0; d < D; d++) {
         stepR(d) = step(d);
-        minR(d) = min_(d);
-        maxR(d) = max_(d);
+        if (stepR(d) == 0.0) {
+            minR(d) = (T) min_(d);
+            maxR(d) = (T) max_(d);
+        } else {
+            minR(d) = (T) min_(d);
+            minR(d) = floor(minR(d)/stepR(d)) * stepR(d);
+            maxR(d) = (T) max_(d);
+            maxR(d) = floor(maxR(d)/stepR(d)) * stepR(d);
+        }
     }
     Grid<D> grid(Box<Real,3>(minR,maxR), stepR);
     CartesianVector<Int,D> numBoxes = grid.getNumCells();
