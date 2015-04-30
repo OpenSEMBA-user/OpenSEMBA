@@ -23,7 +23,6 @@ public:
 
 	Waveport(const Magnitude* magnitude,
              const GroupElements<const Surf>& elem,
-	         const bool input,
 	         const Shape shape,
 	         const ExcitationMode excMode,
 	         const pair<UInt,UInt> mode);
@@ -38,12 +37,21 @@ public:
 	Shape getShape() const;
 	ExcitationMode getExcitationMode() const;
 	pair<UInt, UInt> getMode() const;
-	map<const Surf*, CVecR3> getElectricWeights(
-	        BoundTerminations& termination) const;
+	vector<CVecR3> getElectricWeights(
+	        const vector<CVecR3>& pos,
+	        const BoundTerminations& symmetries) const;
+
+	CVecR3 getNormal() const;
+	CVecR3 getLocalAxis() const;
+	CVecR3 getOffset() const;
+	Real getWidth(const BoundTerminations& symmetries) const;
+	Real getHeight(const BoundTerminations& symmetries) const;
+
+	vector<CVecR3> toLocalAxis(const vector<CVecR3>& rhs) const;
+	vector<CVecR3> toGlobalAxis(const vector<CVecR3>& rhs) const;
 
     void printInfo() const;
 private:
-	bool input_;
 	Shape shape_;
 	ExcitationMode excitationMode_;
 	pair<UInt,UInt> mode_;

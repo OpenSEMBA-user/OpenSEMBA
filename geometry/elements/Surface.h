@@ -16,6 +16,7 @@ class SurfaceBase : public virtual ElementBase {
 public:
     SurfaceBase() {};
     virtual ~SurfaceBase() {};
+    virtual CVecR3 getNormal() const;
 };
 
 template<class T>
@@ -30,7 +31,7 @@ public:
     bool isContainedInPlane(const CartesianPlane plane) const;
 
     virtual CartesianVector<T,3> getNormal() const;
-	
+
     virtual void printInfo() const;
 };
 

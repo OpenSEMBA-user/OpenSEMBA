@@ -64,5 +64,6 @@ private:
 #include "GroupCoordinates.hpp"
 
 typedef GroupCoordinates<CoordR3> CoordR3Group;
+typedef GroupCoordinates<CoordI3> CoordI3Group;
 
 #endif /* COMMON_GEOMETRY_COORDINATES_GROUPCOORDINATES_H_ */
