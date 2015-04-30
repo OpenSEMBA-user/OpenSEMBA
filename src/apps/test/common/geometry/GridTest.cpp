@@ -28,5 +28,6 @@ TEST_F(GeometryGridTest, NaturalCells) {
 
 TEST_F(GeometryGridTest, NumberOfCells) {
     Grid3 grid(BoxR3(min_, max_), CVecR3(0.75, 0.75, 0.75));
+    EXPECT_EQ(grid.getFullDomainBoundingBox(), BoxR3(min_,CVecR3(1.5,1.5,1.5)));
     EXPECT_EQ(grid.getNumCells(), CVecI3(2,2,2));
 }
