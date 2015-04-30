@@ -11,6 +11,7 @@ GTEST_API_ int main(int argc, char **argv) {
 
   tests += "*Math*:";
   tests += "*Geometry*:";
+  tests += "*EMSource*:";
   tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
   tests += "*AdapterFDTDTest.ugrMesherConversion*:";
 

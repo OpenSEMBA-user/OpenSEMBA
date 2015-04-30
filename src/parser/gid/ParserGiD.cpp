@@ -1118,7 +1118,10 @@ ParserGiD::readWaveport() {
                 << "Could not find surfaces matching element faces." << endl;
         surfs.printInfo();
     }
-    return new Waveport(mag, surfs, input, shape, excitationMode, mode);
+    if (!input) {
+        delete mag;
+    }
+    return new Waveport(mag, surfs, shape, excitationMode, mode);
 }
 
 Generator*
