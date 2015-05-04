@@ -11,29 +11,19 @@ ProjectFile::ProjectFile() {
 
 }
 
-ProjectFile::ProjectFile(const string& filename) {
-    filename_ = filename;
+ProjectFile::ProjectFile(const string& filename) : string(filename) {
 }
 
-ProjectFile::ProjectFile(const ProjectFile& rhs) {
-    filename_ = rhs.filename_;
+ProjectFile::ProjectFile(const ProjectFile& rhs) : string(rhs) {
 }
 
 ProjectFile::~ProjectFile() {
 
 }
 
-ProjectFile& ProjectFile::operator=(const ProjectFile& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    filename_ = rhs.filename_;
-    return *this;
-}
-
 bool ProjectFile::canOpen() const {
     ifstream file;
-    file.open(filename_.c_str());
+    file.open(c_str());
     bool res;
     if (file) {
         file.close();
@@ -46,7 +36,7 @@ bool ProjectFile::canOpen() const {
 
 bool ProjectFile::canExecute() const {
     struct stat st;
-    if (stat(filename_.c_str(), &st) < 0) {
+    if (stat(c_str(), &st) < 0) {
         return false;
     }
     if ((st.st_mode & S_IEXEC) != 0) {
@@ -56,17 +46,17 @@ bool ProjectFile::canExecute() const {
 }
 
 string ProjectFile::getFilename() const {
-    return filename_;
+    return *this;
 }
 
 string ProjectFile::getBasename() const {
-    string res(basename(const_cast<char*>(filename_.c_str())));
+    string res(basename(const_cast<char*>(c_str())));
     return res;
 }
 
 string ProjectFile::getFolder() const {
-    char *cstr = new char[filename_.length() + 1];
-    strcpy(cstr, filename_.c_str());
+    char *cstr = new char[length() + 1];
+    strcpy(cstr, c_str());
     string folder(dirname(cstr));
     folder += "/";
     delete [] cstr;
@@ -74,11 +64,11 @@ string ProjectFile::getFolder() const {
 }
 
 void ProjectFile::setFilename(const string& filename) {
-    filename_ = filename;
+    string::operator=(filename);
 }
 
 void ProjectFile::printInfo() const {
-    cout << "Project file name: " << filename_ << endl;
+    cout << "Project file name: " << *this << endl;
 }
 
 vector<string> ProjectFile::getFilesBasenames(const string& directory,
@@ -109,7 +99,7 @@ vector<string> ProjectFile::getFilesBasenames(const string& directory,
 }
 
 void ProjectFile::openFile(ofstream& file) const {
-    openFile(filename_, file);
+    openFile(*this, file);
 }
 
 void ProjectFile::openFile(const string& fileName, ofstream& file) const {
@@ -153,7 +143,7 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
     }
 }
 
-string ProjectFile::getFilenameRelativeTo(const ProjectFile& rhs) const {
+ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
 #ifndef _WIN32
     string rhsFolder = rhs.getFolder();
     if (this->getFolder() != rhsFolder) {
@@ -161,11 +151,11 @@ string ProjectFile::getFilenameRelativeTo(const ProjectFile& rhs) const {
                 << "Rel. paths not implemented for diff folders." << endl;
         this->printInfo();
         rhs.printInfo();
-        return string();
+        return ProjectFile(string());
     }
     string name = getFilename();
     string res = name.substr(name.find(rhsFolder), rhsFolder.length());
-    return "./" + res + "/";
+    return ProjectFile("./" + res + "/");
 #else
     #warning "getFilenameRelativeTo not implemented."
     // TODO Win version for getFilenameRelativeTo.
@@ -174,3 +164,4 @@ string ProjectFile::getFilenameRelativeTo(const ProjectFile& rhs) const {
     return string();
 #endif
 }
+

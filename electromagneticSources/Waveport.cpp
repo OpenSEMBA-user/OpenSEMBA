@@ -9,29 +9,19 @@
 
 Waveport::Waveport(const Magnitude* magnitude,
                    const GroupElements<const Surf>& elem,
-                   const Shape shape,
                    const ExcitationMode excMode,
                    const pair<UInt,UInt> mode)
 :   EMSourceBase(magnitude),
     GroupElements<const Surf>(elem) {
 
-	shape_ = shape;
 	excitationMode_ = excMode;
 	mode_ = mode;
-	// Checks surface normal points to same place.
-	for (UInt i = 0; i < this->size(); i++) {
-	    if (getNormal() != this->get(i)->getNormal()) {
-	        cerr << endl << "ERROR @ Waveport ctor: " <<
-	                "Surface elements must have the same normal." << endl;
-	    }
-	}
 }
 
 Waveport::Waveport(const Waveport& rhs)
 :   EMSourceBase(rhs),
     GroupElements<const Surf>(rhs) {
 
-    shape_ = rhs.shape_;
     excitationMode_ = rhs.excitationMode_;
     mode_ = rhs.mode_;
 }
@@ -46,7 +36,6 @@ bool Waveport::hasSameProperties(const EMSourceBase& rhs) const {
     }
     const Waveport* rhsPtr = rhs.castTo<Waveport>();
     bool hasSameProperties = true;
-    hasSameProperties &= shape_ == rhsPtr->shape_;
     hasSameProperties &= mode_ == rhsPtr->mode_;
     hasSameProperties &= excitationMode_ == rhsPtr->excitationMode_;
     return hasSameProperties;
@@ -55,11 +44,6 @@ bool Waveport::hasSameProperties(const EMSourceBase& rhs) const {
 const string& Waveport::getName() const {
     const static string res = "Waveport";
     return res;
-}
-
-Waveport::Shape
-Waveport::getShape() const {
-	return shape_;
 }
 
 Waveport::ExcitationMode
@@ -77,28 +61,7 @@ vector<CVecR3> Waveport::getElectricWeights(
         const vector<CVecR3>& pos,
         const BoundTerminations& termination) const {
     vector<CVecR3> res(pos.size());
-    pos = toLocalAxis(pos);
-    switch (getShape()) {
-    case Waveport::rectangular:
-        const Real m = M_PI * getMode().first / getWidth(termination);
-        const Real n = M_PI * getMode().second / getHeight(termination);
-        if (getExcitationMode() == Waveport::TE) {
-            for (uint i = 0; i < pos.size(); i++) {
-                res[i](x) = n * cos(m * pos[i](x)) * sin(n * pos[i](y));
-                res[i](y) = - m * sin(m * pos[i](x)) * cos(n * pos[i](y));
-                res[i](z) = (Real) 0.0;
-            }
-        } else {
-            for (uint i = 0; i < pos.size(); i++) {
-                res[i](x) = - m * cos(m * pos[i](x)) * sin(n * pos[i](y));
-                res[i](y) = - m * sin(m * pos[i](x)) * cos(n * pos[i](y));
-                res[i](z) = (Real) 0.0;
-            }
-        }
-        break;
-    default:
-        cerr << endl << "ERROR @ Waveport: Undefined Waveport." << endl;
-    }
+    cerr << endl << "ERROR @ Waveport: Undefined Waveport." << endl;
     return toGlobalAxis(res);
 }
 
@@ -114,7 +77,16 @@ void Waveport::printInfo() const {
 
 CVecR3 Waveport::getNormal() const {
     if (this->size() > 0) {
-        return this->get(0)->getNormalR();
+        if (this->get(0)->is<SurfR>()) {
+            return this->get(0)->castTo<SurfR>()->getNormal();
+        } else {
+            CVecI3 aux = this->get(0)->castTo<SurfI>()->getNormal();
+            CVecR3 res;
+            for (UInt d = 0; d < 3; d++) {
+                res(d) = (Real) aux(d);
+            }
+            return res;
+        }
     } else {
         cerr << endl << "ERROR @ Waveport: Does not contain surfaces." << endl;
         printInfo();
@@ -128,12 +100,6 @@ CVecR3 Waveport::getLocalAxis() const {
     BoxR3 box = getBound();
 
 
-}
-
-Real Waveport::getWidth() const {
-}
-
-Real Waveport::getHeight() const {
 }
 
 vector<CVecR3> Waveport::toLocalAxis(const vector<CVecR3>& rhs) const {

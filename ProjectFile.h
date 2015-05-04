@@ -24,20 +24,17 @@ using namespace std;
 
 #include "Types.h"
 
-class ProjectFile {
+class ProjectFile : public string {
 public:
     ProjectFile();
     ProjectFile(const string& filename);
     ProjectFile(const ProjectFile& rhs);
     virtual ~ProjectFile();
 
-    ProjectFile& operator=(const ProjectFile& rhs);
-
     bool canOpen() const;
     bool canExecute() const;
 
     string getFilename() const;
-    string getFilenameRelativeTo(const ProjectFile& rhs) const;
     string getBasename() const;
     string getFolder() const;
     string getOutputFilename() const {
@@ -49,6 +46,7 @@ public:
     string getProjectName() const {
         return removeExtension(getBasename());
     }
+    ProjectFile relativeTo(const ProjectFile& rhs) const;
 
     void setFilename(const string& filename);
     void openFile(ofstream& file) const;
@@ -62,8 +60,6 @@ protected:
     string removeExtension(const string& filename) const;
     void deleteDirIfExists(const string& directory) const;
 
-private:
-    string filename_;
 };
 
 

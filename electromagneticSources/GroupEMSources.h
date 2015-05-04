@@ -13,7 +13,7 @@
 #include "Generator.h"
 #include "PlaneWave.h"
 #include "SourceOnLine.h"
-#include "Waveport.h"
+#include "WaveportRectangular.h"
 
 template<typename E = EMSourceBase>
 class GroupEMSources : public virtual Group<E> {

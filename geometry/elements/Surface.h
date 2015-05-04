@@ -16,18 +16,6 @@ class SurfaceBase : public virtual ElementBase {
 public:
     SurfaceBase() {};
     virtual ~SurfaceBase() {};
-    virtual CVecR3 getNormalR() const {
-        if (this->is<SurfR>()) {
-            return this->castTo<SurfR>()->getNormal();
-        } else {
-            CVecR3 res;
-            CVecI3 aux this->castTo<SurfI>()->getNormal();
-            for (UInt d = 0; d < 3; d++) {
-                res(d) = (Real) aux(d);
-            }
-            return res;
-        }
-    }
 };
 
 template<class T>
