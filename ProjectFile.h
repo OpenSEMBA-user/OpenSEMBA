@@ -52,6 +52,11 @@ public:
     void openFile(ofstream& file) const;
 
     void printInfo() const;
+    string toStr() const;
+
+    std::ostream& operator<<(ostream& os) {
+        return os << toStr();
+    }
 
 protected:
     vector<string> getFilesBasenames(const string& directory,
@@ -61,7 +66,6 @@ protected:
     void deleteDirIfExists(const string& directory) const;
 
 };
-
 
 
 #endif /* SRC_COMMON_PROJECTFILE_H_ */

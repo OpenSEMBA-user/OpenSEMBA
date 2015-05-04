@@ -67,8 +67,12 @@ void ProjectFile::setFilename(const string& filename) {
     string::operator=(filename);
 }
 
+string ProjectFile::toStr() const {
+    return *this;
+}
+
 void ProjectFile::printInfo() const {
-    cout << "Project file name: " << *this << endl;
+    cout << "Project file name: " << toStr() << endl;
 }
 
 vector<string> ProjectFile::getFilesBasenames(const string& directory,
