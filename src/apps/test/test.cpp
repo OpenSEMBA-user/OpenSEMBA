@@ -12,14 +12,14 @@ GTEST_API_ int main(int argc, char **argv) {
   tests += "*ProjectFile*:";
   tests += "*Math*:";
   tests += "*Geometry*:";
-  tests += "*EMSource*:";
+//  tests += "*EMSource*:";
 //  tests += "*ParserGid*:";
 //  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
   tests += "*AdapterFDTDTest.UGRMesherConversion*:";
 
   ::testing::GTEST_FLAG(filter) = tests.c_str();
 
-  ::testing::GTEST_FLAG(filter) = string("-AdapterFDTDTest.OpenFOAMConversion:-SembaTest.sphereThroughOpenfoam");
+//  ::testing::GTEST_FLAG(filter) = string("-AdapterFDTDTest.OpenFOAMConversion:-SembaTest.sphereThroughOpenfoam");
 
   return RUN_ALL_TESTS();
 }

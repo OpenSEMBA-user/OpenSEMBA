@@ -26,8 +26,8 @@ TEST_F(ProjectFileTest, FolderOperations) {
 
 TEST_F(ProjectFileTest, RelativePaths) {
     ProjectFile rhs("/usr/");
-    EXPECT_EQ(file_.relativeTo(file_), ProjectFile("./ls"));
-    EXPECT_EQ(file_.relativeTo(rhs), ProjectFile("./bin/ls"));
+    EXPECT_EQ(file_.relativeTo(file_), ProjectFile("ls"));
+    EXPECT_EQ(file_.relativeTo(rhs), ProjectFile("bin/ls"));
 }
 #else
     #warning "Project file tests are not implemented for WIN32."

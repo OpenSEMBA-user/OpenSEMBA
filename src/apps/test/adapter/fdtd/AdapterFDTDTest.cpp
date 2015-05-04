@@ -42,9 +42,9 @@ INSTANTIATE_TEST_CASE_P(
         Projects,
         AdapterFDTDTest,
         ::testing::Values(
-//                "planewave",
-                "sphere"
-//                "rcs_1m",
-//                "dmcwf",
-//                "table"
+                "planewave",
+                "sphere",
+                "rcs_1m",
+                "dmcwf",
+                "table"
         ));
