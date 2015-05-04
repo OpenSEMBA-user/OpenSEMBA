@@ -48,6 +48,10 @@ private:
         multilayer,
         undefinedSIBC
     } SIBCType;
+    typedef enum {
+        rectangular,
+        undefined
+    } WaveportShape;
     MeshUnstructured* mesh_;
     string problemTypePath_;
     ProblemSize pSize_;

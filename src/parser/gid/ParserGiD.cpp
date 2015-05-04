@@ -1056,7 +1056,7 @@ ParserGiD::readWaveport() {
     UInt numElements = 0;
     bool input = true;
     Magnitude* mag;
-    Waveport::Shape shape = Waveport::rectangular;
+    WaveportShape shape = WaveportShape::rectangular;
     Waveport::ExcitationMode excitationMode = Waveport::TE;
     pair<UInt,UInt> mode(1,0);
     string line, label, value;
@@ -1073,7 +1073,7 @@ ParserGiD::readWaveport() {
             }
         } else if (!label.compare("Shape")) {
             if (value.find("Rectangular") != value.npos) {
-                shape = Waveport::rectangular;
+                shape = WaveportShape::rectangular;
             } else {
                 cout << "ERROR @ Unreckognized waveport shape." << endl;
                 exit(-1);
@@ -1121,7 +1121,13 @@ ParserGiD::readWaveport() {
     if (!input) {
         delete mag;
     }
-    return new Waveport(mag, surfs, shape, excitationMode, mode);
+    switch (shape) {
+    case WaveportShape::rectangular:
+        return new WaveportRectangular(mag, surfs, excitationMode, mode);
+    default:
+        return new Waveport(mag, surfs, excitationMode, mode);
+    }
+
 }
 
 Generator*
