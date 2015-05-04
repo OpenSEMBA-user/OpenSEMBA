@@ -23,7 +23,7 @@ void Error::setMsg(const string& msg) {
     msg_ = msg;
 }
 
-const char* Error::what() const {
+const char* Error::what() const throw() {
     return msg_.c_str();
 }
 
