@@ -1351,16 +1351,13 @@ ParserGiD::strToMultiportType(string str) const {
 pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) const {
     UInt begin = value.find_first_of("{");
     UInt end = value.find_last_of("}");
-    istringstream iss(value.substr(begin+1,end-2));
-    string sub;
+    istringstream iss(value.substr(begin+1,end-1));
     CVecR3 max, min;
     for (UInt i = 0; i < 3; i++) {
-        iss >> sub;
-        max(i) = atof(sub.c_str());
+        iss >> max(i);
     }
     for (UInt i = 0; i < 3; i++) {
-        iss >> sub;
-        min(i) = atof(sub.c_str());
+        iss >> min(i);
     }
     pair<CVecR3,CVecR3> bound(min, max);
     return bound;
