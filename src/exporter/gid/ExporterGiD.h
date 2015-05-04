@@ -20,11 +20,11 @@ public:
             const SmbData* smb,
             const string& fn,
             GiD_PostMode mode = GiD_PostAscii);
-    ExporterGiD(
-            const MeshUnstructured* mesh,
-            const GroupPhysicalModels<>* mat,
-            const string& fn,
-            GiD_PostMode mode = GiD_PostAscii);
+//    ExporterGiD(
+//            const MeshUnstructured* mesh,
+//            const GroupPhysicalModels<>* mat,
+//            const string& fn,
+//            GiD_PostMode mode = GiD_PostAscii);
     virtual ~ExporterGiD();
 protected:
     void beginMesh(
@@ -65,6 +65,7 @@ private:
 //    void writeMeshWithIds(
 //            const vector<ElementId>& ids, string& name);
 //    void writeOutputRequestsMesh();
+    void writeBoundaries(const BoxR3 box, const OptionsMesher* opts);
     void writeElements(
             const GroupElements<const ElemR>& entities,
             const string& name,
@@ -87,7 +88,7 @@ private:
     void writeMaterialsInLayer(const Layer* lay);
     void writeAllElements(const GroupElements<const ElemR>& elem,
                           const string& name);
-    void initDefault(GiD_PostMode mode, const string& fn);
+    void initDefault(const SmbData* smb, GiD_PostMode mode, const string& fn);
 };
 
 #endif /* EXPORTER_GID_EXPORTERGID_H_ */

@@ -15,8 +15,8 @@ const CVecR3 ExporterGiD::pmlColor(0, 0, 255);
 const CVecR3 ExporterGiD::sibcColor(100, 0, 100);
 const CVecR3 ExporterGiD::emSourceColor(100, 100, 0);
 
-
 void ExporterGiD::initDefault(
+        const SmbData* smb,
         GiD_PostMode mode,
         const string& fn) {
     // Sets default values.
@@ -40,29 +40,38 @@ void ExporterGiD::initDefault(
         cerr << endl << "ERROR @ GiDOutput::openFiles() " << endl;
     }
     writeGaussPoints();
+    writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
+    BoxR3 box;
+    if (smb->grid != NULL) {
+        box = smb->grid->getFullDomainBoundingBox();
+    } else {
+        box = smb->mesh->getBoundingBox();
+    }
+    writeBoundaries(box, smb->mesherOptions);
 }
 
 ExporterGiD::ExporterGiD(const SmbData* smb, GiD_PostMode mode) :
-        Exporter(smb->getFilename()) {
-    initDefault(mode, getFilename());
-    writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
+                Exporter(smb->getFilename()) {
+    initDefault(smb, mode, getFilename());
 }
 
 ExporterGiD::ExporterGiD(
         const SmbData* smb,
         const string& fn,
         GiD_PostMode mode) : Exporter(fn) {
-    initDefault(mode, fn);
-    writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
+    initDefault(smb, mode, fn);
 }
 
-ExporterGiD::ExporterGiD(
-        const MeshUnstructured* mesh,
-        const GroupPhysicalModels<>* mat,
-        const string& fn, GiD_PostMode mode) : Exporter(fn) {
-    initDefault(mode, fn);
-    writeMesh(mesh, mat);
-}
+//ExporterGiD::ExporterGiD(
+//        const MeshUnstructured* mesh,
+//        const GroupPhysicalModels<>* mat,
+//        const string& fn, GiD_PostMode mode) : Exporter(fn) {
+//    SmbData* smb = new SmbData();
+//    smb->mesh =;
+//    smb->pMGroup = mat;
+//    initDefault(smb, mode, fn);
+//    delete smb;
+//}
 
 ExporterGiD::~ExporterGiD() {
     switch (mode_) {
@@ -80,7 +89,7 @@ ExporterGiD::~ExporterGiD() {
 }
 
 void ExporterGiD::writeAllElements(const GroupElements<const ElemR>& elem,
-                                 const string& name) {
+        const string& name) {
     writeElements(elem.getGroupOf<NodR>() , name, GiD_Point, 1);
     writeElements(elem.getGroupOf<LinR2>(), name, GiD_Linear, 2);
     writeElements(elem.getGroupOf<Tri3>() , name, GiD_Triangle, 3);
@@ -220,6 +229,28 @@ ExporterGiD::writeMesh(
 //    }
 //}
 
+void ExporterGiD::writeBoundaries(
+        const BoxR3 box,
+        const OptionsMesher* opts) {
+    CoordR3Group cG;
+    for (UInt i = 0; i < 3; i++) {
+        for (UInt j = 0; j < 2; j++) {
+            OptionsMesher::BoundType bound = opts->getBoundTermination(i,j);
+            if (bound != OptionsMesher::pml) {
+                BoxR3 quadBox = box.getBoundAsBox(
+                        CartesianAxis(i),CartesianBound(j));
+                const string boundName = OptionsMesher::toStr(bound);
+                stringstream name;
+                name << boundName + " @ Boundary " << i << " " << j;
+                GroupElements<const ElemR> elem;
+                elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
+                assert(elem.size() != 0);
+                writeAllElements(elem, name.str());
+            }
+        }
+    }
+}
+
 void ExporterGiD::writeElements(
         const GroupElements<const ElemR>& elem,
         const string& name,
@@ -355,8 +386,8 @@ void ExporterGiD::beginResult(
     const char *compv[cNames.size()];
     for (UInt i = 0; i < cNames.size(); i++) {
         compv[i] = cNames[i].c_str();
-//        compv[i] = new char[cNames[i].length() + 1];
-//        strcpy(compv[i], cNames[i].c_str());
+        //        compv[i] = new char[cNames[i].length() + 1];
+        //        strcpy(compv[i], cNames[i].c_str());
     }
     GiD_fBeginResult(resultFile_, fName, tName, time, resultType,
             getGiDResultLocation(), gpType, NULL, cNames.size(), compv);
