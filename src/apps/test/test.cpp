@@ -19,5 +19,7 @@ GTEST_API_ int main(int argc, char **argv) {
 
   ::testing::GTEST_FLAG(filter) = tests.c_str();
 
+  ::testing::GTEST_FLAG(filter) = string("-AdapterFDTDTest.OpenFOAMConversion:-SembaTest.sphereThroughOpenfoam");
+
   return RUN_ALL_TESTS();
 }
