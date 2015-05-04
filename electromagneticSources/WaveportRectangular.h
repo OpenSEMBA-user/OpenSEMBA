@@ -31,6 +31,7 @@ public:
 
     Real getWidth() const;
     Real getHeight() const;
+
 };
 
 #endif /* SRC_COMMON_ELECTROMAGNETICSOURCES_WAVEPORTRECTANGULAR_H_ */

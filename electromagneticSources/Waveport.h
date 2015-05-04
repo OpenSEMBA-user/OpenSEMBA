@@ -24,8 +24,6 @@ public:
 	Waveport(const Waveport& rhs);
 	virtual ~Waveport();
 
-    DEFINE_CLONE(Waveport);
-
     bool hasSameProperties(const EMSourceBase& rhs) const;
 
     const string& getName() const;

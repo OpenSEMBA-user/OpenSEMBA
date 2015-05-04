@@ -10,8 +10,11 @@
 WaveportRectangular::WaveportRectangular(const Magnitude* magn,
         const GroupElements<const Surf>& elem,
         const ExcitationMode excMode,
-        const pair<UInt,UInt> mode) : Waveport(magn, elem, excMode, mode) {
-}
+        const pair<UInt,UInt> mode) :
+EMSourceBase(magn),
+GroupElements<const Surf>(elem),
+Waveport(magn, elem, excMode, mode) {
+        }
 
 WaveportRectangular::~WaveportRectangular() {
     // TODO Auto-generated destructor stub

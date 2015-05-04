@@ -9,7 +9,11 @@ EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
 }
 
 EMSourceBase::EMSourceBase(const EMSourceBase& rhs) {
-    magnitude_ = rhs.magnitude_->cloneTo<Magnitude>();
+    if (magnitude_ != NULL) {
+        magnitude_ = rhs.magnitude_->cloneTo<Magnitude>();
+    } else {
+        magnitude_ = rhs.magnitude_;
+    }
 }
 
 EMSourceBase::~EMSourceBase() {
@@ -54,7 +58,12 @@ MagnitudeNumerical* EMSourceBase::exportToFile(const string file,
 }
 
 void EMSourceBase::printInfo() const {
-    magnitude_->printInfo();
+    cout << " --- EMSource Base Info ---" << endl;
+    if (magnitude_ != NULL) {
+        magnitude_->printInfo();
+    } else {
+        cout << "No magnitude defined." << endl;
+    }
 }
 
 const Magnitude* EMSourceBase::getMagnitude() const {

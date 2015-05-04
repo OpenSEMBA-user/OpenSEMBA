@@ -33,6 +33,7 @@ public:
 
     bool canOpen() const;
     bool canExecute() const;
+    bool isFolder() const;
 
     string getFilename() const;
     string getBasename() const;

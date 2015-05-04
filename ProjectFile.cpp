@@ -58,7 +58,9 @@ string ProjectFile::getFolder() const {
     char *cstr = new char[length() + 1];
     strcpy(cstr, c_str());
     string folder(dirname(cstr));
-    folder += "/";
+    if (folder.find_last_of("/") != folder.length() - 1) {
+        folder += "/";
+    }
     delete [] cstr;
     return folder;
 }
@@ -149,19 +151,17 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
 
 ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
 #ifndef _WIN32
-    string rhsFolder = rhs.getFolder();
-    if (this->getFolder() != rhsFolder) {
-        cerr << endl << "ERROR @ ProjectFile: "
-                << "Rel. paths not implemented for diff folders." << endl;
-        this->printInfo();
-        rhs.printInfo();
-        return ProjectFile(string());
+    string rhsFolder;
+    if (rhs.isFolder()) {
+        rhsFolder = rhs.getFilename();
+    } else {
+        rhsFolder = rhs.getFolder();
     }
     string name = getFilename();
-    string res = name.substr(name.find(rhsFolder), rhsFolder.length());
-    return ProjectFile("./" + res + "/");
+    string res = name.substr(name.find(rhsFolder) + rhsFolder.length(), name.length());
+    return ProjectFile("./" + res);
 #else
-    #warning "getFilenameRelativeTo not implemented."
+    #warning "ProjectFile::relativeTo() not implemented."
     // TODO Win version for getFilenameRelativeTo.
     cerr << endl << "ERROR @ ProjectFile: "
             << "Rel. paths not implemented in windows." << endl;
@@ -169,3 +169,8 @@ ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
 #endif
 }
 
+bool ProjectFile::isFolder() const {
+    struct stat sb;
+    bool exists = (stat(c_str(), &sb) == 0);
+    return S_ISDIR(sb.st_mode);
+}

@@ -16,6 +16,10 @@ Waveport::Waveport(const Magnitude* magnitude,
 
 	excitationMode_ = excMode;
 	mode_ = mode;
+	if (elem.getGroupOf<Surf>().size() == 0) {
+        cerr << endl << "ERROR @ Waveport: Does not contain surfaces." << endl;
+        printInfo();
+	}
 }
 
 Waveport::Waveport(const Waveport& rhs)
@@ -72,11 +76,19 @@ void Waveport::printInfo() const {
 	} else {
 		cout << "- Is output." << endl;
 	}
+
+	cout << "Mode: ";
+	if (excitationMode_ == TE) {
+	    cout << "TE ";
+	} else {
+	    cout << "TM ";
+	}
+	cout << mode_.first << ", " << mode_.second << endl;
 	EMSource<Surf>::printInfo();
 }
 
 CVecR3 Waveport::getNormal() const {
-    if (this->size() > 0) {
+    if (this->getGroupOf<Surf>().size() > 0) {
         if (this->get(0)->is<SurfR>()) {
             return this->get(0)->castTo<SurfR>()->getNormal();
         } else {
@@ -87,9 +99,6 @@ CVecR3 Waveport::getNormal() const {
             }
             return res;
         }
-    } else {
-        cerr << endl << "ERROR @ Waveport: Does not contain surfaces." << endl;
-        printInfo();
     }
     return CVecR3();
 }
