@@ -7,7 +7,7 @@
 
 #include "Waveport.h"
 
-Waveport::Waveport(const MagnitudeGaussian* magnitude,
+Waveport::Waveport(const Magnitude* magnitude,
                    const GroupElements<const Surf>& elem,
                    const bool input,
                    const Shape shape,
@@ -68,6 +68,16 @@ Waveport::getExcitationMode() const {
 pair<UInt, UInt>
 Waveport::getMode() const {
 	return mode_;
+}
+
+map<const Surf*, CVecR3> Waveport::getElectricWeights(
+        BoundTerminations& termination) const {
+    map<const Surf*, CVecR3> res;
+
+    // TODO Waveport getElectricWeights
+    #warning "To be implemented."
+
+    return res;
 }
 
 void Waveport::printInfo() const {

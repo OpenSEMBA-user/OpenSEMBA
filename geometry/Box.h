@@ -55,7 +55,9 @@ public:
 
     vector<CVecTD> getPos() const;
     vector<CVecTD> getPosOfBound(CartesianAxis d, CartesianBound p) const;
+    Box<T,D> getBoundAsBox(CartesianAxis d, CartesianBound p) const;
     CVecTD getBound(CartesianBound p) const;
+    vector<Box<T,D>> chop(const T step = 1) const;
 
     void set(const pair<CVecTD,CVecTD>& boundsMinMax);
     Box<T,D>& setInfinity();

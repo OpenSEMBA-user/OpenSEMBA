@@ -15,6 +15,7 @@ OptionsMesher::OptionsMesher() {
     scaleFactor_ = false;
     effectiveParameter_ = false;
     scalingFactor_ = 1.0;
+    boundTermination_.resize(3);
     for (UInt i = 0; i < 3; i++) {
         boundTermination_[i].first = pml;
         boundTermination_[i].second = pml;
@@ -84,8 +85,12 @@ void OptionsMesher::setTh(const string& th) {
 void OptionsMesher::printHelp() const {
 }
 
+BoundTerminations OptionsMesher::getBoundTerminations() const {
+    return boundTermination_;
+}
+
 string
-OptionsMesher::toStr(const BoundType val) const {
+OptionsMesher::toStr(const BoundType val) {
     switch (val) {
     case pec:
         return "PEC";

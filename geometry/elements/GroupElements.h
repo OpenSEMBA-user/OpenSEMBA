@@ -45,6 +45,9 @@ struct CompVecIds {
                 if (lhsOrdered[i] < rhsOrdered[i]) {
                     return true;
                 }
+                if (lhsOrdered[i] > rhsOrdered[i]) {
+                    return false;
+                }
             }
             return false;
         }

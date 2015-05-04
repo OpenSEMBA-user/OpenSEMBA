@@ -8,6 +8,7 @@
 using namespace std;
 
 #include "geometry/elements/GroupElements.h"
+#include "options/OptionsMesher.h"
 #include "magnitude/MagnitudeGaussian.h"
 #include "magnitude/MagnitudeNumerical.h"
 #include "math/CartesianVector.h"
