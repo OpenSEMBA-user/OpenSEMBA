@@ -156,6 +156,14 @@ Domain::Type Domain::getDomainType() const {
     }
 }
 
+void Domain::setFinalTime(const Real finalTime) {
+    finalTime_ = finalTime;
+}
+
+void Domain::setSamplingPeriod(const Real samplingPeriod) {
+    samplingPeriod_ = samplingPeriod;
+}
+
 void Domain::printInfo() const {
     cout << "-- Domain info: " << endl;
     if (timeDomain_) {

@@ -9,25 +9,23 @@
 
 Waveport::Waveport(const Magnitude* magnitude,
                    const GroupElements<const Surf>& elem,
-                   const bool input,
-                   const Shape shape,
                    const ExcitationMode excMode,
                    const pair<UInt,UInt> mode)
 :   EMSourceBase(magnitude),
     GroupElements<const Surf>(elem) {
 
-	input_ = input;
-	shape_ = shape;
 	excitationMode_ = excMode;
 	mode_ = mode;
+	if (elem.getGroupOf<Surf>().size() == 0) {
+        cerr << endl << "ERROR @ Waveport: Does not contain surfaces." << endl;
+        printInfo();
+	}
 }
 
 Waveport::Waveport(const Waveport& rhs)
 :   EMSourceBase(rhs),
     GroupElements<const Surf>(rhs) {
 
-    input_ = rhs.input_;
-    shape_ = rhs.shape_;
     excitationMode_ = rhs.excitationMode_;
     mode_ = rhs.mode_;
 }
@@ -42,8 +40,6 @@ bool Waveport::hasSameProperties(const EMSourceBase& rhs) const {
     }
     const Waveport* rhsPtr = rhs.castTo<Waveport>();
     bool hasSameProperties = true;
-    hasSameProperties &= input_ == rhsPtr->input_;
-    hasSameProperties &= shape_ == rhsPtr->shape_;
     hasSameProperties &= mode_ == rhsPtr->mode_;
     hasSameProperties &= excitationMode_ == rhsPtr->excitationMode_;
     return hasSameProperties;
@@ -52,11 +48,6 @@ bool Waveport::hasSameProperties(const EMSourceBase& rhs) const {
 const string& Waveport::getName() const {
     const static string res = "Waveport";
     return res;
-}
-
-Waveport::Shape
-Waveport::getShape() const {
-	return shape_;
 }
 
 Waveport::ExcitationMode
@@ -70,22 +61,58 @@ Waveport::getMode() const {
 	return mode_;
 }
 
-map<const Surf*, CVecR3> Waveport::getElectricWeights(
-        BoundTerminations& termination) const {
-    map<const Surf*, CVecR3> res;
-
-    // TODO Waveport getElectricWeights
-    #warning "To be implemented."
-
-    return res;
+vector<CVecR3> Waveport::getElectricWeights(
+        const vector<CVecR3>& pos,
+        const BoundTerminations& termination) const {
+    vector<CVecR3> res(pos.size());
+    cerr << endl << "ERROR @ Waveport: Undefined Waveport." << endl;
+    return toGlobalAxis(res);
 }
 
 void Waveport::printInfo() const {
 	cout << "--- Waveport info ---" << endl;
-	if (input_) {
+	if (getMagnitude() != NULL) {
 		cout << "- Is input." << endl;
 	} else {
 		cout << "- Is output." << endl;
 	}
+
+	cout << "Mode: ";
+	if (excitationMode_ == TE) {
+	    cout << "TE ";
+	} else {
+	    cout << "TM ";
+	}
+	cout << mode_.first << ", " << mode_.second << endl;
 	EMSource<Surf>::printInfo();
+}
+
+CVecR3 Waveport::getNormal() const {
+    if (this->getGroupOf<Surf>().size() > 0) {
+        if (this->get(0)->is<SurfR>()) {
+            return this->get(0)->castTo<SurfR>()->getNormal();
+        } else {
+            CVecI3 aux = this->get(0)->castTo<SurfI>()->getNormal();
+            CVecR3 res;
+            for (UInt d = 0; d < 3; d++) {
+                res(d) = (Real) aux(d);
+            }
+            return res;
+        }
+    }
+    return CVecR3();
+}
+
+CVecR3 Waveport::getLocalAxis() const {
+    CVecR3 localX, localY, localZ;
+    localZ = getNormal();
+    BoxR3 box = getBound();
+
+
+}
+
+vector<CVecR3> Waveport::toLocalAxis(const vector<CVecR3>& rhs) const {
+}
+
+vector<CVecR3> Waveport::toGlobalAxis(const vector<CVecR3>& rhs) const {
 }

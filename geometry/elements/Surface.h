@@ -30,7 +30,7 @@ public:
     bool isContainedInPlane(const CartesianPlane plane) const;
 
     virtual CartesianVector<T,3> getNormal() const;
-	
+
     virtual void printInfo() const;
 };
 

@@ -15,10 +15,15 @@ Grid<D>::Grid(const BoxRD& box,
     offsetGrid_ = CVecID(0, 0, 0);
     for (Int i = 0; i < D; i++) {
         Real boxLength = box.getMax()(i) - box.getMin()(i);
-        Int nCells = ceil(boxLength / dxyz(i));
-        if (MathUtils::notEqual(boxLength, nCells*dxyz(i),
-                                dxyz(i), tolerance)) {
-            nCells++;
+        Int nCells;
+        if (dxyz(i) == (Real) 0.0) {
+            nCells = 1;
+        } else {
+            nCells = ceil(boxLength / dxyz(i));
+            if (MathUtils::greater(boxLength, nCells*dxyz(i),
+                    dxyz(i), tolerance)) {
+                nCells++;
+            }
         }
         pos_[i].resize(nCells+1);
         for (Int j = 0; j < nCells+1; j++) {
@@ -165,7 +170,11 @@ bool Grid<D>::isCell(const vector<CVecRD>& pos, const Real tol) const {
 
 template<Int D>
 CartesianVector<Int,D> Grid<D>::getNumCells() const {
-    return CVecID(pos_[x].size()-1,pos_[y].size()-1, pos_[z].size()-1);
+    CVecID res;
+    for (UInt d = 0; d < D; d++) {
+        res(d) = getPos(d).size() - 1;
+    }
+    return res;
 }
 
 template<Int D>

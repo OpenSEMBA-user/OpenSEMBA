@@ -33,7 +33,7 @@ bool MathUtils::lowerEqual(const Real lhs, const Real rhs,
     return !lower(rhs, lhs, rel, tol);
 }
 
-bool MathUtils::greather(const Real lhs, const Real rhs,
+bool MathUtils::greater(const Real lhs, const Real rhs,
                          Real rel, const Real tol) {
     return lower(rhs, lhs, rel, tol);
 }

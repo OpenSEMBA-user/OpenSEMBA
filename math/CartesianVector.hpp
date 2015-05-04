@@ -65,23 +65,23 @@ CartesianVector<T,D>& CartesianVector<T,D>::operator=(const T param) {
     return *this;
 }
 
-template <class T, Int D>
+template <class T, Int D> template<class U>
 CartesianVector<T,D>& CartesianVector<T,D>::operator=(
-        const CartesianVector<Real,D>& param) {
+        const CartesianVector<U,D>& param) {
     for (Int i = 0; i < D; i++) {
         val[i] = (T) param.val[i];
     }
     return *this;
 }
-
-template <class T, Int D>
-CartesianVector<T,D>& CartesianVector<T,D>::operator=(
-        const CartesianVector<Int,D>& param) {
-    for (Int i = 0; i < D; i++) {
-        val[i] = (T) param.val[i];
-    }
-    return *this;
-}
+//
+//template <class T, Int D>
+//CartesianVector<T,D>& CartesianVector<T,D>::operator=(
+//        const CartesianVector<Int,D>& param) {
+//    for (Int i = 0; i < D; i++) {
+//        val[i] = (T) param.val[i];
+//    }
+//    return *this;
+//}
 
 template <class T, Int D>
 CartesianVector<T,D>& CartesianVector<T,D>::operator+=(const T param) {
@@ -408,7 +408,7 @@ bool operator< (const CartesianVector<T,D>& lhs,
         if (MathUtils::lower   (lhs(i), rhs(i))) {
             return true;
         }
-        if (MathUtils::greather(lhs(i), rhs(i))) {
+        if (MathUtils::greater(lhs(i), rhs(i))) {
             return false;
         }
     }

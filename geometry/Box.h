@@ -4,15 +4,18 @@
  *  Created on: Dec 18, 2014
  *      Author: luis
  */
+#ifndef SRC_COMMON_GEOMETRY_BOX_H_
+#define SRC_COMMON_GEOMETRY_BOX_H_
 
 #include <limits>
 #include <utility>
+
 using namespace std;
 
 #include "math/CartesianVector.h"
+#include "Grid.h"
 
-#ifndef SRC_COMMON_GEOMETRY_BOX_H_
-#define SRC_COMMON_GEOMETRY_BOX_H_
+template<Int D> class Grid;
 
 template <class T, Int D>
 class Box {
@@ -57,7 +60,8 @@ public:
     vector<CVecTD> getPosOfBound(CartesianAxis d, CartesianBound p) const;
     Box<T,D> getBoundAsBox(CartesianAxis d, CartesianBound p) const;
     CVecTD getBound(CartesianBound p) const;
-    vector<Box<T,D>> chop(const T step = 1) const;
+    vector<Box<T,D>> chop(
+            const CartesianVector<T,D> step = CartesianVector<T,D>(1,1,1)) const;
 
     void set(const pair<CVecTD,CVecTD>& boundsMinMax);
     Box<T,D>& setInfinity();
@@ -80,10 +84,11 @@ std::ostream& operator<<(ostream& os, const Box<T,D>& rhs) {
    return os << "Min: " << rhs.getMin() << ", Max: " << rhs.getMax();
 }
 
-#include "Box.hpp"
-
 typedef Box<Real,3> BoxR3;
 typedef Box<Int ,2> BoxI2;
 typedef Box<Int ,3> BoxI3;
+
+#include "Box.hpp"
+
 
 #endif /* SRC_COMMON_GEOMETRY_BOX_H_ */

@@ -44,8 +44,12 @@ public:
     virtual ~CartesianVector();
 
     CartesianVector<T,D>& operator= (const T);
-    CartesianVector<T,D>& operator= (const CartesianVector<Real,D>&);
-    CartesianVector<T,D>& operator= (const CartesianVector<Int ,D>&);
+
+    template<class U>
+    CartesianVector<T,D>& operator= (const CartesianVector<U,D>&);
+
+//    CartesianVector<T,D>& operator= (const CartesianVector<Int ,D>&);
+//
     CartesianVector<T,D>& operator+=(const T param);
     CartesianVector<T,D>& operator+=(const CartesianVector<T,D>&);
     CartesianVector<T,D>& operator-=(const T param);
@@ -114,6 +118,7 @@ CartesianVector<Real,D> round(const CartesianVector<Real,D>& vec);
 
 #include "CartesianVector.hpp"
 
+typedef CartesianVector<Real,2> CVecR2;
 typedef CartesianVector<Real,3> CVecR3;
 typedef CartesianVector<Int ,2> CVecI2;
 typedef CartesianVector<Int ,3> CVecI3;

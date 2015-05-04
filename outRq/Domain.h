@@ -36,6 +36,9 @@ public:
     virtual ~Domain();
 
     Domain& operator=(const Domain& rhs);
+    void setFinalTime(const Real finalTime);
+    void setSamplingPeriod(const Real samplingPeriod);
+
 
     bool operator==(const Domain& rhs) const;
 
@@ -43,7 +46,6 @@ public:
     Real getInitialTime() const;
     Real getFinalTime() const;
     Real getSamplingPeriod() const;
-
     bool isFrequencyDomain() const;
     Real getInitialFrequency() const;
     Real getFinalFrequency() const;

@@ -13,7 +13,7 @@ Box<T,D>::Box() {
 }
 
 template<class T, Int D> Box<T,D>::Box(
-const pair<CVecTD, CVecTD>& bounds) {
+        const pair<CVecTD, CVecTD>& bounds) {
     set(bounds);
 }
 
@@ -104,7 +104,7 @@ template<class T, Int D>
 CartesianAxis Box<T,D>::getDirection() const {
     if (!isLine()) {
         cerr << endl << "ERROR @ Box::getDirection(): "
-                     << "Box is not a Line" << endl;
+                << "Box is not a Line" << endl;
         assert(false);
         exit(EXIT_FAILURE);
     }
@@ -122,7 +122,7 @@ template<class T, Int D>
 CartesianAxis Box<T,D>::getNormal() const {
     if (!isSurface()) {
         cerr << endl << "ERROR @ Box::getNormal(): "
-                     << "Box is not a Surface" << endl;
+                << "Box is not a Surface" << endl;
         assert(false);
         exit(EXIT_FAILURE);
     }
@@ -311,11 +311,49 @@ inline CartesianVector<T,D> Box<T,D>::getBound(CartesianBound p) const {
 }
 
 template<class T, Int D>
-vector<Box<T,D>> Box<T,D>::chop(const T step) const {
+vector<Box<T,D>> Box<T,D>::chop(const CVecTD origStep) const {
+    static_assert(D == 3, "Chop can't be used for Boxes with D != 3");
+    CVecTD length = getLength();
+    CVecTD step = origStep;
+    for (UInt d = 0; d < D; d++) {
+        if (length(d) < origStep(d)) {
+            step(d) = length(d);
+        }
+        if (origStep(d) <= (T) 0) {
+            step(d) = length(d);
+        }
+    }
+    CartesianVector<Real,3> minR, maxR, stepR;
+    for (UInt d = 0; d < D; d++) {
+        stepR(d) = step(d);
+        if (stepR(d) == 0.0) {
+            minR(d) = (T) min_(d);
+            maxR(d) = (T) max_(d);
+        } else {
+            minR(d) = (T) min_(d);
+            minR(d) = floor(minR(d)/stepR(d)) * stepR(d);
+            maxR(d) = (T) max_(d);
+            maxR(d) = floor(maxR(d)/stepR(d)) * stepR(d);
+        }
+    }
+    Grid<D> grid(Box<Real,3>(minR,maxR), stepR);
+    CartesianVector<Int,D> numBoxes = grid.getNumCells();
     vector<Box<T,D>> res;
-
-    // TODO Chop.
-
+    res.reserve(numBoxes(x)*numBoxes(y)*numBoxes(z));
+    for (Int i = 0; i < numBoxes(x); i++) {
+        for (Int j = 0; j < numBoxes(y); j++) {
+            for (Int k = 0; k < numBoxes(z); k++) {
+                CVecR3 min = grid.getPos(CartesianVector<Int,3>(i,j,k));
+                CVecR3 max = grid.getPos(CartesianVector<Int,3>(i+1,j+1,k+1));
+                CVecI3 minI, maxI;
+                for (UInt d = 0; d < D; d++) {
+                    minI(d) = (T) min(d);
+                    maxI(d) = (T) max(d);
+                }
+                res.push_back(Box<T,D>(minI,maxI));
+            }
+        }
+    }
     return res;
 }
 
