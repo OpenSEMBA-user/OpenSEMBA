@@ -18,14 +18,16 @@ TEST_F(ProjectFileTest, BasicOperations) {
 
 TEST_F(ProjectFileTest, FolderOperations) {
     EXPECT_EQ(file_.getFolder(), "/usr/bin/");
-    ProjectFile folder(file_.getFolder());
-    EXPECT_EQ(folder.getFolder(), "/");
+    ProjectFile usrFolder(file_.getFolder());
+    EXPECT_EQ("/usr/", usrFolder.getFolder());
+    ProjectFile rootFolder(usrFolder.getFolder());
+    EXPECT_EQ("/", rootFolder.getFolder());
 }
 
 TEST_F(ProjectFileTest, RelativePaths) {
-    ProjectFile rhs("./path/");
-    EXPECT_EQ(file_.relativeTo(rhs), ProjectFile("to/file"));
-    EXPECT_EQ(file_.relativeTo(file_), ProjectFile("./"));
+    ProjectFile rhs("/usr/");
+    EXPECT_EQ(file_.relativeTo(file_), ProjectFile("./ls"));
+    EXPECT_EQ(file_.relativeTo(rhs), ProjectFile("./bin/ls"));
 }
 #else
     #warning "Project file tests are not implemented for WIN32."

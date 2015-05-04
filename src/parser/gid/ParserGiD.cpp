@@ -1112,6 +1112,10 @@ ParserGiD::readWaveport() {
         cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
+    if (faces.size() == 0) {
+        cerr << endl << "ERROR @ ParserGiD:"
+                        << "No surfaces read on waveport." << endl;
+    }
     GroupElements<const Surf> surfs = mesh_->getSurfsMatching(faces);
     if (surfs.size() != faces.size()) {
         cerr << endl << "ERROR @ ParserGiD:"
@@ -1120,14 +1124,9 @@ ParserGiD::readWaveport() {
     }
     if (!input) {
         delete mag;
+        mag = NULL;
     }
-    switch (shape) {
-    case WaveportShape::rectangular:
-        return new WaveportRectangular(mag, surfs, excitationMode, mode);
-    default:
-        return new Waveport(mag, surfs, excitationMode, mode);
-    }
-
+    return new WaveportRectangular(mag, surfs, excitationMode, mode);
 }
 
 Generator*
