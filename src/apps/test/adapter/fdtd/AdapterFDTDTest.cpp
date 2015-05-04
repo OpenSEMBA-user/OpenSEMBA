@@ -32,7 +32,7 @@ TEST_P(AdapterFDTDTest,OpenFOAMConversion){
     delete smb;
 }
 
-TEST_P(AdapterFDTDTest,ugrMesherConversion){
+TEST_P(AdapterFDTDTest,UGRMesherConversion){
     SmbData* smb = newSmb(GetParam());
     runProject(smb);
     delete smb;
@@ -42,9 +42,9 @@ INSTANTIATE_TEST_CASE_P(
         Projects,
         AdapterFDTDTest,
         ::testing::Values(
-//                "planewave",
-//                "sphere",
-//                "rcs_1m",
+                "planewave",
+                "sphere",
+                "rcs_1m",
                 "dmcwf",
                 "table"
         ));

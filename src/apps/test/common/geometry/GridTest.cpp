@@ -11,16 +11,25 @@ protected:
       grid_ = Grid3(BoxR3(min_, max_), step_);
    }
 
-   Grid<3> grid_;
+   Grid3 grid_;
    CVecR3 min_, max_, step_;
 };
 
 TEST_F(GeometryGridTest, BasicOperations) {
    EXPECT_EQ(grid_.getNumCells(), CVecI3(20, 20, 20));
+   EXPECT_EQ(Grid3(BoxR3(min_,min_), CVecR3()).getNumCells(), CVecI3(1,1,1));
+   EXPECT_EQ(Grid3(BoxR3(min_,max_), CVecR3()).getNumCells(), CVecI3(1,1,1));
 }
 
 TEST_F(GeometryGridTest, NaturalCells) {
    const double tol = step_(x) / 1.0e3;
    EXPECT_EQ(grid_.getCell(min_, false, 0.0), CVecI3(0,0,0));
    EXPECT_EQ(grid_.getCell(max_, false, tol), grid_.getNumCells());
+}
+
+
+TEST_F(GeometryGridTest, NumberOfCells) {
+    Grid3 grid(BoxR3(min_, max_), CVecR3(0.75, 0.75, 0.75));
+    EXPECT_EQ(grid.getFullDomainBoundingBox(), BoxR3(min_,CVecR3(1.5,1.5,1.5)));
+    EXPECT_EQ(grid.getNumCells(), CVecI3(2,2,2));
 }

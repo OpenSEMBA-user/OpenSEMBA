@@ -1056,7 +1056,7 @@ ParserGiD::readWaveport() {
     UInt numElements = 0;
     bool input = true;
     Magnitude* mag;
-    Waveport::Shape shape = Waveport::rectangular;
+    WaveportShape shape = WaveportShape::rectangular;
     Waveport::ExcitationMode excitationMode = Waveport::TE;
     pair<UInt,UInt> mode(1,0);
     string line, label, value;
@@ -1073,7 +1073,7 @@ ParserGiD::readWaveport() {
             }
         } else if (!label.compare("Shape")) {
             if (value.find("Rectangular") != value.npos) {
-                shape = Waveport::rectangular;
+                shape = WaveportShape::rectangular;
             } else {
                 cout << "ERROR @ Unreckognized waveport shape." << endl;
                 exit(-1);
@@ -1112,13 +1112,21 @@ ParserGiD::readWaveport() {
         cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
                 << "End of excitation type label not found. " << endl;
     }
+    if (faces.size() == 0) {
+        cerr << endl << "ERROR @ ParserGiD:"
+                        << "No surfaces read on waveport." << endl;
+    }
     GroupElements<const Surf> surfs = mesh_->getSurfsMatching(faces);
     if (surfs.size() != faces.size()) {
         cerr << endl << "ERROR @ ParserGiD:"
                 << "Could not find surfaces matching element faces." << endl;
         surfs.printInfo();
     }
-    return new Waveport(mag, surfs, input, shape, excitationMode, mode);
+    if (!input) {
+        delete mag;
+        mag = NULL;
+    }
+    return new WaveportRectangular(mag, surfs, excitationMode, mode);
 }
 
 Generator*
