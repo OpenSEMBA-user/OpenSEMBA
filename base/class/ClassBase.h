@@ -8,12 +8,27 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <typeinfo>
 using namespace std;
+
+#include "base/error/Error.h"
 
 class ClassBase : public enable_shared_from_this<ClassBase> {
 public:
-    ClassBase() {}
-    virtual ~ClassBase() {}
+    class ErrorCast : public Error {
+    public:
+        ErrorCast(const type_info& orig, const type_info& dest);
+        virtual ~ErrorCast();
+
+        const type_info& getTypeOrig() const;
+        const type_info& getTypeDest() const;
+    private:
+        const type_info& orig_;
+        const type_info& dest_;
+    };
+
+    ClassBase();
+    virtual ~ClassBase();
 
     template<typename T>
     bool is() const;

@@ -1,6 +1,56 @@
 #include "GroupId.h"
 
 template<typename T, class Id>
+GroupId<T, Id>::ErrorId::ErrorId(const Id& id) {
+    id_ = id;
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::ErrorId::~ErrorId() {
+
+}
+
+template<typename T, class Id>
+Id GroupId<T, Id>::ErrorId::getId() const {
+    return id_;
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::ErrorIdNotExists::ErrorIdNotExists(const Id& id)
+:   ErrorId(id) {
+    stringstream aux;
+    aux << "GroupId: Id " << id << "doesn't exists";
+    this->setMsg(aux.str());
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::ErrorIdNotExists::~ErrorIdNotExists() {
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::ErrorIdZero::ErrorIdZero(const Id& id)
+:   Error("GroupId: Element with id 0"), ErrorId(id) {
+
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::ErrorIdZero::~ErrorIdZero() {
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::ErrorIdDuplicated::ErrorIdDuplicated(const Id& id)
+:   ErrorId(id) {
+    stringstream aux;
+    aux << "GroupId: Duplicated Id " << id;
+    this->setMsg(aux.str());
+}
+
+template<typename T, class Id>
+GroupId<T, Id>::ErrorIdDuplicated::~ErrorIdDuplicated() {
+
+}
+
+template<typename T, class Id>
 ClassBase* GroupId<T, Id>::clone() const {
     return new GroupId<typename remove_const<T>::type, Id>(
                    this->newGroup());
@@ -13,24 +63,18 @@ bool GroupId<T, Id>::existId(const Id id) const {
 
 template<typename T, class Id>
 T* GroupId<T, Id>::get(const Id id) {
-    if(mapId_.count(id) != 0)
-        return this->get(mapId_.at(id));
-
-    cerr << endl << "ERROR @ GroupId::get():"
-         << "Inexistent Id: " << id << endl;
-    assert(false);
-    return NULL;
+    if(mapId_.count(id) == 0) {
+        throw ErrorIdNotExists(id);
+    }
+    return this->get(mapId_.at(id));
 }
 
 template<typename T, class Id>
 const T* GroupId<T, Id>::get(const Id id) const {
-    if(mapId_.count(id) != 0)
-        return this->get(mapId_.at(id));
-    
-    cerr << endl << "ERROR @ GroupId::get():"
-         << "Inexistent Id: " << id << endl;
-    assert(false);
-    return NULL;
+    if(mapId_.count(id) == 0) {
+        throw ErrorIdNotExists(id);
+    }
+    return this->get(mapId_.at(id));
 }
 
 template<typename T, class Id>
@@ -198,19 +242,12 @@ void GroupId<T, Id>::postprocess(const UInt fistStep) {
             lastId_ = this->get(i)->getId();
 
         if (this->get(i)->getId() == 0) {
-            cerr << endl << "ERROR @ GroupId::buildMapId():"
-                 << "Element with id = 0" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
+            throw ErrorIdZero(this->get(i)->getId());
         }
-
         if (mapId_.count(this->get(i)->getId()) == 0) {
             mapId_[this->get(i)->getId()] = i;
         } else {
-            cerr << endl << "ERROR @ GroupId::buildMapId():"
-                 << "Duplicated Ids" << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
+            throw ErrorIdDuplicated(this->get(i)->getId());
         }
     }
 }

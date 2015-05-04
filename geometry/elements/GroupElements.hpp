@@ -266,13 +266,6 @@ void GroupElements<E>::linearize() {
     if (isLinear()) {
         return;
     }
-    if(!this->ownership_) {
-        cerr << endl << "ERROR @ GroupElements::linearize(): "
-             << "Forbidden to linearize without ownership "
-             << "of elements on it" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-    }
 
     vector<UInt> pos;
     vector<Tri3*> newTri;

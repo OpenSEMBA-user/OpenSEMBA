@@ -3,13 +3,41 @@
 
 #include <iostream>
 #include <map>
+#include <sstream>
 using namespace std;
+
+#include "base/error/Error.h"
 
 #include "Group.h"
 
 template<typename T, class Id>
 class GroupId : public virtual Group<T> {
 public:
+    class ErrorId : public virtual Error {
+    public:
+        ErrorId(const Id&);
+        virtual ~ErrorId();
+
+        Id getId() const;
+    private:
+        Id id_;
+    };
+    class ErrorIdNotExists : public ErrorId {
+    public:
+        ErrorIdNotExists(const Id&);
+        virtual ~ErrorIdNotExists();
+    };
+    class ErrorIdZero : public ErrorId {
+    public:
+        ErrorIdZero(const Id&);
+        virtual ~ErrorIdZero();
+    };
+    class ErrorIdDuplicated : public ErrorId {
+    public:
+        ErrorIdDuplicated(const Id&);
+        virtual ~ErrorIdDuplicated();
+    };
+
     USE_GROUP_CONSTRUCTS(GroupId, T);
 
     ClassBase* clone() const;

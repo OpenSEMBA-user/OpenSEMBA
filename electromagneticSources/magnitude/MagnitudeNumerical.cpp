@@ -79,9 +79,7 @@ bool MagnitudeNumerical::operator==(const Magnitude& rhs) const {
 }
 
 Real MagnitudeNumerical::evaluate(const Real time) const {
-    cerr << endl << "ERROR @ MagnitudeNumerical: "
-         << "Evaluate not implemented." << endl;
-    assert(false);
+    throw ErrorNotImplemented("MagnitudeNumerical::evaluate");
     return 0.0;
 }
 
@@ -99,9 +97,7 @@ void MagnitudeNumerical::initFromFile() {
     ifstream file;
     file.open(getFilename().c_str(), ifstream::in);
     if (file.fail()) {
-        cerr << endl << "ERROR @ MagnitudeNumerical ctor: "
-             << "Problem opening file: " << getFilename() << endl;
-        printInfo();
+        throw ErrorFileNotExists(getFilename());
     }
 
     while (!file.eof()) {
@@ -111,7 +107,6 @@ void MagnitudeNumerical::initFromFile() {
     }
 
     if (value_.size() == 0) {
-        cerr << endl << "WARNING @ MagnitudeNumerical: "
-        << "No values where readed from file: " << getFilename() << endl;
+        throw ErrorFileEmpty(getFilename());
     }
 }

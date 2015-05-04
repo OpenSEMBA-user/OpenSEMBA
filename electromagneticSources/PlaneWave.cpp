@@ -35,7 +35,7 @@ PlaneWave::PlaneWave(const Magnitude* magnitude,
     }
     //
     if ((direction ^ polarization).norm() !=
-     direction.norm() * polarization.norm()) {
+         direction.norm() * polarization.norm()) {
         cerr << endl << "ERROR @ Planewave: "
             << "Wavedirection is not perpendicular to polarization." << endl;
     }

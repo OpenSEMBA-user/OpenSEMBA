@@ -7,6 +7,17 @@
 
 #include "EMSource.h"
 
+template<class T>
+EMSource<T>::ErrorEmpty::ErrorEmpty()
+:   Error("EMSource: EMSource has no elements") {
+
+}
+
+template<class T>
+EMSource<T>::ErrorEmpty::~ErrorEmpty() {
+
+}
+
 template <class T>
 void EMSource<T>::set(const GroupElements<const Elem>& elems) {
     GroupElements<const T>::operator=(elems);
@@ -15,10 +26,7 @@ void EMSource<T>::set(const GroupElements<const Elem>& elems) {
 template<class T>
 bool EMSource<T>::check() const {
     if (this->size() == 0) {
-        cerr << endl << "ERROR @ EMSource: "
-                << "EMSource has no elements." << endl;
-        this->printInfo();
-        return false;
+        throw ErrorEmpty();
     }
     return true;
 }

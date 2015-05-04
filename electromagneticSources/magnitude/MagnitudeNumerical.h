@@ -14,6 +14,8 @@
 using namespace std;
 
 #include "ProjectFile.h"
+#include "base/error/ErrorFile.h"
+#include "base/error/ErrorNotImplemented.h"
 
 #include "Magnitude.h"
 

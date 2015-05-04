@@ -24,11 +24,7 @@ shared_ptr<typename remove_const<T>::type>
 template<typename T>
 T* ClassBase::castTo() {
     if(!this->is<T>()) {
-        cerr << endl << "ERROR @ ClassBase::castTo():"
-        << "Invalid cast" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-        return NULL;
+        throw ErrorCast(typeid(*this), typeid(T));
     }
     return dynamic_cast<T* const>(this);
 }
@@ -36,11 +32,7 @@ T* ClassBase::castTo() {
 template<typename T>
 const T* ClassBase::castTo() const {
     if(!this->is<T>()) {
-        cerr << endl << "ERROR @ ClassBase::castTo():"
-        << "Invalid cast" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-        return NULL;
+        throw ErrorCast(typeid(*this), typeid(T));
     }
     return dynamic_cast<const T* const>(this);
 }
@@ -48,11 +40,7 @@ const T* ClassBase::castTo() const {
 template<typename T>
 shared_ptr<T> ClassBase::castToSharedPtr() {
     if(!this->is<T>()) {
-        cerr << endl << "ERROR @ ClassBase::castTo():"
-        << "Invalid cast" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-        return NULL;
+        throw ErrorCast(typeid(*this), typeid(T));
     }
     return dynamic_pointer_cast<T>(getSharedPtr());
 }
@@ -60,11 +48,7 @@ shared_ptr<T> ClassBase::castToSharedPtr() {
 template<typename T>
 shared_ptr<const T> ClassBase::castToSharedPtr() const {
     if(!this->is<T>()) {
-        cerr << endl << "ERROR @ ClassBase::castTo():"
-        << "Invalid cast" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-        return NULL;
+        throw ErrorCast(typeid(*this), typeid(T));
     }
     return dynamic_pointer_cast<const T>(getSharedPtr());
 }

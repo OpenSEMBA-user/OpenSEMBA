@@ -7,6 +7,7 @@
 #include <vector>
 using namespace std;
 
+#include "base/error/Error.h"
 #include "geometry/elements/GroupElements.h"
 #include "options/OptionsMesher.h"
 #include "magnitude/MagnitudeGaussian.h"
@@ -56,6 +57,12 @@ template<class T>
 class EMSource : public virtual EMSourceBase,
                  public virtual GroupElements<const T> {
 public:
+    class ErrorEmpty : public Error {
+    public:
+        ErrorEmpty();
+        ~ErrorEmpty();
+    };
+
     EMSource() {}
     virtual ~EMSource() {}
 
@@ -71,8 +78,6 @@ public:
 
     void printInfo() const;
 };
-
-
 
 #include "EMSource.hpp"
 
