@@ -264,7 +264,9 @@ UInt OptionsSolver::getNumberOfTimeSteps() const {
 }
 
 void OptionsSolver::setNumberOfTimeSteps(UInt numberOfTimeSteps) {
-    finalTime_ = timeStep_*numberOfTimeSteps;
+    if (numberOfTimeSteps != 0) {
+        finalTime_ = timeStep_ * numberOfTimeSteps;
+    }
 }
 
 const pair<double, double>& OptionsSolver::getPmlAlpha() const {
