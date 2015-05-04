@@ -150,7 +150,6 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
 }
 
 ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
-#ifndef _WIN32
     string rhsFolder;
     if (rhs.isFolder()) {
         rhsFolder = rhs.getFilename();
@@ -159,14 +158,7 @@ ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
     }
     string name = getFilename();
     string res = name.substr(name.find(rhsFolder) + rhsFolder.length(), name.length());
-    return ProjectFile("./" + res);
-#else
-    #warning "ProjectFile::relativeTo() not implemented."
-    // TODO Win version for getFilenameRelativeTo.
-    cerr << endl << "ERROR @ ProjectFile: "
-            << "Rel. paths not implemented in windows." << endl;
-    return string();
-#endif
+    return ProjectFile(res);
 }
 
 bool ProjectFile::isFolder() const {
