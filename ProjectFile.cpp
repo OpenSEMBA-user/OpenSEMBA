@@ -163,5 +163,6 @@ ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
 
 bool ProjectFile::isFolder() const {
     struct stat sb;
+    stat(c_str(), &sb);
     return S_ISDIR(sb.st_mode);
 }

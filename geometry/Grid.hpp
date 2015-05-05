@@ -108,6 +108,57 @@ bool Grid<D>::isInto(const Int dir, const Real pos) const {
 }
 
 template<Int D>
+bool Grid<D>::isIntoDirX (const double &xV)const{
+    if(xV < pos_[x].front()){return false;}
+    if(xV > pos_[x].back()){return false;}
+    return true;
+}
+
+template<Int D>
+bool Grid<D>::isIntoDirY (const double &yV)const{
+    if(yV < pos_[y].front()){return false;}
+    if(yV > pos_[y].back()){return false;}
+    return true;
+}
+
+template<Int D>
+bool Grid<D>::isIntoDirZ (const double &zV)const{
+    if(zV < pos_[z].front()){return false;}
+    if(zV > pos_[z].back()){return false;}
+    return true;
+}
+
+template<Int D>
+bool Grid<D>::getNaturalCellx
+                    (const double &xV,long int &i, double &relativeLen)const{
+    bool err;
+    pair<Int, Real> aux = getCellPair(x, xV, true, tolerance, &err);
+    i = aux.first;
+    relativeLen = aux.second;
+    return err;
+}
+
+template<Int D>
+bool Grid<D>::getNaturalCelly
+                    (const double &yV,long int &j, double &relativeLen)const{
+    bool err;
+    pair<Int, Real> aux = getCellPair(y, yV, true, tolerance, &err);
+    j = aux.first;
+    relativeLen = aux.second;
+    return err;
+}
+
+template<Int D>
+bool Grid<D>::getNaturalCellz
+                    (const double &zV,long int &k, double &relativeLen)const{
+    bool err;
+    pair<Int, Real> aux = getCellPair(z, zV, true, tolerance, &err);
+    k = aux.first;
+    relativeLen = aux.second;
+    return err;
+}
+
+template<Int D>
 bool Grid<D>::isInto(const CVecRD& pos) const {
     for (Int i = 0; i < 3; i++) {
         if (!isInto(i, pos(i))) {
