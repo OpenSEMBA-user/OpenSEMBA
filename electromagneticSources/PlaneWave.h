@@ -12,6 +12,22 @@
 
 class PlaneWave : public EMSource<Vol> {
 public:
+    class ErrorZeroPolarization : public Error {
+    public:
+        ErrorZeroPolarization();
+        virtual ~ErrorZeroPolarization() throw();
+    };
+    class ErrorZeroMagnitude : public Error {
+    public:
+        ErrorZeroMagnitude();
+        virtual ~ErrorZeroMagnitude() throw();
+    };
+    class ErrorNotPerpendicular : public Error {
+    public:
+        ErrorNotPerpendicular();
+        virtual ~ErrorNotPerpendicular() throw();
+    };
+
     PlaneWave();
     PlaneWave(const Magnitude* magnitude,
               GroupElements<Vol> elem,

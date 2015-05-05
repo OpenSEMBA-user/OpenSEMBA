@@ -39,10 +39,7 @@ Node<T>::Node(GroupCoordinates<Coordinate<T,3> >& cG,
     Elem(layerId, matId) {
 
     if(!box.isPoint()) {
-        cerr << endl << "ERROR @ Node::Node(): "
-                     << "Box is not a Point" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
+        throw typename Box<T,3>::ErrorNotPoint();
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {

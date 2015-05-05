@@ -16,10 +16,7 @@ Waveport::Waveport(const Magnitude* magnitude,
 
 	excitationMode_ = excMode;
 	mode_ = mode;
-	if (elem.getGroupOf<Surf>().size() == 0) {
-        cerr << endl << "ERROR @ Waveport: Does not contain surfaces." << endl;
-        printInfo();
-	}
+	check();
 }
 
 Waveport::Waveport(const Waveport& rhs)
@@ -65,7 +62,7 @@ vector<CVecR3> Waveport::getElectricWeights(
         const vector<CVecR3>& pos,
         const BoundTerminations& termination) const {
     vector<CVecR3> res(pos.size());
-    cerr << endl << "ERROR @ Waveport: Undefined Waveport." << endl;
+    throw ErrorNotImplemented("Waveport::getElectricWeights");
     return toGlobalAxis(res);
 }
 

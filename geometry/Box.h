@@ -12,6 +12,7 @@
 
 using namespace std;
 
+#include "base/error/Error.h"
 #include "math/CartesianVector.h"
 #include "Grid.h"
 
@@ -21,6 +22,27 @@ template <class T, Int D>
 class Box {
     typedef CartesianVector<T,D> CVecTD;
 public:
+    class ErrorNotPoint : public Error {
+    public:
+        ErrorNotPoint();
+        virtual ~ErrorNotPoint() throw();
+    };
+    class ErrorNotLine : public Error {
+    public:
+        ErrorNotLine();
+        virtual ~ErrorNotLine() throw();
+    };
+    class ErrorNotSurface : public Error {
+    public:
+        ErrorNotSurface();
+        virtual ~ErrorNotSurface() throw();
+    };
+    class ErrorNotVolume : public Error {
+    public:
+        ErrorNotVolume();
+        virtual ~ErrorNotVolume() throw();
+    };
+
     Box();
     Box(const pair<CVecTD,CVecTD>& boundsMinMax);
     Box(const CVecTD& min, const CVecTD& max);
@@ -86,7 +108,7 @@ std::ostream& operator<<(ostream& os, const Box<T,D>& rhs) {
 
 typedef Box<Real,3> BoxR3;
 typedef Box<Int ,2> BoxI2;
-typedef Box<Int ,3> BoxI3;
+typedef Box<Int, 3> BoxI3;
 
 #include "Box.hpp"
 

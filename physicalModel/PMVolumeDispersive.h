@@ -8,10 +8,18 @@
 #ifndef PMVOLUMEDISPERSIVE_H_
 #define PMVOLUMEDISPERSIVE_H_
 
+#include "base/error/Error.h"
+
 #include "PMVolume.h"
 
 class PMVolumeDispersive : public PMVolume {
 public:
+    class ErrorMagneticMaterial : public Error {
+    public:
+        ErrorMagneticMaterial();
+        virtual ~ErrorMagneticMaterial() throw();
+    };
+
 	PMVolumeDispersive();
 	virtual ~PMVolumeDispersive();
 	PMVolumeDispersive(

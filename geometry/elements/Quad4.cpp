@@ -38,10 +38,7 @@ Quad4<T>::Quad4(GroupCoordinates<Coordinate<T,3> >& cG,
     Elem(layerId, matId) {
 
     if(!box.isSurface()) {
-        cerr << endl << "ERROR @ Quad4::Quad4(): "
-                     << "Box is not a Surface" << endl;
-        box.printInfo();
-        assert(false);
+        throw typename Box<T,3>::ErrorNotSurface();
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {

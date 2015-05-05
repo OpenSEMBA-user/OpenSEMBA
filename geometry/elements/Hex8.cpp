@@ -39,10 +39,7 @@ Hexa8<T>::Hexa8(GroupCoordinates<Coordinate<T,3> >& cG,
     Elem(layerId, matId) {
 
     if(!box.isVolume()) {
-        cerr << endl << "ERROR @ Hexa8::Hexa8(): "
-                     << "Box is not a Volume" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
+        throw typename Box<T,3>::ErrorNotVolume();
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
@@ -208,9 +205,6 @@ const Coordinate<T,3>* Hexa8<T>::getSideV(const UInt f, const UInt i) const {
         }
         break;
     }
-    cerr << "ERROR @ Hexa8" << endl;
-    cerr << "Side vertex not found." << endl;
-    exit(-1);
 }
 
 template<class T>

@@ -8,6 +8,15 @@
 #include "MeshUnstructured.h"
 #include "MeshStructured.h"
 
+MeshStructured::ErrorInvalidBoundary::ErrorInvalidBoundary()
+:   Error("Invalid boundary to discretize") {
+
+}
+
+MeshStructured::ErrorInvalidBoundary::~ErrorInvalidBoundary() throw () {
+
+}
+
 MeshStructured::MeshStructured(const Grid3& grid)
 :   Grid3(grid) {
 
@@ -127,13 +136,11 @@ vector<HexI8*> MeshStructured::discretizeWithinBoundary(
         BoxI3 box(*pair[i].first->getMinV(), *pair[i].second->getMaxV());
         LayerId layId = pair[i].first->getLayerId();
         if (pair[i].first->getLayerId() != pair[i].second->getLayerId()) {
-            cerr << endl << "ERROR @ MeshStructured: "
-                    << "Volumic boundary has different layers. " << endl;
+            throw ErrorInvalidBoundary();
         }
         MatId matId = pair[i].first->getMatId();
         if (pair[i].first->getMatId() != pair[i].second->getMatId()) {
-            cerr << endl << "ERROR @ MeshStructured: "
-                    << "Volumic boundary has different materials. " << endl;
+            throw ErrorInvalidBoundary();
         }
         res.push_back(new HexI8(coords(), id, box, layId, matId));
     }
@@ -147,9 +154,7 @@ MeshStructured::getPairsDefiningVolumeWithin(
     const UInt nOrigBound = origBound.size();
     // Checks that bound.size is an even number.
     if (nOrigBound % 2 != 0) {
-        cerr << endl << "ERROR @ Mesh:"
-                << "Bound size must be an even number to be closed." << endl;
-        return res;
+        throw ErrorInvalidBoundary();
     }
     // Remove Surfaces not lying in a xy plane.
     vector<const SurfI*> bound;

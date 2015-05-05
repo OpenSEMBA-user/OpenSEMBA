@@ -136,8 +136,7 @@ void Tet4::setV(const UInt i, const CoordR3* v) {
 
 void Tet4::check() const {
     if(hasZeroVolume()) {
-        cerr << endl << "ERROR @ Tet4::check():"
-             << "Element " << getId() << " has null volume." << endl;
+        throw Volume<Int>::ErrorNullVolume(this->getId());
     }
 }
 

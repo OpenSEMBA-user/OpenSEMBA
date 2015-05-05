@@ -8,6 +8,31 @@
 #include "Volume.h"
 
 template<class T>
+Volume<T>::ErrorNullVolume::ErrorNullVolume(const ElementId& elemId) {
+    stringstream aux;
+    aux << "Element (" << elemId << ") has null volume";
+    this->setMsg(aux.str());
+}
+
+template<class T>
+Volume<T>::ErrorNullVolume::~ErrorNullVolume() throw () {
+
+}
+
+template<class T>
+Volume<T>::ErrorSurfNotFound::ErrorSurfNotFound(const ElementId& volId,
+                                                const ElementId& surfId) {
+    stringstream aux;
+    aux << "Surf " << surfId << " is not part of Volume " << volId;
+    this->setMsg(aux.str());
+}
+
+template<class T>
+Volume<T>::ErrorSurfNotFound::~ErrorSurfNotFound() throw () {
+
+}
+
+template<class T>
 Volume<T>::Volume() {
 
 }
@@ -64,15 +89,7 @@ UInt Volume<T>::getFaceNumber(const Surface<T>* surf) const {
             }
         }
     }
-    // If face was not found, shows error message.
-    cerr << "ERROR @ VolumeElement::getFaceNumber()"      << endl;
-    cerr << "Surf " << surf->getId() << " is not part of VolumeElement "
-         << this->getId() << endl;
-    cerr << "Volume: " << endl;
-    this->printInfo();
-    cerr << "Surface: " << endl;
-    surf->printInfo();
-    exit(EXIT_FAILURE);
+    throw ErrorSurfNotFound(surf->getId(), this->getId());
 }
 
 template class Volume<Real>;

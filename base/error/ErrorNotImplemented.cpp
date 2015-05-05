@@ -8,7 +8,7 @@
 #include "ErrorNotImplemented.h"
 
 ErrorNotImplemented::ErrorNotImplemented(const string& func)
-:   Error(func + ": not implemented") {
+:   Error(func + "(): not implemented") {
 
 }
 

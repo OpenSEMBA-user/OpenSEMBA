@@ -7,6 +7,14 @@
 
 #include "Arguments.h"
 
+Arguments::ErrorArgumentNotExists::ErrorArgumentNotExists(const string& arg)
+:   Error(string("Arguments: Argument ") + arg + string(" does not exist")) {
+
+}
+
+Arguments::ErrorArgumentNotExists::~ErrorArgumentNotExists() throw () {
+
+}
 
 Arguments::Arguments(const string& args) {
     stringstream iss(args);
@@ -72,11 +80,7 @@ Arguments::getProjectName() const {
 
 string
 Arguments::getFilename() const {
-    if (has("i")) {
-        return get("i");
-    }
-    cerr << endl << "ERROR @ Arguments: No filename read." << endl;
-    return string();
+    return get("i");
 }
 
 string
@@ -170,8 +174,7 @@ bool Arguments::has(const string& arg) const {
 
 string Arguments::get(const string& arg, const UInt i) const {
     if (!has(arg)) {
-        cerr << endl << "ERROR @ Arguments: "
-                << "Argument " << arg << " does not exist." << endl;
+        throw ErrorArgumentNotExists(arg);
     }
     return args_.find(arg)->second[i];
 }

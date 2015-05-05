@@ -7,6 +7,18 @@
 
 #include "LineConformal.h"
 
+LineConformal::ErrorCoordNotConf::ErrorCoordNotConf(
+        const CoordinateId& coordId)
+:   Element<Int>::ErrorCoord(coordId) {
+    stringstream aux;
+    aux << "Coordinate with Id (" << coordId << ") not conformal";
+    setMsg(aux.str());
+}
+
+LineConformal::ErrorCoordNotConf::~ErrorCoordNotConf() throw () {
+
+}
+
 LineConformal::LineConformal() {
     checkCoordinates();
 }
@@ -54,14 +66,8 @@ const CoordConf* LineConformal::getConfV(const UInt i) const {
 }
 
 void LineConformal::setV(const UInt i, const CoordI3* coord) {
-    if (!coord->is<CoordConf>()) {
-        cerr << endl << "ERROR @ Lin2Conformal::setV(): "
-             << "Invalid Coordinate with Id: " << this->getV(i)->getId()
-             << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
-    }
     LinI2::setV(i, coord);
+    checkCoordinates();
 }
 
 ElemR* LineConformal::toUnstructured(const GroupCoordinates<CoordR3>& cG,
@@ -86,18 +92,11 @@ ElemR* LineConformal::toUnstructured(const GroupCoordinates<CoordR3>& cG,
         }
         coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
-            cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
-                 << "Inexistent Coordinate: " << coordId << endl;
-            assert(false);
-            return NULL;
+            throw typename Element<Int>::ErrorCoordNotFound(coordId);
         }
         coord[i] = cG.get(coordId);
         if (coord[i]->pos() != pos) {
-            cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
-                 << "Existent Coordinate " << coordId
-                 << " not coincident." << endl;
-            assert(false);
-            return NULL;
+            throw typename Element<Int>::ErrorCoordNotCoincident(coordId);
         }
     }
     return new LinR2(this->getId(),
@@ -118,11 +117,7 @@ void LineConformal::printInfo() const {
 void LineConformal::checkCoordinates() {
     for(UInt i = 0; i < this->numberOfCoordinates(); i++) {
         if (!this->getV(i)->is<CoordConf>()) {
-            cerr << endl << "ERROR @ LineConformal::checkCoordinates(): "
-                 << "Invalid Coordinate with Id: " << this->getV(i)->getId()
-                 << endl;
-            assert(false);
-            exit(EXIT_FAILURE);
+            throw ErrorCoordNotConf(this->getV(i)->getId());
         }
     }
 }

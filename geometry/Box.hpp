@@ -6,6 +6,49 @@
  */
 #include "Box.h"
 
+template<class T, Int D>
+Box<T,D>::ErrorNotPoint::ErrorNotPoint()
+:   Error("Box: Box is not a Point") {
+
+}
+
+template<class T, Int D>
+Box<T,D>::ErrorNotPoint::~ErrorNotPoint() throw () {
+
+}
+
+template<class T, Int D>
+Box<T,D>::ErrorNotLine::ErrorNotLine()
+:   Error("Box: Box is not a Line") {
+
+}
+
+template<class T, Int D>
+Box<T,D>::ErrorNotLine::~ErrorNotLine() throw () {
+
+}
+
+template<class T, Int D>
+Box<T,D>::ErrorNotSurface::ErrorNotSurface()
+:   Error("Box: Box is not a Surface") {
+
+}
+
+template<class T, Int D>
+Box<T,D>::ErrorNotSurface::~ErrorNotSurface() throw () {
+
+}
+
+template<class T, Int D>
+Box<T,D>::ErrorNotVolume::ErrorNotVolume()
+:   Error("Box: Box is not a Volume") {
+
+}
+
+template<class T, Int D>
+Box<T,D>::ErrorNotVolume::~ErrorNotVolume() throw () {
+
+}
 
 template<class T, Int D>
 Box<T,D>::Box() {
@@ -103,10 +146,7 @@ void Box<T,D>::operator<<(const Box<T,D>& p) {
 template<class T, Int D>
 CartesianAxis Box<T,D>::getDirection() const {
     if (!isLine()) {
-        cerr << endl << "ERROR @ Box::getDirection(): "
-                << "Box is not a Line" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
+        throw ErrorNotLine();
     }
     CartesianAxis res = x;
     for(Int d = 0; d < D; d++) {
@@ -121,10 +161,7 @@ CartesianAxis Box<T,D>::getDirection() const {
 template<class T, Int D>
 CartesianAxis Box<T,D>::getNormal() const {
     if (!isSurface()) {
-        cerr << endl << "ERROR @ Box::getNormal(): "
-                << "Box is not a Surface" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
+        throw ErrorNotSurface();
     }
     assert(D == 3);
     CartesianAxis res = x;

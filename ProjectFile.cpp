@@ -89,9 +89,9 @@ vector<string> ProjectFile::getFilesBasenames(const string& directory,
         }
         closedir(dir);
     } else {
-        cerr << endl << "ERROR @ ProjectFile";
-        cerr << "Could not open directory to extract basenames. ";
-        cerr << "Tried: " << directory << endl;
+        cout << endl << "WARNING @ ProjectFile";
+        cout << "Could not open directory to extract basenames. ";
+        cout << "Tried: " << directory << endl;
     }
     // Stores files with names matching extension.
     vector<string> res;
@@ -113,8 +113,7 @@ void ProjectFile::openFile(const string& fileName, ofstream& file) const {
         file.open(fileName.c_str());
     }
     catch(exception &e) {
-        cerr << endl << "ERROR @ ProjectFile: "
-                << "File can't be opened: " << fileName << endl;
+        throw ErrorFileNotExists(fileName);
     }
 }
 
@@ -143,8 +142,8 @@ void ProjectFile::deleteDirIfExists(const string& directory) const {
 #endif
         command += directory;
         if (system(command.c_str())) {
-            cerr << endl << "ERROR @ ProjectFile: ";
-            cerr << "System command failed to execute " << command << endl;
+            cout << endl << "WARNING @ ProjectFile: ";
+            cout << "System command failed to execute " << command << endl;
         }
     }
 }

@@ -61,11 +61,11 @@ PMVolumePML::getOrientation() const {
 		 && direction[third] == none;
 		if (isUniaxial) {
 			if (i == x) {
-				return PMLx;
+				return Orientation::PMLx;
 			} else if (i == y) {
-				return PMLy;
+				return Orientation::PMLy;
 			} else if (i == z) {
-				return PMLz;
+				return Orientation::PMLz;
 			}
 		}
 		// Is biaxial?
@@ -75,43 +75,43 @@ PMVolumePML::getOrientation() const {
 		 && direction[third] == none;
 		if (isBiaxial) {
 			if (i == x) {
-				return PMLxy;
+				return Orientation::PMLxy;
 			} else if (i == y) {
-				return PMLyz;
+				return Orientation::PMLyz;
 			} else if (i == z) {
-				return PMLzx;
+				return Orientation::PMLzx;
 			}
 		}
 	}
 	if (direction[0] != none
 	 && direction[1] != none
 	 && direction[2] != none) {
-		return PMLxyz;
+		return Orientation::PMLxyz;
 	}
-	return undefined;
+	return Orientation::undefined;
 }
 
 bool
 PMVolumePML::isUniaxial() const {
 	Orientation orientation = getOrientation();
 	return (
-	 orientation == PMLx
-	 || orientation == PMLy
-	 || orientation == PMLz);
+	 orientation == Orientation::PMLx
+	 || orientation == Orientation::PMLy
+	 || orientation == Orientation::PMLz);
 }
 
 bool
 PMVolumePML::isBiaxial() const {
 	Orientation orientation = getOrientation();
 	return (
-	 orientation == PMLxy
-	 || orientation == PMLyz
-	 || orientation == PMLzx);
+	 orientation == Orientation::PMLxy
+	 || orientation == Orientation::PMLyz
+	 || orientation == Orientation::PMLzx);
 }
 
 bool
 PMVolumePML::isTriaxial() const {
-	return (getOrientation() == PMLxyz);
+	return (getOrientation() == Orientation::PMLxyz);
 }
 
 const pair<CVecR3, CVecR3>&
@@ -132,25 +132,20 @@ UInt
 PMVolumePML::getFirstOrientationIndex() const {
 	Orientation orientation = getOrientation();
 	switch (orientation) {
-	case PMLx:
+	case Orientation::PMLx:
 		return 0;
-	case PMLy:
+	case Orientation::PMLy:
 		return 1;
-	case PMLz:
+	case Orientation::PMLz:
 		return 2;
-	case PMLxy:
+	case Orientation::PMLxy:
 		return 0;
-	case PMLyz:
+	case Orientation::PMLyz:
 		return 1;
-	case PMLzx:
+	case Orientation::PMLzx:
 		return 2;
-	case PMLxyz:
+	case Orientation::PMLxyz:
 		return 0;
-	default:
-		cerr << endl << "ERROR @ PMVolumePML " << endl;
-		cerr << endl << "Unreckognized orientation" << endl;
-		assert(false);
-		exit(-1);
 	}
 }
 

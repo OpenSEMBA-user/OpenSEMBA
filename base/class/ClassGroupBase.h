@@ -8,6 +8,9 @@
 #ifndef SRC_COMMON_BASE_CLASSGROUPBASE_H_
 #define SRC_COMMON_BASE_CLASSGROUPBASE_H_
 
+#include <string>
+using namespace std;
+
 #include "base/group/Group.h"
 
 #include "ClassBase.h"
@@ -15,8 +18,16 @@
 template<typename G>
 class ClassGroupBase : public virtual ClassBase {
 public:
+    class ErrorEmpty : public Error {
+    public:
+        ErrorEmpty(const string&);
+        ~ErrorEmpty() throw();
+    };
+
     ClassGroupBase();
     virtual ~ClassGroupBase();
+
+    bool check(const string& = "Group") const;
 
     virtual G elems() const = 0;
 

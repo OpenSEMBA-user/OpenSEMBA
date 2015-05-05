@@ -7,6 +7,16 @@
 
 #include "PMVolumeDispersive.h"
 
+PMVolumeDispersive::ErrorMagneticMaterial::ErrorMagneticMaterial()
+:   Error("PMVolumeDispersive: "
+          "Magnetic conductive materials are not supported.") {
+
+}
+
+PMVolumeDispersive::ErrorMagneticMaterial::~ErrorMagneticMaterial() throw () {
+
+}
+
 PMVolumeDispersive::PMVolumeDispersive(
  const MatId id,
  const string& name,
@@ -22,9 +32,7 @@ PMVolumeDispersive::PMVolumeDispersive(
 	}
 	//
 	if (magnCond != 0.0) {
-		cerr << endl << "ERROR @ PMVolumeDispersive ctor: "
-			<< "Magnetic conductive materials are not supported." << endl;
-		printInfo();
+	    throw ErrorMagneticMaterial();
 	}
 }
 
@@ -114,7 +122,7 @@ PMVolumeDispersive::printInfo() const {
 Real
 PMVolumeDispersive::getElectricConductivity() const {
 	if (pole_.size() > 1) {
-		cerr << endl << "WARNING @ getElectricConductivity: "
+		cout << endl << "WARNING @ getElectricConductivity: "
 			<< "This material is dispersive and its effective permittivity "
 			<< "depends on several parameters."
 			<< "Returning static limit conductivity." << endl;
@@ -142,4 +150,3 @@ PMVolumeDispersive::addPole(
 	residue_.push_back(res_);
 	return;
 }
-

@@ -20,6 +20,10 @@ EMSourceBase::~EMSourceBase() {
 
 }
 
+bool EMSourceBase::check() const {
+    return ClassGroupBase<GroupElements<const Elem>>::check("EMSource");
+}
+
 bool EMSourceBase::hasSameProperties(const EMSourceBase& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;

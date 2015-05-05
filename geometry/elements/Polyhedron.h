@@ -13,6 +13,12 @@
 
 class Polyhedron : public Volume<Real> {
 public:
+    class ErrorNotClosed : public Error {
+    public:
+        ErrorNotClosed();
+        ~ErrorNotClosed() throw ();
+    };
+
     Polyhedron();
     Polyhedron(const ElementId id,
                const vector<const Polygon*>& faces,

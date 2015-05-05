@@ -8,8 +8,10 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
-#include "Surface.h"
+#include "base/error/Error.h"
 #include "math/Simplex.h"
+
+#include "Surface.h"
 
 #include "Element.h"
 
@@ -23,6 +25,18 @@ template<class T>
 class Volume : public virtual Element<T>,
                public virtual VolumeBase {
 public:
+    class ErrorNullVolume : public Error {
+    public:
+        ErrorNullVolume(const ElementId& elemId);
+        ~ErrorNullVolume() throw();
+    };
+
+    class ErrorSurfNotFound : public Error {
+    public:
+        ErrorSurfNotFound(const ElementId& volId, const ElementId& surfId);
+        ~ErrorSurfNotFound() throw();
+    };
+
 	Volume();
     virtual ~Volume();
 
@@ -41,6 +55,6 @@ public:
 
 typedef VolumeBase   Vol;
 typedef Volume<Real> VolR;
-typedef Volume<Int > VolI;
+typedef Volume<Int> VolI;
 
 #endif /* VOLUME_H_ */

@@ -30,6 +30,7 @@
 #include <vector>
 using namespace std;
 
+#include "base/error/Error.h"
 #include "CartesianVector.h"
 #ifdef USE_OPENMP
 	#include <omp.h>
@@ -38,6 +39,12 @@ using namespace std;
 template<class T>
 class MathMatrix {
 public:
+    class ErrorSize : public Error {
+    public:
+        ErrorSize() : Error("Unable print more rows or cols than available") {}
+        virtual ~ErrorSize() throw() {}
+    };
+
 	MathMatrix();
 	virtual ~MathMatrix();
 	virtual UInt

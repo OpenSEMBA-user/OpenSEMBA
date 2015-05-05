@@ -120,9 +120,7 @@ void
 StaMatrix<T,NROWS,NCOLS>::printInfo(UInt rows, UInt cols) const {
    UInt i, j;
    if (rows > NROWS || cols > NCOLS) {
-      cerr << endl << "ERROR: Unable print more rows or cols than available" << endl;
-      cerr << endl << "Terminating."                                         << endl;
-      exit(EXIT_FAILURE);
+       throw typename MathMatrix<T>::ErrorSize();
    }
    cout << "Matrix type: Double";
    cout << "Dimensions: " << NROWS << "x" << NCOLS << endl;
