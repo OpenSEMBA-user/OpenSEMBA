@@ -6,7 +6,7 @@ ClassBase::ErrorCast::ErrorCast(const type_info& orig, const type_info& dest)
            string(" to ") + dest.name());
 }
 
-ClassBase::ErrorCast::~ErrorCast() {
+ClassBase::ErrorCast::~ErrorCast() throw() {
 
 }
 

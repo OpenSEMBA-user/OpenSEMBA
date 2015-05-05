@@ -14,7 +14,7 @@ EMSource<T>::ErrorEmpty::ErrorEmpty()
 }
 
 template<class T>
-EMSource<T>::ErrorEmpty::~ErrorEmpty() {
+EMSource<T>::ErrorEmpty::~ErrorEmpty() throw() {
 
 }
 

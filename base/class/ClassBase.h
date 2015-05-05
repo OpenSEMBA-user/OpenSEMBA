@@ -18,7 +18,7 @@ public:
     class ErrorCast : public Error {
     public:
         ErrorCast(const type_info& orig, const type_info& dest);
-        virtual ~ErrorCast();
+        virtual ~ErrorCast() throw();
 
         const type_info& getTypeOrig() const;
         const type_info& getTypeDest() const;

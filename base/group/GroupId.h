@@ -16,7 +16,7 @@ public:
     class ErrorId : public virtual Error {
     public:
         ErrorId(const Id&);
-        virtual ~ErrorId();
+        virtual ~ErrorId() throw();
 
         Id getId() const;
     private:
@@ -25,17 +25,17 @@ public:
     class ErrorIdNotExists : public ErrorId {
     public:
         ErrorIdNotExists(const Id&);
-        virtual ~ErrorIdNotExists();
+        virtual ~ErrorIdNotExists() throw();
     };
     class ErrorIdZero : public ErrorId {
     public:
         ErrorIdZero(const Id&);
-        virtual ~ErrorIdZero();
+        virtual ~ErrorIdZero() throw();
     };
     class ErrorIdDuplicated : public ErrorId {
     public:
         ErrorIdDuplicated(const Id&);
-        virtual ~ErrorIdDuplicated();
+        virtual ~ErrorIdDuplicated() throw();
     };
 
     USE_GROUP_CONSTRUCTS(GroupId, T);

@@ -17,7 +17,7 @@ class Error: public exception {
 public:
     Error();
     Error(const string& msg);
-    virtual ~Error();
+    virtual ~Error() throw();
 
     void setMsg(const string& msg);
 

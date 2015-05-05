@@ -15,7 +15,7 @@
 class ErrorFile : public virtual Error {
 public:
     ErrorFile(const string& filename);
-    virtual ~ErrorFile();
+    virtual ~ErrorFile() throw();
 
     string getFilename() const;
 private:
@@ -25,13 +25,13 @@ private:
 class ErrorFileNotExists : public ErrorFile {
 public:
     ErrorFileNotExists(const string& filename);
-    ~ErrorFileNotExists();
+    ~ErrorFileNotExists() throw();
 };
 
 class ErrorFileEmpty : public ErrorFile {
 public:
     ErrorFileEmpty(const string& filename);
-    ~ErrorFileEmpty();
+    ~ErrorFileEmpty() throw();
 };
 
 #endif /* COMMON_BASE_ERROR_ERRORFILE_H_ */

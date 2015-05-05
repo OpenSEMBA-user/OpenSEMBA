@@ -60,7 +60,7 @@ public:
     class ErrorEmpty : public Error {
     public:
         ErrorEmpty();
-        ~ErrorEmpty();
+        ~ErrorEmpty() throw();
     };
 
     EMSource() {}

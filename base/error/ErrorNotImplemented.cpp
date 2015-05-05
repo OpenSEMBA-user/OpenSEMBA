@@ -12,7 +12,7 @@ ErrorNotImplemented::ErrorNotImplemented(const string& func)
 
 }
 
-ErrorNotImplemented::~ErrorNotImplemented() {
+ErrorNotImplemented::~ErrorNotImplemented() throw() {
 
 }
 

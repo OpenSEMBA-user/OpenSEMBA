@@ -163,6 +163,5 @@ ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
 
 bool ProjectFile::isFolder() const {
     struct stat sb;
-    bool exists = (stat(c_str(), &sb) == 0);
     return S_ISDIR(sb.st_mode);
 }

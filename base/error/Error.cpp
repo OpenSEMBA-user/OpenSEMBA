@@ -15,7 +15,7 @@ Error::Error(const string& msg) {
     msg_ = msg;
 }
 
-Error::~Error() {
+Error::~Error() throw() {
 
 }
 

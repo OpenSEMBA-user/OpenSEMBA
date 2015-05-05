@@ -6,7 +6,7 @@ GroupId<T, Id>::ErrorId::ErrorId(const Id& id) {
 }
 
 template<typename T, class Id>
-GroupId<T, Id>::ErrorId::~ErrorId() {
+GroupId<T, Id>::ErrorId::~ErrorId() throw() {
 
 }
 
@@ -24,7 +24,7 @@ GroupId<T, Id>::ErrorIdNotExists::ErrorIdNotExists(const Id& id)
 }
 
 template<typename T, class Id>
-GroupId<T, Id>::ErrorIdNotExists::~ErrorIdNotExists() {
+GroupId<T, Id>::ErrorIdNotExists::~ErrorIdNotExists() throw() {
 }
 
 template<typename T, class Id>
@@ -34,7 +34,7 @@ GroupId<T, Id>::ErrorIdZero::ErrorIdZero(const Id& id)
 }
 
 template<typename T, class Id>
-GroupId<T, Id>::ErrorIdZero::~ErrorIdZero() {
+GroupId<T, Id>::ErrorIdZero::~ErrorIdZero() throw() {
 }
 
 template<typename T, class Id>
@@ -46,7 +46,7 @@ GroupId<T, Id>::ErrorIdDuplicated::ErrorIdDuplicated(const Id& id)
 }
 
 template<typename T, class Id>
-GroupId<T, Id>::ErrorIdDuplicated::~ErrorIdDuplicated() {
+GroupId<T, Id>::ErrorIdDuplicated::~ErrorIdDuplicated() throw() {
 
 }
 

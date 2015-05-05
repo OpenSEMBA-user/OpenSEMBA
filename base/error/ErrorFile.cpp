@@ -11,7 +11,7 @@ ErrorFile::ErrorFile(const string& filename) {
     filename_ = filename;
 }
 
-ErrorFile::~ErrorFile() {
+ErrorFile::~ErrorFile() throw() {
 
 }
 
@@ -25,7 +25,7 @@ ErrorFileNotExists::ErrorFileNotExists(const string& filename)
 
 }
 
-ErrorFileNotExists::~ErrorFileNotExists() {
+ErrorFileNotExists::~ErrorFileNotExists() throw() {
 
 }
 
@@ -35,6 +35,6 @@ ErrorFileEmpty::ErrorFileEmpty(const string& filename)
 
 }
 
-ErrorFileEmpty::~ErrorFileEmpty() {
+ErrorFileEmpty::~ErrorFileEmpty() throw() {
 
 }

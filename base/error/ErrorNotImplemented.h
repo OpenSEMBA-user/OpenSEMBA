@@ -15,7 +15,7 @@
 class ErrorNotImplemented: public Error {
 public:
     ErrorNotImplemented(const string&);
-    virtual ~ErrorNotImplemented();
+    virtual ~ErrorNotImplemented() throw();
 
     string getFunctionName() const;
 
