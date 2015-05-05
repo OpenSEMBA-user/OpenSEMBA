@@ -57,8 +57,8 @@ Grid<D>::Grid(const CVecID& offset,
     for(Int d = 0; d < D; d++) {
         pos_[d].resize(step[d].size()+1);
         pos_[d][0] = origin(d);
-        for (UInt i = 1; i < pos_[d].size(); i++) {
-            pos_[d][i] = pos_[d][i-1] + step[d][i];
+        for (UInt i = 0; i < step[d].size(); i++) {
+            pos_[d][i+1] = pos_[d][i] + step[d][i];
         }
     }
 }
@@ -129,33 +129,37 @@ bool Grid<D>::isIntoDirZ (const double &zV)const{
 }
 
 template<Int D>
-bool Grid<D>::getNaturalCellx
-                    (const double &xV,long int &i, double &relativeLen)const{
-    bool err;
-    pair<Int, Real> aux = getCellPair(x, xV, true, tolerance, &err);
-    i = aux.first;
-    relativeLen = aux.second;
-    return err;
+bool Grid<D>::getNaturalCellx(
+        const double &x,long int &i, double &relativeLen)const{
+    long int n; n = 0;
+    relativeLen = -1.0;
+    if(x<getPx()[0]){i=0; return false;}
+    else if(getPx()[getDimsx()]<=x) {i=getDimsx(); return false;}
+    while(getPx()[n]<=x){n++;}  /*mod this: use sort*/
+    i = n-1; relativeLen = (x-getPx()[i])/getDx()[i]; return true;
 }
 
 template<Int D>
-bool Grid<D>::getNaturalCelly
-                    (const double &yV,long int &j, double &relativeLen)const{
-    bool err;
-    pair<Int, Real> aux = getCellPair(y, yV, true, tolerance, &err);
-    j = aux.first;
-    relativeLen = aux.second;
-    return err;
+bool Grid<D>::getNaturalCelly(
+        const double &y,long int &i, double &relativeLen)const{
+    long int n; n = 0;
+    relativeLen = -1.0;
+    if(y<getPy()[0]){i=0; return false;}
+    else if(getPy()[getDimsy()]<=y) {i=getDimsy(); return false;}
+    while(getPy()[n]<=y){n++;}  /*mod this: use sort*/
+    i = n-1; relativeLen = (y-getPy()[i])/getDy()[i]; return true;
+
 }
 
 template<Int D>
-bool Grid<D>::getNaturalCellz
-                    (const double &zV,long int &k, double &relativeLen)const{
-    bool err;
-    pair<Int, Real> aux = getCellPair(z, zV, true, tolerance, &err);
-    k = aux.first;
-    relativeLen = aux.second;
-    return err;
+bool Grid<D>::getNaturalCellz(
+        const double &z,long int &i, double &relativeLen)const{
+    long int n; n = 0;
+    relativeLen = -1.0;
+    if(z<getPz()[0]){i=0; return false;}
+    else if(getPz()[getDimsz()]<=z) {i=getDimsz(); return false;}
+    while(getPz()[n]<=z){n++;}  /*mod this: use sort*/
+    i = n-1; relativeLen = (z-getPz()[i])/getDz()[i]; return true;
 }
 
 template<Int D>

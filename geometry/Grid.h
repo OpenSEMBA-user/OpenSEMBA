@@ -44,13 +44,25 @@ public:
     Grid& operator=(const Grid& cGrid);
 
     // TODO To be deleted >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    inline const double *getPx(void) const {return &pos_[x][0];};
-    inline const double *getPy(void) const {return &pos_[y][0];};
-    inline const double *getPz(void) const {return &pos_[z][0];};
+    inline const double *getPx(void) const {
+        return &pos_[x][0];
+    };
+    inline const double *getPy(void) const {
+        return &pos_[y][0];
+    };
+    inline const double *getPz(void) const {
+        return &pos_[z][0];
+    };
 
-    inline vector<Real> getDx(void) const {return getStep(x);};
-    inline vector<Real> getDy(void) const {return getStep(y);};
-    inline vector<Real> getDz(void) const {return getStep(z);};
+    inline vector<Real> getDx(void) const {
+        return getStep(x);
+    };
+    inline vector<Real> getDy(void) const {
+        return getStep(y);
+    };
+    inline vector<Real> getDz(void) const {
+        return getStep(z);
+    };
 
     inline long int getDimsx(void) const {return getNumCells()(x);};
     inline long int getDimsy(void) const {return getNumCells()(y);};
@@ -135,7 +147,7 @@ private:
 };
 
 typedef Grid<3> Grid3;
-//typedef Grid<3> CartesianGrid;
+typedef Grid<3> CartesianGrid;
 
 #include "Grid.hpp"
 
