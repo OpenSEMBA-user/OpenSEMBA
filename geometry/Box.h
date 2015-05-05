@@ -26,6 +26,14 @@ public:
     Box(const CVecTD& min, const CVecTD& max);
     virtual ~Box();
 
+    // TODO Remove this. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    Box(const vector <vector <double> > &coord);
+    void set (const double *const pMin, const double *const pMax);
+    void set (const double *const &p);
+    bool intersecction (const Box<T,D> &lBox)   const;
+    bool operator <=   (const double * const pIsInto)const;
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
     Box<T,D>& operator= (const Box<T,D>& lBoxMin);
 
     bool operator>(const Box<T,D>& lBoxMin) const;
@@ -87,6 +95,7 @@ std::ostream& operator<<(ostream& os, const Box<T,D>& rhs) {
 typedef Box<Real,3> BoxR3;
 typedef Box<Int ,2> BoxI2;
 typedef Box<Int ,3> BoxI3;
+typedef Box<Real,3> BBox;
 
 #include "Box.hpp"
 

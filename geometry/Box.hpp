@@ -22,9 +22,45 @@ Box<T,D>::Box(const CVecTD& min, const CVecTD& max) {
     min_ = min;
     max_ = max;
 }
+template<class T, Int D>
+Box<T,D>::Box(const vector <vector <double> > &coord) {
+    setDefaultValues();
+    for (unsigned long int n=0; n<coord.size(); n++){
+        for(short int m=0; m<3; m++){
+            if(coord[n][m]<min_(m)){
+                min_(m) = coord[n][m];
+            }
+            if(coord[n][m]>max_(m)){
+                max_(m) = coord[n][m];
+            }
+        }
+    }
+}
+
+template<class T, Int D>
+bool Box<T,D>::operator <=   (const double * const pIsInto)const{
+    if(max_(0)<pIsInto[0]){return false;}
+    if(max_(1)<pIsInto[1]){return false;}
+    if(max_(2)<pIsInto[2]){return false;}
+    if(min_(0)>pIsInto[0]){return false;}
+    if(min_(1)>pIsInto[1]){return false;}
+    if(min_(2)>pIsInto[2]){return false;}
+    return true;
+}
 
 template<class T, Int D>
 Box<T,D>::~Box() {
+}
+
+template<class T, Int D>
+void Box<T,D>::set (const double *const pMin, const double *const pMax){
+    min_(0) = pMin[0];   min_(1) = pMin[1];  min_(2) = pMin[2];
+    max_(0) = pMax[0];   max_(1) = pMax[1];  max_(2) = pMax[2];
+}
+
+template<class T, Int D>
+void Box<T,D>::set (const double *const &p){
+    set (&(p[0]),&(p[0]));
 }
 
 template<class T, Int D>
@@ -165,6 +201,20 @@ bool Box<T,D>::isIntersected(const Box<T,D> &rhs) const {
             return false;
         }
     }
+    return true;
+}
+
+template<class T, Int D>
+bool Box<T,D>::intersecction(const Box<T,D>& lBox) const{
+
+    if(max_(0)<lBox.min_(0)){return false;}
+    if(max_(1)<lBox.min_(1)){return false;}
+    if(max_(2)<lBox.min_(2)){return false;}
+
+    if(max_(2)<lBox.min_(2)){return false;}
+    if(max_(2)<lBox.min_(2)){return false;}
+    if(max_(2)<lBox.min_(2)){return false;}
+
     return true;
 }
 
