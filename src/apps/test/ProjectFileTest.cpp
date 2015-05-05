@@ -12,11 +12,11 @@ protected:
 
 TEST_F(ProjectFileTest, BasicOperations) {
     EXPECT_EQ(file_, file_);
-//    EXPECT_TRUE(file_.canOpen());
-//    EXPECT_TRUE(file_.canExecute());
 }
 
 TEST_F(ProjectFileTest, FolderOperations) {
+    EXPECT_TRUE(ProjectFile("/usr/bin/").isFolder());
+    EXPECT_FALSE(ProjectFile("/non/existing/folder/").isFolder());
     EXPECT_EQ(file_.getFolder(), "/usr/bin/");
     ProjectFile usrFolder(file_.getFolder());
     EXPECT_EQ("/usr/", usrFolder.getFolder());
