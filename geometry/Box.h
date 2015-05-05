@@ -27,11 +27,11 @@ public:
     virtual ~Box();
 
     // TODO Remove this. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    Box(const vector <vector <double> > &coord);
-    void set (const double *const pMin, const double *const pMax);
-    void set (const double *const &p);
-    bool intersecction (const Box<T,D> &lBox)   const;
-    bool operator <=   (const double * const pIsInto)const;
+//    Box(const vector <vector <double> > &coord);
+//    void set (const double *const pMin, const double *const pMax);
+//    void set (const double *const &p);
+//    bool intersecction (const Box<T,D> &lBox)   const;
+//    bool operator <=   (const double * const pIsInto)const;
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     Box<T,D>& operator= (const Box<T,D>& lBoxMin);
