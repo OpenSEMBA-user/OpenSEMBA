@@ -87,7 +87,6 @@ std::ostream& operator<<(ostream& os, const Box<T,D>& rhs) {
 typedef Box<Real,3> BoxR3;
 typedef Box<Int ,2> BoxI2;
 typedef Box<Int ,3> BoxI3;
-typedef Box<Real,3> BBox;
 
 #include "Box.hpp"
 

@@ -147,7 +147,6 @@ private:
 };
 
 typedef Grid<3> Grid3;
-typedef Grid<3> CartesianGrid;
 
 #include "Grid.hpp"
 
