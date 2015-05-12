@@ -15,7 +15,10 @@ ParserSTL::ParserSTL() {
 ParserSTL::ParserSTL(const string& fn)
 :   ProjectFile(fn) {
     setDefaultValues_();
-    is_stl ();
+    if (!is_stl ()) {
+        cerr << endl << "ERROR @ ParserSTL: "
+                << "File is not an STL." << endl;
+    }
 }
 
 ParserSTL::~ParserSTL() {
@@ -45,10 +48,10 @@ ParserSTL::readMesh() {
 }
 
 GroupLayers<> ParserSTL::readLayers() {
-    bool finished = false;
-    bool found = false;
-    string label, value;
-    LayerId id;
+//    bool finished = false;
+//    bool found = false;
+//    string label, value;
+//    LayerId id;
     GroupLayers<> res;
 //    while (!found && !f_in.eof() ) {
 //        getNextLabelAndValue(label, value);
@@ -115,17 +118,17 @@ GroupCoordinates<CoordR3> ParserSTL::readCoordinates() {
 
 GroupElements<ElemR> ParserSTL::readElements(
         const GroupCoordinates<CoordR3>& v) {
-    string line, label;
-    bool finished = false;
-    bool found = false;
+//    string line, label;
+//    bool finished = false;
+//    bool found = false;
     vector<ElemR*> elems;
-    while (!finished && !f_in.eof()) {
-        getline(f_in, line);
-        if (line.find("Elements:") != line.npos) {
-            found = true;
-        }
-        readTri3Elements(v, elems);
-    }
+//    while (!finished && !f_in.eof()) {
+//        getline(f_in, line);
+//        if (line.find("Elements:") != line.npos) {
+//            found = true;
+//        }
+//        readTri3Elements(v, elems);
+//    }
     return GroupElements<ElemR>(elems);
 }
 
@@ -142,7 +145,6 @@ void ParserSTL::setDefaultValues_(void){
     coordz_     = NULL;
     dimsCoord_  = 0;
     numTrig_    = 0;
-    stlCheck_   = false;
     areaTrig_   = NULL;
     numSolid_   = 0;
 }
@@ -165,17 +167,14 @@ void ParserSTL::deleteFull (void){
     setDefaultValues_();
 }
 
-//=============================================================================
-//------ stl parser ascii file  -----------------------------------------------
-//=============================================================================
 bool ParserSTL::stlParser (void){
     return parser_ ();
 }
 
 bool ParserSTL::parser_(void){
-//-----------------------------------------------------------------------------
+
     if(is_stl ()){}else{return false;}
-//-----------------------------------------------------------------------------
+
     dimsCoord_ = numTrig_*3;
     node_      = new long int [dimsCoord_];
     coordx_    = new double   [dimsCoord_];
@@ -183,18 +182,18 @@ bool ParserSTL::parser_(void){
     coordz_    = new double   [dimsCoord_];
 
     solidId_.reserve(numTrig_+1);
-//-----------------------------------------------------------------------------
+
     ifstream fileId;
     string   fileLine;
-//-----------------------------------------------------------------------------
+
     fileId.open (getFilename().c_str());
     if(fileId.is_open()){}else{
         return false;
     }
-//-----------------------------------------------------------------------------
+
     long int counter; counter=0;
     long int solidCounter; solidCounter =0;
-//-----------------------------------------------------------------------------
+
 
     while(leapBlank(fileId, fileLine)){
         if(fileLine.compare(0,5,"solid")==0){
@@ -274,7 +273,7 @@ bool ParserSTL::parser_(void){
     collaps_ ();
     fileId.close();
     return true;
-//-----------------------------------------------------------------------------
+
 }
 
 //=============================================================================
@@ -282,14 +281,14 @@ bool ParserSTL::parser_(void){
 //=============================================================================
 
 void ParserSTL::collaps_ (void){
-//-----------------------------------------------------------------------------
+
     double lmin,areaLimit;
-//-----------------------------------------------------------------------------
+
     buildAreaTrig();
-//-----------------------------------------------------------------------------
+
     areaLimit = meanAreaTrig*1.0e-4;
     lmin = lTrigMin (areaLimit);
-//-----------------------------------------------------------------------------
+
     NumColapsNodes_ = 0;
     if(false){ //topologicalMeshflag
       for(long int n=0; n<dimsCoord_; n++){
@@ -303,7 +302,7 @@ void ParserSTL::collaps_ (void){
          }
       }
     }
-//-----------------------------------------------------------------------------
+
     nodeTrig_ = new long int* [numTrig_];
     for (long int n=0; n<numTrig_; n++){
         nodeTrig_[n] = new long int [4];
@@ -315,7 +314,7 @@ void ParserSTL::collaps_ (void){
         nodeTrig_[n][2] = node_ [n*3+2];
         nodeTrig_[n][3] = 0; //label
     }
-//-----------------------------------------------------------------------------
+
     long int nodesMax;
     nodesMax = 0;
     for(long int n=0; n<dimsCoord_; n++){
@@ -328,9 +327,9 @@ void ParserSTL::collaps_ (void){
         coordz_[node_[n]] = coordz_[n];
     }
     dimsCoord_ = nodesMax+1;
-//-----------------------------------------------------------------------------
+
     return;
-//-----------------------------------------------------------------------------
+
 }
 
 bool ParserSTL::intoSphere (const long int &n, const long int &m, const double &radius)const{
@@ -427,10 +426,10 @@ areaTrig_ = new double [numTrig_];
 bool ParserSTL::is_stl_ (void){
     ifstream fileId;
     string   fileLine;
-//-----------------------------------------------------------------------------
+
     fileId.open (getFilename().c_str());
     if(fileId.is_open()){}else{fileId.close(); return false;}
-//-----------------------------------------------------------------------------
+
     bool loopflag_;
     loopflag_ = false;
     numTrig_ = 0;
@@ -499,21 +498,21 @@ bool ParserSTL::is_stl_ (void){
         }
     }
 
-//-----------------------------------------------------------------------------
+
 fileId.close();
 return loopflag_;
-//-----------------------------------------------------------------------------
+
 }
 
 //=============================================================================
 bool ParserSTL::checkfacent_ (ifstream &fileId){
     string   fileLine;
-//-----------------------------------------------------------------------------
+
 
     if(fileId.is_open()){}else{return false;}
-//-----------------------------------------------------------------------------
+
     numTrig_ = 0;
-//-----------------------------------------------------------------------------
+
 
     if(leapBlanktrim(fileId, fileLine)){}else {return false;}
     if(fileLine.compare(0,5,"solid")==0){
@@ -546,9 +545,9 @@ bool ParserSTL::checkfacent_ (ifstream &fileId){
     if(leapBlanktrim(fileId, fileLine)){}else {return false;}
     if(fileLine.compare(0,8,"endfacet")==0){}else {return false;}
 
-//-----------------------------------------------------------------------------
+
 return true;
-//-----------------------------------------------------------------------------
+
 }
 
 bool ParserSTL::is_stl_OnlyFirst_ (void){
@@ -563,15 +562,11 @@ bool ParserSTL::is_stl_OnlyFirst_ (void){
 }
 
 bool ParserSTL::is_stl (void){
-    if(!stlCheck_){
-        if(is_stl_()) {stlCheck_ = true;} else {stlCheck_ = false;}
-    }
-    return stlCheck_;
+    return is_stl_();
 }
 
 long int ParserSTL::get_numTrig_(void) {
-    is_stl();
-    if(!stlCheck_){
+    if(!is_stl()){
         numTrig_ = 0;
     }
     return numTrig_;
@@ -580,14 +575,13 @@ long int ParserSTL::get_numTrig_(void) {
 void ParserSTL::read_numSolid_ (void){
     ifstream fileId;
     string   fileLine;
-//-----------------------------------------------------------------------------
+
     fileId.open (getFilename().c_str());
-    if(fileId.is_open()){}else{stlCheck_= false; /*error no open file*/}
-//-----------------------------------------------------------------------------
+
     numSolid_ = 0;
     bool intSolidFlag_;
     intSolidFlag_ = false;
-//-----------------------------------------------------------------------------
+
     //if(leapBlank(fileId, fileLine)){}else {return false;}
     //if(fileLine.compare(0,5,"solid")==0){
         //---------------------------------------------------------------------
@@ -597,31 +591,15 @@ void ParserSTL::read_numSolid_ (void){
                 numSolid_ ++;
             }
             if(fileLine.compare(0,8,"endsolid") ==0) {
-                if(intSolidFlag_){
+                if (intSolidFlag_) {
                     intSolidFlag_ = false;
-                }else{
-                    stlCheck_= false;
-                    /*archivo incoherente*/
                 }
             }
         }
         //---------------------------------------------------------------------
     //}
-//-----------------------------------------------------------------------------
-}
 
-//=============================================================================
-//------ parser file procedures -----------------------------------------------
-//=============================================================================
-//bool ParserSTL::leapBlank (ifstream &fileId, string &lastLine){
-//  string auxLine;
-//  while(getline (fileId,lastLine)){
-//      auxLine = lastLine;
-//      std::remove(auxLine.begin(), auxLine.end(), ' ');
-//      if(lastLine!=""){ltrim(lastLine); return true;}
-//  }
-//  return false;
-//}
+}
 
 long int ParserSTL::countFileLines_(void){
 
@@ -640,8 +618,6 @@ void ParserSTL::ltrim(string& s)
     //s.erase(0, s.find_first_not_of(" \f\n\r\t\v") );
     s.erase(0, s.find_first_not_of(" "));
 }
-
-
 
 bool ParserSTL::leapBlank (ifstream &fileId, string &lastLine){
     string auxLine;

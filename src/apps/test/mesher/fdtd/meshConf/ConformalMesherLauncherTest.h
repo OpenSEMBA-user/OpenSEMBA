@@ -27,7 +27,7 @@ protected:
         return res;
     }
 
-    void runUGRMesher(const string args) const {
+    void runUGRMesher(const string project, const string args) const {
         // TODO runUgrMesher
     }
 };

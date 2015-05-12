@@ -67,7 +67,6 @@ private:
     long int NumColapsNodes_;
     double *areaTrig_; //numTrig
     double sumAreaTrig, meanAreaTrig;
-    bool stlCheck_;
 
     void deleteFull (void);
     bool is_stl_ (void);
