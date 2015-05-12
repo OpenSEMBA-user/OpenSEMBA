@@ -25,11 +25,8 @@ else
 	OUT = test
 endif
 # =============================================================================
-#DEFINES += compileWithVTK 
 DEFINES += compileWithstaircase
 DEFINES += IntegratedCompilation
-#DEFINES += compileWithNfde
-#DEFINES += compileOnlyWithStructured
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
 DIR = $(SRC_COMMON_DIR)
