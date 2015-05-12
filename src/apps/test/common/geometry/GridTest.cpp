@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "geometry/Grid.h"
-//#include "mesher/fdtd/meshConf/cartesianGrid.h"
+//#include "apps/ugrMesher/cartesianGrid.h"
 
 class GeometryGridTest : public ::testing::Test {
 
@@ -23,7 +23,7 @@ protected:
         steps[x] = grid_.getStep(x);
         steps[y] = grid_.getStep(y);
         steps[z] = grid_.getStep(z);
-        cartesianGrid_ = new CartesianGrid (CVecI3(), offsetIni, steps);
+        cartesianGrid_ = new Grid3 (CVecI3(), offsetIni, steps);
     }
 
     void checkNaturalCell(double pos) {
@@ -52,7 +52,7 @@ protected:
         EXPECT_EQ(grid_.isIntoDirZ(pos), cartesianGrid_->isIntoDirZ(pos));
     }
     Grid3 grid_;
-    CartesianGrid* cartesianGrid_;
+    Grid3* cartesianGrid_;
     CVecR3 min_, max_, step_;
 };
 
