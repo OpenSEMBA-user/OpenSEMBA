@@ -166,3 +166,13 @@ bool ProjectFile::isFolder() const {
     stat(c_str(), &sb);
     return S_ISDIR(sb.st_mode);
 }
+
+void ProjectFile::openAsInput(ifstream& file) const {
+    try {
+        file.open(this->c_str());
+    }
+    catch(exception &e) {
+        cerr << endl << "ERROR @ ProjectFile: "
+                << "File can't be opened: " << *this << endl;
+    }
+}

@@ -90,7 +90,11 @@ void SmbData::printInfo() const {
 
 bool SmbData::check() const {
     bool res = true;
-    res &= emSources->check();
-//    res &= outputRequests->check();
+    if (emSources != NULL) {
+        res &= emSources->check();
+    }
+    if (outputRequests != NULL) {
+        //    res &= outputRequests->check();
+    }
     return res;
 }

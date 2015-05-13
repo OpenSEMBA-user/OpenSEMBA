@@ -51,6 +51,7 @@ public:
 
     void setFilename(const string& filename);
     void openFile(ofstream& file) const;
+    void openAsInput(ifstream& file) const;
 
     void printInfo() const;
     string toStr() const;
