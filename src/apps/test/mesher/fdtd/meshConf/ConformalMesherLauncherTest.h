@@ -14,19 +14,6 @@ protected:
     virtual ~ConformalMesherLauncherTest() {
     }
 
-    SmbData* parseFromSTL(const string project) {
-        cout << "STL: " << project << endl;
-        const string stlFolder("./projects/test/stls/");
-        ParserSTL parser(stlFolder + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
-
     void runUGRMesher(const string project, const string args) const {
         // TODO runUgrMesher
     }

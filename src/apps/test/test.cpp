@@ -11,11 +11,12 @@ GTEST_API_ int main(int argc, char **argv) {
 
   tests += "*ProjectFile*:";
   tests += "*Math*:";
-  tests += "*Geometry*:";
+//  tests += "*Geometry*:";
+  tests += "*ParserSTL*:";
 //  tests += "*EMSource*:";
 //  tests += "*ParserGid*:";
 //  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
-  tests += "*AdapterFDTDTest.UGRMesherConversion*:";
+//  tests += "*AdapterFDTDTest.UGRMesherConversion*:";
 
   ::testing::GTEST_FLAG(filter) = tests.c_str();
 
