@@ -109,7 +109,7 @@ private:
     Mesher mesher_;
     Mode mode_;
     bool bruteForceVolumes_;
-    bool effectiveParameter_;
+   bool effectiveParameter_;  //DEPRECATED
     string th_;
     string sigma_;
     string edgeFraction_;
