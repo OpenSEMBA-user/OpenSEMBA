@@ -22,6 +22,7 @@ SmbData*
 ParserSTL::read() {
 
     // Reads coordinates.
+
     ifstream stl;
     openAsInput(stl);
     string label;
@@ -40,11 +41,12 @@ ParserSTL::read() {
     }
     GroupCoordinates<CoordR3> cG;
     cG.add(vertices);
+    stl.close();
 
     // Reads Elements and Layers.
     GroupLayers<Layer> lG;
     GroupElements<ElemR> eG;
-    stl.seekg(0); // Rewinds.
+    openAsInput(stl);
     while (!stl.eof()) {
         stl >> label;
         if (label == "solid") {
@@ -52,21 +54,20 @@ ParserSTL::read() {
             stl >> layerName;
             Layer* lay = lG.add(new Layer(layerName), true);
             LayerId lId = lay->getId();
-            while (!stl.eof() && label != "endsolid") {
-                vector<const CoordR3*> coord;
-                string line;
+            string line;
+            while (!stl.eof()) {
                 getline(stl, line);
                 if (trim(line) == "outer loop") {
-                    coord.clear();
+                    vector<const CoordR3*> coord;
                     coord.reserve(3);
-                    stl >> label;
-                    if (label == "vertex") {
-                        CVecR3 pos;
-                        stl >> pos(x) >> pos(y) >> pos(z);
-                        coord.push_back(cG.get(pos));
+                    while (!stl.eof() && label != "endloop") {
+                        stl >> label;
+                        if (label == "vertex") {
+                            CVecR3 pos;
+                            stl >> pos(x) >> pos(y) >> pos(z);
+                            coord.push_back(cG.get(pos));
+                        }
                     }
-                }
-                if (trim(line) == "endloop") {
                     eG.add(new Tri3(ElementId(0), &coord[0], lId, MatId(0)), true);
                 }
             }

@@ -8,6 +8,7 @@ TEST_P(ParserSTLTest, readsSomething) {
 
 INSTANTIATE_TEST_CASE_P(
         stls, ParserSTLTest, ::testing::Values(
+                "single",
                 "B2",
                 "ev55",
                 "scrub2",
