@@ -3,31 +3,37 @@
 
 #include "gtest/gtest.h"
 #include "parser/stl/ParserSTL.h"
+#include "exporter/vtk/ExporterVTK.h"
 
 class ParserSTLTest :
-        public ::testing::Test,
-        public ::testing::WithParamInterface<const char*> {
+public ::testing::Test,
+public ::testing::WithParamInterface<const char*> {
+
+    void SetUp() {
+        stlFolder_ = "./projects/test/stls/";
+    }
 
 protected:
 
-   ParserSTLTest() {
-   }
+    ParserSTLTest() {
+    }
 
-   virtual ~ParserSTLTest() {
-   }
+    virtual ~ParserSTLTest() {
+    }
 
-   SmbData* parseFromSTL(const string project) {
-       cout << "STL: " << project << endl;
-       const string stlFolder("./projects/test/stls/");
-       ParserSTL parser(stlFolder + project + ".stl");
-       EXPECT_TRUE(parser.canOpen());
-       SmbData* res = parser.read();
-       EXPECT_TRUE(res != NULL);
-       if (res != NULL) {
-           EXPECT_TRUE(res->check());
-       }
-       return res;
-   }
+    string stlFolder_;
+
+    SmbData* parseFromSTL(const string project) {
+        cout << "STL: " << project << endl;
+        ParserSTL parser(stlFolder_ + project + ".stl");
+        EXPECT_TRUE(parser.canOpen());
+        SmbData* res = parser.read();
+        EXPECT_TRUE(res != NULL);
+        if (res != NULL) {
+            EXPECT_TRUE(res->check());
+        }
+        return res;
+    }
 
 };
 

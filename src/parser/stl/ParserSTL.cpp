@@ -68,6 +68,7 @@ ParserSTL::read() {
                             coord.push_back(cG.get(pos));
                         }
                     }
+                    label.clear();
                     eG.add(new Tri3(ElementId(0), &coord[0], lId, MatId(0)), true);
                 }
             }
