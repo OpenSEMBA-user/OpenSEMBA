@@ -66,7 +66,7 @@ protected:
     void openFile(const string& fileName, ofstream& file) const;
     string removeExtension(const string& filename) const;
     void deleteDirIfExists(const string& directory) const;
-
+    void initDir_(const string& fn);
 };
 
 

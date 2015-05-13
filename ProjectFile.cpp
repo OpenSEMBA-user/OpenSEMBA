@@ -21,6 +21,15 @@ ProjectFile::~ProjectFile() {
 
 }
 
+void ProjectFile::initDir_(const string& fn) {
+    string dirname = fn + ".vtk";
+#ifdef _WIN32
+    mkdir(dirname.c_str());
+#else
+    mkdir(dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+}
+
 bool ProjectFile::canOpen() const {
     ifstream file;
     file.open(c_str());
