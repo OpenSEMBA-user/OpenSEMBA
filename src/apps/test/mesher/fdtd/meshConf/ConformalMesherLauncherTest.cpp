@@ -2,13 +2,18 @@
 
 TEST_F(ConformalMesherLauncherTest,Structured){
 
-    // >>>>>>>>>>>>>>>>>>> runs ugrMesher <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//    string args = "-auto 1 1 1 -s /home/luis/workspace/semba/projects/test/stls/B2.stl -o B2 --structured";
-//    runUGRMesher(project, args);
-//    // >>>>>>>>>>>>>>>>>>> runs meshConf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// >>>>>>>>>>>>>>>>>>> runs ugrMesher <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    //string args = "-auto 1 1 1 -s /home/luis/workspace/semba/projects/test/stls/B2.stl -o B2 --structured";
+	string args = "-auto 1 1 1 -s ../projects/test/stls/B2.stl -o B2 --structured";
+
+	SmbData* smb = parseFromSTL("B2");
+
+    string project = "";
+    runUGRMesher(project);
+
+// >>>>>>>>>>>>>>>>>>> runs meshConf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 //    SmbData* smb = parseFromSTL("B2");
-//    ConformalMesher* conf = NULL;
-//    conf = ConformalMesherLauncher().run(opts_, smb, NULL);
+    //ConformalMesher* conf = NULL;
 //    MeshStructured* meshNew_ = convertConfToMesh(conf);
 //    GroupPhysicalModels<PMPEC> pec = smb_->pMGroup->getGroupOf<PMPEC>();
 //    assert(pec.size() <= 1);
@@ -38,3 +43,4 @@ TEST_F(ConformalMesherLauncherTest,Structured){
 //                "ev55",
 //                "scrub2"
 //        ));
+
