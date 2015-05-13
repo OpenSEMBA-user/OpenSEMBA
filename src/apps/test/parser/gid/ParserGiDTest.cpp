@@ -27,8 +27,8 @@ TEST_F(ParserGiDTest, rcs_1m) {
 TEST_F(ParserGiDTest, dmcwf) {
     SmbData* smb = newSmb("dmcwf");
     EXPECT_EQ(smb->mesherOptions->getBoundTermination(y,L), OptionsMesher::pec);
-    EXPECT_EQ(smb->mesherOptions->getBoundTermination(x,U), OptionsMesher::pmc);
-    EXPECT_EQ(smb->mesherOptions->getLocationInMesh(), CVecR3(-0.00485, 0.0015, 0.081));
+    EXPECT_EQ(smb->mesherOptions->getBoundTermination(x,L), OptionsMesher::pmc);
+    EXPECT_EQ(smb->mesherOptions->getLocationInMesh(), CVecR3(0.00485, 0.0015, 0.081));
     EXPECT_EQ(smb->outputRequests->getGroupOf<OutRqNode>().size(), 3);
     EXPECT_EQ(smb->emSources->size(), 1);
 }
