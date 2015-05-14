@@ -52,6 +52,9 @@ public:
 
     void setFilename(const string& filename);
     void openFile(ofstream& file) const;
+    void openAsInput(ifstream& file) const;
+
+    void exec(const string arguments = string()) const;
 
     void printInfo() const;
     string toStr() const;
@@ -66,7 +69,7 @@ protected:
     void openFile(const string& fileName, ofstream& file) const;
     string removeExtension(const string& filename) const;
     void deleteDirIfExists(const string& directory) const;
-
+    void initDir_(const string& fn);
 };
 
 

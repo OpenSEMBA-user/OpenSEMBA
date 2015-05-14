@@ -21,6 +21,15 @@ ProjectFile::~ProjectFile() {
 
 }
 
+void ProjectFile::initDir_(const string& fn) {
+    string dirname = fn + ".vtk";
+#ifdef _WIN32
+    mkdir(dirname.c_str());
+#else
+    mkdir(dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+}
+
 bool ProjectFile::canOpen() const {
     ifstream file;
     file.open(c_str());
@@ -162,5 +171,31 @@ ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
 
 bool ProjectFile::isFolder() const {
     struct stat sb;
+    stat(c_str(), &sb);
     return S_ISDIR(sb.st_mode);
+}
+
+void ProjectFile::openAsInput(ifstream& file) const {
+    try {
+        file.open(this->c_str());
+    }
+    catch(exception &e) {
+        cerr << endl << "ERROR @ ProjectFile: "
+                << "File can't be opened: " << *this << endl;
+    }
+}
+
+void ProjectFile::exec(const string arguments) const {
+    if (!canExecute()) {
+        cerr << endl << "ERROR @ ProjectFile:"
+                << "Can not execute" << endl;
+    }
+#ifndef _WIN32
+    string cmd = getFilename() + " " + arguments;
+    system(cmd.c_str());
+#else
+    cerr << endl << "ERROR @ ProjectFile: "
+            << "Not implemented fo windows." << endl;
+    // TODO Dani: Implementar en windows.
+#endif
 }

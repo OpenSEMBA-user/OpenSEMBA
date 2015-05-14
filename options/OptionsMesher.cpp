@@ -13,7 +13,6 @@ OptionsMesher::OptionsMesher() {
     mode_ = structured;
     bruteForceVolumes_ = false;
     scaleFactor_ = false;
-    effectiveParameter_ = false;
     scalingFactor_ = 1.0;
     boundTermination_.resize(3);
     for (UInt i = 0; i < 3; i++) {
@@ -41,9 +40,6 @@ OptionsMesher::OptionsMesher(
     locationInMesh_ = locationInMesh;
     bruteForceVolumes_ = bruteForceVolumes;
     mode_ = mode;
-    effectiveParameter_ = effectiveParameter;
-    th_ = th;
-    sigma_ = sigma;
     edgeFraction_ = edgeFraction;
     scaleFactor_ = scaleFactor;
     scaleFactorValue_ = scaleFactorValue;
@@ -76,10 +72,6 @@ OptionsMesher::printInfo() const {
     cout<< "Lower boundary mesh size: " << boundaryMeshSize_.first << endl;
     cout<< "Upper boundary mesh size: " << boundaryMeshSize_.second << endl;
     cout << " --- End of Meshing parameters info ---" << endl;
-}
-
-void OptionsMesher::setTh(const string& th) {
-    th_ = th;
 }
 
 void OptionsMesher::printHelp() const {
@@ -129,16 +121,6 @@ bool OptionsMesher::isBruteForceVolumes() const {
     return bruteForceVolumes_;
 }
 
-bool OptionsMesher::hasEffParams() const {
-    return effectiveParameter_;
-}
-string OptionsMesher::getEffThick() const {
-    return th_;
-}
-string OptionsMesher::getEffSigma() const {
-    return sigma_;
-}
-
 bool OptionsMesher::isStructured() const {
     return (mode_ == structured);
 }
@@ -169,10 +151,6 @@ string OptionsMesher::getSWFForce() const {
 
 const string& OptionsMesher::getMeshOutputName() const {
     return confOutput_;
-}
-
-bool OptionsMesher::isEffectiveParameter() const {
-    return effectiveParameter_;
 }
 
 OptionsMesher::Mesher OptionsMesher::getMesher() const {
@@ -314,14 +292,6 @@ void OptionsMesher::setScaleFactorValue(const string& scaleFactorValue) {
     scaleFactorValue_ = scaleFactorValue;
 }
 
-void OptionsMesher::setSigma(const string& sigma) {
-    sigma_ = sigma;
-}
-
 void OptionsMesher::setSwfForze(const string& swfForze) {
     swfForze_ = swfForze;
-}
-
-void OptionsMesher::setEffectiveParameter(bool effectiveParameter) {
-    effectiveParameter_ = effectiveParameter;
 }

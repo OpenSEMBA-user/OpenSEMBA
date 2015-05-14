@@ -29,6 +29,12 @@ public:
 	virtual ~Parser();
 	virtual void
 	 printInfo() const = 0;
+
+    static inline string
+    &trim(string &s) {
+        return ltrim(rtrim(s));
+    }
+
 protected:
 	ifstream f_in; // Input file stream.
 	CVecR3
@@ -46,10 +52,6 @@ protected:
 		s.erase(find_if(s.rbegin(), s.rend(),
 		 not1(ptr_fun<int, int>(isspace))).base(), s.end());
 		return s;
-	}
-	static inline string
-	&trim(string &s) {
-		return ltrim(rtrim(s));
 	}
 	static inline bool
 	toBool(const UInt param) {

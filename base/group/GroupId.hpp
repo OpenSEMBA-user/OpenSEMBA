@@ -19,7 +19,7 @@ template<typename T, class Id>
 GroupId<T, Id>::ErrorIdNotExists::ErrorIdNotExists(const Id& id)
 :   ErrorId(id) {
     stringstream aux;
-    aux << "GroupId: Id " << id << "doesn't exists";
+    aux << "GroupId: Id " << id << " doesn't exists";
     this->setMsg(aux.str());
 }
 

@@ -73,7 +73,6 @@ public:
     void setScaleFactorValue(const string& scaleFactorValue);
     void setSigma(const string& sigma);
     void setSwfForze(const string& swfForze);
-    void setTh(const string& th);
     void setEffectiveParameter(bool effectiveParameter);
     void applyGeometricScalingFactor(const Real& factor);
 
@@ -86,9 +85,6 @@ public:
     bool isSlanted() const;
     bool isBruteForceVolumes() const;
     bool isEffectiveParameter() const;
-    bool hasEffParams() const;
-    string getEffThick() const;
-    string getEffSigma() const;
     string getEdgeFraction() const;
     bool hasScaleFactor() const;
     string getScaleFactor() const;
@@ -109,9 +105,6 @@ private:
     Mesher mesher_;
     Mode mode_;
     bool bruteForceVolumes_;
-    bool effectiveParameter_;
-    string th_;
-    string sigma_;
     string edgeFraction_;
     bool scaleFactor_;
     string scaleFactorValue_;
