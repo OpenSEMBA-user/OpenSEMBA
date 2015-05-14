@@ -2,14 +2,9 @@
 
 TEST_F(ConformalMesherLauncherTest, Structured){
     const string project = "B2";
-    CVecR3 step(1,1,1);
-    // >>>>>>>>>>>>>>>>>>> runs ugrMesher <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    ProjectFile ugrMesher("/usr/local/bin/ugrMesher");
-    string inputFile = stlFolder_ + project + ".stl";
-    string outputFile = stlFolder_ + project;
-    string args = "-auto 1 1 1 -s " + inputFile + " -o " + outputFile + " --structured";
-    ugrMesher.exec(args);
-    // >>>>>>>>>>>>>>>>>>> runs meshConf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    const string file = stlFolder_ + project;
+    CVecR3 step(0.5,0.5,0.5);
+    // Runs meshConf.
     SmbData* smb = parseFromSTL(project);
     // Prepares data for mesher.
     smb->pMGroup = new GroupPhysicalModels<>();
@@ -17,7 +12,7 @@ TEST_F(ConformalMesherLauncherTest, Structured){
     smb->pMGroup->add(new PMPEC(pecId, "PEC"));
     smb->mesh->castTo<MeshUnstructured>()->setMatId(pecId);
     BoxR3 bound = smb->mesh->castTo<MeshUnstructured>()->getBoundingBox();
-    smb->grid = new Grid3(bound, step); // TODO Agrandarlo cuatro celdas.
+    smb->grid = new Grid3(bound, step);
     smb->mesherOptions = new OptionsMesher();
     smb->solverOptions = new OptionsSolver();
     smb->emSources = new GroupEMSources<>();
@@ -31,9 +26,15 @@ TEST_F(ConformalMesherLauncherTest, Structured){
         ExporterNFDE outNFDE(*nfde);
     }
     delete smb;
+    // Runs ugrMesher.
+    ProjectFile ugrMesher("/usr/local/bin/ugrMesher");
+    string args = "-i " + file + ".nfde"
+            + " -s " + file + ".stl" + " -o "
+            + file + " --structured";
+    ugrMesher.exec(args);
     // Makes comparisons.
-    ProjectFile cmshBase;
-    ProjectFile cmshNew;
+    ProjectFile cmshBase(file + "_str.cmsh");
+    ProjectFile cmshNew(file + ".cmsh");
     compare(cmshBase, cmshNew);
 }
 

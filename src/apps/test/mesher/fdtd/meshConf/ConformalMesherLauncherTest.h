@@ -22,25 +22,34 @@ protected:
         ifstream fileBase, fileNew;
         cmshBase.openAsInput(fileBase);
         cmshNew.openAsInput(fileNew);
+
+        UInt line = 0;
         while(!fileBase.eof()&&!fileNew.eof()){
+
             string lineBase, lineNew;
             if(!fileBase.eof()){
                 lineBase = nextLine(fileBase);
+                line++;
             }
             if(!fileNew.eof()){
                 lineNew = nextLine(fileNew);
             }
-            EXPECT_TRUE(lineBase==lineNew);
-        }
-
-        if(!fileBase.eof()){
-            nextLine (fileBase);
-            EXPECT_TRUE(fileBase.eof());
-        }
-
-        if(!fileBase.eof()){
-            nextLine (fileNew);
-            EXPECT_TRUE(fileNew.eof());
+            if (lineBase != lineNew) {
+                long int iBase, iNew;
+                for (UInt i = 0; i < 3; i++) {
+                    fileBase >> iBase;
+                    fileNew >> iNew;
+                    EXPECT_EQ(iBase, iNew);
+                }
+                string labelBase, labelNew;
+                fileBase >> labelBase;
+                fileNew >> labelNew;
+                EXPECT_EQ(labelBase, labelNew);
+                Real lengthBase, lengthNew;
+                fileBase >> lengthBase;
+                fileNew >> lengthNew;
+                EXPECT_NEAR(lengthBase, lengthNew, 0.001);
+            }
         }
     }
 
@@ -48,9 +57,9 @@ private:
     string nextLine (ifstream& file) const {
         if(!file.eof()){
             string line;
-            file >> line;
-            while (!file.eof()&&isCommentLine (line)) {
-                file >> line;
+            getline(file, line);
+            while (!file.eof() && isCommentLine(line)) {
+                getline(file, line);
             }
             return line;
         }
@@ -59,9 +68,9 @@ private:
 
     static bool isCommentLine (string& line){
         string trimLine = Parser::trim(line);
-        return ( trimLine.empty()   ||
-                (trimLine.size()==0)||
-                (trimLine.substr(0,0) == string("*") ));
+        return ( trimLine.empty() ||
+                (trimLine.size() == 0) ||
+                (trimLine.substr(0,1) == string("*") ));
     }
 
 };
