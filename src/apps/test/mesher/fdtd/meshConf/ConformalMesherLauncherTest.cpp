@@ -36,7 +36,8 @@ void ConformalMesherLauncherTest::compare(
 void ConformalMesherLauncherTest::runConformalMesher(
         const string& project,
         UInt maxCellsPerLength,
-        OptionsMesher* optsMesher) const {
+        OptionsMesher* optsMesher,
+        const string& subName) const {
     SmbData* smb = parseFromSTL(project);
     smb->pMGroup = new GroupPhysicalModels<>();
     MatId pecId(1);
@@ -51,7 +52,8 @@ void ConformalMesherLauncherTest::runConformalMesher(
     SmbData* nfde = new SmbData();
     AdapterFDTD(*smb).convert(*nfde);
     {
-        ExporterVTK outVTKNFDE(nfde, stlFolder_ + project);
+        ExporterVTK outVTKNFDE(nfde, stlFolder_ + project + subName);
+        nfde->setFilename(nfde->getFilename()+subName);
         ExporterNFDE outNFDE(*nfde);
     }
     delete smb;
@@ -60,25 +62,45 @@ void ConformalMesherLauncherTest::runConformalMesher(
 
 TEST_P(ConformalMesherLauncherTest, Structured_1MCell){
     const string project = GetParam();
-    UInt nCells = 25;
+    UInt nCells = 100;
     // Runs meshConf.
     OptionsMesher* opts = new OptionsMesher();
-    runConformalMesher(project, nCells, opts);
-    // Runs ugrMesher.
-    const string file = stlFolder_ + project;
-    string basicArgs = "-i " + file + ".nfde -s " + file + ".stl -o " + file;
-    string args = basicArgs + " --structured";
-    ugrMesher_.exec(args);
+    runConformalMesher(project, nCells, opts, "_structured");
+//    // Runs ugrMesher.
+//    const string file = stlFolder_ + project;
+//    string basicArgs = "-i " + file + ".nfde -s " + file + ".stl -o " + file;
+//    string args = basicArgs + " --structured";
+//    ugrMesher_.exec(args);
     // Makes comparisons.
-    ProjectFile cmshBase(file + "_str.cmsh");
-    ProjectFile cmshNew(file + ".cmsh");
-    compare(cmshBase, cmshNew);
+//    ProjectFile cmshBase(file + "_str.cmsh");
+//    ProjectFile cmshNew(file + ".cmsh");
+//    compare(cmshBase, cmshNew);
+}
+
+TEST_P(ConformalMesherLauncherTest, Conformal_1MCell){
+    const string project = GetParam();
+    UInt nCells = 100;
+    // Runs meshConf.
+    OptionsMesher* opts = new OptionsMesher();
+    opts->setMode(OptionsMesher::relaxed);
+    runConformalMesher(project, nCells, opts, "_conformal");
+//    // Runs ugrMesher.
+//    const string file = stlFolder_ + project;
+//    string basicArgs = "-i " + file + ".nfde -s " + file + ".stl -o " + file;
+//    string args = basicArgs + " --structured";
+//    ugrMesher_.exec(args);
+    // Makes comparisons.
+//    ProjectFile cmshBase(file + "_str.cmsh");
+//    ProjectFile cmshNew(file + ".cmsh");
+//    compare(cmshBase, cmshNew);
 }
 
 INSTANTIATE_TEST_CASE_P(
         stls, ConformalMesherLauncherTest, ::testing::Values(
-//                "single",
+                "single",
                 "B2",
+                "ev55",
+                "scrub2",
                 "dmcwf"
         ));
 
