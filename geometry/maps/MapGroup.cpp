@@ -7,6 +7,15 @@
 
 #include "MapGroup.h"
 
+MapGroup::ErrorHangingNode::ErrorHangingNode()
+:   Error("Map Group: A surface has a hanging node") {
+
+}
+
+MapGroup::ErrorHangingNode::~ErrorHangingNode() throw () {
+
+}
+
 MapGroup::MapGroup() {
 }
 
@@ -14,177 +23,172 @@ MapGroup::~MapGroup() {
 }
 
 MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
-                   const GroupElements  <const Elem> & eG) {
-   // Builds a list with all tetrahedron faces.
-   static const UInt faces = 4;
-   static const UInt nVert = 3;
-   GroupElements<const Tet> tet = eG.getGroupOf<Tet>();
-   UInt nK = tet.size();
-   UInt nList = nK * faces;
-   DynMatrix<UInt> fList(nList, 2 + nVert);
-   for (UInt k = 0; k < nK; k++) {
-	  const Tet* aux = tet(k);
-      ElementId id = aux->getId();
-      for (UInt f = 0; f < faces; f++) {
-         UInt row = k * faces + f;
-         fList(row, 0) = id;
-         fList(row, 1) = f;
-         vector<CoordinateId> ordered(nVert);
-         ordered = ElementBase::getIds(aux->getSideVertices(f));
-         ordered = ElementBase::ascendingIdOrder(ordered);
-         for (UInt i = 0; i < nVert; i++) {
-            fList(row, i + 2) = ordered[i];
-         }
-      }
-   }
-   // Sorts according to the coordinates id. Pairing matching faces.
-   // If there is not a pair, then that element is not connected with
-   // other remaining connected with itself.
-   fList.sortRows(2,4);
-   // Initializes connectivities matrix.
-   DynMatrix<UInt> etoe(nK, faces);
-   DynMatrix<UInt> etof(nK, faces);
-   for (UInt k = 0; k < nK; k++) {
-      for (UInt f = 0; f < faces; f++) {
-         etoe(k,f) = k;
-         etof(k,f) = f;
-      }
-   }
-   // Inserts information of pairings into the connectivity matrix.
-   for (UInt i = 0; i < (nList-1) && (nList != 0); i++) {
-      bool matches;
-      matches = fList(i,2) == fList(i+1,2);
-      matches &= fList(i,3) == fList(i+1,3);
-      matches &= fList(i,4) == fList(i+1,4);
-      if (matches) {
-         UInt k1 = fList(i,0);
-         UInt f1 = fList(i,1);
-         UInt k2 = fList(i+1,0);
-         UInt f2 = fList(i+1,1);
-         etoe(k1,f1) = k2;
-         etof(k1,f1) = f2;
-         etoe(k2,f2) = k1;
-         etof(k2,f2) = f1;
-      }
-   }
-   // Generates tetrahedron maps.
-   for (UInt k = 0; k < nK; k++) {
-      const Tet *local = tet(k);
-      const Tet *neigh[4];
-      UInt neighFaces[4];
-      for (UInt j = 0; j < 4; j++) {
-         neigh[j] = eG.get(ElementId(etoe(k,j)))->castTo<Tet>();
-         neighFaces[j] = etof(k,j);
-      }
-      pair<UInt, MapVolume*>
-       aux(local->getId(), new MapVolume(local, neigh, neighFaces));
-      tet_.insert(aux);
-   }
-   // Now uses the generated ordered fList to build the triangle maps.
-   GroupElements<const Tri> tri = eG.getGroupOf<Tri>();
-   const UInt nS = tri.size();
-   for (UInt s = 0; s < nS; s++) {
-	  const Tri* local = tri(s);
-      ElementId id = local->getId();
-      pair<const Tet*, const Tet*> neigh;
-      vector<CoordinateId> ordered(nVert);
-      ordered = ElementBase::getIds(local->getVertices());
-      ordered = ElementBase::ascendingIdOrder(ordered);
-      vector<UInt> orderedInt(ordered.size());
-      for (UInt i = 0; i < orderedInt.size(); i++) {
-          orderedInt[i] = (UInt) ordered[i];
-      }
-      UInt i = fList.findFirstOcurrenceInColumns(&orderedInt[0], 2, 3);
-      if (i == fList.nRows()) {
-         cerr << endl << "Faces list." << endl;
-         fList.printInfo();
-         cerr << endl << "Surface:" << endl;
-         local->printInfo();
-         cerr << endl << "ERROR @ building maps: "
-               << "A surface has a hanging node." << endl;
-      }
-      //
-      bool matches;
-      if (i < nList - 1 && nList != 0) {
-         matches = fList(i,2) == fList(i+1,2);
-         matches &= fList(i,3) == fList(i+1,3);
-         matches &= fList(i,4) == fList(i+1,4);
-      } else {
-         matches = false;
-      }
-      if (matches) {
-         neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
-         neigh.second = eG.get(ElementId(fList(i+1,0)))->castTo<Tet>();
-      } else {
-         neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
-         neigh.second = neigh.first;
-      }
-      pair<UInt, MapSurface*> aux(local->getId(), new MapSurface(local, neigh));
-      tri_.insert(aux);
-   }
+                   const GroupElements   <const Elem> & eG) {
+    // Builds a list with all tetrahedron faces.
+    static const UInt faces = 4;
+    static const UInt nVert = 3;
+    GroupElements<const Tet> tet = eG.getGroupOf<Tet>();
+    UInt nK = tet.size();
+    UInt nList = nK * faces;
+    DynMatrix<UInt> fList(nList, 2 + nVert);
+    for (UInt k = 0; k < nK; k++) {
+        const Tet* aux = tet(k);
+        ElementId id = aux->getId();
+        for (UInt f = 0; f < faces; f++) {
+            UInt row = k * faces + f;
+            fList(row, 0) = id;
+            fList(row, 1) = f;
+            vector<CoordinateId> ordered(nVert);
+            ordered = ElementBase::getIds(aux->getSideVertices(f));
+            ordered = ElementBase::ascendingIdOrder(ordered);
+            for (UInt i = 0; i < nVert; i++) {
+                fList(row, i + 2) = ordered[i];
+            }
+        }
+    }
+    // Sorts according to the coordinates id. Pairing matching faces.
+    // If there is not a pair, then that element is not connected with
+    // other remaining connected with itself.
+    fList.sortRows(2,4);
+    // Initializes connectivities matrix.
+    DynMatrix<UInt> etoe(nK, faces);
+    DynMatrix<UInt> etof(nK, faces);
+    for (UInt k = 0; k < nK; k++) {
+        for (UInt f = 0; f < faces; f++) {
+            etoe(k,f) = k;
+            etof(k,f) = f;
+        }
+    }
+    // Inserts information of pairings into the connectivity matrix.
+    for (UInt i = 0; i < (nList-1) && (nList != 0); i++) {
+        bool matches;
+        matches = fList(i,2) == fList(i+1,2);
+        matches &= fList(i,3) == fList(i+1,3);
+        matches &= fList(i,4) == fList(i+1,4);
+        if (matches) {
+            UInt k1 = fList(i,0);
+            UInt f1 = fList(i,1);
+            UInt k2 = fList(i+1,0);
+            UInt f2 = fList(i+1,1);
+            etoe(k1,f1) = k2;
+            etof(k1,f1) = f2;
+            etoe(k2,f2) = k1;
+            etof(k2,f2) = f1;
+        }
+    }
+    // Generates tetrahedron maps.
+    for (UInt k = 0; k < nK; k++) {
+        const Tet *local = tet(k);
+        const Tet *neigh[4];
+        UInt neighFaces[4];
+        for (UInt j = 0; j < 4; j++) {
+            neigh[j] = eG.get(ElementId(etoe(k,j)))->castTo<Tet>();
+            neighFaces[j] = etof(k,j);
+        }
+        pair<UInt, MapVolume*>
+        aux(local->getId(), new MapVolume(local, neigh, neighFaces));
+        tet_.insert(aux);
+    }
+    // Now uses the generated ordered fList to build the triangle maps.
+    GroupElements<const Tri> tri = eG.getGroupOf<Tri>();
+    const UInt nS = tri.size();
+    for (UInt s = 0; s < nS; s++) {
+        const Tri* local = tri(s);
+        ElementId id = local->getId();
+        pair<const Tet*, const Tet*> neigh;
+        vector<CoordinateId> ordered(nVert);
+        ordered = ElementBase::getIds(local->getVertices());
+        ordered = ElementBase::ascendingIdOrder(ordered);
+        vector<UInt> orderedInt(ordered.size());
+        for (UInt i = 0; i < orderedInt.size(); i++) {
+            orderedInt[i] = (UInt) ordered[i];
+        }
+        UInt i = fList.findFirstOcurrenceInColumns(&orderedInt[0], 2, 3);
+        if (i == fList.nRows()) {
+            throw ErrorHangingNode();
+        }
+        //
+        bool matches;
+        if (i < nList - 1 && nList != 0) {
+            matches = fList(i,2) == fList(i+1,2);
+            matches &= fList(i,3) == fList(i+1,3);
+            matches &= fList(i,4) == fList(i+1,4);
+        } else {
+            matches = false;
+        }
+        if (matches) {
+            neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
+            neigh.second = eG.get(ElementId(fList(i+1,0)))->castTo<Tet>();
+        } else {
+            neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
+            neigh.second = neigh.first;
+        }
+        pair<UInt, MapSurface*> aux(local->getId(), new MapSurface(local, neigh));
+        tri_.insert(aux);
+    }
 }
 
 void
 MapGroup::reassignPointers(const GroupElements<const Elem>& newEG) {
-   {
-      map<UInt,MapVolume*>::iterator it;
-      for (it=tet_.begin(); it != tet_.end(); ++it) {
-         it->second->reassignPointers(newEG);
-      }
-   }
-   {
-      map<UInt,MapSurface*>::iterator it;
-      for (it=tri_.begin(); it != tri_.end(); ++it) {
-         it->second->reassignPointers(newEG);
-      }
-   }
+    {
+        map<UInt,MapVolume*>::iterator it;
+        for (it=tet_.begin(); it != tet_.end(); ++it) {
+            it->second->reassignPointers(newEG);
+        }
+    }
+    {
+        map<UInt,MapSurface*>::iterator it;
+        for (it=tri_.begin(); it != tri_.end(); ++it) {
+            it->second->reassignPointers(newEG);
+        }
+    }
 }
 
 const Tet* MapGroup::getNeighbour(const UInt id, const UInt face) const {
-   return tet_.find(id)->second->getVol(face);
+    return tet_.find(id)->second->getVol(face);
 }
 
 UInt MapGroup::getVolToF(const UInt id, const UInt face) const {
-   return tet_.find(id)->second->getVolToF(face);
+    return tet_.find(id)->second->getVolToF(face);
 }
 
 
 pair<const VolR*, UInt>
 MapGroup::getInnerFace(const UInt id) const {
-   map<UInt,MapSurface*>::const_iterator surf = tri_.find(id);
-   assert(surf != tri_.end());
-   const Tet* vol = surf->second->getVol(0);
-   const UInt face = surf->second->getVolToF(0);
-   return pair<const Tet*, UInt>(vol, face);
+    map<UInt,MapSurface*>::const_iterator surf = tri_.find(id);
+    assert(surf != tri_.end());
+    const Tet* vol = surf->second->getVol(0);
+    const UInt face = surf->second->getVolToF(0);
+    return pair<const Tet*, UInt>(vol, face);
 }
 
 pair<const VolR*, UInt>
 MapGroup::getOuterFace(const UInt id) const {
-   const VolR* vol = tri_.find(id)->second->getVol(1);
-   const UInt face = tri_.find(id)->second->getVolToF(1);
-   return pair<const VolR*, UInt>(vol, face);
+    const VolR* vol = tri_.find(id)->second->getVol(1);
+    const UInt face = tri_.find(id)->second->getVolToF(1);
+    return pair<const VolR*, UInt>(vol, face);
 }
 
 pair<const Tet*, UInt>
 MapGroup::getNeighConnection(
-      const UInt id,
-      const UInt face) const {
-   pair<const Tet*, UInt> res;
-   res.first = getNeighbour(id, face);
-   res.second = getVolToF(id, face);
-   return res;
+const UInt id,
+const UInt face) const {
+    pair<const Tet*, UInt> res;
+    res.first = getNeighbour(id, face);
+    res.second = getVolToF(id, face);
+    return res;
 }
 
 bool MapGroup::isBoundary(const UInt id) const {
-   return tri_.find(id)->second->isBoundary();
+    return tri_.find(id)->second->isBoundary();
 }
 
 bool MapGroup::isDomainBoundary(const UInt id, const UInt f) const {
-   return (getNeighbour(id,f)->getId() == id);
+    return (getNeighbour(id,f)->getId() == id);
 }
 
 bool MapGroup::isDomainBoundary(Face boundary) const {
-   return isDomainBoundary(boundary.first->getId(), boundary.second);
+    return isDomainBoundary(boundary.first->getId(), boundary.second);
 }
 
 //pair<const Tet*, const Tet*>

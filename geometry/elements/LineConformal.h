@@ -14,6 +14,12 @@
 
 class LineConformal : public virtual Line2<Int> {
 public:
+    class ErrorCoordNotConf : public Element<Int>::ErrorCoord {
+    public:
+        ErrorCoordNotConf(const CoordinateId& coordId);
+        ~ErrorCoordNotConf() throw();
+    };
+
     LineConformal();
     LineConformal(const ElementId id,
                   const CoordI3* v[2],

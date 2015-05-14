@@ -229,22 +229,22 @@ void GroupWires<T>::getWireMats_(const PMWire*& wireMat,
                 extremeL = mats.get(matIds[m])->castTo<PMMultiport>();
             } else if ((extremeL != NULL) &&
                        (wireMat  == NULL)) {
-                cerr << "WARNING @ WireGroup: ";
-                cerr << " Wire: " << wires_.size()+1;
-                cerr << ". Two node materials together. ";
-                cerr << "Ignoring second.";
-                cerr << endl;
+                cout << "WARNING @ WireGroup: ";
+                cout << " Wire: " << wires_.size()+1;
+                cout << ". Two node materials together. ";
+                cout << "Ignoring second.";
+                cout << endl;
                 assert(false);
                 continue;
             } else if ((wireMat  != NULL) &&
                        (extremeR == NULL)) {
                 extremeR = mats.get(matIds[m])->castTo<PMMultiport>();
             } else if (extremeR != NULL) {
-                cerr << "WARNING @ WireGroup: ";
-                cerr << " Wire: " << wires_.size()+1;
-                cerr << ". Two node materials together. ";
-                cerr << "Ignoring second.";
-                cerr << endl;
+                cout << "WARNING @ WireGroup: ";
+                cout << " Wire: " << wires_.size()+1;
+                cout << ". Two node materials together. ";
+                cout << "Ignoring second.";
+                cout << endl;
                 assert(false);
                 continue;
             }
@@ -252,21 +252,21 @@ void GroupWires<T>::getWireMats_(const PMWire*& wireMat,
             if (wireMat == NULL) {
                 wireMat = mats.get(matIds[m])->castTo<PMWire>();
             } else if (wireMat != NULL) {
-                cerr << "WARNING @ WireGroup: ";
-                cerr << " Wire: " << wires_.size()+1;
-                cerr << ". Too many wire materials. ";
-                cerr << "Ignoring last.";
-                cerr << endl;
+                cout << "WARNING @ WireGroup: ";
+                cout << " Wire: " << wires_.size()+1;
+                cout << ". Too many wire materials. ";
+                cout << "Ignoring last.";
+                cout << endl;
                 assert(false);
                 continue;
             }
         }
     }
     if (wireMat == NULL) {
-        cerr << "WARNING @ WireGroup: ";
-        cerr << " Wire: " << wires_.size()+1;
-        cerr << ". No wire material. Ignoring wire.";
-        cerr << endl;
+        cout << "WARNING @ WireGroup: ";
+        cout << " Wire: " << wires_.size()+1;
+        cout << ". No wire material. Ignoring wire.";
+        cout << endl;
         assert(false);
         return;
     }

@@ -23,6 +23,7 @@
 using namespace std;
 
 #include "Types.h"
+#include "base/error/ErrorFile.h"
 
 class ProjectFile : public string {
 public:

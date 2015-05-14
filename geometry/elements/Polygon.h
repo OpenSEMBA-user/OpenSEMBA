@@ -8,8 +8,13 @@
 #ifndef POLYGON_H_
 #define POLYGON_H_
 
+#include <cstdlib>
+
+using namespace std;
+
+#include "base/error/ErrorNotImplemented.h"
+
 #include "Surface.h"
-#include <stdlib.h>
 
 class Polygon: public Surface<Real> {
 public:

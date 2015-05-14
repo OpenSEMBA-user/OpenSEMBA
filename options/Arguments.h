@@ -21,10 +21,18 @@ using namespace std;
 
 #include <libgen.h>
 
+#include "base/error/Error.h"
+
 #include "Types.h"
 
 class Arguments {
 public:
+    class ErrorArgumentNotExists : public Error {
+    public:
+        ErrorArgumentNotExists(const string&);
+        virtual ~ErrorArgumentNotExists() throw();
+    };
+
     Arguments(const string& arg);
     Arguments(const int argc, const char* argv[]);
     virtual ~Arguments();

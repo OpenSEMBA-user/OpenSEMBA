@@ -182,10 +182,7 @@ template<class T>
 void Line2<T>::setCoordinates(GroupCoordinates<Coordinate<T,3> >& cG,
                              const Box<T,3>& box) {
     if(!box.isLine()) {
-        cerr << endl << "ERROR @ Line2::Line2(): "
-                     << "Box is not a Line" << endl;
-        assert(false);
-        exit(EXIT_FAILURE);
+        throw typename Box<T,3>::ErrorNotLine();
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {

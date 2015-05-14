@@ -481,9 +481,7 @@ void
 DynMatrix<T>::printInfo(UInt rows, UInt cols) const {
    UInt i, j;
    if (rows > _nRows || cols > _nCols) {
-      cerr << endl << "ERROR: Unable print more rows or cols than available" << endl;
-      cerr << endl << "Terminating."                                         << endl;
-      exit(EXIT_FAILURE);
+       throw typename MathMatrix<T>::ErrorSize();
    }
    cout << "Dimensions: " << _nRows << "x" << _nCols << endl;
    cout << "Stored values: " << endl;

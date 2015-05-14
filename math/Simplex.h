@@ -10,6 +10,8 @@
 #include <vector>
 using namespace std;
 
+#include "base/error/ErrorNotImplemented.h"
+
 #include "StaMatrix.h"
 #include "DynMatrix.h"
 #include "CartesianVector.h"
@@ -38,8 +40,7 @@ public:
 	 cubatureNodeIndex(const UInt i, const UInt j) const;
 	virtual const CartesianVector<Real, 4>
 	 cubatureCoordinate(const UInt c) const {
-		 cerr << endl << "ERROR @ cubatureCoordinate" << endl;
-		 exit(EXIT_FAILURE);
+		 throw ErrorNotImplemented("Simplex::cubatureCoordinate");
 	 }
 protected:
 	static const UInt cubatureOrder = SIMPLEX_CUBATURE_ORDER;

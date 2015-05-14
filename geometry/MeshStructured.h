@@ -18,6 +18,12 @@ class MeshStructured : public virtual Mesh,
                        public virtual GroupElements<ElemI>,
                        public virtual GroupLayers<Layer> {
 public:
+    class ErrorInvalidBoundary : public Error {
+    public:
+        ErrorInvalidBoundary();
+        virtual ~ErrorInvalidBoundary() throw();
+    };
+
     MeshStructured(const Grid3& grid);
     MeshStructured(const Grid3& grid,
                    const GroupCoordinates<const CoordI3>& cG,
@@ -30,14 +36,14 @@ public:
 
     DEFINE_CLONE(MeshStructured);
 
-    Grid3&                    grid  () { return *this; }
+    Grid3&                     grid  () { return *this; }
     GroupCoordinates<CoordI3>& coords() { return *this; }
-    GroupElements<ElemI>&     elems () { return *this; }
+    GroupElements<ElemI>&      elems () { return *this; }
     GroupLayers<>&             layers() { return *this; }
 
-    const Grid3&                    grid  () const { return *this; }
+    const Grid3&                     grid  () const { return *this; }
     const GroupCoordinates<CoordI3>& coords() const { return *this; }
-    const GroupElements<ElemI>&     elems () const { return *this; }
+    const GroupElements<ElemI>&      elems () const { return *this; }
     const GroupLayers<>&             layers() const { return *this; }
 
     MeshUnstructured* getMeshUnstructured() const;

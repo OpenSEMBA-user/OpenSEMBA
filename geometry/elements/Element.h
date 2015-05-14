@@ -3,12 +3,15 @@
 
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <string>
 #include <type_traits>
 #include <vector>
 
 using namespace std;
 
+#include "base/error/Error.h"
+#include "base/error/ErrorNotImplemented.h"
 #include "math/MathMatrix.h"
 #include "math/CartesianVector.h"
 #include "geometry/Box.h"
@@ -69,6 +72,28 @@ private:
 template<class T>
 class Element : public virtual ElementBase {
 public:
+    class ErrorCoord : public Error {
+    public:
+        ErrorCoord(const CoordinateId& coordId);
+        virtual ~ErrorCoord() throw();
+
+        CoordinateId getCoordId() const { return coordId_; }
+    private:
+        CoordinateId coordId_;
+    };
+
+    class ErrorCoordNotFound : public ErrorCoord {
+    public:
+        ErrorCoordNotFound(const CoordinateId& coordId);
+        virtual ~ErrorCoordNotFound() throw();
+    };
+
+    class ErrorCoordNotCoincident : public ErrorCoord {
+    public:
+        ErrorCoordNotCoincident(const CoordinateId& coordId);
+        virtual ~ErrorCoordNotCoincident() throw();
+    };
+
     Element();
     virtual ~Element();
 
@@ -118,6 +143,6 @@ protected:
 
 typedef ElementBase   Elem;
 typedef Element<Real> ElemR;
-typedef Element<Int>  ElemI;
+typedef Element<Int> ElemI;
 
 #endif

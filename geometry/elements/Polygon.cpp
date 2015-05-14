@@ -80,9 +80,7 @@ const CoordR3* Polygon::getSideVertex(const UInt f, const UInt i) const {
 }
 
 Real Polygon::getArea() const {
-	cerr << endl << "ERROR @ Polygon getArea: "
-		<< "Not implemented" << endl;
-	exit(EXIT_FAILURE);
+    throw ErrorNotImplemented("Polygon::getArea");
 }
 
 void Polygon::setV(const UInt i, const CoordR3* coord) {

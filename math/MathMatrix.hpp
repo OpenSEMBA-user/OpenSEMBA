@@ -410,11 +410,6 @@ MathMatrix<T>::convertToArray(const Int mode, Real *res) const {
 			for (UInt j = 0; j < nCols(); j++)
 				res[i * nCols() + j] = val(i,j);
 		return;
-	} else {
-		cerr << endl << "ERROR: DynMatrix<T>::converToArray "     << endl;
-		cerr << endl << "Inserted mode is not defined."           << endl;
-		cerr << endl << "Terminating."                            << endl;
-		exit(EXIT_FAILURE);
 	}
 }
  

@@ -7,7 +7,6 @@
 #include <vector>
 using namespace std;
 
-#include "base/error/Error.h"
 #include "geometry/elements/GroupElements.h"
 #include "options/OptionsMesher.h"
 #include "magnitude/MagnitudeGaussian.h"
@@ -26,7 +25,7 @@ public:
 
     virtual bool hasSameProperties(const EMSourceBase& rhs) const;
     virtual bool isSimilar(const EMSourceBase& rhs) const = 0;
-    virtual bool check() const = 0;
+    bool check() const;
 
     template<class T>
     bool magnitudeIs() const {
@@ -57,12 +56,6 @@ template<class T>
 class EMSource : public virtual EMSourceBase,
                  public virtual GroupElements<const T> {
 public:
-    class ErrorEmpty : public Error {
-    public:
-        ErrorEmpty();
-        ~ErrorEmpty() throw();
-    };
-
     EMSource() {}
     virtual ~EMSource() {}
 
@@ -71,7 +64,6 @@ public:
     GroupElements<const Elem> elems() const { return *this; }
 
     bool isSimilar(const EMSourceBase& rhs) const;
-    bool check() const;
 
     void set(const GroupElements<const Elem>&);
     void add(const GroupElements<const Elem>&);

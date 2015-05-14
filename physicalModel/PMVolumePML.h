@@ -18,7 +18,7 @@ public:
 		minus = 1,
 		none = 2
 	} Direction;
-	typedef enum {
+	enum class Orientation {
 		PMLx,
 		PMLy,
 		PMLz,
@@ -27,7 +27,7 @@ public:
 		PMLzx,
 		PMLxyz,
 		undefined
-	} Orientation;
+	} ;
 	static const UInt possibleDirections = 26;
 	PMVolumePML(const MatId id, const string& name_);
 	PMVolumePML(

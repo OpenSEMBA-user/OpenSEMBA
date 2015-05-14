@@ -7,6 +7,15 @@
 
 #include "Polyhedron.h"
 
+Polyhedron::ErrorNotClosed::ErrorNotClosed()
+:   Error("Polyhedron is not closed") {
+
+}
+
+Polyhedron::ErrorNotClosed::~ErrorNotClosed() throw () {
+
+}
+
 Polyhedron::Polyhedron() {
 
 }
@@ -142,9 +151,7 @@ void Polyhedron::checkClosedness() const {
     list.sortRows(0,1);
     for (UInt i = 0; i < nSidesInFaces; i += 2) {
         if (list(i,0) != list(i+1,0) || list(i,1) != list(i+1,1)) {
-            cerr << endl << "ERROR @ Polyhedron: "
-                 << "Polyhedron is not closed." << endl;
-            printInfo();
+            throw ErrorNotClosed();
         }
     }
 }

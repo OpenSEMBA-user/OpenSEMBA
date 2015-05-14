@@ -40,6 +40,44 @@ void ElementBase::printInfo() const {
 }
 
 template<class T>
+Element<T>::ErrorCoord::ErrorCoord(const CoordinateId& coordId) {
+    coordId_ = coordId;
+}
+
+template<class T>
+Element<T>::ErrorCoord::~ErrorCoord() throw () {
+
+}
+
+template<class T>
+Element<T>::ErrorCoordNotFound::ErrorCoordNotFound(
+        const CoordinateId& coordId)
+:   ErrorCoord(coordId) {
+    stringstream aux;
+    aux << "Coordinate with Id (" << coordId << ") not found";
+    this->setMsg(aux.str());
+}
+
+template<class T>
+Element<T>::ErrorCoordNotFound::~ErrorCoordNotFound() throw () {
+
+}
+
+template<class T>
+Element<T>::ErrorCoordNotCoincident::ErrorCoordNotCoincident(
+        const CoordinateId& coordId)
+:   ErrorCoord(coordId) {
+    stringstream aux;
+    aux << "Coordinate with Id (" << coordId
+        << ") not coincident with previous Coordinate";
+    this->setMsg(aux.str());
+}
+
+template<class T>
+Element<T>::ErrorCoordNotCoincident::~ErrorCoordNotCoincident() throw () {
+}
+
+template<class T>
 Element<T>::Element() {
 
 }
@@ -83,9 +121,7 @@ bool Element<T>::isStructured(const Grid3& grid, const Real tol) const {
 
 template<class T>
 bool Element<T>::isInnerPoint(const CartesianVector<T,3>& pos) const {
-    cerr << "ERROR @ Element: "
-         << "Can't determine inner point for this element." << endl;
-    printInfo();
+    throw ErrorNotImplemented("Element::isInnerPoint");
     return false;
 }
 
@@ -235,20 +271,13 @@ CoordinateId* Element<T>::vertexToStructured(
         cell  = grid.getCell(*this->getV(i), true, tol);
         coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
-            cerr << endl << "ERROR @ Element::vertexToStructured(): "
-                 << "Inexistent Coordinate: " << coordId << endl;
-            assert(false);
             delete [] vIds;
-            return NULL;
+            throw ErrorCoordNotFound(coordId);
         }
         coord = cG.get(coordId);
         if (coord->pos() != cell) {
-            cerr << endl << "ERROR @ Element::vertexToStructured(): "
-                 << "Existent Coordinate " << coordId
-                 << " not coincident." << endl;
-            assert(false);
             delete [] vIds;
-            return NULL;
+            throw ErrorCoordNotCoincident(coordId);
         }
         vIds[i] = coordId;
     }
@@ -270,20 +299,13 @@ CoordinateId* Element<T>::vertexToUnstructured(
         pos = grid.getPos(*this->getV(i));
         coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
-            cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
-                 << "Inexistent Coordinate: " << coordId << endl;
-            assert(false);
             delete [] vIds;
-            return NULL;
+            throw ErrorCoordNotFound(coordId);
         }
         coord = cG.get(coordId);
         if (coord->pos() != pos) {
-            cerr << endl << "ERROR @ Element::vertexToUnstructured(): "
-                 << "Existent Coordinate " << coordId
-                 << " not coincident." << endl;
-            assert(false);
             delete [] vIds;
-            return NULL;
+            throw ErrorCoordNotCoincident(coordId);
         }
         vIds[i] = coordId;
     }

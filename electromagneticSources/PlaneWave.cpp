@@ -7,6 +7,33 @@
 
 #include "PlaneWave.h"
 
+PlaneWave::ErrorZeroPolarization::ErrorZeroPolarization()
+:   Error("PlaneWave: Polarization can't be zero.") {
+
+}
+
+PlaneWave::ErrorZeroPolarization::~ErrorZeroPolarization() throw () {
+
+}
+
+PlaneWave::ErrorZeroMagnitude::ErrorZeroMagnitude()
+:   Error("PlaneWave: W. direction can't be zero.") {
+
+}
+
+PlaneWave::ErrorZeroMagnitude::~ErrorZeroMagnitude() throw () {
+
+}
+
+PlaneWave::ErrorNotPerpendicular::ErrorNotPerpendicular()
+:   Error("PlaneWave: W. direction is not perpendicular to polarization.") {
+
+}
+
+PlaneWave::ErrorNotPerpendicular::~ErrorNotPerpendicular() throw () {
+
+}
+
 PlaneWave::PlaneWave() {
 
 }
@@ -21,23 +48,15 @@ PlaneWave::PlaneWave(const Magnitude* magnitude,
     direction_ = direction;
     polarization_ = polarization;
     if (polarization_.norm() == 0) {
-        cout<< "ERROR @ PlaneWave: " << "Polarization can't be zero." << endl;
-        printInfo();
+        throw ErrorZeroPolarization();
     }
     if (direction_.norm() == 0) {
-        cout<< "ERROR @ PlaneWave: " << "W. Direction can't be zero." << endl;
-        printInfo();
-    }
-    if (direction_.norm() == 0.0 || polarization.norm() == 0.0) {
-        cerr << endl << "ERROR @ Planewave: "
-            << "Wave direction and polarization cannot be zero" << endl;
-        printInfo();
+        throw ErrorZeroMagnitude();
     }
     //
     if ((direction ^ polarization).norm() !=
          direction.norm() * polarization.norm()) {
-        cerr << endl << "ERROR @ Planewave: "
-            << "Wavedirection is not perpendicular to polarization." << endl;
+        throw ErrorNotPerpendicular();
     }
 }
 
