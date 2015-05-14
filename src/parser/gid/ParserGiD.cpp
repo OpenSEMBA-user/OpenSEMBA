@@ -159,8 +159,6 @@ ParserGiD::readMesherOptions() {
                     res->setMode(strToMesherMode(value));
                 } else if (label.compare("Forbidden length") == 0) {
                     res->setForbiddenLength(atof(trim(value).c_str()));
-                } else if (label.compare("SWF force") == 0) {
-                    res->setSwfForze(trim(value));
                 } else if (label.compare("Scale factor") == 0) {
                     res->setScaleFactor(strToBool(value));
                 } else if (label.compare("Scale factor value") == 0) {
