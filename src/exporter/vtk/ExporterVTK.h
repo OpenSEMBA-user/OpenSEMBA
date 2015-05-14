@@ -44,8 +44,6 @@ private:
         VTK_QUADRATIC_TETRA      = 24,
         VTK_QUADRATIC_HEXAHEDRON = 25
     };
-
-    void initDir_(const string& fn);
     void writeMesh_(const Mesh* inMesh,
                     const GroupPhysicalModels<>* mat,
                     const GroupEMSources<>* src = NULL,

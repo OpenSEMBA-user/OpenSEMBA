@@ -9,7 +9,7 @@
 #define SRC_TEST_UTILS_SMBTONFDE_ADAPTERFDTDTEST_H_
 
 #include "gtest/gtest.h"
-#include "../../parser/ParserGiDTest.h"
+#include "../../parser/gid/ParserGiDTest.h"
 #include "adapter/fdtd/AdapterFDTD.h"
 #include "exporter/gid/ExporterGiD.h"
 #include "exporter/nfde/ExporterNFDE.h"
