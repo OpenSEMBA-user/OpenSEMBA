@@ -219,36 +219,15 @@ void OptionsMesher::set(const Arguments& args) {
         bruteForceVolumes_ = true;
     }
     if (args.has("structured")) {
-        #ifndef compileOnlyWithStructured
-        #ifdef compileWithstaircase
-            mode_  = structured;
-        #endif
-        #endif
-    }
-    if (args.has("eff")) {
-        #ifdef effectiveParameterMethods
-            effectiveParameter_ = true;
-            th_    = args.get("eff",0);
-            sigma_ = args.get("eff",1);
-        #endif
+        mode_  = structured;
     }
     if (args.has("slanted")) {
-        #ifndef compileOnlyWithStructured
-            mode_ = slanted;
-            edgeFraction_ = args.get("slanted");
-        #endif
+        mode_ = slanted;
+        edgeFraction_ = args.get("slanted");
     }
     if (args.has("relaxed")) {
-        #ifndef compileOnlyWithStructured
-            mode_ = relaxed;
-            edgeFraction_ = args.get("relaxed");
-        #endif
-    }
-    if (args.has("scalefactor")) {
-        #ifdef compileWithTesting
-        scaleFactor_ = true;
-        scaleFactorValue_ = args.get("scalefactor");
-        #endif
+        mode_ = relaxed;
+        edgeFraction_ = args.get("relaxed");
     }
     if (args.has("swff")) {
         swfForze_ = args.get("swff");
