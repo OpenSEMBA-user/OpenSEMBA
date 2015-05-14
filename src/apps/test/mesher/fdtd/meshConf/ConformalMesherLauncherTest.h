@@ -16,11 +16,11 @@ public:
 
     void runUGRMesher(const string project, SmbData* smb) const {
 
-    	OptionsMesher optMsh;
-    	ConformalMesher *conf = NULL;
-        const SmbData* smb;
-
-        conf = ConformalMesherLauncher().run(optMsh, smb, NULL);
+//    	OptionsMesher optMsh;
+//    	ConformalMesher *conf = NULL;
+//        const SmbData* smb;
+//
+//        conf = ConformalMesherLauncher().run(optMsh, smb, NULL);
 
     }
 

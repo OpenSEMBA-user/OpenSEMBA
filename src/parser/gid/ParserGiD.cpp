@@ -165,12 +165,6 @@ ParserGiD::readMesherOptions() {
                     res->setScaleFactor(strToBool(value));
                 } else if (label.compare("Scale factor value") == 0) {
                     res->setScaleFactorValue(trim(value));
-                } else if (label.compare("Effective parameters") == 0) {
-                    res->setEffectiveParameter(strToBool(value));
-                } else if (label.compare("Thickness") == 0) {
-                    res->setTh(trim(value));
-                } else if (label.compare("Sigma") == 0) {
-                    res->setSigma(trim(value));
                 } else if (label.compare("Location in mesh")==0) {
                     CVecR3 location = strToCVecR3(trim(value));
                     res->setLocationInMesh(location);
