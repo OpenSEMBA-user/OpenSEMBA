@@ -18,17 +18,15 @@ public:
                           const string& args , SmbData* smb) const {
         OptionsMesher optMsh;
         string runString;
-        runString = ugrMesherUbication +"ugrMesher" + args;
+        runString = ugrMesherUbication +"ugrMesher " + args;
         exec(runString.c_str());
     }
 
     void runUGRMesher_new(const string project, SmbData* smb) const {
         OptionsMesher optMsh;
+
         ConformalMesher *conf = NULL;
         const SmbData* smb;
-
-
-
         conf = ConformalMesherLauncher().run(optMsh, smb, NULL);
     }
 
