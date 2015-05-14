@@ -35,12 +35,10 @@ protected:
                 lineNew = nextLine(fileNew);
             }
             if (lineBase != lineNew) {
-                long int iBase, iNew;
-                for (UInt i = 0; i < 3; i++) {
-                    fileBase >> iBase;
-                    fileNew >> iNew;
-                    EXPECT_EQ(iBase, iNew);
-                }
+                CVecI3 ijkBase, ijkNew;
+                fileBase >> ijkBase(x) >> ijkBase(y) >> ijkBase(z);
+                fileNew >> ijkNew(x) >> ijkNew(y) >> ijkNew(z);
+                EXPECT_EQ(ijkBase, ijkNew);
                 string labelBase, labelNew;
                 fileBase >> labelBase;
                 fileNew >> labelNew;
