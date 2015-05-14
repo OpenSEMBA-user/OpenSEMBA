@@ -14,15 +14,24 @@ public:
     virtual ~ConformalMesherLauncherTest() {
     }
 
-    void runUGRMesher(const string project, SmbData* smb) const {
+    void runUGRMesher_old(const ProjectFile& ugrMesherUbication,
+                          const string& args , SmbData* smb) const {
+        OptionsMesher optMsh;
+        string runString;
+        runString = ugrMesherUbication +"ugrMesher" + args;
+        exec(runString.c_str());
+    }
 
+    void runUGRMesher_new(const string project, SmbData* smb) const {
         OptionsMesher optMsh;
         ConformalMesher *conf = NULL;
         const SmbData* smb;
 
-        conf = ConformalMesherLauncher().run(optMsh, smb, NULL);
 
+
+        conf = ConformalMesherLauncher().run(optMsh, smb, NULL);
     }
+
 
     void compare(ProjectFile& cmshBase, ProjectFile& cmshNew) const{
         ifstream fileBase, fileNew;
@@ -39,28 +48,53 @@ public:
             EXPECT_TRUE(lineBase==lineNew);
         }
 
+
         if(!fileBase.eof()){
-            //todo expect: the remaining lines are comments
+            next_line (fileBase);
+            EXPECT_TRUE(fileBase.eof());
         }
 
 
         if(!fileBase.eof()){
-            //todo expect the remaining lines are comments
+            next_line (fileNew);
+            EXPECT_TRUE(fileNew.eof());
         }
     }
 
 private:
     string next_line (ifstream& file) const {
-        string line;
-        file>>line;
-        string trimLine;
-        trimLine = Parser::trim(line);
-        while(!file.eof()&&trimLine.size()>0&&trimLine[0] == "*"){
+        if(!file.eof()){
+            string line;
             file>>line;
-            string trimLine = Parser::trim(line);
+            while(!file.eof()&&isCommentLine (line)){
+                file>>line;
+            }
+            return line;
         }
-        return trimLine;
+        return "";
     }
+
+    static bool isCommentLine (string& line){
+        string trimLine = Parser::trim(line);
+        return ( trimLine.empty()   ||
+                (trimLine.size()==0)||
+                (trimLine.substr(0,0) ==string("*") ));
+    }
+
+
+    static std::string exec(const char* cmd) {
+        FILE* pipe = popen(cmd, "r");
+        if (!pipe) return "ERROR";
+        char buffer[128];
+        std::string result = "";
+        while(!feof(pipe)) {
+            if(fgets(buffer, 128, pipe) != NULL)
+                result += buffer;
+        }
+        pclose(pipe);
+        return result;
+    }
+
 };
 
 #endif
