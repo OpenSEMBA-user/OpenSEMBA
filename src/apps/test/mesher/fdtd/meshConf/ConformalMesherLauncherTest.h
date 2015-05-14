@@ -3,7 +3,7 @@
 
 #include "gtest/gtest.h"
 #include "parser/stl/ParserSTL.h"
-
+#include "parser/Parser.h"
 class ConformalMesherLauncherTest : public ::testing::Test {
 
 public:
@@ -53,10 +53,13 @@ private:
     string next_line (ifstream& file) const {
     	string line;
     	file>>line;
-    	//while(!file.eof()&&line == " comment symbol "){ //todo
-		//	file>>line;
-    	//}
-		return line;
+    	string trimLine;
+		trimLine = Parser::trim(line);
+    	while(!file.eof()&&trimLine.size()>0&&trimLine[0] == "*"){ //todo
+			file>>line;
+			string trimLine = Parser::trim(line);
+    	}
+		return trimLine;
     }
 };
 
