@@ -3,15 +3,10 @@
 TEST_F(ConformalMesherLauncherTest, Structured){
     const string project = "B2";
     CVecR3 step(1,1,1);
-//    // >>>>>>>>>>>>>>>>>>> runs ugrMesher <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//    //string args = "-auto 1 1 1 -s /home/luis/workspace/semba/projects/test/stls/B2.stl -o B2 --structured";
-//	string args = "-auto 1 1 1 -s ../projects/test/stls/B2.stl -o B2 --structured";
-//
-//	SmbData* smb = parseFromSTL("B2");
-//
-//    string project = "";
-//    runUGRMesher(project);
-//
+    // >>>>>>>>>>>>>>>>>>> runs ugrMesher <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    ProjectFile ugrMesher("/usr/local/bin/ugrMesher");
+    string args = "-auto 1 1 1 -s " + stlFolder_ + "B2.stl -o B2 --structured";
+    ugrMesher.exec(args);
     // >>>>>>>>>>>>>>>>>>> runs meshConf <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     SmbData* smb = parseFromSTL(project);
     // Prepares data for mesher.
@@ -33,7 +28,10 @@ TEST_F(ConformalMesherLauncherTest, Structured){
         ExporterNFDE outNFDE(*nfde);
     }
     delete smb;
-
+    //
+    ProjectFile cmshBase;
+    ProjectFile cmshNew;
+    compare(cmshBase, cmshNew);
 }
 
 //INSTANTIATE_TEST_CASE_P(

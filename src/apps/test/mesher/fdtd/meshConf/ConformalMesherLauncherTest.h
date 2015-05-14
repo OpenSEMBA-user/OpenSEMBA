@@ -17,16 +17,7 @@ public:
     virtual ~ConformalMesherLauncherTest() {
     }
 
-    void runUGRMesher(const string project, SmbData* smb) const {
-
-        //    	OptionsMesher optMsh;
-        //    	ConformalMesher *conf = NULL;
-        //        const SmbData* smb;
-        //
-        //        conf = ConformalMesherLauncher().run(optMsh, smb, NULL);
-
-    }
-
+protected:
     void compare(ProjectFile& cmshBase, ProjectFile& cmshNew) const{
         ifstream fileBase, fileNew;
         cmshBase.openAsInput(fileBase);
@@ -34,33 +25,45 @@ public:
         while(!fileBase.eof()&&!fileNew.eof()){
             string lineBase, lineNew;
             if(!fileBase.eof()){
-                lineBase = next_line(fileBase);
+                lineBase = nextLine(fileBase);
             }
             if(!fileNew.eof()){
-                lineNew = next_line(fileNew);
+                lineNew = nextLine(fileNew);
             }
             EXPECT_TRUE(lineBase==lineNew);
         }
 
         if(!fileBase.eof()){
-            //todo expect: the remaining lines are comments
+            nextLine (fileBase);
+            EXPECT_TRUE(fileBase.eof());
         }
 
-
         if(!fileBase.eof()){
-            //todo expect the remaining lines are comments
+            nextLine (fileNew);
+            EXPECT_TRUE(fileNew.eof());
         }
     }
 
 private:
-    string next_line (ifstream& file) const {
-        string line;
-        file>>line;
-        //while(!file.eof()&&line == " comment symbol "){ //todo
-        //	file>>line;
-        //}
-        return line;
+    string nextLine (ifstream& file) const {
+        if(!file.eof()){
+            string line;
+            file >> line;
+            while (!file.eof()&&isCommentLine (line)) {
+                file >> line;
+            }
+            return line;
+        }
+        return "";
     }
+
+    static bool isCommentLine (string& line){
+        string trimLine = Parser::trim(line);
+        return ( trimLine.empty()   ||
+                (trimLine.size()==0)||
+                (trimLine.substr(0,0) == string("*") ));
+    }
+
 };
 
 #endif
