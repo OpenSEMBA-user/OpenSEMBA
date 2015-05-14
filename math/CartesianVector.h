@@ -68,6 +68,7 @@ public:
     CartesianVector<T,D>  operator^(const CartesianVector<T,D>& param) const;
 
     T dot(const CartesianVector<T,D>& param) const;
+    T getMax() const;
 
     virtual bool operator==(const CartesianVector<T,D>& param) const;
     virtual bool operator!=(const CartesianVector<T,D>& param) const;

@@ -239,6 +239,17 @@ inline T CartesianVector<T,D>::dot(const CartesianVector<T,D>& param) const {
 }
 
 template <class T, Int D>
+inline T CartesianVector<T,D>::getMax() const {
+    T res = val[0];
+    for (Int i = 1; i < D; i++) {
+        if (val[i] > res) {
+            res = val[i];
+        }
+    }
+    return res;
+}
+
+template <class T, Int D>
 bool CartesianVector<T,D>::operator==(
         const CartesianVector<T, D>& param) const {
     return MathUtils::equal((*this-param).norm(), 0.0, (*this+param).norm());
