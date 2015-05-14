@@ -19,6 +19,13 @@ SmbData::SmbData() {
 
 SmbData::SmbData(const SmbData& rhs)
 :   ProjectFile(rhs) {
+    mesh = NULL;
+    grid = NULL;
+    solverOptions = NULL;
+    pMGroup = NULL;
+    emSources = NULL;
+    outputRequests = NULL;
+    mesherOptions = NULL;
     if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Mesh>();
     }
@@ -50,14 +57,35 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    ProjectFile::operator =(rhs);
-    mesh = rhs.mesh->cloneTo<Mesh>();
-    grid = rhs.grid->cloneTo<Grid3>();
-    solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
-    pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
-    emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
-    outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
-    mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
+    ProjectFile::operator=(rhs);
+    mesh = NULL;
+    grid = NULL;
+    solverOptions = NULL;
+    pMGroup = NULL;
+    emSources = NULL;
+    outputRequests = NULL;
+    mesherOptions = NULL;
+    if (rhs.mesh != NULL) {
+        mesh = rhs.mesh->cloneTo<Mesh>();
+    }
+    if (rhs.grid != NULL) {
+        grid = rhs.grid->cloneTo<Grid3>();
+    }
+    if (rhs.solverOptions != NULL) {
+        solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
+    }
+    if (rhs.pMGroup != NULL) {
+        pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
+    }
+    if (rhs.emSources != NULL) {
+        emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
+    }
+    if (rhs.outputRequests != NULL) {
+        outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
+    }
+    if (rhs.mesherOptions != NULL) {
+        mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
+    }
     return *this;
 }
 
