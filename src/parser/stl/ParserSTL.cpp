@@ -22,7 +22,6 @@ SmbData*
 ParserSTL::read() {
 
     // Reads coordinates.
-
     ifstream stl;
     openAsInput(stl);
     string label;
