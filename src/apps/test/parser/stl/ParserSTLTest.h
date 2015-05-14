@@ -10,12 +10,13 @@ public ::testing::Test,
 public ::testing::WithParamInterface<const char*> {
 
     void SetUp() {
-        stlFolder_ = "./projects/test/stls/";
+//        stlFolder_ = "./projects/test/stls/";
     }
 
 protected:
 
     ParserSTLTest() {
+        stlFolder_ = "./projects/test/stls/";
     }
 
     virtual ~ParserSTLTest() {
@@ -23,7 +24,7 @@ protected:
 
     string stlFolder_;
 
-    SmbData* parseFromSTL(const string project) {
+    SmbData* parseFromSTL(const string project) const {
         cout << "STL: " << project << endl;
         ParserSTL parser(stlFolder_ + project + ".stl");
         EXPECT_TRUE(parser.canOpen());

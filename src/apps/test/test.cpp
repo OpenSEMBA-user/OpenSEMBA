@@ -12,7 +12,7 @@ GTEST_API_ int main(int argc, char **argv) {
   tests += "*ProjectFile*:";
   tests += "*Math*:";
   tests += "*Geometry*:";
-  tests += "*ParserSTL*:";
+//  tests += "*ParserSTL*:";
   tests += "*ConformalMesherLauncherTest*:";
 //  tests += "*EMSource*:";
 //  tests += "*ParserGid*:";
