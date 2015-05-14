@@ -24,39 +24,28 @@ public:
 
     }
 
-    void compare(const string &cmsh_base, const string &cmsh_new) const{
-
-    	ifstream file_base, file_new;
-
-        try {
-        	file_base.open(cmsh_base);
-        	file_new .open(cmsh_new);
-        }
-        catch(exception &e) {
-        	// Todo Mess
-        }
-        file_base.seekg(0);
-        file_new.seekg(0);
-    	while(!file_base.eof()&&!file_new.eof()){
-    		string line_base, line_new;
-    		if(!file_base.eof()){
-    			line_base = next_line(file_base);
+    void compare(ProjectFile& cmshBase, ProjectFile& cmshNew) const{
+    	ifstream fileBase, fileNew;
+        cmshBase.openAsInput(fileBase);
+        cmshNew.openAsInput(fileNew);
+    	while(!fileBase.eof()&&!fileNew.eof()){
+    		string lineBase, lineNew;
+    		if(!fileBase.eof()){
+    			lineBase = next_line(fileBase);
     		}
-    		if(!file_new.eof()){
-    			line_new = next_line(file_new);
+    		if(!fileNew.eof()){
+    			lineNew = next_line(fileNew);
     		}
-    		EXPECT_TRUE(line_base==line_new);
+    		EXPECT_TRUE(lineBase==lineNew);
     	}
 
-    	if(!file_base.eof()){
-    		//todo
-    		// Expect: the remaining lines are comments
+    	if(!fileBase.eof()){
+    		//todo expect: the remaining lines are comments
     	}
 
 
-    	if(!file_base.eof()){
-    		//todo
-    		// Expect the remaining lines are comments
+    	if(!fileBase.eof()){
+    		//todo expect the remaining lines are comments
     	}
     }
 
