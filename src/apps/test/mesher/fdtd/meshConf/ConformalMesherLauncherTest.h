@@ -21,58 +21,12 @@ public:
     }
 
 protected:
-    void compare(ProjectFile& cmshBase, ProjectFile& cmshNew) const{
-        ifstream fileBase, fileNew;
-        cmshBase.openAsInput(fileBase);
-        cmshNew.openAsInput(fileNew);
+    void compare(ProjectFile& cmshBase, ProjectFile& cmshNew) const;
 
-        UInt line = 0;
-        while(fileBase.good() && fileNew.good()){
-            string lineBase, lineNew;
-            if(!fileBase.eof()){
-                lineBase = nextLine(fileBase);
-                line++;
-            }
-            if(!fileNew.eof()){
-                lineNew = nextLine(fileNew);
-            }
-            if (lineBase != lineNew) {
-                CVecI3 ijkBase, ijkNew;
-                fileBase >> ijkBase(x) >> ijkBase(y) >> ijkBase(z);
-                fileNew >> ijkNew(x) >> ijkNew(y) >> ijkNew(z);
-                EXPECT_EQ(ijkBase, ijkNew);
-                string labelBase, labelNew;
-                fileBase >> labelBase;
-                fileNew >> labelNew;
-                EXPECT_EQ(labelBase, labelNew);
-                Real lengthBase, lengthNew;
-                fileBase >> lengthBase;
-                fileNew >> lengthNew;
-                EXPECT_NEAR(lengthBase, lengthNew, 0.001);
-            }
-        }
-    }
-
-    void runConformalMesher(const string& project, CVecI3& nCells,
-            OptionsMesher* optsMesher) const {
-        SmbData* smb = parseFromSTL(project);
-        smb->pMGroup = new GroupPhysicalModels<>();
-        MatId pecId(1);
-        smb->pMGroup->add(new PMPEC(pecId, "PEC"));
-        smb->mesh->castTo<MeshUnstructured>()->setMatId(pecId);
-        BoxR3 bound = smb->mesh->castTo<MeshUnstructured>()->getBoundingBox();
-        smb->grid = new Grid3(bound, nCells);
-        smb->mesherOptions = optsMesher;
-        smb->solverOptions = new OptionsSolver();
-        smb->emSources = new GroupEMSources<>();
-        smb->outputRequests = new GroupOutRqs<>();
-        SmbData* nfde = new SmbData();
-        AdapterFDTD(*smb).convert(*nfde);
-        {
-            ExporterNFDE outNFDE(*nfde);
-        }
-        delete smb;
-    }
+    void runConformalMesher(
+            const string& project,
+            UInt maxCellsPerLength,
+            OptionsMesher* optsMesher) const;
 
     ProjectFile ugrMesher_;
 
@@ -96,6 +50,12 @@ private:
         return ( trimLine.empty() ||
                 (trimLine.size() == 0) ||
                 (trimLine.substr(0,1) == string("*") ));
+    }
+
+    CVecR3 buildStep(const BoxR3& box, UInt maxCells) const {
+        Real maxLength = box.getLength().getMax();
+        Real step = maxLength / maxCells;
+        return CVecR3(step, step, step);
     }
 
 };

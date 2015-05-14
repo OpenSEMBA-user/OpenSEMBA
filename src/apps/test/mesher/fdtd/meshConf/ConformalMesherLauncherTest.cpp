@@ -1,8 +1,66 @@
 #include "ConformalMesherLauncherTest.h"
 
-TEST_P(ConformalMesherLauncherTest, Structured_1kCell){
+void ConformalMesherLauncherTest::compare(
+        ProjectFile& cmshBase,
+        ProjectFile& cmshNew) const {
+    ifstream fileBase, fileNew;
+    cmshBase.openAsInput(fileBase);
+    cmshNew.openAsInput(fileNew);
+    UInt line = 0;
+    while (fileBase.good() && fileNew.good()) {
+        string lineBase, lineNew;
+        if (!fileBase.eof()) {
+            lineBase = nextLine(fileBase);
+            line++;
+        }
+        if (!fileNew.eof()) {
+            lineNew = nextLine(fileNew);
+        }
+        if (lineBase != lineNew) {
+            CVecI3 ijkBase, ijkNew;
+            fileBase >> ijkBase(x) >> ijkBase(y) >> ijkBase(z);
+            fileNew >> ijkNew(x) >> ijkNew(y) >> ijkNew(z);
+            EXPECT_EQ(ijkBase, ijkNew);
+            string labelBase, labelNew;
+            fileBase >> labelBase;
+            fileNew >> labelNew;
+            EXPECT_EQ(labelBase, labelNew);
+            Real lengthBase, lengthNew;
+            fileBase >> lengthBase;
+            fileNew >> lengthNew;
+            EXPECT_NEAR(lengthBase, lengthNew, 0.001);
+        }
+    }
+}
+
+void ConformalMesherLauncherTest::runConformalMesher(
+        const string& project,
+        UInt maxCellsPerLength,
+        OptionsMesher* optsMesher) const {
+    SmbData* smb = parseFromSTL(project);
+    smb->pMGroup = new GroupPhysicalModels<>();
+    MatId pecId(1);
+    smb->pMGroup->add(new PMPEC(pecId, "PEC"));
+    smb->mesh->castTo<MeshUnstructured>()->setMatId(pecId);
+    BoxR3 bound = smb->mesh->castTo<MeshUnstructured>()->getBoundingBox();
+    smb->grid = new Grid3(bound, buildStep(bound, maxCellsPerLength));
+    smb->mesherOptions = optsMesher;
+    smb->solverOptions = new OptionsSolver();
+    smb->emSources = new GroupEMSources<>();
+    smb->outputRequests = new GroupOutRqs<>();
+    SmbData* nfde = new SmbData();
+    AdapterFDTD(*smb).convert(*nfde);
+    {
+        ExporterVTK outVTKNFDE(nfde, stlFolder_ + project);
+        ExporterNFDE outNFDE(*nfde);
+    }
+    delete smb;
+}
+
+
+TEST_P(ConformalMesherLauncherTest, Structured_1MCell){
     const string project = GetParam();
-    CVecI3 nCells(10,20,20);
+    UInt nCells = 25;
     // Runs meshConf.
     OptionsMesher* opts = new OptionsMesher();
     runConformalMesher(project, nCells, opts);
@@ -19,7 +77,7 @@ TEST_P(ConformalMesherLauncherTest, Structured_1kCell){
 
 INSTANTIATE_TEST_CASE_P(
         stls, ConformalMesherLauncherTest, ::testing::Values(
-                "single",
+//                "single",
                 "B2",
                 "dmcwf"
         ));
