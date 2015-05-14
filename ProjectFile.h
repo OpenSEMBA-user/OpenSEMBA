@@ -53,6 +53,8 @@ public:
     void openFile(ofstream& file) const;
     void openAsInput(ifstream& file) const;
 
+    void exec(const string arguments = string()) const;
+
     void printInfo() const;
     string toStr() const;
 
