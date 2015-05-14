@@ -63,7 +63,6 @@ public:
     void setScalingFactor(Real scalingFactor);
     void setBoundTermination(const UInt i, UInt j, BoundType bound);
     void setBruteForceVolumes(bool bruteForceVolumes);
-    void setConfOutput(const string& confOutput);
     void setForbiddenLength(const Real& edgeFraction);
     void setLocationInMesh(const CVecR3& locationInMesh);
     void setLocationInMeshSet(bool locationInMeshSet);
@@ -72,7 +71,6 @@ public:
     void setScaleFactor(bool scaleFactor);
     void setScaleFactorValue(const string& scaleFactorValue);
     void setSigma(const string& sigma);
-    void setSwfForze(const string& swfForze);
     void setEffectiveParameter(bool effectiveParameter);
     void applyGeometricScalingFactor(const Real& factor);
 
@@ -87,7 +85,6 @@ public:
     Real getForbiddenLength() const;
     bool hasScaleFactor() const;
     string getScaleFactor() const;
-    string getSWFForce() const;
     const string& getMeshOutputName() const;
 
     const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
@@ -107,10 +104,8 @@ private:
     Real forbiddenLength_;
     bool scaleFactor_;
     string scaleFactorValue_;
-    string swfForze_;
     bool locationInMeshSet_;
     CVecR3 locationInMesh_;
-    string confOutput_;
 
     Real scalingFactor_;
     vector<pair<BoundType,BoundType>> boundTermination_;
