@@ -14,6 +14,7 @@ OptionsMesher::OptionsMesher() {
     bruteForceVolumes_ = false;
     scaleFactor_ = false;
     scalingFactor_ = 1.0;
+    forbiddenLength_ = (Real) (1.0 / 3.0);
     boundTermination_.resize(3);
     for (UInt i = 0; i < 3; i++) {
         boundTermination_[i].first = pml;
@@ -21,32 +22,32 @@ OptionsMesher::OptionsMesher() {
     }
 }
 
-OptionsMesher::OptionsMesher(
-        Mesher mesher,
-        bool locationInMeshSet,
-        CVecR3 locationInMesh,
-        bool bruteForceVolumes,
-        Mode mode,
-        bool effectiveParameter,
-        string th,
-        string sigma,
-        string edgeFraction,
-        bool scaleFactor,
-        string scaleFactorValue,
-        string swfForze,
-        string confOutput) {
-    mesher_ = mesher;
-    locationInMeshSet_ = locationInMeshSet;
-    locationInMesh_ = locationInMesh;
-    bruteForceVolumes_ = bruteForceVolumes;
-    mode_ = mode;
-    edgeFraction_ = edgeFraction;
-    scaleFactor_ = scaleFactor;
-    scaleFactorValue_ = scaleFactorValue;
-    swfForze_ = swfForze;
-    confOutput_ = confOutput;
-    scalingFactor_ = 0.0;
-}
+//OptionsMesher::OptionsMesher(
+//        Mesher mesher,
+//        bool locationInMeshSet,
+//        CVecR3 locationInMesh,
+//        bool bruteForceVolumes,
+//        Mode mode,
+//        bool effectiveParameter,
+//        string th,
+//        string sigma,
+//        string edgeFraction,
+//        bool scaleFactor,
+//        string scaleFactorValue,
+//        string swfForze,
+//        string confOutput) {
+//    mesher_ = mesher;
+//    locationInMeshSet_ = locationInMeshSet;
+//    locationInMesh_ = locationInMesh;
+//    bruteForceVolumes_ = bruteForceVolumes;
+//    mode_ = mode;
+//    edgeFraction_ = edgeFraction;
+//    scaleFactor_ = scaleFactor;
+//    scaleFactorValue_ = scaleFactorValue;
+//    swfForze_ = swfForze;
+//    confOutput_ = confOutput;
+//    scalingFactor_ = 0.0;
+//}
 
 void
 OptionsMesher::printInfo() const {
@@ -126,15 +127,10 @@ bool OptionsMesher::isStructured() const {
 }
 
 bool OptionsMesher::isRelaxed() const {
-    return (mode_ == relaxed);
-}
-
-bool OptionsMesher::isSlanted() const {
-    return (mode_ == slanted);
-}
-
-string OptionsMesher::getEdgeFraction() const {
-    return edgeFraction_;
+    if (mode_ == slanted || mode_ == relaxed) {
+        return true;
+    }
+    return false;
 }
 
 bool OptionsMesher::hasScaleFactor() const {
@@ -219,36 +215,16 @@ void OptionsMesher::set(const Arguments& args) {
         bruteForceVolumes_ = true;
     }
     if (args.has("structured")) {
-        #ifndef compileOnlyWithStructured
-        #ifdef compileWithstaircase
-            mode_  = structured;
-        #endif
-        #endif
-    }
-    if (args.has("eff")) {
-        #ifdef effectiveParameterMethods
-            effectiveParameter_ = true;
-            th_    = args.get("eff",0);
-            sigma_ = args.get("eff",1);
-        #endif
+        mode_  = structured;
     }
     if (args.has("slanted")) {
-        #ifndef compileOnlyWithStructured
-            mode_ = slanted;
-            edgeFraction_ = args.get("slanted");
-        #endif
+        mode_ = relaxed;
+        forbiddenLength_ = - 1.0;
+        forbiddenLength_ = atof(args.get("slanted").c_str());
     }
     if (args.has("relaxed")) {
-        #ifndef compileOnlyWithStructured
-            mode_ = relaxed;
-            edgeFraction_ = args.get("relaxed");
-        #endif
-    }
-    if (args.has("scalefactor")) {
-        #ifdef compileWithTesting
-        scaleFactor_ = true;
-        scaleFactorValue_ = args.get("scalefactor");
-        #endif
+        mode_ = relaxed;
+        forbiddenLength_ = atof(args.get("relaxed").c_str());
     }
     if (args.has("swff")) {
         swfForze_ = args.get("swff");
@@ -261,10 +237,6 @@ void OptionsMesher::setBruteForceVolumes(bool bruteForceVolumes) {
 
 void OptionsMesher::setConfOutput(const string& confOutput) {
     confOutput_ = confOutput;
-}
-
-void OptionsMesher::setEdgeFraction(const string& edgeFraction) {
-    edgeFraction_ = edgeFraction;
 }
 
 void OptionsMesher::setLocationInMesh(const CVecR3& locationInMesh) {
@@ -294,4 +266,15 @@ void OptionsMesher::setScaleFactorValue(const string& scaleFactorValue) {
 
 void OptionsMesher::setSwfForze(const string& swfForze) {
     swfForze_ = swfForze;
+}
+
+void OptionsMesher::setForbiddenLength(const Real& edgeFraction) {
+}
+
+Real OptionsMesher::getForbiddenLength() const {
+    if (mode_ == Mode::slanted) {
+        return - 1.0;
+    } else {
+        return forbiddenLength_;
+    }
 }
