@@ -26,7 +26,8 @@ protected:
     void runConformalMesher(
             const string& project,
             UInt maxCellsPerLength,
-            OptionsMesher* optsMesher) const;
+            OptionsMesher* optsMesher,
+            const string& subName) const;
 
     ProjectFile ugrMesher_;
 
