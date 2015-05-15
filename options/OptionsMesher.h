@@ -40,20 +40,6 @@ public:
         undefined
     } BoundType;
     OptionsMesher();
-//    OptionsMesher(
-//            Mesher mesher,
-//            bool locationInMeshSet,
-//            CVecR3 locationInMesh,
-//            bool bruteForceVolumes,
-//            Mode mode,
-//            bool effectiveParameter,
-//            string th,
-//            string sigma,
-//            string edgeFraction,
-//            bool scaleFactor,
-//            string scaleFactorValue,
-//            string swfForze,
-//            string confOutput);
 
     DEFINE_CLONE(OptionsMesher);
 
@@ -73,6 +59,7 @@ public:
     void setSigma(const string& sigma);
     void setEffectiveParameter(bool effectiveParameter);
     void applyGeometricScalingFactor(const Real& factor);
+    void setOutputName(const string& outputName);
 
     Mesher getMesher() const;
     virtual const CVecR3& getLocationInMesh() const;
@@ -92,6 +79,7 @@ public:
     Real getScalingFactor() const;
     vector<pair<BoundType,BoundType>> getBoundTerminations() const;
     BoundType getBoundTermination(const UInt i, const UInt p) const;
+    const string& getOutputName() const;
 
     void printHelp() const;
     void printInfo() const;
@@ -106,6 +94,7 @@ private:
     string scaleFactorValue_;
     bool locationInMeshSet_;
     CVecR3 locationInMesh_;
+    string outputName_;
 
     Real scalingFactor_;
     vector<pair<BoundType,BoundType>> boundTermination_;

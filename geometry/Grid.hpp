@@ -108,23 +108,9 @@ bool Grid<D>::isInto(const Int dir, const Real pos) const {
 }
 
 template<Int D>
-bool Grid<D>::isIntoDirX (const double &xV)const{
-    if(xV < pos_[x].front()){return false;}
-    if(xV > pos_[x].back()){return false;}
-    return true;
-}
-
-template<Int D>
-bool Grid<D>::isIntoDirY (const double &yV)const{
-    if(yV < pos_[y].front()){return false;}
-    if(yV > pos_[y].back()){return false;}
-    return true;
-}
-
-template<Int D>
-bool Grid<D>::isIntoDirZ (const double &zV)const{
-    if(zV < pos_[z].front()){return false;}
-    if(zV > pos_[z].back()){return false;}
+bool Grid<D>::isIntoDir(const CartesianAxis dir, const double val)const{
+    if(val < pos_[dir].front()){return false;}
+    if(val > pos_[dir].back()){return false;}
     return true;
 }
 
