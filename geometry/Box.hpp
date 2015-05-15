@@ -116,11 +116,11 @@ bool Box<T,D>::operator==(const Box<T,D> &rhs) const {
 template<class T, Int D>
 void Box<T,D>::operator+=(const Box<T,D> &rhs) {
     for(Int i = 0; i < D; i++) {
-        if (max_(i) < rhs.max_(i)) {
-            max_(i) = rhs.max_(i);
-        }
         if (min_(i) > rhs.min_(i)) {
             min_(i) = rhs.min_(i);
+        }
+        if (max_(i) < rhs.max_(i)) {
+            max_(i) = rhs.max_(i);
         }
     }
 }
