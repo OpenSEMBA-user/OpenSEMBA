@@ -46,11 +46,6 @@ protected:
         EXPECT_NEAR(relLen1, relLen2, 1e-5);
     }
 
-    void isInto(double pos) {
-        EXPECT_EQ(grid_.isIntoDirX(pos), cartesianGrid_->isIntoDirX(pos));
-        EXPECT_EQ(grid_.isIntoDirY(pos), cartesianGrid_->isIntoDirY(pos));
-        EXPECT_EQ(grid_.isIntoDirZ(pos), cartesianGrid_->isIntoDirZ(pos));
-    }
     Grid3 grid_;
     Grid3* cartesianGrid_;
     CVecR3 min_, max_, step_;
@@ -107,12 +102,4 @@ TEST_F(GeometryGridTest, cartesianGridNatCells) {
     checkNaturalCell((double) 0.97);
     checkNaturalCell((double) 1.7);
     checkNaturalCell((double) -1);
-}
-
-TEST_F(GeometryGridTest, isInto) {
-    isInto((double) 0.14);
-    isInto((double) 0.17);
-    isInto((double) 0.97);
-    isInto((double) 1.7);
-    isInto((double) -1);
 }
