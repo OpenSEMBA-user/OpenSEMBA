@@ -97,8 +97,8 @@ TEST_P(ConformalMesherLauncherTest, Conformal_1MCell){
 
 INSTANTIATE_TEST_CASE_P(
         stls, ConformalMesherLauncherTest, ::testing::Values(
-                "single",
                 "B2",
+                "single",
                 "ev55",
                 "scrub2",
                 "dmcwf"
