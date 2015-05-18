@@ -79,6 +79,9 @@ public:
     virtual T& operator() (UInt pos);
     virtual T  operator() (UInt pos) const;
 
+    virtual T& operator[] (UInt pos);
+    virtual T  operator[] (UInt pos) const;
+
     virtual Real norm() const;
 
     CartesianVector<T,D>& abs();

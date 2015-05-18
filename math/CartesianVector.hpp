@@ -332,6 +332,18 @@ inline T CartesianVector<T,D>::operator() (UInt pos) const {
 }
 
 template <class T, Int D>
+inline T& CartesianVector<T,D>::operator[] (UInt pos) {
+    assert(pos >= 0 && pos < D);
+    return val[pos];
+}
+
+template <class T, Int D>
+inline T CartesianVector<T,D>::operator[] (UInt pos) const {
+    assert(pos >= 0 && pos < D);
+    return val[pos];
+}
+
+template <class T, Int D>
 inline Real CartesianVector<T,D>::norm() const {
     Real sum = 0;
     for (UInt i = 0; i < D; i++) {

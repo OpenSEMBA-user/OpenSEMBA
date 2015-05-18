@@ -146,6 +146,8 @@ PMVolumePML::getFirstOrientationIndex() const {
 		return 2;
 	case Orientation::PMLxyz:
 		return 0;
+	default:
+	    return 0;
 	}
 }
 
