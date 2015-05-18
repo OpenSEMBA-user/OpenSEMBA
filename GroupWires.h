@@ -17,11 +17,13 @@ using namespace std;
 
 #include "SmbData.h"
 #include "geometry/elements/Polyline.h"
-#include "geometry/maps/GraphLines.h"
+#include "geometry/maps/GraphVertices.h"
 
 template<class T>
 class GroupWires {
 public:
+    typedef GraphVertices<Line<T>,Coordinate<T,3>> Graph;
+
     GroupWires(const SmbData&);
     ~GroupWires();
 
@@ -42,10 +44,10 @@ private:
     map<MatId, PMWireExtremes*> mats_;
 
     void init_(const SmbData&);
-    GraphLines<T> constructGraph_(const SmbData&);
-    void fillWiresInfo_(const GraphLines<T>&,
+    Graph constructGraph_(const SmbData&);
+    void fillWiresInfo_(const Graph&,
                         const SmbData&);
-    vector<vector<const Line<T>*> > getLines_(const GraphLines<T>&);
+    vector<vector<const Line<T>*> > getLines_(const Graph&);
     void getWireMats_(const PMWire*& wireMat,
                       const PMMultiport*& extremeL,
                       const PMMultiport*& extremeR,

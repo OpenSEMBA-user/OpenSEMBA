@@ -39,22 +39,29 @@ void GroupWires<T>::printInfo() const {
 
 template<class T>
 void GroupWires<T>::init_(const SmbData& smb) {
-    const GraphLines<T>& graph = constructGraph_(smb);
+    const Graph& graph = constructGraph_(smb);
     fillWiresInfo_(graph, smb);
 }
 
 template<class T>
-GraphLines<T> GroupWires<T>::constructGraph_(const SmbData& smb) {
+typename GroupWires<T>::Graph
+    GroupWires<T>::constructGraph_(const SmbData& smb) {
+
     GroupElements<const Line<T>> wires;
+    GroupCoordinates<const Coordinate<T,3>> coords;
     const GroupPhysicalModels<>& mats = *smb.pMGroup;
     {
         GroupElements<const Line<T>> lines;
         if (is_floating_point<T>::value) {
             lines = smb.mesh->castTo<MeshUnstructured>()
                         ->elems().getGroupOf<Line<T>>();
+            coords = smb.mesh->castTo<MeshUnstructured>()
+                         ->coords();
         } else if (is_integral<T>::value) {
             lines = smb.mesh->castTo<MeshStructured>()
                         ->elems().getGroupOf<Line<T>>();
+            coords = smb.mesh->castTo<MeshStructured>()
+                         ->coords();
         }
         GroupPhysicalModels<const PMWire> pmwires =
             smb.pMGroup->getGroupOf<PMWire>();
@@ -72,54 +79,55 @@ GraphLines<T> GroupWires<T>::constructGraph_(const SmbData& smb) {
         wires = lines.getGroupWith(matIds);
     }
 
-    GraphLines<T> graph(wires);
+    Graph graph;
+    graph.init(wires, coords);
 
-    const VertexCoord<T>* nodePtr;
+    const typename Graph::GraphBound* nodePtr;
 
-    for(UInt i = 0; i < graph.numCoords(); i++) {
-        nodePtr = graph.coord(i);
-        if(nodePtr->numLines() > 2) {
-            graph.splitNode(i);
-        } else if(nodePtr->numLines() == 2) {
+    for(UInt i = 0; i < graph.numBounds(); i++) {
+        nodePtr = graph.bound(i);
+        if(nodePtr->numBounds() > 2) {
+            graph.splitBound(i);
+        } else if(nodePtr->numBounds() == 2) {
             LayerId layId[2];
             MatId matId[2];
             bool isWireMat[2];
             bool isWireExtrMat[2];
             bool extreme = true;
             for (UInt j = 0; j < 2; j++) {
-                layId[j] = nodePtr->getLine(j)->line()->getLayerId();
-                matId[j] = nodePtr->getLine(j)->line()->getMatId();
+                layId[j] = nodePtr->getBound(j)->elem()->getLayerId();
+                matId[j] = nodePtr->getBound(j)->elem()->getMatId();
                 isWireMat[j] = mats.get(matId[j])->is<PMWire>();
                 isWireExtrMat[j] = mats.get(matId[j])->is<PMWireExtremes>();
-                if (nodePtr->coord()->getId() !=
-                    nodePtr->getLine(j)->getCoord(0)->coord()->getId()) {
+                if (nodePtr->elem()->getId() !=
+                    nodePtr->getBound(j)->getBound(0)->elem()->getId()) {
                     extreme = false;
                 }
             }
             if (layId[0] != layId[1]) {
-                graph.splitNode(i);
+                graph.splitBound(i);
             } else if (isWireExtrMat[0] || isWireExtrMat[1]) {
                 if ((!isWireExtrMat[0] || !isWireExtrMat[1]) ||
                     (matId[0] != matId[1])) {
-                    graph.splitNode(i);
+                    graph.splitBound(i);
                 }
             }
             else if (isWireMat[0] && isWireMat[1]) {
                 if (matId[0] != matId[1]) {
-                    graph.splitNode(i);
+                    graph.splitBound(i);
                 }
             } else if (!isWireMat[0] && !isWireMat[1]) {
                 if ((matId[0] != matId[1]) || extreme) {
-                    graph.splitNode(i);
+                    graph.splitBound(i);
                 }
             } else if (!isWireMat[0] &&
-                       (nodePtr->coord()->getId() ==
-                        nodePtr->getLine(0)->getCoord(0)->coord()->getId())) {
-                graph.splitNode(i);
+                       (nodePtr->elem()->getId() ==
+                        nodePtr->getBound(0)->getBound(0)->elem()->getId())) {
+                graph.splitBound(i);
             } else if (!isWireMat[1] &&
-                       (nodePtr->coord()->getId() ==
-                        nodePtr->getLine(1)->getCoord(0)->coord()->getId())) {
-                graph.splitNode(i);
+                       (nodePtr->elem()->getId() ==
+                        nodePtr->getBound(1)->getBound(0)->elem()->getId())) {
+                graph.splitBound(i);
             }
         }
     }
@@ -128,7 +136,7 @@ GraphLines<T> GroupWires<T>::constructGraph_(const SmbData& smb) {
 }
 
 template<class T>
-void GroupWires<T>::fillWiresInfo_(const GraphLines<T>& graph,
+void GroupWires<T>::fillWiresInfo_(const GroupWires<T>::Graph& graph,
                                    const SmbData& smb) {
 
     vector<vector<const Line<T>*>> wires = getLines_(graph);
@@ -158,32 +166,32 @@ void GroupWires<T>::fillWiresInfo_(const GraphLines<T>& graph,
 
 template<class T>
 vector<vector<const Line<T>*>> GroupWires<T>::getLines_(
-        const GraphLines<T>& graph) {
+        const GroupWires<T>::Graph& graph) {
 
     vector<vector<const Line<T>*>> res;
     set<ElementId> visLines;
-    const VertexLine<T> *prevSegment, *nextSegment;
+    const typename Graph::GraphElem *prevSegment, *nextSegment;
     ElementId prvNodeId;
     for(UInt n = 1; n < 3; n++) {
-        for(UInt i = 0; i < graph.numLines(); i++) {
-            if (((graph.line(i)->getCoord(0)->numLines() == n)  ||
-                 (graph.line(i)->getCoord(1)->numLines() == n)) &&
-                (visLines.count(graph.line(i)->line()->getId()) == 0)) {
+        for(UInt i = 0; i < graph.numElems(); i++) {
+            if (((graph.elem(i)->getBound(0)->numBounds() == n)  ||
+                 (graph.elem(i)->getBound(1)->numBounds() == n)) &&
+                (visLines.count(graph.elem(i)->elem()->getId()) == 0)) {
 
                 vector<const Line<T>*> wireLines;
-                nextSegment = graph.line(i);
+                nextSegment = graph.elem(i);
                 while(nextSegment != NULL) {
-                    if(visLines.count(nextSegment->line()->getId()) != 0) {
+                    if(visLines.count(nextSegment->elem()->getId()) != 0) {
                         break;
                     }
-                    wireLines.push_back(nextSegment->line());
-                    visLines.insert(nextSegment->line()->getId());
+                    wireLines.push_back(nextSegment->elem());
+                    visLines.insert(nextSegment->elem()->getId());
                     prevSegment = nextSegment;
                     nextSegment = NULL;
-                    for(UInt j = 0; j < prevSegment->numLines(); j++) {
+                    for(UInt j = 0; j < prevSegment->numNeighbors(); j++) {
                         if (visLines.count(
-                                prevSegment->getLine(j)->line()->getId()) == 0) {
-                            nextSegment = prevSegment->getLine(j);
+                                prevSegment->getNeighbor(j)->elem()->getId()) == 0) {
+                            nextSegment = prevSegment->getNeighbor(j);
                         }
                     }
                     if(nextSegment == NULL) {
