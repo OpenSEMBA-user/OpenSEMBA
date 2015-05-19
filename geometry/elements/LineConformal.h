@@ -24,19 +24,18 @@ public:
     LineConformal(const ElementId id,
                   const CoordI3* v[2],
                   const CVecR3& norm,
-                  const Int label,
                   const LayerId layerId = LayerId(0),
                   const MatId   matId   = MatId(0));
     LineConformal(const CoordI3* v[2],
                   const CVecR3& norm,
-                  const Int label);
+                  const LayerId layerId = LayerId(0),
+                  const MatId   matId   = MatId(0));
     LineConformal(const LineConformal& rhs);
     virtual ~LineConformal();
 
     DEFINE_CLONE(LineConformal);
 
     CVecR3 getNorm () const { return norm_;  }
-    Int    getLabel() const { return label_; }
 
     const CoordConf* getConfV(const UInt i) const;
 
@@ -48,9 +47,7 @@ public:
 
 private:
     void checkCoordinates();
-
     CVecR3 norm_;
-    Int    label_;
 };
 
 typedef LineConformal LinConf;
