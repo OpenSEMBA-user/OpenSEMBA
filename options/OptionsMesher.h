@@ -21,6 +21,7 @@ public:
     typedef enum {
         openfoam,
         ugrMesher,
+        zMesher,
         none
     } Mesher;
     typedef enum {
