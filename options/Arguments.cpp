@@ -197,9 +197,10 @@ pair<string, vector<string>> Arguments::readArgument(
     }
     for (int i = pos+1; i < argc; i++) {
         string str = argv[i];
-        transform(str.begin(), str.end(), str.begin(), ::tolower);
-        if (isKey(str)) {
-            break;
+        string aux;
+        transform(str.begin(), str.end(), aux.begin(), ::tolower);
+        if (isKey(aux)) {
+            return pair<string, vector<string>> (aux,value);
         }
         value.push_back(trim(str));
     }
