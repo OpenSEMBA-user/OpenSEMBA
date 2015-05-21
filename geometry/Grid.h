@@ -16,6 +16,7 @@ using namespace std;
 
 #include "Box.h"
 #include "base/class/ClassBase.h"
+#include "geometry/CVecI3Fractional.h"
 
 template<class T, Int D> class Box;
 
@@ -92,6 +93,8 @@ public:
     CVecRD getOrigin() const { return origin_;     }
 
     vector<Real> getStep(const Int dir) const;
+    Real         getStep(const Int dir,const Int& n) const;
+
     Real getMinimumSpaceStep() const;
 
     BoxRD getFullDomainBoundingBox() const;
@@ -121,10 +124,8 @@ public:
                                      const Real tol = tolerance,
                                      bool* err = NULL) const;
 
-    CoordIntFractional getCoordIntFractional const (CVecRD& pos,
-            const bool approx = true,
-            const Real tol = tolerance,
-            bool* err = NULL) const;
+    CVecI3Fractional getCVecI3Fractional (const CVecRD& xyz,
+                                                   bool* err = NULL) const;
 
     Int    getCell(const Int   dir,
                    const Real  x,

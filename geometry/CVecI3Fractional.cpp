@@ -7,19 +7,19 @@
 
 using namespace std;
 
-#include "CvecI3Fractional.h"
+#include "CVecI3Fractional.h"
 
-CvecI3Fractional::CvecI3Fractional() {
+CVecI3Fractional::CVecI3Fractional() {
 }
 
-CvecI3Fractional& CvecI3Fractional::operator =(
-        const CvecI3Fractional & rhs_) {
-    CoordI3::operator =(rhs_);
+CVecI3Fractional& CVecI3Fractional::operator =(
+        const CVecI3Fractional & rhs_) {
+    CVecI3::operator =(rhs_);
     len_ = rhs_.len_;
     return *this;
 }
 
-bool CvecI3Fractional::less_coordI(const CvecI3Fractional &rhs) const {
+bool CVecI3Fractional::less_coordI(const CVecI3Fractional &rhs) const {
     for (UInt n = 0; n < 3; n++) {
         if (this->val[n] < rhs.val[n]) {
             return true;
@@ -30,7 +30,7 @@ bool CvecI3Fractional::less_coordI(const CvecI3Fractional &rhs) const {
     return false;
 }
 
-bool CvecI3Fractional::less(const CvecI3Fractional &rhs,
+bool CVecI3Fractional::less(const CVecI3Fractional &rhs,
         const Real tool) const {
     for (UInt n = 0; n < 3; n++) {
         if (this->val[n] < rhs.val[n]) {
@@ -49,7 +49,7 @@ bool CvecI3Fractional::less(const CvecI3Fractional &rhs,
     return false;
 }
 
-bool CvecI3Fractional::cmp_coordI(const CvecI3Fractional &rhs) const {
+bool CVecI3Fractional::cmp_coordI(const CVecI3Fractional &rhs) const {
     for (UInt n = 0; n < 3; n++) {
         if (this->val[n] != rhs.val[n]) {
             return false;
@@ -58,7 +58,7 @@ bool CvecI3Fractional::cmp_coordI(const CvecI3Fractional &rhs) const {
     return true;
 }
 
-bool CvecI3Fractional::cmp(const CvecI3Fractional &rhs,
+bool CVecI3Fractional::cmp(const CVecI3Fractional &rhs,
         const Real tool) const {
 
     if (cmp_coordI(rhs)) {
@@ -74,7 +74,7 @@ bool CvecI3Fractional::cmp(const CvecI3Fractional &rhs,
     return true;
 }
 
-UInt CvecI3Fractional::getDirBase() {
+UInt CVecI3Fractional::getDirBase() {
     UInt rang = this->getRangeBase();
     if (rang == 1) {
         for (unsigned int n = 0; n < 3; ++n) {
@@ -96,7 +96,7 @@ UInt CvecI3Fractional::getDirBase() {
 //    return pixel.isInto(*this);
 //}
 
-UInt CvecI3Fractional::getRangeBase() {
+UInt CVecI3Fractional::getRangeBase() {
     unsigned int rang;
     rang = 0;
     for (unsigned int n = 0; n < 3; ++n) {
@@ -107,7 +107,7 @@ UInt CvecI3Fractional::getRangeBase() {
     return rang;
 }
 
-void CvecI3Fractional::applyTol(const double tol) {
+void CVecI3Fractional::applyTol(const double tol) {
     for (unsigned int n = 0; n < 3; ++n) {
         if (len_[n] < tol) {
             len_[n] = 0.0;
@@ -118,7 +118,7 @@ void CvecI3Fractional::applyTol(const double tol) {
     }
 }
 
-CVecI3 CvecI3Fractional::DiscretePositionDistribution(
+CVecI3 CVecI3Fractional::DiscretePositionDistribution(
         CVecI3 &numDivision) const {
     CVecI3 ret;
     for (UInt n = 0; n < 3; n++) {
@@ -127,7 +127,7 @@ CVecI3 CvecI3Fractional::DiscretePositionDistribution(
     return ret;
 }
 
-CVecR3 CvecI3Fractional::getRelativePos() const {
+CVecR3 CVecI3Fractional::getRelativePos() const {
     CVecR3 retPos;
     for (unsigned int n = 0; n < 3; ++n) {
         retPos.val[n] = this->val[n] + len_.val[n];

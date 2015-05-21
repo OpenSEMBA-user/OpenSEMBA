@@ -231,6 +231,20 @@ vector<Real> Grid<D>::getStep(const Int dir) const {
     return res;
 }
 
+
+template<Int D>
+Real Grid<D>::getStep(const Int dir, const Int& n) const {
+    assert(dir >= 0 && dir < D);
+    assert(n   >= 0 && n < (pos_.size()-1));
+
+    if (pos_[dir].empty() == 0) {
+        return 0.0;
+    }
+    return pos_[dir][n+1] - pos_[dir][n];
+}
+
+
+
 template<Int D>
 Real Grid<D>::getMinimumSpaceStep() const {
     Real minStep = numeric_limits<Real>::infinity();
@@ -461,6 +475,34 @@ pair<CartesianVector<Int,D>, CartesianVector<Real,D> >
 }
 
 template<Int D>
+CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
+                                               bool* err = NULL) const{
+
+    long int n; n = 0;
+    CVecI3 ijk_;
+    CVecR3 len_ = 0.0;
+
+    for(UInt dir=x; dir<=z; dir++){
+        if(xyz[x]<pos_[x].front()){
+            ijk_[x] = 0;
+            err = false;
+        }else if(pos_[x].back()<=x) {
+            ijk_[x] = pos_[x].size()+offsetGrid_[x];
+            *err = false;
+        }
+        while(pos_[n]<=x){
+            ++n;
+        }
+        ijk_[x] = n-1;
+
+        len_[x] = (xyz[x]-pos_[x][ijk_[x]])/getStep(x,ijk_[x]);
+    }
+
+    return CVecI3Fractional (ijk_,len_);
+
+}
+
+template<Int D>
 Int Grid<D>::getCell(const Int dir,
                      const Real x,
                      const bool approx,
@@ -528,6 +570,7 @@ void Grid<D>::enlarge(const pair<CVecID, CVecID>& additionalCells,
     //    res->cons = false;
     //}
 }
+
 
 template<Int D>
 void Grid<D>::printInfo() const {

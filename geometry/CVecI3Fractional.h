@@ -9,6 +9,7 @@
 # define COORINFRACTIONAL_H_
 
 using namespace std;
+#include "math/CartesianVector.h"
 #include "geometry/coordinates/Coordinate.h"
 #include "geometry/elements/Element.h"
 //#include "Pixel.h"
@@ -17,8 +18,8 @@ class CVecI3Fractional : public CVecI3 {
 
 public:
     CVecI3Fractional ();
-    CVecI3Fractional (const CoordI3 & _coordI, const CVecR3 &_len):
-        CoordI3(_coordI), len_(_len){applyTol();}
+    CVecI3Fractional (const CVecI3 & _cvecI3, const CVecR3 &_len):
+        CVecI3(_cvecI3), len_(_len){applyTol();}
     ~CVecI3Fractional (){}
 
     CVecI3Fractional& operator= (const CVecI3Fractional& rhs);
