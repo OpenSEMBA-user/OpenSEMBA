@@ -95,6 +95,7 @@ public:
     Real getMinimumSpaceStep() const;
 
     BoxRD getFullDomainBoundingBox() const;
+    BoxID getFullDomainBoundingCellBox() const;
     BoxRD getBoundingBox(const BoxID& bound) const;
     BoxRD getBoxRContaining(const CVecRD& point) const;
     BoxID getBoxIContaining(const CVecRD& point) const;

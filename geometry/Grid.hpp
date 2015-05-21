@@ -252,6 +252,18 @@ Box<Real,D> Grid<D>::getFullDomainBoundingBox() const {
 }
 
 template<Int D>
+Box<Int,D> Grid<D>::getFullDomainBoundingCellBox() const {
+
+    CVecID min, max, dims;
+    for (UInt n=0; n<D; n++){
+        dims[n] = pos_[n].size();
+    }
+
+    BoxID res(offsetGrid_, offsetGrid_ + dims);
+    return res;
+}
+
+template<Int D>
 Box<Real,D> Grid<D>::getBoundingBox(const BoxID& bound) const {
     BoxRD res(getPos(bound.getMin()), getPos(bound.getMax()));
     return res;
