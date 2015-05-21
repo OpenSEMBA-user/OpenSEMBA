@@ -477,12 +477,11 @@ pair<CartesianVector<Int,D>, CartesianVector<Real,D> >
 template<Int D>
 CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
                                                bool* err) const{
-
     long int n; n = 0;
     CVecI3 ijk_;
     CVecR3 len_ = 0.0;
 
-    for(UInt dir=0; dir<D; dir++){
+    for(UInt dir=0; dir<D; ++dir){
         if(xyz[dir]<pos_[dir].front()){
             ijk_[dir] = 0;
             *err = false;
@@ -494,12 +493,9 @@ CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
             ++n;
         }
         ijk_[dir] = n-1;
-
         len_[dir] = (xyz[dir]-pos_[dir][ijk_[dir]])/getStep(dir,ijk_[dir]);
     }
-
     return CVecI3Fractional (ijk_,len_);
-
 }
 
 template<Int D>

@@ -12,6 +12,7 @@ using namespace std;
 #include "math/CartesianVector.h"
 #include "geometry/coordinates/Coordinate.h"
 #include "geometry/elements/Element.h"
+#include "mesher/fdtd/meshConf/Pixel.h"
 
 class CVecI3Fractional : public CVecI3 {
 
