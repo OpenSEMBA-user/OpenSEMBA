@@ -120,6 +120,12 @@ public:
                                      const bool approx = true,
                                      const Real tol = tolerance,
                                      bool* err = NULL) const;
+
+    CoordIntFractional getCoordIntFractional const (CVecRD& pos,
+            const bool approx = true,
+            const Real tol = tolerance,
+            bool* err = NULL) const;
+
     Int    getCell(const Int   dir,
                    const Real  x,
                    const bool  approx = true,
