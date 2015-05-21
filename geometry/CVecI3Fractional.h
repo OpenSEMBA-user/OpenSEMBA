@@ -12,7 +12,6 @@ using namespace std;
 #include "math/CartesianVector.h"
 #include "geometry/coordinates/Coordinate.h"
 #include "geometry/elements/Element.h"
-//#include "Pixel.h"
 
 class CVecI3Fractional : public CVecI3 {
 
@@ -24,25 +23,19 @@ public:
 
     CVecI3Fractional& operator= (const CVecI3Fractional& rhs);
 
-    bool less_coordI (const CVecI3Fractional &rhs) const;
-    bool less (const CVecI3Fractional &rhs,
-            const Real tool = MathUtils::tolerance) const;
-
-    bool cmp_coordI (const CVecI3Fractional &rhs) const;
-    bool cmp       (const CVecI3Fractional &rhs,
+    bool less(const CVecI3Fractional &rhs,
             const Real tool = MathUtils::tolerance) const;
 
     void applyTol (const Real tol=1.0e-4);
 
     CVecR3 getRelativePos () const;
-    //bool IsInto(const Pixel& pixel) const;
 
     CVecI3 DiscretePositionDistribution (CVecI3 &numDivision) const;
 
-    UInt getDirBase   ();
-    UInt getRangeBase ();
+    CartesianDirection getDirBase   () const;
+    UInt getRangeBase () const;
 
-protected:
+private:
     CVecR3 len_;
 };
 

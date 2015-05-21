@@ -125,7 +125,7 @@ public:
                                      bool* err = NULL) const;
 
     CVecI3Fractional getCVecI3Fractional (const CVecRD& xyz,
-                                                   bool* err = NULL) const;
+                                          bool* err = NULL) const;
 
     Int    getCell(const Int   dir,
                    const Real  x,

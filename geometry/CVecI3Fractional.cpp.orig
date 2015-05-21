@@ -13,6 +13,27 @@ CVecI3Fractional::CVecI3Fractional() {
 }
 
 CVecI3Fractional& CVecI3Fractional::operator =(
+<<<<<<< HEAD
+        const CVecI3Fractional & rhs_) {
+    CVecI3::operator =(rhs_);
+    len_ = rhs_.len_;
+    return *this;
+}
+
+bool CVecI3Fractional::less_coordI(const CVecI3Fractional &rhs) const {
+    for (UInt n = 0; n < 3; n++) {
+        if (this->val[n] < rhs.val[n]) {
+            return true;
+        } else if (this->val[n] > rhs.val[n]) {
+            return false;
+        }
+    }
+    return false;
+}
+
+bool CVecI3Fractional::less(const CVecI3Fractional &rhs,
+        const Real tool) const {
+=======
         const CVecI3Fractional & rhs) {
     CVecI3::operator =(rhs);
     len_ = rhs.len_;
@@ -21,6 +42,7 @@ CVecI3Fractional& CVecI3Fractional::operator =(
 
 bool CVecI3Fractional::less(const CVecI3Fractional &rhs,
         const Real tol) const {
+>>>>>>> origin/luis
     for (UInt n = 0; n < 3; n++) {
         if (this->val[n] < rhs.val[n]) {
             return true;
@@ -38,7 +60,36 @@ bool CVecI3Fractional::less(const CVecI3Fractional &rhs,
     return false;
 }
 
+<<<<<<< HEAD
+bool CVecI3Fractional::cmp_coordI(const CVecI3Fractional &rhs) const {
+    for (UInt n = 0; n < 3; n++) {
+        if (this->val[n] != rhs.val[n]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool CVecI3Fractional::cmp(const CVecI3Fractional &rhs,
+        const Real tool) const {
+
+    if (cmp_coordI(rhs)) {
+        for (UInt n = 0; n < 3; n++) {
+            if (MathUtils::equal(len_.val[n], rhs.len_.val[n], tool)) {
+            } else {
+                return false;
+            }
+        }
+    } else {
+        return false;
+    }
+    return true;
+}
+
+UInt CVecI3Fractional::getDirBase() {
+=======
 CartesianDirection CVecI3Fractional::getDirBase() const {
+>>>>>>> origin/luis
     UInt rang = this->getRangeBase();
     if (rang == 1) {
         for (unsigned int n = 0; n < 3; ++n) {
@@ -56,7 +107,15 @@ CartesianDirection CVecI3Fractional::getDirBase() const {
     return 0;
 }
 
+<<<<<<< HEAD
+//bool CoordIntFractional::IsInto(const Pixel& pixel) const {
+//    return pixel.isInto(*this);
+//}
+
+UInt CVecI3Fractional::getRangeBase() {
+=======
 UInt CVecI3Fractional::getRangeBase() const {
+>>>>>>> origin/luis
     unsigned int rang;
     rang = 0;
     for (unsigned int n = 0; n < 3; ++n) {
