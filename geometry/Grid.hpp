@@ -237,7 +237,7 @@ Real Grid<D>::getStep(const Int dir, const Int& n) const {
     assert(dir >= 0 && dir < D);
     assert(n   >= 0 && n < (Int(pos_[dir].size()) - 1));
 
-    if (pos_[dir].empty() == 0) {
+    if (pos_[dir].empty()) {
         return 0.0;
     }
     return pos_[dir][n+1] - pos_[dir][n];
@@ -477,10 +477,12 @@ Grid<D>::getCellPair(const CVecRD& xyz,
 template<Int D>
 CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
         bool* err) const{
-    CVecI3 ijk;
-    CVecR3 len;
-    for(UInt dir=0; dir<D; ++dir){
-        if(!pos_[dir].empty()){
+
+    CVecI3 ijk   ;
+    CVecR3 length;
+
+    for(UInt dir=0; dir<(UInt)D; ++dir){
+         if(!pos_[dir].empty()){
             if(xyz(dir) < pos_[dir].front()){
                 ijk(dir) = 0;
                 *err = false;
@@ -493,10 +495,11 @@ CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
                 ++n;
             }
             ijk(dir) = n-1;
-            len(dir) = (xyz(dir)-pos_[dir][ijk(dir)])/getStep(dir,ijk(dir));
+            length(dir) = (xyz(dir)-pos_[dir][ijk(dir)])/getStep(dir,ijk(dir));
         }
     }
-    return CVecI3Fractional (ijk,len);
+    CVecI3Fractional ret (ijk,length);
+    return ret;
 }
 
 template<Int D>
