@@ -33,7 +33,7 @@ public:
 
     void applyTol (const Real tol=1.0e-4);
 
-    CVecI3 getIntPos() const;
+    CVecR3 getRelativePos() const;
 
     CVecI3 DiscretePositionDistribution (CVecI3 &numDivision) const;
 
