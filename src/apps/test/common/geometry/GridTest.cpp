@@ -69,6 +69,11 @@ TEST_F(GeometryGridTest, NumberOfCells) {
     EXPECT_EQ(grid.getNumCells(), CVecI3(2,2,2));
 }
 
+TEST_F(GeometryGridTest, GetCVecI3Fractional) {
+    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02)), grid_.getCVecI3Fractional(CVecR3(0.17)));
+    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02)), grid_.getCVecI3Fractional(CVecR3(0.17)));
+}
+
 TEST_F(GeometryGridTest, cartesianGridvsGrid3) {
     // Dims
     EXPECT_EQ(grid_.getDimsx(), cartesianGrid_->getDimsx());

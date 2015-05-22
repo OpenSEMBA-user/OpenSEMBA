@@ -13,7 +13,7 @@ GTEST_API_ int main(int argc, char **argv) {
   tests += "*Math*:";
   tests += "*Geometry*:";
 //  tests += "*ParserSTL*:";
-//  tests += "*ConformalMesherLauncherTest*:";
+  tests += "*ConformalMesherLauncherTest*:";
 //  tests += "*EMSource*:";
 //  tests += "*ParserGid*:";
 //  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
