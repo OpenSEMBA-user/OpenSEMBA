@@ -98,3 +98,7 @@ CVecR3 CVecI3Fractional::getRelativePos() const {
 string CVecI3Fractional::toStr() const {
     return CVecI3::toStr() + " len: " + len_.toStr();
 }
+
+bool CVecI3Fractional::operator ==(const CVecI3Fractional& rhs) const {
+    return (CVecI3::operator ==(rhs) && len_ == rhs.len_);
+}
