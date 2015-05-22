@@ -10,13 +10,16 @@
 
 using namespace std;
 #include "math/CartesianVector.h"
-#include "geometry/coordinates/Coordinate.h"
-#include "geometry/elements/Element.h"
-#include "mesher/fdtd/meshConf/Pixel.h"
+
 
 class CVecI3Fractional : public CVecI3 {
-
 public:
+    typedef enum {
+        dirNode = 0,
+        dirX    = 1,
+        dirY    = 2,
+        dirZ    = 3
+    } Direction;
     CVecI3Fractional ();
     CVecI3Fractional (const CVecI3 & _cvecI3, const CVecR3 &_len):
         CVecI3(_cvecI3), len_(_len){applyTol();}
@@ -33,7 +36,7 @@ public:
 
     CVecI3 DiscretePositionDistribution (CVecI3 &numDivision) const;
 
-    CartesianDirection getDirBase   () const;
+    Direction getDirBase   () const;
     UInt getRangeBase () const;
 
 private:
@@ -41,5 +44,6 @@ private:
 };
 
 typedef CVecI3Fractional CVecI3Frac;
+typedef CVecI3Fractional::Direction CartesianDirection;
 
 #endif

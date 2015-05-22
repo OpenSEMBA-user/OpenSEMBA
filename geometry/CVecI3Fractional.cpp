@@ -38,22 +38,22 @@ bool CVecI3Fractional::less(const CVecI3Fractional &rhs,
     return false;
 }
 
-CartesianDirection CVecI3Fractional::getDirBase() const {
+CVecI3Frac::Direction CVecI3Fractional::getDirBase() const {
     UInt rang = this->getRangeBase();
     if (rang == 1) {
         for (unsigned int n = 0; n < 3; ++n) {
             if (len_[n] > MathUtils::tolerance) {
-                return n + 1;
+                return Direction(n + 1);
             }
         }
     } else if (rang == 2) {
         for (unsigned int n = 0; n < 3; ++n) {
             if (len_[n] < MathUtils::tolerance) {
-                return n + 1;
+                return Direction(n + 1);
             }
         }
     }
-    return 0;
+    return dirNode;
 }
 
 UInt CVecI3Fractional::getRangeBase() const {

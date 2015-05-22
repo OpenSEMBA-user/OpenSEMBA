@@ -235,7 +235,7 @@ vector<Real> Grid<D>::getStep(const Int dir) const {
 template<Int D>
 Real Grid<D>::getStep(const Int dir, const Int& n) const {
     assert(dir >= 0 && dir < D);
-    assert(n   >= 0 && n < (pos_.size()-1));
+    assert(n   >= 0 && n < (Int(pos_[dir].size()) - 1));
 
     if (pos_[dir].empty() == 0) {
         return 0.0;

@@ -43,8 +43,8 @@ public:
     USE_GROUPID_ADD(C, CoordinateId);
     C*         add(const CVecR3&        , const bool canOverlap = false);
     vector<C*> add(const vector<CVecR3>&, const bool canOverlap = false);
-    virtual C*         add(const CVecI3&        , const bool canOverlap = false);
-    virtual vector<C*> add(const vector<CVecI3>&, const bool canOverlap = false);
+    C*         add(const CVecI3&        , const bool canOverlap = false);
+    vector<C*> add(const vector<CVecI3>&, const bool canOverlap = false);
     
     void applyScalingFactor(const Real factor);
     

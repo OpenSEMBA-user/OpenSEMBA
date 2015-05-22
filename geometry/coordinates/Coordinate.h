@@ -17,7 +17,6 @@ using namespace std;
 
 #include "geometry/Grid.h"
 #include "math/CartesianVector.h"
-
 #include "base/class/ClassIdBase.h"
 
 CREATE_ID(CoordinateId);
