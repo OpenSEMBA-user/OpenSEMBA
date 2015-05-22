@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "mesher/fdtd/meshConf/GroupCVecI3FractionalUnfinished.h"
 
-class MesherFDTDMeshConfGroupCVecI3UnfinishedTest : public ::testing::Test {
+class MesherGroupCVecI3UnfinishedTest : public ::testing::Test {
 public:
 
     void SetUp();
