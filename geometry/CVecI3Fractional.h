@@ -27,6 +27,7 @@ public:
 
     CVecI3Fractional& operator= (const CVecI3Fractional& rhs);
 
+    bool operator==(const CVecI3Fractional &rhs) const;
     bool less(const CVecI3Fractional &rhs,
             const Real tool = MathUtils::tolerance) const;
 
