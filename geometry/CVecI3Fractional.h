@@ -12,7 +12,7 @@ using namespace std;
 
 #include "math/CartesianVector.h"
 
-class CVecI3Fractional : private CVecI3 {
+class CVecI3Fractional : public CVecI3 {
 public:
     typedef enum {
         dirNode = 0,
