@@ -19,6 +19,8 @@ GTEST_API_ int main(int argc, char **argv) {
 //  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
 //  tests += "*AdapterFDTDTest.UGRMesherConversion*:";
 
+  //test += "*UGRMesher*";
+
   ::testing::GTEST_FLAG(filter) = tests.c_str();
 
 //  ::testing::GTEST_FLAG(filter) = string("-AdapterFDTDTest.OpenFOAMConversion:-SembaTest.sphereThroughOpenfoam");
