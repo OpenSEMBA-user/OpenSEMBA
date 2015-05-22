@@ -476,30 +476,30 @@ Grid<D>::getCellPair(const CVecRD& xyz,
 
 template<Int D>
 CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
-        bool* err) const{
+        bool& err) const{
 
     CVecI3 ijk   ;
     CVecR3 length;
-
-    for(UInt dir=0; dir<(UInt)D; ++dir){
+    err = false  ;
+    for(Int dir=0; dir<D; ++dir){
          if(!pos_[dir].empty()){
             if(xyz(dir) < pos_[dir].front()){
                 ijk(dir) = 0;
-                *err = false;
             }else if(pos_[dir].back()<=xyz(dir)) {
                 ijk(dir) = pos_[dir].size()+offsetGrid_[dir];
-                *err = false;
+            }else{
+                err = true;
+                long int n = 0;
+                while(pos_[dir][n] <= xyz(dir)){
+                    ++n;
+                }
+                ijk(dir) = n-1;
+                length(dir) = (xyz(dir)-pos_[dir][ijk(dir)])
+                               /getStep(dir,ijk(dir));
             }
-            long int n = 0;
-            while(pos_[dir][n] <= xyz(dir)){
-                ++n;
-            }
-            ijk(dir) = n-1;
-            length(dir) = (xyz(dir)-pos_[dir][ijk(dir)])/getStep(dir,ijk(dir));
         }
     }
-    CVecI3Fractional ret (ijk,length);
-    return ret;
+    return CVecI3Fractional (ijk,length);
 }
 
 template<Int D>
