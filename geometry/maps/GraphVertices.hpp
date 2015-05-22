@@ -28,6 +28,7 @@ template<class ELEM, class BOUND>
 GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
         const Group<const GraphVertices<ELEM,BOUND>::Elem>& elems,
         const Group<const GraphVertices<ELEM,BOUND>::Bound>& bounds) {
+    return *this;
     LayerId layId;
     const Bound* vertex;
     GraphElem*   elemPtr;

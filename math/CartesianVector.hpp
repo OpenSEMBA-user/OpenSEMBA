@@ -45,10 +45,10 @@ CartesianVector<T,D>::CartesianVector(const CartesianVector<T,D>& begin,
     }
 }
 
-template <class T, Int D>
-CartesianVector<T,D>::CartesianVector(const CartesianVector<T,D>& param) {
+template <class T, Int D> template<class U>
+CartesianVector<T,D>::CartesianVector(const CartesianVector<U,D>& param) {
     for (Int i = 0; i < D; i++) {
-        val[i] = param.val[i];
+        val[i] = (T) param.val[i];
     }
 }
 
@@ -131,6 +131,14 @@ inline CartesianVector<T,D>& CartesianVector<T,D>::operator/=(const T param) {
         val[i] /= param;
     }
     return *this;
+}
+
+template <class T, Int D>
+CartesianVector<T,D> CartesianVector<T,D>::operator+(
+        const CartesianAxis param) const {
+    CartesianVector<T,D> res = *this;
+    res(param)++;
+    return res;
 }
 
 template <class T, Int D>
@@ -457,7 +465,7 @@ bool operator>=(const CartesianVector<T,D>& lhs,
 }
 
 template<Int D>
-CartesianVector<Real,D> round(const CartesianVector<Real,D>& vec) {
+CartesianVector<Real,D> MathUtils::round(const CartesianVector<Real,D>& vec) {
     CartesianVector<Real,D> res;
     for (UInt i = 0; i < D; i++) {
         res(i) = round(vec(i));

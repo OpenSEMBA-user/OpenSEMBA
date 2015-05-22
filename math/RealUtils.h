@@ -20,9 +20,11 @@ namespace MathUtils {
     bool lowerEqual   (const Real lhs, const Real rhs,
                        Real rel = 0.0, const Real tol = tolerance);
     bool greater     (const Real lhs, const Real rhs,
-                       Real rel = 0.0, const Real tol = tolerance);
-    bool greatherEqual(const Real lhs, const Real rhs,
-                       Real rel = 0.0, const Real tol = tolerance);
+                      Real rel = 0.0, const Real tol = tolerance);
+    bool greaterEqual(const Real lhs, const Real rhs,
+                      Real rel = 0.0, const Real tol = tolerance);
+
+    Real round(Real v);
 }
 
 
