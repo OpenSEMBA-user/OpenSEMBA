@@ -71,10 +71,32 @@ TEST_F(GeometryGridTest, NumberOfCells) {
 
 TEST_F(GeometryGridTest, GetCVecI3Fractional) {
     bool err;
-    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02)),
-               grid_.getCVecI3Fractional(CVecR3(0.17), &err));
+    EXPECT_EQ(CVecI3Frac(CVecI3(0), CVecR3(0.0)),
+               grid_.getCVecI3Fractional(CVecR3(0.0), err));
+    EXPECT_TRUE(err);
 
+    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02/0.05)),
+               grid_.getCVecI3Fractional(CVecR3(0.17), err));
+    EXPECT_TRUE(err);
+
+    EXPECT_EQ(CVecI3Frac(CVecI3(4), CVecR3(0.0)),
+               grid_.getCVecI3Fractional(CVecR3(0.2), err));
+    EXPECT_TRUE(err);
+
+    grid_.getCVecI3Fractional(CVecR3(1.01), err);
+    EXPECT_FALSE(err);
+
+    grid_.getCVecI3Fractional(CVecR3(-0.01), err);
+    EXPECT_FALSE(err);
 }
+
+
+TEST_F(GeometryGridTest, GetSteps) {
+    EXPECT_NEAR(0.05, grid_.getStep(0,2),MathUtils::tolerance);
+    EXPECT_NEAR(0.05, grid_.getStep(1,5),MathUtils::tolerance);
+    EXPECT_NEAR(0.05, grid_.getStep(2,5),MathUtils::tolerance);
+}
+
 
 TEST_F(GeometryGridTest, cartesianGridvsGrid3) {
     // Dims
