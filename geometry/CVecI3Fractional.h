@@ -12,7 +12,7 @@ using namespace std;
 
 #include "math/CartesianVector.h"
 
-class CVecI3Fractional : public CVecI3 {
+class CVecI3Fractional : private CVecI3 {
 public:
     typedef enum {
         dirNode = 0,
@@ -21,8 +21,8 @@ public:
         dirZ    = 3
     } Direction;
     CVecI3Fractional ();
-    CVecI3Fractional (const CVecI3 & _cvecI3, const CVecR3 &_len):
-        CVecI3(_cvecI3), len_(_len){applyTol();}
+    CVecI3Fractional (const CVecI3& pos, const CVecR3& len):
+        CVecI3(pos), len_(len){applyTol();}
     ~CVecI3Fractional (){}
 
     CVecI3Fractional& operator= (const CVecI3Fractional& rhs);
@@ -33,7 +33,7 @@ public:
 
     void applyTol (const Real tol=1.0e-4);
 
-    CVecR3 getRelativePos () const;
+    CVecI3 getIntPos() const;
 
     CVecI3 DiscretePositionDistribution (CVecI3 &numDivision) const;
 

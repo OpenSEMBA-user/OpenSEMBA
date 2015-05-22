@@ -16,18 +16,6 @@ Id GroupId<T, Id>::ErrorId::getId() const {
 }
 
 template<typename T, class Id>
-GroupId<T, Id>::ErrorIdNotExists::ErrorIdNotExists(const Id& id)
-:   ErrorId(id) {
-    stringstream aux;
-    aux << "GroupId: Id " << id << " doesn't exists";
-    this->setMsg(aux.str());
-}
-
-template<typename T, class Id>
-GroupId<T, Id>::ErrorIdNotExists::~ErrorIdNotExists() throw() {
-}
-
-template<typename T, class Id>
 GroupId<T, Id>::ErrorIdZero::ErrorIdZero(const Id& id)
 :   Error("GroupId: Element with id 0"), ErrorId(id) {
 
@@ -64,7 +52,7 @@ bool GroupId<T, Id>::existId(const Id id) const {
 template<typename T, class Id>
 T* GroupId<T, Id>::get(const Id id) {
     if(mapId_.count(id) == 0) {
-        throw ErrorIdNotExists(id);
+        return NULL;
     }
     return this->get(mapId_.at(id));
 }
@@ -72,7 +60,7 @@ T* GroupId<T, Id>::get(const Id id) {
 template<typename T, class Id>
 const T* GroupId<T, Id>::get(const Id id) const {
     if(mapId_.count(id) == 0) {
-        throw ErrorIdNotExists(id);
+        return NULL;
     }
     return this->get(mapId_.at(id));
 }
