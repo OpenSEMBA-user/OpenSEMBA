@@ -22,6 +22,11 @@ public:
     private:
         Id id_;
     };
+    class ErrorIdNotExists : public ErrorId {
+    public:
+        ErrorIdNotExists(const Id&);
+        virtual ~ErrorIdNotExists() throw();
+    };
     class ErrorIdZero : public ErrorId {
     public:
         ErrorIdZero(const Id&);
