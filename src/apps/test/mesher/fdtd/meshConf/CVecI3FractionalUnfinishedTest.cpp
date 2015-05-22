@@ -1,7 +1,7 @@
 #include "CVecI3FractionalUnfinishedTest.h"
 
 
-void MesherFDTDMeshConfCVecI3UnfinishedTest::SetUp() {
+void MesherCVecI3UnfinishedTest::SetUp() {
     CVecI3 intPos(2);
     CVecR3 relLen(0.3);
     CVecI3Fractional fracPos(intPos, relLen);
@@ -17,13 +17,14 @@ void MesherFDTDMeshConfCVecI3UnfinishedTest::SetUp() {
     vector<ElemR*> elems;
     CoordinateId vId[3] = {CoordinateId(1), CoordinateId(2), CoordinateId(3)};
     elems.push_back(new Tri3(cG_, ElementId(1), vId));
+    elems.push_back(new Tri3(cG_, ElementId(2), vId));
     eG_ = ElemRGroup(elems);
 
     ConstElemRGroup constElemGroup = eG_;
     fracPosWithElems_ = CVecI3FracU(fracPos, constElemGroup);
 }
 
-TEST_F(MesherFDTDMeshConfCVecI3UnfinishedTest, BasicOperations){
+TEST_F(MesherCVecI3UnfinishedTest, BasicOperations) {
     EXPECT_EQ(fracPosWithElems_, fracPosWithElems_);
     EXPECT_EQ(fracPosEmpty_, fracPosEmpty_);
     EXPECT_NE(fracPosWithElems_, fracPosEmpty_);
@@ -37,9 +38,15 @@ TEST_F(MesherFDTDMeshConfCVecI3UnfinishedTest, BasicOperations){
 
 }
 
-TEST_F(MesherFDTDMeshConfCVecI3UnfinishedTest, Merging){
-    CVecI3 intPos(2);
-    CVecR3 relPos(0.3);
-    CVecI3Fractional fracPos(CVecI3(2), CVecR3(0.3));
-//    CVecI3FractionalUnfinished fracPosUnf()
+TEST_F(MesherCVecI3UnfinishedTest, Merging) {
+    // Merging with fracPos with equal CVecI3Frac.
+    EXPECT_EQ(fracPosEmpty_.merge(fracPosWithElems_), fracPosWithElems_);
+    // Merging of two CVecI3U with different groups.
+    ConstElemRGroup elems2(eG_.get(0));
+    CVecI3FracU fracPosElems2(fracPosEmpty_, elems2);
+    EXPECT_EQ(fracPosElems2.merge(fracPosEmpty_), fracPosElems2);
+    EXPECT_EQ(fracPosElems2.merge(fracPosWithElems_), fracPosWithElems_);
+    // Merging with non equal CVecI3Frac does nothing.
+    CVecI3FracU fracPos2Unf(CVecI3(7), CVecR3(0.75));
+    EXPECT_EQ(fracPos2Unf.merge(fracPosWithElems_), fracPos2Unf);
 }
