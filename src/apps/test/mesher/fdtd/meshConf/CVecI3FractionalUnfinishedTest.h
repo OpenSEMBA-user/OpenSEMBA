@@ -1,10 +1,10 @@
-#ifndef CONFORMALMESHERLAUNCHERTEST_H_
-#define CONFORMALMESHERLAUNCHERTEST_H_
+#ifndef MESHERCVECI3FRACTIONALUNFINISHEDTEST_H_
+#define MESHERCVECI3FRACTIONALUNFINISHEDTEST_H_
 
 #include "gtest/gtest.h"
 #include "mesher/fdtd/meshConf/CVecI3FractionalUnfinished.h"
 
-class MesherCVecI3UnfinishedTest : public ::testing::Test {
+class MesherCVecI3FractionalUnfinishedTest : public ::testing::Test {
 public:
 
     void SetUp();
@@ -14,6 +14,7 @@ protected:
     CoordR3Group cG_;
     ElemRGroup eG_;
 
+    void init();
 };
 
 #endif
