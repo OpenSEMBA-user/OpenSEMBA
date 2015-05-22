@@ -70,8 +70,10 @@ TEST_F(GeometryGridTest, NumberOfCells) {
 }
 
 TEST_F(GeometryGridTest, GetCVecI3Fractional) {
-    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02)), grid_.getCVecI3Fractional(CVecR3(0.17)));
-    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02)), grid_.getCVecI3Fractional(CVecR3(0.17)));
+    bool err;
+    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02)),
+               grid_.getCVecI3Fractional(CVecR3(0.17), &err));
+
 }
 
 TEST_F(GeometryGridTest, cartesianGridvsGrid3) {
