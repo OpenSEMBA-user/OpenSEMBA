@@ -94,3 +94,7 @@ CVecR3 CVecI3Fractional::getRelativePos() const {
     }
     return retPos;
 }
+
+string CVecI3Fractional::toStr() const {
+    return CVecI3::toStr() + " len: " + len_.toStr();
+}

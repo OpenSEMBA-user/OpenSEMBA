@@ -10,7 +10,7 @@ Grid<D>::Grid() {
 
 template<Int D>
 Grid<D>::Grid(const BoxRD& box,
-              const CVecRD& dxyz) {
+        const CVecRD& dxyz) {
     origin_ = box.getMin();
     offsetGrid_ = CVecID(0, 0, 0);
     for (Int i = 0; i < D; i++) {
@@ -34,12 +34,12 @@ Grid<D>::Grid(const BoxRD& box,
 
 template<Int D>
 Grid<D>::Grid(const BoxRD &boundingBox,
-              const CVecID& dims) {
+        const CVecID& dims) {
     origin_ = boundingBox.getMin();
     offsetGrid_ = CVecID(0, 0, 0);
     for (Int i = 0; i < D; i++) {
         Real step =
-        (boundingBox.getMax()(i) - boundingBox.getMin()(i)) / dims(i);
+                (boundingBox.getMax()(i) - boundingBox.getMin()(i)) / dims(i);
         Int nCells = dims(i);
         pos_[i].resize(nCells+1);
         for (Int j = 0; j < nCells+1; j++) {
@@ -50,8 +50,8 @@ Grid<D>::Grid(const BoxRD &boundingBox,
 
 template<Int D>
 Grid<D>::Grid(const CVecID& offset,
-              const CVecRD& origin,
-              const vector<Real> step[D]) {
+        const CVecRD& origin,
+        const vector<Real> step[D]) {
     origin_ = origin;
     offsetGrid_ = offset;
     for(Int d = 0; d < D; d++) {
@@ -262,7 +262,7 @@ Real Grid<D>::getMinimumSpaceStep() const {
 template<Int D>
 Box<Real,D> Grid<D>::getFullDomainBoundingBox() const {
     return getBoundingBox(
-    pair<CVecID,CVecID> (offsetGrid_, offsetGrid_+getNumCells()) );
+            pair<CVecID,CVecID> (offsetGrid_, offsetGrid_+getNumCells()) );
 }
 
 template<Int D>
@@ -304,8 +304,8 @@ vector< CartesianVector<Real,D> > Grid<D>::getCenterOfCellsInside(
     vector<Real> center[D];
     for (Int dir = 0; dir < D; dir++) {
         vector<Real> pos = getPosInRange(dir,
-                                         bound.getMin()(dir),
-                                         bound.getMax()(dir));
+                bound.getMin()(dir),
+                bound.getMax()(dir));
         if (pos.size() > 0) {
             center[dir].reserve(pos.size()-1);
         }
@@ -329,8 +329,8 @@ vector< CartesianVector<Real,D> > Grid<D>::getCenterOfCellsInside(
 
 template<Int D>
 vector<Real> Grid<D>::getPosInRange(const Int dir,
-                                    const Real min,
-                                    const Real max) const {
+        const Real min,
+        const Real max) const {
     vector<Real> pos   = getPos (dir);
     vector<Real> steps = getStep(dir);
     vector<Real> res;
@@ -343,8 +343,8 @@ vector<Real> Grid<D>::getPosInRange(const Int dir,
             step = steps.back();
         }
         if (MathUtils::equal(pos[i], min, step, tolerance) ||
-            (pos[i] >= min && pos[i] <= max)               ||
-            MathUtils::equal(pos[i], max, step, tolerance)) {
+                (pos[i] >= min && pos[i] <= max)               ||
+                MathUtils::equal(pos[i], max, step, tolerance)) {
             res.push_back(pos[i]);
         }
     }
@@ -378,7 +378,7 @@ CartesianVector<Real,D> Grid<D>::getPos(const CVecID& ijk) const {
     CVecRD res;
     for (Int i = 0; i < D; i++) {
         assert((ijk(i) >= offsetGrid_(i)) &&
-               (ijk(i) <= offsetGrid_(i)+dims(i)));
+                (ijk(i) <= offsetGrid_(i)+dims(i)));
         res(i) = pos_[i][ijk(i) - offsetGrid_(i)];
     }
     return res;
@@ -391,10 +391,10 @@ Real Grid<D>::getPos(const Int dir, const Int i) const {
 
 template<Int D>
 pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
-                                     const Real x,
-                                     const bool approx,
-                                     const Real tol,
-                                     bool* err) const {
+        const Real x,
+        const bool approx,
+        const Real tol,
+        bool* err) const {
     if (err != NULL) {
         *err = false;
     }
@@ -452,10 +452,10 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
 
 template<Int D>
 pair<CartesianVector<Int,D>, CartesianVector<Real,D> >
-    Grid<D>::getCellPair(const CVecRD& xyz,
-                         const bool approx,
-                         const Real tol,
-                         bool* err) const {
+Grid<D>::getCellPair(const CVecRD& xyz,
+        const bool approx,
+        const Real tol,
+        bool* err) const {
     if (err != NULL) {
         *err = false;
     }
@@ -476,42 +476,43 @@ pair<CartesianVector<Int,D>, CartesianVector<Real,D> >
 
 template<Int D>
 CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
-                                               bool* err) const{
-    long int n; n = 0;
-    CVecI3 ijk_;
-    CVecR3 len_ = 0.0;
-
+        bool* err) const{
+    CVecI3 ijk;
+    CVecR3 len;
     for(UInt dir=0; dir<D; ++dir){
-        if(xyz[dir]<pos_[dir].front()){
-            ijk_[dir] = 0;
-            *err = false;
-        }else if(pos_[dir].back()<=xyz[dir]) {
-            ijk_[dir] = pos_[dir].size()+offsetGrid_[dir];
-            *err = false;
+        if(!pos_[dir].empty()){
+            if(xyz(dir) < pos_[dir].front()){
+                ijk(dir) = 0;
+                *err = false;
+            }else if(pos_[dir].back()<=xyz(dir)) {
+                ijk(dir) = pos_[dir].size()+offsetGrid_[dir];
+                *err = false;
+            }
+            long int n = 0;
+            while(pos_[dir][n] <= xyz(dir)){
+                ++n;
+            }
+            ijk(dir) = n-1;
+            len(dir) = (xyz(dir)-pos_[dir][ijk(dir)])/getStep(dir,ijk(dir));
         }
-        while(pos_[dir][dir] <= xyz[dir]){
-            ++n;
-        }
-        ijk_[dir] = n-1;
-        len_[dir] = (xyz[dir]-pos_[dir][ijk_[dir]])/getStep(dir,ijk_[dir]);
     }
-    return CVecI3Fractional (ijk_,len_);
+    return CVecI3Fractional (ijk,len);
 }
 
 template<Int D>
 Int Grid<D>::getCell(const Int dir,
-                     const Real x,
-                     const bool approx,
-                     const Real tol,
-                     bool* err) const {
+        const Real x,
+        const bool approx,
+        const Real tol,
+        bool* err) const {
     return getCellPair(dir, x, approx, tol, err).first;
 }
 
 template<Int D>
 CartesianVector<Int,D> Grid<D>::getCell(const CVecRD &coords,
-                                        const bool approx,
-                                        const Real tol,
-                                        bool* err) const {
+        const bool approx,
+        const Real tol,
+        bool* err) const {
     return getCellPair(coords, approx, tol, err).first;
 }
 
@@ -527,7 +528,7 @@ void Grid<D>::applyScalingFactor(const Real factor) {
 
 template<Int D>
 void Grid<D>::enlarge(const pair<CVecID, CVecID>& additionalCells,
-                      const pair<CVecRD, CVecRD>& sizesOfNewCells) {
+        const pair<CVecRD, CVecRD>& sizesOfNewCells) {
     // TODO
     //    const vector<Real> pos = grid.getPos(dir);
     //    const vector<Real> step = grid.getStep(dir);

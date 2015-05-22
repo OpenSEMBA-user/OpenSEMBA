@@ -9,8 +9,8 @@
 # define COORINFRACTIONAL_H_
 
 using namespace std;
-#include "math/CartesianVector.h"
 
+#include "math/CartesianVector.h"
 
 class CVecI3Fractional : public CVecI3 {
 public:
@@ -38,6 +38,12 @@ public:
 
     Direction getDirBase   () const;
     UInt getRangeBase () const;
+
+    string toStr() const;
+
+    friend std::ostream& operator<<(ostream& os, const CVecI3Fractional& vec) {
+       return os << vec.toStr();
+    }
 
 private:
     CVecR3 len_;
