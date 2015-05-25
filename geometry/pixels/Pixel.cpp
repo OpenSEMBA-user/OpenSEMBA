@@ -7,3 +7,7 @@
 
 #include "Pixel.h"
 
+void Pixel::printInfo() const {
+    cout << " -- Pixel info -- " << endl;
+    cout << "Pos: " << CVecI3::toStr() << endl;
+}

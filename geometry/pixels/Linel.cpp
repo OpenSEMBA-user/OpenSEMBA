@@ -7,7 +7,12 @@
 
 #include "Linel.h"
 
+Linel::Linel() {
+    dirId_ = CartesianDirection::dirNode;
+}
 
+Linel::~Linel() {
+}
 
 bool Linel::isInto (const CVecI3Fractional& coordIntFractional_){
     CVecR3 pos_ = coordIntFractional_.getRelativePos();

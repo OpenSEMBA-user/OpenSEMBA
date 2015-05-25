@@ -12,7 +12,7 @@
 
 class Linel: public Pixel {
 public:
-    Linel(){dirId_ = CartesianDirection::dirNode;};
+    Linel();
     virtual ~Linel();
 
     bool isInto (const CVecI3Fractional& coordIntFractional_);
