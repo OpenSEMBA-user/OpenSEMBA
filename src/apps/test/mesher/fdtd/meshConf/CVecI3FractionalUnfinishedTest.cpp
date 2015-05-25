@@ -1,7 +1,10 @@
 #include "CVecI3FractionalUnfinishedTest.h"
 
+void MesherCVecI3FractionalUnfinishedTest::SetUp() {
+    init();
+}
 
-void MesherCVecI3UnfinishedTest::SetUp() {
+void MesherCVecI3FractionalUnfinishedTest::init() {
     CVecI3 intPos(2);
     CVecR3 relLen(0.3);
     CVecI3Fractional fracPos(intPos, relLen);
@@ -24,7 +27,7 @@ void MesherCVecI3UnfinishedTest::SetUp() {
     fracPosWithElems_ = CVecI3FracU(fracPos, constElemGroup);
 }
 
-TEST_F(MesherCVecI3UnfinishedTest, BasicOperations) {
+TEST_F(MesherCVecI3FractionalUnfinishedTest, BasicOperations) {
     EXPECT_EQ(fracPosWithElems_, fracPosWithElems_);
     EXPECT_EQ(fracPosEmpty_, fracPosEmpty_);
     EXPECT_NE(fracPosWithElems_, fracPosEmpty_);
@@ -38,7 +41,7 @@ TEST_F(MesherCVecI3UnfinishedTest, BasicOperations) {
 
 }
 
-TEST_F(MesherCVecI3UnfinishedTest, Merging) {
+TEST_F(MesherCVecI3FractionalUnfinishedTest, Merging) {
     // Merging with fracPos with equal CVecI3Frac.
     EXPECT_EQ(fracPosEmpty_.merge(fracPosWithElems_), fracPosWithElems_);
     // Merging of two CVecI3U with different groups.
