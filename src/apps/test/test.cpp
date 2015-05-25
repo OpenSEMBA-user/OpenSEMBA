@@ -15,7 +15,7 @@ GTEST_API_ int main(int argc, char **argv) {
 //  tests += "*ParserSTL*:";
   tests += "*Mesher*:";
 //  tests += "*ConformalMesherLauncherTest*:";
-//  tests += "*EMSource*:";
+  tests += "*EMSource*:";
 //  tests += "*ParserGid*:";
 //  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
 //  tests += "*AdapterFDTDTest.UGRMesherConversion*:";
