@@ -19,8 +19,7 @@ ParserSTL::~ParserSTL() {
 }
 
 SmbData*
-ParserSTL::read() {
-
+ParserSTL::read(const OptionsMesher* optionsMesher) {
     // Reads coordinates.
     ifstream stl;
     openAsInput(stl);
@@ -78,6 +77,28 @@ ParserSTL::read() {
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
     res->mesh = new MeshUnstructured(cG, eG, lG);
+
+    if (optionsMesher == NULL) {
+        res->mesherOptions = new OptionsMesher();
+    } else {
+        res->mesherOptions = new OptionsMesher(*optionsMesher);
+    }
+
+    res->solverOptions = new OptionsSolver();
+    res->solverOptions->setSolver(OptionsSolver::Solver::none);
+
+    res->pMGroup = new GroupPhysicalModels<>();
+    MatId pecId(1);
+    res->pMGroup->add(new PMPEC(pecId, "PEC"));
+    res->mesh->castTo<MeshUnstructured>()->setMatId(pecId);
+    res->emSources = new GroupEMSources<>();
+    res->outputRequests = new GroupOutRqs<>();
+
+    if (res->mesherOptions->isGridStepSet()) {
+        BoxR3 bound = res->mesh->castTo<MeshUnstructured>()->getBoundingBox();
+        res->grid = new Grid3(bound, res->mesherOptions->getGridStep());
+    }
+
     return res;
 }
 
