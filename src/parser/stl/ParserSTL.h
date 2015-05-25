@@ -26,11 +26,15 @@ public:
     ParserSTL(const string& fn);
     virtual ~ParserSTL();
 
-    SmbData* read();
+    class ErrorGridNotExists : public Error {
+    public:
+        ErrorGridNotExists();
+        virtual ~ErrorGridNotExists() throw();
+    };
+
+    SmbData* read(const OptionsMesher* = NULL);
 
     void printInfo() const;
-private:
-
 };
 
 #endif /* PARSERGID_H_ */
