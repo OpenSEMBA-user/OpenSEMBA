@@ -4,34 +4,41 @@
 class UGRMesherIntersectionsGeneratorTest : public ::testing::Test {
 public:
     UGRMesherIntersectionsGeneratorTest(){
-        intersectionsGenerator_1 = new IntersectionsGenerator;
-        coords.resize(3);
-        coords[0](0) = 0.9; coords[0](1) = 0.9; coords[0](2) = 0.5;
-        coords[1](0) = 3.1; coords[1](1) = 0.9; coords[1](2) = 0.5;
-        coords[2](0) = 0.9; coords[2](1) = 3.1; coords[2](2) = 0.5;
-
+        //create grid
         CVecR3 min_  = CVecR3(0.0, 0.0, 0.0);
         CVecR3 max_  = CVecR3(5.0, 5.0, 5.0);
         CVecR3 step_ = CVecR3(1.0, 1.0, 1.0);
         grid_        = new Grid3(BoxR3(min_, max_), step_);
+
+        //create uMesh
+        vector<CoordR3*> coords;
+        coords.push_back(new CoordR3(CoordinateId(1), CVecR3(0.0, 0.0, 0.0)));
+        coords.push_back(new CoordR3(CoordinateId(2), CVecR3(1.0, 0.0, 0.0)));
+        coords.push_back(new CoordR3(CoordinateId(3), CVecR3(0.0, 3.0, 0.0)));
+        cG_ = CoordR3Group(coords);
+        vector<ElemR*> elems;
+        CoordinateId vId[3] = {CoordinateId(1), CoordinateId(2), CoordinateId(3)};
+        elems.push_back(new Tri3(cG_, ElementId(1), vId));
+        elems.push_back(new Tri3(cG_, ElementId(2), vId));
+        eG_ = ElemRGroup(elems);
+
+        uMesh_ = new MeshUnstructured (cG_, eG_);
+
+
     };
 
     ~UGRMesherIntersectionsGeneratorTest(){};
     const Grid3*   grid_;
-    vector<CVecR3> coords;
-    IntersectionsGenerator *intersectionsGenerator_1;
+    CoordR3Group   cG_;
+    ElemRGroup     eG_;
+    MeshUnstructured*  uMesh_;
 };
 
 TEST_F(UGRMesherIntersectionsGeneratorTest, BasicTests) {
-    EXPECT_TRUE(intersectionsGenerator_1!=NULL);
-    vector<CVecR3> intersections;
-    vector<CVecR3> intersectionsTrue;
 
-    intersectionsGenerator_1 = new IntersectionsGenerator;
-    intersectionsGenerator_1->grid_ = grid_;
-    //intersectionsGenerator_1->addIntersection(coords, intersections);
+    IntersectionsGenerator intersectionsGenerator;
+    IntersectionsGroup* intersections;
+    intersections = intersectionsGenerator(grid_, uMesh_);
 
-    intersectionsGenerator_1->addIntersectionBoundig(coords, intersections);
 
-    cout<<"joder"<<endl;
 }
