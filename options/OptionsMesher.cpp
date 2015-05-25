@@ -13,6 +13,8 @@ OptionsMesher::OptionsMesher() {
     mode_ = structured;
     bruteForceVolumes_ = false;
     scaleFactor_ = false;
+    vtkExport_ = false;
+    gridStep_ = CVecR3(0.0);
     scalingFactor_ = 1.0;
     forbiddenLength_ = (Real) (1.0 / 3.0);
     boundTermination_.resize(3);
@@ -191,6 +193,22 @@ void OptionsMesher::set(const Arguments& args) {
         mode_ = relaxed;
         forbiddenLength_ = atof(args.get("relaxed").c_str());
     }
+    if (args.has("vtkexport")) {
+        vtkExport_ = true;
+    }
+    if (args.has("gridstep")) {
+        CVecR3 gridStep;
+        try {
+            for (UInt i = 0; i < 3; i++) {
+                gridStep(i) = atof(args.get("gridstep", i).c_str());
+            }
+        }
+        catch (Arguments::ErrorArgumentNotExists &e) {
+            cerr << endl << "ERROR @ Arguments: "
+                    << "gridStep must be followed by 3 numbers." << endl;
+        }
+        gridStep_ = gridStep;
+    }
 }
 
 void OptionsMesher::setBruteForceVolumes(bool bruteForceVolumes) {
@@ -239,4 +257,24 @@ const string& OptionsMesher::getOutputName() const {
 
 void OptionsMesher::setOutputName(const string& outputName) {
     outputName_ = outputName;
+}
+
+const CVecR3& OptionsMesher::getGridStep() const {
+    return gridStep_;
+}
+
+void OptionsMesher::setGridStep(const CVecR3& gridStep) {
+    gridStep_ = gridStep;
+}
+
+bool OptionsMesher::isVtkExport() const {
+    return vtkExport_;
+}
+
+void OptionsMesher::setVtkExport(bool vtkExport) {
+    vtkExport_ = vtkExport;
+}
+
+bool OptionsMesher::isGridStepSet() const {
+    return (gridStep_ != CVecR3(0.0));
 }

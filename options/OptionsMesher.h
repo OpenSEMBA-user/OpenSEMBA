@@ -56,8 +56,6 @@ public:
     void setMode(Mode mode);
     void setScaleFactor(bool scaleFactor);
     void setScaleFactorValue(const string& scaleFactorValue);
-    void setSigma(const string& sigma);
-    void setEffectiveParameter(bool effectiveParameter);
     void applyGeometricScalingFactor(const Real& factor);
     void setOutputName(const string& outputName);
 
@@ -68,7 +66,6 @@ public:
     bool isStructured() const;
     bool isRelaxed() const;
     bool isBruteForceVolumes() const;
-    bool isEffectiveParameter() const;
     Real getForbiddenLength() const;
     bool hasScaleFactor() const;
     string getScaleFactor() const;
@@ -84,6 +81,11 @@ public:
     void printHelp() const;
     void printInfo() const;
     static string toStr(const BoundType);
+    bool isGridStepSet() const;
+    const CVecR3& getGridStep() const;
+    void setGridStep(const CVecR3& gridStep);
+    bool isVtkExport() const;
+    void setVtkExport(bool vtkExport);
 
 private:
     Mesher mesher_;
@@ -96,6 +98,8 @@ private:
     CVecR3 locationInMesh_;
     string outputName_;
 
+    bool vtkExport_;
+    CVecR3 gridStep_;
     Real scalingFactor_;
     vector<pair<BoundType,BoundType>> boundTermination_;
     pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;

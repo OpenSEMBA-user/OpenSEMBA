@@ -176,6 +176,9 @@ string Arguments::get(const string& arg, const UInt i) const {
     if (!has(arg)) {
         throw ErrorArgumentNotExists(arg);
     }
+    if (i > args_.find(arg)->second.size()) {
+        throw ErrorArgumentNotExists(arg);
+    }
     return args_.find(arg)->second[i];
 }
 

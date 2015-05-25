@@ -39,6 +39,7 @@ public:
     string getFilename() const;
     string getBasename() const;
     string getFolder() const;
+    string getExtension() const;
     string getOutputFilename() const {
         return getFolder() + getOutputName();
     }
