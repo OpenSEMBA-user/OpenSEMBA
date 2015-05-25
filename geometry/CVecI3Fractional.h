@@ -22,7 +22,7 @@ public:
     } Direction;
     CVecI3Fractional ();
     CVecI3Fractional (const CVecI3& pos, const CVecR3& len):
-        CVecI3(pos), len_(len){applyTol();}
+        CVecI3(pos), len_(len){}
     ~CVecI3Fractional (){}
 
     CVecI3Fractional& operator= (const CVecI3Fractional& rhs);
@@ -30,8 +30,6 @@ public:
     bool operator==(const CVecI3Fractional &rhs) const;
     bool less(const CVecI3Fractional &rhs,
             const Real tool = MathUtils::tolerance) const;
-
-    void applyTol (const Real tol=1.0e-4);
 
     CVecR3 getRelativePos() const;
 
@@ -46,7 +44,6 @@ public:
        return os << vec.toStr();
     }
 
-private:
     CVecR3 len_;
 };
 

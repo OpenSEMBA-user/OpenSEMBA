@@ -67,17 +67,6 @@ UInt CVecI3Fractional::getRangeBase() const {
     return rang;
 }
 
-void CVecI3Fractional::applyTol(const double tol) {
-    for (unsigned int n = 0; n < 3; ++n) {
-        if (len_[n] < tol) {
-            len_[n] = 0.0;
-        } else if (len_[n] > (1.0 - tol)) {
-            len_[n] = 0.0;
-            ++val[n];
-        }
-    }
-}
-
 CVecI3 CVecI3Fractional::DiscretePositionDistribution(
         CVecI3 &numDivision) const {
     CVecI3 ret;
