@@ -33,10 +33,18 @@ TEST_F(MesherCVecI3FractionalUnfinishedTest, BasicOperations) {
     EXPECT_NE(fracPosWithElems_, fracPosEmpty_);
 
     CVecI3FracU copyConstructed(fracPosWithElems_);
+    EXPECT_EQ(2, fracPosWithElems_.size());
+    EXPECT_EQ(2, copyConstructed.size());
     EXPECT_EQ(fracPosWithElems_, copyConstructed);
+
+    const CVecI3FracU constContructed(CVecI3(2),CVecR3(0.3), eG_);
+    CVecI3FracU cpyConstructedFromConst(constContructed);
+    EXPECT_EQ(constContructed, cpyConstructedFromConst);
 
     CVecI3FracU assigned;
     assigned = fracPosWithElems_;
+    EXPECT_EQ(2, fracPosWithElems_.size());
+    EXPECT_EQ(2, assigned.size());
     EXPECT_EQ(fracPosWithElems_, assigned);
 
 }

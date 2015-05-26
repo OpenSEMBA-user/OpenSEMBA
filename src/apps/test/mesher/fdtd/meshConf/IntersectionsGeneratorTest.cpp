@@ -41,6 +41,5 @@ TEST_F(MesherIntersectionsGeneratorTest, BasicTests) {
     IntersectionsGroup* intersections;
     intersections = intersectionsGenerator(grid_, uMesh_);
 
-    EXPECT_TRUE(intersections->size()>0);
-    EXPECT_TRUE(intersections->size()==21);
+    EXPECT_EQ(21, intersections->size());
 }
