@@ -9,14 +9,12 @@
 
 template<class ELEM, class BOUND>
 GraphElement<ELEM,BOUND>::GraphElement(const ELEM* elem, const UInt& numBound) {
-    vis_  = false;
     elem_ = elem;
     bounds_.resize(numBound);
 }
 
 template<class ELEM, class BOUND>
 GraphElement<ELEM,BOUND>::GraphElement(const GraphElement& rhs) {
-    vis_       = rhs.vis_;
     elem_      = rhs.elem_;
     bounds_    = rhs.bounds_;
     neighbors_ = rhs.neighbors_;
@@ -39,7 +37,7 @@ template<class ELEM, class BOUND>
 UInt  GraphElement<ELEM,BOUND>::numNeighbors() const {
     UInt res = 0;
     for (UInt i = 0; i < neighbors_.size(); i++) {
-        res += neighbors_.size();
+        res += neighbors_[i].size();
     }
     return res;
 }
@@ -49,10 +47,10 @@ const typename GraphElement<ELEM,BOUND>::GraphElem*
     GraphElement<ELEM,BOUND>::getNeighbor(UInt j) const {
 
     for (UInt i = 0; i < neighbors_.size(); i++) {
-        if (neighbors_.size() <= j) {
-            j -= neighbors_.size();
-        } else {
+        if (j < neighbors_[i].size()) {
             return neighbors_[i][j];
+        } else {
+            j -= neighbors_[i].size();
         }
     }
     return NULL;
@@ -63,10 +61,10 @@ typename GraphElement<ELEM,BOUND>::GraphElem*
     GraphElement<ELEM,BOUND>::getNeighbor(UInt j) {
 
     for (UInt i = 0; i < neighbors_.size(); i++) {
-        if (neighbors_.size() <= j) {
-            j -= neighbors_.size();
-        } else {
+        if (j < neighbors_[i].size()) {
             return neighbors_[i][j];
+        } else {
+            j -= neighbors_[i].size();
         }
     }
     return NULL;
@@ -105,14 +103,15 @@ void GraphElement<ELEM,BOUND>::printInfo() const {
     for (UInt i = 0; i < bounds_.size(); ++i) {
         cout << " " << bounds_[i]->elem()->getId();
     }
+    cout << endl;
     if (!neighbors_.empty()) {
         cout << "Neighbors:" << endl;
         for (UInt i = 0; i < neighbors_.size(); ++i) {
+            cout << bounds_[i]->elem()->getId() << ":";
             for (UInt j = 0; j < neighbors_[i].size(); ++j) {
                 cout << " " << neighbors_[i][j]->elem()->getId();
             }
             cout << endl;
         }
     }
-    cout << endl;
 }
