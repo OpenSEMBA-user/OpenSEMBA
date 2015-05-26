@@ -48,7 +48,7 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
     const GroupLayers<Layer>& lay = mesh->layers();
     UInt part = 0;
     // Writes materials.
-    if (mat != NULL) {
+    if (mat->size() > 0) {
         for (UInt i = 0; i < lay.size(); i++) {
             const LayerId layId = lay(i)->getId();
             for (UInt j = 0; j < mat->size(); j++) {
