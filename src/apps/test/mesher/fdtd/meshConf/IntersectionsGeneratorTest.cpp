@@ -16,9 +16,9 @@ protected:
 
         //create uMesh
         vector<CoordR3*> coords;
-        coords.push_back(new CoordR3(CoordinateId(1), CVecR3(0.9, 0.9, 0.5)));
-        coords.push_back(new CoordR3(CoordinateId(2), CVecR3(3.1, 0.0, 0.5)));
-        coords.push_back(new CoordR3(CoordinateId(3), CVecR3(0.0, 3.1, 0.5)));
+        coords.push_back(new CoordR3(CoordinateId(1), CVecR3(0.5, 0.5, 0.5)));
+        coords.push_back(new CoordR3(CoordinateId(2), CVecR3(3.8, 0.5, 0.5)));
+        coords.push_back(new CoordR3(CoordinateId(3), CVecR3(0.5, 3.8, 0.5)));
         cG_ = CoordR3Group(coords);
         vector<ElemR*> elems;
         CoordinateId vId[3] = {CoordinateId(1), CoordinateId(2), CoordinateId(3)};
@@ -29,7 +29,6 @@ protected:
         uMesh_ = new MeshUnstructured (cG_, eG_);
     };
 
-private:
     const Grid3*   grid_;
     CoordR3Group   cG_;
     ElemRGroup     eG_;
@@ -43,6 +42,5 @@ TEST_F(MesherIntersectionsGeneratorTest, BasicTests) {
     intersections = intersectionsGenerator(grid_, uMesh_);
 
     EXPECT_TRUE(intersections->size()>0);
-    EXPECT_TRUE(intersections->size()==20);
-
+    EXPECT_TRUE(intersections->size()==21);
 }

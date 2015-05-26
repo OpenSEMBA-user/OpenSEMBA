@@ -5,5 +5,4 @@
  *      Author: luis
  */
 
-#include "SurfelConf.h"
 
