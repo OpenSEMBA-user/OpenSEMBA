@@ -432,7 +432,7 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
         } else if (MathUtils::lower(x, pos[i], step, tol)) {
             cell = i - 1 + offsetGrid_(dir);
             dist = (x - pos[i-1])/step;
-            if(dist > 0.5 && approx) {
+            if(MathUtils::equal(MathUtils::round(dist),1.0) && approx) {
                 cell++;
                 dist -= 1.0;
             }

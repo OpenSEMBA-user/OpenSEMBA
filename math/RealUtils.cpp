@@ -38,7 +38,16 @@ bool MathUtils::greater(const Real lhs, const Real rhs,
     return lower(rhs, lhs, rel, tol);
 }
 
-bool MathUtils::greatherEqual(const Real lhs, const Real rhs,
-                              Real rel, const Real tol) {
+bool MathUtils::greaterEqual(const Real lhs, const Real rhs,
+                             Real rel, const Real tol) {
     return !lower(lhs, rhs, rel, tol);
+}
+
+Real MathUtils::round(Real v) {
+    Real dist = v - floor(v);
+    if (greaterEqual(dist, 0.5)) {
+        return ceil(v);
+    } else {
+        return floor(v);
+    }
 }

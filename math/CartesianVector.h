@@ -40,7 +40,8 @@ public:
     CartesianVector<T,D>(const T, const T, const T);
     CartesianVector<T,D>(const CartesianVector<T,D>&,
                          const CartesianVector<T,D>&);
-    CartesianVector<T,D>(const CartesianVector<T,D>&);
+    template<class U>
+    CartesianVector<T,D>(const CartesianVector<U,D>&);
     virtual ~CartesianVector();
 
     CartesianVector<T,D>& operator= (const T);
@@ -57,6 +58,7 @@ public:
     CartesianVector<T,D>& operator*=(const T param);
     CartesianVector<T,D>& operator/=(const T param);
 
+    CartesianVector<T,D>  operator+(const CartesianAxis param) const;
     CartesianVector<T,D>  operator+(const T param) const;
     CartesianVector<T,D>  operator+(const CartesianVector<T,D>& param) const;
     CartesianVector<T,D>& operator-();
@@ -117,8 +119,12 @@ std::ostream& operator<<(ostream& os, const CartesianVector<T,D>& vec) {
    return os << vec.toStr();
 }
 
+namespace MathUtils {
+
 template<Int D>
 CartesianVector<Real,D> round(const CartesianVector<Real,D>& vec);
+
+}
 
 #include "CartesianVector.hpp"
 

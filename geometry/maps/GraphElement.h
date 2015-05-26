@@ -28,10 +28,6 @@ public:
 
     const Elem* elem() const { return elem_; }
 
-    bool visited() const { return vis_;  }
-    void markVisited  () { vis_ = true;  }
-    void unmarkVisited() { vis_ = false; }
-
     UInt numBounds() const { return bounds_.size(); }
     vector<const GraphBound*> getBounds() const;
     vector<GraphBound*>       getBounds()    { return bounds_;    }
@@ -55,7 +51,6 @@ public:
     void printInfo() const;
 
 private:
-    bool vis_;
     const Elem* elem_;
     vector<GraphBound*>        bounds_;
     vector<vector<GraphElem*>> neighbors_;
