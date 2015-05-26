@@ -22,3 +22,9 @@ bool Voxel::isInto (const CVecI3Fractional& coordIntFractional_) const{
     }
     return true;
 }
+
+array<Linel, 12> Voxel::getLinels() const {
+}
+
+array<Surfel, 6> Voxel::getSurfels() const {
+}
