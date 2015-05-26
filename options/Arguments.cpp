@@ -60,11 +60,7 @@ Arguments::getProjectFolder() const {
 	char *cstr = new char[getFilename().length() + 1];
 	strcpy(cstr, getFilename().c_str());
 	string projectDir(dirname(cstr));
-#ifdef _WIN32
-   projectDir += "\\";
-#else
-   projectDir += "/";
-#endif
+	projectDir += "/";
 	delete [] cstr;
 	return projectDir;
 }
@@ -176,6 +172,9 @@ string Arguments::get(const string& arg, const UInt i) const {
     if (!has(arg)) {
         throw ErrorArgumentNotExists(arg);
     }
+    if (i > args_.find(arg)->second.size()) {
+        throw ErrorArgumentNotExists(arg);
+    }
     return args_.find(arg)->second[i];
 }
 
@@ -197,9 +196,10 @@ pair<string, vector<string>> Arguments::readArgument(
     }
     for (int i = pos+1; i < argc; i++) {
         string str = argv[i];
-        transform(str.begin(), str.end(), str.begin(), ::tolower);
-        if (isKey(str)) {
-            break;
+        string aux;
+        transform(str.begin(), str.end(), aux.begin(), ::tolower);
+        if (isKey(aux)) {
+            return pair<string, vector<string>> (aux,value);
         }
         value.push_back(trim(str));
     }

@@ -199,3 +199,14 @@ void ProjectFile::exec(const string arguments) const {
     // TODO Dani: Implementar en windows.
 #endif
 }
+
+string ProjectFile::getExtension() const {
+    size_t pos = rfind(".");
+    if (pos == string::npos) {
+        return *this;
+    }
+    if (pos == 0) {
+        return *this;
+    }
+    return this->substr(pos, string::npos);
+}

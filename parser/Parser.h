@@ -37,10 +37,8 @@ public:
 
 protected:
 	ifstream f_in; // Input file stream.
-	CVecR3
-	 strToCartesianVector(const string& str) const;
-	bool
-	 strToBool(const string& value) const;
+	CVecR3 strToCartesianVector(const string& str) const;
+	bool strToBool(const string& value) const;
 	static inline string
 	 &ltrim(string &s) {
 		s.erase(s.begin(), find_if(s.begin(),
