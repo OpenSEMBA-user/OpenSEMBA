@@ -1509,6 +1509,8 @@ OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
     str = trim(str);
     if (str.compare("ugrMesher")==0) {
         return OptionsMesher::ugrMesher;
+    } else if (str.compare("zMesher")==0) {
+        return OptionsMesher::zMesher;
     } else if (str.compare("OpenFOAM")==0) {
         return OptionsMesher::openfoam;
     } else if (str.compare("None")==0) {
