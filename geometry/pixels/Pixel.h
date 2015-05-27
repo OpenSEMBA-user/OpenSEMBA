@@ -10,6 +10,7 @@
 
 #include "geometry/CVecI3Fractional.h"
 #include "base/class/ClassBase.h"
+#include <array>
 
 class Pixel : public CVecI3, public ClassBase {
 public:

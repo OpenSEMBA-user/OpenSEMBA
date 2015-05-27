@@ -66,24 +66,18 @@ typename GroupWires<T>::Graph
         GroupPhysicalModels<const PMWire> pmwires =
             smb.pMGroup->getGroupOf<PMWire>();
         vector<MatId> pmwiresIds = pmwires.getIds();
-
         GroupPhysicalModels<const PMMultiport> pmmults =
                 mats.getGroupOf<PMMultiport>();
         vector<MatId> pmmultsIds = pmmults.getIds();
-
         vector<MatId> matIds;
         matIds.reserve(pmwiresIds.size()+pmmultsIds.size());
         matIds.insert(matIds.end(), pmwiresIds.begin(), pmwiresIds.end());
         matIds.insert(matIds.end(), pmmultsIds.begin(), pmmultsIds.end());
-
         wires = lines.getGroupWith(matIds);
     }
-
     Graph graph;
     graph.init(wires, coords);
-
     const typename Graph::GraphBound* nodePtr;
-
     for(UInt i = 0; i < graph.numBounds(); i++) {
         nodePtr = graph.bound(i);
         if(nodePtr->numBounds() > 2) {
@@ -131,14 +125,12 @@ typename GroupWires<T>::Graph
             }
         }
     }
-
     return graph;
 }
 
 template<class T>
 void GroupWires<T>::fillWiresInfo_(const GroupWires<T>::Graph& graph,
                                    const SmbData& smb) {
-
     vector<vector<const Line<T>*>> wires = getLines_(graph);
     const PMWire* wireMat;
     const PMMultiport *extremeL, *extremeR;
@@ -167,16 +159,14 @@ void GroupWires<T>::fillWiresInfo_(const GroupWires<T>::Graph& graph,
 template<class T>
 vector<vector<const Line<T>*>> GroupWires<T>::getLines_(
         const GroupWires<T>::Graph& graph) {
-
     vector<vector<const Line<T>*>> res;
     set<ElementId> visLines;
     const typename Graph::GraphElem *prevSegment, *nextSegment;
     ElementId prvNodeId;
     for(UInt n = 1; n < 3; n++) {
         for(UInt i = 0; i < graph.numElems(); i++) {
-            if (((graph.elem(i)->getBound(0)->numBounds() == n)  ||
-                 (graph.elem(i)->getBound(1)->numBounds() == n)) &&
-                (visLines.count(graph.elem(i)->elem()->getId()) == 0)) {
+            if ((graph.elem(i)->numNeighbors() == n) &&
+               (visLines.count(graph.elem(i)->elem()->getId()) == 0)) {
 
                 vector<const Line<T>*> wireLines;
                 nextSegment = graph.elem(i);
@@ -190,7 +180,8 @@ vector<vector<const Line<T>*>> GroupWires<T>::getLines_(
                     nextSegment = NULL;
                     for(UInt j = 0; j < prevSegment->numNeighbors(); j++) {
                         if (visLines.count(
-                                prevSegment->getNeighbor(j)->elem()->getId()) == 0) {
+                                prevSegment->getNeighbor(j)
+                                    ->elem()->getId()) == 0) {
                             nextSegment = prevSegment->getNeighbor(j);
                         }
                     }
@@ -198,10 +189,9 @@ vector<vector<const Line<T>*>> GroupWires<T>::getLines_(
                         break;
                     }
                 }
-                if (wireLines.empty()) {
-                    continue;
+                if (!wireLines.empty()) {
+                    res.push_back(wireLines);
                 }
-                res.push_back(wireLines);
             }
         }
     }
@@ -212,7 +202,7 @@ template<class T>
 void GroupWires<T>::getWireMats_(const PMWire*& wireMat,
                                  const PMMultiport*& extremeL,
                                  const PMMultiport*& extremeR,
-                                 const vector<const Line<T> *>& lines,
+                                 const vector<const Line<T>*>& lines,
                                  const SmbData& smb) {
 
     const GroupPhysicalModels<>& mats = *smb.pMGroup;
