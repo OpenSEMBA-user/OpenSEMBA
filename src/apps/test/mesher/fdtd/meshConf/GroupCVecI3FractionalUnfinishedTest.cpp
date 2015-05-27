@@ -42,7 +42,7 @@ TEST_F(MesherGroupCVecI3UnfinishedTest, GetVoxels) {
 }
 
 
-TEST_F(MesherGroupCVecI3UnfinishedTest, GetIntersectionsAtVoxels) {
+TEST_F(MesherGroupCVecI3UnfinishedTest, GetIntersectionsAtVoxel) {
     GroupCVecI3FracU group;
     group.add(fracPosWithElems_);
     group.add(CVecI3FracU(CVecI3(1,2,3), CVecR3(0.0)));
@@ -51,6 +51,8 @@ TEST_F(MesherGroupCVecI3UnfinishedTest, GetIntersectionsAtVoxels) {
     sameVoxel.add(CVecI3FracU(pos, CVecR3(0.0)));
     sameVoxel.add(CVecI3FracU(pos, CVecR3(0.32)));
     sameVoxel.add(CVecI3FracU(pos, CVecR3(0.35)));
+    sameVoxel.add(CVecI3FracU(pos+CVecI3(1,0,0), CVecR3(0.0, 0.0, 0.35)));
+    sameVoxel.add(CVecI3FracU(pos+1, CVecR3(0.0)));
     group.add(sameVoxel);
     GroupCVecI3FracU gettedVoxel = group.getIntersectionsAtVoxel(Voxel(pos));
     EXPECT_EQ(sameVoxel.size(), gettedVoxel.size());
