@@ -33,9 +33,8 @@ Arguments::Arguments(const int argc,  const char* argv[]) {
 
 void Arguments::build(const vector<string>& argv) {
     int argc = argv.size();
-    for (Int i = 1; i < argc; i++) {
-        string str = argv[i];
-        transform(str.begin(), str.end(), str.begin(), ::tolower);
+    for (Int i = 0; i < argc; i++) {
+        const string str = argv[i];
         if (isKey(str)) {
             args_.insert(readArgument(i, argc, argv));
         }
@@ -47,7 +46,7 @@ void Arguments::build(const vector<string>& argv) {
 }
 
 Arguments::~Arguments() {
-
+	// TODO Auto-generated destructor stub
 }
 
 bool
@@ -197,8 +196,8 @@ pair<string, vector<string>> Arguments::readArgument(
     }
     for (int i = pos+1; i < argc; i++) {
         string str = argv[i];
-        string aux = str;
-        transform(aux.begin(), aux.end(), aux.begin(), ::tolower);
+        string aux;
+        transform(str.begin(), str.end(), aux.begin(), ::tolower);
         if (isKey(aux)) {
             return pair<string, vector<string>> (aux,value);
         }
