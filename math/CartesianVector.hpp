@@ -380,7 +380,11 @@ CartesianVector<T,D>& CartesianVector<T,D>::normalize() {
 template <class T, Int D> inline
 CartesianVector<T,D>& CartesianVector<T,D>::setPlusInfty() {
     for (Int i = 0; i < D; i++) {
-        val[i] = numeric_limits<T>::infinity();
+        if (numeric_limits<T>::has_infinity) {
+            val[i] = numeric_limits<T>::infinity();
+        } else {
+            val[i] = numeric_limits<T>::max();
+        }
     }
     return *this;
 }
@@ -388,7 +392,11 @@ CartesianVector<T,D>& CartesianVector<T,D>::setPlusInfty() {
 template <class T, Int D> inline
 CartesianVector<T,D>& CartesianVector<T,D>::setMinusInfty() {
     for (Int i = 0; i < D; i++) {
-        val[i] = - numeric_limits<T>::infinity();
+        if (numeric_limits<T>::has_infinity) {
+            val[i] = - numeric_limits<T>::infinity();
+        } else {
+            val[i] = numeric_limits<T>::min();
+        }
     }
     return *this;
 }
