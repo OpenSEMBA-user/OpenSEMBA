@@ -10,14 +10,17 @@
 
 #include "Surfel.h"
 
+typedef array<Linel,12> VoxelLinels;
+typedef array<Surfel,6> VoxelSurfels;
+
 class Voxel: public Pixel {
 public:
     Voxel();
-    Voxel(const CVecI3& cVecI3_): Pixel(cVecI3_){};
+    Voxel(const CVecI3& cVecI3_);
     virtual ~Voxel();
     bool isInto (const CVecI3Fractional& rhs) const;
-    array<Linel,12> getLinels() const;
-    array<Surfel,6> getSurfels() const;
+    VoxelLinels getLinels() const;
+    VoxelSurfels getSurfels() const;
 };
 
 #endif /* SRC_MESHER_FDTD_MESHCONF_VOXEL_H_ */

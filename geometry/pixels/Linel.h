@@ -13,9 +13,12 @@
 class Linel: public Pixel {
 public:
     Linel();
+    Linel(const CVecI3& pos, const CartesianDirection& dir);
     virtual ~Linel();
 
     bool isInto (const CVecI3Fractional& coordIntFractional_);
+
+    bool operator==(const Linel& rhs) const;
 
     CartesianDirection  getDirId ()const{return dirId_;}
     CartesianDirection& DirId (){return dirId_;}
@@ -23,7 +26,6 @@ public:
 
 private:
     CartesianDirection dirId_;
-
 };
 
 #endif /* SRC_MESHER_FDTD_MESHCONF_LINEL_H_ */

@@ -29,5 +29,11 @@ bool Linel::isInto (const CVecI3Fractional& coordIntFractional_){
     return true;
 }
 
+Linel::Linel(const CVecI3& pos, const CartesianDirection& dir) :
+    Pixel(pos) {
+    dirId_ = dir;
+}
 
-
+bool Linel::operator ==(const Linel& rhs) const {
+    return (Pixel::operator==(rhs) && rhs.dirId_ == dirId_);
+}

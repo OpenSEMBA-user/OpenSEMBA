@@ -86,8 +86,6 @@ public:
             const Real tol = tolerance) const;
     bool isCell(const vector<CVecRD>& positions,
             const Real tol = tolerance) const;
-    bool isCell(const CVecID& pos,
-                const Real tol = tolerance) const { return true; }
 
     CVecID getNumCells() const;
     CVecID getOffset() const { return offsetGrid_; }

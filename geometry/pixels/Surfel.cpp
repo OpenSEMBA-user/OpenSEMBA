@@ -22,3 +22,17 @@ bool Surfel::isInto (const CVecI3Frac& coordIntFractional_){
     }
     return true;
 }
+
+Surfel::Surfel(const CVecI3& pos, const CartesianDirection& norm) : Pixel(pos) {
+    normId_ = norm;
+}
+
+bool Surfel::operator ==(const Surfel& rhs) const {
+    return (Pixel::operator==(rhs) && rhs.normId_ == normId_);
+}
+
+string Surfel::toStr() const {
+    stringstream res;
+    res << Pixel::toStr() << " Norm: " << normId_;
+    return res.str();
+}

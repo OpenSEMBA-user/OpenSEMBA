@@ -7,6 +7,10 @@
 
 #include "Voxel.h"
 
+Voxel::Voxel(const CVecI3& cVecI3_) :
+        Pixel(cVecI3_) {
+}
+
 Voxel::Voxel() {}
 
 Voxel::~Voxel() {
@@ -24,7 +28,22 @@ bool Voxel::isInto (const CVecI3Fractional& coordIntFractional_) const{
 }
 
 array<Linel, 12> Voxel::getLinels() const {
+    VoxelLinels res;
+    for (UInt i = 0; i < 12; i++) {
+        const UInt dir = i % 4;
+        // TODO.
+    }
+    return res;
 }
 
 array<Surfel, 6> Voxel::getSurfels() const {
+    VoxelSurfels res;
+    for (UInt i = 0; i < 6; i++) {
+        const UInt dir = (i/2)%3;
+        const UInt bound = i % 2;
+        CVecI3 pos = *this;
+        pos(dir) = pos(dir) + bound;
+        res[i] = Surfel(pos, CartesianDirection(dir + 1));
+    }
+    return res;
 }
