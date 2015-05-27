@@ -10,7 +10,7 @@
 OptionsMesher::OptionsMesher() {
     locationInMeshSet_ = false;
     mesher_ = ugrMesher;
-    mode_ = structured;
+    mode_ = conformal;
     bruteForceVolumes_ = false;
     scaleFactor_ = false;
     vtkExport_ = false;

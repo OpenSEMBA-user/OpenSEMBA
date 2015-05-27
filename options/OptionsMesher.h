@@ -26,7 +26,8 @@ public:
     typedef enum {
         structured,
         relaxed,
-        slanted
+        slanted,
+        conformal
     } Mode;
     typedef enum {
         pec,

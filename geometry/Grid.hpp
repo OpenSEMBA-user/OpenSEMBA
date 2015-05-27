@@ -377,8 +377,8 @@ CartesianVector<Real,D> Grid<D>::getPos(const CVecID& ijk) const {
     CVecID dims = getNumCells();
     CVecRD res;
     for (Int i = 0; i < D; i++) {
-        assert((ijk(i) >= offsetGrid_(i)) &&
-                (ijk(i) <= offsetGrid_(i)+dims(i)));
+        assert((ijk(i) - offsetGrid_(i))>=0 &&
+                (ijk(i) - offsetGrid_(i))<dims(i));
         res(i) = pos_[i][ijk(i) - offsetGrid_(i)];
     }
     return res;
@@ -386,7 +386,7 @@ CartesianVector<Real,D> Grid<D>::getPos(const CVecID& ijk) const {
 
 template<Int D>
 Real Grid<D>::getPos(const Int dir, const Int i) const {
-    return getPos(dir)[i];
+    return  pos_[(UInt)dir][i-offsetGrid_[dir]];
 }
 
 template<Int D>
@@ -476,24 +476,34 @@ Grid<D>::getCellPair(const CVecRD& xyz,
 
 template<Int D>
 CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
-        bool& err) const{
-
+        bool& isInto) const{
     CVecI3 ijk   ;
     CVecR3 length;
-    err = false  ;
+    isInto = true  ;
     for(Int dir=0; dir<D; ++dir){
          if(!pos_[dir].empty()){
-            if(xyz(dir) < pos_[dir].front()){
-                ijk(dir) = 0;
+            if(xyz(dir) <= pos_[dir].front()){
+                if(MathUtils::equal(pos_[dir].front(),xyz(dir))){
+                    ijk(dir) = offsetGrid_[dir];
+                    length(dir) = 0.0;
+                }else{
+                    isInto = false;
+                    break;
+                }
             }else if(pos_[dir].back()<=xyz(dir)) {
-                ijk(dir) = pos_[dir].size()+offsetGrid_[dir];
+                if(MathUtils::equal(pos_[dir].back(),xyz(dir))){
+                    ijk(dir) = offsetGrid_[dir]+pos_[dir].size()-1;
+                    length(dir) = 0.0;
+                }else{
+                    isInto = false;
+                    break;
+                }
             }else{
-                err = true;
                 long int n = 0;
                 while(pos_[dir][n] <= xyz(dir)){
                     ++n;
                 }
-                ijk(dir) = n-1;
+                ijk(dir) = n-1 + offsetGrid_[dir];
                 length(dir) = (xyz(dir)-pos_[dir][ijk(dir)])
                                /getStep(dir,ijk(dir));
             }

@@ -60,7 +60,7 @@ UInt CVecI3Fractional::getRangeBase() const {
     unsigned int rang;
     rang = 0;
     for (unsigned int n = 0; n < 3; ++n) {
-        if (len_[n] < MathUtils::tolerance) {
+        if (len_[n] > MathUtils::tolerance) {
             ++rang;
         }
     }
