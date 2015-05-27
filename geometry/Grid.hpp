@@ -377,8 +377,8 @@ CartesianVector<Real,D> Grid<D>::getPos(const CVecID& ijk) const {
     CVecID dims = getNumCells();
     CVecRD res;
     for (Int i = 0; i < D; i++) {
-        assert((ijk(i) - offsetGrid_(i))>=0 &&
-                (ijk(i) - offsetGrid_(i))<dims(i));
+//        assert((ijk(i) - offsetGrid_(i))>=0 &&
+//                (ijk(i) - offsetGrid_(i))<dims(i));
         res(i) = pos_[i][ijk(i) - offsetGrid_(i)];
     }
     return res;
