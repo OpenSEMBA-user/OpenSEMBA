@@ -155,6 +155,8 @@ ParserGiD::readMesherOptions() {
                     res->setMesher(strToMesher(value));
                 } else if (label.compare("Brute force volumes") == 0) {
                     res->setBruteForceVolumes(strToBool(value));
+                } else if (label.compare("VTK Export") == 0) {
+                    res->setVtkExport(strToBool(value));
                 } else if (label.compare("Mode") == 0) {
                     res->setMode(strToMesherMode(value));
                 } else if (label.compare("Forbidden length") == 0) {
