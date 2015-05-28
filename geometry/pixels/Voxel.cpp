@@ -30,7 +30,7 @@ bool Voxel::isInto (const CVecI3Fractional& coordIntFractional_) const{
 array<Linel, 12> Voxel::getLinels() const {
     VoxelLinels res;
     for (UInt i = 0; i < 12; i++) {
-        const UInt dir = i % 4;
+
         // TODO.
     }
     return res;

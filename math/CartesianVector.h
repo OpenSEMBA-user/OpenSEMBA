@@ -84,6 +84,8 @@ public:
     virtual T& operator[] (UInt pos);
     virtual T  operator[] (UInt pos) const;
 
+    CartesianVector<T,D>& setAsBinary(const UInt number);
+
     virtual Real norm() const;
 
     CartesianVector<T,D>& abs();

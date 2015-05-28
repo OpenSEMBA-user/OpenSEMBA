@@ -258,6 +258,17 @@ inline T CartesianVector<T,D>::getMax() const {
 }
 
 template <class T, Int D>
+CartesianVector<T,D>& CartesianVector<T,D>::setAsBinary(const UInt number) {
+    assert(number < pow(2,D));
+    Int den = 1;
+    for (Int d = 0; d < D; d++) {
+        val[D-d] = (number / den) % 2;
+        den *= 2;
+    }
+    return *this;
+}
+
+template <class T, Int D>
 bool CartesianVector<T,D>::operator==(
         const CartesianVector<T, D>& param) const {
     return MathUtils::equal((*this-param).norm(), 0.0, (*this+param).norm());

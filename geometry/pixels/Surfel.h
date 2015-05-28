@@ -10,6 +10,8 @@
 
 #include "Linel.h"
 
+typedef array<Linel,4> SurfelLinels;
+
 class Surfel: public Pixel {
 public:
     Surfel(){normId_ = CartesianDirection::dirNode;};
@@ -26,11 +28,16 @@ public:
     CartesianDirection& NormId (){return normId_;}
     void setNormId (const CartesianDirection& _normId){normId_ = _normId;}
 
-    string toStr() const;
+    SurfelLinels getLinels() const;
 
+    string toStr() const;
     friend std::ostream& operator<<(ostream& os, const Surfel& vec) {
        return os << vec.toStr();
     }
+
+protected:
+    Linel getLinel(const UInt side) const;
+
 private:
     CartesianDirection normId_;
 };
