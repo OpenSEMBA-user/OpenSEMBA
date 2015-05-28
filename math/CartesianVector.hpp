@@ -262,7 +262,7 @@ CartesianVector<T,D>& CartesianVector<T,D>::setAsBinary(const UInt number) {
     assert(number < pow(2,D));
     Int den = 1;
     for (Int d = 0; d < D; d++) {
-        val[D-d] = (number / den) % 2;
+        val[D-d-1] = (number / den) % 2;
         den *= 2;
     }
     return *this;
