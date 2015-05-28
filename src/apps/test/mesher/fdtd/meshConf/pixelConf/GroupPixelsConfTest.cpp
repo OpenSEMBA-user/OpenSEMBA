@@ -29,7 +29,8 @@ protected:
 
 TEST_F(MesherGroupPixelsConfTest, CoarseGrid) {
     init(CVecR3(0.0), CVecR3(5.0), CVecR3(2.5), coords_);
-    IntersectionsGroup* intersections = IntersectionsGenerator(grid, uMesh);
+    IntersectionsGenerator generator;
+    IntersectionsGroup* intersections = generator(grid, uMesh);
 
     GroupPixelsConf conformalPixels(*intersections);
     EXPECT_EQ(3, conformalPixels.getVoxels()->size());
@@ -41,7 +42,8 @@ TEST_F(MesherGroupPixelsConfTest, CoarseGrid) {
 
 TEST_F(MesherGroupPixelsConfTest, FineGrid) {
     init(CVecR3(0.0), CVecR3(5.0), CVecR3(1.0), coords_);
-    IntersectionsGroup* intersections = IntersectionsGenerator(grid, uMesh);
+    IntersectionsGenerator generator;
+    IntersectionsGroup* intersections = generator(grid, uMesh);
 
     GroupPixelsConf conformalPixels(*intersections);
     EXPECT_EQ(13, conformalPixels.getVoxels()->size());
