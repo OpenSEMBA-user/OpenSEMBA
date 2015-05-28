@@ -155,22 +155,16 @@ ParserGiD::readMesherOptions() {
                     res->setMesher(strToMesher(value));
                 } else if (label.compare("Brute force volumes") == 0) {
                     res->setBruteForceVolumes(strToBool(value));
+                } else if (label.compare("VTK Export") == 0) {
+                    res->setVtkExport(strToBool(value));
                 } else if (label.compare("Mode") == 0) {
                     res->setMode(strToMesherMode(value));
-                } else if (label.compare("Edge fraction") == 0) {
-                    res->setEdgeFraction(trim(value));
-                } else if (label.compare("SWF force") == 0) {
-                    res->setSwfForze(trim(value));
+                } else if (label.compare("Forbidden length") == 0) {
+                    res->setForbiddenLength(atof(trim(value).c_str()));
                 } else if (label.compare("Scale factor") == 0) {
                     res->setScaleFactor(strToBool(value));
                 } else if (label.compare("Scale factor value") == 0) {
                     res->setScaleFactorValue(trim(value));
-                } else if (label.compare("Effective parameters") == 0) {
-                    res->setEffectiveParameter(strToBool(value));
-                } else if (label.compare("Thickness") == 0) {
-                    res->setTh(trim(value));
-                } else if (label.compare("Sigma") == 0) {
-                    res->setSigma(trim(value));
                 } else if (label.compare("Location in mesh")==0) {
                     CVecR3 location = strToCVecR3(trim(value));
                     res->setLocationInMesh(location);
@@ -1351,7 +1345,8 @@ ParserGiD::strToMultiportType(string str) const {
 pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) const {
     UInt begin = value.find_first_of("{");
     UInt end = value.find_last_of("}");
-    istringstream iss(value.substr(begin+1,end-1));
+    string aux = value.substr(begin+1,end-1);
+    stringstream iss(aux);
     CVecR3 max, min;
     for (UInt i = 0; i < 3; i++) {
         iss >> max(i);
@@ -1517,6 +1512,8 @@ OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
     str = trim(str);
     if (str.compare("ugrMesher")==0) {
         return OptionsMesher::ugrMesher;
+    } else if (str.compare("zMesher")==0) {
+        return OptionsMesher::zMesher;
     } else if (str.compare("OpenFOAM")==0) {
         return OptionsMesher::openfoam;
     } else if (str.compare("None")==0) {
