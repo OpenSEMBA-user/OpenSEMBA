@@ -56,3 +56,13 @@ Linel Surfel::getLinel(const UInt s) const {
     UInt dir = (norm + (s%2) + 1) % 3;
     return Linel(pos, CartesianDirection(dir+1));
 }
+
+bool Surfel::operator<(const Surfel& rhs) const {
+    if (Pixel::operator<(rhs)) {
+        return true;
+    }
+    if (Pixel::operator==(rhs)) {
+        return normId_ < rhs.normId_;
+    }
+    return false;
+}

@@ -17,11 +17,11 @@ Voxel::~Voxel() {
 
 }
 
-bool Voxel::isInto (const CVecI3Fractional& coordIntFractional_) const{
-    CVecR3 pos_ = coordIntFractional_.getRelativePos();
+bool Voxel::isInto (const CVecI3Fractional& coordIntFractional) const{
+    CVecR3 pos = coordIntFractional.getRelativePos();
     for(UInt n=0; n<3; n++){
-        if( pos_[n]<(((Real)this->val[n]-1e-20)) ||
-            pos_[n]>((Real)this->val[n]+1.0+1e-20)){
+        if( pos[n]<(((Real)this->val[n]-1e-20)) ||
+            pos[n]>((Real)this->val[n]+1.0+1e-20)){
             return false;
         }
     }
@@ -48,4 +48,8 @@ VoxelSurfels Voxel::getSurfels() const {
         res[i] = Surfel(pos, CartesianDirection(dir + 1));
     }
     return res;
+}
+
+bool Voxel::less(const Voxel& rhs) const {
+    return Pixel::operator<(rhs);
 }

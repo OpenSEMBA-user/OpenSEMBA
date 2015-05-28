@@ -19,6 +19,7 @@ public:
     bool isInto (const CVecI3Fractional& coordIntFractional_);
 
     bool operator==(const Linel& rhs) const;
+    bool operator<(const Linel& rhs) const;
 
     CartesianDirection  getDirId ()const{return dirId_;}
     CartesianDirection& DirId (){return dirId_;}

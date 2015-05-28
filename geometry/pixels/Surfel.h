@@ -23,6 +23,7 @@ public:
     bool isInto (const CVecI3Frac& intFractional);
 
     bool operator==(const Surfel& rhs) const;
+    bool operator<(const Surfel& rhs) const;
 
     CartesianDirection  getNormId ()const{return normId_;}
     CartesianDirection& NormId (){return normId_;}

@@ -24,3 +24,15 @@ string Pixel::toStr(const CartesianDirection& dir) {
         return "Node";
     }
 }
+
+bool Pixel::operator<(const Pixel& rhs) const {
+    for (UInt i = 0; i < 3; i++) {
+        if (val[i] < rhs.val[i]) {
+            return true;
+        }
+        if (val[i] > rhs.val[i]) {
+            return false;
+        }
+    }
+    return false;
+}

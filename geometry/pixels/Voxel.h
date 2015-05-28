@@ -22,6 +22,7 @@ public:
     VoxelLinels getLinels() const;
     VoxelSurfels getSurfels() const;
 
+    bool operator<(const Voxel& rhs) const;
 
 };
 
