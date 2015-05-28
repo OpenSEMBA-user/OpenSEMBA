@@ -21,6 +21,8 @@ public:
     bool isInto (const CVecI3Fractional& rhs) const;
     VoxelLinels getLinels() const;
     VoxelSurfels getSurfels() const;
+
+
 };
 
 #endif /* SRC_MESHER_FDTD_MESHCONF_VOXEL_H_ */
