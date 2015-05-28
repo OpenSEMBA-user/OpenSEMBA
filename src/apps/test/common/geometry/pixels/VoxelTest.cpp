@@ -8,7 +8,8 @@ TEST_F(GeometryVoxelTest, IsInto) {
     CVecI3 pos(1);
     Voxel local(pos);
     for (UInt i = 0; i < 8; i++) {
-        CVecI3 offset((i/4)%2, (i/2)%2, i%2);
+        CVecI3 offset;
+        offset.setAsBinary(i);
         CVecI3Frac infVertex(pos + offset, CVecR3(0.0));
         EXPECT_TRUE(local.isInto(infVertex))
                 << "CVecI3Frac " << infVertex << " should be into voxel " << local;

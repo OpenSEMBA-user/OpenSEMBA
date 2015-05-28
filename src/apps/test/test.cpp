@@ -10,7 +10,7 @@ GTEST_API_ int main(int argc, char **argv) {
   string tests;
 
 //  tests += "*ProjectFile*:";
-//  tests += "*Math*:";
+  tests += "*Math*:";
   tests += "*Geometry*:";
 //  tests += "*ParserSTL*:";
   tests += "*Mesher*:";
