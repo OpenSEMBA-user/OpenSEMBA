@@ -27,16 +27,17 @@ bool Voxel::isInto (const CVecI3Fractional& coordIntFractional_) const{
     return true;
 }
 
-array<Linel, 12> Voxel::getLinels() const {
+VoxelLinels Voxel::getLinels() const {
     VoxelLinels res;
-    for (UInt i = 0; i < 12; i++) {
-
-        // TODO.
+    VoxelSurfels surfels = getSurfels();
+    for (UInt i = 0; i < surfels.size(); i++) {
+        res[i*2] = surfels[i].getLinel(0);
+        res[i*2+1] = surfels[i].getLinel(2);
     }
     return res;
 }
 
-array<Surfel, 6> Voxel::getSurfels() const {
+VoxelSurfels Voxel::getSurfels() const {
     VoxelSurfels res;
     for (UInt i = 0; i < 6; i++) {
         const UInt dir = (i/2)%3;

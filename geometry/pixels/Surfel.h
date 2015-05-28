@@ -29,6 +29,7 @@ public:
     void setNormId (const CartesianDirection& _normId){normId_ = _normId;}
 
     SurfelLinels getLinels() const;
+    Linel getLinel(const UInt side) const;
 
     string toStr() const;
     friend std::ostream& operator<<(ostream& os, const Surfel& vec) {
@@ -36,7 +37,6 @@ public:
     }
 
 protected:
-    Linel getLinel(const UInt side) const;
 
 private:
     CartesianDirection normId_;
