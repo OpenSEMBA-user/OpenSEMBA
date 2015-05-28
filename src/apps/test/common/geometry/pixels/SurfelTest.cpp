@@ -7,6 +7,7 @@ class GeometrySurfelTest : public ::testing::Test {
 TEST_F(GeometrySurfelTest, IsInto) {
     CVecI3 pos(1);
     Surfel surf(pos, CartesianDirection::dirX);
+
     CVecI3Frac sidePos(pos + CVecI3(1,0,0), CVecR3(0.0, 0.5, 0.0));
     EXPECT_TRUE(surf.isInto(sidePos)) <<
             "CVecI3Frac " << sidePos << " should be into surfel " << surf;
