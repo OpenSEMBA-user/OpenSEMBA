@@ -37,3 +37,9 @@ Linel::Linel(const CVecI3& pos, const CartesianDirection& dir) :
 bool Linel::operator ==(const Linel& rhs) const {
     return (Pixel::operator==(rhs) && rhs.dirId_ == dirId_);
 }
+
+string Linel::toStr() const {
+    stringstream res;
+    res << CVecI3::toStr() << " Dir: " << Pixel::toStr(dirId_);
+    return res.str();
+}

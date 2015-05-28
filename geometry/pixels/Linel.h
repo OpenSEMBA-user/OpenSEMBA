@@ -24,6 +24,11 @@ public:
     CartesianDirection& DirId (){return dirId_;}
     void setDirId (const CartesianDirection& _dirId){dirId_ = _dirId;}
 
+    string toStr() const;
+    friend std::ostream& operator<<(ostream& os, const Linel& vec) {
+       return os << vec.toStr();
+    }
+
 private:
     CartesianDirection dirId_;
 };

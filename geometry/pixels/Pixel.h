@@ -21,6 +21,8 @@ public:
     DEFINE_CLONE(Pixel);
 
     void printInfo() const;
+
+    static string toStr(const CartesianDirection& dir);
 };
 
 #endif /* SRC_MESHER_FDTD_MESHCONF_PIXEL_H_ */

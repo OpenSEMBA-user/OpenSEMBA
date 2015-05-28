@@ -33,7 +33,7 @@ bool Surfel::operator ==(const Surfel& rhs) const {
 
 string Surfel::toStr() const {
     stringstream res;
-    res << Pixel::toStr() << " Norm: " << normId_;
+    res << CVecI3::toStr() << " Norm: " << Pixel::toStr(normId_);
     return res.str();
 }
 
@@ -47,11 +47,12 @@ SurfelLinels Surfel::getLinels() const {
 
 Linel Surfel::getLinel(const UInt s) const {
     CVecI3 pos = *this;
-    CVecI3 offset;
-    offset.setAsBinary(s);
-    UInt norm = normId_-1;
-    pos((norm+1)%3) += offset(x);
-    pos((norm+2)%3) += offset(y);
-    UInt dir = (norm + s) % 3;
+    UInt norm(normId_-1);
+    if (s == 2) {
+        pos((norm+2)%3)++;
+    } else if (s == 3) {
+        pos((norm+1)%3)++;
+    }
+    UInt dir = (norm + (s%2) + 1) % 3;
     return Linel(pos, CartesianDirection(dir+1));
 }
