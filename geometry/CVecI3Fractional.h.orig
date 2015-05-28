@@ -43,7 +43,10 @@ public:
     friend std::ostream& operator<<(ostream& os, const CVecI3Fractional& vec) {
        return os << vec.toStr();
     }
+<<<<<<< HEAD
+=======
 //private:
+>>>>>>> origin/luis
     CVecR3 len_;
 };
 

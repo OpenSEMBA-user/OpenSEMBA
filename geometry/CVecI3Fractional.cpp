@@ -79,7 +79,7 @@ CVecI3 CVecI3Fractional::DiscretePositionDistribution(
 CVecR3 CVecI3Fractional::getRelativePos() const {
     CVecR3 retPos;
     for (unsigned int n = 0; n < 3; ++n) {
-        retPos.val[n] = this->val[n] + len_.val[n];
+        retPos.val[n] = (Real)this->val[n] + len_.val[n];
     }
     return retPos;
 }

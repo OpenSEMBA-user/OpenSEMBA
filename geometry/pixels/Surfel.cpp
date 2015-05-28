@@ -36,3 +36,22 @@ string Surfel::toStr() const {
     res << Pixel::toStr() << " Norm: " << normId_;
     return res.str();
 }
+
+SurfelLinels Surfel::getLinels() const {
+    SurfelLinels res;
+    for (UInt i = 0; i < 4; i++) {
+        res[i] = getLinel(i);
+    }
+    return res;
+}
+
+Linel Surfel::getLinel(const UInt s) const {
+    CVecI3 pos = *this;
+    CVecI3 offset;
+    offset.setAsBinary(s);
+    UInt norm = normId_-1;
+    pos((norm+1)%3) += offset(x);
+    pos((norm+2)%3) += offset(y);
+    UInt dir = (norm + s) % 3;
+    return Linel(pos, CartesianDirection(dir+1));
+}
