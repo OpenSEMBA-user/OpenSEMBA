@@ -33,11 +33,32 @@ TEST_F(MesherGroupCVecI3UnfinishedTest, BasicOperations){
     EXPECT_EQ(added.add(group), group);
 }
 
-
 TEST_F(MesherGroupCVecI3UnfinishedTest, GetVoxels) {
     GroupCVecI3FracU group;
     group.add(fracPosWithElems_);
     group.add(CVecI3FracU(CVecI3(4), CVecR3(0.0)));
     group.add(CVecI3FracU(CVecI3(1,2,3), CVecR3(0.0)));
     EXPECT_EQ(3, group.getVoxels().size());
+}
+
+
+TEST_F(MesherGroupCVecI3UnfinishedTest, GetIntersectionsAtVoxel) {
+    GroupCVecI3FracU group;
+    group.add(fracPosWithElems_);
+    group.add(CVecI3FracU(CVecI3(1,2,3), CVecR3(0.0)));
+    GroupCVecI3FracU sameVoxel;
+    CVecI3 pos(4);
+    sameVoxel.add(CVecI3FracU(pos, CVecR3(0.0)));
+    sameVoxel.add(CVecI3FracU(pos, CVecR3(0.32)));
+    sameVoxel.add(CVecI3FracU(pos, CVecR3(0.35)));
+    sameVoxel.add(CVecI3FracU(pos+CVecI3(1,0,0), CVecR3(0.0, 0.0, 0.35)));
+    sameVoxel.add(CVecI3FracU(pos+1, CVecR3(0.0)));
+    group.add(sameVoxel);
+    GroupCVecI3FracU gettedVoxel = group.getIntersectionsAtVoxel(Voxel(pos));
+    EXPECT_EQ(sameVoxel.size(), gettedVoxel.size());
+    GroupCVecI3FracU::iterator it, that;
+    for (it = sameVoxel.begin(); it != sameVoxel.end(); ++it) {
+        that = gettedVoxel.find(*it);
+        EXPECT_EQ(*(*it), *(*that));
+    }
 }

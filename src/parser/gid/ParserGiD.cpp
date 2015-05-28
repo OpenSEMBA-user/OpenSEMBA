@@ -155,6 +155,8 @@ ParserGiD::readMesherOptions() {
                     res->setMesher(strToMesher(value));
                 } else if (label.compare("Brute force volumes") == 0) {
                     res->setBruteForceVolumes(strToBool(value));
+                } else if (label.compare("VTK Export") == 0) {
+                    res->setVtkExport(strToBool(value));
                 } else if (label.compare("Mode") == 0) {
                     res->setMode(strToMesherMode(value));
                 } else if (label.compare("Forbidden length") == 0) {
@@ -1343,7 +1345,8 @@ ParserGiD::strToMultiportType(string str) const {
 pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) const {
     UInt begin = value.find_first_of("{");
     UInt end = value.find_last_of("}");
-    istringstream iss(value.substr(begin+1,end-1));
+    string aux = value.substr(begin+1,end-1);
+    stringstream iss(aux);
     CVecR3 max, min;
     for (UInt i = 0; i < 3; i++) {
         iss >> max(i);
