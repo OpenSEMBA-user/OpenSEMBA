@@ -12,10 +12,9 @@
 class MesherGroupPixelsConfTest : public MesherIntersectionsGeneratorTest {
 public:
     void SetUp() {
-        vector<CoordR3*> coords;
-        coords.push_back(new CoordR3(CoordinateId(1), CVecR3(0.5, 0.5, 0.5)));
-        coords.push_back(new CoordR3(CoordinateId(2), CVecR3(3.8, 0.5, 0.5)));
-        coords.push_back(new CoordR3(CoordinateId(3), CVecR3(0.5, 3.8, 0.5)));
+        coords_.push_back(new CoordR3(CoordinateId(1), CVecR3(0.5, 0.5, 0.5)));
+        coords_.push_back(new CoordR3(CoordinateId(2), CVecR3(3.8, 0.5, 0.5)));
+        coords_.push_back(new CoordR3(CoordinateId(3), CVecR3(0.5, 3.8, 0.5)));
     }
     void TearDown() {
         vector<CoordR3*>::iterator it;
