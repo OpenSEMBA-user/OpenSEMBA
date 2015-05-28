@@ -587,6 +587,7 @@ void Grid<D>::printInfo() const {
     CVecID numCells = getNumCells();
     BoxRD bound = getFullDomainBoundingBox();
     cout << "-- Cartesian Grid<" << D << "> --" << endl;
+    cout << "Offset: " << offsetGrid_.toStr() << endl;
     cout << "Dims: " << numCells.toStr() << endl;
     cout << "Min val: " << bound.getMin().toStr() << endl;
     cout << "Max val: " << bound.getMax().toStr() << endl;
