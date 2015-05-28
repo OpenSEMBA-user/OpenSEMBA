@@ -15,3 +15,11 @@ TEST(MathCartesianVectorTest, Complex) {
    EXPECT_EQ(a, a);
    EXPECT_EQ(sqrt(3.0), a.norm());
 }
+
+TEST(MathCartesianVectorTest, BinaryConversion) {
+    for (UInt i = 0; i < 8; i++) {
+        CVecI3 result((i/4)%2, (i/2)%2, i%2);
+        CVecI3 converted;
+        EXPECT_EQ(result, converted.setAsBinary(i));
+    }
+}

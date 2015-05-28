@@ -24,10 +24,10 @@ TEST_F(GeometryVoxelTest, IsInto) {
 
         CVecI3Frac centerInfX(pos + offset, CVecR3(0.0, 0.5, 0.5));
         if (offset == CVecI3(0,0,0) || offset == CVecI3(1,0,0)) {
-            EXPECT_TRUE(local.isInto(center))
+            EXPECT_TRUE(local.isInto(centerInfX))
                 << "CVecI3Frac " << centerInfX << " should be into voxel " << local;
         } else {
-            EXPECT_FALSE(local.isInto(center))
+            EXPECT_FALSE(local.isInto(centerInfX))
                 << "CVecI3Frac " << centerInfX << " should not be into voxel " << local;
         }
     }
