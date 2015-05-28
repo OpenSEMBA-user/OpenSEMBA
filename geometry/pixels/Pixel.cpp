@@ -14,13 +14,13 @@ void Pixel::printInfo() const {
 
 string Pixel::toStr(const CartesianDirection& dir) {
     switch (dir) {
-    case CartesianDirection::dirNode:
-        return "Node";
     case CartesianDirection::dirX:
         return "X";
     case CartesianDirection::dirY:
         return "Y";
     case CartesianDirection::dirZ:
         return "Z";
+    default:
+        return "Node";
     }
 }
