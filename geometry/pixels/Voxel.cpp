@@ -50,6 +50,6 @@ VoxelSurfels Voxel::getSurfels() const {
     return res;
 }
 
-bool Voxel::less(const Voxel& rhs) const {
+bool Voxel::operator<(const Voxel& rhs) const {
     return Pixel::operator<(rhs);
 }
