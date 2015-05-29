@@ -17,6 +17,7 @@ TEST_F(GeometrySurfelTest, Comparison) {
     Surfel surf1(CVecI3(1), CartesianDirection::dirX);
     Surfel surf2(CVecI3(1), CartesianDirection::dirY);
     EXPECT_LE(surf1, surf2);
+    EXPECT_LE(surf1, Surfel(CVecI3(2), CartesianDirection::dirX));
     EXPECT_FALSE(surf1 < surf1);
 }
 
