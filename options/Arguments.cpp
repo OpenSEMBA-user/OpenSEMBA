@@ -34,8 +34,9 @@ Arguments::Arguments(const int argc,  const char* argv[]) {
 void Arguments::build(const vector<string>& argv) {
     int argc = argv.size();
     for (Int i = 0; i < argc; i++) {
-        const string str = argv[i];
-        if (isKey(str)) {
+        string aux = argv[i];
+        transform(aux.begin(), aux.end(), aux.begin(), ::tolower);
+        if (isKey(aux)) {
             args_.insert(readArgument(i, argc, argv));
         }
     }
@@ -46,7 +47,7 @@ void Arguments::build(const vector<string>& argv) {
 }
 
 Arguments::~Arguments() {
-	// TODO Auto-generated destructor stub
+
 }
 
 bool
@@ -196,8 +197,8 @@ pair<string, vector<string>> Arguments::readArgument(
     }
     for (int i = pos+1; i < argc; i++) {
         string str = argv[i];
-        string aux;
-        transform(str.begin(), str.end(), aux.begin(), ::tolower);
+        string aux = str;
+        transform(aux.begin(), aux.end(), aux.begin(), ::tolower);
         if (isKey(aux)) {
             return pair<string, vector<string>> (aux,value);
         }
@@ -207,6 +208,9 @@ pair<string, vector<string>> Arguments::readArgument(
 }
 
 bool Arguments::isKey(const string str) const {
+    if (str.size() < 2) {
+        return false;
+    }
     return (str.find("-") == 0 || str.find("--") == 0);
 }
 
