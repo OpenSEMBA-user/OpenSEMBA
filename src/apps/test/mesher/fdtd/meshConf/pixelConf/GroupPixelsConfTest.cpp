@@ -25,11 +25,16 @@ TEST_F(MesherGroupPixelsConfTest, SetLinelsConfInsertion) {
     LinelConf* linel1 = new LinelConf(Linel(pos,CartesianDirection::dirX));
     LinelConf* linel2 = new LinelConf(Linel(pos,CartesianDirection::dirY));
     LinelConf* copied = new LinelConf(*linel1);
+    EXPECT_FALSE(*linel1 < *copied);
+
     SetLinelConf linels;
     EXPECT_TRUE(linels.insert(linel1).second);
     EXPECT_TRUE(linels.insert(linel2).second);
     EXPECT_FALSE(linels.insert(linel1).second);
     EXPECT_FALSE(linels.insert(copied).second);
+
+    EXPECT_EQ(**linels.find(linel1), *linel1);
+    EXPECT_EQ(**linels.find(copied), *linel1);
 }
 
 
