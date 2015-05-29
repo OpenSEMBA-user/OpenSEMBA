@@ -20,6 +20,19 @@ protected:
     vector<CoordR3*> coords_;
 };
 
+TEST_F(MesherGroupPixelsConfTest, SetLinelsConfInsertion) {
+    CVecI3 pos(1);
+    LinelConf* linel1 = new LinelConf(Linel(pos,CartesianDirection::dirX));
+    LinelConf* linel2 = new LinelConf(Linel(pos,CartesianDirection::dirY));
+    LinelConf* copied = new LinelConf(*linel1);
+    SetLinelConf linels;
+    EXPECT_TRUE(linels.insert(linel1).second);
+    EXPECT_TRUE(linels.insert(linel2).second);
+    EXPECT_FALSE(linels.insert(linel1).second);
+    EXPECT_FALSE(linels.insert(copied).second);
+}
+
+
 TEST_F(MesherGroupPixelsConfTest, CoarseGrid) {
     init(CVecR3(0.0), CVecR3(5.0), CVecR3(2.5), coords_);
     IntersectionsGenerator generator;
