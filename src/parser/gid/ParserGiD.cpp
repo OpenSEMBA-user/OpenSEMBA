@@ -29,6 +29,11 @@ ParserGiD::~ParserGiD() {
 
 SmbData*
 ParserGiD::read() {
+    if (!canOpen()) {
+        cerr << endl << "ERROR @ ParserGiD: "
+                << "Can not openfile: " << getFilename() << endl;
+        exit(-1);
+    }
     if (!checkVersionCompatibility(readVersion())) {
         return NULL;
     }

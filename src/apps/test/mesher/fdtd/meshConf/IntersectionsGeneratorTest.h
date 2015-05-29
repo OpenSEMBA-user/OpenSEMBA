@@ -18,7 +18,7 @@ public:
         cG_ = CoordR3Group(coords);
         vector<ElemR*> elems;
         CoordinateId vId[3] = {CoordinateId(1), CoordinateId(2), CoordinateId(3)};
-        elems.push_back(new Tri3(cG_, ElementId(1), vId));
+        elems.push_back(new Tri3(cG_, ElementId(1), vId, LayerId(0), MatId(1)));
         eG_ = ElemRGroup(elems);
         uMesh = new MeshUnstructured (cG_, eG_);
     };

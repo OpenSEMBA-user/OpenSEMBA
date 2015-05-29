@@ -16,12 +16,6 @@ public:
         coords_.push_back(new CoordR3(CoordinateId(2), CVecR3(3.8, 0.5, 0.5)));
         coords_.push_back(new CoordR3(CoordinateId(3), CVecR3(0.5, 3.8, 0.5)));
     }
-    void TearDown() {
-        vector<CoordR3*>::iterator it;
-        for (it = coords_.begin(); it != coords_.end(); ++it) {
-            delete *it;
-        }
-    }
 protected:
     vector<CoordR3*> coords_;
 };
