@@ -200,7 +200,7 @@ pair<string, vector<string>> Arguments::readArgument(
         string aux = str;
         transform(aux.begin(), aux.end(), aux.begin(), ::tolower);
         if (isKey(aux)) {
-            return pair<string, vector<string>> (aux,value);
+            return pair<string, vector<string>> (key,value);
         }
         value.push_back(trim(str));
     }
