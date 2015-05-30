@@ -68,10 +68,25 @@ UInt CVecI3Fractional::getRangeBase() const {
 }
 
 CVecI3 CVecI3Fractional::DiscretePositionDistribution(
-        CVecI3 &numDivision) const {
+        const CVecI3 &numDivision) const {
     CVecI3 ret;
     for (UInt n = 0; n < 3; n++) {
         ret[n] = floor(len_[n] * ((Real) numDivision[n]));
+    }
+    return ret;
+}
+
+CVecI3 CVecI3Fractional::DiscretePositionDistribution(
+        const CVecI3 &numDivision, const CVecI3 &origin) const {
+    CVecI3 ret(-1);
+    for (UInt n = 0; n < 3; n++) {
+        ret[n] = floor((len_[n]+(Real)(this->val[n]-origin [n]) )*
+                ((Real) numDivision[n]));
+        if(ret[n]<0){
+            ret[n] = 0;
+        }else if (ret[n]>=numDivision[n]){
+            ret[n] = numDivision[n]-1;
+        }
     }
     return ret;
 }

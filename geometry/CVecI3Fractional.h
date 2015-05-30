@@ -31,9 +31,14 @@ public:
     bool less(const CVecI3Fractional &rhs,
             const Real tool = MathUtils::tolerance) const;
 
+
     CVecR3 getRelativePos() const;
 
-    CVecI3 DiscretePositionDistribution (CVecI3 &numDivision) const;
+    CVecI3 getBasePos () const{return *this->CVecI3::val;}
+
+    CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision) const;
+    CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision,
+                                         const CVecI3 &origin) const;
 
     Direction getDirBase   () const;
     UInt getRangeBase () const;
