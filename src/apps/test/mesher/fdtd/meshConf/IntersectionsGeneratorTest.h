@@ -5,8 +5,9 @@
  *      Author: Miguel D. Ruiz-Cabello N.
  */
 
+#include "../../../../../mesher/fdtd/meshConf/intersectionsPixel/IntersectionsGenerator.h"
+
 #include "gtest/gtest.h"
-#include "mesher/fdtd/meshConf/IntersectionsGenerator.h"
 
 class MesherIntersectionsGeneratorTest : public ::testing::Test {
 public:
