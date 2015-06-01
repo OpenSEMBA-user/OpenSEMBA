@@ -5,7 +5,7 @@
  *      Author: Miguel D. Ruiz-Cabello N.
  */
 
-#include "../../../../../mesher/fdtd/meshConf/intersectionsPixel/IntersectionsGenerator.h"
+#include "../../../../../mesher/fdtd/meshConf/IntersectionsGenerator.h"
 
 #include "gtest/gtest.h"
 
