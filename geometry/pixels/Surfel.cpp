@@ -8,7 +8,7 @@
 #include "Surfel.h"
 
 bool Surfel::isInto (const CVecI3Frac& coordIntFractional_){
-    CVecR3 pos_ = coordIntFractional_.getRelativePos();
+    CVecR3 pos_ = coordIntFractional_.getScalePos();
     for(UInt n=0; n<3; n++){
         if(n==(UInt)(normId_-1)){
             if(MathUtils::notEqual(

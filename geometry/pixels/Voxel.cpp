@@ -18,7 +18,7 @@ Voxel::~Voxel() {
 }
 
 bool Voxel::isInto (const CVecI3Fractional& coordIntFractional) const{
-    CVecR3 pos = coordIntFractional.getRelativePos();
+    CVecR3 pos = coordIntFractional.getScalePos();
     for(UInt n=0; n<3; n++){
         if( pos[n]<(((Real)this->val[n]-1e-20)) ||
             pos[n]>((Real)this->val[n]+1.0+1e-20)){

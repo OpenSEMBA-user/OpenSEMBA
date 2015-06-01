@@ -32,7 +32,8 @@ public:
             const Real tool = MathUtils::tolerance) const;
 
 
-    CVecR3 getRelativePos() const;
+    CVecR3 getScalePos() const;
+    CVecR3 getScalePos(const CVecI3 origin) const;
 
     CVecI3 getBasePos () const{return *this->CVecI3::val;}
 

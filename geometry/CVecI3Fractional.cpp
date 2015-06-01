@@ -80,7 +80,7 @@ CVecI3 CVecI3Fractional::DiscretePositionDistribution(
         const CVecI3 &numDivision, const CVecI3 &origin) const {
     CVecI3 ret(-1);
     for (UInt n = 0; n < 3; n++) {
-        ret[n] = floor((len_[n]+(Real)(this->val[n]-origin [n]) )*
+        ret[n] = floor((len_[n]+(Real)(val[n]-origin [n]) )*
                 ((Real) numDivision[n]));
         if(ret[n]<0){
             ret[n] = 0;
@@ -91,13 +91,22 @@ CVecI3 CVecI3Fractional::DiscretePositionDistribution(
     return ret;
 }
 
-CVecR3 CVecI3Fractional::getRelativePos() const {
+CVecR3 CVecI3Fractional::getScalePos() const {
     CVecR3 retPos;
     for (unsigned int n = 0; n < 3; ++n) {
-        retPos.val[n] = (Real)this->val[n] + len_.val[n];
+        retPos.val[n] = (Real)val[n] + len_.val[n];
     }
     return retPos;
 }
+
+CVecR3 CVecI3Fractional::getScalePos(const CVecI3 origin) const {
+    CVecR3 retPos;
+    for (unsigned int n = 0; n < 3; ++n) {
+        retPos.val[n] = (Real)(val[n]-origin[n]) + len_.val[n];
+    }
+    return retPos;
+}
+
 
 string CVecI3Fractional::toStr() const {
     return CVecI3::toStr() + " len: " + len_.toStr();
