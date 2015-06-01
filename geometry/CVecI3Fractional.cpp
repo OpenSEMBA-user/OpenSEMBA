@@ -115,3 +115,85 @@ string CVecI3Fractional::toStr() const {
 bool CVecI3Fractional::operator ==(const CVecI3Fractional& rhs) const {
     return (CVecI3::operator ==(rhs) && len_ == rhs.len_);
 }
+
+CVecR3 CVecI3Fractional::meanRelativePoint(const CVecI3Fractional& rhs) const {
+    return (len_ + rhs.len_)*0.5;
+}
+
+CVecR3 CVecI3Fractional::getRelativePosNearestNode() const {
+    CVecR3 nearestPos;
+    for(UInt dir=0; dir<3; ++dir){
+        nearestPos(dir) = 0.0;
+        if(len_(dir)>0.5){
+            nearestPos(dir) = 1.0;
+        }
+    }
+    return nearestPos;
+}
+
+
+void CVecI3Fractional::joinGeom(CVecI3Fractional& rhs) {
+    for(UInt dir=0; dir<3; ++dir){
+        if(MathUtils::equal(len_(dir),0.0)){
+            rhs.len_(dir) = 0.0;
+        }else if(MathUtils::equal(rhs.len_(dir),0.0)){
+            len_(dir) = 0.0;
+        }else{
+            rhs.len_(dir) = 0.0;
+        }
+    }
+}
+
+void CVecI3Fractional::reduceTopology() {
+    CVecR3 posNode = getRelativePosNearestNode();
+    CVecR3 dst =  (posNode - len_).abs();
+    Real dstMin = dst[0];
+    UInt minDir = 0;
+    for(UInt dir=1; dir<3; ++dir){
+        if(len_[dir] !=0.0){
+            if(dstMin>dst[dir]){
+                dstMin = dst[dir];
+                minDir = dir;
+            }
+        }
+    }
+    len_[minDir] = posNode[minDir];
+    reduceCoords();
+}
+
+void CVecI3Fractional::reduceCoords() {
+    for(UInt dir=0; dir<3; ++dir){
+        if(len_(dir)>=1.0){
+            len_(dir)= len_(dir)-1.0;
+            ++val[dir];
+        }else if (len_(dir)<0.0){
+            len_(dir) = 1.0 + len_(dir);
+            --val[dir];
+        }else if (len_(dir) < MathUtils::tolerance){
+            len_(dir)=0.0;
+        }
+    }
+}
+
+CVecI3Fractional& CVecI3Fractional::CVecI3Fractional::move(
+        CVecI3Fractional& rhs,
+        const bool forceProject,
+        bool& canBeMoved) const {
+    canBeMoved = true;
+    CVecR3 len;
+    for (UInt dir = 0; dir < 3; ++dir) {
+        if (MathUtils::equal(len_(dir), 0.0)) {
+            len(dir) = 0.0;
+        } else {
+            if (MathUtils::equal(rhs.len_(dir), 0.0)) {
+                canBeMoved = false;
+            } else {
+                len(dir) = len_(dir);
+            }
+        }
+    }
+    if (canBeMoved || forceProject) {
+        rhs.len_ = len;
+    }
+    return rhs;
+}

@@ -35,8 +35,17 @@ public:
     CVecR3 getScalePos() const;
     CVecR3 getScalePos(const CVecI3 origin) const;
 
-    CVecI3 getBasePos () const{return *this->CVecI3::val;}
+    CVecR3 meanRelativePoint (const CVecI3Fractional& rhs) const;
+    CVecR3 getRelativePosNearestNode () const;
+    void reduceCoords();
+    void reduceTopology();
+    void joinGeom(CVecI3Fractional& rhs);
+    CVecI3Fractional& move(
+            CVecI3Fractional& rhs,
+            const bool forceProject,
+            bool& canBeMoved) const;
 
+    CVecI3 getBasePos () const{return *this->CVecI3::val;}
     CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision) const;
     CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision,
                                          const CVecI3 &origin) const;

@@ -269,6 +269,17 @@ CartesianVector<T,D>& CartesianVector<T,D>::setAsBinary(const UInt number) {
 }
 
 template <class T, Int D>
+CartesianVector<T,D>& CartesianVector<T,D>::setWithMinimalComponents(
+        const CartesianVector<T,D>& rhs) {
+    for(Int d = 0; d < D; d++){
+        if(val[d] > rhs.val[d]){
+            val[d] = rhs.val[d];
+        }
+    }
+    return *this;
+}
+
+template <class T, Int D>
 bool CartesianVector<T,D>::operator==(
         const CartesianVector<T, D>& param) const {
     return MathUtils::equal((*this-param).norm(), 0.0, (*this+param).norm());
