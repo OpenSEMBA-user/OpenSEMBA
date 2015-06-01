@@ -24,10 +24,10 @@ TEST_F(GeometryVoxelTest, IsInto) {
 
         CVecI3Frac centerInfX(pos + offset, CVecR3(0.0, 0.5, 0.5));
         if (offset == CVecI3(0,0,0) || offset == CVecI3(1,0,0)) {
-            EXPECT_TRUE(local.isInto(center))
+            EXPECT_TRUE(local.isInto(centerInfX))
                 << "CVecI3Frac " << centerInfX << " should be into voxel " << local;
         } else {
-            EXPECT_FALSE(local.isInto(center))
+            EXPECT_FALSE(local.isInto(centerInfX))
                 << "CVecI3Frac " << centerInfX << " should not be into voxel " << local;
         }
     }
@@ -38,10 +38,18 @@ TEST_F(GeometryVoxelTest, GetLinels) {
     Voxel local(pos);
 
     VoxelLinels linels = local.getLinels();
-    EXPECT_EQ(Linel(pos, CartesianDirection::dirX),                 linels[0]);
-    EXPECT_EQ(Linel(pos + CVecI3(0,0,1), CartesianDirection::dirX), linels[1]);
-    // ...
-    EXPECT_EQ(Linel(pos + CVecI3(1,1,0), CartesianDirection::dirZ), linels[11]);
+    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirY), linels[0]);
+    EXPECT_EQ(Linel(pos + CVecI3(0,0,1), CartesianDirection::dirY), linels[1]);
+    EXPECT_EQ(Linel(pos + CVecI3(1,0,0), CartesianDirection::dirY), linels[2]);
+    EXPECT_EQ(Linel(pos + CVecI3(1,0,1), CartesianDirection::dirY), linels[3]);
+    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirZ), linels[4]);
+    EXPECT_EQ(Linel(pos + CVecI3(1,0,0), CartesianDirection::dirZ), linels[5]);
+    EXPECT_EQ(Linel(pos + CVecI3(0,1,0), CartesianDirection::dirZ), linels[6]);
+    EXPECT_EQ(Linel(pos + CVecI3(1,1,0), CartesianDirection::dirZ), linels[7]);
+    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirX), linels[8]);
+    EXPECT_EQ(Linel(pos + CVecI3(0,1,0), CartesianDirection::dirX), linels[9]);
+    EXPECT_EQ(Linel(pos + CVecI3(0,0,1), CartesianDirection::dirX), linels[10]);
+    EXPECT_EQ(Linel(pos + CVecI3(0,1,1), CartesianDirection::dirX), linels[11]);
 }
 
 TEST_F(GeometryVoxelTest, GetSurfels) {

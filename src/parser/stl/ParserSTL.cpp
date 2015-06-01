@@ -95,8 +95,12 @@ ParserSTL::read(const OptionsMesher* optionsMesher) {
     res->outputRequests = new GroupOutRqs<>();
 
     if (res->mesherOptions->isGridStepSet()) {
+
+        CVecR3 step = res->mesherOptions->getGridStep();
         BoxR3 bound = res->mesh->castTo<MeshUnstructured>()->getBoundingBox();
-        res->grid = new Grid3(bound, res->mesherOptions->getGridStep());
+        BoxR3 boundAdd2cells (bound.getMin()-step*2.0,
+                              bound.getMax()+step*2.0);
+        res->grid = new Grid3(boundAdd2cells, step);
     }
 
     return res;

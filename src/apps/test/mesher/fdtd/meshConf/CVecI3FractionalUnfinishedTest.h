@@ -1,8 +1,9 @@
 #ifndef MESHERCVECI3FRACTIONALUNFINISHEDTEST_H_
 #define MESHERCVECI3FRACTIONALUNFINISHEDTEST_H_
 
+#include "../../../../../mesher/fdtd/meshConf/CVecI3FractionalUnfinished.h"
+
 #include "gtest/gtest.h"
-#include "mesher/fdtd/meshConf/CVecI3FractionalUnfinished.h"
 
 class MesherCVecI3FractionalUnfinishedTest : public ::testing::Test {
 public:
