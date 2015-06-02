@@ -140,8 +140,11 @@ public:
                    const Real  tol = tolerance) const { return pos; }
 
     void applyScalingFactor(const Real factor);
-    void enlarge(const pair<CVecID,CVecID>& additionalCells,
+    void enlarge(const pair<CVecRD,CVecRD>& additionalCells,
                  const pair<CVecRD,CVecRD>& sizesOfNewCells);
+    void enlargeBound(
+            CartesianAxis d, CartesianBound b,
+            Real pad, Real siz);
 
     void printInfo() const;
 private:

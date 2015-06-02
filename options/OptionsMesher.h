@@ -47,8 +47,6 @@ public:
 
     virtual void set(const Arguments& args);
     void setBoundaryMeshSize(const pair<CVecR3, CVecR3>& boundaryMeshSize);
-    void setBoundaryPadding(const pair<CVecR3, CVecR3>& boundaryPadding);
-    void setScalingFactor(Real scalingFactor);
     void setBoundTermination(const UInt i, UInt j, BoundType bound);
     void setBruteForceVolumes(bool bruteForceVolumes);
     void setForbiddenLength(const Real& edgeFraction);
@@ -74,8 +72,6 @@ public:
     const string& getMeshOutputName() const;
 
     const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
-    const pair<CVecR3, CVecR3>& getBoundaryPadding() const;
-    Real getScalingFactor() const;
     vector<pair<BoundType,BoundType>> getBoundTerminations() const;
     BoundType getBoundTermination(const UInt i, const UInt p) const;
     const string& getOutputName() const;

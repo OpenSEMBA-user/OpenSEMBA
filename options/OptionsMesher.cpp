@@ -15,7 +15,6 @@ OptionsMesher::OptionsMesher() {
     scaleFactor_ = false;
     vtkExport_ = false;
     gridStep_ = CVecR3(0.0);
-    scalingFactor_ = 1.0;
     forbiddenLength_ = (Real) (1.0 / 3.0);
     boundTermination_.resize(3);
     for (UInt i = 0; i < 3; i++) {
@@ -36,17 +35,12 @@ OptionsMesher::printInfo() const {
     if (isStructured()) {
         cout << " Generating structured mesh." << endl;
     }
-    cout<< "Geom. scaling factor: " << scalingFactor_ << endl;
     cout<< "Lower X Bound: " << toStr(boundTermination_[0].first) << endl;
     cout<< "Upper X Bound: " << toStr(boundTermination_[0].second) << endl;
     cout<< "Lower Y Bound: " << toStr(boundTermination_[1].first) << endl;
     cout<< "Upper Y Bound: " << toStr(boundTermination_[1].second) << endl;
     cout<< "Lower Z Bound: " << toStr(boundTermination_[2].first) << endl;
     cout<< "Upper Z Bound: " << toStr(boundTermination_[2].second) << endl;
-    cout<< "Lower boundary padding: " << boundaryPadding_.first << endl;
-    cout<< "Upper boundary padding: " << boundaryPadding_.second << endl;
-    cout<< "Lower boundary mesh size: " << boundaryMeshSize_.first << endl;
-    cout<< "Upper boundary mesh size: " << boundaryMeshSize_.second << endl;
     cout << " --- End of Meshing parameters info ---" << endl;
 }
 
@@ -75,14 +69,6 @@ OptionsMesher::toStr(const BoundType val) {
     default:
         return "Undefined";
     }
-}
-
-void
-OptionsMesher::applyGeometricScalingFactor(const Real& factor) {
-    boundaryPadding_.first *= factor;
-    boundaryPadding_.second *= factor;
-    boundaryMeshSize_.first *= factor;
-    boundaryMeshSize_.second *= factor;
 }
 
 const CVecR3& OptionsMesher::getLocationInMesh() const {
@@ -120,31 +106,6 @@ OptionsMesher::Mesher OptionsMesher::getMesher() const {
     return mesher_;
 }
 
-const pair<CVecR3, CVecR3>& OptionsMesher::getBoundaryMeshSize() const {
-    return boundaryMeshSize_;
-}
-
-void OptionsMesher::setBoundaryMeshSize(
-        const pair<CVecR3, CVecR3>& boundaryMeshSize) {
-    boundaryMeshSize_ = boundaryMeshSize;
-}
-
-const pair<CVecR3, CVecR3>& OptionsMesher::getBoundaryPadding() const {
-    return boundaryPadding_;
-}
-
-void OptionsMesher::setBoundaryPadding(
-        const pair<CVecR3, CVecR3>& boundaryPadding) {
-    boundaryPadding_ = boundaryPadding;
-}
-
-Real OptionsMesher::getScalingFactor() const {
-    return scalingFactor_;
-}
-
-void OptionsMesher::setScalingFactor(Real scalingFactor) {
-    scalingFactor_ = scalingFactor;
-}
 OptionsMesher::BoundType
 OptionsMesher::getBoundTermination(
         const UInt i, const UInt p) const {

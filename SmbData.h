@@ -43,7 +43,6 @@ public:
 
     SmbData& operator=(const SmbData& rhs);
 
-    void applyGeometricScalingFactor();
     bool check() const;
 
     void printInfo() const;
