@@ -27,7 +27,6 @@ class ParserGiD : public Parser, public ProjectFile {
 public:
     ParserGiD();
     ParserGiD(const string& fn);
-    ParserGiD(const string& fn, const string& pTPath);
     virtual ~ParserGiD();
 
     const ProblemSize* getProblemSize() const;
@@ -52,9 +51,12 @@ private:
         rectangular,
         undefined
     } WaveportShape;
+
     MeshUnstructured* mesh_;
-    string problemTypePath_;
     ProblemSize pSize_;
+    Real scalingFactor_;
+    pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
+
     OptionsSolver* readSolverOptions();
     OptionsMesher* readMesherOptions();
     GroupEMSources<>* readEMSources();
@@ -74,19 +76,13 @@ private:
             const string& layersString) const;
     GroupLayers<> readLayers();
     GroupCoordinates<CoordR3> readCoordinates();
-    GroupElements<ElemR> readElements(const GroupCoordinates<CoordR3>&);
-    void readHex8Elements (const GroupCoordinates<CoordR3>& v,
-                           vector<ElemR*>& elems);
-    void readTet10Elements(const GroupCoordinates<CoordR3>& v,
-                           vector<ElemR*>& elems);
-    void readTet4Elements (const GroupCoordinates<CoordR3>& v,
-                           vector<ElemR*>& elems);
-    void readTri6Elements (const GroupCoordinates<CoordR3>& v,
-                           vector<ElemR*>& elems);
-    void readTri3Elements (const GroupCoordinates<CoordR3>& v,
-                           vector<ElemR*>& elems);
-    void readLin2Elements (const GroupCoordinates<CoordR3>& v,
-                           vector<ElemR*>& elems);
+    GroupElements<ElemR> readElements(const CoordR3Group&);
+    void readHex8Elements (const CoordR3Group& v, vector<ElemR*>& elems);
+    void readTet10Elements(const CoordR3Group& v, vector<ElemR*>& elems);
+    void readTet4Elements (const CoordR3Group& v, vector<ElemR*>& elems);
+    void readTri6Elements (const CoordR3Group& v, vector<ElemR*>& elems);
+    void readTri3Elements (const CoordR3Group& v, vector<ElemR*>& elems);
+    void readLin2Elements (const CoordR3Group& v, vector<ElemR*>& elems);
     Grid3* readCartesianGrid();
     void readOutRqInstances(GroupOutRqs<>* res);
     void getNextLabelAndValue(string& label, string& value);
@@ -117,7 +113,6 @@ private:
     OptionsSolver::MetalModel strToMetalModel(string) const;
     OptionsSolver::WireModel strToWireModel(string) const;
     OptionsSolver::SelfInductanceModel strToSelfInductanceModel(string) const;
-    void init(const string& pTPath);
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
     GroupElements<Vol> boundToElemGroup(const string& line);

@@ -13,14 +13,21 @@ ParserGiD::ParserGiD() {
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-    string null;
-    init(null);
-}
-
-ParserGiD::ParserGiD(const string& fn, const string& pTPath)
-:   ProjectFile(fn) {
-
-    init(pTPath);
+    mesh_ = NULL;
+    struct stat st;
+    if (stat(getFilename().c_str(), &st) == 0) {
+        if (st.st_mode & S_IFDIR) {
+            cerr << endl << "ERROR@GiDParser::GiDParser(): "
+                    << getFilename() << "It is a directory " << endl;
+        }  else if(st.st_mode & S_IFREG) {
+            f_in.open(getFilename().c_str(), ifstream::in);
+            if (f_in.fail()) {
+                cerr << endl << "ERROR @ ParserGiD::GiDParser(): "
+                        << "Problem opening file: " << getFilename() << endl;
+            }
+            return;
+        }
+    }
 }
 
 ParserGiD::~ParserGiD() {
@@ -720,7 +727,7 @@ PMVolumeDispersive*
 ParserGiD::readDispersiveMatFile(
         const MatId id_, const string& fileName) const {
     ifstream matFile;
-    string matFileName, line, label, value;
+    string line, label, value;
     string name, model;
     string poles, epsilon, sigma;
     UInt nPoles, nDrudePoles;
@@ -731,11 +738,10 @@ ParserGiD::readDispersiveMatFile(
     Int tmpPoleId;
     Real tmpRePK, tmpImPK, tmpReRK, tmpImRK;
     // Opens file, read only mode.
-    matFileName = problemTypePath_ + "/material/" + fileName + ".dat";
-    matFile.open(matFileName.c_str(), ifstream::in);
+    matFile.open(fileName.c_str(), ifstream::in);
     if (matFile.fail()) {
         cerr << endl << "ERROR @ readDispersiveMaterialFile()"
-                << "Problem opening file: " << matFileName << endl;
+                << "Problem opening file: " << fileName << endl;
     }
     // Parses first line, containing material name.
     getline(matFile, line);
@@ -826,7 +832,7 @@ PMSurfaceSIBC*
 ParserGiD::readIsotropicSurfMatFile(
         const MatId id_, const string& fileName) const {
     ifstream matFile;
-    string matFileName, line, label, value;
+    string line, label, value;
     string name, model;
     char *pEnd;
     StaMatrix<Real,2,2> Zstatic, Zinfinite;
@@ -834,17 +840,16 @@ ParserGiD::readIsotropicSurfMatFile(
     vector<StaMatrix<Real,2,2> > Z;
     Real tmpP;
     // Opens file, read only mode.
-    matFileName = problemTypePath_ + "/panel/" + fileName + ".dat";
-    matFile.open(matFileName.c_str(), ifstream::in);
+    matFile.open(fileName.c_str(), ifstream::in);
     if (matFile.fail()) {
         cerr << endl << "ERROR @ readSurfaceMaterialFile(): "
-                << "Problem opening file: " << matFileName << endl;
+                << "Problem opening file: " << fileName << endl;
     }
     // Parses first line, containing material name.
     getline(matFile, line);
     if (line.find("#PANEL#") == string::npos) {
         cerr << endl << "ERROR @ Parser::readSurfaceMaterialFile(...)"
-                << "File: " << matFileName << "   "
+                << "File: " << fileName << "   "
                 << "#PANEL# label has not been found in first line" << endl;
     }
     name = line.substr(8, line.length()-9);
@@ -964,25 +969,6 @@ ParserGiD::readCartesianGrid() {
         grid = NULL;
     }
     return grid;
-}
-
-void
-ParserGiD::init(const string& pTPath) {
-    problemTypePath_ = pTPath;
-    struct stat st;
-    if (stat(getFilename().c_str(), &st) == 0) {
-        if (st.st_mode & S_IFDIR) {
-            cerr << endl << "ERROR@GiDParser::GiDParser(): "
-                    << getFilename() << "It is a directory " << endl;
-        }  else if(st.st_mode & S_IFREG) {
-            f_in.open(getFilename().c_str(), ifstream::in);
-            if (f_in.fail()) {
-                cerr << endl << "ERROR @ ParserGiD::GiDParser(): "
-                        << "Problem opening file: " << getFilename() << endl;
-            }
-            return;
-        }
-    }
 }
 
 PlaneWave*
