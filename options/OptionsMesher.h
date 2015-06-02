@@ -102,9 +102,7 @@ private:
 
     bool vtkExport_;
     CVecR3 gridStep_;
-    Real scalingFactor_;
     vector<pair<BoundType,BoundType>> boundTermination_;
-    pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
 };
 
 typedef vector<pair<OptionsMesher::BoundType,OptionsMesher::BoundType>>
