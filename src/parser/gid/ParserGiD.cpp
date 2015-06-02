@@ -162,6 +162,7 @@ ParserGiD::readMesherOptions() {
     bool found = false;
     string line, label, value;
     OptionsMesher* res = new OptionsMesher();
+    bool paddingByNumberOfCells = false;
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Mesher options") == 0) {
@@ -200,6 +201,12 @@ ParserGiD::readMesherOptions() {
                     res->setBoundTermination(z,1,strToBoundType(value));
                 } else if (label.compare("Lower z bound") == 0) {
                     res->setBoundTermination(z,0,strToBoundType(value));
+                } else if (label.compare("Boundary padding type") == 0) {
+                    if (trim(value).compare("by_number_of_cells")==0) {
+                        paddingByNumberOfCells = true;
+                    } else {
+                        paddingByNumberOfCells = false;
+                    }
                 } else if (label.compare("Boundary padding") == 0) {
                     boundaryPadding_ = strToBound(value);
                 } else if (label.compare("Boundary mesh size") == 0) {
@@ -210,7 +217,12 @@ ParserGiD::readMesherOptions() {
             }
         }
     }
-    //
+
+    if (paddingByNumberOfCells) {
+        boundaryPadding_.first = boundaryPadding_.first * boundaryMeshSize_.first;
+        boundaryPadding_.second = boundaryPadding_.second * boundaryMeshSize_.second;
+    }
+
     return res;
 }
 
