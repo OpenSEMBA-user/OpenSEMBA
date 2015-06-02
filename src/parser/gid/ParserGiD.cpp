@@ -9,11 +9,13 @@
 
 ParserGiD::ParserGiD() {
     mesh_ = NULL;
+    scalingFactor_ = 1.0;
 }
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
     mesh_ = NULL;
+    scalingFactor_ = 1.0;
     struct stat st;
     if (stat(getFilename().c_str(), &st) == 0) {
         if (st.st_mode & S_IFDIR) {
@@ -55,7 +57,11 @@ ParserGiD::read() {
     res->grid = readCartesianGrid();
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
-    res->applyGeometricScalingFactor();
+
+    res->mesh->applyScalingFactor(scalingFactor_);
+    res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
+    res->grid->applyScalingFactor(scalingFactor_);
+
     return res;
 }
 
@@ -181,7 +187,7 @@ ParserGiD::readMesherOptions() {
                     CVecR3 location = strToCVecR3(trim(value));
                     res->setLocationInMesh(location);
                 } else if (label.compare("Geometry scaling factor") == 0) {
-                    res->setScalingFactor(atof(value.c_str()));
+                    scalingFactor_ = atof(value.c_str());
                 } else if (label.compare("Upper x bound") == 0) {
                     res->setBoundTermination(x,1,strToBoundType(value));
                 } else if (label.compare("Lower x bound") == 0) {
@@ -195,9 +201,9 @@ ParserGiD::readMesherOptions() {
                 } else if (label.compare("Lower z bound") == 0) {
                     res->setBoundTermination(z,0,strToBoundType(value));
                 } else if (label.compare("Boundary padding") == 0) {
-                    res->setBoundaryPadding(strToBound(value));
+                    boundaryPadding_ = strToBound(value);
                 } else if (label.compare("Boundary mesh size") == 0) {
-                    res->setBoundaryMeshSize(strToBound(value));
+                    boundaryMeshSize_ = strToBound(value);
                 } else if (label.compare("End of mesher options")==0) {
                     finished = true;
                 }
@@ -1333,7 +1339,7 @@ ParserGiD::strToMultiportType(string str) const {
     }
 }
 
-pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) const {
+pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) {
     UInt begin = value.find_first_of("{");
     UInt end = value.find_last_of("}");
     string aux = value.substr(begin+1,end-1);
