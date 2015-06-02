@@ -543,7 +543,7 @@ template<Int D>
 void Grid<D>::enlarge(const pair<CVecRD, CVecRD>& pad,
         const pair<CVecRD, CVecRD>& sizes) {
     for (Int d = 0; d < D; d++) {
-        for (Int b = 0; b < 1; b++) {
+        for (Int b = 0; b < 2; b++) {
             if (b == 0) {
                 enlargeBound(CartesianAxis(d), CartesianBound(b),
                         pad.first(d), sizes.first(d));
@@ -559,15 +559,27 @@ template<Int D>
 void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
         Real pad, Real siz) {
     assert(getNumCells()(d) > 0);
+    if (pad == 0.0) {
+        return;
+    }
     if (siz == 0.0) {
         siz = getStep(d,0);
     }
-    const Int nCells = ceil(abs(pad) / abs(siz));
-    vector<Real> newPos(nCells, siz);
+    const Int nCells = ceil(pad / abs(siz));
+    vector<Real> newPos(nCells);
     if (b == L) {
-        pos_[d] = newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
+        newPos[nCells-1] = pos_[d].front() - siz;
+        for (Int i = nCells-2; i >= 0 ; i--) {
+            newPos[i] = newPos[i+1] - siz;
+        }
+        newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
+        pos_[d] = newPos;
     } else {
-        pos_[d] = pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
+        newPos[0] = pos_[d].back() + siz;
+        for (Int i = 1; i < nCells; i++) {
+            newPos[i] = newPos[i-1] + siz;
+        }
+        pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
     }
 }
 
