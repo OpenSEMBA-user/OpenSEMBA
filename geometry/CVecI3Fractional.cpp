@@ -107,7 +107,6 @@ CVecR3 CVecI3Fractional::getScalePos(const CVecI3 origin) const {
     return retPos;
 }
 
-
 string CVecI3Fractional::toStr() const {
     return CVecI3::toStr() + " len: " + len_.toStr();
 }
@@ -131,20 +130,20 @@ CVecR3 CVecI3Fractional::getRelativePosNearestNode() const {
     return nearestPos;
 }
 
-
-void CVecI3Fractional::joinGeom(CVecI3Fractional& rhs) {
+void CVecI3Fractional::join(CVecI3Fractional& rhs) {
     for(UInt dir=0; dir<3; ++dir){
         if(MathUtils::equal(len_(dir),0.0)){
             rhs.len_(dir) = 0.0;
         }else if(MathUtils::equal(rhs.len_(dir),0.0)){
             len_(dir) = 0.0;
         }else{
-            rhs.len_(dir) = 0.0;
+           len_(dir) = rhs.len_(dir);
         }
     }
 }
 
 void CVecI3Fractional::reduceTopology() {
+    {
     CVecR3 posNode = getRelativePosNearestNode();
     CVecR3 dst =  (posNode - len_).abs();
     Real dstMin = dst[0];
@@ -158,7 +157,9 @@ void CVecI3Fractional::reduceTopology() {
         }
     }
     len_[minDir] = posNode[minDir];
+    }{
     reduceCoords();
+    }
 }
 
 void CVecI3Fractional::reduceCoords() {
