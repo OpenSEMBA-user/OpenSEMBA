@@ -56,15 +56,6 @@ private:
             const GroupPhysicalModels<>* mat,
             const GroupEMSources<>* src = NULL,
             const GroupOutRqs<>* oRq = NULL);
-//    void writeMeshWithIds(
-//            const vector<vector<ElementId> >& ids,
-//            string& name);
-//    void writeMeshWithIds(
-//            const vector<vector<ElementId> >& ids,
-//            const vector<string>& name);
-//    void writeMeshWithIds(
-//            const vector<ElementId>& ids, string& name);
-//    void writeOutputRequestsMesh();
     void writeBoundaries(const BoxR3 box, const OptionsMesher* opts);
     void writeElements(
             const GroupElements<const ElemR>& entities,
@@ -74,8 +65,7 @@ private:
     static string makeValid(string name);
     void beginCoordinates() const;
     void writeGaussPoints() const;
-    void writeCoordinates(const UInt id, const CVecR3 pos) const;
-    void writeCoordinates(const vector<CVecR3>& pos);
+    void writeCoordinates(CoordR3Group& pos);
     void endCoordinates() const;
     void beginElements() const;
     void writeElement(Int elemId, int nId[]) const;
