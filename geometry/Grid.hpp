@@ -565,15 +565,18 @@ void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
     if (siz == 0.0) {
         siz = getStep(d,0);
     }
-    const Int nCells = ceil(pad / abs(siz));
+    Int nCells = (Int) MathUtils::ceil(pad / abs(siz), (Real) 0.01);
     vector<Real> newPos(nCells);
     if (b == L) {
         newPos[nCells-1] = pos_[d].front() - siz;
+        Real originDisplacement = siz;
         for (Int i = nCells-2; i >= 0 ; i--) {
             newPos[i] = newPos[i+1] - siz;
+            originDisplacement += siz;
         }
         newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
         pos_[d] = newPos;
+        origin_(d) -= originDisplacement;
     } else {
         newPos[0] = pos_[d].back() + siz;
         for (Int i = 1; i < nCells; i++) {

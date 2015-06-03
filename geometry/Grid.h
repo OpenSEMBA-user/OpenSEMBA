@@ -17,6 +17,7 @@ using namespace std;
 
 #include "Box.h"
 #include "base/class/ClassBase.h"
+#include "math/RealUtils.h"
 #include "CVecI3Fractional.h"
 
 template<class T, Int D> class Box;
