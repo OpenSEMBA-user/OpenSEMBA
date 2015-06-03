@@ -55,7 +55,7 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
                 const MatId matId = (*mat)(j)->getId();
                 const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
                 GroupElements<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
-                writeFile_(elem, name, outFile, part);
+                writeFile_(elem, makeValid_(name), outFile, part);
             }
         }
     } else {
@@ -63,7 +63,7 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
             const LayerId layId = lay(i)->getId();
             GroupElements<const ElemR> elem = mesh->elems().getGroupWith(layId);
             const string name = preName + lay(i)->getName();
-            writeFile_(elem, name, outFile, part);
+            writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
     // Writes EM Sources.
@@ -73,7 +73,7 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
             const string name = preName + "EMSource_" + src->getName();
             GroupElements<const ElemR> elem =
                     mesh->elems().getGroupWith(src->elems().getIds());
-            writeFile_(elem, name, outFile, part);
+            writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
     // Writes output requests.
@@ -83,7 +83,7 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
             const string name = preName + "OutRq_" + oRq->getName();
             GroupElements<const ElemR> elem =
                     mesh->elems().getGroupWith(oRq->elems().getIds());
-            writeFile_(elem, name, outFile, part);
+            writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
     outFile << "  " << "</Collection>" << endl;
@@ -216,4 +216,10 @@ void ExporterVTK::writeCells_(ofstream &outFile,
     outFile << endl;
     outFile << "        " << "</DataArray>" << endl;
     outFile << "      " << "</Cells>" << endl;
+}
+
+string ExporterVTK::makeValid_(const string& allocator) {
+    string res = allocator;
+    std::replace(res.begin(), res.end(), '/', '_');
+    return res;
 }

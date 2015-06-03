@@ -10,6 +10,8 @@
 
 #include <fstream>
 #include <utility>
+#include <algorithm>
+
 using namespace std;
 
 #include "exporter/Exporter.h"
@@ -59,6 +61,8 @@ private:
     void writeCells_(ofstream& outFile,
                      const GroupElements<const ElemR>& elems,
                      const map<CoordinateId, UInt>& mapCoords);
+
+    static string makeValid_(const string&);
 
 };
 
