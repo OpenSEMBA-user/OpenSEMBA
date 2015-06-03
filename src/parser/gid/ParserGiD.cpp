@@ -1532,8 +1532,7 @@ OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
     } else if (str.compare("None")==0) {
         return OptionsMesher::none;
     } else {
-        cerr << endl << "ERROR @ Parser: ";
-        cerr << endl << "Unreckognized label: " << str<< endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
         return OptionsMesher::none;
     }
 }
@@ -1549,8 +1548,7 @@ OptionsMesher::Mode ParserGiD::strToMesherMode(string str) const {
     } else if (str.compare("Conformal")==0) {
         return OptionsMesher::conformal;
     } else {
-        cerr << endl << "ERROR @ Parser: ";
-        cerr << endl << "Unreckognized label: " << str<< endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str<< endl;
         return OptionsMesher::structured;
     }
 }
