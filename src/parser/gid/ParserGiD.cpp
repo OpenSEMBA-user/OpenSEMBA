@@ -1546,6 +1546,8 @@ OptionsMesher::Mode ParserGiD::strToMesherMode(string str) const {
         return OptionsMesher::relaxed;
     } else if (str.compare("Slanted")==0) {
         return OptionsMesher::slanted;
+    } else if (str.compare("Conformal")==0) {
+        return OptionsMesher::conformal;
     } else {
         cerr << endl << "ERROR @ Parser: ";
         cerr << endl << "Unreckognized label: " << str<< endl;
