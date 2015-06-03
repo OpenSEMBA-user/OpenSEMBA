@@ -219,8 +219,10 @@ ParserGiD::readMesherOptions() {
     }
 
     if (paddingByNumberOfCells) {
-        boundaryPadding_.first = boundaryPadding_.first * boundaryMeshSize_.first;
-        boundaryPadding_.second = boundaryPadding_.second * boundaryMeshSize_.second;
+        boundaryPadding_.first =
+                boundaryPadding_.first * boundaryMeshSize_.first;
+        boundaryPadding_.second =
+                boundaryPadding_.second * boundaryMeshSize_.second;
     }
 
     return res;
