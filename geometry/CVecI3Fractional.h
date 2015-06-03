@@ -39,6 +39,8 @@ public:
     CVecR3 getRelativePosNearestNode () const;
     void reduceCoords();
     void reduceTopology();
+    void reduceTopology(const UInt range);
+
     void join(CVecI3Fractional& rhs);
     CVecI3Fractional& move(
             CVecI3Fractional& rhs,

@@ -162,6 +162,17 @@ void CVecI3Fractional::reduceTopology() {
     }
 }
 
+void CVecI3Fractional::reduceTopology(const UInt range){
+
+    UInt rangeLoc = getRangeBase();
+    UInt n = 0;
+    while(rangeLoc>range && rangeLoc>0 && n <3){
+        reduceTopology();
+        rangeLoc = getRangeBase();
+        ++n;
+    }
+}
+
 void CVecI3Fractional::reduceCoords() {
     for(UInt dir=0; dir<3; ++dir){
         if(len_(dir)>=1.0){
