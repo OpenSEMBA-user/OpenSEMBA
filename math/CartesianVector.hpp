@@ -382,6 +382,18 @@ inline Real CartesianVector<T,D>::norm() const {
     return sqrt(sum);
 }
 
+
+template <class T, Int D>
+CartesianVector<T,D>& CartesianVector<T,D>::cyclicPermutation(const Int n) {
+    CartesianVector<T,D> valAux(0.0);
+    for (Int i = 0; i < D; i++) {
+        valAux.val[(i+n)%D] = val[i];
+    }
+    *this=valAux;
+
+    return *this;
+}
+
 template <class T, Int D> inline
 CartesianVector<T,D>& CartesianVector<T,D>::abs() {
     for (Int i = 0; i < D; i++) {

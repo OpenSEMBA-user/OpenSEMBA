@@ -16,7 +16,7 @@ public:
     Linel(const CVecI3& pos, const CartesianDirection& dir);
     virtual ~Linel();
 
-    bool isInto (const CVecI3Fractional& coordIntFractional_);
+    bool isInto (const CVecI3Fractional& coordIntFractional_)const;
 
     bool operator==(const Linel& rhs) const;
     bool operator<(const Linel& rhs) const;

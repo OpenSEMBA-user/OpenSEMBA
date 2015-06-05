@@ -14,7 +14,7 @@ Linel::Linel() {
 Linel::~Linel() {
 }
 
-bool Linel::isInto (const CVecI3Fractional& fracPos){
+bool Linel::isInto (const CVecI3Fractional& fracPos)const{
     CVecR3 pos = fracPos.getScalePos();
     for(UInt n=0; n<3; n++){
         if(n==(UInt)(dirId_-1)){

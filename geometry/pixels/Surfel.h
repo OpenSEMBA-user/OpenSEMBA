@@ -11,6 +11,7 @@
 #include "Linel.h"
 
 typedef array<Linel,4> SurfelLinels;
+typedef array<Pixel,4> SurfelPixels;
 
 class Surfel: public Pixel {
 public:
@@ -20,7 +21,7 @@ public:
 
     virtual ~Surfel(){};
 
-    bool isInto (const CVecI3Frac& intFractional);
+    bool isInto (const CVecI3Frac& intFractional)const;
 
     bool operator==(const Surfel& rhs) const;
     bool operator<(const Surfel& rhs) const;
@@ -31,6 +32,7 @@ public:
 
     SurfelLinels getLinels() const;
     Linel getLinel(const UInt side) const;
+    SurfelPixels getPixels() const;
 
     string toStr() const;
     friend std::ostream& operator<<(ostream& os, const Surfel& vec) {

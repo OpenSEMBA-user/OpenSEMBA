@@ -7,7 +7,7 @@
 
 #include "Surfel.h"
 
-bool Surfel::isInto (const CVecI3Frac& coordIntFractional_){
+bool Surfel::isInto (const CVecI3Frac& coordIntFractional_)const{
     CVecR3 pos_ = coordIntFractional_.getScalePos();
     for(UInt n=0; n<3; n++){
         if(n==(UInt)(normId_-1)){
@@ -53,8 +53,25 @@ Linel Surfel::getLinel(const UInt s) const {
     } else if (s == 3) {
         pos((norm+1)%3)++;
     }
-    UInt dir = (norm + (s%2) + 1) % 3;
+    UInt dir = (normId_ + (s%2)) % 3;
     return Linel(pos, CartesianDirection(dir+1));
+}
+
+
+SurfelPixels Surfel::getPixels() const{
+    SurfelPixels ret;
+    UInt counter = 0;
+    for(UInt n=0; n<2; ++n){
+        for(UInt m=0; m<2; ++m){
+            CVecI3 offset;
+            offset(getNormId()-1)    = 0;
+            offset((getNormId())%3)  = n;
+            offset((getNormId()+1)%3)= m;
+            ret[counter] = (CVecI3)*this +offset;
+            ++counter;
+        }
+    }
+    return ret;
 }
 
 bool Surfel::operator<(const Surfel& rhs) const {
