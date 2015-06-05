@@ -540,47 +540,51 @@ void Grid<D>::applyScalingFactor(const Real factor) {
 }
 
 template<Int D>
-void Grid<D>::enlarge(const pair<CVecID, CVecID>& additionalCells,
-        const pair<CVecRD, CVecRD>& sizesOfNewCells) {
-    // TODO
-    //    const vector<Real> pos = grid.getPos(dir);
-    //    const vector<Real> step = grid.getStep(dir);
-    //    if ((padding.first(dir) != 0.0 && finalSize.first(dir) == 0.0)
-    //            || (padding.second(dir) != 0.0 && finalSize.second(dir) == 0.0)) {
-    //        cerr << endl << "WARNING @ writeRectilinearSpaceStep: "
-    //                << "Boundary final size can not be 0.0. "
-    //                << "Defaulting to first step size." << endl;
-    //    }
-    //    if (finalSize.first(dir) == 0.0) {
-    //        finalSize.first(dir) = *step.begin();
-    //    }
-    //    if (finalSize.second(dir) == 0.0) {
-    //        finalSize.second(dir) = step.back();
-    //    }
-    //    const Int nCellsLowest
-    //    = abs(padding.first(dir)) / abs(finalSize.first(dir));
-    //    const Int nCellsHighest
-    //    = abs(padding.second(dir)) / abs(finalSize.second(dir));
-    //    // Writes data.
-    //    SmbData::SpaceSteps* res = &nfde.spacesteps[dir];
-    //    res->m = - nCellsLowest;
-    //    res->n = grid.getNumCells()(dir) + nCellsLowest + nCellsHighest;
-    //    res->d.resize(res->n);
-    //    for (Int i = 0; i < nCellsLowest; i++) {
-    //        res->d[i] = finalSize.first(dir);
-    //    }
-    //    for (Int i = 0; i < (grid.getNumCells()(dir)); i++) {
-    //        res->d[i + nCellsLowest] = step[i];
-    //    }
-    //    for (Int i = 0; i < nCellsHighest; i++) {
-    //        res->d[i + nCellsLowest + grid.getNumCells()(dir)]
-    //               = finalSize.second(dir);
-    //    }
-    //    res->origin = grid.getOrigin()(dir);
-    //    res->cons = false;
-    //}
+void Grid<D>::enlarge(const pair<CVecRD, CVecRD>& pad,
+        const pair<CVecRD, CVecRD>& sizes) {
+    for (Int d = 0; d < D; d++) {
+        for (Int b = 0; b < 2; b++) {
+            if (b == 0) {
+                enlargeBound(CartesianAxis(d), CartesianBound(b),
+                        pad.first(d), sizes.first(d));
+            } else {
+                enlargeBound(CartesianAxis(d), CartesianBound(b),
+                        pad.second(d), sizes.second(d));
+            }
+        }
+    }
 }
 
+template<Int D>
+void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
+        Real pad, Real siz) {
+    assert(getNumCells()(d) > 0);
+    if (pad == 0.0) {
+        return;
+    }
+    if (siz == 0.0) {
+        siz = getStep(d,0);
+    }
+    Int nCells = (Int) MathUtils::ceil(pad / abs(siz), (Real) 0.01);
+    vector<Real> newPos(nCells);
+    if (b == L) {
+        newPos[nCells-1] = pos_[d].front() - siz;
+        Real originDisplacement = siz;
+        for (Int i = nCells-2; i >= 0 ; i--) {
+            newPos[i] = newPos[i+1] - siz;
+            originDisplacement += siz;
+        }
+        newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
+        pos_[d] = newPos;
+        origin_(d) -= originDisplacement;
+    } else {
+        newPos[0] = pos_[d].back() + siz;
+        for (Int i = 1; i < nCells; i++) {
+            newPos[i] = newPos[i-1] + siz;
+        }
+        pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
+    }
+}
 
 template<Int D>
 void Grid<D>::printInfo() const {

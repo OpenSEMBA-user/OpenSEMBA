@@ -89,13 +89,6 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
     return *this;
 }
 
-void SmbData::applyGeometricScalingFactor() {
-
-    mesh->applyScalingFactor(mesherOptions->getScalingFactor());
-    mesherOptions->applyGeometricScalingFactor(mesherOptions->getScalingFactor());
-    mesherOptions->setScalingFactor((Real) 1.0);
-}
-
 void SmbData::printInfo() const {
     cout << " --- SEMBA data --- " << endl;
     if (mesh != NULL) {

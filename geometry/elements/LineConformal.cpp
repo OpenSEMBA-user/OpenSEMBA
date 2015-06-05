@@ -88,11 +88,13 @@ ElemR* LineConformal::toUnstructured(const GroupCoordinates<CoordR3>& cG,
         }
         coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
-            throw typename Element<Int>::ErrorCoordNotFound(coordId);
+//            throw typename Element<Int>::ErrorCoordNotFound(coordId); PROBLEMS IN RHEL
+            throw Element<Int>::ErrorCoordNotFound(coordId);
         }
         coord[i] = cG.get(coordId);
         if (coord[i]->pos() != pos) {
-            throw typename Element<Int>::ErrorCoordNotCoincident(coordId);
+//            throw typename Element<Int>::ErrorCoordNotCoincident(coordId); PROBLEMS IN RHEL
+            throw Element<Int>::ErrorCoordNotCoincident(coordId);
         }
     }
     return new LinR2(this->getId(),

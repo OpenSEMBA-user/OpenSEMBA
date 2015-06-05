@@ -43,6 +43,15 @@ bool MathUtils::greaterEqual(const Real lhs, const Real rhs,
     return !lower(lhs, rhs, rel, tol);
 }
 
+Real MathUtils::ceil(const Real val, const Real rel) {
+    Real low = floor(val);
+    if (val <= (low + rel)) {
+        return low;
+    } else {
+        return std::ceil(val);
+    }
+}
+
 Real MathUtils::round(Real v) {
     Real dist = v - floor(v);
     if (greaterEqual(dist, 0.5)) {

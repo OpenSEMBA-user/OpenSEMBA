@@ -24,6 +24,7 @@ namespace MathUtils {
     bool greaterEqual(const Real lhs, const Real rhs,
                       Real rel = 0.0, const Real tol = tolerance);
 
+    Real ceil(const Real v, Real rel = 0.0);
     Real round(Real v);
 }
 

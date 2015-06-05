@@ -17,6 +17,7 @@ using namespace std;
 
 #include "Box.h"
 #include "base/class/ClassBase.h"
+#include "math/RealUtils.h"
 #include "CVecI3Fractional.h"
 
 template<class T, Int D> class Box;
@@ -140,8 +141,11 @@ public:
                    const Real  tol = tolerance) const { return pos; }
 
     void applyScalingFactor(const Real factor);
-    void enlarge(const pair<CVecID,CVecID>& additionalCells,
+    void enlarge(const pair<CVecRD,CVecRD>& additionalCells,
                  const pair<CVecRD,CVecRD>& sizesOfNewCells);
+    void enlargeBound(
+            CartesianAxis d, CartesianBound b,
+            Real pad, Real siz);
 
     void printInfo() const;
 private:
