@@ -7,16 +7,14 @@
 
 #include "Surfel.h"
 
-bool Surfel::isInto (const CVecI3Frac& coordIntFractional_)const{
-    CVecR3 pos_ = coordIntFractional_.getScalePos();
+bool Surfel::isInto (const CVecI3Frac& coordIntFractional)const{
+    CVecR3 pos = coordIntFractional.getScalePos(*this);
     for(UInt n=0; n<3; n++){
         if(n==(UInt)(normId_-1)){
-            if(MathUtils::notEqual(
-                    pos_.val[n],(Real)coordIntFractional_.val[n])){
+            if(!MathUtils::equal(pos(n),0.0)){
                 return false;
             }
-        }else if ( pos_.val[n]<(Real)coordIntFractional_.val[n] ||
-                pos_.val[n]>((Real)coordIntFractional_.val[n]+1.0) ){
+        }else if ( pos(n)<0.0 || pos(n)>1.0 ){
             return false;
         }
     }

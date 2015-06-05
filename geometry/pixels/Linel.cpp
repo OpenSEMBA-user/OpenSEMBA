@@ -15,14 +15,13 @@ Linel::~Linel() {
 }
 
 bool Linel::isInto (const CVecI3Fractional& fracPos)const{
-    CVecR3 pos = fracPos.getScalePos();
+    CVecR3 pos = fracPos.getScalePos(*this);
     for(UInt n=0; n<3; n++){
         if(n==(UInt)(dirId_-1)){
-            if ( pos.val[n]<(Real)fracPos[n] ||
-                    pos.val[n]>((Real)fracPos[n]+1.0) ){
+            if (pos(n)<0.0 || pos(n)>1.0 ){
                 return false;
             }
-        }else if(MathUtils::notEqual(pos.val[n],(Real)fracPos[n])){
+        }else if (MathUtils::equal(pos(n),0.0)){
             return false;
         }
     }
