@@ -46,7 +46,7 @@ ParserGiD::read() {
     if (!checkVersionCompatibility(readVersion())) {
         cerr << endl << "ERROR @ ParserGiD: "
                 << "File version is not supported. " << endl;
-        return NULL;
+        exit(-1);
     }
     SmbData* res = new SmbData();
     res->setFilename(getFilename());

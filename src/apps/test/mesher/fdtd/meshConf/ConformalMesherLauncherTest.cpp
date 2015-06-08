@@ -65,6 +65,7 @@ TEST_P(ConformalMesherLauncherTest, Structured_1MCell){
     UInt nCells = 100;
     // Runs meshConf.
     OptionsMesher* opts = new OptionsMesher();
+    opts->setMode(OptionsMesher::structured);
     runConformalMesher(project, nCells, opts, "_structured");
 //    // Runs ugrMesher.
 //    const string file = stlFolder_ + project;
