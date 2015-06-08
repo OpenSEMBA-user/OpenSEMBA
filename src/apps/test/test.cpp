@@ -10,15 +10,15 @@ GTEST_API_ int main(int argc, char **argv) {
   string tests;
 
 //  tests += "*ProjectFile*:";
-  tests += "*Math*:";
-  tests += "*Geometry*:";
+//  tests += "*Math*:";
+//  tests += "*Geometry*:";
 //  tests += "*ParserSTL*:";
-  tests += "*Mesher*:";
-//  tests += "*ConformalMesherLauncherTest*:";
+//  tests += "*Mesher*:";
 //  tests += "*EMSource*:";
 //  tests += "*ParserGid*:";
-//  tests += "*AdapterFDTDTest.OpenFOAMConversion*:";
-//  tests += "*AdapterFDTDTest.UGRMesherConversion*:";
+//  tests += "*AdapterFDTDTest*:";
+  tests += "*ConformalMesherLauncherTest*:";
+
 
   ::testing::GTEST_FLAG(filter) = tests.c_str();
 
