@@ -25,7 +25,6 @@ else
 	OUT = test
 endif
 # =============================================================================
-DEFINES += compileWithstaircase
 # -------------------- Paths to directories -----------------------------------
 DIR = $(SRC_COMMON_DIR)
 

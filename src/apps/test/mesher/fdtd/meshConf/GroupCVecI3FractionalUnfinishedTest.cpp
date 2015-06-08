@@ -30,7 +30,7 @@ TEST_F(MesherGroupCVecI3UnfinishedTest, BasicOperations){
 
     // Group add to itself remains equal.
     GroupCVecI3FracU added;
-    EXPECT_EQ(added.add(group), group);
+    EXPECT_EQ(added.add(group).size(), group.size());
 }
 
 TEST_F(MesherGroupCVecI3UnfinishedTest, GetVoxels) {
