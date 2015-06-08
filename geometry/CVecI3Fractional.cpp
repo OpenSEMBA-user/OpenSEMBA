@@ -142,14 +142,14 @@ void CVecI3Fractional::join(CVecI3Fractional& rhs) {
     }
 }
 
-void CVecI3Fractional::reduceTopology() {
+CVecI3Fractional& CVecI3Fractional::reduceTopology() {
     {
     CVecR3 posNode = getRelativePosNearestNode();
     CVecR3 dst =  (posNode - len_).abs();
     Real dstMin = dst[0];
     UInt minDir = 0;
     for(UInt dir=1; dir<3; ++dir){
-        if(len_[dir] !=0.0){
+        if(!MathUtils::equal(len_(dir), 0.0)){
             if(dstMin>dst[dir]){
                 dstMin = dst[dir];
                 minDir = dir;
@@ -160,9 +160,10 @@ void CVecI3Fractional::reduceTopology() {
     }{
     reduceCoords();
     }
+    return *this;
 }
 
-void CVecI3Fractional::reduceTopology(const UInt range){
+CVecI3Fractional& CVecI3Fractional::reduceTopology(const UInt range){
 
     UInt rangeLoc = getRangeBase();
     UInt n = 0;
@@ -171,20 +172,23 @@ void CVecI3Fractional::reduceTopology(const UInt range){
         rangeLoc = getRangeBase();
         ++n;
     }
+    return *this;
 }
 
-void CVecI3Fractional::reduceCoords() {
+CVecI3Fractional& CVecI3Fractional::reduceCoords() {
     for(UInt dir=0; dir<3; ++dir){
-        if(len_(dir)>=1.0){
-            len_(dir)= len_(dir)-1.0;
-            ++val[dir];
-        }else if (len_(dir)<0.0){
-            len_(dir) = 1.0 + len_(dir);
-            --val[dir];
+        if(len_(dir)>=(1.0-MathUtils::tolerance)){
+            len_(dir)= 0.0;
+            val[dir]++;
+        }else if (len_(dir)<-MathUtils::tolerance){
+            len_(dir) = 0.0;
+            val[dir]--;
         }else if (len_(dir) < MathUtils::tolerance){
             len_(dir)=0.0;
         }
     }
+
+    return *this;
 }
 
 CVecI3Fractional& CVecI3Fractional::CVecI3Fractional::move(

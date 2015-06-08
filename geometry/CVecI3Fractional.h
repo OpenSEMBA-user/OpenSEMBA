@@ -37,9 +37,9 @@ public:
 
     CVecR3 meanRelativePoint (const CVecI3Fractional& rhs) const;
     CVecR3 getRelativePosNearestNode () const;
-    void reduceCoords();
-    void reduceTopology();
-    void reduceTopology(const UInt range);
+    CVecI3Fractional& reduceCoords();
+    CVecI3Fractional& reduceTopology();
+    CVecI3Fractional& reduceTopology(const UInt range);
 
     void join(CVecI3Fractional& rhs);
     CVecI3Fractional& move(

@@ -21,7 +21,7 @@ bool Linel::isInto (const CVecI3Fractional& fracPos)const{
             if (pos(n)<0.0 || pos(n)>1.0 ){
                 return false;
             }
-        }else if (MathUtils::equal(pos(n),0.0)){
+        }else if (!MathUtils::equal(pos(n),0.0)){
             return false;
         }
     }
