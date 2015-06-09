@@ -251,8 +251,8 @@ void MeshUnstructured::applyScalingFactor(const Real factor) {
 
 void MeshUnstructured::printInfo() const {
     cout << " --- Mesh unstructured Info --- " << endl;
-    GroupCoordinates<CoordR3>::printInfo();
-    GroupElements<ElemR>::printInfo();
+    cout << "Number of coordinates: " << GroupCoordinates<CoordR3>::size() << endl;
+    cout << "Number of elements: " << GroupElements<ElemR>::size() << endl;
     GroupLayers<>::printInfo();
 }
 

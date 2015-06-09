@@ -91,15 +91,23 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
 
 void SmbData::printInfo() const {
     cout << " --- SEMBA data --- " << endl;
+    if (grid != NULL) {
+        grid->printInfo();
+    }
     if (mesh != NULL) {
         mesh->printInfo();
     } else {
         cout << "No info about mesh." << endl;
     }
+    if (mesherOptions != NULL) {
+        mesherOptions->printInfo();
+    } else {
+        cout << "No info about mesher options." << endl;
+    }
     if (solverOptions != NULL) {
         solverOptions->printInfo();
     } else {
-        cout << "No info about global data." << endl;
+        cout << "No info about solver options." << endl;
     }
     if (pMGroup != NULL) {
         pMGroup->printInfo();
@@ -115,11 +123,6 @@ void SmbData::printInfo() const {
         outputRequests->printInfo();
     } else {
         cout << "No info about output requests." << endl;
-    }
-    if (mesherOptions != NULL) {
-        mesherOptions->printInfo();
-    } else {
-        cout << "No info about mesher options." << endl;
     }
 }
 

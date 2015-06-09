@@ -95,8 +95,8 @@ MeshUnstructured* MeshStructured::getMeshUnstructured() const {
 void MeshStructured::printInfo() const {
     cout << " --- Mesh structured info --- " << endl;
     Grid3::printInfo();
-    GroupCoordinates<CoordI3>::printInfo();
-    GroupElements<ElemI>::printInfo();
+    cout << "Number of coordinates: " << coords().size() << endl;
+    cout << "Number of elements: " << elems().size() << endl;
     GroupLayers<>::printInfo();
 }
 
