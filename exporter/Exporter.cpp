@@ -80,3 +80,50 @@ string Exporter::getOutputfilename() const {
     string output = getOutputName();
     return folder + output;
 }
+
+
+GroupElements<ElemR> Exporter::getBoundary(
+        const CartesianAxis dir,
+        const CartesianBound pos,
+        CoordR3Group& cG,
+        const Grid3* grid,
+        const Mesh* mesh,
+        const OptionsMesher* opts) const {
+    BoxR3 box;
+    if (grid != NULL) {
+        box = grid->getFullDomainBoundingBox();
+    } else {
+        box = mesh->getBoundingBox();
+    }
+    OptionsMesher::BoundType bound = opts->getBoundTermination(dir,pos);
+    GroupElements<ElemR> elem;
+    if (bound != OptionsMesher::pml) {
+        BoxR3 quadBox = box.getBoundAsBox(dir,pos);
+        elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
+        assert(elem.size() != 0);
+    }
+    return elem;
+}
+
+string Exporter::getBoundaryName(
+        const OptionsMesher* opts,
+        const UInt i,
+        const UInt j) {
+    OptionsMesher::BoundType boundType = opts->getBoundTermination(i, j);
+    const string boundName = OptionsMesher::toStr(boundType);
+    stringstream name;
+    name << boundName + "@Boundary" << i << j;
+    return name.str();
+}
+
+GroupElements<ElemR> Exporter::getGridElems(
+        CoordR3Group& cG,
+        const Grid3* grid) const {
+    if (grid == NULL) {
+        return GroupElements<ElemR>();
+    }
+    GroupElements<ElemR> elem;
+    BoxR3 box = grid->getFullDomainBoundingBox();
+    elem.add(new HexR8(cG, ElementId(0), box), true);
+    return elem;
+}
