@@ -26,9 +26,9 @@ PMVolumeDispersive::PMVolumeDispersive(
  const Real magnCond) : PMVolume(id, name, rEps, rMu) {
 	// Adds conductivity as a permittivity pole.
 	if (elecCond != 0.0) {
-		pole_.push_back(0.0);
-		complex<Real> elecCondResidual(elecCond/Real(2.0)/Constants::eps0, 0);
-		residue_.push_back(elecCondResidual);
+		complex<Real> pole(0.0);
+		complex<Real> residue(elecCond/Real(2.0)/Constants::eps0, 0);
+		poleResidue_.push_back(PoleResidue(pole,residue));
 	}
 	//
 	if (magnCond != 0.0) {
@@ -42,16 +42,13 @@ PMVolumeDispersive::PMVolumeDispersive(
  const Real rEps,
  const Real rMu,
  const Real elecCond,
- const vector<complex<Real> >& pole,
- const vector<complex<Real> >& residue,
- const vector<complex<Real> >& drudePole,
- const vector<complex<Real> >& drudeResidue)
+ const Real magnCond,
+ const vector<PoleResidue>& poleResidue,
+ const vector<PoleResidue>& drudePoleResidue)
   : PMVolume(id, name, rEps, rMu) {
-	*this = PMVolumeDispersive(id, name, rEps, rMu, elecCond, 0.0);
-	pole_.insert(pole_.end(), pole.begin(), pole.end());
-	residue_.insert(residue_.end(), residue.begin(), residue.end());
-	drudePole_.insert(drudePole_.end(), drudePole.begin(), drudePole.end());
-	drudeResidue_.insert(drudeResidue_.end(), drudeResidue.begin(), drudeResidue.end());
+	*this = PMVolumeDispersive(id, name, rEps, rMu, elecCond, magnCond);
+	poleResidue_ = poleResidue;
+	drudePoleResidue_ = drudePoleResidue;
 }
 
 PMVolumeDispersive::~PMVolumeDispersive() {
@@ -59,28 +56,28 @@ PMVolumeDispersive::~PMVolumeDispersive() {
 }
 
 UInt PMVolumeDispersive::getDrudePoleNumber() const {
-    return drudePole_.size();
+    return drudePoleResidue_.size();
 }
 
 
 UInt PMVolumeDispersive::getPoleNumber() const {
-    return pole_.size();
+    return poleResidue_.size();
 }
 
 complex<Real> PMVolumeDispersive::getPole(UInt p) const {
-    return pole_[p];
+    return poleResidue_[p].first;
 }
 
 complex<Real> PMVolumeDispersive::getResidue(UInt p) const {
-    return residue_[p];
+    return poleResidue_[p].second;
 }
 
 complex<Real> PMVolumeDispersive::getDrudePole(UInt p) const {
-    return drudePole_[p];
+    return drudePoleResidue_[p].first;
 }
 
 complex<Real> PMVolumeDispersive::getDrudeResidue(UInt p) const {
-    return drudeResidue_[p];
+    return drudePoleResidue_[p].second;
 }
 
 bool PMVolumeDispersive::isDispersive() const {
@@ -94,7 +91,10 @@ bool PMVolumeDispersive::isClassic() const {
 
 bool
 PMVolumeDispersive::isSimplyConductive() const {
-    return (pole_.size() <= 1 && std::abs(getPole(0)) == 0);
+    if (!file_.empty()) {
+        return false;
+    }
+    return (poleResidue_.size() <= 1 && std::abs(getPole(0)) == 0);
 }
 
 void
@@ -102,32 +102,33 @@ PMVolumeDispersive::printInfo() const {
 	cout << "--- PMVolumeDispersive info ---" << endl;
 	PMVolume::printInfo();
 	cout << "Type: " << "Dispersive material" << endl;
-	cout << "Number of pole residue pairs: " << pole_.size() << endl;
+	cout << "Number of pole residue pairs: " << poleResidue_.size() << endl;
 	cout << "# " << " re_a " << " im_a " << " re_c " << " im_c " << endl;
-	for (UInt i = 0; i < pole_.size(); i++) {
-		cout << i << " " << pole_[i].real() << " " << pole_[i].imag()
-		 << " " << residue_[i].real()
-		 << " " << residue_[i].imag() << endl;
+	for (UInt i = 0; i < poleResidue_.size(); i++) {
+		cout << i << " " << getPole(i).real() << " " << getPole(i).imag()
+		 << " " << getResidue(i).real()
+		 << " " << getResidue(i).imag() << endl;
 	}
 	cout << "Number of Drude Pole Residue pairs: " <<
 	 getDrudePoleNumber() << endl;
 	cout << "# " << " re_a " << " im_a " << " re_c " << " im_c " << endl;
 	for (UInt i = 0; i < getDrudePoleNumber(); i++) {
-		cout << i << " " << drudePole_[i].real() << " " << drudePole_[i].imag()
-	     << " " << drudeResidue_[i].real()
-	     << " " << drudeResidue_[i].imag() << endl;
+		cout << i << " " << getDrudePole(i).real()
+		        << " " << getDrudePole(i).imag()
+		        << " " << getDrudeResidue(i).real()
+		        << " " << getDrudeResidue(i).imag() << endl;
 	}
 }
 
 Real
 PMVolumeDispersive::getElectricConductivity() const {
-	if (pole_.size() > 1) {
+	if (getPoleNumber() > 1) {
 		cout << endl << "WARNING @ getElectricConductivity: "
 			<< "This material is dispersive and its effective permittivity "
 			<< "depends on several parameters."
 			<< "Returning static limit conductivity." << endl;
 	}
-	for (UInt i = 0; i < pole_.size(); i++) {
+	for (UInt i = 0; i < getPoleNumber(); i++) {
 		if (std::abs(getPole(i)) == 0) {
 			return getResidue(i).real() * 2.0 * Constants::eps0;
 		}
@@ -137,16 +138,25 @@ PMVolumeDispersive::getElectricConductivity() const {
 
 void
 PMVolumeDispersive::addDrudePole(
- const complex<Real>& pole, const complex<Real>& res_) {
-	drudePole_.push_back(pole);
-	drudeResidue_.push_back(res_);
+ const complex<Real>& pole, const complex<Real>& res) {
+	drudePoleResidue_.push_back(PoleResidue(pole, res));
 	return;
 }
 
 void
 PMVolumeDispersive::addPole(
- const complex<Real>& pole, const complex<Real>& res_) {
-	pole_.push_back(pole);
-	residue_.push_back(res_);
+ const complex<Real>& pole, const complex<Real>& res) {
+	poleResidue_.push_back(PoleResidue(pole,res));
 	return;
+}
+
+PMVolumeDispersive::PMVolumeDispersive(
+        const MatId id,
+        const string& name,
+        const ProjectFile& file) : PMVolume(id, name) {
+    file_ = file;
+}
+
+const ProjectFile PMVolumeDispersive::getFile() const {
+    return file_;
 }

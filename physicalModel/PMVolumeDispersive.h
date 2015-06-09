@@ -12,6 +12,8 @@
 
 #include "PMVolume.h"
 
+typedef pair<complex<Real>,complex<Real>> PoleResidue;
+
 class PMVolumeDispersive : public PMVolume {
 public:
     class ErrorMagneticMaterial : public Error {
@@ -20,25 +22,28 @@ public:
         virtual ~ErrorMagneticMaterial() throw();
     };
 
-	PMVolumeDispersive();
-	virtual ~PMVolumeDispersive();
-	PMVolumeDispersive(
-	 const MatId id_,
-	 const string& name_,
-	 const Real rEps,
-	 const Real rMu,
-	 const Real elecCond,
-	 const Real magnCond);
-	PMVolumeDispersive(
-	 const MatId id_,
-	 const string& name_,
-	 const Real rEps,
-	 const Real rMu,
-	 const Real elecCond,
-	 const vector<complex<Real> >& pole,
-	 const vector<complex<Real> >& residue,
-	 const vector<complex<Real> >& drudePole,
-	 const vector<complex<Real> >& drudeResidue);
+    PMVolumeDispersive();
+    virtual ~PMVolumeDispersive();
+    PMVolumeDispersive(
+            const MatId id,
+            const string& name,
+            const Real rEps,
+            const Real rMu,
+            const Real elecCond,
+            const Real magnCond);
+    PMVolumeDispersive(
+            const MatId id,
+            const string& name,
+            const Real rEps,
+            const Real rMu,
+            const Real elecCond,
+            const Real magnCond,
+            const vector<PoleResidue>& poleResidue,
+            const vector<PoleResidue>& drudePoleResidue = vector<PoleResidue>());
+    PMVolumeDispersive(
+            const MatId id,
+            const string& name,
+            const ProjectFile& file);
 
     DEFINE_CLONE(PMVolumeDispersive);
 
@@ -54,20 +59,18 @@ public:
     bool isClassic() const;
     bool isSimplyConductive() const;
 
-	void printInfo() const;
+    void printInfo() const;
+    const ProjectFile getFile() const;
+
 protected:
-   vector<complex<Real> > residue_; // Residues for dispers model. c_p.
-   vector<complex<Real> > pole_; // Poles for dispersive model. a_p.
-   vector<complex<Real> > drudeResidue_; // c_p_D
-   vector<complex<Real> > drudePole_; // Poles for dispersive model. a_p_D.
-	void
-	 addPole(
-	  const complex<Real>& pole_,
-	  const complex<Real>& res_);
-	void
-	 addDrudePole(
-	  const complex<Real>& pole_,
-	  const complex<Real>& res_);
+    vector<PoleResidue> poleResidue_, drudePoleResidue_; // Residues for dispers model. c_p.
+    ProjectFile file_;
+    void addPole(
+            const complex<Real>& pole_,
+            const complex<Real>& res_);
+    void addDrudePole(
+            const complex<Real>& pole_,
+            const complex<Real>& res_);
 };
 
 #endif /* PMVOLUMEDISPERSIVE_H_ */

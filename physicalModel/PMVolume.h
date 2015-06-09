@@ -14,7 +14,7 @@ class PMVolume : public PhysicalModel {
 public:
 	PMVolume(
 	        const MatId id, const string name,
-	        const Real rEps, const Real rMu);
+	        const Real rEps = 1.0, const Real rMu = 1.0);
 	virtual ~PMVolume();
 
 	DEFINE_CLONE(PMVolume);

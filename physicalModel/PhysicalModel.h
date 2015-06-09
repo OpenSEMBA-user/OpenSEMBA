@@ -12,6 +12,7 @@ using namespace std;
 #include "geometry/elements/GroupElements.h"
 #include "math/Constants.h"
 #include "math/CartesianVector.h"
+#include "ProjectFile.h"
 
 #include "base/class/ClassIdBase.h"
 
