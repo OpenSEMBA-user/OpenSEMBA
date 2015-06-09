@@ -1197,7 +1197,7 @@ ParserGiD::readSourceOnLine() {
             for (UInt i = 0; i < nE; i++) {
                 UInt e;
                 f_in >> e;
-                ids.push_back(ElementId(atoi(value.c_str())));
+                ids.push_back(ElementId(e));
             }
         } else if (label.compare("End of Source_on_line")==0) {
             GroupElements<Lin> lines = mesh_->elems().getGroupWith(ids);

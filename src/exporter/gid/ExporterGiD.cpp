@@ -40,14 +40,7 @@ void ExporterGiD::initDefault(
         cerr << endl << "ERROR @ GiDOutput::openFiles() " << endl;
     }
     writeGaussPoints();
-    writeMesh(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
-    BoxR3 box;
-    if (smb->grid != NULL) {
-        box = smb->grid->getFullDomainBoundingBox();
-    } else {
-        box = smb->mesh->getBoundingBox();
-    }
-    writeBoundaries(box, smb->mesherOptions);
+    writeMesh(smb);
 }
 
 ExporterGiD::ExporterGiD(const SmbData* smb, GiD_PostMode mode) :
@@ -88,11 +81,12 @@ void ExporterGiD::writeAllElements(const GroupElements<const ElemR>& elem,
 }
 
 void
-ExporterGiD::writeMesh(
-        const Mesh* inMesh,
-        const GroupPhysicalModels<>* mat,
-        const GroupEMSources<>* srcs,
-        const GroupOutRqs<>* oRqs) {
+ExporterGiD::writeMesh(const SmbData* smb) {
+    const Mesh* inMesh = smb->mesh;
+    const GroupPhysicalModels<>* mat = smb->pMGroup;
+    const GroupEMSources<>* srcs = smb->emSources;
+    const GroupOutRqs<>* oRqs = smb->outputRequests;
+    const Grid3* grid = NULL;
     assert(inMesh != NULL);
     assert(mat != NULL);
     const MeshUnstructured* mesh;
@@ -100,8 +94,10 @@ ExporterGiD::writeMesh(
     if (inMesh->is<MeshStructured>()) {
         mesh = inMesh->castTo<MeshStructured>()->getMeshUnstructured();
         preName = "str_";
+        grid = inMesh->castTo<Grid3>();
     } else {
         mesh = inMesh->cloneTo<MeshUnstructured>();
+        grid = smb->grid;
     }
     // Writes materials.
     GroupLayers<const Layer> lay = mesh->layers();
@@ -134,110 +130,24 @@ ExporterGiD::writeMesh(
             writeAllElements(elem, name);
         }
     }
+    // Writes boundaries.
+    for (UInt i = 0; i < 3; i++) {
+        for (UInt j = 0; j < 2; j++) {
+            CoordR3Group cG;
+            GroupElements<ElemR> bound =
+                    getBoundary(CartesianAxis(i), CartesianBound(j), cG,
+                            grid, mesh, smb->mesherOptions);
+            string name = getBoundaryName(smb->mesherOptions, i, j);
+            writeAllElements(bound, name);
+        }
+    }
+    // Writes grid.
+    CoordR3Group cG;
+    GroupElements<ElemR> gridAux = getGridElems(cG, grid);
+    writeAllElements(gridAux, "Grid");
     //
     GiD_FlushPostFile();
     delete mesh;
-}
-
-//void
-//OutputGiD::writeMeshWithIds(
-//        const vector<vector<ElementId> >& ids,
-//        const vector<string>& name) {
-//    assert(ids.size() == name.size());
-//    const bool isLinear = mesh_->isLinear();
-//    Int nV;
-//    isLinear? nV = 4 : nV = 10;
-//    for (UInt t = 0; t < ids.size(); t++) {
-//        beginMesh(name[t], GiD_3D, GiD_Tetrahedra, nV);
-//        beginCoordinates();
-//        Int tmpCounter = coordCounter_;
-//        static const UInt GiDTetOrder[10] = {0, 4, 7, 9, 1, 5, 2, 3, 6, 8};
-//        for (UInt j = 0; j < ids[t].size(); j++) {
-//            const ElemR* e = mesh_->elems().get(ids[t][j])->castTo<ElemR>();
-//            for (Int i = 0; i < nV; i++) {
-//                CVecR3 pos;
-//                if (isLinear) {
-//                    pos = e->getVertex(i)->pos();
-//                } else {
-//                    pos = e->getV(GiDTetOrder[i])->pos();
-//                }
-//                writeCoordinates(++coordCounter_, pos);
-//            }
-//        }
-//        endCoordinates();
-//        // Writes elements.
-//        beginElements();
-//        int nId[nV];
-//        for (UInt j = 0; j < ids[t].size(); j++) {
-//            for (Int i = 0; i < nV; i++) {
-//                nId[i] = ++tmpCounter;
-//            }
-//            writeElement(++elemCounter_, nId);
-//        }
-//        endElements();
-//        endMesh();
-//    }
-//}
-//
-//void
-//OutputGiD::writeMeshWithIds(
-//        const vector<vector<ElementId> >& ids,
-//        string& name) {
-//    vector<string> names;
-//    for (UInt i = 0; i < ids.size(); i++) {
-//        stringstream ss;
-//        ss << name << " " << i;
-//        names.push_back(ss.str());
-//    }
-//    writeMeshWithIds(ids, names);
-//}
-//
-//void
-//OutputGiD::writeMeshWithIds(
-//        const vector<ElementId>& ids, string& name) {
-//    vector<vector<ElementId> > aux;
-//    aux.push_back(ids);
-//    writeMeshWithIds(aux, name);
-//}
-//
-//void
-//OutputGiD::writeOutputRequestsMesh() {
-//    for (UInt i = 0; i < smb_->outputRequests->size(); i++) {
-//        //        const OutputRequest* outRq = smb_->outputRequests->get(i);
-//        //      bool mshExist = false;
-//        //      for (UInt j = 0; j < result_.size(); j++) {
-//        //         mshExist = result_[i]->hasEquivalentMesh(outRq);
-//        //         if (mshExist) {
-//        //            result_.push_back(new ResultGiD(outRq, *result_[j]));
-//        //         }
-//        //      }
-//        //      if (!mshExist) {
-//        //        result_.push_back(
-//        //                new ResultGiD(outRq, coordCounter_, elemCounter_, dg_, smb_->mesh));
-//        //      }
-//    }
-//}
-
-void ExporterGiD::writeBoundaries(
-        const BoxR3 box,
-        const OptionsMesher* opts) {
-    CoordR3Group cG;
-    for (UInt i = 0; i < 3; i++) {
-        for (UInt j = 0; j < 2; j++) {
-            OptionsMesher::BoundType bound = opts->getBoundTermination(i,j);
-            if (bound != OptionsMesher::pml) {
-                BoxR3 quadBox = box.getBoundAsBox(
-                        CartesianAxis(i),CartesianBound(j));
-                const string boundName = OptionsMesher::toStr(bound);
-                stringstream name;
-                name << boundName + " @ Boundary " << i << " " << j;
-                GroupElements<const ElemR> elem;
-                elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
-                assert(elem.size() != 0);
-                writeAllElements(elem, name.str());
-            }
-        }
-    }
 }
 
 void ExporterGiD::writeElements(
