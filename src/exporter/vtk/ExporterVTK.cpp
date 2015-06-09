@@ -8,21 +8,22 @@
 #include <exporter/vtk/ExporterVTK.h>
 
 ExporterVTK::ExporterVTK(const SmbData* smb,
-                         const string& fn)
+        const string& fn)
 :   Exporter(fn) {
     initDir_(fn);
-    writeMesh_(smb->mesh, smb->pMGroup, smb->emSources, smb->outputRequests);
+    writeMesh_(smb);
 }
 
 ExporterVTK::~ExporterVTK() {
 
 }
 
-void ExporterVTK::writeMesh_(const Mesh* inMesh,
-                             const GroupPhysicalModels<>* mat,
-                             const GroupEMSources<>* srcs,
-                             const GroupOutRqs<>* oRqs) {
-
+void ExporterVTK::writeMesh_(const SmbData* smb) {
+    const Mesh* inMesh = smb->mesh;
+    const GroupPhysicalModels<>* mat = smb->pMGroup;
+    const GroupEMSources<>* srcs = smb->emSources;
+    const GroupOutRqs<>* oRqs = smb->outputRequests;
+    const Grid3* grid = NULL;
     assert(inMesh != NULL);
     assert(mat != NULL);
     const MeshUnstructured* mesh;
@@ -30,8 +31,10 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
     if (inMesh->is<MeshStructured>()) {
         mesh = inMesh->castTo<MeshStructured>()->getMeshUnstructured();
         preName = "str_";
+        grid = inMesh->castTo<Grid3>();
     } else {
         mesh = inMesh->cloneTo<MeshUnstructured>();
+        grid = smb->grid;
     }
 
     string filename = getFilename() + ".pvd";
@@ -86,6 +89,25 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
             writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
+    // Writes boundaries.
+    const OptionsMesher* opts = smb->mesherOptions;
+    if (opts != NULL) {
+        for (UInt i = 0; i < 3; i++) {
+            for (UInt j = 0; j < 2; j++) {
+                CoordR3Group cG;
+                GroupElements<ElemR> bound =
+                        getBoundary(CartesianAxis(i), CartesianBound(j), cG,
+                                grid, mesh, opts);
+                string name = getBoundaryName(opts, i, j);
+                writeFile_(bound, makeValid_(name), outFile, part);
+            }
+        }
+    }
+    // Writes grid.
+    CoordR3Group cG;
+    GroupElements<ElemR> gridAux = getGridElems(cG, grid);
+    writeFile_(gridAux, makeValid_("Grid"), outFile, part);
+    // Closes file.
     outFile << "  " << "</Collection>" << endl;
     outFile << "</VTKFile>" << endl;
 
@@ -93,9 +115,9 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
 }
 
 void ExporterVTK::writeFile_(const GroupElements<const ElemR>& elems,
-                             const string& name,
-                             ofstream& outMain,
-                             UInt& part) {
+        const string& name,
+        ofstream& outMain,
+        UInt& part) {
     if (elems.empty()) {
         return;
     }
@@ -140,7 +162,7 @@ pair<vector<CVecR3>, map<CoordinateId, UInt>> ExporterVTK::getPoints_(
 }
 
 void ExporterVTK::writePoints_(ofstream &outFile,
-                               const vector<CVecR3>& pos) {
+        const vector<CVecR3>& pos) {
     outFile << "      " << "<Points>" << endl;
     outFile << "        " << "<DataArray "
             << "type=\"Float32\" "
@@ -157,8 +179,8 @@ void ExporterVTK::writePoints_(ofstream &outFile,
 }
 
 void ExporterVTK::writeCells_(ofstream &outFile,
-                              const GroupElements<const ElemR>& elems,
-                              const map<CoordinateId, UInt>& mapCoords) {
+        const GroupElements<const ElemR>& elems,
+        const map<CoordinateId, UInt>& mapCoords) {
 
     outFile << "      " << "<Cells>" << endl;
     outFile << "        " << "<DataArray "

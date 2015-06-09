@@ -6,7 +6,6 @@
 #define EXPORTER_GID_EXPORTERGID_H_
 
 #include "exporter/Exporter.h"
-#include "SmbData.h"
 #include "gidpost/gidpost.h"
 
 using namespace std;
@@ -51,12 +50,7 @@ private:
     GiD_FILE meshFile_;
     GiD_FILE resultFile_;
     GiD_PostMode mode_;
-    void writeMesh(
-            const Mesh* inMesh,
-            const GroupPhysicalModels<>* mat,
-            const GroupEMSources<>* src = NULL,
-            const GroupOutRqs<>* oRq = NULL);
-    void writeBoundaries(const BoxR3 box, const OptionsMesher* opts);
+    void writeMesh(const SmbData* smb);
     void writeElements(
             const GroupElements<const ElemR>& entities,
             const string& name,

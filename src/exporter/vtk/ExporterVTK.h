@@ -46,10 +46,7 @@ private:
         VTK_QUADRATIC_TETRA      = 24,
         VTK_QUADRATIC_HEXAHEDRON = 25
     };
-    void writeMesh_(const Mesh* inMesh,
-                    const GroupPhysicalModels<>* mat,
-                    const GroupEMSources<>* src = NULL,
-                    const GroupOutRqs<>* oRq = NULL);
+    void writeMesh_(const SmbData* smb);
     void writeFile_(const GroupElements<const ElemR>& elems,
                     const string& name,
                     ofstream& outMain,
