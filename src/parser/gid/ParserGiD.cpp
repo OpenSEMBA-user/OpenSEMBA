@@ -302,7 +302,7 @@ ParserGiD::readPhysicalModel(const MatId id) {
     string layersStr;
     Real rEps, rMu, eC, mC;
     Real radius, R, L, C;
-    string filename;
+    ProjectFile file;
     while (!f_in.eof()) {
         string label, value;
         getNextLabelAndValue(label, value);
@@ -332,7 +332,7 @@ ParserGiD::readPhysicalModel(const MatId id) {
         } else if (label.compare("SurfaceType")==0) {
             surfType = strToSIBCType(value);
         } else if (label.compare("Filename")==0) {
-            filename = value;
+            file = ProjectFile(getFolder() + trim(value));
         } else if (label.compare("Layers")==0) {
             layersStr = value;
         } else if (label.compare("End of Material")==0) {
@@ -352,11 +352,17 @@ ParserGiD::readPhysicalModel(const MatId id) {
                 }
                 return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
             case PhysicalModel::elecDispersive:
-                return readDispersiveMatFile(id,name);
+                if (!file.canOpen()) {
+                    throw ErrorFileNotExists(file);
+                }
+                return new PMVolumeDispersive(id, name, file);
             case PhysicalModel::isotropicsibc:
                 switch (surfType) {
                 case sibc:
-                    return readIsotropicSurfMatFile(id, name);
+                    if (!file.canOpen()) {
+                        throw ErrorFileNotExists(file);
+                    }
+                    return new PMSurfaceSIBC(id, name, file);
                 case multilayer:
                     return readMultilayerSurf(id, name, layersStr);
                 default:
@@ -747,80 +753,27 @@ void ParserGiD::readLin2Elements(const GroupCoordinates<CoordR3>& v,
 
 PMVolumeDispersive*
 ParserGiD::readDispersiveMatFile(
-        const MatId id_, const string& fileName) const {
-    ifstream matFile;
-    string line, label, value;
-    string name, model;
-    string poles, epsilon, sigma;
-    UInt nPoles, nDrudePoles;
-    Real eps, sig;
-    vector<Int> poleId, drudePoleId;
-    vector<Real> rePK, imPK, reRK, imRK;
-    vector<Real> reDrudePK, imDrudePK, reDrudeRK, imDrudeRK;
-    Int tmpPoleId;
-    Real tmpRePK, tmpImPK, tmpReRK, tmpImRK;
-    // Opens file, read only mode.
-    matFile.open(fileName.c_str(), ifstream::in);
-    if (matFile.fail()) {
-        cerr << endl << "ERROR @ readDispersiveMaterialFile()"
-                << "Problem opening file: " << fileName << endl;
+        const MatId id,
+        const string& name,
+        const ProjectFile& file) const {
+    if (!file.canOpen()) {
+        throw ErrorFileNotExists(file);
     }
-    // Parses first line, containing material name.
-    getline(matFile, line);
-    label = line.substr(line.find("#") + 2, line.find(":") - 2);
-    name  = label.substr(0, label.find(" "));
-    model = label.substr(label.find(" ") + 1, label.length());
-    value = line.substr(line.find(":") + 2, line.length());
-    poles = value.substr(0, value.find("-"));
-    nPoles = atoi(poles.c_str());
-    epsilon = value.substr(value.find("epsInf=") + 7, 8);
-    eps = atof(epsilon.c_str());
-    sigma = value.substr(value.find("Sigma=") + 6, 8);
-    sig = atof(sigma.c_str());
-    // Parses poles.
-    // Stores in line the file line containing headers.
-    getline(matFile, line);
+    ifstream stream;
+    file.openAsInput(stream);
+    Real sig, eps, mu, sigM;
+    stream >> sig >> eps >> mu >> sigM;
+    UInt nPoles, trash;
+    stream >> nPoles >> trash >> trash >> trash;
+    vector<PoleResidue> poleResidues;
     for (UInt i = 0; i < nPoles; i++) {
-        matFile >> tmpPoleId >> tmpRePK >> tmpImPK >> tmpReRK >> tmpImRK;
-        poleId.push_back(tmpPoleId);
-        rePK.push_back(tmpRePK);
-        imPK.push_back(tmpImPK);
-        reRK.push_back(tmpReRK);
-        imRK.push_back(tmpImRK);
+        PoleResidue pR = readPoleResiduePair(stream);
+        poleResidues.push_back(pR);
     }
-    getline(matFile, line);
-    label = line.substr(line.find("#") + 2, line.find(":") - 2);
-    value = line.substr(line.find(":") + 2, line.length());
-    nDrudePoles = atoi(value.c_str());
-    for (UInt i = 0; i < nDrudePoles; i++) {
-        matFile >> tmpPoleId >> tmpRePK >> tmpImPK >> tmpReRK >> tmpImRK;
-        drudePoleId.push_back(tmpPoleId);
-        reDrudePK.push_back(tmpRePK);
-        imDrudePK.push_back(tmpImPK);
-        reDrudeRK.push_back(tmpReRK);
-        imDrudeRK.push_back(tmpImRK);
-    }
-    // Copies all parsed data into the aux material depending on the model.
-    if (!model.compare("Pole-Residue Model")) {
-        vector<complex<Real> > poles, residues, drudePoles, drudeResidues;
-        for (UInt i = 0; i < nPoles; i++) {
-            complex<Real> pole(rePK[i], imPK[i]);
-            poles.push_back(pole);
-            complex<Real> residue(reRK[i]/2.0, imRK[i]/2.0);
-            residues.push_back(residue);
-        }
-        for (UInt i = 0; i < nDrudePoles; i++) {
-            complex<Real> pole(reDrudePK[i], imDrudePK[i]);
-            drudePoles.push_back(pole);
-            complex<Real> residue(reDrudeRK[i]/2.0, imDrudeRK[i]/2.0);
-            drudeResidues.push_back(residue);
-        }
-        return new PMVolumeDispersive(id_, name, eps, 1.0, sig,
-                poles, residues, drudePoles, drudeResidues);
-    }
-    cerr << endl << "ERROR@GiDParser::readDispersiveMaterialFile(...)"
-            << "File contains unknown model." << endl;
-    return NULL;
+    return new PMVolumeDispersive(id, name,
+            eps / Constants::eps0,
+            mu / Constants::mu0,
+            sig, sigM, poleResidues);
 }
 
 PMSurfaceMultilayer*
@@ -852,7 +805,9 @@ ParserGiD::readMultilayerSurf(
 
 PMSurfaceSIBC*
 ParserGiD::readIsotropicSurfMatFile(
-        const MatId id_, const string& fileName) const {
+        const MatId id,
+        const string& fileName,
+        const ProjectFile& file) const {
     ifstream matFile;
     string line, label, value;
     string name, model;
@@ -913,7 +868,7 @@ ParserGiD::readIsotropicSurfMatFile(
         Z.push_back(tmpZ);
     }
     // Copies all parsed data into the aux material depending on the model.
-    return new PMSurfaceSIBC (id_, name, Zinfinite, Zstatic, pole, Z);
+    return new PMSurfaceSIBC (id, name, Zinfinite, Zstatic, pole, Z);
 }
 
 void
@@ -1647,4 +1602,27 @@ ParserGiD::checkVersionCompatibility(const string version) const {
 
 const ProblemSize* ParserGiD::getProblemSize() const {
     return &pSize_;
+}
+
+PoleResidue ParserGiD::readPoleResiduePair(ifstream& stream) {
+    std::string line;
+    getline(stream, line);
+    std::size_t prev = 0, pos;
+    vector<string> wordVector;
+    while ((pos = line.find_first_of(" (,)", prev)) != std::string::npos) {
+        if (pos > prev) {
+            wordVector.push_back(line.substr(prev, pos-prev));
+        }
+        prev = pos+1;
+    }
+    if (prev < line.length()) {
+        wordVector.push_back(line.substr(prev, std::string::npos));
+    }
+    assert(wordVector.size() == 4);
+    PoleResidue res;
+    res.first = complex<Real>(atof(wordVector[0].c_str()),
+            atof(wordVector[1].c_str()));
+    res.second = complex<Real>(atof(wordVector[2].c_str()),
+            atof(wordVector[3].c_str()));
+    return res;
 }
