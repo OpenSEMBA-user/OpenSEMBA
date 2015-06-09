@@ -9,18 +9,27 @@
 
 ParserGiD::ParserGiD() {
     mesh_ = NULL;
+    scalingFactor_ = 1.0;
 }
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-    string null;
-    init(null);
-}
-
-ParserGiD::ParserGiD(const string& fn, const string& pTPath)
-:   ProjectFile(fn) {
-
-    init(pTPath);
+    mesh_ = NULL;
+    scalingFactor_ = 1.0;
+    struct stat st;
+    if (stat(getFilename().c_str(), &st) == 0) {
+        if (st.st_mode & S_IFDIR) {
+            cerr << endl << "ERROR@GiDParser::GiDParser(): "
+                    << getFilename() << "It is a directory " << endl;
+        }  else if(st.st_mode & S_IFREG) {
+            f_in.open(getFilename().c_str(), ifstream::in);
+            if (f_in.fail()) {
+                cerr << endl << "ERROR @ ParserGiD::GiDParser(): "
+                        << "Problem opening file: " << getFilename() << endl;
+            }
+            return;
+        }
+    }
 }
 
 ParserGiD::~ParserGiD() {
@@ -29,8 +38,15 @@ ParserGiD::~ParserGiD() {
 
 SmbData*
 ParserGiD::read() {
+    if (!canOpen()) {
+        cerr << endl << "ERROR @ ParserGiD: "
+                << "Can not openfile: " << getFilename() << endl;
+        exit(-1);
+    }
     if (!checkVersionCompatibility(readVersion())) {
-        return NULL;
+        cerr << endl << "ERROR @ ParserGiD: "
+                << "File version is not supported. " << endl;
+        exit(-1);
     }
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
@@ -43,7 +59,11 @@ ParserGiD::read() {
     res->grid = readCartesianGrid();
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
-    res->applyGeometricScalingFactor();
+
+    res->mesh->applyScalingFactor(scalingFactor_);
+    res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
+    res->grid->applyScalingFactor(scalingFactor_);
+
     return res;
 }
 
@@ -144,6 +164,7 @@ ParserGiD::readMesherOptions() {
     bool found = false;
     string line, label, value;
     OptionsMesher* res = new OptionsMesher();
+    bool paddingByNumberOfCells = false;
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Mesher options") == 0) {
@@ -155,27 +176,21 @@ ParserGiD::readMesherOptions() {
                     res->setMesher(strToMesher(value));
                 } else if (label.compare("Brute force volumes") == 0) {
                     res->setBruteForceVolumes(strToBool(value));
+                } else if (label.compare("VTK Export") == 0) {
+                    res->setVtkExport(strToBool(value));
                 } else if (label.compare("Mode") == 0) {
                     res->setMode(strToMesherMode(value));
-                } else if (label.compare("Edge fraction") == 0) {
-                    res->setEdgeFraction(trim(value));
-                } else if (label.compare("SWF force") == 0) {
-                    res->setSwfForze(trim(value));
+                } else if (label.compare("Forbidden length") == 0) {
+                    res->setForbiddenLength(atof(trim(value).c_str()));
                 } else if (label.compare("Scale factor") == 0) {
                     res->setScaleFactor(strToBool(value));
                 } else if (label.compare("Scale factor value") == 0) {
                     res->setScaleFactorValue(trim(value));
-                } else if (label.compare("Effective parameters") == 0) {
-                    res->setEffectiveParameter(strToBool(value));
-                } else if (label.compare("Thickness") == 0) {
-                    res->setTh(trim(value));
-                } else if (label.compare("Sigma") == 0) {
-                    res->setSigma(trim(value));
                 } else if (label.compare("Location in mesh")==0) {
                     CVecR3 location = strToCVecR3(trim(value));
                     res->setLocationInMesh(location);
                 } else if (label.compare("Geometry scaling factor") == 0) {
-                    res->setScalingFactor(atof(value.c_str()));
+                    scalingFactor_ = atof(value.c_str());
                 } else if (label.compare("Upper x bound") == 0) {
                     res->setBoundTermination(x,1,strToBoundType(value));
                 } else if (label.compare("Lower x bound") == 0) {
@@ -188,17 +203,30 @@ ParserGiD::readMesherOptions() {
                     res->setBoundTermination(z,1,strToBoundType(value));
                 } else if (label.compare("Lower z bound") == 0) {
                     res->setBoundTermination(z,0,strToBoundType(value));
+                } else if (label.compare("Boundary padding type") == 0) {
+                    if (trim(value).compare("by_number_of_cells")==0) {
+                        paddingByNumberOfCells = true;
+                    } else {
+                        paddingByNumberOfCells = false;
+                    }
                 } else if (label.compare("Boundary padding") == 0) {
-                    res->setBoundaryPadding(strToBound(value));
+                    boundaryPadding_ = strToBound(value);
                 } else if (label.compare("Boundary mesh size") == 0) {
-                    res->setBoundaryMeshSize(strToBound(value));
+                    boundaryMeshSize_ = strToBound(value);
                 } else if (label.compare("End of mesher options")==0) {
                     finished = true;
                 }
             }
         }
     }
-    //
+
+    if (paddingByNumberOfCells) {
+        boundaryPadding_.first =
+                boundaryPadding_.first * boundaryMeshSize_.first;
+        boundaryPadding_.second =
+                boundaryPadding_.second * boundaryMeshSize_.second;
+    }
+
     return res;
 }
 
@@ -721,7 +749,7 @@ PMVolumeDispersive*
 ParserGiD::readDispersiveMatFile(
         const MatId id_, const string& fileName) const {
     ifstream matFile;
-    string matFileName, line, label, value;
+    string line, label, value;
     string name, model;
     string poles, epsilon, sigma;
     UInt nPoles, nDrudePoles;
@@ -732,11 +760,10 @@ ParserGiD::readDispersiveMatFile(
     Int tmpPoleId;
     Real tmpRePK, tmpImPK, tmpReRK, tmpImRK;
     // Opens file, read only mode.
-    matFileName = problemTypePath_ + "/material/" + fileName + ".dat";
-    matFile.open(matFileName.c_str(), ifstream::in);
+    matFile.open(fileName.c_str(), ifstream::in);
     if (matFile.fail()) {
         cerr << endl << "ERROR @ readDispersiveMaterialFile()"
-                << "Problem opening file: " << matFileName << endl;
+                << "Problem opening file: " << fileName << endl;
     }
     // Parses first line, containing material name.
     getline(matFile, line);
@@ -827,7 +854,7 @@ PMSurfaceSIBC*
 ParserGiD::readIsotropicSurfMatFile(
         const MatId id_, const string& fileName) const {
     ifstream matFile;
-    string matFileName, line, label, value;
+    string line, label, value;
     string name, model;
     char *pEnd;
     StaMatrix<Real,2,2> Zstatic, Zinfinite;
@@ -835,17 +862,16 @@ ParserGiD::readIsotropicSurfMatFile(
     vector<StaMatrix<Real,2,2> > Z;
     Real tmpP;
     // Opens file, read only mode.
-    matFileName = problemTypePath_ + "/panel/" + fileName + ".dat";
-    matFile.open(matFileName.c_str(), ifstream::in);
+    matFile.open(fileName.c_str(), ifstream::in);
     if (matFile.fail()) {
         cerr << endl << "ERROR @ readSurfaceMaterialFile(): "
-                << "Problem opening file: " << matFileName << endl;
+                << "Problem opening file: " << fileName << endl;
     }
     // Parses first line, containing material name.
     getline(matFile, line);
     if (line.find("#PANEL#") == string::npos) {
         cerr << endl << "ERROR @ Parser::readSurfaceMaterialFile(...)"
-                << "File: " << matFileName << "   "
+                << "File: " << fileName << "   "
                 << "#PANEL# label has not been found in first line" << endl;
     }
     name = line.substr(8, line.length()-9);
@@ -965,25 +991,6 @@ ParserGiD::readCartesianGrid() {
         grid = NULL;
     }
     return grid;
-}
-
-void
-ParserGiD::init(const string& pTPath) {
-    problemTypePath_ = pTPath;
-    struct stat st;
-    if (stat(getFilename().c_str(), &st) == 0) {
-        if (st.st_mode & S_IFDIR) {
-            cerr << endl << "ERROR@GiDParser::GiDParser(): "
-                    << getFilename() << "It is a directory " << endl;
-        }  else if(st.st_mode & S_IFREG) {
-            f_in.open(getFilename().c_str(), ifstream::in);
-            if (f_in.fail()) {
-                cerr << endl << "ERROR @ ParserGiD::GiDParser(): "
-                        << "Problem opening file: " << getFilename() << endl;
-            }
-            return;
-        }
-    }
 }
 
 PlaneWave*
@@ -1348,10 +1355,11 @@ ParserGiD::strToMultiportType(string str) const {
     }
 }
 
-pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) const {
+pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) {
     UInt begin = value.find_first_of("{");
     UInt end = value.find_last_of("}");
-    istringstream iss(value.substr(begin+1,end-1));
+    string aux = value.substr(begin+1,end-1);
+    stringstream iss(aux);
     CVecR3 max, min;
     for (UInt i = 0; i < 3; i++) {
         iss >> max(i);
@@ -1517,13 +1525,14 @@ OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
     str = trim(str);
     if (str.compare("ugrMesher")==0) {
         return OptionsMesher::ugrMesher;
+    } else if (str.compare("zMesher")==0) {
+        return OptionsMesher::zMesher;
     } else if (str.compare("OpenFOAM")==0) {
         return OptionsMesher::openfoam;
     } else if (str.compare("None")==0) {
         return OptionsMesher::none;
     } else {
-        cerr << endl << "ERROR @ Parser: ";
-        cerr << endl << "Unreckognized label: " << str<< endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
         return OptionsMesher::none;
     }
 }
@@ -1536,9 +1545,10 @@ OptionsMesher::Mode ParserGiD::strToMesherMode(string str) const {
         return OptionsMesher::relaxed;
     } else if (str.compare("Slanted")==0) {
         return OptionsMesher::slanted;
+    } else if (str.compare("Conformal")==0) {
+        return OptionsMesher::conformal;
     } else {
-        cerr << endl << "ERROR @ Parser: ";
-        cerr << endl << "Unreckognized label: " << str<< endl;
+        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str<< endl;
         return OptionsMesher::structured;
     }
 }

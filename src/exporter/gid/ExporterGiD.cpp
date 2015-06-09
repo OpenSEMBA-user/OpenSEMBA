@@ -62,17 +62,6 @@ ExporterGiD::ExporterGiD(
     initDefault(smb, mode, fn);
 }
 
-//ExporterGiD::ExporterGiD(
-//        const MeshUnstructured* mesh,
-//        const GroupPhysicalModels<>* mat,
-//        const string& fn, GiD_PostMode mode) : Exporter(fn) {
-//    SmbData* smb = new SmbData();
-//    smb->mesh =;
-//    smb->pMGroup = mat;
-//    initDefault(smb, mode, fn);
-//    delete smb;
-//}
-
 ExporterGiD::~ExporterGiD() {
     switch (mode_) {
     case GiD_PostAscii:
@@ -268,11 +257,14 @@ void ExporterGiD::writeElements(
             pos.push_back(elem(i)->getVertex(j)->pos());
         }
     }
-    writeCoordinates(pos);
+    GroupCoordinates<CoordR3> cG;
+    cG.add(pos);
+    writeCoordinates(cG);
     beginElements();
     for (UInt j = 0; j < elem.size(); j++) {
         for (Int k = 0; k < nV; k++) {
-            nId[k] = ++tmpCounter;
+            const CoordR3* coordInCG = cG.get(elem(j)->getVertex(k)->pos());
+            nId[k] = tmpCounter + coordInCG->getId();
         }
         writeElement(++elemCounter_, nId);
 
@@ -465,14 +457,11 @@ GiD_ResultLocation ExporterGiD::getGiDResultLocation() const {
     return GiD_ResultLocation::GiD_OnNodes;
 }
 
-void ExporterGiD::writeCoordinates(const UInt id, const CVecR3 pos) const {
-    GiD_fWriteCoordinates(meshFile_, id, pos(x), pos(y), pos(z));
-}
-
-void ExporterGiD::writeCoordinates(const vector<CVecR3>& pos)  {
+void ExporterGiD::writeCoordinates(CoordR3Group& cG)  {
     GiD_fBeginCoordinates(meshFile_);
-    for (UInt i = 0; i < pos.size(); i++) {
-        writeCoordinates(++coordCounter_, pos[i]);
+    for (UInt i = 0; i < cG.size(); i++) {
+        GiD_fWriteCoordinates(meshFile_, ++coordCounter_,
+                (*cG(i))(x), (*cG(i))(y), (*cG(i))(z));
     }
     GiD_fEndCoordinates(meshFile_);
 }

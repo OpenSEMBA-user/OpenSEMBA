@@ -18,15 +18,6 @@ ExporterVTK::~ExporterVTK() {
 
 }
 
-void ExporterVTK::initDir_(const string& fn) {
-    string dirname = fn + ".vtk";
-#ifdef _WIN32
-    mkdir(dirname.c_str());
-#else
-    mkdir(dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
-}
-
 void ExporterVTK::writeMesh_(const Mesh* inMesh,
                              const GroupPhysicalModels<>* mat,
                              const GroupEMSources<>* srcs,
@@ -54,16 +45,25 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
             << ">" << endl;
     outFile << "  " << "<Collection>" << endl;
 
-    // Writes materials.
-    UInt part = 0;
     const GroupLayers<Layer>& lay = mesh->layers();
-    for (UInt i = 0; i < lay.size(); i++) {
-        for (UInt j = 0; j < mat->size(); j++) {
-            const MatId matId = (*mat)(j)->getId();
+    UInt part = 0;
+    // Writes materials.
+    if (mat->size() > 0) {
+        for (UInt i = 0; i < lay.size(); i++) {
             const LayerId layId = lay(i)->getId();
-            const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
-            GroupElements<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
-            writeFile_(elem, name, outFile, part);
+            for (UInt j = 0; j < mat->size(); j++) {
+                const MatId matId = (*mat)(j)->getId();
+                const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
+                GroupElements<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
+                writeFile_(elem, makeValid_(name), outFile, part);
+            }
+        }
+    } else {
+        for (UInt i = 0; i < lay.size(); i++) {
+            const LayerId layId = lay(i)->getId();
+            GroupElements<const ElemR> elem = mesh->elems().getGroupWith(layId);
+            const string name = preName + lay(i)->getName();
+            writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
     // Writes EM Sources.
@@ -73,7 +73,7 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
             const string name = preName + "EMSource_" + src->getName();
             GroupElements<const ElemR> elem =
                     mesh->elems().getGroupWith(src->elems().getIds());
-            writeFile_(elem, name, outFile, part);
+            writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
     // Writes output requests.
@@ -83,7 +83,7 @@ void ExporterVTK::writeMesh_(const Mesh* inMesh,
             const string name = preName + "OutRq_" + oRq->getName();
             GroupElements<const ElemR> elem =
                     mesh->elems().getGroupWith(oRq->elems().getIds());
-            writeFile_(elem, name, outFile, part);
+            writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
     outFile << "  " << "</Collection>" << endl;
@@ -216,4 +216,10 @@ void ExporterVTK::writeCells_(ofstream &outFile,
     outFile << endl;
     outFile << "        " << "</DataArray>" << endl;
     outFile << "      " << "</Cells>" << endl;
+}
+
+string ExporterVTK::makeValid_(const string& allocator) {
+    string res = allocator;
+    std::replace(res.begin(), res.end(), '/', '_');
+    return res;
 }
