@@ -29,9 +29,9 @@ bool CVecI3Fractional::less(const CVecI3Fractional &rhs,
         }
     }
     for (UInt n = 0; n < 3; n++) {
-        if (this->len_.val[n] < rhs.len_.val[n]) {
+        if (MathUtils::lower(len_(n), rhs.len_(n), tol)) {
             return true;
-        } else if (MathUtils::lower(len_.val[n], rhs.len_.val[n], tol)) {
+        } else if (MathUtils::greater(len_(n), rhs.len_(n), tol)) {
             return false;
         }
     }
