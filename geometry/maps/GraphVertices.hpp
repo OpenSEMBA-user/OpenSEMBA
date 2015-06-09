@@ -32,19 +32,19 @@ GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
     const Bound* vertex;
     GraphElem*   elemPtr;
     GraphBound*  boundPtr;
-    map<pair<LayerId,CoordinateId>, GraphBound*> map;
+    map<CoordinateId, GraphBound*> map;
     for (UInt s = 0; s < elems.size(); s++) {
         layId = elems(s)->getLayerId();
         elemPtr = new GraphElem(elems(s), elems(s)->numberOfVertices());
         this->elems_.push_back(elemPtr);
         for (UInt v = 0; v < elems(s)->numberOfVertices(); v++) {
             vertex = elems(s)->getVertex(v);
-            if (map.count(make_pair(layId,vertex->getId())) == 0) {
+            if (map.count(vertex->getId()) == 0) {
                 boundPtr = new GraphBound(vertex);
                 this->bounds_.push_back(boundPtr);
-                map[make_pair(layId,vertex->getId())] = boundPtr;
+                map[vertex->getId()] = boundPtr;
             }
-            boundPtr = map[make_pair(layId,vertex->getId())];
+            boundPtr = map[vertex->getId()];
             elemPtr->setBound(v, boundPtr);
             boundPtr->addBound(elemPtr);
         }

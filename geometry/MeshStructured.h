@@ -47,6 +47,7 @@ public:
     const GroupLayers<>&             layers() const { return *this; }
 
     MeshUnstructured* getMeshUnstructured() const;
+    MeshStructured* getConnectivityMesh() const;
 
     template<template<typename> class E>
     GroupElements< E<Int> > add(const GroupElements<E<Real> >&,

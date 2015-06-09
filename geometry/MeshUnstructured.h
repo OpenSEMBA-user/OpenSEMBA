@@ -10,10 +10,12 @@
 
 #include <iostream>
 #include <limits>
+#include <sstream>
 #include <utility>
 #include <vector>
 using namespace std;
 
+#include "maps/GraphVertices.h"
 #include "maps/MapGroup.h"
 #include "Grid.h"
 
@@ -47,6 +49,7 @@ public:
 
     MeshStructured* getMeshStructured(const Grid3& grid,
                                       const Real tol = Grid3::tolerance) const;
+    MeshUnstructured* getConnectivityMesh() const;
 
     vector<Face> getBorderWithNormal(const vector<Face>& border,
                                      const CVecR3& normal);
