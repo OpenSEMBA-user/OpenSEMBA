@@ -22,7 +22,7 @@ OptionsSolver::OptionsSolver () {
     pmlKappa_ = 1.0;
     pmlCorrection_ = pair<double,double>(1.0, 1.0);
     wireModel_ = WireModel::Default;
-    selfInductanceModel_ = SelfInductanceModel::boutayeb;
+    selfInductanceModel_ = InductanceModel::boutayeb;
     taparrabos_ = false;
     intraWireSimplifications_ = false;
     MTLN_ = false;
@@ -111,11 +111,11 @@ void OptionsSolver::set(const Arguments& arg) {
     if (arg.has("inductance")) {
         string model = arg.get("inductance");
         if (model == "ledfelt") {
-            setSelfInductanceModel(SelfInductanceModel::ledfelt);
+            setSelfInductanceModel(InductanceModel::ledfelt);
         } else if (model == "berenger") {
-            setSelfInductanceModel(SelfInductanceModel::berenger);
+            setSelfInductanceModel(InductanceModel::berenger);
         } else {
-            setSelfInductanceModel(SelfInductanceModel::boutayeb);
+            setSelfInductanceModel(InductanceModel::boutayeb);
         }
     }
     if (arg.has("attw")) {
@@ -294,13 +294,13 @@ void OptionsSolver::setPMLKappa(double pmlKappa) {
     pmlKappa_ = pmlKappa;
 }
 
-OptionsSolver::SelfInductanceModel
+OptionsSolver::InductanceModel
 OptionsSolver::getSelfInductanceModel() const {
     return selfInductanceModel_;
 }
 
 void OptionsSolver::setSelfInductanceModel(
-        SelfInductanceModel selfInductanceModel) {
+        InductanceModel selfInductanceModel) {
     selfInductanceModel_ = selfInductanceModel;
 }
 
@@ -382,10 +382,10 @@ string OptionsSolver::toArgsStr() const {
         break;
     }
     switch (getSelfInductanceModel()) {
-    case SelfInductanceModel::ledfelt:
+    case InductanceModel::ledfelt:
         ss << " -inductance ledfelt";
         break;
-    case SelfInductanceModel::berenger:
+    case InductanceModel::berenger:
         ss << " -inductance berenger";
         break;
     default:

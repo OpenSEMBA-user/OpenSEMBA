@@ -23,16 +23,19 @@ public:
         ugrfdtd, cudg3d, none
     };
     enum class CompositeModel {
-        Default, digFilt, MIBC, ADEMIBC, URMMMT
-    };
-    enum class MetalModel {
-        Default, maloney, maloneySkinDepth, conformalSkinDepth
+        mibc, digFilt, ade, none
     };
     enum class WireModel {
-        Default, transition, New
+        newWireModel, transitionWireModel, oldWireModel
     };
-    enum class SelfInductanceModel {
+    enum class InductanceModel {
         boutayeb, ledfelt, berenger
+    };
+    enum class PMLBacking {
+        none, mur1, mur2
+    };
+    enum class NoNF2FF {
+        none, back, front, left, right, down, up
     };
     OptionsSolver();
 
@@ -51,13 +54,12 @@ public:
     void setIsolateGroupGroups(bool isolateGroupGroups);
     void setJoinWires(bool joinWires);
     void setMakeHoles(bool makeHoles);
-    void setMetalModel(MetalModel metalModel);
     void setMTLN(bool mtln);
     void setNumberOfTimeSteps(UInt numberOfTimeSteps);
     void setPMLAlpha(const pair<double, double>& pmlAlpha);
     void setPMLCorrection(const pair<double, double>& pmlCorrection);
     void setPMLKappa(double pmlKappa);
-    void setSelfInductanceModel(SelfInductanceModel selfInductanceModel);
+    void setInductanceModel(InductanceModel inductanceModel);
     void setTaparrabos(bool taparrabos);
     void setWireModel(WireModel wireModel);
     void setWiresAttenuationFactor(double wiresAttenuationFactor);
@@ -76,13 +78,12 @@ public:
     bool isIsolateGroupGroups() const;
     bool isJoinWires() const;
     bool isMakeHoles() const;
-    MetalModel getMetalModel() const;
     bool isMTLN() const;
     UInt getNumberOfTimeSteps() const;
     const pair<double, double>& getPmlAlpha() const;
     const pair<double, double>& getPmlCorrection() const;
     double getPmlKappa() const;
-    SelfInductanceModel getSelfInductanceModel() const;
+    InductanceModel getInductanceModel() const;
     bool isTaparrabos() const;
     WireModel getWireModel() const;
     double getWiresAttenuationFactor() const;
@@ -98,24 +99,38 @@ private:
     Real timeStep_;
     Real cfl_;
     Real samplingPeriod_;
+    bool forceRestarting_;
+    bool resumeSimulation_;
+    Real flush_;
+
     // ugrfdtd
     CompositeModel compositeModel_;
-    MetalModel metalModel_;
-    WireModel wireModel_;
-    SelfInductanceModel selfInductanceModel_;
+    bool conformalSkin_;
+    bool noCompoMur_;
+    bool skinDepth_;
     double compositesAttenuationFactor_;
-    pair<double,double> pmlAlpha_;
-    double pmlKappa_;
-    pair<double,double> pmlCorrection_;
-    double wiresAttenuationFactor_;
-    bool taparrabos_;
-    bool intraWireSimplifications_;
+
+    WireModel wireModel_;
     bool MTLN_;
-    bool joinWires_;
-    bool groundWires_;
-    bool connectEndings_;
-    bool isolateGroupGroups_;
+    Real minDistanceWires_;
+    bool newDispersiveFormulation_;
+    bool taparrabos_;
     bool makeHoles_;
+    bool groundWires_;
+    InductanceModel inductanceModel_;
+    Real wiresAttenuationFactor_;
+
+    bool useDefaultPML_;
+    pair<Real,Real> pmlAlpha_;
+    Real pmlKappa_;
+    pair<Real,Real> pmlCorrection_;
+    PMLBacking pmlBacking_;
+
+    bool map_;
+    bool MapVTK_;
+    NoNF2FF noNF2FF_;
+    bool nF2FFDecimation_;
+    string additionalArguments_;
     //
     string toStr(const Solver solver) const;
     string toStrIfTrue(const string str, const bool param) const;
