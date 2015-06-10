@@ -65,11 +65,13 @@ private:
     MeshUnstructured* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
-            const MatId id_,
-            const string& name) const;
+            const MatId id,
+            const string& name,
+            const ProjectFile& file) const;
     PMSurfaceSIBC* readIsotropicSurfMatFile(
             const MatId id,
-            const string& name) const;
+            const string& name,
+            const ProjectFile& file) const;
     PMSurfaceMultilayer*  readMultilayerSurf(
             const MatId id,
             const string& name,
@@ -117,6 +119,7 @@ private:
     GroupElements<Vol> boundToElemGroup(const string& line);
 
     static pair<CVecR3, CVecR3> strToBound(const string& str);
+    static PoleResidue readPoleResiduePair(ifstream& stream);
 };
 
 #endif /* PARSERGID_H_ */
