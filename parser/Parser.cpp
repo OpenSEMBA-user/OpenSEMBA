@@ -8,9 +8,7 @@ Parser::~Parser() {
 
 }
 
-CVecR3
-Parser::strToCartesianVector(
- const string& str) const {
+CVecR3 Parser::strToCartesianVector(const string& str) {
 	istringstream iss(str);
 	string sub;
 	CartesianVector<Real,3> res;
@@ -21,8 +19,7 @@ Parser::strToCartesianVector(
 	return res;
 }
 
-bool
-Parser::strToBool(const string& value) const {
+bool Parser::strToBool(const string& value) {
 	if (atoi(value.c_str()) == 1) {
 		return true;
 	} else {

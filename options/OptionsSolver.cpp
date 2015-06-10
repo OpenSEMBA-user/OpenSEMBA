@@ -15,21 +15,17 @@ OptionsSolver::OptionsSolver () {
     timeStep_ = 0.0;
     cfl_ = 0.8;
     // ugrfdtd
-    compositeModel_ = CompositeModel::Default;
+    compositeModel_ = CompositeModel::none;
     compositesAttenuationFactor_ = 1.0;
-    metalModel_ = MetalModel::Default;
+
     pmlAlpha_ = pair<double,double>(0.0, 1.0);
     pmlKappa_ = 1.0;
     pmlCorrection_ = pair<double,double>(1.0, 1.0);
-    wireModel_ = WireModel::Default;
-    selfInductanceModel_ = InductanceModel::boutayeb;
+    wireModel_ = WireModel::newWireModel;
+    inductanceModel_ = InductanceModel::boutayeb;
     taparrabos_ = false;
-    intraWireSimplifications_ = false;
     MTLN_ = false;
-    joinWires_ = false;
     groundWires_ = false;
-    connectEndings_ = false;
-    isolateGroupGroups_ = false;
     makeHoles_ = false;
     wiresAttenuationFactor_ = false;
 }
@@ -48,13 +44,13 @@ void OptionsSolver::set(const Arguments& arg) {
         setCompositeModel(CompositeModel::digFilt);
     }
     if (arg.has("mibc")) {
-        setCompositeModel(CompositeModel::MIBC);
+        setCompositeModel(CompositeModel::mibc);
     }
     if (arg.has("ade")) {
-        setCompositeModel(CompositeModel::ADEMIBC);
+        setCompositeModel(CompositeModel::ade);
     }
-    if (arg.has("nocompomur")) {
-        setCompositeModel(CompositeModel::URMMMT);
+    if (arg.has("digfilt")) {
+        setCompositeModel(CompositeModel::digFilt);
     }
     if (arg.has("attc")) {
         setCompositesAttenuationFactor(atof(arg.get("attc").c_str()));
@@ -77,18 +73,17 @@ void OptionsSolver::set(const Arguments& arg) {
     if (arg.has("wiresflavor")) {
         string flavor = arg.get("wiresflavor");
         if (flavor == "transition") {
-            setWireModel(WireModel::transition);
+            setWireModel(WireModel::transitionWireModel);
         } else if (flavor == "new") {
-            setWireModel(WireModel::New);
+            setWireModel(WireModel::newWireModel);
+        } else if (flavor == "old") {
+            setWireModel(WireModel::oldWireModel);
         } else {
-            setWireModel(WireModel::Default);
+            throw Error("Unreckognized wire flavor: " + flavor);
         }
     }
     if (arg.has("taparrabos")) {
         setTaparrabos(true);
-    }
-    if (arg.has("intrawiresimplify")) {
-        setIntraWireSimplifications(true);
     }
     if (arg.has("mtln")) {
         setMTLN(true);
@@ -96,26 +91,17 @@ void OptionsSolver::set(const Arguments& arg) {
     if (arg.has("groundwires")) {
         setGroundWires(true);
     }
-    if (arg.has("connectendings")) {
-        setConnectEndings(true);
-    }
-    if (arg.has("isolategrougroups")) {
-        setIsolateGroupGroups(true);
-    }
-    if (arg.has("joinwires")) {
-        setJoinWires(true);
-    }
     if (arg.has("makeholes")) {
         setMakeHoles(true);
     }
     if (arg.has("inductance")) {
         string model = arg.get("inductance");
         if (model == "ledfelt") {
-            setSelfInductanceModel(InductanceModel::ledfelt);
+            setInductanceModel(InductanceModel::ledfelt);
         } else if (model == "berenger") {
-            setSelfInductanceModel(InductanceModel::berenger);
+            setInductanceModel(InductanceModel::berenger);
         } else {
-            setSelfInductanceModel(InductanceModel::boutayeb);
+            setInductanceModel(InductanceModel::boutayeb);
         }
     }
     if (arg.has("attw")) {
@@ -127,7 +113,7 @@ void OptionsSolver::printHelp() const {
     // TODO OptionsSolver printHelp
 }
 
-string OptionsSolver::toStr(const Solver solver) const {
+string OptionsSolver::toStr(const Solver solver) {
     switch (solver) {
     case Solver::ugrfdtd:
         return "ugrfdtd";
@@ -195,14 +181,6 @@ void OptionsSolver::setCompositesAttenuationFactor(
     compositesAttenuationFactor_ = compositesAttenuationFactor;
 }
 
-bool OptionsSolver::isConnectEndings() const {
-    return connectEndings_;
-}
-
-void OptionsSolver::setConnectEndings(bool connectEndings) {
-    connectEndings_ = connectEndings;
-}
-
 bool OptionsSolver::isGroundWires() const {
     return groundWires_;
 }
@@ -211,44 +189,12 @@ void OptionsSolver::setGroundWires(bool groundWires) {
     groundWires_ = groundWires;
 }
 
-bool OptionsSolver::isIntraWireSimplifications() const {
-    return intraWireSimplifications_;
-}
-
-void OptionsSolver::setIntraWireSimplifications(bool intraWireSimplifications) {
-    intraWireSimplifications_ = intraWireSimplifications;
-}
-
-bool OptionsSolver::isIsolateGroupGroups() const {
-    return isolateGroupGroups_;
-}
-
-void OptionsSolver::setIsolateGroupGroups(bool isolateGroupGroups) {
-    isolateGroupGroups_ = isolateGroupGroups;
-}
-
-bool OptionsSolver::isJoinWires() const {
-    return joinWires_;
-}
-
-void OptionsSolver::setJoinWires(bool joinWires) {
-    joinWires_ = joinWires;
-}
-
 bool OptionsSolver::isMakeHoles() const {
     return makeHoles_;
 }
 
 void OptionsSolver::setMakeHoles(bool makeHoles) {
     makeHoles_ = makeHoles;
-}
-
-OptionsSolver::MetalModel OptionsSolver::getMetalModel() const {
-    return metalModel_;
-}
-
-void OptionsSolver::setMetalModel(MetalModel metalModel) {
-    metalModel_ = metalModel;
 }
 
 bool OptionsSolver::isMTLN() const {
@@ -295,13 +241,13 @@ void OptionsSolver::setPMLKappa(double pmlKappa) {
 }
 
 OptionsSolver::InductanceModel
-OptionsSolver::getSelfInductanceModel() const {
-    return selfInductanceModel_;
+OptionsSolver::getInductanceModel() const {
+    return inductanceModel_;
 }
 
-void OptionsSolver::setSelfInductanceModel(
+void OptionsSolver::setInductanceModel(
         InductanceModel selfInductanceModel) {
-    selfInductanceModel_ = selfInductanceModel;
+    inductanceModel_ = selfInductanceModel;
 }
 
 bool OptionsSolver::isTaparrabos() const {
@@ -339,49 +285,34 @@ OptionsSolver::printInfo() const {
 
 string OptionsSolver::toArgsStr() const {
     stringstream ss;
+    // TODO
     ss << " -cfl " << getCFL();
     ss << " -n " << getNumberOfTimeSteps();
     switch (getCompositeModel()) {
     case CompositeModel::digFilt:
         ss << " -digfilt";
         break;
-    case CompositeModel::MIBC:
+    case CompositeModel::mibc:
         ss << " -mibc";
         break;
-    case CompositeModel::ADEMIBC:
+    case CompositeModel::ade:
         ss << " -ade";
-        break;
-    case CompositeModel::URMMMT:
-        ss << " -nocompomur";
-        break;
-    default:
-        break;
-    }
-    switch (getMetalModel()) {
-    case MetalModel::maloney:
-        ss << " -skindepth";
-        break;
-    case MetalModel::maloneySkinDepth:
-        ss << " -skindepthpre";
-        break;
-    case MetalModel::conformalSkinDepth:
-        ss << " -conformalskin";
         break;
     default:
         break;
     }
     switch (getWireModel()) {
-    case WireModel::New:
+    case WireModel::newWireModel:
         ss << " -wiresflavor new";
         break;
-    case WireModel::transition:
+    case WireModel::transitionWireModel:
         ss << " -wiresflavor transition";
         break;
     default:
         ss << " -wiresflavor old";
         break;
     }
-    switch (getSelfInductanceModel()) {
+    switch (getInductanceModel()) {
     case InductanceModel::ledfelt:
         ss << " -inductance ledfelt";
         break;
@@ -398,18 +329,133 @@ string OptionsSolver::toArgsStr() const {
     ss << " -pmlkappa " << getPmlKappa();
     ss << " -pmlcorr " << getPmlCorrection().first << " " << getPmlCorrection().second;
     ss << toStrIfTrue(" -taparrabos", isTaparrabos());
-    ss << toStrIfTrue(" -intrawiressimplify", isIntraWireSimplifications());
     ss << toStrIfTrue(" -mtln", isMTLN());
-    ss << toStrIfTrue(" -joinwires", isJoinWires());
     ss << toStrIfTrue(" -groundwires", isGroundWires());
-    ss << toStrIfTrue(" -connectendings", isConnectEndings());
-    ss << toStrIfTrue(" -isolategroupgroups", isIsolateGroupGroups());
     ss << toStrIfTrue(" -makeholes", isMakeHoles());
     return ss.str();
 }
 
-string
-OptionsSolver::toStrIfTrue(const string str, const bool param) const {
+const string& OptionsSolver::getAdditionalArguments() const {
+    return additionalArguments_;
+}
+
+void OptionsSolver::setAdditionalArguments(const string& additionalArguments) {
+    additionalArguments_ = additionalArguments;
+}
+
+bool OptionsSolver::isConformalSkin() const {
+    return conformalSkin_;
+}
+
+void OptionsSolver::setConformalSkin(bool conformalSkin) {
+    conformalSkin_ = conformalSkin;
+}
+
+Real OptionsSolver::getFlush() const {
+    return flush_;
+}
+
+void OptionsSolver::setFlush(Real flush) {
+    flush_ = flush;
+}
+
+bool OptionsSolver::isForceRestarting() const {
+    return forceRestarting_;
+}
+
+void OptionsSolver::setForceRestarting(bool forceRestarting) {
+    forceRestarting_ = forceRestarting;
+}
+
+bool OptionsSolver::isMap() const {
+    return map_;
+}
+
+void OptionsSolver::setMap(bool map) {
+    map_ = map;
+}
+
+bool OptionsSolver::isMapVtk() const {
+    return MapVTK_;
+}
+
+void OptionsSolver::setMapVtk(bool mapVtk) {
+    MapVTK_ = mapVtk;
+}
+
+Real OptionsSolver::getMinDistanceWires() const {
+    return minDistanceWires_;
+}
+
+void OptionsSolver::setMinDistanceWires(Real minDistanceWires) {
+    minDistanceWires_ = minDistanceWires;
+}
+
+bool OptionsSolver::isNewDispersiveFormulation() const {
+    return newDispersiveFormulation_;
+}
+
+void OptionsSolver::setNewDispersiveFormulation(bool newDispersiveFormulation) {
+    newDispersiveFormulation_ = newDispersiveFormulation;
+}
+
+bool OptionsSolver::isNF2FFDecimation() const {
+    return nF2FFDecimation_;
+}
+
+void OptionsSolver::setNF2FFDecimation(bool f2FfDecimation) {
+    nF2FFDecimation_ = f2FfDecimation;
+}
+
+bool OptionsSolver::isNoCompoMur() const {
+    return noCompoMur_;
+}
+
+void OptionsSolver::setNoCompoMur(bool noCompoMur) {
+    noCompoMur_ = noCompoMur;
+}
+
+OptionsSolver::NoNF2FF OptionsSolver::getNoNF2FF() const {
+    return noNF2FF_;
+}
+
+void OptionsSolver::setNoNF2FF(NoNF2FF noNf2Ff) {
+    noNF2FF_ = noNf2Ff;
+}
+
+bool OptionsSolver::isResumeSimulation() const {
+    return resumeSimulation_;
+}
+
+void OptionsSolver::setResumeSimulation(bool resumeSimulation) {
+    resumeSimulation_ = resumeSimulation;
+}
+
+bool OptionsSolver::isSkinDepth() const {
+    return skinDepth_;
+}
+
+void OptionsSolver::setSkinDepth(bool skinDepth) {
+    skinDepth_ = skinDepth;
+}
+
+bool OptionsSolver::isUseDefaultPml() const {
+    return useDefaultPML_;
+}
+
+void OptionsSolver::setUseDefaultPml(bool useDefaultPml) {
+    useDefaultPML_ = useDefaultPml;
+}
+
+OptionsSolver::PMLBacking OptionsSolver::getPMLBacking() const {
+    return pmlBacking_;
+}
+
+void OptionsSolver::setPMLBacking(PMLBacking pmlBacking) {
+    pmlBacking_ = pmlBacking;
+}
+
+string OptionsSolver::toStrIfTrue(const string str, const bool param) {
     if (param) {
         return str;
     } else {
