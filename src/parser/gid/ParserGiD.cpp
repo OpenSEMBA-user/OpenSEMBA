@@ -1574,18 +1574,18 @@ ParserGiD::strToWireModel(string str) const {
     }
 }
 
-OptionsSolver::SelfInductanceModel
+OptionsSolver::InductanceModel
 ParserGiD::strToSelfInductanceModel(string str) const {
     str = trim(str);
     if (str.compare("Boutayeb")==0) {
-        return OptionsSolver::SelfInductanceModel::boutayeb;
+        return OptionsSolver::InductanceModel::boutayeb;
     } else if (str.compare("Ledfelt")==0) {
-        return OptionsSolver::SelfInductanceModel::ledfelt;
+        return OptionsSolver::InductanceModel::ledfelt;
     } else if (str.compare("Berenger")==0) {
-        return OptionsSolver::SelfInductanceModel::berenger;
+        return OptionsSolver::InductanceModel::berenger;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return OptionsSolver::SelfInductanceModel::boutayeb;
+        return OptionsSolver::InductanceModel::boutayeb;
     }
 }
 
