@@ -150,7 +150,7 @@ private:
     PMLBacking pmlBacking_;
 
     bool map_;
-    bool MapVTK_;
+    bool mapVTK_;
     NoNF2FF noNF2FF_;
     bool nF2FFDecimation_;
     string additionalArguments_;

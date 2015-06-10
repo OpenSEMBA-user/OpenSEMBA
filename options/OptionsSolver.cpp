@@ -14,20 +14,36 @@ OptionsSolver::OptionsSolver () {
     samplingPeriod_ = 0.0;
     timeStep_ = 0.0;
     cfl_ = 0.8;
+    forceRestarting_ = false;
+    resumeSimulation_ = false;
+    flush_ = 0.0;
     // ugrfdtd
     compositeModel_ = CompositeModel::none;
+    MTLN_ = false;
+    conformalSkin_ = false;
+    noCompoMur_ = false;
+    skinDepth_ = false;
     compositesAttenuationFactor_ = 1.0;
 
+    wireModel_ = WireModel::newWireModel;
+    inductanceModel_ = InductanceModel::boutayeb;
+    newDispersiveFormulation_ = false;
+    minDistanceWires_ = 0.5;
+    taparrabos_ = false;
+    groundWires_ = false;
+    makeHoles_ = false;
+    wiresAttenuationFactor_ = 1.0;
+
+    useDefaultPML_ = true;
     pmlAlpha_ = pair<double,double>(0.0, 1.0);
     pmlKappa_ = 1.0;
     pmlCorrection_ = pair<double,double>(1.0, 1.0);
-    wireModel_ = WireModel::newWireModel;
-    inductanceModel_ = InductanceModel::boutayeb;
-    taparrabos_ = false;
-    MTLN_ = false;
-    groundWires_ = false;
-    makeHoles_ = false;
-    wiresAttenuationFactor_ = false;
+    pmlBacking_ = PMLBacking::none;
+
+    map_ = false;
+    mapVTK_ = false;
+    nF2FFDecimation_ = false;
+    noNF2FF_ = NoNF2FF::none;
 }
 
 void OptionsSolver::set(const Arguments& arg) {
@@ -284,54 +300,124 @@ OptionsSolver::printInfo() const {
 }
 
 string OptionsSolver::toArgsStr() const {
+    OptionsSolver defaultOptions;
     stringstream ss;
-    // TODO
-    ss << " -cfl " << getCFL();
-    ss << " -n " << getNumberOfTimeSteps();
+    // --- Global solvers options.
+    if (getCFL() != defaultOptions.getCFL()) {
+        ss << " -cfl " << getCFL();
+    }
+    if (isResumeSimulation()) {
+        if (getTimeStep() != 0.0) {
+            ss << " -r " << (UInt) floor(getFinalTime() / getTimeStep());
+        } else {
+            ss << " -r " << (UInt) floor(getFinalTime());
+        }
+    }
+    if (isForceRestarting()) {
+        ss << " -s";
+    }
+    if (getFlush() != defaultOptions.getFlush()) {
+        ss << " -flush " << getFlush();
+    }
+    // --- Composites.
     switch (getCompositeModel()) {
     case CompositeModel::digFilt:
         ss << " -digfilt";
         break;
     case CompositeModel::mibc:
         ss << " -mibc";
+        ss << toStrIfTrue(" -conformalskin", isConformalSkin());
+        ss << toStrIfTrue(" -nocompomur", isNoCompoMur());
+        ss << toStrIfTrue(" -skindepth", isSkinDepth());
         break;
     case CompositeModel::ade:
         ss << " -ade";
+        ss << toStrIfTrue(" -conformalskin", isConformalSkin());
+        ss << toStrIfTrue(" -nocompomur", isNoCompoMur());
+        ss << toStrIfTrue(" -skindepth", isSkinDepth());
         break;
     default:
         break;
     }
+    if (getCompositesAttenuationFactor() !=
+            defaultOptions.getCompositesAttenuationFactor()) {
+        ss << " -attc " << getCompositesAttenuationFactor();
+    }
+    // --- Wire model.
     switch (getWireModel()) {
     case WireModel::newWireModel:
-        ss << " -wiresflavor new";
+        ss << toStrIfTrue(" -newdispersive", isNewDispersiveFormulation());
+        if (getMinDistanceWires() != defaultOptions.getMinDistanceWires()) {
+            ss << " -mindistwires " << getMinDistanceWires();
+        }
         break;
     case WireModel::transitionWireModel:
         ss << " -wiresflavor transition";
         break;
-    default:
+    case WireModel::oldWireModel:
         ss << " -wiresflavor old";
         break;
     }
     switch (getInductanceModel()) {
+    case InductanceModel::boutayeb:
+        break;
     case InductanceModel::ledfelt:
         ss << " -inductance ledfelt";
         break;
     case InductanceModel::berenger:
         ss << " -inductance berenger";
         break;
-    default:
-        ss << " -inductance boutayeb";
-        break;
     }
-    ss << " -attc " << getCompositesAttenuationFactor();
-    ss << " -attw " << getWiresAttenuationFactor();
-    ss << " -pmlalpha " << getPmlAlpha().first << " " << getPmlAlpha().second;
-    ss << " -pmlkappa " << getPmlKappa();
-    ss << " -pmlcorr " << getPmlCorrection().first << " " << getPmlCorrection().second;
-    ss << toStrIfTrue(" -taparrabos", isTaparrabos());
     ss << toStrIfTrue(" -mtln", isMTLN());
+    ss << toStrIfTrue(" -taparrabos", isTaparrabos());
     ss << toStrIfTrue(" -groundwires", isGroundWires());
     ss << toStrIfTrue(" -makeholes", isMakeHoles());
+    if (getWiresAttenuationFactor() != defaultOptions.getWiresAttenuationFactor()) {
+        ss << " -attw " << getWiresAttenuationFactor();
+    }
+    // --- PMLs.
+    if (!isUseDefaultPml()) {
+        ss << " -pmlalpha " << getPmlAlpha().first << " " << getPmlAlpha().second;
+        ss << " -pmlkappa " << getPmlKappa();
+        ss << " -pmlcorr " << getPmlCorrection().first << " " << getPmlCorrection().second;
+        switch (getPMLBacking()) {
+        case PMLBacking::mur1:
+            ss << " -mur1";
+            break;
+        case PMLBacking::mur2:
+            ss << " -mur2";
+            break;
+        case PMLBacking::none:
+            break;
+        }
+    }
+    // --- Other options.
+    switch (getNoNF2FF()) {
+    case NoNF2FF::none:
+        break;
+    case NoNF2FF::back:
+        ss << " -noNF2FF back";
+        break;
+    case NoNF2FF::front:
+        ss << " -noNF2FF front";
+        break;
+    case NoNF2FF::left:
+        ss << " -noNF2FF left";
+        break;
+    case NoNF2FF::right:
+        ss << " -noNF2FF right";
+        break;
+    case NoNF2FF::down:
+        ss << " -noNF2FF down";
+        break;
+    case NoNF2FF::up:
+        ss << " -noNF2FF up";
+        break;
+    }
+    ss << toStrIfTrue(" -NF2FFdecim", isNF2FFDecimation());
+    ss << toStrIfTrue(" -map", isMap());
+    ss << toStrIfTrue(" -mapvtk", isMapVtk());
+    ss << " " << getAdditionalArguments();
     return ss.str();
 }
 
@@ -376,11 +462,11 @@ void OptionsSolver::setMap(bool map) {
 }
 
 bool OptionsSolver::isMapVtk() const {
-    return MapVTK_;
+    return mapVTK_;
 }
 
 void OptionsSolver::setMapVtk(bool mapVtk) {
-    MapVTK_ = mapVtk;
+    mapVTK_ = mapVtk;
 }
 
 Real OptionsSolver::getMinDistanceWires() const {
