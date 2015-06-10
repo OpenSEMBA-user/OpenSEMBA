@@ -131,14 +131,16 @@ ExporterGiD::writeMesh(const SmbData* smb) {
         }
     }
     // Writes boundaries.
-    for (UInt i = 0; i < 3; i++) {
-        for (UInt j = 0; j < 2; j++) {
-            CoordR3Group cG;
-            GroupElements<ElemR> bound =
-                    getBoundary(CartesianAxis(i), CartesianBound(j), cG,
-                            grid, mesh, smb->mesherOptions);
-            string name = getBoundaryName(smb->mesherOptions, i, j);
-            writeAllElements(bound, name);
+    if (smb->mesherOptions != NULL) {
+        for (UInt i = 0; i < 3; i++) {
+            for (UInt j = 0; j < 2; j++) {
+                CoordR3Group cG;
+                GroupElements<ElemR> bound =
+                        getBoundary(CartesianAxis(i), CartesianBound(j), cG,
+                                grid, mesh, smb->mesherOptions);
+                string name = getBoundaryName(smb->mesherOptions, i, j);
+                writeAllElements(bound, name);
+            }
         }
     }
     // Writes grid.
