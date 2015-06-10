@@ -109,15 +109,14 @@ private:
     Domain strToDomain(string line) const;
     OptionsMesher::Mesher strToMesher(string) const;
     OptionsMesher::Mode strToMesherMode(string) const;
-    OptionsSolver::Solver strToSolver(string) const;
-    OptionsSolver::CompositeModel strToCompositeModel(string) const;
-    OptionsSolver::MetalModel strToMetalModel(string) const;
-    OptionsSolver::WireModel strToWireModel(string) const;
-    OptionsSolver::InductanceModel strToSelfInductanceModel(string) const;
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
     GroupElements<Vol> boundToElemGroup(const string& line);
 
+    static OptionsSolver::Solver strToSolver(string);
+    static OptionsSolver::WireModel strToWireModel(string);
+    static OptionsSolver::InductanceModel strToInductanceModel(string);
+    static OptionsSolver::CompositeModel strToCompositeModel(string);
     static pair<CVecR3, CVecR3> strToBound(const string& str);
     static PoleResidue readPoleResiduePair(ifstream& stream);
 };

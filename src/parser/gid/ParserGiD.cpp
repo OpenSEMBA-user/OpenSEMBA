@@ -85,7 +85,6 @@ ParserGiD::readSolverOptions() {
             optionsFound = true;
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
-                // Global options.
                 if (label.compare("Solver") == 0) {
                     res->setSolver(strToSolver(value));
                 } else if (label.compare("Final time") == 0) {
@@ -98,13 +97,42 @@ ParserGiD::readSolverOptions() {
                     res->setCFL(atof(value.c_str()));
                 } else if (label.compare("Default sampling period") == 0) {
                     res->setSamplingPeriod(atof(value.c_str()));
-                    // Ugrfdtd.
+                } else if (label.compare("Force restarting") == 0) {
+
+                } else if (label.compare("Resume simulation") == 0) {
+
+                } else if (label.compare("Flush") == 0) {
+
                 } else if (label.compare("Composites model") == 0) {
                     res->setCompositeModel(strToCompositeModel(value));
+                } else if (label.compare("Conformal skin") == 0) {
+
+                } else if (label.compare("No compo Mur") == 0) {
+
+                } else if (label.compare("Skin depth") == 0) {
+
                 } else if (label.compare("Composites attenuation factor") == 0) {
                     res->setCompositesAttenuationFactor(atof(value.c_str()));
-                } else if (label.compare("Metals") == 0) {
-                    res->setMetalModel(strToMetalModel(value));
+                } else if (label.compare("Wires flavor") == 0) {
+                    res->setWireModel(strToWireModel(value));
+                } else if (label.compare("MTLN") == 0) {
+                    res->setMTLN(strToBool(value));
+                } else if (label.compare("Min distance wires") == 0) {
+
+                } else if (label.compare("New dispersive formulation") == 0) {
+
+                } else if (label.compare("Taparrabos") == 0) {
+                    res->setTaparrabos(strToBool(value));
+                } else if (label.compare("Make holes") == 0) {
+                    res->setMakeHoles(strToBool(value));
+                } else if (label.compare("Ground wires") == 0) {
+                    res->setGroundWires(strToBool(value));
+                } else if (label.compare("Inductance model") == 0) {
+                    res->setInductanceModel(strToInductanceModel(value));
+                } else if (label.compare("Wires attenuation factor") == 0) {
+                    res->setWiresAttenuationFactor(atof(value.c_str()));
+                } else if (label.compare("Use default PML") == 0) {
+
                 } else if (label.compare("PML alpha factor") == 0) {
                     double factor = atof(value.c_str());
                     getNextLabelAndValue(label, value);
@@ -117,28 +145,18 @@ ParserGiD::readSolverOptions() {
                     getNextLabelAndValue(label, value);
                     double depth = atof(value.c_str());
                     res->setPMLCorrection(pair<double,double>(factor, depth));
-                } else if (label.compare("Wires flavor") == 0) {
-                    res->setWireModel(strToWireModel(value));
-                } else if (label.compare("Self inductance model") == 0) {
-                    res->setSelfInductanceModel(strToSelfInductanceModel(value));
-                } else if (label.compare("Taparrabos") == 0) {
-                    res->setTaparrabos(strToBool(value));
-                } else if (label.compare("Intra wire simplification") == 0) {
-                    res->setIntraWireSimplifications(strToBool(value));
-                } else if (label.compare("MTLN") == 0) {
-                    res->setMTLN(strToBool(value));
-                } else if (label.compare("Join wires") == 0) {
-                    res->setJoinWires(strToBool(value));
-                } else if (label.compare("Ground wires") == 0) {
-                    res->setGroundWires(strToBool(value));
-                } else if (label.compare("Connect endings") == 0) {
-                    res->setConnectEndings(strToBool(value));
-                } else if (label.compare("Isolate group groups") == 0) {
-                    res->setIsolateGroupGroups(strToBool(value));
-                } else if (label.compare("Make holes") == 0) {
-                    res->setMakeHoles(strToBool(value));
-                } else if (label.compare("Wires attenuation factor") == 0) {
-                    res->setWiresAttenuationFactor(atof(value.c_str()));
+                } else if (label.compare("PML backing") == 0) {
+
+                } else if (label.compare("Map") == 0) {
+
+                } else if (label.compare("Map VTK") == 0) {
+
+                } else if (label.compare("No NF2FF") == 0) {
+
+                } else if (label.compare("NF2F decimation") == 0) {
+
+                } else if (label.compare("Additional arguments") == 0) {
+
                 } else if(label.find("End of solver options") != label.npos) {
                     finished = true;
                 }
@@ -352,16 +370,10 @@ ParserGiD::readPhysicalModel(const MatId id) {
                 }
                 return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
             case PhysicalModel::elecDispersive:
-                if (!file.canOpen()) {
-                    throw ErrorFileNotExists(file);
-                }
                 return new PMVolumeDispersive(id, name, file);
             case PhysicalModel::isotropicsibc:
                 switch (surfType) {
                 case sibc:
-                    if (!file.canOpen()) {
-                        throw ErrorFileNotExists(file);
-                    }
                     return new PMSurfaceSIBC(id, name, file);
                 case multilayer:
                     return readMultilayerSurf(id, name, layersStr);
@@ -1524,43 +1536,24 @@ OptionsSolver::Solver ParserGiD::strToSolver(string str) const {
 }
 
 OptionsSolver::CompositeModel
-ParserGiD::strToCompositeModel(string str) const {
+ParserGiD::strToCompositeModel(string str) {
     str = trim(str);
-    if (str.compare("Default")==0) {
-        return OptionsSolver::CompositeModel::Default;
+    if (str.compare("None")==0) {
+        return OptionsSolver::CompositeModel::none;
     } else if (str.compare("DigFilt")==0) {
         return OptionsSolver::CompositeModel::digFilt;
     } else if (str.compare("MIBC")==0) {
-        return OptionsSolver::CompositeModel::MIBC;
-    } else if (str.compare("ADE-MIBC")==0) {
-        return OptionsSolver::CompositeModel::ADEMIBC;
-    } else if (str.compare("URM-MMT")==0) {
-        return OptionsSolver::CompositeModel::URMMMT;
+        return OptionsSolver::CompositeModel::mibc;
+    } else if (str.compare("ADE")==0) {
+        return OptionsSolver::CompositeModel::ade;
     } else {
-        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return OptionsSolver::CompositeModel::Default;
-    }
-}
-
-OptionsSolver::MetalModel
-ParserGiD::strToMetalModel(string str) const {
-    str = trim(str);
-    if (str.compare("Default")==0) {
-        return OptionsSolver::MetalModel::Default;
-    } else if (str.compare("Maloney")==0) {
-        return OptionsSolver::MetalModel::maloney;
-    } else if (str.compare("Maloney_skin_depth")==0) {
-        return OptionsSolver::MetalModel::maloneySkinDepth;
-    } else if (str.compare("Conformal_skin_depth")==0) {
-        return OptionsSolver::MetalModel::conformalSkinDepth;
-    } else {
-        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return OptionsSolver::MetalModel::Default;
+        throw Error("Unreckognized label: " + str);
+        return OptionsSolver::CompositeModel::mibc;
     }
 }
 
 OptionsSolver::WireModel
-ParserGiD::strToWireModel(string str) const {
+ParserGiD::strToWireModel(string str) {
     str = trim(str);
     if (str.compare("Default")==0) {
         return OptionsSolver::WireModel::Default;
@@ -1574,8 +1567,7 @@ ParserGiD::strToWireModel(string str) const {
     }
 }
 
-OptionsSolver::InductanceModel
-ParserGiD::strToSelfInductanceModel(string str) const {
+OptionsSolver::InductanceModel ParserGiD::strToInductanceModel(string str) {
     str = trim(str);
     if (str.compare("Boutayeb")==0) {
         return OptionsSolver::InductanceModel::boutayeb;
