@@ -113,7 +113,7 @@ private:
     OptionsSolver::CompositeModel strToCompositeModel(string) const;
     OptionsSolver::MetalModel strToMetalModel(string) const;
     OptionsSolver::WireModel strToWireModel(string) const;
-    OptionsSolver::SelfInductanceModel strToSelfInductanceModel(string) const;
+    OptionsSolver::InductanceModel strToSelfInductanceModel(string) const;
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
     GroupElements<Vol> boundToElemGroup(const string& line);
