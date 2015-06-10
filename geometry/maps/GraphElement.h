@@ -26,6 +26,10 @@ public:
     GraphElement(const Elem* elem, const UInt& numBounds = 0);
     GraphElement(const GraphElement&);
 
+    bool visited() const { return vis_;  }
+    void markVisited  () { vis_ =  true; }
+    void unmarkVisited() { vis_ = false; }
+
     const Elem* elem() const { return elem_; }
 
     UInt numBounds() const { return bounds_.size(); }
@@ -38,11 +42,11 @@ public:
     void setBound(UInt i, GraphBound* bound)   { bounds_[i] = bound;       }
     void addBound(GraphBound* bound)           { bounds_.push_back(bound); }
 
-    UInt numNeighbors() const;
-    const GraphElem* getNeighbor(UInt i) const;
-    GraphElem*       getNeighbor(UInt i);
+    UInt numNeighbors() const { return neighbors_.size(); }
+    const GraphElem* getNeighbor(UInt i) const { return neighbors_[i]; }
+    GraphElem*       getNeighbor(UInt i)       { return neighbors_[i]; }
 
-    UInt numBoundNeighbors(UInt i) const { return neighbors_[i].size(); }
+    UInt numBoundNeighbors(UInt i) const { return boundNeighbors_[i].size(); }
     const GraphElem* getBoundNeighbor(UInt i, UInt j) const;
     GraphElem*       getBoundNeighbor(UInt i, UInt j);
 
@@ -51,9 +55,12 @@ public:
     void printInfo() const;
 
 private:
+    bool vis_;
+
     const Elem* elem_;
     vector<GraphBound*>        bounds_;
-    vector<vector<GraphElem*>> neighbors_;
+    vector<GraphElem*>         neighbors_;
+    vector<vector<GraphElem*>> boundNeighbors_;
 };
 
 #include "GraphElement.hpp"

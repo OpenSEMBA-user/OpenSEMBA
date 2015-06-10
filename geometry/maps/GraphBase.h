@@ -8,6 +8,7 @@
 #ifndef COMMON_GEOMETRY_MAPS_GRAPHBASE_H_
 #define COMMON_GEOMETRY_MAPS_GRAPHBASE_H_
 
+#include <queue>
 #include <map>
 #include <utility>
 #include <vector>
@@ -40,6 +41,9 @@ public:
     GraphElem*        elem (UInt i)       { return elems_ [i]; }
     const GraphBound* bound(UInt i) const { return bounds_[i]; }
     GraphBound*       bound(UInt i)       { return bounds_[i]; }
+
+    void resetVisited();
+    vector<vector<const Elem*>> getConnectedComponents();
 
     void printInfo() const;
 

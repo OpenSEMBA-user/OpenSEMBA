@@ -92,6 +92,30 @@ MeshUnstructured* MeshStructured::getMeshUnstructured() const {
     return res;
 }
 
+MeshStructured* MeshStructured::getConnectivityMesh() const {
+    MeshStructured* res = new MeshStructured(grid());
+    res->coords() = coords().newGroup();
+    GroupElements<const ElemI> elems = this->elems();
+    elems.remove(MatId(0));
+    GraphVertices<ElemI, CoordI3> graphLayer;
+    graphLayer.init(elems, coords());
+    vector<vector<const ElemI*>> comps = graphLayer.getConnectedComponents();
+    for (UInt c = 0; c < comps.size(); c++) {
+        stringstream layerName;
+        layerName << "Component " << c+1;
+        Layer* newLayer = res->layers().add(new Layer(layerName.str()), true);
+        vector<ElemI*> newElemsLayer;
+        newElemsLayer.resize(comps[c].size());
+        for (UInt e = 0; e < comps[c].size(); e++) {
+            newElemsLayer[e] = comps[c][e]->cloneTo<ElemI>();
+            newElemsLayer[e]->setLayerId(newLayer->getId());
+        }
+        res->elems().add(newElemsLayer);
+    }
+    res->reassignPointers(*res);
+    return res;
+}
+
 void MeshStructured::printInfo() const {
     cout << " --- Mesh structured info --- " << endl;
     Grid3::printInfo();
