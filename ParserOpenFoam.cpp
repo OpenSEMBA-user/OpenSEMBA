@@ -74,7 +74,8 @@ CoordR3Group ParserOpenFoam::readCoordinates() const {
         getline(file, line);
         size_t init = line.find("(") + 1;
         size_t end = line.find(")");
-        CVecR3 pos = strToCartesianVector(line.substr(init, end-init));
+        string aux = line.substr(init, end-init);
+        CVecR3 pos = strToCartesianVector(aux);
         coord.push_back(new CoordR3(++id, pos));
     }
 
