@@ -98,19 +98,19 @@ ParserGiD::readSolverOptions() {
                 } else if (label.compare("Default sampling period") == 0) {
                     res->setSamplingPeriod(atof(value.c_str()));
                 } else if (label.compare("Force restarting") == 0) {
-
+                    res->setForceRestarting(strToBool(value));
                 } else if (label.compare("Resume simulation") == 0) {
-
+                    res->setResumeSimulation(strToBool(value));
                 } else if (label.compare("Flush") == 0) {
-
+                    res->setFlush(atof(value.c_str()));
                 } else if (label.compare("Composites model") == 0) {
                     res->setCompositeModel(strToCompositeModel(value));
                 } else if (label.compare("Conformal skin") == 0) {
-
+                    res->setConformalSkin(strToBool(value));
                 } else if (label.compare("No compo Mur") == 0) {
-
+                    res->setNoCompoMur(strToBool(value));
                 } else if (label.compare("Skin depth") == 0) {
-
+                    res->setSkinDepth(strToBool(value));
                 } else if (label.compare("Composites attenuation factor") == 0) {
                     res->setCompositesAttenuationFactor(atof(value.c_str()));
                 } else if (label.compare("Wires flavor") == 0) {
@@ -118,9 +118,9 @@ ParserGiD::readSolverOptions() {
                 } else if (label.compare("MTLN") == 0) {
                     res->setMTLN(strToBool(value));
                 } else if (label.compare("Min distance wires") == 0) {
-
+                    res->setMinDistanceWires(atof(value.c_str()));
                 } else if (label.compare("New dispersive formulation") == 0) {
-
+                    res->setNewDispersiveFormulation(strToBool(value));
                 } else if (label.compare("Taparrabos") == 0) {
                     res->setTaparrabos(strToBool(value));
                 } else if (label.compare("Make holes") == 0) {
@@ -132,7 +132,7 @@ ParserGiD::readSolverOptions() {
                 } else if (label.compare("Wires attenuation factor") == 0) {
                     res->setWiresAttenuationFactor(atof(value.c_str()));
                 } else if (label.compare("Use default PML") == 0) {
-
+                    res->setUseDefaultPml(strToBool(value.c_str()));
                 } else if (label.compare("PML alpha factor") == 0) {
                     double factor = atof(value.c_str());
                     getNextLabelAndValue(label, value);
@@ -146,17 +146,17 @@ ParserGiD::readSolverOptions() {
                     double depth = atof(value.c_str());
                     res->setPMLCorrection(pair<double,double>(factor, depth));
                 } else if (label.compare("PML backing") == 0) {
-
+                    res->setPMLBacking(strToPMLBacking(value));
                 } else if (label.compare("Map") == 0) {
-
+                    res->setMap(strToBool(value));
                 } else if (label.compare("Map VTK") == 0) {
-
+                    res->setMapVtk(strToBool(value));
                 } else if (label.compare("No NF2FF") == 0) {
-
+                    res->setNoNF2FF(strToNoNF2FF(value));
                 } else if (label.compare("NF2F decimation") == 0) {
-
+                    res->setNF2FFDecimation(strToBool(value));
                 } else if (label.compare("Additional arguments") == 0) {
-
+                    res->setAdditionalArguments(value);
                 } else if(label.find("End of solver options") != label.npos) {
                     finished = true;
                 }
@@ -1520,7 +1520,7 @@ OptionsMesher::Mode ParserGiD::strToMesherMode(string str) const {
     }
 }
 
-OptionsSolver::Solver ParserGiD::strToSolver(string str) const {
+OptionsSolver::Solver ParserGiD::strToSolver(string str) {
     str = trim(str);
     if (str.compare("ugrfdtd")==0) {
         return OptionsSolver::Solver::ugrfdtd;
@@ -1555,15 +1555,15 @@ ParserGiD::strToCompositeModel(string str) {
 OptionsSolver::WireModel
 ParserGiD::strToWireModel(string str) {
     str = trim(str);
-    if (str.compare("Default")==0) {
-        return OptionsSolver::WireModel::Default;
+    if (str.compare("Old")==0) {
+        return OptionsSolver::WireModel::oldWireModel;
     } else if (str.compare("Transition")==0) {
-        return OptionsSolver::WireModel::transition;
+        return OptionsSolver::WireModel::transitionWireModel;
     } else if (str.compare("New")==0) {
-        return OptionsSolver::WireModel::New;
+        return OptionsSolver::WireModel::newWireModel;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return OptionsSolver::WireModel::Default;
+        return OptionsSolver::WireModel::newWireModel;
     }
 }
 
@@ -1594,6 +1594,44 @@ ParserGiD::checkVersionCompatibility(const string version) const {
 
 const ProblemSize* ParserGiD::getProblemSize() const {
     return &pSize_;
+}
+
+OptionsSolver::PMLBacking ParserGiD::strToPMLBacking(const string& inStr) {
+    string str = inStr;
+    str = trim(str);
+    if (str.compare("None")==0) {
+        return OptionsSolver::PMLBacking::none;
+    } else if (str.compare("Mur1")==0) {
+        return OptionsSolver::PMLBacking::mur1;
+    } else if (str.compare("Mur2")==0) {
+        return OptionsSolver::PMLBacking::mur2;
+    } else {
+        throw Error("Unrecognized PML Backing label: " + str);
+        return OptionsSolver::PMLBacking::none;
+    }
+}
+
+OptionsSolver::NoNF2FF ParserGiD::strToNoNF2FF(const string& inStr) {
+    string str = inStr;
+    str = trim(str);
+    if (str.compare("None")==0) {
+        return OptionsSolver::NoNF2FF::none;
+    } else if (str.compare("back")==0) {
+        return OptionsSolver::NoNF2FF::back;
+    } else if (str.compare("front")==0) {
+        return OptionsSolver::NoNF2FF::front;
+    } else if (str.compare("left")==0) {
+        return OptionsSolver::NoNF2FF::left;
+    } else if (str.compare("right")==0) {
+        return OptionsSolver::NoNF2FF::right;
+    } else if (str.compare("down")==0) {
+        return OptionsSolver::NoNF2FF::down;
+    } else if (str.compare("up")==0) {
+        return OptionsSolver::NoNF2FF::up;
+    } else {
+        throw Error("Unrecognized No NF2FF label: " + str);
+        return OptionsSolver::NoNF2FF::none;
+    }
 }
 
 PoleResidue ParserGiD::readPoleResiduePair(ifstream& stream) {

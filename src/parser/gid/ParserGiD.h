@@ -113,6 +113,8 @@ private:
     bool checkVersionCompatibility(const string version) const;
     GroupElements<Vol> boundToElemGroup(const string& line);
 
+    static OptionsSolver::PMLBacking strToPMLBacking(const string& string);
+    static OptionsSolver::NoNF2FF strToNoNF2FF(const string& string);
     static OptionsSolver::Solver strToSolver(string);
     static OptionsSolver::WireModel strToWireModel(string);
     static OptionsSolver::InductanceModel strToInductanceModel(string);
