@@ -7,6 +7,14 @@
 
 #include <exporter/vtk/ExporterVTK.h>
 
+namespace {
+#ifdef _WIN32
+    const string Separator = "\\";
+#else
+    const string Separator = "/";
+#endif
+}
+
 ExporterVTK::ExporterVTK(const SmbData* smb,
         const string& fn)
 :   Exporter(fn) {
@@ -124,10 +132,11 @@ void ExporterVTK::writeFile_(const GroupElements<const ElemR>& elems,
     outMain << "    " << "<DataSet "
             << "group=\"" << name << "\" "
             << "part=\"" << part++ << "\" "
-            << "file=\"" << getBasename() + ".vtk" + "/" + name + ".vtu" << "\" "
+            << "file=\""
+            << getBasename() + ".vtk" + Separator + name + ".vtu" << "\" "
             << "/>" << endl;
 
-    string filename = getFilename() + ".vtk" + "/" + name + ".vtu";
+    string filename = getFilename() + ".vtk" + Separator + name + ".vtu";
     ofstream outFile(filename.c_str());
     outFile << "<VTKFile "
             << "type=\"UnstructuredGrid\" "
