@@ -69,7 +69,11 @@ Arguments::getProjectFolder() const {
 	char *cstr = new char[getFilename().length() + 1];
 	strcpy(cstr, getFilename().c_str());
 	string projectDir(dirname(cstr));
+#ifdef _WIN32
+	projectDir += "\\";
+#else
 	projectDir += "/";
+#endif
 	delete [] cstr;
 	return projectDir;
 }
