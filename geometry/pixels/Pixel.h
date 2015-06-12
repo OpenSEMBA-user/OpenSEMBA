@@ -8,7 +8,7 @@
 #ifndef SRC_MESHER_FDTD_MESHCONF_PIXEL_H_
 #define SRC_MESHER_FDTD_MESHCONF_PIXEL_H_
 
-#include "geometry/CVecI3Fractional.h"
+#include "math/CVecI3Fractional.h"
 #include "base/class/ClassBase.h"
 #include <array>
 
