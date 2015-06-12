@@ -11,20 +11,16 @@
 #include <vector>
 #include <utility>
 #include <limits>
-#include "../core/ArgumentsCudg3d.h"
+
+using namespace std;
+
 #include "../core/Comm.h"
 #include "../core/Ordering.h"
-#include "../../../common/inputs/physicalModel/PhysicalModel.h"
-#include "../../../common/geometry/MeshVolume.h"
+#include "physicalModel/PhysicalModel.h"
+#include "geometry/MeshVolume.h"
 #include "DG/DG.h"
 
 #define SOLVERINFO_ALLOW_REORDERING_IN_SOLVER
-
-#ifndef SOLVERINFO_ERROR
-	#define SOLVERINFO_ERROR 111444
-#endif
-
-using namespace std;
 
 class Integrator : public Ordering {
 public:
@@ -33,32 +29,19 @@ public:
 	virtual ~Integrator();
 	virtual void
 	 timeIntegrate(const double timer) const = 0;
-	void
-	 setSolver(DG* solver);
-	double
-	 getMaxDT() const;
-	double
-	 getMinDT() const;
-	uint
-	 getNTiers() const;
-	uint
-	 getNPartitions() const;
-	vector<vector<uint> >
-	 getTiersIds() const;
-	vector<vector<uint> >
-	 getStagesIds() const;
-	vector<vector<uint> >
-	 getPartitionsIds() const;
-	pair<uint,uint>
-	 getRange(const uint tier, const uint stage) const;
-	vector<pair<uint,int> >
-	 getComputationalWeights(const MeshVolume* msh) const;
-	void
-	 partitionate(
-	  const MeshVolume* mesh,
-	  Comm* comm);
-	void
-	 printInfo() const;
+	void setSolver(DG* solver);
+	double getMaxDT() const;
+	double getMinDT() const;
+	uint getNTiers() const;
+	uint getNPartitions() const;
+	vector<vector<uint> > getTiersIds() const;
+	vector<vector<uint> > getStagesIds() const;
+	vector<vector<uint> > getPartitionsIds() const;
+	pair<uint,uint> getRange(const uint tier, const uint stage) const;
+	vector<pair<uint,int> > getComputationalWeights(
+	        const MeshVolume* msh) const;
+	void partitionate(const MeshVolume* mesh, Comm* comm);
+	void printInfo() const;
 protected:
 	DG* solver;
 	bool doLTS;

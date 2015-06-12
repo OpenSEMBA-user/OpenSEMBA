@@ -85,8 +85,8 @@ public:
    setFieldsAndTimeFromResumeFile();
    virtual uint
    getFieldDOFs() = 0;
-   const FieldD3* getElectric() const;
-   const FieldD3* getMagnetic() const;
+   const FieldR3* getElectric() const;
+   const FieldR3* getMagnetic() const;
    virtual uint getGlobalFieldPosOfVertex(
          pair<const Element*, uint> vertex) const;
    virtual vector<uint> getGlobalFieldPosOfFace(
@@ -97,11 +97,11 @@ public:
 
 protected:
    // Fields and residuals: dim = (np,nK)
-   FieldD3 E, H;
-   FieldD3 resE, resH;
+   FieldR3 E, H;
+   FieldR3 resE, resH;
    // Scaling factors for linear elements.
    // Fluxes scaling factors. dim = (4, nK)
-   FieldD3 nAdm, nImp, rnAdm, rnImp, cnAdm, cnImp;
+   FieldR3 nAdm, nImp, rnAdm, rnImp, cnAdm, cnImp;
    // Field scaling factors. dim = (nK)
    double *oneOverEps, *oneOverMu;
    uint nK;

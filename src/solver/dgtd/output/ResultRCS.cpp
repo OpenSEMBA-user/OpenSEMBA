@@ -158,8 +158,8 @@ ResultRCS::getRCS(
 
 void
 ResultRCS::writeResult(
- const FieldD3& elec,
- const FieldD3& magn,
+ const FieldR3& elec,
+ const FieldR3& magn,
  const CVecD3& EInc,
  const double time) {
 	uint i, e, f, j, k;

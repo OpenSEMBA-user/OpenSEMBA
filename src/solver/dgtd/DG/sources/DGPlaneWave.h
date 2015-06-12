@@ -20,7 +20,7 @@ public:
 	 const MapGroup& map,
 	 const CellGroup& cells,
 	 const Comm* comm,
-	 FieldD3& dE, FieldD3& dH,
+	 FieldR3& dE, FieldR3& dH,
 	 const int vmapM[faces][nfp]);
 	virtual ~DGPlaneWave();
 	void

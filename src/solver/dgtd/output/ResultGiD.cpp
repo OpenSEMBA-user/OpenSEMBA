@@ -141,8 +141,8 @@ ResultGiD::writeTetProbeMesh(int& coordCounter, int& elemCounter) {
 void
 ResultGiD::write(
       const double time,
-      const FieldD3& electric,
-      const FieldD3& magnetic) const {
+      const FieldR3& electric,
+      const FieldR3& magnetic) const {
    ExporterGiD::beginResult(
          getName() + " "  + outputTypeStr(),
          "Time", time, getGiDResultType(),

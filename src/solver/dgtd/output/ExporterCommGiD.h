@@ -8,20 +8,19 @@
 #ifndef COMMGIDOUTPUT_H_
 #define COMMGIDOUTPUT_H_
 
-#include "OutputGiD.h"
+#include "ExporterGiD.h"
 #include "../core/Comm.h"
 
-class OutputCommGiD : public ExporterGiD {
+class ExporterCommGiD : public ExporterGiD {
 public:
-   OutputCommGiD(
+   ExporterCommGiD(
          const SmbData* smb,
-         const DG* dg,
          const Comm* comm);
-   virtual	~OutputCommGiD();
+   virtual	~ExporterCommGiD();
    virtual void process(
          const double time,
-         const FieldD3& elec,
-         const FieldD3& magn);
+         const FieldR3& elec,
+         const FieldR3& magn);
 private:
    const Comm* comm_;
    double lastSyncing_;

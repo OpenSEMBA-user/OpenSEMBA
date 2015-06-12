@@ -43,12 +43,12 @@ DGExplicit::getFieldDOFs() {
 	return (nK * np * 3);
 }
 
-const FieldD3&
+const FieldR3&
 DGExplicit::getRHSElectric() const {
 	return rhsE;
 }
 
-const FieldD3&
+const FieldR3&
 DGExplicit::getRHSMagnetic() const {
 	return rhsH;
 }

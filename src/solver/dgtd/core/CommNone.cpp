@@ -40,16 +40,16 @@ CommNone::isMaster() const {
 
 void
 CommNone::gatherFieldsMaster(
-      FieldD3& electric,
-      FieldD3& magnetic,
-      const FieldD3& localElectric,
-      const FieldD3& localMagnetic) const {
+      FieldR3& electric,
+      FieldR3& magnetic,
+      const FieldR3& localElectric,
+      const FieldR3& localMagnetic) const {
 }
 
 void
 CommNone::gatherFieldsSlave(
-      const FieldD3& electric,
-      const FieldD3& magnetic) const {
+      const FieldR3& electric,
+      const FieldR3& magnetic) const {
    //
 }
 

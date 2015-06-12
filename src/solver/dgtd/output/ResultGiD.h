@@ -7,7 +7,7 @@
 #ifndef RESULTGID_H_
 #define RESULTGID_H_
 
-#include "../../../common/inputs/OutputRequest.h"
+#include "outRq/OutRq.h"
 #include "../../../common/gidpost/gidpost.h"
 #include "OutputGiD.h"
 #include <string.h>
@@ -31,16 +31,16 @@ public:
     void writeTetProbeMesh(int& coordCounter, int& elemCounter);
     void
     write(const double time,
-            const FieldD3& electric,
-            const FieldD3& magnetic) const;
+            const FieldR3& electric,
+            const FieldR3& magnetic) const;
 private:
     vector<uint> coord_;
     vector<uint> solverNode_;
     const DG* dg_;
     const Mesh* mesh_;
-    CVecD3 getOutputValueFromFields(
-            const CVecD3& electric,
-            const CVecD3& magnetic) const;
+    CVecR3 getOutputValueFromFields(
+            const CVecR3& electric,
+            const CVecR3& magnetic) const;
     string getGiDGaussPointType() const;
     vector<string> getComponentNames() const;
 };

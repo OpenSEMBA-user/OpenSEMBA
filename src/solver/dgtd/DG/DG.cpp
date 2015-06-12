@@ -330,11 +330,11 @@ DG::setResidualsToZero() {
    resH.setToZero();
 }
 
-const FieldD3* DG::getElectric() const {
+const FieldR3* DG::getElectric() const {
    return &E;
 }
 
-const FieldD3* DG::getMagnetic() const {
+const FieldR3* DG::getMagnetic() const {
    return &H;
 }
 

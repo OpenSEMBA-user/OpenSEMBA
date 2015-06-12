@@ -23,7 +23,7 @@ public:
 	 const vector<const BoundaryCondition*>& bc,
 	 const MapGroup& map,
 	 const CellGroup& cells,
-	 FieldD3& dE, FieldD3& dH,
+	 FieldR3& dE, FieldR3& dH,
 	 const int vmapM[faces][nfp]);
 	virtual ~DGDipole();
 	void

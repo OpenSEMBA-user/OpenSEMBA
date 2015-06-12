@@ -12,7 +12,7 @@ DGPlaneWave::DGPlaneWave(
  const MapGroup& map,
  const CellGroup& cells,
  const Comm* comm,
- FieldD3& dE, FieldD3& dH,
+ FieldR3& dE, FieldR3& dH,
  const int vmapM[faces][nfp]) :
   PlaneWave(pw) {
 	initSource(bc, map, cells, dE, dH, vmapM);

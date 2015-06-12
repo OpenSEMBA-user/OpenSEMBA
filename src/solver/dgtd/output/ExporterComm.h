@@ -8,25 +8,23 @@
 #ifndef OUTPUTCOMM_H_
 #define OUTPUTCOMM_H_
 
-#include "../../../common/exporter/Output.h"
-#include "../core/Comm.h"
+#include "common/exporter/Exporter.h"
 
 using namespace std;
 
-class OutputComm : public Exporter {
+class ExporterComm : public Exporter {
 public:
-   OutputComm(
+   ExporterComm(
          const SmbData* smb,
-         const DG* dg,
          const Comm* comm);
-   virtual	~OutputComm();
+   virtual	~ExporterComm();
    void
    closeResultsFile();
    void
    writeResults(
-         const FieldD3& electric,
-         const FieldD3& magnetic,
-         CVecD3& EInc,
+         const FieldR3& electric,
+         const FieldR3& magnetic,
+         CVecR3& EInc,
          const double time, const uint tStep);
 private:
    double lastSyncing_;

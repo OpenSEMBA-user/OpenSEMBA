@@ -9,7 +9,7 @@
 #define COMMUNICATIONS_H_
 
 #include "stdlib.h"
-#include "../../../common/geometry/MeshVolume.h"
+#include "geometry/MeshVolume.h"
 #include "Ordering.h"
 #include "Field.h"
 #include <iostream>
@@ -38,11 +38,11 @@ public:
       const vector<vector<uint> >& partId) = 0;
 	virtual void
 	 gatherFieldsMaster(
- 	  FieldD3& elec, FieldD3& magn,
- 	  const FieldD3& localElec, const FieldD3& localMagn) const = 0;
+ 	  FieldR3& elec, FieldR3& magn,
+ 	  const FieldR3& localElec, const FieldR3& localMagn) const = 0;
 	virtual void
 	 gatherFieldsSlave(
- 	  const FieldD3& electric, const FieldD3& magnetic) const = 0;
+ 	  const FieldR3& electric, const FieldR3& magnetic) const = 0;
 	virtual void
 	 syncNeighbourFields(
 	  double* nEx, double* nEy, double* nEz,

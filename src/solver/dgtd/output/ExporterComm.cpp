@@ -5,9 +5,9 @@
  *      Author: luis
  */
 
-#include "OutputComm.h"
+#include "ExporterComm.h"
 
-OutputComm::OutputComm(
+ExporterComm::ExporterComm(
       const SmbData* smb,
       const DG* dg,
       const Comm* comm) :
@@ -16,14 +16,14 @@ OutputComm::OutputComm(
    lastSyncing_ = (double) 0.0;
 }
 
-OutputComm::~OutputComm() {
+ExporterComm::~ExporterComm() {
 
 }
 
 void
-OutputComm::writeResults(
-      const FieldD3& electric,
-      const FieldD3& magnetic,
+ExporterComm::writeResults(
+      const FieldR3& electric,
+      const FieldR3& magnetic,
       CVecD3& EInc,
       const double time, const uint tStep) {
    if ((time != lastSyncing_) || (tStep == 0)) {

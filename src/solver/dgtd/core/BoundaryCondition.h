@@ -16,12 +16,12 @@ class BoundaryCondition {
 public:
    BoundaryCondition();
    BoundaryCondition(
-         pair<const Volume*, uint>& boundary,
+         Face& boundary,
          const Condition* cond,
          const bool back = false);
    virtual ~BoundaryCondition();
-   pair<const Volume*, uint> get() const;
-   const Volume* getCell() const;
+   Face get() const;
+   const VolR* getCell() const;
    uint getFace() const;
    bool
    hasSameBoundary(const BoundaryCondition& other) const {
