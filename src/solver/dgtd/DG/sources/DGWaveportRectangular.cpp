@@ -160,7 +160,7 @@ DGWaveportRectangular::computeExcitationField(
       double* HxInc,
       double* HyInc,
       double* HzInc,
-      const CVecD3* pos,
+      const CVecR3* pos,
       const uint nE,
       const double time,
       const double minDT) {

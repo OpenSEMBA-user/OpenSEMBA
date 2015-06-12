@@ -65,7 +65,7 @@ CellGroup::buildNodalMaps(const MapGroup& map) {
 	// - mapP[f][n] stores the number of the node adjacent to the node n in
 	//   face f. With a face node notation.
 	// - vmapP[f][n] does the same with a node notation.
-	CVecD3 diff, posM, posP;
+	CVecR3 diff, posM, posP;
 	uint nK = cell.size();
 	for (uint e = 0; e < nK; e++) {
 	   const uint id = cell[e]->getId();
@@ -121,7 +121,7 @@ CellGroup::checkIdsAreConsecutive() const {
 void
 CellGroup::checkNodalMaps(const MapGroup& map) const {
 	// Checks for vmap.
-	CVecD3 diff;
+	CVecR3 diff;
 	bool problem = false;
 	uint nK = cell.size();
 	for (uint e = 0; e < nK; e++) {

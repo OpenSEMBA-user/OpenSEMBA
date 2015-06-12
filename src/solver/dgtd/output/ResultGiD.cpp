@@ -47,7 +47,7 @@ ResultGiD::writePointProbeMesh(int& coordCounter, int& elemCounter) {
    ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Point, 1);
    GiD_BeginCoordinates();
    assert(getElem().size() == 1);
-   const CVecD3 pos = mesh_->v.getPtrToId(getElem()[0])->pos();
+   const CVecR3 pos = mesh_->v.getPtrToId(getElem()[0])->pos();
    GiD_WriteCoordinates(++coordCounter, pos(0), pos(1), pos(2));
    GiD_EndCoordinates();
    GiD_BeginElements();
@@ -77,7 +77,7 @@ ResultGiD::writeTriProbeMesh(
       const Volume* vol = surf.first;
       uint f = surf.second;
       for (uint i = 0; i < nV; i++) {
-         CVecD3 vertex;
+         CVecR3 vertex;
          if (mesh_->isLinear()) {
             vertex = vol->getSideVertex(f,i)->pos();
          } else {
@@ -115,7 +115,7 @@ ResultGiD::writeTetProbeMesh(int& coordCounter, int& elemCounter) {
    int tmpCounter = coordCounter;
    for (uint j = 0; j < elem_.size(); j++) {
       for (uint i = 0; i < nV; i++ ) {
-         const CVecD3 pos
+         const CVecR3 pos
          = mesh_->getElementWithId(elem_[i])->getVertex(i)->pos();
          GiD_WriteCoordinates(++coordCounter, pos(0), pos(1), pos(2));
       }
@@ -149,17 +149,17 @@ ResultGiD::write(
          getGiDResultLocation(), getGiDGaussPointType(), getComponentNames());
    for (uint k = 0; k < solverNode_.size(); k++) {
       const uint j = solverNode_[k];
-      const CVecD3 vec
+      const CVecR3 vec
       = getOutputValueFromFields(electric.getCVec(j), magnetic.getCVec(j));
       GiD_WriteVectorModule(coord_[k], vec(0), vec(1), vec(2), vec.norm());
    }
    GiD_EndResult();
 }
 
-CVecD3
+CVecR3
 ResultGiD::getOutputValueFromFields(
-      const CVecD3& electric,
-      const CVecD3& magnetic) const {
+      const CVecR3& electric,
+      const CVecR3& magnetic) const {
    switch (getOutputType()) {
    case OutRq::electricField:
       return electric;
@@ -170,7 +170,7 @@ ResultGiD::getOutputValueFromFields(
    default:
       cerr << endl << "ERROR @ ResultGiD::getOutputValueFromFields: "
       << "Not implemented for output type: " << outputTypeStr() << endl;
-      return CVecD3();
+      return CVecR3();
    }
 }
 

@@ -35,15 +35,15 @@ CellTri6<TRI_N>::getRadiatedField(
 	const double beta = 2.0 * M_PI * frequency / SPEED_OF_LIGHT;
 	complex<double> phaseShift(0.0, beta);
 	SphericalVector sphDir(direction.first, direction.second);
-	CVecD3 dir = sphDir.convertToCartesian();
-	CVecD3 cNode[geo.ncp];
+	CVecR3 dir = sphDir.convertToCartesian();
+	CVecR3 cNode[geo.ncp];
 	getCubatureNodes(cNode);
 	for (uint c = 0; c < geo.ncp; c++) {
 		phase[c] = exp(phaseShift * (double) dir.dot(cNode[c]));
 	}
 	// Computes integral.
 	const double c0mu0 = SPEED_OF_LIGHT * VACUUM_PERMEABILITY;
-	CVecD3 cNormal[geo.ncp];
+	CVecR3 cNormal[geo.ncp];
 	getCubatureNormals(cNormal);
 	double csdf[geo.ncp];
 	getCubatureDifferentials(csdf);

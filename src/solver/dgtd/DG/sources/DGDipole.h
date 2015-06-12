@@ -30,7 +30,7 @@ public:
 	 computeExcitation(
 	  const double intTime,
 	  const double minDT);
-	CVecD3
+	CVecR3
 	 getMagnitude(const double time) const;
 	void
 	 printInfo() const;

@@ -34,7 +34,7 @@ public:
 	  const pair<double,double> direction) const = 0;
 	virtual uint
 	 getNumberOfVertices() const;
-	virtual CVecD3
+	virtual CVecR3
 	 getSideNormal(const uint s) const;
 };
 

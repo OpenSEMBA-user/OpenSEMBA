@@ -3,7 +3,8 @@
 #	define SIMULATION_H_
 
 #include "parser/gid/ParserGiD.h"
-#include "../output/OutputGiD.h"
+#include "exporter/gid/ExporterGiD.h"
+
 #ifdef USE_MPI
     #include "CommMPI.h"
     #include "../output/OutputCommGiD.h"

@@ -73,10 +73,10 @@ private:
    uint nE0, nED;
    uint *elem0, *elemD;
    uint *face0, *faceD;
-   CVecD3 *n0, *nD;
-   CVecD3 **Q0, **rhsQ0, **resQ0;
-   CVecD3 **QD, **rhsQD, **resQD;
-   CVecD3 *E0, *ED;
+   CVecR3 *n0, *nD;
+   CVecR3 **Q0, **rhsQ0, **resQ0;
+   CVecR3 **QD, **rhsQD, **resQD;
+   CVecR3 *E0, *ED;
    void
    computePolarizationFields(
          const double *Hx, const double *Hy, const double *Hz,

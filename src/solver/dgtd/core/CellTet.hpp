@@ -51,13 +51,13 @@ CellTet<TET_N>::getConductivityWithGeometricProfile(
  const double maxSigma) const {
 	static const uint ncp = SimplexTet<TET_N>::ncp;
 	StaMatrix<double,np,np> res;
-	CVecD3 cPos[ncp];
+	CVecR3 cPos[ncp];
 	base->getCubaturePositions(cPos);
 	int firstOrientation = mat.getFirstOrientationIndex();
 	int i = ((type % 10) - 1 + firstOrientation);
 	int j = ((type / 10) - 1 + firstOrientation);
-	const CVecD3 posBorder = mat.getPMLBeginningPosition();
-	const CVecD3 width = mat.getWidth();
+	const CVecR3 posBorder = mat.getPMLBeginningPosition();
+	const CVecR3 width = mat.getWidth();
 	// Computes sigma(x) = [(x - x_0)/width]^2 * maxSigma.
 	double sigma[ncp];
 	i = i % 3;
@@ -216,14 +216,14 @@ CellTet<TET_N>::isLocalSide(
 }
 
 template <int TET_N>
-CVecD3
+CVecR3
 CellTet<TET_N>::getSideNodePos(
  const uint f, const uint i) const {
 	return n[tet.sideNode(f, i)];
 }
  
 template <int TET_N>
-CVecD3
+CVecR3
 CellTet<TET_N>::getSideNormal(
  const uint f) const {
 	return base->sideNormal(f);
@@ -366,7 +366,7 @@ CellTet10<TET_N>::getCurvedLIFTnormal(
 	static const uint ncp = SimplexTri<2>::ncp;
 	double csdf[ncp];
 	face.getCubatureDifferentials(csdf);
-	CVecD3 csdn[ncp], csdcn[ncp], csdrn[ncp];
+	CVecR3 csdn[ncp], csdcn[ncp], csdrn[ncp];
 	face.getCubatureNormals(csdn);
 	for (uint c = 0; c < ncp; c++) {
 		csdcn[c](0) = csdn[c](0) * csdn[c](1);

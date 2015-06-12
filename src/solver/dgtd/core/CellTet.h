@@ -28,7 +28,7 @@ public:
 	static const uint vertices = 4;
 	const Tet* base;
 	uint vmapP[faces][nfp]; // Node to Node of the contiguous element.
-	CVecD3 n[np]; // Lagrange's base functions nodes pos.
+	CVecR3 n[np]; // Lagrange's base functions nodes pos.
 	CellTet();
 	virtual ~CellTet();
 	bool
@@ -75,11 +75,11 @@ public:
 	 getSideVertexBaseNode(uint f, uint i) const;
 	Cell*&
 	 getEtoEPointer(const int) const;
-	CVecD3
+	CVecR3
 	 getSideNodePos(
 	  const uint f,
 	  const uint i) const;
-	CVecD3
+	CVecR3
 	 getSideNormal(
 	  const uint f) const;
 	virtual void

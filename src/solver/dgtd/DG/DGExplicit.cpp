@@ -975,7 +975,7 @@ DGExplicit::buildCurvedFluxScalingFactors(
 				 impP, admP, impAv, admAv);
 				uint i = e * faces + f;
 				// Sets flux scaling factors to zero.
-				CVecD3 zero(0.0, 0.0, 0.0);
+				CVecR3 zero(0.0, 0.0, 0.0);
 				nAdm.set(i, zero);
 				nImp.set(i, zero);
 				cnAdm.set(i, zero);

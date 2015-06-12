@@ -276,12 +276,12 @@ DGSource::addJumps(
    }
 }
 
-CVecD3*
+CVecR3*
 DGSource::initPositions(
       const vector<pair<uint, uint> >& elemFace,
       const CellGroup& cells) const {
    const uint nE = elemFace.size();
-   CVecD3 *pos;
+   CVecR3 *pos;
    pos = new CartesianVector<double, 3> [nE * nfp];
    for (uint i = 0; i < nE; i++) {
       uint id = cells.getIdOfRelPos(elemFace[i].first);

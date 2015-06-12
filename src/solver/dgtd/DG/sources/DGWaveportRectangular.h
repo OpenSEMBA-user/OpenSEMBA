@@ -37,7 +37,7 @@ private:
 	 computeExcitationField(
 	  double* ExInc, double *EyInc, double *EzInc,
 	  double* HxInc, double *HyInc, double *HzInc,
-	  const CVecD3* pos,
+	  const CVecR3* pos,
 	  const uint nE,
 	  const double intTime,
 	  const double minDT);

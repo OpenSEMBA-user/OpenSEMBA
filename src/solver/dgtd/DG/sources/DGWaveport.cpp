@@ -57,7 +57,7 @@ bool
 DGWaveport::checkNormalsAreEqual(
  const vector<pair<uint, uint> >& elemFace,
  const CellGroup& cells) const {
-	CVecD3 n1, n2;
+	CVecR3 n1, n2;
 	for (uint i = 1; i < elemFace.size(); i++) {
 		const uint id1 = cells.getIdOfRelPos(elemFace[i-1].first);
 		const uint f1 = elemFace[i-1].second;

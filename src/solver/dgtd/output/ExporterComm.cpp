@@ -24,7 +24,7 @@ void
 ExporterComm::writeResults(
       const FieldR3& electric,
       const FieldR3& magnetic,
-      CVecD3& EInc,
+      CVecR3& EInc,
       const double time, const uint tStep) {
    if ((time != lastSyncing_) || (tStep == 0)) {
       comm_->gatherFieldsSlave(electric, magnetic);

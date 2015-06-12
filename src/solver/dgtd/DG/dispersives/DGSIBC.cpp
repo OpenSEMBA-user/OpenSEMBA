@@ -58,35 +58,35 @@ DGSIBC::DGSIBC(
       faceD[i] = efListD[i].second;
    }
    // Normal vectors.
-   n0 = new CVecD3[nE0];
+   n0 = new CVecR3[nE0];
    for (uint k = 0; k < nE0; k++) {
       n0[k] = bc[k]->getCell()->sideNormal(face0[k]);
    }
-   nD = new CVecD3[nED];
+   nD = new CVecR3[nED];
    for (uint k = 0; k < nED; k++) {
       nD[k] = bc[k]->getCell()->sideNormal(faceD[k]);
    }
    // Allocates magnetic currents.
    nP = getNumberOfPoles();
-   Q0 = new CVecD3*[nP];
-   rhsQ0 = new CVecD3*[nP];
-   resQ0 = new CVecD3*[nP];
-   QD = new CVecD3*[nP];
-   rhsQD = new CVecD3*[nP];
-   resQD = new CVecD3*[nP];
+   Q0 = new CVecR3*[nP];
+   rhsQ0 = new CVecR3*[nP];
+   resQ0 = new CVecR3*[nP];
+   QD = new CVecR3*[nP];
+   rhsQD = new CVecR3*[nP];
+   resQD = new CVecR3*[nP];
    for (uint p = 0; p < nP; p++) {
-      Q0[p] = new CVecD3[nE0*nfp];
-      rhsQ0[p] = new CVecD3[nE0*nfp];
-      resQ0[p] = new CVecD3[nE0*nfp];
+      Q0[p] = new CVecR3[nE0*nfp];
+      rhsQ0[p] = new CVecR3[nE0*nfp];
+      resQ0[p] = new CVecR3[nE0*nfp];
    }
    for (uint p = 0; p < nP; p++) {
-      QD[p] = new CVecD3[nED*nfp];
-      rhsQD[p] = new CVecD3[nED*nfp];
-      resQD[p] = new CVecD3[nED*nfp];
+      QD[p] = new CVecR3[nED*nfp];
+      rhsQD[p] = new CVecR3[nED*nfp];
+      resQD[p] = new CVecR3[nED*nfp];
    }
    // Polarization fields.
-   E0 = new CVecD3[nE0*nfp];
-   ED = new CVecD3[nED*nfp];
+   E0 = new CVecR3[nE0*nfp];
+   ED = new CVecR3[nED*nfp];
 }
 
 
@@ -112,9 +112,9 @@ DGSIBC::computeRHSMagneticPolarizationCurrents(
             uint i = e * nfp;
             for (uint j = 0; j < nfp; j++) {
                int vM = e0 * np + vmapM[f0][j];
-               const CVecD3 H0(H(x)[vM],H(y)[vM],H(z)[vM]);
+               const CVecR3 H0(H(x)[vM],H(y)[vM],H(z)[vM]);
                uint vP = map[e0][f0][j]; // Field coeff pos.
-               const CVecD3 HD(HxP[eD][fD][vP], HyP[eD][fD][vP], HzP[eD][fD][vP]);
+               const CVecR3 HD(HxP[eD][fD][vP], HyP[eD][fD][vP], HzP[eD][fD][vP]);
                rhsQ0[p][i] =  (Q0[p][i] * pole_[p])
                            + (n0[e] ^ H0) * Z_[p](0,0) + (n0[e] ^ HD) * Z_[p](0,1);
                i++;
@@ -135,10 +135,10 @@ DGSIBC::computeRHSMagneticPolarizationCurrents(
             uint i = e * nfp; // Node number.
             for (uint j = 0; j < nfp; j++) {
                uint vM = eD * np + vmapM[fD][j]; // Field coeff pos.
-               const CVecD3
+               const CVecR3
                HD(H(x)[vM],H(y)[vM],H(z)[vM]);
                uint vP = map[eD][fD][j]; // Field coeff pos.
-               const CVecD3
+               const CVecR3
                H0(HxP[e0][f0][vP], HyP[e0][f0][vP], HzP[e0][f0][vP]);
                rhsQD[p][i] = QD[p][i] * pole_[p]
                 - (nD[e] ^ H0) * Z_[p](1,0) - (nD[e] ^ HD) * Z_[p](1,1);
@@ -169,9 +169,9 @@ DGSIBC::computePolarizationFields(
       if (e1 <= e0 && e0 < e2) {
          for (uint j = 0; j < nfp; j++) {
             int vM = e0 * np + vmapM[f0][j];
-            CVecD3 H0(Hx[vM],Hy[vM],Hz[vM]);
+            CVecR3 H0(Hx[vM],Hy[vM],Hz[vM]);
             uint vP = map[eD][fD][j]; // Field coeff pos.
-            CVecD3
+            CVecR3
             HD(HxP[eD][fD][vP], HyP[eD][fD][vP], HzP[eD][fD][vP]);
             uint i = e * nfp;
 #				warning "Ignoring Zinfinite"
@@ -192,9 +192,9 @@ DGSIBC::computePolarizationFields(
       if (e1 <= e0 && e0 < e2) {
          for (uint j = 0; j < nfp; j++) {
             int vM = eD * np + vmapM[fD][j];
-            CVecD3 H0(Hx[vM],Hy[vM],Hz[vM]);
+            CVecR3 H0(Hx[vM],Hy[vM],Hz[vM]);
             uint vP = map[e0][f0][j]; // Field coeff pos.
-            CVecD3
+            CVecR3
             HD(HxP[e0][f0][vP], HyP[e0][f0][vP], HzP[e0][f0][vP]);
             uint i = e * nfp;
 #				warning "Ignoring Zinfinite"

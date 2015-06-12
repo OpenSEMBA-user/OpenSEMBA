@@ -10,8 +10,11 @@
 
 #include <utility>
 #include <vector>
-#include "../../../../common/inputs/electromagneticSources/EMSource.h"
-#include "../../../../common/geometry/maps/Map.h"
+
+using namespace std;
+
+#include "sources/EMSource.h"
+#include "geometry/maps/Map.h"
 #include "../../core/CellGroup.h"
 #include "../../core/Comm.h"
 #include "../../core/BoundaryCondition.h"
@@ -80,7 +83,7 @@ protected:
 	  const MapGroup& map,
 	  const CellGroup& cells,
 	  const BackingType type) const;
-	CVecD3*
+	CVecR3*
 	 initPositions(
  	  const vector<pair<uint, uint> >& elemFace,
 	  const CellGroup& cells) const;

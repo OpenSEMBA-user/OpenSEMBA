@@ -4,26 +4,24 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../core/ArgumentsCudg3d.h"
-#include "../../../common/math/Field.h"
+#include "math/Field.h"
+
+using namespace std;
+
 #include "../core/Comm.h"
 #include "sources/DGPlaneWave.h"
 #include "sources/DGDipole.h"
 #include "sources/DGWaveportRectangular.h"
 #include "VectorModuleResult.h"
 #include "../core/BCGroup.h"
-
 #include "dispersives/DGSIBC.h"
 #include "dispersives/DGDispersiveVolumic.h"
 #include "dispersives/DGPMLUniaxial.h"
 #include "dispersives/DGPMLMultiaxial.h"
 
-using namespace std;
-
 #define SOLVER_DEDUPLICATE_OPERATORS
 #define SOLVER_USE_OPENMP
 
-#ifdef SOLVER_DEDUPLICATE_OPERATORS
 struct lexCompareMat {
    static const uint np = ((ORDER_N+1) * (ORDER_N+2) * (ORDER_N+3) / 6);
    bool
@@ -44,7 +42,6 @@ struct lexCompareMat {
       return false;
    }
 };
-#endif
 
 class DG : public Ordering {
    friend class Exporter;
@@ -73,14 +70,14 @@ public:
    setFieldsToGaussian(
          const CellGroup& cells,
          const double amplitude,
-         CVecD3& polarization,
-         const CVecD3& gaussCenter,
+         CVecR3& polarization,
+         const CVecR3& gaussCenter,
          const double gaussWidth);
    virtual void
    setFieldsToHarmonics(
          const CellGroup& cells,
          const CartesianVector<int,3>& harmonics,
-         CVecD3& polarization);
+         CVecR3& polarization);
    void
    setFieldsAndTimeFromResumeFile();
    virtual uint

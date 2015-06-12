@@ -29,9 +29,9 @@ protected:
 	  const vector<pair<uint,uint> >& elemFace,
 	  const CellGroup& cells) const;
 protected:
-	CVecD3* posTF;
-	CVecD3* posTFNB;
-	CVecD3* posSF;
+	CVecR3* posTF;
+	CVecR3* posTFNB;
+	CVecR3* posSF;
 private:
 	double *gauss, *hm;
 	double

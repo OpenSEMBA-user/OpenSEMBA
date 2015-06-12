@@ -76,7 +76,7 @@ DGDipole::computeExcitationField(
    double iT, iD;
    double tDelayed, sint, cost;
    SphericalVector sphE, sphH;
-   CVecD3 E, H;
+   CVecR3 E, H;
    // External field.
    const uint nFields = nfp * nE;
    for (uint j = 0; j < nFields; j++) {

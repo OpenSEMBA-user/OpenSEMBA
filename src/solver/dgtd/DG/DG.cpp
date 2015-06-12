@@ -35,8 +35,8 @@ void
 DG::setFieldsToGaussian(
       const CellGroup& cells,
       const double amplitude,
-      CVecD3& polarization,
-      const CVecD3& gaussCenter,
+      CVecR3& polarization,
+      const CVecR3& gaussCenter,
       const double gaussWidth) {
    CartesianVector <double,3> aux;
    double expArg;
@@ -57,9 +57,9 @@ void
 DG::setFieldsToHarmonics(
       const CellGroup& cells,
       const CartesianVector<int,3>& harmonics,
-      CVecD3& polarization) {
+      CVecR3& polarization) {
    double amp;
-   CVecD3 pos;
+   CVecR3 pos;
    polarization.normalize();
    for (uint e = 0; e < nK; e++) {
       uint id = cells.getIdOfRelPos(e);
@@ -145,9 +145,9 @@ DG::buildFluxScalingFactors(
       uint id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
       double impM, admM, impP, admP, impAv, admAv;
-      CVecD3 n, rn, cn;
-      CVecD3 nAdmAux, rnAdmAux, cnAdmAux;
-      CVecD3 nImpAux, rnImpAux, cnImpAux;
+      CVecR3 n, rn, cn;
+      CVecR3 nAdmAux, rnAdmAux, cnAdmAux;
+      CVecR3 nImpAux, rnImpAux, cnImpAux;
       for (uint f = 0; f < faces; f++) {
          uint i = e * faces + f;
          // Computes Scaling factor.

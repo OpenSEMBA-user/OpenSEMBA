@@ -25,7 +25,7 @@ CellTri<TRI_N>::getNumberOfVertices() const {
 }
 
 template<int TRI_N>
-CVecD3
+CVecR3
 CellTri<TRI_N>::getSideNormal(const uint s) const {
 	cout << "ERROR @ CellTri:: Not Done" << endl;
 	exit(-1);

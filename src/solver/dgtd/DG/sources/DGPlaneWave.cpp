@@ -57,7 +57,7 @@ DGPlaneWave::computeExcitationField(
 	for (uint j = 0; j < nFields; j++) {
 		double delayedTime = intTime - vPos[j];
 		if (delayedTime >= 0) {
-			pair<CVecD3,CVecD3> EHInc = getElectromagneticField(delayedTime);
+			pair<CVecR3,CVecR3> EHInc = getElectromagneticField(delayedTime);
 			ExInc[j] = EHInc.first(0);
 			EyInc[j] = EHInc.first(1);
 			EzInc[j] = EHInc.first(2);

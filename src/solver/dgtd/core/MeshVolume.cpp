@@ -32,7 +32,7 @@ MeshVolume::createAndAssignPML(
       MeshVolume* mesh) {
    // Computes bound of PML pointing in this direction.
    BoxD3 bound = mesh->getBound(internalBorder);
-   pair<CVecD3,CVecD3> pmlBound;
+   pair<CVecR3,CVecR3> pmlBound;
    for (unsigned int i = 0; i < 3; i++) {
       if (direction[i] == PMVolumePML::minus) {
          pmlBound.second(i) = bound.getMin()(i);

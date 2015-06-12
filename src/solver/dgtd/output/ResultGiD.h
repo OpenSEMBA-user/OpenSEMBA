@@ -7,13 +7,13 @@
 #ifndef RESULTGID_H_
 #define RESULTGID_H_
 
-#include "outRq/OutRq.h"
-#include "../../../common/gidpost/gidpost.h"
-#include "OutputGiD.h"
 #include <string.h>
-#include "../../../common/exporter/Result.h"
 
 using namespace std;
+
+#include "outRq/OutRq.h"
+#include "exporter/gid/ExporterGiD.h"
+#include "exporter/Result.h"
 
 class ResultGiD : public Result, public OutRq {
     friend class ExporterGiD;
