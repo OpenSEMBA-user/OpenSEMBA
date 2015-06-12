@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "SourceOnLine.h"
+#include "../sources/SourceOnLine.h"
 
 SourceOnLine::SourceOnLine(const Magnitude* magnitude,
                            const GroupElements<Lin>& elem,

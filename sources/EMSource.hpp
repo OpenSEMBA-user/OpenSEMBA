@@ -5,7 +5,7 @@
  *      Author: Daniel
  */
 
-#include "EMSource.h"
+#include "../sources/EMSource.h"
 
 template <class T>
 void EMSource<T>::set(const GroupElements<const Elem>& elems) {

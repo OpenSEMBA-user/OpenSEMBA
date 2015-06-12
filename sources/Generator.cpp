@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "Generator.h"
+#include "../sources/Generator.h"
 
 Generator::Generator() {
     type_ = current;

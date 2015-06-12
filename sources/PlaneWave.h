@@ -8,7 +8,7 @@
 #ifndef PLANEWAVE_H_
 #define PLANEWAVE_H_
 
-#include "EMSource.h"
+#include "../sources/EMSource.h"
 
 class PlaneWave : public EMSource<Vol> {
 public:

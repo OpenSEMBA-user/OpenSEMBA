@@ -8,12 +8,12 @@
 #ifndef COMMON_ELECTROMAGNETICSOURCES_GROUPEMSOURCES_H_
 #define COMMON_ELECTROMAGNETICSOURCES_GROUPEMSOURCES_H_
 
-#include "EMSource.h"
-#include "Dipole.h"
-#include "Generator.h"
-#include "PlaneWave.h"
-#include "SourceOnLine.h"
-#include "WaveportRectangular.h"
+#include "../sources/Dipole.h"
+#include "../sources/EMSource.h"
+#include "../sources/Generator.h"
+#include "../sources/PlaneWave.h"
+#include "../sources/SourceOnLine.h"
+#include "../sources/WaveportRectangular.h"
 
 template<typename E = EMSourceBase>
 class GroupEMSources : public virtual Group<E> {
@@ -30,6 +30,6 @@ public:
     void printInfo() const;
 };
 
-#include "GroupEMSources.hpp"
+#include "../sources/GroupEMSources.hpp"
 
 #endif /* COMMON_ELECTROMAGNETICSOURCES_GROUPEMSOURCES_H_ */

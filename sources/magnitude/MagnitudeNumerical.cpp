@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "MagnitudeNumerical.h"
+#include "../../sources/magnitude/MagnitudeNumerical.h"
 
 MagnitudeNumerical::MagnitudeNumerical() {
 

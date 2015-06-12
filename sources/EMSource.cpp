@@ -1,4 +1,4 @@
-#include "EMSource.h"
+#include "../sources/EMSource.h"
 
 EMSourceBase::EMSourceBase() {
     magnitude_ = NULL;

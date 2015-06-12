@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "Waveport.h"
+#include "../sources/Waveport.h"
 
 Waveport::Waveport(const Magnitude* magnitude,
                    const GroupElements<const Surf>& elem,

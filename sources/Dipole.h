@@ -8,7 +8,7 @@
 #ifndef DIPOLE_H_
 #define DIPOLE_H_
 
-#include "EMSource.h"
+#include "../sources/EMSource.h"
 
 class Dipole : public EMSource<Vol> {
 public:

@@ -9,8 +9,8 @@ using namespace std;
 
 #include "geometry/elements/GroupElements.h"
 #include "options/OptionsMesher.h"
-#include "magnitude/MagnitudeGaussian.h"
-#include "magnitude/MagnitudeNumerical.h"
+#include "../sources/magnitude/MagnitudeGaussian.h"
+#include "../sources/magnitude/MagnitudeNumerical.h"
 #include "math/CartesianVector.h"
 #include "math/Constants.h"
 
@@ -71,6 +71,6 @@ public:
     void printInfo() const;
 };
 
-#include "EMSource.hpp"
+#include "../sources/EMSource.hpp"
 
 #endif /* ELECTROMAGNETICSOURCE_H_ */

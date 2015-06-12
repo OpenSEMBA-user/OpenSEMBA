@@ -17,7 +17,7 @@ using namespace std;
 #include "base/error/ErrorFile.h"
 #include "base/error/ErrorNotImplemented.h"
 
-#include "Magnitude.h"
+#include "../../sources/magnitude/Magnitude.h"
 
 class MagnitudeNumerical : public virtual Magnitude,
                            public virtual ProjectFile {

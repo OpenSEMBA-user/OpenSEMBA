@@ -4,7 +4,7 @@
  *  Created on: Jun 28, 2013
  *      Author: luis
  */
-#include "GroupEMSources.h"
+#include "../sources/GroupEMSources.h"
 
 template<typename E>
 bool GroupEMSources<E>::isSimilar(const GroupEMSources& rhs) const {

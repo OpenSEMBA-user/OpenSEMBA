@@ -11,7 +11,7 @@
 #include <cmath>
 using namespace std;
 
-#include "Magnitude.h"
+#include "../../sources/magnitude/Magnitude.h"
 
 class MagnitudeGaussian: public virtual Magnitude {
 public:

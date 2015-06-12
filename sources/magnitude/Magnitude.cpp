@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "Magnitude.h"
+#include "../../sources/magnitude/Magnitude.h"
 
 Magnitude::Magnitude() {
 

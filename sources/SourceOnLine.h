@@ -8,7 +8,7 @@
 #ifndef SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_
 #define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_
 
-#include "EMSource.h"
+#include "../sources/EMSource.h"
 
 class SourceOnLine : public EMSource<Lin> {
 public:

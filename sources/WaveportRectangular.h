@@ -5,10 +5,10 @@
  *      Author: luis
  */
 
-#ifndef SRC_COMMON_ELECTROMAGNETICSOURCES_WAVEPORTRECTANGULAR_H_
-#define SRC_COMMON_ELECTROMAGNETICSOURCES_WAVEPORTRECTANGULAR_H_
+#ifndef SRC_COMMON_SOURCES_WAVEPORTRECTANGULAR_H_
+#define SRC_COMMON_SOURCES_WAVEPORTRECTANGULAR_H_
 
-#include "Waveport.h"
+#include "../sources/Waveport.h"
 
 class WaveportRectangular: public Waveport {
 public:
@@ -34,4 +34,4 @@ public:
 
 };
 
-#endif /* SRC_COMMON_ELECTROMAGNETICSOURCES_WAVEPORTRECTANGULAR_H_ */
+#endif /* SRC_COMMON_SOURCES_WAVEPORTRECTANGULAR_H_ */

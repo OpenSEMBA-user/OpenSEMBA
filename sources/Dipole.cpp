@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "Dipole.h"
+#include "../sources/Dipole.h"
 
 Dipole::Dipole(const MagnitudeGaussian* magnitude,
                const GroupElements<Vol>& elem,

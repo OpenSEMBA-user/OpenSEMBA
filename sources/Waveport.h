@@ -8,9 +8,9 @@
 #ifndef WAVEPORT_H_
 #define WAVEPORT_H_
 
+#include "../sources/EMSource.h"
 #include "base/error/ErrorNotImplemented.h"
 
-#include "EMSource.h"
 
 class Waveport : public EMSource<Surf> {
 public:

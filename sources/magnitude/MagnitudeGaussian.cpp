@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "MagnitudeGaussian.h"
+#include "../../sources/magnitude/MagnitudeGaussian.h"
 
 MagnitudeGaussian::MagnitudeGaussian() {
     spread_ = 0.0;

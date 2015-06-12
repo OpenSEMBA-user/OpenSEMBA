@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "WaveportRectangular.h"
+#include "../sources/WaveportRectangular.h"
 
 WaveportRectangular::WaveportRectangular(const Magnitude* magn,
         const GroupElements<const Surf>& elem,

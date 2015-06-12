@@ -8,7 +8,7 @@
 #ifndef SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_
 #define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_
 
-#include "EMSource.h"
+#include "../sources/EMSource.h"
 
 class Generator : public EMSource<Nod> {
 public:

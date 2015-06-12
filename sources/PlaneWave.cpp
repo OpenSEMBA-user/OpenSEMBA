@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "PlaneWave.h"
+#include "../sources/PlaneWave.h"
 
 PlaneWave::ErrorZeroPolarization::ErrorZeroPolarization()
 :   Error("PlaneWave: Polarization can't be zero.") {
