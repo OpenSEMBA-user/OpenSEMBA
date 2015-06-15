@@ -61,8 +61,10 @@ ParserGiD::read() {
     res->outputRequests = readOutputRequests();
 
     res->mesh->applyScalingFactor(scalingFactor_);
-    res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
-    res->grid->applyScalingFactor(scalingFactor_);
+    if (res->grid != NULL) {
+        res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
+        res->grid->applyScalingFactor(scalingFactor_);
+    }
 
     return res;
 }
