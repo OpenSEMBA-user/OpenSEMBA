@@ -14,7 +14,7 @@ CVecI3Fractional::CVecI3Fractional() {
 
 CVecI3Fractional& CVecI3Fractional::operator =(
         const CVecI3Fractional & rhs) {
-    CVecI3::operator =(rhs);
+    this->CVecI3::operator =(rhs);
     len_ = rhs.len_;
     return *this;
 }
@@ -29,13 +29,27 @@ bool CVecI3Fractional::less(const CVecI3Fractional &rhs,
         }
     }
     for (UInt n = 0; n < 3; n++) {
-        if (this->len_.val[n] < rhs.len_.val[n]) {
+        if (MathUtils::equal(this->len_(n),rhs.len_(n), 1.0e-4)){
+        }else if (this->len_(n) < rhs.len_(n)) {
             return true;
-        } else if (MathUtils::lower(len_.val[n], rhs.len_.val[n], tol)) {
+        }else if (this->len_(n) > rhs.len_(n)) {
             return false;
         }
     }
     return false;
+}
+
+bool CVecI3Fractional::operator ==(const CVecI3Fractional& rhs) const {
+
+    if(CVecI3::operator !=(rhs)){
+        return false;
+    }
+    for (unsigned int n = 0; n < 3; ++n){
+        if(!MathUtils::equal(len_[n], rhs.len_[n], 1.0e-4)){
+            return false;
+        }
+    }
+    return true;
 }
 
 CVecI3Frac::Direction CVecI3Fractional::getDirBase() const {
@@ -60,7 +74,7 @@ UInt CVecI3Fractional::getRangeBase() const {
     unsigned int rang;
     rang = 0;
     for (unsigned int n = 0; n < 3; ++n) {
-        if (len_[n] > MathUtils::tolerance) {
+        if (len_[n] > 0.0) {
             ++rang;
         }
     }
@@ -102,17 +116,13 @@ CVecR3 CVecI3Fractional::getScalePos() const {
 CVecR3 CVecI3Fractional::getScalePos(const CVecI3 origin) const {
     CVecR3 retPos;
     for (unsigned int n = 0; n < 3; ++n) {
-        retPos.val[n] = (Real)(val[n]-origin[n]) + len_.val[n];
+        retPos(n) = (Real)((*this)(n)-origin(n)) + this->len_(n);
     }
     return retPos;
 }
 
 string CVecI3Fractional::toStr() const {
     return CVecI3::toStr() + " len: " + len_.toStr();
-}
-
-bool CVecI3Fractional::operator ==(const CVecI3Fractional& rhs) const {
-    return (CVecI3::operator ==(rhs) && len_ == rhs.len_);
 }
 
 CVecR3 CVecI3Fractional::meanRelativePoint(const CVecI3Fractional& rhs) const {
@@ -143,22 +153,21 @@ void CVecI3Fractional::join(CVecI3Fractional& rhs) {
 }
 
 CVecI3Fractional& CVecI3Fractional::reduceTopology() {
-    {
     CVecR3 posNode = getRelativePosNearestNode();
     CVecR3 dst =  (posNode - len_).abs();
-    Real dstMin = dst[0];
-    UInt minDir = 0;
-    for(UInt dir=1; dir<3; ++dir){
+    Real dstMin = 1e20;
+    Int minDir = -1;
+    for(UInt dir=0; dir<3; ++dir){
         if(!MathUtils::equal(len_(dir), 0.0)){
             if(dstMin>dst[dir]){
-                dstMin = dst[dir];
+                dstMin = dst(dir);
                 minDir = dir;
             }
         }
     }
-    len_[minDir] = posNode[minDir];
-    }{
-    reduceCoords();
+    if(minDir!=-1){
+        len_(minDir) = posNode(minDir);
+        reduceCoords();
     }
     return *this;
 }
@@ -177,13 +186,13 @@ CVecI3Fractional& CVecI3Fractional::reduceTopology(const UInt range){
 
 CVecI3Fractional& CVecI3Fractional::reduceCoords() {
     for(UInt dir=0; dir<3; ++dir){
-        if(len_(dir)>=(1.0-MathUtils::tolerance)){
+        if(len_(dir)>=(1.0-1e-5)){
             len_(dir)= 0.0;
             val[dir]++;
-        }else if (len_(dir)<-MathUtils::tolerance){
-            len_(dir) = 0.0;
-            val[dir]--;
-        }else if (len_(dir) < MathUtils::tolerance){
+//        }else if (len_(dir)<(-1.0)*MathUtils::tolerance){
+//            len_(dir) = 0.0;
+//            val[dir]--;
+        }else if (len_(dir) < 1.0e-5){
             len_(dir)=0.0;
         }
     }

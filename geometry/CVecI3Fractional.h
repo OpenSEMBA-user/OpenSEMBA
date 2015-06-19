@@ -31,7 +31,6 @@ public:
     bool less(const CVecI3Fractional &rhs,
             const Real tool = MathUtils::tolerance) const;
 
-
     CVecR3 getScalePos() const;
     CVecR3 getScalePos(const CVecI3 origin) const;
 
@@ -53,6 +52,8 @@ public:
 
     Direction getDirBase   () const;
     UInt getRangeBase () const;
+
+    void round ();
 
     string toStr() const;
 

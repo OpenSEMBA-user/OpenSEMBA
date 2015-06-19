@@ -8,7 +8,7 @@
 #include "Surfel.h"
 
 bool Surfel::isInto (const CVecI3Frac& coordIntFractional)const{
-    CVecR3 pos = coordIntFractional.getScalePos(*this);
+    CVecR3 pos = coordIntFractional.getScalePos((CVecI3)(*this));
     for(UInt n=0; n<3; n++){
         if(n==(UInt)(normId_-1)){
             if(!MathUtils::equal(pos(n),0.0)){
@@ -59,13 +59,14 @@ Linel Surfel::getLinel(const UInt s) const {
 SurfelPixels Surfel::getPixels() const{
     SurfelPixels ret;
     UInt counter = 0;
+    UInt dirId = getNormId() -1;
     for(UInt n=0; n<2; ++n){
         for(UInt m=0; m<2; ++m){
             CVecI3 offset;
-            offset(getNormId()-1)    = 0;
-            offset((getNormId())%3)  = n;
-            offset((getNormId()+1)%3)= m;
-            ret[counter] = (CVecI3)*this +offset;
+            offset(dirId)       = 0;
+            offset((dirId+1)%3) = n;
+            offset((dirId+2)%3) = m;
+            ret[counter]        = (CVecI3)*this +offset;
             ++counter;
         }
     }
