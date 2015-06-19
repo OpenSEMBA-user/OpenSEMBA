@@ -46,4 +46,6 @@ private:
 
 #include "GroupPhysicalModels.hpp"
 
+typedef GroupPhysicalModels<> PMGroup;
+
 #endif /* COMMON_PHYSICALMODEL_GROUPPHYSICALMODELS_H_ */
