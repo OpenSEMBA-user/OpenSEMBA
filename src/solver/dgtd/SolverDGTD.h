@@ -4,7 +4,8 @@
 
 #include "parser/gid/ParserGiD.h"
 #include "exporter/gid/ExporterGiD.h"
-
+#include "options/OptionsSolverDGTD.h"
+#include "physicalModel/GroupPhysicalModels.h"
 #ifdef USE_MPI
     #include "CommMPI.h"
     #include "../output/OutputCommGiD.h"
@@ -16,7 +17,7 @@
 #include "../integrator/IntegratorLF2.h"
 #include "../integrator/IntegratorLF2Full.h"
 #include "../integrator/IntegratorVerlet.h"
-#include "../Solver.h"
+#include "solver/Solver.h"
 #include "../DG/DGExplicit.h"
 #include "../DG/DGLowMemory.h"
 
@@ -26,8 +27,7 @@ public:
     SolverCudg3d(const OptionsSolverDGTD*);
     SolverCudg3d(SmbData*, const OptionsSolverDGTD*);
     ~SolverCudg3d();
-    void
-    run();
+    void run();
 private:
     const OptionsSolverDGTD* arg_;
     SmbData* smb_;
@@ -37,7 +37,7 @@ private:
     Exporter* out_;
     Integrator* initIntegrator(
             const MeshVolume* mesh,
-            const GroupPhysicalModels* pMGroup,
+            const PMGroup* pMGroup,
             const OptionsSolverDGTD* args);
     Comm* initMPI();
     void initOpenMP();

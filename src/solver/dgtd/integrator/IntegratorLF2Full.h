@@ -22,7 +22,7 @@ public:
 	virtual ~IntegratorLF2Full();
 	IntegratorLF2Full(
 	 const MeshVolume& mesh,
-	 const PhysicalModelGroup& pmGroup,
+	 const PMGroup& pmGroup,
 	 const OptionsSolverDGTD* arg);
 	void
 	 timeIntegrate(const double time) const;

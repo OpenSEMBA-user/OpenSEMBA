@@ -17,7 +17,8 @@ using namespace std;
 #include "../core/Comm.h"
 #include "../core/Ordering.h"
 #include "physicalModel/PhysicalModel.h"
-#include "geometry/MeshVolume.h"
+#include "options/OptionsSolverDGTD.h"
+#include "MeshVolume.h"
 #include "DG/DG.h"
 
 #define SOLVERINFO_ALLOW_REORDERING_IN_SOLVER
@@ -50,7 +51,7 @@ protected:
 	void
 	 init(
 	  const MeshVolume& mesh,
-	  const PhysicalModelGroup& pmGroup,
+	  const PMGroup& pmGroup,
 	  const OptionsSolverDGTD* arg);
 	uint
 	 getNumberOfCellsInTier(const uint tier) const;
@@ -91,7 +92,7 @@ private:
 	void
 	 buildTierInfo(
 	  const MeshVolume& mesh,
-	  const PhysicalModelGroup& pmGroup);
+	  const PMGroup& pmGroup);
 	virtual void
 	 checkMaterialStabilityForDT(
 	  const PhysicalModel* mat,
@@ -99,7 +100,7 @@ private:
 	void
 	 assignTiersBasedOnMaxTimeStep(
 	  const MeshVolume& mesh,
-	  const PhysicalModelGroup& pmGroup);
+	  const PMGroup& pmGroup);
 	pair<uint,uint>**
 	 buildTierRange(
  	  pair<uint,uint> **range,

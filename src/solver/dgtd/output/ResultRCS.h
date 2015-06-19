@@ -140,7 +140,7 @@
 //   uint numNodes;
 //   uint nElem;
 //   vector<pair<uint, uint> > elemFace;
-//   vector<CoordD3 > vertex;
+//   vector<CoordR3 > vertex;
 //   bool quadraticMesh;
 //   RCSStepGroup_s stepsGroup;
 //   void

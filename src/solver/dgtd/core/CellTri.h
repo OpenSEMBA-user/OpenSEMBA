@@ -13,7 +13,7 @@
 #include "../../../common/math/Constants.h"
 #include "../../../common/math/MathUtils.h"
 #include "../../../common/math/SphericalVector.h"
-#include "../../../common/geometry/elements/Surface.h"
+#include "../../../common/geometry/elements/SurfR.h"
 
 template<int TRI_N>
 class CellTri : public Cell {

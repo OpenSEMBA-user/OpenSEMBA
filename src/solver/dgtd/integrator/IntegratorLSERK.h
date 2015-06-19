@@ -26,7 +26,7 @@ public:
 	virtual ~IntegratorLSERK();
 	IntegratorLSERK(
 	 const MeshVolume& mesh,
-	 const PhysicalModelGroup& pmGroup,
+	 const PMGroup& pmGroup,
 	 const OptionsSolverDGTD* arg);
 	void
 	 timeIntegrate(const double time) const;

@@ -16,7 +16,6 @@ class DGPlaneWave : public DGSource, public PlaneWave {
 public:
 	DGPlaneWave(
 	 const PlaneWave& pw,
-	 const vector<const BoundaryCondition*>& bc,
 	 const MapGroup& map,
 	 const CellGroup& cells,
 	 const Comm* comm,
@@ -42,7 +41,6 @@ private:
 	  const double intTime);
 	void
 	initWaveNumberPosition(
-	 const vector<const BoundaryCondition*>& bc,
 	 const MapGroup& map,
 	 const CellGroup& cells,
 	 const Comm* comm,

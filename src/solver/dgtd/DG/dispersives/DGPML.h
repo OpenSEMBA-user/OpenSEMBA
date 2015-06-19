@@ -24,15 +24,7 @@ protected:
 	uint nElem;
 	uint *elem;
 	bool useConstantConductivity;
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double eps0 = VACUUM_PERMITTIVITY;
-	static constexpr double mu0 = VACUUM_PERMEABILITY;
 	static constexpr double sigDefault = 10e9;
-#else
-	static const double eps0 = VACUUM_PERMITTIVITY;
-	static const double mu0 = VACUUM_PERMEABILITY;
-	static const double sigDefault = 10e9;
-#endif
 	double sig;
 	static const uint N = ORDER_N;
 	static const uint np = (N+1) * (N+2) * (N+3) / 6;

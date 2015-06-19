@@ -11,7 +11,7 @@
 CellGroup::CellGroup(
  const SmbData* smb) {
 	const MeshVolume* mesh = smb->mesh;
-	const PhysicalModelGroup* pMGroup = smb->pMGroup;
+	const PMGroup* pMGroup = smb->pMGroup;
 	uint nElem = mesh->elem_.tet.size();
 	cell.resize(nElem, NULL);
 	cellOffsetId = mesh->elem_.offsetIdTet;

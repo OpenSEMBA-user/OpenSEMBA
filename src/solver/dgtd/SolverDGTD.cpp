@@ -89,7 +89,7 @@ SolverCudg3d::run() {
 Integrator*
 SolverCudg3d::initIntegrator(
       const MeshVolume* mesh,
-      const PhysicalModelGroup* pMGroup,
+      const PMGroup* pMGroup,
       const OptionsSolverDGTD* arg) {
    Integrator* res;
    switch (arg->getTimeIntegrator()) {

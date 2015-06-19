@@ -9,7 +9,7 @@
 #define COMMUNICATIONS_H_
 
 #include "stdlib.h"
-#include "geometry/MeshVolume.h"
+#include "MeshVolume.h"
 #include "Ordering.h"
 #include "Field.h"
 #include <iostream>

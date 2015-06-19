@@ -18,7 +18,6 @@ class DGSIBC : public DGDispersive, public PMSurfaceSIBC {
 public:
    DGSIBC(
          const PMSurfaceSIBC& mat_,
-         const vector<const BoundaryCondition*>& bc,
          const CellGroup& cells,
          int ***map_,
          const int vmapM[faces][nfp],

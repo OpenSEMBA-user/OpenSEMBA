@@ -22,7 +22,7 @@ public:
 	virtual ~IntegratorVerlet();
 	IntegratorVerlet(
 	 const MeshVolume& mesh,
-	 const PhysicalModelGroup& pmGroup,
+	 const PMGroup& pmGroup,
 	 const OptionsSolverDGTD* arg);
 	void
 	 timeIntegrate(

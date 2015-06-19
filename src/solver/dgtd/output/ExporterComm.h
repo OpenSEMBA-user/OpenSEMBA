@@ -8,7 +8,8 @@
 #ifndef OUTPUTCOMM_H_
 #define OUTPUTCOMM_H_
 
-#include "common/exporter/Exporter.h"
+#include "exporter/Exporter.h"
+#include "Comm.h"
 
 using namespace std;
 

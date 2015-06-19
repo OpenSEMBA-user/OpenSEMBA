@@ -12,7 +12,7 @@ IntegratorLF2::IntegratorLF2() {
 
 IntegratorLF2::IntegratorLF2(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup,
+ const PMGroup& pmGroup,
  const ArgumentsCudg3d* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	timeStepSize *= 0.75;

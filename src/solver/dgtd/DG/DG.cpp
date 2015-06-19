@@ -124,9 +124,9 @@ DG::buildFieldScalingFactors(
       uint id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
       oneOverEps[e] = 1.0 /
-            (cell->material->getRelativePermittivity()*VACUUM_PERMITTIVITY);
+            (cell->material->getRelativePermittivity()*Constants::eps0);
       oneOverMu[e]  = 1.0 /
-            (cell->material->getRelativePermeability()*VACUUM_PERMEABILITY);
+            (cell->material->getRelativePermeability()*Constants::mu0);
    }
 }
 
@@ -185,7 +185,7 @@ DG::buildFluxScalingFactors(
 void
 DG::init(
       const ArgumentsCudg3d* arg,
-      const PhysicalModelGroup* pm_,
+      const PMGroup* pm_,
       const CellGroup* cells, Comm* comm_) {
    comm = comm_;
    upwinding = arg->getUpwinding();
@@ -339,14 +339,13 @@ const FieldR3* DG::getMagnetic() const {
 }
 
 uint
-DG::getGlobalFieldPosOfVertex(pair<const Element*, uint> vertex) const {
+DG::getGlobalFieldPosOfVertex(pair<const ElemR*, uint> vertex) const {
    uint e = getGlobalRelPosOfId(vertex.first->getId());
    static const SimplexTet<ORDER_N> tet;
    return (e*tet.np + tet.vertex(vertex.second));
 }
 
-vector<uint> DG::getGlobalFieldPosOfFace(
-      pair<const Volume*, uint> bound) const {
+vector<uint> DG::getGlobalFieldPosOfFace(Face bound) const {
    const uint e = getGlobalRelPosOfId(bound.first->getId());
    const uint f = bound.second;
    static const SimplexTet<ORDER_N> tet;

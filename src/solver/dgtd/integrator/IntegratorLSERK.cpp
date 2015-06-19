@@ -35,7 +35,7 @@ IntegratorLSERK::IntegratorLSERK() {
 
 IntegratorLSERK::IntegratorLSERK(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup,
+ const PMGroup& pmGroup,
  const ArgumentsCudg3d* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	buildRKConstants();

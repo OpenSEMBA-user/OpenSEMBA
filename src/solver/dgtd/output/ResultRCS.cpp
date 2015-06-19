@@ -79,7 +79,7 @@
 //		CellTri<ORDER_N> *surf;
 //		if (!quadraticMesh) {
 //			const uint nbp = 3;
-//			const CoordD3* coord[nbp];
+//			const CoordR3* coord[nbp];
 //			for (uint i = 0; i < nbp; i++) {
 //				coord[i] = &vertex[nbp * e + i];
 //			}
@@ -87,7 +87,7 @@
 //			surf = new CellTri3<ORDER_N>(base);
 //		} else {
 //			const uint nbp = 6;
-//			const CoordD3* coord[nbp];
+//			const CoordR3* coord[nbp];
 //			for (uint i = 0; i < nbp; i++) {
 //				coord[i] = &vertex[nbp * e + i];
 //			}
@@ -256,7 +256,7 @@
 //							aux(0) = strtod(line.c_str(), &pEnd);
 //							aux(1) = strtod(pEnd, &pEnd);
 //							aux(2) = strtod(pEnd, &pEnd);
-//							CoordD3
+//							CoordR3
 //							 auxCoord(vertexCount++, aux);
 //							vertex.push_back(auxCoord);
 //						}
@@ -393,7 +393,7 @@
 //			auxVec(0) =  vertex[i](0);
 //			auxVec(1) =  vertex[i](1);
 //			auxVec(2) = -vertex[i](2);
-//			CoordD3 aux(vertexCounter++,auxVec);
+//			CoordR3 aux(vertexCounter++,auxVec);
 //			vertex.push_back(aux);
 //		}
 //		if (sym[0] == Symmetry::pec) {
@@ -433,7 +433,7 @@
 //			auxVec(0) = vertex[i](0);
 //			auxVec(1) = - vertex[i](1);
 //			auxVec(2) = vertex[i](2);
-//			CoordD3 aux(vertexCounter++,auxVec);
+//			CoordR3 aux(vertexCounter++,auxVec);
 //			vertex.push_back(aux);
 //		}
 //		if (sym[2] == Symmetry::pec) {

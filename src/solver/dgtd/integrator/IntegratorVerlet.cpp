@@ -12,7 +12,7 @@ IntegratorVerlet::IntegratorVerlet() {
 
 IntegratorVerlet::IntegratorVerlet(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup,
+ const PMGroup& pmGroup,
  const ArgumentsCudg3d* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	timeStepSize *= 0.9;

@@ -150,7 +150,7 @@ Integrator::printInfo() const {
 void
 Integrator::init(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup,
+ const PMGroup& pmGroup,
  const ArgumentsCudg3d* arg) {
 	growSmallerTiers = arg->getGrowSmallerTiers();
 	maxNumOfTiers = arg->getMaxNumberOfTiers();
@@ -282,7 +282,7 @@ Integrator::reorderTimeTierList(
 void
 Integrator::buildTierInfo(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup) {
+ const PMGroup& pmGroup) {
 	assignTiersBasedOnMaxTimeStep(mesh, pmGroup);
 	// Grows smallest tier regions for smoothing.
 	if (nTiers > 1 && growSmallerTiers > 0) {
@@ -413,7 +413,7 @@ Integrator::growSmallestTierRegions(
 void
 Integrator::assignTiersBasedOnMaxTimeStep(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup) {
+ const PMGroup& pmGroup) {
 	uint nK = mesh.elem_.nVolumeElements();
 	DynMatrix<double> dtList(nK, 4);
 	mindt = 0.0;

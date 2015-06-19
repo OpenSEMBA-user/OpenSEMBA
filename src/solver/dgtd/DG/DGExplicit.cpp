@@ -991,7 +991,7 @@ void
 DGExplicit::buildMaterials(
  const CellGroup& cells,
  const ArgumentsCudg3d* arg) {
-   const PhysicalModelGroup* pm = smb_->pMGroup;
+   const PMGroup* pm = smb_->pMGroup;
 	const uint nMat = pm->count();
 	// Creates Dispersive materials vars parameters and stores ptrs.
 	for (uint i = 0; i < nMat; i++) {

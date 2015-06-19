@@ -8,15 +8,14 @@
 
 DGPlaneWave::DGPlaneWave(
  const PlaneWave& pw,
- const vector<const BoundaryCondition*>& bc,
  const MapGroup& map,
  const CellGroup& cells,
  const Comm* comm,
  FieldR3& dE, FieldR3& dH,
  const int vmapM[faces][nfp]) :
   PlaneWave(pw) {
-	initSource(bc, map, cells, dE, dH, vmapM);
-	initWaveNumberPosition(bc, map, cells, comm, vmapM);
+//	initSource(bc, map, cells, dE, dH, vmapM);
+//	initWaveNumberPosition(bc, map, cells, comm, vmapM);
 }
 
 
@@ -77,7 +76,6 @@ DGPlaneWave::computeExcitationField(
 
 void
 DGPlaneWave::initWaveNumberPosition(
- const vector<const BoundaryCondition*>& bc,
  const MapGroup& map,
  const CellGroup& cells,
  const Comm* comm,
