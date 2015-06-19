@@ -17,7 +17,7 @@ CellTet<TET_N>::init(
         const GroupPhysicalModels<>* pMGroup) {
     base = base_;
     if (pMGroup != NULL) {
-        material = pMGroup->getPMVolumeWithId(base->getMatId());
+        material = pMGroup->getPMVolumeWithId(base->getMatId()) ;
     } else {
         material = NULL;
     }
