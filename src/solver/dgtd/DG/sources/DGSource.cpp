@@ -8,24 +8,6 @@
 #include "DGSource.h"
 
 DGSource::DGSource() {
-   ExTInc = NULL;
-   EyTInc = NULL;
-   EzTInc = NULL;
-   HxTInc = NULL;
-   HyTInc = NULL;
-   HzTInc = NULL;
-   ExSInc = NULL;
-   EySInc = NULL;
-   EzSInc = NULL;
-   HxSInc = NULL;
-   HySInc = NULL;
-   HzSInc = NULL;
-   ExIncNB = NULL;
-   EyIncNB = NULL;
-   EzIncNB = NULL;
-   HxIncNB = NULL;
-   HyIncNB = NULL;
-   HzIncNB = NULL;
    nETF = 0;
    ETFe = NULL;
    dExT = NULL;
@@ -66,50 +48,14 @@ void DGSource::initSource(
 //   scatt = getElemFaces(bc, map, cells, scatteredField);
 //   totalNotBacked = getElemFaces(bc, map, cells, totalFieldNotBacked);
    nETF = total.size();
-   ExTInc  = new Real[nETF*nfp];
-   EyTInc  = new Real[nETF*nfp];
-   EzTInc  = new Real[nETF*nfp];
-   HxTInc  = new Real[nETF*nfp];
-   HyTInc  = new Real[nETF*nfp];
-   HzTInc  = new Real[nETF*nfp];
-   for (UInt i = 0; i < nETF*nfp; i++) {
-      ExTInc[i] = 0.0;
-      EyTInc[i] = 0.0;
-      EzTInc[i] = 0.0;
-      HxTInc[i] = 0.0;
-      HyTInc[i] = 0.0;
-      HzTInc[i] = 0.0;
-   }
+   ETInc.set(nETF*nfp, 0.0);
+   HTInc.set(nETF*nfp, 0.0);
    nESF = scatt.size();
-   ExSInc  = new Real[nESF*nfp];
-   EySInc  = new Real[nESF*nfp];
-   EzSInc  = new Real[nESF*nfp];
-   HxSInc  = new Real[nESF*nfp];
-   HySInc  = new Real[nESF*nfp];
-   HzSInc  = new Real[nESF*nfp];
-   for (UInt i = 0; i < nESF*nfp; i++) {
-      ExSInc[i] = 0.0;
-      EySInc[i] = 0.0;
-      EzSInc[i] = 0.0;
-      HxSInc[i] = 0.0;
-      HySInc[i] = 0.0;
-      HzSInc[i] = 0.0;
-   }
+   ESInc.set(nESF*nfp, 0.0);
+   HSInc.set(nESF*nfp, 0.0);
    nETFNB = totalNotBacked.size();
-   ExIncNB = new Real[nETFNB*nfp];
-   EyIncNB = new Real[nETFNB*nfp];
-   EzIncNB = new Real[nETFNB*nfp];
-   HxIncNB = new Real[nETFNB*nfp];
-   HyIncNB = new Real[nETFNB*nfp];
-   HzIncNB = new Real[nETFNB*nfp];
-   for (UInt i = 0; i < nETFNB*nfp; i++) {
-      ExIncNB[i] = 0.0;
-      EyIncNB[i] = 0.0;
-      EzIncNB[i] = 0.0;
-      HxIncNB[i] = 0.0;
-      HyIncNB[i] = 0.0;
-      HzIncNB[i] = 0.0;
-   }
+   EIncNB.set(nETFNB*nfp, 0.0);
+   HIncNB.set(nETFNB*nfp, 0.0);
    // Allocates and sets jumps pointers.
    // The pointers point to the beginning of the face that they have to
    // update on each iteration.

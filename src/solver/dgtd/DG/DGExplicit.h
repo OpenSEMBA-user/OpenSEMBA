@@ -8,7 +8,6 @@
 #ifndef SOLVEREXPLICIT_H_
 
 #include "DG.h"
-#include "SolverMath.h"
 #include "DGCurvedFace.h"
 
 class DGExplicit : public DG {

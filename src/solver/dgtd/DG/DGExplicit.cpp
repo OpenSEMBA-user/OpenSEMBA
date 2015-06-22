@@ -9,12 +9,10 @@
 
 DGExplicit::DGExplicit(
         const SmbData* smb,
-        Comm* comm,
-        const OptionsSolverDGTD* arg) {
+        Comm* comm) {
     smb_ = smb;
     CellGroup cells(smb);
-
-    init(arg, smb->pMGroup, &cells, comm);
+    init(smb->solverOptions, smb->pMGroup, &cells, comm);
     allocateRHSAndJumps();
     if (!arg->isNoLTS()) {
         allocateFieldsForLTS();
@@ -1103,20 +1101,20 @@ void DGExplicit::deduplicateVMaps(const CellGroup& cells) {
     }
 }
 
-vector<const BoundaryCondition*>
-DGExplicit::removeNonLocalBCs(
-        const CellGroup* cells,
-        const vector<const BoundaryCondition*>& bc) const {
-    vector<const BoundaryCondition*> res;
-    res.reserve(bc.size());
-    for (UInt i = 0; i < bc.size(); i++) {
-        UInt id = bc[i]->getCell()->getId();
-        if (cells->isLocalId(id)) {
-            res.push_back(bc[i]);
-        }
-    }
-    return res;
-}
+//vector<const BoundaryCondition*>
+//DGExplicit::removeNonLocalBCs(
+//        const CellGroup* cells,
+//        const vector<const BoundaryCondition*>& bc) const {
+//    vector<const BoundaryCondition*> res;
+//    res.reserve(bc.size());
+//    for (UInt i = 0; i < bc.size(); i++) {
+//        UInt id = bc[i]->getCell()->getId();
+//        if (cells->isLocalId(id)) {
+//            res.push_back(bc[i]);
+//        }
+//    }
+//    return res;
+//}
 
 void DGExplicit::LTSSaveFieldsAndResidues(
         const UInt fKSave,

@@ -23,6 +23,8 @@ using namespace std;
 
 #define SOLVERINFO_ALLOW_REORDERING_IN_SOLVER
 
+typedef pair<UInt,UInt> Range;
+
 class Integrator : public Ordering {
 public:
     Real timeStepSize;
@@ -38,7 +40,7 @@ public:
     vector<vector<UInt>> getTiersIds() const;
     vector<vector<UInt>> getStagesIds() const;
     vector<vector<UInt>> getPartitionsIds() const;
-    pair<UInt,UInt> getRange(const UInt tier, const UInt stage) const;
+    Range getRange(const UInt tier, const UInt stage) const;
     vector<pair<ElementId,Int>> getComputationalWeights(
             const MeshVolume* msh) const;
     void partitionate(const MeshVolume* mesh, Comm* comm);

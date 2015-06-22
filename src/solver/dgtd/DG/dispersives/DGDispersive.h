@@ -16,7 +16,6 @@ using namespace std;
 #include "math/Field.h"
 #include "physicalModel/PhysicalModel.h"
 #include "core/CellGroup.h"
-#include "SolverMath.h"
 
 class DGDispersive {
 protected:

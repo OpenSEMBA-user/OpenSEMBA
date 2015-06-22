@@ -1,8 +1,5 @@
-
-#ifndef SOLVER_H_
 #include "DG.h"
-#endif
-// =============== Solver methods =============================================
+
 DG::DG() {
    nK = 0;
    buildLIFT();

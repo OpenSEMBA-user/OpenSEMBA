@@ -11,7 +11,6 @@
 #include "../core/CellTet.h"
 #include "../../../common/math/MathMatrix.h"
 #include "../../../common/math/Field.h"
-#include "SolverMath.h"
 
 // TODO: Curved faces are buggy. An static remanent is left.
 // TODO: Observed instability for extreme curvature.

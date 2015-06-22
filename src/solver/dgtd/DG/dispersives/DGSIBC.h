@@ -9,7 +9,6 @@
 #define DGSIBC_H_
 
 #include "DGDispersive.h"
-#include "../../core/BoundaryCondition.h"
 
 #define SOLVER_USE_STATIC_LIMIT_FOR_SIBC
 

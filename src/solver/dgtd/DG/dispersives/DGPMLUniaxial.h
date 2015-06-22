@@ -13,7 +13,7 @@
 template<Int D>
 class DGPMLUniaxial : public DGPML {
 public:
-    DGPMLUniaxial();
+    DGPMLUniaxial(const PMVolumePML& mat, const CellGroup& cells);
     virtual ~DGPMLUniaxial();
     void addRHSToRes(
             const UInt e1, const UInt e2,
@@ -37,12 +37,7 @@ public:
             const FieldR3& H,
             const UInt e1, const UInt e2);
 protected:
-    void initUniaxial(
-            const PMVolumePML& mat_,
-            const CellGroup& cells);
-    Real *J, *M;
-    Real *resJ, *resM;
-    Real *rhsJ, *rhsM;
+    FieldR1 J, M, resJ, resM, rhsJ, rhsM;
 private:
     bool check() const;
     static const CartesianAxis dir1 = CartesianAxis(D);
@@ -51,5 +46,9 @@ private:
 };
 
 #include "DGPMLUniaxial.hpp"
+
+typedef DGPMLUniaxial<x> DGPMLx;
+typedef DGPMLUniaxial<y> DGPMLy;
+typedef DGPMLUniaxial<z> DGPMLz;
 
 #endif /* SOLVERPMLUNIAXIAL_H_ */

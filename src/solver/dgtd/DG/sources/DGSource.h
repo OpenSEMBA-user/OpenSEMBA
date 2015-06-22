@@ -17,7 +17,6 @@ using namespace std;
 #include "geometry/maps/Map.h"
 #include "../../core/CellGroup.h"
 #include "../../core/Comm.h"
-#include "../../core/BoundaryCondition.h"
 
 class DGSource {
 public:
@@ -27,18 +26,14 @@ public:
         totalFieldNotBacked
     } BackingType;
     DGSource();
-    virtual
-    ~DGSource();
-    void
-    addJumps(
+    virtual ~DGSource();
+    void addJumps(
             const UInt e1,
             const UInt e2);
-    virtual void
-    computeExcitation(
+    virtual void computeExcitation(
             const Real intTime,
             const Real minDT) = 0;
-    virtual void
-    printInfo() const = 0;
+    virtual void printInfo() const = 0;
 protected:
     const static UInt N = ORDER_N;
     const static UInt np = (N+1) * (N+2) * (N+3) / 6;
@@ -49,12 +44,8 @@ protected:
     const static UInt faces = 4;
     const static UInt nfpfaces = nfp * faces;
     // Excitation fields.
-    Real *ExTInc, *EyTInc, *EzTInc;
-    Real *HxTInc, *HyTInc, *HzTInc;
-    Real *ExSInc, *EySInc, *EzSInc;
-    Real *HxSInc, *HySInc, *HzSInc;
-    Real *ExIncNB, *EyIncNB, *EzIncNB;
-    Real *HxIncNB, *HyIncNB, *HzIncNB;
+    FieldR3 ETInc, ESInc, EIncNB;
+    FieldR3 HTInc, HSInc, HIncNB;
     // Excitation total field jumps pointers.
     UInt nETF;
     UInt *ETFe;
@@ -82,8 +73,6 @@ protected:
     CVecR3* initPositions(
             const vector<pair<UInt, UInt> >& elemFace,
             const CellGroup& cells) const;
-    bool isContainedInPlane(
-            const CartesianPlane plane);
 };
 
 #endif /* SOLVERSOURCE_H_ */

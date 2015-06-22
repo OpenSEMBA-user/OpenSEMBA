@@ -8,13 +8,11 @@
 using namespace std;
 
 #include "../core/Comm.h"
-#include "../core/BCGroup.h"
 #include "math/Field.h"
 #include "options/OptionsSolverDGTD.h"
 #include "sources/DGPlaneWave.h"
 #include "sources/DGDipole.h"
 #include "sources/DGWaveportRectangular.h"
-#include "VectorModuleResult.h"
 #include "dispersives/DGSIBC.h"
 #include "dispersives/DGDispersiveVolumic.h"
 #include "dispersives/DGPMLUniaxial.h"

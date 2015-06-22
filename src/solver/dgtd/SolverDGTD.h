@@ -19,7 +19,6 @@
 #include "../integrator/IntegratorVerlet.h"
 #include "solver/Solver.h"
 #include "../DG/DGExplicit.h"
-#include "../DG/DGLowMemory.h"
 
 class SolverCudg3d : public Solver {
 public:
