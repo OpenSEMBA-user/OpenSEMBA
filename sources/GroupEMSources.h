@@ -30,6 +30,8 @@ public:
     void printInfo() const;
 };
 
-#include "../sources/GroupEMSources.hpp"
+#include "GroupEMSources.hpp"
+
+typedef GroupEMSources<> EMSourceGroup;
 
 #endif /* COMMON_ELECTROMAGNETICSOURCES_GROUPEMSOURCES_H_ */
