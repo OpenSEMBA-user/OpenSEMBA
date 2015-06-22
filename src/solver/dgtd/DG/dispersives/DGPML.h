@@ -16,8 +16,8 @@ public:
 	virtual ~DGPML();
 	void
 	 addJumps(
-	  Field<Real,3>& dE, Field<Real,3>& dH,
-	  Field<Real,3>& E, Field<Real,3>& H,
+	  FieldR3& dE, FieldR3& dH,
+	  FieldR3& E, FieldR3& H,
 	  const UInt e1, const UInt e2);
 protected:
 	UInt dof;

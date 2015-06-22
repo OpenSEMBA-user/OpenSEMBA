@@ -25,18 +25,15 @@ Integrator::~Integrator() {
 	}
 }
 
-void
-Integrator::setSolver(DG* solver_) {
+void Integrator::setSolver(DG* solver_) {
 	solver = solver_;
 }
 
-UInt
-Integrator::getNTiers() const {
+UInt Integrator::getNTiers() const {
 	return nTiers;
 }
 
-Real
-Integrator::getMaxDT() const {
+Real Integrator::getMaxDT() const {
 	if (doLTS) {
 		return (mindt / pow(getMaxTimeRatio(), Real(nTiers-1)));
 	} else {
@@ -44,14 +41,12 @@ Integrator::getMaxDT() const {
 	}
 }
 
-Real
-Integrator::getMinDT() const {
+Real Integrator::getMinDT() const {
 	return mindt;
 }
 
-vector<vector<UInt> >
-Integrator::getTiersIds() const {
-	vector<vector<UInt> > res;
+vector<vector<UInt>> Integrator::getTiersIds() const {
+	vector<vector<UInt>> res;
 	for (UInt tier = 0; tier < nTiers; tier++) {
 		vector<UInt> tierIds = getIdsOfTier(tier);
 		res.push_back(tierIds);
@@ -59,8 +54,7 @@ Integrator::getTiersIds() const {
 	return res;
 }
 
-vector<vector<UInt> >
-Integrator::getStagesIds() const {
+vector<vector<UInt>> Integrator::getStagesIds() const {
 	vector<vector<UInt> > res;
 	for (UInt stage = 0; stage < getNStages(); stage++) {
 		vector<UInt> stageIds =	getIdsOfStage(stage);
@@ -75,13 +69,13 @@ Integrator::getPartitionsIds() const {
 	return partIds;
 }
 
-vector<pair<UInt, Int> >
+vector<pair<ElementId,Int>>
 Integrator::getComputationalWeights(const MeshVolume* msh) const {
 	const Int curlFlops = 1; // TODO curlFlops are not considered.
 	const Int fluxFlops = 0; // TODO fluxFlops are not considered.
 	Int flops = curlFlops + fluxFlops;
-	UInt nK = msh->nVolumeElements();
-	vector<pair<UInt,Int> > idWgt;
+	UInt nK = msh->elems().sizeOf<VolR>();
+	vector<pair<ElementId,Int>> idWgt;
 	idWgt.reserve(nK);
 	for (UInt e = 0; e < nK; e++) {
 		pair<UInt,Int> aux;
@@ -107,8 +101,7 @@ Integrator::getNPartitions() const {
 	return partIds.size();
 }
 
-void
-Integrator::partitionate(
+void Integrator::partitionate(
  const MeshVolume* msh,
  Comm* comm) {
 	cout << " - Getting computational weights... " << flush;
@@ -128,8 +121,7 @@ Integrator::partitionate(
 	cout << "OK" << endl;
 }
 
-void
-Integrator::printInfo() const {
+void Integrator::printInfo() const {
 	cout << "--- SolverInfo ---" << endl;
 	cout << "Min. time step: " << mindt*1E12 << " [ps]" << endl;
 	cout << "Max. time step: " << getMaxDT()*1E12 << " [ps]" << endl;
@@ -147,11 +139,10 @@ Integrator::printInfo() const {
 	}
 }
 
-void
-Integrator::init(
+void Integrator::init(
  const MeshVolume& mesh,
  const PMGroup& pmGroup,
- const ArgumentsCudg3d* arg) {
+ const OptionsSolverDGTD* arg) {
 	growSmallerTiers = arg->getGrowSmallerTiers();
 	maxNumOfTiers = arg->getMaxNumberOfTiers();
 	doLTS = !arg->isNoLTS();
@@ -174,7 +165,7 @@ Integrator::init(
 
 Real
 Integrator::getMaxTimeStep(
- const Tet* tet,
+ const VolR* vol,
  const PhysicalModel* mat) const {
 	// Returns the maximum time step allowed for this cell.
 	Real fS1 = 0.0;
@@ -230,8 +221,7 @@ Integrator::getIdsOfStage(UInt stage) const {
 	return res;
 }
 
-void
-Integrator::reorder(
+void Integrator::reorder(
  const vector<vector<UInt> >& partitionId,
  const UInt localOffset,
  const UInt localSize) {
@@ -250,8 +240,7 @@ Integrator::reorder(
 	tierRange = buildTierRange(tierRange, reducedList);
 }
 
-void
-Integrator::reorderTimeTierList(
+void Integrator::reorderTimeTierList(
  const vector<vector<UInt> >& partitionId) {
 	UInt nK = timeTierList.nRows();
 	DynMatrix<UInt> aux(nK, 5); // relPos - Ids - Part - Tier - Stage
@@ -279,8 +268,7 @@ Integrator::reorderTimeTierList(
 	}
 }
 
-void
-Integrator::buildTierInfo(
+void Integrator::buildTierInfo(
  const MeshVolume& mesh,
  const PMGroup& pmGroup) {
 	assignTiersBasedOnMaxTimeStep(mesh, pmGroup);
@@ -352,8 +340,7 @@ Integrator::buildTierRange(
 	return range;
 }
 
-void
-Integrator::checkMaterialStabilityForDT(
+void Integrator::checkMaterialStabilityForDT(
  const PhysicalModel* mat,
  const Real dt) const {
    const PMVolumeDispersive* disp = dynamic_cast<const PMVolumeDispersive*>(mat);
@@ -372,11 +359,10 @@ Integrator::checkMaterialStabilityForDT(
 	}
 }
 
-void
-Integrator::growSmallestTierRegions(
+void Integrator::growSmallestTierRegions(
  const UInt toGrow,
  const MeshVolume& mesh) {
-	UInt nK = mesh.elem_.nVolumeElements();
+	UInt nK = mesh.elems().sizeOf<VolR>();
 	timeTierList.sortRows_omp(0,0);
 	for (UInt tier = 0; tier < nTiers-1; tier++) {
 		// Creates a list with all the elements belonging to this tier.
@@ -410,22 +396,19 @@ Integrator::growSmallestTierRegions(
 	nTiers = timeTierList(nK-1,1) + 1;
 }
 
-void
-Integrator::assignTiersBasedOnMaxTimeStep(
+void Integrator::assignTiersBasedOnMaxTimeStep(
  const MeshVolume& mesh,
  const PMGroup& pmGroup) {
-	UInt nK = mesh.elem_.nVolumeElements();
-	DynMatrix<Real> dtList(nK, 4);
+	GroupElements<VolR> vol = mesh.elems().getGroupOf<VolR>();
+	DynMatrix<Real> dtList(vol.size(), 4);
 	mindt = 0.0;
-	for (UInt k = 0; k < nK; k++) {
-		const Tet* tet = mesh.elem_.tet[k];
-		const PMVolume* mat =
-		 pmGroup.getPMVolumeWithId(tet->getMatId());
-		Real dt = getMaxTimeStep(tet, mat);
+	for (UInt k = 0; k < vol.size(); k++) {
+	    const PhysicalModel* mat = pmGroup.get(vol(k)->getMatId());
+		Real dt = getMaxTimeStep(vol(k), mat);
 		if (mindt > dt || mindt == 0.0) {
 			mindt = dt;
 		}
-		dtList(k,0) = tet->getId();
+		dtList(k,0) = vol(k)->getId();
 		dtList(k,1) = dt;
 		dtList(k,2) = noTier;
 		dtList(k,3) = getNStages() - 1;
@@ -458,13 +441,12 @@ Integrator::assignTiersBasedOnMaxTimeStep(
 	timeTierList.copy(dtList.eliminateColumns(1,1));
 }
 
-void
-Integrator::assignStages(const MeshVolume& mesh) {
+void Integrator::assignStages(const MeshVolume& mesh) {
 	if (nTiers == 1) {
 		return;
 	}
 	// ----------- Reassigns tiers ------------------------------------
-	UInt nK = mesh.elem_.nVolumeElements();
+	UInt nK = mesh.elems().sizeOf<Vol>();
 	timeTierList.sortRows_omp(0,0);
 	const UInt nStages = getNStages();
 	for (UInt tier = 0; tier < nTiers-2; tier++) {
@@ -551,52 +533,3 @@ Integrator::getIdPartitionVector(
 	return res;
 }
 
-//void
-//Integrator::processStopRequest() {
-//	// Terminates the program storing the fields if key is pressed.
-//	nonblock(NB_ENABLE);
-//	Int endingRequest = 0;
-//	endingRequest = kbhit();
-//	if (endingRequest != 0 && fgetc(stdin)=='q') {
-//		cout << "Key 'q' was pressed, terminating." << endl;
-//		// Writes fields for resume.
-//		cout << " - Writing resume files." << endl;
-//		const Real *fPtrs[6];
-//		getFieldPtrs(fPtrs);
-//		out->writeResumeFile(fPtrs, tStep, nK);
-//		cout << " - Program was succesfully terminated." << endl;
-//		exit(EXIT_SUCCESS);
-//	}
-//	nonblock(NB_DISABLE);
-//}
-
-//Int
-//Integrator::kbhit()	{
-//	struct timeval tv;
-//	fd_set fds;
-//	tv.tv_sec = 0;
-//	tv.tv_usec = 0;
-//	FD_ZERO(&fds);
-//	FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
-//	select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
-//	return FD_ISSET(STDIN_FILENO, &fds);
-//}
-
-//void
-//Integrator::nonblock(Int state) {
-//	struct termios ttystate;
-//	//get the terminal state
-//	tcgetattr(STDIN_FILENO, &ttystate);
-//	if (state == NB_ENABLE) {
-//		//turn off canonical mode
-//		ttystate.c_lflag &= ~ICANON;
-//		//minimum of number input read.
-//		ttystate.c_cc[VMIN] = 1;
-//	}
-//	else if (state == NB_DISABLE) {
-//		//turn on canonical mode
-//		ttystate.c_lflag |= ICANON;
-//	}
-//	//set the terminal attributes.
-//	tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
-//}

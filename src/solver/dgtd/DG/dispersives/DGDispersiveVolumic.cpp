@@ -28,8 +28,7 @@ DGDispersiveVolumic::~DGDispersiveVolumic() {
 
 }
 
-void
-DGDispersiveVolumic::updateWithRes(
+void DGDispersiveVolumic::updateWithRes(
       const UInt e1,
       const UInt e2,
       const Real rkb) {
@@ -58,8 +57,7 @@ DGDispersiveVolumic::updateWithRes(
    }
 }
 
-void
-DGDispersiveVolumic::addRHSToRes(
+void DGDispersiveVolumic::addRHSToRes(
       const UInt e1,
       const UInt e2,
       const Real rka,
@@ -95,10 +93,9 @@ DGDispersiveVolumic::addRHSToRes(
    }
 }
 
-void
-DGDispersiveVolumic::computeRHSElectric(
-      Field<Real,3>& rhsE,
-      const Field<Real,3>& E,
+void DGDispersiveVolumic::computeRHSElectric(
+      FieldR3& rhsE,
+      const FieldR3& E,
       const UInt e1, const UInt e2) const {
    UInt i, j, e, n, p;
 #ifdef SOLVER_USE_OPENMP
@@ -110,9 +107,9 @@ DGDispersiveVolumic::computeRHSElectric(
          p = i / (nElem * np); // Pole number.
          n = i % np; // Node number.
          j = e * np + n; // Field coeff pos.
-         rhsE.set(x)[j] -= 2.0 * real(pole[p] * P(x)[i] + residue[p] * E(x)[j]);
-         rhsE.set(y)[j] -= 2.0 * real(pole[p] * P(y)[i] + residue[p] * E(y)[j]);
-         rhsE.set(z)[j] -= 2.0 * real(pole[p] * P(z)[i] + residue[p] * E(z)[j]);
+         rhsE.set(x)[j] -= 2.0 * real(getPole(p) * P(x)[i] + getResidue(p) * E(x)[j]);
+         rhsE.set(y)[j] -= 2.0 * real(getPole(p) * P(y)[i] + getResidue(p) * E(y)[j]);
+         rhsE.set(z)[j] -= 2.0 * real(getPole(p) * P(z)[i] + getResidue(p) * E(z)[j]);
       }
    }
 #ifdef SOLVER_USE_OPENMP
@@ -136,13 +133,12 @@ DGDispersiveVolumic::computeRHSElectric(
    }
 }
 
-void DGDispersiveVolumic::computeRHSMagnetic(Field<Real, 3>& rhsE,
-      const Field<Real, 3>& E, const UInt e1, const UInt e2) const {
+void DGDispersiveVolumic::computeRHSMagnetic(FieldR3& rhsE,
+      const FieldR3& E, const UInt e1, const UInt e2) const {
 }
 
-void
-DGDispersiveVolumic::computeRHSElectricPolarizationCurrents(
-      const Field<Real,3>& E,
+void DGDispersiveVolumic::computeRHSElectricPolarizationCurrents(
+      const FieldR3& E,
       const UInt e1, const UInt e2) {
    UInt i, j, e, n, p;
 #ifdef SOLVER_USE_OPENMP
@@ -154,9 +150,9 @@ DGDispersiveVolumic::computeRHSElectricPolarizationCurrents(
          p = i / (nElem * np); // Pole number.
          n = i % np; // Node number.
          j = e * np + n; // Field coeff pos.
-         rhsP.set(x)[i] = pole[p] * P(x)[i] + residue[p] * E(x)[j];
-         rhsP.set(y)[i] = pole[p] * P(y)[i] + residue[p] * E(y)[j];
-         rhsP.set(z)[i] = pole[p] * P(z)[i] + residue[p] * E(z)[j];
+         rhsP.set(x)[i] = getPole(p) * P(x)[i] + getResidue(p) * E(x)[j];
+         rhsP.set(y)[i] = getPole(p) * P(y)[i] + getResidue(p) * E(y)[j];
+         rhsP.set(z)[i] = getPole(p) * P(z)[i] + getResidue(p) * E(z)[j];
       }
    }
 #ifdef SOLVER_USE_OPENMP
@@ -173,33 +169,30 @@ DGDispersiveVolumic::computeRHSElectricPolarizationCurrents(
          // Field coefficient position in the general fields vector.
          j = e * np + n;
          // Updates RHS of Polarization currents.
-         rhsJ.set(x)[i] = drudePole[p] * J(x)[i] + drudeResidue[p] * E(x)[j];
-         rhsJ.set(y)[i] = drudePole[p] * J(y)[i] + drudeResidue[p] * E(y)[j];
-         rhsJ.set(z)[i] = drudePole[p] * J(z)[i] + drudeResidue[p] * E(z)[j];
+         rhsJ.set(x)[i] = getDrudePole(p) * J(x)[i] + getDrudeResidue(p) * E(x)[j];
+         rhsJ.set(y)[i] = getDrudePole(p) * J(y)[i] + getDrudeResidue(p) * E(y)[j];
+         rhsJ.set(z)[i] = getDrudePole(p) * J(z)[i] + getDrudeResidue(p) * E(z)[j];
       }
    }
 }
 
 
-void
-DGDispersiveVolumic::computeRHSMagneticPolarizationCurrents(
-      const Field<Real, 3>& E, const UInt e1, const UInt e2) {
+void DGDispersiveVolumic::computeRHSMagneticPolarizationCurrents(
+      const FieldR3& E, const UInt e1, const UInt e2) {
 }
 
-void
-DGDispersiveVolumic::addJumps(Field<Real, 3>& dE,
-      Field<Real, 3>& dH, Field<Real, 3>& E, Field<Real, 3>& H,
+void DGDispersiveVolumic::addJumps(FieldR3& dE,
+      FieldR3& dH, FieldR3& E, FieldR3& H,
       const UInt e1, const UInt e2) {
 }
 
-void
-DGDispersiveVolumic::build(
+void DGDispersiveVolumic::build(
       const CellGroup& cells) {
    for (UInt p = 0; p < getPoleNumber(); p++) {
-      residue[p] *= VACUUM_PERMITTIVITY;
+      getResidue(p) *= Constants::eps0;
    }
    for (UInt p = 0; p < getDrudePoleNumber(); p++) {
-      drudeResidue[p] *= VACUUM_PERMITTIVITY;
+      getDrudeResidue(p) *= Constants::eps0;
    }
    // Creates list of elements containing dispersive material.
    vector<UInt> rpList;

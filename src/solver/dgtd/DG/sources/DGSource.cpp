@@ -56,17 +56,15 @@ DGSource::~DGSource() {
    // TODO Auto-generated destructor stub
 }
 
-void
-DGSource::initSource(
-      const vector<const BoundaryCondition*>& bc,
+void DGSource::initSource(
       const MapGroup& map,
       const CellGroup& cells,
       FieldR3& dE, FieldR3& dH,
       const Int vmapM[faces][nfp]) {
    vector<pair<UInt, UInt> > total, scatt, totalNotBacked;
-   total = getElemFaces(bc, map, cells, totalField);
-   scatt = getElemFaces(bc, map, cells, scatteredField);
-   totalNotBacked = getElemFaces(bc, map, cells, totalFieldNotBacked);
+//   total = getElemFaces(bc, map, cells, totalField);
+//   scatt = getElemFaces(bc, map, cells, scatteredField);
+//   totalNotBacked = getElemFaces(bc, map, cells, totalFieldNotBacked);
    nETF = total.size();
    ExTInc  = new Real[nETF*nfp];
    EyTInc  = new Real[nETF*nfp];
@@ -188,40 +186,38 @@ DGSource::initSource(
    }
 }
 
-vector<pair<UInt, UInt> >
-DGSource::getElemFaces(
-      const vector<const BoundaryCondition*>& bc,
+vector<pair<UInt,UInt>> DGSource::getElemFaces(
       const MapGroup& map,
       const CellGroup& cells,
       const BackingType type) const {
    vector<pair<UInt, UInt> > res;
-   for (UInt i = 0; i < bc.size(); i++) {
-      UInt id1 = bc[i]->getCell()->getId();
-      UInt f1 = bc[i]->getFace();
-      UInt id2 = map.getNeighbour(id1,f1)->getId();
-      UInt f2 = map.getVolToF(id1, f1);
-      switch (type) {
-      case totalField:
-         if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
-            UInt e1 = cells.getRelPosOfId(id1);
-            res.push_back(pair<UInt,UInt>(e1, f1));
-         }
-         break;
-      case scatteredField:
-         if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id2)) {
-            UInt e2 = cells.getRelPosOfId(id2);
-            res.push_back(pair<UInt,UInt>(e2, f2));
-         }
-         break;
-      case totalFieldNotBacked:
-         if (map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
-            UInt e1 = cells.getRelPosOfId(id1);
-            res.push_back(pair<UInt,UInt>(e1, f1));
-         }
-         break;
-      }
-   }
-   return res;
+//   for (UInt i = 0; i < bc.size(); i++) {
+//      UInt id1 = bc[i]->getCell()->getId();
+//      UInt f1 = bc[i]->getFace();
+//      UInt id2 = map.getNeighbour(id1,f1)->getId();
+//      UInt f2 = map.getVolToF(id1, f1);
+//      switch (type) {
+//      case totalField:
+//         if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
+//            UInt e1 = cells.getRelPosOfId(id1);
+//            res.push_back(pair<UInt,UInt>(e1, f1));
+//         }
+//         break;
+//      case scatteredField:
+//         if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id2)) {
+//            UInt e2 = cells.getRelPosOfId(id2);
+//            res.push_back(pair<UInt,UInt>(e2, f2));
+//         }
+//         break;
+//      case totalFieldNotBacked:
+//         if (map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
+//            UInt e1 = cells.getRelPosOfId(id1);
+//            res.push_back(pair<UInt,UInt>(e1, f1));
+//         }
+//         break;
+//      }
+//   }
+//   return res;
 }
 
 
@@ -282,7 +278,7 @@ DGSource::initPositions(
       const CellGroup& cells) const {
    const UInt nE = elemFace.size();
    CVecR3 *pos;
-   pos = new CartesianVector<Real, 3> [nE * nfp];
+   pos = new CVecR3 [nE * nfp];
    for (UInt i = 0; i < nE; i++) {
       UInt id = cells.getIdOfRelPos(elemFace[i].first);
       UInt f = elemFace[i].second;
@@ -292,17 +288,4 @@ DGSource::initPositions(
       }
    }
    return pos;
-}
-
-bool
-DGSource::isContainedInPlane(
-      const CartesianPlane plane,
-      const vector<const BoundaryCondition*>& bc) const {
-   for (UInt i = 0; i < bc.size(); i++) {
-      UInt face = bc[i]->getFace();
-      if (!bc[i]->getCell()->isFaceContainedInPlane(face, plane)) {
-         return false;
-      }
-   }
-   return true;
 }

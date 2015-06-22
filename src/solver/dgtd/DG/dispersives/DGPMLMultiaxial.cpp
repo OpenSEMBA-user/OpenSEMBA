@@ -271,9 +271,9 @@ DGPMLMultiaxial::internalBiaxialRHSElectric(Real* rhsE1,
             if (e1 <= e && e < e2) {
                 n = i % np;
                 j = e * np + n;
-                rhsE1[j] += - J1[i]*eps0;
-                rhsE2[j] += - J2[i]*eps0;
-                rhsE3[j] += - J3[i]*eps0;
+                rhsE1[j] += - J1[i]*Constants::eps0;
+                rhsE2[j] += - J2[i]*Constants::eps0;
+                rhsE3[j] += - J3[i]*Constants::eps0;
             }
         }
     } else {
@@ -285,18 +285,18 @@ DGPMLMultiaxial::internalBiaxialRHSElectric(Real* rhsE1,
             if (e1 <= elem[e] && elem[e] < e2) {
                 i = e * np;
                 j = elem[e] * np;
-                //rhsE1[j] += - sig2*E1[j]*eps0 + sig1*E1[j]*eps0 - J1[i]*eps0;
-                sub_am_v_prod<Real,np,np>(&rhsE1[j], sig2[e], &E1[j], eps0);
-                add_am_v_prod<Real,np,np>(&rhsE1[j], sig1[e], &E1[j], eps0);
-                sub_a_v_prod<Real,np>(&rhsE1[j], &J1[i], eps0);
-                //rhsE2[j] += - E2[j]*eps0*(sig1-sig2) - J2[i]*eps0;
-                sub_am_v_prod<Real,np,np>(&rhsE2[j], sig1[e], &E2[j], eps0);
-                add_am_v_prod<Real,np,np>(&rhsE2[j], sig2[e], &E2[j], eps0);
-                sub_a_v_prod<Real,np>(&rhsE2[j], &J2[i], eps0);
-                //rhsE3[j] += - E3[j]*eps0*(sig1+sig2) - J3[i]*eps0;
-                sub_am_v_prod<Real,np,np>(&rhsE3[j], sig1[e], &E3[j], eps0);
-                sub_am_v_prod<Real,np,np>(&rhsE3[j], sig2[e], &E3[j], eps0);
-                sub_a_v_prod<Real,np>(&rhsE3[j], &J3[i], eps0);
+                //rhsE1[j] += - sig2*E1[j]*Constants::eps0 + sig1*E1[j]*Constants::eps0 - J1[i]*Constants::eps0;
+                sub_am_v_prod<Real,np,np>(&rhsE1[j], sig2[e], &E1[j], Constants::eps0);
+                add_am_v_prod<Real,np,np>(&rhsE1[j], sig1[e], &E1[j], Constants::eps0);
+                sub_a_v_prod<Real,np>(&rhsE1[j], &J1[i], Constants::eps0);
+                //rhsE2[j] += - E2[j]*Constants::eps0*(sig1-sig2) - J2[i]*Constants::eps0;
+                sub_am_v_prod<Real,np,np>(&rhsE2[j], sig1[e], &E2[j], Constants::eps0);
+                add_am_v_prod<Real,np,np>(&rhsE2[j], sig2[e], &E2[j], Constants::eps0);
+                sub_a_v_prod<Real,np>(&rhsE2[j], &J2[i], Constants::eps0);
+                //rhsE3[j] += - E3[j]*Constants::eps0*(sig1+sig2) - J3[i]*Constants::eps0;
+                sub_am_v_prod<Real,np,np>(&rhsE3[j], sig1[e], &E3[j], Constants::eps0);
+                sub_am_v_prod<Real,np,np>(&rhsE3[j], sig2[e], &E3[j], Constants::eps0);
+                sub_a_v_prod<Real,np>(&rhsE3[j], &J3[i], Constants::eps0);
             }
         }
     }
@@ -324,7 +324,7 @@ DGPMLxy::~DGPMLxy() {
 
 void
 DGPMLxy::computeRHSElectric(
-        Field<Real, 3>& rhs, const Field<Real, 3>& f,
+        FieldR3& rhs, const FieldR3& f,
         const UInt e1, const UInt e2) const {
     internalBiaxialRHSElectric(
             rhs.set(x),rhs.set(y),rhs.set(z), f(x),f(y),f(z), e1,e2);
@@ -332,7 +332,7 @@ DGPMLxy::computeRHSElectric(
 
 void
 DGPMLxy::computeRHSMagnetic(
-        Field<Real, 3>& rhs, const Field<Real, 3>& f,
+        FieldR3& rhs, const FieldR3& f,
         const UInt e1, const UInt e2) const {
     internalBiaxialRHSMagnetic(
             rhs.set(x),rhs.set(y),rhs.set(z), f(x),f(y),f(z), e1,e2);
@@ -340,13 +340,13 @@ DGPMLxy::computeRHSMagnetic(
 
 void
 DGPMLxy::computeRHSElectricPolarizationCurrents(
-        const Field<Real, 3>& f, const UInt e1, const UInt e2) {
+        const FieldR3& f, const UInt e1, const UInt e2) {
     internalBiaxialRHSElectricPolarizationCurrent(f(x),f(y),f(z), e1,e2);
 }
 
 void
 DGPMLxy::computeRHSMagneticPolarizationCurrents(
-        const Field<Real, 3>& f, const UInt e1, const UInt e2) {
+        const FieldR3& f, const UInt e1, const UInt e2) {
     internalBiaxialRHSMagneticPolarizationCurrent(f(x),f(y),f(z), e1,e2);
 }
 
@@ -372,7 +372,7 @@ DGPMLyz::~DGPMLyz() {
 
 void
 DGPMLyz::computeRHSElectric(
-        Field<Real, 3>& rhs, const Field<Real, 3>& f,
+        FieldR3& rhs, const FieldR3& f,
         const UInt e1, const UInt e2) const {
     internalBiaxialRHSElectric(
             rhs.set(y),rhs.set(z),rhs.set(x), f(y),f(z),f(x), e1,e2);
@@ -380,20 +380,20 @@ DGPMLyz::computeRHSElectric(
 
 void
 DGPMLyz::computeRHSMagnetic(
-        Field<Real, 3>& rhs, const Field<Real, 3>& f,
+        FieldR3& rhs, const FieldR3& f,
         const UInt e1, const UInt e2) const {
     internalBiaxialRHSMagnetic(
             rhs.set(y),rhs.set(z),rhs.set(x), f(y),f(z),f(x), e1,e2);
 }
 
 void
-DGPMLyz::computeRHSElectricPolarizationCurrents(const Field<Real, 3>& f,
+DGPMLyz::computeRHSElectricPolarizationCurrents(const FieldR3& f,
         const UInt e1, const UInt e2) {
     internalBiaxialRHSElectricPolarizationCurrent(f(y),f(z),f(x), e1,e2);
 }
 
 void
-DGPMLyz::computeRHSMagneticPolarizationCurrents(const Field<Real, 3>& f,
+DGPMLyz::computeRHSMagneticPolarizationCurrents(const FieldR3& f,
         const UInt e1, const UInt e2) {
     internalBiaxialRHSMagneticPolarizationCurrent(f(y),f(z),f(x), e1,e2);
 }
@@ -420,7 +420,7 @@ DGPMLzx::~DGPMLzx() {
 
 void
 DGPMLzx::computeRHSElectric(
-        Field<Real, 3>& rhs, const Field<Real, 3>& f,
+        FieldR3& rhs, const FieldR3& f,
         const UInt e1, const UInt e2) const {
     internalBiaxialRHSElectric(
             rhs.set(z), rhs.set(x), rhs.set(y), f(z),f(x),f(y), e1,e2);
@@ -428,7 +428,7 @@ DGPMLzx::computeRHSElectric(
 
 void
 DGPMLzx::computeRHSMagnetic(
-        Field<Real, 3>& rhs, const Field<Real, 3>& f,
+        FieldR3& rhs, const FieldR3& f,
         const UInt e1, const UInt e2) const {
     internalBiaxialRHSMagnetic(
             rhs.set(z), rhs.set(x),rhs.set(y), f(z),f(x),f(y), e1,e2);
@@ -436,7 +436,7 @@ DGPMLzx::computeRHSMagnetic(
 
 void
 DGPMLzx::computeRHSElectricPolarizationCurrents(
-        const Field<Real, 3>& f,
+        const FieldR3& f,
         const UInt e1, const UInt e2) {
     internalBiaxialRHSElectricPolarizationCurrent(
             f(z),f(x),f(y), e1,e2);
@@ -444,7 +444,7 @@ DGPMLzx::computeRHSElectricPolarizationCurrents(
 
 void
 DGPMLzx::computeRHSMagneticPolarizationCurrents(
-        const Field<Real, 3>& f,
+        const FieldR3& f,
         const UInt e1, const UInt e2) {
     internalBiaxialRHSMagneticPolarizationCurrent(
             f(z),f(x),f(y), e1,e2);
@@ -470,8 +470,8 @@ DGPMLxyz::~DGPMLxyz() {
 
 void
 DGPMLxyz::computeRHSElectric(
-        Field<Real, 3>& rhsE,
-        const Field<Real, 3>& E,
+        FieldR3& rhsE,
+        const FieldR3& E,
         const UInt e1, const UInt e2) const {
     if (useConstantConductivity) {
         UInt i, j, e, n;
@@ -483,9 +483,9 @@ DGPMLxyz::computeRHSElectric(
             if (e1 <= e && e < e2) {
                 n = i % np;
                 j = e * np + n;
-                rhsE.set(0)[j] += - E(0)[j]*(eps0*sig) - J1[i]*eps0;
-                rhsE.set(0)[j] += - E(0)[j]*(eps0*sig) - J2[i]*eps0;
-                rhsE.set(0)[j] += - E(0)[j]*(eps0*sig) - J3[i]*eps0;
+                rhsE.set(0)[j] += - E(0)[j]*(Constants::eps0*sig) - J1[i]*Constants::eps0;
+                rhsE.set(0)[j] += - E(0)[j]*(Constants::eps0*sig) - J2[i]*Constants::eps0;
+                rhsE.set(0)[j] += - E(0)[j]*(Constants::eps0*sig) - J3[i]*Constants::eps0;
             }
         }
     } else {
@@ -497,21 +497,21 @@ DGPMLxyz::computeRHSElectric(
             if (e1 <= elem[e] && e < elem[e]) {
                 i = e * np;
                 j = elem[e] * np;
-                //rhsEx[j] += - Ex[j]*eps0*(sig3+sig2-sig1) - J1[i]*eps0;
-                sub_am_v_prod<Real,np,np>(&rhsE.set(0)[j], sig3[e], &E(0)[j], eps0);
-                sub_am_v_prod<Real,np,np>(&rhsE.set(0)[j], sig2[e], &E(0)[j], eps0);
-                add_am_v_prod<Real,np,np>(&rhsE.set(0)[j], sig1[e], &E(0)[j], eps0);
-                sub_a_v_prod<Real,np>(&rhsE.set(0)[j], &J1[i], eps0);
-                //rhsEy[j] += - Ey[j]*eps0*(sig1+sig3-sig2) - J2[i]*eps0;
-                sub_am_v_prod<Real,np,np>(&rhsE.set(1)[j], sig1[e], &E(1)[j], eps0);
-                sub_am_v_prod<Real,np,np>(&rhsE.set(1)[j], sig3[e], &E(1)[j], eps0);
-                add_am_v_prod<Real,np,np>(&rhsE.set(1)[j], sig2[e], &E(1)[j], eps0);
-                sub_a_v_prod<Real,np>(&rhsE.set(1)[j], &J2[i], eps0);
-                //rhsEz[j] += - Ez[j]*eps0*(sig2+sig1-sig3) - J3[i]*eps0;
-                sub_am_v_prod<Real,np,np>(&rhsE.set(2)[j], sig2[e], &E(2)[j], eps0);
-                sub_am_v_prod<Real,np,np>(&rhsE.set(2)[j], sig1[e], &E(2)[j], eps0);
-                add_am_v_prod<Real,np,np>(&rhsE.set(2)[j], sig3[e], &E(2)[j], eps0);
-                sub_a_v_prod<Real,np>(&rhsE.set(2)[j], &J3[i], eps0);
+                //rhsEx[j] += - Ex[j]*Constants::eps0*(sig3+sig2-sig1) - J1[i]*Constants::eps0;
+                sub_am_v_prod<Real,np,np>(&rhsE.set(0)[j], sig3[e], &E(0)[j], Constants::eps0);
+                sub_am_v_prod<Real,np,np>(&rhsE.set(0)[j], sig2[e], &E(0)[j], Constants::eps0);
+                add_am_v_prod<Real,np,np>(&rhsE.set(0)[j], sig1[e], &E(0)[j], Constants::eps0);
+                sub_a_v_prod<Real,np>(&rhsE.set(0)[j], &J1[i], Constants::eps0);
+                //rhsEy[j] += - Ey[j]*Constants::eps0*(sig1+sig3-sig2) - J2[i]*Constants::eps0;
+                sub_am_v_prod<Real,np,np>(&rhsE.set(1)[j], sig1[e], &E(1)[j], Constants::eps0);
+                sub_am_v_prod<Real,np,np>(&rhsE.set(1)[j], sig3[e], &E(1)[j], Constants::eps0);
+                add_am_v_prod<Real,np,np>(&rhsE.set(1)[j], sig2[e], &E(1)[j], Constants::eps0);
+                sub_a_v_prod<Real,np>(&rhsE.set(1)[j], &J2[i], Constants::eps0);
+                //rhsEz[j] += - Ez[j]*Constants::eps0*(sig2+sig1-sig3) - J3[i]*Constants::eps0;
+                sub_am_v_prod<Real,np,np>(&rhsE.set(2)[j], sig2[e], &E(2)[j], Constants::eps0);
+                sub_am_v_prod<Real,np,np>(&rhsE.set(2)[j], sig1[e], &E(2)[j], Constants::eps0);
+                add_am_v_prod<Real,np,np>(&rhsE.set(2)[j], sig3[e], &E(2)[j], Constants::eps0);
+                sub_a_v_prod<Real,np>(&rhsE.set(2)[j], &J3[i], Constants::eps0);
             }
         }
     }
@@ -519,8 +519,8 @@ DGPMLxyz::computeRHSElectric(
 
 void
 DGPMLxyz::computeRHSMagnetic(
-        Field<Real, 3>& rhsH,
-        const Field<Real, 3>& H, const UInt e1, const UInt e2) const {
+        FieldR3& rhsH,
+        const FieldR3& H, const UInt e1, const UInt e2) const {
     if (useConstantConductivity) {
         UInt i, j, e, n;
 #ifdef SOLVER_USE_OPENMP
@@ -567,7 +567,7 @@ DGPMLxyz::computeRHSMagnetic(
 
 void
 DGPMLxyz::computeRHSElectricPolarizationCurrents(
-        const Field<Real, 3>& E, const UInt e1, const UInt e2) {
+        const FieldR3& E, const UInt e1, const UInt e2) {
     if (useConstantConductivity) {
         UInt i;
 #ifdef SOLVER_USE_OPENMP
@@ -615,7 +615,7 @@ DGPMLxyz::computeRHSElectricPolarizationCurrents(
 
 void
 DGPMLxyz::computeRHSMagneticPolarizationCurrents(
-        const Field<Real, 3>& H,
+        const FieldR3& H,
         const UInt e1, const UInt e2) {
     if (useConstantConductivity) {
         UInt i;

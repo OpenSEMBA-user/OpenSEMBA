@@ -24,12 +24,9 @@
 class SolverCudg3d : public Solver {
 public:
     SolverCudg3d(SmbData*);
-    SolverCudg3d(const OptionsSolverDGTD*);
-    SolverCudg3d(SmbData*, const OptionsSolverDGTD*);
     ~SolverCudg3d();
-    void run();
+    bool run();
 private:
-    const OptionsSolverDGTD* arg_;
     SmbData* smb_;
     Comm *comm_;
     Integrator *integrator_;
@@ -41,7 +38,6 @@ private:
             const OptionsSolverDGTD* args);
     Comm* initMPI();
     void initOpenMP();
-    void init();
 };
 
 #endif

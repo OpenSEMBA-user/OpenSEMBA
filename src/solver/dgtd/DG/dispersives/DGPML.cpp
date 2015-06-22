@@ -145,7 +145,7 @@ DGPML::init(
 	}
 }
 
-void DGPML::addJumps(Field<Real, 3>& dE, Field<Real, 3>& dH,
-		Field<Real, 3>& E, Field<Real, 3>& H, const UInt e1,
+void DGPML::addJumps(FieldR3& dE, FieldR3& dH,
+		FieldR3& E, FieldR3& H, const UInt e1,
 		const UInt e2) {
 }

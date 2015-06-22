@@ -14,22 +14,22 @@ DGWaveportRectangular::DGWaveportRectangular(
       FieldR3& dE, FieldR3& dH,
       const Int vmapM[faces][nfp]) :
       Waveport(wp) {
-   initSource(bc, map, cells, dE, dH, vmapM);
+   initSource(map, cells, dE, dH, vmapM);
    // Computes positions.
    vector<pair<UInt, UInt> > total;
-   total = getElemFaces(bc, map, cells, totalField);
+   total = getElemFaces(map, cells, totalField);
    posTF = initPositions(total, cells);
    if (!checkNormalsAreEqual(total, cells)) {
       cerr << endl << "Total Normals are different" << endl;
    }
    vector<pair<UInt,UInt> > scatt;
-   scatt = getElemFaces(bc, map, cells, scatteredField);
+   scatt = getElemFaces(map, cells, scatteredField);
    posSF = initPositions(scatt, cells);
    if (!checkNormalsAreEqual(scatt, cells)) {
       cerr << endl << "Scatt Normals are different" << endl;
    }
    vector<pair<UInt, UInt> > totalNB;
-   totalNB = getElemFaces(bc, map, cells, totalFieldNotBacked);
+   totalNB = getElemFaces(map, cells, totalFieldNotBacked);
    posTFNB = initPositions(totalNB, cells);
    if (!checkNormalsAreEqual(totalNB, cells)) {
       cerr << endl << "Total Not Backed Normals are different" << endl;
@@ -121,7 +121,7 @@ DGWaveportRectangular::DGWaveportRectangular(
    // Computes kcm.
    kcm = sqrt(pow((Real) getMode().first * M_PI/width, 2)
          + pow((Real) getMode().second * M_PI/height, 2));
-   intrinsicImpedance = sqrt(VACUUM_PERMEABILITY / VACUUM_PERMITTIVITY);
+   intrinsicImpedance = sqrt(Constants::mu0 / Constants::eps0);
    gammaMSum = 0.0;
 }
 
@@ -129,8 +129,7 @@ DGWaveportRectangular::~DGWaveportRectangular() {
 
 }
 
-void
-DGWaveportRectangular::computeExcitation(
+void DGWaveportRectangular::computeExcitation(
       const Real time,
       const Real minDT) {
    computeExcitationField(
@@ -144,15 +143,13 @@ DGWaveportRectangular::computeExcitation(
          posTFNB, nETFNB, time, minDT);
 }
 
-void
-DGWaveportRectangular::printInfo() const {
+void DGWaveportRectangular::printInfo() const {
    cout << "DGWaveportRectangular::printInfo" << endl;
    cout << "TO BE DONE." << endl;
    // TODO DGWaveportRectangular::printInfo stub.
 }
 
-void
-DGWaveportRectangular::computeExcitationField(
+void DGWaveportRectangular::computeExcitationField(
       Real* ExInc,
       Real* EyInc,
       Real* EzInc,
@@ -165,7 +162,7 @@ DGWaveportRectangular::computeExcitationField(
       const Real minDT) {
    const Real kcmSq = kcm * kcm;
    //	Real f = getGauss(time, amplitude,delay,spread);
-   Real gamma0f = getMagnitude()->evaluate(time) / SPEED_OF_LIGHT;
+   Real gamma0f = getMagnitude()->evaluate(time) / Constants::c0;
    //	Real gammaMf =
    //	 getNumericalGammaMGauss(time,minDT, amplitude,delay,spread, kcm);
    if (excitationMode == Waveport::TE) {

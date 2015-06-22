@@ -25,21 +25,21 @@ public:
 	  const Real rkb);
 	virtual void
 	 computeRHSElectric(
-	  Field<Real,3>& rhsE,
-	  const Field<Real,3>& E,
+	  FieldR3& rhsE,
+	  const FieldR3& E,
 	  const UInt e1, const UInt e2) const = 0;
 	virtual void
 	 computeRHSMagnetic(
-	  Field<Real,3>& rhsH,
-	  const Field<Real,3>& H,
+	  FieldR3& rhsH,
+	  const FieldR3& H,
 	  const UInt e1, const UInt e2) const = 0;
 	virtual void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<Real,3>& E,
+	  const FieldR3& E,
 	  const UInt e1, const UInt e2) = 0;
 	virtual void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<Real,3>& H,
+	  const FieldR3& H,
 	  const UInt e1, const UInt e2) = 0;
 protected:
 	void
@@ -86,21 +86,21 @@ public:
 	virtual ~DGPMLxy();
 	void
 	 computeRHSElectric(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSMagnetic(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 	void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 };
 
@@ -115,21 +115,21 @@ public:
 	virtual ~DGPMLyz();
 	void
 	 computeRHSElectric(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSMagnetic(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 	void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 };
 
@@ -144,21 +144,21 @@ public:
 	virtual ~DGPMLzx();
 	void
 	 computeRHSElectric(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSMagnetic(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 	void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 };
 
@@ -173,21 +173,21 @@ public:
 	virtual ~DGPMLxyz();
 	void
 	 computeRHSElectric(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSMagnetic(
-	  Field<Real,3>& rhs,
-	  const Field<Real,3>& f,
+	  FieldR3& rhs,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 	void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<Real,3>& f,
+	  const FieldR3& f,
 	  const UInt e1, const UInt e2);
 };
 

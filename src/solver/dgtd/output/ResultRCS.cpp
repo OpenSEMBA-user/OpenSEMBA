@@ -126,7 +126,7 @@
 //ResultRCS::getRCS(
 // const Real frequency,
 // const vector<pair<Real, Real> >& directions) const {
-//	const Real betaSq = pow(2*M_PI*frequency/SPEED_OF_LIGHT,2);
+//	const Real betaSq = pow(2*M_PI*frequency/Constants::c0,2);
 //	// Incident Field.
 //	CVecC3 EIncFq;
 //	vector<CVecR3 > EInc;

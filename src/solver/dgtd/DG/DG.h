@@ -61,26 +61,20 @@ public:
     const static UInt nfpfaces = nfp * faces;
     DG();
     virtual ~DG();
-    virtual void
-    setFieldsToZero();
-    virtual void
-    setFieldsToOne();
-    virtual void
-    setFieldsToRandom();
-    virtual void
-    setFieldsToGaussian(
+    virtual void setFieldsToZero();
+    virtual void setFieldsToOne();
+    virtual void setFieldsToRandom();
+    virtual void setFieldsToGaussian(
             const CellGroup& cells,
             const Real amplitude,
             CVecR3& polarization,
             const CVecR3& gaussCenter,
             const Real gaussWidth);
-    virtual void
-    setFieldsToHarmonics(
+    virtual void setFieldsToHarmonics(
             const CellGroup& cells,
             const CartesianVector<Int,3>& harmonics,
             CVecR3& polarization);
-    void
-    setFieldsAndTimeFromResumeFile();
+    void setFieldsAndTimeFromResumeFile();
     virtual UInt
     getFieldDOFs() = 0;
     const FieldR3* getElectric() const;
@@ -159,8 +153,8 @@ protected:
             const Real localtime,
             const Real minDT) = 0;
     virtual UInt getIndexOfElement(const UInt e) const = 0;
-    virtual const Field<Real,3>& getRHSElectric() const = 0;
-    virtual const Field<Real,3>& getRHSMagnetic() const = 0;
+    virtual const FieldR3& getRHSElectric() const = 0;
+    virtual const FieldR3& getRHSMagnetic() const = 0;
     virtual void updateFieldsWithRes(
             const UInt e1,
             const UInt e2,
@@ -209,8 +203,7 @@ protected:
     void buildFieldScalingFactors(
             const CellGroup& cells);
 private:
-    virtual void
-    buildScalingFactors(
+    virtual void buildScalingFactors(
             const CellGroup& cells,
             const MapGroup& map);
     void buildLIFT();

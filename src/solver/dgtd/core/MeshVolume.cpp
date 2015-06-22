@@ -62,20 +62,6 @@ MeshVolume::~MeshVolume() {
 //}
 
 vector<vector<ElementId>>
-MeshVolume::getPartitionsIds(const UInt nDivisions) const {
-    // Calls weight balanced partitioner with a zero size weight vector
-    vector<pair<ElementId,Int>> idWgt;
-    return getPartitionsIds(nDivisions, idWgt);
-}
-
-vector<vector<ElementId>>
-MeshVolume::getPartitionsIds(
-        const UInt nDivisions,
-        const vector<pair<ElementId,Int>> idWgt) const {
-    return getPartitionsIds(nDivisions, idWgt, NULL);
-}
-
-vector<vector<ElementId>>
 MeshVolume::getPartitionsIds(
         const UInt nDivisions,
         const vector<pair<ElementId,Int>> idWgt,
@@ -85,13 +71,13 @@ MeshVolume::getPartitionsIds(
     // compute a k-way partitioning for both its elements and its nodes
     // idWgt contains id and weight pairs.
     vector<vector<ElementId>> res;
-    res.resize(nDivisions);
+    res.resize(nDivisions, vector<ElementId>());
     // Accounts for the one partition case.
     if (nDivisions == 1) {
-        UInt nK = elems().sizeOf<VolR>();
-        res[0].resize(nK, 0);
+        const UInt nK = elems().sizeOf<VolR>();
+        res[0].resize(nK, ElementId(0));
         for (UInt i = 0; i < nK; i++) {
-            res[0][i] = elems().tet[i]->getId();
+            res[0][i] = (elems())(i)->getId();
         }
         return res;
     }

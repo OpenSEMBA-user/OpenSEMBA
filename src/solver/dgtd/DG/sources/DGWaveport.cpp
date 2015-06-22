@@ -47,9 +47,9 @@ DGWaveport::getHm(
  const Real t,
  const Real kcm) const {
 	if (t == 0) {
-		return (kcm * kcm * SPEED_OF_LIGHT / 2.0);
+		return (kcm * kcm * Constants::c0 / 2.0);
 	} else {
-		return (kcm / t * j1(kcm * SPEED_OF_LIGHT * t));
+		return (kcm / t * j1(kcm * Constants::c0 * t));
 	}
 }
 

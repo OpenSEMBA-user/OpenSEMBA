@@ -84,10 +84,10 @@ DGPlaneWave::initWaveNumberPosition(
 	// Computes krmin position.
 	Real krmin = 0.0;
 	bool krminSet = false;
-	CartesianVector<Real, 3> nodePos;
+	CVecR3 nodePos;
 	// Total field.
 	vector<pair<UInt, UInt> > total;
-	total = getElemFaces(bc, map, cells, totalField);
+	total = getElemFaces(map, cells, totalField);
 	kNPosTF = new Real[nETF * nfp];
 	for (UInt j = 0; j < nETF; j++) {
 		UInt id = cells.getIdOfRelPos(total[j].first);
@@ -96,7 +96,7 @@ DGPlaneWave::initWaveNumberPosition(
 		for (UInt k = 0; k < nfp; k++) {
 			const CellTet<N>* cell = cells.getPtrToCellWithId(id);
 			nodePos = cell->n[vmapM[f][k]];
-			kNPosTF[pos + k] = getWaveDirection().dot(nodePos) / SPEED_OF_LIGHT;
+			kNPosTF[pos + k] = getWaveDirection().dot(nodePos) / Constants::c0;
 			// Stores minimum kNPos value.
 			if (!krminSet) {
 				krminSet = true;
@@ -108,7 +108,7 @@ DGPlaneWave::initWaveNumberPosition(
 	}
 	// Scattered field.
 	vector<pair<UInt, UInt> > scatt;
-	scatt = getElemFaces(bc, map, cells, scatteredField);
+	scatt = getElemFaces(map, cells, scatteredField);
 	kNPosSF = new Real[nESF * nfp];
 	for (UInt j = 0; j < nESF; j++) {
 		UInt id = cells.getIdOfRelPos(scatt[j].first);
@@ -117,7 +117,7 @@ DGPlaneWave::initWaveNumberPosition(
 		for (UInt k = 0; k < nfp; k++) {
 			const CellTet<N>* cell = cells.getPtrToCellWithId(id);
 			nodePos = cell->n[vmapM[f][k]];
-			kNPosSF[pos + k] = getWaveDirection().dot(nodePos) / SPEED_OF_LIGHT;
+			kNPosSF[pos + k] = getWaveDirection().dot(nodePos) / Constants::c0;
 			// Stores minimum kNPos value.
 			if (!krminSet) {
 				krminSet = true;
@@ -130,7 +130,7 @@ DGPlaneWave::initWaveNumberPosition(
 	}
 	// Total field not backed.
 	vector<pair<UInt, UInt> > totalNotBacked;
-	totalNotBacked = getElemFaces(bc, map, cells, totalFieldNotBacked);
+	totalNotBacked = getElemFaces(map, cells, totalFieldNotBacked);
 	kNPosTFNB = new Real[nETFNB * nfp];
 	for (UInt j = 0; j < nETFNB; j++) {
 		UInt id = cells.getIdOfRelPos(totalNotBacked[j].first);
@@ -139,7 +139,7 @@ DGPlaneWave::initWaveNumberPosition(
 		for (UInt k = 0; k < nfp; k++) {
 			const CellTet<N>* cell = cells.getPtrToCellWithId(id);
 			nodePos = cell->n[vmapM[f][k]];
-			kNPosTFNB[pos + k] = getWaveDirection().dot(nodePos) / SPEED_OF_LIGHT;
+			kNPosTFNB[pos + k] = getWaveDirection().dot(nodePos) / Constants::c0;
 			// Stores minimum kNPos value.
 			if (!krminSet) {
 				krminSet = true;

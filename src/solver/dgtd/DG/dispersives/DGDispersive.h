@@ -27,18 +27,18 @@ protected:
 public:
     virtual ~DGDispersive() = 0;
     virtual void computeRHSElectric(
-            Field<Real,3>& rhsE,
-            const Field<Real,3>& E,
+            FieldR3& rhsE,
+            const FieldR3& E,
             const UInt e1, const UInt e2) const = 0;
     virtual void computeRHSMagnetic(
-            Field<Real,3>& rhsH,
-            const Field<Real,3>& H,
+            FieldR3& rhsH,
+            const FieldR3& H,
             const UInt e1, const UInt e2) const= 0;
     virtual void computeRHSElectricPolarizationCurrents(
-            const Field<Real,3>& E,
+            const FieldR3& E,
             const UInt e1, const UInt e2) = 0;
     virtual void computeRHSMagneticPolarizationCurrents(
-            const Field<Real,3>& H,
+            const FieldR3& H,
             const UInt e1, const UInt e2) = 0;
     virtual void addRHSToRes(
             const UInt e1, const UInt e2,
@@ -48,8 +48,8 @@ public:
             const UInt e2,
             const Real rkb) = 0;
     virtual void addJumps(
-            Field<Real,3>& dE, Field<Real,3>& dH,
-            Field<Real,3>& E, Field<Real,3>& H,
+            FieldR3& dE, FieldR3& dH,
+            FieldR3& E, FieldR3& H,
             const UInt e1, const UInt e2) = 0;
 };
 

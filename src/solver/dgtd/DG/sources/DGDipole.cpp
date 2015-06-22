@@ -2,13 +2,12 @@
 
 DGDipole::DGDipole(
       const Dipole& dip,
-      const vector<const BoundaryCondition*>& bc,
       const MapGroup& map,
       const CellGroup& cells,
       FieldR3& dE, FieldR3& dH,
       const Int vmapM[faces][nfp])
 : Dipole(dip) {
-   initSource(bc, map, cells, dE, dH, vmapM);
+   initSource(map, cells, dE, dH, vmapM);
    // Determines total or scattered fields in the bc.
    if (nETFNB != 0) {
       cerr << endl << "ERROR @ SolveDipole::build(): "
@@ -16,7 +15,7 @@ DGDipole::DGDipole(
    }
    // Total field boundary.
    vector<pair<UInt, UInt> > total;
-   total = getElemFaces(bc, map, cells, totalField);
+   total = getElemFaces(map, cells, totalField);
    tPos = new SphericalVector[nETF * nfp];
    for (UInt i = 0; i < total.size(); i++) {
       UInt id = cells.getIdOfRelPos(total[i].first);
@@ -28,7 +27,7 @@ DGDipole::DGDipole(
    }
    // Scattered field boundary.
    vector<pair<UInt,UInt> > scatt;
-   scatt = getElemFaces(bc, map, cells, scatteredField);
+   scatt = getElemFaces(map, cells, scatteredField);
    sPos = new SphericalVector[nESF * nfp];
    for (UInt i = 0; i < scatt.size(); i++) {
       UInt id = cells.getIdOfRelPos(scatt[i].first);
@@ -43,8 +42,7 @@ DGDipole::DGDipole(
 DGDipole::~DGDipole() {
 }
 
-void
-DGDipole::computeExcitation(
+void DGDipole::computeExcitation(
       const Real time,
       const Real minDT) {
    computeExcitationField(
@@ -55,8 +53,7 @@ DGDipole::computeExcitation(
          sPos, nESF, time);
 }
 
-void
-DGDipole::computeExcitationField(
+void DGDipole::computeExcitationField(
       Real* ExInc, Real* EyInc, Real* EzInc,
       Real* HxInc, Real* HyInc, Real* HzInc,
       const SphericalVector* vPos,
@@ -85,7 +82,7 @@ DGDipole::computeExcitationField(
       pos3 = pos2 * pos;
       sint = sin(vPos[j].theta);
       cost = cos(vPos[j].theta);
-      tDelayed = time - pos / SPEED_OF_LIGHT; // Delayed time.
+      tDelayed = time - pos / Constants::c0; // Delayed time.
       expArg = (tDelayed - gaussDelay_) / (spreadSqrt2_);
       expArg2 = expArg * expArg;
       iT = exp(- expArg2); // current @ delayed time.
@@ -93,13 +90,13 @@ DGDipole::computeExcitationField(
       Real iD2 = iD * (-2.0)* expArg / spreadSqrt2_
             + iT * (-2.0) / spreadSqrt2_ / spreadSqrt2_;
       Real er = length_ * INV4PIEPS0 * 2.0 * cost
-            * (iT/pos3 + iD/(SPEED_OF_LIGHT*pos2));
+            * (iT/pos3 + iD/(Constants::c0*pos2));
       Real et = length_ * INV4PIEPS0 * sint
             * (iT/pos3
-                  + iD/(SPEED_OF_LIGHT * pos2)
+                  + iD/(Constants::c0 * pos2)
                   + iD2/(SPEED_OF_LIGHT_SQ*pos) );
       Real hp = length_ * INV4PI * sint
-            * (iD2/(pos*SPEED_OF_LIGHT) + iD/pos2 );
+            * (iD2/(pos*Constants::c0) + iD/pos2 );
       // Spherical to Cartesian conversion.
       E = vPos[j].convertSphericalVectorField(er, et, 0.0);
       H = vPos[j].convertSphericalVectorField(0.0, 0.0, hp);
@@ -114,8 +111,7 @@ DGDipole::computeExcitationField(
    }
 }
 
-void
-DGDipole::printInfo() const {
+void DGDipole::printInfo() const {
    cout << " --- SolverDipole Info ---" << endl;
    Dipole::printInfo();
    cout << "#ETF: " << nETF << endl;

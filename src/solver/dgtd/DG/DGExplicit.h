@@ -17,14 +17,11 @@ class DGExplicit : public DG {
     friend class IntegratorLF2Full;
     friend class IntegratorVerlet;
 public:
-    DGExplicit(
-            const SmbData* smb,
-            Comm* comm,
-            const OptionsSolverDGTD* arg);
+    DGExplicit(const SmbData* smb, Comm* comm);
     virtual ~DGExplicit();
     UInt getFieldDOFs();
-    const Field<Real,3>& getRHSElectric() const;
-    const Field<Real,3>& getRHSMagnetic() const;
+    const FieldR3& getRHSElectric() const;
+    const FieldR3& getRHSMagnetic() const;
     void printInfo() const;
 protected:
     void computeRHS(
@@ -117,13 +114,13 @@ private:
     DGCurvedFace *curveFace;
     const Real **Cx, **Cy, **Cz; // Pointers to C. dim = (nK)
     // Fields and residuals: dim = (np,nK)
-    Field<Real,3> rhsE, rhsH;
-    Field<Real,3> savedResE, savedResH;
-    Field<Real,3> savedE, savedH;
-    Field<Real,3> nE, nH;
+    FieldR3 rhsE, rhsH;
+    FieldR3 savedResE, savedResH;
+    FieldR3 savedE, savedH;
+    FieldR3 nE, nH;
     // Jumps and fluxes: dim = (4*nfp, nK)
-    Field<Real,3> dE, dH;
-    Field<Real,3> dresE, dresH;
+    FieldR3 dE, dH;
+    FieldR3 dresE, dresH;
     // BC lists. nSMA, nPEC and nPMC are the number of BC of each kind.
     // BC are stored as pointers to memory positions in the jumps.
     // dim = (nK)
@@ -135,7 +132,7 @@ private:
             const CellGroup& cells,
             const OptionsSolverDGTD* arg);
     void deduplicateVMaps(const CellGroup& cells);
-    void allocateRHSAndJumps(const OptionsSolverDGTD* args);
+    void allocateRHSAndJumps();
     void allocateMaps();
     void assignPointersToNeighbours(
             const CellGroup& cells,

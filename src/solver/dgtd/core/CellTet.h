@@ -106,9 +106,7 @@ public:
     static const UInt vertices = 4;
     CellTet4();
     virtual ~CellTet4();
-    CellTet4(
-            const Tet* element,
-            const PMGroup& pMGroup);
+    CellTet4(const Tet* element, const PMGroup& pMGroup);
     bool isCurved() const;
     void printBCInfo() const;
     void printMapsInfo() const;
@@ -124,18 +122,15 @@ public:
     //
     CellTet10();
     virtual ~CellTet10();
-    CellTet10(
-            const Tet* element,
-            const PMGroup& pMGroup);
-    void
-    getCurvedLIFTnormal(
+    CellTet10(const Tet* element, const PMGroup& pMGroup);
+    void getCurvedLIFTnormal(
             StaMatrix<Real,np,nfp> LIFTn[3],
             StaMatrix<Real,np,nfp> LIFTcn[3],
             StaMatrix<Real,np,nfp> LIFTrn[3],
             const UInt face) const;
-    void
-    buildOperators();
+    void buildOperators();
 };
 
 #include "CellTet.hpp"
+
 #endif /* CELL_H_ */

@@ -31,7 +31,7 @@ CellTri3<TRI_N>::getRadiatedField(
  const pair<Real, Real> direction) const {
 	// Computes phase contribution.
 	complex<Real> phase[geo.ncp];
-	const Real beta = 2.0 * M_PI * frequency / SPEED_OF_LIGHT;
+	const Real beta = 2.0 * M_PI * frequency / Constants::c0;
 	complex<Real> phaseShift(0.0, beta);
 	SphericalVector sphDir(direction.first, direction.second);
 	CVecR3 dir = sphDir.convertToCartesian();
@@ -41,7 +41,7 @@ CellTri3<TRI_N>::getRadiatedField(
 		phase[c] = exp(phaseShift * (Real) dir.dot(cNode[c]));
 	}
 	// Computes integral.
-	const Real c0mu0 = SPEED_OF_LIGHT * VACUUM_PERMEABILITY;
+	const Real c0mu0 = Constants::c0 * Constants::mu0;
 	CVecR3 cNormal[geo.ncp];
 	getCubatureNormals(cNormal);
 	Real csdf[geo.ncp];

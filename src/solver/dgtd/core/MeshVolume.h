@@ -27,18 +27,14 @@ public:
     MeshVolume&
     operator=(const MeshVolume& param);
     vector<vector<ElementId>> getPartitionsIds(
-            const UInt nDivisions) const;
-    vector<vector<ElementId>> getPartitionsIds(
             const UInt nDivisions,
-            const vector<pair<ElementId,Int>> idWeights) const;
-    vector<vector<ElementId>> getPartitionsIds(
-            const UInt nDivisions,
-            const vector<pair<ElementId,Int>> idWeights,
-            const Real* taskPower) const;
+            const vector<pair<ElementId,Int>> idWeights = vector<pair<ElementId,Int>>(),
+            const Real* taskPower = NULL) const;
 //    void detectAndAssignPMLRegions();
 //    void createAndAssignPML(
 //            const PMVolumePML::Direction direction[3],
 //            const vector<Face>& internalBorder,
 //            MeshVolume* mesh);
 };
+
 #endif

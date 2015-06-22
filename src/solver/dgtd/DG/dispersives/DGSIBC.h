@@ -28,39 +28,32 @@ public:
          Real ***HyP_,
          Real ***HzP_);
    virtual ~DGSIBC();
-   void
-   computeRHSElectricPolarizationCurrents(
-         const Field<Real,3>& E,
+   void computeRHSElectricPolarizationCurrents(
+         const FieldR3& E,
          const UInt e1,
          const UInt e2);
-   void
-   computeRHSMagneticPolarizationCurrents(
-         const Field<Real,3>& H,
+   void computeRHSMagneticPolarizationCurrents(
+         const FieldR3& H,
          const UInt e1,
          const UInt e2);
-   void
-   computeRHSElectric(
-         Field<Real,3>& rhsE,
-         const Field<Real,3>& E,
+   void computeRHSElectric(
+         FieldR3& rhsE,
+         const FieldR3& E,
          const UInt e1, const UInt e2) const;
-   void
-   computeRHSMagnetic(
-         Field<Real,3>& rhsH,
-         const Field<Real,3>& H,
+   void computeRHSMagnetic(
+         FieldR3& rhsH,
+         const FieldR3& H,
          const UInt e1, const UInt e2) const;
-   void
-   addJumps(
-         Field<Real,3>& dE, Field<Real,3>& dH,
-         Field<Real,3>& E, Field<Real,3>& H,
+   void addJumps(
+         FieldR3& dE, FieldR3& dH,
+         FieldR3& E, FieldR3& H,
          const UInt e1, const UInt e2);
-   void
-   addRHSToRes(
+   void addRHSToRes(
          const UInt e1,
          const UInt e2,
          const Real rka,
          const Real dt);
-   void
-   updateWithRes(
+   void updateWithRes(
          const UInt e1,
          const UInt e2,
          const Real rkb);
@@ -76,8 +69,7 @@ private:
    CVecR3 **Q0, **rhsQ0, **resQ0;
    CVecR3 **QD, **rhsQD, **resQD;
    CVecR3 *E0, *ED;
-   void
-   computePolarizationFields(
+   void computePolarizationFields(
          const Real *Hx, const Real *Hy, const Real *Hz,
          const UInt e1, const UInt e2);
 
