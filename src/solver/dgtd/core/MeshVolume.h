@@ -26,14 +26,14 @@ public:
     virtual ~MeshVolume();
     MeshVolume&
     operator=(const MeshVolume& param);
-    vector<vector<UInt> > getPartitionsIds(
+    vector<vector<ElementId>> getPartitionsIds(
             const UInt nDivisions) const;
-    vector<vector<UInt> > getPartitionsIds(
+    vector<vector<ElementId>> getPartitionsIds(
             const UInt nDivisions,
-            const vector<pair<UInt,Int> > idWeights) const;
-    vector<vector<UInt> > getPartitionsIds(
+            const vector<pair<ElementId,Int>> idWeights) const;
+    vector<vector<ElementId>> getPartitionsIds(
             const UInt nDivisions,
-            const vector<pair<UInt,Int> > idWeights,
+            const vector<pair<ElementId,Int>> idWeights,
             const Real* taskPower) const;
 //    void detectAndAssignPMLRegions();
 //    void createAndAssignPML(

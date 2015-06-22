@@ -13,7 +13,7 @@ IntegratorVerlet::IntegratorVerlet() {
 IntegratorVerlet::IntegratorVerlet(
  const MeshVolume& mesh,
  const PMGroup& pmGroup,
- const ArgumentsCudg3d* arg) {
+ const OptionsSolverDGTD* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	timeStepSize *= 0.9;
 	if (arg->getUpwinding() > 0.0) {

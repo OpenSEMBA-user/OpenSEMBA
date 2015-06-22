@@ -61,24 +61,24 @@ MeshVolume::~MeshVolume() {
 //    }
 //}
 
-vector<vector<UInt>>
+vector<vector<ElementId>>
 MeshVolume::getPartitionsIds(const UInt nDivisions) const {
     // Calls weight balanced partitioner with a zero size weight vector
-    vector<pair<UInt,Int>> idWgt;
+    vector<pair<ElementId,Int>> idWgt;
     return getPartitionsIds(nDivisions, idWgt);
 }
 
 vector<vector<ElementId>>
 MeshVolume::getPartitionsIds(
         const UInt nDivisions,
-        const vector<pair<UInt,Int>> idWgt) const {
+        const vector<pair<ElementId,Int>> idWgt) const {
     return getPartitionsIds(nDivisions, idWgt, NULL);
 }
 
 vector<vector<ElementId>>
 MeshVolume::getPartitionsIds(
         const UInt nDivisions,
-        const vector<pair<UInt,Int>> idWgt,
+        const vector<pair<ElementId,Int>> idWgt,
         const Real* taskPower) const {
     // Metis v5 manual:
     // [...] take as input the element-node array of the mesh and

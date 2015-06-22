@@ -223,7 +223,7 @@ DGPMLMultiaxial::internalBiaxialRHSMagnetic(
             if (e1 <= e && e < e2) {
                 n = i % np;
                 j = e * np + n;
-                rhsH1[j] -= M1[i] * Constants::Constants::mu0;
+                rhsH1[j] -= M1[i] * Constants::mu0;
                 rhsH2[j] -= M2[i] * Constants::mu0;
                 rhsH3[j] -= M3[i] * Constants::mu0;
             }

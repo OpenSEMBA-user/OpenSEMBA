@@ -36,7 +36,7 @@ IntegratorLSERK::IntegratorLSERK() {
 IntegratorLSERK::IntegratorLSERK(
  const MeshVolume& mesh,
  const PMGroup& pmGroup,
- const ArgumentsCudg3d* arg) {
+ const OptionsSolverDGTD* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	buildRKConstants();
 	useMaxStageSizeForLTS = arg->isUseMaxStageSizeForLts();
