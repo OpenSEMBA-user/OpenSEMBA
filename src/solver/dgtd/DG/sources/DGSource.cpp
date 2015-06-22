@@ -62,19 +62,19 @@ DGSource::initSource(
       const MapGroup& map,
       const CellGroup& cells,
       FieldR3& dE, FieldR3& dH,
-      const int vmapM[faces][nfp]) {
-   vector<pair<uint, uint> > total, scatt, totalNotBacked;
+      const Int vmapM[faces][nfp]) {
+   vector<pair<UInt, UInt> > total, scatt, totalNotBacked;
    total = getElemFaces(bc, map, cells, totalField);
    scatt = getElemFaces(bc, map, cells, scatteredField);
    totalNotBacked = getElemFaces(bc, map, cells, totalFieldNotBacked);
    nETF = total.size();
-   ExTInc  = new double[nETF*nfp];
-   EyTInc  = new double[nETF*nfp];
-   EzTInc  = new double[nETF*nfp];
-   HxTInc  = new double[nETF*nfp];
-   HyTInc  = new double[nETF*nfp];
-   HzTInc  = new double[nETF*nfp];
-   for (uint i = 0; i < nETF*nfp; i++) {
+   ExTInc  = new Real[nETF*nfp];
+   EyTInc  = new Real[nETF*nfp];
+   EzTInc  = new Real[nETF*nfp];
+   HxTInc  = new Real[nETF*nfp];
+   HyTInc  = new Real[nETF*nfp];
+   HzTInc  = new Real[nETF*nfp];
+   for (UInt i = 0; i < nETF*nfp; i++) {
       ExTInc[i] = 0.0;
       EyTInc[i] = 0.0;
       EzTInc[i] = 0.0;
@@ -83,13 +83,13 @@ DGSource::initSource(
       HzTInc[i] = 0.0;
    }
    nESF = scatt.size();
-   ExSInc  = new double[nESF*nfp];
-   EySInc  = new double[nESF*nfp];
-   EzSInc  = new double[nESF*nfp];
-   HxSInc  = new double[nESF*nfp];
-   HySInc  = new double[nESF*nfp];
-   HzSInc  = new double[nESF*nfp];
-   for (uint i = 0; i < nESF*nfp; i++) {
+   ExSInc  = new Real[nESF*nfp];
+   EySInc  = new Real[nESF*nfp];
+   EzSInc  = new Real[nESF*nfp];
+   HxSInc  = new Real[nESF*nfp];
+   HySInc  = new Real[nESF*nfp];
+   HzSInc  = new Real[nESF*nfp];
+   for (UInt i = 0; i < nESF*nfp; i++) {
       ExSInc[i] = 0.0;
       EySInc[i] = 0.0;
       EzSInc[i] = 0.0;
@@ -98,13 +98,13 @@ DGSource::initSource(
       HzSInc[i] = 0.0;
    }
    nETFNB = totalNotBacked.size();
-   ExIncNB = new double[nETFNB*nfp];
-   EyIncNB = new double[nETFNB*nfp];
-   EzIncNB = new double[nETFNB*nfp];
-   HxIncNB = new double[nETFNB*nfp];
-   HyIncNB = new double[nETFNB*nfp];
-   HzIncNB = new double[nETFNB*nfp];
-   for (uint i = 0; i < nETFNB*nfp; i++) {
+   ExIncNB = new Real[nETFNB*nfp];
+   EyIncNB = new Real[nETFNB*nfp];
+   EzIncNB = new Real[nETFNB*nfp];
+   HxIncNB = new Real[nETFNB*nfp];
+   HyIncNB = new Real[nETFNB*nfp];
+   HzIncNB = new Real[nETFNB*nfp];
+   for (UInt i = 0; i < nETFNB*nfp; i++) {
       ExIncNB[i] = 0.0;
       EyIncNB[i] = 0.0;
       EzIncNB[i] = 0.0;
@@ -115,16 +115,16 @@ DGSource::initSource(
    // Allocates and sets jumps pointers.
    // The pointers point to the beginning of the face that they have to
    // update on each iteration.
-   dExT = new double*[nETF];
-   dEyT = new double*[nETF];
-   dEzT = new double*[nETF];
-   dHxT = new double*[nETF];
-   dHyT = new double*[nETF];
-   dHzT = new double*[nETF];
-   for (uint j = 0; j < nETF; j++) {
-      uint e = total[j].first;
-      uint f = total[j].second;
-      uint pos = e * nfp * faces + f * nfp;
+   dExT = new Real*[nETF];
+   dEyT = new Real*[nETF];
+   dEzT = new Real*[nETF];
+   dHxT = new Real*[nETF];
+   dHyT = new Real*[nETF];
+   dHzT = new Real*[nETF];
+   for (UInt j = 0; j < nETF; j++) {
+      UInt e = total[j].first;
+      UInt f = total[j].second;
+      UInt pos = e * nfp * faces + f * nfp;
       dExT[j] = &dE.set(x)[pos];
       dEyT[j] = &dE.set(y)[pos];
       dEzT[j] = &dE.set(z)[pos];
@@ -132,16 +132,16 @@ DGSource::initSource(
       dHyT[j] = &dH.set(y)[pos];
       dHzT[j] = &dH.set(z)[pos];
    }
-   dExS = new double*[nESF];
-   dEyS = new double*[nESF];
-   dEzS = new double*[nESF];
-   dHxS = new double*[nESF];
-   dHyS = new double*[nESF];
-   dHzS = new double*[nESF];
-   for (uint j = 0; j < nESF; j++) {
-      uint e = scatt[j].first;
-      uint f = scatt[j].second;
-      uint pos = e * nfp * faces + f * nfp;
+   dExS = new Real*[nESF];
+   dEyS = new Real*[nESF];
+   dEzS = new Real*[nESF];
+   dHxS = new Real*[nESF];
+   dHyS = new Real*[nESF];
+   dHzS = new Real*[nESF];
+   for (UInt j = 0; j < nESF; j++) {
+      UInt e = scatt[j].first;
+      UInt f = scatt[j].second;
+      UInt pos = e * nfp * faces + f * nfp;
       dExS[j] = &dE.set(x)[pos];
       dEyS[j] = &dE.set(y)[pos];
       dEzS[j] = &dE.set(z)[pos];
@@ -149,16 +149,16 @@ DGSource::initSource(
       dHyS[j] = &dH.set(y)[pos];
       dHzS[j] = &dH.set(z)[pos];
    }
-   dExTNB = new double*[nETFNB];
-   dEyTNB = new double*[nETFNB];
-   dEzTNB = new double*[nETFNB];
-   dHxTNB = new double*[nETFNB];
-   dHyTNB = new double*[nETFNB];
-   dHzTNB = new double*[nETFNB];
-   for (uint j = 0; j < nETFNB; j++) {
-      uint e = totalNotBacked[j].first;
-      uint f = totalNotBacked[j].second;
-      uint pos = e * (nfp*faces) + f * nfp;
+   dExTNB = new Real*[nETFNB];
+   dEyTNB = new Real*[nETFNB];
+   dEzTNB = new Real*[nETFNB];
+   dHxTNB = new Real*[nETFNB];
+   dHyTNB = new Real*[nETFNB];
+   dHzTNB = new Real*[nETFNB];
+   for (UInt j = 0; j < nETFNB; j++) {
+      UInt e = totalNotBacked[j].first;
+      UInt f = totalNotBacked[j].second;
+      UInt pos = e * (nfp*faces) + f * nfp;
       dExTNB[j] = &dE.set(x)[pos];
       dEyTNB[j] = &dE.set(y)[pos];
       dEzTNB[j] = &dE.set(z)[pos];
@@ -167,16 +167,16 @@ DGSource::initSource(
       dHzTNB[j] = &dH.set(z)[pos];
    }
    // List of elements.
-   ETFe = new uint[nETF];
-   for (uint i = 0; i < nETF; i++) {
+   ETFe = new UInt[nETF];
+   for (UInt i = 0; i < nETF; i++) {
       ETFe[i] = total[i].first;
    }
-   ESFe = new uint[nESF];
-   for (uint i = 0; i < nESF; i++) {
+   ESFe = new UInt[nESF];
+   for (UInt i = 0; i < nESF; i++) {
       ESFe[i] = scatt[i].first;
    }
-   ETFNBe = new uint[nETFNB];
-   for (uint i = 0; i < nETFNB; i++) {
+   ETFNBe = new UInt[nETFNB];
+   for (UInt i = 0; i < nETFNB; i++) {
       ETFNBe[i] = totalNotBacked[i].first;
    }
    //
@@ -188,35 +188,35 @@ DGSource::initSource(
    }
 }
 
-vector<pair<uint, uint> >
+vector<pair<UInt, UInt> >
 DGSource::getElemFaces(
       const vector<const BoundaryCondition*>& bc,
       const MapGroup& map,
       const CellGroup& cells,
       const BackingType type) const {
-   vector<pair<uint, uint> > res;
-   for (uint i = 0; i < bc.size(); i++) {
-      uint id1 = bc[i]->getCell()->getId();
-      uint f1 = bc[i]->getFace();
-      uint id2 = map.getNeighbour(id1,f1)->getId();
-      uint f2 = map.getVolToF(id1, f1);
+   vector<pair<UInt, UInt> > res;
+   for (UInt i = 0; i < bc.size(); i++) {
+      UInt id1 = bc[i]->getCell()->getId();
+      UInt f1 = bc[i]->getFace();
+      UInt id2 = map.getNeighbour(id1,f1)->getId();
+      UInt f2 = map.getVolToF(id1, f1);
       switch (type) {
       case totalField:
          if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
-            uint e1 = cells.getRelPosOfId(id1);
-            res.push_back(pair<uint,uint>(e1, f1));
+            UInt e1 = cells.getRelPosOfId(id1);
+            res.push_back(pair<UInt,UInt>(e1, f1));
          }
          break;
       case scatteredField:
          if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id2)) {
-            uint e2 = cells.getRelPosOfId(id2);
-            res.push_back(pair<uint,uint>(e2, f2));
+            UInt e2 = cells.getRelPosOfId(id2);
+            res.push_back(pair<UInt,UInt>(e2, f2));
          }
          break;
       case totalFieldNotBacked:
          if (map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
-            uint e1 = cells.getRelPosOfId(id1);
-            res.push_back(pair<uint,uint>(e1, f1));
+            UInt e1 = cells.getRelPosOfId(id1);
+            res.push_back(pair<UInt,UInt>(e1, f1));
          }
          break;
       }
@@ -227,9 +227,9 @@ DGSource::getElemFaces(
 
 void
 DGSource::addJumps(
-      const uint e1,
-      const uint e2) {
-   uint j, k, pos;
+      const UInt e1,
+      const UInt e2) {
+   UInt j, k, pos;
    // Total field jumps.
    for (j = 0; j < nETF; j++) {
       if (e1 <= ETFe[j] && ETFe[j] < e2) {
@@ -278,15 +278,15 @@ DGSource::addJumps(
 
 CVecR3*
 DGSource::initPositions(
-      const vector<pair<uint, uint> >& elemFace,
+      const vector<pair<UInt, UInt> >& elemFace,
       const CellGroup& cells) const {
-   const uint nE = elemFace.size();
+   const UInt nE = elemFace.size();
    CVecR3 *pos;
-   pos = new CartesianVector<double, 3> [nE * nfp];
-   for (uint i = 0; i < nE; i++) {
-      uint id = cells.getIdOfRelPos(elemFace[i].first);
-      uint f = elemFace[i].second;
-      for (uint j = 0; j < nfp; j++) {
+   pos = new CartesianVector<Real, 3> [nE * nfp];
+   for (UInt i = 0; i < nE; i++) {
+      UInt id = cells.getIdOfRelPos(elemFace[i].first);
+      UInt f = elemFace[i].second;
+      for (UInt j = 0; j < nfp; j++) {
          pos[i*nfp+j] =
                cells.getPtrToCellWithId(id)->getSideNodePos(f,j);
       }
@@ -298,8 +298,8 @@ bool
 DGSource::isContainedInPlane(
       const CartesianPlane plane,
       const vector<const BoundaryCondition*>& bc) const {
-   for (uint i = 0; i < bc.size(); i++) {
-      uint face = bc[i]->getFace();
+   for (UInt i = 0; i < bc.size(); i++) {
+      UInt face = bc[i]->getFace();
       if (!bc[i]->getCell()->isFaceContainedInPlane(face, plane)) {
          return false;
       }

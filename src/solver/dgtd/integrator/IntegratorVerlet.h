@@ -26,28 +26,28 @@ public:
 	 const OptionsSolverDGTD* arg);
 	void
 	 timeIntegrate(
-	  const double time) const;
+	  const Real time) const;
 protected:
-	uint
+	UInt
  	 getNumOfIterationsPerBigTimeStep(
-      const uint e) const;
+      const UInt e) const;
 private:
-	static const uint nStages = 2;
-	uint
+	static const UInt nStages = 2;
+	UInt
 	 getNStages() const;
-	double
+	Real
 	 getMaxTimeRatio() const;
 	void
 	 LTSTimeIntegration(
-	  const double localTime,
-	  const double localdt,
-	  const uint tier) const;
+	  const Real localTime,
+	  const Real localdt,
+	  const UInt tier) const;
 	void
 	 updateFieldsVerlet(
-	  const uint e1,
-	  const uint e2,
-	  const double localTime,
-	  const double rkdt) const;
+	  const UInt e1,
+	  const UInt e2,
+	  const Real localTime,
+	  const Real rkdt) const;
 };
 
 #endif /* SOLVERLEAPFROG_H_ */

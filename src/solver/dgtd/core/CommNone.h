@@ -23,19 +23,19 @@ class CommNone : public Comm {
 public:
 	CommNone();
 	virtual ~CommNone();
-	int
+	Int
 	 getNumberOfTasks() const;
 	void
 	 abort() const;
 	bool
 	 isMaster() const;
-	int
+	Int
 	 getTask() const;
-	uint
+	UInt
 	 getLocalOffset() const;
-	int
+	Int
 	 getNumOfTasksOnThisHost() const;
-	uint
+	UInt
 	 getLocalSize() const;
 	void
 	 gatherFieldsMaster(
@@ -49,17 +49,17 @@ public:
 	  const FieldR3& magnetic) const;
 	void
 	 setPartitionSizes(
-	  const vector<vector<uint> >& partId);
+	  const vector<vector<UInt> >& partId);
 	void
 	 syncNeighbourFields(
-	  double* nEx, double* nEy, double* nEz,
-	  double* nHx, double* nHy, double* nHz,
-	  const double* Ex, const double* Ey, const double* Ez,
-	  const double* Hx, const double* Hy, const double* Hz) const;
-	double
-	 reduceToGlobalMinimum(double val) const;
+	  Real* nEx, Real* nEy, Real* nEz,
+	  Real* nHx, Real* nHy, Real* nHz,
+	  const Real* Ex, const Real* Ey, const Real* Ez,
+	  const Real* Hx, const Real* Hy, const Real* Hz) const;
+	Real
+	 reduceToGlobalMinimum(Real val) const;
 	void
-	 initNeighbourFields(const vector<uint>& nIds);
+	 initNeighbourFields(const vector<UInt>& nIds);
 	void
 	 printInfo() const;
 };

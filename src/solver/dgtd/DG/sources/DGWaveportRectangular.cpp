@@ -9,34 +9,33 @@
 
 DGWaveportRectangular::DGWaveportRectangular(
       const Waveport& wp,
-      const vector<const BoundaryCondition*>& bc,
       const MapGroup& map,
       const CellGroup& cells,
       FieldR3& dE, FieldR3& dH,
-      const int vmapM[faces][nfp]) :
+      const Int vmapM[faces][nfp]) :
       Waveport(wp) {
    initSource(bc, map, cells, dE, dH, vmapM);
    // Computes positions.
-   vector<pair<uint, uint> > total;
+   vector<pair<UInt, UInt> > total;
    total = getElemFaces(bc, map, cells, totalField);
    posTF = initPositions(total, cells);
    if (!checkNormalsAreEqual(total, cells)) {
       cerr << endl << "Total Normals are different" << endl;
    }
-   vector<pair<uint,uint> > scatt;
+   vector<pair<UInt,UInt> > scatt;
    scatt = getElemFaces(bc, map, cells, scatteredField);
    posSF = initPositions(scatt, cells);
    if (!checkNormalsAreEqual(scatt, cells)) {
       cerr << endl << "Scatt Normals are different" << endl;
    }
-   vector<pair<uint, uint> > totalNB;
+   vector<pair<UInt, UInt> > totalNB;
    totalNB = getElemFaces(bc, map, cells, totalFieldNotBacked);
    posTFNB = initPositions(totalNB, cells);
    if (!checkNormalsAreEqual(totalNB, cells)) {
       cerr << endl << "Total Not Backed Normals are different" << endl;
    }
    // Compute waveport size.
-   double zMax, zMin, yMax, yMin;
+   Real zMax, zMin, yMax, yMin;
    if (nETF != 0) {
       zMax = posTF[0](2);
       zMin = posTF[0](2);
@@ -48,7 +47,7 @@ DGWaveportRectangular::DGWaveportRectangular(
       yMax = posTFNB[0](1);
       yMin = posTFNB[0](1);
    }
-   for (uint i = 0; i < (nETF*nfp); i++) {
+   for (UInt i = 0; i < (nETF*nfp); i++) {
       if (posTF[i](2) > zMax) {
          zMax = posTF[i](2);
       }
@@ -62,7 +61,7 @@ DGWaveportRectangular::DGWaveportRectangular(
          yMin = posTF[i](1);
       }
    }
-   for (uint i = 0; i < (nETFNB*nfp); i++) {
+   for (UInt i = 0; i < (nETFNB*nfp); i++) {
       if (posTFNB[i](2) > zMax) {
          zMax = posTFNB[i](2);
       }
@@ -88,24 +87,24 @@ DGWaveportRectangular::DGWaveportRectangular(
 //   }
 //   // Displaces origin to center of waveguide.
 //   if (getSymXY() != Waveport::none) {
-//      for (uint i = 0; i < nETF*nfp; i++) {
+//      for (UInt i = 0; i < nETF*nfp; i++) {
 //         posTF[i](2) += width / 2.0;
 //      }
-//      for (uint i = 0; i < nESF*nfp; i++) {
+//      for (UInt i = 0; i < nESF*nfp; i++) {
 //         posSF[i](2) += width / 2.0;
 //      }
-//      for (uint i = 0; i < nETFNB*nfp; i++) {
+//      for (UInt i = 0; i < nETFNB*nfp; i++) {
 //         posTFNB[i](2) += width / 2.0;
 //      }
 //   }
 //   if (getSymZX() != Waveport::none) {
-//      for (uint i = 0; i < nETF*nfp; i++) {
+//      for (UInt i = 0; i < nETF*nfp; i++) {
 //         posTF[i](1) += height / 2.0;
 //      }
-//      for (uint i = 0; i < nESF*nfp; i++) {
+//      for (UInt i = 0; i < nESF*nfp; i++) {
 //         posSF[i](1) += height / 2.0;
 //      }
-//      for (uint i = 0; i < nETFNB*nfp; i++) {
+//      for (UInt i = 0; i < nETFNB*nfp; i++) {
 //         posTFNB[i](2) += height / 2.0;
 //      }
 //   }
@@ -120,8 +119,8 @@ DGWaveportRectangular::DGWaveportRectangular(
       exit(-1);
    }
    // Computes kcm.
-   kcm = sqrt(pow((double) getMode().first * M_PI/width, 2)
-         + pow((double) getMode().second * M_PI/height, 2));
+   kcm = sqrt(pow((Real) getMode().first * M_PI/width, 2)
+         + pow((Real) getMode().second * M_PI/height, 2));
    intrinsicImpedance = sqrt(VACUUM_PERMEABILITY / VACUUM_PERMITTIVITY);
    gammaMSum = 0.0;
 }
@@ -132,8 +131,8 @@ DGWaveportRectangular::~DGWaveportRectangular() {
 
 void
 DGWaveportRectangular::computeExcitation(
-      const double time,
-      const double minDT) {
+      const Real time,
+      const Real minDT) {
    computeExcitationField(
          ExTInc, EyTInc, EzTInc, HxTInc, HyTInc, HzTInc,
          posTF, nETF, time, minDT);
@@ -154,28 +153,28 @@ DGWaveportRectangular::printInfo() const {
 
 void
 DGWaveportRectangular::computeExcitationField(
-      double* ExInc,
-      double* EyInc,
-      double* EzInc,
-      double* HxInc,
-      double* HyInc,
-      double* HzInc,
+      Real* ExInc,
+      Real* EyInc,
+      Real* EzInc,
+      Real* HxInc,
+      Real* HyInc,
+      Real* HzInc,
       const CVecR3* pos,
-      const uint nE,
-      const double time,
-      const double minDT) {
-   const double kcmSq = kcm * kcm;
-   //	double f = getGauss(time, amplitude,delay,spread);
-   double gamma0f = getMagnitude()->evaluate(time) / SPEED_OF_LIGHT;
-   //	double gammaMf =
+      const UInt nE,
+      const Real time,
+      const Real minDT) {
+   const Real kcmSq = kcm * kcm;
+   //	Real f = getGauss(time, amplitude,delay,spread);
+   Real gamma0f = getMagnitude()->evaluate(time) / SPEED_OF_LIGHT;
+   //	Real gammaMf =
    //	 getNumericalGammaMGauss(time,minDT, amplitude,delay,spread, kcm);
    if (excitationMode == Waveport::TE) {
-      const uint nFields = nfp * nE;
-      const double mConst = M_PI * getMode().first / width;
-      const double nConst = M_PI * getMode().second / height;
-      for (uint i = 0; i < nFields; i++) {
-         const double yD = pos[i](1);
-         const double zD = pos[i](2);
+      const UInt nFields = nfp * nE;
+      const Real mConst = M_PI * getMode().first / width;
+      const Real nConst = M_PI * getMode().second / height;
+      for (UInt i = 0; i < nFields; i++) {
+         const Real yD = pos[i](1);
+         const Real zD = pos[i](2);
          // --- Electric field, TE ---
          //			ExInc[i] = 0.0;
          EyInc[i] = gamma0f * intrinsicImpedance / kcmSq

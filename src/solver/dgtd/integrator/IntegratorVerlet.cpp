@@ -26,29 +26,29 @@ IntegratorVerlet::~IntegratorVerlet() {
 
 }
 
-uint
+UInt
 IntegratorVerlet::getNumOfIterationsPerBigTimeStep(
- const uint e) const {
-	uint nTiers = getNTiers();
-	uint nStages = getNStages();
-	uint tier = timeTierList(e,1);
-	uint iter = (nTiers - tier) * nStages;
+ const UInt e) const {
+	UInt nTiers = getNTiers();
+	UInt nStages = getNStages();
+	UInt tier = timeTierList(e,1);
+	UInt iter = (nTiers - tier) * nStages;
 	return iter;
 }
 
-uint
+UInt
 IntegratorVerlet::getNStages() const {
 	return nStages;
 }
 
-double
+Real
 IntegratorVerlet::getMaxTimeRatio() const {
-	return double (0.5);
+	return Real (0.5);
 }
 
 void
 IntegratorVerlet::timeIntegrate(
- const double time) const {
+ const Real time) const {
 	assert(solver != NULL);
 	if (doLTS) {
 		LTSTimeIntegration(time,getMaxDT(),getNTiers()-1);
@@ -59,11 +59,11 @@ IntegratorVerlet::timeIntegrate(
 
 void
 IntegratorVerlet::LTSTimeIntegration(
- double localTime,
- double localdt,
- const uint tier) const {
-	uint fK = getRange(tier, 0).first;
-	uint lK = getRange(tier, 1).second;
+ Real localTime,
+ Real localdt,
+ const UInt tier) const {
+	UInt fK = getRange(tier, 0).first;
+	UInt lK = getRange(tier, 1).second;
 	if (tier > 0) {
 		LTSTimeIntegration(localTime, localdt/2.0, tier-1);
 	}
@@ -76,10 +76,10 @@ IntegratorVerlet::LTSTimeIntegration(
 
 void
 IntegratorVerlet::updateFieldsVerlet(
- const uint e1,
- const uint e2,
- const double localTime,
- const double rkdt) const {
+ const UInt e1,
+ const UInt e2,
+ const Real localTime,
+ const Real rkdt) const {
 	solver->computeCurlsInRHSMagnetic(e1,e2);
 	solver->computeJumps(e1,e2,localTime,mindt);
 	solver->addFluxesToRHSMagnetic(e1,e2);

@@ -9,7 +9,7 @@
 //
 //CommMPI::CommMPI() {
 //	world = MPI_COMM_WORLD;
-//	int rc = MPI_Init(NULL, NULL);
+//	Int rc = MPI_Init(NULL, NULL);
 //	if (rc != MPI_SUCCESS) {
 //		cout << "Error starting MPI program. Terminating." << endl;
 //		MPI_Abort(world, rc);
@@ -34,12 +34,12 @@
 //	MPI_Finalize();
 //}
 //
-//int
+//Int
 //CommMPI::getNumberOfTasks() const {
 //	return nTasks;
 //}
 //
-//int
+//Int
 //CommMPI::getTask() const {
 //	return task;
 //}
@@ -54,18 +54,18 @@
 //
 //void
 //CommMPI::gatherFieldsMaster(
-// double* Ex, double* Ey, double* Ez,
-// double* Hx, double* Hy, double* Hz,
-// const double* lEx, const double* lEy, const double* lEz,
-// const double* lHx, const double* lHy, const double* lHz) const {
+// Real* Ex, Real* Ey, Real* Ez,
+// Real* Hx, Real* Hy, Real* Hz,
+// const Real* lEx, const Real* lEy, const Real* lEz,
+// const Real* lHx, const Real* lHy, const Real* lHz) const {
 //	assert(isMaster());
 //	// Packs fields in field struct.
-//	uint lFieldSize = getLocalFieldSize();
+//	UInt lFieldSize = getLocalFieldSize();
 //	Field_s *lField;
 //	lField = new Field_s[lFieldSize];
 //	packFields(lField, lEx,lEy,lEz,lHx,lHy,lHz, lFieldSize);
 //	// Allocates space for general field.
-//	uint gFieldSize = getGlobalSize() * np;
+//	UInt gFieldSize = getGlobalSize() * np;
 //	Field_s *gField;
 //	gField = new Field_s[gFieldSize];
 //	// Gathers fields in master.
@@ -80,11 +80,11 @@
 //
 //void
 //CommMPI::gatherFieldsSlave(
-// const double* lEx, const double* lEy, const double* lEz,
-// const double* lHx, const double* lHy, const double* lHz) const {
+// const Real* lEx, const Real* lEy, const Real* lEz,
+// const Real* lHx, const Real* lHy, const Real* lHz) const {
 //	assert(!isMaster());
 //	// Packs fields in field struct.
-//	uint lFSize = getLocalFieldSize();
+//	UInt lFSize = getLocalFieldSize();
 //	Field_s * lField;
 //	lField = new Field_s[lFSize];
 //	packFields(lField, lEx,lEy,lEz,lHx,lHy,lHz, lFSize);
@@ -97,13 +97,13 @@
 //
 //void
 //CommMPI::setPartitionSizes(
-// const vector<vector<uint> >& partId) {
+// const vector<vector<UInt> >& partId) {
 //	// Sets partition sizes and offsets.
-//	pSize = new int[nTasks];
-//	pOffset = new int [nTasks];
-//	fSize = new int [nTasks];
-//	fOffset = new int [nTasks];
-//	for (int i = 0; i < nTasks; i++) {
+//	pSize = new Int[nTasks];
+//	pOffset = new Int [nTasks];
+//	fSize = new Int [nTasks];
+//	fOffset = new Int [nTasks];
+//	for (Int i = 0; i < nTasks; i++) {
 //		pSize[i] = partId[i].size();
 //		fSize[i] = partId[i].size() * np;
 //		if (i == 0) {
@@ -117,13 +117,13 @@
 //	setLocalSizeAndOffset(pSize[task], pOffset[task]);
 //}
 //
-//uint
+//UInt
 //CommMPI::getLocalOffset() const {
 //	assert(pOffset != NULL);
 //	return pOffset[task];
 //}
 //
-//uint
+//UInt
 //CommMPI::getLocalSize() const {
 //	assert(pSize != NULL);
 //	return pSize[task];
@@ -131,21 +131,21 @@
 //
 //void
 //CommMPI::syncNeighbourFields(
-// double* nEx, double* nEy, double* nEz,
-// double* nHx, double* nHy, double* nHz,
-// const double* Ex, const double* Ey, const double* Ez,
-// const double* Hx, const double* Hy,	const double* Hz) const {
-//	for (int t = 0; t < nTasks; t++) {
-//		double *sField;
-//		sField = new double[nDofSize[t][task]];
+// Real* nEx, Real* nEy, Real* nEz,
+// Real* nHx, Real* nHy, Real* nHz,
+// const Real* Ex, const Real* Ey, const Real* Ez,
+// const Real* Hx, const Real* Hy,	const Real* Hz) const {
+//	for (Int t = 0; t < nTasks; t++) {
+//		Real *sField;
+//		sField = new Real[nDofSize[t][task]];
 //		// Packs fields for task t.
 //		if (t != task) {
-//			uint fInd = 0;
-//			for (int i = 0; i < nNeighId[t]; i++) {
-//				uint id = neighId[t][i];
+//			UInt fInd = 0;
+//			for (Int i = 0; i < nNeighId[t]; i++) {
+//				UInt id = neighId[t][i];
 //				if (isLocalId(id)) {
-//					uint fp = getRelPosOfId(id) * np;
-//					for (uint j = 0; j < np; j++) {
+//					UInt fp = getRelPosOfId(id) * np;
+//					for (UInt j = 0; j < np; j++) {
 //						sField[fInd++] = Ex[fp];
 //						sField[fInd++] = Ey[fp];
 //						sField[fInd++] = Ez[fp];
@@ -158,19 +158,19 @@
 //			}
 //		}
 //		// Gathers fields.
-//		uint fSize = nNeighId[t] * np;
-//		double *rField;
-//		rField = new double[fSize*6];
+//		UInt fSize = nNeighId[t] * np;
+//		Real *rField;
+//		rField = new Real[fSize*6];
 //		MPI_Gatherv(sField, nDofSize[t][task], MPI_DOUBLE,
 //		 rField, nDofSize[t], nDofOffset[t], MPI_DOUBLE, t, world);
 //		// Unpacks fields if this process is the receiver.
 //		if (task == t) {
-//			uint nn = (uint) nNeighId[t];
-//			for (uint i = 0; i < nn; i++) {
-//				uint fInd = i * np * 6;
-//				uint frp = neighElemRP[i] * np;
-//				assert((uint) neighElemRP[i*np] < nn);
-//				for (uint j = 0; j < np; j++) {
+//			UInt nn = (UInt) nNeighId[t];
+//			for (UInt i = 0; i < nn; i++) {
+//				UInt fInd = i * np * 6;
+//				UInt frp = neighElemRP[i] * np;
+//				assert((UInt) neighElemRP[i*np] < nn);
+//				for (UInt j = 0; j < np; j++) {
 //					assert(0 <= frp && frp < nn * np);
 //					nEx[frp] = rField[fInd++];
 //					nEy[frp] = rField[fInd++];
@@ -189,66 +189,66 @@
 //}
 //
 //void
-//CommMPI::initNeighbourFields(const vector<uint>& nIds) {
+//CommMPI::initNeighbourFields(const vector<UInt>& nIds) {
 //	assert(nNeighId == NULL);
 //	assert(neighId == NULL);
 //	// Gathers number of neighbours.
-//	nNeighId = new int[nTasks];
-//	uint nNeigh = nIds.size();
+//	nNeighId = new Int[nTasks];
+//	UInt nNeigh = nIds.size();
 //	MPI_Allgather(&nNeigh, 1, MPI_UNSIGNED,
 //     nNeighId, 1, MPI_UNSIGNED, world);
 //	// Gathers neighbour Ids.
 //	// Gathers data.
-//	uint totalNumberOfNeigh = 0;
-//	for (int t = 0; t < nTasks; t++) {
+//	UInt totalNumberOfNeigh = 0;
+//	for (Int t = 0; t < nTasks; t++) {
 //		totalNumberOfNeigh += nNeighId[t];
 //	}
-//	int auxOffset[nTasks];
+//	Int auxOffset[nTasks];
 //	auxOffset[0] = 0;
-//	for (int t = 1; t < nTasks; t++) {
+//	for (Int t = 1; t < nTasks; t++) {
 //		auxOffset[t] = nNeighId[t-1] + auxOffset[t-1];
 //	}
-//	int neighIdGlobal[totalNumberOfNeigh]; // Aux. receiver buffer.
-//	int neighIdsBuffer[nNeigh];
-//	for (uint i = 0; i < nNeigh; i++) {
+//	Int neighIdGlobal[totalNumberOfNeigh]; // Aux. receiver buffer.
+//	Int neighIdsBuffer[nNeigh];
+//	for (UInt i = 0; i < nNeigh; i++) {
 //		neighIdsBuffer[i] = nIds[i];
 //	}
 //	MPI_Allgatherv(neighIdsBuffer, nIds.size(), MPI_UNSIGNED,
 //	 neighIdGlobal, nNeighId, auxOffset, MPI_UNSIGNED, world);
 //	// Unpacks buffer.
-//	neighId = new uint*[nTasks];
-//	for (int t = 0; t < nTasks; t++) {
-//		neighId[t] = new uint[nNeighId[t]];
-//		for (int i = 0; i < nNeighId[t]; i++) {
+//	neighId = new UInt*[nTasks];
+//	for (Int t = 0; t < nTasks; t++) {
+//		neighId[t] = new UInt[nNeighId[t]];
+//		for (Int i = 0; i < nNeighId[t]; i++) {
 //			neighId[t][i] = neighIdGlobal[auxOffset[t] + i];
 //		}
 //	}
 //	// Stores task relational data. Sizes and offsets.
 //	assert(neighFSize == NULL);
 //	assert(neighFOffset == NULL);
-//	neighFSize = new int *[nTasks];
-//	neighFOffset = new int *[nTasks];
-//	nDofSize = new int *[nTasks];
-//	nDofOffset = new int *[nTasks];
-//	for (int i = 0; i < nTasks; i++) {
-//		neighFSize[i] = new int[nTasks];
-//		neighFOffset[i] = new int[nTasks];
-//		nDofSize[i] = new int[nTasks];
-//		nDofOffset[i] = new int[nTasks];
+//	neighFSize = new Int *[nTasks];
+//	neighFOffset = new Int *[nTasks];
+//	nDofSize = new Int *[nTasks];
+//	nDofOffset = new Int *[nTasks];
+//	for (Int i = 0; i < nTasks; i++) {
+//		neighFSize[i] = new Int[nTasks];
+//		neighFOffset[i] = new Int[nTasks];
+//		nDofSize[i] = new Int[nTasks];
+//		nDofOffset[i] = new Int[nTasks];
 //	}
-//	for (int t = 0; t < nTasks; t++) {
+//	for (Int t = 0; t < nTasks; t++) {
 //		// Counts Ids coming from each task.
-//		for (int i = 0; i < nTasks; i++) {
+//		for (Int i = 0; i < nTasks; i++) {
 //			neighFSize[t][i] = 0;
 //			nDofSize[t][i] = 0;
 //		}
-//		for (int i = 0; i < nNeighId[t]; i++) {
-//			int idTask = getTaskOfId(neighId[t][i]);
+//		for (Int i = 0; i < nNeighId[t]; i++) {
+//			Int idTask = getTaskOfId(neighId[t][i]);
 //			neighFSize[t][idTask] += np;
 //			nDofSize[t][idTask] += np * 6;
 //		}
 //		// Inits offsets.
-//		for (int i = 0; i < nTasks; i++) {
+//		for (Int i = 0; i < nTasks; i++) {
 //			if (i == 0) {
 //				neighFOffset[t][0] = 0;
 //				nDofOffset[t][0] = 0;
@@ -261,33 +261,33 @@
 //		}
 //	}
 //	// Sends relative positions of neigh nodes in local node.
-//	int **neighSize, **neighOffset;
-//	neighSize = new int*[nTasks];
-//	neighOffset = new int*[nTasks];
-//	for (int t = 0; t < nTasks; t++) {
-//		neighSize[t] = new int[nTasks];
-//		neighOffset[t] = new int[nTasks];
+//	Int **neighSize, **neighOffset;
+//	neighSize = new Int*[nTasks];
+//	neighOffset = new Int*[nTasks];
+//	for (Int t = 0; t < nTasks; t++) {
+//		neighSize[t] = new Int[nTasks];
+//		neighOffset[t] = new Int[nTasks];
 //		// Counts Ids coming from each task.
-//		for (int i = 0; i < nTasks; i++) {
+//		for (Int i = 0; i < nTasks; i++) {
 //			neighSize[t][i] = neighFSize[t][i] / np;
 //			neighOffset[t][i] = neighFOffset[t][i] / np;
 //		}
 //	}
 //	// Sends relative positions.
-//	for (int t = 0; t < nTasks; t++) {
-//		uint *srp;
-//		uint nFSize = neighFSize[t][task];
-//		srp = new uint[nFSize];
+//	for (Int t = 0; t < nTasks; t++) {
+//		UInt *srp;
+//		UInt nFSize = neighFSize[t][task];
+//		srp = new UInt[nFSize];
 //		if (t != task) {
-//			uint k = 0;
-//			for (int i = 0; i < nNeighId[t]; i++) {
-//				uint id = neighId[t][i];
+//			UInt k = 0;
+//			for (Int i = 0; i < nNeighId[t]; i++) {
+//				UInt id = neighId[t][i];
 //				if (isLocalId(id)) {
 //					srp[k++] = i;
 //				}
 //			}
 //		} else {
-//			neighElemRP = new uint[nNeighId[t]];
+//			neighElemRP = new UInt[nNeighId[t]];
 //		}
 //		MPI_Gatherv(srp, neighSize[t][task], MPI_UNSIGNED,
 //		 neighElemRP, neighSize[t], neighOffset[t], MPI_UNSIGNED,
@@ -315,29 +315,29 @@
 //	cout << " Global Size: " << getGlobalSize() << endl;
 //	if (pSize != NULL) {
 //		cout << "pSize: ";
-//		for (int t = 0; t < nTasks; t++) {
+//		for (Int t = 0; t < nTasks; t++) {
 //			cout << pSize[t] << " ";
 //		}
 //		cout << endl;
 //	}
 //	if (pOffset != NULL) {
 //		cout << "pOffset: ";
-//		for (int t = 0; t < nTasks; t++) {
+//		for (Int t = 0; t < nTasks; t++) {
 //			cout << pOffset[t] << " ";
 //		}
 //		cout << endl;
 //	}
 //	if (nNeighId != NULL) {
 //		cout << "nneighId: " << endl;
-//		for (int t = 0; t < nTasks; t++) {
+//		for (Int t = 0; t < nTasks; t++) {
 //			cout << "task #" << t << ": " << nNeighId[t] << endl;
 //		}
 //	}
 //	if (neighId != NULL) {
 //		cout << "neighId" << endl;
-//		for (int t = 0; t < nTasks; t++) {
+//		for (Int t = 0; t < nTasks; t++) {
 //			cout << "task #" << t << ": ";
-//			for (int i = 0; i < nNeighId[t]; i++) {
+//			for (Int i = 0; i < nNeighId[t]; i++) {
 //				cout << neighId[t][i] << " ";
 //			}
 //			cout << endl;
@@ -345,29 +345,29 @@
 //	}
 //	if (neighFSize != NULL) {
 //		cout << "neighFSize" << endl;
-//		for (int t = 0; t < nTasks; t++) {
-//			for (int s = 0; s < nTasks; s++) {
+//		for (Int t = 0; t < nTasks; t++) {
+//			for (Int s = 0; s < nTasks; s++) {
 //				cout << neighFSize[t][s] << " ";
 //			}
 //			cout << endl;
 //		}
 //		cout << "neighFOffset" << endl;
-//		for (int t = 0; t < nTasks; t++) {
-//			for (int s = 0; s < nTasks; s++) {
+//		for (Int t = 0; t < nTasks; t++) {
+//			for (Int s = 0; s < nTasks; s++) {
 //				cout << neighFOffset[t][s] << " ";
 //			}
 //			cout << endl;
 //		}
 //		cout << "nDofSize" << endl;
-//		for (int t = 0; t < nTasks; t++) {
-//			for (int s = 0; s < nTasks; s++) {
+//		for (Int t = 0; t < nTasks; t++) {
+//			for (Int s = 0; s < nTasks; s++) {
 //				cout << nDofSize[t][s] << " ";
 //			}
 //			cout << endl;
 //		}
 //		cout << "nDofOffset" << endl;
-//		for (int t = 0; t < nTasks; t++) {
-//			for (int s = 0; s < nTasks; s++) {
+//		for (Int t = 0; t < nTasks; t++) {
+//			for (Int s = 0; s < nTasks; s++) {
 //				cout << nDofOffset[t][s] << " ";
 //			}
 //			cout << endl;
@@ -380,10 +380,10 @@
 //void
 //CommMPI::packFields(
 // Field *field,
-// const double *Ex, const double *Ey, const double *Ez,
-// const double *Hx, const double *Hy, const double *Hz,
-// const uint fSize) const {
-//	for (uint i = 0; i < fSize; i++) {
+// const Real *Ex, const Real *Ey, const Real *Ez,
+// const Real *Hx, const Real *Hy, const Real *Hz,
+// const UInt fSize) const {
+//	for (UInt i = 0; i < fSize; i++) {
 //		field[i].Ex = Ex[i];
 //		field[i].Ey = Ey[i];
 //		field[i].Ez = Ez[i];
@@ -395,10 +395,10 @@
 //
 //void
 //CommMPI::unpackFields(
-// double *Ex, double *Ey, double *Ez,
-// double *Hx, double *Hy, double *Hz,
-// const Field *field, const uint fSize) const {
-//	for (uint i = 0; i < fSize; i++) {
+// Real *Ex, Real *Ey, Real *Ez,
+// Real *Hx, Real *Hy, Real *Hz,
+// const Field *field, const UInt fSize) const {
+//	for (UInt i = 0; i < fSize; i++) {
 //		Ex[i] = field[i].Ex;
 //		Ey[i] = field[i].Ey;
 //		Ez[i] = field[i].Ez;
@@ -410,9 +410,9 @@
 //
 //void
 //CommMPI::commitFieldStruct() {
-//	const int count = 7;
-//	int lengths[count] = {1, 1, 1, 1, 1, 1, 1};
-//	int iTS, dTS;
+//	const Int count = 7;
+//	Int lengths[count] = {1, 1, 1, 1, 1, 1, 1};
+//	Int iTS, dTS;
 //	MPI_Type_size(MPI_UNSIGNED, &iTS);
 //	MPI_Type_size(MPI_DOUBLE, &dTS);
 //	MPI_Aint disp[count] = { 0, iTS, iTS+dTS, iTS+2*dTS,
@@ -424,30 +424,30 @@
 //	MPI_Type_commit(&MPIField);
 //}
 //
-//uint
+//UInt
 //CommMPI::getLocalFieldSize() const {
 //	assert(fSize != NULL);
 //	return fSize[task];
 //}
 //
-//int*
+//Int*
 //CommMPI::getFieldOffsets() const{
 //	assert(fOffset != NULL);
 //	return fOffset;
 //}
 //
-//int*
+//Int*
 //CommMPI::getFieldSizes() const{
 //	assert(fSize != NULL);
 //	return fSize;
 //}
 //
 //
-//int
-//CommMPI::getTaskOfId(const uint id) const {
-//	uint rp = getGlobalRelPosOfId(id);
-//	for (int t = 0; t < (nTasks - 1); t++) {
-//		if (rp < (uint) pOffset[t+1]) {
+//Int
+//CommMPI::getTaskOfId(const UInt id) const {
+//	UInt rp = getGlobalRelPosOfId(id);
+//	for (Int t = 0; t < (nTasks - 1); t++) {
+//		if (rp < (UInt) pOffset[t+1]) {
 //			return t;
 //		}
 //	}
@@ -455,19 +455,19 @@
 //}
 //
 //bool
-//CommMPI::checkNNeighCoherence(int* nneigh) const {
+//CommMPI::checkNNeighCoherence(Int* nneigh) const {
 //	assert(nneigh != NULL);
 //	return (nneigh[0] == nneigh[1]);
 //}
 //
 //bool
 //CommMPI::checkVectorsAreEqual(
-// const uint vSize,
-// const uint* v,
-// const vector<uint>& nIds) const {
+// const UInt vSize,
+// const UInt* v,
+// const vector<UInt>& nIds) const {
 //	assert(vSize == nIds.size());
 //	bool ok = true;
-//	for (uint i = 0; i < vSize; i++) {
+//	for (UInt i = 0; i < vSize; i++) {
 //		if (v[i] != nIds[i]) {
 //			cout << v[i] << " is not equal to " << nIds[i] << endl;
 //			ok = false;
@@ -481,36 +481,36 @@
 //	return ok;
 //}
 //
-//double
-//CommMPI::reduceToGlobalMinimum(double val) const {
-//	double res;
-//	static const int count = 1;
+//Real
+//CommMPI::reduceToGlobalMinimum(Real val) const {
+//	Real res;
+//	static const Int count = 1;
 //	MPI_Allreduce(&val, &res, count,
 //	 MPI_DOUBLE, MPI_MIN, world);
 //	return res;
 //}
 //
-//int
+//Int
 //CommMPI::countTasksInLocalHost() const {
 //	// Counts number of tasks running on this host.
 //	char localHostName[MPI_MAX_PROCESSOR_NAME];
-//	int localHostNameLen;
+//	Int localHostNameLen;
 //	MPI_Get_processor_name(localHostName, &localHostNameLen);
 //	char hostName[nTasks][MPI_MAX_PROCESSOR_NAME];
-//	int hostNameLen[nTasks];
+//	Int hostNameLen[nTasks];
 //	MPI_Allgather(
 //	 &localHostNameLen, 1, MPI_INT, hostNameLen, 1, MPI_INT,
 //		world);
 //	MPI_Allgather(
 //	 localHostName, MPI_MAX_PROCESSOR_NAME, MPI_CHAR, hostName,
 //	 MPI_MAX_PROCESSOR_NAME, MPI_CHAR, world);
-//	int res = 0;
-//	for (int t = 0; t < nTasks; t++) {
+//	Int res = 0;
+//	for (Int t = 0; t < nTasks; t++) {
 //		bool isLocalHost = true;
 //		if (localHostNameLen != hostNameLen[t]) {
 //			isLocalHost &= false;
 //		}
-//		for (int i = 0; i < localHostNameLen; i++) {
+//		for (Int i = 0; i < localHostNameLen; i++) {
 //			isLocalHost &= (localHostName[i] == hostName[t][i]);
 //		}
 //		if (isLocalHost) {
@@ -521,7 +521,7 @@
 //	return res;
 //}
 //
-//int
+//Int
 //CommMPI::getNumOfTasksOnThisHost() const {
 //	return nTasksInHost;
 //}
@@ -529,9 +529,9 @@
 //bool
 //CommMPI::checkNeighFSizes() const {
 //	bool sizesOk = true;
-//	for (int t = 0; t < nTasks; t++) {
-//		uint neighFSum = 0;
-//		for (int s = 0; s < nTasks; s++) {
+//	for (Int t = 0; t < nTasks; t++) {
+//		UInt neighFSum = 0;
+//		for (Int s = 0; s < nTasks; s++) {
 //			neighFSum += neighFSize[t][s];
 //		}
 //		sizesOk &= (neighFSum == nNeighId[t] * np);
@@ -540,7 +540,7 @@
 //		cerr << endl << "neighFSizes are inconsistent with nNeighId" << endl;
 //	}
 //	bool diagOk = true;
-//	for (int t = 0; t < nTasks; t++) {
+//	for (Int t = 0; t < nTasks; t++) {
 //			diagOk &= (neighFSize[t][t] == 0);
 //	}
 //	if (!diagOk) {
@@ -549,7 +549,7 @@
 //		cerr << endl << "A task is neighbouring itself." << endl;
 //	}
 //	bool symmetryOk = true;
-//	DynMatrix<int> aux(nTasks, nTasks, neighFSize);
+//	DynMatrix<Int> aux(nTasks, nTasks, neighFSize);
 //	symmetryOk = aux.isSymmetric();
 //	if (!symmetryOk) {
 //		printInfo();
@@ -559,20 +559,20 @@
 //	return (sizesOk && diagOk && symmetryOk);
 //}
 //
-//vector<uint>
+//vector<UInt>
 //CommMPI::getThreadsOfTasks() const {
-//	uint *taskThreads;
-//	taskThreads = new uint[nTasks];
+//	UInt *taskThreads;
+//	taskThreads = new UInt[nTasks];
 //#ifdef USE_OPENMP
-//	uint localThreads = omp_get_max_threads();
+//	UInt localThreads = omp_get_max_threads();
 //#else
-//	uint localThreads = 1;
+//	UInt localThreads = 1;
 //#endif
 //	MPI_Allgather(&localThreads, 1, MPI_UNSIGNED,
 //     taskThreads, 1, MPI_UNSIGNED, world);
-//	vector<uint> res;
+//	vector<UInt> res;
 //	res.reserve(nTasks);
-//	for (int t = 0; t < nTasks; t++) {
+//	for (Int t = 0; t < nTasks; t++) {
 //		res.push_back(taskThreads[t]);
 //	}
 //	delete taskThreads;

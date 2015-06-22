@@ -36,9 +36,9 @@ IntegratorLF2::setSolver(DG* solver_) {
 
 void
 IntegratorLF2::timeIntegrate(
- const double time) const {
+ const Real time) const {
 	assert(solver!=NULL);
-	double dt = getMaxDT();
+	Real dt = getMaxDT();
 	if (doLTS) {
 		LTSupdateFieldsElectric(time,dt,getNTiers()-1);
 		LTSupdateFieldsMagnetic(time,dt,getNTiers()-1);
@@ -47,33 +47,33 @@ IntegratorLF2::timeIntegrate(
 	}
 }
 
-uint
+UInt
 IntegratorLF2::getNStages() const {
 	return nStages;
 }
 
-double
+Real
 IntegratorLF2::getMaxTimeRatio() const {
-	return double (1.0 / 3.0);
+	return Real (1.0 / 3.0);
 }
 
-uint
+UInt
 IntegratorLF2::getNumOfIterationsPerBigTimeStep(
- const uint e) const {
-	uint nTiers = getNTiers();
-	uint nStages = getNStages();
-	uint tier = timeTierList(e,1);
-	uint iter = (nTiers - tier) * nStages;
+ const UInt e) const {
+	UInt nTiers = getNTiers();
+	UInt nStages = getNStages();
+	UInt tier = timeTierList(e,1);
+	UInt iter = (nTiers - tier) * nStages;
 	return iter;
 }
 
 void
 IntegratorLF2::LTSupdateFieldsElectric(
- double lTime,
- double ldt,
- const uint tier) const {
-	uint e1 = getRange(tier, 0).first;
-	uint e2 = getRange(tier, 1).second;
+ Real lTime,
+ Real ldt,
+ const UInt tier) const {
+	UInt e1 = getRange(tier, 0).first;
+	UInt e2 = getRange(tier, 1).second;
 	if (tier > 0) {
 		LTSupdateFieldsElectric(lTime, ldt/3.0, tier-1);
 		LTSupdateFieldsMagnetic(lTime+ldt/3.0,ldt/3.0, tier-1);
@@ -85,11 +85,11 @@ IntegratorLF2::LTSupdateFieldsElectric(
 
 void
 IntegratorLF2::LTSupdateFieldsMagnetic(
- double lTime,
- double ldt,
- const uint tier) const {
-	uint fK = getRange(tier, 0).first;
-	uint lK = getRange(tier, 1).second;
+ Real lTime,
+ Real ldt,
+ const UInt tier) const {
+	UInt fK = getRange(tier, 0).first;
+	UInt lK = getRange(tier, 1).second;
 	if (tier > 0) {
 		LTSupdateFieldsMagnetic(lTime, ldt/3.0, tier-1);
 		LTSupdateFieldsElectric(lTime+ldt/3.0,ldt/3.0, tier-1);
@@ -101,10 +101,10 @@ IntegratorLF2::LTSupdateFieldsMagnetic(
 
 void
 IntegratorLF2::updateFields(
- const uint e1,
- const uint e2,
- const double localTime,
- const double rkdt) const {
+ const UInt e1,
+ const UInt e2,
+ const Real localTime,
+ const Real rkdt) const {
 	solver->computeRHSElectric(e1, e2, localTime, mindt);
 	solver->addRHSToFieldsElectric(e1,e2,rkdt);
 	solver->computeRHSMagnetic(e1, e2, localTime, mindt);

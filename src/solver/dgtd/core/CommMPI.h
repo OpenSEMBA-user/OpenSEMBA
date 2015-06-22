@@ -20,114 +20,114 @@
 //#endif
 //
 //struct Field_s {
-//	int rp;
-//	double Ex, Ey, Ez, Hx, Hy, Hz;
+//	Int rp;
+//	Real Ex, Ey, Ez, Hx, Hy, Hz;
 //};
 //
 //class CommMPI : public Comm {
 //public:
 //	CommMPI();
 //	virtual ~CommMPI();
-//	int
+//	Int
 //	 getNumberOfTasks() const;
-//	int
+//	Int
 //	 getTask() const;
-//	uint
+//	UInt
 //	 getLocalOffset() const;
-//	uint
+//	UInt
 //	 getLocalSize() const;
-//	int
+//	Int
 //	 getNumOfTasksOnThisHost() const;
 //	void
 //	 setPartitionSizes(
-//	  const vector<vector<uint> >& partId);
+//	  const vector<vector<UInt> >& partId);
 //	void
 //	 gatherFieldsMaster(
-// 	  double* Ex, double* Ey, double* Ez,
-//	  double* Hx, double* Hy, double* Hz,
-//	  const double* lEx, const double* lEy, const double* lEz,
-//	  const double* lHx, const double* lHy, const double* lHz) const;
+// 	  Real* Ex, Real* Ey, Real* Ez,
+//	  Real* Hx, Real* Hy, Real* Hz,
+//	  const Real* lEx, const Real* lEy, const Real* lEz,
+//	  const Real* lHx, const Real* lHy, const Real* lHz) const;
 //	void
 //	 gatherFieldsSlave(
-// 	  const double* Ex, const double* Ey, const double* Ez,
-//	  const double* Hx, const double* Hy, const double* Hz) const;
+// 	  const Real* Ex, const Real* Ey, const Real* Ez,
+//	  const Real* Hx, const Real* Hy, const Real* Hz) const;
 //	bool
 //	 isMaster() const;
 //	void
 //	 syncNeighbourFields(
-//	  double* nEx, double* nEy, double* nEz,
-//	  double* nHx, double* nHy, double* nHz,
-//	  const double* Ex, const double* Ey, const double* Ez,
-//	  const double* Hx, const double* Hy, const double* Hz) const;
+//	  Real* nEx, Real* nEy, Real* nEz,
+//	  Real* nHx, Real* nHy, Real* nHz,
+//	  const Real* Ex, const Real* Ey, const Real* Ez,
+//	  const Real* Hx, const Real* Hy, const Real* Hz) const;
 //	void
-//	 initNeighbourFields(const vector<uint>& nIds);
-//	double
-//	 reduceToGlobalMinimum(double val) const;
+//	 initNeighbourFields(const vector<UInt>& nIds);
+//	Real
+//	 reduceToGlobalMinimum(Real val) const;
 //	void
 //	 printInfo() const;
 //private:
-//	static const int master = 0;
-//	static const uint np = ((ORDER_N+1)*(ORDER_N+2)*(ORDER_N+3)/6);
+//	static const Int master = 0;
+//	static const UInt np = ((ORDER_N+1)*(ORDER_N+2)*(ORDER_N+3)/6);
 //	static const bool weightPartitions = true;
-//	int nTasks;
-//	int nTasksInHost;
-//	int task;
-//	int len;
-//	int* pSize;
-//	int* pOffset;
-//	int* fSize;
-//	int* fOffset;
-//	uint* neighElemRP;
+//	Int nTasks;
+//	Int nTasksInHost;
+//	Int task;
+//	Int len;
+//	Int* pSize;
+//	Int* pOffset;
+//	Int* fSize;
+//	Int* fOffset;
+//	UInt* neighElemRP;
 //	MPI_Comm world;
 //	MPI_Datatype MPIField;
-//	uint nPartitions;
-//	int* nNeighId;
-//	uint** neighId;
-//	int **neighFSize;
-//	int **neighFOffset;
-//	int **nDofSize;
-//	int **nDofOffset;
-//	int*
+//	UInt nPartitions;
+//	Int* nNeighId;
+//	UInt** neighId;
+//	Int **neighFSize;
+//	Int **neighFOffset;
+//	Int **nDofSize;
+//	Int **nDofOffset;
+//	Int*
 //	 getDofSizes() const;
-//	int*
+//	Int*
 //	 getDofOffsets() const;
-//	uint
+//	UInt
 //	 getLocalDofSize() const;
-//	uint
+//	UInt
 //	 getGlobalDofSize() const;
 //	void
 //	 packFields(
 //	  Field_s *field,
-//	  const double *Ex, const double *Ey, const double *Ez,
-//	  const double *Hx, const double *Hy, const double *Hz,
-//	  const uint fSize) const;
+//	  const Real *Ex, const Real *Ey, const Real *Ez,
+//	  const Real *Hx, const Real *Hy, const Real *Hz,
+//	  const UInt fSize) const;
 //	void
 //	 unpackFields(
-//	  double *Ex, double *Ey, double *Ez,
-//	  double *Hx, double *Hy, double *Hz,
-//	  const Field_s *field, const uint fSize) const;
+//	  Real *Ex, Real *Ey, Real *Ez,
+//	  Real *Hx, Real *Hy, Real *Hz,
+//	  const Field_s *field, const UInt fSize) const;
 //	void
 //	 commitFieldStruct();
-//	int*
+//	Int*
 //	 getFieldSizes() const;
-//	int*
+//	Int*
 //	 getFieldOffsets() const;
-//	uint
+//	UInt
 //	 getLocalFieldSize() const;
-//	int
-//	 getTaskOfId(const uint id) const;
+//	Int
+//	 getTaskOfId(const UInt id) const;
 //	bool
-//	 checkNNeighCoherence(int* nneigh) const;
+//	 checkNNeighCoherence(Int* nneigh) const;
 //	bool
 //	 checkVectorsAreEqual(
-//	  const uint vSize,
-//	  const uint* v,
-//	  const vector<uint>& nIds) const;
+//	  const UInt vSize,
+//	  const UInt* v,
+//	  const vector<UInt>& nIds) const;
 //	bool
 //	 checkNeighFSizes() const;
-//	int
+//	Int
 //	 countTasksInLocalHost() const;
-//	vector<uint>
+//	vector<UInt>
 //	 getThreadsOfTasks() const;
 //};
 //

@@ -9,9 +9,9 @@
 
 DGSIBC::DGSIBC(
       const PMSurfaceSIBC& mat_, const vector<const BoundaryCondition*>& bc,
-      const CellGroup& cells, int*** map_, const int vmapM_[faces][nfp],
-      double*** ExP_, double*** EyP_, double*** EzP_,
-      double*** HxP_, double*** HyP_, double*** HzP_) :
+      const CellGroup& cells, Int*** map_, const Int vmapM_[faces][nfp],
+      Real*** ExP_, Real*** EyP_, Real*** EzP_,
+      Real*** HxP_, Real*** HyP_, Real*** HzP_) :
       PMSurfaceSIBC(mat_) {
    map = map_;
    ExP = ExP_;
@@ -20,23 +20,23 @@ DGSIBC::DGSIBC(
    HxP = HxP_;
    HyP = HyP_;
    HzP = HzP_;
-   for (uint i = 0; i < faces; i++) {
-      for (uint j = 0; j < nfp; j++) {
+   for (UInt i = 0; i < faces; i++) {
+      for (UInt j = 0; j < nfp; j++) {
          vmapM[i][j] = vmapM_[i][j];
       }
    }
    // Inits sibc positions.
-   vector<pair<uint, uint> > efList0, efListD;
+   vector<pair<UInt, UInt> > efList0, efListD;
    efList0.reserve(cells.getLocalSize());
    efListD.reserve(cells.getLocalSize());
-   for (uint i = 0; i < bc.size(); i++) {
-      uint id = bc[i]->getCell()->getId();
-      uint f = bc[i]->getFace();
+   for (UInt i = 0; i < bc.size(); i++) {
+      UInt id = bc[i]->getCell()->getId();
+      UInt f = bc[i]->getFace();
       if (!bc[i]->isBack()) {
-         pair<uint,uint> aux0(cells.getRelPosOfId(id), f);
+         pair<UInt,UInt> aux0(cells.getRelPosOfId(id), f);
          efList0.push_back(aux0);
       } else {
-         pair<uint,uint> auxD(cells.getRelPosOfId(id), f);
+         pair<UInt,UInt> auxD(cells.getRelPosOfId(id), f);
          efListD.push_back(auxD);
       }
       // TODO Only works with flat faces.
@@ -44,26 +44,26 @@ DGSIBC::DGSIBC(
       // TODO Can't be a computational domain boundary.
    }
    nE0 = efList0.size();
-   elem0 = new uint[nE0];
-   face0 = new uint[nE0];
-   for (uint i = 0; i < nE0; i++) {
+   elem0 = new UInt[nE0];
+   face0 = new UInt[nE0];
+   for (UInt i = 0; i < nE0; i++) {
       elem0[i] = efList0[i].first;
       face0[i] = efList0[i].second;
    }
    nED = efListD.size();
-   elemD = new uint[nED];
-   faceD = new uint[nED];
-   for (uint i = 0; i < nED; i++) {
+   elemD = new UInt[nED];
+   faceD = new UInt[nED];
+   for (UInt i = 0; i < nED; i++) {
       elemD[i] = efListD[i].first;
       faceD[i] = efListD[i].second;
    }
    // Normal vectors.
    n0 = new CVecR3[nE0];
-   for (uint k = 0; k < nE0; k++) {
+   for (UInt k = 0; k < nE0; k++) {
       n0[k] = bc[k]->getCell()->sideNormal(face0[k]);
    }
    nD = new CVecR3[nED];
-   for (uint k = 0; k < nED; k++) {
+   for (UInt k = 0; k < nED; k++) {
       nD[k] = bc[k]->getCell()->sideNormal(faceD[k]);
    }
    // Allocates magnetic currents.
@@ -74,12 +74,12 @@ DGSIBC::DGSIBC(
    QD = new CVecR3*[nP];
    rhsQD = new CVecR3*[nP];
    resQD = new CVecR3*[nP];
-   for (uint p = 0; p < nP; p++) {
+   for (UInt p = 0; p < nP; p++) {
       Q0[p] = new CVecR3[nE0*nfp];
       rhsQ0[p] = new CVecR3[nE0*nfp];
       resQ0[p] = new CVecR3[nE0*nfp];
    }
-   for (uint p = 0; p < nP; p++) {
+   for (UInt p = 0; p < nP; p++) {
       QD[p] = new CVecR3[nED*nfp];
       rhsQD[p] = new CVecR3[nED*nfp];
       resQD[p] = new CVecR3[nED*nfp];
@@ -96,24 +96,24 @@ DGSIBC::~DGSIBC() {
 
 void
 DGSIBC::computeRHSMagneticPolarizationCurrents(
-      const Field<double,3>& H,
-      const uint e1, const uint e2) {
-   uint e;
+      const Field<Real,3>& H,
+      const UInt e1, const UInt e2) {
+   UInt e;
 #ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(e)
 #endif
    for (e = 0; e < nE0; e++) {
-      uint e0 = elem0[e]; // Element-face pair.
-      uint f0 = face0[e];
-      uint eD = elemD[e];
-      uint fD = faceD[e];
+      UInt e0 = elem0[e]; // Element-face pair.
+      UInt f0 = face0[e];
+      UInt eD = elemD[e];
+      UInt fD = faceD[e];
       if (e1 <= e0 && e0 < e2) {
-         for (uint p = 0; p < nP; p++) {
-            uint i = e * nfp;
-            for (uint j = 0; j < nfp; j++) {
-               int vM = e0 * np + vmapM[f0][j];
+         for (UInt p = 0; p < nP; p++) {
+            UInt i = e * nfp;
+            for (UInt j = 0; j < nfp; j++) {
+               Int vM = e0 * np + vmapM[f0][j];
                const CVecR3 H0(H(x)[vM],H(y)[vM],H(z)[vM]);
-               uint vP = map[e0][f0][j]; // Field coeff pos.
+               UInt vP = map[e0][f0][j]; // Field coeff pos.
                const CVecR3 HD(HxP[eD][fD][vP], HyP[eD][fD][vP], HzP[eD][fD][vP]);
                rhsQ0[p][i] =  (Q0[p][i] * pole_[p])
                            + (n0[e] ^ H0) * Z_[p](0,0) + (n0[e] ^ HD) * Z_[p](0,1);
@@ -126,18 +126,18 @@ DGSIBC::computeRHSMagneticPolarizationCurrents(
 #pragma omp parallel for private(e)
 #endif
    for (e = 0; e < nED; e++) {
-      uint e0 = elem0[e]; // Element-face pair.
-      uint f0 = face0[e];
-      uint eD = elemD[e];
-      uint fD = faceD[e];
+      UInt e0 = elem0[e]; // Element-face pair.
+      UInt f0 = face0[e];
+      UInt eD = elemD[e];
+      UInt fD = faceD[e];
       if (e1 <= eD && eD < e2) {
-         for (uint p = 0; p < nP; p++) {
-            uint i = e * nfp; // Node number.
-            for (uint j = 0; j < nfp; j++) {
-               uint vM = eD * np + vmapM[fD][j]; // Field coeff pos.
+         for (UInt p = 0; p < nP; p++) {
+            UInt i = e * nfp; // Node number.
+            for (UInt j = 0; j < nfp; j++) {
+               UInt vM = eD * np + vmapM[fD][j]; // Field coeff pos.
                const CVecR3
                HD(H(x)[vM],H(y)[vM],H(z)[vM]);
-               uint vP = map[eD][fD][j]; // Field coeff pos.
+               UInt vP = map[eD][fD][j]; // Field coeff pos.
                const CVecR3
                H0(HxP[e0][f0][vP], HyP[e0][f0][vP], HzP[e0][f0][vP]);
                rhsQD[p][i] = QD[p][i] * pole_[p]
@@ -151,56 +151,56 @@ DGSIBC::computeRHSMagneticPolarizationCurrents(
 
 void
 DGSIBC::computeRHSMagnetic(
-      Field<double,3>& rhsH,
-      const Field<double,3>& H,
-      const uint e1, const uint e2) const {
+      Field<Real,3>& rhsH,
+      const Field<Real,3>& H,
+      const UInt e1, const UInt e2) const {
 
 }
 
 void
 DGSIBC::computePolarizationFields(
-      const double* Hx, const double* Hy,	const double* Hz,
-      const uint e1, const uint e2) {
-   for (uint e = 0; e < nE0; e++) {
-      uint e0 = elem0[e];
-      uint f0 = face0[e];
-      uint eD = elemD[e];
-      uint fD = faceD[e];
+      const Real* Hx, const Real* Hy,	const Real* Hz,
+      const UInt e1, const UInt e2) {
+   for (UInt e = 0; e < nE0; e++) {
+      UInt e0 = elem0[e];
+      UInt f0 = face0[e];
+      UInt eD = elemD[e];
+      UInt fD = faceD[e];
       if (e1 <= e0 && e0 < e2) {
-         for (uint j = 0; j < nfp; j++) {
-            int vM = e0 * np + vmapM[f0][j];
+         for (UInt j = 0; j < nfp; j++) {
+            Int vM = e0 * np + vmapM[f0][j];
             CVecR3 H0(Hx[vM],Hy[vM],Hz[vM]);
-            uint vP = map[eD][fD][j]; // Field coeff pos.
+            UInt vP = map[eD][fD][j]; // Field coeff pos.
             CVecR3
             HD(HxP[eD][fD][vP], HyP[eD][fD][vP], HzP[eD][fD][vP]);
-            uint i = e * nfp;
+            UInt i = e * nfp;
 #				warning "Ignoring Zinfinite"
             //				E0[i] = (n0[e] ^ H0) * mat.Zinfinite[0]
             //				 + (n0[e] ^ HD) * mat.Zinfinite[1];
-            for (uint p = 0; p < nP; p++) {
+            for (UInt p = 0; p < nP; p++) {
                E0[i] += Q0[p][i];
             }
             i++;
          }
       }
    }
-   for (uint e = 0; e < nED; e++) {
-      uint e0 = elem0[e];
-      uint f0 = face0[e];
-      uint eD = elemD[e];
-      uint fD = faceD[e];
+   for (UInt e = 0; e < nED; e++) {
+      UInt e0 = elem0[e];
+      UInt f0 = face0[e];
+      UInt eD = elemD[e];
+      UInt fD = faceD[e];
       if (e1 <= e0 && e0 < e2) {
-         for (uint j = 0; j < nfp; j++) {
-            int vM = eD * np + vmapM[fD][j];
+         for (UInt j = 0; j < nfp; j++) {
+            Int vM = eD * np + vmapM[fD][j];
             CVecR3 H0(Hx[vM],Hy[vM],Hz[vM]);
-            uint vP = map[e0][f0][j]; // Field coeff pos.
+            UInt vP = map[e0][f0][j]; // Field coeff pos.
             CVecR3
             HD(HxP[e0][f0][vP], HyP[e0][f0][vP], HzP[e0][f0][vP]);
-            uint i = e * nfp;
+            UInt i = e * nfp;
 #				warning "Ignoring Zinfinite"
             //				ED[i] = - (nD[e] ^ H0) * mat.Zinfinite[2]
             //				 - (nD[e] ^ HD) * mat.Zinfinite[3];
-            for (uint p = 0; p < nP; p++) {
+            for (UInt p = 0; p < nP; p++) {
                ED[i] += QD[p][i];
             }
             i++;
@@ -211,21 +211,21 @@ DGSIBC::computePolarizationFields(
 
 void
 DGSIBC::addJumps(
-      Field<double,3>& dE, Field<double,3>& dH,
-      Field<double,3>& E, Field<double,3>& H,
-      const uint e1, const uint e2) {
+      Field<Real,3>& dE, Field<Real,3>& dH,
+      Field<Real,3>& E, Field<Real,3>& H,
+      const UInt e1, const UInt e2) {
    // Updates E0 and ED.
    computePolarizationFields(H(x),H(y),H(z),e1,e2);
    // Updates jumps with polarized fields.
-   uint i, f, e, j, n;
-   for (uint lE = 0; lE < nE0; lE++) {
+   UInt i, f, e, j, n;
+   for (UInt lE = 0; lE < nE0; lE++) {
       f = face0[lE];
       e = elem0[lE];
       if (e >= e1 && e < e2) {
          n = (e * faces + f) * nfp;
          i = lE * nfp;
          for (j = 0; j < nfp; j++) {
-            int vM = e * np + vmapM[f][j];
+            Int vM = e * np + vmapM[f][j];
             dE.set(x)[n] = 2.0 * (E(x)[vM] - E0[i](0));
             dE.set(y)[n] = 2.0 * (E(y)[vM] - E0[i](1));
             dE.set(z)[n] = 2.0 * (E(z)[vM] - E0[i](2));
@@ -237,14 +237,14 @@ DGSIBC::addJumps(
          }
       }
    }
-   for (uint lE = 0; lE < nED; lE++) {
+   for (UInt lE = 0; lE < nED; lE++) {
       f = faceD[lE];
       e = elemD[lE];
       if (e >= e1 && e < e2) {
          n = (e * faces + f) * nfp;
          i = nfp * lE;
          for (j = 0; j < nfp; j++) {
-            int vM = e * np + vmapM[f][j];
+            Int vM = e * np + vmapM[f][j];
             dE.set(x)[n] = 2.0 * (E(x)[vM] - ED[i](0));
             dE.set(y)[n] = 2.0 * (E(y)[vM] - ED[i](1));
             dE.set(z)[n] = 2.0 * (E(z)[vM] - ED[i](2));
@@ -260,25 +260,25 @@ DGSIBC::addJumps(
 
 void
 DGSIBC::addRHSToRes(
-      const uint e1, const uint e2,
-      const double rka,
-      const double dt) {
-   for (uint e = 0; e < nE0; e++) {
+      const UInt e1, const UInt e2,
+      const Real rka,
+      const Real dt) {
+   for (UInt e = 0; e < nE0; e++) {
       if (e >= e1 && e < e2) {
-         for (uint p = 0; p < nP; p++) {
-            uint i = e*nfp;
-            for (uint j = 0; j < nfp; j++) {
+         for (UInt p = 0; p < nP; p++) {
+            UInt i = e*nfp;
+            for (UInt j = 0; j < nfp; j++) {
                resQ0[p][i] = resQ0[p][i] * rka + rhsQ0[p][i] * dt;
                i++;
             }
          }
       }
    }
-   for (uint e = 0; e < nED; e++) {
+   for (UInt e = 0; e < nED; e++) {
       if (e >= e1 && e < e2) {
-         for (uint p = 0; p < nP; p++) {
-            uint i = e*nfp;
-            for (uint j = 0; j < nfp; j++) {
+         for (UInt p = 0; p < nP; p++) {
+            UInt i = e*nfp;
+            for (UInt j = 0; j < nfp; j++) {
                resQD[p][i] = resQD[p][i] * rka + rhsQD[p][i] * dt;
                i++;
             }
@@ -289,22 +289,22 @@ DGSIBC::addRHSToRes(
 
 void
 DGSIBC::updateWithRes(
-      const uint e1, const uint e2, const double rkb) {
-   for (uint e = 0; e < nE0; e++) {
+      const UInt e1, const UInt e2, const Real rkb) {
+   for (UInt e = 0; e < nE0; e++) {
       if (e >= e1 && e < e2) {
-         for (uint p = 0; p < nP; p++) {
-            uint i = e*nfp;
-            for (uint j = 0; j < nfp; j++) {
+         for (UInt p = 0; p < nP; p++) {
+            UInt i = e*nfp;
+            for (UInt j = 0; j < nfp; j++) {
                Q0[p][i] += resQ0[p][i] * rkb;
             }
          }
       }
    }
-   for (uint e = 0; e < nED; e++) {
+   for (UInt e = 0; e < nED; e++) {
       if (e >= e1 && e < e2) {
-         for (uint p = 0; p < nP; p++) {
-            uint i = e*nfp;
-            for (uint j = 0; j < nfp; j++) {
+         for (UInt p = 0; p < nP; p++) {
+            UInt i = e*nfp;
+            for (UInt j = 0; j < nfp; j++) {
                QD[p][i] += resQD[p][i] * rkb;
             }
          }
@@ -314,13 +314,13 @@ DGSIBC::updateWithRes(
 
 void
 DGSIBC::computeRHSElectric(
-      Field<double, 3>& rhsE,
-      const Field<double, 3>& E,
-      const uint e1, const uint e2) const {
+      Field<Real, 3>& rhsE,
+      const Field<Real, 3>& E,
+      const UInt e1, const UInt e2) const {
 }
 
 void
 DGSIBC::computeRHSElectricPolarizationCurrents(
-      const Field<double, 3>& E,
-      const uint e1, const uint e2) {
+      const Field<Real, 3>& E,
+      const UInt e1, const UInt e2) {
 }

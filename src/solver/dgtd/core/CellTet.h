@@ -12,123 +12,98 @@
 
 using namespace std;
 
-template <int TET_N>
+template <Int TET_N>
 class CellTet : public Cell {
 #define TET_NP ((TET_N+1)*(TET_N+2)*(TET_N+3)/6)
 #define TET_NFP ((TET_N+1)*(TET_N+2)/2)
 public:
     static const SimplexTet<TET_N> tet;
-    static const uint np = TET_NP;
-    static const uint nfp = TET_NFP;
-    static const uint faces = 4;
-    static const uint vertices = 4;
+    static const UInt np = TET_NP;
+    static const UInt nfp = TET_NFP;
+    static const UInt faces = 4;
+    static const UInt vertices = 4;
     const Tet* base;
-    uint vmapP[faces][nfp]; // Node to Node of the contiguous element.
+    UInt vmapP[faces][nfp]; // Node to Node of the contiguous element.
     CVecR3 n[np]; // Lagrange's base functions nodes pos.
     CellTet();
     virtual ~CellTet();
     bool isCurved() const;
-    bool isCurvedFace(const uint f) const;
-    double getVolume() const;
-    double getAreaOfFace(uint face) const;
+    bool isCurvedFace(const UInt f) const;
+    Real getVolume() const;
+    Real getAreaOfFace(UInt face) const;
     bool isLocalSide(
-            const uint side,
+            const UInt side,
             const SurfR* surf) const;
     bool isLocalSide(
             const SurfR* surf) const;
-    uint getFaces() const {return faces;}
-    uint getNbp() const {return base->numberOfCoordinates();}
-    uint
-    getNbfp() const;
-    uint
-    getNfp() const {return nfp;}
-    uint
-    getNumberOfVertices() const {return vertices;}
-    uint
-    getNodeVertex(const uint i) const;
-    uint
-    getId() const {return base->getId();}
-    const CoordR3*
-    getV(uint i) const {return base->getV(i);}
-    void
-    getCMatrices(
-            StaMatrix<double,np,np> C[3]) const;
-    CartesianVector<double, 3>
-    getNode(const uint i) const {return n[i];}
+    UInt getFaces() const {return faces;}
+    UInt getNbp() const {return base->numberOfCoordinates();}
+    UInt getNbfp() const;
+    UInt getNfp() const {return nfp;}
+    UInt getNumberOfVertices() const {return vertices;}
+    UInt getNodeVertex(const UInt i) const;
+    UInt getId() const {return base->getId();}
+    const CoordR3* getV(UInt i) const {return base->getV(i);}
+    void getCMatrices(StaMatrix<Real,np,np> C[3]) const;
+    CVecR3 getNode(const UInt i) const {return n[i];}
     const CoordR3*
     getSideBaseNode(
-            const uint f,
-            const uint i) const;
-    const CoordR3*
-    getSideVertexBaseNode(uint f, uint i) const;
-    Cell*&
-    getEtoEPointer(const int) const;
-    CVecR3
-    getSideNodePos(
-            const uint f,
-            const uint i) const;
-    CVecR3
-    getSideNormal(
-            const uint f) const;
-    virtual void
-    getCurvedLIFTnormal(
-            StaMatrix<double,np,nfp> LIFTn[3],
-            StaMatrix<double,np,nfp> LIFTcn[3],
-            StaMatrix<double,np,nfp> LIFTrn[3],
-            const uint face) const;
-    const Tet*
-    getPtrToBase() const;
-    uint
-    getSideNode(uint f, uint i) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
+            const UInt f,
+            const UInt i) const;
+    const CoordR3* getSideVertexBaseNode(UInt f, UInt i) const;
+    Cell*& getEtoEPointer(const Int) const;
+    CVecR3 getSideNodePos(
+            const UInt f,
+            const UInt i) const;
+    CVecR3 getSideNormal(
+            const UInt f) const;
+    virtual void getCurvedLIFTnormal(
+            StaMatrix<Real,np,nfp> LIFTn[3],
+            StaMatrix<Real,np,nfp> LIFTcn[3],
+            StaMatrix<Real,np,nfp> LIFTrn[3],
+            const UInt face) const;
+    const Tet* getPtrToBase() const;
+    UInt getSideNode(UInt f, UInt i) const;
+    virtual StaMatrix<Real,TET_NP,TET_NP>
     getConductivityWithGeometricProfile(
             const PMVolumePML& mat,
-            const uint type,
-            const double maxSigma) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
-    getMassMatrix() const;
-    virtual void
-    printInfo() const;
-    void
-    printMapsInfo() const;
+            const UInt type,
+            const Real maxSigma) const;
+    virtual StaMatrix<Real,TET_NP,TET_NP> getMassMatrix() const;
+    virtual void printInfo() const;
+    void printMapsInfo() const;
 protected:
-    void
-    init(
+    void init(
             const Tet* base_,
             const PMGroup* pMGroup);
-    StaMatrix<double,TET_NP,TET_NP>
-    getCMatrix(
-            const uint x,
-            const StaMatrix<double,np,np>& invM,
-            const StaMatrix<double,4,3> cJHat[SimplexTet<1>::ncp],
-            const StaMatrix<double,4,4> cJ[SimplexTet<1>::ncp]) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
-    getMassMatrix(
-            const double cJDet[SimplexTet<1>::ncp]) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
-    getMassMatrixIntegratedWithScalar(
-            const double cScalar[SimplexTet<1>::ncp]) const;
-    StaMatrix<double,np,nfp>
-    getLIFTMatrix(
-            const uint s,
-            const StaMatrix<double,np,nfp>& invM,
-            const  double csd[SimplexTri<1>::ncp]) const;
+    StaMatrix<Real,TET_NP,TET_NP> getCMatrix(
+            const UInt x,
+            const StaMatrix<Real,np,np>& invM,
+            const StaMatrix<Real,4,3> cJHat[SimplexTet<1>::ncp],
+            const StaMatrix<Real,4,4> cJ[SimplexTet<1>::ncp]) const;
+    virtual StaMatrix<Real,TET_NP,TET_NP> getMassMatrix(
+            const Real cJDet[SimplexTet<1>::ncp]) const;
+    virtual StaMatrix<Real,TET_NP,TET_NP> getMassMatrixIntegratedWithScalar(
+            const Real cScalar[SimplexTet<1>::ncp]) const;
+    StaMatrix<Real,np,nfp> getLIFTMatrix(
+            const UInt s,
+            const StaMatrix<Real,np,nfp>& invM,
+            const  Real csd[SimplexTri<1>::ncp]) const;
 private:
-    void
-    buildNodes();
+    void  buildNodes();
 };
 
-template <int TET_N>
+template <Int TET_N>
 const SimplexTet<TET_N> CellTet<TET_N>::tet;
 
-template <int TET_N>
+template <Int TET_N>
 class CellTet4 : public CellTet<TET_N> {
     friend class Tet4;
 public:
-    static const uint np = TET_NP;
-    static const uint nfp = TET_NFP;
-    static const uint faces = 4;
-    static const uint vertices = 4;
+    static const UInt np = TET_NP;
+    static const UInt nfp = TET_NFP;
+    static const UInt faces = 4;
+    static const UInt vertices = 4;
     CellTet4();
     virtual ~CellTet4();
     CellTet4(
@@ -139,13 +114,13 @@ public:
     void printMapsInfo() const;
 };
 
-template <int TET_N>
+template <Int TET_N>
 class CellTet10 : public CellTet<TET_N> {
 public:
-    static const uint np = TET_NP;
-    static const uint nfp = TET_NFP;
-    static const uint faces = 4;
-    static const uint vertices = 4;
+    static const UInt np = TET_NP;
+    static const UInt nfp = TET_NFP;
+    static const UInt faces = 4;
+    static const UInt vertices = 4;
     //
     CellTet10();
     virtual ~CellTet10();
@@ -154,10 +129,10 @@ public:
             const PMGroup& pMGroup);
     void
     getCurvedLIFTnormal(
-            StaMatrix<double,np,nfp> LIFTn[3],
-            StaMatrix<double,np,nfp> LIFTcn[3],
-            StaMatrix<double,np,nfp> LIFTrn[3],
-            const uint face) const;
+            StaMatrix<Real,np,nfp> LIFTn[3],
+            StaMatrix<Real,np,nfp> LIFTcn[3],
+            StaMatrix<Real,np,nfp> LIFTrn[3],
+            const UInt face) const;
     void
     buildOperators();
 };

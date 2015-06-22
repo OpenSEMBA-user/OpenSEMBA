@@ -23,12 +23,12 @@
 class VectorModuleResult {
 public:
 	string xLabel, yLabel;
-	double where; // where:= e.g, time step or time.
+	Real where; // where:= e.g, time step or time.
 	string componentNames[4];
-	vector<int> valuePos;
-	vector<double> values[3];
-	uint numberOfValues;
-	VectorModuleResult(const uint numberOfValues_);
+	vector<Int> valuePos;
+	vector<Real> values[3];
+	UInt numberOfValues;
+	VectorModuleResult(const UInt numberOfValues_);
 	~VectorModuleResult();
 	VectorModuleResult&
 	 operator=(VectorModuleResult& rhs);

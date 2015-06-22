@@ -29,46 +29,46 @@ public:
 	 const PMGroup& pmGroup,
 	 const OptionsSolverDGTD* arg);
 	void
-	 timeIntegrate(const double time) const;
+	 timeIntegrate(const Real time) const;
 protected:
-	uint
+	UInt
  	 getNumOfIterationsPerBigTimeStep(
-      const uint e) const;
+      const UInt e) const;
 private:
 	bool useMaxStageSizeForLTS;
-	static const uint nStages = 5;
-	static const double rka[nStages];
-	static const double rkb[nStages];
-	static const double rkc[nStages];
-	double stageSize[nStages];
-	double
+	static const UInt nStages = 5;
+	static const Real rka[nStages];
+	static const Real rkb[nStages];
+	static const Real rkc[nStages];
+	Real stageSize[nStages];
+	Real
 	 getMaxStageSize() const;
-	double
+	Real
 	 getMaxTimeRatio() const;
 	void
 	 buildRKConstants();
 	void
 	 LTSTimeIntegration(
-	  const double time,
-	  const double localTime,
-	  const double localdt,
-	  const uint tier) const;
+	  const Real time,
+	  const Real localTime,
+	  const Real localdt,
+	  const UInt tier) const;
 	void
 	 updateResiduals(
-	  const uint e1,
-	  const uint e2,
-	  const double rka,
-	  const double localTime,
-	  const double localdt) const;
-	uint
+	  const UInt e1,
+	  const UInt e2,
+	  const Real rka,
+	  const Real localTime,
+	  const Real localdt) const;
+	UInt
 	 getNStages() const;
-	double
-	 getRKA(const uint s) const;
-	double
-	 getRKB(const uint s) const;
-	double
-	 getRKC(const uint s) const;
-	double
-	 getStageSize(const uint s) const;
+	Real
+	 getRKA(const UInt s) const;
+	Real
+	 getRKB(const UInt s) const;
+	Real
+	 getRKC(const UInt s) const;
+	Real
+	 getStageSize(const UInt s) const;
 };
 #endif /* SOLVERLSERK_H_ */

@@ -13,7 +13,7 @@ CommNone::CommNone() {
 CommNone::~CommNone() {
 }
 
-int
+Int
 CommNone::getNumberOfTasks() const {
    return 1;
 }
@@ -23,12 +23,12 @@ CommNone::abort() const {
 
 }
 
-uint
+UInt
 CommNone::getLocalOffset() const {
    return 0;
 }
 
-uint
+UInt
 CommNone::getLocalSize() const {
    return getGlobalSize();
 }
@@ -55,36 +55,36 @@ CommNone::gatherFieldsSlave(
 
 void
 CommNone::setPartitionSizes(
-      const vector<vector<uint> >& partId) {
+      const vector<vector<UInt> >& partId) {
    assert(partId.size() == 1);
    setGlobalSize(partId[0].size());
    setLocalSizeAndOffset(getGlobalSize(), 0);
 }
 
 void
-CommNone::syncNeighbourFields(double* nEx, double* nEy, double* nEz,
-      double* nHx, double* nHy, double* nHz, const double* Ex, const double* Ey,
-      const double* Ez, const double* Hx, const double* Hy,
-      const double* Hz) const {
+CommNone::syncNeighbourFields(Real* nEx, Real* nEy, Real* nEz,
+      Real* nHx, Real* nHy, Real* nHz, const Real* Ex, const Real* Ey,
+      const Real* Ez, const Real* Hx, const Real* Hy,
+      const Real* Hz) const {
 
 }
 
 void
-CommNone::initNeighbourFields(const vector<uint>& nIds) {
+CommNone::initNeighbourFields(const vector<UInt>& nIds) {
 
 }
 
-int
+Int
 CommNone::getTask() const {
    return 0;
 }
 
-double
-CommNone::reduceToGlobalMinimum(double val) const {
+Real
+CommNone::reduceToGlobalMinimum(Real val) const {
    return val;
 }
 
-int
+Int
 CommNone::getNumOfTasksOnThisHost() const {
    return 1;
 }

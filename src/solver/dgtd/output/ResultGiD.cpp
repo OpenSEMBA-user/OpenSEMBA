@@ -17,8 +17,8 @@
 //
 //ResultGiD::ResultGiD(
 //      const OutRq* p,
-//      int& coordCounter,
-//      int& elemCounter,
+//      Int& coordCounter,
+//      Int& elemCounter,
 //      const DG* dg,
 //      const Mesh* mesh) : OutRq(*p) {
 //   dg_ = dg;
@@ -41,7 +41,7 @@
 //}
 //
 //void
-//ResultGiD::writePointProbeMesh(int& coordCounter, int& elemCounter) {
+//ResultGiD::writePointProbeMesh(Int& coordCounter, Int& elemCounter) {
 //   ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Point, 1);
 //   GiD_BeginCoordinates();
 //   assert(getElem().size() == 1);
@@ -54,7 +54,7 @@
 //   GiD_EndMesh();
 //   coord_.push_back(coordCounter);
 //   assert(elem_.size() > 0);
-//   vector<pair<const Element*, uint> > vertex =
+//   vector<pair<const Element*, UInt> > vertex =
 //         mesh_->getElementsWithVertex(elem_[0], Element::volume);
 //   assert(vertex.size() > 0);
 //   solverNode_.push_back(dg_->getGlobalFieldPosOfVertex(vertex[0]));
@@ -62,19 +62,19 @@
 //
 //void
 //ResultGiD::writeTriProbeMesh(
-//      int& coordCounter,
-//      int& elemCounter) {
-//   uint nV;
+//      Int& coordCounter,
+//      Int& elemCounter) {
+//   UInt nV;
 //   mesh_->isLinear() ? nV = 3 : nV = 6;
 //   ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Triangle, nV);
 //   GiD_BeginCoordinates();
-//   int tmpCounter = coordCounter;
-//   static const uint GiDTriOrder[6] = {0, 3, 5, 1, 4, 2};
-//   for (uint i = 0; i < elem_.size(); i++) {
-//      pair<const Volume*, uint> surf = mesh_->map.getInnerFace(elem_[i]);
+//   Int tmpCounter = coordCounter;
+//   static const UInt GiDTriOrder[6] = {0, 3, 5, 1, 4, 2};
+//   for (UInt i = 0; i < elem_.size(); i++) {
+//      pair<const Volume*, UInt> surf = mesh_->map.getInnerFace(elem_[i]);
 //      const Volume* vol = surf.first;
-//      uint f = surf.second;
-//      for (uint i = 0; i < nV; i++) {
+//      UInt f = surf.second;
+//      for (UInt i = 0; i < nV; i++) {
 //         CVecR3 vertex;
 //         if (mesh_->isLinear()) {
 //            vertex = vol->getSideVertex(f,i)->pos();
@@ -86,9 +86,9 @@
 //   }
 //   GiD_EndCoordinates();
 //   GiD_BeginElements();
-//   vector<int> nId(nV);
-//   for (uint j = 0; j < elem_.size(); j++) {
-//      for (uint i = 0; i < nId.size(); i++) {
+//   vector<Int> nId(nV);
+//   for (UInt j = 0; j < elem_.size(); j++) {
+//      for (UInt i = 0; i < nId.size(); i++) {
 //         nId[i] = ++tmpCounter;
 //         coord_.push_back(nId[i]);
 //      }
@@ -96,23 +96,23 @@
 //   }
 //   GiD_EndElements();
 //   GiD_EndMesh();
-//   for (uint i = 0; i < elem_.size(); i++) {
-//      pair<const Volume*, uint> face = mesh_->map.getInnerFace(elem_[i]);
-//      vector<uint> node = dg_->getGlobalFieldPosOfFace(face);
+//   for (UInt i = 0; i < elem_.size(); i++) {
+//      pair<const Volume*, UInt> face = mesh_->map.getInnerFace(elem_[i]);
+//      vector<UInt> node = dg_->getGlobalFieldPosOfFace(face);
 //      solverNode_.insert(solverNode_.end(), node.begin(), node.end());
 //   }
 //}
 //
 //void
-//ResultGiD::writeTetProbeMesh(int& coordCounter, int& elemCounter) {
-//   uint nV;
+//ResultGiD::writeTetProbeMesh(Int& coordCounter, Int& elemCounter) {
+//   UInt nV;
 //   mesh_->isLinear() ? nV = 4 : nV = 10;
 //   assert(nV == 4); // TODO Implemented only for linear meshes.
 //   ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Tetrahedra, nV);
 //   GiD_BeginCoordinates();
-//   int tmpCounter = coordCounter;
-//   for (uint j = 0; j < elem_.size(); j++) {
-//      for (uint i = 0; i < nV; i++ ) {
+//   Int tmpCounter = coordCounter;
+//   for (UInt j = 0; j < elem_.size(); j++) {
+//      for (UInt i = 0; i < nV; i++ ) {
 //         const CVecR3 pos
 //         = mesh_->getElementWithId(elem_[i])->getVertex(i)->pos();
 //         GiD_WriteCoordinates(++coordCounter, pos(0), pos(1), pos(2));
@@ -120,9 +120,9 @@
 //   }
 //   GiD_EndCoordinates();
 //   GiD_BeginElements();
-//   vector<int> nId(nV);
-//   for (uint j = 0; j < elem_.size(); j++) {
-//      for (uint i = 0; i < nId.size(); i++) {
+//   vector<Int> nId(nV);
+//   for (UInt j = 0; j < elem_.size(); j++) {
+//      for (UInt i = 0; i < nId.size(); i++) {
 //         nId[i] = ++tmpCounter;
 //         coord_.push_back(nId[i]);
 //      }
@@ -130,23 +130,23 @@
 //   }
 //   GiD_EndElements();
 //   GiD_EndMesh();
-//   for (uint i = 0; i < elem_.size(); i++) {
-//      vector<uint> node = dg_->getGlobalFieldPosOfVolume((elem_[i]));
+//   for (UInt i = 0; i < elem_.size(); i++) {
+//      vector<UInt> node = dg_->getGlobalFieldPosOfVolume((elem_[i]));
 //      solverNode_.insert(solverNode_.end(), node.begin(), node.end());
 //   }
 //}
 //
 //void
 //ResultGiD::write(
-//      const double time,
+//      const Real time,
 //      const FieldR3& electric,
 //      const FieldR3& magnetic) const {
 //   ExporterGiD::beginResult(
 //         getName() + " "  + outputTypeStr(),
 //         "Time", time, getGiDResultType(),
 //         getGiDResultLocation(), getGiDGaussPointType(), getComponentNames());
-//   for (uint k = 0; k < solverNode_.size(); k++) {
-//      const uint j = solverNode_[k];
+//   for (UInt k = 0; k < solverNode_.size(); k++) {
+//      const UInt j = solverNode_[k];
 //      const CVecR3 vec
 //      = getOutputValueFromFields(electric.getCVec(j), magnetic.getCVec(j));
 //      GiD_WriteVectorModule(coord_[k], vec(0), vec(1), vec(2), vec.norm());

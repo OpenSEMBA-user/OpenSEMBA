@@ -11,89 +11,87 @@ MeshVolume::MeshVolume(
 MeshVolume::~MeshVolume() {
 }
 
+//void
+//MeshVolume::createAndAssignPML(
+//        const PMVolumePML::Direction direction[3],
+//        const vector<Face>& internalBorder,
+//        MeshVolume* mesh) {
+//    // Computes bound of PML pointing in this direction.
+//    BoxD3 bound = mesh->getBound(internalBorder);
+//    pair<CVecR3,CVecR3> pmlBound;
+//    for (UInt i = 0; i < 3; i++) {
+//        if (direction[i] == PMVolumePML::minus) {
+//            pmlBound.second(i) = bound.getMin()(i);
+//            pmlBound.first(i) = - numeric_limits<Real>::infinity() ;
+//        } else if (direction[i] == PMVolumePML::plus) {
+//            pmlBound.first(i) = bound.getMax()(i);
+//            pmlBound.first(i) = numeric_limits<Real>::infinity() ;
+//        } else {
+//            pmlBound.first(i) = bound.getMin()(i);
+//            pmlBound.second(i) = bound.getMax()(i);
+//        }
+//    }
+//    // Gets ids of PMLs inside the pml bound. Removes non-tet.
+//    vector<UInt> allPMLIds = mesh->getIdsInsideBound(pmlBound);
+//    vector<UInt> PMLIds = mesh->getTetIds(allPMLIds);
+//    // Creates new PML material for that bound and sets in mesh.
+//    if (PMLIds.size() != 0) {
+//        UInt lastId = count();
+//        pml_.push_back(new PMVolumePML(lastId+1, direction, mesh->getBound(PMLIds)));
+//        updatePointers();
+//        mesh->setMaterialIds(PMLIds, lastId+1);
+//    }
+//}
 
-void
-MeshVolume::createAndAssignPML(
-        const PMVolumePML::Direction direction[3],
-        const vector<pair<const Volume*, unsigned int> >& internalBorder,
-        MeshVolume* mesh) {
-    // Computes bound of PML pointing in this direction.
-    BoxD3 bound = mesh->getBound(internalBorder);
-    pair<CVecR3,CVecR3> pmlBound;
-    for (unsigned int i = 0; i < 3; i++) {
-        if (direction[i] == PMVolumePML::minus) {
-            pmlBound.second(i) = bound.getMin()(i);
-            pmlBound.first(i) = - numeric_limits<double>::infinity() ;
-        } else if (direction[i] == PMVolumePML::plus) {
-            pmlBound.first(i) = bound.getMax()(i);
-            pmlBound.first(i) = numeric_limits<double>::infinity() ;
-        } else {
-            pmlBound.first(i) = bound.getMin()(i);
-            pmlBound.second(i) = bound.getMax()(i);
-        }
-    }
-    // Gets ids of PMLs inside the pml bound. Removes non-tet.
-    vector<unsigned int> allPMLIds = mesh->getIdsInsideBound(pmlBound);
-    vector<unsigned int> PMLIds = mesh->getTetIds(allPMLIds);
-    // Creates new PML material for that bound and sets in mesh.
-    if (PMLIds.size() != 0) {
-        unsigned int lastId = count();
-        pml_.push_back(new PMVolumePML(lastId+1, direction, mesh->getBound(PMLIds)));
-        updatePointers();
-        mesh->setMaterialIds(PMLIds, lastId+1);
-    }
-}
+//void
+//MeshVolume::detectAndAssignPMLRegions() {
+//    if (countPML() == 0) {
+//        return;
+//    }
+//    const UInt pmlId = getPML()->getId();
+//    vector<UInt> notPMLId = mesh->elem_.getIdsWithoutMaterialId(pmlId);
+//    vector<UInt> internalId = mesh->getTetIds(notPMLId);
+//    vector<pair<const Volume*, UInt>> internalBorder =
+//            mesh->getInternalBorder(internalId);
+//    // Creates PML material stretched towards +x.
+//    PMVolumePML::Direction direction[3];
+//    for (UInt i = 0; i < PMVolumePML::possibleDirections; i++) {
+//        getDirection(direction, i);
+//        createAndAssignPML(direction, internalBorder, mesh);
+//    }
+//}
 
-
-void
-MeshVolume::detectAndAssignPMLRegions() {
-    if (countPML() == 0) {
-        return;
-    }
-    const unsigned int pmlId = getPML()->getId();
-    vector<unsigned int> notPMLId = mesh->elem_.getIdsWithoutMaterialId(pmlId);
-    vector<unsigned int> internalId = mesh->getTetIds(notPMLId);
-    vector<pair<const Volume*, unsigned int> > internalBorder =
-            mesh->getInternalBorder(internalId);
-    // Creates PML material stretched towards +x.
-    PMVolumePML::Direction direction[3];
-    for (unsigned int i = 0; i < PMVolumePML::possibleDirections; i++) {
-        getDirection(direction, i);
-        createAndAssignPML(direction, internalBorder, mesh);
-    }
-}
-
-vector<vector<unsigned int> >
-MeshVolume::getPartitionsIds(const unsigned int nDivisions) const {
+vector<vector<UInt>>
+MeshVolume::getPartitionsIds(const UInt nDivisions) const {
     // Calls weight balanced partitioner with a zero size weight vector
-    vector<pair<unsigned int,int> > idWgt;
+    vector<pair<UInt,Int>> idWgt;
     return getPartitionsIds(nDivisions, idWgt);
 }
 
-vector<vector<unsigned int> >
+vector<vector<ElementId>>
 MeshVolume::getPartitionsIds(
-        const unsigned int nDivisions,
-        const vector<pair<unsigned int,int> > idWgt) const {
+        const UInt nDivisions,
+        const vector<pair<UInt,Int>> idWgt) const {
     return getPartitionsIds(nDivisions, idWgt, NULL);
 }
 
-vector<vector<unsigned int> >
+vector<vector<ElementId>>
 MeshVolume::getPartitionsIds(
-        const unsigned int nDivisions,
-        const vector<pair<unsigned int,int> > idWgt,
-        const double* taskPower) const {
+        const UInt nDivisions,
+        const vector<pair<UInt,Int>> idWgt,
+        const Real* taskPower) const {
     // Metis v5 manual:
     // [...] take as input the element-node array of the mesh and
     // compute a k-way partitioning for both its elements and its nodes
     // idWgt contains id and weight pairs.
-    vector<vector<unsigned int> > res;
+    vector<vector<ElementId>> res;
     res.resize(nDivisions);
     // Accounts for the one partition case.
     if (nDivisions == 1) {
-        unsigned int nK = elem_.nVolumeElements();
+        UInt nK = elems().sizeOf<VolR>();
         res[0].resize(nK, 0);
-        for (unsigned int i = 0; i < nK; i++) {
-            res[0][i] = elem_.tet[i]->getId();
+        for (UInt i = 0; i < nK; i++) {
+            res[0][i] = elems().tet[i]->getId();
         }
         return res;
     }
@@ -104,11 +102,11 @@ MeshVolume::getPartitionsIds(
     idx_t *eptr, *eind;
     eptr = new idx_t[ne+1];
     eind = new idx_t[ne*4];
-    unsigned int counter = 0;
+    UInt counter = 0;
     eptr[0] = counter;
-    for (int i = 0; i < (int) ne; i++) {
+    for (Int i = 0; i < (Int) ne; i++) {
         const Tet* vol = elem_.tet[i];
-        for (unsigned int j = 0; j < vol->numberOfVertices(); j++) {
+        for (UInt j = 0; j < vol->numberOfVertices(); j++) {
             eind[counter++] = vol->getVertex(j)->id - 1;
         }
         eptr[i+1] = counter;
@@ -116,15 +114,15 @@ MeshVolume::getPartitionsIds(
     cout << "OK" << endl;
     // Relabels ids, needed by quadratic or linearized meshes.
     cout << " - Relabeling... " << flush;
-    DynMatrix<int> id(ne*4,3);
-    for (int i = 0; i < ne*4; i++) {
+    DynMatrix<Int> id(ne*4,3);
+    for (Int i = 0; i < ne*4; i++) {
         id(i,0) = i;
         id(i,1) = eind[i];
         id(i,2) = 0;
     }
     id.sortRows_omp(1,1);
-    int label = 0;
-    for (int i = 1; i < ne*4; i++) {
+    Int label = 0;
+    for (Int i = 1; i < ne*4; i++) {
         if (id(i,1) == id(i-1,1)) {
             id(i,2) = label;
         } else {
@@ -132,7 +130,7 @@ MeshVolume::getPartitionsIds(
         }
     }
     id.sortRows_omp(0,0);
-    for (int i = 0; i < ne*4; i++) {
+    for (Int i = 0; i < ne*4; i++) {
         eind[i] = id(i,2);
     }
     idx_t nn = label+1; // Number of vertices.
@@ -144,7 +142,7 @@ MeshVolume::getPartitionsIds(
         vwgt = NULL;
     } else {
         vwgt = new idx_t[ne];
-        for (int e = 0; e < ne; e++) {
+        for (Int e = 0; e < ne; e++) {
             vwgt[e] = idWgt[e].second;
         }
     }
@@ -161,7 +159,7 @@ MeshVolume::getPartitionsIds(
     if (taskPower != NULL) {
         tpwgts = new real_t[nDivisions];
         real_t sum = 0.0;
-        for (unsigned int i = 0; i < nDivisions; i++) {
+        for (UInt i = 0; i < nDivisions; i++) {
             tpwgts[i] = taskPower[i];
             sum += tpwgts[i];
         }
@@ -170,7 +168,7 @@ MeshVolume::getPartitionsIds(
     // METIS options.
     cout << " - Setting Options... " << flush;
     idx_t options[METIS_NOPTIONS];
-    int status;
+    Int status;
     status = METIS_SetDefaultOptions(options);
     options[METIS_OPTION_PTYPE] = METIS_PTYPE_KWAY;
     options[METIS_OPTION_OBJTYPE] = METIS_OBJTYPE_CUT;
@@ -193,11 +191,11 @@ MeshVolume::getPartitionsIds(
     }
     cout << "OK" << endl;
     // Converts result.
-    for (unsigned int i = 0; i < nDivisions; i++) {
+    for (UInt i = 0; i < nDivisions; i++) {
         res[i].reserve(ne);
     }
-    for (int i = 0; i < ne; i++) {
-        unsigned int id = elem_.tet[i]->getId();
+    for (Int i = 0; i < ne; i++) {
+        UInt id = elem_.tet[i]->getId();
         res[epart[i]].push_back(id);
     }
     // Frees memory.
@@ -211,38 +209,36 @@ MeshVolume::getPartitionsIds(
 #else
     cerr << endl << "ERROR @ Mesh::getPartition(): "
             << "Mesh partitioning is not allowed." << endl;
-    return vector<vector<uint> >();
+    return vector<vector<ElementId>>();
 #endif
 }
 
-bool
-MeshVolume::checkAreaCoherence() const {
-    unsigned int nElem = elem_.nVolumeElements();
-    bool isOk = true;
-    for (unsigned int e = 0; e < nElem; e++) {
-        unsigned int id = elem_.tet[e]->getId();
-        const Tet *local = elem_.getTetPtrToId(id);
-        for (unsigned int f = 0; f < local->numberOfFaces(); f++) {
-            pair<const Volume*, unsigned int> localFace(local, f);
-            pair<const Volume*, unsigned int> neighFace;
-            neighFace = getNeighConnection(localFace);
-            const Volume* neigh = neighFace.first;
-            unsigned int f2 = neighFace.second;
-            double diff =
-                    local->getAreaOfFace(f) - neigh->getAreaOfFace(f2);
-            if (abs(diff) > areaDiffTolerance) {
-                cerr << endl << "Id: " << local->getId()
-				                 << " Face: " << f
-				                 << " Diff: " << diff << endl;
-                isOk = false;
-            }
-        }
-    }
-    if (!isOk) {
-        cerr << endl << "ERROR @ checkAreaCoherence()" << endl;
-        cerr << endl << "Check above id-face pairs." << endl;
-    }
-    return isOk;
-}
-
-
+//bool MeshVolume::checkAreaCoherence() const {
+//    UInt nElem = elem_.nVolumeElements();
+//    bool isOk = true;
+//    for (UInt e = 0; e < nElem; e++) {
+//        UInt id = elem_.tet[e]->getId();
+//        const Tet *local = elem_.getTetPtrToId(id);
+//        for (UInt f = 0; f < local->numberOfFaces(); f++) {
+//            pair<const Volume*, UInt> localFace(local, f);
+//            pair<const Volume*, UInt> neighFace;
+//            neighFace = getNeighConnection(localFace);
+//            const Volume* neigh = neighFace.first;
+//            UInt f2 = neighFace.second;
+//            Real diff =
+//                    local->getAreaOfFace(f) - neigh->getAreaOfFace(f2);
+//            if (abs(diff) > areaDiffTolerance) {
+//                cerr << endl << "Id: " << local->getId()
+//				                 << " Face: " << f
+//				                 << " Diff: " << diff << endl;
+//                isOk = false;
+//            }
+//        }
+//    }
+//    if (!isOk) {
+//        cerr << endl << "ERROR @ checkAreaCoherence()" << endl;
+//        cerr << endl << "Check above id-face pairs." << endl;
+//    }
+//    return isOk;
+//}
+//

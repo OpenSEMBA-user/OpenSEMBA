@@ -70,15 +70,15 @@ SolverCudg3d::run() {
    if (arg_->isDontRun()) {
       return;
    }
-   double tSum = 0.0;
-   double tRunning = 0.0;
-   double time = 0.0;
-   uint NtSteps = smb_->gData->finalTime / integrator_->getMaxDT();
-   const double dt = integrator_->getMaxDT();
+   Real tSum = 0.0;
+   Real tRunning = 0.0;
+   Real time = 0.0;
+   UInt NtSteps = smb_->gData->finalTime / integrator_->getMaxDT();
+   const Real dt = integrator_->getMaxDT();
    assert(dt != 0.0);
    while (time < smb_->gData->finalTime) {
       out_->process(time, *dg_->getElectric(), *dg_->getMagnetic());
-      double initCPUTime = storeCPUTime();
+      Real initCPUTime = storeCPUTime();
       integrator_->timeIntegrate(time);
       tSum += storeCPUTime() - initCPUTime;
       time += dt;
@@ -125,8 +125,8 @@ Comm* SolverCudg3d::initMPI() {
 }
 
 void SolverCudg3d::initOpenMP() {
-   int nTasksOnThisHost = comm_->getNumOfTasksOnThisHost();
-   int maxThreads = omp_get_max_threads() / nTasksOnThisHost - 1;
+   Int nTasksOnThisHost = comm_->getNumOfTasksOnThisHost();
+   Int maxThreads = omp_get_max_threads() / nTasksOnThisHost - 1;
    if (maxThreads == 0) {
       maxThreads = 1;
    }

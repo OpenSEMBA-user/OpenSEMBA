@@ -1,7 +1,7 @@
 #include "BoundaryCondition.h"
 //
 //BoundaryCondition::BoundaryCondition(
-//      pair<const Volume*, uint>& boundary,
+//      pair<const Volume*, UInt>& boundary,
 //      const Condition* cond,
 //      const bool back) {
 //   cell_ = boundary.first;
@@ -26,12 +26,12 @@
 //   return cell_;
 //}
 //
-//uint BoundaryCondition::getFace() const {
+//UInt BoundaryCondition::getFace() const {
 //   return face_;
 //}
 //
-//pair<const Volume*, uint> BoundaryCondition::get() const {
-//   return pair<const Volume*, uint> (cell_, face_);
+//pair<const Volume*, UInt> BoundaryCondition::get() const {
+//   return pair<const Volume*, UInt> (cell_, face_);
 //}
 //
 //const Condition* BoundaryCondition::getCondition() const {

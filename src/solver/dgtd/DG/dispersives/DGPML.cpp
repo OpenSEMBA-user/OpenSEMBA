@@ -33,17 +33,17 @@ DGPML::initElemsAndDOFs(
  const PMVolumePML& mat,
  const CellGroup& cells) {
 	// Initializes Element list and dof.
-	vector<uint> auxList;
+	vector<UInt> auxList;
 	auxList.reserve(cells.getLocalSize());
-	for (uint e = 0; e < cells.getLocalSize(); e++) {
+	for (UInt e = 0; e < cells.getLocalSize(); e++) {
 		const CellTet<ORDER_N>* cell = cells(e);
-		uint id = cell->getId();
+		UInt id = cell->getId();
 		if (cell->material->getId() == mat.getId()) {
 			auxList.push_back(cells.getRelPosOfId(id));
 		}
 		nElem = auxList.size();
-		elem = new uint[nElem];
-		for (uint j = 0; j < nElem; j++) {
+		elem = new UInt[nElem];
+		for (UInt j = 0; j < nElem; j++) {
 			elem[j] = auxList[j];
 		}
 	}
@@ -52,13 +52,13 @@ DGPML::initElemsAndDOFs(
 
 void
 DGPML::initConductivity(
- double **sigma,
- const uint orientation,
+ Real **sigma,
+ const UInt orientation,
  const PMVolumePML& mat,
  const CellGroup& cells) {
-	StaMatrix<double,np,np> auxSig;
-	for (uint e = 0; e < nElem; e++) {
-		uint id = cells.getIdOfRelPos(elem[e]);
+	StaMatrix<Real,np,np> auxSig;
+	for (UInt e = 0; e < nElem; e++) {
+		UInt id = cells.getIdOfRelPos(elem[e]);
 		const CellTet<ORDER_N>* cell;
 		cell = cells.getPtrToCellWithId(id);
 		auxSig =
@@ -73,26 +73,26 @@ DGPML::initConductivityMatrices(
  const CellGroup& cells) {
 	assert(elem != NULL);
 	if (mat.isUniaxial()) {
-		sig1 = new double*[nElem];
-		sig11 = new double*[nElem];
-		for (uint e = 0; e < nElem; e++) {
-			sig1[e] = new double[np*np];
-			sig11[e] = new double[np*np];
+		sig1 = new Real*[nElem];
+		sig11 = new Real*[nElem];
+		for (UInt e = 0; e < nElem; e++) {
+			sig1[e] = new Real[np*np];
+			sig11[e] = new Real[np*np];
 		}
 		initConductivity(sig1, 1, mat, cells);
 		initConductivity(sig11, 11, mat, cells);
 	} else if (mat.isBiaxial()) {
-		sig1 = new double*[nElem];
-		sig2 = new double*[nElem];
-		sig11 = new double*[nElem];
-		sig22 = new double*[nElem];
-		sig12= new double*[nElem];
-		for (uint e = 0; e < nElem; e++) {
-			sig1[e] = new double[np*np];
-			sig2[e] = new double[np*np];
-			sig11[e] = new double[np*np];
-			sig22[e] = new double[np*np];
-			sig12[e] = new double[np*np];
+		sig1 = new Real*[nElem];
+		sig2 = new Real*[nElem];
+		sig11 = new Real*[nElem];
+		sig22 = new Real*[nElem];
+		sig12= new Real*[nElem];
+		for (UInt e = 0; e < nElem; e++) {
+			sig1[e] = new Real[np*np];
+			sig2[e] = new Real[np*np];
+			sig11[e] = new Real[np*np];
+			sig22[e] = new Real[np*np];
+			sig12[e] = new Real[np*np];
 		}
 		initConductivity(sig1, 1, mat, cells);
 		initConductivity(sig2, 2, mat, cells);
@@ -101,25 +101,25 @@ DGPML::initConductivityMatrices(
 		initConductivity(sig12, 12, mat, cells);
 	} else {
 		assert(mat.isTriaxial());
-		sig1 = new double*[nElem];
-		sig2 = new double*[nElem];
-		sig3 = new double*[nElem];
-		sig11 = new double*[nElem];
-		sig22 = new double*[nElem];
-		sig33 = new double*[nElem];
-		sig12= new double*[nElem];
-		sig23= new double*[nElem];
-		sig31= new double*[nElem];
-		for (uint e = 0; e < nElem; e++) {
-			sig1[e] = new double[np*np];
-			sig2[e] = new double[np*np];
-			sig3[e] = new double[np*np];
-			sig11[e] = new double[np*np];
-			sig22[e] = new double[np*np];
-			sig33[e] = new double[np*np];
-			sig12[e] = new double[np*np];
-			sig23[e] = new double[np*np];
-			sig31[e] = new double[np*np];
+		sig1 = new Real*[nElem];
+		sig2 = new Real*[nElem];
+		sig3 = new Real*[nElem];
+		sig11 = new Real*[nElem];
+		sig22 = new Real*[nElem];
+		sig33 = new Real*[nElem];
+		sig12= new Real*[nElem];
+		sig23= new Real*[nElem];
+		sig31= new Real*[nElem];
+		for (UInt e = 0; e < nElem; e++) {
+			sig1[e] = new Real[np*np];
+			sig2[e] = new Real[np*np];
+			sig3[e] = new Real[np*np];
+			sig11[e] = new Real[np*np];
+			sig22[e] = new Real[np*np];
+			sig33[e] = new Real[np*np];
+			sig12[e] = new Real[np*np];
+			sig23[e] = new Real[np*np];
+			sig31[e] = new Real[np*np];
 		}
 		initConductivity(sig1, 1, mat, cells);
 		initConductivity(sig2, 2, mat, cells);
@@ -145,7 +145,7 @@ DGPML::init(
 	}
 }
 
-void DGPML::addJumps(Field<double, 3>& dE, Field<double, 3>& dH,
-		Field<double, 3>& E, Field<double, 3>& H, const uint e1,
-		const uint e2) {
+void DGPML::addJumps(Field<Real, 3>& dE, Field<Real, 3>& dH,
+		Field<Real, 3>& E, Field<Real, 3>& H, const UInt e1,
+		const UInt e2) {
 }

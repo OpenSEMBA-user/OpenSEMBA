@@ -13,15 +13,15 @@
 // const MeshVolume& meshVol,
 // const vector<const BoundaryCondition*>& iB)
 //  : ProjectFile(filename) {
-//	uint bSize = iB.size();
-//	vector<pair<const Volume*, uint> > cellsBorder;
-//	pair<const Volume*, uint> inner, outer;
-//	pair<uint, uint> elFace;
-//	for (uint i = 0; i < bSize; i++) {
+//	UInt bSize = iB.size();
+//	vector<pair<const Volume*, UInt> > cellsBorder;
+//	pair<const Volume*, UInt> inner, outer;
+//	pair<UInt, UInt> elFace;
+//	for (UInt i = 0; i < bSize; i++) {
 //		inner = iB[i]->get();
 //		outer = meshVol.getNeighConnection(inner);
 //		cellsBorder.push_back(outer);
-//		uint id = outer.first->getId();
+//		UInt id = outer.first->getId();
 //		elFace.first = cells.getGlobalRelPosOfId(id);
 //		elFace.second = outer.second;
 //		elemFace.push_back(elFace);
@@ -56,49 +56,49 @@
 //	file.close();
 //}
 //
-//vector<CartesianVector<complex<double>,3> >
+//vector<CVecC3 >
 //ResultRCS::nearToFarField(
-// const double frequency,
-// const vector<pair<double, double> >& directions) const {
+// const Real frequency,
+// const vector<pair<Real, Real> >& directions) const {
 //	assert(numNodes > 0);
 //	assert(stepsGroup.step.size() > 0);
-//	const uint nDir = directions.size();
+//	const UInt nDir = directions.size();
 //	// Performs Fourier Transform of fields at selected frequency.
-//	vector<double> time = stepsGroup.getTimeVector();
+//	vector<Real> time = stepsGroup.getTimeVector();
 // 	// Computes contributions of each cell.
-// 	CartesianVector<complex<double>,3> **ERad;
-// 	ERad = new CartesianVector<complex<double>,3>*[nElem];
-// 	for (uint e = 0; e < nElem; e++) {
-// 		ERad[e] = new CartesianVector<complex<double>,3>[nDir];
+// 	CVecC3 **ERad;
+// 	ERad = new CVecC3*[nElem];
+// 	for (UInt e = 0; e < nElem; e++) {
+// 		ERad[e] = new CVecC3[nDir];
 // 	}
-// 	uint e;
+// 	UInt e;
 //#ifdef USE_OPENMP
 //#pragma omp parallel for private(e)
 //#endif
 //	for (e = 0; e < nElem; e++) {
 //		CellTri<ORDER_N> *surf;
 //		if (!quadraticMesh) {
-//			const uint nbp = 3;
+//			const UInt nbp = 3;
 //			const CoordR3* coord[nbp];
-//			for (uint i = 0; i < nbp; i++) {
+//			for (UInt i = 0; i < nbp; i++) {
 //				coord[i] = &vertex[nbp * e + i];
 //			}
 //			Tri3 base(coord);
 //			surf = new CellTri3<ORDER_N>(base);
 //		} else {
-//			const uint nbp = 6;
+//			const UInt nbp = 6;
 //			const CoordR3* coord[nbp];
-//			for (uint i = 0; i < nbp; i++) {
+//			for (UInt i = 0; i < nbp; i++) {
 //				coord[i] = &vertex[nbp * e + i];
 //			}
 //			Tri6 base(coord);
 //			surf = new CellTri6<ORDER_N>(base);
 //		}
 //		// Obtains transformation in nodes.
-//		CartesianVector<complex<double>,3> elecFq[nfp], magnFq[nfp];
+//		CVecC3 elecFq[nfp], magnFq[nfp];
 //		vector<CVecR3 > electric(stepsGroup.nSteps);
 //		vector<CVecR3 > magnetic(stepsGroup.nSteps);
-//		for (uint node = 0; node < nfp; node++) {
+//		for (UInt node = 0; node < nfp; node++) {
 //			electric = stepsGroup.getElectricField(node + e*nfp);
 //			elecFq[node] =
 //			 MathUtils::getDFT(frequency, time, electric);
@@ -106,50 +106,50 @@
 //			magnFq[node] =
 //			 MathUtils::getDFT(frequency, time, magnetic);
 //		}
-//		for (uint i = 0; i < nDir; i++) {
+//		for (UInt i = 0; i < nDir; i++) {
 //			ERad[e][i] +=
 //			 surf->getRadiatedField(elecFq, magnFq, frequency, directions[i]);
 //		}
 //		delete surf;
 //	}
 //	// Prepares result.
-//	vector<CartesianVector<complex<double>,3> > res(nDir);
-//	for (uint i = 0; i < nDir; i++) {
-//		for (uint e = 0; e < nElem; e++) {
+//	vector<CVecC3 > res(nDir);
+//	for (UInt i = 0; i < nDir; i++) {
+//		for (UInt e = 0; e < nElem; e++) {
 //			res[i] += ERad[e][i];
 //		}
 //	}
 //	return res;
 //}
 //
-//vector<double>
+//vector<Real>
 //ResultRCS::getRCS(
-// const double frequency,
-// const vector<pair<double, double> >& directions) const {
-//	const double betaSq = pow(2*M_PI*frequency/SPEED_OF_LIGHT,2);
+// const Real frequency,
+// const vector<pair<Real, Real> >& directions) const {
+//	const Real betaSq = pow(2*M_PI*frequency/SPEED_OF_LIGHT,2);
 //	// Incident Field.
-//	CartesianVector<complex<double>,3> EIncFq;
+//	CVecC3 EIncFq;
 //	vector<CVecR3 > EInc;
 //	EInc = stepsGroup.getIncidentField();
 //	EIncFq = MathUtils::getDFT(frequency, stepsGroup.getTimeVector(), EInc);
-//	const double EIncSq = pow(EIncFq.norm(),2);
+//	const Real EIncSq = pow(EIncFq.norm(),2);
 //	// Radiated Field.
-// 	vector<CartesianVector<complex<double>,3> > ERadFq;
+// 	vector<CVecC3 > ERadFq;
 // 	ERadFq = nearToFarField(frequency, directions);
-// 	vector<double> res(directions.size());
-// 	for (uint i = 0; i < directions.size(); i++) {
-// 		double ERadSq = pow(ERadFq[i].norm(),2);
+// 	vector<Real> res(directions.size());
+// 	for (UInt i = 0; i < directions.size(); i++) {
+// 		Real ERadSq = pow(ERadFq[i].norm(),2);
 // 		res[i] = ERadSq * betaSq / EIncSq / (4.0 * M_PI);
 // 	}
 // 	return res;
 //}
 //
-//double
+//Real
 //ResultRCS::getRCS(
-// const double frequency,
-// const pair<double, double>& directions) const {
-//	vector<double> res;
-//	vector<pair<double,double> > dir;
+// const Real frequency,
+// const pair<Real, Real>& directions) const {
+//	vector<Real> res;
+//	vector<pair<Real,Real> > dir;
 //	dir.push_back(directions);
 //	res = getRCS(frequency, dir);
 // 	return res[0];
@@ -160,8 +160,8 @@
 // const FieldR3& elec,
 // const FieldR3& magn,
 // const CVecR3& EInc,
-// const double time) {
-//	uint i, e, f, j, k;
+// const Real time) {
+//	UInt i, e, f, j, k;
 //	static const SimplexTet<N> tet;
 //	// RCS step information.
 //	file << "RCSSTEP: " << resultStep++ << endl;
@@ -214,7 +214,7 @@
 //				label = line.substr(0, line.find(LABEL_ENDING));
 //				value = line.substr(line.find(LABEL_ENDING)+1, line.length());
 //				if (!label.compare("N")) {
-//					uint order = atoi(value.c_str());
+//					UInt order = atoi(value.c_str());
 //					if (order != N) {
 //						cout << "Incompatible order." << endl;
 //						exit(-1);
@@ -225,7 +225,7 @@
 //				} else if (label.find("nx ny nz") != label.npos) {
 ////					normal.reserve(nElem);
 //					CVecR3 aux;
-//					for (uint i = 0; i < numNodes; i++) {
+//					for (UInt i = 0; i < numNodes; i++) {
 //						file  >> aux(0) >> aux(1) >> aux(2);
 ////						// Stores only one for element.
 ////						if (i % nfp == 0) {
@@ -235,7 +235,7 @@
 //				} else if (label.find("x y z") != label.npos) {
 ////					nodes.reserve(numNodes);
 //					CVecR3 aux;
-//					for (uint i = 0; i < numNodes; i++) {
+//					for (UInt i = 0; i < numNodes; i++) {
 //						file  >> aux(0) >> aux(1) >> aux(2);
 //						// Stores only one for element.
 ////						if (i % nfp == 0) {
@@ -246,7 +246,7 @@
 //					char* pEnd;
 //					// Size of vertex will match numNodes only if N = Nb.
 //					vertex.reserve(numNodes);
-//					uint vertexCount = 1;
+//					UInt vertexCount = 1;
 //					CVecR3 aux;
 //					while (finished == false && !file.eof()) {
 //						getline(file, line);
@@ -291,7 +291,7 @@
 //
 //void
 //ResultRCS::writeHeader(
-// const vector<pair<const Volume*, uint> >& border) {
+// const vector<pair<const Volume*, UInt> >& border) {
 //	file << "RCS analysis results file" << endl;
 //	file << "HEADER" << endl;
 //	file << "N: " << ORDER_N << endl;
@@ -299,20 +299,20 @@
 //	file << "Nm: " << numNodes << endl;
 //	// Writes normal vectors.
 //	file << "nx ny nz:" << endl;
-//	for (uint i = 0; i < border.size(); i++) {
+//	for (UInt i = 0; i < border.size(); i++) {
 //		const Volume* vol = border[i].first;
-//		uint f = border[i].second;
-//		for (uint j = 0; j < nfp; j++) {
+//		UInt f = border[i].second;
+//		for (UInt j = 0; j < nfp; j++) {
 //			CVecR3 nor = vol->sideNormal(f);
 //			file << - nor(0) << " " << - nor(1) << " " << - nor(2) << endl;
 //		}
 //	}
 //	// Writes node coordinates.
 //	file << "vx vy vz:" << endl;
-//	for (uint i = 0; i < border.size(); i++) {
+//	for (UInt i = 0; i < border.size(); i++) {
 //		const Volume* vol = border[i].first;
-//		uint f = border[i].second;
-//		for (uint j = 0; j < nfp; j++) {
+//		UInt f = border[i].second;
+//		for (UInt j = 0; j < nfp; j++) {
 //			CVecR3 pos = vol->getSideV(f,j)->pos();
 //			file << pos(0) << " " << pos(1) << " " << pos(2) << endl;
 //		}
@@ -325,8 +325,8 @@
 //	stepsGroup.step.reserve(estimatedNumberOfSteps);
 //	stepsGroup.nSteps = 0;
 //	string line, label, value;
-//	int num;
-//	double time;
+//	Int num;
+//	Real time;
 //	bool ok = true;
 //	CVecR3 incident, aux;
 //	vector<CVecR3 >
@@ -342,12 +342,12 @@
 //		} else if (!label.compare("ExInc EyInc EzInc")) {
 //			file >> incident(0) >> incident(1) >> incident(2);
 //		} else if (!label.compare("Ex Ey Ez")) {
-//			for (uint i = 0; i < numNodes; i++) {
+//			for (UInt i = 0; i < numNodes; i++) {
 //				file >> aux(0) >> aux(1) >> aux(2);
 //				electric[i] = aux;
 //			}
 //		} else if (!label.compare("Hx Hy Hz")) {
-//			for (uint i = 0; i < numNodes; i++) {
+//			for (UInt i = 0; i < numNodes; i++) {
 //				file >> aux(0) >> aux(1) >> aux(2);
 //				magnetic[i] = aux;
 //			}
@@ -370,11 +370,11 @@
 //	}
 //}
 //
-//double
+//Real
 //ResultRCS::getSamplingTime() const {
 //	// Performs Fourier Transform of fields at selected frequency.
-//	double samplingTime;
-//	vector<double> time = stepsGroup.getTimeVector();
+//	Real samplingTime;
+//	vector<Real> time = stepsGroup.getTimeVector();
 //	samplingTime = MathUtils::meanDifference(time);
 //	return samplingTime;
 //}
@@ -385,10 +385,10 @@
 //	if (sym[0] != Symmetry::none) {
 //		nElem *= 2;
 //		numNodes *= 2;
-//		uint newVertexSize = 2 * vertex.size();
+//		UInt newVertexSize = 2 * vertex.size();
 //		vertex.reserve(newVertexSize);
-//		uint vertexCounter = newVertexSize / 2;
-//		for (uint i = 0; i < newVertexSize / 2; i++) {
+//		UInt vertexCounter = newVertexSize / 2;
+//		for (UInt i = 0; i < newVertexSize / 2; i++) {
 //			CVecR3 auxVec;
 //			auxVec(0) =  vertex[i](0);
 //			auxVec(1) =  vertex[i](1);
@@ -401,11 +401,11 @@
 //			exit(-1);
 //		}
 //		if (sym[0] == Symmetry::pmc) {
-//			for (uint s = 0; s < stepsGroup.step.size(); s++) {
+//			for (UInt s = 0; s < stepsGroup.step.size(); s++) {
 //				CVecR3 aux;
 //				stepsGroup.step[s]->electric.reserve(numNodes);
 //				stepsGroup.step[s]->magnetic.reserve(numNodes);
-//				for (uint i = 0; i < numNodes / 2; i++) {
+//				for (UInt i = 0; i < numNodes / 2; i++) {
 //					aux(0) = stepsGroup.step[s]->magnetic[i](0);
 //					aux(1) = stepsGroup.step[s]->magnetic[i](1);
 //					aux(2) = - stepsGroup.step[s]->magnetic[i](2);
@@ -425,10 +425,10 @@
 //	if (sym[2] != Symmetry::none) {
 //		nElem *= 2;
 //		numNodes *= 2;
-//		uint newVertexSize = 2 * vertex.size();
+//		UInt newVertexSize = 2 * vertex.size();
 //		vertex.reserve(newVertexSize);
-//		uint vertexCounter = newVertexSize / 2;
-//		for (uint i = 0; i < newVertexSize / 2; i++) {
+//		UInt vertexCounter = newVertexSize / 2;
+//		for (UInt i = 0; i < newVertexSize / 2; i++) {
 //			CVecR3 auxVec;
 //			auxVec(0) = vertex[i](0);
 //			auxVec(1) = - vertex[i](1);
@@ -437,11 +437,11 @@
 //			vertex.push_back(aux);
 //		}
 //		if (sym[2] == Symmetry::pec) {
-//			for (uint s = 0; s < stepsGroup.step.size(); s++) {
+//			for (UInt s = 0; s < stepsGroup.step.size(); s++) {
 //				CVecR3 aux;
 //				stepsGroup.step[s]->electric.reserve(numNodes);
 //				stepsGroup.step[s]->magnetic.reserve(numNodes);
-//				for (uint i = 0; i < numNodes / 2; i++) {
+//				for (UInt i = 0; i < numNodes / 2; i++) {
 //					aux(0) = - stepsGroup.step[s]->magnetic[i](0);
 //					aux(1) = stepsGroup.step[s]->magnetic[i](1);
 //					aux(2) = - stepsGroup.step[s]->magnetic[i](2);

@@ -7,54 +7,54 @@
 
 #include "CellTri3.h"
 
-template<int TRI_N>
+template<Int TRI_N>
 CellTri3<TRI_N>::CellTri3(
  const Tri3& base) {
 	id = base.getId();
 	normal = base.getNormal();
-	for (uint i = 0; i < geo.np; i++) {
+	for (UInt i = 0; i < geo.np; i++) {
 		v[i] = base.getV(i);
 	}
 }
 
-template<int TRI_N>
+template<Int TRI_N>
 CellTri3<TRI_N>::~CellTri3() {
 	// TODO Auto-generated destructor stub
 }
 
-template<int TRI_N>
-inline CartesianVector<complex<double>,3>
+template<Int TRI_N>
+inline CVecC3
 CellTri3<TRI_N>::getRadiatedField(
- const CartesianVector<complex<double>, 3> electric[np],
- const CartesianVector<complex<double>, 3> magnetic[np],
- const double frequency,
- const pair<double, double> direction) const {
+ const CartesianVector<complex<Real>, 3> electric[np],
+ const CartesianVector<complex<Real>, 3> magnetic[np],
+ const Real frequency,
+ const pair<Real, Real> direction) const {
 	// Computes phase contribution.
-	complex<double> phase[geo.ncp];
-	const double beta = 2.0 * M_PI * frequency / SPEED_OF_LIGHT;
-	complex<double> phaseShift(0.0, beta);
+	complex<Real> phase[geo.ncp];
+	const Real beta = 2.0 * M_PI * frequency / SPEED_OF_LIGHT;
+	complex<Real> phaseShift(0.0, beta);
 	SphericalVector sphDir(direction.first, direction.second);
 	CVecR3 dir = sphDir.convertToCartesian();
 	CVecR3 cNode[geo.ncp];
 	getCubatureNodes(cNode);
-	for (uint c = 0; c < geo.ncp; c++) {
-		phase[c] = exp(phaseShift * (double) dir.dot(cNode[c]));
+	for (UInt c = 0; c < geo.ncp; c++) {
+		phase[c] = exp(phaseShift * (Real) dir.dot(cNode[c]));
 	}
 	// Computes integral.
-	const double c0mu0 = SPEED_OF_LIGHT * VACUUM_PERMEABILITY;
+	const Real c0mu0 = SPEED_OF_LIGHT * VACUUM_PERMEABILITY;
 	CVecR3 cNormal[geo.ncp];
 	getCubatureNormals(cNormal);
-	double csdf[geo.ncp];
+	Real csdf[geo.ncp];
 	getCubatureDifferentials(csdf);
-	CartesianVector<complex<double>,3> res;
-	CartesianVector<complex<double>,3> complexDir;
+	CVecC3 res;
+	CVecC3 complexDir;
 	complexDir = MathUtils::convertToComplex(dir);
-	CartesianVector<complex<double>, 3>	 complexNormal[geo.ncp];
+	CartesianVector<complex<Real>, 3>	 complexNormal[geo.ncp];
 	MathUtils::convertToComplex(complexNormal,cNormal,geo.ncp);
 	static const SimplexTri<TRI_N> tri;
-	CartesianVector<complex<double>,3> M, J, integrand;
-	for (uint j = 0; j < tri.np; j++) {
-		for (uint c = 0; c < geo.ncp; c++) {
+	CVecC3 M, J, integrand;
+	for (UInt j = 0; j < tri.np; j++) {
+		for (UInt c = 0; c < geo.ncp; c++) {
 			M = - (complexNormal[c] ^ electric[j]);
 			J =   (complexNormal[c] ^ magnetic[j]);
 			integrand = ((J ^ complexDir) * c0mu0 + M) ^ complexDir;

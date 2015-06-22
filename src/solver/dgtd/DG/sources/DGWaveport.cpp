@@ -19,19 +19,19 @@ DGWaveport::~DGWaveport() {
 	// TODO Auto-generated destructor stub
 }
 //
-//double
+//Real
 //DGWaveport::getNumericalGammaMGauss(
-// const double t,
-// const double dt,
-// const double amp,
-// const double delay,
-// const double spread,
-// const double kcm) const {
+// const Real t,
+// const Real dt,
+// const Real amp,
+// const Real delay,
+// const Real spread,
+// const Real kcm) const {
 //	// Computes current step.
-//	const uint n = t / dt;
+//	const UInt n = t / dt;
 //	// Performs convolution.
-//	uint j;
-//	double res = 0.0;
+//	UInt j;
+//	Real res = 0.0;
 //	for (j = 0; j < n; j++) {
 //		res +=
 //		 getHm(j*dt, kcm)
@@ -42,10 +42,10 @@ DGWaveport::~DGWaveport() {
 //	return res;
 //}
 
-double
+Real
 DGWaveport::getHm(
- const double t,
- const double kcm) const {
+ const Real t,
+ const Real kcm) const {
 	if (t == 0) {
 		return (kcm * kcm * SPEED_OF_LIGHT / 2.0);
 	} else {
@@ -55,15 +55,15 @@ DGWaveport::getHm(
 
 bool
 DGWaveport::checkNormalsAreEqual(
- const vector<pair<uint, uint> >& elemFace,
+ const vector<pair<UInt, UInt> >& elemFace,
  const CellGroup& cells) const {
 	CVecR3 n1, n2;
-	for (uint i = 1; i < elemFace.size(); i++) {
-		const uint id1 = cells.getIdOfRelPos(elemFace[i-1].first);
-		const uint f1 = elemFace[i-1].second;
+	for (UInt i = 1; i < elemFace.size(); i++) {
+		const UInt id1 = cells.getIdOfRelPos(elemFace[i-1].first);
+		const UInt f1 = elemFace[i-1].second;
 		n1 = cells.getPtrToCellWithId(id1)->getSideNormal(f1);
-		const uint id2 = cells.getIdOfRelPos(elemFace[i].first);
-		const uint f2 = elemFace[i].second;
+		const UInt id2 = cells.getIdOfRelPos(elemFace[i].first);
+		const UInt f2 = elemFace[i].second;
 		n2 = cells.getPtrToCellWithId(id2)->getSideNormal(f2);
 		if (n1 != n2) {
 			return false;

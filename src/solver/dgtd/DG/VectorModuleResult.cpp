@@ -8,11 +8,11 @@
 #include "VectorModuleResult.h"
 #endif
 
-VectorModuleResult::VectorModuleResult(const uint numberOfValues_) {
+VectorModuleResult::VectorModuleResult(const UInt numberOfValues_) {
 	where = 0.0;
 	numberOfValues = numberOfValues_;
 	valuePos.resize(numberOfValues, 0);
-	for (uint i = 0; i < 3; i++)
+	for (UInt i = 0; i < 3; i++)
 		values[i].resize(numberOfValues, 0.0);
 }
 
@@ -28,10 +28,10 @@ VectorModuleResult::operator=(VectorModuleResult& rhs) {
 	xLabel = rhs.xLabel;
 	yLabel = rhs.yLabel;
 	where  = rhs.where;
-	for (uint i = 0; i < 4; i++)
+	for (UInt i = 0; i < 4; i++)
 		componentNames[i] = rhs.componentNames[i];
 	valuePos = rhs.valuePos;
-	for (uint i = 0; i < 3; i++)
+	for (UInt i = 0; i < 3; i++)
 		values[i] = rhs.values[i];
 	return *this;
 }
@@ -93,7 +93,7 @@ VectorModuleResult::readResult(ifstream& f_in) {
 			 >> componentNames[2] >> componentNames[3];
 		// Reads values contained in the result.
 		f_in >> valueLabel;
-		for (uint i = 0; i < numberOfValues; i++) {
+		for (UInt i = 0; i < numberOfValues; i++) {
 			f_in >> valuePos[i]
 				 >> values[0][i] >> values[1][i] >> values[2][i];
 		}
@@ -125,7 +125,7 @@ VectorModuleResult::printInfo() const {
 	cout << "X label: " << xLabel << endl;
 	cout << "Y label: " << yLabel << endl;
 	cout << "Component names: ";
-	for (uint i = 0; i < 4; i++)
+	for (UInt i = 0; i < 4; i++)
 		cout << componentNames[i] << " ";
 	cout << endl;
 	cout << "This result contains "
@@ -134,7 +134,7 @@ VectorModuleResult::printInfo() const {
 		 << componentNames[0] << " - "
 		 << componentNames[1] << " - "
 		 << componentNames[2] << endl;
-	for (uint i = 0; i < valuePos.size() && i < 5; i++) {
+	for (UInt i = 0; i < valuePos.size() && i < 5; i++) {
 		cout << valuePos[i] << " "
 			 << values[0][i] << " "
 			 << values[1][i] << " "

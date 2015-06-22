@@ -21,49 +21,49 @@ public:
 	virtual ~DGDispersiveVolumic();
 	void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2);
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2);
 	void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2);
+	  const Field<Real,3>& H,
+	  const UInt e1, const UInt e2);
 	void
 	 computeRHSElectric(
-	  Field<double,3>& rhsE,
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) const;
+	  Field<Real,3>& rhsE,
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSMagnetic(
-	  Field<double,3>& rhsE,
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) const;
+	  Field<Real,3>& rhsE,
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2) const;
 	void
 	 addRHSToRes(
-	  const uint e1, const uint e2,
-	  const double rkb, const double dt);
+	  const UInt e1, const UInt e2,
+	  const Real rkb, const Real dt);
 	void
 	 updateWithRes(
-	  const uint e1,
-	  const uint e2,
-	  const double rkb);
+	  const UInt e1,
+	  const UInt e2,
+	  const Real rkb);
 	void
 	 addJumps(
-	  Field<double,3>& dE, Field<double,3>& dH,
-	  Field<double,3>& E, Field<double,3>& H,
-	  const uint e1, const uint e2);
+	  Field<Real,3>& dE, Field<Real,3>& dH,
+	  Field<Real,3>& E, Field<Real,3>& H,
+	  const UInt e1, const UInt e2);
 	private:
-	static const uint N = ORDER_N;
-	static const uint np = (N+1) * (N+2) * (N+3) / 6;
+	static const UInt N = ORDER_N;
+	static const UInt np = (N+1) * (N+2) * (N+3) / 6;
 //	PMVolumeDispersive mat;
-	uint nElem;
-	uint *elem;
-	uint dof, drudeDof;
+	UInt nElem;
+	UInt *elem;
+	UInt dof, drudeDof;
 	// Polarization currents. Size nK x Np x nPoles.
 	// Data is stored in nK vectors of Np components for each pole.
 	// First nK x Np data correspond to the first pole, and so on.
-	Field<complex<double>,3> P, J;
-	Field<complex<double>,3> rhsP, rhsJ;
-	Field<complex<double>,3> resP, resJ;
+	Field<complex<Real>,3> P, J;
+	Field<complex<Real>,3> rhsP, rhsJ;
+	Field<complex<Real>,3> resP, resJ;
 private:
 	void
 	 build(const CellGroup& cells);

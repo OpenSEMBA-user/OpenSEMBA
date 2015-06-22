@@ -9,7 +9,7 @@
 #define SOLVERDIPOLE_H_
 
 #include "DGSource.h"
-#include "../../../../common/math/SphericalVector.h"
+#include "math/SphericalVector.h"
 
 using namespace std;
 
@@ -20,31 +20,30 @@ class DGDipole : public DGSource, public Dipole {
 public:
 	DGDipole(
 	 const Dipole& dip,
-	 const vector<const BoundaryCondition*>& bc,
 	 const MapGroup& map,
 	 const CellGroup& cells,
 	 FieldR3& dE, FieldR3& dH,
-	 const int vmapM[faces][nfp]);
+	 const Int vmapM[faces][nfp]);
 	virtual ~DGDipole();
 	void
 	 computeExcitation(
-	  const double intTime,
-	  const double minDT);
+	  const Real intTime,
+	  const Real minDT);
 	CVecR3
-	 getMagnitude(const double time) const;
+	 getMagnitude(const Real time) const;
 	void
 	 printInfo() const;
 private:
 #ifdef SOLVERDIPOLE_DO_NOT_USE_GAUSSIAN_DERIVATIVE
-	double *intT, *intS;
+	Real *intT, *intS;
 #endif
 	SphericalVector *tPos, *sPos;
 	void
 	 computeExcitationField(
-	  double* ExInc, double* EyInc, double* EzInc,
-	  double* HxInc, double* HyInc, double* HzInc,
+	  Real* ExInc, Real* EyInc, Real* EzInc,
+	  Real* HxInc, Real* HyInc, Real* HzInc,
 	  const SphericalVector* vPos,
-	  const uint nE,
-	  const double time) const;
+	  const UInt nE,
+	  const Real time) const;
 };
 #endif /* SOLVERDIPOLE_H_ */

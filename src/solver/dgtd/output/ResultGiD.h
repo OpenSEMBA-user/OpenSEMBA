@@ -21,21 +21,21 @@ using namespace std;
 //    ResultGiD();
 //    ResultGiD(
 //            const OutRq* p,
-//            int& coordCounter,
-//            int& elemCounter,
+//            Int& coordCounter,
+//            Int& elemCounter,
 //            const DG* dg,
 //            const Mesh* mesh);
 //    virtual ~ResultGiD();
-//    void writePointProbeMesh(int& coordCounter, int& elemCounter);
-//    void writeTriProbeMesh(int& coordCounter, int& elemCounter);
-//    void writeTetProbeMesh(int& coordCounter, int& elemCounter);
+//    void writePointProbeMesh(Int& coordCounter, Int& elemCounter);
+//    void writeTriProbeMesh(Int& coordCounter, Int& elemCounter);
+//    void writeTetProbeMesh(Int& coordCounter, Int& elemCounter);
 //    void
-//    write(const double time,
+//    write(const Real time,
 //            const FieldR3& electric,
 //            const FieldR3& magnetic) const;
 //private:
-//    vector<uint> coord_;
-//    vector<uint> solverNode_;
+//    vector<UInt> coord_;
+//    vector<UInt> solverNode_;
 //    const DG* dg_;
 //    const Mesh* mesh_;
 //    CVecR3 getOutputValueFromFields(

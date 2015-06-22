@@ -14,33 +14,32 @@ class DGWaveportRectangular : public DGWaveport, public Waveport {
 public:
 	DGWaveportRectangular(
 	 const Waveport& pw,
-	 const vector<const BoundaryCondition*>& bc,
 	 const MapGroup& map,
 	 const CellGroup& cells,
     FieldR3& dE, FieldR3& dH,
-	 const int vmapM[faces][nfp]);
+	 const Int vmapM[faces][nfp]);
 	virtual
 	~DGWaveportRectangular();
 	void
 	 computeExcitation(
-	  const double intTime,
-	  const double minDT);
+	  const Real intTime,
+	  const Real minDT);
 	void
 	 printInfo() const;
 private:
-	double width, height;
+	Real width, height;
 	Waveport::ExcitationMode excitationMode;
-	double kcm;
-	double intrinsicImpedance;
-	double gammaMSum;
+	Real kcm;
+	Real intrinsicImpedance;
+	Real gammaMSum;
 	void
 	 computeExcitationField(
-	  double* ExInc, double *EyInc, double *EzInc,
-	  double* HxInc, double *HyInc, double *HzInc,
+	  Real* ExInc, Real *EyInc, Real *EzInc,
+	  Real* HxInc, Real *HyInc, Real *HzInc,
 	  const CVecR3* pos,
-	  const uint nE,
-	  const double intTime,
-	  const double minDT);
+	  const UInt nE,
+	  const Real intTime,
+	  const Real minDT);
 };
 
 #endif /* SOLVERWAVEPORTRECTANGULAR_H_ */

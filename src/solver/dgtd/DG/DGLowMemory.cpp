@@ -24,77 +24,77 @@ DGLowMemory:: printInfo() const {
 
 void
 DGLowMemory::updateFieldsWithRes(
- const uint e1, const uint e2,	const double rkb) {
+ const UInt e1, const UInt e2,	const Real rkb) {
 	updateFieldsWithResBase(e1,e2,rkb);
 }
 
 void
-DGLowMemory::computeCurlsInRHSElectric(const uint e1, const uint e2) {
+DGLowMemory::computeCurlsInRHSElectric(const UInt e1, const UInt e2) {
 
 }
 
 void
-DGLowMemory::computeCurlsInRHSMagnetic(const uint e1, const uint e2) {
+DGLowMemory::computeCurlsInRHSMagnetic(const UInt e1, const UInt e2) {
 }
 
 void
-DGLowMemory::addFluxesToRHSElectric(const uint e1, const uint e2) {
+DGLowMemory::addFluxesToRHSElectric(const UInt e1, const UInt e2) {
 }
 
 void
-DGLowMemory::addFluxesToRHSMagnetic(const uint e1, const uint e2) {
+DGLowMemory::addFluxesToRHSMagnetic(const UInt e1, const UInt e2) {
 }
 
 void
 DGLowMemory::addRHSToResidueElectric(
- const uint e1, const uint e2,	const double rkdt) {
+ const UInt e1, const UInt e2,	const Real rkdt) {
 }
 
 void
 DGLowMemory::addRHSToResidueMagnetic(
- const uint e1, const uint e2,	const double rkdt) {
+ const UInt e1, const UInt e2,	const Real rkdt) {
 }
 
 void
 DGLowMemory::addRHSToFieldsElectric(
- const uint e1, const uint e2,	const double rkdt) {
+ const UInt e1, const UInt e2,	const Real rkdt) {
 }
 
 void
-DGLowMemory::addRHSToFieldsMagnetic(const uint e1, const uint e2,
-		const double rkdt) {
+DGLowMemory::addRHSToFieldsMagnetic(const UInt e1, const UInt e2,
+		const Real rkdt) {
 }
 
 void
-DGLowMemory::computeJumps(const uint e1, const uint e2,
-		const double localTime, const double minDT) {
+DGLowMemory::computeJumps(const UInt e1, const UInt e2,
+		const Real localTime, const Real minDT) {
 }
 
 void
-DGLowMemory::computePolarizationCurrentsRHS(const uint e1, const uint e2) {
+DGLowMemory::computePolarizationCurrentsRHS(const UInt e1, const UInt e2) {
 }
 
 void
-DGLowMemory::computePolarizationCurrentsRHSElectric(const uint e1,
-		const uint e2) {
+DGLowMemory::computePolarizationCurrentsRHSElectric(const UInt e1,
+		const UInt e2) {
 }
 
 void
-DGLowMemory::computePolarizationCurrentsRHSMagnetic(const uint e1,
-		const uint e2) {
+DGLowMemory::computePolarizationCurrentsRHSMagnetic(const UInt e1,
+		const UInt e2) {
 }
 
 void
-DGLowMemory::LTSSaveFieldsAndResidues(const uint fKSave, const uint lKSave) {
+DGLowMemory::LTSSaveFieldsAndResidues(const UInt fKSave, const UInt lKSave) {
 }
 
 void
-DGLowMemory::LTSLoadFieldsAndResidues(const uint fKSave, const uint lKSave) {
+DGLowMemory::LTSLoadFieldsAndResidues(const UInt fKSave, const UInt lKSave) {
 }
 
 void
-DGLowMemory::addRHSToRes(const uint e1, const uint e2, const double rka,
-		const double dt) {
+DGLowMemory::addRHSToRes(const UInt e1, const UInt e2, const Real rka,
+		const Real dt) {
 }
 
 void

@@ -16,28 +16,28 @@ public:
 	virtual
 	~DGWaveport();
 protected:
-//	double
+//	Real
 //     getNumericalGammaMGauss(
-//      const double time,
-//      const double minDT,
-//      const double amplitude,
-//      const double delay,
-//      const double spread,
-//      const double kcm) const;
+//      const Real time,
+//      const Real minDT,
+//      const Real amplitude,
+//      const Real delay,
+//      const Real spread,
+//      const Real kcm) const;
 	bool
 	 checkNormalsAreEqual(
-	  const vector<pair<uint,uint> >& elemFace,
+	  const vector<pair<UInt,UInt> >& elemFace,
 	  const CellGroup& cells) const;
 protected:
 	CVecR3* posTF;
 	CVecR3* posTFNB;
 	CVecR3* posSF;
 private:
-	double *gauss, *hm;
-	double
+	Real *gauss, *hm;
+	Real
 	 getHm(
-	  const double time,
-	  const double kcm) const;
+	  const Real time,
+	  const Real kcm) const;
 };
 
 #endif /* SOLVERWAVEPORT_H_ */

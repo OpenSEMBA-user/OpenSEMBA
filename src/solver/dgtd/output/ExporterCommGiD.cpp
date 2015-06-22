@@ -9,7 +9,7 @@ ExporterCommGiD::ExporterCommGiD(
       const SmbData* smb,
       const Comm* comm) : ExporterGiD(smb) {
    comm_ = comm;
-   lastSyncing_ = (double) 0.0;
+   lastSyncing_ = (Real) 0.0;
 }
 
 ExporterCommGiD::~ExporterCommGiD() {
@@ -18,10 +18,10 @@ ExporterCommGiD::~ExporterCommGiD() {
 
 void
 ExporterCommGiD::process(
-      const double time,
+      const Real time,
       const FieldR3& localElec,
       const FieldR3& localMagn) {
-//   uint fSize = comm_->getGlobalSize() * dg_->np;
+//   UInt fSize = comm_->getGlobalSize() * dg_->np;
 //   FieldR3 electric(fSize), magnetic(fSize);
 //   if ((time != lastSyncing_) || (time == 0.0)) {
 //      comm_->gatherFieldsMaster(electric, magnetic, localElec, localMagn);

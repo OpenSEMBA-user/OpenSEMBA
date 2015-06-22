@@ -23,9 +23,9 @@ DGPMLUniaxial::~DGPMLUniaxial() {
 
 void
 DGPMLUniaxial::addRHSToRes(
- const uint e1, const uint e2,
- const double rka, const double dt) {
-	uint i,e;
+ const UInt e1, const UInt e2,
+ const Real rka, const Real dt) {
+	UInt i,e;
 	#ifdef SOLVER_USE_OPENMP
 	#pragma omp parallel for private(i,e)
 	#endif
@@ -45,13 +45,13 @@ DGPMLUniaxial::initUniaxial(
  const PMVolumePML& mat_,
  const CellGroup& cells) {
 	init(mat_, cells);
-	J = new double [dof];
-	resJ = new double [dof];
-	rhsJ = new double [dof];
-	M = new double [dof];
-	resM = new double [dof];
-	rhsM = new double [dof];
-	for (uint j = 0; j < dof; j++) {
+	J = new Real [dof];
+	resJ = new Real [dof];
+	rhsJ = new Real [dof];
+	M = new Real [dof];
+	resM = new Real [dof];
+	rhsM = new Real [dof];
+	for (UInt j = 0; j < dof; j++) {
 		J[j] = 0.0;
 		resJ[j] = 0.0;
 		rhsJ[j] = 0.0;
@@ -64,11 +64,11 @@ DGPMLUniaxial::initUniaxial(
 
 void
 DGPMLUniaxial::internalRHSElectric(
- double* rhsE1, double* rhsE2, double* rhsE3,
- const double* E1, const double* E2, const double* E3,
- const uint e1, const uint e2) const {
+ Real* rhsE1, Real* rhsE2, Real* rhsE3,
+ const Real* E1, const Real* E2, const Real* E3,
+ const UInt e1, const UInt e2) const {
 	if (useConstantConductivity) {
-		uint i, j, e, n;
+		UInt i, j, e, n;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e,n)
 		#endif
@@ -83,7 +83,7 @@ DGPMLUniaxial::internalRHSElectric(
 			}
 		}
 	} else {
-		uint i,j,e;
+		UInt i,j,e;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e)
 		#endif
@@ -92,12 +92,12 @@ DGPMLUniaxial::internalRHSElectric(
 				i = e * np;
 				j = elem[e] * np;
 				//rhsE1[j] += (eps0*sig1) * E1[j] - eps0 * J[i];
-				add_am_v_prod<double,np,np>(&rhsE1[j], sig1[e], &E1[j], eps0);
-				sub_a_v_prod<double,np>(&rhsE1[j], &J[i], eps0);
+				add_am_v_prod<Real,np,np>(&rhsE1[j], sig1[e], &E1[j], eps0);
+				sub_a_v_prod<Real,np>(&rhsE1[j], &J[i], eps0);
 				//rhsE2[j] -= (eps0*sig1) * E2[j];
-				sub_am_v_prod<double,np,np>(&rhsE2[j], sig1[e], &E2[j], eps0);
+				sub_am_v_prod<Real,np,np>(&rhsE2[j], sig1[e], &E2[j], eps0);
 				//rhsE3[j] -= (eps0*sig1) * E3[j];
-				sub_am_v_prod<double,np,np>(&rhsE3[j], sig1[e], &E3[j], eps0);
+				sub_am_v_prod<Real,np,np>(&rhsE3[j], sig1[e], &E3[j], eps0);
 			}
 		}
 	}
@@ -105,11 +105,11 @@ DGPMLUniaxial::internalRHSElectric(
 
 void
 DGPMLUniaxial::internalRHSMagnetic(
- double* rhsH1, double* rhsH2, double* rhsH3,
- const double* H1, const double* H2, const double* H3,
- const uint e1, const uint e2) const {
+ Real* rhsH1, Real* rhsH2, Real* rhsH3,
+ const Real* H1, const Real* H2, const Real* H3,
+ const UInt e1, const UInt e2) const {
 	if (useConstantConductivity) {
-		uint i, j, e, n;
+		UInt i, j, e, n;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e,n)
 		#endif
@@ -124,7 +124,7 @@ DGPMLUniaxial::internalRHSMagnetic(
 			}
 		}
 	} else {
-		uint i, j, e;
+		UInt i, j, e;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e)
 		#endif
@@ -133,12 +133,12 @@ DGPMLUniaxial::internalRHSMagnetic(
 				i = e * np;
 				j = elem[e] * np;
 				//rhsH1[j] += (mu0*sigma1) * H1[j] - mu0 * M[i];
-				add_am_v_prod<double,np,np>(&rhsH1[j], sig1[e], &H1[j], mu0);
-				sub_a_v_prod<double,np>(&rhsH1[j], &M[i], mu0);
+				add_am_v_prod<Real,np,np>(&rhsH1[j], sig1[e], &H1[j], mu0);
+				sub_a_v_prod<Real,np>(&rhsH1[j], &M[i], mu0);
 				//rhsH2[j] -= (mu0*sigma1) * H2[j];
-				sub_am_v_prod<double,np,np>(&rhsH2[j], sig1[e], &H2[j], mu0);
+				sub_am_v_prod<Real,np,np>(&rhsH2[j], sig1[e], &H2[j], mu0);
 				//rhsH3[j] -= (mu0*sigma1) * H3[j];
-				sub_am_v_prod<double,np,np>(&rhsH3[j], sig1[e], &H3[j], mu0);
+				sub_am_v_prod<Real,np,np>(&rhsH3[j], sig1[e], &H3[j], mu0);
 			}
 		}
 	}
@@ -146,10 +146,10 @@ DGPMLUniaxial::internalRHSMagnetic(
 
 void
 DGPMLUniaxial::internalRHSElectricPolarizationCurrents(
- const double* E1, const double* E2, const double* E3,
- const uint e1, const uint e2) {
+ const Real* E1, const Real* E2, const Real* E3,
+ const UInt e1, const UInt e2) {
 	if (useConstantConductivity) {
-		uint i, j, e, n;
+		UInt i, j, e, n;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e,n)
 		#endif
@@ -162,7 +162,7 @@ DGPMLUniaxial::internalRHSElectricPolarizationCurrents(
 			}
 		}
 	} else {
-		uint i,j,e;
+		UInt i,j,e;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e)
 		#endif
@@ -171,8 +171,8 @@ DGPMLUniaxial::internalRHSElectricPolarizationCurrents(
 				i = e * np;
 				j = elem[e] * np;
 				//rhsJ[i] = E1[j] * (sig11) - sig1 * J[i];
-				m_v_prod<double,np,np>(&rhsJ[i], sig11[e], &E1[j]);
-				sub_m_v_prod<double,np,np>(&rhsJ[i], sig1[e], &J[i]);
+				m_v_prod<Real,np,np>(&rhsJ[i], sig11[e], &E1[j]);
+				sub_m_v_prod<Real,np,np>(&rhsJ[i], sig1[e], &J[i]);
 			}
 		}
 	}
@@ -180,10 +180,10 @@ DGPMLUniaxial::internalRHSElectricPolarizationCurrents(
 
 void
 DGPMLUniaxial::internalRHSMagneticPolarizationCurrents(
- const double* H1, const double* H2, const double* H3,
- const uint e1, const uint e2) {
+ const Real* H1, const Real* H2, const Real* H3,
+ const UInt e1, const UInt e2) {
 	if (useConstantConductivity) {
-		uint i, j, e, n;
+		UInt i, j, e, n;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e,n)
 		#endif
@@ -196,7 +196,7 @@ DGPMLUniaxial::internalRHSMagneticPolarizationCurrents(
 			}
 		}
 	} else {
-		uint i, j, e;
+		UInt i, j, e;
 		#ifdef SOLVER_USE_OPENMP
 		#pragma omp parallel for private(i,j,e)
 		#endif
@@ -205,8 +205,8 @@ DGPMLUniaxial::internalRHSMagneticPolarizationCurrents(
 				i = e * np;
 				j = elem[e] * np;
 				//rhsM[i] = H1[j] * (sigma1*sigma1) - sigma1 * M[i];
-				m_v_prod<double,np,np>(&rhsM[i], sig11[e], &H1[j]);
-				sub_m_v_prod<double,np,np>(&rhsM[i], sig1[e], &M[i]);
+				m_v_prod<Real,np,np>(&rhsM[i], sig11[e], &H1[j]);
+				sub_m_v_prod<Real,np,np>(&rhsM[i], sig1[e], &M[i]);
 			}
 		}
 	}
@@ -231,10 +231,10 @@ DGPMLUniaxial::check() const {
 
 void
 DGPMLUniaxial::updateWithRes(
- const uint e1,
- const uint e2,
- const double rkb) {
-	uint i, e;
+ const UInt e1,
+ const UInt e2,
+ const Real rkb) {
+	UInt i, e;
 	#ifdef SOLVER_USE_OPENMP
 	#pragma omp parallel for private(i, e)
 	#endif
@@ -251,7 +251,7 @@ DGPMLx::DGPMLx(
  const PMVolumePML& mat_,
  const CellGroup& cells,
  const bool useConductivity,
- const double conductivity) {
+ const Real conductivity) {
 	useConstantConductivity = useConductivity;
 	if (conductivity != 0.0) {
 		sig = conductivity;
@@ -265,28 +265,28 @@ DGPMLx::~DGPMLx() {
 
 
 void
-DGPMLx::computeRHSElectric(Field<double, 3>& rhs,
-      const Field<double, 3>& f,
-		const uint e1, const uint e2) const {
+DGPMLx::computeRHSElectric(Field<Real, 3>& rhs,
+      const Field<Real, 3>& f,
+		const UInt e1, const UInt e2) const {
 	internalRHSElectric(rhs.set(x),rhs.set(y),rhs.set(z), f(x),f(y),f(z), e1,e2);
 }
 
 void
-DGPMLx::computeRHSMagnetic(Field<double, 3>& rhs,
-      const Field<double, 3>& f,
-		const uint e1, const uint e2) const {
+DGPMLx::computeRHSMagnetic(Field<Real, 3>& rhs,
+      const Field<Real, 3>& f,
+		const UInt e1, const UInt e2) const {
 	internalRHSMagnetic(rhs.set(x),rhs.set(y),rhs.set(z), f(x),f(y),f(z), e1,e2);
 }
 
 void
 DGPMLx::computeRHSElectricPolarizationCurrents(
- const Field<double, 3>& E, const uint e1, const uint e2) {
+ const Field<Real, 3>& E, const UInt e1, const UInt e2) {
 	internalRHSElectricPolarizationCurrents(E(x),E(y),E(z), e1,e2);
 }
 
 void
 DGPMLx::computeRHSMagneticPolarizationCurrents(
- const Field<double, 3>& H, const uint e1, const uint e2) {
+ const Field<Real, 3>& H, const UInt e1, const UInt e2) {
 	internalRHSMagneticPolarizationCurrents(H(x),H(y),H(z), e1,e2);
 }
 
@@ -294,7 +294,7 @@ DGPMLy::DGPMLy(
  const PMVolumePML& mat_,
  const CellGroup& cells,
  const bool useConductivity,
- const double conductivity) {
+ const Real conductivity) {
 	useConstantConductivity = useConductivity;
 	if (conductivity != 0.0) {
 		sig = conductivity;
@@ -307,28 +307,28 @@ DGPMLy::~DGPMLy() {
 }
 
 void
-DGPMLy::computeRHSElectric(Field<double, 3>& rhs,
-      const Field<double, 3>& f,
-		const uint e1, const uint e2) const {
+DGPMLy::computeRHSElectric(Field<Real, 3>& rhs,
+      const Field<Real, 3>& f,
+		const UInt e1, const UInt e2) const {
 	internalRHSElectric(rhs.set(y),rhs.set(z),rhs.set(x), f(y),f(z),f(x), e1,e2);
 }
 
 void
-DGPMLy::computeRHSMagnetic(Field<double, 3>& rhs,
-      const Field<double, 3>& f,
-		const uint e1, const uint e2) const {
+DGPMLy::computeRHSMagnetic(Field<Real, 3>& rhs,
+      const Field<Real, 3>& f,
+		const UInt e1, const UInt e2) const {
 	internalRHSMagnetic(rhs.set(y),rhs.set(z),rhs.set(x), f(y),f(z),f(x), e1,e2);
 }
 
 void
 DGPMLy::computeRHSElectricPolarizationCurrents(
- const Field<double, 3>& f, const uint e1, const uint e2) {
+ const Field<Real, 3>& f, const UInt e1, const UInt e2) {
 	internalRHSElectricPolarizationCurrents(f(y),f(z),f(x), e1,e2);
 }
 
 void
 DGPMLy::computeRHSMagneticPolarizationCurrents(
- const Field<double, 3>& f, const uint e1, const uint e2) {
+ const Field<Real, 3>& f, const UInt e1, const UInt e2) {
 	internalRHSMagneticPolarizationCurrents(f(y),f(z),f(x), e1,e2);
 }
 
@@ -336,7 +336,7 @@ DGPMLz::DGPMLz(
  const PMVolumePML& mat_,
  const CellGroup& cells,
  const bool useConductivity,
- const double conductivity) {
+ const Real conductivity) {
 	useConstantConductivity = useConductivity;
 	if (conductivity != 0.0) {
 		sig = conductivity;
@@ -350,27 +350,27 @@ DGPMLz::~DGPMLz() {
 
 
 void
-DGPMLz::computeRHSElectric(Field<double, 3>& rhs,
-      const Field<double, 3>& f,
-		const uint e1, const uint e2) const {
+DGPMLz::computeRHSElectric(Field<Real, 3>& rhs,
+      const Field<Real, 3>& f,
+		const UInt e1, const UInt e2) const {
 	internalRHSElectric(rhs.set(z),rhs.set(x),rhs.set(y), f(z),f(x),f(y), e1,e2);
 }
 
 void
-DGPMLz::computeRHSMagnetic(Field<double, 3>& rhs,
-      const Field<double, 3>& f,
-		const uint e1, const uint e2) const {
+DGPMLz::computeRHSMagnetic(Field<Real, 3>& rhs,
+      const Field<Real, 3>& f,
+		const UInt e1, const UInt e2) const {
 	internalRHSMagnetic(rhs.set(z),rhs.set(x),rhs.set(y), f(z),f(x),f(y), e1,e2);
 }
 
 void
 DGPMLz::computeRHSElectricPolarizationCurrents(
- const Field<double, 3>& f, const uint e1, const uint e2) {
+ const Field<Real, 3>& f, const UInt e1, const UInt e2) {
 	internalRHSElectricPolarizationCurrents(f(z),f(x),f(y), e1,e2);
 }
 
 void
 DGPMLz::computeRHSMagneticPolarizationCurrents(
- const Field<double, 3>& f, const uint e1, const uint e2) {
+ const Field<Real, 3>& f, const UInt e1, const UInt e2) {
 	internalRHSMagneticPolarizationCurrents(f(z),f(x),f(y), e1,e2);
 }

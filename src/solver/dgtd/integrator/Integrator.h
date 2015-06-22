@@ -25,70 +25,70 @@ using namespace std;
 
 class Integrator : public Ordering {
 public:
-	double timeStepSize;
+	Real timeStepSize;
 	Integrator();
 	virtual ~Integrator();
 	virtual void
-	 timeIntegrate(const double timer) const = 0;
+	 timeIntegrate(const Real timer) const = 0;
 	void setSolver(DG* solver);
-	double getMaxDT() const;
-	double getMinDT() const;
-	uint getNTiers() const;
-	uint getNPartitions() const;
-	vector<vector<uint> > getTiersIds() const;
-	vector<vector<uint> > getStagesIds() const;
-	vector<vector<uint> > getPartitionsIds() const;
-	pair<uint,uint> getRange(const uint tier, const uint stage) const;
-	vector<pair<uint,int> > getComputationalWeights(
+	Real getMaxDT() const;
+	Real getMinDT() const;
+	UInt getNTiers() const;
+	UInt getNPartitions() const;
+	vector<vector<UInt> > getTiersIds() const;
+	vector<vector<UInt> > getStagesIds() const;
+	vector<vector<UInt> > getPartitionsIds() const;
+	pair<UInt,UInt> getRange(const UInt tier, const UInt stage) const;
+	vector<pair<UInt,Int> > getComputationalWeights(
 	        const MeshVolume* msh) const;
 	void partitionate(const MeshVolume* mesh, Comm* comm);
 	void printInfo() const;
 protected:
 	DG* solver;
 	bool doLTS;
-	DynMatrix<uint> timeTierList; // Id - Tier - Stage
-	double mindt;
+	DynMatrix<UInt> timeTierList; // Id - Tier - Stage
+	Real mindt;
 	void
 	 init(
 	  const MeshVolume& mesh,
 	  const PMGroup& pmGroup,
 	  const OptionsSolverDGTD* arg);
-	uint
-	 getNumberOfCellsInTier(const uint tier) const;
-	virtual uint
+	UInt
+	 getNumberOfCellsInTier(const UInt tier) const;
+	virtual UInt
  	 getNumOfIterationsPerBigTimeStep(
-      const uint e) const = 0;
-	virtual uint
+      const UInt e) const = 0;
+	virtual UInt
 	 getNStages() const = 0;
-	virtual double
+	virtual Real
 	 getMaxTimeStep(
 	  const Tet* tet,
 	  const PhysicalModel* mat) const;
-	virtual double
+	virtual Real
 	 getMaxTimeRatio() const = 0;
-	vector<uint>
-	 getIdsOfTier(const uint tier) const;
-	vector<uint>
-	 getIdsOfStage(const uint stage) const;
+	vector<UInt>
+	 getIdsOfTier(const UInt tier) const;
+	vector<UInt>
+	 getIdsOfStage(const UInt stage) const;
 private:
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double cfl = 3e-9;
+	static constexpr Real cfl = 3e-9;
 #else
-	static const double cfl = 3e-9;
+	static const Real cfl = 3e-9;
 #endif
-	static const uint noTier = 0;
-	static const uint noStage = 0;
-	uint growSmallerTiers;
-	static const uint growStages = 1;
-	uint maxNumOfTiers;
-	uint nTiers;
-	pair<uint,uint> **tierRange;
-	vector<vector<uint> > partIds;
+	static const UInt noTier = 0;
+	static const UInt noStage = 0;
+	UInt growSmallerTiers;
+	static const UInt growStages = 1;
+	UInt maxNumOfTiers;
+	UInt nTiers;
+	pair<UInt,UInt> **tierRange;
+	vector<vector<UInt> > partIds;
 	void
 	 reorder(
-      const vector<vector<uint> >& partitionsIds_,
-	  const uint localOffset,
-	  const uint localSize);
+      const vector<vector<UInt> >& partitionsIds_,
+	  const UInt localOffset,
+	  const UInt localSize);
 	void
 	 buildTierInfo(
 	  const MeshVolume& mesh,
@@ -96,33 +96,33 @@ private:
 	virtual void
 	 checkMaterialStabilityForDT(
 	  const PhysicalModel* mat,
-	  const double dt) const;
+	  const Real dt) const;
 	void
 	 assignTiersBasedOnMaxTimeStep(
 	  const MeshVolume& mesh,
 	  const PMGroup& pmGroup);
-	pair<uint,uint>**
+	pair<UInt,UInt>**
 	 buildTierRange(
- 	  pair<uint,uint> **range,
-	  const DynMatrix<uint>& list);
+ 	  pair<UInt,UInt> **range,
+	  const DynMatrix<UInt>& list);
 	void
 	 growSmallestTierRegions(
-	  const uint numToGrow,
+	  const UInt numToGrow,
 	  const MeshVolume& mesh);
-	vector<pair<uint, uint> >
+	vector<pair<UInt, UInt> >
 	getIdPartitionVector(
-	 const vector<vector<uint> >& pId) const;
+	 const vector<vector<UInt> >& pId) const;
 	void
 	 assignStages(const MeshVolume& mesh);
 //	void
 //	 processStopRequest();
-//	int
+//	Int
 //	 kbhit();
 //	void
-// 	 nonblock(int state);
+// 	 nonblock(Int state);
 	void
 	 reorderTimeTierList(
-	  const vector<vector<uint> >& partitionId);
+	  const vector<vector<UInt> >& partitionId);
 };
 
 #endif /* SOLVERINFO_H_ */

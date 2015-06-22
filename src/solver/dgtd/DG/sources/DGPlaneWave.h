@@ -20,31 +20,31 @@ public:
 	 const CellGroup& cells,
 	 const Comm* comm,
 	 FieldR3& dE, FieldR3& dH,
-	 const int vmapM[faces][nfp]);
+	 const Int vmapM[faces][nfp]);
 	virtual ~DGPlaneWave();
 	void
 	 computeExcitation(
-	  const double intTime,
-	  const double minDT);
+	  const Real intTime,
+	  const Real minDT);
 	void
 	 printInfo() const;
 private:
-	double *kNPosTF; // dim(nETSF*SOLVER_NFP)
-	double *kNPosSF; // dim(nETSF*SOLVER_NFP)
-	double *kNPosTFNB; // dim(nETFNB*SOLVER_NFP)
+	Real *kNPosTF; // dim(nETSF*SOLVER_NFP)
+	Real *kNPosSF; // dim(nETSF*SOLVER_NFP)
+	Real *kNPosTFNB; // dim(nETFNB*SOLVER_NFP)
 	void
 	 computeExcitationField(
-	  double* ExInc, double *EyInc, double *EzInc,
-	  double* HxInc, double *HyInc, double *HzInc,
-	  const double* vPos,
-	  const uint nE,
-	  const double intTime);
+	  Real* ExInc, Real *EyInc, Real *EzInc,
+	  Real* HxInc, Real *HyInc, Real *HzInc,
+	  const Real* vPos,
+	  const UInt nE,
+	  const Real intTime);
 	void
 	initWaveNumberPosition(
 	 const MapGroup& map,
 	 const CellGroup& cells,
 	 const Comm* comm,
-	 const int vmapM[faces][nfp]);
+	 const Int vmapM[faces][nfp]);
 };
 
 #endif /* SOLVERPLANEWAVE_H_ */

@@ -41,13 +41,13 @@
 //#endif
 //
 //struct RCSStep_s {
-//   int num;
-//   double time;
+//   Int num;
+//   Real time;
 //   CVecR3 incident;
 //   vector<CVecR3 > electric, magnetic;
 //   RCSStep_s(
-//         int num_,
-//         double time_,
+//         Int num_,
+//         Real time_,
 //         CVecR3& incident_,
 //         vector<CVecR3 >& electric_,
 //         vector<CVecR3 >& magnetic_) {
@@ -60,14 +60,14 @@
 //};
 //
 //struct RCSStepGroup_s {
-//   uint nSteps;
+//   UInt nSteps;
 //   vector<RCSStep_s*> step;
 //   // Returns a vector of size Nsteps.
 //
-//   vector<double>
+//   vector<Real>
 //   getTimeVector() const {
-//      vector<double> res(nSteps);
-//      for (uint i = 0; i < nSteps; i++) {
+//      vector<Real> res(nSteps);
+//      for (UInt i = 0; i < nSteps; i++) {
 //         res[i] = step[i]->time;
 //      }
 //      return res;
@@ -76,25 +76,25 @@
 //   vector<CVecR3 >
 //   getIncidentField() const {
 //      vector<CVecR3 > res(nSteps);
-//      for (uint i = 0; i <nSteps; i++) {
+//      for (UInt i = 0; i <nSteps; i++) {
 //         res[i] = step[i]->incident;
 //      }
 //      return res;
 //   }
 //
 //   vector<CVecR3 >
-//   getElectricField(const uint node) const {
+//   getElectricField(const UInt node) const {
 //      vector<CVecR3 > res(nSteps);
-//      for (uint i = 0; i < nSteps; i++) {
+//      for (UInt i = 0; i < nSteps; i++) {
 //         res[i] = step[i]->electric[node];
 //      }
 //      return res;
 //   }
 //
 //   vector<CVecR3 >
-//   getMagneticField(const uint node) const {
+//   getMagneticField(const UInt node) const {
 //      vector<CVecR3 > res(nSteps);
-//      for (uint i = 0; i < nSteps; i++) {
+//      for (UInt i = 0; i < nSteps; i++) {
 //         res[i] = step[i]->magnetic[node];
 //      }
 //      return res;
@@ -117,39 +117,39 @@
 //         const FieldR3& elec,
 //         const FieldR3& magn,
 //         const CVecR3& EInc,
-//         const double time);
-//   vector<CartesianVector<complex<double>,3> >
+//         const Real time);
+//   vector<CVecC3 >
 //   nearToFarField(
-//         const double frequency,
-//         const vector<pair<double,double> >& directions) const;
-//   vector<double>
+//         const Real frequency,
+//         const vector<pair<Real,Real> >& directions) const;
+//   vector<Real>
 //   getRCS(
-//         const double frequency,
-//         const vector<pair<double, double> >& directions) const;
-//   double
+//         const Real frequency,
+//         const vector<pair<Real, Real> >& directions) const;
+//   Real
 //   getRCS(
-//         const double frequency,
-//         const pair<double, double>& directions) const;
+//         const Real frequency,
+//         const pair<Real, Real>& directions) const;
 //   void
 //   printInfo() const;
 //private:
-//   static const uint N = ORDER_N;
-//   static const uint np = (N+1) * (N+2) * (N+3) / 6;
-//   static const uint nfp = (N+1) * (N+2) / 2;
-//   static const uint estimatedNumberOfSteps = 5000;
-//   uint numNodes;
-//   uint nElem;
-//   vector<pair<uint, uint> > elemFace;
+//   static const UInt N = ORDER_N;
+//   static const UInt np = (N+1) * (N+2) * (N+3) / 6;
+//   static const UInt nfp = (N+1) * (N+2) / 2;
+//   static const UInt estimatedNumberOfSteps = 5000;
+//   UInt numNodes;
+//   UInt nElem;
+//   vector<pair<UInt, UInt> > elemFace;
 //   vector<CoordR3 > vertex;
 //   bool quadraticMesh;
 //   RCSStepGroup_s stepsGroup;
 //   void
-//   writeHeader(const vector<pair<const Volume*, uint> >& cellsBorder);
+//   writeHeader(const vector<pair<const Volume*, UInt> >& cellsBorder);
 //   void
 //   readHeader();
 //   void
 //   readFields();
-//   double
+//   Real
 //   getSamplingTime() const;
 //   void
 //   applySymmetries(const Symmetry::Symmetry sym[3]);

@@ -16,21 +16,21 @@ public:
 	virtual ~DGPML();
 	void
 	 addJumps(
-	  Field<double,3>& dE, Field<double,3>& dH,
-	  Field<double,3>& E, Field<double,3>& H,
-	  const uint e1, const uint e2);
+	  Field<Real,3>& dE, Field<Real,3>& dH,
+	  Field<Real,3>& E, Field<Real,3>& H,
+	  const UInt e1, const UInt e2);
 protected:
-	uint dof;
-	uint nElem;
-	uint *elem;
+	UInt dof;
+	UInt nElem;
+	UInt *elem;
 	bool useConstantConductivity;
-	static constexpr double sigDefault = 10e9;
-	double sig;
-	static const uint N = ORDER_N;
-	static const uint np = (N+1) * (N+2) * (N+3) / 6;
-	double **sig1, **sig2, **sig3;
-	double **sig11, **sig22, **sig33;
-	double **sig12, **sig23, **sig31;
+	static constexpr Real sigDefault = 10e9;
+	Real sig;
+	static const UInt N = ORDER_N;
+	static const UInt np = (N+1) * (N+2) * (N+3) / 6;
+	Real **sig1, **sig2, **sig3;
+	Real **sig11, **sig22, **sig33;
+	Real **sig12, **sig23, **sig31;
 	void
 	 init(
 	  const PMVolumePML& mat_,
@@ -46,8 +46,8 @@ private:
 	  const CellGroup& cells);
 	void
  	 initConductivity(
-	  double **sigma,
-	  const uint ori,
+	  Real **sigma,
+	  const UInt ori,
 	  const PMVolumePML& mat,
 	  const CellGroup& cells);
 };

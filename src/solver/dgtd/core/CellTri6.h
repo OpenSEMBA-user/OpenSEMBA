@@ -10,23 +10,23 @@
 
 #include "CellTri.h"
 
-template <int TRI_N>
+template <Int TRI_N>
 class CellTri6 : public CellTri<TRI_N>, public Tri6 {
-	static const uint np = (TRI_N+1) * (TRI_N+2) / 2;
-	static const uint nfp = (TRI_N + 1);
-	static const uint faces = 3;
-	static const uint vertices = 3;
+	static const UInt np = (TRI_N+1) * (TRI_N+2) / 2;
+	static const UInt nfp = (TRI_N + 1);
+	static const UInt faces = 3;
+	static const UInt vertices = 3;
 public:
 	CellTri6(
 	 const Tri6& base);
 	virtual
 	~CellTri6();
-	CartesianVector<complex<double>,3>
+	CVecC3
 	 getRadiatedField(
-	  const CartesianVector<complex<double>,3> electric[np],
-	  const CartesianVector<complex<double>,3> magnetic[np],
-	  const double frequency,
-	  const pair<double, double> direction) const;
+	  const CVecC3 electric[np],
+	  const CVecC3 magnetic[np],
+	  const Real frequency,
+	  const pair<Real, Real> direction) const;
 };
 
 #include "CellTri6.hpp"

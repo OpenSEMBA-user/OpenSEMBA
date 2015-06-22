@@ -22,7 +22,7 @@ using namespace std;
 //   virtual ~BoundaryCondition();
 //   Face get() const;
 //   const VolR* getCell() const;
-//   uint getFace() const;
+//   UInt getFace() const;
 //   bool
 //   hasSameBoundary(const BoundaryCondition& other) const {
 //      return (cell_ == other.cell_ && face_ == other.face_);
@@ -33,7 +33,7 @@ using namespace std;
 //
 //private:
 //   const Volume* cell_;
-//   uint face_;
+//   UInt face_;
 //   bool back_;
 //   const Condition* condition_;
 //};

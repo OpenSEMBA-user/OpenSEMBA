@@ -17,13 +17,13 @@
 //   const MeshVolume& mesh,
 //   const PMGroup& pm,
 //   const vector<const SurfR*>& surf) {
-//   for (uint i = 0; i < surf.size(); i++) {
-//      const uint id = surf[i]->getId();
+//   for (UInt i = 0; i < surf.size(); i++) {
+//      const UInt id = surf[i]->getId();
 //      const Condition* condition = pm.getPMWithId(surf[i]->getMatId());
-//      pair<const Volume*, uint> boundary = mesh.map.getInnerFace(id);
+//      pair<const Volume*, UInt> boundary = mesh.map.getInnerFace(id);
 //      bc_.insert(new BoundaryCondition(boundary, condition));
 //      if (!mesh.map.isDomainBoundary(boundary)) {
-//         pair<const Volume*, uint> boundary = mesh.map.getOuterFace(id);
+//         pair<const Volume*, UInt> boundary = mesh.map.getOuterFace(id);
 //         bc_.insert(new BoundaryCondition(boundary, condition, true));
 //      }
 //   }
@@ -34,19 +34,19 @@
 //      const MeshVolume& mesh,
 //      const PMGroup& pm) {
 //   {
-//      vector<uint> ids = pm.getIds(Condition::pec);
+//      vector<UInt> ids = pm.getIds(Condition::pec);
 //      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
 //   }
 //   {
-//      vector<uint> ids = pm.getIds(Condition::pmc);
+//      vector<UInt> ids = pm.getIds(Condition::pmc);
 //      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
 //   }
 //   {
-//      vector<uint> ids = pm.getIds(Condition::sma);
+//      vector<UInt> ids = pm.getIds(Condition::sma);
 //      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
 //   }
 //   {
-//      vector<uint> ids = pm.getIds(Condition::sibc);
+//      vector<UInt> ids = pm.getIds(Condition::sibc);
 //      addBC(mesh, pm, mesh.elem_.getSurfacesWithMatId(ids));
 //   }
 //}
@@ -55,18 +55,18 @@
 //BCGroup::buildEMSourceBC(
 //      const MeshVolume& mesh,
 //      const EMSourceGroup& em) {
-//   vector<pair<const Volume*, uint> > border;
-//   for (uint i = 0; i < em.count(); i++) {
+//   vector<pair<const Volume*, UInt> > border;
+//   for (UInt i = 0; i < em.count(); i++) {
 //      const EMSource* source = em.get(i);
 //      const BoxD3* bound = source->getBound();
-//      vector<uint> elems;
+//      vector<UInt> elems;
 //      if (bound == NULL) {
 //         elems = source->getElem();
 //      } else {
 //         elems = mesh.getIdsInsideBound(*bound, Element::volume);
 //      }
 //      border = mesh.getInternalBorder(elems);
-//      for (uint j = 0; j < border.size(); j++) {
+//      for (UInt j = 0; j < border.size(); j++) {
 //         bc_.insert(new BoundaryCondition(border[j], source));
 //      }
 //   }
@@ -86,7 +86,7 @@
 //}
 //
 //vector<const BoundaryCondition*>
-//BCGroup::getMatId(const uint matId) const {
+//BCGroup::getMatId(const UInt matId) const {
 //   vector<const BoundaryCondition*> res;
 //   set<BoundaryCondition*>::iterator it;
 //   for (it = bc_.begin(); it != bc_.end(); ++it) {

@@ -16,31 +16,31 @@ public:
 	virtual ~DGPMLUniaxial();
 	void
 	 addRHSToRes(
-	  const uint e1, const uint e2,
-	  const double rka, const double dt);
+	  const UInt e1, const UInt e2,
+	  const Real rka, const Real dt);
 	void
 	 updateWithRes(
-	  const uint e1,
-	  const uint e2,
-	  const double rkb);
+	  const UInt e1,
+	  const UInt e2,
+	  const Real rkb);
 	virtual void
 	 computeRHSElectric(
-	  Field<double,3>& rhsE,
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) const = 0;
+	  Field<Real,3>& rhsE,
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2) const = 0;
 	virtual void
 	 computeRHSMagnetic(
-	  Field<double,3>& rhsH,
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2) const = 0;
+	  Field<Real,3>& rhsH,
+	  const Field<Real,3>& H,
+	  const UInt e1, const UInt e2) const = 0;
 	virtual void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) = 0;
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2) = 0;
 	virtual void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2) = 0;
+	  const Field<Real,3>& H,
+	  const UInt e1, const UInt e2) = 0;
 protected:
 	void
 	 initUniaxial(
@@ -48,28 +48,28 @@ protected:
 	  const CellGroup& cells);
 	void
 	 internalRHSElectric(
-	  double* rhsE1, double* rhsE2, double* rhsE3,
-	  const double* E1, const double* E2, const double* E3,
-	  const uint e1, const uint e2) const;
+	  Real* rhsE1, Real* rhsE2, Real* rhsE3,
+	  const Real* E1, const Real* E2, const Real* E3,
+	  const UInt e1, const UInt e2) const;
 	void
 	 internalRHSMagnetic(
-	  double* rhsH1, double* rhsH2, double* rhsH3,
-	  const double* H1, const double* H2, const double* H3,
-	  const uint e1, const uint e2)const ;
+	  Real* rhsH1, Real* rhsH2, Real* rhsH3,
+	  const Real* H1, const Real* H2, const Real* H3,
+	  const UInt e1, const UInt e2)const ;
 	void
 	 internalRHSElectricPolarizationCurrents(
-	  const double* E1, const double* E2, const double* E3,
-	  const uint e1, const uint e2);
+	  const Real* E1, const Real* E2, const Real* E3,
+	  const UInt e1, const UInt e2);
 	void
 	 internalRHSMagneticPolarizationCurrents(
-	  const double* H1, const double* H2, const double* H3,
-	  const uint e1, const uint e2);
+	  const Real* H1, const Real* H2, const Real* H3,
+	  const UInt e1, const UInt e2);
 	// Polarization currents. Size nK x Np x nPoles.
 	// Data is stored in nK vectors of Np components for each pole.
 	// First nK x Np data correspond to the first pole, and so on.
-	double *J, *M;
-	double *resJ, *resM;
-	double *rhsJ, *rhsM;
+	Real *J, *M;
+	Real *resJ, *resM;
+	Real *rhsJ, *rhsM;
 private:
 	bool
 	 check() const;
@@ -82,26 +82,26 @@ public:
 	 const PMVolumePML& mat_,
 	 const CellGroup& cells,
 	 const bool useConstantConductivity_,
-	 const double conductivity);
+	 const Real conductivity);
 	virtual ~DGPMLx();
 	void
 	 computeRHSElectric(
-	  Field<double,3>& rhsE,
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) const;
+	  Field<Real,3>& rhsE,
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2) const;
 	void
 	 computeRHSMagnetic(
-	  Field<double,3>& rhsH,
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2) const ;
+	  Field<Real,3>& rhsH,
+	  const Field<Real,3>& H,
+	  const UInt e1, const UInt e2) const ;
 	void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2);
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2);
 	void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2);
+	  const Field<Real,3>& H,
+	  const UInt e1, const UInt e2);
 
 };
 
@@ -112,26 +112,26 @@ public:
 	 const PMVolumePML& mat_,
 	 const CellGroup& cells,
 	 const bool useConductivity,
-	 const double conductivity);
+	 const Real conductivity);
 	virtual ~DGPMLy();
 	void
 	 computeRHSElectric(
-	  Field<double,3>& rhsE,
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) const ;
+	  Field<Real,3>& rhsE,
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2) const ;
 	void
 	 computeRHSMagnetic(
-	  Field<double,3>& rhsH,
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2) const ;
+	  Field<Real,3>& rhsH,
+	  const Field<Real,3>& H,
+	  const UInt e1, const UInt e2) const ;
 	void
 	 computeRHSElectricPolarizationCurrents(
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2);
+	  const Field<Real,3>& E,
+	  const UInt e1, const UInt e2);
 	void
 	 computeRHSMagneticPolarizationCurrents(
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2);
+	  const Field<Real,3>& H,
+	  const UInt e1, const UInt e2);
 };
 
 class DGPMLz : public DGPMLUniaxial {
@@ -141,26 +141,26 @@ public:
 	 const PMVolumePML& mat_,
 	 const CellGroup& cells,
 	 const bool useConductivity,
- 	 const double conductivity);
+ 	 const Real conductivity);
 	virtual ~DGPMLz();
    void
     computeRHSElectric(
-     Field<double,3>& rhsE,
-     const Field<double,3>& E,
-     const uint e1, const uint e2) const ;
+     Field<Real,3>& rhsE,
+     const Field<Real,3>& E,
+     const UInt e1, const UInt e2) const ;
    void
     computeRHSMagnetic(
-     Field<double,3>& rhsH,
-     const Field<double,3>& H,
-     const uint e1, const uint e2) const ;
+     Field<Real,3>& rhsH,
+     const Field<Real,3>& H,
+     const UInt e1, const UInt e2) const ;
    void
     computeRHSElectricPolarizationCurrents(
-     const Field<double,3>& E,
-     const uint e1, const uint e2);
+     const Field<Real,3>& E,
+     const UInt e1, const UInt e2);
    void
     computeRHSMagneticPolarizationCurrents(
-     const Field<double,3>& H,
-     const uint e1, const uint e2);
+     const Field<Real,3>& H,
+     const UInt e1, const UInt e2);
 };
 
 

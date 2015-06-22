@@ -4,16 +4,17 @@
 
 #include "geometry/Grid.h"
 #include "geometry/MeshUnstructured.h"
-
-#ifdef USE_METIS
-#include <metis.h>
-#if METIS_VER_MAJOR < 5
-#error "Mesh partitioning requires METIS version 5+"
-#endif
-#define MESH_ALLOW_PARTITIONING
-#endif
+#include "physicalModel/PMVolumePML.h"
 
 using namespace std;
+
+#ifdef USE_METIS
+    #include <metis.h>
+    #if METIS_VER_MAJOR < 5
+        #error "Mesh partitioning requires METIS version 5+"
+    #endif
+    #define MESH_ALLOW_PARTITIONING
+#endif
 
 class MeshVolume : public MeshUnstructured {
 public:
@@ -25,16 +26,16 @@ public:
     virtual ~MeshVolume();
     MeshVolume&
     operator=(const MeshVolume& param);
-    vector<vector<unsigned int> > getPartitionsIds(
-            const unsigned int nDivisions) const;
-    vector<vector<unsigned int> > getPartitionsIds(
-            const unsigned int nDivisions,
-            const vector<pair<unsigned int,int> > idWeights) const;
-    vector<vector<unsigned int> > getPartitionsIds(
-            const unsigned int nDivisions,
-            const vector<pair<unsigned int,int> > idWeights,
-            const double* taskPower) const;
-    void detectAndAssignPMLRegions();
+    vector<vector<UInt> > getPartitionsIds(
+            const UInt nDivisions) const;
+    vector<vector<UInt> > getPartitionsIds(
+            const UInt nDivisions,
+            const vector<pair<UInt,Int> > idWeights) const;
+    vector<vector<UInt> > getPartitionsIds(
+            const UInt nDivisions,
+            const vector<pair<UInt,Int> > idWeights,
+            const Real* taskPower) const;
+//    void detectAndAssignPMLRegions();
 //    void createAndAssignPML(
 //            const PMVolumePML::Direction direction[3],
 //            const vector<Face>& internalBorder,

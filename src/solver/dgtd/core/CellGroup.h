@@ -20,13 +20,13 @@ public:
 	 const SmbData* smb);
 	~CellGroup();
 	const CellTet<ORDER_N>*
-	 operator()(const uint i) const;
+	 operator()(const UInt i) const;
 	const CellTet<ORDER_N>*
 	 getPtrToCell(const Tet* elem) const;
 	const CellTet<ORDER_N>*
-	 getPtrToCellWithId(uint) const;
+	 getPtrToCellWithId(UInt) const;
 private:
-	uint cellOffsetId;
+	UInt cellOffsetId;
 	void
 	 buildNodalMaps(const MapGroup& map);
 	void

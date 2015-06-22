@@ -18,12 +18,12 @@ public:
          const Comm* comm);
    virtual	~ExporterCommGiD();
    virtual void process(
-         const double time,
+         const Real time,
          const FieldR3& elec,
          const FieldR3& magn);
 private:
    const Comm* comm_;
-   double lastSyncing_;
+   Real lastSyncing_;
 };
 
 #endif /* COMMGIDOUTPUT_H_ */

@@ -36,7 +36,7 @@
 //   vector<const BoundaryCondition*>
 //   get(const Condition::Type type) const;
 //   vector<const BoundaryCondition*>
-//   getMatId(const uint id) const;
+//   getMatId(const UInt id) const;
 //   void
 //   printInfo() const;
 //private:
