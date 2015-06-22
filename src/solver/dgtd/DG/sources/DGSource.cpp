@@ -39,8 +39,6 @@ DGSource::~DGSource() {
 }
 
 void DGSource::initSource(
-      const MapGroup& map,
-      const CellGroup& cells,
       FieldR3& dE, FieldR3& dH,
       const Int vmapM[faces][nfp]) {
    vector<pair<UInt, UInt> > total, scatt, totalNotBacked;
@@ -132,106 +130,71 @@ void DGSource::initSource(
    }
 }
 
-vector<pair<UInt,UInt>> DGSource::getElemFaces(
-      const MapGroup& map,
-      const CellGroup& cells,
-      const BackingType type) const {
-   vector<pair<UInt, UInt> > res;
-//   for (UInt i = 0; i < bc.size(); i++) {
-//      UInt id1 = bc[i]->getCell()->getId();
-//      UInt f1 = bc[i]->getFace();
-//      UInt id2 = map.getNeighbour(id1,f1)->getId();
-//      UInt f2 = map.getVolToF(id1, f1);
-//      switch (type) {
-//      case totalField:
-//         if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
-//            UInt e1 = cells.getRelPosOfId(id1);
-//            res.push_back(pair<UInt,UInt>(e1, f1));
-//         }
-//         break;
-//      case scatteredField:
-//         if (!map.isDomainBoundary(id1,f1) && cells.isLocalId(id2)) {
-//            UInt e2 = cells.getRelPosOfId(id2);
-//            res.push_back(pair<UInt,UInt>(e2, f2));
-//         }
-//         break;
-//      case totalFieldNotBacked:
-//         if (map.isDomainBoundary(id1,f1) && cells.isLocalId(id1)) {
-//            UInt e1 = cells.getRelPosOfId(id1);
-//            res.push_back(pair<UInt,UInt>(e1, f1));
-//         }
-//         break;
-//      }
-//   }
-//   return res;
-}
-
-
 void
 DGSource::addJumps(
       const UInt e1,
       const UInt e2) {
-   UInt j, k, pos;
-   // Total field jumps.
-   for (j = 0; j < nETF; j++) {
-      if (e1 <= ETFe[j] && ETFe[j] < e2) {
-         for (k = 0; k < nfp; k++) {
-            pos = j * nfp + k;
-            dExT[j][k] -= ExTInc[pos];
-            dEyT[j][k] -= EyTInc[pos];
-            dEzT[j][k] -= EzTInc[pos];
-            dHxT[j][k] -= HxTInc[pos];
-            dHyT[j][k] -= HyTInc[pos];
-            dHzT[j][k] -= HzTInc[pos];
-         }
-      }
-   }
-   // Scatt field jumps.
-   for (j = 0; j < nESF; j++) {
-      if (e1 <= ESFe[j] && ESFe[j] < e2) {
-         for (k = 0; k < nfp; k++) {
-            pos = j * nfp + k;
-            dExS[j][k] += ExSInc[pos];
-            dEyS[j][k] += EySInc[pos];
-            dEzS[j][k] += EzSInc[pos];
-            dHxS[j][k] += HxSInc[pos];
-            dHyS[j][k] += HySInc[pos];
-            dHzS[j][k] += HzSInc[pos];
-         }
-      }
-   }
-   // Computes TFNB excitation jumps.
-   for (j = 0; j < nETFNB; j++) {
-      if (e1 <= ETFNBe[j] && ETFNBe[j] < e2) {
-         for (k = 0; k < nfp; k++) {
-            pos = j * nfp + k;
-            // Total field jumps of not backed elements.
-            // The inc. field is substracted to computed by the SMA
-            dExTNB[j][k] -= ExIncNB[pos];
-            dEyTNB[j][k] -= EyIncNB[pos];
-            dEzTNB[j][k] -= EzIncNB[pos];
-            dHxTNB[j][k] -= HxIncNB[pos];
-            dHyTNB[j][k] -= HyIncNB[pos];
-            dHzTNB[j][k] -= HzIncNB[pos];
-         }
-      }
-   }
+//   UInt j, k, pos;
+//   // Total field jumps.
+//   for (j = 0; j < nETF; j++) {
+//      if (e1 <= ETFe[j] && ETFe[j] < e2) {
+//         for (k = 0; k < nfp; k++) {
+//            pos = j * nfp + k;
+//            dExT[j][k] -= ExTInc[pos];
+//            dEyT[j][k] -= EyTInc[pos];
+//            dEzT[j][k] -= EzTInc[pos];
+//            dHxT[j][k] -= HxTInc[pos];
+//            dHyT[j][k] -= HyTInc[pos];
+//            dHzT[j][k] -= HzTInc[pos];
+//         }
+//      }
+//   }
+//   // Scatt field jumps.
+//   for (j = 0; j < nESF; j++) {
+//      if (e1 <= ESFe[j] && ESFe[j] < e2) {
+//         for (k = 0; k < nfp; k++) {
+//            pos = j * nfp + k;
+//            dExS[j][k] += ExSInc[pos];
+//            dEyS[j][k] += EySInc[pos];
+//            dEzS[j][k] += EzSInc[pos];
+//            dHxS[j][k] += HxSInc[pos];
+//            dHyS[j][k] += HySInc[pos];
+//            dHzS[j][k] += HzSInc[pos];
+//         }
+//      }
+//   }
+//   // Computes TFNB excitation jumps.
+//   for (j = 0; j < nETFNB; j++) {
+//      if (e1 <= ETFNBe[j] && ETFNBe[j] < e2) {
+//         for (k = 0; k < nfp; k++) {
+//            pos = j * nfp + k;
+//            // Total field jumps of not backed elements.
+//            // The inc. field is substracted to computed by the SMA
+//            dExTNB[j][k] -= ExIncNB[pos];
+//            dEyTNB[j][k] -= EyIncNB[pos];
+//            dEzTNB[j][k] -= EzIncNB[pos];
+//            dHxTNB[j][k] -= HxIncNB[pos];
+//            dHyTNB[j][k] -= HyIncNB[pos];
+//            dHzTNB[j][k] -= HzIncNB[pos];
+//         }
+//      }
+//   }
 }
 
-CVecR3*
-DGSource::initPositions(
-      const vector<pair<UInt, UInt> >& elemFace,
-      const CellGroup& cells) const {
-   const UInt nE = elemFace.size();
-   CVecR3 *pos;
-   pos = new CVecR3 [nE * nfp];
-   for (UInt i = 0; i < nE; i++) {
-      UInt id = cells.getIdOfRelPos(elemFace[i].first);
-      UInt f = elemFace[i].second;
-      for (UInt j = 0; j < nfp; j++) {
-         pos[i*nfp+j] =
-               cells.getPtrToCellWithId(id)->getSideNodePos(f,j);
-      }
-   }
-   return pos;
-}
+//CVecR3*
+//DGSource::initPositions(
+//      const vector<pair<UInt, UInt> >& elemFace,
+//      const CellGroup& cells) const {
+//   const UInt nE = elemFace.size();
+//   CVecR3 *pos;
+//   pos = new CVecR3 [nE * nfp];
+//   for (UInt i = 0; i < nE; i++) {
+//      UInt id = cells.getIdOfRelPos(elemFace[i].first);
+//      UInt f = elemFace[i].second;
+//      for (UInt j = 0; j < nfp; j++) {
+//         pos[i*nfp+j] =
+//               cells.getPtrToCellWithId(id)->getSideNodePos(f,j);
+//      }
+//   }
+//   return pos;
+//}

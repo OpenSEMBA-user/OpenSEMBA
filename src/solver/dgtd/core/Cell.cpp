@@ -10,7 +10,6 @@
 #endif
 
 Cell::Cell() {
-	material = NULL;
 }
 
 Cell::~Cell() {
@@ -40,4 +39,5 @@ vector<UInt> Cell::getNeighbourNodes(const UInt f, const MeshVolume& mesh) {
             }
         }
     }
+    return res;
 }

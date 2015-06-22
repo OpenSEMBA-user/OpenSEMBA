@@ -1,52 +1,39 @@
 #include "CellTet.h"
 
-template <Int TET_N>
-CellTet<TET_N>::CellTet() {
-    base = NULL;
-}
-
-template <Int TET_N>
-CellTet<TET_N>::~CellTet() {
-
-}
-
-template <Int TET_N>
-void CellTet<TET_N>::init(
-        const Tet* base_,
-        const GroupPhysicalModels<>* pMGroup) {
-    base = base_;
-    if (pMGroup != NULL) {
-        material = pMGroup->get(base->getMatId())->castTo<PMVolume>();
-    } else {
-        material = NULL;
-    }
+template<Int N, class E>
+CellTet<N,E>::CellTet(const E& base) : E(base) {
     buildNodes();
 }
 
-template <Int TET_N>
-void CellTet<TET_N>::getCMatrices(StaMatrix<Real,np,np> C[3]) const {
-    StaMatrix<Real,4,4> cJ[SimplexTet<1>::ncp];
-    base->getCubatureJacobian(cJ);
+template<Int N, class E>
+CellTet<N,E>::~CellTet() {
+
+}
+
+template<Int N, class E>
+void CellTet<N,E>::getCMatrices(StaMatrix<Real,np,np> C[3]) const {
+    MatR44 cJ[SimplexTet<1>::ncp];
+    this->getCubatureJacobian(cJ);
     Real cJDet[SimplexTet<1>::ncp];
-    base->getCubatureJacobianDeterminant(cJDet, cJ);
+    this->getCubatureJacobianDeterminant(cJDet, cJ);
     StaMatrix<Real,np,np> invM;
     invM  = getMassMatrix(cJDet).invert();
-    StaMatrix<Real,4,3> cJHat[SimplexTet<1>::ncp];
-    base->getCubatureJacobianHat(cJHat, cJ, cJDet);
+    MatR43 cJHat[SimplexTet<1>::ncp];
+    this->getCubatureJacobianHat(cJHat, cJ, cJDet);
     for (UInt x = 0; x < 3; x++) {
         C[x] = getCMatrix(x, invM, cJHat, cJ);
     }
 }
 
-template <Int TET_N>
-StaMatrix<Real,TET_NP,TET_NP> CellTet<TET_N>::getConductivityWithGeometricProfile(
+template<Int N, class E>
+StaMatrix<Real,TET_NP,TET_NP> CellTet<N,E>::getConductivityWithGeometricProfile(
         const PMVolumePML& mat,
         const UInt type,
         const Real maxSigma) const {
-    static const UInt ncp = SimplexTet<TET_N>::ncp;
+    static const UInt ncp = SimplexTet<N>::ncp;
     StaMatrix<Real,np,np> res;
     CVecR3 cPos[ncp];
-    base->getCubaturePositions(cPos);
+    this->getCubaturePositions(cPos);
     Int firstOrientation = mat.getFirstOrientationIndex();
     Int i = ((type % 10) - 1 + firstOrientation);
     Int j = ((type / 10) - 1 + firstOrientation);
@@ -73,54 +60,12 @@ StaMatrix<Real,TET_NP,TET_NP> CellTet<TET_N>::getConductivityWithGeometricProfil
     return (invMM * res);
 }
 
-template <Int TET_N>
-void CellTet<TET_N>::getCurvedLIFTnormal(
-        StaMatrix<Real,np,nfp> LIFTn[3],
-        StaMatrix<Real,np,nfp> LIFTcn[3],
-        StaMatrix<Real,np,nfp> LIFTrn[3],
-        const UInt face) const {
-    cerr << endl << "ERROR @ CellTet" << endl;
-    assert(false);
-    exit(-1);
-}
-
-template <Int TET_N>
-UInt
-CellTet<TET_N>::getNbfp() const {
-    return base->numberOfSideCoordinates();
-}
-
-template <Int TET_N>
-bool
-CellTet<TET_N>::isCurved() const {
-    return base->isCurved();
-}
-
-template <Int TET_N>
-bool
-CellTet<TET_N>::isCurvedFace(const UInt f) const {
-    return base->isCurvedFace(f);
-}
-
-template <Int TET_N>
-Real
-CellTet<TET_N>::getVolume() const {
-    return base->getVolume();
-}
-
-template <Int TET_N>
-const Tet*
-CellTet<TET_N>::getPtrToBase() const {
-    return base;
-}
-
-template <Int TET_N>
-StaMatrix<Real,TET_NP,TET_NP>
-CellTet<TET_N>::getCMatrix(
+template<Int N, class E>
+StaMatrix<Real,TET_NP,TET_NP> CellTet<N,E>::getCMatrix(
         const UInt x,
         const StaMatrix<Real,np,np>& invM,
-        const StaMatrix<Real,4,3> cJHat[SimplexTet<1>::ncp],
-        const StaMatrix<Real,4,4> cJ[SimplexTet<1>::ncp]) const {
+        const MatR43 cJHat[SimplexTet<1>::ncp],
+        const MatR44 cJ[SimplexTet<1>::ncp]) const {
     StaMatrix<Real,TET_NP,TET_NP> res;
     // Computes preliminary C matrices.
     for (UInt i = 0; i < this->tet.np; i++) {
@@ -138,9 +83,8 @@ CellTet<TET_N>::getCMatrix(
     return res;
 }
 
-template <Int TET_N>
-StaMatrix<Real,TET_NP,TET_NP>
-CellTet<TET_N>::getMassMatrix(
+template<Int N, class E>
+StaMatrix<Real,TET_NP,TET_NP> CellTet<N,E>::getMassMatrix(
         const Real cJDet[SimplexTet<1>::ncp]) const{
     StaMatrix<Real,TET_NP,TET_NP> res;
     for (UInt c = 0; c < SimplexTet<1>::ncp; c++) {
@@ -150,123 +94,74 @@ CellTet<TET_N>::getMassMatrix(
     return res;
 }
 
-template <Int TET_N>
-StaMatrix<Real,TET_NP,TET_NP>
-CellTet<TET_N>::getMassMatrix() const {
+template<Int N, class E>
+CellTet<N,E>::MatNpNp CellTet<N,E>::getMassMatrix() const {
     static const UInt ncp = SimplexTet<1>::ncp;
-    StaMatrix<Real,4,4> cJ[SimplexTet<1>::ncp];
-    base->getCubatureJacobian(cJ);
+    MatR44 cJ[SimplexTet<1>::ncp];
+    this->getCubatureJacobian(cJ);
     Real cJDet[ncp];
-    base->getCubatureJacobianDeterminant(cJDet, cJ);
+    this->getCubatureJacobianDeterminant(cJDet, cJ);
     return getMassMatrix(cJDet);
 }
 
-template <Int TET_N>
-StaMatrix<Real,TET_NP,TET_NP>
-CellTet<TET_N>::getMassMatrixIntegratedWithScalar(
+template<Int N, class E>
+StaMatrix<Real,TET_NP,TET_NP> CellTet<N,E>::getMassMatrixIntegratedWithScalar(
         const Real cScalar[SimplexTet<1>::ncp]) const {
     static const UInt ncp = SimplexTet<1>::ncp;
-    StaMatrix<Real,4,4> cJ[SimplexTet<1>::ncp];
-    base->getCubatureJacobian(cJ);
+    MatR44 cJ[SimplexTet<1>::ncp];
+    this->getCubatureJacobian(cJ);
     Real cJDetByScalar[ncp];
-    base->getCubatureJacobianDeterminant(cJDetByScalar, cJ);
+    this->getCubatureJacobianDeterminant(cJDetByScalar, cJ);
     for (UInt c = 0; c < ncp; c++) {
         cJDetByScalar[c] *= cScalar[c];
     }
     return getMassMatrix(cJDetByScalar);
 }
 
-template <Int TET_N>
-Real CellTet<TET_N>::getAreaOfFace(UInt face) const {
-    return base->getAreaOfFace(face);
-}
-
-template <Int TET_N>
-UInt CellTet<TET_N>::getNodeVertex(const UInt i) const {
+template<Int N, class E>
+UInt CellTet<N,E>::getNodeVertex(const UInt i) const {
     return tet.vertex(i);
 }
 
-template <Int TET_N>
-bool CellTet<TET_N>::isLocalSide(
-        const UInt face,
-        const SurfR* surf) const {
-    return (base->isLocalFace(face, *surf));
-}
-
-template <Int TET_N>
-bool
-CellTet<TET_N>::isLocalSide(
-        const SurfR* surf) const {
-    for (UInt f = 0; f < faces; f++) {
-        if (isLocalSide(f, surf)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-template <Int TET_N>
-CVecR3
-CellTet<TET_N>::getSideNodePos(
+template<Int N, class E>
+CVecR3 CellTet<N,E>::getSideNodePos(
         const UInt f, const UInt i) const {
-    return n[tet.sideNode(f, i)];
+    return node_[tet.sideNode(f, i)];
 }
 
-template <Int TET_N>
-CVecR3
-CellTet<TET_N>::getSideNormal(
-        const UInt f) const {
-    return base->sideNormal(f);
-}
-
-template <Int TET_N>
-UInt
-CellTet<TET_N>::getSideNode(
+template<Int N, class E>
+UInt CellTet<N,E>::getSideNode(
         const UInt f, const UInt i) const {
     return tet.sideNode(f, i);
 }
 
-template <Int TET_N>
-const CoordR3* CellTet<TET_N>::getSideBaseNode(
-        const UInt f, const UInt i) const {
-    return base->getSideV(f,i);
-}
-
-template <Int TET_N>
-const CoordR3* CellTet<TET_N>::getSideVertexBaseNode(UInt f, UInt i) const {
-    return (base->getSideVertex(f, i));
-}
-
-template <Int TET_N>
-void CellTet<TET_N>::buildNodes() {
+template<Int N, class E> void CellTet<N,E>::buildNodes() {
     // Evaluates Lagrange's functions in positions specified by the
     // simplex coordinates of tet.
-    Real lagrEv[tet.np][base->numberOfCoordinates()];
+    Real lagrEv[tet.np][this->numberOfCoordinates()];
     for (UInt j = 0; j < tet.np; j++) {
-        for (UInt i = 0; i < base->numberOfCoordinates(); i++) {
-            lagrEv[j][i]= base->getTet().getLagr(i).eval(tet.coordinate(j));
+        for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+            lagrEv[j][i]= this->getTet().getLagr(i).eval(tet.coordinate(j));
         }
     }
     // Computes nodes.
     for (UInt j = 0; j < tet.np; j++) {
-        for (UInt i = 0; i < base->numberOfCoordinates(); i++) {
-            this->n[j] += *(base->getV(i)) * lagrEv[j][i];
+        for (UInt i = 0; i < this->numberOfCoordinates(); i++) {
+            this->n[j] += *(this->getV(i)) * lagrEv[j][i];
         }
     }
 }
 
-template <Int TET_N>
-void
-CellTet<TET_N>::printInfo() const {
+template<Int N, class E>
+void CellTet<N,E>::printInfo() const {
     cout << " --- CellTet information --- " << endl;
-    this->base->printInfo();
     cout << "Nodes: " << this->np << endl;
     for (UInt i = 0; i < this->np; i++) {
         this->n[i].printInfo();
         cout << endl;
     }
     cout << "Side Nodes and Normal vectors:" << endl;
-    for (UInt f = 0; f < base->numberOfFaces(); f++) {
+    for (UInt f = 0; f < this->numberOfFaces(); f++) {
         cout << "Face " << f << ": " << endl;
         for (UInt i = 0; i < this->nfp; i++) {
             cout << "Pos: ";
@@ -276,9 +171,9 @@ CellTet<TET_N>::printInfo() const {
             cout << endl;
         }
     }
-    for (UInt f = 0; f < base->numberOfFaces(); f++) {
+    for (UInt f = 0; f < this->numberOfFaces(); f++) {
         cout << "Area of face " << f << ": "
-                << this->base->getAreaOfFace(f) << endl;
+                << this->getAreaOfFace(f) << endl;
     }
     cout << " Volume: " << this->base->getVolume() << endl;
     cout << " Neighbour nodes: (vmapP)" << endl;
@@ -305,42 +200,8 @@ CellTet<TET_N>::printInfo() const {
     cout << " --- End of CellTet4 information --- " << endl;
 }
 
-template <Int TET_N>
-CellTet4<TET_N>::CellTet4() {
-
-}
-
-template <Int TET_N>
-CellTet4<TET_N>::~CellTet4() {
-
-}
-
-template <Int TET_N>
-CellTet4<TET_N>::CellTet4(
-        const Tet* base_,
-        const PMGroup& pMGroup) {
-    this->init(base_, &pMGroup);
-}
-
-template <Int TET_N>
-CellTet10<TET_N>::CellTet10() {
-
-}
-
-template <Int TET_N>
-CellTet10<TET_N>::~CellTet10() {
-
-}
-
-template <Int TET_N>
-CellTet10<TET_N>::CellTet10(
-        const Tet* base_,
-        const PMGroup& pMGroup) {
-    this->init(base_, &pMGroup);
-}
-
-template <Int TET_N>
-void CellTet10<TET_N>::getCurvedLIFTnormal(
+template<Int N, class E>
+void CellTet<N,E>::getCurvedLIFTnormal(
         StaMatrix<Real,np,nfp> LIFTn[3],
         StaMatrix<Real,np,nfp> LIFTcn[3],
         StaMatrix<Real,np,nfp> LIFTrn[3],
@@ -362,7 +223,7 @@ void CellTet10<TET_N>::getCurvedLIFTnormal(
         csdrn[c] -= csdn[c] * csdn[c];
     }
     StaMatrix<Real,nfp,nfp> sMMn[3], sMMcn[3], sMMrn[3];
-    static const SimplexTri<TET_N> tri;
+    static const SimplexTri<N> tri;
     for (UInt i = 0; i < 3; i++) {
         sMMn[i].zeros();
         sMMcn[i].zeros();

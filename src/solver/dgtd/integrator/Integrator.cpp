@@ -166,9 +166,9 @@ Integrator::getMaxTimeStep(
         const PhysicalModel* mat) const {
     // Returns the maximum time step allowed for this cell.
     Real fS1 = 0.0;
-    for (UInt f = 0; f < tet->numberOfFaces(); f++) {
-        Real area = tet->getAreaOfFace(f);
-        Real volume = tet->getVolume();
+    for (UInt f = 0; f < vol->numberOfFaces(); f++) {
+        Real area = vol->getAreaOfFace(f);
+        Real volume = vol->getVolume();
         Real fS2 = area / volume;
         if (fS2 > fS1) {
             fS1 = fS2;
@@ -180,8 +180,7 @@ Integrator::getMaxTimeStep(
     return (dt * timeStepSize);
 }
 
-UInt
-Integrator::getNumberOfCellsInTier(const UInt tier) const {
+UInt Integrator::getNumberOfCellsInTier(const UInt tier) const {
     assert(tier < nTiers);
     assert(tierRange != NULL);
     UInt first = getRange(tier, 0).first;
@@ -190,11 +189,10 @@ Integrator::getNumberOfCellsInTier(const UInt tier) const {
     return res;
 }
 
-vector<UInt>
-Integrator::getIdsOfTier(UInt tier) const {
+vector<ElementId> Integrator::getIdsOfTier(UInt tier) const {
     assert(tier < nTiers);
     UInt nK = timeTierList.nRows();
-    vector<UInt> res;
+    vector<ElementId> res;
     res.reserve(nK);
     for (UInt i = 0; i < nK; i++) {
         if (timeTierList(i,1) == tier) {
@@ -204,8 +202,7 @@ Integrator::getIdsOfTier(UInt tier) const {
     return res;
 }
 
-vector<UInt>
-Integrator::getIdsOfStage(UInt stage) const {
+vector<ElementId> Integrator::getIdsOfStage(UInt stage) const {
     assert(stage < getNStages());
     UInt nK = timeTierList.nRows();
     vector<UInt> res;
@@ -238,7 +235,7 @@ void Integrator::reorder(
 }
 
 void Integrator::reorderTimeTierList(
-        const vector<vector<UInt> >& partitionId) {
+        const vector<vector<ElementId>>& partitionId) {
     UInt nK = timeTierList.nRows();
     DynMatrix<UInt> aux(nK, 5); // relPos - Ids - Part - Tier - Stage
     for (UInt k = 0; k < nK; k++) {
@@ -283,9 +280,8 @@ void Integrator::buildTierInfo(
     }
 }
 
-pair<UInt,UInt>**
-Integrator::buildTierRange(
-        pair<UInt,UInt> **range,
+Range** Integrator::buildTierRange(
+        Range **range,
         const DynMatrix<UInt>& list) {
     UInt nK = list.nRows();
     static const UInt vS = 2;

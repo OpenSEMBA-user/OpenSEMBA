@@ -9,16 +9,15 @@
 #define CELL_H_
 
 #include "physicalModel/GroupPhysicalModels.h"
-#include "geometry/Mesh.h"
+#include "MeshVolume.h"
 #include "math/Simplex.h"
 
 class Cell {
 public:
-	const PMVolume* material;
 	Cell();
 	virtual ~Cell();
 
-	vector<UInt> getNeighbourNodes(const UInt f, const MeshVolume& mesh)) const;
+	vector<UInt> getNeighbourNodes(const UInt f, const MeshVolume& mesh) const;
 };
 
 #endif /* CELL_H_ */

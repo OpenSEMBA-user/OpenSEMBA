@@ -15,7 +15,6 @@ using namespace std;
 
 #include "sources/EMSource.h"
 #include "geometry/maps/Map.h"
-#include "../../core/CellGroup.h"
 #include "../../core/Comm.h"
 
 class DGSource {
@@ -62,17 +61,10 @@ protected:
     Real **dExTNB, **dEyTNB, **dEzTNB;
     Real **dHxTNB, **dHyTNB, **dHzTNB;
     void initSource(
-            const MapGroup& map,
-            const CellGroup& cells,
             FieldR3& dE, FieldR3& dH,
             const Int vmapM[faces][nfp]);
-    vector<pair<UInt,UInt> > getElemFaces(
-            const MapGroup& map,
-            const CellGroup& cells,
-            const BackingType type) const;
     CVecR3* initPositions(
-            const vector<pair<UInt, UInt> >& elemFace,
-            const CellGroup& cells) const;
+            const vector<pair<UInt, UInt> >& elemFace) const;
 };
 
 #endif /* SOLVERSOURCE_H_ */

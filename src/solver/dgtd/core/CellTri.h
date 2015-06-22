@@ -15,8 +15,8 @@
 #include "../../../common/math/SphericalVector.h"
 #include "../../../common/geometry/elements/SurfR.h"
 
-template<Int TRI_N>
-class CellTri : public Cell {
+template<Int N, class E>
+class CellTri : public Cell, public E {
 public:
 	static const SimplexTri<TRI_N> tri;
 	static const UInt np = (TRI_N+1) * (TRI_N+2) / 2;
@@ -26,16 +26,11 @@ public:
 	CellTri();
 	virtual
 	~CellTri();
-	virtual CVecC3
-	 getRadiatedField(
+	virtual CVecC3 getRadiatedField(
 	  const CVecC3 electric[np],
 	  const CVecC3 magnetic[np],
 	  const Real frequency,
 	  const pair<Real,Real> direction) const = 0;
-	virtual UInt
-	 getNumberOfVertices() const;
-	virtual CVecR3
-	 getSideNormal(const UInt s) const;
 };
 
 #include "CellTri.hpp"

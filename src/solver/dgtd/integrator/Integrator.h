@@ -30,16 +30,15 @@ public:
     Real timeStepSize;
     Integrator();
     virtual ~Integrator();
-    virtual void
-    timeIntegrate(const Real timer) const = 0;
+    virtual void timeIntegrate(const Real timer) const = 0;
     void setSolver(DG* solver);
     Real getMaxDT() const;
     Real getMinDT() const;
     UInt getNTiers() const;
     UInt getNPartitions() const;
-    vector<vector<UInt>> getTiersIds() const;
-    vector<vector<UInt>> getStagesIds() const;
-    vector<vector<UInt>> getPartitionsIds() const;
+    vector<vector<ElementId>> getTiersIds() const;
+    vector<vector<ElementId>> getStagesIds() const;
+    vector<vector<ElementId>> getPartitionsIds() const;
     Range getRange(const UInt tier, const UInt stage) const;
     vector<pair<ElementId,Int>> getComputationalWeights(
             const MeshVolume* msh) const;
@@ -74,39 +73,31 @@ private:
     UInt nTiers;
     pair<UInt,UInt> **tierRange;
     vector<vector<UInt> > partIds;
-    void
-    reorder(
+    void reorder(
             const vector<vector<UInt> >& partitionsIds_,
             const UInt localOffset,
             const UInt localSize);
-    void
-    buildTierInfo(
+    void buildTierInfo(
             const MeshVolume& mesh,
             const PMGroup& pmGroup);
     virtual void
     checkMaterialStabilityForDT(
             const PhysicalModel* mat,
             const Real dt) const;
-    void
-    assignTiersBasedOnMaxTimeStep(
+    void assignTiersBasedOnMaxTimeStep(
             const MeshVolume& mesh,
             const PMGroup& pmGroup);
-    pair<UInt,UInt>**
-    buildTierRange(
+    pair<UInt,UInt>** buildTierRange(
             pair<UInt,UInt> **range,
             const DynMatrix<UInt>& list);
-    void
-    growSmallestTierRegions(
+    void growSmallestTierRegions(
             const UInt numToGrow,
             const MeshVolume& mesh);
-    vector<pair<UInt, UInt> >
-    getIdPartitionVector(
+    vector<pair<UInt, UInt> > getIdPartitionVector(
             const vector<vector<UInt> >& pId) const;
-    void
-    assignStages(const MeshVolume& mesh);
-    void
-    reorderTimeTierList(
-            const vector<vector<UInt> >& partitionId);
+    void assignStages(const MeshVolume& mesh);
+    void reorderTimeTierList(
+            const vector<vector<UInt>>& partitionId);
 };
 
 #endif /* SOLVERINFO_H_ */

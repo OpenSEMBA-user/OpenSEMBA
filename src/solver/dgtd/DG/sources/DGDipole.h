@@ -10,6 +10,7 @@
 
 #include "DGSource.h"
 #include "math/SphericalVector.h"
+#include "sources/Dipole.h"
 
 using namespace std;
 
@@ -18,32 +19,26 @@ using namespace std;
 
 class DGDipole : public DGSource, public Dipole {
 public:
-	DGDipole(
-	 const Dipole& dip,
-	 const MapGroup& map,
-	 const CellGroup& cells,
-	 FieldR3& dE, FieldR3& dH,
-	 const Int vmapM[faces][nfp]);
-	virtual ~DGDipole();
-	void
-	 computeExcitation(
-	  const Real intTime,
-	  const Real minDT);
-	CVecR3
-	 getMagnitude(const Real time) const;
-	void
-	 printInfo() const;
+    DGDipole(
+            const Dipole& dip,
+            FieldR3& dE, FieldR3& dH,
+            const Int vmapM[faces][nfp]);
+    virtual ~DGDipole();
+    void computeExcitation(
+            const Real intTime,
+            const Real minDT);
+    CVecR3 getMagnitude(const Real time) const;
+    void printInfo() const;
 private:
 #ifdef SOLVERDIPOLE_DO_NOT_USE_GAUSSIAN_DERIVATIVE
-	Real *intT, *intS;
+    Real *intT, *intS;
 #endif
-	SphericalVector *tPos, *sPos;
-	void
-	 computeExcitationField(
-	  Real* ExInc, Real* EyInc, Real* EzInc,
-	  Real* HxInc, Real* HyInc, Real* HzInc,
-	  const SphericalVector* vPos,
-	  const UInt nE,
-	  const Real time) const;
+    SphericalVector *tPos, *sPos;
+    void computeExcitationField(
+            Real* ExInc, Real* EyInc, Real* EzInc,
+            Real* HxInc, Real* HyInc, Real* HzInc,
+            const SphericalVector* vPos,
+            const UInt nE,
+            const Real time) const;
 };
 #endif /* SOLVERDIPOLE_H_ */
