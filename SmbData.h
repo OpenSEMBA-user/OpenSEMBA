@@ -15,9 +15,7 @@
 #include "options/OptionsMesher.h"
 #include "options/OptionsSolver.h"
 #include "outRq/GroupOutRqs.h"
-
 #include "ProjectFile.h"
-
 #include "base/class/ClassBase.h"
 #include "sources/GroupEMSources.h"
 

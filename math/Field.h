@@ -21,11 +21,11 @@ public:
    Field(UInt size);
    virtual ~Field();
 
+   T* operator()(const UInt i);
    const T* operator()(const UInt i) const;
    T* set(const UInt i) const;
    T operator[](const UInt i) const;
-   CartesianVector<T,D>
-   getCVec(const UInt i) const;
+   CartesianVector<T,D> getCVec(const UInt i) const;
    UInt getDOFs() const;
    UInt size() const;
 
@@ -54,6 +54,7 @@ private:
 
 #include "Field.hpp"
 
+typedef Field<Real,1> FieldR1;
 typedef Field<Real,3> FieldR3;
 typedef Field<complex<Real>,3> FieldC3;
 
