@@ -73,6 +73,31 @@ MeshStructured* MeshUnstructured::getMeshStructured(const Grid3& grid,
     res->layers() = layers().newGroup();
     return res;
 }
+
+MeshUnstructured* MeshUnstructured::getConnectivityMesh() const {
+    MeshUnstructured* res = new MeshUnstructured;
+    res->coords() = coords().newGroup();
+    GroupElements<const ElemR> elems = this->elems();
+    elems.remove(MatId(0));
+    GraphVertices<ElemR, CoordR3> graphLayer;
+    graphLayer.init(elems, coords());
+    vector<vector<const ElemR*>> comps = graphLayer.getConnectedComponents();
+    for (UInt c = 0; c < comps.size(); c++) {
+        stringstream layerName;
+        layerName << "Component " << c+1;
+        Layer* newLayer = res->layers().add(new Layer(layerName.str()), true);
+        vector<ElemR*> newElemsLayer;
+        newElemsLayer.resize(comps[c].size());
+        for (UInt e = 0; e < comps[c].size(); e++) {
+            newElemsLayer[e] = comps[c][e]->cloneTo<ElemR>();
+            newElemsLayer[e]->setLayerId(newLayer->getId());
+        }
+        res->elems().add(newElemsLayer);
+    }
+    res->reassignPointers(*res);
+    return res;
+}
+
 vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
         const CVecR3& normal) {
     const UInt nK = border.size();
@@ -251,8 +276,8 @@ void MeshUnstructured::applyScalingFactor(const Real factor) {
 
 void MeshUnstructured::printInfo() const {
     cout << " --- Mesh unstructured Info --- " << endl;
-    GroupCoordinates<CoordR3>::printInfo();
-    GroupElements<ElemR>::printInfo();
+    cout << "Number of coordinates: " << GroupCoordinates<CoordR3>::size() << endl;
+    cout << "Number of elements: " << GroupElements<ElemR>::size() << endl;
     GroupLayers<>::printInfo();
 }
 

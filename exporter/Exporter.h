@@ -7,6 +7,7 @@
 #include <vector>
 using namespace std;
 
+#include "SmbData.h"
 #include "math/CartesianVector.h"
 #include "math/Field.h"
 
@@ -38,8 +39,24 @@ protected:
          const Real dt) const;
 protected:
    string getOutputfilename() const;
+   GroupElements<ElemR> getBoundary(
+           const CartesianAxis dir,
+           const CartesianBound bound,
+           CoordR3Group& cG,
+           const Grid3* grid,
+           const Mesh* mesh,
+           const OptionsMesher* opts) const;
+   GroupElements<ElemR> getGridElems(
+           CoordR3Group& cG,
+           const Grid3* grid) const;
+   static string getBoundaryName(
+           const OptionsMesher* opts,
+           const UInt i,
+           const UInt j);
 private:
 //   void writeAllFields(const FieldR3& field) const;
 };
+
+
 
 #endif /* COMMON_EXPORTER_EXPORTER_H_ */

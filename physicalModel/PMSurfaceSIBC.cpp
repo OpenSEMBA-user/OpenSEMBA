@@ -36,6 +36,7 @@ PMSurfaceSIBC::operator=(
     ZStatic_ = rhs.ZStatic_;
     pole_ = rhs.pole_;
     Z_ = rhs.Z_;
+    file_ = rhs.file_;
     return *this;
 }
 
@@ -78,4 +79,15 @@ PMSurfaceSIBC::printInfo() const {
 
 UInt PMSurfaceSIBC::getNumberOfPoles() const {
     return pole_.size();
+}
+
+PMSurfaceSIBC::PMSurfaceSIBC(
+        const MatId id,
+        const string& name,
+        const ProjectFile& file) : PMSurface(id, name) {
+    file_ = file;
+}
+
+const ProjectFile PMSurfaceSIBC::getFile() const {
+    return file_;
 }

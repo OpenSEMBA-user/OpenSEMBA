@@ -259,9 +259,9 @@ inline vector<CartesianVector<T,D> > Box<T,D>::getPos() const {
             break;
         case y:
             res[0] = CVecTD(min_(x), min_(y), min_(z));
-            res[1] = CVecTD(max_(x), min_(y), min_(z));
+            res[1] = CVecTD(min_(x), min_(y), max_(z));
             res[2] = CVecTD(max_(x), min_(y), max_(z));
-            res[3] = CVecTD(min_(x), min_(y), max_(z));
+            res[3] = CVecTD(max_(x), min_(y), min_(z));
             break;
         case z:
             res[0] = CVecTD(min_(x), min_(y), min_(z));

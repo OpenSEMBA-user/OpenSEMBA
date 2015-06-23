@@ -28,8 +28,6 @@ public:
     CVecI3Fractional& operator= (const CVecI3Fractional& rhs);
 
     bool operator==(const CVecI3Fractional &rhs) const;
-    bool less(const CVecI3Fractional &rhs,
-            const Real tool = MathUtils::tolerance) const;
 
     CVecR3 getScalePos() const;
     CVecR3 getScalePos(const CVecI3 origin) const;
@@ -46,22 +44,14 @@ public:
             const bool forceProject,
             bool& canBeMoved) const;
 
-    CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision) const;
-    CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision,
-                                         const CVecI3 &origin) const;
-
     Direction getDirBase   () const;
     UInt getRangeBase () const;
-
-    void round ();
 
     string toStr() const;
 
     friend std::ostream& operator<<(ostream& os, const CVecI3Fractional& vec) {
        return os << vec.toStr();
     }
-//TODO
-//private:
     CVecR3 len_;
 };
 

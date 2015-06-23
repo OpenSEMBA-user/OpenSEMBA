@@ -67,8 +67,12 @@ string ProjectFile::getFolder() const {
     char *cstr = new char[length() + 1];
     strcpy(cstr, c_str());
     string folder(dirname(cstr));
-    if (folder.find_last_of("/") != folder.length() - 1) {
+    if (folder.find_last_of("/\\") != folder.length() - 1) {
+#ifdef _WIN32
+        folder += "\\";
+#else
         folder += "/";
+#endif
     }
     delete [] cstr;
     return folder;
