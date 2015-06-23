@@ -65,11 +65,13 @@ private:
     MeshUnstructured* readMesh();
     ProblemSize readProblemSize();
     PMVolumeDispersive* readDispersiveMatFile(
-            const MatId id_,
-            const string& name) const;
+            const MatId id,
+            const string& name,
+            const ProjectFile& file) const;
     PMSurfaceSIBC* readIsotropicSurfMatFile(
             const MatId id,
-            const string& name) const;
+            const string& name,
+            const ProjectFile& file) const;
     PMSurfaceMultilayer*  readMultilayerSurf(
             const MatId id,
             const string& name,
@@ -107,16 +109,18 @@ private:
     Domain strToDomain(string line) const;
     OptionsMesher::Mesher strToMesher(string) const;
     OptionsMesher::Mode strToMesherMode(string) const;
-    OptionsSolver::Solver strToSolver(string) const;
-    OptionsSolver::CompositeModel strToCompositeModel(string) const;
-    OptionsSolver::MetalModel strToMetalModel(string) const;
-    OptionsSolver::WireModel strToWireModel(string) const;
-    OptionsSolver::SelfInductanceModel strToSelfInductanceModel(string) const;
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
     GroupElements<Vol> boundToElemGroup(const string& line);
 
+    static OptionsSolver::PMLBacking strToPMLBacking(const string& string);
+    static OptionsSolver::NoNF2FF strToNoNF2FF(const string& string);
+    static OptionsSolver::Solver strToSolver(string);
+    static OptionsSolver::WireModel strToWireModel(string);
+    static OptionsSolver::InductanceModel strToInductanceModel(string);
+    static OptionsSolver::CompositeModel strToCompositeModel(string);
     static pair<CVecR3, CVecR3> strToBound(const string& str);
+    static PoleResidue readPoleResiduePair(ifstream& stream);
 };
 
 #endif /* PARSERGID_H_ */
