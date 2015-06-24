@@ -11,6 +11,11 @@ CellTet<N,E>::~CellTet() {
 }
 
 template<Int N, class E>
+inline CVecR3 CellTet<N,E>::getNode(const UInt i) const {
+    return node_[i];
+}
+
+template<Int N, class E>
 void CellTet<N,E>::getCMatrices(StaMatrix<Real,np,np> C[3]) const {
     MatR44 cJ[SimplexTet<1>::ncp];
     this->getCubatureJacobian(cJ);
@@ -25,8 +30,14 @@ void CellTet<N,E>::getCMatrices(StaMatrix<Real,np,np> C[3]) const {
     }
 }
 
+
 template<Int N, class E>
-StaMatrix<Real,TET_NP,TET_NP> CellTet<N,E>::getConductivityWithGeometricProfile(
+inline UInt CellTet<N,E>::getNfp() const {
+    return tet->numberOfSideNodes();
+}
+
+template<Int N, class E>
+CellTet<N,E>::MatNpNp CellTet<N,E>::getConductivityWithGeometricProfile(
         const PMVolumePML& mat,
         const UInt type,
         const Real maxSigma) const {
@@ -198,6 +209,36 @@ void CellTet<N,E>::printInfo() const {
         }
     }
     cout << " --- End of CellTet4 information --- " << endl;
+}
+
+template<Int N, class E>
+array<UInt,TET_NFP> CellTet<N,E>::getNeighbourNodes(
+        const UInt f,
+        const Cell& neigh) const {
+    vector<UInt> res(getNfp());
+    CVecR3 diff, posM, posP;
+    const ElementId id = getId();
+    // Stores contiguous element (e2) number and orientation.
+    const Tet* neigh = map.getNeighbour(id, f);
+    const CellTet<ORDER_N>* c2 = getPtrToCell(neigh);
+    const UInt f2 = map.getVolToF(id, f);
+    // Runs over each node in local element.
+    for (UInt i = 0; i < cell[e]->getNfp(); i++) {
+        // Initializes mapP and vmapP to default values.
+        cell[e]->vmapP[f][i] = cell[e]->getSideNode(f, i);
+        // Creates the position vector of local element.
+        posM = cell[e]->getSideNodePos(f, i);
+        // Checks posM against all nodes in e2 face.
+        for (UInt j = 0; j < c2->nfp; j++) {
+            posP = c2->getSideNodePos(f2, j);
+            diff = posM - posP;
+            // Stores value if the share position.
+            if (MathUtils::equal(diff.norm(), (Real) 0.0)) {
+                res[i] = getSideNode(f2, j);
+            }
+        }
+    }
+    return res;
 }
 
 template<Int N, class E>

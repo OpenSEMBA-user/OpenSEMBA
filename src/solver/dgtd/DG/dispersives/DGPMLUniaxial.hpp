@@ -8,8 +8,8 @@
 #include "DGPMLUniaxial.h"
 
 template<Int D>
-DGPMLUniaxial<D>::DGPMLUniaxial(const PMVolumePML& mat, const CellGroup& cells) :
-DGPML(mat, cells) {
+DGPMLUniaxial<D>::DGPMLUniaxial(const PMVolumePML& mat) :
+DGPML(mat) {
     J.set(dof, 0.0);
     resJ.set(dof, 0.0);
     rhsJ.set(dof, 0.0);

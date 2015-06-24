@@ -12,9 +12,9 @@
 
 class DGPML : public DGDispersive {
 public:
-    DGPML(const PMVolumePML& mat, const CellGroup& cells);
+    DGPML(const PMVolumePML& mat);
     virtual ~DGPML();
-    void  addJumps(
+    void addJumps(
             FieldR3& dE, FieldR3& dH,
             FieldR3& E, FieldR3& H,
             const UInt e1, const UInt e2);
@@ -31,16 +31,12 @@ protected:
     Real **sig11, **sig22, **sig33;
     Real **sig12, **sig23, **sig31;
 private:
-    void
-    initConductivityMatrices(
-            const PMVolumePML& mat,
-            const CellGroup& cells);
-    void
-    initConductivity(
+    void initConductivityMatrices(
+            const PMVolumePML& mat);
+    void initConductivity(
             Real **sigma,
             const UInt ori,
-            const PMVolumePML& mat,
-            const CellGroup& cells);
+            const PMVolumePML& mat);
 };
 
 #endif /* SOLVERPML_H_ */

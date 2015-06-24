@@ -13,7 +13,7 @@
 template<Int D>
 class DGPMLUniaxial : public DGPML {
 public:
-    DGPMLUniaxial(const PMVolumePML& mat, const CellGroup& cells);
+    DGPMLUniaxial(const PMVolumePML& mat);
     virtual ~DGPMLUniaxial();
     void addRHSToRes(
             const UInt e1, const UInt e2,

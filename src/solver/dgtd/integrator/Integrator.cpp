@@ -10,18 +10,17 @@
 Integrator::Integrator() {
     mindt = 0.0;
     nTiers = 0;
-    tierRange = NULL;
+    tierRange_ = NULL;
     doLTS = true;
     growSmallerTiers = 0;
     maxNumOfTiers = 0;
     timeStepSize = 0.0;
     solver = NULL;
-    partIds.clear();
 }
 
 Integrator::~Integrator() {
     for (UInt i = 0; i < nTiers; i++) {
-        delete tierRange[i];
+        delete tierRange_[i];
     }
 }
 
@@ -45,32 +44,31 @@ Real Integrator::getMinDT() const {
     return mindt;
 }
 
-vector<vector<UInt>> Integrator::getTiersIds() const {
-    vector<vector<UInt>> res;
+vector<vector<ElementId>> Integrator::getTiersIds() const {
+    vector<vector<ElementId>> res;
     for (UInt tier = 0; tier < nTiers; tier++) {
-        vector<UInt> tierIds = getIdsOfTier(tier);
+        vector<ElementId> tierIds = getIdsOfTier(tier);
         res.push_back(tierIds);
     }
     return res;
 }
 
-vector<vector<UInt>> Integrator::getStagesIds() const {
-    vector<vector<UInt> > res;
+vector<vector<ElementId>> Integrator::getStagesIds() const {
+    vector<vector<ElementId> > res;
     for (UInt stage = 0; stage < getNStages(); stage++) {
-        vector<UInt> stageIds =	getIdsOfStage(stage);
+        vector<ElementId> stageIds = getIdsOfStage(stage);
         res.push_back(stageIds);
     }
     return res;
 }
 
-vector<vector<UInt> >
-Integrator::getPartitionsIds() const {
+vector<vector<ElementId>> Integrator::getPartitionsIds() const {
     //assert(partIds.size() != 0);
-    return partIds;
+    return partIds_;
 }
 
-vector<pair<ElementId,Int>>
-Integrator::getComputationalWeights(const MeshVolume* msh) const {
+vector<pair<ElementId,Int>> Integrator::getComputationalWeights(
+        const MeshVolume* msh) const {
     const Int curlFlops = 1; // TODO curlFlops are not considered.
     const Int fluxFlops = 0; // TODO fluxFlops are not considered.
     Int flops = curlFlops + fluxFlops;
@@ -88,16 +86,15 @@ Integrator::getComputationalWeights(const MeshVolume* msh) const {
     return idWgt;
 }
 
-Range
-Integrator::getRange(const UInt tier, const UInt stage) const {
+Interval Integrator::getRange(const UInt tier, const UInt stage) const {
     assert(tier < nTiers);
     assert(stage < getNStages());
-    assert(tierRange != NULL);
-    return tierRange[tier][stage];
+    assert(tierRange_ != NULL);
+    return tierRange_[tier][stage];
 }
 
 UInt Integrator::getNPartitions() const {
-    return partIds.size();
+    return partIds_.size();
 }
 
 void Integrator::partitionate(
@@ -153,15 +150,14 @@ void Integrator::init(
     buildRelPosOfIds(timeTierList);
     cout << " OK" << endl;
     cout << "- Building Tier Range... " << flush;
-    tierRange = buildTierRange(tierRange, timeTierList);
+    tierRange_ = buildTierRange(tierRange_, timeTierList);
     cout <<  "OK" << endl;
     //
     assert(timeStepSize != 0.0);
-    assert(tierRange != NULL);
+    assert(tierRange_ != NULL);
 }
 
-Real
-Integrator::getMaxTimeStep(
+Real Integrator::getMaxTimeStep(
         const VolR* vol,
         const PhysicalModel* mat) const {
     // Returns the maximum time step allowed for this cell.
@@ -182,7 +178,7 @@ Integrator::getMaxTimeStep(
 
 UInt Integrator::getNumberOfCellsInTier(const UInt tier) const {
     assert(tier < nTiers);
-    assert(tierRange != NULL);
+    assert(tierRange_ != NULL);
     UInt first = getRange(tier, 0).first;
     UInt last = getRange(tier, getNStages() - 1).second;
     UInt res = last - first;
@@ -191,12 +187,12 @@ UInt Integrator::getNumberOfCellsInTier(const UInt tier) const {
 
 vector<ElementId> Integrator::getIdsOfTier(UInt tier) const {
     assert(tier < nTiers);
-    UInt nK = timeTierList.nRows();
+    const UInt nK = timeTierList.nRows();
     vector<ElementId> res;
     res.reserve(nK);
     for (UInt i = 0; i < nK; i++) {
         if (timeTierList(i,1) == tier) {
-            res.push_back(timeTierList(i,0));
+            res.push_back(ElementId(timeTierList(i,0)));
         }
     }
     return res;
@@ -216,10 +212,10 @@ vector<ElementId> Integrator::getIdsOfStage(UInt stage) const {
 }
 
 void Integrator::reorder(
-        const vector<vector<UInt> >& partitionId,
+        const vector<vector<ElementId> >& partitionId,
         const UInt localOffset,
         const UInt localSize) {
-    partIds = partitionId;
+    partIds_ = partitionId;
     // Reorders timeTierList according to partitions.
     reorderTimeTierList(partitionId);
     // Now aux stores the final ordering considering partitions.
@@ -231,7 +227,7 @@ void Integrator::reorder(
             reducedList(i,j) = timeTierList(i + localOffset, j);
         }
     }
-    tierRange = buildTierRange(tierRange, reducedList);
+    tierRange_ = buildTierRange(tierRange_, reducedList);
 }
 
 void Integrator::reorderTimeTierList(
@@ -280,8 +276,8 @@ void Integrator::buildTierInfo(
     }
 }
 
-Range** Integrator::buildTierRange(
-        Range **range,
+Interval** Integrator::buildTierRange(
+        Interval **range,
         const DynMatrix<UInt>& list) {
     UInt nK = list.nRows();
     static const UInt vS = 2;
@@ -504,8 +500,7 @@ void Integrator::assignStages(const MeshVolume& mesh) {
     }
 }
 
-vector<pair<UInt, UInt> >
-Integrator::getIdPartitionVector(
+vector<pair<UInt, UInt>> Integrator::getIdPartitionVector(
         const vector<vector<UInt> >& pId) const {
     assert(pId.size() != 0);
     vector<pair<UInt,UInt> > res;

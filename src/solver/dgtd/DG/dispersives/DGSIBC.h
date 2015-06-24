@@ -9,6 +9,7 @@
 #define DGSIBC_H_
 
 #include "DGDispersive.h"
+#include "physicalModel/PMSurfaceSIBC.h"
 
 #define SOLVER_USE_STATIC_LIMIT_FOR_SIBC
 
@@ -17,7 +18,6 @@ class DGSIBC : public DGDispersive, public PMSurfaceSIBC {
 public:
    DGSIBC(
          const PMSurfaceSIBC& mat_,
-         const CellGroup& cells,
          Int ***map_,
          const Int vmapM[faces][nfp],
          Real ***ExP_,
@@ -71,7 +71,6 @@ private:
    void computePolarizationFields(
          const Real *Hx, const Real *Hy, const Real *Hz,
          const UInt e1, const UInt e2);
-
 };
 
 #endif /* SOLVERSIBC_H_ */

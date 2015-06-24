@@ -8,8 +8,9 @@
 using namespace std;
 
 #include "../core/Comm.h"
-#include "math/Field.h"
+#include "SmbData.h"
 #include "options/OptionsSolverDGTD.h"
+#include "math/Field.h"
 #include "sources/DGPlaneWave.h"
 #include "sources/DGDipole.h"
 #include "sources/DGWaveportRectangular.h"
@@ -49,8 +50,8 @@ class DG : public Ordering {
     friend class IntegratorLF2Full;
     friend class IntegratorVerlet;
 public:
-    const static UInt faces = 4;
     const static UInt N = ORDER_N;
+    const static UInt faces = 4;
     const static UInt np = (N+1) * (N+2) * (N+3) / 6;
     const static UInt np2 = np * 2;
     const static UInt nfp = (N+1) * (N+2) / 2;
@@ -63,18 +64,15 @@ public:
     virtual void setFieldsToOne();
     virtual void setFieldsToRandom();
     virtual void setFieldsToGaussian(
-            const CellGroup& cells,
             const Real amplitude,
             CVecR3& polarization,
             const CVecR3& gaussCenter,
             const Real gaussWidth);
     virtual void setFieldsToHarmonics(
-            const CellGroup& cells,
             const CartesianVector<Int,3>& harmonics,
             CVecR3& polarization);
     void setFieldsAndTimeFromResumeFile();
-    virtual UInt
-    getFieldDOFs() = 0;
+    virtual UInt getFieldDOFs() = 0;
     const FieldR3* getElectric() const;
     const FieldR3* getMagnetic() const;
     virtual UInt getGlobalFieldPosOfVertex(
@@ -86,16 +84,10 @@ public:
     virtual void printInfo() const = 0;
 
 protected:
-    // Fields and residuals: dim = (np,nK)
     FieldR3 E, H;
     FieldR3 resE, resH;
-    // Scaling factors for linear elements.
-    // Fluxes scaling factors. dim = (4, nK)
     FieldR3 nAdm, nImp, rnAdm, rnImp, cnAdm, cnImp;
-    // Field scaling factors. dim = (nK)
     Real *oneOverEps, *oneOverMu;
-    UInt nK;
-    Real upwinding;
     Comm* comm;
     const SmbData* smb_;
     // Flux gatherer operator. dim = matrix(np x (4*nfp))
@@ -108,7 +100,7 @@ protected:
     void init(
             const OptionsSolverDGTD* arg,
             const PMGroup* pm_,
-            const CellGroup* cells, Comm* comm_);
+            Comm* comm_);
     virtual void addFluxesToRHS(
             const UInt e1, const UInt e2,
             const Real localTime,
@@ -131,9 +123,8 @@ protected:
             const UInt e1, const UInt e2, const Real rkdt) = 0;
     virtual void addRHSToResidueMagnetic(
             const UInt e1, const UInt e2, const Real rkdt) = 0;
-    void buildCMatrices(const CellGroup& cell);
+    void buildCMatrices();
     virtual void buildMaterials(
-            const CellGroup& cells,
             const OptionsSolverDGTD* arg) = 0;
     virtual void  computeRHS(
             const UInt e1,
@@ -195,17 +186,12 @@ protected:
     void swapResiduesAndFields(
             const UInt e1,
             const UInt e2);
-    void buildFluxScalingFactors(
-            const CellGroup& cells,
-            const MapGroup& map);
-    void buildFieldScalingFactors(
-            const CellGroup& cells);
+    void buildFluxScalingFactors(const MapGroup& map);
+    void buildFieldScalingFactors();
 private:
-    virtual void buildScalingFactors(
-            const CellGroup& cells,
-            const MapGroup& map);
+    virtual void buildScalingFactors(const MapGroup& map);
     void buildLIFT();
-    virtual void assignMatrices(const CellGroup& cells) = 0;
+    virtual void assignMatrices() = 0;
     void allocateFieldsAndRes();
     void setResidualsToZero();
 };

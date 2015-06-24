@@ -23,7 +23,7 @@ using namespace std;
 
 #define SOLVERINFO_ALLOW_REORDERING_IN_SOLVER
 
-typedef pair<UInt,UInt> Range;
+typedef pair<UInt,UInt> Interval;
 
 class Integrator : public Ordering {
 public:
@@ -39,7 +39,7 @@ public:
     vector<vector<ElementId>> getTiersIds() const;
     vector<vector<ElementId>> getStagesIds() const;
     vector<vector<ElementId>> getPartitionsIds() const;
-    Range getRange(const UInt tier, const UInt stage) const;
+    Interval getRange(const UInt tier, const UInt stage) const;
     vector<pair<ElementId,Int>> getComputationalWeights(
             const MeshVolume* msh) const;
     void partitionate(const MeshVolume* mesh, Comm* comm);
@@ -61,8 +61,8 @@ protected:
             const VolR* tet,
             const PhysicalModel* mat) const;
     virtual Real getMaxTimeRatio() const = 0;
-    vector<UInt> getIdsOfTier(const UInt tier) const;
-    vector<UInt> getIdsOfStage(const UInt stage) const;
+    vector<ElementId> getIdsOfTier(const UInt tier) const;
+    vector<ElementId> getIdsOfStage(const UInt stage) const;
 private:
     static constexpr Real cfl = 3e-9;
     static const UInt noTier = 0;
@@ -71,10 +71,10 @@ private:
     UInt growSmallerTiers;
     UInt maxNumOfTiers;
     UInt nTiers;
-    pair<UInt,UInt> **tierRange;
-    vector<vector<UInt> > partIds;
+    pair<UInt,UInt> **tierRange_;
+    vector<vector<ElementId>> partIds_;
     void reorder(
-            const vector<vector<UInt> >& partitionsIds_,
+            const vector<vector<ElementId>>& partitionsIds_,
             const UInt localOffset,
             const UInt localSize);
     void buildTierInfo(

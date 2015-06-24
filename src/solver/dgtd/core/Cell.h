@@ -16,8 +16,6 @@ class Cell {
 public:
 	Cell();
 	virtual ~Cell();
-
-	vector<UInt> getNeighbourNodes(const UInt f, const MeshVolume& mesh) const;
 };
 
 #endif /* CELL_H_ */

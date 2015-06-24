@@ -9,13 +9,13 @@
 #define SOLVERWAVEPORTRECTANGULAR_H_
 
 #include "DGWaveport.h"
+#include "sources/Waveport.h"
 
 class DGWaveportRectangular : public DGWaveport, public Waveport {
 public:
     DGWaveportRectangular(
             const Waveport& pw,
             const MapGroup& map,
-            const CellGroup& cells,
             FieldR3& dE, FieldR3& dH,
             const Int vmapM[faces][nfp]);
     virtual ~DGWaveportRectangular();
@@ -30,8 +30,8 @@ private:
     Real intrinsicImpedance;
     Real gammaMSum;
     void computeExcitationField(
-            Real* ExInc, Real *EyInc, Real *EzInc,
-            Real* HxInc, Real *HyInc, Real *HzInc,
+            FieldR3& EInc,
+            FieldR3& HInc,
             const CVecR3* pos,
             const UInt nE,
             const Real intTime,

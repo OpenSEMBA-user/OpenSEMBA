@@ -14,7 +14,6 @@ class DGPMLMultiaxial : public DGPML {
 public:
     DGPMLMultiaxial(
             const PMVolumePML& mat,
-            const CellGroup& cells,
             const bool useConductivity,
             const Real conductivity);
     virtual ~DGPMLMultiaxial();

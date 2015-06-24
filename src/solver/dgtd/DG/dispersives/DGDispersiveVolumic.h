@@ -8,16 +8,16 @@
 #ifndef SOLVERDISPERSIVEVOLUMIC_H_
 #define SOLVERDISPERSIVEVOLUMIC_H_
 
-#include "DGDispersive.h"
-
 using namespace std;
+
+#include "DGDispersive.h"
+#include "physicalModel/PMVolumeDispersive.h"
 
 class DGDispersiveVolumic : public DGDispersive, public PMVolumeDispersive {
 public:
     DGDispersiveVolumic();
     DGDispersiveVolumic(
-            const PMVolumeDispersive&,
-            const CellGroup& cells);
+            const PMVolumeDispersive&);
     virtual ~DGDispersiveVolumic();
     void computeRHSElectricPolarizationCurrents(
             const FieldR3& E,
@@ -58,6 +58,6 @@ private:
     FieldC3 rhsP, rhsJ;
     FieldC3 resP, resJ;
 private:
-    void build(const CellGroup& cells);
+    void build();
 };
 #endif /* SOLVERDISPERSIVE_H_ */
