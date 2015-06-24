@@ -94,10 +94,9 @@ private:
             const UInt numToGrow,
             const MeshVolume& mesh);
     vector<pair<UInt, UInt> > getIdPartitionVector(
-            const vector<vector<UInt> >& pId) const;
+            const vector<vector<ElementId> >& pId) const;
     void assignStages(const MeshVolume& mesh);
-    void reorderTimeTierList(
-            const vector<vector<UInt>>& partitionId);
+    void reorderTimeTierList(const vector<vector<ElementId>>& partitionId);
 };
 
 #endif /* SOLVERINFO_H_ */

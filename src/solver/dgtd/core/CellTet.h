@@ -45,18 +45,13 @@ public:
             const UInt type,
             const Real maxSigma) const;
     MatNpNp getMassMatrix() const;
-    void getCurvedLIFTnormal(
-            MatNpNfp LIFTn[3],
-            MatNpNfp LIFTcn[3],
-            MatNpNfp LIFTrn[3],
-            const UInt face) const;
     void buildOperators();
     array<UInt,nfp> getNeighbourNodes(
             const UInt f,
             const Cell& neigh) const;
     void printInfo() const;
 private:
-    array<CVecR3,np> nodes_;
+    array<CVecR3,np> node_;
     void buildNodes();
     MatNpNp getCMatrix(
             const UInt x,

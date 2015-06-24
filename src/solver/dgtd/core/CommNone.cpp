@@ -18,18 +18,15 @@ CommNone::getNumberOfTasks() const {
    return 1;
 }
 
-void
-CommNone::abort() const {
+void CommNone::abort() const {
 
 }
 
-UInt
-CommNone::getLocalOffset() const {
+UInt CommNone::getLocalOffset() const {
    return 0;
 }
 
-UInt
-CommNone::getLocalSize() const {
+UInt CommNone::getLocalSize() const {
    return getGlobalSize();
 }
 
@@ -55,7 +52,7 @@ CommNone::gatherFieldsSlave(
 
 void
 CommNone::setPartitionSizes(
-      const vector<vector<UInt> >& partId) {
+      const vector<vector<ElementId>>& partId) {
    assert(partId.size() == 1);
    setGlobalSize(partId[0].size());
    setLocalSizeAndOffset(getGlobalSize(), 0);

@@ -20,7 +20,7 @@ public:
 	UInt solverPosition;
 	DGCurvedFace();
 	DGCurvedFace(
-	 const CellTet<ORDER_N>* cell,
+	 const Cell* cell,
 	 const UInt f,
 	 const UInt solverPosition,
 	 FieldR3& rhsE_, FieldR3& rhsH_,

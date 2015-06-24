@@ -5,7 +5,8 @@ SolverCudg3d::SolverCudg3d(SmbData* smb) {
     comm_ = initMPI();
     initOpenMP();
 
-    integrator_ = initIntegrator(mesh, smb_->pMGroup);
+    OptionsSolverDGTD* arg = smb_->solverOptions->castTo<OptionsSolverDGTD>();
+    integrator_ = initIntegrator(mesh, smb_->pMGroup, arg);
     integrator_->partitionate(mesh, comm_);
 
     dg_ = new DGExplicit(smb_, comm_);

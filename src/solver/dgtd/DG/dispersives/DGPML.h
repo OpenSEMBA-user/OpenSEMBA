@@ -9,6 +9,7 @@
 #define SOLVERPML_H_
 
 #include "DGDispersive.h"
+#include "physicalModel/PMVolumePML.h"
 
 class DGPML : public DGDispersive {
 public:

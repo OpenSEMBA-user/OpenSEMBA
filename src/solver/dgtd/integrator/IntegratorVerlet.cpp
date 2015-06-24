@@ -26,8 +26,7 @@ IntegratorVerlet::~IntegratorVerlet() {
 
 }
 
-UInt
-IntegratorVerlet::getNumOfIterationsPerBigTimeStep(
+UInt IntegratorVerlet::getNumOfIterationsPerBigTimeStep(
  const UInt e) const {
 	UInt nTiers = getNTiers();
 	UInt nStages = getNStages();
@@ -36,18 +35,15 @@ IntegratorVerlet::getNumOfIterationsPerBigTimeStep(
 	return iter;
 }
 
-UInt
-IntegratorVerlet::getNStages() const {
+UInt IntegratorVerlet::getNStages() const {
 	return nStages;
 }
 
-Real
-IntegratorVerlet::getMaxTimeRatio() const {
+Real IntegratorVerlet::getMaxTimeRatio() const {
 	return Real (0.5);
 }
 
-void
-IntegratorVerlet::timeIntegrate(
+void IntegratorVerlet::timeIntegrate(
  const Real time) const {
 	assert(solver != NULL);
 	if (doLTS) {
@@ -57,8 +53,7 @@ IntegratorVerlet::timeIntegrate(
 	}
 }
 
-void
-IntegratorVerlet::LTSTimeIntegration(
+void IntegratorVerlet::LTSTimeIntegration(
  Real localTime,
  Real localdt,
  const UInt tier) const {
@@ -74,8 +69,7 @@ IntegratorVerlet::LTSTimeIntegration(
 	}
 }
 
-void
-IntegratorVerlet::updateFieldsVerlet(
+void IntegratorVerlet::updateFieldsVerlet(
  const UInt e1,
  const UInt e2,
  const Real localTime,

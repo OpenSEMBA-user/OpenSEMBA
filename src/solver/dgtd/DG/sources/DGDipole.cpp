@@ -3,40 +3,39 @@
 DGDipole::DGDipole(
       const Dipole& dip,
       const MapGroup& map,
-      const CellGroup& cells,
       FieldR3& dE, FieldR3& dH,
       const Int vmapM[faces][nfp])
 : Dipole(dip) {
-   initSource(map, cells, dE, dH, vmapM);
-   // Determines total or scattered fields in the bc.
-   if (nETFNB != 0) {
-      cerr << endl << "ERROR @ SolveDipole::build(): "
-       << "Trying to set TF/SF in a not backed boundary." << endl;
-   }
-   // Total field boundary.
-   vector<pair<UInt, UInt> > total;
-   total = getElemFaces(map, cells, totalField);
-   tPos = new SphericalVector[nETF * nfp];
-   for (UInt i = 0; i < total.size(); i++) {
-      UInt id = cells.getIdOfRelPos(total[i].first);
-      UInt f = total[i].second;
-      for (UInt j = 0; j < nfp; j++) {
-         tPos[i*nfp+j] =
-               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
-      }
-   }
-   // Scattered field boundary.
-   vector<pair<UInt,UInt> > scatt;
-   scatt = getElemFaces(map, cells, scatteredField);
-   sPos = new SphericalVector[nESF * nfp];
-   for (UInt i = 0; i < scatt.size(); i++) {
-      UInt id = cells.getIdOfRelPos(scatt[i].first);
-      UInt f = scatt[i].second;
-      for (UInt j = 0; j < nfp; j++) {
-         sPos[i*nfp+j] =
-               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
-      }
-   }
+//   initSource(map, cells, dE, dH, vmapM);
+//   // Determines total or scattered fields in the bc.
+//   if (nETFNB != 0) {
+//      cerr << endl << "ERROR @ SolveDipole::build(): "
+//       << "Trying to set TF/SF in a not backed boundary." << endl;
+//   }
+//   // Total field boundary.
+//   vector<pair<UInt, UInt> > total;
+//   total = getElemFaces(map, cells, totalField);
+//   tPos = new SphericalVector[nETF * nfp];
+//   for (UInt i = 0; i < total.size(); i++) {
+//      UInt id = cells.getIdOfRelPos(total[i].first);
+//      UInt f = total[i].second;
+//      for (UInt j = 0; j < nfp; j++) {
+//         tPos[i*nfp+j] =
+//               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
+//      }
+//   }
+//   // Scattered field boundary.
+//   vector<pair<UInt,UInt> > scatt;
+//   scatt = getElemFaces(map, cells, scatteredField);
+//   sPos = new SphericalVector[nESF * nfp];
+//   for (UInt i = 0; i < scatt.size(); i++) {
+//      UInt id = cells.getIdOfRelPos(scatt[i].first);
+//      UInt f = scatt[i].second;
+//      for (UInt j = 0; j < nfp; j++) {
+//         sPos[i*nfp+j] =
+//               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
+//      }
+//   }
 }
 
 DGDipole::~DGDipole() {

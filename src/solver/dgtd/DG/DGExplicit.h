@@ -127,28 +127,19 @@ private:
     UInt *SMAe, *SMAf, *PECe, *PECf, *PMCe, *PMCf;
     vector<DGSource*> source;
     vector<DGDispersive*> dispersive;
-    void buildMaterials(
-            const CellGroup& cells,
-            const OptionsSolverDGTD* arg);
-    void deduplicateVMaps(const CellGroup& cells);
+    void buildMaterials(const OptionsSolverDGTD* arg);
+    void deduplicateVMaps();
     void allocateRHSAndJumps();
     void allocateMaps();
-    void assignPointersToNeighbours(
-            const CellGroup& cells,
-            const MeshVolume& mesh);
-    void buildScalingFactors(
-            const CellGroup& cells,
-            const MapGroup& map);
+    void assignPointersToNeighbours(const MeshVolume& mesh);
+    void buildScalingFactors(const MapGroup& map);
     void buildEMSources(
             const EMSourceGroup& emSource,
-            const MapGroup& maps,
-            const CellGroup& cells);
+            const MapGroup& maps);
     bool checkPtrsToNeigh() const;
-    void assignMatrices(const CellGroup& cells);
+    void assignMatrices();
     void allocateFieldsForLTS();
-    void buildCurvedFluxScalingFactors(
-            const CellGroup& cells,
-            const MapGroup& map);
+    void buildCurvedFluxScalingFactors(const MapGroup& map);
 };
 
 #endif /* SOLVEREXPLICIT_H_ */
