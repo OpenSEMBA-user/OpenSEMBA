@@ -60,6 +60,7 @@ public:
     vector<const Coordinate<T,3>*> getSideVertices(const UInt face) const;
 
     Real getAreaOfFace(const UInt face) const;
+    Real getVolume() const;
 
     void setV(const UInt i, const Coordinate<T,3>*);
 

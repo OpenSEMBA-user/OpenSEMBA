@@ -42,7 +42,7 @@ void Tet::getCubaturePositions(CVecR3 res[SimplexTet<1>::ncp]) const {
     for (UInt c = 0; c < ncp; c++) {
         for (UInt i = 0; i < numberOfCoordinates(); i++) {
             lagrEv[c][i]= getTet().getLagr(i).eval(
-            getTet().cubatureCoordinate(c));
+                    getTet().cubatureCoordinate(c));
         }
     }
     // Computes nodes.
@@ -58,18 +58,16 @@ void Tet::getCubaturePositions(CVecR3 res[SimplexTet<1>::ncp]) const {
 }
 
 void Tet::getCubatureJacobianDeterminant(
-    Real cJDet[SimplexTet<2>::ncp],
-    const StaMatrix<Real,4,4> cJ[SimplexTet<2>::ncp]) const {
-
+        Real cJDet[SimplexTet<2>::ncp],
+        const MatR44 cJ[SimplexTet<2>::ncp]) const {
     for (UInt c = 0; c < SimplexTet<2>::ncp; c++) {
         cJDet[c] = cJ[c].getDeterminant4x4();
     }
 }
 
 void Tet::getCubatureJacobianDeterminant(
-    Real cJDet[SimplexTet<2>::ncp]) const {
-
-    StaMatrix<Real,4,4> cJ[SimplexTet<2>::ncp];
+        Real cJDet[SimplexTet<2>::ncp]) const {
+    MatR44 cJ[SimplexTet<2>::ncp];
     getCubatureJacobian(cJ);
     for (UInt c = 0; c < SimplexTet<2>::ncp; c++) {
         cJDet[c] = cJ[c].getDeterminant4x4();
@@ -77,8 +75,7 @@ void Tet::getCubatureJacobianDeterminant(
 }
 
 void Tet::getCubatureJacobian(
-    StaMatrix<Real,4,4> res[SimplexTet<2>::ncp]) const {
-
+        MatR44 res[SimplexTet<2>::ncp]) const {
     for (UInt s = 0; s < numberOfFaces(); s++)
         for (UInt i = 0; i < numberOfCoordinates(); i++) {
             const CartesianVector<Real,3> v = *(getV(i));
@@ -92,15 +89,15 @@ void Tet::getCubatureJacobian(
 }
 
 void Tet::getCubatureJacobianHat(
-    StaMatrix<Real,4,3> cJHat[SimplexTet<2>::ncp],
-    const StaMatrix<Real,4,4> cJ[SimplexTet<2>::ncp],
-    const Real cJDet[SimplexTet<2>::ncp]) const {
+        MatR43 cJHat[SimplexTet<2>::ncp],
+        const MatR44 cJ[SimplexTet<2>::ncp],
+        const Real cJDet[SimplexTet<2>::ncp]) const {
 
     // PURPOSE:
     // See chapter 17.3.1 of Filippa's course on Advanced FEM.
     Int ind[3];
-    StaMatrix<Real,3,3> Jred, invJred;
-    StaMatrix<Real,4,3> res;
+    MatR33 Jred, invJred;
+    MatR43 res;
     // Main loop, runs over all simplex coordinates.
     for (UInt j = 0; j < numberOfFaces(); j++) {
         // Chooses columns indices that will be substracted from the Jacobian.
