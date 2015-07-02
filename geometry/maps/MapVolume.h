@@ -21,7 +21,7 @@ public:
    MapVolume&
     operator=(const MapVolume& rhs);
    UInt
-    getLocalId() const {return local->getId();}
+    getLocalId() const {return local->getId().toUInt();}
    const Tet*
     getLocalTet() const;
    UInt

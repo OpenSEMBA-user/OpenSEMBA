@@ -22,7 +22,7 @@ Quad4<T>::Quad4(const GroupCoordinates<Coordinate<T,3> >& cG,
     Elem(layerId, matId) {
     
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.get(vId[i]);
+        v_[i] = cG.getId(vId[i]);
 	}
 	// TODO Normals are not handled.
 	check();
@@ -42,9 +42,9 @@ Quad4<T>::Quad4(GroupCoordinates<Coordinate<T,3> >& cG,
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.get(pos[i]);
+        v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
-            v_[i] = cG.add(pos[i]);
+            v_[i] = cG.addPos(pos[i]);
         }
     }
 }

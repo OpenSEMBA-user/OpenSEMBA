@@ -85,7 +85,7 @@ void Waveport::printInfo() const {
 }
 
 CVecR3 Waveport::getNormal() const {
-    if (this->getGroupOf<Surf>().size() > 0) {
+    if (this->getOf<Surf>().size() > 0) {
         if (this->get(0)->is<SurfR>()) {
             return this->get(0)->castTo<SurfR>()->getNormal();
         } else {

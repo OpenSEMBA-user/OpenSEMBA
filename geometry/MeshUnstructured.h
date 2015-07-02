@@ -31,7 +31,7 @@ public:
     MeshUnstructured();
     MeshUnstructured(const GroupCoordinates<const CoordR3>& cG,
                      const GroupElements<const ElemR>& elem,
-                     const GroupLayers<const Layer>& layer = GroupLayers<>());
+                     const GroupLayers<const Layer>& = GroupLayers<const Layer>());
     MeshUnstructured(const MeshUnstructured& param);
     virtual ~MeshUnstructured();
 

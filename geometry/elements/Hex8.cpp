@@ -25,7 +25,7 @@ Hexa8<T>::Hexa8(const GroupCoordinates<Coordinate<T,3> >& coordGr,
     Elem(layerId, matId) {
 
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = coordGr.get(vId[i]);
+        v_[i] = coordGr.getId(vId[i]);
 	}
 }
 
@@ -43,9 +43,9 @@ Hexa8<T>::Hexa8(GroupCoordinates<Coordinate<T,3> >& cG,
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-	    v_[i] = cG.get(pos[i]);
+	    v_[i] = cG.getPos(pos[i]);
 		if (v_[i] == NULL) {
-			v_[i] = cG.add(pos[i]);
+			v_[i] = cG.addPos(pos[i]);
 		}
 	}
 }
@@ -219,6 +219,11 @@ Real Hexa8<T>::getAreaOfFace(const UInt f) const {
     v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
     v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
     return ((Real) 0.5 * (v1 ^ v2).norm());
+}
+
+template<class T>
+Real Hexa8<T>::getVolume() const {
+    throw ErrorNotImplemented("Hexa8::getVolume()");
 }
 
 template<class T>

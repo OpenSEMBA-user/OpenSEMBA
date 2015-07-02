@@ -59,7 +59,7 @@ public:
     EMSource() {}
     virtual ~EMSource() {}
 
-    virtual ClassBase* clone() const = 0;
+    virtual EMSource* clone() const = 0;
 
     GroupElements<const Elem> elems() const { return *this; }
 

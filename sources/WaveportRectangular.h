@@ -17,6 +17,7 @@ public:
             const GroupElements<const Surf>& elem,
             const ExcitationMode excMode,
             const pair<UInt,UInt> mode);
+    WaveportRectangular(const WaveportRectangular&);
     virtual ~WaveportRectangular();
 
     DEFINE_CLONE(WaveportRectangular);

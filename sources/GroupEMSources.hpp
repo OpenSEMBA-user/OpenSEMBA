@@ -7,6 +7,24 @@
 #include "../sources/GroupEMSources.h"
 
 template<typename E>
+GroupEMSources<E>& GroupEMSources<E>::operator=(VectorPtr<E>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    Group<E>::operator=(rhs);
+    return *this;
+}
+
+template<typename E>
+GroupEMSources<E>& GroupEMSources<E>::operator=(VectorPtr<E>&& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    Group<E>::operator=(std::move(rhs));
+    return *this;
+}
+
+template<typename E>
 bool GroupEMSources<E>::isSimilar(const GroupEMSources& rhs) const {
     if (this->size() != rhs.size()) {
         return false;

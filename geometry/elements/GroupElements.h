@@ -32,7 +32,7 @@ typedef pair<const VolR*, UInt> Face;
 
 struct CompVecIds {
     bool operator()(const vector<CoordinateId>& lhs,
-            const vector<CoordinateId>& rhs) const {
+                    const vector<CoordinateId>& rhs) const {
         vector<CoordinateId> lhsOrdered, rhsOrdered;
         lhsOrdered = ElementBase::ascendingIdOrder(lhs);
         rhsOrdered = ElementBase::ascendingIdOrder(rhs);
@@ -57,34 +57,49 @@ struct CompVecIds {
 typedef map<vector<CoordinateId>,const Elem*,CompVecIds> IndexByVertexId;
 
 template<typename E = Elem>
-class GroupElements : public virtual GroupId<E, ElementId> {
+class GroupElements : public GroupId<E, ElementId> {
 public:
-    USE_GROUP_CONSTRUCTS(GroupElements, E);
+    GroupElements() {}
+    template<typename E2>
+    GroupElements(E2* e)                     : GroupId<E,ElementId>(e) {}
+    template<typename E2>
+    GroupElements(const std::vector<E2*>& e) : GroupId<E,ElementId>(e) {}
+    template<typename E2>
+    GroupElements(VectorPtr<E2>&       rhs) : GroupId<E,ElementId>(rhs) {}
+    template<typename E2>
+    GroupElements(const VectorPtr<E2>& rhs) : GroupId<E,ElementId>(rhs) {}
+    GroupElements(VectorPtr<E>&        rhs) : GroupId<E,ElementId>(rhs) {}
+    template<typename E2>
+    GroupElements(VectorPtr<E2>&& rhs) : GroupId<E,ElementId>(std::move(rhs)) {}
+    GroupElements(VectorPtr<E >&& rhs) : GroupId<E,ElementId>(std::move(rhs)) {}
+    virtual ~GroupElements() {}
 
     DEFINE_GROUP_CLONE(GroupElements, E);
 
-    USE_GROUP_ASSIGN(E);
+    GroupElements& operator=(VectorPtr<E>&);
+    GroupElements& operator=(VectorPtr<E>&&);
+    GroupElements& operator=(const VectorPtr<E>&);
 
     bool isLinear() const;
 
-    USE_GROUPID_GETGROUPWITH(E, ElementId);
-    GroupElements<E> getGroupWith(const MatId matId);
-    GroupElements<E> getGroupWith(const vector<MatId>& matId);
-    GroupElements<E> getGroupWith(const LayerId layerId);
-    GroupElements<E> getGroupWith(const vector<LayerId>& layerId);
-    GroupElements<E> getGroupWith(const MatId, const LayerId);
-    GroupElements<const E> getGroupWith(const MatId matId) const;
-    GroupElements<const E> getGroupWith(const vector<MatId>& matId) const;
-    GroupElements<const E> getGroupWith(const LayerId layerId) const;
-    GroupElements<const E> getGroupWith(const vector<LayerId>& layerId) const;
-    GroupElements<const E> getGroupWith(const MatId, const LayerId) const;
+    GroupElements<E>       getMatId(const MatId matId);
+    GroupElements<E>       getMatId(const vector<MatId>& matId);
+    GroupElements<const E> getMatId(const MatId matId) const;
+    GroupElements<const E> getMatId(const vector<MatId>& matId) const;
+
+    GroupElements<E>       getLayerId(const LayerId layerId);
+    GroupElements<E>       getLayerId(const vector<LayerId>& layerId);
+    GroupElements<const E> getLayerId(const LayerId layerId) const;
+    GroupElements<const E> getLayerId(const vector<LayerId>& layerId) const;
+
+    GroupElements<E>       getMatLayerId(const MatId, const LayerId);
+    GroupElements<const E> getMatLayerId(const MatId, const LayerId) const;
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
     vector<ElementId> getIdsInsideBound(const BoxR3& bound) const;
 
-    vector<pair<const E*, UInt> > getElementsWithVertex(
-            const CoordinateId) const;
+    vector<pair<const E*,UInt>> getElementsWithVertex(const CoordinateId) const;
     BoxR3 getBound() const;
     BoxR3 getBound(const vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const CVecR3 pos) const;
@@ -97,9 +112,8 @@ public:
     map<LayerId, vector<const E*> > separateByLayers() const;
     IndexByVertexId getIndexByVertexId() const;
 
-    USE_GROUPID_REMOVE(E, ElementId);
-    void remove(const MatId matId);
-    void remove(const vector<MatId>& matId);
+    void removeMatId(const MatId matId);
+    void removeMatId(const vector<MatId>& matId);
 
     void linearize();
 

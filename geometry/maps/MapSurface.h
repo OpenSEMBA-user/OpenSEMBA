@@ -19,7 +19,7 @@ public:
    MapSurface&
    operator=(const MapSurface& rhs);
    UInt
-   getLocalId() const {return local->getId();}
+   getLocalId() const {return local->getId().toUInt();}
    UInt
     getVolToF(UInt f) const;
    const Tet*

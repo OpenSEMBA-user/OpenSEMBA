@@ -11,22 +11,19 @@
 #include <exception>
 #include <ostream>
 #include <string>
-using namespace std;
 
-class Error: public exception {
+class Error: public std::exception {
 public:
     Error();
-    Error(const string& msg);
+    Error(const std::string& msg);
     virtual ~Error() throw();
 
-    void setMsg(const string& msg);
+    void setMsg(const std::string& msg);
 
     const char* what() const throw();
 
 private:
-    string msg_;
+    std::string msg_;
 };
-
-ostream& operator<<(ostream& os, const Error& e);
 
 #endif /* COMMON_BASE_ERROR_ERROR_H_ */

@@ -1,7 +1,7 @@
 #ifndef CLASSIDBASE_H_
 #define CLASSIDBASE_H_
 
-#include "IdBase.h"
+#include "base/id/Id.h"
 
 #include "ClassBase.h"
 

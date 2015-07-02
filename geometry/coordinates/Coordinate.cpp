@@ -68,6 +68,11 @@ Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
 }
 
 template<class T, Int D>
+Coordinate<T,D>* Coordinate<T,D>::clone() const {
+    return new Coordinate<T,D>(*this);
+}
+
+template<class T, Int D>
 bool Coordinate<T,D>::operator==(const CoordinateBase& rhs) const {
     if(!CoordinateBase::operator==(rhs)) {
         return false;

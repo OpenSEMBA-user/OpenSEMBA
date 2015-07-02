@@ -167,7 +167,7 @@ template<class T>
 void Line2<T>::setCoordinates(const GroupCoordinates<Coordinate<T,3> >& cG,
                               const CoordinateId vId[2]) {
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.get(vId[i]);
+        v_[i] = cG.getId(vId[i]);
     }
 }
 
@@ -186,9 +186,9 @@ void Line2<T>::setCoordinates(GroupCoordinates<Coordinate<T,3> >& cG,
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.get(pos[i]);
+        v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
-            v_[i] = cG.add(pos[i]);
+            v_[i] = cG.addPos(pos[i]);
         }
     }
 }

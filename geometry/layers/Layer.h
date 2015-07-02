@@ -17,7 +17,9 @@ using namespace std;
 
 #include "../../base/class/ClassIdBase.h"
 
-CREATE_ID(LayerId);
+class Layer;
+
+typedef Id<Layer> LayerId;
 
 class Layer : public virtual ClassIdBase<LayerId> {
 public:

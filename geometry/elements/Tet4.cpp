@@ -22,7 +22,7 @@ Tet4::Tet4(const GroupCoordinates<CoordR3>& coordGr,
     Elem(layerId, matId) {
 
     for (UInt i = 0; i < tet.np; i++) {
-        v_[i] = coordGr.get(vId[i]);
+        v_[i] = coordGr.getId(vId[i]);
     }
     check();
 }

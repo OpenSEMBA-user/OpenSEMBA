@@ -99,7 +99,7 @@ GroupElements<ElemR> Exporter::getBoundary(
     GroupElements<ElemR> elem;
     if (bound != OptionsMesher::pml) {
         BoxR3 quadBox = box.getBoundAsBox(dir,pos);
-        elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
+        elem.addId(new QuaR4(cG, ElementId(0), quadBox));
         assert(elem.size() != 0);
     }
     return elem;
@@ -124,6 +124,6 @@ GroupElements<ElemR> Exporter::getGridElems(
     }
     GroupElements<ElemR> elem;
     BoxR3 box = grid->getFullDomainBoundingBox();
-    elem.add(new HexR8(cG, ElementId(0), box), true);
+    elem.addId(new HexR8(cG, ElementId(0), box));
     return elem;
 }

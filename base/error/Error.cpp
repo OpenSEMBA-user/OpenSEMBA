@@ -11,7 +11,7 @@ Error::Error() {
 
 }
 
-Error::Error(const string& msg) {
+Error::Error(const std::string& msg) {
     msg_ = msg;
 }
 
@@ -19,15 +19,10 @@ Error::~Error() throw() {
 
 }
 
-void Error::setMsg(const string& msg) {
+void Error::setMsg(const std::string& msg) {
     msg_ = msg;
 }
 
 const char* Error::what() const throw() {
     return msg_.c_str();
-}
-
-ostream& operator<<(ostream& os, const Error& e) {
-    os << e.what();
-    return os;
 }

@@ -16,13 +16,27 @@
 #include "../sources/WaveportRectangular.h"
 
 template<typename E = EMSourceBase>
-class GroupEMSources : public virtual Group<E> {
+class GroupEMSources : public Group<E> {
 public:
-    USE_GROUP_CONSTRUCTS(GroupEMSources, E);
+    GroupEMSources() {}
+    template<typename E2>
+    GroupEMSources(E2* e)                     : Group<E>(e) {}
+    template<typename E2>
+    GroupEMSources(const std::vector<E2*>& e) : Group<E>(e) {}
+    template<typename E2>
+    GroupEMSources(VectorPtr<E2>&       rhs) : Group<E>(rhs) {}
+    template<typename E2>
+    GroupEMSources(const VectorPtr<E2>& rhs) : Group<E>(rhs) {}
+    GroupEMSources(VectorPtr<E>&        rhs) : Group<E>(rhs) {}
+    template<typename E2>
+    GroupEMSources(VectorPtr<E2>&& rhs) : Group<E>(std::move(rhs)) {}
+    GroupEMSources(VectorPtr<E >&& rhs) : Group<E>(std::move(rhs)) {}
+    virtual ~GroupEMSources() {}
 
     DEFINE_GROUP_CLONE(GroupEMSources, E);
 
-    USE_GROUP_ASSIGN(E);
+    GroupEMSources& operator=(VectorPtr<E>&);
+    GroupEMSources& operator=(VectorPtr<E>&&);
 
     bool isSimilar(const GroupEMSources& rhs) const;
     bool check() const;

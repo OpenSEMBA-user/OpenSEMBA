@@ -15,7 +15,7 @@ Tri6::Tri6(const GroupCoordinates<CoordR3>& coordGr,
     Elem(layerId, matId) {
 
 	for (UInt i = 0; i < geo.np; i++) {
-        v_[i] = coordGr.get(vId[i]);
+        v_[i] = coordGr.getId(vId[i]);
 	}
 }
 

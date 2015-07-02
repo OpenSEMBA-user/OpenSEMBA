@@ -8,6 +8,8 @@
 #ifndef HEX8_H_
 #define HEX8_H_
 
+#include "base/error/ErrorNotImplemented.h"
+
 #include "Volume.h"
 
 class Hexa8Base : public virtual VolumeBase {
@@ -78,6 +80,6 @@ private:
 
 typedef Hexa8Base   Hex8;
 typedef Hexa8<Real> HexR8;
-typedef Hexa8<Int > HexI8;
+typedef Hexa8<Int> HexI8;
 
 #endif /* HEX8_H_ */

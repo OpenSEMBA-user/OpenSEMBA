@@ -8,8 +8,8 @@
 #include "ClassGroupBase.h"
 
 template<class T>
-ClassGroupBase<T>::ErrorEmpty::ErrorEmpty(const string& func)
-:   Error(func + string(" has no elements")) {
+ClassGroupBase<T>::ErrorEmpty::ErrorEmpty(const std::string& func)
+:   Error(func + std::string(" has no elements")) {
 
 }
 
@@ -29,7 +29,7 @@ ClassGroupBase<T>::~ClassGroupBase() {
 }
 
 template<class T>
-bool ClassGroupBase<T>::check(const string& func) const {
+bool ClassGroupBase<T>::check(const std::string& func) const {
     if (this->elems().empty()) {
         throw ErrorEmpty(func);
     }

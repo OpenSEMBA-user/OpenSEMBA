@@ -9,7 +9,6 @@
 #define SRC_COMMON_BASE_CLASSGROUPBASE_H_
 
 #include <string>
-using namespace std;
 
 #include "base/group/Group.h"
 
@@ -20,14 +19,14 @@ class ClassGroupBase : public virtual ClassBase {
 public:
     class ErrorEmpty : public Error {
     public:
-        ErrorEmpty(const string&);
+        ErrorEmpty(const std::string&);
         ~ErrorEmpty() throw();
     };
 
     ClassGroupBase();
     virtual ~ClassGroupBase();
 
-    bool check(const string& = "Group") const;
+    bool check(const std::string& = "Group") const;
 
     virtual G elems() const = 0;
 

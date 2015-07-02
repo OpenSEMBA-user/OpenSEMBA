@@ -91,7 +91,7 @@ ElemR* LineConformal::toUnstructured(const GroupCoordinates<CoordR3>& cG,
 //            throw typename Element<Int>::ErrorCoordNotFound(coordId); PROBLEMS IN RHEL
             throw Element<Int>::ErrorCoordNotFound(coordId);
         }
-        coord[i] = cG.get(coordId);
+        coord[i] = cG.getId(coordId);
         if (coord[i]->pos() != pos) {
 //            throw typename Element<Int>::ErrorCoordNotCoincident(coordId); PROBLEMS IN RHEL
             throw Element<Int>::ErrorCoordNotCoincident(coordId);
