@@ -71,9 +71,9 @@ OutputOpenFoam::writeSTLs() const {
             }
             MatId matId = mat->getId();
             const MeshUnstructured* mesh = smb_->mesh->castTo<MeshUnstructured>();
-            ConstElemRGroup elems = mesh->elems().getGroupWith(matId);
+            ConstElemRGroup elems = mesh->elems().getMatId(matId);
             GroupElements<const Tri> tri = mesh->convertToTri(elems, includeTets);
-            triToSTL(tri, dirTriSurface_, "mat", matId, mat->getName());
+            triToSTL(tri, dirTriSurface_, "mat", matId.toUInt(), mat->getName());
         }
     }
     // Writes surface output requests.
@@ -114,14 +114,14 @@ OutputOpenFoam::triToSTL(
         ofstream file;
         string filename;
         filename = folder + type
-                + "." + intToStr(typeId) + "." + intToStr(layerId);
+                + "." + intToStr(typeId) + "." + intToStr(layerId.toUInt());
         openFile(filename + ".stl", file);
         // Writes data.
         const UInt nElem = tri.size();
         string solidName(name);
         const MeshUnstructured* mesh = smb_->mesh->castTo<MeshUnstructured>();
-        if (mesh->layers().get(layerId) != NULL) {
-            solidName += "@" + mesh->layers().get(layerId)->getName();
+        if (mesh->layers().getId(layerId) != NULL) {
+            solidName += "@" + mesh->layers().getId(layerId)->getName();
         }
         file << "solid " << solidName << endl;
         for (UInt i = 0; i < nElem; i++) {

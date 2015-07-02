@@ -41,7 +41,7 @@ ParserOpenFoam::readMeshUnstructured() const {
 
     vector<OpenfoamBoundary> boundaries = readBoundaries();
     GroupLayers<> layers = assignAsLayers(elems, boundaries);
-    elems.remove(MatId(0));
+    elems.removeMatId(MatId(0));
 
     return MeshUnstructured(cG, elems, layers);
 }
@@ -70,7 +70,7 @@ CoordR3Group ParserOpenFoam::readCoordinates() const {
     vector<CoordR3*> coord;
     coord.reserve(nCoord);
     CoordinateId id(0);
-    while (!file.eof() && id < nCoord) {
+    while (!file.eof() && id < CoordinateId(nCoord)) {
         getline(file, line);
         size_t init = line.find("(") + 1;
         size_t end = line.find(")");
@@ -181,7 +181,7 @@ ParserOpenFoam::readFaces() const {
     getline(file, line);
     ElementId id(0);
     res.reserve(nElem);
-    while (!file.eof() && id < nElem) {
+    while (!file.eof() && id < ElementId(nElem)) {
         // Reads info
         getline(file, line);
         size_t init = line.find("(") + 1;
@@ -275,7 +275,7 @@ GroupLayers<> ParserOpenFoam::assignAsLayers(
     GroupLayers<> layers;
     for (UInt b = 0; b < bound.size(); b++) {
         if (bound[b].isMaterial()) {
-            layers.add(new Layer(bound[b]), true);
+            layers.addId(new Layer(bound[b]));
             MatId matId = bound[b].getMaterialIdFromName();
             LayerId layId = bound[b].getId();
             for (UInt i = 0; i < bound[b].getFaces(); i++) {
