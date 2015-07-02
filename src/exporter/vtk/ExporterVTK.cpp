@@ -65,14 +65,14 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
             for (UInt j = 0; j < mat->size(); j++) {
                 const MatId matId = (*mat)(j)->getId();
                 const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
-                GroupElements<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
+                GroupElements<const ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
                 writeFile_(elem, makeValid_(name), outFile, part);
             }
         }
     } else {
         for (UInt i = 0; i < lay.size(); i++) {
             const LayerId layId = lay(i)->getId();
-            GroupElements<const ElemR> elem = mesh->elems().getGroupWith(layId);
+            GroupElements<const ElemR> elem = mesh->elems().getLayerId(layId);
             const string name = preName + lay(i)->getName();
             writeFile_(elem, makeValid_(name), outFile, part);
         }
@@ -83,7 +83,7 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
             const EMSourceBase* src =  (*srcs)(i);
             const string name = preName + "EMSource_" + src->getName();
             GroupElements<const ElemR> elem =
-                    mesh->elems().getGroupWith(src->elems().getIds());
+                    mesh->elems().getId(src->elems().getIds());
             writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
@@ -93,7 +93,7 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
             const OutRqBase* oRq = (*oRqs)(i);
             const string name = preName + "OutRq_" + oRq->getName();
             GroupElements<const ElemR> elem =
-                    mesh->elems().getGroupWith(oRq->elems().getIds());
+                    mesh->elems().getId(oRq->elems().getIds());
             writeFile_(elem, makeValid_(name), outFile, part);
         }
     }

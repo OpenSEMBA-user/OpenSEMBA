@@ -15,7 +15,6 @@
 #include "../../../common/math/DynMatrix.h"
 
 using namespace std;
-typedef UInt UInt;
 
 class Ordering {
 public:
