@@ -232,11 +232,11 @@ void ExporterVTK::writeCells_(ofstream &outFile,
             outFile << CELL_TYPES::VTK_VERTEX;
         } else if (elems(i)->is<Lin>()) {
             outFile << CELL_TYPES::VTK_LINE;
-        } else if (elems(i)->is<Tri>()) {
+        } else if (elems(i)->is<Triangle>()) {
             outFile << CELL_TYPES::VTK_TRIANGLE;
         } else if (elems(i)->is<Qua>()) {
             outFile << CELL_TYPES::VTK_QUAD;
-        } else if (elems(i)->is<Tet>()) {
+        } else if (elems(i)->is<Tetrahedron>()) {
             outFile << CELL_TYPES::VTK_TETRA;
         } else if (elems(i)->is<Hex8>()) {
             outFile << CELL_TYPES::VTK_HEXAHEDRON;

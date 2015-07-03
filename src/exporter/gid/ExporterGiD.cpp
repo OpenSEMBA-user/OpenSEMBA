@@ -74,9 +74,9 @@ void ExporterGiD::writeAllElements(const GroupElements<const ElemR>& elem,
         const string& name) {
     writeElements(elem.getOf<NodR>() , name, GiD_Point, 1);
     writeElements(elem.getOf<LinR2>(), name, GiD_Linear, 2);
-    writeElements(elem.getOf<Tri3>() , name, GiD_Triangle, 3);
+    writeElements(elem.getOf<Triangle3>() , name, GiD_Triangle, 3);
     writeElements(elem.getOf<QuaR4>(), name, GiD_Quadrilateral, 4);
-    writeElements(elem.getOf<Tet4>() , name, GiD_Tetrahedra, 4);
+    writeElements(elem.getOf<Tetrahedron4>() , name, GiD_Tetrahedra, 4);
     writeElements(elem.getOf<HexR8>(), name, GiD_Hexahedra, 8);
 }
 

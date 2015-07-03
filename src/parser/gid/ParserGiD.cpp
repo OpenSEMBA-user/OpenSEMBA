@@ -709,7 +709,7 @@ void ParserGiD::readTet10Elements(const GroupCoordinates<CoordR3>& v,
             f_in >> vId[j];
         }
         f_in >> matId;
-        elems.push_back(new Tet10(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Tetrahedron10(v, id, vId, LayerId(0), matId));
     }
 }
 
@@ -721,7 +721,7 @@ void ParserGiD::readTet4Elements(const GroupCoordinates<CoordR3>& v,
     MatId matId;
     for (UInt i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
-        elems.push_back(new Tet4(v, id, vId, layerId, matId));
+        elems.push_back(new Tetrahedron4(v, id, vId, layerId, matId));
     }
 }
 
@@ -736,7 +736,7 @@ void ParserGiD::readTri6Elements(const GroupCoordinates<CoordR3>& v,
         for (UInt j = 0; j < 6; j++)
             f_in >> vId[j];
         f_in >> matId;
-        elems.push_back(new Tri6(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Triangle6(v, id, vId, LayerId(0), matId));
     }
 }
 
@@ -749,7 +749,7 @@ void ParserGiD::readTri3Elements(const GroupCoordinates<CoordR3>& v,
     CVecR3 normal;
     for (UInt i = 0; i < pSize_.tri3; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> matId >> layerId;
-        elems.push_back(new Tri3(v, id, vId, layerId, matId));
+        elems.push_back(new Triangle3(v, id, vId, layerId, matId));
     }
 }
 

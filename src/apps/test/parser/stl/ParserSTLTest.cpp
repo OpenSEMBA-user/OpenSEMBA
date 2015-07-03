@@ -7,7 +7,7 @@ TEST_F(ParserSTLTest, Single) {
     MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
     if (smb->mesh != NULL) {
         EXPECT_EQ(mesh->coords().size(), 3);
-        EXPECT_EQ(mesh->elems().getGroupOf<Tri3>().size(), 1);
+        EXPECT_EQ(mesh->elems().getGroupOf<Triangle3>().size(), 1);
     }
 }
 
@@ -18,7 +18,7 @@ TEST_F(ParserSTLTest, B2) {
     MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
     if (smb->mesh != NULL) {
         EXPECT_EQ(mesh->coords().size(), 1956);
-        EXPECT_EQ(mesh->elems().getGroupOf<Tri3>().size(), 652);
+        EXPECT_EQ(mesh->elems().getGroupOf<Triangle3>().size(), 652);
     }
 }
 

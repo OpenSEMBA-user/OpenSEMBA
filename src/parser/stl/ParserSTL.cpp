@@ -67,7 +67,7 @@ ParserSTL::read(const OptionsMesher* optionsMesher) {
                         }
                     }
                     label.clear();
-                    eG.addId(new Tri3(ElementId(0), &coord[0], lId, MatId(0)));
+                    eG.addId(new Triangle3(ElementId(0), &coord[0], lId, MatId(0)));
                 }
             }
         }
