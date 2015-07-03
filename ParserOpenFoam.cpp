@@ -30,7 +30,7 @@ ParserOpenFoam::readMeshUnstructured() const {
                     << "Surfaces can not be defined with 2 coords: "
                     << face[i].first << endl;
         } else if (face[i].second.size() == 3) {
-            pol[i] = new Tri3(cG, face[i].first, &face[i].second[0]);
+            pol[i] = new Triangle3(cG, face[i].first, &face[i].second[0]);
         } else if (face[i].second.size() == 4) {
             pol[i] = new QuaR4(cG, face[i].first, &face[i].second[0]);
         } else {
@@ -95,7 +95,7 @@ ElemRGroup* ParserOpenFoam::readSurfaceElements(
         const UInt nVertex = vId.size();
         switch (nVertex) {
         case 3:
-            elems.push_back(new Tri3(cG, id, &vId.front()));
+            elems.push_back(new Triangle3(cG, id, &vId.front()));
             break;
         case 4:
             elems.push_back(new QuaR4(cG, id, &vId.front()));

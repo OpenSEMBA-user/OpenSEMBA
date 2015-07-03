@@ -72,7 +72,7 @@ OutputOpenFoam::writeSTLs() const {
             MatId matId = mat->getId();
             const MeshUnstructured* mesh = smb_->mesh->castTo<MeshUnstructured>();
             ConstElemRGroup elems = mesh->elems().getMatId(matId);
-            GroupElements<const Tri> tri = mesh->convertToTri(elems, includeTets);
+            GroupElements<const Triangle> tri = mesh->convertToTri(elems, includeTets);
             triToSTL(tri, dirTriSurface_, "mat", matId.toUInt(), mat->getName());
         }
     }
@@ -100,16 +100,16 @@ OutputOpenFoam::writeSTLs() const {
 
 void
 OutputOpenFoam::triToSTL(
-        const GroupElements<const Tri>& tri,
+        const GroupElements<const Triangle>& tri,
         const string& folder,
         const string& type,
         const UInt& typeId,
         const string& name) const {
-    map<LayerId, vector<const Tri*> > layers = tri.separateByLayers();
-    map<LayerId, vector<const Tri*> >::iterator it;
+    map<LayerId, vector<const Triangle*> > layers = tri.separateByLayers();
+    map<LayerId, vector<const Triangle*> >::iterator it;
     for (it = layers.begin(); it != layers.end(); ++it) {
         const LayerId layerId = it->first;
-        const vector<const Tri*> tri = it->second;
+        const vector<const Triangle*> tri = it->second;
         // Opens file.
         ofstream file;
         string filename;
