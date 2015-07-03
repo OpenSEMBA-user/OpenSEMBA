@@ -1,24 +1,24 @@
 #ifndef TRI3_H_
 #define TRI3_H_
 
-#include "Tri.h"
+#include <geometry/elements/Triangle.h>
 
-class Tri3 : public Tri {
+class Triangle3 : public Triangle {
 public:
-    Tri3();
-    Tri3(const GroupCoordinates<CoordR3>&,
+    Triangle3();
+    Triangle3(const GroupCoordinates<CoordR3>&,
          const ElementId id,
          const CoordinateId vId[3],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Tri3(const ElementId id,
+    Triangle3(const ElementId id,
          const CoordR3* v[3],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Tri3(const Tri3& rhs);
-    virtual ~Tri3();
+    Triangle3(const Triangle3& rhs);
+    virtual ~Triangle3();
 
-    DEFINE_CLONE(Tri3);
+    DEFINE_CLONE(Triangle3);
 
     UInt numberOfCoordinates() const { return 3; }
 
@@ -38,7 +38,7 @@ public:
 
     void setV(const UInt i, const CoordR3*);
 
-    Tri3* linearize() const;
+    Triangle3* linearize() const;
 
     void printInfo() const;
     void check() const;
@@ -50,6 +50,8 @@ protected:
     void getCubatureTangentsVecProds(
     CVecR3 csTanVecProd[SimplexTri<1>::ncp]) const;
 };
-const SimplexTri<1> Tri3::geo;
+const SimplexTri<1> Triangle3::geo;
+
+typedef Triangle3 Tri3;
 
 #endif

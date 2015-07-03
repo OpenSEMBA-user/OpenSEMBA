@@ -8,21 +8,21 @@
 #ifndef TET10_H_
 #define TET10_H_
 
-#include "Tet.h"
-#include "Tet4.h"
+#include <geometry/elements/Tetrahedron.h>
+#include <geometry/elements/Tetrahedron4.h>
 
-class Tet10 : public Tet {
+class Tetrahedron10 : public Tetrahedron {
 public:
-    Tet10();
-    Tet10(const GroupCoordinates<CoordR3>&,
+    Tetrahedron10();
+    Tetrahedron10(const GroupCoordinates<CoordR3>&,
           const ElementId id,
           const CoordinateId vId[10],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-    Tet10(const Tet10& rhs);
-    virtual ~Tet10();
+    Tetrahedron10(const Tetrahedron10& rhs);
+    virtual ~Tetrahedron10();
 
-    DEFINE_CLONE(Tet10);
+    DEFINE_CLONE(Tetrahedron10);
 
     bool isCurved() const;
     bool isQuadratic() const {return true;}
@@ -43,11 +43,11 @@ public:
     Real getVolume() const;
     const Simplex& getTet() const {return tet;}
     Real getAreaOfFace(const UInt face) const;
-    Tri6 getTri6Face(const UInt f) const;
+    Triangle6 getTri6Face(const UInt f) const;
 
     void setV(const UInt i, const CoordR3*);
 
-    Tet4* linearize() const;
+    Tetrahedron4* linearize() const;
 
     void printInfo() const;
     void check() const;
@@ -57,8 +57,9 @@ private:
     static const SimplexTet<2> tet;
     const CoordR3* v_[10];
 };
-const SimplexTri<2> Tet10::tri;
-const SimplexTet<2> Tet10::tet;
+const SimplexTri<2> Tetrahedron10::tri;
+const SimplexTet<2> Tetrahedron10::tet;
 
+typedef Tetrahedron10 Tet10;
 
 #endif /* TET10_H_ */

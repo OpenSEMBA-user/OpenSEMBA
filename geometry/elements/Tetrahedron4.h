@@ -8,24 +8,24 @@
 #ifndef TET4_H_
 #define TET4_H_
 
-#include "Tet.h"
+#include <geometry/elements/Tetrahedron.h>
 
-class Tet4 : public Tet {
+class Tetrahedron4 : public Tetrahedron {
 public:
-    Tet4();
-    Tet4(const GroupCoordinates<CoordR3>&,
+    Tetrahedron4();
+    Tetrahedron4(const GroupCoordinates<CoordR3>&,
          const ElementId id,
          const CoordinateId vId[4],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Tet4(const ElementId id,
+    Tetrahedron4(const ElementId id,
          const CoordR3* v[4],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Tet4(const Tet4& rhs);
-    virtual ~Tet4();
+    Tetrahedron4(const Tetrahedron4& rhs);
+    virtual ~Tetrahedron4();
 
-    DEFINE_CLONE(Tet4);
+    DEFINE_CLONE(Tetrahedron4);
 
     bool isInnerPoint(const CVecR3& pos) const;
     bool isCurvedFace(const UInt face) const;
@@ -57,6 +57,8 @@ private:
 
 	bool hasZeroVolume() const;
 };
-const SimplexTet<1> Tet4::tet;
+const SimplexTet<1> Tetrahedron4::tet;
+
+typedef Tetrahedron4 Tet4;
 
 #endif /* TET4_H_ */

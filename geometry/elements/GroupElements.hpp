@@ -32,8 +32,8 @@ GroupElements<E>& GroupElements<E>::operator=(const VectorPtr<E>& rhs) {
 
 template<typename E>
 bool GroupElements<E>::isLinear() const {
-    return (this->template sizeOf<Tri6 >() == 0 &&
-            this->template sizeOf<Tet10>() == 0);
+    return (this->template sizeOf<Triangle6 >() == 0 &&
+            this->template sizeOf<Tetrahedron10>() == 0);
 }
 
 template<typename E>
@@ -291,14 +291,14 @@ void GroupElements<E>::linearize() {
     }
 
     vector<UInt> pos;
-    vector<Tri3*> newTri;
-    vector<Tet4*> newTet;
+    vector<Triangle3*> newTri;
+    vector<Tetrahedron4*> newTet;
     for(UInt i = 0; i < this->size(); i++) {
-        if (this->get(i)->template is<Tri6>()) {
+        if (this->get(i)->template is<Triangle6>()) {
             pos.push_back(i);
             newTri.push_back(this->get(i)->linearize());
         }
-        if (this->element_[i]->template is<Tet10>()) {
+        if (this->element_[i]->template is<Tetrahedron10>()) {
             pos.push_back(i);
             newTet.push_back(this->get(i)->linearize());
         }

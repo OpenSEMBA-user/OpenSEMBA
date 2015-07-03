@@ -1,25 +1,25 @@
 #ifndef TRI6_H_
 #define TRI6_H_
 
-#include "Tri.h"
-#include "Tri3.h"
+#include <geometry/elements/Triangle.h>
+#include <geometry/elements/Triangle3.h>
 
-class Tri6 : public Tri {
+class Triangle6 : public Triangle {
 public:
-    Tri6();
-    Tri6(const GroupCoordinates<CoordR3>&,
+    Triangle6();
+    Triangle6(const GroupCoordinates<CoordR3>&,
          const ElementId id,
          const CoordinateId vId[6],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Tri6(const ElementId id,
+    Triangle6(const ElementId id,
          const CoordR3*[6],
          const LayerId layerId = LayerId(0),
          const MatId   matId   = MatId(0));
-    Tri6(const Tri6& rhs);
-    virtual ~Tri6();
+    Triangle6(const Triangle6& rhs);
+    virtual ~Triangle6();
 
-    DEFINE_CLONE(Tri6);
+    DEFINE_CLONE(Triangle6);
 
     bool isCurved   () const;
     bool isQuadratic() const { return true; }
@@ -42,7 +42,7 @@ public:
 
     void setV(const UInt i, const CoordR3*);
 
-    Tri3* linearize() const;
+    Triangle3* linearize() const;
 
     void printInfo() const;
 
@@ -52,7 +52,8 @@ protected:
     void getCubatureTangentsVecProds(
         CVecR3 csTanVecProd[SimplexTri<2>::ncp]) const;
 };
+const SimplexTri<2> Triangle6::geo;
 
-const SimplexTri<2> Tri6::geo;
+typedef Triangle6 Tri6;
 
 #endif

@@ -114,31 +114,31 @@ vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
     return res;
 }
 
-GroupElements<const Tri> MeshUnstructured::convertToTri(
+GroupElements<const Triangle> MeshUnstructured::convertToTri(
         const GroupElements<const ElemR>& region,
         bool includeTets) const {
 
-    GroupElements<Tri> res(region.cloneElems());
+    GroupElements<Triangle> res(region.cloneElems());
     if (includeTets) {
-        GroupElements<const Tet> tet = region.getOf<Tet>();
+        GroupElements<const Tetrahedron> tet = region.getOf<Tetrahedron>();
         vector<Face> border = getInternalBorder(tet);
         for (UInt i = 0; i < border.size(); i++) {
-            if (border[i].first->is<Tet>()) {
-                const Tet* tet = border[i].first->castTo<Tet>();
+            if (border[i].first->is<Tetrahedron>()) {
+                const Tetrahedron* tet = border[i].first->castTo<Tetrahedron>();
                 const UInt face = border[i].second;
                 res.addId(tet->getTri3Face(face));
             }
         }
     }
-    return GroupElements<const Tri>(res);
+    return GroupElements<const Triangle>(res);
 }
 
 vector<Face> MeshUnstructured::getInternalBorder(
         const GroupElements<const ElemR>& region) const {
 
     vector<Face> tri, res;
-    res = getTetInternalBorder(region.getOf<Tet>());
-    tri = getTriInternalBorder(region.getOf<Tri>());
+    res = getTetInternalBorder(region.getOf<Tetrahedron>());
+    tri = getTriInternalBorder(region.getOf<Triangle>());
     res.insert(res.end(), tri.begin(), tri.end());
     return res;
 }
@@ -165,7 +165,7 @@ vector<Face> MeshUnstructured::getExternalBorder(
 }
 
 vector<Face> MeshUnstructured::getTetInternalBorder(
-        const GroupElements<const Tet>& region) const {
+        const GroupElements<const Tetrahedron>& region) const {
 
     // Builds a list with all tetrahedron faces.
     static const UInt faces = 4;
@@ -205,9 +205,9 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
         if (matches) {
             k++;
         } else {
-            if(!elems().getId(ElementId(fList(k,0)))->is<Tet>())
+            if(!elems().getId(ElementId(fList(k,0)))->is<Tetrahedron>())
                 continue;
-            const Tet* tet = elems().getId(ElementId(fList(k,0)))->castTo<Tet>();
+            const Tetrahedron* tet = elems().getId(ElementId(fList(k,0)))->castTo<Tetrahedron>();
             UInt face = fList(k,1);
             Face aux(tet, face);
             res.push_back(aux);
@@ -217,7 +217,7 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
 }
 
 vector<Face> MeshUnstructured::getTriInternalBorder(
-        const GroupElements<const Tri>& region) const {
+        const GroupElements<const Triangle>& region) const {
 
     UInt nE = region.size();
     vector<Face> res(nE);

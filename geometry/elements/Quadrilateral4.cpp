@@ -5,15 +5,15 @@
  *      Author: luis
  */
 
-#include "Quad4.h"
+#include <geometry/elements/Quadrilateral4.h>
 
 template<class T>
-Quad4<T>::Quad4() {
+Quadrilateral4<T>::Quadrilateral4() {
 
 }
 
 template<class T>
-Quad4<T>::Quad4(const GroupCoordinates<Coordinate<T,3> >& cG,
+Quadrilateral4<T>::Quadrilateral4(const GroupCoordinates<Coordinate<T,3> >& cG,
                 const ElementId id,
                 const CoordinateId vId[4],
                 const LayerId layerId,
@@ -29,7 +29,7 @@ Quad4<T>::Quad4(const GroupCoordinates<Coordinate<T,3> >& cG,
 }
 
 template<class T>
-Quad4<T>::Quad4(GroupCoordinates<Coordinate<T,3> >& cG,
+Quadrilateral4<T>::Quadrilateral4(GroupCoordinates<Coordinate<T,3> >& cG,
                 const ElementId id,
                 const Box<T,3>& box,
                 const LayerId layerId,
@@ -50,7 +50,7 @@ Quad4<T>::Quad4(GroupCoordinates<Coordinate<T,3> >& cG,
 }
 
 template<class T>
-Quad4<T>::Quad4(const Quad4<T>& rhs)
+Quadrilateral4<T>::Quadrilateral4(const Quadrilateral4<T>& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
     
@@ -60,12 +60,12 @@ Quad4<T>::Quad4(const Quad4<T>& rhs)
 }
 
 template<class T>
-Quad4<T>::~Quad4() {
+Quadrilateral4<T>::~Quadrilateral4() {
     
 }
 
 template<class T>
-bool Quad4<T>::isStructured(const Grid3& grid, const Real tol) const {
+bool Quadrilateral4<T>::isStructured(const Grid3& grid, const Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
     }
@@ -79,12 +79,12 @@ bool Quad4<T>::isStructured(const Grid3& grid, const Real tol) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Quad4<T>::getVertex(const UInt i) const {
+const Coordinate<T,3>* Quadrilateral4<T>::getVertex(const UInt i) const {
 	return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Quad4<T>::getSideV(const UInt f,
+const Coordinate<T,3>* Quadrilateral4<T>::getSideV(const UInt f,
                                           const UInt i) const {
 	assert(f < this->numberOfFaces());
 	assert(i < numberOfSideCoordinates());
@@ -92,7 +92,7 @@ const Coordinate<T,3>* Quad4<T>::getSideV(const UInt f,
 }
 
 template<class T>
-const Coordinate<T,3>* Quad4<T>::getSideVertex(const UInt f,
+const Coordinate<T,3>* Quadrilateral4<T>::getSideVertex(const UInt f,
                                                const UInt i) const {
 	assert(f < this->numberOfFaces());
 	assert(i < this->numberOfSideVertices());
@@ -100,12 +100,12 @@ const Coordinate<T,3>* Quad4<T>::getSideVertex(const UInt f,
 }
 
 template<class T>
-void Quad4<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
+void Quadrilateral4<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
     v_[i] = coord;
 }
 
 template<class T>
-ElemI* Quad4<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
+ElemI* Quadrilateral4<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
                               const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -121,7 +121,7 @@ ElemI* Quad4<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Quad4<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
+ElemR* Quadrilateral4<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                 const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
@@ -137,18 +137,18 @@ ElemR* Quad4<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
 }
 
 template<class T>
-void Quad4<T>::printInfo() const {
+void Quadrilateral4<T>::printInfo() const {
 	cout << "--- Quad4 info ---" << endl;
-	Quad<T>::printInfo();
+	Quadrilateral<T>::printInfo();
 	for (UInt i = 0; i < numberOfCoordinates(); i++) {
 	    v_[i]->printInfo();
 	}
 }
 
 template<class T>
-void Quad4<T>::check() const {
+void Quadrilateral4<T>::check() const {
 	// TODO Auto-generated
 }
 
-template class Quad4<Real>;
-template class Quad4<Int >;
+template class Quadrilateral4<Real>;
+template class Quadrilateral4<Int >;

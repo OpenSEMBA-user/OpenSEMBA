@@ -16,13 +16,13 @@ using namespace std;
 
 #include "Element.h"
 #include "Node.h"
-#include "Lin2.h"
-#include "Tri3.h"
-#include "Tri6.h"
-#include "Quad4.h"
-#include "Tet4.h"
-#include "Tet10.h"
-#include "Hex8.h"
+#include <geometry/elements/Line2.h>
+#include <geometry/elements/Triangle3.h>
+#include <geometry/elements/Triangle6.h>
+#include <geometry/elements/Quadrilateral4.h>
+#include <geometry/elements/Tetrahedron4.h>
+#include <geometry/elements/Tetrahedron10.h>
+#include <geometry/elements/Hexahedron8.h>
 #include "Polygon.h"
 #include "Polyhedron.h"
 

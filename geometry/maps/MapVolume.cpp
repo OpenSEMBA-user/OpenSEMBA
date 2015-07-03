@@ -24,8 +24,8 @@ MapVolume::~MapVolume() {
 }
 
 MapVolume::MapVolume(
-      const Tet* local_,
-      const Tet* neighboor[4],
+      const Tetrahedron* local_,
+      const Tetrahedron* neighboor[4],
       const UInt neighboorFaces[4]) {
    local = local_;
    for (UInt i = 0; i < 4; i++) {
@@ -34,7 +34,7 @@ MapVolume::MapVolume(
    }
 }
 
-const Tet*
+const Tetrahedron*
 MapVolume::getLocalTet() const {
    return local;
 }
@@ -54,9 +54,9 @@ MapVolume::operator=(const MapVolume& rhs) {
 
 void
 MapVolume::reassignPointers(const GroupElements<const Elem>& nEG) {
-   local = nEG.getId(local->getId())->castTo<Tet>();
+   local = nEG.getId(local->getId())->castTo<Tetrahedron>();
    for (UInt i = 0; i < 4; i++) {
-      vol[i] = nEG.getId(vol[i]->getId())->castTo<Tet>();
+      vol[i] = nEG.getId(vol[i]->getId())->castTo<Tetrahedron>();
    }
 }
 

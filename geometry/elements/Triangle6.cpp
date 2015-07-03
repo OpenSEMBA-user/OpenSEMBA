@@ -1,12 +1,13 @@
+
 #ifndef TRI6_H_
-#include "Tri6.h"
+#include <geometry/elements/Triangle6.h>
 #endif
 
-Tri6::Tri6() {
+Triangle6::Triangle6() {
 
 }
 
-Tri6::Tri6(const GroupCoordinates<CoordR3>& coordGr,
+Triangle6::Triangle6(const GroupCoordinates<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[6],
            const LayerId layerId,
@@ -19,7 +20,7 @@ Tri6::Tri6(const GroupCoordinates<CoordR3>& coordGr,
 	}
 }
 
-Tri6::Tri6(const ElementId id,
+Triangle6::Triangle6(const ElementId id,
            const CoordR3* v[6],
            const LayerId layerId,
            const MatId   matId)
@@ -31,7 +32,7 @@ Tri6::Tri6(const ElementId id,
     }
 }
 
-Tri6::Tri6(const Tri6& rhs)
+Triangle6::Triangle6(const Triangle6& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
 
@@ -40,11 +41,11 @@ Tri6::Tri6(const Tri6& rhs)
     }
 }
 
-Tri6::~Tri6() {
+Triangle6::~Triangle6() {
 
 }
 
-bool Tri6::isCurved() const {
+bool Triangle6::isCurved() const {
     CVecR3 cn[geo.ncp];
     getCubatureNormals(cn);
     CVecR3 v1,v2,pN;
@@ -80,23 +81,23 @@ bool Tri6::isCurved() const {
 //  #warning "Every tri6 surface is always treated as curved."
 }
 
-const CoordR3* Tri6::getSideV(const UInt face, const UInt i) const {
+const CoordR3* Triangle6::getSideV(const UInt face, const UInt i) const {
 	assert(face < numberOfFaces());
 	assert(i < numberOfSideCoordinates());
 	return v_[geo.sideNode(face,i)];
 }
 
-const CoordR3* Tri6::getVertex(const UInt i) const {
+const CoordR3* Triangle6::getVertex(const UInt i) const {
     return v_[geo.vertex(i)];
 }
 
-const CoordR3* Tri6::getSideVertex(const UInt face, const UInt i) const {
+const CoordR3* Triangle6::getSideVertex(const UInt face, const UInt i) const {
 	assert(face < numberOfFaces());
 	assert(i < numberOfSideVertices());
 	return v_[geo.sideVertex(face,i)];
 }
 
-Real Tri6::getArea() const {
+Real Triangle6::getArea() const {
 	Real csdf[geo.ncp];
 	getCubatureDifferentials(csdf);
 	Real res = 0.0;
@@ -107,7 +108,7 @@ Real Tri6::getArea() const {
 	return res;
 }
 
-void Tri6::getCubatureDifferentials(Real csdf[SimplexTri<2>::ncp]) const {
+void Triangle6::getCubatureDifferentials(Real csdf[SimplexTri<2>::ncp]) const {
     CVecR3 csTanVec[geo.ncp];
     getCubatureTangentsVecProds(csTanVec);
     for (UInt c = 0; c < geo.ncp; c++) {
@@ -115,7 +116,7 @@ void Tri6::getCubatureDifferentials(Real csdf[SimplexTri<2>::ncp]) const {
     }
 }
 
-void Tri6::getCubatureNormals(CVecR3 csdn[SimplexTri<2>::ncp]) const {
+void Triangle6::getCubatureNormals(CVecR3 csdn[SimplexTri<2>::ncp]) const {
     CVecR3 cTanVec[geo.ncp];
     getCubatureTangentsVecProds(cTanVec);
     for (UInt c = 0; c < geo.ncp; c++) {
@@ -123,7 +124,7 @@ void Tri6::getCubatureNormals(CVecR3 csdn[SimplexTri<2>::ncp]) const {
     }
 }
 
-void Tri6::getCubatureNodes(CVecR3 cNode[SimplexTri<2>::ncp]) const {
+void Triangle6::getCubatureNodes(CVecR3 cNode[SimplexTri<2>::ncp]) const {
     // Evaluates Lagrange's functions in positions specified by the
     for (UInt i = 0; i < geo.np; i++) {
         for (UInt c = 0; c < geo.ncp; c++) {
@@ -132,19 +133,19 @@ void Tri6::getCubatureNodes(CVecR3 cNode[SimplexTri<2>::ncp]) const {
     }
 }
 
-void Tri6::setV(const UInt i, const CoordR3* vNew) {
+void Triangle6::setV(const UInt i, const CoordR3* vNew) {
     v_[i] = vNew;
 }
 
-Tri3* Tri6::linearize() const {
+Triangle3* Triangle6::linearize() const {
 	const CoordR3* vertex[3];
 	for (UInt i = 0; i < 3; i++) {
 		vertex[i] = getVertex(i);
 	}
-	return new Tri3(getId(), vertex, getLayerId(), getMatId());
+	return new Triangle3(getId(), vertex, getLayerId(), getMatId());
 }
 
-void Tri6::printInfo() const {
+void Triangle6::printInfo() const {
     cout << "--- Tri6 info ---" << endl;
     cout << "Id: " << getId() << "  Mat Id: " << getMatId() << endl;
     cout << "Coordinates:" << endl;
@@ -154,7 +155,7 @@ void Tri6::printInfo() const {
 }
 
 void
-Tri6::getCubatureTangentsVecProds(
+Triangle6::getCubatureTangentsVecProds(
     CVecR3 cTanVecProd[SimplexTri<2>::ncp]) const {
 
 	StaMatrix<Real,3,3> csJ;

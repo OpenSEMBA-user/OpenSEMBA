@@ -5,7 +5,7 @@
  *      Author: luis
  */
 
-#include "Lin2.h"
+#include <geometry/elements/Line2.h>
 
 template<class T>
 const SimplexLin<1> Line2<T>::lin;

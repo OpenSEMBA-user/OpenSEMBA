@@ -1,5 +1,5 @@
 /*
- * Lin2.h
+ * Line2.h
  *
  *  Created on: Sep 24, 2013
  *      Author: luis

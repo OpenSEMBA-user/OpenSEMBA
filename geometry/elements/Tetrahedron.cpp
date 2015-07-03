@@ -6,26 +6,26 @@
  */
 
 #ifndef TET_H_
-#include "Tet.h"
+#include <geometry/elements/Tetrahedron.h>
 #endif
 
-Tet::Tet() {
+Tetrahedron::Tetrahedron() {
 
 }
 
-Tet::~Tet() {
+Tetrahedron::~Tetrahedron() {
 
 }
 
-Tri3* Tet::getTri3Face(const UInt f) const {
+Triangle3* Tetrahedron::getTri3Face(const UInt f) const {
     const CoordR3* coord[3];
     for (UInt i = 0; i < 3; i++) {
         coord[i] = getSideVertex(f,i);
     }
-    return new Tri3(ElementId(0), coord, getLayerId(), getMatId());
+    return new Triangle3(ElementId(0), coord, getLayerId(), getMatId());
 }
 
-void Tet::getCubaturePositions(CVecR3 res[SimplexTet<1>::ncp]) const {
+void Tetrahedron::getCubaturePositions(CVecR3 res[SimplexTet<1>::ncp]) const {
     static const UInt ncp = SimplexTet<1>::ncp;
     for (UInt c = 0; c < ncp; c++) {
         for (UInt i = 0; i < 3; i++) {
@@ -57,7 +57,7 @@ void Tet::getCubaturePositions(CVecR3 res[SimplexTet<1>::ncp]) const {
     delete[] lagrEv;
 }
 
-void Tet::getCubatureJacobianDeterminant(
+void Tetrahedron::getCubatureJacobianDeterminant(
         Real cJDet[SimplexTet<2>::ncp],
         const MatR44 cJ[SimplexTet<2>::ncp]) const {
     for (UInt c = 0; c < SimplexTet<2>::ncp; c++) {
@@ -65,7 +65,7 @@ void Tet::getCubatureJacobianDeterminant(
     }
 }
 
-void Tet::getCubatureJacobianDeterminant(
+void Tetrahedron::getCubatureJacobianDeterminant(
         Real cJDet[SimplexTet<2>::ncp]) const {
     MatR44 cJ[SimplexTet<2>::ncp];
     getCubatureJacobian(cJ);
@@ -74,7 +74,7 @@ void Tet::getCubatureJacobianDeterminant(
     }
 }
 
-void Tet::getCubatureJacobian(
+void Tetrahedron::getCubatureJacobian(
         MatR44 res[SimplexTet<2>::ncp]) const {
     for (UInt s = 0; s < numberOfFaces(); s++)
         for (UInt i = 0; i < numberOfCoordinates(); i++) {
@@ -88,7 +88,7 @@ void Tet::getCubatureJacobian(
         }
 }
 
-void Tet::getCubatureJacobianHat(
+void Tetrahedron::getCubatureJacobianHat(
         MatR43 cJHat[SimplexTet<2>::ncp],
         const MatR44 cJ[SimplexTet<2>::ncp],
         const Real cJDet[SimplexTet<2>::ncp]) const {

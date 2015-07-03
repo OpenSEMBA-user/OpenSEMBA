@@ -60,7 +60,7 @@ public:
                                                    const LayerId layId) const;
     GroupElements<const SurfR> getSurfsMatching(
             const vector<Face>& faces) const;
-    GroupElements<const Tri> convertToTri(
+    GroupElements<const Triangle> convertToTri(
             const GroupElements<const ElemR>& region,
             bool ignoreTets) const;
     vector<Face> getInternalBorder(
@@ -77,9 +77,9 @@ public:
     void printInfo() const;
 protected:
     vector<Face> getTetInternalBorder(
-            const GroupElements<const Tet>& tet) const;
+            const GroupElements<const Tetrahedron>& tet) const;
     vector<Face> getTriInternalBorder(
-            const GroupElements<const Tri>& tri) const;
+            const GroupElements<const Triangle>& tri) const;
 };
 
 #endif /* MESHUNSTRUCTURED_H_ */

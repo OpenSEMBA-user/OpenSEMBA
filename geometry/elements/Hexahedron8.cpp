@@ -5,18 +5,18 @@
  *      Author: luis
  */
 
-#include "Hex8.h"
+#include <geometry/elements/Hexahedron8.h>
 
 template<class T>
-const Real Hexa8<T>::tolerance = 1e-15;
+const Real Hexahedron8<T>::tolerance = 1e-15;
 
 template<class T>
-Hexa8<T>::Hexa8() {
+Hexahedron8<T>::Hexahedron8() {
 
 }
 
 template<class T>
-Hexa8<T>::Hexa8(const GroupCoordinates<Coordinate<T,3> >& coordGr,
+Hexahedron8<T>::Hexahedron8(const GroupCoordinates<Coordinate<T,3> >& coordGr,
               const ElementId id,
               const CoordinateId vId[8],
               const LayerId layerId,
@@ -30,7 +30,7 @@ Hexa8<T>::Hexa8(const GroupCoordinates<Coordinate<T,3> >& coordGr,
 }
 
 template<class T>
-Hexa8<T>::Hexa8(GroupCoordinates<Coordinate<T,3> >& cG,
+Hexahedron8<T>::Hexahedron8(GroupCoordinates<Coordinate<T,3> >& cG,
               const ElementId id,
               const Box<T,3>& box,
               const LayerId layerId,
@@ -51,7 +51,7 @@ Hexa8<T>::Hexa8(GroupCoordinates<Coordinate<T,3> >& cG,
 }
 
 template<class T>
-Hexa8<T>::Hexa8(const Hexa8<T>& rhs)
+Hexahedron8<T>::Hexahedron8(const Hexahedron8<T>& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
 
@@ -61,12 +61,12 @@ Hexa8<T>::Hexa8(const Hexa8<T>& rhs)
 }
 
 template<class T>
-Hexa8<T>::~Hexa8() {
+Hexahedron8<T>::~Hexahedron8() {
 
 }
 
 template<class T>
-bool Hexa8<T>::isStructured(const Grid3& grid, const Real tol) const {
+bool Hexahedron8<T>::isStructured(const Grid3& grid, const Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
     }
@@ -80,7 +80,7 @@ bool Hexa8<T>::isStructured(const Grid3& grid, const Real tol) const {
 }
 
 template<class T>
-bool Hexa8<T>::isRegular() const {
+bool Hexahedron8<T>::isRegular() const {
     // Checks that all edges are aligned with one of the axis.
     static const CartesianVector<T,3> xAxe(1.0, 0.0, 0.0);
     static const CartesianVector<T,3> yAxe(0.0, 1.0, 0.0);
@@ -104,7 +104,7 @@ bool Hexa8<T>::isRegular() const {
 }
 
 template<class T>
-const Coordinate<T,3>* Hexa8<T>::getSideV(const UInt f, const UInt i) const {
+const Coordinate<T,3>* Hexahedron8<T>::getSideV(const UInt f, const UInt i) const {
     assert(f < numberOfFaces());
     assert(i < numberOfSideCoordinates());
     switch (f) {
@@ -208,13 +208,13 @@ const Coordinate<T,3>* Hexa8<T>::getSideV(const UInt f, const UInt i) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Hexa8<T>::getSideVertex(const UInt f,
+const Coordinate<T,3>* Hexahedron8<T>::getSideVertex(const UInt f,
                                               const UInt i) const {
 	return getSideV(f,i);
 }
 
 template<class T>
-Real Hexa8<T>::getAreaOfFace(const UInt f) const {
+Real Hexahedron8<T>::getAreaOfFace(const UInt f) const {
     CartesianVector<T,3> v1, v2;
     v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
     v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
@@ -222,18 +222,18 @@ Real Hexa8<T>::getAreaOfFace(const UInt f) const {
 }
 
 template<class T>
-Real Hexa8<T>::getVolume() const {
+Real Hexahedron8<T>::getVolume() const {
     throw ErrorNotImplemented("Hexa8::getVolume()");
 }
 
 template<class T>
-void Hexa8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
+void Hexahedron8<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
     assert(i < numberOfCoordinates());
     v_[i] = coord;
 }
 
 template<class T>
-ElemI* Hexa8<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
+ElemI* Hexahedron8<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
                               const Grid3& grid, const Real tol) const {
     CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
     if (vIds == NULL) {
@@ -249,7 +249,7 @@ ElemI* Hexa8<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Hexa8<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
+ElemR* Hexahedron8<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
                                 const Grid3& grid) const {
     CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
     if (vIds == NULL) {
@@ -265,7 +265,7 @@ ElemR* Hexa8<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
 }
 
 template<class T>
-void Hexa8<T>::printInfo() const {
+void Hexahedron8<T>::printInfo() const {
     cout << "--- Hex8 Info ---" << endl;
     cout << "Id: " << this->getId() << endl;
     cout << "Coordinates:" << endl;
@@ -279,6 +279,6 @@ void Hexa8<T>::printInfo() const {
     }
 }
 
-template class Hexa8<Real>;
-template class Hexa8<Int >;
+template class Hexahedron8<Real>;
+template class Hexahedron8<Int >;
 

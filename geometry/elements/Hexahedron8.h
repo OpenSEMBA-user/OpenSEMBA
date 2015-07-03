@@ -12,10 +12,10 @@
 
 #include "Volume.h"
 
-class Hexa8Base : public virtual VolumeBase {
+class Hexahedron8Base : public virtual VolumeBase {
 public:
-    Hexa8Base() {}
-    virtual ~Hexa8Base() {}
+    Hexahedron8Base() {}
+    virtual ~Hexahedron8Base() {}
 
     inline bool isQuadratic() const { return false; }
 
@@ -28,24 +28,24 @@ public:
 };
 
 template<class T>
-class Hexa8 : public virtual Volume<T>,
-              public virtual Hexa8Base {
+class Hexahedron8 : public virtual Volume<T>,
+              public virtual Hexahedron8Base {
 public:
-    Hexa8();
-    Hexa8(const GroupCoordinates<Coordinate<T,3> >&,
+    Hexahedron8();
+    Hexahedron8(const GroupCoordinates<Coordinate<T,3> >&,
           const ElementId id,
           const CoordinateId vId[8],
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-    Hexa8(GroupCoordinates<Coordinate<T,3> >&,
+    Hexahedron8(GroupCoordinates<Coordinate<T,3> >&,
           const ElementId id,
           const Box<T,3>& box,
           const LayerId layerId = LayerId(0),
           const MatId   matId   = MatId(0));
-    Hexa8(const Hexa8<T>& rhs);
-    virtual ~Hexa8();
+    Hexahedron8(const Hexahedron8<T>& rhs);
+    virtual ~Hexahedron8();
 
-    DEFINE_CLONE(Hexa8<T>);
+    DEFINE_CLONE(Hexahedron8<T>);
 
     bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
 
@@ -78,8 +78,8 @@ private:
     const static Real tolerance;
 };
 
-typedef Hexa8Base   Hex8;
-typedef Hexa8<Real> HexR8;
-typedef Hexa8<Int> HexI8;
+typedef Hexahedron8Base   Hex8;
+typedef Hexahedron8<Real> HexR8;
+typedef Hexahedron8<Int > HexI8;
 
 #endif /* HEX8_H_ */

@@ -15,28 +15,28 @@ public:
    MapVolume();
    virtual ~MapVolume();
    MapVolume(
-    const Tet* local,
-    const Tet* neighboor[4],
+    const Tetrahedron* local,
+    const Tetrahedron* neighboor[4],
     const UInt neighboorFaces[4]);
    MapVolume&
     operator=(const MapVolume& rhs);
    UInt
     getLocalId() const {return local->getId().toUInt();}
-   const Tet*
+   const Tetrahedron*
     getLocalTet() const;
    UInt
     getVolToF(UInt f) const {return volToF[f];}
    void
     reassignPointers(const GroupElements<const Elem>& nEG);
-   const Tet*
+   const Tetrahedron*
     getVol(UInt f) const {return vol[f];}
    bool
     faceIsBoundary(UInt f) const;
    void
     printInfo() const;
 private:
-   const Tet* local;
-   const Tet* vol[4];
+   const Tetrahedron* local;
+   const Tetrahedron* vol[4];
    UInt volToF[4];
 };
 

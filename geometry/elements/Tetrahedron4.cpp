@@ -6,14 +6,14 @@
  */
 
 #ifndef TET4_H_
-#include "Tet4.h"
+#include <geometry/elements/Tetrahedron4.h>
 #endif
 
-Tet4::Tet4() {
+Tetrahedron4::Tetrahedron4() {
 
 }
 
-Tet4::Tet4(const GroupCoordinates<CoordR3>& coordGr,
+Tetrahedron4::Tetrahedron4(const GroupCoordinates<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[4],
            const LayerId layerId,
@@ -27,7 +27,7 @@ Tet4::Tet4(const GroupCoordinates<CoordR3>& coordGr,
     check();
 }
 
-Tet4::Tet4(const ElementId id,
+Tetrahedron4::Tetrahedron4(const ElementId id,
            const CoordR3* v[4],
            const LayerId layerId,
            const MatId   matId)
@@ -40,7 +40,7 @@ Tet4::Tet4(const ElementId id,
     check();
 }
 
-Tet4::Tet4(const Tet4& rhs)
+Tetrahedron4::Tetrahedron4(const Tetrahedron4& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
 
@@ -49,11 +49,11 @@ Tet4::Tet4(const Tet4& rhs)
     }
 }
 
-Tet4::~Tet4() {
+Tetrahedron4::~Tetrahedron4() {
 
 }
 
-bool Tet4::isInnerPoint(const CVecR3& pos) const {
+bool Tetrahedron4::isInnerPoint(const CVecR3& pos) const {
     if (!getBound().isInnerPoint(pos)) {
         return false;
     }
@@ -92,25 +92,25 @@ bool Tet4::isInnerPoint(const CVecR3& pos) const {
     return true;
 }
 
-bool Tet4::isCurvedFace(const UInt face) const {
+bool Tetrahedron4::isCurvedFace(const UInt face) const {
     return false;
 }
 
-bool Tet4::isFaceContainedInPlane(
+bool Tetrahedron4::isFaceContainedInPlane(
 const UInt face,
 const CartesianPlane plane) const {
     return getTri3Face(face)->isContainedInPlane(plane);
 }
 
-const CoordR3* Tet4::getSideV(const UInt f, const UInt i) const {
+const CoordR3* Tetrahedron4::getSideV(const UInt f, const UInt i) const {
     return v_[tet.sideNode(f,i)];
 }
 
-const CoordR3* Tet4::getSideVertex(const UInt f, const UInt i) const {
+const CoordR3* Tetrahedron4::getSideVertex(const UInt f, const UInt i) const {
     return v_[tet.sideVertex(f,i)];
 }
 
-Real Tet4::getVolume() const {
+Real Tetrahedron4::getVolume() const {
     StaMatrix<Real,3,3> mat;
     CVecR3 aux;
     for (UInt i = 1; i < 4; i++) {
@@ -123,24 +123,24 @@ Real Tet4::getVolume() const {
     return (det / ((Real) 6.0));
 }
 
-Real Tet4::getAreaOfFace(const UInt f) const {
+Real Tetrahedron4::getAreaOfFace(const UInt f) const {
     CVecR3 v1, v2;
     v1 = getSideV(f,1)->pos() - getSideV(f,0)->pos();
     v2 = getSideV(f,2)->pos() - getSideV(f,0)->pos();
     return ((Real) 0.5 * (v1 ^ v2).norm());
 }
 
-void Tet4::setV(const UInt i, const CoordR3* v) {
+void Tetrahedron4::setV(const UInt i, const CoordR3* v) {
     v_[i] = v;
 }
 
-void Tet4::check() const {
+void Tetrahedron4::check() const {
     if(hasZeroVolume()) {
         throw Volume<Int>::ErrorNullVolume(this->getId());
     }
 }
 
-void Tet4::printInfo() const {
+void Tetrahedron4::printInfo() const {
     cout << "--- Tet4 info ---" << endl;
     cout << "Id: " << getId() << endl;
     cout << "Coordinates:" << endl;
@@ -149,7 +149,7 @@ void Tet4::printInfo() const {
     }
 }
 
-bool Tet4::hasZeroVolume() const {
+bool Tetrahedron4::hasZeroVolume() const {
     bool zeroVolume;
     CVecR3 initialVCoord, otherVCoord;
     initialVCoord = *v_[0];

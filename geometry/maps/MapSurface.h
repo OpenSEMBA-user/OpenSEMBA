@@ -15,14 +15,14 @@ public:
    MapSurface();
    virtual ~MapSurface();
    MapSurface(
-         const Tri* localSurf, pair<const Tet*, const Tet*>);
+         const Triangle* localSurf, pair<const Tetrahedron*, const Tetrahedron*>);
    MapSurface&
    operator=(const MapSurface& rhs);
    UInt
    getLocalId() const {return local->getId().toUInt();}
    UInt
     getVolToF(UInt f) const;
-   const Tet*
+   const Tetrahedron*
     getVol(UInt f) const {return vol[f];}
    void
     reassignPointers(const GroupElements<const Elem>& nEG);
@@ -31,8 +31,8 @@ public:
    void
     printInfo() const;
 private:
-   const Tri* local;
-   const Tet* vol[2];
+   const Triangle* local;
+   const Tetrahedron* vol[2];
    UInt volToF[2];
 };
 

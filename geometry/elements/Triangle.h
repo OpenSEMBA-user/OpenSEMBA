@@ -5,10 +5,10 @@
 
 #include "Surface.h"
 
-class Tri : public Surface<Real> {
+class Triangle : public Surface<Real> {
 public:
-	Tri();
-    virtual ~Tri();
+	Triangle();
+    virtual ~Triangle();
     
 	UInt numberOfFaces   () const { return 3; }
 	UInt numberOfVertices() const { return 3; }
@@ -16,5 +16,7 @@ public:
 	UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
     
 };
+
+typedef Triangle Tri;
 
 #endif

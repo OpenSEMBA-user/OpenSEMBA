@@ -6,14 +6,14 @@
  */
 
 #ifndef TET10_H_
-#include "Tet10.h"
+#include <geometry/elements/Tetrahedron10.h>
 #endif
 
-Tet10::Tet10() {
+Tetrahedron10::Tetrahedron10() {
 
 }
 
-Tet10::Tet10(const GroupCoordinates<CoordR3>& coordGr,
+Tetrahedron10::Tetrahedron10(const GroupCoordinates<CoordR3>& coordGr,
              const ElementId id,
              const CoordinateId vId[10],
              const LayerId layerId,
@@ -28,7 +28,7 @@ Tet10::Tet10(const GroupCoordinates<CoordR3>& coordGr,
     check();
 }
 
-Tet10::Tet10(const Tet10& rhs)
+Tetrahedron10::Tetrahedron10(const Tetrahedron10& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
 
@@ -37,11 +37,11 @@ Tet10::Tet10(const Tet10& rhs)
     }
 }
 
-Tet10::~Tet10() {
+Tetrahedron10::~Tetrahedron10() {
 
 }
 
-bool Tet10::isCurved() const {
+bool Tetrahedron10::isCurved() const {
     for (UInt f = 0; f < tet.faces; f++) {
         if(isCurvedFace(f)) {
             return true;
@@ -50,31 +50,31 @@ bool Tet10::isCurved() const {
     return false;
 }
 
-bool Tet10::isCurvedFace(const UInt f) const {
+bool Tetrahedron10::isCurvedFace(const UInt f) const {
     return getTri6Face(f).isCurved();
 }
 
 bool
-Tet10::isFaceContainedInPlane(
+Tetrahedron10::isFaceContainedInPlane(
  const UInt face,
  const CartesianPlane plane) const {
     return getTri6Face(face).isContainedInPlane(plane);
 }
 
-const CoordR3* Tet10::getSideV(const UInt f, const UInt i) const {
+const CoordR3* Tetrahedron10::getSideV(const UInt f, const UInt i) const {
 	return v_[tet.sideNode(f,i)];
 }
 
 const CoordR3*
-Tet10::getVertex(const UInt i) const {
+Tetrahedron10::getVertex(const UInt i) const {
 	return v_[tet.vertex(i)];
 }
 
-const CoordR3* Tet10::getSideVertex(const UInt f, const UInt i) const {
+const CoordR3* Tetrahedron10::getSideVertex(const UInt f, const UInt i) const {
 	return v_[tet.sideVertex(f, i)];
 }
 
-Real Tet10::getVolume() const {
+Real Tetrahedron10::getVolume() const {
 	Real cJDet[SimplexTet<2>::ncp];
 	getCubatureJacobianDeterminant(cJDet);
 	Real res = 0.0;
@@ -85,32 +85,32 @@ Real Tet10::getVolume() const {
 	return res;
 }
 
-Real Tet10::getAreaOfFace(const UInt f) const {
+Real Tetrahedron10::getAreaOfFace(const UInt f) const {
 	return getTri6Face(f).getArea();
 }
 
-Tri6 Tet10::getTri6Face(const UInt f) const {
+Triangle6 Tetrahedron10::getTri6Face(const UInt f) const {
 	const CoordR3* sideV[6];
 	for (UInt i = 0; i < 6; i++) {
 		sideV[i] = getSideV(f,i);
 	}
-	Tri6 auxFace(ElementId(0), sideV);
+	Triangle6 auxFace(ElementId(0), sideV);
 	return auxFace;
 }
 
-void Tet10::setV(const UInt i, const CoordR3* vNew) {
+void Tetrahedron10::setV(const UInt i, const CoordR3* vNew) {
     v_[i] = vNew;
 }
 
-Tet4* Tet10::linearize() const {
+Tetrahedron4* Tetrahedron10::linearize() const {
     const Coordinate<Real,3>* vertex[4];
     for (UInt i = 0; i < 4; i++) {
         vertex[i] = getVertex(i);
     }
-    return new Tet4(getId(), vertex, getLayerId(), getMatId());
+    return new Tetrahedron4(getId(), vertex, getLayerId(), getMatId());
 }
 
-void Tet10::printInfo() const {
+void Tetrahedron10::printInfo() const {
     cout << "--- Tet10 info ---" << endl;
     cout << "Id: " << getId() << endl;
     cout << "Coordinates:" << endl;
@@ -119,6 +119,6 @@ void Tet10::printInfo() const {
     }
 }
 
-void Tet10::check() const {
+void Tetrahedron10::check() const {
 
 }

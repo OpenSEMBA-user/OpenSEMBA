@@ -6,14 +6,14 @@
  */
 
 #ifndef TRI3_H_
-#include "Tri3.h"
+#include <geometry/elements/Triangle3.h>
 #endif
 
-Tri3::Tri3() {
+Triangle3::Triangle3() {
 
 }
 
-Tri3::Tri3(const GroupCoordinates<CoordR3>& coordGr,
+Triangle3::Triangle3(const GroupCoordinates<CoordR3>& coordGr,
            const ElementId id,
            const CoordinateId vId[3],
            const LayerId layerId,
@@ -27,7 +27,7 @@ Tri3::Tri3(const GroupCoordinates<CoordR3>& coordGr,
 	check();
 }
 
-Tri3::Tri3(const ElementId id,
+Triangle3::Triangle3(const ElementId id,
            const CoordR3* v[3],
            const LayerId layerId,
            const MatId   matId)
@@ -39,7 +39,7 @@ Tri3::Tri3(const ElementId id,
     check();
 }
 
-Tri3::Tri3(const Tri3& rhs)
+Triangle3::Triangle3(const Triangle3& rhs)
 :   ClassIdBase<ElementId>(rhs),
     Elem(rhs) {
     
@@ -48,34 +48,34 @@ Tri3::Tri3(const Tri3& rhs)
     }
 }
 
-Tri3::~Tri3() {
+Triangle3::~Triangle3() {
 
 }
 
-const CoordR3* Tri3::getSideV(const UInt f, const UInt i) const {
+const CoordR3* Triangle3::getSideV(const UInt f, const UInt i) const {
     assert(f < numberOfFaces());
     assert(i < numberOfSideCoordinates());
     return v_[geo.sideNode(f, i)];
 }
 
-const CoordR3* Tri3::getVertex(const UInt i) const {
+const CoordR3* Triangle3::getVertex(const UInt i) const {
 	return v_[geo.vertex(i)];
 }
 
-const CoordR3* Tri3::getSideVertex(const UInt f, const UInt i) const {
+const CoordR3* Triangle3::getSideVertex(const UInt f, const UInt i) const {
 	assert(f < numberOfFaces());
 	assert(i < numberOfSideVertices());
 	return v_[geo.sideVertex(f, i)];
 }
 
-Real Tri3::getArea() const {
+Real Triangle3::getArea() const {
 	CVecR3 v1, v2;
 	v1 = getVertex(1)->pos() - getVertex(0)->pos();
 	v2 = getVertex(2)->pos() - getVertex(0)->pos();
 	return ((Real) 0.5 * (v1 ^ v2).norm());
 }
 
-void Tri3::getCubatureDifferentials(Real csdf[SimplexTri<1>::ncp]) const {
+void Triangle3::getCubatureDifferentials(Real csdf[SimplexTri<1>::ncp]) const {
 	CVecR3 csTanVec[geo.ncp];
 	getCubatureTangentsVecProds(csTanVec);
 	for (UInt c = 0; c < geo.ncp; c++) {
@@ -83,7 +83,7 @@ void Tri3::getCubatureDifferentials(Real csdf[SimplexTri<1>::ncp]) const {
 	}
 }
 
-void Tri3::getCubatureNormals(CVecR3 csdn[SimplexTri<1>::ncp]) const {
+void Triangle3::getCubatureNormals(CVecR3 csdn[SimplexTri<1>::ncp]) const {
 	CVecR3 cTanVec[geo.ncp];
 	getCubatureTangentsVecProds(cTanVec);
 	for (UInt c = 0; c < geo.ncp; c++) {
@@ -91,7 +91,7 @@ void Tri3::getCubatureNormals(CVecR3 csdn[SimplexTri<1>::ncp]) const {
 	}
 }
 
-void Tri3::getCubatureNodes(CVecR3 cNode[SimplexTri<1>::ncp]) const {
+void Triangle3::getCubatureNodes(CVecR3 cNode[SimplexTri<1>::ncp]) const {
 	// Evaluates Lagrange's functions in positions specified by the
 	for (UInt i = 0; i < geo.np; i++) {
 		for (UInt c = 0; c < geo.ncp; c++) {
@@ -100,15 +100,15 @@ void Tri3::getCubatureNodes(CVecR3 cNode[SimplexTri<1>::ncp]) const {
 	}
 }
 
-void Tri3::setV(const UInt i, const CoordR3* vNew) {
+void Triangle3::setV(const UInt i, const CoordR3* vNew) {
     v_[i] = vNew;
 }
 
-void Tri3::check() const {
+void Triangle3::check() const {
 
 }
 
-void Tri3::printInfo() const {
+void Triangle3::printInfo() const {
 	cout << "--- Tri3 info ---" << endl;
 	ElementBase::printInfo();
 	cout << "Coordinates:" << endl;
@@ -117,11 +117,11 @@ void Tri3::printInfo() const {
 	}
 }
 
-Tri3* Tri3::linearize() const {
-	return new Tri3(*this);
+Triangle3* Triangle3::linearize() const {
+	return new Triangle3(*this);
 }
 
-void Tri3::getCubatureTangentsVecProds(
+void Triangle3::getCubatureTangentsVecProds(
     CVecR3 cTanVecProd[SimplexTri<2>::ncp]) const {
 
     StaMatrix<Real,3,3> csJ;
