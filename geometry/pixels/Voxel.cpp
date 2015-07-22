@@ -27,27 +27,27 @@ bool Voxel::isInto (const CVecI3Fractional& coordIntFractional) const{
     return true;
 }
 
-VoxelLinels Voxel::getLinels() const {
-    VoxelLinels res;
-    VoxelSurfels surfels = getSurfels();
-    for (UInt i = 0; i < surfels.size(); i++) {
-        res[i*2] = surfels[i].getLinel(0);
-        res[i*2+1] = surfels[i].getLinel(2);
-    }
-    return res;
-}
-
-VoxelSurfels Voxel::getSurfels() const {
-    VoxelSurfels res;
-    for (UInt i = 0; i < 6; i++) {
-        const UInt dir = (i/2)%3;
-        const UInt bound = i % 2;
-        CVecI3 pos = *this;
-        pos(dir) = pos(dir) + bound;
-        res[i] = Surfel(pos, CartesianDirection(dir + 1));
-    }
-    return res;
-}
+//VoxelLinels Voxel::getLinels() const {
+//    VoxelLinels res;
+//    VoxelSurfels surfels = getSurfels();
+//    for (UInt i = 0; i < surfels.size(); i++) {
+//        res[i*2] = surfels[i].getLinel(0);
+//        res[i*2+1] = surfels[i].getLinel(2);
+//    }
+//    return res;
+//}
+//
+//VoxelSurfels Voxel::getSurfels() const {
+//    VoxelSurfels res;
+//    for (UInt i = 0; i < 6; i++) {
+//        const UInt dir = (i/2)%3;
+//        const UInt bound = i % 2;
+//        CVecI3 pos = *this;
+//        pos(dir) = pos(dir) + bound;
+//        res[i] = Surfel(pos, CartesianDirection(dir + 1));
+//    }
+//    return res;
+//}
 
 bool Voxel::operator<(const Voxel& rhs) const {
     return Pixel::operator<(rhs);

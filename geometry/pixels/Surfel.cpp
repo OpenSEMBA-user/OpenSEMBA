@@ -21,10 +21,6 @@ bool Surfel::isInto (const CVecI3Frac& coordIntFractional)const{
     return true;
 }
 
-Surfel::Surfel(const CVecI3& pos, const CartesianDirection& norm) : Pixel(pos) {
-    normId_ = norm;
-}
-
 bool Surfel::operator ==(const Surfel& rhs) const {
     return (Pixel::operator==(rhs) && rhs.normId_ == normId_);
 }
@@ -35,25 +31,25 @@ string Surfel::toStr() const {
     return res.str();
 }
 
-SurfelLinels Surfel::getLinels() const {
-    SurfelLinels res;
-    for (UInt i = 0; i < 4; i++) {
-        res[i] = getLinel(i);
-    }
-    return res;
-}
-
-Linel Surfel::getLinel(const UInt s) const {
-    CVecI3 pos = *this;
-    UInt norm(normId_-1);
-    if (s == 2) {
-        pos((norm+2)%3)++;
-    } else if (s == 3) {
-        pos((norm+1)%3)++;
-    }
-    UInt dir = (normId_ + (s%2)) % 3;
-    return Linel(pos, CartesianDirection(dir+1));
-}
+//SurfelLinels Surfel::getLinels() const {
+//    SurfelLinels res;
+//    for (UInt i = 0; i < 4; i++) {
+//        res[i] = getLinel(i);
+//    }
+//    return res;
+//}
+//
+//Linel Surfel::getLinel(const UInt s) const {
+//    CVecI3 pos = *this;
+//    UInt norm(normId_-1);
+//    if (s == 2) {
+//        pos((norm+2)%3)++;
+//    } else if (s == 3) {
+//        pos((norm+1)%3)++;
+//    }
+//    UInt dir = (normId_ + (s%2)) % 3;
+//    return Linel(pos, CartesianDirection(dir+1));
+//}
 
 
 SurfelPixels Surfel::getPixels() const{

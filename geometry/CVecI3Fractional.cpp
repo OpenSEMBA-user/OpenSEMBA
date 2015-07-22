@@ -32,18 +32,18 @@ bool CVecI3Fractional::operator ==(const CVecI3Fractional& rhs) const {
 }
 
 
-CVecI3Frac::Direction CVecI3Fractional::getDirBase() const {
+CartesianDirection CVecI3Fractional::getDirBase() const {
     UInt rang = this->getRangeBase();
     if (rang == 1) {
         for (unsigned int n = 0; n < 3; ++n) {
             if (len_[n] > MathUtils::tolerance) {
-                return Direction(n + 1);
+                return CartesianDirection(n + 1);
             }
         }
     } else if (rang == 2) {
         for (unsigned int n = 0; n < 3; ++n) {
             if (len_[n] < MathUtils::tolerance) {
-                return Direction(n + 1);
+                return CartesianDirection(n + 1);
             }
         }
     }

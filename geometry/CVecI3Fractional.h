@@ -12,14 +12,17 @@ using namespace std;
 
 #include "math/CartesianVector.h"
 
+typedef enum {
+    dirNode = 0,
+    dirX    = 1,
+    dirY    = 2,
+    dirZ    = 3
+} CartesianDirection;
+
 class CVecI3Fractional : public CVecI3 {
 public:
-    typedef enum {
-        dirNode = 0,
-        dirX    = 1,
-        dirY    = 2,
-        dirZ    = 3
-    } Direction;
+
+
     CVecI3Fractional ();
     CVecI3Fractional (const CVecI3& pos, const CVecR3& len):
         CVecI3(pos), len_(len){}
@@ -44,7 +47,7 @@ public:
             const bool forceProject,
             bool& canBeMoved) const;
 
-    Direction getDirBase   () const;
+    CartesianDirection getDirBase   () const;
     UInt getRangeBase () const;
 
     string toStr() const;
@@ -56,6 +59,6 @@ public:
 };
 
 typedef CVecI3Fractional CVecI3Frac;
-typedef CVecI3Fractional::Direction CartesianDirection;
+//typedef CVecI3Fractional::Direction CartesianDirection;
 
 #endif
