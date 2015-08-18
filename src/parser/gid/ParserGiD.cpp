@@ -250,8 +250,7 @@ ParserGiD::readMesherOptions() {
     return res;
 }
 
-MeshUnstructured*
-ParserGiD::readMesh() {
+MeshUnstructured* ParserGiD::readMesh() {
     GroupLayers<> lG = readLayers();
     GroupCoordinates<CoordR3> cG = readCoordinates();
     GroupElements<ElemR> eG = readElements(cG);
