@@ -106,8 +106,7 @@ OptionsMesher::Mesher OptionsMesher::getMesher() const {
     return mesher_;
 }
 
-OptionsMesher::BoundType
-OptionsMesher::getBoundTermination(
+OptionsMesher::BoundType OptionsMesher::getBoundTermination(
         const UInt i, const UInt p) const {
     assert(i < 3);
     assert(p < 2);
