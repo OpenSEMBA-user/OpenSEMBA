@@ -2,13 +2,17 @@
 
 template<class T>
 OutRq<T>::OutRq(const Domain& domain,
-                const Type outputType,
+                const Type type,
                 const string& name,
                 const GroupElements<T>& elems)
 :   Domain(domain),
-    OutRqBase(outputType, name),
+    OutRqBase(type, name),
     GroupElements<const T>(elems) {
-
+    if (type == bulkCurrentElectric || type == bulkCurrentMagnetic) {
+        if (this->getGroupWith(MatId(0)).size() != this->size()) {
+            throw Error("Bulk currents have to be defined over elements with no material assigned.");
+        }
+    }
 }
 
 template<class T>
