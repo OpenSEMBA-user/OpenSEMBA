@@ -60,3 +60,25 @@ TYPED_TEST(GeometryBoxTest, SurfaceBoxChop) {
     EXPECT_EQ(box.chop(2).size(), 4);
 }
 
+TYPED_TEST(GeometryBoxTest, BoxChopGrid) {
+    CVecR3 min(0.0);
+    CVecR3 max(3.0);
+    CVecR3 step(1.0);
+    BoxR3 box(min,max);
+    Grid<3> grid(box, step);
+
+    {
+        EXPECT_EQ(27, box.chop(grid).size());
+
+        BoxR3 smallMinBox(min, CVecR3(2.0));
+        EXPECT_EQ(8, smallMinBox.chop(grid).size());
+
+        BoxR3 smallMaxBox(CVecR3(1.0), max);
+        EXPECT_EQ(8, smallMaxBox.chop(grid).size());
+    }
+
+    {
+        BoxR3 surfBox(min, min+CVecR3(0.0, 3.0, 0.0));
+        EXPECT_EQ(9, surfBox.chop(grid).size());
+    }
+}
