@@ -13,6 +13,7 @@ OptionsMesher::OptionsMesher() {
     mode_ = conformal;
     bruteForceVolumes_ = false;
     scaleFactor_ = false;
+    postmshExport_ = true;
     vtkExport_ = false;
     gridStep_ = CVecR3(0.0);
     forbiddenLength_ = (Real) (1.0 / 3.0);
@@ -229,6 +230,14 @@ void OptionsMesher::setGridStep(const CVecR3& gridStep) {
 
 bool OptionsMesher::isVtkExport() const {
     return vtkExport_;
+}
+
+bool OptionsMesher::isPostmshExport() const {
+    return postmshExport_;
+}
+
+void OptionsMesher::setPostmshExport(bool postmshExport) {
+    postmshExport_ = postmshExport;
 }
 
 void OptionsMesher::setVtkExport(bool vtkExport) {
