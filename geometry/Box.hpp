@@ -374,6 +374,12 @@ vector<Box<T,D>> Box<T,D>::chop(const CVecTD origStep) const {
         }
     }
     Grid<D> grid(Box<Real,3>(minR,maxR), stepR);
+    return chop(grid);
+}
+
+template<class T, Int D>
+vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
+    static_assert(D == 3, "Chop can't be used for Boxes with D != 3");
     CartesianVector<Int,D> numBoxes = grid.getNumCells();
     vector<Box<T,D>> res;
     res.reserve(numBoxes(x)*numBoxes(y)*numBoxes(z));

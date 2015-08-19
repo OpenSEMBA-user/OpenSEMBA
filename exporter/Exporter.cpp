@@ -90,18 +90,25 @@ GroupElements<ElemR> Exporter::getBoundary(
         const Mesh* mesh,
         const OptionsMesher* opts) const {
     BoxR3 box;
-    if (grid != NULL) {
+    if (grid != nullptr) {
         box = grid->getFullDomainBoundingBox();
     } else {
         box = mesh->getBoundingBox();
     }
-    OptionsMesher::BoundType bound = opts->getBoundTermination(dir,pos);
+//    OptionsMesher::BoundType bound = opts->getBoundTermination(dir,pos);
     GroupElements<ElemR> elem;
-    if (bound != OptionsMesher::pml) {
+//    if (bound != OptionsMesher::pml) {
         BoxR3 quadBox = box.getBoundAsBox(dir,pos);
-        elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
+        if (grid != nullptr) {
+            vector<BoxR3> quadBoxes = quadBox.chop(*grid);
+            for (UInt i = 0; i < quadBoxes.size(); i++) {
+                elem.add(new QuaR4(cG, ElementId(0), quadBoxes[i]), true);
+            }
+        } else {
+            elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
+        }
         assert(elem.size() != 0);
-    }
+//    }
     return elem;
 }
 
