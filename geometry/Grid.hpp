@@ -62,13 +62,6 @@ Grid<D>::Grid(const vector<Real> step[D],
     }
 }
 
-template<Int D>
-Grid<D>::Grid(const vector<Real> pos[D], const CVecID& offset) {
-    offset_ = offset;
-    for(Int d = 0; d < D; d++) {
-        pos_[d] = pos[d];
-    }
-}
 
 template<Int D>
 Grid<D>::Grid(const Grid<D>& grid) {
@@ -93,6 +86,17 @@ Grid<D>& Grid<D>::operator=(const Grid<D>& rhs) {
         pos_[i] = rhs.pos_[i];
     }
     return *this;
+}
+
+template<Int D>
+void Grid<D>::setPos(const vector<Real> pos[D], const CVecID& offset) {
+    offset_ = offset;
+    for(Int d = 0; d < D; d++) {
+        if (pos[d].size() == 0) {
+            throw Error("Grid positions must contain at least one value");
+        }
+        pos_[d] = pos[d];
+    }
 }
 
 template<Int D>
@@ -219,6 +223,9 @@ CartesianVector<Int,D> Grid<D>::getNumCells() const {
     CVecID res;
     for (UInt d = 0; d < D; d++) {
         res(d) = getPos(d).size() - 1;
+        if (getPos(d).size() == 1) {
+            res(d) = 1;
+        }
     }
     return res;
 }

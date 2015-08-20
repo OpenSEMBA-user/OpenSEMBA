@@ -39,14 +39,14 @@ public:
     Grid(const vector<Real> step[D],
          const CVecID& offset = CVecID(0),
          const CVecRD& origin = CVecRD(0.0));
-    Grid(const vector<Real> pos[D],
-         const CVecID& offset = CVecID(0));
     Grid(const Grid& grid);
     ~Grid ();
 
     DEFINE_CLONE(Grid<D>);
 
     Grid& operator=(const Grid& cGrid);
+    void setPos(const vector<Real> pos[D],
+                const CVecID& offset = CVecID(0));
 
     // TODO To be deleted >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     inline const double *getPx(void) const {
