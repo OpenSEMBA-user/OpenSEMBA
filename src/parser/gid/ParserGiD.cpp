@@ -178,8 +178,7 @@ ParserGiD::readSolverOptions() {
     return res;
 }
 
-OptionsMesher*
-ParserGiD::readMesherOptions() {
+OptionsMesher* ParserGiD::readMesherOptions() {
     bool finished;
     bool found = false;
     string line, label, value;
@@ -198,6 +197,8 @@ ParserGiD::readMesherOptions() {
                     res->setBruteForceVolumes(strToBool(value));
                 } else if (label.compare("VTK Export") == 0) {
                     res->setVtkExport(strToBool(value));
+                } else if (label.compare("postmsh Export") == 0) {
+                    res->setPostmshExport(strToBool(value));
                 } else if (label.compare("Mode") == 0) {
                     res->setMode(strToMesherMode(value));
                 } else if (label.compare("Forbidden length") == 0) {
@@ -250,8 +251,7 @@ ParserGiD::readMesherOptions() {
     return res;
 }
 
-MeshUnstructured*
-ParserGiD::readMesh() {
+MeshUnstructured* ParserGiD::readMesh() {
     GroupLayers<> lG = readLayers();
     GroupCoordinates<CoordR3> cG = readCoordinates();
     GroupElements<ElemR> eG = readElements(cG);
