@@ -96,6 +96,9 @@ void Grid<D>::setPos(const vector<Real> pos[D], const CVecID& offset) {
             throw Error("Grid positions must contain at least one value");
         }
         pos_[d] = pos[d];
+        if (pos_[d].size() == 1) {
+            pos_[d].push_back(pos_[d][0]);
+        }
     }
 }
 
@@ -222,10 +225,7 @@ template<Int D>
 CartesianVector<Int,D> Grid<D>::getNumCells() const {
     CVecID res;
     for (UInt d = 0; d < D; d++) {
-        res(d) = getPos(d).size() - 1;
-        if (getPos(d).size() == 1) {
-            res(d) = 1;
-        }
+        res(d) = getPos(d).size() - 1; // Minimum size of pos is 2.
     }
     return res;
 }

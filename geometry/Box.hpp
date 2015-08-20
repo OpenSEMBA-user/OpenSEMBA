@@ -404,20 +404,20 @@ vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
             for (Int k = 0; k < numBoxes(z); k++) {
                 CVecR3 min = subGrid.getPos(CartesianVector<Int,3>(i,j,k));
                 CVecR3 max = subGrid.getPos(CartesianVector<Int,3>(i+1,j+1,k+1));
-                CVecI3 minI, maxI;
+                CVecTD minT, maxT;
                 for (UInt d = 0; d < D; d++) {
-                    if (min(d) > min_(d)) {
-                        minI(d) = (T) min(d);
+                    if (min(d) >= min_(d)) {
+                        minT(d) = (T) min(d);
                     } else {
-                        minI(d) = min_(d);
+                        minT(d) = min_(d);
                     }
                     if (max(d) <= max_(d)) {
-                        maxI(d) = (T) max(d);
+                        maxT(d) = (T) max(d);
                     } else {
-                        maxI(d) = max_(d);
+                        maxT(d) = max_(d);
                     }
                 }
-                res.push_back(Box<T,D>(minI,maxI));
+                res.push_back(Box<T,D>(minT,maxT));
             }
         }
     }
