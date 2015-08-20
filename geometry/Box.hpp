@@ -380,6 +380,10 @@ vector<Box<T,D>> Box<T,D>::chop(const CVecTD origStep) const {
 template<class T, Int D>
 vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
     static_assert(D == 3, "Chop can't be used for Boxes with D != 3");
+    // Prepares subgrid.
+
+    Grid<D> subGrid();
+    //
     CartesianVector<Int,D> numBoxes = grid.getNumCells();
     vector<Box<T,D>> res;
     res.reserve(numBoxes(x)*numBoxes(y)*numBoxes(z));
