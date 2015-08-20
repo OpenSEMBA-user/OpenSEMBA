@@ -23,7 +23,7 @@ protected:
         steps[x] = grid_.getStep(x);
         steps[y] = grid_.getStep(y);
         steps[z] = grid_.getStep(z);
-        cartesianGrid_ = new Grid3 (CVecI3(), offsetIni, steps);
+        cartesianGrid_ = new Grid3 (steps, CVecI3(), offsetIni);
     }
 
     void checkNaturalCell(double pos) {
