@@ -591,25 +591,59 @@ void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
         return;
     }
     if (siz == 0.0) {
-        siz = getStep(d,0);
+        siz = getStep(d,b);
     }
-    Int nCells = (Int) MathUtils::ceil(pad / abs(siz), (Real) 0.01);
-    vector<Real> newPos(nCells);
-    if (b == L) {
-        newPos[nCells-1] = pos_[d].front() - siz;
-        Real originDisplacement = siz;
-        for (Int i = nCells-2; i >= 0 ; i--) {
-            newPos[i] = newPos[i+1] - siz;
-            originDisplacement += siz;
+    if (MathUtils::equal(getStep(d,b), siz)) {
+        // Computes enlargement for a padding with same size.
+        Int nCells = (Int) MathUtils::ceil(pad / abs(siz), (Real) 0.01);
+        vector<Real> newPos(nCells);
+        if (b == L) {
+            newPos[nCells-1] = pos_[d].front() - siz;
+            Real originDisplacement = siz;
+            for (Int i = nCells-2; i >= 0 ; i--) {
+                newPos[i] = newPos[i+1] - siz;
+                originDisplacement += siz;
+            }
+            newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
+            pos_[d] = newPos;
+        } else {
+            newPos[0] = pos_[d].back() + siz;
+            for (Int i = 1; i < nCells; i++) {
+                newPos[i] = newPos[i-1] + siz;
+            }
+            pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
         }
-        newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
-        pos_[d] = newPos;
     } else {
-        newPos[0] = pos_[d].back() + siz;
-        for (Int i = 1; i < nCells; i++) {
-            newPos[i] = newPos[i-1] + siz;
+        // Computes enlargement for padding with different size.
+        // Taken from AutoCAD interface programmed in LISP (2001).
+        Real d12 = getStep(d,b);
+        Real d14 = getStep(d,b) + pad;
+        Real d34 = siz;
+        Real d13 = d14 - d34;
+        Real t0 = d12;
+        Real r0 = (d14-d12) / (d14-d34);
+        Int n = round(log(d34/d12) / log(r0));
+        Real r = r0;
+        // Newton method to adjust the sum of available space.
+        Real f = 1;
+        while (f != 0.0) {
+            f = t0 * (1-pow(r,n)) / (1-r) - d13;
+            Real df = t0*(1-pow(r,n))/pow(1-r,2) - t0*n*pow(r,n-1)/(1-r);
+            r = r0 - f / df;
         }
-        pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
+        Int nCells = n-1;
+        vector<Real> newSteps(nCells);
+        for (UInt i = 0; i < nCells; i++) {
+            newSteps[i] = t0 * pow(r,(i+1));
+        }
+
+#warning "Not implemented."
+        if (b == U) {
+            // TODO
+        } else {
+            // TODO
+        }
+
     }
 }
 
