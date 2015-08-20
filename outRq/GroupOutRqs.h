@@ -2,6 +2,7 @@
 #define COMMON_OUTRQ_GROUPOUTRQS_H_
 
 #include "OutRq.h"
+#include "OutRqBulkCurrent.h"
 #include "OutRqFarField.h"
 
 template<typename O = OutRqBase>
