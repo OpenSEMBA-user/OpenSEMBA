@@ -27,14 +27,11 @@ public:
 //         const Real time,
 //         const FieldR3& electric,
 //         const FieldR3& magnetic);
-   virtual void
-   printInfo() const;
+   virtual void printInfo() const;
 protected:
    vector<const Result*> result_;
-   void
-   deleteExistentOutputFiles() const;
-   UInt
-   determineStepsSaved(
+   void deleteExistentOutputFiles() const;
+   UInt determineStepsSaved(
          const Real savingPeriod,
          const Real dt) const;
 protected:

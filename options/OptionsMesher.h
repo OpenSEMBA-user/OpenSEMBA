@@ -70,6 +70,10 @@ public:
     bool hasScaleFactor() const;
     string getScaleFactor() const;
     const string& getMeshOutputName() const;
+    bool isGridStepSet() const;
+    bool isVtkExport() const;
+    bool isPostmshExport() const;
+    const CVecR3& getGridStep() const;
 
     const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
     vector<pair<BoundType,BoundType>> getBoundTerminations() const;
@@ -79,11 +83,9 @@ public:
     void printHelp() const;
     void printInfo() const;
     static string toStr(const BoundType);
-    bool isGridStepSet() const;
-    const CVecR3& getGridStep() const;
     void setGridStep(const CVecR3& gridStep);
-    bool isVtkExport() const;
     void setVtkExport(bool vtkExport);
+    void setPostmshExport(bool postmshExport);
 
 private:
     Mesher mesher_;
@@ -97,6 +99,7 @@ private:
     string outputName_;
 
     bool vtkExport_;
+    bool postmshExport_;
     CVecR3 gridStep_;
     vector<pair<BoundType,BoundType>> boundTermination_;
 };

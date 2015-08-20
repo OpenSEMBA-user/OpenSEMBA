@@ -84,6 +84,8 @@ public:
     CVecTD getBound(CartesianBound p) const;
     vector<Box<T,D>> chop(
             const CartesianVector<T,D> step = CartesianVector<T,D>(1,1,1)) const;
+    vector<Box<T,D>> chop(
+            const Grid<D>& grid) const;
 
     void set(const pair<CVecTD,CVecTD>& boundsMinMax);
     Box<T,D>& setInfinity();
