@@ -486,6 +486,32 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     res->add(new OutRq<Vol>(domain, type, name, elems));
                     break;
                 }
+                case ParserGiD::bulkCurrent:
+                {
+                    CartesianAxis dir;
+                    UInt skip;
+                    getNextLabelAndValue(label,value);
+                    switch (value[0]) {
+                    case 'x':
+                        dir = x;
+                        break;
+                    case 'y':
+                        dir = y;
+                        break;
+                    case 'z':
+                        dir = z;
+                        break;
+                    default:
+                        dir = x;
+                    }
+                    getNextLabelAndValue(label,value);
+                    skip = atoi(value.c_str());
+                    getline(f_in, line);
+                    GroupElements<Vol> elems = boundToElemGroup(line);
+                    res->add(new OutRqBulkCurrent(domain, name, elems,
+                                                  dir, skip));
+                    break;
+                }
                 case ParserGiD::farField:
                 {
                     getline(f_in, line);
@@ -1417,7 +1443,9 @@ ParserGiD::strToGidOutputType(string str) const {
         return ParserGiD::outRqOnSurface;
     } else if (str.compare("OutRq_on_volume")==0) {
         return ParserGiD::outRqOnVolume;
-    } else if (str.compare("farField")) {
+    } else if (str.compare("Bulk_current")==0) {
+        return ParserGiD::bulkCurrent;
+    } else if (str.compare("farField")==0) {
         return ParserGiD::farField;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label." << endl;

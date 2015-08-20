@@ -40,6 +40,7 @@ private:
         outRqOnLine,
         outRqOnSurface,
         outRqOnVolume,
+        bulkCurrent,
         farField
     } GiDOutputType;
     typedef enum {
