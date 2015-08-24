@@ -47,6 +47,10 @@ public:
     Grid& operator=(const Grid& cGrid);
     void setPos(const vector<Real> pos[D],
                 const CVecID& offset = CVecID(0));
+    void setAdditionalSteps(
+            const CartesianAxis d,
+            const CartesianBound b,
+            const vector<Real>& step);
 
     // TODO To be deleted >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     inline const double *getPx(void) const {
