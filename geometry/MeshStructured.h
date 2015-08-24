@@ -28,7 +28,7 @@ public:
     MeshStructured(const Grid3& grid,
                    const GroupCoordinates<const CoordI3>& cG,
                    const GroupElements<const ElemI>& elem,
-                   const GroupLayers<const Layer>& layer = GroupLayers<>());
+                   const GroupLayers<const Layer>& = GroupLayers<const Layer>());
     MeshStructured(const MeshStructured& param);
     virtual ~MeshStructured();
 

@@ -5,9 +5,9 @@
  *      Author: Daniel
  */
 
-#include <base/error/ErrorFile.h>
+#include "ErrorFile.h"
 
-ErrorFile::ErrorFile(const string& filename) {
+ErrorFile::ErrorFile(const std::string& filename) {
     filename_ = filename;
 }
 
@@ -15,12 +15,12 @@ ErrorFile::~ErrorFile() throw() {
 
 }
 
-string ErrorFile::getFilename() const {
+std::string ErrorFile::getFilename() const {
     return filename_;
 }
 
-ErrorFileNotExists::ErrorFileNotExists(const string& filename)
-:   Error(filename + string(" doesn't exists")),
+ErrorFileNotExists::ErrorFileNotExists(const std::string& filename)
+:   Error(filename + std::string(" doesn't exists")),
     ErrorFile(filename) {
 
 }
@@ -29,8 +29,8 @@ ErrorFileNotExists::~ErrorFileNotExists() throw() {
 
 }
 
-ErrorFileEmpty::ErrorFileEmpty(const string& filename)
-:   Error(filename + string(" empty")),
+ErrorFileEmpty::ErrorFileEmpty(const std::string& filename)
+:   Error(filename + std::string(" empty")),
     ErrorFile(filename) {
 
 }

@@ -55,3 +55,54 @@ Solver::printTime(const double originalSeconds) const {
    }
    cout<< secondsLeft << "s";
 }
+
+
+//void
+//Integrator::processStopRequest() {
+//  // Terminates the program storing the fields if key is pressed.
+//  nonblock(NB_ENABLE);
+//  Int endingRequest = 0;
+//  endingRequest = kbhit();
+//  if (endingRequest != 0 && fgetc(stdin)=='q') {
+//      cout << "Key 'q' was pressed, terminating." << endl;
+//      // Writes fields for resume.
+//      cout << " - Writing resume files." << endl;
+//      const Real *fPtrs[6];
+//      getFieldPtrs(fPtrs);
+//      out->writeResumeFile(fPtrs, tStep, nK);
+//      cout << " - Program was succesfully terminated." << endl;
+//      exit(EXIT_SUCCESS);
+//  }
+//  nonblock(NB_DISABLE);
+//}
+
+//Int
+//Integrator::kbhit()   {
+//  struct timeval tv;
+//  fd_set fds;
+//  tv.tv_sec = 0;
+//  tv.tv_usec = 0;
+//  FD_ZERO(&fds);
+//  FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
+//  select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+//  return FD_ISSET(STDIN_FILENO, &fds);
+//}
+
+//void
+//Integrator::nonblock(Int state) {
+//  struct termios ttystate;
+//  //get the terminal state
+//  tcgetattr(STDIN_FILENO, &ttystate);
+//  if (state == NB_ENABLE) {
+//      //turn off canonical mode
+//      ttystate.c_lflag &= ~ICANON;
+//      //minimum of number input read.
+//      ttystate.c_cc[VMIN] = 1;
+//  }
+//  else if (state == NB_DISABLE) {
+//      //turn on canonical mode
+//      ttystate.c_lflag |= ICANON;
+//  }
+//  //set the terminal attributes.
+//  tcsetattr(STDIN_FILENO, TCSANOW, &ttystate);
+//}

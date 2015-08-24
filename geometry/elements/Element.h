@@ -21,8 +21,11 @@ using namespace std;
 
 #include "base/class/ClassIdBase.h"
 
-CREATE_ID(ElementId);
-CREATE_ID(MatId);
+class ElementBase;
+class PhysicalModel;
+
+typedef Id<  ElementBase> ElementId;
+typedef Id<PhysicalModel> MatId;
 
 class ElementBase : public virtual ClassIdBase<ElementId> {
 public:

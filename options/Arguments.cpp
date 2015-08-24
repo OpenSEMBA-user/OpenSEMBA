@@ -61,7 +61,7 @@ Arguments::~Arguments() {
 bool
 Arguments::fExists(const string& filename) const {
    ifstream ifile(filename.c_str());
-   return ifile;
+   return ifile.good();
 }
 
 string

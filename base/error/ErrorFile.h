@@ -14,23 +14,23 @@
 
 class ErrorFile : public virtual Error {
 public:
-    ErrorFile(const string& filename);
+    ErrorFile(const std::string& filename);
     virtual ~ErrorFile() throw();
 
-    string getFilename() const;
+    std::string getFilename() const;
 private:
-    string filename_;
+    std::string filename_;
 };
 
 class ErrorFileNotExists : public ErrorFile {
 public:
-    ErrorFileNotExists(const string& filename);
+    ErrorFileNotExists(const std::string& filename);
     ~ErrorFileNotExists() throw();
 };
 
 class ErrorFileEmpty : public ErrorFile {
 public:
-    ErrorFileEmpty(const string& filename);
+    ErrorFileEmpty(const std::string& filename);
     ~ErrorFileEmpty() throw();
 };
 

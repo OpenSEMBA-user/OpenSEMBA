@@ -27,22 +27,22 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
     // Builds a list with all tetrahedron faces.
     static const UInt faces = 4;
     static const UInt nVert = 3;
-    GroupElements<const Tet> tet = eG.getGroupOf<Tet>();
+    GroupElements<const Tetrahedron> tet = eG.getOf<Tetrahedron>();
     UInt nK = tet.size();
     UInt nList = nK * faces;
     DynMatrix<UInt> fList(nList, 2 + nVert);
     for (UInt k = 0; k < nK; k++) {
-        const Tet* aux = tet(k);
+        const Tetrahedron* aux = tet(k);
         ElementId id = aux->getId();
         for (UInt f = 0; f < faces; f++) {
             UInt row = k * faces + f;
-            fList(row, 0) = id;
+            fList(row, 0) = id.toUInt();
             fList(row, 1) = f;
             vector<CoordinateId> ordered(nVert);
             ordered = ElementBase::getIds(aux->getSideVertices(f));
             ordered = ElementBase::ascendingIdOrder(ordered);
             for (UInt i = 0; i < nVert; i++) {
-                fList(row, i + 2) = ordered[i];
+                fList(row, i + 2) = ordered[i].toUInt();
             }
         }
     }
@@ -78,30 +78,30 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
     }
     // Generates tetrahedron maps.
     for (UInt k = 0; k < nK; k++) {
-        const Tet *local = tet(k);
-        const Tet *neigh[4];
+        const Tetrahedron *local = tet(k);
+        const Tetrahedron *neigh[4];
         UInt neighFaces[4];
         for (UInt j = 0; j < 4; j++) {
-            neigh[j] = eG.get(ElementId(etoe(k,j)))->castTo<Tet>();
+            neigh[j] = eG.getId(ElementId(etoe(k,j)))->castTo<Tetrahedron>();
             neighFaces[j] = etof(k,j);
         }
-        pair<UInt, MapVolume*>
-        aux(local->getId(), new MapVolume(local, neigh, neighFaces));
+        pair<UInt, MapVolume*> aux(local->getId().toUInt(),
+                                   new MapVolume(local, neigh, neighFaces));
         tet_.insert(aux);
     }
     // Now uses the generated ordered fList to build the triangle maps.
-    GroupElements<const Tri> tri = eG.getGroupOf<Tri>();
+    GroupElements<const Triangle> tri = eG.getOf<Triangle>();
     const UInt nS = tri.size();
     for (UInt s = 0; s < nS; s++) {
-        const Tri* local = tri(s);
+        const Triangle* local = tri(s);
         ElementId id = local->getId();
-        pair<const Tet*, const Tet*> neigh;
+        pair<const Tetrahedron*, const Tetrahedron*> neigh;
         vector<CoordinateId> ordered(nVert);
         ordered = ElementBase::getIds(local->getVertices());
         ordered = ElementBase::ascendingIdOrder(ordered);
         vector<UInt> orderedInt(ordered.size());
         for (UInt i = 0; i < orderedInt.size(); i++) {
-            orderedInt[i] = (UInt) ordered[i];
+            orderedInt[i] = ordered[i].toUInt();
         }
         UInt i = fList.findFirstOcurrenceInColumns(&orderedInt[0], 2, 3);
         if (i == fList.nRows()) {
@@ -117,13 +117,14 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
             matches = false;
         }
         if (matches) {
-            neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
-            neigh.second = eG.get(ElementId(fList(i+1,0)))->castTo<Tet>();
+            neigh.first = eG.getId(ElementId(fList(i,0)))->castTo<Tetrahedron>();
+            neigh.second = eG.getId(ElementId(fList(i+1,0)))->castTo<Tetrahedron>();
         } else {
-            neigh.first = eG.get(ElementId(fList(i,0)))->castTo<Tet>();
+            neigh.first = eG.getId(ElementId(fList(i,0)))->castTo<Tetrahedron>();
             neigh.second = neigh.first;
         }
-        pair<UInt, MapSurface*> aux(local->getId(), new MapSurface(local, neigh));
+        pair<UInt, MapSurface*> aux(local->getId().toUInt(),
+                                    new MapSurface(local, neigh));
         tri_.insert(aux);
     }
 }
@@ -144,7 +145,7 @@ MapGroup::reassignPointers(const GroupElements<const Elem>& newEG) {
     }
 }
 
-const Tet* MapGroup::getNeighbour(const UInt id, const UInt face) const {
+const Tetrahedron* MapGroup::getNeighbour(const UInt id, const UInt face) const {
     return tet_.find(id)->second->getVol(face);
 }
 
@@ -157,9 +158,9 @@ pair<const VolR*, UInt>
 MapGroup::getInnerFace(const UInt id) const {
     map<UInt,MapSurface*>::const_iterator surf = tri_.find(id);
     assert(surf != tri_.end());
-    const Tet* vol = surf->second->getVol(0);
+    const Tetrahedron* vol = surf->second->getVol(0);
     const UInt face = surf->second->getVolToF(0);
-    return pair<const Tet*, UInt>(vol, face);
+    return pair<const Tetrahedron*, UInt>(vol, face);
 }
 
 pair<const VolR*, UInt>
@@ -169,11 +170,11 @@ MapGroup::getOuterFace(const UInt id) const {
     return pair<const VolR*, UInt>(vol, face);
 }
 
-pair<const Tet*, UInt>
+pair<const Tetrahedron*, UInt>
 MapGroup::getNeighConnection(
 const UInt id,
 const UInt face) const {
-    pair<const Tet*, UInt> res;
+    pair<const Tetrahedron*, UInt> res;
     res.first = getNeighbour(id, face);
     res.second = getVolToF(id, face);
     return res;
@@ -184,11 +185,11 @@ bool MapGroup::isBoundary(const UInt id) const {
 }
 
 bool MapGroup::isDomainBoundary(const UInt id, const UInt f) const {
-    return (getNeighbour(id,f)->getId() == id);
+    return (getNeighbour(id,f)->getId() == ElementId(id));
 }
 
 bool MapGroup::isDomainBoundary(Face boundary) const {
-    return isDomainBoundary(boundary.first->getId(), boundary.second);
+    return isDomainBoundary(boundary.first->getId().toUInt(), boundary.second);
 }
 
 //pair<const Tet*, const Tet*>

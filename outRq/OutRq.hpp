@@ -9,7 +9,7 @@ OutRq<T>::OutRq(const Domain& domain,
     OutRqBase(type, name),
     GroupElements<const T>(elems) {
     if (type == bulkCurrentElectric || type == bulkCurrentMagnetic) {
-        if (this->getGroupWith(MatId(0)).size() != this->size()) {
+        if (this->getMatId(MatId(0)).size() != this->size()) {
             throw Error("Bulk currents have to be defined over elements with no material assigned.");
         }
     }

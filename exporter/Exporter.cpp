@@ -100,10 +100,10 @@ GroupElements<ElemR> Exporter::getBoundary(
     if (grid != nullptr) {
         vector<BoxR3> quadBoxes = quadBox.chop(*grid);
         for (UInt i = 0; i < quadBoxes.size(); i++) {
-            elem.add(new QuaR4(cG, ElementId(0), quadBoxes[i]), true);
+            elem.addId(new QuaR4(cG, ElementId(0), quadBoxes[i]));
         }
     } else {
-        elem.add(new QuaR4(cG, ElementId(0), quadBox), true);
+        elem.addId(new QuaR4(cG, ElementId(0), quadBox));
     }
     assert(elem.size() != 0);
     return elem;
@@ -128,6 +128,6 @@ GroupElements<ElemR> Exporter::getGridElems(
     }
     GroupElements<ElemR> elem;
     BoxR3 box = grid->getFullDomainBoundingBox();
-    elem.add(new HexR8(cG, ElementId(0), box), true);
+    elem.addId(new HexR8(cG, ElementId(0), box));
     return elem;
 }

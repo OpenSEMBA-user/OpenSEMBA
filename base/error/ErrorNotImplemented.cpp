@@ -7,7 +7,7 @@
 
 #include "ErrorNotImplemented.h"
 
-ErrorNotImplemented::ErrorNotImplemented(const string& func)
+ErrorNotImplemented::ErrorNotImplemented(const std::string& func)
 :   Error(func + "(): not implemented") {
 
 }
@@ -16,6 +16,6 @@ ErrorNotImplemented::~ErrorNotImplemented() throw() {
 
 }
 
-string ErrorNotImplemented::getFunctionName() const {
+std::string ErrorNotImplemented::getFunctionName() const {
     return func_;
 }

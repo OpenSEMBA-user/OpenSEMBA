@@ -8,9 +8,9 @@
 #ifndef SRC_COMMON_GEOMETRY_ELEMENTS_LINECONFORMAL_H_
 #define SRC_COMMON_GEOMETRY_ELEMENTS_LINECONFORMAL_H_
 
+#include <geometry/elements/Line2.h>
 #include "geometry/coordinates/CoordinateConformal.h"
 
-#include "Lin2.h"
 
 class LineConformal : public virtual Line2<Int> {
 public:
