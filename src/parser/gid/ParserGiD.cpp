@@ -36,8 +36,7 @@ ParserGiD::~ParserGiD() {
 
 }
 
-SmbData*
-ParserGiD::read() {
+SmbData* ParserGiD::read() {
     if (!canOpen()) {
         cerr << endl << "ERROR @ ParserGiD: "
                 << "Can not openfile: " << getFilename() << endl;
@@ -69,14 +68,12 @@ ParserGiD::read() {
     return res;
 }
 
-void
-ParserGiD::printInfo() const {
+void ParserGiD::printInfo() const {
     cout << "--- GiDParser info ---" << endl;
     cout << "--- End of GiDParser info ---" << endl;
 }
 
-OptionsSolver*
-ParserGiD::readSolverOptions() {
+OptionsSolver* ParserGiD::readSolverOptions() {
     OptionsSolver* res = new OptionsSolver();
     bool finished = false;
     bool optionsFound = false;
@@ -1026,8 +1023,7 @@ ParserGiD::readDipole() {
     return new Dipole(mag, elems, length, orientation, position);
 }
 
-Waveport*
-ParserGiD::readWaveport() {
+Waveport* ParserGiD::readWaveport() {
     vector<Face> faces;
     UInt numElements = 0;
     bool input = true;
@@ -1051,8 +1047,7 @@ ParserGiD::readWaveport() {
             if (value.find("Rectangular") != value.npos) {
                 shape = WaveportShape::rectangular;
             } else {
-                cout << "ERROR @ Unreckognized waveport shape." << endl;
-                exit(-1);
+                throw Error("Unreckognized waveport shape.");
             }
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
@@ -1079,34 +1074,33 @@ ParserGiD::readWaveport() {
             finished = true;
         }
         if (f_in.eof()) {
-            cerr << endl << "ERROR @ Parser: "
-                    << "End of Waveport not found" << endl;
+            throw Error("End of Waveport not found");
         }
     }
     // Throws error message if finished was not updated.
     if (!finished) {
-        cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
-                << "End of excitation type label not found. " << endl;
+        throw Error("End of excitation type label not found.");
     }
     if (faces.size() == 0) {
-        cerr << endl << "ERROR @ ParserGiD:"
-                        << "No surfaces read on waveport." << endl;
+        throw Error("No surfaces read on waveport.");
     }
     GroupElements<const Surf> surfs = mesh_->getSurfsMatching(faces);
     if (surfs.size() != faces.size()) {
-        cerr << endl << "ERROR @ ParserGiD:"
-                << "Could not find surfaces matching element faces." << endl;
         surfs.printInfo();
+        throw Error("Could not find surfaces matching element faces.");
     }
     if (!input) {
         delete mag;
         mag = NULL;
     }
-    return new WaveportRectangular(mag, surfs, excitationMode, mode);
+    if (shape == WaveportShape::rectangular) {
+        return new WaveportRectangular(mag, surfs, excitationMode, mode);
+    } else {
+        throw Error("Unsupported Waveport shape.");
+    }
 }
 
-Generator*
-ParserGiD::readGenerator() {
+Generator* ParserGiD::readGenerator() {
     GroupElements<Nod> elems;
     Magnitude* mag;
     Generator::Type type;
@@ -1144,8 +1138,7 @@ ParserGiD::readGenerator() {
     return new Generator();
 }
 
-SourceOnLine*
-ParserGiD::readSourceOnLine() {
+SourceOnLine* ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
     Magnitude* mag;
@@ -1211,8 +1204,7 @@ OutRq<void>::Type ParserGiD::strToOutputType(string str) const {
     }
 }
 
-ParserGiD::SIBCType
-ParserGiD::strToSIBCType(string str) const {
+ParserGiD::SIBCType ParserGiD::strToSIBCType(string str) const {
     str = trim(str);
     if (str.compare("File")==0) {
         return sibc;
@@ -1225,8 +1217,7 @@ ParserGiD::strToSIBCType(string str) const {
     }
 }
 
-Generator::Type
-ParserGiD::strToGeneratorType(string str) const {
+Generator::Type ParserGiD::strToGeneratorType(string str) const {
     str = trim(str);
     if (str.compare("voltage")==0) {
         return Generator::voltage;
@@ -1239,8 +1230,7 @@ ParserGiD::strToGeneratorType(string str) const {
     }
 }
 
-Generator::Hardness
-ParserGiD::strToGeneratorHardness(string str) const {
+Generator::Hardness ParserGiD::strToGeneratorHardness(string str) const {
     str = trim(str);
     if (str.compare("soft")==0) {
         return Generator::soft;
@@ -1253,8 +1243,7 @@ ParserGiD::strToGeneratorHardness(string str) const {
     }
 }
 
-OptionsMesher::BoundType
-ParserGiD::strToBoundType(string str) const {
+OptionsMesher::BoundType ParserGiD::strToBoundType(string str) const {
     str = trim(str);
     if (str.compare("PEC")==0) {
         return OptionsMesher::pec;
@@ -1302,8 +1291,7 @@ PhysicalModel::Type ParserGiD::strToMaterialType(string str) const {
     }
 }
 
-PMMultiport::Type
-ParserGiD::strToMultiportType(string str) const {
+PMMultiport::Type ParserGiD::strToMultiportType(string str) const {
     str = trim(str);
     if (str.compare("Conn_short")==0) {
         return PMMultiport::shortCircuit;
@@ -1348,8 +1336,7 @@ CVecR3 ParserGiD::strToCVecR3(const string& str) const {
     return res;
 }
 
-SourceOnLine::Type
-ParserGiD::strToNodalType(string str) const {
+SourceOnLine::Type ParserGiD::strToNodalType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
         return SourceOnLine::electric;
@@ -1362,8 +1349,7 @@ ParserGiD::strToNodalType(string str) const {
     }
 }
 
-SourceOnLine::Hardness
-ParserGiD::strToNodalHardness(string str) const {
+SourceOnLine::Hardness ParserGiD::strToNodalHardness(string str) const {
     str = trim(str);
     if (str.compare("soft")==0) {
         return SourceOnLine::soft;
@@ -1376,8 +1362,7 @@ ParserGiD::strToNodalHardness(string str) const {
     }
 }
 
-string
-ParserGiD::readVersion() {
+string ParserGiD::readVersion() {
     string line, label, value;
     bool formatFound = false;
     bool versionFound = false;
@@ -1405,8 +1390,7 @@ ParserGiD::readVersion() {
     return version;
 }
 
-ParserGiD::GiDOutputType
-ParserGiD::strToGidOutputType(string str) const {
+ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) const {
     str = trim(str);
     if (str.compare("OutRq_on_point")==0) {
         return ParserGiD::outRqOnPoint;
@@ -1424,8 +1408,7 @@ ParserGiD::strToGidOutputType(string str) const {
     }
 }
 
-Domain
-ParserGiD::strToDomain(string line) const {
+Domain ParserGiD::strToDomain(string line) const {
     UInt timeDomain;
     Real initialTime;
     Real finalTime;
@@ -1447,8 +1430,7 @@ ParserGiD::strToDomain(string line) const {
             toBool(usingTransferFunction), transferFunctionFile));
 }
 
-Magnitude*
-ParserGiD::readMagnitude(const string typeIn) {
+Magnitude* ParserGiD::readMagnitude(const string typeIn) {
     string type = typeIn;
     type = trim(type);
     bool finished = false;
@@ -1537,8 +1519,7 @@ OptionsSolver::Solver ParserGiD::strToSolver(string str) {
     }
 }
 
-OptionsSolver::CompositeModel
-ParserGiD::strToCompositeModel(string str) {
+OptionsSolver::CompositeModel ParserGiD::strToCompositeModel(string str) {
     str = trim(str);
     if (str.compare("None")==0) {
         return OptionsSolver::CompositeModel::none;
@@ -1554,8 +1535,7 @@ ParserGiD::strToCompositeModel(string str) {
     }
 }
 
-OptionsSolver::WireModel
-ParserGiD::strToWireModel(string str) {
+OptionsSolver::WireModel ParserGiD::strToWireModel(string str) {
     str = trim(str);
     if (str.compare("Old")==0) {
         return OptionsSolver::WireModel::oldWireModel;
@@ -1583,8 +1563,7 @@ OptionsSolver::InductanceModel ParserGiD::strToInductanceModel(string str) {
     }
 }
 
-bool
-ParserGiD::checkVersionCompatibility(const string version) const {
+bool ParserGiD::checkVersionCompatibility(const string version) const {
     bool versionMatches =
             atof(version.c_str()) == atof(string(APP_VERSION).c_str());
     if (!versionMatches) {
