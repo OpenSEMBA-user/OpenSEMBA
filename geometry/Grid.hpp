@@ -633,7 +633,7 @@ void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
         }
         Int nCells = n-1;
         vector<Real> newSteps(nCells);
-        for (UInt i = 0; i < nCells; i++) {
+        for (Int i = 0; i < nCells; i++) {
             newSteps[i] = t0 * pow(r,(i+1));
         }
 
