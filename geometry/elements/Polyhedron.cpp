@@ -155,3 +155,6 @@ void Polyhedron::checkClosedness() const {
         }
     }
 }
+
+Real Polyhedron::getVolume() const {
+}

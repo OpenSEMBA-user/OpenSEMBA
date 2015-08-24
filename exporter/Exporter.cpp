@@ -99,9 +99,11 @@ GroupElements<ElemR> Exporter::getBoundary(
     BoxR3 quadBox = box.getBoundAsBox(dir,pos);
     if (grid != nullptr) {
         vector<BoxR3> quadBoxes = quadBox.chop(*grid);
+        vector<QuaR4*> quads(quadBoxes.size());
         for (UInt i = 0; i < quadBoxes.size(); i++) {
-            elem.addId(new QuaR4(cG, ElementId(0), quadBoxes[i]));
+            quads[i] = new QuaR4(cG, ElementId(0), quadBoxes[i]);
         }
+        elem.addId(quads);
     } else {
         elem.addId(new QuaR4(cG, ElementId(0), quadBox));
     }
