@@ -619,23 +619,29 @@ void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
     if (pad == 0.0) {
         return;
     }
+    Int cell;
+    if (b == L) {
+        cell = 0;
+    } else {
+        cell = this->getNumCells()(d) - 1;
+    }
     vector<Real> newSteps;
     if (MathUtils::equal(getStep(d,b), siz) || siz == 0.0) {
-        siz = getStep(d,b);
+        siz = getStep(d,cell);
         // Computes enlargement for a padding with same size.
         Int nCells = (Int) MathUtils::ceil(abs(pad) / abs(siz), (Real) 0.01);
         newSteps.resize(nCells, siz);
     } else {
         // Computes enlargement for padding with different size.
         // Taken from AutoCAD interface programmed in LISP (2001).
-        Real d12 = getStep(d,b);
+        Real d12 = getStep(d,cell);
         Real d14 = abs(pad);
         Real d34 = abs(siz);
         Real d13 = d14 - d34;
         Real t0 = d12;
         Real r0 = (d14-d12) / (d14-d34);
         Real r = r0;
-        Int n = round(log(d34/d12) / log(r0));
+        Int n = MathUtils::ceil(log(d34/d12) / log(r0), (Real) 0.01);
         if (n > 0) {
             // Newton method to adjust the sum of available space.
             Real f = 1;
