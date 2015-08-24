@@ -17,51 +17,36 @@
 using namespace std;
 
 #define COMMUNICATIONS_SUCCESS 0
-#define COMMUNICATIONS_ERROR 10334
 
 class CommNone : public Comm {
 public:
-	CommNone();
-	virtual ~CommNone();
-	int
-	 getNumberOfTasks() const;
-	void
-	 abort() const;
-	bool
-	 isMaster() const;
-	int
-	 getTask() const;
-	uint
-	 getLocalOffset() const;
-	int
-	 getNumOfTasksOnThisHost() const;
-	uint
-	 getLocalSize() const;
-	void
-	 gatherFieldsMaster(
- 	  FieldD3& electric,
-	  FieldD3& magnetic,
-	  const FieldD3& localElectric,
-	  const FieldD3& localMagnetic) const;
-	void
-	 gatherFieldsSlave(
- 	  const FieldD3& electric,
-	  const FieldD3& magnetic) const;
-	void
-	 setPartitionSizes(
-	  const vector<vector<uint> >& partId);
-	void
-	 syncNeighbourFields(
-	  double* nEx, double* nEy, double* nEz,
-	  double* nHx, double* nHy, double* nHz,
-	  const double* Ex, const double* Ey, const double* Ez,
-	  const double* Hx, const double* Hy, const double* Hz) const;
-	double
-	 reduceToGlobalMinimum(double val) const;
-	void
-	 initNeighbourFields(const vector<uint>& nIds);
-	void
-	 printInfo() const;
+    CommNone();
+    virtual ~CommNone();
+    Int getNumberOfTasks() const;
+    void abort() const;
+    bool isMaster() const;
+    Int getTask() const;
+    UInt getLocalOffset() const;
+    Int getNumOfTasksOnThisHost() const;
+    UInt getLocalSize() const;
+    void gatherFieldsMaster(
+            FieldR3& electric,
+            FieldR3& magnetic,
+            const FieldR3& localElectric,
+            const FieldR3& localMagnetic) const;
+    void gatherFieldsSlave(
+            const FieldR3& electric,
+            const FieldR3& magnetic) const;
+    void setPartitionSizes(
+            const vector<vector<ElementId>>& partId);
+    void syncNeighbourFields(
+            Real* nEx, Real* nEy, Real* nEz,
+            Real* nHx, Real* nHy, Real* nHz,
+            const Real* Ex, const Real* Ey, const Real* Ez,
+            const Real* Hx, const Real* Hy, const Real* Hz) const;
+    Real reduceToGlobalMinimum(Real val) const;
+    void initNeighbourFields(const vector<UInt>& nIds);
+    void printInfo() const;
 };
 
 #endif

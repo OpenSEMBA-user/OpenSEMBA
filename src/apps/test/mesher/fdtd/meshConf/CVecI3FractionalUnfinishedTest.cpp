@@ -19,8 +19,8 @@ void MesherCVecI3FractionalUnfinishedTest::init() {
 
     vector<ElemR*> elems;
     CoordinateId vId[3] = {CoordinateId(1), CoordinateId(2), CoordinateId(3)};
-    elems.push_back(new Tri3(cG_, ElementId(1), vId));
-    elems.push_back(new Tri3(cG_, ElementId(2), vId));
+    elems.push_back(new Triangle3(cG_, ElementId(1), vId));
+    elems.push_back(new Triangle3(cG_, ElementId(2), vId));
     eG_ = ElemRGroup(elems);
 
     ConstElemRGroup constElemGroup = eG_;

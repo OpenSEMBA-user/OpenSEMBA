@@ -8,15 +8,14 @@
 
 DGPlaneWave::DGPlaneWave(
  const PlaneWave& pw,
- const vector<const BoundaryCondition*>& bc,
  const MapGroup& map,
  const CellGroup& cells,
  const Comm* comm,
- FieldD3& dE, FieldD3& dH,
- const int vmapM[faces][nfp]) :
+ FieldR3& dE, FieldR3& dH,
+ const Int vmapM[faces][nfp]) :
   PlaneWave(pw) {
-	initSource(bc, map, cells, dE, dH, vmapM);
-	initWaveNumberPosition(bc, map, cells, comm, vmapM);
+//	initSource(bc, map, cells, dE, dH, vmapM);
+//	initWaveNumberPosition(bc, map, cells, comm, vmapM);
 }
 
 
@@ -34,7 +33,7 @@ DGPlaneWave::printInfo() const {
 
 void
 DGPlaneWave::computeExcitation(
- const double intTime, const double minDT) {
+ const Real intTime, const Real minDT) {
 	computeExcitationField(
 	 ExTInc, EyTInc, EzTInc, HxTInc, HyTInc, HzTInc, kNPosTF, nETF, intTime);
 	computeExcitationField(
@@ -46,18 +45,18 @@ DGPlaneWave::computeExcitation(
 
 void
 DGPlaneWave::computeExcitationField(
- double* ExInc, double *EyInc, double *EzInc,
- double* HxInc, double *HyInc, double *HzInc,
- const double* vPos,
- const uint nE,
- const double intTime) {
+ Real* ExInc, Real *EyInc, Real *EzInc,
+ Real* HxInc, Real *HyInc, Real *HzInc,
+ const Real* vPos,
+ const UInt nE,
+ const Real intTime) {
 	// Computes the plane wve excitation corresponding to the face f.
 	// The face contins nfp nodes and it is computed for time intTime.
-	const uint nFields = nfp*nE;
-	for (uint j = 0; j < nFields; j++) {
-		double delayedTime = intTime - vPos[j];
+	const UInt nFields = nfp*nE;
+	for (UInt j = 0; j < nFields; j++) {
+		Real delayedTime = intTime - vPos[j];
 		if (delayedTime >= 0) {
-			pair<CVecD3,CVecD3> EHInc = getElectromagneticField(delayedTime);
+			pair<CVecR3,CVecR3> EHInc = getElectromagneticField(delayedTime);
 			ExInc[j] = EHInc.first(0);
 			EyInc[j] = EHInc.first(1);
 			EzInc[j] = EHInc.first(2);
@@ -65,40 +64,39 @@ DGPlaneWave::computeExcitationField(
 			HyInc[j] = EHInc.second(1);
 			HzInc[j] = EHInc.second(2);
 		} else {
-			ExInc[j] = (double) 0.0;
-			EyInc[j] = (double) 0.0;
-			EzInc[j] = (double) 0.0;
-			HxInc[j] = (double) 0.0;
-			HyInc[j] = (double) 0.0;
-			HzInc[j] = (double) 0.0;
+			ExInc[j] = (Real) 0.0;
+			EyInc[j] = (Real) 0.0;
+			EzInc[j] = (Real) 0.0;
+			HxInc[j] = (Real) 0.0;
+			HyInc[j] = (Real) 0.0;
+			HzInc[j] = (Real) 0.0;
 		}
 	}
 }
 
 void
 DGPlaneWave::initWaveNumberPosition(
- const vector<const BoundaryCondition*>& bc,
  const MapGroup& map,
  const CellGroup& cells,
  const Comm* comm,
- const int vmapM[faces][nfp]) {
+ const Int vmapM[faces][nfp]) {
 	// Generates kNPosTSF for PW excitation.
 	// Computes krmin position.
-	double krmin = 0.0;
+	Real krmin = 0.0;
 	bool krminSet = false;
-	CartesianVector<double, 3> nodePos;
+	CVecR3 nodePos;
 	// Total field.
-	vector<pair<uint, uint> > total;
-	total = getElemFaces(bc, map, cells, totalField);
-	kNPosTF = new double[nETF * nfp];
-	for (uint j = 0; j < nETF; j++) {
-		uint id = cells.getIdOfRelPos(total[j].first);
-		uint f = total[j].second;
-		uint pos = j * nfp;
-		for (uint k = 0; k < nfp; k++) {
+	vector<pair<UInt, UInt> > total;
+	total = getElemFaces(map, cells, totalField);
+	kNPosTF = new Real[nETF * nfp];
+	for (UInt j = 0; j < nETF; j++) {
+		UInt id = cells.getIdOfRelPos(total[j].first);
+		UInt f = total[j].second;
+		UInt pos = j * nfp;
+		for (UInt k = 0; k < nfp; k++) {
 			const CellTet<N>* cell = cells.getPtrToCellWithId(id);
 			nodePos = cell->n[vmapM[f][k]];
-			kNPosTF[pos + k] = getWaveDirection().dot(nodePos) / SPEED_OF_LIGHT;
+			kNPosTF[pos + k] = getWaveDirection().dot(nodePos) / Constants::c0;
 			// Stores minimum kNPos value.
 			if (!krminSet) {
 				krminSet = true;
@@ -109,17 +107,17 @@ DGPlaneWave::initWaveNumberPosition(
 		}
 	}
 	// Scattered field.
-	vector<pair<uint, uint> > scatt;
-	scatt = getElemFaces(bc, map, cells, scatteredField);
-	kNPosSF = new double[nESF * nfp];
-	for (uint j = 0; j < nESF; j++) {
-		uint id = cells.getIdOfRelPos(scatt[j].first);
-		uint f = scatt[j].second;
-		uint pos = j * nfp;
-		for (uint k = 0; k < nfp; k++) {
+	vector<pair<UInt, UInt> > scatt;
+	scatt = getElemFaces(map, cells, scatteredField);
+	kNPosSF = new Real[nESF * nfp];
+	for (UInt j = 0; j < nESF; j++) {
+		UInt id = cells.getIdOfRelPos(scatt[j].first);
+		UInt f = scatt[j].second;
+		UInt pos = j * nfp;
+		for (UInt k = 0; k < nfp; k++) {
 			const CellTet<N>* cell = cells.getPtrToCellWithId(id);
 			nodePos = cell->n[vmapM[f][k]];
-			kNPosSF[pos + k] = getWaveDirection().dot(nodePos) / SPEED_OF_LIGHT;
+			kNPosSF[pos + k] = getWaveDirection().dot(nodePos) / Constants::c0;
 			// Stores minimum kNPos value.
 			if (!krminSet) {
 				krminSet = true;
@@ -131,17 +129,17 @@ DGPlaneWave::initWaveNumberPosition(
 		}
 	}
 	// Total field not backed.
-	vector<pair<uint, uint> > totalNotBacked;
-	totalNotBacked = getElemFaces(bc, map, cells, totalFieldNotBacked);
-	kNPosTFNB = new double[nETFNB * nfp];
-	for (uint j = 0; j < nETFNB; j++) {
-		uint id = cells.getIdOfRelPos(totalNotBacked[j].first);
-		uint f = totalNotBacked[j].second;
-		uint pos = j * nfp;
-		for (uint k = 0; k < nfp; k++) {
+	vector<pair<UInt, UInt> > totalNotBacked;
+	totalNotBacked = getElemFaces(map, cells, totalFieldNotBacked);
+	kNPosTFNB = new Real[nETFNB * nfp];
+	for (UInt j = 0; j < nETFNB; j++) {
+		UInt id = cells.getIdOfRelPos(totalNotBacked[j].first);
+		UInt f = totalNotBacked[j].second;
+		UInt pos = j * nfp;
+		for (UInt k = 0; k < nfp; k++) {
 			const CellTet<N>* cell = cells.getPtrToCellWithId(id);
 			nodePos = cell->n[vmapM[f][k]];
-			kNPosTFNB[pos + k] = getWaveDirection().dot(nodePos) / SPEED_OF_LIGHT;
+			kNPosTFNB[pos + k] = getWaveDirection().dot(nodePos) / Constants::c0;
 			// Stores minimum kNPos value.
 			if (!krminSet) {
 				krminSet = true;
@@ -155,13 +153,13 @@ DGPlaneWave::initWaveNumberPosition(
 	// Syncs minimum.
 	krmin = comm->reduceToGlobalMinimum(krmin);
 	// Adds krmin to kNPosTSF and kNPosTFNB.
-	for (uint j = 0; j < nETF * nfp; j++) {
+	for (UInt j = 0; j < nETF * nfp; j++) {
 		kNPosTF[j] -= krmin;
 	}
-	for (uint j = 0; j < nESF * nfp; j++) {
+	for (UInt j = 0; j < nESF * nfp; j++) {
 		kNPosSF[j] -= krmin;
 	}
-	for (uint j = 0; j < nETFNB * nfp; j++) {
+	for (UInt j = 0; j < nETFNB * nfp; j++) {
 		kNPosTFNB[j] -= krmin;
 	}
 }

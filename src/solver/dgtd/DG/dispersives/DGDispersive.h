@@ -9,52 +9,46 @@
 #define SOLVERDISPERSIVE_H_
 
 #include <cmath>
-#include "../../../../common/math/Constants.h"
-#include "../../../../common/inputs/physicalModel/PhysicalModel.h"
-#include "../../../../common/math/Field.h"
-#include "../../core/CellGroup.h"
-#include "../SolverMath.h"
+
+using namespace std;
+
+#include "math/Constants.h"
+#include "math/Field.h"
+#include "physicalModel/PhysicalModel.h"
 
 class DGDispersive {
 protected:
-	static const uint N = ORDER_N;
-	static const uint nfp = (N+1) * (N+2) / 2;
-	static const uint np = (N+1) * (N+2) * (N+3) / 6;
-	static const uint faces = 4;
+    static const UInt N = ORDER_N;
+    static const UInt nfp = (N+1) * (N+2) / 2;
+    static const UInt np = (N+1) * (N+2) * (N+3) / 6;
+    static const UInt faces = 4;
 public:
-	virtual ~DGDispersive() = 0;
-	virtual void
-	 computeRHSElectric(
-	  Field<double,3>& rhsE,
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) const = 0;
-	virtual void
-	 computeRHSMagnetic(
-	  Field<double,3>& rhsH,
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2) const= 0;
-	virtual void
-	 computeRHSElectricPolarizationCurrents(
-	  const Field<double,3>& E,
-	  const uint e1, const uint e2) = 0;
-	virtual void
-	 computeRHSMagneticPolarizationCurrents(
-	  const Field<double,3>& H,
-	  const uint e1, const uint e2) = 0;
-	virtual void
-	 addRHSToRes(
-	  const uint e1, const uint e2,
-	  const double rka, const double dt) = 0;
-	virtual void
-	 updateWithRes(
-	  const uint e1,
-	  const uint e2,
-	  const double rkb) = 0;
-	virtual void
-	 addJumps(
-	  Field<double,3>& dE, Field<double,3>& dH,
-	  Field<double,3>& E, Field<double,3>& H,
-	  const uint e1, const uint e2) = 0;
+    virtual ~DGDispersive() = 0;
+    virtual void computeRHSElectric(
+            FieldR3& rhsE,
+            const FieldR3& E,
+            const UInt e1, const UInt e2) const = 0;
+    virtual void computeRHSMagnetic(
+            FieldR3& rhsH,
+            const FieldR3& H,
+            const UInt e1, const UInt e2) const= 0;
+    virtual void computeRHSElectricPolarizationCurrents(
+            const FieldR3& E,
+            const UInt e1, const UInt e2) = 0;
+    virtual void computeRHSMagneticPolarizationCurrents(
+            const FieldR3& H,
+            const UInt e1, const UInt e2) = 0;
+    virtual void addRHSToRes(
+            const UInt e1, const UInt e2,
+            const Real rka, const Real dt) = 0;
+    virtual void updateWithRes(
+            const UInt e1,
+            const UInt e2,
+            const Real rkb) = 0;
+    virtual void addJumps(
+            FieldR3& dE, FieldR3& dH,
+            FieldR3& E, FieldR3& H,
+            const UInt e1, const UInt e2) = 0;
 };
 
 #endif /* SOLVERDISPERSIVE_H_ */

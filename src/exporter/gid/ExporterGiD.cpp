@@ -72,12 +72,12 @@ ExporterGiD::~ExporterGiD() {
 
 void ExporterGiD::writeAllElements(const GroupElements<const ElemR>& elem,
         const string& name) {
-    writeElements(elem.getGroupOf<NodR>() , name, GiD_Point, 1);
-    writeElements(elem.getGroupOf<LinR2>(), name, GiD_Linear, 2);
-    writeElements(elem.getGroupOf<Tri3>() , name, GiD_Triangle, 3);
-    writeElements(elem.getGroupOf<QuaR4>(), name, GiD_Quadrilateral, 4);
-    writeElements(elem.getGroupOf<Tet4>() , name, GiD_Tetrahedra, 4);
-    writeElements(elem.getGroupOf<HexR8>(), name, GiD_Hexahedra, 8);
+    writeElements(elem.getOf<NodR>() , name, GiD_Point, 1);
+    writeElements(elem.getOf<LinR2>(), name, GiD_Linear, 2);
+    writeElements(elem.getOf<Triangle3>() , name, GiD_Triangle, 3);
+    writeElements(elem.getOf<QuaR4>(), name, GiD_Quadrilateral, 4);
+    writeElements(elem.getOf<Tetrahedron4>() , name, GiD_Tetrahedra, 4);
+    writeElements(elem.getOf<HexR8>(), name, GiD_Hexahedra, 8);
 }
 
 void
@@ -106,7 +106,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
             const MatId matId = (*mat)(j)->getId();
             const LayerId layId = lay(i)->getId();
             const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
-            GroupElements<const ElemR> elem = mesh->elems().getGroupWith(matId, layId);
+            GroupElements<const ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
             writeAllElements(elem, name);
         }
     }
@@ -116,7 +116,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
             const EMSourceBase* src =  (*srcs)(i);
             const string name = preName + "EMSource_" + src->getName();
             GroupElements<const ElemR> elem =
-                    mesh->elems().getGroupWith(src->elems().getIds());
+                    mesh->elems().getId(src->elems().getIds());
             writeAllElements(elem, name);
         }
     }
@@ -126,7 +126,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
             const OutRqBase* oRq = (*oRqs)(i);
             const string name = preName + "OutRq_" + oRq->getName();
             GroupElements<const ElemR> elem =
-                    mesh->elems().getGroupWith(oRq->elems().getIds());
+                    mesh->elems().getId(oRq->elems().getIds());
             writeAllElements(elem, name);
         }
     }
@@ -170,13 +170,13 @@ void ExporterGiD::writeElements(
         }
     }
     GroupCoordinates<CoordR3> cG;
-    cG.add(pos);
+    cG.addPos(pos);
     writeCoordinates(cG);
     beginElements();
     for (UInt j = 0; j < elem.size(); j++) {
         for (Int k = 0; k < nV; k++) {
-            const CoordR3* coordInCG = cG.get(elem(j)->getVertex(k)->pos());
-            nId[k] = tmpCounter + coordInCG->getId();
+            const CoordR3* coordInCG = cG.getPos(elem(j)->getVertex(k)->pos());
+            nId[k] = tmpCounter + coordInCG->getId().toUInt();
         }
         writeElement(++elemCounter_, nId);
 

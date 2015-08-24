@@ -15,51 +15,50 @@
 #include "../../../common/math/DynMatrix.h"
 
 using namespace std;
-typedef unsigned int uint;
 
 class Ordering {
 public:
-	uint
+	UInt
 	 getGlobalSize() const;
-	uint
-	 getIdOfGlobalRelPos(const uint rp) const;
-	uint
-	 getGlobalRelPosOfId(const uint id) const;
-	uint
-	 getIdOfRelPos(const uint rp) const;
-	uint
-	 getRelPosOfId(const uint id) const;
-	uint
+	UInt
+	 getIdOfGlobalRelPos(const UInt rp) const;
+	UInt
+	 getGlobalRelPosOfId(const UInt id) const;
+	UInt
+	 getIdOfRelPos(const UInt rp) const;
+	UInt
+	 getRelPosOfId(const UInt id) const;
+	UInt
 	 getLocalSize() const;
 	bool
 	 checkRelPosOfId() const;
 	bool
-	 isLocalId(const uint id) const;
+	 isLocalId(const UInt id) const;
 protected:
 	Ordering();
 	virtual ~Ordering();
 	void
-	 setGlobalSize(const uint globalSize_);
+	 setGlobalSize(const UInt globalSize_);
 	void
 	 setLocalSizeAndOffset(
-	  const uint localSize,
-	  const uint localOffset);
+	  const UInt localSize,
+	  const UInt localOffset);
 	void
 	 buildRelPosOfIds(
-	  const DynMatrix<uint>& list);
+	  const DynMatrix<UInt>& list);
 	void
 	 printOrderingInfo() const;
 private:
-	static uint globalSize;
-	static uint localSize;
-	static uint localOffset;
-	static uint offsetId;
-	static uint* idOfRelPos;
-	static uint* relPosOfId;
+	static UInt globalSize;
+	static UInt localSize;
+	static UInt localOffset;
+	static UInt offsetId;
+	static UInt* idOfRelPos;
+	static UInt* relPosOfId;
 	bool
 	 checkLocalIds(
-	  const vector<vector<uint> >& partIds,
-	  const uint task);
+	  const vector<vector<UInt> >& partIds,
+	  const UInt task);
 };
 
 #endif /* ORDERING_H_ */

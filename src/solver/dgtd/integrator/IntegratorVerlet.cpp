@@ -12,8 +12,8 @@ IntegratorVerlet::IntegratorVerlet() {
 
 IntegratorVerlet::IntegratorVerlet(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup,
- const ArgumentsCudg3d* arg) {
+ const PMGroup& pmGroup,
+ const OptionsSolverDGTD* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	timeStepSize *= 0.9;
 	if (arg->getUpwinding() > 0.0) {
@@ -26,29 +26,25 @@ IntegratorVerlet::~IntegratorVerlet() {
 
 }
 
-uint
-IntegratorVerlet::getNumOfIterationsPerBigTimeStep(
- const uint e) const {
-	uint nTiers = getNTiers();
-	uint nStages = getNStages();
-	uint tier = timeTierList(e,1);
-	uint iter = (nTiers - tier) * nStages;
+UInt IntegratorVerlet::getNumOfIterationsPerBigTimeStep(
+ const UInt e) const {
+	UInt nTiers = getNTiers();
+	UInt nStages = getNStages();
+	UInt tier = timeTierList(e,1);
+	UInt iter = (nTiers - tier) * nStages;
 	return iter;
 }
 
-uint
-IntegratorVerlet::getNStages() const {
+UInt IntegratorVerlet::getNStages() const {
 	return nStages;
 }
 
-double
-IntegratorVerlet::getMaxTimeRatio() const {
-	return double (0.5);
+Real IntegratorVerlet::getMaxTimeRatio() const {
+	return Real (0.5);
 }
 
-void
-IntegratorVerlet::timeIntegrate(
- const double time) const {
+void IntegratorVerlet::timeIntegrate(
+ const Real time) const {
 	assert(solver != NULL);
 	if (doLTS) {
 		LTSTimeIntegration(time,getMaxDT(),getNTiers()-1);
@@ -57,13 +53,12 @@ IntegratorVerlet::timeIntegrate(
 	}
 }
 
-void
-IntegratorVerlet::LTSTimeIntegration(
- double localTime,
- double localdt,
- const uint tier) const {
-	uint fK = getRange(tier, 0).first;
-	uint lK = getRange(tier, 1).second;
+void IntegratorVerlet::LTSTimeIntegration(
+ Real localTime,
+ Real localdt,
+ const UInt tier) const {
+	UInt fK = getRange(tier, 0).first;
+	UInt lK = getRange(tier, 1).second;
 	if (tier > 0) {
 		LTSTimeIntegration(localTime, localdt/2.0, tier-1);
 	}
@@ -74,12 +69,11 @@ IntegratorVerlet::LTSTimeIntegration(
 	}
 }
 
-void
-IntegratorVerlet::updateFieldsVerlet(
- const uint e1,
- const uint e2,
- const double localTime,
- const double rkdt) const {
+void IntegratorVerlet::updateFieldsVerlet(
+ const UInt e1,
+ const UInt e2,
+ const Real localTime,
+ const Real rkdt) const {
 	solver->computeCurlsInRHSMagnetic(e1,e2);
 	solver->computeJumps(e1,e2,localTime,mindt);
 	solver->addFluxesToRHSMagnetic(e1,e2);

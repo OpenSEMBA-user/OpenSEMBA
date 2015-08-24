@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
-#include "electromagneticSources/PlaneWave.h"
+
+#include "../../../../common/sources/PlaneWave.h"
 
 class EMSourcePlaneWaveTest : public ::testing::Test {
     void SetUp() {

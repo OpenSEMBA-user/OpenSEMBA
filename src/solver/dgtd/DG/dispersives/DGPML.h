@@ -9,55 +9,35 @@
 #define SOLVERPML_H_
 
 #include "DGDispersive.h"
+#include "physicalModel/PMVolumePML.h"
 
 class DGPML : public DGDispersive {
 public:
-	DGPML();
-	virtual ~DGPML();
-	void
-	 addJumps(
-	  Field<double,3>& dE, Field<double,3>& dH,
-	  Field<double,3>& E, Field<double,3>& H,
-	  const uint e1, const uint e2);
+    DGPML(const PMVolumePML& mat);
+    virtual ~DGPML();
+    void addJumps(
+            FieldR3& dE, FieldR3& dH,
+            FieldR3& E, FieldR3& H,
+            const UInt e1, const UInt e2);
 protected:
-	uint dof;
-	uint nElem;
-	uint *elem;
-	bool useConstantConductivity;
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double eps0 = VACUUM_PERMITTIVITY;
-	static constexpr double mu0 = VACUUM_PERMEABILITY;
-	static constexpr double sigDefault = 10e9;
-#else
-	static const double eps0 = VACUUM_PERMITTIVITY;
-	static const double mu0 = VACUUM_PERMEABILITY;
-	static const double sigDefault = 10e9;
-#endif
-	double sig;
-	static const uint N = ORDER_N;
-	static const uint np = (N+1) * (N+2) * (N+3) / 6;
-	double **sig1, **sig2, **sig3;
-	double **sig11, **sig22, **sig33;
-	double **sig12, **sig23, **sig31;
-	void
-	 init(
-	  const PMVolumePML& mat_,
-      const CellGroup& cells);
+    UInt dof;
+    UInt nElem;
+    UInt *elem;
+    bool useConstantConductivity;
+    static constexpr Real sigDefault = 10e9;
+    Real sig;
+    static const UInt N = ORDER_N;
+    static const UInt np = (N+1) * (N+2) * (N+3) / 6;
+    Real **sig1, **sig2, **sig3;
+    Real **sig11, **sig22, **sig33;
+    Real **sig12, **sig23, **sig31;
 private:
-	void
-	 initElemsAndDOFs(
-	  const PMVolumePML& mat,
-	  const CellGroup& cells);
-	void
-	 initConductivityMatrices(
-	  const PMVolumePML& mat,
-	  const CellGroup& cells);
-	void
- 	 initConductivity(
-	  double **sigma,
-	  const uint ori,
-	  const PMVolumePML& mat,
-	  const CellGroup& cells);
+    void initConductivityMatrices(
+            const PMVolumePML& mat);
+    void initConductivity(
+            Real **sigma,
+            const UInt ori,
+            const PMVolumePML& mat);
 };
 
 #endif /* SOLVERPML_H_ */

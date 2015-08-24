@@ -24,8 +24,8 @@ class GeometryMeshUnstructuredTest : public ::testing::Test {
                 CoordinateId(2),
                 CoordinateId(1),
                 CoordinateId(3)};
-        elems.push_back(new Tet4(cG, ElementId(1), vIdTet, LayerId(0), MatId(0)));
-        elems.push_back(new Tri3(cG, ElementId(2), vIdTri, LayerId(1), MatId(0)));
+        elems.push_back(new Tetrahedron4(cG, ElementId(1), vIdTet, LayerId(0), MatId(0)));
+        elems.push_back(new Triangle3(cG, ElementId(2), vIdTri, LayerId(1), MatId(0)));
         ElemRGroup eG(elems);
 
         GroupLayers<> lG;

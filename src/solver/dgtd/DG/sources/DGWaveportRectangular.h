@@ -9,38 +9,33 @@
 #define SOLVERWAVEPORTRECTANGULAR_H_
 
 #include "DGWaveport.h"
+#include "sources/Waveport.h"
 
 class DGWaveportRectangular : public DGWaveport, public Waveport {
 public:
-	DGWaveportRectangular(
-	 const Waveport& pw,
-	 const vector<const BoundaryCondition*>& bc,
-	 const MapGroup& map,
-	 const CellGroup& cells,
-    FieldD3& dE, FieldD3& dH,
-	 const int vmapM[faces][nfp]);
-	virtual
-	~DGWaveportRectangular();
-	void
-	 computeExcitation(
-	  const double intTime,
-	  const double minDT);
-	void
-	 printInfo() const;
+    DGWaveportRectangular(
+            const Waveport& pw,
+            const MapGroup& map,
+            FieldR3& dE, FieldR3& dH,
+            const Int vmapM[faces][nfp]);
+    virtual ~DGWaveportRectangular();
+    void computeExcitation(
+            const Real intTime,
+            const Real minDT);
+    void printInfo() const;
 private:
-	double width, height;
-	Waveport::ExcitationMode excitationMode;
-	double kcm;
-	double intrinsicImpedance;
-	double gammaMSum;
-	void
-	 computeExcitationField(
-	  double* ExInc, double *EyInc, double *EzInc,
-	  double* HxInc, double *HyInc, double *HzInc,
-	  const CVecD3* pos,
-	  const uint nE,
-	  const double intTime,
-	  const double minDT);
+    Real width, height;
+    Waveport::ExcitationMode excitationMode;
+    Real kcm;
+    Real intrinsicImpedance;
+    Real gammaMSum;
+    void computeExcitationField(
+            FieldR3& EInc,
+            FieldR3& HInc,
+            const CVecR3* pos,
+            const UInt nE,
+            const Real intTime,
+            const Real minDT);
 };
 
 #endif /* SOLVERWAVEPORTRECTANGULAR_H_ */

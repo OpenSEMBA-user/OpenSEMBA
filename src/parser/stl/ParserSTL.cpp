@@ -38,7 +38,7 @@ ParserSTL::read(const OptionsMesher* optionsMesher) {
         }
     }
     GroupCoordinates<CoordR3> cG;
-    cG.add(vertices);
+    cG.addPos(vertices);
     stl.close();
 
     // Reads Elements and Layers.
@@ -50,7 +50,7 @@ ParserSTL::read(const OptionsMesher* optionsMesher) {
         if (label == "solid") {
             string layerName;
             stl >> layerName;
-            Layer* lay = lG.add(new Layer(layerName), true);
+            Layer* lay = lG.addId(new Layer(layerName))(0);
             LayerId lId = lay->getId();
             string line;
             while (!stl.eof()) {
@@ -63,11 +63,11 @@ ParserSTL::read(const OptionsMesher* optionsMesher) {
                         if (label == "vertex") {
                             CVecR3 pos;
                             stl >> pos(x) >> pos(y) >> pos(z);
-                            coord.push_back(cG.get(pos));
+                            coord.push_back(cG.getPos(pos));
                         }
                     }
                     label.clear();
-                    eG.add(new Tri3(ElementId(0), &coord[0], lId, MatId(0)), true);
+                    eG.addId(new Triangle3(ElementId(0), &coord[0], lId, MatId(0)));
                 }
             }
         }

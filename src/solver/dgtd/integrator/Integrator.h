@@ -11,134 +11,92 @@
 #include <vector>
 #include <utility>
 #include <limits>
-#include "../core/ArgumentsCudg3d.h"
+
+using namespace std;
+
 #include "../core/Comm.h"
 #include "../core/Ordering.h"
-#include "../../../common/inputs/physicalModel/PhysicalModel.h"
-#include "../../../common/geometry/MeshVolume.h"
+#include "physicalModel/PhysicalModel.h"
+#include "options/OptionsSolverDGTD.h"
+#include "MeshVolume.h"
 #include "DG/DG.h"
 
 #define SOLVERINFO_ALLOW_REORDERING_IN_SOLVER
 
-#ifndef SOLVERINFO_ERROR
-	#define SOLVERINFO_ERROR 111444
-#endif
-
-using namespace std;
+typedef pair<UInt,UInt> Interval;
 
 class Integrator : public Ordering {
 public:
-	double timeStepSize;
-	Integrator();
-	virtual ~Integrator();
-	virtual void
-	 timeIntegrate(const double timer) const = 0;
-	void
-	 setSolver(DG* solver);
-	double
-	 getMaxDT() const;
-	double
-	 getMinDT() const;
-	uint
-	 getNTiers() const;
-	uint
-	 getNPartitions() const;
-	vector<vector<uint> >
-	 getTiersIds() const;
-	vector<vector<uint> >
-	 getStagesIds() const;
-	vector<vector<uint> >
-	 getPartitionsIds() const;
-	pair<uint,uint>
-	 getRange(const uint tier, const uint stage) const;
-	vector<pair<uint,int> >
-	 getComputationalWeights(const MeshVolume* msh) const;
-	void
-	 partitionate(
-	  const MeshVolume* mesh,
-	  Comm* comm);
-	void
-	 printInfo() const;
+    Real timeStepSize;
+    Integrator();
+    virtual ~Integrator();
+    virtual void timeIntegrate(const Real timer) const = 0;
+    void setSolver(DG* solver);
+    Real getMaxDT() const;
+    Real getMinDT() const;
+    UInt getNTiers() const;
+    UInt getNPartitions() const;
+    vector<vector<ElementId>> getTiersIds() const;
+    vector<vector<ElementId>> getStagesIds() const;
+    vector<vector<ElementId>> getPartitionsIds() const;
+    Interval getRange(const UInt tier, const UInt stage) const;
+    vector<pair<ElementId,Int>> getComputationalWeights(
+            const MeshVolume* msh) const;
+    void partitionate(const MeshVolume* mesh, Comm* comm);
+    void printInfo() const;
 protected:
-	DG* solver;
-	bool doLTS;
-	DynMatrix<uint> timeTierList; // Id - Tier - Stage
-	double mindt;
-	void
-	 init(
-	  const MeshVolume& mesh,
-	  const PhysicalModelGroup& pmGroup,
-	  const OptionsSolverDGTD* arg);
-	uint
-	 getNumberOfCellsInTier(const uint tier) const;
-	virtual uint
- 	 getNumOfIterationsPerBigTimeStep(
-      const uint e) const = 0;
-	virtual uint
-	 getNStages() const = 0;
-	virtual double
-	 getMaxTimeStep(
-	  const Tet* tet,
-	  const PhysicalModel* mat) const;
-	virtual double
-	 getMaxTimeRatio() const = 0;
-	vector<uint>
-	 getIdsOfTier(const uint tier) const;
-	vector<uint>
-	 getIdsOfStage(const uint stage) const;
+    DG* solver;
+    bool doLTS;
+    DynMatrix<UInt> timeTierList; // Id - Tier - Stage
+    Real mindt;
+    void init(
+            const MeshVolume& mesh,
+            const PMGroup& pmGroup,
+            const OptionsSolverDGTD* arg);
+    UInt getNumberOfCellsInTier(const UInt tier) const;
+    virtual UInt getNumOfIterationsPerBigTimeStep(
+            const UInt e) const = 0;
+    virtual UInt getNStages() const = 0;
+    virtual Real getMaxTimeStep(
+            const VolR* tet,
+            const PhysicalModel* mat) const;
+    virtual Real getMaxTimeRatio() const = 0;
+    vector<ElementId> getIdsOfTier(const UInt tier) const;
+    vector<ElementId> getIdsOfStage(const UInt stage) const;
 private:
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-	static constexpr double cfl = 3e-9;
-#else
-	static const double cfl = 3e-9;
-#endif
-	static const uint noTier = 0;
-	static const uint noStage = 0;
-	uint growSmallerTiers;
-	static const uint growStages = 1;
-	uint maxNumOfTiers;
-	uint nTiers;
-	pair<uint,uint> **tierRange;
-	vector<vector<uint> > partIds;
-	void
-	 reorder(
-      const vector<vector<uint> >& partitionsIds_,
-	  const uint localOffset,
-	  const uint localSize);
-	void
-	 buildTierInfo(
-	  const MeshVolume& mesh,
-	  const PhysicalModelGroup& pmGroup);
-	virtual void
-	 checkMaterialStabilityForDT(
-	  const PhysicalModel* mat,
-	  const double dt) const;
-	void
-	 assignTiersBasedOnMaxTimeStep(
-	  const MeshVolume& mesh,
-	  const PhysicalModelGroup& pmGroup);
-	pair<uint,uint>**
-	 buildTierRange(
- 	  pair<uint,uint> **range,
-	  const DynMatrix<uint>& list);
-	void
-	 growSmallestTierRegions(
-	  const uint numToGrow,
-	  const MeshVolume& mesh);
-	vector<pair<uint, uint> >
-	getIdPartitionVector(
-	 const vector<vector<uint> >& pId) const;
-	void
-	 assignStages(const MeshVolume& mesh);
-//	void
-//	 processStopRequest();
-//	int
-//	 kbhit();
-//	void
-// 	 nonblock(int state);
-	void
-	 reorderTimeTierList(
-	  const vector<vector<uint> >& partitionId);
+    static constexpr Real cfl = 3e-9;
+    static const UInt noTier = 0;
+    static const UInt noStage = 0;
+    static const UInt growStages = 1;
+    UInt growSmallerTiers;
+    UInt maxNumOfTiers;
+    UInt nTiers;
+    pair<UInt,UInt> **tierRange_;
+    vector<vector<ElementId>> partIds_;
+    void reorder(
+            const vector<vector<ElementId>>& partitionsIds_,
+            const UInt localOffset,
+            const UInt localSize);
+    void buildTierInfo(
+            const MeshVolume& mesh,
+            const PMGroup& pmGroup);
+    virtual void
+    checkMaterialStabilityForDT(
+            const PhysicalModel* mat,
+            const Real dt) const;
+    void assignTiersBasedOnMaxTimeStep(
+            const MeshVolume& mesh,
+            const PMGroup& pmGroup);
+    pair<UInt,UInt>** buildTierRange(
+            pair<UInt,UInt> **range,
+            const DynMatrix<UInt>& list);
+    void growSmallestTierRegions(
+            const UInt numToGrow,
+            const MeshVolume& mesh);
+    vector<pair<UInt, UInt> > getIdPartitionVector(
+            const vector<vector<ElementId> >& pId) const;
+    void assignStages(const MeshVolume& mesh);
+    void reorderTimeTierList(const vector<vector<ElementId>>& partitionId);
 };
 
 #endif /* SOLVERINFO_H_ */

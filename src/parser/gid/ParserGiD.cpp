@@ -425,8 +425,8 @@ ParserGiD::readOutputRequests() {
 GroupElements<Vol> ParserGiD::boundToElemGroup(const string& line) {
     BoxR3 bound = strToBound(line);
     HexR8* hex = new HexR8(*mesh_, ElementId(0), bound);
-    mesh_->elems().add(hex, true);
-    GroupElements<Vol> elems = mesh_->elems().getGroupWith(hex->getId());
+    mesh_->elems().addId(hex);
+    GroupElements<Vol> elems(hex);
     return elems;
 }
 
@@ -453,8 +453,8 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getNextLabelAndValue(label,value);
                     CoordinateId coordId(atoi(value.c_str()));
                     NodR* node = new NodR(*mesh_, ElementId(0), &coordId);
-                    mesh_->elems().add(node, true);
-                    GroupElements<Nod> elems = mesh_->elems().getGroupWith(node->getId());
+                    mesh_->elems().addId(node);
+                    GroupElements<Nod> elems(node);
                     res->add(new OutRq<Nod>(domain, type, name, elems));
                     break;
                 }
@@ -470,8 +470,8 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getNextLabelAndValue(label,value);
                     vector<ElementId> ids;
                     ids.push_back(ElementId(atoi(value.c_str())));
-                    GroupElements<ElemR> elems = mesh_->elems().getGroupWith(ids);
-                    GroupElements<Surf> surfs = elems.getGroupOf<Surf>();
+                    GroupElements<ElemR> elems = mesh_->elems().getId(ids);
+                    GroupElements<Surf> surfs = elems.getOf<Surf>();
                     res->add(new OutRq<Surf>(domain, type, name, surfs));
                     break;
                 }
@@ -481,6 +481,32 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getline(f_in, line);
                     GroupElements<Vol> elems = boundToElemGroup(line);
                     res->add(new OutRq<Vol>(domain, type, name, elems));
+                    break;
+                }
+                case ParserGiD::bulkCurrent:
+                {
+                    CartesianAxis dir;
+                    UInt skip;
+                    getNextLabelAndValue(label,value);
+                    switch (value[0]) {
+                    case 'x':
+                        dir = x;
+                        break;
+                    case 'y':
+                        dir = y;
+                        break;
+                    case 'z':
+                        dir = z;
+                        break;
+                    default:
+                        dir = x;
+                    }
+                    getNextLabelAndValue(label,value);
+                    skip = atoi(value.c_str());
+                    getline(f_in, line);
+                    GroupElements<Vol> elems = boundToElemGroup(line);
+                    res->add(new OutRqBulkCurrent(domain, name, elems,
+                                                  dir, skip));
                     break;
                 }
                 case ParserGiD::farField:
@@ -706,7 +732,7 @@ void ParserGiD::readTet10Elements(const GroupCoordinates<CoordR3>& v,
             f_in >> vId[j];
         }
         f_in >> matId;
-        elems.push_back(new Tet10(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Tetrahedron10(v, id, vId, LayerId(0), matId));
     }
 }
 
@@ -718,7 +744,7 @@ void ParserGiD::readTet4Elements(const GroupCoordinates<CoordR3>& v,
     MatId matId;
     for (UInt i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
-        elems.push_back(new Tet4(v, id, vId, layerId, matId));
+        elems.push_back(new Tetrahedron4(v, id, vId, layerId, matId));
     }
 }
 
@@ -733,7 +759,7 @@ void ParserGiD::readTri6Elements(const GroupCoordinates<CoordR3>& v,
         for (UInt j = 0; j < 6; j++)
             f_in >> vId[j];
         f_in >> matId;
-        elems.push_back(new Tri6(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Triangle6(v, id, vId, LayerId(0), matId));
     }
 }
 
@@ -746,7 +772,7 @@ void ParserGiD::readTri3Elements(const GroupCoordinates<CoordR3>& v,
     CVecR3 normal;
     for (UInt i = 0; i < pSize_.tri3; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> matId >> layerId;
-        elems.push_back(new Tri3(v, id, vId, layerId, matId));
+        elems.push_back(new Triangle3(v, id, vId, layerId, matId));
     }
 }
 
@@ -978,11 +1004,12 @@ ParserGiD::readPlaneWave() {
             elems = boundToElemGroup(value);
         } else if (label.compare("Number of elements")==0) {
             UInt nE = atoi(value.c_str());
+            elems.clear();
             elems.reserve(nE);
             for (UInt i = 0; i < nE; i++) {
                 ElementId id;
                 f_in >> id;
-                elems = mesh_->elems().getGroupWith(id);
+                elems.add(mesh_->elems().getId(id));
             }
         } else if (label.compare("End of Planewave")==0) {
             return new PlaneWave(mag, elems, dir, pol);
@@ -1067,7 +1094,7 @@ Waveport* ParserGiD::readWaveport() {
             UInt e, f;
             for (UInt i = 0; i < numElements; i++) {
                 f_in >> e >> f;
-                const VolR* vol = mesh_->elems().get(ElementId(e))->castTo<VolR>();
+                const VolR* vol = mesh_->elems().getId(ElementId(e))->castTo<VolR>();
                 faces.push_back(Face(vol,f-1));
             }
         } else if (label.find("End of Waveport") != label.npos) {
@@ -1124,10 +1151,10 @@ Generator* ParserGiD::readGenerator() {
                 f_in >> e;
                 CoordinateId id = CoordinateId(e);
                 NodR* node = new NodR(*mesh_, ElementId(0), &id);
-                mesh_->elems().add(node, true);
+                mesh_->elems().addId(node);
                 nodes.push_back(node->getId());
             }
-            elems = mesh_->elems().getGroupWith(nodes);
+            elems = mesh_->elems().getId(nodes);
         } else if (label.compare("End of Generator")==0) {
             return new Generator(mag, elems, type, hardness);
         }
@@ -1162,7 +1189,7 @@ SourceOnLine* ParserGiD::readSourceOnLine() {
                 ids.push_back(ElementId(e));
             }
         } else if (label.compare("End of Source_on_line")==0) {
-            GroupElements<Lin> lines = mesh_->elems().getGroupWith(ids);
+            GroupElements<Lin> lines = mesh_->elems().getId(ids);
             return new SourceOnLine(mag, lines, type, hardness);
         }
     }
@@ -1400,7 +1427,9 @@ ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) const {
         return ParserGiD::outRqOnSurface;
     } else if (str.compare("OutRq_on_volume")==0) {
         return ParserGiD::outRqOnVolume;
-    } else if (str.compare("farField")) {
+    } else if (str.compare("Bulk_current")==0) {
+        return ParserGiD::bulkCurrent;
+    } else if (str.compare("farField")==0) {
         return ParserGiD::farField;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label." << endl;

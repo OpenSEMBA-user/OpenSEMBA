@@ -10,84 +10,61 @@
 
 #include <utility>
 #include <vector>
-#include "../../../../common/inputs/electromagneticSources/EMSource.h"
-#include "../../../../common/geometry/maps/Map.h"
-#include "../../core/CellGroup.h"
+
+using namespace std;
+
+#include "sources/EMSource.h"
+#include "geometry/maps/Map.h"
 #include "../../core/Comm.h"
-#include "../../core/BoundaryCondition.h"
 
 class DGSource {
 public:
-   typedef enum {
-      totalField,
-      scatteredField,
-      totalFieldNotBacked
-   } BackingType;
-	DGSource();
-	virtual
-	~DGSource();
-	void
-	 addJumps(
-	  const uint e1,
-	  const uint e2);
-	virtual void
-	 computeExcitation(
-	  const double intTime,
-	  const double minDT) = 0;
-	virtual void
-	 printInfo() const = 0;
+    typedef enum {
+        totalField,
+        scatteredField,
+        totalFieldNotBacked
+    } BackingType;
+    DGSource();
+    virtual ~DGSource();
+    void addJumps(
+            const UInt e1,
+            const UInt e2);
+    virtual void computeExcitation(
+            const Real intTime,
+            const Real minDT) = 0;
+    virtual void printInfo() const = 0;
 protected:
-	const static uint N = ORDER_N;
-	const static uint np = (N+1) * (N+2) * (N+3) / 6;
-	const static uint np2 = np * 2;
-	const static uint nfp = (N+1) * (N+2) / 2;
-	const static uint npnfp = np * nfp;
-	const static uint npnp = np * np;
-	const static uint faces = 4;
-	const static uint nfpfaces = nfp * faces;
-	// Excitation fields.
-	double *ExTInc, *EyTInc, *EzTInc;
-	double *HxTInc, *HyTInc, *HzTInc;
-	double *ExSInc, *EySInc, *EzSInc;
-	double *HxSInc, *HySInc, *HzSInc;
-	double *ExIncNB, *EyIncNB, *EzIncNB;
-	double *HxIncNB, *HyIncNB, *HzIncNB;
-	// Excitation total field jumps pointers.
-	uint nETF;
-	uint *ETFe;
-	double **dExT, **dEyT, **dEzT;
-	double **dHxT, **dHyT, **dHzT;
-	// Excitation scattered field jumps pointers.
-	uint nESF;
-	uint *ESFe;
-	double **dExS, **dEyS, **dEzS;
-	double **dHxS, **dHyS, **dHzS;
-	// Excitation total field not backed jumps.
-	uint nETFNB;
-	uint *ETFNBe;
-	double **dExTNB, **dEyTNB, **dEzTNB;
-	double **dHxTNB, **dHyTNB, **dHzTNB;
-	void
-	 initSource(
-	  const vector<const BoundaryCondition*>& bc,
-	  const MapGroup& map,
-      const CellGroup& cells,
-      FieldD3& dE, FieldD3& dH,
-      const int vmapM[faces][nfp]);
-	vector<pair<uint,uint> >
-	 getElemFaces(
-	  const vector<const BoundaryCondition*>& bc,
-	  const MapGroup& map,
-	  const CellGroup& cells,
-	  const BackingType type) const;
-	CVecD3*
-	 initPositions(
- 	  const vector<pair<uint, uint> >& elemFace,
-	  const CellGroup& cells) const;
-	bool
-	 isContainedInPlane(
-	  const CartesianPlane plane,
-	  const vector<const BoundaryCondition*>& bc) const;
+    const static UInt N = ORDER_N;
+    const static UInt np = (N+1) * (N+2) * (N+3) / 6;
+    const static UInt np2 = np * 2;
+    const static UInt nfp = (N+1) * (N+2) / 2;
+    const static UInt npnfp = np * nfp;
+    const static UInt npnp = np * np;
+    const static UInt faces = 4;
+    const static UInt nfpfaces = nfp * faces;
+    // Excitation fields.
+    FieldR3 ETInc, ESInc, EIncNB;
+    FieldR3 HTInc, HSInc, HIncNB;
+    // Excitation total field jumps pointers.
+    UInt nETF;
+    UInt *ETFe;
+    Real **dExT, **dEyT, **dEzT;
+    Real **dHxT, **dHyT, **dHzT;
+    // Excitation scattered field jumps pointers.
+    UInt nESF;
+    UInt *ESFe;
+    Real **dExS, **dEyS, **dEzS;
+    Real **dHxS, **dHyS, **dHzS;
+    // Excitation total field not backed jumps.
+    UInt nETFNB;
+    UInt *ETFNBe;
+    Real **dExTNB, **dEyTNB, **dEzTNB;
+    Real **dHxTNB, **dHyTNB, **dHzTNB;
+    void initSource(
+            FieldR3& dE, FieldR3& dH,
+            const Int vmapM[faces][nfp]);
+    CVecR3* initPositions(
+            const vector<pair<UInt, UInt> >& elemFace) const;
 };
 
 #endif /* SOLVERSOURCE_H_ */
