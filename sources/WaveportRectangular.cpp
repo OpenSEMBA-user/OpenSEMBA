@@ -15,6 +15,10 @@ WaveportRectangular::WaveportRectangular(const Magnitude* magn,
     GroupElements<const Surf>(elem),
     Waveport(magn, elem, excMode, mode) {
 
+    if (mode.first == 0 && mode.second == 0) {
+        printInfo();
+        throw Error("At least one mode must be non-zero.");
+    }
 }
 
 WaveportRectangular::WaveportRectangular(const WaveportRectangular& rhs)
@@ -38,18 +42,24 @@ bool WaveportRectangular::hasSameProperties(const EMSourceBase& rhs) const {
 CVecR3 WaveportRectangular::getWeight(
         const CVecR3& pos,
         const BoundTerminations& sym) const {
+    // Return normalized weights for electric field components.
     static const Real pi = acos(-1.0);
     CVecR3 res;
     CVecR3 rPos = pos - getOrigin(sym);
     const Real m = pi * getMode().first / getWidth(sym);
     const Real n = pi * getMode().second / getHeight(sym);
+    Real normFactor = m;
+    if (n > m) {
+        normFactor = n;
+    }
+    //const Real betaC = sqrt(pow(m,2) + pow(n,2));
     if (getExcitationMode() == Waveport::TE) {
-        res(x) =   n * cos(m * rPos(x)) * sin(n * rPos(y));
-        res(y) = - m * sin(m * rPos(x)) * cos(n * rPos(y));
+        res(x) =   n * cos(m * rPos(x)) * sin(n * rPos(y)) / normFactor;
+        res(y) = - m * sin(m * rPos(x)) * cos(n * rPos(y)) / normFactor;
         res(z) = (Real) 0.0;
     } else {
-        res(x) = - m * cos(m * rPos(x)) * sin(n * rPos(y));
-        res(y) = - m * sin(m * rPos(x)) * cos(n * rPos(y));
+        res(x) = - m * cos(m * rPos(x)) * sin(n * rPos(y)) / normFactor;
+        res(y) = - m * sin(m * rPos(x)) * cos(n * rPos(y)) / normFactor;
         res(z) = (Real) 0.0;
     }
     return res;
