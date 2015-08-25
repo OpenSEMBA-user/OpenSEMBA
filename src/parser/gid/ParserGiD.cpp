@@ -255,8 +255,7 @@ MeshUnstructured* ParserGiD::readMesh() {
     return new MeshUnstructured(cG, eG, lG);
 }
 
-GroupEMSources<>*
-ParserGiD::readEMSources() {
+GroupEMSources<>* ParserGiD::readEMSources() {
     GroupEMSources<>* res = new GroupEMSources<>();
     bool finished = false;
     bool found = false;
@@ -293,8 +292,7 @@ ParserGiD::readEMSources() {
     return res;
 }
 
-GroupPhysicalModels<>*
-ParserGiD::readMaterials(){
+GroupPhysicalModels<>* ParserGiD::readMaterials(){
     GroupPhysicalModels<>* res = new GroupPhysicalModels<>();
     string label, value;
     UInt materialCount = 0;
@@ -310,8 +308,7 @@ ParserGiD::readMaterials(){
     return res;
 }
 
-PhysicalModel*
-ParserGiD::readPhysicalModel(const MatId id) {
+PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
     string name;
     PhysicalModel::Type type = PhysicalModel::undefined;
     PMMultiport::Type mpType = PMMultiport::undefined;
@@ -398,8 +395,7 @@ ParserGiD::readPhysicalModel(const MatId id) {
     return NULL;
 }
 
-GroupOutRqs<>*
-ParserGiD::readOutputRequests() {
+GroupOutRqs<>* ParserGiD::readOutputRequests() {
     GroupOutRqs<>* res = new GroupOutRqs<>();
     bool finished;
     bool found = false;
@@ -1051,7 +1047,6 @@ ParserGiD::readDipole() {
 }
 
 Waveport* ParserGiD::readWaveport() {
-    vector<Face> faces;
     UInt numElements = 0;
     bool input = true;
     Magnitude* mag;
@@ -1059,6 +1054,7 @@ Waveport* ParserGiD::readWaveport() {
     Waveport::ExcitationMode excitationMode = Waveport::TE;
     pair<UInt,UInt> mode(1,0);
     string line, label, value;
+    GroupElements<const Surf> surfs;
     bool finished = false;
     while (!finished && !f_in.eof()) {
         getNextLabelAndValue(label,value);
@@ -1092,10 +1088,24 @@ Waveport* ParserGiD::readWaveport() {
             numElements = atoi(value.c_str());
         } else if (!label.compare("Elements")) {
             UInt e, f;
+            vector<Face> faces;
             for (UInt i = 0; i < numElements; i++) {
                 f_in >> e >> f;
-                const VolR* vol = mesh_->elems().getId(ElementId(e))->castTo<VolR>();
-                faces.push_back(Face(vol,f-1));
+                const ElemR* elem = mesh_->elems().getId(ElementId(e));
+                if (elem->is<VolR>()) {
+                    const VolR* vol = elem->castTo<VolR>();
+                    faces.push_back(Face(vol,f-1));
+                } else if (elem->is<SurfR>()) {
+                    surfs.add(elem->castTo<SurfR>());
+                }
+            }
+            surfs.add(mesh_->getSurfsMatching(faces));
+            if (surfs.size() < faces.size()) {
+                surfs.printInfo();
+                throw Error("Could not find surfaces matching element faces.");
+            }
+            if (surfs.size() == 0) {
+                throw Error("No surfaces read on waveport.");
             }
         } else if (label.find("End of Waveport") != label.npos) {
             finished = true;
@@ -1107,14 +1117,6 @@ Waveport* ParserGiD::readWaveport() {
     // Throws error message if finished was not updated.
     if (!finished) {
         throw Error("End of excitation type label not found.");
-    }
-    if (faces.size() == 0) {
-        throw Error("No surfaces read on waveport.");
-    }
-    GroupElements<const Surf> surfs = mesh_->getSurfsMatching(faces);
-    if (surfs.size() != faces.size()) {
-        surfs.printInfo();
-        throw Error("Could not find surfaces matching element faces.");
     }
     if (!input) {
         delete mag;
