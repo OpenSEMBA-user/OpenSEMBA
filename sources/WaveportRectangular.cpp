@@ -15,6 +15,8 @@ WaveportRectangular::WaveportRectangular(const Magnitude* magn,
     GroupElements<const Surf>(elem),
     Waveport(magn, elem, excMode, mode) {
 
+    box_ = this->getBound();
+
     if (mode.first == 0 && mode.second == 0) {
         printInfo();
         throw Error("At least one mode must be non-zero.");
@@ -26,6 +28,7 @@ WaveportRectangular::WaveportRectangular(const WaveportRectangular& rhs)
     GroupElements<const Surf>(rhs),
     Waveport(rhs) {
 
+    box_ = rhs.box_;
 }
 
 WaveportRectangular::~WaveportRectangular() {
@@ -67,14 +70,20 @@ CVecR3 WaveportRectangular::getWeight(
 
 Real WaveportRectangular::getWidth(const BoundTerminations& sym) const {
     CVecR3 origin = getOrigin(sym);
-    CVecR3 max = this->getBound().getMax();
+    CVecR3 max = box_.getMax();
     return max(x) - origin(x);
 }
 
 Real WaveportRectangular::getHeight(const BoundTerminations& sym) const {
     CVecR3 origin = getOrigin(sym);
-    CVecR3 max = this->getBound().getMax();
+    CVecR3 max = box_.getMax();
     return max(y) - origin(y);
+}
+
+void WaveportRectangular::set(
+        const GroupElements<const Elem>& constGroupElements) {
+    Waveport::set(constGroupElements);
+    box_ = this->getBound();
 }
 
 CVecR3 WaveportRectangular::getOrigin(const BoundTerminations& sym) const {
@@ -84,8 +93,8 @@ CVecR3 WaveportRectangular::getOrigin(const BoundTerminations& sym) const {
     if (sym[y].first != OptionsMesher::pml && sym[y].first != OptionsMesher::pec) {
         throw Error("Waveport must have PML or PEC boundary in the y lower axis");
     }
-    CVecR3 min = this->getBound().getMin();
-    CVecR3 max = this->getBound().getMax();
+    CVecR3 min = box_.getMin();
+    CVecR3 max = box_.getMax();
     CVecR3 res = min;
     if (sym[x].first == OptionsMesher::pmc) {
         res(x) = - max(x);

@@ -97,16 +97,7 @@ GroupElements<ElemR> Exporter::getBoundary(
     }
     GroupElements<ElemR> elem;
     BoxR3 quadBox = box.getBoundAsBox(dir,pos);
-    if (grid != nullptr) {
-        vector<BoxR3> quadBoxes = quadBox.chop(*grid);
-        vector<QuaR4*> quads(quadBoxes.size());
-        for (UInt i = 0; i < quadBoxes.size(); i++) {
-            quads[i] = new QuaR4(cG, ElementId(0), quadBoxes[i]);
-        }
-        elem.addId(quads);
-    } else {
-        elem.addId(new QuaR4(cG, ElementId(0), quadBox));
-    }
+    elem.addId(new QuaR4(cG, ElementId(0), quadBox));
     assert(elem.size() != 0);
     return elem;
 }
@@ -130,6 +121,19 @@ GroupElements<ElemR> Exporter::getGridElems(
     }
     GroupElements<ElemR> elem;
     BoxR3 box = grid->getFullDomainBoundingBox();
+    if (grid != nullptr) {
+        for (UInt d = 0; d < 3; d++) {
+            vector<BoxR3> quadBoxes =
+                    box.getBoundAsBox(CartesianAxis(d),L).chop(*grid);
+            vector<QuaR4*> quads(quadBoxes.size());
+            for (UInt i = 0; i < quadBoxes.size(); i++) {
+                quads[i] = new QuaR4(cG, ElementId(0), quadBoxes[i]);
+            }
+            elem.addId(quads);
+        }
+    } else {
+        elem.addId(new QuaR4(cG, ElementId(0), box));
+    }
     elem.addId(new HexR8(cG, ElementId(0), box));
     return elem;
 }

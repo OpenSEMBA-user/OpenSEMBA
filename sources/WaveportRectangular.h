@@ -22,6 +22,8 @@ public:
 
     DEFINE_CLONE(WaveportRectangular);
 
+    void set(const GroupElements<const Elem>&);
+
     bool hasSameProperties(const EMSourceBase& rhs) const;
     virtual CVecR3 getWeight(
             const CVecR3& pos,
@@ -31,7 +33,8 @@ public:
     Real getHeight(const BoundTerminations& sym) const;
 
     CVecR3 getOrigin(const BoundTerminations& sym) const;
-
+private:
+    BoxR3 box_; // This has been included for performance.
 };
 
 #endif /* SRC_COMMON_SOURCES_WAVEPORTRECTANGULAR_H_ */
