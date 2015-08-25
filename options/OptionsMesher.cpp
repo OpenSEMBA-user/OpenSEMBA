@@ -17,7 +17,6 @@ OptionsMesher::OptionsMesher() {
     vtkExport_ = false;
     gridStep_ = CVecR3(0.0);
     forbiddenLength_ = (Real) (1.0 / 3.0);
-    boundTermination_.resize(3);
     for (UInt i = 0; i < 3; i++) {
         boundTermination_[i].first = pml;
         boundTermination_[i].second = pml;

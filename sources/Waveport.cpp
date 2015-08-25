@@ -16,6 +16,21 @@ Waveport::Waveport(const Magnitude* magnitude,
 
 	excitationMode_ = excMode;
 	mode_ = mode;
+	// Performs checks
+	if (!this->getBound().isSurface()) {
+	    throw Error("Waveport elements must be contained in a single surface");
+	}
+
+	CVecR3 diagonal = this->getBound().getMax() - this->getBound().getMin();
+	if (!diagonal.isContainedInPlane(xy)) {
+	    throw Error("Waveport must be contained in plane xy.");
+	}
+
+	if (this->size() == 0) {
+	    throw Error("Waveport must contain some elements.");
+	}
+
+
 	check();
 }
 
@@ -88,18 +103,4 @@ CVecR3 Waveport::getNormal() const {
         }
     }
     return CVecR3();
-}
-
-CVecR3 Waveport::getLocalAxis() const {
-    CVecR3 localX, localY, localZ;
-    localZ = getNormal();
-    BoxR3 box = getBound();
-
-
-}
-
-vector<CVecR3> Waveport::toLocalAxis(const vector<CVecR3>& rhs) const {
-}
-
-vector<CVecR3> Waveport::toGlobalAxis(const vector<CVecR3>& rhs) const {
 }

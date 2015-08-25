@@ -9,6 +9,7 @@
 #define WAVEPORT_H_
 
 #include "../sources/EMSource.h"
+#include "../options/OptionsMesher.h"
 #include "base/error/ErrorNotImplemented.h"
 
 
@@ -33,12 +34,11 @@ public:
 	pair<UInt, UInt> getMode() const;
 
 	CVecR3 getNormal() const;
-	CVecR3 getLocalAxis() const;
-	CVecR3 getOffset() const;
-	virtual vector<CVecR3> toLocalAxis(const vector<CVecR3>& rhs) const;
-	virtual vector<CVecR3> toGlobalAxis(const vector<CVecR3>& rhs) const;
-	virtual vector<CVecR3> getElectricWeights(
-	        const BoundTerminations& symmetries) const = 0;
+
+	virtual CVecR3 getOrigin(const BoundTerminations& sym) const = 0;
+	virtual CVecR3 getWeight(
+	        const CVecR3& pos,
+	        const BoundTerminations& sym) const = 0;
 
 
     void printInfo() const;

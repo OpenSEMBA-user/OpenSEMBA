@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <array>
 
 using namespace std;
 
@@ -76,7 +77,7 @@ public:
     const CVecR3& getGridStep() const;
 
     const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
-    vector<pair<BoundType,BoundType>> getBoundTerminations() const;
+    array<pair<BoundType,BoundType>,3> getBoundTerminations() const;
     BoundType getBoundTermination(const UInt i, const UInt p) const;
     const string& getOutputName() const;
 
@@ -101,10 +102,10 @@ private:
     bool vtkExport_;
     bool postmshExport_;
     CVecR3 gridStep_;
-    vector<pair<BoundType,BoundType>> boundTermination_;
+    array<pair<BoundType,BoundType>,3> boundTermination_;
 };
 
-typedef vector<pair<OptionsMesher::BoundType,OptionsMesher::BoundType>>
+typedef array<pair<OptionsMesher::BoundType,OptionsMesher::BoundType>,3>
         BoundTerminations;
 //typedef OptionsMesher ConfOptSwitch;
 

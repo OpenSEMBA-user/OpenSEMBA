@@ -23,14 +23,14 @@ public:
     DEFINE_CLONE(WaveportRectangular);
 
     bool hasSameProperties(const EMSourceBase& rhs) const;
-    virtual vector<CVecR3> getElectricWeights(
-            const BoundTerminations& symmetries) const;
+    virtual CVecR3 getWeight(
+            const CVecR3& pos,
+            const BoundTerminations& sym) const;
 
-    virtual vector<CVecR3> toLocalAxis(const vector<CVecR3>& rhs) const;
-    virtual vector<CVecR3> toGlobalAxis(const vector<CVecR3>& rhs) const;
+    Real getWidth(const BoundTerminations& sym) const;
+    Real getHeight(const BoundTerminations& sym) const;
 
-    Real getWidth() const;
-    Real getHeight() const;
+    CVecR3 getOrigin(const BoundTerminations& sym) const;
 
 };
 

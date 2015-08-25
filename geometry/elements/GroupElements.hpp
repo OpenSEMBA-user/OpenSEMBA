@@ -173,9 +173,22 @@ BoxR3 GroupElements<E>::getBound() const {
         return BoxR3().setInfinity();
     }
     BoxR3 bound;
-    GroupElements<const ElemR> elems = this->template getOf<ElemR>();
-    for (UInt i = 0; i < elems.size(); i++) {
-        bound << elems(i)->getBound();
+    {
+        GroupElements<const ElemR> elems = this->template getOf<ElemR>();
+        for (UInt i = 0; i < elems.size(); i++) {
+            bound << elems(i)->getBound();
+        }
+    }
+    {
+        GroupElements<const ElemI> elemsI = this->template getOf<ElemI>();
+        for (UInt i = 0; i < elemsI.size(); i++) {
+            BoxI3 boxI = elemsI(i)->getBound();
+            CVecI3 min = boxI.getMin();
+            CVecI3 max = boxI.getMax();
+            bound << BoxR3(
+                    CVecR3(min(x),min(y),min(z)),
+                    CVecR3(max(x),max(y),max(z)));
+        }
     }
     return bound;
 }
