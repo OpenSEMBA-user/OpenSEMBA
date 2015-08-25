@@ -38,8 +38,7 @@ public:
 	virtual vector<CVecR3> toLocalAxis(const vector<CVecR3>& rhs) const;
 	virtual vector<CVecR3> toGlobalAxis(const vector<CVecR3>& rhs) const;
 	virtual vector<CVecR3> getElectricWeights(
-	        const vector<CVecR3>& pos,
-	        const BoundTerminations& symmetries) const;
+	        const BoundTerminations& symmetries) const = 0;
 
 
     void printInfo() const;

@@ -47,23 +47,13 @@ const string& Waveport::getName() const {
     return res;
 }
 
-Waveport::ExcitationMode
-Waveport::getExcitationMode() const {
+Waveport::ExcitationMode Waveport::getExcitationMode() const {
 	return excitationMode_;
 }
 
 
-pair<UInt, UInt>
-Waveport::getMode() const {
+pair<UInt, UInt> Waveport::getMode() const {
 	return mode_;
-}
-
-vector<CVecR3> Waveport::getElectricWeights(
-        const vector<CVecR3>& pos,
-        const BoundTerminations& termination) const {
-    vector<CVecR3> res(pos.size());
-    throw ErrorNotImplemented("Waveport::getElectricWeights");
-    return toGlobalAxis(res);
 }
 
 void Waveport::printInfo() const {

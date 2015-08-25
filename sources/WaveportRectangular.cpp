@@ -36,28 +36,28 @@ bool WaveportRectangular::hasSameProperties(const EMSourceBase& rhs) const {
 }
 
 vector<CVecR3> WaveportRectangular::getElectricWeights(
-        vector<CVecR3> pos,
         const BoundTerminations& symmetries) const {
-    static const Real pi = acos(-1.0);
-
-    vector<CVecR3> res(pos.size());
-    pos = toLocalAxis(pos);
-    const Real m = pi * getMode().first / getWidth();
-    const Real n = pi * getMode().second / getHeight();
-    if (getExcitationMode() == Waveport::TE) {
-        for (UInt i = 0; i < pos.size(); i++) {
-            res[i](x) = n * cos(m * pos[i](x)) * sin(n * pos[i](y));
-            res[i](y) = - m * sin(m * pos[i](x)) * cos(n * pos[i](y));
-            res[i](z) = (Real) 0.0;
-        }
-    } else {
-        for (UInt i = 0; i < pos.size(); i++) {
-            res[i](x) = - m * cos(m * pos[i](x)) * sin(n * pos[i](y));
-            res[i](y) = - m * sin(m * pos[i](x)) * cos(n * pos[i](y));
-            res[i](z) = (Real) 0.0;
-        }
-    }
-    return toGlobalAxis(res);
+//    static const Real pi = acos(-1.0);
+//
+    vector<CVecR3> res(this->size());
+//    pos = toLocalAxis(pos);
+//    const Real m = pi * getMode().first / getWidth();
+//    const Real n = pi * getMode().second / getHeight();
+//    if (getExcitationMode() == Waveport::TE) {
+//        for (UInt i = 0; i < pos.size(); i++) {
+//            res[i](x) = n * cos(m * pos[i](x)) * sin(n * pos[i](y));
+//            res[i](y) = - m * sin(m * pos[i](x)) * cos(n * pos[i](y));
+//            res[i](z) = (Real) 0.0;
+//        }
+//    } else {
+//        for (UInt i = 0; i < pos.size(); i++) {
+//            res[i](x) = - m * cos(m * pos[i](x)) * sin(n * pos[i](y));
+//            res[i](y) = - m * sin(m * pos[i](x)) * cos(n * pos[i](y));
+//            res[i](z) = (Real) 0.0;
+//        }
+//    }
+    return res;
+//    return toGlobalAxis(res);
 }
 
 vector<CVecR3> WaveportRectangular::toLocalAxis(

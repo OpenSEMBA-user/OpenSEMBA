@@ -24,7 +24,6 @@ public:
 
     bool hasSameProperties(const EMSourceBase& rhs) const;
     virtual vector<CVecR3> getElectricWeights(
-            vector<CVecR3> pos,
             const BoundTerminations& symmetries) const;
 
     virtual vector<CVecR3> toLocalAxis(const vector<CVecR3>& rhs) const;
