@@ -35,5 +35,5 @@ bool EMSource<T>::isSimilar(const EMSourceBase& rhs) const {
 template<class T>
 void EMSource<T>::printInfo() const {
     EMSourceBase::printInfo();
-    this->GroupElements<const T>::printInfo();
+//    this->GroupElements<const T>::printInfo();
 }
