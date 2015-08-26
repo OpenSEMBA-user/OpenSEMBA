@@ -164,12 +164,10 @@ OptionsSolver* ParserGiD::readSolverOptions() {
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
     if (!optionsFound) {
-        cerr << endl << "ERROR @ readSolverOptions(): "
-                << "EoF was reached but problem data was not found." << endl;
+        throw Error("EoF was reached but problem data was not found.");
     }
     if (!finished) {
-        cerr << endl << "ERROR @ readSolverOptions(): "
-                << "EoF reached, \"end of problem data\" not found." << endl;
+        throw Error("EoF reached, \"end of problem data\" not found.");
     }
     //
     return res;
