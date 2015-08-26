@@ -9,7 +9,7 @@ EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
 }
 
 EMSourceBase::EMSourceBase(const EMSourceBase& rhs) {
-    if (magnitude_ != NULL) {
+    if (rhs.magnitude_ != NULL) {
         magnitude_ = rhs.magnitude_->cloneTo<Magnitude>();
     } else {
         magnitude_ = rhs.magnitude_;
