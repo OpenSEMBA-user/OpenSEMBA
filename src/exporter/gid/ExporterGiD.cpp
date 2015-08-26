@@ -96,7 +96,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
         preName = "str_";
         grid = inMesh->castTo<Grid3>();
     } else {
-        mesh = inMesh->cloneTo<MeshUnstructured>();
+        mesh = inMesh->castTo<MeshUnstructured>();
         grid = smb->grid;
     }
     // Writes materials.
@@ -149,7 +149,10 @@ ExporterGiD::writeMesh(const SmbData* smb) {
     writeAllElements(gridAux, "Grid");
     //
     GiD_FlushPostFile();
-    delete mesh;
+    //
+    if (inMesh->is<MeshStructured>()) {
+        delete mesh;
+    }
 }
 
 void ExporterGiD::writeElements(
