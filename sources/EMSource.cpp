@@ -1,7 +1,7 @@
 #include "../sources/EMSource.h"
 
 EMSourceBase::EMSourceBase() {
-    magnitude_ = NULL;
+    magnitude_ = nullptr;
 }
 
 EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
@@ -9,7 +9,7 @@ EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
 }
 
 EMSourceBase::EMSourceBase(const EMSourceBase& rhs) {
-    if (rhs.magnitude_ != NULL) {
+    if (rhs.magnitude_ != nullptr) {
         magnitude_ = rhs.magnitude_->cloneTo<Magnitude>();
     } else {
         magnitude_ = rhs.magnitude_;
@@ -17,7 +17,9 @@ EMSourceBase::EMSourceBase(const EMSourceBase& rhs) {
 }
 
 EMSourceBase::~EMSourceBase() {
-
+    if (magnitude_ != nullptr) {
+        delete magnitude_;
+    }
 }
 
 bool EMSourceBase::check() const {
@@ -34,7 +36,7 @@ bool EMSourceBase::hasSameProperties(const EMSourceBase& rhs) const {
 string EMSourceBase::getMagnitudeFilename() const {
     const MagnitudeNumerical* mag =
             dynamic_cast<const MagnitudeNumerical*>(magnitude_);
-    if (mag != NULL) {
+    if (mag != nullptr) {
         return mag->getFilename();
     }
     return string();
@@ -63,7 +65,7 @@ MagnitudeNumerical* EMSourceBase::exportToFile(const string file,
 
 void EMSourceBase::printInfo() const {
     cout << " --- EMSource Base Info ---" << endl;
-    if (magnitude_ != NULL) {
+    if (magnitude_ != nullptr) {
         magnitude_->printInfo();
     } else {
         cout << "No magnitude defined." << endl;
