@@ -1159,10 +1159,7 @@ Generator* ParserGiD::readGenerator() {
             return new Generator(mag, elems, type, hardness);
         }
     }
-    // Throws error message if ending label was not found.
-    cerr << endl << "ERROR @ Parsing generator: "
-            << "End of Generator label not found. " << endl;
-    return new Generator();
+    throw("End of Generator label not found.");
 }
 
 SourceOnLine* ParserGiD::readSourceOnLine() {
@@ -1495,9 +1492,7 @@ Magnitude* ParserGiD::readMagnitude(const string typeIn) {
             }
         }
     }
-    cerr << endl << "ERROR @ readMagnitude: "
-            << "Unable to recognize magnitude type when reading excitation."
-            << endl;
+    throw Error("Unable to recognize magnitude type when reading excitation.");
     return NULL;
 }
 
