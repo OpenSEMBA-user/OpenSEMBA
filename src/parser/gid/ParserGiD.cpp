@@ -359,10 +359,7 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
             case PhysicalModel::PML:
                 return new PMVolumePML(id, name);
             case PhysicalModel::classic:
-                if (eC == 0 && mC == 0) {
-                    return new PMVolume(id, name, rEps, rMu);
-                }
-                return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
+                return new PMVolumeClassic(id, name, rEps, rMu, eC, mC);
             case PhysicalModel::elecDispersive:
                 return new PMVolumeDispersive(id, name, file);
             case PhysicalModel::isotropicsibc:
@@ -372,7 +369,7 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
                 case multilayer:
                     return readMultilayerSurf(id, name, layersStr);
                 default:
-                    cerr << endl << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
+                    throw Error("Undefined SIBC Type.");
                 }
                 break;
                 case PhysicalModel::wire:
@@ -384,9 +381,7 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
                         return new PMMultiportRLC(id, name, mpType, R, L, C);
                     }
                 default:
-                    cerr << endl << "ERROR @ Parsing materials: ";
-                    cerr << endl << "Material type not recognized." << endl;
-                    return NULL;
+                    throw Error("Material type not recognized.");
             }
         }
     }
