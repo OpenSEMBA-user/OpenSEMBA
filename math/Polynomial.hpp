@@ -1,13 +1,13 @@
 template<class T>
 Polynomial<T>::Polynomial() {
-	nv = 0;
-	nm = 0;
+	nv_ = 0;
+	nm_ = 0;
 }
  
 template<class T>
 Polynomial<T>::Polynomial(const UInt nvar) {
-	nv = nvar;
-	nm = 0;
+	nv_ = nvar;
+	nm_ = 0;
 }
 // =-=-=-=-=-=-=-= Destructors =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 // =-=-=-=-=-=-=-= General methods =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -16,29 +16,29 @@ Polynomial<T>&
 Polynomial<T>::operator=(const Polynomial<T> &param) {
 	if (this == &param)
 		return *this;
-	nv = param.nv;
-	nm = param.nm;
-	mv = param.mv;
-	mp = param.mp;
+	nv_ = param.nv_;
+	nm_ = param.nm_;
+	mv_ = param.mv_;
+	mp_ = param.mp_;
 	return *this;
 }
  
 template<class T>
 inline UInt
 Polynomial<T>::numberOfVariables() const {
-	return nv;
+	return nv_;
 }
 
 template<class T>
 inline UInt
 Polynomial<T>::numberOfMonomials() const {
-	return nm;
+	return nm_;
 }
 
 template<class T>
 inline T
 Polynomial<T>::monomialValue(const UInt i) const {
-	return mv[i];
+	return mv_[i];
 }
 
 template<class T>
@@ -46,21 +46,21 @@ inline UInt
 Polynomial<T>::monomialPower(
  const UInt monomial,
  const UInt variable) const {
-	return mp[monomial][variable];
+	return mp_[monomial][variable];
 }
  
 template<class T>
 T
 Polynomial<T>::eval(const CartesianVector<T,1>& pos) const {
-	assert(1 == nv);
+	assert(1 == nv_);
 	T prod;
 	UInt m, v;
 	T res = 0.0;
-	for (m = 0; m < nm; m++) {
+	for (m = 0; m < nm_; m++) {
 		prod = 1.0;
-		for (v = 0; v < nv; v++)
-			prod *= pow(pos(v), mp[m][v]);
-		res += mv[m] * prod;
+		for (v = 0; v < nv_; v++)
+			prod *= pow(pos(v), mp_[m][v]);
+		res += mv_[m] * prod;
 	}
 	return res;
 }
@@ -68,15 +68,15 @@ Polynomial<T>::eval(const CartesianVector<T,1>& pos) const {
 template<class T>
 T
 Polynomial<T>::eval(const CartesianVector<T,2>& pos) const {
-	assert(2 == nv);
+	assert(2 == nv_);
 	T prod;
 	UInt m, v;
 	T res = 0.0;
-	for (m = 0; m < nm; m++) {
+	for (m = 0; m < nm_; m++) {
 		prod = 1.0;
-		for (v = 0; v < nv; v++)
-			prod *= pow(pos(v), mp[m][v]);
-		res += mv[m] * prod;
+		for (v = 0; v < nv_; v++)
+			prod *= pow(pos(v), mp_[m][v]);
+		res += mv_[m] * prod;
 	}
 	return res;
 }
@@ -84,15 +84,15 @@ Polynomial<T>::eval(const CartesianVector<T,2>& pos) const {
 template<class T>
 T
 Polynomial<T>::eval(const CartesianVector<T,3>& pos) const {
-	assert(3 == nv);
+	assert(3 == nv_);
 	T prod;
 	UInt m, v;
 	T res = 0.0;
-	for (m = 0; m < nm; m++) {
+	for (m = 0; m < nm_; m++) {
 		prod = 1.0;
-		for (v = 0; v < nv; v++)
-			prod *= pow(pos(v), mp[m][v]);
-		res += mv[m] * prod;
+		for (v = 0; v < nv_; v++)
+			prod *= pow(pos(v), mp_[m][v]);
+		res += mv_[m] * prod;
 	}
 	return res;
 }
@@ -100,15 +100,15 @@ Polynomial<T>::eval(const CartesianVector<T,3>& pos) const {
 template<class T>
 T
 Polynomial<T>::eval(const CartesianVector<T,4>& pos) const {
-	assert(4 == nv);
+	assert(4 == nv_);
 	T prod;
 	UInt m, v;
 	T res = 0.0;
-	for (m = 0; m < nm; m++) {
+	for (m = 0; m < nm_; m++) {
 		prod = 1.0;
-		for (v = 0; v < nv; v++)
-			prod *= pow(pos(v), mp[m][v]);
-		res += mv[m] * prod;
+		for (v = 0; v < nv_; v++)
+			prod *= pow(pos(v), mp_[m][v]);
+		res += mv_[m] * prod;
 	}
 	return res;
 }
@@ -117,12 +117,12 @@ template<class T>
 void
 Polynomial<T>::derive(Int coord) {
 	// Performs derivative with respect to coordinate coord.
-	for (UInt m = 0; m < nm; m++)
-		if (mp[m][coord] == 0)
-			mv[m] = 0.0;
+	for (UInt m = 0; m < nm_; m++)
+		if (mp_[m][coord] == 0)
+			mv_[m] = 0.0;
 		else {
-			mv[m] *= mp[m][coord];
-			mp[m][coord]--;
+			mv_[m] *= mp_[m][coord];
+			mp_[m][coord]--;
 		}
 	// Removes monomials with value zero.
 	removeZeros();
@@ -131,11 +131,11 @@ Polynomial<T>::derive(Int coord) {
 template<class T>
 void
 Polynomial<T>::removeZeros() {
-	for (UInt i = 0; i < nm; i++)
-		if (mv[i] == 0) {
-			nm--;
-			mv.erase(mv.begin() + i);
-			mp.erase(mp.begin() + i);
+	for (UInt i = 0; i < nm_; i++)
+		if (mv_[i] == 0) {
+			nm_--;
+			mv_.erase(mv_.begin() + i);
+			mp_.erase(mp_.begin() + i);
 		}
 }
  
@@ -145,7 +145,7 @@ Polynomial<T>::operator*(const Polynomial<T> &param) const {
 	// PURPOSE:
 	// Performs polynomial product.
 	// Algebraically, convolution is the same operation as multiplying
-	assert(nv == 1 && param.nv == 1);
+	assert(nv_ == 1 && param.nv_ == 1);
 	DynMatrix<T> a, b, c;
 	Polynomial<T> res(1);
 	// Converts polynomials to vectors.
@@ -162,7 +162,7 @@ Polynomial<T>::operator*(const Polynomial<T> &param) const {
 template<class T>
 Polynomial<T>&
 Polynomial<T>::operator*=(const Polynomial<T> &param) {
-	assert(nv == 1 && param.nv == 1);
+	assert(nv_ == 1 && param.nv_ == 1);
 	DynMatrix<T> a, b, c;
 	// Converts polynomials to vectors.
 	a = polynomialToMatrix();
@@ -182,13 +182,13 @@ Polynomial<T>::operator^(const Polynomial<T> &param) {
 	// Performs external product between polynomials. This means that
 	// variables in both polynomials will be treated as if they are different.
 	UInt i, j;
-	Polynomial<T> res(nv + param.nv);
+	Polynomial<T> res(nv_ + param.nv_);
 	vector<Int> pow;
-	for (i = 0; i < nm; i++)
-		for (j = 0; j < param.nm; j++) {
-			pow = mp[i];
-			pow.insert(pow.end(), param.mp[j].begin(), param.mp[j].end());
-			res.addMonomial(mv[i]*param.mv[j], pow);
+	for (i = 0; i < nm_; i++)
+		for (j = 0; j < param.nm_; j++) {
+			pow = mp_[i];
+			pow.insert(pow.end(), param.mp_[j].begin(), param.mp_[j].end());
+			res.addMonomial(mv_[i]*param.mv_[j], pow);
 		}
 	return res;
 }
@@ -199,13 +199,13 @@ Polynomial<T>::operator^=(const Polynomial<T> &param) {
 	// PURPOSE: Performs external product between polynomials. This means that
 	// variables in both polynomials will be treated as if they are different.
 	UInt i, j;
-	Polynomial<T> res(nv + param.nv);
+	Polynomial<T> res(nv_ + param.nv_);
 	vector<Int> pow;
-	for (i = 0; i < nm; i++)
-		for (j = 0; j < param.nm; j++) {
-			pow = mp[i];
-			pow.insert(pow.end(), param.mp[j].begin(), param.mp[j].end());
-			res.addMonomial(mv[i]*param.mv[j], pow);
+	for (i = 0; i < nm_; i++)
+		for (j = 0; j < param.nm_; j++) {
+			pow = mp_[i];
+			pow.insert(pow.end(), param.mp_[j].begin(), param.mp_[j].end());
+			res.addMonomial(mv_[i]*param.mv_[j], pow);
 		}
 	*this = res;
 	return *this;
@@ -215,8 +215,8 @@ template<class T>
 Polynomial<T>&
 Polynomial<T>::operator/=(const T param) {
 	assert(param != 0);
-	for (UInt i = 0 ; i < nm; i++)
-		mv[i] /= param;
+	for (UInt i = 0 ; i < nm_; i++)
+		mv_[i] /= param;
 	return *this;
 }
  
@@ -234,16 +234,16 @@ Polynomial<T>::vectorToPolynomial (T *v, Int sv, Int nvar) {
 template<class T>
 Polynomial<T>
 Polynomial<T>::matrixToPolynomial (const DynMatrix<T> &param) const {
-	assert(nv <= 2);
+	assert(nv_ <= 2);
 	Polynomial<T> res;
 	if (param.nCols() == 1) {
-		res.nv = 1;
+		res.nv_ = 1;
 		for (UInt i = 0; i < param.nRows(); i++)
 			if (param(i,0) != 0.0)
 				res.addMonomial(param(i,0), i);
 	} else {
 		vector<Int> pow(2,0);
-		res.nv = 2;
+		res.nv_ = 2;
 		for (UInt i = 0; i < param.nRows(); i++)
 			for (UInt j = 0; j < param.nCols(); j++)
 				if (param(i,j) != 0.0) {
@@ -258,31 +258,31 @@ Polynomial<T>::matrixToPolynomial (const DynMatrix<T> &param) const {
 template<class T>
 DynMatrix<T>
 Polynomial<T>::polynomialToMatrix() const {
-	assert(nv == 1);
+	assert(nv_ == 1);
 	DynMatrix<T>  res(maxPower() + 1, 1);
 	// Copies monomials to vector positions.
-	for (UInt i = 0; i < nm; i++)
-		res(mp[i][0], 0) = mv[i];
+	for (UInt i = 0; i < nm_; i++)
+		res(mp_[i][0], 0) = mv_[i];
 	return res;
 }
  
 template<class T>
 void
 Polynomial<T>::addMonomial(T val, vector<Int> pow) {
-	assert(nv == pow.size());
-	nm++;
-	mv.push_back(val);
-	mp.push_back(pow);
+	assert(nv_ == pow.size());
+	nm_++;
+	mv_.push_back(val);
+	mp_.push_back(pow);
 }
  
 template<class T>
 void
 Polynomial<T>::addMonomial(T val, Int pow) {
-	assert(nv == 1);
+	assert(nv_ == 1);
 	vector<Int> vPow(1, pow);
-	nm++;
-	mv.push_back(val);
-	mp.push_back(vPow);
+	nm_++;
+	mv_.push_back(val);
+	mp_.push_back(vPow);
 }
  
 template<class T>
@@ -291,10 +291,10 @@ Polynomial<T>::maxPower() const {
 	// Returns maximum power present in this polynomial.
 	UInt i, j;
 	Int res = 0;
-	for (i = 0; i < nv; i++)
-		for (j = 0; j < nm; j++)
-			if (mp[j][i] > res)
-				res = mp[j][i];
+	for (i = 0; i < nv_; i++)
+		for (j = 0; j < nm_; j++)
+			if (mp_[j][i] > res)
+				res = mp_[j][i];
 	return res;
 }
  
@@ -302,14 +302,14 @@ template<class T>
 void
 Polynomial<T>::printInfo() const {
 	cout << " -- Polynomial<T> -- " << endl;
-	cout << "Number of variables:			" << nv << endl;
-	cout << "Number of monomials:			" << nm << endl;
+	cout << "Number of variables:			" << nv_ << endl;
+	cout << "Number of monomials:			" << nm_ << endl;
 	cout << "Value		Powers		" << endl;
 	UInt i, j;
-	for (i = 0; i < nm; i++) {
-		cout << mv[i] << "               ";
-		for (j = 0; j < nv; j++)
-			cout << mp[i][j] << " ";
+	for (i = 0; i < nm_; i++) {
+		cout << mv_[i] << "               ";
+		for (j = 0; j < nv_; j++)
+			cout << mp_[i][j] << " ";
 		cout << endl;
 	}
 }

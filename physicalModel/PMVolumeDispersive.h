@@ -65,9 +65,6 @@ protected:
     void addPole(
             const complex<Real>& pole_,
             const complex<Real>& res_);
-    void addDrudePole(
-            const complex<Real>& pole_,
-            const complex<Real>& res_);
 };
 
 #endif /* PMVOLUMEDISPERSIVE_H_ */
