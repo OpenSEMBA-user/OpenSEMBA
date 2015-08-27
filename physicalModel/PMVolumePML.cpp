@@ -8,7 +8,7 @@
 #include "PMVolumePML.h"
 
 PMVolumePML::PMVolumePML(const MatId id, const string& name)
-: PMVolume(id, name, 1.0, 1.0){
+: PMVolume(id, name){
 	for (UInt i = 0; i < 3; i++) {
 		direction[i] = none;
 	}
@@ -17,7 +17,7 @@ PMVolumePML::PMVolumePML(const MatId id, const string& name)
 PMVolumePML::PMVolumePML(
  const MatId id,
  const Direction direction_[3],
- const BoxR3& bound_) : PMVolume(id, "PML", 1.0, 1.0){
+ const BoxR3& bound_) : PMVolume(id, "PML"){
 	bound.first = bound_.getMin();
 	bound.second = bound_.getMax();
 	for (UInt i = 0; i < 3; i++) {
@@ -91,8 +91,7 @@ PMVolumePML::getOrientation() const {
 	return Orientation::undefined;
 }
 
-bool
-PMVolumePML::isUniaxial() const {
+bool PMVolumePML::isUniaxial() const {
 	Orientation orientation = getOrientation();
 	return (
 	 orientation == Orientation::PMLx
@@ -100,8 +99,7 @@ PMVolumePML::isUniaxial() const {
 	 || orientation == Orientation::PMLz);
 }
 
-bool
-PMVolumePML::isBiaxial() const {
+bool PMVolumePML::isBiaxial() const {
 	Orientation orientation = getOrientation();
 	return (
 	 orientation == Orientation::PMLxy
@@ -109,8 +107,7 @@ PMVolumePML::isBiaxial() const {
 	 || orientation == Orientation::PMLzx);
 }
 
-bool
-PMVolumePML::isTriaxial() const {
+bool PMVolumePML::isTriaxial() const {
 	return (getOrientation() == Orientation::PMLxyz);
 }
 
@@ -119,8 +116,7 @@ PMVolumePML::getBound() const {
 	return bound;
 }
 
-CVecR3
-PMVolumePML::getWidth() const {
+CVecR3 PMVolumePML::getWidth() const {
 	CVecR3 res;
 	for (UInt i = 0; i < 3; i++) {
 		res(i) = abs(bound.second(i) - bound.first(i));
@@ -128,8 +124,7 @@ PMVolumePML::getWidth() const {
 	return res;
 }
 
-UInt
-PMVolumePML::getFirstOrientationIndex() const {
+UInt PMVolumePML::getFirstOrientationIndex() const {
 	Orientation orientation = getOrientation();
 	switch (orientation) {
 	case Orientation::PMLx:
@@ -151,8 +146,7 @@ PMVolumePML::getFirstOrientationIndex() const {
 	}
 }
 
-CVecR3
-PMVolumePML::getPMLBeginningPosition() const {
+CVecR3 PMVolumePML::getPMLBeginningPosition() const {
 	CVecR3 res;
 	for (UInt i = 0; i < 3; i++) {
 		if (direction[i] == plus) {
