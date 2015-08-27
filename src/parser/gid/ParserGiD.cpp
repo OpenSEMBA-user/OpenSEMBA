@@ -14,21 +14,6 @@ ParserGiD::ParserGiD() {
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
     mesh_ = NULL;
-    scalingFactor_ = 1.0;
-    struct stat st;
-    if (stat(getFilename().c_str(), &st) == 0) {
-        if (st.st_mode & S_IFDIR) {
-            cerr << endl << "ERROR@GiDParser::GiDParser(): "
-                    << getFilename() << "It is a directory " << endl;
-        }  else if(st.st_mode & S_IFREG) {
-            f_in.open(getFilename().c_str(), ifstream::in);
-            if (f_in.fail()) {
-                cerr << endl << "ERROR @ ParserGiD::GiDParser(): "
-                        << "Problem opening file: " << getFilename() << endl;
-            }
-            return;
-        }
-    }
 }
 
 ParserGiD::~ParserGiD() {
@@ -36,16 +21,19 @@ ParserGiD::~ParserGiD() {
 }
 
 SmbData* ParserGiD::read() {
+    if (isFolder()) {
+        string msg(getFilename() +  " is a directory.");
+        throw Error(msg);
+    }
     if (!canOpen()) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "Can not openfile: " << getFilename() << endl;
-        exit(-1);
+        throw Error("Can not openfile: " + getFilename());
     }
-    if (!checkVersionCompatibility(readVersion())) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "File version is not supported. " << endl;
-        exit(-1);
+    openAsInput(f_in);
+    string version = readVersion();
+    if (!checkVersionCompatibility(version)) {
+        throw Error("File version " + version + " is not supported.");
     }
+
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
     res->solverOptions = readSolverOptions();
