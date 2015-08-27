@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 using namespace std;
 
 #include <libgen.h>
@@ -26,9 +27,9 @@ using namespace std;
 
 class Parser {
 public:
+    Parser();
 	virtual ~Parser();
-	virtual void
-	 printInfo() const = 0;
+	virtual void printInfo() const = 0;
 
     static inline string
     &trim(string &s) {
@@ -37,22 +38,22 @@ public:
 
 protected:
 	ifstream f_in; // Input file stream.
+	Real scalingFactor_;
+    pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
+
 	static CVecR3 strToCartesianVector(const string& str);
 	static bool strToBool(const string& value);
-	static inline string
-	 &ltrim(string &s) {
+	static inline string &ltrim(string &s) {
 		s.erase(s.begin(), find_if(s.begin(),
 		 s.end(), not1(ptr_fun<int, int>(isspace))));
 	 	return s;
 	}
-	static inline string
-	 &rtrim(string &s) {
+	static inline string &rtrim(string &s) {
 		s.erase(find_if(s.rbegin(), s.rend(),
 		 not1(ptr_fun<int, int>(isspace))).base(), s.end());
 		return s;
 	}
-	static inline bool
-	toBool(const UInt param) {
+	static inline bool toBool(const UInt param) {
 		assert(param == 0 || param == 1);
 		if (param == 1) {
 			return true;
@@ -60,5 +61,7 @@ protected:
 			return false;
 		}
 	}
+
+	void postReadOperations(SmbData* res);
 };
 #endif

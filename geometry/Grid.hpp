@@ -595,7 +595,7 @@ void Grid<D>::enlarge(const pair<CVecRD, CVecRD>& pad,
         const pair<CVecRD, CVecRD>& sizes) {
     for (Int d = 0; d < D; d++) {
         for (Int b = 0; b < 2; b++) {
-            if (b == 0) {
+            if (b == L) {
                 enlargeBound(CartesianAxis(d), CartesianBound(b),
                         pad.first(d), sizes.first(d));
             } else {
@@ -619,22 +619,22 @@ void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
     if (pad == 0.0) {
         return;
     }
-    Int cell;
+    Int boundCell;
     if (b == L) {
-        cell = 0;
+        boundCell = 0;
     } else {
-        cell = this->getNumCells()(d) - 1;
+        boundCell = this->getNumCells()(d) - 1;
     }
     vector<Real> newSteps;
-    if (MathUtils::equal(getStep(d,b), siz) || siz == 0.0) {
-        siz = getStep(d,cell);
+    if (MathUtils::greaterEqual(getStep(d,b), siz) || siz == 0.0) {
+        siz = getStep(d,boundCell);
         // Computes enlargement for a padding with same size.
         Int nCells = (Int) MathUtils::ceil(abs(pad) / abs(siz), (Real) 0.01);
         newSteps.resize(nCells, siz);
     } else {
         // Computes enlargement for padding with different size.
         // Taken from AutoCAD interface programmed in LISP (2001).
-        Real d12 = getStep(d,cell);
+        Real d12 = getStep(d,boundCell);
         Real d14 = abs(pad);
         Real d34 = abs(siz);
         Real d13 = d14 - d34;
