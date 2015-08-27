@@ -28,12 +28,12 @@ public:
     GroupOutRqs& operator=(VectorPtr<O>&);
     GroupOutRqs& operator=(VectorPtr<O>&&);
 
-//    template<typename O2>
-//    O* add(O2* newElem);
-//    template<typename O2>
-//    vector<O*> add(vector<O2*>&);
-//    template<typename O2>
-//    vector<O*> add(Group<O2>&);
+    template<typename O2>
+    VectorPtr<O> add(O2* newElem);
+    template<typename O2>
+    vector<O*> add(vector<O2*>&);
+    template<typename O2>
+    vector<O*> add(Group<O2>&);
 
     bool isSimilar(const GroupOutRqs& rhs) const;
 
