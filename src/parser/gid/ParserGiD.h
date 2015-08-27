@@ -56,8 +56,6 @@ private:
 
     MeshUnstructured* mesh_;
     ProblemSize pSize_;
-    Real scalingFactor_;
-    pair<CVecR3,CVecR3> boundaryPadding_, boundaryMeshSize_;
 
     OptionsSolver* readSolverOptions();
     OptionsMesher* readMesherOptions();

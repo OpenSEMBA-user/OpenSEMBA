@@ -9,7 +9,6 @@
 
 ParserGiD::ParserGiD() {
     mesh_ = NULL;
-    scalingFactor_ = 1.0;
 }
 
 ParserGiD::ParserGiD(const string& fn)
@@ -59,11 +58,7 @@ SmbData* ParserGiD::read() {
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
 
-    res->mesh->applyScalingFactor(scalingFactor_);
-    if (res->grid != NULL) {
-        res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
-        res->grid->applyScalingFactor(scalingFactor_);
-    }
+    postReadOperations(res);
 
     return res;
 }
