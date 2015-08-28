@@ -291,11 +291,15 @@ GroupPhysicalModels<>* ParserGiD::readMaterials(){
 
 PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
     string name;
-    PhysicalModel::Type type = PhysicalModel::undefined;
+    PhysicalModel::Type type;
     PMMultiport::Type mpType = PMMultiport::undefined;
     SIBCType surfType = undefinedSIBC;
     string layersStr;
     Real rEps, rMu, eC, mC;
+    PMVolumeAnisotropic::Model anisotropicModel;
+    LocalAxes localAxes;
+    CVecR3 rEpsPrincipalAxes;
+    Real kappa;
     Real radius, R, L, C;
     ProjectFile file;
     while (!f_in.eof()) {
@@ -330,6 +334,20 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
             file = ProjectFile(getFolder() + trim(value));
         } else if (label.compare("Layers")==0) {
             layersStr = value;
+        } else if (label.compare("Anisotropic model") == 0) {
+            anisotropicModel = strToAnisotropicModel(value);
+        } else if (label.compare("Local Axes") == 0) {
+            localAxes = strToLocalAxes(value);
+        } else if (label.compare("Relative permittivity principal axes")) {
+            rEpsPrincipalAxes = strToCVecR3(value);
+        } else if (label.compare("Crystal relative permeability")) {
+            rMu = atof(value.c_str());
+        } else if (label.compare("Kappa")) {
+            kappa = atof(value.c_str());
+        } else if (label.compare("Ferrite relative permeability")) {
+            rMu = atof(value.c_str());
+        } else if (label.compare("Ferrite relative permittivity")) {
+            rEps = atof(value.c_str());
         } else if (label.compare("End of Material")==0) {
             // Creates material.
             switch (type) {
@@ -345,6 +363,17 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
                 return new PMVolumeClassic(id, name, rEps, rMu, eC, mC);
             case PhysicalModel::elecDispersive:
                 return new PMVolumeDispersive(id, name, file);
+            case PhysicalModel::anisotropic;
+                switch (anisotropicModel) {
+                case PMVolumeAnisotropic::Model::crystal:
+                    return PMVolumeAnisotropicCrystal(id, name, localAxes,
+                            rEpsPrincipalAxes, rMu);
+                case PMVolumeAnisotropic::Model::ferrite:
+                    return PMVolumeAnisotropicFerrite(id, name, localAxes,
+                            kappa,rMu,rEps);
+                default:
+                    throw Error("Material type not recognized.");
+                }
             case PhysicalModel::isotropicsibc:
                 switch (surfType) {
                 case sibc:
@@ -1280,6 +1309,8 @@ PhysicalModel::Type ParserGiD::strToMaterialType(string str) const {
         return PhysicalModel::classic;
     } else if (str.compare("Dispersive")==0) {
         return PhysicalModel::elecDispersive;
+    } else if (str.compare("Anisotropic")==0) {
+        return PhysicalModel::anisotropic;
     } else if (str.compare("SIBC")==0) {
         return PhysicalModel::isotropicsibc;
     } else if (str.compare("Wire")==0) {
@@ -1287,9 +1318,7 @@ PhysicalModel::Type ParserGiD::strToMaterialType(string str) const {
     } else if (str.find("Conn_") != string::npos) {
         return PhysicalModel::multiport;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized material label." << endl;
-        return PhysicalModel::undefined;
+        throw Error("Unreckognized material label.");
     }
 }
 
