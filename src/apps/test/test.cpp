@@ -10,8 +10,8 @@ GTEST_API_ int main(int argc, char **argv) {
   string tests;
 
 //  tests += "*ProjectFile*:";
-//  tests += "*Math*:";
-  tests += "*Geometry*:";
+  tests += "*Math*:";
+//  tests += "*Geometry*:";
 //  tests += "*ParserSTL*:";
 //  tests += "*Mesher*:";
 //  tests += "*EMSource*:";
@@ -20,7 +20,7 @@ GTEST_API_ int main(int argc, char **argv) {
 //  tests += "*ConformalMesherLauncherTest*:";
 
 
-//  ::testing::GTEST_FLAG(filter) = tests.c_str();
+  ::testing::GTEST_FLAG(filter) = tests.c_str();
 
 //  ::testing::GTEST_FLAG(filter) = string("-AdapterFDTDTest.OpenFOAMConversion:-SembaTest.sphereThroughOpenfoam");
 
