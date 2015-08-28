@@ -9,24 +9,24 @@
 #define SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPIC_H_
 
 #include "PMVolume.h"
-#ibclude "math/LocalAxes.h"
+#include "math/LocalAxes.h"
 
 class PMVolumeAnisotropic: public PMVolume {
 public:
     PMVolumeAnisotropic(
             const MatId matId,
             const string& name,
-            const LocalAxes& local,
-            const array<PMVolume,3> tensor
-            );
+            const LocalAxes& local);
     virtual ~PMVolumeAnisotropic();
-    MatR33 getRelPermittivityMatrix() const;
-    MatR33 getRelPermeabilityMatrix() const;
-    MatR33 getElectricConductivity() const;
-    MatR33 getMagneticConductivity() const;
+
+    LocalAxes getLocalAxe() const;
+    virtual MatR33 getRelPermittivityMatR() const = 0;
+    virtual MatR33 getRelPermeabilityMatR() const = 0;
+    virtual MatR33 getElectricConductivityMat() const = 0;
+    virtual MatR33 getMagneticConductivityMat() const = 0;
+
 private:
     LocalAxes localAxe_;
-    array<PMVolume*,3> tensor_;
 };
 
 #endif /* SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPIC_H_ */

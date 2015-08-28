@@ -19,7 +19,7 @@ StaMatrix<T,NROWS,NCOLS>::StaMatrix(
 template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>::~StaMatrix() {
 }
-// =-=-=-=-=-=-=-= General methods =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 template <class T, UInt NROWS, UInt NCOLS>
 StaMatrix<T,NROWS,NCOLS>&
 StaMatrix<T,NROWS,NCOLS>::operator=(
@@ -210,12 +210,24 @@ StaMatrix<T,NROWS,NCOLS>::operator/=(const T param) {
 }
 
 template<class T, UInt NROWS, UInt NCOLS>
-StaMatrix<T,NROWS,NCOLS>
-StaMatrix<T,NROWS,NCOLS>::operator*(T param) const {
+StaMatrix<T,NROWS,NCOLS> StaMatrix<T,NROWS,NCOLS>::operator*(T param) const {
    StaMatrix<T,NROWS,NCOLS> res;
-   for (UInt i = 0; i < NROWS*NCOLS; i++)
+   for (UInt i = 0; i < NROWS*NCOLS; i++) {
       res._val[i] = _val[i] * param;
+   }
    return res;
+}
+
+template<class T, UInt NROWS, UInt NCOLS>
+CartesianVector<T,NCOLS>  StaMatrix<T,NROWS,NCOLS>::operator*(
+        CartesianVector<T,NCOLS> rhs) const {
+    CartesianVector<T,NCOLS> res;
+    for (UInt i = 0; i < NROWS; i++) {
+        for (UInt j = 0; j < NCOLS; j++) {
+            res(i) += this->val(i,j)*rhs(j);
+        }
+    }
+    return res;
 }
 
 template<class T, UInt NROWS, UInt NCOLS>

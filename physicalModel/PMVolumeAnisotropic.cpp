@@ -9,11 +9,15 @@
 
 PMVolumeAnisotropic::PMVolumeAnisotropic(
         const MatId matId,
-        const string& name) : PMVolume(matId, name) {
-    // TODO Auto-generated constructor stub
+        const string& name,
+        const LocalAxes& localAxe) : PMVolume(matId, name) {
+    localAxe_ = localAxe;
 }
 
 PMVolumeAnisotropic::~PMVolumeAnisotropic() {
-    // TODO Auto-generated destructor stub
+
 }
 
+LocalAxes PMVolumeAnisotropic::getLocalAxe() const {
+    return localAxe_;
+}
