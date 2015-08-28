@@ -7,6 +7,9 @@
 
 #include "LocalAxes.h"
 
+LocalAxes::LocalAxes() {
+}
+
 LocalAxes::LocalAxes(CVecR3 eulerAngles, CVecR3 origin) {
     eulerAngles_ = eulerAngles;
     origin_ = origin;

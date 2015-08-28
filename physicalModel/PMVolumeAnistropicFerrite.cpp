@@ -7,12 +7,20 @@
 
 #include "PMVolumeAnistropicFerrite.h"
 
-PMVolumeAnistropicFerrite::PMVolumeAnistropicFerrite() {
-    // TODO Auto-generated constructor stub
-
+PMVolumeAnistropicFerrite::PMVolumeAnistropicFerrite(
+        const MatId matId,
+        const string& name,
+        const LocalAxes& local,
+        const Real kappa,
+        const Real relativePermeability,
+        const Real relativePermittivity)
+: PMVolumeAnisotropic(matId, name, local) {
+    kappa_ = kappa;
+    relativePermeability_ = relativePermeability;
+    relativePermittivity_ = relativePermittivity;
 }
 
 PMVolumeAnistropicFerrite::~PMVolumeAnistropicFerrite() {
-    // TODO Auto-generated destructor stub
+
 }
 

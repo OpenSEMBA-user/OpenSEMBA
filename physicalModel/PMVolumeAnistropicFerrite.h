@@ -14,8 +14,19 @@
 // https://en.wikipedia.org/wiki/Polder_tensor
 class PMVolumeAnistropicFerrite: public PMVolumeAnisotropic {
 public:
-    PMVolumeAnistropicFerrite();
+    PMVolumeAnistropicFerrite(
+            const MatId matId,
+            const string& name,
+            const LocalAxes& local,
+            const Real kappa,
+            const Real relativePermeability,
+            const Real relativePermittivity);
     virtual ~PMVolumeAnistropicFerrite();
+
+private:
+    Real kappa_;
+    Real relativePermeability_;
+    Real relativePermittivity_;
 };
 
 #endif /* SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISTROPICFERRITE_H_ */

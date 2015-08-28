@@ -24,7 +24,7 @@ public:
     CVecR3 convertToGlobal(const CVecR3& local) const;
 
 private:
-    CVecR3 eulerAngles_;
+    CVecR3 eulerAngles_; // Euler angles in radians.
     CVecR3 origin_;
 };
 
