@@ -13,6 +13,11 @@
 
 class PMVolumeAnisotropic: public PMVolume {
 public:
+    enum class Model {
+        crystal,
+        ferrite
+    };
+
     PMVolumeAnisotropic(
             const MatId matId,
             const string& name,

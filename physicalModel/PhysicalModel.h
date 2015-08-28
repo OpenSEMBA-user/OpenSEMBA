@@ -19,17 +19,16 @@ using namespace std;
 class PhysicalModel : public ClassIdBase<MatId> {
 public:
     enum Type {
-        vacuum = 1,
-        PEC = 2,
-        PMC = 3,
-        SMA = 4,
-        classic = 5,
-        elecDispersive = 6,
-        isotropicsibc = 7,
-        PML = 8,
-        wire = 9,
-        multiport = 10,
-        undefined = 0
+        PEC,
+        PMC,
+        SMA,
+        classic,
+        elecDispersive,
+        anisotropic,
+        isotropicsibc,
+        PML,
+        wire,
+        multiport
     };
 
 	PhysicalModel(const MatId id, const string& name);
