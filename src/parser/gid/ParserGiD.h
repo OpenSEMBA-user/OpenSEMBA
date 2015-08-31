@@ -95,6 +95,7 @@ private:
     SourceOnLine* readSourceOnLine();
     PhysicalModel* readPhysicalModel(const MatId id);
     Magnitude* readMagnitude(const string type);
+    LocalAxes strToLocalAxes(const string& str);
     CVecR3 strToCVecR3(const string& str) const;
     Generator::Type strToGeneratorType(string label) const;
     Generator::Hardness strToGeneratorHardness(string str) const;
@@ -103,6 +104,7 @@ private:
     OptionsMesher::BoundType strToBoundType(string label) const;
     PhysicalModel::Type strToMaterialType(string label) const;
     PMMultiport::Type strToMultiportType(string label) const;
+    PMVolumeAnisotropic::Model strToAnisotropicModel(string label) const;
     OutRq<void>::Type strToOutputType(string label) const;
     SIBCType strToSIBCType(string str) const;
     GiDOutputType strToGidOutputType(string label) const;
