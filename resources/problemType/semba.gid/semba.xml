@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Infoproblemtype version="1.0">
+    <Program>
+        <Name>Semba</Name>
+        <Version>0.9</Version>
+		<EngineVersion>XXXX</EngineVersion>
+        <MinimumGiDVersion>9.1.0b</MinimumGiDVersion>
+		<ImageFileBrowser>images/ico.png</ImageFileBrowser>        
+        <Maintainer>GEG - University of Granada</Maintainer>
+        <Homepage>http://www.ugrfdtd.com</Homepage>
+        <ShortDescription>Full-wave Time Domain electromagnetic solvers.</ShortDescription>
+        <Description>
+         Full-wave Time Domain electromagnetic solvers.
+        </Description>
+    </Program>
+</Infoproblemtype>
