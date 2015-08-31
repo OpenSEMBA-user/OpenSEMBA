@@ -20,6 +20,8 @@ using namespace std;
 #include "PMVolumeClassic.h"
 #include "PMVolumeDispersive.h"
 #include "PMVolumeAnisotropic.h"
+#include "PMVolumeAnisotropicCrystal.h"
+#include "PMVolumeAnisotropicFerrite.h"
 #include "PMVolumePML.h"
 #include "PMMultiportPredefined.h"
 #include "PMMultiportRLC.h"

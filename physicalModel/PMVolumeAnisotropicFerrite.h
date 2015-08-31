@@ -23,6 +23,8 @@ public:
             const Real relativePermittivity);
     virtual ~PMVolumeAnisotropicFerrite();
 
+    DEFINE_CLONE(PMVolumeAnisotropicFerrite);
+
     MatR33 getRelPermittivityMatR() const;
 
     MatR33 getRelPermeabilityMatR() const; // Real part.

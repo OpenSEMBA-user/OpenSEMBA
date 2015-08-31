@@ -21,6 +21,8 @@ public:
             const Real relativePermeability);
     virtual ~PMVolumeAnisotropicCrystal();
 
+    DEFINE_CLONE(PMVolumeAnisotropicCrystal);
+
     const CVecR3 getPrincipalAxesRelativePermittivity() const;
     Real getRelativePermeability() const;
 
