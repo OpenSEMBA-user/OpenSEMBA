@@ -50,8 +50,7 @@ MatR33 LocalAxes::getTransformationMatrix() const {
 
 MatR33 LocalAxes::convertToGlobal(const MatR33& local) const {
     MatR33 transformation = getTransformationMatrix();
-    MatR33 transformationTransposed = transformation;
-    transformationTransposed.transpose();
+    MatR33 transformationTransposed = getTransformationMatrix().transpose();
     MatR33 global = transformation * local * transformationTransposed;
     return global;
 }
