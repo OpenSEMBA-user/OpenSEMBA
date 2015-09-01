@@ -374,20 +374,50 @@ vector<Box<T,D>> Box<T,D>::chop(const CVecTD origStep) const {
         }
     }
     Grid<D> grid(Box<Real,3>(minR,maxR), stepR);
-    CartesianVector<Int,D> numBoxes = grid.getNumCells();
+    return chop(grid);
+}
+
+template<class T, Int D>
+vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
+    static_assert(D == 3, "Chop can't be used for Boxes with D != 3");
+    // Prepares subgrid with the size of the box preserving grid positions.
+    vector<Real> pos[D];
+    for (UInt d = 0; d < D; d++) {
+        pos[d] = grid.getPosInRange(d, min_(d), max_(d));
+        if (min_(d) != pos[d].front()) {
+            vector<Real> aux(1,min_(d));
+            aux.insert(aux.end(), pos[d].begin(), pos[d].end());
+            pos[d] = aux;
+        }
+        if (max_(d) != pos[d].back()) {
+            pos[d].push_back(max_(d));
+        }
+    }
+    Grid<D> subGrid;
+    subGrid.setPos(pos);
+    //
+    CartesianVector<Int,D> numBoxes = subGrid.getNumCells();
     vector<Box<T,D>> res;
     res.reserve(numBoxes(x)*numBoxes(y)*numBoxes(z));
     for (Int i = 0; i < numBoxes(x); i++) {
         for (Int j = 0; j < numBoxes(y); j++) {
             for (Int k = 0; k < numBoxes(z); k++) {
-                CVecR3 min = grid.getPos(CartesianVector<Int,3>(i,j,k));
-                CVecR3 max = grid.getPos(CartesianVector<Int,3>(i+1,j+1,k+1));
-                CVecI3 minI, maxI;
+                CVecR3 min = subGrid.getPos(CartesianVector<Int,3>(i,j,k));
+                CVecR3 max = subGrid.getPos(CartesianVector<Int,3>(i+1,j+1,k+1));
+                CVecTD minT, maxT;
                 for (UInt d = 0; d < D; d++) {
-                    minI(d) = (T) min(d);
-                    maxI(d) = (T) max(d);
+                    if (min(d) >= min_(d)) {
+                        minT(d) = (T) min(d);
+                    } else {
+                        minT(d) = min_(d);
+                    }
+                    if (max(d) <= max_(d)) {
+                        maxT(d) = (T) max(d);
+                    } else {
+                        maxT(d) = max_(d);
+                    }
                 }
-                res.push_back(Box<T,D>(minI,maxI));
+                res.push_back(Box<T,D>(minT,maxT));
             }
         }
     }

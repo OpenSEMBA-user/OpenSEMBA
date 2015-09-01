@@ -38,8 +38,7 @@ public:
             const Real rMu,
             const Real elecCond,
             const Real magnCond,
-            const vector<PoleResidue>& poleResidue,
-            const vector<PoleResidue>& drudePoleResidue = vector<PoleResidue>());
+            const vector<PoleResidue>& poleResidue);
     PMVolumeDispersive(
             const MatId id,
             const string& name,
@@ -50,25 +49,20 @@ public:
     UInt getPoleNumber() const;
     complex<Real> getPole(UInt p) const;
     complex<Real> getResidue(UInt p) const;
-    UInt getDrudePoleNumber() const;
-    complex<Real> getDrudePole(UInt p) const;
-    complex<Real> getDrudeResidue(UInt p) const;
     virtual Real getElectricConductivity() const;
 
-    virtual bool isDispersive() const;
     bool isClassic() const;
     bool isSimplyConductive() const;
+    bool isDispersive() const;
 
     void printInfo() const;
     const ProjectFile getFile() const;
 
 protected:
-    vector<PoleResidue> poleResidue_, drudePoleResidue_; // Residues for dispers model. c_p.
+    Real rEpsInfty_, rMuInfty_; // @ InftyFreq.
+    vector<PoleResidue> poleResidue_; // Residues for dispers model. c_p.
     ProjectFile file_;
     void addPole(
-            const complex<Real>& pole_,
-            const complex<Real>& res_);
-    void addDrudePole(
             const complex<Real>& pole_,
             const complex<Real>& res_);
 };

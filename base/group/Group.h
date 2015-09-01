@@ -2,296 +2,72 @@
 #define GROUP_H_
 
 #include <algorithm>
-#include <cassert>
-#include <cstdlib>
-#include <memory>
-#include <set>
-#include <type_traits>
-#include <utility>
-#include <vector>
-using namespace std;
+#include <iostream>
+#include <typeinfo>
 
-#include "GroupIterator.h"
-#include "GroupConstIterator.h"
-
-#include "base/class/ClassBase.h"
+#include "../class/ClassBase.h"
+#include "../sequence/Vector.h"
 
 template<typename T>
-class Group : public virtual ClassBase {
-    template<typename T2>
-    friend class Group;
+class Group : public virtual ClassBase,
+              public Vector<T*> {
 public:
-    typedef GroupIterator<T> Iterator;
-    typedef GroupIterator<T> ConstIterator;
-
-    Group();
-
+    Group() {}
     template<typename T2>
-    Group(T2*);
+    Group(T2* e)                     : Vector<T*>(e) {}
     template<typename T2>
-    Group(const vector<T2*>&);
+    Group(const std::vector<T2*>& e) : Vector<T*>(e) {}
+    template<typename T2>
+    Group(VectorPtr<T2>&       rhs) : Vector<T*>(rhs) {}
+    template<typename T2>
+    Group(const VectorPtr<T2>& rhs) : Vector<T*>(rhs) {}
+    Group(VectorPtr<T>&        rhs) : Vector<T*>(rhs) {}
+    template<typename T2>
+    Group(VectorPtr<T2>&& rhs) : Vector<T*>(std::move(rhs)) {}
+    Group(VectorPtr<T >&& rhs) : Vector<T*>(std::move(rhs)) {}
+    virtual ~Group() {}
 
-    Group(Group<T>&);
-    template<typename T2>
-    Group(Group<T2>& rhs);
-    template<typename T2>
-    Group(const Group<T2>& rhs);
+    Group<T>* clone() const;
 
-    Group(Group<T>&&);
-    template<typename T2>
-    Group(Group<T2>&& rhs);
-
-    virtual ~Group();
-
-    ClassBase* clone() const;
-    Group<typename remove_const<T>::type> newGroup() const;
-
-    Group<T>& operator=(Group<T>& rhs);
-    template<typename T2>
-    Group<T>& operator=(Group<T2>& rhs);
-    template<typename T2>
-    Group<T>& operator=(const Group<T2>& rhs);
-    Group<T>& operator=(Group<T>&& rhs);
-    template<typename T2>
-    Group<T>& operator=(Group<T2>&& rhs);
-
-    void reserve(const UInt nS) { element_.reserve(nS);    }
-    bool empty() const          { return element_.empty(); }
-    UInt size () const          { return element_.size();  }
-    void clear();
+    virtual Group& operator=(VectorPtr<T>&  rhs);
+    virtual Group& operator=(VectorPtr<T>&& rhs);
 
     template<class T2>
     bool emptyOf() const;
     template<class T2>
-    UInt sizeOf() const;
-
-    Iterator      begin()       { return Iterator     (*this, 0); }
-    ConstIterator begin() const { return ConstIterator(*this, 0); }
-
-    Iterator      end()       { return Iterator     (*this, size()); }
-    ConstIterator end() const { return ConstIterator(*this, size()); }
+    UInt sizeOf () const;
 
     template<class T2>
-    Group<typename conditional<is_const<T>::value, const T2, T2>::type>
-                    getGroupOf();
+    Group<typename std::conditional<std::is_const<T>::value,
+                                    const T2, T2>::type>
+                    getOf    ();
     template<class T2>
-    Group<const T2> getGroupOf() const;
+    Group<const T2> getOf    () const;
     template<class T2>
-    Group<T>        getGroupNotOf();
+    Group<typename std::conditional<std::is_const<T>::value,
+                                    const T2, T2>::type>
+                    getOfOnly();
     template<class T2>
-    Group<const T>  getGroupNotOf() const;
-
-    template<class T2>
-    Group<typename conditional<is_const<T>::value, const T2, T2>::type>
-                    getGroupOfOnly();
-    template<class T2>
-    Group<const T2> getGroupOfOnly() const;
-    template<class T2>
-    Group<T>        getGroupNotOfOnly();
-    template<class T2>
-    Group<const T>  getGroupNotOfOnly() const;
-
-    Group<T> getGroupWith(const UInt);
-    Group<T> getGroupWith(const vector<UInt>&);
-    Group<const T> getGroupWith(const UInt) const;
-    Group<const T> getGroupWith(const vector<UInt>&) const;
-    Group<T> getGroupWithout(const UInt);
-    Group<T> getGroupWithout(const vector<UInt>&);
-    Group<const T> getGroupWithout(const UInt) const;
-    Group<const T> getGroupWithout(const vector<UInt>&) const;
-
-    T*       operator()(const UInt i)       { return element_[i].get(); }
-    const T* operator()(const UInt i) const { return element_[i].get(); }
-
-    T*       get(const UInt i)       { return element_[i].get(); }
-    const T* get(const UInt i) const { return element_[i].get(); }
-
-    template<typename T2>
-    T* add(T2* newElem);
-    template<typename T2>
-    vector<T*> add(const vector<T2*>&);
-    template<typename T2>
-    vector<T*> add(Group<T2>&);
-    template<typename T2>
-    vector<T*> add(const Group<T2>&);
-    template<typename T2>
-    vector<T*> add(Group<T2>&&);
-
-
-    void remove(const UInt);
-    void remove(const vector<UInt>&);
+    Group<const T2> getOfOnly() const;
 
     void printInfo() const;
 
-protected:
-    virtual void construct();
-    virtual void destruct ();
-
-    virtual vector<T*> preprocess (const vector<T*>& elems) const;
-    virtual void       postprocess(const UInt i);
-
 private:
-    vector<shared_ptr<T>> element_;
-    set<const T*> set_;
-
     template<typename T2>
-    vector<typename add_pointer<
-               typename conditional<is_const<T>::value,
-                                    const T2, T2>::type>::type>
-                    getElemsOf_   () const;
+    std::vector<UInt> getElemsOf_       () const;
     template<typename T2>
-    vector<T*>      getElemsNotOf_() const;
-
-    template<class T2>
-    vector<UInt> getElemsWith_() const;
-    vector<T*>  getElemsWith_   (const vector<UInt>&) const;
-    vector<T*>  getElemsWithout_(const vector<UInt>&) const;
-
+    std::vector<UInt> getElemsNotOf_    () const;
     template<typename T2>
-    static vector<T*> compatElems_(const vector<T2*>&);
-
-    vector<typename add_pointer<
-               typename remove_const<T>::type>::type> cloneElems_() const;
+    std::vector<UInt> getElemsOfOnly_   () const;
+    template<typename T2>
+    std::vector<UInt> getElemsNotOfOnly_() const;
 };
 
 #include "Group.hpp"
-#include "GroupIterator.hpp"
-#include "GroupConstIterator.hpp"
 
-#define USE_GROUP_CONSTRUCTS(NAME, T)                               \
-    NAME() {}                                                       \
-    template<typename T2>                                           \
-    NAME(T2*& elems)            { Group<T>::add(elems);          }  \
-    template<typename T2>                                           \
-    NAME(vector<T2*>& elems)    { Group<T>::add(elems);          }  \
-    NAME(Group<T>& rhs)         { Group<T>::add(rhs);            }  \
-    template<typename T2>                                           \
-    NAME(Group<T2>& rhs)        { Group<T>::add(rhs);            }  \
-    template<typename T2>                                           \
-    NAME(const Group<T2>& rhs)  { Group<T>::add(rhs);            }  \
-    NAME(Group<T>&& rhs)        { Group<T>::add(std::move(rhs)); }  \
-    template<typename T2>                                           \
-    NAME(Group<T2>&& rhs)       { Group<T>::add(std::move(rhs)); }  \
-    virtual ~NAME() {}
-
-#define DEFINE_GROUP_CLONE(NAME, T)                         \
-    ClassBase* clone() const {                              \
-        return new NAME<typename remove_const<T>::type>(    \
-                       this->newGroup());                   \
-    }
-
-#define USE_GROUP_ASSIGN(T)                         \
-    Group<T>& operator=(Group<T>& rhs) {            \
-        return Group<T>::operator=(rhs);            \
-    }                                               \
-    template<typename T2>                           \
-    Group<T>& operator=(Group<T2>& rhs) {           \
-        return Group<T>::operator=(rhs);            \
-    }                                               \
-    template<typename T2>                           \
-    Group<T>& operator=(const Group<T2>& rhs) {     \
-        return Group<T>::operator=(rhs);            \
-    }                                               \
-    Group<T>& operator=(Group<T>&& rhs) {           \
-        return Group<T>::operator=(std::move(rhs)); \
-    }                                               \
-    template<typename T2>                           \
-    Group<T>& operator=(Group<T2>&& rhs) {          \
-        return Group<T>::operator=(std::move(rhs)); \
-    }
-
-#define USE_GROUP_GETGROUPOF(T)                                         \
-    template<class T2>                                                  \
-    Group<typename conditional<is_const<T>::value, const T2, T2>::type> \
-        getGroupOf() {                                                  \
-        return Group<T>::getGroupOf<T2>();                              \
-    }                                                                   \
-    template<class T2>                                                  \
-    Group<const T2> getGroupOf() const {                                \
-        return Group<T>::getGroupOf<T2>();                              \
-    }                                                                   \
-    template<class T2>                                                  \
-    Group<T> getGroupNotOf() {                                          \
-        return Group<T>::getGroupNotOf<T2>();                           \
-    }                                                                   \
-    template<class T2>                                                  \
-    Group<const T> getGroupNotOf() const {                              \
-        return Group<T>::getGroupNotOf<T2>();                           \
-    }                                                                   \
-    template<class T2>                                                  \
-    Group<typename conditional<is_const<T>::value, const T2, T2>::type> \
-        getGroupOfOnly() {                                              \
-        return Group<T>::getGroupOfOnly<T2>();                          \
-    }                                                                   \
-    template<class T2>                                                  \
-    Group<const T2> getGroupOfOnly() const {                            \
-        return Group<T>::getGroupOfOnly<T2>();                          \
-    }                                                                   \
-    template<class T2>                                                  \
-    Group<T> getGroupNotOfOnly() {                                      \
-        return Group<T>::getGroupNotOfOnly<T2>();                       \
-    }                                                                   \
-    template<class T2>                                                  \
-    Group<const T> getGroupNotOfOnly() const {                          \
-        return Group<T>::getGroupNotOfOnly<T2>();                       \
-    }
-
-#define USE_GROUP_GETGROUPWITH(T)                                       \
-    Group<T> getGroupWith(const UInt elems) {                           \
-        return Group<T>::getGroupWith(elems);                           \
-    }                                                                   \
-    Group<T> getGroupWith(const vector<UInt>& elems) {                  \
-        return Group<T>::getGroupWith(elems);                           \
-    }                                                                   \
-    Group<const T> getGroupWith(const UInt elems) const {               \
-        return Group<T>::getGroupWith(elems);                           \
-    }                                                                   \
-    Group<const T> getGroupWith(const vector<UInt>& elems) const {      \
-        return Group<T>::getGroupWith(elems);                           \
-    }                                                                   \
-    Group<T> getGroupWithout(const UInt elems) {                        \
-        return Group<T>::getGroupWithout(elems);                        \
-    }                                                                   \
-    Group<T> getGroupWithout(const vector<UInt>& elems) {               \
-        return Group<T>::getGroupWithout(elems);                        \
-    }                                                                   \
-    Group<const T> getGroupWithout(const UInt elems) const {            \
-        return Group<T>::getGroupWithout(elems);                        \
-    }                                                                   \
-    Group<const T> getGroupWithout(const vector<UInt>& elems) const {   \
-        return Group<T>::getGroupWithout(elems);                        \
-    }
-
-#define USE_GROUP_GET(T)                                            \
-    T*       get(const UInt i)       { return Group<T>::get(i); }   \
-    const T* get(const UInt i) const { return Group<T>::get(i); }
-
-#define USE_GROUP_ADD(T)                        \
-template<typename T2>                           \
-    T* add(T2* newElem) {                       \
-        return Group<T>::add(newElem);          \
-    }                                           \
-    template<typename T2>                       \
-    vector<T*> add(const vector<T2*>& elems) {  \
-        return Group<T>::add(elems);            \
-    }                                           \
-    template<typename T2>                       \
-    vector<T*> add(Group<T2>& rhs) {            \
-        return Group<T>::add(rhs);              \
-    }                                           \
-    vector<T*> add(const Group<T2>& rhs) {      \
-        return Group<T>::add(rhs);              \
-    }                                           \
-    vector<T*> add(Group<T2>&& rhs) {           \
-        return Group<T>::add(std::move(rhs));   \
-    }
-
-#define USE_GROUP_REMOVE(T)                     \
-    void remove(const UInt elem) {              \
-        Group<T>::remove(elem);                 \
-    }                                           \
-    void remove(const vector<UInt>& elems) {    \
-        Group<T>::remove(elems);                \
+#define DEFINE_GROUP_CLONE(NAME, T)             \
+    NAME<T>* clone() const {                    \
+        return new NAME<T>(this->cloneElems()); \
     }
 
 #endif /* GROUP_H_ */

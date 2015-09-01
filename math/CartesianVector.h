@@ -94,9 +94,7 @@ public:
     CartesianVector<T,D>& setPlusInfty();
     CartesianVector<T,D>& setMinusInfty();
 
-
     CartesianVector<T,D>& cyclicPermutation(const Int n=1);
-
 
     virtual string toStr() const;
     virtual void printInfo() const;

@@ -22,11 +22,11 @@ MapSurface::~MapSurface() {
 }
 
 MapSurface::MapSurface(
-      const Tri* localSurf,
-      pair<const Tet*, const Tet*> neighbours) {
+      const Triangle* localSurf,
+      pair<const Tetrahedron*, const Tetrahedron*> neighbours) {
    local = localSurf;
-   const Tet* n1 = neighbours.first;
-   const Tet* n2 = neighbours.second;
+   const Tetrahedron* n1 = neighbours.first;
+   const Tetrahedron* n2 = neighbours.second;
    UInt f = n1->getFaceNumber(localSurf);
    if (n1->isLocalFace(f, *local)) {
       vol[0] = n1;
@@ -55,9 +55,9 @@ MapSurface::operator=(const MapSurface& rhs) {
 
 void
 MapSurface::reassignPointers(const GroupElements<const Elem>& nEG) {
-    local = nEG.get(local->getId())->castTo<Tri>();
+    local = nEG.getId(local->getId())->castTo<Triangle>();
     for (UInt i = 0; i < 2; i++) {
-        vol[i] = nEG.get(vol[i]->getId())->castTo<Tet>();
+        vol[i] = nEG.getId(vol[i]->getId())->castTo<Tetrahedron>();
     }
 }
 

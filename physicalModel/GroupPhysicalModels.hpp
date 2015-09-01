@@ -7,8 +7,25 @@
 #include "GroupPhysicalModels.h"
 
 template<typename P>
-void
-GroupPhysicalModels<P>::printInfo() const {
+GroupPhysicalModels<P>& GroupPhysicalModels<P>::operator=(VectorPtr<P>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    GroupId<P, MatId>::operator=(rhs);
+    return *this;
+}
+
+template<typename P>
+GroupPhysicalModels<P>& GroupPhysicalModels<P>::operator=(VectorPtr<P>&& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    GroupId<P, MatId>::operator=(std::move(rhs));
+    return *this;
+}
+
+template<typename P>
+void GroupPhysicalModels<P>::printInfo() const {
     cout << "---- GroupPhysicalModels info ----" << endl;
     cout << "Number of physical models: " << this->size() << endl;
     Group<P>::printInfo();
@@ -16,7 +33,7 @@ GroupPhysicalModels<P>::printInfo() const {
 
 template<typename P>
 void GroupPhysicalModels<P>::getDirection(PMVolumePML::Direction direction[3],
-                                         const UInt i) const {
+                                          const UInt i) const {
     assert(i < PMVolumePML::possibleDirections);
     direction[x] = getDirectionFromInt((i/9) % 3);
     direction[y] = getDirectionFromInt((i/3) % 3);

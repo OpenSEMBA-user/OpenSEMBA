@@ -19,7 +19,9 @@ using namespace std;
 #include "math/CartesianVector.h"
 #include "base/class/ClassIdBase.h"
 
-CREATE_ID(CoordinateId);
+class CoordinateBase;
+
+typedef Id<CoordinateBase> CoordinateId;
 
 class CoordinateBase : public virtual ClassIdBase<CoordinateId> {
 public:
@@ -40,7 +42,7 @@ public:
     Coordinate(const Coordinate& rhs);
     virtual ~Coordinate();
 
-    DEFINE_CLONE((Coordinate<T,D>));
+    Coordinate<T,D>* clone() const;
 
     Coordinate& operator=(const Coordinate& rhs);
 

@@ -44,6 +44,7 @@ public:
 
     const Polygon* getFace(const UInt f) const;
     Real getAreaOfFace(const UInt f) const;
+    Real getVolume() const;
 
     void printInfo() const;
 

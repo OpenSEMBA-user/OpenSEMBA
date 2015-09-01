@@ -274,7 +274,7 @@ CoordinateId* Element<T>::vertexToStructured(
             delete [] vIds;
             throw ErrorCoordNotFound(coordId);
         }
-        coord = cG.get(coordId);
+        coord = cG.getId(coordId);
         if (coord->pos() != cell) {
             delete [] vIds;
             throw ErrorCoordNotCoincident(coordId);
@@ -302,7 +302,7 @@ CoordinateId* Element<T>::vertexToUnstructured(
             delete [] vIds;
             throw ErrorCoordNotFound(coordId);
         }
-        coord = cG.get(coordId);
+        coord = cG.getId(coordId);
         if (coord->pos() != pos) {
             delete [] vIds;
             throw ErrorCoordNotCoincident(coordId);

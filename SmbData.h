@@ -8,7 +8,6 @@
 #ifndef SMBDATA_H_
 #define SMBDATA_H_
 
-#include "electromagneticSources/GroupEMSources.h"
 #include "geometry/MeshUnstructured.h"
 #include "geometry/MeshStructured.h"
 #include "geometry/Grid.h"
@@ -16,10 +15,9 @@
 #include "options/OptionsMesher.h"
 #include "options/OptionsSolver.h"
 #include "outRq/GroupOutRqs.h"
-
 #include "ProjectFile.h"
-
 #include "base/class/ClassBase.h"
+#include "sources/GroupEMSources.h"
 
 class SmbData : public virtual ProjectFile,
                 public virtual ClassBase {

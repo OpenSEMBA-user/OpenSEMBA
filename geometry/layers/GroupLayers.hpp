@@ -8,10 +8,28 @@
 #include "GroupLayers.h"
 
 template<typename L>
-const L* GroupLayers<L>::get(const string name) const {
+GroupLayers<L>& GroupLayers<L>::operator=(VectorPtr<L>& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    GroupId<L, LayerId>::operator=(rhs);
+    return *this;
+}
+
+template<typename L>
+GroupLayers<L>& GroupLayers<L>::operator=(VectorPtr<L>&& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    GroupId<L, LayerId>::operator=(std::move(rhs));
+    return *this;
+}
+
+template<typename L>
+const L* GroupLayers<L>::getName(const string name) const {
     for (UInt i = 0; i < this->size(); i++) {
         if (this->get(i)->getName() == name) {
-            return this->element_[i];
+            return this->get(i);
         }
     }
     return NULL;
@@ -20,5 +38,5 @@ const L* GroupLayers<L>::get(const string name) const {
 template<typename L>
 void GroupLayers<L>::printInfo() const {
     cout<< "--- GroupLayers info ---" << endl;
-    Group<L>::printInfo();
+    GroupId<L, LayerId>::printInfo();
 }

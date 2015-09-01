@@ -25,40 +25,56 @@ struct lexCompareCoord {
 };
 
 template<typename C = Coord>
-class GroupCoordinates : public virtual GroupId<C, CoordinateId> {
+class GroupCoordinates : public GroupId<C, CoordinateId> {
 public:
-    USE_GROUP_CONSTRUCTS(GroupCoordinates, C);
-
+    GroupCoordinates();
     GroupCoordinates(const vector<CVecR3>&);
     GroupCoordinates(const vector<CVecI3>&);
-    
+    template<typename C2>
+    GroupCoordinates(C2*);
+    template<typename C2>
+    GroupCoordinates(const std::vector<C2*>&);
+    template<typename C2>
+    GroupCoordinates(VectorPtr<C2>&);
+    template<typename C2>
+    GroupCoordinates(const VectorPtr<C2>&);
+    GroupCoordinates(VectorPtr<C>&);
+    template<typename C2>
+    GroupCoordinates(VectorPtr<C2>&&);
+    GroupCoordinates(VectorPtr<C>&&);
+    virtual ~GroupCoordinates();
+
     DEFINE_GROUP_CLONE(GroupCoordinates, C);
 
-    USE_GROUP_ASSIGN(C);
+    GroupCoordinates& operator=(VectorPtr<C>&);
+    GroupCoordinates& operator=(VectorPtr<C>&&);
 
-    USE_GROUPID_GET(C, CoordinateId);
-    const CoordR3* get(const CVecR3& pos) const;
-    const CoordI3* get(const CVecI3& pos) const;
+    void clear();
+
+    const CoordR3* getPos(const CVecR3& pos) const;
+    const CoordI3* getPos(const CVecI3& pos) const;
+
+    VectorPtr<C> add(VectorPtr<C>&);
+    VectorPtr<C> add(VectorPtr<C>&&);
+    using GroupId<C,CoordinateId>::add;
     
-    USE_GROUPID_ADD(C, CoordinateId);
-    C*         add(const CVecR3&        , const bool canOverlap = false);
-    vector<C*> add(const vector<CVecR3>&, const bool canOverlap = false);
-    C*         add(const CVecI3&        , const bool canOverlap = false);
-    vector<C*> add(const vector<CVecI3>&, const bool canOverlap = false);
-    
+    const C*            addPos(const CVecR3&        , const bool = false);
+    GroupCoordinates<C> addPos(const vector<CVecR3>&, const bool = false);
+    const C*            addPos(const CVecI3&        , const bool = false);
+    GroupCoordinates<C> addPos(const vector<CVecI3>&, const bool = false);
+
+    void remove(const UInt&);
+    void remove(const std::vector<UInt>&);
+
     void applyScalingFactor(const Real factor);
     
     void printInfo() const;
-    
-protected:
-    void construct();
-    void destruct ();
-
-    void postprocess(const UInt i);
 
 private:
     multiset<const CoordR3*, lexCompareCoord> indexUnstr_;
     multiset<const CoordI3*, lexCompareCoord> indexStr_;
+
+    void postprocess_(const UInt i);
 };
 
 #include "GroupCoordinates.hpp"

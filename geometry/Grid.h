@@ -18,7 +18,7 @@ using namespace std;
 #include "Box.h"
 #include "base/class/ClassBase.h"
 #include "math/RealUtils.h"
-#include "CVecI3Fractional.h"
+#include "math/CVecI3Fractional.h"
 
 template<class T, Int D> class Box;
 
@@ -36,15 +36,21 @@ public:
          const CVecRD& dxyz);
     Grid(const BoxRD&  boundingBox,
          const CVecID& dims);
-    Grid(const CVecID& offset,
-         const CVecRD& origin,
-         const vector<Real> step[D]);
+    Grid(const vector<Real> step[D],
+         const CVecID& offset = CVecID(0),
+         const CVecRD& origin = CVecRD(0.0));
     Grid(const Grid& grid);
     ~Grid ();
 
     DEFINE_CLONE(Grid<D>);
 
     Grid& operator=(const Grid& cGrid);
+    void setPos(const vector<Real> pos[D],
+                const CVecID& offset = CVecID(0));
+    void setAdditionalSteps(
+            const CartesianAxis d,
+            const CartesianBound b,
+            const vector<Real>& step);
 
     // TODO To be deleted >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     inline const double *getPx(void) const {
@@ -89,8 +95,8 @@ public:
             const Real tol = tolerance) const;
 
     CVecID getNumCells() const;
-    CVecID getOffset() const { return offsetGrid_; }
-    CVecRD getOrigin() const { return origin_;     }
+    CVecID getOffset() const;
+    CVecRD getOrigin() const;
 
     vector<Real> getStep(const Int dir) const;
     Real         getStep(const Int dir,const Int& n) const;
@@ -141,6 +147,7 @@ public:
                    const Real  tol = tolerance) const { return pos; }
 
     void applyScalingFactor(const Real factor);
+
     void enlarge(const pair<CVecRD,CVecRD>& additionalCells,
                  const pair<CVecRD,CVecRD>& sizesOfNewCells);
     void enlargeBound(
@@ -148,10 +155,9 @@ public:
             Real pad, Real siz);
 
     void printInfo() const;
-private:
 
-    CVecID offsetGrid_;
-    CVecRD origin_;
+private:
+    CVecID offset_;
     vector<Real> pos_[D];
 };
 

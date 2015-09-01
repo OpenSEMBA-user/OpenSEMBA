@@ -54,26 +54,26 @@ typename GroupWires<T>::Graph
         GroupElements<const Line<T>> lines;
         if (is_floating_point<T>::value) {
             lines = smb.mesh->castTo<MeshUnstructured>()
-                        ->elems().getGroupOf<Line<T>>();
+                        ->elems().getOf<Line<T>>();
             coords = smb.mesh->castTo<MeshUnstructured>()
                          ->coords();
         } else if (is_integral<T>::value) {
             lines = smb.mesh->castTo<MeshStructured>()
-                        ->elems().getGroupOf<Line<T>>();
+                        ->elems().getOf<Line<T>>();
             coords = smb.mesh->castTo<MeshStructured>()
                          ->coords();
         }
         GroupPhysicalModels<const PMWire> pmwires =
-            smb.pMGroup->getGroupOf<PMWire>();
+            smb.pMGroup->getOf<PMWire>();
         vector<MatId> pmwiresIds = pmwires.getIds();
         GroupPhysicalModels<const PMMultiport> pmmults =
-                mats.getGroupOf<PMMultiport>();
+                mats.getOf<PMMultiport>();
         vector<MatId> pmmultsIds = pmmults.getIds();
         vector<MatId> matIds;
         matIds.reserve(pmwiresIds.size()+pmmultsIds.size());
         matIds.insert(matIds.end(), pmwiresIds.begin(), pmwiresIds.end());
         matIds.insert(matIds.end(), pmmultsIds.begin(), pmmultsIds.end());
-        wires = lines.getGroupWith(matIds);
+        wires = lines.getMatId(matIds);
     }
     Graph graph;
     graph.init(wires, coords);
@@ -91,8 +91,8 @@ typename GroupWires<T>::Graph
             for (UInt j = 0; j < 2; j++) {
                 layId[j] = nodePtr->getBound(j)->elem()->getLayerId();
                 matId[j] = nodePtr->getBound(j)->elem()->getMatId();
-                isWireMat[j] = mats.get(matId[j])->is<PMWire>();
-                isWireExtrMat[j] = mats.get(matId[j])->is<PMWireExtremes>();
+                isWireMat[j] = mats.getId(matId[j])->is<PMWire>();
+                isWireExtrMat[j] = mats.getId(matId[j])->is<PMWireExtremes>();
                 if (nodePtr->elem()->getId() !=
                     nodePtr->getBound(j)->getBound(0)->elem()->getId()) {
                     extreme = false;
@@ -221,10 +221,10 @@ void GroupWires<T>::getWireMats_(const PMWire*& wireMat,
     extremeL = NULL;
     extremeR = NULL;
     for (UInt m = 0; m < matIds.size(); m++) {
-        if (mats.get(matIds[m])->is<PMMultiport>()) {
+        if (mats.getId(matIds[m])->is<PMMultiport>()) {
             if ((extremeL == NULL) &&
                 (wireMat  == NULL)) {
-                extremeL = mats.get(matIds[m])->castTo<PMMultiport>();
+                extremeL = mats.getId(matIds[m])->castTo<PMMultiport>();
             } else if ((extremeL != NULL) &&
                        (wireMat  == NULL)) {
                 cout << "WARNING @ WireGroup: ";
@@ -236,7 +236,7 @@ void GroupWires<T>::getWireMats_(const PMWire*& wireMat,
                 continue;
             } else if ((wireMat  != NULL) &&
                        (extremeR == NULL)) {
-                extremeR = mats.get(matIds[m])->castTo<PMMultiport>();
+                extremeR = mats.getId(matIds[m])->castTo<PMMultiport>();
             } else if (extremeR != NULL) {
                 cout << "WARNING @ WireGroup: ";
                 cout << " Wire: " << wires_.size()+1;
@@ -246,9 +246,9 @@ void GroupWires<T>::getWireMats_(const PMWire*& wireMat,
                 assert(false);
                 continue;
             }
-        } else if (mats.get(matIds[m])->is<PMWire>()) {
+        } else if (mats.getId(matIds[m])->is<PMWire>()) {
             if (wireMat == NULL) {
-                wireMat = mats.get(matIds[m])->castTo<PMWire>();
+                wireMat = mats.getId(matIds[m])->castTo<PMWire>();
             } else if (wireMat != NULL) {
                 cout << "WARNING @ WireGroup: ";
                 cout << " Wire: " << wires_.size()+1;

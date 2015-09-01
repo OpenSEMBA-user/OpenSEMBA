@@ -136,8 +136,8 @@ void Polyhedron::checkClosedness() const {
     UInt row = 0;
     for (UInt f = 0; f < numberOfFaces(); f++) {
         for (UInt s = 0; s < getFace(f)->numberOfFaces(); s++) {
-            UInt id0 = getFace(f)->getSideVertex(s,0)->getId();
-            UInt id1 = getFace(f)->getSideVertex(s,1)->getId();
+            UInt id0 = getFace(f)->getSideVertex(s,0)->getId().toUInt();
+            UInt id1 = getFace(f)->getSideVertex(s,1)->getId().toUInt();
             if (id0 < id1) {
                 list(row,0) = id0;
                 list(row,1) = id1;
@@ -154,4 +154,7 @@ void Polyhedron::checkClosedness() const {
             throw ErrorNotClosed();
         }
     }
+}
+
+Real Polyhedron::getVolume() const {
 }

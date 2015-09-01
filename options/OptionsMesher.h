@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <array>
 
 using namespace std;
 
@@ -70,20 +71,22 @@ public:
     bool hasScaleFactor() const;
     string getScaleFactor() const;
     const string& getMeshOutputName() const;
+    bool isGridStepSet() const;
+    bool isVtkExport() const;
+    bool isPostmshExport() const;
+    const CVecR3& getGridStep() const;
 
     const pair<CVecR3, CVecR3>& getBoundaryMeshSize() const;
-    vector<pair<BoundType,BoundType>> getBoundTerminations() const;
+    array<pair<BoundType,BoundType>,3> getBoundTerminations() const;
     BoundType getBoundTermination(const UInt i, const UInt p) const;
     const string& getOutputName() const;
 
     void printHelp() const;
     void printInfo() const;
     static string toStr(const BoundType);
-    bool isGridStepSet() const;
-    const CVecR3& getGridStep() const;
     void setGridStep(const CVecR3& gridStep);
-    bool isVtkExport() const;
     void setVtkExport(bool vtkExport);
+    void setPostmshExport(bool postmshExport);
 
 private:
     Mesher mesher_;
@@ -97,11 +100,12 @@ private:
     string outputName_;
 
     bool vtkExport_;
+    bool postmshExport_;
     CVecR3 gridStep_;
-    vector<pair<BoundType,BoundType>> boundTermination_;
+    array<pair<BoundType,BoundType>,3> boundTermination_;
 };
 
-typedef vector<pair<OptionsMesher::BoundType,OptionsMesher::BoundType>>
+typedef array<pair<OptionsMesher::BoundType,OptionsMesher::BoundType>,3>
         BoundTerminations;
 //typedef OptionsMesher ConfOptSwitch;
 

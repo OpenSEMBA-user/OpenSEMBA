@@ -23,7 +23,7 @@ Polygon::Polygon(const GroupCoordinates<CoordR3>& cG,
 	assert(vId.size() >= 5); // Polygons of 3 or 4 vertices are treated as triangles or quads.
 	v_.resize(vSize);
 	for (UInt i = 0; i < vSize; i++) {
-        v_[i] = cG.get(vId[i]);
+        v_[i] = cG.getId(vId[i]);
 	}
 }
 

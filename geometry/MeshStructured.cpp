@@ -27,18 +27,18 @@ MeshStructured::MeshStructured(const Grid3& grid,
                                const GroupElements<const ElemI>& elem,
                                const GroupLayers<const Layer>& layers)
 :   Grid3(grid),
-    GroupCoordinates<CoordI3>(cG.newGroup()),
-    GroupElements<ElemI>(elem.newGroup()),
-    GroupLayers<Layer>(layers.newGroup()) {
+    GroupCoordinates<CoordI3>(cG.cloneElems()),
+    GroupElements<ElemI>(elem.cloneElems()),
+    GroupLayers<Layer>(layers.cloneElems()) {
 
     GroupElements<ElemI>::reassignPointers(*this);
 }
 
 MeshStructured::MeshStructured(const MeshStructured& rhs)
 :   Grid3(rhs),
-    GroupCoordinates<CoordI3>(rhs.coords().newGroup()),
-    GroupElements<ElemI>(rhs.elems().newGroup()),
-    GroupLayers<Layer>(rhs.layers().newGroup()) {
+    GroupCoordinates<CoordI3>(rhs.coords().cloneElems()),
+    GroupElements<ElemI>(rhs.elems().cloneElems()),
+    GroupLayers<Layer>(rhs.layers().cloneElems()) {
 
     GroupElements<ElemI>::reassignPointers(*this);
 }
@@ -53,9 +53,9 @@ MeshStructured& MeshStructured::operator=(const MeshStructured& rhs) {
     }
 
     Grid3::operator=(rhs);
-    GroupCoordinates<CoordI3>::operator=(rhs.coords().newGroup());
-    GroupElements<ElemI>::operator=(rhs.elems().newGroup());
-    GroupLayers<Layer>::operator=(rhs.layers().newGroup());
+    GroupCoordinates<CoordI3>::operator=(rhs.coords().cloneElems());
+    GroupElements<ElemI>::operator=(rhs.elems().cloneElems());
+    GroupLayers<Layer>::operator=(rhs.layers().cloneElems());
 
     GroupElements<ElemI>::reassignPointers(*this);
 
@@ -88,22 +88,22 @@ MeshUnstructured* MeshStructured::getMeshUnstructured() const {
         }
     }
     res->elems().add(newElems);
-    res->layers() = layers().newGroup();
+    res->layers() = layers().cloneElems();
     return res;
 }
 
 MeshStructured* MeshStructured::getConnectivityMesh() const {
     MeshStructured* res = new MeshStructured(grid());
-    res->coords() = coords().newGroup();
+    res->coords() = coords().cloneElems();
     GroupElements<const ElemI> elems = this->elems();
-    elems.remove(MatId(0));
+    elems.removeMatId(MatId(0));
     GraphVertices<ElemI, CoordI3> graphLayer;
     graphLayer.init(elems, coords());
     vector<vector<const ElemI*>> comps = graphLayer.getConnectedComponents();
     for (UInt c = 0; c < comps.size(); c++) {
         stringstream layerName;
         layerName << "Component " << c+1;
-        Layer* newLayer = res->layers().add(new Layer(layerName.str()), true);
+        Layer* newLayer = res->layers().addId(new Layer(layerName.str()))(0);
         vector<ElemI*> newElemsLayer;
         newElemsLayer.resize(comps[c].size());
         for (UInt e = 0; e < comps[c].size(); e++) {
@@ -126,8 +126,8 @@ void MeshStructured::printInfo() const {
 
 void MeshStructured::convertToHex(GroupElements<const SurfI> surfs) {
     vector<HexI8*> hexes = discretizeWithinBoundary(surfs);
-    this->GroupElements<ElemI>::remove(surfs.getIds());
-    elems().add(hexes, true);
+    this->GroupElements<ElemI>::removeId(surfs.getIds());
+    elems().addId(hexes);
 }
 
 void MeshStructured::addAsHex(GroupElements<const VolR> region) {
@@ -198,7 +198,7 @@ MeshStructured::getPairsDefiningVolumeWithin(
     for (UInt b = 0; b < nBound; b++) {
         CVecI3 minPos = bound[b]->getMinV()->pos();
         // Stores boundary at quad list.
-        quads(b, 0) = (Real) bound[b]->getId();
+        quads(b, 0) = (Real) bound[b]->getId().toUInt();
         for (UInt i = 0; i < 3; i++) {
             quads(b, i+1) = minPos(i);
         }
@@ -209,9 +209,9 @@ MeshStructured::getPairsDefiningVolumeWithin(
     for (UInt b = 0; b < nBound; b++) {
         const ElementId id(quads(b,0));
         if (b % 2 == 0) {
-            aux.first = elems().get(id)->castTo<SurfI>();
+            aux.first = elems().getId(id)->castTo<SurfI>();
         } else {
-            aux.second = elems().get(id)->castTo<SurfI>();
+            aux.second = elems().getId(id)->castTo<SurfI>();
             res.push_back(aux);
         }
     }

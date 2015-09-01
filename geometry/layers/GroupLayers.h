@@ -17,16 +17,29 @@ using namespace std;
 #include "base/group/GroupId.h"
 
 template<typename L = Layer>
-class GroupLayers : public virtual GroupId<L, LayerId> {
+class GroupLayers : public GroupId<L, LayerId> {
 public:
-    USE_GROUP_CONSTRUCTS(GroupLayers, L);
+    GroupLayers() {}
+    template<typename L2>
+    GroupLayers(L2* e)                     : GroupId<L,LayerId>(e) {}
+    template<typename L2>
+    GroupLayers(const std::vector<L2*>& e) : GroupId<L,LayerId>(e) {}
+    template<typename L2>
+    GroupLayers(VectorPtr<L2>& rhs)       : GroupId<L,LayerId>(rhs) {}
+    template<typename L2>
+    GroupLayers(const VectorPtr<L2>& rhs) : GroupId<L,LayerId>(rhs) {}
+    GroupLayers(VectorPtr<L>& rhs)        : GroupId<L,LayerId>(rhs) {}
+    template<typename L2>
+    GroupLayers(VectorPtr<L2>&& rhs) : GroupId<L,LayerId>(std::move(rhs)) {}
+    GroupLayers(VectorPtr<L >&& rhs) : GroupId<L,LayerId>(std::move(rhs)) {}
+    virtual ~GroupLayers() {}
 
     DEFINE_GROUP_CLONE(GroupLayers, L);
 
-    USE_GROUP_ASSIGN(L);
+    GroupLayers& operator=(VectorPtr<L>&);
+    GroupLayers& operator=(VectorPtr<L>&&);
 
-    USE_GROUPID_GET(L,LayerId);
-    const L* get(const string name) const;
+    const L* getName(const string name) const;
 
     void printInfo() const;
 };

@@ -33,9 +33,9 @@ public:
              const GroupElements  <const Elem> & eG);
     virtual ~MapGroup();
     void reassignPointers(const GroupElements<const Elem>& nEG);
-    const Tet* getNeighbour(const UInt id, const UInt face) const;
+    const Tetrahedron* getNeighbour(const UInt id, const UInt face) const;
     UInt getVolToF(const UInt id, const UInt face) const;
-    pair<const Tet*, UInt> getNeighConnection(const UInt id, const UInt face) const;
+    pair<const Tetrahedron*, UInt> getNeighConnection(const UInt id, const UInt face) const;
     Face getInnerFace(const UInt id) const;
     Face getOuterFace(const UInt id) const;
     bool isBoundary(const UInt id) const;

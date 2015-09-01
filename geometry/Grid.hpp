@@ -11,8 +11,8 @@ Grid<D>::Grid() {
 template<Int D>
 Grid<D>::Grid(const BoxRD& box,
         const CVecRD& dxyz) {
-    origin_ = box.getMin();
-    offsetGrid_ = CVecID(0, 0, 0);
+    CVecRD origin = box.getMin();
+    offset_ = CVecID(0, 0, 0);
     for (Int i = 0; i < D; i++) {
         Real boxLength = box.getMax()(i) - box.getMin()(i);
         Int nCells;
@@ -27,7 +27,7 @@ Grid<D>::Grid(const BoxRD& box,
         }
         pos_[i].resize(nCells+1);
         for (Int j = 0; j < nCells+1; j++) {
-            pos_[i][j] = origin_(i) + j * dxyz(i);
+            pos_[i][j] = origin(i) + j * dxyz(i);
         }
     }
 }
@@ -35,25 +35,24 @@ Grid<D>::Grid(const BoxRD& box,
 template<Int D>
 Grid<D>::Grid(const BoxRD &boundingBox,
         const CVecID& dims) {
-    origin_ = boundingBox.getMin();
-    offsetGrid_ = CVecID(0, 0, 0);
+    CVecRD origin = boundingBox.getMin();
+    offset_ = CVecID(0, 0, 0);
     for (Int i = 0; i < D; i++) {
         Real step =
                 (boundingBox.getMax()(i) - boundingBox.getMin()(i)) / dims(i);
         Int nCells = dims(i);
         pos_[i].resize(nCells+1);
         for (Int j = 0; j < nCells+1; j++) {
-            pos_[i][j] = origin_(i) + j * step;
+            pos_[i][j] = origin(i) + j * step;
         }
     }
 }
 
 template<Int D>
-Grid<D>::Grid(const CVecID& offset,
-        const CVecRD& origin,
-        const vector<Real> step[D]) {
-    origin_ = origin;
-    offsetGrid_ = offset;
+Grid<D>::Grid(const vector<Real> step[D],
+        const CVecID& offset,
+        const CVecRD& origin) {
+    offset_ = offset;
     for(Int d = 0; d < D; d++) {
         pos_[d].resize(step[d].size()+1);
         pos_[d][0] = origin(d);
@@ -63,10 +62,10 @@ Grid<D>::Grid(const CVecID& offset,
     }
 }
 
+
 template<Int D>
 Grid<D>::Grid(const Grid<D>& grid) {
-    origin_ = grid.origin_;
-    offsetGrid_ = grid.offsetGrid_;
+    offset_ = grid.offset_;
     for (Int i = 0; i < D; i++) {
         pos_[i] = grid.pos_[i];
     }
@@ -82,12 +81,48 @@ Grid<D>& Grid<D>::operator=(const Grid<D>& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    origin_ = rhs.origin_;
-    offsetGrid_ = rhs.offsetGrid_;
+    offset_ = rhs.offset_;
     for (Int i = 0; i < D; i++) {
         pos_[i] = rhs.pos_[i];
     }
     return *this;
+}
+
+template<Int D>
+void Grid<D>::setPos(const vector<Real> pos[D], const CVecID& offset) {
+    offset_ = offset;
+    for(Int d = 0; d < D; d++) {
+        if (pos[d].size() == 0) {
+            throw Error("Grid positions must contain at least one value");
+        }
+        pos_[d] = pos[d];
+        if (pos_[d].size() == 1) {
+            pos_[d].push_back(pos_[d][0]);
+        }
+    }
+}
+
+template<Int D>
+void Grid<D>::setAdditionalSteps(
+        const CartesianAxis d,
+        const CartesianBound b,
+        const vector<Real>& step) {
+    const Int nCells = step.size();
+    vector<Real> newPos(nCells);
+    if (b == U) {
+        newPos[0] = pos_[d].back() + step[0];
+        for (Int i = 1; i < nCells; i++) {
+            newPos[i] = newPos[i-1] + step[i];
+        }
+        pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
+    } else {
+        newPos[nCells-1] = pos_[d].front() - step[0];
+        for (Int i = nCells-2; i >= 0 ; i--) {
+            newPos[i] = newPos[i+1] - step[nCells-1-i];
+        }
+        newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
+        pos_[d] = newPos;
+    }
 }
 
 template<Int D>
@@ -213,7 +248,24 @@ template<Int D>
 CartesianVector<Int,D> Grid<D>::getNumCells() const {
     CVecID res;
     for (UInt d = 0; d < D; d++) {
-        res(d) = getPos(d).size() - 1;
+        res(d) = getPos(d).size() - 1; // Minimum size of pos is 2.
+    }
+    return res;
+}
+
+template<Int D>
+CartesianVector<Int,D> Grid<D>::getOffset() const {
+    return offset_;
+}
+
+template<Int D>
+CartesianVector<Real,D> Grid<D>::getOrigin() const {
+    CVecRD res;
+    for (UInt d = 0; d < D; d++) {
+        if (pos_[d].size() == 0) {
+            throw Error("Positions are not initialized.");
+        }
+        res(d) = pos_[d][0];
     }
     return res;
 }
@@ -262,7 +314,7 @@ Real Grid<D>::getMinimumSpaceStep() const {
 template<Int D>
 Box<Real,D> Grid<D>::getFullDomainBoundingBox() const {
     return getBoundingBox(
-            pair<CVecID,CVecID> (offsetGrid_, offsetGrid_+getNumCells()) );
+            pair<CVecID,CVecID> (offset_, offset_+getNumCells()) );
 }
 
 template<Int D>
@@ -273,7 +325,7 @@ Box<Int,D> Grid<D>::getFullDomainBoundingCellBox() const {
         dims[n] = pos_[n].size();
     }
 
-    BoxID res(offsetGrid_, offsetGrid_ + dims);
+    BoxID res(offset_, offset_ + dims);
     return res;
 }
 
@@ -379,14 +431,14 @@ CartesianVector<Real,D> Grid<D>::getPos(const CVecID& ijk) const {
     for (Int i = 0; i < D; i++) {
 //        assert((ijk(i) - offsetGrid_(i))>=0 &&
 //                (ijk(i) - offsetGrid_(i))<dims(i));
-        res(i) = pos_[i][ijk(i) - offsetGrid_(i)];
+        res(i) = pos_[i][ijk(i) - offset_(i)];
     }
     return res;
 };
 
 template<Int D>
 Real Grid<D>::getPos(const Int dir, const Int i) const {
-    return  pos_[(UInt)dir][i-offsetGrid_[dir]];
+    return  pos_[(UInt)dir][i-offset_[dir]];
 }
 
 template<Int D>
@@ -406,7 +458,7 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
     assert(pos_[dir].size() >= 1);
     // Checks if it is below the grid.
     if (MathUtils::lower(x, pos[0], steps[0], tol)) {
-        cell = offsetGrid_(dir);
+        cell = offset_(dir);
         dist = (x-pos[0])/steps[0];
         if (err != NULL) {
             *err = true;
@@ -423,14 +475,14 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
             step = steps.back();
         }
         if (MathUtils::equal(x, pos[i], step, tol)) {
-            cell = i + offsetGrid_(dir);
+            cell = i + offset_(dir);
             dist = 0.0;
             if (err != NULL) {
                 *err = false;
             }
             return make_pair(cell, dist);
         } else if (MathUtils::lower(x, pos[i], step, tol)) {
-            cell = i - 1 + offsetGrid_(dir);
+            cell = i - 1 + offset_(dir);
             dist = (x - pos[i-1])/step;
             if(MathUtils::equal(MathUtils::round(dist),1.0) && approx) {
                 cell++;
@@ -442,7 +494,7 @@ pair<Int, Real> Grid<D>::getCellPair(const Int  dir,
             return make_pair(cell, dist);
         }
     }
-    cell = getNumCells()(dir) + offsetGrid_(dir);
+    cell = getNumCells()(dir) + offset_(dir);
     dist = (x - pos.back())/steps.back();
     if (err != NULL) {
         *err = true;
@@ -484,7 +536,7 @@ CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
          if(!pos_[dir].empty()){
             if(xyz(dir) <= pos_[dir].front()){
                 if(MathUtils::equal(pos_[dir].front(),xyz(dir))){
-                    ijk(dir) = offsetGrid_[dir];
+                    ijk(dir) = offset_[dir];
                     length(dir) = 0.0;
                 }else{
                     isInto = false;
@@ -492,7 +544,7 @@ CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
                 }
             }else if(pos_[dir].back()<=xyz(dir)) {
                 if(MathUtils::equal(pos_[dir].back(),xyz(dir))){
-                    ijk(dir) = offsetGrid_[dir]+pos_[dir].size()-1;
+                    ijk(dir) = offset_[dir]+pos_[dir].size()-1;
                     length(dir) = 0.0;
                 }else{
                     isInto = false;
@@ -503,7 +555,7 @@ CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
                 while(pos_[dir][n] <= xyz(dir)){
                     ++n;
                 }
-                ijk(dir) = n-1 + offsetGrid_[dir];
+                ijk(dir) = n-1 + offset_[dir];
                 length(dir) = (xyz(dir)-pos_[dir][ijk(dir)])
                                /getStep(dir,ijk(dir));
             }
@@ -531,7 +583,6 @@ CartesianVector<Int,D> Grid<D>::getCell(const CVecRD &coords,
 
 template<Int D>
 void Grid<D>::applyScalingFactor(const Real factor) {
-    origin_ *= factor;
     for (Int d = 0; d < D; d++) {
         for (UInt i = 0; i < pos_[d].size(); i++) {
             pos_[d][i] *= factor;
@@ -544,7 +595,7 @@ void Grid<D>::enlarge(const pair<CVecRD, CVecRD>& pad,
         const pair<CVecRD, CVecRD>& sizes) {
     for (Int d = 0; d < D; d++) {
         for (Int b = 0; b < 2; b++) {
-            if (b == 0) {
+            if (b == L) {
                 enlargeBound(CartesianAxis(d), CartesianBound(b),
                         pad.first(d), sizes.first(d));
             } else {
@@ -559,31 +610,56 @@ template<Int D>
 void Grid<D>::enlargeBound(CartesianAxis d, CartesianBound b,
         Real pad, Real siz) {
     assert(getNumCells()(d) > 0);
+    if (abs(siz) > abs(pad)) {
+        cerr << "WARNING @ Grid enlarge bound: "
+                << "Size was larger than padding. Ignoring padding in "
+                << "axe" << d << " and bound " << b << "." << endl;
+        return;
+    }
     if (pad == 0.0) {
         return;
     }
-    if (siz == 0.0) {
-        siz = getStep(d,0);
-    }
-    Int nCells = (Int) MathUtils::ceil(pad / abs(siz), (Real) 0.01);
-    vector<Real> newPos(nCells);
+    Int boundCell;
     if (b == L) {
-        newPos[nCells-1] = pos_[d].front() - siz;
-        Real originDisplacement = siz;
-        for (Int i = nCells-2; i >= 0 ; i--) {
-            newPos[i] = newPos[i+1] - siz;
-            originDisplacement += siz;
-        }
-        newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
-        pos_[d] = newPos;
-        origin_(d) -= originDisplacement;
+        boundCell = 0;
     } else {
-        newPos[0] = pos_[d].back() + siz;
-        for (Int i = 1; i < nCells; i++) {
-            newPos[i] = newPos[i-1] + siz;
-        }
-        pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
+        boundCell = this->getNumCells()(d) - 1;
     }
+    vector<Real> newSteps;
+    if (MathUtils::greaterEqual(getStep(d,b), siz) || siz == 0.0) {
+        siz = getStep(d,boundCell);
+        // Computes enlargement for a padding with same size.
+        Int nCells = (Int) MathUtils::ceil(abs(pad) / abs(siz), (Real) 0.01);
+        newSteps.resize(nCells, siz);
+    } else {
+        // Computes enlargement for padding with different size.
+        // Taken from AutoCAD interface programmed in LISP (2001).
+        Real d12 = getStep(d,boundCell);
+        Real d14 = abs(pad);
+        Real d34 = abs(siz);
+        Real d13 = d14 - d34;
+        Real t0 = d12;
+        Real r0 = (d14-d12) / (d14-d34);
+        Real r = r0;
+        Int n = MathUtils::ceil(log(d34/d12) / log(r0), (Real) 0.01);
+        if (n > 0) {
+            // Newton method to adjust the sum of available space.
+            Real f = 1;
+            while (!MathUtils::equal(f, 0.0)) {
+                f = t0 * (1-pow(r,n)) / (1-r) - d13;
+                Real df = t0*(1-pow(r,n))/pow(1-r,2) - t0*n*pow(r,n-1)/(1-r);
+                r = r - f / df;
+            }
+            newSteps.resize(n);
+            for (Int i = 0; i < n; i++) {
+                newSteps[i] = t0 * pow(r,(i+1));
+            }
+            newSteps[n-1] = d34;
+        } else {
+            newSteps.resize(1, d34);
+        }
+    }
+    setAdditionalSteps(d, b, newSteps);
 }
 
 template<Int D>
@@ -591,7 +667,7 @@ void Grid<D>::printInfo() const {
     CVecID numCells = getNumCells();
     BoxRD bound = getFullDomainBoundingBox();
     cout << "-- Cartesian Grid<" << D << "> --" << endl;
-    cout << "Offset: " << offsetGrid_.toStr() << endl;
+    cout << "Offset: " << offset_.toStr() << endl;
     cout << "Dims: " << numCells.toStr() << endl;
     cout << "Min val: " << bound.getMin().toStr() << endl;
     cout << "Max val: " << bound.getMax().toStr() << endl;

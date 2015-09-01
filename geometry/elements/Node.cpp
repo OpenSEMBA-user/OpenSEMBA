@@ -15,7 +15,7 @@ Node<T>::Node(const GroupCoordinates< Coordinate<T,3> >& coordGr,
     Elem(layerId, matId) {
 
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = coordGr.get(vId[i]);
+        v_[i] = coordGr.getId(vId[i]);
 	}
 }
 
@@ -43,9 +43,9 @@ Node<T>::Node(GroupCoordinates<Coordinate<T,3> >& cG,
     }
     vector<CartesianVector<T,3> > pos = box.getPos();
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.get(pos[i]);
+        v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
-            v_[i] = cG.add(pos[i]);
+            v_[i] = cG.addPos(pos[i]);
         }
     }
 }

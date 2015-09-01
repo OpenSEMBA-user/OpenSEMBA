@@ -4,11 +4,7 @@
  *  Created on: Sep 23, 2014
  *      Author: luis
  */
-
-
-#ifndef FIELD_H_
 #include "Field.h"
-#endif
 
 template<class T, Int D>
 Field<T,D>::Field() {
@@ -37,8 +33,7 @@ Field<T,D>::operator()(const UInt i) const {
 }
 
 template<class T, Int D>
-inline CartesianVector<T,D>
-Field<T,D>::getCVec(const UInt i) const {
+inline CartesianVector<T,D> Field<T,D>::getCVec(const UInt i) const {
    CartesianVector<T,D> res;
    for (UInt d = 0; d < D; d++) {
       res(d) = (*this)(d)[i];
@@ -47,60 +42,52 @@ Field<T,D>::getCVec(const UInt i) const {
 }
 
 template<class T, Int D>
-inline T*
-Field<T,D>::set(const UInt i) const {
+inline T* Field<T,D>::set(const UInt i) const {
 	assert(i < D);
 	return &val_[size_*i];
 }
 
 template<class T, Int D>
-inline T
-Field<T,D>::operator[](const UInt i) const {
+inline T Field<T,D>::operator[](const UInt i) const {
 	return val_[i];
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::setSize(const UInt siz) {
+inline void Field<T,D>::setSize(const UInt siz) {
 	size_ = siz;
 	val_ = new T[D*siz];
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::setToZero() {
+inline void Field<T,D>::setToZero() {
 	for (UInt i = 0; i < size_*D; i++) {
 		val_[i] = (T) 0.0;
 	}
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::set(const UInt i, const CartesianVector<T,D>& vec) {
+inline void Field<T,D>::set(const UInt i, const CartesianVector<T,D>& vec) {
 	for (UInt j = 0; j < D; j++) {
 		val_[j * size_ + i] = vec(j);
 	}
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::set(const UInt i, const T& num) {
+inline void Field<T,D>::set(const UInt i, const T& num) {
 	for (UInt j = 0; j < D; j++) {
 		val_[j * size_ + i] = num;
 	}
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::setToOne() {
+inline void Field<T,D>::setToOne() {
 	for (UInt i = 0; i < size_*D; i++) {
 		val_[i] = (T) 1.0;
 	}
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::setToRandom(const Real min, const Real max) {
+inline void Field<T,D>::setToRandom(const Real min, const Real max) {
 	Real range = max - min;
 	srand (1);
 	for (UInt i = 0; i < size_*D; i++) {
@@ -109,8 +96,7 @@ Field<T,D>::setToRandom(const Real min, const Real max) {
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::prod(
+inline void Field<T,D>::prod(
  const UInt init,
  const UInt end,
  const T param) {
@@ -123,8 +109,7 @@ Field<T,D>::prod(
 
 
 template<class T, Int D>
-inline void
-Field<T,D>::prod_omp(const UInt init, const UInt end, const T param) {
+inline void Field<T,D>::prod_omp(const UInt init, const UInt end, const T param) {
 	UInt i;
 	for (UInt d = 0; d < D; d++) {
 #		pragma omp parallel for private(i)
@@ -135,8 +120,7 @@ Field<T,D>::prod_omp(const UInt init, const UInt end, const T param) {
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::copy(const UInt init, const UInt end,
+inline void Field<T,D>::copy(const UInt init, const UInt end,
 		const Field<T, D>& field) {
 	for (UInt d = 0; d < D; d++) {
 		for (UInt i = init; i < end; i++) {
@@ -146,8 +130,7 @@ Field<T,D>::copy(const UInt init, const UInt end,
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::addProd(
+inline void Field<T,D>::addProd(
  const UInt init, const UInt end,
  const Field<T, D>& field, const T param) {
 	for (UInt d = 0; d < D; d++) {
@@ -158,8 +141,7 @@ Field<T,D>::addProd(
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::addProd_omp(
+inline void Field<T,D>::addProd_omp(
  const UInt init, const UInt end,
  const Field<T, D>& field, const T param) {
 	UInt i;
@@ -183,8 +165,7 @@ inline UInt Field<T,D>::size() const {
 }
 
 template<class T, Int D>
-inline void
-Field<T,D>::swap(
+inline void Field<T,D>::swap(
  Field<T, D>& param, const UInt first, const UInt last) {
 	for (UInt i = 0; i < D; i++) {
 		for (UInt k = first; k < last; k++) {
