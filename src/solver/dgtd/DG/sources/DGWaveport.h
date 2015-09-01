@@ -12,32 +12,28 @@
 
 class DGWaveport : public DGSource {
 public:
-	DGWaveport();
-	virtual
-	~DGWaveport();
+    DGWaveport();
+    virtual	~DGWaveport();
 protected:
-//	double
-//     getNumericalGammaMGauss(
-//      const double time,
-//      const double minDT,
-//      const double amplitude,
-//      const double delay,
-//      const double spread,
-//      const double kcm) const;
-	bool
-	 checkNormalsAreEqual(
-	  const vector<pair<uint,uint> >& elemFace,
-	  const CellGroup& cells) const;
+    //	Real
+    //     getNumericalGammaMGauss(
+    //      const Real time,
+    //      const Real minDT,
+    //      const Real amplitude,
+    //      const Real delay,
+    //      const Real spread,
+    //      const Real kcm) const;
+    bool checkNormalsAreEqual(
+            const vector<pair<UInt,UInt> >& elemFace) const;
 protected:
-	CVecD3* posTF;
-	CVecD3* posTFNB;
-	CVecD3* posSF;
+    CVecR3* posTF;
+    CVecR3* posTFNB;
+    CVecR3* posSF;
 private:
-	double *gauss, *hm;
-	double
-	 getHm(
-	  const double time,
-	  const double kcm) const;
+    Real *gauss, *hm;
+    Real getHm(
+            const Real time,
+            const Real kcm) const;
 };
 
 #endif /* SOLVERWAVEPORT_H_ */

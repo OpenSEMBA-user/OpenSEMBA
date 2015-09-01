@@ -6,7 +6,6 @@
  */
 
 #include "gtest/gtest.h"
-#include "base/class/IdBase.h"
 #include "base/group/GroupId.h"
 #include "geometry/layers/GroupLayers.h"
 
@@ -26,7 +25,7 @@ protected:
 
     void areEqual(const vector<Layer*>& vec, const GroupLayers<>& layers) {
         for (UInt i = 0; i < vec.size(); i++) {
-            EXPECT_EQ(*vec[i], *layers.get(vec[i]->getId()));
+            EXPECT_EQ(*vec[i], *layers.getId(vec[i]->getId()));
         }
     }
 };

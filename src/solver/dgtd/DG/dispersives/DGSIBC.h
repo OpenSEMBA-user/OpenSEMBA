@@ -9,7 +9,7 @@
 #define DGSIBC_H_
 
 #include "DGDispersive.h"
-#include "../../core/BoundaryCondition.h"
+#include "physicalModel/PMSurfaceSIBC.h"
 
 #define SOLVER_USE_STATIC_LIMIT_FOR_SIBC
 
@@ -18,70 +18,59 @@ class DGSIBC : public DGDispersive, public PMSurfaceSIBC {
 public:
    DGSIBC(
          const PMSurfaceSIBC& mat_,
-         const vector<const BoundaryCondition*>& bc,
-         const CellGroup& cells,
-         int ***map_,
-         const int vmapM[faces][nfp],
-         double ***ExP_,
-         double ***EyP_,
-         double ***EzP_,
-         double ***HxP_,
-         double ***HyP_,
-         double ***HzP_);
+         Int ***map_,
+         const Int vmapM[faces][nfp],
+         Real ***ExP_,
+         Real ***EyP_,
+         Real ***EzP_,
+         Real ***HxP_,
+         Real ***HyP_,
+         Real ***HzP_);
    virtual ~DGSIBC();
-   void
-   computeRHSElectricPolarizationCurrents(
-         const Field<double,3>& E,
-         const uint e1,
-         const uint e2);
-   void
-   computeRHSMagneticPolarizationCurrents(
-         const Field<double,3>& H,
-         const uint e1,
-         const uint e2);
-   void
-   computeRHSElectric(
-         Field<double,3>& rhsE,
-         const Field<double,3>& E,
-         const uint e1, const uint e2) const;
-   void
-   computeRHSMagnetic(
-         Field<double,3>& rhsH,
-         const Field<double,3>& H,
-         const uint e1, const uint e2) const;
-   void
-   addJumps(
-         Field<double,3>& dE, Field<double,3>& dH,
-         Field<double,3>& E, Field<double,3>& H,
-         const uint e1, const uint e2);
-   void
-   addRHSToRes(
-         const uint e1,
-         const uint e2,
-         const double rka,
-         const double dt);
-   void
-   updateWithRes(
-         const uint e1,
-         const uint e2,
-         const double rkb);
+   void computeRHSElectricPolarizationCurrents(
+         const FieldR3& E,
+         const UInt e1,
+         const UInt e2);
+   void computeRHSMagneticPolarizationCurrents(
+         const FieldR3& H,
+         const UInt e1,
+         const UInt e2);
+   void computeRHSElectric(
+         FieldR3& rhsE,
+         const FieldR3& E,
+         const UInt e1, const UInt e2) const;
+   void computeRHSMagnetic(
+         FieldR3& rhsH,
+         const FieldR3& H,
+         const UInt e1, const UInt e2) const;
+   void addJumps(
+         FieldR3& dE, FieldR3& dH,
+         FieldR3& E, FieldR3& H,
+         const UInt e1, const UInt e2);
+   void addRHSToRes(
+         const UInt e1,
+         const UInt e2,
+         const Real rka,
+         const Real dt);
+   void updateWithRes(
+         const UInt e1,
+         const UInt e2,
+         const Real rkb);
 private:
-   int ***map;
-   double ***ExP, ***EyP, ***EzP, ***HxP, ***HyP, ***HzP;
-   int vmapM[faces][nfp];
-   uint nP;
-   uint nE0, nED;
-   uint *elem0, *elemD;
-   uint *face0, *faceD;
-   CVecD3 *n0, *nD;
-   CVecD3 **Q0, **rhsQ0, **resQ0;
-   CVecD3 **QD, **rhsQD, **resQD;
-   CVecD3 *E0, *ED;
-   void
-   computePolarizationFields(
-         const double *Hx, const double *Hy, const double *Hz,
-         const uint e1, const uint e2);
-
+   Int ***map;
+   Real ***ExP, ***EyP, ***EzP, ***HxP, ***HyP, ***HzP;
+   Int vmapM[faces][nfp];
+   UInt nP;
+   UInt nE0, nED;
+   UInt *elem0, *elemD;
+   UInt *face0, *faceD;
+   CVecR3 *n0, *nD;
+   CVecR3 **Q0, **rhsQ0, **resQ0;
+   CVecR3 **QD, **rhsQD, **resQD;
+   CVecR3 *E0, *ED;
+   void computePolarizationFields(
+         const Real *Hx, const Real *Hy, const Real *Hz,
+         const UInt e1, const UInt e2);
 };
 
 #endif /* SOLVERSIBC_H_ */

@@ -8,46 +8,32 @@
 #include "ParserGiD.h"
 
 ParserGiD::ParserGiD() {
-    mesh_ = NULL;
-    scalingFactor_ = 1.0;
+    mesh_ = nullptr;
 }
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-    mesh_ = NULL;
-    scalingFactor_ = 1.0;
-    struct stat st;
-    if (stat(getFilename().c_str(), &st) == 0) {
-        if (st.st_mode & S_IFDIR) {
-            cerr << endl << "ERROR@GiDParser::GiDParser(): "
-                    << getFilename() << "It is a directory " << endl;
-        }  else if(st.st_mode & S_IFREG) {
-            f_in.open(getFilename().c_str(), ifstream::in);
-            if (f_in.fail()) {
-                cerr << endl << "ERROR @ ParserGiD::GiDParser(): "
-                        << "Problem opening file: " << getFilename() << endl;
-            }
-            return;
-        }
-    }
+    mesh_ = nullptr;
 }
 
 ParserGiD::~ParserGiD() {
 
 }
 
-SmbData*
-ParserGiD::read() {
+SmbData* ParserGiD::read() {
+    if (isFolder()) {
+        string msg(getFilename() +  " is a directory.");
+        throw Error(msg);
+    }
     if (!canOpen()) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "Can not openfile: " << getFilename() << endl;
-        exit(-1);
+        throw Error("Can not openfile: " + getFilename());
     }
-    if (!checkVersionCompatibility(readVersion())) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "File version is not supported. " << endl;
-        exit(-1);
+    openAsInput(f_in);
+    string version = readVersion();
+    if (!checkVersionCompatibility(version)) {
+        throw Error("File version " + version + " is not supported.");
     }
+
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
     res->solverOptions = readSolverOptions();
@@ -60,23 +46,17 @@ ParserGiD::read() {
     res->emSources = readEMSources();
     res->outputRequests = readOutputRequests();
 
-    res->mesh->applyScalingFactor(scalingFactor_);
-    if (res->grid != NULL) {
-        res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
-        res->grid->applyScalingFactor(scalingFactor_);
-    }
+    postReadOperations(res);
 
     return res;
 }
 
-void
-ParserGiD::printInfo() const {
+void ParserGiD::printInfo() const {
     cout << "--- GiDParser info ---" << endl;
     cout << "--- End of GiDParser info ---" << endl;
 }
 
-OptionsSolver*
-ParserGiD::readSolverOptions() {
+OptionsSolver* ParserGiD::readSolverOptions() {
     OptionsSolver* res = new OptionsSolver();
     bool finished = false;
     bool optionsFound = false;
@@ -167,19 +147,16 @@ ParserGiD::readSolverOptions() {
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
     if (!optionsFound) {
-        cerr << endl << "ERROR @ readSolverOptions(): "
-                << "EoF was reached but problem data was not found." << endl;
+        throw Error("EoF was reached but problem data was not found.");
     }
     if (!finished) {
-        cerr << endl << "ERROR @ readSolverOptions(): "
-                << "EoF reached, \"end of problem data\" not found." << endl;
+        throw Error("EoF reached, \"end of problem data\" not found.");
     }
     //
     return res;
 }
 
-OptionsMesher*
-ParserGiD::readMesherOptions() {
+OptionsMesher* ParserGiD::readMesherOptions() {
     bool finished;
     bool found = false;
     string line, label, value;
@@ -198,6 +175,8 @@ ParserGiD::readMesherOptions() {
                     res->setBruteForceVolumes(strToBool(value));
                 } else if (label.compare("VTK Export") == 0) {
                     res->setVtkExport(strToBool(value));
+                } else if (label.compare("postmsh Export") == 0) {
+                    res->setPostmshExport(strToBool(value));
                 } else if (label.compare("Mode") == 0) {
                     res->setMode(strToMesherMode(value));
                 } else if (label.compare("Forbidden length") == 0) {
@@ -250,16 +229,14 @@ ParserGiD::readMesherOptions() {
     return res;
 }
 
-MeshUnstructured*
-ParserGiD::readMesh() {
+MeshUnstructured* ParserGiD::readMesh() {
     GroupLayers<> lG = readLayers();
     GroupCoordinates<CoordR3> cG = readCoordinates();
     GroupElements<ElemR> eG = readElements(cG);
     return new MeshUnstructured(cG, eG, lG);
 }
 
-GroupEMSources<>*
-ParserGiD::readEMSources() {
+GroupEMSources<>* ParserGiD::readEMSources() {
     GroupEMSources<>* res = new GroupEMSources<>();
     bool finished = false;
     bool found = false;
@@ -296,8 +273,7 @@ ParserGiD::readEMSources() {
     return res;
 }
 
-GroupPhysicalModels<>*
-ParserGiD::readMaterials(){
+GroupPhysicalModels<>* ParserGiD::readMaterials(){
     GroupPhysicalModels<>* res = new GroupPhysicalModels<>();
     string label, value;
     UInt materialCount = 0;
@@ -313,14 +289,18 @@ ParserGiD::readMaterials(){
     return res;
 }
 
-PhysicalModel*
-ParserGiD::readPhysicalModel(const MatId id) {
+PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
     string name;
-    PhysicalModel::Type type = PhysicalModel::undefined;
+    PhysicalModel::Type type;
     PMMultiport::Type mpType = PMMultiport::undefined;
     SIBCType surfType = undefinedSIBC;
     string layersStr;
     Real rEps, rMu, eC, mC;
+    PMVolumeAnisotropic::Model anisotropicModel;
+    Real crystalRMu, ferriteREps, ferriteRMu;
+    CVecR3 rEpsPrincipalAxes;
+    LocalAxes localAxes;
+    Real kappa;
     Real radius, R, L, C;
     ProjectFile file;
     while (!f_in.eof()) {
@@ -355,6 +335,20 @@ ParserGiD::readPhysicalModel(const MatId id) {
             file = ProjectFile(getFolder() + trim(value));
         } else if (label.compare("Layers")==0) {
             layersStr = value;
+        } else if (label.compare("Anisotropic model") == 0) {
+            anisotropicModel = strToAnisotropicModel(value);
+        } else if (label.compare("Local Axes") == 0) {
+            localAxes = strToLocalAxes(value);
+        } else if (label.compare("Relative permittivity principal axes") == 0) {
+            rEpsPrincipalAxes = strToCVecR3(value);
+        } else if (label.compare("Crystal relative permeability") == 0) {
+            crystalRMu = atof(value.c_str());
+        } else if (label.compare("Kappa") == 0) {
+            kappa = atof(value.c_str());
+        } else if (label.compare("Ferrite relative permeability") == 0) {
+            ferriteRMu = atof(value.c_str());
+        } else if (label.compare("Ferrite relative permittivity") == 0) {
+            ferriteREps = atof(value.c_str());
         } else if (label.compare("End of Material")==0) {
             // Creates material.
             switch (type) {
@@ -367,12 +361,20 @@ ParserGiD::readPhysicalModel(const MatId id) {
             case PhysicalModel::PML:
                 return new PMVolumePML(id, name);
             case PhysicalModel::classic:
-                if (eC == 0 && mC == 0) {
-                    return new PMVolume(id, name, rEps, rMu);
-                }
-                return new PMVolumeDispersive(id, name, rEps, rMu, eC, mC);
+                return new PMVolumeClassic(id, name, rEps, rMu, eC, mC);
             case PhysicalModel::elecDispersive:
                 return new PMVolumeDispersive(id, name, file);
+            case PhysicalModel::anisotropic:
+            switch (anisotropicModel) {
+            case PMVolumeAnisotropic::Model::crystal:
+                return new PMVolumeAnisotropicCrystal(id, name, localAxes,
+                        rEpsPrincipalAxes, crystalRMu);
+            case PMVolumeAnisotropic::Model::ferrite:
+                return new PMVolumeAnisotropicFerrite(id, name, localAxes,
+                        kappa,ferriteRMu,ferriteREps);
+            default:
+                throw Error("Material type not recognized.");
+            }
             case PhysicalModel::isotropicsibc:
                 switch (surfType) {
                 case sibc:
@@ -380,7 +382,7 @@ ParserGiD::readPhysicalModel(const MatId id) {
                 case multilayer:
                     return readMultilayerSurf(id, name, layersStr);
                 default:
-                    cerr << endl << "ERROR @ ParserGiD: Undefined SIBC Type." << endl;
+                    throw Error("Undefined SIBC Type.");
                 }
                 break;
                 case PhysicalModel::wire:
@@ -392,17 +394,14 @@ ParserGiD::readPhysicalModel(const MatId id) {
                         return new PMMultiportRLC(id, name, mpType, R, L, C);
                     }
                 default:
-                    cerr << endl << "ERROR @ Parsing materials: ";
-                    cerr << endl << "Material type not recognized." << endl;
-                    return NULL;
+                    throw Error("Material type not recognized.");
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
-GroupOutRqs<>*
-ParserGiD::readOutputRequests() {
+GroupOutRqs<>* ParserGiD::readOutputRequests() {
     GroupOutRqs<>* res = new GroupOutRqs<>();
     bool finished;
     bool found = false;
@@ -428,8 +427,8 @@ ParserGiD::readOutputRequests() {
 GroupElements<Vol> ParserGiD::boundToElemGroup(const string& line) {
     BoxR3 bound = strToBound(line);
     HexR8* hex = new HexR8(*mesh_, ElementId(0), bound);
-    mesh_->elems().add(hex, true);
-    GroupElements<Vol> elems = mesh_->elems().getGroupWith(hex->getId());
+    mesh_->elems().addId(hex);
+    GroupElements<Vol> elems(hex);
     return elems;
 }
 
@@ -456,8 +455,8 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getNextLabelAndValue(label,value);
                     CoordinateId coordId(atoi(value.c_str()));
                     NodR* node = new NodR(*mesh_, ElementId(0), &coordId);
-                    mesh_->elems().add(node, true);
-                    GroupElements<Nod> elems = mesh_->elems().getGroupWith(node->getId());
+                    mesh_->elems().addId(node);
+                    GroupElements<Nod> elems(node);
                     res->add(new OutRq<Nod>(domain, type, name, elems));
                     break;
                 }
@@ -473,8 +472,8 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getNextLabelAndValue(label,value);
                     vector<ElementId> ids;
                     ids.push_back(ElementId(atoi(value.c_str())));
-                    GroupElements<ElemR> elems = mesh_->elems().getGroupWith(ids);
-                    GroupElements<Surf> surfs = elems.getGroupOf<Surf>();
+                    GroupElements<ElemR> elems = mesh_->elems().getId(ids);
+                    GroupElements<Surf> surfs = elems.getOf<Surf>();
                     res->add(new OutRq<Surf>(domain, type, name, surfs));
                     break;
                 }
@@ -484,6 +483,32 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getline(f_in, line);
                     GroupElements<Vol> elems = boundToElemGroup(line);
                     res->add(new OutRq<Vol>(domain, type, name, elems));
+                    break;
+                }
+                case ParserGiD::bulkCurrent:
+                {
+                    CartesianAxis dir;
+                    UInt skip;
+                    getNextLabelAndValue(label,value);
+                    switch (value[0]) {
+                    case 'x':
+                        dir = x;
+                        break;
+                    case 'y':
+                        dir = y;
+                        break;
+                    case 'z':
+                        dir = z;
+                        break;
+                    default:
+                        dir = x;
+                    }
+                    getNextLabelAndValue(label,value);
+                    skip = atoi(value.c_str());
+                    getline(f_in, line);
+                    GroupElements<Vol> elems = boundToElemGroup(line);
+                    res->add(new OutRqBulkCurrent(domain, name, elems,
+                            dir, skip));
                     break;
                 }
                 case ParserGiD::farField:
@@ -626,12 +651,10 @@ GroupCoordinates<CoordR3> ParserGiD::readCoordinates() {
         }
     }
     if (!found) {
-        cerr << endl << "ERROR @ GiDParser::readCoordinates(): "
-                << "Coordinates label was not found." << endl;
+        throw Error("Coordinates label was not found.");
     }
     if (!finished) {
-        cerr << endl << "ERROR @ GiDParser::readCoordinates(): "
-                << "End of coordinates label not found." << endl;
+        throw Error("End of coordinates label not found.");
     }
     return GroupCoordinates<CoordR3>(coord);
 }
@@ -709,7 +732,7 @@ void ParserGiD::readTet10Elements(const GroupCoordinates<CoordR3>& v,
             f_in >> vId[j];
         }
         f_in >> matId;
-        elems.push_back(new Tet10(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Tetrahedron10(v, id, vId, LayerId(0), matId));
     }
 }
 
@@ -721,7 +744,7 @@ void ParserGiD::readTet4Elements(const GroupCoordinates<CoordR3>& v,
     MatId matId;
     for (UInt i = 0; i < pSize_.tet4; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> vId[3] >> matId >> layerId;
-        elems.push_back(new Tet4(v, id, vId, layerId, matId));
+        elems.push_back(new Tetrahedron4(v, id, vId, layerId, matId));
     }
 }
 
@@ -736,7 +759,7 @@ void ParserGiD::readTri6Elements(const GroupCoordinates<CoordR3>& v,
         for (UInt j = 0; j < 6; j++)
             f_in >> vId[j];
         f_in >> matId;
-        elems.push_back(new Tri6(v, id, vId, LayerId(0), matId));
+        elems.push_back(new Triangle6(v, id, vId, LayerId(0), matId));
     }
 }
 
@@ -749,7 +772,7 @@ void ParserGiD::readTri3Elements(const GroupCoordinates<CoordR3>& v,
     CVecR3 normal;
     for (UInt i = 0; i < pSize_.tri3; i++) {
         f_in >> id >> vId[0] >> vId[1] >> vId[2] >> matId >> layerId;
-        elems.push_back(new Tri3(v, id, vId, layerId, matId));
+        elems.push_back(new Triangle3(v, id, vId, layerId, matId));
     }
 }
 
@@ -903,7 +926,7 @@ ParserGiD::readCartesianGrid() {
     bool finished = false;
     bool gridLabelFound = false;
     bool gridFound = false;
-    Grid3* grid = NULL;
+    Grid3* grid = nullptr;
     BoxR3 bound;
     bool stepsByNumberOfCells = true;
     CVecI3 numElems;
@@ -935,7 +958,7 @@ ParserGiD::readCartesianGrid() {
                 } else if(label.find("End of Grid") != label.npos) {
                     finished = true;
                     if (!gridFound) {
-                        return NULL;
+                        return nullptr;
                     }
                 }
                 if (f_in.eof()) {
@@ -957,7 +980,7 @@ ParserGiD::readCartesianGrid() {
             grid = new Grid3(bound, steps);
         }
     } else {
-        grid = NULL;
+        grid = nullptr;
     }
     return grid;
 }
@@ -981,11 +1004,12 @@ ParserGiD::readPlaneWave() {
             elems = boundToElemGroup(value);
         } else if (label.compare("Number of elements")==0) {
             UInt nE = atoi(value.c_str());
+            elems.clear();
             elems.reserve(nE);
             for (UInt i = 0; i < nE; i++) {
                 ElementId id;
                 f_in >> id;
-                elems = mesh_->elems().getGroupWith(id);
+                elems.add(mesh_->elems().getId(id));
             }
         } else if (label.compare("End of Planewave")==0) {
             return new PlaneWave(mag, elems, dir, pol);
@@ -1003,7 +1027,7 @@ ParserGiD::readDipole() {
     Real length = 0.0;
     CVecR3 orientation;
     CVecR3 position;
-    MagnitudeGaussian* mag = NULL;
+    MagnitudeGaussian* mag = nullptr;
     //
     string line;
     bool finished = false;
@@ -1026,9 +1050,7 @@ ParserGiD::readDipole() {
     return new Dipole(mag, elems, length, orientation, position);
 }
 
-Waveport*
-ParserGiD::readWaveport() {
-    vector<Face> faces;
+Waveport* ParserGiD::readWaveport() {
     UInt numElements = 0;
     bool input = true;
     Magnitude* mag;
@@ -1036,6 +1058,7 @@ ParserGiD::readWaveport() {
     Waveport::ExcitationMode excitationMode = Waveport::TE;
     pair<UInt,UInt> mode(1,0);
     string line, label, value;
+    GroupElements<const Surf> surfs;
     bool finished = false;
     while (!finished && !f_in.eof()) {
         getNextLabelAndValue(label,value);
@@ -1051,8 +1074,7 @@ ParserGiD::readWaveport() {
             if (value.find("Rectangular") != value.npos) {
                 shape = WaveportShape::rectangular;
             } else {
-                cout << "ERROR @ Unreckognized waveport shape." << endl;
-                exit(-1);
+                throw Error("Unreckognized waveport shape.");
             }
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
@@ -1070,43 +1092,48 @@ ParserGiD::readWaveport() {
             numElements = atoi(value.c_str());
         } else if (!label.compare("Elements")) {
             UInt e, f;
+            vector<Face> faces;
             for (UInt i = 0; i < numElements; i++) {
                 f_in >> e >> f;
-                const VolR* vol = mesh_->elems().get(ElementId(e))->castTo<VolR>();
-                faces.push_back(Face(vol,f-1));
+                const ElemR* elem = mesh_->elems().getId(ElementId(e));
+                if (elem->is<VolR>()) {
+                    const VolR* vol = elem->castTo<VolR>();
+                    faces.push_back(Face(vol,f-1));
+                } else if (elem->is<SurfR>()) {
+                    surfs.add(elem->castTo<SurfR>());
+                }
+            }
+            surfs.add(mesh_->getSurfsMatching(faces));
+            if (surfs.size() < faces.size()) {
+                surfs.printInfo();
+                throw Error("Could not find surfaces matching element faces.");
+            }
+            if (surfs.size() == 0) {
+                throw Error("No surfaces read on waveport.");
             }
         } else if (label.find("End of Waveport") != label.npos) {
             finished = true;
         }
         if (f_in.eof()) {
-            cerr << endl << "ERROR @ Parser: "
-                    << "End of Waveport not found" << endl;
+            throw Error("End of Waveport not found");
         }
     }
     // Throws error message if finished was not updated.
     if (!finished) {
-        cerr << endl << "ERROR @ GiDParser::readWaveportEMSource: "
-                << "End of excitation type label not found. " << endl;
-    }
-    if (faces.size() == 0) {
-        cerr << endl << "ERROR @ ParserGiD:"
-                        << "No surfaces read on waveport." << endl;
-    }
-    GroupElements<const Surf> surfs = mesh_->getSurfsMatching(faces);
-    if (surfs.size() != faces.size()) {
-        cerr << endl << "ERROR @ ParserGiD:"
-                << "Could not find surfaces matching element faces." << endl;
-        surfs.printInfo();
+        throw Error("End of excitation type label not found.");
     }
     if (!input) {
         delete mag;
-        mag = NULL;
+        mag = nullptr;
     }
-    return new WaveportRectangular(mag, surfs, excitationMode, mode);
+    if (shape == WaveportShape::rectangular) {
+        return new WaveportRectangular(mag, surfs, excitationMode, mode);
+    } else {
+        throw Error("Unsupported Waveport shape.");
+    }
 }
 
-Generator*
-ParserGiD::readGenerator() {
+Generator* ParserGiD::readGenerator() {
     GroupElements<Nod> elems;
     Magnitude* mag;
     Generator::Type type;
@@ -1130,22 +1157,18 @@ ParserGiD::readGenerator() {
                 f_in >> e;
                 CoordinateId id = CoordinateId(e);
                 NodR* node = new NodR(*mesh_, ElementId(0), &id);
-                mesh_->elems().add(node, true);
+                mesh_->elems().addId(node);
                 nodes.push_back(node->getId());
             }
-            elems = mesh_->elems().getGroupWith(nodes);
+            elems = mesh_->elems().getId(nodes);
         } else if (label.compare("End of Generator")==0) {
             return new Generator(mag, elems, type, hardness);
         }
     }
-    // Throws error message if ending label was not found.
-    cerr << endl << "ERROR @ Parsing generator: "
-            << "End of Generator label not found. " << endl;
-    return new Generator();
+    throw("End of Generator label not found.");
 }
 
-SourceOnLine*
-ParserGiD::readSourceOnLine() {
+SourceOnLine* ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
     Magnitude* mag;
@@ -1169,7 +1192,7 @@ ParserGiD::readSourceOnLine() {
                 ids.push_back(ElementId(e));
             }
         } else if (label.compare("End of Source_on_line")==0) {
-            GroupElements<Lin> lines = mesh_->elems().getGroupWith(ids);
+            GroupElements<Lin> lines = mesh_->elems().getId(ids);
             return new SourceOnLine(mag, lines, type, hardness);
         }
     }
@@ -1211,8 +1234,7 @@ OutRq<void>::Type ParserGiD::strToOutputType(string str) const {
     }
 }
 
-ParserGiD::SIBCType
-ParserGiD::strToSIBCType(string str) const {
+ParserGiD::SIBCType ParserGiD::strToSIBCType(string str) const {
     str = trim(str);
     if (str.compare("File")==0) {
         return sibc;
@@ -1225,8 +1247,7 @@ ParserGiD::strToSIBCType(string str) const {
     }
 }
 
-Generator::Type
-ParserGiD::strToGeneratorType(string str) const {
+Generator::Type ParserGiD::strToGeneratorType(string str) const {
     str = trim(str);
     if (str.compare("voltage")==0) {
         return Generator::voltage;
@@ -1239,8 +1260,7 @@ ParserGiD::strToGeneratorType(string str) const {
     }
 }
 
-Generator::Hardness
-ParserGiD::strToGeneratorHardness(string str) const {
+Generator::Hardness ParserGiD::strToGeneratorHardness(string str) const {
     str = trim(str);
     if (str.compare("soft")==0) {
         return Generator::soft;
@@ -1253,8 +1273,7 @@ ParserGiD::strToGeneratorHardness(string str) const {
     }
 }
 
-OptionsMesher::BoundType
-ParserGiD::strToBoundType(string str) const {
+OptionsMesher::BoundType ParserGiD::strToBoundType(string str) const {
     str = trim(str);
     if (str.compare("PEC")==0) {
         return OptionsMesher::pec;
@@ -1289,6 +1308,8 @@ PhysicalModel::Type ParserGiD::strToMaterialType(string str) const {
         return PhysicalModel::classic;
     } else if (str.compare("Dispersive")==0) {
         return PhysicalModel::elecDispersive;
+    } else if (str.compare("Anisotropic")==0) {
+        return PhysicalModel::anisotropic;
     } else if (str.compare("SIBC")==0) {
         return PhysicalModel::isotropicsibc;
     } else if (str.compare("Wire")==0) {
@@ -1296,14 +1317,11 @@ PhysicalModel::Type ParserGiD::strToMaterialType(string str) const {
     } else if (str.find("Conn_") != string::npos) {
         return PhysicalModel::multiport;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized material label." << endl;
-        return PhysicalModel::undefined;
+        throw Error("Unreckognized material label.");
     }
 }
 
-PMMultiport::Type
-ParserGiD::strToMultiportType(string str) const {
+PMMultiport::Type ParserGiD::strToMultiportType(string str) const {
     str = trim(str);
     if (str.compare("Conn_short")==0) {
         return PMMultiport::shortCircuit;
@@ -1348,8 +1366,7 @@ CVecR3 ParserGiD::strToCVecR3(const string& str) const {
     return res;
 }
 
-SourceOnLine::Type
-ParserGiD::strToNodalType(string str) const {
+SourceOnLine::Type ParserGiD::strToNodalType(string str) const {
     str = trim(str);
     if (str.compare("electricField")==0) {
         return SourceOnLine::electric;
@@ -1362,8 +1379,7 @@ ParserGiD::strToNodalType(string str) const {
     }
 }
 
-SourceOnLine::Hardness
-ParserGiD::strToNodalHardness(string str) const {
+SourceOnLine::Hardness ParserGiD::strToNodalHardness(string str) const {
     str = trim(str);
     if (str.compare("soft")==0) {
         return SourceOnLine::soft;
@@ -1376,8 +1392,7 @@ ParserGiD::strToNodalHardness(string str) const {
     }
 }
 
-string
-ParserGiD::readVersion() {
+string ParserGiD::readVersion() {
     string line, label, value;
     bool formatFound = false;
     bool versionFound = false;
@@ -1405,8 +1420,7 @@ ParserGiD::readVersion() {
     return version;
 }
 
-ParserGiD::GiDOutputType
-ParserGiD::strToGidOutputType(string str) const {
+ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) const {
     str = trim(str);
     if (str.compare("OutRq_on_point")==0) {
         return ParserGiD::outRqOnPoint;
@@ -1416,7 +1430,9 @@ ParserGiD::strToGidOutputType(string str) const {
         return ParserGiD::outRqOnSurface;
     } else if (str.compare("OutRq_on_volume")==0) {
         return ParserGiD::outRqOnVolume;
-    } else if (str.compare("farField")) {
+    } else if (str.compare("Bulk_current")==0) {
+        return ParserGiD::bulkCurrent;
+    } else if (str.compare("farField")==0) {
         return ParserGiD::farField;
     } else {
         cerr << endl << "ERROR @ Parser: Unreckognized label." << endl;
@@ -1424,8 +1440,7 @@ ParserGiD::strToGidOutputType(string str) const {
     }
 }
 
-Domain
-ParserGiD::strToDomain(string line) const {
+Domain ParserGiD::strToDomain(string line) const {
     UInt timeDomain;
     Real initialTime;
     Real finalTime;
@@ -1447,8 +1462,7 @@ ParserGiD::strToDomain(string line) const {
             toBool(usingTransferFunction), transferFunctionFile));
 }
 
-Magnitude*
-ParserGiD::readMagnitude(const string typeIn) {
+Magnitude* ParserGiD::readMagnitude(const string typeIn) {
     string type = typeIn;
     type = trim(type);
     bool finished = false;
@@ -1484,10 +1498,7 @@ ParserGiD::readMagnitude(const string typeIn) {
             }
         }
     }
-    cerr << endl << "ERROR @ readMagnitude: "
-            << "Unable to recognize magnitude type when reading excitation."
-            << endl;
-    return NULL;
+    throw Error("Unable to recognize magnitude type when reading excitation.");
 }
 
 OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
@@ -1537,8 +1548,7 @@ OptionsSolver::Solver ParserGiD::strToSolver(string str) {
     }
 }
 
-OptionsSolver::CompositeModel
-ParserGiD::strToCompositeModel(string str) {
+OptionsSolver::CompositeModel ParserGiD::strToCompositeModel(string str) {
     str = trim(str);
     if (str.compare("None")==0) {
         return OptionsSolver::CompositeModel::none;
@@ -1554,8 +1564,7 @@ ParserGiD::strToCompositeModel(string str) {
     }
 }
 
-OptionsSolver::WireModel
-ParserGiD::strToWireModel(string str) {
+OptionsSolver::WireModel ParserGiD::strToWireModel(string str) {
     str = trim(str);
     if (str.compare("Old")==0) {
         return OptionsSolver::WireModel::oldWireModel;
@@ -1583,8 +1592,7 @@ OptionsSolver::InductanceModel ParserGiD::strToInductanceModel(string str) {
     }
 }
 
-bool
-ParserGiD::checkVersionCompatibility(const string version) const {
+bool ParserGiD::checkVersionCompatibility(const string version) const {
     bool versionMatches =
             atof(version.c_str()) == atof(string(APP_VERSION).c_str());
     if (!versionMatches) {
@@ -1657,4 +1665,27 @@ PoleResidue ParserGiD::readPoleResiduePair(ifstream& stream) {
     res.second = complex<Real>(atof(wordVector[2].c_str()),
             atof(wordVector[3].c_str()));
     return res;
+}
+
+PMVolumeAnisotropic::Model ParserGiD::strToAnisotropicModel(
+        string label) const {
+    string str = label;
+    str = trim(str);
+    if (str.compare("Crystal")==0) {
+        return PMVolumeAnisotropic::Model::crystal;
+    } else if (str.compare("Ferrite")==0) {
+        return PMVolumeAnisotropic::Model::ferrite;
+    } else {
+        throw Error("Unrecognized Anisotropic Model: " + str);
+    }
+}
+
+LocalAxes ParserGiD::strToLocalAxes(const string& str) {
+    UInt begin = str.find_first_of("{");
+    UInt end = str.find_first_of("}");
+    CVecR3 eulerAngles = strToCVecR3(str.substr(begin+1,end-1));
+    begin = str.find_last_of("{");
+    end = str.find_last_of("}");
+    CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
+    return LocalAxes(eulerAngles, origin);
 }

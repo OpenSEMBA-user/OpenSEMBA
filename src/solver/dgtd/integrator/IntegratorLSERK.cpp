@@ -9,19 +9,19 @@
 
 #ifndef LSERKINFO_CONSTANTS
 #define LSERKINFO_CONSTANTS
-	const double IntegratorLSERK::rka[IntegratorLSERK::nStages] = {
+	const Real IntegratorLSERK::rka[IntegratorLSERK::nStages] = {
 			0.0,
 			-567301805773.0/1357537059087.0,
 			-2404267990393.0/2016746695238.0,
 			-3550918686646.0/2091501179385.0,
 			-1275806237668.0/842570457699.0};
-	const double IntegratorLSERK::rkb[IntegratorLSERK::nStages] = {
+	const Real IntegratorLSERK::rkb[IntegratorLSERK::nStages] = {
 			1432997174477.0/9575080441755.0,
 			5161836677717.0/13612068292357.0,
 			1720146321549.0/2090206949498.0,
 			3134564353537.0/4481467310338.0,
 			2277821191437.0/14882151754819.0};
-	const double IntegratorLSERK::rkc[IntegratorLSERK::nStages] = {
+	const Real IntegratorLSERK::rkc[IntegratorLSERK::nStages] = {
 			0.0,
 			1432997174477.0/9575080441755.0,
 			2526269341429.0/6820363962896.0,
@@ -35,8 +35,8 @@ IntegratorLSERK::IntegratorLSERK() {
 
 IntegratorLSERK::IntegratorLSERK(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup,
- const ArgumentsCudg3d* arg) {
+ const PMGroup& pmGroup,
+ const OptionsSolverDGTD* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	buildRKConstants();
 	useMaxStageSizeForLTS = arg->isUseMaxStageSizeForLts();
@@ -47,16 +47,16 @@ IntegratorLSERK::~IntegratorLSERK() {
 }
 
 void
-IntegratorLSERK::timeIntegrate(const double time) const {
+IntegratorLSERK::timeIntegrate(const Real time) const {
 	assert(solver != NULL);
-	double dt = getMaxDT();
+	Real dt = getMaxDT();
 	if (doLTS) {
 		LTSTimeIntegration(time, time, dt, getNTiers() - 1);
 	} else  {
-		double localTime;
-		const uint nStages = getNStages();
-		uint nK = solver->nK;
-		for (uint s = 0; s < nStages; s++) {
+		Real localTime;
+		const UInt nStages = getNStages();
+		UInt nK = solver->nK;
+		for (UInt s = 0; s < nStages; s++) {
 			localTime = time + dt * getRKC(s);
 			updateResiduals(0, nK, getRKA(s), localTime, dt);
 			solver->updateFieldsWithRes(0, nK, getRKB(s));
@@ -64,14 +64,14 @@ IntegratorLSERK::timeIntegrate(const double time) const {
 	}
 }
 
-uint
+UInt
 IntegratorLSERK::getNumOfIterationsPerBigTimeStep(
- const uint e) const {
-	uint nTiers = getNTiers();
-	uint nStages = getNStages();
-	uint tier = timeTierList(e,1);
-	uint stage = timeTierList(e,2);
-	uint iter = 0;
+ const UInt e) const {
+	UInt nTiers = getNTiers();
+	UInt nStages = getNStages();
+	UInt tier = timeTierList(e,1);
+	UInt stage = timeTierList(e,2);
+	UInt iter = 0;
 	if (tier == 0) {
 		iter = (nTiers - tier) * nStages;
 	} else {
@@ -80,68 +80,68 @@ IntegratorLSERK::getNumOfIterationsPerBigTimeStep(
 	return iter;
 }
 
-uint
+UInt
 IntegratorLSERK::getNStages() const {
 	return nStages;
 }
 
-double
-IntegratorLSERK::getRKA(const uint s) const {
+Real
+IntegratorLSERK::getRKA(const UInt s) const {
 	return rka[s];
 }
 
-double
-IntegratorLSERK::getRKB(const uint s) const {
+Real
+IntegratorLSERK::getRKB(const UInt s) const {
 	return rkb[s];
 }
 
-double
-IntegratorLSERK::getRKC(const uint s) const {
+Real
+IntegratorLSERK::getRKC(const UInt s) const {
 	return rkc[s];
 }
 
-double
-IntegratorLSERK::getStageSize(const uint s) const {
+Real
+IntegratorLSERK::getStageSize(const UInt s) const {
 	return stageSize[s];
 }
 
 void
 IntegratorLSERK::buildRKConstants() {
-	for (uint i = 1; i <= nStages; i++) {
+	for (UInt i = 1; i <= nStages; i++) {
 		stageSize[i-1] = rkc[i] - rkc[i-1];
 	}
-	stageSize[nStages - 1] = (double) 1.0 - rkc[nStages-1];
+	stageSize[nStages - 1] = (Real) 1.0 - rkc[nStages-1];
 }
 
-double
+Real
 IntegratorLSERK::getMaxStageSize() const {
-	DynMatrix<double> aux(nStages,1);
-	for (uint i = 0; i < nStages; i++) {
+	DynMatrix<Real> aux(nStages,1);
+	for (UInt i = 0; i < nStages; i++) {
 		aux(i,0) = stageSize[i];
 	}
 	aux.sortRows(0,0);
 	return aux(nStages-1, 0);
 }
 
-double
+Real
 IntegratorLSERK::getMaxTimeRatio() const {
 	if (useMaxStageSizeForLTS) {
 		return getMaxStageSize();
 	} else {
-		return ((double)1.0 / (double) nStages);
+		return ((Real)1.0 / (Real) nStages);
 	}
 }
 
  
 void
 IntegratorLSERK::LTSTimeIntegration(
- const double time,
- double localTime,
- double localdt,
- const uint tier) const {
-	uint fK, lK;
-	const uint nStages = getNStages();
-	for (uint s = 0; s < nStages; s++) {
+ const Real time,
+ Real localTime,
+ Real localdt,
+ const UInt tier) const {
+	UInt fK, lK;
+	const UInt nStages = getNStages();
+	for (UInt s = 0; s < nStages; s++) {
 		// Determines range of cells belonging to this tier and stage.
 		if (tier == getNTiers()-1) {
 			fK = getRange(tier, 0).first;
@@ -156,10 +156,10 @@ IntegratorLSERK::LTSTimeIntegration(
 		}
 		// Updates RHS in current tier.
 		localTime = time + localdt * getRKC(s);
-		double rkdt = localdt * getStageSize(s);
+		Real rkdt = localdt * getStageSize(s);
 		// Recursively calls this function.
 		if (tier > 0) {
-			uint lSaved = getRange(tier, nStages-2).second;
+			UInt lSaved = getRange(tier, nStages-2).second;
 			solver->LTSSaveFieldsAndResidues(fK,lSaved);
 			LTSTimeIntegration(time, localTime, rkdt, tier-1);
 			solver->LTSLoadFieldsAndResidues(fK,lSaved);
@@ -172,11 +172,11 @@ IntegratorLSERK::LTSTimeIntegration(
 
 void
 IntegratorLSERK::updateResiduals(
- const uint e1,
- const uint e2,
- const double rka,
- const double localTime,
- const double localdt) const {
+ const UInt e1,
+ const UInt e2,
+ const Real rka,
+ const Real localTime,
+ const Real localdt) const {
 	solver->computeRHS(e1,e2,localTime,localdt);
 	solver->addRHSToRes(e1,e2,rka,localdt);
 }

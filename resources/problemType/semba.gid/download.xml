@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DownloadProblemtype version='1.0'>
+    <Program>
+        <Name>Semba</Name>
+        <Version>0.1</Version>        
+        <ShortDescription>Framework for CEM problems</ShortDescription>        
+    </Program>
+</DownloadProblemtype>

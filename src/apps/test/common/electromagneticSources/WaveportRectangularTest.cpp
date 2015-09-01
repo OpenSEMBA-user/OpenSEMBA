@@ -5,8 +5,9 @@
  *      Author: luis
  */
 
+#include "../../../../common/sources/WaveportRectangular.h"
+
 #include "gtest/gtest.h"
-#include "electromagneticSources/WaveportRectangular.h"
 
 class EMSourceWaveportRectangularTest : public ::testing::Test {
     void SetUp() {

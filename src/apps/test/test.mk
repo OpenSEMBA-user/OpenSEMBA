@@ -26,7 +26,7 @@ else
 endif
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
-DIR = $(SRC_COMMON_DIR)
+DIR = $(SRC_COMMON_DIR) $(SRC_MESHER_DIR) $(SRC_SOLVER_DIR)
 
 SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(SRCDIR)/apps/test/, ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
 

@@ -23,7 +23,7 @@ protected:
         steps[x] = grid_.getStep(x);
         steps[y] = grid_.getStep(y);
         steps[z] = grid_.getStep(z);
-        cartesianGrid_ = new Grid3 (CVecI3(), offsetIni, steps);
+        cartesianGrid_ = new Grid3 (steps, CVecI3(), offsetIni);
     }
 
     void checkNaturalCell(double pos) {
@@ -67,6 +67,13 @@ TEST_F(GeometryGridTest, NumberOfCells) {
     Grid3 grid(BoxR3(min_, max_), CVecR3(0.75, 0.75, 0.75));
     EXPECT_EQ(grid.getFullDomainBoundingBox(), BoxR3(min_,CVecR3(1.5,1.5,1.5)));
     EXPECT_EQ(grid.getNumCells(), CVecI3(2,2,2));
+}
+
+TEST_F(GeometryGridTest, PosInRange) {
+    vector<Real> posInRange = grid_.getPosInRange(x,0.17,0.27);
+    EXPECT_EQ(2, posInRange.size());
+    EXPECT_EQ(0.2, posInRange[0]);
+    EXPECT_EQ(0.25, posInRange[1]);
 }
 
 TEST_F(GeometryGridTest, GetCVecI3Fractional) {

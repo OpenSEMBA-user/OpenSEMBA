@@ -1,0 +1,175 @@
+BOOK: Predefined_materials
+MATERIAL: PEC
+QUESTION: TypeId
+VALUE: PEC
+STATE: HIDDEN
+END MATERIAL
+
+MATERIAL: PMC
+QUESTION: TypeId
+VALUE: PMC
+STATE: HIDDEN
+END MATERIAL
+
+MATERIAL: SMA
+QUESTION: TypeId
+VALUE: SMA
+STATE: HIDDEN
+END MATERIAL
+
+MATERIAL: PML
+QUESTION: TypeId
+VALUE: PML
+STATE: HIDDEN
+END MATERIAL
+
+MATERIAL: MUR1
+QUESTION: TypeId
+VALUE: MUR1
+STATE: HIDDEN
+END MATERIAL
+
+MATERIAL: MUR2
+QUESTION: TypeId
+VALUE: MUR2
+STATE: HIDDEN
+END MATERIAL
+
+BOOK: Basic_materials
+MATERIAL: Classic
+QUESTION: TypeId
+VALUE: Classic
+STATE: HIDDEN
+QUESTION: Permittivity
+VALUE: 1.0
+QUESTION: Permeability
+VALUE: 1.0
+QUESTION: ElecCond
+VALUE: 0.0
+QUESTION: MagnCond
+VALUE: 0.0
+END MATERIAL
+
+MATERIAL: Dispersive_Material
+QUESTION: TypeId
+VALUE: Dispersive
+STATE: HIDDEN
+QUESTION: File
+VALUE:
+HELP: Insert name of dispersive material file. It must be in the project materials folder. 
+END MATERIAL
+
+
+BOOK: Advanced_materials
+MATERIAL: Surface_Impedance
+QUESTION: TypeId
+VALUE: SIBC
+STATE: HIDDEN
+QUESTION: SurfaceType#CB#(File,Layers)
+VALUE: Layers
+DEPENDENCIES:(File, RESTORE, File,#CURRENT#, HIDE, Layers, #CURRENT# )
+DEPENDENCIES:(Layers, RESTORE,Layers,#CURRENT#, SET, File, , HIDE, File, )
+QUESTION: File
+VALUE: 
+HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
+QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
+VALUE: #N# 5 0.0 1.0 1.0 0.0 0.0 
+END MATERIAL
+
+MATERIAL: Anisotropic
+QUESTION: TypeId
+VALUE: Anisotropic
+STATE: HIDDEN
+QUESTION: Local-Axes#LA#(-GLOBAL-)
+VALUE: -GLOBAL-
+QUESTION: Anisotropic_model#CB#(Crystal,Ferrite)
+VALUE: Crystal
+HELP: Crystals have a Local Axes in which their permittivity can be expressed as a diagonal tensor. Ferrites use a Polder tensor model.
+DEPENDENCIES:(Crystal, RESTORE,Relative_permittivity_principal_axes,#CURRENT#, RESTORE,Crystal_relative_permeability,#CURRENT#, HIDE,Kappa,#CURRENT#, HIDE,Ferrite_relative_permeability,#CURRENT#,  HIDE,Ferrite_relative_permittivity,#CURRENT#)
+DEPENDENCIES:(Ferrite, HIDE,Relative_permittivity_principal_axes,#CURRENT#, HIDE,Crystal_relative_permeability,#CURRENT#, RESTORE,Kappa,#CURRENT#, RESTORE,Ferrite_relative_permeability,#CURRENT#, RESTORE,Ferrite_relative_permittivity,#CURRENT#)
+QUESTION: Relative_permittivity_principal_axes
+VALUE: 1.0 1.0 1.0
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Crystal_relative_permeability
+VALUE: 1.0
+QUESTION: Kappa
+VALUE: 0.0
+QUESTION: Ferrite_relative_permeability
+VALUE: 1.0
+QUESTION: Ferrite_relative_permittivity
+VALUE: 1.0
+
+#QUESTION: Tensor_11#MAT#(Basic_materials)
+#VALUE: Classic
+#QUESTION: Tensor_22#MAT#(Basic_materials)
+#VALUE: Classic
+#QUESTION: Tensor_33#MAT#(Basic_materials)
+#VALUE: Classic
+END MATERIAL
+
+
+
+BOOK: Wires
+
+MATERIAL: Cable
+QUESTION: TypeId
+VALUE: Wire
+STATE: HIDDEN
+QUESTION: Radius
+VALUE: 0.0
+QUESTION: Resistance
+VALUE: 0.0
+QUESTION: Inductance
+VALUE: 0.0
+END MATERIAL
+
+MATERIAL: Connector_short
+QUESTION: TypeId
+VALUE: Conn_short
+STATE: HIDDEN
+END MATERIAL
+
+MATERIAL: Connector_open
+QUESTION: TypeId
+VALUE: Conn_open
+STATE: HIDDEN
+END MATERIAL
+
+MATERIAL: Connector_series_RLC
+QUESTION: TypeId
+VALUE: Conn_sRLC
+STATE: HIDDEN
+QUESTION: Resistance
+VALUE: 0.0
+QUESTION: Inductance
+VALUE: 0.0
+QUESTION: Capacitance
+VALUE: 0.0
+IMAGE: RLC_series.gif
+END MATERIAL
+
+MATERIAL: Connector_parallel_RLC
+QUESTION: TypeId
+VALUE: Conn_pRLC
+STATE: HIDDEN
+QUESTION: Resistance
+VALUE: 0.0
+QUESTION: Inductance
+VALUE: 0.0
+QUESTION: Capacitance
+VALUE: 0.0
+IMAGE: RLC_parallel.gif
+END MATERIAL
+
+MATERIAL: Connector_series_L_parallel_RC
+QUESTION: TypeId
+VALUE: Conn_sLpRC
+STATE: HIDDEN
+QUESTION: Resistance
+VALUE: 0.0
+QUESTION: Inductance
+VALUE: 0.0
+QUESTION: Capacitance
+VALUE: 0.0
+IMAGE: L_series_RC_parallel.gif
+END MATERIAL

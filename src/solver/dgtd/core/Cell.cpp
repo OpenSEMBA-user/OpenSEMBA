@@ -10,7 +10,6 @@
 #endif
 
 Cell::Cell() {
-	material = NULL;
 }
 
 Cell::~Cell() {

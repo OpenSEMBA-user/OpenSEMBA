@@ -38,7 +38,7 @@ TEST_F(GeometryCoordinateGroupTest, getByPos){
     EXPECT_EQ(coords.size(), grp.size());
     for (UInt i = 0; i < grp.size(); i++) {
         CVecR3 pos = coords[i]->pos();
-        const CoordR3* found = grp.get(pos);
+        const CoordR3* found = grp.getPos(pos);
         EXPECT_EQ(pos, found->pos());
     }
 }

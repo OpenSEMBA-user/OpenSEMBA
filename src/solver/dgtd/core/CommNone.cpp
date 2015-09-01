@@ -13,23 +13,20 @@ CommNone::CommNone() {
 CommNone::~CommNone() {
 }
 
-int
+Int
 CommNone::getNumberOfTasks() const {
    return 1;
 }
 
-void
-CommNone::abort() const {
+void CommNone::abort() const {
 
 }
 
-uint
-CommNone::getLocalOffset() const {
+UInt CommNone::getLocalOffset() const {
    return 0;
 }
 
-uint
-CommNone::getLocalSize() const {
+UInt CommNone::getLocalSize() const {
    return getGlobalSize();
 }
 
@@ -40,51 +37,51 @@ CommNone::isMaster() const {
 
 void
 CommNone::gatherFieldsMaster(
-      FieldD3& electric,
-      FieldD3& magnetic,
-      const FieldD3& localElectric,
-      const FieldD3& localMagnetic) const {
+      FieldR3& electric,
+      FieldR3& magnetic,
+      const FieldR3& localElectric,
+      const FieldR3& localMagnetic) const {
 }
 
 void
 CommNone::gatherFieldsSlave(
-      const FieldD3& electric,
-      const FieldD3& magnetic) const {
+      const FieldR3& electric,
+      const FieldR3& magnetic) const {
    //
 }
 
 void
 CommNone::setPartitionSizes(
-      const vector<vector<uint> >& partId) {
+      const vector<vector<ElementId>>& partId) {
    assert(partId.size() == 1);
    setGlobalSize(partId[0].size());
    setLocalSizeAndOffset(getGlobalSize(), 0);
 }
 
 void
-CommNone::syncNeighbourFields(double* nEx, double* nEy, double* nEz,
-      double* nHx, double* nHy, double* nHz, const double* Ex, const double* Ey,
-      const double* Ez, const double* Hx, const double* Hy,
-      const double* Hz) const {
+CommNone::syncNeighbourFields(Real* nEx, Real* nEy, Real* nEz,
+      Real* nHx, Real* nHy, Real* nHz, const Real* Ex, const Real* Ey,
+      const Real* Ez, const Real* Hx, const Real* Hy,
+      const Real* Hz) const {
 
 }
 
 void
-CommNone::initNeighbourFields(const vector<uint>& nIds) {
+CommNone::initNeighbourFields(const vector<UInt>& nIds) {
 
 }
 
-int
+Int
 CommNone::getTask() const {
    return 0;
 }
 
-double
-CommNone::reduceToGlobalMinimum(double val) const {
+Real
+CommNone::reduceToGlobalMinimum(Real val) const {
    return val;
 }
 
-int
+Int
 CommNone::getNumOfTasksOnThisHost() const {
    return 1;
 }

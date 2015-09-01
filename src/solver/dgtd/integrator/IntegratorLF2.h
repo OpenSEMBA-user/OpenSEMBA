@@ -22,48 +22,48 @@ public:
 	virtual ~IntegratorLF2();
 	IntegratorLF2(
 	 const MeshVolume& mesh,
-	 const PhysicalModelGroup& pmGroup,
+	 const PMGroup& pmGroup,
 	 const OptionsSolverDGTD* arg);
 	void
 	 setSolver(DG* solver);
 	void
-	 timeIntegrate(const double time) const;
+	 timeIntegrate(const Real time) const;
 protected:
-	uint
+	UInt
  	 getNumOfIterationsPerBigTimeStep(
-      const uint e) const;
+      const UInt e) const;
 private:
-	static const uint nStages = 2;
-	uint
+	static const UInt nStages = 2;
+	UInt
 	 getNStages() const;
-	double
+	Real
 	 getMaxTimeRatio() const;
 	void
 	 LTSupdateFieldsElectric(
-	  const double localTime,
-	  const double localdt,
-	  const uint tier) const;
+	  const Real localTime,
+	  const Real localdt,
+	  const UInt tier) const;
 	void
 	 LTSupdateFieldsMagnetic(
-	  const double localTime,
-	  const double localdt,
-	  const uint tier) const;
+	  const Real localTime,
+	  const Real localdt,
+	  const UInt tier) const;
 	void
 	 updateFields(
-	  const uint e1,
-	  const uint e2,
-	  const double localTime,
-	  const double rkdt) const;
+	  const UInt e1,
+	  const UInt e2,
+	  const Real localTime,
+	  const Real rkdt) const;
 	void
 	 addRHSToFieldsElectric(
-	  const uint e1,
-	  const uint e2,
-	  const double rkdt) const;
+	  const UInt e1,
+	  const UInt e2,
+	  const Real rkdt) const;
 	void
 	 addRHSToFieldsMagnetic(
-	  const uint e1,
-	  const uint e2,
-	  const double rkdt) const;
+	  const UInt e1,
+	  const UInt e2,
+	  const Real rkdt) const;
 };
 
 #endif /* SOLVERLEAPFROG_H_ */

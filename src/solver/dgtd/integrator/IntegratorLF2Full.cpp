@@ -12,8 +12,8 @@ IntegratorLF2Full::IntegratorLF2Full() {
 
 IntegratorLF2Full::IntegratorLF2Full(
  const MeshVolume& mesh,
- const PhysicalModelGroup& pmGroup,
- const ArgumentsCudg3d* arg) {
+ const PMGroup& pmGroup,
+ const OptionsSolverDGTD* arg) {
 	timeStepSize = arg->getTimeStepSize();
 	timeStepSize *= 0.75;
 	if (arg->getUpwinding() > 0.0) {
@@ -30,23 +30,23 @@ IntegratorLF2Full::~IntegratorLF2Full() {
 
 }
 
-uint
+UInt
 IntegratorLF2Full::getNStages() const {
 	return nStages;
 }
 
-double
+Real
 IntegratorLF2Full::getMaxTimeRatio() const {
-	return ((double)1.0 / (double) nStages);
+	return ((Real)1.0 / (Real) nStages);
 }
 
-uint
-IntegratorLF2Full::getNumOfIterationsPerBigTimeStep(const uint e) const {
-	uint nTiers = getNTiers();
-	uint nStages = getNStages();
-	uint tier = timeTierList(e,1);
-	uint stage = timeTierList(e,2);
-	uint iter = 0;
+UInt
+IntegratorLF2Full::getNumOfIterationsPerBigTimeStep(const UInt e) const {
+	UInt nTiers = getNTiers();
+	UInt nStages = getNStages();
+	UInt tier = timeTierList(e,1);
+	UInt stage = timeTierList(e,2);
+	UInt iter = 0;
 	if (tier == 0) {
 		iter = (nTiers - tier) * nStages;
 	} else {
@@ -57,7 +57,7 @@ IntegratorLF2Full::getNumOfIterationsPerBigTimeStep(const uint e) const {
 
 void
 IntegratorLF2Full::timeIntegrate(
- const double time) const {
+ const Real time) const {
 	assert(solver != NULL);
 	if (doLTS) {
 		LTSTimeIntegration(time, getMaxDT(), getNTiers() - 1, 0);
@@ -70,13 +70,13 @@ IntegratorLF2Full::timeIntegrate(
 
 void
 IntegratorLF2Full::LTSTimeIntegration(
- double localTime,
- double localdt,
- const uint tier,
- const uint stage) const {
-	uint fK, lK;
+ Real localTime,
+ Real localdt,
+ const UInt tier,
+ const UInt stage) const {
+	UInt fK, lK;
 	static const bool useResForUpwinding = true;
-	const uint nStages = getNStages();
+	const UInt nStages = getNStages();
 	// Determines range of cells belonging to this tier and stage.
 	if (tier == getNTiers()-1) {
 		fK = getRange(tier, 0).first;
@@ -93,11 +93,11 @@ IntegratorLF2Full::LTSTimeIntegration(
 	solver->addFluxesToRHSMagnetic(fK,lK,useResForUpwinding);
 	// ------- Recursively calls this function ------------------------
 	if (tier > 0) {
-		double lts = localdt/((double) nStages);
-		uint lSaved = getRange(tier, nStages-2).second;
+		Real lts = localdt/((Real) nStages);
+		UInt lSaved = getRange(tier, nStages-2).second;
 		solver->LTSSaveFieldsAndResidues(fK,lSaved);
-		for (uint s = 0; s < nStages; s++) {
-			LTSTimeIntegration(localTime + ((double) s)*lts,
+		for (UInt s = 0; s < nStages; s++) {
+			LTSTimeIntegration(localTime + ((Real) s)*lts,
 			 lts, tier-1, nStages-s-1);
 		}
 		solver->LTSLoadFieldsAndResidues(fK,lSaved);
@@ -111,10 +111,10 @@ IntegratorLF2Full::LTSTimeIntegration(
 
 void
 IntegratorLF2Full::updateFields(
- const uint e1,
- const uint e2,
- const double localTime,
- const double rkdt) const {
+ const UInt e1,
+ const UInt e2,
+ const Real localTime,
+ const Real rkdt) const {
 	static const bool useResForUpwinding = true;
 	solver->computeCurlsInRHSElectric(e1,e2);
 	solver->computeCurlsInRHSMagnetic(e1,e2);

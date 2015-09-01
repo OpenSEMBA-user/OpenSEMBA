@@ -1,0 +1,226 @@
+PROBLEM DATA
+BOOK: Solver_options
+TITLE: Solver
+QUESTION: Solver#CB#(ugrfdtd,cudg3d,none)
+VALUE: none
+QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
+VALUE: Final_time
+DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,0)
+DEPENDENCIES: (Number_of_time_steps, SET,Final_time,#CURRENT#, RESTORE,Number_of_time_steps,0)
+QUESTION: Final_time
+VALUE: 30e-9
+HELP: Final time in seconds.
+QUESTION: Number_of_time_steps
+VALUE: 0
+HELP: Runs until specified time step. Ignored if 0. Overrides final time.
+QUESTION: Time_step
+VALUE: 0.0
+HELP: Time step in seconds. A zero value lets solver to choose the default time step.
+QUESTION: CFL
+VALUE: 0.8
+HELP: Courant number (suggested <= 0.8; ignored if 0.0).
+QUESTION: Default_sampling_period
+VALUE: 1e-10
+HELP: Zero means every time step.
+QUESTION: Force_restarting#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, SET,Resume_simulation,0)
+DEPENDENCIES: (0, RESTORE,Resume_simulation,#CURRENT#)
+QUESTION: Resume_simulation#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, SET,Force_restarting,0)
+DEPENDENCIES: (0, RESTORE,Force_restarting,#CURRENT#)
+HELP: Permits to resume a previous simulation until a final time step. Requires to exist a previous run with the –flush option
+QUESTION: Flush
+VALUE: 0
+HELP: Minutes between data flush of restarting fields. Necessary to resume a stopped problem. A 0 means no flushing.
+TITLE: ugrfdtd
+QUESTION: Composites_model#CB#(MIBC,ADE,DigFilt,None)
+VALUE: MIBC
+DEPENDENCIES: (MIBC, RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
+DEPENDENCIES: (ADE,  RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
+DEPENDENCIES: (DigFilt, SET, Conformal_skin,         0,    SET, No_compo_Mur,         0,    SET, Skin_depth,         0, RESTORE, Composites_attenuation_factor, 1.0)
+DEPENDENCIES: (None,    SET, Conformal_skin,         0,    SET, No_compo_Mur,         0,    SET, Skin_depth,         0,    SET, Composites_attenuation_factor, 1.0)
+QUESTION: Conformal_skin#CB#(0,1)
+VALUE: 0
+HELP: Uses a conformal correction
+QUESTION: No_compo_Mur#CB#(0,1)
+VALUE: 0
+HELP: Prevents a causal correction
+QUESTION: Skin_depth#CB#(0,1)
+VALUE: 0
+HELP: Uses a HF MIBC correction for multilayered lossy materials. Requires a previous run with -skindepthpre and a Matlab preprocessing with UGRmat_multilayer.
+QUESTION: Composites_attenuation_factor
+VALUE: 1.0
+HELP: Positive factor (under 1) for enhancing stability in composites.
+QUESTION: Wires_flavor#CB#(New,Old,Transition)
+VALUE: New
+DEPENDENCIES: (       New, RESTORE,MTLN,1,    RESTORE,Min_distance_wires,0.5, RESTORE,New_dispersive_formulation,0, SET,Taparrabos,0)
+DEPENDENCIES: (       Old, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
+DEPENDENCIES: (Transition, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
+QUESTION: MTLN#CB#(0,1)
+VALUE: 0
+HELP: Different behavior. "old/transition": uses a pseudo-MTLN (no default). "new" uses a true MTLN (no default, should be enforced)
+QUESTION: Min_distance_wires
+VALUE: 0.5
+HELP: minimum distance among multi-wires (default 0.5)
+QUESTION: New_dispersive_formulation#CB#(0,1)
+VALUE: 0
+HELP: Use the new formulation for dispersive RLC endings. Only valid in new wires flavor
+QUESTION: Taparrabos#CB#(0,1)
+VALUE: 0
+HELP: Remove extra double tails at the end of the wires
+QUESTION: Make_holes#CB#(0,1)
+VALUE: 0
+HELP: Create a void 2-cell area around wire segments Use with CAUTION. Revise Warnings.txt
+QUESTION: Ground_wires#CB#(0,1)
+VALUE: 0
+HELP: Ground wires touching/embedded/crossing PEC/Lossy. Use with CAUTION. Revise Warnings.txt
+QUESTION: Inductance_model#CB#(Boutayeb,Ledfelt,Berenger)
+VALUE: Boutayeb
+HELP: Inductance Model
+QUESTION: Wires_attenuation_factor
+VALUE: 1.0
+HELP: Positive factor from 0 (full attenuation) to 1 (no attenuation) for enhancing stability in wires. Defaults to 1.0.
+QUESTION: Use_default_PML#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (1,   SET,PML_alpha_factor,0.0,    SET,PML_alpha_order,1.0,    SET,PML_kappa,1.0,    SET,PML_correction_factor,1.0,    SET,PML_correction_depth,8,    SET,PML_backing,None)
+DEPENDENCIES: (0, RESTORE,PML_alpha_factor,0.0, RESTORE,PML_alpha_order,1.0, RESTORE,PML_kappa,1.0, RESTORE,PML_correction_factor,1.0, RESTORE,PML_correction_depth,8, RESTORE,PML_backing,None)
+QUESTION: PML_alpha_factor
+VALUE: 0.0
+HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
+QUESTION: PML_alpha_order
+VALUE: 1.0
+HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
+QUESTION: PML_kappa
+VALUE: 1.0
+HELP: CPML Kappa (>=1)
+QUESTION: PML_correction_factor
+VALUE: 1.0
+HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
+QUESTION: PML_correction_depth
+VALUE: 8
+HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
+QUESTION: PML_backing#CB#(None,Mur1,Mur2)
+VALUE: None
+HELP: Supplement PMLs with Mur ABCs
+QUESTION: Map#CB#(0,1)
+VALUE: 0
+HELP: Creates map ASCII files of the geometry and a .dxf file with wires and PEC (in conjunction with -n 0 only creates the maps)
+QUESTION: Map_VTK#CB#(0,1)
+VALUE: 0
+HELP: reates .VTK map of the PEC/wires/Surface geometry
+QUESTION: NF2FF_decimation#CB#(0,1)
+VALUE: 0
+HELP: Uses decimation in NF2FF calculation (faster). WARNING: High-freq aliasing may occur.
+QUESTION: Additional_arguments
+VALUE: 
+TITLE: cudg3d
+BOOK: Mesher_options
+Title: Mesher
+QUESTION: Mesher#CB#(ugrMesher,zMesher,OpenFOAM,None)
+VALUE: ugrMesher
+DEPENDENCIES: (OpenFOAM,     HIDE,Mode,Structured,    HIDE,Forbidden_length,0, RESTORE,Brute_force_volumes,1)
+DEPENDENCIES: (ugrMesher, RESTORE,Mode,Structured, RESTORE,Forbidden_length,0, RESTORE,Brute_force_volumes,1)
+DEPENDENCIES: (zMesher,      HIDE,Mode,Structured,    HIDE,Forbidden_length,0,    HIDE,Brute_force_volumes,1)
+DEPENDENCIES: (None,         HIDE,Mode,Structured,    HIDE,Forbidden_length,0,    HIDE,Brute_force_volumes,1)
+QUESTION: Brute_force_volumes#CB#(0,1)
+VALUE: 1
+QUESTION: VTK_Export#CB#(0,1)
+VALUE: 0
+QUESTION: postmsh_Export#CB#(0,1)
+VALUE: 1
+QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
+VALUE: Structured
+DEPENDENCIES: (Structured, SET, Forbidden_length, 0.0, HIDE, Forbidden_length,0.0)
+DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length,0.25)
+DEPENDENCIES: (Slanted,    HIDE, Forbidden_length,-1.0)
+DEPENDENCIES: (Conformal,  SET, Forbidden_length, 0.0, HIDE, Forbidden_length,0.0)
+QUESTION: Forbidden_length
+VALUE: 0.0
+DEPENDENCIES: (0,     HIDE,Scale_factor_value,0.0)
+DEPENDENCIES: (1,  RESTORE,Scale_factor_value,0.0)
+QUESTION: Scale_factor_value
+VALUE: 0.0
+Title: Geometry
+QUESTION: model_units#CB#(m,cm,mm,nm,other)
+VALUE: m
+DEPENDENCIES: (m, SET, scaling_factor, 1.0)
+DEPENDENCIES: (cm, SET, scaling_factor, 1e-2)
+DEPENDENCIES: (mm, SET, scaling_factor, 1e-3)
+DEPENDENCIES: (nm, SET, scaling_factor, 1e-9)
+DEPENDENCIES: (other, RESTORE, scaling_factor, 1.0)
+QUESTION: scaling_factor
+VALUE: 1.0
+QUESTION: Lower_x_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
+VALUE: PML
+QUESTION: Lower_y_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
+VALUE: PML
+QUESTION: Lower_z_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
+VALUE: PML
+QUESTION: Upper_x_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
+VALUE: PML
+DEPENDENCIES: (Periodic,SET,Lower_x_bound,Periodic)
+DEPENDENCIES: (PML,RESTORE,Lower_x_bound,#CURRENT#)
+DEPENDENCIES: (PEC,RESTORE,Lower_x_bound,#CURRENT#)
+DEPENDENCIES: (PMC,RESTORE,Lower_x_bound,#CURRENT#)
+DEPENDENCIES: (MUR1,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
+QUESTION: Upper_y_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
+VALUE: PML
+DEPENDENCIES: (Periodic,SET,Lower_y_bound,Periodic)
+DEPENDENCIES: (PML,RESTORE,Lower_y_bound,#CURRENT#)
+DEPENDENCIES: (PEC,RESTORE,Lower_y_bound,#CURRENT#)
+DEPENDENCIES: (PMC,RESTORE,Lower_y_bound,#CURRENT#)
+DEPENDENCIES: (MUR1,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
+QUESTION: Upper_z_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
+VALUE: PML
+DEPENDENCIES: (Periodic,SET,Lower_z_bound,Periodic)
+DEPENDENCIES: (PML,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (PEC,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (PMC,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR1,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
+QUESTION: boundary_padding_type#CB#(by_number_of_cells,by_distance)
+VALUE: by_distance
+QUESTION: Lower_x_boundary_padding
+VALUE: 3
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Lower_y_boundary_padding
+VALUE: 5
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Lower_z_boundary_padding
+VALUE: 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Upper_x_boundary_padding
+VALUE: 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Upper_y_boundary_padding
+VALUE: 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Upper_z_boundary_padding
+VALUE: 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Lower_x_Boundary_mesh_size
+VALUE: 0.5
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+QUESTION: Lower_y_Boundary_mesh_size
+VALUE: 0.0
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+QUESTION: Lower_z_Boundary_mesh_size
+VALUE: 0.0
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+QUESTION: Upper_x_Boundary_mesh_size
+VALUE: 0.1
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+QUESTION: Upper_y_Boundary_mesh_size
+VALUE: 0.5
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+QUESTION: Upper_z_Boundary_mesh_size
+VALUE: 0.0
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+END PROBLEM DATA
+INTERVAL DATA
+END INTERVAL DATA
+
