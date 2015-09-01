@@ -157,38 +157,38 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
     global GIDDEFAULT
     # List of bitmaps.
     set sembaBitmapsNames(0) [ list \
-							 images/icons/data.gif \
+		                                         images/icons/data.gif \
 		                     images/icons/meshingConfiguration.gif \
-							 images/icons/boundingbox.gif \
-							 images/icons/meshing.gif \
-							 images/icons/predefinedMaterials.gif \
-							 images/icons/materials.gif \
+		                                         images/icons/boundingbox.gif \
+		                                         images/icons/meshing.gif \
+		                                         images/icons/predefinedMaterials.gif \
+		                                         images/icons/materials.gif \
 		                     images/icons/advancedMaterials.gif \
 		                     images/icons/wires.gif \
 		                     images/icons/sources.gif \
 		                     images/icons/requests.gif \
-							 images/icons/structured.gif \
+		                                         images/icons/structured.gif \
 		                    ]
     # List of commands.
     set sembaBitmapsCommands(0) [list \
 		                       [list -np- GidOpenProblemData "Solver_options"] \
 		                       [list -np- GidOpenProblemData "Mesher_options"] \
-							   [list -np- semba::OpenBoundingBoxData] \
-							   [list -np- GidOpenConditions "Meshing"] \
+		                                           [list -np- semba::OpenBoundingBoxData] \
+		                                           [list -np- GidOpenConditions "Meshing"] \
 		                       [list -np- GidOpenMaterials "Predefined_materials"] \
 		                       [list -np- GidOpenMaterials "Basic_materials"] \
 		                       [list -np- GidOpenMaterials "Advanced_materials"] \
 		                       [list -np- GidOpenMaterials "Wires"] \
 		                       [list -np- GidOpenConditions "Electromagnetic_sources"] \
 		                       [list -np- GidOpenConditions "Output_Requests"] \
-							   [list -np- semba::generateStructuredMesh $_dir] \
+		                                           [list -np- semba::generateStructuredMesh $_dir] \
 		                      ]
     
     set sembaBitmapsHelp(0) [list \
 		                   [= "Solver options"] \
 		                   [= "Mesher options"] \
-						   [= "Create bounding box"] \
-						   [= "Grid"] \
+		                                   [= "Create bounding box"] \
+		                                   [= "Grid"] \
 		                   [= "Predefined Materials"] \
 		                   [= "Basic Materials"] \
 		                   [= "Advanced Materials"] \
@@ -233,8 +233,8 @@ proc semba::generateStructuredMesh { dir } {
 	[file join $modelDir $modelName.smb]
 #    # Launches script.
 #    exec $dir/scripts/generateNFDE.sh \
-#	$dir $modelDir $modelName \
-#	> $modelDir/log.generateNFDE
+#        $dir $modelDir $modelName \
+#        > $modelDir/log.generateNFDE
 }
 
 proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} {
@@ -266,14 +266,45 @@ proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} 
     set xmin [expr {$xmin - $xMinPad}]
     set ymin [expr {$ymin - $yMinPad}]
     set zmin [expr {$zmin - $zMinPad}]
-	    
-    # Creates rectangle in base.
-    GiD_Process Mescape Geometry Create Object Rectangle \
-	 $xmin $ymin $zmin $xmax $ymax $zmin
-    
-    # Extrudes rectangle.
-    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
-	 Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax end escape   
+	
+	# Stores Id of last created surface.
+	set oldId [GiD_Info Geometry MaxNumSurfaces]    
+	# Creates rectangle in base.
+    GiD_Process Mescape Geometry Create Object Rectangle $xmin $ymin $zmin $xmax $ymax $zmin
+	set newId [GiD_Info Geometry MaxNumSurfaces]    
+
+	# Disables dialog to create new point.
+	set statusCreateAlwaysNewPoint [GiD_Set CreateAlwaysNewPoint]
+	GiD_Set CreateAlwaysNewPoint 1
+
+	if {$newId == [expr $oldId + 1]} {
+	    # Extrudes rectangle.
+	    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
+		         Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax end escape   
+	} else {
+#                 # Determines if there is a surface containing all the points.
+#                 set surfaceFound 0
+#                 foreach surf [GiD_Geometry list surface 1:end] {
+#                         set allInside true
+#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmin $ymin $zmin}]]
+#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmin $ymax $zmin}]]
+#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmax $ymin $zmin}]]
+#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmax $ymax $zmin}]]
+#                         if {$allInside} {
+#                                 set surfaceFound $surf
+#                         }
+#                 }
+#                 if {$surfaceFound != 0} {
+#                         GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
+#                                  Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax $surfaceFound escape   
+#                 } else {
+		        GiD_Process Mescape
+		        WarnWin [=  "Unable to create automatic bounding box"]
+#                 }
+	}
+
+	# Restores status of createAlwaysNewPoint.
+	GiD_Set CreateAlwaysNewPoint $statusCreateAlwaysNewPoint
 }
 
 
@@ -371,7 +402,7 @@ proc semba::ApplyBoundingBoxData { w } {
 		}
 	}
 
-    semba::createBoundingBox $BoundingBoxDataPriv(size,xMax) $BoundingBoxDataPriv(size,yMin) $BoundingBoxDataPriv(size,zMin) $BoundingBoxDataPriv(size,xMin) $BoundingBoxDataPriv(size,yMin) $BoundingBoxDataPriv(size,zMin)
+    semba::createBoundingBox $BoundingBoxDataPriv(size,xMax) $BoundingBoxDataPriv(size,yMax) $BoundingBoxDataPriv(size,zMax) $BoundingBoxDataPriv(size,xMin) $BoundingBoxDataPriv(size,yMin) $BoundingBoxDataPriv(size,zMin)
        
 	grab release $w
 	#destroy $w
