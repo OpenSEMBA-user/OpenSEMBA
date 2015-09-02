@@ -505,7 +505,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     skip = atoi(value.c_str());
                     getline(f_in, line);
                     vector<ElementId> ids;
-                    ids.push_back(ElementId(atoi(value.c_str())));
+                    ids.push_back(ElementId(atoi(line.c_str())));
                     GroupElements<ElemR> elems = mesh_->elems().getId(ids);
                     GroupElements<Surf> surfs = elems.getOf<Surf>();
                     res->add(new OutRqBulkCurrent(domain, name, surfs,
