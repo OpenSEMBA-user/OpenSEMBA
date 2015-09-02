@@ -460,7 +460,6 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     res->add(new OutRq<Nod>(domain, type, name, elems));
                     break;
                 }
-
                 //case ParserGiD::outRqOnLine:
                 //    getNextLabelAndValue(label,value);
                 //    elem.clear();
@@ -477,7 +476,6 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     res->add(new OutRq<Surf>(domain, type, name, surfs));
                     break;
                 }
-
                 case ParserGiD::outRqOnVolume:
                 {
                     getline(f_in, line);
@@ -485,7 +483,36 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     res->add(new OutRq<Vol>(domain, type, name, elems));
                     break;
                 }
-                case ParserGiD::bulkCurrent:
+                case ParserGiD::bulkCurrentOnSurface:
+                {
+                    CartesianAxis dir;
+                    UInt skip;
+                    getNextLabelAndValue(label,value);
+                    switch (value[0]) {
+                    case 'x':
+                        dir = x;
+                        break;
+                    case 'y':
+                        dir = y;
+                        break;
+                    case 'z':
+                        dir = z;
+                        break;
+                    default:
+                        dir = x;
+                    }
+                    getNextLabelAndValue(label,value);
+                    skip = atoi(value.c_str());
+                    getline(f_in, line);
+                    vector<ElementId> ids;
+                    ids.push_back(ElementId(atoi(value.c_str())));
+                    GroupElements<ElemR> elems = mesh_->elems().getId(ids);
+                    GroupElements<Surf> surfs = elems.getOf<Surf>();
+                    res->add(new OutRqBulkCurrent(domain, name, surfs,
+                                                  dir, skip));
+                    break;
+                }
+                case ParserGiD::bulkCurrentOnVolume:
                 {
                     CartesianAxis dir;
                     UInt skip;
@@ -508,7 +535,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getline(f_in, line);
                     GroupElements<Vol> elems = boundToElemGroup(line);
                     res->add(new OutRqBulkCurrent(domain, name, elems,
-                            dir, skip));
+                                                  dir, skip));
                     break;
                 }
                 case ParserGiD::farField:
@@ -1430,8 +1457,10 @@ ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) const {
         return ParserGiD::outRqOnSurface;
     } else if (str.compare("OutRq_on_volume")==0) {
         return ParserGiD::outRqOnVolume;
-    } else if (str.compare("Bulk_current")==0) {
-        return ParserGiD::bulkCurrent;
+    } else if (str.compare("Bulk_current_on_surface")==0) {
+        return ParserGiD::bulkCurrentOnSurface;
+    } else if (str.compare("Bulk_current_on_volume")==0) {
+        return ParserGiD::bulkCurrentOnVolume;
     } else if (str.compare("farField")==0) {
         return ParserGiD::farField;
     } else {
