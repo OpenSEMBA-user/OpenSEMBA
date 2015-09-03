@@ -8,67 +8,67 @@
 #include "SmbData.h"
 
 SmbData::SmbData() {
-    mesh = nullptr;
-    grid = nullptr;
-    solverOptions = nullptr;
-    pMGroup = nullptr;
-    emSources = nullptr;
-    outputRequests = nullptr;
-    mesherOptions = nullptr;
+    mesh = NULL;
+    grid = NULL;
+    solverOptions = NULL;
+    pMGroup = NULL;
+    emSources = NULL;
+    outputRequests = NULL;
+    mesherOptions = NULL;
 }
 
 SmbData::SmbData(const SmbData& rhs)
 :   ProjectFile(rhs) {
-    mesh = nullptr;
-    grid = nullptr;
-    solverOptions = nullptr;
-    pMGroup = nullptr;
-    emSources = nullptr;
-    outputRequests = nullptr;
-    mesherOptions = nullptr;
-    if (rhs.mesh != nullptr) {
+    mesh = NULL;
+    grid = NULL;
+    solverOptions = NULL;
+    pMGroup = NULL;
+    emSources = NULL;
+    outputRequests = NULL;
+    mesherOptions = NULL;
+    if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Mesh>();
     }
-    if (rhs.grid != nullptr) {
+    if (rhs.grid != NULL) {
         grid = rhs.grid->cloneTo<Grid3>();
     }
-    if (rhs.solverOptions != nullptr) {
+    if (rhs.solverOptions != NULL) {
         solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
     }
-    if (rhs.pMGroup != nullptr) {
+    if (rhs.pMGroup != NULL) {
         pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
     }
-    if (rhs.emSources != nullptr) {
+    if (rhs.emSources != NULL) {
         emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
     }
-    if (rhs.outputRequests != nullptr) {
+    if (rhs.outputRequests != NULL) {
         outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
     }
-    if (rhs.mesherOptions != nullptr) {
+    if (rhs.mesherOptions != NULL) {
         mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
     }
 }
 
 SmbData::~SmbData() {
-    if (mesh != nullptr) {
+    if (mesh != NULL) {
         delete mesh;
     }
-    if (grid != nullptr) {
+    if (grid != NULL) {
         delete grid;
     }
-    if (solverOptions != nullptr) {
+    if (solverOptions != NULL) {
         delete solverOptions;
     }
-    if (pMGroup != nullptr) {
+    if (pMGroup != NULL) {
         delete pMGroup;
     }
-    if (emSources != nullptr) {
+    if (emSources != NULL) {
         delete emSources;
     }
-    if (outputRequests != nullptr) {
+    if (outputRequests != NULL) {
         delete outputRequests;
     }
-    if (mesherOptions != nullptr) {
+    if (mesherOptions != NULL) {
         delete mesherOptions;
     }
 }
@@ -78,32 +78,32 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
         return *this;
     }
     ProjectFile::operator=(rhs);
-    mesh = nullptr;
-    grid = nullptr;
-    solverOptions = nullptr;
-    pMGroup = nullptr;
-    emSources = nullptr;
-    outputRequests = nullptr;
-    mesherOptions = nullptr;
-    if (rhs.mesh != nullptr) {
+    mesh = NULL;
+    grid = NULL;
+    solverOptions = NULL;
+    pMGroup = NULL;
+    emSources = NULL;
+    outputRequests = NULL;
+    mesherOptions = NULL;
+    if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Mesh>();
     }
-    if (rhs.grid != nullptr) {
+    if (rhs.grid != NULL) {
         grid = rhs.grid->cloneTo<Grid3>();
     }
-    if (rhs.solverOptions != nullptr) {
+    if (rhs.solverOptions != NULL) {
         solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
     }
-    if (rhs.pMGroup != nullptr) {
+    if (rhs.pMGroup != NULL) {
         pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
     }
-    if (rhs.emSources != nullptr) {
+    if (rhs.emSources != NULL) {
         emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
     }
-    if (rhs.outputRequests != nullptr) {
+    if (rhs.outputRequests != NULL) {
         outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
     }
-    if (rhs.mesherOptions != nullptr) {
+    if (rhs.mesherOptions != NULL) {
         mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
     }
     return *this;
@@ -111,35 +111,35 @@ SmbData& SmbData::operator=(const SmbData& rhs) {
 
 void SmbData::printInfo() const {
     cout << " --- SEMBA data --- " << endl;
-    if (grid != nullptr) {
+    if (grid != NULL) {
         grid->printInfo();
     }
-    if (mesh != nullptr) {
+    if (mesh != NULL) {
         mesh->printInfo();
     } else {
         cout << "No info about mesh." << endl;
     }
-    if (mesherOptions != nullptr) {
+    if (mesherOptions != NULL) {
         mesherOptions->printInfo();
     } else {
         cout << "No info about mesher options." << endl;
     }
-    if (solverOptions != nullptr) {
+    if (solverOptions != NULL) {
         solverOptions->printInfo();
     } else {
         cout << "No info about solver options." << endl;
     }
-    if (pMGroup != nullptr) {
+    if (pMGroup != NULL) {
         pMGroup->printInfo();
     } else {
         cout << "No info about physical models." << endl;
     }
-    if (emSources != nullptr) {
+    if (emSources != NULL) {
         emSources->printInfo();
     } else {
         cout << "No info about electromagnetic sources." << endl;
     }
-    if (outputRequests != nullptr) {
+    if (outputRequests != NULL) {
         outputRequests->printInfo();
     } else {
         cout << "No info about output requests." << endl;
@@ -148,10 +148,10 @@ void SmbData::printInfo() const {
 
 bool SmbData::check() const {
     bool res = true;
-    if (emSources != nullptr) {
+    if (emSources != NULL) {
         res &= emSources->check();
     }
-    if (outputRequests != nullptr) {
+    if (outputRequests != NULL) {
         //    res &= outputRequests->check();
     }
     return res;

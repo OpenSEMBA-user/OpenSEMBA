@@ -90,7 +90,7 @@ GroupElements<ElemR> Exporter::getBoundary(
         const Mesh* mesh,
         const OptionsMesher* opts) const {
     BoxR3 box;
-    if (grid != nullptr) {
+    if (grid != NULL) {
         box = grid->getFullDomainBoundingBox();
     } else {
         box = mesh->getBoundingBox();
@@ -121,7 +121,7 @@ GroupElements<ElemR> Exporter::getGridElems(
     }
     GroupElements<ElemR> elem;
     BoxR3 box = grid->getFullDomainBoundingBox();
-    if (grid != nullptr) {
+    if (grid != NULL) {
         for (UInt d = 0; d < 3; d++) {
             vector<BoxR3> quadBoxes =
                     box.getBoundAsBox(CartesianAxis(d),L).chop(*grid);
