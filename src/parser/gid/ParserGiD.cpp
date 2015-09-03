@@ -8,12 +8,12 @@
 #include "ParserGiD.h"
 
 ParserGiD::ParserGiD() {
-    mesh_ = nullptr;
+    mesh_ = NULL;
 }
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-    mesh_ = nullptr;
+    mesh_ = NULL;
 }
 
 ParserGiD::~ParserGiD() {
@@ -398,7 +398,7 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
             }
         }
     }
-    return nullptr;
+    return NULL;
 }
 
 GroupOutRqs<>* ParserGiD::readOutputRequests() {
@@ -953,7 +953,7 @@ ParserGiD::readCartesianGrid() {
     bool finished = false;
     bool gridLabelFound = false;
     bool gridFound = false;
-    Grid3* grid = nullptr;
+    Grid3* grid = NULL;
     BoxR3 bound;
     bool stepsByNumberOfCells = true;
     CVecI3 numElems;
@@ -985,7 +985,7 @@ ParserGiD::readCartesianGrid() {
                 } else if(label.find("End of Grid") != label.npos) {
                     finished = true;
                     if (!gridFound) {
-                        return nullptr;
+                        return NULL;
                     }
                 }
                 if (f_in.eof()) {
@@ -1007,7 +1007,7 @@ ParserGiD::readCartesianGrid() {
             grid = new Grid3(bound, steps);
         }
     } else {
-        grid = nullptr;
+        grid = NULL;
     }
     return grid;
 }
@@ -1054,7 +1054,7 @@ ParserGiD::readDipole() {
     Real length = 0.0;
     CVecR3 orientation;
     CVecR3 position;
-    MagnitudeGaussian* mag = nullptr;
+    MagnitudeGaussian* mag = NULL;
     //
     string line;
     bool finished = false;
@@ -1151,7 +1151,7 @@ Waveport* ParserGiD::readWaveport() {
     }
     if (!input) {
         delete mag;
-        mag = nullptr;
+        mag = NULL;
     }
     if (shape == WaveportShape::rectangular) {
         return new WaveportRectangular(mag, surfs, excitationMode, mode);
