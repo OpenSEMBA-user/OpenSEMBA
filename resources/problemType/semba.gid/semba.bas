@@ -63,13 +63,6 @@ Mode: *GenData(Mode)
 Forbidden length: *GenData(Forbidden_length)
 Scale factor: *GenData(Scale_factor)
 Scale factor value: *GenData(Scale_factor_value)
-*set elems(all)
-*set Cond Location_in_Mesh
-*if(CondNumEntities(int)>0)
-*loop nodes *OnlyInCond
-Location in mesh: *NodesCoord
-*end nodes
-*end if
 End of mesher options
 
 Problem size:

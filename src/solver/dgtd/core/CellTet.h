@@ -10,7 +10,7 @@ using namespace std;
 #include "Cell.h"
 #include "math/Simplex.h"
 #include "math/MathMatrix.h"
-#include "math/Polynomial.h"
+#include "../../../common/math/FunctionPolynomial.h"
 #include "geometry/elements/Tet.h"
 
 template <Int N, class E>
