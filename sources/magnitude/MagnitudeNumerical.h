@@ -44,8 +44,6 @@ public:
 private:
     static const UInt defaultNumberOfSteps = 1000;
 
-    map<Real,Real> value_;
-
     void initFromFile();
 };
 

@@ -37,7 +37,7 @@ SimplexTet<SIMPTET_N>::buildCubaturePositionsAndWeights() {
 		aux = cId[i];
 		cPos[i] = aux / (Real) nc;
 	}
-	Polynomial<Real> cubLagr[ncp];
+	FunctionPolynomial<Real> cubLagr[ncp];
 	cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
 	for (UInt i = 0; i < ncp; i++) {
 		cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
@@ -112,13 +112,13 @@ SimplexTet<SIMPTET_N>::cubatureNodeIndex(const UInt i, const UInt j) const {
 }
 
 template <Int SIMPTET_N>
-inline const Polynomial<Real>&
+inline const FunctionPolynomial<Real>&
 SimplexTet<SIMPTET_N>::getLagr(const UInt i) const {
 	return lagr[i];
 }
 
 template <Int SIMPTET_N>
-inline const Polynomial<Real>&
+inline const FunctionPolynomial<Real>&
 SimplexTet<SIMPTET_N>::getDLagr(const UInt i, const UInt f) const {
 	return dLagr[i][f];
 }

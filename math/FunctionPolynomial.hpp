@@ -1,19 +1,21 @@
+
 template<class T>
-Polynomial<T>::Polynomial() {
+FunctionPolynomial<T>::FunctionPolynomial() {
 	nv_ = 0;
 	nm_ = 0;
 }
- 
 template<class T>
-Polynomial<T>::Polynomial(const UInt nvar) {
+FunctionPolynomial<T>::FunctionPolynomial(const UInt nvar) {
 	nv_ = nvar;
 	nm_ = 0;
 }
-// =-=-=-=-=-=-=-= Destructors =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-// =-=-=-=-=-=-=-= General methods =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 template<class T>
-Polynomial<T>&
-Polynomial<T>::operator=(const Polynomial<T> &param) {
+inline FunctionPolynomial<T>::~FunctionPolynomial() {
+}
+
+template<class T>
+FunctionPolynomial<T>& FunctionPolynomial<T>::operator=(const FunctionPolynomial<T> &param) {
 	if (this == &param)
 		return *this;
 	nv_ = param.nv_;
@@ -24,34 +26,29 @@ Polynomial<T>::operator=(const Polynomial<T> &param) {
 }
  
 template<class T>
-inline UInt
-Polynomial<T>::numberOfVariables() const {
+inline UInt FunctionPolynomial<T>::numberOfVariables() const {
 	return nv_;
 }
 
 template<class T>
-inline UInt
-Polynomial<T>::numberOfMonomials() const {
+inline UInt FunctionPolynomial<T>::numberOfMonomials() const {
 	return nm_;
 }
 
 template<class T>
-inline T
-Polynomial<T>::monomialValue(const UInt i) const {
+inline T FunctionPolynomial<T>::monomialValue(const UInt i) const {
 	return mv_[i];
 }
 
 template<class T>
-inline UInt
-Polynomial<T>::monomialPower(
+inline UInt FunctionPolynomial<T>::monomialPower(
  const UInt monomial,
  const UInt variable) const {
 	return mp_[monomial][variable];
 }
  
 template<class T>
-T
-Polynomial<T>::eval(const CartesianVector<T,1>& pos) const {
+T FunctionPolynomial<T>::eval(const CartesianVector<T,1>& pos) const {
 	assert(1 == nv_);
 	T prod;
 	UInt m, v;
@@ -66,8 +63,7 @@ Polynomial<T>::eval(const CartesianVector<T,1>& pos) const {
 }
 
 template<class T>
-T
-Polynomial<T>::eval(const CartesianVector<T,2>& pos) const {
+T FunctionPolynomial<T>::eval(const CartesianVector<T,2>& pos) const {
 	assert(2 == nv_);
 	T prod;
 	UInt m, v;
@@ -82,8 +78,7 @@ Polynomial<T>::eval(const CartesianVector<T,2>& pos) const {
 }
 
 template<class T>
-T
-Polynomial<T>::eval(const CartesianVector<T,3>& pos) const {
+T FunctionPolynomial<T>::eval(const CartesianVector<T,3>& pos) const {
 	assert(3 == nv_);
 	T prod;
 	UInt m, v;
@@ -98,8 +93,7 @@ Polynomial<T>::eval(const CartesianVector<T,3>& pos) const {
 }
 
 template<class T>
-T
-Polynomial<T>::eval(const CartesianVector<T,4>& pos) const {
+T FunctionPolynomial<T>::eval(const CartesianVector<T,4>& pos) const {
 	assert(4 == nv_);
 	T prod;
 	UInt m, v;
@@ -114,8 +108,7 @@ Polynomial<T>::eval(const CartesianVector<T,4>& pos) const {
 }
  
 template<class T>
-void
-Polynomial<T>::derive(Int coord) {
+void FunctionPolynomial<T>::derive(Int coord) {
 	// Performs derivative with respect to coordinate coord.
 	for (UInt m = 0; m < nm_; m++)
 		if (mp_[m][coord] == 0)
@@ -129,8 +122,7 @@ Polynomial<T>::derive(Int coord) {
 }
  
 template<class T>
-void
-Polynomial<T>::removeZeros() {
+void FunctionPolynomial<T>::removeZeros() {
 	for (UInt i = 0; i < nm_; i++)
 		if (mv_[i] == 0) {
 			nm_--;
@@ -140,14 +132,13 @@ Polynomial<T>::removeZeros() {
 }
  
 template<class T>
-Polynomial<T>
-Polynomial<T>::operator*(const Polynomial<T> &param) const {
+FunctionPolynomial<T> FunctionPolynomial<T>::operator*(const FunctionPolynomial<T> &param) const {
 	// PURPOSE:
 	// Performs polynomial product.
 	// Algebraically, convolution is the same operation as multiplying
 	assert(nv_ == 1 && param.nv_ == 1);
 	DynMatrix<T> a, b, c;
-	Polynomial<T> res(1);
+	FunctionPolynomial<T> res(1);
 	// Converts polynomials to vectors.
 	a = polynomialToMatrix();
 	b = param.polynomialToMatrix();
@@ -160,8 +151,7 @@ Polynomial<T>::operator*(const Polynomial<T> &param) const {
 }
  
 template<class T>
-Polynomial<T>&
-Polynomial<T>::operator*=(const Polynomial<T> &param) {
+FunctionPolynomial<T>& FunctionPolynomial<T>::operator*=(const FunctionPolynomial<T> &param) {
 	assert(nv_ == 1 && param.nv_ == 1);
 	DynMatrix<T> a, b, c;
 	// Converts polynomials to vectors.
@@ -176,13 +166,11 @@ Polynomial<T>::operator*=(const Polynomial<T> &param) {
 }
  
 template<class T>
-Polynomial<T>
-Polynomial<T>::operator^(const Polynomial<T> &param) {
-	// PURPOSE:
-	// Performs external product between polynomials. This means that
+FunctionPolynomial<T> FunctionPolynomial<T>::operator^(const FunctionPolynomial<T> &param) {
+	// PURPOSE: Performs external product between polynomials. This means that
 	// variables in both polynomials will be treated as if they are different.
 	UInt i, j;
-	Polynomial<T> res(nv_ + param.nv_);
+	FunctionPolynomial<T> res(nv_ + param.nv_);
 	vector<Int> pow;
 	for (i = 0; i < nm_; i++)
 		for (j = 0; j < param.nm_; j++) {
@@ -194,12 +182,11 @@ Polynomial<T>::operator^(const Polynomial<T> &param) {
 }
  
 template<class T>
-Polynomial<T>&
-Polynomial<T>::operator^=(const Polynomial<T> &param) {
+FunctionPolynomial<T>& FunctionPolynomial<T>::operator^=(const FunctionPolynomial<T> &param) {
 	// PURPOSE: Performs external product between polynomials. This means that
 	// variables in both polynomials will be treated as if they are different.
 	UInt i, j;
-	Polynomial<T> res(nv_ + param.nv_);
+	FunctionPolynomial<T> res(nv_ + param.nv_);
 	vector<Int> pow;
 	for (i = 0; i < nm_; i++)
 		for (j = 0; j < param.nm_; j++) {
@@ -212,8 +199,7 @@ Polynomial<T>::operator^=(const Polynomial<T> &param) {
 }
  
 template<class T>
-Polynomial<T>&
-Polynomial<T>::operator/=(const T param) {
+FunctionPolynomial<T>& FunctionPolynomial<T>::operator/=(const T param) {
 	assert(param != 0);
 	for (UInt i = 0 ; i < nm_; i++)
 		mv_[i] /= param;
@@ -221,10 +207,9 @@ Polynomial<T>::operator/=(const T param) {
 }
  
 template<class T>
-Polynomial<T>
-Polynomial<T>::vectorToPolynomial (T *v, Int sv, Int nvar) {
+FunctionPolynomial<T> FunctionPolynomial<T>::vectorToPolynomial (T *v, Int sv, Int nvar) {
 	assert(nvar == 1);
-	Polynomial<T> res(1);
+	FunctionPolynomial<T> res(1);
 	for (UInt i = 0; i < sv ; i++)
 		if (v[i] != 0)
 			res.addMonomial(v[i], i);
@@ -232,10 +217,9 @@ Polynomial<T>::vectorToPolynomial (T *v, Int sv, Int nvar) {
 }
  
 template<class T>
-Polynomial<T>
-Polynomial<T>::matrixToPolynomial (const DynMatrix<T> &param) const {
+FunctionPolynomial<T> FunctionPolynomial<T>::matrixToPolynomial (const DynMatrix<T> &param) const {
 	assert(nv_ <= 2);
-	Polynomial<T> res;
+	FunctionPolynomial<T> res;
 	if (param.nCols() == 1) {
 		res.nv_ = 1;
 		for (UInt i = 0; i < param.nRows(); i++)
@@ -256,8 +240,7 @@ Polynomial<T>::matrixToPolynomial (const DynMatrix<T> &param) const {
 }
  
 template<class T>
-DynMatrix<T>
-Polynomial<T>::polynomialToMatrix() const {
+DynMatrix<T> FunctionPolynomial<T>::polynomialToMatrix() const {
 	assert(nv_ == 1);
 	DynMatrix<T>  res(maxPower() + 1, 1);
 	// Copies monomials to vector positions.
@@ -267,8 +250,7 @@ Polynomial<T>::polynomialToMatrix() const {
 }
  
 template<class T>
-void
-Polynomial<T>::addMonomial(T val, vector<Int> pow) {
+void FunctionPolynomial<T>::addMonomial(T val, vector<Int> pow) {
 	assert(nv_ == pow.size());
 	nm_++;
 	mv_.push_back(val);
@@ -276,8 +258,7 @@ Polynomial<T>::addMonomial(T val, vector<Int> pow) {
 }
  
 template<class T>
-void
-Polynomial<T>::addMonomial(T val, Int pow) {
+void FunctionPolynomial<T>::addMonomial(T val, Int pow) {
 	assert(nv_ == 1);
 	vector<Int> vPow(1, pow);
 	nm_++;
@@ -286,8 +267,7 @@ Polynomial<T>::addMonomial(T val, Int pow) {
 }
  
 template<class T>
-Int
-Polynomial<T>::maxPower() const {
+Int FunctionPolynomial<T>::maxPower() const {
 	// Returns maximum power present in this polynomial.
 	UInt i, j;
 	Int res = 0;
@@ -297,10 +277,14 @@ Polynomial<T>::maxPower() const {
 				res = mp_[j][i];
 	return res;
 }
- 
+
 template<class T>
-void
-Polynomial<T>::printInfo() const {
+inline T FunctionPolynomial<T>::operator ()(const T& arg) const {
+    return eval(CartesianVector<T,1>(arg));
+}
+
+template<class T>
+void FunctionPolynomial<T>::printInfo() const {
 	cout << " -- Polynomial<T> -- " << endl;
 	cout << "Number of variables:			" << nv_ << endl;
 	cout << "Number of monomials:			" << nm_ << endl;

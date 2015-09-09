@@ -135,6 +135,7 @@ CartesianVector<Real,D> round(const CartesianVector<Real,D>& vec);
 
 typedef CartesianVector<Real,2> CVecR2;
 typedef CartesianVector<Real,3> CVecR3;
+typedef CartesianVector<Real,4> CVecR4;
 typedef CartesianVector<Int ,2> CVecI2;
 typedef CartesianVector<Int ,3> CVecI3;
 

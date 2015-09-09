@@ -4,7 +4,7 @@ EMSourceBase::EMSourceBase() {
     magnitude_ = NULL;
 }
 
-EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
+EMSourceBase::EMSourceBase(const FunctionBase* magnitude) {
     magnitude_ = magnitude;
 }
 

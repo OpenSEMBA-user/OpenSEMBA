@@ -29,9 +29,9 @@ public:
 	 cubatureNodeIndex(const UInt i, const UInt j) const;
 	UInt
 	 sideNode(const UInt f, const UInt i) const;
-	const Polynomial<Real>&
+	const FunctionPolynomial<Real>&
 	 getLagr(const UInt i) const;
-	const Polynomial<Real>&
+	const FunctionPolynomial<Real>&
 	 getDLagr(const UInt i, const UInt f) const;
 	void
 	 printInfo() const;
@@ -42,8 +42,8 @@ private:
 	CartesianVector<Int,nsc> nId[np];
 	StaMatrix<Int,faces,nfp> sNId;
 	// --- Lagrange polynomials ---------------------------------------
-	Polynomial<Real> lagr[np];
-	Polynomial<Real> dLagr[np][faces];
+	FunctionPolynomial<Real> lagr[np];
+	FunctionPolynomial<Real> dLagr[np][faces];
 	// --- ca: Cubatured alpha, cda: cub. derived, cwaa: cub. weighted
 	static const Real sizeFactor;
 	static const UInt dimension = 1;

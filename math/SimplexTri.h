@@ -4,7 +4,7 @@
 // ----------- Libraries --------------------------------------------------
 #include "Simplex.h"
 #include "CartesianVector.h"
-#include "Polynomial.h"
+#include "FunctionPolynomial.h"
 // =========== SimplexTri class ===========================================
 namespace {
 template <Int SIMPTRI_N>
@@ -29,8 +29,8 @@ public:
 	StaMatrix<Int,nfp,np> R[faces];
 	CartesianVector<Int,nsc> nId[np];
 	StaMatrix<Int,faces,nfp> sNId;
-	Polynomial<Real> lagr[np];
-	Polynomial<Real> dLagr[np][faces];
+	FunctionPolynomial<Real> lagr[np];
+	FunctionPolynomial<Real> dLagr[np][faces];
 //	// weight: This is the relative weight of a node. Is computed
 //	// integrating over the simplex area. The sum of all must be one.
 //	// Weights can be used to obtain the result of a integral knowing the
@@ -56,9 +56,9 @@ public:
 	 sideNode(const UInt f, const UInt i) const;
 	CartesianVector<Real,3>
 	 coordinate(const UInt i) const;
-	const Polynomial<Real>&
+	const FunctionPolynomial<Real>&
 	 getLagr(const UInt i) const;
-	const Polynomial<Real>&
+	const FunctionPolynomial<Real>&
 	 getDLagr(const UInt i, const UInt f) const;
 	StaMatrix<Real,SIMPTRI_NP,SIMPTRI_NP>
 	 getMassMatrix() const;

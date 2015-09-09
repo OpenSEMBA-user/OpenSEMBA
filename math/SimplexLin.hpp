@@ -55,13 +55,13 @@ SimplexLin<SIMPLIN_N>::sideNode(
 }
  
 template <Int SIMPLIN_N>
-const Polynomial<Real>&
+const FunctionPolynomial<Real>&
 SimplexLin<SIMPLIN_N>::getLagr(const UInt i) const {
 	return lagr[i];
 }
  
 template <Int SIMPLIN_N>
-const Polynomial<Real>&
+const FunctionPolynomial<Real>&
 SimplexLin<SIMPLIN_N>::getDLagr(const UInt i, const UInt f) const {
 	return dLagr[i][f];
 }
@@ -105,7 +105,7 @@ SimplexLin<SIMPLIN_N>::buildCubaturePositionsAndWeights() {
 		aux = cId[i];
 		cPos[i] = aux / (Real) nc;
 	}
-	Polynomial<Real> cubLagr[ncp];
+	FunctionPolynomial<Real> cubLagr[ncp];
 	cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
 	for (UInt i = 0; i < ncp; i++) {
 		cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;

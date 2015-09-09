@@ -7,19 +7,19 @@
 
 #include "../sources/Dipole.h"
 
-Dipole::Dipole(const MagnitudeGaussian* magnitude,
+Dipole::Dipole(const FunctionGaussian& magnitude,
                const GroupElements<Vol>& elem,
                Real length,
                CVecR3 orientation,
                CVecR3 position)
-:   EMSourceBase(magnitude),
+:   EMSourceBase(&magnitude),
     GroupElements<const Vol>(elem) {
 
     length_ = length;
     orientation_ = orientation;
     position_ = position;
-    gaussDelay_ = magnitude->getDelay();
-    spreadSqrt2_ = magnitude->getSpread() * sqrt(2.0);
+    gaussDelay_ = magnitude.getDelay();
+    spreadSqrt2_ = magnitude.getSpread() * sqrt(2.0);
 }
 
 Dipole::Dipole(const Dipole& rhs)

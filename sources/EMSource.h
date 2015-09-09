@@ -9,8 +9,8 @@ using namespace std;
 
 #include "geometry/elements/GroupElements.h"
 #include "options/OptionsMesher.h"
-#include "../sources/magnitude/MagnitudeGaussian.h"
 #include "../sources/magnitude/MagnitudeNumerical.h"
+#include "math/FunctionGaussian.h"
 #include "math/CartesianVector.h"
 #include "math/Constants.h"
 
@@ -19,7 +19,7 @@ using namespace std;
 class EMSourceBase : public virtual ClassGroupBase<GroupElements<const Elem>> {
 public:
     EMSourceBase();
-    EMSourceBase(const Magnitude* magnitude);
+    EMSourceBase(const FunctionBase* magnitude);
     EMSourceBase(const EMSourceBase& rhs);
     virtual ~EMSourceBase();
 
@@ -46,10 +46,10 @@ public:
     virtual void printInfo() const;
 
 protected:
-    const Magnitude* getMagnitude() const;
+    const FunctionBase* getMagnitude() const;
 
 private:
-    const Magnitude* magnitude_;
+    const FunctionBase* magnitude_;
 };
 
 template<class T>

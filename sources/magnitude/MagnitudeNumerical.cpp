@@ -32,7 +32,7 @@ MagnitudeNumerical::MagnitudeNumerical(const string& name,
         nSteps = abs(finalTime / timeStep);
     } else {
         nSteps = defaultNumberOfSteps;
-        cout << endl << "WARNING @ MagnitudeNumerical: "
+        cerr << "WARNING @ MagnitudeNumerical: "
              << "Attempting to build a numerical magnitude with a 0.0 step."
              << "Using default number of steps instead: " << nSteps << endl;
         mag->printInfo();

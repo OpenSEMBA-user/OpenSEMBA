@@ -33,7 +33,7 @@ SimplexTri<SIMPTRI_N>::buildCubaturePositionsAndWeights() {
 		aux = cId[i];
 		cPos[i] = aux / (Real) nc;
 	}
-	Polynomial<Real> cubLagr[ncp];
+	FunctionPolynomial<Real> cubLagr[ncp];
 	cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
 	for (UInt i = 0; i < ncp; i++) {
 		cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
@@ -93,13 +93,13 @@ SimplexTri<SIMPTRI_N>::cubatureNodeIndex(UInt i, UInt j) const {
 }
 
 template <Int SIMPTRI_N>
-const Polynomial<Real>&
+const FunctionPolynomial<Real>&
 SimplexTri<SIMPTRI_N>::getLagr(const UInt i) const {
 	return lagr[i];
 }
 
 template <Int SIMPTRI_N>
-const Polynomial<Real>&
+const FunctionPolynomial<Real>&
 SimplexTri<SIMPTRI_N>::getDLagr(const UInt i, const UInt f) const {
 	return dLagr[i][f];
 }
