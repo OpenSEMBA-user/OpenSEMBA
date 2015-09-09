@@ -185,10 +185,10 @@ DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
 QUESTION: boundary_padding_type#CB#(by_number_of_cells,by_distance)
 VALUE: by_distance
 QUESTION: Lower_x_boundary_padding
-VALUE: 3
+VALUE: 0
 HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
 QUESTION: Lower_y_boundary_padding
-VALUE: 5
+VALUE: 0
 HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
 QUESTION: Lower_z_boundary_padding
 VALUE: 0.0
@@ -203,7 +203,7 @@ QUESTION: Upper_z_boundary_padding
 VALUE: 0.0
 HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
 QUESTION: Lower_x_Boundary_mesh_size
-VALUE: 0.5
+VALUE: 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Lower_y_Boundary_mesh_size
 VALUE: 0.0
@@ -212,10 +212,10 @@ QUESTION: Lower_z_Boundary_mesh_size
 VALUE: 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Upper_x_Boundary_mesh_size
-VALUE: 0.1
+VALUE: 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Upper_y_Boundary_mesh_size
-VALUE: 0.5
+VALUE: 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Upper_z_Boundary_mesh_size
 VALUE: 0.0

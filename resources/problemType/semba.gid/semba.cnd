@@ -431,7 +431,7 @@ QUESTION: z_direction
 VALUE: 20
 END CONDITION
 
-CONDITION: Location_in_mesh
-CONDTYPE: over points
-CONDMESHTYPE: over body elements
-END CONDITION
+#CONDITION: Location_in_mesh
+#CONDTYPE: over points
+#CONDMESHTYPE: over body elements
+#END CONDITION
