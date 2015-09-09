@@ -19,35 +19,9 @@ protected:
 
         offsetIni = grid_.getOrigin();
 
-        vector<Real> steps[3];
-        steps[x] = grid_.getStep(x);
-        steps[y] = grid_.getStep(y);
-        steps[z] = grid_.getStep(z);
-        cartesianGrid_ = new Grid3 (steps, CVecI3(), offsetIni);
-    }
-
-    void checkNaturalCell(double pos) {
-        long int ijk1, ijk2;
-        double relLen1, relLen2;
-
-        EXPECT_EQ(        grid_.getNaturalCellx(pos, ijk1, relLen1),
-                cartesianGrid_->getNaturalCellx(pos, ijk2, relLen2));
-        EXPECT_EQ(ijk1, ijk2);
-        EXPECT_NEAR(relLen1, relLen2, 1e-5);
-
-        EXPECT_EQ(        grid_.getNaturalCelly(pos, ijk1, relLen1),
-                cartesianGrid_->getNaturalCelly(pos, ijk2, relLen2));
-        EXPECT_EQ(ijk1, ijk2);
-        EXPECT_NEAR(relLen1, relLen2, 1e-5);
-
-        EXPECT_EQ(        grid_.getNaturalCellz(pos, ijk1, relLen1),
-                cartesianGrid_->getNaturalCellz(pos, ijk2, relLen2));
-        EXPECT_EQ(ijk1, ijk2);
-        EXPECT_NEAR(relLen1, relLen2, 1e-5);
     }
 
     Grid3 grid_;
-    Grid3* cartesianGrid_;
     CVecR3 min_, max_, step_;
 };
 
@@ -97,45 +71,8 @@ TEST_F(GeometryGridTest, GetCVecI3Fractional) {
     EXPECT_FALSE(err);
 }
 
-
 TEST_F(GeometryGridTest, GetSteps) {
     EXPECT_NEAR(0.05, grid_.getStep(0,2),MathUtils::tolerance);
     EXPECT_NEAR(0.05, grid_.getStep(1,5),MathUtils::tolerance);
     EXPECT_NEAR(0.05, grid_.getStep(2,5),MathUtils::tolerance);
-}
-
-
-TEST_F(GeometryGridTest, cartesianGridvsGrid3) {
-    // Dims
-    EXPECT_EQ(grid_.getDimsx(), cartesianGrid_->getDimsx());
-    EXPECT_EQ(grid_.getDimsy(), cartesianGrid_->getDimsy());
-    EXPECT_EQ(grid_.getDimsz(), cartesianGrid_->getDimsz());
-    // Pos
-    for (UInt i = 0; i < grid_.getDimsx()+1; i++) {
-        EXPECT_NEAR(grid_.getPx()[i], cartesianGrid_->getPx()[i], 1e-4);
-    }
-    for (UInt i = 0; i < grid_.getDimsy()+1; i++) {
-        EXPECT_NEAR(grid_.getPy()[i], cartesianGrid_->getPy()[i], 1e-4);
-    }
-    for (UInt i = 0; i < grid_.getDimsz()+1; i++) {
-        EXPECT_NEAR(grid_.getPz()[i], cartesianGrid_->getPz()[i], 1e-4);
-    }
-    // Steps
-    for (UInt i = 0; i < grid_.getDimsx(); i++) {
-        EXPECT_EQ(grid_.getDx()[i], cartesianGrid_->getDx()[i]);
-    }
-    for (UInt i = 0; i < grid_.getDimsy(); i++) {
-        EXPECT_EQ(grid_.getDy()[i], cartesianGrid_->getDy()[i]);
-    }
-    for (UInt i = 0; i < grid_.getDimsz(); i++) {
-        EXPECT_EQ(grid_.getDz()[i], cartesianGrid_->getDz()[i]);
-    }
-}
-
-TEST_F(GeometryGridTest, cartesianGridNatCells) {
-    checkNaturalCell((double) 0.14);
-    checkNaturalCell((double) 0.17);
-    checkNaturalCell((double) 0.97);
-    checkNaturalCell((double) 1.7);
-    checkNaturalCell((double) -1);
 }
