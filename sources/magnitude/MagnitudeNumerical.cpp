@@ -36,14 +36,27 @@ MagnitudeNumerical::MagnitudeNumerical(const ProjectFile& file,
              << "Using default number of steps instead: " << nSteps << endl;
         mag.printInfo();
     }
-    ofstream oStream;
-    oStream.open(file.c_str());
+    ofstream out;
+    out.open(file.c_str());
     Real time = 0.0;
     for (UInt i = 0; i < nSteps; i++) {
-        oStream << time << " " << mag.evaluate(time) << endl;
+        // Determines if neigh values are aligned with current.
+        vector<pair<Real,Real>> preAndPost;
+        const Real tPre = time - timeStep;
+        const Real tPost = time + timeStep;
+        preAndPost.push_back(pair<Real,Real>(tPre, mag.evaluate(tPre)));
+        preAndPost.push_back(pair<Real,Real>(tPost, mag.evaluate(tPost)));
+        const Real interpolated = LinearInterpolation(preAndPost)(time);
+        const Real current = mag.evaluate(time);
+        bool isAligned = MathUtils::equal(current, interpolated);
+        //
+        if (!isAligned || i == nSteps-1) {
+            out << time << " " << current << endl;
+        }
+        //
         time += timeStep;
     }
-    oStream.close();
+    out.close();
 
     Magnitude::operator=(Magnitude(new LinearInterpolation(file)));
 }

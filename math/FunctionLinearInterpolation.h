@@ -13,6 +13,7 @@
 using namespace std;
 
 #include "Function.h"
+#include "ProjectFile.h"
 
 template<class S, class T>
 class FunctionLinearInterpolation: public Function<S,T> {

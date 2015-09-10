@@ -14,7 +14,9 @@ inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation() {
 template<class S, class T>
 inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation(
         const vector<pair<S, T> >& xy) {
-    throw Error("Not Implemented");
+    for (UInt i = 0; i < xy.size(); i++) {
+        value_.insert(xy[i]);
+    }
 }
 
 template<class S, class T>
@@ -33,8 +35,26 @@ inline void FunctionLinearInterpolation<S, T>::printInfo() const {
 }
 
 template<class S, class T>
-inline T FunctionLinearInterpolation<S, T>::operator ()(const S& arg) const {
-    throw Error("Not Implemented");
+inline T FunctionLinearInterpolation<S, T>::operator ()(const S& pos) const {
+    pair<typename map<S,T>::const_iterator, typename map<S,T>::const_iterator> range;
+    range = value_.equal_range(pos);
+    cout << "Fluffy" << endl;
+//    if (low == value_.end()) {
+//        return value_.begin()->second;
+//    } else {
+//        up = low;
+//        ++up;
+//        if (up == value_.end()) {
+//            return low->second;
+//        }
+//        const Real x1 = low->first;
+//        const Real y1 = low->second;
+//        const Real x2 = up->first;
+//        const Real y2 = up->second;
+//        const Real m = (y2 - y1) / (x2 - x1);
+//        const Real n = (x2*y1 - x1*y2)/(x2 - x1);
+//        return (m * pos + n);
+//    }
 }
 
 template<class S, class T>

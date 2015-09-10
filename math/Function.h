@@ -13,6 +13,7 @@
 using namespace std;
 
 #include "FunctionBase.h"
+#include "RealUtils.h"
 #include "Types.h"
 
 template<class S, class T>
@@ -22,6 +23,7 @@ public:
     virtual ~Function();
 
     virtual T operator()(const S& arg) const = 0;
+    T eval(const S& arg) const;
 
     void printInfo() const;
 };
