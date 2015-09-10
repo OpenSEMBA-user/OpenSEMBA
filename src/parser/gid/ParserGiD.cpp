@@ -8,12 +8,12 @@
 #include "ParserGiD.h"
 
 ParserGiD::ParserGiD() {
-    mesh_ = nullptr;
+    mesh_ = NULL;
 }
 
 ParserGiD::ParserGiD(const string& fn)
 :   ProjectFile(fn) {
-    mesh_ = nullptr;
+    mesh_ = NULL;
 }
 
 ParserGiD::~ParserGiD() {
@@ -398,7 +398,7 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
             }
         }
     }
-    return nullptr;
+    return NULL;
 }
 
 GroupOutRqs<>* ParserGiD::readOutputRequests() {
@@ -460,7 +460,6 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     res->add(new OutRq<Nod>(domain, type, name, elems));
                     break;
                 }
-
                 //case ParserGiD::outRqOnLine:
                 //    getNextLabelAndValue(label,value);
                 //    elem.clear();
@@ -477,7 +476,6 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     res->add(new OutRq<Surf>(domain, type, name, surfs));
                     break;
                 }
-
                 case ParserGiD::outRqOnVolume:
                 {
                     getline(f_in, line);
@@ -485,7 +483,36 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     res->add(new OutRq<Vol>(domain, type, name, elems));
                     break;
                 }
-                case ParserGiD::bulkCurrent:
+                case ParserGiD::bulkCurrentOnSurface:
+                {
+                    CartesianAxis dir;
+                    UInt skip;
+                    getNextLabelAndValue(label,value);
+                    switch (value[0]) {
+                    case 'x':
+                        dir = x;
+                        break;
+                    case 'y':
+                        dir = y;
+                        break;
+                    case 'z':
+                        dir = z;
+                        break;
+                    default:
+                        dir = x;
+                    }
+                    getNextLabelAndValue(label,value);
+                    skip = atoi(value.c_str());
+                    getline(f_in, line);
+                    vector<ElementId> ids;
+                    ids.push_back(ElementId(atoi(line.c_str())));
+                    GroupElements<ElemR> elems = mesh_->elems().getId(ids);
+                    GroupElements<Surf> surfs = elems.getOf<Surf>();
+                    res->add(new OutRqBulkCurrent(domain, name, surfs,
+                                                  dir, skip));
+                    break;
+                }
+                case ParserGiD::bulkCurrentOnVolume:
                 {
                     CartesianAxis dir;
                     UInt skip;
@@ -508,7 +535,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getline(f_in, line);
                     GroupElements<Vol> elems = boundToElemGroup(line);
                     res->add(new OutRqBulkCurrent(domain, name, elems,
-                            dir, skip));
+                                                  dir, skip));
                     break;
                 }
                 case ParserGiD::farField:
@@ -926,7 +953,7 @@ ParserGiD::readCartesianGrid() {
     bool finished = false;
     bool gridLabelFound = false;
     bool gridFound = false;
-    Grid3* grid = nullptr;
+    Grid3* grid = NULL;
     BoxR3 bound;
     bool stepsByNumberOfCells = true;
     CVecI3 numElems;
@@ -958,7 +985,7 @@ ParserGiD::readCartesianGrid() {
                 } else if(label.find("End of Grid") != label.npos) {
                     finished = true;
                     if (!gridFound) {
-                        return nullptr;
+                        return NULL;
                     }
                 }
                 if (f_in.eof()) {
@@ -980,7 +1007,7 @@ ParserGiD::readCartesianGrid() {
             grid = new Grid3(bound, steps);
         }
     } else {
-        grid = nullptr;
+        grid = NULL;
     }
     return grid;
 }
@@ -1027,7 +1054,7 @@ ParserGiD::readDipole() {
     Real length = 0.0;
     CVecR3 orientation;
     CVecR3 position;
-    MagnitudeGaussian* mag = nullptr;
+    MagnitudeGaussian* mag = NULL;
     //
     string line;
     bool finished = false;
@@ -1124,7 +1151,7 @@ Waveport* ParserGiD::readWaveport() {
     }
     if (!input) {
         delete mag;
-        mag = nullptr;
+        mag = NULL;
     }
     if (shape == WaveportShape::rectangular) {
         return new WaveportRectangular(mag, surfs, excitationMode, mode);
@@ -1430,8 +1457,10 @@ ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) const {
         return ParserGiD::outRqOnSurface;
     } else if (str.compare("OutRq_on_volume")==0) {
         return ParserGiD::outRqOnVolume;
-    } else if (str.compare("Bulk_current")==0) {
-        return ParserGiD::bulkCurrent;
+    } else if (str.compare("Bulk_current_on_surface")==0) {
+        return ParserGiD::bulkCurrentOnSurface;
+    } else if (str.compare("Bulk_current_on_volume")==0) {
+        return ParserGiD::bulkCurrentOnVolume;
     } else if (str.compare("farField")==0) {
         return ParserGiD::farField;
     } else {

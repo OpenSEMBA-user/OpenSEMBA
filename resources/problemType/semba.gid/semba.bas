@@ -1,6 +1,6 @@
 =======================================================================
 Format: Semba Data File
-Version: *tcl(set version $ugrfdtd::VersionNumber)
+Version: *tcl(set version $semba::VersionNumber)
 =======================================================================
 
 Solver options:
@@ -373,10 +373,25 @@ Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period)
 *end layers
 End of Output request instance: 
 *end if
-*Set cond Bulk_current
+*Set cond Bulk_current_on_surface
 *if(CondNumEntities(int)>0)
 Output request instance: 
-GiDOutputType: Bulk_current
+GiDOutputType: Bulk_current_on_surface
+Number of elements: *CondNumEntities(int)
+*loop elems *OnlyInCond
+Name: *cond(Name) 
+Type: *cond(Type) 
+Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)"
+Direction: *cond(Direction)
+Skip: *cond(Skip)
+*elemsNum
+*end elems
+End of Output request instance:
+*end if
+*Set cond Bulk_current_on_volume
+*if(CondNumEntities(int)>0)
+Output request instance: 
+GiDOutputType: Bulk_current_on_volume
 Number of elements: *CondNumEntities(int)
 *loop layers *OnlyInCond
 Name: *cond(Name) 
