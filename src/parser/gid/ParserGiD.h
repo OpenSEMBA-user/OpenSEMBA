@@ -95,7 +95,7 @@ private:
     Generator* readGenerator();
     SourceOnLine* readSourceOnLine();
     PhysicalModel* readPhysicalModel(const MatId id);
-    Magnitude readMagnitude(const string type);
+    Magnitude* readMagnitude(const string type);
     LocalAxes strToLocalAxes(const string& str);
     CVecR3 strToCVecR3(const string& str) const;
     Generator::Type strToGeneratorType(string label) const;

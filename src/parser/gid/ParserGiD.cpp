@@ -1016,7 +1016,7 @@ PlaneWave* ParserGiD::readPlaneWave() {
     string label, value;
     CVecR3 dir, pol;
     GroupElements<Vol> elems;
-    Magnitude mag;
+    Magnitude* mag;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
         if (label.compare("Direction")==0) {
@@ -1073,8 +1073,7 @@ Dipole* ParserGiD::readDipole() {
 
 Waveport* ParserGiD::readWaveport() {
     UInt numElements = 0;
-    bool input = true;
-    Magnitude mag;
+    Magnitude* mag;
     WaveportShape shape = WaveportShape::rectangular;
     Waveport::ExcitationMode excitationMode = Waveport::TE;
     pair<UInt,UInt> mode(1,0);
@@ -1144,7 +1143,7 @@ Waveport* ParserGiD::readWaveport() {
 
 Generator* ParserGiD::readGenerator() {
     GroupElements<Nod> elems;
-    Magnitude mag;
+    Magnitude* mag;
     Generator::Type type;
     Generator::Hardness hardness;
     string filename;
@@ -1180,7 +1179,7 @@ Generator* ParserGiD::readGenerator() {
 SourceOnLine* ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
-    Magnitude mag;
+    Magnitude* mag;
     vector<ElementId> ids;
     string filename;
     string label, value;
@@ -1467,7 +1466,7 @@ Domain ParserGiD::strToDomain(string line) const {
             toBool(usingTransferFunction), transferFunctionFile));
 }
 
-Magnitude ParserGiD::readMagnitude(const string typeIn) {
+Magnitude* ParserGiD::readMagnitude(const string typeIn) {
     string type = typeIn;
     type = trim(type);
     bool finished = false;
@@ -1487,7 +1486,7 @@ Magnitude ParserGiD::readMagnitude(const string typeIn) {
             }
             finished = spreadFound && delayFound;
             if (finished) {
-                return Magnitude(new Gaussian(spread, delay));
+                return new Magnitude(new Gaussian(spread, delay));
             }
         }
     } else if (type.compare("File") == 0) {
@@ -1499,7 +1498,7 @@ Magnitude ParserGiD::readMagnitude(const string typeIn) {
                 finished = true;
             }
             if (finished) {
-                return MagnitudeNumerical(getFolder() + excName);
+                return new MagnitudeNumerical(getFolder() + excName);
             }
         }
     }
@@ -1517,8 +1516,7 @@ OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
     } else if (str.compare("None")==0) {
         return OptionsMesher::none;
     } else {
-        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return OptionsMesher::none;
+        throw Error("Unreckognized label: " + str);
     }
 }
 
@@ -1533,8 +1531,7 @@ OptionsMesher::Mode ParserGiD::strToMesherMode(string str) const {
     } else if (str.compare("Conformal")==0) {
         return OptionsMesher::conformal;
     } else {
-        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str<< endl;
-        return OptionsMesher::structured;
+        throw Error("Unreckognized label: " + str);
     }
 }
 
@@ -1547,9 +1544,7 @@ OptionsSolver::Solver ParserGiD::strToSolver(string str) {
     } else if (str.compare("none")==0) {
         return OptionsSolver::Solver::none;
     } else {
-        cerr << endl << "ERROR @ Parser: ";
-        cerr << endl << "Unreckognized label: " << str<< endl;
-        return OptionsSolver::Solver::none;
+        throw Error("Unreckognized label: " + str);
     }
 }
 
@@ -1565,7 +1560,6 @@ OptionsSolver::CompositeModel ParserGiD::strToCompositeModel(string str) {
         return OptionsSolver::CompositeModel::ade;
     } else {
         throw Error("Unreckognized label: " + str);
-        return OptionsSolver::CompositeModel::mibc;
     }
 }
 
