@@ -25,6 +25,7 @@ public:
     DEFINE_CLONE(FunctionLinearInterpolation)
 
     T operator()(const S& arg) const;
+    bool operator==(const FunctionBase& arg) const;
 
     void printInfo() const;
 private:

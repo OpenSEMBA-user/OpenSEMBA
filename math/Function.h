@@ -22,7 +22,6 @@ public:
     virtual ~Function();
 
     virtual T operator()(const S& arg) const = 0;
-    virtual bool operator==(const FunctionBase& rhs) const = 0;
 
     void printInfo() const;
 };

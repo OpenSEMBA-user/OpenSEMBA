@@ -14,6 +14,7 @@ inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation() {
 template<class S, class T>
 inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation(
         const vector<pair<S, T> >& xy) {
+    throw Error("Not Implemented")
 }
 
 template<class S, class T>
@@ -29,6 +30,22 @@ inline FunctionLinearInterpolation<S, T>::~FunctionLinearInterpolation() {
 template<class S, class T>
 inline void FunctionLinearInterpolation<S, T>::printInfo() const {
     Function<S,T>::printInfo();
+}
+
+template<class S, class T>
+inline T FunctionLinearInterpolation<S, T>::operator ()(const S& arg) const {
+    throw Error("Not Implemented");
+}
+
+template<class S, class T>
+inline bool FunctionLinearInterpolation<S, T>::operator ==(
+        const FunctionBase& rhs) const {
+    if (typeid(*this) != typeid(rhs)) {
+        return false;
+    }
+    const FunctionLinearInterpolation<S,T>* rhsPtr =
+            rhs.castTo<FunctionLinearInterpolation<S,T>>();
+    return value_ == rhsPtr->value_;
 }
 
 template<class S, class T>

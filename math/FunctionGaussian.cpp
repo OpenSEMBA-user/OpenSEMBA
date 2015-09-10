@@ -64,6 +64,7 @@ Real FunctionGaussian::getFreq() const {
 
 void FunctionGaussian::printInfo() const {
     cout << " --- Function Gaussian info --- " << endl;
+    FunctionRR::printInfo();
     cout << "Spread:    " << spread_ << endl;
     cout << "Delay:     " << delay_ << endl;
     cout << "Frequency: " << freq_ << endl;

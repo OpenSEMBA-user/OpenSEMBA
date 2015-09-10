@@ -45,7 +45,7 @@ MagnitudeNumerical::MagnitudeNumerical(const ProjectFile& file,
     }
     oStream.close();
 
-    Magnitude(new LinearInterpolation(file));
+    Magnitude::operator=(Magnitude(new LinearInterpolation(file)));
 }
 
 MagnitudeNumerical::~MagnitudeNumerical() {

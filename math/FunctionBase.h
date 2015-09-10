@@ -14,6 +14,9 @@ class FunctionBase : public virtual ClassBase {
 public:
     FunctionBase();
     virtual ~FunctionBase();
+
+    virtual bool operator==(const FunctionBase& rhs) const = 0;
+    virtual void printInfo() const = 0;
 };
 
 #endif /* SRC_COMMON_MATH_FUNCTIONBASE_H_ */

@@ -20,6 +20,7 @@ class Magnitude : public virtual ClassBase {
 public:
     Magnitude();
     Magnitude(FunctionRR* mathFunction);
+    Magnitude(const Magnitude& rhs);
     virtual ~Magnitude();
 
     DEFINE_CLONE(Magnitude);

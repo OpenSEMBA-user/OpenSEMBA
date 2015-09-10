@@ -15,6 +15,10 @@ Magnitude::Magnitude(FunctionRR* mathFunction) {
     mathFunction_ = mathFunction;
 }
 
+Magnitude::Magnitude(const Magnitude& rhs) {
+    mathFunction_ = rhs.mathFunction_->cloneTo<FunctionRR>();
+}
+
 Magnitude::~Magnitude() {
     if (mathFunction_ != NULL) {
         delete mathFunction_;
@@ -25,7 +29,7 @@ Magnitude& Magnitude::operator =(const Magnitude& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    mathFunction_ = rhs.mathFunction_->cloneTo<Function<Real,Real>>();
+    mathFunction_ = rhs.mathFunction_->cloneTo<FunctionRR>();
     return *this;
 }
 
@@ -39,5 +43,5 @@ void Magnitude::printInfo() const {
 }
 
 Real Magnitude::evaluate(const Real time) const {
-    return mathFunction_->operator()(ltime);
+    return mathFunction_->operator()(time);
 }
