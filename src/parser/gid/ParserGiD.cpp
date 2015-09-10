@@ -266,8 +266,7 @@ GroupEMSources<>* ParserGiD::readEMSources() {
         } // if: boundary condition label was found.
     } // while: information was found or eof was reached.
     if (!found) {
-        cerr << endl << "ERROR @ Parsing sources: "
-                << "Excitations label was not found." << endl;
+        throw Error("Excitations label was not found.");
     }
     //
     return res;
