@@ -46,10 +46,10 @@ vector<O*> GroupOutRqs<O>::add(vector<O2*>& newOuts) {
     return res;
 }
 
-template<typename O> template<typename O2>
-vector<O*> GroupOutRqs<O>::add(Group<O2>& rhs) {
-    return Group<O>::add(rhs);
-}
+//template<typename O> template<typename O2>
+//vector<O*> GroupOutRqs<O>::add(Group<O2>& rhs) {
+//    return Group<O>::add(rhs);
+//}
 
 template<typename O>
 bool GroupOutRqs<O>::isSimilar(const GroupOutRqs& rhs) const {

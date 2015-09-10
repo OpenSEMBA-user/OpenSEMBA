@@ -30,10 +30,10 @@ bool Parser::strToBool(const string& value) {
 }
 
 void Parser::postReadOperations(SmbData* res) {
-    if (res->mesh != nullptr) {
+    if (res->mesh != NULL) {
         res->mesh->applyScalingFactor(scalingFactor_);
     }
-    if (res->grid != nullptr) {
+    if (res->grid != NULL) {
         res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
         res->grid->applyScalingFactor(scalingFactor_);
     }

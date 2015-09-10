@@ -9,12 +9,12 @@
 
 OutRqBulkCurrent::OutRqBulkCurrent(const Domain& domain,
                                    const string& name,
-                                   const GroupElements<Vol>& elem,
+                                   const GroupElements<Elem>& elem,
                                    const CartesianAxis& dir,
                                    const UInt& skip)
 :   Domain(domain),
     OutRqBase(bulkCurrentElectric, name),
-    GroupElements<const Vol>(elem) {
+    GroupElements<const Elem>(elem) {
 
     dir_ = dir;
     skip_ = skip;
@@ -23,7 +23,7 @@ OutRqBulkCurrent::OutRqBulkCurrent(const Domain& domain,
 OutRqBulkCurrent::OutRqBulkCurrent(const OutRqBulkCurrent& rhs)
 :   Domain(rhs),
     OutRqBase(rhs),
-    GroupElements<const Vol>(rhs) {
+    GroupElements<const Elem>(rhs) {
 
     dir_ = rhs.dir_;
     skip_ = rhs.skip_;

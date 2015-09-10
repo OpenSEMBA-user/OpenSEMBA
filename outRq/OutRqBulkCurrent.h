@@ -10,11 +10,11 @@
 
 #include "OutRq.h"
 
-class OutRqBulkCurrent : public virtual OutRq<Vol> {
+class OutRqBulkCurrent : public virtual OutRq<Elem> {
 public:
     OutRqBulkCurrent(const Domain& domain,
                      const string& name,
-                     const GroupElements<Vol>& box,
+                     const GroupElements<Elem>& box,
                      const CartesianAxis& dir,
                      const UInt& skip);
     OutRqBulkCurrent(const OutRqBulkCurrent& rhs);
