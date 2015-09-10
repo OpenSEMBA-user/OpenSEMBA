@@ -142,45 +142,71 @@ bool Grid<D>::isInto(const Int dir, const Real pos) const {
     return false;
 }
 
+//template<Int D>
+//bool Grid<D>::isIntoDir(const CartesianAxis dir, const double val) const {
+//    if(val < pos_[dir].front()){return false;}
+//    if(val > pos_[dir].back()){return false;}
+//    return true;
+//}
+
 template<Int D>
-bool Grid<D>::isIntoDir(const CartesianAxis dir, const double val)const{
-    if(val < pos_[dir].front()){return false;}
-    if(val > pos_[dir].back()){return false;}
+bool Grid<D>::getNaturalCellx(
+        const double &x,long int &i, double &relativeLen) const {
+    long int n = 0;
+    relativeLen = -1.0;
+    if (x < getPos(CartesianAxis::x,0)) {
+        i = 0;
+        return false;
+    } else if (getPos(CartesianAxis::x,getNumCells()(CartesianAxis::x)) <= x) {
+        i = getNumCells()(CartesianAxis::x);
+        return false;
+    }
+    while (getPos(CartesianAxis::x)[n] <=x ){
+        n++;
+    }  /*mod this: use sort*/
+    i = n-1;
+    relativeLen = (x - getPos(CartesianAxis::x)[i])/getStep(CartesianAxis::x,i);
     return true;
 }
 
 template<Int D>
-bool Grid<D>::getNaturalCellx(
-        const double &x,long int &i, double &relativeLen)const{
-    long int n; n = 0;
-    relativeLen = -1.0;
-    if(x<getPx()[0]){i=0; return false;}
-    else if(getPx()[getDimsx()]<=x) {i=getDimsx(); return false;}
-    while(getPx()[n]<=x){n++;}  /*mod this: use sort*/
-    i = n-1; relativeLen = (x-getPx()[i])/getDx()[i]; return true;
-}
-
-template<Int D>
 bool Grid<D>::getNaturalCelly(
-        const double &y,long int &i, double &relativeLen)const{
-    long int n; n = 0;
+        const double &y,long int &i, double &relativeLen) const {
+    long int n = 0;
     relativeLen = -1.0;
-    if(y<getPy()[0]){i=0; return false;}
-    else if(getPy()[getDimsy()]<=y) {i=getDimsy(); return false;}
-    while(getPy()[n]<=y){n++;}  /*mod this: use sort*/
-    i = n-1; relativeLen = (y-getPy()[i])/getDy()[i]; return true;
-
+    if (y < getPos(CartesianAxis::y,0)) {
+        i = 0;
+        return false;
+    } else if (getPos(CartesianAxis::y,getNumCells()(CartesianAxis::y)) <= y) {
+        i = getNumCells()(CartesianAxis::y);
+        return false;
+    }
+    while (getPos(CartesianAxis::y,n) <= y) {
+        n++;
+    }  /*mod this: use sort*/
+    i = n-1;
+    relativeLen = (y-getPos(CartesianAxis::y,i)) / getStep(CartesianAxis::y,i);
+    return true;
 }
 
 template<Int D>
 bool Grid<D>::getNaturalCellz(
         const double &z,long int &i, double &relativeLen)const{
-    long int n; n = 0;
+    long int n = 0;
     relativeLen = -1.0;
-    if(z<getPz()[0]){i=0; return false;}
-    else if(getPz()[getDimsz()]<=z) {i=getDimsz(); return false;}
-    while(getPz()[n]<=z){n++;}  /*mod this: use sort*/
-    i = n-1; relativeLen = (z-getPz()[i])/getDz()[i]; return true;
+    if (z<getPos(CartesianAxis::z,0)) {
+        i=0;
+        return false;
+    } else if(getPos(CartesianAxis::z,getNumCells()(CartesianAxis::z)) <=z ) {
+        i=getNumCells()(CartesianAxis::z);
+        return false;
+    }
+    while (getPos(CartesianAxis::z,n) <= z){
+        n++;
+    }  /*mod this: use sort*/
+    i = n-1;
+    relativeLen = (z-getPos(CartesianAxis::z,i)) / getStep(CartesianAxis::z,i);
+    return true;
 }
 
 template<Int D>
