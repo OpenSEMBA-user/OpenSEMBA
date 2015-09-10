@@ -7,7 +7,7 @@
 
 #include "../sources/Dipole.h"
 
-Dipole::Dipole(const Magnitude& magnitude,
+Dipole::Dipole(const Magnitude* magnitude,
                const GroupElements<Vol>& elem,
                Real length,
                CVecR3 orientation,

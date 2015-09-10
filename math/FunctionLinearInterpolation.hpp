@@ -14,7 +14,7 @@ inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation() {
 template<class S, class T>
 inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation(
         const vector<pair<S, T> >& xy) {
-    throw Error("Not Implemented")
+    throw Error("Not Implemented");
 }
 
 template<class S, class T>

@@ -12,7 +12,7 @@ Generator::Generator() {
     hardness_ = soft;
 }
 
-Generator::Generator(const Magnitude& magnitude,
+Generator::Generator(const Magnitude* magnitude,
                      GroupElements<Nod>& elems,
                      const Type& generatorType,
                      const Hardness& hardness)

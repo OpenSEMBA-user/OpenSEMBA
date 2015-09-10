@@ -29,7 +29,7 @@ public:
     };
 
     PlaneWave();
-    PlaneWave(const Magnitude& magnitude,
+    PlaneWave(Magnitude* magnitude,
               GroupElements<Vol> elem,
               CVecR3 direction,
               CVecR3 polarization);

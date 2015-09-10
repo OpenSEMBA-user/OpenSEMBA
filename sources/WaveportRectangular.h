@@ -13,7 +13,7 @@
 class WaveportRectangular: public Waveport {
 public:
     WaveportRectangular(
-            const Magnitude& magnitude,
+            Magnitude* magnitude,
             const GroupElements<const Surf>& elem,
             const ExcitationMode excMode,
             const pair<UInt,UInt> mode);

@@ -38,7 +38,7 @@ PlaneWave::PlaneWave() {
 
 }
 
-PlaneWave::PlaneWave(const Magnitude& magnitude,
+PlaneWave::PlaneWave(Magnitude* magnitude,
                      GroupElements<Vol> elem,
                      CVecR3 direction,
                      CVecR3 polarization)

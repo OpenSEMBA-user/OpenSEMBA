@@ -4,8 +4,8 @@ EMSourceBase::EMSourceBase() {
     magnitude_ = NULL;
 }
 
-EMSourceBase::EMSourceBase(const Magnitude& magnitude) {
-    magnitude_ = magnitude.clone();
+EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
+    magnitude_ = magnitude;
 }
 
 EMSourceBase::EMSourceBase(const EMSourceBase& rhs) {

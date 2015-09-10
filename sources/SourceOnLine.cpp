@@ -7,7 +7,7 @@
 
 #include "../sources/SourceOnLine.h"
 
-SourceOnLine::SourceOnLine(const Magnitude& magnitude,
+SourceOnLine::SourceOnLine(const Magnitude* magnitude,
                            const GroupElements<Lin>& elem,
                            const Type& sourceType,
                            const Hardness& sourceHardness)

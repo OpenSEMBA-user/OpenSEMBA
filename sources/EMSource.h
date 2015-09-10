@@ -19,7 +19,7 @@ using namespace std;
 class EMSourceBase : public virtual ClassGroupBase<GroupElements<const Elem>> {
 public:
     EMSourceBase();
-    EMSourceBase(const Magnitude& magnitude);
+    EMSourceBase(const Magnitude* magnitude);
     EMSourceBase(const EMSourceBase& rhs);
     virtual ~EMSourceBase();
 
