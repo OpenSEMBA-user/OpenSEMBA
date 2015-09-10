@@ -275,7 +275,6 @@ End of Source_on_line:
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
  Filename: *cond(File)
- Input: *cond(Input) 
  ExcitationMode: *cond(Mode)
  FirstMode: *cond(FirstMode)
  SecondMode: *cond(SecondMode)

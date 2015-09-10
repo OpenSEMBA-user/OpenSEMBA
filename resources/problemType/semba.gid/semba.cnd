@@ -119,8 +119,6 @@ CONDITION: Waveport
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 #Title: Basic
-QUESTION: Input#CB#(1,0)
-VALUE: 1
 Question: Shape#CB#(Rectangular)
 VALUE: Rectangular
 Question: Mode#CB#(TE,TM)

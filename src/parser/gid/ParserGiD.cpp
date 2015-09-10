@@ -1012,13 +1012,12 @@ ParserGiD::readCartesianGrid() {
     return grid;
 }
 
-PlaneWave*
-ParserGiD::readPlaneWave() {
+PlaneWave* ParserGiD::readPlaneWave() {
     string filename;
     string label, value;
     CVecR3 dir, pol;
     GroupElements<Vol> elems;
-    Magnitude* mag;
+    Magnitude mag;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
         if (label.compare("Direction")==0) {
@@ -1042,45 +1041,41 @@ ParserGiD::readPlaneWave() {
             return new PlaneWave(mag, elems, dir, pol);
         }
     }
-    // Throws error message if ending label was not found.
-    cerr << endl << "ERROR @ Parsing planewave: "
-            << "End of Planewave label not found. " << endl;
-    return new PlaneWave();
+    throw Error("End of Planewave label not found.");
 }
 
-Dipole*
-ParserGiD::readDipole() {
+Dipole* ParserGiD::readDipole() {
     GroupElements<Vol> elems;
     Real length = 0.0;
     CVecR3 orientation;
     CVecR3 position;
-    MagnitudeGaussian* mag = NULL;
+//    MagnitudeGaussian* mag = NULL;
     //
-    string line;
-    bool finished = false;
-    char* pEnd;
-    while(!finished && !f_in.eof()) {
-        getline(f_in, line);
-        if (line.find("End of puntual excitation") == line.npos) {
-            ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
-            //            Volume<>* elem = mesh_->elems().get(id);
-            //            elems.add(elem);
-        } else
-            finished = true;
-    }
-    if (!finished) {
-        cerr << endl << "ERROR @ ParserGiD::readDipoleEMSource: "
-                << "End of excitation type label not found. "
-                << endl;
-    }
-    //
-    return new Dipole(mag, elems, length, orientation, position);
+//    string line;
+//    bool finished = false;
+//    char* pEnd;
+//    while(!finished && !f_in.eof()) {
+//        getline(f_in, line);
+//        if (line.find("End of puntual excitation") == line.npos) {
+//            ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
+//            //            Volume<>* elem = mesh_->elems().get(id);
+//            //            elems.add(elem);
+//        } else
+//            finished = true;
+//    }
+//    if (!finished) {
+//        cerr << endl << "ERROR @ ParserGiD::readDipoleEMSource: "
+//                << "End of excitation type label not found. "
+//                << endl;
+//    }
+//    //
+//    return new Dipole(mag, elems, length, orientation, position);
 }
 
 Waveport* ParserGiD::readWaveport() {
     UInt numElements = 0;
     bool input = true;
-    Magnitude* mag;
+    Magnitude mag;
     WaveportShape shape = WaveportShape::rectangular;
     Waveport::ExcitationMode excitationMode = Waveport::TE;
     pair<UInt,UInt> mode(1,0);
@@ -1089,15 +1084,7 @@ Waveport* ParserGiD::readWaveport() {
     bool finished = false;
     while (!finished && !f_in.eof()) {
         getNextLabelAndValue(label,value);
-        if (!label.compare("Input")) {
-            UInt oneOrZero;
-            oneOrZero = atoi(value.c_str());
-            if (oneOrZero == 1) {
-                input = true;
-            } else {
-                input = false;
-            }
-        } else if (!label.compare("Shape")) {
+        if (!label.compare("Shape")) {
             if (value.find("Rectangular") != value.npos) {
                 shape = WaveportShape::rectangular;
             } else {
@@ -1149,10 +1136,6 @@ Waveport* ParserGiD::readWaveport() {
     if (!finished) {
         throw Error("End of excitation type label not found.");
     }
-    if (!input) {
-        delete mag;
-        mag = NULL;
-    }
     if (shape == WaveportShape::rectangular) {
         return new WaveportRectangular(mag, surfs, excitationMode, mode);
     } else {
@@ -1162,7 +1145,7 @@ Waveport* ParserGiD::readWaveport() {
 
 Generator* ParserGiD::readGenerator() {
     GroupElements<Nod> elems;
-    Magnitude* mag;
+    Magnitude mag;
     Generator::Type type;
     Generator::Hardness hardness;
     string filename;
@@ -1198,7 +1181,7 @@ Generator* ParserGiD::readGenerator() {
 SourceOnLine* ParserGiD::readSourceOnLine() {
     SourceOnLine::Type type;
     SourceOnLine::Hardness hardness;
-    Magnitude* mag;
+    Magnitude mag;
     vector<ElementId> ids;
     string filename;
     string label, value;
@@ -1223,11 +1206,7 @@ SourceOnLine* ParserGiD::readSourceOnLine() {
             return new SourceOnLine(mag, lines, type, hardness);
         }
     }
-    // Throws error message if ending label was not found.
-    cerr << endl << "ERROR @ Parsing nodal: "
-            << "End of Nodal label not found. " << endl;
-    GroupElements<Lin> lines;
-    return new SourceOnLine(mag, lines, type, hardness);
+    throw Error("End of Nodal label not found.");
 }
 
 OutRq<void>::Type ParserGiD::strToOutputType(string str) const {
@@ -1255,9 +1234,7 @@ OutRq<void>::Type ParserGiD::strToOutputType(string str) const {
     } else if (str.compare("farField")==0) {
         return OutRqBase::electric;
     } else {
-        cerr << endl << "ERROR @ GiDParser::readOutputRequestInstance(): "
-                << "Unrecognized output type: " << str << endl;
-        return OutRqBase::undefined;
+        throw Error("Unrecognized output type: " + str);
     }
 }
 
@@ -1491,7 +1468,7 @@ Domain ParserGiD::strToDomain(string line) const {
             toBool(usingTransferFunction), transferFunctionFile));
 }
 
-Magnitude* ParserGiD::readMagnitude(const string typeIn) {
+Magnitude ParserGiD::readMagnitude(const string typeIn) {
     string type = typeIn;
     type = trim(type);
     bool finished = false;
@@ -1511,7 +1488,7 @@ Magnitude* ParserGiD::readMagnitude(const string typeIn) {
             }
             finished = spreadFound && delayFound;
             if (finished) {
-                return new MagnitudeGaussian(spread, delay);
+                return Magnitude(new Gaussian(spread, delay));
             }
         }
     } else if (type.compare("File") == 0) {
@@ -1523,7 +1500,7 @@ Magnitude* ParserGiD::readMagnitude(const string typeIn) {
                 finished = true;
             }
             if (finished) {
-                return new MagnitudeNumerical(getFolder() + excName);
+                return MagnitudeNumerical(getFolder() + excName);
             }
         }
     }
