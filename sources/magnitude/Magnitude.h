@@ -13,21 +13,26 @@
 #include <string>
 using namespace std;
 
-#include "Types.h"
-
+#include "math/Function.h"
 #include "base/class/ClassBase.h"
 
 class Magnitude : public virtual ClassBase {
 public:
     Magnitude();
+    Magnitude(FunctionRR* mathFunction);
     virtual ~Magnitude();
 
-    virtual bool operator==(const Magnitude&) const = 0;
+    DEFINE_CLONE(Magnitude);
 
-    virtual Real evaluate(const Real time) const = 0;
+    Magnitude& operator=(const Magnitude& rhs);
 
-    virtual void printInfo() const = 0;
+    virtual bool operator==(const Magnitude&) const;
 
+    Real evaluate(const Real time) const;
+
+    virtual void printInfo() const;
+private:
+    FunctionRR* mathFunction_;
 };
 
 #endif /* SRC_COMMON_INPUTS_MAGNITUDE_H_ */

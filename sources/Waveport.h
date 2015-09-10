@@ -20,7 +20,7 @@ public:
 		TM
 	} ExcitationMode;
 
-	Waveport(const Magnitude* magnitude,
+	Waveport(const Magnitude& magnitude,
              const GroupElements<const Surf>& elem,
 	         const ExcitationMode excMode,
 	         const pair<UInt,UInt> mode);

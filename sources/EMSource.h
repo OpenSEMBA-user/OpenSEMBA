@@ -19,7 +19,7 @@ using namespace std;
 class EMSourceBase : public virtual ClassGroupBase<GroupElements<const Elem>> {
 public:
     EMSourceBase();
-    EMSourceBase(const FunctionBase* magnitude);
+    EMSourceBase(const Magnitude& magnitude);
     EMSourceBase(const EMSourceBase& rhs);
     virtual ~EMSourceBase();
 
@@ -35,10 +35,10 @@ public:
     virtual string getMagnitudeFilename() const;
     virtual const string& getName() const = 0;
 
-    void convertToNumerical(const string file,
+    void convertToNumerical(const ProjectFile& file,
                             const Real step,
                             const Real finalTime);
-    MagnitudeNumerical* exportToFile(const string file,
+    MagnitudeNumerical* exportToFile(const ProjectFile& file,
                                      const Real step,
                                      const Real finalTime) const;
 
@@ -46,10 +46,10 @@ public:
     virtual void printInfo() const;
 
 protected:
-    const FunctionBase* getMagnitude() const;
+    const Magnitude* getMagnitude() const;
 
 private:
-    const FunctionBase* magnitude_;
+    const Magnitude* magnitude_;
 };
 
 template<class T>

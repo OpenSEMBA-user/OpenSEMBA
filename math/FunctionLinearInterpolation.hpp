@@ -7,12 +7,48 @@
 
 #include "FunctionLinearInterpolation.h"
 
-FunctionLinearInterpolation::FunctionLinearInterpolation() {
-    // TODO Auto-generated constructor stub
-
+template<class S, class T>
+inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation() {
 }
 
-FunctionLinearInterpolation::~FunctionLinearInterpolation() {
-    // TODO Auto-generated destructor stub
+template<class S, class T>
+inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation(
+        const vector<pair<S, T> >& xy) {
 }
 
+template<class S, class T>
+inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation(
+        const ProjectFile& file) {
+    initFromFile(file);
+}
+
+template<class S, class T>
+inline FunctionLinearInterpolation<S, T>::~FunctionLinearInterpolation() {
+}
+
+template<class S, class T>
+inline void FunctionLinearInterpolation<S, T>::printInfo() const {
+    Function<S,T>::printInfo();
+}
+
+template<class S, class T>
+void FunctionLinearInterpolation<S, T>::initFromFile(
+        const ProjectFile& file) {
+    static_assert(std::is_same<S, Real>::value, "S must be Real");
+    static_assert(std::is_same<T, Real>::value, "T must be Real");
+    ifstream iStream;
+    iStream.open(file.getFilename().c_str(), ifstream::in);
+    if (iStream.fail()) {
+        throw ErrorFileNotExists(file.getFilename());
+    }
+
+    while (!iStream.eof()) {
+        pair<Real, Real> value;
+        iStream >> value.first >> value.second;
+        value_.insert(value);
+    }
+
+    if (value_.size() == 0) {
+        throw ErrorFileEmpty(file.getFilename());
+    }
+}

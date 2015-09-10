@@ -28,6 +28,8 @@ public:
 
 	FunctionPolynomial<T>& operator=(const FunctionPolynomial<T> &param);
 
+	bool operator==(const FunctionBase& rhs) const;
+
 	// Product between polynomials assuming variables are the same.
 	FunctionPolynomial<T> operator*(const FunctionPolynomial<T> &param ) const;
 	FunctionPolynomial<T>& operator*=(const FunctionPolynomial<T> &param);

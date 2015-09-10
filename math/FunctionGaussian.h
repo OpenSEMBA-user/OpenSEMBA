@@ -37,4 +37,6 @@ private:
     Real freq_;
 };
 
+typedef FunctionGaussian Gaussian;
+
 #endif /* SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_ */

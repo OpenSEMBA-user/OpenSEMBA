@@ -11,20 +11,19 @@ MagnitudeNumerical::MagnitudeNumerical() {
 
 }
 
-MagnitudeNumerical::MagnitudeNumerical(const string& filename)
-:   ProjectFile(filename) {
-
-    initFromFile();
+MagnitudeNumerical::MagnitudeNumerical(const ProjectFile& file)
+:   Magnitude(new LinearInterpolation(file)),
+    ProjectFile(file) {
 }
 
-MagnitudeNumerical::MagnitudeNumerical(const string& name,
-                                       const Magnitude* mag,
+MagnitudeNumerical::MagnitudeNumerical(const ProjectFile& file,
+                                       const Magnitude& mag,
                                        const Real timeStep,
                                        const Real finalTime)
-:   ProjectFile(name) {
+:   ProjectFile(file) {
 
-    if(mag->is<MagnitudeNumerical>()) {
-        operator=(*mag->castTo<MagnitudeNumerical>());
+    if(mag.is<MagnitudeNumerical>()) {
+        operator=(*mag.castTo<MagnitudeNumerical>());
         return;
     }
     UInt nSteps;
@@ -35,24 +34,18 @@ MagnitudeNumerical::MagnitudeNumerical(const string& name,
         cerr << "WARNING @ MagnitudeNumerical: "
              << "Attempting to build a numerical magnitude with a 0.0 step."
              << "Using default number of steps instead: " << nSteps << endl;
-        mag->printInfo();
+        mag.printInfo();
     }
-    ofstream file;
-    file.open(name.c_str());
+    ofstream oStream;
+    oStream.open(file.c_str());
     Real time = 0.0;
     for (UInt i = 0; i < nSteps; i++) {
-        file << time << " " << mag->evaluate(time) << endl;
+        oStream << time << " " << mag.evaluate(time) << endl;
         time += timeStep;
     }
-    file.close();
+    oStream.close();
 
-    initFromFile();
-}
-
-MagnitudeNumerical::MagnitudeNumerical(const MagnitudeNumerical& rhs)
-:   ProjectFile(rhs) {
-
-    initFromFile();
+    Magnitude(new LinearInterpolation(file));
 }
 
 MagnitudeNumerical::~MagnitudeNumerical() {
@@ -64,8 +57,8 @@ MagnitudeNumerical& MagnitudeNumerical::operator=(
     if (this == &rhs) {
         return *this;
     }
+    Magnitude::operator=(rhs);
     ProjectFile::operator=(rhs);
-    value_ = rhs.value_;
 
     return *this;
 }
@@ -74,8 +67,11 @@ bool MagnitudeNumerical::operator==(const Magnitude& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }
+    bool areEqual = true;
+    areEqual &= Magnitude::operator==(rhs);
     const MagnitudeNumerical* rhsPtr = rhs.castTo<MagnitudeNumerical>();
-    return (this->value_ == rhsPtr->value_);
+    areEqual &= (ProjectFile::compare(*rhsPtr) == 0);
+    return areEqual;
 }
 
 Real MagnitudeNumerical::evaluate(const Real time) const {
@@ -85,28 +81,6 @@ Real MagnitudeNumerical::evaluate(const Real time) const {
 
 void MagnitudeNumerical::printInfo() const {
     cout << " --- Magnitude Numerical Info --- " << endl;
+    Magnitude::printInfo();
     ProjectFile::printInfo();
-    cout << "Stored values: " << value_.size() << endl;
-    //    map<Real,Real>::const_iterator it;
-    //    for (it = value_.begin(); it != value_.end(); ++it) {
-    //        cout << it->first << " " << it->second << endl;
-    //    }
-}
-
-void MagnitudeNumerical::initFromFile() {
-    ifstream file;
-    file.open(getFilename().c_str(), ifstream::in);
-    if (file.fail()) {
-        throw ErrorFileNotExists(getFilename());
-    }
-
-    while (!file.eof()) {
-        pair<Real, Real> value;
-        file >> value.first >> value.second;
-        value_.insert(value);
-    }
-
-    if (value_.size() == 0) {
-        throw ErrorFileEmpty(getFilename());
-    }
 }

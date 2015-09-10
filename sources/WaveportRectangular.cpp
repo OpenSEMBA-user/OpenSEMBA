@@ -7,7 +7,7 @@
 
 #include "../sources/WaveportRectangular.h"
 
-WaveportRectangular::WaveportRectangular(const Magnitude* magn,
+WaveportRectangular::WaveportRectangular(const Magnitude& magn,
         const GroupElements<const Surf>& elem,
         const ExcitationMode excMode,
         const pair<UInt,UInt> mode)

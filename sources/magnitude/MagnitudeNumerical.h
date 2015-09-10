@@ -14,6 +14,7 @@
 using namespace std;
 
 #include "ProjectFile.h"
+#include "math/FunctionLinearInterpolation.h"
 #include "base/error/ErrorFile.h"
 #include "base/error/ErrorNotImplemented.h"
 
@@ -23,12 +24,11 @@ class MagnitudeNumerical : public virtual Magnitude,
                            public virtual ProjectFile {
 public:
     MagnitudeNumerical();
-    MagnitudeNumerical(const string& filename);
-    MagnitudeNumerical(const string& filename,
-                       const Magnitude* mag,
+    MagnitudeNumerical(const ProjectFile& filename);
+    MagnitudeNumerical(const ProjectFile& filename,
+                       const Magnitude& mag,
                        const Real timeStep,
                        const Real finalTime);
-    MagnitudeNumerical(const MagnitudeNumerical& rhs);
     virtual ~MagnitudeNumerical();
 
     DEFINE_CLONE(MagnitudeNumerical);
@@ -36,7 +36,6 @@ public:
     MagnitudeNumerical& operator=(const MagnitudeNumerical& rhs);
 
     bool operator==(const Magnitude&) const;
-
     Real evaluate(const Real time) const;
 
     void printInfo() const;
@@ -44,7 +43,7 @@ public:
 private:
     static const UInt defaultNumberOfSteps = 1000;
 
-    void initFromFile();
+
 };
 
 #endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_ */

@@ -18,3 +18,8 @@ Function<S,T>::~Function() {
 
 }
 
+template<class S, class T>
+inline void Function<S, T>::printInfo() const {
+    cout << " --- Function from " << typeid(S).name()
+            << " to " << typeid(T).name() << " --- " << endl;
+}

@@ -284,6 +284,18 @@ inline T FunctionPolynomial<T>::operator ()(const T& arg) const {
 }
 
 template<class T>
+inline bool FunctionPolynomial<T>::operator ==(const FunctionBase& rhs) const {
+    if (!rhs.is<FunctionPolynomial<T>>()) {
+        return false;
+    }
+    const FunctionPolynomial<T>* rhsPol = rhs.castTo<FunctionPolynomial<T>>();
+    bool areEqual = true;
+    areEqual &= mv_ == rhsPol->mv_;
+    areEqual &= mp_ == rhsPol->mp_;
+    return areEqual;
+}
+
+template<class T>
 void FunctionPolynomial<T>::printInfo() const {
 	cout << " -- Polynomial<T> -- " << endl;
 	cout << "Number of variables:			" << nv_ << endl;

@@ -7,7 +7,7 @@
 
 #include "../sources/Waveport.h"
 
-Waveport::Waveport(const Magnitude* magnitude,
+Waveport::Waveport(const Magnitude& magnitude,
                    const GroupElements<const Surf>& elem,
                    const ExcitationMode excMode,
                    const pair<UInt,UInt> mode)
