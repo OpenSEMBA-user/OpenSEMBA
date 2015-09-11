@@ -36,25 +36,36 @@ inline void FunctionLinearInterpolation<S, T>::printInfo() const {
 
 template<class S, class T>
 inline T FunctionLinearInterpolation<S, T>::operator ()(const S& pos) const {
+    if (value_.empty()) {
+        throw Error("Attempting to interpolate with no data.");
+    }
     pair<typename map<S,T>::const_iterator, typename map<S,T>::const_iterator> range;
     range = value_.equal_range(pos);
-    cout << "Fluffy" << endl;
-//    if (low == value_.end()) {
-//        return value_.begin()->second;
-//    } else {
-//        up = low;
-//        ++up;
-//        if (up == value_.end()) {
-//            return low->second;
-//        }
-//        const Real x1 = low->first;
-//        const Real y1 = low->second;
-//        const Real x2 = up->first;
-//        const Real y2 = up->second;
-//        const Real m = (y2 - y1) / (x2 - x1);
-//        const Real n = (x2*y1 - x1*y2)/(x2 - x1);
-//        return (m * pos + n);
-//    }
+    if (range.first == range.second) {
+        if (range.first == value_.end()) {
+            return value_.rbegin()->second;
+        } else {
+            if (pos <= range.first->first && range.first == value_.begin()) {
+                return range.first->second;
+            } else {
+                typename map<S,T>::const_iterator prev = range.first;
+                --prev;
+                const Real x1 = prev->first;
+                const Real y1 = prev->second;
+                const Real x2 = range.second->first;
+                const Real y2 = range.second->second;
+                const Real m = (y2 - y1) / (x2 - x1);
+                const Real n = (x2*y1 - x1*y2)/(x2 - x1);
+                return (m * pos + n);
+            }
+        }
+    } else {
+        if (range.first->first == pos) {
+            return range.first->second;
+        } else {
+            return range.first->second;
+        }
+    }
 }
 
 template<class S, class T>
