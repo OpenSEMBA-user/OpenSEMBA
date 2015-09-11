@@ -10,18 +10,12 @@
 
 #include "Surfel.h"
 
-typedef array<Linel,12> VoxelLinels;
-typedef array<Surfel,6> VoxelSurfels;
-
 class Voxel: public Pixel {
 public:
     Voxel();
     Voxel(const CVecI3& cVecI3_);
     virtual ~Voxel();
     bool isInto (const CVecI3Fractional& rhs) const;
-    VoxelLinels getLinels() const;
-    VoxelSurfels getSurfels() const;
-
     bool operator<(const Voxel& rhs) const;
 
 };

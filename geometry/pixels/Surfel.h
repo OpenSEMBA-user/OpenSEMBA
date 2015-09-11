@@ -16,8 +16,8 @@ typedef array<Pixel,4> SurfelPixels;
 class Surfel: public Pixel {
 public:
     Surfel(){normId_ = CartesianDirection::dirNode;};
-    Surfel(const CVecI3& cVecI3_): Pixel(cVecI3_){normId_ = CartesianDirection::dirNode;}
-    Surfel(const CVecI3& pos, const CartesianDirection& norm);
+    Surfel(const CVecI3& pos): Pixel(pos){normId_ = CartesianDirection::dirNode;}
+    Surfel(const CVecI3& pos, const CartesianDirection& norm) : Pixel(pos), normId_(norm){};
 
     virtual ~Surfel(){};
 
@@ -30,8 +30,8 @@ public:
     CartesianDirection& NormId (){return normId_;}
     void setNormId (const CartesianDirection& _normId){normId_ = _normId;}
 
-    SurfelLinels getLinels() const;
-    Linel getLinel(const UInt side) const;
+//    SurfelLinels getLinels() const;
+//    Linel getLinel(const UInt side) const;
     SurfelPixels getPixels() const;
 
     string toStr() const;
@@ -40,8 +40,6 @@ public:
     }
 
 protected:
-
-private:
     CartesianDirection normId_;
 };
 

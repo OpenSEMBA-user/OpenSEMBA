@@ -12,14 +12,17 @@ using namespace std;
 
 #include "math/CartesianVector.h"
 
+typedef enum {
+    dirNode = 0,
+    dirX    = 1,
+    dirY    = 2,
+    dirZ    = 3
+} CartesianDirection;
+
 class CVecI3Fractional : public CVecI3 {
 public:
-    typedef enum {
-        dirNode = 0,
-        dirX    = 1,
-        dirY    = 2,
-        dirZ    = 3
-    } Direction;
+
+
     CVecI3Fractional ();
     CVecI3Fractional (const CVecI3& pos, const CVecR3& len):
         CVecI3(pos), len_(len){}
@@ -28,9 +31,6 @@ public:
     CVecI3Fractional& operator= (const CVecI3Fractional& rhs);
 
     bool operator==(const CVecI3Fractional &rhs) const;
-    bool less(const CVecI3Fractional &rhs,
-            const Real tool = MathUtils::tolerance) const;
-
 
     CVecR3 getScalePos() const;
     CVecR3 getScalePos(const CVecI3 origin) const;
@@ -47,11 +47,7 @@ public:
             const bool forceProject,
             bool& canBeMoved) const;
 
-    CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision) const;
-    CVecI3 DiscretePositionDistribution (const CVecI3 &numDivision,
-                                         const CVecI3 &origin) const;
-
-    Direction getDirBase   () const;
+    CartesianDirection getDirBase   () const;
     UInt getRangeBase () const;
 
     string toStr() const;
@@ -59,12 +55,10 @@ public:
     friend std::ostream& operator<<(ostream& os, const CVecI3Fractional& vec) {
        return os << vec.toStr();
     }
-//TODO
-//private:
     CVecR3 len_;
 };
 
 typedef CVecI3Fractional CVecI3Frac;
-typedef CVecI3Fractional::Direction CartesianDirection;
+//typedef CVecI3Fractional::Direction CartesianDirection;
 
 #endif
