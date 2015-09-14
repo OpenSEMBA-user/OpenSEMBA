@@ -5,9 +5,9 @@
  *      Author: luis
  */
 
-#include "../sources/Waveport.h"
+#include "PortWaveguide.h"
 
-Waveport::Waveport(Magnitude* magnitude,
+PortWaveguide::PortWaveguide(Magnitude* magnitude,
                    const GroupElements<const Surf>& elem,
                    const ExcitationMode excMode,
                    const pair<UInt,UInt> mode)
@@ -18,7 +18,7 @@ Waveport::Waveport(Magnitude* magnitude,
 	mode_ = mode;
 	// Performs checks
 	if (!this->getBound().isSurface()) {
-	    throw Error("Waveport elements must be contained in a single surface");
+	    throw Error("Waveport elements must be contained in a coplanar surface");
 	}
 
 	CVecR3 diagonal = this->getBound().getMax() - this->getBound().getMin();
@@ -34,7 +34,7 @@ Waveport::Waveport(Magnitude* magnitude,
 	check();
 }
 
-Waveport::Waveport(const Waveport& rhs)
+PortWaveguide::PortWaveguide(const PortWaveguide& rhs)
 :   EMSourceBase(rhs),
     GroupElements<const Surf>(rhs) {
 
@@ -42,43 +42,36 @@ Waveport::Waveport(const Waveport& rhs)
     mode_ = rhs.mode_;
 }
 
-Waveport::~Waveport() {
+PortWaveguide::~PortWaveguide() {
 
 }
 
-bool Waveport::hasSameProperties(const EMSourceBase& rhs) const {
+bool PortWaveguide::hasSameProperties(const EMSourceBase& rhs) const {
     if(!EMSourceBase::hasSameProperties(rhs)) {
         return false;
     }
-    const Waveport* rhsPtr = rhs.castTo<Waveport>();
+    const PortWaveguide* rhsPtr = rhs.castTo<PortWaveguide>();
     bool hasSameProperties = true;
     hasSameProperties &= mode_ == rhsPtr->mode_;
     hasSameProperties &= excitationMode_ == rhsPtr->excitationMode_;
     return hasSameProperties;
 }
 
-const string& Waveport::getName() const {
-    const static string res = "Waveport";
+const string& PortWaveguide::getName() const {
+    const static string res = "Waveguide port";
     return res;
 }
 
-Waveport::ExcitationMode Waveport::getExcitationMode() const {
+PortWaveguide::ExcitationMode PortWaveguide::getExcitationMode() const {
 	return excitationMode_;
 }
 
-
-pair<UInt, UInt> Waveport::getMode() const {
+pair<UInt, UInt> PortWaveguide::getMode() const {
 	return mode_;
 }
 
-void Waveport::printInfo() const {
-	cout << "--- Waveport info ---" << endl;
-	if (getMagnitude() != NULL) {
-		cout << "- Is input." << endl;
-	} else {
-		cout << "- Is output." << endl;
-	}
-
+void PortWaveguide::printInfo() const {
+	cout << "--- Waveguide port info ---" << endl;
 	cout << "Mode: ";
 	if (excitationMode_ == TE) {
 	    cout << "TE ";
@@ -86,21 +79,5 @@ void Waveport::printInfo() const {
 	    cout << "TM ";
 	}
 	cout << mode_.first << ", " << mode_.second << endl;
-	EMSource<Surf>::printInfo();
-}
-
-CVecR3 Waveport::getNormal() const {
-    if (this->getOf<Surf>().size() > 0) {
-        if (this->get(0)->is<SurfR>()) {
-            return this->get(0)->castTo<SurfR>()->getNormal();
-        } else {
-            CVecI3 aux = this->get(0)->castTo<SurfI>()->getNormal();
-            CVecR3 res;
-            for (UInt d = 0; d < 3; d++) {
-                res(d) = (Real) aux(d);
-            }
-            return res;
-        }
-    }
-    return CVecR3();
+	Port::printInfo();
 }

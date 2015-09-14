@@ -8,38 +8,27 @@
 #ifndef WAVEPORT_H_
 #define WAVEPORT_H_
 
-#include "../sources/EMSource.h"
-#include "../options/OptionsMesher.h"
-#include "base/error/ErrorNotImplemented.h"
+#include "Port.h"
 
-
-class Waveport : public EMSource<Surf> {
+class PortWaveguide : public Port {
 public:
 	typedef enum {
 		TE,
 		TM
 	} ExcitationMode;
 
-	Waveport(Magnitude* magnitude,
+	PortWaveguide(Magnitude* magnitude,
              const GroupElements<const Surf>& elem,
 	         const ExcitationMode excMode,
 	         const pair<UInt,UInt> mode);
-	Waveport(const Waveport& rhs);
-	virtual ~Waveport();
+	PortWaveguide(const PortWaveguide& rhs);
+	virtual ~PortWaveguide();
 
     bool hasSameProperties(const EMSourceBase& rhs) const;
 
     const string& getName() const;
 	ExcitationMode getExcitationMode() const;
 	pair<UInt, UInt> getMode() const;
-
-	CVecR3 getNormal() const;
-
-	virtual CVecR3 getOrigin(const BoundTerminations& sym) const = 0;
-	virtual CVecR3 getWeight(
-	        const CVecR3& pos,
-	        const BoundTerminations& sym) const = 0;
-
 
     void printInfo() const;
 private:

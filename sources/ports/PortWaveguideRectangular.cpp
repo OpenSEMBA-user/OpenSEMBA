@@ -5,15 +5,15 @@
  *      Author: luis
  */
 
-#include "../sources/WaveportRectangular.h"
+#include "PortWaveguideRectangular.h"
 
-WaveportRectangular::WaveportRectangular(Magnitude* magn,
+PortWaveguideRectangular::PortWaveguideRectangular(Magnitude* magn,
         const GroupElements<const Surf>& elem,
         const ExcitationMode excMode,
         const pair<UInt,UInt> mode)
 :   EMSourceBase(magn),
     GroupElements<const Surf>(elem),
-    Waveport(magn, elem, excMode, mode) {
+    PortWaveguide(magn, elem, excMode, mode) {
 
     box_ = this->getBound();
 
@@ -23,26 +23,26 @@ WaveportRectangular::WaveportRectangular(Magnitude* magn,
     }
 }
 
-WaveportRectangular::WaveportRectangular(const WaveportRectangular& rhs)
+PortWaveguideRectangular::PortWaveguideRectangular(const PortWaveguideRectangular& rhs)
 :   EMSourceBase(rhs),
     GroupElements<const Surf>(rhs),
-    Waveport(rhs) {
+    PortWaveguide(rhs) {
 
     box_ = rhs.box_;
 }
 
-WaveportRectangular::~WaveportRectangular() {
+PortWaveguideRectangular::~PortWaveguideRectangular() {
     // TODO Auto-generated destructor stub
 }
 
-bool WaveportRectangular::hasSameProperties(const EMSourceBase& rhs) const {
+bool PortWaveguideRectangular::hasSameProperties(const EMSourceBase& rhs) const {
     bool res = true;
-    res &= rhs.is<WaveportRectangular>();
-    res &= Waveport::hasSameProperties(rhs);
+    res &= rhs.is<PortWaveguideRectangular>();
+    res &= PortWaveguide::hasSameProperties(rhs);
     return res;
 }
 
-CVecR3 WaveportRectangular::getWeight(
+CVecR3 PortWaveguideRectangular::getWeight(
         const CVecR3& pos,
         const BoundTerminations& sym) const {
     // Return normalized weights for electric field components.
@@ -56,7 +56,7 @@ CVecR3 WaveportRectangular::getWeight(
         normFactor = n;
     }
     //const Real betaC = sqrt(pow(m,2) + pow(n,2));
-    if (getExcitationMode() == Waveport::TE) {
+    if (getExcitationMode() == PortWaveguide::TE) {
         res(x) =   n * cos(m * rPos(x)) * sin(n * rPos(y)) / normFactor;
         res(y) = - m * sin(m * rPos(x)) * cos(n * rPos(y)) / normFactor;
         res(z) = (Real) 0.0;
@@ -68,25 +68,25 @@ CVecR3 WaveportRectangular::getWeight(
     return res;
 }
 
-Real WaveportRectangular::getWidth(const BoundTerminations& sym) const {
+Real PortWaveguideRectangular::getWidth(const BoundTerminations& sym) const {
     CVecR3 origin = getOrigin(sym);
     CVecR3 max = box_.getMax();
     return max(x) - origin(x);
 }
 
-Real WaveportRectangular::getHeight(const BoundTerminations& sym) const {
+Real PortWaveguideRectangular::getHeight(const BoundTerminations& sym) const {
     CVecR3 origin = getOrigin(sym);
     CVecR3 max = box_.getMax();
     return max(y) - origin(y);
 }
 
-void WaveportRectangular::set(
+void PortWaveguideRectangular::set(
         const GroupElements<const Elem>& constGroupElements) {
-    Waveport::set(constGroupElements);
+    PortWaveguide::set(constGroupElements);
     box_ = this->getBound();
 }
 
-CVecR3 WaveportRectangular::getOrigin(const BoundTerminations& sym) const {
+CVecR3 PortWaveguideRectangular::getOrigin(const BoundTerminations& sym) const {
     if (sym[x].first != OptionsMesher::pml && sym[x].first != OptionsMesher::pmc) {
         throw Error("Waveport must have PML or PMC boundary in the x lower axis");
     }
