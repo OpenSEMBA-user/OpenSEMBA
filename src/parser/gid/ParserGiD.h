@@ -91,7 +91,7 @@ private:
     void getNextLabelAndValue(string& label, string& value);
     PlaneWave* readPlaneWave();
     Dipole* readDipole();
-    Waveport* readWaveport();
+    PortWaveguide* readWaveport();
     Generator* readGenerator();
     SourceOnLine* readSourceOnLine();
     PhysicalModel* readPhysicalModel(const MatId id);

@@ -13,7 +13,7 @@ using namespace std;
 #include "math/Field.h"
 #include "sources/DGPlaneWave.h"
 #include "sources/DGDipole.h"
-#include "sources/DGWaveportRectangular.h"
+#include "sources/DGWaveguideOortRectangular.h"
 #include "dispersives/DGSIBC.h"
 #include "dispersives/DGDispersiveVolumic.h"
 #include "dispersives/DGPMLUniaxial.h"

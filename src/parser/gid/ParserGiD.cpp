@@ -1071,11 +1071,11 @@ Dipole* ParserGiD::readDipole() {
 //    return new Dipole(mag, elems, length, orientation, position);
 }
 
-Waveport* ParserGiD::readWaveport() {
+PortWaveguide* ParserGiD::readWaveport() {
     UInt numElements = 0;
     Magnitude* mag;
     WaveportShape shape = WaveportShape::rectangular;
-    Waveport::ExcitationMode excitationMode = Waveport::TE;
+    PortWaveguide::ExcitationMode excitationMode = PortWaveguide::TE;
     pair<UInt,UInt> mode(1,0);
     string line, label, value;
     GroupElements<const Surf> surfs;
@@ -1092,9 +1092,9 @@ Waveport* ParserGiD::readWaveport() {
             mag = readMagnitude(value);
         } else if (!label.compare("ExcitationMode")) {
             if (value.find("TE") != value.npos) {
-                excitationMode = Waveport::TE;
+                excitationMode = PortWaveguide::TE;
             } else if (value.find("TM") != value.npos) {
-                excitationMode = Waveport::TM;
+                excitationMode = PortWaveguide::TM;
             }
         } else if (!label.compare("FirstMode")) {
             mode.first = atoi(value.c_str());
@@ -1135,7 +1135,7 @@ Waveport* ParserGiD::readWaveport() {
         throw Error("End of excitation type label not found.");
     }
     if (shape == WaveportShape::rectangular) {
-        return new WaveportRectangular(mag, surfs, excitationMode, mode);
+        return new PortWaveguideRectangular(mag, surfs, excitationMode, mode);
     } else {
         throw Error("Unsupported Waveport shape.");
     }

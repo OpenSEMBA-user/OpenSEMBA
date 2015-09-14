@@ -8,13 +8,13 @@
 #ifndef SOLVERWAVEPORTRECTANGULAR_H_
 #define SOLVERWAVEPORTRECTANGULAR_H_
 
+#include "../../../../common/sources/PortWaveguide.h"
 #include "DGWaveport.h"
-#include "sources/Waveport.h"
 
-class DGWaveportRectangular : public DGWaveport, public Waveport {
+class DGWaveportRectangular : public DGWaveport, public PortWaveguide {
 public:
     DGWaveportRectangular(
-            const Waveport& pw,
+            const PortWaveguide& pw,
             const MapGroup& map,
             FieldR3& dE, FieldR3& dH,
             const Int vmapM[faces][nfp]);
@@ -25,7 +25,7 @@ public:
     void printInfo() const;
 private:
     Real width, height;
-    Waveport::ExcitationMode excitationMode;
+    PortWaveguide::ExcitationMode excitationMode;
     Real kcm;
     Real intrinsicImpedance;
     Real gammaMSum;
