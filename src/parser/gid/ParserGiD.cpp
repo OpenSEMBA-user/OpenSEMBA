@@ -255,8 +255,10 @@ GroupEMSources<>* ParserGiD::readEMSources() {
                     res->add(readPlaneWave());
                 } else if (label.compare("Generator")==0) {
                     res->add(readGenerator());
-                } else if (label.compare("Waveport")==0) {
-                    res->add(readWaveport());
+                } else if (label.compare("Waveguide_port")==0) {
+                    res->add(readPortWaveguide());
+                } else if (label.compare("TEM_port")==0) {
+                    res->add(readPortTEM());
                 } else if (label.compare("Source_on_line")==0) {
                     res->add(readSourceOnLine());
                 } else if (label.compare("End of Excitations")==0) {
@@ -996,8 +998,7 @@ ParserGiD::readCartesianGrid() {
     }
     // Throws error message if label was not found.
     if (!gridLabelFound) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "Grid3 label not found." << endl;
+        throw Error("Grid3 label not found.");
     }
     if (gridFound) {
         if (stepsByNumberOfCells) {
@@ -1044,10 +1045,10 @@ PlaneWave* ParserGiD::readPlaneWave() {
 }
 
 Dipole* ParserGiD::readDipole() {
-    GroupElements<Vol> elems;
-    Real length = 0.0;
-    CVecR3 orientation;
-    CVecR3 position;
+//    GroupElements<Vol> elems;
+//    Real length = 0.0;
+//    CVecR3 orientation;
+//    CVecR3 position;
 //    MagnitudeGaussian* mag = NULL;
     //
 //    string line;
@@ -1071,7 +1072,7 @@ Dipole* ParserGiD::readDipole() {
 //    return new Dipole(mag, elems, length, orientation, position);
 }
 
-PortWaveguide* ParserGiD::readWaveport() {
+PortWaveguide* ParserGiD::readPortWaveguide() {
     UInt numElements = 0;
     Magnitude* mag;
     WaveportShape shape = WaveportShape::rectangular;
@@ -1086,20 +1087,86 @@ PortWaveguide* ParserGiD::readWaveport() {
             if (value.find("Rectangular") != value.npos) {
                 shape = WaveportShape::rectangular;
             } else {
-                throw Error("Unreckognized waveport shape.");
+                throw Error("Unreckognized waveguide port shape.");
             }
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
-        } else if (!label.compare("ExcitationMode")) {
+        } else if (label.compare("ExcitationMode") == 0) {
             if (value.find("TE") != value.npos) {
                 excitationMode = PortWaveguide::TE;
             } else if (value.find("TM") != value.npos) {
                 excitationMode = PortWaveguide::TM;
             }
-        } else if (!label.compare("FirstMode")) {
+        } else if (label.compare("FirstMode") == 0) {
             mode.first = atoi(value.c_str());
-        } else if (!label.compare("SecondMode")) {
+        } else if (label.compare("SecondMode") == 0) {
             mode.second = atoi(value.c_str());
+        } else if (label.compare("Number of elements") == 0) {
+            numElements = atoi(value.c_str());
+        } else if (label.compare("Elements") == 0) {
+            UInt e, f;
+            vector<Face> faces;
+            for (UInt i = 0; i < numElements; i++) {
+                f_in >> e >> f;
+                const ElemR* elem = mesh_->elems().getId(ElementId(e));
+                if (elem->is<VolR>()) {
+                    const VolR* vol = elem->castTo<VolR>();
+                    faces.push_back(Face(vol,f-1));
+                } else if (elem->is<SurfR>()) {
+                    surfs.add(elem->castTo<SurfR>());
+                }
+            }
+            surfs.add(mesh_->getSurfsMatching(faces));
+            if (surfs.size() < faces.size()) {
+                surfs.printInfo();
+                throw Error("Could not find surfaces matching element faces.");
+            }
+            if (surfs.size() == 0) {
+                throw Error("No surfaces read on waveguide port.");
+            }
+        } else if (label.find("End of Waveguide port") != label.npos) {
+            finished = true;
+        }
+        if (f_in.eof()) {
+            throw Error("End of Waveguide port not found");
+        }
+    }
+    // Throws error message if finished was not updated.
+    if (!finished) {
+        throw Error("End of excitation type label not found.");
+    }
+    if (shape == WaveportShape::rectangular) {
+        return new PortWaveguideRectangular(mag, surfs, excitationMode, mode);
+    } else {
+        throw Error("Unsupported Waveport shape.");
+    }
+}
+
+PortTEM* ParserGiD::readPortTEM() {
+    UInt numElements = 0;
+    Magnitude* mag;
+    PortTEM::ExcitationMode excitationMode = PortTEM::voltage;
+    CVecR3 origin;
+    Real innerRadius, outerRadius;
+    string line, label, value;
+    GroupElements<const Surf> surfs;
+    bool finished = false;
+    while (!finished && !f_in.eof()) {
+        getNextLabelAndValue(label,value);
+        if (label.compare("Excitation") == 0) {
+            mag = readMagnitude(value);
+        } else if (!label.compare("ExcitationMode")) {
+            if (value.find("Voltage") != value.npos) {
+                excitationMode = PortTEM::voltage;
+            } else if (value.find("Current") != value.npos) {
+                excitationMode = PortTEM::current;
+            }
+        } else if (!label.compare("Origin")) {
+            origin = strToCVecR3(value);
+        } else if (!label.compare("Inner radius")) {
+            innerRadius = atof(value.c_str());
+        } else if (!label.compare("Outer radius")) {
+            outerRadius = atof(value.c_str());
         } else if (!label.compare("Number of elements")) {
             numElements = atoi(value.c_str());
         } else if (!label.compare("Elements")) {
@@ -1121,24 +1188,21 @@ PortWaveguide* ParserGiD::readWaveport() {
                 throw Error("Could not find surfaces matching element faces.");
             }
             if (surfs.size() == 0) {
-                throw Error("No surfaces read on waveport.");
+                throw Error("No surfaces read on TEM port.");
             }
-        } else if (label.find("End of Waveport") != label.npos) {
+        } else if (label.find("End of TEM port") != label.npos) {
             finished = true;
         }
         if (f_in.eof()) {
-            throw Error("End of Waveport not found");
+            throw Error("End of TEM port not found");
         }
     }
     // Throws error message if finished was not updated.
     if (!finished) {
         throw Error("End of excitation type label not found.");
     }
-    if (shape == WaveportShape::rectangular) {
-        return new PortWaveguideRectangular(mag, surfs, excitationMode, mode);
-    } else {
-        throw Error("Unsupported Waveport shape.");
-    }
+    return new PortTEMCoaxial(mag, surfs, excitationMode, origin,
+            innerRadius, outerRadius);
 }
 
 Generator* ParserGiD::readGenerator() {
@@ -1688,3 +1752,4 @@ LocalAxes ParserGiD::strToLocalAxes(const string& str) {
     CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
     return LocalAxes(eulerAngles, origin);
 }
+

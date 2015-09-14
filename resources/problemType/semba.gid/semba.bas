@@ -269,8 +269,8 @@ End of Source_on_line:
 *endif
 *end conditions
 *loop conditions *faceElements
-*if(strcasecmp(condName,"waveport")==0&&condNumEntities>0)
- Waveport: 
+*if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
+ Waveguide_port: 
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
@@ -291,18 +291,17 @@ End of Source_on_line:
   *ElemsNum 3
 *endif
 *end elems
- End of Waveport:
+ End of Waveguide_port:
 *endif 
 
 *end conditions
 *loop conditions *bodyElements
-*if(strcasecmp(condName,"waveport")==0&&condNumEntities>0)
- Waveport: 
+*if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
+ Waveguide_port: 
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
  Filename: *cond(File)
- Input: *cond(Input) 
  ExcitationMode: *cond(Mode)
  FirstMode: *cond(FirstMode)
  SecondMode: *cond(SecondMode)
@@ -319,7 +318,33 @@ End of Source_on_line:
   *ElemsNum 3
 *endif
 *end elems
- End of Waveport:
+ End of Waveguide port:
+*endif 
+
+*if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
+ TEM_port: 
+ Excitation: *cond(Excitation)
+ Gaussian spread: *cond(Gaussian_spread)
+ Gaussian delay: *cond(Gaussian_delay)
+ Filename: *cond(File)
+ Origin: *cond(Origin)
+ Inner radius: *cond(Inner_radius)
+ Outer radius: *cond(Outer_radius)
+ ExcitationMode: *cond(Mode)
+ Number of elements: *CondNumEntities(int)
+ Elements:
+*loop elems *onlyInCond
+*if(CondElemFace==1)
+  *ElemsNum 1
+*elseif(CondElemFace==2)
+  *ElemsNum 4
+*elseif(CondElemFace==3)
+  *ElemsNum 2
+*else
+  *ElemsNum 3
+*endif
+*end elems
+ End of TEM port:
 *endif 
 
 *end conditions
