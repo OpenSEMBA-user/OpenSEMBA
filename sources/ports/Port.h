@@ -9,12 +9,14 @@
 #define SRC_COMMON_SOURCES_PORT_H_
 
 #include "../EMSource.h"
-#include "../options/OptionsMesher.h"
+#include "../../options/OptionsMesher.h"
 #include "base/error/ErrorNotImplemented.h"
 
 class Port : public EMSource<Surf> {
 public:
-    Port();
+    Port(Magnitude* magnitude,
+            const GroupElements<const Surf>& elem);
+    Port(const Port& rhs);
     virtual ~Port();
 
     CVecR3 getNormal() const;

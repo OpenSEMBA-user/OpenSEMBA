@@ -26,7 +26,6 @@ public:
 
     bool hasSameProperties(const EMSourceBase& rhs) const;
 
-    const string& getName() const;
 	ExcitationMode getExcitationMode() const;
 	pair<UInt, UInt> getMode() const;
 

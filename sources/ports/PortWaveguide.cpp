@@ -11,8 +11,7 @@ PortWaveguide::PortWaveguide(Magnitude* magnitude,
                    const GroupElements<const Surf>& elem,
                    const ExcitationMode excMode,
                    const pair<UInt,UInt> mode)
-:   EMSourceBase(magnitude),
-    GroupElements<const Surf>(elem) {
+:   Port(magnitude, elem) {
 
 	excitationMode_ = excMode;
 	mode_ = mode;
@@ -35,9 +34,7 @@ PortWaveguide::PortWaveguide(Magnitude* magnitude,
 }
 
 PortWaveguide::PortWaveguide(const PortWaveguide& rhs)
-:   EMSourceBase(rhs),
-    GroupElements<const Surf>(rhs) {
-
+:   Port(rhs) {
     excitationMode_ = rhs.excitationMode_;
     mode_ = rhs.mode_;
 }
@@ -55,11 +52,6 @@ bool PortWaveguide::hasSameProperties(const EMSourceBase& rhs) const {
     hasSameProperties &= mode_ == rhsPtr->mode_;
     hasSameProperties &= excitationMode_ == rhsPtr->excitationMode_;
     return hasSameProperties;
-}
-
-const string& PortWaveguide::getName() const {
-    const static string res = "Waveguide port";
-    return res;
 }
 
 PortWaveguide::ExcitationMode PortWaveguide::getExcitationMode() const {

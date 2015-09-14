@@ -25,6 +25,7 @@ public:
 
     void set(const GroupElements<const Elem>&);
 
+    const string& getName() const;
     Real getWidth(const BoundTerminations& sym) const;
     Real getHeight(const BoundTerminations& sym) const;
 

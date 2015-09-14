@@ -17,10 +17,15 @@ public:
         current
     } ExcitationMode;
 
-    PortTEM();
+    PortTEM(Magnitude* magnitude,
+            const GroupElements<const Surf>& elem,
+            const ExcitationMode excitationMode);
+    PortTEM(const PortTEM& rhs);
     virtual ~PortTEM();
 
     ExcitationMode getExcitationMode() const;
+private:
+    ExcitationMode excitationMode_;
 };
 
 #endif /* SRC_COMMON_SOURCES_PORTTEM_H_ */

@@ -24,21 +24,23 @@ PortWaveguideRectangular::PortWaveguideRectangular(Magnitude* magn,
 }
 
 PortWaveguideRectangular::PortWaveguideRectangular(const PortWaveguideRectangular& rhs)
-:   EMSourceBase(rhs),
-    GroupElements<const Surf>(rhs),
-    PortWaveguide(rhs) {
-
+:   PortWaveguide(rhs) {
     box_ = rhs.box_;
 }
 
 PortWaveguideRectangular::~PortWaveguideRectangular() {
-    // TODO Auto-generated destructor stub
+
 }
 
 bool PortWaveguideRectangular::hasSameProperties(const EMSourceBase& rhs) const {
     bool res = true;
     res &= rhs.is<PortWaveguideRectangular>();
     res &= PortWaveguide::hasSameProperties(rhs);
+    return res;
+}
+
+const string& PortWaveguideRectangular::getName() const {
+    const static string res = "Rectangular_waveguide_port";
     return res;
 }
 

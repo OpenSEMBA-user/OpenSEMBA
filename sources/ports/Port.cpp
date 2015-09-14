@@ -7,13 +7,19 @@
 
 #include "Port.h"
 
-Port::Port() {
-    // TODO Auto-generated constructor stub
+
+Port::Port(Magnitude* magnitude, const GroupElements<const Surf>& elem) :
+    EMSourceBase(magnitude),
+    GroupElements<const Surf>(elem) {
 
 }
 
+Port::Port(const Port& rhs) :
+            EMSourceBase(rhs),
+            GroupElements<const Surf>(rhs) {
+}
+
 Port::~Port() {
-    // TODO Auto-generated destructor stub
 }
 
 CVecR3 Port::getNormal() const {

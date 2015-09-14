@@ -7,14 +7,21 @@
 
 #include "PortTEM.h"
 
-PortTEM::PortTEM() {
-    // TODO Auto-generated constructor stub
-
-}
-
 PortTEM::~PortTEM() {
     // TODO Auto-generated destructor stub
 }
 
-ExcitationMode PortTEM::getExcitationMode() const {
+PortTEM::PortTEM(
+        Magnitude* magnitude,
+        const GroupElements<const Surf>& elem,
+        const ExcitationMode excitationMode) : Port(magnitude, elem) {
+    excitationMode_ = excitationMode;
+}
+
+PortTEM::PortTEM(const PortTEM& rhs) : Port(rhs) {
+    excitationMode_ = rhs.excitationMode_;
+}
+
+PortTEM::ExcitationMode PortTEM::getExcitationMode() const {
+    return excitationMode_;
 }

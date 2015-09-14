@@ -10,19 +10,22 @@
 
 #include "PortTEM.h"
 
-class PortTEMCoaxial : PortTEM {
+class PortTEMCoaxial : public PortTEM {
 public:
     PortTEMCoaxial(
             Magnitude* magnitude,
             const GroupElements<const Surf>& elem,
             const ExcitationMode excMode,
-            const Real center,
+            const CVecR3& origin,
             const Real innerRadius,
             const Real outerRadius);
+    PortTEMCoaxial(const PortTEMCoaxial& rhs);
     virtual ~PortTEMCoaxial();
 
     DEFINE_CLONE(PortTEMCoaxial);
-    bool hasSameProperties(const EMSourceBase& rhs) const;
+    bool hasSameProperties(const PortTEMCoaxial& rhs) const;
+
+    const string& getName() const;
 
     CVecR3 getOrigin(const BoundTerminations& sym = BoundTerminations()) const;
     CVecR3 getWeight(
