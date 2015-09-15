@@ -5,8 +5,8 @@ QUESTION: Solver#CB#(ugrfdtd,cudg3d,none)
 VALUE: none
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
 VALUE: Final_time
-DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,0)
-DEPENDENCIES: (Number_of_time_steps, SET,Final_time,#CURRENT#, RESTORE,Number_of_time_steps,0)
+DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)
+DEPENDENCIES: (Number_of_time_steps, SET,Final_time,#CURRENT#, RESTORE,Number_of_time_steps,#CURRENT#)
 QUESTION: Final_time
 VALUE: 30e-9
 HELP: Final time in seconds.
