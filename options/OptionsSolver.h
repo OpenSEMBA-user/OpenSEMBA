@@ -19,6 +19,9 @@ using namespace std;
 
 class OptionsSolver : public Options {
 public:
+    enum class EndingCondition {
+        finalTime, numberOfTimeSteps
+    };
     enum class Solver {
         ugrfdtd, cudg3d, none
     };
@@ -118,9 +121,12 @@ public:
 private:
     // Global
     Solver solver_;
-    Real finalTime_;
+
+    EndingCondition endingCondition_;
+    Real ending_;
     Real timeStep_;
     Real cfl_;
+
     Real samplingPeriod_;
     bool forceRestarting_;
     bool resumeSimulation_;

@@ -10,7 +10,8 @@
 OptionsSolver::OptionsSolver () {
     // Global
     solver_ = Solver::none;
-    finalTime_ = 0;
+    endingCondition_ = EndingCondition::finalTime;
+    ending_ = 0.0;
     samplingPeriod_ = 0.0;
     timeStep_ = 0.0;
     cfl_ = 0.8;
@@ -141,11 +142,16 @@ string OptionsSolver::toStr(const Solver solver) {
 }
 
 Real OptionsSolver::getFinalTime() const {
-    return finalTime_;
+    if (endingCondition_ == EndingCondition::finalTime) {
+        return ending_;
+    } else {
+        return ending_ * timeStep_;
+    }
 }
 
 void OptionsSolver::setFinalTime(Real finalTime) {
-    finalTime_ = finalTime;
+    endingCondition_ = EndingCondition::finalTime;
+    ending_ = finalTime;
 }
 
 Real OptionsSolver::getSamplingPeriod() const {
@@ -222,13 +228,20 @@ void OptionsSolver::setMTLN(bool mtln) {
 }
 
 UInt OptionsSolver::getNumberOfTimeSteps() const {
-    return (UInt)ceil(finalTime_/timeStep_);
+    if (endingCondition_ == EndingCondition::finalTime) {
+        if (timeStep_ != 0.0) {
+            return ceil(ending_ / timeStep_);
+        } else {
+            return (UInt) 0;
+        }
+    } else {
+        return (UInt) ending_;
+    }
 }
 
 void OptionsSolver::setNumberOfTimeSteps(UInt numberOfTimeSteps) {
-    if (numberOfTimeSteps != 0) {
-        finalTime_ = timeStep_ * numberOfTimeSteps;
-    }
+    endingCondition_ = EndingCondition::numberOfTimeSteps;
+    ending_ = (Real) numberOfTimeSteps;
 }
 
 const pair<double, double>& OptionsSolver::getPmlAlpha() const {
@@ -294,7 +307,7 @@ void
 OptionsSolver::printInfo() const {
     cout<< " --- Solver parameters --- " << endl;
     cout<< "Solver: " << toStr(solver_) << endl;
-    cout<< "Final time: " << finalTime_ << endl;
+    cout<< "Final time: " << getFinalTime() << endl;
     cout<< "Default sampling period: " << samplingPeriod_ << endl;
     cout<< "Time step: " << timeStep_ << endl;
 }
