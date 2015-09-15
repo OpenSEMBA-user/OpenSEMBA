@@ -270,6 +270,9 @@ End of Source_on_line:
 *end conditions
 *loop conditions *faceElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
+*set var HEADER = 0
+*loop elems *onlyInCond
+*if(HEADER == 0)
  Waveguide_port: 
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
@@ -280,7 +283,8 @@ End of Source_on_line:
  SecondMode: *cond(SecondMode)
  Number of elements: *CondNumEntities(int)
  Elements:
-*loop elems *onlyInCond
+*set var HEADER = 1
+*endif
 *if(CondElemFace==1)
   *ElemsNum 1
 *elseif(CondElemFace==2)
@@ -297,6 +301,9 @@ End of Source_on_line:
 *end conditions
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
+*set var HEADER = 0
+*loop elems *onlyInCond
+*if(HEADER == 0)
  Waveguide_port: 
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
@@ -307,7 +314,8 @@ End of Source_on_line:
  SecondMode: *cond(SecondMode)
  Number of elements: *CondNumEntities(int)
  Elements:
-*loop elems *onlyInCond
+*set var HEADER = 1
+*endif
 *if(CondElemFace==1)
   *ElemsNum 1
 *elseif(CondElemFace==2)
@@ -320,8 +328,13 @@ End of Source_on_line:
 *end elems
  End of Waveguide port:
 *endif 
+*end conditions
 
+*loop conditions *faceElements
 *if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
+*set var HEADER = 0
+*loop elems *onlyInCond
+*if(HEADER == 0)
  TEM_port: 
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
@@ -333,7 +346,40 @@ End of Source_on_line:
  ExcitationMode: *cond(Mode)
  Number of elements: *CondNumEntities(int)
  Elements:
+*set var HEADER = 1
+*endif
+*if(CondElemFace==1)
+  *ElemsNum 1
+*elseif(CondElemFace==2)
+  *ElemsNum 4
+*elseif(CondElemFace==3)
+  *ElemsNum 2
+*else
+  *ElemsNum 3
+*endif
+*end elems
+ End of Waveguide_port:
+*endif 
+
+*end conditions
+*loop conditions *bodyElements
+*if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
+*set var HEADER = 0
 *loop elems *onlyInCond
+*if(HEADER == 0)
+ TEM_port: 
+ Excitation: *cond(Excitation)
+ Gaussian spread: *cond(Gaussian_spread)
+ Gaussian delay: *cond(Gaussian_delay)
+ Filename: *cond(File)
+ Origin: *cond(Origin)
+ Inner radius: *cond(Inner_radius)
+ Outer radius: *cond(Outer_radius)
+ ExcitationMode: *cond(Mode)
+ Number of elements: *CondNumEntities(int)
+ Elements:
+*set var HEADER = 1
+*endif
 *if(CondElemFace==1)
   *ElemsNum 1
 *elseif(CondElemFace==2)
@@ -348,6 +394,7 @@ End of Source_on_line:
 *endif 
 
 *end conditions
+
 End of Excitations:
 
 Output Requests:

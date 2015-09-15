@@ -366,36 +366,36 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
             case PhysicalModel::elecDispersive:
                 return new PMVolumeDispersive(id, name, file);
             case PhysicalModel::anisotropic:
-            switch (anisotropicModel) {
-            case PMVolumeAnisotropic::Model::crystal:
-                return new PMVolumeAnisotropicCrystal(id, name, localAxes,
-                        rEpsPrincipalAxes, crystalRMu);
-            case PMVolumeAnisotropic::Model::ferrite:
-                return new PMVolumeAnisotropicFerrite(id, name, localAxes,
-                        kappa,ferriteRMu,ferriteREps);
-            default:
-                throw Error("Material type not recognized.");
-            }
-            case PhysicalModel::isotropicsibc:
-                switch (surfType) {
-                case sibc:
-                    return new PMSurfaceSIBC(id, name, file);
-                case multilayer:
-                    return readMultilayerSurf(id, name, layersStr);
-                default:
-                    throw Error("Undefined SIBC Type.");
-                }
-                break;
-                case PhysicalModel::wire:
-                    return new PMWire(id, name, radius, R, L);
-                case PhysicalModel::multiport:
-                    if (mpType == PMMultiport::shortCircuit) {
-                        return new PMMultiportPredefined(id, name, mpType);
-                    } else {
-                        return new PMMultiportRLC(id, name, mpType, R, L, C);
-                    }
+                switch (anisotropicModel) {
+                case PMVolumeAnisotropic::Model::crystal:
+                    return new PMVolumeAnisotropicCrystal(id, name, localAxes,
+                            rEpsPrincipalAxes, crystalRMu);
+                case PMVolumeAnisotropic::Model::ferrite:
+                    return new PMVolumeAnisotropicFerrite(id, name, localAxes,
+                            kappa,ferriteRMu,ferriteREps);
                 default:
                     throw Error("Material type not recognized.");
+                }
+                case PhysicalModel::isotropicsibc:
+                    switch (surfType) {
+                    case sibc:
+                        return new PMSurfaceSIBC(id, name, file);
+                    case multilayer:
+                        return readMultilayerSurf(id, name, layersStr);
+                    default:
+                        throw Error("Undefined SIBC Type.");
+                    }
+                    break;
+                    case PhysicalModel::wire:
+                        return new PMWire(id, name, radius, R, L);
+                    case PhysicalModel::multiport:
+                        if (mpType == PMMultiport::shortCircuit) {
+                            return new PMMultiportPredefined(id, name, mpType);
+                        } else {
+                            return new PMMultiportRLC(id, name, mpType, R, L, C);
+                        }
+                    default:
+                        throw Error("Material type not recognized.");
             }
         }
     }
@@ -510,7 +510,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     GroupElements<ElemR> elems = mesh_->elems().getId(ids);
                     GroupElements<Surf> surfs = elems.getOf<Surf>();
                     res->add(new OutRqBulkCurrent(domain, name, surfs,
-                                                  dir, skip));
+                            dir, skip));
                     break;
                 }
                 case ParserGiD::bulkCurrentOnVolume:
@@ -536,7 +536,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getline(f_in, line);
                     GroupElements<Vol> elems = boundToElemGroup(line);
                     res->add(new OutRqBulkCurrent(domain, name, elems,
-                                                  dir, skip));
+                            dir, skip));
                     break;
                 }
                 case ParserGiD::farField:
@@ -1045,31 +1045,31 @@ PlaneWave* ParserGiD::readPlaneWave() {
 }
 
 Dipole* ParserGiD::readDipole() {
-//    GroupElements<Vol> elems;
-//    Real length = 0.0;
-//    CVecR3 orientation;
-//    CVecR3 position;
-//    MagnitudeGaussian* mag = NULL;
+    //    GroupElements<Vol> elems;
+    //    Real length = 0.0;
+    //    CVecR3 orientation;
+    //    CVecR3 position;
+    //    MagnitudeGaussian* mag = NULL;
     //
-//    string line;
-//    bool finished = false;
-//    char* pEnd;
-//    while(!finished && !f_in.eof()) {
-//        getline(f_in, line);
-//        if (line.find("End of puntual excitation") == line.npos) {
-//            ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
-//            //            Volume<>* elem = mesh_->elems().get(id);
-//            //            elems.add(elem);
-//        } else
-//            finished = true;
-//    }
-//    if (!finished) {
-//        cerr << endl << "ERROR @ ParserGiD::readDipoleEMSource: "
-//                << "End of excitation type label not found. "
-//                << endl;
-//    }
-//    //
-//    return new Dipole(mag, elems, length, orientation, position);
+    //    string line;
+    //    bool finished = false;
+    //    char* pEnd;
+    //    while(!finished && !f_in.eof()) {
+    //        getline(f_in, line);
+    //        if (line.find("End of puntual excitation") == line.npos) {
+    //            ElementId id = ElementId(strtol(line.c_str(), &pEnd, 10));
+    //            //            Volume<>* elem = mesh_->elems().get(id);
+    //            //            elems.add(elem);
+    //        } else
+    //            finished = true;
+    //    }
+    //    if (!finished) {
+    //        cerr << endl << "ERROR @ ParserGiD::readDipoleEMSource: "
+    //                << "End of excitation type label not found. "
+    //                << endl;
+    //    }
+    //    //
+    //    return new Dipole(mag, elems, length, orientation, position);
 }
 
 PortWaveguide* ParserGiD::readPortWaveguide() {
@@ -1307,9 +1307,7 @@ ParserGiD::SIBCType ParserGiD::strToSIBCType(string str) const {
     } else if (str.compare("Layers")==0) {
         return multilayer;
     } else {
-        cerr << endl << "ERROR @ GiDParser: "
-                << "Unrecognized SIBC type: " << str << endl;
-        return undefinedSIBC;
+        throw Error("Unrecognized SIBC type: " + str);
     }
 }
 
@@ -1320,9 +1318,7 @@ Generator::Type ParserGiD::strToGeneratorType(string str) const {
     } else if (str.compare("current")==0) {
         return Generator::current;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized generator type." << endl;
-        return Generator::voltage;
+        throw Error("Unrecognized generator type: " + str);
     }
 }
 
@@ -1333,9 +1329,7 @@ Generator::Hardness ParserGiD::strToGeneratorHardness(string str) const {
     } else if (str.compare("hard")==0) {
         return Generator::hard;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized generator hardness." << endl;
-        return Generator::soft;
+        throw Error("Unrecognized generator hardness: " + str);
     }
 }
 
@@ -1354,9 +1348,7 @@ OptionsMesher::BoundType ParserGiD::strToBoundType(string str) const {
     } else if (str.compare("MUR2")==0) {
         return OptionsMesher::mur2;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized bound label." << endl;
-        return OptionsMesher::undefined;
+        throw Error("Unrecognized bound label: " + str);
     }
 }
 
@@ -1402,9 +1394,7 @@ PMMultiport::Type ParserGiD::strToMultiportType(string str) const {
     } else if (str.compare("Conn_sLpRC")==0) {
         return PMMultiport::sLpRC;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized multiport label." << endl;
-        return PMMultiport::undefined;
+        throw Error("Unrecognized multiport label: " + str);
     }
 }
 
@@ -1439,9 +1429,7 @@ SourceOnLine::Type ParserGiD::strToNodalType(string str) const {
     } else if (str.compare("magneticField")==0) {
         return SourceOnLine::magnetic;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized nodal type." << endl;
-        return SourceOnLine::electric;
+        throw Error("Unrecognized nodal type: " + str);
     }
 }
 
@@ -1452,8 +1440,7 @@ SourceOnLine::Hardness ParserGiD::strToNodalHardness(string str) const {
     } else if (str.compare("hard")==0) {
         return SourceOnLine::hard;
     } else {
-        cerr << endl << "ERROR @ Parser: "
-                << "Unreckognized nodal hardness." << endl;
+        throw Error("Unrecognized nodal hardness: " + str);
         return SourceOnLine::soft;
     }
 }
