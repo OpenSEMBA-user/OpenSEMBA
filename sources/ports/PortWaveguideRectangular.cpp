@@ -23,8 +23,11 @@ PortWaveguideRectangular::PortWaveguideRectangular(Magnitude* magn,
     }
 }
 
-PortWaveguideRectangular::PortWaveguideRectangular(const PortWaveguideRectangular& rhs)
-:   PortWaveguide(rhs) {
+PortWaveguideRectangular::PortWaveguideRectangular(
+        const PortWaveguideRectangular& rhs) :
+                                EMSourceBase(rhs),
+                                GroupElements<const Surf>(rhs),
+                                PortWaveguide(rhs) {
     box_ = rhs.box_;
 }
 

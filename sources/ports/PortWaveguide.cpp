@@ -8,33 +8,33 @@
 #include "PortWaveguide.h"
 
 PortWaveguide::PortWaveguide(Magnitude* magnitude,
-                   const GroupElements<const Surf>& elem,
-                   const ExcitationMode excMode,
-                   const pair<UInt,UInt> mode)
+        const GroupElements<const Surf>& elem,
+        const ExcitationMode excMode,
+        const pair<UInt,UInt> mode)
 :   Port(magnitude, elem) {
 
-	excitationMode_ = excMode;
-	mode_ = mode;
-	// Performs checks
-	if (!this->getBound().isSurface()) {
-	    throw Error("Waveport elements must be contained in a coplanar surface");
-	}
+    excitationMode_ = excMode;
+    mode_ = mode;
+    // Performs checks
+    if (!this->getBound().isSurface()) {
+        throw Error("Waveport elements must be contained in a coplanar surface");
+    }
 
-	CVecR3 diagonal = this->getBound().getMax() - this->getBound().getMin();
-	if (!diagonal.isContainedInPlane(xy)) {
-	    throw Error("Waveport must be contained in plane xy.");
-	}
+    CVecR3 diagonal = this->getBound().getMax() - this->getBound().getMin();
+    if (!diagonal.isContainedInPlane(xy)) {
+        throw Error("Waveport must be contained in plane xy.");
+    }
 
-	if (this->size() == 0) {
-	    throw Error("Waveport must contain some elements.");
-	}
+    if (this->size() == 0) {
+        throw Error("Waveport must contain some elements.");
+    }
 
 
-	check();
+    check();
 }
 
-PortWaveguide::PortWaveguide(const PortWaveguide& rhs)
-:   Port(rhs) {
+PortWaveguide::PortWaveguide(const PortWaveguide& rhs) :
+                Port(rhs) {
     excitationMode_ = rhs.excitationMode_;
     mode_ = rhs.mode_;
 }
@@ -55,21 +55,21 @@ bool PortWaveguide::hasSameProperties(const EMSourceBase& rhs) const {
 }
 
 PortWaveguide::ExcitationMode PortWaveguide::getExcitationMode() const {
-	return excitationMode_;
+    return excitationMode_;
 }
 
 pair<UInt, UInt> PortWaveguide::getMode() const {
-	return mode_;
+    return mode_;
 }
 
 void PortWaveguide::printInfo() const {
-	cout << "--- Waveguide port info ---" << endl;
-	cout << "Mode: ";
-	if (excitationMode_ == TE) {
-	    cout << "TE ";
-	} else {
-	    cout << "TM ";
-	}
-	cout << mode_.first << ", " << mode_.second << endl;
-	Port::printInfo();
+    cout << "--- Waveguide port info ---" << endl;
+    cout << "Mode: ";
+    if (excitationMode_ == TE) {
+        cout << "TE ";
+    } else {
+        cout << "TM ";
+    }
+    cout << mode_.first << ", " << mode_.second << endl;
+    Port::printInfo();
 }

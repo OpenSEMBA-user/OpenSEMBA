@@ -23,6 +23,9 @@ public:
     virtual ~PortTEMCoaxial();
 
     DEFINE_CLONE(PortTEMCoaxial);
+
+    void set(const GroupElements<const Elem>&);
+
     bool hasSameProperties(const PortTEMCoaxial& rhs) const;
 
     const string& getName() const;
@@ -31,6 +34,8 @@ public:
     CVecR3 getWeight(
             const CVecR3& pos,
             const BoundTerminations& sym = BoundTerminations()) const;
+
+    void printInfo() const;
 private:
     CVecR3 origin_;
     Real innerRadius_, outerRadius_;

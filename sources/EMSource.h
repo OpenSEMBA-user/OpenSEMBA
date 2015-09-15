@@ -59,15 +59,13 @@ public:
     EMSource() {}
     virtual ~EMSource() {}
 
-    virtual EMSource* clone() const = 0;
+    virtual void set(const GroupElements<const Elem>&);
+    void add(const GroupElements<const Elem>&);
 
+    virtual EMSource* clone() const = 0;
     GroupElements<const Elem> elems() const { return *this; }
 
     bool isSimilar(const EMSourceBase& rhs) const;
-
-    void set(const GroupElements<const Elem>&);
-    void add(const GroupElements<const Elem>&);
-
     void printInfo() const;
 };
 

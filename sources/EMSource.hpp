@@ -8,7 +8,8 @@
 #include "../sources/EMSource.h"
 
 template <class T>
-void EMSource<T>::set(const GroupElements<const Elem>& elems) {
+void EMSource<T>::set(
+        const GroupElements<const Elem>& elems) {
     GroupElements<const T>::operator=(elems);
 }
 
@@ -35,5 +36,5 @@ bool EMSource<T>::isSimilar(const EMSourceBase& rhs) const {
 template<class T>
 void EMSource<T>::printInfo() const {
     EMSourceBase::printInfo();
-//    this->GroupElements<const T>::printInfo();
+    this->GroupElements<const T>::printInfo();
 }

@@ -24,6 +24,10 @@ public:
     virtual ~PortTEM();
 
     ExcitationMode getExcitationMode() const;
+
+    void printInfo() const;
+
+    static string toStr(const ExcitationMode& excitationMode);
 private:
     ExcitationMode excitationMode_;
 };

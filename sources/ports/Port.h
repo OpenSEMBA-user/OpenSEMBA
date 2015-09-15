@@ -14,6 +14,7 @@
 
 class Port : public EMSource<Surf> {
 public:
+
     Port(Magnitude* magnitude,
             const GroupElements<const Surf>& elem);
     Port(const Port& rhs);
