@@ -1511,6 +1511,10 @@ Domain ParserGiD::strToDomain(string line) const {
     ss >> timeDomain >> initialTime >> finalTime >> samplingPeriod
     >> frequencyDomain >> initialFrequency >> finalFrequency >>frequencyStep
     >> logFrequencySweep >> usingTransferFunction >> transferFunctionFile;
+    //
+    transferFunctionFile.erase(std::remove( transferFunctionFile.begin(),
+            transferFunctionFile.end(), '\"' ),transferFunctionFile.end());
+    //
     return (Domain(toBool(timeDomain), initialTime, finalTime, samplingPeriod,
             toBool(frequencyDomain), initialFrequency, finalFrequency,
             frequencyStep,	toBool(logFrequencySweep),
