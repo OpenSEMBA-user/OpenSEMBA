@@ -115,7 +115,7 @@ TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
 
-CONDITION: Waveport
+CONDITION: Waveguide_port
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 #Title: Basic
@@ -130,6 +130,38 @@ VALUE: 0
 #Question: Electric_field_direction
 #VALUE: #WIDTH#(5)
 #TKWIDGET: GidUtils::TkwidgetGetVector3D
+##Title: Excitation
+QUESTION: Excitation#CB#(Gaussian,File)
+VALUE: Gaussian
+DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
+DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Gaussian_spread
+VALUE: 2e-9
+HELP: Gaussian spread in seconds.
+QUESTION: Gaussian_delay
+VALUE: 6e-9
+HELP: Gaussian delay in seconds.
+QUESTION: File
+VALUE:
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+HELP: File containing excitation values. If set, ignores other excitation options.
+END CONDITION
+
+CONDITION: TEM_port
+CONDTYPE: over surfaces
+CONDMESHTYPE: over body elements
+#Title: Basic
+Question: Shape#CB#(Coaxial)
+VALUE: Coaxial
+Question: Mode#CB#(Voltage,Current)
+VALUE: Voltage
+Question: Origin
+Value: 
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+Question: Inner_radius
+Value: 0.0
+Question: Outer_radius
+Value: 0.0
 ##Title: Excitation
 QUESTION: Excitation#CB#(Gaussian,File)
 VALUE: Gaussian

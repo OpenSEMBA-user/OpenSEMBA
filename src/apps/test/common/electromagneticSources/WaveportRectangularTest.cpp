@@ -5,9 +5,9 @@
  *      Author: luis
  */
 
-#include "../../../../common/sources/WaveportRectangular.h"
-
 #include "gtest/gtest.h"
+
+#include "../../../../common/sources/PortWaveguideRectangular.h"
 
 class EMSourceWaveportRectangularTest : public ::testing::Test {
     void SetUp() {
@@ -19,9 +19,9 @@ class EMSourceWaveportRectangularTest : public ::testing::Test {
             surfs.add(new QuaI4(cG, ElementId(0), quadBoxes[i]), true);
         }
 
-        Waveport::ExcitationMode excMode = Waveport::TE;
+        PortWaveguide::ExcitationMode excMode = PortWaveguide::TE;
         pair<UInt,UInt> mode(1,0);
-        wp_ = new WaveportRectangular(NULL, surfs, excMode, mode);
+        wp_ = new PortWaveguideRectangular(NULL, surfs, excMode, mode);
 
         pair<OptionsMesher::BoundType,OptionsMesher::BoundType> bound;
         bound.first = OptionsMesher::pml;
@@ -36,7 +36,7 @@ class EMSourceWaveportRectangularTest : public ::testing::Test {
     }
 
 protected:
-    Waveport* wp_;
+    PortWaveguide* wp_;
     BoundTerminations bounds_;
 };
 

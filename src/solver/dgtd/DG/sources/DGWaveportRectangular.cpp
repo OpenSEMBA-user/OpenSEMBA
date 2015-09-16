@@ -5,14 +5,14 @@
  *      Author: luis
  */
 
-#include "DGWaveportRectangular.h"
+#include "DGWaveguideOortRectangular.h"
 
 DGWaveportRectangular::DGWaveportRectangular(
-        const Waveport& wp,
+        const PortWaveguide& wp,
         const MapGroup& map,
         FieldR3& dE, FieldR3& dH,
         const Int vmapM[faces][nfp]) :
-        Waveport(wp) {
+        PortWaveguide(wp) {
     //   initSource(map, cells, dE, dH, vmapM);
     //   // Computes positions.
     //   vector<pair<UInt, UInt> > total;
@@ -111,7 +111,7 @@ DGWaveportRectangular::DGWaveportRectangular(
 #  warning "Waveports are not being ctrted."
     // Stores modes.
     excitationMode = getExcitationMode();
-    if (excitationMode != Waveport::TE) {
+    if (excitationMode != PortWaveguide::TE) {
         cerr << endl << "ERROR @ DGWaveportRectangular" << endl;
         cerr << endl << "Non TE mode not supported yet." << endl;
         assert(false);
