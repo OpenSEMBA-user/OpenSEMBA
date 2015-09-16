@@ -5,7 +5,7 @@ Version: *tcl(set version $semba::VersionNumber)
 
 Solver options:
 Solver: *GenData(Solver)
-*if(strcasecmp(*GenData(Ending),"Final_time")==0)
+*if(strcasecmp(GenData(Ending),"Final_time")==0)
 Final time: *GenData(Final_time)
 *else
 Number of time steps: *GenData(Number_of_time_steps)
