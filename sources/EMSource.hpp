@@ -36,5 +36,7 @@ bool EMSource<T>::isSimilar(const EMSourceBase& rhs) const {
 template<class T>
 void EMSource<T>::printInfo() const {
     EMSourceBase::printInfo();
-    this->GroupElements<const T>::printInfo();
+    cout << "Size of element group: "
+            << this->GroupElements<const T>::size() << endl;
+//    this->GroupElements<const T>::printInfo();
 }
