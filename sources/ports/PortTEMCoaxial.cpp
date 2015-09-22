@@ -67,7 +67,7 @@ CVecR3 PortTEMCoaxial::getWeight(
     case ExcitationMode::current:
     {
         const CVecR3 phiHat = (CVecR3(0,0,1) ^ pos).normalize();
-        return phiHat / (2*M_PI*rho);
+        return phiHat / (2.0 * Constants::pi * rho);
     }
     default:
         throw Error("Unsupported excitation mode.");
