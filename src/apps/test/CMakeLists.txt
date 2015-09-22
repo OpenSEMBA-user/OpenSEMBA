@@ -4,5 +4,5 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ${CMAKE_CURR
 add_sources(. ${SRCS})
 
 add_executable(testSemba ${SRCS})
-target_link_libraries(testSemba common parserGiD adapterFDTD semba gtest gtest_main)
+target_link_libraries(testSemba opensemba parserGiD adapterFDTD semba gtest gtest_main)
 set_target_properties(testSemba PROPERTIES OUTPUT_NAME test)

@@ -3,4 +3,4 @@ cmake_minimum_required(VERSION 2.8)
 add_sources(. ${SRCS})
 
 add_library(exporterVTK STATIC ${SRCS})
-target_link_libraries(exporterVTK common)
+target_link_libraries(exporterVTK opensemba)
