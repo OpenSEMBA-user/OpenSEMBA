@@ -49,7 +49,7 @@ endif
 # -------------------- Paths to directories -----------------------------------
 DIR = $(SRC_DIR) 
 
-SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(SRCDIR)/apps/test/, ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
+SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
 
 IGNORES := 
 EXCLUDE := $(shell find $(SOURCE_DIR) -type f \( -name MathMatrix.cpp $(addprefix -o -name , $(IGNORES)) \) 2>/dev/null )

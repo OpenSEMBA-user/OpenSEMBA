@@ -53,34 +53,34 @@ TEST_F(GeometryVoxelTest, IsInto) {
     }
 }
 
-TEST_F(GeometryVoxelTest, GetLinels) {
-    CVecI3 pos(1);
-    Voxel local(pos);
-
-    VoxelLinels linels = local.getLinels();
-    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirY), linels[0]);
-    EXPECT_EQ(Linel(pos + CVecI3(0,0,1), CartesianDirection::dirY), linels[1]);
-    EXPECT_EQ(Linel(pos + CVecI3(1,0,0), CartesianDirection::dirY), linels[2]);
-    EXPECT_EQ(Linel(pos + CVecI3(1,0,1), CartesianDirection::dirY), linels[3]);
-    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirZ), linels[4]);
-    EXPECT_EQ(Linel(pos + CVecI3(1,0,0), CartesianDirection::dirZ), linels[5]);
-    EXPECT_EQ(Linel(pos + CVecI3(0,1,0), CartesianDirection::dirZ), linels[6]);
-    EXPECT_EQ(Linel(pos + CVecI3(1,1,0), CartesianDirection::dirZ), linels[7]);
-    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirX), linels[8]);
-    EXPECT_EQ(Linel(pos + CVecI3(0,1,0), CartesianDirection::dirX), linels[9]);
-    EXPECT_EQ(Linel(pos + CVecI3(0,0,1), CartesianDirection::dirX), linels[10]);
-    EXPECT_EQ(Linel(pos + CVecI3(0,1,1), CartesianDirection::dirX), linels[11]);
-}
-
-TEST_F(GeometryVoxelTest, GetSurfels) {
-    CVecI3 pos(1);
-    Voxel local(pos);
-
-    VoxelSurfels surfels = local.getSurfels();
-    EXPECT_EQ(Surfel(pos                , CartesianDirection::dirX), surfels[0]);
-    EXPECT_EQ(Surfel(pos + CVecI3(1,0,0), CartesianDirection::dirX), surfels[1]);
-    EXPECT_EQ(Surfel(pos                , CartesianDirection::dirY), surfels[2]);
-    EXPECT_EQ(Surfel(pos + CVecI3(0,1,0), CartesianDirection::dirY), surfels[3]);
-    EXPECT_EQ(Surfel(pos                , CartesianDirection::dirZ), surfels[4]);
-    EXPECT_EQ(Surfel(pos + CVecI3(0,0,1), CartesianDirection::dirZ), surfels[5]);
-}
+//TEST_F(GeometryVoxelTest, GetLinels) {
+//    CVecI3 pos(1);
+//    Voxel local(pos);
+//
+//    VoxelLinels linels = local.getLinels();
+//    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirY), linels[0]);
+//    EXPECT_EQ(Linel(pos + CVecI3(0,0,1), CartesianDirection::dirY), linels[1]);
+//    EXPECT_EQ(Linel(pos + CVecI3(1,0,0), CartesianDirection::dirY), linels[2]);
+//    EXPECT_EQ(Linel(pos + CVecI3(1,0,1), CartesianDirection::dirY), linels[3]);
+//    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirZ), linels[4]);
+//    EXPECT_EQ(Linel(pos + CVecI3(1,0,0), CartesianDirection::dirZ), linels[5]);
+//    EXPECT_EQ(Linel(pos + CVecI3(0,1,0), CartesianDirection::dirZ), linels[6]);
+//    EXPECT_EQ(Linel(pos + CVecI3(1,1,0), CartesianDirection::dirZ), linels[7]);
+//    EXPECT_EQ(Linel(pos,                 CartesianDirection::dirX), linels[8]);
+//    EXPECT_EQ(Linel(pos + CVecI3(0,1,0), CartesianDirection::dirX), linels[9]);
+//    EXPECT_EQ(Linel(pos + CVecI3(0,0,1), CartesianDirection::dirX), linels[10]);
+//    EXPECT_EQ(Linel(pos + CVecI3(0,1,1), CartesianDirection::dirX), linels[11]);
+//}
+//
+//TEST_F(GeometryVoxelTest, GetSurfels) {
+//    CVecI3 pos(1);
+//    Voxel local(pos);
+//
+//    VoxelSurfels surfels = local.getSurfels();
+//    EXPECT_EQ(Surfel(pos                , CartesianDirection::dirX), surfels[0]);
+//    EXPECT_EQ(Surfel(pos + CVecI3(1,0,0), CartesianDirection::dirX), surfels[1]);
+//    EXPECT_EQ(Surfel(pos                , CartesianDirection::dirY), surfels[2]);
+//    EXPECT_EQ(Surfel(pos + CVecI3(0,1,0), CartesianDirection::dirY), surfels[3]);
+//    EXPECT_EQ(Surfel(pos                , CartesianDirection::dirZ), surfels[4]);
+//    EXPECT_EQ(Surfel(pos + CVecI3(0,0,1), CartesianDirection::dirZ), surfels[5]);
+//}

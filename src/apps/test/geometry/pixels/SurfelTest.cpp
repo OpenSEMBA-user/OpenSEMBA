@@ -41,32 +41,32 @@ TEST_F(GeometrySurfelTest, Comparison) {
     EXPECT_FALSE(surf1 < surf1);
 }
 
-TEST_F(GeometrySurfelTest, GetLinels) {
-    CVecI3 pos(1);
-    {
-        Surfel surf(pos, CartesianDirection::dirX);
-        SurfelLinels linels = surf.getLinels();
-        EXPECT_EQ(Linel(pos, CartesianDirection::dirY), linels[0]);
-        EXPECT_EQ(Linel(pos, CartesianDirection::dirZ), linels[1]);
-        EXPECT_EQ(Linel(pos+CVecI3(0,0,1), CartesianDirection::dirY), linels[2]);
-        EXPECT_EQ(Linel(pos+CVecI3(0,1,0), CartesianDirection::dirZ), linels[3]);
-    }
-
-    {
-        Surfel surf(pos, CartesianDirection::dirY);
-        SurfelLinels linels = surf.getLinels();
-        EXPECT_EQ(Linel(pos, CartesianDirection::dirZ), linels[0]);
-        EXPECT_EQ(Linel(pos, CartesianDirection::dirX), linels[1]);
-        EXPECT_EQ(Linel(pos+CVecI3(1,0,0), CartesianDirection::dirZ), linels[2]);
-        EXPECT_EQ(Linel(pos+CVecI3(0,0,1), CartesianDirection::dirX), linels[3]);
-    }
-
-    {
-        Surfel surf(pos, CartesianDirection::dirZ);
-        SurfelLinels linels = surf.getLinels();
-        EXPECT_EQ(Linel(pos, CartesianDirection::dirX), linels[0]);
-        EXPECT_EQ(Linel(pos, CartesianDirection::dirY), linels[1]);
-        EXPECT_EQ(Linel(pos+CVecI3(0,1,0), CartesianDirection::dirX), linels[2]);
-        EXPECT_EQ(Linel(pos+CVecI3(1,0,0), CartesianDirection::dirY), linels[3]);
-    }
-}
+//TEST_F(GeometrySurfelTest, GetLinels) {
+//    CVecI3 pos(1);
+//    {
+//        Surfel surf(pos, CartesianDirection::dirX);
+//        SurfelLinels linels = surf.getLinels();
+//        EXPECT_EQ(Linel(pos, CartesianDirection::dirY), linels[0]);
+//        EXPECT_EQ(Linel(pos, CartesianDirection::dirZ), linels[1]);
+//        EXPECT_EQ(Linel(pos+CVecI3(0,0,1), CartesianDirection::dirY), linels[2]);
+//        EXPECT_EQ(Linel(pos+CVecI3(0,1,0), CartesianDirection::dirZ), linels[3]);
+//    }
+//
+//    {
+//        Surfel surf(pos, CartesianDirection::dirY);
+//        SurfelLinels linels = surf.getLinels();
+//        EXPECT_EQ(Linel(pos, CartesianDirection::dirZ), linels[0]);
+//        EXPECT_EQ(Linel(pos, CartesianDirection::dirX), linels[1]);
+//        EXPECT_EQ(Linel(pos+CVecI3(1,0,0), CartesianDirection::dirZ), linels[2]);
+//        EXPECT_EQ(Linel(pos+CVecI3(0,0,1), CartesianDirection::dirX), linels[3]);
+//    }
+//
+//    {
+//        Surfel surf(pos, CartesianDirection::dirZ);
+//        SurfelLinels linels = surf.getLinels();
+//        EXPECT_EQ(Linel(pos, CartesianDirection::dirX), linels[0]);
+//        EXPECT_EQ(Linel(pos, CartesianDirection::dirY), linels[1]);
+//        EXPECT_EQ(Linel(pos+CVecI3(0,1,0), CartesianDirection::dirX), linels[2]);
+//        EXPECT_EQ(Linel(pos+CVecI3(1,0,0), CartesianDirection::dirY), linels[3]);
+//    }
+//}

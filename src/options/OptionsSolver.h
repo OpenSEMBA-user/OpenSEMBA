@@ -1,23 +1,3 @@
-// OpenSEMBA
-// Copyright (C) 2015 Salvador Gonzalez Garcia        (salva@ugr.es)
-//                    Luis Manuel Diaz Angulo         (lmdiazangulo@semba.guru)
-//                    Miguel David Ruiz-Cabello Nuñez (miguel@semba.guru)
-//                    Daniel Mateos Romero            (damarro@semba.guru)
-//
-// This file is part of OpenSEMBA.
-//
-// OpenSEMBA is free software: you can redistribute it and/or modify it under
-// the terms of the GNU Lesser General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// OpenSEMBA is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
-// details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 /*
  * GlobalProblemData.h
  *
@@ -31,11 +11,11 @@
 #include <cmath>
 #include <iostream>
 #include <utility>
+
 using namespace std;
 
-#include "math/CartesianVector.h"
-
 #include "Options.h"
+#include "math/CartesianVector.h"
 
 class OptionsSolver : public Options {
 public:
@@ -45,99 +25,38 @@ public:
     enum class Solver {
         ugrfdtd, cudg3d, none
     };
-    enum class CompositeModel {
-        mibc, digFilt, ade, none
-    };
-    enum class WireModel {
-        newWireModel, transitionWireModel, oldWireModel
-    };
-    enum class InductanceModel {
-        boutayeb, ledfelt, berenger
-    };
-    enum class PMLBacking {
-        none, mur1, mur2
-    };
-    enum class NoNF2FF {
-        none, back, front, left, right, down, up
-    };
     OptionsSolver();
+    virtual ~OptionsSolver();
 
     DEFINE_CLONE(OptionsSolver);
 
     void set(const Arguments& args);
+
     void setFinalTime(Real finalTime);
     void setSamplingPeriod(Real samplingPeriod);
-    void setSolver(Solver solver);
     void setCFL(double cfl);
-    void setCompositeModel(CompositeModel compositeModel);
-    void setCompositesAttenuationFactor(double compositesAttenuationFactor);
-    void setGroundWires(bool groundWires);
-    void setMakeHoles(bool makeHoles);
-    void setMTLN(bool mtln);
     void setNumberOfTimeSteps(UInt numberOfTimeSteps);
-    void setPMLAlpha(const pair<double, double>& pmlAlpha);
-    void setPMLCorrection(const pair<double, double>& pmlCorrection);
-    void setPMLKappa(double pmlKappa);
-    void setInductanceModel(InductanceModel inductanceModel);
-    void setTaparrabos(bool taparrabos);
-    void setWireModel(WireModel wireModel);
-    void setWiresAttenuationFactor(double wiresAttenuationFactor);
-    void setTimeStep(Real timeStep);
-    void setAdditionalArguments(const string& additionalArguments);
-    void setConformalSkin(bool conformalSkin);
     void setFlush(Real flush);
     void setForceRestarting(bool forceRestarting);
-    void setMap(bool map);
-    void setMapVtk(bool mapVtk);
-    void setMinDistanceWires(Real minDistanceWires);
-    void setNewDispersiveFormulation(bool newDispersiveFormulation);
-    void setNF2FFDecimation(bool f2FfDecimation);
-    void setNoCompoMur(bool noCompoMur);
-    void setNoNF2FF(NoNF2FF noNf2Ff);
+    void setTimeStep(Real timeStep);
     void setResumeSimulation(bool resumeSimulation);
-    void setSkinDepth(bool skinDepth);
-    void setUseDefaultPml(bool useDefaultPml);
-    void setPMLBacking(PMLBacking pmlBacking);
+    void setAdditionalArguments(const string& additionalArguments);
 
     Real getFinalTime() const;
     Real getSamplingPeriod() const;
-    Solver getSolver() const;
-    Real getTimeStep() const;
     Real getCFL() const;
-    CompositeModel getCompositeModel() const;
-    Real getCompositesAttenuationFactor() const;
-    bool isGroundWires() const;
-    bool isJoinWires() const;
-    bool isMakeHoles() const;
-    bool isMTLN() const;
-    UInt getNumberOfTimeSteps() const;
-    const pair<double, double>& getPmlAlpha() const;
-    const pair<double, double>& getPmlCorrection() const;
-    Real getPmlKappa() const;
-    InductanceModel getInductanceModel() const;
-    bool isTaparrabos() const;
-    WireModel getWireModel() const;
-    Real getWiresAttenuationFactor() const;
-    const string& getAdditionalArguments() const;
-    bool isConformalSkin() const;
+    Real getTimeStep() const;
     Real getFlush() const;
     bool isForceRestarting() const;
-    bool isMap() const;
-    bool isMapVtk() const;
-    Real getMinDistanceWires() const;
-    bool isNewDispersiveFormulation() const;
-    bool isNF2FFDecimation() const;
-    bool isNoCompoMur() const;
-    NoNF2FF getNoNF2FF() const;
+    UInt getNumberOfTimeSteps() const;
+    const string& getAdditionalArguments() const;
     bool isResumeSimulation() const;
-    bool isSkinDepth() const;
-    bool isUseDefaultPml() const;
-    PMLBacking getPMLBacking() const;
 
-    string toArgsStr() const;
     void printInfo() const;
     void printHelp() const;
 
+    static string toStr(const OptionsSolver::Solver& solver);
+    virtual string toArgsStr() const;
 private:
     // Global
     Solver solver_;
@@ -150,39 +69,9 @@ private:
     Real samplingPeriod_;
     bool forceRestarting_;
     bool resumeSimulation_;
+    bool dontRun_;
     Real flush_;
-
-    // ugrfdtd
-    CompositeModel compositeModel_;
-    bool conformalSkin_;
-    bool noCompoMur_;
-    bool skinDepth_;
-    double compositesAttenuationFactor_;
-
-    WireModel wireModel_;
-    bool MTLN_;
-    Real minDistanceWires_;
-    bool newDispersiveFormulation_;
-    bool taparrabos_;
-    bool makeHoles_;
-    bool groundWires_;
-    InductanceModel inductanceModel_;
-    Real wiresAttenuationFactor_;
-
-    bool useDefaultPML_;
-    pair<Real,Real> pmlAlpha_;
-    Real pmlKappa_;
-    pair<Real,Real> pmlCorrection_;
-    PMLBacking pmlBacking_;
-
-    bool map_;
-    bool mapVTK_;
-    NoNF2FF noNF2FF_;
-    bool nF2FFDecimation_;
     string additionalArguments_;
-    //
-    static string toStr(const Solver solver);
-    static string toStrIfTrue(const string str, const bool param);
 };
 
 #endif /* GLOBALPROBLEMDATA_H_ */

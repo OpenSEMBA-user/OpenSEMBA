@@ -33,7 +33,7 @@ file(GLOB_RECURSE SRCS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.cpp)
 
 list(APPEND SRCS ${HDRS_LOCAL} ${TMPL_LOCAL} ${SRCS_LOCAL})
 
-add_definitions(-DAPP_VERSION="0.9")
+add_definitions(-DAPP_VERSION="0.10")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 

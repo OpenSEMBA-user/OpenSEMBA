@@ -30,43 +30,35 @@ USER=`whoami`
 BUILD_COMMAND=make clobber ; make -j `nproc` -s target=$(target) 
 FILES=./src ./Makefile ./*.mk
 
-APP_VERSION=\"0.9\"
+APP_VERSION=\"0.10\"
 DEFINES +=APP_VERSION=$(APP_VERSION)
 # ==================== Intel Compiler =========================================
 ifeq ($(compiler),intel) 
 	CC = icc
 	CXX = icpc
-	FC = ifort
 	CCFLAGS +=
 	CXXFLAGS +=
-	FCFLAGS +=
 endif # end of If choosing Intel compiler.
 #===================== GNU Compiler ===========================================
 ifeq ($(compiler),gnu)
 	CC = gcc 
 	CXX = g++
-	FC = gfortran
 	CCFLAGS +=
 	CXXFLAGS += -std=c++0x
-	FCFLAGS +=
 endif # endif choosing the GNU compiler.
 #===================== MinGW32 Compiler =======================================
 ifeq ($(compiler),mingw32)
 	CC = i686-w64-mingw32-gcc
 	CXX = i686-w64-mingw32-g++
-	FC = i686-w64-mingw32-gfortran
 	CCFLAGS +=
 	CXXFLAGS += -std=c++0x -static
-	FCFLAGS +=
 endif # endif choosing the MinGW32 compiler.
 #===================== MinGW64 Compiler =======================================
 ifeq ($(compiler),mingw64)
 	CC = x86_64-w64-mingw32-gcc
 	CXX = x86_64-w64-mingw32-g++
-	FC = x86_64-w64-mingw32-gfortran
 	CCFLAGS +=
 	CXXFLAGS += -std=c++0x -static
-	FCFLAGS +=
 endif # endif choosing the MinGW64 compiler.
 # ================= Optimization target =======================================
 ifeq ($(target),debug)
@@ -92,7 +84,6 @@ SRC_DIR = ./ math/ \
  parser/ parser/gid/ parser/stl/ \
  solver/ \
  semba/
-#SRC_SOLVER_DIR = 
  
 LIB_DIR = ./ gidpost/
 
@@ -106,33 +97,19 @@ default: all
 
 all: semba
 
-semba: check .NOTPARALLEL
-	$(MAKE) -f ./src/apps/semba/semba.mk
-
 create_dirs:
 	@echo 'Creating directories to store binaries and intermediate objects'
 	-mkdir $(BINDIR)
 	-mkdir $(OBJDIR)
 
-cudg3d: check 
+cudg3d: check libopensemba 
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
+	
+libopensemba: check
+	$(MAKE) -f ./src/apps/libopensemba.mk
 
 testSemba: check
 	$(MAKE) -f ./src/apps/test/test.mk
-
-remote-build:
-	@echo "Creating directory: local-$(WORKDIR)"
-	@-mkdir local-$(WORKDIR)
-	@echo "Copying the following files: ${FILES}"
-	@cp -rf ${FILES} ./local-$(WORKDIR)
-	@echo "Removing .svn folders"
-	@-find ./local-$(WORKDIR)/ -name ".svn" -exec rm -rf {} \; 2> /dev/null
-	@echo "Syncing with: $(DESTINATION)"
-	@rsync -rh --progress -e ssh local-$(WORKDIR)/ $(DESTINATION) 
-	@echo "Building program: $(BUILD_COMMAND)"
-	@ssh $(USER)@$(HOST) "cd ~/$(WORKDIR) ; $(BUILD_COMMAND)"
-	@echo "Removing temporal folder: local-$(WORKDIR)"
-	@rm -rf ./local-$(WORKDIR)
 
 repeat: clean default
 
