@@ -95,7 +95,7 @@ $(OUT): $(OBJS_CXX) $(OBJS_C)
 	 
 print:
 	@echo "======================================================="
-	@echo "         ----- Compiling $(OUT) ------        "
+	@echo "         ----- Compiling $(OUT) ------                 "
 	@echo "Target:           " $(target)
 	@echo "Compiler:         " $(compiler)
 	@echo "C++ Compiler:     " `which $(CXX)`
