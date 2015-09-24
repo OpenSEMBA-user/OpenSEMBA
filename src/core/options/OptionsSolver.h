@@ -61,6 +61,7 @@ public:
     void setTimeStep(Real timeStep);
     void setResumeSimulation(bool resumeSimulation);
     void setAdditionalArguments(const string& additionalArguments);
+    void setSolver(Solver solver);
 
     Real getFinalTime() const;
     Real getSamplingPeriod() const;
@@ -69,6 +70,7 @@ public:
     Real getFlush() const;
     bool isForceRestarting() const;
     UInt getNumberOfTimeSteps() const;
+    Solver getSolver() const;
     const string& getAdditionalArguments() const;
     bool isResumeSimulation() const;
 
@@ -77,6 +79,7 @@ public:
 
     static string toStr(const OptionsSolver::Solver& solver);
     virtual string toArgsStr() const;
+
 private:
     // Global
     Solver solver_;

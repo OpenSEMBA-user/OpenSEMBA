@@ -1350,7 +1350,7 @@ SourceOnLine* ParserGiD::readSourceOnLine() {
     throw Error("End of Nodal label not found.");
 }
 
-OutRq<void>::Type ParserGiD::strToOutputType(string str) const {
+OutRq<void>::Type ParserGiD::strToOutputType(string str) {
     str = trim(str);
     if (str.compare("electricField")==0) {
         return OutRqBase::electric;
@@ -1743,7 +1743,6 @@ OptionsSolverFDTD::PMLBacking ParserGiD::strToPMLBacking(const string& inStr) {
         return OptionsSolverFDTD::PMLBacking::mur2;
     } else {
         throw Error("Unrecognized PML Backing label: " + str);
-        return OptionsSolver::PMLBacking::none;
     }
 }
 

@@ -1,6 +1,4 @@
-#ifndef CELLTET_H_
 #include "CellTet.h"
-#endif
 
 template <int TET_N>
 CellTet<TET_N>::CellTet() {
@@ -241,8 +239,7 @@ CellTet<TET_N>::getSideVertexBaseNode(UInt f, UInt i) const {
 }
 
 template <int TET_N>
-void
-CellTet<TET_N>::buildNodes() {
+void CellTet<TET_N>::buildNodes() {
     // Evaluates Lagrange's functions in positions specified by the
     // simplex coordinates of tet.
     double lagrEv[tet.np][base->numberOfCoordinates()];
@@ -260,8 +257,7 @@ CellTet<TET_N>::buildNodes() {
 }
 
 template <int TET_N>
-bool
-CellTet<TET_N>::isFaceContainedInPlane(
+bool CellTet<TET_N>::isFaceContainedInPlane(
         const UInt face,
         const CartesianPlane plane) const {
     return base->isFaceContainedInPlane(face, plane);
@@ -352,8 +348,7 @@ CellTet10<TET_N>::CellTet10(
 }
 
 template <int TET_N>
-void
-CellTet10<TET_N>::getCurvedLIFTnormal(
+void CellTet10<TET_N>::getCurvedLIFTnormal(
         StaMatrix<double,np,nfp> LIFTn[3],
         StaMatrix<double,np,nfp> LIFTcn[3],
         StaMatrix<double,np,nfp> LIFTrn[3],

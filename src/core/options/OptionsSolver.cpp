@@ -181,3 +181,11 @@ string OptionsSolver::toArgsStr() const {
     }
     return ss.str();
 }
+
+OptionsSolver::Solver OptionsSolver::getSolver() const {
+    return solver_;
+}
+
+void OptionsSolver::setSolver(OptionsSolver::Solver solver) {
+    solver_ = solver;
+}

@@ -13,7 +13,7 @@
 
 class CellGroup : public Ordering {
 public:
-	vector<CellTet<ORDER_N,Tet4>*> cell;
+	vector<CellTet<ORDER_N>*> cell;
 	vector<CellTet4<ORDER_N> > linTet;
 	vector<CellTet10<ORDER_N> > quadTet;
 	CellGroup(const SmbData* smb);
@@ -23,14 +23,10 @@ public:
 	const CellTet<ORDER_N>* getPtrToCellWithId(UInt) const;
 private:
 	UInt cellOffsetId;
-	void
-	 buildNodalMaps(const MapGroup& map);
-	void
-	 check(const MapGroup& map) const;
-	void
-	 checkIdsAreConsecutive() const;
-	void
-	 checkNodalMaps(const MapGroup& map) const;
+	void buildNodalMaps(const MapGroup& map);
+	void check(const MapGroup& map) const;
+	void checkIdsAreConsecutive() const;
+	void checkNodalMaps(const MapGroup& map) const;
 };
 
 #endif /* CELLGROUP_H_ */
