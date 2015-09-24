@@ -1,3 +1,6 @@
 build*/
 /obj/
 /bin/
+.settings
+.project
+.cproject
