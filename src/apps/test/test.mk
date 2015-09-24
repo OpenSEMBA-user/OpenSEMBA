@@ -46,11 +46,11 @@ else
 endif
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
-DIR = $(SRC_COMMON_DIR) $(SRC_MESHER_DIR) $(SRC_SOLVER_DIR)
+DIR = ./ $(SRC_CORE_DIR) 
 
 SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(SRCDIR)/apps/test/, ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
 
-IGNORES := OptionsSolverDGTD.cpp
+IGNORES := 
 EXCLUDE := $(shell find $(SOURCE_DIR) -type f \( -name MathMatrix.cpp $(addprefix -o -name , $(IGNORES)) \) 2>/dev/null )
 
 SRCS_CXX := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.cpp")

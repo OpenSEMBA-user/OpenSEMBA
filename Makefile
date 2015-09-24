@@ -73,21 +73,22 @@ BINDIR = ./bin/
 OBJDIR = ./obj/
 LIBDIR = ./lib/
 SRCDIR = ./src/
-SRC_DIR = ./ math/ \
- base/class/  base/error/ base/group/ \
- geometry/ geometry/elements/ geometry/maps/ \
- geometry/coordinates/ geometry/layers/ geometry/pixels/ \
- options/ \
- physicalModel/ \
- sources/ sources/ports/ sources/magnitude/ \
- outRq/ solver/ parser/ exporter/ \
- parser/ parser/gid/ parser/stl/ \
- solver/ \
- semba/
- 
+SRC_CORE_DIR = core/ \
+ core/math/ \
+ core/base/class/  core/base/error/ core/base/group/ \
+ core/geometry/ core/geometry/elements/ core/geometry/maps/ \
+ core/geometry/coordinates/ core/geometry/layers/ core/geometry/pixels/ \
+ core/options/ \
+ core/physicalModel/ \
+ core/sources/ core/sources/ports/ core/sources/magnitude/ \
+ core/outRq/ core/solver/ core/parser/ core/exporter/ 
+SRC_PARSER_DIR = parser/gid/ parser/stl/ 
+SRC_EXPORTER_DIR = exporter/gid/ exporter/vtk/ 
+SRC_SOLVER_DIR = solver/dgtd/
+  
 LIB_DIR = ./ gidpost/
 
-INCLUDES += src/ src/common lib/
+INCLUDES += src/ src/core/ lib/
 
 # =============================================================================
 .NOTPARALLEL:
