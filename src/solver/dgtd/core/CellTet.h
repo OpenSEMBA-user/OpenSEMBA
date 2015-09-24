@@ -75,29 +75,21 @@ public:
     const CoordR3* getSideBaseNode(
             const UInt f,
             const UInt i) const;
-    const CoordR3*
-    getSideVertexBaseNode(UInt f, UInt i) const;
-    Cell*&
-    getEtoEPointer(const int) const;
-    CVecR3
-    getSideNodePos(
+    const CoordR3* getSideVertexBaseNode(UInt f, UInt i) const;
+    Cell*& getEtoEPointer(const int) const;
+    CVecR3 getSideNodePos(
             const UInt f,
             const UInt i) const;
-    CVecR3
-    getSideNormal(
+    CVecR3 getSideNormal(
             const UInt f) const;
-    virtual void
-    getCurvedLIFTnormal(
+    virtual void getCurvedLIFTnormal(
             StaMatrix<double,np,nfp> LIFTn[3],
             StaMatrix<double,np,nfp> LIFTcn[3],
             StaMatrix<double,np,nfp> LIFTrn[3],
             const UInt face) const;
-    const Tet*
-    getPtrToBase() const;
-    UInt
-    getSideNode(UInt f, UInt i) const;
-    bool
-    isFaceContainedInPlane(
+    const Tet* getPtrToBase() const;
+    UInt getSideNode(UInt f, UInt i) const;
+    bool isFaceContainedInPlane(
             const UInt face,
             const CartesianPlane) const;
     virtual StaMatrix<double,TET_NP,TET_NP>
@@ -105,37 +97,28 @@ public:
             const PMVolumePML& mat,
             const UInt type,
             const double maxSigma) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
-    getMassMatrix() const;
-    virtual void
-    printInfo() const;
-    void
-    printMapsInfo() const;
+    virtual StaMatrix<double,TET_NP,TET_NP> getMassMatrix() const;
+    virtual void printInfo() const;
+    void printMapsInfo() const;
 protected:
-    void
-    init(
+    void init(
             const Tet* base_,
-            const PhysicalModelGroup* pMGroup);
-    StaMatrix<double,TET_NP,TET_NP>
-    getCMatrix(
+            const PMGroup* pMGroup);
+    StaMatrix<double,TET_NP,TET_NP> getCMatrix(
             const UInt x,
             const StaMatrix<double,np,np>& invM,
             const StaMatrix<double,4,3> cJHat[SimplexTet<1>::ncp],
             const StaMatrix<double,4,4> cJ[SimplexTet<1>::ncp]) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
-    getMassMatrix(
+    virtual StaMatrix<double,TET_NP,TET_NP> getMassMatrix(
             const double cJDet[SimplexTet<1>::ncp]) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
-    getMassMatrixIntegratedWithScalar(
+    virtual StaMatrix<double,TET_NP,TET_NP> getMassMatrixIntegratedWithScalar(
             const double cScalar[SimplexTet<1>::ncp]) const;
-    StaMatrix<double,np,nfp>
-    getLIFTMatrix(
+    StaMatrix<double,np,nfp> getLIFTMatrix(
             const UInt s,
             const StaMatrix<double,np,nfp>& invM,
             const  double csd[SimplexTri<1>::ncp]) const;
 private:
-    void
-    buildNodes();
+    void buildNodes();
 };
 
 template <int TET_N>
@@ -151,15 +134,10 @@ public:
     static const UInt vertices = 4;
     CellTet4();
     virtual ~CellTet4();
-    CellTet4(
-            const Tet* element,
-            const PhysicalModelGroup& pMGroup);
-    bool
-    isCurved() const;
-    void
-    printBCInfo() const;
-    void
-    printMapsInfo() const;
+    CellTet4(const Tet* element, const PMGroup& pMGroup);
+    bool isCurved() const;
+    void printBCInfo() const;
+    void printMapsInfo() const;
 };
 
 template <int TET_N>
@@ -172,9 +150,7 @@ public:
     //
     CellTet10();
     virtual ~CellTet10();
-    CellTet10(
-            const Tet* element,
-            const PhysicalModelGroup& pMGroup);
+    CellTet10(const Tet* element, const PMGroup& pMGroup);
     void getCurvedLIFTnormal(
             StaMatrix<double,np,nfp> LIFTn[3],
             StaMatrix<double,np,nfp> LIFTcn[3],
@@ -184,4 +160,5 @@ public:
 };
 
 #include "CellTet.hpp"
+
 #endif /* CELL_H_ */

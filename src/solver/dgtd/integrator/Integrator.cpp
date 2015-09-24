@@ -159,7 +159,7 @@ void Integrator::init(
         const OptionsSolverDGTD* arg) {
     growSmallerTiers = arg->getGrowSmallerTiers();
     maxNumOfTiers = arg->getMaxNumberOfTiers();
-    doLTS = !arg->isNoLTS();
+    doLTS = arg->isUseLTS();
     if (!doLTS) {
         maxNumOfTiers = 1;
     }

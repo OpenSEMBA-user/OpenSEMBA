@@ -84,6 +84,6 @@ DynMatrix<T> operator*(
 typedef StaMatrix<Real,2,2> MatR22;
 typedef StaMatrix<Real,3,3> MatR33;
 typedef StaMatrix<Real,4,3> MatR43;
-typedef StaMatrix<Real,4,3> MatR44;
+typedef StaMatrix<Real,4,4> MatR44;
 
 #endif

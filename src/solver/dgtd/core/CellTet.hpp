@@ -13,10 +13,10 @@ CellTet<TET_N>::~CellTet() {
 template <int TET_N>
 void CellTet<TET_N>::init(
         const Tet* base_,
-        const PhysicalModelGroup* pMGroup) {
+        const PMGroup* pMGroup) {
     base = base_;
     if (pMGroup != NULL) {
-        material = pMGroup->getPMVolumeWithId(base->getMatId());
+        material = pMGroup->getId(base->getMatId())->castTo<PMVolumeClassic>();
     } else {
         material = NULL;
     }
@@ -75,50 +75,41 @@ StaMatrix<double,TET_NP,TET_NP> CellTet<TET_N>::getConductivityWithGeometricProf
 }
 
 template <int TET_N>
-void
-CellTet<TET_N>::getCurvedLIFTnormal(
+void CellTet<TET_N>::getCurvedLIFTnormal(
         StaMatrix<double,np,nfp> LIFTn[3],
         StaMatrix<double,np,nfp> LIFTcn[3],
         StaMatrix<double,np,nfp> LIFTrn[3],
         const UInt face) const {
-    cerr << "ERROR @ CellTet" << endl;
-    assert(false);
-    exit(-1);
+    throw ErrorNotImplemented("Not implemented");
 }
 
 template <int TET_N>
-UInt
-CellTet<TET_N>::getNbfp() const {
+UInt CellTet<TET_N>::getNbfp() const {
     return base->numberOfSideCoordinates();
 }
 
 template <int TET_N>
-bool
-CellTet<TET_N>::isCurved() const {
+bool CellTet<TET_N>::isCurved() const {
     return base->isCurved();
 }
 
 template <int TET_N>
-bool
-CellTet<TET_N>::isCurvedFace(const UInt f) const {
+bool CellTet<TET_N>::isCurvedFace(const UInt f) const {
     return base->isCurvedFace(f);
 }
 
 template <int TET_N>
-double
-CellTet<TET_N>::getVolume() const {
+double CellTet<TET_N>::getVolume() const {
     return base->getVolume();
 }
 
 template <int TET_N>
-const Tet*
-CellTet<TET_N>::getPtrToBase() const {
+const Tet* CellTet<TET_N>::getPtrToBase() const {
     return base;
 }
 
 template <int TET_N>
-StaMatrix<double,TET_NP,TET_NP>
-CellTet<TET_N>::getCMatrix(
+StaMatrix<double,TET_NP,TET_NP> CellTet<TET_N>::getCMatrix(
         const UInt x,
         const StaMatrix<double,np,np>& invM,
         const StaMatrix<double,4,3> cJHat[SimplexTet<1>::ncp],
@@ -141,8 +132,7 @@ CellTet<TET_N>::getCMatrix(
 }
 
 template <int TET_N>
-StaMatrix<double,TET_NP,TET_NP>
-CellTet<TET_N>::getMassMatrix(
+StaMatrix<double,TET_NP,TET_NP> CellTet<TET_N>::getMassMatrix(
         const double cJDet[SimplexTet<1>::ncp]) const{
     StaMatrix<double,TET_NP,TET_NP> res;
     for (UInt c = 0; c < SimplexTet<1>::ncp; c++) {
@@ -156,7 +146,7 @@ template <int TET_N>
 StaMatrix<double,TET_NP,TET_NP>
 CellTet<TET_N>::getMassMatrix() const {
     static const UInt ncp = SimplexTet<1>::ncp;
-    StaMatrix<double,4,4> cJ[SimplexTet<1>::ncp];
+    MatR44 cJ[SimplexTet<1>::ncp];
     base->getCubatureJacobian(cJ);
     double cJDet[ncp];
     base->getCubatureJacobianDeterminant(cJDet, cJ);
@@ -168,7 +158,7 @@ StaMatrix<double,TET_NP,TET_NP>
 CellTet<TET_N>::getMassMatrixIntegratedWithScalar(
         const double cScalar[SimplexTet<1>::ncp]) const {
     static const UInt ncp = SimplexTet<1>::ncp;
-    StaMatrix<double,4,4> cJ[SimplexTet<1>::ncp];
+    MatR44 cJ[SimplexTet<1>::ncp];
     base->getCubatureJacobian(cJ);
     double cJDetByScalar[ncp];
     base->getCubatureJacobianDeterminant(cJDetByScalar, cJ);
@@ -191,13 +181,13 @@ UInt CellTet<TET_N>::getNodeVertex(const UInt i) const {
 template <int TET_N>
 bool CellTet<TET_N>::isLocalSide(
         const UInt face,
-        const Surface* surf) const {
+        const SurfR* surf) const {
     return (base->isLocalFace(face, *surf));
 }
 
 template <int TET_N>
 bool CellTet<TET_N>::isLocalSide(
-        const Surface* surf) const {
+        const SurfR* surf) const {
     for (UInt f = 0; f < faces; f++) {
         if (isLocalSide(f, surf)) {
             return true;
@@ -326,7 +316,7 @@ CellTet4<TET_N>::~CellTet4() {
 template <int TET_N>
 CellTet4<TET_N>::CellTet4(
         const Tet* base_,
-        const PhysicalModelGroup& pMGroup) {
+        const PMGroup& pMGroup) {
     this->init(base_, &pMGroup);
 }
 
@@ -343,7 +333,7 @@ CellTet10<TET_N>::~CellTet10() {
 template <int TET_N>
 CellTet10<TET_N>::CellTet10(
         const Tet* base_,
-        const PhysicalModelGroup& pMGroup) {
+        const PMGroup& pMGroup) {
     this->init(base_, &pMGroup);
 }
 

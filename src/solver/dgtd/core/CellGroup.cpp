@@ -4,25 +4,21 @@
  *  Created on: Aug 29, 2012
  *      Author: luis
  */
-#ifndef _CELLGROUP_H_
 #include "CellGroup.h"
-#endif
 
-CellGroup::CellGroup(
- const SmbData* smb) {
-	const MeshVolume* mesh = smb->mesh;
-	const PhysicalModelGroup* pMGroup = smb->pMGroup;
-	UInt nElem = mesh->elem.tet.size();
-	cell.resize(nElem, NULL);
-	cellOffsetId = mesh->elem.offsetIdTet;
+CellGroup::CellGroup(const SmbData* smb) {
+    const MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
+	GroupElements<Tet> tet = mesh->elems().getOf<Tet>().size();
+	const PMGroup* pMGroup = smb->pMGroup;
+	cell.resize(tet.size(), NULL);
+	cellOffsetId = tet(0)->getId();
 	// Reserves space for cell vectors.
 	vector<const Tet*> linear, quadratic;
-	for (UInt k = 0; k < nElem; k++) {
-		const Tet* tet = mesh->elem.tet[k];
-		if (!tet->isCurved()) {
-			linear.push_back(tet);
+	for (UInt k = 0; k < tet.size(); k++) {
+		if (!tet(k)->isCurved()) {
+			linear.push_back(tet(k));
 		} else {
-			quadratic.push_back(tet);
+			quadratic.push_back(tet(k));
 		}
 	}
 	linTet.resize(linear.size(), CellTet4<ORDER_N>());
@@ -35,31 +31,29 @@ CellGroup::CellGroup(
 		quadTet[k] = CellTet10<ORDER_N>(quadratic[k], *pMGroup);
 		cell[quadTet[k].getId() - cellOffsetId] = &quadTet[k];
 	}
-	buildNodalMaps(mesh->map);
-	check(mesh->map);
+
+	MapGroup map(mesh->coords(), mesh->elems());
+	buildNodalMaps(map);
+	check(map);
 }
  
 CellGroup::~CellGroup() {
 	// TODO Auto-generated destructor stub
 }
  
-const CellTet<ORDER_N>*
-CellGroup::operator()(const UInt i) const {
+const CellTet<ORDER_N>* CellGroup::operator()(const UInt i) const {
 	return cell[i];
 }
 
-const CellTet<ORDER_N>*
-CellGroup::getPtrToCell(const Tet* elem) const {
+const CellTet<ORDER_N>* CellGroup::getPtrToCell(const Tet* elem) const {
 	return getPtrToCellWithId(elem->getId());
 }
  
-const CellTet<ORDER_N>*
-CellGroup::getPtrToCellWithId(const UInt id) const {
+const CellTet<ORDER_N>* CellGroup::getPtrToCellWithId(const UInt id) const {
 	return cell[id - cellOffsetId];
 }
 
-void
-CellGroup::buildNodalMaps(const MapGroup& map) {
+void CellGroup::buildNodalMaps(const MapGroup& map) {
 	// PURPOSE:
 	// - Creates two maps, mapP, and vmapP.
 	// - mapP[f][n] stores the number of the node adjacent to the node n in
@@ -92,8 +86,7 @@ CellGroup::buildNodalMaps(const MapGroup& map) {
 	}
 }
  
-void
-CellGroup::check(const MapGroup& map) const {
+void CellGroup::check(const MapGroup& map) const {
 	if (cellOffsetId != cell[0]->getId()) {
 		cerr << "ERROR@CellGroup::check" << endl;
 		exit(CELL_ERROR);
@@ -104,8 +97,7 @@ CellGroup::check(const MapGroup& map) const {
 //	checkAreaCoherence();
 }
  
-void
-CellGroup::checkIdsAreConsecutive() const {
+void CellGroup::checkIdsAreConsecutive() const {
 	UInt currentId = cellOffsetId;
 	for (UInt i = 1; i < cell.size(); i++) {
 		if (cell[i]->getId() == currentId + 1) {
@@ -117,8 +109,7 @@ CellGroup::checkIdsAreConsecutive() const {
 	}
 }
 
-void
-CellGroup::checkNodalMaps(const MapGroup& map) const {
+void CellGroup::checkNodalMaps(const MapGroup& map) const {
 	// Checks for vmap.
 	CVecR3 diff;
 	bool problem = false;

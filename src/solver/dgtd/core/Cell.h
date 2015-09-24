@@ -34,6 +34,8 @@
 
 class Cell {
 public:
+	const PMVolumeClassic* material;
+	//
 	Cell();
 	virtual ~Cell();
 };

@@ -25,11 +25,10 @@
  *      Author: luis
  */
 
-#ifndef CELL_H_
 #include "Cell.h"
-#endif
 
 Cell::Cell() {
+	material = NULL;
 }
 
 Cell::~Cell() {

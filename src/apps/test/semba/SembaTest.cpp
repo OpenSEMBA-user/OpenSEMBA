@@ -18,12 +18,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "SembaTest.h"
-
-//TEST_F(SembaTest, sphereThroughOpenfoam) {
-//   runProject("sphere", " --openfoam");
+//#include "SembaTest.h"
+//
+////TEST_F(SembaTest, sphereThroughOpenfoam) {
+////   runProject("sphere", " --openfoam");
+////}
+//
+//TEST_F(SembaTest, sphere) {
+//   runProject("sphere");
 //}
-
-TEST_F(SembaTest, sphere) {
-   runProject("sphere");
-}
