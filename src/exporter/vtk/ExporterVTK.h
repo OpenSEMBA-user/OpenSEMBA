@@ -36,7 +36,6 @@ using namespace std;
 
 #include "exporter/Exporter.h"
 #include "SmbData.h"
-#include "gidpost/gidpost.h"
 
 class ExporterVTK : public Exporter {
 public:

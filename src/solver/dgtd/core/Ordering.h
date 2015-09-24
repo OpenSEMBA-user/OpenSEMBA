@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <iostream>
 #include <vector>
-#include "../../../common/math/DynMatrix.h"
+#include "math/DynMatrix.h"
 
 using namespace std;
 

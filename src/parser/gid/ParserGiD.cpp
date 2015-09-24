@@ -56,7 +56,7 @@ SmbData* ParserGiD::read() {
 
     SmbData* res = new SmbData();
     res->setFilename(getFilename());
-    res->solverOptions = readSolverOptions();
+    res->solverOptions = readOptionsSolver();
     res->mesherOptions = readMesherOptions();
     pSize_ = readProblemSize();
     res->pMGroup = readMaterials();
@@ -76,8 +76,8 @@ void ParserGiD::printInfo() const {
     cout << "--- End of GiDParser info ---" << endl;
 }
 
-OptionsSolver* ParserGiD::readSolverOptions() {
-    OptionsSolver* res = new OptionsSolver();
+OptionsSolver* ParserGiD::readOptionsSolver() {
+    OptionsSolver base;
     bool finished = false;
     bool optionsFound = false;
     while (!optionsFound && !f_in.eof()) {
@@ -87,25 +87,55 @@ OptionsSolver* ParserGiD::readSolverOptions() {
             optionsFound = true;
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label, value);
-                if (label.compare("Solver") == 0) {
-                    res->setSolver(strToSolver(value));
-                } else if (label.compare("Final time") == 0) {
-                    res->setFinalTime(atof(value.c_str()));
+                if (label.compare("Final time") == 0) {
+                    base.setFinalTime(atof(value.c_str()));
                 } else if (label.compare("Number of time steps") == 0) {
-                    res->setNumberOfTimeSteps(atoi(value.c_str()));
+                    base.setNumberOfTimeSteps(atoi(value.c_str()));
                 } else if (label.compare("Time step") == 0) {
-                    res->setTimeStep(atof(value.c_str()));
+                    base.setTimeStep(atof(value.c_str()));
                 } else if (label.compare("CFL") == 0) {
-                    res->setCFL(atof(value.c_str()));
+                    base.setCFL(atof(value.c_str()));
                 } else if (label.compare("Default sampling period") == 0) {
-                    res->setSamplingPeriod(atof(value.c_str()));
+                    base.setSamplingPeriod(atof(value.c_str()));
                 } else if (label.compare("Force restarting") == 0) {
-                    res->setForceRestarting(strToBool(value));
+                    base.setForceRestarting(strToBool(value));
                 } else if (label.compare("Resume simulation") == 0) {
-                    res->setResumeSimulation(strToBool(value));
+                    base.setResumeSimulation(strToBool(value));
                 } else if (label.compare("Flush") == 0) {
-                    res->setFlush(atof(value.c_str()));
-                } else if (label.compare("Composites model") == 0) {
+                    base.setFlush(atof(value.c_str()));
+                } else if (label.compare("Additional arguments") == 0) {
+                    base.setAdditionalArguments(value);
+                } else if (label.compare("Solver") == 0) {
+                    switch (strToSolver(value)) {
+                    case OptionsSolver::Solver::ugrfdtd:
+                        return readOptionsSolverFDTD(base);
+                    case OptionsSolver::Solver::cudg3d:
+                        return readOptionsSolverDGTD(base);
+                    default:
+                        break;
+                    }
+                } else if(label.find("End of solver options") != label.npos) {
+                    finished = true;
+                }
+            } // Closes ( !finished && !f_in.eof() ) while.
+        } // Closes problem data found if.
+    } // Closes problemDataFound while.
+    // Throws error messages if a problem was detected.
+    throw Error("No options were found.");
+}
+
+OptionsSolverFDTD* ParserGiD::readOptionsSolverFDTD(
+        const OptionsSolver& base) {
+    bool finished = false;
+    bool optionsFound = false;
+    OptionsSolverFDTD* res = new OptionsSolverFDTD(base);
+    while (!optionsFound && !f_in.eof()) {
+        string label, value;
+        getNextLabelAndValue(label, value);
+        if (label.compare("ugrfdtd options") == 0) {
+            optionsFound = true;
+            while (!finished && !f_in.eof() ) {
+                if (label.compare("Composites model") == 0) {
                     res->setCompositeModel(strToCompositeModel(value));
                 } else if (label.compare("Conformal skin") == 0) {
                     res->setConformalSkin(strToBool(value));
@@ -136,17 +166,17 @@ OptionsSolver* ParserGiD::readSolverOptions() {
                 } else if (label.compare("Use default PML") == 0) {
                     res->setUseDefaultPml(strToBool(value.c_str()));
                 } else if (label.compare("PML alpha factor") == 0) {
-                    double factor = atof(value.c_str());
+                    Real factor = atof(value.c_str());
                     getNextLabelAndValue(label, value);
-                    double order = atof(value.c_str());
-                    res->setPMLAlpha(pair<double,double>(factor, order));
+                    Real order = atof(value.c_str());
+                    res->setPMLAlpha(pair<Real,Real>(factor, order));
                 } else if (label.compare("PML kappa") == 0) {
                     res->setPMLKappa(atof(value.c_str()));
                 } else if (label.compare("PML correction factor") == 0) {
-                    double factor = atof(value.c_str());
+                    Real factor = atof(value.c_str());
                     getNextLabelAndValue(label, value);
-                    double depth = atof(value.c_str());
-                    res->setPMLCorrection(pair<double,double>(factor, depth));
+                    Real depth = atof(value.c_str());
+                    res->setPMLCorrection(pair<Real,Real>(factor, depth));
                 } else if (label.compare("PML backing") == 0) {
                     res->setPMLBacking(strToPMLBacking(value));
                 } else if (label.compare("Map") == 0) {
@@ -157,23 +187,52 @@ OptionsSolver* ParserGiD::readSolverOptions() {
                     res->setNoNF2FF(strToNoNF2FF(value));
                 } else if (label.compare("NF2F decimation") == 0) {
                     res->setNF2FFDecimation(strToBool(value));
-                } else if (label.compare("Additional arguments") == 0) {
-                    res->setAdditionalArguments(value);
-                } else if(label.find("End of solver options") != label.npos) {
+                } else if(label.find("End of ugrfdtd options") != label.npos) {
                     finished = true;
+                    return res;
                 }
             } // Closes ( !finished && !f_in.eof() ) while.
         } // Closes problem data found if.
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
-    if (!optionsFound) {
-        throw Error("EoF was reached but problem data was not found.");
+    throw Error("No options were found.");
     }
-    if (!finished) {
-        throw Error("EoF reached, \"end of problem data\" not found.");
-    }
-    //
-    return res;
+
+OptionsSolverDGTD* ParserGiD::readOptionsSolverDGTD(
+        const OptionsSolver& base) {
+    bool optionsFound = false;
+    OptionsSolverDGTD* res = new OptionsSolverDGTD(base);
+    while (!optionsFound && !f_in.eof()) {
+        string label, value;
+        getNextLabelAndValue(label, value);
+        if (label.compare("cudg3d options") == 0) {
+            optionsFound = true;
+            while (!f_in.eof()) {
+                if (label.compare("Upwinding") == 0) {
+                    res->setUpwinding(atof(value.c_str()));
+                } else if (label.compare("Time integrator") == 0) {
+                    res->setTimeIntegrator(
+                            OptionsSolverDGTD::strToTimeIntegrator(trim(value)));
+                } else if (label.compare("Use LTS") == 0) {
+                    res->setUseLTS(strToBool(value));
+                } else if (label.compare("Grow smaller tiers") == 0) {
+                    res->setGrowSmallerTiers(atoi(value.c_str()));
+                } else if (label.compare("Max number of tiers") == 0) {
+                    res->setMaxNumberOfTiers(atoi(value.c_str()));
+                } else if (label.compare("Use max stage size for LTS") == 0) {
+                    res->setUseMaxStageSizeForLTS(strToBool(value));
+                } else if (label.compare("PML constant conductivity profile") == 0) {
+                    res->setPMLConstantConductivityProfile(strToBool(value));
+                } else if (label.compare("PML conductivity") == 0) {
+                    res->setPMLConductivity(atof(value.c_str()));
+                } else if(label.find("End of cudg3d options") != label.npos) {
+    				return res;
+                }
+            } // Closes ( !finished && !f_in.eof() ) while.
+        } // Closes problem data found if.
+    } // Closes problemDataFound while.
+    // Throws error messages if a problem was detected.
+    throw Error("No options were found.");
 }
 
 OptionsMesher* ParserGiD::readMesherOptions() {
@@ -573,7 +632,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                 }
                 default:
                     cerr << endl << "ERROR @ GiDParser: "
-                    << "Unreckognized GiD Output request type:"
+                    << "Unrecognized GiD Output request type:"
                     << type << endl;
                     break;
                 }
@@ -947,7 +1006,7 @@ ParserGiD::readIsotropicSurfMatFile(
     // Stores in line the file line containing headers.
     getline(matFile, line);
     for (UInt i = 0; i < nPoles; i++) {
-        StaMatrix<Real,2,2> tmpZ;
+        MatR22 tmpZ;
         matFile >> tmpP >> tmpZ(0,0) >> tmpZ(0,1) >> tmpZ(1,0) >> tmpZ(1,1);
         pole.push_back(tmpP);
         Z.push_back(tmpZ);
@@ -1320,7 +1379,7 @@ OutRq<void>::Type ParserGiD::strToOutputType(string str) const {
     }
 }
 
-ParserGiD::SIBCType ParserGiD::strToSIBCType(string str) const {
+ParserGiD::SIBCType ParserGiD::strToSIBCType(string str) {
     str = trim(str);
     if (str.compare("File")==0) {
         return sibc;
@@ -1331,7 +1390,7 @@ ParserGiD::SIBCType ParserGiD::strToSIBCType(string str) const {
     }
 }
 
-Generator::Type ParserGiD::strToGeneratorType(string str) const {
+Generator::Type ParserGiD::strToGeneratorType(string str) {
     str = trim(str);
     if (str.compare("voltage")==0) {
         return Generator::voltage;
@@ -1342,7 +1401,7 @@ Generator::Type ParserGiD::strToGeneratorType(string str) const {
     }
 }
 
-Generator::Hardness ParserGiD::strToGeneratorHardness(string str) const {
+Generator::Hardness ParserGiD::strToGeneratorHardness(string str) {
     str = trim(str);
     if (str.compare("soft")==0) {
         return Generator::soft;
@@ -1353,7 +1412,7 @@ Generator::Hardness ParserGiD::strToGeneratorHardness(string str) const {
     }
 }
 
-OptionsMesher::BoundType ParserGiD::strToBoundType(string str) const {
+OptionsMesher::BoundType ParserGiD::strToBoundType(string str) {
     str = trim(str);
     if (str.compare("PEC")==0) {
         return OptionsMesher::pec;
@@ -1372,7 +1431,7 @@ OptionsMesher::BoundType ParserGiD::strToBoundType(string str) const {
     }
 }
 
-PhysicalModel::Type ParserGiD::strToMaterialType(string str) const {
+PhysicalModel::Type ParserGiD::strToMaterialType(string str) {
     str = trim(str);
     if (str.compare("PEC")==0) {
         return PhysicalModel::PEC;
@@ -1395,11 +1454,11 @@ PhysicalModel::Type ParserGiD::strToMaterialType(string str) const {
     } else if (str.find("Conn_") != string::npos) {
         return PhysicalModel::multiport;
     } else {
-        throw Error("Unreckognized material label.");
+        throw Error("Unrecognized material label: " + str);
     }
 }
 
-PMMultiport::Type ParserGiD::strToMultiportType(string str) const {
+PMMultiport::Type ParserGiD::strToMultiportType(string str) {
     str = trim(str);
     if (str.compare("Conn_short")==0) {
         return PMMultiport::shortCircuit;
@@ -1435,14 +1494,14 @@ pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) {
 }
 
 
-CVecR3 ParserGiD::strToCVecR3(const string& str) const {
+CVecR3 ParserGiD::strToCVecR3(const string& str) {
     stringstream ss(str);
     CVecR3 res;
     ss >> res(x) >> res(y) >> res(z);
     return res;
 }
 
-SourceOnLine::Type ParserGiD::strToNodalType(string str) const {
+SourceOnLine::Type ParserGiD::strToNodalType(string str) {
     str = trim(str);
     if (str.compare("electricField")==0) {
         return SourceOnLine::electric;
@@ -1453,7 +1512,7 @@ SourceOnLine::Type ParserGiD::strToNodalType(string str) const {
     }
 }
 
-SourceOnLine::Hardness ParserGiD::strToNodalHardness(string str) const {
+SourceOnLine::Hardness ParserGiD::strToNodalHardness(string str) {
     str = trim(str);
     if (str.compare("soft")==0) {
         return SourceOnLine::soft;
@@ -1493,7 +1552,7 @@ string ParserGiD::readVersion() {
     return version;
 }
 
-ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) const {
+ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) {
     str = trim(str);
     if (str.compare("OutRq_on_point")==0) {
         return ParserGiD::outRqOnPoint;
@@ -1510,12 +1569,12 @@ ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) const {
     } else if (str.compare("farField")==0) {
         return ParserGiD::farField;
     } else {
-        cerr << endl << "ERROR @ Parser: Unreckognized label." << endl;
+        cerr << endl << "ERROR @ Parser: Unrecognized label." << endl;
         return ParserGiD::outRqOnPoint;
     }
 }
 
-Domain ParserGiD::strToDomain(string line) const {
+Domain ParserGiD::strToDomain(string line) {
     UInt timeDomain;
     Real initialTime;
     Real finalTime;
@@ -1580,7 +1639,7 @@ Magnitude* ParserGiD::readMagnitude(const string typeIn) {
     throw Error("Unable to recognize magnitude type when reading excitation.");
 }
 
-OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
+OptionsMesher::Mesher ParserGiD::strToMesher(string str) {
     str = trim(str);
     if (str.compare("ugrMesher")==0) {
         return OptionsMesher::ugrMesher;
@@ -1595,7 +1654,7 @@ OptionsMesher::Mesher ParserGiD::strToMesher(string str) const {
     }
 }
 
-OptionsMesher::Mode ParserGiD::strToMesherMode(string str) const {
+OptionsMesher::Mode ParserGiD::strToMesherMode(string str)  {
     str = trim(str);
     if (str.compare("Structured")==0) {
         return OptionsMesher::structured;
@@ -1623,46 +1682,44 @@ OptionsSolver::Solver ParserGiD::strToSolver(string str) {
     }
 }
 
-OptionsSolver::CompositeModel ParserGiD::strToCompositeModel(string str) {
+OptionsSolverFDTD::CompositeModel ParserGiD::strToCompositeModel(string str) {
     str = trim(str);
     if (str.compare("None")==0) {
-        return OptionsSolver::CompositeModel::none;
+        return OptionsSolverFDTD::CompositeModel::none;
     } else if (str.compare("DigFilt")==0) {
-        return OptionsSolver::CompositeModel::digFilt;
+        return OptionsSolverFDTD::CompositeModel::digFilt;
     } else if (str.compare("MIBC")==0) {
-        return OptionsSolver::CompositeModel::mibc;
+        return OptionsSolverFDTD::CompositeModel::mibc;
     } else if (str.compare("ADE")==0) {
-        return OptionsSolver::CompositeModel::ade;
+        return OptionsSolverFDTD::CompositeModel::ade;
     } else {
         throw Error("Unreckognized label: " + str);
     }
 }
 
-OptionsSolver::WireModel ParserGiD::strToWireModel(string str) {
+OptionsSolverFDTD::WireModel ParserGiD::strToWireModel(string str) {
     str = trim(str);
     if (str.compare("Old")==0) {
-        return OptionsSolver::WireModel::oldWireModel;
+        return OptionsSolverFDTD::WireModel::oldWireModel;
     } else if (str.compare("Transition")==0) {
-        return OptionsSolver::WireModel::transitionWireModel;
+        return OptionsSolverFDTD::WireModel::transitionWireModel;
     } else if (str.compare("New")==0) {
-        return OptionsSolver::WireModel::newWireModel;
+        return OptionsSolverFDTD::WireModel::newWireModel;
     } else {
-        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return OptionsSolver::WireModel::newWireModel;
+        throw Error("Unrecognized label: " + str);
     }
 }
 
-OptionsSolver::InductanceModel ParserGiD::strToInductanceModel(string str) {
+OptionsSolverFDTD::InductanceModel ParserGiD::strToInductanceModel(string str) {
     str = trim(str);
     if (str.compare("Boutayeb")==0) {
-        return OptionsSolver::InductanceModel::boutayeb;
+        return OptionsSolverFDTD::InductanceModel::boutayeb;
     } else if (str.compare("Ledfelt")==0) {
-        return OptionsSolver::InductanceModel::ledfelt;
+        return OptionsSolverFDTD::InductanceModel::ledfelt;
     } else if (str.compare("Berenger")==0) {
-        return OptionsSolver::InductanceModel::berenger;
+        return OptionsSolverFDTD::InductanceModel::berenger;
     } else {
-        cerr << endl << "ERROR @ Parser: Unreckognized label: " << str << endl;
-        return OptionsSolver::InductanceModel::boutayeb;
+        throw Error("Unrecognized Inductance model label: " + str);
     }
 }
 
@@ -1670,51 +1727,46 @@ bool ParserGiD::checkVersionCompatibility(const string version) const {
     bool versionMatches =
             atof(version.c_str()) == atof(string(APP_VERSION).c_str());
     if (!versionMatches) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "File version " << version << " is not supported." << endl;
+        throw Error("File version " + version + " is not supported.");
     }
     return versionMatches;
 }
 
-const ProblemSize* ParserGiD::getProblemSize() const {
-    return &pSize_;
-}
-
-OptionsSolver::PMLBacking ParserGiD::strToPMLBacking(const string& inStr) {
+OptionsSolverFDTD::PMLBacking ParserGiD::strToPMLBacking(const string& inStr) {
     string str = inStr;
     str = trim(str);
     if (str.compare("None")==0) {
-        return OptionsSolver::PMLBacking::none;
+        return OptionsSolverFDTD::PMLBacking::none;
     } else if (str.compare("Mur1")==0) {
-        return OptionsSolver::PMLBacking::mur1;
+        return OptionsSolverFDTD::PMLBacking::mur1;
     } else if (str.compare("Mur2")==0) {
-        return OptionsSolver::PMLBacking::mur2;
+        return OptionsSolverFDTD::PMLBacking::mur2;
     } else {
         throw Error("Unrecognized PML Backing label: " + str);
         return OptionsSolver::PMLBacking::none;
     }
 }
 
-OptionsSolver::NoNF2FF ParserGiD::strToNoNF2FF(const string& inStr) {
+OptionsSolverFDTD::NoNF2FF ParserGiD::strToNoNF2FF(const string& inStr) {
     string str = inStr;
     str = trim(str);
     if (str.compare("None")==0) {
-        return OptionsSolver::NoNF2FF::none;
+        return OptionsSolverFDTD::NoNF2FF::none;
     } else if (str.compare("back")==0) {
-        return OptionsSolver::NoNF2FF::back;
+        return OptionsSolverFDTD::NoNF2FF::back;
     } else if (str.compare("front")==0) {
-        return OptionsSolver::NoNF2FF::front;
+        return OptionsSolverFDTD::NoNF2FF::front;
     } else if (str.compare("left")==0) {
-        return OptionsSolver::NoNF2FF::left;
+        return OptionsSolverFDTD::NoNF2FF::left;
     } else if (str.compare("right")==0) {
-        return OptionsSolver::NoNF2FF::right;
+        return OptionsSolverFDTD::NoNF2FF::right;
     } else if (str.compare("down")==0) {
-        return OptionsSolver::NoNF2FF::down;
+        return OptionsSolverFDTD::NoNF2FF::down;
     } else if (str.compare("up")==0) {
-        return OptionsSolver::NoNF2FF::up;
+        return OptionsSolverFDTD::NoNF2FF::up;
     } else {
         throw Error("Unrecognized No NF2FF label: " + str);
-        return OptionsSolver::NoNF2FF::none;
+        return OptionsSolverFDTD::NoNF2FF::none;
     }
 }
 
@@ -1741,8 +1793,7 @@ PoleResidue ParserGiD::readPoleResiduePair(ifstream& stream) {
     return res;
 }
 
-PMVolumeAnisotropic::Model ParserGiD::strToAnisotropicModel(
-        string label) const {
+PMVolumeAnisotropic::Model ParserGiD::strToAnisotropicModel(string label) {
     string str = label;
     str = trim(str);
     if (str.compare("Crystal")==0) {

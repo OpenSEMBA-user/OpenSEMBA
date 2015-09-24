@@ -16,26 +16,32 @@
 // FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
 // details.
 //
-// You should have received a copy of the GNU Lesser General Public License
-// along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include <stdio.h>
-#include <gtest/gtest.h>
-#include <string>
+
+#include <iostream>
+#include <stdlib.h>
+#include <sys/time.h>
 
 using namespace std;
 
-GTEST_API_ int main(int argc, char **argv) {
-  testing::InitGoogleTest(&argc, argv);
+#include "solver/dgtd/SolverDGTD.h"
 
-  string tests;
+#define APP_NAME "cudg3d"
 
-  tests += "*ProjectFile*:";
-  tests += "*Math*:";
-  tests += "*Geometry*:";
-  tests += "*ParserSTL*:";
-  tests += "*EMSource*:";
+int
+main(int argc, char *argv[]) {
+    Arguments arg(argc, argv);
+    arg.printWelcomeMessage(string(APP_NAME), string(APP_VERSION));
+    arg.printInfo();
 
-  ::testing::GTEST_FLAG(filter) = tests.c_str();
+    SmbData* smb;
+    ProjectFile inputFile(arg.getFilename());
+    ParserGiD parserGiD(inputFile);
+    smb = parserGiD.read();
+    smb->solverOptions->set(arg);
 
-  return RUN_ALL_TESTS();
+    SolverDGTD dgtd(smb);
+    dgtd.run();
+
+    arg.printGoodbyeMessage(string(APP_NAME));
+    exit(EXIT_SUCCESS);
 }

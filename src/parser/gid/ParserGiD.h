@@ -38,7 +38,6 @@ using namespace std;
 
 #include "parser/Parser.h"
 #include "SmbData.h"
-
 #include "ProblemSize.h"
 
 #define LABEL_ENDING ':'
@@ -53,7 +52,6 @@ public:
     const ProblemSize* getProblemSize() const;
 
     virtual SmbData* read();
-
     void printInfo() const;
 private:
     typedef enum {
@@ -78,7 +76,9 @@ private:
     MeshUnstructured* mesh_;
     ProblemSize pSize_;
 
-    OptionsSolver* readSolverOptions();
+    OptionsSolver* readOptionsSolver();
+    OptionsSolverFDTD* readOptionsSolverFDTD(const OptionsSolver& base);
+    OptionsSolverDGTD* readOptionsSolverDGTD(const OptionsSolver& base);
     OptionsMesher* readMesherOptions();
     GroupEMSources<>* readEMSources();
     GroupOutRqs<>* readOutputRequests();
@@ -118,31 +118,33 @@ private:
     PhysicalModel* readPhysicalModel(const MatId id);
     Magnitude* readMagnitude(const string type);
     LocalAxes strToLocalAxes(const string& str);
-    CVecR3 strToCVecR3(const string& str) const;
-    Generator::Type strToGeneratorType(string label) const;
-    Generator::Hardness strToGeneratorHardness(string str) const;
-    SourceOnLine::Type strToNodalType(string label) const;
-    SourceOnLine::Hardness strToNodalHardness(string label) const;
-    OptionsMesher::BoundType strToBoundType(string label) const;
-    PhysicalModel::Type strToMaterialType(string label) const;
-    PMMultiport::Type strToMultiportType(string label) const;
-    PMVolumeAnisotropic::Model strToAnisotropicModel(string label) const;
-    OutRq<void>::Type strToOutputType(string label) const;
-    SIBCType strToSIBCType(string str) const;
-    GiDOutputType strToGidOutputType(string label) const;
-    Domain strToDomain(string line) const;
-    OptionsMesher::Mesher strToMesher(string) const;
-    OptionsMesher::Mode strToMesherMode(string) const;
+
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
     GroupElements<Vol> boundToElemGroup(const string& line);
 
-    static OptionsSolver::PMLBacking strToPMLBacking(const string& string);
-    static OptionsSolver::NoNF2FF strToNoNF2FF(const string& string);
+    static OutRq<void>::Type strToOutputType(string label);
+    static SIBCType strToSIBCType(string str);
+    static GiDOutputType strToGidOutputType(string label);
+    static Domain strToDomain(string line);
+    static OptionsMesher::Mesher strToMesher(string);
+    static OptionsMesher::Mode strToMesherMode(string);
+    static CVecR3 strToCVecR3(const string& str);
+    static Generator::Type strToGeneratorType(string label);
+    static Generator::Hardness strToGeneratorHardness(string str);
+    static SourceOnLine::Type strToNodalType(string label);
+    static SourceOnLine::Hardness strToNodalHardness(string label);
+    static OptionsMesher::BoundType strToBoundType(string label);
+    static PhysicalModel::Type strToMaterialType(string label);
+    static PMMultiport::Type strToMultiportType(string label);
+    static PMVolumeAnisotropic::Model strToAnisotropicModel(string label);
+
+    static OptionsSolverFDTD::PMLBacking strToPMLBacking(const string& string);
+    static OptionsSolverFDTD::NoNF2FF strToNoNF2FF(const string& string);
     static OptionsSolver::Solver strToSolver(string);
-    static OptionsSolver::WireModel strToWireModel(string);
-    static OptionsSolver::InductanceModel strToInductanceModel(string);
-    static OptionsSolver::CompositeModel strToCompositeModel(string);
+    static OptionsSolverFDTD::WireModel strToWireModel(string);
+    static OptionsSolverFDTD::InductanceModel strToInductanceModel(string);
+    static OptionsSolverFDTD::CompositeModel strToCompositeModel(string);
     static pair<CVecR3, CVecR3> strToBound(const string& str);
     static PoleResidue readPoleResiduePair(ifstream& stream);
 };

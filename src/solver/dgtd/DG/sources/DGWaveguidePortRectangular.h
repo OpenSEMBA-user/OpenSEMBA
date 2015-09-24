@@ -28,10 +28,10 @@
 #ifndef SOLVERWAVEPORTRECTANGULAR_H_
 #define SOLVERWAVEPORTRECTANGULAR_H_
 
-#include "../../../../common/sources/PortWaveguide.h"
+#include "sources/ports/PortWaveguideRectangular.h"
 #include "DGWaveport.h"
 
-class DGWaveportRectangular : public DGWaveport, public PortWaveguide {
+class DGWaveportRectangular : public DGWaveport, public PortWaveguideRectangular {
 public:
     DGWaveportRectangular(
             const PortWaveguide& pw,

@@ -25,7 +25,7 @@
  *      Author: luis
  */
 
-#include "DGWaveguideOortRectangular.h"
+#include "DGWaveguidePortRectangular.h"
 
 DGWaveportRectangular::DGWaveportRectangular(
         const PortWaveguide& wp,

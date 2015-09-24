@@ -19,86 +19,83 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
+# ============= Makefile for the cudg3d program ===============================
 # ==================== Default variables ======================================
+target = debug
+compiler = gnu
+order = 1
+OUT = cudg3d
+# Default paths.
 BINDIR = bin/
 OBJDIR = obj/
-LIBDIR = lib/
 SRCDIR = src/
 # =============================================================================
 CXXFLAGS += -fopenmp
-# =============================================================================
-INCLUDES += test/
-LIBRARIES +=
-LIBS += gtest
 
-ifeq ($(mode),debug)
+INCLUDES +=/usr/local/include
+LIBRARIES +=/usr/lib64
+LIBS +=
+
+ifeq ($(target),debug)
 	DEFINES +=_DEBUG
 endif
 
-DEFINES += 
-ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
-	OUT := $(addsuffix .exe,$(OUT))
-endif
-# =============================================================================
-OUT = libopensemba
+DEFINES += ORDER_N=$(order) USE_OPENMP
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
-DIR = $(SRC_DIR) 
-
-SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
-
-IGNORES := 
-EXCLUDE := $(shell find $(SOURCE_DIR) -type f \( -name MathMatrix.cpp $(addprefix -o -name , $(IGNORES)) \) 2>/dev/null )
+DIR = $(SRC_CORE_DIR) $(SRC_PARSER_DIR) $(SRC_EXPORTER_DIR) \
+ src/apps/cudg3d/ solver/dgtd/ \
+ solver/dgtd/core/ solver/dgtd/output/ solver/dgtd/integrator/ \
+ solver/dgtd/DG/ solver/dgtd/DG/dispersives/ solver/dgtd/DG/sources/  
+SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR})
 
 SRCS_CXX := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.cpp")
 SRCS_CXX := $(filter-out $(EXCLUDE), $(SRCS_CXX)) 
-OBJS_CXX := $(addprefix $(OBJDIR), $(SRCS_CXX:.cpp=.o))
+OBJS_CXX := $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCS_CXX:.cpp=.o))
 
 SRCS_C := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.c")
 SRCS_C := $(filter-out $(EXCLUDE), $(SRCS_C)) 
-OBJS_C := $(addprefix $(OBJDIR), $(SRCS_C:.c=.o))
+OBJS_C := $(patsubst $(SRCDIR)%,$(OBJDIR)%,$(SRCS_C:.c=.o))
 
-.PHONY: default clean clobber print
+.PHONY: default clean clobber check
 
-default: print $(OUT)
+default: check cudg3d
 	@echo "======================================================="
-	@echo "           $(OUT) compilation finished             "
+	@echo "             $(OUT) compilation finished               "
 	@echo "======================================================="
-		
+	
 clean:
 	rm -rf *.err *.o *.d $(OBJDIR)
 
 clobber: clean
 	rm -rf $(BINDIR)
 
-$(OBJDIR)%.o: %.cpp
+$(OBJDIR)%.o: $(SRCDIR)%.cpp
 	@dirname $@ | xargs mkdir -p
 	@echo "Compiling:" $@
-	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES) ${SOURCE_DIR}) -c -o $@ $<
 	
-$(OBJDIR)%.o: %.c
+$(OBJDIR)%.o: $(SRCDIR)%.c
 	@dirname $@ | xargs mkdir -p
 	@echo "Compiling:" $@
-	$(CC) $(CCFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
+	$(CC) $(CCFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES) ${SOURCE_DIR}) -c -o $@ $<
 
-# TODO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
-$(OUT): $(OBJS_CXX) $(OBJS_C)
-	@mkdir -p $(BINDIR) 
+cudg3d: $(OBJS_CXX) $(OBJS_C)
+	@mkdir -p $(BINDIR)
 	@echo "Linking:" $@
 	${CXX} $^ -o $(BINDIR)$(OUT) $(CXXFLAGS) \
 	 $(addprefix -D, $(DEFINES)) \
-	 $(addprefix -I, ${INCLUDES}) \
+	 $(addprefix -I, $(SOURCE_DIR)) $(addprefix -I, ${INCLUDES}) \
 	 $(addprefix -L, ${LIBRARIES}) $(addprefix -l, ${LIBS})
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<	 
-	 
-print:
+
+check:
 	@echo "======================================================="
-	@echo "         ----- Compiling $(OUT) ------                 "
-	@echo "Target:           " $(target)
+	@echo "            ----- Compiling $(OUT) ------              "
+	@echo "target:           " $(target)
 	@echo "Compiler:         " $(compiler)
 	@echo "C++ Compiler:     " `which $(CXX)`
 	@echo "C++ Flags:        " $(CXXFLAGS)
 	@echo "Defines:          " $(DEFINES)
+	@echo "Polynomial order: " $(order)
 	@echo "======================================================="
-
-# ------------------------------- END ----------------------------------------
+	@sleep 1

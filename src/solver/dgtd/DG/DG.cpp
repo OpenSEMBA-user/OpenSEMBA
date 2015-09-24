@@ -28,28 +28,24 @@ DG::DG() {
 DG::~DG() {
 }
 
-void
-DG::setFieldsToZero() {
+void DG::setFieldsToZero() {
    E.setToZero();
    H.setToZero();
 }
 
-void
-DG::setFieldsToOne() {
+void DG::setFieldsToOne() {
    E.setToOne();
    H.setToZero();
 }
 
-void
-DG::setFieldsToRandom() {
+void DG::setFieldsToRandom() {
    static const Real min = -1.0;
    static const Real max = 1.0;
    E.setToRandom(min, max);
    H.setToRandom(min, max);
 }
 
-void
-DG::setFieldsToGaussian(
+void DG::setFieldsToGaussian(
       const CellGroup& cells,
       const Real amplitude,
       CVecR3& polarization,
@@ -70,8 +66,7 @@ DG::setFieldsToGaussian(
    H.setToZero();
 }
 
-void
-DG::setFieldsToHarmonics(
+void DG::setFieldsToHarmonics(
       const CellGroup& cells,
       const CartesianVector<Int,3>& harmonics,
       CVecR3& polarization) {
@@ -132,8 +127,8 @@ DG::setFieldsAndTimeFromResumeFile() {
    }
    f_in.close();
 }
-void
-DG::buildFieldScalingFactors(
+
+void DG::buildFieldScalingFactors(
       const CellGroup& cells) {
    oneOverEps = new Real[nK];
    oneOverMu = new Real[nK];
@@ -147,8 +142,7 @@ DG::buildFieldScalingFactors(
    }
 }
 
-void
-DG::buildFluxScalingFactors(
+void DG::buildFluxScalingFactors(
       const CellGroup& cells,
       const MapGroup& map) {
    nAdm.setSize(nK*4);

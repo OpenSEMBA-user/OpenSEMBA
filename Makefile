@@ -71,7 +71,7 @@ endif
 # -------------------- Paths to directories -----------------------------------
 BINDIR = ./bin/
 OBJDIR = ./obj/
-LIBDIR = ./lib/
+LIBDIR = ./external/
 SRCDIR = ./src/
 SRC_CORE_DIR = core/ \
  core/math/ \
@@ -88,7 +88,7 @@ SRC_SOLVER_DIR = solver/dgtd/
   
 LIB_DIR = ./ gidpost/
 
-INCLUDES += src/ src/core/ lib/
+INCLUDES += src/ src/core/ $(LIBDIR)
 
 # =============================================================================
 .NOTPARALLEL:
@@ -103,7 +103,7 @@ create_dirs:
 	-mkdir $(BINDIR)
 	-mkdir $(OBJDIR)
 
-cudg3d: check libopensemba 
+cudg3d: check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
 libopensemba: check

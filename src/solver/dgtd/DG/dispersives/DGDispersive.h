@@ -35,6 +35,7 @@ using namespace std;
 #include "math/Constants.h"
 #include "math/Field.h"
 #include "physicalModel/PhysicalModel.h"
+#include "solver/dgtd/core/CellGroup.h"
 
 class DGDispersive {
 protected:

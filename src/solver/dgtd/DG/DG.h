@@ -33,7 +33,7 @@ using namespace std;
 #include "math/Field.h"
 #include "sources/DGPlaneWave.h"
 #include "sources/DGDipole.h"
-#include "sources/DGWaveguideOortRectangular.h"
+#include "sources/DGWaveguidePortRectangular.h"
 #include "dispersives/DGSIBC.h"
 #include "dispersives/DGDispersiveVolumic.h"
 #include "dispersives/DGPMLUniaxial.h"
@@ -110,6 +110,7 @@ protected:
     Real *oneOverEps, *oneOverMu;
     Comm* comm;
     const SmbData* smb_;
+    UInt nK;
     // Flux gatherer operator. dim = matrix(np x (4*nfp))
     Real LIFT[faces*npnfp];
 #ifdef SOLVER_DEDUPLICATE_OPERATORS

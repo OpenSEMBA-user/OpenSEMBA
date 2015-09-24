@@ -28,9 +28,9 @@
 #ifndef DGCURVEDFACE_H_
 #define DGCURVEDFACE_H_
 
-#include "../core/CellTet.h"
-#include "../../../common/math/MathMatrix.h"
-#include "../../../common/math/Field.h"
+#include "solver/dgtd/core/CellTet.h"
+#include "math/MathMatrix.h"
+#include "math/Field.h"
 
 // TODO: Curved faces are buggy. An static remanent is left.
 // TODO: Observed instability for extreme curvature.
