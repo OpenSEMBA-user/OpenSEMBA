@@ -18,44 +18,29 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
+#ifndef SRC_TEST_ELEMENTSGROUPTEST_H_
+#define SRC_TEST_ELEMENTSGROUPTEST_H_
 
 #include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
+#include "geometry/elements/GroupElements.h"
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
-
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
-    }
+class GeometryElementsGroupTest : public ::testing::Test {
 
 protected:
-
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
-
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
+    bool checkTypes(const GroupElements<>& rhs) {
+        bool res = true;
+        for (UInt i = 0; i < rhs.size(); i++) {
+            res &= rhs(i)->is<Elem>();
         }
         return res;
     }
 
+    vector<CoordR3*> newCoordR3Vector() const {
+        vector<CoordR3*> res;
+        res.push_back(new CoordR3(CoordinateId(1), CVecR3(1.0, 1.0, 1.0)));
+        res.push_back(new CoordR3(CoordinateId(2), CVecR3(2.0, 2.0, 2.0)));
+        return res;
+    }
 };
 
 #endif

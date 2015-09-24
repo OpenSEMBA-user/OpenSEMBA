@@ -18,44 +18,19 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
-
 #include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
+#include "math/FunctionLinearInterpolation.h"
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
+TEST(MathFuncitonLinearInterpolationTest, Basic) {
+    vector<pair<Real,Real>> xy;
+    xy.push_back(pair<Real,Real>(0.0,  0.0));
+    xy.push_back(pair<Real,Real>(1.0, 10.0));
+    LinearInterpolation linear(xy);
 
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
-    }
+    EXPECT_EQ(0.0,  linear(-1.0));
+    EXPECT_EQ(0.0,  linear(0.0));
+    EXPECT_EQ(5.0,  linear(0.5));
+    EXPECT_EQ(10.0, linear(1.0));
+    EXPECT_EQ(10.0, linear(2.0));
 
-protected:
-
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
-
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
-
-};
-
-#endif
+}

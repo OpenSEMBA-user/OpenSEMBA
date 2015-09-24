@@ -18,44 +18,23 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
+#include "MeshUnstructuredTest.h"
 
-#include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
+TEST_F(GeometryMeshUnstructuredTest, ctor) {
+    EXPECT_EQ(mesh_.elems().size(), 2);
+    EXPECT_EQ(mesh_.elems().getOf<Tetrahedron>().size(), 1);
+    EXPECT_EQ(mesh_.elems().getOf<Triangle>().size(), 1);
+}
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
-
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
+TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
+    const Tetrahedron4* tet = mesh_.elems().getOf<Tetrahedron4>()(0);
+    vector<Face> faces;
+    for (UInt f = 0; f < tet->numberOfFaces(); f++) {
+        faces.push_back(Face(tet, f));
     }
+    GroupElements<const SurfR> matching = mesh_.getSurfsMatching(faces);
+    EXPECT_EQ(matching.size(), 1);
+    const Triangle3* tri = mesh_.elems().getOf<Triangle3>()(0);
+    EXPECT_EQ(*matching(0), *tri);
+}
 
-protected:
-
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
-
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
-
-};
-
-#endif

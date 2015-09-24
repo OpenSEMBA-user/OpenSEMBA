@@ -18,44 +18,37 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
+#include "GroupElementsTest.h"
 
-#include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
+TEST_F(GeometryElementsGroupTest, Copy){
+    vector<CoordR3*> coords = newCoordR3Vector();
+    GroupCoordinates<>* original = new GroupCoordinates<>(coords);
+    GroupCoordinates<> copied;
+    copied = *original;
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
+    EXPECT_TRUE(checkTypes(*original));
+    EXPECT_TRUE(checkTypes(copied));
 
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
+    delete original;
+
+    EXPECT_TRUE(checkTypes(copied));
+}
+
+TEST_F(GeometryElementsGroupTest, CopyCtor){
+    GroupCoordinates<> grp;
+    {
+        vector<CoordR3*> coords = newCoordR3Vector();
+        grp.add(coords);
     }
+    EXPECT_TRUE(checkTypes(grp));
+}
 
-protected:
-
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
+TEST_F(GeometryElementsGroupTest, idsConservation){
+    vector<CoordR3*> coords = newCoordR3Vector();
+    GroupCoordinates<> grp(coords);
+    EXPECT_EQ(coords.size(), grp.size());
+    for (UInt i = 0; i < grp.size(); i++) {
+        EXPECT_EQ(coords[i]->getId(), grp(i)->getId());
     }
+}
 
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
-
-};
-
-#endif

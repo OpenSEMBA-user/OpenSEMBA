@@ -18,44 +18,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
-
 #include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
+#include "math/CartesianVector.h"
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
+TEST(MathCartesianVectorTest, Basic) {
+    EXPECT_EQ(CVecR3(2.0, 3.0, 4.0), CVecR3(2.0, 3.0, 4.0));
+    EXPECT_NE(CVecR3(2.0, 3.0, 4.0), CVecR3(1.0, 3.0, 4.0));
+    EXPECT_EQ(sqrt(4.0 + 9.0 + 16.0), CVecR3(2.0, 3.0, 4.0).norm());
+    EXPECT_EQ(CVecR3(0.0, 0.0, 1.0), CVecR3(1.0,0.0,0.0) ^ CVecR3(0.0,1.0,0.0));
+}
 
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
+TEST(MathCartesianVectorTest, Complex) {
+    complex<double> zero(0.0, 0.0);
+    complex<double> realOne(1.0, 0.0);
+    CVecC3 a(realOne, realOne, realOne);
+    EXPECT_EQ(a, a);
+    EXPECT_EQ(sqrt(3.0), a.norm());
+}
+
+TEST(MathCartesianVectorTest, BinaryConversion) {
+    for (UInt i = 0; i < 8; i++) {
+        CVecI3 result((i/4)%2, (i/2)%2, i%2);
+        CVecI3 converted;
+        EXPECT_EQ(result, converted.setAsBinary(i));
     }
-
-protected:
-
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
-
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
-
-};
-
-#endif
+}

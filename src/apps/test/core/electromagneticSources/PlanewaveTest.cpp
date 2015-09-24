@@ -18,44 +18,32 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
-
 #include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
+#include "../../../../common/sources/PlaneWave.h"
 
+class EMSourcePlaneWaveTest : public ::testing::Test {
     void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
+
+    }
+
+    void TearDown() {
+
     }
 
 protected:
 
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
-
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
-
 };
 
-#endif
+TEST_F(EMSourcePlaneWaveTest, PolarCoordinatesDirAndPolarization) {
+    {
+        CVecR3 dir(1.0, 0.0, 0.0);
+        CVecR3 pol(0.0, 0.0, 1.0);
+        PlaneWave pw(NULL, ElemRGroup(), dir, pol);
+        EXPECT_NEAR(1.5708, pw.getTheta(), 1e-3);
+        EXPECT_NEAR(   0.0, pw.getPhi(),   1e-3);
+        EXPECT_NEAR(   0.0, pw.getAlpha(), 1e-3);
+        EXPECT_NEAR(   0.0, pw.getBeta(),  1e-3);
+    }
+}
+

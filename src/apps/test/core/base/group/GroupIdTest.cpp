@@ -18,44 +18,40 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
+/*
+ * GroupIdTest.cpp
+ *
+ *  Created on: Apr 14, 2015
+ *      Author: luis
+ */
 
 #include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
+#include "base/group/GroupId.h"
+#include "geometry/layers/GroupLayers.h"
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
-
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
-    }
+class BaseGroupGroupIdTest : public ::testing::Test {
+public:
+    BaseGroupGroupIdTest() {};
+    virtual ~BaseGroupGroupIdTest() {};
 
 protected:
-
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
-
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
+    vector<Layer*> newLayersVector() const {
+        vector<Layer*> res;
+        res.push_back(new Layer(LayerId(1), "Patata"));
+        res.push_back(new Layer(LayerId(6), "Cebolla"));
+        res.push_back(new Layer(LayerId(5), "Huevos"));
         return res;
     }
 
+    void areEqual(const vector<Layer*>& vec, const GroupLayers<>& layers) {
+        for (UInt i = 0; i < vec.size(); i++) {
+            EXPECT_EQ(*vec[i], *layers.getId(vec[i]->getId()));
+        }
+    }
 };
 
-#endif
+TEST_F(BaseGroupGroupIdTest, ctor) {
+    vector<Layer*> vecLayers = newLayersVector();
+    GroupLayers<> layers(vecLayers);
+    areEqual(vecLayers, layers);
+}

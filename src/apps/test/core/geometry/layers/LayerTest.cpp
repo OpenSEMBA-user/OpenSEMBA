@@ -18,44 +18,35 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERSTLTEST_H_
-#define PARSERGIDTEST_H_
+/*
+ * GeometryLayersLayerTest.cpp
+ *
+ *  Created on: Apr 14, 2015
+ *      Author: luis
+ */
 
 #include "gtest/gtest.h"
-#include "parser/stl/ParserSTL.h"
-#include "exporter/vtk/ExporterVTK.h"
+#include "geometry/layers/Layer.h"
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
-
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
-    }
+class GeometryLayersLayerTest : public ::testing::Test {
+public:
+    GeometryLayersLayerTest() {};
+    virtual ~GeometryLayersLayerTest() {};
 
 protected:
 
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
-
-    virtual ~ParserSTLTest() {
-    }
-
-    string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
-
 };
 
-#endif
+TEST_F(GeometryLayersLayerTest, comparison) {
+    Layer lay1P(LayerId(1), "Patata");
+    Layer lay1T(LayerId(1), "Tomate");
+    Layer lay2T(LayerId(2), "Tomate");
+
+    EXPECT_EQ(lay1P, lay1P);
+    EXPECT_NE(lay1P, lay1T);
+    EXPECT_NE(lay1P, lay2T);
+}
+
+
+
+
