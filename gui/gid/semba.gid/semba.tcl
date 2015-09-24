@@ -51,9 +51,6 @@ proc InitGIDProject { dir } {
 		WarnWinText [= "Error: This interface requires GiD %s or later" $problemtype_local(MinimumGiDVersion)].
     }
 
-    # Includes script files.
-    source "$dir/scripts/hirf.tcl"
-    source "$dir/scripts/amelet.tcl"
     # Shows splash window at start
     #semba::Splash
     # Checks packages
