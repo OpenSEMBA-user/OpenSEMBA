@@ -40,7 +40,6 @@ using namespace std;
 #include "dispersives/DGPMLMultiaxial.h"
 
 #define SOLVER_DEDUPLICATE_OPERATORS
-#define SOLVER_USE_OPENMP
 
 struct lexCompareMat {
     static const UInt np = ((ORDER_N+1) * (ORDER_N+2) * (ORDER_N+3) / 6);
@@ -84,12 +83,14 @@ public:
     virtual void setFieldsToOne();
     virtual void setFieldsToRandom();
     virtual void setFieldsToGaussian(
+            const CellGroup& cells,
             const Real amplitude,
             CVecR3& polarization,
             const CVecR3& gaussCenter,
             const Real gaussWidth);
     virtual void setFieldsToHarmonics(
-            const CartesianVector<Int,3>& harmonics,
+            const CellGroup& cells,
+            const CVecI3& harmonics,
             CVecR3& polarization);
     void setFieldsAndTimeFromResumeFile();
     virtual UInt getFieldDOFs() = 0;
@@ -100,7 +101,7 @@ public:
     virtual vector<UInt> getGlobalFieldPosOfFace(
             Face boundary) const;
     virtual vector<UInt> getGlobalFieldPosOfVolume(
-            const UInt volId) const;
+            const ElementId volId) const;
     virtual void printInfo() const = 0;
 
 protected:
@@ -111,6 +112,7 @@ protected:
     Comm* comm;
     const SmbData* smb_;
     UInt nK;
+    Real upwinding;
     // Flux gatherer operator. dim = matrix(np x (4*nfp))
     Real LIFT[faces*npnfp];
 #ifdef SOLVER_DEDUPLICATE_OPERATORS
@@ -120,7 +122,8 @@ protected:
 #endif
     void init(
             const OptionsSolverDGTD* arg,
-            const PMGroup* pm_,
+            const PMGroup* pm,
+            const CellGroup* cells,
             Comm* comm_);
     virtual void addFluxesToRHS(
             const UInt e1, const UInt e2,
@@ -144,8 +147,9 @@ protected:
             const UInt e1, const UInt e2, const Real rkdt) = 0;
     virtual void addRHSToResidueMagnetic(
             const UInt e1, const UInt e2, const Real rkdt) = 0;
-    void buildCMatrices();
+    void buildCMatrices(const CellGroup& cells);
     virtual void buildMaterials(
+            const CellGroup& cells,
             const OptionsSolverDGTD* arg) = 0;
     virtual void  computeRHS(
             const UInt e1,
@@ -207,12 +211,14 @@ protected:
     void swapResiduesAndFields(
             const UInt e1,
             const UInt e2);
-    void buildFluxScalingFactors(const MapGroup& map);
-    void buildFieldScalingFactors();
+    void buildFluxScalingFactors(const CellGroup& cells, const MapGroup& map);
+    void buildFieldScalingFactors(const CellGroup& cells);
 private:
-    virtual void buildScalingFactors(const MapGroup& map);
+    virtual void buildScalingFactors(
+            const CellGroup& cells,
+            const MapGroup& map);
     void buildLIFT();
-    virtual void assignMatrices() = 0;
+    virtual void assignMatrices(const CellGroup& cells) = 0;
     void allocateFieldsAndRes();
     void setResidualsToZero();
 };

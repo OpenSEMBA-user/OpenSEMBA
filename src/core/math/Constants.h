@@ -44,7 +44,7 @@ namespace Constants {
     static const Real eps0 = 8.85418782E-12;
     static const Real mu0 = 1.25663706E-6;
     static const Real c0 = 299792458.0;
-    static const Real pi = 3.14159265358979323846;  // Same as M_PI
+    static const Real pi = 3.14159265358979323846;  // Same as Constants::pi
 }
 
 

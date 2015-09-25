@@ -1,3 +1,24 @@
+// OpenSEMBA
+// Copyright (C) 2015 Salvador Gonzalez Garcia        (salva@ugr.es)
+//                    Luis Manuel Diaz Angulo         (lmdiazangulo@semba.guru)
+//                    Miguel David Ruiz-Cabello Nuñez (miguel@semba.guru)
+//                    Daniel Mateos Romero            (damarro@semba.guru)
+//
+// This file is part of OpenSEMBA.
+//
+// OpenSEMBA is free software: you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// OpenSEMBA is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+// details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+
 /*
  * CellGroup.cpp
  *
@@ -45,11 +66,11 @@ const CellTet<ORDER_N>* CellGroup::operator()(const UInt i) const {
 	return cell[i];
 }
 
-const CellTet<ORDER_N>* CellGroup::getPtrToCell(const Tet* elem) const {
+const CellTet<ORDER_N>* CellGroup::getPtrToCell(const VolR* elem) const {
 	return getPtrToCellWithId(elem->getId());
 }
  
-const CellTet<ORDER_N>* CellGroup::getPtrToCellWithId(const UInt id) const {
+const CellTet<ORDER_N>* CellGroup::getPtrToCellWithId(const ElementId& id) const {
 	return cell[id - cellOffsetId];
 }
 
@@ -64,9 +85,9 @@ void CellGroup::buildNodalMaps(const MapGroup& map) {
 	for (UInt e = 0; e < nK; e++) {
 		for (UInt f = 0; f < cell[e]->getFaces(); f++) {
 			// Stores contiguous element (e2) number and orientation.
-			const Tet* neigh = map.tet[e].vol[f];
-			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh);
-			UInt f2 = map.tet[e].volToF[f];
+			Face neigh = map.getNeighConnection(e,f);
+			const UInt f2 = neigh.second;
+			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh.first);
 			// Runs over each node in local element.
 			for (UInt i = 0; i < cell[e]->getNfp(); i++) {
 				// Initializes mapP and vmapP to default values.
@@ -88,8 +109,7 @@ void CellGroup::buildNodalMaps(const MapGroup& map) {
  
 void CellGroup::check(const MapGroup& map) const {
 	if (cellOffsetId != cell[0]->getId()) {
-		cerr << "ERROR@CellGroup::check" << endl;
-		exit(CELL_ERROR);
+	    throw Error("Check");
 	}
 	checkIdsAreConsecutive();
 //	checkReciprocityInConnectivities();
@@ -103,8 +123,7 @@ void CellGroup::checkIdsAreConsecutive() const {
 		if (cell[i]->getId() == currentId + 1) {
 			currentId++;
 		} else {
-			cerr << "ERROR@CellGroup::checkIdsAreConsecutive" << endl;
-			exit(CELL_ERROR);
+		    throw Error("Ids are not consecutive.");
 		}
 	}
 }
@@ -116,7 +135,7 @@ void CellGroup::checkNodalMaps(const MapGroup& map) const {
 	UInt nK = cell.size();
 	for (UInt e = 0; e < nK; e++)
 		for (int f = 0; f < 4; f++) {
-			const Tet* neigh = map.tet[e].vol[f];
+			const VolR* neigh = map.getNeighConnection(e,f);
 			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh);
 			for (UInt i = 0; i < cell[e]->getNfp(); i++) {
 				int neighNode = cell[e]->vmapP[f][i];
@@ -128,9 +147,7 @@ void CellGroup::checkNodalMaps(const MapGroup& map) const {
 			}
 		}
 	if (problem) {
-		cerr << "ERROR@CellGroup::checkNodalMaps()" << endl;
-		cerr << "vmapP contains errors. Check above." << endl;
-		exit(CELL_ERROR);
+	    throw Error("vmapP contains errors.");
 	}
 }
 

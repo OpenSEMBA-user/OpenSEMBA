@@ -55,7 +55,7 @@ public:
     void reassignPointers(const GroupElements<const Elem>& nEG);
     const Tetrahedron* getNeighbour(const UInt id, const UInt face) const;
     UInt getVolToF(const UInt id, const UInt face) const;
-    pair<const Tetrahedron*, UInt> getNeighConnection(const UInt id, const UInt face) const;
+    Face getNeighConnection(const UInt id, const UInt face) const;
     Face getInnerFace(const UInt id) const;
     Face getOuterFace(const UInt id) const;
     bool isBoundary(const UInt id) const;
@@ -63,7 +63,7 @@ public:
     bool isDomainBoundary(Face boundary) const;
 private:
     map<UInt, MapSurface*> tri_;
-    map<UInt, MapVolume*>tet_;
+    map<UInt, MapVolume*> tet_;
 };
 
 

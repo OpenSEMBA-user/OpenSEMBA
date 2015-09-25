@@ -33,9 +33,6 @@ using namespace std;
 #include "Cell.h"
 
 #define CELL_NODE_TOLERANCE 1e-12
-#ifndef CELL_ERROR
-#	define CELL_ERROR 22
-#endif
 
 template <int TET_N>
 class CellTet : public Cell {

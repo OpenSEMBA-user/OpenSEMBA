@@ -138,8 +138,8 @@ DGWaveportRectangular::DGWaveportRectangular(
         exit(-1);
     }
     // Computes kcm.
-    kcm = sqrt(pow((Real) getMode().first * M_PI/width, 2)
-            + pow((Real) getMode().second * M_PI/height, 2));
+    kcm = sqrt(pow((Real) getMode().first * Constants::pi/width, 2)
+            + pow((Real) getMode().second * Constants::pi/height, 2));
     intrinsicImpedance = sqrt(Constants::mu0 / Constants::eps0);
     gammaMSum = 0.0;
 }
@@ -182,8 +182,8 @@ void DGWaveportRectangular::computeExcitationField(
     //   //	 getNumericalGammaMGauss(time,minDT, amplitude,delay,spread, kcm);
     //   if (excitationMode == Waveport::TE) {
     //      const UInt nFields = nfp * nE;
-    //      const Real mConst = M_PI * getMode().first / width;
-    //      const Real nConst = M_PI * getMode().second / height;
+    //      const Real mConst = Constants::pi * getMode().first / width;
+    //      const Real nConst = Constants::pi * getMode().second / height;
     //      for (UInt i = 0; i < nFields; i++) {
     //         const Real yD = pos[i](1);
     //         const Real zD = pos[i](2);

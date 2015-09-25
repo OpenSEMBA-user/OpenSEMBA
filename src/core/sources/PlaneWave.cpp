@@ -169,8 +169,8 @@ pair<Real,Real> PlaneWave::cartesianToPolar(const CVecR3& v) const {
         beta_aux = -abs(acos(vx_/vmxy_));
     }
     pair<Real,Real> res;
-    res.first = reduceRadians(alpha_aux); // alpha_aux % (2*M_PI) ?
-    res.second = reduceRadians(beta_aux);  // beta_aux % (2*M_PI) ?
+    res.first = reduceRadians(alpha_aux); // alpha_aux % (2*Constants::pi) ?
+    res.second = reduceRadians(beta_aux);  // beta_aux % (2*Constants::pi) ?
     return res;
 }
 

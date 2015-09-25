@@ -32,7 +32,7 @@ CellTri6<TRI_N>::getRadiatedField(
  const pair<double, double> direction) const {
 	// Computes phase contribution.
 	complex<double> phase[geo.ncp];
-	const double beta = 2.0 * M_PI * frequency / SPEED_OF_LIGHT;
+	const double beta = 2.0 * Constants::pi * frequency / SPEED_OF_LIGHT;
 	complex<double> phaseShift(0.0, beta);
 	SphericalVector sphDir(direction.first, direction.second);
 	CVecR3 dir = sphDir.convertToCartesian();
@@ -63,6 +63,6 @@ CellTri6<TRI_N>::getRadiatedField(
 			 (phase[c] * geo.cw[c] * csdf[c] / 2.0) * tri.ca[j][c];
 		}
 	}
-	//res *= (phaseShift / (M_PI * 4.0)) * exp(phaseShift);
+	//res *= (phaseShift / (Constants::pi * 4.0)) * exp(phaseShift);
 	return res;
 }

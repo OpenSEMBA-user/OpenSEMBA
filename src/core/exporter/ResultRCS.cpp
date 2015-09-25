@@ -146,7 +146,7 @@
 //ResultRCS::getRCS(
 // const Real frequency,
 // const vector<pair<Real, Real> >& directions) const {
-//	const Real betaSq = pow(2*M_PI*frequency/Constants::c0,2);
+//	const Real betaSq = pow(2*Constants::pi*frequency/Constants::c0,2);
 //	// Incident Field.
 //	CVecC3 EIncFq;
 //	vector<CVecR3 > EInc;
@@ -159,7 +159,7 @@
 // 	vector<Real> res(directions.size());
 // 	for (UInt i = 0; i < directions.size(); i++) {
 // 		Real ERadSq = pow(ERadFq[i].norm(),2);
-// 		res[i] = ERadSq * betaSq / EIncSq / (4.0 * M_PI);
+// 		res[i] = ERadSq * betaSq / EIncSq / (4.0 * Constants::pi);
 // 	}
 // 	return res;
 //}

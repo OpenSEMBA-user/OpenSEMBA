@@ -183,15 +183,13 @@ MapGroup::getInnerFace(const UInt id) const {
     return pair<const Tetrahedron*, UInt>(vol, face);
 }
 
-pair<const VolR*, UInt>
-MapGroup::getOuterFace(const UInt id) const {
+Face MapGroup::getOuterFace(const UInt id) const {
     const VolR* vol = tri_.find(id)->second->getVol(1);
     const UInt face = tri_.find(id)->second->getVolToF(1);
     return pair<const VolR*, UInt>(vol, face);
 }
 
-pair<const Tetrahedron*, UInt>
-MapGroup::getNeighConnection(
+Face MapGroup::getNeighConnection(
 const UInt id,
 const UInt face) const {
     pair<const Tetrahedron*, UInt> res;

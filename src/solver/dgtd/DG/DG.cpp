@@ -51,11 +51,11 @@ void DG::setFieldsToGaussian(
       CVecR3& polarization,
       const CVecR3& gaussCenter,
       const Real gaussWidth) {
-   CartesianVector <Real,3> aux;
+   CVecR3 aux;
    Real expArg;
    polarization.normalize();
    for (UInt e = 0; e < nK; e++) {
-      UInt id = cells.getIdOfRelPos(e);
+      ElementId id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
       for (UInt i = 0; i < np; i++) {
          aux = cell->n[i] - gaussCenter;
@@ -68,21 +68,21 @@ void DG::setFieldsToGaussian(
 
 void DG::setFieldsToHarmonics(
       const CellGroup& cells,
-      const CartesianVector<Int,3>& harmonics,
+      const CVecI3& harmonics,
       CVecR3& polarization) {
    Real amp;
    CVecR3 pos;
    polarization.normalize();
    for (UInt e = 0; e < nK; e++) {
-      UInt id = cells.getIdOfRelPos(e);
+      ElementId id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
       for (UInt i = 0; i < np; i++) {
          pos = cell->n[i];
          if(harmonics(1) == 0) {
-            amp = sin(pos(0) * harmonics(0) * M_PI);
+            amp = sin(pos(0) * harmonics(0) * Constants::pi);
          } else {
-            amp = sin(pos(0)*harmonics(0)*M_PI)
-				             * sin(pos(1)*harmonics(1)*M_PI);
+            amp = sin(pos(0)*harmonics(0)*Constants::pi)
+				             * sin(pos(1)*harmonics(1)*Constants::pi);
          }
          E.set(e*np + i, polarization*amp);
       }
@@ -90,42 +90,42 @@ void DG::setFieldsToHarmonics(
    H.setToZero();
 }
 
-void
-DG::setFieldsAndTimeFromResumeFile() {
-   string resumeFileName = "simulation.resume";
-   ifstream f_in(resumeFileName.c_str());
-   // Checks file existence.
-   if (!f_in) {
-      cerr << endl << "ERROR @ Solver::setFieldsFromResumeFile: "
-            << "File " << resumeFileName
-            << " does not exist, imposible to resume." << endl;
-   }
-   // Reads result header.
-   string trash;
-   getline(f_in, trash);
-   {
-      // Reads electric resume fields.
-      VectorModuleResult electricField(nK * np);
-      electricField.readResult(f_in);
-      // Copies result electric fields into the fast solver field vectors.
-      for (UInt i = 0; i < nK * np; i++) {
-         E.set(x)[i] = electricField.values[0][i];
-         E.set(y)[i] = electricField.values[1][i];
-         E.set(z)[i] = electricField.values[2][i];
-      }
-   }
-   {
-      // Reads magnetic resume fields.
-      VectorModuleResult magneticField(nK * np);
-      magneticField.readResult(f_in);
-      // Copies result electric fields into the fast solver field vectors.
-      for (UInt i = 0; i < nK * np; i++) {
-         H.set(x)[i] = magneticField.values[0][i];
-         H.set(y)[i] = magneticField.values[1][i];
-         H.set(z)[i] = magneticField.values[2][i];
-      }
-   }
-   f_in.close();
+void DG::setFieldsAndTimeFromResumeFile() {
+//   string resumeFileName = "simulation.resume";
+//   ifstream f_in(resumeFileName.c_str());
+//   // Checks file existence.
+//   if (!f_in) {
+//      cerr << endl << "ERROR @ Solver::setFieldsFromResumeFile: "
+//            << "File " << resumeFileName
+//            << " does not exist, imposible to resume." << endl;
+//   }
+//   // Reads result header.
+//   string trash;
+//   getline(f_in, trash);
+//   {
+//      // Reads electric resume fields.
+//      VectorModuleResult electricField(nK * np);
+//      electricField.readResult(f_in);
+//      // Copies result electric fields into the fast solver field vectors.
+//      for (UInt i = 0; i < nK * np; i++) {
+//         E.set(x)[i] = electricField.values[0][i];
+//         E.set(y)[i] = electricField.values[1][i];
+//         E.set(z)[i] = electricField.values[2][i];
+//      }
+//   }
+//   {
+//      // Reads magnetic resume fields.
+//      VectorModuleResult magneticField(nK * np);
+//      magneticField.readResult(f_in);
+//      // Copies result electric fields into the fast solver field vectors.
+//      for (UInt i = 0; i < nK * np; i++) {
+//         H.set(x)[i] = magneticField.values[0][i];
+//         H.set(y)[i] = magneticField.values[1][i];
+//         H.set(z)[i] = magneticField.values[2][i];
+//      }
+//   }
+//   f_in.close();
+    throw ErrorNotImplemented();
 }
 
 void DG::buildFieldScalingFactors(
@@ -133,12 +133,10 @@ void DG::buildFieldScalingFactors(
    oneOverEps = new Real[nK];
    oneOverMu = new Real[nK];
    for (UInt e = 0; e < nK; e++) {
-      UInt id = cells.getIdOfRelPos(e);
+      ElementId id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
-      oneOverEps[e] = 1.0 /
-            (cell->material->getRelativePermittivity()*Constants::eps0);
-      oneOverMu[e]  = 1.0 /
-            (cell->material->getRelativePermeability()*Constants::mu0);
+      oneOverEps[e] = 1.0 / (cell->material->getPermittivity());
+      oneOverMu[e]  = 1.0 / (cell->material->getPermeability());
    }
 }
 
@@ -153,7 +151,7 @@ void DG::buildFluxScalingFactors(
    cnImp.setSize(nK*4);
    // Straight faces -------------------------------------------------
    for (UInt e = 0; e < nK; e++) {
-      UInt id = cells.getIdOfRelPos(e);
+      ElementId id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
       Real impM, admM, impP, admP, impAv, admAv;
       CVecR3 n, rn, cn;
@@ -167,8 +165,8 @@ void DG::buildFluxScalingFactors(
          impM = cell->material->getImpedance();
          admM = cell->material->getAdmitance();
          // Computes contiguous element impedance and admittance.
-         UInt neighId = map.getNeighbour(cell->getId(), f)->getId();
-         const CellTet<ORDER_N>* neigh =	 cells.getPtrToCellWithId(neighId);
+         ElementId neighId = map.getNeighbour(cell->getId(), f)->getId();
+         const CellTet<ORDER_N>* neigh = cells.getPtrToCellWithId(neighId);
          impP = neigh->material->getImpedance();
          admP = neigh->material->getAdmitance();
          impAv = (impM + impP) * 0.5;
@@ -195,8 +193,9 @@ void DG::buildFluxScalingFactors(
 
 void DG::init(
       const OptionsSolverDGTD* arg,
-      const PMGroup* pm_,
-      const CellGroup* cells, Comm* comm_) {
+      const PMGroup* pm,
+      const CellGroup* cells,
+      Comm* comm_) {
    comm = comm_;
    upwinding = arg->getUpwinding();
    nK = cells->getLocalSize();
@@ -218,9 +217,9 @@ void DG::addFluxesToRHS(
 
 void DG::buildCMatrices(const CellGroup& cells) {
    UInt e;
-#	ifdef SOLVER_DEDUPLICATE_OPERATORS
+#ifdef SOLVER_DEDUPLICATE_OPERATORS
    for (e = 0; e < nK; e++) {
-      UInt id = cells.getIdOfRelPos(e);
+      ElementId id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
       StaMatrix<Real,np,np> C[3];
       cell->getCMatrices(C);
@@ -230,9 +229,7 @@ void DG::buildCMatrices(const CellGroup& cells) {
    }
 #	else
    CList = new StaMatrix<Real,np,np>[3*nK];
-#	ifdef SOLVER_USE_OPENMP
-#	pragma omp parallel for private(e)
-#	endif
+#pragma omp parallel for private(e)
    for (e = 0; e < nK; e++) {
       UInt id = cells.getIdOfRelPos(e);
       const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
@@ -355,7 +352,7 @@ vector<UInt> DG::getGlobalFieldPosOfFace(Face bound) const {
    return res;
 }
 
-vector<UInt> DG::getGlobalFieldPosOfVolume(const UInt volId) const {
+vector<UInt> DG::getGlobalFieldPosOfVolume(const ElementId volId) const {
    const UInt e = getGlobalRelPosOfId(volId);
    static const SimplexTet<ORDER_N> tet;
    vector<UInt> res(tet.np);

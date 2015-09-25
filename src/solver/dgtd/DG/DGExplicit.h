@@ -98,10 +98,7 @@ protected:
             const UInt e1,
             const UInt e2,
             const Real rkdt);
-    UInt
-    getIndexOfElement(const UInt e) const {
-        return (e * np);
-    }
+    UInt getIndexOfElement(const UInt e) const;
     void addRHSToResidueElectric(const UInt e1, const UInt e2,
             const Real rkdt);
     void addRHSToResidueMagnetic(const UInt e1, const UInt e2,
@@ -161,5 +158,9 @@ private:
     void allocateFieldsForLTS();
     void buildCurvedFluxScalingFactors(const MapGroup& map);
 };
+
+inline UInt DGExplicit::getIndexOfElement(const UInt e) const {
+    return (e * np);
+}
 
 #endif /* SOLVEREXPLICIT_H_ */
