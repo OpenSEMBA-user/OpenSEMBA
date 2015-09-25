@@ -71,7 +71,7 @@ const CellTet<ORDER_N>* CellGroup::getPtrToCell(const VolR* elem) const {
 }
  
 const CellTet<ORDER_N>* CellGroup::getPtrToCellWithId(const ElementId& id) const {
-	return cell[id - cellOffsetId];
+	return cell[id.toUInt() - cellOffsetId];
 }
 
 void CellGroup::buildNodalMaps(const MapGroup& map) {

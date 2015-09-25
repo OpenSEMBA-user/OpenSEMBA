@@ -29,6 +29,7 @@
 
 #include "DG.h"
 #include "DGCurvedFace.h"
+#include "SolverMath.h"
 
 class DGExplicit : public DG {
     friend class IntegratorLSERK;
@@ -154,7 +155,7 @@ private:
             const EMSourceGroup& emSource,
             const MapGroup& maps);
     bool checkPtrsToNeigh() const;
-    void assignMatrices();
+    void assignMatrices(const CellGroup& cells);
     void allocateFieldsForLTS();
     void buildCurvedFluxScalingFactors(const MapGroup& map);
 };
