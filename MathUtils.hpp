@@ -145,7 +145,7 @@ MathUtils::getDFT(
  const vector<T>& time,
  const vector<T>& signal) {
 	const UInt N = signal.size();
-	const complex<T> constPart(0.0, -(T)(2.0 * M_PI * frequency));
+	const complex<T> constPart(0.0, -(T)(2.0 * Constants::pi * frequency));
 	complex<T> res(0.0, 0.0);
 	for (UInt i = 0; i < N; i++) {
 		res += signal[i] * exp(constPart * time[i]);
