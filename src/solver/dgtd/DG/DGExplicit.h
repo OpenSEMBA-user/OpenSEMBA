@@ -145,19 +145,23 @@ private:
     UInt *SMAe, *SMAf, *PECe, *PECf, *PMCe, *PMCf;
     vector<DGSource*> source;
     vector<DGDispersive*> dispersive;
-    void buildMaterials(const OptionsSolverDGTD* arg);
-    void deduplicateVMaps();
+    void buildMaterials(const CellGroup& cells, const OptionsSolverDGTD* arg);
+    void deduplicateVMaps(const CellGroup& cells);
     void allocateRHSAndJumps();
     void allocateMaps();
     void assignPointersToNeighbours(const MeshVolume& mesh);
-    void buildScalingFactors(const MapGroup& map);
+    void buildScalingFactors(const CellGroup& cells, const MapGroup& map);
     void buildEMSources(
             const EMSourceGroup& emSource,
             const MapGroup& maps);
+    void BCToLocalArray(
+        const BCGroup& bc,
+        const CellGroup& cells,
+        const MapGroup& map)
     bool checkPtrsToNeigh() const;
     void assignMatrices(const CellGroup& cells);
     void allocateFieldsForLTS();
-    void buildCurvedFluxScalingFactors(const MapGroup& map);
+    void buildCurvedFluxScalingFactors(const CellGroup& cells, const MapGroup& map);
 };
 
 inline UInt DGExplicit::getIndexOfElement(const UInt e) const {

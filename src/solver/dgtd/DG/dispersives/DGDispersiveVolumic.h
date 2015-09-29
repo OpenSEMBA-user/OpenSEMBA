@@ -37,7 +37,8 @@ class DGDispersiveVolumic : public DGDispersive, public PMVolumeDispersive {
 public:
     DGDispersiveVolumic();
     DGDispersiveVolumic(
-            const PMVolumeDispersive&);
+            const PMVolumeDispersive&,
+            const CellGroup& cells);
     virtual ~DGDispersiveVolumic();
     void computeRHSElectricPolarizationCurrents(
             const FieldR3& E,

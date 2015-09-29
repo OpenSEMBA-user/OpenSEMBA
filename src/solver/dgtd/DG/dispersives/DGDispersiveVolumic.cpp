@@ -173,25 +173,6 @@ void DGDispersiveVolumic::computeRHSElectricPolarizationCurrents(
             rhsP.set(z)[i] = getPole(p) * P(z)[i] + getResidue(p) * E(z)[j];
         }
     }
-#ifdef SOLVER_USE_OPENMP
-#pragma omp parallel for private(i,j,e,n,p)
-#endif
-    for (i = 0; i < drudeDof; i++) {
-        // Pole number.
-        p = i / (nElem * np);
-        // Element number.
-        e = elem[(i / np) % nElem];
-        if (e1 <= e && e < e2) {
-            // Node number.
-            n = i % np;
-            // Field coefficient position in the general fields vector.
-            j = e * np + n;
-            // Updates RHS of Polarization currents.
-            rhsJ.set(x)[i] = getDrudePole(p) * J(x)[i] + getDrudeResidue(p) * E(x)[j];
-            rhsJ.set(y)[i] = getDrudePole(p) * J(y)[i] + getDrudeResidue(p) * E(y)[j];
-            rhsJ.set(z)[i] = getDrudePole(p) * J(z)[i] + getDrudeResidue(p) * E(z)[j];
-        }
-    }
 }
 
 

@@ -804,81 +804,84 @@ void DGExplicit::assignPointersToNeighbours(
     assert(checkPtrsToNeigh());
 }
 
-void DGExplicit::BCToLocalArray() {
-//    // ----------- SMA ------------------------------------------------
-//    // Counts SMAs and allocates, em boundaries are also considered.
-//    {
-//        vector<const BoundaryCondition*> smaPtr = bc.get(Condition::sma);
-//        vector<const BoundaryCondition*> emPtr = bc.get(Condition::emSource);
-//        // Removes non local elements.
-//        smaPtr = removeNonLocalBCs(&cells, smaPtr);
-//        emPtr = removeNonLocalBCs(&cells, emPtr);
-//        // Stores em sources at boundaries.
-//        vector<const BoundaryCondition*> emAtDomainBound;
-//        for (UInt i = 0; i < emPtr.size(); i++) {
-//            if (maps.isDomainBoundary(emPtr[i]->get())) {
-//                emAtDomainBound.push_back(emPtr[i]);
-//            }
-//        }
-//        nSMA = smaPtr.size() + emAtDomainBound.size();
-//        SMAe = new UInt[nSMA];
-//        SMAf = new UInt[nSMA];
-//        // Stores solver relative positions and faces.
-//        UInt j = 0;
-//        for (UInt i = 0; i < smaPtr.size(); i++) {
-//            SMAe[j] = cells.getRelPosOfId(smaPtr[i]->getCell()->getId());
-//            SMAf[j] = smaPtr[i]->getFace();
-//            j++;
-//        }
-//        for (UInt i = 0; i < emAtDomainBound.size(); i++) {
-//            SMAe[j] = cells.getRelPosOfId(emAtDomainBound[i]->getCell()->getId());
-//            SMAf[j] = emAtDomainBound[i]->getFace();
-//            j++;
-//        }
-//        assert(nSMA == j);
-//    }
-//    // ----------- PEC ------------------------------------------------
-//    // Counts and allocates.
-//    {
-//        vector<const BoundaryCondition*> pecPtr = bc.get(Condition::pec);
-//        pecPtr = removeNonLocalBCs(&cells, pecPtr);
-//        nPEC = pecPtr.size();
-//        PECe = new UInt[nPEC];
-//        PECf = new UInt[nPEC];
-//        // Stores solver rel pos and faces.
-//        for (UInt i = 0; i < pecPtr.size(); i++) {
-//            PECe[i] = cells.getRelPosOfId(pecPtr[i]->getCell()->getId());
-//            PECf[i] = pecPtr[i]->getFace();
-//        }
-//    }
-//    // ----------- PMC ------------------------------------------------
-//    // Counts and allocates.
-//    {
-//        vector<const BoundaryCondition*> pmcPtr = bc.get(Condition::pmc);
-//        pmcPtr = removeNonLocalBCs(&cells, pmcPtr);
-//        nPMC = pmcPtr.size();
-//        PMCe = new UInt[nPMC];
-//        PMCf = new UInt[nPMC];
-//        // Stores solver rel pos and faces.
-//        for (UInt i = 0; i < pmcPtr.size(); i++) {
-//            PMCe[i] = cells.getRelPosOfId(pmcPtr[i]->getCell()->getId());
-//            PMCf[i] = pmcPtr[i]->getFace();
-//        }
-//    }
-//    {
-//        for (UInt i = 0; i < smb_->pMGroup->countSIBC(); i++) {
-//            const PMSurfaceSIBC* m =
-//                    dynamic_cast<const PMSurfaceSIBC*>(smb_->pMGroup->getPMSurface(i));
-//            if (m != NULL) {
-//                vector<const BoundaryCondition*> sibcPtr
-//                = bc.getMatId(m->getId());
-//                sibcPtr = removeNonLocalBCs(&cells, sibcPtr);
-//                dispersive.push_back(
-//                        new DGSIBC(*m, sibcPtr, cells, map, vmapM,
-//                                ExP, EyP, EzP, HxP, HyP, HzP));
-//            }
-//        }
-//    }
+void DGExplicit::BCToLocalArray(
+	const BCGroup& bc,
+	const CellGroup& cells,
+	const MapGroup& map_) {
+    // ----------- SMA ------------------------------------------------
+    // Counts SMAs and allocates, em boundaries are also considered.
+    {
+        vector<const BoundaryCondition*> smaPtr = bc.get(Condition::sma);
+        vector<const BoundaryCondition*> emPtr = bc.get(Condition::emSource);
+        // Removes non local elements.
+        smaPtr = removeNonLocalBCs(&cells, smaPtr);
+        emPtr = removeNonLocalBCs(&cells, emPtr);
+        // Stores em sources at boundaries.
+        vector<const BoundaryCondition*> emAtDomainBound;
+        for (UInt i = 0; i < emPtr.size(); i++) {
+            if (maps.isDomainBoundary(emPtr[i]->get())) {
+                emAtDomainBound.push_back(emPtr[i]);
+            }
+        }
+        nSMA = smaPtr.size() + emAtDomainBound.size();
+        SMAe = new UInt[nSMA];
+        SMAf = new UInt[nSMA];
+        // Stores solver relative positions and faces.
+        UInt j = 0;
+        for (UInt i = 0; i < smaPtr.size(); i++) {
+            SMAe[j] = cells.getRelPosOfId(smaPtr[i]->getCell()->getId());
+            SMAf[j] = smaPtr[i]->getFace();
+            j++;
+        }
+        for (UInt i = 0; i < emAtDomainBound.size(); i++) {
+            SMAe[j] = cells.getRelPosOfId(emAtDomainBound[i]->getCell()->getId());
+            SMAf[j] = emAtDomainBound[i]->getFace();
+            j++;
+        }
+        assert(nSMA == j);
+    }
+    // ----------- PEC ------------------------------------------------
+    // Counts and allocates.
+    {
+        vector<const BoundaryCondition*> pecPtr = bc.get(Condition::pec);
+        pecPtr = removeNonLocalBCs(&cells, pecPtr);
+        nPEC = pecPtr.size();
+        PECe = new UInt[nPEC];
+        PECf = new UInt[nPEC];
+        // Stores solver rel pos and faces.
+        for (UInt i = 0; i < pecPtr.size(); i++) {
+            PECe[i] = cells.getRelPosOfId(pecPtr[i]->getCell()->getId());
+            PECf[i] = pecPtr[i]->getFace();
+        }
+    }
+    // ----------- PMC ------------------------------------------------
+    // Counts and allocates.
+    {
+        vector<const BoundaryCondition*> pmcPtr = bc.get(Condition::pmc);
+        pmcPtr = removeNonLocalBCs(&cells, pmcPtr);
+        nPMC = pmcPtr.size();
+        PMCe = new UInt[nPMC];
+        PMCf = new UInt[nPMC];
+        // Stores solver rel pos and faces.
+        for (UInt i = 0; i < pmcPtr.size(); i++) {
+            PMCe[i] = cells.getRelPosOfId(pmcPtr[i]->getCell()->getId());
+            PMCf[i] = pmcPtr[i]->getFace();
+        }
+    }
+    {
+        for (UInt i = 0; i < smb_->pMGroup->countSIBC(); i++) {
+            const PMSurfaceSIBC* m =
+                    dynamic_cast<const PMSurfaceSIBC*>(smb_->pMGroup->getPMSurface(i));
+            if (m != NULL) {
+                vector<const BoundaryCondition*> sibcPtr
+                = bc.getMatId(m->getId());
+                sibcPtr = removeNonLocalBCs(&cells, sibcPtr);
+                dispersive.push_back(
+                        new DGSIBC(*m, sibcPtr, cells, map, vmapM,
+                                ExP, EyP, EzP, HxP, HyP, HzP));
+            }
+        }
+    }
 }
 
 void DGExplicit::buildEMSources(
@@ -904,8 +907,7 @@ void DGExplicit::buildEMSources(
             source.push_back(new DGWaveportRectangular(
                     *em.getWaveport(i), aux, maps, cells, dE, dH, vmapM));
         } else {
-            cerr << endl << "ERROR @ buildEMSources" << endl;
-            cerr << endl << "Unreckognized waveport shape." << endl;
+           throw Error("Unreckognized waveport shape.");
         }
     }
 }
@@ -926,7 +928,7 @@ void DGExplicit::buildCurvedFluxScalingFactors(
     // Counts curved faces.
     nCurvedFaces = 0;
     for (UInt e = 0; e < nK; e++) {
-        UInt id = cells.getIdOfRelPos(e);
+        ElementId id = cells.getIdOfRelPos(e);
         const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
         for (UInt f = 0; f < cell->getFaces(); f++) {
             if (cell->isCurvedFace(f)) {
@@ -938,7 +940,7 @@ void DGExplicit::buildCurvedFluxScalingFactors(
     // Supress linear fluxes operators. Computes curved operators.
     UInt face = 0;
     for (UInt e = 0; e < nK; e++) {
-        UInt id = cells.getIdOfRelPos(e);
+        ElementId id = cells.getIdOfRelPos(e);
         const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
         Real impM, admM, impP, admP, impAv, admAv;
         for (UInt f = 0; f < faces; f++) {
@@ -946,7 +948,7 @@ void DGExplicit::buildCurvedFluxScalingFactors(
                 // Builds CurvedFace information
                 impM = cell->material->getImpedance();
                 admM = cell->material->getAdmitance();
-                UInt nId = map.getNeighbour(cell->getId(), f)->getId();
+                ElementId nId = map.getNeighbour(cell->getId(), f)->getId();
                 const CellTet<ORDER_N>* neigh = cells.getPtrToCellWithId(nId);
                 impP = neigh->material->getImpedance();
                 admP = neigh->material->getAdmitance();
@@ -974,16 +976,16 @@ void DGExplicit::buildMaterials(
         const OptionsSolverDGTD* arg) {
     // Creates Dispersive materials vars parameters and stores ptrs.
     const GroupPhysicalModels<PMVolumeDispersive> dispersives =
-            smb_->pMGroup->getGroupOf<PMVolumeDispersive>();
+            smb_->pMGroup->getOf<PMVolumeDispersive>();
     for (UInt i = 0; i < dispersives.size(); i++) {
         dispersive.push_back(new DGDispersiveVolumic(*dispersives(i), cells));
     }
     // Creates PML materials variables parameters and stores pointers.
     const GroupPhysicalModels<PMVolumePML> pmls =
-            smb_->pMGroup->getGroupOf<PMVolumePML>();
+            smb_->pMGroup->getOf<PMVolumePML>();
     for (UInt i = 0; i < pmls.size(); i++) {
-        const bool isConstCond = arg->isPmlUseConstantConductivity();
-        const Real cond = arg->getPmlConductivity();
+        const bool isConstCond = arg->isPMLConstantConductivityProfile();
+        const Real cond = arg->getPMLConductivity();
         switch (pmls(i)->getOrientation()) {
         case PMVolumePML::Orientation::PMLx:
             dispersive.push_back(new DGPMLx(pmls(i),cells,isConstCond,cond));
@@ -1051,7 +1053,7 @@ void DGExplicit::deduplicateVMaps(const CellGroup& cells) {
     }
     // deduplicates vmapP in a list and points cell->vmap to them.
     for (UInt e = 0; e < nK; e++) {
-        UInt id = cells.getIdOfRelPos(e);
+        ElementId id = cells.getIdOfRelPos(e);
         const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
         for (UInt f = 0; f < faces; f++) {
             // Checks if the vmapP[f] vector is in the list.
@@ -1100,7 +1102,7 @@ void DGExplicit::deduplicateVMaps(const CellGroup& cells) {
     }
     // Checks that vmapP has the correct values.
     for (UInt e = 0; e < nK; e++) {
-        UInt id = cells.getIdOfRelPos(e);
+        ElementId id = cells.getIdOfRelPos(e);
         const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
         for (UInt f = 0; f < faces; f++) {
             for (UInt i = 0; i < nfp; i++) {
