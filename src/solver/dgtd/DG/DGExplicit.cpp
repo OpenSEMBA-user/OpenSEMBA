@@ -890,26 +890,25 @@ void DGExplicit::buildEMSources(
         const MapGroup& maps,
         const CellGroup& cells) {
     // Copies the sources structure into solver.
-    if (em.countPlaneWaves() > 0) {
-        vector<const BoundaryCondition*> aux =	 bc.get(Condition::emSource);
-        source.push_back(new DGPlaneWave(*em.getPlaneWave(), aux, maps,
-                cells, comm, dE, dH, vmapM));
-    }
-    for (UInt i = 0; i < em.countDipoles(); i++) {
+    for (UInt i = 0; i < em.getOf<PlaneWave>().size(); i++) {
         vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);
-        source.push_back(
-                new DGDipole(*em.getDipole(i), aux, maps, cells, dE, dH, vmapM));
+        source.push_back(new DGPlaneWave(*em(i), aux, maps, cells, comm, dE, dH, vmapM));
     }
-    for (UInt i = 0; i < em.countWaveports(); i++) {
-        vector<const BoundaryCondition*> aux =	 bc.get(Condition::emSource);
-        Waveport::Shape shape = em.getWaveport(i)->getShape();
-        if (shape == Waveport::rectangular) {
-            source.push_back(new DGWaveportRectangular(
-                    *em.getWaveport(i), aux, maps, cells, dE, dH, vmapM));
-        } else {
-           throw Error("Unreckognized waveport shape.");
-        }
-    }
+//    for (UInt i = 0; i < em.countDipoles(); i++) {
+//        vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);
+//        source.push_back(
+//                new DGDipole(*em.getDipole(i), aux, maps, cells, dE, dH, vmapM));
+//    }
+//    for (UInt i = 0; i < em.countWaveports(); i++) {
+//        vector<const BoundaryCondition*> aux =	 bc.get(Condition::emSource);
+//        Waveport::Shape shape = em.getWaveport(i)->getShape();
+//        if (shape == Waveport::rectangular) {
+//            source.push_back(new DGWaveportRectangular(
+//                    *em.getWaveport(i), aux, maps, cells, dE, dH, vmapM));
+//        } else {
+//           throw Error("Unreckognized waveport shape.");
+//        }
+//    }
 }
 
 

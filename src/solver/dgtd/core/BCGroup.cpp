@@ -116,13 +116,13 @@ void BCGroup::removeOverlapped() {
     // Builds separated lists.
     vector<BoundaryCondition*> pec, pmc, sma, sibc, em;
     for (uint i = 0; i < pmbc.size(); i++) {
-        if(pmbc[i].isSMA()) {
+        if(pmbc[i].getCondition()->is<PMSMA>()) {
             sma.push_back(&pmbc[i]);
-        } else if (pmbc[i].isPEC()) {
+        } else if (pmbc[i].getCondition()->is<PMPEC>()) {
             pec.push_back(&pmbc[i]);
-        } else if (pmbc[i].isPMC()) {
+        } else if (pmbc[i].getCondition()->is<PMPMC>()) {
             pmc.push_back(&pmbc[i]);
-        } else if (pmbc[i].isSurfaceImpedance()) {
+        } else if (pmbc[i].getCondition()->is<PMSurfaceSIBC>()) {
             sibc.push_back(&pmbc[i]);
         }
     }
@@ -189,7 +189,7 @@ vector<BoundaryCondition*> BCGroup::removeCommons(
 vector<const BoundaryCondition*> BCGroup::getPtrsToPEC() const {
     vector<const BoundaryCondition*> res;
     for (uint i = 0; i < pmbc.size(); i++) {
-        if (pmbc[i].isPEC()) {
+        if (pmbc[i].getCondition()->is<PMPEC>()) {
             const BoundaryCondition* ptr = &pmbc[i];
             res.push_back(ptr);
         }
@@ -200,7 +200,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToPEC() const {
 vector<const BoundaryCondition*> BCGroup::getPtrsToPMC() const {
     vector<const BoundaryCondition*> res;
     for (uint i = 0; i < pmbc.size(); i++) {
-        if (pmbc[i].isPMC()) {
+        if (pmbc[i].getCondition()->is<PMPMC>()) {
             const BoundaryCondition* ptr = &pmbc[i];
             res.push_back(ptr);
         }
@@ -211,7 +211,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToPMC() const {
 vector<const BoundaryCondition*> BCGroup::getPtrsToSMA() const {
     vector<const BoundaryCondition*> res;
     for (uint i = 0; i < pmbc.size(); i++) {
-        if (pmbc[i].isSMA()) {
+        if (pmbc[i].getCondition()->is<PMSMA>()) {
             const BoundaryCondition* ptr = &pmbc[i];
             res.push_back(ptr);
         }
@@ -241,7 +241,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToBC(const EMSourceBase* pw) co
     vector<const BoundaryCondition*> res;
     res.reserve(embc.size());
     for (uint i = 0; i < embc.size(); i++) {
-        if (pw == embc[i].condition) {
+        if (pw == embc[i].getCondition()) {
             res.push_back(&embc[i]);
         }
     }
@@ -265,13 +265,13 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToBCWithMatId(
     vector<const BoundaryCondition*> res;
     res.reserve(pmbc.size());
     for (uint i = 0; i < pmbc.size(); i++) {
-        if (pmbc[i].condition->getId() == id) {
+        if (pmbc[i].getCondition()->getId() == id) {
             res.push_back(&pmbc[i]);
         }
     }
     res.reserve(sibc.size());
     for (uint i = 0; i < sibc.size(); i++) {
-        if (sibc[i].condition->getId() == id) {
+        if (sibc[i].getCondition()->getId() == id) {
             res.push_back(&sibc[i]);
         }
     }
@@ -281,7 +281,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToBCWithMatId(
 void BCGroup::checkEMSourcesAreSetInVacuum() const {
     uint nBC = embc.size();
     for (uint i = 0; i < nBC; i++) {
-        if (!embc[i].cell->material->isVacuum()) {
+        if (!embc[i].cell_->material->isVacuum()) {
             cerr << "ERROR @ Boundary Conditions."   << endl;
             cerr << "ElectromagneticSource BC has been" << endl;
             cerr << "defined over a not vacuum cell." << endl;
@@ -295,8 +295,8 @@ bool BCGroup::checkOverlapping() const {
     // Check repeated elements in embc and pmbc
     for (uint i = 0; i < embc.size(); i++) {
         for (uint j = 0; j < pmbc.size(); j++) {
-            if (embc[i].cell == pmbc[j].cell
-                    && embc[i].face == pmbc[j].face) {
+            if (embc[i].cell_ == pmbc[j].cell_
+                    && embc[i].face_ == pmbc[j].face_) {
                 repeated = true;
                 break;
             }

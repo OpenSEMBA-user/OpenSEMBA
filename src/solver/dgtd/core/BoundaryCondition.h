@@ -36,69 +36,66 @@ using namespace std;
 
 class BoundaryCondition {
 public:
-    const CellTet<ORDER_N>* cell;
-    uint face;
-    const Condition* condition;
-    //
     BoundaryCondition();
+    BoundaryCondition(const CellTet<ORDER_N>* cell, UInt face);
     virtual ~BoundaryCondition();
-    bool isSMA() const {return condition->isSMA();}
-    virtual bool isPEC() const {return condition->isPEC();}
-    virtual bool isPMC() const {return condition->isPMC();}
-    virtual bool isSurfaceImpedance() const {
-        return condition->isSurfaceImpedance();
-    }
-    bool hasSameBoundary(const BoundaryCondition& other) const {
-        return (cell == other.cell && face == other.face);
-    }
-    virtual const CellTet<ORDER_N>* getCellD() const;
-    virtual uint getFaceD() const;
-    virtual void printInfo() const;
+    bool hasSameBoundary(const BoundaryCondition& other) const;
+    virtual BoundaryCondition& operator=(const BoundaryCondition& rhs);
+        virtual void printInfo() const;
+private:
+    const CellTet<ORDER_N>* cell_;
+    UInt face_;
 };
 
 class EMSourceBC : public BoundaryCondition {
 public:
-    //
     EMSourceBC();
     virtual ~EMSourceBC();
-    EMSourceBC(const BoundaryCondition& param);
-    EMSourceBC(const CellTet<ORDER_N>* e, const uint f, const Condition* bc);
+    EMSourceBC(const CellTet<ORDER_N>* e, const UInt f, const EMSourceBase* bc);
     EMSourceBC& operator=(const EMSourceBC& rhs);
     void check() const;
+    const EMSourceBase*& getCondition() const;
+
+private:
+    const EMSourceBase* em_;
 };
 
 class PhysicalModelBC : public BoundaryCondition {
 public:
     //
     PhysicalModelBC();
-    PhysicalModelBC(const BoundaryCondition& param);
     PhysicalModelBC(
             const CellTet<ORDER_N>*,
-            uint face,
-            const Condition* bc);
+            UInt face,
+            const PMPredefined* bc);
     virtual ~PhysicalModelBC();
     PhysicalModelBC& operator=(const PhysicalModelBC& rhs);
-    bool
-    checkIsPMValidForSurfaces() const;
+    const PMPredefined*& getCondition() const;
+private:
+    const PMPredefined* pm_;
 };
 
 class SurfaceImpedanceBC : public BoundaryCondition {
 public:
-    const CellTet<ORDER_N>* cellD;
-    uint faceD;
-    //
     SurfaceImpedanceBC();
     virtual ~SurfaceImpedanceBC();
     SurfaceImpedanceBC(
             const CellTet<ORDER_N>* cell,
-            const uint face,
+            const UInt face,
             const CellTet<ORDER_N>* cellD,
-            const uint faceD,
-            const Condition* cond);
+            const UInt faceD,
+            const PMSurfaceSIBC* cond);
     SurfaceImpedanceBC& operator=(const SurfaceImpedanceBC &rhs);
     bool isSIBC() const;
     const CellTet<ORDER_N>* getCellD() const;
-    uint getFaceD() const;
+    UInt getFaceD() const;
+    const PMSurfaceSIBC*& getCondition() const;
+
+private:
+    const CellTet<ORDER_N>* cellD_;
+    UInt faceD_;
+    const PMSurfaceSIBC* sibc_;
 };
+
 
 #endif /* BOUNDARYCONDITION_H_ */

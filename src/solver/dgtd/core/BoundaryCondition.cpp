@@ -22,135 +22,94 @@
 #include "BoundaryCondition.h"
 
 BoundaryCondition::BoundaryCondition() {
-	cell = NULL;
-	face = 0;
-	condition = NULL;
+    cell_ = NULL;
+    face_ = 0;
+}
+
+
+BoundaryCondition::BoundaryCondition(const CellTet<ORDER_N>* cell, UInt face) {
+    cell_ = cell;
+    face_ = face;
 }
 
 BoundaryCondition::~BoundaryCondition() {
 
 }
 
-const CellTet<ORDER_N>*
-BoundaryCondition::getCellD() const {
-	assert(false);
-	return NULL;
+bool BoundaryCondition::hasSameBoundary(
+        const BoundaryCondition& other) const {
+    return (cell_ == other.cell_ && face_ == other.face_);
 }
 
-uint
-BoundaryCondition::getFaceD() const {
-	assert(false);
-	return 0;
+BoundaryCondition& BoundaryCondition::operator =(const BoundaryCondition& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    cell_ = rhs.cell_;
+    face_ = rhs.face_;
+    return *this;
 }
 
-void
-BoundaryCondition::printInfo() const {
-	cout << "--- BC info ---" << endl;
-	cout << "Cell Id:" << cell->getId() << " Face: " << face << endl;
-	cout << "Condition: " << endl;
-	condition->printInfo();
+void BoundaryCondition::printInfo() const {
+    cout << "--- BC info ---" << endl;
+    cout << "Cell Id:" << cell_->getId() << " Face: " << face_ << endl;
 }
 
 EMSourceBC::EMSourceBC() {
-
+    em_ = NULL;
 }
 
 EMSourceBC::~EMSourceBC() {
 
 }
 
-EMSourceBC::EMSourceBC(const BoundaryCondition& param) {
-	cell = param.cell;
-	face = param.face;
-	condition = param.condition;
-	//
-	check();
-}
- 
 EMSourceBC::EMSourceBC(
- const CellTet<ORDER_N>* e,
- const uint f,
- const Condition* bc) {
-	cell = e;
-	face = f;
-	condition = bc;
-	check();
+        const CellTet<ORDER_N>* e,
+        const UInt f,
+        const EMSourceBase* bc) :
+            BoundaryCondition(e, f) {
+    em_ = bc;
+    check();
 }
- 
-EMSourceBC&
-EMSourceBC::operator=(const EMSourceBC& rhs) {
-	if (this == &rhs)
-		return *this;
-	cell = rhs.cell;
-	face = rhs.face;
-	condition = rhs.condition;
-	return *this;
-}
-//
-void
-EMSourceBC::check() const {
-	if (!condition->isEMSource()) {
-		cerr << "ERROR@EMSourceBC ctor" << endl;
-		exit(BC_ERROR);
-	}
-}
-// =============== PhysicalModelBC ============================================
-PhysicalModelBC::PhysicalModelBC() {
 
+EMSourceBC& EMSourceBC::operator=(const EMSourceBC& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    BoundaryCondition::operator=(rhs);
+    em_ = rhs.em_;
+    return *this;
+}
+
+PhysicalModelBC::PhysicalModelBC() {
+    pm_ = NULL;
 }
 
 PhysicalModelBC::~PhysicalModelBC() {
 
 }
 
-PhysicalModelBC::PhysicalModelBC(const BoundaryCondition& param) {
-	cell = param.cell;
-	face = param.face;
-	condition = param.condition;
-	//
-	checkIsPMValidForSurfaces();
-}
- 
 PhysicalModelBC::PhysicalModelBC(
- const CellTet<ORDER_N>* cell_,
- uint face_,
- const Condition* bc) {
-	cell = cell_;
-	face = face_;
-	condition = bc;
-	if (!checkIsPMValidForSurfaces()) {
-		cout << "Invalid PM on Surface." << endl;
-		cout << "Cell:" << cell->getId() << " Face: " << face << endl;
-		cout << "Physical Model: " << endl;
-		condition->printInfo();
-		exit(-1);
-	}
+        const CellTet<ORDER_N>* cell__,
+        UInt face__,
+        const PMPredefined* bc) :
+            BoundaryCondition(cell__, face__) {
+    pm_ = bc;
 }
 
-PhysicalModelBC&
-PhysicalModelBC::operator=(const PhysicalModelBC& rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	cell = rhs.cell;
-	face = rhs.face;
-	condition = rhs.condition;
-	return *this;
-}
-//
-bool
-PhysicalModelBC::checkIsPMValidForSurfaces() const {
-	if (!condition->isPMPredefined() && !condition->isSurface()) {
-		condition->printInfo();
-		cerr << "ERROR@PhysicalModelBC ctor" << endl;
-		return false;
-	}
-	return true;
+PhysicalModelBC& PhysicalModelBC::operator=(const PhysicalModelBC& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    BoundaryCondition::operator =(rhs);
+    pm_ = rhs.pm_;
+    return *this;
 }
 
 SurfaceImpedanceBC::SurfaceImpedanceBC() {
-	cellD = NULL;
-	faceD = 0;
+    cellD_ = NULL;
+    faceD_ = 0;
+    sibc_ = NULL;
 }
 
 SurfaceImpedanceBC::~SurfaceImpedanceBC() {
@@ -158,41 +117,45 @@ SurfaceImpedanceBC::~SurfaceImpedanceBC() {
 }
 
 SurfaceImpedanceBC::SurfaceImpedanceBC(
- const CellTet<ORDER_N>* cell_,
- const uint face_,
- const CellTet<ORDER_N>* cellD_,
- const uint faceD_,
- const Condition* cond_) {
-	cell = cell_;
-	face = face_;
-	cellD = cellD_;
-	faceD = faceD_;
-	condition = cond_;
-	assert(cell != NULL);
-	assert(cellD != NULL);
-	assert(condition != NULL);
+        const CellTet<ORDER_N>* cell,
+        const UInt face,
+        const CellTet<ORDER_N>* cellD,
+        const UInt faceD,
+        const PMSurfaceSIBC* sibc) :
+            BoundaryCondition(cell, face) {
+    cellD_ = cellD;
+    faceD_ = faceD;
+    sibc_ = sibc;
 }
 
-SurfaceImpedanceBC&
-SurfaceImpedanceBC::operator=(const SurfaceImpedanceBC &rhs) {
-	if (this == &rhs) {
-		return *this;
-	}
-	cell = rhs.cell;
-	face = rhs.face;
-	cellD = rhs.cellD;
-	faceD = rhs.faceD;
-	condition = rhs.condition;
-	return *this;
+SurfaceImpedanceBC& SurfaceImpedanceBC::operator=(
+        const SurfaceImpedanceBC &rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    BoundaryCondition::operator =(rhs);
+    cellD_ = rhs.cellD_;
+    faceD_ = rhs.faceD_;
+    sibc_ = rhs.sibc_;
+    return *this;
 }
 
-const CellTet<ORDER_N>*
-SurfaceImpedanceBC::getCellD() const {
-	return cellD;
+const CellTet<ORDER_N>* SurfaceImpedanceBC::getCellD() const {
+    return cellD_;
 }
 
-uint
-SurfaceImpedanceBC::getFaceD() const {
-	return faceD;
+UInt SurfaceImpedanceBC::getFaceD() const {
+    return faceD_;
 }
 
+const PMPredefined*& PhysicalModelBC::getCondition() const {
+    return pm_;
+}
+
+const EMSourceBase*& EMSourceBC::getCondition() const {
+    return em_;
+}
+
+const PMSurfaceSIBC*& SurfaceImpedanceBC::getCondition() const {
+    return sibc_;
+}

@@ -152,12 +152,14 @@ private:
     void assignPointersToNeighbours(const MeshVolume& mesh);
     void buildScalingFactors(const CellGroup& cells, const MapGroup& map);
     void buildEMSources(
-            const EMSourceGroup& emSource,
-            const MapGroup& maps);
+            const EMSourceGroup& em,
+            const BCGroup& bc,
+            const MapGroup& maps,
+            const CellGroup& cells);
     void BCToLocalArray(
-        const BCGroup& bc,
-        const CellGroup& cells,
-        const MapGroup& map)
+            const BCGroup& bc,
+            const CellGroup& cells,
+            const MapGroup& map)
     bool checkPtrsToNeigh() const;
     void assignMatrices(const CellGroup& cells);
     void allocateFieldsForLTS();
