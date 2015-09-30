@@ -175,8 +175,8 @@ vector<Face> MeshUnstructured::getExternalBorder(
     for (UInt i = 0; i < internal.size(); i++) {
         ElementId inId = internal[i].first->getId();
         UInt inFace = internal[i].second;
-        const VolR* outVol = mapGroup.getNeighbour(inId.toUInt(), inFace);
-        UInt outFace = mapGroup.getVolToF(inId.toUInt(), inFace);
+        const VolR* outVol = mapGroup.getNeighbour(inId, inFace);
+        const UInt outFace = mapGroup.getVolToF(inId, inFace);
         if (outVol->getId() != inId || inFace != outFace)  {
             external.push_back(Face(outVol, outFace));
         }
@@ -243,7 +243,7 @@ vector<Face> MeshUnstructured::getTriInternalBorder(
     vector<Face> res(nE);
     MapGroup mapGroup(coords().getOf<CoordR3>(), region);
     for (UInt i = 0; i < nE; i++) {
-        res[i] = mapGroup.getInnerFace(region(i)->getId().toUInt());
+        res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
     return res;
 }

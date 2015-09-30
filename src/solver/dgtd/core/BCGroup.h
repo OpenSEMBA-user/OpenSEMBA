@@ -39,8 +39,9 @@ public:
     vector<PhysicalModelBC> pmbc;
     vector<SurfaceImpedanceBC> sibc;
     BCGroup(
-            const SmbData* smb,
-            const CellGroup* cells);
+            const SmbData& smb,
+            const CellGroup& cells,
+            const MapGroup& map);
     BCGroup& operator=(const BCGroup &rhs);
     vector<const BoundaryCondition*> getPtrsToPEC() const;
     vector<const BoundaryCondition*> getPtrsToPMC() const;
@@ -58,7 +59,8 @@ private:
     void buildPhysicalModelBC(
             const MeshVolume& mesh,
             const PMGroup& pm,
-            const CellGroup& cells);
+            const CellGroup& cells,
+            const MapGroup& map);
     void removeOverlapped();
     vector<BoundaryCondition*> removeCommons(
             const vector<BoundaryCondition*>& low,

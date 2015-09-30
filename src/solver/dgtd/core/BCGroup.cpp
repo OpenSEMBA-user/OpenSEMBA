@@ -26,18 +26,17 @@
  *      Author: luis
  */
 
-#ifndef BCGROUP_H_
 #include "BCGroup.h"
-#endif
 
 BCGroup::BCGroup(
-        const SmbData* smb,
-        const CellGroup* cells) {
-    const MeshVolume* mesh = smb->mesh;
-    const EMSourceGroup* em = smb->emSources;
-    const PMGroup* pm = smb->pMGroup;
-    buildEMSourceBC(*mesh, *em, *cells);
-    buildPhysicalModelBC(*mesh, *pm, *cells);
+        const SmbData& smb,
+        const CellGroup& cells,
+        const MapGroup& map) {
+    const MeshVolume* mesh = smb.mesh;
+    const EMSourceGroup* em = smb.emSources;
+    const PMGroup* pm = smb.pMGroup;
+    buildEMSourceBC(*mesh, *em, cells);
+    buildPhysicalModelBC(*mesh, *pm, cells, map);
     removeOverlapped();
     check();
 }
@@ -57,12 +56,12 @@ void BCGroup::buildEMSourceBC(
         const EMSourceGroup& em,
         const CellGroup& cells) {
     vector<Face> border;
-    for (uint i = 0; i < em.size(); i++) {
+    for (UInt i = 0; i < em.size(); i++) {
         const EMSourceBase* source = em(i);
         border = mesh.getInternalBorder(source->elems());
-        for (uint j = 0; j < border.size(); j++) {
+        for (UInt j = 0; j < border.size(); j++) {
             const CellTet<ORDER_N>* auxCell = cells.getPtrToCell(border[j].first);
-            uint face = border[j].second;
+            UInt face = border[j].second;
             EMSourceBC auxBC(auxCell, face, source);
             embc.push_back(auxBC);
         }
@@ -72,33 +71,29 @@ void BCGroup::buildEMSourceBC(
 void BCGroup::buildPhysicalModelBC(
         const MeshVolume& mesh,
         const PMGroup& pm,
-        const CellGroup& cells) {
-    GroupElements<Surf> surf = mesh.elems().getOf<Surf>();
-    for (uint i = 0; i < surf.size(); i++) {
-        const TriMap* sMap = &mesh.map.tri[i];
-        // Finds elements neighbouring surface.
-        if (surf->getMatId() != 0) {
-            const Condition* mat = pm.getPMWithId(surf->getMatId());
-            pair<const Tet*, uint> tFace = sMap->getInnerFace();
-            const CellTet<ORDER_N>* cell
-            = cells.getPtrToCell(tFace.first);
-            uint face = tFace.second;
-            if (!mat->isSurfaceImpedance()) {
+        const CellGroup& cells,
+        const MapGroup& map) {
+    GroupElements<SurfR> surf = mesh.elems().getOf<SurfR>();
+    for (UInt i = 0; i < surf.size(); i++) {
+        if (surf(i)->getMatId() != 0) {
+            const PhysicalModel* mat = pm.getId(surf(i)->getMatId());
+            Face tFace = map.getInnerFace(surf(i)->getId());
+            const CellTet<ORDER_N>* cell = cells.getPtrToCell(tFace.first);
+            const UInt face = tFace.second;
+            if (!mat->is<PMSurfaceSIBC>()) {
                 pmbc.push_back(PhysicalModelBC(cell, face, mat));
-                if (!sMap->isBoundary()) {
-                    tFace = sMap->getOuterFace();
+                if (!map.isDomainBoundary(tFace)) {
+                    tFace = map.getOuterFace(surf(i)->getId());
                     cell = cells.getPtrToCell(tFace.first);
                     face = tFace.second;
                     pmbc.push_back(PhysicalModelBC(cell, face, mat));
                 }
             } else {
                 assert(!sMap->isBoundary());
-                pair<const Tet*, uint> neigh;
-                neigh = mesh.getNeighConnection(tFace);
-                const CellTet<ORDER_N>* nCell;
-                nCell = cells.getPtrToCell(neigh.first);
-                const uint nFace = neigh.second;
-                if (cell->isLocalSide(face, surf)) {
+                Face neigh = map.getNeighConnection(tFace);
+                const CellTet<ORDER_N>* nCell = cells.getPtrToCell(neigh.first);
+                const UInt nFace = neigh.second;
+                if (cell->isLocalSide(face, surf(i))) {
                     sibc.push_back(
                             SurfaceImpedanceBC(cell,face,nCell,nFace,mat));
                 } else {
@@ -115,7 +110,7 @@ void BCGroup::removeOverlapped() {
     // PEC, PMC, SMA, SIBC > EM Source
     // Builds separated lists.
     vector<BoundaryCondition*> pec, pmc, sma, sibc, em;
-    for (uint i = 0; i < pmbc.size(); i++) {
+    for (UInt i = 0; i < pmbc.size(); i++) {
         if(pmbc[i].getCondition()->is<PMSMA>()) {
             sma.push_back(&pmbc[i]);
         } else if (pmbc[i].getCondition()->is<PMPEC>()) {
@@ -127,7 +122,7 @@ void BCGroup::removeOverlapped() {
         }
     }
     em.reserve(embc.size());
-    for (uint i = 0; i < embc.size(); i++) {
+    for (UInt i = 0; i < embc.size(); i++) {
         em.push_back(&embc[i]);
     }
     // Removes bc overlapping PEC. After this, PEC is cleaned.
@@ -145,22 +140,22 @@ void BCGroup::removeOverlapped() {
     vector<PhysicalModelBC> auxPMBC;
     auxPMBC.reserve(
             pec.size() + pmc.size() + sma.size() + sibc.size());
-    for (uint i = 0; i < pec.size(); i++) {
+    for (UInt i = 0; i < pec.size(); i++) {
         auxPMBC.push_back(PhysicalModelBC(*pec[i]));
     }
-    for (uint i = 0; i < pmc.size(); i++) {
+    for (UInt i = 0; i < pmc.size(); i++) {
         auxPMBC.push_back(PhysicalModelBC(*pmc[i]));
     }
-    for (uint i = 0; i < sma.size(); i++) {
+    for (UInt i = 0; i < sma.size(); i++) {
         auxPMBC.push_back(PhysicalModelBC(*sma[i]));
     }
-    for (uint i = 0; i < sibc.size(); i++) {
+    for (UInt i = 0; i < sibc.size(); i++) {
         auxPMBC.push_back(PhysicalModelBC(*sibc[i]));
     }
     pmbc = auxPMBC;
     vector<EMSourceBC> auxEMBC;
     auxEMBC.reserve(em.size());
-    for (uint i = 0; i < em.size(); i++) {
+    for (UInt i = 0; i < em.size(); i++) {
         auxEMBC.push_back(EMSourceBC(*em[i]));
     }
     embc = auxEMBC;
@@ -171,9 +166,9 @@ vector<BoundaryCondition*> BCGroup::removeCommons(
         const vector<BoundaryCondition*>& high) const {
     vector<BoundaryCondition*> res;
     res.reserve(low.size());
-    for (uint i = 0; i < low.size(); i++) {
+    for (UInt i = 0; i < low.size(); i++) {
         bool isPresentInHigh = false;
-        for (uint j = 0; j < high.size(); j++) {
+        for (UInt j = 0; j < high.size(); j++) {
             if (low[i]->hasSameBoundary(*high[j])) {
                 isPresentInHigh = true;
                 break;
@@ -188,7 +183,7 @@ vector<BoundaryCondition*> BCGroup::removeCommons(
 
 vector<const BoundaryCondition*> BCGroup::getPtrsToPEC() const {
     vector<const BoundaryCondition*> res;
-    for (uint i = 0; i < pmbc.size(); i++) {
+    for (UInt i = 0; i < pmbc.size(); i++) {
         if (pmbc[i].getCondition()->is<PMPEC>()) {
             const BoundaryCondition* ptr = &pmbc[i];
             res.push_back(ptr);
@@ -199,7 +194,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToPEC() const {
 
 vector<const BoundaryCondition*> BCGroup::getPtrsToPMC() const {
     vector<const BoundaryCondition*> res;
-    for (uint i = 0; i < pmbc.size(); i++) {
+    for (UInt i = 0; i < pmbc.size(); i++) {
         if (pmbc[i].getCondition()->is<PMPMC>()) {
             const BoundaryCondition* ptr = &pmbc[i];
             res.push_back(ptr);
@@ -210,7 +205,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToPMC() const {
 
 vector<const BoundaryCondition*> BCGroup::getPtrsToSMA() const {
     vector<const BoundaryCondition*> res;
-    for (uint i = 0; i < pmbc.size(); i++) {
+    for (UInt i = 0; i < pmbc.size(); i++) {
         if (pmbc[i].getCondition()->is<PMSMA>()) {
             const BoundaryCondition* ptr = &pmbc[i];
             res.push_back(ptr);
@@ -221,7 +216,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToSMA() const {
 
 vector<const BoundaryCondition*> BCGroup::getPtrsToSIBC() const {
     vector<const BoundaryCondition*> res;
-    for (uint i = 0; i < sibc.size(); i++) {
+    for (UInt i = 0; i < sibc.size(); i++) {
         const BoundaryCondition* ptr = &sibc[i];
         res.push_back(ptr);
     }
@@ -230,7 +225,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToSIBC() const {
 
 vector<const BoundaryCondition*> BCGroup::getPtrsToEMSourceBC() const {
     vector<const BoundaryCondition*> res;
-    for (uint i = 0; i < embc.size(); i++) {
+    for (UInt i = 0; i < embc.size(); i++) {
         const BoundaryCondition* ptr = &embc[i];
         res.push_back(ptr);
     }
@@ -240,7 +235,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToEMSourceBC() const {
 vector<const BoundaryCondition*> BCGroup::getPtrsToBC(const EMSourceBase* pw) const {
     vector<const BoundaryCondition*> res;
     res.reserve(embc.size());
-    for (uint i = 0; i < embc.size(); i++) {
+    for (UInt i = 0; i < embc.size(); i++) {
         if (pw == embc[i].getCondition()) {
             res.push_back(&embc[i]);
         }
@@ -261,16 +256,16 @@ void BCGroup::check() const {
 }
 
 vector<const BoundaryCondition*> BCGroup::getPtrsToBCWithMatId(
-        const uint id) const {
+        const UInt id) const {
     vector<const BoundaryCondition*> res;
     res.reserve(pmbc.size());
-    for (uint i = 0; i < pmbc.size(); i++) {
+    for (UInt i = 0; i < pmbc.size(); i++) {
         if (pmbc[i].getCondition()->getId() == id) {
             res.push_back(&pmbc[i]);
         }
     }
     res.reserve(sibc.size());
-    for (uint i = 0; i < sibc.size(); i++) {
+    for (UInt i = 0; i < sibc.size(); i++) {
         if (sibc[i].getCondition()->getId() == id) {
             res.push_back(&sibc[i]);
         }
@@ -279,8 +274,8 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToBCWithMatId(
 }
 
 void BCGroup::checkEMSourcesAreSetInVacuum() const {
-    uint nBC = embc.size();
-    for (uint i = 0; i < nBC; i++) {
+    UInt nBC = embc.size();
+    for (UInt i = 0; i < nBC; i++) {
         if (!embc[i].cell_->material->isVacuum()) {
             cerr << "ERROR @ Boundary Conditions."   << endl;
             cerr << "ElectromagneticSource BC has been" << endl;
@@ -293,8 +288,8 @@ void BCGroup::checkEMSourcesAreSetInVacuum() const {
 bool BCGroup::checkOverlapping() const {
     bool repeated = false;
     // Check repeated elements in embc and pmbc
-    for (uint i = 0; i < embc.size(); i++) {
-        for (uint j = 0; j < pmbc.size(); j++) {
+    for (UInt i = 0; i < embc.size(); i++) {
+        for (UInt j = 0; j < pmbc.size(); j++) {
             if (embc[i].cell_ == pmbc[j].cell_
                     && embc[i].face_ == pmbc[j].face_) {
                 repeated = true;
@@ -303,8 +298,7 @@ bool BCGroup::checkOverlapping() const {
         }
     }
     if (repeated) {
-        cerr << "ERROR@BCGroup::checkRepeated()" << endl;
-        cerr << "Overlapping boundary conditions detected." << endl;
+        throw Error("Overlapping boundary conditions detected.");
     }
     return repeated;
 }

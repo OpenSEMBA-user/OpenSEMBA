@@ -43,7 +43,7 @@ MapGroup::~MapGroup() {
 }
 
 MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
-                   const GroupElements   <const Elem> & eG) {
+        const GroupElements   <const Elem> & eG) {
     // Builds a list with all tetrahedron faces.
     static const UInt faces = 4;
     static const UInt nVert = 3;
@@ -106,7 +106,7 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
             neighFaces[j] = etof(k,j);
         }
         pair<UInt, MapVolume*> aux(local->getId().toUInt(),
-                                   new MapVolume(local, neigh, neighFaces));
+                new MapVolume(local, neigh, neighFaces));
         tet_.insert(aux);
     }
     // Now uses the generated ordered fList to build the triangle maps.
@@ -144,13 +144,12 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
             neigh.second = neigh.first;
         }
         pair<UInt, MapSurface*> aux(local->getId().toUInt(),
-                                    new MapSurface(local, neigh));
+                new MapSurface(local, neigh));
         tri_.insert(aux);
     }
 }
 
-void
-MapGroup::reassignPointers(const GroupElements<const Elem>& newEG) {
+void MapGroup::reassignPointers(const GroupElements<const Elem>& newEG) {
     {
         map<UInt,MapVolume*>::iterator it;
         for (it=tet_.begin(); it != tet_.end(); ++it) {
@@ -165,17 +164,16 @@ MapGroup::reassignPointers(const GroupElements<const Elem>& newEG) {
     }
 }
 
-const Tetrahedron* MapGroup::getNeighbour(const UInt id, const UInt face) const {
+const Tetrahedron* MapGroup::getNeighbour(const ElementId id, const UInt face) const {
     return tet_.find(id)->second->getVol(face);
 }
 
-UInt MapGroup::getVolToF(const UInt id, const UInt face) const {
+UInt MapGroup::getVolToF(const ElementId id, const UInt face) const {
     return tet_.find(id)->second->getVolToF(face);
 }
 
 
-pair<const VolR*, UInt>
-MapGroup::getInnerFace(const UInt id) const {
+Face MapGroup::getInnerFace(const ElementId id) const {
     map<UInt,MapSurface*>::const_iterator surf = tri_.find(id);
     assert(surf != tri_.end());
     const Tetrahedron* vol = surf->second->getVol(0);
@@ -183,31 +181,30 @@ MapGroup::getInnerFace(const UInt id) const {
     return pair<const Tetrahedron*, UInt>(vol, face);
 }
 
-Face MapGroup::getOuterFace(const UInt id) const {
+Face MapGroup::getOuterFace(const ElementId id) const {
     const VolR* vol = tri_.find(id)->second->getVol(1);
     const UInt face = tri_.find(id)->second->getVolToF(1);
     return pair<const VolR*, UInt>(vol, face);
 }
 
 Face MapGroup::getNeighConnection(
-const UInt id,
-const UInt face) const {
-    pair<const Tetrahedron*, UInt> res;
-    res.first = getNeighbour(id, face);
-    res.second = getVolToF(id, face);
+        const Face& face) const {
+    Face res;
+    res.first = getNeighbour(face.first->getId(), face.second);
+    res.second = getVolToF(face.first->getId(), face.second);
     return res;
 }
 
-bool MapGroup::isBoundary(const UInt id) const {
+bool MapGroup::isBoundary(const ElementId  id) const {
     return tri_.find(id)->second->isBoundary();
 }
 
-bool MapGroup::isDomainBoundary(const UInt id, const UInt f) const {
+bool MapGroup::isDomainBoundary(const ElementId id, const UInt f) const {
     return (getNeighbour(id,f)->getId() == ElementId(id));
 }
 
 bool MapGroup::isDomainBoundary(Face boundary) const {
-    return isDomainBoundary(boundary.first->getId().toUInt(), boundary.second);
+    return isDomainBoundary(boundary.first->getId(), boundary.second);
 }
 
 //pair<const Tet*, const Tet*>

@@ -53,17 +53,17 @@ public:
              const GroupElements  <const Elem> & eG);
     virtual ~MapGroup();
     void reassignPointers(const GroupElements<const Elem>& nEG);
-    const Tetrahedron* getNeighbour(const UInt id, const UInt face) const;
-    UInt getVolToF(const UInt id, const UInt face) const;
-    Face getNeighConnection(const UInt id, const UInt face) const;
-    Face getInnerFace(const UInt id) const;
-    Face getOuterFace(const UInt id) const;
-    bool isBoundary(const UInt id) const;
-    bool isDomainBoundary(const UInt id, const UInt f) const;
+    const Tetrahedron* getNeighbour(const ElementId id, const UInt face) const;
+    UInt getVolToF(const ElementId id, const UInt face) const;
+    Face getNeighConnection(const Face& face) const;
+    Face getInnerFace(const ElementId id) const;
+    Face getOuterFace(const ElementId id) const;
+    bool isBoundary(const ElementId id) const;
+    bool isDomainBoundary(const ElementId id, const UInt f) const;
     bool isDomainBoundary(Face boundary) const;
 private:
-    map<UInt, MapSurface*> tri_;
-    map<UInt, MapVolume*> tet_;
+    map<ElementId, MapSurface*> tri_;
+    map<ElementId, MapVolume*> tet_;
 };
 
 
