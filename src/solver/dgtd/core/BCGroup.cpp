@@ -32,7 +32,7 @@ BCGroup::BCGroup(
         const SmbData& smb,
         const CellGroup& cells,
         const MapGroup& map) {
-    const MeshVolume* mesh = smb.mesh;
+    const MeshVolume* mesh = smb.mesh->castTo<MeshVolume>();
     const EMSourceGroup* em = smb.emSources;
     const PMGroup* pm = smb.pMGroup;
     buildEMSourceBC(*mesh, *em, cells);
@@ -138,8 +138,7 @@ void BCGroup::removeOverlapped() {
     em = removeCommons(em, sibc);
     // Rebuilds lists.
     vector<PhysicalModelBC> auxPMBC;
-    auxPMBC.reserve(
-            pec.size() + pmc.size() + sma.size() + sibc.size());
+    auxPMBC.reserve(pec.size() + pmc.size() + sma.size() + sibc.size());
     for (UInt i = 0; i < pec.size(); i++) {
         auxPMBC.push_back(PhysicalModelBC(*pec[i]));
     }
@@ -277,10 +276,7 @@ void BCGroup::checkEMSourcesAreSetInVacuum() const {
     UInt nBC = embc.size();
     for (UInt i = 0; i < nBC; i++) {
         if (!embc[i].cell_->material->isVacuum()) {
-            cerr << "ERROR @ Boundary Conditions."   << endl;
-            cerr << "ElectromagneticSource BC has been" << endl;
-            cerr << "defined over a not vacuum cell." << endl;
-            exit(BC_ERROR);
+            throw Error("ElectromagneticSource BC has been defined over a not vacuum cell.");
         }
     }
 }

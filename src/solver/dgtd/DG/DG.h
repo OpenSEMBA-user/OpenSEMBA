@@ -24,13 +24,13 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-
 using namespace std;
 
-#include "../core/Comm.h"
 #include "SmbData.h"
-#include "options/OptionsSolverDGTD.h"
 #include "math/Field.h"
+#include "solver/dgtd/core/Comm.h"
+#include "solver/dgtd/core/BCGroup.h"
+#include "options/OptionsSolverDGTD.h"
 #include "sources/DGPlaneWave.h"
 #include "sources/DGDipole.h"
 #include "sources/DGWaveguidePortRectangular.h"

@@ -29,10 +29,10 @@
 
 CellGroup::CellGroup(const SmbData* smb) {
     const MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
-	GroupElements<Tet> tet = mesh->elems().getOf<Tet>().size();
+	GroupElements<Tet> tet = mesh->elems().getOf<Tet>();
 	const PMGroup* pMGroup = smb->pMGroup;
 	cell.resize(tet.size(), NULL);
-	cellOffsetId = tet(0)->getId();
+	cellOffsetId = tet(0)->getId().toUInt();
 	// Reserves space for cell vectors.
 	vector<const Tet*> linear, quadratic;
 	for (UInt k = 0; k < tet.size(); k++) {

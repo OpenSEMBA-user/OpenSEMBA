@@ -123,7 +123,7 @@ const SimplexTet<TET_N> CellTet<TET_N>::tet;
 
 template <int TET_N>
 class CellTet4 : public CellTet<TET_N> {
-    friend class Tet4;
+    friend class Tetrahedron4;
 public:
     static const UInt np = TET_NP;
     static const UInt nfp = TET_NFP;
