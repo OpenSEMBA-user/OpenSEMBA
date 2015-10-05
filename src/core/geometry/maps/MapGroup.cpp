@@ -105,7 +105,7 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
             neigh[j] = eG.getId(ElementId(etoe(k,j)))->castTo<Tetrahedron>();
             neighFaces[j] = etof(k,j);
         }
-        pair<UInt, MapVolume*> aux(local->getId().toUInt(),
+        pair<ElementId, MapVolume*> aux(local->getId(),
                 new MapVolume(local, neigh, neighFaces));
         tet_.insert(aux);
     }
@@ -143,7 +143,7 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
             neigh.first = eG.getId(ElementId(fList(i,0)))->castTo<Tetrahedron>();
             neigh.second = neigh.first;
         }
-        pair<UInt, MapSurface*> aux(local->getId().toUInt(),
+        pair<ElementId, MapSurface*> aux(local->getId(),
                 new MapSurface(local, neigh));
         tri_.insert(aux);
     }
@@ -151,13 +151,13 @@ MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
 
 void MapGroup::reassignPointers(const GroupElements<const Elem>& newEG) {
     {
-        map<UInt,MapVolume*>::iterator it;
+        map<ElementId,MapVolume*>::iterator it;
         for (it=tet_.begin(); it != tet_.end(); ++it) {
             it->second->reassignPointers(newEG);
         }
     }
     {
-        map<UInt,MapSurface*>::iterator it;
+        map<ElementId,MapSurface*>::iterator it;
         for (it=tri_.begin(); it != tri_.end(); ++it) {
             it->second->reassignPointers(newEG);
         }
@@ -174,7 +174,7 @@ UInt MapGroup::getVolToF(const ElementId id, const UInt face) const {
 
 
 Face MapGroup::getInnerFace(const ElementId id) const {
-    map<UInt,MapSurface*>::const_iterator surf = tri_.find(id);
+    map<ElementId,MapSurface*>::const_iterator surf = tri_.find(id);
     assert(surf != tri_.end());
     const Tetrahedron* vol = surf->second->getVol(0);
     const UInt face = surf->second->getVolToF(0);

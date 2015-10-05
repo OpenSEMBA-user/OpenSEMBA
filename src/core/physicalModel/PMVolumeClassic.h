@@ -52,6 +52,8 @@ public:
     Real getElectricConductivity() const;
     Real getMagneticConductivity() const;
     bool isVacuum() const;
+
+    void printInfo() const;
 private:
     Real rEps_; // Rel. permittivity @ infte. freq.
     Real rMu_; // Rel. permeability @ infte. freq.

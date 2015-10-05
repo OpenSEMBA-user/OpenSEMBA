@@ -88,3 +88,11 @@ bool PMVolumeClassic::isVacuum() const {
             && magneticConudctivity_ == 0.0);
 }
 
+void PMVolumeClassic::printInfo() const {
+    cout << "--- PMVolumeClassic info ---" << endl;
+    PMVolume::printInfo();
+    cout << "Rel. elec. permittivity: " << getRelativePermittivity() << endl;
+    cout << "Rel. magn. permeability: " << getRelativePermeability() << endl;
+    cout << "Electric conductivity: " << getElectricConductivity() << endl;
+    cout << "Magnetic conductivity: " << getMagneticConductivity() << endl;
+}
