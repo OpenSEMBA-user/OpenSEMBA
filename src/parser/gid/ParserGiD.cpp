@@ -708,16 +708,16 @@ GroupLayers<> ParserGiD::readLayers() {
                     finished = true;
                 } else {
                     stringstream ss(line);
-                    ss >> id >> value;
-                    res.add(new Layer(id, value));
+                    ss >> id;;
+                    string name;
+                    name = line.substr(line.find_first_of(" ") + 1, line.length());
+                    res.add(new Layer(id, name));
                 }
             }
         }
     }
     if (!found) {
-        cerr << endl << "ERROR @ Parsing layers: "
-                << "Layers label was not found." << endl;
-        return res;
+        throw Error("Layers label was not found.");
     }
     return res;
 }

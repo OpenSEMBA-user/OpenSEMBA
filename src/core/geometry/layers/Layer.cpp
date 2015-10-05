@@ -33,11 +33,11 @@ Layer::Layer() {
 
 Layer::Layer(const LayerId id, const string& name)
 :   ClassIdBase<LayerId>(id) {
-    name_ = name;
+    name_ = spaceToUnderscore(name);
 }
 
 Layer::Layer(const string& name) {
-    name_ = name;
+    name_ = spaceToUnderscore(name);
 }
 
 Layer::Layer(const Layer& rhs)
@@ -85,4 +85,14 @@ string Layer::toStr() const {
     stringstream ss;
     ss << "Layer. Id: " << getId() << " Name: " << getName();
     return ss.str();
+}
+
+string Layer::spaceToUnderscore(string rhs) {
+    string str = rhs;
+    for(std::string::iterator it = str.begin(); it != str.end(); ++it) {
+        if(*it == ' ') {
+            *it = '_';
+        }
+    }
+    return str;
 }

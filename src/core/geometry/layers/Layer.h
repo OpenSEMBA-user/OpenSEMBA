@@ -67,6 +67,8 @@ public:
 
 private:
     string name_;
+
+    static string spaceToUnderscore(string rhs);
 };
 
 #endif /* SRC_COMMON_INPUTS_LAYER_H_ */
