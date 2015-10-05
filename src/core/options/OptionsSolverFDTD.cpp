@@ -66,7 +66,7 @@ OptionsSolverFDTD::~OptionsSolverFDTD() {
 }
 
 void OptionsSolverFDTD::set(const Arguments& arg) {
-    OptionsSolverFDTD::set(arg);
+    OptionsSolver::set(arg);
     if (arg.has("digfilt")) {
         setCompositeModel(CompositeModel::digFilt);
     }

@@ -106,14 +106,14 @@ OptionsSolver* ParserGiD::readOptionsSolver() {
                 } else if (label.compare("Additional arguments") == 0) {
                     base.setAdditionalArguments(value);
                 } else if (label.compare("Solver") == 0) {
-                    switch (strToSolver(value)) {
-                    case OptionsSolver::Solver::ugrfdtd:
-                        return readOptionsSolverFDTD(base);
-                    case OptionsSolver::Solver::cudg3d:
-                        return readOptionsSolverDGTD(base);
-                    default:
-                        break;
-                    }
+                    base.setSolver(strToSolver(value));
+                } else if (label.compare("cudg3d options") == 0 &&
+                        base.getSolver() == OptionsSolverDGTD::Solver::cudg3d) {
+                    return readOptionsSolverDGTD(base);
+                } else if (label.compare("ugrfdtd options") == 0 &&
+                        (base.getSolver() == OptionsSolverDGTD::Solver::ugrfdtd
+                         || base.getSolver() == OptionsSolverDGTD::Solver::none)) {
+                    return readOptionsSolverFDTD(base);
                 } else if(label.find("End of solver options") != label.npos) {
                     finished = true;
                 }
@@ -126,73 +126,65 @@ OptionsSolver* ParserGiD::readOptionsSolver() {
 
 OptionsSolverFDTD* ParserGiD::readOptionsSolverFDTD(
         const OptionsSolver& base) {
-    bool finished = false;
-    bool optionsFound = false;
     OptionsSolverFDTD* res = new OptionsSolverFDTD(base);
-    while (!optionsFound && !f_in.eof()) {
+    while (!f_in.eof()) {
         string label, value;
         getNextLabelAndValue(label, value);
-        if (label.compare("ugrfdtd options") == 0) {
-            optionsFound = true;
-            while (!finished && !f_in.eof() ) {
-                if (label.compare("Composites model") == 0) {
-                    res->setCompositeModel(strToCompositeModel(value));
-                } else if (label.compare("Conformal skin") == 0) {
-                    res->setConformalSkin(strToBool(value));
-                } else if (label.compare("No compo Mur") == 0) {
-                    res->setNoCompoMur(strToBool(value));
-                } else if (label.compare("Skin depth") == 0) {
-                    res->setSkinDepth(strToBool(value));
-                } else if (label.compare("Composites attenuation factor") == 0) {
-                    res->setCompositesAttenuationFactor(atof(value.c_str()));
-                } else if (label.compare("Wires flavor") == 0) {
-                    res->setWireModel(strToWireModel(value));
-                } else if (label.compare("MTLN") == 0) {
-                    res->setMTLN(strToBool(value));
-                } else if (label.compare("Min distance wires") == 0) {
-                    res->setMinDistanceWires(atof(value.c_str()));
-                } else if (label.compare("New dispersive formulation") == 0) {
-                    res->setNewDispersiveFormulation(strToBool(value));
-                } else if (label.compare("Taparrabos") == 0) {
-                    res->setTaparrabos(strToBool(value));
-                } else if (label.compare("Make holes") == 0) {
-                    res->setMakeHoles(strToBool(value));
-                } else if (label.compare("Ground wires") == 0) {
-                    res->setGroundWires(strToBool(value));
-                } else if (label.compare("Inductance model") == 0) {
-                    res->setInductanceModel(strToInductanceModel(value));
-                } else if (label.compare("Wires attenuation factor") == 0) {
-                    res->setWiresAttenuationFactor(atof(value.c_str()));
-                } else if (label.compare("Use default PML") == 0) {
-                    res->setUseDefaultPml(strToBool(value.c_str()));
-                } else if (label.compare("PML alpha factor") == 0) {
-                    Real factor = atof(value.c_str());
-                    getNextLabelAndValue(label, value);
-                    Real order = atof(value.c_str());
-                    res->setPMLAlpha(pair<Real,Real>(factor, order));
-                } else if (label.compare("PML kappa") == 0) {
-                    res->setPMLKappa(atof(value.c_str()));
-                } else if (label.compare("PML correction factor") == 0) {
-                    Real factor = atof(value.c_str());
-                    getNextLabelAndValue(label, value);
-                    Real depth = atof(value.c_str());
-                    res->setPMLCorrection(pair<Real,Real>(factor, depth));
-                } else if (label.compare("PML backing") == 0) {
-                    res->setPMLBacking(strToPMLBacking(value));
-                } else if (label.compare("Map") == 0) {
-                    res->setMap(strToBool(value));
-                } else if (label.compare("Map VTK") == 0) {
-                    res->setMapVtk(strToBool(value));
-                } else if (label.compare("No NF2FF") == 0) {
-                    res->setNoNF2FF(strToNoNF2FF(value));
-                } else if (label.compare("NF2F decimation") == 0) {
-                    res->setNF2FFDecimation(strToBool(value));
-                } else if(label.find("End of ugrfdtd options") != label.npos) {
-                    finished = true;
-                    return res;
-                }
-            } // Closes ( !finished && !f_in.eof() ) while.
-        } // Closes problem data found if.
+        if (label.compare("Composites model") == 0) {
+            res->setCompositeModel(strToCompositeModel(value));
+        } else if (label.compare("Conformal skin") == 0) {
+            res->setConformalSkin(strToBool(value));
+        } else if (label.compare("No compo Mur") == 0) {
+            res->setNoCompoMur(strToBool(value));
+        } else if (label.compare("Skin depth") == 0) {
+            res->setSkinDepth(strToBool(value));
+        } else if (label.compare("Composites attenuation factor") == 0) {
+            res->setCompositesAttenuationFactor(atof(value.c_str()));
+        } else if (label.compare("Wires flavor") == 0) {
+            res->setWireModel(strToWireModel(value));
+        } else if (label.compare("MTLN") == 0) {
+            res->setMTLN(strToBool(value));
+        } else if (label.compare("Min distance wires") == 0) {
+            res->setMinDistanceWires(atof(value.c_str()));
+        } else if (label.compare("New dispersive formulation") == 0) {
+            res->setNewDispersiveFormulation(strToBool(value));
+        } else if (label.compare("Taparrabos") == 0) {
+            res->setTaparrabos(strToBool(value));
+        } else if (label.compare("Make holes") == 0) {
+            res->setMakeHoles(strToBool(value));
+        } else if (label.compare("Ground wires") == 0) {
+            res->setGroundWires(strToBool(value));
+        } else if (label.compare("Inductance model") == 0) {
+            res->setInductanceModel(strToInductanceModel(value));
+        } else if (label.compare("Wires attenuation factor") == 0) {
+            res->setWiresAttenuationFactor(atof(value.c_str()));
+        } else if (label.compare("Use default PML") == 0) {
+            res->setUseDefaultPml(strToBool(value.c_str()));
+        } else if (label.compare("PML alpha factor") == 0) {
+            Real factor = atof(value.c_str());
+            getNextLabelAndValue(label, value);
+            Real order = atof(value.c_str());
+            res->setPMLAlpha(pair<Real,Real>(factor, order));
+        } else if (label.compare("PML kappa") == 0) {
+            res->setPMLKappa(atof(value.c_str()));
+        } else if (label.compare("PML correction factor") == 0) {
+            Real factor = atof(value.c_str());
+            getNextLabelAndValue(label, value);
+            Real depth = atof(value.c_str());
+            res->setPMLCorrection(pair<Real,Real>(factor, depth));
+        } else if (label.compare("PML backing") == 0) {
+            res->setPMLBacking(strToPMLBacking(value));
+        } else if (label.compare("Map") == 0) {
+            res->setMap(strToBool(value));
+        } else if (label.compare("Map VTK") == 0) {
+            res->setMapVtk(strToBool(value));
+        } else if (label.compare("No NF2FF") == 0) {
+            res->setNoNF2FF(strToNoNF2FF(value));
+        } else if (label.compare("NF2F decimation") == 0) {
+            res->setNF2FFDecimation(strToBool(value));
+        } else if(label.find("End of ugrfdtd options") == 0) {
+            return res;
+        }
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
     throw Error("No options were found.");

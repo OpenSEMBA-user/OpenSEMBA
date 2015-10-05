@@ -2,7 +2,7 @@
 <Infoproblemtype version="1.0">
     <Program>
         <Name>Semba</Name>
-        <Version>0.10</Version>
+        <Version>0.9.3</Version>
 		<EngineVersion>XXXX</EngineVersion>
         <MinimumGiDVersion>9.1.0b</MinimumGiDVersion>
 		<ImageFileBrowser>images/ico.png</ImageFileBrowser>        

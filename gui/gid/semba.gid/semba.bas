@@ -4,7 +4,6 @@ Version: *tcl(set version $semba::VersionNumber)
 =======================================================================
 
 Solver options:
-Solver: *GenData(Solver)
 *if(strcasecmp(GenData(Ending),"Final_time")==0)
 Final time: *GenData(Final_time)
 *else
@@ -16,7 +15,10 @@ Default sampling period: *GenData(Default_sampling_period)
 Force restarting: *GenData(Force_restarting)
 Resume simulation: *GenData(Resume_simulation)
 Flush: *GenData(Flush)
+Additional arguments: *GenData(Additional_arguments)
+Solver: *GenData(Solver)
 ------- UGRFDTD -------
+ugrfdtd options: 
 Composites model: *GenData(Composites_model)
 Conformal skin: *GenData(Conformal_skin)
 No compo Mur: *GenData(No_compo_mur)
@@ -44,7 +46,7 @@ PML backing: *GenData(PML_backing)
 Map: *GenData(Map)
 Map VTK: *GenData(Map_VTK)
 NF2FF decimation: *GenData(NF2FF_decimation)
-Additional arguments: *GenData(Additional_arguments)
+End of ugrfdtd options:
 End of solver options
 ------- MESHER -------
 Mesher options:
