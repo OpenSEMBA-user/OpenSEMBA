@@ -280,9 +280,9 @@ OptionsMesher* ParserGiD::readMesherOptions() {
                         paddingByNumberOfCells = false;
                     }
                 } else if (label.compare("Boundary padding") == 0) {
-                    boundaryPadding_ = strToBound(value);
+                    boundaryPadding_ = strToBox(value);
                 } else if (label.compare("Boundary mesh size") == 0) {
-                    boundaryMeshSize_ = strToBound(value);
+                    boundaryMeshSize_ = strToBox(value);
                 } else if (label.compare("End of mesher options")==0) {
                     finished = true;
                 }
@@ -496,12 +496,21 @@ GroupOutRqs<>* ParserGiD::readOutputRequests() {
     return res;
 }
 
-GroupElements<Vol> ParserGiD::boundToElemGroup(const string& line) {
-    BoxR3 bound = strToBound(line);
-    HexR8* hex = new HexR8(*mesh_, ElementId(0), bound);
-    mesh_->elems().addId(hex);
-    GroupElements<Vol> elems(hex);
-    return elems;
+GroupElements<> ParserGiD::boxToElemGroup(const string& line) {
+    BoxR3 box = strToBox(line);
+    if (box.isVolume()) {
+        HexR8* hex = new HexR8(*mesh_, ElementId(0), box);
+        mesh_->elems().addId(hex);
+        GroupElements<> elems(hex);
+        return elems;
+    } else if (box.isSurface()) {
+        QuaR4* qua = new QuaR4(*mesh_, ElementId(0), box);
+        mesh_->elems().addId(qua);
+        GroupElements<> elems(qua);
+        return elems;
+    } else {
+        throw Error("Box to Elem Group only works for volumes and surfaces");
+    }
 }
 
 void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
@@ -551,8 +560,14 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                 case ParserGiD::outRqOnVolume:
                 {
                     getline(f_in, line);
-                    GroupElements<Vol> elems = boundToElemGroup(line);
-                    res->add(new OutRq<Vol>(domain, type, name, elems));
+                    GroupElements<> elems = boxToElemGroup(line);
+                    if (elems.getOf<Vol>().size()) {
+                        res->add(new OutRq<Vol>(domain, type, name, elems.getOf<Vol>()));
+                    } else if (elems.getOf<Surf>().size()) {
+                        res->add(new OutRq<Surf>(domain, type, name, elems.getOf<Surf>()));
+                    } else {
+                        throw Error("Layer for OutRq on volume must be volume or surface");
+                    }
                     break;
                 }
                 case ParserGiD::bulkCurrentOnSurface:
@@ -605,7 +620,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     getNextLabelAndValue(label,value);
                     skip = atoi(value.c_str());
                     getline(f_in, line);
-                    GroupElements<Vol> elems = boundToElemGroup(line);
+                    GroupElements<Vol> elems = boxToElemGroup(line);
                     res->add(new OutRqBulkCurrent(domain, name, elems,
                             dir, skip));
                     break;
@@ -613,7 +628,7 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                 case ParserGiD::farField:
                 {
                     getline(f_in, line);
-                    GroupElements<Vol> elems = boundToElemGroup(line);
+                    GroupElements<Vol> elems = boxToElemGroup(line);
                     Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
@@ -1038,7 +1053,7 @@ ParserGiD::readCartesianGrid() {
                 getNextLabelAndValue(label, value);
                 if (label.compare("Layer Box")==0) {
                     gridFound = true;
-                    bound = BoxR3(strToBound(value));
+                    bound = BoxR3(strToBox(value));
                 } else if (label.compare("Type")==0) {
                     if (trim(value).compare("by_number_of_cells")==0) {
                         stepsByNumberOfCells = true;
@@ -1098,7 +1113,7 @@ PlaneWave* ParserGiD::readPlaneWave() {
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
-            elems = boundToElemGroup(value);
+            elems = boxToElemGroup(value);
         } else if (label.compare("Number of elements")==0) {
             UInt nE = atoi(value.c_str());
             elems.clear();
@@ -1469,7 +1484,7 @@ PMMultiport::Type ParserGiD::strToMultiportType(string str) {
     }
 }
 
-pair<CVecR3, CVecR3> ParserGiD::strToBound(const string& value) {
+pair<CVecR3, CVecR3> ParserGiD::strToBox(const string& value) {
     UInt begin = value.find_first_of("{");
     UInt end = value.find_last_of("}");
     string aux = value.substr(begin+1,end-1);

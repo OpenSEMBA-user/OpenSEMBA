@@ -121,7 +121,7 @@ private:
 
     string readVersion();
     bool checkVersionCompatibility(const string version) const;
-    GroupElements<Vol> boundToElemGroup(const string& line);
+    GroupElements<> boxToElemGroup(const string& line);
 
     static OutRq<void>::Type strToOutputType(string label);
     static SIBCType strToSIBCType(string str);
@@ -145,7 +145,7 @@ private:
     static OptionsSolverFDTD::WireModel strToWireModel(string);
     static OptionsSolverFDTD::InductanceModel strToInductanceModel(string);
     static OptionsSolverFDTD::CompositeModel strToCompositeModel(string);
-    static pair<CVecR3, CVecR3> strToBound(const string& str);
+    static pair<CVecR3, CVecR3> strToBox(const string& str);
     static PoleResidue readPoleResiduePair(ifstream& stream);
 };
 
