@@ -27,10 +27,6 @@
 #ifndef MATHMATRIX_H_
 #define MATHMATRIX_H_
 
-#ifndef _DEBUG
-	#define NDEBUG
-#endif
-
 #define MATRICES_ASCENDING          0
 #define MATRICES_DESCENDING         1
 #ifndef MATRICES_MODES
