@@ -18,11 +18,12 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+
 cmake_minimum_required(VERSION 2.8)
 
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
 add_sources(. ${SRCS})
 
-add_executable(testSemba ${SRCS})
-target_link_libraries(testSemba opensemba parserGiD adapterFDTD semba gtest gtest_main)
-set_target_properties(testSemba PROPERTIES OUTPUT_NAME test)
+add_executable(testOpenSemba ${SRCS})
+target_link_libraries(testOpenSemba opensemba parserGiD adapterFDTD gtest gtest_main)
+set_target_properties(testOpenSemba PROPERTIES OUTPUT_NAME test)
