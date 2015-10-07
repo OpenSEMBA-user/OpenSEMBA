@@ -143,13 +143,27 @@ GroupElements<ElemR> Exporter::getGridElems(
     BoxR3 box = grid->getFullDomainBoundingBox();
     if (grid != NULL) {
         for (UInt d = 0; d < 3; d++) {
-            vector<BoxR3> quadBoxes =
-                    box.getBoundAsBox(CartesianAxis(d),L).chop(*grid);
-            vector<QuaR4*> quads(quadBoxes.size());
-            for (UInt i = 0; i < quadBoxes.size(); i++) {
-                quads[i] = new QuaR4(cG, ElementId(0), quadBoxes[i]);
+            // Generates grid as quads.
+//            vector<BoxR3> quadBoxes =
+//                    box.getBoundAsBox(CartesianAxis(d),L).chop(*grid);
+//            vector<QuaR4*> quads(quadBoxes.size());
+//            for (UInt i = 0; i < quadBoxes.size(); i++) {
+//                quads[i] = new QuaR4(cG, ElementId(0), quadBoxes[i]);
+//            }
+//            elem.addId(quads);
+            // Generates grid as lines.
+            for (UInt i = 0; i < 2; i++) {
+                vector<Real> pos = grid->getPos((d+i+1)%3);
+                for (UInt j = 0; j < pos.size(); j++) {
+                    CVecR3 pMin, pMax;
+                    pMin(d) = grid->getPos(d,L);
+                    pMin((d+i+1)%3) = pos[j];
+                    pMax = pMin;
+                    pMin((d-i+2)%3) = grid->getPos((d-i+2)%3).front();
+                    pMax((d-i+2)%3) = grid->getPos((d-i+2)%3).back();
+                    elem.addId(new LinR2(cG, ElementId(0), BoxR3(pMin,pMax)));
+                }
             }
-            elem.addId(quads);
         }
     } else {
         elem.addId(new QuaR4(cG, ElementId(0), box));

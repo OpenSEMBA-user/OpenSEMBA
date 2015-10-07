@@ -91,6 +91,14 @@ void GraphVertices<ELEM,BOUND>::splitBound(UInt i) {
     for (UInt j = 1; j < oldAdj.size(); j++) {
         this->bounds_.push_back(new GraphBound(*this->bounds_[i]));
         this->bounds_.back()->setBounds(oldAdj[j]);
+        if (oldAdj[j]->getBound(0)->elem()->getId() ==
+            this->bounds_[i]->elem()->getId()) {
+            oldAdj[j]->setBound(0, this->bounds_.back());
+        }
+        if (oldAdj[j]->getBound(1)->elem()->getId() ==
+            this->bounds_[i]->elem()->getId()) {
+            oldAdj[j]->setBound(1, this->bounds_.back());
+        }
         this->bounds_.back()->getBound(0)->constructNeighbors();
         this->bounds_.back()->constructNeighbors();
     }
