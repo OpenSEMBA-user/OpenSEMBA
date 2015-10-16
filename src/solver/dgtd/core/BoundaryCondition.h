@@ -42,6 +42,9 @@ public:
     bool hasSameBoundary(const BoundaryCondition& other) const;
     virtual BoundaryCondition& operator=(const BoundaryCondition& rhs);
         virtual void printInfo() const;
+    const CellTet<ORDER_N>*& getCell() const;
+    UInt getFace() const;
+
 private:
     const CellTet<ORDER_N>* cell_;
     UInt face_;

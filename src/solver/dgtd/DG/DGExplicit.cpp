@@ -33,9 +33,12 @@ DGExplicit::DGExplicit(
         Comm* comm) {
     smb_ = smb;
     CellGroup cells(smb);
-    init(smb->solverOptions, smb->pMGroup, &cells, comm);
+    const MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
+    const OptionsSolverDGTD* options =
+            dynamic_cast<OptionsSolverDGTD>(smb->solverOptions);
+    init(options, smb->pMGroup, &cells, comm);
     allocateRHSAndJumps();
-    if (!arg->isNoLTS()) {
+    if (options->isUseLTS()) {
         allocateFieldsForLTS();
     }
     if (smb->emSources->size() != 0) {
@@ -47,10 +50,13 @@ DGExplicit::DGExplicit(
     }
     allocateMaps();
     deduplicateVMaps(cells);
-    assignPointersToNeighbours(cells, *smb->mesh);
-    buildEMSources(*smb->emSources, smb->mesh->map, cells);
-    BCGroupsToLocalArray(cells, smb->mesh->map);
-    buildScalingFactors(cells, smb->mesh->map);
+
+    MapGroup map(mesh->coords(), mesh->elems());
+    BCGroup bc(smb, cells, map);
+    assignPointersToNeighbours(cells, map, *mesh);
+    buildEMSources(*smb->emSources, bc, map, cells);
+    BCToLocalArray(bc, cells, map);
+    buildScalingFactors(cells, map);
 }
 
 DGExplicit::~DGExplicit() {
@@ -719,9 +725,8 @@ void DGExplicit::assignMatrices(const CellGroup& cells) {
                     Cz[e] = it->val();
                 }
             } else {
-                cerr << endl << "ERROR @ SolverExplicit:"
-                        << "The following matrix is not stored." << endl;
                 C[i].printInfo();
+                throw Error("The following matrix is not stored.");
             }
         }
     }
@@ -753,12 +758,13 @@ void DGExplicit::assignMatrices(const CellGroup& cells) {
 
 void DGExplicit::assignPointersToNeighbours(
         const CellGroup& cells,
-        const MeshVolume& mesh) {
+        const MapGroup& map,
+        const MeshUnstructured& mesh) {
     UInt nNeighs = 0;
     for (UInt k = 0; k < nK; k++) {
-        UInt id1 = cells.getIdOfRelPos(k);
+        ElementId id1 = cells.getIdOfRelPos(k);
         for (UInt f = 0; f < faces; f++) {
-            UInt id2 = mesh.map.getNeighbour(id1,f)->getId();
+            ElementId id2 = map.getNeighbour(id1,f)->getId();
             if (cells.isLocalId(id2)) {
                 // Assigns ptrs to local cells and counts non local neigh.
                 UInt e2 = cells.getRelPosOfId(id2);
@@ -774,7 +780,7 @@ void DGExplicit::assignPointersToNeighbours(
         }
     }
     // Stores neighbours information and allocates fields.
-    vector<UInt> neighId;
+    vector<ElementId> neighId;
     neighId.reserve(nNeighs);
     nE.setSize(nNeighs*np);
     nH.setSize(nNeighs*np);
@@ -782,10 +788,10 @@ void DGExplicit::assignPointersToNeighbours(
     nH.setToZero();
     UInt neigh = 0;
     for (UInt k = 0; k < nK; k++) {
-        UInt id1 = cells.getIdOfRelPos(k);
+        ElementId id1 = cells.getIdOfRelPos(k);
         for (UInt f = 0; f < faces; f++) {
             assert(cells.isLocalId(id1));
-            UInt id2 = mesh.map.getNeighbour(id1,f)->getId();
+            ElementId id2 = map.getNeighbour(id1,f)->getId();
             if (!cells.isLocalId(id2)) {
                 neighId.push_back(id2);
                 ExP[k][f] = &nE.set(x)[neigh * np];
@@ -811,8 +817,8 @@ void DGExplicit::BCToLocalArray(
     // ----------- SMA ------------------------------------------------
     // Counts SMAs and allocates, em boundaries are also considered.
     {
-        vector<const BoundaryCondition*> smaPtr = bc.get(Condition::sma);
-        vector<const BoundaryCondition*> emPtr = bc.get(Condition::emSource);
+        vector<const BoundaryCondition*> smaPtr = bc.getPtrsToSMA();
+        vector<const BoundaryCondition*> emPtr = bc.getPtrsToEMSourceBC();
         // Removes non local elements.
         smaPtr = removeNonLocalBCs(&cells, smaPtr);
         emPtr = removeNonLocalBCs(&cells, emPtr);
@@ -843,7 +849,7 @@ void DGExplicit::BCToLocalArray(
     // ----------- PEC ------------------------------------------------
     // Counts and allocates.
     {
-        vector<const BoundaryCondition*> pecPtr = bc.get(Condition::pec);
+        vector<const BoundaryCondition*> pecPtr = bc.getPtrsToPEC();
         pecPtr = removeNonLocalBCs(&cells, pecPtr);
         nPEC = pecPtr.size();
         PECe = new UInt[nPEC];
@@ -857,7 +863,7 @@ void DGExplicit::BCToLocalArray(
     // ----------- PMC ------------------------------------------------
     // Counts and allocates.
     {
-        vector<const BoundaryCondition*> pmcPtr = bc.get(Condition::pmc);
+        vector<const BoundaryCondition*> pmcPtr = bc.getPtrsToPMC();
         pmcPtr = removeNonLocalBCs(&cells, pmcPtr);
         nPMC = pmcPtr.size();
         PMCe = new UInt[nPMC];
@@ -868,20 +874,20 @@ void DGExplicit::BCToLocalArray(
             PMCf[i] = pmcPtr[i]->getFace();
         }
     }
-    {
-        for (UInt i = 0; i < smb_->pMGroup->countSIBC(); i++) {
-            const PMSurfaceSIBC* m =
-                    dynamic_cast<const PMSurfaceSIBC*>(smb_->pMGroup->getPMSurface(i));
-            if (m != NULL) {
-                vector<const BoundaryCondition*> sibcPtr
-                = bc.getMatId(m->getId());
-                sibcPtr = removeNonLocalBCs(&cells, sibcPtr);
-                dispersive.push_back(
-                        new DGSIBC(*m, sibcPtr, cells, map, vmapM,
-                                ExP, EyP, EzP, HxP, HyP, HzP));
-            }
-        }
-    }
+//    {
+//        for (UInt i = 0; i < smb_->pMGroup->countSIBC(); i++) {
+//            const PMSurfaceSIBC* m =
+//                    dynamic_cast<const PMSurfaceSIBC*>(smb_->pMGroup->getPMSurface(i));
+//            if (m != NULL) {
+//                vector<const BoundaryCondition*> sibcPtr
+//                = bc.getMatId(m->getId());
+//                sibcPtr = removeNonLocalBCs(&cells, sibcPtr);
+//                dispersive.push_back(
+//                        new DGSIBC(*m, sibcPtr, cells, map, vmapM,
+//                                ExP, EyP, EzP, HxP, HyP, HzP));
+//            }
+//        }
+//    }
 }
 
 void DGExplicit::buildEMSources(
@@ -891,7 +897,7 @@ void DGExplicit::buildEMSources(
         const CellGroup& cells) {
     // Copies the sources structure into solver.
     for (UInt i = 0; i < em.getOf<PlaneWave>().size(); i++) {
-        vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);
+        vector<const BoundaryCondition*> aux = bc.getPtrsToEMSourceBC();
         source.push_back(new DGPlaneWave(*em(i), aux, maps, cells, comm, dE, dH, vmapM));
     }
 //    for (UInt i = 0; i < em.countDipoles(); i++) {

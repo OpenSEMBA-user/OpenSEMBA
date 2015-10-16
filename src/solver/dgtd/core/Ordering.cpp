@@ -73,7 +73,7 @@ UInt Ordering::getLocalSize() const {
 	return localSize;
 }
 
-bool Ordering::isLocalId(const UInt id) const {
+bool Ordering::isLocalId(const ElementId id) const {
 	assert(relPosOfId != NULL);
 	assert(id >= offsetId);
 	UInt rp = relPosOfId[id - offsetId];

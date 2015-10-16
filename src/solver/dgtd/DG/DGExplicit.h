@@ -123,7 +123,7 @@ private:
     // - Maps.
     Int vmapM[faces][nfp];
     Int vmapP[16][nfp];
-    Int ***map;
+    Int ***map_;
     // Pointers to neighbour fields. dim = (nK, 4).
     Real ***ExP, ***EyP, ***EzP, ***HxP, ***HyP, ***HzP;
     // Curved faces stuff ---------------------------------------------
@@ -149,7 +149,10 @@ private:
     void deduplicateVMaps(const CellGroup& cells);
     void allocateRHSAndJumps();
     void allocateMaps();
-    void assignPointersToNeighbours(const MeshVolume& mesh);
+    void assignPointersToNeighbours(
+            const CellGroup& cells,
+            const MapGroup& map,
+            const MeshUnstructured& mesh);
     void buildScalingFactors(const CellGroup& cells, const MapGroup& map);
     void buildEMSources(
             const EMSourceGroup& em,

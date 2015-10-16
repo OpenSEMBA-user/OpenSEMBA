@@ -159,3 +159,11 @@ const EMSourceBase*& EMSourceBC::getCondition() const {
 const PMSurfaceSIBC*& SurfaceImpedanceBC::getCondition() const {
     return sibc_;
 }
+
+const CellTet<ORDER_N>*& BoundaryCondition::getCell() const {
+    return cell_;
+}
+
+UInt BoundaryCondition::getFace() const {
+    return face_;
+}

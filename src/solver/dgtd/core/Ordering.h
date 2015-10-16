@@ -47,7 +47,7 @@ public:
     ElementId getIdOfRelPos(const UInt rp) const;
     UInt getLocalSize() const;
     bool checkRelPosOfId() const;
-    bool isLocalId(const UInt id) const;
+    bool isLocalId(const ElementId id) const;
 protected:
     Ordering();
     virtual ~Ordering();

@@ -36,8 +36,6 @@
 
 using namespace std;
 
-#define COMMUNICATIONS_SUCCESS 0
-
 class CommNone : public Comm {
 public:
     CommNone();
@@ -65,7 +63,7 @@ public:
             const Real* Ex, const Real* Ey, const Real* Ez,
             const Real* Hx, const Real* Hy, const Real* Hz) const;
     Real reduceToGlobalMinimum(Real val) const;
-    void initNeighbourFields(const vector<UInt>& nIds);
+    void initNeighbourFields(const vector<ElementId>& nIds);
     void printInfo() const;
 };
 

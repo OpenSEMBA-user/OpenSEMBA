@@ -64,7 +64,7 @@ public:
     UInt getNfp() const {return nfp;}
     UInt getNumberOfVertices() const {return vertices;}
     UInt getNodeVertex(const UInt i) const;
-    UInt getId() const {return base->getId();}
+    ElementId getId() const {return base->getId();}
     const CoordR3* getV(UInt i) const {return base->getV(i);}
     void getCMatrices(
             StaMatrix<double,np,np> C[3]) const;

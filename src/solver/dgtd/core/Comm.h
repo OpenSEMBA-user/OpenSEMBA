@@ -58,7 +58,7 @@ public:
             Real* nHx, Real* nHy, Real* nHz,
             const Real* Ex, const Real* Ey, const Real* Ez,
             const Real* Hx, const Real* Hy, const Real* Hz) const = 0;
-    virtual void initNeighbourFields(const vector<UInt>& nIds) = 0;
+    virtual void initNeighbourFields(const vector<ElementId>& nIds) = 0;
     virtual Real reduceToGlobalMinimum(Real val) const = 0;
     virtual void printInfo() const = 0;
 };
