@@ -75,30 +75,31 @@ void BCGroup::buildPhysicalModelBC(
         const MapGroup& map) {
     GroupElements<SurfR> surf = mesh.elems().getOf<SurfR>();
     for (UInt i = 0; i < surf.size(); i++) {
-        if (surf(i)->getMatId() != 0) {
+        if (surf(i)->getMatId() !=  MatId(0)) {
             const PhysicalModel* mat = pm.getId(surf(i)->getMatId());
             Face tFace = map.getInnerFace(surf(i)->getId());
             const CellTet<ORDER_N>* cell = cells.getPtrToCell(tFace.first);
-            const UInt face = tFace.second;
+            UInt face = tFace.second;
             if (!mat->is<PMSurfaceSIBC>()) {
-                pmbc.push_back(PhysicalModelBC(cell, face, mat));
+                const PMPredefined* pred = mat->castTo<PMPredefined>();
+                pmbc.push_back(PhysicalModelBC(cell, face, pred));
                 if (!map.isDomainBoundary(tFace)) {
                     tFace = map.getOuterFace(surf(i)->getId());
                     cell = cells.getPtrToCell(tFace.first);
                     face = tFace.second;
-                    pmbc.push_back(PhysicalModelBC(cell, face, mat));
+                    pmbc.push_back(PhysicalModelBC(cell, face, pred));
                 }
             } else {
-                assert(!sMap->isBoundary());
+                const PMSurfaceSIBC* matSibc = mat->castTo<PMSurfaceSIBC>();
                 Face neigh = map.getNeighConnection(tFace);
                 const CellTet<ORDER_N>* nCell = cells.getPtrToCell(neigh.first);
                 const UInt nFace = neigh.second;
                 if (cell->isLocalSide(face, surf(i))) {
                     sibc.push_back(
-                            SurfaceImpedanceBC(cell,face,nCell,nFace,mat));
+                            SurfaceImpedanceBC(cell,face,nCell,nFace,matSibc));
                 } else {
                     sibc.push_back(
-                            SurfaceImpedanceBC(nCell,nFace,cell,face,mat));
+                            SurfaceImpedanceBC(nCell,nFace,cell,face,matSibc));
                 }
             }
         }
@@ -255,7 +256,7 @@ void BCGroup::check() const {
 }
 
 vector<const BoundaryCondition*> BCGroup::getPtrsToBCWithMatId(
-        const UInt id) const {
+        const MatId id) const {
     vector<const BoundaryCondition*> res;
     res.reserve(pmbc.size());
     for (UInt i = 0; i < pmbc.size(); i++) {
@@ -275,7 +276,7 @@ vector<const BoundaryCondition*> BCGroup::getPtrsToBCWithMatId(
 void BCGroup::checkEMSourcesAreSetInVacuum() const {
     UInt nBC = embc.size();
     for (UInt i = 0; i < nBC; i++) {
-        if (!embc[i].cell_->material->isVacuum()) {
+        if (!embc[i].getCell()->material->isVacuum()) {
             throw Error("ElectromagneticSource BC has been defined over a not vacuum cell.");
         }
     }
@@ -286,8 +287,8 @@ bool BCGroup::checkOverlapping() const {
     // Check repeated elements in embc and pmbc
     for (UInt i = 0; i < embc.size(); i++) {
         for (UInt j = 0; j < pmbc.size(); j++) {
-            if (embc[i].cell_ == pmbc[j].cell_
-                    && embc[i].face_ == pmbc[j].face_) {
+            if (embc[i].getCell() == pmbc[j].getCell()
+                    && embc[i].getFace()  == pmbc[j].getFace()) {
                 repeated = true;
                 break;
             }

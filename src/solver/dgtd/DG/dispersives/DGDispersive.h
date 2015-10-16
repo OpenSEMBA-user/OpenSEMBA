@@ -38,12 +38,11 @@ using namespace std;
 #include "solver/dgtd/core/CellGroup.h"
 
 class DGDispersive {
-protected:
+public:
     static const UInt N = ORDER_N;
     static const UInt nfp = (N+1) * (N+2) / 2;
     static const UInt np = (N+1) * (N+2) * (N+3) / 6;
     static const UInt faces = 4;
-public:
     virtual ~DGDispersive() = 0;
     virtual void computeRHSElectric(
             FieldR3& rhsE,

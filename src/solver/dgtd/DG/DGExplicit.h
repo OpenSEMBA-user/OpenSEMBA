@@ -162,7 +162,10 @@ private:
     void BCToLocalArray(
             const BCGroup& bc,
             const CellGroup& cells,
-            const MapGroup& map)
+            const MapGroup& map);
+    vector<const BoundaryCondition*> removeNonLocalBCs(
+            const CellGroup* cells,
+            const vector<const BoundaryCondition*>& bc) const;
     bool checkPtrsToNeigh() const;
     void assignMatrices(const CellGroup& cells);
     void allocateFieldsForLTS();

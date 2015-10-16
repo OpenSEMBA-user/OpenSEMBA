@@ -810,10 +810,24 @@ void DGExplicit::assignPointersToNeighbours(
     assert(checkPtrsToNeigh());
 }
 
+vector<const BoundaryCondition*> DGExplicit::removeNonLocalBCs(
+        const CellGroup* cells,
+        const vector<const BoundaryCondition*>& bc) const {
+    vector<const BoundaryCondition*> res;
+    res.reserve(bc.size());
+    for (uint i = 0; i < bc.size(); i++) {
+        ElementId id = bc[i]->getCell()->getId();
+        if (cells->isLocalId(id)) {
+            res.push_back(bc[i]);
+        }
+    }
+    return res;
+}
+
 void DGExplicit::BCToLocalArray(
 	const BCGroup& bc,
 	const CellGroup& cells,
-	const MapGroup& map_) {
+	const MapGroup& map) {
     // ----------- SMA ------------------------------------------------
     // Counts SMAs and allocates, em boundaries are also considered.
     {
@@ -825,7 +839,7 @@ void DGExplicit::BCToLocalArray(
         // Stores em sources at boundaries.
         vector<const BoundaryCondition*> emAtDomainBound;
         for (UInt i = 0; i < emPtr.size(); i++) {
-            if (maps.isDomainBoundary(emPtr[i]->get())) {
+            if (map.isDomainBoundary(emPtr[i]->getCellFace())) {
                 emAtDomainBound.push_back(emPtr[i]);
             }
         }
@@ -898,7 +912,7 @@ void DGExplicit::buildEMSources(
     // Copies the sources structure into solver.
     for (UInt i = 0; i < em.getOf<PlaneWave>().size(); i++) {
         vector<const BoundaryCondition*> aux = bc.getPtrsToEMSourceBC();
-        source.push_back(new DGPlaneWave(*em(i), aux, maps, cells, comm, dE, dH, vmapM));
+        source.push_back(new DGPlaneWave(*em(i), comm, dE, dH, vmapM));
     }
 //    for (UInt i = 0; i < em.countDipoles(); i++) {
 //        vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);

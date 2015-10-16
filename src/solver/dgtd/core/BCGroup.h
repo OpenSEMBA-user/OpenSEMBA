@@ -33,23 +33,23 @@
 
 using namespace std;
 
-class BCGroup {
+class GroupBoundaryConditions {
 public:
     vector<EMSourceBC> embc;
     vector<PhysicalModelBC> pmbc;
     vector<SurfaceImpedanceBC> sibc;
-    BCGroup(
+    GroupBoundaryConditions(
             const SmbData& smb,
             const CellGroup& cells,
             const MapGroup& map);
-    BCGroup& operator=(const BCGroup &rhs);
+    GroupBoundaryConditions& operator=(const GroupBoundaryConditions &rhs);
     vector<const BoundaryCondition*> getPtrsToPEC() const;
     vector<const BoundaryCondition*> getPtrsToPMC() const;
     vector<const BoundaryCondition*> getPtrsToSMA() const;
     vector<const BoundaryCondition*> getPtrsToSIBC() const;
     vector<const BoundaryCondition*> getPtrsToEMSourceBC() const;
     vector<const BoundaryCondition*> getPtrsToBC(const EMSourceBase* pw) const;
-    vector<const BoundaryCondition*> getPtrsToBCWithMatId(const uint id) const;
+    vector<const BoundaryCondition*> getPtrsToBCWithMatId(const MatId id) const;
     void printInfo() const;
 private:
     void buildEMSourceBC(
@@ -70,5 +70,6 @@ private:
     void checkEMSourcesAreSetInVacuum() const;
 };
 
+typedef GroupBoundaryConditions BCGroup;
 
 #endif /* BCGROUP_H_ */

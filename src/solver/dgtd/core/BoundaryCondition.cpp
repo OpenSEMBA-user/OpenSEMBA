@@ -50,6 +50,10 @@ BoundaryCondition& BoundaryCondition::operator =(const BoundaryCondition& rhs) {
     return *this;
 }
 
+Face BoundaryCondition::getCellFace() const {
+    return Face(cell_, face_);
+}
+
 void BoundaryCondition::printInfo() const {
     cout << "--- BC info ---" << endl;
     cout << "Cell Id:" << cell_->getId() << " Face: " << face_ << endl;
@@ -148,22 +152,23 @@ UInt SurfaceImpedanceBC::getFaceD() const {
     return faceD_;
 }
 
-const PMPredefined*& PhysicalModelBC::getCondition() const {
+const PMPredefined* PhysicalModelBC::getCondition() const {
     return pm_;
 }
 
-const EMSourceBase*& EMSourceBC::getCondition() const {
+const EMSourceBase* EMSourceBC::getCondition() const {
     return em_;
 }
 
-const PMSurfaceSIBC*& SurfaceImpedanceBC::getCondition() const {
+const PMSurfaceSIBC* SurfaceImpedanceBC::getCondition() const {
     return sibc_;
 }
 
-const CellTet<ORDER_N>*& BoundaryCondition::getCell() const {
+const CellTet<ORDER_N>* BoundaryCondition::getCell() const {
     return cell_;
 }
 
 UInt BoundaryCondition::getFace() const {
     return face_;
 }
+

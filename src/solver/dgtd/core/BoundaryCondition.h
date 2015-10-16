@@ -42,9 +42,9 @@ public:
     bool hasSameBoundary(const BoundaryCondition& other) const;
     virtual BoundaryCondition& operator=(const BoundaryCondition& rhs);
         virtual void printInfo() const;
-    const CellTet<ORDER_N>*& getCell() const;
+    const CellTet<ORDER_N>* getCell() const;
     UInt getFace() const;
-
+    Face getCellFace() const;
 private:
     const CellTet<ORDER_N>* cell_;
     UInt face_;
@@ -57,7 +57,7 @@ public:
     EMSourceBC(const CellTet<ORDER_N>* e, const UInt f, const EMSourceBase* bc);
     EMSourceBC& operator=(const EMSourceBC& rhs);
     void check() const;
-    const EMSourceBase*& getCondition() const;
+    const EMSourceBase* getCondition() const;
 
 private:
     const EMSourceBase* em_;
@@ -73,7 +73,7 @@ public:
             const PMPredefined* bc);
     virtual ~PhysicalModelBC();
     PhysicalModelBC& operator=(const PhysicalModelBC& rhs);
-    const PMPredefined*& getCondition() const;
+    const PMPredefined* getCondition() const;
 private:
     const PMPredefined* pm_;
 };
@@ -92,7 +92,7 @@ public:
     bool isSIBC() const;
     const CellTet<ORDER_N>* getCellD() const;
     UInt getFaceD() const;
-    const PMSurfaceSIBC*& getCondition() const;
+    const PMSurfaceSIBC* getCondition() const;
 
 private:
     const CellTet<ORDER_N>* cellD_;
