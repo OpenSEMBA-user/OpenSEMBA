@@ -90,7 +90,7 @@ ExporterGiD::~ExporterGiD() {
     GiD_fClosePostMeshFile(meshFile_);
 }
 
-void ExporterGiD::writeAllElements(const GroupElements<const ElemR>& elem,
+void ExporterGiD::writeAllElements(const Group<const ElemR>& elem,
         const string& name) {
     writeElements(elem.getOf<NodR>() , name, GiD_Point, 1);
     writeElements(elem.getOf<LinR2>(), name, GiD_Linear, 2);
@@ -100,8 +100,7 @@ void ExporterGiD::writeAllElements(const GroupElements<const ElemR>& elem,
     writeElements(elem.getOf<HexR8>(), name, GiD_Hexahedra, 8);
 }
 
-void
-ExporterGiD::writeMesh(const SmbData* smb) {
+void ExporterGiD::writeMesh(const SmbData* smb) {
     const Mesh* inMesh = smb->mesh;
     const GroupPhysicalModels<>* mat = smb->pMGroup;
     const GroupEMSources<>* srcs = smb->emSources;
@@ -120,13 +119,13 @@ ExporterGiD::writeMesh(const SmbData* smb) {
         grid = smb->grid;
     }
     // Writes materials.
-    GroupLayers<const Layer> lay = mesh->layers();
+    const GroupLayers<Layer>& lay = mesh->layers();
     for (UInt i = 0; i < lay.size(); i++) {
         for (UInt j = 0; j < mat->size(); j++) {
             const MatId matId = (*mat)(j)->getId();
             const LayerId layId = lay(i)->getId();
             const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
-            GroupElements<const ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
+            Group<const ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
             writeAllElements(elem, name);
         }
     }
@@ -135,7 +134,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
         for (UInt i = 0; i < srcs->size(); i++) {
             const EMSourceBase* src =  (*srcs)(i);
             const string name = preName + "EMSource_" + src->getName();
-            GroupElements<const ElemR> elem =
+            Group<const ElemR> elem =
                     mesh->elems().getId(src->elems().getIds());
             writeAllElements(elem, name);
         }
@@ -145,7 +144,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
         for (UInt i = 0; i < oRqs->size(); i++) {
             const OutRqBase* oRq = (*oRqs)(i);
             const string name = preName + "OutRq_" + oRq->getName();
-            GroupElements<const ElemR> elem =
+            Group<const ElemR> elem =
                     mesh->elems().getId(oRq->elems().getIds());
             writeAllElements(elem, name);
         }
@@ -155,7 +154,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
         for (UInt i = 0; i < 3; i++) {
             for (UInt j = 0; j < 2; j++) {
                 CoordR3Group cG;
-                GroupElements<ElemR> bound =
+                const GroupElements<ElemR>& bound =
                         getBoundary(CartesianAxis(i), CartesianBound(j), cG,
                                 grid, mesh, smb->mesherOptions);
                 string name = getBoundaryName(smb->mesherOptions, i, j);
@@ -176,7 +175,7 @@ ExporterGiD::writeMesh(const SmbData* smb) {
 }
 
 void ExporterGiD::writeElements(
-        const GroupElements<const ElemR>& elem,
+        const Group<const ElemR>& elem,
         const string& name,
         const GiD_ElementType type,
         const Int nV) {

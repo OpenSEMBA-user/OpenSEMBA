@@ -72,7 +72,7 @@ private:
     GiD_PostMode mode_;
     void writeMesh(const SmbData* smb);
     void writeElements(
-            const GroupElements<const ElemR>& entities,
+            const Group<const ElemR>& entities,
             const string& name,
             const GiD_ElementType type,
             const Int nV);
@@ -90,7 +90,7 @@ private:
     void openPostMeshFile(const string& filename);
     void openPostResultFile(const string& filename);
     void writeMaterialsInLayer(const Layer* lay);
-    void writeAllElements(const GroupElements<const ElemR>& elem,
+    void writeAllElements(const Group<const ElemR>& elem,
                           const string& name);
     void initDefault(const SmbData* smb, GiD_PostMode mode, const string& fn);
 };

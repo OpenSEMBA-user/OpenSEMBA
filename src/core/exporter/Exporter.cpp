@@ -102,7 +102,7 @@ string Exporter::getOutputfilename() const {
 }
 
 
-GroupElements<ElemR> Exporter::getBoundary(
+Group<ElemR> Exporter::getBoundary(
         const CartesianAxis dir,
         const CartesianBound pos,
         CoordR3Group& cG,
@@ -115,9 +115,9 @@ GroupElements<ElemR> Exporter::getBoundary(
     } else {
         box = mesh->getBoundingBox();
     }
-    GroupElements<ElemR> elem;
+    Group<ElemR> elem;
     BoxR3 quadBox = box.getBoundAsBox(dir,pos);
-    elem.addId(new QuaR4(cG, ElementId(0), quadBox));
+    elem.add(new QuaR4(cG, ElementId(0), quadBox));
     assert(elem.size() != 0);
     return elem;
 }
@@ -133,11 +133,11 @@ string Exporter::getBoundaryName(
     return name.str();
 }
 
-GroupElements<ElemR> Exporter::getGridElems(
+Group<ElemR> Exporter::getGridElems(
         CoordR3Group& cG,
         const Grid3* grid) const {
     if (grid == NULL) {
-        return GroupElements<ElemR>();
+        return Group<ElemR>();
     }
     GroupElements<ElemR> elem;
     BoxR3 box = grid->getFullDomainBoundingBox();
@@ -166,8 +166,8 @@ GroupElements<ElemR> Exporter::getGridElems(
             }
         }
     } else {
-        elem.addId(new QuaR4(cG, ElementId(0), box));
+        elem.add(new QuaR4(cG, ElementId(0), box));
     }
-    elem.addId(new HexR8(cG, ElementId(0), box));
+    elem.add(new HexR8(cG, ElementId(0), box));
     return elem;
 }

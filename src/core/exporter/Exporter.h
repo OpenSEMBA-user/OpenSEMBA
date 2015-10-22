@@ -56,14 +56,14 @@ protected:
          const Real dt) const;
 protected:
    string getOutputfilename() const;
-   GroupElements<ElemR> getBoundary(
+   Group<ElemR> getBoundary(
            const CartesianAxis dir,
            const CartesianBound bound,
            CoordR3Group& cG,
            const Grid3* grid,
            const Mesh* mesh,
            const OptionsMesher* opts) const;
-   GroupElements<ElemR> getGridElems(
+   Group<ElemR> getGridElems(
            CoordR3Group& cG,
            const Grid3* grid) const;
    static string getBoundaryName(
