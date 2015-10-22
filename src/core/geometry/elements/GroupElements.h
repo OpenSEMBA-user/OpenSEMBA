@@ -102,18 +102,18 @@ public:
 
     bool isLinear() const;
 
-    GroupElements<E>       getMatId(const MatId matId);
-    GroupElements<E>       getMatId(const vector<MatId>& matId);
-    GroupElements<const E> getMatId(const MatId matId) const;
-    GroupElements<const E> getMatId(const vector<MatId>& matId) const;
+    Group<E>       getMatId(const MatId matId);
+    Group<E>       getMatId(const vector<MatId>& matId);
+    Group<const E> getMatId(const MatId matId) const;
+    Group<const E> getMatId(const vector<MatId>& matId) const;
 
-    GroupElements<E>       getLayerId(const LayerId layerId);
-    GroupElements<E>       getLayerId(const vector<LayerId>& layerId);
-    GroupElements<const E> getLayerId(const LayerId layerId) const;
-    GroupElements<const E> getLayerId(const vector<LayerId>& layerId) const;
+    Group<E>       getLayerId(const LayerId layerId);
+    Group<E>       getLayerId(const vector<LayerId>& layerId);
+    Group<const E> getLayerId(const LayerId layerId) const;
+    Group<const E> getLayerId(const vector<LayerId>& layerId) const;
 
-    GroupElements<E>       getMatLayerId(const MatId, const LayerId);
-    GroupElements<const E> getMatLayerId(const MatId, const LayerId) const;
+    Group<E>       getMatLayerId(const MatId, const LayerId);
+    Group<const E> getMatLayerId(const MatId, const LayerId) const;
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
@@ -146,6 +146,7 @@ protected:
 private:
     vector<UInt> getElemsWith_(const vector<MatId>&) const;
     vector<UInt> getElemsWith_(const vector<LayerId>&) const;
+    vector<UInt> getElemsWith_(const MatId&, const LayerId&) const;
 };
 
 #include "GroupElements.hpp"

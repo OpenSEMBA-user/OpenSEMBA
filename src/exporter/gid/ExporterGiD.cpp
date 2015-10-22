@@ -154,7 +154,7 @@ void ExporterGiD::writeMesh(const SmbData* smb) {
         for (UInt i = 0; i < 3; i++) {
             for (UInt j = 0; j < 2; j++) {
                 CoordR3Group cG;
-                const GroupElements<ElemR>& bound =
+                const Group<ElemR>& bound =
                         getBoundary(CartesianAxis(i), CartesianBound(j), cG,
                                 grid, mesh, smb->mesherOptions);
                 string name = getBoundaryName(smb->mesherOptions, i, j);
@@ -164,7 +164,7 @@ void ExporterGiD::writeMesh(const SmbData* smb) {
     }
     // Writes grid.
     CoordR3Group cG;
-    GroupElements<ElemR> gridAux = getGridElems(cG, grid);
+    Group<ElemR> gridAux = getGridElems(cG, grid);
     writeAllElements(gridAux, "Grid");
     //
     GiD_FlushPostFile();

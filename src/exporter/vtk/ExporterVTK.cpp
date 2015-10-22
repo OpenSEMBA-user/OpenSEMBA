@@ -85,14 +85,14 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
             for (UInt j = 0; j < mat->size(); j++) {
                 const MatId matId = (*mat)(j)->getId();
                 const string name = preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
-                GroupElements<const ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
+                Group<const ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
                 writeFile_(elem, makeValid_(name), outFile, part);
             }
         }
     } else {
         for (UInt i = 0; i < lay.size(); i++) {
             const LayerId layId = lay(i)->getId();
-            GroupElements<const ElemR> elem = mesh->elems().getLayerId(layId);
+            Group<const ElemR> elem = mesh->elems().getLayerId(layId);
             const string name = preName + lay(i)->getName();
             writeFile_(elem, makeValid_(name), outFile, part);
         }
@@ -102,8 +102,7 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
         for (UInt i = 0; i < srcs->size(); i++) {
             const EMSourceBase* src =  (*srcs)(i);
             const string name = preName + "EMSource_" + src->getName();
-            GroupElements<const ElemR> elem =
-                    mesh->elems().getId(src->elems().getIds());
+            Group<const ElemR> elem = mesh->elems().getId(src->elems().getIds());
             writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
@@ -112,8 +111,7 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
         for (UInt i = 0; i < oRqs->size(); i++) {
             const OutRqBase* oRq = (*oRqs)(i);
             const string name = preName + "OutRq_" + oRq->getName();
-            GroupElements<const ElemR> elem =
-                    mesh->elems().getId(oRq->elems().getIds());
+            Group<const ElemR> elem = mesh->elems().getId(oRq->elems().getIds());
             writeFile_(elem, makeValid_(name), outFile, part);
         }
     }
@@ -123,7 +121,7 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
         for (UInt i = 0; i < 3; i++) {
             for (UInt j = 0; j < 2; j++) {
                 CoordR3Group cG;
-                GroupElements<ElemR> bound =
+                Group<ElemR> bound =
                         getBoundary(CartesianAxis(i), CartesianBound(j), cG,
                                 grid, mesh, opts);
                 string name = getBoundaryName(opts, i, j);
@@ -133,7 +131,7 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
     }
     // Writes grid.
     CoordR3Group cG;
-    GroupElements<ElemR> gridAux = getGridElems(cG, grid);
+    Group<ElemR> gridAux = getGridElems(cG, grid);
     writeFile_(gridAux, makeValid_("Grid"), outFile, part);
     // Closes file.
     outFile << "  " << "</Collection>" << endl;
@@ -142,7 +140,7 @@ void ExporterVTK::writeMesh_(const SmbData* smb) {
     delete mesh;
 }
 
-void ExporterVTK::writeFile_(const GroupElements<const ElemR>& elems,
+void ExporterVTK::writeFile_(const Group<const ElemR>& elems,
         const string& name,
         ofstream& outMain,
         UInt& part) {
@@ -176,7 +174,7 @@ void ExporterVTK::writeFile_(const GroupElements<const ElemR>& elems,
 }
 
 pair<vector<CVecR3>, map<CoordinateId, UInt>> ExporterVTK::getPoints_(
-        const GroupElements<const ElemR>& elems) {
+        const Group<const ElemR>& elems) {
     map<CoordinateId, UInt> mapCoords;
     vector<CVecR3> pos;
     for (UInt i = 0; i < elems.size(); i++) {
@@ -208,7 +206,7 @@ void ExporterVTK::writePoints_(ofstream &outFile,
 }
 
 void ExporterVTK::writeCells_(ofstream &outFile,
-        const GroupElements<const ElemR>& elems,
+        const Group<const ElemR>& elems,
         const map<CoordinateId, UInt>& mapCoords) {
 
     outFile << "      " << "<Cells>" << endl;

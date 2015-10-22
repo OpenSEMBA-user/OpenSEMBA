@@ -66,16 +66,16 @@ private:
         VTK_QUADRATIC_HEXAHEDRON = 25
     };
     void writeMesh_(const SmbData* smb);
-    void writeFile_(const GroupElements<const ElemR>& elems,
+    void writeFile_(const Group<const ElemR>& elems,
                     const string& name,
                     ofstream& outMain,
                     UInt& part);
     pair<vector<CVecR3>, map<CoordinateId, UInt>> getPoints_(
-            const GroupElements<const ElemR>& elems);
+            const Group<const ElemR>& elems);
     void writePoints_(ofstream& outFile,
                       const vector<CVecR3>& pos);
     void writeCells_(ofstream& outFile,
-                     const GroupElements<const ElemR>& elems,
+                     const Group<const ElemR>& elems,
                      const map<CoordinateId, UInt>& mapCoords);
 
     static string makeValid_(const string&);

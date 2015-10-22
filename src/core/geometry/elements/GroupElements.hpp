@@ -57,21 +57,21 @@ bool GroupElements<E>::isLinear() const {
 }
 
 template<typename E>
-GroupElements<E> GroupElements<E>::getMatId(const MatId matId) {
+Group<E> GroupElements<E>::getMatId(const MatId matId) {
     vector<MatId> aux;
     aux.push_back(matId);
     return getMatId(aux);
 }
 
 template<typename E>
-GroupElements<E> GroupElements<E>::getMatId(
+Group<E> GroupElements<E>::getMatId(
         const vector<MatId>& matIds) {
 
     return this->get(getElemsWith_(matIds));
 }
 
 template<typename E>
-GroupElements<const E> GroupElements<E>::getMatId(
+Group<const E> GroupElements<E>::getMatId(
         const MatId matId) const {
     vector<MatId> aux;
     aux.push_back(matId);
@@ -79,28 +79,28 @@ GroupElements<const E> GroupElements<E>::getMatId(
 }
 
 template<typename E>
-GroupElements<const E> GroupElements<E>::getMatId(
+Group<const E> GroupElements<E>::getMatId(
         const vector<MatId>& matIds) const {
 
     return this->get(getElemsWith_(matIds));
 }
 
 template<typename E>
-GroupElements<E> GroupElements<E>::getLayerId(const LayerId layerId) {
+Group<E> GroupElements<E>::getLayerId(const LayerId layerId) {
     vector<LayerId> aux;
     aux.push_back(layerId);
     return getLayerId(aux);
 }
 
 template<typename E>
-GroupElements<E> GroupElements<E>::getLayerId(
+Group<E> GroupElements<E>::getLayerId(
         const vector<LayerId>& layIds) {
 
     return this->get(getElemsWith_(layIds));
 }
 
 template<typename E>
-GroupElements<const E> GroupElements<E>::getLayerId(
+Group<const E> GroupElements<E>::getLayerId(
         const LayerId layerId) const {
     vector<LayerId> aux;
     aux.push_back(layerId);
@@ -108,23 +108,22 @@ GroupElements<const E> GroupElements<E>::getLayerId(
 }
 
 template<typename E>
-GroupElements<const E> GroupElements<E>::getLayerId(
+Group<const E> GroupElements<E>::getLayerId(
         const vector<LayerId>& layIds) const {
 
     return this->get(getElemsWith_(layIds));
 }
 
 template<typename E>
-GroupElements<E> GroupElements<E>::getMatLayerId(const MatId   matId,
-                                                 const LayerId layId) {
-    return getMatId(matId).getLayerId(layId);
+Group<E> GroupElements<E>::getMatLayerId(const MatId   matId,
+                                         const LayerId layId) {
+    return this->get(getElemsWith_(matId, layId));
 }
 
 template<typename E>
-GroupElements<const E> GroupElements<E>::getMatLayerId(
-        const MatId   matId,
-        const LayerId layId) const {
-    return getMatId(matId).getLayerId(layId);
+Group<const E> GroupElements<E>::getMatLayerId(const MatId   matId,
+                                               const LayerId layId) const {
+    return this->get(getElemsWith_(matId, layId));
 }
 
 template<typename E>
@@ -386,6 +385,21 @@ vector<UInt> GroupElements<E>::getElemsWith_(
     elems.reserve(this->size());
     for (UInt i = 0; i < this->size(); i++) {
         if (layIds.count(this->get(i)->getLayerId()) == 1) {
+            elems.push_back(i);
+        }
+    }
+    return elems;
+}
+
+template<typename E>
+vector<UInt> GroupElements<E>::getElemsWith_(
+        const MatId& matId, const LayerId& layId) const {
+
+    vector<UInt> elems;
+    elems.reserve(this->size());
+    for (UInt i = 0; i < this->size(); i++) {
+        if ((this->get(i)->getLayerId() == layId) &&
+            (this->get(i)->getMatId()   == matId)) {
             elems.push_back(i);
         }
     }
