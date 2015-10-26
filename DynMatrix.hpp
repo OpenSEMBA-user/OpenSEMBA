@@ -71,8 +71,7 @@ DynMatrix<T>::~DynMatrix<T>() {
 }
 
 template <class T>
-DynMatrix<T>&
-DynMatrix<T>::operator=(const DynMatrix<T>& param) {
+DynMatrix<T>& DynMatrix<T>::operator=(const DynMatrix<T>& param) {
    if (this == &param) {
       return *this;
    }
@@ -87,20 +86,19 @@ DynMatrix<T>::operator=(const DynMatrix<T>& param) {
 }
 
 template<class T>
-inline UInt
-DynMatrix<T>::nCols() const {
+inline UInt DynMatrix<T>::nCols() const {
    return _nCols;
 }
 
 template<class T>
-inline UInt
-DynMatrix<T>::nRows() const {
+inline UInt DynMatrix<T>::nRows() const {
    return _nRows;
 }
 
 template<class T>
-inline DynMatrix<T>
-DynMatrix<T>::sub(pair<Int, Int>& rows, pair<Int, Int>& cols) const {
+inline DynMatrix<T> DynMatrix<T>::sub(
+        pair<Int, Int>& rows,
+        pair<Int, Int>& cols) const {
    Int resRows = rows.second-rows.first+1;
    Int resCols = cols.second-cols.first+1;
    DynMatrix<T> res(resRows, resCols);
@@ -113,8 +111,7 @@ DynMatrix<T>::sub(pair<Int, Int>& rows, pair<Int, Int>& cols) const {
 }
 
 template <class T>
-inline void
-DynMatrix<T>::resizeVal(const UInt rows, const UInt cols) {
+inline void DynMatrix<T>::resizeVal(const UInt rows, const UInt cols) {
    _nRows = rows;
    _nCols = cols;
    if (_val != NULL) {
@@ -124,8 +121,7 @@ DynMatrix<T>::resizeVal(const UInt rows, const UInt cols) {
 }
 
 template<class T>
-void
-DynMatrix<T>::copy(vector<vector<T> > values) {
+void DynMatrix<T>::copy(vector<vector<T> > values) {
    UInt rows = values.size();
    UInt cols;
    if (rows > 0) {
