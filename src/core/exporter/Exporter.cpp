@@ -139,7 +139,7 @@ Group<ElemR> Exporter::getGridElems(
     if (grid == NULL) {
         return Group<ElemR>();
     }
-    GroupElements<ElemR> elem;
+    Group<ElemR> elem;
     BoxR3 box = grid->getFullDomainBoundingBox();
     if (grid != NULL) {
         for (UInt d = 0; d < 3; d++) {
@@ -161,7 +161,7 @@ Group<ElemR> Exporter::getGridElems(
                     pMax = pMin;
                     pMin((d-i+2)%3) = grid->getPos((d-i+2)%3).front();
                     pMax((d-i+2)%3) = grid->getPos((d-i+2)%3).back();
-                    elem.addId(new LinR2(cG, ElementId(0), BoxR3(pMin,pMax)));
+                    elem.add(new LinR2(cG, ElementId(0), BoxR3(pMin,pMax)));
                 }
             }
         }
