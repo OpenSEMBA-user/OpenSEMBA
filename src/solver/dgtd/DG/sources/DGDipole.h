@@ -41,7 +41,11 @@ class DGDipole : public DGSource, public Dipole {
 public:
     DGDipole(
             const Dipole& dip,
-            FieldR3& dE, FieldR3& dH,
+            const BCGroup& bc,
+            const MapGroup& map,
+            const CellGroup& cells,
+            FieldR3& dE,
+            FieldR3& dH,
             const Int vmapM[faces][nfp]);
     virtual ~DGDipole();
     void computeExcitation(
@@ -55,8 +59,8 @@ private:
 #endif
     SphericalVector *tPos, *sPos;
     void computeExcitationField(
-            Real* ExInc, Real* EyInc, Real* EzInc,
-            Real* HxInc, Real* HyInc, Real* HzInc,
+            FieldR3& EInc,
+            FieldR3& HInc,
             const SphericalVector* vPos,
             const UInt nE,
             const Real time) const;

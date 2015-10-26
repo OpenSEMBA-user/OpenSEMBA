@@ -62,11 +62,11 @@ private:
     static UInt globalSize;
     static UInt localSize;
     static UInt localOffset;
-    static UInt offsetId;
+    static ElementId offsetId;
     static ElementId* idOfRelPos;
     static UInt* relPosOfId;
     bool checkLocalIds(
-            const vector<vector<UInt> >& partIds,
+            const vector<vector<ElementId> >& partIds,
             const UInt task);
 };
 

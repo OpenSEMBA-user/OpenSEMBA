@@ -96,11 +96,10 @@ vector<pair<ElementId,Int>> Integrator::getComputationalWeights(
     vector<pair<ElementId,Int>> idWgt;
     idWgt.reserve(nK);
     for (UInt e = 0; e < nK; e++) {
-        pair<UInt,Int> aux;
-        UInt id = getIdOfGlobalRelPos(e);
+        pair<ElementId,Int> aux;
+        ElementId id = getIdOfGlobalRelPos(e);
         aux.first = id;
-        aux.second =
-                getNumOfIterationsPerBigTimeStep(e) * flops;
+        aux.second = getNumOfIterationsPerBigTimeStep(e) * flops;
         idWgt.push_back(aux);
     }
     return idWgt;
@@ -266,7 +265,7 @@ void Integrator::reorderTimeTierList(
     UInt nParts = partitionId.size();
     for (UInt p = 0; p < nParts; p++) {
         for (UInt i = 0; i < partitionId[p].size(); i++) {
-            UInt id = partitionId[p][i];
+            UInt id = partitionId[p][i].toUInt();
             aux(id - initId, 2) = p;
         }
     }

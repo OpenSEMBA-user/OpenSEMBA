@@ -28,7 +28,11 @@
 #include "DGPMLUniaxial.h"
 
 template<Int D>
-DGPMLUniaxial<D>::DGPMLUniaxial(const PMVolumePML& mat) :
+DGPMLUniaxial<D>::DGPMLUniaxial(
+        const PMVolumePML& mat,
+        const CellGroup& cells,
+        const bool useConductivity,
+        const Real conductivity) :
 DGPML(mat) {
     J.set(dof, 0.0);
     resJ.set(dof, 0.0);

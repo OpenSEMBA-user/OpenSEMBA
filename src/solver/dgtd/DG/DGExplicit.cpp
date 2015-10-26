@@ -218,7 +218,7 @@ void DGExplicit::computeJumps(
         for (UInt f = 0; f < faces; f++) {
             for (UInt j = 0; j < nfp; j++) {
                 vM = k + vmapM[f][j]; // Local field pos.
-                vP = map[e][f][j]; // Neigh field pos.
+                vP = map_[e][f][j]; // Neigh field pos.
                 dE.set(x)[i] = E(x)[vM] - ExP[e][f][vP];
                 dE.set(y)[i] = E(y)[vM] - EyP[e][f][vP];
                 dE.set(z)[i] = E(z)[vM] - EzP[e][f][vP];
@@ -689,11 +689,11 @@ void DGExplicit::allocateMaps() {
             HzP[e][f] = NULL;
         }
     }
-    map = new Int**[nK];
+    map_ = new Int**[nK];
     for (UInt e = 0; e < nK; e++) {
-        map[e] = new Int*[faces];
+        map_[e] = new Int*[faces];
         for (UInt f = 0; f < faces; f++) {
-            map[e][f] = NULL;
+            map_[e][f] = NULL;
         }
     }
 }
@@ -912,7 +912,7 @@ void DGExplicit::buildEMSources(
     // Copies the sources structure into solver.
     for (UInt i = 0; i < em.getOf<PlaneWave>().size(); i++) {
         vector<const BoundaryCondition*> aux = bc.getPtrsToEMSourceBC();
-        source.push_back(new DGPlaneWave(*em(i), comm, dE, dH, vmapM));
+        source.push_back(new DGPlaneWave(*em(i), bc, maps, cells, comm, dE, dH, vmapM));
     }
 //    for (UInt i = 0; i < em.countDipoles(); i++) {
 //        vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);
@@ -1000,37 +1000,37 @@ void DGExplicit::buildMaterials(
         dispersive.push_back(new DGDispersiveVolumic(*dispersives(i), cells));
     }
     // Creates PML materials variables parameters and stores pointers.
-    const GroupPhysicalModels<PMVolumePML> pmls =
-            smb_->pMGroup->getOf<PMVolumePML>();
-    for (UInt i = 0; i < pmls.size(); i++) {
-        const bool isConstCond = arg->isPMLConstantConductivityProfile();
-        const Real cond = arg->getPMLConductivity();
-        switch (pmls(i)->getOrientation()) {
-        case PMVolumePML::Orientation::PMLx:
-            dispersive.push_back(new DGPMLx(pmls(i),cells,isConstCond,cond));
-            break;
-        case PMVolumePML::Orientation::PMLy:
-            dispersive.push_back(new DGPMLy(pmls(i),cells,isConstCond,cond));
-            break;
-        case PMVolumePML::Orientation::PMLz:
-            dispersive.push_back(new DGPMLz(pmls(i),cells,isConstCond,cond));
-            break;
-        case PMVolumePML::Orientation::PMLxy:
-            dispersive.push_back(new DGPMLxy(pmls(i),cells,isConstCond,cond));
-            break;
-        case PMVolumePML::Orientation::PMLyz:
-            dispersive.push_back(new DGPMLyz(pmls(i),cells,isConstCond,cond));
-            break;
-        case PMVolumePML::Orientation::PMLzx:
-            dispersive.push_back(new DGPMLzx(pmls(i),cells,isConstCond,cond));
-            break;
-        case PMVolumePML::Orientation::PMLxyz:
-            dispersive.push_back(new DGPMLxyz(pmls(i),cells,isConstCond,cond));
-            break;
-        default:
-            break;
-        }
-    }
+//    const GroupPhysicalModels<PMVolumePML> pmls =
+//            smb_->pMGroup->getOf<PMVolumePML>();
+//    for (UInt i = 0; i < pmls.size(); i++) {
+//        const bool isConstCond = arg->isPMLConstantConductivityProfile();
+//        const Real cond = arg->getPMLConductivity();
+//        switch (pmls(i)->getOrientation()) {
+//        case PMVolumePML::Orientation::PMLx:
+//            dispersive.push_back(new DGPMLx(*pmls(i),cells,isConstCond,cond));
+//            break;
+//        case PMVolumePML::Orientation::PMLy:
+//            dispersive.push_back(new DGPMLy(*pmls(i),cells,isConstCond,cond));
+//            break;
+//        case PMVolumePML::Orientation::PMLz:
+//            dispersive.push_back(new DGPMLz(*pmls(i),cells,isConstCond,cond));
+//            break;
+//        case PMVolumePML::Orientation::PMLxy:
+//            dispersive.push_back(new DGPMLxy(*pmls(i),cells,isConstCond,cond));
+//            break;
+//        case PMVolumePML::Orientation::PMLyz:
+//            dispersive.push_back(new DGPMLyz(*pmls(i),cells,isConstCond,cond));
+//            break;
+//        case PMVolumePML::Orientation::PMLzx:
+//            dispersive.push_back(new DGPMLzx(*pmls(i),cells,isConstCond,cond));
+//            break;
+//        case PMVolumePML::Orientation::PMLxyz:
+//            dispersive.push_back(new DGPMLxyz(*pmls(i),cells,isConstCond,cond));
+//            break;
+//        default:
+//            break;
+//        }
+//    }
 }
 
 bool DGExplicit::checkPtrsToNeigh() const {
@@ -1086,7 +1086,7 @@ void DGExplicit::deduplicateVMaps(const CellGroup& cells) {
                     }
                 // Make the elements to point to their corresponding vmapP.
                 if (found) {
-                    map[e][f] = vmapP[i];
+                    map_[e][f] = vmapP[i];
                     break;
                 }
             }
@@ -1098,7 +1098,7 @@ void DGExplicit::deduplicateVMaps(const CellGroup& cells) {
                             vmapP[i][j] = cell->vmapP[f][j];
                         }
                         // Points cell->vmapP to its corresponding one.
-                        map[e][f] = vmapP[i];
+                        map_[e][f] = vmapP[i];
                         break;
                     }
                 }
@@ -1109,7 +1109,7 @@ void DGExplicit::deduplicateVMaps(const CellGroup& cells) {
     bool problem = false;
     for (UInt e = 0; e < nK; e++) {
         for (UInt f = 0; f < faces; f++) {
-            if (map[e][f] == NULL) {
+            if (map_[e][f] == NULL) {
                 problem = true;
                 if (problem) {
                     cerr << endl << "ERROR: Solver::deduplicateVMaps()"
@@ -1125,7 +1125,7 @@ void DGExplicit::deduplicateVMaps(const CellGroup& cells) {
         const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
         for (UInt f = 0; f < faces; f++) {
             for (UInt i = 0; i < nfp; i++) {
-                if (Int(cell->vmapP[f][i]) != map[e][f][i]) {
+                if (Int(cell->vmapP[f][i]) != map_[e][f][i]) {
                     if (!problem) {
                         cerr << endl << "ERROR: Solver::deduplicateVMaps" << endl;
                         cerr << endl << "Check vmapsP" << endl;

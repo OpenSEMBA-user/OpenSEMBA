@@ -28,7 +28,7 @@
 
 #include "BCGroup.h"
 
-BCGroup::BCGroup(
+BCGroup::GroupBoundaryConditions(
         const SmbData& smb,
         const CellGroup& cells,
         const MapGroup& map) {

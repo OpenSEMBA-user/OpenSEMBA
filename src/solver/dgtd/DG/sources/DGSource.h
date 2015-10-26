@@ -36,9 +36,14 @@ using namespace std;
 #include "sources/EMSource.h"
 #include "geometry/maps/Map.h"
 #include "../../core/Comm.h"
+#include "../../core/CellGroup.h"
+#include "../../core/BCGroup.h"
 
 class DGSource {
 public:
+    const static UInt N = ORDER_N;
+    const static UInt nfp = (N+1) * (N+2) / 2;
+    const static UInt faces = 4;
     typedef enum {
         totalField,
         scatteredField,
@@ -54,13 +59,10 @@ public:
             const Real minDT) = 0;
     virtual void printInfo() const = 0;
 protected:
-    const static UInt N = ORDER_N;
     const static UInt np = (N+1) * (N+2) * (N+3) / 6;
     const static UInt np2 = np * 2;
-    const static UInt nfp = (N+1) * (N+2) / 2;
     const static UInt npnfp = np * nfp;
     const static UInt npnp = np * np;
-    const static UInt faces = 4;
     const static UInt nfpfaces = nfp * faces;
     // Excitation fields.
     FieldR3 ETInc, ESInc, EIncNB;
@@ -81,10 +83,27 @@ protected:
     Real **dExTNB, **dEyTNB, **dEzTNB;
     Real **dHxTNB, **dHyTNB, **dHzTNB;
     void initSource(
-            FieldR3& dE, FieldR3& dH,
+            const BCGroup& bc,
+            const MapGroup& map,
+            const CellGroup& cells,
+            FieldR3& dE,
+            FieldR3& dH,
             const Int vmapM[faces][nfp]);
     CVecR3* initPositions(
-            const vector<pair<UInt, UInt> >& elemFace) const;
+            const vector<pair<UInt, UInt> >& elemFace,
+            const CellGroup& cells) const;
+    vector<pair<UInt, UInt>> getTotalFieldElemFaces(
+            const BCGroup& bc,
+            const MapGroup& map,
+            const CellGroup& cells) const;
+    vector<pair<UInt, UInt>> getScattFieldElemFaces(
+            const BCGroup& bc,
+            const MapGroup& map,
+            const CellGroup& cells) const;
+    vector<pair<UInt, UInt>> getTotalNotBackedFieldElemFaces(
+            const BCGroup& bc,
+            const MapGroup& map,
+            const CellGroup& cells) const;
 };
 
 #endif /* SOLVERSOURCE_H_ */

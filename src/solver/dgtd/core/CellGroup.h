@@ -46,7 +46,6 @@ private:
 	UInt cellOffsetId;
 	void buildNodalMaps(const MapGroup& map);
 	void check(const MapGroup& map) const;
-	void checkIdsAreConsecutive() const;
 	void checkNodalMaps(const MapGroup& map) const;
 };
 

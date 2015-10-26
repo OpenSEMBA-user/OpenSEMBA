@@ -365,7 +365,11 @@ void CellTet10<TET_N>::getCurvedLIFTnormal(
         StaMatrix<double,np,nfp> LIFTrn[3],
         const UInt f) const {
     // Side mass matrix.
-    Tri6 face = this->base->getTri6Face(f);
+    vector<const CoordR3*> coord;
+    for (UInt i = 0; i < this->base->numberOfSideCoordinates(); i++) {
+        coord.push_back(this->base->getSideV(f,i));
+    }
+    Tri6 face(ElementId(0), &coord[0]);
     static const UInt ncp = SimplexTri<2>::ncp;
     double csdf[ncp];
     face.getCubatureDifferentials(csdf);

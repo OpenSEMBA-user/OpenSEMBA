@@ -33,7 +33,11 @@
 template<Int D>
 class DGPMLUniaxial : public DGPML {
 public:
-    DGPMLUniaxial(const PMVolumePML& mat);
+    DGPMLUniaxial(
+            const PMVolumePML& mat,
+            const CellGroup& cells,
+            const bool useConductivity,
+            const Real conductivity);
     virtual ~DGPMLUniaxial();
     void addRHSToRes(
             const UInt e1, const UInt e2,

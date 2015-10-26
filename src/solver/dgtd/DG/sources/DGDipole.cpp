@@ -22,40 +22,42 @@
 
 DGDipole::DGDipole(
       const Dipole& dip,
+      const BCGroup& bc,
       const MapGroup& map,
-      FieldR3& dE, FieldR3& dH,
+      const CellGroup& cells,
+      FieldR3& dE,
+      FieldR3& dH,
       const Int vmapM[faces][nfp])
 : Dipole(dip) {
-//   initSource(map, cells, dE, dH, vmapM);
-//   // Determines total or scattered fields in the bc.
-//   if (nETFNB != 0) {
-//      cerr << endl << "ERROR @ SolveDipole::build(): "
-//       << "Trying to set TF/SF in a not backed boundary." << endl;
-//   }
-//   // Total field boundary.
-//   vector<pair<UInt, UInt> > total;
-//   total = getElemFaces(map, cells, totalField);
-//   tPos = new SphericalVector[nETF * nfp];
-//   for (UInt i = 0; i < total.size(); i++) {
-//      UInt id = cells.getIdOfRelPos(total[i].first);
-//      UInt f = total[i].second;
-//      for (UInt j = 0; j < nfp; j++) {
-//         tPos[i*nfp+j] =
-//               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
-//      }
-//   }
-//   // Scattered field boundary.
-//   vector<pair<UInt,UInt> > scatt;
-//   scatt = getElemFaces(map, cells, scatteredField);
-//   sPos = new SphericalVector[nESF * nfp];
-//   for (UInt i = 0; i < scatt.size(); i++) {
-//      UInt id = cells.getIdOfRelPos(scatt[i].first);
-//      UInt f = scatt[i].second;
-//      for (UInt j = 0; j < nfp; j++) {
-//         sPos[i*nfp+j] =
-//               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
-//      }
-//   }
+   initSource(bc, map, cells, dE, dH, vmapM);
+   // Determines total or scattered fields in the bc.
+   if (nETFNB != 0) {
+      throw Error("Trying to set TF/SF in a not backed boundary.");
+   }
+   // Total field boundary.
+   vector<pair<UInt, UInt> > total;
+   total = getTotalFieldElemFaces(bc, map, cells);
+   tPos = new SphericalVector[nETF * nfp];
+   for (UInt i = 0; i < total.size(); i++) {
+      ElementId id = cells.getIdOfRelPos(total[i].first);
+      UInt f = total[i].second;
+      for (UInt j = 0; j < nfp; j++) {
+         tPos[i*nfp+j] =
+               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
+      }
+   }
+   // Scattered field boundary.
+   vector<pair<UInt,UInt> > scatt;
+   scatt = getScattFieldElemFaces(bc, map, cells);
+   sPos = new SphericalVector[nESF * nfp];
+   for (UInt i = 0; i < scatt.size(); i++) {
+      ElementId id = cells.getIdOfRelPos(scatt[i].first);
+      UInt f = scatt[i].second;
+      for (UInt j = 0; j < nfp; j++) {
+         sPos[i*nfp+j] =
+               cells.getPtrToCellWithId(id)->getSideNodePos(f,j) - position_;
+      }
+   }
 }
 
 DGDipole::~DGDipole() {
@@ -64,17 +66,13 @@ DGDipole::~DGDipole() {
 void DGDipole::computeExcitation(
       const Real time,
       const Real minDT) {
-   computeExcitationField(
-         ExTInc, EyTInc, EzTInc, HxTInc, HyTInc, HzTInc,
-         tPos, nETF, time);
-   computeExcitationField(
-         ExSInc, EySInc, EzSInc, HxSInc, HySInc, HzSInc,
-         sPos, nESF, time);
+   computeExcitationField(ETInc, HTInc, tPos, nETF, time);
+   computeExcitationField(ESInc, HSInc, sPos, nESF, time);
 }
 
 void DGDipole::computeExcitationField(
-      Real* ExInc, Real* EyInc, Real* EzInc,
-      Real* HxInc, Real* HyInc, Real* HzInc,
+        FieldR3& EInc,
+        FieldR3& HInc,
       const SphericalVector* vPos,
       const UInt nE,
       const Real time) const {
@@ -83,10 +81,8 @@ void DGDipole::computeExcitationField(
    // "Electromagnetic Field Theory for physicist and engineers.
    // Section: Fields created by an infinitesimal current element with
    // arbitrary time dependence.
-   // I use the derivative of the gaussian.
+   // Uses the derivative of the gaussian.
    // Otherwise charge accumulates and fields do not tend to zero.
-   // This also saves some memory because we do not have to save data
-   // from time integrals of the charge.
    Real pos, pos2, pos3;
    Real expArg, expArg2;
    Real iT, iD;
@@ -119,14 +115,13 @@ void DGDipole::computeExcitationField(
       // Spherical to Cartesian conversion.
       E = vPos[j].convertSphericalVectorField(er, et, 0.0);
       H = vPos[j].convertSphericalVectorField(0.0, 0.0, hp);
-      // TODO: Orientation of dipole can be included here
       // use a rotation matrix applied on E and H.
-      ExInc[j] = E(0);
-      EyInc[j] = E(1);
-      EzInc[j] = E(2);
-      HxInc[j] = H(0);
-      HyInc[j] = H(1);
-      HzInc[j] = H(2);
+      EInc(x)[j] = E(0);
+      EInc(y)[j] = E(1);
+      EInc(z)[j] = E(2);
+      HInc(x)[j] = H(0);
+      HInc(y)[j] = H(1);
+      HInc(z)[j] = H(2);
    }
 }
 

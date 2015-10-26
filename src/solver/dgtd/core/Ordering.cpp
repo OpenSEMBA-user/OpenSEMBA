@@ -30,7 +30,7 @@
 UInt Ordering::globalSize = 0;
 UInt Ordering::localOffset = 0;
 UInt Ordering::localSize = 0;
-UInt Ordering::offsetId = 0;
+ElementId Ordering::offsetId(0);
 ElementId* Ordering::idOfRelPos = NULL;
 UInt* Ordering::relPosOfId = NULL;
 
@@ -48,7 +48,7 @@ ElementId Ordering::getIdOfGlobalRelPos(const UInt rp) const {
 
 UInt Ordering::getGlobalRelPosOfId(const ElementId id) const {
 	assert(relPosOfId != NULL);
-	return relPosOfId[id.toUInt() - offsetId];
+	return relPosOfId[id.toUInt() - offsetId.toUInt()];
 }
 
 ElementId Ordering::getIdOfRelPos(const UInt rp) const {
@@ -59,8 +59,8 @@ ElementId Ordering::getIdOfRelPos(const UInt rp) const {
 
 UInt Ordering::getRelPosOfId(const ElementId id) const {
 	assert(relPosOfId != NULL);
-	assert((relPosOfId[id.toUInt() - offsetId] - localOffset) < localSize);
-	return relPosOfId[id.toUInt() - offsetId] - localOffset;
+	assert((relPosOfId[id.toUInt() - offsetId.toUInt()] - localOffset) < localSize);
+	return relPosOfId[id.toUInt() - offsetId.toUInt()] - localOffset;
 }
 
 UInt Ordering::getGlobalSize() const {
@@ -75,8 +75,8 @@ UInt Ordering::getLocalSize() const {
 
 bool Ordering::isLocalId(const ElementId id) const {
 	assert(relPosOfId != NULL);
-	assert(id >= offsetId);
-	UInt rp = relPosOfId[id - offsetId];
+	assert(id.toUInt() >= offsetId.toUInt());
+	UInt rp = relPosOfId[id.toUInt() - offsetId.toUInt()];
 	if (localOffset > rp || localSize == rp - localOffset) {
 		return false;
 	}
@@ -111,7 +111,7 @@ void Ordering::buildRelPosOfIds(const DynMatrix<UInt>& list) {
 		aux(i,1) = list(i,0);
 	}
 	aux.sortRows_omp(1,1);
-	offsetId = aux(0,1);
+	offsetId = ElementId(aux(0,1));
 	if (idOfRelPos != NULL) {
 		delete [] idOfRelPos;
 	}
@@ -128,7 +128,7 @@ void Ordering::buildRelPosOfIds(const DynMatrix<UInt>& list) {
 	}
 	relPosOfId = new UInt[nK];
 	for (UInt i = 0; i < nK; i++) {
-		relPosOfId[aux(i,1) - offsetId] = aux(i,0);
+		relPosOfId[aux(i,1) - offsetId.toUInt()] = aux(i,0);
 	}
 	assert(checkRelPosOfId());
 }
@@ -148,7 +148,7 @@ void Ordering::setLocalSizeAndOffset(
 void Ordering::printOrderingInfo() const {
 	cout << "RelPosOfIds: " << relPosOfId << endl;
 	for (UInt i = 0; i < globalSize; i++) {
-	    ElementId id(i + offsetId);
+	    ElementId id(i + offsetId.toUInt());
 		cout << getGlobalRelPosOfId(id) << " ";
 	}
 	cout << endl;
@@ -160,7 +160,7 @@ void Ordering::printOrderingInfo() const {
 }
 
 bool Ordering::checkLocalIds(
- const vector<vector<UInt> >& partIds,
+ const vector<vector<ElementId> >& partIds,
  const UInt task) {
 	vector<ElementId> localId = partIds[task];
 	UInt nK = localId.size();

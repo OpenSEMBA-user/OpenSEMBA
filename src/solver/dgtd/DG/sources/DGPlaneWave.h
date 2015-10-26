@@ -37,6 +37,9 @@ class DGPlaneWave : public DGSource, public PlaneWave {
 public:
     DGPlaneWave(
             const PlaneWave& pw,
+            const BCGroup& bc,
+            const MapGroup& map,
+            const CellGroup& cells,
             const Comm* comm,
             FieldR3& dE, FieldR3& dH,
             const Int vmapM[faces][nfp]);
@@ -50,12 +53,15 @@ private:
     Real *kNPosSF; // dim(nETSF*SOLVER_NFP)
     Real *kNPosTFNB; // dim(nETFNB*SOLVER_NFP)
     void computeExcitationField(
-            Real* ExInc, Real *EyInc, Real *EzInc,
-            Real* HxInc, Real *HyInc, Real *HzInc,
+            FieldR3& EInc,
+            FieldR3& HInc,
             const Real* vPos,
             const UInt nE,
             const Real intTime);
     void initWaveNumberPosition(
+            const BCGroup& bc,
+            const MapGroup& map,
+            const CellGroup& cells,
             const Comm* comm,
             const Int vmapM[faces][nfp]);
 };

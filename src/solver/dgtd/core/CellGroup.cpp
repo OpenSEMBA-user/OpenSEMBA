@@ -46,11 +46,11 @@ CellGroup::CellGroup(const SmbData* smb) {
 	quadTet.resize(quadratic.size(), CellTet10<ORDER_N>());
 	for (UInt k = 0; k < linear.size(); k++) {
 		linTet[k] = CellTet4<ORDER_N>(linear[k], *pMGroup);
-		cell[linTet[k].getId() - cellOffsetId] = &linTet[k];
+		cell[linTet[k].getId().toUInt() - cellOffsetId] = &linTet[k];
 	}
 	for (UInt k = 0; k < quadratic.size(); k++) {
 		quadTet[k] = CellTet10<ORDER_N>(quadratic[k], *pMGroup);
-		cell[quadTet[k].getId() - cellOffsetId] = &quadTet[k];
+		cell[quadTet[k].getId().toUInt() - cellOffsetId] = &quadTet[k];
 	}
 
 	MapGroup map(mesh->coords(), mesh->elems());
@@ -85,7 +85,8 @@ void CellGroup::buildNodalMaps(const MapGroup& map) {
 	for (UInt e = 0; e < nK; e++) {
 		for (UInt f = 0; f < cell[e]->getFaces(); f++) {
 			// Stores contiguous element (e2) number and orientation.
-			Face neigh = map.getNeighConnection(e,f);
+		    Face local(cell[e]->getPtrToBase(),f);
+		    Face neigh = map.getNeighConnection(local);
 			const UInt f2 = neigh.second;
 			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh.first);
 			// Runs over each node in local element.
@@ -108,26 +109,11 @@ void CellGroup::buildNodalMaps(const MapGroup& map) {
 }
  
 void CellGroup::check(const MapGroup& map) const {
-	if (cellOffsetId != cell[0]->getId()) {
-	    throw Error("Check");
-	}
-	checkIdsAreConsecutive();
 //	checkReciprocityInConnectivities();
 	checkNodalMaps(map);
 //	checkAreaCoherence();
 }
  
-void CellGroup::checkIdsAreConsecutive() const {
-	UInt currentId = cellOffsetId;
-	for (UInt i = 1; i < cell.size(); i++) {
-		if (cell[i]->getId() == currentId + 1) {
-			currentId++;
-		} else {
-		    throw Error("Ids are not consecutive.");
-		}
-	}
-}
-
 void CellGroup::checkNodalMaps(const MapGroup& map) const {
 	// Checks for vmap.
 	CVecR3 diff;
@@ -135,7 +121,8 @@ void CellGroup::checkNodalMaps(const MapGroup& map) const {
 	UInt nK = cell.size();
 	for (UInt e = 0; e < nK; e++)
 		for (int f = 0; f < 4; f++) {
-			const VolR* neigh = map.getNeighConnection(e,f);
+		    Face local(cell[e]->getPtrToBase(),f);
+			const VolR* neigh = map.getNeighConnection(local).first;
 			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh);
 			for (UInt i = 0; i < cell[e]->getNfp(); i++) {
 				int neighNode = cell[e]->vmapP[f][i];
