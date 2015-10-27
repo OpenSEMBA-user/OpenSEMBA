@@ -46,8 +46,13 @@ Field<T,D>::~Field() {
 }
 
 template<class T, Int D>
-inline const T*
-Field<T,D>::operator()(const UInt i) const {
+inline T* Field<T,D>::operator()(const UInt i) {
+    assert(i < D);
+    return &val_[size_*i];
+}
+
+template<class T, Int D>
+inline const T* Field<T,D>::operator()(const UInt i) const {
 	assert(i < D);
 	return &val_[size_*i];
 }
@@ -132,7 +137,7 @@ template<class T, Int D>
 inline void Field<T,D>::prod_omp(const UInt init, const UInt end, const T param) {
 	UInt i;
 	for (UInt d = 0; d < D; d++) {
-#		pragma omp parallel for private(i)
+        #pragma omp parallel for private(i)
 		for (i = init; i < end; i++) {
 			val_[d*size_ + i] *= param;
 		}
@@ -140,7 +145,9 @@ inline void Field<T,D>::prod_omp(const UInt init, const UInt end, const T param)
 }
 
 template<class T, Int D>
-inline void Field<T,D>::copy(const UInt init, const UInt end,
+inline void Field<T,D>::copy(
+        const UInt init,
+        const UInt end,
 		const Field<T, D>& field) {
 	for (UInt d = 0; d < D; d++) {
 		for (UInt i = init; i < end; i++) {
@@ -186,7 +193,9 @@ inline UInt Field<T,D>::size() const {
 
 template<class T, Int D>
 inline void Field<T,D>::swap(
- Field<T, D>& param, const UInt first, const UInt last) {
+        Field<T, D>& param,
+        const UInt first,
+        const UInt last) {
 	for (UInt i = 0; i < D; i++) {
 		for (UInt k = first; k < last; k++) {
 			T aux = val_[i*size_ + k];
