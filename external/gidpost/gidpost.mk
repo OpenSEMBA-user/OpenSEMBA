@@ -17,6 +17,10 @@ else
   LIBSDIR=
 endif
 
+ifeq ($(target),debug) 
+	DEBUG = yes
+endif 
+
 OBJDIR = $(if $(filter yes,$(DEBUG)),debug,release)
 
 ifeq ($(USER),ramsan)
@@ -44,7 +48,9 @@ else
   LDFLAGS += -shared -fPIC
   LIB_DIRECTORIES = /usr/local/ActiveTcl-8.5/lib
   LIBEXT = so
+  STATIC_LIBEXT = a
   LD = gcc
+  AR = ar
 endif
 
 CPPFLAGS += $(addprefix -I ,$(INCLUDE_DIRECTORIES))
@@ -60,8 +66,8 @@ CPPFLAGS += -g -D_DEBUG -DDEBUG -Wall
 LDFLAGS  += -g
 endif
 ifeq ($(OBJDIR),release)
-CPPFLAGS += -O3
-LDFLAGS  += -O3
+CPPFLAGS += -O2
+LDFLAGS  += -O2
 endif
 
 ifeq ($(OS),windows)
@@ -80,9 +86,10 @@ ifeq ($(OS),windows)
 endif
 
 SRCS = \
-    gidpost.c     gidpostHash.c  gidpostInt.c  hdf5c.c    recycle.c \
-    gidpostHDF5.c  hashtab.c lookupa.c
-#    zlibint2.c  zlibint1.c
+    gidpost.c     gidpostHash.c  gidpostInt.c    recycle.c \
+    hashtab.c lookupa.c \
+    zlibint2.c  zlibint1.c
+#    gidpostHDF5.c  hdf5c.c 
 
 OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
 
@@ -93,6 +100,7 @@ compile: $(OBJDIR) $(EXE)
 
 $(EXE): $(OBJS)
 	$(LD) $(LDFLAGS) -o $(EXE) $(OBJS) $(LIBS)
+	$(AR) rcs $(OBJDIR)/libgidpost.$(STATIC_LIBEXT) $(OBJS) $(LIBS)
 ifneq ($(OBJDIR),debug)
 	 $(STRIP) $(EXE)
 endif
@@ -109,7 +117,7 @@ ifneq ($(OBJDIR),debug)
 endif
 
 clean:
-	rm -f $(OBJDIR)/*.o $(OBJDIR)/*.d $(EXE)
+	rm -rf $(OBJDIR)
 
 copy: compile
 	cp $(EXE) $(EXE_INSTALL)

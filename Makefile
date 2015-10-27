@@ -44,7 +44,7 @@ ifeq ($(compiler),gnu)
 	CC = gcc 
 	CXX = g++
 	CCFLAGS +=
-	CXXFLAGS += -std=c++0x
+	CXXFLAGS += -std=c++0x -static
 endif # endif choosing the GNU compiler.
 #===================== MinGW32 Compiler =======================================
 ifeq ($(compiler),mingw32)
@@ -86,7 +86,7 @@ SRC_PARSER_DIR = parser/gid/ parser/stl/
 SRC_EXPORTER_DIR = exporter/gid/ exporter/vtk/ 
 SRC_SOLVER_DIR = solver/dgtd/
   
-LIB_DIR = gidpost/
+LIB_DIR = $(BINDIR)gidpost/lib/ $(BINDIR)gidpost/include/
 
 INCLUDES += src/ src/core/
 
@@ -100,10 +100,10 @@ all: semba
 
 create_dirs:
 	@echo 'Creating directories to store binaries and intermediate objects'
-	-mkdir $(BINDIR)
-	-mkdir $(OBJDIR)
+	-mkdir -p $(BINDIR) $(LIB_DIR)
+	-mkdir -p $(OBJDIR)
 
-cudg3d: check
+cudg3d: gidpost check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
 libopensemba: check
@@ -112,11 +112,25 @@ libopensemba: check
 testSemba: check
 	$(MAKE) -f ./src/apps/test/test.mk
 
+gidpost: create_dirs check
+	$(MAKE) -C ./external/gidpost/ -f gidpost.mk
+ifeq ($(target),debug)
+	cp ./external/gidpost/debug/gidpost.so $(BINDIR)/gidpost/lib/libgidpost.so
+	cp ./external/gidpost/debug/libgidpost.a $(BINDIR)/gidpost/lib/libgidpost.a
+endif
+ifeq ($(target),release)
+	cp ./external/gidpost/release/gidpost.so $(BINDIR)/gidpost/lib/libgidpost.so
+	cp ./external/gidpost/release/libgidpost.a $(BINDIR)/gidpost/lib/libgidpost.a
+endif
+	cp ./external/gidpost/gidpost.h $(BINDIR)/gidpost/include/gidpost.h
+ 
+
 repeat: clean default
 
 clean:
 	rm -rf *.err *.o *.mod *.d $(OBJDIR)
 	find ./src -name "*.gch" -exec rm {} \;
+	$(MAKE) -C ./external/gidpost/ -f gidpost.mk clean
 
 clobber: clean
 	rm -rf $(BINDIR) 
