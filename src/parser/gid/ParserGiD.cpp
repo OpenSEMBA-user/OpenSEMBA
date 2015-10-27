@@ -112,7 +112,7 @@ OptionsSolver* ParserGiD::readOptionsSolver() {
                     return readOptionsSolverDGTD(base);
                 } else if (label.compare("ugrfdtd options") == 0 &&
                         (base.getSolver() == OptionsSolverDGTD::Solver::ugrfdtd
-                         || base.getSolver() == OptionsSolverDGTD::Solver::none)) {
+                                || base.getSolver() == OptionsSolverDGTD::Solver::none)) {
                     return readOptionsSolverFDTD(base);
                 } else if(label.find("End of solver options") != label.npos) {
                     finished = true;
@@ -188,40 +188,34 @@ OptionsSolverFDTD* ParserGiD::readOptionsSolverFDTD(
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
     throw Error("No options were found.");
-    }
+}
 
 OptionsSolverDGTD* ParserGiD::readOptionsSolverDGTD(
         const OptionsSolver& base) {
-    bool optionsFound = false;
     OptionsSolverDGTD* res = new OptionsSolverDGTD(base);
-    while (!optionsFound && !f_in.eof()) {
+    while (!f_in.eof()) {
         string label, value;
         getNextLabelAndValue(label, value);
-        if (label.compare("cudg3d options") == 0) {
-            optionsFound = true;
-            while (!f_in.eof()) {
-                if (label.compare("Upwinding") == 0) {
-                    res->setUpwinding(atof(value.c_str()));
-                } else if (label.compare("Time integrator") == 0) {
-                    res->setTimeIntegrator(
-                            OptionsSolverDGTD::strToTimeIntegrator(trim(value)));
-                } else if (label.compare("Use LTS") == 0) {
-                    res->setUseLTS(strToBool(value));
-                } else if (label.compare("Grow smaller tiers") == 0) {
-                    res->setGrowSmallerTiers(atoi(value.c_str()));
-                } else if (label.compare("Max number of tiers") == 0) {
-                    res->setMaxNumberOfTiers(atoi(value.c_str()));
-                } else if (label.compare("Use max stage size for LTS") == 0) {
-                    res->setUseMaxStageSizeForLTS(strToBool(value));
-                } else if (label.compare("PML constant conductivity profile") == 0) {
-                    res->setPMLConstantConductivityProfile(strToBool(value));
-                } else if (label.compare("PML conductivity") == 0) {
-                    res->setPMLConductivity(atof(value.c_str()));
-                } else if(label.find("End of cudg3d options") != label.npos) {
-    				return res;
-                }
-            } // Closes ( !finished && !f_in.eof() ) while.
-        } // Closes problem data found if.
+        if (label.compare("Upwinding") == 0) {
+            res->setUpwinding(atof(value.c_str()));
+        } else if (label.compare("Time integrator") == 0) {
+            res->setTimeIntegrator(
+                    OptionsSolverDGTD::strToTimeIntegrator(trim(value)));
+        } else if (label.compare("Use LTS") == 0) {
+            res->setUseLTS(strToBool(value));
+        } else if (label.compare("Grow smaller tiers") == 0) {
+            res->setGrowSmallerTiers(atoi(value.c_str()));
+        } else if (label.compare("Max number of tiers") == 0) {
+            res->setMaxNumberOfTiers(atoi(value.c_str()));
+        } else if (label.compare("Use max stage size for LTS") == 0) {
+            res->setUseMaxStageSizeForLTS(strToBool(value));
+        } else if (label.compare("PML constant conductivity profile") == 0) {
+            res->setPMLConstantConductivityProfile(strToBool(value));
+        } else if (label.compare("PML conductivity") == 0) {
+            res->setPMLConductivity(atof(value.c_str()));
+        } else if(label.find("End of cudg3d options") != label.npos) {
+            return res;
+        }
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
     throw Error("No options were found.");

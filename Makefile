@@ -91,6 +91,7 @@ LIB_DIR = $(BINDIR)gidpost/lib/ $(BINDIR)gidpost/include/
 INCLUDES += src/ src/core/
 
 # =============================================================================
+.ONESHELL:
 .NOTPARALLEL:
 # -------------------- RULES --------------------------------------------------
 default: all
@@ -103,7 +104,7 @@ create_dirs:
 	-mkdir -p $(BINDIR) $(LIB_DIR)
 	-mkdir -p $(OBJDIR)
 
-cudg3d: gidpost check
+cudg3d: gidpost check .ONESHELL
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
 libopensemba: check
@@ -135,7 +136,7 @@ clean:
 clobber: clean
 	rm -rf $(BINDIR) 
 
-check:
+check: .ONESHELL .NOTPARALLEL
 ifneq ($(target),release) 
 ifneq ($(target),debug) 
 	@echo "Invalid build target."  

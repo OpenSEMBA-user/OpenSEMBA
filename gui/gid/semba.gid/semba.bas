@@ -61,7 +61,6 @@ End of cudg3d options:
 *endif
 End of solver options
 
-*if(strcasecmp(GenData(Mesher),"None")!=0)
 ------- MESHER -------
 Mesher options:
 Geometry scaling factor: *GenData(scaling_factor)
@@ -83,7 +82,6 @@ Forbidden length: *GenData(Forbidden_length)
 Scale factor: *GenData(Scale_factor)
 Scale factor value: *GenData(Scale_factor_value)
 End of mesher options
-*endif
 
 Problem size:
 *set elems(Hexahedra)
