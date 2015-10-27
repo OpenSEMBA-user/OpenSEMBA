@@ -17,6 +17,7 @@ Resume simulation: *GenData(Resume_simulation)
 Flush: *GenData(Flush)
 Additional arguments: *GenData(Additional_arguments)
 Solver: *GenData(Solver)
+*if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 ------- UGRFDTD -------
 ugrfdtd options: 
 Composites model: *GenData(Composites_model)
@@ -47,7 +48,20 @@ Map: *GenData(Map)
 Map VTK: *GenData(Map_VTK)
 NF2FF decimation: *GenData(NF2FF_decimation)
 End of ugrfdtd options:
+*elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
+------- CUDG3D -------
+cudg3d options:
+Time integrator: *GenData(Time_integrator)
+Use LTS: *GenData(Use_LTS)
+
+Upwinding: *GenData(Upwinding)
+End of cudg3d options:
+*else
+*WarningBox Unrecognized solver
+*endif
 End of solver options
+
+*if(strcasecmp(GenData(Mesher),"None")!=0)
 ------- MESHER -------
 Mesher options:
 Geometry scaling factor: *GenData(scaling_factor)
@@ -69,6 +83,7 @@ Forbidden length: *GenData(Forbidden_length)
 Scale factor: *GenData(Scale_factor)
 Scale factor value: *GenData(Scale_factor_value)
 End of mesher options
+*endif
 
 Problem size:
 *set elems(Hexahedra)

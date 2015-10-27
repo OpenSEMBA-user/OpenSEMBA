@@ -1,4 +1,5 @@
 PROBLEM DATA
+# =============================================================================
 BOOK: Solver_options
 TITLE: Solver
 QUESTION: Solver#CB#(ugrfdtd,cudg3d,none)
@@ -34,6 +35,7 @@ HELP: Permits to resume a previous simulation until a final time step. Requires 
 QUESTION: Flush
 VALUE: 0
 HELP: Minutes between data flush of restarting fields. Necessary to resume a stopped problem. A 0 means no flushing.
+
 TITLE: ugrfdtd
 QUESTION: Composites_model#CB#(MIBC,ADE,DigFilt,None)
 VALUE: MIBC
@@ -115,7 +117,17 @@ VALUE: 0
 HELP: Uses decimation in NF2FF calculation (faster). WARNING: High-freq aliasing may occur.
 QUESTION: Additional_arguments
 VALUE: 
+
 TITLE: cudg3d
+QUESTION: Time_integrator#CB#(lserk4,lf2,lf2full)
+VALUE: lserk4
+QUESTION: Use_LTS#CB#(0,1)
+VALUE: 1
+
+QUESTION: Upwinding
+VALUE: 1.0
+HELP: 0.0 for centered, 1.0 for full upwinding.
+# =============================================================================
 BOOK: Mesher_options
 Title: Mesher
 QUESTION: Mesher#CB#(ugrMesher,zMesher,OpenFOAM,None)
