@@ -111,3 +111,7 @@ void SolverCudg3d::initOpenMP() {
     }
     omp_set_num_threads(maxThreads);
 }
+
+bool SolverCudg3d::canRun() const {
+    throw ErrorNotImplemented("Can Run is not implemented.");
+}

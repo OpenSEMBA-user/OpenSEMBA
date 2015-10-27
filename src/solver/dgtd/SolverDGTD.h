@@ -45,6 +45,7 @@ public:
     SolverCudg3d(SmbData*);
     ~SolverCudg3d();
     bool run();
+    bool canRun() const;
 private:
     SmbData* smb_;
     Comm *comm_;

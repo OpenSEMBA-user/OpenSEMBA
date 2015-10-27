@@ -73,7 +73,6 @@ EMSourceBC::EMSourceBC(
         const EMSourceBase* bc) :
             BoundaryCondition(e, f) {
     em_ = bc;
-    check();
 }
 
 EMSourceBC& EMSourceBC::operator=(const EMSourceBC& rhs) {

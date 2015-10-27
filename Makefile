@@ -86,9 +86,9 @@ SRC_PARSER_DIR = parser/gid/ parser/stl/
 SRC_EXPORTER_DIR = exporter/gid/ exporter/vtk/ 
 SRC_SOLVER_DIR = solver/dgtd/
   
-LIB_DIR = ./ gidpost/
+LIB_DIR = gidpost/
 
-INCLUDES += src/ src/core/ $(LIBDIR)
+INCLUDES += src/ src/core/
 
 # =============================================================================
 .NOTPARALLEL:
