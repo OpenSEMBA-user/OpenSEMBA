@@ -73,7 +73,7 @@ void BCGroup::buildPhysicalModelBC(
         const PMGroup& pm,
         const CellGroup& cells,
         const MapGroup& map) {
-    GroupElements<SurfR> surf = mesh.elems().getOf<SurfR>();
+    Group<const SurfR> surf = mesh.elems().getOf<SurfR>();
     for (UInt i = 0; i < surf.size(); i++) {
         if (surf(i)->getMatId() !=  MatId(0)) {
             const PhysicalModel* mat = pm.getId(surf(i)->getMatId());
@@ -141,22 +141,27 @@ void BCGroup::removeOverlapped() {
     vector<PhysicalModelBC> auxPMBC;
     auxPMBC.reserve(pec.size() + pmc.size() + sma.size() + sibc.size());
     for (UInt i = 0; i < pec.size(); i++) {
-        auxPMBC.push_back(PhysicalModelBC(*pec[i]));
+        const PhysicalModelBC* aux = dynamic_cast<PhysicalModelBC*>(pec[i]);
+        auxPMBC.push_back(PhysicalModelBC(*aux));
     }
     for (UInt i = 0; i < pmc.size(); i++) {
-        auxPMBC.push_back(PhysicalModelBC(*pmc[i]));
+        const PhysicalModelBC* aux = dynamic_cast<PhysicalModelBC*>(pmc[i]);
+        auxPMBC.push_back(PhysicalModelBC(*aux));
     }
     for (UInt i = 0; i < sma.size(); i++) {
-        auxPMBC.push_back(PhysicalModelBC(*sma[i]));
+        const PhysicalModelBC* aux = dynamic_cast<PhysicalModelBC*>(sma[i]);
+        auxPMBC.push_back(PhysicalModelBC(*aux));
     }
     for (UInt i = 0; i < sibc.size(); i++) {
-        auxPMBC.push_back(PhysicalModelBC(*sibc[i]));
+        const PhysicalModelBC* aux = dynamic_cast<PhysicalModelBC*>(sibc[i]);
+        auxPMBC.push_back(PhysicalModelBC(*aux));
     }
     pmbc = auxPMBC;
     vector<EMSourceBC> auxEMBC;
     auxEMBC.reserve(em.size());
     for (UInt i = 0; i < em.size(); i++) {
-        auxEMBC.push_back(EMSourceBC(*em[i]));
+        const EMSourceBC* aux = dynamic_cast<EMSourceBC*>(em[i]);
+        auxEMBC.push_back(EMSourceBC(*aux));
     }
     embc = auxEMBC;
 }

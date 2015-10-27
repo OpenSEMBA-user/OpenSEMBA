@@ -35,7 +35,7 @@ DGExplicit::DGExplicit(
     CellGroup cells(smb);
     const MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
     const OptionsSolverDGTD* options =
-            dynamic_cast<OptionsSolverDGTD>(smb->solverOptions);
+            dynamic_cast<OptionsSolverDGTD*>(smb->solverOptions);
     init(options, smb->pMGroup, &cells, comm);
     allocateRHSAndJumps();
     if (options->isUseLTS()) {
@@ -52,7 +52,7 @@ DGExplicit::DGExplicit(
     deduplicateVMaps(cells);
 
     MapGroup map(mesh->coords(), mesh->elems());
-    BCGroup bc(smb, cells, map);
+    BCGroup bc(*smb, cells, map);
     assignPointersToNeighbours(cells, map, *mesh);
     buildEMSources(*smb->emSources, bc, map, cells);
     BCToLocalArray(bc, cells, map);
@@ -912,7 +912,8 @@ void DGExplicit::buildEMSources(
     // Copies the sources structure into solver.
     for (UInt i = 0; i < em.getOf<PlaneWave>().size(); i++) {
         vector<const BoundaryCondition*> aux = bc.getPtrsToEMSourceBC();
-        source.push_back(new DGPlaneWave(*em(i), bc, maps, cells, comm, dE, dH, vmapM));
+        source.push_back(new DGPlaneWave(*(em(i)->castTo<PlaneWave>()), bc,
+                maps, cells, comm, dE, dH, vmapM));
     }
 //    for (UInt i = 0; i < em.countDipoles(); i++) {
 //        vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);
@@ -993,13 +994,13 @@ void DGExplicit::buildCurvedFluxScalingFactors(
 void DGExplicit::buildMaterials(
         const CellGroup& cells,
         const OptionsSolverDGTD* arg) {
-    // Creates Dispersive materials vars parameters and stores ptrs.
-    const GroupPhysicalModels<PMVolumeDispersive> dispersives =
-            smb_->pMGroup->getOf<PMVolumeDispersive>();
-    for (UInt i = 0; i < dispersives.size(); i++) {
-        dispersive.push_back(new DGDispersiveVolumic(*dispersives(i), cells));
-    }
-    // Creates PML materials variables parameters and stores pointers.
+//    // Creates Dispersive materials vars parameters and stores ptrs.
+//    const GroupPhysicalModels<PMVolumeDispersive> dispersives =
+//            smb_->pMGroup->getOf<PMVolumeDispersive>();
+//    for (UInt i = 0; i < dispersives.size(); i++) {
+//        dispersive.push_back(new DGDispersiveVolumic(*dispersives(i), cells));
+//    }
+//    // Creates PML materials variables parameters and stores pointers.
 //    const GroupPhysicalModels<PMVolumePML> pmls =
 //            smb_->pMGroup->getOf<PMVolumePML>();
 //    for (UInt i = 0; i < pmls.size(); i++) {

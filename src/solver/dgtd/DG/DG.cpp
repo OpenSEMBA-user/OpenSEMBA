@@ -125,7 +125,7 @@ void DG::setFieldsAndTimeFromResumeFile() {
 //      }
 //   }
 //   f_in.close();
-    throw ErrorNotImplemented();
+    throw ErrorNotImplemented("Not implemented");
 }
 
 void DG::buildFieldScalingFactors(
@@ -345,7 +345,7 @@ vector<UInt> DG::getGlobalFieldPosOfFace(Face bound) const {
    const UInt e = getGlobalRelPosOfId(bound.first->getId());
    const UInt f = bound.second;
    static const SimplexTet<ORDER_N> tet;
-   vector<UInt> res(tet.nfp);
+   vector<UInt> res(tet.nfp, 0);
    for (UInt i = 0; i < tet.nfp; i++) {
       res[i] = e * tet.np + tet.sideNode(f,i);
    }
@@ -355,7 +355,7 @@ vector<UInt> DG::getGlobalFieldPosOfFace(Face bound) const {
 vector<UInt> DG::getGlobalFieldPosOfVolume(const ElementId volId) const {
    const UInt e = getGlobalRelPosOfId(volId);
    static const SimplexTet<ORDER_N> tet;
-   vector<UInt> res(tet.np);
+   vector<UInt> res(tet.np, 0);
    for (UInt i = 0; i < tet.np; i++) {
       res[i] = e * tet.np + i;
    }

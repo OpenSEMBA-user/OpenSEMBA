@@ -29,7 +29,7 @@
 
 CellGroup::CellGroup(const SmbData* smb) {
     const MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
-	GroupElements<Tet> tet = mesh->elems().getOf<Tet>();
+	Group<const Tet> tet = mesh->elems().getOf<Tet>();
 	const PMGroup* pMGroup = smb->pMGroup;
 	cell.resize(tet.size(), NULL);
 	cellOffsetId = tet(0)->getId().toUInt();

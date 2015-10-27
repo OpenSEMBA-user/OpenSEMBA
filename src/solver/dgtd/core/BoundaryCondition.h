@@ -41,7 +41,7 @@ public:
     virtual ~BoundaryCondition();
     bool hasSameBoundary(const BoundaryCondition& other) const;
     virtual BoundaryCondition& operator=(const BoundaryCondition& rhs);
-        virtual void printInfo() const;
+    virtual void printInfo() const;
     const CellTet<ORDER_N>* getCell() const;
     UInt getFace() const;
     Face getCellFace() const;
@@ -89,7 +89,6 @@ public:
             const UInt faceD,
             const PMSurfaceSIBC* cond);
     SurfaceImpedanceBC& operator=(const SurfaceImpedanceBC &rhs);
-    bool isSIBC() const;
     const CellTet<ORDER_N>* getCellD() const;
     UInt getFaceD() const;
     const PMSurfaceSIBC* getCondition() const;

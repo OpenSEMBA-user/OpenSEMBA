@@ -51,7 +51,7 @@ BoundaryCondition& BoundaryCondition::operator =(const BoundaryCondition& rhs) {
 }
 
 Face BoundaryCondition::getCellFace() const {
-    return Face(cell_, face_);
+    return Face(cell_->getPtrToBase(), face_);
 }
 
 void BoundaryCondition::printInfo() const {
