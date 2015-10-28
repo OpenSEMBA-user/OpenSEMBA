@@ -19,8 +19,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 // File: simulation.h
-#ifndef SIMULATION_H_
-#	define SIMULATION_H_
+#ifndef SOLVERDGTD_H_
+#	define SOLVERDGTD_H_
 
 #include "parser/gid/ParserGiD.h"
 #include "exporter/gid/ExporterGiD.h"
@@ -40,10 +40,10 @@
 #include "solver/Solver.h"
 #include "../DG/DGExplicit.h"
 
-class SolverCudg3d : public Solver {
+class SolverDGTD : public Solver {
 public:
-    SolverCudg3d(SmbData*);
-    ~SolverCudg3d();
+    SolverDGTD(SmbData*);
+    ~SolverDGTD();
     bool run();
     bool canRun() const;
 private:

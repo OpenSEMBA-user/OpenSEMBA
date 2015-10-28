@@ -25,7 +25,7 @@ MeshVolume::MeshVolume() {
 
 MeshVolume::MeshVolume(
         const CoordR3Group& vIn,
-        const ElemRGroup& elementIn) : MeshUnstructured(vIn, elementIn) {
+        const ElemRGroup& elementIn) : MeshVolume(vIn, elementIn) {
 }
 
 MeshVolume::~MeshVolume() {

@@ -33,7 +33,7 @@ DGExplicit::DGExplicit(
         Comm* comm) {
     smb_ = smb;
     CellGroup cells(smb);
-    const MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
+    const MeshVolume* mesh = smb->mesh->castTo<MeshVolume>();
     const OptionsSolverDGTD* options =
             dynamic_cast<OptionsSolverDGTD*>(smb->solverOptions);
     init(options, smb->pMGroup, &cells, comm);
@@ -759,7 +759,7 @@ void DGExplicit::assignMatrices(const CellGroup& cells) {
 void DGExplicit::assignPointersToNeighbours(
         const CellGroup& cells,
         const MapGroup& map,
-        const MeshUnstructured& mesh) {
+        const MeshVolume& mesh) {
     UInt nNeighs = 0;
     for (UInt k = 0; k < nK; k++) {
         ElementId id1 = cells.getIdOfRelPos(k);

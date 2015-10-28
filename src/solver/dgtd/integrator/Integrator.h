@@ -38,7 +38,6 @@ using namespace std;
 #include "../core/Ordering.h"
 #include "physicalModel/PhysicalModel.h"
 #include "options/OptionsSolverDGTD.h"
-#include "MeshVolume.h"
 #include "DG/DG.h"
 
 #define SOLVERINFO_ALLOW_REORDERING_IN_SOLVER

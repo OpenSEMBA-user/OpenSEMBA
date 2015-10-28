@@ -19,8 +19,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 // File: Mesh.h
-#ifndef MESHVOLUME_H_
-#define MESHVOLUME_H_
+#ifndef MeshVolume_H_
+#define MeshVolume_H_
 
 #ifdef USE_METIS
     #include <metis.h>
@@ -31,9 +31,8 @@
 #endif
 using namespace std;
 
-#include "geometry/Grid.h"
 #include "geometry/MeshUnstructured.h"
-#include "physicalModel/PMVolumePML.h"
+
 
 class MeshVolume : public MeshUnstructured {
 public:
@@ -54,5 +53,7 @@ public:
 //            const vector<Face>& internalBorder,
 //            MeshVolume* mesh);
 };
+
+
 
 #endif

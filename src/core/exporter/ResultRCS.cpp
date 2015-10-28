@@ -30,7 +30,7 @@
 //ResultRCS::ResultRCS(
 // const string& filename,
 // const string& resultName,
-// const MeshVolume& meshVol,
+// const MeshUnstructured& meshVol,
 // const vector<const BoundaryCondition*>& iB)
 //  : ProjectFile(filename) {
 //	UInt bSize = iB.size();

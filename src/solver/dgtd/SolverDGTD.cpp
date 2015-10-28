@@ -20,7 +20,8 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "SolverDGTD.h"
 
-SolverCudg3d::SolverCudg3d(SmbData* smb) {
+SolverDGTD::SolverDGTD(SmbData* smb) {
+    smb_ = smb;
     const MeshVolume* mesh = smb_->mesh->castTo<MeshVolume>();
     comm_ = initMPI();
     initOpenMP();
@@ -43,12 +44,12 @@ SolverCudg3d::SolverCudg3d(SmbData* smb) {
 #endif
 }
 
-SolverCudg3d::~SolverCudg3d() {
+SolverDGTD::~SolverDGTD() {
     delete out_;
     delete dg_;
 }
 
-bool SolverCudg3d::run() {
+bool SolverDGTD::run() {
     Real tSum = 0.0;
     Real tRunning = 0.0;
     Real time = 0.0;
@@ -66,7 +67,7 @@ bool SolverCudg3d::run() {
     return true;
 }
 
-Integrator* SolverCudg3d::initIntegrator(
+Integrator* SolverDGTD::initIntegrator(
         const MeshVolume* mesh,
         const PMGroup* pMGroup,
         const OptionsSolverDGTD* arg) {
@@ -95,7 +96,7 @@ Integrator* SolverCudg3d::initIntegrator(
     return res;
 }
 
-Comm* SolverCudg3d::initMPI() {
+Comm* SolverDGTD::initMPI() {
 #ifdef USE_MPI
     return new CommMPI();
 #else
@@ -103,7 +104,7 @@ Comm* SolverCudg3d::initMPI() {
 #endif
 }
 
-void SolverCudg3d::initOpenMP() {
+void SolverDGTD::initOpenMP() {
     Int nTasksOnThisHost = comm_->getNumOfTasksOnThisHost();
     Int maxThreads = omp_get_max_threads() / nTasksOnThisHost - 1;
     if (maxThreads == 0) {
@@ -112,6 +113,6 @@ void SolverCudg3d::initOpenMP() {
     omp_set_num_threads(maxThreads);
 }
 
-bool SolverCudg3d::canRun() const {
+bool SolverDGTD::canRun() const {
     throw ErrorNotImplemented("Can Run is not implemented.");
 }

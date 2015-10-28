@@ -152,7 +152,7 @@ private:
     void assignPointersToNeighbours(
             const CellGroup& cells,
             const MapGroup& map,
-            const MeshUnstructured& mesh);
+            const MeshVolume& mesh);
     void buildScalingFactors(const CellGroup& cells, const MapGroup& map);
     void buildEMSources(
             const EMSourceGroup& em,

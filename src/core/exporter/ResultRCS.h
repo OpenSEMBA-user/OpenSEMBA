@@ -126,7 +126,7 @@
 //   ResultRCS(
 //         const string& fileName,
 //         const string& resultName,
-//         const MeshVolume& mesh,
+//         const MeshUnstructured& mesh,
 //         const vector<const BoundaryCondition*>& iB);
 //   ResultRCS(
 //         const string& filename,

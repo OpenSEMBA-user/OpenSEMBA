@@ -28,7 +28,7 @@
 #include "CellGroup.h"
 
 CellGroup::CellGroup(const SmbData* smb) {
-    const MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
+    const MeshVolume* mesh = smb->mesh->castTo<MeshVolume>();
 	Group<const Tet> tet = mesh->elems().getOf<Tet>();
 	const PMGroup* pMGroup = smb->pMGroup;
 	cell.resize(tet.size(), NULL);
