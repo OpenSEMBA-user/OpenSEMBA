@@ -236,20 +236,8 @@ vector<Face> MeshUnstructured::getTetInternalBorder(
     return res;
 }
 
-vector<Face> MeshUnstructured::getTriInternalBorder(
-        const GroupElements<const Triangle>& region) const {
-
-    UInt nE = region.size();
-    vector<Face> res(nE);
-    MapGroup mapGroup(coords().getOf<CoordR3>(), region);
-    for (UInt i = 0; i < nE; i++) {
-        res[i] = mapGroup.getInnerFace(region(i)->getId());
-    }
-    return res;
-}
-
-GroupElements<ElemR> MeshUnstructured::getAdjacentRegion(
-        const GroupElements<const ElemR>& region) {
+GroupElements <const VolR> MeshUnstructured::getAdjacentRegion(
+        const GroupElements<const VolR>& region) const {
     vector<Face> outer = getExternalBorder(region);
     UInt nOut = outer.size();
     // Removes repeated.
@@ -266,17 +254,16 @@ GroupElements<ElemR> MeshUnstructured::getAdjacentRegion(
     return res;
 }
 
-bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
-    GroupElements<const ElemR> elems =
-            GroupElements<ElemR>::getOf<ElemR>();
-    for (UInt i = 0; i < elems.size(); i++) {
-        for (UInt j = 0; j < elems(i)->numberOfCoordinates(); j++) {
-            if (*param == *elems(i)->getV(j)) {
-                return false;
-            }
-        }
+vector<Face> MeshUnstructured::getTriInternalBorder(
+        const GroupElements<const Triangle>& region) const {
+
+    UInt nE = region.size();
+    vector<Face> res(nE);
+    MapGroup mapGroup(coords().getOf<CoordR3>(), region);
+    for (UInt i = 0; i < nE; i++) {
+        res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
-    return true;
+    return res;
 }
 
 bool MeshUnstructured::isOnBoundary(const CVecR3 pos) const {

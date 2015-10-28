@@ -87,9 +87,8 @@ public:
             const GroupElements<const ElemR>& region) const;
     vector<Face> getExternalBorder(
             const GroupElements<const ElemR>& region) const;
-    GroupElements<ElemR> getAdjacentRegion(
-            const GroupElements<const ElemR>& region);
-
+    GroupElements<const VolR> getAdjacentRegion(
+            const GroupElements<const VolR>& region) const;
     Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
     BoxR3 getBoundingBox() const;

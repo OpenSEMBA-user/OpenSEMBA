@@ -38,9 +38,7 @@ class MeshVolume : public MeshUnstructured {
 public:
     MeshVolume();
     MeshVolume(const MeshVolume& meshVol);
-    MeshVolume(
-            const CoordR3Group&,
-            const ElemRGroup&);
+    MeshVolume(const MeshUnstructured& uns);
     virtual ~MeshVolume();
     MeshVolume& operator=(const MeshVolume& param);
     vector<vector<ElementId>> getPartitionsIds(

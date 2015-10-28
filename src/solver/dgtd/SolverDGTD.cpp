@@ -22,13 +22,13 @@
 
 SolverDGTD::SolverDGTD(SmbData* smb) {
     smb_ = smb;
-    const MeshVolume* mesh = smb_->mesh->castTo<MeshVolume>();
+    MeshVolume mesh(*smb_->mesh->castTo<MeshUnstructured>());
     comm_ = initMPI();
-    initOpenMP();
+
 
     OptionsSolverDGTD* arg = smb_->solverOptions->castTo<OptionsSolverDGTD>();
-    integrator_ = initIntegrator(mesh, smb_->pMGroup, arg);
-    integrator_->partitionate(mesh, comm_);
+    integrator_ = initIntegrator(&mesh, smb_->pMGroup, arg);
+    integrator_->partitionate(&mesh, comm_);
 
     dg_ = new DGExplicit(smb_, comm_);
     integrator_->setSolver(dg_);
@@ -102,15 +102,6 @@ Comm* SolverDGTD::initMPI() {
 #else
     return new CommNone();
 #endif
-}
-
-void SolverDGTD::initOpenMP() {
-    Int nTasksOnThisHost = comm_->getNumOfTasksOnThisHost();
-    Int maxThreads = omp_get_max_threads() / nTasksOnThisHost - 1;
-    if (maxThreads == 0) {
-        maxThreads = 1;
-    }
-    omp_set_num_threads(maxThreads);
 }
 
 bool SolverDGTD::canRun() const {

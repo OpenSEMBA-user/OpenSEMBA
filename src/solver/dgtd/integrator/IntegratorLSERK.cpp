@@ -89,8 +89,8 @@ IntegratorLSERK::getNumOfIterationsPerBigTimeStep(
  const UInt e) const {
 	UInt nTiers = getNTiers();
 	UInt nStages = getNStages();
-	UInt tier = timeTierList(e,1);
-	UInt stage = timeTierList(e,2);
+	UInt tier = timeTierList_(e,1);
+	UInt stage = timeTierList_(e,2);
 	UInt iter = 0;
 	if (tier == 0) {
 		iter = (nTiers - tier) * nStages;

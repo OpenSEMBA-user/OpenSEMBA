@@ -82,7 +82,7 @@ IntegratorLF2::getNumOfIterationsPerBigTimeStep(
  const UInt e) const {
 	UInt nTiers = getNTiers();
 	UInt nStages = getNStages();
-	UInt tier = timeTierList(e,1);
+	UInt tier = timeTierList_(e,1);
 	UInt iter = (nTiers - tier) * nStages;
 	return iter;
 }

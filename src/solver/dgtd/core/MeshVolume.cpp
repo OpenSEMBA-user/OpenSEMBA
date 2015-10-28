@@ -24,15 +24,27 @@ MeshVolume::MeshVolume() {
 }
 
 MeshVolume::MeshVolume(
-        const CoordR3Group& vIn,
-        const ElemRGroup& elementIn) : MeshVolume(vIn, elementIn) {
+        const MeshUnstructured& uns) :
+                        MeshUnstructured(uns.coords(), uns.elems(), uns.layers()) {
 }
 
 MeshVolume::~MeshVolume() {
 }
 
-//void
-//MeshVolume::createAndAssignPML(
+bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
+    GroupElements<const ElemR> elems =
+            GroupElements<ElemR>::getOf<ElemR>();
+    for (UInt i = 0; i < elems.size(); i++) {
+        for (UInt j = 0; j < elems(i)->numberOfCoordinates(); j++) {
+            if (*param == *elems(i)->getV(j)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+//void MeshVolume::createAndAssignPML(
 //        const PMVolumePML::Direction direction[3],
 //        const vector<Face>& internalBorder,
 //        MeshVolume* mesh) {
@@ -62,9 +74,8 @@ MeshVolume::~MeshVolume() {
 //        mesh->setMaterialIds(PMLIds, lastId+1);
 //    }
 //}
-
-//void
-//MeshVolume::detectAndAssignPMLRegions() {
+//
+//void MeshVolume::detectAndAssignPMLRegions() {
 //    if (countPML() == 0) {
 //        return;
 //    }
@@ -81,8 +92,7 @@ MeshVolume::~MeshVolume() {
 //    }
 //}
 
-vector<vector<ElementId>>
-MeshVolume::getPartitionsIds(
+vector<vector<ElementId>> MeshVolume::getPartitionsIds(
         const UInt nDivisions,
         const vector<pair<ElementId,Int>> idWgt,
         const Real* taskPower) const {

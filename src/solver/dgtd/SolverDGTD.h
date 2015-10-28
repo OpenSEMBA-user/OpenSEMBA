@@ -57,7 +57,6 @@ private:
             const PMGroup* pMGroup,
             const OptionsSolverDGTD* args);
     Comm* initMPI();
-    void initOpenMP();
 };
 
 #endif

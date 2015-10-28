@@ -46,7 +46,6 @@ typedef pair<UInt,UInt> Interval;
 
 class Integrator : public Ordering {
 public:
-    Real timeStepSize;
     Integrator();
     virtual ~Integrator();
     virtual void timeIntegrate(const Real timer) const = 0;
@@ -64,9 +63,10 @@ public:
     void partitionate(const MeshVolume* mesh, Comm* comm);
     void printInfo() const;
 protected:
+    Real timeStepSize;
     DG* solver;
     bool doLTS;
-    DynMatrix<UInt> timeTierList; // Id - Tier - Stage
+    DynMatrix<UInt> timeTierList_; // Id - Tier - Stage
     Real mindt;
     void init(
             const MeshVolume& mesh,
@@ -89,7 +89,7 @@ private:
     static const UInt growStages = 1;
     UInt growSmallerTiers;
     UInt maxNumOfTiers;
-    UInt nTiers;
+    UInt nTiers_;
     pair<UInt,UInt> **tierRange_;
     vector<vector<ElementId>> partIds_;
     void reorder(
