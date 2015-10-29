@@ -401,11 +401,8 @@ void Integrator::assignTiersBasedOnMaxTimeStep(
         const MeshVolume& mesh,
         const PMGroup& pmGroup) {
     // Takes only elements with a defined material.
-    GroupElements<const VolR> allVol, vol;
-    allVol = mesh.elems().getOf<VolR>();
-    for (UInt i = 0; i < pmGroup.size(); i++) {
-        vol.add(allVol.getMatId(pmGroup(i)->getId()));
-    }
+    GroupElements<const VolR> vol = mesh.elems().getOf<VolR>();
+    vol.removeMatId(MatId(0));
     const UInt nK =  vol.size();
     // Computes maximum global timestep (local minimum).
     DynMatrix<Real> dtList(vol.size(), 4);

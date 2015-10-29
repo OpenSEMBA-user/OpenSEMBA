@@ -52,7 +52,6 @@ public:
     MapGroup(const GroupCoordinates<const Coord>& cG,
              const GroupElements  <const Elem> & eG);
     virtual ~MapGroup();
-    void reassignPointers(const GroupElements<const Elem>& nEG);
     const Tetrahedron* getNeighbour(const ElementId id, const UInt face) const;
     UInt getVolToF(const ElementId id, const UInt face) const;
     Face getNeighConnection(const Face& face) const;
@@ -62,8 +61,7 @@ public:
     bool isDomainBoundary(const ElementId id, const UInt f) const;
     bool isDomainBoundary(Face boundary) const;
 private:
-    map<ElementId, MapSurface*> tri_;
-    map<ElementId, MapVolume*> tet_;
+    GraphVertices<ElemR,CoordR3> elem_;
 };
 
 
