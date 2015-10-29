@@ -20,6 +20,7 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
 #include "math/LocalAxes.h"
+#include "math/Constants.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>

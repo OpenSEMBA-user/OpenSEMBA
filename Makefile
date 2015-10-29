@@ -73,11 +73,11 @@ BINDIR = ./bin/
 OBJDIR = ./obj/
 LIBDIR = ./external/
 SRCDIR = ./src/
-SRC_CORE_DIR = core/ \
- core/math/ \
+SRC_GEOMETRY_DIR = core/math/ \
  core/base/class/  core/base/error/ core/base/group/ \
  core/geometry/ core/geometry/elements/ core/geometry/maps/ \
- core/geometry/coordinates/ core/geometry/layers/ core/geometry/pixels/ \
+ core/geometry/coordinates/ core/geometry/layers/ core/geometry/pixels/ 
+SRC_CORE_DIR = core/ $(SRC_GEOMETRY_DIR) \
  core/options/ \
  core/physicalModel/ \
  core/sources/ core/sources/ports/ core/sources/magnitude/ \
@@ -91,7 +91,6 @@ LIB_DIR = $(BINDIR)gidpost/lib/ $(BINDIR)gidpost/include/
 INCLUDES += src/ src/core/
 
 # =============================================================================
-.ONESHELL:
 .NOTPARALLEL:
 # -------------------- RULES --------------------------------------------------
 default: all

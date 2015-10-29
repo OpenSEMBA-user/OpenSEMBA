@@ -18,48 +18,23 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-# ==================== Default variables ======================================
-BINDIR = bin/
-OBJDIR = obj/
-LIBDIR = lib/
-SRCDIR = src/
-# =============================================================================
-CXXFLAGS += -fopenmp
-# =============================================================================
-INCLUDES += test/
-LIBRARIES +=
+
+
 LIBS += gtest
 
-ifeq ($(mode),debug)
-	DEFINES +=_DEBUG
-endif
-
-DEFINES += 
+OUT = test
 ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 	OUT := $(addsuffix .exe,$(OUT))
 endif
+
 # =============================================================================
-ifeq ($(mode),debug)
-	OUT = test
-else 
-	OUT = test
-endif
-# =============================================================================
-# -------------------- Paths to directories -----------------------------------
 DIR = ./ $(SRC_CORE_DIR) 
 
 SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(SRCDIR)/apps/test/, ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
 
-IGNORES := 
-EXCLUDE := $(shell find $(SOURCE_DIR) -type f \( -name MathMatrix.cpp $(addprefix -o -name , $(IGNORES)) \) 2>/dev/null )
-
-SRCS_CXX := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.cpp")
+SRCS_CXX := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.cpp" 2>/dev/null)
 SRCS_CXX := $(filter-out $(EXCLUDE), $(SRCS_CXX)) 
 OBJS_CXX := $(addprefix $(OBJDIR), $(SRCS_CXX:.cpp=.o))
-
-SRCS_C := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.c")
-SRCS_C := $(filter-out $(EXCLUDE), $(SRCS_C)) 
-OBJS_C := $(addprefix $(OBJDIR), $(SRCS_C:.c=.o))
 
 .PHONY: default clean clobber print
 
@@ -79,12 +54,7 @@ $(OBJDIR)%.o: %.cpp
 	@echo "Compiling:" $@
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
 	
-$(OBJDIR)%.o: %.c
-	@dirname $@ | xargs mkdir -p
-	@echo "Compiling:" $@
-	$(CC) $(CCFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
-
-$(OUT): $(OBJS_CXX) $(OBJS_C)
+$(OUT): $(OBJS_CXX)
 	@mkdir -p $(BINDIR)
 	@echo "Linking:" $@
 	${CXX} $^ -o $(BINDIR)$(OUT) $(CXXFLAGS) \
