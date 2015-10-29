@@ -37,7 +37,7 @@ using namespace std;
 
 #include "SmbData.h"
 #include "geometry/elements/Polyline.h"
-#include "geometry/maps/GraphVertices.h"
+#include "geometry/graphs/GraphVertices.h"
 
 template<class T>
 class GroupWires {

@@ -25,7 +25,7 @@
  *      Author: luis
  */
 
-#include "MapGroup.h"
+#include "../graphs/MapGroup.h"
 
 MapGroup::ErrorHangingNode::ErrorHangingNode()
 :   Error("Map Group: A surface has a hanging node") {

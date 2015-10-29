@@ -19,14 +19,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 /*
- * GraphElement.h
+ * GraphFaces.h
  *
  *  Created on: Jun 16, 2014
  *      Author: damarro
  */
 
-#ifndef COMMON_GEOMETRY_MAPS_GRAPHELEMENT_H_
-#define COMMON_GEOMETRY_MAPS_GRAPHELEMENT_H_
+#ifndef COMMON_GEOMETRY_MAPS_GRAPHFACES_H_
+#define COMMON_GEOMETRY_MAPS_GRAPHFACES_H_
 
 
 #include <utility>
@@ -36,15 +36,15 @@ using namespace std;
 #include "../elements/Element.h"
 
 template<class ELEM, class BOUND>
-class GraphElement {
+class GraphFaces {
 public:
     typedef ELEM  Elem;
     typedef BOUND Bound;
-    typedef GraphElement<Elem,Bound> GraphElem;
-    typedef GraphElement<Bound,Elem> GraphBound;
+    typedef GraphFaces<Elem,Bound> GraphElem;
+    typedef GraphFaces<Bound,Elem> GraphBound;
 
-    GraphElement(const Elem* elem, const UInt& numBounds = 0);
-    GraphElement(const GraphElement&);
+    GraphFaces(const Elem* elem, const UInt& numBounds = 0);
+    GraphFaces(const GraphFaces&);
 
     bool visited() const { return vis_;  }
     void markVisited  () { vis_ =  true; }
@@ -83,6 +83,6 @@ private:
     vector<vector<GraphElem*>> boundNeighbors_;
 };
 
-#include "GraphElement.hpp"
+#include "../graphs/GraphFaces.hpp"
 
-#endif /* COMMON_GEOMETRY_MAPS_GRAPHELEMENT_H_ */
+#endif /* COMMON_GEOMETRY_MAPS_GraphFaces_H_ */

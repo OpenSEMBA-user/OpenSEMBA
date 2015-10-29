@@ -19,23 +19,23 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 /*
- * GraphElement.hpp
+ * GraphFaces.hpp
  *
  *  Created on: Jun 16, 2014
  *      Author: damarro
  */
 
-#include "GraphElement.h"
+#include "../graphs/GraphFaces.h"
 
 template<class ELEM, class BOUND>
-GraphElement<ELEM,BOUND>::GraphElement(const ELEM* elem, const UInt& numBound) {
+GraphFaces<ELEM,BOUND>::GraphFaces(const ELEM* elem, const UInt& numBound) {
     vis_  = false;
     elem_ = elem;
     bounds_.resize(numBound);
 }
 
 template<class ELEM, class BOUND>
-GraphElement<ELEM,BOUND>::GraphElement(const GraphElement& rhs) {
+GraphFaces<ELEM,BOUND>::GraphFaces(const GraphFaces& rhs) {
     vis_       = rhs.vis_;
     elem_      = rhs.elem_;
     bounds_    = rhs.bounds_;
@@ -44,32 +44,32 @@ GraphElement<ELEM,BOUND>::GraphElement(const GraphElement& rhs) {
 }
 
 template<class ELEM, class BOUND>
-vector<const typename GraphElement<ELEM,BOUND>::GraphBound*>
-    GraphElement<ELEM,BOUND>::getBounds() const {
+vector<const typename GraphFaces<ELEM,BOUND>::GraphBound*>
+    GraphFaces<ELEM,BOUND>::getBounds() const {
     return vector<const GraphBound*>(bounds_.begin(), bounds_.end());
 }
 
 template<class ELEM, class BOUND>
-void GraphElement<ELEM,BOUND>::setBounds(
-    GraphElement<ELEM,BOUND>::GraphBound* bound) {
+void GraphFaces<ELEM,BOUND>::setBounds(
+    GraphFaces<ELEM,BOUND>::GraphBound* bound) {
     bounds_.resize(1);
     bounds_[0] = bound;
 }
 
 template<class ELEM, class BOUND>
-const typename GraphElement<ELEM,BOUND>::GraphElem*
-    GraphElement<ELEM,BOUND>::getBoundNeighbor(UInt i, UInt j) const {
+const typename GraphFaces<ELEM,BOUND>::GraphElem*
+    GraphFaces<ELEM,BOUND>::getBoundNeighbor(UInt i, UInt j) const {
     return boundNeighbors_[i][j];
 }
 
 template<class ELEM, class BOUND>
-typename GraphElement<ELEM,BOUND>::GraphElem*
-    GraphElement<ELEM,BOUND>::getBoundNeighbor(UInt i, UInt j) {
+typename GraphFaces<ELEM,BOUND>::GraphElem*
+    GraphFaces<ELEM,BOUND>::getBoundNeighbor(UInt i, UInt j) {
     return boundNeighbors_[i][j];
 }
 
 template<class ELEM, class BOUND>
-void GraphElement<ELEM,BOUND>::constructNeighbors() {
+void GraphFaces<ELEM,BOUND>::constructNeighbors() {
     boundNeighbors_.clear();
     boundNeighbors_.resize(bounds_.size());
     for (UInt i = 0; i < bounds_.size(); i++) {
@@ -89,8 +89,8 @@ void GraphElement<ELEM,BOUND>::constructNeighbors() {
 }
 
 template<class ELEM, class BOUND>
-void GraphElement<ELEM,BOUND>::printInfo() const {
-    cout << "--- GraphElement Info ---" << endl;
+void GraphFaces<ELEM,BOUND>::printInfo() const {
+    cout << "--- GraphFaces Info ---" << endl;
     elem_->printInfo();
     cout << "Bounds:";
     for (UInt i = 0; i < bounds_.size(); ++i) {

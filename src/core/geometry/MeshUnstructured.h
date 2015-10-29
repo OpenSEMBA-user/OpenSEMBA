@@ -35,8 +35,8 @@
 #include <vector>
 using namespace std;
 
-#include "maps/GraphVertices.h"
-#include "maps/MapGroup.h"
+#include "graphs/GraphVertices.h"
+#include "graphs/MapGroup.h"
 #include "Grid.h"
 
 #include "Mesh.h"

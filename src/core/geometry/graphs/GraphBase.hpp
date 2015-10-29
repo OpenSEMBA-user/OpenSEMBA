@@ -25,7 +25,7 @@
  *      Author: Daniel
  */
 
-#include "GraphBase.h"
+#include "../graphs/GraphBase.h"
 
 template<class ELEM, class BOUND>
 GraphBase<ELEM,BOUND>::GraphBase() {

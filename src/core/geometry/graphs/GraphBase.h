@@ -19,36 +19,59 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 /*
- * GraphVertices.h
+ * GraphBase.h
  *
- *  Created on: 15/4/2015
+ *  Created on: 17/5/2015
  *      Author: Daniel
  */
 
-#ifndef COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_
-#define COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_
+#ifndef COMMON_GEOMETRY_MAPS_GRAPHBASE_H_
+#define COMMON_GEOMETRY_MAPS_GRAPHBASE_H_
 
-#include "GraphBase.h"
+#include <queue>
+#include <map>
+#include <utility>
+#include <vector>
+using namespace std;
+
+#include "base/group/Group.h"
+
+#include "../graphs/GraphElement.h"
 
 template<class ELEM, class BOUND>
-class GraphVertices : public GraphBase<ELEM, BOUND> {
+class GraphBase {
 public:
     typedef ELEM  Elem;
     typedef BOUND Bound;
     typedef GraphElement<Elem,Bound> GraphElem;
     typedef GraphElement<Bound,Elem> GraphBound;
 
-    GraphVertices();
-    GraphVertices(const Group<const Elem>&  elems,
-                  const Group<const Bound>& bounds);
-    virtual ~GraphVertices();
+    GraphBase();
+    virtual ~GraphBase();
 
-    GraphVertices<Elem,Bound>& init(const Group<const Elem>&  elems,
-                                    const Group<const Bound>& bounds);
+    GraphBase& operator=(const GraphBase&);
 
-    void splitBound(UInt i);
+    virtual GraphBase& init(const Group<const Elem>&  elems,
+                            const Group<const Bound>& bounds) = 0;
+
+    UInt numElems () const { return elems_.size();  }
+    UInt numBounds() const { return bounds_.size(); }
+
+    const GraphElem*  elem (UInt i) const { return elems_ [i]; }
+    GraphElem*        elem (UInt i)       { return elems_ [i]; }
+    const GraphBound* bound(UInt i) const { return bounds_[i]; }
+    GraphBound*       bound(UInt i)       { return bounds_[i]; }
+
+    void resetVisited();
+    vector<vector<const Elem*>> getConnectedComponents();
+
+    void printInfo() const;
+
+protected:
+    vector<GraphElem* > elems_;
+    vector<GraphBound*> bounds_;
 };
 
-#include "GraphVertices.hpp"
+#include "../graphs/GraphBase.hpp"
 
-#endif /* COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_ */
+#endif /* COMMON_GEOMETRY_MAPS_GRAPHBASE_H_ */

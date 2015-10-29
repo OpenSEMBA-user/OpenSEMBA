@@ -35,8 +35,8 @@ using namespace std;
 
 #include "base/error/Error.h"
 
-#include "MapSurface.h"
-#include "MapVolume.h"
+#include "../graphs/MapSurface.h"
+#include "../graphs/MapVolume.h"
 
 typedef pair<const VolR*, UInt> Face;
 

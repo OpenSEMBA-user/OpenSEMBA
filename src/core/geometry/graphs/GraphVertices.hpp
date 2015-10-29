@@ -25,7 +25,7 @@
  *      Author: Daniel
  */
 
-#include "GraphVertices.h"
+#include "../graphs/GraphVertices.h"
 
 template<class ELEM, class BOUND>
 GraphVertices<ELEM,BOUND>::GraphVertices() {

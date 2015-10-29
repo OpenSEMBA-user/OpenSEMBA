@@ -25,7 +25,7 @@
  *      Author: luis
  */
 
-#include "MapVolume.h"
+#include "../graphs/MapVolume.h"
 
 MapVolume::MapVolume() {
    local = NULL;

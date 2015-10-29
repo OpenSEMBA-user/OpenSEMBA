@@ -28,7 +28,7 @@
 #ifndef SRC_COMMON_GEOMETRY_MAPSURFACE_H_
 #define SRC_COMMON_GEOMETRY_MAPSURFACE_H_
 
-#include "Map.h"
+#include "../graphs/Map.h"
 
 class MapSurface: public Map {
 public:

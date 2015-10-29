@@ -75,7 +75,7 @@ LIBDIR = ./external/
 SRCDIR = ./src/
 SRC_GEOMETRY_DIR = core/math/ \
  core/base/class/  core/base/error/ core/base/group/ \
- core/geometry/ core/geometry/elements/ core/geometry/maps/ \
+ core/geometry/ core/geometry/elements/ core/geometry/graphs/ \
  core/geometry/coordinates/ core/geometry/layers/ core/geometry/pixels/ 
 SRC_CORE_DIR = core/ $(SRC_GEOMETRY_DIR) \
  core/options/ \

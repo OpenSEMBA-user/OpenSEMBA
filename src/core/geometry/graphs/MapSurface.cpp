@@ -25,7 +25,7 @@
  *      Author: luis
  */
 
-#include "MapSurface.h"
+#include "../graphs/MapSurface.h"
 
 MapSurface::MapSurface() {
    local = NULL;
