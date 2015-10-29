@@ -63,7 +63,7 @@ public:
     void partitionate(const MeshVolume* mesh, Comm* comm);
     void printInfo() const;
 protected:
-    Real timeStepSize;
+    Real cfl_;
     DG* solver;
     bool doLTS;
     DynMatrix<UInt> timeTierList_; // Id - Tier - Stage
@@ -83,7 +83,6 @@ protected:
     vector<ElementId> getIdsOfTier(const UInt tier) const;
     vector<ElementId> getIdsOfStage(const UInt stage) const;
 private:
-    static constexpr Real cfl = 3e-9;
     static const UInt noTier = 0;
     static const UInt noStage = 0;
     static const UInt growStages = 1;

@@ -27,10 +27,8 @@
  */
 #include "CellGroup.h"
 
-CellGroup::CellGroup(const SmbData* smb) {
-    const MeshVolume* mesh = smb->mesh->castTo<MeshVolume>();
-	Group<const Tet> tet = mesh->elems().getOf<Tet>();
-	const PMGroup* pMGroup = smb->pMGroup;
+CellGroup::CellGroup(const MeshVolume& mesh, const PMGroup& pMGroup) {
+    Group<const Tet> tet = mesh.elems().getOf<Tet>();
 	cell.resize(tet.size(), NULL);
 	cellOffsetId = tet(0)->getId().toUInt();
 	// Reserves space for cell vectors.
@@ -45,15 +43,15 @@ CellGroup::CellGroup(const SmbData* smb) {
 	linTet.resize(linear.size(), CellTet4<ORDER_N>());
 	quadTet.resize(quadratic.size(), CellTet10<ORDER_N>());
 	for (UInt k = 0; k < linear.size(); k++) {
-		linTet[k] = CellTet4<ORDER_N>(linear[k], *pMGroup);
+		linTet[k] = CellTet4<ORDER_N>(linear[k], pMGroup);
 		cell[linTet[k].getId().toUInt() - cellOffsetId] = &linTet[k];
 	}
 	for (UInt k = 0; k < quadratic.size(); k++) {
-		quadTet[k] = CellTet10<ORDER_N>(quadratic[k], *pMGroup);
+		quadTet[k] = CellTet10<ORDER_N>(quadratic[k], pMGroup);
 		cell[quadTet[k].getId().toUInt() - cellOffsetId] = &quadTet[k];
 	}
 
-	MapGroup map(mesh->coords(), mesh->elems());
+	MapGroup map(mesh.coords(), mesh.elems());
 	buildNodalMaps(map);
 	check(map);
 }

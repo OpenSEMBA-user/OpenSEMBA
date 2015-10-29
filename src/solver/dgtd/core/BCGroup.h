@@ -39,7 +39,9 @@ public:
     vector<PhysicalModelBC> pmbc;
     vector<SurfaceImpedanceBC> sibc;
     GroupBoundaryConditions(
-            const SmbData& smb,
+            const MeshVolume& mesh,
+            const EMSourceGroup& em,
+            const PMGroup& pm,
             const CellGroup& cells,
             const MapGroup& map);
     GroupBoundaryConditions& operator=(const GroupBoundaryConditions &rhs);

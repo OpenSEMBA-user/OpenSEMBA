@@ -34,10 +34,10 @@ IntegratorVerlet::IntegratorVerlet(
         const MeshVolume& mesh,
         const PMGroup& pmGroup,
         const OptionsSolverDGTD* arg) {
-    timeStepSize = arg->getTimeStep();
-    timeStepSize *= 0.9;
+    cfl_ = arg->getTimeStep();
+    cfl_ *= 0.9;
     if (arg->getUpwinding() > 0.0) {
-        timeStepSize *= 0.5;
+        cfl_ *= 0.5;
     }
     init(mesh, pmGroup, arg);
 }

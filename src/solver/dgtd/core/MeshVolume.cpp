@@ -24,8 +24,10 @@ MeshVolume::MeshVolume() {
 }
 
 MeshVolume::MeshVolume(
-        const MeshUnstructured& uns) :
-                        MeshUnstructured(uns.coords(), uns.elems(), uns.layers()) {
+        const MeshUnstructured& uns) {
+    this->coords() = *uns.coords().clone();
+    this->elems() = *uns.elems().clone();
+    this->layers() = *uns.layers().clone();
 }
 
 MeshVolume::~MeshVolume() {

@@ -29,16 +29,6 @@
 
 #include "Integrator.h"
 
-#ifdef LSERK_ORDER
-#if LSERK_ORDER != 4
-#error LSERK is not implemented for this order.
-#endif
-#endif
-
-#if SOLVER_ORDER > 4
-#warning "SolverLSERK RK order is below the order of polynomial basis."
-#endif
-
 class IntegratorLSERK : public Integrator {
     friend class DG;
 public:

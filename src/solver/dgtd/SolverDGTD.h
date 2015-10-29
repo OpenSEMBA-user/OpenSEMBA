@@ -47,11 +47,11 @@ public:
     bool run();
     bool canRun() const;
 private:
-    SmbData* smb_;
     Comm *comm_;
     Integrator *integrator_;
     DG *dg_;
     Exporter* out_;
+    const OptionsSolverDGTD* options_;
     Integrator* initIntegrator(
             const MeshVolume* mesh,
             const PMGroup* pMGroup,

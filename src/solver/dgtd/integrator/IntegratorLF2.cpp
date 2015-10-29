@@ -34,13 +34,13 @@ IntegratorLF2::IntegratorLF2(
  const MeshVolume& mesh,
  const PMGroup& pmGroup,
  const OptionsSolverDGTD* arg) {
-	timeStepSize = arg->getTimeStep();
-	timeStepSize *= 0.75;
+	cfl_ = arg->getTimeStep();
+	cfl_ *= 0.75;
 	if (arg->getUpwinding() > 0.0) {
-		timeStepSize *= 0.5;
+		cfl_ *= 0.5;
 	}
 	if (arg->isUseLTS()) {
-		timeStepSize *= 0.95;
+		cfl_ *= 0.95;
 	}
 	init(mesh, pmGroup, arg);
 }

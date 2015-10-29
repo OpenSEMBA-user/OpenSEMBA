@@ -29,19 +29,18 @@
 #include "DGExplicit.h"
 
 DGExplicit::DGExplicit(
-        const SmbData* smb,
+        const MeshVolume& mesh,
+        const PMGroup& pMGroup,
+        const EMSourceGroup& emSources,
+        const OptionsSolverDGTD& options,
         Comm* comm) {
-    smb_ = smb;
-    CellGroup cells(smb);
-    const MeshVolume* mesh = smb->mesh->castTo<MeshVolume>();
-    const OptionsSolverDGTD* options =
-            dynamic_cast<OptionsSolverDGTD*>(smb->solverOptions);
-    init(options, smb->pMGroup, &cells, comm);
+    CellGroup cells(mesh, pMGroup);
+    init(options, pMGroup, cells, comm);
     allocateRHSAndJumps();
-    if (options->isUseLTS()) {
+    if (options.isUseLTS()) {
         allocateFieldsForLTS();
     }
-    if (smb->emSources->size() != 0) {
+    if (emSources.size() != 0) {
         setFieldsToZero();
     } else {
         setFieldsToRandom();
@@ -51,10 +50,10 @@ DGExplicit::DGExplicit(
     allocateMaps();
     deduplicateVMaps(cells);
 
-    MapGroup map(mesh->coords(), mesh->elems());
-    BCGroup bc(*smb, cells, map);
-    assignPointersToNeighbours(cells, map, *mesh);
-    buildEMSources(*smb->emSources, bc, map, cells);
+    MapGroup map(mesh.coords(), mesh.elems());
+    BCGroup bc(mesh, emSources, pMGroup, cells, map);
+    assignPointersToNeighbours(cells, map, mesh);
+    buildEMSources(emSources, bc, map, cells);
     BCToLocalArray(bc, cells, map);
     buildScalingFactors(cells, map);
 }
@@ -993,7 +992,7 @@ void DGExplicit::buildCurvedFluxScalingFactors(
 
 void DGExplicit::buildMaterials(
         const CellGroup& cells,
-        const OptionsSolverDGTD* arg) {
+        const OptionsSolverDGTD& arg) {
 //    // Creates Dispersive materials vars parameters and stores ptrs.
 //    const GroupPhysicalModels<PMVolumeDispersive> dispersives =
 //            smb_->pMGroup->getOf<PMVolumeDispersive>();

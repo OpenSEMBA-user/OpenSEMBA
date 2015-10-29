@@ -34,7 +34,7 @@ Integrator::Integrator() {
     doLTS = true;
     growSmallerTiers = 0;
     maxNumOfTiers = 0;
-    timeStepSize = 0.0;
+    cfl_ = 0.0;
     solver = NULL;
 }
 
@@ -171,9 +171,6 @@ void Integrator::init(
     cout << "- Building Tier Range... " << flush;
     tierRange_ = buildTierRange(tierRange_, timeTierList_);
     cout <<  "OK" << endl;
-    //
-    assert(timeStepSize != 0.0);
-    assert(tierRange_ != NULL);
 }
 
 Real Integrator::getMaxTimeStep(
@@ -189,10 +186,10 @@ Real Integrator::getMaxTimeStep(
             fS1 = fS2;
         }
     }
-    Real dt = cfl *  (1.0 / Real(fS1 * ORDER_N * ORDER_N));
+    Real dt = (1.0 / Constants::c0) *  (1.0 / Real(fS1 * ORDER_N * ORDER_N));
     // Checks case of electrical dispersive materials.
     checkMaterialStabilityForDT(mat, dt);
-    return (dt * timeStepSize);
+    return (dt * cfl_);
 }
 
 UInt Integrator::getNumberOfCellsInTier(const UInt tier) const {
@@ -403,8 +400,14 @@ void Integrator::growSmallestTierRegions(
 void Integrator::assignTiersBasedOnMaxTimeStep(
         const MeshVolume& mesh,
         const PMGroup& pmGroup) {
-    GroupElements<const VolR> vol = mesh.elems().getOf<VolR>();
+    // Takes only elements with a defined material.
+    GroupElements<const VolR> allVol, vol;
+    allVol = mesh.elems().getOf<VolR>();
+    for (UInt i = 0; i < pmGroup.size(); i++) {
+        vol.add(allVol.getMatId(pmGroup(i)->getId()));
+    }
     const UInt nK =  vol.size();
+    // Computes maximum global timestep (local minimum).
     DynMatrix<Real> dtList(vol.size(), 4);
     mindt = 0.0;
     for (UInt k = 0; k < vol.size(); k++) {

@@ -110,7 +110,6 @@ protected:
     FieldR3 nAdm, nImp, rnAdm, rnImp, cnAdm, cnImp;
     Real *oneOverEps, *oneOverMu;
     Comm* comm;
-    const SmbData* smb_;
     UInt nK;
     Real upwinding;
     // Flux gatherer operator. dim = matrix(np x (4*nfp))
@@ -121,9 +120,9 @@ protected:
     StaMatrix<Real,np,np>* CList;
 #endif
     void init(
-            const OptionsSolverDGTD* arg,
-            const PMGroup* pm,
-            const CellGroup* cells,
+            const OptionsSolverDGTD& options,
+            const PMGroup& pm,
+            const CellGroup& cells,
             Comm* comm_);
     virtual void addFluxesToRHS(
             const UInt e1, const UInt e2,
@@ -150,7 +149,7 @@ protected:
     void buildCMatrices(const CellGroup& cells);
     virtual void buildMaterials(
             const CellGroup& cells,
-            const OptionsSolverDGTD* arg) = 0;
+            const OptionsSolverDGTD& arg) = 0;
     virtual void  computeRHS(
             const UInt e1,
             const UInt e2,

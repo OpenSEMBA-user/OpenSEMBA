@@ -37,7 +37,7 @@ public:
 	vector<CellTet<ORDER_N>*> cell;
 	vector<CellTet4<ORDER_N> > linTet;
 	vector<CellTet10<ORDER_N> > quadTet;
-	CellGroup(const SmbData* smb);
+	CellGroup(const MeshVolume& mesh, const PMGroup& pMGroup);
 	~CellGroup();
 	const CellTet<ORDER_N>* operator()(const UInt i) const;
 	const CellTet<ORDER_N>* getPtrToCell(const VolR* elem) const;

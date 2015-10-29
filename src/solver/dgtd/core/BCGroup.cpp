@@ -29,14 +29,13 @@
 #include "BCGroup.h"
 
 BCGroup::GroupBoundaryConditions(
-        const SmbData& smb,
+        const MeshVolume& mesh,
+        const EMSourceGroup& em,
+        const PMGroup& pm,
         const CellGroup& cells,
         const MapGroup& map) {
-    const MeshVolume* mesh = smb.mesh->castTo<MeshVolume>();
-    const EMSourceGroup* em = smb.emSources;
-    const PMGroup* pm = smb.pMGroup;
-    buildEMSourceBC(*mesh, *em, cells);
-    buildPhysicalModelBC(*mesh, *pm, cells, map);
+    buildEMSourceBC(mesh, em, cells);
+    buildPhysicalModelBC(mesh, pm, cells, map);
     removeOverlapped();
     check();
 }

@@ -37,7 +37,12 @@ class DGExplicit : public DG {
     friend class IntegratorLF2Full;
     friend class IntegratorVerlet;
 public:
-    DGExplicit(const SmbData* smb, Comm* comm);
+    DGExplicit(
+            const MeshVolume& mesh,
+            const PMGroup& pMGroup,
+            const EMSourceGroup& emsources,
+            const OptionsSolverDGTD& options,
+            Comm* comm);
     virtual ~DGExplicit();
     UInt getFieldDOFs();
     const FieldR3& getRHSElectric() const;
@@ -145,7 +150,9 @@ private:
     UInt *SMAe, *SMAf, *PECe, *PECf, *PMCe, *PMCf;
     vector<DGSource*> source;
     vector<DGDispersive*> dispersive;
-    void buildMaterials(const CellGroup& cells, const OptionsSolverDGTD* arg);
+    void buildMaterials(
+            const CellGroup& cells,
+            const OptionsSolverDGTD& arg);
     void deduplicateVMaps(const CellGroup& cells);
     void allocateRHSAndJumps();
     void allocateMaps();

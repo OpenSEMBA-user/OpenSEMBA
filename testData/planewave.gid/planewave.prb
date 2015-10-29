@@ -116,6 +116,13 @@ HELP: Uses decimation in NF2FF calculation (faster). WARNING: High-freq aliasing
 QUESTION: Additional_arguments
 VALUE: 
 TITLE: cudg3d
+QUESTION: Time_integrator#CB#(lserk4,lf2,lf2full)
+VALUE: lserk4
+QUESTION: Use_LTS#CB#(0,1)
+VALUE: 0
+QUESTION: Upwinding
+VALUE: 1.0
+HELP: 0.0 for centered, 1.0 for full upwinding.
 BOOK: Mesher_options
 Title: Mesher
 QUESTION: Mesher#CB#(ugrMesher,zMesher,OpenFOAM,None)

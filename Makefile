@@ -104,11 +104,11 @@ create_dirs:
 	-mkdir -p $(BINDIR) $(LIB_DIR)
 	-mkdir -p $(OBJDIR)
 
-cudg3d: gidpost check .ONESHELL
+cudg3d: gidpost check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
-libopensemba: check
-	$(MAKE) -f ./src/apps/libopensemba.mk
+libopensemba: check gidpost 
+	$(MAKE) -f ./src/apps/libopensemba/libopensemba.mk
 
 testSemba: check
 	$(MAKE) -f ./src/apps/test/test.mk
@@ -136,7 +136,7 @@ clean:
 clobber: clean
 	rm -rf $(BINDIR) 
 
-check: .ONESHELL .NOTPARALLEL
+check:
 ifneq ($(target),release) 
 ifneq ($(target),debug) 
 	@echo "Invalid build target."  

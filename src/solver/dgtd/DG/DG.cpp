@@ -192,15 +192,15 @@ void DG::buildFluxScalingFactors(
 }
 
 void DG::init(
-        const OptionsSolverDGTD* arg,
-        const PMGroup* pm,
-        const CellGroup* cells,
+        const OptionsSolverDGTD& options,
+        const PMGroup& pm,
+        const CellGroup& cells,
         Comm* comm_) {
     comm = comm_;
-    upwinding = arg->getUpwinding();
-    nK = cells->getLocalSize();
-    buildMaterials(*cells, arg);
-    buildCMatrices(*cells);
+    upwinding = options.getUpwinding();
+    nK = cells.getLocalSize();
+    buildMaterials(cells, options);
+    buildCMatrices(cells);
     allocateFieldsAndRes();
     setResidualsToZero();
 }

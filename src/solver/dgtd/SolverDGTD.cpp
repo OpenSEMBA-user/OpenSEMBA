@@ -21,27 +21,23 @@
 #include "SolverDGTD.h"
 
 SolverDGTD::SolverDGTD(SmbData* smb) {
-    smb_ = smb;
-    MeshVolume mesh(*smb_->mesh->castTo<MeshUnstructured>());
+
+    // Smb data adaptation and validation.
+    MeshVolume mesh(*smb->mesh->castTo<MeshUnstructured>());
+    mesh.printInfo();
     comm_ = initMPI();
 
+    // Time integrator initialization.
+    options_ = smb->solverOptions->castTo<OptionsSolverDGTD>();
+    integrator_ = initIntegrator(&mesh, smb->pMGroup, options_);
+//    integrator_->partitionate(&mesh, comm_);
 
-    OptionsSolverDGTD* arg = smb_->solverOptions->castTo<OptionsSolverDGTD>();
-    integrator_ = initIntegrator(&mesh, smb_->pMGroup, arg);
-    integrator_->partitionate(&mesh, comm_);
-
-    dg_ = new DGExplicit(smb_, comm_);
+    // Spatial discretization.
+    dg_ = new DGExplicit(mesh, *smb->pMGroup, *smb->emSources, *options_, comm_);
     integrator_->setSolver(dg_);
 
-#ifndef USE_MPI
-    out_ = new ExporterGiD(smb_);
-#else
-    if (comm_->isMaster()) {
-        out_ = new OutputCommGiD(smb_, dg_, comm_);
-    } else {
-        out_ = new OutputComm(smb_, dg_, comm_);
-    }
-#endif
+    // Exporter initialization.
+    out_ = new ExporterGiD(smb);
 }
 
 SolverDGTD::~SolverDGTD() {
@@ -55,14 +51,14 @@ bool SolverDGTD::run() {
     Real time = 0.0;
     const Real dt = integrator_->getMaxDT();
     assert(dt != 0.0);
-    while (time < smb_->solverOptions->getFinalTime()) {
+    while (time < options_->getFinalTime()) {
         out_->process(time, *dg_->getElectric(), *dg_->getMagnetic());
         Real initCPUTime = storeCPUTime();
         integrator_->timeIntegrate(time);
         tSum += storeCPUTime() - initCPUTime;
         time += dt;
         printTimeProfilingInfo(tSum, tRunning, time / dt,
-                smb_->solverOptions->getNumberOfTimeSteps());
+                options_->getNumberOfTimeSteps());
     }
     return true;
 }
