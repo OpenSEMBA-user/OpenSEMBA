@@ -48,13 +48,11 @@ template<class ELEM, class BOUND>
 GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
         const Group<const GraphVertices<ELEM,BOUND>::Elem>& elems,
         const Group<const GraphVertices<ELEM,BOUND>::Bound>& bounds) {
-    LayerId layId;
     const Bound* vertex;
     GraphElem*   elemPtr;
     GraphBound*  boundPtr;
     map<CoordinateId, GraphBound*> map;
     for (UInt s = 0; s < elems.size(); s++) {
-        layId = elems(s)->getLayerId();
         elemPtr = new GraphElem(elems(s), elems(s)->numberOfVertices());
         this->elems_.push_back(elemPtr);
         for (UInt v = 0; v < elems(s)->numberOfVertices(); v++) {

@@ -42,7 +42,8 @@ MapGroup::MapGroup() {
 MapGroup::~MapGroup() {
 }
 
-MapGroup::MapGroup(const GroupCoordinates<const Coord>& cG,
+MapGroup::MapGroup(
+        const GroupCoordinates<const Coord>& cG,
         const GroupElements   <const Elem> & eG) {
     // Builds a list with all tetrahedron faces.
     static const UInt faces = 4;

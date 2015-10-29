@@ -46,54 +46,6 @@ bool MeshUnstructured::isFloatingCoordinate(const CoordR3* param) const {
     return true;
 }
 
-//void MeshVolume::createAndAssignPML(
-//        const PMVolumePML::Direction direction[3],
-//        const vector<Face>& internalBorder,
-//        MeshVolume* mesh) {
-//    // Computes bound of PML pointing in this direction.
-//    BoxD3 bound = mesh->getBound(internalBorder);
-//    pair<CVecR3,CVecR3> pmlBound;
-//    for (UInt i = 0; i < 3; i++) {
-//        if (direction[i] == PMVolumePML::minus) {
-//            pmlBound.second(i) = bound.getMin()(i);
-//            pmlBound.first(i) = - numeric_limits<Real>::infinity() ;
-//        } else if (direction[i] == PMVolumePML::plus) {
-//            pmlBound.first(i) = bound.getMax()(i);
-//            pmlBound.first(i) = numeric_limits<Real>::infinity() ;
-//        } else {
-//            pmlBound.first(i) = bound.getMin()(i);
-//            pmlBound.second(i) = bound.getMax()(i);
-//        }
-//    }
-//    // Gets ids of PMLs inside the pml bound. Removes non-tet.
-//    vector<UInt> allPMLIds = mesh->getIdsInsideBound(pmlBound);
-//    vector<UInt> PMLIds = mesh->getTetIds(allPMLIds);
-//    // Creates new PML material for that bound and sets in mesh.
-//    if (PMLIds.size() != 0) {
-//        UInt lastId = count();
-//        pml_.push_back(new PMVolumePML(lastId+1, direction, mesh->getBound(PMLIds)));
-//        updatePointers();
-//        mesh->setMaterialIds(PMLIds, lastId+1);
-//    }
-//}
-//
-//void MeshVolume::detectAndAssignPMLRegions() {
-//    if (countPML() == 0) {
-//        return;
-//    }
-//    const UInt pmlId = getPML()->getId();
-//    vector<UInt> notPMLId = mesh->elem_.getIdsWithoutMaterialId(pmlId);
-//    vector<UInt> internalId = mesh->getTetIds(notPMLId);
-//    vector<pair<const Volume*, UInt>> internalBorder =
-//            mesh->getInternalBorder(internalId);
-//    // Creates PML material stretched towards +x.
-//    PMVolumePML::Direction direction[3];
-//    for (UInt i = 0; i < PMVolumePML::possibleDirections; i++) {
-//        getDirection(direction, i);
-//        createAndAssignPML(direction, internalBorder, mesh);
-//    }
-//}
-
 vector<vector<ElementId>> MeshVolume::getPartitionsIds(
         const UInt nDivisions,
         const vector<pair<ElementId,Int>> idWgt,
@@ -202,10 +154,7 @@ vector<vector<ElementId>> MeshVolume::getPartitionsIds(
             &ne, &nn, eptr, eind, vwgt, vsize, &ncommon, &nparts,
             tpwgts, options, &objval, epart, npart);
     if (status != METIS_OK) {
-        cerr << endl << "ERROR@Mesh::getPartitionIds()" << endl;
-        cerr << endl << "METIS_PartMeshDual fn failed with error: "
-                << status << endl;
-        exit(MESH_ERROR);
+        throw Error("METIS_PartMeshDual fn failed with error: " + status);
     }
     cout << "OK" << endl;
     // Converts result.
@@ -225,38 +174,6 @@ vector<vector<ElementId>> MeshVolume::getPartitionsIds(
     // Returns result.
     return res;
 #else
-    cerr << endl << "ERROR @ Mesh::getPartition(): "
-            << "Mesh partitioning is not allowed." << endl;
-    return vector<vector<ElementId>>();
+    throw Error("Mesh partitioning is not allowed.");
 #endif
 }
-
-//bool MeshVolume::checkAreaCoherence() const {
-//    UInt nElem = elem_.nVolumeElements();
-//    bool isOk = true;
-//    for (UInt e = 0; e < nElem; e++) {
-//        UInt id = elem_.tet[e]->getId();
-//        const Tet *local = elem_.getTetPtrToId(id);
-//        for (UInt f = 0; f < local->numberOfFaces(); f++) {
-//            pair<const Volume*, UInt> localFace(local, f);
-//            pair<const Volume*, UInt> neighFace;
-//            neighFace = getNeighConnection(localFace);
-//            const Volume* neigh = neighFace.first;
-//            UInt f2 = neighFace.second;
-//            Real diff =
-//                    local->getAreaOfFace(f) - neigh->getAreaOfFace(f2);
-//            if (abs(diff) > areaDiffTolerance) {
-//                cerr << endl << "Id: " << local->getId()
-//				                 << " Face: " << f
-//				                 << " Diff: " << diff << endl;
-//                isOk = false;
-//            }
-//        }
-//    }
-//    if (!isOk) {
-//        cerr << endl << "ERROR @ checkAreaCoherence()" << endl;
-//        cerr << endl << "Check above id-face pairs." << endl;
-//    }
-//    return isOk;
-//}
-//

@@ -45,11 +45,6 @@ public:
             const UInt nDivisions,
             const vector<pair<ElementId,Int>> idWeights = vector<pair<ElementId,Int>>(),
             const Real* taskPower = NULL) const;
-//    void detectAndAssignPMLRegions();
-//    void createAndAssignPML(
-//            const PMVolumePML::Direction direction[3],
-//            const vector<Face>& internalBorder,
-//            MeshVolume* mesh);
 };
 
 

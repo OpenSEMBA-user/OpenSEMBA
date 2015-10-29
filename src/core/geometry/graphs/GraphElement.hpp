@@ -89,6 +89,20 @@ void GraphElement<ELEM,BOUND>::constructNeighbors() {
 }
 
 template<class ELEM, class BOUND>
+inline vector<const GraphElement<BOUND,ELEM>*>
+GraphElement<ELEM, BOUND>::getSharedBounds(const GraphElem& neigh) const {
+    vector<const GraphBound*> res;
+    for (UInt i = 0; i < bounds_.size(); i++) {
+        for (UInt j = 0; j < bounds_[i]->numBounds(); j++) {
+            if (bounds_[i]->getBound(j)->elem() == neigh.elem()) {
+                res.push_back(bounds_[i]);
+            }
+        }
+    }
+    return res;
+}
+
+template<class ELEM, class BOUND>
 void GraphElement<ELEM,BOUND>::printInfo() const {
     cout << "--- GraphElement Info ---" << endl;
     elem_->printInfo();

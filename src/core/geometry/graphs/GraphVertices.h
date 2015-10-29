@@ -40,7 +40,7 @@ public:
 
     GraphVertices();
     GraphVertices(const Group<const Elem>&  elems,
-                  const Group<const Bound>& bounds);
+                  const Group<const Bound>& bounds = Group<const Bound>());
     virtual ~GraphVertices();
 
     GraphVertices<Elem,Bound>& init(const Group<const Elem>&  elems,
