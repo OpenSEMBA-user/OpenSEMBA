@@ -1,1 +1,4 @@
 /openfoam/
+*.msh
+*.rdr
+*.smb
