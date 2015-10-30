@@ -142,7 +142,7 @@ void DG::buildFieldScalingFactors(
 
 void DG::buildFluxScalingFactors(
         const CellGroup& cells,
-        const MapGroup& map) {
+        const Connectivities& map) {
     nAdm.setSize(nK*4);
     nImp.setSize(nK*4);
     rnAdm.setSize(nK*4);
@@ -292,7 +292,7 @@ void DG::swapResiduesAndFields(
 
 void DG::buildScalingFactors(
         const CellGroup& cells,
-        const MapGroup& map) {
+        const Connectivities& map) {
     buildFieldScalingFactors(cells);
     buildFluxScalingFactors(cells, map);
 }

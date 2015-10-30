@@ -36,7 +36,7 @@
 using namespace std;
 
 #include "graphs/GraphVertices.h"
-#include "graphs/MapGroup.h"
+#include "graphs/Connectivities.h"
 #include "Grid.h"
 
 #include "Mesh.h"

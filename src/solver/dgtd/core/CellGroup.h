@@ -44,9 +44,9 @@ public:
 	const CellTet<ORDER_N>* getPtrToCellWithId(const ElementId&) const;
 private:
 	UInt cellOffsetId;
-	void buildNodalMaps(const MapGroup& map);
-	void check(const MapGroup& map) const;
-	void checkNodalMaps(const MapGroup& map) const;
+	void buildNodalMaps(const Connectivities& map);
+	void check(const Connectivities& map) const;
+	void checkNodalMaps(const Connectivities& map) const;
 };
 
 #endif /* CELLGROUP_H_ */

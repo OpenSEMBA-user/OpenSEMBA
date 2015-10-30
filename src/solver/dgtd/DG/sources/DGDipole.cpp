@@ -23,7 +23,7 @@
 DGDipole::DGDipole(
       const Dipole& dip,
       const BCGroup& bc,
-      const MapGroup& map,
+      const Connectivities& map,
       const CellGroup& cells,
       FieldR3& dE,
       FieldR3& dH,

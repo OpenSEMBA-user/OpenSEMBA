@@ -51,7 +51,7 @@ CellGroup::CellGroup(const MeshVolume& mesh, const PMGroup& pMGroup) {
 		cell[quadTet[k].getId().toUInt() - cellOffsetId] = &quadTet[k];
 	}
 
-	MapGroup map(mesh.coords(), mesh.elems());
+	Connectivities map(mesh.coords(), mesh.elems());
 	buildNodalMaps(map);
 	check(map);
 }
@@ -72,7 +72,7 @@ const CellTet<ORDER_N>* CellGroup::getPtrToCellWithId(const ElementId& id) const
 	return cell[id.toUInt() - cellOffsetId];
 }
 
-void CellGroup::buildNodalMaps(const MapGroup& map) {
+void CellGroup::buildNodalMaps(const Connectivities& map) {
 	// PURPOSE:
 	// - Creates two maps, mapP, and vmapP.
 	// - mapP[f][n] stores the number of the node adjacent to the node n in
@@ -84,7 +84,7 @@ void CellGroup::buildNodalMaps(const MapGroup& map) {
 		for (UInt f = 0; f < cell[e]->getFaces(); f++) {
 			// Stores contiguous element (e2) number and orientation.
 		    Face local(cell[e]->getPtrToBase(),f);
-		    Face neigh = map.getNeighConnection(local);
+		    Face neigh = map.getNeigh(local);
 			const UInt f2 = neigh.second;
 			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh.first);
 			// Runs over each node in local element.
@@ -106,13 +106,13 @@ void CellGroup::buildNodalMaps(const MapGroup& map) {
 	}
 }
  
-void CellGroup::check(const MapGroup& map) const {
+void CellGroup::check(const Connectivities& map) const {
 //	checkReciprocityInConnectivities();
 	checkNodalMaps(map);
 //	checkAreaCoherence();
 }
  
-void CellGroup::checkNodalMaps(const MapGroup& map) const {
+void CellGroup::checkNodalMaps(const Connectivities& map) const {
 	// Checks for vmap.
 	CVecR3 diff;
 	bool problem = false;
@@ -120,7 +120,7 @@ void CellGroup::checkNodalMaps(const MapGroup& map) const {
 	for (UInt e = 0; e < nK; e++)
 		for (int f = 0; f < 4; f++) {
 		    Face local(cell[e]->getPtrToBase(),f);
-			const VolR* neigh = map.getNeighConnection(local).first;
+			const VolR* neigh = map.getNeigh(local).first;
 			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh);
 			for (UInt i = 0; i < cell[e]->getNfp(); i++) {
 				int neighNode = cell[e]->vmapP[f][i];

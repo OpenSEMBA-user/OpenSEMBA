@@ -33,7 +33,7 @@ BCGroup::GroupBoundaryConditions(
         const EMSourceGroup& em,
         const PMGroup& pm,
         const CellGroup& cells,
-        const MapGroup& map) {
+        const Connectivities& map) {
     buildEMSourceBC(mesh, em, cells);
     buildPhysicalModelBC(mesh, pm, cells, map);
     removeOverlapped();
@@ -71,7 +71,7 @@ void BCGroup::buildPhysicalModelBC(
         const MeshVolume& mesh,
         const PMGroup& pm,
         const CellGroup& cells,
-        const MapGroup& map) {
+        const Connectivities& map) {
     Group<const SurfR> surf = mesh.elems().getOf<SurfR>();
     for (UInt i = 0; i < surf.size(); i++) {
         if (surf(i)->getMatId() !=  MatId(0)) {
@@ -90,7 +90,7 @@ void BCGroup::buildPhysicalModelBC(
                 }
             } else {
                 const PMSurfaceSIBC* matSibc = mat->castTo<PMSurfaceSIBC>();
-                Face neigh = map.getNeighConnection(tFace);
+                Face neigh = map.getNeigh(tFace);
                 const CellTet<ORDER_N>* nCell = cells.getPtrToCell(neigh.first);
                 const UInt nFace = neigh.second;
                 if (cell->isLocalSide(face, surf(i))) {

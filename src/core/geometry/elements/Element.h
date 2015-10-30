@@ -72,6 +72,9 @@ public:
 
     static vector<CoordinateId> ascendingIdOrder(
             const vector<CoordinateId>& rhs);
+    static bool areSameCoords(
+            const vector<const Coord*>& lhs,
+            const vector<const Coord*>& rhs);
 
     template<class T>
     static vector<CoordinateId> getIds(vector<const Coordinate<T,3>*> in) {
@@ -142,6 +145,8 @@ public:
     virtual const Coordinate<T,3>* getMaxV() const;
 
     vector<const Coordinate<T,3>*> getVertices() const;
+    vector<const Coordinate<T,3>*> getCoordinates() const;
+    vector<const Coordinate<T,3>*> getSideCoordinates(const UInt face) const;
     vector<const Coordinate<T,3>*> getSideVertices(const UInt face) const;
 
     virtual void setV(const UInt i, const Coordinate<T,3>*);
@@ -166,6 +171,6 @@ protected:
 
 typedef ElementBase   Elem;
 typedef Element<Real> ElemR;
-typedef Element<Int> ElemI;
+typedef Element<Int>  ElemI;
 
 #endif

@@ -25,8 +25,8 @@
  *      Author: luis
  */
 
-#ifndef SRC_COMMON_GEOMETRY_MAPGROUP_H_
-#define SRC_COMMON_GEOMETRY_MAPGROUP_H_
+#ifndef SRC_COMMON_GEOMETRY_GRAPHS_CONNECTIVITIES_H_
+#define SRC_COMMON_GEOMETRY_GRAPHS_CONNECTIVITIES_H_
 
 #include <vector>
 #include <limits.h>
@@ -35,33 +35,38 @@ using namespace std;
 
 #include "base/error/Error.h"
 
-#include "../graphs/MapSurface.h"
-#include "../graphs/MapVolume.h"
-
 typedef pair<const VolR*, UInt> Face;
 
-class MapGroup {
+class Connectivities {
 public:
-    class ErrorHangingNode : public Error {
-    public:
-        ErrorHangingNode();
-        virtual ~ErrorHangingNode() throw();
-    };
+    typedef GraphElement<ElemR,CoordR3> GraphElem;
 
-    MapGroup();
-    MapGroup(const GroupCoordinates<const Coord>& cG,
-             const GroupElements  <const Elem> & eG);
-    virtual ~MapGroup();
-    const Tetrahedron* getNeighbour(const ElementId id, const UInt face) const;
-    UInt getVolToF(const ElementId id, const UInt face) const;
-    Face getNeighConnection(const Face& face) const;
-    Face getInnerFace(const ElementId id) const;
-    Face getOuterFace(const ElementId id) const;
-    bool isBoundary(const ElementId id) const;
-    bool isDomainBoundary(const ElementId id, const UInt f) const;
+    Connectivities();
+    Connectivities(
+            const GroupCoordinates<const Coord>& cG,
+            const GroupElements  <const Elem> & eG);
+    virtual ~Connectivities();
+
+    // Returns face of volume matching given face.
+    Face getNeighFace(const Face& face) const;
+
+    // Returns surface matching face.
+    const SurfR* getNeighSurf(const Face& face) const;
+
+    // Returns face of volume element connecting the surface.
+    Face getInnerFace(const SurfR& surf) const;
+    Face getOuterFace(const SurfR& surf) const;
+
+    bool isDomainBoundary(const SurfR& surf) const;
     bool isDomainBoundary(Face boundary) const;
+
 private:
-    GraphVertices<ElemR,CoordR3> elem_;
+    GraphVertices<ElemR,CoordR3> graph_;
+    map<ElementId, const GraphElem*> index_;
+
+    Face getMatchingFace_(
+            const GraphElem* local,
+            const vector<const Coord*> localSideV) const;
 };
 
 

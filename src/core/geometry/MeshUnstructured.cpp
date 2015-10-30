@@ -168,7 +168,7 @@ vector<Face> MeshUnstructured::getExternalBorder(
 
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
-    const MapGroup mapGroup(
+    const Connectivities mapGroup(
             GroupCoordinates<CoordR3>::getOf<Coord>(),
             region.getOf<Elem>());
     external.reserve(internal.size());
@@ -259,7 +259,7 @@ vector<Face> MeshUnstructured::getTriInternalBorder(
 
     UInt nE = region.size();
     vector<Face> res(nE);
-    MapGroup mapGroup(coords().getOf<CoordR3>(), region);
+    Connectivities mapGroup(coords().getOf<CoordR3>(), region);
     for (UInt i = 0; i < nE; i++) {
         res[i] = mapGroup.getInnerFace(region(i)->getId());
     }

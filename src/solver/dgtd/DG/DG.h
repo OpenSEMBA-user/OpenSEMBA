@@ -210,12 +210,12 @@ protected:
     void swapResiduesAndFields(
             const UInt e1,
             const UInt e2);
-    void buildFluxScalingFactors(const CellGroup& cells, const MapGroup& map);
+    void buildFluxScalingFactors(const CellGroup& cells, const Connectivities& map);
     void buildFieldScalingFactors(const CellGroup& cells);
 private:
     virtual void buildScalingFactors(
             const CellGroup& cells,
-            const MapGroup& map);
+            const Connectivities& map);
     void buildLIFT();
     virtual void assignMatrices(const CellGroup& cells) = 0;
     void allocateFieldsAndRes();

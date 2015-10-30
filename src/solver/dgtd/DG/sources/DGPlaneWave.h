@@ -38,7 +38,7 @@ public:
     DGPlaneWave(
             const PlaneWave& pw,
             const BCGroup& bc,
-            const MapGroup& map,
+            const Connectivities& map,
             const CellGroup& cells,
             const Comm* comm,
             FieldR3& dE, FieldR3& dH,
@@ -60,7 +60,7 @@ private:
             const Real intTime);
     void initWaveNumberPosition(
             const BCGroup& bc,
-            const MapGroup& map,
+            const Connectivities& map,
             const CellGroup& cells,
             const Comm* comm,
             const Int vmapM[faces][nfp]);

@@ -64,7 +64,7 @@ Volume<T>::~Volume() {
 
 template<class T>
 bool Volume<T>::isLocalFace(const UInt f, const Surface<T>& surf) const {
-	return sideNormal(f) == surf.getNormal();
+	return getSideNormal(f) == surf.getNormal();
 }
 
 template<class T>
@@ -76,7 +76,7 @@ bool Volume<T>::isFaceContainedInPlane(const UInt face,
 }
 
 template<class T>
-CartesianVector<T,3> Volume<T>::sideNormal(const UInt f) const {
+CartesianVector<T,3> Volume<T>::getSideNormal(const UInt f) const {
     CartesianVector<T,3> vec1, vec2, res;
 	vec1 = *this->getSideVertex(f,1) - *this->getSideVertex(f,0);
 	vec2 = *this->getSideVertex(f,2) - *this->getSideVertex(f,0);

@@ -35,7 +35,7 @@ class DGWaveportRectangular : public DGWaveport, public PortWaveguideRectangular
 public:
     DGWaveportRectangular(
             const PortWaveguide& pw,
-            const MapGroup& map,
+            const Connectivities& map,
             FieldR3& dE, FieldR3& dH,
             const Int vmapM[faces][nfp]);
     virtual ~DGWaveportRectangular();

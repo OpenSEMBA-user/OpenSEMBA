@@ -50,7 +50,7 @@ DGExplicit::DGExplicit(
     allocateMaps();
     deduplicateVMaps(cells);
 
-    MapGroup map(mesh.coords(), mesh.elems());
+    Connectivities map(mesh.coords(), mesh.elems());
     BCGroup bc(mesh, emSources, pMGroup, cells, map);
     assignPointersToNeighbours(cells, map, mesh);
     buildEMSources(emSources, bc, map, cells);
@@ -757,7 +757,7 @@ void DGExplicit::assignMatrices(const CellGroup& cells) {
 
 void DGExplicit::assignPointersToNeighbours(
         const CellGroup& cells,
-        const MapGroup& map,
+        const Connectivities& map,
         const MeshVolume& mesh) {
     UInt nNeighs = 0;
     for (UInt k = 0; k < nK; k++) {
@@ -826,7 +826,7 @@ vector<const BoundaryCondition*> DGExplicit::removeNonLocalBCs(
 void DGExplicit::BCToLocalArray(
 	const BCGroup& bc,
 	const CellGroup& cells,
-	const MapGroup& map) {
+	const Connectivities& map) {
     // ----------- SMA ------------------------------------------------
     // Counts SMAs and allocates, em boundaries are also considered.
     {
@@ -906,7 +906,7 @@ void DGExplicit::BCToLocalArray(
 void DGExplicit::buildEMSources(
         const EMSourceGroup& em,
         const BCGroup& bc,
-        const MapGroup& maps,
+        const Connectivities& maps,
         const CellGroup& cells) {
     // Copies the sources structure into solver.
     for (UInt i = 0; i < em.getOf<PlaneWave>().size(); i++) {
@@ -935,7 +935,7 @@ void DGExplicit::buildEMSources(
 
 void DGExplicit::buildScalingFactors(
         const CellGroup& cells,
-        const MapGroup& map) {
+        const Connectivities& map) {
     buildFieldScalingFactors(cells);
     buildFluxScalingFactors(cells, map);
     buildCurvedFluxScalingFactors(cells, map);
@@ -943,7 +943,7 @@ void DGExplicit::buildScalingFactors(
 
 void DGExplicit::buildCurvedFluxScalingFactors(
         const CellGroup& cells,
-        const MapGroup& map) {
+        const Connectivities& map) {
     // Counts curved faces.
     nCurvedFaces = 0;
     for (UInt e = 0; e < nK; e++) {

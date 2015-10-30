@@ -66,7 +66,7 @@ public:
     virtual bool isFaceContainedInPlane(const UInt face,
                                         const CartesianPlane plane) const;
 
-    CartesianVector<T,3> sideNormal(const UInt f) const;
+    CartesianVector<T,3> getSideNormal(const UInt f) const;
 
     virtual Real getAreaOfFace(const UInt face) const = 0;
     virtual Real getVolume() const = 0;

@@ -204,6 +204,25 @@ vector<const Coordinate<T,3>*> Element<T>::getVertices() const {
 }
 
 template<class T>
+vector<const Coordinate<T,3>*> Element<T>::getVertices() const {
+    vector<const Coordinate<T,3>*> res(numberOfCoordinates());
+    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+        res[i] = getV(i);
+    }
+    return res;
+}
+
+template<class T>
+vector<const Coordinate<T,3>*> Element<T>::getSideCoordinates(
+        const UInt face) const {
+    vector<const Coordinate<T,3>*> res(numberOfSideCoordinates());
+    for (UInt i = 0; i < numberOfSideCoordinates(); i++) {
+        res[i] = getSideV(face,i);
+    }
+    return res;
+}
+
+template<class T>
 vector<const Coordinate<T,3>*> Element<T>::getSideVertices(
         const UInt face) const {
     vector<const Coordinate<T,3>*> res(numberOfSideVertices());
@@ -303,6 +322,7 @@ CoordinateId* Element<T>::vertexToStructured(
     }
     return vIds;
 }
+
 
 template<class T>
 CoordinateId* Element<T>::vertexToUnstructured(

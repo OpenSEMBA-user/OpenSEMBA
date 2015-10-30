@@ -43,7 +43,7 @@ public:
             const EMSourceGroup& em,
             const PMGroup& pm,
             const CellGroup& cells,
-            const MapGroup& map);
+            const Connectivities& map);
     GroupBoundaryConditions& operator=(const GroupBoundaryConditions &rhs);
     vector<const BoundaryCondition*> getPtrsToPEC() const;
     vector<const BoundaryCondition*> getPtrsToPMC() const;
@@ -62,7 +62,7 @@ private:
             const MeshVolume& mesh,
             const PMGroup& pm,
             const CellGroup& cells,
-            const MapGroup& map);
+            const Connectivities& map);
     void removeOverlapped();
     vector<BoundaryCondition*> removeCommons(
             const vector<BoundaryCondition*>& low,

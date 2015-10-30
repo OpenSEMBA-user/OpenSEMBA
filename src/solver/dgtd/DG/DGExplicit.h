@@ -158,25 +158,25 @@ private:
     void allocateMaps();
     void assignPointersToNeighbours(
             const CellGroup& cells,
-            const MapGroup& map,
+            const Connectivities& map,
             const MeshVolume& mesh);
-    void buildScalingFactors(const CellGroup& cells, const MapGroup& map);
+    void buildScalingFactors(const CellGroup& cells, const Connectivities& map);
     void buildEMSources(
             const EMSourceGroup& em,
             const BCGroup& bc,
-            const MapGroup& maps,
+            const Connectivities& maps,
             const CellGroup& cells);
     void BCToLocalArray(
             const BCGroup& bc,
             const CellGroup& cells,
-            const MapGroup& map);
+            const Connectivities& map);
     vector<const BoundaryCondition*> removeNonLocalBCs(
             const CellGroup* cells,
             const vector<const BoundaryCondition*>& bc) const;
     bool checkPtrsToNeigh() const;
     void assignMatrices(const CellGroup& cells);
     void allocateFieldsForLTS();
-    void buildCurvedFluxScalingFactors(const CellGroup& cells, const MapGroup& map);
+    void buildCurvedFluxScalingFactors(const CellGroup& cells, const Connectivities& map);
 };
 
 inline UInt DGExplicit::getIndexOfElement(const UInt e) const {

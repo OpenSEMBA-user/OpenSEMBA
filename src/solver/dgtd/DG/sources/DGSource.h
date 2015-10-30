@@ -84,7 +84,7 @@ protected:
     Real **dHxTNB, **dHyTNB, **dHzTNB;
     void initSource(
             const BCGroup& bc,
-            const MapGroup& map,
+            const Connectivities& map,
             const CellGroup& cells,
             FieldR3& dE,
             FieldR3& dH,
@@ -94,15 +94,15 @@ protected:
             const CellGroup& cells) const;
     vector<pair<UInt, UInt>> getTotalFieldElemFaces(
             const BCGroup& bc,
-            const MapGroup& map,
+            const Connectivities& map,
             const CellGroup& cells) const;
     vector<pair<UInt, UInt>> getScattFieldElemFaces(
             const BCGroup& bc,
-            const MapGroup& map,
+            const Connectivities& map,
             const CellGroup& cells) const;
     vector<pair<UInt, UInt>> getTotalNotBackedFieldElemFaces(
             const BCGroup& bc,
-            const MapGroup& map,
+            const Connectivities& map,
             const CellGroup& cells) const;
 };
 

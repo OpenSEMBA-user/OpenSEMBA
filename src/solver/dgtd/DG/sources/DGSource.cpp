@@ -60,7 +60,7 @@ DGSource::~DGSource() {
 
 void DGSource::initSource(
         const BCGroup& bc,
-        const MapGroup& map,
+        const Connectivities& map,
         const CellGroup& cells,
         FieldR3& dE,
         FieldR3& dH,
@@ -223,7 +223,7 @@ CVecR3* DGSource::initPositions(
 
 vector<pair<UInt, UInt>> DGSource::getTotalFieldElemFaces(
         const BCGroup& bc,
-        const MapGroup& map,
+        const Connectivities& map,
         const CellGroup& cells) const {
     vector<pair<UInt, UInt> > res;
     for (UInt i = 0; i < bc.embc.size(); i++) {
@@ -241,7 +241,7 @@ vector<pair<UInt, UInt>> DGSource::getTotalFieldElemFaces(
 
 vector<pair<UInt, UInt>> DGSource::getScattFieldElemFaces(
         const BCGroup& bc,
-        const MapGroup& map,
+        const Connectivities& map,
         const CellGroup& cells) const {
     vector<pair<UInt,UInt> > res;
     for (UInt i = 0; i <bc.embc.size(); i++) {
@@ -249,7 +249,7 @@ vector<pair<UInt, UInt>> DGSource::getScattFieldElemFaces(
         UInt f1 = bc.embc[i].getFace();
         if (!map.isDomainBoundary(id1,f1)) {
             Face inner = bc.embc[i].getCellFace();
-            Face outer = map.getNeighConnection(inner);
+            Face outer = map.getNeigh(inner);
             ElementId id2 = outer.first->getId();
             UInt f2 = outer.second;
             if (cells.isLocalId(id2)) {
@@ -264,7 +264,7 @@ vector<pair<UInt, UInt>> DGSource::getScattFieldElemFaces(
 
 vector<pair<UInt, UInt>> DGSource::getTotalNotBackedFieldElemFaces(
         const BCGroup& bc,
-        const MapGroup& map,
+        const Connectivities& map,
         const CellGroup& cells) const {
     vector<pair<UInt,UInt> > res;
     for (UInt i = 0; i < bc.embc.size(); i++) {
