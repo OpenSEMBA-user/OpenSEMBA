@@ -52,8 +52,6 @@ public:
 
     const Elem* elem() const { return elem_; }
 
-    vector<const GraphBound*> getSharedBounds(const GraphElem& neigh) const;
-
     UInt numBounds() const { return bounds_.size(); }
     vector<const GraphBound*> getBounds() const;
     vector<GraphBound*>       getBounds()    { return bounds_;    }

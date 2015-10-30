@@ -33,40 +33,40 @@ class GeometryGraphVerticesTest : public ::testing::Test {
         {
             CoordinateId vId[3] = {
                     CoordinateId(1), CoordinateId(2), CoordinateId(3)};
-            elems_.add(new Tri3(cG_, ElementId(1), vId));
+            elem_.add(new Tri3(cG_, ElementId(1), vId));
         }
         {
             CoordinateId vId[3] = {
                     CoordinateId(2), CoordinateId(4), CoordinateId(3)};
-            elems_.add(new Tri3(cG_, ElementId(2), vId));
+            elem_.add(new Tri3(cG_, ElementId(2), vId));
         }
         {
             CoordinateId vId[3] = {
                     CoordinateId(1), CoordinateId(3), CoordinateId(5)};
-            elems_.add(new Tri3(cG_, ElementId(3), vId));
+            elem_.add(new Tri3(cG_, ElementId(3), vId));
         }
         {
             CoordinateId vId[3] = {
                     CoordinateId(1), CoordinateId(5), CoordinateId(6)};
-            elems_.add(new Tri3(cG_, ElementId(4), vId));
+            elem_.add(new Tri3(cG_, ElementId(4), vId));
         }
         {
             CoordinateId vId[2] = {CoordinateId(1), CoordinateId(3)};
-            elems_.add(new LinR2(cG_, ElementId(5), vId));
+            elem_.add(new LinR2(cG_, ElementId(5), vId));
         }
     }
     void TearDown() {
         cG_.clear();
-        elems_.clear();
+        elem_.clear();
     }
 protected:
     CoordR3Group cG_;
-    ElemRGroup elems_;
+    ElemRGroup elem_;
 };
 
 TEST_F(GeometryGraphVerticesTest, GraphSharedBound) {
     //  Creates Graph.
-    GraphVertices<ElemR,CoordR3> graph(elems_);
+    GraphVertices<ElemR,CoordR3> graph(elem_);
     EXPECT_EQ(5, graph.numElems());
     EXPECT_EQ(6, graph.numBounds());
 

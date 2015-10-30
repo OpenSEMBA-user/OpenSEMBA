@@ -42,9 +42,7 @@ public:
     typedef GraphElement<ElemR,CoordR3> GraphElem;
 
     Connectivities();
-    Connectivities(
-            const GroupCoordinates<const Coord>& cG,
-            const GroupElements  <const Elem> & eG);
+    Connectivities(const GroupElements<const Elem>& eG);
     virtual ~Connectivities();
 
     // Returns face of volume matching given face.

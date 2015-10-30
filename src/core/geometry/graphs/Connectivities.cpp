@@ -33,9 +33,7 @@ Connectivities::Connectivities() {
 Connectivities::~Connectivities() {
 }
 
-Connectivities::Connectivities(
-        const GroupCoordinates<const Coord>& cG,
-        const GroupElements   <const Elem> & eG) {
+Connectivities::Connectivities(const GroupElements<const Elem>& eG) {
     // Preliminar checks.
     if (eG.sizeOf<ElemI>()) {
         throw Error("Map Group only accepts ElemR elements");
