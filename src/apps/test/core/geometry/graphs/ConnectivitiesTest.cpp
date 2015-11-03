@@ -73,16 +73,22 @@ protected:
     GroupElements<const ElemR> elem_;
 };
 
-TEST_F(GeometryConnectivitiesTest, GraphValidity) {
-    //  Creates valid Graph.
-    Connectivities basic(elem_);
-    EXPECT_EQ(6, basic.size());
-    ASSERT_NO_THROW(Connectivities(elem_));
-
-    // Creates invalid graph.
+TEST_F(GeometryConnectivitiesTest, GraphReciprocity) {
+    //  Creates reciprocal connectivities.
+    {
+        Connectivities conn(elem_);
+        EXPECT_EQ(6, conn.size());
+        EXPECT_TRUE(conn.existsReciprocity());
+    }
+    // Creates non recicprocal connectivities.
     array<CoordinateId,4> vId = {CoordinateId(1), CoordinateId(2),
                            CoordinateId(4), CoordinateId(5)};
     elem_.add(new Tet4(cG_, ElementId(7), vId.begin(), LayerId(1), MatId(1)));
-    ASSERT_THROW(Connectivities test(elem_), Connectivities::ErrorNotReciprocal);
+    {
+        Connectivities conn(elem_);
+        EXPECT_EQ(7, conn.size());
+        EXPECT_FALSE(conn.existsReciprocity());
+    }
+
 }
 

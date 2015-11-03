@@ -127,104 +127,13 @@ template<class T>
 const Coordinate<T,3>* Hexahedron8<T>::getSideV(const UInt f, const UInt i) const {
     assert(f < numberOfFaces());
     assert(i < numberOfSideCoordinates());
-    switch (f) {
-    case 0:
-        switch (i) {
-        case 0:
-            return v_[0];
-            break;
-        case 1:
-            return v_[1];
-            break;
-        case 2:
-            return v_[2];
-            break;
-        case 3:
-            return v_[3];
-            break;
-        }
-        break;
-    case 1:
-        switch (i) {
-        case 0:
-            return v_[0];
-            break;
-        case 1:
-            return v_[3];
-            break;
-        case 2:
-            return v_[7];
-            break;
-        case 3:
-            return v_[4];
-            break;
-        }
-        break;
-    case 2:
-        switch (i) {
-        case 0:
-            return v_[0];
-            break;
-        case 1:
-            return v_[4];
-            break;
-        case 2:
-            return v_[5];
-            break;
-        case 3:
-            return v_[1];
-            break;
-        }
-        break;
-    case 3:
-        switch (i) {
-        case 0:
-            return v_[1];
-            break;
-        case 1:
-            return v_[5];
-            break;
-        case 2:
-            return v_[6];
-            break;
-        case 3:
-            return v_[2];
-            break;
-        }
-        break;
-    case 4:
-        switch (i) {
-        case 0:
-            return v_[2];
-            break;
-        case 1:
-            return v_[6];
-            break;
-        case 2:
-            return v_[7];
-            break;
-        case 3:
-            return v_[3];
-            break;
-        }
-        break;
-    case 5:
-        switch (i) {
-        case 0:
-            return v_[4];
-            break;
-        case 1:
-            return v_[7];
-            break;
-        case 2:
-            return v_[6];
-            break;
-        case 3:
-            return v_[5];
-            break;
-        }
-        break;
-    }
+    array<array<UInt,4>,6> index= {{{0,1,2,3},
+                                    {0,3,7,4},
+                                    {0,4,5,1},
+                                    {1,5,6,2},
+                                    {2,6,7,3},
+                                    {4,7,6,5}}};
+    return v_[index[f][i]];
 }
 
 template<class T>

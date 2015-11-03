@@ -37,4 +37,3 @@ TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
     const Triangle3* tri = mesh_.elems().getOf<Triangle3>()(0);
     EXPECT_EQ(*matching(0), *tri);
 }
-

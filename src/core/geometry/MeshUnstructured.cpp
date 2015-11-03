@@ -158,18 +158,22 @@ vector<Face> MeshUnstructured::getInternalBorder(
     Connectivities conn(region);
     vector<Face> res;
     res.reserve(region.size());
-    for (UInt i = 0; i < region.size(); i++) {
-        // TODO getInternalBorder
+    const GroupElements<const VolR> vol = region.getOf<VolR>();
+    for (UInt i = 0; i < vol.size(); i++) {
+        for (UInt f = 0; f < vol(i)->numberOfFaces(); f++) {
+            Face face(vol(i), f);
+            conn.isDomainBoundary(face);
+            res.push_back(face);
+        }
     }
     return res;
 }
 
 vector<Face> MeshUnstructured::getExternalBorder(
         const GroupElements<const ElemR>& region) const {
-
+    const Connectivities conn(elems());
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
-    const Connectivities conn(region);
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
         if (!conn.isDomainBoundary(internal[i]))  {
@@ -197,10 +201,6 @@ GroupElements <const VolR> MeshUnstructured::getAdjacentRegion(
     return res;
 }
 
-bool MeshUnstructured::isOnBoundary(const CVecR3 pos) const {
-    // TODO Unstr isOnBoundary
-}
-
 GroupElements<const SurfR> MeshUnstructured::getMaterialBoundary(
         const MatId matId,
         const LayerId layId) const {
@@ -217,10 +217,6 @@ void MeshUnstructured::printInfo() const {
     cout << "Number of coordinates: " << GroupCoordinates<CoordR3>::size() << endl;
     cout << "Number of elements: " << GroupElements<ElemR>::size() << endl;
     GroupLayers<>::printInfo();
-}
-
-Real MeshUnstructured::getMinimumSpaceStep() const {
-    // TODO Unstr minimum space step.
 }
 
 GroupElements<const SurfR> MeshUnstructured::getSurfsMatching(

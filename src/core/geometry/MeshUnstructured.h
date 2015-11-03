@@ -73,7 +73,7 @@ public:
                                      const CVecR3& normal);
 
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
-    virtual bool isOnBoundary(const CVecR3 pos) const;
+
     GroupElements<const SurfR> getMaterialBoundary(const MatId   matId,
                                                    const LayerId layId) const;
     GroupElements<const SurfR> getSurfsMatching(
@@ -87,7 +87,6 @@ public:
             const GroupElements<const ElemR>& region) const;
     GroupElements<const VolR> getAdjacentRegion(
             const GroupElements<const VolR>& region) const;
-    Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Real factor);
     BoxR3 getBoundingBox() const;
 

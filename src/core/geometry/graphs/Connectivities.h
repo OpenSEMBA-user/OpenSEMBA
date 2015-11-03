@@ -74,6 +74,8 @@ public:
     bool isDomainBoundary(const SurfR* surf) const;
     bool isDomainBoundary(Face boundary) const;
 
+    bool existsReciprocity() const;
+
 private:
     GraphVertices<ElemR,CoordR3> graph_;
     map<ElementId, const GraphElem*> index_;

@@ -35,48 +35,12 @@ Connectivities::~Connectivities() {
 }
 
 Connectivities::Connectivities(const GroupElements<const ElemR>& eG) {
-    // Removes elements with no physical model associated.
-    GroupElements<const Elem> elem = eG;
-    elem.removeMatId(MatId(0));
-
     // Generates graph.
-    graph_.init(elem);
+    graph_.init(eG);
     for (UInt i = 0; i < graph_.numElems(); i++) {
         GraphElem* graphElem = graph_.elem(i);
         ElementId id = graphElem->elem()->getId();
         index_.insert(pair<ElementId,const GraphElem*>(id, graphElem));
-    }
-
-    // Checks volumic reciprocity in connectivities.
-    Group<const VolR> vol = eG.getOf<VolR>();
-    for (UInt i = 0; i < vol.size(); i++) {
-        for (UInt f = 0; f < vol(i)->numberOfFaces(); f++) {
-            Face local(vol(i), f);
-            Face neigh = this->getNeighFace(local);
-            if (this->isDomainBoundary(local)) {
-                if (neigh != Face(NULL, 0)) {
-                    throw ErrorNotReciprocal(local);
-                }
-            } else {
-              Face neighNeigh = this->getNeighFace(neigh);
-              if (local != neighNeigh) {
-                  throw ErrorNotReciprocal(local);
-              }
-            }
-        }
-    }
-
-    // Checks surf reciprocity in connectivities.
-    Group<const SurfR> surf = eG.getOf<SurfR>();
-    for (UInt i = 0; i < surf.size(); i++) {
-        Face inner = this->getInnerFace(surf(i));
-        if (inner.first != NULL) {
-            Face outer = this->getOuterFace(surf(i));
-            Face inNeigh = this->getNeighFace(inner);
-            if (outer != inNeigh) {
-                throw ErrorNotReciprocal(inner);
-            }
-        }
     }
 }
 
@@ -154,4 +118,42 @@ Face Connectivities::getMatchingFace_(
 
 UInt Connectivities::size() const {
     return graph_.numElems();
+}
+
+bool Connectivities::existsReciprocity() const {
+
+    for (UInt i = 0; i < graph_.numElems(); i++) {
+        const ElemR* elem = graph_.elem(i)->elem();
+        // Checks volumic reciprocity in connectivities.
+        if (elem->is<VolR>()) {
+            const VolR* vol = elem->castTo<VolR>();
+            for (UInt f = 0; f < vol->numberOfFaces(); f++) {
+                Face local(vol, f);
+                Face neigh = this->getNeighFace(local);
+                if (this->isDomainBoundary(local)) {
+                    if (neigh != Face(NULL, 0)) {
+                        throw ErrorNotReciprocal(local);
+                    }
+                } else {
+                    Face neighNeigh = this->getNeighFace(neigh);
+                    if (local != neighNeigh) {
+                        throw ErrorNotReciprocal(local);
+                    }
+                }
+            }
+        }
+        // Checks surf reciprocity in connectivities.
+        if (elem->is<SurfR>()) {
+            const SurfR* surf = elem->castTo<SurfR>();
+            Face inner = this->getInnerFace(surf);
+            if (inner.first != NULL) {
+                Face outer = this->getOuterFace(surf);
+                Face inNeigh = this->getNeighFace(inner);
+                if (outer != inNeigh) {
+                    throw ErrorNotReciprocal(inner);
+                }
+            }
+        }
+    }
+    return true;
 }

@@ -44,7 +44,7 @@ ifeq ($(compiler),gnu)
 	CC = gcc 
 	CXX = g++
 	CCFLAGS +=
-	CXXFLAGS += -std=c++0x -static -pthread
+	CXXFLAGS += -std=c++0x -static -pthread -fopenmp
 endif # endif choosing the GNU compiler.
 #===================== MinGW32 Compiler =======================================
 ifeq ($(compiler),mingw32)
