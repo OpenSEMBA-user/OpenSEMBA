@@ -204,7 +204,7 @@ vector<const Coordinate<T,3>*> Element<T>::getVertices() const {
 }
 
 template<class T>
-vector<const Coordinate<T,3>*> Element<T>::getVertices() const {
+vector<const Coordinate<T,3>*> Element<T>::getCoordinates() const {
     vector<const Coordinate<T,3>*> res(numberOfCoordinates());
     for (UInt i = 0; i < numberOfCoordinates(); i++) {
         res[i] = getV(i);
@@ -234,11 +234,8 @@ vector<const Coordinate<T,3>*> Element<T>::getSideVertices(
 
 template<class T>
 void Element<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
-    cout << "ERROR @ Element::setV(): "
-         << "Setting coordinates is not allowed for this element"
-         << endl;
-    
 	printInfo();
+	throw Error("Setting coordinates is not allowed for this element");
 }
 
 template<class T>

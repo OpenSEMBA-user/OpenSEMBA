@@ -34,6 +34,8 @@
 using namespace std;
 
 #include "base/error/Error.h"
+#include "geometry/elements/GroupElements.h"
+#include "geometry/graphs/GraphVertices.h"
 
 typedef pair<const VolR*, UInt> Face;
 
@@ -41,9 +43,23 @@ class Connectivities {
 public:
     typedef GraphElement<ElemR,CoordR3> GraphElem;
 
+    class ErrorNotReciprocal : public virtual Error {
+    public:
+        ErrorNotReciprocal(const Face& face) {
+            stringstream ss;
+            ss << "Face of element " << face.first->getId()
+                    << " through f " << face.second
+                    << " is not reciprocal.";
+            Error(ss.str());
+        };
+        virtual ~ErrorNotReciprocal() throw() {};
+    };
+
     Connectivities();
-    Connectivities(const GroupElements<const Elem>& eG);
+    Connectivities(const GroupElements<const ElemR>& eG);
     virtual ~Connectivities();
+
+    UInt size() const;
 
     // Returns face of volume matching given face.
     Face getNeighFace(const Face& face) const;
@@ -52,10 +68,10 @@ public:
     const SurfR* getNeighSurf(const Face& face) const;
 
     // Returns face of volume element connecting the surface.
-    Face getInnerFace(const SurfR& surf) const;
-    Face getOuterFace(const SurfR& surf) const;
+    Face getInnerFace(const SurfR* surf) const;
+    Face getOuterFace(const SurfR* surf) const;
 
-    bool isDomainBoundary(const SurfR& surf) const;
+    bool isDomainBoundary(const SurfR* surf) const;
     bool isDomainBoundary(Face boundary) const;
 
 private:
@@ -64,7 +80,8 @@ private:
 
     Face getMatchingFace_(
             const GraphElem* local,
-            const vector<const Coord*> localSideV) const;
+            const vector<const CoordR3*> localSideV) const;
+
 };
 
 

@@ -28,70 +28,102 @@
 #include "Connectivities.h"
 
 Connectivities::Connectivities() {
+
 }
 
 Connectivities::~Connectivities() {
 }
 
-Connectivities::Connectivities(const GroupElements<const Elem>& eG) {
-    // Preliminar checks.
-    if (eG.sizeOf<ElemI>()) {
-        throw Error("Map Group only accepts ElemR elements");
-    }
-
+Connectivities::Connectivities(const GroupElements<const ElemR>& eG) {
     // Removes elements with no physical model associated.
-    ElemRGroup elem = eG;
+    GroupElements<const Elem> elem = eG;
     elem.removeMatId(MatId(0));
 
     // Generates graph.
     graph_ = GraphVertices<ElemR,CoordR3>(elem);
     for (UInt i = 0; i < graph_.numElems(); i++) {
-        const GraphElem* graphElem = graph_.elem(i);
+        GraphElem* graphElem = graph_.elem(i);
+        graphElem->constructNeighbors();
         ElementId id = graphElem->elem()->getId();
         index_.insert(pair<ElementId,const GraphElem*>(id, graphElem));
+    }
+
+    // Checks volumic reciprocity in connectivities.
+    Group<const VolR> vol = eG.getOf<VolR>();
+    for (UInt i = 0; i < vol.size(); i++) {
+        for (UInt f = 0; f < vol(i)->numberOfFaces(); f++) {
+            Face local(vol(i), f);
+            Face neigh = this->getNeighFace(local);
+            if (this->isDomainBoundary(local)) {
+                if (neigh != Face(NULL, 0)) {
+                    throw ErrorNotReciprocal(local);
+                }
+            } else {
+              Face neighNeigh = this->getNeighFace(neigh);
+              if (local != neighNeigh) {
+                  throw ErrorNotReciprocal(local);
+              }
+            }
+        }
+    }
+
+    // Checks surf reciprocity in connectivities.
+    Group<const SurfR> surf = eG.getOf<SurfR>();
+    for (UInt i = 0; i < surf.size(); i++) {
+        Face inner = this->getInnerFace(surf(i));
+        if (inner.first != NULL) {
+            Face outer = this->getOuterFace(surf(i));
+            Face inNeigh = this->getNeighFace(inner);
+            if (outer != inNeigh) {
+                throw ErrorNotReciprocal(inner);
+            }
+        }
     }
 }
 
 Face Connectivities::getNeighFace(const Face& face) const {
     const ElemR* elem = face.first;
     const GraphElem* local = index_.find(elem->getId())->second;
-    vector<const Coord*> localSideV = elem->getSideCoordinates(face.second);
+    vector<const CoordR3*> localSideV = elem->getSideCoordinates(face.second);
 
     return getMatchingFace_(local, localSideV);
 }
 
 const SurfR* Connectivities::getNeighSurf(const Face& face) const {
     const ElemR* elem = face.first;
-    vector<const Coord*> localSideV = elem->getSideCoordinates(face.second);
+    vector<const CoordR3*> localSideV = elem->getSideCoordinates(face.second);
     const GraphElem* local = index_.find(elem->getId())->second;
 
     for (UInt i = 0; i < local->numNeighbors(); i++) {
         const ElemR* neigh = local->getNeighbor(i)->elem();
-        vector<const Coord*> neighV = neigh->getCoordinates();
-        if (ElementBase::areSameCoords(localSideV, neighV)) {
-            return neigh;
+        if (neigh->is<SurfR>()) {
+            vector<const CoordR3*> neighV = neigh->getCoordinates();
+            if (ElementBase::areSameCoords<CoordR3,CoordR3>(
+                    localSideV, neighV)) {
+                return neigh->castTo<SurfR>();
+            }
         }
     }
     return NULL;
 }
 
-Face Connectivities::getInnerFace(const SurfR& surf) const {
-    const GraphElem* local = index_.find(surf.getId())->second;
-    vector<const Coord*> localV = local->elem()->getCoordinates();
+Face Connectivities::getInnerFace(const SurfR* surf) const {
+    const GraphElem* local = index_.find(surf->getId())->second;
+    vector<const CoordR3*> localV = local->elem()->getCoordinates();
     Face face = getMatchingFace_(local, localV);
     CVecR3 faceNormal = face.first->getSideNormal(face.second);
-    if (surf.getNormal() == faceNormal) {
+    if (surf->getNormal() == faceNormal) {
         return face;
     } else {
         return getNeighFace(face);
     }
 }
 
-Face Connectivities::getOuterFace(const SurfR& surf) const {
+Face Connectivities::getOuterFace(const SurfR* surf) const {
     return getNeighFace(getInnerFace(surf));
 }
 
-bool Connectivities::isDomainBoundary(const SurfR& surf) const {
+bool Connectivities::isDomainBoundary(const SurfR* surf) const {
     return (getInnerFace(surf).first == NULL
             || getOuterFace(surf).first == NULL);
 }
@@ -102,15 +134,26 @@ bool Connectivities::isDomainBoundary(Face face) const {
 
 Face Connectivities::getMatchingFace_(
         const GraphElem* local,
-        const vector<const Coord*> localSideV) const {
+        const vector<const CoordR3*> localSideV) const {
     for (UInt i = 0; i < local->numNeighbors(); i++) {
-        const ElemR* neigh = local->getNeighbor(i)->elem();
-        for (UInt f = 0; f < neigh->numberOfFaces(); f++) {
-            vector<const Coord*> neighSideV = neigh->getSideCoordinates(f);
-            if (ElementBase::areSameCoords(localSideV, neighSideV)) {
-                return Face(neigh, f);
+        local->printInfo();
+        const GraphElem* neighConn = local->getNeighbor(i);
+        if (neighConn->elem() == NULL) {
+            return Face(NULL, 0);
+        }
+        const ElemR* neigh = neighConn->elem();
+        if (neigh->is<VolR>()) {
+            for (UInt f = 0; f < neigh->numberOfFaces(); f++) {
+                vector<const CoordR3*> neighSideV = neigh->getSideCoordinates(f);
+                if (ElementBase::areSameCoords(localSideV, neighSideV)) {
+                    return Face(neigh->castTo<VolR>(), f);
+                }
             }
         }
     }
     return Face(NULL, 0);
+}
+
+UInt Connectivities::size() const {
+    return graph_.numElems();
 }

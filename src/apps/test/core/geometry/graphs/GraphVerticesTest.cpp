@@ -64,20 +64,9 @@ protected:
     ElemRGroup elem_;
 };
 
-TEST_F(GeometryGraphVerticesTest, GraphSharedBound) {
+TEST_F(GeometryGraphVerticesTest, Ctor) {
     //  Creates Graph.
     GraphVertices<ElemR,CoordR3> graph(elem_);
     EXPECT_EQ(5, graph.numElems());
     EXPECT_EQ(6, graph.numBounds());
-
-    // Checks shared edges in neighbours.
-    for (UInt i = 0; i < graph.numElems(); i++) {
-        const GraphElement<ElemR,CoordR3> local = *graph.elem(i);
-        for (UInt j = 0; j < local.numNeighbors(); j++) {
-            const GraphElement<ElemR,CoordR3> neigh = *local.getNeighbor(j);
-            const UInt sharedBoundsSize = local.getSharedBounds(neigh).size();
-            EXPECT_GE(sharedBoundsSize, 1);
-            EXPECT_LT(sharedBoundsSize, 3);
-        }
-    }
 }

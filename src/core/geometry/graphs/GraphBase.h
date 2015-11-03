@@ -49,8 +49,6 @@ public:
     GraphBase();
     virtual ~GraphBase();
 
-    GraphBase& operator=(const GraphBase&);
-
     virtual GraphBase& init(const Group<const Elem>&  elems,
                             const Group<const Bound>& bounds) = 0;
 

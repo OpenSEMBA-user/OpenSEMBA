@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "geometry/graphs/GraphVertices.h"
-#include "geometry/elements/GroupElements.h"
+#include "geometry/graphs/Connectivities.h"
 
 class GeometryConnectivitiesTest : public ::testing::Test {
     void SetUp() {
@@ -32,30 +31,37 @@ class GeometryConnectivitiesTest : public ::testing::Test {
         cG_.add(new CoordR3(CoordinateId(6), CVecR3( 1.0, 1.0, 0.0)));
         cG_.add(new CoordR3(CoordinateId(7), CVecR3( 1.0, 1.0, 1.0)));
         cG_.add(new CoordR3(CoordinateId(8), CVecR3( 2.0, 0.0, 0.0)));
+        LayerId lId(1);
+        MatId mId(1);
         {
             CoordinateId vId[4] = {CoordinateId(1), CoordinateId(2),
                                    CoordinateId(3), CoordinateId(4)};
-            elem_.add(new Tet4(cG_, ElementId(1), vId));
+            elem_.add(new Tet4(cG_, ElementId(1), vId, lId, mId));
         }
         {
             CoordinateId vId[4] = {CoordinateId(1), CoordinateId(2),
                                    CoordinateId(4), CoordinateId(5)};
-            elem_.add(new Tet4(cG_, ElementId(2), vId));
+            elem_.add(new Tet4(cG_, ElementId(2), vId, lId, mId));
         }
         {
             CoordinateId vId[4] = {CoordinateId(3), CoordinateId(4),
                                    CoordinateId(6), CoordinateId(7)};
-            elem_.add(new Tet4(cG_, ElementId(3), vId));
+            elem_.add(new Tet4(cG_, ElementId(3), vId, lId, mId));
         }
         {
             CoordinateId vId[4] = {CoordinateId(3), CoordinateId(8),
                                    CoordinateId(6), CoordinateId(7)};
-            elem_.add(new Tet4(cG_, ElementId(4), vId));
+            elem_.add(new Tet4(cG_, ElementId(4), vId, lId, mId));
         }
         {
             CoordinateId vId[3] = {
                     CoordinateId(3),  CoordinateId(6), CoordinateId(7)};
-            elem_.add(new Tri3(cG_, ElementId(5), vId));
+            elem_.add(new Tri3(cG_, ElementId(5), vId, lId, mId));
+        }
+        {
+            CoordinateId vId[3] = {
+                    CoordinateId(1),  CoordinateId(2), CoordinateId(3)};
+            elem_.add(new Tri3(cG_, ElementId(6), vId, lId, mId));
         }
     }
     void TearDown() {
@@ -64,16 +70,20 @@ class GeometryConnectivitiesTest : public ::testing::Test {
     }
 protected:
     CoordR3Group cG_;
-    ElemRGroup elem_;
+    GroupElements<const ElemR> elem_;
 };
 
-TEST_F(GeometryConnectivitiesTest, Connectivties) {
-    //  Creates Graph.
-    Connectivities conn(elem_);
+TEST_F(GeometryConnectivitiesTest, GraphValidity) {
+    //  Creates valid Graph.
+    Connectivities basic(elem_);
+    EXPECT_EQ(6, basic.size());
+    ASSERT_NO_THROW(Connectivities(elem_));
 
-    // Checks tet connectivity reciproicity
-    ElemRGroup tet = elem_.getOf<Tet4>();
-    for (UInt i = 0; i < tet.size(); i++) {
-        // TODO Checks tet neighbor reciproicity
-    }
+    // Creates invalid graph.
+    array<CoordinateId,4> vId = {CoordinateId(1), CoordinateId(2),
+                           CoordinateId(4), CoordinateId(5)};
+    elem_.add(new Tet4(cG_, ElementId(7), vId.begin(), LayerId(1), MatId(1)));
+    Connectivities sasa(elem_);
+    ASSERT_THROW(Connectivities(elem_), Connectivities::ErrorNotReciprocal);
 }
+

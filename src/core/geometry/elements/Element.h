@@ -72,9 +72,21 @@ public:
 
     static vector<CoordinateId> ascendingIdOrder(
             const vector<CoordinateId>& rhs);
+
+    template<class T1, class T2>
     static bool areSameCoords(
-            const vector<const Coord*>& lhs,
-            const vector<const Coord*>& rhs);
+            const vector<const T1*>& lhs,
+            const vector<const T2*>& rhs) {
+        if (lhs.size() != rhs.size()) {
+            return false;
+        }
+        vector<CoordinateId> lhsId, rhsId;
+        for (UInt i = 0; i < lhs.size(); i++) {
+            lhsId.push_back(lhs[i]->getId());
+            rhsId.push_back(rhs[i]->getId());
+        }
+        return (ascendingIdOrder(lhsId) == ascendingIdOrder(rhsId));
+    }
 
     template<class T>
     static vector<CoordinateId> getIds(vector<const Coordinate<T,3>*> in) {

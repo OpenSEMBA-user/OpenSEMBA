@@ -35,10 +35,8 @@
 #include <vector>
 using namespace std;
 
-#include "graphs/GraphVertices.h"
 #include "graphs/Connectivities.h"
 #include "Grid.h"
-
 #include "Mesh.h"
 
 class MeshStructured;
@@ -94,11 +92,6 @@ public:
     BoxR3 getBoundingBox() const;
 
     void printInfo() const;
-protected:
-    vector<Face> getTetInternalBorder(
-            const GroupElements<const Tetrahedron>& tet) const;
-    vector<Face> getTriInternalBorder(
-            const GroupElements<const Triangle>& tri) const;
 };
 
 #endif /* MESHUNSTRUCTURED_H_ */

@@ -126,7 +126,7 @@ vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
     for (UInt i = 0; i < nK; i++) {
         const VolR* tet = border[i].first;
         const UInt face = border[i].second;
-        CartesianVector<Real,3> tetNormal = tet->sideNormal(face);
+        CVecR3 tetNormal = tet->getSideNormal(face);
         if (tetNormal == normal && !tet->isCurvedFace(face)) {
             res.push_back(border[i]);
         }
@@ -155,11 +155,12 @@ GroupElements<const Triangle> MeshUnstructured::convertToTri(
 
 vector<Face> MeshUnstructured::getInternalBorder(
         const GroupElements<const ElemR>& region) const {
-
-    vector<Face> tri, res;
-    res = getTetInternalBorder(region.getOf<Tetrahedron>());
-    tri = getTriInternalBorder(region.getOf<Triangle>());
-    res.insert(res.end(), tri.begin(), tri.end());
+    Connectivities conn(region);
+    vector<Face> res;
+    res.reserve(region.size());
+    for (UInt i = 0; i < region.size(); i++) {
+        // TODO getInternalBorder
+    }
     return res;
 }
 
@@ -168,72 +169,14 @@ vector<Face> MeshUnstructured::getExternalBorder(
 
     vector<Face> internal = getInternalBorder(region);
     vector<Face> external;
-    const Connectivities mapGroup(
-            GroupCoordinates<CoordR3>::getOf<Coord>(),
-            region.getOf<Elem>());
+    const Connectivities conn(region);
     external.reserve(internal.size());
     for (UInt i = 0; i < internal.size(); i++) {
-        ElementId inId = internal[i].first->getId();
-        UInt inFace = internal[i].second;
-        const VolR* outVol = mapGroup.getNeighbour(inId, inFace);
-        const UInt outFace = mapGroup.getVolToF(inId, inFace);
-        if (outVol->getId() != inId || inFace != outFace)  {
-            external.push_back(Face(outVol, outFace));
+        if (!conn.isDomainBoundary(internal[i]))  {
+            external.push_back(conn.getNeighFace(internal[i]));
         }
     }
     return external;
-}
-
-vector<Face> MeshUnstructured::getTetInternalBorder(
-        const GroupElements<const Tetrahedron>& region) const {
-
-    // Builds a list with all tetrahedron faces.
-    static const UInt faces = 4;
-    static const UInt nVert = 3;
-    UInt nK = region.size();
-    UInt nList = nK * faces;
-    DynMatrix<UInt> fList(nList, 2 + nVert);
-    for (UInt k = 0; k < nK; k++) {
-        for (UInt f = 0; f < faces; f++) {
-            UInt row = k * faces + f;
-            fList(row, 0) = region(k)->getId().toUInt();
-            fList(row, 1) = f;
-            vector<CoordinateId> ordered(nVert);
-            ordered = ElementBase::getIds(region(k)->getSideVertices(f));
-            ordered = ElementBase::ascendingIdOrder(ordered);
-            for (UInt i = 0; i < nVert; i++) {
-                fList(row, i + 2) = ordered[i].toUInt();
-            }
-        }
-    }
-    // Sorts according to the coordinates id. Pairing matching faces. ---------
-    // If there is not a pair, then that element is not connected with other
-    // remaining connected with itself.
-    fList.sortRows_omp(2,4);
-    // Copies non repeated faces into result vector.
-    vector<Face> res;
-    res.reserve(nK);
-    bool matches;
-    for (UInt k = 0; k < nList; k++) {
-        if (k < nList-1) {
-            matches = fList(k, 2) == fList(k+1, 2);
-            matches &= fList(k, 3) == fList(k+1, 3);
-            matches &= fList(k, 4) == fList(k+1, 4);
-        } else {
-            matches = false;
-        }
-        if (matches) {
-            k++;
-        } else {
-            if(!elems().getId(ElementId(fList(k,0)))->is<Tetrahedron>())
-                continue;
-            const Tetrahedron* tet = elems().getId(ElementId(fList(k,0)))->castTo<Tetrahedron>();
-            UInt face = fList(k,1);
-            Face aux(tet, face);
-            res.push_back(aux);
-        }
-    }
-    return res;
 }
 
 GroupElements <const VolR> MeshUnstructured::getAdjacentRegion(
@@ -250,18 +193,6 @@ GroupElements <const VolR> MeshUnstructured::getAdjacentRegion(
     GroupElements<ElemR> res;
     for (UInt i = 0; i < aux.nRows(); i++) {
         res.add(elems().getId(ElementId(aux(i,0)))->cloneTo<ElemR>());
-    }
-    return res;
-}
-
-vector<Face> MeshUnstructured::getTriInternalBorder(
-        const GroupElements<const Triangle>& region) const {
-
-    UInt nE = region.size();
-    vector<Face> res(nE);
-    Connectivities mapGroup(coords().getOf<CoordR3>(), region);
-    for (UInt i = 0; i < nE; i++) {
-        res[i] = mapGroup.getInnerFace(region(i)->getId());
     }
     return res;
 }

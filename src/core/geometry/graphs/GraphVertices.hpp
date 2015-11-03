@@ -55,7 +55,7 @@ GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
     for (UInt s = 0; s < elems.size(); s++) {
         elemPtr = new GraphElem(elems(s), elems(s)->numberOfVertices());
         this->elems_.push_back(elemPtr);
-        for (UInt v = 0; v < elems(s)->numberOfVertices(); v++) {
+        for (UInt v = 0; v < elems(s)->numberOfVertices(); v++) { // TODO Can this be changed to numberOfCoordinates ?
             vertex = elems(s)->getVertex(v);
             if (map.count(vertex->getId()) == 0) {
                 boundPtr = new GraphBound(vertex);
