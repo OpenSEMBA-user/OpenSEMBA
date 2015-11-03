@@ -118,7 +118,7 @@ MeshStructured* MeshStructured::getConnectivityMesh() const {
     GroupElements<const ElemI> elems = this->elems();
     elems.removeMatId(MatId(0));
     GraphVertices<ElemI, CoordI3> graphLayer;
-    graphLayer.init(elems, coords());
+    graphLayer.init(elems);
     vector<vector<const ElemI*>> comps = graphLayer.getConnectedComponents();
     for (UInt c = 0; c < comps.size(); c++) {
         stringstream layerName;

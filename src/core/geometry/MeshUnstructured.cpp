@@ -100,7 +100,7 @@ MeshUnstructured* MeshUnstructured::getConnectivityMesh() const {
     GroupElements<const ElemR> elems = this->elems();
     elems.removeMatId(MatId(0));
     GraphVertices<ElemR, CoordR3> graphLayer;
-    graphLayer.init(elems, coords());
+    graphLayer.init(elems);
     vector<vector<const ElemR*>> comps = graphLayer.getConnectedComponents();
     for (UInt c = 0; c < comps.size(); c++) {
         stringstream layerName;

@@ -83,7 +83,6 @@ TEST_F(GeometryConnectivitiesTest, GraphValidity) {
     array<CoordinateId,4> vId = {CoordinateId(1), CoordinateId(2),
                            CoordinateId(4), CoordinateId(5)};
     elem_.add(new Tet4(cG_, ElementId(7), vId.begin(), LayerId(1), MatId(1)));
-    Connectivities sasa(elem_);
-    ASSERT_THROW(Connectivities(elem_), Connectivities::ErrorNotReciprocal);
+    ASSERT_THROW(Connectivities test(elem_), Connectivities::ErrorNotReciprocal);
 }
 

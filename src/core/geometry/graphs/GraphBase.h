@@ -49,8 +49,7 @@ public:
     GraphBase();
     virtual ~GraphBase();
 
-    virtual GraphBase& init(const Group<const Elem>&  elems,
-                            const Group<const Bound>& bounds) = 0;
+    virtual GraphBase& init(const Group<const Elem>& elems) = 0;
 
     UInt numElems () const { return elems_.size();  }
     UInt numBounds() const { return bounds_.size(); }

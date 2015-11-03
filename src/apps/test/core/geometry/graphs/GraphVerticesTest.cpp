@@ -66,7 +66,8 @@ protected:
 
 TEST_F(GeometryGraphVerticesTest, Ctor) {
     //  Creates Graph.
-    GraphVertices<ElemR,CoordR3> graph(elem_);
+    GraphVertices<ElemR,CoordR3> graph;
+    graph.init(elem_);
     EXPECT_EQ(5, graph.numElems());
     EXPECT_EQ(6, graph.numBounds());
 }

@@ -40,10 +40,9 @@ Connectivities::Connectivities(const GroupElements<const ElemR>& eG) {
     elem.removeMatId(MatId(0));
 
     // Generates graph.
-    graph_ = GraphVertices<ElemR,CoordR3>(elem);
+    graph_.init(elem);
     for (UInt i = 0; i < graph_.numElems(); i++) {
         GraphElem* graphElem = graph_.elem(i);
-        graphElem->constructNeighbors();
         ElementId id = graphElem->elem()->getId();
         index_.insert(pair<ElementId,const GraphElem*>(id, graphElem));
     }
@@ -136,7 +135,6 @@ Face Connectivities::getMatchingFace_(
         const GraphElem* local,
         const vector<const CoordR3*> localSideV) const {
     for (UInt i = 0; i < local->numNeighbors(); i++) {
-        local->printInfo();
         const GraphElem* neighConn = local->getNeighbor(i);
         if (neighConn->elem() == NULL) {
             return Face(NULL, 0);

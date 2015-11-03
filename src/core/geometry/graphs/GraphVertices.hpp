@@ -33,36 +33,30 @@ GraphVertices<ELEM,BOUND>::GraphVertices() {
 }
 
 template<class ELEM, class BOUND>
-GraphVertices<ELEM,BOUND>::GraphVertices(
-        const Group<const GraphVertices<ELEM,BOUND>::Elem>&  elems,
-        const Group<const GraphVertices<ELEM,BOUND>::Bound>& bounds) {
-    init(elems, bounds);
-}
-
-template<class ELEM, class BOUND>
 GraphVertices<ELEM,BOUND>::~GraphVertices() {
 
 }
 
 template<class ELEM, class BOUND>
 GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
-        const Group<const GraphVertices<ELEM,BOUND>::Elem>& elems,
-        const Group<const GraphVertices<ELEM,BOUND>::Bound>& bounds) {
-    const Bound* vertex;
+        const Group<const GraphVertices<ELEM,BOUND>::Elem>& elems) {
+    const Bound* coord;
     GraphElem*   elemPtr;
     GraphBound*  boundPtr;
     map<CoordinateId, GraphBound*> map;
+    this->elems_.clear();
+    this->bounds_.clear();
     for (UInt s = 0; s < elems.size(); s++) {
-        elemPtr = new GraphElem(elems(s), elems(s)->numberOfVertices());
+        elemPtr = new GraphElem(elems(s), elems(s)->numberOfCoordinates());
         this->elems_.push_back(elemPtr);
-        for (UInt v = 0; v < elems(s)->numberOfVertices(); v++) { // TODO Can this be changed to numberOfCoordinates ?
-            vertex = elems(s)->getVertex(v);
-            if (map.count(vertex->getId()) == 0) {
-                boundPtr = new GraphBound(vertex);
+        for (UInt v = 0; v < elems(s)->numberOfCoordinates(); v++) {
+            coord = elems(s)->getV(v);
+            if (map.count(coord->getId()) == 0) {
+                boundPtr = new GraphBound(coord);
                 this->bounds_.push_back(boundPtr);
-                map[vertex->getId()] = boundPtr;
+                map[coord->getId()] = boundPtr;
             }
-            boundPtr = map[vertex->getId()];
+            boundPtr = map[coord->getId()];
             elemPtr->setBound(v, boundPtr);
             boundPtr->addBound(elemPtr);
         }

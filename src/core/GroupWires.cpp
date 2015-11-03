@@ -68,20 +68,15 @@ typename GroupWires<T>::Graph
     GroupWires<T>::constructGraph_(const SmbData& smb) {
 
     GroupElements<const Line<T>> wires;
-    GroupCoordinates<const Coordinate<T,3>> coords;
     const GroupPhysicalModels<>& mats = *smb.pMGroup;
     {
         GroupElements<const Line<T>> lines;
         if (is_floating_point<T>::value) {
             lines = smb.mesh->castTo<MeshUnstructured>()
                         ->elems().getOf<Line<T>>();
-            coords = smb.mesh->castTo<MeshUnstructured>()
-                         ->coords();
         } else if (is_integral<T>::value) {
             lines = smb.mesh->castTo<MeshStructured>()
                         ->elems().getOf<Line<T>>();
-            coords = smb.mesh->castTo<MeshStructured>()
-                         ->coords();
         }
         GroupPhysicalModels<const PMWire> pmwires =
             smb.pMGroup->getOf<PMWire>();
@@ -96,7 +91,7 @@ typename GroupWires<T>::Graph
         wires = lines.getMatId(matIds);
     }
     Graph graph;
-    graph.init(wires, coords);
+    graph.init(wires);
     const typename Graph::GraphBound* nodePtr;
     for(UInt i = 0; i < graph.numBounds(); i++) {
         nodePtr = graph.bound(i);
