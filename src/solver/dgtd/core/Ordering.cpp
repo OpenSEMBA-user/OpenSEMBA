@@ -38,7 +38,6 @@ Ordering::Ordering() {
 }
 
 Ordering::~Ordering() {
-	// TODO Auto-generated destructor stub
 }
 
 ElementId Ordering::getIdOfGlobalRelPos(const UInt rp) const {

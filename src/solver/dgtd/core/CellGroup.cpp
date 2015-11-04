@@ -29,109 +29,96 @@
 
 CellGroup::CellGroup(const MeshVolume& mesh, const PMGroup& pMGroup) {
     Group<const Tet> tet = mesh.elems().getOf<Tet>();
-	cell.resize(tet.size(), NULL);
-	cellOffsetId = tet(0)->getId().toUInt();
-	// Reserves space for cell vectors.
-	vector<const Tet*> linear, quadratic;
-	for (UInt k = 0; k < tet.size(); k++) {
-		if (!tet(k)->isCurved()) {
-			linear.push_back(tet(k));
-		} else {
-			quadratic.push_back(tet(k));
-		}
-	}
-	linTet.resize(linear.size(), CellTet4<ORDER_N>());
-	quadTet.resize(quadratic.size(), CellTet10<ORDER_N>());
-	for (UInt k = 0; k < linear.size(); k++) {
-		linTet[k] = CellTet4<ORDER_N>(linear[k], pMGroup);
-		cell[linTet[k].getId().toUInt() - cellOffsetId] = &linTet[k];
-	}
-	for (UInt k = 0; k < quadratic.size(); k++) {
-		quadTet[k] = CellTet10<ORDER_N>(quadratic[k], pMGroup);
-		cell[quadTet[k].getId().toUInt() - cellOffsetId] = &quadTet[k];
-	}
+    cell.resize(tet.size(), NULL);
+    cellOffsetId = tet(0)->getId().toUInt();
+    // Reserves space for cell vectors.
+    vector<const Tet*> linear, quadratic;
+    for (UInt k = 0; k < tet.size(); k++) {
+        if (!tet(k)->isCurved()) {
+            linear.push_back(tet(k));
+        } else {
+            quadratic.push_back(tet(k));
+        }
+    }
+    linTet.resize(linear.size(), CellTet4<ORDER_N>());
+    quadTet.resize(quadratic.size(), CellTet10<ORDER_N>());
+    for (UInt k = 0; k < linear.size(); k++) {
+        linTet[k] = CellTet4<ORDER_N>(linear[k], pMGroup);
+        cell[linTet[k].getId().toUInt() - cellOffsetId] = &linTet[k];
+    }
+    for (UInt k = 0; k < quadratic.size(); k++) {
+        quadTet[k] = CellTet10<ORDER_N>(quadratic[k], pMGroup);
+        cell[quadTet[k].getId().toUInt() - cellOffsetId] = &quadTet[k];
+    }
 
-	Connectivities map(mesh.elems());
-	buildNodalMaps(map);
-	check(map);
+    Connectivities map(mesh.elems());
+    buildNodalMaps(map);
+    check(map);
 }
- 
+
 CellGroup::~CellGroup() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
- 
+
 const CellTet<ORDER_N>* CellGroup::operator()(const UInt i) const {
-	return cell[i];
+    return cell[i];
 }
 
 const CellTet<ORDER_N>* CellGroup::getPtrToCell(const VolR* elem) const {
-	return getPtrToCellWithId(elem->getId());
+    return getPtrToCellWithId(elem->getId());
 }
- 
+
 const CellTet<ORDER_N>* CellGroup::getPtrToCellWithId(const ElementId& id) const {
-	return cell[id.toUInt() - cellOffsetId];
+    return cell[id.toUInt() - cellOffsetId];
 }
 
 void CellGroup::buildNodalMaps(const Connectivities& map) {
-	// PURPOSE:
-	// - Creates two maps, mapP, and vmapP.
-	// - mapP[f][n] stores the number of the node adjacent to the node n in
-	//   face f. With a face node notation.
-	// - vmapP[f][n] does the same with a node notation.
-	CVecR3 diff, posM, posP;
-	UInt nK = cell.size();
-	for (UInt e = 0; e < nK; e++) {
-		for (UInt f = 0; f < cell[e]->getFaces(); f++) {
-			// Stores contiguous element (e2) number and orientation.
-		    Face local(cell[e]->getBase(),f);
-		    Face neigh = map.getNeighFace(local);
-			const UInt f2 = neigh.second;
-			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh.first);
-			// Runs over each node in local element.
-			for (UInt i = 0; i < cell[e]->getNfp(); i++) {
-				// Initializes mapP and vmapP to default values.
-				cell[e]->vmapP[f][i] = cell[e]->getSideNode(f, i);
-				// Creates the position vector of local element.
-				posM = cell[e]->getSideNodePos(f, i);
-				// Checks posM against all nodes in e2 face.
-				for (UInt j = 0; j < c2->nfp; j++) {
-					posP = c2->getSideNodePos(f2, j);
-					diff = posM - posP;
-					// Stores value if the share position.
-					if (diff.norm() < CELL_NODE_TOLERANCE)
-						cell[e]->vmapP[f][i] = cell[e]->getSideNode(f2, j);
-				}
-			}
-		}
-	}
+    for (UInt e = 0; e < cell.size(); e++) {
+        for (UInt f = 0; f < cell[e]->getFaces(); f++) {
+            Face local(cell[e]->getBase(),f);
+            Face neigh = map.getNeighFace(local);
+            if (map.isDomainBoundary(local)) {
+                neigh = local;
+            }
+            const CellTet<ORDER_N>* c2 = getPtrToCell(neigh.first);
+            for (UInt i = 0; i < cell[e]->getNfp(); i++) {
+                const CVecR3 posM = cell[e]->getSideNodePos(f,i);
+                for (UInt j = 0; j < c2->getNfp(); j++) {
+                    const UInt f2 = neigh.second;
+                    const CVecR3 posP = c2->getSideNodePos(f2,j);
+                    if (posM == posP) {
+                        cell[e]->vmapP[f][i] = cell[e]->getSideNode(f2,j);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
- 
+
 void CellGroup::check(const Connectivities& map) const {
-//	checkReciprocityInConnectivities();
-	checkNodalMaps(map);
-//	checkAreaCoherence();
+    checkNodalMaps(map);
 }
- 
+
 void CellGroup::checkNodalMaps(const Connectivities& map) const {
-	// Checks for vmap.
-	CVecR3 diff;
-	bool problem = false;
-	UInt nK = cell.size();
-	for (UInt e = 0; e < nK; e++)
-		for (int f = 0; f < 4; f++) {
-		    Face local(cell[e]->getBase(),f);
-			const VolR* neigh = map.getNeighFace(local).first;
-			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh);
-			for (UInt i = 0; i < cell[e]->getNfp(); i++) {
-				int neighNode = cell[e]->vmapP[f][i];
-				if (cell[e]->getSideNodePos(f, i) != c2->n[neighNode]) {
-					cerr << "Elem " << e << ", face " << f << endl;
-					problem = true;
-				}
-			}
-		}
-	if (problem) {
-	    throw Error("vmapP contains errors.");
-	}
+    // Checks for vmap.
+    UInt nK = cell.size();
+    for (UInt e = 0; e < nK; e++) {
+        for (int f = 0; f < 4; f++) {
+            Face local(cell[e]->getBase(),f);
+            Face neigh = map.getNeighFace(local);
+            if (map.isDomainBoundary(local)) {
+                neigh = local;
+            }
+            const CellTet<ORDER_N>* c2 = getPtrToCell(neigh.first);
+            for (UInt i = 0; i < cell[e]->getNfp(); i++) {
+                int neighNode = cell[e]->vmapP[f][i];
+                if (cell[e]->getSideNodePos(f, i) != c2->n[neighNode]) {
+                    cerr << "Elem " << e << ", face " << f << endl;
+                    throw Error("vmapP contains errors.");
+                }
+            }
+        }
+    }
 }
 

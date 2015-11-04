@@ -32,8 +32,6 @@ using namespace std;
 #include "SmbData.h"
 #include "Cell.h"
 
-#define CELL_NODE_TOLERANCE 1e-12
-
 template <int TET_N>
 class CellTet : public Cell {
 #define TET_NP ((TET_N+1)*(TET_N+2)*(TET_N+3)/6)

@@ -24,13 +24,12 @@ SolverDGTD::SolverDGTD(SmbData* smb) {
 
     // Smb data adaptation and validation.
     MeshVolume mesh(*smb->mesh->castTo<MeshUnstructured>());
-    mesh.printInfo();
     comm_ = initMPI();
 
     // Time integrator initialization.
     options_ = smb->solverOptions->castTo<OptionsSolverDGTD>();
     integrator_ = initIntegrator(&mesh, smb->pMGroup, options_);
-//    integrator_->partitionate(&mesh, comm_);
+    integrator_->partitionate(&mesh, comm_);
 
     // Spatial discretization.
     dg_ = new DGExplicit(mesh, *smb->pMGroup, *smb->emSources, *options_, comm_);
