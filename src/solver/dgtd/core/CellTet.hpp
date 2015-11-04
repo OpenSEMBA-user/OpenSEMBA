@@ -125,7 +125,7 @@ double CellTet<TET_N>::getVolume() const {
 }
 
 template <int TET_N>
-const Tet* CellTet<TET_N>::getPtrToBase() const {
+const Tet* CellTet<TET_N>::getBase() const {
     return base;
 }
 
@@ -226,7 +226,7 @@ CVecR3 CellTet<TET_N>::getSideNodePos(
 template <int TET_N>
 CVecR3 CellTet<TET_N>::getSideNormal(
         const UInt f) const {
-    return base->sideNormal(f);
+    return base->getSideNormal(f);
 }
 
 template <int TET_N>

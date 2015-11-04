@@ -76,21 +76,21 @@ void BCGroup::buildPhysicalModelBC(
     for (UInt i = 0; i < surf.size(); i++) {
         if (surf(i)->getMatId() !=  MatId(0)) {
             const PhysicalModel* mat = pm.getId(surf(i)->getMatId());
-            Face tFace = map.getInnerFace(surf(i)->getId());
+            Face tFace = map.getInnerFace(surf(i));
             const CellTet<ORDER_N>* cell = cells.getPtrToCell(tFace.first);
             UInt face = tFace.second;
             if (!mat->is<PMSurfaceSIBC>()) {
                 const PMPredefined* pred = mat->castTo<PMPredefined>();
                 pmbc.push_back(PhysicalModelBC(cell, face, pred));
                 if (!map.isDomainBoundary(tFace)) {
-                    tFace = map.getOuterFace(surf(i)->getId());
+                    tFace = map.getOuterFace(surf(i));
                     cell = cells.getPtrToCell(tFace.first);
                     face = tFace.second;
                     pmbc.push_back(PhysicalModelBC(cell, face, pred));
                 }
             } else {
                 const PMSurfaceSIBC* matSibc = mat->castTo<PMSurfaceSIBC>();
-                Face neigh = map.getNeigh(tFace);
+                Face neigh = map.getNeighFace(tFace);
                 const CellTet<ORDER_N>* nCell = cells.getPtrToCell(neigh.first);
                 const UInt nFace = neigh.second;
                 if (cell->isLocalSide(face, surf(i))) {

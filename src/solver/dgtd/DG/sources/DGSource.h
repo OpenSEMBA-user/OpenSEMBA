@@ -34,7 +34,7 @@
 using namespace std;
 
 #include "sources/EMSource.h"
-#include "../../../../core/geometry/graphs/Map.h"
+#include "geometry/graphs/Connectivities.h"
 #include "../../core/Comm.h"
 #include "../../core/CellGroup.h"
 #include "../../core/BCGroup.h"

@@ -245,11 +245,9 @@ vector<pair<UInt, UInt>> DGSource::getScattFieldElemFaces(
         const CellGroup& cells) const {
     vector<pair<UInt,UInt> > res;
     for (UInt i = 0; i <bc.embc.size(); i++) {
-        ElementId id1 = bc.embc[i].getCell()->getId();
-        UInt f1 = bc.embc[i].getFace();
-        if (!map.isDomainBoundary(id1,f1)) {
-            Face inner = bc.embc[i].getCellFace();
-            Face outer = map.getNeigh(inner);
+        Face bcFace = bc.embc[i].getCellFace();
+        if (!map.isDomainBoundary(bcFace)) {
+            Face outer = map.getNeighFace(bcFace);
             ElementId id2 = outer.first->getId();
             UInt f2 = outer.second;
             if (cells.isLocalId(id2)) {

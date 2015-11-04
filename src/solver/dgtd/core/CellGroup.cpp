@@ -51,7 +51,7 @@ CellGroup::CellGroup(const MeshVolume& mesh, const PMGroup& pMGroup) {
 		cell[quadTet[k].getId().toUInt() - cellOffsetId] = &quadTet[k];
 	}
 
-	Connectivities map(mesh.coords(), mesh.elems());
+	Connectivities map(mesh.elems());
 	buildNodalMaps(map);
 	check(map);
 }
@@ -83,8 +83,8 @@ void CellGroup::buildNodalMaps(const Connectivities& map) {
 	for (UInt e = 0; e < nK; e++) {
 		for (UInt f = 0; f < cell[e]->getFaces(); f++) {
 			// Stores contiguous element (e2) number and orientation.
-		    Face local(cell[e]->getPtrToBase(),f);
-		    Face neigh = map.getNeigh(local);
+		    Face local(cell[e]->getBase(),f);
+		    Face neigh = map.getNeighFace(local);
 			const UInt f2 = neigh.second;
 			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh.first);
 			// Runs over each node in local element.
@@ -119,13 +119,12 @@ void CellGroup::checkNodalMaps(const Connectivities& map) const {
 	UInt nK = cell.size();
 	for (UInt e = 0; e < nK; e++)
 		for (int f = 0; f < 4; f++) {
-		    Face local(cell[e]->getPtrToBase(),f);
-			const VolR* neigh = map.getNeigh(local).first;
+		    Face local(cell[e]->getBase(),f);
+			const VolR* neigh = map.getNeighFace(local).first;
 			const CellTet<ORDER_N>* c2 = getPtrToCell(neigh);
 			for (UInt i = 0; i < cell[e]->getNfp(); i++) {
 				int neighNode = cell[e]->vmapP[f][i];
-				diff = cell[e]->getSideNodePos(f, i) - c2->n[neighNode];
-				if (diff.norm() > CELL_NODE_TOLERANCE) {
+				if (cell[e]->getSideNodePos(f, i) != c2->n[neighNode]) {
 					cerr << "Elem " << e << ", face " << f << endl;
 					problem = true;
 				}

@@ -74,17 +74,14 @@ public:
             const UInt i) const;
     const CoordR3* getSideVertexBaseNode(UInt f, UInt i) const;
     Cell*& getEtoEPointer(const int) const;
-    CVecR3 getSideNodePos(
-            const UInt f,
-            const UInt i) const;
-    CVecR3 getSideNormal(
-            const UInt f) const;
+    CVecR3 getSideNodePos(const UInt f,const UInt i) const;
+    CVecR3 getSideNormal(const UInt f) const;
     virtual void getCurvedLIFTnormal(
             StaMatrix<double,np,nfp> LIFTn[3],
             StaMatrix<double,np,nfp> LIFTcn[3],
             StaMatrix<double,np,nfp> LIFTrn[3],
             const UInt face) const;
-    const Tet* getPtrToBase() const;
+    const Tet* getBase() const;
     UInt getSideNode(UInt f, UInt i) const;
     bool isFaceContainedInPlane(
             const UInt face,

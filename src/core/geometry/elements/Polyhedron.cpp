@@ -177,4 +177,5 @@ void Polyhedron::checkClosedness() const {
 }
 
 Real Polyhedron::getVolume() const {
+    throw ErrorNotImplemented("Polyhedron::getVolume()");
 }

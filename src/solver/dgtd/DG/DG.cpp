@@ -165,7 +165,8 @@ void DG::buildFluxScalingFactors(
             impM = cell->material->getImpedance();
             admM = cell->material->getAdmitance();
             // Computes contiguous element impedance and admittance.
-            ElementId neighId = map.getNeighbour(cell->getId(), f)->getId();
+            Face cellFace(cell->getBase(), f);
+            ElementId neighId = map.getNeighFace(cellFace).first->getId();
             const CellTet<ORDER_N>* neigh = cells.getPtrToCellWithId(neighId);
             impP = neigh->material->getImpedance();
             admP = neigh->material->getAdmitance();

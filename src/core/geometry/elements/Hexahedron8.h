@@ -69,6 +69,7 @@ public:
 
     bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
 
+    // Checks if edges are ortonormal.
     bool isRegular() const;
     inline bool isCurvedFace(const UInt f) const { return false; }
 

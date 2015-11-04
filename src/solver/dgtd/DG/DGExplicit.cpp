@@ -50,7 +50,7 @@ DGExplicit::DGExplicit(
     allocateMaps();
     deduplicateVMaps(cells);
 
-    Connectivities map(mesh.coords(), mesh.elems());
+    Connectivities map(mesh.elems());
     BCGroup bc(mesh, emSources, pMGroup, cells, map);
     assignPointersToNeighbours(cells, map, mesh);
     buildEMSources(emSources, bc, map, cells);
@@ -761,9 +761,9 @@ void DGExplicit::assignPointersToNeighbours(
         const MeshVolume& mesh) {
     UInt nNeighs = 0;
     for (UInt k = 0; k < nK; k++) {
-        ElementId id1 = cells.getIdOfRelPos(k);
+        const VolR* vol = cells(k)->getBase();
         for (UInt f = 0; f < faces; f++) {
-            ElementId id2 = map.getNeighbour(id1,f)->getId();
+            ElementId id2 = map.getNeighFace(Face(vol,f)).first->getId();
             if (cells.isLocalId(id2)) {
                 // Assigns ptrs to local cells and counts non local neigh.
                 UInt e2 = cells.getRelPosOfId(id2);
@@ -787,10 +787,10 @@ void DGExplicit::assignPointersToNeighbours(
     nH.setToZero();
     UInt neigh = 0;
     for (UInt k = 0; k < nK; k++) {
-        ElementId id1 = cells.getIdOfRelPos(k);
+        const VolR* vol = cells(k)->getBase();
         for (UInt f = 0; f < faces; f++) {
-            assert(cells.isLocalId(id1));
-            ElementId id2 = map.getNeighbour(id1,f)->getId();
+            assert(cells.isLocalId(vol->getId()));
+            ElementId id2 = map.getNeighFace(Face(vol,f)).first->getId();
             if (!cells.isLocalId(id2)) {
                 neighId.push_back(id2);
                 ExP[k][f] = &nE.set(x)[neigh * np];
@@ -959,15 +959,15 @@ void DGExplicit::buildCurvedFluxScalingFactors(
     // Supress linear fluxes operators. Computes curved operators.
     UInt face = 0;
     for (UInt e = 0; e < nK; e++) {
-        ElementId id = cells.getIdOfRelPos(e);
-        const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
+        const VolR* vol = cells(e)->getBase();
+        const CellTet<ORDER_N>* cell = cells.getPtrToCell(vol);
         Real impM, admM, impP, admP, impAv, admAv;
         for (UInt f = 0; f < faces; f++) {
             if (cell->isCurvedFace(f)) {
                 // Builds CurvedFace information
                 impM = cell->material->getImpedance();
                 admM = cell->material->getAdmitance();
-                ElementId nId = map.getNeighbour(cell->getId(), f)->getId();
+                ElementId nId = map.getNeighFace(Face(vol, f)).first->getId();
                 const CellTet<ORDER_N>* neigh = cells.getPtrToCellWithId(nId);
                 impP = neigh->material->getImpedance();
                 admP = neigh->material->getAdmitance();
