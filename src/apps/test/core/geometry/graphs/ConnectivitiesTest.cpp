@@ -73,7 +73,7 @@ protected:
     GroupElements<const ElemR> elem_;
 };
 
-TEST_F(GeometryConnectivitiesTest, GraphReciprocity) {
+TEST_F(GeometryConnectivitiesTest, ConnectivtiesReciprocity) {
     //  Creates reciprocal connectivities.
     {
         Connectivities conn(elem_);
@@ -90,5 +90,24 @@ TEST_F(GeometryConnectivitiesTest, GraphReciprocity) {
         EXPECT_FALSE(conn.existsReciprocity());
     }
 
+}
+
+TEST_F(GeometryConnectivitiesTest, InnerOuterFace) {
+    Connectivities conn(elem_);
+    {
+        const Tri3* tri = elem_.getId(ElementId(6))->castTo<Tri3>();
+        EXPECT_EQ(Face(NULL,0),conn.getOuterFace(tri));
+        EXPECT_TRUE(conn.isDomainBoundary(conn.getInnerFace(tri)));
+    }
+
+    {
+        const Tri3* tri = elem_.getId(ElementId(5))->castTo<Tri3>();
+
+        const Tet4* innerTet = elem_.getId(ElementId(3))->castTo<Tet4>();
+        EXPECT_EQ(innerTet, conn.getInnerFace(tri).first);
+
+        const Tet4* outerTet = elem_.getId(ElementId(4))->castTo<Tet4>();
+        EXPECT_EQ(outerTet, conn.getOuterFace(tri).first);
+    }
 }
 

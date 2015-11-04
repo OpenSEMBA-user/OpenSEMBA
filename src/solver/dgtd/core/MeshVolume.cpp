@@ -58,7 +58,9 @@ vector<vector<ElementId>> MeshVolume::getPartitionsIds(
     res.resize(nDivisions, vector<ElementId>());
     // Accounts for the one partition case.
     if (nDivisions == 1) {
-        const UInt nK = elems().sizeOf<VolR>();
+        GroupElements<const ElemR> physVol = elems();
+        physVol.removeMatId(MatId(0));
+        const UInt nK = physVol.sizeOf<VolR>();
         res[0].resize(nK, ElementId(0));
         for (UInt i = 0; i < nK; i++) {
             res[0][i] = (elems())(i)->getId();

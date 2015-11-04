@@ -75,7 +75,7 @@ Face Connectivities::getInnerFace(const SurfR* surf) const {
     vector<const CoordR3*> localV = local->elem()->getCoordinates();
     Face face = getMatchingFace_(local, localV);
     CVecR3 faceNormal = face.first->getSideNormal(face.second);
-    if (surf->getNormal() == faceNormal) {
+    if ((surf->getNormal() == faceNormal) || isDomainBoundary(surf)) {
         return face;
     } else {
         return getNeighFace(face);
@@ -132,12 +132,12 @@ bool Connectivities::existsReciprocity() const {
                 Face neigh = this->getNeighFace(local);
                 if (this->isDomainBoundary(local)) {
                     if (neigh != Face(NULL, 0)) {
-                        throw ErrorNotReciprocal(local);
+                        return false;
                     }
                 } else {
                     Face neighNeigh = this->getNeighFace(neigh);
                     if (local != neighNeigh) {
-                        throw ErrorNotReciprocal(local);
+                        return false;
                     }
                 }
             }
@@ -150,7 +150,7 @@ bool Connectivities::existsReciprocity() const {
                 Face outer = this->getOuterFace(surf);
                 Face inNeigh = this->getNeighFace(inner);
                 if (outer != inNeigh) {
-                    throw ErrorNotReciprocal(inner);
+                    return false;
                 }
             }
         }

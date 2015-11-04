@@ -85,8 +85,7 @@ Integrator* SolverDGTD::initIntegrator(
         res = new IntegratorVerlet(*mesh, *pMGroup, arg);
         break;
     default:
-        cerr << endl << "ERROR@Simulation::buildSolverInfo: "
-        << "Undefined time integrator."<< endl;
+        throw Error("Undefined time integrator.");
     }
     return res;
 }

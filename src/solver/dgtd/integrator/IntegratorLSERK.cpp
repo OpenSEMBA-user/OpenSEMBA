@@ -66,8 +66,7 @@ IntegratorLSERK::IntegratorLSERK(
 IntegratorLSERK::~IntegratorLSERK() {
 }
 
-void
-IntegratorLSERK::timeIntegrate(const Real time) const {
+void IntegratorLSERK::timeIntegrate(const Real time) const {
     assert(solver != NULL);
     Real dt = getMaxDT();
     if (doLTS) {
@@ -84,8 +83,7 @@ IntegratorLSERK::timeIntegrate(const Real time) const {
     }
 }
 
-UInt
-IntegratorLSERK::getNumOfIterationsPerBigTimeStep(
+UInt IntegratorLSERK::getNumOfIterationsPerBigTimeStep(
         const UInt e) const {
     UInt nTiers = getNTiers();
     UInt nStages = getNStages();

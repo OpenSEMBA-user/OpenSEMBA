@@ -77,6 +77,13 @@ void BCGroup::buildPhysicalModelBC(
         if (surf(i)->getMatId() !=  MatId(0)) {
             const PhysicalModel* mat = pm.getId(surf(i)->getMatId());
             Face tFace = map.getInnerFace(surf(i));
+            if (tFace.first == NULL) {
+                tFace = map.getOuterFace(surf(i));
+            }
+            if (tFace.first == NULL) {
+                surf(i)->printInfo();
+                throw Error("Surface with mat defined is floating.");
+            }
             const CellTet<ORDER_N>* cell = cells.getPtrToCell(tFace.first);
             UInt face = tFace.second;
             if (!mat->is<PMSurfaceSIBC>()) {

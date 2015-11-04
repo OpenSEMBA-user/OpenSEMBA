@@ -89,10 +89,12 @@ vector<vector<ElementId>> Integrator::getPartitionsIds() const {
 
 vector<pair<ElementId,Int>> Integrator::getComputationalWeights(
         const MeshVolume* msh) const {
-    const Int curlFlops = 1; // TODO curlFlops are not considered.
-    const Int fluxFlops = 0; // TODO fluxFlops are not considered.
+    const Int curlFlops = 1;
+    const Int fluxFlops = 0;
     Int flops = curlFlops + fluxFlops;
-    UInt nK = msh->elems().sizeOf<VolR>();
+    GroupElements<const VolR> physVol = msh->elems();
+    physVol.removeMatId(MatId(0));
+    const UInt nK = physVol.sizeOf<VolR>();
     vector<pair<ElementId,Int>> idWgt;
     idWgt.reserve(nK);
     for (UInt e = 0; e < nK; e++) {
