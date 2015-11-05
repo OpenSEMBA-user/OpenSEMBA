@@ -144,7 +144,7 @@ protected:
             const UInt e1, const UInt e2, const Real rkdt) = 0;
     virtual void addRHSToResidueMagnetic(
             const UInt e1, const UInt e2, const Real rkdt) = 0;
-    virtual void buildCMatrices(const CellGroup& cells) = 0;
+    void buildCMatrices(const CellGroup& cells);
     virtual void buildMaterials(
             const CellGroup& cells,
             const OptionsSolverDGTD& arg) = 0;

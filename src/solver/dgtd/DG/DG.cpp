@@ -198,7 +198,6 @@ void DG::init(
     buildMaterials(cells, options);
     buildCMatrices(cells);
     allocateFieldsAndRes();
-
     resE.setAll((Real) 0.0);
     resH.setAll((Real) 0.0);
 }
@@ -211,6 +210,34 @@ void DG::addFluxesToRHS(
     computeJumps(e1,e2, localTime,minDT);
     addFluxesToRHSElectric(e1,e2);
     addFluxesToRHSMagnetic(e1,e2);
+}
+
+void DG::buildCMatrices(const CellGroup& cells) {
+    UInt e;
+#ifdef SOLVER_DEDUPLICATE_OPERATORS
+    for (e = 0; e < nK; e++) {
+        ElementId id = cells.getIdOfRelPos(e);
+        const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
+        array<StaMatrix<Real,np,np>,3> C = cell->getCMatrices();
+        for (UInt i = 0; i < 3; i++) {
+            CList.insert(C[i]);
+        }
+    }
+#	else
+    CList = new StaMatrix<Real,np,np>[3*nK];
+#pragma omp parallel for private(e)
+    for (e = 0; e < nK; e++) {
+        UInt id = cells.getIdOfRelPos(e);
+        const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
+        StaMatrix<Real,np,np> C[3];
+        cell->getCMatrices(C);
+        for (UInt i = 0; i < 3; i++) {
+            UInt j = 3 * e + i;
+            CList[j] = C[i];
+        }
+    }
+#	endif
+    assignMatrices(cells);
 }
 
 void DG::computeCurlsInRHS(
