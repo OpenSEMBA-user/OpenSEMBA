@@ -31,13 +31,13 @@ DGDipole::DGDipole(
 : Dipole(dip) {
    initSource(bc, map, cells, dE, dH, vmapM);
    // Determines total or scattered fields in the bc.
-   if (nETFNB != 0) {
+   if (ETFNBe.size()) {
       throw Error("Trying to set TF/SF in a not backed boundary.");
    }
    // Total field boundary.
    vector<pair<UInt, UInt> > total;
    total = getTotalFieldElemFaces(bc, map, cells);
-   tPos = new SphericalVector[nETF * nfp];
+   tPos = new SphericalVector[ETInc.size() * nfp];
    for (UInt i = 0; i < total.size(); i++) {
       ElementId id = cells.getIdOfRelPos(total[i].first);
       UInt f = total[i].second;
@@ -49,7 +49,7 @@ DGDipole::DGDipole(
    // Scattered field boundary.
    vector<pair<UInt,UInt> > scatt;
    scatt = getScattFieldElemFaces(bc, map, cells);
-   sPos = new SphericalVector[nESF * nfp];
+   sPos = new SphericalVector[ESInc.size() * nfp];
    for (UInt i = 0; i < scatt.size(); i++) {
       ElementId id = cells.getIdOfRelPos(scatt[i].first);
       UInt f = scatt[i].second;
@@ -66,8 +66,8 @@ DGDipole::~DGDipole() {
 void DGDipole::computeExcitation(
       const Real time,
       const Real minDT) {
-   computeExcitationField(ETInc, HTInc, tPos, nETF, time);
-   computeExcitationField(ESInc, HSInc, sPos, nESF, time);
+   computeExcitationField(ETInc, HTInc, tPos, ETInc.size(), time);
+   computeExcitationField(ESInc, HSInc, sPos, ESInc.size(), time);
 }
 
 void DGDipole::computeExcitationField(
@@ -128,6 +128,6 @@ void DGDipole::computeExcitationField(
 void DGDipole::printInfo() const {
    cout << " --- SolverDipole Info ---" << endl;
    Dipole::printInfo();
-   cout << "#ETF: " << nETF << endl;
-   cout << "#ESF: " << nESF << endl;
+   cout << "#ETF: " << ETInc.size() << endl;
+   cout << "#ESF: " << ESInc.size() << endl;
 }

@@ -45,19 +45,19 @@ void CellTet<TET_N>::init(
 }
 
 template <int TET_N>
-void CellTet<TET_N>::getCMatrices(
-        StaMatrix<double,np,np> C[3]) const {
-    StaMatrix<double,4,4> cJ[SimplexTet<1>::ncp];
+array<typename CellTet<TET_N>::MatNpNp,3> CellTet<TET_N>::getCMatrices() const {
+    MatR44 cJ[SimplexTet<1>::ncp];
     base->getCubatureJacobian(cJ);
     double cJDet[SimplexTet<1>::ncp];
     base->getCubatureJacobianDeterminant(cJDet, cJ);
-    StaMatrix<double,np,np> invM;
-    invM  = getMassMatrix(cJDet).invert();
+    MatNpNp invM = getMassMatrix(cJDet).invert();
     StaMatrix<double,4,3> cJHat[SimplexTet<1>::ncp];
     base->getCubatureJacobianHat(cJHat, cJ, cJDet);
+    array<MatNpNp,3> res;
     for (UInt x = 0; x < 3; x++) {
-        C[x] = getCMatrix(x, invM, cJHat, cJ);
+        res[x] = getCMatrix(x, invM, cJHat, cJ);
     }
+    return res;
 }
 
 template <int TET_N>
@@ -230,22 +230,19 @@ CVecR3 CellTet<TET_N>::getSideNormal(
 }
 
 template <int TET_N>
-UInt
-CellTet<TET_N>::getSideNode(
+UInt CellTet<TET_N>::getSideNode(
         const UInt f, const UInt i) const {
     return tet.sideNode(f, i);
 }
 
 template <int TET_N>
-const CoordR3*
-CellTet<TET_N>::getSideBaseNode(
+const CoordR3* CellTet<TET_N>::getSideBaseNode(
         const UInt f, const UInt i) const {
     return base->getSideV(f,i);
 }
 
 template <int TET_N>
-const CoordR3*
-CellTet<TET_N>::getSideVertexBaseNode(UInt f, UInt i) const {
+const CoordR3* CellTet<TET_N>::getSideVertexBaseNode(UInt f, UInt i) const {
     return (base->getSideVertex(f, i));
 }
 
@@ -275,8 +272,7 @@ bool CellTet<TET_N>::isFaceContainedInPlane(
 }
 
 template <int TET_N>
-void
-CellTet<TET_N>::printInfo() const {
+void CellTet<TET_N>::printInfo() const {
     cout << " --- CellTet information --- " << endl;
     this->base->printInfo();
     cout << "Nodes: " << this->np << endl;

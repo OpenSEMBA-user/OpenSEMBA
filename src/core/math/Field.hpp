@@ -84,13 +84,6 @@ inline void Field<T,D>::setSize(const UInt siz) {
 }
 
 template<class T, Int D>
-inline void Field<T,D>::setToZero() {
-	for (UInt i = 0; i < size_*D; i++) {
-		val_[i] = (T) 0.0;
-	}
-}
-
-template<class T, Int D>
 inline void Field<T,D>::set(const UInt i, const CartesianVector<T,D>& vec) {
 	for (UInt j = 0; j < D; j++) {
 		val_[j * size_ + i] = vec(j);
@@ -105,9 +98,9 @@ inline void Field<T,D>::set(const UInt i, const T& num) {
 }
 
 template<class T, Int D>
-inline void Field<T,D>::setToOne() {
+inline void Field<T,D>::setAll(const T& num) {
 	for (UInt i = 0; i < size_*D; i++) {
-		val_[i] = (T) 1.0;
+		val_[i] = (T) num;
 	}
 }
 

@@ -51,9 +51,8 @@ public:
 
    void set(const UInt i, const CartesianVector<T,D>& vec);
    void set(const UInt i, const T& num);
+   void setAll(const T& num);
    void setSize(const UInt siz);
-   void setToZero();
-   void setToOne();
    void setToRandom(const Real min, const Real max);
 
    void prod(const UInt init, const UInt end, const T param);

@@ -41,7 +41,8 @@ DGExplicit::DGExplicit(
         allocateFieldsForLTS();
     }
     if (emSources.size() != 0) {
-        setFieldsToZero();
+        E.setAll((Real) 0.0);
+        H.setAll((Real) 0.0);
     } else {
         setFieldsToRandom();
         cout<< ">> No EM Excitations were detected <<" << endl;
@@ -124,9 +125,7 @@ void DGExplicit::computeRHSElectric(
     computeJumps(e1,e2, localTime,minDT);
     addFluxesToRHSElectric(e1,e2);
     UInt i, j, e;
-#	ifdef SOLVER_USE_OPENMP
 #	pragma omp parallel for private(i,j,e)
-#	endif
     for (e = e1; e < e2; e++) {
         i = e * np;
         j = (e + 1) * np;
@@ -143,9 +142,7 @@ void DGExplicit::computeRHSMagnetic(
     computeJumps(e1,e2,localTime,minDT);
     addFluxesToRHSMagnetic(e1,e2);
     UInt i, j, e;
-#	ifdef SOLVER_USE_OPENMP
-#	pragma omp parallel for private(i,j,e)
-#	endif
+#pragma omp parallel for private(i,j,e)
     for (e = e1; e < e2; e++) {
         i = e * np;
         j = (e + 1) * np;
@@ -157,9 +154,7 @@ void DGExplicit::computeCurlsInRHSElectric(
         const UInt e1,
         const UInt e2) {
     UInt i, e;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(e,i)
-#endif
     for (e = e1; e < e2; e++) {
         // i: Beginning of element field. [0, (nK-1)*np]
         i = e * np;
@@ -179,9 +174,7 @@ void DGExplicit::computeCurlsInRHSMagnetic(
         const UInt e1,
         const UInt e2) {
     UInt i, e;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(e,i)
-#endif
     for (e = e1; e < e2; e++) {
         // i: Beginning of element field. [0, (nK-1)*np]
         i = e * np;
@@ -208,9 +201,7 @@ void DGExplicit::computeJumps(
     }
     UInt b, i, j, k, f, e;
     UInt vM, vP;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(e,k,i,f,j,vM,vP)
-#endif
     for (e = e1; e < e2; e++) {
         k = e * np;   // Beginning of element field. [0, (nK-1)*np]
         i = e * nfp * faces;
@@ -229,9 +220,7 @@ void DGExplicit::computeJumps(
         }
     }
     // SMA
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(b,e,k,i,f,j,vM,vP)
-#endif
     for (b = 0; b < nSMA; b++) {
         f = SMAf[b];
         e = SMAe[b];
@@ -250,9 +239,7 @@ void DGExplicit::computeJumps(
         }
     }
     // PEC
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(b,e,k,i,f,j,vM,vP)
-#endif
     for (b = 0; b < nPEC; b++) {
         f = PECf[b];
         e = PECe[b];
@@ -271,9 +258,7 @@ void DGExplicit::computeJumps(
         }
     }
     // PMC
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(b,e,k,i,f,j,vM,vP)
-#endif
     for (b = 0; b < nPMC; b++) {
         f = PMCf[b];
         e = PMCe[b];
@@ -362,9 +347,7 @@ void DGExplicit::addStraightFluxesToRHSElectric(
     } else if (upwinding == 1.0) {
         // ---------- Upwind flux -------------------------------------
         if (useResForUpw) {
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -388,9 +371,7 @@ void DGExplicit::addStraightFluxesToRHSElectric(
             }
         } else {
             // >>>>>>> This one is the most frequently used <<<<<<<<<
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -417,9 +398,7 @@ void DGExplicit::addStraightFluxesToRHSElectric(
     } else {
         // ---------- Penalized flux ----------------------------------
         if (useResForUpw) {
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -442,9 +421,7 @@ void DGExplicit::addStraightFluxesToRHSElectric(
                 add_m_v_prod<Real,np,nfpfaces>(&rhsE.set(z)[i], LIFT, fz);
             }
         } else {
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -478,9 +455,7 @@ void DGExplicit::addStraightFluxesToRHSMagnetic (
     Real fx[nfpfaces], fy[nfpfaces], fz[nfpfaces];
     if (upwinding == 0.0) {
         // ---------- Centred flux --------------------------------------------
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
         for (e = e1; e < e2; e++) {
             i = e * nfpfaces;
             for (k = 0; k < nfpfaces; k++) {
@@ -499,9 +474,7 @@ void DGExplicit::addStraightFluxesToRHSMagnetic (
     } else if (upwinding == 1.0) {
         // ---------- Upwind flux ---------------------------------------------
         if (useResForUpw) {
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -524,9 +497,7 @@ void DGExplicit::addStraightFluxesToRHSMagnetic (
                 add_m_v_prod<Real,np,nfpfaces>(&rhsH.set(z)[i], LIFT, fz);
             }
         } else {
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -552,9 +523,7 @@ void DGExplicit::addStraightFluxesToRHSMagnetic (
     } else {
         // ---------- Penalized flux ------------------------------------------
         if (useResForUpw) {
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -577,9 +546,7 @@ void DGExplicit::addStraightFluxesToRHSMagnetic (
                 add_m_v_prod<Real,np,nfpfaces>(&rhsH.set(z)[i], LIFT, fz);
             }
         } else {
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,k,e,f,fx,fy,fz)
-#endif
             for (e = e1; e < e2; e++) {
                 i = e * nfpfaces;
                 for (k = 0; k < nfpfaces; k++) {
@@ -608,36 +575,28 @@ void DGExplicit::addCurvedFluxesToRHSElectric(
         const UInt e1,
         const UInt e2,
         const bool useResForUpw) {
-#	ifndef SOLVERExplicit_IGNORE_CURVED_FLUXES
     UInt c;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(c)
-#endif
     for (c = 0; c < nCurvedFaces; c++) {
         if (e1 <= curveFace[c].solverPosition
                 && curveFace[c].solverPosition < e2) {
             curveFace[c].addFluxToRHSElectric(upwinding, useResForUpw);
         }
     }
-#	endif
 }
 
 void DGExplicit::addCurvedFluxesToRHSMagnetic(
         const UInt e1,
         const UInt e2,
         const bool useResForUpw) {
-#	ifndef SOLVERExplicit_IGNORE_CURVED_FLUXES
     UInt c;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(c)
-#endif
     for (c = 0; c < nCurvedFaces; c++) {
         if (e1 <= curveFace[c].solverPosition
                 && curveFace[c].solverPosition < e2) {
             curveFace[c].addFluxToRHSMagnetic(upwinding, useResForUpw);
         }
     }
-#	endif
 }
 
 void DGExplicit::addRHSToFieldsElectric(
@@ -704,12 +663,12 @@ void DGExplicit::assignMatrices(const CellGroup& cells) {
     Cz = new const Real*[nK];
     UInt e;
 #	ifdef SOLVER_DEDUPLICATE_OPERATORS
-#	ifdef SOLVER_USE_OPENMP
 #	pragma omp parallel for private(e)
-#	endif
     for (e = 0; e < nK; e++) {
-        StaMatrix<Real,np,np> C[3];
-        cells.getPtrToCellWithId(cells.getIdOfRelPos(e))->getCMatrices(C);
+        array<StaMatrix<Real,np,np>,3> C;
+        const ElementId id = cells.getIdOfRelPos(e);
+        const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
+        C = cell->getCMatrices();
         for (UInt i = 0; i < 3; i++) {
             set<StaMatrix<Real,np,np>, lexCompareMat>::iterator it;
             it = CList.find(C[i]);
@@ -729,13 +688,10 @@ void DGExplicit::assignMatrices(const CellGroup& cells) {
             }
         }
     }
-    cout<< "Matrix deduplication: " << nK*3
-            << " --> " << CList.size() << endl;
+    cout<< "Matrix deduplication: " << nK*3 << " --> " << CList.size() << endl;
 #	else
     CList = new StaMatrix<Real,np,np>[3*nK];
-#	ifdef SOLVER_USE_OPENMP
 #	pragma omp parallel for private(e)
-#	endif
     for (e = 0; e < nK; e++) {
         UInt id = cells.getIdOfRelPos(e);
         const CellTet<ORDER_N>* cell_ = cells.getPtrToCellWithId(id);
@@ -763,7 +719,13 @@ void DGExplicit::assignPointersToNeighbours(
     for (UInt k = 0; k < nK; k++) {
         const VolR* vol = cells(k)->getBase();
         for (UInt f = 0; f < faces; f++) {
-            ElementId id2 = map.getNeighFace(Face(vol,f)).first->getId();
+            Face neigh = map.getNeighFace(Face(vol,f));
+            ElementId id2;
+            if (map.isDomainBoundary(neigh)) {
+                id2 = vol->getId();
+            } else {
+                id2 = neigh.first->getId();
+            }
             if (cells.isLocalId(id2)) {
                 // Assigns ptrs to local cells and counts non local neigh.
                 UInt e2 = cells.getRelPosOfId(id2);
@@ -783,14 +745,19 @@ void DGExplicit::assignPointersToNeighbours(
     neighId.reserve(nNeighs);
     nE.setSize(nNeighs*np);
     nH.setSize(nNeighs*np);
-    nE.setToZero();
-    nH.setToZero();
+    nE.setAll((Real) 0.0);
+    nH.setAll((Real) 0.0);
     UInt neigh = 0;
     for (UInt k = 0; k < nK; k++) {
         const VolR* vol = cells(k)->getBase();
         for (UInt f = 0; f < faces; f++) {
-            assert(cells.isLocalId(vol->getId()));
-            ElementId id2 = map.getNeighFace(Face(vol,f)).first->getId();
+            Face neighF = map.getNeighFace(Face(vol,f));
+            ElementId id2;
+            if (map.isDomainBoundary(neighF)) {
+                id2 = vol->getId();
+            } else {
+                id2 = neighF.first->getId();
+            }
             if (!cells.isLocalId(id2)) {
                 neighId.push_back(id2);
                 ExP[k][f] = &nE.set(x)[neigh * np];
@@ -824,9 +791,9 @@ vector<const BoundaryCondition*> DGExplicit::removeNonLocalBCs(
 }
 
 void DGExplicit::BCToLocalArray(
-	const BCGroup& bc,
-	const CellGroup& cells,
-	const Connectivities& map) {
+        const BCGroup& bc,
+        const CellGroup& cells,
+        const Connectivities& map) {
     // ----------- SMA ------------------------------------------------
     // Counts SMAs and allocates, em boundaries are also considered.
     {
@@ -887,20 +854,20 @@ void DGExplicit::BCToLocalArray(
             PMCf[i] = pmcPtr[i]->getFace();
         }
     }
-//    {
-//        for (UInt i = 0; i < smb_->pMGroup->countSIBC(); i++) {
-//            const PMSurfaceSIBC* m =
-//                    dynamic_cast<const PMSurfaceSIBC*>(smb_->pMGroup->getPMSurface(i));
-//            if (m != NULL) {
-//                vector<const BoundaryCondition*> sibcPtr
-//                = bc.getMatId(m->getId());
-//                sibcPtr = removeNonLocalBCs(&cells, sibcPtr);
-//                dispersive.push_back(
-//                        new DGSIBC(*m, sibcPtr, cells, map, vmapM,
-//                                ExP, EyP, EzP, HxP, HyP, HzP));
-//            }
-//        }
-//    }
+    //    {
+    //        for (UInt i = 0; i < smb_->pMGroup->countSIBC(); i++) {
+    //            const PMSurfaceSIBC* m =
+    //                    dynamic_cast<const PMSurfaceSIBC*>(smb_->pMGroup->getPMSurface(i));
+    //            if (m != NULL) {
+    //                vector<const BoundaryCondition*> sibcPtr
+    //                = bc.getMatId(m->getId());
+    //                sibcPtr = removeNonLocalBCs(&cells, sibcPtr);
+    //                dispersive.push_back(
+    //                        new DGSIBC(*m, sibcPtr, cells, map, vmapM,
+    //                                ExP, EyP, EzP, HxP, HyP, HzP));
+    //            }
+    //        }
+    //    }
 }
 
 void DGExplicit::buildEMSources(
@@ -914,21 +881,21 @@ void DGExplicit::buildEMSources(
         source.push_back(new DGPlaneWave(*(em(i)->castTo<PlaneWave>()), bc,
                 maps, cells, comm, dE, dH, vmapM));
     }
-//    for (UInt i = 0; i < em.countDipoles(); i++) {
-//        vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);
-//        source.push_back(
-//                new DGDipole(*em.getDipole(i), aux, maps, cells, dE, dH, vmapM));
-//    }
-//    for (UInt i = 0; i < em.countWaveports(); i++) {
-//        vector<const BoundaryCondition*> aux =	 bc.get(Condition::emSource);
-//        Waveport::Shape shape = em.getWaveport(i)->getShape();
-//        if (shape == Waveport::rectangular) {
-//            source.push_back(new DGWaveportRectangular(
-//                    *em.getWaveport(i), aux, maps, cells, dE, dH, vmapM));
-//        } else {
-//           throw Error("Unreckognized waveport shape.");
-//        }
-//    }
+    //    for (UInt i = 0; i < em.countDipoles(); i++) {
+    //        vector<const BoundaryCondition*> aux = bc.get(Condition::emSource);
+    //        source.push_back(
+    //                new DGDipole(*em.getDipole(i), aux, maps, cells, dE, dH, vmapM));
+    //    }
+    //    for (UInt i = 0; i < em.countWaveports(); i++) {
+    //        vector<const BoundaryCondition*> aux =	 bc.get(Condition::emSource);
+    //        Waveport::Shape shape = em.getWaveport(i)->getShape();
+    //        if (shape == Waveport::rectangular) {
+    //            source.push_back(new DGWaveportRectangular(
+    //                    *em.getWaveport(i), aux, maps, cells, dE, dH, vmapM));
+    //        } else {
+    //           throw Error("Unreckognized waveport shape.");
+    //        }
+    //    }
 }
 
 
@@ -993,44 +960,44 @@ void DGExplicit::buildCurvedFluxScalingFactors(
 void DGExplicit::buildMaterials(
         const CellGroup& cells,
         const OptionsSolverDGTD& arg) {
-//    // Creates Dispersive materials vars parameters and stores ptrs.
-//    const GroupPhysicalModels<PMVolumeDispersive> dispersives =
-//            smb_->pMGroup->getOf<PMVolumeDispersive>();
-//    for (UInt i = 0; i < dispersives.size(); i++) {
-//        dispersive.push_back(new DGDispersiveVolumic(*dispersives(i), cells));
-//    }
-//    // Creates PML materials variables parameters and stores pointers.
-//    const GroupPhysicalModels<PMVolumePML> pmls =
-//            smb_->pMGroup->getOf<PMVolumePML>();
-//    for (UInt i = 0; i < pmls.size(); i++) {
-//        const bool isConstCond = arg->isPMLConstantConductivityProfile();
-//        const Real cond = arg->getPMLConductivity();
-//        switch (pmls(i)->getOrientation()) {
-//        case PMVolumePML::Orientation::PMLx:
-//            dispersive.push_back(new DGPMLx(*pmls(i),cells,isConstCond,cond));
-//            break;
-//        case PMVolumePML::Orientation::PMLy:
-//            dispersive.push_back(new DGPMLy(*pmls(i),cells,isConstCond,cond));
-//            break;
-//        case PMVolumePML::Orientation::PMLz:
-//            dispersive.push_back(new DGPMLz(*pmls(i),cells,isConstCond,cond));
-//            break;
-//        case PMVolumePML::Orientation::PMLxy:
-//            dispersive.push_back(new DGPMLxy(*pmls(i),cells,isConstCond,cond));
-//            break;
-//        case PMVolumePML::Orientation::PMLyz:
-//            dispersive.push_back(new DGPMLyz(*pmls(i),cells,isConstCond,cond));
-//            break;
-//        case PMVolumePML::Orientation::PMLzx:
-//            dispersive.push_back(new DGPMLzx(*pmls(i),cells,isConstCond,cond));
-//            break;
-//        case PMVolumePML::Orientation::PMLxyz:
-//            dispersive.push_back(new DGPMLxyz(*pmls(i),cells,isConstCond,cond));
-//            break;
-//        default:
-//            break;
-//        }
-//    }
+    //    // Creates Dispersive materials vars parameters and stores ptrs.
+    //    const GroupPhysicalModels<PMVolumeDispersive> dispersives =
+    //            smb_->pMGroup->getOf<PMVolumeDispersive>();
+    //    for (UInt i = 0; i < dispersives.size(); i++) {
+    //        dispersive.push_back(new DGDispersiveVolumic(*dispersives(i), cells));
+    //    }
+    //    // Creates PML materials variables parameters and stores pointers.
+    //    const GroupPhysicalModels<PMVolumePML> pmls =
+    //            smb_->pMGroup->getOf<PMVolumePML>();
+    //    for (UInt i = 0; i < pmls.size(); i++) {
+    //        const bool isConstCond = arg->isPMLConstantConductivityProfile();
+    //        const Real cond = arg->getPMLConductivity();
+    //        switch (pmls(i)->getOrientation()) {
+    //        case PMVolumePML::Orientation::PMLx:
+    //            dispersive.push_back(new DGPMLx(*pmls(i),cells,isConstCond,cond));
+    //            break;
+    //        case PMVolumePML::Orientation::PMLy:
+    //            dispersive.push_back(new DGPMLy(*pmls(i),cells,isConstCond,cond));
+    //            break;
+    //        case PMVolumePML::Orientation::PMLz:
+    //            dispersive.push_back(new DGPMLz(*pmls(i),cells,isConstCond,cond));
+    //            break;
+    //        case PMVolumePML::Orientation::PMLxy:
+    //            dispersive.push_back(new DGPMLxy(*pmls(i),cells,isConstCond,cond));
+    //            break;
+    //        case PMVolumePML::Orientation::PMLyz:
+    //            dispersive.push_back(new DGPMLyz(*pmls(i),cells,isConstCond,cond));
+    //            break;
+    //        case PMVolumePML::Orientation::PMLzx:
+    //            dispersive.push_back(new DGPMLzx(*pmls(i),cells,isConstCond,cond));
+    //            break;
+    //        case PMVolumePML::Orientation::PMLxyz:
+    //            dispersive.push_back(new DGPMLxyz(*pmls(i),cells,isConstCond,cond));
+    //            break;
+    //        default:
+    //            break;
+    //        }
+    //    }
 }
 
 bool DGExplicit::checkPtrsToNeigh() const {
@@ -1189,9 +1156,7 @@ void DGExplicit::copyJumpsToResidueJumps(
         const UInt e1,
         const UInt e2) {
     UInt i, j, f, e;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(e,i,f,j)
-#endif
     for (e = e1; e < e2; e++) {
         i = e * nfp * faces;
         for (f = 0; f < faces; f++) {
@@ -1212,9 +1177,7 @@ void DGExplicit::copyJumpsToResidueJumps(
 void DGExplicit::addRHSToResidueElectric(
         const UInt e1, const UInt e2,	const Real rkdt) {
     UInt i, j, e;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,e)
-#endif
     for (e = e1; e < e2; e++) {
         i = e * np;
         for (j = 0; j < np; j++) {
@@ -1229,9 +1192,7 @@ void DGExplicit::addRHSToResidueElectric(
 void DGExplicit::addRHSToResidueMagnetic(
         const UInt e1, const UInt e2, const Real rkdt) {
     UInt i, j, e;
-#ifdef SOLVER_USE_OPENMP
 #pragma omp parallel for private(i,j,e)
-#endif
     for (e = e1; e < e2; e++) {
         i = e * np;
         for (j = 0; j < np; j++) {
@@ -1248,11 +1209,9 @@ void DGExplicit::updateFieldsWithRes(
         const UInt e2,
         const Real rkb) {
     updateFieldsWithResBase(e1,e2,rkb);
-#ifndef SOLVER_IGNORE_DISPERSIVES
     for (UInt d = 0; d < dispersive.size(); d++) {
         dispersive[d]->updateWithRes(e1,e2,rkb);
     }
-#endif
 }
 
 void DGExplicit::addRHSToRes(
@@ -1262,21 +1221,12 @@ void DGExplicit::addRHSToRes(
         const Real dt) {
     UInt i = getIndexOfElement(e1);
     UInt j = getIndexOfElement(e2);
-#	ifdef SOLVER_USE_OPENMP
     resE.prod_omp(i,j, rka);
     resE.addProd_omp(i,j, rhsE, dt);
     resH.prod_omp(i,j, rka);
     resH.addProd_omp(i,j, rhsH, dt);
-#	else
-    resE.prod(i,j, rka);
-    resE.addProd(i,j, rhsE, dt);
-    resH.prod(i,j, rka);
-    resH.addProd(i,j, rhsH, dt);
-#	endif
     // Polarization currents in dispersive materials.
-#	ifndef SOLVER_IGNORE_DISPERSIVES
     for (UInt d = 0; d < dispersive.size(); d++) {
         dispersive[d]->addRHSToRes(e1,e2,rka,dt);
     }
-#	endif
 }

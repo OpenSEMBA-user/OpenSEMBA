@@ -67,19 +67,15 @@ protected:
     // Excitation fields.
     FieldR3 ETInc, ESInc, EIncNB;
     FieldR3 HTInc, HSInc, HIncNB;
+
+    vector<UInt> ETFe, ESFe, ETFNBe;
     // Excitation total field jumps pointers.
-    UInt nETF;
-    UInt *ETFe;
     Real **dExT, **dEyT, **dEzT;
     Real **dHxT, **dHyT, **dHzT;
     // Excitation scattered field jumps pointers.
-    UInt nESF;
-    UInt *ESFe;
     Real **dExS, **dEyS, **dEzS;
     Real **dHxS, **dHyS, **dHzS;
     // Excitation total field not backed jumps.
-    UInt nETFNB;
-    UInt *ETFNBe;
     Real **dExTNB, **dEyTNB, **dEzTNB;
     Real **dHxTNB, **dHyTNB, **dHzTNB;
     void initSource(

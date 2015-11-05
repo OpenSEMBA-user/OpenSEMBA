@@ -37,6 +37,7 @@ class CellTet : public Cell {
 #define TET_NP ((TET_N+1)*(TET_N+2)*(TET_N+3)/6)
 #define TET_NFP ((TET_N+1)*(TET_N+2)/2)
 public:
+    typedef StaMatrix<Real,TET_NP,TET_NP> MatNpNp;
     static const SimplexTet<TET_N> tet;
     static const UInt np = TET_NP;
     static const UInt nfp = TET_NFP;
@@ -64,8 +65,7 @@ public:
     UInt getNodeVertex(const UInt i) const;
     ElementId getId() const {return base->getId();}
     const CoordR3* getV(UInt i) const {return base->getV(i);}
-    void getCMatrices(
-            StaMatrix<double,np,np> C[3]) const;
+    array<MatNpNp,3> getCMatrices() const;
     CVecR3 getNode(const UInt i) const {return n[i];}
     const CoordR3* getSideBaseNode(
             const UInt f,
@@ -84,12 +84,11 @@ public:
     bool isFaceContainedInPlane(
             const UInt face,
             const CartesianPlane) const;
-    virtual StaMatrix<double,TET_NP,TET_NP>
-    getConductivityWithGeometricProfile(
+    virtual MatNpNp getConductivityWithGeometricProfile(
             const PMVolumePML& mat,
             const UInt type,
             const double maxSigma) const;
-    virtual StaMatrix<double,TET_NP,TET_NP> getMassMatrix() const;
+    virtual MatNpNp getMassMatrix() const;
     virtual void printInfo() const;
     void printMapsInfo() const;
 protected:

@@ -28,16 +28,6 @@ DG::DG() {
 DG::~DG() {
 }
 
-void DG::setFieldsToZero() {
-    E.setToZero();
-    H.setToZero();
-}
-
-void DG::setFieldsToOne() {
-    E.setToOne();
-    H.setToZero();
-}
-
 void DG::setFieldsToRandom() {
     static const Real min = -1.0;
     static const Real max = 1.0;
@@ -63,7 +53,7 @@ void DG::setFieldsToGaussian(
             E.set(e*np + i, polarization*amplitude*exp(- expArg * expArg));
         }
     }
-    H.setToZero();
+    H.setAll((Real) 0.0);
 }
 
 void DG::setFieldsToHarmonics(
@@ -87,7 +77,7 @@ void DG::setFieldsToHarmonics(
             E.set(e*np + i, polarization*amp);
         }
     }
-    H.setToZero();
+    H.setAll((Real) 0.0);
 }
 
 void DG::setFieldsAndTimeFromResumeFile() {
@@ -166,7 +156,12 @@ void DG::buildFluxScalingFactors(
             admM = cell->material->getAdmitance();
             // Computes contiguous element impedance and admittance.
             Face cellFace(cell->getBase(), f);
-            ElementId neighId = map.getNeighFace(cellFace).first->getId();
+            ElementId neighId;
+            if (map.isDomainBoundary(cellFace)) {
+                neighId = cellFace.first->getId();
+            } else {
+                neighId = map.getNeighFace(cellFace).first->getId();
+            }
             const CellTet<ORDER_N>* neigh = cells.getPtrToCellWithId(neighId);
             impP = neigh->material->getImpedance();
             admP = neigh->material->getAdmitance();
@@ -203,7 +198,9 @@ void DG::init(
     buildMaterials(cells, options);
     buildCMatrices(cells);
     allocateFieldsAndRes();
-    setResidualsToZero();
+
+    resE.setAll((Real) 0.0);
+    resH.setAll((Real) 0.0);
 }
 
 void DG::addFluxesToRHS(
@@ -214,35 +211,6 @@ void DG::addFluxesToRHS(
     computeJumps(e1,e2, localTime,minDT);
     addFluxesToRHSElectric(e1,e2);
     addFluxesToRHSMagnetic(e1,e2);
-}
-
-void DG::buildCMatrices(const CellGroup& cells) {
-    UInt e;
-#ifdef SOLVER_DEDUPLICATE_OPERATORS
-    for (e = 0; e < nK; e++) {
-        ElementId id = cells.getIdOfRelPos(e);
-        const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
-        StaMatrix<Real,np,np> C[3];
-        cell->getCMatrices(C);
-        for (UInt i = 0; i < 3; i++) {
-            CList.insert(C[i]);
-        }
-    }
-#	else
-    CList = new StaMatrix<Real,np,np>[3*nK];
-#pragma omp parallel for private(e)
-    for (e = 0; e < nK; e++) {
-        UInt id = cells.getIdOfRelPos(e);
-        const CellTet<ORDER_N>* cell = cells.getPtrToCellWithId(id);
-        StaMatrix<Real,np,np> C[3];
-        cell->getCMatrices(C);
-        for (UInt i = 0; i < 3; i++) {
-            UInt j = 3 * e + i;
-            CList[j] = C[i];
-        }
-    }
-#	endif
-    assignMatrices(cells);
 }
 
 void DG::computeCurlsInRHS(
@@ -319,11 +287,6 @@ void DG::allocateFieldsAndRes() {
     H.setSize(dof/3);
     resE.setSize(dof/3);
     resH.setSize(dof/3);
-}
-
-void DG::setResidualsToZero() {
-    resE.setToZero();
-    resH.setToZero();
 }
 
 const FieldR3* DG::getElectric() const {

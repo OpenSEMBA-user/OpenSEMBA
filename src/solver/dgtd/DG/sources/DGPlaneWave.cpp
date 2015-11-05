@@ -41,21 +41,20 @@ DGPlaneWave::DGPlaneWave(
 
 
 DGPlaneWave::~DGPlaneWave() {
-    // TODO Auto-generated destructor stub
 }
 
 void DGPlaneWave::printInfo() const {
     cout << " --- DGPlaneWave Info ---" << endl;
-    cout << "# ETF: " << nETF << endl;
-    cout << "# ESF: " << nESF << endl;
-    cout << "# ETFNB: " << nETFNB << endl;
+    cout << "# ETF: " << ETInc.size() << endl;
+    cout << "# ESF: " << ESInc.size() << endl;
+    cout << "# ETFNB: " << EIncNB.size() << endl;
 }
 
 void DGPlaneWave::computeExcitation(
         const Real intTime, const Real minDT) {
-    computeExcitationField(ETInc, HTInc, kNPosTF, nETF, intTime);
-    computeExcitationField(ESInc, HSInc, kNPosSF, nESF, intTime);
-    computeExcitationField(EIncNB, HIncNB, kNPosTFNB, nETFNB, intTime);
+    computeExcitationField(ETInc, HTInc, kNPosTF, ETInc.size(), intTime);
+    computeExcitationField(ESInc, HSInc, kNPosSF, ESInc.size(), intTime);
+    computeExcitationField(EIncNB, HIncNB, kNPosTFNB, EIncNB.size(), intTime);
 }
 
 void DGPlaneWave::computeExcitationField(
@@ -102,8 +101,8 @@ void DGPlaneWave::initWaveNumberPosition(
     // Total field.
     vector<pair<UInt, UInt> > total;
     total = getTotalFieldElemFaces(bc, map, cells);
-    kNPosTF = new Real[nETF * nfp];
-    for (UInt j = 0; j < nETF; j++) {
+    kNPosTF = new Real[ETInc.size() * nfp];
+    for (UInt j = 0; j < ETInc.size(); j++) {
         ElementId id = cells.getIdOfRelPos(total[j].first);
         UInt f = total[j].second;
         UInt pos = j * nfp;
@@ -123,8 +122,8 @@ void DGPlaneWave::initWaveNumberPosition(
     // Scattered field.
     vector<pair<UInt, UInt> > scatt;
     scatt = getScattFieldElemFaces(bc, map, cells);
-    kNPosSF = new Real[nESF * nfp];
-    for (UInt j = 0; j < nESF; j++) {
+    kNPosSF = new Real[ESInc.size() * nfp];
+    for (UInt j = 0; j < ESInc.size(); j++) {
         ElementId id = cells.getIdOfRelPos(scatt[j].first);
         UInt f = scatt[j].second;
         UInt pos = j * nfp;
@@ -145,8 +144,8 @@ void DGPlaneWave::initWaveNumberPosition(
     // Total field not backed.
     vector<pair<UInt, UInt> > totalNotBacked;
     totalNotBacked = getTotalNotBackedFieldElemFaces(bc, map, cells);
-    kNPosTFNB = new Real[nETFNB * nfp];
-    for (UInt j = 0; j < nETFNB; j++) {
+    kNPosTFNB = new Real[EIncNB.size() * nfp];
+    for (UInt j = 0; j < EIncNB.size(); j++) {
         ElementId id = cells.getIdOfRelPos(totalNotBacked[j].first);
         UInt f = totalNotBacked[j].second;
         UInt pos = j * nfp;
@@ -167,13 +166,13 @@ void DGPlaneWave::initWaveNumberPosition(
     // Syncs minimum.
     krmin = comm->reduceToGlobalMinimum(krmin);
     // Adds krmin to kNPosTSF and kNPosTFNB.
-    for (UInt j = 0; j < nETF * nfp; j++) {
+    for (UInt j = 0; j < ETInc.size() * nfp; j++) {
         kNPosTF[j] -= krmin;
     }
-    for (UInt j = 0; j < nESF * nfp; j++) {
+    for (UInt j = 0; j < ESInc.size() * nfp; j++) {
         kNPosSF[j] -= krmin;
     }
-    for (UInt j = 0; j < nETFNB * nfp; j++) {
+    for (UInt j = 0; j < EIncNB.size() * nfp; j++) {
         kNPosTFNB[j] -= krmin;
     }
 }

@@ -28,24 +28,18 @@
 #include "DGSource.h"
 
 DGSource::DGSource() {
-    nETF = 0;
-    ETFe = NULL;
     dExT = NULL;
     dEyT = NULL;
     dEzT = NULL;
     dHxT = NULL;
     dHyT = NULL;
     dHzT = NULL;
-    nESF = 0;
-    ESFe = NULL;
     dExS = NULL;
     dEyS = NULL;
     dEzS = NULL;
     dHxS = NULL;
     dHyS = NULL;
     dHzS = NULL;
-    nETFNB = 0;
-    ETFNBe = NULL;
     dExTNB = NULL;
     dEyTNB = NULL;
     dEzTNB = NULL;
@@ -69,15 +63,16 @@ void DGSource::initSource(
     total = getTotalFieldElemFaces(bc, map, cells);
     scatt = getScattFieldElemFaces(bc, map, cells);
     totalNotBacked = getTotalNotBackedFieldElemFaces(bc, map, cells);
-    nETF = total.size();
-    ETInc.set(nETF*nfp, 0.0);
-    HTInc.set(nETF*nfp, 0.0);
-    nESF = scatt.size();
-    ESInc.set(nESF*nfp, 0.0);
-    HSInc.set(nESF*nfp, 0.0);
-    nETFNB = totalNotBacked.size();
-    EIncNB.set(nETFNB*nfp, 0.0);
-    HIncNB.set(nETFNB*nfp, 0.0);
+    // Set fields to zero.
+    ETInc.setAll((Real) 0.0);
+    HTInc.setAll((Real) 0.0);
+    ESInc.setAll((Real) 0.0);
+    HSInc.setAll((Real) 0.0);
+    EIncNB.setAll((Real) 0.0);
+    HIncNB.setAll((Real) 0.0);
+    const UInt nETF = total.size();
+    const UInt nESF = scatt.size();
+    const UInt nETFNB = totalNotBacked.size();
     // Allocates and sets jumps pointers.
     // The pointers point to the beginning of the face that they have to
     // update on each iteration.
@@ -133,24 +128,17 @@ void DGSource::initSource(
         dHzTNB[j] = &dH.set(z)[pos];
     }
     // List of elements.
-    ETFe = new UInt[nETF];
+    ETFe.resize(nETF);
     for (UInt i = 0; i < nETF; i++) {
         ETFe[i] = total[i].first;
     }
-    ESFe = new UInt[nESF];
+    ESFe.resize(nESF);
     for (UInt i = 0; i < nESF; i++) {
         ESFe[i] = scatt[i].first;
     }
-    ETFNBe = new UInt[nETFNB];
+    ETFNBe.resize(nETFNB);
     for (UInt i = 0; i < nETFNB; i++) {
         ETFNBe[i] = totalNotBacked[i].first;
-    }
-    //
-    if (nETF == 0 && nESF == 0 && nETFNB == 0) {
-        cerr << endl << "ERROR @ InitSources" << endl;
-        cerr << endl << "In source:" << endl;
-        printInfo();
-        cerr << endl << "No elements were found for excitation." << endl;
     }
 }
 
@@ -159,7 +147,7 @@ void DGSource::addJumps(
         const UInt e2) {
     UInt j, k, pos;
     // Total field jumps.
-    for (j = 0; j < nETF; j++) {
+    for (j = 0; j < ETInc.size(); j++) {
         if (e1 <= ETFe[j] && ETFe[j] < e2) {
             for (k = 0; k < nfp; k++) {
                 pos = j * nfp + k;
@@ -173,7 +161,7 @@ void DGSource::addJumps(
         }
     }
     // Scatt field jumps.
-    for (j = 0; j < nESF; j++) {
+    for (j = 0; j < ESInc.size(); j++) {
         if (e1 <= ESFe[j] && ESFe[j] < e2) {
             for (k = 0; k < nfp; k++) {
                 pos = j * nfp + k;
@@ -187,7 +175,7 @@ void DGSource::addJumps(
         }
     }
     // Computes TFNB excitation jumps.
-    for (j = 0; j < nETFNB; j++) {
+    for (j = 0; j < EIncNB.size(); j++) {
         if (e1 <= ETFNBe[j] && ETFNBe[j] < e2) {
             for (k = 0; k < nfp; k++) {
                 pos = j * nfp + k;
