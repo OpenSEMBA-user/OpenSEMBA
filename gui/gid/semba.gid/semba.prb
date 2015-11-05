@@ -130,7 +130,7 @@ HELP: 0.0 for centered, 1.0 for full upwinding.
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(ugrMesher,zMesher,OpenFOAM,None)
+QUESTION: Mesher#CB#(ugrMesher,zMesher,None)
 VALUE: ugrMesher
 DEPENDENCIES: (OpenFOAM,     HIDE,Mode,Structured,    HIDE,Forbidden_length,0, RESTORE,Brute_force_volumes,1)
 DEPENDENCIES: (ugrMesher, RESTORE,Mode,Structured, RESTORE,Forbidden_length,0, RESTORE,Brute_force_volumes,1)
