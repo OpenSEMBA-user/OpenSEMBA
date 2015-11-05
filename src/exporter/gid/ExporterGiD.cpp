@@ -57,9 +57,8 @@ void ExporterGiD::initDefault(
         openPostResultFile(fn + ".post.res");
         break;
     default:
-        cerr << endl << "ERROR @ GiDOutput::openFiles() " << endl;
+        throw Error("Invalid GiD exporting mode.");
     }
-    writeGaussPoints();
     writeMesh(smb);
 }
 
@@ -340,39 +339,13 @@ void ExporterGiD::openPostResultFile(
     delete [] auxChar;
 }
 
-void
-ExporterGiD::flushPostFile() const {
+void ExporterGiD::flushPostFile() const {
     if (meshFile_ != 0) {
         GiD_fFlushPostFile(meshFile_);
     }
     if (resultFile_ != 0) {
         GiD_fFlushPostFile(resultFile_);
     }
-}
-
-
-void
-ExporterGiD::writeGaussPoints() const {
-    //    {
-    //        const char* name = "gp_tri";
-    //        static const SimplexTri<ORDER_N> tri;
-    //        GiD_BeginGaussPoint((char*) name, GiD_Triangle, NULL,tri.np,0,0);
-    //        for (UInt i = 0; i < tri.np; i++) {
-    //            CVecR3 pos = tri.coordinate(i);
-    //            GiD_WriteGaussPoint2D(pos(1), pos(2));
-    //        }
-    //        GiD_EndGaussPoint();
-    //    }
-    //    {
-    //        const char* name = "gp_tet";
-    //        static const SimplexTet<ORDER_N> tet;
-    //        GiD_BeginGaussPoint((char*) name, GiD_Tetrahedra, NULL,tet.np,0,0);
-    //        for (UInt i = 0; i < tet.np; i++) {
-    //            CartesianVector<Real,4> pos = tet.coordinate(i);
-    //            GiD_WriteGaussPoint3D(pos(1), pos(2), pos(3));
-    //        }
-    //        GiD_EndGaussPoint();
-    //    }
 }
 
 GiD_ResultType ExporterGiD::getGiDResultType(OutRqBase::Type type) const {

@@ -39,11 +39,6 @@ public:
             const SmbData* smb,
             const string& fn,
             GiD_PostMode mode = GiD_PostAscii);
-//    ExporterGiD(
-//            const MeshUnstructured* mesh,
-//            const GroupPhysicalModels<>* mat,
-//            const string& fn,
-//            GiD_PostMode mode = GiD_PostAscii);
     virtual ~ExporterGiD();
 protected:
     void beginMesh(
@@ -78,7 +73,6 @@ private:
             const Int nV);
     static string makeValid(string name);
     void beginCoordinates() const;
-    void writeGaussPoints() const;
     void writeCoordinates(CoordR3Group& pos);
     void endCoordinates() const;
     void beginElements() const;

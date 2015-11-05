@@ -36,7 +36,9 @@ SolverDGTD::SolverDGTD(SmbData* smb) {
     integrator_->setSolver(dg_);
 
     // Exporter initialization.
-    out_ = new ExporterGiD(smb);
+    cout << " - Initializing exporter... " << flush;
+    out_ = new ExporterGiD(smb, smb->getFolder() + smb->getProjectName());
+    cout << "[OK]" << endl;
 }
 
 SolverDGTD::~SolverDGTD() {
