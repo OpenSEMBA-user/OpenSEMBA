@@ -50,6 +50,20 @@ QUESTION: MagnCond
 VALUE: 0.0
 END MATERIAL
 
+MATERIAL: Vacuum
+QUESTION: TypeId
+VALUE: Classic
+STATE: HIDDEN
+QUESTION: Permittivity
+VALUE: 1.0
+QUESTION: Permeability
+VALUE: 1.0
+QUESTION: ElecCond
+VALUE: 0.0
+QUESTION: MagnCond
+VALUE: 0.0
+END MATERIAL
+
 MATERIAL: Dispersive_Material
 QUESTION: TypeId
 VALUE: Dispersive

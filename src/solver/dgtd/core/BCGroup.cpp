@@ -55,7 +55,7 @@ void BCGroup::buildEMSourceBC(
         const EMSourceGroup& em,
         const CellGroup& cells) {
     for (UInt i = 0; i < em.size(); i++) {
-        // If it has been defined using a layer the info is transferred to
+        // If emSource it has been defined using a layer it is transferred to
         // the border of elems within.
         vector<Face> border;
         if (em(i)->elems().size() == 1) {
