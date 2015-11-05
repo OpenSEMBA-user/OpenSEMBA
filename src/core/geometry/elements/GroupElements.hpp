@@ -141,16 +141,14 @@ vector<ElementId> GroupElements<E>::getIdsWithoutMaterialId(
 }
 
 template<typename E>
-vector<ElementId> GroupElements<E>::getIdsInsideBound(
+GroupElements<const ElemR> GroupElements<E>::getInsideBound(
         const BoxR3& bound) const {
-
-    GroupElements<ElemR> elems = this->template getGroupOf<ElemR>();
-    vector<ElementId> res;
-    res.reserve(elems.size());
-    for (UInt i = 0; i < elems.size(); i++) {
-        BoxR3 localBound = elems(i)->getBound();
+    GroupElements<const ElemR> res;
+    res.reserve(this->size());
+    for (UInt i = 0; i < this->size(); i++) {
+        BoxR3 localBound = this->get(i)->getBound();
         if (localBound <= bound) {
-            res.push_back(elems(i)->getId());
+            res.add(this->get(i));
         }
     }
     return res;

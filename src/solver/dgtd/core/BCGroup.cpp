@@ -54,14 +54,28 @@ void BCGroup::buildEMSourceBC(
         const MeshVolume& mesh,
         const EMSourceGroup& em,
         const CellGroup& cells) {
-    vector<Face> border;
     for (UInt i = 0; i < em.size(); i++) {
-        const EMSourceBase* source = em(i);
-        border = mesh.getInternalBorder(source->elems());
+        // If it has been defined using a layer the info is transferred to
+        // the border of elems within.
+        vector<Face> border;
+        if (em(i)->elems().size() == 1) {
+            const ElemR* elem = em(i)->elems()(0)->castTo<ElemR>();
+            if (!elem->is<HexR8>() || elem->getMatId() != MatId(0)) {
+                throw Error("Invalid definition of Planewave.");
+            }
+            BoxR3 box = elem->getBound();
+            GroupElements<const ElemR> elems = mesh.elems().getInsideBound(box);
+            elems.removeMatId(MatId(0));
+            border = mesh.getInternalBorder(elems.getOf<VolR>());
+        } else {
+            border = mesh.getInternalBorder(em(i)->elems());
+        }
+
+        // Builds boundary conditions.
         for (UInt j = 0; j < border.size(); j++) {
             const CellTet<ORDER_N>* auxCell = cells.getPtrToCell(border[j].first);
             UInt face = border[j].second;
-            EMSourceBC auxBC(auxCell, face, source);
+            EMSourceBC auxBC(auxCell, face, em(i));
             embc.push_back(auxBC);
         }
     }

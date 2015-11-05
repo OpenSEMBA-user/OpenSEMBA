@@ -117,7 +117,7 @@ public:
 
     vector<ElementId> getIdsWithMaterialId   (const MatId matId) const;
     vector<ElementId> getIdsWithoutMaterialId(const MatId matId) const;
-    vector<ElementId> getIdsInsideBound(const BoxR3& bound) const;
+    GroupElements<const ElemR> getInsideBound(const BoxR3& bound) const;
 
     vector<pair<const E*,UInt>> getElementsWithVertex(const CoordinateId) const;
     BoxR3 getBound() const;
