@@ -249,6 +249,7 @@ vector<pair<UInt, UInt>> DGSource::getScattFieldElemFaces(
 }
 
 vector<pair<UInt, UInt>> DGSource::getTotalNotBackedFieldElemFaces(
+
         const BCGroup& bc,
         const Connectivities& map,
         const CellGroup& cells) const {

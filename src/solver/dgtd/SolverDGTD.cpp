@@ -42,6 +42,8 @@ SolverDGTD::SolverDGTD(SmbData* smb) {
 SolverDGTD::~SolverDGTD() {
     delete out_;
     delete dg_;
+    delete integrator_;
+    delete comm_;
 }
 
 bool SolverDGTD::run() {
