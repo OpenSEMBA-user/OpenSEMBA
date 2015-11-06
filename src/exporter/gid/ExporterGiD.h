@@ -26,7 +26,7 @@
 #define EXPORTER_GID_EXPORTERGID_H_
 
 #include "exporter/Exporter.h"
-#include "gidpost.h"
+#include "gidpost/gidpost.h"
 
 using namespace std;
 

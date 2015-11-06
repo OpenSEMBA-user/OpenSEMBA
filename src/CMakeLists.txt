@@ -73,7 +73,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
-add_definitions(-DAPP_VERSION="0.9.3")
+add_definitions(-DAPP_VERSION="0.10")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}
                     ${CMAKE_CURRENT_LIST_DIR}/core/
