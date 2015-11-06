@@ -44,6 +44,11 @@ GraphElement<ELEM,BOUND>::GraphElement(const GraphElement& rhs) {
 }
 
 template<class ELEM, class BOUND>
+GraphElement<ELEM,BOUND>* GraphElement<ELEM,BOUND>::clone() const {
+    return new GraphElement(*this);
+}
+
+template<class ELEM, class BOUND>
 vector<const typename GraphElement<ELEM,BOUND>::GraphBound*>
     GraphElement<ELEM,BOUND>::getBounds() const {
     return vector<const GraphBound*>(bounds_.begin(), bounds_.end());

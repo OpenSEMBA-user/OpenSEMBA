@@ -33,6 +33,12 @@ GraphVertices<ELEM,BOUND>::GraphVertices() {
 }
 
 template<class ELEM, class BOUND>
+GraphVertices<ELEM,BOUND>::GraphVertices(const GraphVertices& rhs)
+:   GraphBase<ELEM,BOUND>(rhs) {
+
+}
+
+template<class ELEM, class BOUND>
 GraphVertices<ELEM,BOUND>::~GraphVertices() {
 
 }
@@ -68,6 +74,16 @@ GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
     for (UInt i = 0; i < this->bounds_.size(); i++) {
         this->bounds_[i]->constructNeighbors();
     }
+    return *this;
+}
+
+template<class ELEM, class BOUND>
+GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::operator=(
+        const GraphVertices& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    GraphBase<ELEM,BOUND>::operator=(rhs);
     return *this;
 }
 

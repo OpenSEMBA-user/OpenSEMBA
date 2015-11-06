@@ -46,6 +46,8 @@ public:
     GraphElement(const Elem* elem, const UInt& numBounds = 0);
     GraphElement(const GraphElement&);
 
+    GraphElement* clone() const;
+
     bool visited() const { return vis_;  }
     void markVisited  () { vis_ =  true; }
     void unmarkVisited() { vis_ = false; }

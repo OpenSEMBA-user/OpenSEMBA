@@ -47,9 +47,12 @@ public:
     typedef GraphElement<Bound,Elem> GraphBound;
 
     GraphBase();
+    GraphBase(const GraphBase&);
     virtual ~GraphBase();
 
     virtual GraphBase& init(const Group<const Elem>& elems) = 0;
+
+    GraphBase& operator=(const GraphBase&);
 
     UInt numElems () const { return elems_.size();  }
     UInt numBounds() const { return bounds_.size(); }
@@ -67,6 +70,9 @@ public:
 protected:
     vector<GraphElem* > elems_;
     vector<GraphBound*> bounds_;
+
+private:
+    void cloneInfo(const GraphBase&);
 };
 
 #include "../graphs/GraphBase.hpp"

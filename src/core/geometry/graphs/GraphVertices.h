@@ -39,10 +39,13 @@ public:
     typedef GraphElement<Bound,Elem> GraphBound;
 
     GraphVertices();
+    GraphVertices(const GraphVertices&);
     GraphVertices(const Group<const Elem>&  elems);
     virtual ~GraphVertices();
 
     GraphVertices<Elem,Bound>& init(const Group<const Elem>&  elems);
+
+    GraphVertices& operator=(const GraphVertices&);
 
     void splitBound(UInt i);
 };

@@ -33,13 +33,27 @@ GraphBase<ELEM,BOUND>::GraphBase() {
 }
 
 template<class ELEM, class BOUND>
+GraphBase<ELEM,BOUND>::GraphBase(const GraphBase& rhs) {
+    cloneInfo(rhs);
+}
+
+template<class ELEM, class BOUND>
 GraphBase<ELEM,BOUND>::~GraphBase() {
-    for (UInt i = 0; i < bounds_.size(); i++) {
-        delete bounds_[i];
-    }
     for (UInt i = 0; i < elems_.size(); i++) {
         delete elems_[i];
     }
+    for (UInt i = 0; i < bounds_.size(); i++) {
+        delete bounds_[i];
+    }
+}
+
+template<class ELEM, class BOUND>
+GraphBase<ELEM,BOUND>& GraphBase<ELEM,BOUND>::operator=(const GraphBase& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    cloneInfo(rhs);
+    return *this;
 }
 
 template<class ELEM, class BOUND>
@@ -92,4 +106,39 @@ vector<vector<const ELEM*>> GraphBase<ELEM,BOUND>::getConnectedComponents() {
     }
     resetVisited();
     return res;
+}
+
+template<class ELEM, class BOUND>
+void GraphBase<ELEM,BOUND>::cloneInfo(const GraphBase& rhs) {
+    map<GraphElem* , GraphElem* > mapElems;
+    map<GraphBound*, GraphBound*> mapBounds;
+
+    elems_.resize(rhs.elems_.size());
+    for (UInt i = 0; i < rhs.elems_.size(); i++) {
+        elems_[i] = rhs.elems_[i]->clone();
+        mapElems[rhs.elems_[i]] = elems_[i];
+    }
+    bounds_.resize(rhs.bounds_.size());
+    for (UInt i = 0; i < rhs.bounds_.size(); i++) {
+        bounds_[i] = rhs.bounds_[i]->clone();
+        mapBounds[rhs.bounds_[i]] = bounds_[i];
+    }
+
+    for (UInt i = 0; i < elems_.size(); i++) {
+        for (UInt j = 0; j < elems_[i]->numBounds(); j++) {
+            elems_[i]->setBound(j, mapBounds[elems_[i]->getBound(j)]);
+        }
+    }
+    for (UInt i = 0; i < bounds_.size(); i++) {
+        for (UInt j = 0; j < bounds_[i]->numBounds(); j++) {
+            bounds_[i]->setBound(j, mapElems[bounds_[i]->getBound(j)]);
+        }
+    }
+
+    for (UInt i = 0; i < this->elems_.size(); i++) {
+        this->elems_[i]->constructNeighbors();
+    }
+    for (UInt i = 0; i < this->bounds_.size(); i++) {
+        this->bounds_[i]->constructNeighbors();
+    }
 }
