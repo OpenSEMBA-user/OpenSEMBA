@@ -25,14 +25,10 @@
  *      Author: luis
  */
 
-#ifndef MATHUTILS_H_
-	#include "MathUtils.h"
-#endif
-
+#include "MathUtils.h"
 
 template<class T, Int D>
-inline CartesianVector<complex<T>,D>
-MathUtils::convertToComplex(
+inline CartesianVector<complex<T>,D> MathUtils::convertToComplex(
  const CartesianVector<T,D>& rhs) {
 	CartesianVector<complex<T>,D> res;
 	for (Int d = 0; d < D; d++) {
@@ -42,8 +38,7 @@ MathUtils::convertToComplex(
 }
 
 template<class T, Int D>
-inline void
-MathUtils::convertToComplex(
+inline void MathUtils::convertToComplex(
  CartesianVector<complex<T>,D> *res,
  const CartesianVector<T,D> *rhs,
  const UInt vS) {
@@ -54,8 +49,7 @@ MathUtils::convertToComplex(
 
 
 template<class T, Int D>
-inline vector<CartesianVector<complex<T>,D> >
-MathUtils::convertToComplex(
+inline vector<CartesianVector<complex<T>,D> > MathUtils::convertToComplex(
  const vector<CartesianVector<T,D> >& rhs) {
 	const UInt vS = rhs.size();
 	vector<CartesianVector<complex<T>,D> > res(vS);
@@ -66,8 +60,7 @@ MathUtils::convertToComplex(
 }
 
 template<class T>
-vector<Real>
-MathUtils::logspace(
+vector<Real> MathUtils::logspace(
  const pair<Real,Real>& rangeExponents,
  const T nPoints) {
 	vector<Real> res;
@@ -88,8 +81,7 @@ MathUtils::logspace(
 }
 
 template<class T>
-vector<T>
-MathUtils::linspace(
+vector<T> MathUtils::linspace(
  const pair<T,T>& range,
  const UInt nPoints) {
 	vector<T> res;
@@ -106,8 +98,7 @@ MathUtils::linspace(
 }
 
 template<class T>
-T
-MathUtils::meanDifference(
+T MathUtils::meanDifference(
  const vector<T>& vec) {
 	if (vec.size() == 1) {
 		return (T) 0.0;
@@ -121,15 +112,13 @@ MathUtils::meanDifference(
 }
 
 template<class T>
-T
-MathUtils::mean(const vector<T>& vec) {
+T MathUtils::mean(const vector<T>& vec) {
 	const UInt vS = vec.size();
 	return sum(vec) / vS;
 }
 
 template<class T>
-T
-MathUtils::sum(const vector<T>& vec) {
+T MathUtils::sum(const vector<T>& vec) {
 	const UInt vS = vec.size();
 	T res = 0.0;
 	for (UInt i = 0; i < vS; i++) {
@@ -139,8 +128,7 @@ MathUtils::sum(const vector<T>& vec) {
 }
 
 template<class T>
-complex<T>
-MathUtils::getDFT(
+complex<T> MathUtils::getDFT(
  const Real frequency,
  const vector<T>& time,
  const vector<T>& signal) {
@@ -155,8 +143,7 @@ MathUtils::getDFT(
 }
 
 template<class T, Int D>
-CartesianVector<complex<T>,D>
-MathUtils::getDFT(
+CartesianVector<complex<T>,D> MathUtils::getDFT(
  const Real frequency,
  const vector<T>& time,
  const vector<CartesianVector<T,D> >& signal) {
@@ -170,4 +157,12 @@ MathUtils::getDFT(
 		res(d) = getDFT(frequency, time, auxSignal);
 	}
 	return res;
+}
+
+template<class T>
+bool complexLT(complex<T> a, complex<T> b) {
+    if (real(a) == real(b)) {
+        return imag(a) < imag(b);
+    }
+    return real(a) < real(b);
 }

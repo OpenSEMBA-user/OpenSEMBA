@@ -59,6 +59,8 @@ public:
    StaMatrix<T,COLS,ROWS>& invert();
    StaMatrix<T,COLS,ROWS> transpose();
 
+   array<complex<Real>,ROWS> getEigenvalues() const;
+
    void copy(vector<vector<T> > values);
    bool operator==(const StaMatrix<T,ROWS,COLS>& rhs) const;
    bool operator<(const StaMatrix<T,ROWS,COLS>& rhs) const;
@@ -79,11 +81,13 @@ DynMatrix<T> operator*(
         const StaMatrix<T,ROWS,COLS>& lhs,
         const DynMatrix<T>& rhs);
 
-#include "StaMatrix.hpp"
-
 typedef StaMatrix<Real,2,2> MatR22;
 typedef StaMatrix<Real,3,3> MatR33;
 typedef StaMatrix<Real,4,3> MatR43;
 typedef StaMatrix<Real,4,4> MatR44;
+typedef StaMatrix<complex<Real>,2,2> MatC22;
+typedef StaMatrix<complex<Real>,3,3> MatC33;
+
+#include "StaMatrix.hpp"
 
 #endif

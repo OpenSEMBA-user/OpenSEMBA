@@ -27,8 +27,6 @@
 #ifndef MATHMATRIX_H_
 #define MATHMATRIX_H_
 
-#define MATRICES_ASCENDING          0
-#define MATRICES_DESCENDING         1
 #ifndef MATRICES_MODES
 #	define MATRICES_MODES
 #	define MATRICES_COL_MAJOR	   0
@@ -44,13 +42,12 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <array>
+#include <omp.h>
 using namespace std;
 
 #include "base/error/Error.h"
 #include "CartesianVector.h"
-#ifdef USE_OPENMP
-	#include <omp.h>
-#endif
 
 template<class T>
 class MathMatrix {
@@ -61,54 +58,62 @@ public:
         virtual ~ErrorSize() throw() {}
     };
 
-	MathMatrix();
-	virtual ~MathMatrix();
-	virtual UInt nCols() const = 0;
-	virtual UInt nRows() const = 0;
-	virtual T operator()(const UInt row, const UInt col) const = 0;
-	virtual T& operator()(const UInt row, const UInt col) = 0;
-	virtual T& val(const UInt ind) = 0;
-	virtual T val(const UInt row, const UInt col) const = 0;
-	virtual T& val(const UInt row, const UInt col) = 0;
-	virtual T val(const UInt ind) const = 0;
-	virtual void copy(vector<vector<T> > values) = 0;
-	void zeros();
-	void eye();
-	void cpLowerTri2UpperTri();
-	void convertToArray(const Int mode, Real *res) const;
-	vector<CartesianVector<T,3> > convertToCartesianVector() const;
-	T getDeterminant3x3() const;
-	T getDeterminant4x4() const;
-	T maxVal() const;
-	T maxValInCol(UInt col) const;
-	void sortRows();
-	void sortRows(const UInt iCol, const UInt lCol);
-	UInt findFirstOcurrenceInColumns(
-	  const T* vec,
-	  const UInt col,
-	  const UInt vecSize) const;
-	bool isSquare() const;
-	bool isSymmetric() const;
-	vector<T> cpRowToVector(const UInt row) const;
-	virtual void printInfo() const = 0;
+    MathMatrix();
+    virtual ~MathMatrix();
+    virtual UInt nCols() const = 0;
+    virtual UInt nRows() const = 0;
+    virtual T operator()(const UInt row, const UInt col) const = 0;
+    virtual T& operator()(const UInt row, const UInt col) = 0;
+    virtual T& val(const UInt ind) = 0;
+    virtual T val(const UInt row, const UInt col) const = 0;
+    virtual T& val(const UInt row, const UInt col) = 0;
+    virtual T val(const UInt ind) const = 0;
+    virtual void copy(vector<vector<T> > values) = 0;
+
+    void zeros();
+    void eye();
+    void cpLowerTri2UpperTri();
+    void convertToArray(const Int mode, Real *res) const;
+
+    vector<CartesianVector<T,3> > convertToCartesianVector() const;
+    vector<T> cpRowToVector(const UInt row) const;
+
+    T getDeterminant3x3() const;
+    T getDeterminant4x4() const;
+    T maxVal() const;
+    T maxValInCol(UInt col) const;
+
+    void sortRows();
+    void sortRows(const UInt iCol, const UInt lCol);
+
+    UInt findFirstOcurrenceInColumns(
+            const T* vec,
+            const UInt col,
+            const UInt vecSize) const;
+
+    bool isSquare() const;
+    bool isSymmetric() const;
+
+
+    virtual void printInfo() const = 0;
 protected:
-	void internalInvert();
-	bool isEQ(const T* x1, const T* x2, const UInt vS) const;
-	bool isGEQ(const T* x1, const T* x2, const UInt vS) const;
-	bool isLEQ(const T* x1, const T* x2, const UInt vS) const;
+    void invert_();
+    bool isEQ_(const T* x1, const T* x2, const UInt vS) const;
+    bool isGEQ_(const T* x1, const T* x2, const UInt vS) const;
+    bool isLEQ_(const T* x1, const T* x2, const UInt vS) const;
 private:
-	void QSRows(Int p, Int r,
-	  const UInt iCol, const UInt lCol);
-	Int partitionRows(Int p, Int r,
-	  const UInt iCol, const UInt lCol);
-	UInt binarySearch(
-	  const T* key,
-	  const UInt col,
-	  const UInt vecSize,
-	  UInt imin,
-	  UInt imax) const;
-	void factorizeLU(Int pivot[]);
-	void invertFactorized(const Int pivot[]);
+    void QSRows_(Int p, Int r,
+            const UInt iCol, const UInt lCol);
+    Int partitionRows_(Int p, Int r,
+            const UInt iCol, const UInt lCol);
+    UInt binarySearch_(
+            const T* key,
+            const UInt col,
+            const UInt vecSize,
+            UInt imin,
+            UInt imax) const;
+    void factorizeLU(Int pivot[]);
+    void invertFactorized(const Int pivot[]);
 };
 
 #include "MathMatrix.hpp"
