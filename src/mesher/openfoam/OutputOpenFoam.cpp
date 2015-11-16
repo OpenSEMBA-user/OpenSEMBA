@@ -271,8 +271,7 @@ OutputOpenFoam::writeBlockMeshDict() const {
     // Prepares data.
     const Grid3* grid = smb_->grid;
     if (grid->hasZeroSize()) {
-        cerr << endl << "ERROR @ writeBlockMeshDict: "
-                << "Rectilinear grid has zero size." << endl;
+        throw Error("Rectilinear grid has zero size.");
     }
     CVecR3 min(grid->getFullDomainBoundingBox().getMin());
     CVecR3 max(grid->getFullDomainBoundingBox().getMax());

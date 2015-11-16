@@ -184,8 +184,7 @@ void OptionsMesher::set(const Arguments& args) {
             }
         }
         catch (Arguments::ErrorArgumentNotExists &e) {
-            cerr << endl << "ERROR @ Arguments: "
-                    << "gridStep must be followed by 3 numbers." << endl;
+            throw Error("gridStep must be followed by 3 numbers.");
         }
         gridStep_ = gridStep;
     }

@@ -632,17 +632,13 @@ void ParserGiD::readOutRqInstances(GroupOutRqs<>* res) {
                     break;
                 }
                 default:
-                    cerr << endl << "ERROR @ GiDParser: "
-                    << "Unrecognized GiD Output request type:"
-                    << type << endl;
-                    break;
+                    throw Error("Unrecognized GiD Output request type:" + type);
                 }
             } // End of loop running over the elements.
         } else if (label.compare("End of Output request instance")==0) {
             finished = true;
         } else {
-            cerr << endl << "ERROR @ GiDParser::readOutputRequestsInstance(): "
-                    << "Label not identified: " << label << endl;
+            throw Error("Label not identified: " + label);
         } // End of condition comparing labels.
     }
 }
@@ -802,13 +798,11 @@ GroupElements<ElemR> ParserGiD::readElements(
     }
     // Shows error message if the elements label was not found.
     if (!found) {
-        cerr << endl << "ERROR @ GiDParser::readElements(): "
-                << "\"Elements\" label was not found." << endl;
+        throw Error("\"Elements\" label was not found.");
     }
     // This code is reached only in case of "End of elements" is not found.
     if (!finished) {
-        cerr << endl << "ERROR @ GiDParser::readElements()"
-                << "\"End of elements\" label was not found." << endl;
+        throw Error("\"End of elements\" label was not found.");
     }
     //
     return GroupElements<ElemR>(elems);
@@ -896,8 +890,7 @@ void ParserGiD::readLin2Elements(const GroupCoordinates<CoordR3>& v,
     }
 }
 
-PMVolumeDispersive*
-ParserGiD::readDispersiveMatFile(
+PMVolumeDispersive* ParserGiD::readDispersiveMatFile(
         const MatId id,
         const string& name,
         const ProjectFile& file) const {
@@ -921,8 +914,7 @@ ParserGiD::readDispersiveMatFile(
             sig, sigM, poleResidues);
 }
 
-PMSurfaceMultilayer*
-ParserGiD::readMultilayerSurf(
+PMSurfaceMultilayer* ParserGiD::readMultilayerSurf(
         const MatId id,
         const string& name,
         const string& layersStr) const {
@@ -948,8 +940,7 @@ ParserGiD::readMultilayerSurf(
     return new PMSurfaceMultilayer(id, name, thick, rEps, rMu, eCond, mCond);
 }
 
-PMSurfaceSIBC*
-ParserGiD::readIsotropicSurfMatFile(
+PMSurfaceSIBC* ParserGiD::readIsotropicSurfMatFile(
         const MatId id,
         const string& fileName,
         const ProjectFile& file) const {
@@ -964,15 +955,12 @@ ParserGiD::readIsotropicSurfMatFile(
     // Opens file, read only mode.
     matFile.open(fileName.c_str(), ifstream::in);
     if (matFile.fail()) {
-        cerr << endl << "ERROR @ readSurfaceMaterialFile(): "
-                << "Problem opening file: " << fileName << endl;
+        throw Error("Problem opening file: " + fileName);
     }
     // Parses first line, containing material name.
     getline(matFile, line);
     if (line.find("#PANEL#") == string::npos) {
-        cerr << endl << "ERROR @ Parser::readSurfaceMaterialFile(...)"
-                << "File: " << fileName << "   "
-                << "#PANEL# label has not been found in first line" << endl;
+        throw Error("#PANEL# label has not been found in first line");
     }
     name = line.substr(8, line.length()-9);
     getline(matFile, line);
@@ -1016,8 +1004,7 @@ ParserGiD::readIsotropicSurfMatFile(
     return new PMSurfaceSIBC (id, name, Zinfinite, Zstatic, pole, Z);
 }
 
-void
-ParserGiD::getNextLabelAndValue(string& label, string& value) {
+void ParserGiD::getNextLabelAndValue(string& label, string& value) {
     string line;
     getline(f_in, line);
     line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
@@ -1028,8 +1015,7 @@ ParserGiD::getNextLabelAndValue(string& label, string& value) {
     value = trim(value);
 }
 
-Grid3*
-ParserGiD::readCartesianGrid() {
+Grid3* ParserGiD::readCartesianGrid() {
     string label, line, value;
     bool finished = false;
     bool gridLabelFound = false;
@@ -1144,9 +1130,7 @@ Dipole* ParserGiD::readDipole() {
     //            finished = true;
     //    }
     //    if (!finished) {
-    //        cerr << endl << "ERROR @ ParserGiD::readDipoleEMSource: "
-    //                << "End of excitation type label not found. "
-    //                << endl;
+    //        throw Error("End of excitation type label not found.");
     //    }
     //    //
     //    return new Dipole(mag, elems, length, orientation, position);
@@ -1543,12 +1527,10 @@ string ParserGiD::readVersion() {
     }
     // Shows error messages.
     if (!formatFound) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "EoF was reached but format label was not found." << endl;
+        throw Error("EoF was reached but format label was not found.");
     }
     if (!versionFound) {
-        cerr << endl << "ERROR @ ParserGiD: "
-                << "EoF was reached but version label was not found." << endl;
+        throw Error("EoF was reached but version label was not found.");
     }
     return version;
 }
@@ -1570,7 +1552,7 @@ ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) {
     } else if (str.compare("farField")==0) {
         return ParserGiD::farField;
     } else {
-        cerr << endl << "ERROR @ Parser: Unrecognized label." << endl;
+        throw Error("Unrecognized label " + str);
         return ParserGiD::outRqOnPoint;
     }
 }

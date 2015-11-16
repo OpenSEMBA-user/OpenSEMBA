@@ -88,8 +88,8 @@ endif
 SRCS = \
     gidpost.c     gidpostHash.c  gidpostInt.c    recycle.c \
     hashtab.c lookupa.c \
-    zlibint2.c  zlibint1.c
-#    gidpostHDF5.c  hdf5c.c 
+    zlibint2.c  zlibint1.c \
+    gidpostHDF5.c  #hdf5c.c 
 
 OBJS = $(addprefix $(OBJDIR)/,$(SRCS:.c=.o))
 

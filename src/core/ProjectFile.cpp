@@ -204,22 +204,19 @@ void ProjectFile::openAsInput(ifstream& file) const {
         file.open(this->c_str());
     }
     catch(exception &e) {
-        cerr << endl << "ERROR @ ProjectFile: "
-                << "File can't be opened: " << *this << endl;
+        throw Error("File can't be opened: " + *this);
     }
 }
 
 void ProjectFile::exec(const string arguments) const {
     if (!canExecute()) {
-        cerr << endl << "ERROR @ ProjectFile:"
-                << "Can not execute" << endl;
+        throw Error("Can not execute " + *this);
     }
 #ifndef _WIN32
     string cmd = getFilename() + " " + arguments;
     system(cmd.c_str());
 #else
-    cerr << endl << "ERROR @ ProjectFile: "
-            << "Not implemented fo windows." << endl;
+    throw Error("Not implemented fo windows.");
     // TODO Dani: Implementar en windows.
 #endif
 }
