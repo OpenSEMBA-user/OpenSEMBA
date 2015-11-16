@@ -151,8 +151,7 @@ void StaMatrix<T,ROWS,COLS>::printInfo(UInt rows, UInt cols) const {
 }
 
 template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,COLS,ROWS>&
-StaMatrix<T,ROWS,COLS>::invert() {
+StaMatrix<T,COLS,ROWS>& StaMatrix<T,ROWS,COLS>::invert() {
     this->internalInvert();
     return *this;
 }
@@ -246,8 +245,8 @@ bool
 StaMatrix<T,ROWS,COLS>::operator==(
         const StaMatrix<T,ROWS,COLS>& param) const {
     for (UInt i = 0; i < ROWS*COLS; i++) {
-        T diff = abs(_val[i] -param._val[i]);
-        if (diff > numeric_limits<T>::epsilon() * 1e2) {
+        Real diff = abs(_val[i] -param._val[i]);
+        if (diff > numeric_limits<Real>::epsilon() * 1e2) {
             return false;
         }
     }

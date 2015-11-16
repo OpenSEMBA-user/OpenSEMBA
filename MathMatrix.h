@@ -81,7 +81,6 @@ public:
 	T getDeterminant4x4() const;
 	T maxVal() const;
 	T maxValInCol(UInt col) const;
-	virtual void randomize(T min, T max);
 	void sortRows();
 	void sortRows(const UInt iCol, const UInt lCol);
 	UInt findFirstOcurrenceInColumns(

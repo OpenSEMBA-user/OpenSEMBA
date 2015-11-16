@@ -37,7 +37,7 @@ MathMatrix<T>::getDeterminant3x3() const {
 			- val(0,1) * (val(1,0)*val(2,2) - val(1,2)*val(2,0))
             + val(0,2) * (val(1,0)*val(2,1) - val(1,1)*val(2,0));
 }
- 
+
 template <class T>
 T
 MathMatrix<T>::getDeterminant4x4() const {
@@ -68,7 +68,7 @@ MathMatrix<T>::getDeterminant4x4() const {
 		 + val(0,0) * val(1,1) * val(2,2) * val(3,3);
 }
 
- 
+
 template <class T>
 void
 MathMatrix<T>::internalInvert() {
@@ -78,7 +78,7 @@ MathMatrix<T>::internalInvert() {
 	invertFactorized(pivot);
 	delete [] pivot;
 }
- 
+
 template<class T>
 void
 MathMatrix<T>::factorizeLU(Int pivot[]) {
@@ -147,7 +147,7 @@ MathMatrix<T>::invertFactorized(const Int pivot[]) {
 	Int nn = n * n;
 	Int i, j, k;
 	T temp;
-	Real *b = new Real[nn];
+	T *b = new T[nn];
 	// Compute Inverse(U).
 	for (k = 0; k < n; k++) {
 		for (i = 0; i < k; i++) {
@@ -189,10 +189,9 @@ MathMatrix<T>::invertFactorized(const Int pivot[]) {
 	// Frees memory.
 	delete [] b;
 }
- 
+
 template <class T>
-T
-MathMatrix<T>::maxVal() const {
+T MathMatrix<T>::maxVal() const {
 	T res = val(0,0);
 	for (UInt i = 0; i < nRows(); i++) {
 		for (UInt j = 0; j < nCols(); j++) {
@@ -202,10 +201,9 @@ MathMatrix<T>::maxVal() const {
 	}
 	return res;
 }
- 
+
 template <class T>
-T
-MathMatrix<T>::maxValInCol(UInt col) const {
+T MathMatrix<T>::maxValInCol(UInt col) const {
 	T res = val(0,col);
 	for (UInt i = 0; i < nRows(); i++)
 		if (val(i,col) > res)
@@ -214,28 +212,14 @@ MathMatrix<T>::maxValInCol(UInt col) const {
 }
 
 template <class T>
-void
-MathMatrix<T>::randomize(T min, T max) {
-	Real range = (Real) max - (Real) min;
-	for (UInt i = 0; i < nRows(); i++) {
-		for (UInt j = 0; j < nCols(); j++) {
-			Real aux = range * rand() / (RAND_MAX + (Real) 1) + min;
-			val(i,j) = (T) aux;
-		}
-	}
-}
-
-template <class T>
-void
-MathMatrix<T>::sortRows() {
+void MathMatrix<T>::sortRows() {
 	// Orders array a with nr rows and nc columns. Ordering is performed
 	// using column indicated in orCol as reference. In ascending order.
 	sortRows(0, nCols());
 }
- 
+
 template <class T>
-void
-MathMatrix<T>::sortRows(const UInt iCol, const UInt lCol) {
+void MathMatrix<T>::sortRows(const UInt iCol, const UInt lCol) {
 	// Orders array a with nr rows and nc columns. Ordering is performed
 	// using column indicated in orCol as reference. In ascending order.
 	if (nRows() <= 1) {
@@ -245,8 +229,7 @@ MathMatrix<T>::sortRows(const UInt iCol, const UInt lCol) {
 }
 
 template <class T>
-bool
-MathMatrix<T>::isEQ(
+bool MathMatrix<T>::isEQ(
  const T* x1,
  const T* x2,
  const UInt vS) const {
@@ -259,8 +242,7 @@ MathMatrix<T>::isEQ(
 }
 
 template <class T>
-bool
-MathMatrix<T>::isGEQ(
+bool MathMatrix<T>::isGEQ(
  const T* x1,
  const T* x2,
  const UInt vS) const {
@@ -351,7 +333,7 @@ MathMatrix<T>::binarySearch(
 		bool iseq;
 		iseq = isEQ(value, key, vecSize);
 		delete[] value;
-		if (iseq) {			
+		if (iseq) {
 			return imin;
 		} else {
 			return nRows();
@@ -372,7 +354,7 @@ MathMatrix<T>::binarySearch(
 		}
     }
 }
- 
+
 template <class T>
 UInt
 MathMatrix<T>::findFirstOcurrenceInColumns(
@@ -399,7 +381,7 @@ MathMatrix<T>::findFirstOcurrenceInColumns(
 	// Returns result.
 	return row;
 }
- 
+
 template <class T>
 void
 MathMatrix<T>::cpLowerTri2UpperTri() {
@@ -408,7 +390,7 @@ MathMatrix<T>::cpLowerTri2UpperTri() {
 		for (j = i+1; j < nCols(); j++)
 			val(i,j) = val(j,i);
 }
- 
+
 template <class T>
 void
 MathMatrix<T>::zeros() {
@@ -416,7 +398,7 @@ MathMatrix<T>::zeros() {
 		for (UInt j = 0; j < nCols(); j++)
  			val(i,j) = (T) 0;
 }
- 
+
 template <class T>
 void
 MathMatrix<T>::convertToArray(const Int mode, Real *res) const {
@@ -432,7 +414,7 @@ MathMatrix<T>::convertToArray(const Int mode, Real *res) const {
 		return;
 	}
 }
- 
+
 template <class T>
 bool
 MathMatrix<T>::isSquare() const {
@@ -451,7 +433,7 @@ MathMatrix<T>::isSymmetric() const {
 	}
 	return true;
 }
- 
+
 template <class T>
 void
 MathMatrix<T>::eye() {
@@ -461,7 +443,7 @@ MathMatrix<T>::eye() {
 	for (UInt i = 0; i < nRows(); i++)
 		val(i,i) = T(1);
 }
- 
+
 template <class T>
 vector<T>
 MathMatrix<T>::cpRowToVector(const UInt row) const {
