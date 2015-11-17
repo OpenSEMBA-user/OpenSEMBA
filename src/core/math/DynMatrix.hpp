@@ -564,7 +564,7 @@ void DynMatrix<T>::mergeSortedRows(
     while (i < m && j < n) {
         const T *aVal = a.valPtr(i,iCol);
         const T *bVal = b.valPtr(j,iCol);
-        bool leq = this->isLEQ(aVal, bVal, vS);
+        bool leq = this->isLEQ_(aVal, bVal, vS);
         if (leq) {
             for (UInt col = 0; col < _nCols; col++) {
                 val(k,col) = a(i,col);

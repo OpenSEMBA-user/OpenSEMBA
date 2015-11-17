@@ -80,3 +80,9 @@ CVecR3 LocalAxes::convertToGlobal(const CVecR3& local) const {
     CVecR3 global = transformation * local + origin_;
     return global;
 }
+
+void LocalAxes::printInfo() const {
+    cout << " --- Local Axes Info --- " << endl;
+    cout << "Euler angles: " << eulerAngles_ << endl;
+    cout << "Origin:       " << origin_ << endl;
+}

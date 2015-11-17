@@ -76,11 +76,6 @@ public:
     GroupPhysicalModels& operator=(VectorPtr<P>&&);
 
     void printInfo() const;
-
-private:
-    void getDirection(PMVolumePML::Direction direction[3],
-                      const UInt i) const;
-    PMVolumePML::Direction getDirectionFromInt(const UInt i) const;
 };
 
 #include "GroupPhysicalModels.hpp"

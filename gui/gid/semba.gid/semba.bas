@@ -109,7 +109,7 @@ TypeId: *MatProp(TypeId)
 *if(strcmp(MatProp(TypeId),"PMC")==0)
 *endif
 *if(strcmp(MatProp(TypeId),"PML")==0)
-Orientation: *matprop(Orientation)
+Autmatic Orientation: *matprop(Automatic_orientation)
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
 Local Axes: {0.0 0.0 0.0} {0.0 0.0 0.0}
 *else

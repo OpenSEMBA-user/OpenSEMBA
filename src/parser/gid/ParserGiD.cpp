@@ -121,7 +121,7 @@ OptionsSolver* ParserGiD::readOptionsSolver() {
         } // Closes problem data found if.
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
-    throw Error("No options were found.");
+    throw Error("No solver options were found.");
 }
 
 OptionsSolverFDTD* ParserGiD::readOptionsSolverFDTD(
@@ -366,6 +366,7 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
     Real crystalRMu, ferriteREps, ferriteRMu;
     CVecR3 rEpsPrincipalAxes;
     LocalAxes localAxes;
+    bool pmlAutomaticOrientation;
     Real kappa;
     Real radius, R, L, C;
     ProjectFile file;
@@ -387,6 +388,8 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
             eC = atof(value.c_str());
         } else if (label.compare("Magnetic Conductivity")==0) {
             mC = atof(value.c_str());
+        } else if (label.compare("Automatic Orientation")==0) {
+            pmlAutomaticOrientation = strToBool(value);
         } else if (label.compare("Radius")==0) {
             radius = atof(value.c_str());
         } else if (label.compare("Resistance")==0) {
@@ -425,7 +428,11 @@ PhysicalModel* ParserGiD::readPhysicalModel(const MatId id) {
             case PhysicalModel::SMA:
                 return new PMSMA(id, name);
             case PhysicalModel::PML:
-                return new PMVolumePML(id, name);
+                if (pmlAutomaticOrientation) {
+                    return new PMVolumePML(id, name, NULL);
+                } else {
+                    return new PMVolumePML(id, name, new LocalAxes(localAxes));
+                }
             case PhysicalModel::classic:
                 return new PMVolumeClassic(id, name, rEps, rMu, eC, mC);
             case PhysicalModel::elecDispersive:
@@ -1796,4 +1803,3 @@ LocalAxes ParserGiD::strToLocalAxes(const string& str) {
     CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
     return LocalAxes(eulerAngles, origin);
 }
-

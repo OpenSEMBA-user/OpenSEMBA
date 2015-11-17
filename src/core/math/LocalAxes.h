@@ -43,6 +43,7 @@ public:
     MatR33 convertToGlobal(const MatR33& local) const;
     CVecR3 convertToGlobal(const CVecR3& local) const;
 
+    void printInfo() const;
 private:
     CVecR3 eulerAngles_; // Euler angles in radians.
     CVecR3 origin_;
