@@ -134,6 +134,10 @@ void StaMatrix<T,ROWS,COLS>::printInfo() const {
     printInfo(ROWS, COLS);
 }
 
+template<class T, UInt ROWS, UInt COLS>
+inline array<complex<Real>, ROWS> StaMatrix<T,ROWS,COLS>::getEigenvalues() const {
+}
+
 template <class T, UInt ROWS, UInt COLS>
 void StaMatrix<T,ROWS,COLS>::printInfo(UInt rows, UInt cols) const {
     UInt i, j;
@@ -151,9 +155,8 @@ void StaMatrix<T,ROWS,COLS>::printInfo(UInt rows, UInt cols) const {
 }
 
 template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,COLS,ROWS>&
-StaMatrix<T,ROWS,COLS>::invert() {
-    this->internalInvert();
+StaMatrix<T,COLS,ROWS>& StaMatrix<T,ROWS,COLS>::invert() {
+    this->invert_();
     return *this;
 }
 
@@ -246,8 +249,8 @@ bool
 StaMatrix<T,ROWS,COLS>::operator==(
         const StaMatrix<T,ROWS,COLS>& param) const {
     for (UInt i = 0; i < ROWS*COLS; i++) {
-        T diff = abs(_val[i] -param._val[i]);
-        if (diff > numeric_limits<T>::epsilon() * 1e2) {
+        Real diff = abs(_val[i] -param._val[i]);
+        if (diff > numeric_limits<Real>::epsilon() * 1e2) {
             return false;
         }
     }
@@ -280,8 +283,7 @@ StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator=(
 }
 
 template<class T, UInt ROWS, UInt COLS>
-void
-StaMatrix<T,ROWS,COLS>::copy(vector<vector<T> > values) {
+void StaMatrix<T,ROWS,COLS>::copy(vector<vector<T> > values) {
     assert(ROWS == values.size());
     for (UInt i = 0; i < ROWS; i++) {
         assert(values[i].size() == COLS);
