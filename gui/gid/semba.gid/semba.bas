@@ -56,6 +56,8 @@ Use LTS: *GenData(Use_LTS)
 
 Upwinding: *GenData(Upwinding)
 End of cudg3d options:
+*elseif(strcasecmp(GenData(Solver),"none")==0)
+------- NO SOLVER SELECTED ------
 *else
 *WarningBox Unrecognized solver
 *endif
@@ -101,10 +103,18 @@ Materials:
 *loop materials
 Material: *matnum()
 Name: *MatProp(0)
-TypeId: *Matprop(TypeId)
-*if(strcmp(Matprop(TypeId),"PEC"))==0)
+TypeId: *MatProp(TypeId)
+*if(strcmp(MatProp(TypeId),"PEC")==0)
 *endif
-*if(strcmp(Matprop(TypeId),"PMC"))==0)
+*if(strcmp(MatProp(TypeId),"PMC")==0)
+*endif
+*if(strcmp(MatProp(TypeId),"PML")==0)
+Orientation: *matprop(Orientation)
+*if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
+Local Axes: {0.0 0.0 0.0} {0.0 0.0 0.0}
+*else
+Local Axes: *tcl(GiD_Info localaxes *matprop(Local_Axes))
+*endif
 *endif
 *if(strcmp(Matprop(TypeId),"Classic")==0)
 Permittivity: *matprop(Permittivity)
@@ -141,7 +151,11 @@ Filename: *matprop(File)
 Layers: *matprop
 *endif
 *if(strcmp(Matprop(TypeId),"Anisotropic")==0)
-Local Axes: *tcl(GiD_Info localaxes *matprop(Local-Axes))
+*if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
+Local Axes: {0.0 0.0 0.0} {0.0 0.0 0.0}
+*else
+Local Axes: *tcl(GiD_Info localaxes *matprop(Local_Axes))
+*endif
 Anisotropic model: *matprop(Anisotropic_model)
 Relative permittivity principal axes: *matprop(Relative_permittivity_principal_axes)
 Crystal relative permeability: *matprop(Crystal_relative_permeability)

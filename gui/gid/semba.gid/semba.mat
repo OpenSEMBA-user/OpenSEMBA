@@ -23,9 +23,9 @@ VALUE: PML
 STATE: HIDDEN
 QUESTION: Orientation#CB#(Auto,Uniaxial)
 VALUE: Auto
-DEPENDENCIES:(Auto, HIDE, Local-Axes,#CURRENT#)
-DEPENDENCIES:(Uniaxial, RESTORE, Local-Axes,#CURRENT#)
-QUESTION: Local-Axes#LA#(-GLOBAL-)
+DEPENDENCIES:(Auto, HIDE, Local_Axes,#CURRENT#)
+DEPENDENCIES:(Uniaxial, RESTORE, Local_Axes,#CURRENT#)
+QUESTION: Local_Axes#LA#(-GLOBAL-)
 VALUE: -GLOBAL-
 END MATERIAL
 
@@ -100,7 +100,7 @@ MATERIAL: Anisotropic
 QUESTION: TypeId
 VALUE: Anisotropic
 STATE: HIDDEN
-QUESTION: Local-Axes#LA#(-GLOBAL-)
+QUESTION: Local_Axes#LA#(-GLOBAL-)
 VALUE: -GLOBAL-
 QUESTION: Anisotropic_model#CB#(Crystal,Ferrite)
 VALUE: Crystal
