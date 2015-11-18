@@ -65,34 +65,34 @@ StaMatrix<double,TET_NP,TET_NP> CellTet<TET_N>::getConductivityWithGeometricProf
         const PMVolumePML& mat,
         const UInt type,
         const double maxSigma) const {
-    static const UInt ncp = SimplexTet<TET_N>::ncp;
-    StaMatrix<double,np,np> res;
-    CVecR3 cPos[ncp];
-    base->getCubaturePositions(cPos);
-    int firstOrientation = mat.getFirstOrientationIndex();
-    int i = ((type % 10) - 1 + firstOrientation);
-    int j = ((type / 10) - 1 + firstOrientation);
-    const CVecR3 posBorder = mat.getPMLBeginningPosition();
-    const CVecR3 width = mat.getWidth();
-    // Computes sigma(x) = [(x - x_0)/width]^2 * maxSigma.
-    double sigma[ncp];
-    i = i % 3;
-    for (UInt c = 0; c < ncp; c++) {
-        sigma[c] = maxSigma;
-        sigma[c] *= pow((cPos[c](i) - posBorder(i))/width(i), 2);
-    }
-    // Computes second sigma if necessary.
-    if (j - firstOrientation >= 0) {
-        j = j % 3;
-        for (UInt c = 0; c < ncp; c++) {
-            sigma[c] *= maxSigma;
-            sigma[c] *= pow((cPos[c](j) - posBorder(j))/width(j), 2);
-        }
-    }
-    // Computes Mass Matrix.
-    res = getMassMatrixIntegratedWithScalar(sigma);
-    StaMatrix<double,np,np> invMM = getMassMatrix().invert();
-    return (invMM * res);
+//    static const UInt ncp = SimplexTet<TET_N>::ncp;
+//    StaMatrix<double,np,np> res;
+//    CVecR3 cPos[ncp];
+//    base->getCubaturePositions(cPos);
+//    int firstOrientation = mat.getFirstOrientationIndex();
+//    int i = ((type % 10) - 1 + firstOrientation);
+//    int j = ((type / 10) - 1 + firstOrientation);
+//    const CVecR3 posBorder = mat.getPMLBeginningPosition();
+//    const CVecR3 width = mat.getWidth();
+//    // Computes sigma(x) = [(x - x_0)/width]^2 * maxSigma.
+//    double sigma[ncp];
+//    i = i % 3;
+//    for (UInt c = 0; c < ncp; c++) {
+//        sigma[c] = maxSigma;
+//        sigma[c] *= pow((cPos[c](i) - posBorder(i))/width(i), 2);
+//    }
+//    // Computes second sigma if necessary.
+//    if (j - firstOrientation >= 0) {
+//        j = j % 3;
+//        for (UInt c = 0; c < ncp; c++) {
+//            sigma[c] *= maxSigma;
+//            sigma[c] *= pow((cPos[c](j) - posBorder(j))/width(j), 2);
+//        }
+//    }
+//    // Computes Mass Matrix.
+//    res = getMassMatrixIntegratedWithScalar(sigma);
+//    StaMatrix<double,np,np> invMM = getMassMatrix().invert();
+//    return (invMM * res);
 }
 
 template <int TET_N>

@@ -28,9 +28,6 @@ Exporter::Exporter(const string& name) : ProjectFile(name) {
 }
 
 Exporter::~Exporter() {
-    for (UInt i = 0; i < result_.size(); i++) {
-        delete result_[i];
-    }
 }
 
 //void
@@ -63,18 +60,16 @@ Exporter::~Exporter() {
 //    cout << " - File for resuming was succesfully written." << endl;
 //}
 
-void
-Exporter::process(
-        const Real time,
-        const FieldR3& electric,
-        const FieldR3& magnetic) {
-    for (UInt i = 0; i < result_.size(); i++) {
-        result_[i]->write(time, electric, magnetic);
-    }
-}
+//void Exporter::process(
+//        const Real time,
+//        const FieldR3& electric,
+//        const FieldR3& magnetic) {
+//    for (UInt i = 0; i < result_.size(); i++) {
+//        result_[i]->write(time, electric, magnetic);
+//    }
+//}
 
-void
-Exporter::deleteExistentOutputFiles() const {
+void Exporter::deleteExistentOutputFiles() const {
     string file;
     file = getFilename() + ".post.msh";
     remove(file.c_str());
@@ -82,8 +77,7 @@ Exporter::deleteExistentOutputFiles() const {
     remove(file.c_str());
 }
 
-void
-Exporter::printInfo() const {
+void Exporter::printInfo() const {
     cout << " --- Exporter info --- " << endl;
     cout << " --- End of Exporter info --- " << endl;
 }
@@ -171,3 +165,4 @@ Group<ElemR> Exporter::getGridElems(
     elem.add(new HexR8(cG, ElementId(0), box));
     return elem;
 }
+

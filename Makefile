@@ -31,7 +31,11 @@ BUILD_COMMAND=make clobber ; make -j `nproc` -s target=$(target)
 FILES=./src ./Makefile ./*.mk
 
 APP_VERSION=\"0.10\"
-DEFINES +=APP_VERSION=$(APP_VERSION)
+DEFINES += APP_VERSION=$(APP_VERSION)
+# ==================== Debugging options ======================================
+ifeq ($(target),debug)
+	DEFINES += HDF5 
+endif
 # ==================== Intel Compiler =========================================
 ifeq ($(compiler),intel) 
 	CC = icc
@@ -44,7 +48,7 @@ ifeq ($(compiler),gnu)
 	CC = gcc 
 	CXX = g++
 	CCFLAGS +=
-	CXXFLAGS += -std=c++0x -static -pthread -fopenmp
+	CXXFLAGS += -std=c++0x -static -pthread #-fopenmp
 endif # endif choosing the GNU compiler.
 #===================== MinGW32 Compiler =======================================
 ifeq ($(compiler),mingw32)

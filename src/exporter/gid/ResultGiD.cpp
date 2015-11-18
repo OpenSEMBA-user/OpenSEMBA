@@ -18,18 +18,8 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-///*
-// * GiDResult.cpp
-// *
-// *  Created on: Aug 27, 2012
-// *      Author: luis
-// */
-//#include "ResultGiD.h"
-//
-//ResultGiD::ResultGiD() {
-//   mesh_ = NULL;
-//   dg_ = NULL;
-//}
+
+#include "ResultGiD.h"
 //
 //ResultGiD::~ResultGiD() {
 //
@@ -60,8 +50,7 @@
 //   }
 //}
 //
-//void
-//ResultGiD::writePointProbeMesh(Int& coordCounter, Int& elemCounter) {
+//void ResultGiD::writePointProbeMesh(Int& coordCounter, Int& elemCounter) {
 //   ExporterGiD::beginMesh(getName(), GiD_3D, GiD_Point, 1);
 //   GiD_BeginCoordinates();
 //   assert(getElem().size() == 1);
@@ -80,8 +69,7 @@
 //   solverNode_.push_back(dg_->getGlobalFieldPosOfVertex(vertex[0]));
 //}
 //
-//void
-//ResultGiD::writeTriProbeMesh(
+//void ResultGiD::writeTriProbeMesh(
 //      Int& coordCounter,
 //      Int& elemCounter) {
 //   UInt nV;
@@ -123,8 +111,7 @@
 //   }
 //}
 //
-//void
-//ResultGiD::writeTetProbeMesh(Int& coordCounter, Int& elemCounter) {
+//void ResultGiD::writeTetProbeMesh(Int& coordCounter, Int& elemCounter) {
 //   UInt nV;
 //   mesh_->isLinear() ? nV = 4 : nV = 10;
 //   assert(nV == 4); // TODO Implemented only for linear meshes.
@@ -156,8 +143,7 @@
 //   }
 //}
 //
-//void
-//ResultGiD::write(
+//void ResultGiD::write(
 //      const Real time,
 //      const FieldR3& electric,
 //      const FieldR3& magnetic) const {
@@ -174,8 +160,7 @@
 //   GiD_EndResult();
 //}
 //
-//CVecR3
-//ResultGiD::getOutputValueFromFields(
+//CVecR3 ResultGiD::getOutputValueFromFields(
 //      const CVecR3& electric,
 //      const CVecR3& magnetic) const {
 //   switch (getOutputType()) {

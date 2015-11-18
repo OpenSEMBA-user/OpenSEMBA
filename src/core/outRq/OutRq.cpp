@@ -21,7 +21,6 @@
 #include "OutRq.h"
 
 OutRqBase::OutRqBase() {
-    outputType_ = undefined;
 }
 
 OutRqBase::OutRqBase(const Type outputType,

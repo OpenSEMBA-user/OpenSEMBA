@@ -51,12 +51,9 @@ protected:
             double tRunning,
             const UInt tStep,
             const UInt Ntsteps) const;
-    //   void
-    //   processStopRequest();
-    //  Int
-    //   kbhit();
-    //  void
-    //   nonblock(Int state);
+//    void processStopRequest();
+//    Int kbhit();
+//    void nonblock(Int state);
 };
 
 #endif /* SRC_SOLVER_H_ */
