@@ -22,6 +22,7 @@
 #ifndef SOLVERDGTD_H_
 #	define SOLVERDGTD_H_
 
+#include "exporter/Output.h"
 #include "parser/gid/ParserGiD.h"
 #include "exporter/gid/ExporterGiD.h"
 #include "options/OptionsSolverDGTD.h"
@@ -51,7 +52,7 @@ private:
     Integrator *integrator_;
     DG *dg_;
     Exporter* exporter_;
-    GroupOutputs outputs_;
+    Group<Output> outputs_;
     const OptionsSolverDGTD* options_;
     Integrator* initIntegrator(
             const MeshVolume* mesh,

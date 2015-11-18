@@ -33,28 +33,26 @@ using namespace std;
 
 #include "outRq/OutRq.h"
 #include "exporter/gid/ExporterGiD.h"
-#include "exporter/Result.h"
 
-template<class T>
-class ResultGiD {
-public:
-    ResultGiD();
-    ResultGiD(
-            const OutRq* outRq,
-            );
-    virtual ~ResultGiD();
-    void write(const Real time,
-            const FieldR3& electric,
-            const FieldR3& magnetic) const;
-private:
-    const OutRqBase* outRq_;
-
-    vector<UInt> coord_;
-    vector<UInt> solverNode_;
-
-    CVecR3 getOutputValueFromFields(
-            const CVecR3& electric,
-            const CVecR3& magnetic) const;
-};
+//class ResultGiD {
+//public:
+//    ResultGiD();
+//    ResultGiD(
+//            const OutRq* outRq,
+//            );
+//    virtual ~ResultGiD();
+//    void write(const Real time,
+//            const FieldR3& electric,
+//            const FieldR3& magnetic) const;
+//private:
+//    const Output* output_;
+//
+//    vector<UInt> coord_;
+//    vector<UInt> solverNode_;
+//
+//    CVecR3 getOutputValueFromFields(
+//            const CVecR3& electric,
+//            const CVecR3& magnetic) const;
+//};
 
 #endif /* GIDRESULT_H_ */

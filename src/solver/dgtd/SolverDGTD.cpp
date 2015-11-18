@@ -20,26 +20,28 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "SolverDGTD.h"
 
-SolverDGTD::SolverDGTD(SmbData* smb) {
+SolverDGTD::SolverDGTD(SmbData* raw) {
 
     // Smb data adaptation and validation.
-    MeshVolume mesh(*smb->mesh->castTo<MeshUnstructured>());
+    MeshVolume mesh(*raw->mesh->castTo<MeshUnstructured>());
+    SmbData smb;
+//    AdapterDGTD(*raw).convert(smb); TODO Adapt OutRqs on Volumes.
 
     // Time integrator initialization.
-    options_ = smb->solverOptions->castTo<OptionsSolverDGTD>();
-    integrator_ = initIntegrator(&mesh, smb->pMGroup, options_);
+    options_ = smb.solverOptions->castTo<OptionsSolverDGTD>();
+    integrator_ = initIntegrator(&mesh, smb.pMGroup, options_);
     integrator_->partitionate(&mesh, comm_);
 
     // Spatial discretization.
-    dg_ = new DGExplicit(mesh, *smb->pMGroup, *smb->emSources, *options_, comm_);
-    outputs_ = dg_->getOutputs(*smb->outputRequests);
+    dg_ = new DGExplicit(mesh, *smb.pMGroup, *smb.emSources, *options_, comm_);
+//    outputs_ = dg_->getOutputs(*smb.outputRequests);
     integrator_->setSolver(dg_);
 
     // Exporter initialization.
-    cout << " - Initializing exporter... " << flush;
-    const string outputFilename = smb->getOutputFilename();
-    exporter_ = new ExporterGiD(smb, outputFilename, outputs_);
-    cout << "[OK]" << endl;
+//    cout << " - Initializing exporter... " << flush;
+//    const string outputFilename = smb.getOutputFilename();
+//    exporter_ = new ExporterGiD(smb, outputFilename, outputs_);
+//    cout << "[OK]" << endl;
 }
 
 SolverDGTD::~SolverDGTD() {
@@ -56,8 +58,8 @@ bool SolverDGTD::run() {
     const Real dt = integrator_->getMaxDT();
     assert(dt != 0.0);
     while (time < options_->getFinalTime()) {
-        dg_->update(outputs_);
-        exporter_->process(time, outputs_);
+//        dg_->update(outputs_);
+//        exporter_->process(time, outputs_);
         Real initCPUTime = storeCPUTime();
         integrator_->timeIntegrate(time);
         tSum += storeCPUTime() - initCPUTime;
