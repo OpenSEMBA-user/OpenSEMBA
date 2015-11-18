@@ -24,7 +24,6 @@ SolverDGTD::SolverDGTD(SmbData* smb) {
 
     // Smb data adaptation and validation.
     MeshVolume mesh(*smb->mesh->castTo<MeshUnstructured>());
-    comm_ = initMPI();
 
     // Time integrator initialization.
     options_ = smb->solverOptions->castTo<OptionsSolverDGTD>();
@@ -33,16 +32,18 @@ SolverDGTD::SolverDGTD(SmbData* smb) {
 
     // Spatial discretization.
     dg_ = new DGExplicit(mesh, *smb->pMGroup, *smb->emSources, *options_, comm_);
+    outputs_ = dg_->getOutputs(*smb->outputRequests);
     integrator_->setSolver(dg_);
 
     // Exporter initialization.
     cout << " - Initializing exporter... " << flush;
-    out_ = new ExporterGiD(smb, smb->getFolder() + smb->getProjectName());
+    const string outputFilename = smb->getOutputFilename();
+    exporter_ = new ExporterGiD(smb, outputFilename, outputs_);
     cout << "[OK]" << endl;
 }
 
 SolverDGTD::~SolverDGTD() {
-    delete out_;
+    delete exporter_;
     delete dg_;
     delete integrator_;
     delete comm_;
@@ -55,7 +56,8 @@ bool SolverDGTD::run() {
     const Real dt = integrator_->getMaxDT();
     assert(dt != 0.0);
     while (time < options_->getFinalTime()) {
-        out_->process(time, *dg_->getElectric(), *dg_->getMagnetic());
+        dg_->update(outputs_);
+        exporter_->process(time, outputs_);
         Real initCPUTime = storeCPUTime();
         integrator_->timeIntegrate(time);
         tSum += storeCPUTime() - initCPUTime;
@@ -92,14 +94,6 @@ Integrator* SolverDGTD::initIntegrator(
         throw Error("Undefined time integrator.");
     }
     return res;
-}
-
-Comm* SolverDGTD::initMPI() {
-#ifdef USE_MPI
-    return new CommMPI();
-#else
-    return new CommNone();
-#endif
 }
 
 bool SolverDGTD::canRun() const {

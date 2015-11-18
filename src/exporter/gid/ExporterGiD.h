@@ -32,6 +32,9 @@ using namespace std;
 
 class ExporterGiD : public Exporter {
 public:
+    static const CVecR3 pecColor, pmcColor, smaColor, pmlColor,
+    sibcColor, emSourceColor;
+
     ExporterGiD(
             const SmbData* smb,
             GiD_PostMode mode = GiD_PostAscii);
@@ -40,7 +43,7 @@ public:
             const string& fn,
             GiD_PostMode mode = GiD_PostAscii);
     virtual ~ExporterGiD();
-protected:
+
     void beginMesh(
             const string& tName,
             GiD_Dimension dim,
@@ -59,34 +62,39 @@ protected:
 private:
     static Int coordCounter_;
     static Int elemCounter_;
-    static const CVecR3 pecColor, pmcColor, smaColor, pmlColor,
-     sibcColor, emSourceColor;
     static Int numberOfOutputGiD_;
+
     GiD_FILE meshFile_;
     GiD_FILE resultFile_;
     GiD_PostMode mode_;
-    void writeMesh(const SmbData* smb);
-    void writeElements(
+
+    void init_(const SmbData* smb, GiD_PostMode mode, const string& fn);
+    void writeMesh_(const SmbData* smb);
+    void writeElements_(
             const Group<const ElemR>& entities,
             const string& name,
             const GiD_ElementType type,
             const Int nV);
-    static string makeValid(string name);
-    void beginCoordinates() const;
-    void writeCoordinates(CoordR3Group& pos);
-    void endCoordinates() const;
-    void beginElements() const;
-    void writeElement(Int elemId, int nId[]) const;
-    void endElements() const;
-    void endMesh() const;
-    GiD_ResultType getGiDResultType(OutRqBase::Type type) const;
-    GiD_ResultLocation getGiDResultLocation() const;
-    void openPostMeshFile(const string& filename);
-    void openPostResultFile(const string& filename);
-    void writeMaterialsInLayer(const Layer* lay);
-    void writeAllElements(const Group<const ElemR>& elem,
-                          const string& name);
-    void initDefault(const SmbData* smb, GiD_PostMode mode, const string& fn);
+    void writeElement_(Int elemId, int nId[]) const;
+    void writeCoordinates_(CoordR3Group& pos);
+
+    void beginCoordinates_() const;
+    void endCoordinates_() const;
+    void beginElements_() const;
+    void endElements_() const;
+    void endMesh_() const;
+
+    GiD_ResultType getGiDResultType_(OutRqBase::Type type) const;
+    GiD_ResultLocation getGiDResultLocation_() const;
+
+    void openPostMeshFile_(const string& filename);
+    void openPostResultFile_(const string& filename);
+
+    void writeMaterialsInLayer_(const Layer* lay);
+    void writeAllElements_(const Group<const ElemR>& elem,
+            const string& name);
+
+    static string makeValid_(string name);
 };
 
 #endif /* EXPORTER_GID_EXPORTERGID_H_ */

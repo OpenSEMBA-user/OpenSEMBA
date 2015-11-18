@@ -63,8 +63,7 @@ Exporter::~Exporter() {
 //    cout << " - File for resuming was succesfully written." << endl;
 //}
 
-void
-Exporter::process(
+void Exporter::process(
         const Real time,
         const FieldR3& electric,
         const FieldR3& magnetic) {
@@ -73,8 +72,7 @@ Exporter::process(
     }
 }
 
-void
-Exporter::deleteExistentOutputFiles() const {
+void Exporter::deleteExistentOutputFiles() const {
     string file;
     file = getFilename() + ".post.msh";
     remove(file.c_str());
@@ -82,8 +80,7 @@ Exporter::deleteExistentOutputFiles() const {
     remove(file.c_str());
 }
 
-void
-Exporter::printInfo() const {
+void Exporter::printInfo() const {
     cout << " --- Exporter info --- " << endl;
     cout << " --- End of Exporter info --- " << endl;
 }

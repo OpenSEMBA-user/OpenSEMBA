@@ -76,9 +76,7 @@ Solver::printTime(const double originalSeconds) const {
    cout<< secondsLeft << "s";
 }
 
-
-//void
-//Integrator::processStopRequest() {
+//void Integrator::processStopRequest() {
 //  // Terminates the program storing the fields if key is pressed.
 //  nonblock(NB_ENABLE);
 //  Int endingRequest = 0;
@@ -95,9 +93,8 @@ Solver::printTime(const double originalSeconds) const {
 //  }
 //  nonblock(NB_DISABLE);
 //}
-
-//Int
-//Integrator::kbhit()   {
+//
+//Int Integrator::kbhit()   {
 //  struct timeval tv;
 //  fd_set fds;
 //  tv.tv_sec = 0;
@@ -107,9 +104,8 @@ Solver::printTime(const double originalSeconds) const {
 //  select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
 //  return FD_ISSET(STDIN_FILENO, &fds);
 //}
-
-//void
-//Integrator::nonblock(Int state) {
+//
+//void Integrator::nonblock(Int state) {
 //  struct termios ttystate;
 //  //get the terminal state
 //  tcgetattr(STDIN_FILENO, &ttystate);

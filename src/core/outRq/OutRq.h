@@ -36,7 +36,6 @@ class OutRqBase : public virtual Domain,
                   public virtual ClassGroupBase<GroupElements<const Elem>> {
 public:
     typedef enum {
-        undefined,
         electric,
         magnetic,
         electricFieldNormals,
