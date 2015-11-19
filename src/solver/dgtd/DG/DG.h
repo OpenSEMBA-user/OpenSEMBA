@@ -28,6 +28,7 @@ using namespace std;
 
 #include "SmbData.h"
 #include "math/Field.h"
+#include "solver/SpatialDiscretization.h"
 #include "solver/dgtd/core/Comm.h"
 #include "solver/dgtd/core/BCGroup.h"
 #include "options/OptionsSolverDGTD.h"
@@ -62,7 +63,7 @@ struct lexCompareMat {
     }
 };
 
-class DG : public Ordering {
+class DG : public Ordering, public SpatialDiscretization {
     friend class Exporter;
     friend class IntegratorLSERK;
     friend class IntegratorLF2;
@@ -102,7 +103,7 @@ public:
             const ElementId volId) const;
     virtual void printInfo() const = 0;
 
-protected:
+private:
     FieldR3 E, H;
     FieldR3 resE, resH;
     FieldR3 nAdm, nImp, rnAdm, rnImp, cnAdm, cnImp;
@@ -110,8 +111,8 @@ protected:
     Comm* comm;
     UInt nK;
     Real upwinding;
-    // Flux gatherer operator. dim = matrix(np x (4*nfp))
-    Real LIFT[faces*npnfp];
+    Real LIFT[faces*npnfp]; //!< Flux gatherer operator. dim = matrix(np x (4*nfp))
+
 #ifdef SOLVER_DEDUPLICATE_OPERATORS
     set<StaMatrix<Real,np,np>, lexCompareMat> CList;
 #else
@@ -210,7 +211,6 @@ protected:
             const UInt e2);
     void buildFluxScalingFactors(const CellGroup& cells, const Connectivities& map);
     void buildFieldScalingFactors(const CellGroup& cells);
-private:
     virtual void buildScalingFactors(
             const CellGroup& cells,
             const Connectivities& map);

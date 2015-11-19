@@ -7,12 +7,11 @@
 
 #include "Output.h"
 
-Output::Output() {
+OutputBase::OutputBase() {
     // TODO Auto-generated constructor stub
 
 }
 
-Output::~Output() {
-    // TODO Auto-generated destructor stub
+OutputBase::~OutputBase() {
 }
 
