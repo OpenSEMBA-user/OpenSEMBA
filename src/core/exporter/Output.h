@@ -10,10 +10,20 @@
 
 #include "base/class/ClassBase.h"
 
-class Output : public ClassBase {
+class OutputBase : public ClassBase {
 public:
+    OutputBase(const OutRqBase* outRq);
+    virtual ~OutputBase();
+protected:
+    const OutRqBase* outRq_;
+};
+
+template<class T>
+class Output : public OutputBase {
     Output();
     virtual ~Output();
+private:
+    multimap<ElementId, vector<T>> data_;
 };
 
 #endif /* SRC_CORE_EXPORTER_OUTPUT_H_ */
