@@ -9,6 +9,7 @@
 #define SRC_CORE_EXPORTER_OUTPUT_H_
 
 #include "base/class/ClassBase.h"
+#include "outRq/OutRq.h"
 
 class OutputBase : public ClassBase {
 public:
@@ -20,13 +21,15 @@ protected:
 
 template<class T>
 class Output : public OutputBase {
-    typedef vector<T> GaussValues;
-    Output();
+public:
+        Output( const OutRqBase* outRq,
+            multimap<ElementId, vector<CVecR3>>& electric,
+            multimap<ElementId, vector<CVecR3>>& magnetic);
     virtual ~Output();
 
 
 private:
-    multimap<ElementId, GaussValues> data_;
+    multimap<ElementId, vector<T>> data_;
     //!< Stores several values for a single element which is needed when data
     //! is multivaluated (e.g. Discontinuous Galerkin). vector<T> must contain
     //!  data at the Gauss points of the element. e.g:
@@ -37,8 +40,6 @@ private:
     //!      Lin (1)      |        2
     //!      Tet (1)      |        4
     //!      Tet (2)      |       10
-
-
 };
 
 #endif /* SRC_CORE_EXPORTER_OUTPUT_H_ */

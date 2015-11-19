@@ -103,7 +103,7 @@ public:
             const ElementId volId) const;
     virtual void printInfo() const = 0;
 
-private:
+protected:
     FieldR3 E, H;
     FieldR3 resE, resH;
     FieldR3 nAdm, nImp, rnAdm, rnImp, cnAdm, cnImp;

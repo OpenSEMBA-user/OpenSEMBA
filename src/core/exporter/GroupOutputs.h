@@ -18,40 +18,22 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * SpatialDiscretization.h
- *
- *  Created on: Nov 19, 2015
- *      Author: luis
- */
+#ifndef COMMON_OUTRQ_GROUPOUTRQS_H_
+#define COMMON_OUTRQ_GROUPOUTRQS_H_
 
-#ifndef SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_
-#define SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_
+#include "Output.h"
+#include "outRq/OutRq.h"
 
-#include <map>
-using namespace std;
-
-#include "base/group/Group.h"
-#include "outRq/GroupOutRqs.h"
-#include "exporter/GroupOutputs.h"
-#include "Cell.h"
-
-class SpatialDiscretization {
+class GroupOutputs : public Group<OutputBase> {
 public:
-    SpatialDiscretization();
-    virtual ~SpatialDiscretization();
+    GroupOutputs();
+    virtual ~GroupOutputs();
 
-    void setOutputRequests(const GroupOutRqs<>* outRqs);
+    void add(const OutRqBase* outRq,
+             const multimap<ElementId, vector<CVecR3>>& electric,
+             const multimap<ElementId, vector<CVecR3>>& magnetic);
 
-    GroupOutputs getOutputs() const;
-
-protected:
-    static const UInt outputsInterpolationOrder = 2;
-
-    const GroupOutRqs<>* outRqs_;
-
-    map<ElementId,vector<const Cell*>> outputIdsToCells_;
-    //!< Index of  OutputRequest's ElementIds in to Solver cells.
+    void printInfo() const;
 };
 
-#endif /* SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_ */
+#endif

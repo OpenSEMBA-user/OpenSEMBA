@@ -34,7 +34,7 @@ SolverDGTD::SolverDGTD(SmbData* raw) {
 
     // Spatial discretization.
     dg_ = new DGExplicit(mesh, *smb.pMGroup, *smb.emSources, *options_, comm_);
-//    outputs_ = dg_->getOutputs(*smb.outputRequests);
+    dg_->setOutputRequests(smb.outputRequests);
     integrator_->setSolver(dg_);
 
     // Exporter initialization.

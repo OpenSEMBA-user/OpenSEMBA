@@ -19,17 +19,35 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 /*
- * Cell.cpp
+ * Cell.h
  *
  *  Created on: Aug 30, 2012
  *      Author: luis
  */
 
-#include "Cell.h"
+#ifndef CELL_H_
+#define CELL_H_
 
-Cell::Cell() {
-	material = NULL;
-}
+#include "physicalModel/GroupPhysicalModels.h"
+#include "MeshVolume.h"
+#include "math/Simplex.h"
+#include "math/Field.h"
 
-Cell::~Cell() {
-}
+class Cell {
+public:
+    enum class FieldType {
+        electric,
+        magnetic
+    };
+    const PMVolumeClassic* material;
+    //
+    Cell();
+    virtual ~Cell();
+
+    virtual UInt getOrder() const;
+    virtual vector<CVecR3> getFieldAt(
+            const CVecR3& gaussPoints,
+            const FieldType& fieldType) const;
+};
+
+#endif /* CELL_H_ */

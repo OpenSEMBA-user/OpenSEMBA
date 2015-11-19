@@ -52,7 +52,6 @@ private:
     Integrator *integrator_;
     DG *dg_;
     Exporter* exporter_;
-    Group<Output> outputs_;
     const OptionsSolverDGTD* options_;
     Integrator* initIntegrator(
             const MeshVolume* mesh,
