@@ -3,7 +3,7 @@ PROBLEM DATA
 BOOK: Solver_options
 TITLE: Solver
 QUESTION: Solver#CB#(ugrfdtd,cudg3d,none)
-VALUE: none
+VALUE: ugrfdtd
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
 VALUE: Final_time
 DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)

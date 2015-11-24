@@ -29,7 +29,7 @@
 #define CELL_H_
 
 #include "physicalModel/GroupPhysicalModels.h"
-#include "MeshVolume.h"
+#include "solver/dgtd/core/MeshVolume.h"
 #include "math/Simplex.h"
 #include "math/Field.h"
 

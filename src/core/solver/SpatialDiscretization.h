@@ -43,7 +43,7 @@ public:
 
     void setOutputRequests(const GroupOutRqs<>* outRqs);
 
-    GroupOutputs getOutputs() const;
+//    GroupOutputs getOutputs() const;
 
 protected:
     static const UInt outputsInterpolationOrder = 2;
