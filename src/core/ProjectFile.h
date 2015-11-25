@@ -72,7 +72,7 @@ public:
     ProjectFile relativeTo(const ProjectFile& rhs) const;
 
     void setFilename(const string& filename);
-    void openFile(ofstream& file) const;
+    void openFile(ofstream& file, const ios_base::openmode mode = ios::out) const;
     void openAsInput(ifstream& file) const;
 
     void exec(const string arguments = string()) const;
@@ -87,7 +87,7 @@ public:
 protected:
     vector<string> getFilesBasenames(const string& directory,
                                      const string& extension) const;
-    void openFile(const string& fileName, ofstream& file) const;
+    void openFile(const string& fileName, ofstream& file, const ios_base::openmode mode = ios::out) const;
     string removeExtension(const string& filename) const;
     void deleteDirIfExists(const string& directory) const;
     void initDir_(const string& fn);

@@ -135,7 +135,7 @@ OutputOpenFoam::triToSTL(
         string filename;
         filename = folder + type
                 + "." + intToStr(typeId) + "." + intToStr(layerId.toUInt());
-        openFile(filename + ".stl", file);
+        openFile(filename + ".stl", file, ios::out);
         // Writes data.
         const UInt nElem = tri.size();
         string solidName(name);

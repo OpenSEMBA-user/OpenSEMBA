@@ -137,13 +137,15 @@ vector<string> ProjectFile::getFilesBasenames(const string& directory,
     return res;
 }
 
-void ProjectFile::openFile(ofstream& file) const {
-    openFile(*this, file);
+void ProjectFile::openFile(ofstream& file,
+        const ios_base::openmode mode) const {
+    openFile(*this, file, mode);
 }
 
-void ProjectFile::openFile(const string& fileName, ofstream& file) const {
+void ProjectFile::openFile(const string& fileName, ofstream& file,
+        const ios_base::openmode mode) const {
     try {
-        file.open(fileName.c_str());
+        file.open(fileName.c_str(), mode);
     }
     catch(exception &e) {
         throw ErrorFileNotExists(fileName);
