@@ -43,15 +43,19 @@ public:
 
     void setOutputRequests(const GroupOutRqs<>* outRqs);
 
-//    GroupOutputs getOutputs() const;
+    GroupOutputs<> getOutputs() const;
 
 protected:
-    static const UInt outputsInterpolationOrder = 2;
-
     const GroupOutRqs<>* outRqs_;
 
-    map<ElementId,vector<const Cell*>> outputIdsToCells_;
-    //!< Index of  OutputRequest's ElementIds in to Solver cells.
+    vector<const FieldBase*> getFieldsAt_(
+            const vector<CVecR3>& position,
+            const bool indexPosition = false) const;
+    //!< Returns all fields in a set of positions.
+
+
+    map<ElementId,vector<const Cell*>> posToCells_;
+    //!< Index of positions in to Solver cells.
 };
 
 #endif /* SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_ */

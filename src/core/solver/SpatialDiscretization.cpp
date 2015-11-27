@@ -44,29 +44,13 @@ void SpatialDiscretization::setOutputRequests(const GroupOutRqs<>* outRqs) {
     }
 }
 
-//GroupOutputs SpatialDiscretization::getOutputs() const {
-//    GroupOutputs res;
-//
-//    for (UInt i = 0; i < outRqs_->size(); i++) {
-//        multimap<ElementId,vector<CVecR3>> electric, magnetic;
-//        const OutRqBase* outRq = outRqs_(i);
-//        for (UInt j = 0; j < outRq->elems().size(); j++) {
-//            const Elem* elem = outRq->elems()(i);
-//            const ElementId id = elem->getId();
-//            vector<const Cell*> cell = outputIdsToCells_.find(id);
-//            for (UInt k = 0; k < cell.size(); k++) {
-////                const UInt outputsInterpolationOrder = cell[k]->getOrder();
-//                vector <CVecR3> gaussPos =
-//                        elem->getGaussPoints(outputsInterpolationOrder);
-//                electric.insert(pair<ElementId,vector<CVecR3>>(
-//                        id, cell[k]->getFieldAt(gaussPos, Cell::FieldType::electric)));
-//                magnetic.insert(pair<ElementId,vector<CVecR3>>(
-//                        id, cell[k]->getFieldAt(gaussPos, Cell::FieldType::magnetic)));
-//            }
-//        }
-//
-//        res.add(outRq, electric, magnetic);
-//
-//    }
-//    return res;
-//}
+GroupOutputs<> SpatialDiscretization::getOutputs() const {
+    GroupOutputs<> res;
+
+    for (UInt i = 0; i < outRqs_->size(); i++) {
+        set<CVecR3> pos = outRqs_(i)->getPosInGaussPoints();
+
+            pair<ElementId,vector<FieldBase*>>(id, getFieldsAt_(pos)));
+    }
+    return res;
+}
