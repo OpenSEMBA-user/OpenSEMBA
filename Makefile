@@ -30,7 +30,7 @@ USER=`whoami`
 BUILD_COMMAND=make clobber ; make -j `nproc` -s target=$(target) 
 FILES=./src ./Makefile ./*.mk
 
-APP_VERSION=\"0.10\"
+APP_VERSION=\"0.10.1\"
 DEFINES += APP_VERSION=$(APP_VERSION)
 # ==================== Debugging options ======================================
 ifeq ($(target),debug)

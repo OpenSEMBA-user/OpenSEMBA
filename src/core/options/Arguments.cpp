@@ -47,14 +47,9 @@ Arguments::Arguments(const string& args) {
 }
 
 Arguments::Arguments(const int argc,  const char* argv[]) {
-    stringstream aux;
     vector<string> arg;
-    string str;
     for (int i = 0; i < argc; i++) {
-        aux << argv[i] << " ";
-    }
-    while (getline(aux, str, ' ')) {
-      arg.push_back(str);
+        arg.push_back(argv[i]);
     }
     build(arg);
 }

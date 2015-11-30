@@ -1556,7 +1556,7 @@ ParserGiD::GiDOutputType ParserGiD::strToGidOutputType(string str) {
         return ParserGiD::bulkCurrentOnSurface;
     } else if (str.compare("Bulk_current_on_volume")==0) {
         return ParserGiD::bulkCurrentOnVolume;
-    } else if (str.compare("farField")==0) {
+    } else if (str.compare("Far_field")==0) {
         return ParserGiD::farField;
     } else {
         throw Error("Unrecognized label " + str);
