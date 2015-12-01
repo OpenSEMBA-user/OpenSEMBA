@@ -18,20 +18,17 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Polyline.h
- *
- *  Created on: Apr 15, 2015
- *      Author: damarro
- */
 
 #ifndef POLYLINE_H_
 #define POLYLINE_H_
 
 #include <vector>
-using namespace std;
 
 #include "Line.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 class PolylineBase : public virtual LineBase {
 public:
@@ -44,35 +41,40 @@ class Polyline : public virtual Line<T>,
                  public virtual PolylineBase {
 public:
     Polyline();
-    Polyline(const ElementId id,
-             const vector<const Coordinate<T,3>*>& v,
-             const LayerId layerId = LayerId(0),
-             const MatId   matId   = MatId(0));
+    Polyline(const Id id,
+             const std::vector<const Coordinate::Coordinate<T,3>*>& v,
+             const Layer* lay = NULL,
+             const Model* mat = NULL);
     Polyline(const Polyline<T>& rhs);
     virtual ~Polyline();
     
-    DEFINE_CLONE(Polyline<T>);
+    SEMBA_CLASS_DEFINE_CLONE(Polyline<T>);
 
-    inline UInt numberOfCoordinates() const { return v_.size(); }
+    inline Size numberOfCoordinates() const { return v_.size(); }
 
-    const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
-    const Coordinate<T,3>* getSideV(const UInt f,
-                                    const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
+                                                const Size i) const;
 
-    const Coordinate<T,3>* getVertex    (const UInt i) const;
-    const Coordinate<T,3>* getSideVertex(const UInt f,
-                                         const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
+                                                     const Size i) const;
 
-    void setV(const UInt i, const Coordinate<T,3>* coord);
+    void setV(const Size i, const Coordinate::Coordinate<T,3>* coord);
 
     void printInfo() const;
 
 private:
-    vector<const Coordinate<T,3>*> v_;
+    std::vector<const Coordinate::Coordinate<T,3>*> v_;
 };
 
-typedef PolylineBase   Polylin;
-typedef Polyline<Real> PolylinR;
-typedef Polyline<Int > PolylinI;
+} /* namespace Element */
+
+typedef Element::PolylineBase         Polylin;
+typedef Element::Polyline<Math::Real> PolylinR;
+typedef Element::Polyline<Math::Int > PolylinI;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
 
 #endif /* POLYLINE_H_ */

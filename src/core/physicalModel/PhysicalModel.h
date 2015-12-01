@@ -18,25 +18,30 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PHYSICALMODEL_H_
-#define PHYSICALMODEL_H_
 
-#include <cmath>
-#include <complex>
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
-#include <vector>
-using namespace std;
+#ifndef SEMBA_PHYSICALMODEL_PHYSICALMODEL_H_
+#define SEMBA_PHYSICALMODEL_PHYSICALMODEL_H_
 
-#include "geometry/elements/GroupElements.h"
 #include "math/Constants.h"
-#include "math/CartesianVector.h"
-#include "ProjectFile.h"
 
-#include "base/class/ClassIdBase.h"
+#include "class/Class.h"
+#include "class/Cloneable.h"
+#include "class/Shareable.h"
+#include "class/Printable.h"
+#include "class/Identifiable.h"
+#include "class/Identification.h"
 
-class PhysicalModel : public ClassIdBase<MatId> {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class PhysicalModel;
+typedef Class::Identification<PhysicalModel> Id;
+
+class PhysicalModel : public virtual Class::Class,
+                      public virtual Class::Cloneable,
+                      public virtual Class::Shareable,
+                      public virtual Class::Printable,
+                      public Class::Identifiable<Id> {
 public:
     enum Type {
         PEC,
@@ -51,16 +56,28 @@ public:
         multiport
     };
 
-	PhysicalModel(const MatId id, const string& name);
-	virtual ~PhysicalModel();
+    PhysicalModel(const Id id, const std::string& name);
+    virtual ~PhysicalModel();
 
-	const string& getName() const;
-	void setName(const string& newName);
+    const std::string& getName() const;
+    void setName(const std::string& newName);
 
-	virtual void printInfo() const;
+    virtual void printInfo() const;
+
 private:
-    string name_;
+    std::string name_;
 };
 
+namespace Error {
 
-#endif
+class Error : public std::exception {
+public:
+    Error() {}
+    virtual ~Error() throw() {}
+};
+
+} /* namespace Error */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_PHYSICALMODEL_H_ */

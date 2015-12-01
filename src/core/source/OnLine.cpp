@@ -18,83 +18,83 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Nodal.cpp
- *
- *  Created on: Oct 3, 2014
- *      Author: luis
- */
 
-#include "../sources/SourceOnLine.h"
+#include "OnLine.h"
 
-SourceOnLine::SourceOnLine(const Magnitude* magnitude,
-                           const GroupElements<Lin>& elem,
-                           const Type& sourceType,
-                           const Hardness& sourceHardness)
-:   EMSourceBase(magnitude),
-    GroupElements<const Lin>(elem) {
+namespace SEMBA {
+namespace Source {
 
-	type_ = sourceType;
+OnLine::OnLine(const Magnitude::Magnitude* magnitude,
+               const Geometry::Element::Group<Geometry::Lin>& elem,
+               const Type& sourceType,
+               const Hardness& sourceHardness)
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Lin>(elem) {
+
+    type_ = sourceType;
     hardness_ = sourceHardness;
 }
 
-SourceOnLine::SourceOnLine(const SourceOnLine& rhs)
-:   EMSourceBase(rhs),
-    GroupElements<const Lin>(rhs) {
+OnLine::OnLine(const OnLine& rhs)
+:   SEMBA::Source::Base(rhs),
+    Geometry::Element::Group<const Geometry::Lin>(rhs) {
 
     type_ = rhs.type_;
     hardness_ = rhs.hardness_;
 }
 
-SourceOnLine::~SourceOnLine() {
+OnLine::~OnLine() {
 
 }
 
-bool SourceOnLine::hasSameProperties(const EMSourceBase& rhs) const {
-    if(!EMSourceBase::hasSameProperties(rhs)) {
+bool OnLine::hasSameProperties(const SEMBA::Source::Base& rhs) const {
+    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
         return false;
     }
-    const SourceOnLine* rhsPtr = rhs.castTo<SourceOnLine>();
+    const OnLine* rhsPtr = rhs.castTo<OnLine>();
     bool hasSameProperties = true;
     hasSameProperties &= type_ == rhsPtr->type_;
     hasSameProperties &= hardness_ == rhsPtr->hardness_;
     return hasSameProperties;
 }
 
-const string& SourceOnLine::getName() const {
-    const static string res = "SourceOnLine";
+const std::string& OnLine::getName() const {
+    const static std::string res = "OnLine";
     return res;
 }
 
-SourceOnLine::Type SourceOnLine::getType() const {
-	return type_;
+OnLine::Type OnLine::getType() const {
+    return type_;
 }
 
-SourceOnLine::Hardness SourceOnLine::getHardness() const {
-	return hardness_;
+OnLine::Hardness OnLine::getHardness() const {
+    return hardness_;
 }
 
-void SourceOnLine::printInfo() const {
-	cout<< " --- Nodal info --- " << endl;
-	EMSourceBase::printInfo();
-	cout<< "Type: " << getTypeStr() << endl;
-    cout<< "Hardness: " << getHardnessStr() << endl;
+void OnLine::printInfo() const {
+    std::cout<< " --- Nodal info --- " << std::endl;
+    SEMBA::Source::Base::printInfo();
+    std::cout<< "Type: " << getTypeStr() << std::endl;
+    std::cout<< "Hardness: " << getHardnessStr() << std::endl;
 }
 
-string SourceOnLine::getTypeStr() const {
-	switch (type_) {
-	case electric:
-		return "Electric Field";
-	default:
-		return "Magnetic Field";
-	}
+std::string OnLine::getTypeStr() const {
+    switch (type_) {
+    case electric:
+        return "Electric Field";
+    default:
+        return "Magnetic Field";
+    }
 }
 
-string SourceOnLine::getHardnessStr() const {
-	switch (type_) {
-	case hard:
-		return "Hard";
-	default:
-		return "Soft";
-	}
+std::string OnLine::getHardnessStr() const {
+    switch (type_) {
+    case hard:
+        return "Hard";
+    default:
+        return "Soft";
+    }
 }
+
+} /* namespace Source */
+} /* namespace SEMBA */

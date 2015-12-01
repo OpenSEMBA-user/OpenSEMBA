@@ -18,25 +18,23 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Magnitude.cpp
- *
- *  Created on: Dec 13, 2014
- *      Author: luis
- */
 
-#include "../../sources/magnitude/Magnitude.h"
+#include "Magnitude.h"
+
+namespace SEMBA {
+namespace Source {
+namespace Magnitude {
 
 Magnitude::Magnitude() {
     mathFunction_ = NULL;
 }
 
-Magnitude::Magnitude(FunctionRR* mathFunction) {
+Magnitude::Magnitude(Math::FunctionRR* mathFunction) {
     mathFunction_ = mathFunction;
 }
 
 Magnitude::Magnitude(const Magnitude& rhs) {
-    mathFunction_ = rhs.mathFunction_->cloneTo<FunctionRR>();
+    mathFunction_ = dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
 }
 
 Magnitude::~Magnitude() {
@@ -45,11 +43,11 @@ Magnitude::~Magnitude() {
     }
 }
 
-Magnitude& Magnitude::operator =(const Magnitude& rhs) {
+Magnitude& Magnitude::operator=(const Magnitude& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    mathFunction_ = rhs.mathFunction_->cloneTo<FunctionRR>();
+    mathFunction_ = dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
     return *this;
 }
 
@@ -58,10 +56,14 @@ bool Magnitude::operator ==(const Magnitude& rhs) const {
 }
 
 void Magnitude::printInfo() const {
-    cout << " --- Magnitude ---" << endl;
+    std::cout << " --- Magnitude ---" << std::endl;
     mathFunction_->printInfo();
 }
 
-Real Magnitude::evaluate(const Real time) const {
+Math::Real Magnitude::evaluate(const Math::Real time) const {
     return mathFunction_->operator()(time);
 }
+
+} /* namespace Magnitude */
+} /* namespace Source */
+} /* namespace SEMBA */

@@ -18,36 +18,35 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumePML.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMVolumePML.h"
+#include "VolumePML.h"
 
-PMVolumePML::PMVolumePML(
-        const MatId id,
-        const string& name,
-        const LocalAxes* orientation)
-: PMVolume(id, name) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+VolumePML::VolumePML(
+        const Id id,
+        const std::string& name,
+        const Math::Axis::Local* orientation)
+:   Volume(id, name) {
     orientation_ = orientation;
 }
 
-PMVolumePML::~PMVolumePML() {
+VolumePML::~VolumePML() {
     if (orientation_ != NULL) {
         delete orientation_;
     }
 }
 
-void PMVolumePML::printInfo() const {
-	cout << "--- PMVolumePML info ---" << endl;
-	PMVolume::printInfo();
-	orientation_->printInfo();
+void VolumePML::printInfo() const {
+    std::cout << "--- VolumePML info ---" << std::endl;
+    Volume::printInfo();
+    orientation_->printInfo();
 
 }
 
-const LocalAxes* PMVolumePML::getOrientation() const {
+const Math::Axis::Local* VolumePML::getOrientation() const {
     return orientation_;
 }
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

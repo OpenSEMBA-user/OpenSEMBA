@@ -18,14 +18,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Quad.cpp
- *
- *  Created on: Apr 10, 2014
- *      Author: luis
- */
 
-#include <geometry/elements/Quadrilateral.h>
+#include "Quadrilateral.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 template<class T>
 Quadrilateral<T>::Quadrilateral() {
@@ -37,5 +35,9 @@ Quadrilateral<T>::~Quadrilateral() {
 
 }
 
-template class Quadrilateral<Real>;
-template class Quadrilateral<Int >;
+template class Quadrilateral<Math::Real>;
+template class Quadrilateral<Math::Int >;
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

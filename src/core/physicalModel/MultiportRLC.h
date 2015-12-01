@@ -18,37 +18,36 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultiportRLC.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMMULTIPORTRLC_H_
-#define PMMULTIPORTRLC_H_
+#ifndef SEMBA_PHYSICALMODEL_MULTIPORTRLC_H_
+#define SEMBA_PHYSICALMODEL_MULTIPORTRLC_H_
 
-#include "PMMultiport.h"
+#include "Multiport.h"
 
-class PMMultiportRLC: public PMMultiport {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class MultiportRLC: public Multiport {
 public:
-	PMMultiportRLC(
-	 const MatId idIn,
-	 const string nameIn,
-	 const PMMultiport::Type typeIn,
-	 const Real resistance,
-	 const Real inductance,
-	 const Real capacitance);
-	virtual ~PMMultiportRLC();
+    MultiportRLC(const Id idIn,
+                 const std::string nameIn,
+                 const Multiport::Type typeIn,
+                 const Math::Real resistance,
+                 const Math::Real inductance,
+                 const Math::Real capacitance);
+    virtual ~MultiportRLC();
 
-    DEFINE_CLONE(PMMultiportRLC);
+    SEMBA_CLASS_DEFINE_CLONE(MultiportRLC);
 
-	virtual Real getR() const;
-	virtual Real getL() const;
-	virtual Real getC() const;
-	virtual void printInfo() const;
+    virtual Math::Real getR() const;
+    virtual Math::Real getL() const;
+    virtual Math::Real getC() const;
+    virtual void printInfo() const;
 private:
-	Real R_, L_, C_;
+    Math::Real R_, L_, C_;
 };
 
-#endif /* PMMULTIPORTRLC_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_MULTIPORTRLC_H_ */

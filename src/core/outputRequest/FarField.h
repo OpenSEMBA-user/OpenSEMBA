@@ -18,45 +18,46 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * OutputRequestFarField.h
- *
- *  Created on: Mar 5, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
-#define SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_
+#ifndef SEMBA_OUTPUTREQUEST_FARFIELD_H_
+#define SEMBA_OUTPUTREQUEST_FARFIELD_H_
 
-#include "OutRq.h"
+#include "OutputRequest.h"
 
-class OutRqFarField : public virtual OutRq<Vol> {
+namespace SEMBA {
+namespace OutputRequest {
+
+class FarField : public virtual OutputRequest<Geometry::Elem> {
 public:
-    OutRqFarField(const Domain& domain,
-                  const string& name,
-                  const GroupElements<Vol>& box,
-                  const Real iTh, const Real fTh, const Real sTh,
-                  const Real iPhi, const Real fPhi, const Real sPhi);
-    OutRqFarField(const OutRqFarField& rhs);
-    ~OutRqFarField();
+    FarField(const Domain& domain,
+             const std::string& name,
+             const Geometry::Element::Group<Geometry::Elem>& box,
+             const Math::Real iTh, const Math::Real fTh, const Math::Real sTh,
+             const Math::Real iPhi, const Math::Real fPhi,
+             const Math::Real sPhi);
+    FarField(const FarField& rhs);
+    ~FarField();
 
-    DEFINE_CLONE(OutRqFarField);
+    SEMBA_CLASS_DEFINE_CLONE(FarField);
 
-    bool hasSameProperties(const OutRqBase& rhs) const;
+    bool hasSameProperties(const SEMBA::OutputRequest::Base& rhs) const;
 
-    Real getInitialTheta() const;
-    Real getFinalTheta() const;
-    Real getStepTheta() const;
-    Real getInitialPhi() const;
-    Real getFinalPhi() const;
-    Real getStepPhi() const;
+    Math::Real getInitialTheta() const;
+    Math::Real getFinalTheta() const;
+    Math::Real getStepTheta() const;
+    Math::Real getInitialPhi() const;
+    Math::Real getFinalPhi() const;
+    Math::Real getStepPhi() const;
 
 private:
-    Real initialTheta_, finalTheta_, stepTheta_;
-    Real initialPhi_, finalPhi_, stepPhi_;
+    Math::Real initialTheta_, finalTheta_, stepTheta_;
+    Math::Real initialPhi_, finalPhi_, stepPhi_;
 
-    void setThetaAndPhi(Real iTh, Real fTh, Real sTh,
-                        Real iPhi, Real fPhi, Real sPhi);
+    void setThetaAndPhi(Math::Real iTh, Math::Real fTh, Math::Real sTh,
+                        Math::Real iPhi, Math::Real fPhi, Math::Real sPhi);
 };
 
-#endif /* SRC_COMMON_INPUTS_OUTRQ_OUTRQFARFIELD_H_ */
+} /* namespace OutputRequest */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_OUTPUTREQUEST_FARFIELD_H_ */

@@ -18,58 +18,77 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Lin2Conformal.h
- *
- *  Created on: 21/3/2015
- *      Author: Daniel
- */
 
-#ifndef SRC_COMMON_GEOMETRY_ELEMENTS_LINECONFORMAL_H_
-#define SRC_COMMON_GEOMETRY_ELEMENTS_LINECONFORMAL_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_LINECONFORMAL_H_
+#define SEMBA_GEOMETRY_ELEMENT_LINECONFORMAL_H_
 
-#include <geometry/elements/Line2.h>
-#include "geometry/coordinates/CoordinateConformal.h"
+#include "geometry/coordinate/Conformal.h"
 
+#include "Line2.h"
 
-class LineConformal : public virtual Line2<Int> {
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
+
+class LineConformal : public virtual Line2<Math::Int> {
 public:
-    class ErrorCoordNotConf : public Element<Int>::ErrorCoord {
-    public:
-        ErrorCoordNotConf(const CoordinateId& coordId);
-        ~ErrorCoordNotConf() throw();
-    };
-
     LineConformal();
-    LineConformal(const ElementId id,
+    LineConformal(const Id id,
                   const CoordI3* v[2],
-                  const CVecR3& norm,
-                  const LayerId layerId = LayerId(0),
-                  const MatId   matId   = MatId(0));
+                  const Math::CVecR3& norm,
+                  const Layer* lay = NULL,
+                  const Model* mat = NULL);
     LineConformal(const CoordI3* v[2],
-                  const CVecR3& norm,
-                  const LayerId layerId = LayerId(0),
-                  const MatId   matId   = MatId(0));
+                  const Math::CVecR3& norm,
+                  const Layer* lay = NULL,
+                  const Model* mat = NULL);
     LineConformal(const LineConformal& rhs);
     virtual ~LineConformal();
 
-    DEFINE_CLONE(LineConformal);
+    SEMBA_CLASS_DEFINE_CLONE(LineConformal);
 
-    CVecR3 getNorm () const { return norm_;  }
+    Math::CVecR3 getNorm () const { return norm_;  }
 
-    const CoordConf* getConfV(const UInt i) const;
+    const CoordConf* getV(const Size i) const;
 
-    void setV(const UInt i, const CoordI3* coord);
+    void setV(const Size i, const CoordI3* coord);
 
-    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
+    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
+                          const Grid3&) const;
 
     void printInfo() const;
 
 private:
     void checkCoordinates();
-    CVecR3 norm_;
+    Math::CVecR3 norm_;
 };
 
-typedef LineConformal LinConf;
+namespace Error {
+namespace Coord {
 
-#endif /* SRC_COMMON_GEOMETRY_ELEMENTS_LINECONFORMAL_H_ */
+class NotConf : public Error {
+public:
+    NotConf(const CoordId& coordId)
+    :   Error(coordId) {
+        std::stringstream aux;
+        aux << "Coordinate with Id (" << this->getCoordId()
+            << ") not conformal";
+        str_ = aux.str();
+    }
+    ~NotConf() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    std::string str_;
+};
+
+} /* namespace Coord */
+} /* namespace Error */
+} /* namespace Element */
+
+typedef Element::LineConformal LinConf;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_LINECONFORMAL_H_ */

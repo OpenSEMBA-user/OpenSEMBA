@@ -18,62 +18,63 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Mesh.cpp
- *
- *  Created on: Jul 23, 2013
- *      Author: luis
- */
-#include "MeshStructured.h"
-#include "MeshUnstructured.h"
 
-MeshUnstructured::MeshUnstructured() {
+#include "Structured.h"
+#include "Unstructured.h"
 
-}
+#include "geometry/element/Tetrahedron.h"
 
-MeshUnstructured::MeshUnstructured(const GroupCoordinates<const CoordR3>& cG,
-                                   const GroupElements<const ElemR>& elem,
-                                   const GroupLayers<const Layer>& layers)
-:   GroupCoordinates<CoordR3>(cG.cloneElems()),
-    GroupElements<ElemR>(elem.cloneElems()),
-    GroupLayers<Layer>(layers.cloneElems()) {
+namespace SEMBA {
+namespace Geometry {
+namespace Mesh {
 
-    GroupElements<ElemR>::reassignPointers(*this);
-}
-
-MeshUnstructured::MeshUnstructured(const MeshUnstructured& rhs)
-:   GroupCoordinates<CoordR3>(rhs.coords().cloneElems()),
-    GroupElements<ElemR>(rhs.elems().cloneElems()),
-    GroupLayers<Layer>(rhs.layers().cloneElems()) {
-
-    GroupElements<ElemR>::reassignPointers(*this);
-}
-
-MeshUnstructured::~MeshUnstructured() {
+Unstructured::Unstructured() {
 
 }
 
-MeshUnstructured& MeshUnstructured::operator=(const MeshUnstructured& rhs) {
+Unstructured::Unstructured(const Coordinate::Group<const CoordR3>& cG,
+                           const Element::Group<const ElemR>& elem,
+                           const Layer::Group<const Layer::Layer>& layers)
+:   Coordinate::Group<CoordR3>(cG.cloneElems()),
+    Element::Group<ElemR>(elem.cloneElems()),
+    Layer::Group<Layer::Layer>(layers.cloneElems()) {
+
+    Element::Group<ElemR>::reassignPointers(*this);
+}
+
+Unstructured::Unstructured(const Unstructured& rhs)
+:   Coordinate::Group<CoordR3>(rhs.coords().cloneElems()),
+    Element::Group<ElemR>(rhs.elems().cloneElems()),
+    Layer::Group<Layer::Layer>(rhs.layers().cloneElems()) {
+
+    Element::Group<ElemR>::reassignPointers(*this);
+}
+
+Unstructured::~Unstructured() {
+
+}
+
+Unstructured& Unstructured::operator=(const Unstructured& rhs) {
     if(this == &rhs) {
         return *this;
     }
 
-    GroupCoordinates<CoordR3>::operator=(rhs.coords().cloneElems());
-    GroupElements<ElemR>::operator=(rhs.elems().cloneElems());
-    GroupLayers<Layer>::operator=(rhs.layers().cloneElems());
+    Coordinate::Group<CoordR3>::operator=(rhs.coords().cloneElems());
+    Element::Group<ElemR>::operator=(rhs.elems().cloneElems());
+    Layer::Group<Layer::Layer>::operator=(rhs.layers().cloneElems());
 
-    GroupElements<ElemR>::reassignPointers(*this);
+    Element::Group<ElemR>::reassignPointers(*this);
 
     return *this;
 }
 
-MeshStructured* MeshUnstructured::getMeshStructured(const Grid3& grid,
-        const Real tol) const {
-    MeshStructured* res = new MeshStructured(grid);
+Structured* Unstructured::getMeshStructured(const Grid3& grid,
+        const Math::Real tol) const {
+    Structured* res = new Structured(grid);
 
-    vector<CoordI3*> newCoords;
+    std::vector<CoordI3*> newCoords;
     newCoords.reserve(coords().size());
-    for (UInt i = 0; i < coords().size(); i++) {
+    for (Size i = 0; i < coords().size(); i++) {
         CoordI3* newCoord = coords()(i)->toStructured(grid);
         if (newCoord != NULL) {
             newCoords.push_back(newCoord);
@@ -81,9 +82,9 @@ MeshStructured* MeshUnstructured::getMeshStructured(const Grid3& grid,
     }
     res->coords().add(newCoords);
 
-    vector<ElemI*> newElems;
+    std::vector<ElemI*> newElems;
     newElems.reserve(elems().size());
-    for (UInt i = 0; i < elems().size(); i++) {
+    for (Size i = 0; i < elems().size(); i++) {
         ElemI* newElem = elems()(i)->toStructured(*res, grid, tol);
         if (newElem != NULL) {
             newElems.push_back(newElem);
@@ -94,23 +95,25 @@ MeshStructured* MeshUnstructured::getMeshStructured(const Grid3& grid,
     return res;
 }
 
-MeshUnstructured* MeshUnstructured::getConnectivityMesh() const {
-    MeshUnstructured* res = new MeshUnstructured;
+Unstructured* Unstructured::getConnectivityMesh() const {
+    Unstructured* res = new Unstructured;
     res->coords() = coords().cloneElems();
-    GroupElements<const ElemR> elems = this->elems();
+    Element::Group<const ElemR> elems = this->elems();
     elems.removeMatId(MatId(0));
-    GraphVertices<ElemR, CoordR3> graphLayer;
+    Graph::Vertices<ElemR, CoordR3> graphLayer;
     graphLayer.init(elems);
-    vector<vector<const ElemR*>> comps = graphLayer.getConnectedComponents();
-    for (UInt c = 0; c < comps.size(); c++) {
-        stringstream layerName;
+    std::vector<std::vector<const ElemR*>> comps =
+        graphLayer.getConnectedComponents();
+    for (Size c = 0; c < comps.size(); c++) {
+        std::stringstream layerName;
         layerName << "Component " << c+1;
-        Layer* newLayer = res->layers().addId(new Layer(layerName.str()))(0);
-        vector<ElemR*> newElemsLayer;
+        Layer::Layer* newLayer =
+            res->layers().addId(new Layer::Layer(layerName.str()))(0);
+        std::vector<ElemR*> newElemsLayer;
         newElemsLayer.resize(comps[c].size());
-        for (UInt e = 0; e < comps[c].size(); e++) {
+        for (Size e = 0; e < comps[c].size(); e++) {
             newElemsLayer[e] = comps[c][e]->cloneTo<ElemR>();
-            newElemsLayer[e]->setLayerId(newLayer->getId());
+            newElemsLayer[e]->setLayer(newLayer);
         }
         res->elems().add(newElemsLayer);
     }
@@ -118,15 +121,16 @@ MeshUnstructured* MeshUnstructured::getConnectivityMesh() const {
     return res;
 }
 
-vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
-        const CVecR3& normal) {
-    const UInt nK = border.size();
-    vector<Face> res;
+std::vector<Element::Face> Unstructured::getBorderWithNormal(
+        const std::vector<Element::Face>& border,
+        const Math::CVecR3& normal) {
+    const Size nK = border.size();
+    std::vector<Element::Face> res;
     res.reserve(nK);
-    for (UInt i = 0; i < nK; i++) {
+    for (Size i = 0; i < nK; i++) {
         const VolR* tet = border[i].first;
-        const UInt face = border[i].second;
-        CVecR3 tetNormal = tet->getSideNormal(face);
+        const Size face = border[i].second;
+        Math::CVecR3 tetNormal = tet->getSideNormal(face);
         if (tetNormal == normal && !tet->isCurvedFace(face)) {
             res.push_back(border[i]);
         }
@@ -134,34 +138,34 @@ vector<Face> MeshUnstructured::getBorderWithNormal(const vector<Face>& border,
     return res;
 }
 
-GroupElements<const Triangle> MeshUnstructured::convertToTri(
-        const GroupElements<const ElemR>& region,
+Element::Group<const Tri> Unstructured::convertToTri(
+        const Element::Group<const ElemR>& region,
         bool includeTets) const {
 
-    GroupElements<Triangle> res(region.cloneElems());
+    Element::Group<Tri> res(region.cloneElems());
     if (includeTets) {
-        GroupElements<const Tetrahedron> tet = region.getOf<Tetrahedron>();
-        vector<Face> border = getInternalBorder(tet);
-        for (UInt i = 0; i < border.size(); i++) {
-            if (border[i].first->is<Tetrahedron>()) {
-                const Tetrahedron* tet = border[i].first->castTo<Tetrahedron>();
-                const UInt face = border[i].second;
+        Element::Group<const Tet> tet = region.getOf<Tet>();
+        std::vector<Element::Face> border = getInternalBorder(tet);
+        for (Size i = 0; i < border.size(); i++) {
+            if (border[i].first->is<Tet>()) {
+                const Tet* tet = border[i].first->castTo<Tet>();
+                const Size face = border[i].second;
                 res.addId(tet->getTri3Face(face));
             }
         }
     }
-    return GroupElements<const Triangle>(res);
+    return Element::Group<const Tri>(res);
 }
 
-vector<Face> MeshUnstructured::getInternalBorder(
-        const GroupElements<const ElemR>& region) const {
-    Connectivities conn(region);
-    vector<Face> res;
+std::vector<Element::Face> Unstructured::getInternalBorder(
+        const Element::Group<const ElemR>& region) const {
+    Graph::Connectivities conn(region);
+    std::vector<Element::Face> res;
     res.reserve(region.size());
-    const GroupElements<const VolR> vol = region.getOf<VolR>();
-    for (UInt i = 0; i < vol.size(); i++) {
-        for (UInt f = 0; f < vol(i)->numberOfFaces(); f++) {
-            Face face(vol(i), f);
+    const Element::Group<const VolR> vol = region.getOf<VolR>();
+    for (Size i = 0; i < vol.size(); i++) {
+        for (Size f = 0; f < vol(i)->numberOfFaces(); f++) {
+            Element::Face face(vol(i), f);
             conn.isDomainBoundary(face);
             res.push_back(face);
         }
@@ -169,13 +173,13 @@ vector<Face> MeshUnstructured::getInternalBorder(
     return res;
 }
 
-vector<Face> MeshUnstructured::getExternalBorder(
-        const GroupElements<const ElemR>& region) const {
-    const Connectivities conn(elems());
-    vector<Face> internal = getInternalBorder(region);
-    vector<Face> external;
+std::vector<Element::Face> Unstructured::getExternalBorder(
+        const Element::Group<const ElemR>& region) const {
+    const Graph::Connectivities conn(elems());
+    std::vector<Element::Face> internal = getInternalBorder(region);
+    std::vector<Element::Face> external;
     external.reserve(internal.size());
-    for (UInt i = 0; i < internal.size(); i++) {
+    for (Size i = 0; i < internal.size(); i++) {
         if (!conn.isDomainBoundary(internal[i]))  {
             external.push_back(conn.getNeighFace(internal[i]));
         }
@@ -183,59 +187,65 @@ vector<Face> MeshUnstructured::getExternalBorder(
     return external;
 }
 
-GroupElements <const VolR> MeshUnstructured::getAdjacentRegion(
-        const GroupElements<const VolR>& region) const {
-    vector<Face> outer = getExternalBorder(region);
-    UInt nOut = outer.size();
+Element::Group <const VolR> Unstructured::getAdjacentRegion(
+        const Element::Group<const VolR>& region) const {
+    std::vector<Element::Face> outer = getExternalBorder(region);
+    Size nOut = outer.size();
     // Removes repeated.
-    DynMatrix<UInt> aux(nOut,1);
-    for (UInt i = 0; i < nOut; i++) {
-        aux(i,0) = outer[i].first->getId().toUInt();
+    Math::Matrix::Dynamic<Size> aux(nOut,1);
+    for (Size i = 0; i < nOut; i++) {
+        aux(i,0) = outer[i].first->getId().toInt();
     }
     aux.sortAndRemoveRepeatedRows_omp();
     // Prepares result.
-    GroupElements<ElemR> res;
-    for (UInt i = 0; i < aux.nRows(); i++) {
-        res.add(elems().getId(ElementId(aux(i,0)))->cloneTo<ElemR>());
+    Element::Group<ElemR> res;
+    for (Size i = 0; i < aux.nRows(); i++) {
+        res.add(elems().getId(ElemId(aux(i,0)))->cloneTo<ElemR>());
     }
     return res;
 }
 
-GroupElements<const SurfR> MeshUnstructured::getMaterialBoundary(
+Element::Group<const SurfR> Unstructured::getMaterialBoundary(
         const MatId matId,
         const LayerId layId) const {
 
     return elems().getMatLayerId(matId, layId).getOf<SurfR>();
 }
 
-void MeshUnstructured::applyScalingFactor(const Real factor) {
-    GroupCoordinates<CoordR3>::applyScalingFactor(factor);
+void Unstructured::applyScalingFactor(const Math::Real factor) {
+    Coordinate::Group<CoordR3>::applyScalingFactor(factor);
 }
 
-void MeshUnstructured::printInfo() const {
-    cout << " --- Mesh unstructured Info --- " << endl;
-    cout << "Number of coordinates: " << GroupCoordinates<CoordR3>::size() << endl;
-    cout << "Number of elements: " << GroupElements<ElemR>::size() << endl;
-    GroupLayers<>::printInfo();
+void Unstructured::printInfo() const {
+    std::cout << " --- Mesh unstructured Info --- " << std::endl;
+    std::cout << "Number of coordinates: "
+              << Coordinate::Group<CoordR3>::size() << std::endl;
+    std::cout << "Number of elements: " << Element::Group<ElemR>::size()
+              << std::endl;
+    Layer::Group<>::printInfo();
 }
 
-GroupElements<const SurfR> MeshUnstructured::getSurfsMatching(
-        const vector<Face>& faces) const {
-    vector<const SurfR*> res;
-    IndexByVertexId index = getIndexByVertexId();
-    for (UInt i = 0; i < faces.size(); i++) {
+Element::Group<const SurfR> Unstructured::getSurfsMatching(
+        const std::vector<Element::Face>& faces) const {
+    std::vector<const SurfR*> res;
+    Element::IndexByVertexId index = getIndexByVertexId();
+    for (Size i = 0; i < faces.size(); i++) {
         const VolR* vol = faces[i].first;
-        const UInt f = faces[i].second;
-        vector<const CoordR3*> vertices = vol->getSideVertices(f);
-        vector<CoordinateId> ids = ElementBase::getIds(vertices);
-        IndexByVertexId::const_iterator it = index.find(ids);
+        const Size f = faces[i].second;
+        std::vector<const CoordR3*> vertices = vol->getSideVertices(f);
+        std::vector<CoordId> ids = Element::Base::getIds(vertices);
+        Element::IndexByVertexId::const_iterator it = index.find(ids);
         if (it != index.end()) {
             res.push_back(it->second->castTo<SurfR>());
         }
     }
-    return GroupElements<const SurfR>(res);
+    return Element::Group<const SurfR>(res);
 }
 
-BoxR3 MeshUnstructured::getBoundingBox() const {
+BoxR3 Unstructured::getBoundingBox() const {
     return elems().getBound();
 }
+
+} /* namespace Mesh */
+} /* namespace Geometry */
+} /* namespace SEMBA */

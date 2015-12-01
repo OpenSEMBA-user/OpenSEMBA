@@ -18,16 +18,11 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * CoordIntFractional.cpp
- *
- *  Created on: May 19, 2015
- *      Author: Miguel D. Ruiz - Cabello Nuñez
- */
-
-using namespace std;
 
 #include "CVecI3Fractional.h"
+
+namespace SEMBA {
+namespace Math {
 
 CVecI3Fractional::CVecI3Fractional() {
 }
@@ -56,13 +51,13 @@ CartesianDirection CVecI3Fractional::getDirBase() const {
     UInt rang = this->getRangeBase();
     if (rang == 1) {
         for (unsigned int n = 0; n < 3; ++n) {
-            if (len_[n] > MathUtils::tolerance) {
+            if (len_[n] > Util::tolerance) {
                 return CartesianDirection(n + 1);
             }
         }
     } else if (rang == 2) {
         for (unsigned int n = 0; n < 3; ++n) {
-            if (len_[n] < MathUtils::tolerance) {
+            if (len_[n] < Util::tolerance) {
                 return CartesianDirection(n + 1);
             }
         }
@@ -74,7 +69,7 @@ UInt CVecI3Fractional::getRangeBase() const {
     unsigned int rang;
     rang = 0;
     for (unsigned int n = 0; n < 3; ++n) {
-        if (len_[n] > MathUtils::tolerance) {
+        if (len_[n] > Util::tolerance) {
             ++rang;
         }
     }
@@ -97,7 +92,7 @@ CVecR3 CVecI3Fractional::getScalePos(const CVecI3 origin) const {
     return retPos;
 }
 
-string CVecI3Fractional::toStr() const {
+std::string CVecI3Fractional::toStr() const {
     return CVecI3::toStr() + " len: " + len_.toStr();
 }
 
@@ -120,12 +115,12 @@ CVecR3 CVecI3Fractional::getRelativePosNearestNode() const {
 
 void CVecI3Fractional::join(CVecI3Fractional& rhs) {
     for(UInt dir=0; dir<3; ++dir){
-        if(MathUtils::equal(len_(dir),0.0)){
+        if(Util::equal(len_(dir),0.0)){
             rhs.len_(dir) = 0.0;
-        }else if(MathUtils::equal(rhs.len_(dir),0.0)){
+        }else if(Util::equal(rhs.len_(dir),0.0)){
             len_(dir) = 0.0;
         }else{
-           len_(dir) = rhs.len_(dir);
+            len_(dir) = rhs.len_(dir);
         }
     }
 }
@@ -163,13 +158,13 @@ CVecI3Fractional& CVecI3Fractional::reduceTopology(const UInt range){
 
 CVecI3Fractional& CVecI3Fractional::reduceCoords() {
     for(UInt dir=0; dir<3; ++dir){
-        if(len_(dir)>=(1.0-MathUtils::tolerance)){
+        if(len_(dir)>=(1.0-Util::tolerance)){
             len_(dir)= 0.0;
             (*this)(dir)++;
 //        }else if (len_(dir)<(-1.0)*MathUtils::tolerance){
 //            len_(dir) = 0.0;
 //            val[dir]--;
-        }else if (len_(dir) < MathUtils::tolerance){
+        }else if (len_(dir) < Util::tolerance){
             len_(dir)=0.0;
         }
     }
@@ -184,10 +179,10 @@ CVecI3Fractional& CVecI3Fractional::CVecI3Fractional::move(
     canBeMoved = true;
     CVecR3 len;
     for (UInt dir = 0; dir < 3; ++dir) {
-        if (MathUtils::equal(len_(dir), 0.0)) {
+        if (Util::equal(len_(dir), 0.0)) {
             len(dir) = 0.0;
         } else {
-            if (MathUtils::equal(rhs.len_(dir), 0.0)) {
+            if (Util::equal(rhs.len_(dir), 0.0)) {
                 canBeMoved = false;
             } else {
                 len(dir) = len_(dir);
@@ -199,3 +194,6 @@ CVecI3Fractional& CVecI3Fractional::CVecI3Fractional::move(
     }
     return rhs;
 }
+
+} /* namespace Math */
+} /* namespace SEMBA */

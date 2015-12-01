@@ -18,66 +18,96 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PlaneWave.h
- *
- *  Created on: Jun 28, 2013
- *      Author: luis
- */
 
-#ifndef PLANEWAVE_H_
-#define PLANEWAVE_H_
+#ifndef SEMBA_SOURCE_PLANEWAVE_H_
+#define SEMBA_SOURCE_PLANEWAVE_H_
 
-#include "../sources/EMSource.h"
+#include <exception>
 
-class PlaneWave : public EMSource<Vol> {
+#include "Source.h"
+
+namespace SEMBA {
+namespace Source {
+
+class PlaneWave : public Source<Geometry::Vol> {
 public:
-    class ErrorZeroPolarization : public Error {
-    public:
-        ErrorZeroPolarization();
-        virtual ~ErrorZeroPolarization() throw();
-    };
-    class ErrorZeroMagnitude : public Error {
-    public:
-        ErrorZeroMagnitude();
-        virtual ~ErrorZeroMagnitude() throw();
-    };
-    class ErrorNotPerpendicular : public Error {
-    public:
-        ErrorNotPerpendicular();
-        virtual ~ErrorNotPerpendicular() throw();
-    };
-
     PlaneWave();
-    PlaneWave(Magnitude* magnitude,
-              GroupElements<Vol> elem,
-              CVecR3 direction,
-              CVecR3 polarization);
+    PlaneWave(Magnitude::Magnitude* magnitude,
+              Geometry::Element::Group<Geometry::Vol> elem,
+              Math::CVecR3 direction,
+              Math::CVecR3 polarization);
     PlaneWave(const PlaneWave& rhs);
     virtual ~PlaneWave();
 
-    DEFINE_CLONE(PlaneWave);
+    SEMBA_CLASS_DEFINE_CLONE(PlaneWave);
 
-    bool hasSameProperties(const EMSourceBase& rhs) const;
+    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
 
-    const string& getName() const;
-    const CVecR3& getPolarization() const;
-    const CVecR3& getWaveDirection() const;
-    Real getTheta() const;
-    Real getPhi() const;
-    Real getAlpha() const;
-    Real getBeta() const;
-    CVecR3 getElectricField(const Real time) const;
-    pair<CVecR3,CVecR3> getElectromagneticField(const Real time) const;
+    const std::string& getName() const;
+    const Math::CVecR3& getPolarization() const;
+    const Math::CVecR3& getWaveDirection() const;
+    Math::Real getTheta() const;
+    Math::Real getPhi() const;
+    Math::Real getAlpha() const;
+    Math::Real getBeta() const;
+    Math::CVecR3 getElectricField(const Math::Real time) const;
+    std::pair<Math::CVecR3,Math::CVecR3> getElectromagneticField(
+            const Math::Real time) const;
 
     void printInfo() const;
 
 private:
-    CVecR3 direction_;
-    CVecR3 polarization_;
+    Math::CVecR3 direction_;
+    Math::CVecR3 polarization_;
 
-    pair<Real,Real> cartesianToPolar(const CVecR3& vec) const;
-    Real reduceRadians(const Real radianIn) const;
+    std::pair<Math::Real,Math::Real> cartesianToPolar(
+            const Math::CVecR3& vec) const;
+    Math::Real reduceRadians(const Math::Real radianIn) const;
 };
 
-#endif /* PLANEWAVE_H_ */
+namespace Error {
+namespace PlaneWave {
+
+class Error : public std::exception {
+public:
+    Error() {}
+    virtual ~Error() throw() {}
+};
+
+class ZeroPolarization : public Error {
+public:
+    ZeroPolarization() {}
+    virtual ~ZeroPolarization() throw() {}
+
+    const char* what() const throw() {
+        return "PlaneWave: Polarization can't be zero.";
+    }
+};
+
+class ZeroMagnitude : public Error {
+public:
+    ZeroMagnitude() {}
+    virtual ~ZeroMagnitude() throw() {}
+
+    const char* what() const throw() {
+        return "PlaneWave: W. direction can't be zero.";
+    }
+};
+
+class NotPerpendicular : public Error {
+public:
+    NotPerpendicular() {}
+    virtual ~NotPerpendicular() throw() {}
+
+    const char* what() const throw() {
+        return ("PlaneWave: W. direction is not "
+                "perpendicular to polarization.");
+    }
+};
+
+} /* namespace PlaneWave */
+} /* namespace Error */
+} /* namespace Source */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_SOURCE_PLANEWAVE_H_ */

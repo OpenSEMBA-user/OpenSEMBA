@@ -18,23 +18,22 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * LocalAxes.h
- *
- *  Created on: Aug 27, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_MATH_LOCALAXES_H_
-#define SRC_COMMON_MATH_LOCALAXES_H_
+#ifndef SEMBA_MATH_AXIS_LOCAL_H_
+#define SEMBA_MATH_AXIS_LOCAL_H_
 
-#include "StaMatrix.h"
+#include "math/vector/Cartesian.h"
+#include "math/matrix/Static.h"
 
-class LocalAxes {
+namespace SEMBA {
+namespace Math {
+namespace Axis {
+
+class Local {
 public:
-    LocalAxes();
-    LocalAxes(CVecR3 eulerAngles, CVecR3 origin = CVecR3());
-    virtual ~LocalAxes();
+    Local();
+    Local(CVecR3 eulerAngles, CVecR3 origin = CVecR3());
+    virtual ~Local();
 
     MatR33 getTransformationMatrix() const;
     const CVecR3 getEulerAngles() const;
@@ -44,9 +43,14 @@ public:
     CVecR3 convertToGlobal(const CVecR3& local) const;
 
     void printInfo() const;
+
 private:
     CVecR3 eulerAngles_; // Euler angles in radians.
     CVecR3 origin_;
 };
 
-#endif /* SRC_COMMON_MATH_LOCALAXES_H_ */
+} /* namespace Axis */
+} /* namespace Math */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_MATH_AXIS_LOCAL_H_ */

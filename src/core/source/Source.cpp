@@ -18,80 +18,89 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "../sources/EMSource.h"
 
-EMSourceBase::EMSourceBase() {
+#include "Source.h"
+
+#include <iostream>
+
+namespace SEMBA {
+namespace Source {
+
+Base::Base() {
     magnitude_ = NULL;
 }
 
-EMSourceBase::EMSourceBase(const Magnitude* magnitude) {
+Base::Base(const Magnitude::Magnitude* magnitude) {
     magnitude_ = magnitude;
 }
 
-EMSourceBase::EMSourceBase(const EMSourceBase& rhs) {
+Base::Base(const Base& rhs) {
     if (rhs.magnitude_ != NULL) {
-        magnitude_ = rhs.magnitude_->cloneTo<Magnitude>();
+        magnitude_ = rhs.magnitude_->cloneTo<Magnitude::Magnitude>();
     } else {
         magnitude_ = rhs.magnitude_;
     }
 }
 
-EMSourceBase::~EMSourceBase() {
+Base::~Base() {
     if (magnitude_ != NULL) {
         delete magnitude_;
     }
 }
 
-bool EMSourceBase::check() const {
-    return ClassGroupBase<GroupElements<const Elem>>::check("EMSource");
+bool Base::check() const {
+// TODO Redo this function
+    throw std::logic_error("Source::Base::check() not implemented");
 }
 
-bool EMSourceBase::hasSameProperties(const EMSourceBase& rhs) const {
+bool Base::hasSameProperties(const Base& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }
     return (*magnitude_ == *rhs.magnitude_);
 }
 
-string EMSourceBase::getMagnitudeFilename() const {
-    const MagnitudeNumerical* mag =
-            dynamic_cast<const MagnitudeNumerical*>(magnitude_);
+std::string Base::getMagnitudeFilename() const {
+    const Magnitude::Numerical* mag =
+            dynamic_cast<const Magnitude::Numerical*>(magnitude_);
     if (mag != NULL) {
         return mag->getFilename();
     }
-    return string();
+    return std::string();
 }
 
-void EMSourceBase::convertToNumerical(const ProjectFile& file,
-                                      const Real step,
-                                      const Real finalTime) {
-    if(magnitude_->is<MagnitudeNumerical>()) {
+void Base::convertToNumerical(const FileSystem::Project& file,
+                              const Math::Real step,
+                              const Math::Real finalTime) {
+    if(magnitude_->is<Magnitude::Numerical>()) {
         return;
     }
-    const Magnitude* orig = magnitude_;
-    magnitude_ = new MagnitudeNumerical(file, *magnitude_, step, finalTime);
+    const Magnitude::Magnitude* orig = magnitude_;
+    magnitude_ = new Magnitude::Numerical(file, *magnitude_, step, finalTime);
     delete orig;
 }
 
-MagnitudeNumerical* EMSourceBase::exportToFile(const ProjectFile& file,
-                                               const Real step,
-                                               const Real finalTime) const {
-
-    if(magnitude_->is<MagnitudeNumerical>()) {
-        return magnitude_->cloneTo<MagnitudeNumerical>();
+Magnitude::Numerical* Base::exportToFile(const FileSystem::Project& file,
+                                         const Math::Real step,
+                                         const Math::Real finalTime) const {
+    if(magnitude_->is<Magnitude::Numerical>()) {
+        return magnitude_->cloneTo<Magnitude::Numerical>();
     }
-    return new MagnitudeNumerical(file, *magnitude_, step, finalTime);
+    return new Magnitude::Numerical(file, *magnitude_, step, finalTime);
 }
 
-void EMSourceBase::printInfo() const {
-    cout << " --- EMSource Base Info ---" << endl;
+void Base::printInfo() const {
+    std::cout << " --- EMSource Base Info ---" << std::endl;
     if (magnitude_ != NULL) {
         magnitude_->printInfo();
     } else {
-        cout << "No magnitude defined." << endl;
+        std::cout << "No magnitude defined." << std::endl;
     }
 }
 
-const Magnitude* EMSourceBase::getMagnitude() const {
+const Magnitude::Magnitude* Base::getMagnitude() const {
     return magnitude_;
 }
+
+} /* namespace Source */
+} /* namespace SEMBA */

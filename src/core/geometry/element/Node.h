@@ -18,21 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef NODE_H_
-#define NODE_H_
+
+#ifndef SEMBA_GEOMETRY_ELEMENT_NODE_H_
+#define SEMBA_GEOMETRY_ELEMENT_NODE_H_
 
 #include "Element.h"
 
-class NodeBase : public virtual ElementBase {
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
+
+class NodeBase : public virtual Base {
 public:
     NodeBase() {};
     virtual ~NodeBase() {};
 
-    inline UInt numberOfCoordinates() const { return 1; }
-    inline UInt numberOfFaces   () const { return 1; }
-    inline UInt numberOfVertices() const { return 1; }
-    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 1; }
-    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 1; }
+    inline Size numberOfCoordinates() const { return 1; }
+    inline Size numberOfFaces   () const { return 1; }
+    inline Size numberOfVertices() const { return 1; }
+    inline Size numberOfSideVertices   (const Size f = 0) const { return 1; }
+    inline Size numberOfSideCoordinates(const Size f = 0) const { return 1; }
 };
 
 template<class T>
@@ -40,47 +45,51 @@ class Node : public virtual Element<T>,
              public virtual NodeBase {
 public:
     Node();
-	Node(const GroupCoordinates< Coordinate<T,3> >&,
-         const ElementId id,
-         const CoordinateId vId[1],
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-	Node(const ElementId id,
-         const Coordinate<T,3>* v[1],
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-	Node(GroupCoordinates<Coordinate<T,3> >&,
-         const ElementId id,
+    Node(const Id id,
+         const Coordinate::Coordinate<T,3>* v[1],
+         const Layer* lay = NULL,
+         const Model* mat = NULL);
+    Node(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
+         const Id id,
          const Box<T,3>& box,
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
+         const Layer* lay = NULL,
+         const Model* mat = NULL);
     Node(const Node<T>& rhs);
-	virtual ~Node();
+    virtual ~Node();
     
-    DEFINE_CLONE(Node<T>);
+    SEMBA_CLASS_DEFINE_CLONE(Node<T>);
 
-    bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
+    bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
-    const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
-    const Coordinate<T,3>* getSideV(const UInt f, const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
+                                                const Size i) const;
 
-    const Coordinate<T,3>* getVertex    (const UInt i) const;
-    const Coordinate<T,3>* getSideVertex(const UInt f, const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
+                                                     const Size i) const;
 
-    void setV(const UInt i, const Coordinate<T,3>* coord);
+    void setV(const Size i, const Coordinate::Coordinate<T,3>* coord);
 
-    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
-                        const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
+    ElemI* toStructured(const Coordinate::Group<CoordI3>&,
+                        const Grid3&,
+                        const Math::Real = Grid3::tolerance) const;
+    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
+                          const Grid3&) const;
 
-	void printInfo() const;
+    void printInfo() const;
 
 private:
-	const Coordinate<T,3>* v_[1];
+    const Coordinate::Coordinate<T,3>* v_[1];
 };
 
-typedef NodeBase   Nod;
-typedef Node<Real> NodR;
-typedef Node<Int > NodI;
+} /* namespace Element */
 
-#endif
+typedef Element::NodeBase         Nod;
+typedef Element::Node<Math::Real> NodR;
+typedef Element::Node<Math::Int > NodI;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_NODE_H_ */

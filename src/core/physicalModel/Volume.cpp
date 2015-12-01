@@ -18,25 +18,25 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolume.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMVolume.h"
+#include "Volume.h"
 
-PMVolume::PMVolume(const MatId id, const string name)
-: PhysicalModel(id, name) {
-}
+namespace SEMBA {
+namespace PhysicalModel {
 
-PMVolume::~PMVolume() {
+Volume::Volume(const Id id, const std::string name)
+:   PhysicalModel(id, name) {
 
 }
 
-void PMVolume::printInfo() const {
-	cout << "--- PMVolume info ---" << endl;
-	PhysicalModel::printInfo();
+Volume::~Volume() {
+
 }
 
+void Volume::printInfo() const {
+    std::cout << "--- Volume info ---" << std::endl;
+    PhysicalModel::printInfo();
+}
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

@@ -18,32 +18,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Line.h
- *
- *  Created on: May 13, 2013
- *      Author: luis
- */
 
-#ifndef LINE_H_
-#define LINE_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_LINE_H_
+#define SEMBA_GEOMETRY_ELEMENT_LINE_H_
 
-#include "math/SimplexLin.h"
+#include "math/simplex/Line.h"
 
 #include "Element.h"
 
-using namespace std;
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
-class LineBase : public virtual ElementBase {
+class LineBase : public virtual Base {
 public:
     LineBase() {}
     virtual ~LineBase() {}
 
-    inline UInt numberOfFaces   () const { return 2; }
-    inline UInt numberOfVertices() const { return 2; }
+    inline Size numberOfFaces   () const { return 2; }
+    inline Size numberOfVertices() const { return 2; }
 
-    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 1; }
-    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 1; }
+    inline Size numberOfSideVertices   (const Size f = 0) const { return 1; }
+    inline Size numberOfSideCoordinates(const Size f = 0) const { return 1; }
 };
 
 template<class T>
@@ -54,8 +50,13 @@ public:
     virtual ~Line();
 };
 
-typedef LineBase   Lin;
-typedef Line<Real> LinR;
-typedef Line<Int > LinI;
+} /* namespace Element */
 
-#endif /* LINE_H_ */
+typedef Element::LineBase         Lin;
+typedef Element::Line<Math::Real> LinR;
+typedef Element::Line<Math::Int > LinI;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_LINE_H_ */

@@ -18,80 +18,102 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * MeshStructured.h
- *
- *  Created on: Mar 13, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_
-#define SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_
+#ifndef SEMBA_GEOMETRY_MESH_STRUCTURED_H_
+#define SEMBA_GEOMETRY_MESH_STRUCTURED_H_
+
+#include <exception>
+
+#include "geometry/element/Hexahedron8.h"
 
 #include "Mesh.h"
+#include "geometry/Grid.h"
+#include "geometry/coordinate/Group.h"
+#include "geometry/element/Group.h"
+#include "geometry/layer/Group.h"
 
-class MeshUnstructured;
+class Unstructured;
 
-class MeshStructured : public virtual Mesh,
-                       public virtual Grid3,
-                       public virtual GroupCoordinates<CoordI3>,
-                       public virtual GroupElements<ElemI>,
-                       public virtual GroupLayers<Layer> {
+namespace SEMBA {
+namespace Geometry {
+namespace Mesh {
+
+class Structured : public virtual Mesh,
+                   public virtual Grid3,
+                   public virtual Coordinate::Group<CoordI3>,
+                   public virtual Element::Group<ElemI>,
+                   public virtual Layer::Group<Layer::Layer> {
 public:
-    class ErrorInvalidBoundary : public Error {
-    public:
-        ErrorInvalidBoundary();
-        virtual ~ErrorInvalidBoundary() throw();
-    };
+    Structured(const Grid3& grid);
+    Structured(const Grid3& grid,
+               const Coordinate::Group<const CoordI3>& cG,
+               const Element::Group<const ElemI>& elem,
+               const Layer::Group<const Layer::Layer>& =
+                   Layer::Group<const Layer::Layer>());
+    Structured(const Structured& param);
+    virtual ~Structured();
 
-    MeshStructured(const Grid3& grid);
-    MeshStructured(const Grid3& grid,
-                   const GroupCoordinates<const CoordI3>& cG,
-                   const GroupElements<const ElemI>& elem,
-                   const GroupLayers<const Layer>& = GroupLayers<const Layer>());
-    MeshStructured(const MeshStructured& param);
-    virtual ~MeshStructured();
+    Structured& operator=(const Structured& rhs);
 
-    MeshStructured& operator=(const MeshStructured& rhs);
+    SEMBA_CLASS_DEFINE_CLONE(Structured);
 
-    DEFINE_CLONE(MeshStructured);
+    Grid3&                      grid  () { return *this; }
+    Coordinate::Group<CoordI3>& coords() { return *this; }
+    Element::Group<ElemI>&      elems () { return *this; }
+    Layer::Group<>&             layers() { return *this; }
 
-    Grid3&                     grid  () { return *this; }
-    GroupCoordinates<CoordI3>& coords() { return *this; }
-    GroupElements<ElemI>&      elems () { return *this; }
-    GroupLayers<>&             layers() { return *this; }
+    const Grid3&                      grid  () const { return *this; }
+    const Coordinate::Group<CoordI3>& coords() const { return *this; }
+    const Element::Group<ElemI>&      elems () const { return *this; }
+    const Layer::Group<>&             layers() const { return *this; }
 
-    const Grid3&                     grid  () const { return *this; }
-    const GroupCoordinates<CoordI3>& coords() const { return *this; }
-    const GroupElements<ElemI>&      elems () const { return *this; }
-    const GroupLayers<>&             layers() const { return *this; }
-
-    MeshUnstructured* getMeshUnstructured() const;
-    MeshStructured* getConnectivityMesh() const;
+    Unstructured* getMeshUnstructured() const;
+    Structured* getConnectivityMesh() const;
 
     template<template<typename> class E>
-    GroupElements< E<Int> > add(const GroupElements<E<Real> >&,
-                                const Real tol = Grid3::tolerance);
+    Element::Group< E<Math::Int> > add(
+            const Element::Group<E<Math::Real> >&,
+            const Math::Real tol = Grid3::tolerance);
     template<template<typename> class E>
-    GroupElements< E<Int> > add(const GroupElements<const E<Real> >&,
-                                const Real tol = Grid3::tolerance);
+    Element::Group< E<Math::Int> > add(
+            const Element::Group<const E<Math::Real> >&,
+            const Math::Real tol = Grid3::tolerance);
     template<template<typename> class E>
-    GroupElements< E<Int> > add(E<Real>*,
-                                const Real tol = Grid3::tolerance);
+    Element::Group< E<Math::Int> > add(
+            E<Math::Real>*,
+            const Math::Real tol = Grid3::tolerance);
 
-    void convertToHex(GroupElements<const SurfI> surfs);
-    void addAsHex(GroupElements<const VolR> vols);
+    void convertToHex(Element::Group<const SurfI> surfs);
+    void addAsHex(Element::Group<const VolR> vols);
 
-    Real getMinimumSpaceStep() const;
-    void applyScalingFactor(const Real factor);
+    Math::Real getMinimumSpaceStep() const;
+    void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
 
     virtual void printInfo() const;
 private:
-    vector<HexI8*> discretizeWithinBoundary(
-            const GroupElements<const SurfI>& faces);
-    vector<pair<const SurfI*, const SurfI*> > getPairsDefiningVolumeWithin(
-            const GroupElements<const SurfI>& faces) const;
+    std::vector<HexI8*> discretizeWithinBoundary(
+            const Element::Group<const SurfI>& faces);
+    std::vector<std::pair<const SurfI*, const SurfI*> >
+        getPairsDefiningVolumeWithin(
+            const Element::Group<const SurfI>& faces) const;
 };
 
-#endif /* SRC_COMMON_GEOMETRY_MESHSTRUCTURED_H_ */
+namespace Error {
+
+class InvalidBoundary : public std::exception {
+public:
+    InvalidBoundary() {}
+    virtual ~InvalidBoundary() throw() {}
+
+    const char* what() const throw() {
+        return "Invalid boundary to discretize";
+    }
+};
+
+} /* namespace Error */
+} /* namespace Mesh */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_MESH_STRUCTURED_H_ */

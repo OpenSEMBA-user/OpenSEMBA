@@ -18,21 +18,21 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMSurface.h
- *
- *  Created on: Jan 9, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACE_H_
-#define SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACE_H_
+#ifndef SEMBA_PHYSICALMODEL_SURFACE_H_
+#define SEMBA_PHYSICALMODEL_SURFACE_H_
 
 #include "PhysicalModel.h"
 
-class PMSurface: public PhysicalModel {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class Surface: public PhysicalModel {
 public:
-   PMSurface(const MatId id, const string& name);
+    Surface(const Id id, const std::string& name);
 };
 
-#endif /* SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACE_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_SURFACE_H_ */

@@ -18,7 +18,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+
 #include "Node.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 template<class T>
 Node<T>::Node() {
@@ -26,43 +31,29 @@ Node<T>::Node() {
 }
 
 template<class T>
-Node<T>::Node(const GroupCoordinates< Coordinate<T,3> >& coordGr,
-              const ElementId id,
-              const CoordinateId vId[1],
-              const LayerId layerId,
-              const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
-
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = coordGr.getId(vId[i]);
-	}
-}
-
-template<class T>
-Node<T>::Node(const ElementId id,
-              const Coordinate<T,3>* v[1],
-              const LayerId layerId,
-              const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
+Node<T>::Node(const Id id,
+              const Coordinate::Coordinate<T,3>* v[1],
+              const Layer* lay,
+              const Model* mat)
+:   Identifiable<Id>(id),
+  Elem(lay, mat) {
 
     v_[0] = v[0];
 }
 template<class T>
-Node<T>::Node(GroupCoordinates<Coordinate<T,3> >& cG,
-              const ElementId id,
+Node<T>::Node(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
+              const Id id,
               const Box<T,3>& box,
-              const LayerId layerId,
-              const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
+              const Layer* lay,
+              const Model* mat)
+:   Identifiable<Id>(id),
+    Elem(lay, mat) {
 
     if(!box.isPoint()) {
-        throw typename Box<T,3>::ErrorNotPoint();
+        throw Geometry::Error::Box::NotPoint();
     }
-    vector<CartesianVector<T,3> > pos = box.getPos();
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+    std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
             v_[i] = cG.addPos(pos[i]);
@@ -72,7 +63,7 @@ Node<T>::Node(GroupCoordinates<Coordinate<T,3> >& cG,
 
 template<class T>
 Node<T>::Node(const Node<T>& rhs)
-:   ClassIdBase<ElementId>(rhs),
+:   Identifiable<Id>(rhs),
     Elem(rhs) {
 
     v_[0] = rhs.v_[0];
@@ -84,7 +75,7 @@ Node<T>::~Node() {
 }
 
 template<class T>
-bool Node<T>::isStructured(const Grid3& grid, const Real tol) const {
+bool Node<T>::isStructured(const Grid3& grid, const Math::Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
     }
@@ -98,69 +89,78 @@ bool Node<T>::isStructured(const Grid3& grid, const Real tol) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Node<T>::getSideV(const UInt f, const UInt i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getV(const Size i) const {
+    return v_[i];
+}
+
+template<class T>
+const Coordinate::Coordinate<T,3>* Node<T>::getSideV(const Size f,
+                                                     const Size i) const {
     assert(f == 0 && i == 0);
     return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Node<T>::getVertex(const UInt i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getVertex(const Size i) const {
     assert(i == 0);
-	return v_[i];
+    return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Node<T>::getSideVertex(const UInt f, const UInt i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getSideVertex(const Size f,
+                                                          const Size i) const {
     assert(f == 0 && i == 0);
     return v_[i];
 }
 
 template<class T>
-void Node<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
-	assert(i < numberOfCoordinates());
-	v_[i] = coord;
+void Node<T>::setV(const Size i, const Coordinate::Coordinate<T,3>* coord) {
+    assert(i < numberOfCoordinates());
+    v_[i] = coord;
 }
 
 template<class T>
-ElemI* Node<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
-                             const Grid3& grid, const Real tol) const {
-    CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
-    if (vIds == NULL) {
+ElemI* Node<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
+                             const Grid3& grid, const Math::Real tol) const {
+    const CoordI3** v = this->vertexToStructured(cG, grid, tol);
+    if (v == NULL) {
         return NULL;
     }
-    ElemI* res =  new NodI(cG,
-                           this->getId(),
-                           vIds,
-                           this->getLayerId(),
-                           this->getMatId());
-    delete[] vIds;
+    ElemI* res =  new NodI(this->getId(),
+                           v,
+                           this->getLayer(),
+                           this->getModel());
+    delete[] v;
     return res;
 }
 
 template<class T>
-ElemR* Node<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
+ElemR* Node<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
                                const Grid3& grid) const {
-    CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
-    if (vIds == NULL) {
+    const CoordR3** v = this->vertexToUnstructured(cG, grid);
+    if (v == NULL) {
         return NULL;
     }
-    ElemR* res =  new NodR(cG,
-                           this->getId(),
-                           vIds,
-                           this->getLayerId(),
-                           this->getMatId());
-    delete[] vIds;
+    ElemR* res =  new NodR(this->getId(),
+                           v,
+                           this->getLayer(),
+                           this->getModel());
+    delete[] v;
     return res;
 }
 
 template<class T>
 void Node<T>::printInfo() const {
-	cout << "--- Node info ---" << endl;
-	Element<T>::printInfo();
-	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-		v_[i]->printInfo();
-	}
+    std::cout << "--- Node info ---" << std::endl;
+    Element<T>::printInfo();
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
+        v_[i]->printInfo();
+    }
 }
 
-template class Node<Real>;
-template class Node<Int >;
+template class Node<Math::Real>;
+template class Node<Math::Int >;
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

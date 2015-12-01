@@ -18,102 +18,116 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * MagnitudeNumerical.cpp
- *
- *  Created on: Dec 16, 2014
- *      Author: luis
- */
 
-#include "../../sources/magnitude/MagnitudeNumerical.h"
+#include "Numerical.h"
 
-MagnitudeNumerical::MagnitudeNumerical() {
+#include "math/function/LinearInterpolation.h"
+#include "math/util/Real.h"
+
+namespace SEMBA {
+namespace Source {
+namespace Magnitude {
+
+Numerical::Numerical() {
 
 }
 
-MagnitudeNumerical::MagnitudeNumerical(const ProjectFile& file)
-:   Magnitude(new LinearInterpolation(file)),
-    ProjectFile(file) {
+Numerical::Numerical(const FileSystem::Project& file)
+:   Magnitude(
+        new Math::Function::LinearInterpolation<Math::Real,Math::Real>(file)),
+    FileSystem::Project(file) {
 }
 
-MagnitudeNumerical::MagnitudeNumerical(const ProjectFile& file,
-                                       const Magnitude& mag,
-                                       const Real timeStep,
-                                       const Real finalTime)
-:   ProjectFile(file) {
+Numerical::Numerical(const FileSystem::Project& file,
+                     const Magnitude& mag,
+                     const Math::Real timeStep,
+                     const Math::Real finalTime)
+:   FileSystem::Project(file) {
 
-    if(mag.is<MagnitudeNumerical>()) {
-        operator=(*mag.castTo<MagnitudeNumerical>());
+    if(mag.is<Numerical>()) {
+        operator=(*mag.castTo<Numerical>());
         return;
     }
-    UInt nSteps;
+    Size nSteps;
     if (timeStep != 0.0) {
         nSteps = abs(finalTime / timeStep);
     } else {
         nSteps = defaultNumberOfSteps;
-        cerr << "WARNING @ MagnitudeNumerical: "
-             << "Attempting to build a numerical magnitude with a 0.0 step."
-             << "Using default number of steps instead: " << nSteps << endl;
+        std::cerr << "WARNING @ Numerical: "
+                  << "Attempting to build a numerical magnitude with a 0.0 step."
+                  << "Using default number of steps instead: " << nSteps
+                  << std::endl;
         mag.printInfo();
     }
-    ofstream out;
+    std::ofstream out;
     out.open(file.c_str());
-    Real time = 0.0;
-    for (UInt i = 0; i < nSteps; i++) {
+    Math::Real time = 0.0;
+    for (Size i = 0; i < nSteps; i++) {
         // Determines if neigh values are aligned with current.
-        vector<pair<Real,Real>> preAndPost;
-        const Real tPre = time - timeStep;
-        const Real tPost = time + timeStep;
-        preAndPost.push_back(pair<Real,Real>(tPre, mag.evaluate(tPre)));
-        preAndPost.push_back(pair<Real,Real>(tPost, mag.evaluate(tPost)));
-        const Real interpolated = LinearInterpolation(preAndPost)(time);
-        const Real current = mag.evaluate(time);
-        bool isAligned = MathUtils::equal(current, interpolated);
+        std::vector<std::pair<Math::Real,Math::Real>> preAndPost;
+        const Math::Real tPre = time - timeStep;
+        const Math::Real tPost = time + timeStep;
+        preAndPost.push_back(
+            std::pair<Math::Real,Math::Real>(tPre, mag.evaluate(tPre)));
+        preAndPost.push_back(
+            std::pair<Math::Real,Math::Real>(tPost, mag.evaluate(tPost)));
+        const Math::Real interpolated =
+            Math::Function::LinearInterpolation<Math::Real,Math::Real>(
+                preAndPost)(time);
+        const Math::Real current = mag.evaluate(time);
+        bool isAligned = Math::Util::equal(current, interpolated);
         //
         if (!isAligned || i == nSteps-1) {
-            out << time << " " << current << endl;
+            out << time << " " << current << std::endl;
         }
         //
         time += timeStep;
     }
     out.close();
 
-    Magnitude::operator=(Magnitude(new LinearInterpolation(file)));
+    Magnitude::operator=(
+        Magnitude(
+            new Math::Function::LinearInterpolation<Math::Real,Math::Real>(
+                file)));
 }
 
-MagnitudeNumerical::~MagnitudeNumerical() {
+Numerical::~Numerical() {
 
 }
 
-MagnitudeNumerical& MagnitudeNumerical::operator=(
-        const MagnitudeNumerical& rhs) {
+Numerical& Numerical::operator=(
+        const Numerical& rhs) {
     if (this == &rhs) {
         return *this;
     }
     Magnitude::operator=(rhs);
-    ProjectFile::operator=(rhs);
+    FileSystem::Project::operator=(rhs);
 
     return *this;
 }
 
-bool MagnitudeNumerical::operator==(const Magnitude& rhs) const {
+bool Numerical::operator==(const Magnitude& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }
     bool areEqual = true;
     areEqual &= Magnitude::operator==(rhs);
-    const MagnitudeNumerical* rhsPtr = rhs.castTo<MagnitudeNumerical>();
-    areEqual &= (ProjectFile::compare(*rhsPtr) == 0);
+    const Numerical* rhsPtr = rhs.castTo<Numerical>();
+    areEqual &= (FileSystem::Project::compare(*rhsPtr) == 0);
     return areEqual;
 }
 
-Real MagnitudeNumerical::evaluate(const Real time) const {
-    throw ErrorNotImplemented("MagnitudeNumerical::evaluate");
+Math::Real Numerical::evaluate(const Math::Real time) const {
+    throw std::logic_error("Numerical::evaluate not implemented");
     return 0.0;
 }
 
-void MagnitudeNumerical::printInfo() const {
-    cout << " --- Magnitude Numerical Info --- " << endl;
+void Numerical::printInfo() const {
+    std::cout << " --- Magnitude Numerical Info --- " << std::endl;
     Magnitude::printInfo();
-    ProjectFile::printInfo();
+    FileSystem::Project::printInfo();
 }
+
+} /* namespace Magnitude */
+} /* namespace Source */
+} /* namespace SEMBA */

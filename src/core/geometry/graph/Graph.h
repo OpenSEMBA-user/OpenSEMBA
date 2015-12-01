@@ -18,63 +18,61 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GraphBase.h
- *
- *  Created on: 17/5/2015
- *      Author: Daniel
- */
 
-#ifndef COMMON_GEOMETRY_MAPS_GRAPHBASE_H_
-#define COMMON_GEOMETRY_MAPS_GRAPHBASE_H_
+#ifndef SEMBA_GEOMETRY_GRAPH_GRAPH_H_
+#define SEMBA_GEOMETRY_GRAPH_GRAPH_H_
 
-#include <queue>
-#include <map>
-#include <utility>
 #include <vector>
-using namespace std;
 
-#include "base/group/Group.h"
+#include "group/Group.h"
 
-#include "../graphs/GraphElement.h"
+#include "Element.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Graph {
 
 template<class ELEM, class BOUND>
-class GraphBase {
+class Graph {
 public:
     typedef ELEM  Elem;
     typedef BOUND Bound;
-    typedef GraphElement<Elem,Bound> GraphElem;
-    typedef GraphElement<Bound,Elem> GraphBound;
+    typedef Element<Elem,Bound> GraphElem;
+    typedef Element<Bound,Elem> GraphBound;
 
-    GraphBase();
-    GraphBase(const GraphBase&);
-    virtual ~GraphBase();
+    Graph();
+    Graph(const Graph&);
+    virtual ~Graph();
 
-    virtual GraphBase& init(const Group<const Elem>& elems) = 0;
+    virtual Graph& init(const Group::Group<const Elem>& elems) = 0;
 
-    GraphBase& operator=(const GraphBase&);
+    Graph& operator=(const Graph&);
 
-    UInt numElems () const { return elems_.size();  }
-    UInt numBounds() const { return bounds_.size(); }
+    Size numElems () const { return elems_.size();  }
+    Size numBounds() const { return bounds_.size(); }
 
-    const GraphElem*  elem (UInt i) const { return elems_ [i]; }
-    GraphElem*        elem (UInt i)       { return elems_ [i]; }
-    const GraphBound* bound(UInt i) const { return bounds_[i]; }
-    GraphBound*       bound(UInt i)       { return bounds_[i]; }
+    const GraphElem*  elem (Size i) const { return elems_ [i]; }
+    GraphElem*        elem (Size i)       { return elems_ [i]; }
+    const GraphBound* bound(Size i) const { return bounds_[i]; }
+    GraphBound*       bound(Size i)       { return bounds_[i]; }
 
     void resetVisited();
-    vector<vector<const Elem*>> getConnectedComponents();
+    std::vector<std::vector<const Elem*>> getConnectedComponents();
 
     void printInfo() const;
 
 protected:
-    vector<GraphElem* > elems_;
-    vector<GraphBound*> bounds_;
+    std::vector<GraphElem* > elems_;
+    std::vector<GraphBound*> bounds_;
 
 private:
-    void cloneInfo(const GraphBase&);
+    void cloneInfo(const Graph&);
 };
 
-#include "../graphs/GraphBase.hpp"
+} /* namespace Graph */
+} /* namespace Geometry */
+} /* namespace SEMBA */
 
-#endif /* COMMON_GEOMETRY_MAPS_GRAPHBASE_H_ */
+#include "Graph.hpp"
+
+#endif /* SEMBA_GEOMETRY_GRAPH_GRAPH_H_ */

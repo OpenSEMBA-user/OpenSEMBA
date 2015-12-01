@@ -18,24 +18,23 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMPredefined.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMPredefined.h"
+#include "Predefined.h"
 
-PMPredefined::PMPredefined(const MatId id, const string name)
-: PhysicalModel(id, name) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+Predefined::Predefined(const Id id, const std::string name)
+:   PhysicalModel(id, name) {
 }
 
-PMPredefined::~PMPredefined() {
+Predefined::~Predefined() {
 }
 
-void
-PMPredefined::printInfo() const {
-	cout << "--- PMPredefined info ---" << endl;
-	PhysicalModel::printInfo();
+void Predefined::printInfo() const {
+    std::cout << "--- Predefined info ---" << std::endl;
+    PhysicalModel::printInfo();
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

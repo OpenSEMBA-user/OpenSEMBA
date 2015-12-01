@@ -18,31 +18,32 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Pixel.h
- *
- *  Created on: May 19, 2015
- *      Author: Miguel D. Ruiz - Cabello Nuñez
- */
 
-#ifndef SRC_MESHER_FDTD_MESHCONF_PIXEL_H_
-#define SRC_MESHER_FDTD_MESHCONF_PIXEL_H_
+#ifndef SEMBA_GEOMETRY_PIXEL_PIXEL_H_
+#define SEMBA_GEOMETRY_PIXEL_PIXEL_H_
 
-#include "math/CVecI3Fractional.h"
-#include "base/class/ClassBase.h"
-#include <array>
+#include "Types.h"
+#include "math/vector/CVecI3Fractional.h"
 
-class Pixel : public CVecI3 {
+namespace SEMBA {
+namespace Geometry {
+namespace Pixel {
+
+class Pixel : public Math::CVecI3 {
 public:
-    Pixel():CVecI3(){};
-    Pixel(const CVecI3& cVecI3_): CVecI3(cVecI3_){};
-    virtual ~Pixel(){};
+    Pixel() : Math::CVecI3() {}
+    Pixel(const Math::CVecI3& cVecI3_) : Math::CVecI3(cVecI3_) {}
+    virtual ~Pixel() {}
 
     bool operator<(const Pixel& rhs) const;
 
     void printInfo() const;
 
-    static string toStr(const CartesianDirection& dir);
+    static std::string toStr(const Math::CartesianDirection& dir);
 };
 
-#endif /* SRC_MESHER_FDTD_MESHCONF_PIXEL_H_ */
+} /* namespace Pixel */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_PIXEL_PIXEL_H_ */

@@ -19,9 +19,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef TRI_H_
-#include <geometry/elements/Triangle.h>
-#endif
+#include "Triangle.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 Triangle::Triangle() {
 
@@ -30,3 +32,7 @@ Triangle::Triangle() {
 Triangle::~Triangle() {
 
 }
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

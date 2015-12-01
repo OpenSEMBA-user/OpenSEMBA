@@ -18,44 +18,44 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeAnistropicFerrite.h
- *
- *  Created on: Aug 28, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPICFERRITE_H_
-#define SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPICFERRITE_H_
+#ifndef SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICFERRITE_H_
+#define SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICFERRITE_H_
 
-#include "PMVolumeAnisotropic.h"
+#include "VolumeAnisotropic.h"
+
+namespace SEMBA {
+namespace PhysicalModel {
 
 // Described using Polder tensor model:
 // https://en.wikipedia.org/wiki/Polder_tensor
-class PMVolumeAnisotropicFerrite: public PMVolumeAnisotropic {
+class VolumeAnisotropicFerrite: public VolumeAnisotropic {
 public:
-    PMVolumeAnisotropicFerrite(
-            const MatId matId,
-            const string& name,
-            const LocalAxes& local,
-            const Real kappa,
-            const Real relativePermeability,
-            const Real relativePermittivity);
-    virtual ~PMVolumeAnisotropicFerrite();
+    VolumeAnisotropicFerrite(
+            const Id matId,
+            const std::string& name,
+            const Math::Axis::Local& local,
+            const Math::Real kappa,
+            const Math::Real relativePermeability,
+            const Math::Real relativePermittivity);
+    virtual ~VolumeAnisotropicFerrite();
 
-    DEFINE_CLONE(PMVolumeAnisotropicFerrite);
+    SEMBA_CLASS_DEFINE_CLONE(VolumeAnisotropicFerrite);
 
-    MatR33 getRelPermittivityMatR() const;
+    Math::MatR33 getRelPermittivityMatR() const;
 
-    MatR33 getRelPermeabilityMatR() const; // Real part.
-    MatR33 getRelPermeabilityMatI() const; // Imaginary part.
+    Math::MatR33 getRelPermeabilityMatR() const; // Math::Real part.
+    Math::MatR33 getRelPermeabilityMatI() const; // Imaginary part.
 
-    MatR33 getElectricConductivityMat() const;
-    MatR33 getMagneticConductivityMat() const;
+    Math::MatR33 getElectricConductivityMat() const;
+    Math::MatR33 getMagneticConductivityMat() const;
 private:
-    Real kappa_;
-    Real relativePermeability_;
-    Real relativePermittivity_;
+    Math::Real kappa_;
+    Math::Real relativePermeability_;
+    Math::Real relativePermittivity_;
 };
 
-#endif /* SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPICFERRITE_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICFERRITE_H_ */

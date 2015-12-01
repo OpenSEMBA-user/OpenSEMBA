@@ -18,79 +18,82 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Mesh.h
- *
- *  Created on: Jul 23, 2013
- *      Author: luis
- */
 
-#ifndef MESHUNSTRUCTURED_H_
-#define MESHUNSTRUCTURED_H_
+#ifndef SEMBA_GEOMETRY_MESH_UNSTRUCTURED_H_
+#define SEMBA_GEOMETRY_MESH_UNSTRUCTURED_H_
 
-#include <iostream>
-#include <limits>
-#include <sstream>
-#include <utility>
-#include <vector>
-using namespace std;
+#include "geometry/element/Triangle.h"
+#include "geometry/graph/Connectivities.h"
 
-#include "graphs/Connectivities.h"
-#include "Grid.h"
 #include "Mesh.h"
+#include "geometry/Grid.h"
+#include "geometry/coordinate/Group.h"
+#include "geometry/element/Group.h"
+#include "geometry/layer/Group.h"
 
-class MeshStructured;
+namespace SEMBA {
+namespace Geometry {
+namespace Mesh {
 
-class MeshUnstructured : public virtual Mesh,
-                         public virtual GroupCoordinates<CoordR3>,
-                         public virtual GroupElements<ElemR>,
-                         public virtual GroupLayers<Layer> {
+class Structured;
+
+class Unstructured : public virtual Mesh,
+                     public virtual Coordinate::Group<CoordR3>,
+                     public virtual Element::Group<ElemR>,
+                     public virtual Layer::Group<Layer::Layer> {
 public:
-    MeshUnstructured();
-    MeshUnstructured(const GroupCoordinates<const CoordR3>& cG,
-                     const GroupElements<const ElemR>& elem,
-                     const GroupLayers<const Layer>& = GroupLayers<const Layer>());
-    MeshUnstructured(const MeshUnstructured& param);
-    virtual ~MeshUnstructured();
+    Unstructured();
+    Unstructured(const Coordinate::Group<const CoordR3>& cG,
+                 const Element::Group<const ElemR>& elem,
+                 const Layer::Group<const Layer::Layer>& =
+                     Layer::Group<const Layer::Layer>());
+    Unstructured(const Unstructured& param);
+    virtual ~Unstructured();
 
-    MeshUnstructured& operator=(const MeshUnstructured& rhs);
+    Unstructured& operator=(const Unstructured& rhs);
 
-    DEFINE_CLONE(MeshUnstructured);
+    SEMBA_CLASS_DEFINE_CLONE(Unstructured);
 
-    GroupCoordinates<CoordR3>& coords() { return *this; }
-    GroupElements<ElemR>&      elems () { return *this; }
-    GroupLayers<Layer>&        layers() { return *this; }
+    Coordinate::Group<CoordR3>& coords() { return *this; }
+    Element::Group<ElemR>&      elems () { return *this; }
+    Layer::Group<Layer::Layer>& layers() { return *this; }
 
-    const GroupCoordinates<CoordR3>& coords() const { return *this; }
-    const GroupElements<ElemR>&      elems () const { return *this; }
-    const GroupLayers<Layer>&        layers() const { return *this; }
+    const Coordinate::Group<CoordR3>& coords() const { return *this; }
+    const Element::Group<ElemR>&      elems () const { return *this; }
+    const Layer::Group<Layer::Layer>& layers() const { return *this; }
 
-    MeshStructured* getMeshStructured(const Grid3& grid,
-                                      const Real tol = Grid3::tolerance) const;
-    MeshUnstructured* getConnectivityMesh() const;
+    Structured* getMeshStructured(
+            const Grid3& grid,
+            const Math::Real tol = Grid3::tolerance) const;
+    Unstructured* getConnectivityMesh() const;
 
-    vector<Face> getBorderWithNormal(const vector<Face>& border,
-                                     const CVecR3& normal);
+    std::vector<Element::Face> getBorderWithNormal(
+            const std::vector<Element::Face>& border,
+            const Math::CVecR3& normal);
 
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
 
-    GroupElements<const SurfR> getMaterialBoundary(const MatId   matId,
+    Element::Group<const SurfR> getMaterialBoundary(const MatId   matId,
                                                    const LayerId layId) const;
-    GroupElements<const SurfR> getSurfsMatching(
-            const vector<Face>& faces) const;
-    GroupElements<const Triangle> convertToTri(
-            const GroupElements<const ElemR>& region,
+    Element::Group<const SurfR> getSurfsMatching(
+            const std::vector<Element::Face>& faces) const;
+    Element::Group<const Tri> convertToTri(
+            const Element::Group<const ElemR>& region,
             bool ignoreTets) const;
-    vector<Face> getInternalBorder(
-            const GroupElements<const ElemR>& region) const;
-    vector<Face> getExternalBorder(
-            const GroupElements<const ElemR>& region) const;
-    GroupElements<const VolR> getAdjacentRegion(
-            const GroupElements<const VolR>& region) const;
-    void applyScalingFactor(const Real factor);
+    std::vector<Element::Face> getInternalBorder(
+            const Element::Group<const ElemR>& region) const;
+    std::vector<Element::Face> getExternalBorder(
+            const Element::Group<const ElemR>& region) const;
+    Element::Group<const VolR> getAdjacentRegion(
+            const Element::Group<const VolR>& region) const;
+    void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
 
     void printInfo() const;
 };
 
-#endif /* MESHUNSTRUCTURED_H_ */
+} /* namespace Mesh */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_MESH_UNSTRUCTURED_H_ */

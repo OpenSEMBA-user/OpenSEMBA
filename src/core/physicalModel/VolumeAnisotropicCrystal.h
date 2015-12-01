@@ -18,41 +18,41 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeAnisotropicCrystal.h
- *
- *  Created on: Aug 28, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPICCRYSTAL_H_
-#define SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPICCRYSTAL_H_
+#ifndef SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICCRYSTAL_H_
+#define SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICCRYSTAL_H_
 
-#include "PMVolumeAnisotropic.h"
+#include "VolumeAnisotropic.h"
+
+namespace SEMBA {
+namespace PhysicalModel {
 
 // Described in: https://courses.cit.cornell.edu/ece303/Lectures/lecture17.pdf
-class PMVolumeAnisotropicCrystal: public PMVolumeAnisotropic {
+class VolumeAnisotropicCrystal: public VolumeAnisotropic {
 public:
-    PMVolumeAnisotropicCrystal(
-            const MatId matId,
-            const string& name,
-            const LocalAxes& local,
-            const CVecR3& principalAxesRelativePermittivity,
-            const Real relativePermeability);
-    virtual ~PMVolumeAnisotropicCrystal();
+    VolumeAnisotropicCrystal(
+            const Id matId,
+            const std::string& name,
+            const Math::Axis::Local& local,
+            const Math::CVecR3& principalAxesRelativePermittivity,
+            const Math::Real relativePermeability);
+    virtual ~VolumeAnisotropicCrystal();
 
-    DEFINE_CLONE(PMVolumeAnisotropicCrystal);
+    SEMBA_CLASS_DEFINE_CLONE(VolumeAnisotropicCrystal);
 
-    const CVecR3 getPrincipalAxesRelativePermittivity() const;
-    Real getRelativePermeability() const;
+    const Math::CVecR3 getPrincipalAxesRelativePermittivity() const;
+    Math::Real getRelativePermeability() const;
 
-    MatR33 getRelPermittivityMatR() const;
-    MatR33 getRelPermeabilityMatR() const;
-    MatR33 getElectricConductivityMat() const;
-    MatR33 getMagneticConductivityMat() const;
+    Math::MatR33 getRelPermittivityMatR() const;
+    Math::MatR33 getRelPermeabilityMatR() const;
+    Math::MatR33 getElectricConductivityMat() const;
+    Math::MatR33 getMagneticConductivityMat() const;
 private:
-    CVecR3 principalAxesRelativePermittivity_;
-    Real relativePermeability_;
+    Math::CVecR3 principalAxesRelativePermittivity_;
+    Math::Real relativePermeability_;
 };
 
-#endif /* SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPICCRYSTAL_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICCRYSTAL_H_ */

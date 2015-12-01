@@ -18,40 +18,37 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMWireExtremes.cpp
- *
- *  Created on: 15/4/2015
- *      Author: Daniel
- */
 
-#include "PMWireExtremes.h"
+#include "WireExtremes.h"
 
-PMWireExtremes::PMWireExtremes(const PMWire& wire,
-                               const PMMultiport* extremeL,
-                               const PMMultiport* extremeR)
-:   PMWire(wire) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+WireExtremes::WireExtremes(const Wire& wire,
+                               const Multiport* extremeL,
+                               const Multiport* extremeR)
+:   Wire(wire) {
     extreme_[0] = extreme_[1] = NULL;
     if (extremeL != NULL) {
-        extreme_[0] = extremeL->cloneTo<PMMultiport>();
+        extreme_[0] = extremeL->cloneTo<Multiport>();
     }
     if (extremeR != NULL) {
-        extreme_[1] = extremeR->cloneTo<PMMultiport>();
+        extreme_[1] = extremeR->cloneTo<Multiport>();
     }
 }
 
-PMWireExtremes::PMWireExtremes(const PMWireExtremes& rhs)
-:   PMWire(rhs) {
+WireExtremes::WireExtremes(const WireExtremes& rhs)
+:   Wire(rhs) {
     extreme_[0] = extreme_[1] = NULL;
     if (rhs.extreme_[0] != NULL) {
-        extreme_[0] = rhs.extreme_[0]->cloneTo<PMMultiport>();
+        extreme_[0] = rhs.extreme_[0]->cloneTo<Multiport>();
     }
     if (rhs.extreme_[1] != NULL) {
-        extreme_[1] = rhs.extreme_[1]->cloneTo<PMMultiport>();
+        extreme_[1] = rhs.extreme_[1]->cloneTo<Multiport>();
     }
 }
 
-PMWireExtremes::~PMWireExtremes() {
+WireExtremes::~WireExtremes() {
     if (extreme_[0] != NULL) {
         delete extreme_[0];
     }
@@ -60,25 +57,28 @@ PMWireExtremes::~PMWireExtremes() {
     }
 }
 
-void PMWireExtremes::setExtreme(const UInt i, const PMMultiport* extreme) {
+void WireExtremes::setExtreme(const Size i, const Multiport* extreme) {
     if (extreme_[i] != NULL) {
         delete extreme_[i];
     }
     extreme_[i] = NULL;
     if (extreme != NULL) {
-        extreme_[i] = extreme->cloneTo<PMMultiport>();
+        extreme_[i] = extreme->cloneTo<Multiport>();
     }
 }
 
-void PMWireExtremes::printInfo() const {
-    cout<< " --- WireExtremes info ---" << endl;
-    PMWire::printInfo();
+void WireExtremes::printInfo() const {
+    std::cout<< " --- WireExtremes info ---" << std::endl;
+    Wire::printInfo();
     if (extreme_[0] != NULL) {
-        cout << "ExtremeL:" << endl;
+        std::cout << "ExtremeL:" << std::endl;
         extreme_[0]->printInfo();
     }
     if (extreme_[1] != NULL) {
-        cout << "ExtremeR:" << endl;
+        std::cout << "ExtremeR:" << std::endl;
         extreme_[1]->printInfo();
     }
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

@@ -18,27 +18,21 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef COMMON_OUTRQ_GROUPOUTRQS_H_
-#define COMMON_OUTRQ_GROUPOUTRQS_H_
 
-#include "outRq/OutRq.h"
-#include "Output.h"
+#include "Printable.h"
 
-template<typename O = OutputBase>
-class GroupOutputs : public Group<O> {
-public:
-    GroupOutputs();
-    virtual ~GroupOutputs();
+#include <iostream>
 
-    DEFINE_GROUP_CLONE(GroupOutputs, O);
+namespace SEMBA {
+namespace Group {
 
-    void add(const OutRqBase* outRq,
-             const multimap<ElementId, vector<CVecR3>>& electric,
-             const multimap<ElementId, vector<CVecR3>>& magnetic);
+template<typename T>
+void Printable<T>::printInfo() const {
+    std::cout << "Number of elements in group: " << this->size() << std::endl;
+    for (std::size_t i = 0; i < this->size(); i++) {
+        this->get(i)->printInfo();
+    }
+}
 
-    void printInfo() const;
-};
-
-#include "GroupOutputs.hpp"
-
-#endif
+} /* namespace Group */
+} /* namespace SEMBA */

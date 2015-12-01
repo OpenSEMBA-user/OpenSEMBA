@@ -18,147 +18,140 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef CARTESIANVECTOR_H_
-#define CARTESIANVECTOR_H_
 
-#include <cassert>
-#include <cmath>
+#ifndef SEMBA_MATH_VECTOR_CARTESIAN_H_
+#define SEMBA_MATH_VECTOR_CARTESIAN_H_
+
 #include <complex>
-#include <cstdlib>
 #include <iostream>
-#include <limits>
-#include <type_traits>
-using namespace std;
 
-#include "RealUtils.h"
+#include "math/Types.h"
+#include "math/Constants.h"
+#include "math/util/Real.h"
 
-typedef enum {
-	xy = 0,
-	yz = 1,
-	zx = 2
-} CartesianPlane;
+namespace SEMBA {
+namespace Math {
+namespace Vector {
 
-typedef enum {
-	x = 0,
-	y = 1,
-	z = 2
-} CartesianAxis;
-
-typedef enum {
-    L = 0,
-    U = 1
-} CartesianBound;
-
-template <class T, Int D>
-class CartesianVector {
+template <class T, Size D>
+class Cartesian {
 public:
     T val[D];
-    CartesianVector();
-    CartesianVector<T,D>(const T val_);
-    CartesianVector<T,D>(T val_[D]);
-    CartesianVector<T,D>(const T val_[D]);
-    CartesianVector<T,D>(const T, const T, const T);
-    CartesianVector<T,D>(const CartesianVector<T,D>&,
-                         const CartesianVector<T,D>&);
+    Cartesian();
+    Cartesian<T,D>(const T val_);
+    Cartesian<T,D>(T val_[D]);
+    Cartesian<T,D>(const T val_[D]);
+    Cartesian<T,D>(const T, const T, const T);
+    Cartesian<T,D>(const Cartesian<T,D>&,
+                   const Cartesian<T,D>&);
     template<class U>
-    CartesianVector<T,D>(const CartesianVector<U,D>&);
-    virtual ~CartesianVector();
+    Cartesian<T,D>(const Cartesian<U,D>&);
+    virtual ~Cartesian();
 
-    CartesianVector<T,D>& operator= (const T);
+    Cartesian<T,D>& operator= (const T);
 
     template<class U>
-    CartesianVector<T,D>& operator= (const CartesianVector<U,D>&);
+    Cartesian<T,D>& operator= (const Cartesian<U,D>&);
 
-//    CartesianVector<T,D>& operator= (const CartesianVector<Int ,D>&);
-//
-    CartesianVector<T,D>& operator+=(const T param);
-    CartesianVector<T,D>& operator+=(const CartesianVector<T,D>&);
-    CartesianVector<T,D>& operator-=(const T param);
-    CartesianVector<T,D>& operator-=(const CartesianVector<T,D>&);
-    CartesianVector<T,D>& operator*=(const T param);
-    CartesianVector<T,D>& operator/=(const T param);
+    Cartesian<T,D>& operator+=(const T param);
+    Cartesian<T,D>& operator+=(const Cartesian<T,D>&);
+    Cartesian<T,D>& operator-=(const T param);
+    Cartesian<T,D>& operator-=(const Cartesian<T,D>&);
+    Cartesian<T,D>& operator*=(const T param);
+    Cartesian<T,D>& operator/=(const T param);
 
-    CartesianVector<T,D>  operator+(const CartesianAxis param) const;
-    CartesianVector<T,D>  operator+(const T param) const;
-    CartesianVector<T,D>  operator+(const CartesianVector<T,D>& param) const;
-    CartesianVector<T,D>& operator-();
-    CartesianVector<T,D>  operator-(const T param) const;
-    CartesianVector<T,D>  operator-(const CartesianVector<T,D>& param) const;
-    CartesianVector<T,D>  operator*(const T param) const;
-    CartesianVector<T,D>  operator*(const CartesianVector<T,D>& param) const;
-    CartesianVector<T,D>  operator/(const T param) const;
-    CartesianVector<T,D>  operator^(const CartesianVector<T,D>& param) const;
+    Cartesian<T,D>  operator+(const T param) const;
+    Cartesian<T,D>  operator+(const Cartesian<T,D>& param) const;
+    Cartesian<T,D>& operator-();
+    Cartesian<T,D>  operator-(const T param) const;
+    Cartesian<T,D>  operator-(const Cartesian<T,D>& param) const;
+    Cartesian<T,D>  operator*(const T param) const;
+    Cartesian<T,D>  operator*(const Cartesian<T,D>& param) const;
+    Cartesian<T,D>  operator/(const T param) const;
+    Cartesian<T,D>  operator^(const Cartesian<T,D>& param) const;
 
-    T dot(const CartesianVector<T,D>& param) const;
+    T dot(const Cartesian<T,D>& param) const;
     T getMax() const;
 
-    virtual bool operator==(const CartesianVector<T,D>& param) const;
-    virtual bool operator!=(const CartesianVector<T,D>& param) const;
+    virtual bool operator==(const Cartesian<T,D>& param) const;
+    virtual bool operator!=(const Cartesian<T,D>& param) const;
     virtual bool isContainedInPlane() const;
-    virtual bool isContainedInPlane(const CartesianPlane plane) const;
-    virtual bool isCoplanar(const CartesianVector<T,D>& param) const;
+    virtual bool isContainedInPlane(
+            const Constants::CartesianPlane plane) const;
+    virtual bool isCoplanar(const Cartesian<T,D>& param) const;
 
-    virtual T& operator() (UInt pos);
-    virtual T  operator() (UInt pos) const;
+    virtual T& operator() (Size pos);
+    virtual T  operator() (Size pos) const;
 
-    virtual T& operator[] (UInt pos);
-    virtual T  operator[] (UInt pos) const;
+    virtual T& operator[] (Size pos);
+    virtual T  operator[] (Size pos) const;
 
-    CartesianVector<T,D>& setAsBinary(const UInt number);
-    CartesianVector<T,D>& setWithMinimalComponents(const CartesianVector<T,D>& rhs);
+    Cartesian<T,D>& setAsBinary(const UInt number);
+    Cartesian<T,D>& setWithMinimalComponents(const Cartesian<T,D>& rhs);
 
     virtual Real norm() const;
 
-    CartesianVector<T,D>& abs();
-    CartesianVector<T,D>& normalize();
-    CartesianVector<T,D>& setPlusInfty();
-    CartesianVector<T,D>& setMinusInfty();
+    Cartesian<T,D>& abs();
+    Cartesian<T,D>& normalize();
+    Cartesian<T,D>& setPlusInfty();
+    Cartesian<T,D>& setMinusInfty();
 
-    CartesianVector<T,D>& cyclicPermutation(const Int n=1);
+    Cartesian<T,D>& cyclicPermutation(const Size n=1);
 
-    virtual string toStr() const;
+    virtual std::string toStr() const;
     virtual void printInfo() const;
 };
 
-template<Int D>
-CartesianVector<Real,D> operator+(const CartesianVector<Int ,D>& lhs,
-                                  const CartesianVector<Real,D>& rhs);
-template<Int D>
-CartesianVector<Real,D> operator/(const CartesianVector<Int,D>& lhs,
-                                  const Real rhs);
-template<class T, Int D>
-bool operator< (const CartesianVector<T,D>& lhs,
-                const CartesianVector<T,D>& rhs);
-template<class T, Int D>
-bool operator<=(const CartesianVector<T,D>& lhs,
-                const CartesianVector<T,D>& rhs);
-template<class T, Int D>
-bool operator> (const CartesianVector<T,D>& lhs,
-                const CartesianVector<T,D>& rhs);
-template<class T, Int D>
-bool operator>=(const CartesianVector<T,D>& lhs,
-                const CartesianVector<T,D>& rhs);
+template<std::size_t D>
+Cartesian<Real,D> operator+(const Cartesian<Int ,D>& lhs,
+                            const Cartesian<Real,D>& rhs);
+template<std::size_t D>
+Cartesian<Real,D> operator/(const Cartesian<Int,D>& lhs,
+                            const Real rhs);
+template<class T, std::size_t D>
+bool operator< (const Cartesian<T,D>& lhs,
+                const Cartesian<T,D>& rhs);
+template<class T, std::size_t D>
+bool operator<=(const Cartesian<T,D>& lhs,
+                const Cartesian<T,D>& rhs);
+template<class T, std::size_t D>
+bool operator> (const Cartesian<T,D>& lhs,
+                const Cartesian<T,D>& rhs);
+template<class T, std::size_t D>
+bool operator>=(const Cartesian<T,D>& lhs,
+                const Cartesian<T,D>& rhs);
 
-template <class T, Int D>
-std::ostream& operator<<(ostream& os, const CartesianVector<T,D>& vec) {
-   return os << vec.toStr();
+template <class T, std::size_t D>
+std::ostream& operator<<(std::ostream& os, const Cartesian<T,D>& vec) {
+    return os << vec.toStr();
 }
 
-namespace MathUtils {
+} /* namespace Vector */
 
-template<Int D>
-CartesianVector<Real,D> round(const CartesianVector<Real,D>& vec);
+namespace Util {
 
-}
+template<std::size_t D>
+Vector::Cartesian<Real,D> round(const Vector::Cartesian<Real,D>& vec);
 
-#include "CartesianVector.hpp"
+} /* namespace Util */
 
-typedef CartesianVector<Real,2> CVecR2;
-typedef CartesianVector<Real,3> CVecR3;
-typedef CartesianVector<Real,4> CVecR4;
-typedef CartesianVector<Int ,2> CVecI2;
-typedef CartesianVector<Int ,3> CVecI3;
+} /* namespace Math */
+} /* namespace SEMBA */
 
-typedef CartesianVector<complex<Real>,3> CVecC3;
+#include "Cartesian.hpp"
 
-#endif /* MATHVECTOR_H_ */
+namespace SEMBA {
+namespace Math {
+
+typedef Vector::Cartesian<Real,2> CVecR2;
+typedef Vector::Cartesian<Real,3> CVecR3;
+typedef Vector::Cartesian<Real,4> CVecR4;
+typedef Vector::Cartesian<Int ,2> CVecI2;
+typedef Vector::Cartesian<Int ,3> CVecI3;
+
+typedef Vector::Cartesian<std::complex<Real>,3> CVecC3;
+
+} /* namespace Math */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_MATH_VECTOR_CARTESIAN_H_ */

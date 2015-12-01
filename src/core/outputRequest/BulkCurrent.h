@@ -18,38 +18,38 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * OutRqBulkCurrent.h
- *
- *  Created on: 20 de ago. de 2015
- *      Author: Daniel
- */
 
-#ifndef SRC_COMMON_OUTRQ_OUTRQBULKCURRENT_H_
-#define SRC_COMMON_OUTRQ_OUTRQBULKCURRENT_H_
+#ifndef SEMBA_OUTPUTREQUEST_BULKCURRENT_H_
+#define SEMBA_OUTPUTREQUEST_BULKCURRENT_H_
 
-#include "OutRq.h"
+#include "OutputRequest.h"
 
-class OutRqBulkCurrent : public virtual OutRq<Elem> {
+namespace SEMBA {
+namespace OutputRequest {
+
+class BulkCurrent : public virtual OutputRequest<Geometry::Elem> {
 public:
-    OutRqBulkCurrent(const Domain& domain,
-                     const string& name,
-                     const GroupElements<Elem>& box,
-                     const CartesianAxis& dir,
-                     const UInt& skip);
-    OutRqBulkCurrent(const OutRqBulkCurrent& rhs);
-    virtual ~OutRqBulkCurrent();
+    BulkCurrent(const Domain& domain,
+                const std::string& name,
+                const Geometry::Element::Group<Geometry::Elem>& box,
+                const Math::Constants::CartesianAxis& dir,
+                const Math::UInt& skip);
+    BulkCurrent(const BulkCurrent& rhs);
+    virtual ~BulkCurrent();
 
-    DEFINE_CLONE(OutRqBulkCurrent);
+    SEMBA_CLASS_DEFINE_CLONE(BulkCurrent);
 
-    bool hasSameProperties(const OutRqBase& rhs) const;
+    bool hasSameProperties(const SEMBA::OutputRequest::Base& rhs) const;
 
-    CartesianAxis getDir() const;
-    UInt          getSkip() const;
+    Math::Constants::CartesianAxis getDir() const;
+    Math::UInt                     getSkip() const;
 
 private:
-    CartesianAxis dir_;
-    UInt skip_;
+    Math::Constants::CartesianAxis dir_;
+    Math::UInt                     skip_;
 };
 
-#endif /* SRC_COMMON_OUTRQ_OUTRQBULKCURRENT_H_ */
+} /* namespace OutputRequest */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_OUTPUTREQUEST_BULKCURRENT_H_ */

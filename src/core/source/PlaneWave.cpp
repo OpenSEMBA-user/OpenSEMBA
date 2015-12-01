@@ -18,71 +18,41 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PlaneWave.cpp
- *
- *  Created on: Jun 28, 2013
- *      Author: luis
- */
 
-#include "../sources/PlaneWave.h"
+#include "PlaneWave.h"
 
-PlaneWave::ErrorZeroPolarization::ErrorZeroPolarization()
-:   Error("PlaneWave: Polarization can't be zero.") {
-
-}
-
-PlaneWave::ErrorZeroPolarization::~ErrorZeroPolarization() throw () {
-
-}
-
-PlaneWave::ErrorZeroMagnitude::ErrorZeroMagnitude()
-:   Error("PlaneWave: W. direction can't be zero.") {
-
-}
-
-PlaneWave::ErrorZeroMagnitude::~ErrorZeroMagnitude() throw () {
-
-}
-
-PlaneWave::ErrorNotPerpendicular::ErrorNotPerpendicular()
-:   Error("PlaneWave: W. direction is not perpendicular to polarization.") {
-
-}
-
-PlaneWave::ErrorNotPerpendicular::~ErrorNotPerpendicular() throw () {
-
-}
+namespace SEMBA {
+namespace Source {
 
 PlaneWave::PlaneWave() {
 
 }
 
-PlaneWave::PlaneWave(Magnitude* magnitude,
-                     GroupElements<Vol> elem,
-                     CVecR3 direction,
-                     CVecR3 polarization)
-:   EMSourceBase(magnitude),
-    GroupElements<const Vol>(elem) {
+PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
+                     Geometry::Element::Group<Geometry::Vol> elem,
+                     Math::CVecR3 direction,
+                     Math::CVecR3 polarization)
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Vol>(elem) {
 
     direction_ = direction;
     polarization_ = polarization;
     if (polarization_.norm() == 0) {
-        throw ErrorZeroPolarization();
+        throw Error::PlaneWave::ZeroPolarization();
     }
     if (direction_.norm() == 0) {
-        throw ErrorZeroMagnitude();
+        throw Error::PlaneWave::ZeroMagnitude();
     }
     //
     if ((direction ^ polarization).norm() !=
          direction.norm() * polarization.norm()) {
-        throw ErrorNotPerpendicular();
+        throw Error::PlaneWave::NotPerpendicular();
     }
 }
 
 PlaneWave::PlaneWave(const PlaneWave& rhs)
-:   EMSourceBase(rhs),
-    GroupElements<const Vol>(rhs) {
+:   SEMBA::Source::Base(rhs),
+    Geometry::Element::Group<const Geometry::Vol>(rhs) {
 
     direction_ = rhs.direction_;
     polarization_ = rhs.polarization_;
@@ -92,8 +62,8 @@ PlaneWave::~PlaneWave() {
 
 }
 
-bool PlaneWave::hasSameProperties(const EMSourceBase& rhs) const {
-    if(!EMSourceBase::hasSameProperties(rhs)) {
+bool PlaneWave::hasSameProperties(const SEMBA::Source::Base& rhs) const {
+    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
         return false;
     }
     const PlaneWave* rhsPtr = rhs.castTo<PlaneWave>();
@@ -103,82 +73,89 @@ bool PlaneWave::hasSameProperties(const EMSourceBase& rhs) const {
     return hasSameProperties;
 }
 
-const string& PlaneWave::getName() const {
-    const static string res = "PlaneWave";
+const std::string& PlaneWave::getName() const {
+    const static std::string res = "PlaneWave";
     return res;
 }
 
-const CVecR3& PlaneWave::getPolarization() const {
+const Math::CVecR3& PlaneWave::getPolarization() const {
     return polarization_;
 }
 
-const CVecR3& PlaneWave::getWaveDirection() const {
+const Math::CVecR3& PlaneWave::getWaveDirection() const {
     return direction_;
 }
 
-Real PlaneWave::getTheta() const {
+Math::Real PlaneWave::getTheta() const {
     return cartesianToPolar (direction_).first;
 }
 
-Real PlaneWave::getPhi() const {
+Math::Real PlaneWave::getPhi() const {
     return cartesianToPolar (direction_).second;
 }
 
-Real PlaneWave::getAlpha() const {
+Math::Real PlaneWave::getAlpha() const {
     return cartesianToPolar (polarization_).first;
 }
 
-Real PlaneWave::getBeta() const {
+Math::Real PlaneWave::getBeta() const {
     return cartesianToPolar (polarization_).second;
 }
 
-CVecR3
-PlaneWave::getElectricField(const Real time) const {
-    CVecR3 res = polarization_ * getMagnitude()->evaluate(time);
+Math::CVecR3
+PlaneWave::getElectricField(const Math::Real time) const {
+    Math::CVecR3 res = polarization_ * getMagnitude()->evaluate(time);
     return res;
 }
 
-pair<CVecR3, CVecR3>
-PlaneWave::getElectromagneticField(const Real time) const {
-    CVecR3 electric = getElectricField(time);
-    CVecR3 magnetic = (direction_ ^ electric) * (Real) VACUUM_ADMITANCE;
-    return pair<CVecR3,CVecR3>(electric, magnetic);
+std::pair<Math::CVecR3, Math::CVecR3>
+PlaneWave::getElectromagneticField(const Math::Real time) const {
+    Math::CVecR3 electric = getElectricField(time);
+    Math::CVecR3 magnetic = (direction_ ^ electric) *
+                            Math::Constants::VACUUM_ADMITANCE;
+    return std::pair<Math::CVecR3,Math::CVecR3>(electric, magnetic);
 }
 
 void PlaneWave::printInfo() const {
-	cout<< " --- PlaneWave info --- " << endl;
-	EMSourceBase::printInfo();
-	cout<< " - Polarization vector: " << polarization_ << endl;
-	cout<< " - Wave direction vector: " << direction_ << endl;
+    std::cout<< " --- PlaneWave info --- " << std::endl;
+    SEMBA::Source::Base::printInfo();
+    std::cout<< " - Polarization vector: " << polarization_ << std::endl;
+    std::cout<< " - Wave direction vector: " << direction_ << std::endl;
 }
 
-pair<Real,Real> PlaneWave::cartesianToPolar(const CVecR3& v) const {
-    Real vx_, vy_,vz_;
-    Real vmxyz, vmxy_, alpha_aux, beta_aux;
-    vmxyz = sqrt(v(x)*v(x)+v(y)*v(y)+v(z)*v(z));
-    vx_ = v(x)/vmxyz;
-    vy_ = v(y)/vmxyz;
-    vz_= v(z)/vmxyz;
+std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
+        const Math::CVecR3& v) const {
+    Math::Real vx_, vy_,vz_;
+    Math::Real vmxyz, vmxy_, alpha_aux, beta_aux;
+    vmxyz = std::sqrt(v(Math::Constants::x)*v(Math::Constants::x)+
+                      v(Math::Constants::y)*v(Math::Constants::y)+
+                      v(Math::Constants::z)*v(Math::Constants::z));
+    vx_ = v(Math::Constants::x)/vmxyz;
+    vy_ = v(Math::Constants::y)/vmxyz;
+    vz_ = v(Math::Constants::z)/vmxyz;
     vmxy_  = sqrt(vx_*vx_+vy_*vy_);
     alpha_aux = acos(vz_); //acos(Ez) [0, pi]
     if(vy_>0.0){
         beta_aux = abs(acos(vx_/vmxy_));
-    } else if(v(y)==0.0){
+    } else if(v(Math::Constants::y)==0.0){
         beta_aux = 0.0;
     } else {
         beta_aux = -abs(acos(vx_/vmxy_));
     }
-    pair<Real,Real> res;
+    std::pair<Math::Real,Math::Real> res;
     res.first = reduceRadians(alpha_aux); // alpha_aux % (2*Constants::pi) ?
     res.second = reduceRadians(beta_aux);  // beta_aux % (2*Constants::pi) ?
     return res;
 }
 
-Real PlaneWave::reduceRadians(const Real radianIn) const {
-    Real nVueltas, nVueltasComp, radianOut, Val2Pi;
-    Val2Pi = (Real) 2.0 * (Real) acos((Real) 0.0);
+Math::Real PlaneWave::reduceRadians(const Math::Real radianIn) const {
+    Math::Real nVueltas, nVueltasComp, radianOut, Val2Pi;
+    Val2Pi = (Math::Real) 2.0 * (Math::Real) acos((Math::Real) 0.0);
     nVueltas = radianIn/(Val2Pi);
-    nVueltasComp = (Real) floor(nVueltas);
+    nVueltasComp = (Math::Real) floor(nVueltas);
     radianOut = radianIn - nVueltasComp*Val2Pi;
     return  radianOut;
 }
+
+} /* namespace Source */
+} /* namespace SEMBA */

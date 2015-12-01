@@ -18,63 +18,69 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Field.h
- *
- *  Created on: Sep 23, 2014
- *      Author: luis
- */
 
 #ifndef FIELD_H_
 #define FIELD_H_
 
 #include <cstdlib>
 
-using namespace std;
+#include "math/vector/Cartesian.h"
 
-#include "CartesianVector.h"
+namespace SEMBA {
+namespace Math {
 
-template <class T, Int D>
+template <class T, Size D>
 class Field {
 public:
-   Field();
-   Field(UInt size);
-   virtual ~Field();
+    Field();
+    Field(Size size);
+    virtual ~Field();
 
-   T* operator()(const UInt i);
-   const T* operator()(const UInt i) const;
-   T* set(const UInt i) const;
-   T operator[](const UInt i) const;
-   CartesianVector<T,D> getCVec(const UInt i) const;
-   UInt getDOFs() const;
-   UInt size() const;
+    T*       operator()(const Size i);
+    const T* operator()(const Size i) const;
 
-   void set(const UInt i, const CartesianVector<T,D>& vec);
-   void set(const UInt i, const T& num);
-   void setAll(const T& num);
-   void setSize(const UInt siz);
-   void setToRandom(const Real min, const Real max);
+    T operator[](const Size i) const;
 
-   void prod(const UInt init, const UInt end, const T param);
-   void prod_omp(const UInt init, const UInt end, const T param);
-   void addProd(
-         const UInt init, const UInt end,
-         const Field<T,D>& field, const T param);
-   void addProd_omp(
-         const UInt init, const UInt end,
-         const Field<T,D>& field, const T param);
-   void copy(const UInt init, const UInt end, const Field<T,D>& param);
+    Vector::Cartesian<T,D> getCVec(const Size i) const;
 
-   void swap(Field<T,D>& param, const UInt first, const UInt last);
+    Size getDOFs() const;
+    Size size() const;
+
+    T* set(const Size i) const;
+    void set(const Size i, const T& num);
+    void set(const Size i, const Vector::Cartesian<T,D>& vec);
+
+    void setAll(const T& num);
+    void setSize(const Size siz);
+    void setToRandom(const Real min, const Real max);
+
+    void prod(const Size init, const Size end, const T param);
+    void prod_omp(const Size init, const Size end, const T param);
+    void addProd(const Size init, const Size end,
+                 const Field<T,D>& field, const T param);
+    void addProd_omp(const Size init, const Size end,
+                     const Field<T,D>& field, const T param);
+    void copy(const Size init, const Size end, const Field<T,D>& param);
+
+    void swap(Field<T,D>& param, const Size first, const Size last);
 private:
-   T* val_;
-   UInt size_;
+    T* val_;
+    Size size_;
 };
+
+} /* namespace Math */
+} /* namespace SEMBA */
 
 #include "Field.hpp"
 
+namespace SEMBA {
+namespace Math {
+
 typedef Field<Real,1> FieldR1;
 typedef Field<Real,3> FieldR3;
-typedef Field<complex<Real>,3> FieldC3;
+typedef Field<std::complex<Real>,3> FieldC3;
+
+} /* namespace Math */
+} /* namespace SEMBA */
 
 #endif /* FIELD_H_ */

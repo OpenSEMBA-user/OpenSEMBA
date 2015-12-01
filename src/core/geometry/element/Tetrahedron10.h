@@ -18,54 +18,52 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Tet10.h
- *
- *  Created on: Sep 24, 2013
- *      Author: luis
- */
 
-#ifndef TET10_H_
-#define TET10_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_TETRAHEDRON10_H_
+#define SEMBA_GEOMETRY_ELEMENT_TETRAHEDRON10_H_
 
-#include <geometry/elements/Tetrahedron.h>
-#include <geometry/elements/Tetrahedron4.h>
+#include "Tetrahedron.h"
+#include "Tetrahedron4.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 class Tetrahedron10 : public Tetrahedron {
 public:
     Tetrahedron10();
-    Tetrahedron10(const GroupCoordinates<CoordR3>&,
-          const ElementId id,
-          const CoordinateId vId[10],
-          const LayerId layerId = LayerId(0),
-          const MatId   matId   = MatId(0));
+    Tetrahedron10(const Id id,
+                  const CoordR3* v[10],
+                  const Layer* lay = NULL,
+                  const Model* mat = NULL);
     Tetrahedron10(const Tetrahedron10& rhs);
     virtual ~Tetrahedron10();
 
-    DEFINE_CLONE(Tetrahedron10);
+    SEMBA_CLASS_DEFINE_CLONE(Tetrahedron10);
 
     bool isCurved() const;
     bool isQuadratic() const {return true;}
-    bool isCurvedFace(const UInt f) const;
-    bool isFaceContainedInPlane(const UInt face,
-                                const CartesianPlane plane) const;
+    bool isCurvedFace(const Size f) const;
+    bool isFaceContainedInPlane(
+            const Size face,
+            const Math::Constants::CartesianPlane plane) const;
 
-    UInt numberOfCoordinates() const { return 10; }
+    Size numberOfCoordinates() const { return 10; }
 
-    UInt numberOfSideCoordinates(const UInt f = 0) const { return 6; }
+    Size numberOfSideCoordinates(const Size f = 0) const { return 6; }
 
-    const CoordR3* getV(const UInt i) const {return v_[i];}
-    const CoordR3* getSideV(const UInt f, const UInt i) const;
+    const CoordR3* getV(const Size i) const {return v_[i];}
+    const CoordR3* getSideV(const Size f, const Size i) const;
 
-    const CoordR3* getVertex(const UInt i) const;
-    const CoordR3* getSideVertex(const UInt f, const UInt i) const;
+    const CoordR3* getVertex(const Size i) const;
+    const CoordR3* getSideVertex(const Size f, const Size i) const;
 
-    Real getVolume() const;
-    const Simplex& getTet() const {return tet;}
-    Real getAreaOfFace(const UInt face) const;
-    Triangle6 getTri6Face(const UInt f) const;
+    Math::Real getVolume() const;
+    const Math::Simplex::Simplex& getTet() const {return tet;}
+    Math::Real getAreaOfFace(const Size face) const;
+    Triangle6 getTri6Face(const Size f) const;
 
-    void setV(const UInt i, const CoordR3*);
+    void setV(const Size i, const CoordR3*);
 
     Tetrahedron4* linearize() const;
 
@@ -73,13 +71,16 @@ public:
     void check() const;
 
 private:
-    static const SimplexTri<2> tri;
-    static const SimplexTet<2> tet;
+    static const Math::Simplex::Triangle<2> tri;
+    static const Math::Simplex::Tetrahedron<2> tet;
     const CoordR3* v_[10];
 };
-const SimplexTri<2> Tetrahedron10::tri;
-const SimplexTet<2> Tetrahedron10::tet;
 
-typedef Tetrahedron10 Tet10;
+} /* namespace Element */
 
-#endif /* TET10_H_ */
+typedef Element::Tetrahedron10 Tet10;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_TETRAHEDRON10_H_ */

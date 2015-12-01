@@ -18,57 +18,57 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * OutRqBulkCurrent.cpp
- *
- *  Created on: 20 de ago. de 2015
- *      Author: Daniel
- */
 
-#include <outRq/OutRqBulkCurrent.h>
+#include "BulkCurrent.h"
 
-OutRqBulkCurrent::OutRqBulkCurrent(const Domain& domain,
-                                   const string& name,
-                                   const GroupElements<Elem>& elem,
-                                   const CartesianAxis& dir,
-                                   const UInt& skip)
+namespace SEMBA {
+namespace OutputRequest {
+
+BulkCurrent::BulkCurrent(const Domain& domain,
+                         const std::string& name,
+                         const Geometry::Element::Group<Geometry::Elem>& elem,
+                         const Math::Constants::CartesianAxis& dir,
+                         const Math::UInt& skip)
 :   Domain(domain),
-    OutRqBase(bulkCurrentElectric, name),
-    GroupElements<const Elem>(elem) {
+    SEMBA::OutputRequest::Base(bulkCurrentElectric, name),
+    Geometry::Element::Group<const Geometry::Elem>(elem) {
 
     dir_ = dir;
     skip_ = skip;
 }
 
-OutRqBulkCurrent::OutRqBulkCurrent(const OutRqBulkCurrent& rhs)
+BulkCurrent::BulkCurrent(const BulkCurrent& rhs)
 :   Domain(rhs),
-    OutRqBase(rhs),
-    GroupElements<const Elem>(rhs) {
+    SEMBA::OutputRequest::Base(rhs),
+    Geometry::Element::Group<const Geometry::Elem>(rhs) {
 
     dir_ = rhs.dir_;
     skip_ = rhs.skip_;
 }
 
-OutRqBulkCurrent::~OutRqBulkCurrent() {
+BulkCurrent::~BulkCurrent() {
 
 }
 
-bool OutRqBulkCurrent::hasSameProperties(const OutRqBase& rhs) const {
-    if(!OutRqBase::hasSameProperties(rhs)) {
+bool BulkCurrent::hasSameProperties(
+        const SEMBA::OutputRequest::Base& rhs) const {
+    if(!SEMBA::OutputRequest::Base::hasSameProperties(rhs)) {
         return false;
     }
-    const OutRqBulkCurrent* rhsPtr = rhs.castTo<OutRqBulkCurrent>();
+    const BulkCurrent* rhsPtr = rhs.castTo<BulkCurrent>();
     bool hasSameProperties = true;
     hasSameProperties &= dir_ == rhsPtr->dir_;
     hasSameProperties &= skip_ == rhsPtr->skip_;
     return hasSameProperties;
 }
 
-CartesianAxis OutRqBulkCurrent::getDir() const {
+Math::Constants::CartesianAxis BulkCurrent::getDir() const {
     return dir_;
 }
 
-UInt OutRqBulkCurrent::getSkip() const {
+Math::UInt BulkCurrent::getSkip() const {
     return skip_;
 }
 
+} /* namespace OutputRequest */
+} /* namespace SEMBA */

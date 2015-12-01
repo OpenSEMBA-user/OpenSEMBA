@@ -18,41 +18,41 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Gaussian.cpp
- *
- *  Created on: Sep 9, 2015
- *      Author: luis
- */
 
-#include "FunctionGaussian.h"
+#include "Gaussian.h"
 
+#include <cmath>
+#include <iostream>
 
-FunctionGaussian::FunctionGaussian() {
+namespace SEMBA {
+namespace Math {
+namespace Function {
+
+Gaussian::Gaussian() {
     spread_ = 0.0;
     delay_  = 0.0;
     freq_   = 0.0;
 }
 
-FunctionGaussian::FunctionGaussian(const Real spread,
-                                     const Real delay,
-                                     const Real freq) {
+Gaussian::Gaussian(const Real spread,
+                   const Real delay,
+                   const Real freq) {
     spread_ = spread;
     delay_  = delay;
     freq_   = freq;
 }
 
-FunctionGaussian::FunctionGaussian(const FunctionGaussian& rhs) {
+Gaussian::Gaussian(const Gaussian& rhs) {
     spread_ = rhs.spread_;
     delay_  = rhs.delay_;
     freq_   = rhs.freq_;
 }
 
-FunctionGaussian::~FunctionGaussian() {
+Gaussian::~Gaussian() {
 
 }
 
-Real FunctionGaussian::operator ()(const Real& time) const {
+Real Gaussian::operator ()(const Real& time) const {
     static const Real pi    = acos(-1.0);
     static const Real sqrt2 = sqrt(2.0);
     Real expArg = (time - delay_) / (spread_ * sqrt2);
@@ -60,32 +60,36 @@ Real FunctionGaussian::operator ()(const Real& time) const {
     return exp(-expArg * expArg) * cos(freq_ * pi * 2.0 * time);
 }
 
-bool FunctionGaussian::operator==(const FunctionBase& rhs) const {
+bool Gaussian::operator==(const Base& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }
-    const FunctionGaussian* rhsPtr = rhs.castTo<FunctionGaussian>();
+    const Gaussian* rhsPtr = dynamic_cast<const Gaussian*>(&rhs);
     return ((this->getSpread() == rhsPtr->getSpread()) &&
             (this->getDelay()  == rhsPtr->getDelay())  &&
             (this->getFreq()   == rhsPtr->getFreq()));
 }
 
-Real FunctionGaussian::getSpread() const {
+Real Gaussian::getSpread() const {
    return spread_;
 }
 
-Real FunctionGaussian::getDelay() const {
+Real Gaussian::getDelay() const {
    return delay_;
 }
 
-Real FunctionGaussian::getFreq() const {
+Real Gaussian::getFreq() const {
    return freq_;
 }
 
-void FunctionGaussian::printInfo() const {
-    cout << " --- Function Gaussian info --- " << endl;
+void Gaussian::printInfo() const {
+    std::cout << " --- Function Gaussian info --- " << std::endl;
     FunctionRR::printInfo();
-    cout << "Spread:    " << spread_ << endl;
-    cout << "Delay:     " << delay_ << endl;
-    cout << "Frequency: " << freq_ << endl;
+    std::cout << "Spread:    " << spread_ << std::endl;
+    std::cout << "Delay:     " << delay_ << std::endl;
+    std::cout << "Frequency: " << freq_ << std::endl;
 }
+
+} /* namespace Function */
+} /* namespace Math */
+} /* namespace SEMBA */

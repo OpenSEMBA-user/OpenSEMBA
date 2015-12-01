@@ -18,42 +18,39 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef CLASSBASE_H_
-#define CLASSBASE_H_
 
-#include <cstdlib>
-#include <memory>
-#include <string>
-#include <typeinfo>
+#ifndef SEMBA_CLASS_CLASS_H_
+#define SEMBA_CLASS_CLASS_H_
 
-class ClassBase : public std::enable_shared_from_this<ClassBase> {
+#include <cstddef>
+
+namespace SEMBA {
+namespace Class {
+
+class Class {
 public:
-    ClassBase();
-    virtual ~ClassBase();
+    Class() {}
+    virtual ~Class() {}
 
     template<typename T>
-    bool is() const;
-
-    virtual ClassBase* clone  () const = 0;
-    template<typename T>
-    T*                 cloneTo() const;
-
-    std::shared_ptr<      ClassBase> getSharedPtr();
-    std::shared_ptr<const ClassBase> getSharedPtr() const;
-
-    template<typename T>
-    T*       castTo();
-    template<typename T>
-    const T* castTo() const;
-
-    virtual void printInfo() const = 0;
-};
-
-#include "ClassBase.hpp"
-
-#define DEFINE_CLONE(NAME)      \
-    NAME* clone() const {       \
-        return new NAME(*this); \
+    bool is() const {
+        if(dynamic_cast<const T*>(this) != NULL) {
+            return true;
+        }
+        return false;
     }
 
-#endif /* CLASSBASE_H_ */
+    template<typename T>
+    T*       castTo() {
+        return &dynamic_cast<T&>(*this);
+    }
+    template<typename T>
+    const T* castTo() const {
+        return &dynamic_cast<const T&>(*this);
+    }
+};
+
+} /* namespace Class */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_CLASS_CLASS_H_ */

@@ -18,37 +18,39 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMWireExtremes.h
- *
- *  Created on: 15/4/2015
- *      Author: Daniel
- */
 
-#ifndef SRC_COMMON_PHYSICALMODEL_PMWIREEXTREMES_H_
-#define SRC_COMMON_PHYSICALMODEL_PMWIREEXTREMES_H_
+#ifndef SEMBA_PHYSICALMODEL_WIREEXTREMES_H_
+#define SEMBA_PHYSICALMODEL_WIREEXTREMES_H_
 
-#include "PMWire.h"
-#include "PMMultiport.h"
+#include "Types.h"
 
-class PMWireExtremes: public PMWire {
+#include "Wire.h"
+#include "Multiport.h"
+
+namespace SEMBA {
+namespace PhysicalModel {
+
+class WireExtremes: public Wire {
 public:
-    PMWireExtremes(const PMWire& wire,
-                   const PMMultiport* extremeL,
-                   const PMMultiport* extremeR);
-    PMWireExtremes(const PMWireExtremes& rhs);
-    virtual ~PMWireExtremes();
+    WireExtremes(const Wire& wire,
+                   const Multiport* extremeL,
+                   const Multiport* extremeR);
+    WireExtremes(const WireExtremes& rhs);
+    virtual ~WireExtremes();
 
-    DEFINE_CLONE(PMWireExtremes);
+    SEMBA_CLASS_DEFINE_CLONE(WireExtremes);
 
-    const PMMultiport *getExtreme(const UInt i) const { return extreme_[i]; }
+    const Multiport *getExtreme(const Size i) const { return extreme_[i]; }
 
-    void setExtreme(const UInt i, const PMMultiport* extreme);
+    void setExtreme(const Size i, const Multiport* extreme);
 
     void printInfo() const;
 
 private:
-    const PMMultiport* extreme_[2];
+    const Multiport* extreme_[2];
 };
 
-#endif /* SRC_COMMON_PHYSICALMODEL_PMWIREEXTREMES_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_WIREEXTREMES_H_ */

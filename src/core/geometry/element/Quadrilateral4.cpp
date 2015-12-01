@@ -18,14 +18,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Quad4.cpp
- *
- *  Created on: Apr 10, 2014
- *      Author: luis
- */
 
-#include <geometry/elements/Quadrilateral4.h>
+#include "Quadrilateral4.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 template<class T>
 Quadrilateral4<T>::Quadrilateral4() {
@@ -33,35 +31,35 @@ Quadrilateral4<T>::Quadrilateral4() {
 }
 
 template<class T>
-Quadrilateral4<T>::Quadrilateral4(const GroupCoordinates<Coordinate<T,3> >& cG,
-                const ElementId id,
-                const CoordinateId vId[4],
-                const LayerId layerId,
-                const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
+Quadrilateral4<T>::Quadrilateral4(const Id id,
+                                  const Coordinate::Coordinate<T,3>* coords[4],
+                                  const Layer* lay,
+                                  const Model* mat)
+:   Identifiable<Id>(id),
+    Elem(lay, mat) {
     
-	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.getId(vId[i]);
-	}
-	// TODO Normals are not handled.
-	check();
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
+        v_[i] = coords[i];
+    }
+    // TODO Normals are not handled.
+    check();
 }
 
 template<class T>
-Quadrilateral4<T>::Quadrilateral4(GroupCoordinates<Coordinate<T,3> >& cG,
-                const ElementId id,
-                const Box<T,3>& box,
-                const LayerId layerId,
-                const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
+Quadrilateral4<T>::Quadrilateral4(
+        Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
+        const Id id,
+        const Box<T,3>& box,
+        const Layer* lay,
+        const Model* mat)
+:   Identifiable<Id>(id),
+    Elem(lay, mat) {
 
     if(!box.isSurface()) {
-        throw typename Box<T,3>::ErrorNotSurface();
+        throw Geometry::Error::Box::NotSurface();
     }
-    vector<CartesianVector<T,3> > pos = box.getPos();
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+    std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
             v_[i] = cG.addPos(pos[i]);
@@ -71,10 +69,10 @@ Quadrilateral4<T>::Quadrilateral4(GroupCoordinates<Coordinate<T,3> >& cG,
 
 template<class T>
 Quadrilateral4<T>::Quadrilateral4(const Quadrilateral4<T>& rhs)
-:   ClassIdBase<ElementId>(rhs),
+:   Identifiable<Id>(rhs),
     Elem(rhs) {
     
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
 }
@@ -85,7 +83,8 @@ Quadrilateral4<T>::~Quadrilateral4() {
 }
 
 template<class T>
-bool Quadrilateral4<T>::isStructured(const Grid3& grid, const Real tol) const {
+bool Quadrilateral4<T>::isStructured(const Grid3& grid,
+                                     const Math::Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
     }
@@ -99,76 +98,89 @@ bool Quadrilateral4<T>::isStructured(const Grid3& grid, const Real tol) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Quadrilateral4<T>::getVertex(const UInt i) const {
-	return v_[i];
+const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getV(const Size i) const {
+    return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Quadrilateral4<T>::getSideV(const UInt f,
-                                          const UInt i) const {
-	assert(f < this->numberOfFaces());
-	assert(i < numberOfSideCoordinates());
-	return v_[(f + i) % 4];
+const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getVertex(
+        const Size i) const {
+    return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Quadrilateral4<T>::getSideVertex(const UInt f,
-                                               const UInt i) const {
-	assert(f < this->numberOfFaces());
-	assert(i < this->numberOfSideVertices());
-	return v_[(f + i) % 4];
+const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getSideV(
+        const Size f,
+        const Size i) const {
+    assert(f < this->numberOfFaces());
+    assert(i < numberOfSideCoordinates());
+    return v_[(f + i) % 4];
 }
 
 template<class T>
-void Quadrilateral4<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
+const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getSideVertex(
+        const Size f,
+        const Size i) const {
+    assert(f < this->numberOfFaces());
+    assert(i < this->numberOfSideVertices());
+    return v_[(f + i) % 4];
+}
+
+template<class T>
+void Quadrilateral4<T>::setV(const Size i,
+                             const Coordinate::Coordinate<T,3>* coord) {
     v_[i] = coord;
 }
 
 template<class T>
-ElemI* Quadrilateral4<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
-                              const Grid3& grid, const Real tol) const {
-    CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
-    if (vIds == NULL) {
+ElemI* Quadrilateral4<T>::toStructured(
+        const Coordinate::Group<CoordI3>& cG,
+        const Grid3& grid, const Math::Real tol) const {
+    const CoordI3** coords = this->vertexToStructured(cG, grid, tol);
+    if (coords == NULL) {
         return NULL;
     }
-    Element<Int>* res =  new QuaI4(cG,
-                                   this->getId(),
-                                   vIds,
-                                   this->getLayerId(),
-                                   this->getMatId());
-    delete[] vIds;
+    ElemI* res =  new QuaI4(this->getId(),
+                            coords,
+                            this->getLayer(),
+                            this->getModel());
+    delete[] coords;
     return res;
 }
 
 template<class T>
-ElemR* Quadrilateral4<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
-                                const Grid3& grid) const {
-    CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
-    if (vIds == NULL) {
+ElemR* Quadrilateral4<T>::toUnstructured(
+        const Coordinate::Group<CoordR3>& cG,
+        const Grid3& grid) const {
+    const CoordR3** coords = this->vertexToUnstructured(cG, grid);
+    if (coords == NULL) {
         return NULL;
     }
-    ElemR* res =  new QuaR4(cG,
-                            this->getId(),
-                            vIds,
-                            this->getLayerId(),
-                            this->getMatId());
-    delete[] vIds;
+    ElemR* res =  new QuaR4(this->getId(),
+                            coords,
+                            this->getLayer(),
+                            this->getModel());
+    delete[] coords;
     return res;
 }
 
 template<class T>
 void Quadrilateral4<T>::printInfo() const {
-	cout << "--- Quad4 info ---" << endl;
-	Quadrilateral<T>::printInfo();
-	for (UInt i = 0; i < numberOfCoordinates(); i++) {
-	    v_[i]->printInfo();
-	}
+    std::cout << "--- Quad4 info ---" << std::endl;
+    Quadrilateral<T>::printInfo();
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
+        v_[i]->printInfo();
+    }
 }
 
 template<class T>
 void Quadrilateral4<T>::check() const {
-	// TODO Auto-generated
+
 }
 
-template class Quadrilateral4<Real>;
-template class Quadrilateral4<Int >;
+template class Quadrilateral4<Math::Real>;
+template class Quadrilateral4<Math::Int >;
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

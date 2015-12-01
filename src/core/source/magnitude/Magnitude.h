@@ -18,42 +18,47 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Magnitude.h
- *
- *  Created on: Dec 13, 2014
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_MAGNITUDE_H_
-#define SRC_COMMON_INPUTS_MAGNITUDE_H_
+#ifndef SEMBA_SOURCE_MAGNITUDE_MAGNITUDE_H_
+#define SEMBA_SOURCE_MAGNITUDE_MAGNITUDE_H_
 
-#include <iostream>
-#include <fstream>
-#include <string>
-using namespace std;
+#include "math/function/Function.h"
 
-#include "math/Function.h"
-#include "base/class/ClassBase.h"
+#include "class/Class.h"
+#include "class/Cloneable.h"
+#include "class/Shareable.h"
+#include "class/Printable.h"
 
-class Magnitude : public virtual ClassBase {
+namespace SEMBA {
+namespace Source {
+namespace Magnitude {
+
+class Magnitude : public virtual Class::Class,
+                  public virtual Class::Cloneable,
+                  public virtual Class::Shareable,
+                  public virtual Class::Printable {
 public:
     Magnitude();
-    Magnitude(FunctionRR* mathFunction);
+    Magnitude(Math::FunctionRR* mathFunction);
     Magnitude(const Magnitude& rhs);
     virtual ~Magnitude();
 
-    DEFINE_CLONE(Magnitude);
+    SEMBA_CLASS_DEFINE_CLONE(Magnitude);
 
     Magnitude& operator=(const Magnitude& rhs);
 
     virtual bool operator==(const Magnitude&) const;
 
-    Real evaluate(const Real time) const;
+    Math::Real evaluate(const Math::Real time) const;
 
     virtual void printInfo() const;
+
 private:
-    FunctionRR* mathFunction_;
+    Math::FunctionRR* mathFunction_;
 };
 
-#endif /* SRC_COMMON_INPUTS_MAGNITUDE_H_ */
+} /* namespace Magnitude */
+} /* namespace Source */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_SOURCE_MAGNITUDE_MAGNITUDE_H_ */

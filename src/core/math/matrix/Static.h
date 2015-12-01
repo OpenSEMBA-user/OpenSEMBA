@@ -18,76 +18,94 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef STAMATRIX_H_
-#define STAMATRIX_H_
 
-#include "MathMatrix.h"
-#include "DynMatrix.h"
+#ifndef SEMBA_MATH_MATRIX_STATIC_H_
+#define SEMBA_MATH_MATRIX_STATIC_H_
+
+#include <array>
+#include <complex>
+
+#include "math/Types.h"
+
+#include "Matrix.h"
+#include "Dynamic.h"
+
+namespace SEMBA {
+namespace Math {
+namespace Matrix {
 
 // Static Matrix class. It can't change its size in run time.
-template<class T,UInt ROWS,UInt COLS>
-class StaMatrix : public MathMatrix<T> {
+template<class T,Size ROWS,Size COLS>
+class Static : public Matrix<T> {
 public:
-   StaMatrix();
-   StaMatrix(const StaMatrix<T,ROWS,COLS>& rhs);
-   ~StaMatrix();
-   T operator()(const UInt row, const UInt col) const;
-   T& operator()(const UInt row, const UInt col);
-   T val(const UInt ind) const;
-   T& val(const UInt ind);
-   T val(const UInt row, const UInt col) const;
-   T& val(const UInt row, const UInt col);
+   Static();
+   Static(const Static<T,ROWS,COLS>& rhs);
+   ~Static();
+   T operator()(const Size row, const Size col) const;
+   T& operator()(const Size row, const Size col);
+   T val(const Size ind) const;
+   T& val(const Size ind);
+   T val(const Size row, const Size col) const;
+   T& val(const Size row, const Size col);
    const T* val() const;
-   UInt nRows() const;
-   UInt nCols() const;
+   Size nRows() const;
+   Size nCols() const;
 
-   StaMatrix<T,ROWS,COLS>& operator=(const StaMatrix<T,ROWS,COLS>& rhs);
-   StaMatrix<T,ROWS,COLS>& operator=(const DynMatrix<Int>& rhs);
-   StaMatrix<T,ROWS,COLS>& operator=(const DynMatrix<Real>& rhs);
+   Static<T,ROWS,COLS>& operator=(const Static<T,ROWS,COLS>& rhs);
+   Static<T,ROWS,COLS>& operator=(const Dynamic<Int>& rhs);
+   Static<T,ROWS,COLS>& operator=(const Dynamic<Real>& rhs);
 
-   StaMatrix<T,ROWS,COLS>& assign(const StaMatrix<Int,ROWS,COLS>& rhs);
-   StaMatrix<T,ROWS,COLS>& setInDiagonal(const CartesianVector<T,ROWS>& rhs);
+   Static<T,ROWS,COLS>& assign(const Static<Int,ROWS,COLS>& rhs);
+   Static<T,ROWS,COLS>& setInDiagonal(const Vector::Cartesian<T,ROWS>& rhs);
 
-   StaMatrix<T,ROWS,COLS>& operator+=(const Real rhs);
-   StaMatrix<T,ROWS,COLS>& operator+=(const StaMatrix<T,ROWS,COLS>& rhs);
-   StaMatrix<T,ROWS,COLS>& operator-=(const StaMatrix<T,ROWS,COLS>& rhs);
-   StaMatrix<T,ROWS,COLS>& operator*=(const T rhs);
-   StaMatrix<T,ROWS,COLS>& operator/=(const T rhs);
-   StaMatrix<T,ROWS,COLS> operator*(T rhs) const;
-   CartesianVector<T,COLS> operator*(CartesianVector<T,COLS> rhs) const;
-   StaMatrix<T,ROWS,COLS> operator+(StaMatrix<T,ROWS,COLS> &rhs) const;
-   StaMatrix<T,COLS,ROWS>& invert();
-   StaMatrix<T,COLS,ROWS> transpose();
+   Static<T,ROWS,COLS>& operator+=(const Real rhs);
+   Static<T,ROWS,COLS>& operator+=(const Static<T,ROWS,COLS>& rhs);
+   Static<T,ROWS,COLS>& operator-=(const Static<T,ROWS,COLS>& rhs);
+   Static<T,ROWS,COLS>& operator*=(const T rhs);
+   Static<T,ROWS,COLS>& operator/=(const T rhs);
+   Static<T,ROWS,COLS> operator*(T rhs) const;
+   Vector::Cartesian<T,COLS> operator*(Vector::Cartesian<T,COLS> rhs) const;
+   Static<T,ROWS,COLS> operator+(Static<T,ROWS,COLS> &rhs) const;
+   Static<T,COLS,ROWS>& invert();
+   Static<T,COLS,ROWS> transpose();
 
-   array<complex<Real>,ROWS> getEigenvalues() const;
+   std::array<std::complex<Real>,ROWS> getEigenvalues() const;
 
-   void copy(vector<vector<T> > values);
-   bool operator==(const StaMatrix<T,ROWS,COLS>& rhs) const;
-   bool operator<(const StaMatrix<T,ROWS,COLS>& rhs) const;
+   void copy(std::vector<std::vector<T> > values);
+   bool operator==(const Static<T,ROWS,COLS>& rhs) const;
+   bool operator<(const Static<T,ROWS,COLS>& rhs) const;
    void printInfo() const;
-   void printInfo(UInt, UInt) const;
+   void printInfo(Size, Size) const;
 private:
    T _val[ROWS*COLS];
 };
 
 // Products between different sized StaMatrices.
-template<class T, class S, UInt ROWS, UInt COLS, UInt NCOLSB>
-StaMatrix<T,ROWS,NCOLSB> operator*(
-        const StaMatrix<T,ROWS,COLS>& lhs,
-        const StaMatrix<S,COLS,NCOLSB>& rhs);
-// Products between StaMatrix and DynMatrix
-template<class T, UInt ROWS, UInt COLS>
-DynMatrix<T> operator*(
-        const StaMatrix<T,ROWS,COLS>& lhs,
-        const DynMatrix<T>& rhs);
+template<class T, class S, Size ROWS, Size COLS, Size NCOLSB>
+Static<T,ROWS,NCOLSB> operator*(const Static<T,ROWS,COLS>& lhs,
+                                const Static<S,COLS,NCOLSB>& rhs);
+// Products between Static and Dynamic
+template<class T, Size ROWS, Size COLS>
+Dynamic<T> operator*(const Static<T,ROWS,COLS>& lhs,
+                     const Dynamic<T>& rhs);
 
-typedef StaMatrix<Real,2,2> MatR22;
-typedef StaMatrix<Real,3,3> MatR33;
-typedef StaMatrix<Real,4,3> MatR43;
-typedef StaMatrix<Real,4,4> MatR44;
-typedef StaMatrix<complex<Real>,2,2> MatC22;
-typedef StaMatrix<complex<Real>,3,3> MatC33;
+} /* namespace Matrix */
+} /* namespace Math */
+} /* namespace SEMBA */
 
-#include "StaMatrix.hpp"
+#include "Static.hpp"
+
+namespace SEMBA {
+namespace Math {
+
+typedef Matrix::Static<Real,2,2> MatR22;
+typedef Matrix::Static<Real,3,3> MatR33;
+typedef Matrix::Static<Real,4,3> MatR43;
+typedef Matrix::Static<Real,4,4> MatR44;
+typedef Matrix::Static<std::complex<Real>,2,2> MatC22;
+typedef Matrix::Static<std::complex<Real>,3,3> MatC33;
+
+} /* namespace Math */
+} /* namespace SEMBA */
 
 #endif

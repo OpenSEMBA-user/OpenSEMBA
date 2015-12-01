@@ -18,35 +18,36 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GroupPhysicalModels.hpp
- *
- *  Created on: Jul 1, 2013
- *      Author: luis
- */
-#include "GroupPhysicalModels.h"
+
+#include "Group.h"
+
+namespace SEMBA {
+namespace PhysicalModel {
 
 template<typename P>
-GroupPhysicalModels<P>& GroupPhysicalModels<P>::operator=(VectorPtr<P>& rhs) {
+Group<P>& Group<P>::operator=(SEMBA::Group::Group<P>& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    GroupId<P, MatId>::operator=(rhs);
+    SEMBA::Group::Identifiable<P, Id>::operator=(rhs);
     return *this;
 }
 
 template<typename P>
-GroupPhysicalModels<P>& GroupPhysicalModels<P>::operator=(VectorPtr<P>&& rhs) {
+Group<P>& Group<P>::operator=(SEMBA::Group::Group<P>&& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    GroupId<P, MatId>::operator=(std::move(rhs));
+    SEMBA::Group::Identifiable<P, Id>::operator=(std::move(rhs));
     return *this;
 }
 
 template<typename P>
-void GroupPhysicalModels<P>::printInfo() const {
-    cout << "---- GroupPhysicalModels info ----" << endl;
-    cout << "Number of physical models: " << this->size() << endl;
+void Group<P>::printInfo() const {
+    std::cout << "---- Group info ----" << std::endl;
+    std::cout << "Number of physical models: " << this->size() << std::endl;
     Group<P>::printInfo();
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

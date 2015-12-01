@@ -18,35 +18,30 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GraphElement.h
- *
- *  Created on: Jun 16, 2014
- *      Author: damarro
- */
 
-#ifndef COMMON_GEOMETRY_MAPS_GRAPHELEMENT_H_
-#define COMMON_GEOMETRY_MAPS_GRAPHELEMENT_H_
+#ifndef SEMBA_GEOMETRY_GRAPH_ELEMENT_H_
+#define SEMBA_GEOMETRY_GRAPH_ELEMENT_H_
 
-
-#include <utility>
 #include <vector>
-using namespace std;
 
-#include "../elements/Element.h"
+#include "Types.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Graph {
 
 template<class ELEM, class BOUND>
-class GraphElement {
+class Element {
 public:
     typedef ELEM  Elem;
     typedef BOUND Bound;
-    typedef GraphElement<Elem,Bound> GraphElem;
-    typedef GraphElement<Bound,Elem> GraphBound;
+    typedef Element<Elem,Bound> GraphElem;
+    typedef Element<Bound,Elem> GraphBound;
 
-    GraphElement(const Elem* elem, const UInt& numBounds = 0);
-    GraphElement(const GraphElement&);
+    Element(const Elem* elem, const Size& numBounds = 0);
+    Element(const Element&);
 
-    GraphElement* clone() const;
+    Element* clone() const;
 
     bool visited() const { return vis_;  }
     void markVisited  () { vis_ =  true; }
@@ -54,23 +49,23 @@ public:
 
     const Elem* elem() const { return elem_; }
 
-    UInt numBounds() const { return bounds_.size(); }
-    vector<const GraphBound*> getBounds() const;
-    vector<GraphBound*>       getBounds()    { return bounds_;    }
-    const GraphBound* getBound(UInt i) const { return bounds_[i]; }
-    GraphBound*       getBound(UInt i)       { return bounds_[i]; }
+    Size numBounds() const { return bounds_.size(); }
+    std::vector<const GraphBound*> getBounds() const;
+    std::vector<GraphBound*>       getBounds()    { return bounds_;    }
+    const GraphBound* getBound(Size i) const { return bounds_[i]; }
+    GraphBound*       getBound(Size i)       { return bounds_[i]; }
     void setBounds(GraphBound* bound);
-    void setBounds(vector<GraphBound*> bounds) { bounds_ = bounds; }
-    void setBound(UInt i, GraphBound* bound)   { bounds_[i] = bound;       }
-    void addBound(GraphBound* bound)           { bounds_.push_back(bound); }
+    void setBounds(std::vector<GraphBound*> bounds) { bounds_ = bounds; }
+    void setBound (Size i, GraphBound* bound)       { bounds_[i] = bound;      }
+    void addBound (GraphBound* bound)               { bounds_.push_back(bound);}
 
-    UInt numNeighbors() const { return neighbors_.size(); }
-    const GraphElem* getNeighbor(UInt i) const { return neighbors_[i]; }
-    GraphElem*       getNeighbor(UInt i)       { return neighbors_[i]; }
+    Size numNeighbors() const { return neighbors_.size(); }
+    const GraphElem* getNeighbor(Size i) const { return neighbors_[i]; }
+    GraphElem*       getNeighbor(Size i)       { return neighbors_[i]; }
 
-    UInt numBoundNeighbors(UInt i) const { return boundNeighbors_[i].size(); }
-    const GraphElem* getBoundNeighbor(UInt i, UInt j) const;
-    GraphElem*       getBoundNeighbor(UInt i, UInt j);
+    Size numBoundNeighbors(Size i) const { return boundNeighbors_[i].size(); }
+    const GraphElem* getBoundNeighbor(Size i, Size j) const;
+    GraphElem*       getBoundNeighbor(Size i, Size j);
 
     void constructNeighbors();
 
@@ -80,11 +75,15 @@ private:
     bool vis_;
 
     const Elem* elem_;
-    vector<GraphBound*>        bounds_;
-    vector<GraphElem*>         neighbors_;
-    vector<vector<GraphElem*>> boundNeighbors_;
+    std::vector<GraphBound*>             bounds_;
+    std::vector<GraphElem*>              neighbors_;
+    std::vector<std::vector<GraphElem*>> boundNeighbors_;
 };
 
-#include "../graphs/GraphElement.hpp"
+} /* namespace Graph */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#include "Element.hpp"
 
 #endif /* COMMON_GEOMETRY_MAPS_GRAPHELEMENT_H_ */

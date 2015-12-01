@@ -18,55 +18,55 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Id.h
- *
- *  Created on: 22/6/2015
- *      Author: Daniel
- */
 
-#ifndef COMMON_BASE_ID_ID_H_
-#define COMMON_BASE_ID_ID_H_
+#ifndef SEMBA_CLASS_IDENTIFICATION_H_
+#define SEMBA_CLASS_IDENTIFICATION_H_
 
+#include <cstddef>
 #include <iostream>
-#include <sstream>
 #include <string>
 
-#include "Types.h"
+namespace SEMBA {
+namespace Class {
 
 template <typename T>
-class Id {
+class Identification {
     template <typename I>
-    friend std::istream& operator>>(std::istream&  input,       Id<I>& id);
+    friend std::istream& operator>>(std::istream&  input,
+                                    Identification<I>& id);
     template <typename I>
-    friend std::ostream& operator<<(std::ostream& output, const Id<I>& id);
+    friend std::ostream& operator<<(std::ostream& output,
+                                    const Identification<I>& id);
 public:
-    Id();
-    explicit Id(const UInt id);
-    Id(const Id& rhs);
-    virtual ~Id();
+    Identification();
+    explicit Identification(const std::size_t id);
+    Identification(const Identification& rhs);
+    virtual ~Identification();
 
-    Id& operator =(const Id& rhs);
-    Id& operator+=(const Id& rhs);
+    Identification& operator =(const Identification& rhs);
+    Identification& operator+=(const Identification& rhs);
 
-    bool operator==(const Id& rhs) const;
-    bool operator!=(const Id& rhs) const;
-    bool operator< (const Id& rhs) const;
-    bool operator<=(const Id& rhs) const;
-    bool operator> (const Id& rhs) const;
-    bool operator>=(const Id& rhs) const;
+    bool operator==(const Identification& rhs) const;
+    bool operator!=(const Identification& rhs) const;
+    bool operator< (const Identification& rhs) const;
+    bool operator<=(const Identification& rhs) const;
+    bool operator> (const Identification& rhs) const;
+    bool operator>=(const Identification& rhs) const;
 
-    Id  operator+ (const Id& rhs) const;
-    Id& operator++();
-    Id  operator++(int);
+    Identification  operator+ (const Identification& rhs) const;
+    Identification& operator++();
+    Identification  operator++(int);
 
-    UInt        toUInt() const;
+    std::size_t toInt() const;
     std::string toStr() const;
 
 private:
-    UInt id_;
+    std::size_t id_;
 };
 
-#include "Id.hpp"
+} /* namespace Class */
+} /* namespace SEMBA */
 
-#endif /* COMMON_BASE_ID_ID_H_ */
+#include "Identification.hpp"
+
+#endif /* SEMBA_CLASS_IDENTIFICATION_H_ */

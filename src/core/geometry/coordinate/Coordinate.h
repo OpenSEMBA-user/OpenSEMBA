@@ -18,47 +18,47 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Coordinate.h
- *
- *  Created on: Aug 26, 2012
- *      Author: luis
- */
 
-#ifndef COORDINATE_H_
-#define COORDINATE_H_
-
-#include <cstdlib>
-#include <sstream>
-#include <type_traits>
-#include <vector>
-
-using namespace std;
+#ifndef SEMBA_GEOMETRY_COORDINATE_COORDINATE_H_
+#define SEMBA_GEOMETRY_COORDINATE_COORDINATE_H_
 
 #include "geometry/Grid.h"
-#include "math/CartesianVector.h"
-#include "base/class/ClassIdBase.h"
+#include "math/vector/Cartesian.h"
 
-class CoordinateBase;
+#include "class/Class.h"
+#include "class/Cloneable.h"
+#include "class/Shareable.h"
+#include "class/Printable.h"
+#include "class/Identifiable.h"
+#include "class/Identification.h"
 
-typedef Id<CoordinateBase> CoordinateId;
+namespace SEMBA {
+namespace Geometry {
+namespace Coordinate {
 
-class CoordinateBase : public virtual ClassIdBase<CoordinateId> {
+class Base;
+typedef Class::Identification<Base> Id;
+
+class Base : public virtual Class::Class,
+             public virtual Class::Cloneable,
+             public virtual Class::Shareable,
+             public virtual Class::Printable,
+             public virtual Class::Identifiable<Id> {
 public:
-    CoordinateBase();
-    virtual ~CoordinateBase();
+    Base();
+    virtual ~Base();
 
-    virtual bool operator==(const CoordinateBase& rhs) const;
-    virtual bool operator!=(const CoordinateBase& rhs) const;
+    virtual bool operator==(const Base& rhs) const;
+    virtual bool operator!=(const Base& rhs) const;
 };
 
-template <class T, Int D>
-class Coordinate : public virtual CoordinateBase,
-                   public virtual CartesianVector<T,D> {
+template <class T, Size D>
+class Coordinate : public virtual Base,
+                   public virtual Math::Vector::Cartesian<T,D> {
 public:
     Coordinate();
-    Coordinate(const CoordinateId id_, const CartesianVector<T,D>& pos);
-    explicit Coordinate(const CartesianVector<T,D>& pos);
+    Coordinate(const Id id_, const Math::Vector::Cartesian<T,D>& pos);
+    explicit Coordinate(const Math::Vector::Cartesian<T,D>& pos);
     Coordinate(const Coordinate& rhs);
     virtual ~Coordinate();
 
@@ -66,23 +66,29 @@ public:
 
     Coordinate& operator=(const Coordinate& rhs);
 
-    bool operator==(const CoordinateBase& rhs) const;
-    bool operator!=(const CoordinateBase& rhs) const;
+    bool operator==(const Base& rhs) const;
+    bool operator!=(const Base& rhs) const;
 
     virtual bool isStructured(const Grid<D>&,
-                              const Real = Grid<D>::tolerance) const;
+                              const Math::Real = Grid<D>::tolerance) const;
 
-    CartesianVector<T,D>&       pos()       { return *this; }
-    const CartesianVector<T,D>& pos() const { return *this; }
+    Math::Vector::Cartesian<T,D>&       pos()       { return *this; }
+    const Math::Vector::Cartesian<T,D>& pos() const { return *this; }
 
-    virtual Coordinate<Int ,D>* toStructured  (const Grid<D>&) const;
-    virtual Coordinate<Real,D>* toUnstructured(const Grid<D>&) const;
+    virtual Coordinate<Math::Int ,D>* toStructured  (const Grid<D>&) const;
+    virtual Coordinate<Math::Real,D>* toUnstructured(const Grid<D>&) const;
 
     void printInfo() const;
 };
 
-typedef CoordinateBase      Coord;
-typedef Coordinate<Real, 3> CoordR3;
-typedef Coordinate<Int, 3> CoordI3;
+} /* namespace Coordinate */
 
-#endif /* COORDINATE_H_ */
+typedef Coordinate::Id                       CoordId;
+typedef Coordinate::Base                     Coord;
+typedef Coordinate::Coordinate<Math::Real,3> CoordR3;
+typedef Coordinate::Coordinate<Math::Int ,3> CoordI3;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_COORDINATE_COORDINATE_H_ */

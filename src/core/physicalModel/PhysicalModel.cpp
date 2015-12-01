@@ -23,28 +23,32 @@
 
 #include "PhysicalModel.h"
 
-PhysicalModel::PhysicalModel(const MatId id, const string& name)
-:  ClassIdBase<MatId>(id) {
-   name_ = name;
+namespace SEMBA {
+namespace PhysicalModel {
+
+PhysicalModel::PhysicalModel(const Id id, const std::string& name)
+:   Identifiable<Id>(id) {
+    name_ = name;
 }
 
 PhysicalModel::~PhysicalModel() {
 
 }
 
-const string&
-PhysicalModel::getName() const {
-	return name_;
+const std::string& PhysicalModel::getName() const {
+    return name_;
 }
  
-void PhysicalModel::setName(const string& newName) {
+void PhysicalModel::setName(const std::string& newName) {
     name_ = newName;
 }
 
 void
 PhysicalModel::printInfo() const {
-	cout << " --- Physical Model Info ---" << endl;
-	cout << "Id: " << getId() << endl;
-	cout << "Name: " << name_ << endl;
+    std::cout << " --- Physical Model Info ---" << std::endl;
+    std::cout << "Id: " << getId() << std::endl;
+    std::cout << "Name: " << name_ << std::endl;
 }
 
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

@@ -18,24 +18,22 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Line2.h
- *
- *  Created on: Sep 24, 2013
- *      Author: luis
- */
 
-#ifndef LIN2_H_
-#define LIN2_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_LINE2_H_
+#define SEMBA_GEOMETRY_ELEMENT_LINE2_H_
 
 #include "Line.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 class Line2Base : public virtual LineBase {
 public:
     Line2Base() {};
     virtual ~Line2Base() {};
 
-    inline UInt numberOfCoordinates() const { return 2; }
+    inline Size numberOfCoordinates() const { return 2; }
 };
 
 template<class T>
@@ -43,61 +41,59 @@ class Line2 : public virtual Line<T>,
               public virtual Line2Base {
 public:
     Line2();
-    Line2(const GroupCoordinates<Coordinate<T,3> >&,
-          const ElementId id,
-          const CoordinateId vId[2],
-          const LayerId layerId = LayerId(0),
-          const MatId   matId   = MatId(0));
-    Line2(const ElementId id,
-          const Coordinate<T,3>* v[2],
-          const LayerId layerId = LayerId(0),
-          const MatId   matId   = MatId(0));
-    Line2(GroupCoordinates<Coordinate<T,3> >&,
-          const ElementId id,
+    Line2(const Id id,
+          const Coordinate::Coordinate<T,3>* v[2],
+          const Layer* lay = NULL,
+          const Model* mat = NULL);
+    Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
+          const Id id,
           const Box<T,3>& box,
-          const LayerId layerId = LayerId(0),
-          const MatId   matId   = MatId(0));
-    Line2(const GroupCoordinates<Coordinate<T,3> >&,
-          const CoordinateId vId[2]);
-    Line2(const Coordinate<T,3>* v[2]);
-    Line2(GroupCoordinates<Coordinate<T,3> >&,
+          const Layer* lay = NULL,
+          const Model* mat = NULL);
+    Line2(const Coordinate::Coordinate<T,3>* v[2]);
+    Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
           const Box<T,3>& box);
     Line2(const Line2<T>& rhs);
     virtual ~Line2();
     
-    DEFINE_CLONE(Line2<T>);
+    SEMBA_CLASS_DEFINE_CLONE(Line2<T>);
 
-    bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
+    bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
-    const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
-    const Coordinate<T,3>* getSideV(const UInt f,
-                               const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
+                                                const Size i) const;
 
-    const Coordinate<T,3>* getVertex    (const UInt i) const;
-    const Coordinate<T,3>* getSideVertex(const UInt f,
-                                         const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
+                                                     const Size i) const;
 
-    void setV(const UInt i, const Coordinate<T,3>* coord);
+    void setV(const Size i, const Coordinate::Coordinate<T,3>* coord);
 
-    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
-                        const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
+    ElemI* toStructured(const Coordinate::Group<CoordI3>&,
+                        const Grid3&,
+                        const Math::Real = Grid3::tolerance) const;
+    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
+                          const Grid3&) const;
 
     void printInfo() const;
 
 private:
-    static const SimplexLin<1> lin;
-    const Coordinate<T,3>* v_[2];
+    static const Math::Simplex::Line<1> lin;
+    const Coordinate::Coordinate<T,3>* v_[2];
 
-    void setCoordinates(const GroupCoordinates<Coordinate<T,3> >&,
-                        const CoordinateId vId[2]);
-    void setCoordinates(const Coordinate<T,3>* v[2]);
-    void setCoordinates(GroupCoordinates<Coordinate<T,3> >&,
+    void setCoordinates(const Coordinate::Coordinate<T,3>* v[2]);
+    void setCoordinates(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                         const Box<T,3>& box);
 };
 
-typedef Line2Base   Lin2;
-typedef Line2<Real> LinR2;
-typedef Line2<Int > LinI2;
+} /* namespace Element */
 
-#endif /* LIN2_H_ */
+typedef Element::Line2Base         Lin2;
+typedef Element::Line2<Math::Real> LinR2;
+typedef Element::Line2<Math::Int > LinI2;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_LINE2_H_ */

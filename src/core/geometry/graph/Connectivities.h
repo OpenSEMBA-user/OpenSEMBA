@@ -18,48 +18,29 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * MapGroup.h
- *
- *  Created on: Jan 23, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_GEOMETRY_GRAPHS_CONNECTIVITIES_H_
-#define SRC_COMMON_GEOMETRY_GRAPHS_CONNECTIVITIES_H_
+#ifndef SEMBA_GEOMETRY_GRAPH_CONNECTIVITIES_H_
+#define SEMBA_GEOMETRY_GRAPH_CONNECTIVITIES_H_
 
-#include <vector>
-#include <limits.h>
+#include "geometry/element/Group.h"
 
-using namespace std;
+#include "Vertices.h"
 
-#include "base/error/Error.h"
-#include "geometry/elements/GroupElements.h"
-#include "geometry/graphs/GraphVertices.h"
+namespace SEMBA {
+namespace Geometry {
+namespace Graph {
 
-typedef pair<const VolR*, UInt> Face;
+typedef std::pair<const VolR*, Size> Face;
 
 class Connectivities {
 public:
-    typedef GraphElement<ElemR,CoordR3> GraphElem;
-
-    class ErrorNotReciprocal : public virtual Error {
-    public:
-        ErrorNotReciprocal(const Face& face) {
-            stringstream ss;
-            ss << "Face of element " << face.first->getId()
-                    << " through f " << face.second
-                    << " is not reciprocal.";
-            Error(ss.str());
-        };
-        virtual ~ErrorNotReciprocal() throw() {};
-    };
+    typedef Element<ElemR,CoordR3> GraphElem;
 
     Connectivities();
-    Connectivities(const GroupElements<const ElemR>& eG);
+    Connectivities(const Group::Group<const ElemR>& eG);
     virtual ~Connectivities();
 
-    UInt size() const;
+    Size size() const;
 
     // Returns face of volume matching given face.
     Face getNeighFace(const Face& face) const;
@@ -77,14 +58,38 @@ public:
     bool existsReciprocity() const;
 
 private:
-    GraphVertices<ElemR,CoordR3> graph_;
-    map<ElementId, const GraphElem*> index_;
+    Vertices<ElemR,CoordR3> graph_;
+    std::map<ElemId, const GraphElem*> index_;
 
     Face getMatchingFace_(
             const GraphElem* local,
-            const vector<const CoordR3*> localSideV) const;
+            const std::vector<const CoordR3*> localSideV) const;
 
 };
 
+namespace Error {
 
-#endif
+class NotReciprocal : public virtual std::exception {
+public:
+    NotReciprocal(const Face& face)
+    :   face_(face) {
+        std::stringstream ss;
+        ss << "Face of element " << face_.first->getId()
+           << " through f " << face_.second
+           << " is not reciprocal.";
+        str_ = ss.str();
+    }
+    virtual ~NotReciprocal() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    Face face_;
+    std::string str_;
+};
+
+} /* namespace Error */
+} /* namespace Graph */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_GRAPH_CONNECTIVITIES_H_ */

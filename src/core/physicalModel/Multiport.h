@@ -18,42 +18,42 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultiport.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMMULTIPORT_H_
-#define PMMULTIPORT_H_
+#ifndef SEMBA_PHYSICALMODEL_MULTIPORT_H_
+#define SEMBA_PHYSICALMODEL_MULTIPORT_H_
 
 #include "PhysicalModel.h"
 
-class PMMultiport: public PhysicalModel {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class Multiport: public PhysicalModel {
 public:
-	typedef enum {
-		// Predefined
-		shortCircuit = 1,
-		openCircuit = 2,
-		matched = 3,
-		// RLC types.
-		sRLC = 11,    // R+L+C.
-		sRLpC = 12,   // (R + L)//C.
-		sRCpL = 13,   // (R + C)//L.
-		sRpLC = 14,   // R + (L//C).
-		sLCpR = 15,   // (L + C)//R.
-		sLpRC = 16,   // L + (R//C).
-		sCpLR = 17,   // C + (L//R).
-		pRLC = 18,     // R//L//C.
-		undefined = 0
- 	} Type;
- 	PMMultiport(const MatId id, const string name);
-	virtual ~PMMultiport();
-	virtual Type getType() const;
+    typedef enum {
+        // Predefined
+        shortCircuit = 1,
+        openCircuit = 2,
+        matched = 3,
+        // RLC types.
+        sRLC = 11,    // R+L+C.
+        sRLpC = 12,   // (R + L)//C.
+        sRCpL = 13,   // (R + C)//L.
+        sRpLC = 14,   // R + (L//C).
+        sLCpR = 15,   // (L + C)//R.
+        sLpRC = 16,   // L + (R//C).
+        sCpLR = 17,   // C + (L//R).
+        pRLC = 18,     // R//L//C.
+        undefined = 0
+    } Type;
+    Multiport(const Id id, const std::string name);
+    virtual ~Multiport();
+    virtual Type getType() const;
 protected:
-	Type type_;
-	string getTypeStr() const;
+    Type type_;
+    std::string getTypeStr() const;
 };
 
-#endif /* PMMULTIPORT_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_MULTIPORT_H_ */

@@ -18,62 +18,57 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Polygon.h
- *
- *  Created on: Jul 25, 2014
- *      Author: luis
- */
 
-#ifndef POLYGON_H_
-#define POLYGON_H_
-
-#include <cstdlib>
-
-using namespace std;
-
-#include "base/error/ErrorNotImplemented.h"
+#ifndef SEMBA_GEOMETRY_ELEMENT_POLYGON_H_
+#define SEMBA_GEOMETRY_ELEMENT_POLYGON_H_
 
 #include "Surface.h"
 
-class Polygon: public Surface<Real> {
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
+
+class Polygon: public Surface<Math::Real> {
 public:
     Polygon();
-	Polygon(const GroupCoordinates<CoordR3>& cG,
-            const ElementId id,
-            const vector<CoordinateId>& vId,
-            const LayerId layerId = LayerId(0),
-            const MatId   matId   = MatId(0));
+    Polygon(const Id id,
+            const std::vector<const CoordR3*>& v,
+            const Layer* lay = NULL,
+            const Model* mat = NULL);
     Polygon(const Polygon& rhs);
-	virtual ~Polygon();
+    virtual ~Polygon();
     
-    DEFINE_CLONE(Polygon);
+    SEMBA_CLASS_DEFINE_CLONE(Polygon);
     
-	UInt numberOfFaces      () const;
-	UInt numberOfVertices   () const;
-	UInt numberOfCoordinates() const;
-    
-	UInt numberOfSideVertices   (const UInt f) const;
-	UInt numberOfSideCoordinates(const UInt f) const;
-    
-	const CoordR3* getV    (const UInt i) const;
-	const CoordR3* getSideV(const UInt f,
-                            const UInt i) const;
-    
-	const CoordR3* getVertex    (const UInt i) const;
-	const CoordR3* getSideVertex(const UInt f,
-                                 const UInt i) const;
-    
-	Real getArea() const;
-	
-	void setV(const UInt i, const CoordR3*);
+    Size numberOfFaces      () const;
+    Size numberOfVertices   () const;
+    Size numberOfCoordinates() const;
+
+    Size numberOfSideVertices   (const Size f) const;
+    Size numberOfSideCoordinates(const Size f) const;
+
+    const CoordR3* getV    (const Size i) const;
+    const CoordR3* getSideV(const Size f,
+                            const Size i) const;
+
+    const CoordR3* getVertex    (const Size i) const;
+    const CoordR3* getSideVertex(const Size f,
+                                 const Size i) const;
+
+    Math::Real getArea() const;
+
+    void setV(const Size i, const CoordR3*);
     
     void printInfo() const;
 
 private:
-	vector<const CoordR3*> v_;
-	// TODO void checkVertexCoplanarity() const;
+    std::vector<const CoordR3*> v_;
+    // TODO void checkVertexCoplanarity() const;
 
 };
 
-#endif /* POLYGON_H_ */
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_POLYGON_H_ */

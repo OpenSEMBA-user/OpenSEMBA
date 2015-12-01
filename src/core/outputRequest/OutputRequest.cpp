@@ -18,27 +18,34 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "OutRq.h"
 
-OutRqBase::OutRqBase() {
+#include "OutputRequest.h"
+
+#include <iostream>
+
+namespace SEMBA {
+namespace OutputRequest {
+
+Base::Base() {
+
 }
 
-OutRqBase::OutRqBase(const Type outputType,
-                     const string& name) {
+Base::Base(const Type outputType,
+           const std::string& name) {
     name_ = name;
     outputType_ = outputType;
 }
 
-OutRqBase::OutRqBase(const OutRqBase& rhs) {
+Base::Base(const Base& rhs) {
     name_ = rhs.name_;
     outputType_ = rhs.outputType_;
 }
 
-OutRqBase::~OutRqBase() {
+Base::~Base() {
 
 }
 
-bool OutRqBase::hasSameProperties(const OutRqBase& rhs) const {
+bool Base::hasSameProperties(const Base& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }
@@ -49,26 +56,26 @@ bool OutRqBase::hasSameProperties(const OutRqBase& rhs) const {
     return hasSameProperties;
 }
 
-const string& OutRqBase::getName() const {
+const std::string& Base::getName() const {
     return name_;
 }
 
-OutRqBase::Type OutRqBase::getOutputType() const {
+Base::Type Base::getOutputType() const {
     return outputType_;
 }
 
-Domain OutRqBase::getDomain() const {
+Domain Base::getDomain() const {
     return *this;
 }
 
 
-void OutRqBase::printInfo() const {
-    cout<< "Name: " << name_.c_str() << endl;
-    cout<< "Type: " << getTypeStr() << endl;
+void Base::printInfo() const {
+    std::cout<< "Name: " << name_.c_str() << std::endl;
+    std::cout<< "Type: " << getTypeStr() << std::endl;
     Domain::printInfo();
 }
 
-string OutRqBase::getTypeStr() const {
+std::string Base::getTypeStr() const {
     switch (outputType_) {
     case electric:
         return "Electric field";
@@ -90,3 +97,6 @@ string OutRqBase::getTypeStr() const {
         return "Undefined";
     }
 }
+
+} /* namespace OutputRequest */
+} /* namespace SEMBA */

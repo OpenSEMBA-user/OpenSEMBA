@@ -18,40 +18,37 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Nodal.h
- *
- *  Created on: Oct 3, 2014
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_
-#define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_
+#ifndef SEMBA_SOURCE_ONLINE_H_
+#define SEMBA_SOURCE_ONLINE_H_
 
-#include "../sources/EMSource.h"
+#include "Source.h"
 
-class SourceOnLine : public EMSource<Lin> {
+namespace SEMBA {
+namespace Source {
+
+class OnLine : public Source<Geometry::Lin> {
 public:
-    typedef enum {
+    enum Type {
         electric = 1,
         magnetic = 2
-    } Type;
-    typedef enum {
+    };
+    enum Hardness {
         hard = 1,
         soft = 2
-    } Hardness;
-    SourceOnLine(const Magnitude* magnitude,
-                 const GroupElements<Lin>& elem,
-                 const Type& sourceType,
-                 const Hardness& sourceHardness);
-    SourceOnLine(const SourceOnLine& rhs);
-    virtual ~SourceOnLine();
+    };
+    OnLine(const Magnitude::Magnitude* magnitude,
+           const Geometry::Element::Group<Geometry::Lin>& elem,
+           const Type& sourceType,
+           const Hardness& sourceHardness);
+    OnLine(const OnLine& rhs);
+    virtual ~OnLine();
 
-    DEFINE_CLONE(SourceOnLine);
+    SEMBA_CLASS_DEFINE_CLONE(OnLine);
 
-    bool hasSameProperties(const EMSourceBase& rhs) const;
+    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
 
-    const string& getName() const;
+    const std::string& getName() const;
     Type getType() const;
     Hardness getHardness() const;
 
@@ -60,8 +57,11 @@ private:
     Type type_;
     Hardness hardness_;
 
-    string getTypeStr() const;
-    string getHardnessStr() const;
+    std::string getTypeStr() const;
+    std::string getHardnessStr() const;
 };
 
-#endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_NODALSOURCE_H_ */
+} /* namespace Source */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_SOURCE_ONLINE_H_ */

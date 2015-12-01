@@ -18,31 +18,24 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * CoordIntFractional.h
- *
- *  Created on: May 19, 2015
- *      Author: Miguel D. Ruiz - Cabello Nuñez
- */
 
-#ifndef  COORINFRACTIONAL_H_
-# define COORINFRACTIONAL_H_
+#ifndef COORINFRACTIONAL_H_
+#define COORINFRACTIONAL_H_
 
-using namespace std;
+#include "Cartesian.h"
 
-#include "math/CartesianVector.h"
+namespace SEMBA {
+namespace Math {
 
-typedef enum {
+enum CartesianDirection {
     dirNode = 0,
     dirX    = 1,
     dirY    = 2,
     dirZ    = 3
-} CartesianDirection;
+};
 
 class CVecI3Fractional : public CVecI3 {
 public:
-
-
     CVecI3Fractional ();
     CVecI3Fractional (const CVecI3& pos, const CVecR3& len):
         CVecI3(pos), len_(len){}
@@ -62,23 +55,25 @@ public:
     CVecI3Fractional& reduceTopology(const UInt range);
 
     void join(CVecI3Fractional& rhs);
-    CVecI3Fractional& move(
-            CVecI3Fractional& rhs,
-            const bool forceProject,
-            bool& canBeMoved) const;
+    CVecI3Fractional& move(CVecI3Fractional& rhs,
+                           const bool forceProject,
+                           bool& canBeMoved) const;
 
     CartesianDirection getDirBase   () const;
     UInt getRangeBase () const;
 
-    string toStr() const;
+    std::string toStr() const;
 
-    friend std::ostream& operator<<(ostream& os, const CVecI3Fractional& vec) {
-       return os << vec.toStr();
+    friend std::ostream& operator<<(std::ostream& os,
+                                    const CVecI3Fractional& vec) {
+        return os << vec.toStr();
     }
     CVecR3 len_;
 };
 
 typedef CVecI3Fractional CVecI3Frac;
-//typedef CVecI3Fractional::Direction CartesianDirection;
+
+} /* namespace Math */
+} /* namespace SEMBA */
 
 #endif

@@ -18,52 +18,63 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultilayer.h
- *
- *  Created on: Jan 9, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACEMULTILAYER_H_
-#define SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACEMULTILAYER_H_
+#ifndef SEMBA_PHYSICALMODEL_SURFACEMULTILAYER_H_
+#define SEMBA_PHYSICALMODEL_SURFACEMULTILAYER_H_
 
-#include "base/error/Error.h"
+#include <cassert>
+#include <exception>
 
-#include "PMSurface.h"
+#include "Types.h"
+#include "Surface.h"
 
-class PMSurfaceMultilayer : public PMSurface {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class SurfaceMultilayer : public Surface {
 public:
-    class ErrorIncompatibleSizes : public Error {
-    public:
-        ErrorIncompatibleSizes();
-        virtual ~ErrorIncompatibleSizes() throw();
-    };
+    SurfaceMultilayer();
+    SurfaceMultilayer(const Id id,
+                      const std::string& name,
+                      const std::vector<Math::Real>& thickness,
+                      const std::vector<Math::Real>& relPermittivity,
+                      const std::vector<Math::Real>& relPermeability,
+                      const std::vector<Math::Real>& elecCond,
+                      const std::vector<Math::Real>& magnCond);
 
-    PMSurfaceMultilayer();
-    PMSurfaceMultilayer(
-    const MatId id,
-    const string& name,
-    const vector<Real>& thickness,
-    const vector<Real>& relPermittivity,
-    const vector<Real>& relPermeability,
-    const vector<Real>& elecCond,
-    const vector<Real>& magnCond);
+    SEMBA_CLASS_DEFINE_CLONE(SurfaceMultilayer);
 
-    DEFINE_CLONE(PMSurfaceMultilayer);
-
-    UInt getNumberOfLayers() const;
-    string printLayer(const UInt i) const;
-    Real getThickness(const UInt i) const;
-    Real getPermittivity(const UInt i) const;
-    Real getPermeability(const UInt i) const;
-    Real getElecCond(const UInt i) const;
-    Real getMagnCond(const UInt i) const;
+    Size getNumberOfLayers() const;
+    std::string printLayer(const Size i) const;
+    Math::Real getThickness(const Size i) const;
+    Math::Real getPermittivity(const Size i) const;
+    Math::Real getPermeability(const Size i) const;
+    Math::Real getElecCond(const Size i) const;
+    Math::Real getMagnCond(const Size i) const;
 
     void printInfo() const;
 private:
-    vector<Real> thickness_, relPermittivity_, relPermeability_,
+    std::vector<Math::Real> thickness_, relPermittivity_, relPermeability_,
                  elecCond_, magnCond_;
 };
 
-#endif /* SRC_COMMON_INPUTS_PHYSICALMODEL_PMSURFACEMULTILAYER_H_ */
+namespace Error {
+namespace SurfaceMultilayer {
+
+class IncompatibleSizes : public std::exception {
+public:
+    IncompatibleSizes() {}
+    virtual ~IncompatibleSizes() throw() {}
+
+    const char* what() const throw() {
+        return "SurfaceMultilayer: "
+               "Incompatible sizes of layers parameters.";
+    }
+};
+
+} /* namespace SurfaceMultilayer */
+} /* namespace Error */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_SURFACEMULTILAYER_H_ */

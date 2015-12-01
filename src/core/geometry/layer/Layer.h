@@ -18,57 +18,65 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Layer.h
- *
- *  Created on: Dec 3, 2014
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_LAYER_H_
-#define SRC_COMMON_INPUTS_LAYER_H_
+#ifndef SEMBA_GEOMETRY_LAYER_LAYER_H_
+#define SEMBA_GEOMETRY_LAYER_LAYER_H_
 
 #include <string>
-#include <iostream>
-#include <sstream>
-#include <assert.h>
 
-using namespace std;
+#include "class/Class.h"
+#include "class/Cloneable.h"
+#include "class/Shareable.h"
+#include "class/Printable.h"
+#include "class/Identifiable.h"
+#include "class/Identification.h"
 
-#include "../../base/class/ClassIdBase.h"
+namespace SEMBA {
+namespace Geometry {
+namespace Layer {
 
 class Layer;
+typedef Class::Identification<Layer> Id;
 
-typedef Id<Layer> LayerId;
-
-class Layer : public virtual ClassIdBase<LayerId> {
+class Layer : public virtual Class::Class,
+              public virtual Class::Cloneable,
+              public virtual Class::Shareable,
+              public virtual Class::Printable,
+              public virtual Class::Identifiable<Id> {
 public:
     Layer();
-    Layer(const LayerId id, const string& name);
-    Layer(const string& name);
+    Layer(const Id id, const std::string& name);
+    Layer(const std::string& name);
     Layer(const Layer& rhs);
     virtual ~Layer();
 
-    DEFINE_CLONE(Layer);
+    SEMBA_CLASS_DEFINE_CLONE(Layer);
 
     virtual bool operator==(const Layer& rhs) const;
     virtual bool operator!=(const Layer& rhs) const;
 
-    string getName() const;
+    std::string getName() const;
 
-    virtual string getParentName() const;
-    virtual string getChildName() const;
-    string toStr() const;
+    virtual std::string getParentName() const;
+    virtual std::string getChildName() const;
+    std::string toStr() const;
 
     virtual void printInfo() const;
-    friend std::ostream& operator<<(ostream& os, const Layer& lay) {
+    friend std::ostream& operator<<(std::ostream& os, const Layer& lay) {
        return os << lay.toStr();
     }
 
 private:
-    string name_;
+    std::string name_;
 
-    static string spaceToUnderscore(string rhs);
+    static std::string spaceToUnderscore(std::string rhs);
 };
 
-#endif /* SRC_COMMON_INPUTS_LAYER_H_ */
+} /* namespace Layer */
+
+typedef Layer::Id LayerId;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_LAYER_LAYER_H_ */

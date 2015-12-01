@@ -18,62 +18,69 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Polyhedron.h
- *
- *  Created on: Jul 24, 2014
- *      Author: luis
- */
 
-#ifndef POLYHEDRON_H_
-#define POLYHEDRON_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_POLYHEDRON_H_
+#define SEMBA_GEOMETRY_ELEMENT_POLYHEDRON_H_
 
 #include "Volume.h"
 #include "Polygon.h"
 
-class Polyhedron : public Volume<Real> {
-public:
-    class ErrorNotClosed : public Error {
-    public:
-        ErrorNotClosed();
-        ~ErrorNotClosed() throw ();
-    };
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
+class Polyhedron : public Volume<Math::Real> {
+public:
     Polyhedron();
-    Polyhedron(const ElementId id,
-               const vector<const Polygon*>& faces,
-               const LayerId layerId = LayerId(0),
-               const MatId   matId   = MatId(0));
+    Polyhedron(const Id id,
+               const std::vector<const Polygon*>& faces,
+               const Layer* lay = NULL,
+               const Model* mat = NULL);
     Polyhedron(const Polyhedron& rhs);
     virtual ~Polyhedron();
 
-    DEFINE_CLONE(Polyhedron);
+    SEMBA_CLASS_DEFINE_CLONE(Polyhedron);
 
-    bool isCurvedFace(const UInt f) const;
+    bool isCurvedFace(const Size f) const;
 
-    UInt numberOfFaces      () const;
-    UInt numberOfVertices   () const;
-    UInt numberOfCoordinates() const;
+    Size numberOfFaces      () const;
+    Size numberOfVertices   () const;
+    Size numberOfCoordinates() const;
 
-    UInt numberOfSideVertices   (const UInt f = 0) const;
-    UInt numberOfSideCoordinates(const UInt f = 0) const;
-    const CoordR3* getV(const UInt i) const;
-    const CoordR3* getSideV(const UInt f, const UInt i) const;
-    const CoordR3* getVertex(const UInt i) const;
-    const CoordR3* getSideVertex(const UInt f, const UInt i) const;
+    Size numberOfSideVertices   (const Size f = 0) const;
+    Size numberOfSideCoordinates(const Size f = 0) const;
+    const CoordR3* getV(const Size i) const;
+    const CoordR3* getSideV(const Size f, const Size i) const;
+    const CoordR3* getVertex(const Size i) const;
+    const CoordR3* getSideVertex(const Size f, const Size i) const;
 
-    const Polygon* getFace(const UInt f) const;
-    Real getAreaOfFace(const UInt f) const;
-    Real getVolume() const;
+    const Polygon* getFace(const Size f) const;
+    Math::Real getAreaOfFace(const Size f) const;
+    Math::Real getVolume() const;
 
     void printInfo() const;
 
 private:
-    vector<const CoordR3*> v_;
-    vector<const Polygon*> face_;
+    std::vector<const CoordR3*> v_;
+    std::vector<const Polygon*> face_;
 
     void addV(const CoordR3*);
     void checkClosedness() const;
 };
 
-#endif /* POLYHEDRON_H_ */
+namespace Error {
+
+class NotClosed : public Error {
+public:
+    NotClosed() {}
+    ~NotClosed() throw () {}
+
+    const char* what() const throw() { return "Polyhedron is not closed"; }
+};
+
+} /* namespace Error */
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_POLYHEDRON_H_ */

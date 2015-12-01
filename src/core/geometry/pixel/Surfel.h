@@ -18,49 +18,55 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Surfel.h
- *
- *  Created on: May 19, 2015
- *      Author: Miguel D. Ruiz-Cabello N.
- */
 
-#ifndef SRC_MESHER_FDTD_MESHCONF_SURFEL_H_
-#define SRC_MESHER_FDTD_MESHCONF_SURFEL_H_
+#ifndef SEMBA_GEOMETRY_PIXEL_SURFEL_H_
+#define SEMBA_GEOMETRY_PIXEL_SURFEL_H_
+
+#include <array>
 
 #include "Linel.h"
 
-typedef array<Linel,4> SurfelLinels;
-typedef array<Pixel,4> SurfelPixels;
+namespace SEMBA {
+namespace Geometry {
+namespace Pixel {
+
+typedef std::array<Linel,4> SurfelLinels;
+typedef std::array<Pixel,4> SurfelPixels;
 
 class Surfel: public Pixel {
 public:
-    Surfel(){normId_ = CartesianDirection::dirNode;};
-    Surfel(const CVecI3& pos): Pixel(pos){normId_ = CartesianDirection::dirNode;}
-    Surfel(const CVecI3& pos, const CartesianDirection& norm) : Pixel(pos), normId_(norm){};
+    Surfel(){normId_ = Math::CartesianDirection::dirNode;};
+    Surfel(const Math::CVecI3& pos)
+    :   Pixel(pos){normId_ = Math::CartesianDirection::dirNode;}
+    Surfel(const Math::CVecI3& pos, const Math::CartesianDirection& norm)
+    :   Pixel(pos), normId_(norm){};
 
     virtual ~Surfel(){};
 
-    bool isInto (const CVecI3Frac& intFractional)const;
+    bool isInto (const Math::CVecI3Frac& intFractional)const;
 
     bool operator==(const Surfel& rhs) const;
     bool operator<(const Surfel& rhs) const;
 
-    CartesianDirection  getNormId ()const{return normId_;}
-    CartesianDirection& NormId (){return normId_;}
-    void setNormId (const CartesianDirection& _normId){normId_ = _normId;}
+    Math::CartesianDirection  getNormId ()const{return normId_;}
+    Math::CartesianDirection& NormId (){return normId_;}
+    void setNormId (const Math::CartesianDirection& _normId){normId_ = _normId;}
 
 //    SurfelLinels getLinels() const;
 //    Linel getLinel(const UInt side) const;
     SurfelPixels getPixels() const;
 
-    string toStr() const;
-    friend std::ostream& operator<<(ostream& os, const Surfel& vec) {
+    std::string toStr() const;
+    friend std::ostream& operator<<(std::ostream& os, const Surfel& vec) {
        return os << vec.toStr();
     }
 
 protected:
-    CartesianDirection normId_;
+    Math::CartesianDirection normId_;
 };
 
-#endif /* SRC_MESHER_FDTD_MESHCONF_SURFEL_H_ */
+} /* namespace Pixel */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_PIXEL_SURFEL_H_ */

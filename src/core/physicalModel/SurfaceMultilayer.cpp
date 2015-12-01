@@ -18,95 +18,86 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultilayer.cpp
- *
- *  Created on: Jan 9, 2015
- *      Author: luis
- */
 
-#include "PMSurfaceMultilayer.h"
+#include <vector>
 
-PMSurfaceMultilayer::ErrorIncompatibleSizes::ErrorIncompatibleSizes()
-:   Error("PMSurfaceMultilayer: Incompatible sizes of layers parameters. ") {
+#include "SurfaceMultilayer.h"
 
-}
+namespace SEMBA {
+namespace PhysicalModel {
 
-PMSurfaceMultilayer::ErrorIncompatibleSizes::~ErrorIncompatibleSizes() throw () {
-
-}
-
-PMSurfaceMultilayer::PMSurfaceMultilayer(const MatId id,
-                                         const string& name,
-                                         const vector<Real>& thickness,
-                                         const vector<Real>& relPermittivity,
-                                         const vector<Real>& relPermeability,
-                                         const vector<Real>& elecCond,
-                                         const vector<Real>& magnCond)
-:   PMSurface(id, name) {
+SurfaceMultilayer::SurfaceMultilayer(
+        const Id id,
+        const std::string& name,
+        const std::vector<Math::Real>& thickness,
+        const std::vector<Math::Real>& relPermittivity,
+        const std::vector<Math::Real>& relPermeability,
+        const std::vector<Math::Real>& elecCond,
+        const std::vector<Math::Real>& magnCond)
+:   Surface(id, name) {
     thickness_ = thickness;
     relPermittivity_ = relPermittivity;
     relPermeability_ = relPermeability;
     elecCond_ = elecCond;
     magnCond_ = magnCond;
-    const UInt nLayers = thickness_.size();
+    const Size nLayers = thickness_.size();
     if (relPermittivity_.size() != nLayers ||
         relPermeability_.size() != nLayers ||
         elecCond_.size() != nLayers ||
         magnCond_.size() != nLayers) {
-        throw ErrorIncompatibleSizes();
+        throw Error::SurfaceMultilayer::IncompatibleSizes();
     }
 }
 
-UInt PMSurfaceMultilayer::getNumberOfLayers() const {
+Size SurfaceMultilayer::getNumberOfLayers() const {
     return thickness_.size();
 }
 
-string
-PMSurfaceMultilayer::printLayer(const UInt i) const {
+std::string SurfaceMultilayer::printLayer(const Size i) const {
     assert(i < getNumberOfLayers());
-    stringstream ss;
-    ss << elecCond_[i] << " " << relPermittivity_[i]*Constants::eps0 << " "
-    << relPermeability_[i] * Constants::mu0 << " " << magnCond_[i] << " "
-    << thickness_[i];
-    return string(ss.str());
+    std::stringstream ss;
+    ss << elecCond_[i] << " " << relPermittivity_[i]*Math::Constants::eps0
+       << " " << relPermeability_[i] * Math::Constants::mu0 << " "
+       << magnCond_[i] << " " << thickness_[i];
+    return std::string(ss.str());
 }
 
-Real
-PMSurfaceMultilayer::getThickness(const UInt i) const {
+Math::Real SurfaceMultilayer::getThickness(const Size i) const {
     return thickness_[i];
 }
 
-Real PMSurfaceMultilayer::getPermittivity(const UInt i) const {
-    return relPermittivity_[i] * Constants::eps0;
+Math::Real SurfaceMultilayer::getPermittivity(const Size i) const {
+    return relPermittivity_[i] * Math::Constants::eps0;
 }
 
-Real PMSurfaceMultilayer::getPermeability(const UInt i) const {
-    return relPermeability_[i] * Constants::mu0;
+Math::Real SurfaceMultilayer::getPermeability(const Size i) const {
+    return relPermeability_[i] * Math::Constants::mu0;
 }
 
-Real PMSurfaceMultilayer::getElecCond(const UInt i) const {
+Math::Real SurfaceMultilayer::getElecCond(const Size i) const {
     return elecCond_[i];
 }
 
-Real PMSurfaceMultilayer::getMagnCond(const UInt i) const {
+Math::Real SurfaceMultilayer::getMagnCond(const Size i) const {
     return magnCond_[i];
 }
 
-void
-PMSurfaceMultilayer::printInfo() const {
-    cout << " --- PMSurfaceMultilayer info ---" << endl;
-    PMSurface::printInfo();
-    cout << "Number of layers: " << getNumberOfLayers() << endl;
-    cout <<
-    "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << endl;
-    for (UInt i = 0; i < getNumberOfLayers(); i++) {
-        cout<< i << ": "
+void SurfaceMultilayer::printInfo() const {
+    std::cout << " --- SurfaceMultilayer info ---" << std::endl;
+    Surface::printInfo();
+    std::cout << "Number of layers: " << getNumberOfLayers() << std::endl;
+    std::cout <<
+    "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << std::endl;
+    for (Size i = 0; i < getNumberOfLayers(); i++) {
+        std::cout<< i << ": "
         << thickness_[i] << " "
         << relPermittivity_[i] << " "
         << relPermeability_[i] << " "
         << elecCond_[i] << " "
-        << magnCond_[i] << endl;
+        << magnCond_[i] << std::endl;
     }
-    cout << " --- End of PMSurfaceMultilayer info ---" << endl;
+    std::cout << " --- End of SurfaceMultilayer info ---" << std::endl;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

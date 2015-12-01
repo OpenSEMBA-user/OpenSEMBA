@@ -18,83 +18,81 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Coordinate.cpp
- *
- *  Created on: Aug 26, 2012
- *      Author: luis
- */
+
 #include "Coordinate.h"
 
+namespace SEMBA {
+namespace Geometry {
+namespace Coordinate {
 
-CoordinateBase::CoordinateBase() {
+Base::Base() {
 
 }
 
-CoordinateBase::~CoordinateBase() {
+Base::~Base() {
 
 }
 
-bool CoordinateBase::operator ==(const CoordinateBase& rhs) const {
+bool Base::operator ==(const Base& rhs) const {
     if (typeid(*this) == typeid(rhs)) {
         return true;
     }
     return false;
 }
 
-bool CoordinateBase::operator !=(const CoordinateBase& rhs) const {
+bool Base::operator !=(const Base& rhs) const {
     return !(*this == rhs);
 }
 
-template<class T, Int D>
+template<class T, Size D>
 Coordinate<T,D>::Coordinate() {
 
 }
 
-template<class T, Int D>
-Coordinate<T,D>::Coordinate(const CoordinateId id,
-                            const CartesianVector<T,D>& pos)
-:   ClassIdBase<CoordinateId>(id),
-    CartesianVector<T,D>(pos) {
+template<class T, Size D>
+Coordinate<T,D>::Coordinate(const Id id,
+                            const Math::Vector::Cartesian<T,D>& pos)
+:   Identifiable<Id>(id),
+    Math::Vector::Cartesian<T,D>(pos) {
 
 }
 
-template<class T, Int D>
-Coordinate<T,D>::Coordinate(const CartesianVector<T,D>& pos)
-:   CartesianVector<T,D>(pos) {
+template<class T, Size D>
+Coordinate<T,D>::Coordinate(const Math::Vector::Cartesian<T,D>& pos)
+:   Math::Vector::Cartesian<T,D>(pos) {
 
 }
 
-template<class T, Int D>
+template<class T, Size D>
 Coordinate<T,D>::Coordinate(const Coordinate& rhs)
-:   ClassIdBase<CoordinateId>(rhs),
-    CartesianVector<T,D>(rhs) {
+:   Identifiable<Id>(rhs),
+    Math::Vector::Cartesian<T,D>(rhs) {
 
 }
 
-template<class T, Int D>
+template<class T, Size D>
 Coordinate<T,D>::~Coordinate() {
 
 }
 
-template<class T, Int D>
+template<class T, Size D>
 Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
     if (this == &rhs)
         return *this;
     setId(rhs.getId());
-    CartesianVector<T,D>::operator=(rhs);
+    Math::Vector::Cartesian<T,D>::operator=(rhs);
 
     return *this;
 }
 
-template<class T, Int D>
+template<class T, Size D>
 Coordinate<T,D>* Coordinate<T,D>::clone() const {
     return new Coordinate<T,D>(*this);
 }
 
-template<class T, Int D>
-bool Coordinate<T,D>::operator==(const CoordinateBase& rhs) const {
-    if(!CoordinateBase::operator==(rhs)) {
+template<class T, Size D>
+bool Coordinate<T,D>::operator==(const Base& rhs) const {
+    if(!Base::operator==(rhs)) {
         return false;
     }
     const Coordinate<T,D>* rhsPtr = rhs.castTo<Coordinate<T,D> >();
@@ -104,40 +102,47 @@ bool Coordinate<T,D>::operator==(const CoordinateBase& rhs) const {
     return res;
 }
 
-template<class T, Int D>
-bool Coordinate<T,D>::operator!=(const CoordinateBase& rhs) const {
-    return CoordinateBase::operator!=(rhs);
+template<class T, Size D>
+bool Coordinate<T,D>::operator!=(const Base& rhs) const {
+    return Base::operator!=(rhs);
 }
 
-template<class T, Int D>
-bool Coordinate<T,D>::isStructured(const Grid<D>& grid, const Real tol) const {
+template<class T, Size D>
+bool Coordinate<T,D>::isStructured(const Grid<D>& grid,
+                                   const Math::Real tol) const {
     if (!grid.isCell(*this, tol)) {
         return false;
     }
     return true;
 }
 
-template<class T, Int D>
-Coordinate<Int,D>* Coordinate<T,D>::toStructured(const Grid<D>& grid) const {
-    return new Coordinate<Int,D>(this->getId(), grid.getCell(*this));
+template<class T, Size D>
+Coordinate<Math::Int,D>* Coordinate<T,D>::toStructured(
+        const Grid<D>& grid) const {
+    return new Coordinate<Math::Int,D>(this->getId(), grid.getCell(*this));
 }
 
-template<class T, Int D>
-Coordinate<Real,D>* Coordinate<T,D>::toUnstructured(const Grid<D>& grid) const {
-    return new Coordinate<Real,D>(this->getId(), grid.getPos(*this));
+template<class T, Size D>
+Coordinate<Math::Real,D>* Coordinate<T,D>::toUnstructured(
+        const Grid<D>& grid) const {
+    return new Coordinate<Math::Real,D>(this->getId(), grid.getPos(*this));
 }
 
-template<class T, Int D>
+template<class T, Size D>
 void Coordinate<T,D>::printInfo() const {
-    cout << "Id: ("<< getId() << ")  Pos: (";
-    for (register Int i = 0; i < D; i++) {
-        cout << this->val[i];
+    std::cout << "Id: ("<< getId() << ")  Pos: (";
+    for (Size i = 0; i < D; i++) {
+        std::cout << this->val[i];
         if (i < D-1) {
-            cout << " , ";
+            std::cout << " , ";
         }
     }
-    cout << ")" << endl;
+    std::cout << ")" << std::endl;
 }
 
-template class Coordinate<Real,3>;
-template class Coordinate<Int ,3>;
+template class Coordinate<Math::Real,3>;
+template class Coordinate<Math::Int ,3>;
+
+} /* namespace Coordinate */
+} /* namespace Geometry */
+} /* namespace SEMBA */

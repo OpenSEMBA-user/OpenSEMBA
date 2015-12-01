@@ -18,45 +18,48 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef TRI3_H_
-#define TRI3_H_
 
-#include <geometry/elements/Triangle.h>
+#ifndef SEMBA_GEOMETRY_ELEMENT_TRIANGLE3_H_
+#define SEMBA_GEOMETRY_ELEMENT_TRIANGLE3_H_
+
+#include "Triangle.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 class Triangle3 : public Triangle {
 public:
     Triangle3();
-    Triangle3(const GroupCoordinates<CoordR3>&,
-         const ElementId id,
-         const CoordinateId vId[3],
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
-    Triangle3(const ElementId id,
-         const CoordR3* v[3],
-         const LayerId layerId = LayerId(0),
-         const MatId   matId   = MatId(0));
+    Triangle3(const Id id,
+              const CoordR3* v[3],
+              const Layer* lay = NULL,
+              const Model* mat = NULL);
     Triangle3(const Triangle3& rhs);
     virtual ~Triangle3();
 
-    DEFINE_CLONE(Triangle3);
+    SEMBA_CLASS_DEFINE_CLONE(Triangle3);
 
-    UInt numberOfCoordinates() const { return 3; }
+    Size numberOfCoordinates() const { return 3; }
 
-    UInt numberOfSideCoordinates(const UInt f = 0) const { return 2; }
+    Size numberOfSideCoordinates(const Size f = 0) const { return 2; }
 
-    const CoordR3* getV     (const UInt i) const {return v_[i];}
-    const CoordR3* getVertex(const UInt i) const;
+    const CoordR3* getV     (const Size i) const {return v_[i];}
+    const CoordR3* getVertex(const Size i) const;
 
-    const CoordR3* getSideV     (const UInt face, const UInt i) const;
-    const CoordR3* getSideVertex(const UInt face, const UInt i) const;
+    const CoordR3* getSideV     (const Size face, const Size i) const;
+    const CoordR3* getSideVertex(const Size face, const Size i) const;
 
-    Real getArea() const;
+    Math::Real getArea() const;
 
-    void getCubatureDifferentials(Real  csdf[SimplexTri<1>::ncp]) const;
-    void getCubatureNormals      (CVecR3    cn[SimplexTri<1>::ncp]) const;
-    void getCubatureNodes        (CVecR3 nodes[SimplexTri<1>::ncp]) const;
+    void getCubatureDifferentials(
+            Math::Real    csdf[Math::Simplex::Triangle<1>::ncp]) const;
+    void getCubatureNormals(
+            Math::CVecR3    cn[Math::Simplex::Triangle<1>::ncp]) const;
+    void getCubatureNodes(
+            Math::CVecR3 nodes[Math::Simplex::Triangle<1>::ncp]) const;
 
-    void setV(const UInt i, const CoordR3*);
+    void setV(const Size i, const CoordR3*);
 
     Triangle3* linearize() const;
 
@@ -64,14 +67,18 @@ public:
     void check() const;
 
 protected:
-    static const SimplexTri<1> geo;
+    static const Math::Simplex::Triangle<1> geo;
     const CoordR3* v_[3];
 
     void getCubatureTangentsVecProds(
-    CVecR3 csTanVecProd[SimplexTri<1>::ncp]) const;
+    Math::CVecR3 csTanVecProd[Math::Simplex::Triangle<1>::ncp]) const;
 };
-const SimplexTri<1> Triangle3::geo;
 
-typedef Triangle3 Tri3;
+} /* namespace Element */
 
-#endif
+typedef Element::Triangle3 Tri3;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_TRIANGLE3_H_ */

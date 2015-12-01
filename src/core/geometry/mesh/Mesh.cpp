@@ -18,7 +18,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+
 #include "Mesh.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Mesh {
 
 Mesh::Mesh() {
 
@@ -27,3 +32,7 @@ Mesh::Mesh() {
 Mesh::~Mesh() {
 
 }
+
+} /* namespace Mesh */
+} /* namespace Geometry */
+} /* namespace SEMBA */

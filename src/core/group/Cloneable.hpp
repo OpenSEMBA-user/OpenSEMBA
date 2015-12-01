@@ -18,28 +18,30 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "exporter/GroupOutputs.h"
 
-template<typename O>
-GroupOutputs<O>::GroupOutputs() {
+#include "Cloneable.h"
+
+namespace SEMBA {
+namespace Group {
+
+template<typename T>
+Group<T>* Cloneable<T>::clone() const {
+    return new Cloneable<T>(this->cloneElems());
 }
 
-template<typename O>
-GroupOutputs<O>::~GroupOutputs() {
+template<typename T>
+Group<typename std::remove_const<T>::type> Cloneable<T>::cloneElems() const {
+    Group<typename std::remove_const<T>::type> res;
+    res.reserve(this->size());
+    for (std::size_t i = 0; i < this->size(); i++) {
+        res.add(
+            dynamic_cast<
+                typename std::add_pointer<
+                             typename std::remove_const<T>::type>::type>(
+                                 this->get(i)->clone()));
+    }
+    return res;
 }
 
-template<typename O>
-void GroupOutputs<O>::add(
-        const OutRqBase* outRq,
-        const multimap<ElementId, vector<CVecR3> >& electric,
-        const multimap<ElementId, vector<CVecR3> >& magnetic) {
-
-    // TODO Create outputs.
-
-}
-
-template<typename O>
-void GroupOutputs<O>::printInfo() const {
-    cout<< " --- GroupOutputs info ---" << endl;
-    Group<OutputBase>::printInfo();
-}
+} /* namespace Group */
+} /* namespace SEMBA */

@@ -18,34 +18,31 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Generator.cpp
- *
- *  Created on: Oct 3, 2014
- *      Author: luis
- */
 
-#include "../sources/Generator.h"
+#include "Generator.h"
+
+namespace SEMBA {
+namespace Source {
 
 Generator::Generator() {
     type_ = current;
     hardness_ = soft;
 }
 
-Generator::Generator(const Magnitude* magnitude,
-                     GroupElements<Nod>& elems,
+Generator::Generator(const Magnitude::Magnitude* magnitude,
+                     Geometry::Element::Group<Geometry::Nod>& elems,
                      const Type& generatorType,
                      const Hardness& hardness)
-:   EMSourceBase(magnitude),
-    GroupElements<const Nod>(elems) {
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Nod>(elems) {
 
     type_ = generatorType;
     hardness_ = hardness;
 }
 
 Generator::Generator(const Generator& rhs)
-:   EMSourceBase(rhs),
-    GroupElements<const Nod>(rhs) {
+:   SEMBA::Source::Base(rhs),
+    Geometry::Element::Group<const Geometry::Nod>(rhs) {
 
     type_ = rhs.type_;
     hardness_ = rhs.hardness_;
@@ -55,8 +52,8 @@ Generator::~Generator() {
 
 }
 
-bool Generator::hasSameProperties(const EMSourceBase& rhs) const {
-    if(!EMSourceBase::hasSameProperties(rhs)) {
+bool Generator::hasSameProperties(const SEMBA::Source::Base& rhs) const {
+    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
         return false;
     }
     const Generator* rhsPtr = rhs.castTo<Generator>();
@@ -66,8 +63,8 @@ bool Generator::hasSameProperties(const EMSourceBase& rhs) const {
     return hasSameProperties;
 }
 
-const string& Generator::getName() const {
-    const static string res = "Generator";
+const std::string& Generator::getName() const {
+    const static std::string res = "Generator";
     return res;
 }
 
@@ -78,12 +75,12 @@ Generator::getType() const {
 
 void
 Generator::printInfo() const {
-    cout<< " --- Generator info --- " << endl;
-    EMSourceBase::printInfo();
-    cout<< "Type: " << getTypeStr() << endl;
+    std::cout<< " --- Generator info --- " << std::endl;
+    SEMBA::Source::Base::printInfo();
+    std::cout<< "Type: " << getTypeStr() << std::endl;
 }
 
-string
+std::string
 Generator::getTypeStr() const {
     switch (type_) {
     case voltage:
@@ -92,3 +89,6 @@ Generator::getTypeStr() const {
         return "Current";
     }
 }
+
+} /* namespace Source */
+} /* namespace SEMBA */

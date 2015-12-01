@@ -18,53 +18,50 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultiportRLC.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMMultiportRLC.h"
+#include "MultiportRLC.h"
 
-PMMultiportRLC::PMMultiportRLC(
-        const MatId id,
-        const string name,
-        const PMMultiport::Type type,
-        const Real resistance,
-        const Real inductance,
-        const Real capacitance) : PMMultiport(id, name) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+MultiportRLC::MultiportRLC(
+        const Id id,
+        const std::string name,
+        const Multiport::Type type,
+        const Math::Real resistance,
+        const Math::Real inductance,
+        const Math::Real capacitance)
+:   Multiport(id, name) {
     type_ = type;
     R_ = resistance;
     L_ = inductance;
     C_ = capacitance;
 }
 
-PMMultiportRLC::~PMMultiportRLC() {
+MultiportRLC::~MultiportRLC() {
 
 }
 
-Real
-PMMultiportRLC::getR() const {
+Math::Real MultiportRLC::getR() const {
     return R_;
 }
 
-Real
-PMMultiportRLC::getL() const {
+Math::Real MultiportRLC::getL() const {
     return L_;
 }
 
-Real
-PMMultiportRLC::getC() const {
+Math::Real MultiportRLC::getC() const {
     return C_;
 }
 
-void
-PMMultiportRLC::printInfo() const {
-    cout<< " --- Multiport RLC Info --- " << endl;
-    PMMultiport::printInfo();
-    cout<< " Type: " << getTypeStr() << endl;
-    cout<< " Resistance: " << R_ << endl;
-    cout<< " Inductance: " << L_ << endl;
-    cout<< " Capacitance: " << C_ << endl;
+void MultiportRLC::printInfo() const {
+    std::cout<< " --- Multiport RLC Info --- " << std::endl;
+    Multiport::printInfo();
+    std::cout<< " Type: " << getTypeStr() << std::endl;
+    std::cout<< " Resistance: " << R_ << std::endl;
+    std::cout<< " Inductance: " << L_ << std::endl;
+    std::cout<< " Capacitance: " << C_ << std::endl;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

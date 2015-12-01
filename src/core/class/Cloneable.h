@@ -18,44 +18,34 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * SpatialDiscretization.h
- *
- *  Created on: Nov 19, 2015
- *      Author: luis
- */
 
-#ifndef SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_
-#define SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_
+#ifndef SEMBA_CLASS_CLONEABLE_H_
+#define SEMBA_CLASS_CLONEABLE_H_
 
-#include <map>
-using namespace std;
+namespace SEMBA {
+namespace Class {
 
-#include "base/group/Group.h"
-#include "outRq/GroupOutRqs.h"
-#include "exporter/GroupOutputs.h"
-#include "Cell.h"
-//
-//class SpatialDiscretization {
-//public:
-//    SpatialDiscretization();
-//    virtual ~SpatialDiscretization();
-//
-//    void setOutputRequests(const GroupOutRqs<>* outRqs);
-//
-//    GroupOutputs<> getOutputs() const;
-//
-//protected:
-//    const GroupOutRqs<>* outRqs_;
-//
-//    vector<const FieldBase*> getFieldsAt_(
-//            const vector<CVecR3>& position,
-//            const bool indexPosition = false) const;
-//    //!< Returns all fields in a set of positions.
-//
-//
-//    map<ElementId,vector<const Cell*>> posToCells_;
-//    //!< Index of positions in to Solver cells.
-//};
+class Cloneable {
+public:
+    Cloneable() {}
+    virtual ~Cloneable() {}
 
-#endif /* SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_ */
+
+    virtual Cloneable* clone  () const = 0;
+    template<typename T>
+    T*                 cloneTo() const {
+        return &dynamic_cast<T&>(*clone());
+    }
+};
+
+} /* namespace Class */
+} /* namespace SEMBA */
+
+#ifndef SEMBA_CLASS_DEFINE_CLONE
+#define SEMBA_CLASS_DEFINE_CLONE(NAME)  \
+    NAME* clone() const {               \
+        return new NAME(*this);         \
+    }
+#endif
+
+#endif /* SEMBA_CLASS_CLONEABLE_H_ */

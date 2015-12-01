@@ -18,54 +18,55 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeAnistropicFerrite.cpp
- *
- *  Created on: Aug 28, 2015
- *      Author: luis
- */
 
-#include "PMVolumeAnisotropicFerrite.h"
+#include "VolumeAnisotropicFerrite.h"
 
-PMVolumeAnisotropicFerrite::PMVolumeAnisotropicFerrite(
-        const MatId matId,
-        const string& name,
-        const LocalAxes& local,
-        const Real kappa,
-        const Real relativePermeability,
-        const Real relativePermittivity)
-: PMVolumeAnisotropic(matId, name, local) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+VolumeAnisotropicFerrite::VolumeAnisotropicFerrite(
+        const Id matId,
+        const std::string& name,
+        const Math::Axis::Local& local,
+        const Math::Real kappa,
+        const Math::Real relativePermeability,
+        const Math::Real relativePermittivity)
+: VolumeAnisotropic(matId, name, local) {
     kappa_ = kappa;
     relativePermeability_ = relativePermeability;
     relativePermittivity_ = relativePermittivity;
 }
 
-PMVolumeAnisotropicFerrite::~PMVolumeAnisotropicFerrite() {
+VolumeAnisotropicFerrite::~VolumeAnisotropicFerrite() {
 
 }
 
-MatR33 PMVolumeAnisotropicFerrite::getRelPermittivityMatR() const {
-    return MatR33().setInDiagonal(CVecR3(relativePermittivity_));
+Math::MatR33 VolumeAnisotropicFerrite::getRelPermittivityMatR() const {
+    return Math::MatR33().setInDiagonal(Math::CVecR3(relativePermittivity_));
 }
 
-MatR33 PMVolumeAnisotropicFerrite::getRelPermeabilityMatR() const {
-    MatR33 local;
-    CVecR3 principalAxis(relativePermeability_, relativePermeability_, 1.0);
+Math::MatR33 VolumeAnisotropicFerrite::getRelPermeabilityMatR() const {
+    Math::MatR33 local;
+    Math::CVecR3 principalAxis(relativePermeability_,
+                               relativePermeability_, 1.0);
     local.setInDiagonal(principalAxis);
     return getLocalAxe().convertToGlobal(local);
 }
 
-MatR33 PMVolumeAnisotropicFerrite::getRelPermeabilityMatI() const {
-    MatR33 local;
+Math::MatR33 VolumeAnisotropicFerrite::getRelPermeabilityMatI() const {
+    Math::MatR33 local;
     local(0,1) =   kappa_;
     local(1,0) = - kappa_;
     return getLocalAxe().convertToGlobal(local);
 }
 
-MatR33 PMVolumeAnisotropicFerrite::getElectricConductivityMat() const {
-    return MatR33();
+Math::MatR33 VolumeAnisotropicFerrite::getElectricConductivityMat() const {
+    return Math::MatR33();
 }
 
-MatR33 PMVolumeAnisotropicFerrite::getMagneticConductivityMat() const {
-    return MatR33();
+Math::MatR33 VolumeAnisotropicFerrite::getMagneticConductivityMat() const {
+    return Math::MatR33();
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

@@ -18,48 +18,49 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * FunctionLinearInterpolation.cpp
- *
- *  Created on: Sep 9, 2015
- *      Author: luis
- */
 
-#include "FunctionLinearInterpolation.h"
+#include "LinearInterpolation.h"
+
+#include <fstream>
+
+namespace SEMBA {
+namespace Math {
+namespace Function {
 
 template<class S, class T>
-inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation() {
+inline LinearInterpolation<S, T>::LinearInterpolation() {
 }
 
 template<class S, class T>
-inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation(
-        const vector<pair<S, T> >& xy) {
+inline LinearInterpolation<S, T>::LinearInterpolation(
+        const std::vector<std::pair<S, T> >& xy) {
     for (UInt i = 0; i < xy.size(); i++) {
         value_.insert(xy[i]);
     }
 }
 
 template<class S, class T>
-inline FunctionLinearInterpolation<S, T>::FunctionLinearInterpolation(
-        const ProjectFile& file) {
+inline LinearInterpolation<S, T>::LinearInterpolation(
+        const std::string& file) {
     initFromFile(file);
 }
 
 template<class S, class T>
-inline FunctionLinearInterpolation<S, T>::~FunctionLinearInterpolation() {
+inline LinearInterpolation<S, T>::~LinearInterpolation() {
 }
 
 template<class S, class T>
-inline void FunctionLinearInterpolation<S, T>::printInfo() const {
+inline void LinearInterpolation<S, T>::printInfo() const {
     Function<S,T>::printInfo();
 }
 
 template<class S, class T>
-inline T FunctionLinearInterpolation<S, T>::operator ()(const S& pos) const {
+inline T LinearInterpolation<S, T>::operator ()(const S& pos) const {
     if (value_.empty()) {
-        throw Error("Attempting to interpolate with no data.");
+        throw std::out_of_range("Attempting to interpolate with no data.");
     }
-    pair<typename map<S,T>::const_iterator, typename map<S,T>::const_iterator> range;
+    std::pair<typename std::map<S,T>::const_iterator,
+              typename std::map<S,T>::const_iterator> range;
     range = value_.equal_range(pos);
     if (range.first == range.second) {
         if (range.first == value_.end()) {
@@ -68,7 +69,7 @@ inline T FunctionLinearInterpolation<S, T>::operator ()(const S& pos) const {
             if (pos <= range.first->first && range.first == value_.begin()) {
                 return range.first->second;
             } else {
-                typename map<S,T>::const_iterator prev = range.first;
+                typename std::map<S,T>::const_iterator prev = range.first;
                 --prev;
                 const Real x1 = prev->first;
                 const Real y1 = prev->second;
@@ -89,34 +90,39 @@ inline T FunctionLinearInterpolation<S, T>::operator ()(const S& pos) const {
 }
 
 template<class S, class T>
-inline bool FunctionLinearInterpolation<S, T>::operator ==(
-        const FunctionBase& rhs) const {
+inline bool LinearInterpolation<S, T>::operator ==(
+        const Base& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;
     }
-    const FunctionLinearInterpolation<S,T>* rhsPtr =
-            rhs.castTo<FunctionLinearInterpolation<S,T>>();
+    const LinearInterpolation<S,T>* rhsPtr =
+        dynamic_cast<const LinearInterpolation<S,T>*>(&rhs);
     return value_ == rhsPtr->value_;
 }
 
 template<class S, class T>
-void FunctionLinearInterpolation<S, T>::initFromFile(
-        const ProjectFile& file) {
+void LinearInterpolation<S, T>::initFromFile(
+        const std::string& file) {
     static_assert(std::is_same<S, Real>::value, "S must be Real");
     static_assert(std::is_same<T, Real>::value, "T must be Real");
-    ifstream iStream;
-    iStream.open(file.getFilename().c_str(), ifstream::in);
+    std::ifstream iStream;
+    iStream.open(file, std::ifstream::in);
     if (iStream.fail()) {
-        throw ErrorFileNotExists(file.getFilename());
+        throw std::ios_base::failure(std::string("File: ") + file +
+                                     std::string(" not exists"));
     }
 
     while (!iStream.eof()) {
-        pair<Real, Real> value;
+        std::pair<Real, Real> value;
         iStream >> value.first >> value.second;
         value_.insert(value);
     }
 
     if (value_.size() == 0) {
-        throw ErrorFileEmpty(file.getFilename());
+        throw std::ios_base::failure(std::string("No data in file: ") + file);
     }
 }
+
+} /* namespace Function */
+} /* namespace Math */
+} /* namespace SEMBA */

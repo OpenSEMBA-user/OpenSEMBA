@@ -18,27 +18,25 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Pixel.cpp
- *
- *  Created on: May 19, 2015
- *      Author: Miguel D. Ruiz - Cabello Nuñez
- */
 
 #include "Pixel.h"
 
+namespace SEMBA {
+namespace Geometry {
+namespace Pixel {
+
 void Pixel::printInfo() const {
-    cout << " -- Pixel info -- " << endl;
-    cout << "Pos: " << CVecI3::toStr() << endl;
+    std::cout << " -- Pixel info -- " << std::endl;
+    std::cout << "Pos: " << Math::CVecI3::toStr() << std::endl;
 }
 
-string Pixel::toStr(const CartesianDirection& dir) {
+std::string Pixel::toStr(const Math::CartesianDirection& dir) {
     switch (dir) {
-    case CartesianDirection::dirX:
+    case Math::CartesianDirection::dirX:
         return "X";
-    case CartesianDirection::dirY:
+    case Math::CartesianDirection::dirY:
         return "Y";
-    case CartesianDirection::dirZ:
+    case Math::CartesianDirection::dirZ:
         return "Z";
     default:
         return "Node";
@@ -46,7 +44,7 @@ string Pixel::toStr(const CartesianDirection& dir) {
 }
 
 bool Pixel::operator<(const Pixel& rhs) const {
-    for (UInt i = 0; i < 3; i++) {
+    for (Size i = 0; i < 3; i++) {
         if (val[i] < rhs.val[i]) {
             return true;
         }
@@ -56,3 +54,7 @@ bool Pixel::operator<(const Pixel& rhs) const {
     }
     return false;
 }
+
+} /* namespace Pixel */
+} /* namespace Geometry */
+} /* namespace SEMBA */

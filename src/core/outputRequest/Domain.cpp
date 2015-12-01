@@ -18,14 +18,13 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Domain.cpp
- *
- *  Created on: Oct 9, 2014
- *      Author: luis
- */
 
-#include "../outRq/Domain.h"
+#include "Domain.h"
+
+#include <iostream>
+
+namespace SEMBA {
+namespace OutputRequest {
 
 Domain::Domain() {
     timeDomain_ = false;
@@ -40,10 +39,17 @@ Domain::Domain() {
     usingTransferFunction_ = false;
 }
 
-Domain::Domain(bool timeDomain, Real initialTime, Real finalTime,
-               Real samplingPeriod, bool frequencyDomain, Real initialFrequency,
-               Real finalFrequency, Real frequencyStep, bool logFrequencySweep,
-               bool usingTransferFunction, string transferFunctionFile) {
+Domain::Domain(bool timeDomain,
+               Math::Real initialTime,
+               Math::Real finalTime,
+               Math::Real samplingPeriod,
+               bool frequencyDomain,
+               Math::Real initialFrequency,
+               Math::Real finalFrequency,
+               Math::Real frequencyStep,
+               bool logFrequencySweep,
+               bool usingTransferFunction,
+               std::string transferFunctionFile) {
     timeDomain_ = timeDomain;
     initialTime_ = initialTime;
     finalTime_ = finalTime;
@@ -116,11 +122,11 @@ bool Domain::isTimeDomain() const {
     return timeDomain_;
 }
 
-Real Domain::getInitialTime() const {
+Math::Real Domain::getInitialTime() const {
     return initialTime_;
 }
 
-Real Domain::getFinalTime() const {
+Math::Real Domain::getFinalTime() const {
     return finalTime_;
 }
 
@@ -128,19 +134,19 @@ bool Domain::isFrequencyDomain() const {
     return frequencyDomain_;
 }
 
-Real Domain::getInitialFrequency() const {
+Math::Real Domain::getInitialFrequency() const {
     return initialFrequency_;
 }
 
-Real Domain::getFinalFrequency() const {
+Math::Real Domain::getFinalFrequency() const {
     return finalFrequency_;
 }
 
-Real Domain::getSamplingPeriod() const {
+Math::Real Domain::getSamplingPeriod() const {
     return samplingPeriod_;
 }
 
-Real Domain::getFrequencyStep() const {
+Math::Real Domain::getFrequencyStep() const {
     return frequencyStep_;
 }
 
@@ -152,7 +158,7 @@ bool Domain::isUsingTransferFunction() const {
     return usingTransferFunction_;
 }
 
-const string& Domain::getTransferFunctionFile() const {
+const std::string& Domain::getTransferFunctionFile() const {
     return transferFunctionFile_;
 }
 
@@ -176,32 +182,36 @@ Domain::Type Domain::getDomainType() const {
     }
 }
 
-void Domain::setFinalTime(const Real finalTime) {
+void Domain::setFinalTime(const Math::Real finalTime) {
     finalTime_ = finalTime;
 }
 
-void Domain::setSamplingPeriod(const Real samplingPeriod) {
+void Domain::setSamplingPeriod(const Math::Real samplingPeriod) {
     samplingPeriod_ = samplingPeriod;
 }
 
 void Domain::printInfo() const {
-    cout << "-- Domain info: " << endl;
+    std::cout << "-- Domain info: " << std::endl;
     if (timeDomain_) {
-        cout << "Requesting time output: ";
-        cout << initialTime_ << " " << finalTime_ << " " << samplingPeriod_
-             << endl;
+        std::cout << "Requesting time output: ";
+        std::cout << initialTime_ << " " << finalTime_ << " "
+                  << samplingPeriod_ << std::endl;
     }
     if (frequencyDomain_) {
-        cout << "Requesting frequency output: " << initialFrequency_ << " "
-             << finalFrequency_ << " " << frequencyStep_ << endl;
+        std::cout << "Requesting frequency output: " << initialFrequency_
+                  << " " << finalFrequency_ << " " << frequencyStep_
+                  << std::endl;
         if (logFrequencySweep_) {
-            cout << "Logarithmic frequency sweep." << endl;
+            std::cout << "Logarithmic frequency sweep." << std::endl;
         } else {
-            cout << "Linear frequency sweep." << endl;
+            std::cout << "Linear frequency sweep." << std::endl;
         }
         if (usingTransferFunction_) {
-            cout << "Using transfer function file: " << transferFunctionFile_
-                 << endl;
+            std::cout << "Using transfer function file: "
+                      << transferFunctionFile_ << std::endl;
         }
     }
 }
+
+} /* namespace OutputRequest */
+} /* namespace SEMBA */

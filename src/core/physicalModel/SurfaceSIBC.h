@@ -18,52 +18,51 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMSurface.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMSURFACESIBC_H_
-#define PMSURFACESIBC_H_
+#ifndef SEMBA_PHYSICALMODEL_SURFACESIBC_H_
+#define SEMBA_PHYSICALMODEL_SURFACESIBC_H_
 
-#include "math/StaMatrix.h"
+#include "math/matrix/Static.h"
+#include "filesystem/Project.h"
 
-#include "PMSurface.h"
+#include "Surface.h"
 
-class PMSurfaceSIBC : public PMSurface {
-	friend class DGSIBC;
+namespace SEMBA {
+namespace PhysicalModel {
+
+class SurfaceSIBC : public Surface {
+    friend class DGSIBC;
 public:
-	PMSurfaceSIBC();
-	PMSurfaceSIBC(
-	 const MatId id,
-	 const string& name,
-	 const MatR22& Zinfinite,
-	 const MatR22& Zstatic,
-	 const vector<Real>& pole,
-	 const vector<MatR22>& Z);
-	PMSurfaceSIBC(
-	     const MatId id,
-	     const string& name,
-	     const ProjectFile& file);
-	virtual ~PMSurfaceSIBC();
+    SurfaceSIBC();
+    SurfaceSIBC(const Id id,
+                const std::string& name,
+                const Math::MatR22& Zinfinite,
+                const Math::MatR22& Zstatic,
+                const std::vector<Math::Real>& pole,
+                const std::vector<Math::MatR22>& Z);
+    SurfaceSIBC(const Id id,
+                const std::string& name,
+                const FileSystem::Project& file);
+    virtual ~SurfaceSIBC();
 
-	DEFINE_CLONE(PMSurfaceSIBC);
+    SEMBA_CLASS_DEFINE_CLONE(SurfaceSIBC);
 
-	virtual PMSurfaceSIBC& operator=(const PMSurfaceSIBC &param);
-	void setZInfinity(const MatR22& Zinf);
-	void setZStatic(const MatR22& Zsta);
-	virtual void addPole(const Real pole, const MatR22& Z);
-    virtual UInt getNumberOfPoles() const;
+    virtual SurfaceSIBC& operator=(const SurfaceSIBC &param);
+    void setZInfinity(const Math::MatR22& Zinf);
+    void setZStatic(const Math::MatR22& Zsta);
+    virtual void addPole(const Math::Real pole, const Math::MatR22& Z);
+    virtual Size getNumberOfPoles() const;
     virtual void printInfo() const;
-    const ProjectFile getFile() const;
+    const FileSystem::Project getFile() const;
 
 protected:
-	MatR22 ZInfinity_, ZStatic_;
-	vector<Real> pole_; // Impedance poles.
-	vector<MatR22> Z_; // Impedance residuals.
-	ProjectFile file_;
+    Math::MatR22 ZInfinity_, ZStatic_;
+    std::vector<Math::Real> pole_; // Impedance poles.
+    std::vector<Math::MatR22> Z_; // Impedance residuals.
+    FileSystem::Project file_;
 };
 
-#endif /* PMSURFACE_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_SURFACESIBC_H_ */

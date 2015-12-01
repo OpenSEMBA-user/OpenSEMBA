@@ -18,51 +18,49 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * CoordinateConformal.cpp
- *
- *  Created on: 21/3/2015
- *      Author: Daniel
- */
-#include "CoordinateConformal.h"
 
-CoordinateConformal::CoordinateConformal() {
-    dir_ = x;
+#include "Conformal.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Coordinate {
+
+Conformal::Conformal() {
+    dir_ = Math::Constants::x;
     length_ = 0.0;
 }
 
-CoordinateConformal::CoordinateConformal(const CoordinateId id,
-                                         const CVecI3& pos,
-                                         const CartesianAxis dir,
-                                         const Real length)
-:   ClassIdBase<CoordinateId>(id),
-    CVecI3(pos) {
+Conformal::Conformal(const Id id,
+                     const Math::CVecI3& pos,
+                     const Math::Constants::CartesianAxis dir,
+                     const Math::Real length)
+:   Identifiable<Id>(id),
+    Math::CVecI3(pos) {
 
     dir_    = dir;
     length_ = length;
 }
 
-CoordinateConformal::CoordinateConformal(const CartesianAxis dir,
-                                         const Real length) {
+Conformal::Conformal(const Math::Constants::CartesianAxis dir,
+                     const Math::Real length) {
 
     dir_    = dir;
     length_ = length;
 }
 
-CoordinateConformal::CoordinateConformal(const CoordinateConformal& rhs)
-:   ClassIdBase<CoordinateId>(rhs),
-    CVecI3(rhs) {
+Conformal::Conformal(const Conformal& rhs)
+:   Identifiable<Id>(rhs),
+    Math::CVecI3(rhs) {
 
     dir_    = rhs.dir_;
     length_ = rhs.length_;
 }
 
-CoordinateConformal::~CoordinateConformal() {
+Conformal::~Conformal() {
 
 }
 
-CoordinateConformal& CoordinateConformal::operator=(
-        const CoordinateConformal& rhs) {
+Conformal& Conformal::operator=(const Conformal& rhs) {
     if (this == &rhs)
         return *this;
 
@@ -73,41 +71,45 @@ CoordinateConformal& CoordinateConformal::operator=(
     return *this;
 }
 
-bool CoordinateConformal::operator==(const CoordinateBase& rhs) const {
-    if (!Coordinate<Int,3>::operator==(rhs)) {
+bool Conformal::operator==(const Base& rhs) const {
+    if (!Coordinate<Math::Int,3>::operator==(rhs)) {
         return false;
     }
-    const CoordinateConformal* rhsPtr = rhs.castTo<CoordinateConformal>();
+    const Conformal* rhsPtr = rhs.castTo<Conformal>();
     bool res = true;
     res &= (this->length_ == rhsPtr->length_);
     res &= (this->dir_ == rhsPtr->dir_);
     return res;
 }
 
-CoordR3* CoordinateConformal::toUnstructured(const Grid3& grid) const {
-    CVecR3 pos = grid.getPos(*this);
-    if (MathUtils::greater(getLength(), 0.0)) {
-        Int dir = getDir();
-        Real length = getLength();
-        CVecI3 cellAux = *this;
+CoordR3* Conformal::toUnstructured(const Grid3& grid) const {
+    Math::CVecR3 pos = grid.getPos(*this);
+    if (Math::Util::greater(getLength(), 0.0)) {
+        Math::Int dir = getDir();
+        Math::Real length = getLength();
+        Math::CVecI3 cellAux = *this;
         cellAux(dir)++;
-        CVecR3 posAux = grid.getPos(cellAux);
-        Real step = posAux(dir)-pos(dir);
+        Math::CVecR3 posAux = grid.getPos(cellAux);
+        Math::Real step = posAux(dir)-pos(dir);
         pos(dir) += step*length;
     }
     return new CoordR3(this->getId(), pos);
 }
 
-void CoordinateConformal::printInfo() const {
+void Conformal::printInfo() const {
     CoordI3::printInfo();
-    cout << " Dir: (";
-    if(MathUtils::equal(length_, 0.0)) {
-        cout << "0";
+    std::cout << " Dir: (";
+    if(Math::Util::equal(length_, 0.0)) {
+        std::cout << "0";
     } else {
-        cout << ('x'+dir_);
+        std::cout << ('x'+dir_);
     }
-    cout << ")";
-    if(MathUtils::notEqual(length_, 0.0)) {
-        cout << " Length: (" << length_ << ")";
+    std::cout << ")";
+    if(Math::Util::notEqual(length_, 0.0)) {
+        std::cout << " Length: (" << length_ << ")";
     }
 }
+
+} /* namespace Coordinate */
+} /* namespace Geometry */
+} /* namespace SEMBA */

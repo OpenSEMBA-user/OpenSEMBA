@@ -18,26 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeAnisotropic.cpp
- *
- *  Created on: Aug 27, 2015
- *      Author: luis
- */
 
-#include "PMVolumeAnisotropic.h"
+#include "VolumeAnisotropic.h"
 
-PMVolumeAnisotropic::PMVolumeAnisotropic(
-        const MatId matId,
-        const string& name,
-        const LocalAxes& localAxe) : PMVolume(matId, name) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+VolumeAnisotropic::VolumeAnisotropic(
+        const Id matId,
+        const std::string& name,
+        const Math::Axis::Local& localAxe) : Volume(matId, name) {
     localAxe_ = localAxe;
 }
 
-PMVolumeAnisotropic::~PMVolumeAnisotropic() {
+VolumeAnisotropic::~VolumeAnisotropic() {
 
 }
 
-LocalAxes PMVolumeAnisotropic::getLocalAxe() const {
+Math::Axis::Local VolumeAnisotropic::getLocalAxe() const {
     return localAxe_;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

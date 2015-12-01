@@ -18,14 +18,18 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * MapGroup.cpp
- *
- *  Created on: Jan 23, 2015
- *      Author: luis
- */
 
 #include "Connectivities.h"
+
+//#include <climits>
+//#include <exception>
+//#include <sstream>
+//#include <utility>
+//#include <vector>
+
+namespace SEMBA {
+namespace Geometry {
+namespace Graph {
 
 Connectivities::Connectivities() {
 
@@ -34,34 +38,36 @@ Connectivities::Connectivities() {
 Connectivities::~Connectivities() {
 }
 
-Connectivities::Connectivities(const GroupElements<const ElemR>& eG) {
+Connectivities::Connectivities(const Group::Group<const ElemR>& eG) {
     // Generates graph.
     graph_.init(eG);
-    for (UInt i = 0; i < graph_.numElems(); i++) {
+    for (Size i = 0; i < graph_.numElems(); i++) {
         GraphElem* graphElem = graph_.elem(i);
-        ElementId id = graphElem->elem()->getId();
-        index_.insert(pair<ElementId,const GraphElem*>(id, graphElem));
+        ElemId id = graphElem->elem()->getId();
+        index_.insert(std::pair<ElemId,const GraphElem*>(id, graphElem));
     }
 }
 
 Face Connectivities::getNeighFace(const Face& face) const {
     const ElemR* elem = face.first;
     const GraphElem* local = index_.find(elem->getId())->second;
-    vector<const CoordR3*> localSideV = elem->getSideCoordinates(face.second);
+    std::vector<const CoordR3*> localSideV =
+        elem->getSideCoordinates(face.second);
 
     return getMatchingFace_(local, localSideV);
 }
 
 const SurfR* Connectivities::getNeighSurf(const Face& face) const {
     const ElemR* elem = face.first;
-    vector<const CoordR3*> localSideV = elem->getSideCoordinates(face.second);
+    std::vector<const CoordR3*> localSideV =
+        elem->getSideCoordinates(face.second);
     const GraphElem* local = index_.find(elem->getId())->second;
 
-    for (UInt i = 0; i < local->numNeighbors(); i++) {
+    for (Size i = 0; i < local->numNeighbors(); i++) {
         const ElemR* neigh = local->getNeighbor(i)->elem();
         if (neigh->is<SurfR>()) {
-            vector<const CoordR3*> neighV = neigh->getCoordinates();
-            if (ElementBase::areSameCoords<CoordR3,CoordR3>(
+            std::vector<const CoordR3*> neighV = neigh->getCoordinates();
+            if (Geometry::Element::Base::areSameCoords<CoordR3,CoordR3>(
                     localSideV, neighV)) {
                 return neigh->castTo<SurfR>();
             }
@@ -72,9 +78,9 @@ const SurfR* Connectivities::getNeighSurf(const Face& face) const {
 
 Face Connectivities::getInnerFace(const SurfR* surf) const {
     const GraphElem* local = index_.find(surf->getId())->second;
-    vector<const CoordR3*> localV = local->elem()->getCoordinates();
+    std::vector<const CoordR3*> localV = local->elem()->getCoordinates();
     Face face = getMatchingFace_(local, localV);
-    CVecR3 faceNormal = face.first->getSideNormal(face.second);
+    Math::CVecR3 faceNormal = face.first->getSideNormal(face.second);
     if ((surf->getNormal() == faceNormal) || isDomainBoundary(face)) {
         return face;
     } else {
@@ -100,17 +106,19 @@ bool Connectivities::isDomainBoundary(Face face) const {
 
 Face Connectivities::getMatchingFace_(
         const GraphElem* local,
-        const vector<const CoordR3*> localSideV) const {
-    for (UInt i = 0; i < local->numNeighbors(); i++) {
+        const std::vector<const CoordR3*> localSideV) const {
+    for (Size i = 0; i < local->numNeighbors(); i++) {
         const GraphElem* neighConn = local->getNeighbor(i);
         if (neighConn->elem() == NULL) {
             return Face(NULL, 0);
         }
         const ElemR* neigh = neighConn->elem();
         if (neigh->is<VolR>()) {
-            for (UInt f = 0; f < neigh->numberOfFaces(); f++) {
-                vector<const CoordR3*> neighSideV = neigh->getSideCoordinates(f);
-                if (ElementBase::areSameCoords(localSideV, neighSideV)) {
+            for (Size f = 0; f < neigh->numberOfFaces(); f++) {
+                std::vector<const CoordR3*> neighSideV =
+                    neigh->getSideCoordinates(f);
+                if (Geometry::Element::Base::areSameCoords(localSideV,
+                                                           neighSideV)) {
                     return Face(neigh->castTo<VolR>(), f);
                 }
             }
@@ -119,18 +127,17 @@ Face Connectivities::getMatchingFace_(
     return Face(NULL, 0);
 }
 
-UInt Connectivities::size() const {
+Size Connectivities::size() const {
     return graph_.numElems();
 }
 
 bool Connectivities::existsReciprocity() const {
-
-    for (UInt i = 0; i < graph_.numElems(); i++) {
+    for (Size i = 0; i < graph_.numElems(); i++) {
         const ElemR* elem = graph_.elem(i)->elem();
         // Checks volumic reciprocity in connectivities.
         if (elem->is<VolR>()) {
             const VolR* vol = elem->castTo<VolR>();
-            for (UInt f = 0; f < vol->numberOfFaces(); f++) {
+            for (Size f = 0; f < vol->numberOfFaces(); f++) {
                 Face local(vol, f);
                 Face neigh = this->getNeighFace(local);
                 if (this->isDomainBoundary(local)) {
@@ -160,3 +167,7 @@ bool Connectivities::existsReciprocity() const {
     }
     return true;
 }
+
+} /* namespace Graph */
+} /* namespace Geometry */
+} /* namespace SEMBA */

@@ -18,161 +18,125 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * SmbData.cpp
- *
- *  Created on: Mar 28, 2014
- *      Author: luis
- */
 
-#include "SmbData.h"
+#include "Data.h"
 
-SmbData::SmbData() {
+namespace SEMBA {
+
+Data::Data() {
     mesh = NULL;
     grid = NULL;
-    solverOptions = NULL;
-    pMGroup = NULL;
-    emSources = NULL;
+    physicalModels = NULL;
+    sources = NULL;
     outputRequests = NULL;
-    mesherOptions = NULL;
 }
 
-SmbData::SmbData(const SmbData& rhs)
-:   ProjectFile(rhs) {
+Data::Data(const Data& rhs)
+:   FileSystem::Project(rhs) {
     mesh = NULL;
     grid = NULL;
-    solverOptions = NULL;
-    pMGroup = NULL;
-    emSources = NULL;
+    physicalModels = NULL;
+    sources = NULL;
     outputRequests = NULL;
-    mesherOptions = NULL;
     if (rhs.mesh != NULL) {
-        mesh = rhs.mesh->cloneTo<Mesh>();
+        mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
     }
     if (rhs.grid != NULL) {
-        grid = rhs.grid->cloneTo<Grid3>();
+        grid = new Geometry::Grid3(*rhs.grid);
     }
-    if (rhs.solverOptions != NULL) {
-        solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
+    if (rhs.physicalModels != NULL) {
+        physicalModels = rhs.physicalModels->clone();
     }
-    if (rhs.pMGroup != NULL) {
-        pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
-    }
-    if (rhs.emSources != NULL) {
-        emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
+    if (rhs.sources != NULL) {
+        sources = rhs.sources->clone();
     }
     if (rhs.outputRequests != NULL) {
-        outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
-    }
-    if (rhs.mesherOptions != NULL) {
-        mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
+        outputRequests = rhs.outputRequests->clone();
     }
 }
 
-SmbData::~SmbData() {
+Data::~Data() {
     if (mesh != NULL) {
         delete mesh;
     }
     if (grid != NULL) {
         delete grid;
     }
-    if (solverOptions != NULL) {
-        delete solverOptions;
+    if (physicalModels != NULL) {
+        delete physicalModels;
     }
-    if (pMGroup != NULL) {
-        delete pMGroup;
-    }
-    if (emSources != NULL) {
-        delete emSources;
+    if (sources != NULL) {
+        delete sources;
     }
     if (outputRequests != NULL) {
         delete outputRequests;
     }
-    if (mesherOptions != NULL) {
-        delete mesherOptions;
-    }
 }
 
-SmbData& SmbData::operator=(const SmbData& rhs) {
+Data& Data::operator=(const Data& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    ProjectFile::operator=(rhs);
+    FileSystem::Project::operator=(rhs);
     mesh = NULL;
     grid = NULL;
-    solverOptions = NULL;
-    pMGroup = NULL;
-    emSources = NULL;
+    physicalModels = NULL;
+    sources = NULL;
     outputRequests = NULL;
-    mesherOptions = NULL;
     if (rhs.mesh != NULL) {
-        mesh = rhs.mesh->cloneTo<Mesh>();
+        mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
     }
     if (rhs.grid != NULL) {
-        grid = rhs.grid->cloneTo<Grid3>();
+        grid = new Geometry::Grid3(*rhs.grid);
     }
-    if (rhs.solverOptions != NULL) {
-        solverOptions = rhs.solverOptions->cloneTo<OptionsSolver>();
+    if (rhs.physicalModels != NULL) {
+        physicalModels = rhs.physicalModels->clone();
     }
-    if (rhs.pMGroup != NULL) {
-        pMGroup = rhs.pMGroup->cloneTo<GroupPhysicalModels<>>();
-    }
-    if (rhs.emSources != NULL) {
-        emSources = rhs.emSources->cloneTo<GroupEMSources<>>();
+    if (rhs.sources != NULL) {
+        sources = rhs.sources->clone();
     }
     if (rhs.outputRequests != NULL) {
-        outputRequests = rhs.outputRequests->cloneTo<GroupOutRqs<>>();
-    }
-    if (rhs.mesherOptions != NULL) {
-        mesherOptions = rhs.mesherOptions->cloneTo<OptionsMesher>();
+        outputRequests = rhs.outputRequests->clone();
     }
     return *this;
 }
 
-void SmbData::printInfo() const {
-    cout << " --- SEMBA data --- " << endl;
+void Data::printInfo() const {
+    std::cout << " --- SEMBA data --- " << std::endl;
     if (grid != NULL) {
         grid->printInfo();
     }
     if (mesh != NULL) {
         mesh->printInfo();
     } else {
-        cout << "No info about mesh." << endl;
+        std::cout << "No info about mesh." << std::endl;
     }
-    if (mesherOptions != NULL) {
-        mesherOptions->printInfo();
+    if (physicalModels != NULL) {
+        physicalModels->printInfo();
     } else {
-        cout << "No info about mesher options." << endl;
+        std::cout << "No info about physical models." << std::endl;
     }
-    if (solverOptions != NULL) {
-        solverOptions->printInfo();
+    if (sources != NULL) {
+        sources->printInfo();
     } else {
-        cout << "No info about solver options." << endl;
-    }
-    if (pMGroup != NULL) {
-        pMGroup->printInfo();
-    } else {
-        cout << "No info about physical models." << endl;
-    }
-    if (emSources != NULL) {
-        emSources->printInfo();
-    } else {
-        cout << "No info about electromagnetic sources." << endl;
+        std::cout << "No info about electromagnetic sources." << std::endl;
     }
     if (outputRequests != NULL) {
         outputRequests->printInfo();
     } else {
-        cout << "No info about output requests." << endl;
+        std::cout << "No info about output requests." << std::endl;
     }
 }
 
-bool SmbData::check() const {
+bool Data::check() const {
     bool res = true;
-    if (emSources != NULL) {
-        res &= emSources->check();
+    if (sources != NULL) {
+//        res &= sources->check();
     }
     if (outputRequests != NULL) {
-        //    res &= outputRequests->check();
+//        res &= outputRequests->check();
     }
     return res;
 }
+
+} /* namespace SEMBA */

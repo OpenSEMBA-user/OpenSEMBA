@@ -18,124 +18,77 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "GroupId.h"
+
+#include "Identifiable.h"
+
+#include "Error.h"
+
+#include <string>
+
+namespace SEMBA {
+namespace Group {
 
 template<typename T, class Id>
-GroupId<T,Id>::ErrorId::ErrorId(const Id& id) {
-    id_ = id;
-}
-
-template<typename T, class Id>
-GroupId<T,Id>::ErrorId::~ErrorId() throw() {
-
-}
-
-template<typename T, class Id>
-Id GroupId<T,Id>::ErrorId::getId() const {
-    return id_;
-}
-
-template<typename T, class Id>
-GroupId<T, Id>::ErrorIdNotExists::ErrorIdNotExists(const Id& id)
-:   Error(std::string("GroupId: Element with id ") + id.toStr() +
-          std::string(" not exists")),
-    ErrorId(id) {
-}
-
-template<typename T, class Id>
-GroupId<T, Id>::ErrorIdNotExists::~ErrorIdNotExists() throw () {
-}
-
-template<typename T, class Id>
-GroupId<T,Id>::ErrorIdZero::ErrorIdZero(const Id& id)
-:   Error("GroupId: Element with id 0"), ErrorId(id) {
-
-}
-
-template<typename T, class Id>
-GroupId<T,Id>::ErrorIdZero::~ErrorIdZero() throw() {
-
-}
-
-template<typename T, class Id>
-GroupId<T,Id>::ErrorIdDuplicated::ErrorIdDuplicated(const Id& id)
-:   ErrorId(id) {
-    std::stringstream aux;
-    aux << "GroupId: Duplicated Id " << id;
-    this->setMsg(aux.str());
-}
-
-template<typename T, class Id>
-GroupId<T,Id>::ErrorIdDuplicated::~ErrorIdDuplicated() throw() {
-
-}
-
-template<typename T, class Id>
-GroupId<T,Id>::GroupId() {
+Identifiable<T,Id>::Identifiable() {
     lastId_ = Id(0);
 }
 
 template<typename T, class Id> template<typename T2>
-GroupId<T, Id>::GroupId(T2* elem)
+Identifiable<T, Id>::Identifiable(T2* elem)
 :   Group<T>(elem) {
     lastId_ = Id(0);
     postprocess_(0);
 }
 
 template<typename T, class Id> template<typename T2>
-GroupId<T, Id>::GroupId(const std::vector<T2*>& elems)
+Identifiable<T, Id>::Identifiable(const std::vector<T2*>& elems)
 :   Group<T>(elems) {
     lastId_ = Id(0);
     postprocess_(0);
 }
 
 template<typename T, class Id> template<typename T2>
-GroupId<T, Id>::GroupId(VectorPtr<T2>& rhs)
+Identifiable<T, Id>::Identifiable(Group<T2>& rhs)
 :   Group<T>(rhs) {
     lastId_ = Id(0);
     postprocess_(0);
 }
 
 template<typename T, class Id> template<typename T2>
-GroupId<T, Id>::GroupId(const VectorPtr<T2>& rhs)
+Identifiable<T, Id>::Identifiable(const Group<T2>& rhs)
 :   Group<T>(rhs) {
     lastId_ = Id(0);
     postprocess_(0);
 }
 
 template<typename T, class Id>
-GroupId<T,Id>::GroupId(VectorPtr<T>& rhs)
+Identifiable<T,Id>::Identifiable(Group<T>& rhs)
 :   Group<T>(rhs) {
     lastId_ = Id(0);
     postprocess_(0);
 }
 
 template<typename T, class Id> template<typename T2>
-GroupId<T, Id>::GroupId(VectorPtr<T2> && rhs)
+Identifiable<T, Id>::Identifiable(Group<T2> && rhs)
 :   Group<T>(std::move(rhs)) {
     lastId_ = Id(0);
     postprocess_(0);
 }
 
 template<typename T, class Id>
-GroupId<T,Id>::GroupId(VectorPtr<T>&& rhs)
+Identifiable<T,Id>::Identifiable(Group<T>&& rhs)
 :   Group<T>(std::move(rhs)) {
     lastId_ = Id(0);
     postprocess_(0);
 }
 
 template<typename T, class Id>
-GroupId<T,Id>::~GroupId() {
+Identifiable<T,Id>::~Identifiable() {
 
 }
 
 template<typename T, class Id>
-GroupId<T,Id>* GroupId<T,Id>::clone() const {
-    return new GroupId<T, Id>(this->cloneElems());
-}
-
-template<typename T, class Id>
-GroupId<T,Id>& GroupId<T,Id>::operator=(VectorPtr<T>& rhs) {
+Identifiable<T,Id>& Identifiable<T,Id>::operator=(Group<T>& rhs) {
     if (this == &rhs) {
         return *this;
     }
@@ -145,7 +98,7 @@ GroupId<T,Id>& GroupId<T,Id>::operator=(VectorPtr<T>& rhs) {
 }
 
 template<typename T, class Id>
-GroupId<T,Id>& GroupId<T,Id>::operator=(VectorPtr<T>&& rhs) {
+Identifiable<T,Id>& Identifiable<T,Id>::operator=(Group<T>&& rhs) {
     if (this == &rhs) {
         return *this;
     }
@@ -155,150 +108,153 @@ GroupId<T,Id>& GroupId<T,Id>::operator=(VectorPtr<T>&& rhs) {
 }
 
 template<typename T, class Id>
-void GroupId<T,Id>::clear() {
+void Identifiable<T,Id>::clear() {
     Group<T>::clear();
     lastId_ = Id(0);
     mapId_.clear();
 }
 
 template<typename T, class Id>
-bool GroupId<T,Id>::existId(const Id id) const {
+bool Identifiable<T,Id>::existId(const Id id) const {
     return (mapId_.count(id) != 0);
 }
 
 template<typename T, class Id>
-std::vector<Id> GroupId<T,Id>::getIds() const {
+std::vector<Id> Identifiable<T,Id>::getIds() const {
     std::vector<Id> ids;
-    for (UInt i = 0; i < this->size(); i++) {
+    for (std::size_t i = 0; i < this->size(); i++) {
         ids.push_back(this->get(i)->getId());
     }
     return ids;
 }
 
 template<typename T, class Id>
-typename Reference<T*>::type GroupId<T,Id>::getId(const Id id) {
+T* Identifiable<T,Id>::getId(const Id id) {
     if(mapId_.count(id) == 0) {
-        throw ErrorIdNotExists(id);
+        throw typename Error::Id::NotExists<Id>(id);
     }
     return this->get(mapId_.at(id));
 }
 
 template<typename T, class Id>
-typename ConstReference<T*>::type GroupId<T,Id>::getId(const Id id) const {
+const T* Identifiable<T,Id>::getId(const Id id) const {
     if(mapId_.count(id) == 0) {
-        throw ErrorIdNotExists(id);
+        throw typename Error::Id::NotExists<Id>(id);
     }
     return this->get(mapId_.at(id));
 }
 
 template<typename T, class Id>
-GroupId<T,Id> GroupId<T,Id>::getId(const std::vector<Id>& ids) {
+Identifiable<T,Id> Identifiable<T,Id>::getId(const std::vector<Id>& ids) {
     return this->get(getElemsId_(ids));
 }
 
 template<typename T, class Id>
-GroupId<const T,Id> GroupId<T,Id>::getId(const std::vector<Id>& ids) const {
+Identifiable<const T,Id> Identifiable<T,Id>::getId(const std::vector<Id>& ids) const {
     return this->get(getElemsId_(ids));
 }
 
 template<typename T, class Id>
-VectorPtr<T> GroupId<T,Id>::add(VectorPtr<T>& rhs) {
-    UInt lastSize = this->size();
+Group<T> Identifiable<T,Id>::add(Group<T>& rhs) {
+    std::size_t lastSize = this->size();
     Group<T>::add(rhs);
     postprocess_(lastSize);
     return rhs;
 }
 
 template<typename T, class Id>
-VectorPtr<T> GroupId<T,Id>::add(VectorPtr<T>&& rhs) {
-    UInt lastSize = this->size();
+Group<T> Identifiable<T,Id>::add(Group<T>&& rhs) {
+    std::size_t lastSize = this->size();
     Group<T>::add(std::move(rhs));
     postprocess_(lastSize);
     return rhs;
 }
 
 template<typename T, class Id> template<typename T2>
-VectorPtr<T> GroupId<T, Id>::addId(T2* elem) {
-    return addId(VectorPtr<T>(elem));
+Group<T> Identifiable<T, Id>::addId(T2* elem) {
+    return addId(Group<T>(elem));
 }
 
 template<typename T, class Id> template<typename T2>
-VectorPtr<T> GroupId<T, Id>::addId(const std::vector<T2*>& elems) {
-    return addId(VectorPtr<T>(elems));
+Group<T> Identifiable<T, Id>::addId(const std::vector<T2*>& elems) {
+    return addId(Group<T>(elems));
 }
 
 template<typename T, class Id> template<typename T2>
-VectorPtr<T> GroupId<T,Id>::addId(VectorPtr<T2>& rhs) {
-    return addId(VectorPtr<T>(rhs));
+Group<T> Identifiable<T,Id>::addId(Group<T2>& rhs) {
+    return addId(Group<T>(rhs));
 }
 
 template<typename T, class Id>
-VectorPtr<T> GroupId<T,Id>::addId(VectorPtr<T>& rhs) {
-    for (UInt i = 0; i < rhs.size(); i++) {
+Group<T> Identifiable<T,Id>::addId(Group<T>& rhs) {
+    for (std::size_t i = 0; i < rhs.size(); i++) {
         rhs(i)->setId(++lastId_);
     }
     return add(rhs);
 }
 
 template<typename T, class Id>
-VectorPtr<T> GroupId<T,Id>::addId(VectorPtr<T>&& rhs) {
-    for (UInt i = 0; i < rhs.size(); i++) {
+Group<T> Identifiable<T,Id>::addId(Group<T>&& rhs) {
+    for (std::size_t i = 0; i < rhs.size(); i++) {
         rhs(i)->setId(++lastId_);
     }
     return add(std::move(rhs));
 }
 
 template<typename T, class Id>
-void GroupId<T,Id>::remove(const UInt& pos) {
+void Identifiable<T,Id>::remove(const std::size_t& pos) {
     mapId_.erase(this->get(pos)->getId());
     Group<T>::remove(pos);
 }
 
 template<typename T, class Id>
-void GroupId<T,Id>::remove(const std::vector<UInt>& pos) {
-    for (UInt i = 0; i < pos.size(); i++) {
+void Identifiable<T,Id>::remove(const std::vector<std::size_t>& pos) {
+    for (std::size_t i = 0; i < pos.size(); i++) {
         mapId_.erase(this->get(pos[i])->getId());
     }
     Group<T>::remove(pos);
 }
 
 template<typename T, class Id>
-void GroupId<T,Id>::removeId(const Id id) {
+void Identifiable<T,Id>::removeId(const Id id) {
     std::vector<Id> aux;
     aux.push_back(id);
     removeId(aux);
 }
 
 template<typename T, class Id>
-void GroupId<T,Id>::removeId(const std::vector<Id>& ids) {
+void Identifiable<T,Id>::removeId(const std::vector<Id>& ids) {
     remove(getElemsId_(ids));
 }
 
 template<typename T, class Id>
-void GroupId<T,Id>::postprocess_(const UInt& firstStep) {
-    for(UInt i = firstStep; i < this->size(); i++) {
+void Identifiable<T,Id>::postprocess_(const std::size_t& firstStep) {
+    for(std::size_t i = firstStep; i < this->size(); i++) {
         if (this->get(i)->getId() > this->lastId_) {
             lastId_ = this->get(i)->getId();
         }
         if (this->get(i)->getId() == Id(0)) {
-            throw ErrorIdZero(this->get(i)->getId());
+            throw typename Error::Id::Zero<Id>();
         }
         if (mapId_.count(this->get(i)->getId()) == 0) {
             mapId_[this->get(i)->getId()] = i;
         } else {
-            throw ErrorIdDuplicated(this->get(i)->getId());
+            throw typename Error::Id::Duplicated<Id>(this->get(i)->getId());
         }
     }
 }
 
 template<typename T, class Id>
-std::vector<UInt> GroupId<T,Id>::getElemsId_(const std::vector<Id>& ids) const {
-    std::vector<UInt> res;
+std::vector<std::size_t> Identifiable<T,Id>::getElemsId_(const std::vector<Id>& ids) const {
+    std::vector<std::size_t> res;
     res.reserve(ids.size());
-    for(UInt i = 0; i < ids.size(); i++) {
+    for(std::size_t i = 0; i < ids.size(); i++) {
         if (mapId_.count(ids[i]) == 1) {
             res.push_back(mapId_.at(ids[i]));
         }
     }
     return res;
 }
+
+} /* namespace Group */
+} /* namespace SEMBA */

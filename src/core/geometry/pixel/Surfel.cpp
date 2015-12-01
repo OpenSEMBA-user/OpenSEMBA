@@ -18,20 +18,18 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Surfel.cpp
- *
- *  Created on: May 19, 2015
- *      Author: Miguel D. Ruiz-Cabello N.
- */
 
 #include "Surfel.h"
 
-bool Surfel::isInto (const CVecI3Frac& coordIntFractional)const{
-    CVecR3 pos = coordIntFractional.getScalePos((CVecI3)(*this));
-    for(UInt n=0; n<3; n++){
-        if(n==(UInt)(normId_-1)){
-            if(!MathUtils::equal(pos(n),0.0)){
+namespace SEMBA {
+namespace Geometry {
+namespace Pixel {
+
+bool Surfel::isInto (const Math::CVecI3Frac& coordIntFractional)const{
+    Math::CVecR3 pos = coordIntFractional.getScalePos((Math::CVecI3)(*this));
+    for(Size n=0; n<3; n++){
+        if(n==(Size)(normId_-1)){
+            if(!Math::Util::equal(pos(n),0.0)){
                 return false;
             }
         }else if ( pos(n)<0.0 || pos(n)>1.0 ){
@@ -45,9 +43,9 @@ bool Surfel::operator ==(const Surfel& rhs) const {
     return (Pixel::operator==(rhs) && rhs.normId_ == normId_);
 }
 
-string Surfel::toStr() const {
-    stringstream res;
-    res << CVecI3::toStr() << " Norm: " << Pixel::toStr(normId_);
+std::string Surfel::toStr() const {
+    std::stringstream res;
+    res << Math::CVecI3::toStr() << " Norm: " << Pixel::toStr(normId_);
     return res.str();
 }
 
@@ -74,15 +72,15 @@ string Surfel::toStr() const {
 
 SurfelPixels Surfel::getPixels() const{
     SurfelPixels ret;
-    UInt counter = 0;
-    UInt dirId = getNormId() -1;
-    for(UInt n=0; n<2; ++n){
-        for(UInt m=0; m<2; ++m){
-            CVecI3 offset;
+    Size counter = 0;
+    Size dirId = getNormId() -1;
+    for(Size n=0; n<2; ++n){
+        for(Size m=0; m<2; ++m){
+            Math::CVecI3 offset;
             offset(dirId)       = 0;
             offset((dirId+1)%3) = n;
             offset((dirId+2)%3) = m;
-            ret[counter]        = (CVecI3)*this +offset;
+            ret[counter]        = (Math::CVecI3)*this +offset;
             ++counter;
         }
     }
@@ -98,3 +96,7 @@ bool Surfel::operator<(const Surfel& rhs) const {
     }
     return false;
 }
+
+} /* namespace Pixel */
+} /* namespace Geometry */
+} /* namespace SEMBA */

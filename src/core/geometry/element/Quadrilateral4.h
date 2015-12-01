@@ -18,26 +18,24 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Quad4.h
- *
- *  Created on: Apr 10, 2014
- *      Author: luis
- */
 
-#ifndef QUAD4_H_
-#define QUAD4_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL4_H_
+#define SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL4_H_
 
-#include <geometry/elements/Quadrilateral.h>
+#include "Quadrilateral.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 class Quadrilateral4Base : public virtual SurfaceBase {
 public:
     Quadrilateral4Base() {}
     virtual ~Quadrilateral4Base() {}
 
-    UInt numberOfCoordinates() const { return 4; }
+    Size numberOfCoordinates() const { return 4; }
 
-    UInt numberOfSideCoordinates(const UInt f = 0) const { return 2; }
+    Size numberOfSideCoordinates(const Size f = 0) const { return 2; }
 };
 
 template<class T>
@@ -45,46 +43,52 @@ class Quadrilateral4: public virtual Quadrilateral<T>,
                       public virtual Quadrilateral4Base {
 public:
     Quadrilateral4();
-	Quadrilateral4(const GroupCoordinates<Coordinate<T,3> >&,
-          const ElementId id,
-          const CoordinateId vId[4],
-          const LayerId layerId = LayerId(0),
-          const MatId   matId   = MatId(0));
-	Quadrilateral4(GroupCoordinates<Coordinate<T,3> >&,
-	      const ElementId id,
-	      const Box<T,3>& box,
-	      const LayerId layerId = LayerId(0),
-	      const MatId   matId   = MatId(0));
+    Quadrilateral4(const Id id,
+                   const Coordinate::Coordinate<T,3>* coords[4],
+                   const Layer* lay = NULL,
+                   const Model* mat = NULL);
+    Quadrilateral4(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
+                   const Id id,
+                   const Box<T,3>& box,
+                   const Layer* lay = NULL,
+                   const Model* mat = NULL);
     Quadrilateral4(const Quadrilateral4<T>& rhs);
-	virtual ~Quadrilateral4();
-    
-    DEFINE_CLONE(Quadrilateral4<T>);
+    virtual ~Quadrilateral4();
 
-    bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
+    SEMBA_CLASS_DEFINE_CLONE(Quadrilateral4<T>);
 
-	const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
-	const Coordinate<T,3>* getSideV(const UInt f,
-	                                const UInt i) const;
+    bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
-	const Coordinate<T,3>* getVertex    (const UInt i) const;
-	const Coordinate<T,3>* getSideVertex(const UInt f,
-	                                     const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
+                                                const Size i) const;
 
-    void setV(const UInt i, const Coordinate<T,3>*);
+    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
+                                                     const Size i) const;
 
-    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
-                        const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
+    void setV(const Size i, const Coordinate::Coordinate<T,3>*);
 
-	void printInfo() const;
-	void check() const;
+    ElemI* toStructured(const Coordinate::Group<CoordI3>&,
+                        const Grid3&,
+                        const Math::Real = Grid3::tolerance) const;
+    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
+                          const Grid3&) const;
+
+    void printInfo() const;
+    void check() const;
 
 private:
-	const Coordinate<T,3>* v_[4];
+    const Coordinate::Coordinate<T,3>* v_[4];
 };
 
-typedef Quadrilateral4Base   Qua4;
-typedef Quadrilateral4<Real> QuaR4;
-typedef Quadrilateral4<Int > QuaI4;
+} /* namespace Element */
 
-#endif /* QUAD4_H_ */
+typedef Element::Quadrilateral4Base         Qua4;
+typedef Element::Quadrilateral4<Math::Real> QuaR4;
+typedef Element::Quadrilateral4<Math::Int > QuaI4;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL4_H_ */

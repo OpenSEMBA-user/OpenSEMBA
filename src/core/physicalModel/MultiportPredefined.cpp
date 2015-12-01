@@ -18,28 +18,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultiportPredefined.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMMultiportPredefined.h"
+#include "MultiportPredefined.h"
 
-PMMultiportPredefined::PMMultiportPredefined(
- const MatId id,
- const string name,
- const PMMultiport::Type type) : PMMultiport(id, name) {
-	type_ = type;
+namespace SEMBA {
+namespace PhysicalModel {
+
+MultiportPredefined::MultiportPredefined(const Id id,
+                                         const std::string name,
+                                         const Multiport::Type type)
+:   Multiport(id, name) {
+    type_ = type;
 }
 
-PMMultiportPredefined::~PMMultiportPredefined() {
+MultiportPredefined::~MultiportPredefined() {
+
 }
 
-void
-PMMultiportPredefined::printInfo() const {
-	cout<< " --- Multiport Info --- " << endl;
-	PMMultiport::printInfo();
-	cout<< " Type: " << getTypeStr() << endl;
+void MultiportPredefined::printInfo() const {
+    std::cout<< " --- Multiport Info --- " << std::endl;
+    Multiport::printInfo();
+    std::cout<< " Type: " << getTypeStr() << std::endl;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

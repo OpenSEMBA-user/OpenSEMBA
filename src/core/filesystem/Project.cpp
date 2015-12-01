@@ -18,40 +18,49 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ProjectFile.cpp
- *
- *  Created on: Dec 19, 2014
- *      Author: luis
- */
 
-#include "ProjectFile.h"
+#include "Project.h"
 
-ProjectFile::ProjectFile() {
+#include <cstring>
+#include <iostream>
+
+#ifndef _WIN32
+#include <dirent.h>
+#include <libgen.h>
+#include <sys/stat.h>
+#else
+#include <direct.h>
+#include <Shlwapi.h>
+#endif
+
+namespace SEMBA {
+namespace FileSystem {
+
+Project::Project() {
 
 }
 
-ProjectFile::ProjectFile(const string& filename) : string(filename) {
+Project::Project(const std::string& filename) : std::string(filename) {
 }
 
-ProjectFile::ProjectFile(const ProjectFile& rhs) : string(rhs) {
+Project::Project(const Project& rhs) : std::string(rhs) {
 }
 
-ProjectFile::~ProjectFile() {
+Project::~Project() {
 
 }
 
-void ProjectFile::initDir_(const string& fn) {
-    string dirname = fn + ".vtk";
+void Project::initDir_(const std::string& fn) {
+    std::string dirname = fn + ".vtk";
 #ifdef _WIN32
-    mkdir(dirname.c_str());
+    _mkdir(dirname.c_str());
 #else
     mkdir(dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
 }
 
-bool ProjectFile::canOpen() const {
-    ifstream file;
+bool Project::canOpen() const {
+    std::ifstream file;
     file.open(c_str());
     bool res;
     if (file) {
@@ -63,7 +72,14 @@ bool ProjectFile::canOpen() const {
     return res;
 }
 
-bool ProjectFile::canExecute() const {
+bool Project::canExecute() const {
+#ifdef _WIN32
+    LPDWORD aux = NULL;
+    if(GetBinaryTypeA(c_str(), aux) != 0) {
+        return true;
+    }
+    return false;
+#else
     struct stat st;
     if (stat(c_str(), &st) < 0) {
         return false;
@@ -72,21 +88,36 @@ bool ProjectFile::canExecute() const {
         return true;
     }
     return false;
+#endif
 }
 
-string ProjectFile::getFilename() const {
+std::string Project::getFilename() const {
     return *this;
 }
 
-string ProjectFile::getBasename() const {
-    string res(basename(const_cast<char*>(c_str())));
+std::string Project::getBasename() const {
+#ifdef _WIN32
+    char *cstr = new char[getFilename().length() + 1];
+    std::strcpy(cstr, getFilename().c_str());
+    PathFindFileName(cstr);
+    std::string res(cstr);
+#else
+    std::string res(basename(const_cast<char*>(c_str())));
+#endif
     return res;
 }
 
-string ProjectFile::getFolder() const {
+std::string Project::getFolder() const {
     char *cstr = new char[length() + 1];
     strcpy(cstr, c_str());
-    string folder(dirname(cstr));
+#ifdef _WIN32
+    PathRemoveFileSpec(cstr);
+    std::string folder(cstr);
+    folder += "\\";
+#else
+    std::string folder(dirname(cstr));
+    folder += "/";
+#endif
     if (folder.find_last_of("/\\") != folder.length() - 1) {
 #ifdef _WIN32
         folder += "\\";
@@ -98,23 +129,36 @@ string ProjectFile::getFolder() const {
     return folder;
 }
 
-void ProjectFile::setFilename(const string& filename) {
-    string::operator=(filename);
+void Project::setFilename(const std::string& filename) {
+    std::string::operator=(filename);
 }
 
-string ProjectFile::toStr() const {
+std::string Project::toStr() const {
     return *this;
 }
 
-void ProjectFile::printInfo() const {
-    cout << "Project file name: " << toStr() << endl;
+void Project::printInfo() const {
+    std::cout << "Project file name: " << toStr() << std::endl;
 }
 
-vector<string> ProjectFile::getFilesBasenames(const string& directory,
-        const string& extension) const {
+std::vector<std::string> Project::getFilesBasenames(
+        const std::string& directory,
+        const std::string& extension) const {
+    std::vector<std::string> files;
+#ifdef _WIN32
+    HANDLE hFind;
+    WIN32_FIND_DATA data;
+
+    hFind = FindFirstFile(directory.c_str(), &data);
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            files.push_back(std::string("data.cFileName"));
+        } while (FindNextFile(hFind, &data));
+        FindClose(hFind);
+    }
+#else
     DIR *dir;
     struct dirent *ent;
-    vector<string> files;
     // Retrieves names of all files.
     if ((dir = opendir(directory.c_str())) != NULL) {
         while ((ent = readdir (dir)) != NULL) {
@@ -122,39 +166,38 @@ vector<string> ProjectFile::getFilesBasenames(const string& directory,
         }
         closedir(dir);
     } else {
-        cout << endl << "WARNING @ ProjectFile";
-        cout << "Could not open directory to extract basenames. ";
-        cout << "Tried: " << directory << endl;
+        std::cout << std::endl << "WARNING @ Project";
+        std::cout << "Could not open directory to extract basenames. ";
+        std::cout << "Tried: " << directory << std::endl;
     }
+#endif
     // Stores files with names matching extension.
-    vector<string> res;
-    for (UInt i = 0; i < files.size(); i++) {
+    std::vector<std::string> res;
+    for (Size i = 0; i < files.size(); i++) {
         size_t index = files[i].find(extension);
-        if (index != string::npos) {
+        if (index != std::string::npos) {
             res.push_back(files[i]);
         }
     }
     return res;
 }
 
-void ProjectFile::openFile(ofstream& file,
-        const ios_base::openmode mode) const {
-    openFile(*this, file, mode);
+void Project::openFile(std::ofstream& file) const {
+    openFile(*this, file);
 }
 
-void ProjectFile::openFile(const string& fileName, ofstream& file,
-        const ios_base::openmode mode) const {
+void Project::openFile(const std::string& fileName, std::ofstream& file) const {
     try {
-        file.open(fileName.c_str(), mode);
+        file.open(fileName.c_str());
     }
-    catch(exception &e) {
-        throw ErrorFileNotExists(fileName);
+    catch(std::exception &e) {
+        throw std::ios_base::failure(fileName + std::string(" not exists"));
     }
 }
 
-string ProjectFile::removeExtension(const string& fName) const {
+std::string Project::removeExtension(const std::string& fName) const {
     size_t pos = fName.rfind(".");
-    if (pos == string::npos) { //No extension.
+    if (pos == std::string::npos) { //No extension.
         return fName;
     }
     if (pos == 0) {    //. is at the front. Not an extension.
@@ -163,73 +206,105 @@ string ProjectFile::removeExtension(const string& fName) const {
     return fName.substr(0, pos);
 }
 
-void ProjectFile::deleteDirIfExists(const string& directory) const {
+void Project::deleteDirIfExists(const std::string& directory) const {
+#ifdef _WIN32
+    bool exists = false;;
+    DWORD atrib = GetFileAttributesA(directory.c_str());
+    if (atrib == INVALID_FILE_ATTRIBUTES) {
+        exists = false;
+    } else if (atrib & FILE_ATTRIBUTE_DIRECTORY) {
+        exists = true;
+    }
+    if (exists) {
+        char *cstr = new char[directory.size() + 2];
+        std::strcpy(cstr, directory.c_str());
+        cstr[directory.size()  ] = 0;
+        cstr[directory.size()+1] = 0;
+        SHFILEOPSTRUCT strOper = { 0 };
+        strOper.hwnd = NULL;
+        strOper.wFunc = FO_DELETE;
+        strOper.pFrom = cstr;
+        strOper.fFlags = FOF_SILENT | FOF_NOCONFIRMATION;
+        if (SHFileOperation(&strOper) != 0) {
+            std::cout << std::endl << "WARNING @ Project: ";
+            std::cout << "Dir " << directory << " deletion failed" << std::endl;
+        }
+        delete [] cstr;
+    }
+#else
     // Checks existence
     struct stat sb;
     bool exists = (stat(directory.c_str(), &sb) == 0);
     exists &= S_ISDIR(sb.st_mode);
     // Deletes if exists.
     if (exists) {
-#ifdef _WIN32
-        string command = "rmdir /s /q ";
-#else
-        string command = "rm -r ";
-#endif
+        std::string command = "rm -r ";
         command += directory;
         if (system(command.c_str())) {
-            cout << endl << "WARNING @ ProjectFile: ";
-            cout << "System command failed to execute " << command << endl;
+            std::cout << std::endl << "WARNING @ Project: ";
+            std::cout << "System command failed to execute " << command
+                      << std::endl;
         }
     }
+#endif
 }
 
-ProjectFile ProjectFile::relativeTo(const ProjectFile& rhs) const {
-    string rhsFolder;
+Project Project::relativeTo(const Project& rhs) const {
+    std::string rhsFolder;
     if (rhs.isFolder()) {
         rhsFolder = rhs.getFilename();
     } else {
         rhsFolder = rhs.getFolder();
     }
-    string name = getFilename();
-    string res = name.substr(name.find(rhsFolder) + rhsFolder.length(), name.length());
-    return ProjectFile(res);
+    std::string name = getFilename();
+    std::string res = name.substr(name.find(rhsFolder) + rhsFolder.length(), name.length());
+    return Project(res);
 }
 
-bool ProjectFile::isFolder() const {
+bool Project::isFolder() const {
+#ifdef _WIN32
+    DWORD atrib = GetFileAttributesA(c_str());
+    if (atrib == INVALID_FILE_ATTRIBUTES) {
+        return false;
+    } else if (atrib & FILE_ATTRIBUTE_DIRECTORY) {
+        return true;
+    }
+    return false;
+#else
     struct stat sb;
     stat(c_str(), &sb);
     return S_ISDIR(sb.st_mode);
-}
-
-void ProjectFile::openAsInput(ifstream& file) const {
-    try {
-        file.open(this->c_str());
-    }
-    catch(exception &e) {
-        throw Error("File can't be opened: " + *this);
-    }
-}
-
-void ProjectFile::exec(const string arguments) const {
-    if (!canExecute()) {
-        throw Error("Can not execute " + *this);
-    }
-#ifndef _WIN32
-    string cmd = getFilename() + " " + arguments;
-    system(cmd.c_str());
-#else
-    throw Error("Not implemented fo windows.");
-    // TODO Dani: Implementar en windows.
 #endif
 }
 
-string ProjectFile::getExtension() const {
+void Project::openAsInput(std::ifstream& file) const {
+    try {
+        file.open(this->c_str());
+    }
+    catch(std::exception &e) {
+        throw std::ios_base::failure(std::string("File can't be opened: ") +
+                                     *this);
+    }
+}
+
+void Project::exec(const std::string arguments) const {
+    if (!canExecute()) {
+        throw std::ios_base::failure("Can not execute " + *this);
+    }
+    std::string cmd = getFilename() + " " + arguments;
+    system(cmd.c_str());
+}
+
+std::string Project::getExtension() const {
     size_t pos = rfind(".");
-    if (pos == string::npos) {
+    if (pos == std::string::npos) {
         return *this;
     }
     if (pos == 0) {
         return *this;
     }
-    return this->substr(pos, string::npos);
+    return this->substr(pos, std::string::npos);
 }
+
+} /* namespace FileSystem */
+} /* namespace SEMBA */

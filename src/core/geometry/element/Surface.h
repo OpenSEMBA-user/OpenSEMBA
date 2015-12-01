@@ -18,21 +18,17 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Surface.h
- *
- *  Created on: May 13, 2013
- *      Author: luis
- */
 
-#ifndef SURFACE_H_
-#define SURFACE_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_SURFACE_H_
+#define SEMBA_GEOMETRY_ELEMENT_SURFACE_H_
 
 #include "Element.h"
 
-using namespace std;
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
-class SurfaceBase : public virtual ElementBase {
+class SurfaceBase : public virtual Base {
 public:
     SurfaceBase() {};
     virtual ~SurfaceBase() {};
@@ -47,15 +43,20 @@ public:
 
     bool isRectangular() const;
     bool isContainedInPlane() const;
-    bool isContainedInPlane(const CartesianPlane plane) const;
+    bool isContainedInPlane(const Math::Constants::CartesianPlane plane) const;
 
-    virtual CartesianVector<T,3> getNormal() const;
+    virtual Math::Vector::Cartesian<T,3> getNormal() const;
 
     virtual void printInfo() const;
 };
 
-typedef SurfaceBase   Surf;
-typedef Surface<Real> SurfR;
-typedef Surface<Int > SurfI;
+} /* namespace Element */
 
-#endif /* SURFACE_H_ */
+typedef Element::SurfaceBase         Surf;
+typedef Element::Surface<Math::Real> SurfR;
+typedef Element::Surface<Math::Int > SurfI;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_SURFACE_H_ */

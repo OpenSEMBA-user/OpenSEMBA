@@ -18,40 +18,39 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Id.hpp
- *
- *  Created on: 22/6/2015
- *      Author: Daniel
- */
 
-#include "Id.h"
+#include "Identification.h"
+
+#include <sstream>
+
+namespace SEMBA {
+namespace Class {
 
 template<typename T>
-Id<T>::Id()
+Identification<T>::Identification()
 :   id_(0) {
 
 }
 
 template<typename T>
-Id<T>::Id(const UInt id)
+Identification<T>::Identification(const std::size_t id)
 :   id_(id) {
 
 }
 
 template<typename T>
-Id<T>::Id(const Id& rhs)
+Identification<T>::Identification(const Identification& rhs)
 :   id_(rhs.id_) {
 
 }
 
 template<typename T>
-Id<T>::~Id() {
+Identification<T>::~Identification() {
 
 }
 
 template<typename T>
-Id<T>& Id<T>::operator=(const Id& rhs) {
+Identification<T>& Identification<T>::operator=(const Identification& rhs) {
     if(this == &rhs) {
         return *this;
     }
@@ -60,79 +59,82 @@ Id<T>& Id<T>::operator=(const Id& rhs) {
 }
 
 template<typename T>
-Id<T>& Id<T>::operator+=(const Id& rhs) {
+Identification<T>& Identification<T>::operator+=(const Identification& rhs) {
     id_ += rhs.id_;
     return *this;
 }
 
 template<typename T>
-bool Id<T>::operator==(const Id& rhs) const {
+bool Identification<T>::operator==(const Identification& rhs) const {
     return id_ == rhs.id_;
 }
 
 template<typename T>
-bool Id<T>::operator!=(const Id& rhs) const {
+bool Identification<T>::operator!=(const Identification& rhs) const {
     return id_ != rhs.id_;
 }
 
 template<typename T>
-bool Id<T>::operator<(const Id& rhs) const {
+bool Identification<T>::operator<(const Identification& rhs) const {
     return id_ < rhs.id_;
 }
 
 template<typename T>
-bool Id<T>::operator<=(const Id& rhs) const {
+bool Identification<T>::operator<=(const Identification& rhs) const {
     return id_ <= rhs.id_;
 }
 
 template<typename T>
-bool Id<T>::operator>(const Id& rhs) const {
+bool Identification<T>::operator>(const Identification& rhs) const {
     return id_ > rhs.id_;
 }
 
 template<typename T>
-bool Id<T>::operator>=(const Id& rhs) const {
+bool Identification<T>::operator>=(const Identification& rhs) const {
     return id_ >= rhs.id_;
 }
 
 template<typename T>
-Id<T> Id<T>::operator+(const Id& rhs) const {
-    return Id(id_ + rhs.id_);
+Identification<T> Identification<T>::operator+(const Identification& rhs) const {
+    return Identification(id_ + rhs.id_);
 }
 
 template<typename T>
-Id<T>& Id<T>::operator++() {
+Identification<T>& Identification<T>::operator++() {
     id_++;
     return *this;
 }
 
 template<typename T>
-Id<T> Id<T>::operator++(int) {
-    Id copy(*this);
+Identification<T> Identification<T>::operator++(int) {
+    Identification copy(*this);
     id_++;
     return copy;
 }
 
 template<typename T>
-UInt Id<T>::toUInt() const {
+std::size_t Identification<T>::toInt() const {
     return id_;
 }
 
 template<typename T>
-std::string Id<T>::toStr() const {
+std::string Identification<T>::toStr() const {
     std::stringstream aux;
     aux << id_;
     return aux.str();
 }
 
 template <typename I>
-std::istream& operator>>(std::istream& input, Id<I>& id) {
+std::istream& operator>>(std::istream& input, Identification<I>& id) {
     input >> id.id_;
     return input;
 }
 
 template <typename I>
-std::ostream& operator<<(std::ostream& output, const Id<I>& id) {
+std::ostream& operator<<(std::ostream& output, const Identification<I>& id) {
     output << id.id_;
     return output;
 }
+
+} /* namespace Class */
+} /* namespace SEMBA */

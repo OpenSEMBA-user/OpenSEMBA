@@ -18,39 +18,46 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "ClassIdBase.h"
+
+#include "Identifiable.h"
+
+namespace SEMBA {
+namespace Class {
 
 template<class Id>
-ClassIdBase<Id>::ClassIdBase() {
+Identifiable<Id>::Identifiable() {
     id_ = Id(0);
 }
 
 template<class Id>
-ClassIdBase<Id>::ClassIdBase(const Id id) {
+Identifiable<Id>::Identifiable(const Id id) {
     id_ = id;
 }
 
 template<class Id>
-ClassIdBase<Id>::ClassIdBase(const ClassIdBase<Id>& rhs) {
+Identifiable<Id>::Identifiable(const Identifiable<Id>& rhs) {
     id_ = rhs.id_;
 }
 
 template<class Id>
-ClassIdBase<Id>::~ClassIdBase() {
+Identifiable<Id>::~Identifiable() {
 
 }
 
 template<class Id>
-Id ClassIdBase<Id>::getId() const {
+Id Identifiable<Id>::getId() const {
     return this->id_;
 }
 
 template<class Id>
-void ClassIdBase<Id>::setId(const Id id) {
+void Identifiable<Id>::setId(const Id id) {
     this->id_ = id;
 }
 
 template<class Id>
-bool ClassIdBase<Id>::operator==(const ClassIdBase& rhs) const {
+bool Identifiable<Id>::operator==(const Identifiable& rhs) const {
     return (this->id_ == rhs.id_);
 }
+
+} /* namespace Class */
+} /* namespace SEMBA */

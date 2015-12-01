@@ -18,38 +18,27 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Polyhedron.cpp
- *
- *  Created on: Jul 24, 2014
- *      Author: luis
- */
 
 #include "Polyhedron.h"
 
-Polyhedron::ErrorNotClosed::ErrorNotClosed()
-:   Error("Polyhedron is not closed") {
-
-}
-
-Polyhedron::ErrorNotClosed::~ErrorNotClosed() throw () {
-
-}
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 Polyhedron::Polyhedron() {
 
 }
 
-Polyhedron::Polyhedron(const ElementId id,
-                       const vector<const Polygon*>& face,
-                       const LayerId layerId,
-                       const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
+Polyhedron::Polyhedron(const Id id,
+                       const std::vector<const Polygon*>& face,
+                       const Layer* lay,
+                       const Model* mat)
+:   Identifiable<Id>(id),
+    Elem(lay, mat) {
 
     face_ = face;
-    for (UInt f = 0; f < numberOfFaces(); f++) {
-        for (UInt i = 0; i < face[f]->numberOfCoordinates(); i++) {
+    for (Size f = 0; f < numberOfFaces(); f++) {
+        for (Size i = 0; i < face[f]->numberOfCoordinates(); i++) {
             addV(face_[f]->getV(i));
         }
     }
@@ -57,12 +46,12 @@ Polyhedron::Polyhedron(const ElementId id,
 }
 
 Polyhedron::Polyhedron(const Polyhedron& rhs)
-:   ClassIdBase<ElementId>(rhs),
+:   Identifiable<Id>(rhs),
     Elem(rhs) {
 
     face_ = rhs.face_;
-    for (UInt f = 0; f < numberOfFaces(); f++) {
-        for (UInt i = 0; i < face_[f]->numberOfCoordinates(); i++) {
+    for (Size f = 0; f < numberOfFaces(); f++) {
+        for (Size i = 0; i < face_[f]->numberOfCoordinates(); i++) {
             addV(face_[f]->getV(i));
         }
     }
@@ -72,72 +61,72 @@ Polyhedron::~Polyhedron() {
 
 }
 
-bool Polyhedron::isCurvedFace(const UInt f) const {
+bool Polyhedron::isCurvedFace(const Size f) const {
     return getFace(f)->isCurved();
 }
 
-UInt Polyhedron::numberOfCoordinates() const {
+Size Polyhedron::numberOfCoordinates() const {
     return v_.size();
 }
 
-UInt Polyhedron::numberOfVertices() const {
+Size Polyhedron::numberOfVertices() const {
     return numberOfCoordinates();
 }
 
-UInt Polyhedron::numberOfFaces() const {
+Size Polyhedron::numberOfFaces() const {
     return face_.size();
 }
 
-UInt Polyhedron::numberOfSideVertices(const UInt f) const {
+Size Polyhedron::numberOfSideVertices(const Size f) const {
     assert(f < numberOfFaces());
     return face_[f]->numberOfVertices();
 }
 
-UInt Polyhedron::numberOfSideCoordinates(const UInt f) const {
+Size Polyhedron::numberOfSideCoordinates(const Size f) const {
     return numberOfSideVertices(f);
 }
 
 const CoordR3* Polyhedron::getV(
-const UInt i) const {
+const Size i) const {
     assert(i < numberOfCoordinates());
     return v_[i];
 }
 
 const CoordR3* Polyhedron::getSideV(
-const UInt f,
-const UInt i) const {
+const Size f,
+const Size i) const {
     return getFace(f)->getV(i);
 }
 
-const CoordR3* Polyhedron::getVertex(const UInt i) const {
+const CoordR3* Polyhedron::getVertex(const Size i) const {
     return getV(i);
 }
 
-const CoordR3* Polyhedron::getSideVertex(const UInt f, const UInt i) const {
+const CoordR3* Polyhedron::getSideVertex(const Size f, const Size i) const {
     return getSideV(f,i);
 }
 
-const Polygon* Polyhedron::getFace(const UInt f) const {
+const Polygon* Polyhedron::getFace(const Size f) const {
     assert(f < numberOfFaces());
     return face_[f];
 }
 
-Real Polyhedron::getAreaOfFace(const UInt f) const {
+Math::Real Polyhedron::getAreaOfFace(const Size f) const {
     return getFace(f)->getArea();
 }
 
 void Polyhedron::printInfo() const {
-    cout << "--- Polyhedron info ---" << endl
-         << "Number of vertices: " << numberOfVertices() << endl
-         << "Number of faces: " << numberOfFaces() << endl;
-    for (UInt i = 0; i < numberOfFaces(); i++) {
-        cout<< "Face #" << i << endl;
+    std::cout << "--- Polyhedron info ---" << std::endl
+              << "Number of vertices: " << numberOfVertices() << std::endl
+              << "Number of faces: " << numberOfFaces() << std::endl;
+    for (Size i = 0; i < numberOfFaces(); i++) {
+        std::cout<< "Face #" << i << std::endl;
         getFace(i)->printInfo();
     }
 }
 
-void Polyhedron::addV(const Coordinate<Real, 3>* v) {
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+void Polyhedron::addV(const CoordR3* v) {
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
         if (*v_[i] == *v) {
             return;
         }
@@ -148,16 +137,16 @@ void Polyhedron::addV(const Coordinate<Real, 3>* v) {
 void Polyhedron::checkClosedness() const {
     // This checks consists in pairing segments ordered according to their ids.
     // If a segment is not paired, the surface is not closed.
-    UInt nSidesInFaces = 0;
-    for (UInt f = 0; f < numberOfFaces(); f++) {
+    Size nSidesInFaces = 0;
+    for (Size f = 0; f < numberOfFaces(); f++) {
         nSidesInFaces += getFace(f)->numberOfFaces();
     }
-    DynMatrix<UInt> list(nSidesInFaces, 2);
-    UInt row = 0;
-    for (UInt f = 0; f < numberOfFaces(); f++) {
-        for (UInt s = 0; s < getFace(f)->numberOfFaces(); s++) {
-            UInt id0 = getFace(f)->getSideVertex(s,0)->getId().toUInt();
-            UInt id1 = getFace(f)->getSideVertex(s,1)->getId().toUInt();
+    Math::Matrix::Dynamic<Size> list(nSidesInFaces, 2);
+    Size row = 0;
+    for (Size f = 0; f < numberOfFaces(); f++) {
+        for (Size s = 0; s < getFace(f)->numberOfFaces(); s++) {
+            Size id0 = getFace(f)->getSideVertex(s,0)->getId().toInt();
+            Size id1 = getFace(f)->getSideVertex(s,1)->getId().toInt();
             if (id0 < id1) {
                 list(row,0) = id0;
                 list(row,1) = id1;
@@ -169,13 +158,17 @@ void Polyhedron::checkClosedness() const {
         }
     }
     list.sortRows(0,1);
-    for (UInt i = 0; i < nSidesInFaces; i += 2) {
+    for (Size i = 0; i < nSidesInFaces; i += 2) {
         if (list(i,0) != list(i+1,0) || list(i,1) != list(i+1,1)) {
-            throw ErrorNotClosed();
+            throw Error::NotClosed();
         }
     }
 }
 
-Real Polyhedron::getVolume() const {
-    throw ErrorNotImplemented("Polyhedron::getVolume()");
+Math::Real Polyhedron::getVolume() const {
+    throw std::logic_error("Polyhedron::getVolume() not implemented");
 }
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

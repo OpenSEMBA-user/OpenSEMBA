@@ -18,40 +18,40 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Dipole.h
- *
- *  Created on: Jun 28, 2013
- *      Author: luis
- */
 
-#ifndef DIPOLE_H_
-#define DIPOLE_H_
+#ifndef SEMBA_SOURCE_DIPOLE_H_
+#define SEMBA_SOURCE_DIPOLE_H_
 
-#include "../sources/EMSource.h"
+#include "Source.h"
 
-class Dipole : public EMSource<Vol> {
+namespace SEMBA {
+namespace Source {
+
+class Dipole : public Source<Geometry::Vol> {
 public:
-    Dipole(const Magnitude* magnitude,
-           const GroupElements<Vol>& elem,
-           Real   length,
-           CVecR3 orientation,
-           CVecR3 position);
+    Dipole(const Magnitude::Magnitude* magnitude,
+           const Geometry::Element::Group<Geometry::Vol>& elem,
+           Math::Real   length,
+           Math::CVecR3 orientation,
+           Math::CVecR3 position);
     Dipole(const Dipole& rhs);
     virtual ~Dipole();
 
-    DEFINE_CLONE(Dipole);
+    SEMBA_CLASS_DEFINE_CLONE(Dipole);
 
-    bool hasSameProperties(const EMSourceBase& rhs) const;
+    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
 
-    const string& getName() const;
+    const std::string& getName() const;
     void printInfo() const;
 protected:
-    Real length_;
-    CVecR3 orientation_;
-    CVecR3 position_;
-    Real gaussDelay_;
-    Real spreadSqrt2_;
+    Math::Real length_;
+    Math::CVecR3 orientation_;
+    Math::CVecR3 position_;
+    Math::Real gaussDelay_;
+    Math::Real spreadSqrt2_;
 };
 
-#endif /* DIPOLE_H_ */
+} /* namespace Source */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_SOURCE_DIPOLE_H_ */

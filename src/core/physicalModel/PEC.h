@@ -18,26 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMPEC.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMPEC_H_
-#define PMPEC_H_
+#ifndef SEMBA_PHYSICALMODEL_PEC_H_
+#define SEMBA_PHYSICALMODEL_PEC_H_
 
-#include "PMPredefined.h"
+#include "Predefined.h"
 
-class PMPEC : public PMPredefined {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class PEC : public Predefined {
 public:
-	PMPEC(const MatId id, const string name);
-	virtual ~PMPEC();
+    PEC(const Id id, const std::string name);
+    virtual ~PEC();
 
-    DEFINE_CLONE(PMPEC);
+    SEMBA_CLASS_DEFINE_CLONE(PEC);
 
-	void printInfo() const;
+    void printInfo() const;
 };
 
-#endif /* PMPEC_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_PEC_H_ */

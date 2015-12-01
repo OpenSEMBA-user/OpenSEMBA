@@ -18,40 +18,40 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeAnisotropic.h
- *
- *  Created on: Aug 27, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPIC_H_
-#define SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPIC_H_
+#ifndef SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_
+#define SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_
 
-#include "PMVolume.h"
-#include "math/LocalAxes.h"
+#include "Volume.h"
+#include "math/axis/Local.h"
 
-class PMVolumeAnisotropic: public PMVolume {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class VolumeAnisotropic: public Volume {
 public:
     enum class Model {
         crystal,
         ferrite
     };
 
-    PMVolumeAnisotropic(
-            const MatId matId,
-            const string& name,
-            const LocalAxes& local);
-    virtual ~PMVolumeAnisotropic();
+    VolumeAnisotropic(
+            const Id matId,
+            const std::string& name,
+            const Math::Axis::Local& local);
+    virtual ~VolumeAnisotropic();
 
-    LocalAxes getLocalAxe() const;
-    virtual MatR33 getRelPermittivityMatR() const = 0;
-    virtual MatR33 getRelPermeabilityMatR() const = 0;
-    virtual MatR33 getElectricConductivityMat() const = 0;
-    virtual MatR33 getMagneticConductivityMat() const = 0;
+    Math::Axis::Local getLocalAxe() const;
+    virtual Math::MatR33 getRelPermittivityMatR() const = 0;
+    virtual Math::MatR33 getRelPermeabilityMatR() const = 0;
+    virtual Math::MatR33 getElectricConductivityMat() const = 0;
+    virtual Math::MatR33 getMagneticConductivityMat() const = 0;
 
 private:
-    LocalAxes localAxe_;
+    Math::Axis::Local localAxe_;
 };
 
-#endif /* SRC_COMMON_PHYSICALMODEL_PMVOLUMEANISOTROPIC_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_ */

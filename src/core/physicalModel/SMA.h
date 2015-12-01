@@ -18,26 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMSMA.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMSMA_H_
-#define PMSMA_H_
+#ifndef SEMBA_PHYSICALMODEL_SMA_H_
+#define SEMBA_PHYSICALMODEL_SMA_H_
 
-#include "PMPredefined.h"
+#include "Predefined.h"
 
-class PMSMA : public PMPredefined {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class SMA : public Predefined {
 public:
-    virtual ~PMSMA();
-    PMSMA(const MatId id, const string name);
+    virtual ~SMA();
+    SMA(const Id id, const std::string name);
 
-    DEFINE_CLONE(PMSMA);
+    SEMBA_CLASS_DEFINE_CLONE(SMA);
 
     void printInfo() const;
 };
 
-#endif /* PMSMA_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_SMA_H_ */

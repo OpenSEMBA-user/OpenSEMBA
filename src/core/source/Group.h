@@ -18,55 +18,66 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GroupEMSource.h
- *
- *  Created on: Jun 28, 2013
- *      Author: luis
- */
 
-#ifndef COMMON_ELECTROMAGNETICSOURCES_GROUPEMSOURCES_H_
-#define COMMON_ELECTROMAGNETICSOURCES_GROUPEMSOURCES_H_
+#ifndef SEMBA_SOURCE_GROUP_H_
+#define SEMBA_SOURCE_GROUP_H_
 
-#include "../sources/Dipole.h"
-#include "../sources/EMSource.h"
-#include "../sources/Generator.h"
-#include "../sources/PlaneWave.h"
-#include "../sources/SourceOnLine.h"
-#include "../sources/ports/PortWaveguideRectangular.h"
-#include "../sources/ports/PortTEMCoaxial.h"
+#include "Source.h"
 
-template<typename E = EMSourceBase>
-class GroupEMSources : public Group<E> {
+#include "group/Group.h"
+#include "group/Cloneable.h"
+#include "group/Printable.h"
+
+namespace SEMBA {
+namespace Source {
+
+template<typename S = Base>
+class Group : public SEMBA::Group::Group<S>,
+              public SEMBA::Group::Cloneable<S>,
+              public SEMBA::Group::Printable<S> {
 public:
-    GroupEMSources() {}
-    template<typename E2>
-    GroupEMSources(E2* e)                     : Group<E>(e) {}
-    template<typename E2>
-    GroupEMSources(const std::vector<E2*>& e) : Group<E>(e) {}
-    template<typename E2>
-    GroupEMSources(VectorPtr<E2>&       rhs) : Group<E>(rhs) {}
-    template<typename E2>
-    GroupEMSources(const VectorPtr<E2>& rhs) : Group<E>(rhs) {}
-    GroupEMSources(VectorPtr<E>&        rhs) : Group<E>(rhs) {}
-    template<typename E2>
-    GroupEMSources(VectorPtr<E2>&& rhs) : Group<E>(std::move(rhs)) {}
-    GroupEMSources(VectorPtr<E >&& rhs) : Group<E>(std::move(rhs)) {}
-    virtual ~GroupEMSources() {}
+    Group() {}
+    template<typename S2>
+    Group(S2* e)                     : SEMBA::Group::Group<S>(e) {}
+    template<typename S2>
+    Group(const std::vector<S2*>& e) : SEMBA::Group::Group<S>(e) {}
+    template<typename S2>
+    Group(SEMBA::Group::Group<S2>&       rhs) : SEMBA::Group::Group<S>(rhs) {}
+    template<typename S2>
+    Group(const SEMBA::Group::Group<S2>& rhs) : SEMBA::Group::Group<S>(rhs) {}
+    Group(SEMBA::Group::Group<S>&        rhs) : SEMBA::Group::Group<S>(rhs) {}
+    template<typename S2>
+    Group(SEMBA::Group::Group<S2>&& rhs)
+    :   SEMBA::Group::Group<S>(std::move(rhs)) {}
+    Group(SEMBA::Group::Group<S >&& rhs)
+    :   SEMBA::Group::Group<S>(std::move(rhs)) {}
+    virtual ~Group() {}
 
-    DEFINE_GROUP_CLONE(GroupEMSources, E);
+    SEMBA_GROUP_DEFINE_CLONE(Group, S);
 
-    GroupEMSources& operator=(VectorPtr<E>&);
-    GroupEMSources& operator=(VectorPtr<E>&&);
+    Group& operator=(SEMBA::Group::Group<S>&);
+    Group& operator=(SEMBA::Group::Group<S>&&);
 
-    bool isSimilar(const GroupEMSources& rhs) const;
-    bool check() const;
+    using SEMBA::Group::Group<S>::add;
+    template<typename S2>
+    SEMBA::Group::Group<S> add(S2* newElem);
+    template<typename S2>
+    SEMBA::Group::Group<S*> add(std::vector<S2*>&);
+
+    bool isSimilar(const Group& rhs) const;
 
     void printInfo() const;
 };
 
-#include "GroupEMSources.hpp"
+} /* namespace Source */
+} /* namespace SEMBA */
 
-typedef GroupEMSources<> EMSourceGroup;
+#include "Group.hpp"
 
-#endif /* COMMON_ELECTROMAGNETICSOURCES_GROUPEMSOURCES_H_ */
+namespace SEMBA {
+
+typedef Source::Group<> SourceGroup;
+
+} /* namespace SEMBA */
+
+#endif /* SEMBA_SOURCE_GROUP_H_ */

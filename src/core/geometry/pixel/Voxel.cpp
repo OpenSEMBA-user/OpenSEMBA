@@ -18,16 +18,14 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Voxel.cpp
- *
- *  Created on: May 19, 2015
- *      Author: mdebi
- */
 
 #include "Voxel.h"
 
-Voxel::Voxel(const CVecI3& cVecI3_) :
+namespace SEMBA {
+namespace Geometry {
+namespace Pixel {
+
+Voxel::Voxel(const Math::CVecI3& cVecI3_) :
         Pixel(cVecI3_) {
 }
 
@@ -37,9 +35,9 @@ Voxel::~Voxel() {
 
 }
 
-bool Voxel::isInto (const CVecI3Fractional& coordIntFractional) const{
-    CVecR3 pos = coordIntFractional.getScalePos(*this);
-    for(UInt n=0; n<3; n++){
+bool Voxel::isInto (const Math::CVecI3Fractional& coordIntFractional) const{
+    Math::CVecR3 pos = coordIntFractional.getScalePos(*this);
+    for(Size n=0; n<3; n++){
         if (pos(n)<0.0 || pos(n)>1.0 ){
             return false;
         }
@@ -72,3 +70,7 @@ bool Voxel::isInto (const CVecI3Fractional& coordIntFractional) const{
 bool Voxel::operator<(const Voxel& rhs) const {
     return Pixel::operator<(rhs);
 }
+
+} /* namespace Pixel */
+} /* namespace Geometry */
+} /* namespace SEMBA */

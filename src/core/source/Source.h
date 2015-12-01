@@ -19,76 +19,86 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 // File: electromagneticsource.h
-#ifndef ELECTROMAGNETICSOURCE_H_
-#define ELECTROMAGNETICSOURCE_H_
 
-#include <cmath>
-#include <iostream>
-#include <vector>
-using namespace std;
+#ifndef SEMBA_SOURCE_SOURCE_H_
+#define SEMBA_SOURCE_SOURCE_H_
 
-#include "geometry/elements/GroupElements.h"
-#include "options/OptionsMesher.h"
-#include "../sources/magnitude/MagnitudeNumerical.h"
-#include "math/FunctionGaussian.h"
-#include "math/CartesianVector.h"
-#include "math/Constants.h"
+#include "geometry/element/Group.h"
+#include "magnitude/Magnitude.h"
+#include "magnitude/Numerical.h"
+#include "filesystem/Project.h"
 
-#include "base/class/ClassGroupBase.h"
+#include "class/Class.h"
+#include "class/Cloneable.h"
+#include "class/Shareable.h"
+#include "class/Printable.h"
 
-class EMSourceBase : public virtual ClassGroupBase<GroupElements<const Elem>> {
+namespace SEMBA {
+namespace Source {
+
+class Base : public virtual Class::Class,
+             public virtual Class::Cloneable,
+             public virtual Class::Shareable,
+             public virtual Class::Printable {
 public:
-    EMSourceBase();
-    EMSourceBase(const Magnitude* magnitude);
-    EMSourceBase(const EMSourceBase& rhs);
-    virtual ~EMSourceBase();
+    Base();
+    Base(const Magnitude::Magnitude* magnitude);
+    Base(const Base& rhs);
+    virtual ~Base();
 
-    virtual bool hasSameProperties(const EMSourceBase& rhs) const;
-    virtual bool isSimilar(const EMSourceBase& rhs) const = 0;
+    virtual bool hasSameProperties(const Base& rhs) const;
+    virtual bool isSimilar(const Base& rhs) const = 0;
     bool check() const;
+
+    virtual Geometry::Element::Group<const Geometry::Elem> elems() const = 0;
+
+    virtual void set(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual void add(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
 
     template<class T>
     bool magnitudeIs() const {
         return magnitude_->is<T>();
     }
 
-    virtual string getMagnitudeFilename() const;
-    virtual const string& getName() const = 0;
+    virtual std::string getMagnitudeFilename() const;
+    virtual const std::string& getName() const = 0;
 
-    void convertToNumerical(const ProjectFile& file,
-                            const Real step,
-                            const Real finalTime);
-    MagnitudeNumerical* exportToFile(const ProjectFile& file,
-                                     const Real step,
-                                     const Real finalTime) const;
-
+    void convertToNumerical(const FileSystem::Project& file,
+                            const Math::Real step,
+                            const Math::Real finalTime);
+    Magnitude::Numerical* exportToFile(const FileSystem::Project& file,
+                                       const Math::Real step,
+                                       const Math::Real finalTime) const;
 
     virtual void printInfo() const;
 
 protected:
-    const Magnitude* getMagnitude() const;
+    const Magnitude::Magnitude* getMagnitude() const;
 
 private:
-    const Magnitude* magnitude_;
+    const Magnitude::Magnitude* magnitude_;
 };
 
 template<class T>
-class EMSource : public virtual EMSourceBase,
-                 public virtual GroupElements<const T> {
+class Source : public virtual Base,
+               public virtual Geometry::Element::Group<const T> {
 public:
-    EMSource() {}
-    virtual ~EMSource() {}
+    Source() {}
+    virtual ~Source() {}
 
-    virtual void set(const GroupElements<const Elem>&);
-    void add(const GroupElements<const Elem>&);
+    void set(const Geometry::Element::Group<const Geometry::Elem>&);
+    void add(const Geometry::Element::Group<const Geometry::Elem>&);
 
-    virtual EMSource* clone() const = 0;
-    GroupElements<const Elem> elems() const { return *this; }
+    virtual Source* clone() const = 0;
+    Geometry::Element::Group<const Geometry::Elem> elems() const {return *this;}
 
-    bool isSimilar(const EMSourceBase& rhs) const;
+    bool isSimilar(const Base& rhs) const;
     void printInfo() const;
 };
 
-#include "../sources/EMSource.hpp"
+} /* namespace Source */
+} /* namespace SEMBA */
 
-#endif /* ELECTROMAGNETICSOURCE_H_ */
+#include "Source.hpp"
+
+#endif /* SEMBA_SOURCE_SOURCE_H_ */

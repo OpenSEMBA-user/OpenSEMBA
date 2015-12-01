@@ -18,80 +18,69 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ProjectFile.h
- *
- *  Created on: Dec 19, 2014
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_PROJECTFILE_H_
-#define SRC_COMMON_PROJECTFILE_H_
+#ifndef SEMBA_FILESYSTEM_PROJECT_H_
+#define SEMBA_FILESYSTEM_PROJECT_H_
 
-#include <string>
-#include <cstring>
-#include <stdlib.h>
-#include <stdio.h>
-#include <libgen.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <vector>
-#include <iostream>
 #include <fstream>
-
-using namespace std;
+#include <string>
+#include <vector>
 
 #include "Types.h"
-#include "base/error/ErrorFile.h"
 
-class ProjectFile : public string {
+namespace SEMBA {
+namespace FileSystem {
+
+class Project : public std::string {
 public:
-    ProjectFile();
-    ProjectFile(const string& filename);
-    ProjectFile(const ProjectFile& rhs);
-    virtual ~ProjectFile();
+    Project();
+    Project(const std::string& filename);
+    Project(const Project& rhs);
+    virtual ~Project();
 
     bool canOpen() const;
     bool canExecute() const;
     bool isFolder() const;
 
-    string getFilename() const;
-    string getBasename() const;
-    string getFolder() const;
-    string getExtension() const;
-    string getOutputFilename() const {
+    std::string getFilename() const;
+    std::string getBasename() const;
+    std::string getFolder() const;
+    std::string getExtension() const;
+    std::string getOutputFilename() const {
         return getFolder() + getOutputName();
     }
-    string getOutputName() const {
+    std::string getOutputName() const {
         return getProjectName();
     }
-    string getProjectName() const {
+    std::string getProjectName() const {
         return removeExtension(getBasename());
     }
-    ProjectFile relativeTo(const ProjectFile& rhs) const;
+    Project relativeTo(const Project& rhs) const;
 
-    void setFilename(const string& filename);
-    void openFile(ofstream& file, const ios_base::openmode mode = ios::out) const;
-    void openAsInput(ifstream& file) const;
+    void setFilename(const std::string& filename);
+    void openFile(std::ofstream& file) const;
+    void openAsInput(std::ifstream& file) const;
 
-    void exec(const string arguments = string()) const;
+    void exec(const std::string arguments = std::string()) const;
 
     void printInfo() const;
-    string toStr() const;
+    std::string toStr() const;
 
-    std::ostream& operator<<(ostream& os) {
+    std::ostream& operator<<(std::ostream& os) {
         return os << toStr();
     }
 
 protected:
-    vector<string> getFilesBasenames(const string& directory,
-                                     const string& extension) const;
-    void openFile(const string& fileName, ofstream& file, const ios_base::openmode mode = ios::out) const;
-    string removeExtension(const string& filename) const;
-    void deleteDirIfExists(const string& directory) const;
-    void initDir_(const string& fn);
+    std::vector<std::string> getFilesBasenames(
+            const std::string& directory,
+            const std::string& extension) const;
+    void openFile(const std::string& fileName, std::ofstream& file) const;
+    std::string removeExtension(const std::string& filename) const;
+    void deleteDirIfExists(const std::string& directory) const;
+    void initDir_(const std::string& fn);
 };
 
+} /* namespace FileSystem */
+} /* namespace SEMBA */
 
-#endif /* SRC_COMMON_PROJECTFILE_H_ */
+#endif /* SEMBA_FILESYSTEM_PROJECT_H_ */

@@ -18,35 +18,38 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * SphericalVector.h
- *
- *  Created on: Sep 1, 2012
- *      Author: luis
- */
-#ifndef SPHERICALVECTOR_H_
-#define SPHERICALVECTOR_H_
 
-#include <cmath>
-#include <iostream>
-using namespace std;
+#ifndef SEMBA_MATH_VECTOR_SPHERICAL_H_
+#define SEMBA_MATH_VECTOR_SPHERICAL_H_
 
-#include "CartesianVector.h"
+#include "Cartesian.h"
 
-class SphericalVector {
+namespace SEMBA {
+namespace Math {
+namespace Vector {
+
+class Spherical {
 public:
-	Real radius;
-	Real theta, phi;
-	SphericalVector();
-	SphericalVector(const Real theta, const Real phi);
-	SphericalVector& operator=(const CVecR3& param);
-	CVecR3 convertSphericalVectorField(
-	  const Real ar,
-	  const Real at,
-	  const Real ap) const;
-	CVecR3 convertToCartesian() const;
-	Real norm() const;
-	void printInfo() const;
+    Real radius;
+    Real theta, phi;
+    Spherical();
+    Spherical(const Real theta, const Real phi);
+
+    Spherical& operator=(const CVecR3& param);
+
+    CVecR3 convertSphericalVectorField(const Real ar,
+                                       const Real at,
+                                       const Real ap) const;
+
+    CVecR3 convertToCartesian() const;
+
+    Real norm() const;
+
+    void printInfo() const;
 };
 
-#endif /* SPHERICALVECTOR_H_ */
+} /* namespace Vector */
+} /* namespace Math */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_MATH_VECTOR_SPHERICAL_H_ */

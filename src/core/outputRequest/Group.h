@@ -18,47 +18,60 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef COMMON_OUTRQ_GROUPOUTRQS_H_
-#define COMMON_OUTRQ_GROUPOUTRQS_H_
 
-#include "OutRq.h"
-#include "OutRqBulkCurrent.h"
-#include "OutRqFarField.h"
+#ifndef SEMBA_OUTPUTREQUEST_GROUP_H_
+#define SEMBA_OUTPUTREQUEST_GROUP_H_
 
-template<typename O = OutRqBase>
-class GroupOutRqs : public Group<O> {
+#include "OutputRequest.h"
+
+#include "group/Group.h"
+#include "group/Cloneable.h"
+#include "group/Printable.h"
+
+namespace SEMBA {
+namespace OutputRequest {
+
+template<typename O = Base>
+class Group : public SEMBA::Group::Group<O>,
+              public SEMBA::Group::Cloneable<O>,
+              public SEMBA::Group::Printable<O> {
 public:
-    GroupOutRqs() {}
+    Group() {}
     template<typename O2>
-    GroupOutRqs(O2* e)                     : Group<O>(e) {}
+    Group(O2* e)                     : SEMBA::Group::Group<O>(e) {}
     template<typename O2>
-    GroupOutRqs(const std::vector<O2*>& e) : Group<O>(e) {}
+    Group(const std::vector<O2*>& e) : SEMBA::Group::Group<O>(e) {}
     template<typename O2>
-    GroupOutRqs(VectorPtr<O2>&       rhs) : Group<O>(rhs) {}
+    Group(SEMBA::Group::Group<O2>&       rhs) : SEMBA::Group::Group<O>(rhs) {}
     template<typename O2>
-    GroupOutRqs(const VectorPtr<O2>& rhs) : Group<O>(rhs) {}
-    GroupOutRqs(VectorPtr<O>&        rhs) : Group<O>(rhs) {}
+    Group(const SEMBA::Group::Group<O2>& rhs) : SEMBA::Group::Group<O>(rhs) {}
+    Group(SEMBA::Group::Group<O>&        rhs) : SEMBA::Group::Group<O>(rhs) {}
     template<typename O2>
-    GroupOutRqs(VectorPtr<O2>&& rhs) : Group<O>(std::move(rhs)) {}
-    GroupOutRqs(VectorPtr<O >&& rhs) : Group<O>(std::move(rhs)) {}
-    virtual ~GroupOutRqs() {}
+    Group(SEMBA::Group::Group<O2>&& rhs)
+    :   SEMBA::Group::Group<O>(std::move(rhs)) {}
+    Group(SEMBA::Group::Group<O >&& rhs)
+    :   SEMBA::Group::Group<O>(std::move(rhs)) {}
+    virtual ~Group() {}
 
-    DEFINE_GROUP_CLONE(GroupOutRqs, O);
+    SEMBA_GROUP_DEFINE_CLONE(Group, O);
 
-    GroupOutRqs& operator=(VectorPtr<O>&);
-    GroupOutRqs& operator=(VectorPtr<O>&&);
+    Group& operator=(SEMBA::Group::Group<O>&);
+    Group& operator=(SEMBA::Group::Group<O>&&);
 
-    using Group<O>::add;
+    using SEMBA::Group::Group<O>::add;
     template<typename O2>
-    VectorPtr<O> add(O2* newElem);
+    SEMBA::Group::Group<O> add(O2* newElem);
     template<typename O2>
-    vector<O*> add(vector<O2*>&);
+    SEMBA::Group::Group<O*> add(std::vector<O2*>&);
 
-    bool isSimilar(const GroupOutRqs& rhs) const;
+    bool isSimilar(const Group& rhs) const;
 
     void printInfo() const;
 };
 
-#include "GroupOutRqs.hpp"
+} /* namespace OutputRequest */
+} /* namespace SEMBA */
 
-#endif
+#include "Group.hpp"
+
+#endif /* SEMBA_OUTPUTREQUEST_GROUP_H_ */

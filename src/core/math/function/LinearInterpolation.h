@@ -18,46 +18,45 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * FunctionLinearInterpolation.h
- *
- *  Created on: Sep 9, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_MATH_FUNCTIONLINEARINTERPOLATION_H_
-#define SRC_COMMON_MATH_FUNCTIONLINEARINTERPOLATION_H_
+#ifndef SEMBA_MATH_FUNCTION_LINEARINTERPOLATION_H_
+#define SEMBA_MATH_FUNCTION_LINEARINTERPOLATION_H_
 
 #include <map>
-#include <type_traits>
-using namespace std;
+#include <string>
+#include <vector>
 
 #include "Function.h"
-#include "ProjectFile.h"
+
+namespace SEMBA {
+namespace Math {
+namespace Function {
 
 template<class S, class T>
-class FunctionLinearInterpolation: public Function<S,T> {
+class LinearInterpolation : public Function<S,T> {
 public:
-    FunctionLinearInterpolation();
-    FunctionLinearInterpolation(const vector<pair<S,T>>& xy);
-    FunctionLinearInterpolation(const ProjectFile& file);
-    virtual ~FunctionLinearInterpolation();
+    LinearInterpolation();
+    LinearInterpolation(const std::vector<std::pair<S,T>>& xy);
+    LinearInterpolation(const std::string& file);
+    virtual ~LinearInterpolation();
 
-    DEFINE_CLONE(FunctionLinearInterpolation)
+    SEMBA_MATH_FUNCTION_DEFINE_CLONE(LinearInterpolation)
 
     T operator()(const S& arg) const;
-    bool operator==(const FunctionBase& arg) const;
+    bool operator==(const Base& arg) const;
 
     void printInfo() const;
+
 private:
+    std::map<S,T> value_;
 
-    map<S,T> value_;
-
-    void initFromFile(const ProjectFile& file);
+    void initFromFile(const std::string& file);
 };
 
-typedef FunctionLinearInterpolation<Real,Real> LinearInterpolation;
+} /* namespace Function */
+} /* namespace Math */
+} /* namespace SEMBA */
 
-#include "FunctionLinearInterpolation.hpp"
+#include "LinearInterpolation.hpp"
 
-#endif /* SRC_COMMON_MATH_FUNCTIONLINEARINTERPOLATION_H_ */
+#endif /* SEMBA_MATH_FUNCTION_LINEARINTERPOLATION_H_ */

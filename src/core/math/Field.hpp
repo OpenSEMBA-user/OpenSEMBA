@@ -18,182 +18,177 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Field.cpp
- *
- *  Created on: Sep 23, 2014
- *      Author: luis
- */
+
 #include "Field.h"
 
-template<class T, Int D>
+namespace SEMBA {
+namespace Math {
+
+template<class T, Size D>
 Field<T,D>::Field() {
-	val_ = NULL;
-	size_ = 0;
+    val_ = NULL;
+    size_ = 0;
 }
 
-template<class T, Int D>
-Field<T,D>::Field(UInt size) {
-   size_ = size;
-   val_ = new (T) (size_ * D) ;
+template<class T, Size D>
+Field<T,D>::Field(Size size) {
+    size_ = size;
+    val_ = new (T) (size_ * D) ;
 }
 
-template<class T, Int D>
+template<class T, Size D>
 Field<T,D>::~Field() {
-	if (val_ != NULL) {
-		delete [] val_;
-	}
+    if (val_ != NULL) {
+        delete [] val_;
+    }
 }
 
-template<class T, Int D>
-inline T* Field<T,D>::operator()(const UInt i) {
+template<class T, Size D>
+inline T* Field<T,D>::operator()(const Size i) {
     assert(i < D);
     return &val_[size_*i];
 }
 
-template<class T, Int D>
-inline const T* Field<T,D>::operator()(const UInt i) const {
-	assert(i < D);
-	return &val_[size_*i];
+template<class T, Size D>
+inline const T* Field<T,D>::operator()(const Size i) const {
+    assert(i < D);
+    return &val_[size_*i];
 }
 
-template<class T, Int D>
-inline CartesianVector<T,D> Field<T,D>::getCVec(const UInt i) const {
-   CartesianVector<T,D> res;
-   for (UInt d = 0; d < D; d++) {
-      res(d) = (*this)(d)[i];
-   }
-   return res;
+template<class T, Size D>
+inline Vector::Cartesian<T,D> Field<T,D>::getCVec(const Size i) const {
+    Vector::Cartesian<T,D> res;
+    for (Size d = 0; d < D; d++) {
+        res(d) = (*this)(d)[i];
+    }
+    return res;
 }
 
-template<class T, Int D>
-inline T* Field<T,D>::set(const UInt i) const {
-	assert(i < D);
-	return &val_[size_*i];
+template<class T, Size D>
+inline T* Field<T,D>::set(const Size i) const {
+    assert(i < D);
+    return &val_[size_*i];
 }
 
-template<class T, Int D>
-inline T Field<T,D>::operator[](const UInt i) const {
-	return val_[i];
+template<class T, Size D>
+inline T Field<T,D>::operator[](const Size i) const {
+    return val_[i];
 }
 
-template<class T, Int D>
-inline void Field<T,D>::setSize(const UInt siz) {
-	size_ = siz;
-	val_ = new T[D*siz];
+template<class T, Size D>
+inline void Field<T,D>::setSize(const Size siz) {
+    size_ = siz;
+    val_ = new T[D*siz];
 }
 
-template<class T, Int D>
-inline void Field<T,D>::set(const UInt i, const CartesianVector<T,D>& vec) {
-	for (UInt j = 0; j < D; j++) {
-		val_[j * size_ + i] = vec(j);
-	}
+template<class T, Size D>
+inline void Field<T,D>::set(const Size i, const Vector::Cartesian<T,D>& vec) {
+    for (Size j = 0; j < D; j++) {
+        val_[j * size_ + i] = vec(j);
+    }
 }
 
-template<class T, Int D>
-inline void Field<T,D>::set(const UInt i, const T& num) {
-	for (UInt j = 0; j < D; j++) {
-		val_[j * size_ + i] = num;
-	}
+template<class T, Size D>
+inline void Field<T,D>::set(const Size i, const T& num) {
+    for (Size j = 0; j < D; j++) {
+        val_[j * size_ + i] = num;
+    }
 }
 
-template<class T, Int D>
+template<class T, Size D>
 inline void Field<T,D>::setAll(const T& num) {
-	for (UInt i = 0; i < size_*D; i++) {
-		val_[i] = (T) num;
-	}
+    for (Size i = 0; i < size_*D; i++) {
+        val_[i] = (T) num;
+    }
 }
 
-template<class T, Int D>
+template<class T, Size D>
 inline void Field<T,D>::setToRandom(const Real min, const Real max) {
-	Real range = max - min;
-	srand (1);
-	for (UInt i = 0; i < size_*D; i++) {
-		val_[i] = range * rand() / (RAND_MAX + (Real) 1) + min;
-	}
+    Real range = max - min;
+    srand (1);
+    for (Size i = 0; i < size_*D; i++) {
+        val_[i] = range * rand() / (RAND_MAX + (Real) 1) + min;
+    }
 }
 
-template<class T, Int D>
-inline void Field<T,D>::prod(
- const UInt init,
- const UInt end,
- const T param) {
-	for (UInt d = 0; d < D; d++) {
-		for (UInt i = init; i < end; i++) {
-			val_[d*size_ + i] *= param;
-		}
-	}
+template<class T, Size D>
+inline void Field<T,D>::prod(const Size init, const Size end,
+                             const T param) {
+    for (Size d = 0; d < D; d++) {
+        for (Size i = init; i < end; i++) {
+            val_[d*size_ + i] *= param;
+        }
+    }
 }
 
 
-template<class T, Int D>
-inline void Field<T,D>::prod_omp(const UInt init, const UInt end, const T param) {
-	UInt i;
-	for (UInt d = 0; d < D; d++) {
-        #pragma omp parallel for private(i)
-		for (i = init; i < end; i++) {
-			val_[d*size_ + i] *= param;
-		}
-	}
+template<class T, Size D>
+inline void Field<T,D>::prod_omp(const Size init, const Size end,
+                                 const T param) {
+    Size i;
+    for (Size d = 0; d < D; d++) {
+#pragma omp parallel for private(i)
+        for (i = init; i < end; i++) {
+            val_[d*size_ + i] *= param;
+        }
+    }
 }
 
-template<class T, Int D>
-inline void Field<T,D>::copy(
-        const UInt init,
-        const UInt end,
-		const Field<T, D>& field) {
-	for (UInt d = 0; d < D; d++) {
-		for (UInt i = init; i < end; i++) {
-			val_[d*size_ + i] = field.val_[d*size_ + i];
-		}
-	}
+template<class T, Size D>
+inline void Field<T,D>::copy(const Size init, const Size end,
+                             const Field<T, D>& field) {
+    for (Size d = 0; d < D; d++) {
+        for (Size i = init; i < end; i++) {
+            val_[d*size_ + i] = field.val_[d*size_ + i];
+        }
+    }
 }
 
-template<class T, Int D>
-inline void Field<T,D>::addProd(
- const UInt init, const UInt end,
- const Field<T, D>& field, const T param) {
-	for (UInt d = 0; d < D; d++) {
-		for (UInt i = init; i < end; i++) {
-			val_[d*size_ + i] += field.val_[d*size_ + i] * param;
-		}
-	}
+template<class T, Size D>
+inline void Field<T,D>::addProd(const Size init, const Size end,
+                                const Field<T, D>& field, const T param) {
+    for (Size d = 0; d < D; d++) {
+        for (Size i = init; i < end; i++) {
+            val_[d*size_ + i] += field.val_[d*size_ + i] * param;
+        }
+    }
 }
 
-template<class T, Int D>
-inline void Field<T,D>::addProd_omp(
- const UInt init, const UInt end,
- const Field<T, D>& field, const T param) {
-	UInt i;
-	for (UInt d = 0; d < D; d++) {
-#		pragma omp parallel for private(i)
-		for (i = init; i < end; i++) {
-			val_[d*size_ + i] += field.val_[d*size_ + i] * param;
-		}
-	}
+template<class T, Size D>
+inline void Field<T,D>::addProd_omp(const Size init, const Size end,
+                                    const Field<T, D>& field, const T param) {
+    Size i;
+    for (Size d = 0; d < D; d++) {
+#pragma omp parallel for private(i)
+        for (i = init; i < end; i++) {
+            val_[d*size_ + i] += field.val_[d*size_ + i] * param;
+        }
+    }
 }
 
-template<class T, Int D>
-inline UInt
+template<class T, Size D>
+inline Size
 Field<T,D>::getDOFs() const {
-	return (D*size_);
+    return (D*size_);
 }
 
-template<class T, Int D>
-inline UInt Field<T,D>::size() const {
-   return size_;
+template<class T, Size D>
+inline Size Field<T,D>::size() const {
+    return size_;
 }
 
-template<class T, Int D>
-inline void Field<T,D>::swap(
-        Field<T, D>& param,
-        const UInt first,
-        const UInt last) {
-	for (UInt i = 0; i < D; i++) {
-		for (UInt k = first; k < last; k++) {
-			T aux = val_[i*size_ + k];
-			val_[i*size_ + k] = param(i)[k];
-			param.set(i)[k] = aux;
-		}
-	}
+template<class T, Size D>
+inline void Field<T,D>::swap(Field<T, D>& param,
+                             const Size first,
+                             const Size last) {
+    for (Size i = 0; i < D; i++) {
+        for (Size k = first; k < last; k++) {
+            T aux = val_[i*size_ + k];
+            val_[i*size_ + k] = param(i)[k];
+            param.set(i)[k] = aux;
+        }
+    }
 }
+
+} /* namespace Math */
+} /* namespace SEMBA */

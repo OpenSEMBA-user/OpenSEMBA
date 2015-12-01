@@ -18,81 +18,89 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeClassic.cpp
- *
- *  Created on: Aug 27, 2015
- *      Author: luis
- */
 
-#include "PMVolumeClassic.h"
+#include "VolumeClassic.h"
 
-PMVolumeClassic::PMVolumeClassic(
-        const MatId matId,
-        const string& name,
-        const Real relativePermittivity,
-        const Real relativePermeability,
-        const Real electricConductivity,
-        const Real magneticConductivity) : PMVolume(matId, name) {
+#include <cmath>
+
+namespace SEMBA {
+namespace PhysicalModel {
+
+VolumeClassic::VolumeClassic(const Id matId,
+                             const std::string& name,
+                             const Math::Real relativePermittivity,
+                             const Math::Real relativePermeability,
+                             const Math::Real electricConductivity,
+                             const Math::Real magneticConductivity)
+:   Volume(matId, name) {
     rEps_ = relativePermittivity;
     rMu_ = relativePermeability;
     electricConductivity_ = electricConductivity;
     magneticConudctivity_ = magneticConductivity;
 }
 
-PMVolumeClassic::~PMVolumeClassic() {
+VolumeClassic::~VolumeClassic() {
+
 }
 
-Real PMVolumeClassic::getImpedance() const {
+Math::Real VolumeClassic::getImpedance() const {
     if (rEps_ <= 0.0) {
-        return numeric_limits<Real>::infinity();
+        return std::numeric_limits<Math::Real>::infinity();
     }
-    return sqrt((rMu_ * Constants::mu0) / (rEps_ * Constants::eps0));
+    return std::sqrt((rMu_ * Math::Constants::mu0) /
+                     (rEps_ * Math::Constants::eps0));
 }
 
-Real PMVolumeClassic::getAdmitance() const {
+Math::Real VolumeClassic::getAdmitance() const {
     if (rMu_ <= 0.0) {
-        return numeric_limits<Real>::infinity();
+        return std::numeric_limits<Math::Real>::infinity();
     }
     return (1.0 / getImpedance());
 }
 
-Real PMVolumeClassic::getRelativePermittivity() const {
+Math::Real VolumeClassic::getRelativePermittivity() const {
     return rEps_;
 }
 
-Real PMVolumeClassic::getRelativePermeability() const {
+Math::Real VolumeClassic::getRelativePermeability() const {
     return rMu_;
 }
 
-Real PMVolumeClassic::getPermittivity() const {
-    return (rEps_ * Constants::eps0);
+Math::Real VolumeClassic::getPermittivity() const {
+    return (rEps_ * Math::Constants::eps0);
 }
 
-Real PMVolumeClassic::getPermeability() const {
-    return (rMu_ * Constants::mu0);
+Math::Real VolumeClassic::getPermeability() const {
+    return (rMu_ * Math::Constants::mu0);
 }
 
-Real PMVolumeClassic::getElectricConductivity() const {
+Math::Real VolumeClassic::getElectricConductivity() const {
     return electricConductivity_;
 }
 
-Real PMVolumeClassic::getMagneticConductivity() const {
+Math::Real VolumeClassic::getMagneticConductivity() const {
     return magneticConudctivity_;
 }
 
-bool PMVolumeClassic::isVacuum() const {
+bool VolumeClassic::isVacuum() const {
     return (rEps_ == 1.0
             && rMu_ == 1.0
             && electricConductivity_ == 0.0
             && magneticConudctivity_ == 0.0);
 }
 
-void PMVolumeClassic::printInfo() const {
-    cout << "--- PMVolumeClassic info ---" << endl;
-    PMVolume::printInfo();
-    cout << "Rel. elec. permittivity: " << getRelativePermittivity() << endl;
-    cout << "Rel. magn. permeability: " << getRelativePermeability() << endl;
-    cout << "Electric conductivity: " << getElectricConductivity() << endl;
-    cout << "Magnetic conductivity: " << getMagneticConductivity() << endl;
+void VolumeClassic::printInfo() const {
+    std::cout << "--- VolumeClassic info ---" << std::endl;
+    Volume::printInfo();
+    std::cout << "Rel. elec. permittivity: "
+              << getRelativePermittivity() << std::endl;
+    std::cout << "Rel. magn. permeability: "
+              << getRelativePermeability() << std::endl;
+    std::cout << "Electric conductivity: "
+              << getElectricConductivity() << std::endl;
+    std::cout << "Magnetic conductivity: "
+              << getMagneticConductivity() << std::endl;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

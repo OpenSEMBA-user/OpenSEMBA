@@ -18,38 +18,42 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GraphVertices.h
- *
- *  Created on: 15/4/2015
- *      Author: Daniel
- */
 
 #ifndef COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_
 #define COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_
 
-#include "../graphs/GraphBase.h"
+#include "Graph.h"
+#include "geometry/coordinate/Coordinate.h"
+
+
+namespace SEMBA {
+namespace Geometry {
+namespace Graph {
 
 template<class ELEM, class BOUND>
-class GraphVertices : public GraphBase<ELEM, BOUND> {
+class Vertices : public Graph<ELEM, BOUND> {
 public:
     typedef ELEM  Elem;
     typedef BOUND Bound;
-    typedef GraphElement<Elem,Bound> GraphElem;
-    typedef GraphElement<Bound,Elem> GraphBound;
+    typedef Element<Elem,Bound> GraphElem;
+    typedef Element<Bound,Elem> GraphBound;
 
-    GraphVertices();
-    GraphVertices(const GraphVertices&);
-    GraphVertices(const Group<const Elem>&  elems);
-    virtual ~GraphVertices();
+    Vertices();
+    Vertices(const Vertices&);
+    Vertices(const Group::Group<const Elem>& elems);
+    virtual ~Vertices();
 
-    GraphVertices<Elem,Bound>& init(const Group<const Elem>&  elems);
+    Vertices<Elem,Bound>& init(const Group::Group<const Elem>& elems);
 
-    GraphVertices& operator=(const GraphVertices&);
+    Vertices& operator=(const Vertices&);
 
-    void splitBound(UInt i);
+    void splitBound(Size i);
 };
 
-#include "../graphs/GraphVertices.hpp"
+} /* namespace Graph */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#include "Vertices.hpp"
 
 #endif /* COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_ */

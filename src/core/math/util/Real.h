@@ -18,35 +18,40 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef REALUTILS_H_
-#define REALUTILS_H_
+
+#ifndef SEMBA_MATH_UTIL_REAL_H_
+#define SEMBA_MATH_UTIL_REAL_H_
 
 #include <cmath>
 #include <limits>
-using namespace std;
 
-#include "Types.h"
+#include "math/Types.h"
 
-namespace MathUtils {
-    const Real epsilon = numeric_limits<Real>::epsilon()*1.0e2;
-    const Real tolerance = 1e-10;
+namespace SEMBA {
+namespace Math {
+namespace Util {
 
-    bool equal        (const Real lhs, const Real rhs,
-                       Real rel = 0.0, const Real tol = tolerance);
-    bool notEqual     (const Real lhs, const Real rhs,
-                       Real rel = 0.0, const Real tol = tolerance);
-    bool lower        (const Real lhs, const Real rhs,
-                       Real rel = 0.0, const Real tol = tolerance);
-    bool lowerEqual   (const Real lhs, const Real rhs,
-                       Real rel = 0.0, const Real tol = tolerance);
-    bool greater     (const Real lhs, const Real rhs,
-                      Real rel = 0.0, const Real tol = tolerance);
-    bool greaterEqual(const Real lhs, const Real rhs,
-                      Real rel = 0.0, const Real tol = tolerance);
+const Real epsilon = std::numeric_limits<Real>::epsilon()*1.0e2;
+const Real tolerance = 1e-10;
 
-    Real ceil(const Real v, Real rel = 0.0);
-    Real round(Real v);
-}
+bool equal       (const Real lhs, const Real rhs,
+                  Real rel = 0.0, const Real tol = tolerance);
+bool notEqual    (const Real lhs, const Real rhs,
+                  Real rel = 0.0, const Real tol = tolerance);
+bool lower       (const Real lhs, const Real rhs,
+                  Real rel = 0.0, const Real tol = tolerance);
+bool lowerEqual  (const Real lhs, const Real rhs,
+                  Real rel = 0.0, const Real tol = tolerance);
+bool greater     (const Real lhs, const Real rhs,
+                  Real rel = 0.0, const Real tol = tolerance);
+bool greaterEqual(const Real lhs, const Real rhs,
+                  Real rel = 0.0, const Real tol = tolerance);
 
+Real ceil(const Real v, Real rel = 0.0);
+Real round(Real v);
 
-#endif
+} /* namespace Util */
+} /* namespace Math */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_MATH_UTIL_REAL_H_ */

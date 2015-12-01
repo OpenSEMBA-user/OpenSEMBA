@@ -18,39 +18,42 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Quad4.h
- *
- *  Created on: Apr 10, 2014
- *      Author: luis
- */
 
-#ifndef QUAD_H_
-#define QUAD_H_
+#ifndef SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL_H_
+#define SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL_H_
 
 #include "Surface.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 class QuadrilateralBase : public virtual SurfaceBase {
 public:
     QuadrilateralBase() {}
     virtual ~QuadrilateralBase() {}
 
-    UInt numberOfFaces   () const { return 4; }
-    UInt numberOfVertices() const { return 4; }
+    Size numberOfFaces   () const { return 4; }
+    Size numberOfVertices() const { return 4; }
 
-    UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
+    Size numberOfSideVertices(const Size f = 0) const { return 2; }
 };
 
 template<class T>
 class Quadrilateral : public virtual Surface<T>,
                       public virtual QuadrilateralBase {
 public:
-	Quadrilateral();
+    Quadrilateral();
     virtual ~Quadrilateral();
 };
 
-typedef QuadrilateralBase   Qua;
-typedef Quadrilateral<Real> QuaR;
-typedef Quadrilateral<Int > QuaI;
+} /* namespace Element */
 
-#endif /* QUAD4_H_ */
+typedef Element::QuadrilateralBase         Qua;
+typedef Element::Quadrilateral<Math::Real> QuaR;
+typedef Element::Quadrilateral<Math::Int > QuaI;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL_H_ */

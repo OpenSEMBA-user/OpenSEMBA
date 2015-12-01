@@ -18,53 +18,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Box.h
- *
- *  Created on: Dec 18, 2014
- *      Author: luis
- */
-#ifndef SRC_COMMON_GEOMETRY_BOX_H_
-#define SRC_COMMON_GEOMETRY_BOX_H_
 
-#include <limits>
+#ifndef SEMBA_GEOMETRY_BOX_BOX_H_
+#define SEMBA_GEOMETRY_BOX_BOX_H_
+
+#include <exception>
 #include <utility>
 
-using namespace std;
-
-#include "base/error/Error.h"
-#include "math/CartesianVector.h"
+#include "Types.h"
+#include "math/vector/Cartesian.h"
 #include "Grid.h"
 
-template<Int D> class Grid;
+namespace SEMBA {
+namespace Geometry {
 
-template <class T, Int D>
+template<Size D> class Grid;
+
+template <class T, Size D>
 class Box {
-    typedef CartesianVector<T,D> CVecTD;
+    typedef Math::Vector::Cartesian<T,D> CVecTD;
 public:
-    class ErrorNotPoint : public Error {
-    public:
-        ErrorNotPoint();
-        virtual ~ErrorNotPoint() throw();
-    };
-    class ErrorNotLine : public Error {
-    public:
-        ErrorNotLine();
-        virtual ~ErrorNotLine() throw();
-    };
-    class ErrorNotSurface : public Error {
-    public:
-        ErrorNotSurface();
-        virtual ~ErrorNotSurface() throw();
-    };
-    class ErrorNotVolume : public Error {
-    public:
-        ErrorNotVolume();
-        virtual ~ErrorNotVolume() throw();
-    };
-
     Box();
-    Box(const pair<CVecTD,CVecTD>& boundsMinMax);
+    Box(const std::pair<CVecTD,CVecTD>& boundsMinMax);
     Box(const CVecTD& min, const CVecTD& max);
     virtual ~Box();
 
@@ -87,8 +62,8 @@ public:
     bool isSurface() const { return (numberOfDifferentCoords() == 2); }
     bool isVolume () const { return (numberOfDifferentCoords() == 3); }
 
-    CartesianAxis getDirection() const;
-    CartesianAxis getNormal   () const;
+    Math::Constants::CartesianAxis getDirection() const;
+    Math::Constants::CartesianAxis getNormal   () const;
 
     Box<T,D> intersect(const Box<T,D>& rhs) const;
     bool isIntersected (const Box<T,D>& lBox) const;
@@ -98,18 +73,18 @@ public:
     inline CVecTD getMax() const;
     inline CVecTD getLength() const;
 
-    vector<CVecTD> getPos() const;
-    vector<CVecTD> getPosOfBound(CartesianAxis d, CartesianBound p) const;
-    Box<T,D> getBoundAsBox(CartesianAxis d, CartesianBound p) const;
-    CVecTD getBound(CartesianBound p) const;
-    vector<Box<T,D>> chop(
-            const CartesianVector<T,D> step = CartesianVector<T,D>(1,1,1)) const;
-    vector<Box<T,D>> chop(
-            const Grid<D>& grid) const;
+    std::vector<CVecTD> getPos() const;
+    std::vector<CVecTD> getPosOfBound(Math::Constants::CartesianAxis  d,
+                                      Math::Constants::CartesianBound p) const;
+    Box<T,D> getBoundAsBox(Math::Constants::CartesianAxis  d,
+                           Math::Constants::CartesianBound p) const;
+    CVecTD getBound(Math::Constants::CartesianBound p) const;
+    std::vector<Box<T,D>> chop(const CVecTD step = CVecTD(1,1,1)) const;
+    std::vector<Box<T,D>> chop(const Grid<D>& grid) const;
 
-    void set(const pair<CVecTD,CVecTD>& boundsMinMax);
+    void set(const std::pair<CVecTD,CVecTD>& boundsMinMax);
     Box<T,D>& setInfinity();
-    void scale(const Real factor);
+    void scale(const Math::Real factor);
 
     void printInfo() const;
 private:
@@ -120,19 +95,69 @@ private:
         max_.setMinusInfty();
     };
 
-    UInt numberOfDifferentCoords() const;
+    Size numberOfDifferentCoords() const;
 };
 
-template <class T, Int D>
-std::ostream& operator<<(ostream& os, const Box<T,D>& rhs) {
+template <class T, Size D>
+std::ostream& operator<<(std::ostream& os, const Box<T,D>& rhs) {
    return os << "Min: " << rhs.getMin() << ", Max: " << rhs.getMax();
 }
 
-typedef Box<Real,3> BoxR3;
-typedef Box<Int ,2> BoxI2;
-typedef Box<Int, 3> BoxI3;
+namespace Error {
+namespace Box {
+
+class Error : public std::exception {
+public:
+    Error() {}
+    virtual ~Error() throw() {}
+};
+
+class NotPoint : public Error {
+public:
+    NotPoint() {}
+    virtual ~NotPoint() throw() {}
+
+    const char* what() const throw() { return "Box is not a Point"; }
+};
+
+class NotLine : public Error {
+public:
+    NotLine() {}
+    virtual ~NotLine() throw() {}
+
+    const char* what() const throw() { return "Box is not a Line"; }
+};
+
+class NotSurface : public Error {
+public:
+    NotSurface() {}
+    virtual ~NotSurface() throw() {}
+
+    const char* what() const throw() { return "Box is not a Surface"; }
+};
+
+class NotVolume : public Error {
+public:
+    NotVolume() {}
+    virtual ~NotVolume() throw() {}
+
+    const char* what() const throw() { return "Box is not a Volume"; }
+};
+} /* namespace Box */
+} /* namespace Error */
+} /* namespace Geometry */
+} /* namespace SEMBA */
 
 #include "Box.hpp"
 
+namespace SEMBA {
+namespace Geometry {
 
-#endif /* SRC_COMMON_GEOMETRY_BOX_H_ */
+typedef Box<Math::Real,3> BoxR3;
+typedef Box<Math::Int ,2> BoxI2;
+typedef Box<Math::Int, 3> BoxI3;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_BOX_BOX_H_ */

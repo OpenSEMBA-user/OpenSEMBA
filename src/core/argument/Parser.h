@@ -1,115 +1,116 @@
-// OpenSEMBA
-// Copyright (C) 2015 Salvador Gonzalez Garcia        (salva@ugr.es)
-//                    Luis Manuel Diaz Angulo         (lmdiazangulo@semba.guru)
-//                    Miguel David Ruiz-Cabello Nuñez (miguel@semba.guru)
-//                    Daniel Mateos Romero            (damarro@semba.guru)
-//
-// This file is part of OpenSEMBA.
-//
-// OpenSEMBA is free software: you can redistribute it and/or modify it under
-// the terms of the GNU Lesser General Public License as published by the Free
-// Software Foundation, either version 3 of the License, or (at your option)
-// any later version.
-//
-// OpenSEMBA is distributed in the hope that it will be useful, but WITHOUT ANY
-// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
-// details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Arguments.h
- *
- *  Created on: Jul 19, 2013
- *      Author: luis
- */
 
-#ifndef ARGUMENTS_H_
-#define ARGUMENTS_H_
+#ifndef SEMBA_ARGUMENT_PARSER_H_
+#define SEMBA_ARGUMENT_PARSER_H_
 
-#include <algorithm>
-#include <cstdlib>
-#include <cstring>
-#include <map>
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-using namespace std;
+#include "Formatter.h"
+#include "Group.h"
 
-#include <libgen.h>
+namespace SEMBA {
+namespace Argument {
 
-#include "base/error/Error.h"
-
-#include "Types.h"
-
-class Arguments {
+class Parser : public Group<true> {
 public:
-    class ErrorArgumentNotExists : public Error {
-    public:
-        ErrorArgumentNotExists(const string&);
-        virtual ~ErrorArgumentNotExists() throw();
+    Parser(const int& argc, const char** argv);
+    Parser(const Object&);
+    virtual ~Parser();
+
+    Parser& prog       (const std::string&);
+    Parser& usage      (const std::string&);
+    Parser& description(const std::string&);
+    Parser& epilog     (const std::string&);
+    Parser& prefixChars(const std::string&);
+    Parser& allowAbbrev(const bool);
+    Parser& formatter  (const FormatterBase&);
+
+    const std::string& getProg       () const { return prog_;        }
+    const std::string& getUsage      () const { return usage_;       }
+    const std::string& getEpilog     () const { return epilog_;      }
+
+    Object parse();
+    std::pair<Object, std::vector<std::string>> parseKnownArgs();
+
+    void printUsage() const;
+    void printHelp () const;
+
+private:
+    enum class ArgType {
+        Positional,
+        ShortOpt,
+        LongOpt,
+        Separator
     };
 
-    Arguments(const string& arg);
-    Arguments(const int argc, const char* argv[]);
-    virtual ~Arguments();
+    //Input
+    std::vector<std::string> input_;
 
-    bool has(const string& arg) const;
-    string get(const string& arg, const UInt i = 0) const;
-    virtual string getProjectFolder() const;
-    virtual string getProjectName() const;
-    virtual string getFilename() const;
-    UInt size() const;
+    //Aux
+    std::string prog_;
+    std::string usage_;
+    std::string epilog_;
+    std::string prefixChars_;
+    bool        allowAbbrev_;
+    FormatterBase* formatter_;
 
-    bool contains(const Arguments& rhs) const;
+    Object res_;
 
-    virtual void printWelcomeMessage(
-            const string appName,
-            const string versionNumber) const;
-    virtual void printGoodbyeMessage(
-            const string appName) const;
+    void initDefault_();
+    Object parse_();
+    ArgType getArgType_(const std::string& arg) const;
+    static void printErrorList_(const std::vector<std::list<std::string>>&);
 
-    string toStr() const;
-    void printInfo() const;
-    void printHelp() const;
-
-    friend std::ostream& operator<<(ostream& os, const Arguments& lay) {
-       return os << lay.toStr();
-    }
-
-
-protected:
-    map<string, vector<string>> args_;
-    bool fExists(const string& filename) const;
-    string getFileNameFromProjectPath(const string projectPath) const;
-    string boolToStr(const bool param) const;
 private:
-    pair<string, vector<string>> readArgument(
-            const int i, const int argc,  const vector<string>& argv) const;
-    string removeExtension(const string& fName) const;
-    string removeChars(const string& str, const char* charsToRemove) const;
-    bool isKey(string) const;
-    void build(const vector<string>& args);
+    //Erased
+    Parser();
+    Parser(const Parser&);
+    Parser(Parser&&);
 
-    static inline string
-     &ltrim(string &s) {
-        s.erase(s.begin(), find_if(s.begin(),
-         s.end(), not1(ptr_fun<int, int>(isspace))));
-        return s;
-    }
-    static inline string
-     &rtrim(string &s) {
-        s.erase(find_if(s.rbegin(), s.rend(),
-         not1(ptr_fun<int, int>(isspace))).base(), s.end());
-        return s;
-    }
-    static inline string
-    &trim(string &s) {
-        return ltrim(rtrim(s));
-    }
+    Parser& operator=(const Parser&);
+    Parser& operator=(Parser&&);
 };
 
-#endif /* ARGUMENTS2_H_ */
+namespace Error {
+
+class Ambiguous : public Error {
+public:
+    Ambiguous(const std::string& arg,
+              const std::vector<std::string>& args) {
+        std::stringstream aux;
+        aux << "Ambiguous argument --" << arg
+            << " that can match arguments";
+        for (std::size_t i = 0; i < args.size(); i++) {
+            if (i != 0) {
+                aux << ",";
+            }
+            aux << " --" << args[i];
+        }
+        str_ = aux.str();
+    }
+    virtual ~Ambiguous() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    std::string str_;
+};
+
+class Unknown : public Error {
+public:
+    Unknown(const std::vector<std::string>& args) {
+        std::stringstream aux;
+        aux << "Unrecognized arguments:";
+        for (std::size_t i = 0; i < args.size(); i++) {
+            aux << " " << args[i];
+        }
+        str_ = aux.str();
+    }
+    virtual ~Unknown() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    std::string str_;
+};
+
+} /* namespace Error */
+} /* namespace Argument */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_ARGUMENT_PARSER_H_ */

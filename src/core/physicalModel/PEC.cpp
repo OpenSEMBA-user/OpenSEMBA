@@ -18,29 +18,27 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMPEC.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMPEC.h"
+#include "PEC.h"
 
+namespace SEMBA {
+namespace PhysicalModel {
 
-// =============== PMPEC ======================================================
-PMPEC::PMPEC(const MatId id, const string name)
-: PMPredefined(id, name) {
+// =============== PEC ======================================================
+PEC::PEC(const Id id, const std::string name)
+: Predefined(id, name) {
 
 }
 
-PMPEC::~PMPEC() {
+PEC::~PEC() {
 
 }
 
-void
-PMPEC::printInfo() const {
-	cout << "--- PMPEC info ---" << endl;
-	PMPredefined::printInfo();
-	cout << "Perfect Electric Conductor" << endl;
+void PEC::printInfo() const {
+    std::cout << "--- PEC info ---" << std::endl;
+    Predefined::printInfo();
+    std::cout << "Perfect Electric Conductor" << std::endl;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

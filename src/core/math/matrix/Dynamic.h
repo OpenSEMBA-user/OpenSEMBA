@@ -18,82 +18,86 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef DYNMATRIX_H_
-#define DYNMATRIX_H_
 
-#include <utility>
-using namespace std;
+#ifndef SEMBA_MATH_MATRIX_DYNAMIC_H_
+#define SEMBA_MATH_MATRIX_DYNAMIC_H_
 
-#include "MathMatrix.h"
+#include "Matrix.h"
+
+namespace SEMBA {
+namespace Math {
+namespace Matrix {
 
 template<class T>
-class DynMatrix : public MathMatrix<T> {
+class Dynamic : public Matrix<T> {
 public:
-   DynMatrix();
-   DynMatrix(const DynMatrix<T>& param);
-   DynMatrix(UInt rows, UInt cols);
-   DynMatrix(UInt rows, UInt cols, T** values);
-   virtual ~DynMatrix();
-   UInt nCols() const;
-   UInt nRows() const;
-   T operator()(const UInt row, const UInt col) const;
-   T& operator()(const UInt row, const UInt col);
-   T val(const UInt ind) const;
-   T& val(const UInt ind);
-   T val(const UInt row, const UInt col) const;
-   T& val(const UInt row, const UInt col);
-   const T* valPtr(const UInt row, const UInt col) const;
+   Dynamic();
+   Dynamic(const Dynamic<T>& param);
+   Dynamic(Size rows, Size cols);
+   Dynamic(Size rows, Size cols, T** values);
+   virtual ~Dynamic();
+   Size nCols() const;
+   Size nRows() const;
+   T operator()(const Size row, const Size col) const;
+   T& operator()(const Size row, const Size col);
+   T val(const Size ind) const;
+   T& val(const Size ind);
+   T val(const Size row, const Size col) const;
+   T& val(const Size row, const Size col);
+   const T* valPtr(const Size row, const Size col) const;
    // ----------- assignment, copy -------------------------------------------
-   DynMatrix<T>& operator=(const DynMatrix<T> &param);
-   DynMatrix<T>& operator=(const vector<T> &param);
-   DynMatrix<T>& operator=(const T &param);
-   void copy(vector<vector<T> > values);
-   void copy(const DynMatrix<Real> &param);
-   DynMatrix<T> copy(
-           const UInt fRow,
-           const UInt lRow,
-           const UInt fCol,
-           const UInt lCol) const;
+   Dynamic<T>& operator=(const Dynamic<T> &param);
+   Dynamic<T>& operator=(const std::vector<T> &param);
+   Dynamic<T>& operator=(const T &param);
+   void copy(std::vector<std::vector<T> > values);
+   void copy(const Dynamic<Real> &param);
+   Dynamic<T> copy(const Size fRow,
+                   const Size lRow,
+                   const Size fCol,
+                   const Size lCol) const;
    // ----------- operations -------------------------------------------------
-   DynMatrix<T> operator+(DynMatrix<T> &param) const;
-   DynMatrix<T>& operator+=(const T param);
-   DynMatrix<T>& operator+=(const DynMatrix& param);
-   DynMatrix<T>& operator*=(const T param);
-   DynMatrix<T>& operator/=(const T param);
-   DynMatrix<T> operator*(DynMatrix<T> &param) const;
-   DynMatrix<T> operator*(const T param) const;
-   DynMatrix<T> operator/(const T param) const;
-   DynMatrix<T> kron(DynMatrix<T>& param) const;
-   DynMatrix<T> sub(pair<Int,Int>& rows, pair<Int,Int>& cols) const;
-   bool operator==(const DynMatrix<T>& param) const;
-   bool operator<(const DynMatrix<T>& param) const;
-   DynMatrix<T> convolute(const DynMatrix<T>& param) const;
-   DynMatrix<T> invert();
-   DynMatrix<T>& transpose();
-   DynMatrix<T> reshape(UInt rows, UInt cols);
-   DynMatrix<T> reshape(UInt rows, UInt cols, Int order);
-   DynMatrix<T> eliminateColumns(UInt first, UInt last) const;
-   DynMatrix<T>& sortAndRemoveRepeatedRows_omp();
+   Dynamic<T> operator+(Dynamic<T> &param) const;
+   Dynamic<T>& operator+=(const T param);
+   Dynamic<T>& operator+=(const Dynamic& param);
+   Dynamic<T>& operator*=(const T param);
+   Dynamic<T>& operator/=(const T param);
+   Dynamic<T> operator*(Dynamic<T> &param) const;
+   Dynamic<T> operator*(const T param) const;
+   Dynamic<T> operator/(const T param) const;
+   Dynamic<T> kron(Dynamic<T>& param) const;
+   Dynamic<T> sub(std::pair<Size,Size>& rows, std::pair<Size,Size>& cols) const;
+   bool operator==(const Dynamic<T>& param) const;
+   bool operator<(const Dynamic<T>& param) const;
+   Dynamic<T> convolute(const Dynamic<T>& param) const;
+   Dynamic<T> invert();
+   Dynamic<T>& transpose();
+   Dynamic<T> reshape(Size rows, Size cols);
+   Dynamic<T> reshape(Size rows, Size cols, Int order);
+   Dynamic<T> eliminateColumns(Size first, Size last) const;
+   Dynamic<T>& sortAndRemoveRepeatedRows_omp();
    void sortAndRemoveRepeatedRows();
    void removeRepeatedSortedRows();
-   void sortRows_omp(const UInt iCol, const UInt lCol);
-   void mergeSortedRows(
-     const DynMatrix<T>& a,
-     const UInt iCol,
-     const UInt lCol);
+   void sortRows_omp(const Size iCol, const Size lCol);
+   void mergeSortedRows(const Dynamic<T>& a,
+                        const Size iCol,
+                        const Size lCol);
    void printInfo() const;
-   void printInfo(UInt, UInt) const;
-   void printInfo(
-     UInt firstRow,
-     UInt lastRow,
-     UInt firstCol,
-     UInt lastCol) const;
+   void printInfo(Size, Size) const;
+   void printInfo(Size firstRow,
+                  Size lastRow,
+                  Size firstCol,
+                  Size lastCol) const;
 private:
    T* _val;
-   UInt _nRows, _nCols;
-   void resizeVal(const UInt rows, const UInt cols);
+   Size _nRows, _nCols;
+
+   void resizeVal(const Size rows, const Size cols);
 };
 
-#include "DynMatrix.hpp"
+} /* namespace Matrix */
+} /* namespace Math */
+} /* namespace SEMBA */
+
+#include "Dynamic.hpp"
 
 #endif

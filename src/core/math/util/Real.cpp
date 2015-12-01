@@ -18,10 +18,15 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "RealUtils.h"
 
-bool MathUtils::equal(const Real lhs, const Real rhs,
-                      Real rel, const Real tol) {
+#include "Real.h"
+
+namespace SEMBA {
+namespace Math {
+namespace Util {
+
+bool equal(const Real lhs, const Real rhs,
+           Real rel, const Real tol) {
     if (rel == 0.0) {
         rel = abs(lhs+rhs);
     }
@@ -35,35 +40,35 @@ bool MathUtils::equal(const Real lhs, const Real rhs,
     return false;
 }
 
-bool MathUtils::notEqual(const Real lhs, const Real rhs,
-                         Real rel, const Real tol) {
+bool notEqual(const Real lhs, const Real rhs,
+              Real rel, const Real tol) {
     return !equal(lhs, rhs, rel, tol);
 }
 
-bool MathUtils::lower(const Real lhs, const Real rhs,
-                      Real rel, const Real tol) {
+bool lower(const Real lhs, const Real rhs,
+           Real rel, const Real tol) {
     if(equal(lhs, rhs, rel, tol)) {
         return false;
     }
     return lhs < rhs;
 }
 
-bool MathUtils::lowerEqual(const Real lhs, const Real rhs,
-                           Real rel, const Real tol) {
+bool lowerEqual(const Real lhs, const Real rhs,
+                Real rel, const Real tol) {
     return !lower(rhs, lhs, rel, tol);
 }
 
-bool MathUtils::greater(const Real lhs, const Real rhs,
-                         Real rel, const Real tol) {
+bool greater(const Real lhs, const Real rhs,
+             Real rel, const Real tol) {
     return lower(rhs, lhs, rel, tol);
 }
 
-bool MathUtils::greaterEqual(const Real lhs, const Real rhs,
-                             Real rel, const Real tol) {
+bool greaterEqual(const Real lhs, const Real rhs,
+                  Real rel, const Real tol) {
     return !lower(lhs, rhs, rel, tol);
 }
 
-Real MathUtils::ceil(const Real val, const Real rel) {
+Real ceil(const Real val, const Real rel) {
     Real low = floor(val);
     if (val <= (low + rel)) {
         return low;
@@ -72,7 +77,7 @@ Real MathUtils::ceil(const Real val, const Real rel) {
     }
 }
 
-Real MathUtils::round(Real v) {
+Real round(Real v) {
     Real dist = v - floor(v);
     if (greaterEqual(dist, 0.5)) {
         return ceil(v);
@@ -80,3 +85,7 @@ Real MathUtils::round(Real v) {
         return floor(v);
     }
 }
+
+} /* namespace Constant */
+} /* namespace Math */
+} /* namespace SEMBA */

@@ -18,29 +18,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultiportPredefined.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMMULTIPORTPREDEFINED_H_
-#define PMMULTIPORTPREDEFINED_H_
+#ifndef SEMBA_PHYSICALMODEL_MULTIPORTPREDEFINED_H_
+#define SEMBA_PHYSICALMODEL_MULTIPORTPREDEFINED_H_
 
-#include "PMMultiport.h"
+#include "Multiport.h"
 
-class PMMultiportPredefined: public PMMultiport {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class MultiportPredefined: public Multiport {
 public:
-	PMMultiportPredefined(
-	 const MatId idIn,
-	 const string nameIn,
-	 const PMMultiport::Type);
-	virtual ~PMMultiportPredefined();
+    MultiportPredefined(const Id idIn,
+                        const std::string nameIn,
+                        const Multiport::Type);
+    virtual ~MultiportPredefined();
 
-    DEFINE_CLONE(PMMultiportPredefined);
+    SEMBA_CLASS_DEFINE_CLONE(MultiportPredefined);
 
-	virtual void printInfo() const;
+    virtual void printInfo() const;
 };
 
-#endif /* PMMULTIPORTPREDEFINED_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_MULTIPORTPREDEFINED_H_ */

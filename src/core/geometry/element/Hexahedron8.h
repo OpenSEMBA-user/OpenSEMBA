@@ -18,19 +18,15 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Hex8.h
- *
- *  Created on: Sep 24, 2013
- *      Author: luis
- */
 
-#ifndef HEX8_H_
-#define HEX8_H_
-
-#include "base/error/ErrorNotImplemented.h"
+#ifndef SEMBA_GEOMETRY_ELEMENT_HEXAHEDRON8_H_
+#define SEMBA_GEOMETRY_ELEMENT_HEXAHEDRON8_H_
 
 #include "Volume.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 class Hexahedron8Base : public virtual VolumeBase {
 public:
@@ -39,12 +35,12 @@ public:
 
     inline bool isQuadratic() const { return false; }
 
-    inline UInt numberOfFaces      () const { return 6; }
-    inline UInt numberOfVertices   () const { return 8; }
-    inline UInt numberOfCoordinates() const { return 8; }
+    inline Size numberOfFaces      () const { return 6; }
+    inline Size numberOfVertices   () const { return 8; }
+    inline Size numberOfCoordinates() const { return 8; }
 
-    inline UInt numberOfSideVertices   (const UInt f = 0) const { return 4; }
-    inline UInt numberOfSideCoordinates(const UInt f = 0) const { return 4; }
+    inline Size numberOfSideVertices   (const Size f = 0) const { return 4; }
+    inline Size numberOfSideCoordinates(const Size f = 0) const { return 4; }
 };
 
 template<class T>
@@ -52,55 +48,64 @@ class Hexahedron8 : public virtual Volume<T>,
               public virtual Hexahedron8Base {
 public:
     Hexahedron8();
-    Hexahedron8(const GroupCoordinates<Coordinate<T,3> >&,
-          const ElementId id,
-          const CoordinateId vId[8],
-          const LayerId layerId = LayerId(0),
-          const MatId   matId   = MatId(0));
-    Hexahedron8(GroupCoordinates<Coordinate<T,3> >&,
-          const ElementId id,
-          const Box<T,3>& box,
-          const LayerId layerId = LayerId(0),
-          const MatId   matId   = MatId(0));
+    Hexahedron8(const Id id,
+                const Coordinate::Coordinate<T,3>* v[8],
+                const Layer* lay = NULL,
+                const Model* mat = NULL);
+    Hexahedron8(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
+                const Id id,
+                const Box<T,3>& box,
+                const Layer* lay = NULL,
+                const Model* mat = NULL);
     Hexahedron8(const Hexahedron8<T>& rhs);
     virtual ~Hexahedron8();
 
-    DEFINE_CLONE(Hexahedron8<T>);
+    SEMBA_CLASS_DEFINE_CLONE(Hexahedron8<T>);
 
-    bool isStructured(const Grid3&, const Real = Grid3::tolerance) const;
+    bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
     // Checks if edges are ortonormal.
     bool isRegular() const;
-    inline bool isCurvedFace(const UInt f) const { return false; }
+    inline bool isCurvedFace(const Size f) const { return false; }
 
-    const Coordinate<T,3>* getV    (const UInt i) const { return v_[i]; }
-    const Coordinate<T,3>* getSideV(const UInt f, const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
+                                                const Size i) const;
 
-    const Coordinate<T,3>* getVertex    (const UInt i) const { return v_[i]; }
-    const Coordinate<T,3>* getSideVertex(const UInt f, const UInt i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
+                                                     const Size i) const;
 
-    vector<const Coordinate<T,3>*> getVertices() const;
-    vector<const Coordinate<T,3>*> getSideVertices(const UInt face) const;
+    std::vector<const Coordinate::Coordinate<T,3>*> getVertices() const;
+    std::vector<const Coordinate::Coordinate<T,3>*> getSideVertices(
+            const Size face) const;
 
-    Real getAreaOfFace(const UInt face) const;
-    Real getVolume() const;
+    Math::Real getAreaOfFace(const Size face) const;
+    Math::Real getVolume() const;
 
-    void setV(const UInt i, const Coordinate<T,3>*);
+    void setV(const Size i, const Coordinate::Coordinate<T,3>*);
 
-    ElemI* toStructured(const GroupCoordinates<CoordI3>&,
-                        const Grid3&, const Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const GroupCoordinates<CoordR3>&, const Grid3&) const;
+    ElemI* toStructured(const Coordinate::Group<CoordI3>&,
+                        const Grid3&,
+                        const Math::Real = Grid3::tolerance) const;
+    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
+                          const Grid3&) const;
 
     void printInfo() const;
 
 private:
-    const Coordinate<T,3>* v_[8];
+    const Coordinate::Coordinate<T,3>* v_[8];
 
-    const static Real tolerance;
+    const static Math::Real tolerance;
 };
 
-typedef Hexahedron8Base   Hex8;
-typedef Hexahedron8<Real> HexR8;
-typedef Hexahedron8<Int > HexI8;
+} /* namespace Element */
 
-#endif /* HEX8_H_ */
+typedef Element::Hexahedron8Base         Hex8;
+typedef Element::Hexahedron8<Math::Real> HexR8;
+typedef Element::Hexahedron8<Math::Int > HexI8;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_HEXAHEDRON8_H_ */

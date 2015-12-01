@@ -18,136 +18,129 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeDispersive.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMVolumeDispersive.h"
+#include "VolumeDispersive.h"
 
-PMVolumeDispersive::ErrorMagneticMaterial::ErrorMagneticMaterial()
-:   Error("PMVolumeDispersive: "
-        "Magnetic conductive materials are not supported.") {
+namespace SEMBA {
+namespace PhysicalModel {
 
-}
-
-PMVolumeDispersive::ErrorMagneticMaterial::~ErrorMagneticMaterial() throw () {
-
-}
-
-PMVolumeDispersive::PMVolumeDispersive(
-        const MatId id,
-        const string& name,
-        const Real rEpsInfty,
-        const Real rMuInfty,
-        const Real elecCond,
-        const Real magnCond) : PMVolume(id, name) {
+VolumeDispersive::VolumeDispersive(const Id id,
+                                   const std::string& name,
+                                   const Math::Real rEpsInfty,
+                                   const Math::Real rMuInfty,
+                                   const Math::Real elecCond,
+                                   const Math::Real magnCond)
+:   Volume(id, name) {
     rEpsInfty_ = rEpsInfty;
     rMuInfty_ = rMuInfty;
     // Adds conductivity as a permittivity pole.
     if (elecCond != 0.0) {
-        complex<Real> pole(0.0);
-        complex<Real> residue(elecCond/Real(2.0)/Constants::eps0, 0);
+        std::complex<Math::Real> pole(0.0);
+        std::complex<Math::Real> residue(elecCond/Math::Real(2.0)/
+                                         Math::Constants::eps0, 0);
         poleResidue_.push_back(PoleResidue(pole,residue));
     }
     //
     if (magnCond != 0.0) {
-        throw ErrorMagneticMaterial();
+        throw Error::VolumeDispersive::MagneticMaterial();
     }
 }
 
-PMVolumeDispersive::PMVolumeDispersive(
-        const MatId id,
-        const string& name,
-        const Real rEps,
-        const Real rMu,
-        const Real elecCond,
-        const Real magnCond,
-        const vector<PoleResidue>& poleResidue)
-: PMVolume(id, name) {
-    *this = PMVolumeDispersive(id, name, rEps, rMu, elecCond, magnCond);
+VolumeDispersive::VolumeDispersive(const Id id,
+                                   const std::string& name,
+                                   const Math::Real rEps,
+                                   const Math::Real rMu,
+                                   const Math::Real elecCond,
+                                   const Math::Real magnCond,
+                                   const std::vector<PoleResidue>& poleResidue)
+:   Volume(id, name) {
+    *this = VolumeDispersive(id, name, rEps, rMu, elecCond, magnCond);
     poleResidue_ = poleResidue;
 }
 
-PMVolumeDispersive::PMVolumeDispersive(
-        const MatId id,
-        const string& name,
-        const ProjectFile& file) : PMVolume(id, name) {
+VolumeDispersive::VolumeDispersive(const Id id,
+                                   const std::string& name,
+                                   const FileSystem::Project& file)
+:   Volume(id, name) {
     rEpsInfty_ = 1.0;
     rMuInfty_ = 1.0;
     file_ = file;
 }
 
-PMVolumeDispersive::~PMVolumeDispersive() {
+VolumeDispersive::~VolumeDispersive() {
 
 }
 
-UInt PMVolumeDispersive::getPoleNumber() const {
+Size VolumeDispersive::getPoleNumber() const {
     return poleResidue_.size();
 }
 
-complex<Real> PMVolumeDispersive::getPole(UInt p) const {
+std::complex<Math::Real> VolumeDispersive::getPole(Size p) const {
     return poleResidue_[p].first;
 }
 
-complex<Real> PMVolumeDispersive::getResidue(UInt p) const {
+std::complex<Math::Real> VolumeDispersive::getResidue(Size p) const {
     return poleResidue_[p].second;
 }
 
-bool PMVolumeDispersive::isDispersive() const {
+bool VolumeDispersive::isDispersive() const {
     if (poleResidue_.size() > 0) {
         return true;
     }
     return false;
 }
 
-bool PMVolumeDispersive::isClassic() const {
+bool VolumeDispersive::isClassic() const {
     return isSimplyConductive();
 }
 
-bool PMVolumeDispersive::isSimplyConductive() const {
+bool VolumeDispersive::isSimplyConductive() const {
     if (!file_.empty()) {
         return false;
     }
     return (poleResidue_.size() <= 1 && std::abs(getPole(0)) == 0);
 }
 
-Real PMVolumeDispersive::getElectricConductivity() const {
+Math::Real VolumeDispersive::getElectricConductivity() const {
     if (getPoleNumber() > 1) {
-        cout << endl << "WARNING @ getElectricConductivity: "
+        std::cout << std::endl << "WARNING @ getElectricConductivity: "
                 << "This material is dispersive and its effective permittivity "
                 << "depends on several parameters."
-                << "Returning static limit conductivity." << endl;
+                << "Returning static limit conductivity." << std::endl;
     }
-    for (UInt i = 0; i < getPoleNumber(); i++) {
+    for (Size i = 0; i < getPoleNumber(); i++) {
         if (std::abs(getPole(i)) == 0) {
-            return getResidue(i).real() * 2.0 * Constants::eps0;
+            return getResidue(i).real() * 2.0 * Math::Constants::eps0;
         }
     }
     return 0.0;
 }
 
-void PMVolumeDispersive::addPole(
-        const complex<Real>& pole, const complex<Real>& res) {
+void VolumeDispersive::addPole(
+        const std::complex<Math::Real>& pole,
+        const std::complex<Math::Real>& res) {
     poleResidue_.push_back(PoleResidue(pole,res));
     return;
 }
 
-const ProjectFile PMVolumeDispersive::getFile() const {
+const FileSystem::Project VolumeDispersive::getFile() const {
     return file_;
 }
 
-void PMVolumeDispersive::printInfo() const {
-    cout << "--- PMVolumeDispersive info ---" << endl;
-    PMVolume::printInfo();
-    cout << "Type: " << "Dispersive material" << endl;
-    cout << "Number of pole residue pairs: " << poleResidue_.size() << endl;
-    cout << "# " << " re_a " << " im_a " << " re_c " << " im_c " << endl;
-    for (UInt i = 0; i < poleResidue_.size(); i++) {
-        cout << i << " " << getPole(i).real() << " " << getPole(i).imag()
-		         << " " << getResidue(i).real()
-		         << " " << getResidue(i).imag() << endl;
+void VolumeDispersive::printInfo() const {
+    std::cout << "--- VolumeDispersive info ---" << std::endl;
+    Volume::printInfo();
+    std::cout << "Type: " << "Dispersive material" << std::endl;
+    std::cout << "Number of pole residue pairs: " << poleResidue_.size()
+              << std::endl;
+    std::cout << "# " << " re_a " << " im_a " << " re_c " << " im_c "
+              << std::endl;
+    for (Size i = 0; i < poleResidue_.size(); i++) {
+        std::cout << i << " " << getPole(i).real() << " " << getPole(i).imag()
+                  << " " << getResidue(i).real() << " " << getResidue(i).imag()
+                  << std::endl;
     }
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

@@ -18,30 +18,32 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Layer.cpp
- *
- *  Created on: Dec 3, 2014
- *      Author: luis
- */
 
 #include "Layer.h"
+
+#include <cassert>
+#include <iostream>
+#include <sstream>
+
+namespace SEMBA {
+namespace Geometry {
+namespace Layer {
 
 Layer::Layer() {
 
 }
 
-Layer::Layer(const LayerId id, const string& name)
-:   ClassIdBase<LayerId>(id) {
+Layer::Layer(const Id id, const std::string& name)
+:   Identifiable<Id>(id) {
     name_ = spaceToUnderscore(name);
 }
 
-Layer::Layer(const string& name) {
+Layer::Layer(const std::string& name) {
     name_ = spaceToUnderscore(name);
 }
 
 Layer::Layer(const Layer& rhs)
-:   ClassIdBase<LayerId>(rhs) {
+:   Identifiable<Id>(rhs) {
     name_ = rhs.name_;
 }
 
@@ -63,32 +65,32 @@ bool Layer::operator !=(const Layer& rhs) const {
     return !(*this == rhs);
 }
 
-string Layer::getName() const {
+std::string Layer::getName() const {
     return name_;
 }
 
-string Layer::getParentName() const {
+std::string Layer::getParentName() const {
    assert(false);
-   return string();
+   return std::string();
 }
 
-string Layer::getChildName() const {
+std::string Layer::getChildName() const {
    assert(false);
-   return string();
+   return std::string();
 }
 
 void Layer::printInfo() const {
-    cout << toStr() << endl;
+    std::cout << toStr() << std::endl;
 }
 
-string Layer::toStr() const {
-    stringstream ss;
+std::string Layer::toStr() const {
+    std::stringstream ss;
     ss << "Layer. Id: " << getId() << " Name: " << getName();
     return ss.str();
 }
 
-string Layer::spaceToUnderscore(string rhs) {
-    string str = rhs;
+std::string Layer::spaceToUnderscore(std::string rhs) {
+    std::string str = rhs;
     for(std::string::iterator it = str.begin(); it != str.end(); ++it) {
         if(*it == ' ') {
             *it = '_';
@@ -96,3 +98,7 @@ string Layer::spaceToUnderscore(string rhs) {
     }
     return str;
 }
+
+} /* namespace Layer */
+} /* namespace Geometry */
+} /* namespace SEMBA */

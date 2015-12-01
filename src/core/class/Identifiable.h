@@ -18,30 +18,35 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef CLASSIDBASE_H_
-#define CLASSIDBASE_H_
 
-#include "base/id/Id.h"
+#ifndef SEMBA_CLASS_IDENTIFIABLE_H_
+#define SEMBA_CLASS_IDENTIFIABLE_H_
 
-#include "ClassBase.h"
+#include "Class.h"
+
+namespace SEMBA {
+namespace Class {
 
 template<class Id>
-class ClassIdBase : public virtual ClassBase {
+class Identifiable : public virtual Class {
 public:
-    ClassIdBase();
-    ClassIdBase(const Id id);
-    ClassIdBase(const ClassIdBase<Id>& rhs);
-    virtual ~ClassIdBase();
+    Identifiable();
+    Identifiable(const Id id);
+    Identifiable(const Identifiable<Id>& rhs);
+    virtual ~Identifiable();
 
     Id   getId() const;
     void setId(const Id id);
 
-    virtual bool operator==(const ClassIdBase& rhs) const;
+    virtual bool operator==(const Identifiable& rhs) const;
 
 private:
     Id id_;
 };
 
-#include "ClassIdBase.hpp"
+} /* namespace Class */
+} /* namespace SEMBA */
 
-#endif /* CLASSIDBASE_H_ */
+#include "Identifiable.hpp"
+
+#endif /* SEMBA_CLASS_IDENTIFIABLE_H_ */

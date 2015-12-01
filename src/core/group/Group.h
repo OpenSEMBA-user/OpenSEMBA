@@ -18,51 +18,78 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef GROUP_H_
-#define GROUP_H_
 
-#include <algorithm>
-#include <iostream>
+#ifndef SEMBA_GROUP_GROUP_H_
+#define SEMBA_GROUP_GROUP_H_
+
+#include <cstddef>
+#include <memory>
 #include <typeinfo>
+#include <vector>
 
-#include "../class/ClassBase.h"
-#include "../sequence/Vector.h"
+namespace SEMBA {
+namespace Group {
+
+template <typename T>
+class Base {
+public:
+    Base();
+    virtual ~Base();
+
+    virtual std::size_t size () const = 0;
+    virtual bool        empty() const;
+
+    T*       operator()(std::size_t pos);
+    const T* operator()(std::size_t pos) const;
+
+    virtual T*       get(std::size_t pos) = 0;
+    virtual const T* get(std::size_t pos) const = 0;
+};
 
 template<typename T>
-class Group : public virtual ClassBase,
-              public Vector<T*> {
+class Group : public virtual Base<T> {
 public:
     Group() {}
     template<typename T2>
-    Group(T2* e)                     : Vector<T*>(e) {}
+    Group(T2*);
     template<typename T2>
-    Group(const std::vector<T2*>& e) : Vector<T*>(e) {}
+    Group(const std::vector<T2*>&);
     template<typename T2>
-    Group(VectorPtr<T2>&       rhs) : Vector<T*>(rhs) {}
+    Group(Group<T2>&);
     template<typename T2>
-    Group(const VectorPtr<T2>& rhs) : Vector<T*>(rhs) {}
-    Group(VectorPtr<T>&        rhs) : Vector<T*>(rhs) {}
+    Group(Group<T2>&&);
     template<typename T2>
-    Group(VectorPtr<T2>&& rhs) : Vector<T*>(std::move(rhs)) {}
-    Group(VectorPtr<T >&& rhs) : Vector<T*>(std::move(rhs)) {}
+    Group(const Group<T2>&);
+    Group(Group&);
+    Group(Group&&);
     virtual ~Group() {}
 
-    Group<T>* clone() const;
+    virtual Group& operator=(Group&  rhs);
+    virtual Group& operator=(Group&& rhs);
 
-    virtual Group& operator=(VectorPtr<T>&  rhs);
-    virtual Group& operator=(VectorPtr<T>&& rhs);
+    void resize (const std::size_t nS) { element_.resize (nS); }
+    void reserve(const std::size_t nS) { element_.reserve(nS); }
+    virtual void clear()               { element_.clear();     }
+
+    bool        empty() const { return element_.empty(); }
+    std::size_t size () const { return element_.size();  }
 
     template<class T2>
-    bool emptyOf() const;
+    bool        emptyOf() const;
     template<class T2>
-    UInt sizeOf () const;
+    std::size_t sizeOf () const;
+
+    T*       get(const std::size_t i);
+    const T* get(const std::size_t i) const;
+    Group<T>       get(const std::vector<std::size_t>&);
+    Group<const T> get(const std::vector<std::size_t>&) const;
 
     template<class T2>
     Group<typename std::conditional<std::is_const<T>::value,
                                     const T2, T2>::type>
-                    getOf    ();
+                    getOf();
     template<class T2>
-    Group<const T2> getOf    () const;
+    Group<const T2> getOf() const;
     template<class T2>
     Group<typename std::conditional<std::is_const<T>::value,
                                     const T2, T2>::type>
@@ -70,24 +97,42 @@ public:
     template<class T2>
     Group<const T2> getOfOnly() const;
 
-    void printInfo() const;
+    virtual void set(const std::size_t i, T*);
+
+    template<typename T2>
+    Group<T> add(T2*);
+    template<typename T2>
+    Group<T> add(const std::vector<T2*>&);
+    template<typename T2>
+    Group<T> add(Group<T2>&);
+    template<typename T2, typename T3 = T,
+             typename = typename std::enable_if<std::is_const<T3>::value>::type>
+    Group<T> add(const Group<T2>&);
+    virtual Group add(Group&);
+    virtual Group add(Group&&);
+
+    virtual void remove(const std::size_t&);
+    virtual void remove(const std::vector<std::size_t>&);
 
 private:
+    std::vector<std::shared_ptr<T>> element_;
+
     template<typename T2>
-    std::vector<UInt> getElemsOf_       () const;
+    std::vector<std::size_t> getElemsOf_       () const;
     template<typename T2>
-    std::vector<UInt> getElemsNotOf_    () const;
+    std::vector<std::size_t> getElemsNotOf_    () const;
     template<typename T2>
-    std::vector<UInt> getElemsOfOnly_   () const;
+    std::vector<std::size_t> getElemsOfOnly_   () const;
     template<typename T2>
-    std::vector<UInt> getElemsNotOfOnly_() const;
+    std::vector<std::size_t> getElemsNotOfOnly_() const;
+
+    template<typename T2>
+    std::shared_ptr<T> getSharedPtr(T2*) const;
 };
+
+} /* namespace Group */
+} /* namespace SEMBA */
 
 #include "Group.hpp"
 
-#define DEFINE_GROUP_CLONE(NAME, T)             \
-    NAME<T>* clone() const {                    \
-        return new NAME<T>(this->cloneElems()); \
-    }
-
-#endif /* GROUP_H_ */
+#endif /* SEMBA_GROUP_GROUP_H_ */

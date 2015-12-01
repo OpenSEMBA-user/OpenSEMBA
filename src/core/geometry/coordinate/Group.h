@@ -18,26 +18,23 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GroupCoordinates.h
- *
- *  Created on: Aug 29, 2012
- *      Author: luis
- */
 
-#ifndef COMMON_GEOMETRY_COORDINATES_GROUPCOORDINATES_H_
-#define COMMON_GEOMETRY_COORDINATES_GROUPCOORDINATES_H_
+#ifndef SEMBA_GEOMETRY_COORDINATE_GROUP_H_
+#define SEMBA_GEOMETRY_COORDINATE_GROUP_H_
 
-#include <map>
 #include <set>
 
-using namespace std;
-
 #include "Coordinate.h"
-#include "base/group/GroupId.h"
+#include "group/Cloneable.h"
+#include "group/Printable.h"
+#include "group/Identifiable.h"
 
-struct lexCompareCoord {
-    template<class T, Int D>
+namespace SEMBA {
+namespace Geometry {
+namespace Coordinate {
+
+struct CoordComparator {
+    template<class T, Size D>
     bool operator() (const Coordinate<T,D>* lhs,
                      const Coordinate<T,D>* rhs) const {
         return (lhs->pos() < rhs->pos());
@@ -45,61 +42,77 @@ struct lexCompareCoord {
 };
 
 template<typename C = Coord>
-class GroupCoordinates : public GroupId<C, CoordinateId> {
+class Group : public SEMBA::Group::Cloneable<C>,
+              public SEMBA::Group::Printable<C>,
+              public SEMBA::Group::Identifiable<C, Id> {
 public:
-    GroupCoordinates();
-    GroupCoordinates(const vector<CVecR3>&);
-    GroupCoordinates(const vector<CVecI3>&);
+    Group();
+    Group(const std::vector<Math::CVecR3>&);
+    Group(const std::vector<Math::CVecI3>&);
     template<typename C2>
-    GroupCoordinates(C2*);
+    Group(C2*);
     template<typename C2>
-    GroupCoordinates(const std::vector<C2*>&);
+    Group(const std::vector<C2*>&);
     template<typename C2>
-    GroupCoordinates(VectorPtr<C2>&);
+    Group(SEMBA::Group::Group<C2>&);
     template<typename C2>
-    GroupCoordinates(const VectorPtr<C2>&);
-    GroupCoordinates(VectorPtr<C>&);
+    Group(const SEMBA::Group::Group<C2>&);
+    Group(SEMBA::Group::Group<C>&);
     template<typename C2>
-    GroupCoordinates(VectorPtr<C2>&&);
-    GroupCoordinates(VectorPtr<C>&&);
-    virtual ~GroupCoordinates();
+    Group(SEMBA::Group::Group<C2>&&);
+    Group(SEMBA::Group::Group<C>&&);
+    virtual ~Group();
 
-    DEFINE_GROUP_CLONE(GroupCoordinates, C);
+    SEMBA_GROUP_DEFINE_CLONE(Group, C);
 
-    GroupCoordinates& operator=(VectorPtr<C>&);
-    GroupCoordinates& operator=(VectorPtr<C>&&);
+    Group& operator=(SEMBA::Group::Group<C>&);
+    Group& operator=(SEMBA::Group::Group<C>&&);
 
     void clear();
 
-    const CoordR3* getPos(const CVecR3& pos) const;
-    const CoordI3* getPos(const CVecI3& pos) const;
+    const CoordR3* getPos(const Math::CVecR3& pos) const;
+    const CoordI3* getPos(const Math::CVecI3& pos) const;
 
-    VectorPtr<C> add(VectorPtr<C>&);
-    VectorPtr<C> add(VectorPtr<C>&&);
-    using GroupId<C,CoordinateId>::add;
+    using SEMBA::Group::Identifiable<C,Id>::add;
+    SEMBA::Group::Group<C> add(SEMBA::Group::Group<C>&);
+    SEMBA::Group::Group<C> add(SEMBA::Group::Group<C>&&);
     
-    const C*            addPos(const CVecR3&        , const bool = false);
-    GroupCoordinates<C> addPos(const vector<CVecR3>&, const bool = false);
-    const C*            addPos(const CVecI3&        , const bool = false);
-    GroupCoordinates<C> addPos(const vector<CVecI3>&, const bool = false);
+    const C*               addPos(const Math::CVecR3&,
+                                  const bool = false);
+    SEMBA::Group::Group<C> addPos(const std::vector<Math::CVecR3>&,
+                                  const bool = false);
+    const C*               addPos(const Math::CVecI3&,
+                                  const bool = false);
+    SEMBA::Group::Group<C> addPos(const std::vector<Math::CVecI3>&,
+                                  const bool = false);
 
-    void remove(const UInt&);
-    void remove(const std::vector<UInt>&);
+    void remove(const Size&);
+    void remove(const std::vector<Size>&);
 
-    void applyScalingFactor(const Real factor);
+    void applyScalingFactor(const Math::Real factor);
     
     void printInfo() const;
 
 private:
-    multiset<const CoordR3*, lexCompareCoord> indexUnstr_;
-    multiset<const CoordI3*, lexCompareCoord> indexStr_;
+    std::multiset<const CoordR3*, CoordComparator> indexUnstr_;
+    std::multiset<const CoordI3*, CoordComparator> indexStr_;
 
-    void postprocess_(const UInt i);
+    void postprocess_(const Size i);
 };
 
-#include "GroupCoordinates.hpp"
+} /* namespace Coordinate */
+} /* namespace Geometry */
+} /* namespace SEMBA */
 
-typedef GroupCoordinates<CoordR3> CoordR3Group;
-typedef GroupCoordinates<CoordI3> CoordI3Group;
+#include "Group.hpp"
 
-#endif /* COMMON_GEOMETRY_COORDINATES_GROUPCOORDINATES_H_ */
+namespace SEMBA {
+namespace Geometry {
+
+typedef Coordinate::Group<CoordR3> CoordR3Group;
+typedef Coordinate::Group<CoordI3> CoordI3Group;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_COORDINATE_GROUP_H_ */

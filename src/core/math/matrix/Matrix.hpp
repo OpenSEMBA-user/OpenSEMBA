@@ -19,70 +19,78 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
+#include "Matrix.h"
+
+#include <cassert>
+
+namespace SEMBA {
+namespace Math {
+namespace Matrix {
+
 template <class T>
-MathMatrix<T>::MathMatrix() {
+Matrix<T>::Matrix() {
 
 }
 
 template <class T>
-MathMatrix<T>::~MathMatrix() {
+Matrix<T>::~Matrix() {
 
 }
 
 template <class T>
-T MathMatrix<T>::getDeterminant3x3() const {
+T Matrix<T>::getDeterminant3x3() const {
     assert(nRows() == 3 && nCols() == 3);
-    return	+ val(0,0) * (val(1,1)*val(2,2) - val(2,1)*val(1,2))
-            - val(0,1) * (val(1,0)*val(2,2) - val(1,2)*val(2,0))
-            + val(0,2) * (val(1,0)*val(2,1) - val(1,1)*val(2,0));
+    return + val(0,0) * (val(1,1)*val(2,2) - val(2,1)*val(1,2))
+    - val(0,1) * (val(1,0)*val(2,2) - val(1,2)*val(2,0))
+    + val(0,2) * (val(1,0)*val(2,1) - val(1,1)*val(2,0));
 }
 
 template <class T>
-T MathMatrix<T>::getDeterminant4x4() const {
+T Matrix<T>::getDeterminant4x4() const {
     assert(nRows() == 4 && nCols() == 4);
     return val(0,3) * val(1,2) * val(2,1) * val(3,0)
-            - val(0,2) * val(1,3) * val(2,1) * val(3,0)
-            - val(0,3) * val(1,1) * val(2,2) * val(3,0)
-            + val(0,1) * val(1,3) * val(2,2) * val(3,0)
-            + val(0,2) * val(1,1) * val(2,3) * val(3,0)
-            - val(0,1) * val(1,2) * val(2,3) * val(3,0)
-            - val(0,3) * val(1,2) * val(2,0) * val(3,1)
-            + val(0,2) * val(1,3) * val(2,0) * val(3,1)
-            + val(0,3) * val(1,0) * val(2,2) * val(3,1)
-            - val(0,0) * val(1,3) * val(2,2) * val(3,1)
-            - val(0,2) * val(1,0) * val(2,3) * val(3,1)
-            + val(0,0) * val(1,2) * val(2,3) * val(3,1)
-            + val(0,3) * val(1,1) * val(2,0) * val(3,2)
-            - val(0,1) * val(1,3) * val(2,0) * val(3,2)
-            - val(0,3) * val(1,0) * val(2,1) * val(3,2)
-            + val(0,0) * val(1,3) * val(2,1) * val(3,2)
-            + val(0,1) * val(1,0) * val(2,3) * val(3,2)
-            - val(0,0) * val(1,1) * val(2,3) * val(3,2)
-            - val(0,2) * val(1,1) * val(2,0) * val(3,3)
-            + val(0,1) * val(1,2) * val(2,0) * val(3,3)
-            + val(0,2) * val(1,0) * val(2,1) * val(3,3)
-            - val(0,0) * val(1,2) * val(2,1) * val(3,3)
-            - val(0,1) * val(1,0) * val(2,2) * val(3,3)
-            + val(0,0) * val(1,1) * val(2,2) * val(3,3);
+    - val(0,2) * val(1,3) * val(2,1) * val(3,0)
+    - val(0,3) * val(1,1) * val(2,2) * val(3,0)
+    + val(0,1) * val(1,3) * val(2,2) * val(3,0)
+    + val(0,2) * val(1,1) * val(2,3) * val(3,0)
+    - val(0,1) * val(1,2) * val(2,3) * val(3,0)
+    - val(0,3) * val(1,2) * val(2,0) * val(3,1)
+    + val(0,2) * val(1,3) * val(2,0) * val(3,1)
+    + val(0,3) * val(1,0) * val(2,2) * val(3,1)
+    - val(0,0) * val(1,3) * val(2,2) * val(3,1)
+    - val(0,2) * val(1,0) * val(2,3) * val(3,1)
+    + val(0,0) * val(1,2) * val(2,3) * val(3,1)
+    + val(0,3) * val(1,1) * val(2,0) * val(3,2)
+    - val(0,1) * val(1,3) * val(2,0) * val(3,2)
+    - val(0,3) * val(1,0) * val(2,1) * val(3,2)
+    + val(0,0) * val(1,3) * val(2,1) * val(3,2)
+    + val(0,1) * val(1,0) * val(2,3) * val(3,2)
+    - val(0,0) * val(1,1) * val(2,3) * val(3,2)
+    - val(0,2) * val(1,1) * val(2,0) * val(3,3)
+    + val(0,1) * val(1,2) * val(2,0) * val(3,3)
+    + val(0,2) * val(1,0) * val(2,1) * val(3,3)
+    - val(0,0) * val(1,2) * val(2,1) * val(3,3)
+    - val(0,1) * val(1,0) * val(2,2) * val(3,3)
+    + val(0,0) * val(1,1) * val(2,2) * val(3,3);
 }
 
 
 template <class T>
-void MathMatrix<T>::invert_() {
-    assert(MathMatrix<T>::isSquare());
-    Int *pivot = new Int[nRows()];
-    factorizeLU(pivot);
-    invertFactorized(pivot);
+void Matrix<T>::internal_() {
+    assert(Matrix<T>::isSquare());
+    Size *pivot = new Size[nRows()];
+    factorizeLU_(pivot);
+    invertFactorized_(pivot);
     delete [] pivot;
 }
 
 template<class T>
-void MathMatrix<T>::factorizeLU(Int pivot[]) {
+void Matrix<T>::factorizeLU_(Size pivot[]) {
     // Performs a LINPACK-style PLU factorization of a general matrix.
-    // Output, UInt PIVOT[N], a vector of pivot indices.
+    // Output, Size PIVOT[N], a vector of pivot indices.
     assert(nRows() == nCols());
-    UInt n = nRows();
-    UInt i, j, k, l;
+    Size n = nRows();
+    Size i, j, k, l;
     T t;
     for (k = 0; k < n-1; k++) {
         //  Find L, the index of the pivot row.
@@ -94,11 +102,11 @@ void MathMatrix<T>::factorizeLU(Int pivot[]) {
         }
         pivot[k] = l;
         //  If the pivot index is zero, the algorithm has failed.
-        if (val(l,k) == (T) 0.0)	{
+        if (val(l,k) == (T) 0.0) {
             printInfo();
-            stringstream ss;
+            std::stringstream ss;
             ss << "Zero pivot on step " << k;
-            throw Error(ss.str());
+            throw std::out_of_range(ss.str());
         }
         //  Interchange rows L and K if necessary.
         if (l != k) {
@@ -112,7 +120,7 @@ void MathMatrix<T>::factorizeLU(Int pivot[]) {
         }
         //  Row elimination with column indexing.
         for (j = k+1; j < n; j++) {
-            if (l != k)	{
+            if (l != k) {
                 t = val(l,j);
                 val(l,j) = val(k,j);
                 val(k,j) = t;
@@ -124,8 +132,8 @@ void MathMatrix<T>::factorizeLU(Int pivot[]) {
     }
     pivot[n-1] = n-1;
     if (val(n-1,n-1) == (T) 0.0) {
-        cout << "ERROR@MathMatrix<T>::factorizeToArray" << endl;
-        cout << "  Zero pivot on step " << n-1 << endl;
+        std::cout << "ERROR@Matrix<T>::factorizeToArray" << std::endl;
+        std::cout << "  Zero pivot on step " << n-1 << std::endl;
         printInfo();
         assert(false);
         exit (EXIT_FAILURE);
@@ -133,13 +141,13 @@ void MathMatrix<T>::factorizeLU(Int pivot[]) {
 }
 
 template <class T>
-void MathMatrix<T>::invertFactorized(const Int pivot[]) {
+void Matrix<T>::invertFactorized_(const Size pivot[]) {
     // Computes inverse of a general matrix factored by factorize.
     // Input, Int PIVOT(N), the pivot vector from R8GE_FA.
     assert(nRows() == nCols());
-    Int n = nRows();
-    Int nn = n * n;
-    Int i, j, k;
+    Size n = nRows();
+    Size nn = n * n;
+    Size i, j, k;
     T temp;
     T *b = new T[nn];
     // Compute Inverse(U).
@@ -175,8 +183,8 @@ void MathMatrix<T>::invertFactorized(const Int pivot[]) {
         }
     }
     // Stores inverted matrix in res.
-    for (Int i = 0; i < n; i++) {
-        for (Int j = 0; j < n; j++) {
+    for (Size i = 0; i < n; i++) {
+        for (Size j = 0; j < n; j++) {
             val(i,j) = (T) b[i+j*n];
         }
     }
@@ -185,10 +193,10 @@ void MathMatrix<T>::invertFactorized(const Int pivot[]) {
 }
 
 template <class T>
-T MathMatrix<T>::maxVal() const {
+T Matrix<T>::maxVal() const {
     T res = val(0,0);
-    for (UInt i = 0; i < nRows(); i++) {
-        for (UInt j = 0; j < nCols(); j++) {
+    for (Size i = 0; i < nRows(); i++) {
+        for (Size j = 0; j < nCols(); j++) {
             if (val(i,j) > res)
                 res = val(i,j);
         }
@@ -197,23 +205,23 @@ T MathMatrix<T>::maxVal() const {
 }
 
 template <class T>
-T MathMatrix<T>::maxValInCol(UInt col) const {
+T Matrix<T>::maxValInCol(Size col) const {
     T res = val(0,col);
-    for (UInt i = 0; i < nRows(); i++)
+    for (Size i = 0; i < nRows(); i++)
         if (val(i,col) > res)
             res = val(i,col);
     return res;
 }
 
 template <class T>
-void MathMatrix<T>::sortRows() {
+void Matrix<T>::sortRows() {
     // Orders array a with nr rows and nc columns. Ordering is performed
     // using column indicated in orCol as reference. In ascending order.
     sortRows(0, nCols());
 }
 
 template <class T>
-void MathMatrix<T>::sortRows(const UInt iCol, const UInt lCol) {
+void Matrix<T>::sortRows(const Size iCol, const Size lCol) {
     // Orders array a with nr rows and nc columns. Ordering is performed
     // using column indicated in orCol as reference. In ascending order.
     if (nRows() <= 1) {
@@ -223,11 +231,10 @@ void MathMatrix<T>::sortRows(const UInt iCol, const UInt lCol) {
 }
 
 template <class T>
-bool MathMatrix<T>::isEQ_(
-        const T* x1,
-        const T* x2,
-        const UInt vS) const {
-    for (UInt i = 0; i < vS; i++) {
+bool Matrix<T>::isEQ_(const T* x1,
+                      const T* x2,
+                      const Size vS) const {
+    for (Size i = 0; i < vS; i++) {
         if (x1[i] != x2[i]) {
             return false;
         }
@@ -236,11 +243,10 @@ bool MathMatrix<T>::isEQ_(
 }
 
 template <class T>
-bool MathMatrix<T>::isGEQ_(
-        const T* x1,
-        const T* x2,
-        const UInt vS) const {
-    for (UInt i = 0; i < vS; i++) {
+bool Matrix<T>::isGEQ_(const T* x1,
+                       const T* x2,
+                       const Size vS) const {
+    for (Size i = 0; i < vS; i++) {
         if (x1[i] < x2[i]) {
             return false;
         }
@@ -252,11 +258,10 @@ bool MathMatrix<T>::isGEQ_(
 }
 
 template <class T>
-bool MathMatrix<T>::isLEQ_(
-        const T* x1,
-        const T* x2,
-        const UInt vS) const {
-    for (UInt i = 0; i < vS; i++) {
+bool Matrix<T>::isLEQ_(const T* x1,
+                       const T* x2,
+                       const Size vS) const {
+    for (Size i = 0; i < vS; i++) {
         if (x1[i] > x2[i]) {
             return false;
         }
@@ -268,22 +273,20 @@ bool MathMatrix<T>::isLEQ_(
 }
 
 template <class T>
-Int MathMatrix<T>::partitionRows_(
-        Int p, Int r,
-        const UInt iCol, const UInt lCol) {
+Int Matrix<T>::partitionRows_(Int p, Int r, const Size iCol, const Size lCol) {
     Int j = p - 1;
     for (Int i = p; i < r; i++) {
         bool geq = isGEQ_(&val(r,iCol), &val(i,iCol), lCol - iCol + 1);
         if (geq) {
             j++;
-            for (UInt k = 0; k < nCols(); k++) {
+            for (Size k = 0; k < nCols(); k++) {
                 T temp = val(j,k);
                 val(j,k) = val(i,k);
                 val(i,k) = temp;
             }
         }
     }
-    for (UInt k = 0; k < nCols(); k++) {
+    for (Size k = 0; k < nCols(); k++) {
         T x = val(r, k);
         val(r, k) = val(j+1, k);
         val(j+1, k) = x;
@@ -292,8 +295,7 @@ Int MathMatrix<T>::partitionRows_(
 }
 
 template <class T>
-void MathMatrix<T>::QSRows_(
-        Int p, Int r, const UInt iCol, const UInt lCol) {
+void Matrix<T>::QSRows_(Int p, Int r, const Size iCol, const Size lCol) {
     if (p < r) {
         Int q = partitionRows_(p, r, iCol, lCol);
         QSRows_(p, q - 1, iCol, lCol);
@@ -302,12 +304,11 @@ void MathMatrix<T>::QSRows_(
 }
 
 template <class T>
-UInt MathMatrix<T>::binarySearch_(
-        const T* key,
-        const UInt col,
-        const UInt vecSize,
-        UInt imin,
-        UInt imax) const {
+Size Matrix<T>::binarySearch_(const T* key,
+                              const Size col,
+                              const Size vecSize,
+                              Size imin,
+                              Size imax) const {
     // NOTE: Just for ascending order!!!
     if (imax == imin) {
         if (nRows() == imin) {
@@ -317,7 +318,7 @@ UInt MathMatrix<T>::binarySearch_(
         T *value;
         value = new T [vecSize];
 
-        for (UInt i = 0; i < vecSize; i++) {
+        for (Size i = 0; i < vecSize; i++) {
             value[i] = val(imin, col+i);
         }
         bool iseq;
@@ -329,10 +330,10 @@ UInt MathMatrix<T>::binarySearch_(
             return nRows();
         }
     } else {
-        UInt imid = (UInt) (imin + imax) / 2;
+        Size imid = (Size) (imin + imax) / 2;
         T *value;
         value = new T [vecSize];
-        for (UInt i = 0; i < vecSize; i++) {
+        for (Size i = 0; i < vecSize; i++) {
             value[i] = val(imid, col+i);
         }
         bool geq = isGEQ_(value, key, vecSize);
@@ -346,19 +347,18 @@ UInt MathMatrix<T>::binarySearch_(
 }
 
 template <class T>
-UInt MathMatrix<T>::findFirstOcurrenceInColumns(
-        const T* key,
-        const UInt col,
-        const UInt vecSize) const {
+Size Matrix<T>::findFirstOcurrenceInColumns(const T* key,
+                                            const Size col,
+                                            const Size vecSize) const {
     // Performs binary search -------------------------------------------------
-    UInt row = binarySearch_(key, col, vecSize, 0, nRows());
+    Size row = binarySearch_(key, col, vecSize, 0, nRows());
     if (row == nRows()) {
         return row; // Returns this is value was not found.
     }
     // Goes back to find the first occurrence ---------------------------------
-    for (UInt i = row; i > 0; i--) {
+    for (Size i = row; i > 0; i--) {
         bool isEqual = true;
-        for (UInt j = 0; j < vecSize; j++) {
+        for (Size j = 0; j < vecSize; j++) {
             isEqual &= val(i,j+col) == key[j];
         }
         if (!isEqual) {
@@ -372,44 +372,44 @@ UInt MathMatrix<T>::findFirstOcurrenceInColumns(
 }
 
 template <class T>
-void MathMatrix<T>::cpLowerTri2UpperTri() {
-    UInt i, j;
+void Matrix<T>::cpLowerTri2UpperTri() {
+    Size i, j;
     for (i = 0; i < nRows(); i++)
         for (j = i+1; j < nCols(); j++)
             val(i,j) = val(j,i);
 }
 
 template <class T>
-void MathMatrix<T>::zeros() {
-    for (UInt i = 0; i < nRows(); i++)
-        for (UInt j = 0; j < nCols(); j++)
+void Matrix<T>::zeros() {
+    for (Size i = 0; i < nRows(); i++)
+        for (Size j = 0; j < nCols(); j++)
             val(i,j) = (T) 0;
 }
 
 template <class T>
-void MathMatrix<T>::convertToArray(const Int mode, Real *res) const {
+void Matrix<T>::convertToArray(const Int mode, Real *res) const {
     if (mode == MATRICES_COL_MAJOR) {
-        for (UInt j = 0; j < nCols(); j++)
-            for (UInt i = 0; i < nRows(); i++)
+        for (Size j = 0; j < nCols(); j++)
+            for (Size i = 0; i < nRows(); i++)
                 res[i + j * nRows()] = val(i,j);
         return;
     } else if (mode == MATRICES_ROW_MAJOR) {
-        for (UInt i = 0; i < nRows(); i++)
-            for (UInt j = 0; j < nCols(); j++)
+        for (Size i = 0; i < nRows(); i++)
+            for (Size j = 0; j < nCols(); j++)
                 res[i * nCols() + j] = val(i,j);
         return;
     }
 }
 
 template <class T>
-bool MathMatrix<T>::isSquare() const {
+bool Matrix<T>::isSquare() const {
     return (nRows() == nCols());
 }
 
 template <class T>
-bool MathMatrix<T>::isSymmetric() const {
-    for (UInt i = 0; i < nRows(); i++) {
-        for (UInt j = 0; j < nRows(); j++) {
+bool Matrix<T>::isSymmetric() const {
+    for (Size i = 0; i < nRows(); i++) {
+        for (Size j = 0; j < nRows(); j++) {
             if (val(i,j) != val(j,i)) {
                 return false;
             }
@@ -419,29 +419,34 @@ bool MathMatrix<T>::isSymmetric() const {
 }
 
 template <class T>
-void MathMatrix<T>::eye() {
+void Matrix<T>::eye() {
     assert(isSquare());
     // Sets 1 in main diagonal or 0 otherwise.
     zeros();
-    for (UInt i = 0; i < nRows(); i++)
+    for (Size i = 0; i < nRows(); i++)
         val(i,i) = T(1);
 }
 
 template <class T>
-vector<T> MathMatrix<T>::cpRowToVector(const UInt row) const {
-    vector<T> res(nCols());
-    for (UInt i = 0; i < nCols(); i++) {
+std::vector<T> Matrix<T>::cpRowToVector(const UInt row) const {
+    std::vector<T> res(nCols());
+    for (Size i = 0; i < nCols(); i++) {
         res[i] = val(row,i);
     }
     return res;
 }
 
 template <class T>
-vector<CartesianVector<T,3> > MathMatrix<T>::convertToCartesianVector() const {
+std::vector<Vector::Cartesian<T,3> >
+        Matrix<T>::convertToCartesianVector() const {
     assert(nCols() == 3);
-    vector<CartesianVector<T,3> > res(nRows());
-    for (UInt r = 0; r < nRows(); r++) {
-        res[r] = CartesianVector<T,3>(val(r,0), val(r,1), val(r,2));
+    std::vector<Vector::Cartesian<T,3> > res(nRows());
+    for (Size r = 0; r < nRows(); r++) {
+        res[r] = Vector::Cartesian<T,3>(val(r,0), val(r,1), val(r,2));
     }
     return res;
 }
+
+} /* namespace MAtrix */
+} /* namespace Math */
+} /* namespace SEMBA */

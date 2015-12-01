@@ -18,36 +18,51 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * constants.h
- *
- *  Created on: May 12, 2013
- *      Author: luis
- */
 
-#ifndef CONSTANTS_H_
-#define CONSTANTS_H_
+#ifndef SEMBA_MATH_CONSTANTS_H_
+#define SEMBA_MATH_CONSTANTS_H_
 
 #include "Types.h"
 
-#define SPEED_OF_LIGHT_SQ 8.98755179E+16
-#define INVC0 3.33564095E-9
-#define VACUUM_IMPEDANCE 3.76730313E+2
-#define VACUUM_ADMITANCE 2.65441873E-3
-#define INV4PIEPS0 8.98755179E+9
-#define INV2PIEPS0 1.79751036E+10
-#define SQRT2xC0 4.23970560000766E+08
-
-#define INV4PI 0.079577471545947674
-
+namespace SEMBA {
+namespace Math {
 namespace Constants {
-    static const Real eps0 = 8.85418782E-12;
-    static const Real mu0 = 1.25663706E-6;
-    static const Real c0 = 299792458.0;
-    static const Real pi = 3.14159265358979323846;  // Same as M_PI
-    static const Real pi_2 = 1.57079632679489661923;  // Same as M_PI_2
-}
 
+const Real SPEED_OF_LIGHT_SQ = 8.98755179E+16;
+const Real INVC0             = 3.33564095E-9;
+const Real VACUUM_IMPEDANCE  = 3.76730313E+2;
+const Real VACUUM_ADMITANCE  = 2.65441873E-3;
+const Real INV4PIEPS0        = 8.98755179E+9;
+const Real INV2PIEPS0        = 1.79751036E+10;
+const Real SQRT2xC0          = 4.23970560000766E+08;
 
+const Real INV4PI            = 0.079577471545947674;
 
-#endif /* CONSTANTS_H_ */
+const Real eps0 = 8.85418782E-12;
+const Real mu0  = 1.25663706E-6;
+const Real c0   = 299792458.0;
+const Real pi   = 3.14159265358979323846;  // Same as M_PI
+const Real pi_2 = 1.57079632679489661923;  // Same as M_PI_2
+
+enum CartesianPlane {
+    xy = 0,
+    yz = 1,
+    zx = 2
+};
+
+enum CartesianAxis {
+    x = 0,
+    y = 1,
+    z = 2
+};
+
+enum CartesianBound {
+    L = 0,
+    U = 1
+};
+
+} /* namespace Constants */
+} /* namespace Math */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_MATH_CONSTANTS_H_ */

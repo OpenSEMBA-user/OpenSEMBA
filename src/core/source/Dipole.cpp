@@ -18,33 +18,32 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Dipole.cpp
- *
- *  Created on: Jun 28, 2013
- *      Author: luis
- */
 
-#include "../sources/Dipole.h"
+#include "Dipole.h"
 
-Dipole::Dipole(const Magnitude* magnitude,
-               const GroupElements<Vol>& elem,
-               Real length,
-               CVecR3 orientation,
-               CVecR3 position)
-:   EMSourceBase(magnitude),
-    GroupElements<const Vol>(elem) {
+namespace SEMBA {
+namespace Source {
+
+Dipole::Dipole(const Magnitude::Magnitude* magnitude,
+               const Geometry::Element::Group<Geometry::Vol>& elem,
+               Math::Real length,
+               Math::CVecR3 orientation,
+               Math::CVecR3 position)
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Vol>(elem) {
 
     length_ = length;
     orientation_ = orientation;
     position_ = position;
+    gaussDelay_ = 0.0;
+    spreadSqrt2_ = 0.0;
 //    gaussDelay_ = magnitude.getDelay();
 //    spreadSqrt2_ = magnitude.getSpread() * sqrt(2.0);
 }
 
 Dipole::Dipole(const Dipole& rhs)
-:   EMSourceBase(rhs),
-    GroupElements<const Vol>(rhs) {
+:   SEMBA::Source::Base(rhs),
+    Geometry::Element::Group<const Geometry::Vol>(rhs) {
 
     length_ = rhs.length_;
     orientation_ = rhs.orientation_;
@@ -57,8 +56,8 @@ Dipole::~Dipole() {
 
 }
 
-bool Dipole::hasSameProperties(const EMSourceBase& rhs) const {
-    if(!EMSourceBase::hasSameProperties(rhs)) {
+bool Dipole::hasSameProperties(const SEMBA::Source::Base& rhs) const {
+    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
         return false;
     }
     const Dipole* rhsPtr = rhs.castTo<Dipole>();
@@ -71,19 +70,22 @@ bool Dipole::hasSameProperties(const EMSourceBase& rhs) const {
     return hasSameProperties;
 }
 
-const string& Dipole::getName() const {
-    const static string res = "Dipole";
+const std::string& Dipole::getName() const {
+    const static std::string res = "Dipole";
     return res;
 }
 
 void Dipole::printInfo() const {
-    cout << " ---- Dipole information ---- " << endl;
-    EMSourceBase::printInfo();
-    cout << " - Length: " << length_ << endl;
-    cout << " - Orientation vector:";;
+    std::cout << " ---- Dipole information ---- " << std::endl;
+    SEMBA::Source::Base::printInfo();
+    std::cout << " - Length: " << length_ << std::endl;
+    std::cout << " - Orientation vector:";;
     orientation_.printInfo();
-    cout << endl;
-    cout << " - Position vector:";
+    std::cout << std::endl;
+    std::cout << " - Position vector:";
     position_.printInfo();
-    cout << endl;
+    std::cout << std::endl;
 }
+
+} /* namespace Source */
+} /* namespace SEMBA */

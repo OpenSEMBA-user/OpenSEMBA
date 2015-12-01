@@ -18,55 +18,49 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * SmbData.h
- *
- *  Created on: Mar 28, 2014
- *      Author: luis
- */
 
-#ifndef SMBDATA_H_
-#define SMBDATA_H_
+#ifndef SEMBA_DATA_H_
+#define SEMBA_DATA_H_
 
-#include "geometry/MeshUnstructured.h"
-#include "geometry/MeshStructured.h"
+#include "geometry/mesh/Mesh.h"
 #include "geometry/Grid.h"
-#include "physicalModel/GroupPhysicalModels.h"
-#include "options/OptionsMesher.h"
-#include "options/OptionsSolverFDTD.h"
-#include "options/OptionsSolverDGTD.h"
-#include "outRq/GroupOutRqs.h"
-#include "ProjectFile.h"
-#include "base/class/ClassBase.h"
-#include "sources/GroupEMSources.h"
+#include "physicalModel/Group.h"
+#include "outputRequest/Group.h"
+#include "source/Group.h"
 
-class SmbData : public virtual ProjectFile,
-                public virtual ClassBase {
+#include "filesystem/Project.h"
+#include "class/Class.h"
+#include "class/Cloneable.h"
+#include "class/Printable.h"
+
+namespace SEMBA {
+
+class Data : public virtual FileSystem::Project,
+             public virtual Class::Class,
+             public virtual Class::Cloneable,
+             public virtual Class::Printable {
 public:
-    Grid3*                 grid;
-    Mesh*                  mesh;
+    Geometry::Grid3*        grid;
+    Geometry::Mesh::Mesh*   mesh;
 
-    OptionsMesher*         mesherOptions;
-    OptionsSolver*         solverOptions;
+    PhysicalModel::Group<>* physicalModels;
 
-    GroupPhysicalModels<>* pMGroup;
+    Source::Group<>*        sources;
+    OutputRequest::Group<>* outputRequests;
 
-    GroupEMSources<>*      emSources;
-    GroupOutRqs<>*         outputRequests;
+    Data();
+    Data(const Data& rhs);
+    virtual ~Data();
 
-    SmbData();
-    SmbData(const SmbData& rhs);
-    virtual ~SmbData();
+    SEMBA_CLASS_DEFINE_CLONE(Data);
 
-    DEFINE_CLONE(SmbData);
-
-    SmbData& operator=(const SmbData& rhs);
+    Data& operator=(const Data& rhs);
 
     bool check() const;
 
     void printInfo() const;
-
-private:
 };
 
-#endif /* SMBDATA_H_ */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_DATA_H_ */

@@ -18,38 +18,37 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMWire.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMWIRE_H_
-#define PMWIRE_H_
+#ifndef SEMBA_PHYSICALMODEL_WIRE_H_
+#define SEMBA_PHYSICALMODEL_WIRE_H_
 
 #include "PhysicalModel.h"
 
-class PMWire: public PhysicalModel {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class Wire: public PhysicalModel {
 public:
-	PMWire(
-	 const MatId id,
-	 const string name,
-	 const Real radius,
-	 const Real resistance,
-	 const Real inductance);
-	virtual ~PMWire();
+    Wire(const Id id,
+         const std::string name,
+         const Math::Real radius,
+         const Math::Real resistance,
+         const Math::Real inductance);
+    virtual ~Wire();
 
-    DEFINE_CLONE(PMWire);
+    SEMBA_CLASS_DEFINE_CLONE(Wire);
 
-	virtual Real	 getRadius() const;
-	virtual Real	 getResistance() const;
-	virtual Real	 getInductance() const;
-	virtual void printInfo() const;
+    virtual Math::Real getRadius() const;
+    virtual Math::Real getResistance() const;
+    virtual Math::Real getInductance() const;
+    virtual void printInfo() const;
 private:
-	Real radius_;
-	Real resistance_; // Resistance per meter.
-	Real inductance_; // Inductance per meter.
+    Math::Real radius_;
+    Math::Real resistance_; // Resistance per meter.
+    Math::Real inductance_; // Inductance per meter.
 };
 
-#endif /* PMWIRE_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_WIRE_H_ */

@@ -18,57 +18,81 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GroupEMSources.cpp
- *
- *  Created on: Jun 28, 2013
- *      Author: luis
- */
-#include "../sources/GroupEMSources.h"
 
-template<typename E>
-GroupEMSources<E>& GroupEMSources<E>::operator=(VectorPtr<E>& rhs) {
+#include "Group.h"
+
+namespace SEMBA {
+namespace Source {
+
+template<typename S>
+Group<S>& Group<S>::operator=(SEMBA::Group::Group<S>& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    Group<E>::operator=(rhs);
+    SEMBA::Group::Group<S>::operator=(rhs);
     return *this;
 }
 
-template<typename E>
-GroupEMSources<E>& GroupEMSources<E>::operator=(VectorPtr<E>&& rhs) {
+template<typename S>
+Group<S>& Group<S>::operator=(SEMBA::Group::Group<S>&& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    Group<E>::operator=(std::move(rhs));
+    SEMBA::Group::Group<S>::operator=(std::move(rhs));
     return *this;
 }
 
-template<typename E>
-bool GroupEMSources<E>::isSimilar(const GroupEMSources& rhs) const {
+template<typename S> template<typename S2>
+SEMBA::Group::Group<S> Group<S>::add(S2* newSrc) {
+    for (Size i = 0; i < this->size(); i++) {
+        if (this->get(i)->template is<S2>()) {
+            S2* oRq = this->get(i)->template castTo<S2>();
+            if (oRq->hasSameProperties(*newSrc)) {
+                oRq->add(newSrc->elems());
+                delete newSrc;
+                return SEMBA::Group::Group<S>();
+            }
+        }
+    }
+    return SEMBA::Group::Group<S>::add(newSrc);
+}
+
+template<typename S> template<typename S2>
+SEMBA::Group::Group<S*> Group<S>::add(std::vector<S2*>& newSrcs) {
+    std::vector<S*> res;
+    res.reserve(newSrcs.size());
+    for (Size i = 0; i < newSrcs.size(); i++) {
+        S* resElem = add(newSrcs[i]);
+        if (resElem != NULL) {
+            res.push_back(resElem);
+        }
+    }
+    return res;
+}
+
+//template<typename S> template<typename S2>
+//vector<S*> Group<S>::add(Group<S2>& rhs) {
+//    return Group<S>::add(rhs);
+//}
+
+template<typename S>
+bool Group<S>::isSimilar(const Group& rhs) const {
     if (this->size() != rhs.size()) {
         return false;
     }
-    for (UInt i = 0; i < this->size(); i++) {
+    for (Size i = 0; i < this->size(); i++) {
         if (!this->get(i)->isSimilar(*rhs(i))) {
             return false;
         }
-    }
+     }
     return true;
 }
 
-template<typename E>
-bool GroupEMSources<E>::check() const {
-    for (UInt i = 0; i < this->size(); i++) {
-        if (!this->get(i)->check()) {
-            return false;
-        }
-    }
-    return true;
+template<typename S>
+void Group<S>::printInfo() const {
+    std::cout<< " --- SourceGroup info ---" << std::endl;
+    SEMBA::Group::Printable<S>::printInfo();
 }
 
-template<typename E>
-void GroupEMSources<E>::printInfo() const {
-    cout << " --- EMSourceGroup info --- " << endl;
-    Group<E>::printInfo();
-}
+} /* namespace Source */
+} /* namespace SEMBA */

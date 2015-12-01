@@ -18,76 +18,36 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * MathUtils.h
- *
- *  Created on: Jul 21, 2013
- *      Author: luis
- */
 
-#ifndef MATHUTILS_H_
-#define MATHUTILS_H_
+#ifndef SEMBA_MATH_UTIL_DFT_H_
+#define SEMBA_MATH_UTIL_DFT_H_
 
 #include <cmath>
 #include <complex>
 #include <utility>
 #include <vector>
-using namespace std;
 
-#include "Constants.h"
-#include "CartesianVector.h"
+#include "math/vector/Cartesian.h"
 
-namespace MathUtils {
-
-template<class T, Int D>
-CartesianVector<complex<T>,D> convertToComplex(
-        const CartesianVector<T,D>& rhs);
-
-template<class T, Int D>
-vector<CartesianVector<complex<T>,D> > convertToComplex(
-        const vector<CartesianVector<T,D> >& rhs);
-
-template<class T, Int D>
-void convertToComplex(
-        CartesianVector<complex<T>,D>* res,
-        const CartesianVector<T,D>* rhs,
-        const UInt vS);
+namespace SEMBA {
+namespace Math {
+namespace Util {
 
 template<class T>
-vector<Real> logspace(
-        const pair<Real, Real>& rangeExponents,
-        const T nPoints);
+std::complex<T> getDFT(const Real frequency,
+                       const std::vector<T>& time,
+                       const std::vector<T>& signal);
 
-template<class T>
-vector<T> linspace(
-        const pair<T,T>& range,
-        const UInt nPoints);
+template<class T, Size D>
+Vector::Cartesian<std::complex<T>,D> getDFT(
+      const Real frequency,
+      const std::vector<T>& time,
+      const std::vector<Vector::Cartesian<T,D> >& signal);
 
-template<class T>
-T meanDifference(const vector<T>& vec);
+} /* namespace Util */
+} /* namespace Math */
+} /* namespace SEMBA */
 
-template<class T>
-T mean(const vector<T>& vec);
+#include "DFT.hpp"
 
-template<class T>
-T sum(const vector<T>& vec);
-
-template<class T>
-complex<T> getDFT(
-        const Real frequency,
-        const vector<T>& time,
-        const vector<T>& signal);
-
-template<class T, Int D>
-CartesianVector<complex<T>,D> getDFT(
-        const Real frequency,
-        const vector<T>& time,
-        const vector<CartesianVector<T,D> >& signal);
-
-template<class T>
-bool complexLT(complex<T> a, complex<T> b);
-}
-
-#include "MathUtils.hpp"
-
-#endif /* MATHUTILS_H_ */
+#endif /* SEMBA_MATH_UTIL_DFT_H_ */

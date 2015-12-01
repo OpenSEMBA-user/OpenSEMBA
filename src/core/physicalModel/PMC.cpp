@@ -18,26 +18,25 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMPMC.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMPMC.h"
+#include "PMC.h"
 
-PMPMC::~PMPMC() {
+namespace SEMBA {
+namespace PhysicalModel {
+
+PMC::PMC(const Id id, const std::string name)
+:   Predefined(id, name){
+}
+
+PMC::~PMC() {
 
 }
 
-PMPMC::PMPMC(const MatId id, const string name)
-: PMPredefined(id, name){
+void PMC::printInfo() const {
+    std::cout << "--- PMC info ---" << std::endl;
+    Predefined::printInfo();
+    std::cout << "Perfect Magnetic Conductor" << std::endl;
 }
 
-void
-PMPMC::printInfo() const {
-	cout << "--- PMPMC info ---" << endl;
-	PMPredefined::printInfo();
-	cout << "Perfect Magnetic Conductor" << endl;
-}
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

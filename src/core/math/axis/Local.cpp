@@ -18,36 +18,34 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * LocalAxes.cpp
- *
- *  Created on: Aug 27, 2015
- *      Author: luis
- */
 
-#include "LocalAxes.h"
+#include "Local.h"
 
-LocalAxes::LocalAxes() {
+namespace SEMBA {
+namespace Math {
+namespace Axis {
+
+Local::Local() {
 }
 
-LocalAxes::LocalAxes(CVecR3 eulerAngles, CVecR3 origin) {
+Local::Local(CVecR3 eulerAngles, CVecR3 origin) {
     eulerAngles_ = eulerAngles;
     origin_ = origin;
 }
 
-LocalAxes::~LocalAxes() {
+Local::~Local() {
 
 }
 
-const CVecR3 LocalAxes::getEulerAngles() const {
+const CVecR3 Local::getEulerAngles() const {
     return eulerAngles_;
 }
 
-const CVecR3 LocalAxes::getOrigin() const {
+const CVecR3 Local::getOrigin() const {
     return origin_;
 }
 
-MatR33 LocalAxes::getTransformationMatrix() const {
+MatR33 Local::getTransformationMatrix() const {
     MatR33 res;
     const Real phi = eulerAngles_(0);
     const Real theta = eulerAngles_(1);
@@ -68,21 +66,25 @@ MatR33 LocalAxes::getTransformationMatrix() const {
     return res;
 }
 
-MatR33 LocalAxes::convertToGlobal(const MatR33& local) const {
+MatR33 Local::convertToGlobal(const MatR33& local) const {
     MatR33 transformation = getTransformationMatrix();
     MatR33 transformationTransposed = getTransformationMatrix().transpose();
     MatR33 global = transformation * local * transformationTransposed;
     return global;
 }
 
-CVecR3 LocalAxes::convertToGlobal(const CVecR3& local) const {
+CVecR3 Local::convertToGlobal(const CVecR3& local) const {
     MatR33 transformation = getTransformationMatrix();
     CVecR3 global = transformation * local + origin_;
     return global;
 }
 
-void LocalAxes::printInfo() const {
-    cout << " --- Local Axes Info --- " << endl;
-    cout << "Euler angles: " << eulerAngles_ << endl;
-    cout << "Origin:       " << origin_ << endl;
+void Local::printInfo() const {
+    std::cout << " --- Local Axes Info --- " << std::endl;
+    std::cout << "Euler angles: " << eulerAngles_ << std::endl;
+    std::cout << "Origin:       " << origin_ << std::endl;
 }
+
+} /* namespace Axis */
+} /* namespace Math */
+} /* namespace SEMBA */

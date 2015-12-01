@@ -18,14 +18,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Line.cpp
- *
- *  Created on: May 13, 2013
- *      Author: luis
- */
 
 #include "Line.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 template<class T>
 Line<T>::Line() {
@@ -37,5 +35,9 @@ Line<T>::~Line() {
 
 }
 
-template class Line<Real>;
-template class Line<Int >;
+template class Line<Math::Real>;
+template class Line<Math::Int >;
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

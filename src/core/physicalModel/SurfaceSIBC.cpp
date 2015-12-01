@@ -18,40 +18,41 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMSurface.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMSurfaceSIBC.h"
+#include "SurfaceSIBC.h"
 
-PMSurfaceSIBC::PMSurfaceSIBC(
-        const MatId id,
-        const string& name,
-        const MatR22& Zinfinite,
-        const MatR22& Zstatic,
-        const vector<Real>& pole,
-        const vector<MatR22 >& Z)
-: PMSurface(id, name) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+SurfaceSIBC::SurfaceSIBC(const Id id,
+                         const std::string& name,
+                         const Math::MatR22& Zinfinite,
+                         const Math::MatR22& Zstatic,
+                         const std::vector<Math::Real>& pole,
+                         const std::vector<Math::MatR22 >& Z)
+:   Surface(id, name) {
     ZInfinity_ = Zinfinite;
     ZStatic_ = Zstatic;
     pole_ = pole;
     Z_ = Z;
 }
 
-PMSurfaceSIBC::~PMSurfaceSIBC() {
+SurfaceSIBC::SurfaceSIBC(const Id id,
+                         const std::string& name,
+                         const FileSystem::Project& file)
+:   Surface(id, name) {
+    file_ = file;
+}
+
+SurfaceSIBC::~SurfaceSIBC() {
 
 }
 
-PMSurfaceSIBC&
-PMSurfaceSIBC::operator=(
-        const PMSurfaceSIBC &rhs) {
+SurfaceSIBC& SurfaceSIBC::operator=(const SurfaceSIBC &rhs) {
     if (this == &rhs) {
         return *this;
     }
-    PMSurface::operator=(rhs);
+    Surface::operator=(rhs);
     ZInfinity_ = rhs.ZInfinity_;
     ZStatic_ = rhs.ZStatic_;
     pole_ = rhs.pole_;
@@ -60,54 +61,46 @@ PMSurfaceSIBC::operator=(
     return *this;
 }
 
-void
-PMSurfaceSIBC::setZInfinity(const MatR22& ZInf) {
+void SurfaceSIBC::setZInfinity(const Math::MatR22& ZInf) {
     ZInfinity_ = ZInf;
 }
 
-void
-PMSurfaceSIBC::setZStatic(const MatR22& ZSta) {
+void SurfaceSIBC::setZStatic(const Math::MatR22& ZSta) {
     ZStatic_ = ZSta;
 }
 
-void
-PMSurfaceSIBC::addPole(const Real vP, const MatR22& Z) {
+void SurfaceSIBC::addPole(const Math::Real vP, const Math::MatR22& Z) {
     pole_.push_back(vP);
     Z_.push_back(Z);
 }
 
-void
-PMSurfaceSIBC::printInfo() const {
-    cout << "--- Physical model information ---"   << endl;
-    cout << "Surface Impedance Boundary Condition" << endl;
-    PMSurface::printInfo();
-    cout << "Impedance @ infininite freq.:";
+void SurfaceSIBC::printInfo() const {
+    std::cout << "--- Physical model information ---"   << std::endl;
+    std::cout << "Surface Impedance Boundary Condition" << std::endl;
+    Surface::printInfo();
+    std::cout << "Impedance @ infininite freq.:";
     ZInfinity_.printInfo();
-    cout << "Impedance @ zero freq.:";
+    std::cout << "Impedance @ zero freq.:";
     ZStatic_.printInfo();
     if (pole_.size()) {
-        cout << "Number of poles: " << pole_.size() << endl;
-        cout << "# Pole Z11 Z12 Z21 Z22 " << endl;
+        std::cout << "Number of poles: " << pole_.size() << std::endl;
+        std::cout << "# Pole Z11 Z12 Z21 Z22 " << std::endl;
     }
-    for (register UInt i = 0; i < pole_.size(); i++) {
-        cout << i << " "
+    for (register Size i = 0; i < pole_.size(); i++) {
+        std::cout << i << " "
                 << pole_[i] << " "
                 << Z_[i](0,0) << " " << Z_[i](0,1) << " "
-                << Z_[i](1,0) << " " << Z_[i](1,1) << endl;
+                << Z_[i](1,0) << " " << Z_[i](1,1) << std::endl;
     }
 }
 
-UInt PMSurfaceSIBC::getNumberOfPoles() const {
+Size SurfaceSIBC::getNumberOfPoles() const {
     return pole_.size();
 }
 
-PMSurfaceSIBC::PMSurfaceSIBC(
-        const MatId id,
-        const string& name,
-        const ProjectFile& file) : PMSurface(id, name) {
-    file_ = file;
-}
-
-const ProjectFile PMSurfaceSIBC::getFile() const {
+const FileSystem::Project SurfaceSIBC::getFile() const {
     return file_;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

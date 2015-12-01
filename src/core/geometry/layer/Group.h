@@ -18,52 +18,58 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GroupLayers.h
- *
- *  Created on: Dec 3, 2014
- *      Author: luis
- */
 
-#ifndef COMMON_INPUTS_LAYERGROUP_H_
-#define COMMON_INPUTS_LAYERGROUP_H_
-
-#include <vector>
-#include <map>
-
-using namespace std;
+#ifndef SEMBA_GEOMETRY_LAYER_GROUP_H_
+#define SEMBA_GEOMETRY_LAYER_GROUP_H_
 
 #include "Layer.h"
-#include "base/group/GroupId.h"
+#include "group/Cloneable.h"
+#include "group/Printable.h"
+#include "group/Identifiable.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Layer {
 
 template<typename L = Layer>
-class GroupLayers : public GroupId<L, LayerId> {
+class Group : public SEMBA::Group::Cloneable<L>,
+              public SEMBA::Group::Printable<L>,
+              public SEMBA::Group::Identifiable<L, Id>  {
 public:
-    GroupLayers() {}
+    Group() {}
     template<typename L2>
-    GroupLayers(L2* e)                     : GroupId<L,LayerId>(e) {}
+    Group(L2* e)                     : SEMBA::Group::Identifiable<L,Id>(e) {}
     template<typename L2>
-    GroupLayers(const std::vector<L2*>& e) : GroupId<L,LayerId>(e) {}
+    Group(const std::vector<L2*>& e) : SEMBA::Group::Identifiable<L,Id>(e) {}
     template<typename L2>
-    GroupLayers(VectorPtr<L2>& rhs)       : GroupId<L,LayerId>(rhs) {}
+    Group(SEMBA::Group::Group<L2>& rhs)
+    :   SEMBA::Group::Identifiable<L,Id>(rhs) {}
     template<typename L2>
-    GroupLayers(const VectorPtr<L2>& rhs) : GroupId<L,LayerId>(rhs) {}
-    GroupLayers(VectorPtr<L>& rhs)        : GroupId<L,LayerId>(rhs) {}
+    Group(const SEMBA::Group::Group<L2>& rhs)
+    :   SEMBA::Group::Identifiable<L,Id>(rhs) {}
+    Group(SEMBA::Group::Group<L>& rhs)
+    :   SEMBA::Group::Identifiable<L,Id>(rhs) {}
     template<typename L2>
-    GroupLayers(VectorPtr<L2>&& rhs) : GroupId<L,LayerId>(std::move(rhs)) {}
-    GroupLayers(VectorPtr<L >&& rhs) : GroupId<L,LayerId>(std::move(rhs)) {}
-    virtual ~GroupLayers() {}
+    Group(SEMBA::Group::Group<L2>&& rhs)
+    :   SEMBA::Group::Identifiable<L,Id>(std::move(rhs)) {}
+    Group(SEMBA::Group::Group<L >&& rhs)
+    :   SEMBA::Group::Identifiable<L,Id>(std::move(rhs)) {}
+    virtual ~Group() {}
 
-    DEFINE_GROUP_CLONE(GroupLayers, L);
+    SEMBA_GROUP_DEFINE_CLONE(Group, L);
 
-    GroupLayers& operator=(VectorPtr<L>&);
-    GroupLayers& operator=(VectorPtr<L>&&);
+    Group& operator=(SEMBA::Group::Group<L>&);
+    Group& operator=(SEMBA::Group::Group<L>&&);
 
-    const L* getName(const string name) const;
+    const L* getName(const std::string name) const;
 
     void printInfo() const;
 };
 
-#include "GroupLayers.hpp"
+} /* namespace Layer */
+} /* namespace Geometry */
+} /* namespace SEMBA */
 
-#endif /* COMMON_INPUTS_LAYERGROUP_H_ */
+#include "Group.hpp"
+
+#endif /* SEMBA_GEOMETRY_LAYER_GROUP_H_ */

@@ -18,52 +18,47 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * MagnitudeNumerical.h
- *
- *  Created on: Dec 16, 2014
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_
-#define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_
+#ifndef SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
+#define SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
 
-#include <cassert>
-#include <cmath>
-#include <map>
-using namespace std;
 
-#include "ProjectFile.h"
-#include "math/FunctionLinearInterpolation.h"
-#include "base/error/ErrorFile.h"
-#include "base/error/ErrorNotImplemented.h"
 
-#include "../../sources/magnitude/Magnitude.h"
+#include "Magnitude.h"
+#include "filesystem/Project.h"
 
-class MagnitudeNumerical : public virtual Magnitude,
-                           public virtual ProjectFile {
+namespace SEMBA {
+namespace Source {
+namespace Magnitude {
+
+class Numerical : public virtual Magnitude,
+                  public virtual FileSystem::Project {
 public:
-    MagnitudeNumerical();
-    MagnitudeNumerical(const ProjectFile& filename);
-    MagnitudeNumerical(const ProjectFile& filename,
-                       const Magnitude& mag,
-                       const Real timeStep,
-                       const Real finalTime);
-    virtual ~MagnitudeNumerical();
+    Numerical();
+    Numerical(const FileSystem::Project& filename);
+    Numerical(const FileSystem::Project& filename,
+              const Magnitude& mag,
+              const Math::Real timeStep,
+              const Math::Real finalTime);
+    virtual ~Numerical();
 
-    DEFINE_CLONE(MagnitudeNumerical);
+    SEMBA_CLASS_DEFINE_CLONE(Numerical);
 
-    MagnitudeNumerical& operator=(const MagnitudeNumerical& rhs);
+    Numerical& operator=(const Numerical& rhs);
 
     bool operator==(const Magnitude&) const;
-    Real evaluate(const Real time) const;
+    Math::Real evaluate(const Math::Real time) const;
 
     void printInfo() const;
 
 private:
-    static const UInt defaultNumberOfSteps = 1000;
+    static const Size defaultNumberOfSteps = 1000;
 
 
 };
 
-#endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_MAGNITUDENUMERICAL_H_ */
+} /* namespace Magnitude */
+} /* namespace Source */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_ */

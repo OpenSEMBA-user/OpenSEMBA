@@ -18,70 +18,67 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMMultiport.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMMultiport.h"
+#include "Multiport.h"
 
-PMMultiport::PMMultiport(const MatId id, const string name)
-: PhysicalModel(id, name) {
+namespace SEMBA {
+namespace PhysicalModel {
+
+Multiport::Multiport(const Id id, const std::string name)
+:   PhysicalModel(id, name) {
     type_ = undefined;
 }
 
-PMMultiport::~PMMultiport() {
-	// TODO Auto-generated destructor stub
+Multiport::~Multiport() {
+
 }
 
-PMMultiport::Type
-PMMultiport::getType() const {
-	return type_;
+Multiport::Type Multiport::getType() const {
+    return type_;
 }
 
-string
-PMMultiport::getTypeStr() const {
-	string res;
-	switch (type_) {
-	case shortCircuit:
-		res = "Short circuit";
-		break;
-	case openCircuit:
-		res = "Open circuit";
-		break;
-	case matched:
-		res = "Matched";
-		break;
-	case sRLC:
-		res = "Series RLC";
-		break;
-	case sRLpC:
-		res = "Series RL Parallel C";
-		break;
-	case sRCpL:
-		res = "Series RC Parallel L";
-		break;
-	case sRpLC:
-		res = "Series R Parallel C";
-		break;
-	case sLCpR:
-		res = "Series LC Parallel R";
-		break;
-	case sLpRC:
-		res = "Series L Parallel RC";
-		break;
-	case sCpLR:
-		res = "Series C Parallel LR";
-		break;
-	case pRLC:
-		res = "Parallel RLC";
-		break;
-	default:
-		res = "Undefined";
-		break;
-	}
-	return res;
+std::string Multiport::getTypeStr() const {
+    std::string res;
+    switch (type_) {
+    case shortCircuit:
+        res = "Short circuit";
+        break;
+    case openCircuit:
+        res = "Open circuit";
+        break;
+    case matched:
+        res = "Matched";
+        break;
+    case sRLC:
+        res = "Series RLC";
+        break;
+    case sRLpC:
+        res = "Series RL Parallel C";
+        break;
+    case sRCpL:
+        res = "Series RC Parallel L";
+        break;
+    case sRpLC:
+        res = "Series R Parallel C";
+        break;
+    case sLCpR:
+        res = "Series LC Parallel R";
+        break;
+    case sLpRC:
+        res = "Series L Parallel RC";
+        break;
+    case sCpLR:
+        res = "Series C Parallel LR";
+        break;
+    case pRLC:
+        res = "Parallel RLC";
+        break;
+    default:
+        res = "Undefined";
+        break;
+    }
+    return res;
 }
 
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

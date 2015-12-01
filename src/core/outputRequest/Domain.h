@@ -18,21 +18,16 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Domain.h
- *
- *  Created on: Oct 9, 2014
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_DOMAIN_H_
-#define SRC_COMMON_INPUTS_DOMAIN_H_
+#ifndef SEMBA_OUTPUTREQUEST_DOMAIN_H_
+#define SEMBA_OUTPUTREQUEST_DOMAIN_H_
 
 #include <string>
-#include <iostream>
-using namespace std;
 
-#include "Types.h"
+#include "math/Types.h"
+
+namespace SEMBA {
+namespace OutputRequest {
 
 class Domain {
 public:
@@ -42,56 +37,58 @@ public:
 
     Domain();
     Domain(bool timeDomain,
-           Real initialTime,
-           Real finalTime,
-           Real samplingPeriod,
+           Math::Real initialTime,
+           Math::Real finalTime,
+           Math::Real samplingPeriod,
            bool frequencyDomain,
-           Real initialFrequency,
-           Real finalFrequency,
-           Real frequencyStep,
+           Math::Real initialFrequency,
+           Math::Real finalFrequency,
+           Math::Real frequencyStep,
            bool logFrequencySweep,
            bool usingTransferFunction,
-           string transferFunctionFile);
+           std::string transferFunctionFile);
     Domain(const Domain& rhs);
     virtual ~Domain();
 
     Domain& operator=(const Domain& rhs);
-    void setFinalTime(const Real finalTime);
-    void setSamplingPeriod(const Real samplingPeriod);
+    void setFinalTime(const Math::Real finalTime);
+    void setSamplingPeriod(const Math::Real samplingPeriod);
 
 
     bool operator==(const Domain& rhs) const;
 
-    bool isTimeDomain() const;
-    Real getInitialTime() const;
-    Real getFinalTime() const;
-    Real getSamplingPeriod() const;
-    bool isFrequencyDomain() const;
-    Real getInitialFrequency() const;
-    Real getFinalFrequency() const;
-    Real getFrequencyStep() const;
-    bool isLogFrequencySweep() const;
+    bool       isTimeDomain() const;
+    Math::Real getInitialTime() const;
+    Math::Real getFinalTime() const;
+    Math::Real getSamplingPeriod() const;
+    bool       isFrequencyDomain() const;
+    Math::Real getInitialFrequency() const;
+    Math::Real getFinalFrequency() const;
+    Math::Real getFrequencyStep() const;
+    bool       isLogFrequencySweep() const;
 
     bool isUsingTransferFunction() const;
-    const string& getTransferFunctionFile() const;
+    const std::string& getTransferFunctionFile() const;
 
     Type getDomainType() const;
 
     void printInfo() const;
 
 private:
-    bool timeDomain_;
-    Real initialTime_;
-    Real finalTime_;
-    Real samplingPeriod_;
-    bool frequencyDomain_;
-    Real initialFrequency_;
-    Real finalFrequency_;
-    Real frequencyStep_;
-    bool logFrequencySweep_;
-    bool usingTransferFunction_;
-    string transferFunctionFile_;
+    bool        timeDomain_;
+    Math::Real  initialTime_;
+    Math::Real  finalTime_;
+    Math::Real  samplingPeriod_;
+    bool        frequencyDomain_;
+    Math::Real  initialFrequency_;
+    Math::Real  finalFrequency_;
+    Math::Real  frequencyStep_;
+    bool        logFrequencySweep_;
+    bool        usingTransferFunction_;
+    std::string transferFunctionFile_;
 };
 
+} /* namespace OutputRequest */
+} /* namespace SEMBA */
 
-#endif /* SRC_COMMON_INPUTS_DOMAIN_H_ */
+#endif /* SEMBA_OUTPUTREQUEST_DOMAIN_H_ */

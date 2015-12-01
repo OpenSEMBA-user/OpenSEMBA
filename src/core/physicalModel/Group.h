@@ -18,68 +18,73 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PhysicalModelGroup.h
- *
- *  Created on: Jul 1, 2013
- *      Author: luis
- */
 
-#ifndef COMMON_PHYSICALMODEL_GROUPPHYSICALMODELS_H_
-#define COMMON_PHYSICALMODEL_GROUPPHYSICALMODELS_H_
-
-#include <cassert>
-#include <cmath>
-#include <vector>
-using namespace std;
+#ifndef SEMBA_PHYSICALMODEL_GROUP_H_
+#define SEMBA_PHYSICALMODEL_GROUP_H_
 
 #include "PhysicalModel.h"
-#include "PMPEC.h"
-#include "PMPMC.h"
-#include "PMSMA.h"
-#include "PMVolumeClassic.h"
-#include "PMVolumeDispersive.h"
-#include "PMVolumeAnisotropic.h"
-#include "PMVolumeAnisotropicCrystal.h"
-#include "PMVolumeAnisotropicFerrite.h"
-#include "PMVolumePML.h"
-#include "PMMultiportPredefined.h"
-#include "PMMultiportRLC.h"
-#include "PMSurfaceSIBC.h"
-#include "PMSurfaceMultilayer.h"
-#include "PMWire.h"
-#include "PMWireExtremes.h"
+#include "PEC.h"
+#include "PMC.h"
+#include "SMA.h"
+#include "VolumeClassic.h"
+#include "VolumeDispersive.h"
+#include "VolumeAnisotropic.h"
+#include "VolumeAnisotropicCrystal.h"
+#include "VolumeAnisotropicFerrite.h"
+#include "VolumePML.h"
+#include "MultiportPredefined.h"
+#include "MultiportRLC.h"
+#include "SurfaceSIBC.h"
+#include "SurfaceMultilayer.h"
+#include "Wire.h"
+#include "WireExtremes.h"
 
-#include "base/group/GroupId.h"
+#include "group/Cloneable.h"
+#include "group/Printable.h"
+#include "group/Identifiable.h"
+
+namespace SEMBA {
+namespace PhysicalModel {
 
 template<typename P = PhysicalModel>
-class GroupPhysicalModels : public GroupId<P,MatId> {
+class Group : public SEMBA::Group::Cloneable<P>,
+              public SEMBA::Group::Printable<P>,
+              public SEMBA::Group::Identifiable<P, Id> {
 public:
-    GroupPhysicalModels() {}
+    Group() {}
     template<typename P2>
-    GroupPhysicalModels(P2* e)                     : GroupId<P,MatId>(e) {}
+    Group(P2* e)                     : SEMBA::Group::Identifiable<P,Id>(e) {}
     template<typename P2>
-    GroupPhysicalModels(const std::vector<P2*>& e) : GroupId<P,MatId>(e) {}
+    Group(const std::vector<P2*>& e) : SEMBA::Group::Identifiable<P,Id>(e) {}
     template<typename P2>
-    GroupPhysicalModels(VectorPtr<P2>&       rhs) : GroupId<P,MatId>(rhs) {}
+    Group(SEMBA::Group::Group<P2>& rhs)
+    :   SEMBA::Group::Identifiable<P,Id>(rhs) {}
     template<typename P2>
-    GroupPhysicalModels(const VectorPtr<P2>& rhs) : GroupId<P,MatId>(rhs) {}
-    GroupPhysicalModels(VectorPtr<P>&        rhs) : GroupId<P,MatId>(rhs) {}
+    Group(const SEMBA::Group::Group<P2>& rhs)
+    :   SEMBA::Group::Identifiable<P,Id>(rhs) {}
+    Group(SEMBA::Group::Group<P>& rhs)
+    :   SEMBA::Group::Identifiable<P,Id>(rhs) {}
     template<typename P2>
-    GroupPhysicalModels(VectorPtr<P2>&& rhs) : GroupId<P,MatId>(std::move(rhs)) {}
-    GroupPhysicalModels(VectorPtr<P >&& rhs) : GroupId<P,MatId>(std::move(rhs)) {}
-    virtual ~GroupPhysicalModels() {}
+    Group(SEMBA::Group::Group<P2>&& rhs)
+    :   SEMBA::Group::Identifiable<P,Id>(std::move(rhs)) {}
+    Group(SEMBA::Group::Group<P >&& rhs)
+    :   SEMBA::Group::Identifiable<P,Id>(std::move(rhs)) {}
+    virtual ~Group() {}
 
-    DEFINE_GROUP_CLONE(GroupPhysicalModels, P);
+    SEMBA_GROUP_DEFINE_CLONE(Group, P);
 
-    GroupPhysicalModels& operator=(VectorPtr<P>&);
-    GroupPhysicalModels& operator=(VectorPtr<P>&&);
+    Group& operator=(SEMBA::Group::Group<P>&);
+    Group& operator=(SEMBA::Group::Group<P>&&);
 
     void printInfo() const;
 };
 
-#include "GroupPhysicalModels.hpp"
+} /* namespace PhysicalModel */
 
-typedef GroupPhysicalModels<> PMGroup;
+typedef PhysicalModel::Group<> PMGroup;
 
-#endif /* COMMON_PHYSICALMODEL_GROUPPHYSICALMODELS_H_ */
+} /* namespace SEMBA */
+
+#include "Group.hpp"
+
+#endif /* SEMBA_PHYSICALMODEL_GROUP_H_ */

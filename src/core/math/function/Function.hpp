@@ -18,18 +18,18 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Function.cpp
- *
- *  Created on: Sep 9, 2015
- *      Author: luis
- */
 
 #include "Function.h"
 
+#include <iostream>
+#include <typeinfo>
+
+namespace SEMBA {
+namespace Math {
+namespace Function {
+
 template<class S, class T>
 Function<S,T>::Function() {
-    // TODO Auto-generated constructor stub
 
 }
 
@@ -45,6 +45,10 @@ inline T Function<S, T>::eval(const S& arg) const {
 
 template<class S, class T>
 inline void Function<S, T>::printInfo() const {
-    cout << " --- Function from " << typeid(S).name()
-            << " to " << typeid(T).name() << " --- " << endl;
+    std::cout << " --- Function from " << typeid(S).name()
+              << " to " << typeid(T).name() << " --- " << std::endl;
 }
+
+} /* namespace Function */
+} /* namespace Math */
+} /* namespace SEMBA */

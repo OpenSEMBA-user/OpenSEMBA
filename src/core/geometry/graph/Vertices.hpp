@@ -18,44 +18,42 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GraphVertices.hpp
- *
- *  Created on: 15/4/2015
- *      Author: Daniel
- */
 
-#include "../graphs/GraphVertices.h"
+#include "Vertices.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Graph {
 
 template<class ELEM, class BOUND>
-GraphVertices<ELEM,BOUND>::GraphVertices() {
+Vertices<ELEM,BOUND>::Vertices() {
 
 }
 
 template<class ELEM, class BOUND>
-GraphVertices<ELEM,BOUND>::GraphVertices(const GraphVertices& rhs)
-:   GraphBase<ELEM,BOUND>(rhs) {
+Vertices<ELEM,BOUND>::Vertices(const Vertices& rhs)
+:   Graph<ELEM,BOUND>(rhs) {
 
 }
 
 template<class ELEM, class BOUND>
-GraphVertices<ELEM,BOUND>::~GraphVertices() {
+Vertices<ELEM,BOUND>::~Vertices() {
 
 }
 
 template<class ELEM, class BOUND>
-GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
-        const Group<const GraphVertices<ELEM,BOUND>::Elem>& elems) {
+Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::init(
+        const Group::Group<const Vertices<ELEM,BOUND>::Elem>& elems) {
     const Bound* coord;
     GraphElem*   elemPtr;
     GraphBound*  boundPtr;
-    map<CoordinateId, GraphBound*> map;
+    std::map<CoordId, GraphBound*> map;
     this->elems_.clear();
     this->bounds_.clear();
-    for (UInt s = 0; s < elems.size(); s++) {
+    for (Size s = 0; s < elems.size(); s++) {
         elemPtr = new GraphElem(elems(s), elems(s)->numberOfCoordinates());
         this->elems_.push_back(elemPtr);
-        for (UInt v = 0; v < elems(s)->numberOfCoordinates(); v++) {
+        for (Size v = 0; v < elems(s)->numberOfCoordinates(); v++) {
             coord = elems(s)->getV(v);
             if (map.count(coord->getId()) == 0) {
                 boundPtr = new GraphBound(coord);
@@ -68,35 +66,35 @@ GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::init(
         }
     }
     map.clear();
-    for (UInt i = 0; i < this->elems_.size(); i++) {
+    for (Size i = 0; i < this->elems_.size(); i++) {
         this->elems_[i]->constructNeighbors();
     }
-    for (UInt i = 0; i < this->bounds_.size(); i++) {
+    for (Size i = 0; i < this->bounds_.size(); i++) {
         this->bounds_[i]->constructNeighbors();
     }
     return *this;
 }
 
 template<class ELEM, class BOUND>
-GraphVertices<ELEM,BOUND>& GraphVertices<ELEM,BOUND>::operator=(
-        const GraphVertices& rhs) {
+Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::operator=(
+        const Vertices& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    GraphBase<ELEM,BOUND>::operator=(rhs);
+    Graph<ELEM,BOUND>::operator=(rhs);
     return *this;
 }
 
 template<class ELEM, class BOUND>
-void GraphVertices<ELEM,BOUND>::splitBound(UInt i) {
-    vector<GraphElem*> oldAdj = this->bounds_[i]->getBounds();
+void Vertices<ELEM,BOUND>::splitBound(Size i) {
+    std::vector<GraphElem*> oldAdj = this->bounds_[i]->getBounds();
     if (oldAdj.empty()) {
         return;
     }
     this->bounds_[i]->setBounds(oldAdj[0]);
     this->bounds_[i]->getBound(0)->constructNeighbors();
     this->bounds_[i]->constructNeighbors();
-    for (UInt j = 1; j < oldAdj.size(); j++) {
+    for (Size j = 1; j < oldAdj.size(); j++) {
         this->bounds_.push_back(new GraphBound(*this->bounds_[i]));
         this->bounds_.back()->setBounds(oldAdj[j]);
         if (oldAdj[j]->getBound(0)->elem()->getId() ==
@@ -111,3 +109,7 @@ void GraphVertices<ELEM,BOUND>::splitBound(UInt i) {
         this->bounds_.back()->constructNeighbors();
     }
 }
+
+} /* namespace Graph */
+} /* namespace Geometry */
+} /* namespace SEMBA */

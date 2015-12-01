@@ -18,25 +18,34 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef TRI_H_
-#define TRI_H_
 
-#include "math/SimplexTri.h"
+#ifndef SEMBA_GEOMETRY_ELEMENT_TRIANGLE_H_
+#define SEMBA_GEOMETRY_ELEMENT_TRIANGLE_H_
+
+#include "math/simplex/Triangle.h"
 
 #include "Surface.h"
 
-class Triangle : public Surface<Real> {
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
+
+class Triangle : public Surface<Math::Real> {
 public:
-	Triangle();
+    Triangle();
     virtual ~Triangle();
-    
-	UInt numberOfFaces   () const { return 3; }
-	UInt numberOfVertices() const { return 3; }
-    
-	UInt numberOfSideVertices(const UInt f = 0) const { return 2; }
-    
+
+    Size numberOfFaces   () const { return 3; }
+    Size numberOfVertices() const { return 3; }
+
+    Size numberOfSideVertices(const Size f = 0) const { return 2; }
 };
 
-typedef Triangle Tri;
+} /* namespace Element */
 
-#endif
+typedef Element::Triangle Tri;
+
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_ELEMENT_TRIANGLE_H_ */

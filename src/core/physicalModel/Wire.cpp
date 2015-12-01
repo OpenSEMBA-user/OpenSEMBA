@@ -18,49 +18,45 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMWire.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMWire.h"
+#include "Wire.h"
 
-PMWire::PMWire(
- const MatId id,
- const string name,
- const Real radius,
- const Real resistance,
- const Real inductance) : PhysicalModel(id, name) {
-	radius_ = radius;
-	resistance_ = resistance;
-	inductance_ = inductance;
+namespace SEMBA {
+namespace PhysicalModel {
+
+Wire::Wire(const Id id,
+           const std::string name,
+           const Math::Real radius,
+           const Math::Real resistance,
+           const Math::Real inductance)
+:   PhysicalModel(id, name) {
+    radius_ = radius;
+    resistance_ = resistance;
+    inductance_ = inductance;
 }
 
-PMWire::~PMWire() {
+Wire::~Wire() {
 }
 
-Real
- PMWire::getRadius() const {
-	return radius_;
+Math::Real Wire::getRadius() const {
+    return radius_;
 }
 
-Real
- PMWire::getResistance() const {
-	return resistance_;
+Math::Real Wire::getResistance() const {
+    return resistance_;
 }
 
-Real
- PMWire::getInductance() const {
-	return inductance_;
+Math::Real Wire::getInductance() const {
+    return inductance_;
 }
 
-void
-PMWire::printInfo() const {
-	cout<< " --- Wire info ---" << endl;
-	PhysicalModel::printInfo();
-	cout << " Radius: " << radius_ << endl
-	    << " Resistance: " << resistance_ << endl
-		<< " Inductance: " << inductance_ << endl;
+void Wire::printInfo() const {
+    std::cout<< " --- Wire info ---" << std::endl;
+    PhysicalModel::printInfo();
+    std::cout << " Radius: " << radius_ << std::endl
+              << " Resistance: " << resistance_ << std::endl
+              << " Inductance: " << inductance_ << std::endl;
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

@@ -18,24 +18,24 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolume.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMVOLUME_H_
-#define PMVOLUME_H_
+#ifndef SEMBA_PHYSICALMODEL_VOLUME_H_
+#define SEMBA_PHYSICALMODEL_VOLUME_H_
 
 #include "PhysicalModel.h"
 
-class PMVolume : public PhysicalModel {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class Volume : public PhysicalModel {
 public:
-	PMVolume(const MatId id, const string name);
-	virtual ~PMVolume() = 0;
+    Volume(const Id id, const std::string name);
+    virtual ~Volume() = 0;
 
     virtual void printInfo() const;
 };
 
-#endif /* PMVOLUME_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_VOLUME_H_ */

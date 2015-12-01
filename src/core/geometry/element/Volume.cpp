@@ -18,39 +18,12 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Volume.cpp
- *
- *  Created on: May 13, 2013
- *      Author: luis
- */
 
 #include "Volume.h"
 
-template<class T>
-Volume<T>::ErrorNullVolume::ErrorNullVolume(const ElementId& elemId) {
-    stringstream aux;
-    aux << "Element (" << elemId << ") has null volume";
-    this->setMsg(aux.str());
-}
-
-template<class T>
-Volume<T>::ErrorNullVolume::~ErrorNullVolume() throw () {
-
-}
-
-template<class T>
-Volume<T>::ErrorSurfNotFound::ErrorSurfNotFound(const ElementId& volId,
-                                                const ElementId& surfId) {
-    stringstream aux;
-    aux << "Surf " << surfId << " is not part of Volume " << volId;
-    this->setMsg(aux.str());
-}
-
-template<class T>
-Volume<T>::ErrorSurfNotFound::~ErrorSurfNotFound() throw () {
-
-}
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 template<class T>
 Volume<T>::Volume() {
@@ -63,43 +36,44 @@ Volume<T>::~Volume() {
 }
 
 template<class T>
-bool Volume<T>::isLocalFace(const UInt f, const Surface<T>& surf) const {
-	return getSideNormal(f) == surf.getNormal();
+bool Volume<T>::isLocalFace(const Size f, const Surface<T>& surf) const {
+    return getSideNormal(f) == surf.getNormal();
 }
 
 template<class T>
-bool Volume<T>::isFaceContainedInPlane(const UInt face,
-                                       const CartesianPlane plane) const {
+bool Volume<T>::isFaceContainedInPlane(
+        const Size face,
+        const Math::Constants::CartesianPlane plane) const {
    Box<T,3> box = getBoundOfFace(face);
-   CartesianVector<T,3> vec = box.getMax() - box.getMin();
+   Math::Vector::Cartesian<T,3> vec = box.getMax() - box.getMin();
    return vec.isContainedInPlane(plane);
 }
 
 template<class T>
-CartesianVector<T,3> Volume<T>::getSideNormal(const UInt f) const {
-    CartesianVector<T,3> vec1, vec2, res;
-	vec1 = *this->getSideVertex(f,1) - *this->getSideVertex(f,0);
-	vec2 = *this->getSideVertex(f,2) - *this->getSideVertex(f,0);
-	res = (vec1 ^ vec2).normalize();
-	return res;
+Math::Vector::Cartesian<T,3> Volume<T>::getSideNormal(const Size f) const {
+    Math::Vector::Cartesian<T,3> vec1, vec2, res;
+    vec1 = *this->getSideVertex(f,1) - *this->getSideVertex(f,0);
+    vec2 = *this->getSideVertex(f,2) - *this->getSideVertex(f,0);
+    res = (vec1 ^ vec2).normalize();
+    return res;
 }
 
 template<class T>
-Box<T,3> Volume<T>::getBoundOfFace(const UInt face) const {
+Box<T,3> Volume<T>::getBoundOfFace(const Size face) const {
     Box<T,3> res;
-   for (UInt i = 0; i < this->numberOfSideCoordinates(); i++) {
+   for (Size i = 0; i < this->numberOfSideCoordinates(); i++) {
       res << this->getSideV(face,i)->pos();
    }
    return res;
 }
 
 template<class T>
-UInt Volume<T>::getFaceNumber(const Surface<T>* surf) const {
+Size Volume<T>::getFaceNumber(const Surface<T>* surf) const {
     // Checks each face. Order is not important.
-    for (UInt f = 0; f < this->numberOfFaces(); f++) {
-        UInt vPresent = 0;
-        for (UInt i = 0; i < surf->numberOfVertices(); i++) {
-            for (UInt j = 0; j < surf->numberOfVertices(); j++) {
+    for (Size f = 0; f < this->numberOfFaces(); f++) {
+        Size vPresent = 0;
+        for (Size i = 0; i < surf->numberOfVertices(); i++) {
+            for (Size j = 0; j < surf->numberOfVertices(); j++) {
                 if (surf->getVertex(j) == this->getSideVertex(f, i)) {
                     vPresent++;
                 }
@@ -109,8 +83,12 @@ UInt Volume<T>::getFaceNumber(const Surface<T>* surf) const {
             }
         }
     }
-    throw ErrorSurfNotFound(surf->getId(), this->getId());
+    throw Error::SurfNotFound(surf->getId(), this->getId());
 }
 
-template class Volume<Real>;
-template class Volume<Int >;
+template class Volume<Math::Real>;
+template class Volume<Math::Int >;
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

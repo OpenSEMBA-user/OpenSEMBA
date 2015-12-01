@@ -18,37 +18,35 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Linel.cpp
- *
- *  Created on: May 19, 2015
- *      Author: mdebi
- */
 
 #include "Linel.h"
 
+namespace SEMBA {
+namespace Geometry {
+namespace Pixel {
+
 Linel::Linel() {
-    dirId_ = CartesianDirection::dirNode;
+    dirId_ = Math::CartesianDirection::dirNode;
 }
 
 Linel::~Linel() {
 }
 
-bool Linel::isInto (const CVecI3Fractional& fracPos)const{
-    CVecR3 pos = fracPos.getScalePos(*this);
-    for(UInt n=0; n<3; n++){
-        if(n==(UInt)(dirId_-1)){
+bool Linel::isInto (const Math::CVecI3Fractional& fracPos)const{
+    Math::CVecR3 pos = fracPos.getScalePos(*this);
+    for(Size n=0; n<3; n++){
+        if(n==(Size)(dirId_-1)){
             if (pos(n)<0.0 || pos(n)>1.0 ){
                 return false;
             }
-        }else if (!MathUtils::equal(pos(n),0.0)){
+        }else if (!Math::Util::equal(pos(n),0.0)){
             return false;
         }
     }
     return true;
 }
 
-Linel::Linel(const CVecI3& pos, const CartesianDirection& dir) :
+Linel::Linel(const Math::CVecI3& pos, const Math::CartesianDirection& dir) :
     Pixel(pos) {
     dirId_ = dir;
 }
@@ -57,9 +55,9 @@ bool Linel::operator ==(const Linel& rhs) const {
     return (Pixel::operator==(rhs) && rhs.dirId_ == dirId_);
 }
 
-string Linel::toStr() const {
-    stringstream res;
-    res << CVecI3::toStr() << " Dir: " << Pixel::toStr(dirId_);
+std::string Linel::toStr() const {
+    std::stringstream res;
+    res << Math::CVecI3::toStr() << " Dir: " << Pixel::toStr(dirId_);
     return res.str();
 }
 
@@ -72,3 +70,7 @@ bool Linel::operator<(const Linel& rhs) const {
     }
     return false;
 }
+
+} /* namespace Pixel */
+} /* namespace Geometry */
+} /* namespace SEMBA */

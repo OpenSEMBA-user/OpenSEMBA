@@ -18,31 +18,36 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Mesh.h
- *
- *  Created on: Mar 19, 2015
- *      Author: damarro
- */
 
-#ifndef SRC_COMMON_GEOMETRY_MESH_H_
-#define SRC_COMMON_GEOMETRY_MESH_H_
+#ifndef SEMBA_GEOMETRY_MESH_MESH_H_
+#define SEMBA_GEOMETRY_MESH_MESH_H_
 
-#include "Types.h"
-#include "coordinates/GroupCoordinates.h"
-#include "elements/GroupElements.h"
-#include "layers/GroupLayers.h"
-#include "Grid.h"
+#include "math/Types.h"
+#include "geometry/Box.h"
 
-#include "base/class/ClassBase.h"
+#include "class/Class.h"
+#include "class/Cloneable.h"
+#include "class/Shareable.h"
+#include "class/Printable.h"
 
-class Mesh : public virtual ClassBase {
+namespace SEMBA {
+namespace Geometry {
+namespace Mesh {
+
+class Mesh : public virtual Class::Class,
+             public virtual Class::Cloneable,
+             public virtual Class::Shareable,
+             public virtual Class::Printable {
 public:
     Mesh();
-    ~Mesh();
+    virtual ~Mesh();
 
-    virtual void applyScalingFactor(const Real factor) = 0;
+    virtual void applyScalingFactor(const Math::Real factor) = 0;
     virtual BoxR3 getBoundingBox() const = 0;
 };
 
-#endif /* SRC_COMMON_GEOMETRY_MESH_H_ */
+} /* namespace Mesh */
+} /* namespace Geometry */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_GEOMETRY_MESH_MESH_H_ */

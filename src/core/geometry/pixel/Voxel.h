@@ -18,26 +18,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Voxel.h
- *
- *  Created on: May 19, 2015
- *      Author: Miguel D. Ruiz - Cabello Nuñez
- */
 
-#ifndef SRC_MESHER_FDTD_MESHCONF_VOXEL_H_
-#define SRC_MESHER_FDTD_MESHCONF_VOXEL_H_
+#ifndef SEMBA_GEOMETRY_PIXEL_VOXEL_H_
+#define SEMBA_GEOMETRY_PIXEL_VOXEL_H_
 
 #include "Surfel.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Pixel {
 
 class Voxel: public Pixel {
 public:
     Voxel();
-    Voxel(const CVecI3& cVecI3_);
+    Voxel(const Math::CVecI3& cVecI3_);
     virtual ~Voxel();
-    bool isInto (const CVecI3Fractional& rhs) const;
+    bool isInto (const Math::CVecI3Fractional& rhs) const;
     bool operator<(const Voxel& rhs) const;
 
 };
+
+} /* namespace Pixel */
+} /* namespace Geometry */
+} /* namespace SEMBA */
 
 #endif /* SRC_MESHER_FDTD_MESHCONF_VOXEL_H_ */

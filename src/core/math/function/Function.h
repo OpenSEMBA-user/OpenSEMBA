@@ -18,26 +18,29 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Function.h
- *
- *  Created on: Sep 9, 2015
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_MATH_FUNCTION_H_
-#define SRC_COMMON_MATH_FUNCTION_H_
+#ifndef SEMBA_MATH_FUNCTION_FUNCTION_H_
+#define SEMBA_MATH_FUNCTION_FUNCTION_H_
 
-#include <iostream>
-#include <math.h>
-using namespace std;
+#include "math/Types.h"
 
-#include "FunctionBase.h"
-#include "RealUtils.h"
-#include "Types.h"
+namespace SEMBA {
+namespace Math {
+namespace Function {
+
+class Base {
+public:
+    Base() {}
+    virtual ~Base() {}
+
+    virtual Base* clone() const = 0;
+
+    virtual bool operator==(const Base& rhs) const = 0;
+    virtual void printInfo() const = 0;
+};
 
 template<class S, class T>
-class Function : public FunctionBase {
+class Function : public Base {
 public:
     Function();
     virtual ~Function();
@@ -48,8 +51,20 @@ public:
     void printInfo() const;
 };
 
-typedef Function<Real, Real> FunctionRR;
+} /* namespace Function */
+
+typedef Function::Function<Real, Real> FunctionRR;
+
+} /* namespace Math */
+} /* namespace SEMBA */
 
 #include "Function.hpp"
 
-#endif /* SRC_COMMON_MATH_FUNCTION_H_ */
+#ifndef SEMBA_MATH_FUNCTION_DEFINE_CLONE
+#define SEMBA_MATH_FUNCTION_DEFINE_CLONE(NAME)  \
+    NAME* clone() const {                       \
+        return new NAME(*this);                 \
+    }
+#endif
+
+#endif /* SEMBA_MATH_FUNCTION_FUNCTION_H_ */

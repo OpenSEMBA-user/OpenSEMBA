@@ -18,36 +18,22 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Cell.h
- *
- *  Created on: Aug 30, 2012
- *      Author: luis
- */
 
-#ifndef CELL_H_
-#define CELL_H_
+#ifndef SEMBA_CLASS_PRINTABLE_H_
+#define SEMBA_CLASS_PRINTABLE_H_
 
-#include "physicalModel/GroupPhysicalModels.h"
-#include "solver/dgtd/core/MeshVolume.h"
-#include "math/Simplex.h"
-#include "math/Field.h"
+namespace SEMBA {
+namespace Class {
 
-class Cell {
+class Printable {
 public:
-    enum class FieldType {
-        electric,
-        magnetic
-    };
-    const PMVolumeClassic* material;
-    //
-    Cell();
-    virtual ~Cell();
+    Printable() {}
+    virtual ~Printable() {}
 
-    virtual UInt getOrder() const;
-    virtual vector<CVecR3> getFieldAt(
-            const CVecR3& gaussPoints,
-            const FieldType& fieldType) const;
+    virtual void printInfo() const = 0;
 };
 
-#endif /* CELL_H_ */
+} /* namespace Class */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_CLASS_PRINTABLE_H_ */

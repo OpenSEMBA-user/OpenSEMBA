@@ -18,64 +18,38 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef GROUPID_H_
-#define GROUPID_H_
 
-#include <iostream>
+#ifndef SEMBA_GROUP_IDENTIFIABLE_H_
+#define SEMBA_GROUP_IDENTIFIABLE_H_
+
+#include <exception>
 #include <map>
-#include <sstream>
-
-#include "../error/Error.h"
 
 #include "Group.h"
 
+namespace SEMBA {
+namespace Group {
+
 template<typename T, class Id>
-class GroupId : public Group<T> {
+class Identifiable : public Group<T> {
 public:
-    class ErrorId : public virtual Error {
-    public:
-        ErrorId(const Id&);
-        virtual ~ErrorId() throw();
+    Identifiable();
+    template<typename T2>
+    Identifiable(T2*);
+    template<typename T2>
+    Identifiable(const std::vector<T2*>&);
+    template<typename T2>
+    Identifiable(Group<T2>&);
+    template<typename T2>
+    Identifiable(const Group<T2>&);
+    Identifiable(Group<T>&);
+    template<typename T2>
+    Identifiable(Group<T2>&&);
+    Identifiable(Group<T>&&);
+    virtual ~Identifiable();
 
-        Id getId() const;
-    private:
-        Id id_;
-    };
-    class ErrorIdNotExists : public ErrorId {
-    public:
-        ErrorIdNotExists(const Id&);
-        virtual ~ErrorIdNotExists() throw();
-    };
-    class ErrorIdZero : public ErrorId {
-    public:
-        ErrorIdZero(const Id&);
-        virtual ~ErrorIdZero() throw();
-    };
-    class ErrorIdDuplicated : public ErrorId {
-    public:
-        ErrorIdDuplicated(const Id&);
-        virtual ~ErrorIdDuplicated() throw();
-    };
-
-    GroupId();
-    template<typename T2>
-    GroupId(T2*);
-    template<typename T2>
-    GroupId(const std::vector<T2*>&);
-    template<typename T2>
-    GroupId(VectorPtr<T2>&);
-    template<typename T2>
-    GroupId(const VectorPtr<T2>&);
-    GroupId(VectorPtr<T>&);
-    template<typename T2>
-    GroupId(VectorPtr<T2>&&);
-    GroupId(VectorPtr<T>&&);
-    virtual ~GroupId();
-
-    GroupId<T,Id>* clone() const;
-
-    GroupId<T,Id>& operator=(VectorPtr<T>&);
-    GroupId<T,Id>& operator=(VectorPtr<T>&&);
+    Identifiable<T,Id>& operator=(Group<T>&);
+    Identifiable<T,Id>& operator=(Group<T>&&);
 
     virtual void clear();
 
@@ -83,38 +57,41 @@ public:
 
     std::vector<Id> getIds() const;
 
-    virtual typename Reference<T*>::type      getId(const Id id);
-    virtual typename ConstReference<T*>::type getId(const Id id) const;
-    virtual GroupId<T,Id>       getId(const std::vector<Id>&);
-    virtual GroupId<const T,Id> getId(const std::vector<Id>&) const;
+    virtual T*       getId(const Id id);
+    virtual const T* getId(const Id id) const;
+    virtual Identifiable<T,Id>       getId(const std::vector<Id>&);
+    virtual Identifiable<const T,Id> getId(const std::vector<Id>&) const;
 
-    VectorPtr<T> add(VectorPtr<T>&);
-    VectorPtr<T> add(VectorPtr<T>&&);
-    using VectorPtr<T>::add;
+    using Group<T>::add;
+    Group<T> add(Group<T>&);
+    Group<T> add(Group<T>&&);
 
     template<typename T2>
-    VectorPtr<T> addId(T2*);
+    Group<T> addId(T2*);
     template<typename T2>
-    VectorPtr<T> addId(const std::vector<T2*>&);
+    Group<T> addId(const std::vector<T2*>&);
     template<typename T2>
-    VectorPtr<T> addId(VectorPtr<T2>&);
-    VectorPtr<T> addId(VectorPtr<T>&);
-    VectorPtr<T> addId(VectorPtr<T>&&);
+    Group<T> addId(Group<T2>&);
+    Group<T> addId(Group<T>&);
+    Group<T> addId(Group<T>&&);
 
-    virtual void remove(const UInt&);
-    virtual void remove(const std::vector<UInt>&);
+    virtual void remove(const std::size_t&);
+    virtual void remove(const std::vector<std::size_t>&);
 
     virtual void removeId(const Id);
     virtual void removeId(const std::vector<Id>&);
 
 private:
     Id lastId_;
-    std::map<Id, UInt> mapId_;
+    std::map<Id, std::size_t> mapId_;
 
-    void postprocess_(const UInt& pos);
-    std::vector<UInt> getElemsId_(const std::vector<Id>&) const;
+    void postprocess_(const std::size_t& pos);
+    std::vector<std::size_t> getElemsId_(const std::vector<Id>&) const;
 };
 
-#include "GroupId.hpp"
+} /* namespace Group */
+} /* namespace SEMBA */
 
-#endif /* GROUPID_H_ */
+#include "Identifiable.hpp"
+
+#endif /* SEMBA_GROUP_IDENTIFIABLE_H_ */

@@ -18,19 +18,16 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Generator.h
- *
- *  Created on: Oct 3, 2014
- *      Author: luis
- */
 
-#ifndef SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_
-#define SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_
+#ifndef SEMBA_SOURCE_GENERATOR_H_
+#define SEMBA_SOURCE_GENERATOR_H_
 
-#include "../sources/EMSource.h"
+#include "Source.h"
 
-class Generator : public EMSource<Nod> {
+namespace SEMBA {
+namespace Source {
+
+class Generator : public Source<Geometry::Nod> {
 public:
     typedef enum {
         voltage = 1,
@@ -42,18 +39,18 @@ public:
     } Hardness;
 
     Generator();
-    Generator(const Magnitude* magnitude,
-              GroupElements<Nod>& elem,
+    Generator(const Magnitude::Magnitude* magnitude,
+              Geometry::Element::Group<Geometry::Nod>& elem,
               const Type& generatorType,
               const Hardness& hardness);
     Generator(const Generator& rhs);
     virtual ~Generator();
 
-    DEFINE_CLONE(Generator);
+    SEMBA_CLASS_DEFINE_CLONE(Generator);
 
-    bool hasSameProperties(const EMSourceBase& rhs) const;
+    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
 
-    const string& getName() const;
+    const std::string& getName() const;
     Type getType() const;
 
     void printInfo() const;
@@ -62,7 +59,10 @@ private:
     Type type_;
     Hardness hardness_;
 
-    string getTypeStr() const;
+    std::string getTypeStr() const;
 };
 
-#endif /* SRC_COMMON_INPUTS_ELECTROMAGNETICSOURCES_GENERATOR_H_ */
+} /* namespace Source */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_SOURCE_GENERATOR_H_ */

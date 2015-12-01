@@ -18,36 +18,40 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumePML.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMVOLUMEPML_H_
-#define PMVOLUMEPML_H_
+#ifndef SEMBA_PHYSICALMODEL_VOLUMEPML_H_
+#define SEMBA_PHYSICALMODEL_VOLUMEPML_H_
 
-#include "PMVolume.h"
-#include "math/LocalAxes.h"
+#include "Types.h"
+#include "geometry/Box.h"
+#include "math/axis/Local.h"
 
-class PMVolumePML : public PMVolume {
+#include "Volume.h"
+
+namespace SEMBA {
+namespace PhysicalModel {
+
+class VolumePML : public Volume {
 public:
-    PMVolumePML(
-	        const MatId id,
-	        const string& name,
-	        const LocalAxes* orientation = NULL);
+    VolumePML(
+            const Id id,
+            const std::string& name,
+            const Math::Axis::Local* orientation = NULL);
     // If no orientation is given. Automatic orientation should be attempted.
 
-	~PMVolumePML();
+    ~VolumePML();
 
-	DEFINE_CLONE(PMVolumePML);
+    SEMBA_CLASS_DEFINE_CLONE(VolumePML);
 
-	const LocalAxes* getOrientation() const;
+    const Math::Axis::Local* getOrientation() const;
 
-	void printInfo() const;
+    void printInfo() const;
+
 private:
-	const LocalAxes* orientation_;
+    const Math::Axis::Local* orientation_;
 };
 
-#endif /* PMVOLUMEPML_H_ */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_VOLUMEPML_H_ */

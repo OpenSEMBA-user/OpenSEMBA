@@ -18,17 +18,15 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Line2.cpp
- *
- *  Created on: Sep 24, 2013
- *      Author: luis
- */
 
-#include <geometry/elements/Line2.h>
+#include "Line2.h"
+
+namespace SEMBA {
+namespace Geometry {
+namespace Element {
 
 template<class T>
-const SimplexLin<1> Line2<T>::lin;
+const Math::Simplex::Line<1> Line2<T>::lin;
 
 template<class T>
 Line2<T>::Line2() {
@@ -36,55 +34,36 @@ Line2<T>::Line2() {
 }
 
 template<class T>
-Line2<T>::Line2(const GroupCoordinates<Coordinate<T,3> >& cG,
-              const ElementId id,
-              const CoordinateId vId[2],
-              const LayerId layerId,
-              const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
-    
-    setCoordinates(cG, vId);
-}
-
-template<class T>
-Line2<T>::Line2(const ElementId id,
-              const Coordinate<T,3>* v[2],
-              const LayerId layerId,
-              const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
+Line2<T>::Line2(const Id id,
+                const Coordinate::Coordinate<T,3>* v[2],
+                const Layer* lay,
+                const Model* mat)
+:   Identifiable<Id>(id),
+    Elem(lay, mat) {
     
     setCoordinates(v);
 }
 
 template<class T>
-Line2<T>::Line2(GroupCoordinates<Coordinate<T,3> >& cG,
-              const ElementId id,
-              const Box<T,3>& box,
-              const LayerId layerId,
-              const MatId   matId)
-:   ClassIdBase<ElementId>(id),
-    Elem(layerId, matId) {
+Line2<T>::Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
+                const Id id,
+                const Box<T,3>& box,
+                const Layer* lay,
+                const Model* mat)
+:   Identifiable<Id>(id),
+    Elem(lay, mat) {
 
     setCoordinates(cG, box);
 }
 
-
 template<class T>
-Line2<T>::Line2(const GroupCoordinates<Coordinate<T,3> >& cG,
-              const CoordinateId vId[2]) {
-    setCoordinates(cG, vId);
-}
-
-template<class T>
-Line2<T>::Line2(const Coordinate<T,3>* v[2]) {
+Line2<T>::Line2(const Coordinate::Coordinate<T,3>* v[2]) {
     setCoordinates(v);
 }
 
 template<class T>
-Line2<T>::Line2(GroupCoordinates<Coordinate<T,3> >& cG,
-              const Box<T,3>& box) {
+Line2<T>::Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
+                const Box<T,3>& box) {
 
     setCoordinates(cG, box);
 }
@@ -92,12 +71,12 @@ Line2<T>::Line2(GroupCoordinates<Coordinate<T,3> >& cG,
 
 template<class T>
 Line2<T>::Line2(const Line2<T>& rhs)
-:   ClassIdBase<ElementId>(rhs),
+:   Identifiable<Id>(rhs),
     Elem(rhs) {
     
-    for (UInt i = 0; i < lin.np; i++) {
-		v_[i] = rhs.v_[i];
-	}
+    for (Size i = 0; i < lin.np; i++) {
+        v_[i] = rhs.v_[i];
+    }
 }
 
 template<class T>
@@ -106,7 +85,7 @@ Line2<T>::~Line2() {
 }
 
 template<class T>
-bool Line2<T>::isStructured(const Grid3& grid, const Real tol) const {
+bool Line2<T>::isStructured(const Grid3& grid, const Math::Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
     }
@@ -120,92 +99,89 @@ bool Line2<T>::isStructured(const Grid3& grid, const Real tol) const {
 }
 
 template<class T>
-const Coordinate<T,3>* Line2<T>::getSideV(const UInt f, const UInt i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getV(const Size i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate<T,3>* Line2<T>::getVertex(const UInt i) const {
-	return v_[i];
-}
-
-template<class T>
-const Coordinate<T,3>* Line2<T>::getSideVertex(const UInt f,
-                                              const UInt i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getSideV(const Size f,
+                                                      const Size i) const {
     return v_[i];
 }
 
 template<class T>
-void Line2<T>::setV(const UInt i, const Coordinate<T,3>* coord) {
+const Coordinate::Coordinate<T,3>* Line2<T>::getVertex(const Size i) const {
+    return v_[i];
+}
+
+template<class T>
+const Coordinate::Coordinate<T,3>* Line2<T>::getSideVertex(const Size f,
+                                                           const Size i) const {
+    return v_[i];
+}
+
+template<class T>
+void Line2<T>::setV(const Size i, const Coordinate::Coordinate<T,3>* coord) {
 
     assert(i < numberOfCoordinates());
     v_[i] = coord;
 }
 
 template<class T>
-ElemI* Line2<T>::toStructured(const GroupCoordinates<CoordI3>& cG,
-                              const Grid3& grid, const Real tol) const {
-    CoordinateId* vIds = this->vertexToStructured(cG, grid, tol);
-    if (vIds == NULL) {
+ElemI* Line2<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
+                              const Grid3& grid, const Math::Real tol) const {
+    const CoordI3** coords = this->vertexToStructured(cG, grid, tol);
+    if (coords == NULL) {
         return NULL;
     }
-    ElemI* res =  new LinI2(cG,
-                            this->getId(),
-                            vIds,
-                            this->getLayerId(),
-                            this->getMatId());
-    delete[] vIds;
+    ElemI* res =  new LinI2(this->getId(),
+                            coords,
+                            this->getLayer(),
+                            this->getModel());
+    delete[] coords;
     return res;
 }
 
 template<class T>
-ElemR* Line2<T>::toUnstructured(const GroupCoordinates<CoordR3>& cG,
+ElemR* Line2<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
                                 const Grid3& grid) const {
-    CoordinateId* vIds = this->vertexToUnstructured(cG, grid);
-    if (vIds == NULL) {
+    const CoordR3** coords = this->vertexToUnstructured(cG, grid);
+    if (coords == NULL) {
         return NULL;
     }
-    ElemR* res =  new LinR2(cG,
-                            this->getId(),
-                            vIds,
-                            this->getLayerId(),
-                            this->getMatId());
-    delete[] vIds;
+    ElemR* res =  new LinR2(this->getId(),
+                            coords,
+                            this->getLayer(),
+                            this->getModel());
+    delete[] coords;
     return res;
 }
 
 template<class T>
 void Line2<T>::printInfo() const {
-    cout << "--- Lin2 info ---" << endl;
+    std::cout << "--- Lin2 info ---" << std::endl;
     Line<T>::printInfo();
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
     }
 }
 
 template<class T>
-void Line2<T>::setCoordinates(const GroupCoordinates<Coordinate<T,3> >& cG,
-                              const CoordinateId vId[2]) {
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.getId(vId[i]);
-    }
-}
-
-template<class T>
-void Line2<T>::setCoordinates(const Coordinate<T,3>* v[2]) {
-    for (UInt i = 0; i < lin.np; i++) {
+void Line2<T>::setCoordinates(const Coordinate::Coordinate<T,3>* v[2]) {
+    for (Size i = 0; i < lin.np; i++) {
         v_[i] = v[i];
     }
 }
 
 template<class T>
-void Line2<T>::setCoordinates(GroupCoordinates<Coordinate<T,3> >& cG,
-                             const Box<T,3>& box) {
+void Line2<T>::setCoordinates(
+        Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
+        const Box<T,3>& box) {
     if(!box.isLine()) {
-        throw typename Box<T,3>::ErrorNotLine();
+        throw Geometry::Error::Box::NotLine();
     }
-    vector<CartesianVector<T,3> > pos = box.getPos();
-    for (UInt i = 0; i < numberOfCoordinates(); i++) {
+    std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
+    for (Size i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
             v_[i] = cG.addPos(pos[i]);
@@ -213,5 +189,9 @@ void Line2<T>::setCoordinates(GroupCoordinates<Coordinate<T,3> >& cG,
     }
 }
 
-template class Line2<Real>;
-template class Line2<Int >;
+template class Line2<Math::Real>;
+template class Line2<Math::Int >;
+
+} /* namespace Element */
+} /* namespace Geometry */
+} /* namespace SEMBA */

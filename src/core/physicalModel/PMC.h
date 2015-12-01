@@ -18,27 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMPMC.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMPMC_H_
-#define PMPMC_H_
+#ifndef SEMBA_PHYSICALMODEL_PMC_H_
+#define SEMBA_PHYSICALMODEL_PMC_H_
 
-#include "PMPredefined.h"
+#include "Predefined.h"
 
-class PMPMC : public PMPredefined {
+namespace SEMBA {
+namespace PhysicalModel {
+
+class PMC : public Predefined {
 public:
-	virtual ~PMPMC();
-	PMPMC(const MatId id, const string name);
+    PMC(const Id id, const std::string name);
+    virtual ~PMC();
 
-    DEFINE_CLONE(PMPMC);
+    SEMBA_CLASS_DEFINE_CLONE(PMC);
 
-	void printInfo() const;
+    void printInfo() const;
 };
 
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
 
-#endif /* PMPMC_H_ */
+#endif /* SEMBA_PHYSICALMODEL_PMC_H_ */

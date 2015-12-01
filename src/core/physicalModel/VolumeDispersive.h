@@ -18,73 +18,84 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMVolumeDispersive.h
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#ifndef PMVOLUMEDISPERSIVE_H_
-#define PMVOLUMEDISPERSIVE_H_
+#ifndef SEMBA_PHYSICALMODEL_VOLUMEDISPERSIVE_H_
+#define SEMBA_PHYSICALMODEL_VOLUMEDISPERSIVE_H_
 
-#include "base/error/Error.h"
+#include <complex>
+#include <exception>
+#include <utility>
 
-#include "PMVolume.h"
+#include "filesystem/Project.h"
 
-typedef pair<complex<Real>,complex<Real>> PoleResidue;
+#include "Volume.h"
 
-class PMVolumeDispersive : public PMVolume {
+namespace SEMBA {
+namespace PhysicalModel {
+
+typedef std::pair<std::complex<Math::Real>,
+                  std::complex<Math::Real>> PoleResidue;
+
+class VolumeDispersive : public Volume {
 public:
-    class ErrorMagneticMaterial : public Error {
-    public:
-        ErrorMagneticMaterial();
-        virtual ~ErrorMagneticMaterial() throw();
-    };
+    VolumeDispersive();
+    virtual ~VolumeDispersive();
+    VolumeDispersive(const Id id,
+                     const std::string& name,
+                     const Math::Real rEps,
+                     const Math::Real rMu,
+                     const Math::Real elecCond,
+                     const Math::Real magnCond);
+    VolumeDispersive(const Id id,
+                     const std::string& name,
+                     const Math::Real rEps,
+                     const Math::Real rMu,
+                     const Math::Real elecCond,
+                     const Math::Real magnCond,
+                     const std::vector<PoleResidue>& poleResidue);
+    VolumeDispersive(const Id id,
+                     const std::string& name,
+                     const FileSystem::Project& file);
 
-    PMVolumeDispersive();
-    virtual ~PMVolumeDispersive();
-    PMVolumeDispersive(
-            const MatId id,
-            const string& name,
-            const Real rEps,
-            const Real rMu,
-            const Real elecCond,
-            const Real magnCond);
-    PMVolumeDispersive(
-            const MatId id,
-            const string& name,
-            const Real rEps,
-            const Real rMu,
-            const Real elecCond,
-            const Real magnCond,
-            const vector<PoleResidue>& poleResidue);
-    PMVolumeDispersive(
-            const MatId id,
-            const string& name,
-            const ProjectFile& file);
+    SEMBA_CLASS_DEFINE_CLONE(VolumeDispersive);
 
-    DEFINE_CLONE(PMVolumeDispersive);
-
-    UInt getPoleNumber() const;
-    complex<Real> getPole(UInt p) const;
-    complex<Real> getResidue(UInt p) const;
-    virtual Real getElectricConductivity() const;
+    Size getPoleNumber() const;
+    std::complex<Math::Real> getPole(Size p) const;
+    std::complex<Math::Real> getResidue(Size p) const;
+    virtual Math::Real getElectricConductivity() const;
 
     bool isClassic() const;
     bool isSimplyConductive() const;
     bool isDispersive() const;
 
     void printInfo() const;
-    const ProjectFile getFile() const;
+    const FileSystem::Project getFile() const;
 
 protected:
-    Real rEpsInfty_, rMuInfty_; // @ InftyFreq.
-    vector<PoleResidue> poleResidue_; // Residues for dispers model. c_p.
-    ProjectFile file_;
-    void addPole(
-            const complex<Real>& pole_,
-            const complex<Real>& res_);
+    Math::Real rEpsInfty_, rMuInfty_; // @ InftyFreq.
+    std::vector<PoleResidue> poleResidue_; // Residues for dispers model. c_p.
+    FileSystem::Project file_;
+    void addPole(const std::complex<Math::Real>& pole_,
+                 const std::complex<Math::Real>& res_);
 };
 
-#endif /* PMVOLUMEDISPERSIVE_H_ */
+namespace Error {
+namespace VolumeDispersive {
+
+class MagneticMaterial : public Error {
+public:
+    MagneticMaterial() {}
+    virtual ~MagneticMaterial() throw() {}
+
+    const char* what() const throw() {
+        return ("VolumeDispersive: "
+                "Magnetic conductive materials are not supported.");
+    }
+};
+
+} /* namespace VolumeDispersive */
+} /* namespace Error */
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_VOLUMEDISPERSIVE_H_ */

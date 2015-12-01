@@ -18,31 +18,30 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * OutputRequestFarField.cpp
- *
- *  Created on: Mar 5, 2015
- *      Author: luis
- */
 
-#include "OutRqFarField.h"
+#include "FarField.h"
 
-OutRqFarField::OutRqFarField(const Domain& domain,
-                             const string& name,
-                             const GroupElements<Vol>& elem,
-                             const Real iTh, const Real fTh, const Real sTh,
-                             const Real iPhi, const Real fPhi, const Real sPhi)
+namespace SEMBA {
+namespace OutputRequest {
+
+FarField::FarField(const Domain& domain,
+                   const std::string& name,
+                   const Geometry::Element::Group<Geometry::Elem>& elem,
+                   const Math::Real iTh, const Math::Real fTh,
+                   const Math::Real sTh,
+                   const Math::Real iPhi, const Math::Real fPhi,
+                   const Math::Real sPhi)
 :   Domain(domain),
-    OutRqBase(electric, name),
-    GroupElements<const Vol>(elem) {
+    SEMBA::OutputRequest::Base(electric, name),
+    Geometry::Element::Group<const Geometry::Elem>(elem) {
 
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 
-OutRqFarField::OutRqFarField(const OutRqFarField& rhs)
+FarField::FarField(const FarField& rhs)
 :   Domain(rhs),
-    OutRqBase(rhs),
-    GroupElements<const Vol>(rhs) {
+    SEMBA::OutputRequest::Base(rhs),
+    Geometry::Element::Group<const Geometry::Elem>(rhs) {
 
     initialTheta_ = rhs.initialTheta_;
     finalTheta_ = rhs.finalTheta_;
@@ -52,15 +51,16 @@ OutRqFarField::OutRqFarField(const OutRqFarField& rhs)
     stepPhi_ = rhs.stepPhi_;
 }
 
-OutRqFarField::~OutRqFarField() {
+FarField::~FarField() {
 
 }
 
-bool OutRqFarField::hasSameProperties(const OutRqBase& rhs) const {
-    if(!OutRqBase::hasSameProperties(rhs)) {
+bool FarField::hasSameProperties(
+        const SEMBA::OutputRequest::Base& rhs) const {
+    if(!SEMBA::OutputRequest::Base::hasSameProperties(rhs)) {
         return false;
     }
-    const OutRqFarField* rhsPtr = rhs.castTo<OutRqFarField>();
+    const FarField* rhsPtr = rhs.castTo<FarField>();
     bool hasSameProperties = true;
     hasSameProperties &= initialTheta_ == rhsPtr->initialTheta_;
     hasSameProperties &= finalTheta_ == rhsPtr->finalTheta_;
@@ -71,32 +71,33 @@ bool OutRqFarField::hasSameProperties(const OutRqBase& rhs) const {
     return hasSameProperties;
 }
 
-Real OutRqFarField::getInitialTheta() const {
+Math::Real FarField::getInitialTheta() const {
     return initialTheta_;
 }
 
-Real OutRqFarField::getFinalTheta() const {
+Math::Real FarField::getFinalTheta() const {
     return finalTheta_;
 }
 
-Real OutRqFarField::getStepTheta() const {
+Math::Real FarField::getStepTheta() const {
     return stepTheta_;
 }
 
-Real OutRqFarField::getInitialPhi() const {
+Math::Real FarField::getInitialPhi() const {
     return initialPhi_;
 }
 
-Real OutRqFarField::getFinalPhi() const {
+Math::Real FarField::getFinalPhi() const {
     return finalPhi_;
 }
 
-Real OutRqFarField::getStepPhi() const {
+Math::Real FarField::getStepPhi() const {
     return stepPhi_;
 }
 
-void OutRqFarField::setThetaAndPhi(Real iTh, Real fTh, Real sTh,
-                                   Real iPhi, Real fPhi, Real sPhi) {
+void FarField::setThetaAndPhi(
+        Math::Real iTh, Math::Real fTh, Math::Real sTh,
+        Math::Real iPhi, Math::Real fPhi, Math::Real sPhi) {
     initialTheta_ = iTh * acos(-1.0);
     finalTheta_ = fTh * acos(-1.0);
     stepTheta_ = sTh * acos(-1.0);
@@ -104,3 +105,6 @@ void OutRqFarField::setThetaAndPhi(Real iTh, Real fTh, Real sTh,
     finalPhi_ = fPhi * acos(-1.0);
     stepPhi_ = sPhi* acos(-1.0);
 }
+
+} /* namespace OutputRequest */
+} /* namespace SEMBA */

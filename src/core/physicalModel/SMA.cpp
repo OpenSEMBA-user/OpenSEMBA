@@ -18,27 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * PMSMA.cpp
- *
- *  Created on: May 27, 2014
- *      Author: luis
- */
 
-#include "PMSMA.h"
+#include "SMA.h"
 
-PMSMA::~PMSMA() {
+namespace SEMBA {
+namespace PhysicalModel {
+
+SMA::~SMA() {
 
 }
 
-PMSMA::PMSMA(const MatId id, const string name)
-: PMPredefined(id, name) {
+SMA::SMA(const Id id, const std::string name)
+:   Predefined(id, name) {
 
 }
 
-void
-PMSMA::printInfo() const {
-	cout << "--- PMSMA info ---" << endl;
-	cout << "Silver-Muller Absorbing" << endl;
-	PMPredefined::printInfo();
+void SMA::printInfo() const {
+    std::cout << "--- SMA info ---" << std::endl;
+    std::cout << "Silver-Muller Absorbing" << std::endl;
+    Predefined::printInfo();
 }
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

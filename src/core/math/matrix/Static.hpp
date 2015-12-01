@@ -18,250 +18,257 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "StaMatrix.h"
 
-template <class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>::StaMatrix() {
-    for (UInt i = 0; i < ROWS*COLS; i++) {
+#include "Static.h"
+
+namespace SEMBA {
+namespace Math {
+namespace Matrix {
+
+template <class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>::Static() {
+    for (Size i = 0; i < ROWS*COLS; i++) {
         _val[i] = T(0);
     }
 }
 
-template <class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>::StaMatrix(
-        const StaMatrix<T,ROWS,COLS>& param) {
-    UInt nRnC = ROWS * COLS;
-    for (UInt i = 0; i < nRnC; i++) {
+template <class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>::Static(
+        const Static<T,ROWS,COLS>& param) {
+    Size nRnC = ROWS * COLS;
+    for (Size i = 0; i < nRnC; i++) {
         _val[i] = (T) param._val[i];
     }
 }
 
-template <class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>::~StaMatrix() {
+template <class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>::~Static() {
 }
 
-template <class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator=(
-        const StaMatrix<T,ROWS,COLS>& param) {
+template <class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator=(
+        const Static<T,ROWS,COLS>& param) {
     if (this == &param)
         return *this;
-    for (UInt i = 0; i < ROWS*COLS; i++)
+    for (Size i = 0; i < ROWS*COLS; i++)
         _val[i] = param._val[i];
     return *this;
 }
 
-template <class T, UInt ROWS, UInt COLS>
-inline T StaMatrix<T,ROWS,COLS>::val(const UInt i) const {
+template <class T, Size ROWS, Size COLS>
+inline T Static<T,ROWS,COLS>::val(const Size i) const {
     return _val[i];
 }
 
-template <class T, UInt ROWS, UInt COLS>
-inline T& StaMatrix<T,ROWS,COLS>::val(const UInt i) {
+template <class T, Size ROWS, Size COLS>
+inline T& Static<T,ROWS,COLS>::val(const Size i) {
     return _val[i];
 }
 
-template <class T, UInt ROWS, UInt COLS>
-inline T StaMatrix<T,ROWS,COLS>::val(const UInt row, const UInt col) const {
+template <class T, Size ROWS, Size COLS>
+inline T Static<T,ROWS,COLS>::val(const Size row, const Size col) const {
     return _val[row * COLS + col];
 }
 
-template <class T, UInt ROWS, UInt COLS>
-inline T& StaMatrix<T,ROWS,COLS>::val(const UInt row, const UInt col) {
+template <class T, Size ROWS, Size COLS>
+inline T& Static<T,ROWS,COLS>::val(const Size row, const Size col) {
     return _val[row * COLS + col];
 }
 
-template <class T, UInt ROWS, UInt COLS>
-inline const T* StaMatrix<T,ROWS,COLS>::val() const {
+template <class T, Size ROWS, Size COLS>
+inline const T* Static<T,ROWS,COLS>::val() const {
     return _val;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-inline T StaMatrix<T,ROWS,COLS>::operator()(
-        const UInt row,
-        const UInt col) const {
+template<class T, Size ROWS, Size COLS>
+inline T Static<T,ROWS,COLS>::operator()(
+        const Size row,
+        const Size col) const {
     return _val[row * COLS + col];
 }
 
-template<class T, UInt ROWS, UInt COLS>
-inline T& StaMatrix<T,ROWS,COLS>::operator()(const UInt row, const UInt col) {
+template<class T, Size ROWS, Size COLS>
+inline T& Static<T,ROWS,COLS>::operator()(const Size row, const Size col) {
     return _val[row * COLS + col];
 }
 
-template <class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::assign(
-        const StaMatrix<Int,ROWS,COLS>& param) {
-    for (UInt i = 0; i < ROWS; i++) {
-        for (UInt j = 0; j < COLS; j++) {
+template <class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::assign(
+        const Static<Int,ROWS,COLS>& param) {
+    for (Size i = 0; i < ROWS; i++) {
+        for (Size j = 0; j < COLS; j++) {
             val(i,j) = param(i,j);
         }
     }
     return *this;
 }
 
-template <class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::setInDiagonal(
-        const CartesianVector<T,ROWS>& rhs) {
+template <class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::setInDiagonal(
+        const Vector::Cartesian<T,ROWS>& rhs) {
     static_assert(ROWS == COLS, "Requires squire matrix");
-    for (UInt i = 0; i < ROWS; i++) {
+    for (Size i = 0; i < ROWS; i++) {
         val(i,i) = rhs(i);
     }
     return *this;
 }
 
-template <class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator=(
-        const DynMatrix<Real>& param) {
+template <class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator=(
+        const Dynamic<Real>& param) {
     assert(ROWS == param.nRows() && COLS == param.nCols());
-    for (UInt i = 0; i < ROWS; i++)
-        for (UInt j = 0; j < COLS; j++)
+    for (Size i = 0; i < ROWS; i++)
+        for (Size j = 0; j < COLS; j++)
             val(i,j) = param(i,j);
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-inline StaMatrix<T, ROWS, COLS> StaMatrix<T,ROWS,COLS>::operator+(
-        StaMatrix<T, ROWS, COLS>& param) const {
-    StaMatrix<T,ROWS,COLS> res;
-    UInt n = ROWS*COLS;
-    for (UInt i = 0; i < n; i++) {
+template<class T, Size ROWS, Size COLS>
+inline Static<T, ROWS, COLS> Static<T,ROWS,COLS>::operator+(
+        Static<T, ROWS, COLS>& param) const {
+    Static<T,ROWS,COLS> res;
+    Size n = ROWS*COLS;
+    for (Size i = 0; i < n; i++) {
         res._val[i] = _val[i] + param._val[i];
     }
     return res;
 }
 
-template <class T, UInt ROWS, UInt COLS>
-void StaMatrix<T,ROWS,COLS>::printInfo() const {
+template <class T, Size ROWS, Size COLS>
+void Static<T,ROWS,COLS>::printInfo() const {
     printInfo(ROWS, COLS);
 }
 
-template<class T, UInt ROWS, UInt COLS>
-inline array<complex<Real>, ROWS> StaMatrix<T,ROWS,COLS>::getEigenvalues() const {
+template<class T, Size ROWS, Size COLS>
+std::array<std::complex<Real>, ROWS>
+        Static<T,ROWS,COLS>::getEigenvalues() const {
 }
 
-template <class T, UInt ROWS, UInt COLS>
-void StaMatrix<T,ROWS,COLS>::printInfo(UInt rows, UInt cols) const {
-    UInt i, j;
+template <class T, Size ROWS, Size COLS>
+void Static<T,ROWS,COLS>::printInfo(Size rows, Size cols) const {
+    Size i, j;
     if (rows > ROWS || cols > COLS) {
-        throw typename MathMatrix<T>::ErrorSize();
+        throw typename Error::Size();
     }
-    cout << "Matrix type: Double";
-    cout << "Dimensions: " << ROWS << "x" << COLS << endl;
-    cout << "Stored values: " << endl;
+    std::cout << "Matrix type: Double";
+    std::cout << "Dimensions: " << ROWS << "x" << COLS << std::endl;
+    std::cout << "Stored values: " << std::endl;
     for (i = 0; i < rows; i++) {
         for (j = 0; j < cols; j++)
-            cout << val(i,j) << " ";
-        cout << endl;
+            std::cout << val(i,j) << " ";
+        std::cout << std::endl;
     }
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,COLS,ROWS>& StaMatrix<T,ROWS,COLS>::invert() {
-    this->invert_();
+template<class T, Size ROWS, Size COLS>
+Static<T,COLS,ROWS>&
+Static<T,ROWS,COLS>::invert() {
+    this->internal_();
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-inline UInt StaMatrix<T,ROWS,COLS>::nCols() const {
+template<class T, Size ROWS, Size COLS>
+inline Size Static<T,ROWS,COLS>::nCols() const {
     return COLS;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-inline UInt StaMatrix<T,ROWS,COLS>::nRows() const {
+template<class T, Size ROWS, Size COLS>
+inline Size Static<T,ROWS,COLS>::nRows() const {
     return ROWS;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,COLS,ROWS> StaMatrix<T,ROWS,COLS>::transpose() {
-    StaMatrix<T,COLS,ROWS> res;
-    for (UInt i = 0; i < ROWS; i++) {
-        for (UInt j = 0; j < COLS; j++) {
+template<class T, Size ROWS, Size COLS>
+Static<T,COLS,ROWS> Static<T,ROWS,COLS>::transpose() {
+    Static<T,COLS,ROWS> res;
+    for (Size i = 0; i < ROWS; i++) {
+        for (Size j = 0; j < COLS; j++) {
             res(j,i) = val(i,j);
         }
     }
     return res;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator+=(
+template<class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator+=(
         const Real param) {
-    for (UInt i = 0; i < ROWS*COLS; i++)
+    for (Size i = 0; i < ROWS*COLS; i++)
         _val[i] += param;
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator+=(
-        const StaMatrix<T,ROWS,COLS>& param) {
-    for (UInt i = 0; i < ROWS*COLS; i++) {
+template<class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator+=(
+        const Static<T,ROWS,COLS>& param) {
+    for (Size i = 0; i < ROWS*COLS; i++) {
         _val[i] += param._val[i];
     }
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator-=(
-        const StaMatrix<T,ROWS,COLS>& param) {
-    for (UInt i = 0; i < ROWS*COLS; i++) {
+template<class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator-=(
+        const Static<T,ROWS,COLS>& param) {
+    for (Size i = 0; i < ROWS*COLS; i++) {
         _val[i] -= param._val[i];
     }
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator*=(const T param) {
-    for (UInt i = 0; i < ROWS*COLS; i++) {
+template<class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator*=(const T param) {
+    for (Size i = 0; i < ROWS*COLS; i++) {
         _val[i] *= param;
     }
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator/=(const T param) {
-    for (UInt i = 0; i < ROWS*COLS; i++) {
+template<class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator/=(const T param) {
+    for (Size i = 0; i < ROWS*COLS; i++) {
         _val[i] /= param;
     }
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS> StaMatrix<T,ROWS,COLS>::operator*(T param) const {
-    StaMatrix<T,ROWS,COLS> res;
-    for (UInt i = 0; i < ROWS*COLS; i++) {
+template<class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS> Static<T,ROWS,COLS>::operator*(T param) const {
+    Static<T,ROWS,COLS> res;
+    for (Size i = 0; i < ROWS*COLS; i++) {
         res._val[i] = _val[i] * param;
     }
     return res;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-CartesianVector<T,COLS> StaMatrix<T,ROWS,COLS>::operator*(
-        CartesianVector<T,COLS> rhs) const {
-    CartesianVector<T,COLS> res;
-    for (UInt i = 0; i < ROWS; i++) {
-        for (UInt j = 0; j < COLS; j++) {
+template<class T, Size ROWS, Size COLS>
+Vector::Cartesian<T,COLS> Static<T,ROWS,COLS>::operator*(
+        Vector::Cartesian<T,COLS> rhs) const {
+    Vector::Cartesian<T,COLS> res;
+    for (Size i = 0; i < ROWS; i++) {
+        for (Size j = 0; j < COLS; j++) {
             res(i) += this->val(i,j)*rhs(j);
         }
     }
     return res;
 }
 
-template<class T, UInt ROWS, UInt COLS>
+template<class T, Size ROWS, Size COLS>
 bool
-StaMatrix<T,ROWS,COLS>::operator==(
-        const StaMatrix<T,ROWS,COLS>& param) const {
-    for (UInt i = 0; i < ROWS*COLS; i++) {
+Static<T,ROWS,COLS>::operator==(
+        const Static<T,ROWS,COLS>& param) const {
+    for (Size i = 0; i < ROWS*COLS; i++) {
         Real diff = abs(_val[i] -param._val[i]);
-        if (diff > numeric_limits<Real>::epsilon() * 1e2) {
+        if (diff > std::numeric_limits<Real>::epsilon() * 1e2) {
             return false;
         }
     }
     return true;
 }
 
-template<class T, UInt ROWS, UInt COLS>
+template<class T, Size ROWS, Size COLS>
 bool
-StaMatrix<T,ROWS,COLS>::operator<(
-        const StaMatrix<T,ROWS,COLS>& param) const {
-    for (UInt i = 0; i < (ROWS*COLS); i++) {
+Static<T,ROWS,COLS>::operator<(
+        const Static<T,ROWS,COLS>& param) const {
+    for (Size i = 0; i < (ROWS*COLS); i++) {
         if (val(i) < param.val(i)) {
             return true;
         }
@@ -272,34 +279,35 @@ StaMatrix<T,ROWS,COLS>::operator<(
     return false;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-StaMatrix<T,ROWS,COLS>& StaMatrix<T,ROWS,COLS>::operator=(
-        const DynMatrix<Int>& rhs) {
+template<class T, Size ROWS, Size COLS>
+Static<T,ROWS,COLS>& Static<T,ROWS,COLS>::operator=(
+        const Dynamic<Int>& rhs) {
     assert(ROWS == rhs.nRows() && COLS == rhs.nCols());
-    for (UInt i = 0; i < ROWS; i++)
-        for (UInt j = 0; j < COLS; j++)
+    for (Size i = 0; i < ROWS; i++)
+        for (Size j = 0; j < COLS; j++)
             val(i,j) = (T) rhs(i,j);
     return *this;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-void StaMatrix<T,ROWS,COLS>::copy(vector<vector<T> > values) {
+template<class T, Size ROWS, Size COLS>
+void
+Static<T,ROWS,COLS>::copy(std::vector<std::vector<T> > values) {
     assert(ROWS == values.size());
-    for (UInt i = 0; i < ROWS; i++) {
+    for (Size i = 0; i < ROWS; i++) {
         assert(values[i].size() == COLS);
-        for (UInt j = 0; j < COLS; j++) {
+        for (Size j = 0; j < COLS; j++) {
             val(i,j) = values[i][j];
         }
     }
 }
 
 
-template<class T, class S, UInt ROWS, UInt COLS, UInt NCOLSB>
-StaMatrix<T,ROWS,NCOLSB> operator*(
-        const StaMatrix<T,ROWS,COLS>& lhs,
-        const StaMatrix<S,COLS,NCOLSB>& rhs) {
-    UInt i, j, k;
-    StaMatrix<T,ROWS,NCOLSB> res;
+template<class T, class S, Size ROWS, Size COLS, Size NCOLSB>
+Static<T,ROWS,NCOLSB> operator*(
+        const Static<T,ROWS,COLS>& lhs,
+        const Static<S,COLS,NCOLSB>& rhs) {
+    Size i, j, k;
+    Static<T,ROWS,NCOLSB> res;
     for (i = 0; i < ROWS; i++) {
         for (k = 0; k < COLS; k++) {
             for (j = 0; j < NCOLSB; j++) {
@@ -310,13 +318,13 @@ StaMatrix<T,ROWS,NCOLSB> operator*(
     return res;
 }
 
-template<class T, UInt ROWS, UInt COLS>
-DynMatrix<T> operator*(
-        const StaMatrix<T,ROWS,COLS>& lhs,
-        const DynMatrix<T>& rhs) {
+template<class T, Size ROWS, Size COLS>
+Dynamic<T> operator*(
+        const Static<T,ROWS,COLS>& lhs,
+        const Dynamic<T>& rhs) {
     assert(COLS == rhs.nRows());
-    UInt i, j, k;
-    DynMatrix<T> res(ROWS, rhs.nCols());
+    Size i, j, k;
+    Dynamic<T> res(ROWS, rhs.nCols());
     for (i = 0; i < ROWS; i++) {
         for (k = 0; k < COLS; k++) {
             for (j = 0; j < rhs.nCols(); j++) {
@@ -326,3 +334,7 @@ DynMatrix<T> operator*(
     }
     return res;
 }
+
+} /* namespace Matrix */
+} /* namespace Math */
+} /* namespace SEMBA */
