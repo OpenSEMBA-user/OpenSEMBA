@@ -19,47 +19,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_DATA_H_
-#define SEMBA_DATA_H_
+#ifndef SEMBA_SOURCE_PORT_PORT_H_
+#define SEMBA_SOURCE_PORT_PORT_H_
 
-#include "geometry/mesh/Mesh.h"
-#include "physicalModel/Group.h"
-#include "outputRequest/Group.h"
-#include "source/Group.h"
-#include "solver/Options.h"
-
-#include "filesystem/Project.h"
-#include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Printable.h"
+#include "../Source.h"
 
 namespace SEMBA {
+namespace Source {
+namespace Port {
 
-class Data : public virtual FileSystem::Project,
-             public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Printable {
+class Port : public Source<Geometry::Surf> {
 public:
-    Geometry::Mesh::Mesh*   mesh;
 
-    PhysicalModel::Group<>* physicalModels;
+    Port(Magnitude::Magnitude* magnitude,
+         const Geometry::Element::Group<const Geometry::Surf>& elem);
+    Port(const Port& rhs);
+    virtual ~Port();
 
-    Source::Group<>*        sources;
-    OutputRequest::Group<>* outputRequests;
+    Math::CVecR3 getNormal() const;
 
-    Data();
-    Data(const Data& rhs);
-    virtual ~Data();
-
-    SEMBA_CLASS_DEFINE_CLONE(Data);
-
-    Data& operator=(const Data& rhs);
-
-    bool check() const;
-
-    void printInfo() const;
+//    virtual Math::CVecR3 getOrigin(const BoundTerminations& sym) const = 0;
+//    virtual Math::CVecR3 getWeight(
+//            const Math::CVecR3& pos,
+//            const BoundTerminations& sym) const = 0;
 };
 
+} /* namespace Port */
+} /* namespace Source */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_DATA_H_ */
+#endif /* SEMBA_SOURCE_PORT_PORT_H_ */

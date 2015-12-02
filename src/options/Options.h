@@ -18,48 +18,27 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+/*
+ * Options.h
+ *
+ *  Created on: Mar 10, 2015
+ *      Author: luis
+ */
 
-#ifndef SEMBA_DATA_H_
-#define SEMBA_DATA_H_
+#ifndef SRC_COMMON_INPUTS_OPTIONS_H_
+#define SRC_COMMON_INPUTS_OPTIONS_H_
 
-#include "geometry/mesh/Mesh.h"
-#include "physicalModel/Group.h"
-#include "outputRequest/Group.h"
-#include "source/Group.h"
-#include "solver/Options.h"
+#include "Arguments.h"
 
-#include "filesystem/Project.h"
-#include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Printable.h"
+#include "base/class/ClassBase.h"
 
-namespace SEMBA {
-
-class Data : public virtual FileSystem::Project,
-             public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Printable {
+class Options : public virtual ClassBase {
 public:
-    Geometry::Mesh::Mesh*   mesh;
+    virtual ~Options();
 
-    PhysicalModel::Group<>* physicalModels;
+    virtual void set(const Arguments& args) = 0;
 
-    Source::Group<>*        sources;
-    OutputRequest::Group<>* outputRequests;
-
-    Data();
-    Data(const Data& rhs);
-    virtual ~Data();
-
-    SEMBA_CLASS_DEFINE_CLONE(Data);
-
-    Data& operator=(const Data& rhs);
-
-    bool check() const;
-
-    void printInfo() const;
+    virtual void printHelp() const = 0;
 };
 
-} /* namespace SEMBA */
-
-#endif /* SEMBA_DATA_H_ */
+#endif /* SRC_COMMON_INPUTS_OPTIONS_H_ */

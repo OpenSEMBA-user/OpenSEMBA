@@ -44,12 +44,17 @@ class Structured : public virtual Mesh,
                    public virtual Element::Group<ElemI>,
                    public virtual Layer::Group<Layer::Layer> {
 public:
+    typedef std::array<std::array<const Element::Model*,2>,3>
+                BoundTerminations;
+
     Structured(const Grid3& grid);
     Structured(const Grid3& grid,
                const Coordinate::Group<const CoordI3>& cG,
                const Element::Group<const ElemI>& elem,
                const Layer::Group<const Layer::Layer>& =
-                   Layer::Group<const Layer::Layer>());
+                   Layer::Group<const Layer::Layer>(),
+               const BoundTerminations& =
+                   {{{NULL,NULL},{NULL,NULL},{NULL,NULL}}});
     Structured(const Structured& param);
     virtual ~Structured();
 
@@ -57,15 +62,17 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Structured);
 
-    Grid3&                      grid  () { return *this; }
-    Coordinate::Group<CoordI3>& coords() { return *this; }
-    Element::Group<ElemI>&      elems () { return *this; }
-    Layer::Group<>&             layers() { return *this; }
+    BoundTerminations&          bounds() { return bounds_; }
+    Grid3&                      grid  () { return *this;   }
+    Coordinate::Group<CoordI3>& coords() { return *this;   }
+    Element::Group<ElemI>&      elems () { return *this;   }
+    Layer::Group<>&             layers() { return *this;   }
 
-    const Grid3&                      grid  () const { return *this; }
-    const Coordinate::Group<CoordI3>& coords() const { return *this; }
-    const Element::Group<ElemI>&      elems () const { return *this; }
-    const Layer::Group<>&             layers() const { return *this; }
+    const BoundTerminations&          bounds() const { return bounds_; }
+    const Grid3&                      grid  () const { return *this;   }
+    const Coordinate::Group<CoordI3>& coords() const { return *this;   }
+    const Element::Group<ElemI>&      elems () const { return *this;   }
+    const Layer::Group<>&             layers() const { return *this;   }
 
     Unstructured* getMeshUnstructured() const;
     Structured* getConnectivityMesh() const;
@@ -92,6 +99,8 @@ public:
 
     virtual void printInfo() const;
 private:
+    BoundTerminations bounds_;
+
     std::vector<HexI8*> discretizeWithinBoundary(
             const Element::Group<const SurfI>& faces);
     std::vector<std::pair<const SurfI*, const SurfI*> >

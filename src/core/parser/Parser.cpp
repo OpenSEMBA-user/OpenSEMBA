@@ -57,10 +57,6 @@ void Parser::postReadOperations(Data* res) {
     if (res->mesh != NULL) {
         res->mesh->applyScalingFactor(scalingFactor_);
     }
-    if (res->grid != NULL) {
-        res->grid->enlarge(boundaryPadding_, boundaryMeshSize_);
-        res->grid->applyScalingFactor(scalingFactor_);
-    }
 }
 
 } /* namespace Parser */

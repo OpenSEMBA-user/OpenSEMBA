@@ -19,47 +19,28 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_DATA_H_
-#define SEMBA_DATA_H_
-
-#include "geometry/mesh/Mesh.h"
-#include "physicalModel/Group.h"
-#include "outputRequest/Group.h"
-#include "source/Group.h"
-#include "solver/Options.h"
-
-#include "filesystem/Project.h"
-#include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Printable.h"
-
-namespace SEMBA {
-
-class Data : public virtual FileSystem::Project,
-             public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Printable {
-public:
-    Geometry::Mesh::Mesh*   mesh;
-
-    PhysicalModel::Group<>* physicalModels;
-
-    Source::Group<>*        sources;
-    OutputRequest::Group<>* outputRequests;
-
-    Data();
-    Data(const Data& rhs);
-    virtual ~Data();
-
-    SEMBA_CLASS_DEFINE_CLONE(Data);
-
-    Data& operator=(const Data& rhs);
-
-    bool check() const;
-
-    void printInfo() const;
-};
-
-} /* namespace SEMBA */
-
-#endif /* SEMBA_DATA_H_ */
+//#include "exporter/GroupOutputs.h"
+//
+//template<typename O>
+//GroupOutputs<O>::GroupOutputs() {
+//}
+//
+//template<typename O>
+//GroupOutputs<O>::~GroupOutputs() {
+//}
+//
+//template<typename O>
+//void GroupOutputs<O>::add(
+//        const OutRqBase* outRq,
+//        const multimap<ElementId, vector<CVecR3> >& electric,
+//        const multimap<ElementId, vector<CVecR3> >& magnetic) {
+//
+//    // TODO Create outputs.
+//
+//}
+//
+//template<typename O>
+//void GroupOutputs<O>::printInfo() const {
+//    cout<< " --- GroupOutputs info ---" << endl;
+//    Group<OutputBase>::printInfo();
+//}

@@ -19,47 +19,47 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_DATA_H_
-#define SEMBA_DATA_H_
-
-#include "geometry/mesh/Mesh.h"
-#include "physicalModel/Group.h"
-#include "outputRequest/Group.h"
-#include "source/Group.h"
-#include "solver/Options.h"
-
-#include "filesystem/Project.h"
-#include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Printable.h"
+#include "TEM.h"
 
 namespace SEMBA {
+namespace Source {
+namespace Port {
 
-class Data : public virtual FileSystem::Project,
-             public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Printable {
-public:
-    Geometry::Mesh::Mesh*   mesh;
+TEM::~TEM() {
 
-    PhysicalModel::Group<>* physicalModels;
+}
 
-    Source::Group<>*        sources;
-    OutputRequest::Group<>* outputRequests;
+TEM::TEM(
+        Magnitude::Magnitude* magnitude,
+        const Geometry::Element::Group<const Geometry::Surf>& elem,
+        const ExcitationMode excitationMode) : Port(magnitude, elem) {
+    excitationMode_ = excitationMode;
+}
 
-    Data();
-    Data(const Data& rhs);
-    virtual ~Data();
+TEM::TEM(const TEM& rhs) : Port(rhs) {
+    excitationMode_ = rhs.excitationMode_;
+}
 
-    SEMBA_CLASS_DEFINE_CLONE(Data);
+TEM::ExcitationMode TEM::getExcitationMode() const {
+    return excitationMode_;
+}
 
-    Data& operator=(const Data& rhs);
+void TEM::printInfo() const {
+    std::cout << " --- TEM Port --- " << std::endl;
+    std::cout << "Excitation mode: " << toStr(excitationMode_) << std::endl;
+    Port::printInfo();
+}
 
-    bool check() const;
+std::string TEM::toStr(const ExcitationMode& excitationMode) {
+    switch (excitationMode) {
+    case ExcitationMode::voltage:
+        return std::string("voltage");
+    case ExcitationMode::current:
+    default:
+        return std::string("current");
+    }
+}
 
-    void printInfo() const;
-};
-
+} /* namespace Port */
+} /* namespace Source */
 } /* namespace SEMBA */
-
-#endif /* SEMBA_DATA_H_ */

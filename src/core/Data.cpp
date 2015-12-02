@@ -25,7 +25,6 @@ namespace SEMBA {
 
 Data::Data() {
     mesh = NULL;
-    grid = NULL;
     physicalModels = NULL;
     sources = NULL;
     outputRequests = NULL;
@@ -34,15 +33,11 @@ Data::Data() {
 Data::Data(const Data& rhs)
 :   FileSystem::Project(rhs) {
     mesh = NULL;
-    grid = NULL;
     physicalModels = NULL;
     sources = NULL;
     outputRequests = NULL;
     if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
-    }
-    if (rhs.grid != NULL) {
-        grid = new Geometry::Grid3(*rhs.grid);
     }
     if (rhs.physicalModels != NULL) {
         physicalModels = rhs.physicalModels->clone();
@@ -58,9 +53,6 @@ Data::Data(const Data& rhs)
 Data::~Data() {
     if (mesh != NULL) {
         delete mesh;
-    }
-    if (grid != NULL) {
-        delete grid;
     }
     if (physicalModels != NULL) {
         delete physicalModels;
@@ -79,15 +71,11 @@ Data& Data::operator=(const Data& rhs) {
     }
     FileSystem::Project::operator=(rhs);
     mesh = NULL;
-    grid = NULL;
     physicalModels = NULL;
     sources = NULL;
     outputRequests = NULL;
     if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
-    }
-    if (rhs.grid != NULL) {
-        grid = new Geometry::Grid3(*rhs.grid);
     }
     if (rhs.physicalModels != NULL) {
         physicalModels = rhs.physicalModels->clone();
@@ -103,9 +91,6 @@ Data& Data::operator=(const Data& rhs) {
 
 void Data::printInfo() const {
     std::cout << " --- SEMBA data --- " << std::endl;
-    if (grid != NULL) {
-        grid->printInfo();
-    }
     if (mesh != NULL) {
         mesh->printInfo();
     } else {

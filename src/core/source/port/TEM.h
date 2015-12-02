@@ -19,47 +19,39 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_DATA_H_
-#define SEMBA_DATA_H_
+#ifndef SEMBA_SOURCE_PORT_TEM_H_
+#define SEMBA_SOURCE_PORT_TEM_H_
 
-#include "geometry/mesh/Mesh.h"
-#include "physicalModel/Group.h"
-#include "outputRequest/Group.h"
-#include "source/Group.h"
-#include "solver/Options.h"
-
-#include "filesystem/Project.h"
-#include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Printable.h"
+#include "Port.h"
 
 namespace SEMBA {
+namespace Source {
+namespace Port {
 
-class Data : public virtual FileSystem::Project,
-             public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Printable {
+class TEM : public Port {
 public:
-    Geometry::Mesh::Mesh*   mesh;
+    typedef enum {
+        voltage,
+        current
+    } ExcitationMode;
 
-    PhysicalModel::Group<>* physicalModels;
+    TEM(Magnitude::Magnitude* magnitude,
+        const Geometry::Element::Group<const Geometry::Surf>& elem,
+        const ExcitationMode excitationMode);
+    TEM(const TEM& rhs);
+    virtual ~TEM();
 
-    Source::Group<>*        sources;
-    OutputRequest::Group<>* outputRequests;
-
-    Data();
-    Data(const Data& rhs);
-    virtual ~Data();
-
-    SEMBA_CLASS_DEFINE_CLONE(Data);
-
-    Data& operator=(const Data& rhs);
-
-    bool check() const;
+    ExcitationMode getExcitationMode() const;
 
     void printInfo() const;
+
+    static std::string toStr(const ExcitationMode& excitationMode);
+private:
+    ExcitationMode excitationMode_;
 };
 
+} /* namespace Port */
+} /* namespace Source */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_DATA_H_ */
+#endif /* SEMBA_SOURCE_PORT_TEM_H_ */
