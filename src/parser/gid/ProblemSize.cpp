@@ -18,14 +18,14 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ProblemSize.cpp
- *
- *  Created on: Aug 27, 2012
- *      Author: luis
- */
 
 #include "ProblemSize.h"
+
+#include <iostream>
+
+namespace SEMBA {
+namespace Parser {
+namespace GiD {
 
 ProblemSize::ProblemSize() {
     v = 0;
@@ -58,15 +58,19 @@ ProblemSize::operator=(const ProblemSize& rhs) {
 
 void
 ProblemSize::printInfo() const {
-    cout << " --- Problem size --- " << endl;
-    cout << "Number of coordinates:  " << v << endl;
-    cout << "Number of materials:    " << mat << endl;
-    cout << "Number of hex8:         " << hex8 << endl;
-    cout << "Number of tet10:        " << tet10 << endl;
-    cout << "Number of tet4:         " << tet4 << endl;
-    cout << "Number of tri6:         " << tri6 << endl;
-    cout << "Number of tri3:         " << tri3 << endl;
-    cout << "Number of lin3:         " << lin3 << endl;
-    cout << "Number of lin2:         " << lin2 << endl;
-    cout << " --- End of Problem size --- " << endl;
+    std::cout << " --- Problem size --- " << std::endl;
+    std::cout << "Number of coordinates:  " << v << std::endl;
+    std::cout << "Number of materials:    " << mat << std::endl;
+    std::cout << "Number of hex8:         " << hex8 << std::endl;
+    std::cout << "Number of tet10:        " << tet10 << std::endl;
+    std::cout << "Number of tet4:         " << tet4 << std::endl;
+    std::cout << "Number of tri6:         " << tri6 << std::endl;
+    std::cout << "Number of tri3:         " << tri3 << std::endl;
+    std::cout << "Number of lin3:         " << lin3 << std::endl;
+    std::cout << "Number of lin2:         " << lin2 << std::endl;
+    std::cout << " --- End of Problem size --- " << std::endl;
 }
+
+} /* namespace GiD */
+} /* namespace Parser */
+} /* namespace SEMBA */

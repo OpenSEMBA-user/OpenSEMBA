@@ -18,38 +18,35 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ProblemSize.h
- *
- *  Created on: Aug 27, 2012
- *      Author: luis
- */
 
 #ifndef PROBLEMSIZE_H_
 #define PROBLEMSIZE_H_
 
-#include <iostream>
+#include <cstddef>
 
-using namespace std;
-
-#include "Types.h"
+namespace SEMBA {
+namespace Parser {
+namespace GiD {
 
 class ProblemSize {
 public:
-	UInt v;	    // Number of coordinate points.
-	UInt lin2;  // # linear segment lines.
-	UInt lin3;  // # quadratic segment lines.
-	UInt tri3;  // # triangular elements.
-	UInt tri6;  // #
-	UInt tet4;  // # tetrahedron elements.
-	UInt tet10; // #
-	UInt hex8;
-	UInt mat;   // # materials.
-	ProblemSize();
-	ProblemSize
-	 operator=(const ProblemSize& rhs);
-	void
-     printInfo() const;
+    std::size_t v;	    // Number of coordinate points.
+    std::size_t lin2;  // # linear segment lines.
+    std::size_t lin3;  // # quadratic segment lines.
+    std::size_t tri3;  // # triangular elements.
+    std::size_t tri6;  // #
+    std::size_t tet4;  // # tetrahedron elements.
+    std::size_t tet10; // #
+    std::size_t hex8;
+    std::size_t mat;   // # materials.
+
+    ProblemSize();
+    ProblemSize operator=(const ProblemSize& rhs);
+    void printInfo() const;
 };
+
+} /* namespace GiD */
+} /* namespace Parser */
+} /* namespace SEMBA */
 
 #endif /* PROBLEMSIZE_H_ */
