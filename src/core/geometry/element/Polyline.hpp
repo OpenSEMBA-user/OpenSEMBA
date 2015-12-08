@@ -53,13 +53,13 @@ Polyline<T>::~Polyline() {
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Polyline<T>::getV(const Size i) const {
+const Coordinate::Coordinate<T,3>* Polyline<T>::getV(const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Polyline<T>::getSideV(const Size f,
-                                                         const Size i) const {
+const Coordinate::Coordinate<T,3>* Polyline<T>::getSideV(const std::size_t f,
+                                                         const std::size_t i) const {
     if (f == 0) {
         return v_.front();
     }
@@ -67,7 +67,7 @@ const Coordinate::Coordinate<T,3>* Polyline<T>::getSideV(const Size f,
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Polyline<T>::getVertex(const Size i) const {
+const Coordinate::Coordinate<T,3>* Polyline<T>::getVertex(const std::size_t i) const {
     if (i == 0) {
         return v_.front();
     }
@@ -76,8 +76,8 @@ const Coordinate::Coordinate<T,3>* Polyline<T>::getVertex(const Size i) const {
 
 template<class T>
 const Coordinate::Coordinate<T,3>* Polyline<T>::getSideVertex(
-        const Size f,
-        const Size i) const {
+        const std::size_t f,
+        const std::size_t i) const {
     if (f == 0) {
         return v_.front();
     }
@@ -85,7 +85,7 @@ const Coordinate::Coordinate<T,3>* Polyline<T>::getSideVertex(
 }
 
 template<class T>
-void Polyline<T>::setV(const Size i, const Coordinate::Coordinate<T,3>* coord) {
+void Polyline<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord) {
 
     assert(i < numberOfCoordinates());
     v_[i] = coord;
@@ -95,13 +95,10 @@ template<class T>
 void Polyline<T>::printInfo() const {
     std::cout << "--- Polyline info ---" << std::endl;
     Line<T>::printInfo();
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
     }
 }
-
-template class Polyline<Math::Real>;
-template class Polyline<Math::Int >;
 
 } /* namespace Element */
 } /* namespace Geometry */

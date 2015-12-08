@@ -24,8 +24,6 @@
 
 #include <vector>
 
-#include "Types.h"
-
 namespace SEMBA {
 namespace Geometry {
 namespace Graph {
@@ -38,7 +36,7 @@ public:
     typedef Element<Elem,Bound> GraphElem;
     typedef Element<Bound,Elem> GraphBound;
 
-    Element(const Elem* elem, const Size& numBounds = 0);
+    Element(const Elem* elem, const std::size_t& numBounds = 0);
     Element(const Element&);
 
     Element* clone() const;
@@ -49,23 +47,27 @@ public:
 
     const Elem* elem() const { return elem_; }
 
-    Size numBounds() const { return bounds_.size(); }
+    std::size_t numBounds() const { return bounds_.size(); }
     std::vector<const GraphBound*> getBounds() const;
-    std::vector<GraphBound*>       getBounds()    { return bounds_;    }
-    const GraphBound* getBound(Size i) const { return bounds_[i]; }
-    GraphBound*       getBound(Size i)       { return bounds_[i]; }
+    std::vector<GraphBound*>       getBounds()      { return bounds_;    }
+    const GraphBound* getBound(std::size_t i) const { return bounds_[i]; }
+    GraphBound*       getBound(std::size_t i)       { return bounds_[i]; }
     void setBounds(GraphBound* bound);
-    void setBounds(std::vector<GraphBound*> bounds) { bounds_ = bounds; }
-    void setBound (Size i, GraphBound* bound)       { bounds_[i] = bound;      }
-    void addBound (GraphBound* bound)               { bounds_.push_back(bound);}
+    void setBounds(std::vector<GraphBound*> bounds)  { bounds_ = bounds;   }
+    void setBound (std::size_t i, GraphBound* bound) { bounds_[i] = bound; }
+    void addBound (GraphBound* bound)                {
+        bounds_.push_back(bound);
+    }
 
-    Size numNeighbors() const { return neighbors_.size(); }
-    const GraphElem* getNeighbor(Size i) const { return neighbors_[i]; }
-    GraphElem*       getNeighbor(Size i)       { return neighbors_[i]; }
+    std::size_t numNeighbors() const { return neighbors_.size(); }
+    const GraphElem* getNeighbor(std::size_t i) const { return neighbors_[i]; }
+    GraphElem*       getNeighbor(std::size_t i)       { return neighbors_[i]; }
 
-    Size numBoundNeighbors(Size i) const { return boundNeighbors_[i].size(); }
-    const GraphElem* getBoundNeighbor(Size i, Size j) const;
-    GraphElem*       getBoundNeighbor(Size i, Size j);
+    std::size_t numBoundNeighbors(std::size_t i) const {
+        return boundNeighbors_[i].size();
+    }
+    const GraphElem* getBoundNeighbor(std::size_t i, std::size_t j) const;
+    GraphElem*       getBoundNeighbor(std::size_t i, std::size_t j);
 
     void constructNeighbors();
 

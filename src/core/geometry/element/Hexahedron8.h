@@ -22,6 +22,8 @@
 #ifndef SEMBA_GEOMETRY_ELEMENT_HEXAHEDRON8_H_
 #define SEMBA_GEOMETRY_ELEMENT_HEXAHEDRON8_H_
 
+#include <array>
+
 #include "Volume.h"
 
 namespace SEMBA {
@@ -35,12 +37,16 @@ public:
 
     inline bool isQuadratic() const { return false; }
 
-    inline Size numberOfFaces      () const { return 6; }
-    inline Size numberOfVertices   () const { return 8; }
-    inline Size numberOfCoordinates() const { return 8; }
+    inline std::size_t numberOfFaces      () const { return 6; }
+    inline std::size_t numberOfVertices   () const { return 8; }
+    inline std::size_t numberOfCoordinates() const { return 8; }
 
-    inline Size numberOfSideVertices   (const Size f = 0) const { return 4; }
-    inline Size numberOfSideCoordinates(const Size f = 0) const { return 4; }
+    inline std::size_t numberOfSideVertices   (const std::size_t f = 0) const {
+        return 4;
+    }
+    inline std::size_t numberOfSideCoordinates(const std::size_t f = 0) const {
+        return 4;
+    }
 };
 
 template<class T>
@@ -60,30 +66,32 @@ public:
     Hexahedron8(const Hexahedron8<T>& rhs);
     virtual ~Hexahedron8();
 
-    SEMBA_CLASS_DEFINE_CLONE(Hexahedron8<T>);
+    SEMBA_CLASS_DEFINE_CLONE(Hexahedron8);
 
     bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
     // Checks if edges are ortonormal.
     bool isRegular() const;
-    inline bool isCurvedFace(const Size f) const { return false; }
+    inline bool isCurvedFace(const std::size_t f) const { return false; }
 
-    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
-                                                const Size i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const std::size_t f,
+                                                const std::size_t i) const;
 
-    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
-                                                     const Size i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (
+            const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(
+            const std::size_t f,
+            const std::size_t i) const;
 
     std::vector<const Coordinate::Coordinate<T,3>*> getVertices() const;
     std::vector<const Coordinate::Coordinate<T,3>*> getSideVertices(
-            const Size face) const;
+            const std::size_t face) const;
 
-    Math::Real getAreaOfFace(const Size face) const;
+    Math::Real getAreaOfFace(const std::size_t face) const;
     Math::Real getVolume() const;
 
-    void setV(const Size i, const Coordinate::Coordinate<T,3>*);
+    void setV(const std::size_t i, const Coordinate::Coordinate<T,3>*);
 
     ElemI* toStructured(const Coordinate::Group<CoordI3>&,
                         const Grid3&,
@@ -107,5 +115,7 @@ typedef Element::Hexahedron8<Math::Int > HexI8;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Hexahedron8.hpp"
 
 #endif /* SEMBA_GEOMETRY_ELEMENT_HEXAHEDRON8_H_ */

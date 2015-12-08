@@ -48,19 +48,19 @@ public:
     Polyline(const Polyline<T>& rhs);
     virtual ~Polyline();
     
-    SEMBA_CLASS_DEFINE_CLONE(Polyline<T>);
+    SEMBA_CLASS_DEFINE_CLONE(Polyline);
 
-    inline Size numberOfCoordinates() const { return v_.size(); }
+    inline std::size_t numberOfCoordinates() const { return v_.size(); }
 
-    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
-                                                const Size i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const std::size_t f,
+                                                const std::size_t i) const;
 
-    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
-                                                     const Size i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(const std::size_t f,
+                                                     const std::size_t i) const;
 
-    void setV(const Size i, const Coordinate::Coordinate<T,3>* coord);
+    void setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord);
 
     void printInfo() const;
 
@@ -76,5 +76,7 @@ typedef Element::Polyline<Math::Int > PolylinI;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Polyline.h"
 
 #endif /* POLYLINE_H_ */

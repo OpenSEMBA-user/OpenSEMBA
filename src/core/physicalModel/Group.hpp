@@ -46,7 +46,6 @@ template<typename P>
 void Group<P>::printInfo() const {
     std::cout << "---- Group info ----" << std::endl;
     std::cout << "Number of physical models: " << this->size() << std::endl;
-    Group<P>::printInfo();
 }
 
 } /* namespace PhysicalModel */

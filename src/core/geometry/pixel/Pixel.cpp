@@ -44,7 +44,7 @@ std::string Pixel::toStr(const Math::CartesianDirection& dir) {
 }
 
 bool Pixel::operator<(const Pixel& rhs) const {
-    for (Size i = 0; i < 3; i++) {
+    for (std::size_t i = 0; i < 3; i++) {
         if (val[i] < rhs.val[i]) {
             return true;
         }

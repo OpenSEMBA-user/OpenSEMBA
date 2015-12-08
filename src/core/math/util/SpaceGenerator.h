@@ -37,7 +37,7 @@ std::vector<Real> logspace(const std::pair<Real, Real>& rangeExponents,
 
 template<class T>
 std::vector<T> linspace(const std::pair<T,T>& range,
-                        const Size nPoints);
+                        const std::size_t nPoints);
 
 } /* namespace Util */
 } /* namespace Math */

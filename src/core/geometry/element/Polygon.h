@@ -40,24 +40,24 @@ public:
     
     SEMBA_CLASS_DEFINE_CLONE(Polygon);
     
-    Size numberOfFaces      () const;
-    Size numberOfVertices   () const;
-    Size numberOfCoordinates() const;
+    std::size_t numberOfFaces      () const;
+    std::size_t numberOfVertices   () const;
+    std::size_t numberOfCoordinates() const;
 
-    Size numberOfSideVertices   (const Size f) const;
-    Size numberOfSideCoordinates(const Size f) const;
+    std::size_t numberOfSideVertices   (const std::size_t f) const;
+    std::size_t numberOfSideCoordinates(const std::size_t f) const;
 
-    const CoordR3* getV    (const Size i) const;
-    const CoordR3* getSideV(const Size f,
-                            const Size i) const;
+    const CoordR3* getV    (const std::size_t i) const;
+    const CoordR3* getSideV(const std::size_t f,
+                            const std::size_t i) const;
 
-    const CoordR3* getVertex    (const Size i) const;
-    const CoordR3* getSideVertex(const Size f,
-                                 const Size i) const;
+    const CoordR3* getVertex    (const std::size_t i) const;
+    const CoordR3* getSideVertex(const std::size_t f,
+                                 const std::size_t i) const;
 
     Math::Real getArea() const;
 
-    void setV(const Size i, const CoordR3*);
+    void setV(const std::size_t i, const CoordR3*);
     
     void printInfo() const;
 

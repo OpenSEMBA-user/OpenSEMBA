@@ -68,8 +68,10 @@ public:
 
     virtual Geometry::Element::Group<const Geometry::Elem> elems() const = 0;
 
-    virtual void set(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
-    virtual void add(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual void set(
+            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual void add(
+            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
 
     virtual bool hasSameProperties(const Base& rhs) const;
     virtual bool isSimilar(const Base& rhs) const = 0;
@@ -101,7 +103,7 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(OutputRequest<T>);
 
-    bool isSimilar(const Base& rhs) const;
+    bool isSimilar(const SEMBA::OutputRequest::Base& rhs) const;
 
     Geometry::Element::Group<const Geometry::Elem> elems() const {return *this;}
 

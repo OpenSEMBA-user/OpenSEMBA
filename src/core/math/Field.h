@@ -29,43 +29,46 @@
 namespace SEMBA {
 namespace Math {
 
-template <class T, Size D>
+template <class T, std::size_t D>
 class Field {
 public:
     Field();
-    Field(Size size);
+    Field(std::size_t size);
     virtual ~Field();
 
-    T*       operator()(const Size i);
-    const T* operator()(const Size i) const;
+    T*       operator()(const std::size_t i);
+    const T* operator()(const std::size_t i) const;
 
-    T operator[](const Size i) const;
+    T operator[](const std::size_t i) const;
 
-    Vector::Cartesian<T,D> getCVec(const Size i) const;
+    Vector::Cartesian<T,D> getCVec(const std::size_t i) const;
 
-    Size getDOFs() const;
-    Size size() const;
+    std::size_t getDOFs() const;
+    std::size_t size() const;
 
-    T* set(const Size i) const;
-    void set(const Size i, const T& num);
-    void set(const Size i, const Vector::Cartesian<T,D>& vec);
+    T* set(const std::size_t i) const;
+    void set(const std::size_t i, const T& num);
+    void set(const std::size_t i, const Vector::Cartesian<T,D>& vec);
 
     void setAll(const T& num);
-    void setSize(const Size siz);
+    void setSize(const std::size_t siz);
     void setToRandom(const Real min, const Real max);
 
-    void prod(const Size init, const Size end, const T param);
-    void prod_omp(const Size init, const Size end, const T param);
-    void addProd(const Size init, const Size end,
+    void prod(const std::size_t init, const std::size_t end, const T param);
+    void prod_omp(const std::size_t init, const std::size_t end,
+                  const T param);
+    void addProd(const std::size_t init, const std::size_t end,
                  const Field<T,D>& field, const T param);
-    void addProd_omp(const Size init, const Size end,
+    void addProd_omp(const std::size_t init, const std::size_t end,
                      const Field<T,D>& field, const T param);
-    void copy(const Size init, const Size end, const Field<T,D>& param);
+    void copy(const std::size_t init, const std::size_t end,
+              const Field<T,D>& param);
 
-    void swap(Field<T,D>& param, const Size first, const Size last);
+    void swap(Field<T,D>& param, const std::size_t first,
+              const std::size_t last);
 private:
     T* val_;
-    Size size_;
+    std::size_t size_;
 };
 
 } /* namespace Math */

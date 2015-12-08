@@ -34,8 +34,8 @@ Linel::~Linel() {
 
 bool Linel::isInto (const Math::CVecI3Fractional& fracPos)const{
     Math::CVecR3 pos = fracPos.getScalePos(*this);
-    for(Size n=0; n<3; n++){
-        if(n==(Size)(dirId_-1)){
+    for(std::size_t n=0; n<3; n++){
+        if(n==(std::size_t)(dirId_-1)){
             if (pos(n)<0.0 || pos(n)>1.0 ){
                 return false;
             }

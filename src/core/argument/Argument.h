@@ -42,27 +42,24 @@ public:
     virtual std::string getArgName() const { return name_; }
 
     const bool&        getRequired() const { return required_; }
-    const std::string& getHelp    () const { return help_;     }
-
-    virtual Argument& required  (const bool& = true);
-    virtual Argument& help      (const std::string&);
-
-    virtual void parse(Object&,
-                       std::vector<std::list<std::string>>&,
-                       std::vector<std::list<std::string>>&) const = 0;
-
-    virtual void noParsed(Object&) const;
-
-protected:
+    const std::string& getHelp() const { return help_; }
     const std::list<std::string>& getMetavar() const { return metavar_; }
     const std::list<std::string>& getDefault() const { return default_; }
     const std::vector<std::list<std::string>>& getChoices() const {
         return choices_;
     }
 
-    virtual Argument& metavar   (const std::list<std::string>&);
+    virtual Argument& required  (const bool& = true);
+    virtual Argument& help(const std::string&);
+    virtual Argument& metavar(const std::list<std::string>&);
     virtual Argument& defaultVal(const std::list<std::string>&);
-    virtual Argument& choices   (const std::vector<std::list<std::string>>&);
+    virtual Argument& choices(const std::vector<std::list<std::string>>&);
+
+    virtual void parse(Object&,
+                       std::vector<std::list<std::string>>&,
+                       std::vector<std::list<std::string>>&) const = 0;
+
+    virtual void noParsed(Object&) const;
 
 private:
     std::string name_;

@@ -49,7 +49,7 @@ public:
 
 protected:
     void deleteExistentOutputFiles() const;
-    Size determineStepsSaved(
+    std::size_t determineStepsSaved(
             const Math::Real savingPeriod,
             const Math::Real dt) const;
 protected:
@@ -65,8 +65,8 @@ protected:
             const Geometry::Grid3* grid) const;
     static std::string getBoundaryName(
             const Geometry::Mesh::Structured* mesh,
-            const Size i,
-            const Size j);
+            const std::size_t i,
+            const std::size_t j);
 private:
     //   void writeAllFields(const FieldR3& field) const;
 };

@@ -36,7 +36,7 @@ namespace SEMBA {
 namespace Geometry {
 namespace Element {
 
-typedef std::pair<const VolR*, Size> Face;
+typedef std::pair<const VolR*, std::size_t> Face;
 
 struct CompVecIds {
     bool operator()(const std::vector<CoordId>& lhs,
@@ -49,7 +49,7 @@ struct CompVecIds {
         } else if (lhsOrdered.size() > rhsOrdered.size()) {
             return false;
         } else {
-            for (Size i = 0; i < lhsOrdered.size(); i++) {
+            for (std::size_t i = 0; i < lhsOrdered.size(); i++) {
                 if (lhsOrdered[i] < rhsOrdered[i]) {
                     return true;
                 }
@@ -114,16 +114,16 @@ public:
     std::vector<Id> getIdsWithoutMaterialId(const MatId matId) const;
     Group<const ElemR> getInsideBound(const BoxR3& bound) const;
 
-    std::vector<std::pair<const E*,Size>> getElementsWithVertex(
+    std::vector<std::pair<const E*,std::size_t>> getElementsWithVertex(
             const CoordId) const;
     BoxR3 getBound() const;
     BoxR3 getBound(const std::vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const Math::CVecR3 pos) const;
 
-    void setMatId  (const MatId   newId);
-    void setLayerId(const LayerId newId);
-    void setMatId  (const Id id, const MatId   newMatId);
-    void setLayerId(const Id id, const LayerId newLayerId);
+    void setModel(const Model* newMat);
+    void setLayer(const Layer* newLay);
+    void setModel(const Id id, const Model* newMat);
+    void setLayer(const Id id, const Layer* newLay);
 
     std::map<LayerId, std::vector<const E*> > separateByLayers() const;
     IndexByVertexId getIndexByVertexId() const;
@@ -142,9 +142,9 @@ protected:
     void reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew);
     void reassignPointers(const SEMBA::Group::Identifiable<Model,MatId>& mNew);
 private:
-    std::vector<Size> getElemsWith_(const std::vector<MatId>&) const;
-    std::vector<Size> getElemsWith_(const std::vector<LayerId>&) const;
-    std::vector<Size> getElemsWith_(const MatId&, const LayerId&) const;
+    std::vector<std::size_t> getElemsWith_(const std::vector<MatId>&) const;
+    std::vector<std::size_t> getElemsWith_(const std::vector<LayerId>&) const;
+    std::vector<std::size_t> getElemsWith_(const MatId&, const LayerId&) const;
 };
 
 } /* namespace Element */

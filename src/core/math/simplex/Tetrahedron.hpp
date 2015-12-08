@@ -428,7 +428,8 @@ void Tetrahedron<SIMPTET_N>::printInfo() const {
     std::cout << " Lagrange polynomials derivatives: " << std::endl;
     for (UInt i = 0; i < np; i++)
         for (UInt j = 0; j < faces; j++) {
-            std::cout << "Pol. " << i << " derived w.r.t. var." << j << std::endl;
+            std::cout << "Pol. " << i 
+                      << " derived w.r.t. var." << j << std::endl;
             dLagr[i][j].printInfo();
         }
     std::cout << " LIFT Matrices" << std::endl;

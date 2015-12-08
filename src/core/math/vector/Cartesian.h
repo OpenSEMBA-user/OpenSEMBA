@@ -33,7 +33,7 @@ namespace SEMBA {
 namespace Math {
 namespace Vector {
 
-template <class T, Size D>
+template <class T, std::size_t D>
 class Cartesian {
 public:
     T val[D];
@@ -80,11 +80,11 @@ public:
             const Constants::CartesianPlane plane) const;
     virtual bool isCoplanar(const Cartesian<T,D>& param) const;
 
-    virtual T& operator() (Size pos);
-    virtual T  operator() (Size pos) const;
+    virtual T& operator() (std::size_t pos);
+    virtual T  operator() (std::size_t pos) const;
 
-    virtual T& operator[] (Size pos);
-    virtual T  operator[] (Size pos) const;
+    virtual T& operator[] (std::size_t pos);
+    virtual T  operator[] (std::size_t pos) const;
 
     Cartesian<T,D>& setAsBinary(const UInt number);
     Cartesian<T,D>& setWithMinimalComponents(const Cartesian<T,D>& rhs);
@@ -96,7 +96,7 @@ public:
     Cartesian<T,D>& setPlusInfty();
     Cartesian<T,D>& setMinusInfty();
 
-    Cartesian<T,D>& cyclicPermutation(const Size n=1);
+    Cartesian<T,D>& cyclicPermutation(const std::size_t n=1);
 
     virtual std::string toStr() const;
     virtual void printInfo() const;

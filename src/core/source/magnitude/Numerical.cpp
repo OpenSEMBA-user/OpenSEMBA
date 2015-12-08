@@ -48,9 +48,9 @@ Numerical::Numerical(const FileSystem::Project& file,
         operator=(*mag.castTo<Numerical>());
         return;
     }
-    Size nSteps;
+    std::size_t nSteps;
     if (timeStep != 0.0) {
-        nSteps = abs(finalTime / timeStep);
+        nSteps = (std::size_t)abs(finalTime / timeStep);
     } else {
         nSteps = defaultNumberOfSteps;
         std::cerr << "WARNING @ Numerical: "
@@ -62,7 +62,7 @@ Numerical::Numerical(const FileSystem::Project& file,
     std::ofstream out;
     out.open(file.c_str());
     Math::Real time = 0.0;
-    for (Size i = 0; i < nSteps; i++) {
+    for (std::size_t i = 0; i < nSteps; i++) {
         // Determines if neigh values are aligned with current.
         std::vector<std::pair<Math::Real,Math::Real>> preAndPost;
         const Math::Real tPre = time - timeStep;

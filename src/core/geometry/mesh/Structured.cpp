@@ -48,7 +48,8 @@ Structured::Structured(
         }
     }
 
-    Element::Group<ElemI>::reassignPointers(*this);
+    Element::Group<ElemI>::reassignPointers(this->coords());
+    Element::Group<ElemI>::reassignPointers(this->layers());
 }
 
 Structured::Structured(const Structured& rhs)
@@ -59,7 +60,8 @@ Structured::Structured(const Structured& rhs)
 
     bounds_ = rhs.bounds_;
 
-    Element::Group<ElemI>::reassignPointers(*this);
+    Element::Group<ElemI>::reassignPointers(this->coords());
+    Element::Group<ElemI>::reassignPointers(this->layers());
 }
 
 Structured::~Structured() {
@@ -78,7 +80,8 @@ Structured& Structured::operator=(const Structured& rhs) {
 
     bounds_ = rhs.bounds_;
 
-    Element::Group<ElemI>::reassignPointers(*this);
+    Element::Group<ElemI>::reassignPointers(this->coords());
+    Element::Group<ElemI>::reassignPointers(this->layers());
 
     return *this;
 }
@@ -92,7 +95,7 @@ Unstructured* Structured::getMeshUnstructured() const {
 
     std::vector<CoordR3*> newCoords;
     newCoords.reserve(coords().size());
-    for (Size i = 0; i < coords().size(); i++) {
+    for (std::size_t i = 0; i < coords().size(); i++) {
         CoordR3* newCoord = coords()(i)->toUnstructured(*this);
         if (newCoord != NULL) {
             newCoords.push_back(newCoord);
@@ -102,7 +105,7 @@ Unstructured* Structured::getMeshUnstructured() const {
 
     std::vector<ElemR*> newElems;
     newElems.reserve(elems().size());
-    for (Size i = 0; i < elems().size(); i++) {
+    for (std::size_t i = 0; i < elems().size(); i++) {
         ElemR* newElem = elems()(i)->toUnstructured(*res, *this);
         if (newElem != NULL) {
             newElems.push_back(newElem);
@@ -121,20 +124,21 @@ Structured* Structured::getConnectivityMesh() const {
     Graph::Vertices<ElemI, CoordI3> graphLayer;
     graphLayer.init(elems);
     std::vector<std::vector<const ElemI*>> comps = graphLayer.getConnectedComponents();
-    for (Size c = 0; c < comps.size(); c++) {
+    for (std::size_t c = 0; c < comps.size(); c++) {
         std::stringstream layerName;
         layerName << "Component " << c+1;
         Layer::Layer* newLayer = res->layers().addId(
                                      new Layer::Layer(layerName.str()))(0);
         std::vector<ElemI*> newElemsLayer;
         newElemsLayer.resize(comps[c].size());
-        for (Size e = 0; e < comps[c].size(); e++) {
+        for (std::size_t e = 0; e < comps[c].size(); e++) {
             newElemsLayer[e] = comps[c][e]->cloneTo<ElemI>();
             newElemsLayer[e]->setLayer(newLayer);
         }
         res->elems().add(newElemsLayer);
     }
-    res->reassignPointers(*res);
+    res->reassignPointers(res->coords());
+    res->reassignPointers(res->layers());
     return res;
 }
 
@@ -157,8 +161,8 @@ void Structured::addAsHex(Element::Group<const VolR> region) {
         getCenterOfCellsInside(region.getBound());
     std::vector<HexI8*> hexes;
     hexes.reserve(center.size());
-    for (Size i = 0; i < center.size(); i++) {
-        for (Size j = 0; j < region.size(); j++) {
+    for (std::size_t i = 0; i < center.size(); i++) {
+        for (std::size_t j = 0; j < region.size(); j++) {
             if (region(j)->isInnerPoint(center[i])) {
                 ElemId id = region(j)->getId();
                 BoxI3 box = getBoxIContaining(center[i]);
@@ -178,7 +182,7 @@ std::vector<HexI8*> Structured::discretizeWithinBoundary(
             getPairsDefiningVolumeWithin(surf);
     std::vector<HexI8*> res;
     res.reserve(pair.size());
-    for (Size i = 0; i < pair.size(); i++) {
+    for (std::size_t i = 0; i < pair.size(); i++) {
         ElemId id(0);
         BoxI3 box(*pair[i].first->getMinV(), *pair[i].second->getMaxV());
         const Layer::Layer* lay = pair[i].first->getLayer();
@@ -198,7 +202,7 @@ std::vector<std::pair<const SurfI*, const SurfI*> >
     Structured::getPairsDefiningVolumeWithin(
         const Element::Group<const SurfI>& origBound) const {
     std::vector<std::pair<const SurfI*, const SurfI*> > res;
-    const Size nOrigBound = origBound.size();
+    const std::size_t nOrigBound = origBound.size();
     // Checks that bound.size is an even number.
     if (nOrigBound % 2 != 0) {
         throw Error::InvalidBoundary();
@@ -206,30 +210,30 @@ std::vector<std::pair<const SurfI*, const SurfI*> >
     // Remove Surfaces not lying in a xy plane.
     std::vector<const SurfI*> bound;
     bound.reserve(nOrigBound);
-    for (Size b = 0; b < origBound.size(); b++) {
+    for (std::size_t b = 0; b < origBound.size(); b++) {
         if (origBound(b)->isContainedInPlane(Math::Constants::xy)) {
             bound.push_back(origBound(b));
         }
     }
     // Sort remaining quad Ids using coordinates as a lexicographical order.
     // Pairs quadrilaterals that are aligned in the same Z natural axe.
-    const Size nBound = bound.size();
+    const std::size_t nBound = bound.size();
     assert(nBound % 2 == 0);
     res.reserve(nBound / 2);
     // Sorts.
     Math::Matrix::Dynamic<Math::Int> quads(nBound, 4);
-    for (Size b = 0; b < nBound; b++) {
+    for (std::size_t b = 0; b < nBound; b++) {
         Math::CVecI3 minPos = bound[b]->getMinV()->pos();
         // Stores boundary at quad list.
-        quads(b, 0) = (Math::Real) bound[b]->getId().toInt();
-        for (Size i = 0; i < 3; i++) {
+        quads(b, 0) = (Math::Int) bound[b]->getId().toInt();
+        for (std::size_t i = 0; i < 3; i++) {
             quads(b, i+1) = minPos(i);
         }
     }
     quads.sortRows_omp(1,3);
     // Performs pairing.
     std::pair<const SurfI*, const SurfI*> aux;
-    for (Size b = 0; b < nBound; b++) {
+    for (std::size_t b = 0; b < nBound; b++) {
         const ElemId id(quads(b,0));
         if (b % 2 == 0) {
             aux.first = elems().getId(id)->castTo<SurfI>();

@@ -46,19 +46,19 @@ public:
     Volume();
     virtual ~Volume();
 
-    bool isLocalFace(const Size f,
+    bool isLocalFace(const std::size_t f,
                      const Surface<T>& surf) const;
-    virtual bool isCurvedFace(const Size face) const = 0;
+    virtual bool isCurvedFace(const std::size_t face) const = 0;
     virtual bool isFaceContainedInPlane(
-            const Size face,
+            const std::size_t face,
             const Math::Constants::CartesianPlane plane) const;
 
-    Math::Vector::Cartesian<T,3> getSideNormal(const Size f) const;
+    Math::Vector::Cartesian<T,3> getSideNormal(const std::size_t f) const;
 
-    virtual Math::Real getAreaOfFace(const Size face) const = 0;
+    virtual Math::Real getAreaOfFace(const std::size_t face) const = 0;
     virtual Math::Real getVolume() const = 0;
-    Box<T,3> getBoundOfFace(const Size face) const;
-    Size getFaceNumber(const Surface<T>*) const;
+    Box<T,3> getBoundOfFace(const std::size_t face) const;
+    std::size_t getFaceNumber(const Surface<T>*) const;
 };
 
 namespace Error {
@@ -103,5 +103,7 @@ typedef Element::Volume<Math::Int > VolI;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Volume.hpp"
 
 #endif /* SEMBA_GEOMETRY_ELEMENT_VOLUME_H_ */

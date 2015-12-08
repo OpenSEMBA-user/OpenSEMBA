@@ -21,8 +21,8 @@
 /* =================== Matrix procedures ========================
    + Mathematical matrices class.
    + Contains two implementations:
-     - Dynamic (Dynamic matrices): Size can change in run time.
-     - Static  (Static  matrices): Size set at compilation time.
+     - Dynamic (Dynamic matrices): std::size_t can change in run time.
+     - Static  (Static  matrices): std::size_t set at compilation time.
    ============================================================== */
 
 #ifndef SEMBA_MATH_MATRIX_MATRIX_H_
@@ -48,14 +48,16 @@ class Matrix {
 public:
     Matrix();
     virtual ~Matrix();
-    virtual Size nCols() const = 0;
-    virtual Size nRows() const = 0;
-    virtual T operator()(const Size row, const Size col) const = 0;
-    virtual T& operator()(const Size row, const Size col) = 0;
-    virtual T& val(const Size ind) = 0;
-    virtual T val(const Size row, const Size col) const = 0;
-    virtual T& val(const Size row, const Size col) = 0;
-    virtual T val(const Size ind) const = 0;
+    virtual std::size_t nCols() const = 0;
+    virtual std::size_t nRows() const = 0;
+    virtual T operator() (const std::size_t row,
+                          const std::size_t col) const = 0;
+    virtual T& operator()(const std::size_t row,
+                          const std::size_t col) = 0;
+    virtual T& val(const std::size_t ind) = 0;
+    virtual T val(const std::size_t row, const std::size_t col) const = 0;
+    virtual T& val(const std::size_t row, const std::size_t col) = 0;
+    virtual T val(const std::size_t ind) const = 0;
     virtual void copy(std::vector<std::vector<T> > values) = 0;
 
     void zeros();
@@ -69,14 +71,14 @@ public:
     T getDeterminant3x3() const;
     T getDeterminant4x4() const;
     T maxVal() const;
-    T maxValInCol(Size col) const;
+    T maxValInCol(std::size_t col) const;
 
     void sortRows();
-    void sortRows(const Size iCol, const Size lCol);
+    void sortRows(const std::size_t iCol, const std::size_t lCol);
 
-    Size findFirstOcurrenceInColumns(const T* vec,
-                                     const Size col,
-                                     const Size vecSize) const;
+    std::size_t findFirstOcurrenceInColumns(const T* vec,
+                                     const std::size_t col,
+                                     const std::size_t vecSize) const;
 
     bool isSquare() const;
     bool isSymmetric() const;
@@ -85,22 +87,22 @@ public:
 
 protected:
     void internal_();
-    bool isEQ_(const T* x1, const T* x2, const Size vS) const;
-    bool isGEQ_(const T* x1, const T* x2, const Size vS) const;
-    bool isLEQ_(const T* x1, const T* x2, const Size vS) const;
+    bool isEQ_(const T* x1, const T* x2, const std::size_t vS) const;
+    bool isGEQ_(const T* x1, const T* x2, const std::size_t vS) const;
+    bool isLEQ_(const T* x1, const T* x2, const std::size_t vS) const;
 
 private:
     void QSRows_(Int p, Int r,
-                 const Size iCol, const Size lCol);
+                 const std::size_t iCol, const std::size_t lCol);
     Int partitionRows_(Int p, Int r,
-                       const Size iCol, const Size lCol);
-    Size binarySearch_(const T* key,
-                       const Size col,
-                       const Size vecSize,
-                       Size imin,
-                       Size imax) const;
-    void factorizeLU_(Size pivot[]);
-    void invertFactorized_(const Size pivot[]);
+                       const std::size_t iCol, const std::size_t lCol);
+    std::size_t binarySearch_(const T* key,
+                       const std::size_t col,
+                       const std::size_t vecSize,
+                       std::size_t imin,
+                       std::size_t imax) const;
+    void factorizeLU_(std::size_t pivot[]);
+    void invertFactorized_(const std::size_t pivot[]);
 };
 
 namespace Error {

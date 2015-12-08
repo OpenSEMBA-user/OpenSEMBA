@@ -30,7 +30,7 @@ namespace SEMBA {
 namespace Geometry {
 namespace Graph {
 
-typedef std::pair<const VolR*, Size> Face;
+typedef std::pair<const VolR*, std::size_t> Face;
 
 class Connectivities {
 public:
@@ -40,7 +40,7 @@ public:
     Connectivities(const Group::Group<const ElemR>& eG);
     virtual ~Connectivities();
 
-    Size size() const;
+    std::size_t size() const;
 
     // Returns face of volume matching given face.
     Face getNeighFace(const Face& face) const;

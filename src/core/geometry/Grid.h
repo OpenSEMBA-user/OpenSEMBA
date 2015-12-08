@@ -31,9 +31,9 @@
 namespace SEMBA {
 namespace Geometry {
 
-template<class T, Size D> class Box;
+template<class T, std::size_t D> class Box;
 
-template<Size D>
+template<std::size_t D>
 class Grid {
     typedef Box<Math::Real,D> BoxRD;
     typedef Box<Math::Int ,D> BoxID;
@@ -69,9 +69,9 @@ public:
     bool hasZeroSize() const;
 
     bool isInto(const CVecRD& pos) const;
-    bool isInto(const Size dir, const Math::Real pos) const;
+    bool isInto(const std::size_t dir, const Math::Real pos) const;
     bool isRegular() const;
-    bool isRegular(const Size d) const;
+    bool isRegular(const std::size_t d) const;
     bool isCartesian() const;
     bool isCell(const CVecRD& position,
                 const Math::Real tol = tolerance) const;
@@ -82,8 +82,9 @@ public:
     CVecID getOffset()   const;
     CVecRD getOrigin()   const;
 
-    std::vector<Math::Real> getStep(const Size dir) const;
-    Math::Real              getStep(const Size dir, const Math::Int& n) const;
+    std::vector<Math::Real> getStep(const std::size_t dir) const;
+    Math::Real              getStep(const std::size_t dir,
+                                    const Math::Int& n) const;
 
     Math::Real getMinimumSpaceStep() const;
 
@@ -94,18 +95,19 @@ public:
     BoxID getBoxIContaining(const CVecRD& point) const;
 
     std::vector<CVecRD> getCenterOfCellsInside(const BoxRD& bound) const;
-    std::vector<Math::Real> getPosInRange(const Size dir,
+    std::vector<Math::Real> getPosInRange(const std::size_t dir,
                                           const Math::Real min,
                                           const Math::Real max) const;
 
     std::vector<CVecRD>     getPos() const;
-    std::vector<Math::Real> getPos(const Size dir) const;
-    Math::Real              getPos(const Size dir, const Math::Int i) const;
+    std::vector<Math::Real> getPos(const std::size_t dir) const;
+    Math::Real              getPos(const std::size_t dir,
+                                   const Math::Int i) const;
     CVecRD                  getPos(const CVecID& ijk) const;
     CVecRD                  getPos(const CVecRD& ijk) const { return ijk; }
 
     std::pair<Math::Int, Math::Real> getCellPair(
-            const Size       dir,
+            const std::size_t       dir,
             const Math::Real x,
             const bool approx = true,
             const Math::Real tol = tolerance,
@@ -117,9 +119,9 @@ public:
             bool* err = NULL) const;
 
     Math::CVecI3Fractional getCVecI3Fractional (const CVecRD& xyz,
-                                                bool& err = false) const;
+                                                bool& err) const;
 
-    Math::Int getCell(const Size dir,
+    Math::Int getCell(const std::size_t dir,
                       const Math::Real  x,
                       const bool  approx = true,
                       const Math::Real  tol = tolerance,
@@ -147,17 +149,11 @@ private:
     std::vector<Math::Real> pos_[D];
 };
 
-} /* namespace Geometry */
-} /* namespace SEMBA */
-
-#include "Grid.hpp"
-
-namespace SEMBA {
-namespace Geometry {
-
 typedef Grid<3> Grid3;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Grid.hpp"
 
 #endif /* SEMBA_GEOMETRY_GRID_H_ */

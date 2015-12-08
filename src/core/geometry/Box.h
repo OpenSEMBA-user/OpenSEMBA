@@ -25,16 +25,15 @@
 #include <exception>
 #include <utility>
 
-#include "Types.h"
 #include "math/vector/Cartesian.h"
 #include "Grid.h"
 
 namespace SEMBA {
 namespace Geometry {
 
-template<Size D> class Grid;
+template<std::size_t D> class Grid;
 
-template <class T, Size D>
+template <class T, std::size_t D>
 class Box {
     typedef Math::Vector::Cartesian<T,D> CVecTD;
 public:
@@ -95,10 +94,10 @@ private:
         max_.setMinusInfty();
     };
 
-    Size numberOfDifferentCoords() const;
+    std::size_t numberOfDifferentCoords() const;
 };
 
-template <class T, Size D>
+template <class T, std::size_t D>
 std::ostream& operator<<(std::ostream& os, const Box<T,D>& rhs) {
    return os << "Min: " << rhs.getMin() << ", Max: " << rhs.getMax();
 }
@@ -145,13 +144,6 @@ public:
 };
 } /* namespace Box */
 } /* namespace Error */
-} /* namespace Geometry */
-} /* namespace SEMBA */
-
-#include "Box.hpp"
-
-namespace SEMBA {
-namespace Geometry {
 
 typedef Box<Math::Real,3> BoxR3;
 typedef Box<Math::Int ,2> BoxI2;
@@ -159,5 +151,7 @@ typedef Box<Math::Int, 3> BoxI3;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Box.hpp"
 
 #endif /* SEMBA_GEOMETRY_BOX_BOX_H_ */

@@ -45,7 +45,7 @@ Group<L>& Group<L>::operator=(SEMBA::Group::Group<L>&& rhs) {
 
 template<typename L>
 const L* Group<L>::getName(const std::string name) const {
-    for (Size i = 0; i < this->size(); i++) {
+    for (std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->getName() == name) {
             return this->get(i);
         }

@@ -38,7 +38,7 @@ Math::CVecR3 Parser::strToCartesianVector(const std::string& str) {
     std::stringstream iss(str);
     std::string sub;
     Math::CVecR3 res;
-    for (Size i = 0; i < 3; i++) {
+    for (std::size_t i = 0; i < 3; i++) {
         iss >> sub;
         res(i) = atof(sub.c_str());
     }

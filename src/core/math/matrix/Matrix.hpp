@@ -78,19 +78,19 @@ T Matrix<T>::getDeterminant4x4() const {
 template <class T>
 void Matrix<T>::internal_() {
     assert(Matrix<T>::isSquare());
-    Size *pivot = new Size[nRows()];
+    std::size_t *pivot = new std::size_t[nRows()];
     factorizeLU_(pivot);
     invertFactorized_(pivot);
     delete [] pivot;
 }
 
 template<class T>
-void Matrix<T>::factorizeLU_(Size pivot[]) {
+void Matrix<T>::factorizeLU_(std::size_t pivot[]) {
     // Performs a LINPACK-style PLU factorization of a general matrix.
-    // Output, Size PIVOT[N], a vector of pivot indices.
+    // Output, std::size_t PIVOT[N], a vector of pivot indices.
     assert(nRows() == nCols());
-    Size n = nRows();
-    Size i, j, k, l;
+    std::size_t n = nRows();
+    std::size_t i, j, k, l;
     T t;
     for (k = 0; k < n-1; k++) {
         //  Find L, the index of the pivot row.
@@ -141,13 +141,13 @@ void Matrix<T>::factorizeLU_(Size pivot[]) {
 }
 
 template <class T>
-void Matrix<T>::invertFactorized_(const Size pivot[]) {
+void Matrix<T>::invertFactorized_(const std::size_t pivot[]) {
     // Computes inverse of a general matrix factored by factorize.
     // Input, Int PIVOT(N), the pivot vector from R8GE_FA.
     assert(nRows() == nCols());
-    Size n = nRows();
-    Size nn = n * n;
-    Size i, j, k;
+    std::size_t n = nRows();
+    std::size_t nn = n * n;
+    std::size_t i, j, k;
     T temp;
     T *b = new T[nn];
     // Compute Inverse(U).
@@ -183,8 +183,8 @@ void Matrix<T>::invertFactorized_(const Size pivot[]) {
         }
     }
     // Stores inverted matrix in res.
-    for (Size i = 0; i < n; i++) {
-        for (Size j = 0; j < n; j++) {
+    for (std::size_t i = 0; i < n; i++) {
+        for (std::size_t j = 0; j < n; j++) {
             val(i,j) = (T) b[i+j*n];
         }
     }
@@ -195,8 +195,8 @@ void Matrix<T>::invertFactorized_(const Size pivot[]) {
 template <class T>
 T Matrix<T>::maxVal() const {
     T res = val(0,0);
-    for (Size i = 0; i < nRows(); i++) {
-        for (Size j = 0; j < nCols(); j++) {
+    for (std::size_t i = 0; i < nRows(); i++) {
+        for (std::size_t j = 0; j < nCols(); j++) {
             if (val(i,j) > res)
                 res = val(i,j);
         }
@@ -205,9 +205,9 @@ T Matrix<T>::maxVal() const {
 }
 
 template <class T>
-T Matrix<T>::maxValInCol(Size col) const {
+T Matrix<T>::maxValInCol(std::size_t col) const {
     T res = val(0,col);
-    for (Size i = 0; i < nRows(); i++)
+    for (std::size_t i = 0; i < nRows(); i++)
         if (val(i,col) > res)
             res = val(i,col);
     return res;
@@ -221,7 +221,7 @@ void Matrix<T>::sortRows() {
 }
 
 template <class T>
-void Matrix<T>::sortRows(const Size iCol, const Size lCol) {
+void Matrix<T>::sortRows(const std::size_t iCol, const std::size_t lCol) {
     // Orders array a with nr rows and nc columns. Ordering is performed
     // using column indicated in orCol as reference. In ascending order.
     if (nRows() <= 1) {
@@ -233,8 +233,8 @@ void Matrix<T>::sortRows(const Size iCol, const Size lCol) {
 template <class T>
 bool Matrix<T>::isEQ_(const T* x1,
                       const T* x2,
-                      const Size vS) const {
-    for (Size i = 0; i < vS; i++) {
+                      const std::size_t vS) const {
+    for (std::size_t i = 0; i < vS; i++) {
         if (x1[i] != x2[i]) {
             return false;
         }
@@ -245,8 +245,8 @@ bool Matrix<T>::isEQ_(const T* x1,
 template <class T>
 bool Matrix<T>::isGEQ_(const T* x1,
                        const T* x2,
-                       const Size vS) const {
-    for (Size i = 0; i < vS; i++) {
+                       const std::size_t vS) const {
+    for (std::size_t i = 0; i < vS; i++) {
         if (x1[i] < x2[i]) {
             return false;
         }
@@ -260,8 +260,8 @@ bool Matrix<T>::isGEQ_(const T* x1,
 template <class T>
 bool Matrix<T>::isLEQ_(const T* x1,
                        const T* x2,
-                       const Size vS) const {
-    for (Size i = 0; i < vS; i++) {
+                       const std::size_t vS) const {
+    for (std::size_t i = 0; i < vS; i++) {
         if (x1[i] > x2[i]) {
             return false;
         }
@@ -273,20 +273,21 @@ bool Matrix<T>::isLEQ_(const T* x1,
 }
 
 template <class T>
-Int Matrix<T>::partitionRows_(Int p, Int r, const Size iCol, const Size lCol) {
+Int Matrix<T>::partitionRows_(Int p, Int r,
+                              const std::size_t iCol, const std::size_t lCol) {
     Int j = p - 1;
     for (Int i = p; i < r; i++) {
         bool geq = isGEQ_(&val(r,iCol), &val(i,iCol), lCol - iCol + 1);
         if (geq) {
             j++;
-            for (Size k = 0; k < nCols(); k++) {
+            for (std::size_t k = 0; k < nCols(); k++) {
                 T temp = val(j,k);
                 val(j,k) = val(i,k);
                 val(i,k) = temp;
             }
         }
     }
-    for (Size k = 0; k < nCols(); k++) {
+    for (std::size_t k = 0; k < nCols(); k++) {
         T x = val(r, k);
         val(r, k) = val(j+1, k);
         val(j+1, k) = x;
@@ -295,7 +296,8 @@ Int Matrix<T>::partitionRows_(Int p, Int r, const Size iCol, const Size lCol) {
 }
 
 template <class T>
-void Matrix<T>::QSRows_(Int p, Int r, const Size iCol, const Size lCol) {
+void Matrix<T>::QSRows_(Int p, Int r,
+                        const std::size_t iCol, const std::size_t lCol) {
     if (p < r) {
         Int q = partitionRows_(p, r, iCol, lCol);
         QSRows_(p, q - 1, iCol, lCol);
@@ -304,11 +306,11 @@ void Matrix<T>::QSRows_(Int p, Int r, const Size iCol, const Size lCol) {
 }
 
 template <class T>
-Size Matrix<T>::binarySearch_(const T* key,
-                              const Size col,
-                              const Size vecSize,
-                              Size imin,
-                              Size imax) const {
+std::size_t Matrix<T>::binarySearch_(const T* key,
+                                     const std::size_t col,
+                                     const std::size_t vecSize,
+                                     std::size_t imin,
+                                     std::size_t imax) const {
     // NOTE: Just for ascending order!!!
     if (imax == imin) {
         if (nRows() == imin) {
@@ -318,7 +320,7 @@ Size Matrix<T>::binarySearch_(const T* key,
         T *value;
         value = new T [vecSize];
 
-        for (Size i = 0; i < vecSize; i++) {
+        for (std::size_t i = 0; i < vecSize; i++) {
             value[i] = val(imin, col+i);
         }
         bool iseq;
@@ -330,10 +332,10 @@ Size Matrix<T>::binarySearch_(const T* key,
             return nRows();
         }
     } else {
-        Size imid = (Size) (imin + imax) / 2;
+        std::size_t imid = (std::size_t) (imin + imax) / 2;
         T *value;
         value = new T [vecSize];
-        for (Size i = 0; i < vecSize; i++) {
+        for (std::size_t i = 0; i < vecSize; i++) {
             value[i] = val(imid, col+i);
         }
         bool geq = isGEQ_(value, key, vecSize);
@@ -347,18 +349,19 @@ Size Matrix<T>::binarySearch_(const T* key,
 }
 
 template <class T>
-Size Matrix<T>::findFirstOcurrenceInColumns(const T* key,
-                                            const Size col,
-                                            const Size vecSize) const {
+std::size_t Matrix<T>::findFirstOcurrenceInColumns(
+        const T* key,
+        const std::size_t col,
+        const std::size_t vecSize) const {
     // Performs binary search -------------------------------------------------
-    Size row = binarySearch_(key, col, vecSize, 0, nRows());
+    std::size_t row = binarySearch_(key, col, vecSize, 0, nRows());
     if (row == nRows()) {
         return row; // Returns this is value was not found.
     }
     // Goes back to find the first occurrence ---------------------------------
-    for (Size i = row; i > 0; i--) {
+    for (std::size_t i = row; i > 0; i--) {
         bool isEqual = true;
-        for (Size j = 0; j < vecSize; j++) {
+        for (std::size_t j = 0; j < vecSize; j++) {
             isEqual &= val(i,j+col) == key[j];
         }
         if (!isEqual) {
@@ -373,7 +376,7 @@ Size Matrix<T>::findFirstOcurrenceInColumns(const T* key,
 
 template <class T>
 void Matrix<T>::cpLowerTri2UpperTri() {
-    Size i, j;
+    std::size_t i, j;
     for (i = 0; i < nRows(); i++)
         for (j = i+1; j < nCols(); j++)
             val(i,j) = val(j,i);
@@ -381,21 +384,21 @@ void Matrix<T>::cpLowerTri2UpperTri() {
 
 template <class T>
 void Matrix<T>::zeros() {
-    for (Size i = 0; i < nRows(); i++)
-        for (Size j = 0; j < nCols(); j++)
+    for (std::size_t i = 0; i < nRows(); i++)
+        for (std::size_t j = 0; j < nCols(); j++)
             val(i,j) = (T) 0;
 }
 
 template <class T>
 void Matrix<T>::convertToArray(const Int mode, Real *res) const {
     if (mode == MATRICES_COL_MAJOR) {
-        for (Size j = 0; j < nCols(); j++)
-            for (Size i = 0; i < nRows(); i++)
+        for (std::size_t j = 0; j < nCols(); j++)
+            for (std::size_t i = 0; i < nRows(); i++)
                 res[i + j * nRows()] = val(i,j);
         return;
     } else if (mode == MATRICES_ROW_MAJOR) {
-        for (Size i = 0; i < nRows(); i++)
-            for (Size j = 0; j < nCols(); j++)
+        for (std::size_t i = 0; i < nRows(); i++)
+            for (std::size_t j = 0; j < nCols(); j++)
                 res[i * nCols() + j] = val(i,j);
         return;
     }
@@ -408,8 +411,8 @@ bool Matrix<T>::isSquare() const {
 
 template <class T>
 bool Matrix<T>::isSymmetric() const {
-    for (Size i = 0; i < nRows(); i++) {
-        for (Size j = 0; j < nRows(); j++) {
+    for (std::size_t i = 0; i < nRows(); i++) {
+        for (std::size_t j = 0; j < nRows(); j++) {
             if (val(i,j) != val(j,i)) {
                 return false;
             }
@@ -423,14 +426,14 @@ void Matrix<T>::eye() {
     assert(isSquare());
     // Sets 1 in main diagonal or 0 otherwise.
     zeros();
-    for (Size i = 0; i < nRows(); i++)
+    for (std::size_t i = 0; i < nRows(); i++)
         val(i,i) = T(1);
 }
 
 template <class T>
 std::vector<T> Matrix<T>::cpRowToVector(const UInt row) const {
     std::vector<T> res(nCols());
-    for (Size i = 0; i < nCols(); i++) {
+    for (std::size_t i = 0; i < nCols(); i++) {
         res[i] = val(row,i);
     }
     return res;
@@ -441,7 +444,7 @@ std::vector<Vector::Cartesian<T,3> >
         Matrix<T>::convertToCartesianVector() const {
     assert(nCols() == 3);
     std::vector<Vector::Cartesian<T,3> > res(nRows());
-    for (Size r = 0; r < nRows(); r++) {
+    for (std::size_t r = 0; r < nRows(); r++) {
         res[r] = Vector::Cartesian<T,3>(val(r,0), val(r,1), val(r,2));
     }
     return res;

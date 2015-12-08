@@ -47,7 +47,7 @@ public:
 
     Vertices& operator=(const Vertices&);
 
-    void splitBound(Size i);
+    void splitBound(std::size_t i);
 };
 
 } /* namespace Graph */

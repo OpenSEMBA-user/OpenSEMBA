@@ -52,8 +52,10 @@ public:
 
     virtual Geometry::Element::Group<const Geometry::Elem> elems() const = 0;
 
-    virtual void set(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
-    virtual void add(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual void set(
+            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual void add(
+            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
 
     template<class T>
     bool magnitudeIs() const {
@@ -90,9 +92,11 @@ public:
     void add(const Geometry::Element::Group<const Geometry::Elem>&);
 
     virtual Source* clone() const = 0;
-    Geometry::Element::Group<const Geometry::Elem> elems() const {return *this;}
+    Geometry::Element::Group<const Geometry::Elem> elems() const {
+        return *this;
+    }
 
-    bool isSimilar(const Base& rhs) const;
+    bool isSimilar(const SEMBA::Source::Base& rhs) const;
     void printInfo() const;
 };
 

@@ -127,7 +127,6 @@ protected:
 
 private:
     //Erased
-    GroupBase();
     GroupBase(const GroupBase&);
     GroupBase(GroupBase&&);
 

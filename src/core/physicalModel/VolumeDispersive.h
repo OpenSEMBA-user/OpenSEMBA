@@ -59,9 +59,9 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(VolumeDispersive);
 
-    Size getPoleNumber() const;
-    std::complex<Math::Real> getPole(Size p) const;
-    std::complex<Math::Real> getResidue(Size p) const;
+    std::size_t getPoleNumber() const;
+    std::complex<Math::Real> getPole(std::size_t p) const;
+    std::complex<Math::Real> getResidue(std::size_t p) const;
     virtual Math::Real getElectricConductivity() const;
 
     bool isClassic() const;

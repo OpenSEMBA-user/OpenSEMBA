@@ -43,12 +43,12 @@ bool Base<T>::empty() const {
 }
 
 template<typename T>
-T* Base<T>::operator()(std::size_t pos) {
+T* Base<T>::operator()(const std::size_t pos) {
     return get(pos);
 }
 
 template<typename T>
-const T* Base<T>::operator()(std::size_t pos) const {
+const T* Base<T>::operator()(const std::size_t pos) const {
     return get(pos);
 }
 
@@ -231,8 +231,9 @@ Group<T> Group<T>::add(Group<T2>& rhs) {
     return add(Group<T>(rhs));
 }
 
-template<typename T> template<typename T2, typename, typename>
+template<typename T> template<typename T2>
 Group<T> Group<T>::add(const Group<T2>& rhs) {
+    static_assert(std::is_const<T>::value, "Template parameter must be const");
     return add(Group<T>(rhs));
 }
 

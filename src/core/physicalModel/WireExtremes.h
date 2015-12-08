@@ -22,8 +22,6 @@
 #ifndef SEMBA_PHYSICALMODEL_WIREEXTREMES_H_
 #define SEMBA_PHYSICALMODEL_WIREEXTREMES_H_
 
-#include "Types.h"
-
 #include "Wire.h"
 #include "Multiport.h"
 
@@ -40,9 +38,9 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(WireExtremes);
 
-    const Multiport *getExtreme(const Size i) const { return extreme_[i]; }
+    const Multiport *getExtreme(const std::size_t i) const { return extreme_[i]; }
 
-    void setExtreme(const Size i, const Multiport* extreme);
+    void setExtreme(const std::size_t i, const Multiport* extreme);
 
     void printInfo() const;
 

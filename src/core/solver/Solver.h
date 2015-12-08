@@ -30,8 +30,6 @@
 #include <sys/time.h>
 #endif
 
-#include "Types.h"
-
 namespace SEMBA {
 namespace Solver {
 
@@ -42,13 +40,13 @@ public:
     virtual bool run() = 0;
     virtual bool canRun() const = 0;
 protected:
-    static const Size printStep = 100;
+    static const std::size_t printStep = 100;
     void printTime(const double originalSeconds) const;
     double storeCPUTime() const;
     void printTimeProfilingInfo(double tSum,
                                 double tRunning,
-                                const Size tStep,
-                                const Size Ntsteps) const;
+                                const std::size_t tStep,
+                                const std::size_t Ntsteps) const;
     //   void
     //   processStopRequest();
     //  Int

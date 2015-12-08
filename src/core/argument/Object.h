@@ -41,7 +41,7 @@ class Object {
 public:
     enum class Type {
         Null,
-        Object,
+        Dictionary,
         Array,
         Bool,
         String
@@ -62,7 +62,7 @@ public:
         case Type::Null:
             return "Null";
             break;
-        case Type::Object:
+        case Type::Dictionary:
             return "Object";
             break;
         case Type::Array:
@@ -123,7 +123,7 @@ public:
     bool     isType(const Type& type) const { return type == type_; }
     Type    getType()                 const { return type_;         }
     Object& setType(const Type& type) {
-        if ((type == Type::Object) || (type == Type::Array)
+        if ((type == Type::Dictionary) || (type == Type::Array)
             || (type == Type::Null)) {
             clear_();
             type_ = type;
@@ -136,8 +136,8 @@ public:
     Object& setNull()       {       setType(Type::Null); return *this; }
 
     //Object Value
-    bool     isObject() const { return isType(Type::Object);               }
-    Object& setObject()       {       setType(Type::Object); return *this; }
+    bool     isObject() const {return isType(Type::Dictionary); }
+    Object& setObject()       {      setType(Type::Dictionary); return *this; }
     bool exists(const std::string& name) const {
         return (nameMembers_.count(name) != 0);
     }
@@ -359,7 +359,7 @@ public:
             }
             std::cout << std::string(depth, ' ') << "]";
             break;
-        case Object::Type::Object:
+        case Object::Type::Dictionary:
             std::cout << "{" << std::endl;
             for (std::size_t i = 0; i < size(); i++) {
                 std::cout << std::string(depth+2, ' ');

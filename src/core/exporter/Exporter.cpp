@@ -120,8 +120,8 @@ Group::Group<Geometry::ElemR> Exporter::getBoundary(
 
 std::string Exporter::getBoundaryName(
         const Geometry::Mesh::Structured* mesh,
-        const Size i,
-        const Size j) {
+        const std::size_t i,
+        const std::size_t j) {
     const Geometry::Element::Model* boundType = mesh->bounds()[i][j];
     const std::string boundName =
         boundType->castTo<PhysicalModel::PhysicalModel>()->getName();
@@ -139,11 +139,11 @@ Group::Group<Geometry::ElemR> Exporter::getGridElems(
     Group::Group<Geometry::ElemR> elem;
     Geometry::BoxR3 box = grid->getFullDomainBoundingBox();
     if (grid != NULL) {
-        for (Size d = 0; d < 3; d++) {
+        for (std::size_t d = 0; d < 3; d++) {
             // Generates grid as lines.
-            for (Size i = 0; i < 2; i++) {
+            for (std::size_t i = 0; i < 2; i++) {
                 std::vector<Math::Real> pos = grid->getPos((d+i+1)%3);
-                for (Size j = 0; j < pos.size(); j++) {
+                for (std::size_t j = 0; j < pos.size(); j++) {
                     Math::CVecR3 pMin, pMax;
                     pMin(d) = grid->getPos(d,Math::Constants::L);
                     pMin((d+i+1)%3) = pos[j];

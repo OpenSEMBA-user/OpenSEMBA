@@ -35,21 +35,21 @@ namespace Math {
 namespace Matrix {
 
 // Static Matrix class. It can't change its size in run time.
-template<class T,Size ROWS,Size COLS>
+template<class T,std::size_t ROWS,std::size_t COLS>
 class Static : public Matrix<T> {
 public:
    Static();
    Static(const Static<T,ROWS,COLS>& rhs);
    ~Static();
-   T operator()(const Size row, const Size col) const;
-   T& operator()(const Size row, const Size col);
-   T val(const Size ind) const;
-   T& val(const Size ind);
-   T val(const Size row, const Size col) const;
-   T& val(const Size row, const Size col);
+   T operator()(const std::size_t row, const std::size_t col) const;
+   T& operator()(const std::size_t row, const std::size_t col);
+   T val(const std::size_t ind) const;
+   T& val(const std::size_t ind);
+   T val(const std::size_t row, const std::size_t col) const;
+   T& val(const std::size_t row, const std::size_t col);
    const T* val() const;
-   Size nRows() const;
-   Size nCols() const;
+   std::size_t nRows() const;
+   std::size_t nCols() const;
 
    Static<T,ROWS,COLS>& operator=(const Static<T,ROWS,COLS>& rhs);
    Static<T,ROWS,COLS>& operator=(const Dynamic<Int>& rhs);
@@ -75,17 +75,18 @@ public:
    bool operator==(const Static<T,ROWS,COLS>& rhs) const;
    bool operator<(const Static<T,ROWS,COLS>& rhs) const;
    void printInfo() const;
-   void printInfo(Size, Size) const;
+   void printInfo(std::size_t, std::size_t) const;
 private:
    T _val[ROWS*COLS];
 };
 
 // Products between different sized StaMatrices.
-template<class T, class S, Size ROWS, Size COLS, Size NCOLSB>
+template<class T, class S,
+         std::size_t ROWS, std::size_t COLS, std::size_t NCOLSB>
 Static<T,ROWS,NCOLSB> operator*(const Static<T,ROWS,COLS>& lhs,
                                 const Static<S,COLS,NCOLSB>& rhs);
 // Products between Static and Dynamic
-template<class T, Size ROWS, Size COLS>
+template<class T, std::size_t ROWS, std::size_t COLS>
 Dynamic<T> operator*(const Static<T,ROWS,COLS>& lhs,
                      const Dynamic<T>& rhs);
 

@@ -49,7 +49,7 @@ typedef PhysicalModel::Id MatId;
 namespace Geometry {
 namespace Element {
 
-typedef Layer::Layer               Layer;
+typedef Geometry::Layer::Layer     Layer;
 typedef Class::Identifiable<MatId> Model;
 
 class Base;
@@ -72,12 +72,14 @@ public:
     virtual bool isCurved   () const { return false; }
     virtual bool isQuadratic() const { return false; }
 
-    virtual Size numberOfFaces      () const = 0;
-    virtual Size numberOfVertices   () const = 0;
-    virtual Size numberOfCoordinates() const = 0;
+    virtual std::size_t numberOfFaces      () const = 0;
+    virtual std::size_t numberOfVertices   () const = 0;
+    virtual std::size_t numberOfCoordinates() const = 0;
 
-    virtual Size numberOfSideVertices   (const Size f = 0) const = 0;
-    virtual Size numberOfSideCoordinates(const Size f = 0) const = 0;
+    virtual std::size_t numberOfSideVertices   (
+            const std::size_t f = 0) const = 0;
+    virtual std::size_t numberOfSideCoordinates(
+            const std::size_t f = 0) const = 0;
 
     LayerId getLayerId() const;
     MatId   getMatId  () const;
@@ -96,7 +98,7 @@ public:
             return false;
         }
         std::vector<CoordId> lhsId, rhsId;
-        for (Size i = 0; i < lhs.size(); i++) {
+        for (std::size_t i = 0; i < lhs.size(); i++) {
             lhsId.push_back(lhs[i]->getId());
             rhsId.push_back(rhs[i]->getId());
         }
@@ -107,7 +109,7 @@ public:
     static std::vector<CoordId> getIds(
             std::vector<const Coordinate::Coordinate<T,3>*> in) {
         std::vector<CoordId> res(in.size());
-        for  (Size i = 0; i < in.size(); i++) {
+        for  (std::size_t i = 0; i < in.size(); i++) {
             res[i] = in[i]->getId();
         }
         return res;
@@ -137,15 +139,17 @@ public:
                               const Math::Real = Grid3::tolerance) const;
     virtual bool isInnerPoint(const Math::Vector::Cartesian<T,3>& pos) const;
 
-    virtual const Coordinate::Coordinate<T,3>* getV    (const Size i) const = 0;
-    virtual const Coordinate::Coordinate<T,3>* getSideV(const Size f,
-                                                        const Size i) const = 0;
+    virtual const Coordinate::Coordinate<T,3>* getV    (
+            const std::size_t i) const = 0;
+    virtual const Coordinate::Coordinate<T,3>* getSideV(
+            const std::size_t f,
+            const std::size_t i) const = 0;
 
     virtual const Coordinate::Coordinate<T,3>* getVertex    (
-            const Size i) const = 0;
+            const std::size_t i) const = 0;
     virtual const Coordinate::Coordinate<T,3>* getSideVertex(
-            const Size f,
-            const Size i) const = 0;
+            const std::size_t f,
+            const std::size_t i) const = 0;
 
     Box<T,3> getBound() const;
     // Returns ptr to coord with min(max) lexicographical position.
@@ -155,11 +159,11 @@ public:
     std::vector<const Coordinate::Coordinate<T,3>*>getVertices() const;
     std::vector<const Coordinate::Coordinate<T,3>*> getCoordinates() const;
     std::vector<const Coordinate::Coordinate<T,3>*> getSideCoordinates(
-            const Size face) const;
+            const std::size_t face) const;
     std::vector<const Coordinate::Coordinate<T,3>*> getSideVertices(
-            const Size face) const;
+            const std::size_t face) const;
 
-    virtual void setV(const Size i, const Coordinate::Coordinate<T,3>*);
+    virtual void setV(const std::size_t i, const Coordinate::Coordinate<T,3>*);
 
     virtual Element<Math::Int >* toStructured(
             const Coordinate::Group<CoordI3>&,
@@ -241,5 +245,7 @@ typedef Element::Element<Math::Int>  ElemI;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Element.hpp"
 
 #endif /* SEMBA_GEOMETRY_ELEMENT_ELEMENT_H_ */

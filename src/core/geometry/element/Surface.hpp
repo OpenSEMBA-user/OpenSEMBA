@@ -40,10 +40,13 @@ bool Surface<T>::isRectangular() const {
     if (this->numberOfCoordinates() != 4 || this->numberOfFaces() != 4) {
         return false;
     }
-    for (Size f = 0; f < 4; f++) {
-        Math::Vector::Cartesian<T,3> p0 = this->getSideVertex(f    %4,0)->pos();
-        Math::Vector::Cartesian<T,3> p1 = this->getSideVertex(f    %4,1)->pos();
-        Math::Vector::Cartesian<T,3> p2 = this->getSideVertex((f+1)%4,1)->pos();
+    for (std::size_t f = 0; f < 4; f++) {
+        Math::Vector::Cartesian<T,3> p0 = 
+            this->getSideVertex(f    %4,0)->pos();
+        Math::Vector::Cartesian<T,3> p1 = 
+            this->getSideVertex(f    %4,1)->pos();
+        Math::Vector::Cartesian<T,3> p2 = 
+            this->getSideVertex((f+1)%4,1)->pos();
         Math::Real sProd = (Math::Real)(p2-p1).dot(p1 - p0);
         if (Math::Util::greater(sProd, 0.0, 1.0)) {
             return false;
@@ -63,7 +66,7 @@ template<class T>
 bool Surface<T>::isContainedInPlane(
         const Math::Constants::CartesianPlane plane) const {
     // Checks if any vertex lies out of the plane.
-    for (Size i = 1; i < this->numberOfCoordinates(); i++) {
+    for (std::size_t i = 1; i < this->numberOfCoordinates(); i++) {
         if (!(*this->getV(i) - *this->getV(0)).isContainedInPlane(plane)) {
             return false;
         }
@@ -86,9 +89,6 @@ void Surface<T>::printInfo() const {
     std::cout << getNormal() << std::endl;
     Element<T>::printInfo();
 }
-
-template class Surface<Math::Real>;
-template class Surface<Math::Int >;
 
 } /* namespace Element */
 } /* namespace Geometry */

@@ -33,11 +33,11 @@ public:
     NodeBase() {};
     virtual ~NodeBase() {};
 
-    inline Size numberOfCoordinates() const { return 1; }
-    inline Size numberOfFaces   () const { return 1; }
-    inline Size numberOfVertices() const { return 1; }
-    inline Size numberOfSideVertices   (const Size f = 0) const { return 1; }
-    inline Size numberOfSideCoordinates(const Size f = 0) const { return 1; }
+    inline std::size_t numberOfCoordinates() const { return 1; }
+    inline std::size_t numberOfFaces   () const { return 1; }
+    inline std::size_t numberOfVertices() const { return 1; }
+    inline std::size_t numberOfSideVertices   (const std::size_t f = 0) const { return 1; }
+    inline std::size_t numberOfSideCoordinates(const std::size_t f = 0) const { return 1; }
 };
 
 template<class T>
@@ -61,15 +61,15 @@ public:
 
     bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
-    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
-                                                const Size i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const std::size_t f,
+                                                const std::size_t i) const;
 
-    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
-                                                     const Size i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(const std::size_t f,
+                                                     const std::size_t i) const;
 
-    void setV(const Size i, const Coordinate::Coordinate<T,3>* coord);
+    void setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord);
 
     ElemI* toStructured(const Coordinate::Group<CoordI3>&,
                         const Grid3&,
@@ -91,5 +91,7 @@ typedef Element::Node<Math::Int > NodI;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Node.hpp"
 
 #endif /* SEMBA_GEOMETRY_ELEMENT_NODE_H_ */

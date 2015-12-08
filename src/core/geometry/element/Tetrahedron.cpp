@@ -33,9 +33,9 @@ Tetrahedron::~Tetrahedron() {
 
 }
 
-Triangle3* Tetrahedron::getTri3Face(const Size f) const {
+Triangle3* Tetrahedron::getTri3Face(const std::size_t f) const {
     const CoordR3* coord[3];
-    for (Size i = 0; i < 3; i++) {
+    for (std::size_t i = 0; i < 3; i++) {
         coord[i] = getSideVertex(f,i);
     }
     return new Triangle3(Id(0), coord, getLayer(), getModel());
@@ -43,9 +43,9 @@ Triangle3* Tetrahedron::getTri3Face(const Size f) const {
 
 void Tetrahedron::getCubaturePositions(
         Math::CVecR3 res[Math::Simplex::Tetrahedron<1>::ncp]) const {
-    static const Size ncp = Math::Simplex::Tetrahedron<1>::ncp;
-    for (Size c = 0; c < ncp; c++) {
-        for (Size i = 0; i < 3; i++) {
+    static const std::size_t ncp = Math::Simplex::Tetrahedron<1>::ncp;
+    for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t i = 0; i < 3; i++) {
             res[c](i) = 0.0;
         }
     }
@@ -53,22 +53,22 @@ void Tetrahedron::getCubaturePositions(
     // simplex coordinates of tet.
     Math::Real **lagrEv;
     lagrEv = new Math::Real*[ncp];
-    for (Size i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         lagrEv[i] = new Math::Real[numberOfCoordinates()];
     }
-    for (Size c = 0; c < ncp; c++) {
-        for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
             lagrEv[c][i]= getTet().getLagr(i).eval(
                     getTet().cubatureCoordinate(c));
         }
     }
     // Computes nodes.
-    for (Size c = 0; c < ncp; c++) {
-        for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
             res[c] += *(getV(i)) * lagrEv[c][i];
         }
     }
-    for (Size i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         delete[] lagrEv[i];
     }
     delete[] lagrEv;
@@ -77,7 +77,7 @@ void Tetrahedron::getCubaturePositions(
 void Tetrahedron::getCubatureJacobianDeterminant(
         Math::Real cJDet[Math::Simplex::Tetrahedron<2>::ncp],
         const Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::ncp]) const {
-    for (Size c = 0; c < Math::Simplex::Tetrahedron<2>::ncp; c++) {
+    for (std::size_t c = 0; c < Math::Simplex::Tetrahedron<2>::ncp; c++) {
         cJDet[c] = cJ[c].getDeterminant4x4();
     }
 }
@@ -86,17 +86,18 @@ void Tetrahedron::getCubatureJacobianDeterminant(
         Math::Real cJDet[Math::Simplex::Tetrahedron<2>::ncp]) const {
     Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::ncp];
     getCubatureJacobian(cJ);
-    for (Size c = 0; c < Math::Simplex::Tetrahedron<2>::ncp; c++) {
+    for (std::size_t c = 0; c < Math::Simplex::Tetrahedron<2>::ncp; c++) {
         cJDet[c] = cJ[c].getDeterminant4x4();
     }
 }
 
 void Tetrahedron::getCubatureJacobian(
         Math::MatR44 res[Math::Simplex::Tetrahedron<2>::ncp]) const {
-    for (Size s = 0; s < numberOfFaces(); s++)
-        for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t s = 0; s < numberOfFaces(); s++)
+        for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
             const Math::CVecR3 v = *(getV(i));
-            for (Size c = 0; c < Math::Simplex::Tetrahedron<2>::ncp; c++) {
+            for (std::size_t c = 0; c < Math::Simplex::Tetrahedron<2>::ncp;
+                 c++) {
                 res[c](0,s) += v(0) * getTet().getCda(i,s,c);
                 res[c](1,s) += v(1) * getTet().getCda(i,s,c);
                 res[c](2,s) += v(2) * getTet().getCda(i,s,c);
@@ -112,11 +113,11 @@ void Tetrahedron::getCubatureJacobianHat(
 
     // PURPOSE:
     // See chapter 17.3.1 of Filippa's course on Advanced FEM.
-    Size ind[3];
+    std::size_t ind[3];
     Math::MatR33 Jred, invJred;
     Math::MatR43 res;
     // Main loop, runs over all simplex coordinates.
-    for (Size j = 0; j < numberOfFaces(); j++) {
+    for (std::size_t j = 0; j < numberOfFaces(); j++) {
         // Chooses columns indices that will be substracted from the Jacobian.
         switch (j) {
         case 0:
@@ -133,25 +134,25 @@ void Tetrahedron::getCubatureJacobianHat(
             break;
         }
         // Builds reduced jacobian for all cubature points.
-        for (Size c = 0; c < Math::Simplex::Tetrahedron<1>::ncp; c++) {
+        for (std::size_t c = 0; c < Math::Simplex::Tetrahedron<1>::ncp; c++) {
             // Substracts column j to column ind[c], to build J reduced.
-            for (Size k = 0; k < 3; k++) {
-                for (Size i = 0; i < 3; i++) {
+            for (std::size_t k = 0; k < 3; k++) {
+                for (std::size_t i = 0; i < 3; i++) {
                     Jred(k,i) = cJ[c](k,ind[i]) - cJ[c](k,j);
                 }
             }
             // Computes reduced jacobian inverse.
             invJred = Jred.invert();
             // Gets Jhat from the summation of reduced jacobians.
-            for (Size m = 0; m < 3; m++) {
-                for (Size n = 0; n < 3; n++) {
+            for (std::size_t m = 0; m < 3; m++) {
+                for (std::size_t n = 0; n < 3; n++) {
                     cJHat[c](j,m) -= invJred(n,m);
                 }
             }
         }
     } // Ends j loop, running over faces.
     // Multiplies by Jacobian determinant.
-    for (Size c = 0; c < Math::Simplex::Tetrahedron<1>::ncp; c++) {
+    for (std::size_t c = 0; c < Math::Simplex::Tetrahedron<1>::ncp; c++) {
         cJHat[c] *= cJDet[c];
     }
 }

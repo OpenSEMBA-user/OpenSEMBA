@@ -35,11 +35,15 @@ public:
     LineBase() {}
     virtual ~LineBase() {}
 
-    inline Size numberOfFaces   () const { return 2; }
-    inline Size numberOfVertices() const { return 2; }
+    inline std::size_t numberOfFaces   () const { return 2; }
+    inline std::size_t numberOfVertices() const { return 2; }
 
-    inline Size numberOfSideVertices   (const Size f = 0) const { return 1; }
-    inline Size numberOfSideCoordinates(const Size f = 0) const { return 1; }
+    inline std::size_t numberOfSideVertices   (const std::size_t f = 0) const { 
+        return 1; 
+    }
+    inline std::size_t numberOfSideCoordinates(const std::size_t f = 0) const { 
+        return 1; 
+    }
 };
 
 template<class T>
@@ -58,5 +62,7 @@ typedef Element::Line<Math::Int > LinI;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Line.hpp"
 
 #endif /* SEMBA_GEOMETRY_ELEMENT_LINE_H_ */

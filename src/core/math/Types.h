@@ -22,8 +22,14 @@
 #ifndef SEMBA_MATH_TYPES_H_
 #define SEMBA_MATH_TYPES_H_
 
+#ifdef _MSC_VER
+#pragma warning(disable:4244)
+#pragma warning(disable:4267)
+#endif
+
 #include <cstdint>
 #include <cstddef>
+#include <cstdlib>
 
 namespace SEMBA {
 namespace Math {
@@ -54,8 +60,6 @@ typedef long double Real;
 #else
 typedef double      Real;
 #endif
-
-typedef std::size_t Size;
 
 } /* namespace Math */
 } /* namespace SEMBA */

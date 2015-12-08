@@ -71,15 +71,15 @@ VolumeDispersive::~VolumeDispersive() {
 
 }
 
-Size VolumeDispersive::getPoleNumber() const {
+std::size_t VolumeDispersive::getPoleNumber() const {
     return poleResidue_.size();
 }
 
-std::complex<Math::Real> VolumeDispersive::getPole(Size p) const {
+std::complex<Math::Real> VolumeDispersive::getPole(std::size_t p) const {
     return poleResidue_[p].first;
 }
 
-std::complex<Math::Real> VolumeDispersive::getResidue(Size p) const {
+std::complex<Math::Real> VolumeDispersive::getResidue(std::size_t p) const {
     return poleResidue_[p].second;
 }
 
@@ -108,7 +108,7 @@ Math::Real VolumeDispersive::getElectricConductivity() const {
                 << "depends on several parameters."
                 << "Returning static limit conductivity." << std::endl;
     }
-    for (Size i = 0; i < getPoleNumber(); i++) {
+    for (std::size_t i = 0; i < getPoleNumber(); i++) {
         if (std::abs(getPole(i)) == 0) {
             return getResidue(i).real() * 2.0 * Math::Constants::eps0;
         }
@@ -135,7 +135,7 @@ void VolumeDispersive::printInfo() const {
               << std::endl;
     std::cout << "# " << " re_a " << " im_a " << " re_c " << " im_c "
               << std::endl;
-    for (Size i = 0; i < poleResidue_.size(); i++) {
+    for (std::size_t i = 0; i < poleResidue_.size(); i++) {
         std::cout << i << " " << getPole(i).real() << " " << getPole(i).imag()
                   << " " << getResidue(i).real() << " " << getResidue(i).imag()
                   << std::endl;

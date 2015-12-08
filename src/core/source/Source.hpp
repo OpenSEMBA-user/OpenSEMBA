@@ -37,12 +37,12 @@ void Source<T>::add(
 }
 
 template<class T>
-bool Source<T>::isSimilar(const Base& rhs) const {
+bool Source<T>::isSimilar(const SEMBA::Source::Base& rhs) const {
     if (!this->hasSameProperties(rhs)) {
         return false;
     }
-    Size sizeLhs = this->elems().size();
-    Size sizeRhs = rhs.elems().size();
+    std::size_t sizeLhs = this->elems().size();
+    std::size_t sizeRhs = rhs.elems().size();
     if ((sizeLhs == 0) && (sizeRhs == 0)) {
         return true;
     } else if ((sizeLhs == 0) || (sizeRhs == 0)) {
@@ -54,7 +54,7 @@ bool Source<T>::isSimilar(const Base& rhs) const {
 template<class T>
 void Source<T>::printInfo() const {
     Base::printInfo();
-    std::cout << "Size of element group: "
+    std::cout << "std::size_t of element group: "
               << this->Geometry::Element::Group<const T>::size() << std::endl;
 //    this->GroupElements<const T>::printInfo();
 }

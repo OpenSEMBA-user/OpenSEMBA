@@ -54,7 +54,6 @@ protected:
 
 private:
     //Erased
-    Group();
     Group(const Group&);
     Group(Group&&);
 

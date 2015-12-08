@@ -93,7 +93,7 @@ void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
                                   const UInt np,
                                   const UInt nsc) const {
     // Computes Sylvester's polynomials.
-    Function::Polynomial<Real> pol[n+1];
+    std::vector<Function::Polynomial<Real>> pol(n+1);
     for (UInt i = 0; i < (n+1); i++) {
         pol[i] = silvesterPol(i,n);
     }
@@ -132,10 +132,11 @@ Real Simplex::integrate(const Function::Polynomial<Real> pol,
     assert(pol.numberOfVariables() == dim + 1);
     UInt nsc = dim + 1;
     Real sum = 0.0;
-    Real auxNum, auxDen;
+    Real auxNum;
+    UInt auxDen;
     for (UInt i = 0; i < pol.numberOfMonomials(); i++) {
         auxNum = pol.monomialValue(i);
-        auxDen = 0.0;
+        auxDen = 0;
         for (UInt j = 0; j < nsc; j++) {
             auxNum *= factorial(pol.monomialPower(i,j));
             auxDen += pol.monomialPower(i,j);

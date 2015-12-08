@@ -33,28 +33,28 @@ class Dynamic : public Matrix<T> {
 public:
    Dynamic();
    Dynamic(const Dynamic<T>& param);
-   Dynamic(Size rows, Size cols);
-   Dynamic(Size rows, Size cols, T** values);
+   Dynamic(std::size_t rows, std::size_t cols);
+   Dynamic(std::size_t rows, std::size_t cols, T** values);
    virtual ~Dynamic();
-   Size nCols() const;
-   Size nRows() const;
-   T operator()(const Size row, const Size col) const;
-   T& operator()(const Size row, const Size col);
-   T val(const Size ind) const;
-   T& val(const Size ind);
-   T val(const Size row, const Size col) const;
-   T& val(const Size row, const Size col);
-   const T* valPtr(const Size row, const Size col) const;
+   std::size_t nCols() const;
+   std::size_t nRows() const;
+   T operator()(const std::size_t row, const std::size_t col) const;
+   T& operator()(const std::size_t row, const std::size_t col);
+   T val(const std::size_t ind) const;
+   T& val(const std::size_t ind);
+   T val(const std::size_t row, const std::size_t col) const;
+   T& val(const std::size_t row, const std::size_t col);
+   const T* valPtr(const std::size_t row, const std::size_t col) const;
    // ----------- assignment, copy -------------------------------------------
    Dynamic<T>& operator=(const Dynamic<T> &param);
    Dynamic<T>& operator=(const std::vector<T> &param);
    Dynamic<T>& operator=(const T &param);
    void copy(std::vector<std::vector<T> > values);
    void copy(const Dynamic<Real> &param);
-   Dynamic<T> copy(const Size fRow,
-                   const Size lRow,
-                   const Size fCol,
-                   const Size lCol) const;
+   Dynamic<T> copy(const std::size_t fRow,
+                   const std::size_t lRow,
+                   const std::size_t fCol,
+                   const std::size_t lCol) const;
    // ----------- operations -------------------------------------------------
    Dynamic<T> operator+(Dynamic<T> &param) const;
    Dynamic<T>& operator+=(const T param);
@@ -65,33 +65,34 @@ public:
    Dynamic<T> operator*(const T param) const;
    Dynamic<T> operator/(const T param) const;
    Dynamic<T> kron(Dynamic<T>& param) const;
-   Dynamic<T> sub(std::pair<Size,Size>& rows, std::pair<Size,Size>& cols) const;
+   Dynamic<T> sub(std::pair<std::size_t,std::size_t>& rows,
+                  std::pair<std::size_t,std::size_t>& cols) const;
    bool operator==(const Dynamic<T>& param) const;
    bool operator<(const Dynamic<T>& param) const;
    Dynamic<T> convolute(const Dynamic<T>& param) const;
    Dynamic<T> invert();
    Dynamic<T>& transpose();
-   Dynamic<T> reshape(Size rows, Size cols);
-   Dynamic<T> reshape(Size rows, Size cols, Int order);
-   Dynamic<T> eliminateColumns(Size first, Size last) const;
+   Dynamic<T> reshape(std::size_t rows, std::size_t cols);
+   Dynamic<T> reshape(std::size_t rows, std::size_t cols, Int order);
+   Dynamic<T> eliminateColumns(std::size_t first, std::size_t last) const;
    Dynamic<T>& sortAndRemoveRepeatedRows_omp();
    void sortAndRemoveRepeatedRows();
    void removeRepeatedSortedRows();
-   void sortRows_omp(const Size iCol, const Size lCol);
+   void sortRows_omp(const std::size_t iCol, const std::size_t lCol);
    void mergeSortedRows(const Dynamic<T>& a,
-                        const Size iCol,
-                        const Size lCol);
+                        const std::size_t iCol,
+                        const std::size_t lCol);
    void printInfo() const;
-   void printInfo(Size, Size) const;
-   void printInfo(Size firstRow,
-                  Size lastRow,
-                  Size firstCol,
-                  Size lastCol) const;
+   void printInfo(std::size_t, std::size_t) const;
+   void printInfo(std::size_t firstRow,
+                  std::size_t lastRow,
+                  std::size_t firstCol,
+                  std::size_t lastCol) const;
 private:
    T* _val;
-   Size _nRows, _nCols;
+   std::size_t _nRows, _nCols;
 
-   void resizeVal(const Size rows, const Size cols);
+   void resizeVal(const std::size_t rows, const std::size_t cols);
 };
 
 } /* namespace Matrix */

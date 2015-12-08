@@ -23,12 +23,14 @@
 #define SEMBA_CLASS_IDENTIFIABLE_H_
 
 #include "Class.h"
+#include "Shareable.h"
 
 namespace SEMBA {
 namespace Class {
 
 template<class Id>
-class Identifiable : public virtual Class {
+class Identifiable : public virtual Class,
+                     public virtual Shareable {
 public:
     Identifiable();
     Identifiable(const Id id);

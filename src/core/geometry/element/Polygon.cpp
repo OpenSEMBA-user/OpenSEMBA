@@ -36,10 +36,10 @@ Polygon::Polygon(const Id id,
 :   Identifiable<Id>(id),
     Elem(lay, mat) {
     
-    const Size vSize = v.size();
+    const std::size_t vSize = v.size();
     assert(v.size() >= 5); // Polygons of 3 or 4 vertices are treated as triangles or quads.
     v_.resize(vSize);
-    for (Size i = 0; i < vSize; i++) {
+    for (std::size_t i = 0; i < vSize; i++) {
         v_[i] = v[i];
     }
 }
@@ -55,44 +55,44 @@ Polygon::~Polygon() {
     
 }
 
-Size Polygon::numberOfFaces() const {
+std::size_t Polygon::numberOfFaces() const {
     return v_.size();
 }
 
-Size Polygon::numberOfVertices() const {
+std::size_t Polygon::numberOfVertices() const {
     return numberOfCoordinates();
 }
 
-Size Polygon::numberOfCoordinates() const {
+std::size_t Polygon::numberOfCoordinates() const {
     return v_.size();
 }
 
-Size
-Polygon::numberOfSideVertices(const Size f = 0) const {
+std::size_t
+Polygon::numberOfSideVertices(const std::size_t f = 0) const {
     return 2;
 }
 
-Size
-Polygon::numberOfSideCoordinates(const Size f = 0) const {
+std::size_t
+Polygon::numberOfSideCoordinates(const std::size_t f = 0) const {
     return 2;
 }
 
-const CoordR3* Polygon::getV(const Size i) const {
+const CoordR3* Polygon::getV(const std::size_t i) const {
     assert(i < numberOfCoordinates());
     return v_[i];
 }
 
-const CoordR3* Polygon::getSideV(const Size f,
-                                 const Size i) const {
+const CoordR3* Polygon::getSideV(const std::size_t f,
+                                 const std::size_t i) const {
     
     return v_[(f + i) % numberOfCoordinates()];
 }
 
-const CoordR3* Polygon::getVertex(const Size i) const {
+const CoordR3* Polygon::getVertex(const std::size_t i) const {
     return getV(i);
 }
 
-const CoordR3* Polygon::getSideVertex(const Size f, const Size i) const {
+const CoordR3* Polygon::getSideVertex(const std::size_t f, const std::size_t i) const {
     return getSideV(f,i);
 }
 
@@ -100,7 +100,7 @@ Math::Real Polygon::getArea() const {
     throw std::logic_error("Polygon::getArea not implemented");
 }
 
-void Polygon::setV(const Size i, const CoordR3* coord) {
+void Polygon::setV(const std::size_t i, const CoordR3* coord) {
     assert(i < numberOfCoordinates());
     v_[i] = coord;
 }
@@ -109,7 +109,7 @@ void Polygon::printInfo() const {
     std::cout<< "--- Polygon info ---" << std::endl
              << "Number of coordinates: " << numberOfCoordinates() << std::endl;
     std::cout<< "Id: " << getId() << ", MatId: " << getMatId() << std::endl;
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         std::cout<< "#" << i << ": ";
         v_[i]->printInfo();
     }

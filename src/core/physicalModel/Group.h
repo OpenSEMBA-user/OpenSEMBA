@@ -23,21 +23,6 @@
 #define SEMBA_PHYSICALMODEL_GROUP_H_
 
 #include "PhysicalModel.h"
-#include "PEC.h"
-#include "PMC.h"
-#include "SMA.h"
-#include "VolumeClassic.h"
-#include "VolumeDispersive.h"
-#include "VolumeAnisotropic.h"
-#include "VolumeAnisotropicCrystal.h"
-#include "VolumeAnisotropicFerrite.h"
-#include "VolumePML.h"
-#include "MultiportPredefined.h"
-#include "MultiportRLC.h"
-#include "SurfaceSIBC.h"
-#include "SurfaceMultilayer.h"
-#include "Wire.h"
-#include "WireExtremes.h"
 
 #include "group/Cloneable.h"
 #include "group/Printable.h"

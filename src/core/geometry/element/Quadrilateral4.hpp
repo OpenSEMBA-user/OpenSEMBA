@@ -38,7 +38,7 @@ Quadrilateral4<T>::Quadrilateral4(const Id id,
 :   Identifiable<Id>(id),
     Elem(lay, mat) {
     
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = coords[i];
     }
     // TODO Normals are not handled.
@@ -59,7 +59,7 @@ Quadrilateral4<T>::Quadrilateral4(
         throw Geometry::Error::Box::NotSurface();
     }
     std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
             v_[i] = cG.addPos(pos[i]);
@@ -72,7 +72,7 @@ Quadrilateral4<T>::Quadrilateral4(const Quadrilateral4<T>& rhs)
 :   Identifiable<Id>(rhs),
     Elem(rhs) {
     
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
 }
@@ -98,20 +98,21 @@ bool Quadrilateral4<T>::isStructured(const Grid3& grid,
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getV(const Size i) const {
+const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getV(
+        const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
 const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getVertex(
-        const Size i) const {
+        const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
 const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getSideV(
-        const Size f,
-        const Size i) const {
+        const std::size_t f,
+        const std::size_t i) const {
     assert(f < this->numberOfFaces());
     assert(i < numberOfSideCoordinates());
     return v_[(f + i) % 4];
@@ -119,15 +120,15 @@ const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getSideV(
 
 template<class T>
 const Coordinate::Coordinate<T,3>* Quadrilateral4<T>::getSideVertex(
-        const Size f,
-        const Size i) const {
+        const std::size_t f,
+        const std::size_t i) const {
     assert(f < this->numberOfFaces());
     assert(i < this->numberOfSideVertices());
     return v_[(f + i) % 4];
 }
 
 template<class T>
-void Quadrilateral4<T>::setV(const Size i,
+void Quadrilateral4<T>::setV(const std::size_t i,
                              const Coordinate::Coordinate<T,3>* coord) {
     v_[i] = coord;
 }
@@ -168,7 +169,7 @@ template<class T>
 void Quadrilateral4<T>::printInfo() const {
     std::cout << "--- Quad4 info ---" << std::endl;
     Quadrilateral<T>::printInfo();
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
     }
 }
@@ -177,9 +178,6 @@ template<class T>
 void Quadrilateral4<T>::check() const {
 
 }
-
-template class Quadrilateral4<Math::Real>;
-template class Quadrilateral4<Math::Int >;
 
 } /* namespace Element */
 } /* namespace Geometry */

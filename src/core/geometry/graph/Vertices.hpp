@@ -43,17 +43,17 @@ Vertices<ELEM,BOUND>::~Vertices() {
 
 template<class ELEM, class BOUND>
 Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::init(
-        const Group::Group<const Vertices<ELEM,BOUND>::Elem>& elems) {
+        const Group::Group<typename const Vertices<ELEM,BOUND>::Elem>& elems) {
     const Bound* coord;
     GraphElem*   elemPtr;
     GraphBound*  boundPtr;
     std::map<CoordId, GraphBound*> map;
     this->elems_.clear();
     this->bounds_.clear();
-    for (Size s = 0; s < elems.size(); s++) {
+    for (std::size_t s = 0; s < elems.size(); s++) {
         elemPtr = new GraphElem(elems(s), elems(s)->numberOfCoordinates());
         this->elems_.push_back(elemPtr);
-        for (Size v = 0; v < elems(s)->numberOfCoordinates(); v++) {
+        for (std::size_t v = 0; v < elems(s)->numberOfCoordinates(); v++) {
             coord = elems(s)->getV(v);
             if (map.count(coord->getId()) == 0) {
                 boundPtr = new GraphBound(coord);
@@ -66,10 +66,10 @@ Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::init(
         }
     }
     map.clear();
-    for (Size i = 0; i < this->elems_.size(); i++) {
+    for (std::size_t i = 0; i < this->elems_.size(); i++) {
         this->elems_[i]->constructNeighbors();
     }
-    for (Size i = 0; i < this->bounds_.size(); i++) {
+    for (std::size_t i = 0; i < this->bounds_.size(); i++) {
         this->bounds_[i]->constructNeighbors();
     }
     return *this;
@@ -86,7 +86,7 @@ Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::operator=(
 }
 
 template<class ELEM, class BOUND>
-void Vertices<ELEM,BOUND>::splitBound(Size i) {
+void Vertices<ELEM,BOUND>::splitBound(std::size_t i) {
     std::vector<GraphElem*> oldAdj = this->bounds_[i]->getBounds();
     if (oldAdj.empty()) {
         return;
@@ -94,7 +94,7 @@ void Vertices<ELEM,BOUND>::splitBound(Size i) {
     this->bounds_[i]->setBounds(oldAdj[0]);
     this->bounds_[i]->getBound(0)->constructNeighbors();
     this->bounds_[i]->constructNeighbors();
-    for (Size j = 1; j < oldAdj.size(); j++) {
+    for (std::size_t j = 1; j < oldAdj.size(); j++) {
         this->bounds_.push_back(new GraphBound(*this->bounds_[i]));
         this->bounds_.back()->setBounds(oldAdj[j]);
         if (oldAdj[j]->getBound(0)->elem()->getId() ==

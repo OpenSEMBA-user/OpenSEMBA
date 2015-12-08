@@ -40,6 +40,8 @@ class Data : public virtual FileSystem::Project,
              public virtual Class::Cloneable,
              public virtual Class::Printable {
 public:
+    Solver::Options*        solverOptions;
+
     Geometry::Mesh::Mesh*   mesh;
 
     PhysicalModel::Group<>* physicalModels;

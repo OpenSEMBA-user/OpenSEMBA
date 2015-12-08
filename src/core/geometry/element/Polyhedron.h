@@ -41,21 +41,21 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Polyhedron);
 
-    bool isCurvedFace(const Size f) const;
+    bool isCurvedFace(const std::size_t f) const;
 
-    Size numberOfFaces      () const;
-    Size numberOfVertices   () const;
-    Size numberOfCoordinates() const;
+    std::size_t numberOfFaces      () const;
+    std::size_t numberOfVertices   () const;
+    std::size_t numberOfCoordinates() const;
 
-    Size numberOfSideVertices   (const Size f = 0) const;
-    Size numberOfSideCoordinates(const Size f = 0) const;
-    const CoordR3* getV(const Size i) const;
-    const CoordR3* getSideV(const Size f, const Size i) const;
-    const CoordR3* getVertex(const Size i) const;
-    const CoordR3* getSideVertex(const Size f, const Size i) const;
+    std::size_t numberOfSideVertices   (const std::size_t f = 0) const;
+    std::size_t numberOfSideCoordinates(const std::size_t f = 0) const;
+    const CoordR3* getV(const std::size_t i) const;
+    const CoordR3* getSideV(const std::size_t f, const std::size_t i) const;
+    const CoordR3* getVertex(const std::size_t i) const;
+    const CoordR3* getSideVertex(const std::size_t f, const std::size_t i) const;
 
-    const Polygon* getFace(const Size f) const;
-    Math::Real getAreaOfFace(const Size f) const;
+    const Polygon* getFace(const std::size_t f) const;
+    Math::Real getAreaOfFace(const std::size_t f) const;
     Math::Real getVolume() const;
 
     void printInfo() const;

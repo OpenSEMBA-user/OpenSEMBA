@@ -173,7 +173,7 @@ std::vector<std::string> Project::getFilesBasenames(
 #endif
     // Stores files with names matching extension.
     std::vector<std::string> res;
-    for (Size i = 0; i < files.size(); i++) {
+    for (std::size_t i = 0; i < files.size(); i++) {
         size_t index = files[i].find(extension);
         if (index != std::string::npos) {
             res.push_back(files[i]);
@@ -186,11 +186,11 @@ void Project::openFile(std::ofstream& file) const {
     openFile(*this, file);
 }
 
-void Project::openFile(const std::string& fileName, std::ofstream& file) const {
+void Project::openFile(const std::string& fileName,
+                       std::ofstream& file) const {
     try {
         file.open(fileName.c_str());
-    }
-    catch(std::exception &e) {
+    } catch(const std::exception&) {
         throw std::ios_base::failure(fileName + std::string(" not exists"));
     }
 }
@@ -227,7 +227,8 @@ void Project::deleteDirIfExists(const std::string& directory) const {
         strOper.fFlags = FOF_SILENT | FOF_NOCONFIRMATION;
         if (SHFileOperation(&strOper) != 0) {
             std::cout << std::endl << "WARNING @ Project: ";
-            std::cout << "Dir " << directory << " deletion failed" << std::endl;
+            std::cout << "Dir " << directory
+                      << " deletion failed" << std::endl;
         }
         delete [] cstr;
     }
@@ -257,7 +258,8 @@ Project Project::relativeTo(const Project& rhs) const {
         rhsFolder = rhs.getFolder();
     }
     std::string name = getFilename();
-    std::string res = name.substr(name.find(rhsFolder) + rhsFolder.length(), name.length());
+    std::string res = name.substr(name.find(rhsFolder) + rhsFolder.length(),
+                                  name.length());
     return Project(res);
 }
 
@@ -280,8 +282,7 @@ bool Project::isFolder() const {
 void Project::openAsInput(std::ifstream& file) const {
     try {
         file.open(this->c_str());
-    }
-    catch(std::exception &e) {
+    } catch(const std::exception&) {
         throw std::ios_base::failure(std::string("File can't be opened: ") +
                                      *this);
     }

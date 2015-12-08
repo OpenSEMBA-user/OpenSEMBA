@@ -69,7 +69,7 @@ protected:
         return s;
     }
 
-    static inline bool toBool(const Size param) {
+    static inline bool toBool(const std::size_t param) {
         assert(param == 0 || param == 1);
         if (param == 1) {
             return true;

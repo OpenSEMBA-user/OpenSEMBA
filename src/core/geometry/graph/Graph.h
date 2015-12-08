@@ -48,13 +48,13 @@ public:
 
     Graph& operator=(const Graph&);
 
-    Size numElems () const { return elems_.size();  }
-    Size numBounds() const { return bounds_.size(); }
+    std::size_t numElems () const { return elems_.size();  }
+    std::size_t numBounds() const { return bounds_.size(); }
 
-    const GraphElem*  elem (Size i) const { return elems_ [i]; }
-    GraphElem*        elem (Size i)       { return elems_ [i]; }
-    const GraphBound* bound(Size i) const { return bounds_[i]; }
-    GraphBound*       bound(Size i)       { return bounds_[i]; }
+    const GraphElem*  elem (std::size_t i) const { return elems_ [i]; }
+    GraphElem*        elem (std::size_t i)       { return elems_ [i]; }
+    const GraphBound* bound(std::size_t i) const { return bounds_[i]; }
+    GraphBound*       bound(std::size_t i)       { return bounds_[i]; }
 
     void resetVisited();
     std::vector<std::vector<const Elem*>> getConnectedComponents();

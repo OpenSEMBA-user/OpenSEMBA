@@ -29,26 +29,26 @@ template<class T>
 std::complex<T> getDFT(const Real frequency,
                        const std::vector<T>& time,
                        const std::vector<T>& signal) {
-    const Size N = signal.size();
+    const std::size_t N = signal.size();
     const std::complex<T> constPart(0.0, -(T)(2.0 * Constants::pi*frequency));
     std::complex<T> res(0.0, 0.0);
-    for (Size i = 0; i < N; i++) {
+    for (std::size_t i = 0; i < N; i++) {
         res += signal[i] * exp(constPart * time[i]);
     }
     res /= (Real) N;
     return conj(res);
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 Vector::Cartesian<std::complex<T>,D> getDFT(
         const Real frequency,
         const std::vector<T>& time,
         const std::vector<Vector::Cartesian<T,D> >& signal) {
     Vector::Cartesian<std::complex<T>,D> res;
-    const Size N = signal.size();
+    const std::size_t N = signal.size();
     std::vector<T> auxSignal(N);
-    for (Size d = 0; d < D; d++) {
-        for (Size i = 0; i < N; i++) {
+    for (std::size_t d = 0; d < D; d++) {
+        for (std::size_t i = 0; i < N; i++) {
             auxSignal[i] = signal[i](d);
         }
         res(d) = getDFT(frequency, time, auxSignal);

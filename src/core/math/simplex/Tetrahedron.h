@@ -60,7 +60,8 @@ public:
     UInt cubatureNodeIndex(const UInt i, const UInt j) const;
     UInt sideNode(const UInt f, const UInt i) const;
     const Function::Polynomial<Real>& getLagr(const UInt i) const;
-    const Function::Polynomial<Real>& getDLagr(const UInt i, const UInt f) const;
+    const Function::Polynomial<Real>& getDLagr(const UInt i, 
+                                               const UInt f) const;
     Real getCda(UInt i, UInt j, UInt k) const;
     CVecR4 coordinate(const UInt i) const;
     CVecR4 sideCoordinate(const UInt f, const UInt i) const;
@@ -77,7 +78,7 @@ private:
     Matrix::Static<Int,np,np> P[faces]; // P: Rotation matrices.
     // lagr: Non-zero Lagrange's pol. coeffs.
     Function::Polynomial<Real> lagr[np];
-    // Non-zero Lagrange's pol. coeffs of derivatives. Size is NP, NFACES.
+    // Non-zero Lagrange's pol. coeffs of derivatives. std::size_t is NP, NFACES.
     Function::Polynomial<Real> dLagr[np][faces];
     // nId: List of node indices.
     Vector::Cartesian<Int,nsc> nId[np];

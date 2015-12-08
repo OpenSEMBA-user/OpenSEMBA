@@ -35,10 +35,12 @@ public:
     Triangle();
     virtual ~Triangle();
 
-    Size numberOfFaces   () const { return 3; }
-    Size numberOfVertices() const { return 3; }
+    std::size_t numberOfFaces   () const { return 3; }
+    std::size_t numberOfVertices() const { return 3; }
 
-    Size numberOfSideVertices(const Size f = 0) const { return 2; }
+    std::size_t numberOfSideVertices(const std::size_t f = 0) const {
+        return 2;
+    }
 };
 
 } /* namespace Element */

@@ -45,8 +45,8 @@ double Solver::storeCPUTime() const {
 
 void Solver::printTimeProfilingInfo(double tSum,
                                     double tRunning,
-                                    const Size tStep,
-                                    const Size NtSteps) const {
+                                    const std::size_t tStep,
+                                    const std::size_t NtSteps) const {
     if (tStep % printStep == 0) {
         // Prints information on how much took to complete the current
         // set of time steps.
@@ -66,7 +66,7 @@ Solver::printTime(const double originalSeconds) const {
     int minutes = 0;
     int secondsLeft = 0;
     hours = int(originalSeconds) / 3600;
-    secondsLeft = originalSeconds - hours * 3600;
+    secondsLeft = int(originalSeconds) - hours * 3600;
     minutes = int (secondsLeft) / 60;
     secondsLeft = secondsLeft - minutes * 60;
     if (hours > 0) {

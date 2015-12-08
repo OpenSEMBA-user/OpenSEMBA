@@ -39,7 +39,8 @@ Unstructured::Unstructured(const Coordinate::Group<const CoordR3>& cG,
     Element::Group<ElemR>(elem.cloneElems()),
     Layer::Group<Layer::Layer>(layers.cloneElems()) {
 
-    Element::Group<ElemR>::reassignPointers(*this);
+    Element::Group<ElemR>::reassignPointers(this->coords());
+    Element::Group<ElemR>::reassignPointers(this->layers());
 }
 
 Unstructured::Unstructured(const Unstructured& rhs)
@@ -47,7 +48,8 @@ Unstructured::Unstructured(const Unstructured& rhs)
     Element::Group<ElemR>(rhs.elems().cloneElems()),
     Layer::Group<Layer::Layer>(rhs.layers().cloneElems()) {
 
-    Element::Group<ElemR>::reassignPointers(*this);
+    Element::Group<ElemR>::reassignPointers(this->coords());
+    Element::Group<ElemR>::reassignPointers(this->layers());
 }
 
 Unstructured::~Unstructured() {
@@ -63,7 +65,8 @@ Unstructured& Unstructured::operator=(const Unstructured& rhs) {
     Element::Group<ElemR>::operator=(rhs.elems().cloneElems());
     Layer::Group<Layer::Layer>::operator=(rhs.layers().cloneElems());
 
-    Element::Group<ElemR>::reassignPointers(*this);
+    Element::Group<ElemR>::reassignPointers(this->coords());
+    Element::Group<ElemR>::reassignPointers(this->layers());
 
     return *this;
 }
@@ -74,7 +77,7 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid,
 
     std::vector<CoordI3*> newCoords;
     newCoords.reserve(coords().size());
-    for (Size i = 0; i < coords().size(); i++) {
+    for (std::size_t i = 0; i < coords().size(); i++) {
         CoordI3* newCoord = coords()(i)->toStructured(grid);
         if (newCoord != NULL) {
             newCoords.push_back(newCoord);
@@ -84,7 +87,7 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid,
 
     std::vector<ElemI*> newElems;
     newElems.reserve(elems().size());
-    for (Size i = 0; i < elems().size(); i++) {
+    for (std::size_t i = 0; i < elems().size(); i++) {
         ElemI* newElem = elems()(i)->toStructured(*res, grid, tol);
         if (newElem != NULL) {
             newElems.push_back(newElem);
@@ -104,32 +107,33 @@ Unstructured* Unstructured::getConnectivityMesh() const {
     graphLayer.init(elems);
     std::vector<std::vector<const ElemR*>> comps =
         graphLayer.getConnectedComponents();
-    for (Size c = 0; c < comps.size(); c++) {
+    for (std::size_t c = 0; c < comps.size(); c++) {
         std::stringstream layerName;
         layerName << "Component " << c+1;
         Layer::Layer* newLayer =
             res->layers().addId(new Layer::Layer(layerName.str()))(0);
         std::vector<ElemR*> newElemsLayer;
         newElemsLayer.resize(comps[c].size());
-        for (Size e = 0; e < comps[c].size(); e++) {
+        for (std::size_t e = 0; e < comps[c].size(); e++) {
             newElemsLayer[e] = comps[c][e]->cloneTo<ElemR>();
             newElemsLayer[e]->setLayer(newLayer);
         }
         res->elems().add(newElemsLayer);
     }
-    res->reassignPointers(*res);
+    res->reassignPointers(res->coords());
+    res->reassignPointers(res->layers());
     return res;
 }
 
 std::vector<Element::Face> Unstructured::getBorderWithNormal(
         const std::vector<Element::Face>& border,
         const Math::CVecR3& normal) {
-    const Size nK = border.size();
+    const std::size_t nK = border.size();
     std::vector<Element::Face> res;
     res.reserve(nK);
-    for (Size i = 0; i < nK; i++) {
+    for (std::size_t i = 0; i < nK; i++) {
         const VolR* tet = border[i].first;
-        const Size face = border[i].second;
+        const std::size_t face = border[i].second;
         Math::CVecR3 tetNormal = tet->getSideNormal(face);
         if (tetNormal == normal && !tet->isCurvedFace(face)) {
             res.push_back(border[i]);
@@ -146,10 +150,10 @@ Element::Group<const Tri> Unstructured::convertToTri(
     if (includeTets) {
         Element::Group<const Tet> tet = region.getOf<Tet>();
         std::vector<Element::Face> border = getInternalBorder(tet);
-        for (Size i = 0; i < border.size(); i++) {
+        for (std::size_t i = 0; i < border.size(); i++) {
             if (border[i].first->is<Tet>()) {
                 const Tet* tet = border[i].first->castTo<Tet>();
-                const Size face = border[i].second;
+                const std::size_t face = border[i].second;
                 res.addId(tet->getTri3Face(face));
             }
         }
@@ -163,8 +167,8 @@ std::vector<Element::Face> Unstructured::getInternalBorder(
     std::vector<Element::Face> res;
     res.reserve(region.size());
     const Element::Group<const VolR> vol = region.getOf<VolR>();
-    for (Size i = 0; i < vol.size(); i++) {
-        for (Size f = 0; f < vol(i)->numberOfFaces(); f++) {
+    for (std::size_t i = 0; i < vol.size(); i++) {
+        for (std::size_t f = 0; f < vol(i)->numberOfFaces(); f++) {
             Element::Face face(vol(i), f);
             conn.isDomainBoundary(face);
             res.push_back(face);
@@ -179,7 +183,7 @@ std::vector<Element::Face> Unstructured::getExternalBorder(
     std::vector<Element::Face> internal = getInternalBorder(region);
     std::vector<Element::Face> external;
     external.reserve(internal.size());
-    for (Size i = 0; i < internal.size(); i++) {
+    for (std::size_t i = 0; i < internal.size(); i++) {
         if (!conn.isDomainBoundary(internal[i]))  {
             external.push_back(conn.getNeighFace(internal[i]));
         }
@@ -190,16 +194,16 @@ std::vector<Element::Face> Unstructured::getExternalBorder(
 Element::Group <const VolR> Unstructured::getAdjacentRegion(
         const Element::Group<const VolR>& region) const {
     std::vector<Element::Face> outer = getExternalBorder(region);
-    Size nOut = outer.size();
+    std::size_t nOut = outer.size();
     // Removes repeated.
-    Math::Matrix::Dynamic<Size> aux(nOut,1);
-    for (Size i = 0; i < nOut; i++) {
+    Math::Matrix::Dynamic<std::size_t> aux(nOut,1);
+    for (std::size_t i = 0; i < nOut; i++) {
         aux(i,0) = outer[i].first->getId().toInt();
     }
     aux.sortAndRemoveRepeatedRows_omp();
     // Prepares result.
     Element::Group<ElemR> res;
-    for (Size i = 0; i < aux.nRows(); i++) {
+    for (std::size_t i = 0; i < aux.nRows(); i++) {
         res.add(elems().getId(ElemId(aux(i,0)))->cloneTo<ElemR>());
     }
     return res;
@@ -229,9 +233,9 @@ Element::Group<const SurfR> Unstructured::getSurfsMatching(
         const std::vector<Element::Face>& faces) const {
     std::vector<const SurfR*> res;
     Element::IndexByVertexId index = getIndexByVertexId();
-    for (Size i = 0; i < faces.size(); i++) {
+    for (std::size_t i = 0; i < faces.size(); i++) {
         const VolR* vol = faces[i].first;
-        const Size f = faces[i].second;
+        const std::size_t f = faces[i].second;
         std::vector<const CoordR3*> vertices = vol->getSideVertices(f);
         std::vector<CoordId> ids = Element::Base::getIds(vertices);
         Element::IndexByVertexId::const_iterator it = index.find(ids);

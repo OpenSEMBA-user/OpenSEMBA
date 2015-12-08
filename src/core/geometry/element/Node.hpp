@@ -53,7 +53,7 @@ Node<T>::Node(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
         throw Geometry::Error::Box::NotPoint();
     }
     std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
             v_[i] = cG.addPos(pos[i]);
@@ -89,32 +89,32 @@ bool Node<T>::isStructured(const Grid3& grid, const Math::Real tol) const {
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Node<T>::getV(const Size i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getV(const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Node<T>::getSideV(const Size f,
-                                                     const Size i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getSideV(const std::size_t f,
+                                                     const std::size_t i) const {
     assert(f == 0 && i == 0);
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Node<T>::getVertex(const Size i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getVertex(const std::size_t i) const {
     assert(i == 0);
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Node<T>::getSideVertex(const Size f,
-                                                          const Size i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getSideVertex(const std::size_t f,
+                                                          const std::size_t i) const {
     assert(f == 0 && i == 0);
     return v_[i];
 }
 
 template<class T>
-void Node<T>::setV(const Size i, const Coordinate::Coordinate<T,3>* coord) {
+void Node<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord) {
     assert(i < numberOfCoordinates());
     v_[i] = coord;
 }
@@ -153,13 +153,10 @@ template<class T>
 void Node<T>::printInfo() const {
     std::cout << "--- Node info ---" << std::endl;
     Element<T>::printInfo();
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
     }
 }
-
-template class Node<Math::Real>;
-template class Node<Math::Int >;
 
 } /* namespace Element */
 } /* namespace Geometry */

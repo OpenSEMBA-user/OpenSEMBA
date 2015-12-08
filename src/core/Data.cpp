@@ -24,6 +24,7 @@
 namespace SEMBA {
 
 Data::Data() {
+    solverOptions = NULL;
     mesh = NULL;
     physicalModels = NULL;
     sources = NULL;
@@ -32,10 +33,14 @@ Data::Data() {
 
 Data::Data(const Data& rhs)
 :   FileSystem::Project(rhs) {
+    solverOptions = NULL;
     mesh = NULL;
     physicalModels = NULL;
     sources = NULL;
     outputRequests = NULL;
+    if (rhs.solverOptions != NULL) {
+        solverOptions = new Solver::Options(*rhs.solverOptions);
+    }
     if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
     }
@@ -51,6 +56,9 @@ Data::Data(const Data& rhs)
 }
 
 Data::~Data() {
+    if (solverOptions != NULL) {
+        delete solverOptions;
+    }
     if (mesh != NULL) {
         delete mesh;
     }
@@ -70,10 +78,14 @@ Data& Data::operator=(const Data& rhs) {
         return *this;
     }
     FileSystem::Project::operator=(rhs);
+    solverOptions = NULL;
     mesh = NULL;
     physicalModels = NULL;
     sources = NULL;
     outputRequests = NULL;
+    if (rhs.solverOptions != NULL) {
+        solverOptions = new Solver::Options(*rhs.solverOptions);
+    }
     if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
     }
@@ -91,6 +103,12 @@ Data& Data::operator=(const Data& rhs) {
 
 void Data::printInfo() const {
     std::cout << " --- SEMBA data --- " << std::endl;
+    if (solverOptions != NULL) {
+        solverOptions->printInfo();
+    }
+    else {
+        std::cout << "No info about solver options." << std::endl;
+    }
     if (mesh != NULL) {
         mesh->printInfo();
     } else {
@@ -104,7 +122,7 @@ void Data::printInfo() const {
     if (sources != NULL) {
         sources->printInfo();
     } else {
-        std::cout << "No info about electromagnetic sources." << std::endl;
+        std::cout << "No info about sources." << std::endl;
     }
     if (outputRequests != NULL) {
         outputRequests->printInfo();

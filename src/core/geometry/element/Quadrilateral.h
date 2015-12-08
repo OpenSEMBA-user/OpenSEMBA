@@ -33,10 +33,12 @@ public:
     QuadrilateralBase() {}
     virtual ~QuadrilateralBase() {}
 
-    Size numberOfFaces   () const { return 4; }
-    Size numberOfVertices() const { return 4; }
+    std::size_t numberOfFaces   () const { return 4; }
+    std::size_t numberOfVertices() const { return 4; }
 
-    Size numberOfSideVertices(const Size f = 0) const { return 2; }
+    std::size_t numberOfSideVertices(const std::size_t f = 0) const { 
+        return 2; 
+    }
 };
 
 template<class T>
@@ -55,5 +57,7 @@ typedef Element::Quadrilateral<Math::Int > QuaI;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Quadrilateral.hpp"
 
 #endif /* SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL_H_ */

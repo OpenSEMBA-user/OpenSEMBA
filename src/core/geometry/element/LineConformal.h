@@ -49,9 +49,9 @@ public:
 
     Math::CVecR3 getNorm () const { return norm_;  }
 
-    const CoordConf* getV(const Size i) const;
+    const CoordConf* getV(const std::size_t i) const;
 
-    void setV(const Size i, const CoordI3* coord);
+    void setV(const std::size_t i, const CoordI3* coord);
 
     ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
                           const Grid3&) const;

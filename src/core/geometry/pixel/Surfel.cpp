@@ -27,8 +27,8 @@ namespace Pixel {
 
 bool Surfel::isInto (const Math::CVecI3Frac& coordIntFractional)const{
     Math::CVecR3 pos = coordIntFractional.getScalePos((Math::CVecI3)(*this));
-    for(Size n=0; n<3; n++){
-        if(n==(Size)(normId_-1)){
+    for(std::size_t n=0; n<3; n++){
+        if(n==(std::size_t)(normId_-1)){
             if(!Math::Util::equal(pos(n),0.0)){
                 return false;
             }
@@ -72,10 +72,10 @@ std::string Surfel::toStr() const {
 
 SurfelPixels Surfel::getPixels() const{
     SurfelPixels ret;
-    Size counter = 0;
-    Size dirId = getNormId() -1;
-    for(Size n=0; n<2; ++n){
-        for(Size m=0; m<2; ++m){
+    std::size_t counter = 0;
+    std::size_t dirId = getNormId() -1;
+    for(Math::UInt n=0; n<2; ++n){
+        for (Math::UInt m = 0; m<2; ++m){
             Math::CVecI3 offset;
             offset(dirId)       = 0;
             offset((dirId+1)%3) = n;

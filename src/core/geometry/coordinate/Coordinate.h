@@ -52,7 +52,7 @@ public:
     virtual bool operator!=(const Base& rhs) const;
 };
 
-template <class T, Size D>
+template <class T, std::size_t D>
 class Coordinate : public virtual Base,
                    public virtual Math::Vector::Cartesian<T,D> {
 public:
@@ -90,5 +90,7 @@ typedef Coordinate::Coordinate<Math::Int ,3> CoordI3;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Coordinate.hpp"
 
 #endif /* SEMBA_GEOMETRY_COORDINATE_COORDINATE_H_ */

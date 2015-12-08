@@ -86,7 +86,7 @@ void SurfaceSIBC::printInfo() const {
         std::cout << "Number of poles: " << pole_.size() << std::endl;
         std::cout << "# Pole Z11 Z12 Z21 Z22 " << std::endl;
     }
-    for (register Size i = 0; i < pole_.size(); i++) {
+    for (register std::size_t i = 0; i < pole_.size(); i++) {
         std::cout << i << " "
                 << pole_[i] << " "
                 << Z_[i](0,0) << " " << Z_[i](0,1) << " "
@@ -94,7 +94,7 @@ void SurfaceSIBC::printInfo() const {
     }
 }
 
-Size SurfaceSIBC::getNumberOfPoles() const {
+std::size_t SurfaceSIBC::getNumberOfPoles() const {
     return pole_.size();
 }
 

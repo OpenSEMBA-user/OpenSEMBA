@@ -36,13 +36,14 @@ Volume<T>::~Volume() {
 }
 
 template<class T>
-bool Volume<T>::isLocalFace(const Size f, const Surface<T>& surf) const {
+bool Volume<T>::isLocalFace(const std::size_t f,
+                            const Surface<T>& surf) const {
     return getSideNormal(f) == surf.getNormal();
 }
 
 template<class T>
 bool Volume<T>::isFaceContainedInPlane(
-        const Size face,
+        const std::size_t face,
         const Math::Constants::CartesianPlane plane) const {
    Box<T,3> box = getBoundOfFace(face);
    Math::Vector::Cartesian<T,3> vec = box.getMax() - box.getMin();
@@ -50,7 +51,8 @@ bool Volume<T>::isFaceContainedInPlane(
 }
 
 template<class T>
-Math::Vector::Cartesian<T,3> Volume<T>::getSideNormal(const Size f) const {
+Math::Vector::Cartesian<T,3> Volume<T>::getSideNormal(
+        const std::size_t f) const {
     Math::Vector::Cartesian<T,3> vec1, vec2, res;
     vec1 = *this->getSideVertex(f,1) - *this->getSideVertex(f,0);
     vec2 = *this->getSideVertex(f,2) - *this->getSideVertex(f,0);
@@ -59,21 +61,21 @@ Math::Vector::Cartesian<T,3> Volume<T>::getSideNormal(const Size f) const {
 }
 
 template<class T>
-Box<T,3> Volume<T>::getBoundOfFace(const Size face) const {
+Box<T,3> Volume<T>::getBoundOfFace(const std::size_t face) const {
     Box<T,3> res;
-   for (Size i = 0; i < this->numberOfSideCoordinates(); i++) {
+   for (std::size_t i = 0; i < this->numberOfSideCoordinates(); i++) {
       res << this->getSideV(face,i)->pos();
    }
    return res;
 }
 
 template<class T>
-Size Volume<T>::getFaceNumber(const Surface<T>* surf) const {
+std::size_t Volume<T>::getFaceNumber(const Surface<T>* surf) const {
     // Checks each face. Order is not important.
-    for (Size f = 0; f < this->numberOfFaces(); f++) {
-        Size vPresent = 0;
-        for (Size i = 0; i < surf->numberOfVertices(); i++) {
-            for (Size j = 0; j < surf->numberOfVertices(); j++) {
+    for (std::size_t f = 0; f < this->numberOfFaces(); f++) {
+        std::size_t vPresent = 0;
+        for (std::size_t i = 0; i < surf->numberOfVertices(); i++) {
+            for (std::size_t j = 0; j < surf->numberOfVertices(); j++) {
                 if (surf->getVertex(j) == this->getSideVertex(f, i)) {
                     vPresent++;
                 }
@@ -85,9 +87,6 @@ Size Volume<T>::getFaceNumber(const Surface<T>* surf) const {
     }
     throw Error::SurfNotFound(surf->getId(), this->getId());
 }
-
-template class Volume<Math::Real>;
-template class Volume<Math::Int >;
 
 } /* namespace Element */
 } /* namespace Geometry */

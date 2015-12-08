@@ -140,7 +140,7 @@ const CoordI3* Group<C>::getPos(const Math::CVecI3& position) const {
 
 template<typename C>
 SEMBA::Group::Group<C> Group<C>::add(SEMBA::Group::Group<C>& rhs) {
-    Size lastSize = this->size();
+    std::size_t lastSize = this->size();
     SEMBA::Group::Identifiable<C,Id>::add(rhs);
     postprocess_(lastSize);
     return rhs;
@@ -148,7 +148,7 @@ SEMBA::Group::Group<C> Group<C>::add(SEMBA::Group::Group<C>& rhs) {
 
 template<typename C>
 SEMBA::Group::Group<C> Group<C>::add(SEMBA::Group::Group<C>&& rhs) {
-    Size lastSize = this->size();
+    std::size_t lastSize = this->size();
     SEMBA::Group::Identifiable<C,Id>::add(std::move(rhs));
     postprocess_(lastSize);
     return rhs;
@@ -167,11 +167,12 @@ const C* Group<C>::addPos(const Math::CVecR3& newPosition,
 }
 
 template<typename C>
-SEMBA::Group::Group<C> Group<C>::addPos(const std::vector<Math::CVecR3>& newPos,
-                                        const bool canOverlap) {
+SEMBA::Group::Group<C> Group<C>::addPos(
+        const std::vector<Math::CVecR3>& newPos,
+        const bool canOverlap) {
     std::vector<C*> newCoords;
     newCoords.reserve(newPos.size());
-    for(Size i = 0; i < newPos.size(); i++) {
+    for(std::size_t i = 0; i < newPos.size(); i++) {
         if (canOverlap || (getPos(newPos[i]) == NULL)) {
             CoordR3* newCoord = new CoordR3(newPos[i]);
             if (newCoord->template is<C>()) {
@@ -197,10 +198,11 @@ const C* Group<C>::addPos(const Math::CVecI3& newPosition,
 }
 
 template<typename C>
-SEMBA::Group::Group<C> Group<C>::addPos(const std::vector<Math::CVecI3>& newPos,
-                                        const bool canOverlap) {
+SEMBA::Group::Group<C> Group<C>::addPos(
+        const std::vector<Math::CVecI3>& newPos,
+        const bool canOverlap) {
     std::vector<C*> newCoords;
-    for(Size i = 0; i < newPos.size(); i++) {
+    for(std::size_t i = 0; i < newPos.size(); i++) {
         if (canOverlap || (getPos(newPos[i]) == NULL)) {
             CoordI3* newCoord = new CoordI3(newPos[i]);
             if (newCoord->template is<C>()) {
@@ -214,7 +216,7 @@ SEMBA::Group::Group<C> Group<C>::addPos(const std::vector<Math::CVecI3>& newPos,
 }
 
 template<typename C>
-void Group<C>::remove(const Size& pos) {
+void Group<C>::remove(const std::size_t& pos) {
     if (this->get(pos)->template is<CoordR3>()) {
         indexUnstr_.erase(this->get(pos)->template castTo<CoordR3>());
     }
@@ -225,8 +227,8 @@ void Group<C>::remove(const Size& pos) {
 }
 
 template<typename C>
-void Group<C>::remove(const std::vector<Size>& pos) {
-    for (Size i = 0; i < pos.size(); i++) {
+void Group<C>::remove(const std::vector<std::size_t>& pos) {
+    for (std::size_t i = 0; i < pos.size(); i++) {
         if (this->get(pos[i])->template is<CoordR3>()) {
             indexUnstr_.erase(this->get(pos[i])->template castTo<CoordR3>());
         }
@@ -239,7 +241,7 @@ void Group<C>::remove(const std::vector<Size>& pos) {
 
 template<typename C>
 void Group<C>::applyScalingFactor(const Math::Real factor) {
-    for(Size i = 0; i < this->size(); i++) {
+    for(std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->template is<CoordR3>()) {
             CoordR3* ptr = this->get(i)->template castTo<CoordR3>();
             *ptr *= factor;
@@ -255,8 +257,8 @@ void Group<C>::printInfo() const {
 }
 
 template<typename C>
-void Group<C>::postprocess_(const Size fistStep) {
-    for (Size i = fistStep; i < this->size(); i++) {
+void Group<C>::postprocess_(const std::size_t fistStep) {
+    for (std::size_t i = fistStep; i < this->size(); i++) {
         if (this->get(i)->template is<CoordR3>()) {
             indexUnstr_.insert(this->get(i)->template castTo<CoordR3>());
         }

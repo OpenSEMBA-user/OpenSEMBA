@@ -31,36 +31,36 @@ namespace SEMBA {
 namespace Math {
 namespace Vector {
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>::Cartesian() {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = T(0);
     }
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>::Cartesian(const T val_) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = val_;
     }
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 Cartesian<T,D>::Cartesian(T val_[D]) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = val_[i];
     }
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 Cartesian<T,D>::Cartesian(const T val_[D]) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = val_[i];
     }
 }
 
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>::Cartesian(const T x, const T y, const T z) {
     assert(D==3);
     val[0] = x;
@@ -68,181 +68,181 @@ Cartesian<T,D>::Cartesian(const T x, const T y, const T z) {
     val[2] = z;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>::Cartesian(const Cartesian<T,D>& begin,
                           const Cartesian<T,D>& end) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = end.val[i]-begin.val[i];
     }
 }
 
-template <class T, Size D> template<class U>
+template <class T, std::size_t D> template<class U>
 Cartesian<T,D>::Cartesian(const Cartesian<U,D>& param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = (T) param.val[i];
     }
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 Cartesian<T,D>::~Cartesian() {
 
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::operator=(const T param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = param;
     }
     return *this;
 }
 
-template <class T, Size D> template<class U>
+template <class T, std::size_t D> template<class U>
 Cartesian<T,D>& Cartesian<T,D>::operator=(const Cartesian<U,D>& param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = (T) param.val[i];
     }
     return *this;
 }
 //
-//template <class T, Size D>
+//template <class T, std::size_t D>
 //Cartesian<T,D>& Cartesian<T,D>::operator=(
-//        const Cartesian<Size,D>& param) {
-//    for (Size i = 0; i < D; i++) {
+//        const Cartesian<std::size_t,D>& param) {
+//    for (std::size_t i = 0; i < D; i++) {
 //        val[i] = (T) param.val[i];
 //    }
 //    return *this;
 //}
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::operator+=(const T param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] += param;
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 inline Cartesian<T,D>& Cartesian<T,D>::operator+=(
         const Cartesian<T,D>& param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] += param.val[i];
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::operator-=(const T param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] -= param;
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::operator-=(const Cartesian<T,D>& param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] -= param.val[i];
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 inline Cartesian<T,D>& Cartesian<T,D>::operator*=(const T param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] *= param;
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 inline Cartesian<T,D>& Cartesian<T,D>::operator/=(const T param) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] /= param;
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> Cartesian<T,D>::operator+(const T param) const {
     Cartesian<T,D> res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res.val[i] = val[i] + param;
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> Cartesian<T,D>::operator+(const Cartesian<T,D>& param) const {
     Cartesian<T,D> res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res.val[i] = val[i] + param.val[i];
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::operator-() {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = - val[i];
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> Cartesian<T,D>::operator-(const Cartesian<T,D>& param) const {
     Cartesian<T,D> res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res.val[i] = val[i] - param.val[i];
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> Cartesian<T,D>::operator-(const T param) const {
     Cartesian<T,D> res;
-    for (Size i = 0; i<D; i++) {
+    for (std::size_t i = 0; i<D; i++) {
         res.val[i] = val[i] - param;
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> operator-(const T& lhs, const Cartesian<T,D>& rhs) {
     Cartesian<Real,D> res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res.val[i] = lhs - rhs.val[i];
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> Cartesian<T,D>::operator*(const T param) const {
     Cartesian<T, D>  res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res.val[i] = val[i] * param;
     }
     return res;
 }
 
-template <class T, Size D> inline
+template <class T, std::size_t D> inline
 Cartesian<T,D> Cartesian<T,D>::operator*(const Cartesian<T,D>& param) const {
     Cartesian<T, D>  res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res.val[i] = val[i] * param.val[i];
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> Cartesian<T,D>::operator/(const T param) const {
     Cartesian<T, D>  res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res.val[i] = val[i] / param;
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D> Cartesian<T,D>::operator^(const Cartesian<T,D>& param) const {
     // PURPOSE: Computes vectorial product.
     assert(D == 3);
@@ -253,19 +253,19 @@ Cartesian<T,D> Cartesian<T,D>::operator^(const Cartesian<T,D>& param) const {
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 inline T Cartesian<T,D>::dot(const Cartesian<T,D>& param) const {
-    T res = 0.0;
-    for (Size i = 0; i < D; i++) {
+    T res = T();
+    for (std::size_t i = 0; i < D; i++) {
         res += val[i] * param.val[i];
     }
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 inline T Cartesian<T,D>::getMax() const {
     T res = val[0];
-    for (Size i = 1; i < D; i++) {
+    for (std::size_t i = 1; i < D; i++) {
         if (val[i] > res) {
             res = val[i];
         }
@@ -273,21 +273,21 @@ inline T Cartesian<T,D>::getMax() const {
     return res;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::setAsBinary(const UInt number) {
     assert(number < pow(2,D));
     UInt den = 1;
-    for (Size d = 0; d < D; d++) {
+    for (std::size_t d = 0; d < D; d++) {
         val[D-d-1] = (number / den) % 2;
         den *= 2;
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::setWithMinimalComponents(
         const Cartesian<T,D>& rhs) {
-    for(Size d = 0; d < D; d++){
+    for(std::size_t d = 0; d < D; d++){
         if(val[d] > rhs.val[d]){
             val[d] = rhs.val[d];
         }
@@ -295,24 +295,24 @@ Cartesian<T,D>& Cartesian<T,D>::setWithMinimalComponents(
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 bool Cartesian<T,D>::operator==(const Cartesian<T, D>& param) const {
     return Util::equal((*this-param).norm(), 0.0, (*this+param).norm());
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 inline bool Cartesian<T,D>::operator!=(const Cartesian<T,D>& param) const {
     return !(*this == param);
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 bool Cartesian<T,D>::isContainedInPlane() const {
     return (this->isContainedInPlane(Constants::xy) ||
             this->isContainedInPlane(Constants::yz) ||
             this->isContainedInPlane(Constants::zx));
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 bool Cartesian<T,D>::isContainedInPlane(
         const Constants::CartesianPlane plane) const {
     assert(D == 3);
@@ -338,17 +338,17 @@ bool Cartesian<T,D>::isContainedInPlane(
     } else {
         switch (plane) {
         case Constants::xy:
-            if (Util::equal(std::fabs(val[2]), 0.0)) {
+            if (Util::equal(std::abs(val[2]), 0.0)) {
                 return true;
             }
             break;
         case Constants::yz:
-            if (Util::equal(std::fabs(val[0]), 0.0)) {
+            if (Util::equal(std::abs(val[0]), 0.0)) {
                 return true;
             }
             break;
         case Constants::zx:
-            if (Util::equal(std::fabs(val[1]), 0.0)) {
+            if (Util::equal(std::abs(val[1]), 0.0)) {
                 return true;
             }
             break;
@@ -357,49 +357,49 @@ bool Cartesian<T,D>::isContainedInPlane(
     }
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 inline bool Cartesian<T,D>::isCoplanar(const Cartesian<T, D>& param) const {
     return (*this - param).isContainedInPlane();
 }
 
-template <class T, Size D>
-inline T& Cartesian<T,D>::operator() (Size pos) {
+template <class T, std::size_t D>
+inline T& Cartesian<T,D>::operator() (std::size_t pos) {
     assert(pos >= 0 && pos < D);
     return val[pos];
 }
 
-template <class T, Size D>
-inline T Cartesian<T,D>::operator() (Size pos) const {
+template <class T, std::size_t D>
+inline T Cartesian<T,D>::operator() (std::size_t pos) const {
     assert(pos >= 0 && pos < D);
     return val[pos];
 }
 
-template <class T, Size D>
-inline T& Cartesian<T,D>::operator[] (Size pos) {
+template <class T, std::size_t D>
+inline T& Cartesian<T,D>::operator[] (std::size_t pos) {
     assert(pos >= 0 && pos < D);
     return val[pos];
 }
 
-template <class T, Size D>
-inline T Cartesian<T,D>::operator[] (Size pos) const {
+template <class T, std::size_t D>
+inline T Cartesian<T,D>::operator[] (std::size_t pos) const {
     assert(pos >= 0 && pos < D);
     return val[pos];
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 inline Real Cartesian<T,D>::norm() const {
     Real sum = 0;
-    for (Size i = 0; i < D; i++) {
-        sum += (Real) std::fabs(val[i]) * std::fabs(val[i]);
+    for (std::size_t i = 0; i < D; i++) {
+        sum += (Real) std::abs(val[i]) * std::abs(val[i]);
     }
     return sqrt(sum);
 }
 
 
-template <class T, Size D>
-Cartesian<T,D>& Cartesian<T,D>::cyclicPermutation(const Size n) {
+template <class T, std::size_t D>
+Cartesian<T,D>& Cartesian<T,D>::cyclicPermutation(const std::size_t n) {
     Cartesian<T,D> valAux(0.0);
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         valAux.val[(i+n)%D] = val[i];
     }
     *this=valAux;
@@ -407,26 +407,26 @@ Cartesian<T,D>& Cartesian<T,D>::cyclicPermutation(const Size n) {
     return *this;
 }
 
-template <class T, Size D> inline
+template <class T, std::size_t D> inline
 Cartesian<T,D>& Cartesian<T,D>::abs() {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         val[i] = (T) std::fabs(val[i]);
     }
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::normalize() {
-    T nor = norm();
-    for (Size i = 0; i < D; i++) {
-        val[i] /= nor;
+    Real nor = norm();
+    for (std::size_t i = 0; i < D; i++) {
+        val[i] /= (T)nor;
     }
     return *this;
 }
 
-template <class T, Size D> inline
+template <class T, std::size_t D> inline
 Cartesian<T,D>& Cartesian<T,D>::setPlusInfty() {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         if (std::numeric_limits<T>::has_infinity) {
             val[i] = std::numeric_limits<T>::infinity();
         } else {
@@ -436,9 +436,9 @@ Cartesian<T,D>& Cartesian<T,D>::setPlusInfty() {
     return *this;
 }
 
-template <class T, Size D> inline
+template <class T, std::size_t D> inline
 Cartesian<T,D>& Cartesian<T,D>::setMinusInfty() {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         if (std::numeric_limits<T>::has_infinity) {
             val[i] = -std::numeric_limits<T>::infinity();
         } else {
@@ -448,11 +448,11 @@ Cartesian<T,D>& Cartesian<T,D>::setMinusInfty() {
     return *this;
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 std::string Cartesian<T,D>::toStr() const {
     std::stringstream ss;
     ss << "(";
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         ss << val[i];
         if (i < D-1) {
             ss << " , ";
@@ -462,35 +462,35 @@ std::string Cartesian<T,D>::toStr() const {
     return ss.str();
 }
 
-template <class T, Size D>
+template <class T, std::size_t D>
 void Cartesian<T,D>::printInfo() const {
     std::cout << toStr() << std::flush;
 }
 
-template<Size D>
+template<std::size_t D>
 Cartesian<Real,D> operator+(const Cartesian<Int ,D> & lhs,
                             const Cartesian<Real,D>& rhs) {
     Cartesian<Real,D> res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res(i) = lhs(i) + rhs(i);
     }
     return res;
 }
 
-template<Size D>
+template<std::size_t D>
 Cartesian<Real,D> operator/(const Cartesian<Int,D>& lhs,
                             const Real rhs) {
     Cartesian<Real,D> res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res(i) = (Real) lhs(i) / rhs;
     }
     return  res;
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 bool operator< (const Cartesian<T,D>& lhs,
                 const Cartesian<T,D>& rhs) {
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         if (Util::lower  (lhs(i), rhs(i))) {
             return true;
         }
@@ -501,19 +501,19 @@ bool operator< (const Cartesian<T,D>& lhs,
     return false;
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 bool operator<=(const Cartesian<T,D>& lhs,
                 const Cartesian<T,D>& rhs) {
     return !(rhs < lhs);
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 bool operator> (const Cartesian<T,D>& lhs,
                 const Cartesian<T,D>& rhs) {
     return rhs < lhs;
 }
 
-template<class T, Size D>
+template<class T, std::size_t D>
 bool operator>=(const Cartesian<T,D>& lhs,
                 const Cartesian<T,D>& rhs) {
     return !(lhs < rhs);
@@ -523,10 +523,10 @@ bool operator>=(const Cartesian<T,D>& lhs,
 
 namespace Util {
 
-template<Size D>
+template<std::size_t D>
 Vector::Cartesian<Real,D> round(const Vector::Cartesian<Real,D>& vec) {
     Vector::Cartesian<Real,D> res;
-    for (Size i = 0; i < D; i++) {
+    for (std::size_t i = 0; i < D; i++) {
         res(i) = round(vec(i));
     }
     return  res;

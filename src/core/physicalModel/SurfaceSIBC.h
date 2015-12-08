@@ -51,7 +51,7 @@ public:
     void setZInfinity(const Math::MatR22& Zinf);
     void setZStatic(const Math::MatR22& Zsta);
     virtual void addPole(const Math::Real pole, const Math::MatR22& Z);
-    virtual Size getNumberOfPoles() const;
+    virtual std::size_t getNumberOfPoles() const;
     virtual void printInfo() const;
     const FileSystem::Project getFile() const;
 

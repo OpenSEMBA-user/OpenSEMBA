@@ -39,10 +39,10 @@ Graph<ELEM,BOUND>::Graph(const Graph& rhs) {
 
 template<class ELEM, class BOUND>
 Graph<ELEM,BOUND>::~Graph() {
-    for (Size i = 0; i < elems_.size(); i++) {
+    for (std::size_t i = 0; i < elems_.size(); i++) {
         delete elems_[i];
     }
-    for (Size i = 0; i < bounds_.size(); i++) {
+    for (std::size_t i = 0; i < bounds_.size(); i++) {
         delete bounds_[i];
     }
 }
@@ -60,21 +60,21 @@ template<class ELEM, class BOUND>
 void Graph<ELEM,BOUND>::printInfo() const {
     std::cout << "--- Graph Info ---" << std::endl;
     std::cout << "Elems: " << elems_.size() << std::endl;
-    for (Size i = 0; i < elems_.size(); i++) {
+    for (std::size_t i = 0; i < elems_.size(); i++) {
         elems_[i]->printInfo();
     }
     std::cout << "Bounds: " << bounds_.size() << std::endl;
-    for (Size i = 0; i < bounds_.size(); i++) {
+    for (std::size_t i = 0; i < bounds_.size(); i++) {
         bounds_[i]->printInfo();
     }
 }
 
 template<class ELEM, class BOUND>
 void Graph<ELEM,BOUND>::resetVisited() {
-    for (Size i = 0; i < elems_.size(); i++) {
+    for (std::size_t i = 0; i < elems_.size(); i++) {
         elems_[i]->unmarkVisited();
     }
-    for (Size i = 0; i < bounds_.size(); i++) {
+    for (std::size_t i = 0; i < bounds_.size(); i++) {
         bounds_[i]->unmarkVisited();
     }
 }
@@ -84,7 +84,7 @@ std::vector<std::vector<const ELEM*>>
         Graph<ELEM,BOUND>::getConnectedComponents() {
     resetVisited();
     std::vector<std::vector<const Elem*>> res;
-    for (Size i = 0; i < elems_.size(); i++) {
+    for (std::size_t i = 0; i < elems_.size(); i++) {
         if (!elems_[i]->visited()) {
             std::vector<const Elem*> comp;
             std::queue<GraphElem*> q;
@@ -95,7 +95,7 @@ std::vector<std::vector<const ELEM*>>
                 q.pop();
                 comp.push_back(elem->elem());
                 elem->markVisited();
-                for (Size n = 0; n < elem->numNeighbors(); n++) {
+                for (std::size_t n = 0; n < elem->numNeighbors(); n++) {
                     if (!elem->getNeighbor(n)->visited()) {
                         q.push(elem->getNeighbor(n));
                         elem->getNeighbor(n)->markVisited();
@@ -115,31 +115,31 @@ void Graph<ELEM,BOUND>::cloneInfo(const Graph& rhs) {
     std::map<GraphBound*, GraphBound*> mapBounds;
 
     elems_.resize(rhs.elems_.size());
-    for (Size i = 0; i < rhs.elems_.size(); i++) {
+    for (std::size_t i = 0; i < rhs.elems_.size(); i++) {
         elems_[i] = rhs.elems_[i]->clone();
         mapElems[rhs.elems_[i]] = elems_[i];
     }
     bounds_.resize(rhs.bounds_.size());
-    for (Size i = 0; i < rhs.bounds_.size(); i++) {
+    for (std::size_t i = 0; i < rhs.bounds_.size(); i++) {
         bounds_[i] = rhs.bounds_[i]->clone();
         mapBounds[rhs.bounds_[i]] = bounds_[i];
     }
 
-    for (Size i = 0; i < elems_.size(); i++) {
-        for (Size j = 0; j < elems_[i]->numBounds(); j++) {
+    for (std::size_t i = 0; i < elems_.size(); i++) {
+        for (std::size_t j = 0; j < elems_[i]->numBounds(); j++) {
             elems_[i]->setBound(j, mapBounds[elems_[i]->getBound(j)]);
         }
     }
-    for (Size i = 0; i < bounds_.size(); i++) {
-        for (Size j = 0; j < bounds_[i]->numBounds(); j++) {
+    for (std::size_t i = 0; i < bounds_.size(); i++) {
+        for (std::size_t j = 0; j < bounds_[i]->numBounds(); j++) {
             bounds_[i]->setBound(j, mapElems[bounds_[i]->getBound(j)]);
         }
     }
 
-    for (Size i = 0; i < this->elems_.size(); i++) {
+    for (std::size_t i = 0; i < this->elems_.size(); i++) {
         this->elems_[i]->constructNeighbors();
     }
-    for (Size i = 0; i < this->bounds_.size(); i++) {
+    for (std::size_t i = 0; i < this->bounds_.size(); i++) {
         this->bounds_[i]->constructNeighbors();
     }
 }

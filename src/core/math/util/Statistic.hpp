@@ -30,9 +30,9 @@ T meanDifference(const std::vector<T>& vec) {
     if (vec.size() == 1) {
         return (T) 0.0;
     }
-    const Size vS = vec.size();
+    const std::size_t vS = vec.size();
     std::vector<T> diff(vS-1, 0.0);
-    for (Size i = 1; i < vS; i++) {
+    for (std::size_t i = 1; i < vS; i++) {
         diff[i-1] = vec[i] - vec[i-1];
     }
     return mean(diff);
@@ -40,15 +40,15 @@ T meanDifference(const std::vector<T>& vec) {
 
 template<class T>
 T mean(const std::vector<T>& vec) {
-    const Size vS = vec.size();
+    const std::size_t vS = vec.size();
     return sum(vec) / vS;
 }
 
 template<class T>
 T sum(const std::vector<T>& vec) {
-    const Size vS = vec.size();
+    const std::size_t vS = vec.size();
     T res = 0.0;
-    for (Size i = 0; i < vS; i++) {
+    for (std::size_t i = 0; i < vS; i++) {
         res += vec[i];
     }
     return res;

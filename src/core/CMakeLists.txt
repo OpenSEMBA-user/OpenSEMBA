@@ -21,6 +21,34 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-add_sources(. SRCS)
+macro(add_subdirectories dir bin)
+    set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
+    file(GLOB children RELATIVE ${curdir} ${curdir}/*)
+    foreach(child ${children})
+        if(IS_DIRECTORY ${curdir}/${child})
+            if(EXISTS ${curdir}/${child}/CMakeLists.txt)
+                add_subdirectory(${curdir}/${child} ${bin}/${dir}/${child})
+            endif()
+            if(EXISTS ${curdir}/${child}/src/CMakeLists.txt)
+                add_subdirectory(${curdir}/${child}/src ${bin}/${dir}/${child})
+            endif()
+        endif()
+    endforeach()
+endmacro()
 
-add_library(opensemba STATIC ${SRCS})
+project(opensemba_core CXX)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+include_directories(${CMAKE_CURRENT_LIST_DIR})
+add_subdirectories(. .)
+if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
+          ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
+    add_library(opensemba_core_data STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
+    add_dependencies(opensemba_core_data opensemba_core_geometry
+                                         opensemba_core_physicalmodel
+                                         opensemba_core_source
+                                         opensemba_core_outputrequest)
+endif()

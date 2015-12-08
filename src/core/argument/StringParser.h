@@ -23,7 +23,9 @@
 #define SEMBA_ARGUMENT_STRINGPARSER_H_
 
 #include <algorithm>
+#include <cctype>
 #include <exception>
+#include <functional>
 #include <list>
 #include <sstream>
 #include <string>

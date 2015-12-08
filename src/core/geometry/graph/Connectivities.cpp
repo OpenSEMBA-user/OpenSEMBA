@@ -41,7 +41,7 @@ Connectivities::~Connectivities() {
 Connectivities::Connectivities(const Group::Group<const ElemR>& eG) {
     // Generates graph.
     graph_.init(eG);
-    for (Size i = 0; i < graph_.numElems(); i++) {
+    for (std::size_t i = 0; i < graph_.numElems(); i++) {
         GraphElem* graphElem = graph_.elem(i);
         ElemId id = graphElem->elem()->getId();
         index_.insert(std::pair<ElemId,const GraphElem*>(id, graphElem));
@@ -63,7 +63,7 @@ const SurfR* Connectivities::getNeighSurf(const Face& face) const {
         elem->getSideCoordinates(face.second);
     const GraphElem* local = index_.find(elem->getId())->second;
 
-    for (Size i = 0; i < local->numNeighbors(); i++) {
+    for (std::size_t i = 0; i < local->numNeighbors(); i++) {
         const ElemR* neigh = local->getNeighbor(i)->elem();
         if (neigh->is<SurfR>()) {
             std::vector<const CoordR3*> neighV = neigh->getCoordinates();
@@ -107,14 +107,14 @@ bool Connectivities::isDomainBoundary(Face face) const {
 Face Connectivities::getMatchingFace_(
         const GraphElem* local,
         const std::vector<const CoordR3*> localSideV) const {
-    for (Size i = 0; i < local->numNeighbors(); i++) {
+    for (std::size_t i = 0; i < local->numNeighbors(); i++) {
         const GraphElem* neighConn = local->getNeighbor(i);
         if (neighConn->elem() == NULL) {
             return Face(NULL, 0);
         }
         const ElemR* neigh = neighConn->elem();
         if (neigh->is<VolR>()) {
-            for (Size f = 0; f < neigh->numberOfFaces(); f++) {
+            for (std::size_t f = 0; f < neigh->numberOfFaces(); f++) {
                 std::vector<const CoordR3*> neighSideV =
                     neigh->getSideCoordinates(f);
                 if (Geometry::Element::Base::areSameCoords(localSideV,
@@ -127,17 +127,17 @@ Face Connectivities::getMatchingFace_(
     return Face(NULL, 0);
 }
 
-Size Connectivities::size() const {
+std::size_t Connectivities::size() const {
     return graph_.numElems();
 }
 
 bool Connectivities::existsReciprocity() const {
-    for (Size i = 0; i < graph_.numElems(); i++) {
+    for (std::size_t i = 0; i < graph_.numElems(); i++) {
         const ElemR* elem = graph_.elem(i)->elem();
         // Checks volumic reciprocity in connectivities.
         if (elem->is<VolR>()) {
             const VolR* vol = elem->castTo<VolR>();
-            for (Size f = 0; f < vol->numberOfFaces(); f++) {
+            for (std::size_t f = 0; f < vol->numberOfFaces(); f++) {
                 Face local(vol, f);
                 Face neigh = this->getNeighFace(local);
                 if (this->isDomainBoundary(local)) {

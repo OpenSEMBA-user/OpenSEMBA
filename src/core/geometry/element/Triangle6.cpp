@@ -38,7 +38,7 @@ Triangle6::Triangle6(const Id id,
 :   Identifiable<Id>(id),
     Elem(lay, mat) {
 
-    for (Size i = 0; i < geo.np; i++) {
+    for (std::size_t i = 0; i < geo.np; i++) {
         v_[i] = v[i];
     }
 }
@@ -47,7 +47,7 @@ Triangle6::Triangle6(const Triangle6& rhs)
 :   Identifiable<Id>(rhs),
     Elem(rhs) {
 
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
 }
@@ -64,7 +64,7 @@ bool Triangle6::isCurved() const {
     v2 = getVertex(2)->pos() - getVertex(0)->pos();
     pN = (v1 ^ v2).normalize();
     Math::Real curvature = (Math::Real) 0.0;
-    for (Size c = 0; c < geo.ncp; c++) {
+    for (std::size_t c = 0; c < geo.ncp; c++) {
         curvature += geo.cw[c] * (1.0 - abs(cn[c].dot(pN)));
     }
     if (Math::Util::notEqual(curvature, 0.0, 1.0)) {
@@ -76,7 +76,7 @@ bool Triangle6::isCurved() const {
 //  CartesianVector<Math::Real,3> vec2, vec1;
 //  bool aligned;
 //  Math::Real alignement;
-//  for (Size s = 0; s < tri.faces; s++) {
+//  for (std::size_t s = 0; s < tri.faces; s++) {
 //      vec1 = *v[tri.sideNode(s,1)] - *v[tri.sideNode(s,0)];
 //      vec2 = *v[tri.sideNode(s,2)] - *v[tri.sideNode(s,0)];
 //      vec1.normalize();
@@ -92,17 +92,19 @@ bool Triangle6::isCurved() const {
 //  #warning "Every tri6 surface is always treated as curved."
 }
 
-const CoordR3* Triangle6::getSideV(const Size face, const Size i) const {
+const CoordR3* Triangle6::getSideV(const std::size_t face,
+                                   const std::size_t i) const {
     assert(face < numberOfFaces());
     assert(i < numberOfSideCoordinates());
     return v_[geo.sideNode(face,i)];
 }
 
-const CoordR3* Triangle6::getVertex(const Size i) const {
+const CoordR3* Triangle6::getVertex(const std::size_t i) const {
     return v_[geo.vertex(i)];
 }
 
-const CoordR3* Triangle6::getSideVertex(const Size face, const Size i) const {
+const CoordR3* Triangle6::getSideVertex(const std::size_t face,
+                                        const std::size_t i) const {
     assert(face < numberOfFaces());
     assert(i < numberOfSideVertices());
     return v_[geo.sideVertex(face,i)];
@@ -112,7 +114,7 @@ Math::Real Triangle6::getArea() const {
     Math::Real csdf[geo.ncp];
     getCubatureDifferentials(csdf);
     Math::Real res = 0.0;
-    for (Size c = 0; c < geo.ncp; c++) {
+    for (std::size_t c = 0; c < geo.ncp; c++) {
         res += geo.cw[c] * csdf[c];
     }
     res *= 0.5;
@@ -123,7 +125,7 @@ void Triangle6::getCubatureDifferentials(
         Math::Real csdf[Math::Simplex::Triangle<2>::ncp]) const {
     Math::CVecR3 csTanVec[geo.ncp];
     getCubatureTangentsVecProds(csTanVec);
-    for (Size c = 0; c < geo.ncp; c++) {
+    for (std::size_t c = 0; c < geo.ncp; c++) {
         csdf[c] = csTanVec[c].norm();
     }
 }
@@ -132,7 +134,7 @@ void Triangle6::getCubatureNormals(
         Math::CVecR3 csdn[Math::Simplex::Triangle<2>::ncp]) const {
     Math::CVecR3 cTanVec[geo.ncp];
     getCubatureTangentsVecProds(cTanVec);
-    for (Size c = 0; c < geo.ncp; c++) {
+    for (std::size_t c = 0; c < geo.ncp; c++) {
         csdn[c] = cTanVec[c].normalize();
     }
 }
@@ -140,20 +142,20 @@ void Triangle6::getCubatureNormals(
 void Triangle6::getCubatureNodes(
         Math::CVecR3 cNode[Math::Simplex::Triangle<2>::ncp]) const {
     // Evaluates Lagrange's functions in positions specified by the
-    for (Size i = 0; i < geo.np; i++) {
-        for (Size c = 0; c < geo.ncp; c++) {
+    for (std::size_t i = 0; i < geo.np; i++) {
+        for (std::size_t c = 0; c < geo.ncp; c++) {
             cNode[c] += *getV(i) * geo.ca[i][c];
         }
     }
 }
 
-void Triangle6::setV(const Size i, const CoordR3* vNew) {
+void Triangle6::setV(const std::size_t i, const CoordR3* vNew) {
     v_[i] = vNew;
 }
 
 Triangle3* Triangle6::linearize() const {
     const CoordR3* vertex[3];
-    for (Size i = 0; i < 3; i++) {
+    for (std::size_t i = 0; i < 3; i++) {
         vertex[i] = getVertex(i);
     }
     return new Triangle3(getId(), vertex, getLayer(), getModel());
@@ -163,7 +165,7 @@ void Triangle6::printInfo() const {
     std::cout << "--- Tri6 info ---" << std::endl;
     std::cout << "Id: " << getId() << "  Mat Id: " << getMatId() << std::endl;
     std::cout << "Coordinates:" << std::endl;
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
     }
 }
@@ -173,7 +175,7 @@ Triangle6::getCubatureTangentsVecProds(
     Math::CVecR3 cTanVecProd[Math::Simplex::Triangle<2>::ncp]) const {
 
     Math::Matrix::Static<Math::Real,3,3> csJ;
-    Size j, i, c;
+    std::size_t j, i, c;
     // Gets cubature points for base Lagrange polynomials.
     Math::CVecR3 auxPos, ct1, ct2;
     for (c = 0; c < geo.ncp; c++) {

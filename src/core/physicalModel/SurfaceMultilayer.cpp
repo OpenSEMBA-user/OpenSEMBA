@@ -40,7 +40,7 @@ SurfaceMultilayer::SurfaceMultilayer(
     relPermeability_ = relPermeability;
     elecCond_ = elecCond;
     magnCond_ = magnCond;
-    const Size nLayers = thickness_.size();
+    const std::size_t nLayers = thickness_.size();
     if (relPermittivity_.size() != nLayers ||
         relPermeability_.size() != nLayers ||
         elecCond_.size() != nLayers ||
@@ -49,11 +49,11 @@ SurfaceMultilayer::SurfaceMultilayer(
     }
 }
 
-Size SurfaceMultilayer::getNumberOfLayers() const {
+std::size_t SurfaceMultilayer::getNumberOfLayers() const {
     return thickness_.size();
 }
 
-std::string SurfaceMultilayer::printLayer(const Size i) const {
+std::string SurfaceMultilayer::printLayer(const std::size_t i) const {
     assert(i < getNumberOfLayers());
     std::stringstream ss;
     ss << elecCond_[i] << " " << relPermittivity_[i]*Math::Constants::eps0
@@ -62,23 +62,23 @@ std::string SurfaceMultilayer::printLayer(const Size i) const {
     return std::string(ss.str());
 }
 
-Math::Real SurfaceMultilayer::getThickness(const Size i) const {
+Math::Real SurfaceMultilayer::getThickness(const std::size_t i) const {
     return thickness_[i];
 }
 
-Math::Real SurfaceMultilayer::getPermittivity(const Size i) const {
+Math::Real SurfaceMultilayer::getPermittivity(const std::size_t i) const {
     return relPermittivity_[i] * Math::Constants::eps0;
 }
 
-Math::Real SurfaceMultilayer::getPermeability(const Size i) const {
+Math::Real SurfaceMultilayer::getPermeability(const std::size_t i) const {
     return relPermeability_[i] * Math::Constants::mu0;
 }
 
-Math::Real SurfaceMultilayer::getElecCond(const Size i) const {
+Math::Real SurfaceMultilayer::getElecCond(const std::size_t i) const {
     return elecCond_[i];
 }
 
-Math::Real SurfaceMultilayer::getMagnCond(const Size i) const {
+Math::Real SurfaceMultilayer::getMagnCond(const std::size_t i) const {
     return magnCond_[i];
 }
 
@@ -88,7 +88,7 @@ void SurfaceMultilayer::printInfo() const {
     std::cout << "Number of layers: " << getNumberOfLayers() << std::endl;
     std::cout <<
     "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << std::endl;
-    for (Size i = 0; i < getNumberOfLayers(); i++) {
+    for (std::size_t i = 0; i < getNumberOfLayers(); i++) {
         std::cout<< i << ": "
         << thickness_[i] << " "
         << relPermittivity_[i] << " "

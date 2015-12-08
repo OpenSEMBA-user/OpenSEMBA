@@ -33,9 +33,11 @@ public:
     Quadrilateral4Base() {}
     virtual ~Quadrilateral4Base() {}
 
-    Size numberOfCoordinates() const { return 4; }
+    std::size_t numberOfCoordinates() const { return 4; }
 
-    Size numberOfSideCoordinates(const Size f = 0) const { return 2; }
+    std::size_t numberOfSideCoordinates(const std::size_t f = 0) const { 
+        return 2; 
+    }
 };
 
 template<class T>
@@ -59,15 +61,17 @@ public:
 
     bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
-    const Coordinate::Coordinate<T,3>* getV    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideV(const Size f,
-                                                const Size i) const;
+    const Coordinate::Coordinate<T,3>* getV    (const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideV(const std::size_t f,
+                                                const std::size_t i) const;
 
-    const Coordinate::Coordinate<T,3>* getVertex    (const Size i) const;
-    const Coordinate::Coordinate<T,3>* getSideVertex(const Size f,
-                                                     const Size i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (
+            const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(
+            const std::size_t f,
+            const std::size_t i) const;
 
-    void setV(const Size i, const Coordinate::Coordinate<T,3>*);
+    void setV(const std::size_t i, const Coordinate::Coordinate<T,3>*);
 
     ElemI* toStructured(const Coordinate::Group<CoordI3>&,
                         const Grid3&,
@@ -90,5 +94,7 @@ typedef Element::Quadrilateral4<Math::Int > QuaI4;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Quadrilateral4.hpp"
 
 #endif /* SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL4_H_ */

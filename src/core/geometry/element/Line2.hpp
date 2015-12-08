@@ -74,7 +74,7 @@ Line2<T>::Line2(const Line2<T>& rhs)
 :   Identifiable<Id>(rhs),
     Elem(rhs) {
     
-    for (Size i = 0; i < lin.np; i++) {
+    for (std::size_t i = 0; i < lin.np; i++) {
         v_[i] = rhs.v_[i];
     }
 }
@@ -99,29 +99,29 @@ bool Line2<T>::isStructured(const Grid3& grid, const Math::Real tol) const {
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Line2<T>::getV(const Size i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getV(const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Line2<T>::getSideV(const Size f,
-                                                      const Size i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getSideV(const std::size_t f,
+                                                      const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Line2<T>::getVertex(const Size i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getVertex(const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Line2<T>::getSideVertex(const Size f,
-                                                           const Size i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getSideVertex(const std::size_t f,
+                                                           const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-void Line2<T>::setV(const Size i, const Coordinate::Coordinate<T,3>* coord) {
+void Line2<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord) {
 
     assert(i < numberOfCoordinates());
     v_[i] = coord;
@@ -161,14 +161,14 @@ template<class T>
 void Line2<T>::printInfo() const {
     std::cout << "--- Lin2 info ---" << std::endl;
     Line<T>::printInfo();
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
     }
 }
 
 template<class T>
 void Line2<T>::setCoordinates(const Coordinate::Coordinate<T,3>* v[2]) {
-    for (Size i = 0; i < lin.np; i++) {
+    for (std::size_t i = 0; i < lin.np; i++) {
         v_[i] = v[i];
     }
 }
@@ -181,16 +181,13 @@ void Line2<T>::setCoordinates(
         throw Geometry::Error::Box::NotLine();
     }
     std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
         if (v_[i] == NULL) {
             v_[i] = cG.addPos(pos[i]);
         }
     }
 }
-
-template class Line2<Math::Real>;
-template class Line2<Math::Int >;
 
 } /* namespace Element */
 } /* namespace Geometry */

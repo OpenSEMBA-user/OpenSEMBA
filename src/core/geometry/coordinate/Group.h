@@ -24,6 +24,10 @@
 
 #include <set>
 
+#ifdef _MSC_VER
+#pragma warning(disable:4250)
+#endif
+
 #include "Coordinate.h"
 #include "group/Cloneable.h"
 #include "group/Printable.h"
@@ -34,7 +38,7 @@ namespace Geometry {
 namespace Coordinate {
 
 struct CoordComparator {
-    template<class T, Size D>
+    template<class T, std::size_t D>
     bool operator() (const Coordinate<T,D>* lhs,
                      const Coordinate<T,D>* rhs) const {
         return (lhs->pos() < rhs->pos());
@@ -86,8 +90,8 @@ public:
     SEMBA::Group::Group<C> addPos(const std::vector<Math::CVecI3>&,
                                   const bool = false);
 
-    void remove(const Size&);
-    void remove(const std::vector<Size>&);
+    void remove(const std::size_t&);
+    void remove(const std::vector<std::size_t>&);
 
     void applyScalingFactor(const Math::Real factor);
     
@@ -97,22 +101,17 @@ private:
     std::multiset<const CoordR3*, CoordComparator> indexUnstr_;
     std::multiset<const CoordI3*, CoordComparator> indexStr_;
 
-    void postprocess_(const Size i);
+    void postprocess_(const std::size_t i);
 };
 
 } /* namespace Coordinate */
-} /* namespace Geometry */
-} /* namespace SEMBA */
-
-#include "Group.hpp"
-
-namespace SEMBA {
-namespace Geometry {
 
 typedef Coordinate::Group<CoordR3> CoordR3Group;
 typedef Coordinate::Group<CoordI3> CoordI3Group;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
+
+#include "Group.hpp"
 
 #endif /* SEMBA_GEOMETRY_COORDINATE_GROUP_H_ */

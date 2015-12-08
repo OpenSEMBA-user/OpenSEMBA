@@ -37,7 +37,7 @@ Voxel::~Voxel() {
 
 bool Voxel::isInto (const Math::CVecI3Fractional& coordIntFractional) const{
     Math::CVecR3 pos = coordIntFractional.getScalePos(*this);
-    for(Size n=0; n<3; n++){
+    for(std::size_t n=0; n<3; n++){
         if (pos(n)<0.0 || pos(n)>1.0 ){
             return false;
         }

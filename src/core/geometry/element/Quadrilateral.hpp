@@ -19,24 +19,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "Line.h"
+#include "Quadrilateral.h"
 
 namespace SEMBA {
 namespace Geometry {
 namespace Element {
 
 template<class T>
-Line<T>::Line() {
+Quadrilateral<T>::Quadrilateral() {
 
 }
 
 template<class T>
-Line<T>::~Line() {
+Quadrilateral<T>::~Quadrilateral() {
 
 }
-
-template class Line<Math::Real>;
-template class Line<Math::Int >;
 
 } /* namespace Element */
 } /* namespace Geometry */

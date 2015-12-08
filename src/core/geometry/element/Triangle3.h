@@ -40,15 +40,19 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Triangle3);
 
-    Size numberOfCoordinates() const { return 3; }
+    std::size_t numberOfCoordinates() const { return 3; }
 
-    Size numberOfSideCoordinates(const Size f = 0) const { return 2; }
+    std::size_t numberOfSideCoordinates(const std::size_t f = 0) const {
+        return 2;
+    }
 
-    const CoordR3* getV     (const Size i) const {return v_[i];}
-    const CoordR3* getVertex(const Size i) const;
+    const CoordR3* getV     (const std::size_t i) const { return v_[i]; }
+    const CoordR3* getVertex(const std::size_t i) const;
 
-    const CoordR3* getSideV     (const Size face, const Size i) const;
-    const CoordR3* getSideVertex(const Size face, const Size i) const;
+    const CoordR3* getSideV     (const std::size_t face,
+                                 const std::size_t i) const;
+    const CoordR3* getSideVertex(const std::size_t face,
+                                 const std::size_t i) const;
 
     Math::Real getArea() const;
 
@@ -59,7 +63,7 @@ public:
     void getCubatureNodes(
             Math::CVecR3 nodes[Math::Simplex::Triangle<1>::ncp]) const;
 
-    void setV(const Size i, const CoordR3*);
+    void setV(const std::size_t i, const CoordR3*);
 
     Triangle3* linearize() const;
 

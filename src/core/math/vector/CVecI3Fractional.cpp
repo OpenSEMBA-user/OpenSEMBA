@@ -172,7 +172,7 @@ CVecI3Fractional& CVecI3Fractional::reduceCoords() {
     return *this;
 }
 
-CVecI3Fractional& CVecI3Fractional::CVecI3Fractional::move(
+CVecI3Fractional& CVecI3Fractional::move(
         CVecI3Fractional& rhs,
         const bool forceProject,
         bool& canBeMoved) const {

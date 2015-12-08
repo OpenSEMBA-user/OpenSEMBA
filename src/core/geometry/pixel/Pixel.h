@@ -22,7 +22,6 @@
 #ifndef SEMBA_GEOMETRY_PIXEL_PIXEL_H_
 #define SEMBA_GEOMETRY_PIXEL_PIXEL_H_
 
-#include "Types.h"
 #include "math/vector/CVecI3Fractional.h"
 
 namespace SEMBA {

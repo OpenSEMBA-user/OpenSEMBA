@@ -44,7 +44,7 @@ Group<O>& Group<O>::operator=(SEMBA::Group::Group<O>&& rhs) {
 
 template<typename O> template<typename O2>
 SEMBA::Group::Group<O> Group<O>::add(O2* newORq) {
-    for (Size i = 0; i < this->size(); i++) {
+    for (std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->template is<O2>()) {
             O2* oRq = this->get(i)->template castTo<O2>();
             if (oRq->hasSameProperties(*newORq)) {
@@ -61,7 +61,7 @@ template<typename O> template<typename O2>
 SEMBA::Group::Group<O*> Group<O>::add(std::vector<O2*>& newOuts) {
     std::vector<O*> res;
     res.reserve(newOuts.size());
-    for (Size i = 0; i < newOuts.size(); i++) {
+    for (std::size_t i = 0; i < newOuts.size(); i++) {
         O* resElem = add(newOuts[i]);
         if (resElem != NULL) {
             res.push_back(resElem);
@@ -80,7 +80,7 @@ bool Group<O>::isSimilar(const Group& rhs) const {
     if (this->size() != rhs.size()) {
         return false;
     }
-    for (Size i = 0; i < this->size(); i++) {
+    for (std::size_t i = 0; i < this->size(); i++) {
         if (!this->get(i)->isSimilar(*rhs(i))) {
             return false;
         }

@@ -22,11 +22,13 @@
 #ifndef SEMBA_FILESYSTEM_PROJECT_H_
 #define SEMBA_FILESYSTEM_PROJECT_H_
 
+#ifdef _MSC_VER
+#pragma warning(disable:4996)
+#endif
+
 #include <fstream>
 #include <string>
 #include <vector>
-
-#include "Types.h"
 
 namespace SEMBA {
 namespace FileSystem {

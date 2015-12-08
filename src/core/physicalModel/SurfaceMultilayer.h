@@ -25,7 +25,6 @@
 #include <cassert>
 #include <exception>
 
-#include "Types.h"
 #include "Surface.h"
 
 namespace SEMBA {
@@ -44,13 +43,13 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(SurfaceMultilayer);
 
-    Size getNumberOfLayers() const;
-    std::string printLayer(const Size i) const;
-    Math::Real getThickness(const Size i) const;
-    Math::Real getPermittivity(const Size i) const;
-    Math::Real getPermeability(const Size i) const;
-    Math::Real getElecCond(const Size i) const;
-    Math::Real getMagnCond(const Size i) const;
+    std::size_t getNumberOfLayers() const;
+    std::string printLayer(const std::size_t i) const;
+    Math::Real getThickness(const std::size_t i) const;
+    Math::Real getPermittivity(const std::size_t i) const;
+    Math::Real getPermeability(const std::size_t i) const;
+    Math::Real getElecCond(const std::size_t i) const;
+    Math::Real getMagnCond(const std::size_t i) const;
 
     void printInfo() const;
 private:

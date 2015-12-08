@@ -32,7 +32,7 @@ Dynamic<T>::Dynamic() {
    _val = NULL;
    _nRows = 0;
    _nCols = 0;
-   for (Size i = 0; i < _nRows*_nCols; i++) {
+   for (std::size_t i = 0; i < _nRows*_nCols; i++) {
       _val[i] = (T) 0.0;
    }
 }
@@ -41,30 +41,30 @@ template <class T>
 Dynamic<T>::Dynamic(const Dynamic<T>& param) {
    _nRows = param._nRows;
    _nCols = param._nCols;
-   Size nRnC = _nRows * _nCols;
+   std::size_t nRnC = _nRows * _nCols;
    _val = new T[nRnC];
-   for (Size i = 0; i < nRnC; i++) {
+   for (std::size_t i = 0; i < nRnC; i++) {
       _val[i] = (T) param._val[i];
    }
 }
 
 template <class T>
-Dynamic<T>::Dynamic(Size rows, Size cols) {
+Dynamic<T>::Dynamic(std::size_t rows, std::size_t cols) {
    _nRows = rows;
    _nCols = cols;
    _val = new T[_nRows * _nCols];
-   for (Size i = 0; i < _nRows*_nCols; i++) {
+   for (std::size_t i = 0; i < _nRows*_nCols; i++) {
       _val[i] = (T) 0.0;
    }
 }
 
 template <class T>
-Dynamic<T>::Dynamic(Size rows, Size cols, T** values) {
+Dynamic<T>::Dynamic(std::size_t rows, std::size_t cols, T** values) {
    _nRows = rows;
    _nCols = cols;
    assert(values != NULL);
-   for (Size i = 0; i < _nRows; i++) {
-      for (Size j = 0; j < _nCols; j++) {
+   for (std::size_t i = 0; i < _nRows; i++) {
+      for (std::size_t j = 0; j < _nCols; j++) {
          val(i,j) = values[i][j];
       }
    }
@@ -85,31 +85,32 @@ Dynamic<T>& Dynamic<T>::operator=(const Dynamic<T>& param) {
    _nRows = param._nRows;
    _nCols = param._nCols;
    resizeVal(_nRows, _nCols);
-   Size nRnC = _nRows * _nCols;
-   for (Size i = 0; i < nRnC; i++) {
+   std::size_t nRnC = _nRows * _nCols;
+   for (std::size_t i = 0; i < nRnC; i++) {
       _val[i] = param._val[i];
    }
    return *this;
 }
 
 template<class T>
-inline Size Dynamic<T>::nCols() const {
+inline std::size_t Dynamic<T>::nCols() const {
    return _nCols;
 }
 
 template<class T>
-inline Size Dynamic<T>::nRows() const {
+inline std::size_t Dynamic<T>::nRows() const {
    return _nRows;
 }
 
 template<class T>
-inline Dynamic<T> Dynamic<T>::sub(std::pair<Size, Size>& rows,
-                                  std::pair<Size, Size>& cols) const {
-   Size resRows = rows.second-rows.first+1;
-   Size resCols = cols.second-cols.first+1;
+inline Dynamic<T> Dynamic<T>::sub(
+        std::pair<std::size_t, std::size_t>& rows,
+        std::pair<std::size_t, std::size_t>& cols) const {
+   std::size_t resRows = rows.second-rows.first+1;
+   std::size_t resCols = cols.second-cols.first+1;
    Dynamic<T> res(resRows, resCols);
-   for (Size i = rows.first; i <= rows.second; i++) {
-      for (Size j = cols.first; j <= cols.second; j++) {
+   for (std::size_t i = rows.first; i <= rows.second; i++) {
+      for (std::size_t j = cols.first; j <= cols.second; j++) {
          res(i - rows.first,j - cols.first) = val(i,j);
       }
    }
@@ -117,7 +118,8 @@ inline Dynamic<T> Dynamic<T>::sub(std::pair<Size, Size>& rows,
 }
 
 template <class T>
-inline void Dynamic<T>::resizeVal(const Size rows, const Size cols) {
+inline void Dynamic<T>::resizeVal(const std::size_t rows,
+                                  const std::size_t cols) {
    _nRows = rows;
    _nCols = cols;
    if (_val != NULL) {
@@ -128,16 +130,16 @@ inline void Dynamic<T>::resizeVal(const Size rows, const Size cols) {
 
 template<class T>
 void Dynamic<T>::copy(std::vector<std::vector<T> > values) {
-   Size rows = values.size();
-   Size cols;
+   std::size_t rows = values.size();
+   std::size_t cols;
    if (rows > 0) {
       cols = values[0].size();
    } else {
       cols = 0;
    }
    resizeVal(rows, cols);
-   for (Size i = 0; i < _nRows; i++) {
-      for (Size j = 0; j < _nCols; j++) {
+   for (std::size_t i = 0; i < _nRows; i++) {
+      for (std::size_t j = 0; j < _nCols; j++) {
          val(i,j) = values[i][j];
       }
    }
@@ -147,7 +149,7 @@ template <class T>
 Dynamic<T>&
 Dynamic<T>::operator=(const std::vector<T>& param) {
    resizeVal(param.size(), 1);
-   for (Size i = 0; i < _nRows; i++) {
+   for (std::size_t i = 0; i < _nRows; i++) {
       val(i,0) = param[i];
    }
    return *this;
@@ -158,8 +160,8 @@ void Dynamic<T>::copy(const Dynamic<Real>& param) {
    _nRows = param.nRows();
    _nCols = param.nCols();
    resizeVal(nRows(), nCols());
-   for (Size r = 0; r < _nRows; r++) {
-      for (Size c = 0; c < _nCols; c++) {
+   for (std::size_t r = 0; r < _nRows; r++) {
+      for (std::size_t c = 0; c < _nCols; c++) {
          val(r,c) = param(r,c);
       }
    }
@@ -168,15 +170,15 @@ void Dynamic<T>::copy(const Dynamic<Real>& param) {
 template<class T>
 Dynamic<T>
 Dynamic<T>::copy(
- const Size fRow,
- const Size lRow,
- const Size fCol,
- const Size lCol) const {
-   Size rS = lRow - fRow;
-   Size cS = lCol - fCol;
+ const std::size_t fRow,
+ const std::size_t lRow,
+ const std::size_t fCol,
+ const std::size_t lCol) const {
+   std::size_t rS = lRow - fRow;
+   std::size_t cS = lCol - fCol;
    Dynamic<T> res(rS, cS);
-   for (Size i = 0; i < rS; i++) {
-      for (Size j = 0; j < cS; j++) {
+   for (std::size_t i = 0; i < rS; i++) {
+      for (std::size_t j = 0; j < cS; j++) {
          res(i,j) = val(i+fRow, j+fCol);
       }
    }
@@ -203,16 +205,16 @@ void
 Dynamic<T>::removeRepeatedSortedRows() {
    std::vector<std::vector<T> > aux;
    aux.reserve(nRows());
-   Size nonRepeated = 0;
-   Size nCompared;
+   std::size_t nonRepeated = 0;
+   std::size_t nCompared;
    if (nRows() <= 1 ) {
       nCompared = 0;
    } else {
       nCompared = nRows() - 1;
    }
-   for (Size i = 0; i < nCompared; i++) {
+   for (std::size_t i = 0; i < nCompared; i++) {
       bool areEqual = true;
-      for (Size j = 0; j < nCols(); j++) {
+      for (std::size_t j = 0; j < nCols(); j++) {
          areEqual &= (val(i,j) == val(i+1,j));
       }
       if (!areEqual) {
@@ -236,22 +238,22 @@ Dynamic<T>::removeRepeatedSortedRows() {
 template<class T>
 void
 Dynamic<T>::sortRows_omp(
- const Size iCol, const Size lCol) {
+ const std::size_t iCol, const std::size_t lCol) {
 #ifdef USE_OPENMP
-   Size nT = (Size) omp_get_max_threads();
+   std::size_t nT = (std::size_t) omp_get_max_threads();
    if (_nRows < nT || nT == 1) {
       this->sortRows(iCol, lCol);
       return;
    }
    // Each thread copies and sorts its respective work chunk.
    Dynamic<T> chunk[nT];
-   Size cSize = nRows() / nT;
-   Size tId;
+   std::size_t cSize = nRows() / nT;
+   std::size_t tId;
    #pragma omp parallel private (tId) shared(chunk)
    {
       tId = omp_get_thread_num();
-      Size fRow = tId * cSize;
-      Size lRow = (tId + 1) * cSize;
+      std::size_t fRow = tId * cSize;
+      std::size_t lRow = (tId + 1) * cSize;
       if (tId + 1 == nT) {
          lRow = nRows();
       }
@@ -260,7 +262,7 @@ Dynamic<T>::sortRows_omp(
    }
    // Combines all the chunks.
    *this = chunk[0];
-   for (Size i = 1; i < nT; i++) {
+   for (std::size_t i = 1; i < nT; i++) {
       mergeSortedRows(chunk[i], iCol, lCol);
    }
 #else
@@ -271,53 +273,56 @@ Dynamic<T>::sortRows_omp(
 
 template <class T>
 Dynamic<T>& Dynamic<T>::operator=(const T &param) {
-   for (Size i = 0; i < _nRows; i++)
-      for (Size j = 0; j < _nCols; j++)
+   for (std::size_t i = 0; i < _nRows; i++)
+      for (std::size_t j = 0; j < _nCols; j++)
          _val[i][j] = param;
    return *this;
 }
 
 template <class T>
-inline T Dynamic<T>::operator() (const Size row, const Size col) const {
+inline T Dynamic<T>::operator() (const std::size_t row,
+                                 const std::size_t col) const {
    assert(row < _nRows && col < _nCols);
    return _val[row * _nCols + col];
 }
 
 template <class T>
-inline T& Dynamic<T>::operator()(const Size row, const Size col) {
+inline T& Dynamic<T>::operator()(const std::size_t row,
+                                 const std::size_t col) {
    assert(col < _nCols);
    assert(row < _nRows);
    return _val[row * _nCols + col];
 }
 
 template <class T>
-inline T Dynamic<T>::val(const Size i) const {
+inline T Dynamic<T>::val(const std::size_t i) const {
    assert(i < _nRows * _nCols);
    return _val[i];
 }
 
 template <class T>
-inline T& Dynamic<T>::val(const Size i) {
+inline T& Dynamic<T>::val(const std::size_t i) {
    assert(i < _nRows * _nCols);
    return _val[i];
 }
 
 template <class T>
-inline T Dynamic<T>::val(const Size row, const Size col) const {
+inline T Dynamic<T>::val(const std::size_t row, const std::size_t col) const {
    assert(col < _nCols);
    assert(row < _nRows);
    return _val[row * _nCols + col];
 }
 
 template <class T>
-inline T& Dynamic<T>::val(const Size row, const Size col) {
+inline T& Dynamic<T>::val(const std::size_t row, const std::size_t col) {
    assert(col < _nCols);
    assert(row < _nRows);
    return _val[row * _nCols + col];
 }
 
 template <class T>
-const T* Dynamic<T>::valPtr(const Size row, const Size col) const {
+const T* Dynamic<T>::valPtr(const std::size_t row,
+                            const std::size_t col) const {
    assert(row < _nRows && col < _nCols);
    return &_val[row * _nCols + col];
 }
@@ -325,7 +330,7 @@ const T* Dynamic<T>::valPtr(const Size row, const Size col) const {
 template <class T>
 Dynamic<T> Dynamic<T>::operator*(Dynamic<T> &param) const {
    Dynamic<T> res(_nRows, param._nCols);
-   Size i, j, k;
+   std::size_t i, j, k;
    for (i = 0; i < _nRows; i++) {
       for (k = 0; k < _nCols; k++) {
          for (j = 0; j < param._nCols; j++) {
@@ -340,8 +345,8 @@ template <class T>
 Dynamic<T> Dynamic<T>::operator+(Dynamic<T> &param) const {
    assert(_nRows == param._nRows && _nCols == param._nCols);
    Dynamic<T> res(_nRows, _nCols);
-   Size n = _nRows * _nCols;
-   for (Size i = 0; i < n; i++) {
+   std::size_t n = _nRows * _nCols;
+   for (std::size_t i = 0; i < n; i++) {
       res._val[i] = _val[i] + param._val[i];
    }
    return res;
@@ -350,8 +355,8 @@ Dynamic<T> Dynamic<T>::operator+(Dynamic<T> &param) const {
 template <class T>
 Dynamic<T> Dynamic<T>::operator*(const T param) const {
    Dynamic<T> res(_nRows, _nCols);
-   for (Size i = 0; i < _nRows; i++) {
-      for (Size j = 0; j < _nCols; j++) {
+   for (std::size_t i = 0; i < _nRows; i++) {
+      for (std::size_t j = 0; j < _nCols; j++) {
          res(i,j) = val(i,j) * param;
       }
    }
@@ -359,16 +364,17 @@ Dynamic<T> Dynamic<T>::operator*(const T param) const {
 }
 
 template<class T>
-Dynamic<T> Dynamic<T>::eliminateColumns(Size first, Size last) const {
-   Size nColsToEliminate = last - first + 1;
+Dynamic<T> Dynamic<T>::eliminateColumns(std::size_t first,
+                                        std::size_t last) const {
+   std::size_t nColsToEliminate = last - first + 1;
    Dynamic<T> res(_nRows, _nCols - nColsToEliminate);
-   for (Size r = 0; r < _nRows; r++) {
-      for (Size c = 0; c < first; c++) {
+   for (std::size_t r = 0; r < _nRows; r++) {
+      for (std::size_t c = 0; c < first; c++) {
          res(r,c) = val(r,c);
       }
    }
-   for (Size r = 0; r < _nRows; r++) {
-      for (Size c = last+1; c < _nCols; c++) {
+   for (std::size_t r = 0; r < _nRows; r++) {
+      for (std::size_t c = last+1; c < _nCols; c++) {
          res(r,c-nColsToEliminate) = val(r,c);
       }
    }
@@ -377,7 +383,7 @@ Dynamic<T> Dynamic<T>::eliminateColumns(Size first, Size last) const {
 
 template <class T>
 Dynamic<T> Dynamic<T>::operator/(const T param) const {
-   Size i,j;
+   std::size_t i,j;
    Dynamic<T> res(_nRows, _nCols);
    for (i = 0; i < _nRows; i++)
       for (j = 0; j < _nCols; j++)
@@ -387,8 +393,8 @@ Dynamic<T> Dynamic<T>::operator/(const T param) const {
 
 template <class T>
 Dynamic<T>& Dynamic<T>::operator+=(const T param) {
-   Size n = _nRows * _nCols;
-   for (Size i = 0; i < n; i++)
+   std::size_t n = _nRows * _nCols;
+   for (std::size_t i = 0; i < n; i++)
       _val[i] += param;
    return *this;
 }
@@ -396,16 +402,16 @@ Dynamic<T>& Dynamic<T>::operator+=(const T param) {
 template <class T>
 Dynamic<T>& Dynamic<T>::operator+=(const Dynamic<T>& param) {
    assert(_nRows == param._nRows && _nCols == param._nCols);
-   Size n = _nRows * _nCols;
-   for (Size i = 0; i < n; i++)
+   std::size_t n = _nRows * _nCols;
+   for (std::size_t i = 0; i < n; i++)
       _val[i] += param._val[i];
    return *this;
 }
 
 template <class T>
 Dynamic<T>& Dynamic<T>::operator*=(const T param) {
-   for (Size i = 0; i < _nRows; i++) {
-      for (Size j = 0; j < _nCols; j++) {
+   for (std::size_t i = 0; i < _nRows; i++) {
+      for (std::size_t j = 0; j < _nCols; j++) {
          val(i,j) *= param;
       }
    }
@@ -415,7 +421,7 @@ Dynamic<T>& Dynamic<T>::operator*=(const T param) {
 template <class T>
 Dynamic<T>& Dynamic<T>::operator/=(const T param) {
    assert(_nRows == param._nRows && _nCols == param._nCols);
-   Size i, j;
+   std::size_t i, j;
    for (i = 0; i < _nRows; i++) {
       for (j = 0; j < _nCols; j++) {
          _val[i][j] /= param;
@@ -429,8 +435,8 @@ template <class T>
 bool Dynamic<T>::operator==(const Dynamic<T>& param) const {
    bool res = true;
    if (_nRows == param._nRows && _nCols == param._nCols) {
-      for (Size i = 0; i < _nRows; i++) {
-         for (Size j = 0; j < _nCols; j++) {
+      for (std::size_t i = 0; i < _nRows; i++) {
+         for (std::size_t j = 0; j < _nCols; j++) {
             T diff = abs(this->operator()(i,j) - param(i,j));
             res &= diff < std::numeric_limits<T>::epsilon() * 1e2;
          }
@@ -443,8 +449,8 @@ bool Dynamic<T>::operator==(const Dynamic<T>& param) const {
 template <class T>
 bool Dynamic<T>::operator<(const Dynamic<T>& param) const {
    assert(_nRows == param._nRows && _nCols == param._nCols);
-   for (Size i = 0; i < _nRows; i++)
-      for (Size j = 0; j < _nCols; j++)
+   for (std::size_t i = 0; i < _nRows; i++)
+      for (std::size_t j = 0; j < _nCols; j++)
          if (_val[i][j] < param._val[i][j])
             return true;
    return false;
@@ -455,7 +461,7 @@ Dynamic<T> Dynamic<T>::convolute(const Dynamic<T> &param) const {
    // PURPOSE:
    // Returns convolution of this row matrix vector and param.
    assert(_nCols == 1 && param._nCols == 1);
-   Size i, j, min, max;
+   std::size_t i, j, min, max;
    Dynamic<T> res(_nRows + param._nRows - 1, 1);
    min = _nRows;
    max = 1;
@@ -476,8 +482,8 @@ void Dynamic<T>::printInfo() const {
 }
 
 template <class T>
-void Dynamic<T>::printInfo(Size rows, Size cols) const {
-   Size i, j;
+void Dynamic<T>::printInfo(std::size_t rows, std::size_t cols) const {
+   std::size_t i, j;
    if (rows > _nRows || cols > _nCols) {
        throw typename Error::Size();
    }
@@ -491,29 +497,29 @@ void Dynamic<T>::printInfo(Size rows, Size cols) const {
 }
 
 template <class T>
-void Dynamic<T>::printInfo(Size fr, Size lr,
-                           Size fc, Size lc) const {
+void Dynamic<T>::printInfo(std::size_t fr, std::size_t lr,
+                           std::size_t fc, std::size_t lc) const {
    std::cout << "Dimensions: " << _nRows << "x" << _nCols << std::endl;
    std::cout << "Stored values: " << std::endl;
-   for (Size i = fr; i <= lr; i++) {
-      for (Size j = fc; j < lc; j++)
+   for (std::size_t i = fr; i <= lr; i++) {
+      for (std::size_t j = fc; j < lc; j++)
           std::cout << _val[i][j] << " ";
       std::cout << std::endl;
    }
 }
 
 template <class T>
-Dynamic<T> Dynamic<T>::reshape(Size rows, Size cols) {
+Dynamic<T> Dynamic<T>::reshape(std::size_t rows, std::size_t cols) {
    Dynamic<T> res(rows, cols);
    res = reshape(rows,cols,1);
    return res;
 }
 
 template <class T>
-Dynamic<T> Dynamic<T>::reshape(Size rows, Size cols, Int order) {
+Dynamic<T> Dynamic<T>::reshape(std::size_t rows, std::size_t cols, Int order) {
    assert(_nRows * _nCols == rows*cols);
    Dynamic<T> res(rows, cols);
-   Size i, j, k;
+   std::size_t i, j, k;
    k = 0;
    switch (order) {
    case 1:
@@ -539,10 +545,10 @@ Dynamic<T> Dynamic<T>::reshape(Size rows, Size cols, Int order) {
 template<class T>
 Dynamic<T> Dynamic<T>::kron(Dynamic<T>& rhs) const {
    Dynamic<T> res(_nRows + rhs._nRows, _nCols + rhs._nCols);
-   for (Size i = 0; i < _nRows; i++) {
-      for (Size j = 0; j < rhs._nRows; j++) {
-         for (Size k = 0; k < _nCols; k++) {
-            for (Size l = 0; l < rhs._nCols; l++) {
+   for (std::size_t i = 0; i < _nRows; i++) {
+      for (std::size_t j = 0; j < rhs._nRows; j++) {
+         for (std::size_t k = 0; k < _nCols; k++) {
+            for (std::size_t l = 0; l < rhs._nCols; l++) {
                res(i*_nRows + j, k*_nCols + l) = val(i,k) * rhs(j,l);
             }
          }
@@ -560,31 +566,31 @@ Dynamic<T> Dynamic<T>::invert() {
 
 template <class T>
 void Dynamic<T>::mergeSortedRows(const Dynamic<T>& a,
-                                 const Size iCol,
-                                 const Size lCol) {
+                                 const std::size_t iCol,
+                                 const std::size_t lCol) {
    assert(this != &a);
    assert(lCol >= iCol);
    Dynamic<T> b;
    b = *this;
    assert(a.nCols() == b.nCols());
-   Size m = a.nRows();
-   Size n = b.nRows();
+   std::size_t m = a.nRows();
+   std::size_t n = b.nRows();
    _nRows = m + n;
    _nCols = a.nCols();
    resizeVal(a.nRows() + b.nRows(), a.nCols());
-   Size i = 0, j = 0, k = 0;
-   Size vS = lCol - iCol + 1;
+   std::size_t i = 0, j = 0, k = 0;
+   std::size_t vS = lCol - iCol + 1;
    while (i < m && j < n) {
       const T *aVal = a.valPtr(i,iCol);
       const T *bVal = b.valPtr(j,iCol);
       bool leq = this->isLEQ_(aVal, bVal, vS);
       if (leq) {
-         for (Size col = 0; col < _nCols; col++) {
+         for (std::size_t col = 0; col < _nCols; col++) {
             val(k,col) = a(i,col);
          }
          i++;
       } else {
-         for (Size col = 0; col < _nCols; col++) {
+         for (std::size_t col = 0; col < _nCols; col++) {
             val(k,col) = b(j,col);
          }
          j++;
@@ -592,14 +598,14 @@ void Dynamic<T>::mergeSortedRows(const Dynamic<T>& a,
         k++;
    }
    if (i < m) {
-      for (Size p = i; p < m; p++,k++) {
-         for (Size col = 0; col < _nCols; col++) {
+      for (std::size_t p = i; p < m; p++,k++) {
+         for (std::size_t col = 0; col < _nCols; col++) {
             val(k,col) = a(p,col);
          }
       }
    } else {
-      for (Size p = j; p < n; p++,k++) {
-         for (Size col = 0; col < _nCols; col++) {
+      for (std::size_t p = j; p < n; p++,k++) {
+         for (std::size_t col = 0; col < _nCols; col++) {
             val(k,col) = b(p,col);
          }
       }
@@ -613,8 +619,8 @@ Dynamic<T>& Dynamic<T>::transpose() {
    _nRows = temp._nCols;
    _nCols = temp._nRows;
    // Assigns values to transposed matrix.
-   for (Size i = 0; i < _nRows; i++) {
-      for (Size j = 0; j < _nCols; j++) {
+   for (std::size_t i = 0; i < _nRows; i++) {
+      for (std::size_t j = 0; j < _nCols; j++) {
          val(i,j) = temp(j,i);
       }
    }

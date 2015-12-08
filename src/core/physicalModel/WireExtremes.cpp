@@ -57,7 +57,7 @@ WireExtremes::~WireExtremes() {
     }
 }
 
-void WireExtremes::setExtreme(const Size i, const Multiport* extreme) {
+void WireExtremes::setExtreme(const std::size_t i, const Multiport* extreme) {
     if (extreme_[i] != NULL) {
         delete extreme_[i];
     }

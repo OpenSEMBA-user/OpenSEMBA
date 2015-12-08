@@ -22,7 +22,6 @@
 #ifndef SEMBA_PHYSICALMODEL_VOLUMEPML_H_
 #define SEMBA_PHYSICALMODEL_VOLUMEPML_H_
 
-#include "Types.h"
 #include "geometry/Box.h"
 #include "math/axis/Local.h"
 

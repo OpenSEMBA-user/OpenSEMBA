@@ -22,6 +22,10 @@
 #ifndef SEMBA_GROUP_GROUP_H_
 #define SEMBA_GROUP_GROUP_H_
 
+#ifdef _MSC_VER
+#pragma warning(disable:4250)
+#endif
+
 #include <cstddef>
 #include <memory>
 #include <typeinfo>
@@ -39,11 +43,11 @@ public:
     virtual std::size_t size () const = 0;
     virtual bool        empty() const;
 
-    T*       operator()(std::size_t pos);
-    const T* operator()(std::size_t pos) const;
+    T*       operator()(const std::size_t pos);
+    const T* operator()(const std::size_t pos) const;
 
-    virtual T*       get(std::size_t pos) = 0;
-    virtual const T* get(std::size_t pos) const = 0;
+    virtual T*       get(const std::size_t pos) = 0;
+    virtual const T* get(const std::size_t pos) const = 0;
 };
 
 template<typename T>
@@ -105,8 +109,7 @@ public:
     Group<T> add(const std::vector<T2*>&);
     template<typename T2>
     Group<T> add(Group<T2>&);
-    template<typename T2, typename T3 = T,
-             typename = typename std::enable_if<std::is_const<T3>::value>::type>
+    template<typename T2>
     Group<T> add(const Group<T2>&);
     virtual Group add(Group&);
     virtual Group add(Group&&);

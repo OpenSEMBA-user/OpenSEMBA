@@ -38,7 +38,7 @@ std::complex<T> getDFT(const Real frequency,
                        const std::vector<T>& time,
                        const std::vector<T>& signal);
 
-template<class T, Size D>
+template<class T, std::size_t D>
 Vector::Cartesian<std::complex<T>,D> getDFT(
       const Real frequency,
       const std::vector<T>& time,

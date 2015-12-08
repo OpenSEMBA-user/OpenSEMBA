@@ -63,11 +63,11 @@ LineConformal::~LineConformal() {
 
 }
 
-const CoordConf* LineConformal::getV(const Size i) const {
+const CoordConf* LineConformal::getV(const std::size_t i) const {
     return this->getV(i)->castTo<CoordConf>();
 }
 
-void LineConformal::setV(const Size i, const CoordI3* coord) {
+void LineConformal::setV(const std::size_t i, const CoordI3* coord) {
     LinI2::setV(i, coord);
     checkCoordinates();
 }
@@ -81,7 +81,7 @@ ElemR* LineConformal::toUnstructured(const Coordinate::Group<CoordR3>& cG,
     Math::CVecR3 pos;
     const CoordR3* coord[2];
     CoordId coordId;
-    for (Size i = 0; i < this->numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
         pos = grid.getPos(vConf[i]->pos());
         if (Math::Util::greater(vConf[i]->getLength(), 0.0, 1.0)) {
             Math::Int dir = vConf[i]->getDir();
@@ -110,14 +110,14 @@ ElemR* LineConformal::toUnstructured(const Coordinate::Group<CoordR3>& cG,
 void LineConformal::printInfo() const {
     std::cout << "--- LineConformal info ---" << std::endl;
     std::cout << "Id: " << this->getId() << std::endl;
-    for (Size i = 0; i < this->numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
         getV(i)->printInfo();
         std::cout << std::endl;
     }
 }
 
 void LineConformal::checkCoordinates() {
-    for(Size i = 0; i < this->numberOfCoordinates(); i++) {
+    for(std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
         if (!this->getV(i)->is<CoordConf>()) {
             throw Error::Coord::NotConf(this->getV(i)->getId());
         }

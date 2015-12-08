@@ -52,7 +52,7 @@ public:
     void printInfo() const;
 
 private:
-    static const Size defaultNumberOfSteps = 1000;
+    static const std::size_t defaultNumberOfSteps = 1000;
 
 
 };

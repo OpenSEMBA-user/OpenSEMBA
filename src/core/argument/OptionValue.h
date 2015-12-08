@@ -22,6 +22,10 @@
 #ifndef SEMBA_ARGUMENT_OPTIONVALUE_H_
 #define SEMBA_ARGUMENT_OPTIONVALUE_H_
 
+#ifdef _MSC_VER
+#pragma warning(disable:4250)
+#endif
+
 #include "OptionBase.h"
 #include "ValueBase.h"
 

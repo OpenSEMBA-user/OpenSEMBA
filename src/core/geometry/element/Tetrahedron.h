@@ -36,17 +36,19 @@ public:
     Tetrahedron();
     virtual ~Tetrahedron();
 
-    virtual bool isCurvedFace(const Size face) const = 0;
-    virtual bool isFaceContainedInPlane(const Size face,
+    virtual bool isCurvedFace(const std::size_t face) const = 0;
+    virtual bool isFaceContainedInPlane(const std::size_t face,
             const Math::Constants::CartesianPlane plane) const = 0;
 
-    inline Size numberOfFaces   () const { return 4; }
-    inline Size numberOfVertices() const { return 4; }
-    inline Size numberOfSideVertices(const Size f = 0) const { return 3; }
+    inline std::size_t numberOfFaces   () const { return 4; }
+    inline std::size_t numberOfVertices() const { return 4; }
+    inline std::size_t numberOfSideVertices(const std::size_t f = 0) const {
+        return 3;
+    }
     virtual const Math::Simplex::Simplex& getTet() const = 0;
     virtual Math::Real getVolume() const = 0;
-    virtual Math::Real getAreaOfFace(const Size face) const = 0;
-    virtual Triangle3* getTri3Face(const Size f) const;
+    virtual Math::Real getAreaOfFace(const std::size_t face) const = 0;
+    virtual Triangle3* getTri3Face(const std::size_t f) const;
     void getCubaturePositions(
             Math::CVecR3 cubaturePositions[
                             Math::Simplex::Tetrahedron<1>::ncp]) const;

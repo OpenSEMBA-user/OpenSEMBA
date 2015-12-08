@@ -28,7 +28,7 @@ namespace Geometry {
 namespace Graph {
 
 template<class ELEM, class BOUND>
-Element<ELEM,BOUND>::Element(const ELEM* elem, const Size& numBound) {
+Element<ELEM,BOUND>::Element(const ELEM* elem, const std::size_t& numBound) {
     vis_  = false;
     elem_ = elem;
     bounds_.resize(numBound);
@@ -56,20 +56,20 @@ std::vector<const typename Element<ELEM,BOUND>::GraphBound*>
 
 template<class ELEM, class BOUND>
 void Element<ELEM,BOUND>::setBounds(
-    Element<ELEM,BOUND>::GraphBound* bound) {
+    typename Element<ELEM,BOUND>::GraphBound* bound) {
     bounds_.resize(1);
     bounds_[0] = bound;
 }
 
 template<class ELEM, class BOUND>
 const typename Element<ELEM,BOUND>::GraphElem*
-    Element<ELEM,BOUND>::getBoundNeighbor(Size i, Size j) const {
+    Element<ELEM,BOUND>::getBoundNeighbor(std::size_t i, std::size_t j) const {
     return boundNeighbors_[i][j];
 }
 
 template<class ELEM, class BOUND>
 typename Element<ELEM,BOUND>::GraphElem*
-    Element<ELEM,BOUND>::getBoundNeighbor(Size i, Size j) {
+    Element<ELEM,BOUND>::getBoundNeighbor(std::size_t i, std::size_t j) {
     return boundNeighbors_[i][j];
 }
 
@@ -77,16 +77,16 @@ template<class ELEM, class BOUND>
 void Element<ELEM,BOUND>::constructNeighbors() {
     boundNeighbors_.clear();
     boundNeighbors_.resize(bounds_.size());
-    for (Size i = 0; i < bounds_.size(); i++) {
-        for (Size j = 0; j < bounds_[i]->numBounds(); j++) {
+    for (std::size_t i = 0; i < bounds_.size(); i++) {
+        for (std::size_t j = 0; j < bounds_[i]->numBounds(); j++) {
             if (bounds_[i]->getBound(j)->elem()->getId() != elem_->getId()) {
                 boundNeighbors_[i].push_back(bounds_[i]->getBound(j));
             }
         }
     }
     std::set<GraphElem*> neighbors;
-    for (Size i = 0; i < boundNeighbors_.size(); i++) {
-        for (Size j = 0; j < boundNeighbors_[i].size(); j++) {
+    for (std::size_t i = 0; i < boundNeighbors_.size(); i++) {
+        for (std::size_t j = 0; j < boundNeighbors_[i].size(); j++) {
             neighbors.insert(boundNeighbors_[i][j]);
         }
     }
@@ -98,20 +98,20 @@ void Element<ELEM,BOUND>::printInfo() const {
     std::cout << "--- Element Info ---" << std::endl;
     elem_->printInfo();
     std::cout << "Bounds:";
-    for (Size i = 0; i < bounds_.size(); ++i) {
+    for (std::size_t i = 0; i < bounds_.size(); ++i) {
         std::cout << " " << bounds_[i]->elem()->getId();
     }
     std::cout << std::endl;
     if (!neighbors_.empty()) {
         std::cout << "Neighbors:";
-        for (Size i = 0; i < neighbors_.size(); ++i) {
+        for (std::size_t i = 0; i < neighbors_.size(); ++i) {
             std::cout << " " << neighbors_[i]->elem()->getId();
         }
         std::cout << std::endl;
         std::cout << "Bound Neighbors:" << std::endl;
-        for (Size i = 0; i < boundNeighbors_.size(); ++i) {
+        for (std::size_t i = 0; i < boundNeighbors_.size(); ++i) {
             std::cout << bounds_[i]->elem()->getId() << ":";
-            for (Size j = 0; j < boundNeighbors_[i].size(); ++j) {
+            for (std::size_t j = 0; j < boundNeighbors_[i].size(); ++j) {
                 std::cout << " " << boundNeighbors_[i][j]->elem()->getId();
             }
             std::cout << std::endl;

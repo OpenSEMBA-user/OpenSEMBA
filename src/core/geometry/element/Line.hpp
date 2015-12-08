@@ -19,38 +19,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "ValueBase.h"
+#include "Line.h"
 
 namespace SEMBA {
-namespace Argument {
+namespace Geometry {
+namespace Element {
 
-ValueBase& ValueBase::required(const bool& required) {
-    Argument::required(required);
-    return *this;
+template<class T>
+Line<T>::Line() {
+
 }
 
-ValueBase& ValueBase::help(const std::string& help) {
-    Argument::help(help);
-    return *this;
+template<class T>
+Line<T>::~Line() {
+
 }
 
-ValueBase& ValueBase::metavar(
-        const std::list<std::string>& metavar) {
-    Argument::metavar(metavar);
-    return *this;
-}
-
-ValueBase& ValueBase::defaultVal(
-        const std::list<std::string>& defaultVal) {
-    Argument::defaultVal(defaultVal);
-    return *this;
-}
-
-ValueBase& ValueBase::choices(
-        const std::vector<std::list<std::string>>& choices) {
-    Argument::choices(choices);
-    return *this;
-}
-
-} /* namespace Argument */
+} /* namespace Element */
+} /* namespace Geometry */
 } /* namespace SEMBA */

@@ -37,8 +37,8 @@ Polyhedron::Polyhedron(const Id id,
     Elem(lay, mat) {
 
     face_ = face;
-    for (Size f = 0; f < numberOfFaces(); f++) {
-        for (Size i = 0; i < face[f]->numberOfCoordinates(); i++) {
+    for (std::size_t f = 0; f < numberOfFaces(); f++) {
+        for (std::size_t i = 0; i < face[f]->numberOfCoordinates(); i++) {
             addV(face_[f]->getV(i));
         }
     }
@@ -50,8 +50,8 @@ Polyhedron::Polyhedron(const Polyhedron& rhs)
     Elem(rhs) {
 
     face_ = rhs.face_;
-    for (Size f = 0; f < numberOfFaces(); f++) {
-        for (Size i = 0; i < face_[f]->numberOfCoordinates(); i++) {
+    for (std::size_t f = 0; f < numberOfFaces(); f++) {
+        for (std::size_t i = 0; i < face_[f]->numberOfCoordinates(); i++) {
             addV(face_[f]->getV(i));
         }
     }
@@ -61,57 +61,57 @@ Polyhedron::~Polyhedron() {
 
 }
 
-bool Polyhedron::isCurvedFace(const Size f) const {
+bool Polyhedron::isCurvedFace(const std::size_t f) const {
     return getFace(f)->isCurved();
 }
 
-Size Polyhedron::numberOfCoordinates() const {
+std::size_t Polyhedron::numberOfCoordinates() const {
     return v_.size();
 }
 
-Size Polyhedron::numberOfVertices() const {
+std::size_t Polyhedron::numberOfVertices() const {
     return numberOfCoordinates();
 }
 
-Size Polyhedron::numberOfFaces() const {
+std::size_t Polyhedron::numberOfFaces() const {
     return face_.size();
 }
 
-Size Polyhedron::numberOfSideVertices(const Size f) const {
+std::size_t Polyhedron::numberOfSideVertices(const std::size_t f) const {
     assert(f < numberOfFaces());
     return face_[f]->numberOfVertices();
 }
 
-Size Polyhedron::numberOfSideCoordinates(const Size f) const {
+std::size_t Polyhedron::numberOfSideCoordinates(const std::size_t f) const {
     return numberOfSideVertices(f);
 }
 
 const CoordR3* Polyhedron::getV(
-const Size i) const {
+const std::size_t i) const {
     assert(i < numberOfCoordinates());
     return v_[i];
 }
 
 const CoordR3* Polyhedron::getSideV(
-const Size f,
-const Size i) const {
+const std::size_t f,
+const std::size_t i) const {
     return getFace(f)->getV(i);
 }
 
-const CoordR3* Polyhedron::getVertex(const Size i) const {
+const CoordR3* Polyhedron::getVertex(const std::size_t i) const {
     return getV(i);
 }
 
-const CoordR3* Polyhedron::getSideVertex(const Size f, const Size i) const {
+const CoordR3* Polyhedron::getSideVertex(const std::size_t f, const std::size_t i) const {
     return getSideV(f,i);
 }
 
-const Polygon* Polyhedron::getFace(const Size f) const {
+const Polygon* Polyhedron::getFace(const std::size_t f) const {
     assert(f < numberOfFaces());
     return face_[f];
 }
 
-Math::Real Polyhedron::getAreaOfFace(const Size f) const {
+Math::Real Polyhedron::getAreaOfFace(const std::size_t f) const {
     return getFace(f)->getArea();
 }
 
@@ -119,14 +119,14 @@ void Polyhedron::printInfo() const {
     std::cout << "--- Polyhedron info ---" << std::endl
               << "Number of vertices: " << numberOfVertices() << std::endl
               << "Number of faces: " << numberOfFaces() << std::endl;
-    for (Size i = 0; i < numberOfFaces(); i++) {
+    for (std::size_t i = 0; i < numberOfFaces(); i++) {
         std::cout<< "Face #" << i << std::endl;
         getFace(i)->printInfo();
     }
 }
 
 void Polyhedron::addV(const CoordR3* v) {
-    for (Size i = 0; i < numberOfCoordinates(); i++) {
+    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         if (*v_[i] == *v) {
             return;
         }
@@ -137,16 +137,16 @@ void Polyhedron::addV(const CoordR3* v) {
 void Polyhedron::checkClosedness() const {
     // This checks consists in pairing segments ordered according to their ids.
     // If a segment is not paired, the surface is not closed.
-    Size nSidesInFaces = 0;
-    for (Size f = 0; f < numberOfFaces(); f++) {
+    std::size_t nSidesInFaces = 0;
+    for (std::size_t f = 0; f < numberOfFaces(); f++) {
         nSidesInFaces += getFace(f)->numberOfFaces();
     }
-    Math::Matrix::Dynamic<Size> list(nSidesInFaces, 2);
-    Size row = 0;
-    for (Size f = 0; f < numberOfFaces(); f++) {
-        for (Size s = 0; s < getFace(f)->numberOfFaces(); s++) {
-            Size id0 = getFace(f)->getSideVertex(s,0)->getId().toInt();
-            Size id1 = getFace(f)->getSideVertex(s,1)->getId().toInt();
+    Math::Matrix::Dynamic<std::size_t> list(nSidesInFaces, 2);
+    std::size_t row = 0;
+    for (std::size_t f = 0; f < numberOfFaces(); f++) {
+        for (std::size_t s = 0; s < getFace(f)->numberOfFaces(); s++) {
+            std::size_t id0 = getFace(f)->getSideVertex(s,0)->getId().toInt();
+            std::size_t id1 = getFace(f)->getSideVertex(s,1)->getId().toInt();
             if (id0 < id1) {
                 list(row,0) = id0;
                 list(row,1) = id1;
@@ -158,7 +158,7 @@ void Polyhedron::checkClosedness() const {
         }
     }
     list.sortRows(0,1);
-    for (Size i = 0; i < nSidesInFaces; i += 2) {
+    for (std::size_t i = 0; i < nSidesInFaces; i += 2) {
         if (list(i,0) != list(i+1,0) || list(i,1) != list(i+1,1)) {
             throw Error::NotClosed();
         }
