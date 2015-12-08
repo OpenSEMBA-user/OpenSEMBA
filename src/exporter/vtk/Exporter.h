@@ -18,30 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ExporterVTK.h
- *
- *  Created on: 22/4/2015
- *      Author: Daniel
- */
 
-#ifndef EXPORTER_VTK_EXPORTERVTK_H_
-#define EXPORTER_VTK_EXPORTERVTK_H_
+#ifndef SEMBA_EXPORTER_VTK_EXPORTER_H_
+#define SEMBA_EXPORTER_VTK_EXPORTER_H_
 
 #include <fstream>
 #include <utility>
 #include <algorithm>
 
-using namespace std;
-
 #include "exporter/Exporter.h"
-#include "SmbData.h"
+#include "Data.h"
 
-class ExporterVTK : public Exporter {
+namespace SEMBA {
+namespace Exporter {
+namespace VTK {
+
+class Exporter : public SEMBA::Exporter::Exporter {
 public:
-    ExporterVTK(const SmbData* smb,
-                const string& fn);
-    virtual ~ExporterVTK();
+    Exporter(const Data* smb,
+                const std::string& fn);
+    virtual ~Exporter();
 
 private:
     enum CELL_TYPES {
@@ -65,21 +61,26 @@ private:
         VTK_QUADRATIC_TETRA      = 24,
         VTK_QUADRATIC_HEXAHEDRON = 25
     };
-    void writeMesh_(const SmbData* smb);
-    void writeFile_(const Group<const ElemR>& elems,
-                    const string& name,
-                    ofstream& outMain,
-                    UInt& part);
-    pair<vector<CVecR3>, map<CoordinateId, UInt>> getPoints_(
-            const Group<const ElemR>& elems);
-    void writePoints_(ofstream& outFile,
-                      const vector<CVecR3>& pos);
-    void writeCells_(ofstream& outFile,
-                     const Group<const ElemR>& elems,
-                     const map<CoordinateId, UInt>& mapCoords);
+    void writeMesh_(const Data* smb);
+    void writeFile_(const Group::Group<const Geometry::ElemR>& elems,
+                    const std::string& name,
+                    std::ofstream& outMain,
+                    std::size_t& part);
+    std::pair<std::vector<Math::CVecR3>, 
+              std::map<Geometry::CoordId, std::size_t>> getPoints_(
+              const Group::Group<const Geometry::ElemR>& elems);
+    void writePoints_(std::ofstream& outFile,
+                      const std::vector<Math::CVecR3>& pos);
+    void writeCells_(
+            std::ofstream& outFile,
+            const Group::Group<const Geometry::ElemR>& elems,
+            std::map<Geometry::CoordId, std::size_t>& mapCoords);
 
-    static string makeValid_(const string&);
-
+    static std::string makeValid_(const std::string&);
 };
 
-#endif /* EXPORTER_VTK_EXPORTERVTK_H_ */
+} /* namespace VTK */
+} /* namespace Exporter */
+} /* namespace SEMBA */
+
+#endif /* SEMBA_EXPORTER_VTK_EXPORTER_H_ */
