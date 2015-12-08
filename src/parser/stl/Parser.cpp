@@ -23,6 +23,7 @@
 
 #include "geometry/element/Triangle3.h"
 #include "geometry/mesh/Unstructured.h"
+#include "physicalModel/PEC.h"
 
 namespace SEMBA {
 namespace Parser {
