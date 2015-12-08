@@ -18,12 +18,6 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ParserSTL.h
- *
- *  Created on: Sep 23, 2013
- *      Author: luis
- */
 
 #ifndef PARSERSTL_H_
 #define PARSERSTL_H_
@@ -34,27 +28,26 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 #include "parser/Parser.h"
-#include "SmbData.h"
+#include "Data.h"
 
-class ParserSTL : public Parser, public ProjectFile {
-    friend class SmbData;
+namespace SEMBA {
+namespace Parser {
+namespace STL {
+
+class Parser : public SEMBA::Parser::Parser, public FileSystem::Project {
 public:
-    ParserSTL();
-    ParserSTL(const string& fn);
-    virtual ~ParserSTL();
+    Parser();
+    Parser(const std::string& fn);
+    virtual ~Parser();
 
-    class ErrorGridNotExists : public Error {
-    public:
-        ErrorGridNotExists();
-        virtual ~ErrorGridNotExists() throw();
-    };
-
-    SmbData* read(const OptionsMesher* = NULL);
+    Data* read();
 
     void printInfo() const;
 };
+
+} /* namespace STL */
+} /* namespace Parser */
+} /* namespace SEMBA */
 
 #endif /* PARSERGID_H_ */
