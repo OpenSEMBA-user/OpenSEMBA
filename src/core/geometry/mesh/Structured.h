@@ -32,11 +32,11 @@
 #include "geometry/element/Group.h"
 #include "geometry/layer/Group.h"
 
-class Unstructured;
-
 namespace SEMBA {
 namespace Geometry {
 namespace Mesh {
+
+class Unstructured;
 
 class Structured : public virtual Mesh,
                    public virtual Grid3,
