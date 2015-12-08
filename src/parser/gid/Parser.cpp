@@ -98,7 +98,6 @@ void Parser::printInfo() const {
 
 Solver::Options* Parser::readOptionsSolver() {
     Solver::Options* res = NULL;
-    bool finished = false;
     bool optionsFound = false;
     while (!optionsFound && !f_in.eof()) {
         std::string label, value;
@@ -108,16 +107,8 @@ Solver::Options* Parser::readOptionsSolver() {
             res = new Solver::Options();
             res->setObject();
             Solver::Options opts;
-            getNextLabelAndValue(label, value);
-            readOptionsSolverOptions(opts, label);
+            readOptionsSolverOptions(opts, "Solver options");
             res->addMember(value, std::move(opts));
-            while (!finished && !f_in.eof()) {
-                getNextLabelAndValue(label, value);
-                if(label.find("End of solver options") != label.npos) {
-                    finished = true;
-                    return res;
-                }
-            } // Closes ( !finished && !f_in.eof() ) while.
         } // Closes problem data found if.
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
