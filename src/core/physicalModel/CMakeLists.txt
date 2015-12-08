@@ -74,4 +74,5 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/..)
 
 add_sources(. SRCS)
 add_library(opensemba_core_physicalmodel STATIC ${SRCS})
-add_dependencies(opensemba_core_physicalmodel opensemba_core_math)
+add_dependencies(opensemba_core_physicalmodel opensemba_core_math
+                                              opensemba_core_filesystem)
