@@ -58,7 +58,7 @@ SEMBA::Group::Group<O> Group<O>::add(O2* newORq) {
 }
 
 template<typename O> template<typename O2>
-SEMBA::Group::Group<O*> Group<O>::add(std::vector<O2*>& newOuts) {
+SEMBA::Group::Group<O> Group<O>::add(std::vector<O2*>& newOuts) {
     std::vector<O*> res;
     res.reserve(newOuts.size());
     for (std::size_t i = 0; i < newOuts.size(); i++) {

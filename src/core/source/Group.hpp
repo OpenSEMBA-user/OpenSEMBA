@@ -58,7 +58,7 @@ SEMBA::Group::Group<S> Group<S>::add(S2* newSrc) {
 }
 
 template<typename S> template<typename S2>
-SEMBA::Group::Group<S*> Group<S>::add(std::vector<S2*>& newSrcs) {
+SEMBA::Group::Group<S> Group<S>::add(std::vector<S2*>& newSrcs) {
     std::vector<S*> res;
     res.reserve(newSrcs.size());
     for (std::size_t i = 0; i < newSrcs.size(); i++) {

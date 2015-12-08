@@ -36,22 +36,11 @@ macro(add_subdirectories dir bin)
     endforeach()
 endmacro()
 
-macro(add_sources dir ${SRCS})
-    set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
-    file(GLOB_RECURSE HDRS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.h)
-    file(GLOB_RECURSE TMPL_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.hpp)
-    file(GLOB_RECURSE SRCS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.cpp)
-    
-    list(APPEND SRCS ${HDRS_LOCAL} ${TMPL_LOCAL} ${SRCS_LOCAL})
-endmacro()
-
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 project(opensemba CXX)
-
-add_subdirectory(../external obj/external)
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -76,8 +65,7 @@ endif()
 add_definitions(-DAPP_VERSION="0.10.1")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}
-                    ${CMAKE_CURRENT_LIST_DIR}/core/
-                    ${CMAKE_CURRENT_LIST_DIR}/../external/)
+                    ${CMAKE_CURRENT_LIST_DIR}/core/)
 add_subdirectory  (core     obj/src/core)
 add_subdirectories(parser   obj/src)
 add_subdirectories(mesher   obj/src)

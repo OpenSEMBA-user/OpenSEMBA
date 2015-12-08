@@ -58,11 +58,10 @@ public:
     Group& operator=(SEMBA::Group::Group<O>&);
     Group& operator=(SEMBA::Group::Group<O>&&);
 
-    using SEMBA::Group::Group<O>::add;
     template<typename O2>
     SEMBA::Group::Group<O> add(O2* newElem);
     template<typename O2>
-    SEMBA::Group::Group<O*> add(std::vector<O2*>&);
+    SEMBA::Group::Group<O> add(std::vector<O2*>&);
 
     bool isSimilar(const Group& rhs) const;
 
