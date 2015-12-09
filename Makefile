@@ -77,15 +77,14 @@ BINDIR = ./bin/
 OBJDIR = ./obj/
 LIBDIR = ./external/
 SRCDIR = ./src/
-SRC_GEOMETRY_DIR = core/math/ \
- core/base/class/  core/base/error/ core/base/group/ \
- core/geometry/ core/geometry/elements/ core/geometry/graphs/ \
- core/geometry/coordinates/ core/geometry/layers/ core/geometry/pixels/ 
-SRC_CORE_DIR = core/ $(SRC_GEOMETRY_DIR) \
- core/options/ \
- core/physicalModel/ \
- core/sources/ core/sources/ports/ core/sources/magnitude/ \
- core/outRq/ core/solver/ core/parser/ core/exporter/ 
+SRC_CORE_GEOMETRY_DIR = core/geometry/ \
+ core/geometry/coordinate/ core/geometry/element/ core/geometry/graph/ \
+ core/geometry/layer/ core/geometry/mesh/ core/geometry/pixiel/
+SRC_CORE_MATH_DIR = core/math/ core/math/axis/ core/math/function/ \
+ core/math/matrix/ core/math/simplex/ core/math/util/ core/math/vector/
+SRC_CORE_SOURCE_DIR = core/source/ core/source/magnitude/ core/source/port/ \
+ core/filesystem/ core/geometry/ core/group/ core/outputRequests/ \
+ core/parser/ core/physicalModel/ core/solver/
 SRC_PARSER_DIR = parser/gid/ parser/stl/ 
 SRC_EXPORTER_DIR = exporter/gid/ exporter/vtk/ 
 SRC_SOLVER_DIR = solver/dgtd/

@@ -22,61 +22,63 @@
  *  Created on: Aug 23, 2012
  *      Author: luis
  */
-#ifndef EXPORTER_GID_EXPORTERGID_H_
-#define EXPORTER_GID_EXPORTERGID_H_
+#ifndef SEMBA_EXPORTER_GID_EXPORTER_H_
+#define SEMBA_EXPORTER_GID_EXPORTER_H_
 
 #include "exporter/Exporter.h"
 #include "gidpost/gidpost.h"
 
-using namespace std;
+namespace SEMBA {
+namespace Exporter {
+namespace GiD {
 
-class ExporterGiD : public Exporter {
+class Exporter : public SEMBA::Exporter::Exporter {
 public:
-    static const CVecR3 pecColor, pmcColor, smaColor, pmlColor,
+    static const Math::CVecR3 pecColor, pmcColor, smaColor, pmlColor,
     sibcColor, emSourceColor;
 
-    ExporterGiD(
-            const SmbData* smb,
+    Exporter(
+            const Data* smb,
             GiD_PostMode mode = GiD_PostAscii);
-    ExporterGiD(
-            const SmbData* smb,
-            const string& fn,
+    Exporter(
+            const Data* smb,
+            const std::string& fn,
             GiD_PostMode mode = GiD_PostAscii);
-    virtual ~ExporterGiD();
+    virtual ~Exporter();
 
     void beginMesh(
-            const string& tName,
+            const std::string& tName,
             GiD_Dimension dim,
             GiD_ElementType elementType,
-            Int nNode,
-            const CVecR3& ColorRGB = CVecR3()) const;
+            Math::Int nNode,
+            const Math::CVecR3& ColorRGB = Math::CVecR3()) const;
     void beginResult(
-            const string& fieldName,
-            const string& timeName,
-            const Real time,
+            const std::string& fieldName,
+            const std::string& timeName,
+            const Math::Real time,
             GiD_ResultType resultType,
             GiD_ResultLocation resultLocaltion,
-            const string gaussPointType,
-            const vector<string>& componentsNames) const;
+            const std::string gaussPointType,
+            const std::vector<std::string>& componentsNames) const;
     void flushPostFile() const;
 private:
-    static Int coordCounter_;
-    static Int elemCounter_;
-    static Int numberOfOutputGiD_;
+    static Math::Int coordCounter_;
+    static Math::Int elemCounter_;
+    static Math::Int numberOfOutputGiD_;
 
     GiD_FILE meshFile_;
     GiD_FILE resultFile_;
     GiD_PostMode mode_;
 
-    void init_(const SmbData* smb, GiD_PostMode mode, const string& fn);
-    void writeMesh_(const SmbData* smb);
+    void init_(const Data* smb, GiD_PostMode mode, const std::string& fn);
+    void writeMesh_(const Data* smb);
     void writeElements_(
-            const Group<const ElemR>& entities,
-            const string& name,
+            const Group<const Geometry::ElemR>& entities,
+            const std::string& name,
             const GiD_ElementType type,
-            const Int nV);
-    void writeElement_(Int elemId, int nId[]) const;
-    void writeCoordinates_(CoordR3Group& pos);
+            const Math::Int nV);
+    void writeElement_(Math::Int elemId, int nId[]) const;
+    void writeCoordinates_(Geometry::CoordR3Group& pos);
 
     void beginCoordinates_() const;
     void endCoordinates_() const;
@@ -84,17 +86,22 @@ private:
     void endElements_() const;
     void endMesh_() const;
 
-    GiD_ResultType getGiDResultType_(OutRqBase::Type type) const;
+    GiD_ResultType getGiDResultType_(
+    		OutputRequest::OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation_() const;
 
-    void openPostMeshFile_(const string& filename);
-    void openPostResultFile_(const string& filename);
+    void openPostMeshFile_(const std::string& filename);
+    void openPostResultFile_(const std::string& filename);
 
-    void writeMaterialsInLayer_(const Layer* lay);
-    void writeAllElements_(const Group<const ElemR>& elem,
-            const string& name);
+    void writeMaterialsInLayer_(const Geometry::Layer* lay);
+    void writeAllElements_(const Group<const Geometry::ElemR>& elem,
+            const std::string& name);
 
-    static string makeValid_(string name);
+    static std::string makeValid_(std::string name);
 };
+
+} /* namespace GiD */
+} /* namespace Exporter */
+} /* namespace SEMBA */
 
 #endif /* EXPORTER_GID_EXPORTERGID_H_ */
