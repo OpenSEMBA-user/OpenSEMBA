@@ -32,7 +32,7 @@
 using namespace std;
 
 #include "outRq/OutRq.h"
-#include "exporter/gid/ExporterGiD.h"
+#include "Exporter.h"
 
 //class ResultGiD {
 //public:

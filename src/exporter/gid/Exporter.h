@@ -73,7 +73,7 @@ private:
     void init_(const Data* smb, GiD_PostMode mode, const std::string& fn);
     void writeMesh_(const Data* smb);
     void writeElements_(
-            const Group<const Geometry::ElemR>& entities,
+            const Group::Group<const Geometry::ElemR>& entities,
             const std::string& name,
             const GiD_ElementType type,
             const Math::Int nV);
@@ -94,7 +94,8 @@ private:
     void openPostResultFile_(const std::string& filename);
 
     void writeMaterialsInLayer_(const Geometry::Layer* lay);
-    void writeAllElements_(const Group<const Geometry::ElemR>& elem,
+    void writeAllElements_(
+    		const Group::Group<const Geometry::ElemR>& elem,
             const std::string& name);
 
     static std::string makeValid_(std::string name);

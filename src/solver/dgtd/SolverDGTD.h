@@ -22,9 +22,9 @@
 #ifndef SOLVERDGTD_H_
 #	define SOLVERDGTD_H_
 
+#include "../../exporter/gid/Exporter.h"
 #include "exporter/Output.h"
 #include "parser/gid/ParserGiD.h"
-#include "exporter/gid/ExporterGiD.h"
 #include "options/OptionsSolverDGTD.h"
 #include "physicalModel/GroupPhysicalModels.h"
 #ifdef USE_MPI
