@@ -70,6 +70,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
+include_directories(${gidpost_SOURCE_DIR})
+
 add_sources(. SRCS)
 add_library(opensemba_exporter_gid STATIC ${SRCS})
-add_dependencies(opensemba_exporter_gid opensemba_core_data)
+add_dependencies(opensemba_exporter_gid opensemba_core_exporter)

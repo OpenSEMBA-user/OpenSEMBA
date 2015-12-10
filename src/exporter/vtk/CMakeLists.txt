@@ -72,4 +72,4 @@ endif()
 
 add_sources(. SRCS)
 add_library(opensemba_exporter_vtk STATIC ${SRCS})
-add_dependencies(opensemba_exporter_vtk opensemba_core_data)
+add_dependencies(opensemba_exporter_vtk opensemba_core_exporter)

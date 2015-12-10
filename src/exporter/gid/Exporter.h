@@ -26,7 +26,7 @@
 #define SEMBA_EXPORTER_GID_EXPORTER_H_
 
 #include "exporter/Exporter.h"
-#include "gidpost/gidpost.h"
+#include "gidpost.h"
 
 namespace SEMBA {
 namespace Exporter {
@@ -87,13 +87,13 @@ private:
     void endMesh_() const;
 
     GiD_ResultType getGiDResultType_(
-    		OutputRequest::OutputRequest::Type type) const;
+    		OutputRequest::Base::Type type) const;
     GiD_ResultLocation getGiDResultLocation_() const;
 
     void openPostMeshFile_(const std::string& filename);
     void openPostResultFile_(const std::string& filename);
 
-    void writeMaterialsInLayer_(const Geometry::Layer* lay);
+    void writeMaterialsInLayer_(const Geometry::Layer::Layer* lay);
     void writeAllElements_(
     		const Group::Group<const Geometry::ElemR>& elem,
             const std::string& name);

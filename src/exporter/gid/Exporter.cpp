@@ -18,7 +18,15 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+
 #include "Exporter.h"
+
+#include "geometry/element/Line2.h"
+#include "geometry/element/Triangle3.h"
+#include "geometry/element/Quadrilateral4.h"
+#include "geometry/element/Tetrahedron4.h"
+#include "geometry/mesh/Structured.h"
+#include "geometry/mesh/Unstructured.h"
 
 namespace SEMBA {
 namespace Exporter {
@@ -188,7 +196,7 @@ void Exporter::writeElements_(
         return;
     }
     Math::UInt tmpCounter = coordCounter_;
-    int nId[nV];
+    std::vector<int> nId(nV);
     beginMesh(name, GiD_3D, type, nV);
     std::vector<Math::CVecR3> pos;
     for(std::size_t i = 0; i < elem.size(); i++) {
@@ -206,7 +214,7 @@ void Exporter::writeElements_(
             		cG.getPos(elem(j)->getVertex(k)->pos());
             nId[k] = tmpCounter + coordInCG->getId().toInt();
         }
-        writeElement_(++elemCounter_, nId);
+        writeElement_(++elemCounter_, &nId[0]);
 
     }
     endElements_();
@@ -241,21 +249,14 @@ void Exporter::beginResult(
         GiD_ResultLocation resultLocaltion,
         const std::string gaussPointType,
         const std::vector<std::string>& componentsNames) const {
-    char fName[fieldName.length() + 1];
-    strcpy(fName, fieldName.c_str());
-    char tName[timeName.length() + 1];
-    strcpy(tName, timeName.c_str());
-    char gpType[gaussPointType.length() + 1];
-    strcpy(gpType, gaussPointType.c_str());
-    std::vector<std::string> cNames = componentsNames;
-    const char *compv[cNames.size()];
-    for (std::size_t i = 0; i < cNames.size(); i++) {
-        compv[i] = cNames[i].c_str();
-        //        compv[i] = new char[cNames[i].length() + 1];
-        //        strcpy(compv[i], cNames[i].c_str());
+    std::vector<const char*> compv(componentsNames.size());
+    for (std::size_t i = 0; i < componentsNames.size(); i++) {
+        compv[i] = componentsNames[i].c_str();
     }
-    GiD_fBeginResult(resultFile_, fName, tName, time, resultType,
-            getGiDResultLocation_(), gpType, NULL, cNames.size(), compv);
+    GiD_fBeginResult(
+        resultFile_, fieldName.c_str(), timeName.c_str(), time, resultType,
+        getGiDResultLocation_(), gaussPointType.c_str(), NULL,
+        componentsNames.size(), &compv[0]);
 }
 
 void Exporter::openPostMeshFile_(

@@ -31,7 +31,7 @@
 
 using namespace std;
 
-#include "outRq/OutRq.h"
+#include "outputRequest/OutputRequest.h"
 #include "Exporter.h"
 
 //class ResultGiD {

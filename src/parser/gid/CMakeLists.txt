@@ -72,4 +72,4 @@ endif()
 
 add_sources(. SRCS)
 add_library(opensemba_parser_gid STATIC ${SRCS})
-add_dependencies(opensemba_parser_gid opensemba_core_data)
+add_dependencies(opensemba_parser_gid opensemba_core_parser)
