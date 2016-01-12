@@ -36,26 +36,26 @@ using namespace std;
 #include "exporter/GroupOutputs.h"
 #include "Cell.h"
 
-class SpatialDiscretization {
-public:
-    SpatialDiscretization();
-    virtual ~SpatialDiscretization();
-
-    void setOutputRequests(const GroupOutRqs<>* outRqs);
-
-    GroupOutputs<> getOutputs() const;
-
-protected:
-    const GroupOutRqs<>* outRqs_;
-
-    vector<const FieldBase*> getFieldsAt_(
-            const vector<CVecR3>& position,
-            const bool indexPosition = false) const;
-    //!< Returns all fields in a set of positions.
-
-
-    map<ElementId,vector<const Cell*>> posToCells_;
-    //!< Index of positions in to Solver cells.
-};
+//class SpatialDiscretization {
+//public:
+//    SpatialDiscretization();
+//    virtual ~SpatialDiscretization();
+//
+//    void setOutputRequests(const GroupOutRqs<>* outRqs);
+//
+//    GroupOutputs<> getOutputs() const;
+//
+//protected:
+//    const GroupOutRqs<>* outRqs_;
+//
+//    vector<const FieldBase*> getFieldsAt_(
+//            const vector<CVecR3>& position,
+//            const bool indexPosition = false) const;
+//    //!< Returns all fields in a set of positions.
+//
+//
+//    map<ElementId,vector<const Cell*>> posToCells_;
+//    //!< Index of positions in to Solver cells.
+//};
 
 #endif /* SRC_CORE_SOLVER_SPATIALDISCRETIZATION_H_ */

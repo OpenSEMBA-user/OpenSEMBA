@@ -27,30 +27,30 @@
 
 #include "SpatialDiscretization.h"
 
-SpatialDiscretization::SpatialDiscretization() {
-    outRqs_ = NULL;
-}
-
-SpatialDiscretization::~SpatialDiscretization() {
-
-}
-
-void SpatialDiscretization::setOutputRequests(const GroupOutRqs<>* outRqs) {
-    // Builds index.
-    for (UInt i = 0; i < outRqs->size(); i++) {
-
-        // TODO Build index.
-
-    }
-}
-
-GroupOutputs<> SpatialDiscretization::getOutputs() const {
-    GroupOutputs<> res;
-
-    for (UInt i = 0; i < outRqs_->size(); i++) {
-        set<CVecR3> pos = outRqs_(i)->getPosInGaussPoints();
-
-            pair<ElementId,vector<FieldBase*>>(id, getFieldsAt_(pos)));
-    }
-    return res;
-}
+//SpatialDiscretization::SpatialDiscretization() {
+//    outRqs_ = NULL;
+//}
+//
+//SpatialDiscretization::~SpatialDiscretization() {
+//
+//}
+//
+//void SpatialDiscretization::setOutputRequests(const GroupOutRqs<>* outRqs) {
+//    // Builds index.
+//    for (UInt i = 0; i < outRqs->size(); i++) {
+//
+//        // TODO Build index.
+//
+//    }
+//}
+//
+//GroupOutputs<> SpatialDiscretization::getOutputs() const {
+//    GroupOutputs<> res;
+//
+//    for (UInt i = 0; i < outRqs_->size(); i++) {
+//        set<CVecR3> pos = outRqs_(i)->getPosInGaussPoints();
+//
+//            pair<ElementId,vector<FieldBase*>>(id, getFieldsAt_(pos)));
+//    }
+//    return res;
+//}
