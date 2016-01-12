@@ -57,7 +57,8 @@ Use LTS: *GenData(Use_LTS)
 Upwinding: *GenData(Upwinding)
 End of cudg3d options:
 *elseif(strcasecmp(GenData(Solver),"none")==0)
-------- NO SOLVER SELECTED ------
+ugrfdtd options:
+End of ugrfdtd options:
 *else
 *WarningBox Unrecognized solver
 *endif
