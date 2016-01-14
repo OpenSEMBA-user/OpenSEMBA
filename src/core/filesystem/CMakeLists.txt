@@ -46,10 +46,6 @@ endfunction()
 
 project(opensemba_core_filesystem CXX)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 find_package(OpenMP)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -70,7 +66,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/..)
+include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 add_sources(. SRCS)
 add_library(opensemba_core_filesystem STATIC ${SRCS})
