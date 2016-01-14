@@ -18,49 +18,56 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ParserOpenFoamMesh.h
- *
- *  Created on: Apr 10, 2014
- *      Author: luis
- */
 
-#ifndef PARSEROPENFOAMMESH_H_
-#define PARSEROPENFOAMMESH_H_
+#ifndef SEMBA_MESHER_OPENFOAM_PARSER_H_
+#define SEMBA_MESHER_OPENFOAM_PARSER_H_
 
+#include <cstdio>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <stdio.h>
 #include <vector>
 #include <sys/stat.h>
 
-#include "OpenfoamBoundary.h"
+#include "Boundary.h"
+
+#include "geometry/mesh/Unstructured.h"
 
 #include "parser/Parser.h"
 
-typedef pair<ElementId,vector<CoordinateId> > FaceIdentifier;
+namespace SEMBA {
+namespace Mesher {
+namespace OpenFOAM {
 
-class ParserOpenFoam : public Parser {
+typedef std::pair<Geometry::ElemId,
+                  std::vector<Geometry::CoordId>> FaceIdentifier;
+
+class Parser : public SEMBA::Parser::Parser {
 public:
-	ParserOpenFoam();
-	ParserOpenFoam(const string& openfoamDir);
-	virtual ~ParserOpenFoam();
-	MeshUnstructured readMeshUnstructured() const;
-	bool isExistingDirectory(const string& dir) const;
+	Parser();
+	Parser(const std::string& openfoamDir);
+	virtual ~Parser();
+	Geometry::Mesh::Unstructured readMeshUnstructured() const;
+	bool isExistingDirectory(const std::string& dir) const;
 	void printInfo() const;
 private:
-	string dirPolymesh_;
-	CoordR3Group readCoordinates() const;
-	void skipHeader(ifstream& file) const;
-	ElemRGroup* readSurfaceElements(const CoordR3Group&) const;
-	vector<FaceIdentifier> readFaces() const;
-	vector<UInt> readFacesOwner(const string& ownerOrNeighbour) const;
-	vector<OpenfoamBoundary> readBoundaries() const;
-	GroupLayers<> assignAsLayers(
-	        ElemRGroup& elems,
-	        const vector<OpenfoamBoundary>& boundaries) const;
-	void openFile(ifstream& file, const string& name) const;
+	std::string dirPolymesh_;
+	Geometry::CoordR3Group readCoordinates() const;
+	void skipHeader(std::ifstream& file) const;
+	Geometry::ElemRGroup* readSurfaceElements(
+            const Geometry::CoordR3Group&) const;
+	std::vector<FaceIdentifier> readFaces() const;
+	std::vector<std::size_t> readFacesOwner(
+            const std::string& ownerOrNeighbour) const;
+    std::vector<Boundary> readBoundaries() const;
+	Geometry::Layer::Group<> assignAsLayers(
+	        Geometry::ElemRGroup& elems,
+	        const std::vector<Boundary>& boundaries) const;
+	void openFile(std::ifstream& file, const std::string& name) const;
 };
 
-#endif /* PARSEROPENFOAMMESH_H_ */
+}
+}
+}
+
+#endif /* SEMBA_MESHER_OPENFOAM_PARSER_H_ */

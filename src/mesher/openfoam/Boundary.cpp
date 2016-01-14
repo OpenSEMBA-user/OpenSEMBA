@@ -18,24 +18,22 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * OpenfoamBoundary.cpp
- *
- *  Created on: Apr 11, 2014
- *      Author: luis
- */
 
-#include "OpenfoamBoundary.h"
+#include "Boundary.h"
 
-OpenfoamBoundary::OpenfoamBoundary() {
+namespace SEMBA {
+namespace Mesher {
+namespace OpenFOAM {
+
+Boundary::Boundary() {
     nFaces_ = 0;
     startFace_ = 0;
 }
 
-OpenfoamBoundary::OpenfoamBoundary(
-        const string name,
-        const UInt nFaces,
-        const UInt startFace) : Layer(LayerId(0), name) {
+Boundary::Boundary(
+        const std::string name,
+        const std::size_t nFaces,
+        const std::size_t startFace) : Layer(Geometry::LayerId(0), name) {
     nFaces_ = nFaces;
     startFace_ = startFace;
     if (isMaterial()) {
@@ -43,59 +41,51 @@ OpenfoamBoundary::OpenfoamBoundary(
     }
 }
 
-UInt
-OpenfoamBoundary::getFaces() const {
+std::size_t Boundary::getFaces() const {
     return nFaces_;
 }
 
-UInt
-OpenfoamBoundary::getStartFace() const {
+std::size_t Boundary::getStartFace() const {
     return startFace_;
 }
 
-void
-OpenfoamBoundary::printInfo() const {
-    cout << " --- OpenFoam boundary info ---" << endl;
+void Boundary::printInfo() const {
+    std::cout << " --- OpenFoam boundary info ---" << std::endl;
     Layer::printInfo();
-    cout << "Nfaces: " << nFaces_ << endl;
-    cout << "StartFace: " << startFace_ << endl;
+    std::cout << "Nfaces: " << nFaces_ << std::endl;
+    std::cout << "StartFace: " << startFace_ << std::endl;
 }
 
-bool
-OpenfoamBoundary::isMaterial() const {
+bool Boundary::isMaterial() const {
     if (getName().find("mat.") != getName().npos) {
         return true;
     }
     return false;
 }
 
-MatId
-OpenfoamBoundary::getMaterialIdFromName() const {
+MatId Boundary::getMaterialIdFromName() const {
     assert(isMaterial());
-    Int firstDot = strpos(getName().c_str(), ".", 1);
-    Int secondDot = strpos(getName().c_str(), ".", 2);
-    string values = getName().substr(firstDot + 1, secondDot);
-    UInt res = atoi(values.c_str());
+    int firstDot = strpos(getName().c_str(), ".", 1);
+    int secondDot = strpos(getName().c_str(), ".", 2);
+    std::string values = getName().substr(firstDot + 1, secondDot);
+    std::size_t res = atoi(values.c_str());
     return MatId(res);
 }
 
-OpenfoamBoundary::~OpenfoamBoundary() {
+Boundary::~Boundary() {
 }
 
-LayerId
-OpenfoamBoundary::getLayerIdFromName() const {
+Geometry::LayerId Boundary::getLayerIdFromName() const {
     assert(isMaterial());
-    Int secondDot = strpos(getName().c_str(), ".", 2);
-    string value = getName().substr(secondDot + 1, getName().npos);
-    UInt res = atoi(value.c_str());
-    return LayerId(res);
+    int secondDot = strpos(getName().c_str(), ".", 2);
+    std::string value = getName().substr(secondDot + 1, getName().npos);
+    std::size_t res = atoi(value.c_str());
+    return Geometry::LayerId(res);
 }
 
-Int
-OpenfoamBoundary::strpos(const char *haystack,
-                         const char *needle, Int nth) const {
+int Boundary::strpos(const char *haystack, const char *needle, int nth) const {
     const char *res = haystack;
-    for(Int i = 1; i <= nth; i++)
+    for (int i = 1; i <= nth; i++)
     {
         res = strstr(res, needle);
         if (!res) {
@@ -105,4 +95,8 @@ OpenfoamBoundary::strpos(const char *haystack,
         }
     }
     return res - haystack;
+}
+
+}
+}
 }

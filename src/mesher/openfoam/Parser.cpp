@@ -18,141 +18,146 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * ParserOpenFoamMesh.cpp
- *
- *  Created on: Apr 10, 2014
- *      Author: luis
- */
 
-#include "ParserOpenFoam.h"
+#include "Parser.h"
 
-ParserOpenFoam::ParserOpenFoam() {
+#include "geometry/element/Triangle3.h"
+#include "geometry/element/Quadrilateral4.h"
+#include "geometry/element/Polygon.h"
+
+namespace SEMBA {
+namespace Mesher {
+namespace OpenFOAM {
+
+Parser::Parser() {
 }
 
-ParserOpenFoam::ParserOpenFoam(
-        const string& dirOpenFoam) {
+Parser::Parser(
+        const std::string& dirOpenFoam) {
     dirPolymesh_ = dirOpenFoam + "constant/polyMesh/";
 }
 
-ParserOpenFoam::~ParserOpenFoam() {
+Parser::~Parser() {
 }
 
-MeshUnstructured
-ParserOpenFoam::readMeshUnstructured() const {
-    CoordR3Group cG = readCoordinates();
+Geometry::Mesh::Unstructured Parser::readMeshUnstructured() const {
+    Geometry::CoordR3Group cG = readCoordinates();
 
-    vector<FaceIdentifier> face = readFaces();
-    vector<ElemR*> pol(face.size());
-    for (UInt i = 0; i < face.size(); i++) {
+    std::vector<FaceIdentifier> face = readFaces();
+    std::vector<Geometry::ElemR*> pol(face.size());
+    for (std::size_t i = 0; i < face.size(); i++) {
         if (face[i].second.size() <= 2) {
-            cerr << "ERROR @ ParserOpenfoam: "
+            std::cerr << "ERROR @ Parser: "
                     << "Surfaces can not be defined with 2 coords: "
-                    << face[i].first << endl;
+                    << face[i].first << std::endl;
         } else if (face[i].second.size() == 3) {
-            pol[i] = new Triangle3(cG, face[i].first, &face[i].second[0]);
+            pol[i] = new Geometry::Tri3(
+                            cG, face[i].first, &face[i].second[0]);
         } else if (face[i].second.size() == 4) {
-            pol[i] = new QuaR4(cG, face[i].first, &face[i].second[0]);
+            pol[i] = new Geometry::QuaR4(
+                            cG, face[i].first, &face[i].second[0]);
         } else {
-            pol[i] = new Polygon(cG, face[i].first, face[i].second);
+            pol[i] = new Geometry::Element::Polygon(
+                            cG, face[i].first, face[i].second);
         }
     }
-    ElemRGroup elems(pol);
+    Geometry::ElemRGroup elems(pol);
 
-    vector<OpenfoamBoundary> boundaries = readBoundaries();
-    GroupLayers<> layers = assignAsLayers(elems, boundaries);
+    std::vector<Boundary> boundaries = readBoundaries();
+    Geometry::Layer::Group<> layers = assignAsLayers(elems, boundaries);
     elems.removeMatId(MatId(0));
 
-    return MeshUnstructured(cG, elems, layers);
+    return Geometry::Mesh::Unstructured(cG, elems, layers);
 }
 
-void ParserOpenFoam::printInfo() const {
-    cout<< "--- Parser OpenfoamMesh info ---" << endl
-            << "--- End of Parser Openfoam mesh info ---" << endl;
+void Parser::printInfo() const {
+    std::cout << "--- Parser OpenfoamMesh info ---" << std::endl
+              << "--- End of Parser Openfoam mesh info ---" << std::endl;
 }
 
-CoordR3Group ParserOpenFoam::readCoordinates() const {
-    ifstream file;
+Geometry::CoordR3Group Parser::readCoordinates() const {
+    std::ifstream file;
     openFile(file, "points");
     if (!file.is_open()) {
-        cerr << endl << "ERROR @ ParserOpenfoam: Could not open file." << endl;
-        return CoordR3Group();
+        std::cerr << std::endl
+                  << "ERROR @ Parser: Could not open file." << std::endl;
+        return Geometry::CoordR3Group();
     }
 
     skipHeader(file);
-    UInt nCoord = 0;
+    std::size_t nCoord = 0;
     while (!file.eof() && nCoord == 0) {
         file >> nCoord;
     }
-    string line;
+    std::string line;
     getline(file, line);
     getline(file, line);
-    vector<CoordR3*> coord;
+    std::vector<Geometry::CoordR3*> coord;
     coord.reserve(nCoord);
-    CoordinateId id(0);
-    while (!file.eof() && id < CoordinateId(nCoord)) {
+    Geometry::CoordId id(0);
+    while (!file.eof() && id < Geometry::CoordId(nCoord)) {
         getline(file, line);
         size_t init = line.find("(") + 1;
         size_t end = line.find(")");
-        string aux = line.substr(init, end-init);
-        CVecR3 pos = strToCartesianVector(aux);
-        coord.push_back(new CoordR3(++id, pos));
+        std::string aux = line.substr(init, end-init);
+        Math::CVecR3 pos = strToCartesianVector(aux);
+        coord.push_back(new Geometry::CoordR3(++id, pos));
     }
 
     file.close();
-    return CoordR3Group(coord);
+    return Geometry::CoordR3Group(coord);
 }
 
-ElemRGroup* ParserOpenFoam::readSurfaceElements(
-        const CoordR3Group& cG) const {
-    vector<FaceIdentifier> face = readFaces();
-    const UInt nElem = face.size();
-    vector<ElemR*> elems;
+Geometry::ElemRGroup* Parser::readSurfaceElements(
+        const Geometry::CoordR3Group& cG) const {
+    std::vector<FaceIdentifier> face = readFaces();
+    const std::size_t nElem = face.size();
+    std::vector<Geometry::ElemR*> elems;
     elems.reserve(nElem);
-    for (UInt i = 0; i < nElem; i++) {
-        const ElementId id = face[i].first;
-        const vector<CoordinateId> vId = face[i].second;
-        const UInt nVertex = vId.size();
+    for (std::size_t i = 0; i < nElem; i++) {
+        const Geometry::ElemId id = face[i].first;
+        const std::vector<Geometry::CoordId> vId = face[i].second;
+        const std::size_t nVertex = vId.size();
         switch (nVertex) {
         case 3:
-            elems.push_back(new Triangle3(cG, id, &vId.front()));
+            elems.push_back(new Geometry::Tri3(cG, id, &vId.front()));
             break;
         case 4:
-            elems.push_back(new QuaR4(cG, id, &vId.front()));
+            elems.push_back(new Geometry::QuaR4(cG, id, &vId.front()));
             break;
         default:
-            cerr << endl << "ERROR @ ParserOpenFoamMesh: ";
-            cerr << endl << "Faces with " << nVertex << "are not supported." << endl;
+            std::cerr << std::endl << "ERROR @ ParserOpenFoamMesh: ";
+            std::cerr << std::endl << "Faces with " << nVertex
+                      << "are not supported." << std::endl;
             break;
         }
     }
-    return new ElemRGroup(elems);
+    return new Geometry::ElemRGroup(elems);
 }
 
-vector<OpenfoamBoundary>
-ParserOpenFoam::readBoundaries() const {
+std::vector<Boundary> Parser::readBoundaries() const {
     // -- Opens file --
-    ifstream file;
+    std::ifstream file;
     openFile(file, "boundary");
-    vector<OpenfoamBoundary> res;
+    std::vector<Boundary> res;
     if (!file.is_open()) {
         return res;
     }
     // -- Reads data --
     skipHeader(file);
-    UInt nBoundaries = 0;
+    std::size_t nBoundaries = 0;
     while (!file.eof() && nBoundaries == 0) {
         file >> nBoundaries;
     }
-    string line;
+    std::string line;
     getline(file, line);
     getline(file, line);
     //
-    UInt boundariesRead = 0;
+    std::size_t boundariesRead = 0;
     while (!file.eof() && boundariesRead < nBoundaries) {
-        UInt nFaces = 0;
-        UInt startFace = 0;
-        string name;
+        std::size_t nFaces = 0;
+        std::size_t startFace = 0;
+        std::string name;
         getline(file, name);
         name = trim(name);
         getline(file, line);
@@ -160,8 +165,8 @@ ParserOpenFoam::readBoundaries() const {
             bool boundaryFinished = false;
             while (!file.eof() && !boundaryFinished) {
                 getline(file, line);
-                istringstream iss(line);
-                string tag;
+                std::istringstream iss(line);
+                std::string tag;
                 iss >> tag;
                 if (tag == "nFaces") {
                     iss >> nFaces;
@@ -172,7 +177,7 @@ ParserOpenFoam::readBoundaries() const {
                 }
             }
         }
-        res.push_back(OpenfoamBoundary(name, nFaces, startFace));
+        res.push_back(Boundary(name, nFaces, startFace));
         boundariesRead++;
     }
     //
@@ -180,68 +185,66 @@ ParserOpenFoam::readBoundaries() const {
     return res;
 }
 
-
-vector<FaceIdentifier>
-ParserOpenFoam::readFaces() const {
-    vector<FaceIdentifier> res;
+std::vector<FaceIdentifier> Parser::readFaces() const {
+    std::vector<FaceIdentifier> res;
     // --- Opens file ---
-    ifstream file;
+    std::ifstream file;
     openFile(file, "faces");
     if (!file.is_open()) {
         return res;
     }
     // --- Reads data ---
     skipHeader(file);
-    UInt nElem = 0;
+    std::size_t nElem = 0;
     while (!file.eof() && nElem == 0) {
         file >> nElem;
     }
-    string line;
+    std::string line;
     getline(file, line);
     getline(file, line);
-    ElementId id(0);
+    Geometry::ElemId id(0);
     res.reserve(nElem);
-    while (!file.eof() && id < ElementId(nElem)) {
+    while (!file.eof() && id < Geometry::ElemId(nElem)) {
         // Reads info
         getline(file, line);
         size_t init = line.find("(") + 1;
         size_t end = line.find(")");
-        const UInt nV = atoi(line.substr(0, init).c_str());
-        vector<CoordinateId> vId(nV);
-        stringstream ss(line.substr(init, end-init));
-        for (UInt i = 0; i < nV; i++) {
+        const std::size_t nV = atoi(line.substr(0, init).c_str());
+        std::vector<Geometry::CoordId> vId(nV);
+        std::stringstream ss(line.substr(init, end-init));
+        for (std::size_t i = 0; i < nV; i++) {
             ss >> vId[i];
             vId[i]++;
         }
-        res.push_back(pair<ElementId,vector<CoordinateId> >(++id, vId));
+        res.push_back(std::pair<Geometry::ElemId,
+                                std::vector<Geometry::CoordId>>(++id, vId));
     }
     file.close();
     return res;
 }
 
-vector<UInt>
-ParserOpenFoam::readFacesOwner(
-        const string& ownerOrNeighbour) const {
-    vector<UInt> res;
+std::vector<std::size_t> Parser::readFacesOwner(
+        const std::string& ownerOrNeighbour) const {
+    std::vector<std::size_t> res;
     // --- Opens file ---
-    ifstream file;
+    std::ifstream file;
     openFile(file, ownerOrNeighbour.c_str());
     if (!file.is_open()) {
         return res;
     }
     // --- Reads data ---
     skipHeader(file);
-    UInt nElem = 0;
+    std::size_t nElem = 0;
     while (!file.eof() && nElem == 0) {
         file >> nElem;
     }
-    string line;
+    std::string line;
     getline(file, line);
     getline(file, line);
-    UInt elem = 0;
+    std::size_t elem = 0;
     res.reserve(nElem);
     while (!file.eof() && elem < nElem) {
-        UInt id;
+        std::size_t id;
         file >> id;
         res.push_back(id++);
         elem++;
@@ -250,32 +253,28 @@ ParserOpenFoam::readFacesOwner(
     return res;
 }
 
-bool
-ParserOpenFoam::isExistingDirectory(const string& dir) const {
+bool Parser::isExistingDirectory(const std::string& dir) const {
     struct stat sb;
     bool res = (stat(dir.c_str(), &sb) == 0);
     res &= S_ISDIR(sb.st_mode);
     return res;
 }
 
-void
-ParserOpenFoam::openFile(
-        ifstream& file,
-        const string& name) const {
+void Parser::openFile(std::ifstream& file,
+                      const std::string& name) const {
     // Opens file
-    string filename = dirPolymesh_ + name;
-    file.open(filename.c_str(), ifstream::in);
+    std::string filename = dirPolymesh_ + name;
+    file.open(filename.c_str(), std::ifstream::in);
     if (file.fail()) {
-        cerr << endl << "WARNING @ ParserOpenFoamMesh: ";
-        cerr << endl << "Could not open file: ";
-        cerr << filename << endl;
+        std::cerr << std::endl << "WARNING @ ParserOpenFoamMesh: ";
+        std::cerr << std::endl << "Could not open file: ";
+        std::cerr << filename << std::endl;
     }
     return;
 }
 
-void
-ParserOpenFoam::skipHeader(ifstream& file) const {
-    string line;
+void Parser::skipHeader(std::ifstream& file) const {
+    std::string line;
     while (!file.eof()) {
         getline(file, line);
         if (line.find("}") != line.npos) {
@@ -283,27 +282,31 @@ ParserOpenFoam::skipHeader(ifstream& file) const {
             return;
         }
     }
-    cerr << endl << "ERROR @ ParserOpenFoamMesh: "
+    std::cerr << std::endl << "ERROR @ ParserOpenFoamMesh: "
             << "End of file reached and EOF was not found."
-            << "While skipping header. " << endl;
+            << "While skipping header. " << std::endl;
     return;
 }
 
-GroupLayers<> ParserOpenFoam::assignAsLayers(
-        ElemRGroup& elems,
-        const vector<OpenfoamBoundary>& bound) const {
-    GroupLayers<> layers;
-    for (UInt b = 0; b < bound.size(); b++) {
+Geometry::Layer::Group<> Parser::assignAsLayers(
+        Geometry::ElemRGroup& elems,
+        const std::vector<Boundary>& bound) const {
+    Geometry::Layer::Group<> layers;
+    for (std::size_t b = 0; b < bound.size(); b++) {
         if (bound[b].isMaterial()) {
-            layers.addId(new Layer(bound[b]));
+            layers.addId(new Geometry::Layer::Layer(bound[b]));
             MatId matId = bound[b].getMaterialIdFromName();
-            LayerId layId = bound[b].getId();
-            for (UInt i = 0; i < bound[b].getFaces(); i++) {
-                ElementId id(bound[b].getStartFace() + i + 1);
+            Geometry::LayerId layId = bound[b].getId();
+            for (std::size_t i = 0; i < bound[b].getFaces(); i++) {
+                Geometry::ElemId id(bound[b].getStartFace() + i + 1);
                 elems.setMatId(id, matId);
                 elems.setLayerId(id, layId);
             }
         }
     }
     return layers;
+}
+
+}
+}
 }

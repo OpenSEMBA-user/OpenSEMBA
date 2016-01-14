@@ -18,27 +18,26 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * OutOpenFoam.h
- *
- *  Created on: Apr 1, 2014
- *      Author: luis
- */
 
-#ifndef OUTOPENFOAM_H_
-#define OUTOPENFOAM_H_
+#ifndef SEMBA_MESHER_OPENFOAM_EXPORTER_H_
+#define SEMBA_MESHER_OPENFOAM_EXPORTER_H_
 
-#include "SmbData.h"
+#include "Data.h"
+#include "geometry/element/Triangle.h"
 
-class OutputOpenFoam : public ProjectFile {
+namespace SEMBA {
+namespace Mesher {
+namespace OpenFOAM {
+
+class Exporter : public FileSystem::Project {
 public:
-    OutputOpenFoam();
-    OutputOpenFoam(const SmbData* smb);
-    virtual ~OutputOpenFoam();
+    Exporter();
+    Exporter(const Data* smb);
+    virtual ~Exporter();
 private:
-	const SmbData* smb_;
-	string dirConstant_, dirPolymesh_, dirTriSurface_;
-	string dirSystem_;
+	const Data* smb_;
+	std::string dirConstant_, dirPolymesh_, dirTriSurface_;
+    std::string dirSystem_;
 	typedef enum {
 		dictionary,
 	} classes;
@@ -46,12 +45,11 @@ private:
 	void writeAllRun() const;
 //	void writeAllRunParallel() const;
 	void writeSTLs() const;
-	void triToSTL(
-	  const GroupElements<const Triangle>& tri,
-	  const string& folder,
-	  const string& type,
-	  const UInt& typeId,
-	  const string& name) const;
+	void triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri,
+	              const std::string& folder,
+	              const std::string& type,
+	              const std::size_t& typeId,
+	              const std::string& name) const;
 	void writeControlDict() const;
 	void writefvSchemes() const;
 	void writefvSolution() const;
@@ -59,19 +57,22 @@ private:
 	void writeMeshQualityDict() const;
 //	void writeDecomposeParDict() const;
 	void createOpenFoamDirs();
-	string writeOpenFoamHeader(
-	  const string& location,
-	  const string& object) const;
-	string writeAllBoundary() const;
+    std::string writeOpenFoamHeader(const std::string& location,
+                                    const std::string& object) const;
+	std::string writeAllBoundary() const;
 	void writeOpenFoamDummyFile() const;
 	void writeSurfaceFeatureExtractDict() const;
 	void writeSnappyHexMeshDict() const;
-	UInt computeRefinableCellDim(
-	  const UInt originalCellDim,
-	  const UInt numberOfProcessors) const;
-	string boolToStr(const bool) const;
-	string intToStr(const UInt i) const;
-	CVecR3 computeLocationInMesh() const;
+	std::size_t computeRefinableCellDim(
+            const std::size_t originalCellDim,
+            const std::size_t numberOfProcessors) const;
+	std::string boolToStr(const bool) const;
+    std::string intToStr(const std::size_t i) const;
+	Math::CVecR3 computeLocationInMesh() const;
 };
 
-#endif /* OUTOPENFOAM_H_ */
+}
+}
+}
+
+#endif /* SEMBA_MESHER_OPENFOAM_EXPORTER_H_ */

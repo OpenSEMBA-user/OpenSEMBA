@@ -18,21 +18,27 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * OutOpenFoam.cpp
- *
- *  Created on: Apr 1, 2014
- *      Author: luis
- */
 
-#include "OutputOpenFoam.h"
+#include "Exporter.h"
 
-OutputOpenFoam::OutputOpenFoam() {
+#ifdef _WIN32
+#include <direct.h>
+#endif
+
+#include "geometry/mesh/Unstructured.h"
+#include "physicalModel/PEC.h"
+#include "physicalModel/SMA.h"
+
+namespace SEMBA {
+namespace Mesher {
+namespace OpenFOAM {
+
+Exporter::Exporter() {
     smb_ = NULL;
 }
 
-OutputOpenFoam::OutputOpenFoam(
-        const SmbData* smb) {
+Exporter::Exporter(
+        const Data* smb) {
     smb_ = smb;
     setFilename(smb_->getFolder() + "/openfoam/");
     deleteDirIfExists(getFilename());
@@ -55,11 +61,11 @@ OutputOpenFoam::OutputOpenFoam(
     writeMeshQualityDict();
 }
 
-OutputOpenFoam::~OutputOpenFoam() {
+Exporter::~Exporter() {
 }
 
 void
-OutputOpenFoam::createOpenFoamDirs() {
+Exporter::createOpenFoamDirs() {
     dirConstant_ = getFilename() + "constant/";
     dirPolymesh_ = getFilename() + "constant/polyMesh/";
     dirTriSurface_ = getFilename() + "constant/triSurface/";
@@ -80,152 +86,158 @@ OutputOpenFoam::createOpenFoamDirs() {
 }
 
 void
-OutputOpenFoam::writeSTLs() const {
+Exporter::writeSTLs() const {
     // Writes materials.
-    for (UInt i = 0; i < smb_->pMGroup->size(); i++) {
-        const PhysicalModel* mat = (*smb_->pMGroup)(i);
-        if (!mat->is<PMSMA>()) {
-            bool includeTets = !smb_->mesherOptions->isBruteForceVolumes();
-            if (mat->is<PMPEC>()) {
+    for (std::size_t i = 0; i < smb_->physicalModels->size(); i++) {
+        const PhysicalModel::PhysicalModel* mat = (*smb_->physicalModels)(i);
+        if (!mat->is<PhysicalModel::SMA>()) {
+            //TODO
+            //bool includeTets = !smb_->mesherOptions->isBruteForceVolumes();
+            bool includeTets = false;
+            if (mat->is<PhysicalModel::PEC>()) {
                 includeTets = true;
             }
             MatId matId = mat->getId();
-            const MeshUnstructured* mesh = smb_->mesh->castTo<MeshUnstructured>();
-            ConstElemRGroup elems = mesh->elems().getMatId(matId);
-            GroupElements<const Triangle> tri = mesh->convertToTri(elems, includeTets);
-            triToSTL(tri, dirTriSurface_, "mat", matId.toUInt(), mat->getName());
+            const Geometry::Mesh::Unstructured* mesh = 
+                smb_->mesh->castTo<Geometry::Mesh::Unstructured>();
+            Geometry::ConstElemRGroup elems = mesh->elems().getMatId(matId);
+            Geometry::Element::Group<const Geometry::Tri> tri = 
+                mesh->convertToTri(elems, includeTets);
+            triToSTL(tri, dirTriSurface_, "mat", matId.toInt(), mat->getName());
         }
     }
     // Writes surface output requests.
-    //	const UInt nOutRq =
+    //	const std::size_t nOutRq =
     //	 smb_->outputRequests->countWithType(Element::SURFACE);
-    //	for (UInt i = 0; i < nOutRq; i++) {
+    //	for (std::size_t i = 0; i < nOutRq; i++) {
     //		const OutputRequest* outRq =
     //		 smb_->outputRequests->getWithType(i, Element::SURFACE);
-    //		const vector<Tri3> tri = smb_->mesh->getTriWithId(outRq->getElem());
-    //		const string name = outRq->getName();
+    //		const std::vector<Tri3> tri = smb_->mesh->getTriWithId(outRq->getElem());
+    //		const std::string name = outRq->getName();
     //		stringstream num;
     //		num << i;
     //		triToSTL(tri, dirTriSurface + "out." + num.str(), name);
     //	}
     //   // Writes surface EMSource.
-    //   const UInt nEM = smb_->emSources->countWithType(ElementBase::surface);
-    //   for (UInt i = 0; i < nEM; i++) {
+    //   const std::size_t nEM = smb_->emSources->countWithType(ElementBase::surface);
+    //   for (std::size_t i = 0; i < nEM; i++) {
     //      const EMSource* em = smb_->emSources->getWithType(i, ElementBase::surface);
     //      GroupElements<Tri3> tri = smb_->mesh->get(em->getElem()).getGroupOf<Tri3>();
-    //      const string name = "Waveport";
+    //      const std::string name = "Waveport";
     //      triToSTL(tri, dirTriSurface_, "src", i, name);
     //   }
 }
 
 void
-OutputOpenFoam::triToSTL(
-        const GroupElements<const Triangle>& tri,
-        const string& folder,
-        const string& type,
-        const UInt& typeId,
-        const string& name) const {
-    map<LayerId, vector<const Triangle*> > layers = tri.separateByLayers();
-    map<LayerId, vector<const Triangle*> >::iterator it;
+Exporter::triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri,
+                   const std::string& folder,
+                   const std::string& type,
+                   const std::size_t& typeId,
+                   const std::string& name) const {
+    std::map<Geometry::LayerId, std::vector<const Geometry::Tri*> > layers = 
+        tri.separateByLayers();
+    std::map<Geometry::LayerId, std::vector<const Geometry::Tri*> >::iterator 
+        it;
     for (it = layers.begin(); it != layers.end(); ++it) {
-        const LayerId layerId = it->first;
-        const vector<const Triangle*> tri = it->second;
+        const Geometry::LayerId layerId = it->first;
+        const std::vector<const Geometry::Tri*> tri = it->second;
         // Opens file.
-        ofstream file;
-        string filename;
+        std::ofstream file;
+        std::string filename;
         filename = folder + type
-                + "." + intToStr(typeId) + "." + intToStr(layerId.toUInt());
-        openFile(filename + ".stl", file, ios::out);
+                + "." + intToStr(typeId) + "." + intToStr(layerId.toInt());
+        openFile(filename + ".stl", file);
         // Writes data.
-        const UInt nElem = tri.size();
-        string solidName(name);
-        const MeshUnstructured* mesh = smb_->mesh->castTo<MeshUnstructured>();
+        const std::size_t nElem = tri.size();
+        std::string solidName(name);
+        const Geometry::Mesh::Unstructured* mesh = 
+            smb_->mesh->castTo<Geometry::Mesh::Unstructured>();
         if (mesh->layers().getId(layerId) != NULL) {
             solidName += "@" + mesh->layers().getId(layerId)->getName();
         }
-        file << "solid " << solidName << endl;
-        for (UInt i = 0; i < nElem; i++) {
+        file << "solid " << solidName << std::endl;
+        for (std::size_t i = 0; i < nElem; i++) {
             file << "facet ";
-            //          CVecR3 n = tri[i]->getNormal();
+            //          Math::CVecR3 n = tri[i]->getNormal();
             //          file << " normal " << n(0) << " " << n(1) << " " << n(2)
-            file << endl;
-            file << "  outer loop" << endl;
-            for (UInt j = 0; j < tri[i]->numberOfVertices(); j++) {
-                CVecR3 v = tri[i]->getVertex(j)->pos();
+            file << std::endl;
+            file << "  outer loop" << std::endl;
+            for (std::size_t j = 0; j < tri[i]->numberOfVertices(); j++) {
+                Math::CVecR3 v = tri[i]->getVertex(j)->pos();
                 file << "    vertex "
                         << v(0) << " "
                         << v(1) << " "
-                        << v(2) << endl;
+                        << v(2) << std::endl;
             }
-            file << "  endloop" << endl;
-            file << "endfacet" << endl;
+            file << "  endloop" << std::endl;
+            file << "endfacet" << std::endl;
         }
-        file << "endsolid " << solidName << endl;
+        file << "endsolid " << solidName << std::endl;
         file.close();
     }
 }
 
 void
-OutputOpenFoam::writeOpenFoamDummyFile() const {
-    ofstream file;
+Exporter::writeOpenFoamDummyFile() const {
+    std::ofstream file;
     openFile(getFilename() + "openfoam.foam", file);
     file.close();
 }
 
 void
-OutputOpenFoam::writeControlDict() const {
-    string name = "controlDict";
-    string fileName = dirSystem_ + "/" + name;
-    ofstream file;
+Exporter::writeControlDict() const {
+    std::string name = "controlDict";
+    std::string fileName = dirSystem_ + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
-    file << writeOpenFoamHeader(string("system"), name) << endl;
-    file << endl;
-    file << "filestartFrom   startTime;" << endl;
-    file << "startTime       latestTime;" << endl;
-    file << "stopAt          endTime;" << endl;
-    file << "endTime         0;" << endl;
-    file << "deltaT          1;" << endl;
-    file << "writeControl    timeStep;" << endl;
-    file << "writeInterval   1;" << endl;
-    file << "purgeWrite      0;" << endl;
-    file << "writeFormat     ascii;" << endl;
-    file << "writePrecision  6;" << endl;
-    file << "writeCompression uncompressed;" << endl;
-    file << "timeFormat      general;" << endl;
-    file << "timePrecision   6;" << endl;
-    file << "runTimeModifiable yes;" << endl;
+    file << writeOpenFoamHeader(std::string("system"), name) << std::endl;
+    file << std::endl;
+    file << "filestartFrom   startTime;" << std::endl;
+    file << "startTime       latestTime;" << std::endl;
+    file << "stopAt          endTime;" << std::endl;
+    file << "endTime         0;" << std::endl;
+    file << "deltaT          1;" << std::endl;
+    file << "writeControl    timeStep;" << std::endl;
+    file << "writeInterval   1;" << std::endl;
+    file << "purgeWrite      0;" << std::endl;
+    file << "writeFormat     ascii;" << std::endl;
+    file << "writePrecision  6;" << std::endl;
+    file << "writeCompression uncompressed;" << std::endl;
+    file << "timeFormat      general;" << std::endl;
+    file << "timePrecision   6;" << std::endl;
+    file << "runTimeModifiable yes;" << std::endl;
     // Closes file.
     file.close();
 }
 
 void
-OutputOpenFoam::writefvSchemes() const {
-    const string name = "fvSchemes";
-    const string fileName = dirSystem_ + "/" + name;
-    ofstream file;
+Exporter::writefvSchemes() const {
+    const std::string name = "fvSchemes";
+    const std::string fileName = dirSystem_ + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
-    file << writeOpenFoamHeader("system", name) << endl;
-    file << "gradSchemes {}" << endl;
-    file << "divSchemes {}" << endl;
-    file << "laplacianSchemes {}" << endl;
+    file << writeOpenFoamHeader("system", name) << std::endl;
+    file << "gradSchemes {}" << std::endl;
+    file << "divSchemes {}" << std::endl;
+    file << "laplacianSchemes {}" << std::endl;
     // Closes file.
     file.close();
 }
 
 void
-OutputOpenFoam::writefvSolution() const {
-    const string name = "fvSolution";
-    const string fileName = dirSystem_ + "/" + name;
-    ofstream file;
+Exporter::writefvSolution() const {
+    const std::string name = "fvSolution";
+    const std::string fileName = dirSystem_ + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
-    file << writeOpenFoamHeader("system", name) << endl;
+    file << writeOpenFoamHeader("system", name) << std::endl;
     // Closes file.
     file.close();
 }
 
-string
-OutputOpenFoam::writeAllBoundary() const {
-    string res;
+std::string
+Exporter::writeAllBoundary() const {
+    std::string res;
     res =  "allBoundary {\n";
     res += "  type patch; \n";
     res += "    faces ( (3 7 6 2) (0 4 7 3) (2 6 5 1)\n";
@@ -235,105 +247,105 @@ OutputOpenFoam::writeAllBoundary() const {
 }
 
 //void
-//OutputOpenFoam::writeDecomposeParDict() const {
+//Exporter::writeDecomposeParDict() const {
 //   // Opens file for writing.
-//   const string name = "decomposeParDict";
-//   const string fileName = dirSystem_ + "/" + name;
-//   ofstream file;
+//   const std::string name = "decomposeParDict";
+//   const std::string fileName = dirSystem_ + "/" + name;
+//   std::ofstream file;
 //   openFile(fileName, file);
 //   // Prepares data.
-//   UInt numberOfProcesses = smb_->solverParams->numberOfProcesses;
+//   std::size_t numberOfProcesses = smb_->solverParams->numberOfProcesses;
 //   // Writes file.
-//   file<< writeOpenFoamHeader("system/", name) << endl
-//         << endl
-//         << "numberOfSubdomains " << numberOfProcesses << ";" << endl
-//         << endl
-//         << "method hierarchical;" << endl
-//         << endl
-//         << "hierarchicalCoeffs {" << endl
-//         << "    n (" << numberOfProcesses << " 1 1);" << endl
-//         << "    order xyz;" << endl
-//         << "    delta 0.001;" << endl
-//         << "}" << endl
-//         << endl
-//         << "distributed no;" << endl;
+//   file<< writeOpenFoamHeader("system/", name) << std::endl
+//         << std::endl
+//         << "numberOfSubdomains " << numberOfProcesses << ";" << std::endl
+//         << std::endl
+//         << "method hierarchical;" << std::endl
+//         << std::endl
+//         << "hierarchicalCoeffs {" << std::endl
+//         << "    n (" << numberOfProcesses << " 1 1);" << std::endl
+//         << "    order xyz;" << std::endl
+//         << "    delta 0.001;" << std::endl
+//         << "}" << std::endl
+//         << std::endl
+//         << "distributed no;" << std::endl;
 //   // Closes file.
 //   file.close();
 //}
 
 void
-OutputOpenFoam::writeBlockMeshDict() const {
+Exporter::writeBlockMeshDict() const {
     // Opens file for writing.
-    const string name = "blockMeshDict";
-    const string fileName = dirPolymesh_ + "/" + name;
-    ofstream file;
+    const std::string name = "blockMeshDict";
+    const std::string fileName = dirPolymesh_ + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
     // Prepares data.
-    const Grid3* grid = smb_->grid;
+    const Geometry::Grid3* grid = smb_->grid;
     if (grid->hasZeroSize()) {
-        throw Error("Rectilinear grid has zero size.");
+        throw std::logic_error("Rectilinear grid has zero size.");
     }
-    CVecR3 min(grid->getFullDomainBoundingBox().getMin());
-    CVecR3 max(grid->getFullDomainBoundingBox().getMax());
+    Math::CVecR3 min(grid->getFullDomainBoundingBox().getMin());
+    Math::CVecR3 max(grid->getFullDomainBoundingBox().getMax());
     // blockMesh can not run in parallel. Because of this reason we have to
     // create an initial mesh with nCells/nProc processors and then
     // use refineMesh. Therefore the following equality must be true:
     //                 (nCellsX / nProc) % 2 == 0
     // This is ensured by computeRefinableCellDim.
-    Int dimX = computeRefinableCellDim(grid->getNumCells()(0), 1);
-    Int dimY = computeRefinableCellDim(grid->getNumCells()(1), 1);
-    Int dimZ = computeRefinableCellDim(grid->getNumCells()(2), 1);
+    Math::Int dimX = computeRefinableCellDim(grid->getNumCells()(0), 1);
+    Math::Int dimY = computeRefinableCellDim(grid->getNumCells()(1), 1);
+    Math::Int dimZ = computeRefinableCellDim(grid->getNumCells()(2), 1);
     // Writes file.
-    file << writeOpenFoamHeader("constant/polyMesh", name) << endl;
+    file << writeOpenFoamHeader("constant/polyMesh", name) << std::endl;
     // Scaling should have already been applied to mesh. It is not
     // necessary to modify this.
-    file << "convertToMeters 1;" << endl;
-    file << endl;
+    file << "convertToMeters 1;" << std::endl;
+    file << std::endl;
     // Vertices.
-    file << "vertices" << endl;
-    file << "(" << endl;
-    file << "    ( " << min(0) << " " << min(1) << " " << min(2) << ")" << endl;
-    file << "    ( " << max(0) << " " << min(1) << " " << min(2) << ")" << endl;
-    file << "    ( " << max(0) << " " << max(1) << " " << min(2) << ")" << endl;
-    file << "    ( " << min(0) << " " << max(1) << " " << min(2) << ")" << endl;
-    file << "    ( " << min(0) << " " << min(1) << " " << max(2) << ")" << endl;
-    file << "    ( " << max(0) << " " << min(1) << " " << max(2) << ")" << endl;
-    file << "    ( " << max(0) << " " << max(1) << " " << max(2) << ")" << endl;
-    file << "    ( " << min(0) << " " << max(1) << " " << max(2) << ")" << endl;
-    file << ");" << endl;
-    file << endl;
+    file << "vertices" << std::endl;
+    file << "(" << std::endl;
+    file << "    ( " << min(0) << " " << min(1) << " " << min(2) << ")" << std::endl;
+    file << "    ( " << max(0) << " " << min(1) << " " << min(2) << ")" << std::endl;
+    file << "    ( " << max(0) << " " << max(1) << " " << min(2) << ")" << std::endl;
+    file << "    ( " << min(0) << " " << max(1) << " " << min(2) << ")" << std::endl;
+    file << "    ( " << min(0) << " " << min(1) << " " << max(2) << ")" << std::endl;
+    file << "    ( " << max(0) << " " << min(1) << " " << max(2) << ")" << std::endl;
+    file << "    ( " << max(0) << " " << max(1) << " " << max(2) << ")" << std::endl;
+    file << "    ( " << min(0) << " " << max(1) << " " << max(2) << ")" << std::endl;
+    file << ");" << std::endl;
+    file << std::endl;
     // Blocks.
-    file << "blocks" << endl;
-    file << "(" << endl;
+    file << "blocks" << std::endl;
+    file << "(" << std::endl;
     file << "    hex (0 1 2 3 4 5 6 7) ("
             << dimX << " " << dimY << " " << dimZ
-            << ") simpleGrading (1 1 1)" << endl;
-    file << ");" << endl;
-    file << endl;
+            << ") simpleGrading (1 1 1)" << std::endl;
+    file << ");" << std::endl;
+    file << std::endl;
     // Edges.
-    file << "edges" << endl;
-    file << "(" << endl;
-    file << ");" << endl;
-    file << endl;
+    file << "edges" << std::endl;
+    file << "(" << std::endl;
+    file << ");" << std::endl;
+    file << std::endl;
     // Boundary.
-    file << "boundary" << endl;
-    file << "(" << endl;
-    file << "  xMin {type symmetryPlane; faces ((0 4 7 3));}" << endl;
-    file << "  yMin {type symmetryPlane; faces ((1 5 4 0));}" << endl;
-    file << "  zMin {type symmetryPlane; faces ((0 1 2 3));}" << endl;
-    file << "  xMax {type symmetryPlane; faces ((1 5 6 2));}" << endl;
-    file << "  yMax {type symmetryPlane; faces ((2 3 7 6));}" << endl;
-    file << "  zMax {type symmetryPlane; faces ((4 5 6 7));}" << endl;
-    file << ");" << endl;
+    file << "boundary" << std::endl;
+    file << "(" << std::endl;
+    file << "  xMin {type symmetryPlane; faces ((0 4 7 3));}" << std::endl;
+    file << "  yMin {type symmetryPlane; faces ((1 5 4 0));}" << std::endl;
+    file << "  zMin {type symmetryPlane; faces ((0 1 2 3));}" << std::endl;
+    file << "  xMax {type symmetryPlane; faces ((1 5 6 2));}" << std::endl;
+    file << "  yMax {type symmetryPlane; faces ((2 3 7 6));}" << std::endl;
+    file << "  zMax {type symmetryPlane; faces ((4 5 6 7));}" << std::endl;
+    file << ");" << std::endl;
     // Closes file.
     file.close();
 }
 
-string
-OutputOpenFoam::writeOpenFoamHeader(
-        const string& location,
-        const string& object) const {
-    string res;
+std::string
+Exporter::writeOpenFoamHeader(
+        const std::string& location,
+        const std::string& object) const {
+    std::string res;
     res =  "// Written automatically by smbExtract\n";
     res += "// Propietary software of University of Granada, 2014.\n";
     res += "// In the case of unexpected behaviour contact lm@diazangulo.com\n";
@@ -349,94 +361,94 @@ OutputOpenFoam::writeOpenFoamHeader(
 }
 
 void
-OutputOpenFoam::writeSurfaceFeatureExtractDict() const {
+Exporter::writeSurfaceFeatureExtractDict() const {
     // Opens file.
-    string name = "surfaceFeatureExtractDict";
-    string fileName = dirSystem_ + "/" + name;
-    ofstream file;
+    std::string name = "surfaceFeatureExtractDict";
+    std::string fileName = dirSystem_ + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
     // Prepares data.
-    vector<string> stlFile = getFilesBasenames(dirTriSurface_, ".stl");
-    const UInt nSTLs = stlFile.size();
+    std::vector<std::string> stlFile = getFilesBasenames(dirTriSurface_, ".stl");
+    const std::size_t nSTLs = stlFile.size();
     // Writes data.
-    file << writeOpenFoamHeader("system", name) << endl;
-    file << endl;
-    for (UInt i = 0; i < nSTLs; i++) {
-        file<< stlFile[i] << endl
-                << "{" << endl
-                << "    extractionMethod    extractFromSurface;" << endl
-                << "    extractFromSurfaceCoeffs" << endl
-                << "    {" << endl
-                << "        includedAngle 180;" << endl
-                << "    }" << endl
-                << "    writeObj true;" << endl
-                << "}" << endl
-                << endl;
+    file << writeOpenFoamHeader("system", name) << std::endl;
+    file << std::endl;
+    for (std::size_t i = 0; i < nSTLs; i++) {
+        file<< stlFile[i] << std::endl
+                << "{" << std::endl
+                << "    extractionMethod    extractFromSurface;" << std::endl
+                << "    extractFromSurfaceCoeffs" << std::endl
+                << "    {" << std::endl
+                << "        includedAngle 180;" << std::endl
+                << "    }" << std::endl
+                << "    writeObj true;" << std::endl
+                << "}" << std::endl
+                << std::endl;
     }
     // Closes file.
     file.close();
 }
 
 void
-OutputOpenFoam::writeSnappyHexMeshDict() const {
+Exporter::writeSnappyHexMeshDict() const {
     // Opens file.
-    string name = "snappyHexMeshDict";
-    string fileName = dirSystem_ + "/" + name;
-    ofstream file;
+    std::string name = "snappyHexMeshDict";
+    std::string fileName = dirSystem_ + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
     // Prepares data.
-    vector<string> stlFile = getFilesBasenames(dirTriSurface_, ".stl");
-    const UInt nSTLs = stlFile.size();
+    std::vector<std::string> stlFile = getFilesBasenames(dirTriSurface_, ".stl");
+    const std::size_t nSTLs = stlFile.size();
     // Writes data.
-    file << writeOpenFoamHeader("system", name) << endl;
-    file << endl;
-    file << "castellatedMesh " << boolToStr(true) << ";" << endl;
-    file << "snap            " << boolToStr(false) << ";" << endl;
-    file << "addLayers       " << boolToStr(false) << ";" << endl;
-    file << endl;
+    file << writeOpenFoamHeader("system", name) << std::endl;
+    file << std::endl;
+    file << "castellatedMesh " << boolToStr(true) << ";" << std::endl;
+    file << "snap            " << boolToStr(false) << ";" << std::endl;
+    file << "addLayers       " << boolToStr(false) << ";" << std::endl;
+    file << std::endl;
     // ---- Geometry ----
-    file << "geometry" << endl;
-    file << "{" << endl;
-    for (UInt i = 0; i < nSTLs; i++) {
-        string matName = removeExtension(stlFile[i]);
-        file << "    " << stlFile[i] << endl;
-        file << "    {" << endl;
-        file << "        type triSurfaceMesh;" << endl;
-        file << "        name " << matName << ";" << endl;
-        file << "    }" << endl;
+    file << "geometry" << std::endl;
+    file << "{" << std::endl;
+    for (std::size_t i = 0; i < nSTLs; i++) {
+        std::string matName = removeExtension(stlFile[i]);
+        file << "    " << stlFile[i] << std::endl;
+        file << "    {" << std::endl;
+        file << "        type triSurfaceMesh;" << std::endl;
+        file << "        name " << matName << ";" << std::endl;
+        file << "    }" << std::endl;
     }
-    file << "};" << endl;
-    file << endl;
+    file << "};" << std::endl;
+    file << std::endl;
     // ---- Castellated mesh controls ----
-    file << "castellatedMeshControls" << endl;
-    file << "{" << endl;
-    file << "    maxLocalCells 100000;" << endl;
-    file << "    maxGlobalCells 2000000;" << endl;
-    file << "    minRefinementCells 0;" << endl;
-    file << "    nCellsBetweenLevels 1;" << endl;
+    file << "castellatedMeshControls" << std::endl;
+    file << "{" << std::endl;
+    file << "    maxLocalCells 100000;" << std::endl;
+    file << "    maxGlobalCells 2000000;" << std::endl;
+    file << "    minRefinementCells 0;" << std::endl;
+    file << "    nCellsBetweenLevels 1;" << std::endl;
 
-    file << endl;
+    file << std::endl;
     // Explicit features.
-    file << "    features" << endl;
-    file << "    (" << endl;
-    //	for (UInt i = 0; i < nSTLs; i++) {
-    //		file<< "        {" << endl
+    file << "    features" << std::endl;
+    file << "    (" << std::endl;
+    //	for (std::size_t i = 0; i < nSTLs; i++) {
+    //		file<< "        {" << std::endl
     //		 << "            file \"" << removeExtension(stlFile[i])
-    //		 << ".extendedFeatureEdgeMesh\";" << endl
+    //		 << ".extendedFeatureEdgeMesh\";" << std::endl
     //		 << "            level "
-    //		 << smb_->ofParams->getFeatureRefinementLevel()<< ";" << endl
-    //		 << "        }" << endl;
+    //		 << smb_->ofParams->getFeatureRefinementLevel()<< ";" << std::endl
+    //		 << "        }" << std::endl;
     //	}
-    file << "    );" << endl;
-    file << endl;
+    file << "    );" << std::endl;
+    file << std::endl;
     // Refinement surfaces.
-    file << "    refinementSurfaces" << endl;
-    file << "    {" << endl;
-    for (UInt i = 0; i < nSTLs; i++) {
-        file << "        " << removeExtension(stlFile[i]) << endl;
-        file << "        {" << endl;
-        file << "            level (0 0);" << endl;
-        file << "        }" << endl;
+    file << "    refinementSurfaces" << std::endl;
+    file << "    {" << std::endl;
+    for (std::size_t i = 0; i < nSTLs; i++) {
+        file << "        " << removeExtension(stlFile[i]) << std::endl;
+        file << "        {" << std::endl;
+        file << "            level (0 0);" << std::endl;
+        file << "        }" << std::endl;
         // TODO If it is a surface we have to put:
         /* faceZone mat.1;
 		   faceType baffle;
@@ -445,112 +457,112 @@ OutputOpenFoam::writeSnappyHexMeshDict() const {
          */
         // To obtain a non duplicated surface when snapping is activated.
     }
-    file << "    }" << endl;
-    file << endl;
-    file << "    resolveFeatureAngle 30;" << endl;
-    file << endl;
+    file << "    }" << std::endl;
+    file << std::endl;
+    file << "    resolveFeatureAngle 30;" << std::endl;
+    file << std::endl;
     // Refinement regions.
-    file << "    refinementRegions" << endl;
-    file << "    {" << endl;
-    file << "    }" << endl;
+    file << "    refinementRegions" << std::endl;
+    file << "    {" << std::endl;
+    file << "    }" << std::endl;
     // Mesh selection.
-    CVecR3 loc = computeLocationInMesh();
+    Math::CVecR3 loc = computeLocationInMesh();
     file << "   locationInMesh "
-            << "(" << loc(0) << " " << loc(1) << " " << loc(2) << ");" << endl;
-    file << endl;
-    file << "   allowFreeStandingZoneFaces true;" << endl;
-    file << "}" << endl; // Closes castellated mesh controls.
-    file << endl;
+            << "(" << loc(0) << " " << loc(1) << " " << loc(2) << ");" << std::endl;
+    file << std::endl;
+    file << "   allowFreeStandingZoneFaces true;" << std::endl;
+    file << "}" << std::endl; // Closes castellated mesh controls.
+    file << std::endl;
     // ---- Snap controls ----
-    file << "snapControls" << endl;
-    file << "{" << endl;
-    file << "    nSmoothPatch 3;" << endl;
-    file << "    tolerance 1.5;" << endl;
-    file << "    nSolveIter 150;" << endl;
-    file << "    nRelaxIter 5;" << endl;
-    file << "    nFeatureSnapIter 10;" << endl;
-    file << "    implicitFeatureSnap false;" << endl;
-    file << "    explicitFeatureSnap true;" << endl;
-    file << "    multiRegionFeatureSnap true;" << endl;
-    file << "}" << endl;
-    file << endl;
+    file << "snapControls" << std::endl;
+    file << "{" << std::endl;
+    file << "    nSmoothPatch 3;" << std::endl;
+    file << "    tolerance 1.5;" << std::endl;
+    file << "    nSolveIter 150;" << std::endl;
+    file << "    nRelaxIter 5;" << std::endl;
+    file << "    nFeatureSnapIter 10;" << std::endl;
+    file << "    implicitFeatureSnap false;" << std::endl;
+    file << "    explicitFeatureSnap true;" << std::endl;
+    file << "    multiRegionFeatureSnap true;" << std::endl;
+    file << "}" << std::endl;
+    file << std::endl;
     // ---- addLayers controls ----
-    file << "addLayersControls" << endl;
-    file << "{" << endl;
-    file << "    relativeSizes true;" << endl;
-    file << "    layers { }" << endl;
-    file << "    expansionRatio 1.0;" << endl;
-    file << "    finalLayerThickness 0.3;" << endl;
-    file << "    minThickness 0.25;" << endl;
-    file << "    nGrow 0;" << endl;
-    file << "    featureAngle 30;" << endl;
-    file << "    nRelaxIter 5;" << endl;
-    file << "    nSmoothSurfaceNormals 1;" << endl;
-    file << "    nSmoothNormals 3;" << endl;
-    file << "    nSmoothThickness 10;" << endl;
-    file << "    maxFaceThicknessRatio 0.5;" << endl;
-    file << "    maxThicknessToMedialRatio 0.3;" << endl;
-    file << "    minMedianAxisAngle 90;" << endl;
-    file << "    nBufferCellsNoExtrude 0;" << endl;
-    file << "    nLayerIter 50;" << endl;
-    file << "}" << endl;
-    file << endl;
+    file << "addLayersControls" << std::endl;
+    file << "{" << std::endl;
+    file << "    relativeSizes true;" << std::endl;
+    file << "    layers { }" << std::endl;
+    file << "    expansionRatio 1.0;" << std::endl;
+    file << "    finalLayerThickness 0.3;" << std::endl;
+    file << "    minThickness 0.25;" << std::endl;
+    file << "    nGrow 0;" << std::endl;
+    file << "    featureAngle 30;" << std::endl;
+    file << "    nRelaxIter 5;" << std::endl;
+    file << "    nSmoothSurfaceNormals 1;" << std::endl;
+    file << "    nSmoothNormals 3;" << std::endl;
+    file << "    nSmoothThickness 10;" << std::endl;
+    file << "    maxFaceThicknessRatio 0.5;" << std::endl;
+    file << "    maxThicknessToMedialRatio 0.3;" << std::endl;
+    file << "    minMedianAxisAngle 90;" << std::endl;
+    file << "    nBufferCellsNoExtrude 0;" << std::endl;
+    file << "    nLayerIter 50;" << std::endl;
+    file << "}" << std::endl;
+    file << std::endl;
     // ---- meshQuality control ----
-    file << "meshQualityControls" << endl;
-    file << "{" << endl;
-    file << "    #include \"meshQualityDict\"" << endl;
-    file << "}" << endl;
-    file << endl;
+    file << "meshQualityControls" << std::endl;
+    file << "{" << std::endl;
+    file << "    #include \"meshQualityDict\"" << std::endl;
+    file << "}" << std::endl;
+    file << std::endl;
     // ---- Write flags ----
-    file << "writeFlags" << endl;
-    file << "(" << endl;
-    file << "    scalarLevels" << endl;
-    file << "    layerSets" << endl;
-    file << "    layerFields" << endl;
-    file << ");" << endl;
-    file << endl;
+    file << "writeFlags" << std::endl;
+    file << "(" << std::endl;
+    file << "    scalarLevels" << std::endl;
+    file << "    layerSets" << std::endl;
+    file << "    layerFields" << std::endl;
+    file << ");" << std::endl;
+    file << std::endl;
     // ---- Merge tolerance ----
-    file << "mergeTolerance 1E-6;" << endl;
-    file << endl;
+    file << "mergeTolerance 1E-6;" << std::endl;
+    file << std::endl;
     // Closes file.
     file.close();
 }
 
 void
-OutputOpenFoam::writeMeshQualityDict() const {
+Exporter::writeMeshQualityDict() const {
     // Opens file.
-    string name = "meshQualityDict";
-    string fileName = dirSystem_ + "/" + name;
-    ofstream file;
+    std::string name = "meshQualityDict";
+    std::string fileName = dirSystem_ + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
     // Writes data.
-    file << writeOpenFoamHeader("system", name) << endl;
-    file << endl;
-    file << "#include \"$WM_PROJECT_DIR/etc/caseDicts/meshQualityDict\"" << endl;
-    //	file << "    relaxed" << endl;
-    //	file << "    {" << endl;
-    //	file << "        maxNonOrtho 75;" << endl;
-    //	file << "    }" << endl;
-    file << "    nSmoothScale 4;" << endl;
-    file << "    errorReduction 0.75;" << endl;
+    file << writeOpenFoamHeader("system", name) << std::endl;
+    file << std::endl;
+    file << "#include \"$WM_PROJECT_DIR/etc/caseDicts/meshQualityDict\"" << std::endl;
+    //	file << "    relaxed" << std::endl;
+    //	file << "    {" << std::endl;
+    //	file << "        maxNonOrtho 75;" << std::endl;
+    //	file << "    }" << std::endl;
+    file << "    nSmoothScale 4;" << std::endl;
+    file << "    errorReduction 0.75;" << std::endl;
     // Closes file.
     file.close();
 }
 
 void
-OutputOpenFoam::writeAllClean() const {
-    string name = "Allclean";
-    string fileName = getFilename() + "/" + name;
-    ofstream file;
+Exporter::writeAllClean() const {
+    std::string name = "Allclean";
+    std::string fileName = getFilename() + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
-    file<< "#!/bin/bash" << endl;
-    file << "source /opt/openfoam230/etc/bashrc" << endl;
-    file << ". /opt/openfoam230/bin/tools/CleanFunctions" << endl;
-    file << "rm -rf 0 > /dev/null 2>&1" << endl;
-    file << "rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1" << endl;
-    file << "rm -f constant/triSurface/*.eMesh > /dev/null 2>&1" << endl;
-    file << "rm -f constant/polyMesh/boundary" << endl;
-    file << "cleanCase" << endl;
+    file<< "#!/bin/bash" << std::endl;
+    file << "source /opt/openfoam230/etc/bashrc" << std::endl;
+    file << ". /opt/openfoam230/bin/tools/CleanFunctions" << std::endl;
+    file << "rm -rf 0 > /dev/null 2>&1" << std::endl;
+    file << "rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1" << std::endl;
+    file << "rm -f constant/triSurface/*.eMesh > /dev/null 2>&1" << std::endl;
+    file << "rm -f constant/polyMesh/boundary" << std::endl;
+    file << "cleanCase" << std::endl;
     // Closes file.
     file.close();
 #ifndef _WIN32
@@ -559,18 +571,18 @@ OutputOpenFoam::writeAllClean() const {
 }
 
 void
-OutputOpenFoam::writeAllRun() const {
-    string name = "Allrun";
-    string fileName = getFilename() + "/" + name;
-    ofstream file;
+Exporter::writeAllRun() const {
+    std::string name = "Allrun";
+    std::string fileName = getFilename() + "/" + name;
+    std::ofstream file;
     openFile(fileName, file);
-    file<< "#!/bin/bash" << endl;
-    file<< "cd \"$(dirname \"$0\")\"" << endl;
-    file<< "source /opt/openfoam230/etc/bashrc" << endl;
-    file<< ". /opt/openfoam230/bin/tools/RunFunctions" << endl;
-    file<< "runApplication blockMesh" << endl;
-    //file<< "runApplication surfaceFeatureExtract" << endl;
-    file<< "runApplication snappyHexMesh -overwrite" << endl;
+    file<< "#!/bin/bash" << std::endl;
+    file<< "cd \"$(dirname \"$0\")\"" << std::endl;
+    file<< "source /opt/openfoam230/etc/bashrc" << std::endl;
+    file<< ". /opt/openfoam230/bin/tools/RunFunctions" << std::endl;
+    file<< "runApplication blockMesh" << std::endl;
+    //file<< "runApplication surfaceFeatureExtract" << std::endl;
+    file<< "runApplication snappyHexMesh -overwrite" << std::endl;
     // Closes file.
     file.close();
 #ifndef _WIN32
@@ -579,25 +591,25 @@ OutputOpenFoam::writeAllRun() const {
 }
 
 //void
-//OutputOpenFoam::writeAllRunParallel() const {
+//Exporter::writeAllRunParallel() const {
 //   // blockMesh can not run in parallel. Because of this reason we have to
 //   // create an initial mesh with nCells/nProc processors and then
 //   // use refineMesh. Therefore the following equality must be true:
 //   //                 (nCellsX / nProc) % 2 == 0
-//   string name = "Allrun";
-//   string fileName = getFilename() + "/" + name;
-//   ofstream file;
+//   std::string name = "Allrun";
+//   std::string fileName = getFilename() + "/" + name;
+//   std::ofstream file;
 //   openFile(fileName, file);
-//   const UInt nProc = smb_->solverParams->numberOfProcesses;
-//   file<< "#!/bin/bash" << endl;
-//   file<< "source /opt/openfoam230/etc/bashrc" << endl;
-//   file<< ". /opt/openfoam230/bin/tools/RunFunctions" << endl;
-//   file<< "runApplication blockMesh" << endl;
-//   //file<< "runApplication surfaceFeatureExtract" << endl;
-//   file<< "runApplication decomposePar" << endl;
-//   file<< "runParallel refineMesh " << nProc << " -overwrite" << endl;
-//   file<< "runParallel snappyHexMesh " << nProc << " -overwrite" << endl;
-//   file<< "runApplication reconstructParMesh -constant" << endl;
+//   const std::size_t nProc = smb_->solverParams->numberOfProcesses;
+//   file<< "#!/bin/bash" << std::endl;
+//   file<< "source /opt/openfoam230/etc/bashrc" << std::endl;
+//   file<< ". /opt/openfoam230/bin/tools/RunFunctions" << std::endl;
+//   file<< "runApplication blockMesh" << std::endl;
+//   //file<< "runApplication surfaceFeatureExtract" << std::endl;
+//   file<< "runApplication decomposePar" << std::endl;
+//   file<< "runParallel refineMesh " << nProc << " -overwrite" << std::endl;
+//   file<< "runParallel snappyHexMesh " << nProc << " -overwrite" << std::endl;
+//   file<< "runApplication reconstructParMesh -constant" << std::endl;
 //   // Closes file.
 //   file.close();
 //#ifndef _WIN32
@@ -605,51 +617,54 @@ OutputOpenFoam::writeAllRun() const {
 //#endif
 //}
 
-UInt
-OutputOpenFoam::computeRefinableCellDim(
-        const UInt originalCellDim,
-        const UInt nProc) const {
+std::size_t
+Exporter::computeRefinableCellDim(
+        const std::size_t originalCellDim,
+        const std::size_t nProc) const {
     if (nProc == 1) {
         return originalCellDim;
     }
-    UInt res = originalCellDim;
+    std::size_t res = originalCellDim;
     bool showWarning = false;
     while ((res/nProc) % 2 != 0) {
         res++;
         showWarning = true;
     }
     if (showWarning) {
-        cout<< "WARNING @ computeRefinableCellDim: "
-                << "The number of cells has changed to make possible parallelization."
-                << "To avoid this message use a number of cells such that "
-                << "NumberOfCellsInDim / numberOfProcessors can be divided by 2."
-                << endl;
+        std::cout << "WARNING @ computeRefinableCellDim: "
+                  << "The number of cells has changed to make possible parallelization."
+                  << "To avoid this message use a number of cells such that "
+                  << "NumberOfCellsInDim / numberOfProcessors can be divided by 2."
+                  << std::endl;
     }
     return (res/2);
 }
 
-string
-OutputOpenFoam::intToStr(const UInt i) const {
-    stringstream ss;
+std::string
+Exporter::intToStr(const std::size_t i) const {
+    std::stringstream ss;
     ss << i;
     return ss.str();
 }
 
-string
-OutputOpenFoam::boolToStr(const bool constBool) const {
+std::string
+Exporter::boolToStr(const bool constBool) const {
     if (constBool) {
-        return string("true");
+        return std::string("true");
     } else {
-        return string("false");
+        return std::string("false");
     }
 }
 
-CVecR3
-OutputOpenFoam::computeLocationInMesh() const {
+Math::CVecR3 Exporter::computeLocationInMesh() const {
     if (smb_->mesherOptions->isLocationInMeshSet()) {
         return smb_->mesherOptions->getLocationInMesh();
     } else {
-        const Grid3* g = smb_->grid;
+        const Geometry::Grid3* g = smb_->grid;
         return g->getPos(g->getNumCells() - 1);
     }
+}
+
+}
+}
 }
