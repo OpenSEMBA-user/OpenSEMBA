@@ -119,6 +119,42 @@ public:
     template<typename... T>
     Object& operator =(const T&...);
 
+    Object& operator+=(const Object& rhs) {
+        *this = *this + rhs;
+        return *this;
+    }
+    Object  operator+ (const Object& rhs) const {
+        if (isNull() && rhs.isNull()) {
+            return *this;
+        } else if (isNull()) {
+            return rhs;
+        } else if (rhs.isNull()) {
+            return *this;
+        }
+        if (isObject() && rhs.isObject()) {
+            Object res;
+            res.setObject();
+            for (std::size_t i = 0; i < size(); i++) {
+                if (rhs.existsName(getName(i))) {
+                    res[getName(i)] = (*this)[getName(i)] + rhs[getName(i)];
+                } else {
+                    res[getName(i)] = (*this)[getName(i)];
+                }
+            }
+            for (std::size_t i = 0; i < rhs.size(); i++) {
+                if (!res.existsName(rhs.getName(i))) {
+                    res[rhs.getName(i)] = rhs[rhs.getName(i)];
+                }
+            }
+            return res;
+        } else if (isObject()) {
+            return *this;
+        } else if (rhs.isObject()) {
+            return rhs;
+        }
+        return rhs;
+    }
+
     Object& reset() { return setType(type_); }
 
     //Value Type
