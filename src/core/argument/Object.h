@@ -353,7 +353,7 @@ public:
     template<typename... T>
     Object&                      set(const T&...);
 
-    void printInfo(const std::size_t& depth = 0) {
+    void printInfo(const std::size_t& depth = 0) const {
         switch (getType()) {
         case Object::Type::Null:
             std::cout << "null";
