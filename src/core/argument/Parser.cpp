@@ -45,16 +45,20 @@ Parser::Parser(const int& argc, const char** argv)
     initDefault_();
 }
 
-Parser::Parser(const Object& obj)
-:   Group<true>(NULL, "Parser") {
+Parser::Parser(const std::vector<std::string>& argv)
+:   Group<true>(NULL, "") {
     input_.clear();
-    if (obj.isObject() && obj.exists("unknown")) {
-        if (obj["unknown"].isArray() && (obj["unknown"].size() != 0)) {
-            prog_ = obj["unknown"][0].getString();
-            for (std::size_t i = 1; i < obj["unknown"].size(); i++) {
-                input_.push_back(obj["unknown"][i].getString());
+    if (argv.size() > 0) {
+        prog_ = argv[0];
+        std::size_t folderSep = prog_.find_last_of("/\\");
+        if (folderSep != std::string::npos) {
+            if (!prog_.substr(folderSep + 1).empty()) {
+                prog_ = prog_.substr(folderSep + 1);
             }
         }
+    }
+    for (int i = 1; i < argv.size(); i++) {
+        input_.push_back(argv[i]);
     }
     initDefault_();
 }

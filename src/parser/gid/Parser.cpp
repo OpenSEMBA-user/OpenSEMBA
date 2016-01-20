@@ -77,7 +77,7 @@ Data* Parser::read() {
 
     Data* res = new Data();
     res->setFilename(getFilename());
-    res->solverOptions = readOptionsSolver();
+    res->solver = readSolver();
     pSize_ = readProblemSize();
     physicalModels_ = readMaterials();
     res->physicalModels = physicalModels_;
@@ -96,19 +96,18 @@ void Parser::printInfo() const {
     std::cout << "--- End of GiDParser info ---" << std::endl;
 }
 
-Solver::Options* Parser::readOptionsSolver() {
-    Solver::Options* res = NULL;
+Solver::Data* Parser::readSolver() {
+    Solver::Data* res = NULL;
     bool optionsFound = false;
     while (!optionsFound && !f_in.eof()) {
         std::string label, value;
         getNextLabelAndValue(label, value);
         if (label.compare("Solver options") == 0) {
             optionsFound = true;
-            res = new Solver::Options();
-            res->setObject();
             Solver::Options opts;
-            readOptionsSolverOptions(opts, "Solver options");
-            res->addMember(value, std::move(opts));
+            readSolverOptions(opts, "Solver options");
+            res = new Solver::Data(value, std::move(opts));
+            return res;
         } // Closes problem data found if.
     } // Closes problemDataFound while.
     // Throws error messages if a problem was detected.
@@ -118,8 +117,8 @@ Solver::Options* Parser::readOptionsSolver() {
     throw std::logic_error("No solver options were found.");
 }
 
-void Parser::readOptionsSolverOptions(Solver::Options& opts,
-                                      const std::string& sect) {
+void Parser::readSolverOptions(Solver::Options& opts,
+                               const std::string& sect) {
     std::string endSect = std::string("End of ") + sect;
     std::string label, value;
     opts.setObject();
@@ -129,7 +128,7 @@ void Parser::readOptionsSolverOptions(Solver::Options& opts,
             return;
         } else if (trim(value).empty()) {
             Solver::Options aux;
-            readOptionsSolverOptions(aux, label);
+            readSolverOptions(aux, label);
             opts.addMember(label, std::move(aux));
         } else {
             Solver::Options aux;
