@@ -45,8 +45,8 @@
 //private:
 //    multimap<ElementId, vector<T>> data_;
 //    //!< Stores several values for a single element which is needed when data
-//    //! is multivaluated (e.g. Discontinuous Galerkin). vector<T> must contain
-//    //!  data at the Gauss points of the element. e.g:
+//    //! is multivaluated (e.g. Discontinuous Galerkin). vector<T> must
+//    //!  contain data at the Gauss points of the element. e.g:
 //    //!      Cell Type    |   vector size
 //    //!      ------------ |   --------------
 //    //!      Node         |        1

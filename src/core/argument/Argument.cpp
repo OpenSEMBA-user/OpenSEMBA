@@ -66,7 +66,8 @@ Argument& Argument::defaultVal(const std::list<std::string>& defaultVal) {
     return *this;
 }
 
-Argument& Argument::choices(const std::vector<std::list<std::string>>& choices) {
+Argument& Argument::choices(
+        const std::vector<std::list<std::string>>& choices) {
     choices_ = choices;
     return *this;
 }

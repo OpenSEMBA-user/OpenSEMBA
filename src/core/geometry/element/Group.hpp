@@ -167,7 +167,8 @@ std::vector<std::pair<const E*, std::size_t> > Group<E>::getElementsWithVertex(
             if ((elemsR(i)->getVertex(j)->getId() == vertexId) &&
                     elemsR(i)->template is<E>()) {
 
-                std::pair<const E*, std::size_t> aux(elemsR(i)->template castTo<E>(), j);
+                std::pair<const E*, std::size_t> aux(
+                    elemsR(i)->template castTo<E>(), j);
                 res.push_back(aux);
             }
         }
@@ -178,7 +179,8 @@ std::vector<std::pair<const E*, std::size_t> > Group<E>::getElementsWithVertex(
             if ((elemsI(i)->getVertex(j)->getId() == vertexId) &&
                     elemsI(i)->template is<E>()) {
 
-                std::pair<const E*, std::size_t> aux(elemsI(i)->template castTo<E>(), j);
+                std::pair<const E*, std::size_t> aux(
+                    elemsI(i)->template castTo<E>(), j);
                 res.push_back(aux);
             }
         }

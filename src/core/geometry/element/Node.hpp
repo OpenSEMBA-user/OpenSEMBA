@@ -94,27 +94,31 @@ const Coordinate::Coordinate<T,3>* Node<T>::getV(const std::size_t i) const {
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Node<T>::getSideV(const std::size_t f,
-                                                     const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getSideV(
+        const std::size_t f,
+        const std::size_t i) const {
     assert(f == 0 && i == 0);
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Node<T>::getVertex(const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getVertex(
+        const std::size_t i) const {
     assert(i == 0);
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Node<T>::getSideVertex(const std::size_t f,
-                                                          const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Node<T>::getSideVertex(
+        const std::size_t f,
+        const std::size_t i) const {
     assert(f == 0 && i == 0);
     return v_[i];
 }
 
 template<class T>
-void Node<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord) {
+void Node<T>::setV(const std::size_t i,
+                   const Coordinate::Coordinate<T,3>* coord) {
     assert(i < numberOfCoordinates());
     v_[i] = coord;
 }

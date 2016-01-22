@@ -18,13 +18,6 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-// File: parser.h
-// =============== Parser procedures ==========================================
-//  PURPOSE:
-//  - Read raw data provided by the input file.
-//  - Parser will not interpret the input, only has to ensure that all the data
-//     is read. Information must remain in a similar way to the parsed data.
-// ============================================================================
 
 #ifndef SEMBA_PARSER_PARSER_H_
 #define SEMBA_PARSER_PARSER_H_
@@ -64,7 +57,8 @@ protected:
     static inline std::string& rtrim(std::string &s) {
         s.erase(find_if(s.rbegin(),
                         s.rend(),
-                        std::not1(std::ptr_fun<int, int>(std::isspace))).base(),
+                        std::not1(
+                            std::ptr_fun<int, int>(std::isspace))).base(),
                 s.end());
         return s;
     }

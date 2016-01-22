@@ -40,7 +40,7 @@ VolumeAnisotropicCrystal::~VolumeAnisotropicCrystal() {
 }
 
 const Math::CVecR3
-        VolumeAnisotropicCrystal::getPrincipalAxesRelativePermittivity() const {
+    VolumeAnisotropicCrystal::getPrincipalAxesRelativePermittivity() const {
     return principalAxesRelativePermittivity_;
 }
 

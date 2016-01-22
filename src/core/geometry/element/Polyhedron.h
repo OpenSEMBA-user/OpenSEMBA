@@ -52,7 +52,8 @@ public:
     const CoordR3* getV(const std::size_t i) const;
     const CoordR3* getSideV(const std::size_t f, const std::size_t i) const;
     const CoordR3* getVertex(const std::size_t i) const;
-    const CoordR3* getSideVertex(const std::size_t f, const std::size_t i) const;
+    const CoordR3* getSideVertex(const std::size_t f,
+                                 const std::size_t i) const;
 
     const Polygon* getFace(const std::size_t f) const;
     Math::Real getAreaOfFace(const std::size_t f) const;

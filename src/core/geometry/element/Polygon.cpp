@@ -37,7 +37,8 @@ Polygon::Polygon(const Id id,
     Elem(lay, mat) {
     
     const std::size_t vSize = v.size();
-    assert(v.size() >= 5); // Polygons of 3 or 4 vertices are treated as triangles or quads.
+    assert(v.size() >= 5); // Polygons of 3 or 4 vertices are treated
+                           // as triangles or quads.
     v_.resize(vSize);
     for (std::size_t i = 0; i < vSize; i++) {
         v_[i] = v[i];
@@ -92,7 +93,8 @@ const CoordR3* Polygon::getVertex(const std::size_t i) const {
     return getV(i);
 }
 
-const CoordR3* Polygon::getSideVertex(const std::size_t f, const std::size_t i) const {
+const CoordR3* Polygon::getSideVertex(const std::size_t f,
+                                      const std::size_t i) const {
     return getSideV(f,i);
 }
 
@@ -106,8 +108,9 @@ void Polygon::setV(const std::size_t i, const CoordR3* coord) {
 }
 
 void Polygon::printInfo() const {
-    std::cout<< "--- Polygon info ---" << std::endl
-             << "Number of coordinates: " << numberOfCoordinates() << std::endl;
+    std::cout << "--- Polygon info ---" << std::endl
+              << "Number of coordinates: " << numberOfCoordinates()
+              << std::endl;
     std::cout<< "Id: " << getId() << ", MatId: " << getMatId() << std::endl;
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         std::cout<< "#" << i << ": ";

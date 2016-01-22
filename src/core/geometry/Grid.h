@@ -61,9 +61,12 @@ public:
                             const std::vector<Math::Real>& step);
 
     // TODO To be deleted >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    bool getNaturalCellx (const double &x, long int &i, double &relativeLen) const;
-    bool getNaturalCelly (const double &y, long int &j, double &relativeLen) const;
-    bool getNaturalCellz (const double &z, long int &k, double &relativeLen) const;
+    bool getNaturalCellx (const double &x, long int &i,
+                          double &relativeLen) const;
+    bool getNaturalCelly (const double &y, long int &j,
+                          double &relativeLen) const;
+    bool getNaturalCellz (const double &z, long int &k,
+                          double &relativeLen) const;
     // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     bool hasZeroSize() const;

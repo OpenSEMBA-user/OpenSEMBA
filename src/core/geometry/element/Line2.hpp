@@ -104,24 +104,28 @@ const Coordinate::Coordinate<T,3>* Line2<T>::getV(const std::size_t i) const {
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Line2<T>::getSideV(const std::size_t f,
-                                                      const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getSideV(
+        const std::size_t f,
+        const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Line2<T>::getVertex(const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getVertex(
+        const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Line2<T>::getSideVertex(const std::size_t f,
-                                                           const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Line2<T>::getSideVertex(
+        const std::size_t f,
+        const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-void Line2<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord) {
+void Line2<T>::setV(const std::size_t i,
+                    const Coordinate::Coordinate<T,3>* coord) {
 
     assert(i < numberOfCoordinates());
     v_[i] = coord;

@@ -104,9 +104,9 @@ bool VolumeDispersive::isSimplyConductive() const {
 Math::Real VolumeDispersive::getElectricConductivity() const {
     if (getPoleNumber() > 1) {
         std::cout << std::endl << "WARNING @ getElectricConductivity: "
-                << "This material is dispersive and its effective permittivity "
-                << "depends on several parameters."
-                << "Returning static limit conductivity." << std::endl;
+                  << "This material is dispersive and its effective "
+                  << "permittivity depends on several parameters. "
+                  << "Returning static limit conductivity." << std::endl;
     }
     for (std::size_t i = 0; i < getPoleNumber(); i++) {
         if (std::abs(getPole(i)) == 0) {

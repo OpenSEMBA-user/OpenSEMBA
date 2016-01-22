@@ -390,7 +390,8 @@ Object Parser::parse_() {
             } catch(const StringParser::Error::Error& e) {
                 printUsage();
                 std::cerr << prog_ << ": Argument "
-                          << getPosition_(positionsFull_.size()-1)->getArgName()
+                          << getPosition_(
+                                positionsFull_.size()-1)->getArgName()
                           << ": " << e.what();
                 printErrorList_(rem);
                 std::cerr << std::endl;

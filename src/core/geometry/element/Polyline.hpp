@@ -53,13 +53,15 @@ Polyline<T>::~Polyline() {
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Polyline<T>::getV(const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Polyline<T>::getV(
+        const std::size_t i) const {
     return v_[i];
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Polyline<T>::getSideV(const std::size_t f,
-                                                         const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Polyline<T>::getSideV(
+        const std::size_t f,
+        const std::size_t i) const {
     if (f == 0) {
         return v_.front();
     }
@@ -67,7 +69,8 @@ const Coordinate::Coordinate<T,3>* Polyline<T>::getSideV(const std::size_t f,
 }
 
 template<class T>
-const Coordinate::Coordinate<T,3>* Polyline<T>::getVertex(const std::size_t i) const {
+const Coordinate::Coordinate<T,3>* Polyline<T>::getVertex(
+        const std::size_t i) const {
     if (i == 0) {
         return v_.front();
     }
@@ -85,7 +88,8 @@ const Coordinate::Coordinate<T,3>* Polyline<T>::getSideVertex(
 }
 
 template<class T>
-void Polyline<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord) {
+void Polyline<T>::setV(const std::size_t i,
+                       const Coordinate::Coordinate<T,3>* coord) {
 
     assert(i < numberOfCoordinates());
     v_[i] = coord;

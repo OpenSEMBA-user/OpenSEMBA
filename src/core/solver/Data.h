@@ -53,6 +53,10 @@ public:
     void setName   (const std::string& name) { solverName_ = name; }
     void setOptions(const Options&     opts) { solverOpts_ = opts; }
 
+    Data operator+ (const Options& opts) {
+        return Data(getName(), getOptions() + opts);
+    }
+
     template<typename T>
     bool is() const {
         T aux;

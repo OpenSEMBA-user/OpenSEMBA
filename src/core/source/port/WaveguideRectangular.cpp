@@ -41,11 +41,10 @@ WaveguideRectangular::WaveguideRectangular(Magnitude::Magnitude* magn,
     }
 }
 
-WaveguideRectangular::WaveguideRectangular(
-        const WaveguideRectangular& rhs) :
-                                SEMBA::Source::Base(rhs),
-                                Geometry::Element::Group<const Geometry::Surf>(rhs),
-                                Waveguide(rhs) {
+WaveguideRectangular::WaveguideRectangular(const WaveguideRectangular& rhs)
+:   SEMBA::Source::Base(rhs),
+    Geometry::Element::Group<const Geometry::Surf>(rhs),
+    Waveguide(rhs) {
     box_ = rhs.box_;
 }
 
@@ -53,7 +52,8 @@ WaveguideRectangular::~WaveguideRectangular() {
 
 }
 
-bool WaveguideRectangular::hasSameProperties(const SEMBA::Source::Base& rhs) const {
+bool WaveguideRectangular::hasSameProperties(
+        const SEMBA::Source::Base& rhs) const {
     bool res = true;
     res &= rhs.is<WaveguideRectangular>();
     res &= Waveguide::hasSameProperties(rhs);
@@ -99,32 +99,37 @@ const std::string& WaveguideRectangular::getName() const {
 //    return res;
 //}
 //
-//Math::Real WaveguideRectangular::getWidth(const BoundTerminations& sym) const {
+//Math::Real WaveguideRectangular::getWidth(
+//        const BoundTerminations& sym) const {
 //    Math::CVecR3 origin = getOrigin(sym);
 //    Math::CVecR3 max = box_.getMax();
 //    return max(Math::Constants::x) - origin(Math::Constants::x);
 //}
 //
-//Math::Real WaveguideRectangular::getHeight(const BoundTerminations& sym) const {
+//Math::Real WaveguideRectangular::getHeight(
+//        const BoundTerminations& sym) const {
 //    Math::CVecR3 origin = getOrigin(sym);
 //    Math::CVecR3 max = box_.getMax();
 //    return max(Math::Constants::y) - origin(Math::Constants::y);
 //}
 
 void WaveguideRectangular::set(
-        const Geometry::Element::Group<const Geometry::Elem>& constGroupElements) {
-    Waveguide::set(constGroupElements);
+    const Geometry::Element::Group<const Geometry::Elem>& constGroupElems) {
+    Waveguide::set(constGroupElems);
     box_ = this->getBound();
 }
 
-//Math::CVecR3 WaveguideRectangular::getOrigin(const BoundTerminations& sym) const {
+//Math::CVecR3 WaveguideRectangular::getOrigin(
+//        const BoundTerminations& sym) const {
 //    if (sym[Math::Constants::x].first != OptionsMesher::pml &&
 //        sym[Math::Constants::x].first != OptionsMesher::pmc) {
-//        throw std::logic_error("Waveport must have PML or PMC boundary in the x lower axis");
+//        throw std::logic_error("Waveport must have PML or PMC "
+//                               "boundary in the x lower axis");
 //    }
 //    if (sym[Math::Constants::y].first != OptionsMesher::pml &&
 //        sym[Math::Constants::y].first != OptionsMesher::pec) {
-//        throw std::logic_error("Waveport must have PML or PEC boundary in the y lower axis");
+//        throw std::logic_error("Waveport must have PML or PEC "
+//                               "boundary in the y lower axis");
 //    }
 //    Math::CVecR3 min = box_.getMin();
 //    Math::CVecR3 max = box_.getMax();

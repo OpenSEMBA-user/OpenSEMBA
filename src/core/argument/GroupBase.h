@@ -51,8 +51,12 @@ public:
 
     virtual GroupBase& required() { required_ = true; return *this; }
 
-    std::size_t   numChilds()                    const { return child_.size(); }
-    const GroupBase& child(const std::size_t& i) const { return *child_.at(i); }
+    std::size_t   numChilds()                    const {
+        return child_.size();
+    }
+    const GroupBase& child(const std::size_t& i) const {
+        return *child_.at(i);
+    }
 
     std::size_t      numPositions() const;
     const PositionBase& position(const std::size_t& i) const;

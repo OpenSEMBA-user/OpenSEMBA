@@ -86,8 +86,8 @@ void SurfaceMultilayer::printInfo() const {
     std::cout << " --- SurfaceMultilayer info ---" << std::endl;
     Surface::printInfo();
     std::cout << "Number of layers: " << getNumberOfLayers() << std::endl;
-    std::cout <<
-    "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << std::endl;
+    std::cout << "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond"
+              << std::endl;
     for (std::size_t i = 0; i < getNumberOfLayers(); i++) {
         std::cout<< i << ": "
         << thickness_[i] << " "
