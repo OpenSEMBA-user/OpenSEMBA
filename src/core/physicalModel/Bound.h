@@ -29,7 +29,7 @@ namespace PhysicalModel {
 
 class Bound : public virtual PhysicalModel {
 public:
-    Bound(const Id id, const std::string name);
+    Bound();
     virtual ~Bound();
 };
 

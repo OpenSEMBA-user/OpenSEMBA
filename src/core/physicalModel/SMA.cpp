@@ -24,12 +24,19 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-SMA::~SMA() {
+SMA::SMA(const Id id, const std::string name)
+:   Identifiable<Id>(id), 
+    PhysicalModel(name) {
 
 }
 
-SMA::SMA(const Id id, const std::string name)
-:   Predefined(id, name) {
+SMA::SMA(const SMA& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+
+}
+
+SMA::~SMA() {
 
 }
 

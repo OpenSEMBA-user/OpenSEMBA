@@ -25,7 +25,15 @@ namespace SEMBA {
 namespace PhysicalModel {
 
 PMC::PMC(const Id id, const std::string name)
-:   Predefined(id, name){
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
+
+}
+
+PMC::PMC(const PMC& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+
 }
 
 PMC::~PMC() {

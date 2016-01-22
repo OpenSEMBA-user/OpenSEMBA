@@ -29,7 +29,7 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class VolumeClassic : public Volume {
+class VolumeClassic : public virtual Volume {
 public:
     VolumeClassic(const Id matId,
                   const std::string& name,
@@ -37,6 +37,7 @@ public:
                   const Math::Real relativePermeability = 1.0,
                   const Math::Real electricConductivity = 0.0,
                   const Math::Real magneticConductivity = 0.0);
+    VolumeClassic(const VolumeClassic&);
     virtual ~VolumeClassic();
 
     SEMBA_CLASS_DEFINE_CLONE(VolumeClassic);

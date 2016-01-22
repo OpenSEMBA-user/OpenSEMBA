@@ -27,11 +27,12 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class MultiportPredefined: public Multiport {
+class MultiportPredefined : public virtual Multiport {
 public:
     MultiportPredefined(const Id idIn,
                         const std::string nameIn,
                         const Multiport::Type);
+    MultiportPredefined(const MultiportPredefined&);
     virtual ~MultiportPredefined();
 
     SEMBA_CLASS_DEFINE_CLONE(MultiportPredefined);

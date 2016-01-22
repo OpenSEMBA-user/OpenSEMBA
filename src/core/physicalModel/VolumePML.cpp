@@ -24,12 +24,22 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-VolumePML::VolumePML(
-        const Id id,
-        const std::string& name,
-        const Math::Axis::Local* orientation)
-:   Volume(id, name) {
+VolumePML::VolumePML(const Id id,
+                     const std::string& name,
+                     const Math::Axis::Local* orientation)
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
     orientation_ = orientation;
+}
+
+VolumePML::VolumePML(const VolumePML& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    if (rhs.orientation_ != NULL) {
+        orientation_ = new Math::Axis::Local(*rhs.orientation_);
+    } else {
+        orientation_ = NULL;
+    }
 }
 
 VolumePML::~VolumePML() {
@@ -41,7 +51,9 @@ VolumePML::~VolumePML() {
 void VolumePML::printInfo() const {
     std::cout << "--- VolumePML info ---" << std::endl;
     Volume::printInfo();
-    orientation_->printInfo();
+    if (orientation_ != NULL) {
+        orientation_->printInfo();
+    }
 
 }
 

@@ -25,9 +25,11 @@ namespace SEMBA {
 namespace PhysicalModel {
 
 WireExtremes::WireExtremes(const Wire& wire,
-                               const Multiport* extremeL,
-                               const Multiport* extremeR)
-:   Wire(wire) {
+                           const Multiport* extremeL,
+                           const Multiport* extremeR)
+:   Identifiable<Id>(wire),
+    PhysicalModel(wire),
+    Wire(wire) {
     extreme_[0] = extreme_[1] = NULL;
     if (extremeL != NULL) {
         extreme_[0] = extremeL->cloneTo<Multiport>();
@@ -38,7 +40,9 @@ WireExtremes::WireExtremes(const Wire& wire,
 }
 
 WireExtremes::WireExtremes(const WireExtremes& rhs)
-:   Wire(rhs) {
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs),
+    Wire(rhs) {
     extreme_[0] = extreme_[1] = NULL;
     if (rhs.extreme_[0] != NULL) {
         extreme_[0] = rhs.extreme_[0]->cloneTo<Multiport>();

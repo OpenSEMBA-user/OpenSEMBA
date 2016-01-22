@@ -24,8 +24,7 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-Predefined::Predefined(const Id id, const std::string name)
-:   PhysicalModel(id, name) {
+Predefined::Predefined() {
 }
 
 Predefined::~Predefined() {

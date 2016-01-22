@@ -23,13 +23,16 @@
 #define SEMBA_PHYSICALMODEL_PMC_H_
 
 #include "Predefined.h"
+#include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 
-class PMC : public Predefined {
+class PMC : public virtual Predefined,
+            public virtual Bound {
 public:
     PMC(const Id id, const std::string name);
+    PMC(const PMC&);
     virtual ~PMC();
 
     SEMBA_CLASS_DEFINE_CLONE(PMC);

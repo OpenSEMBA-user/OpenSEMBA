@@ -24,11 +24,12 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-VolumeAnisotropic::VolumeAnisotropic(
-        const Id matId,
-        const std::string& name,
-        const Math::Axis::Local& localAxe) : Volume(matId, name) {
+VolumeAnisotropic::VolumeAnisotropic(const Math::Axis::Local& localAxe) {
     localAxe_ = localAxe;
+}
+
+VolumeAnisotropic::VolumeAnisotropic(const VolumeAnisotropic& rhs) {
+    localAxe_ = rhs.localAxe_;
 }
 
 VolumeAnisotropic::~VolumeAnisotropic() {

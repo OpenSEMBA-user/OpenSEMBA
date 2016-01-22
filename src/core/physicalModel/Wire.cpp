@@ -29,10 +29,19 @@ Wire::Wire(const Id id,
            const Math::Real radius,
            const Math::Real resistance,
            const Math::Real inductance)
-:   PhysicalModel(id, name) {
+:   Identifiable<Id>(id), 
+    PhysicalModel(name) {
     radius_ = radius;
     resistance_ = resistance;
     inductance_ = inductance;
+}
+
+Wire::Wire(const Wire& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    radius_ = rhs.radius_;
+    resistance_ = rhs.resistance_;
+    inductance_ = rhs.inductance_;
 }
 
 Wire::~Wire() {

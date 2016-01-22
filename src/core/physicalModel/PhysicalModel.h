@@ -41,7 +41,7 @@ class PhysicalModel : public virtual Class::Class,
                       public virtual Class::Cloneable,
                       public virtual Class::Shareable,
                       public virtual Class::Printable,
-                      public Class::Identifiable<Id> {
+                      public virtual Class::Identifiable<Id> {
 public:
     enum Type {
         PEC,
@@ -56,7 +56,9 @@ public:
         multiport
     };
 
-    PhysicalModel(const Id id, const std::string& name);
+    PhysicalModel();
+    PhysicalModel(const std::string& name);
+    PhysicalModel(const PhysicalModel& rhs);
     virtual ~PhysicalModel();
 
     const std::string& getName() const;

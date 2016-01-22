@@ -30,9 +30,8 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class SurfaceMultilayer : public Surface {
+class SurfaceMultilayer : public virtual Surface {
 public:
-    SurfaceMultilayer();
     SurfaceMultilayer(const Id id,
                       const std::string& name,
                       const std::vector<Math::Real>& thickness,
@@ -40,6 +39,8 @@ public:
                       const std::vector<Math::Real>& relPermeability,
                       const std::vector<Math::Real>& elecCond,
                       const std::vector<Math::Real>& magnCond);
+    SurfaceMultilayer(const SurfaceMultilayer&);
+    virtual ~SurfaceMultilayer();
 
     SEMBA_CLASS_DEFINE_CLONE(SurfaceMultilayer);
 
@@ -53,8 +54,9 @@ public:
 
     void printInfo() const;
 private:
-    std::vector<Math::Real> thickness_, relPermittivity_, relPermeability_,
-                 elecCond_, magnCond_;
+    std::vector<Math::Real> thickness_,
+                            relPermittivity_, relPermeability_,
+                            elecCond_, magnCond_;
 };
 
 namespace Error {

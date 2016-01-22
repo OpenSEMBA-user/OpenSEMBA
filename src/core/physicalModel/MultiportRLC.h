@@ -27,7 +27,7 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class MultiportRLC: public Multiport {
+class MultiportRLC : public virtual Multiport {
 public:
     MultiportRLC(const Id idIn,
                  const std::string nameIn,
@@ -35,6 +35,7 @@ public:
                  const Math::Real resistance,
                  const Math::Real inductance,
                  const Math::Real capacitance);
+    MultiportRLC(const MultiportRLC&);
     virtual ~MultiportRLC();
 
     SEMBA_CLASS_DEFINE_CLONE(MultiportRLC);

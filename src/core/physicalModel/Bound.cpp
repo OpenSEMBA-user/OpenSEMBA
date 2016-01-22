@@ -24,8 +24,7 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-Bound::Bound(const Id id, const std::string name)
-:   PhysicalModel(id, name) {
+Bound::Bound() {
 
 }
 

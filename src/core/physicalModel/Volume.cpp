@@ -24,8 +24,7 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-Volume::Volume(const Id id, const std::string name)
-:   PhysicalModel(id, name) {
+Volume::Volume() {
 
 }
 
