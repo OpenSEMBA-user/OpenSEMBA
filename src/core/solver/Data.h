@@ -57,20 +57,6 @@ public:
         return Data(getName(), getOptions() + opts);
     }
 
-    template<typename T>
-    bool is() const {
-        T aux;
-        return aux.parse(*this);
-    }
-    template<typename T>
-    T castTo() const {
-        T res;
-        if (!res.parse(*this)) {
-            throw std::bad_cast();
-        }
-        return res;
-    }
-
     void printInfo() const {
         std::cout << "--- Solver Data ---" << std::endl;
         std::cout << "Solver name: " << solverName_ << std::endl;
