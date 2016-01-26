@@ -37,9 +37,14 @@ Exporter::Exporter() {
     smb_ = NULL;
 }
 
-Exporter::Exporter(
-        const Data* smb) {
+Exporter::Exporter(const Data* smb,
+                   const Geometry::Grid3* grid,
+                   const bool isLocationMesh,
+                   const Math::CVecR3& location) {
     smb_ = smb;
+    grid_ = grid;
+    isLocationMesh_ = isLocationMesh;
+    location_ = location;
     setFilename(smb_->getFolder() + "/openfoam/");
     deleteDirIfExists(getFilename());
     createOpenFoamDirs();
@@ -281,7 +286,7 @@ Exporter::writeBlockMeshDict() const {
     std::ofstream file;
     openFile(fileName, file);
     // Prepares data.
-    const Geometry::Grid3* grid = smb_->grid;
+    const Geometry::Grid3* grid = grid_;
     if (grid->hasZeroSize()) {
         throw std::logic_error("Rectilinear grid has zero size.");
     }
@@ -657,10 +662,10 @@ Exporter::boolToStr(const bool constBool) const {
 }
 
 Math::CVecR3 Exporter::computeLocationInMesh() const {
-    if (smb_->mesherOptions->isLocationInMeshSet()) {
-        return smb_->mesherOptions->getLocationInMesh();
+    if (isLocationMesh_) {
+        return location_;
     } else {
-        const Geometry::Grid3* g = smb_->grid;
+        const Geometry::Grid3* g = grid_;
         return g->getPos(g->getNumCells() - 1);
     }
 }

@@ -46,19 +46,20 @@ Geometry::Mesh::Unstructured Parser::readMeshUnstructured() const {
     std::vector<FaceIdentifier> face = readFaces();
     std::vector<Geometry::ElemR*> pol(face.size());
     for (std::size_t i = 0; i < face.size(); i++) {
+        std::vector<const Geometry::CoordR3*> coords(face[i].second.size());
+        for (std::size_t j = 0; j < face[i].second.size(); j++) {
+            coords[j] = cG.getId(face[i].second[j]);
+        }
         if (face[i].second.size() <= 2) {
             std::cerr << "ERROR @ Parser: "
                     << "Surfaces can not be defined with 2 coords: "
                     << face[i].first << std::endl;
         } else if (face[i].second.size() == 3) {
-            pol[i] = new Geometry::Tri3(
-                            cG, face[i].first, &face[i].second[0]);
+            pol[i] = new Geometry::Tri3(face[i].first, coords.data());
         } else if (face[i].second.size() == 4) {
-            pol[i] = new Geometry::QuaR4(
-                            cG, face[i].first, &face[i].second[0]);
+            pol[i] = new Geometry::QuaR4(face[i].first, coords.data());
         } else {
-            pol[i] = new Geometry::Element::Polygon(
-                            cG, face[i].first, face[i].second);
+            pol[i] = new Geometry::Element::Polygon(face[i].first, coords);
         }
     }
     Geometry::ElemRGroup elems(pol);
@@ -118,16 +119,20 @@ Geometry::ElemRGroup* Parser::readSurfaceElements(
         const Geometry::ElemId id = face[i].first;
         const std::vector<Geometry::CoordId> vId = face[i].second;
         const std::size_t nVertex = vId.size();
+        std::vector<const Geometry::CoordR3*> coords(nVertex);
+        for (std::size_t j = 0; j < nVertex; j++) {
+            coords[j] = cG.getId(vId[j]);
+        }
         switch (nVertex) {
         case 3:
-            elems.push_back(new Geometry::Tri3(cG, id, &vId.front()));
+            elems.push_back(new Geometry::Tri3(id, coords.data()));
             break;
         case 4:
-            elems.push_back(new Geometry::QuaR4(cG, id, &vId.front()));
+            elems.push_back(new Geometry::QuaR4(id, coords.data()));
             break;
         default:
             std::cerr << std::endl << "ERROR @ ParserOpenFoamMesh: ";
-            std::cerr << std::endl << "Faces with " << nVertex
+            std::cerr << "Faces with " << nVertex
                       << "are not supported." << std::endl;
             break;
         }
@@ -256,7 +261,9 @@ std::vector<std::size_t> Parser::readFacesOwner(
 bool Parser::isExistingDirectory(const std::string& dir) const {
     struct stat sb;
     bool res = (stat(dir.c_str(), &sb) == 0);
+#ifndef _WIN32
     res &= S_ISDIR(sb.st_mode);
+#endif
     return res;
 }
 
@@ -294,13 +301,15 @@ Geometry::Layer::Group<> Parser::assignAsLayers(
     Geometry::Layer::Group<> layers;
     for (std::size_t b = 0; b < bound.size(); b++) {
         if (bound[b].isMaterial()) {
-            layers.addId(new Geometry::Layer::Layer(bound[b]));
+            const Geometry::Layer::Layer* lay =
+                layers.addId(new Geometry::Layer::Layer(bound[b]))(0);
             MatId matId = bound[b].getMaterialIdFromName();
+            const PhysicalModel::PhysicalModel* mat = NULL; //TODO
             Geometry::LayerId layId = bound[b].getId();
             for (std::size_t i = 0; i < bound[b].getFaces(); i++) {
                 Geometry::ElemId id(bound[b].getStartFace() + i + 1);
-                elems.setMatId(id, matId);
-                elems.setLayerId(id, layId);
+                elems.setModel(id, mat);
+                elems.setLayer(id, lay);
             }
         }
     }

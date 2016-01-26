@@ -32,10 +32,16 @@ namespace OpenFOAM {
 class Exporter : public FileSystem::Project {
 public:
     Exporter();
-    Exporter(const Data* smb);
+    Exporter(const Data* smb,
+             const Geometry::Grid3* grid,
+             const bool isLocationMesh = false,
+             const Math::CVecR3& location = Math::CVecR3());
     virtual ~Exporter();
 private:
-	const Data* smb_;
+    const Data* smb_;
+    const Geometry::Grid3* grid_;
+    bool isLocationMesh_;
+    Math::CVecR3 location_;
 	std::string dirConstant_, dirPolymesh_, dirTriSurface_;
     std::string dirSystem_;
 	typedef enum {
@@ -53,7 +59,7 @@ private:
 	void writeControlDict() const;
 	void writefvSchemes() const;
 	void writefvSolution() const;
-	void writeBlockMeshDict() const;
+    void writeBlockMeshDict() const;
 	void writeMeshQualityDict() const;
 //	void writeDecomposeParDict() const;
 	void createOpenFoamDirs();
@@ -68,7 +74,7 @@ private:
             const std::size_t numberOfProcessors) const;
 	std::string boolToStr(const bool) const;
     std::string intToStr(const std::size_t i) const;
-	Math::CVecR3 computeLocationInMesh() const;
+    Math::CVecR3 computeLocationInMesh() const;
 };
 
 }
