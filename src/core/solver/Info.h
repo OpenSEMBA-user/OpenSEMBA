@@ -19,57 +19,59 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_SOLVER_DATA_H_
-#define SEMBA_SOLVER_DATA_H_
+#ifndef SEMBA_SOLVER_INFO_H_
+#define SEMBA_SOLVER_INFO_H_
 
-#include "Options.h"
+#include "argument/Object.h"
 
 namespace SEMBA {
 namespace Solver {
 
-class Data {
+typedef Argument::Object Settings;
+
+class Info {
 public:
-    Data() {}
-    Data(const std::string& name) {
+    Info() {}
+    Info(const std::string& name) {
         solverName_ = name;
     }
-    Data(const std::string& name, const Options& opts) {
+    Info(const std::string& name, const Settings& sett) {
         solverName_ = name;
-        solverOpts_ = opts;
+        solverSett_ = sett;
     }
-    Data(const Data& rhs) {
+    Info(const Info& rhs) {
         solverName_ = rhs.solverName_;
-        solverOpts_ = rhs.solverOpts_;
+        solverSett_ = rhs.solverSett_;
     }
-    Data::Data(Data&& rhs) {
+    Info(Info&& rhs) {
         solverName_ = std::move(rhs.solverName_);
-        solverOpts_ = std::move(rhs.solverOpts_);
+        solverSett_ = std::move(rhs.solverSett_);
     }
-    virtual ~Data() {}
+    virtual ~Info() {}
 
-    const std::string& getName   () const { return solverName_; }
-    const Options&     getOptions() const { return solverOpts_; }
+    const std::string& getName    () const { return solverName_; }
+    const Settings&    getSettings() const { return solverSett_; }
 
-    void setName   (const std::string& name) { solverName_ = name; }
-    void setOptions(const Options&     opts) { solverOpts_ = opts; }
+    void setName    (const std::string& name) { solverName_ = name; }
+    void setSettings(const Settings&    sett) { solverSett_ = sett; }
 
-    Data operator+ (const Options& opts) {
-        return Data(getName(), getOptions() + opts);
+    Info operator+ (const Settings& opts) {
+        return Info(getName(), getSettings() + opts);
     }
 
     void printInfo() const {
         std::cout << "--- Solver Data ---" << std::endl;
         std::cout << "Solver name: " << solverName_ << std::endl;
-        std::cout << "Solver options:" << std::endl;
-        solverOpts_.printInfo();
+        std::cout << "Solver settings:" << std::endl;
+        solverSett_.printInfo();
     }
 
 private:
     std::string solverName_;
-    Options     solverOpts_;
+    Settings    solverSett_;
 };
 
 } /* namespace Solver */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_SOLVER_DATA_H_ */
+#endif /* SEMBA_SOLVER_INFO_H_ */

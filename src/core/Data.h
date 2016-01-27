@@ -26,7 +26,7 @@
 #include "physicalModel/Group.h"
 #include "outputRequest/Group.h"
 #include "source/Group.h"
-#include "solver/Data.h"
+#include "solver/Info.h"
 
 #include "filesystem/Project.h"
 #include "class/Class.h"
@@ -40,7 +40,7 @@ class Data : public virtual FileSystem::Project,
              public virtual Class::Cloneable,
              public virtual Class::Printable {
 public:
-    Solver::Data*           solver;
+    Solver::Info*           solver;
 
     Geometry::Mesh::Mesh*   mesh;
 
