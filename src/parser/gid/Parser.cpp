@@ -96,17 +96,17 @@ void Parser::printInfo() const {
     std::cout << "--- End of GiDParser info ---" << std::endl;
 }
 
-Solver::Data* Parser::readSolver() {
-    Solver::Data* res = NULL;
+Solver::Info* Parser::readSolver() {
+    Solver::Info* res = NULL;
     bool optionsFound = false;
     while (!optionsFound && !f_in.eof()) {
         std::string label, value;
         getNextLabelAndValue(label, value);
         if (label.compare("Solver options") == 0) {
             optionsFound = true;
-            Solver::Options opts;
+            Solver::Settings opts;
             readSolverOptions(opts, "Solver options");
-            res = new Solver::Data(value, std::move(opts));
+            res = new Solver::Info(value, std::move(opts));
             return res;
         } // Closes problem data found if.
     } // Closes problemDataFound while.
@@ -117,7 +117,7 @@ Solver::Data* Parser::readSolver() {
     throw std::logic_error("No solver options were found.");
 }
 
-void Parser::readSolverOptions(Solver::Options& opts,
+void Parser::readSolverOptions(Solver::Settings& opts,
                                const std::string& sect) {
     std::string endSect = std::string("End of ") + sect;
     std::string label, value;
@@ -127,11 +127,11 @@ void Parser::readSolverOptions(Solver::Options& opts,
         if (label.find(endSect) != label.npos) {
             return;
         } else if (trim(value).empty()) {
-            Solver::Options aux;
+            Solver::Settings aux;
             readSolverOptions(aux, label);
             opts.addMember(label, std::move(aux));
         } else {
-            Solver::Options aux;
+            Solver::Settings aux;
             aux.setString(label);
             opts.addMember(label, std::move(aux));
         }

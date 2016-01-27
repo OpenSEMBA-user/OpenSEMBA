@@ -39,7 +39,7 @@ Data::Data(const Data& rhs)
     sources = NULL;
     outputRequests = NULL;
     if (rhs.solver != NULL) {
-        solver = new Solver::Data(*rhs.solver);
+        solver = new Solver::Info(*rhs.solver);
     }
     if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
@@ -84,7 +84,7 @@ Data& Data::operator=(const Data& rhs) {
     sources = NULL;
     outputRequests = NULL;
     if (rhs.solver != NULL) {
-        solver = new Solver::Data(*rhs.solver);
+        solver = new Solver::Info(*rhs.solver);
     }
     if (rhs.mesh != NULL) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();

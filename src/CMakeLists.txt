@@ -89,7 +89,8 @@ endif()
 
 add_definitions(-DAPP_VERSION="0.10.1")
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
+                    ${CMAKE_CURRENT_LIST_DIR}
                     ${CMAKE_CURRENT_LIST_DIR}/core/)
 add_subdirectory  (core     obj/src/core)
 add_subdirectories(parser   obj/src)

@@ -23,8 +23,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(opensemba_exporter_gid CXX)
 
-include_directories(${gidpost_SOURCE_DIR})
-
 add_sources(. SRCS)
 add_library(opensemba_exporter_gid STATIC ${SRCS})
 add_dependencies(opensemba_exporter_gid opensemba_core_exporter)

@@ -415,7 +415,7 @@ std::vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
     Grid<D> subGrid;
     subGrid.setPos(pos);
     //
-    Math::Vector::Cartesian<std::size_t,D> numBoxes = subGrid.getNumCells();
+    Math::Vector::Cartesian<Math::Int,D> numBoxes = subGrid.getNumCells();
     std::vector<Box<T,D>> res;
     res.reserve(numBoxes(Math::Constants::x)*
                 numBoxes(Math::Constants::y)*
