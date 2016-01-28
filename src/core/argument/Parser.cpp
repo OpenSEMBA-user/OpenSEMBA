@@ -64,7 +64,7 @@ Parser::Parser(const std::vector<std::string>& argv)
 }
 
 Parser::~Parser() {
-
+    delete formatter_;
 }
 
 Parser& Parser::prog(const std::string& prog) {
@@ -97,7 +97,7 @@ Parser& Parser::allowAbbrev(const bool allowAbbrev) {
     return *this;
 }
 
-Parser& Parser::formatter(const FormatterBase& form) {
+Parser& Parser::formatter(const Formatter& form) {
     delete formatter_;
     formatter_ = form.clone();
     return *this;

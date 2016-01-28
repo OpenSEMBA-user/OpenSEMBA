@@ -40,7 +40,7 @@ public:
     Parser& epilog     (const std::string&);
     Parser& prefixChars(const std::string&);
     Parser& allowAbbrev(const bool);
-    Parser& formatter  (const FormatterBase&);
+    Parser& formatter  (const Formatter&);
 
     const std::string& getProg       () const { return prog_;        }
     const std::string& getUsage      () const { return usage_;       }
@@ -69,7 +69,7 @@ private:
     std::string epilog_;
     std::string prefixChars_;
     bool        allowAbbrev_;
-    FormatterBase* formatter_;
+    Formatter*  formatter_;
 
     Object res_;
 
