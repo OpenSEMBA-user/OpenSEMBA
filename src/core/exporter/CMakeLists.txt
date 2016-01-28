@@ -25,4 +25,4 @@ project(opensemba_core_exporter CXX)
 
 add_sources(. SRCS)
 add_library(opensemba_core_exporter STATIC ${SRCS})
-add_dependencies(opensemba_core_exporter opensemba_core_data)
+target_link_libraries(opensemba_core_exporter opensemba_core_data)

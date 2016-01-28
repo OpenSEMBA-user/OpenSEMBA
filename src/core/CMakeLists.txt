@@ -87,9 +87,9 @@ if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
     add_library(opensemba_core_data STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h
                                            ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
-    add_dependencies(opensemba_core_data opensemba_core_geometry
-                                         opensemba_core_physicalmodel
-                                         opensemba_core_source
-                                         opensemba_core_outputrequest
-										 opensemba_core_filesystem)
+    target_link_libraries(opensemba_core_data opensemba_core_geometry
+                                              opensemba_core_physicalmodel
+                                              opensemba_core_source
+                                              opensemba_core_outputrequest
+										      opensemba_core_filesystem)
 endif()

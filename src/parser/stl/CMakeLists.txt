@@ -25,4 +25,4 @@ project(opensemba_parser_stl CXX)
 
 add_sources(. SRCS)
 add_library(opensemba_parser_stl STATIC ${SRCS})
-add_dependencies(opensemba_parser_stl opensemba_core_parser)
+target_link_libraries(opensemba_parser_stl opensemba_core_parser)

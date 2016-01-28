@@ -25,4 +25,4 @@ project(opensemba_core_geometry CXX)
 
 add_sources(. SRCS)
 add_library(opensemba_core_geometry STATIC ${SRCS})
-add_dependencies(opensemba_core_geometry opensemba_core_math)
+target_link_libraries(opensemba_core_geometry opensemba_core_math)

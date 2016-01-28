@@ -79,6 +79,6 @@ typedef Element::Polyline<Math::Int > PolylinI;
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
-#include "Polyline.h"
+#include "Polyline.hpp"
 
 #endif /* POLYLINE_H_ */

@@ -25,4 +25,4 @@ project(opensemba_exporter_gid CXX)
 
 add_sources(. SRCS)
 add_library(opensemba_exporter_gid STATIC ${SRCS})
-add_dependencies(opensemba_exporter_gid opensemba_core_exporter)
+target_link_libraries(opensemba_exporter_gid gidpost opensemba_core_exporter)

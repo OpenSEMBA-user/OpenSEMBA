@@ -59,4 +59,6 @@ typedef Element::Surface<Math::Int > SurfI;
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
+#include "Surface.hpp"
+
 #endif /* SEMBA_GEOMETRY_ELEMENT_SURFACE_H_ */
