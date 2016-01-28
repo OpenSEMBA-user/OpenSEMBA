@@ -49,7 +49,7 @@ public:
     const std::string& getName       () const { return name_;        }
     const std::string& getDescription() const { return description_; }
 
-    virtual GroupBase& required() { required_ = true; return *this; }
+    virtual GroupBase& required();
 
     std::size_t   numChilds()                    const {
         return child_.size();
@@ -65,7 +65,7 @@ public:
     const OptionBase& option(const std::size_t& i) const;
 
     template <typename T>
-    T& addArgument(const T& arg);
+    T* addArgument(const T& arg);
 
 protected:
     void parsePreprocess(Object&) const;
@@ -139,7 +139,7 @@ private:
 };
 
 template<typename T>
-T& GroupBase::addArgument(const T& arg) {
+T* GroupBase::addArgument(const T& arg) {
     std::list<std::string> aux;
     aux.push_back(arg.getName());
     T* newArg = dynamic_cast<T*>(arg.clone());
@@ -168,7 +168,7 @@ T& GroupBase::addArgument(const T& arg) {
     } else {
         delete newArg;
     }
-    return *newArg;
+    return newArg;
 }
 
 namespace Error {

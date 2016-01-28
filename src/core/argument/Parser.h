@@ -28,7 +28,7 @@
 namespace SEMBA {
 namespace Argument {
 
-class Parser : public Group<true> {
+class Parser : public Group {
 public:
     Parser(const int& argc, const char** argv);
     Parser(const std::vector<std::string>&);

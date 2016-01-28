@@ -28,7 +28,7 @@ namespace SEMBA {
 namespace Argument {
 
 Parser::Parser(const int& argc, const char** argv)
-:   Group<true>(NULL, "") {
+:   Group(NULL, "") {
     input_.clear();
     if (argc > 0) {
         prog_ = argv[0];
@@ -46,7 +46,7 @@ Parser::Parser(const int& argc, const char** argv)
 }
 
 Parser::Parser(const std::vector<std::string>& argv)
-:   Group<true>(NULL, "") {
+:   Group(NULL, "") {
     input_.clear();
     if (argv.size() > 0) {
         prog_ = argv[0];

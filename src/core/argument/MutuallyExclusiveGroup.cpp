@@ -19,43 +19,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_ARGUMENT_GROUP_H_
-#define SEMBA_ARGUMENT_GROUP_H_
-
-#include "MutuallyExclusiveGroup.h"
+#include "Group.h"
 
 namespace SEMBA {
 namespace Argument {
 
-class Group : public GroupBase {
-public:
-    virtual ~Group();
+MutuallyExclusiveGroup::MutuallyExclusiveGroup(GroupBase* group,
+                                               const std::string& name,
+                                               const std::string& desc)
+:   GroupBase(group, name, desc) {
 
-    bool isMutuallyExclusive() const { return false; }
+}
 
-    Group& required();
+MutuallyExclusiveGroup::~MutuallyExclusiveGroup() {
 
-    Group& addGroup(const std::string& = std::string(),
-                    const std::string& = std::string());
-    MEGroup& addMutuallyExclusiveGroup();
-
-protected:
-    std::size_t numMutExc_;
-
-    Group(GroupBase* = NULL,
-          const std::string& = std::string(),
-          const std::string& = std::string());
-
-private:
-    //Erased
-    Group(const Group&);
-    Group(Group&&);
-
-    Group& operator=(const Group&);
-    Group& operator=(Group&&);
-};
+}
 
 } /* namespace Argument */
 } /* namespace SEMBA */
-
-#endif /* SEMBA_ARGUMENT_GROUP_H_ */

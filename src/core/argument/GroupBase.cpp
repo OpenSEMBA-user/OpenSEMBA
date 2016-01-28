@@ -49,6 +49,13 @@ GroupBase::~GroupBase() {
     optionsName_.clear();
 }
 
+GroupBase& GroupBase::required() {
+    if (isMutuallyExclusive()) {
+        required_ = true;
+    }
+    return *this;
+}
+
 std::size_t GroupBase::numPositions() const {
     return positions_.size();
 }

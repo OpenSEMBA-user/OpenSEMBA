@@ -19,43 +19,38 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_ARGUMENT_GROUP_H_
-#define SEMBA_ARGUMENT_GROUP_H_
+#ifndef SEMBA_ARGUMENT_MUTUALLYEXCLUSIVEGROUP_H_
+#define SEMBA_ARGUMENT_MUTUALLYEXCLUSIVEGROUP_H_
 
-#include "MutuallyExclusiveGroup.h"
+#include "GroupBase.h"
 
 namespace SEMBA {
 namespace Argument {
 
-class Group : public GroupBase {
+class MutuallyExclusiveGroup : public GroupBase {
+    friend class Group;
 public:
-    virtual ~Group();
-
-    bool isMutuallyExclusive() const { return false; }
-
-    Group& required();
-
-    Group& addGroup(const std::string& = std::string(),
-                    const std::string& = std::string());
-    MEGroup& addMutuallyExclusiveGroup();
+    virtual ~MutuallyExclusiveGroup();
+    
+    bool isMutuallyExclusive() const { return true; }
 
 protected:
-    std::size_t numMutExc_;
-
-    Group(GroupBase* = NULL,
-          const std::string& = std::string(),
-          const std::string& = std::string());
+    MutuallyExclusiveGroup(GroupBase* = NULL,
+                           const std::string& = std::string(),
+                           const std::string& = std::string());
 
 private:
     //Erased
-    Group(const Group&);
-    Group(Group&&);
+    MutuallyExclusiveGroup(const MutuallyExclusiveGroup&);
+    MutuallyExclusiveGroup(MutuallyExclusiveGroup&&);
 
-    Group& operator=(const Group&);
-    Group& operator=(Group&&);
+    MutuallyExclusiveGroup& operator=(const MutuallyExclusiveGroup&);
+    MutuallyExclusiveGroup& operator=(MutuallyExclusiveGroup&&);
 };
+
+typedef MutuallyExclusiveGroup MEGroup;
 
 } /* namespace Argument */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_ARGUMENT_GROUP_H_ */
+#endif /* SEMBA_ARGUMENT_MUTUALLYEXCLUSIVEGROUP_H_ */
