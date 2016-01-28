@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <string.h>
 #ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 #include <windows.h>
 #endif
 #include "hdf5c.h"

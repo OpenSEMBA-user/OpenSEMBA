@@ -423,17 +423,17 @@ std::vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
     for (std::size_t i = 0; i < numBoxes(Math::Constants::x); i++) {
         for (std::size_t j = 0; j < numBoxes(Math::Constants::y); j++) {
             for (std::size_t k = 0; k < numBoxes(Math::Constants::z); k++) {
-                CVecTD min = subGrid.getPos(CVecTD(i,j,k));
-                CVecTD max = subGrid.getPos(CVecTD(i+1,j+1,k+1));
+                CVecTD minP = subGrid.getPos(CVecTD(i,j,k));
+                CVecTD maxP = subGrid.getPos(CVecTD(i+1,j+1,k+1));
                 CVecTD minT, maxT;
                 for (std::size_t d = 0; d < D; d++) {
-                    if (min(d) >= min_(d)) {
-                        minT(d) = (T) min(d);
+                    if (minP(d) >= min_(d)) {
+                        minT(d) = (T) minP(d);
                     } else {
                         minT(d) = min_(d);
                     }
-                    if (max(d) <= max_(d)) {
-                        maxT(d) = (T) max(d);
+                    if (maxP(d) <= max_(d)) {
+                        maxT(d) = (T) maxP(d);
                     } else {
                         maxT(d) = max_(d);
                     }

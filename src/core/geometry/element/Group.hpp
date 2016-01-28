@@ -204,14 +204,14 @@ BoxR3 Group<E>::getBound() const {
         Group<const ElemI> elemsI = this->template getOf<ElemI>();
         for (std::size_t i = 0; i < elemsI.size(); i++) {
             BoxI3 boxI = elemsI(i)->getBound();
-            Math::CVecI3 min = boxI.getMin();
-            Math::CVecI3 max = boxI.getMax();
-            bound << BoxR3(Math::CVecR3(min(Math::Constants::x),
-                                        min(Math::Constants::y),
-                                        min(Math::Constants::z)),
-                           Math::CVecR3(max(Math::Constants::x),
-                                        max(Math::Constants::y),
-                                        max(Math::Constants::z)));
+            Math::CVecI3 minP = boxI.getMin();
+            Math::CVecI3 maxP = boxI.getMax();
+            bound << BoxR3(Math::CVecR3(minP(Math::Constants::x),
+                                        minP(Math::Constants::y),
+                                        minP(Math::Constants::z)),
+                           Math::CVecR3(maxP(Math::Constants::x),
+                                        maxP(Math::Constants::y),
+                                        maxP(Math::Constants::z)));
         }
     }
     return bound;
