@@ -215,7 +215,7 @@ public:
         return *this;
     }
     Object& eraseMember(const std::string& name) {
-        if (isObject()) {
+        if (existsName(name)) {
             delete objMembers_.at(nameMembers_.at(name));
             objMembers_ .erase(objMembers_.begin() + nameMembers_.at(name));
             objName_    .erase(objName_   .begin() + nameMembers_.at(name));
