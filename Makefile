@@ -87,7 +87,7 @@ create_dirs:
 	@echo 'Creating directories to store binaries and intermediate objects'
 	-mkdir -p $(OBJ_DIR)
 
-cudg3d: gidpost check
+cudg3d: gidpost opensemba check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
 opensemba: check gidpost

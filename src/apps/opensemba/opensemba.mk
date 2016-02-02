@@ -19,12 +19,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 # =============================================================================
-OUT = libopensemba
+out = libopensemba
+static = yes
 
-# =============================================================================
-LIBS = gidpost
-INCLUDES += src/ src/core/ external/
-# =============================================================================
 # -------------------- Paths to directories -----------------------------------
 SRC_CORE_DIRS     := $(shell find $(SRC_DIR)core/ -type d)
 SRC_EXPORTER_DIRS := $(shell find $(SRC_DIR)exporter/ -type d)
@@ -37,14 +34,19 @@ SRC_DIRS = $(SRC_CORE_DIRS) \
            $(SRC_PARSER_DIRS)
 
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
-OBJS_CXX := $(addprefix $(OBJDIR), $(SRCS_CXX:.cpp=.o))
+OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
+
+# =============================================================================
+LIBS = gidpost
+
+INCLUDES += $(SRC_DIR)core/
+# =============================================================================
 
 .PHONY: default clean clobber print
-.NOTPARALLEL:
 
-default: .NOTPARALLEL print $(OUT) 
+default: print $(out) 
 	@echo "======================================================="
-	@echo "           $(OUT) compilation finished             "
+	@echo "           $(out) compilation finished             "
 	@echo "======================================================="
 		
 clean:
@@ -53,29 +55,23 @@ clean:
 clobber: clean
 	rm -rf $(BINDIR)
 
-$(OBJDIR)%.o: %.cpp
+$(OBJ_DIR)%.o: %.cpp
 	@dirname $@ | xargs mkdir -p
 	@echo "Compiling:" $@
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
 	
-$(OBJDIR)%.o: %.c
-	@dirname $@ | xargs mkdir -p
-	@echo "Compiling:" $@
-	$(CC) $(CCFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
-
-# TODO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
-$(OUT): $(OBJS_CXX) $(OBJS_C)
+$(out): $(OBJS_CXX)
 	@mkdir -p $(BINDIR) 
 	@echo "Linking:" $@
-	${CXX} $^ -o $(BINDIR)$(OUT) $(CXXFLAGS) \
+	${CXX} $^ -o $(BIN_DIR)$(out) $(CXXFLAGS) \
 	 $(addprefix -D, $(DEFINES)) \
 	 $(addprefix -I, ${INCLUDES}) \
-	 $(addprefix -L, ${LIBRARIES}) $(addprefix -l, ${LIBS})
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<	 
+	 $(addprefix -L, ${LIBS_DIR}) $(addprefix -l, ${LIBS})
 	 
+.NOTPARALLEL:
 print:
 	@echo "======================================================="
-	@echo "         ----- Compiling $(OUT) ------                 "
+	@echo "         ----- Compiling $(out) ------                 "
 	@echo "Target:           " $(target)
 	@echo "Compiler:         " $(compiler)
 	@echo "C++ Compiler:     " `which $(CXX)`
