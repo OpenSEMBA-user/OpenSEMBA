@@ -112,7 +112,7 @@ cudg3d: gidpost check
 libopensemba: check gidpost 
 	$(MAKE) -f ./src/apps/libopensemba/libopensemba.mk
 
-testSemba: check
+testSemba: check libopensemba
 	$(MAKE) -f ./src/apps/test/test.mk
 
 gidpost: create_dirs check

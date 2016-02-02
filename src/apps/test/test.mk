@@ -19,7 +19,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-
 LIBS += gtest
 
 OUT = test
@@ -28,7 +27,7 @@ ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 endif
 
 # =============================================================================
-DIR = ./ $(SRC_CORE_DIR) 
+DIR = ./ 
 
 SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(SRCDIR)/apps/test/, ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
 

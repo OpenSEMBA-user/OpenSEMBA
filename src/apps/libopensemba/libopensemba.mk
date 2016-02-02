@@ -54,9 +54,6 @@ SRCS_CXX := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.cpp")
 SRCS_CXX := $(filter-out $(EXCLUDE), $(SRCS_CXX)) 
 OBJS_CXX := $(addprefix $(OBJDIR), $(SRCS_CXX:.cpp=.o))
 
-SRCS_C := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.c")
-SRCS_C := $(filter-out $(EXCLUDE), $(SRCS_C)) 
-OBJS_C := $(addprefix $(OBJDIR), $(SRCS_C:.c=.o))
 
 .PHONY: default clean clobber print
 
