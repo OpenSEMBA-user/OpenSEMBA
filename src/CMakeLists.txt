@@ -87,7 +87,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
-add_definitions(-DAPP_VERSION="0.10.1")
+add_definitions(-DAPP_VERSION="0.11")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
                     ${CMAKE_CURRENT_LIST_DIR}

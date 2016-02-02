@@ -30,7 +30,7 @@ USER=`whoami`
 BUILD_COMMAND=make clobber ; make -j `nproc` -s target=$(target) 
 FILES=./src ./Makefile ./*.mk
 
-APP_VERSION=\"0.10.1\"
+APP_VERSION=\"0.11\"
 DEFINES += APP_VERSION=$(APP_VERSION)
 # ==================== Debugging options ======================================
 ifeq ($(target),debug)
@@ -79,7 +79,7 @@ LIBDIR = ./external/
 SRCDIR = ./src/
 SRC_CORE_GEOMETRY_DIR = core/geometry/ \
  core/geometry/coordinate/ core/geometry/element/ core/geometry/graph/ \
- core/geometry/layer/ core/geometry/mesh/ core/geometry/pixiel/
+ core/geometry/layer/ core/geometry/mesh/
 SRC_CORE_MATH_DIR = core/math/ core/math/axis/ core/math/function/ \
  core/math/matrix/ core/math/simplex/ core/math/util/ core/math/vector/
 SRC_CORE_SOURCE_DIR = core/source/ core/source/magnitude/ core/source/port/ \

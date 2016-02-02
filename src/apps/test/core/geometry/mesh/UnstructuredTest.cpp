@@ -18,37 +18,22 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "GroupElementsTest.h"
+#include "UnstructuredTest.h"
 
-TEST_F(GeometryElementsGroupTest, Copy){
-    vector<CoordR3*> coords = newCoordR3Vector();
-    GroupCoordinates<>* original = new GroupCoordinates<>(coords);
-    GroupCoordinates<> copied;
-    copied = *original;
-
-    EXPECT_TRUE(checkTypes(*original));
-    EXPECT_TRUE(checkTypes(copied));
-
-    delete original;
-
-    EXPECT_TRUE(checkTypes(copied));
+TEST_F(GeometryMeshUnstructuredTest, ctor) {
+    EXPECT_EQ(mesh_.elems().size(), 2);
+    EXPECT_EQ(mesh_.elems().getOf<Tetrahedron>().size(), 1);
+    EXPECT_EQ(mesh_.elems().getOf<Triangle>().size(), 1);
 }
 
-TEST_F(GeometryElementsGroupTest, CopyCtor){
-    GroupCoordinates<> grp;
-    {
-        vector<CoordR3*> coords = newCoordR3Vector();
-        grp.add(coords);
+TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
+    const Tetrahedron4* tet = mesh_.elems().getOf<Tetrahedron4>()(0);
+    vector<Face> faces;
+    for (UInt f = 0; f < tet->numberOfFaces(); f++) {
+        faces.push_back(Face(tet, f));
     }
-    EXPECT_TRUE(checkTypes(grp));
+    GroupElements<const SurfR> matching = mesh_.getSurfsMatching(faces);
+    EXPECT_EQ(matching.size(), 1);
+    const Triangle3* tri = mesh_.elems().getOf<Triangle3>()(0);
+    EXPECT_EQ(*matching(0), *tri);
 }
-
-TEST_F(GeometryElementsGroupTest, idsConservation){
-    vector<CoordR3*> coords = newCoordR3Vector();
-    GroupCoordinates<> grp(coords);
-    EXPECT_EQ(coords.size(), grp.size());
-    for (UInt i = 0; i < grp.size(); i++) {
-        EXPECT_EQ(coords[i]->getId(), grp(i)->getId());
-    }
-}
-
