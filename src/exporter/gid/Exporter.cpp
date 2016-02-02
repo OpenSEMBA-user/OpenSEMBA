@@ -32,9 +32,9 @@ namespace SEMBA {
 namespace Exporter {
 namespace GiD {
 
-Math::Int numberOfOutputGiD_ = 0;
-Math::Int coordCounter_ = 0;
-Math::Int elemCounter_ = 0;
+Math::Int Exporter::numberOfOutputGiD_ = 0;
+Math::Int Exporter::coordCounter_ = 0;
+Math::Int Exporter::elemCounter_ = 0;
 
 const Math::CVecR3 pecColor(255, 0, 0);
 const Math::CVecR3 pmcColor(0, 255, 0);

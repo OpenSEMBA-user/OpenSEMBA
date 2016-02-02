@@ -34,7 +34,8 @@ Magnitude::Magnitude(Math::FunctionRR* mathFunction) {
 }
 
 Magnitude::Magnitude(const Magnitude& rhs) {
-    mathFunction_ = dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
+    mathFunction_ =
+        dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
 }
 
 Magnitude::~Magnitude() {
@@ -47,7 +48,8 @@ Magnitude& Magnitude::operator=(const Magnitude& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    mathFunction_ = dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
+    mathFunction_ =
+        dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
     return *this;
 }
 

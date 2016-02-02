@@ -34,7 +34,8 @@ SurfaceMultilayer::SurfaceMultilayer(
         const std::vector<Math::Real>& relPermeability,
         const std::vector<Math::Real>& elecCond,
         const std::vector<Math::Real>& magnCond)
-:   Surface(id, name) {
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
     thickness_ = thickness;
     relPermittivity_ = relPermittivity;
     relPermeability_ = relPermeability;
@@ -47,6 +48,27 @@ SurfaceMultilayer::SurfaceMultilayer(
         magnCond_.size() != nLayers) {
         throw Error::SurfaceMultilayer::IncompatibleSizes();
     }
+}
+
+SurfaceMultilayer::SurfaceMultilayer(const SurfaceMultilayer& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    thickness_ = rhs.thickness_;
+    relPermittivity_ = rhs.relPermittivity_;
+    relPermeability_ = rhs.relPermeability_;
+    elecCond_ = rhs.elecCond_;
+    magnCond_ = rhs.magnCond_;
+    const std::size_t nLayers = thickness_.size();
+    if (relPermittivity_.size() != nLayers ||
+        relPermeability_.size() != nLayers ||
+        elecCond_.size() != nLayers ||
+        magnCond_.size() != nLayers) {
+        throw Error::SurfaceMultilayer::IncompatibleSizes();
+    }
+}
+
+SurfaceMultilayer::~SurfaceMultilayer() {
+
 }
 
 std::size_t SurfaceMultilayer::getNumberOfLayers() const {
@@ -86,8 +108,8 @@ void SurfaceMultilayer::printInfo() const {
     std::cout << " --- SurfaceMultilayer info ---" << std::endl;
     Surface::printInfo();
     std::cout << "Number of layers: " << getNumberOfLayers() << std::endl;
-    std::cout <<
-    "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond" << std::endl;
+    std::cout << "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond"
+              << std::endl;
     for (std::size_t i = 0; i < getNumberOfLayers(); i++) {
         std::cout<< i << ": "
         << thickness_[i] << " "

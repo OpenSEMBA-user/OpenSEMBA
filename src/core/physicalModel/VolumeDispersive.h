@@ -36,26 +36,21 @@ namespace PhysicalModel {
 typedef std::pair<std::complex<Math::Real>,
                   std::complex<Math::Real>> PoleResidue;
 
-class VolumeDispersive : public Volume {
+class VolumeDispersive : public virtual Volume {
 public:
-    VolumeDispersive();
-    virtual ~VolumeDispersive();
-    VolumeDispersive(const Id id,
-                     const std::string& name,
-                     const Math::Real rEps,
-                     const Math::Real rMu,
-                     const Math::Real elecCond,
-                     const Math::Real magnCond);
     VolumeDispersive(const Id id,
                      const std::string& name,
                      const Math::Real rEps,
                      const Math::Real rMu,
                      const Math::Real elecCond,
                      const Math::Real magnCond,
-                     const std::vector<PoleResidue>& poleResidue);
+                     const std::vector<PoleResidue>& poleResidue =
+                        std::vector<PoleResidue>());
     VolumeDispersive(const Id id,
                      const std::string& name,
                      const FileSystem::Project& file);
+    VolumeDispersive(const VolumeDispersive& rhs);
+    virtual ~VolumeDispersive();
 
     SEMBA_CLASS_DEFINE_CLONE(VolumeDispersive);
 

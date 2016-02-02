@@ -21,6 +21,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-add_sources(. SRCS)
+project(opensemba_mesher_openfoam CXX)
 
-add_library(mesherOpenFOAM STATIC ${SRCS})
+add_sources(. SRCS)
+add_library(opensemba_mesher_openfoam STATIC ${SRCS})

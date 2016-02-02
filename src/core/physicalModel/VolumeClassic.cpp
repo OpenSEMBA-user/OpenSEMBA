@@ -32,11 +32,21 @@ VolumeClassic::VolumeClassic(const Id matId,
                              const Math::Real relativePermeability,
                              const Math::Real electricConductivity,
                              const Math::Real magneticConductivity)
-:   Volume(matId, name) {
+:   Identifiable<Id>(matId), 
+    PhysicalModel(name) {
     rEps_ = relativePermittivity;
     rMu_ = relativePermeability;
     electricConductivity_ = electricConductivity;
     magneticConudctivity_ = magneticConductivity;
+}
+
+VolumeClassic::VolumeClassic(const VolumeClassic& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    rEps_ = rhs.rEps_;
+    rMu_ = rhs.rMu_;
+    electricConductivity_ = rhs.electricConductivity_;
+    magneticConudctivity_ = rhs.magneticConudctivity_;
 }
 
 VolumeClassic::~VolumeClassic() {

@@ -27,13 +27,14 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class Wire: public PhysicalModel {
+class Wire : public virtual PhysicalModel {
 public:
     Wire(const Id id,
          const std::string name,
          const Math::Real radius,
          const Math::Real resistance,
          const Math::Real inductance);
+    Wire(const Wire&);
     virtual ~Wire();
 
     SEMBA_CLASS_DEFINE_CLONE(Wire);

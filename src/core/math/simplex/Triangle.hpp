@@ -260,7 +260,6 @@ Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
 //template <Int SIMPTRI_N> inline
 //vector<Matrix::Static<Real, SIMPTRI_NP, SIMPTRI_NP> >
 //Triangle<SIMPTRI_N>::cubatureLagrangeProducts() const {
-//    // ========================================================================
 //    // PURPOSE:
 //    // - Gets cubatured alpha and derived alpha for simplex element
 //    UInt i, j, c;

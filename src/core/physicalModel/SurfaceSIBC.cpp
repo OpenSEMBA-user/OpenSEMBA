@@ -30,7 +30,8 @@ SurfaceSIBC::SurfaceSIBC(const Id id,
                          const Math::MatR22& Zstatic,
                          const std::vector<Math::Real>& pole,
                          const std::vector<Math::MatR22 >& Z)
-:   Surface(id, name) {
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
     ZInfinity_ = Zinfinite;
     ZStatic_ = Zstatic;
     pole_ = pole;
@@ -40,8 +41,15 @@ SurfaceSIBC::SurfaceSIBC(const Id id,
 SurfaceSIBC::SurfaceSIBC(const Id id,
                          const std::string& name,
                          const FileSystem::Project& file)
-:   Surface(id, name) {
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
     file_ = file;
+}
+
+SurfaceSIBC::SurfaceSIBC(const SurfaceSIBC& rhs)
+    : Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    file_ = rhs.file_;
 }
 
 SurfaceSIBC::~SurfaceSIBC() {

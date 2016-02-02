@@ -26,7 +26,14 @@ namespace PhysicalModel {
 
 // =============== PEC ======================================================
 PEC::PEC(const Id id, const std::string name)
-: Predefined(id, name) {
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
+
+}
+
+PEC::PEC(const PEC& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
 
 }
 

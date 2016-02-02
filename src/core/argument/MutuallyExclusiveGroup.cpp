@@ -19,27 +19,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_PIXEL_VOXEL_H_
-#define SEMBA_GEOMETRY_PIXEL_VOXEL_H_
-
-#include "Surfel.h"
+#include "Group.h"
 
 namespace SEMBA {
-namespace Geometry {
-namespace Pixel {
+namespace Argument {
 
-class Voxel: public Pixel {
-public:
-    Voxel();
-    Voxel(const Math::CVecI3& cVecI3_);
-    virtual ~Voxel();
-    bool isInto (const Math::CVecI3Fractional& rhs) const;
-    bool operator<(const Voxel& rhs) const;
+MutuallyExclusiveGroup::MutuallyExclusiveGroup(GroupBase* group,
+                                               const std::string& name,
+                                               const std::string& desc)
+:   GroupBase(group, name, desc) {
 
-};
+}
 
-} /* namespace Pixel */
-} /* namespace Geometry */
+MutuallyExclusiveGroup::~MutuallyExclusiveGroup() {
+
+}
+
+} /* namespace Argument */
 } /* namespace SEMBA */
-
-#endif /* SRC_MESHER_FDTD_MESHCONF_VOXEL_H_ */

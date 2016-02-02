@@ -27,10 +27,10 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class Volume : public PhysicalModel {
+class Volume : public virtual PhysicalModel {
 public:
-    Volume(const Id id, const std::string name);
-    virtual ~Volume() = 0;
+    Volume();
+    virtual ~Volume();
 
     virtual void printInfo() const;
 };

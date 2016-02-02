@@ -25,8 +25,9 @@ namespace SEMBA {
 namespace Source {
 namespace Port {
 
-Port::Port(Magnitude::Magnitude* magnitude, const Geometry::Element::Group<const Geometry::Surf>& elem) :
-    SEMBA::Source::Base(magnitude),
+Port::Port(Magnitude::Magnitude* magnitude,
+           const Geometry::Element::Group<const Geometry::Surf>& elem)
+:   SEMBA::Source::Base(magnitude),
     Geometry::Element::Group<const Geometry::Surf>(elem) {
 
 }

@@ -95,7 +95,8 @@ bool Identification<T>::operator>=(const Identification& rhs) const {
 }
 
 template<typename T>
-Identification<T> Identification<T>::operator+(const Identification& rhs) const {
+Identification<T> Identification<T>::operator+(
+        const Identification& rhs) const {
     return Identification(id_ + rhs.id_);
 }
 

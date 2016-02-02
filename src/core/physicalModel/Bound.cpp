@@ -18,16 +18,19 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * Options.cpp
- *
- *  Created on: Mar 10, 2015
- *      Author: luis
- */
 
-#include "Options.h"
+#include "Bound.h"
 
-Options::~Options() {
-    // TODO Auto-generated destructor stub
+namespace SEMBA {
+namespace PhysicalModel {
+
+Bound::Bound() {
+
 }
 
+Bound::~Bound() {
+
+}
+
+} /* namespace PhysicalModel */
+} /* namespace SEMBA */

@@ -24,18 +24,27 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-MultiportRLC::MultiportRLC(
-        const Id id,
-        const std::string name,
-        const Multiport::Type type,
-        const Math::Real resistance,
-        const Math::Real inductance,
-        const Math::Real capacitance)
-:   Multiport(id, name) {
+MultiportRLC::MultiportRLC(const Id id,
+                           const std::string name,
+                           const Multiport::Type type,
+                           const Math::Real resistance,
+                           const Math::Real inductance,
+                           const Math::Real capacitance)
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
     type_ = type;
     R_ = resistance;
     L_ = inductance;
     C_ = capacitance;
+}
+
+MultiportRLC::MultiportRLC(const MultiportRLC& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    type_ = rhs.type_;
+    R_ = rhs.R_;
+    L_ = rhs.L_;
+    C_ = rhs.C_;
 }
 
 MultiportRLC::~MultiportRLC() {

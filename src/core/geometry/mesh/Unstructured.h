@@ -74,7 +74,7 @@ public:
     bool isFloatingCoordinate(const CoordR3* coordinate) const;
 
     Element::Group<const SurfR> getMaterialBoundary(const MatId   matId,
-                                                   const LayerId layId) const;
+                                                    const LayerId layId) const;
     Element::Group<const SurfR> getSurfsMatching(
             const std::vector<Element::Face>& faces) const;
     Element::Group<const Tri> convertToTri(

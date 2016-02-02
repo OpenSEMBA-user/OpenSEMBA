@@ -26,14 +26,12 @@
 
 #include "GroupBase.h"
 
-#include "FormatterBase.h"
-
 namespace SEMBA {
 namespace Argument {
 
 class Parser;
 
-class Formatter : public FormatterBase {
+class Formatter {
 public:
     static const std::string PROG;
     static const std::string DEFAULT;
@@ -43,10 +41,10 @@ public:
     Formatter(const Formatter& rhs) : parser_(rhs.parser_) {}
     virtual ~Formatter() {}
 
-    Formatter* clone() const { return new Formatter(*this); }
+    virtual Formatter* clone() const { return new Formatter(*this); }
 
-    void printUsage();
-    void printHelp ();
+    virtual void printUsage();
+    virtual void printHelp();
 
 private:
     const Parser* parser_;

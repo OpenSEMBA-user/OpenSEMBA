@@ -31,13 +31,13 @@ namespace PhysicalModel {
 // https://en.wikipedia.org/wiki/Polder_tensor
 class VolumeAnisotropicFerrite: public VolumeAnisotropic {
 public:
-    VolumeAnisotropicFerrite(
-            const Id matId,
-            const std::string& name,
-            const Math::Axis::Local& local,
-            const Math::Real kappa,
-            const Math::Real relativePermeability,
-            const Math::Real relativePermittivity);
+    VolumeAnisotropicFerrite(const Id matId,
+                             const std::string& name,
+                             const Math::Axis::Local& local,
+                             const Math::Real kappa,
+                             const Math::Real relativePermeability,
+                             const Math::Real relativePermittivity);
+    VolumeAnisotropicFerrite(const VolumeAnisotropicFerrite&);
     virtual ~VolumeAnisotropicFerrite();
 
     SEMBA_CLASS_DEFINE_CLONE(VolumeAnisotropicFerrite);

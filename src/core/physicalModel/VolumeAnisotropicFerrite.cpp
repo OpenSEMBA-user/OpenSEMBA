@@ -31,10 +31,22 @@ VolumeAnisotropicFerrite::VolumeAnisotropicFerrite(
         const Math::Real kappa,
         const Math::Real relativePermeability,
         const Math::Real relativePermittivity)
-: VolumeAnisotropic(matId, name, local) {
+:   Identifiable<Id>(matId),
+    PhysicalModel(name),
+    VolumeAnisotropic(local) {
     kappa_ = kappa;
     relativePermeability_ = relativePermeability;
     relativePermittivity_ = relativePermittivity;
+}
+
+VolumeAnisotropicFerrite::VolumeAnisotropicFerrite(
+    const VolumeAnisotropicFerrite& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs),
+    VolumeAnisotropic(rhs) {
+    kappa_ = rhs.kappa_;
+    relativePermeability_ = rhs.relativePermeability_;
+    relativePermittivity_ = rhs.relativePermittivity_;
 }
 
 VolumeAnisotropicFerrite::~VolumeAnisotropicFerrite() {

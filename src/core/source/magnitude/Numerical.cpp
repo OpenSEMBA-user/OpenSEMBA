@@ -54,7 +54,8 @@ Numerical::Numerical(const FileSystem::Project& file,
     } else {
         nSteps = defaultNumberOfSteps;
         std::cerr << "WARNING @ Numerical: "
-                  << "Attempting to build a numerical magnitude with a 0.0 step."
+                  << "Attempting to build a "
+                  << "numerical magnitude with a 0.0 step."
                   << "Using default number of steps instead: " << nSteps
                   << std::endl;
         mag.printInfo();

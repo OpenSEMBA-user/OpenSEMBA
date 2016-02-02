@@ -150,7 +150,8 @@ Identifiable<T,Id> Identifiable<T,Id>::getId(const std::vector<Id>& ids) {
 }
 
 template<typename T, class Id>
-Identifiable<const T,Id> Identifiable<T,Id>::getId(const std::vector<Id>& ids) const {
+Identifiable<const T,Id> Identifiable<T,Id>::getId(
+        const std::vector<Id>& ids) const {
     return this->get(getElemsId_(ids));
 }
 
@@ -245,7 +246,8 @@ void Identifiable<T,Id>::postprocess_(const std::size_t& firstStep) {
 }
 
 template<typename T, class Id>
-std::vector<std::size_t> Identifiable<T,Id>::getElemsId_(const std::vector<Id>& ids) const {
+std::vector<std::size_t> Identifiable<T,Id>::getElemsId_(
+        const std::vector<Id>& ids) const {
     std::vector<std::size_t> res;
     res.reserve(ids.size());
     for(std::size_t i = 0; i < ids.size(); i++) {

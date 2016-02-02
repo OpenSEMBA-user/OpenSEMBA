@@ -194,7 +194,8 @@ struct Internal_ {
                           std::list<std::string>& outlist,
                           std::list<std::string>& inlist) {
             const std::size_t P = std::tuple_size<std::tuple<T...>>::value-I-1;
-            typedef typename std::tuple_element<P, std::tuple<T...>>::type Type;
+            typedef typename std::tuple_element<P, std::tuple<T...>>::type
+                Type;
             ParserHelper<Type>::parse(std::get<P>(tuple), outlist, inlist, P);
             Parser<I-1, T...>::parse(tuple, outlist, inlist);
         }
@@ -206,7 +207,8 @@ struct Internal_ {
                           std::list<std::string>& outlist,
                           std::list<std::string>& inlist) {
             const std::size_t P = std::tuple_size<std::tuple<T...>>::value - 1;
-            typedef typename std::tuple_element<P, std::tuple<T...>>::type Type;
+            typedef typename std::tuple_element<P, std::tuple<T...>>::type
+                Type;
             ParserHelper<Type>::parse(std::get<P>(tuple), outlist, inlist, P);
         }
     };

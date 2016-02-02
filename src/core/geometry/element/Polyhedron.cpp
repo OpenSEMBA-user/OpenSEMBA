@@ -102,7 +102,8 @@ const CoordR3* Polyhedron::getVertex(const std::size_t i) const {
     return getV(i);
 }
 
-const CoordR3* Polyhedron::getSideVertex(const std::size_t f, const std::size_t i) const {
+const CoordR3* Polyhedron::getSideVertex(const std::size_t f,
+                                         const std::size_t i) const {
     return getSideV(f,i);
 }
 

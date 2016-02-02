@@ -27,10 +27,11 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class SMA : public Predefined {
+class SMA : public virtual Predefined {
 public:
-    virtual ~SMA();
     SMA(const Id id, const std::string name);
+    SMA(const SMA& rhs);
+    virtual ~SMA();
 
     SEMBA_CLASS_DEFINE_CLONE(SMA);
 

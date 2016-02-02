@@ -30,14 +30,13 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class VolumePML : public Volume {
+class VolumePML : public virtual Volume {
 public:
-    VolumePML(
-            const Id id,
-            const std::string& name,
-            const Math::Axis::Local* orientation = NULL);
+    VolumePML(const Id id,
+              const std::string& name,
+              const Math::Axis::Local* orientation = NULL);
     // If no orientation is given. Automatic orientation should be attempted.
-
+    VolumePML(const VolumePML& rhs);
     ~VolumePML();
 
     SEMBA_CLASS_DEFINE_CLONE(VolumePML);

@@ -26,45 +26,46 @@ namespace PhysicalModel {
 
 VolumeDispersive::VolumeDispersive(const Id id,
                                    const std::string& name,
-                                   const Math::Real rEpsInfty,
-                                   const Math::Real rMuInfty,
-                                   const Math::Real elecCond,
-                                   const Math::Real magnCond)
-:   Volume(id, name) {
-    rEpsInfty_ = rEpsInfty;
-    rMuInfty_ = rMuInfty;
-    // Adds conductivity as a permittivity pole.
-    if (elecCond != 0.0) {
-        std::complex<Math::Real> pole(0.0);
-        std::complex<Math::Real> residue(elecCond/Math::Real(2.0)/
-                                         Math::Constants::eps0, 0);
-        poleResidue_.push_back(PoleResidue(pole,residue));
-    }
-    //
-    if (magnCond != 0.0) {
-        throw Error::VolumeDispersive::MagneticMaterial();
-    }
-}
-
-VolumeDispersive::VolumeDispersive(const Id id,
-                                   const std::string& name,
                                    const Math::Real rEps,
                                    const Math::Real rMu,
                                    const Math::Real elecCond,
                                    const Math::Real magnCond,
                                    const std::vector<PoleResidue>& poleResidue)
-:   Volume(id, name) {
-    *this = VolumeDispersive(id, name, rEps, rMu, elecCond, magnCond);
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
+    rEpsInfty_ = rEps;
+    rMuInfty_ = rMu;
+    // Adds conductivity as a permittivity pole.
+    if (elecCond != 0.0) {
+        std::complex<Math::Real> pole(0.0);
+        std::complex<Math::Real> residue(elecCond / Math::Real(2.0) /
+                                         Math::Constants::eps0, 0);
+        poleResidue_.push_back(PoleResidue(pole, residue));
+    }
+    //
+    if (magnCond != 0.0) {
+        throw Error::VolumeDispersive::MagneticMaterial();
+    }
     poleResidue_ = poleResidue;
 }
 
 VolumeDispersive::VolumeDispersive(const Id id,
                                    const std::string& name,
                                    const FileSystem::Project& file)
-:   Volume(id, name) {
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
     rEpsInfty_ = 1.0;
     rMuInfty_ = 1.0;
     file_ = file;
+}
+
+VolumeDispersive::VolumeDispersive(const VolumeDispersive& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    rEpsInfty_ = rhs.rEpsInfty_;
+    rMuInfty_ = rhs.rMuInfty_;
+    poleResidue_ = rhs.poleResidue_;
+    file_ = rhs.file_;
 }
 
 VolumeDispersive::~VolumeDispersive() {
@@ -104,9 +105,9 @@ bool VolumeDispersive::isSimplyConductive() const {
 Math::Real VolumeDispersive::getElectricConductivity() const {
     if (getPoleNumber() > 1) {
         std::cout << std::endl << "WARNING @ getElectricConductivity: "
-                << "This material is dispersive and its effective permittivity "
-                << "depends on several parameters."
-                << "Returning static limit conductivity." << std::endl;
+                  << "This material is dispersive and its effective "
+                  << "permittivity depends on several parameters. "
+                  << "Returning static limit conductivity." << std::endl;
     }
     for (std::size_t i = 0; i < getPoleNumber(); i++) {
         if (std::abs(getPole(i)) == 0) {

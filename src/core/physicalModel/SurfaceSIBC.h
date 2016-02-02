@@ -30,7 +30,7 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class SurfaceSIBC : public Surface {
+class SurfaceSIBC : public virtual Surface {
     friend class DGSIBC;
 public:
     SurfaceSIBC();
@@ -43,6 +43,7 @@ public:
     SurfaceSIBC(const Id id,
                 const std::string& name,
                 const FileSystem::Project& file);
+    SurfaceSIBC(const SurfaceSIBC& rhs);
     virtual ~SurfaceSIBC();
 
     SEMBA_CLASS_DEFINE_CLONE(SurfaceSIBC);

@@ -123,7 +123,8 @@ Structured* Structured::getConnectivityMesh() const {
     elems.removeMatId(MatId(0));
     Graph::Vertices<ElemI, CoordI3> graphLayer;
     graphLayer.init(elems);
-    std::vector<std::vector<const ElemI*>> comps = graphLayer.getConnectedComponents();
+    std::vector<std::vector<const ElemI*>> comps =
+        graphLayer.getConnectedComponents();
     for (std::size_t c = 0; c < comps.size(); c++) {
         std::stringstream layerName;
         layerName << "Component " << c+1;

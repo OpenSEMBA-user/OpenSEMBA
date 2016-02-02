@@ -117,14 +117,52 @@ public:
         return *this;
     }
     template<typename... T>
-    Object& operator=(const T&...);
+    Object& operator =(const T&...);
+
+    Object& operator+=(const Object& rhs) {
+        *this = *this + rhs;
+        return *this;
+    }
+    Object  operator+ (const Object& rhs) const {
+        if (isNull() && rhs.isNull()) {
+            return *this;
+        } else if (isNull()) {
+            return rhs;
+        } else if (rhs.isNull()) {
+            return *this;
+        }
+        if (isObject() && rhs.isObject()) {
+            Object res;
+            res.setObject();
+            for (std::size_t i = 0; i < size(); i++) {
+                if (rhs.existsName(getName(i))) {
+                    res[getName(i)] = (*this)[getName(i)] + rhs[getName(i)];
+                } else {
+                    res[getName(i)] = (*this)[getName(i)];
+                }
+            }
+            for (std::size_t i = 0; i < rhs.size(); i++) {
+                if (!res.existsName(rhs.getName(i))) {
+                    res[rhs.getName(i)] = rhs[rhs.getName(i)];
+                }
+            }
+            return res;
+        } else if (isObject()) {
+            return *this;
+        } else if (rhs.isObject()) {
+            return rhs;
+        }
+        return rhs;
+    }
+
+    Object& reset() { return setType(type_); }
 
     //Value Type
     bool     isType(const Type& type) const { return type == type_; }
     Type    getType()                 const { return type_;         }
     Object& setType(const Type& type) {
-        if ((type == Type::Dictionary) || (type == Type::Array)
-            || (type == Type::Null)) {
+        if (((type == Type::Dictionary) || (type == Type::Array) ||
+             (type == Type::Null)) && (type != type_)) {
             clear_();
             type_ = type;
         }
@@ -132,16 +170,14 @@ public:
     }
 
     //Null Value
-    bool     isNull() const { return isType(Type::Null);               }
-    Object& setNull()       {       setType(Type::Null); return *this; }
+    bool     isNull() const { return  isType(Type::Null); }
+    Object& setNull()       { return setType(Type::Null); }
 
     //Object Value
-    bool     isObject() const {return isType(Type::Dictionary); }
-    Object& setObject()       {      setType(Type::Dictionary); return *this; }
-    bool exists(const std::string& name) const {
-        return (nameMembers_.count(name) != 0);
-    }
-    Object& operator [](const std::string& name) {
+    bool     isObject() const { return  isType(Type::Dictionary); }
+    Object& setObject()       { return setType(Type::Dictionary); }
+    Object&       operator [](const std::string& name) {
+        setObject();
         if (nameMembers_.count(name) == 0) {
             nameMembers_[name] = objMembers_.size();
             objMembers_.push_back(NULL);
@@ -154,34 +190,32 @@ public:
     const Object& operator [](const std::string& name) const {
         return *objMembers_.at(nameMembers_.at(name));
     }
-    Object& addMember(const std::string& name, const Object& val) {
-        if (isObject()) {
-            if (nameMembers_.count(name) != 0) {
-                delete objMembers_.at(nameMembers_.at(name));
-            } else {
-                nameMembers_[name] = objMembers_.size();
-                objMembers_.push_back(NULL);
-                objName_   .push_back(name);
-            }
-            objMembers_.at(nameMembers_.at(name)) = new Object(val);
+    Object&   addMember(const std::string& name, const Object& val) {
+        setObject();
+        if (nameMembers_.count(name) != 0) {
+            delete objMembers_.at(nameMembers_.at(name));
+        } else {
+            nameMembers_[name] = objMembers_.size();
+            objMembers_.push_back(NULL);
+            objName_   .push_back(name);
         }
+        objMembers_.at(nameMembers_.at(name)) = new Object(val);
         return *this;
     }
-    Object& addMember(const std::string& name, Object&& val) {
-        if (isObject()) {
-            if (nameMembers_.count(name) != 0) {
-                delete objMembers_.at(nameMembers_.at(name));
-            } else {
-                nameMembers_[name] = objMembers_.size();
-                objMembers_.push_back(NULL);
-                objName_   .push_back(name);
-            }
-            objMembers_.at(nameMembers_.at(name)) = new Object(std::move(val));
+    Object&   addMember(const std::string& name, Object&& val) {
+        setObject();
+        if (nameMembers_.count(name) != 0) {
+            delete objMembers_.at(nameMembers_.at(name));
+        } else {
+            nameMembers_[name] = objMembers_.size();
+            objMembers_.push_back(NULL);
+            objName_   .push_back(name);
         }
+        objMembers_.at(nameMembers_.at(name)) = new Object(std::move(val));
         return *this;
     }
     Object& eraseMember(const std::string& name) {
-        if (isObject()) {
+        if (existsName(name)) {
             delete objMembers_.at(nameMembers_.at(name));
             objMembers_ .erase(objMembers_.begin() + nameMembers_.at(name));
             objName_    .erase(objName_   .begin() + nameMembers_.at(name));
@@ -189,32 +223,31 @@ public:
         }
         return *this;
     }
+    bool            existsName(const std::string& name) const {
+        return isObject() && (nameMembers_.count(name) != 0);
+    }
     const std::string& getName(const std::size_t& i) const {
         return objName_.at(i);
     }
 
     //Array Value
-    bool     isArray() const { return isType(Type::Array);               }
-    Object& setArray()       {       setType(Type::Array); return *this; }
-    std::size_t size() const {
-        return objMembers_.size();
-    }
-    Object& operator [](const std::size_t& i) {
+    bool     isArray() const { return  isType(Type::Array); }
+    Object& setArray()       { return setType(Type::Array); }
+    std::size_t size() const { return objMembers_.size();   }
+    Object&       operator [](const std::size_t& i) {
         return *objMembers_.at(i);
     }
     const Object& operator [](const std::size_t& i) const {
         return *objMembers_.at(i);
     }
-    Object& addValue(const Object& val) {
-        if (isArray()) {
-            objMembers_.push_back(new Object(val));
-        }
+    Object&   addValue(const Object& val) {
+        setArray();
+        objMembers_.push_back(new Object(val));
         return *this;
     }
-    Object& addValue(Object&& val) {
-        if (isArray()) {
-            objMembers_.push_back(new Object(std::move(val)));
-        }
+    Object&   addValue(Object&& val) {
+        setArray();
+        objMembers_.push_back(new Object(std::move(val)));
         return *this;
     }
     Object& eraseValue(const std::size_t& i) {
@@ -226,25 +259,27 @@ public:
     }
 
     //Bool Value
-    bool  isBool(const BoolType& type = BoolType::None) const {
+    bool     isBool(const BoolType& type = BoolType::None) const {
         if (type == BoolType::None) {
             return (type_ == Type::Bool);
         }
         return (type_ == Type::Bool) && (type == boolType_);
     }
-    bool  isTrue () const { return isBool(BoolType::True ); }
-    bool  isFalse() const { return isBool(BoolType::False); }
+    bool     isTrue () const { return isBool(BoolType::True ); }
+    bool     isFalse() const { return isBool(BoolType::False); }
     Object& setBool(const BoolType& type) {
-        clear_();
-        type_ = Type::Bool;
-        boolType_ = type;
+        if (type != BoolType::None) {
+            clear_();
+            type_ = Type::Bool;
+            boolType_ = type;
+        }
         return *this;
     }
-    Object& setTrue () { setBool(BoolType::True ); return *this; }
-    Object& setFalse() { setBool(BoolType::False); return *this; }
+    Object& setTrue () { return setBool(BoolType::True ); }
+    Object& setFalse() { return setBool(BoolType::False); }
 
     //Number Value
-    virtual bool isNumber(const NumberType& type = NumberType::None) const {
+    bool isNumber(const NumberType& type = NumberType::None) const {
         if (type_ != Type::String) {
             return false;
         }
@@ -289,7 +324,7 @@ public:
         }
         return res;
     }
-    Object& setString(const std::string& str) {
+    Object&     setString(const std::string& str) {
         clear_();
         type_ = Type::String;
         strValue_.push_back(str);
@@ -298,7 +333,8 @@ public:
     const std::list<std::string>& getGenericString() const {
         return strValue_;
     }
-    Object& setGenericString(const std::list<std::string>& str) {
+    Object&                       setGenericString(
+            const std::list<std::string>& str) {
         clear_();
         type_ = Type::String;
         strValue_ = str;
@@ -317,7 +353,7 @@ public:
     template<typename... T>
     Object&                      set(const T&...);
 
-    void printInfo(const std::size_t& depth = 0) {
+    void printInfo(const std::size_t& depth = 0) const {
         switch (getType()) {
         case Object::Type::Null:
             std::cout << "null";
@@ -426,7 +462,8 @@ private:
              it = objMembers_.begin(); it != objMembers_.end(); ++it) {
             delete *it;
         }
-        objMembers_.clear();
+        objMembers_ .clear();
+        objName_    .clear();
         nameMembers_.clear();
         //Bool Value
         boolType_ = BoolType::None;

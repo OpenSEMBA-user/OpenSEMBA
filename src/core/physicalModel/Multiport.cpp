@@ -24,9 +24,8 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-Multiport::Multiport(const Id id, const std::string name)
-:   PhysicalModel(id, name) {
-    type_ = undefined;
+Multiport::Multiport() {
+
 }
 
 Multiport::~Multiport() {

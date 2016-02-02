@@ -24,8 +24,12 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-Surface::Surface(const Id id, const std::string& name)
-:   PhysicalModel(id, name) {
+Surface::Surface() {
+
+}
+
+Surface::~Surface() {
+
 }
 
 } /* namespace PhysicalModel */

@@ -105,7 +105,9 @@ public:
 
     bool isSimilar(const SEMBA::OutputRequest::Base& rhs) const;
 
-    Geometry::Element::Group<const Geometry::Elem> elems() const {return *this;}
+    Geometry::Element::Group<const Geometry::Elem> elems() const {
+        return *this;
+    }
 
     void set(const Geometry::Element::Group<const Geometry::Elem>&);
     void add(const Geometry::Element::Group<const Geometry::Elem>&);

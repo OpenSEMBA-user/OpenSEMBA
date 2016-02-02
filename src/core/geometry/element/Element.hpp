@@ -158,7 +158,8 @@ std::vector<const Coordinate::Coordinate<T,3>*> Element<T>::getSideCoordinates(
 template<class T>
 std::vector<const Coordinate::Coordinate<T,3>*> Element<T>::getSideVertices(
         const std::size_t face) const {
-    std::vector<const Coordinate::Coordinate<T,3>*> res(numberOfSideVertices());
+    std::vector<const Coordinate::Coordinate<T, 3>*> res;
+    res.resize(numberOfSideVertices());
     for (std::size_t i = 0; i < numberOfSideVertices(); i++) {
         res[i] = getSideVertex(face,i);
     }
@@ -166,7 +167,8 @@ std::vector<const Coordinate::Coordinate<T,3>*> Element<T>::getSideVertices(
 }
 
 template<class T>
-void Element<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord) {
+void Element<T>::setV(const std::size_t i,
+                      const Coordinate::Coordinate<T,3>* coord) {
     printInfo();
     throw std::logic_error(
               "Setting coordinates is not allowed for this element");
@@ -174,7 +176,8 @@ void Element<T>::setV(const std::size_t i, const Coordinate::Coordinate<T,3>* co
 
 template<class T>
 ElemI* Element<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
-                                const Grid3& grid, const Math::Real tol) const {
+                                const Grid3& grid,
+                                const Math::Real tol) const {
     return NULL;
 }
 

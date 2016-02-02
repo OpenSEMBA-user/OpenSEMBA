@@ -28,17 +28,15 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class VolumeAnisotropic: public Volume {
+class VolumeAnisotropic : public virtual Volume {
 public:
     enum class Model {
         crystal,
         ferrite
     };
 
-    VolumeAnisotropic(
-            const Id matId,
-            const std::string& name,
-            const Math::Axis::Local& local);
+    VolumeAnisotropic(const Math::Axis::Local& local);
+    VolumeAnisotropic(const VolumeAnisotropic& rhs);
     virtual ~VolumeAnisotropic();
 
     Math::Axis::Local getLocalAxe() const;

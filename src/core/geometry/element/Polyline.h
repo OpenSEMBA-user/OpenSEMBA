@@ -56,9 +56,11 @@ public:
     const Coordinate::Coordinate<T,3>* getSideV(const std::size_t f,
                                                 const std::size_t i) const;
 
-    const Coordinate::Coordinate<T,3>* getVertex    (const std::size_t i) const;
-    const Coordinate::Coordinate<T,3>* getSideVertex(const std::size_t f,
-                                                     const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getVertex    (
+            const std::size_t i) const;
+    const Coordinate::Coordinate<T,3>* getSideVertex(
+            const std::size_t f,
+            const std::size_t i) const;
 
     void setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord);
 
@@ -77,6 +79,6 @@ typedef Element::Polyline<Math::Int > PolylinI;
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
-#include "Polyline.h"
+#include "Polyline.hpp"
 
 #endif /* POLYLINE_H_ */

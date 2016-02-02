@@ -27,10 +27,11 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class Predefined : public PhysicalModel {
+class Predefined : public virtual PhysicalModel {
 public:
-    Predefined(const Id id, const std::string name);
+    Predefined();
     virtual ~Predefined();
+
     virtual void printInfo() const;
 };
 

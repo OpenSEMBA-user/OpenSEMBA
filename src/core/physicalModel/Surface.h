@@ -27,9 +27,10 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class Surface: public PhysicalModel {
+class Surface : public virtual PhysicalModel {
 public:
-    Surface(const Id id, const std::string& name);
+    Surface();
+    virtual ~Surface();
 };
 
 } /* namespace PhysicalModel */

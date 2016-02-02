@@ -25,7 +25,7 @@ namespace SEMBA {
 namespace Math {
 namespace Simplex {
 
-// =============== Tetrahedron =================================================
+// =============== Tetrahedron ================================================
 // =-=-=-=-=-=-=-= Constructors =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 template <Int SIMPTET_N>
 Tetrahedron<SIMPTET_N>::Tetrahedron() {

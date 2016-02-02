@@ -27,9 +27,9 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class Multiport: public PhysicalModel {
+class Multiport : public virtual PhysicalModel {
 public:
-    typedef enum {
+    enum Type {
         // Predefined
         shortCircuit = 1,
         openCircuit = 2,
@@ -44,10 +44,12 @@ public:
         sCpLR = 17,   // C + (L//R).
         pRLC = 18,     // R//L//C.
         undefined = 0
-    } Type;
-    Multiport(const Id id, const std::string name);
+    };
+    Multiport();
     virtual ~Multiport();
+
     virtual Type getType() const;
+
 protected:
     Type type_;
     std::string getTypeStr() const;

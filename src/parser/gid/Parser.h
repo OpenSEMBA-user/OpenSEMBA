@@ -85,8 +85,8 @@ private:
     Geometry::Mesh::Unstructured* mesh_;
     ProblemSize pSize_;
 
-    Solver::Options* readOptionsSolver();
-    void readOptionsSolverOptions(Solver::Options&, const std::string&);
+    Solver::Info* readSolver();
+    void readSolverOptions(Solver::Settings&, const std::string&);
     //OptionsSolverFDTD* readOptionsSolverFDTD(const OptionsSolver& base);
     //OptionsSolverDGTD* readOptionsSolverDGTD(const OptionsSolver& base);
     //OptionsMesher* readMesherOptions();

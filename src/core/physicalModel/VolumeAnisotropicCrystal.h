@@ -36,6 +36,7 @@ public:
             const Math::Axis::Local& local,
             const Math::CVecR3& principalAxesRelativePermittivity,
             const Math::Real relativePermeability);
+    VolumeAnisotropicCrystal(const VolumeAnisotropicCrystal&);
     virtual ~VolumeAnisotropicCrystal();
 
     SEMBA_CLASS_DEFINE_CLONE(VolumeAnisotropicCrystal);

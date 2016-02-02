@@ -19,41 +19,47 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_PIXEL_LINEL_H_
-#define SEMBA_GEOMETRY_PIXEL_LINEL_H_
+#ifndef SEMBA_MESHER_OPENFOAM_BOUNDARY_H_
+#define SEMBA_MESHER_OPENFOAM_BOUNDARY_H_
 
-#include "Pixel.h"
+#include <string>
+#include <cstring>
+#include <stdlib.h>
+#include <iostream>
+#include <assert.h>
+
+#include "geometry/element/Element.h"
+#include "geometry/layer/Layer.h"
+#include "physicalModel/PhysicalModel.h"
 
 namespace SEMBA {
-namespace Geometry {
-namespace Pixel {
+namespace Mesher {
+namespace OpenFOAM {
 
-class Linel: public Pixel {
+class Boundary : public Geometry::Layer::Layer {
+    friend class Parser;
 public:
-    Linel();
-    Linel(const Math::CVecI3& pos, const Math::CartesianDirection& dir);
-    virtual ~Linel();
-
-    bool isInto (const Math::CVecI3Fractional& coordIntFractional_)const;
-
-    bool operator==(const Linel& rhs) const;
-    bool operator<(const Linel& rhs) const;
-
-    Math::CartesianDirection  getDirId ()const{return dirId_;}
-    Math::CartesianDirection& DirId (){return dirId_;}
-    void setDirId (const Math::CartesianDirection& _dirId){dirId_ = _dirId;}
-
-    std::string toStr() const;
-    friend std::ostream& operator<<(std::ostream& os, const Linel& vec) {
-        return os << vec.toStr();
-    }
-
+	Boundary();
+	Boundary(
+	 const std::string name,
+	 const std::size_t nFaces,
+     const std::size_t startFace);
+	virtual ~Boundary();
+    std::size_t getFaces() const;
+    std::size_t getStartFace() const;
+    void printInfo() const;
+protected:
+    bool isMaterial() const;
+    MatId getMaterialIdFromName() const;
 private:
-    Math::CartesianDirection dirId_;
+	std::size_t nFaces_;
+    std::size_t startFace_;
+    int strpos(const char *haystack, const char *needle, int nth) const;
+    Geometry::LayerId getLayerIdFromName() const;
 };
 
-} /* namespace Pixel */
-} /* namespace Geometry */
-} /* namespace SEMBA */
+}
+}
+}
 
-#endif /* SEMBA_GEOMETRY_PIXEL_LINEL_H_ */
+#endif /* SEMBA_MESHER_OPENFOAM_BOUNDARY_H_ */

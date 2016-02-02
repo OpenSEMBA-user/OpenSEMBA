@@ -28,17 +28,19 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-class WireExtremes: public Wire {
+class WireExtremes : public virtual Wire {
 public:
     WireExtremes(const Wire& wire,
-                   const Multiport* extremeL,
-                   const Multiport* extremeR);
+                 const Multiport* extremeL,
+                 const Multiport* extremeR);
     WireExtremes(const WireExtremes& rhs);
     virtual ~WireExtremes();
 
     SEMBA_CLASS_DEFINE_CLONE(WireExtremes);
 
-    const Multiport *getExtreme(const std::size_t i) const { return extreme_[i]; }
+    const Multiport *getExtreme(const std::size_t i) const {
+        return extreme_[i];
+    }
 
     void setExtreme(const std::size_t i, const Multiport* extreme);
 

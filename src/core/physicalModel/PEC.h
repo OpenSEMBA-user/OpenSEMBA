@@ -23,13 +23,16 @@
 #define SEMBA_PHYSICALMODEL_PEC_H_
 
 #include "Predefined.h"
+#include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 
-class PEC : public Predefined {
+class PEC : public virtual Predefined,
+            public virtual Bound {
 public:
     PEC(const Id id, const std::string name);
+    PEC(const PEC&);
     virtual ~PEC();
 
     SEMBA_CLASS_DEFINE_CLONE(PEC);

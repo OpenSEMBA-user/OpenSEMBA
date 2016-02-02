@@ -28,10 +28,10 @@
 namespace SEMBA {
 namespace Argument {
 
-class Parser : public Group<true> {
+class Parser : public Group {
 public:
     Parser(const int& argc, const char** argv);
-    Parser(const Object&);
+    Parser(const std::vector<std::string>&);
     virtual ~Parser();
 
     Parser& prog       (const std::string&);
@@ -40,7 +40,7 @@ public:
     Parser& epilog     (const std::string&);
     Parser& prefixChars(const std::string&);
     Parser& allowAbbrev(const bool);
-    Parser& formatter  (const FormatterBase&);
+    Parser& formatter  (const Formatter&);
 
     const std::string& getProg       () const { return prog_;        }
     const std::string& getUsage      () const { return usage_;       }
@@ -69,7 +69,7 @@ private:
     std::string epilog_;
     std::string prefixChars_;
     bool        allowAbbrev_;
-    FormatterBase* formatter_;
+    Formatter*  formatter_;
 
     Object res_;
 

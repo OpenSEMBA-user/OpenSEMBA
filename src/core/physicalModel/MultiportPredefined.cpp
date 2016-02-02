@@ -27,8 +27,15 @@ namespace PhysicalModel {
 MultiportPredefined::MultiportPredefined(const Id id,
                                          const std::string name,
                                          const Multiport::Type type)
-:   Multiport(id, name) {
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
     type_ = type;
+}
+
+MultiportPredefined::MultiportPredefined(const MultiportPredefined& rhs)
+    : Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    type_ = rhs.type_;
 }
 
 MultiportPredefined::~MultiportPredefined() {

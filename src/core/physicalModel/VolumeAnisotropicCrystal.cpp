@@ -30,9 +30,21 @@ VolumeAnisotropicCrystal::VolumeAnisotropicCrystal(
         const Math::Axis::Local& local,
         const Math::CVecR3& principalAxesRelativePermittivity,
         const Math::Real relativePermeability)
-: VolumeAnisotropic(matId, name, local) {
+:   Identifiable<Id>(matId),
+    PhysicalModel(name),
+    VolumeAnisotropic(local) {
     principalAxesRelativePermittivity_ = principalAxesRelativePermittivity;
     relativePermeability_ = relativePermeability;
+}
+
+VolumeAnisotropicCrystal::VolumeAnisotropicCrystal(
+    const VolumeAnisotropicCrystal& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs),
+    VolumeAnisotropic(rhs) {
+    principalAxesRelativePermittivity_ =
+        rhs.principalAxesRelativePermittivity_;
+    relativePermeability_ = rhs.relativePermeability_;
 }
 
 VolumeAnisotropicCrystal::~VolumeAnisotropicCrystal() {
@@ -40,7 +52,7 @@ VolumeAnisotropicCrystal::~VolumeAnisotropicCrystal() {
 }
 
 const Math::CVecR3
-        VolumeAnisotropicCrystal::getPrincipalAxesRelativePermittivity() const {
+    VolumeAnisotropicCrystal::getPrincipalAxesRelativePermittivity() const {
     return principalAxesRelativePermittivity_;
 }
 
