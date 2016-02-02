@@ -40,7 +40,7 @@ ifeq ($(compiler),gnu)
 	CC = gcc 
 	CXX = g++
 	CCFLAGS +=
-	CXXFLAGS += -std=c++0x -static -pthread #-fopenmp
+	CXXFLAGS += -std=c++0x -static -pthread -fopenmp
 endif # endif choosing the GNU compiler.
 #===================== MinGW32 Compiler =======================================
 ifeq ($(compiler),mingw32)
@@ -60,6 +60,7 @@ endif # endif choosing the MinGW64 compiler.
 ifeq ($(target),debug)
 	CXXFLAGS +=-O0 -g3 -Wall -Wno-write-strings 
 	# Other options: -Wconversion -fprofile-arcs -ftest-coverage
+	DEFINES +=_DEBUG
 endif
 ifeq ($(target),release)
    	CXXFLAGS +=-O2 
@@ -80,7 +81,7 @@ LIB_DIR = $(BUILD_DIR)lib/
 default: all
 	@echo "======>>>>> Done <<<<<======"
 
-all: check libopensemba cudg3d test 
+all: check opensemba cudg3d test 
 
 create_dirs:
 	@echo 'Creating directories to store binaries and intermediate objects'
@@ -89,28 +90,28 @@ create_dirs:
 cudg3d: gidpost check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
-libopensemba: check gidpost
+opensemba: check gidpost
 	-mkdir -p $(LIB_DIR)/opensemba/lib/ $(LIB_DIR)/opensemba/include/  
-	$(MAKE) -f ./src/apps/libopensemba/libopensemba.mk
+	$(MAKE) -f ./src/apps/opensemba/opensemba.mk
 
-testSemba: check libopensemba
+testSemba: check opensemba
 	-mkdir -p  $(BIN_DIR)/test/  
 	$(MAKE) -f ./src/apps/test/test.mk
 
 gidpost: create_dirs check
-	$(MAKE) -C $(EXTERNAL_DIR)/gidpost/ -f gidpost.mk
-	-mkdir -p $(LIB_DIR)/gidpost/lib/ $(LIB_DIR)/gidpost/include/
-	-mkdir -p $(OBJ_DIR)$(EXTERNAL_DIR)/gidpost/
-	mv $(EXTERNAL_DIR)/gidpost/$(target)/gidpost.so $(LIB_DIR)/gidpost/lib/libgidpost.so
-	mv $(EXTERNAL_DIR)/gidpost/$(target)/libgidpost.a $(LIB_DIR)/gidpost/lib/libgidpost.a
-	cp ./external/gidpost/gidpost.h $(LIB_DIR)/gidpost/include/gidpost.h
-	mv $(EXTERNAL_DIR)/gidpost/$(target)/*.o $(OBJ_DIR)$(EXTERNAL_DIR)/gidpost/
-	rm -r $(EXTERNAL_DIR)/gidpost/$(target)
+	$(MAKE) -C $(EXTERNAL_DIR)$@/ -f gidpost.mk
+	-mkdir -p $(LIB_DIR)$@/lib/ $(LIB_DIR)$@/include/
+	-mkdir -p $(OBJ_DIR)$(EXTERNAL_DIR)$@
+	-cp $(EXTERNAL_DIR)$@/$(target)/gidpost.so $(LIB_DIR)$@/lib/libgidpost.so
+	-cp $(EXTERNAL_DIR)$@/$(target)/libgidpost.a $(LIB_DIR)$@/lib/libgidpost.a
+	-cp $(EXTERNAL_DIR)$@/gidpost.h $(LIB_DIR)$@/include/gidpost.h
+	-cp $(EXTERNAL_DIR)$@/$(target)/*.o $(OBJ_DIR)$(EXTERNAL_DIR)$@
+	@echo ">>>>>" $@ "compilation finished <<<<<<<<"
 
 repeat: clean default
 
 clean:
-	rm -rf *.err *.o *.mod *.d $(OBJDIR)
+	rm -rf *.err *.o *.mod *.d $(OBJ_DIR)
 	find ./src -name "*.gch" -exec rm {} \;
 	$(MAKE) -C ./external/gidpost/ -f gidpost.mk clean
 
