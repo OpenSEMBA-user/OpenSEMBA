@@ -21,26 +21,18 @@
 
 # -- USAGE --------------------------------------------------------------------
 # make target     = {debug, release}
-#      compiler = {intel, gnu}
+#      compiler = {intel, gnu, ...}
 # ==================== Default values =========================================
-target = release
+target   = release
 compiler = gnu
-
-USER=`whoami`
-BUILD_COMMAND=make clobber ; make -j `nproc` -s target=$(target) 
-FILES=./src ./Makefile ./*.mk
-
 APP_VERSION=\"0.11\"
+
 DEFINES += APP_VERSION=$(APP_VERSION)
-# ==================== Debugging options ======================================
-ifeq ($(target),debug)
-	DEFINES += HDF5 
-endif
 # ==================== Intel Compiler =========================================
 ifeq ($(compiler),intel) 
-	CC = icc
-	CXX = icpc
-	CCFLAGS +=
+	CC       = icc
+	CXX      = icpc
+	CCFLAGS  +=
 	CXXFLAGS +=
 endif # end of If choosing Intel compiler.
 #===================== GNU Compiler ===========================================
@@ -66,32 +58,21 @@ ifeq ($(compiler),mingw64)
 endif # endif choosing the MinGW64 compiler.
 # ================= Optimization target =======================================
 ifeq ($(target),debug)
-	CXXFLAGS +=-O0 -g3 -Wall -Wno-write-strings # -Wconversion #-fprofile-arcs -ftest-coverage
+	CXXFLAGS +=-O0 -g3 -Wall -Wno-write-strings 
+	# Other options: -Wconversion -fprofile-arcs -ftest-coverage
 endif
 ifeq ($(target),release)
    	CXXFLAGS +=-O2 
 endif
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
-BINDIR = ./bin/
-OBJDIR = ./obj/
-LIBDIR = ./external/
-SRCDIR = ./src/
-SRC_CORE_GEOMETRY_DIR = core/geometry/ \
- core/geometry/coordinate/ core/geometry/element/ core/geometry/graph/ \
- core/geometry/layer/ core/geometry/mesh/
-SRC_CORE_MATH_DIR = core/math/ core/math/axis/ core/math/function/ \
- core/math/matrix/ core/math/simplex/ core/math/util/ core/math/vector/
-SRC_CORE_SOURCE_DIR = core/source/ core/source/magnitude/ core/source/port/ \
- core/filesystem/ core/geometry/ core/group/ core/outputRequests/ \
- core/parser/ core/physicalModel/ core/solver/
-SRC_PARSER_DIR = parser/gid/ parser/stl/ 
-SRC_EXPORTER_DIR = exporter/gid/ exporter/vtk/ 
-SRC_SOLVER_DIR = solver/dgtd/
-  
-LIB_DIR = $(BINDIR)gidpost/lib/ $(BINDIR)gidpost/include/ 
+BUILD_DIR = ./build/
+OBJ_DIR = ./obj/
+SRC_DIR = ./src/
+EXTERNAL_DIR = ./external/
 
-INCLUDES += src/ src/core/ external/
+BIN_DIR = $(BUILD_DIR)bin/
+LIB_DIR = $(BUILD_DIR)lib/
 
 # =============================================================================
 .NOTPARALLEL:
@@ -99,34 +80,32 @@ INCLUDES += src/ src/core/ external/
 default: all
 	@echo "======>>>>> Done <<<<<======"
 
-all: semba
+all: check libopensemba cudg3d test 
 
 create_dirs:
 	@echo 'Creating directories to store binaries and intermediate objects'
-	-mkdir -p $(BINDIR) $(LIB_DIR)
-	-mkdir -p $(OBJDIR)
+	-mkdir -p $(OBJ_DIR)
 
 cudg3d: gidpost check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
-libopensemba: check gidpost 
+libopensemba: check gidpost
+	-mkdir -p $(LIB_DIR)/opensemba/lib/ $(LIB_DIR)/opensemba/include/  
 	$(MAKE) -f ./src/apps/libopensemba/libopensemba.mk
 
 testSemba: check libopensemba
+	-mkdir -p  $(BIN_DIR)/test/  
 	$(MAKE) -f ./src/apps/test/test.mk
 
 gidpost: create_dirs check
-	$(MAKE) -C ./external/gidpost/ -f gidpost.mk
-ifeq ($(target),debug)
-	cp ./external/gidpost/debug/gidpost.so $(BINDIR)/gidpost/lib/libgidpost.so
-	cp ./external/gidpost/debug/libgidpost.a $(BINDIR)/gidpost/lib/libgidpost.a
-endif
-ifeq ($(target),release)
-	cp ./external/gidpost/release/gidpost.so $(BINDIR)/gidpost/lib/libgidpost.so
-	cp ./external/gidpost/release/libgidpost.a $(BINDIR)/gidpost/lib/libgidpost.a
-endif
-	cp ./external/gidpost/gidpost.h $(BINDIR)/gidpost/include/gidpost.h
- 
+	$(MAKE) -C $(EXTERNAL_DIR)/gidpost/ -f gidpost.mk
+	-mkdir -p $(LIB_DIR)/gidpost/lib/ $(LIB_DIR)/gidpost/include/
+	-mkdir -p $(OBJ_DIR)$(EXTERNAL_DIR)/gidpost/
+	mv $(EXTERNAL_DIR)/gidpost/$(target)/gidpost.so $(LIB_DIR)/gidpost/lib/libgidpost.so
+	mv $(EXTERNAL_DIR)/gidpost/$(target)/libgidpost.a $(LIB_DIR)/gidpost/lib/libgidpost.a
+	cp ./external/gidpost/gidpost.h $(LIB_DIR)/gidpost/include/gidpost.h
+	mv $(EXTERNAL_DIR)/gidpost/$(target)/*.o $(OBJ_DIR)$(EXTERNAL_DIR)/gidpost/
+	rm -r $(EXTERNAL_DIR)/gidpost/$(target)
 
 repeat: clean default
 
@@ -136,7 +115,7 @@ clean:
 	$(MAKE) -C ./external/gidpost/ -f gidpost.mk clean
 
 clobber: clean
-	rm -rf $(BINDIR) 
+	rm -rf $(BUILD_DIR) 
 
 check:
 ifneq ($(target),release) 

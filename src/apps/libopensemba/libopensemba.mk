@@ -20,16 +20,12 @@
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
 # ==================== Default variables ======================================
-BINDIR = bin/
-OBJDIR = obj/
-LIBDIR = lib/
-SRCDIR = src/
-# =============================================================================
 CXXFLAGS += -fopenmp
 # =============================================================================
-INCLUDES += test/
-LIBRARIES +=
-LIBS += gtest
+  
+LIB_DIR = $(BINDIR)gidpost/lib/ $(BINDIR)gidpost/include/ 
+
+INCLUDES += src/ src/core/ external/
 
 ifeq ($(mode),debug)
 	DEFINES +=_DEBUG
@@ -44,6 +40,17 @@ OUT = libopensemba
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
 DIR = $(SRC_DIR) 
+SRC_CORE_GEOMETRY_DIR = core/geometry/ \
+ core/geometry/coordinate/ core/geometry/element/ core/geometry/graph/ \
+ core/geometry/layer/ core/geometry/mesh/
+SRC_CORE_MATH_DIR = core/math/ core/math/axis/ core/math/function/ \
+ core/math/matrix/ core/math/simplex/ core/math/util/ core/math/vector/
+SRC_CORE_SOURCE_DIR = core/source/ core/source/magnitude/ core/source/port/ \
+ core/filesystem/ core/geometry/ core/group/ core/outputRequests/ \
+ core/parser/ core/physicalModel/ core/solver/
+SRC_PARSER_DIR = parser/gid/ parser/stl/ 
+SRC_EXPORTER_DIR = exporter/gid/ exporter/vtk/ 
+
 
 SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
 
