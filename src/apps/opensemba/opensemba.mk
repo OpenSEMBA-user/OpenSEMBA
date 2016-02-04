@@ -50,10 +50,10 @@ default: print $(out)
 	@echo "======================================================="
 		
 clean:
-	rm -rf *.err *.o *.d $(OBJDIR)
+	rm -rf *.err *.o *.d $(OBJ_DIR)
 
 clobber: clean
-	rm -rf $(BINDIR)
+	rm -rf $(LIB_DIR)
 
 $(OBJ_DIR)%.o: %.cpp
 	@dirname $@ | xargs mkdir -p
@@ -63,9 +63,9 @@ $(OBJ_DIR)%.o: %.cpp
 $(out): $(OBJS_CXX)
 	@mkdir -p $(LIB_DIR)/$(out)/lib/ 
 	@echo "Linking:" $@
-	-ar rvs $(LIB_DIR)/$(out)/lib/lib$(out).a $^ 
-	 
-.NOTPARALLEL:
+	-ar rvs $(LIB_DIR)/$(out)/lib/lib$(out).a $^
+	-cd $(SRC_DIR); find core/ exporter/ parser/ -name "*.h" -exec cp --parents {} ../$(LIB_DIR)$(out)/include/ \;
+
 print:
 	@echo "======================================================="
 	@echo "         ----- Compiling $(out) ------                 "
