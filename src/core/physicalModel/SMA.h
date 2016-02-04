@@ -23,11 +23,13 @@
 #define SEMBA_PHYSICALMODEL_SMA_H_
 
 #include "Predefined.h"
+#include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 
-class SMA : public virtual Predefined {
+class SMA : public virtual Predefined,
+            public virtual Bound {
 public:
     SMA(const Id id, const std::string name);
     SMA(const SMA& rhs);
