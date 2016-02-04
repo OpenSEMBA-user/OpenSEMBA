@@ -136,14 +136,14 @@ public:
             res.setObject();
             for (std::size_t i = 0; i < size(); i++) {
                 if (rhs.existsName(getName(i))) {
-                    res[getName(i)] = (*this)[getName(i)] + rhs[getName(i)];
+                    res(getName(i)) = (*this)(getName(i)) + rhs(getName(i));
                 } else {
-                    res[getName(i)] = (*this)[getName(i)];
+                    res(getName(i)) = (*this)(getName(i));
                 }
             }
             for (std::size_t i = 0; i < rhs.size(); i++) {
                 if (!res.existsName(rhs.getName(i))) {
-                    res[rhs.getName(i)] = rhs[rhs.getName(i)];
+                    res(rhs.getName(i)) = rhs(rhs.getName(i));
                 }
             }
             return res;
@@ -153,6 +153,13 @@ public:
             return rhs;
         }
         return rhs;
+    }
+
+    operator bool() const {
+        if (isBool()) {
+            return isTrue();
+        }
+        return !isNull();
     }
 
     Object& reset() { return setType(type_); }
@@ -176,47 +183,41 @@ public:
     //Object Value
     bool     isObject() const { return  isType(Type::Dictionary); }
     Object& setObject()       { return setType(Type::Dictionary); }
-    Object&       operator [](const std::string& name) {
+    Object&       operator ()(const std::string& name) {
         setObject();
         if (nameMembers_.count(name) == 0) {
             nameMembers_[name] = objMembers_.size();
-            objMembers_.push_back(NULL);
+            objMembers_.push_back(Object());
             objName_   .push_back(name);
-            objMembers_.at(nameMembers_.at(name)) = new Object();
         }
-        return *objMembers_.at(nameMembers_.at(name));
+        return objMembers_.at(nameMembers_.at(name));
 
     }
-    const Object& operator [](const std::string& name) const {
-        return *objMembers_.at(nameMembers_.at(name));
+    const Object& operator ()(const std::string& name) const {
+        return objMembers_.at(nameMembers_.at(name));
     }
     Object&   addMember(const std::string& name, const Object& val) {
         setObject();
-        if (nameMembers_.count(name) != 0) {
-            delete objMembers_.at(nameMembers_.at(name));
-        } else {
+        if (nameMembers_.count(name) == 0) {
             nameMembers_[name] = objMembers_.size();
-            objMembers_.push_back(NULL);
+            objMembers_.push_back(Object());
             objName_   .push_back(name);
         }
-        objMembers_.at(nameMembers_.at(name)) = new Object(val);
+        objMembers_.at(nameMembers_.at(name)) = val;
         return *this;
     }
     Object&   addMember(const std::string& name, Object&& val) {
         setObject();
-        if (nameMembers_.count(name) != 0) {
-            delete objMembers_.at(nameMembers_.at(name));
-        } else {
+        if (nameMembers_.count(name) == 0) {
             nameMembers_[name] = objMembers_.size();
-            objMembers_.push_back(NULL);
+            objMembers_.push_back(Object());
             objName_   .push_back(name);
         }
-        objMembers_.at(nameMembers_.at(name)) = new Object(std::move(val));
+        objMembers_.at(nameMembers_.at(name)) = std::move(val);
         return *this;
     }
     Object& eraseMember(const std::string& name) {
         if (existsName(name)) {
-            delete objMembers_.at(nameMembers_.at(name));
             objMembers_ .erase(objMembers_.begin() + nameMembers_.at(name));
             objName_    .erase(objName_   .begin() + nameMembers_.at(name));
             nameMembers_.erase(name);
@@ -234,25 +235,24 @@ public:
     bool     isArray() const { return  isType(Type::Array); }
     Object& setArray()       { return setType(Type::Array); }
     std::size_t size() const { return objMembers_.size();   }
-    Object&       operator [](const std::size_t& i) {
-        return *objMembers_.at(i);
+    Object&       operator ()(const std::size_t& i) {
+        return objMembers_.at(i);
     }
-    const Object& operator [](const std::size_t& i) const {
-        return *objMembers_.at(i);
+    const Object& operator ()(const std::size_t& i) const {
+        return objMembers_.at(i);
     }
     Object&   addValue(const Object& val) {
         setArray();
-        objMembers_.push_back(new Object(val));
+        objMembers_.push_back(val);
         return *this;
     }
     Object&   addValue(Object&& val) {
         setArray();
-        objMembers_.push_back(new Object(std::move(val)));
+        objMembers_.push_back(std::move(val));
         return *this;
     }
     Object& eraseValue(const std::size_t& i) {
         if (isArray()) {
-            delete objMembers_.at(i);
             objMembers_.erase(objMembers_.begin() + i);
         }
         return *this;
@@ -387,7 +387,7 @@ public:
             std::cout << "[" << std::endl;
             for (std::size_t i = 0; i < size(); i++) {
                 std::cout << std::string(depth+2, ' ');
-                (*this)[i].printInfo(depth+2);
+                (*this)(i).printInfo(depth+2);
                 if (i+1 < size()) {
                     std::cout << ",";
                 }
@@ -400,7 +400,7 @@ public:
             for (std::size_t i = 0; i < size(); i++) {
                 std::cout << std::string(depth+2, ' ');
                 std::cout << "\"" << getName(i) << "\" : ";
-                (*this)[i].printInfo(depth+2);
+                (*this)(i).printInfo(depth+2);
                 if (i+1 < size()) {
                     std::cout << ",";
                 }
@@ -417,7 +417,7 @@ private:
     //Value Type
     Type type_;
     //Object Value
-    std::vector<Object*>               objMembers_;
+    std::vector<Object>                objMembers_;
     std::vector<std::string>           objName_;
     std::map<std::string, std::size_t> nameMembers_;
     //Bool Value
@@ -429,9 +429,7 @@ private:
         //Value Type
         type_ = rhs.type_;
         //Object Value
-        for (std::size_t i = 0; i < rhs.objMembers_.size(); i++) {
-            objMembers_.push_back(new Object(*rhs.objMembers_[i]));
-        }
+        objMembers_  = rhs.objMembers_;
         objName_     = rhs.objName_;
         nameMembers_ = rhs.nameMembers_;
         //Bool Value
@@ -443,11 +441,11 @@ private:
         //Value Type
         type_ = rhs.type_;
         //Object Value
-        objMembers_ = std::move(rhs.objMembers_);
-        rhs.objMembers_.clear();
+        objMembers_  = std::move(rhs.objMembers_);
         objName_     = std::move(rhs.objName_);
-        rhs.objName_.clear();
         nameMembers_ = std::move(rhs.nameMembers_);
+        rhs.objName_.clear();
+        rhs.objMembers_.clear();
         rhs.nameMembers_.clear();
         //Bool Value
         boolType_ = rhs.boolType_;
@@ -458,10 +456,6 @@ private:
         //Value Type
         type_ = Type::Null;
         //Object Value
-        for (std::vector<Object*>::const_iterator
-             it = objMembers_.begin(); it != objMembers_.end(); ++it) {
-            delete *it;
-        }
         objMembers_ .clear();
         objName_    .clear();
         nameMembers_.clear();

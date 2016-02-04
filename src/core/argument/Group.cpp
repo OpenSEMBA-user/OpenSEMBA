@@ -29,6 +29,7 @@ Group::Group(GroupBase* group,
              const std::string& desc)
 :   GroupBase(group, name, desc) {
     numMutExc_ = 0;
+    lastPosParsed_ = positionsAll_.begin();
 }
 
 Group::~Group() {
@@ -40,12 +41,24 @@ Group& Group::required() {
     return *this;
 }
 
+Group& Group::description(const std::string& desc) {
+    GroupBase::description(desc);
+    return *this;
+}
+
+std::size_t Group::numChilds() const {
+    return child_.size();
+}
+
+const GroupBase& Group::child(const std::size_t& i) const {
+    return *child_[i];
+}
+
 Group& Group::addGroup(const std::string& name,
                        const std::string& desc) {
-    insertName_(name);
+    insertName(name);
     Group* newGroup = new Group(this, name, desc);
 
-    childName_[name] = child_.size();
     child_.push_back(newGroup);
 
     return *newGroup;
@@ -55,13 +68,110 @@ MEGroup& Group::addMutuallyExclusiveGroup() {
     std::stringstream aux;
     aux << "__aux" << ++numMutExc_ << "__";
     std::string name = aux.str();
-    insertName_(aux.str());
+    insertName(aux.str());
     MEGroup* newGroup = new MEGroup(this, name);
 
-    childName_[name] = child_.size();
     child_.push_back(newGroup);
 
     return *newGroup;
+}
+
+void Group::parsePreprocess(Object& out) {
+    out.setObject();
+    for (std::size_t i = 0; i < child_.size(); i++) {
+        if (!child_[i]->isMutuallyExclusive()) {
+            Object aux;
+            aux.setObject();
+            child_[i]->parsePreprocess(aux);
+            out.addMember(child_[i]->getName(), std::move(aux));
+        }
+    }
+}
+
+void Group::parsePosition(Object& out,
+                          std::vector<std::list<std::string>>& output,
+                          std::vector<std::list<std::string>>& input) {
+    if (*lastPosParsed_ != NULL) {
+        const std::string& name = (*lastPosParsed_)->getName();
+        if ((*lastPosParsed_)->isMutuallyExclusive()) {
+            (*lastPosParsed_)->parsePosition(out, output, input);
+        } else {
+            (*lastPosParsed_)->parsePosition(out(name), output, input);
+        }
+    } else {
+        GroupBase::parsePosition(out, output, input);
+    }
+    ++lastPosParsed_;
+}
+
+void Group::parseOption(const std::string& name,
+                        Object& out,
+                        std::vector<std::list<std::string>>& output,
+                        std::vector<std::list<std::string>>& input) {
+    if (optionsAll_.at(name) != NULL) {
+        GroupBase* child = optionsAll_.at(name);
+        std::string childName = child->getName();
+        if (child->isMutuallyExclusive()) {
+            child->parseOption(name, out, output, input);
+        } else {
+            child->parseOption(name, out(childName), output, input);
+        }
+    } else {
+        GroupBase::parseOption(name, out, output, input);
+    }
+}
+
+void Group::parsePostprocess(Object& out) {
+    GroupBase::parsePostprocess(out);
+    for (std::size_t i = 0; i < child_.size(); i++) {
+        if (child_[i]->isMutuallyExclusive()) {
+            child_[i]->parsePostprocess(out);
+        } else {
+            child_[i]->parsePostprocess(out(child_[i]->getName()));
+        }
+    }
+}
+
+void Group::addPositionProcess(GroupBase* child, PositionBase* pos) {
+    GroupBase::addPositionProcess(child, pos);
+    positionsAll_.push_back(child);
+}
+
+void Group::addOptionProcess(GroupBase* child, OptionBase* opt) {
+    std::string name;
+    if (opt->hasShortIdentifier()) {
+        name = std::string(1, opt->getShortIdentifier());
+    } else {
+        name = opt->getLongIdentifier();
+    }
+    GroupBase::addOptionProcess(child, opt);
+    optionsAll_[name] = child;
+}
+
+std::size_t Group::numAllPositions() const {
+    return positionsAll_.size();
+}
+
+const PositionBase& Group::getAllPosition(const std::size_t& i) const {
+    std::size_t numSameGroup = 0;
+    std::vector<GroupBase*>::const_iterator aux = positionsAll_.begin() + i;
+    for (std::vector<GroupBase*>::const_iterator
+         it = positionsAll_.begin(); it < aux; ++it) {
+        if (*it == *aux) {
+            numSameGroup++;
+        }
+    }
+    if (*aux == NULL) {
+        return position(numSameGroup);
+    }
+    return (*aux)->getAllPosition(numSameGroup);
+}
+
+const OptionBase& Group::getAllOption(const std::string& name) const {
+    if (optionsAll_.at(name) == NULL) {
+        return GroupBase::getAllOption(name);
+    }
+    return optionsAll_.at(name)->getAllOption(name);
 }
 
 } /* namespace Argument */

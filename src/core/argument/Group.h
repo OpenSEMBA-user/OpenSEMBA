@@ -34,19 +34,47 @@ public:
     bool isMutuallyExclusive() const { return false; }
 
     Group& required();
+    Group& description(const std::string& desc);
+
+    std::size_t  numChilds() const;
+    const GroupBase& child(const std::size_t& i) const;
 
     Group& addGroup(const std::string& = std::string(),
                     const std::string& = std::string());
     MEGroup& addMutuallyExclusiveGroup();
 
-protected:
-    std::size_t numMutExc_;
+    void parsePreprocess(Object&);
+    void parsePosition(Object&,
+                       std::vector<std::list<std::string>>&,
+                       std::vector<std::list<std::string>>&);
+    void parseOption(const std::string&,
+                     Object&,
+                     std::vector<std::list<std::string>>&,
+                     std::vector<std::list<std::string>>&);
+    void parsePostprocess(Object&);
 
+protected:
     Group(GroupBase* = NULL,
           const std::string& = std::string(),
           const std::string& = std::string());
 
+    void addPositionProcess(GroupBase*, PositionBase*);
+    void addOptionProcess  (GroupBase*, OptionBase*);
+
+    std::size_t         numAllPositions() const;
+    const PositionBase& getAllPosition(const std::size_t&) const;
+    const OptionBase&   getAllOption  (const std::string&) const;
+
 private:
+    std::size_t numMutExc_;
+
+    std::vector<GroupBase*> positionsAll_;
+    std::vector<GroupBase*>::iterator lastPosParsed_;
+
+    std::map<std::string, GroupBase*> optionsAll_;
+
+    std::vector<GroupBase*> child_;
+
     //Erased
     Group(const Group&);
     Group(Group&&);

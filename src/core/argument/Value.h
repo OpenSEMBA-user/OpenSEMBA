@@ -48,6 +48,7 @@ public:
 namespace Error {
 
 class NotChoices : public Error {
+public:
     NotChoices(const Argument& arg,
                const std::vector<std::list<std::string>>& c)
     :   arg_(arg),

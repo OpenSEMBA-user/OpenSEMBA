@@ -50,86 +50,71 @@ public:
     const std::string& getDescription() const { return description_; }
 
     virtual GroupBase& required();
+    virtual GroupBase& description(const std::string& desc);
 
-    std::size_t   numChilds()                    const {
-        return child_.size();
-    }
-    const GroupBase& child(const std::size_t& i) const {
-        return *child_.at(i);
-    }
+    virtual std::size_t numChilds() const;
+    virtual std::size_t numPositions() const;
+    virtual std::size_t numOptions() const;
 
-    std::size_t      numPositions() const;
-    const PositionBase& position(const std::size_t& i) const;
+    virtual const GroupBase&    child   (const std::size_t& i) const;
+    virtual const PositionBase& position(const std::size_t& i) const;
+    virtual const OptionBase&   option  (const std::size_t& i) const;
 
-    std::size_t    numOptions() const;
-    const OptionBase& option(const std::size_t& i) const;
+    bool existsOption(const char&) const;
+    bool existsOption(const std::string&, const bool& abbrev = false) const;
 
-    template <typename T>
-    T* addArgument(const T& arg);
+    const std::string& optionName(const char&) const;
+    const std::string& optionName(const std::string&) const;
+    std::vector<std::string> getPossibleOptions(const std::string&,
+                                                const bool& = false) const;
+
+    virtual PositionBase& addPosition(const PositionBase&);
+    virtual OptionBase&   addOption  (const OptionBase&);
+
+    virtual void parsePreprocess(Object&);
+    virtual void parsePosition(Object&,
+                               std::vector<std::list<std::string>>&,
+                               std::vector<std::list<std::string>>&);
+    virtual void parseOption(const std::string&,
+                             Object&,
+                             std::vector<std::list<std::string>>&,
+                             std::vector<std::list<std::string>>&);
+    virtual void parsePostprocess(Object&);
+
+    virtual std::size_t         numAllPositions() const;
+    virtual const PositionBase& getAllPosition(const std::size_t&) const;
+    virtual const OptionBase&   getAllOption(const std::string&) const;
 
 protected:
-    void parsePreprocess(Object&) const;
-
-    void parsePosition(Object&,
-                       std::vector<std::list<std::string>>&,
-                       std::vector<std::list<std::string>>&);
-    void parseOption  (std::list<std::string>&,
-                       Object&,
-                       std::vector<std::list<std::string>>&,
-                       std::vector<std::list<std::string>>&);
-    void parseLastPosition(Object&,
-                           std::vector<std::list<std::string>>&,
-                           std::vector<std::list<std::string>>&);
-
-    void parsePostprocess(Object&) const;
-
-protected:
-    GroupBase* parent_;
-    bool required_;
-
-    std::string name_;
-    std::string description_;
-
-    std::map<std::string, std::size_t> childName_;
-    std::vector<GroupBase*>            child_;
-
-    std::set<std::string> names_;
-
-    std::vector<PositionBase*> positions_;
-    std::vector<OptionBase*  > options_;
-
-    std::size_t lastPosParsed_;
-    std::vector<std::pair<PositionBase*, GroupBase*>> positionsFull_;
-
-    std::map<std::string, bool>        optionParsed_;
-    std::map<std::string, OptionBase*> optionsName_;
-    std::map<char,        std::list<std::string>> shortOpts_;
-    std::map<std::string, std::list<std::string>>  longOpts_;
-
     GroupBase(GroupBase* = NULL,
               const std::string& = std::string(),
               const std::string& = std::string());
 
-    void setDescription_(const std::string& desc) { description_ = desc; }
+    virtual void addPositionProcess(GroupBase*, PositionBase*);
+    virtual void addOptionProcess  (GroupBase*, OptionBase*);
 
-    void registerPosition_(GroupBase*, std::list<std::string>&);
-    void registerOption_  (GroupBase*, std::list<std::string>&,
-                           const char&);
-    void registerOption_  (GroupBase*, std::list<std::string>&,
-                           const std::string&);
-    void registerOption_  (GroupBase*, std::list<std::string>&,
-                           const char&, const std::string&);
-
-    void insertName_(const std::string&);
-    void insertShortOpt_(const std::list<std::string>&, const char&);
-    void insertLongOpt_ (const std::list<std::string>&, const std::string&);
-
-    PositionBase* getPosition_(const std::size_t&) const;
-    OptionBase*   getOption_  (std::list<std::string>&) const;
-
-    bool isLastPosMulti_() const;
+    virtual void insertName(const std::string&);
+    virtual void insertShortOpt(const char&, const std::string&);
+    virtual void insertLongOpt(const std::string&, const std::string&);
 
 private:
+    GroupBase* parent_;
+
+    std::string name_;
+    std::string description_;
+    bool required_;
+
+    std::set<std::string> names_;
+
+    std::vector<PositionBase*> positions_;
+    std::vector<PositionBase*>::iterator lastPosParsed_;
+
+    std::vector<OptionBase*> options_;
+    std::map<std::string, bool> optionParsed_;
+    std::map<std::string, OptionBase*> optionName_;
+    std::map<char, std::string> shortOpts_;
+    std::map<std::string, std::string> longOpts_;
+
     //Erased
     GroupBase(const GroupBase&);
     GroupBase(GroupBase&&);
@@ -138,40 +123,9 @@ private:
     GroupBase& operator=(GroupBase&&);
 };
 
-template<typename T>
-T* GroupBase::addArgument(const T& arg) {
-    std::list<std::string> aux;
-    aux.push_back(arg.getName());
-    T* newArg = dynamic_cast<T*>(arg.clone());
-    if (dynamic_cast<PositionBase*>(newArg) != NULL) {
-        PositionBase* newPos = dynamic_cast<PositionBase*>(newArg);
-        positions_.push_back(newPos);
-        positionsFull_.push_back(
-            std::pair<PositionBase*,GroupBase*>(newPos, NULL));
-        registerPosition_(NULL, aux);
-    } else if (dynamic_cast<OptionBase*>(newArg) != NULL) {
-        OptionBase* newOpt = dynamic_cast<OptionBase*>(newArg);
-        options_.push_back(newOpt);
-        optionsName_ [newOpt->getName()] = newOpt;
-        optionParsed_[newOpt->getName()] = false;
-        if (newOpt->hasShortIdentifier() && newOpt->hasLongIdentifier()) {
-            registerOption_(NULL, aux,
-                            newOpt->getShortIdentifier(),
-                            newOpt->getLongIdentifier());
-        } else if (newOpt->hasShortIdentifier()) {
-            registerOption_(NULL, aux,
-                            newOpt->getShortIdentifier());
-        } else if (newOpt->hasLongIdentifier()) {
-            registerOption_(NULL, aux,
-                            newOpt->getLongIdentifier());
-        }
-    } else {
-        delete newArg;
-    }
-    return newArg;
-}
-
 namespace Error {
+
+namespace Group {
 
 class Excluded : public Error {
 public:
@@ -198,9 +152,9 @@ private:
     std::string str_;
 };
 
-class GroupRequired : public Error {
+class Required : public Error {
 public:
-    GroupRequired(const std::vector<Argument*> args)
+    Required(const std::vector<Argument*> args)
     :   args_(args) {
         std::stringstream aux;
         aux << "One of the arguments ";
@@ -213,7 +167,7 @@ public:
         aux << " is required";
         str_ = aux.str();
     }
-    virtual ~GroupRequired() throw() {}
+    virtual ~Required() throw() {}
 
     const char* what() const throw() { return str_.c_str(); }
 
@@ -227,7 +181,8 @@ private:
 class Repeated : public Error {
 public:
     Repeated(const std::string& name)
-    :   str_(std::string("Argument defined twice")) {}
+    :   str_(std::string("Argument \"") + name +
+             std::string("\" defined twice")) {}
     virtual ~Repeated() throw() {}
 
     const char* what() const throw() { return str_.c_str(); }
@@ -235,6 +190,7 @@ private:
     std::string str_;
 };
 
+} /* namespace Group */
 } /* namespace Error */
 } /* namespace Argument */
 } /* namespace SEMBA */
