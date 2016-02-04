@@ -19,13 +19,13 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 # =============================================================================
-out = libopensemba
+out = opensemba
 static = yes
 
 # -------------------- Paths to directories -----------------------------------
 SRC_CORE_DIRS     := $(shell find $(SRC_DIR)core/ -type d)
 SRC_EXPORTER_DIRS := $(shell find $(SRC_DIR)exporter/ -type d)
-SRC_MESHER_DIRS   := $(shell find $(SRC_DIR)mesher/ -type d)
+#SRC_MESHER_DIRS   := $(shell find $(SRC_DIR)mesher/ -type d)
 SRC_PARSER_DIRS   := $(shell find $(SRC_DIR)parser/ -type d)
 
 SRC_DIRS = $(SRC_CORE_DIRS) \
@@ -39,7 +39,7 @@ OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 # =============================================================================
 LIBS = gidpost
 
-INCLUDES += $(SRC_DIR)core/
+INCLUDES += $(SRC_DIR)core/ $(LIB_DIR)gidpost/include/
 # =============================================================================
 
 .PHONY: default clean clobber print
@@ -61,12 +61,9 @@ $(OBJ_DIR)%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
 	
 $(out): $(OBJS_CXX)
-	@mkdir -p $(BINDIR) 
+	@mkdir -p $(LIB_DIR)/$(out)/lib/ 
 	@echo "Linking:" $@
-	${CXX} $^ -o $(BIN_DIR)$(out) $(CXXFLAGS) \
-	 $(addprefix -D, $(DEFINES)) \
-	 $(addprefix -I, ${INCLUDES}) \
-	 $(addprefix -L, ${LIBS_DIR}) $(addprefix -l, ${LIBS})
+	-ar rvs $(LIB_DIR)/$(out)/lib/lib$(out).a $^ 
 	 
 .NOTPARALLEL:
 print:

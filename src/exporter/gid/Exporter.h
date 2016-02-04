@@ -26,7 +26,7 @@
 #define SEMBA_EXPORTER_GID_EXPORTER_H_
 
 #include "exporter/Exporter.h"
-#include "gidpost/gidpost.h"
+#include "gidpost.h"
 
 namespace SEMBA {
 namespace Exporter {
