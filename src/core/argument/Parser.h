@@ -30,8 +30,7 @@ namespace Argument {
 
 class Parser : public Group {
 public:
-    Parser(const int& argc, const char** argv);
-    Parser(const std::vector<std::string>&);
+    Parser();
     virtual ~Parser();
 
     Parser& prog       (const std::string&);
@@ -39,15 +38,23 @@ public:
     Parser& description(const std::string&);
     Parser& epilog     (const std::string&);
     Parser& prefixChars(const std::string&);
-    Parser& allowAbbrev(const bool);
+    Parser& allowAbbrev(const bool&);
     Parser& formatter  (const Formatter&);
+    Parser& args       (const int& argc, const char** argv);
+    Parser& args       (const std::vector<std::string>&);
 
-    const std::string& getProg       () const { return prog_;        }
-    const std::string& getUsage      () const { return usage_;       }
-    const std::string& getEpilog     () const { return epilog_;      }
+    const std::string& getProg  () const { return prog_;   }
+    const std::string& getUsage () const { return usage_;  }
+    const std::string& getEpilog() const { return epilog_; }
 
     Object parse();
+    Object parse(const int& argc, const char** argv);
+    Object parse(const std::vector<std::string>&);
     std::pair<Object, std::vector<std::string>> parseKnownArgs();
+    std::pair<Object, std::vector<std::string>> parseKnownArgs(
+            const int& argc, const char** argv);
+    std::pair<Object, std::vector<std::string>> parseKnownArgs(
+            const std::vector<std::string>&);
 
     void printUsage() const;
     void printHelp () const;
@@ -71,16 +78,13 @@ private:
     bool        allowAbbrev_;
     Formatter*  formatter_;
 
-    Object res_;
-
     void initDefault_();
-    Object parse_();
+    std::pair<Object, std::vector<std::string>> parse_();
     ArgType getArgType_(const std::string& arg) const;
     static void printErrorList_(const std::vector<std::list<std::string>>&);
 
 private:
     //Erased
-    Parser();
     Parser(const Parser&);
     Parser(Parser&&);
 

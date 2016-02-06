@@ -27,39 +27,8 @@
 namespace SEMBA {
 namespace Argument {
 
-Parser::Parser(const int& argc, const char** argv)
+Parser::Parser()
 :   Group(NULL, "") {
-    input_.clear();
-    if (argc > 0) {
-        prog_ = argv[0];
-        std::size_t folderSep = prog_.find_last_of("/\\");
-        if (folderSep != std::string::npos) {
-            if (!prog_.substr(folderSep+1).empty()) {
-                prog_ = prog_.substr(folderSep+1);
-            }
-        }
-    }
-    for (int i = 1; i < argc; i++) {
-        input_.push_back(argv[i]);
-    }
-    initDefault_();
-}
-
-Parser::Parser(const std::vector<std::string>& argv)
-:   Group(NULL, "") {
-    input_.clear();
-    if (argv.size() > 0) {
-        prog_ = argv[0];
-        std::size_t folderSep = prog_.find_last_of("/\\");
-        if (folderSep != std::string::npos) {
-            if (!prog_.substr(folderSep + 1).empty()) {
-                prog_ = prog_.substr(folderSep + 1);
-            }
-        }
-    }
-    for (int i = 1; i < argv.size(); i++) {
-        input_.push_back(argv[i]);
-    }
     initDefault_();
 }
 
@@ -92,7 +61,7 @@ Parser& Parser::prefixChars(const std::string& prefixChars) {
     return *this;
 }
 
-Parser& Parser::allowAbbrev(const bool allowAbbrev) {
+Parser& Parser::allowAbbrev(const bool& allowAbbrev) {
     allowAbbrev_ = allowAbbrev;
     return *this;
 }
@@ -103,23 +72,67 @@ Parser& Parser::formatter(const Formatter& form) {
     return *this;
 }
 
+Parser& Parser::args(const int& argc, const char** argv) {
+    std::vector<std::string> aux(argv, argv + argc);
+    return args(aux);
+}
+
+Parser& Parser::args(const std::vector<std::string>& argv) {
+    input_.clear();
+    if (argv.size() > 0) {
+        prog_ = argv[0];
+        std::size_t folderSep = prog_.find_last_of("/\\");
+        if (folderSep != std::string::npos) {
+            if (!prog_.substr(folderSep + 1).empty()) {
+                prog_ = prog_.substr(folderSep + 1);
+            }
+        }
+    }
+    for (int i = 1; i < argv.size(); i++) {
+        input_.push_back(argv[i]);
+    }
+    return *this;
+}
+
 Object Parser::parse() {
-    Object res = parse_();
-    if (!input_.empty()) {
-        Error::Unknown err(input_);
+    std::pair<Object, std::vector<std::string>> res = parse_();
+    if (!res.second.empty()) {
+        Error::Unknown err(res.second);
         printUsage();
         std::cerr << prog_ << ": " << err.what() << std::endl;
-        throw Error::Unknown(input_);
+        throw Error::Unknown(res.second);
     }
-    return res;
+    return res.first;
+}
+
+Object Parser::parse(const int& argc, const char** argv) {
+    args(argc, argv);
+    return parse();
+}
+
+Object Parser::parse(const std::vector<std::string>& args_) {
+    args(args_);
+    return parse();
 }
 
 std::pair<Object, std::vector<std::string>> Parser::parseKnownArgs() {
-    Object                   known = parse_();
+    std::pair<Object, std::vector<std::string>> res = parse_();
     std::vector<std::string> unknown;
     unknown.push_back(prog_);
-    unknown.insert(unknown.end(), input_.begin(), input_.end());
-    return std::make_pair(known, unknown);
+    unknown.insert(unknown.end(), res.second.begin(), res.second.end());
+    return std::make_pair(res.first, unknown);
+}
+
+std::pair<Object, std::vector<std::string>> Parser::parseKnownArgs(
+        const int& argc, const char** argv) {
+    args(argc, argv);
+    return parseKnownArgs();
+}
+
+std::pair<Object, std::vector<std::string>> Parser::parseKnownArgs(
+        const std::vector<std::string>& args_) {
+    args(args_);
+    return parseKnownArgs();
 }
 
 void Parser::printUsage() const {
@@ -136,10 +149,11 @@ void Parser::initDefault_() {
     formatter_ = new Formatter(this);
 }
 
-Object Parser::parse_() {
+std::pair<Object, std::vector<std::string>> Parser::parse_() {
+    std::pair<Object, std::vector<std::string>> res;
     if (input_.empty()) {
         printUsage();
-        return Object();
+        return res;
     }
     std::vector<std::list<std::string>> unresolvedOptions;
     std::vector<std::vector<std::pair<std::string,
@@ -272,8 +286,7 @@ Object Parser::parse_() {
             }
         }
     }
-    Object res;
-    parsePreprocess(res);
+    parsePreprocess(res.first);
     for (std::map<std::string,
                   std::vector<std::pair<std::size_t,
                                         std::size_t>>>::const_iterator
@@ -286,7 +299,7 @@ Object Parser::parse_() {
         }
         rem.resize(input.size());
         try {
-            parseOption(name, res, rem, input);
+            parseOption(name, res.first, rem, input);
         } catch (const StringParser::Error::Error& e) {
             name = it->first;
             printUsage();
@@ -327,7 +340,7 @@ Object Parser::parse_() {
         }
         rem.clear();
         try {
-            parsePosition(res, rem, positions);
+            parsePosition(res.first, rem, positions);
         } catch(const StringParser::Error::Error& e) {
             printUsage();
             std::cerr << prog_ << ": Argument "
@@ -342,15 +355,15 @@ Object Parser::parse_() {
         }
         positions = rem;
     }
-    input_.clear();
+    res.second.clear();
     for (std::size_t i = 0; i < unresolvedOptions.size(); i++) {
-        input_.insert(input_.end(),
-                      unresolvedOptions[i].begin(),
-                      unresolvedOptions[i].end());
+        res.second.insert(res.second.end(),
+                          unresolvedOptions[i].begin(),
+                          unresolvedOptions[i].end());
     }
     for (std::size_t i = 0; i < rem.size(); i++) {
         if (!rem[i].empty()) {
-            input_.push_back("--");
+            res.second.push_back("--");
             break;
         }
     }
@@ -360,7 +373,7 @@ Object Parser::parse_() {
                       rem[i].end());
     }
     try {
-        parsePostprocess(res);
+        parsePostprocess(res.first);
     } catch (const SEMBA::Argument::Error::Error& e) {
         printUsage();
         std::cerr << prog_ << ": " << e.what() << std::endl;
