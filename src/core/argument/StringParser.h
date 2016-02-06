@@ -38,31 +38,43 @@ namespace Argument {
 namespace StringParser {
 
 namespace Error {
-    class Error : public std::exception {
-    public:
-        Error() {}
-        virtual ~Error() throw() {}
-    };
 
-    class NotEnough : public Error {
-    public:
-        NotEnough() : str_("Not enough values") {}
-        virtual ~NotEnough() throw() {}
+class Error : public std::exception {
+public:
+    Error() {}
+    virtual ~Error() throw() {}
+};
 
-        const char* what() const throw() { return str_.c_str(); }
-    private:
-        std::string str_;
-    };
+class NotEnough : public Error {
+public:
+    NotEnough() : str_("Not enough values") {}
+    virtual ~NotEnough() throw() {}
 
-    class Incorrect : public Error {
-    public:
-        Incorrect() : str_("Invalid value") {}
-        virtual ~Incorrect() throw() {}
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    std::string str_;
+};
 
-        const char* what() const throw() { return str_.c_str(); }
-    private:
-        std::string str_;
-    };
+class TooMany : public Error {
+public:
+    TooMany() : str_("Too many values") {}
+    virtual ~TooMany() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    std::string str_;
+};
+
+class Incorrect : public Error {
+public:
+    Incorrect() : str_("Invalid value") {}
+    virtual ~Incorrect() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    std::string str_;
+};
+
 } /* namespace Error */
 
 template<typename T>
@@ -83,7 +95,7 @@ struct Parser<std::string> {
     }
 };
 
-struct Internal_ {
+struct Details {
     static inline std::string& ltrim(std::string& s) {
         s.erase(s.begin(),
                 std::find_if(s.begin(),
@@ -219,7 +231,10 @@ T parse(const std::list<std::string>& input) {
     std::tuple<T> res;
     std::list<std::string> auxin;
     std::list<std::string> auxout(input.begin(), input.end());
-    Internal_::Parser<0, T>::parse(res, auxin, auxout);
+    Details::Parser<0, T>::parse(res, auxin, auxout);
+    if (!auxout.empty()) {
+        throw Error::TooMany();
+    }
     return std::get<0>(res);
 }
 
@@ -228,7 +243,10 @@ std::pair<T1, T2> parse(const std::list<std::string>& input) {
     std::tuple<T1, T2> res;
     std::list<std::string> auxin;
     std::list<std::string> auxout(input.begin(), input.end());
-    Internal_::Parser<1, T1, T2>::parse(res, auxin, auxout);
+    Details::Parser<1, T1, T2>::parse(res, auxin, auxout);
+    if (!auxout.empty()) {
+        throw Error::TooMany();
+    }
     return std::make_pair(std::get<0>(res), std::get<1>(res));
 }
 
@@ -237,17 +255,35 @@ std::tuple<T1, T2, T3, T...> parse(const std::list<std::string>& input) {
     std::tuple<T1, T2, T3, T...> res;
     std::list<std::string> auxin;
     std::list<std::string> auxout(input.begin(), input.end());
-    Internal_::Parser<sizeof...(T)+2, T1, T2, T3, T...>::parse(res,
-                                                              auxin, auxout);
+    Details::Parser<sizeof...(T)+2, T1, T2, T3, T...>::parse(res,
+                                                             auxin, auxout);
+    if (!auxout.empty()) {
+        throw Error::TooMany();
+    }
     return res;
+}
+
+template<typename T>
+T parse(const std::string& input) {
+    return parse<T>({res});
+}
+
+template<typename T1, typename T2>
+std::pair<T1, T2> parse(const std::string& input) {
+    return parse<T1, T2>({res});
+}
+
+template<typename T1, typename T2, typename T3, typename... T>
+std::tuple<T1, T2, T3, T...> parse(const std::string& input) {
+    return parse<T1, T2, T3, T...>({res});
 }
 
 template<typename T>
 T parse(std::list<std::string>& input, std::list<std::string>& output) {
     std::tuple<T> res;
-    output = std::list<std::string>(input.begin(), input.end());
-    input.clear();
-    Internal_::Parser<0, T>::parse(res, input, output);
+    output.clear();
+    std::swap(input, output);
+    Details::Parser<0, T>::parse(res, input, output);
     return std::get<0>(res);
 }
 
@@ -255,9 +291,9 @@ template<typename T1, typename T2>
 std::pair<T1, T2> parse(std::list<std::string>& input,
                         std::list<std::string>& output) {
     std::tuple<T1, T2> res;
-    output = std::list<std::string>(input.begin(), input.end());
-    input.clear();
-    Internal_::Parser<1, T1, T2>::parse(res, input, output);
+    output.clear();
+    std::swap(input, output);
+    Details::Parser<1, T1, T2>::parse(res, input, output);
     return std::make_pair(std::get<0>(res), std::get<1>(res));
 }
 
@@ -265,10 +301,10 @@ template<typename T1, typename T2, typename T3, typename... T>
 std::tuple<T1, T2, T3, T...> parse(std::list<std::string>& input,
                                    std::list<std::string>& output) {
     std::tuple<T1, T2, T3, T...> res;
-    output = std::list<std::string>(input.begin(), input.end());
-    input.clear();
-    Internal_::Parser<sizeof...(T)+2, T1, T2, T3, T...>::parse(res,
-                                                              input, output);
+    output.clear();
+    std::swap(input, output);
+    Details::Parser<sizeof...(T)+2, T1, T2, T3, T...>::parse(res,
+                                                             input, output);
     return res;
 }
 
