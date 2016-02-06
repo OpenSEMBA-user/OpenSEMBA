@@ -39,22 +39,23 @@ namespace Argument {
 
 class Object {
 public:
+#ifdef SEMBA_ARGUMENT_OBJECT_INT
+    typedef SEMBA_ARGUMENT_OBJECT_INT  Int;
+#else
+    typedef int                        Int;
+#endif
+#ifdef SEMBA_ARGUMENT_OBJECT_REAL
+    typedef SEMBA_ARGUMENT_OBJECT_REAL Real;
+#else
+    typedef double                     Real;
+#endif
     enum class Type {
         Null,
         Dictionary,
         Array,
         Bool,
+        Number,
         String
-    };
-    enum class NumberType {
-        None,
-        Int,
-        Real
-    };
-    enum class BoolType {
-        None,
-        True,
-        False
     };
 
     static std::string getTypeStr(const Type& type) {
@@ -71,25 +72,14 @@ public:
         case Type::Bool:
             return "Bool";
             break;
+        case Type::Number:
+            return "Number";
+            break;
         case Type::String:
             return "String";
             break;
         }
         return "Null";
-    }
-    static std::string getNumberTypeStr(const NumberType& type) {
-        switch (type) {
-        case NumberType::None:
-            return "None";
-            break;
-        case NumberType::Int:
-            return "Int";
-            break;
-        case NumberType::Real:
-            return "Real";
-            break;
-        }
-        return "None";
     }
 
     Object() {
@@ -155,18 +145,21 @@ public:
         return rhs;
     }
 
-    operator bool() const {
-        if (isBool()) {
-            return isTrue();
-        }
-        return !isNull();
-    }
-
     Object& reset() { return setType(type_); }
 
     //Value Type
-    bool     isType(const Type& type) const { return type == type_; }
-    Type    getType()                 const { return type_;         }
+    bool     isType(const Type& type) const {
+        if (type_ == Type::String) {
+            if (type == Type::Bool) {
+                return is<bool>();
+            }
+            if (type == Type::Number) {
+                return is<Int>() || is<Real>();
+            }
+        }
+        return type == type_;
+    }
+    Type    getType()                 const { return type_; }
     Object& setType(const Type& type) {
         if (((type == Type::Dictionary) || (type == Type::Array) ||
              (type == Type::Null)) && (type != type_)) {
@@ -259,57 +252,20 @@ public:
     }
 
     //Bool Value
-    bool     isBool(const BoolType& type = BoolType::None) const {
-        if (type == BoolType::None) {
-            return (type_ == Type::Bool);
-        }
-        return (type_ == Type::Bool) && (type == boolType_);
-    }
-    bool     isTrue () const { return isBool(BoolType::True ); }
-    bool     isFalse() const { return isBool(BoolType::False); }
-    Object& setBool(const BoolType& type) {
-        if (type != BoolType::None) {
-            clear_();
-            type_ = Type::Bool;
-            boolType_ = type;
-        }
-        return *this;
-    }
-    Object& setTrue () { return setBool(BoolType::True ); }
-    Object& setFalse() { return setBool(BoolType::False); }
+    bool     isBool () const          { return isType(Type::Bool); }
+    bool    getBool () const          { return get<bool>();        }
+    Object& setBool (const bool& val) { return set(val);           }
+    Object& setTrue ()                { return setBool(true );     }
+    Object& setFalse()                { return setBool(false);     }
 
     //Number Value
-    bool isNumber(const NumberType& type = NumberType::None) const {
-        if (type_ != Type::String) {
-            return false;
-        }
-        bool res = false;
-        if ((type == NumberType::None) || (type == NumberType::Int)) {
-            res = res || isInt();
-        }
-        if ((type == NumberType::None) || (type == NumberType::Real)) {
-            res = res || isReal();
-        }
-        return res;
-    }
-    template <typename T = long long>
-    typename std::enable_if<std::is_integral<T>::value, bool>::type
-         isInt () const;
-    template <typename T = long double>
-    typename std::enable_if<std::is_floating_point<T>::value, bool>::type
-         isReal() const;
-    template <typename T = long long>
-    typename std::enable_if<std::is_integral<T>::value, T>::type
-        getInt () const;
-    template <typename T = long double>
-    typename std::enable_if<std::is_floating_point<T>::value, T>::type
-        getReal() const;
-    template <typename T = long long>
-    typename std::enable_if<std::is_integral<T>::value, Object&>::type
-        setInt (const T&);
-    template <typename T = long double>
-    typename std::enable_if<std::is_floating_point<T>::value, Object&>::type
-        setReal(const T&);
+    bool     isNumber() const          { return isType(Type::Number); }
+    bool     isInt   () const          { return is <Int >();          }
+    bool     isReal  () const          { return is <Real>();          }
+    Int     getInt   () const          { return get<Int >();          }
+    Real    getReal  () const          { return get<Real>();          }
+    Object& setInt   (const Int&  val) { return set(val);             }
+    Object& setReal  (const Real& val) { return set(val);             }
 
     //String Value
     bool         isString() const { return isType(Type::String); }
@@ -330,6 +286,7 @@ public:
         strValue_.push_back(str);
         return *this;
     }
+    
     const std::list<std::string>& getGenericString() const {
         return strValue_;
     }
@@ -358,19 +315,16 @@ public:
         case Object::Type::Null:
             std::cout << "null";
             break;
-        case Object::Type::Bool:
-            std::cout << std::boolalpha << isTrue();
-            break;
         case Object::Type::String:
             if (isNumber()) {
                 if (isInt()) {
                     std::cout.precision(
                         std::numeric_limits<long long>::max_digits10);
-                    std::cout << getInt()  << " (Int)";
+                    std::cout << getInt();
                 } else {
                     std::cout.precision(
                         std::numeric_limits<long double>::max_digits10);
-                    std::cout << getReal() << " (Real)";
+                    std::cout << getReal();
                 }
             } else {
                 const std::list<std::string>& val = getGenericString();
@@ -408,11 +362,14 @@ public:
             }
             std::cout << std::string(depth, ' ') << "}";
             break;
+        default:
+            break;
         }
         if (depth == 0) {
             std::cout << std::endl;
         }
     }
+
 private:
     //Value Type
     Type type_;
@@ -420,8 +377,6 @@ private:
     std::vector<Object>                objMembers_;
     std::vector<std::string>           objName_;
     std::map<std::string, std::size_t> nameMembers_;
-    //Bool Value
-    BoolType boolType_;
     //String Value
     std::list<std::string> strValue_;
 
@@ -432,8 +387,6 @@ private:
         objMembers_  = rhs.objMembers_;
         objName_     = rhs.objName_;
         nameMembers_ = rhs.nameMembers_;
-        //Bool Value
-        boolType_ = rhs.boolType_;
         //String Value
         strValue_ = rhs.strValue_;
     }
@@ -447,8 +400,6 @@ private:
         rhs.objName_.clear();
         rhs.objMembers_.clear();
         rhs.nameMembers_.clear();
-        //Bool Value
-        boolType_ = rhs.boolType_;
         //String Value
         strValue_ = std::move(rhs.strValue_);
     }
@@ -459,8 +410,6 @@ private:
         objMembers_ .clear();
         objName_    .clear();
         nameMembers_.clear();
-        //Bool Value
-        boolType_ = BoolType::None;
         //String Value
         strValue_.clear();
     }
@@ -482,19 +431,13 @@ public:
 
 class NotType : public Error {
 public:
-    NotType(const SEMBA::Argument::Object::Type& t,
-            const SEMBA::Argument::Object::NumberType& n =
-                    SEMBA::Argument::Object::NumberType::None)
-    :   type_(t), numType_(n) {
+    NotType(const SEMBA::Argument::Object::Type& t)
+    :   type_(t),
+        str_(std::string("Object not a valid ") +
+             SEMBA::Argument::Object::getTypeStr(type_)) {
         std::stringstream aux;
-        if ((t == SEMBA::Argument::Object::Type::String) &&
-            (n != SEMBA::Argument::Object::NumberType::None)) {
-            aux << "Object not a valid Number of type "
-                << SEMBA::Argument::Object::getNumberTypeStr(numType_);
-        } else {
-            aux << "Object not a valid "
-                << SEMBA::Argument::Object::getTypeStr(type_);
-        }
+        aux << "Object not a valid "
+            << SEMBA::Argument::Object::getTypeStr(type_);
         str_ = aux.str();
     }
     virtual ~NotType() throw() {}
@@ -504,12 +447,9 @@ public:
     const SEMBA::Argument::Object::Type&       getType()       const {
         return type_;
     }
-    const SEMBA::Argument::Object::NumberType& getNumberType() const {
-        return numType_;
-    }
+
 private:
-    SEMBA::Argument::Object::Type        type_;
-    SEMBA::Argument::Object::NumberType  numType_;
+    SEMBA::Argument::Object::Type type_;
     std::string str_;
 };
 

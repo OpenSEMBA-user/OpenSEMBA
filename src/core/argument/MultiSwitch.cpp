@@ -86,14 +86,14 @@ MultiSwitch& MultiSwitch::defaultVal(const std::size_t& defaultVal) {
 void MultiSwitch::parse(Object& out,
                         std::vector<std::list<std::string>>& output,
                         std::vector<std::list<std::string>>& input) const {
-    out.setInt(default_ + input.size());
+    out.set(default_ + input.size());
     output = input;
     input.clear();
 }
 
 void MultiSwitch::noParsed(Object& out) const {
     if (hasDefault_) {
-        out.setInt(default_);
+        out.set(default_);
     } else {
         Argument::noParsed(out);
     }
