@@ -147,7 +147,7 @@ void Matrix<T>::invertFactorized_(const std::size_t pivot[]) {
     assert(nRows() == nCols());
     std::size_t n = nRows();
     std::size_t nn = n * n;
-    std::size_t i, j, k;
+    Int i, j, k;
     T temp;
     T *b = new T[nn];
     // Compute Inverse(U).
