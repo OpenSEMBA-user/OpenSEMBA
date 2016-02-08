@@ -31,14 +31,17 @@
 #endif
 using namespace std;
 
-#include "geometry/MeshUnstructured.h"
+#include "geometry/mesh/Unstructured.h"
 
+namespace SEMBA {
+namespace Geometry {
+namespace Mesh {
 
-class MeshVolume : public MeshUnstructured {
+class MeshVolume : public Unstructured {
 public:
     MeshVolume();
     MeshVolume(const MeshVolume& meshVol);
-    MeshVolume(const MeshUnstructured& uns);
+    MeshVolume(const Unstructured& uns);
     virtual ~MeshVolume();
     MeshVolume& operator=(const MeshVolume& param);
     vector<vector<ElementId>> getPartitionsIds(
@@ -47,6 +50,8 @@ public:
             const Real* taskPower = NULL) const;
 };
 
-
+} /* namespace Mesh */
+} /* namespace Geometry */
+} /* namespace SEMBA */
 
 #endif

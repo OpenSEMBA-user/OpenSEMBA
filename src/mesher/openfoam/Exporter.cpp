@@ -69,8 +69,7 @@ Exporter::Exporter(const Data* smb,
 Exporter::~Exporter() {
 }
 
-void
-Exporter::createOpenFoamDirs() {
+void Exporter::createOpenFoamDirs() {
     dirConstant_ = getFilename() + "constant/";
     dirPolymesh_ = getFilename() + "constant/polyMesh/";
     dirTriSurface_ = getFilename() + "constant/triSurface/";
@@ -90,8 +89,7 @@ Exporter::createOpenFoamDirs() {
 #endif
 }
 
-void
-Exporter::writeSTLs() const {
+void Exporter::writeSTLs() const {
     // Writes materials.
     for (std::size_t i = 0; i < smb_->physicalModels->size(); i++) {
         const PhysicalModel::PhysicalModel* mat = (*smb_->physicalModels)(i);
@@ -133,8 +131,7 @@ Exporter::writeSTLs() const {
     //   }
 }
 
-void
-Exporter::triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri,
+void Exporter::triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri,
                    const std::string& folder,
                    const std::string& type,
                    const std::size_t& typeId,
@@ -182,15 +179,13 @@ Exporter::triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri,
     }
 }
 
-void
-Exporter::writeOpenFoamDummyFile() const {
+void Exporter::writeOpenFoamDummyFile() const {
     std::ofstream file;
     openFile(getFilename() + "openfoam.foam", file);
     file.close();
 }
 
-void
-Exporter::writeControlDict() const {
+void Exporter::writeControlDict() const {
     std::string name = "controlDict";
     std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
@@ -215,8 +210,7 @@ Exporter::writeControlDict() const {
     file.close();
 }
 
-void
-Exporter::writefvSchemes() const {
+void Exporter::writefvSchemes() const {
     const std::string name = "fvSchemes";
     const std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
@@ -229,8 +223,7 @@ Exporter::writefvSchemes() const {
     file.close();
 }
 
-void
-Exporter::writefvSolution() const {
+void Exporter::writefvSolution() const {
     const std::string name = "fvSolution";
     const std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
@@ -240,8 +233,7 @@ Exporter::writefvSolution() const {
     file.close();
 }
 
-std::string
-Exporter::writeAllBoundary() const {
+std::string Exporter::writeAllBoundary() const {
     std::string res;
     res =  "allBoundary {\n";
     res += "  type patch; \n";

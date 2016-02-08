@@ -37,7 +37,7 @@
 #include "source/Dipole.h"
 #include "source/Generator.h"
 #include "source/OnLine.h"
-#include "source/Planewave.h"
+#include "source/PlaneWave.h"
 #include "source/port/Waveguide.h"
 #include "source/port/TEM.h"
 #include "Data.h"

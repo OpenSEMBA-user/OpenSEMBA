@@ -18,22 +18,37 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "MeshUnstructuredTest.h"
+#include "gtest/gtest.h"
+#include "ProjectFile.h"
 
-TEST_F(GeometryMeshUnstructuredTest, ctor) {
-    EXPECT_EQ(mesh_.elems().size(), 2);
-    EXPECT_EQ(mesh_.elems().getOf<Tetrahedron>().size(), 1);
-    EXPECT_EQ(mesh_.elems().getOf<Triangle>().size(), 1);
-}
-
-TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
-    const Tetrahedron4* tet = mesh_.elems().getOf<Tetrahedron4>()(0);
-    vector<Face> faces;
-    for (UInt f = 0; f < tet->numberOfFaces(); f++) {
-        faces.push_back(Face(tet, f));
+#ifndef _WIN32
+class ProjectTest : public ::testing::Test {
+    void SetUp() {
+        file_ = ProjectFile("/usr/bin/ls");
     }
-    GroupElements<const SurfR> matching = mesh_.getSurfsMatching(faces);
-    EXPECT_EQ(matching.size(), 1);
-    const Triangle3* tri = mesh_.elems().getOf<Triangle3>()(0);
-    EXPECT_EQ(*matching(0), *tri);
+protected:
+    ProjectFile file_;
+};
+
+TEST_F(ProjectTest, BasicOperations) {
+    EXPECT_EQ(file_, file_);
 }
+
+TEST_F(ProjectTest, FolderOperations) {
+    EXPECT_TRUE(ProjectFile("/usr/bin/").isFolder());
+    EXPECT_FALSE(ProjectFile("/non/existing/folder/").isFolder());
+    EXPECT_EQ(file_.getFolder(), "/usr/bin/");
+    ProjectFile usrFolder(file_.getFolder());
+    EXPECT_EQ("/usr/", usrFolder.getFolder());
+    ProjectFile rootFolder(usrFolder.getFolder());
+    EXPECT_EQ("/", rootFolder.getFolder());
+}
+
+TEST_F(ProjectTest, RelativePaths) {
+    ProjectFile rhs("/usr/");
+    EXPECT_EQ(file_.relativeTo(file_), ProjectFile("ls"));
+    EXPECT_EQ(file_.relativeTo(rhs), ProjectFile("bin/ls"));
+}
+#else
+    #warning "Filesystem::Project tests are not implemented for WIN32."
+#endif

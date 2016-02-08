@@ -18,37 +18,37 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "gtest/gtest.h"
-#include "ProjectFile.h"
+#include "GroupTest.h"
 
-#ifndef _WIN32
-class ProjectFileTest : public ::testing::Test {
-    void SetUp() {
-        file_ = ProjectFile("/usr/bin/ls");
+TEST_F(GeometryElementsGroupTest, Copy){
+    vector<CoordR3*> coords = newCoordR3Vector();
+    GroupCoordinates<>* original = new GroupCoordinates<>(coords);
+    GroupCoordinates<> copied;
+    copied = *original;
+
+    EXPECT_TRUE(checkTypes(*original));
+    EXPECT_TRUE(checkTypes(copied));
+
+    delete original;
+
+    EXPECT_TRUE(checkTypes(copied));
+}
+
+TEST_F(GeometryElementsGroupTest, CopyCtor){
+    GroupCoordinates<> grp;
+    {
+        vector<CoordR3*> coords = newCoordR3Vector();
+        grp.add(coords);
     }
-protected:
-    ProjectFile file_;
-};
-
-TEST_F(ProjectFileTest, BasicOperations) {
-    EXPECT_EQ(file_, file_);
+    EXPECT_TRUE(checkTypes(grp));
 }
 
-TEST_F(ProjectFileTest, FolderOperations) {
-    EXPECT_TRUE(ProjectFile("/usr/bin/").isFolder());
-    EXPECT_FALSE(ProjectFile("/non/existing/folder/").isFolder());
-    EXPECT_EQ(file_.getFolder(), "/usr/bin/");
-    ProjectFile usrFolder(file_.getFolder());
-    EXPECT_EQ("/usr/", usrFolder.getFolder());
-    ProjectFile rootFolder(usrFolder.getFolder());
-    EXPECT_EQ("/", rootFolder.getFolder());
+TEST_F(GeometryElementsGroupTest, idsConservation){
+    vector<CoordR3*> coords = newCoordR3Vector();
+    GroupCoordinates<> grp(coords);
+    EXPECT_EQ(coords.size(), grp.size());
+    for (UInt i = 0; i < grp.size(); i++) {
+        EXPECT_EQ(coords[i]->getId(), grp(i)->getId());
+    }
 }
 
-TEST_F(ProjectFileTest, RelativePaths) {
-    ProjectFile rhs("/usr/");
-    EXPECT_EQ(file_.relativeTo(file_), ProjectFile("ls"));
-    EXPECT_EQ(file_.relativeTo(rhs), ProjectFile("bin/ls"));
-}
-#else
-    #warning "Project file tests are not implemented for WIN32."
-#endif
