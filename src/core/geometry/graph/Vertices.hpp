@@ -43,7 +43,7 @@ Vertices<ELEM,BOUND>::~Vertices() {
 
 template<class ELEM, class BOUND>
 Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::init(
-        const Group::Group<const Vertices<ELEM,BOUND>::Elem>& elems) {
+        const Group::Group<const ELEM>& elems) {
     const Bound* coord;
     GraphElem*   elemPtr;
     GraphBound*  boundPtr;
