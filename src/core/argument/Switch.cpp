@@ -26,25 +26,25 @@ namespace Argument {
 
 Switch::Switch(const std::string& name)
 :   Argument(name),
-    SwitchBase(name) {
+    OptionBase(name) {
     initDefault_();
 }
 
 Switch::Switch(const std::string& name, const char& shortId)
 :   Argument(name),
-    SwitchBase(shortId) {
+    OptionBase(shortId) {
     initDefault_();
 }
 
 Switch::Switch(const char& shortId, const std::string& longId)
 :   Argument(longId),
-    SwitchBase(shortId, longId) {
+    OptionBase(shortId, longId) {
     initDefault_();
 }
 
 Switch::Switch(const std::string& name, const std::string& longId)
 :   Argument(name),
-    SwitchBase(longId) {
+    OptionBase(longId) {
     initDefault_();
 }
 
@@ -52,13 +52,13 @@ Switch::Switch(const std::string& name,
                const char& shortId,
                const std::string& longId)
 :   Argument(name),
-    SwitchBase(shortId, longId) {
+    OptionBase(shortId, longId) {
     initDefault_();
 }
 
 Switch::Switch(const Switch& rhs)
 :   Argument(rhs),
-    SwitchBase(rhs) {
+    OptionBase(rhs) {
     hasDefault_ = rhs.hasDefault_;
     default_    = rhs.default_;
 }

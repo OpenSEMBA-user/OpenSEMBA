@@ -39,7 +39,7 @@ public:
     Parser& epilog     (const std::string&);
     Parser& prefixChars(const std::string&);
     Parser& allowAbbrev(const bool&);
-    Parser& formatter  (const Formatter&);
+    Parser& formatter  (Formatter*);
     Parser& args       (const int& argc, const char** argv);
     Parser& args       (const std::vector<std::string>&);
 
@@ -93,6 +93,16 @@ private:
 };
 
 namespace Error {
+
+class Empty : public Error {
+public:
+    Empty() : str_("No Arguments in parser") {}
+    virtual ~Empty() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+private:
+    std::string str_;
+};
 
 class Ambiguous : public Error {
 public:

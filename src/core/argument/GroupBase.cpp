@@ -31,7 +31,7 @@ GroupBase::GroupBase(GroupBase* parent,
     name_ = name;
     description_ = description;
     required_ = false;
-    lastPosParsed_ = positions_.begin();
+    lastPosParsed_ = 0;
 }
 
 GroupBase::~GroupBase() {
@@ -70,7 +70,7 @@ std::size_t GroupBase::numOptions() const {
 }
 
 const GroupBase& GroupBase::child(const std::size_t& i) const {
-    throw; //TODO
+    throw std::out_of_range("GroupBase::child");
 }
 
 const PositionBase& GroupBase::position(const std::size_t& i) const {
@@ -79,6 +79,18 @@ const PositionBase& GroupBase::position(const std::size_t& i) const {
 
 const OptionBase& GroupBase::option(const std::size_t& i) const {
     return *options_.at(i);
+}
+
+std::size_t GroupBase::numChildPositions() const {
+    return numPositions();
+}
+
+const PositionBase& GroupBase::childPosition(const std::size_t& i) const {
+    return position(i);
+}
+
+const OptionBase& GroupBase::childOption(const std::string& name) const {
+    return *optionName_.at(name);
 }
 
 bool GroupBase::existsOption(const char& id) const {
@@ -114,8 +126,8 @@ const std::string& GroupBase::optionName(const std::string& id) const {
     return longOpts_.at(id);
 }
 
-std::vector<std::string> GroupBase::getPossibleOptions(
-        const std::string& id, const bool& abbrev) const {
+std::vector<std::string> GroupBase::possibleOptions(const std::string& id,
+                                                    const bool& abbrev) const {
     std::vector<std::string> res;
     if (longOpts_.count(id) != 0) {
         res.push_back(longOpts_.at(id));
@@ -129,8 +141,8 @@ std::vector<std::string> GroupBase::getPossibleOptions(
         if (it->first.size() < id.size()) {
             continue;
         }
-        std::string abbrev = it->first.substr(0, id.size());
-        if (id == abbrev) {
+        std::string abbrevStr = it->first.substr(0, id.size());
+        if (id == abbrevStr) {
             res.push_back(it->first);
         }
     }
@@ -145,8 +157,8 @@ void GroupBase::parsePosition(Object& out,
                               std::vector<std::list<std::string>>& output,
                               std::vector<std::list<std::string>>& input) {
     Object aux;
-    (*lastPosParsed_)->parse(aux, output, input);
-    out.addMember((*lastPosParsed_)->getName(), std::move(aux));
+    positions_.at(lastPosParsed_)->parse(aux, output, input);
+    out.addMember(positions_.at(lastPosParsed_)->getName(), std::move(aux));
     ++lastPosParsed_;
 }
 
@@ -165,11 +177,10 @@ void GroupBase::parsePostprocess(Object& out) {
     if (isMutuallyExclusive()) {
         std::vector<Argument*> argsAll;
         std::vector<Argument*> argsParsed;
-        for (std::vector<PositionBase*>::const_iterator
-             it = positions_.begin(); it != positions_.end(); ++it) {
-            argsAll.push_back(*it);
-            if (it < lastPosParsed_) {
-                argsParsed.push_back(*it);
+        for (std::size_t i = 0; i < positions_.size(); i++) {
+            argsAll.push_back(positions_[i]);
+            if (i < lastPosParsed_) {
+                argsParsed.push_back(positions_[i]);
             }
         }
         for (std::map<std::string, OptionBase*>::const_iterator
@@ -185,11 +196,10 @@ void GroupBase::parsePostprocess(Object& out) {
             throw Error::Group::Required(argsAll);
         }
     } else {
-        for (std::vector<PositionBase*>::iterator
-             it = lastPosParsed_; it < positions_.end(); ++it) {
-            std::string optName = (*it)->getName();
+        for (std::size_t i = 0; i < positions_.size(); i++) {
+            std::string optName = positions_[i]->getName();
             Object aux;
-            (*it)->noParsed(aux);
+            positions_[i]->noParsed(aux);
             out.addMember(optName, std::move(aux));
         }
         for (std::map<std::string, OptionBase*>::const_iterator
@@ -204,26 +214,30 @@ void GroupBase::parsePostprocess(Object& out) {
     }
 }
 
-PositionBase& GroupBase::addPosition(const PositionBase& pos) {
-    PositionBase* newPos = pos.clone();
+PositionBase& GroupBase::addPosition(PositionBase* arg) {
+    if (arg == NULL) {
+        throw Error::Group::NullArgument();
+    }
     try {
-        addPositionProcess(this, newPos);
+        addPositionProcess(NULL, arg);
     } catch (...) {
-        delete newPos;
+        delete arg;
         throw;
     }
-    return *newPos;
+    return *arg;
 }
 
-OptionBase& GroupBase::addOption(const OptionBase& opt) {
-    OptionBase* newOpt = opt.clone();
+OptionBase& GroupBase::addOption(OptionBase* arg) {
+    if (arg == NULL) {
+        throw Error::Group::NullArgument();
+    }
     try {
-        addOptionProcess(this, newOpt);
+        addOptionProcess(NULL, arg);
     } catch (...) {
-        delete newOpt;
+        delete arg;
         throw;
     }
-    return *newOpt;
+    return *arg;
 }
 
 void GroupBase::addPositionProcess(GroupBase* child, PositionBase* pos) {
@@ -326,18 +340,6 @@ void GroupBase::insertLongOpt(const std::string& opt,
         throw Error::Group::Repeated(std::string("--") + opt);
     }
     longOpts_[opt] = name;
-}
-
-std::size_t GroupBase::numAllPositions() const {
-    return numPositions();
-}
-
-const PositionBase& GroupBase::getAllPosition(const std::size_t& i) const {
-    return position(i);
-}
-
-const OptionBase& GroupBase::getAllOption(const std::string& name) const {
-    return *optionName_.at(name);
 }
 
 } /* namespace Argument */

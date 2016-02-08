@@ -31,7 +31,7 @@
 namespace SEMBA {
 namespace Argument {
 
-class Switch : public SwitchBase {
+class Switch : public virtual SwitchBase {
 public:
     Switch(const std::string&);
     Switch(const char&, const std::string&);
@@ -40,8 +40,6 @@ public:
     Switch(const std::string&, const char&, const std::string&);
     Switch(const Switch&);
     virtual ~Switch();
-
-    Switch* clone() const { return new Switch(*this); };
 
     Switch& required  (const bool& = true);
     Switch& help      (const std::string&);

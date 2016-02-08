@@ -30,7 +30,7 @@
 namespace SEMBA {
 namespace Argument {
 
-class MultiSwitch : public SwitchBase {
+class MultiSwitch : public virtual SwitchBase {
 public:
     MultiSwitch(const std::string&);
     MultiSwitch(const char&, const std::string&);
@@ -39,8 +39,6 @@ public:
     MultiSwitch(const std::string&, const char&, const std::string&);
     MultiSwitch(const MultiSwitch&);
     virtual ~MultiSwitch();
-
-    MultiSwitch* clone() const { return new MultiSwitch(*this); };
 
     MultiSwitch& required  (const bool& = true);
     MultiSwitch& help      (const std::string&);

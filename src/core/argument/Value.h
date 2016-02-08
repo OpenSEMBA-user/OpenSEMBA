@@ -33,7 +33,7 @@ namespace SEMBA {
 namespace Argument {
 
 template <typename V, typename T1, typename... T>
-class Value : public V {
+class Value : public virtual V {
 public:
     Value() {}
     virtual ~Value() {}

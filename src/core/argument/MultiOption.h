@@ -30,25 +30,23 @@ namespace SEMBA {
 namespace Argument {
 
 template <typename... T>
-class MultiOption : public OptionValue,
-                    public Value<ValueMulti, T...> {
+class MultiOption : public virtual OptionValue,
+                    public virtual Value<ValueMulti, T...> {
 public:
     MultiOption(const std::string& name)
-    :   Argument(name), OptionValue(name) {}
+    :   Argument(name), OptionBase(name) {}
     MultiOption(const char& shortId, const std::string& longId)
-    :   Argument(longId), OptionValue(shortId, longId) {}
+    :   Argument(longId), OptionBase(shortId, longId) {}
     MultiOption(const std::string& name, const char& shortId)
-    :   Argument(name), OptionValue(shortId) {}
+    :   Argument(name), OptionBase(shortId) {}
     MultiOption(const std::string& name, const std::string& longId)
-    :   Argument(name), OptionValue(longId) {}
+    :   Argument(name), OptionBase(longId) {}
     MultiOption(const std::string& name,
                 const char& shortId, const std::string& longId)
-    :   Argument(name), OptionValue(shortId, longId) {}
-    MultiOption(const OptionValue& rhs)
-    :   Argument(rhs), OptionValue(rhs) {}
+    :   Argument(name), OptionBase(shortId, longId) {}
+    MultiOption(const MultiOption& rhs)
+    :   Argument(rhs), OptionBase(rhs) {}
     virtual ~MultiOption() {}
-
-    MultiOption* clone() const { return new MultiOption(*this); }
 };
 
 } /* namespace Argument */

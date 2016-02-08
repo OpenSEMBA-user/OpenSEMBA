@@ -27,19 +27,10 @@
 namespace SEMBA {
 namespace Argument {
 
-class SwitchBase : public OptionBase {
+class SwitchBase : public virtual OptionBase {
 public:
-    SwitchBase(const char& shortId)
-    :   OptionBase(shortId) {}
-    SwitchBase(const std::string& longId)
-    :   OptionBase(longId) {}
-    SwitchBase(const char& shortId, const std::string& longId)
-    :   OptionBase(shortId, longId) {}
-    SwitchBase(const SwitchBase& rhs)
-    :   OptionBase(rhs) {}
+    SwitchBase() {}
     virtual ~SwitchBase() {}
-
-    virtual SwitchBase* clone() const = 0;
 };
 
 } /* namespace Argument */

@@ -60,16 +60,20 @@ public:
     virtual const PositionBase& position(const std::size_t& i) const;
     virtual const OptionBase&   option  (const std::size_t& i) const;
 
+    virtual std::size_t      numChildPositions() const;
+    virtual const PositionBase& childPosition(const std::size_t&) const;
+    virtual const OptionBase&   childOption  (const std::string&) const;
+
     bool existsOption(const char&) const;
     bool existsOption(const std::string&, const bool& abbrev = false) const;
 
     const std::string& optionName(const char&) const;
     const std::string& optionName(const std::string&) const;
-    std::vector<std::string> getPossibleOptions(const std::string&,
-                                                const bool& = false) const;
+    std::vector<std::string> possibleOptions(const std::string&,
+                                             const bool& = false) const;
 
-    virtual PositionBase& addPosition(const PositionBase&);
-    virtual OptionBase&   addOption  (const OptionBase&);
+    virtual PositionBase& addPosition(PositionBase*);
+    virtual OptionBase&   addOption  (OptionBase*);
 
     virtual void parsePreprocess(Object&);
     virtual void parsePosition(Object&,
@@ -80,10 +84,6 @@ public:
                              std::vector<std::list<std::string>>&,
                              std::vector<std::list<std::string>>&);
     virtual void parsePostprocess(Object&);
-
-    virtual std::size_t         numAllPositions() const;
-    virtual const PositionBase& getAllPosition(const std::size_t&) const;
-    virtual const OptionBase&   getAllOption(const std::string&) const;
 
 protected:
     GroupBase(GroupBase* = NULL,
@@ -107,7 +107,7 @@ private:
     std::set<std::string> names_;
 
     std::vector<PositionBase*> positions_;
-    std::vector<PositionBase*>::iterator lastPosParsed_;
+    std::size_t lastPosParsed_;
 
     std::vector<OptionBase*> options_;
     std::map<std::string, bool> optionParsed_;
@@ -126,6 +126,17 @@ private:
 namespace Error {
 
 namespace Group {
+
+class NullArgument : public Error {
+public:
+    NullArgument() : str_("Argument must not be NULL") {}
+    virtual ~NullArgument() throw() {}
+
+    const char* what() const throw() { return str_.c_str(); }
+
+private:
+    std::string str_;
+};
 
 class Excluded : public Error {
 public:

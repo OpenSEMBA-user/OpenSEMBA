@@ -30,14 +30,12 @@ namespace SEMBA {
 namespace Argument {
 
 template <typename... T>
-class MultiPosition : public PositionBase,
-                      public Value<ValueMulti, T...> {
+class MultiPosition : public virtual PositionBase,
+                      public virtual Value<ValueMulti, T...> {
 public:
     MultiPosition(const std::string&   name) : Argument(name) {}
     MultiPosition(const MultiPosition& rhs)  : Argument(rhs ) {}
     virtual ~MultiPosition() {}
-
-    MultiPosition* clone() const { return new MultiPosition(*this); }
 };
 
 } /* namespace Argument */

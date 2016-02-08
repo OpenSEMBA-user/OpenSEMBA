@@ -26,25 +26,25 @@ namespace Argument {
 
 MultiSwitch::MultiSwitch(const std::string& name)
 :   Argument(name),
-    SwitchBase(name) {
+    OptionBase(name) {
     initDefault_();
 }
 
 MultiSwitch::MultiSwitch(const char& shortId, const std::string& longId)
 :   Argument(longId),
-    SwitchBase(shortId, longId) {
+    OptionBase(shortId, longId) {
     initDefault_();
 }
 
 MultiSwitch::MultiSwitch(const std::string& name, const char& shortId)
 :   Argument(name),
-    SwitchBase(shortId) {
+    OptionBase(shortId) {
     initDefault_();
 }
 
 MultiSwitch::MultiSwitch(const std::string& name, const std::string& longId)
 :   Argument(name),
-    SwitchBase(longId) {
+    OptionBase(longId) {
     initDefault_();
 }
 
@@ -52,7 +52,7 @@ MultiSwitch::MultiSwitch(const std::string& name,
                          const char& shortId,
                          const std::string& longId)
 :   Argument(name),
-    SwitchBase(shortId, longId) {
+    OptionBase(shortId, longId) {
     initDefault_();
 }
 

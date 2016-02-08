@@ -32,8 +32,6 @@ public:
     PositionBase() { required(true); }
     virtual ~PositionBase() {}
 
-    virtual PositionBase* clone() const = 0;
-
 protected:
     Argument& required(const bool&) { return Argument::required(true); }
     using Argument::getRequired;

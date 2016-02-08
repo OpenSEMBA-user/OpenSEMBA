@@ -41,8 +41,6 @@ public:
     Formatter(const Formatter& rhs) : parser_(rhs.parser_) {}
     virtual ~Formatter() {}
 
-    virtual Formatter* clone() const { return new Formatter(*this); }
-
     virtual void printUsage();
     virtual void printHelp();
 

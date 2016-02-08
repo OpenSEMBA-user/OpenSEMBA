@@ -39,6 +39,10 @@ public:
     std::size_t  numChilds() const;
     const GroupBase& child(const std::size_t& i) const;
 
+    std::size_t      numChildPositions() const;
+    const PositionBase& childPosition(const std::size_t&) const;
+    const OptionBase&   childOption  (const std::string&) const;
+
     Group& addGroup(const std::string& = std::string(),
                     const std::string& = std::string());
     MEGroup& addMutuallyExclusiveGroup();
@@ -61,17 +65,13 @@ protected:
     void addPositionProcess(GroupBase*, PositionBase*);
     void addOptionProcess  (GroupBase*, OptionBase*);
 
-    std::size_t         numAllPositions() const;
-    const PositionBase& getAllPosition(const std::size_t&) const;
-    const OptionBase&   getAllOption  (const std::string&) const;
-
 private:
     std::size_t numMutExc_;
 
-    std::vector<GroupBase*> positionsAll_;
-    std::vector<GroupBase*>::iterator lastPosParsed_;
+    std::vector<GroupBase*> positions_;
+    std::size_t lastPosParsed_;
 
-    std::map<std::string, GroupBase*> optionsAll_;
+    std::map<std::string, GroupBase*> options_;
 
     std::vector<GroupBase*> child_;
 

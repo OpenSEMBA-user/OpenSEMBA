@@ -30,25 +30,23 @@ namespace SEMBA {
 namespace Argument {
 
 template <typename... T>
-class Option : public OptionValue,
-               public Value<ValueSingle, T...> {
+class Option : public virtual OptionValue,
+               public virtual Value<ValueSingle, T...> {
 public:
     Option(const std::string& name)
-    :   Argument(name), OptionValue(name) {}
+    :   Argument(name), OptionBase(name) {}
     Option(const char& shortId, const std::string& longId)
-    :   Argument(longId), OptionValue(shortId, longId) {}
+    :   Argument(longId), OptionBase(shortId, longId) {}
     Option(const std::string& name, const char& shortId)
-    :   Argument(name), OptionValue(shortId) {}
+    :   Argument(name), OptionBase(shortId) {}
     Option(const std::string& name, const std::string& longId)
-    :   Argument(name), OptionValue(longId) {}
+    :   Argument(name), OptionBase(longId) {}
     Option(const std::string& name,
            const char& shortId, const std::string& longId)
-    :   Argument(name), OptionValue(shortId, longId) {}
-    Option(const OptionValue& rhs)
-    :   Argument(rhs), OptionValue(rhs) {}
+    :   Argument(name), OptionBase(shortId, longId) {}
+    Option(const Option& rhs)
+    :   Argument(rhs), OptionBase(rhs) {}
     virtual ~Option() {}
-
-    Option* clone() const { return new Option(*this); }
 };
 
 } /* namespace Argument */

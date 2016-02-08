@@ -45,8 +45,6 @@ public:
     bool               hasLongIdentifier() const { return hasLongId_; }
     const std::string& getLongIdentifier() const { return    longId_; }
 
-    virtual OptionBase* clone() const = 0;
-
 private:
     bool     hasShortId_;
     char        shortId_;

@@ -30,14 +30,12 @@ namespace SEMBA {
 namespace Argument {
 
 template <typename... T>
-class Position : public PositionBase,
-                 public Value<ValueSingle, T...> {
+class Position : public virtual PositionBase,
+                 public virtual Value<ValueSingle, T...> {
 public:
     Position(const std::string& name) : Argument(name) {}
     Position(const Position&    rhs)  : Argument(rhs ) {}
     virtual ~Position() {}
-
-    Position* clone() const { return new Position(*this); }
 };
 
 } /* namespace Argument */

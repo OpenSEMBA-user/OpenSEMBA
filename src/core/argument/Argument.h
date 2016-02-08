@@ -36,8 +36,6 @@ public:
     Argument(const Argument&);
     virtual ~Argument();
 
-    virtual Argument* clone() const = 0;
-
     const  std::string& getName()    const { return name_; }
     virtual std::string getArgName() const { return name_; }
 

@@ -66,9 +66,9 @@ Parser& Parser::allowAbbrev(const bool& allowAbbrev) {
     return *this;
 }
 
-Parser& Parser::formatter(const Formatter& form) {
+Parser& Parser::formatter(Formatter* form) {
     delete formatter_;
-    formatter_ = form.clone();
+    formatter_ = form;
     return *this;
 }
 
@@ -88,7 +88,7 @@ Parser& Parser::args(const std::vector<std::string>& argv) {
             }
         }
     }
-    for (int i = 1; i < argv.size(); i++) {
+    for (std::size_t i = 1; i < argv.size(); i++) {
         input_.push_back(argv[i]);
     }
     return *this;
@@ -153,7 +153,7 @@ std::pair<Object, std::vector<std::string>> Parser::parse_() {
     std::pair<Object, std::vector<std::string>> res;
     if (input_.empty()) {
         printUsage();
-        return res;
+        throw Error::Empty();
     }
     std::vector<std::list<std::string>> unresolvedOptions;
     std::vector<std::vector<std::pair<std::string,
@@ -231,8 +231,8 @@ std::pair<Object, std::vector<std::string>> Parser::parse_() {
                 arg.first  = it->substr(2);
                 arg.second.clear();
             }
-            std::vector<std::string> ambiguous =
-                getPossibleOptions(arg.first, allowAbbrev_);
+            std::vector<std::string> ambiguous = possibleOptions(arg.first,
+                                                                 allowAbbrev_);
             if (ambiguous.size() > 1) {
                 Error::Ambiguous err(arg.first, ambiguous);
                 printUsage();
@@ -304,7 +304,7 @@ std::pair<Object, std::vector<std::string>> Parser::parse_() {
             name = it->first;
             printUsage();
             std::cerr << prog_ << ": Argument "
-                      << getAllOption(name).getArgName() << ": " << e.what();
+                      << childOption(name).getArgName() << ": " << e.what();
             printErrorList_(rem);
             std::cerr << std::endl;
             throw;
@@ -334,7 +334,7 @@ std::pair<Object, std::vector<std::string>> Parser::parse_() {
     for (std::size_t i = 0; i < endPositions.size(); i++) {
         positions.back().push_back(endPositions[i]);
     }
-    for (std::size_t i = 0; i < numAllPositions(); i++) {
+    for (std::size_t i = 0; i < numChildPositions(); i++) {
         if (positions[0].empty()) {
             break;
         }
@@ -344,7 +344,7 @@ std::pair<Object, std::vector<std::string>> Parser::parse_() {
         } catch(const StringParser::Error::Error& e) {
             printUsage();
             std::cerr << prog_ << ": Argument "
-                        << getAllPosition(i).getArgName() << ": " << e.what();
+                        << childPosition(i).getArgName() << ": " << e.what();
             printErrorList_(rem);
             std::cerr << std::endl;
             throw;

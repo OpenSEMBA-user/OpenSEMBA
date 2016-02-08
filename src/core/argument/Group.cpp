@@ -29,7 +29,7 @@ Group::Group(GroupBase* group,
              const std::string& desc)
 :   GroupBase(group, name, desc) {
     numMutExc_ = 0;
-    lastPosParsed_ = positionsAll_.begin();
+    lastPosParsed_ = 0;
 }
 
 Group::~Group() {
@@ -52,6 +52,32 @@ std::size_t Group::numChilds() const {
 
 const GroupBase& Group::child(const std::size_t& i) const {
     return *child_[i];
+}
+
+std::size_t Group::numChildPositions() const {
+    return positions_.size();
+}
+
+const PositionBase& Group::childPosition(const std::size_t& i) const {
+    std::size_t numSameGroup = 0;
+    std::vector<GroupBase*>::const_iterator aux = positions_.begin() + i;
+    for (std::vector<GroupBase*>::const_iterator
+         it = positions_.begin(); it < aux; ++it) {
+        if (*it == *aux) {
+            numSameGroup++;
+        }
+    }
+    if (*aux == NULL) {
+        return position(numSameGroup);
+    }
+    return (*aux)->childPosition(numSameGroup);
+}
+
+const OptionBase& Group::childOption(const std::string& name) const {
+    if (options_.at(name) == NULL) {
+        return GroupBase::childOption(name);
+    }
+    return options_.at(name)->childOption(name);
 }
 
 Group& Group::addGroup(const std::string& name,
@@ -91,12 +117,13 @@ void Group::parsePreprocess(Object& out) {
 void Group::parsePosition(Object& out,
                           std::vector<std::list<std::string>>& output,
                           std::vector<std::list<std::string>>& input) {
-    if (*lastPosParsed_ != NULL) {
-        const std::string& name = (*lastPosParsed_)->getName();
-        if ((*lastPosParsed_)->isMutuallyExclusive()) {
-            (*lastPosParsed_)->parsePosition(out, output, input);
+    if (positions_.at(lastPosParsed_) != NULL) {
+        const std::string& name = positions_.at(lastPosParsed_)->getName();
+        if (positions_.at(lastPosParsed_)->isMutuallyExclusive()) {
+            positions_.at(lastPosParsed_)->parsePosition(out, output, input);
         } else {
-            (*lastPosParsed_)->parsePosition(out(name), output, input);
+            positions_.at(lastPosParsed_)->parsePosition(out(name),
+                                                         output, input);
         }
     } else {
         GroupBase::parsePosition(out, output, input);
@@ -108,8 +135,8 @@ void Group::parseOption(const std::string& name,
                         Object& out,
                         std::vector<std::list<std::string>>& output,
                         std::vector<std::list<std::string>>& input) {
-    if (optionsAll_.at(name) != NULL) {
-        GroupBase* child = optionsAll_.at(name);
+    if (options_.at(name) != NULL) {
+        GroupBase* child = options_.at(name);
         std::string childName = child->getName();
         if (child->isMutuallyExclusive()) {
             child->parseOption(name, out, output, input);
@@ -134,7 +161,7 @@ void Group::parsePostprocess(Object& out) {
 
 void Group::addPositionProcess(GroupBase* child, PositionBase* pos) {
     GroupBase::addPositionProcess(child, pos);
-    positionsAll_.push_back(child);
+    positions_.push_back(child);
 }
 
 void Group::addOptionProcess(GroupBase* child, OptionBase* opt) {
@@ -145,33 +172,7 @@ void Group::addOptionProcess(GroupBase* child, OptionBase* opt) {
         name = opt->getLongIdentifier();
     }
     GroupBase::addOptionProcess(child, opt);
-    optionsAll_[name] = child;
-}
-
-std::size_t Group::numAllPositions() const {
-    return positionsAll_.size();
-}
-
-const PositionBase& Group::getAllPosition(const std::size_t& i) const {
-    std::size_t numSameGroup = 0;
-    std::vector<GroupBase*>::const_iterator aux = positionsAll_.begin() + i;
-    for (std::vector<GroupBase*>::const_iterator
-         it = positionsAll_.begin(); it < aux; ++it) {
-        if (*it == *aux) {
-            numSameGroup++;
-        }
-    }
-    if (*aux == NULL) {
-        return position(numSameGroup);
-    }
-    return (*aux)->getAllPosition(numSameGroup);
-}
-
-const OptionBase& Group::getAllOption(const std::string& name) const {
-    if (optionsAll_.at(name) == NULL) {
-        return GroupBase::getAllOption(name);
-    }
-    return optionsAll_.at(name)->getAllOption(name);
+    options_[name] = child;
 }
 
 } /* namespace Argument */
