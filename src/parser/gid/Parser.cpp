@@ -105,7 +105,7 @@ Solver::Info* Parser::readSolver() {
         if (label.compare("Solver options") == 0) {
             optionsFound = true;
             Solver::Settings opts;
-            readSolverOptions(opts, "Solver options");
+            readSolverSettings(opts, "Solver options");
             res = new Solver::Info(value, std::move(opts));
             return res;
         } // Closes problem data found if.
@@ -117,22 +117,25 @@ Solver::Info* Parser::readSolver() {
     throw std::logic_error("No solver options were found.");
 }
 
-void Parser::readSolverOptions(Solver::Settings& opts,
-                               const std::string& sect) {
+void Parser::readSolverSettings(Solver::Settings& opts,
+                                const std::string& sect) {
     std::string endSect = std::string("End of ") + sect;
     std::string label, value;
     opts.setObject();
     while (!f_in.eof()) {
         getNextLabelAndValue(label, value);
-        if (label.find(endSect) != label.npos) {
+        if (trim(label).empty()) {
+            continue;
+        }
+        if (label.find(endSect) != std::string::npos) {
             return;
         } else if (trim(value).empty()) {
             Solver::Settings aux;
-            readSolverOptions(aux, label);
+            readSolverSettings(aux, label);
             opts.addMember(label, std::move(aux));
         } else {
             Solver::Settings aux;
-            aux.setString(label);
+            aux.setString(value);
             opts.addMember(label, std::move(aux));
         }
     }
@@ -772,7 +775,8 @@ Geometry::Layer::Group<> Parser::readLayers() {
                     std::stringstream ss(line);
                     ss >> id;;
                     std::string name;
-                    name = line.substr(line.find_first_of(" ") + 1, line.length());
+                    name = line.substr(line.find_first_of(" ") + 1,
+                                       line.length());
                     res.add(new Geometry::Layer::Layer(id, name));
                 }
             }

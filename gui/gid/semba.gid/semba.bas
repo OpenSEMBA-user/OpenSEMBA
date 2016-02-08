@@ -3,7 +3,7 @@ Format: Semba Data File
 Version: *tcl(set version $semba::VersionNumber)
 =======================================================================
 
-Solver options:
+Solver options: *GenData(Solver)
 *if(strcasecmp(GenData(Ending),"Final_time")==0)
 Final time: *GenData(Final_time)
 *else
@@ -15,11 +15,10 @@ Default sampling period: *GenData(Default_sampling_period)
 Force restarting: *GenData(Force_restarting)
 Resume simulation: *GenData(Resume_simulation)
 Flush: *GenData(Flush)
+*if(strcmp(*GenData(Additional_arguments),"")!=0)
 Additional arguments: *GenData(Additional_arguments)
-Solver: *GenData(Solver)
+*endif
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
-------- UGRFDTD -------
-ugrfdtd options: 
 Composites model: *GenData(Composites_model)
 Conformal skin: *GenData(Conformal_skin)
 No compo Mur: *GenData(No_compo_mur)
@@ -47,24 +46,7 @@ PML backing: *GenData(PML_backing)
 Map: *GenData(Map)
 Map VTK: *GenData(Map_VTK)
 NF2FF decimation: *GenData(NF2FF_decimation)
-End of ugrfdtd options:
-*elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
-------- CUDG3D -------
-cudg3d options:
-Time integrator: *GenData(Time_integrator)
-Use LTS: *GenData(Use_LTS)
 
-Upwinding: *GenData(Upwinding)
-End of cudg3d options:
-*elseif(strcasecmp(GenData(Solver),"none")==0)
-ugrfdtd options:
-End of ugrfdtd options:
-*else
-*WarningBox Unrecognized solver
-*endif
-End of solver options
-
-------- MESHER -------
 Mesher options:
 Geometry scaling factor: *GenData(scaling_factor)
 Upper x bound: *GenData(Upper_x_bound)
@@ -84,7 +66,28 @@ Mode: *GenData(Mode)
 Forbidden length: *GenData(Forbidden_length)
 Scale factor: *GenData(Scale_factor)
 Scale factor value: *GenData(Scale_factor_value)
-End of mesher options
+Grid:
+*set elems(all)
+*set Cond Grid
+*if(CondNumEntities(int)>0)
+*loop layers *OnlyInCond
+ Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
+ Type: *cond(Type)
+ Directions: *cond(x_direction) *cond(y_direction) *cond(z_direction)
+*end layers
+*endif
+End of Grid
+End of Mesher options
+*elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
+cudg3d options:
+Time integrator: *GenData(Time_integrator)
+Use LTS: *GenData(Use_LTS)
+
+Upwinding: *GenData(Upwinding)
+*else
+*WarningBox Unrecognized solver
+*endif
+End of Solver options
 
 Problem size:
 *set elems(Hexahedra)
@@ -213,18 +216,6 @@ Line Elements:
 *End elems
 End of Line Elements
 End of Elements
-
-Grid:
-*set elems(all)
-*set Cond Grid
-*if(CondNumEntities(int)>0)
-*loop layers *OnlyInCond
- Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
- Type: *cond(Type)
- Directions: *cond(x_direction) *cond(y_direction) *cond(z_direction)
-*end layers
-*endif
-End of Grid
 
 Excitations:
 *set elems(all)

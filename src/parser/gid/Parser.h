@@ -86,7 +86,7 @@ private:
     ProblemSize pSize_;
 
     Solver::Info* readSolver();
-    void readSolverOptions(Solver::Settings&, const std::string&);
+    void readSolverSettings(Solver::Settings&, const std::string&);
     //OptionsSolverFDTD* readOptionsSolverFDTD(const OptionsSolver& base);
     //OptionsSolverDGTD* readOptionsSolverDGTD(const OptionsSolver& base);
     //OptionsMesher* readMesherOptions();
