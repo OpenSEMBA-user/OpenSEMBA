@@ -70,3 +70,6 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 add_sources(. SRCS)
 add_library(opensemba_core_filesystem STATIC ${SRCS})
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    TARGET_LINK_LIBRARIES(opensemba_core_filesystem shlwapi)
+endif()
