@@ -52,9 +52,10 @@ bool Parser::strToBool(const std::string& value) {
 }
 
 void Parser::postReadOperations(Data* res) {
-    if (res->mesh != NULL) {
-        res->mesh->applyScalingFactor(scalingFactor_);
-    }
+    //TODO
+    //if (res->mesh != NULL) {
+    //    res->mesh->applyScalingFactor(scalingFactor_);
+    //}
 }
 
 } /* namespace Parser */
