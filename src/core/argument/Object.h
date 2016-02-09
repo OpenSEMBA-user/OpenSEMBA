@@ -310,13 +310,14 @@ public:
     template<typename... T>
     Object&                      set(const T&...);
 
-    void printInfo(const std::size_t& depth = 0) const {
+    void printInfo(const bool& asString = false,
+                   const std::size_t& depth = 0) const {
         switch (getType()) {
         case Object::Type::Null:
             std::cout << "null";
             break;
         case Object::Type::String:
-            if (isNumber()) {
+            if (isNumber() && !asString) {
                 if (isInt()) {
                     std::cout.precision(
                         std::numeric_limits<long long>::max_digits10);
@@ -341,7 +342,7 @@ public:
             std::cout << "[" << std::endl;
             for (std::size_t i = 0; i < size(); i++) {
                 std::cout << std::string(depth+2, ' ');
-                (*this)(i).printInfo(depth+2);
+                (*this)(i).printInfo(asString, depth+2);
                 if (i+1 < size()) {
                     std::cout << ",";
                 }
@@ -354,7 +355,7 @@ public:
             for (std::size_t i = 0; i < size(); i++) {
                 std::cout << std::string(depth+2, ' ');
                 std::cout << "\"" << getName(i) << "\" : ";
-                (*this)(i).printInfo(depth+2);
+                (*this)(i).printInfo(asString, depth+2);
                 if (i+1 < size()) {
                     std::cout << ",";
                 }
