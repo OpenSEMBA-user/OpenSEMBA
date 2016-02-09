@@ -30,6 +30,8 @@
 #include "class/Shareable.h"
 #include "class/Printable.h"
 
+#include "geometry/element/Element.h"
+
 namespace SEMBA {
 namespace Geometry {
 namespace Mesh {
@@ -44,6 +46,9 @@ public:
 
     virtual void applyScalingFactor(const Math::Real factor) = 0;
     virtual BoxR3 getBoundingBox() const = 0;
+    virtual void reassignPointers(
+            const SEMBA::Group::Identifiable<Element::Model, MatId>& =
+                SEMBA::Group::Identifiable<Element::Model, MatId>()) = 0;
 };
 
 } /* namespace Mesh */

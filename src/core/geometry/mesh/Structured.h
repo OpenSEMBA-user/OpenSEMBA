@@ -77,25 +77,15 @@ public:
     Unstructured* getMeshUnstructured() const;
     Structured* getConnectivityMesh() const;
 
-    template<template<typename> class E>
-    Element::Group< E<Math::Int> > add(
-            const Element::Group<E<Math::Real> >&,
-            const Math::Real tol = Grid3::tolerance);
-    template<template<typename> class E>
-    Element::Group< E<Math::Int> > add(
-            const Element::Group<const E<Math::Real> >&,
-            const Math::Real tol = Grid3::tolerance);
-    template<template<typename> class E>
-    Element::Group< E<Math::Int> > add(
-            E<Math::Real>*,
-            const Math::Real tol = Grid3::tolerance);
-
     void convertToHex(Element::Group<const SurfI> surfs);
     void addAsHex(Element::Group<const VolR> vols);
 
     Math::Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
+    void reassignPointers(
+        const SEMBA::Group::Identifiable<Element::Model, MatId>& =
+            SEMBA::Group::Identifiable<Element::Model, MatId>());
 
     virtual void printInfo() const;
 private:

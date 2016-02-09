@@ -316,7 +316,7 @@ void Group<E>::reassignPointers(
         const SEMBA::Group::Identifiable<Model,MatId>& mNew) {
     for (std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->getModel() != NULL) {
-            this->get(i)->setModel(mNew.getId(this->get(i)->getModelId()));
+            this->get(i)->setModel(mNew.getId(this->get(i)->getMatId()));
         }
     }
 }

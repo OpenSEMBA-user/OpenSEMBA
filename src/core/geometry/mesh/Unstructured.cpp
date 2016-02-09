@@ -220,6 +220,15 @@ void Unstructured::applyScalingFactor(const Math::Real factor) {
     Coordinate::Group<CoordR3>::applyScalingFactor(factor);
 }
 
+void Unstructured::reassignPointers(
+    const SEMBA::Group::Identifiable<Element::Model, MatId>& matGr) {
+        Element::Group<ElemR>::reassignPointers(this->coords());
+        Element::Group<ElemR>::reassignPointers(this->layers());
+    if (!matGr.empty()) {
+        Element::Group<ElemR>::reassignPointers(matGr);
+    }
+}
+
 void Unstructured::printInfo() const {
     std::cout << " --- Mesh unstructured Info --- " << std::endl;
     std::cout << "Number of coordinates: "

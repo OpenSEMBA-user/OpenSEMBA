@@ -89,6 +89,10 @@ public:
     void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
 
+    void reassignPointers(
+        const SEMBA::Group::Identifiable<Element::Model, MatId>& =
+            SEMBA::Group::Identifiable<Element::Model, MatId>());
+
     void printInfo() const;
 };
 

@@ -143,6 +143,15 @@ Structured* Structured::getConnectivityMesh() const {
     return res;
 }
 
+void Structured::reassignPointers(
+    const SEMBA::Group::Identifiable<Element::Model, MatId>& matGr) {
+    Element::Group<ElemI>::reassignPointers(this->coords());
+    Element::Group<ElemI>::reassignPointers(this->layers());
+    if (!matGr.empty()) {
+        Element::Group<ElemI>::reassignPointers(matGr);
+    }
+}
+
 void Structured::printInfo() const {
     std::cout << " --- Mesh structured info --- " << std::endl;
     Grid3::printInfo();
