@@ -113,7 +113,9 @@ std::string Project::getFolder() const {
 #ifdef _WIN32
     PathRemoveFileSpec(cstr);
     std::string folder(cstr);
-    folder += "\\";
+    if (!folder.empty()) {
+        folder += "\\";
+    }
 #else
     std::string folder(dirname(cstr));
     folder += "/";

@@ -28,7 +28,11 @@ namespace Mesh {
 
 Structured::Structured(const Grid3& grid)
 :   Grid3(grid) {
-
+    for (std::size_t d = 0; d < 3; d++) {
+        for (std::size_t p = 0; p < 2; p++) {
+            bounds_[d][p] = NULL;
+        }
+    }
 }
 
 Structured::Structured(

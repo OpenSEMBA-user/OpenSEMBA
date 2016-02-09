@@ -167,10 +167,10 @@ void Exporter::writeMesh_(const Data* smb) {
                 Geometry::CoordR3Group cG;
                 const Group::Group<Geometry::ElemR>& bound =
                         getBoundary(Math::Constants::CartesianAxis(i),
-                        		Math::Constants::CartesianBound(j), cG, grid,
-								mesh->castTo<Geometry::Mesh::Structured>());
+                        		    Math::Constants::CartesianBound(j),
+                                    cG, grid, mesh);
                 std::string name = getBoundaryName(
-                		mesh->castTo<Geometry::Mesh::Structured>(), i, j);
+                		inMesh->castTo<Geometry::Mesh::Structured>(), i, j);
                 writeAllElements_(bound, name);
             }
         }

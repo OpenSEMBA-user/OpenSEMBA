@@ -123,8 +123,13 @@ std::string Exporter::getBoundaryName(
         const std::size_t i,
         const std::size_t j) {
     const Geometry::Element::Model* boundType = mesh->bounds()[i][j];
-    const std::string boundName =
-        boundType->castTo<PhysicalModel::PhysicalModel>()->getName();
+    std::string boundName;
+    if (boundType == NULL) {
+        boundName = "None";
+    } else {
+        boundName =
+            boundType->castTo<PhysicalModel::PhysicalModel>()->getName();
+    }
     std::stringstream name;
     name << boundName + "@Boundary" << i << j;
     return name.str();
