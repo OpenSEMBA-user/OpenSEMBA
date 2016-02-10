@@ -34,7 +34,7 @@ inline LinearInterpolation<S, T>::LinearInterpolation() {
 template<class S, class T>
 inline LinearInterpolation<S, T>::LinearInterpolation(
         const std::vector<std::pair<S, T> >& xy) {
-    for (UInt i = 0; i < xy.size(); i++) {
+    for (std::size_t i = 0; i < xy.size(); i++) {
         value_.insert(xy[i]);
     }
 }

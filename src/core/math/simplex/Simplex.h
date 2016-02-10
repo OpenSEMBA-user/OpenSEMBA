@@ -48,31 +48,35 @@ class Simplex {
 public:
     Simplex();
     virtual ~Simplex();
-    virtual Real getCda(UInt i, UInt j, UInt k) const;
-    virtual const Function::Polynomial<Real>& getLagr(const UInt i) const;
-    virtual const Function::Polynomial<Real>& getDLagr(const UInt i,
-                                                       const UInt f) const;
-    virtual UInt nodeIndex(const UInt i, const UInt j) const;
-    virtual UInt cubatureNodeIndex(const UInt i, const UInt j) const;
-    virtual const CVecR4 cubatureCoordinate(const UInt c) const {
+    virtual Real getCda(std::size_t i, std::size_t j, std::size_t k) const;
+    virtual const Function::Polynomial<Real>& getLagr(
+        const std::size_t i) const;
+    virtual const Function::Polynomial<Real>& getDLagr(
+        const std::size_t i,
+        const std::size_t f) const;
+    virtual std::size_t nodeIndex(const std::size_t i, 
+                                  const std::size_t j) const;
+    virtual std::size_t cubatureNodeIndex(const std::size_t i,
+                                          const std::size_t j) const;
+    virtual const CVecR4 cubatureCoordinate(const std::size_t c) const {
         throw std::logic_error("Simplex::cubatureCoordinate not implemented");
     }
 protected:
-    static const UInt cubatureOrder = SIMPLEX_CUBATURE_ORDER;
-    Function::Polynomial<Real> silvesterPol(const UInt m,
-                                            const UInt n) const;
+    static const std::size_t cubatureOrder = SIMPLEX_CUBATURE_ORDER;
+    Function::Polynomial<Real> silvesterPol(const std::size_t m,
+                                            const std::size_t n) const;
     void lagrangePolynomials(Function::Polynomial<Real>* lagr,
-                             const UInt n,
-                             const UInt np,
-                             const UInt nsc) const;
+                             const std::size_t n,
+                             const std::size_t np,
+                             const std::size_t nsc) const;
     void cubatureLagrangePolynomials(Function::Polynomial<Real>* lagr,
-                                     const UInt n,
-                                     const UInt np,
-                                     const UInt nsc) const;
+                                     const std::size_t n,
+                                     const std::size_t np,
+                                     const std::size_t nsc) const;
     Real integrate(const Function::Polynomial<Real> pol,
-                   const UInt dimension,
+                   const std::size_t dimension,
                    const Real sizeFactor) const;
-    UInt factorial(UInt n) const;
+    std::size_t factorial(std::size_t n) const;
 };
 
 } /* namespace Simplex */

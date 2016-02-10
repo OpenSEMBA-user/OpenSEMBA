@@ -28,17 +28,17 @@ namespace Simplex {
 // =============== Triangle methods =========================================
 template <Int SIMPTRI_N>
 Triangle<SIMPTRI_N>::Triangle() {
-    for (UInt s = 0; s < nsc; s++) {
+    for (std::size_t s = 0; s < nsc; s++) {
         P[s] = PMatrix(n,s);
     }
     buildNodeIndices(nId, n, np);
-    for (UInt s = 0; s < nsc; s++) {
+    for (std::size_t s = 0; s < nsc; s++) {
         R[s] = RMatrix(s);
     }
     buildSideNodeIndices();
     lagrangePolynomials(lagr,n,np,nsc);
-    for (UInt i = 0; i < np; i++) {
-        for (UInt s = 0; s < nsc; s++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t s = 0; s < nsc; s++) {
             dLagr[i][s] = lagr[i];
             dLagr[i][s].derive(s);
         }
@@ -52,13 +52,13 @@ template <Int SIMPTRI_N>
 void Triangle<SIMPTRI_N>::buildCubaturePositionsAndWeights() {
     buildNodeIndices(cId,nc,ncp);
     Vector::Cartesian<Real,nsc> aux;
-    for (UInt i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         aux = cId[i];
         cPos[i] = aux / (Real) nc;
     }
     Function::Polynomial<Real> cubLagr[ncp];
     cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
-    for (UInt i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
     }
 }
@@ -67,7 +67,7 @@ template <Int SIMPTRI_N>
 Matrix::Static<Real, SIMPTRI_NP, SIMPTRI_NP>
         Triangle<SIMPTRI_N>::getMassMatrix() const {
     Matrix::Static<Real,np,np> res;
-    for (UInt c = 0; c < ncp; c++) {
+    for (std::size_t c = 0; c < ncp; c++) {
         res += cwaa[c];
     }
     return res;
@@ -75,16 +75,16 @@ Matrix::Static<Real, SIMPTRI_NP, SIMPTRI_NP>
 
 template<Int SIMPTRI_N>
 void Triangle<SIMPTRI_N>::buildCubatureLagrange() {
-    UInt i, j, k, c;
+    std::size_t i, j, k, c;
     // Evaluates Lagrange and Lagrange derived polynomials in cubature points.
-    for (UInt i = 0; i < np; i++) {
-        for (UInt c = 0; c < ncp; c++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t c = 0; c < ncp; c++) {
             ca[i][c] = lagr[i].eval(cPos[c]);
         }
     }
-    for (UInt i = 0; i < np; i++) {
-        for (UInt j = 0; j < faces; j++) {
-            for (UInt c = 0; c < ncp; c++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t j = 0; j < faces; j++) {
+            for (std::size_t c = 0; c < ncp; c++) {
                 cda[i][j][c] = dLagr[i][j].eval(cPos[c]);
             }
         }
@@ -103,46 +103,51 @@ void Triangle<SIMPTRI_N>::buildCubatureLagrange() {
 }
 
 template <Int SIMPTRI_N>
-inline UInt Triangle<SIMPTRI_N>::nodeIndex(const UInt i, const UInt j) const {
+inline std::size_t Triangle<SIMPTRI_N>::nodeIndex(const std::size_t i,
+                                                  const std::size_t j) const {
     return nId[i](j);
 }
 
 template <Int SIMPTRI_N>
-inline UInt Triangle<SIMPTRI_N>::cubatureNodeIndex(UInt i, UInt j) const {
+inline std::size_t Triangle<SIMPTRI_N>::cubatureNodeIndex(
+        std::size_t i,
+        std::size_t j) const {
     return cId[i](j);
 }
 
 template <Int SIMPTRI_N>
 const Function::Polynomial<Real>& Triangle<SIMPTRI_N>::getLagr(
-        const UInt i) const {
+        const std::size_t i) const {
     return lagr[i];
 }
 
 template <Int SIMPTRI_N>
 const Function::Polynomial<Real>& Triangle<SIMPTRI_N>::getDLagr(
-        const UInt i,
-        const UInt f) const {
+        const std::size_t i,
+        const std::size_t f) const {
     return dLagr[i][f];
 }
 
 template<Int SIMPTRI_N>
-inline UInt Triangle<SIMPTRI_N>::vertex(UInt i) const {
+inline std::size_t Triangle<SIMPTRI_N>::vertex(std::size_t i) const {
     return sideNode(i,0);
 }
 
 template<Int SIMPTRI_N>
-inline UInt Triangle<SIMPTRI_N>::sideVertex(const UInt f, const UInt i) const {
+inline std::size_t Triangle<SIMPTRI_N>::sideVertex(const std::size_t f,
+                                                   const std::size_t i) const {
     return sideNode(f,i);
 }
 
 template <Int SIMPTRI_N>
-inline UInt Triangle<SIMPTRI_N>::sideNode(
-const UInt face, const UInt num) const {
+inline std::size_t Triangle<SIMPTRI_N>::sideNode(
+const std::size_t face, const std::size_t num) const {
     return sNId(face, num);
 }
 
 template <Int SIMPTRI_N>
-Vector::Cartesian<Real,3> Triangle<SIMPTRI_N>::coordinate(const UInt i) const {
+Vector::Cartesian<Real,3> Triangle<SIMPTRI_N>::coordinate(
+        const std::size_t i) const {
     Vector::Cartesian<Real,3> res;
     res = nId[i];
     res /= (Real) n;
@@ -150,9 +155,9 @@ Vector::Cartesian<Real,3> Triangle<SIMPTRI_N>::coordinate(const UInt i) const {
 }
 
 template <Int SIMPTRI_N>
-UInt Triangle<SIMPTRI_N>::numberOfNodes(const UInt order) const {
+std::size_t Triangle<SIMPTRI_N>::numberOfNodes(const std::size_t order) const {
     Int res = 1;
-    for (UInt i = 1; i < nsc; i++)
+    for (std::size_t i = 1; i < nsc; i++)
         res *= (order + i);
     res /= factorial(nsc-1);
     return res;
@@ -163,37 +168,38 @@ void Triangle<SIMPTRI_N>::buildSideNodeIndices() {
     Matrix::Static<Int,np,1> nList;
     Matrix::Static<Int,nfp,1> aux;
     // Initializes node list.
-    for (UInt i = 0; i < np; i++)
+    for (std::size_t i = 0; i < np; i++)
         nList(i,0) = i;
     // Creates aux matrix to store the computed sNId.
-    for (UInt f = 0; f < faces; f++) {
+    for (std::size_t f = 0; f < faces; f++) {
         aux = R[f] * nList;
-        for (UInt i = 0; i < nfp; i++)
+        for (std::size_t i = 0; i < nfp; i++)
             sNId(f,i) = aux(i,0);
     }
 }
 
 template <Int SIMPTRI_N>
-Matrix::Dynamic<Int> Triangle<SIMPTRI_N>::PMatrix(UInt order, UInt s) const {
+Matrix::Dynamic<Int> Triangle<SIMPTRI_N>::PMatrix(std::size_t order,
+                                                  std::size_t s) const {
     // Creates indices rotation matrix for a simplex triangle element.
     // Rotation is clockwise.
-    UInt np = numberOfNodes(order);
-    UInt nfp = order + 1;
+    std::size_t np = numberOfNodes(order);
+    std::size_t nfp = order + 1;
     Matrix::Dynamic<Int> res(np,np);
     Matrix::Dynamic<Int> original(nfp,nfp), rotated(nfp,nfp);
     // Creates original numeration matrix.
-    UInt originalNum = 1;
-    for (UInt i = 0; i < nfp; i++)
-        for (UInt j = 0; j <= i; j++) {
+    std::size_t originalNum = 1;
+    for (std::size_t i = 0; i < nfp; i++)
+        for (std::size_t j = 0; j <= i; j++) {
             original(i,j) = originalNum;
             originalNum++;
         }
     // Creates rotated numeration matrix.
-    UInt rotatedNum = 1;
+    std::size_t rotatedNum = 1;
     if (s == 0) {
         res.eye();
     } else if (s == 1 || s == 2) {
-        for (UInt i = 0; i <= nfp; i++) {
+        for (std::size_t i = 0; i <= nfp; i++) {
             Int j = Int(nfp - 1);
             while (j >= Int(nfp - i)) {
                 rotated(j,j-nfp+i) = rotatedNum;
@@ -202,8 +208,8 @@ Matrix::Dynamic<Int> Triangle<SIMPTRI_N>::PMatrix(UInt order, UInt s) const {
             }
         }
         // Assigns values to P matrix.
-        for (UInt i = 0; i < nfp; i++) {
-            for (UInt j = 0; j <= i; j++) {
+        for (std::size_t i = 0; i < nfp; i++) {
+            for (std::size_t j = 0; j <= i; j++) {
                 res(rotated(i,j)-1,original(i,j)-1) = 1;
             }
         }
@@ -215,17 +221,17 @@ Matrix::Dynamic<Int> Triangle<SIMPTRI_N>::PMatrix(UInt order, UInt s) const {
 
 template <Int SIMPTRI_N>
 Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
-        const UInt s) const {
+        const std::size_t s) const {
     // Creates node indices vector with node indices on face 1.
     Matrix::Static<Int,nfp,1> nodeVec;
-    UInt last = 0;
-    for (UInt i = 0; i < n + 1; i++) {
+    std::size_t last = 0;
+    for (std::size_t i = 0; i < n + 1; i++) {
         last += i;
         nodeVec(i,0) = last;
     }
     // Creates extraction matrix R for face 1.
     Matrix::Static<Int,nfp,np> Raux;
-    for (UInt i = 0; i < nfp; i++)
+    for (std::size_t i = 0; i < nfp; i++)
         Raux(i,nodeVec(i,0)) = 1;
     // Returns final form of R.
     Matrix::Static<Int,nfp,np> res = Raux * P[s] * P[s];
@@ -238,7 +244,7 @@ Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
 //    vector<Matrix::Static<Real,np,np> > cwaa;
 //    cwaa = cubatureLagrangeProducts();
 //    Matrix::Static<Real,np,np> res;
-//    for (UInt c = 0; c < cwaa.size(); c++) {
+//    for (std::size_t c = 0; c < cwaa.size(); c++) {
 //        res += cwaa[c];
 //    }
 //    return res;
@@ -252,7 +258,7 @@ Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
 //    //   points.
 //    TriangleRule triRule(3);
 //    vector<Evaluation> ca(np, Evaluation(triRule.ncp));
-//    for (UInt i = 0; i < np; i++)
+//    for (std::size_t i = 0; i < np; i++)
 //        ca[i] = triRule.eval(lagr[i]);
 //    return ca;
 //}
@@ -262,7 +268,7 @@ Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
 //Triangle<SIMPTRI_N>::cubatureLagrangeProducts() const {
 //    // PURPOSE:
 //    // - Gets cubatured alpha and derived alpha for simplex element
-//    UInt i, j, c;
+//    std::size_t i, j, c;
 //    TriangleRule triRule(3);
 //    Matrix::Static<Real, np, np> zero;
 //    vector<Matrix::Static<Real, np, np> > res(triRule.ncp,  zero);
@@ -279,25 +285,25 @@ Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
 //template <Int SIMPTRI_N> inline
 //void
 //Triangle<SIMPTRI_N>::computeWeights() {
-//    for (UInt i = 0; i < np; i++)
+//    for (std::size_t i = 0; i < np; i++)
 //        weight[i] = lagr[i].integrateInSimplexSpace();
 //}
 
 template <Int SIMPTRI_N>
 void Triangle<SIMPTRI_N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                                           const UInt order,
-                                           const UInt nNodes) const {
+                                           const std::size_t order,
+                                           const std::size_t nNodes) const {
     // Computes first coordinate indices vector.
     Matrix::Dynamic<Int> ini(nNodes,nsc);
-    for (UInt i = 0; i <= order; i++)
-        for (UInt j = numberOfNodes(UInt(i-1)); j < nNodes; j++)
+    for (std::size_t i = 0; i <= order; i++)
+        for (std::size_t j = numberOfNodes(std::size_t(i-1)); j < nNodes; j++)
             ini(j,0) = order - i;
     // Computes ordered nodal simplex coordinates.
     Matrix::Dynamic<Int> ord(nNodes,nsc);
-    for (UInt i = 0; i < nsc; i++) {
+    for (std::size_t i = 0; i < nsc; i++) {
         ord = PMatrix(order,i) * ini;
         // Stores in nId matrix.
-        for (UInt j = 0; j < nNodes; j++) {
+        for (std::size_t j = 0; j < nNodes; j++) {
             res[j](i) = ord(j,0);
         }
     }
@@ -311,33 +317,33 @@ void Triangle<SIMPTRI_N>::printInfo() const {
     std::cout << " Number of face nodes:          " << nfp << std::endl;
     std::cout << " Number of coordinates:         " << nsc << std::endl;
     std::cout << " Rotation matrices:             "        << std::endl;
-    for (UInt i = 0; i < nsc; i++) {
+    for (std::size_t i = 0; i < nsc; i++) {
         std::cout << "Rotation around simplex coordinate #" << i << std::endl;
         P[i].printInfo();
     }
     std::cout << " List of node indices:          "        << std::endl;
-    for (UInt i = 0; i < np; i++) {
+    for (std::size_t i = 0; i < np; i++) {
         nId[i].printInfo();
         std::cout << std::endl;
     }
     std::cout << " Extraction matrices:           "        << std::endl;
-    for (UInt i = 0; i < faces; i++) {
+    for (std::size_t i = 0; i < faces; i++) {
         std::cout << "Extraction matrices for face #" << i << std::endl;
         R[i].printInfo();
     }
     std::cout << " List of side nodes indices:    "        << std::endl;
     sNId.printInfo();
     std::cout << " Lagrange polynomials:          "        << std::endl;
-    for (UInt i = 0; i < np; i++) {
+    for (std::size_t i = 0; i < np; i++) {
         std::cout << "Lagrange polynomial of node #" <<  i << std::endl;
         lagr[i].printInfo();
     }
     std::cout << " Vertices:" << std::endl;
-    for (UInt i = 0; i < vertices; i++)
+    for (std::size_t i = 0; i < vertices; i++)
         std::cout << "Vertex #" << i << ": " << vertex(i) << std::endl;
     //    std::cout << " Weights:                       "       << std::endl;
     //    Real totalWeight = 0.0;
-    //    for (UInt i = 0; i < np; i++) {
+    //    for (std::size_t i = 0; i < np; i++) {
     //        std::cout << weight[i] << std::endl;
     //        totalWeight += weight[i];
     //    }
@@ -345,7 +351,7 @@ void Triangle<SIMPTRI_N>::printInfo() const {
     std::cout << " Order of cubature: " << nc << std::endl;
     std::cout << " Number of cub. points: " << ncp << std::endl;
     std::cout << " Cubature positions and weights: " << std::endl;
-    for (UInt i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         std::cout << "#" << i << " ";
         cPos[i].printInfo();
         std::cout << " " << cw[i] << std::endl;

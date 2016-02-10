@@ -431,7 +431,7 @@ void Matrix<T>::eye() {
 }
 
 template <class T>
-std::vector<T> Matrix<T>::cpRowToVector(const UInt row) const {
+std::vector<T> Matrix<T>::cpRowToVector(const std::size_t row) const {
     std::vector<T> res(nCols());
     for (std::size_t i = 0; i < nCols(); i++) {
         res[i] = val(row,i);

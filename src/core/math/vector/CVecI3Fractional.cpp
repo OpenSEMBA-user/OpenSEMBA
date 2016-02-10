@@ -48,7 +48,7 @@ bool CVecI3Fractional::operator ==(const CVecI3Fractional& rhs) const {
 
 
 CartesianDirection CVecI3Fractional::getDirBase() const {
-    UInt rang = this->getRangeBase();
+    std::size_t rang = this->getRangeBase();
     if (rang == 1) {
         for (unsigned int n = 0; n < 3; ++n) {
             if (len_[n] > Util::tolerance) {
@@ -65,10 +65,9 @@ CartesianDirection CVecI3Fractional::getDirBase() const {
     return dirNode;
 }
 
-UInt CVecI3Fractional::getRangeBase() const {
-    unsigned int rang;
-    rang = 0;
-    for (unsigned int n = 0; n < 3; ++n) {
+std::size_t CVecI3Fractional::getRangeBase() const {
+    std::size_t rang = 0;
+    for (std::size_t n = 0; n < 3; ++n) {
         if (len_[n] > Util::tolerance) {
             ++rang;
         }
@@ -104,7 +103,7 @@ CVecR3 CVecI3Fractional::meanRelativePoint(const CVecI3Fractional& rhs) const {
 
 CVecR3 CVecI3Fractional::getRelativePosNearestNode() const {
     CVecR3 nearestPos;
-    for(UInt dir=0; dir<3; ++dir){
+    for (std::size_t dir = 0; dir<3; ++dir) {
         nearestPos(dir) = 0.0;
         if(len_(dir)>0.5){
             nearestPos(dir) = 1.0;
@@ -114,7 +113,7 @@ CVecR3 CVecI3Fractional::getRelativePosNearestNode() const {
 }
 
 void CVecI3Fractional::join(CVecI3Fractional& rhs) {
-    for(UInt dir=0; dir<3; ++dir){
+    for (std::size_t dir = 0; dir<3; ++dir) {
         if(Util::equal(len_(dir),0.0)){
             rhs.len_(dir) = 0.0;
         }else if(Util::equal(rhs.len_(dir),0.0)){
@@ -130,7 +129,7 @@ CVecI3Fractional& CVecI3Fractional::reduceTopology() {
     CVecR3 dst =  (posNode - len_).abs();
     Real dstMin = 1e20;
     Int minDir = -1;
-    for(UInt dir=0; dir<3; ++dir){
+    for (std::size_t dir = 0; dir<3; ++dir) {
         if(len_(dir)!=0.0){
             if(dstMin>dst[dir]){
                 dstMin = dst(dir);
@@ -145,9 +144,9 @@ CVecI3Fractional& CVecI3Fractional::reduceTopology() {
     return *this;
 }
 
-CVecI3Fractional& CVecI3Fractional::reduceTopology(const UInt range){
-    UInt rangeLoc = getRangeBase();
-    UInt n = 0;
+CVecI3Fractional& CVecI3Fractional::reduceTopology(const std::size_t range) {
+    std::size_t rangeLoc = getRangeBase();
+    std::size_t n = 0;
     while(rangeLoc>range && rangeLoc>0 && n <3){
         reduceTopology();
         rangeLoc = getRangeBase();
@@ -157,7 +156,7 @@ CVecI3Fractional& CVecI3Fractional::reduceTopology(const UInt range){
 }
 
 CVecI3Fractional& CVecI3Fractional::reduceCoords() {
-    for(UInt dir=0; dir<3; ++dir){
+    for (std::size_t dir = 0; dir<3; ++dir) {
         if(len_(dir)>=(1.0-Util::tolerance)){
             len_(dir)= 0.0;
             (*this)(dir)++;
@@ -178,7 +177,7 @@ CVecI3Fractional& CVecI3Fractional::move(
         bool& canBeMoved) const {
     canBeMoved = true;
     CVecR3 len;
-    for (UInt dir = 0; dir < 3; ++dir) {
+    for (std::size_t dir = 0; dir < 3; ++dir) {
         if (Util::equal(len_(dir), 0.0)) {
             len(dir) = 0.0;
         } else {

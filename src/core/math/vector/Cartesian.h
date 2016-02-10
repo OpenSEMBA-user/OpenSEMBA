@@ -86,7 +86,7 @@ public:
     virtual T& operator[] (std::size_t pos);
     virtual T  operator[] (std::size_t pos) const;
 
-    Cartesian<T,D>& setAsBinary(const UInt number);
+    Cartesian<T,D>& setAsBinary(UInt number);
     Cartesian<T,D>& setWithMinimalComponents(const Cartesian<T,D>& rhs);
 
     virtual Real norm() const;

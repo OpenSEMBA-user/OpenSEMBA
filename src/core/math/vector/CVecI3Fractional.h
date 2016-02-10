@@ -52,7 +52,7 @@ public:
     CVecR3 getRelativePosNearestNode () const;
     CVecI3Fractional& reduceCoords();
     CVecI3Fractional& reduceTopology();
-    CVecI3Fractional& reduceTopology(const UInt range);
+    CVecI3Fractional& reduceTopology(const std::size_t range);
 
     void join(CVecI3Fractional& rhs);
     CVecI3Fractional& move(CVecI3Fractional& rhs,
@@ -60,7 +60,7 @@ public:
                            bool& canBeMoved) const;
 
     CartesianDirection getDirBase   () const;
-    UInt getRangeBase () const;
+    std::size_t getRangeBase() const;
 
     std::string toStr() const;
 

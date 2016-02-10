@@ -32,27 +32,28 @@ namespace Simplex {
 
 template <Int SIMPLIN_N>
 class Line : public Simplex {
-    #define SIMPLIN_NP (SIMPLIN_N+1)
+    #define SIMPLIN_NP (SIMPLIN_N + 1)
     #define SIMPLIN_NFP (1)
     #define SIMPLIN_FACES (2)
 public:
-    static const UInt faces = 2;
-    static const UInt nsc = 2;
-    static const UInt n = SIMPLIN_N;
-    static const UInt np = SIMPLIN_NP;
-    static const UInt nfp = SIMPLIN_NFP;
-    static const UInt nc = SIMPLEX_CUBATURE_ORDER;
-    static const UInt ncp = SIMPLEX_CUBATURE_ORDER + 1;
+    static const std::size_t faces = 2;
+    static const std::size_t nsc = 2;
+    static const std::size_t n = SIMPLIN_N;
+    static const std::size_t np = SIMPLIN_NP;
+    static const std::size_t nfp = SIMPLIN_NFP;
+    static const std::size_t nc = SIMPLEX_CUBATURE_ORDER;
+    static const std::size_t ncp = SIMPLEX_CUBATURE_ORDER + 1;
     // ------- Methods ------------------------------------------------
     Line();
-    UInt vertex(const UInt) const;
-    UInt sideVertex(const UInt f, const UInt i) const;
-    UInt nodeIndex(const UInt i, const UInt j) const;
-    UInt cubatureNodeIndex(const UInt i, const UInt j) const;
-    UInt sideNode(const UInt f, const UInt i) const;
-    const Function::Polynomial<Real>& getLagr(const UInt i) const;
-    const Function::Polynomial<Real>& getDLagr(const UInt i,
-                                               const UInt f) const;
+    std::size_t vertex(const std::size_t) const;
+    std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
+    std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
+    std::size_t cubatureNodeIndex(const std::size_t i,
+                                  const std::size_t j) const;
+    std::size_t sideNode(const std::size_t f, const std::size_t i) const;
+    const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
+    const Function::Polynomial<Real>& getDLagr(const std::size_t i,
+                                               const std::size_t f) const;
     void     printInfo() const;
 private:
     // --- Rotation and extraction matrices ---------------------------
@@ -65,7 +66,7 @@ private:
     Function::Polynomial<Real> dLagr[np][faces];
     // --- ca: Cubatured alpha, cda: cub. derived, cwaa: cub. weighted
     static const Real sizeFactor;
-    static const UInt dimension = 1;
+    static const std::size_t dimension = 1;
     Vector::Cartesian<Int,nsc> cId[ncp];
     Vector::Cartesian<Real,nsc> cPos[ncp];
     Real cw[ncp];
@@ -74,13 +75,15 @@ private:
     Matrix::Static<Real,np,np> cwaa[ncp];
     Matrix::Static<Real,np,np> cwada[ncp][faces];
     // =========== Methods ============================================
-    Matrix::Static<Int,SIMPLIN_NFP,SIMPLIN_NP> RMatrix(const UInt s) const;
-    Matrix::Dynamic<Int> PMatrix(const UInt n, const UInt s) const;
+    Matrix::Static<Int, SIMPLIN_NFP, SIMPLIN_NP> RMatrix(
+            const std::size_t s) const;
+    Matrix::Dynamic<Int> PMatrix(const std::size_t n,
+                                 const std::size_t s) const;
     void buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                          const UInt order,
-                          const UInt nNodes) const;
+                          const std::size_t order,
+                          const std::size_t nNodes) const;
     void buildSideNodeIndices();
-    UInt numberOfNodes(const UInt order) const ;
+    std::size_t numberOfNodes(const std::size_t order) const;
     // --- Cubature build functions -----------------------------------
     void buildCubaturePositionsAndWeights();
     void buildCubatureLagrange();

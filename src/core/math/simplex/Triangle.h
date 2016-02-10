@@ -36,18 +36,18 @@ namespace Simplex {
 
 template <Int SIMPTRI_N>
 class Triangle : public Simplex {
-    #define SIMPTRI_NP ((SIMPTRI_N+1)*(SIMPTRI_N+2)/2)
-    #define SIMPTRI_NFP (SIMPTRI_N+1)
+    #define SIMPTRI_NP ((SIMPTRI_N + 1)*(SIMPTRI_N + 2) / 2)
+    #define SIMPTRI_NFP (SIMPTRI_N + 1)
     #define SIMPTRI_FACES (3)
 public:
-    static const UInt faces = 3;
-    static const UInt n = SIMPTRI_N;
-    static const UInt nsc = 3;
-    static const UInt vertices = 3;
-    static const UInt np = SIMPTRI_NP;
-    static const UInt nfp = SIMPTRI_NFP;
-    static const UInt nc = SIMPLEX_CUBATURE_ORDER;
-    static const UInt ncp =
+    static const std::size_t faces = 3;
+    static const std::size_t n = SIMPTRI_N;
+    static const std::size_t nsc = 3;
+    static const std::size_t vertices = 3;
+    static const std::size_t np = SIMPTRI_NP;
+    static const std::size_t nfp = SIMPTRI_NFP;
+    static const std::size_t nc = SIMPLEX_CUBATURE_ORDER;
+    static const std::size_t ncp =
     (SIMPLEX_CUBATURE_ORDER+1)*(SIMPLEX_CUBATURE_ORDER+2)/2;
     Real cw[ncp];
     Vector::Cartesian<Real,nsc> cPos[ncp];
@@ -64,31 +64,34 @@ public:
     // function values on its nodal positions.
     Real w[np];
     static const Real sizeFactor;
-    static const UInt dimension = 2;
+    static const std::size_t dimension = 2;
     Vector::Cartesian<Int,nsc> cId[ncp];
     Real ca[np][ncp];
     Real cda[np][faces][ncp];
     Matrix::Static<Real,np,np> cwaa[ncp];
     Matrix::Static<Real,np,np> cwada[ncp][faces];
     Triangle();
-    UInt vertex(const UInt) const;
-    UInt sideVertex(const UInt f, const UInt i) const;
-    UInt nodeIndex(const UInt i, const UInt j) const;
-    UInt cubatureNodeIndex(const UInt i, const UInt j) const;
-    UInt sideNode(const UInt f, const UInt i) const;
-    Vector::Cartesian<Real,3> coordinate(const UInt i) const;
-    const Function::Polynomial<Real>& getLagr(const UInt i) const;
-    const Function::Polynomial<Real>& getDLagr(const UInt i,
-                                               const UInt f) const;
+    std::size_t vertex(const std::size_t) const;
+    std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
+    std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
+    std::size_t cubatureNodeIndex(const std::size_t i,
+                                  const std::size_t j) const;
+    std::size_t sideNode(const std::size_t f, const std::size_t i) const;
+    Vector::Cartesian<Real,3> coordinate(const std::size_t i) const;
+    const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
+    const Function::Polynomial<Real>& getDLagr(const std::size_t i,
+                                               const std::size_t f) const;
     Matrix::Static<Real,SIMPTRI_NP,SIMPTRI_NP> getMassMatrix() const;
-    Matrix::Dynamic<Int> PMatrix(const UInt n, const UInt s) const;
+    Matrix::Dynamic<Int> PMatrix(const std::size_t n,
+                                 const std::size_t s) const;
     void printInfo() const;
 private:
-    UInt numberOfNodes(const UInt order) const;
-    Matrix::Static<Int,SIMPTRI_NFP,SIMPTRI_NP> RMatrix(const UInt s) const;
+    std::size_t numberOfNodes(const std::size_t order) const;
+    Matrix::Static<Int,SIMPTRI_NFP,SIMPTRI_NP> RMatrix(
+            const std::size_t s) const;
     void buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                          const UInt order,
-                          const UInt nNodes) const;
+                          const std::size_t order,
+                          const std::size_t nNodes) const;
     void buildSideNodeIndices();
     Int numberOfNodes(Int order) const ;
     void buildCubaturePositionsAndWeights();

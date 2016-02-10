@@ -34,14 +34,14 @@ Line<SIMPLIN_N>::Line() {
         P[s] = PMatrix(n,s);
     }*/
     buildNodeIndices(nId, n, np);
-    for (UInt s = 0; s < nsc; s++) {
+    for (std::size_t s = 0; s < nsc; s++) {
         R[s] = RMatrix(s);
     }
     buildSideNodeIndices();
     // ----------- Lagrange polynomials ---------------------------------------
     lagrangePolynomials(lagr,n,np,nsc);
-    for (UInt i = 0; i < np; i++) {
-        for (UInt s = 0; s < nsc; s++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t s = 0; s < nsc; s++) {
             dLagr[i][s] = lagr[i];
             dLagr[i][s].derive(s);
         }
@@ -53,44 +53,47 @@ Line<SIMPLIN_N>::Line() {
 };
 
 template <Int SIMPLIN_N>
-inline UInt Line<SIMPLIN_N>::nodeIndex(const UInt i, const UInt j) const {
+inline std::size_t Line<SIMPLIN_N>::nodeIndex(const std::size_t i,
+                                              const std::size_t j) const {
     return nId[i](j);
 }
 
 template <Int SIMPLIN_N>
-inline UInt Line<SIMPLIN_N>::cubatureNodeIndex(UInt i, UInt j) const {
+inline std::size_t Line<SIMPLIN_N>::cubatureNodeIndex(std::size_t i,
+                                                      std::size_t j) const {
     return cId[i](j);
 }
 
 template <Int SIMPLIN_N>
-inline UInt Line<SIMPLIN_N>::vertex(const UInt vertexNum) const {
+inline std::size_t Line<SIMPLIN_N>::vertex(const std::size_t vertexNum) const {
     return sideNode(vertexNum,0);
 }
 
 template <Int SIMPLIN_N>
-inline UInt Line<SIMPLIN_N>::sideNode(const UInt face, const UInt num) const {
+inline std::size_t Line<SIMPLIN_N>::sideNode(const std::size_t face,
+                                             const std::size_t num) const {
     return sNId(face, num);
 }
 
 template <Int SIMPLIN_N>
 const Function::Polynomial<Real>& Line<SIMPLIN_N>::getLagr(
-        const UInt i) const {
+        const std::size_t i) const {
     return lagr[i];
 }
 
 template <Int SIMPLIN_N>
 const Function::Polynomial<Real>& Line<SIMPLIN_N>::getDLagr(
-        const UInt i,
-        const UInt f) const {
+        const std::size_t i,
+        const std::size_t f) const {
     return dLagr[i][f];
 }
 
 template <Int SIMPLIN_N>
 void Line<SIMPLIN_N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                                       const UInt order,
-                                       const UInt nNodes) const {
+                                       const std::size_t order,
+                                       const std::size_t nNodes) const {
     // Computes first coordinate indices vector.
-    for (UInt i = 0; i < nNodes; i++) {
+    for (std::size_t i = 0; i < nNodes; i++) {
         res[i](0) = order - i;
         res[i](1) = i;
     }
@@ -101,12 +104,12 @@ void Line<SIMPLIN_N>::buildSideNodeIndices() {
     Matrix::Static<Int,np,1> nList;
     Matrix::Static<Int,nfp,1> aux;
     // Initializes node list.
-    for (UInt i = 0; i < np; i++)
+    for (std::size_t i = 0; i < np; i++)
         nList(i,0) = i;
     // Creates aux matrix to store the computed sNId.
-    for (UInt f = 0; f < faces; f++) {
+    for (std::size_t f = 0; f < faces; f++) {
         aux = R[f] * nList;
-        for (UInt i = 0; i < nfp; i++) {
+        for (std::size_t i = 0; i < nfp; i++) {
             sNId(f,i) = aux(i,0);
         }
     }
@@ -116,29 +119,29 @@ template <Int SIMPLIN_N>
 void Line<SIMPLIN_N>::buildCubaturePositionsAndWeights() {
     buildNodeIndices(cId,nc,ncp);
     Vector::Cartesian<Real,nsc> aux;
-    for (UInt i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         aux = cId[i];
         cPos[i] = aux / (Real) nc;
     }
     Function::Polynomial<Real> cubLagr[ncp];
     cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
-    for (UInt i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
     }
 }
 
 template<Int SIMPLIN_N>
 void Line<SIMPLIN_N>::buildCubatureLagrange() {
-    UInt i, j, k, c;
+    std::size_t i, j, k, c;
     // Evaluates Lagrange and Lagrange derived polynomials in cubature points.
-    for (UInt i = 0; i < np; i++) {
-        for (UInt c = 0; c < ncp; c++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t c = 0; c < ncp; c++) {
             ca[i][c] = lagr[i].eval(cPos[c]);
         }
     }
-    for (UInt i = 0; i < np; i++) {
-        for (UInt j = 0; j < faces; j++) {
-            for (UInt c = 0; c < ncp; c++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t j = 0; j < faces; j++) {
+            for (std::size_t c = 0; c < ncp; c++) {
                 cda[i][j][c] = dLagr[i][j].eval(cPos[c]);
             }
         }
@@ -157,20 +160,20 @@ void Line<SIMPLIN_N>::buildCubatureLagrange() {
 }
 
 template<Int SIMPLIN_N>
-UInt Line<SIMPLIN_N>::numberOfNodes(const UInt order) const {
+std::size_t Line<SIMPLIN_N>::numberOfNodes(const std::size_t order) const {
     return (order + 1);
 }
 
 template <Int SIMPLIN_N>
-Matrix::Dynamic<Int> Line<SIMPLIN_N>::PMatrix(const UInt n,
-                                              const UInt s) const {
-    UInt np = numberOfNodes(n);
+Matrix::Dynamic<Int> Line<SIMPLIN_N>::PMatrix(const std::size_t n,
+                                              const std::size_t s) const {
+    std::size_t np = numberOfNodes(n);
     Matrix::Dynamic<Int> res(np,np);
     if (s == 0) {
         res.eye();
     } else  {
         res.zeros();
-        for (UInt i = 0; i < np; i++) {
+        for (std::size_t i = 0; i < np; i++) {
             res(i, np-i-1) = (Int) 1;
         }
     }
@@ -178,8 +181,8 @@ Matrix::Dynamic<Int> Line<SIMPLIN_N>::PMatrix(const UInt n,
 }
 
 template <Int SIMPLIN_N>
-Matrix::Static<Int,SIMPLIN_NFP,SIMPLIN_NP> Line<SIMPLIN_N>::RMatrix(
-        const UInt s) const {
+Matrix::Static<Int, SIMPLIN_NFP, SIMPLIN_NP> Line<SIMPLIN_N>::RMatrix(
+        const std::size_t s) const {
     // Creates extraction matrix R for face 1.
     Matrix::Static<Int,nfp,np> Raux;
     Raux.zeros();
@@ -197,37 +200,37 @@ void Line<SIMPLIN_N>::printInfo() const {
     std::cout << " Number of face nodes:          " << nfp << std::endl;
     std::cout << " Order of cubature integration: " << nc << std::endl;
     std::cout << " Rotation matrices:             " << std::endl;
-    for (UInt i = 0; i < faces; i++) {
+    for (std::size_t i = 0; i < faces; i++) {
         std::cout << "Rotation around simplex coordinate #" << i << std::endl;
         P[i].printInfo();
     }
     std::cout << " Extraction matrices:           " << std::endl;
-    for (UInt i = 0; i < faces; i++) {
+    for (std::size_t i = 0; i < faces; i++) {
         std::cout << "Extraction matrices for face #" << i << std::endl;
         R[i].printInfo();
     }
     std::cout << " List of node indices:          " << std::endl;
-    for (UInt i = 0; i < np; i++) {
+    for (std::size_t i = 0; i < np; i++) {
         nId[i].printInfo();
         std::cout << std::endl;
     }
     std::cout << " List of side nodes indices:    " << std::endl;
     sNId.printInfo();
     std::cout << " Lagrange polynomials:          " << std::endl;
-    for (UInt i = 0; i < np; i++) {
+    for (std::size_t i = 0; i < np; i++) {
         std::cout << "Lagrange polynomial of node #" <<  i << std::endl;
         lagr[i].printInfo();
     }
     std::cout << " Lagrange polynomials derivatives: " << std::endl;
-    for (UInt i = 0; i < np; i++) {
-        for (UInt j = 0; j < faces; j++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t j = 0; j < faces; j++) {
             std::cout << "Pol. " << i << " derived w.r.t. var." 
                       << j << std::endl;
             dLagr[i][j].printInfo();
         }
     }
     std::cout << " Cubature positions and weights: " << std::endl;
-    for (UInt i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < ncp; i++) {
         std::cout << "#" << i << " ";
         cPos[i].printInfo();
         std::cout << " " << cw[i] << std::endl;

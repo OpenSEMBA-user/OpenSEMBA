@@ -37,16 +37,17 @@ template<class T>
 class Polynomial : public Function<T,T>{
 public:
     Polynomial();
-    Polynomial(const UInt nvar);
+    Polynomial(const std::size_t nvar);
     virtual ~Polynomial();
 
     SEMBA_MATH_FUNCTION_DEFINE_CLONE(Polynomial);
 
-    UInt numberOfVariables() const;
-    UInt numberOfMonomials() const;
+    std::size_t numberOfVariables() const;
+    std::size_t numberOfMonomials() const;
 
-    T monomialValue(const UInt i) const;
-    UInt monomialPower(const UInt monomial, const UInt variable) const;
+    T monomialValue(const std::size_t i) const;
+    std::size_t monomialPower(const std::size_t monomial,
+                              const std::size_t variable) const;
 
     Polynomial<T>& operator=(const Polynomial<T> &param);
 
@@ -80,8 +81,8 @@ public:
 
     void printInfo() const;
 private:
-    UInt nv_; // Number of variables.
-    UInt nm_; // Number of monomials.
+    std::size_t nv_; // Number of variables.
+    std::size_t nm_; // Number of monomials.
     std::vector<T> mv_; // Value of constant monomials coefficients.
     std::vector<std::vector<Int>> mp_; // nm x nv array, containing powers of monomials.
 };

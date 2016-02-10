@@ -35,17 +35,17 @@ class Tetrahedron : public Simplex {
     #define SIMPTET_NFP ((SIMPTET_N+1)*(SIMPTET_N+2)/2)
     #define SIMPTET_FACES (4)
 public:
-    static const UInt faces = 4;
-    static const UInt nsc = 4;
-    static const UInt n = SIMPTET_N;
-    static const UInt np = SIMPTET_NP;
-    static const UInt nfp = SIMPTET_NFP;
+    static const std::size_t faces = 4;
+    static const std::size_t nsc = 4;
+    static const std::size_t n = SIMPTET_N;
+    static const std::size_t np = SIMPTET_NP;
+    static const std::size_t nfp = SIMPTET_NFP;
     const Triangle<SIMPTET_N> tri;
     Matrix::Static<Real,np,nfp> LIFT[faces];
-    static const UInt nc = SIMPLEX_CUBATURE_ORDER;
-    static const UInt ncp = (SIMPLEX_CUBATURE_ORDER+1)*
-                            (SIMPLEX_CUBATURE_ORDER+2)*
-                            (SIMPLEX_CUBATURE_ORDER+3)/6;
+    static const std::size_t nc = SIMPLEX_CUBATURE_ORDER;
+    static const std::size_t ncp = (SIMPLEX_CUBATURE_ORDER + 1)*
+                                   (SIMPLEX_CUBATURE_ORDER+2)*
+                                   (SIMPLEX_CUBATURE_ORDER+3)/6;
     Real cw[ncp];
     Matrix::Static<Real,np,np> cwaa[ncp];
     Matrix::Static<Real,np,np> cwada[ncp][faces];
@@ -54,44 +54,48 @@ public:
     // ------- Methods --------------------------------------------------------
     Tetrahedron();
     Matrix::Static<Real,SIMPTET_NP,SIMPTET_NP> getMassMatrix() const;
-    UInt vertex(const UInt) const;
-    UInt sideVertex(const UInt f, const UInt i) const;
-    UInt nodeIndex(const UInt i, const UInt j) const;
-    UInt cubatureNodeIndex(const UInt i, const UInt j) const;
-    UInt sideNode(const UInt f, const UInt i) const;
-    const Function::Polynomial<Real>& getLagr(const UInt i) const;
-    const Function::Polynomial<Real>& getDLagr(const UInt i, 
-                                               const UInt f) const;
-    Real getCda(UInt i, UInt j, UInt k) const;
-    CVecR4 coordinate(const UInt i) const;
-    CVecR4 sideCoordinate(const UInt f, const UInt i) const;
+    std::size_t vertex(const std::size_t) const;
+    std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
+    std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
+    std::size_t cubatureNodeIndex(const std::size_t i,
+                                  const std::size_t j) const;
+    std::size_t sideNode(const std::size_t f, const std::size_t i) const;
+    const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
+    const Function::Polynomial<Real>& getDLagr(const std::size_t i, 
+                                               const std::size_t f) const;
+    Real getCda(std::size_t i, std::size_t j, std::size_t k) const;
+    CVecR4 coordinate(const std::size_t i) const;
+    CVecR4 sideCoordinate(const std::size_t f, const std::size_t i) const;
     Real integrateScalarsOnFace(const Real x[SIMPTET_NP],
-                                const UInt f,
+                                const std::size_t f,
                                 const Real area) const;
     Real integrateScalars(const Real x[SIMPTET_NP],
                           const Real volume) const;
     void printInfo() const;
-    const Vector::Cartesian<Real, nsc> cubatureCoordinate(const UInt c) const {
+    const Vector::Cartesian<Real, nsc> cubatureCoordinate(
+            const std::size_t c) const {
         return cPos[c];
     }
 private:
     Matrix::Static<Int,np,np> P[faces]; // P: Rotation matrices.
     // lagr: Non-zero Lagrange's pol. coeffs.
     Function::Polynomial<Real> lagr[np];
-    // Non-zero Lagrange's pol. coeffs of derivatives. std::size_t is NP, NFACES.
+    // Non-zero Lagrange's pol. coeffs of derivatives. uint is NP, NFACES.
     Function::Polynomial<Real> dLagr[np][faces];
     // nId: List of node indices.
     Vector::Cartesian<Int,nsc> nId[np];
     // sNId: List of side nodes.
     Matrix::Static<Int,faces,nfp> sNId;
-    Matrix::Static<Int,SIMPTET_NFP,SIMPTET_NP> RMatrix(const UInt s) const;
-    Matrix::Dynamic<Int> PMatrix(const UInt n, const UInt s) const;
+    Matrix::Static<Int,SIMPTET_NFP,SIMPTET_NP> RMatrix(
+            const std::size_t s) const;
+    Matrix::Dynamic<Int> PMatrix(const std::size_t n,
+                                 const std::size_t s) const;
     void buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                          const UInt order,
-                          const UInt nNodes) const;
+                          const std::size_t order,
+                          const std::size_t nNodes) const;
     void buildSideNodeIndices();
     static const Real sizeFactor;
-    static const UInt dimension = 3;
+    static const std::size_t dimension = 3;
     Vector::Cartesian<Int,nsc> cId[ncp];
     Vector::Cartesian<Real,nsc> cPos[ncp];
     Real ca[np][ncp];

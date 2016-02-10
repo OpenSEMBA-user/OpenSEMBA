@@ -31,7 +31,7 @@ Polynomial<T>::Polynomial() {
     nm_ = 0;
 }
 template<class T>
-Polynomial<T>::Polynomial(const UInt nvar) {
+Polynomial<T>::Polynomial(const std::size_t nvar) {
     nv_ = nvar;
     nm_ = 0;
 }
@@ -52,24 +52,24 @@ Polynomial<T>& Polynomial<T>::operator=(const Polynomial<T> &param) {
 }
 
 template<class T>
-inline UInt Polynomial<T>::numberOfVariables() const {
+inline std::size_t Polynomial<T>::numberOfVariables() const {
     return nv_;
 }
 
 template<class T>
-inline UInt Polynomial<T>::numberOfMonomials() const {
+inline std::size_t Polynomial<T>::numberOfMonomials() const {
     return nm_;
 }
 
 template<class T>
-inline T Polynomial<T>::monomialValue(const UInt i) const {
+inline T Polynomial<T>::monomialValue(const std::size_t i) const {
     return mv_[i];
 }
 
 template<class T>
-inline UInt Polynomial<T>::monomialPower(
-const UInt monomial,
-const UInt variable) const {
+inline std::size_t Polynomial<T>::monomialPower(
+        const std::size_t monomial,
+        const std::size_t variable) const {
     return mp_[monomial][variable];
 }
 
@@ -77,7 +77,7 @@ template<class T>
 T Polynomial<T>::eval(const Vector::Cartesian<T,1>& pos) const {
     assert(1 == nv_);
     T prod;
-    UInt m, v;
+    std::size_t m, v;
     T res = 0.0;
     for (m = 0; m < nm_; m++) {
         prod = 1.0;
@@ -92,7 +92,7 @@ template<class T>
 T Polynomial<T>::eval(const Vector::Cartesian<T,2>& pos) const {
     assert(2 == nv_);
     T prod;
-    UInt m, v;
+    std::size_t m, v;
     T res = 0.0;
     for (m = 0; m < nm_; m++) {
         prod = 1.0;
@@ -107,7 +107,7 @@ template<class T>
 T Polynomial<T>::eval(const Vector::Cartesian<T,3>& pos) const {
     assert(3 == nv_);
     T prod;
-    UInt m, v;
+    std::size_t m, v;
     T res = 0.0;
     for (m = 0; m < nm_; m++) {
         prod = 1.0;
@@ -122,7 +122,7 @@ template<class T>
 T Polynomial<T>::eval(const Vector::Cartesian<T,4>& pos) const {
     assert(4 == nv_);
     T prod;
-    UInt m, v;
+    std::size_t m, v;
     T res = 0.0;
     for (m = 0; m < nm_; m++) {
         prod = 1.0;
@@ -136,7 +136,7 @@ T Polynomial<T>::eval(const Vector::Cartesian<T,4>& pos) const {
 template<class T>
 void Polynomial<T>::derive(Int coord) {
     // Performs derivative with respect to coordinate coord.
-    for (UInt m = 0; m < nm_; m++)
+    for (std::size_t m = 0; m < nm_; m++)
         if (mp_[m][coord] == 0)
             mv_[m] = 0.0;
         else {
@@ -149,7 +149,7 @@ void Polynomial<T>::derive(Int coord) {
 
 template<class T>
 void Polynomial<T>::removeZeros() {
-    for (UInt i = 0; i < nm_; i++)
+    for (std::size_t i = 0; i < nm_; i++)
         if (mv_[i] == 0) {
             nm_--;
             mv_.erase(mv_.begin() + i);
@@ -195,7 +195,7 @@ template<class T>
 Polynomial<T> Polynomial<T>::operator^(const Polynomial<T> &param) {
     // PURPOSE: Performs external product between polynomials. This means that
     // variables in both polynomials will be treated as if they are different.
-    UInt i, j;
+    std::size_t i, j;
     Polynomial<T> res(nv_ + param.nv_);
     std::vector<Int> pow;
     for (i = 0; i < nm_; i++)
@@ -211,7 +211,7 @@ template<class T>
 Polynomial<T>& Polynomial<T>::operator^=(const Polynomial<T> &param) {
     // PURPOSE: Performs external product between polynomials. This means that
     // variables in both polynomials will be treated as if they are different.
-    UInt i, j;
+    std::size_t i, j;
     Polynomial<T> res(nv_ + param.nv_);
     std::vector<Int> pow;
     for (i = 0; i < nm_; i++)
@@ -227,7 +227,7 @@ Polynomial<T>& Polynomial<T>::operator^=(const Polynomial<T> &param) {
 template<class T>
 Polynomial<T>& Polynomial<T>::operator/=(const T param) {
     assert(param != 0);
-    for (UInt i = 0 ; i < nm_; i++)
+    for (std::size_t i = 0; i < nm_; i++)
         mv_[i] /= param;
     return *this;
 }
@@ -236,7 +236,7 @@ template<class T>
 Polynomial<T> Polynomial<T>::vectorToPolynomial (T *v, Int sv, Int nvar) {
     assert(nvar == 1);
     Polynomial<T> res(1);
-    for (UInt i = 0; i < sv ; i++)
+    for (std::size_t i = 0; i < sv; i++)
         if (v[i] != 0)
             res.addMonomial(v[i], i);
     return res;
@@ -249,14 +249,14 @@ Polynomial<T> Polynomial<T>::matrixToPolynomial (
     Polynomial<T> res;
     if (param.nCols() == 1) {
         res.nv_ = 1;
-        for (UInt i = 0; i < param.nRows(); i++)
+        for (std::size_t i = 0; i < param.nRows(); i++)
             if (param(i,0) != 0.0)
                 res.addMonomial(param(i,0), i);
     } else {
         std::vector<Int> pow(2,0);
         res.nv_ = 2;
-        for (UInt i = 0; i < param.nRows(); i++)
-            for (UInt j = 0; j < param.nCols(); j++)
+        for (std::size_t i = 0; i < param.nRows(); i++)
+            for (std::size_t j = 0; j < param.nCols(); j++)
                 if (param(i,j) != 0.0) {
                     pow[0] = i;
                     pow[1] = j;
@@ -271,7 +271,7 @@ Matrix::Dynamic<T> Polynomial<T>::polynomialToMatrix() const {
     assert(nv_ == 1);
     Matrix::Dynamic<T>  res(maxPower() + 1, 1);
     // Copies monomials to vector positions.
-    for (UInt i = 0; i < nm_; i++)
+    for (std::size_t i = 0; i < nm_; i++)
         res(mp_[i][0], 0) = mv_[i];
     return res;
 }
@@ -296,7 +296,7 @@ void Polynomial<T>::addMonomial(T val, Int pow) {
 template<class T>
 Int Polynomial<T>::maxPower() const {
     // Returns maximum power present in this polynomial.
-    UInt i, j;
+    std::size_t i, j;
     Int res = 0;
     for (i = 0; i < nv_; i++)
         for (j = 0; j < nm_; j++)
@@ -328,7 +328,7 @@ void Polynomial<T>::printInfo() const {
     std::cout << "Number of variables: " << nv_ << std::endl;
     std::cout << "Number of monomials: " << nm_ << std::endl;
     std::cout << "Value             Powers" << std::endl;
-    UInt i, j;
+    std::size_t i, j;
     for (i = 0; i < nm_; i++) {
         std::cout << mv_[i] << "               ";
         for (j = 0; j < nv_; j++)

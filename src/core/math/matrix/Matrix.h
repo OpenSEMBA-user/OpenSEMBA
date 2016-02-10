@@ -66,7 +66,7 @@ public:
     void convertToArray(const Int mode, Real *res) const;
 
     std::vector<Vector::Cartesian<T,3> > convertToCartesianVector() const;
-    std::vector<T> cpRowToVector(const UInt row) const;
+    std::vector<T> cpRowToVector(const std::size_t row) const;
 
     T getDeterminant3x3() const;
     T getDeterminant4x4() const;

@@ -35,33 +35,35 @@ Simplex::~Simplex() {
 
 }
 
-const Function::Polynomial<Real>& Simplex::getLagr(const UInt i) const {
+const Function::Polynomial<Real>& Simplex::getLagr(const std::size_t i) const {
     exit(EXIT_FAILURE);
 }
 
-const Function::Polynomial<Real>& Simplex::getDLagr(const UInt i,
-                                                    const UInt f) const {
+const Function::Polynomial<Real>& Simplex::getDLagr(
+        const std::size_t i,
+        const std::size_t f) const {
     exit(EXIT_FAILURE);
 }
 
-Real Simplex::getCda(UInt i, UInt j, UInt k) const {
+Real Simplex::getCda(std::size_t i, std::size_t j, std::size_t k) const {
     exit(EXIT_FAILURE);
 }
 
-inline UInt Simplex::nodeIndex(UInt i, UInt j) const {
+inline std::size_t Simplex::nodeIndex(std::size_t i, std::size_t j) const {
     exit(EXIT_FAILURE);
 }
 
-inline UInt Simplex::cubatureNodeIndex(UInt i, UInt j) const {
+inline std::size_t Simplex::cubatureNodeIndex(std::size_t i,
+                                              std::size_t j) const {
     exit(EXIT_FAILURE);
 }
 
-UInt Simplex::factorial(UInt n) const {
+std::size_t Simplex::factorial(std::size_t n) const {
     return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
 
-Function::Polynomial<Real> Simplex::silvesterPol(const UInt m,
-                                                 const UInt n) const {
+Function::Polynomial<Real> Simplex::silvesterPol(const std::size_t m,
+                                                 const std::size_t n) const {
     // Purpose: Generates coefficients of the R polynomial as are defined in
     // Sylvester's book page 130. These polynomials have m equispace zeros to
     // the left of m/n and none to the right. These are necessary to build
@@ -81,7 +83,7 @@ Function::Polynomial<Real> Simplex::silvesterPol(const UInt m,
         }
         // Computes factorial and divides by it.
         Real fact = 1.0;
-        for (UInt k = 1; k <= m; k++)
+        for (std::size_t k = 1; k <= m; k++)
             fact *= k;
         res /= fact;
     }
@@ -89,17 +91,17 @@ Function::Polynomial<Real> Simplex::silvesterPol(const UInt m,
 }
 
 void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
-                                  const UInt n,
-                                  const UInt np,
-                                  const UInt nsc) const {
+                                  const std::size_t n,
+                                  const std::size_t np,
+                                  const std::size_t nsc) const {
     // Computes Sylvester's polynomials.
     std::vector<Function::Polynomial<Real>> pol(n+1);
-    for (UInt i = 0; i < (n+1); i++) {
+    for (std::size_t i = 0; i < (n + 1); i++) {
         pol[i] = silvesterPol(i,n);
     }
     // Computes Lagrange's polynomials.
-    for (UInt i = 0; i < np; i++) {
-        for (UInt j = 0; j < nsc; j++) {
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t j = 0; j < nsc; j++) {
             if (j == 0) {
                 res[i] = pol[nodeIndex(i,j)];
             } else {
@@ -110,16 +112,16 @@ void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
 }
 
 void Simplex::cubatureLagrangePolynomials(Function::Polynomial<Real>* res,
-                                          const UInt n,
-                                          const UInt np,
-                                          const UInt nsc) const {
+                                          const std::size_t n,
+                                          const std::size_t np,
+                                          const std::size_t nsc) const {
     // Computes Sylvester's polynomials.
     Function::Polynomial<Real> pol[10+1];
-    for (UInt i = 0; i < (n+1); i++)
+    for (std::size_t i = 0; i < (n + 1); i++)
         pol[i] = silvesterPol(i,n);
     // Computes Lagrange's polynomials.
-    for (UInt i = 0; i < np; i++)
-        for (UInt j = 0; j < nsc; j++)
+    for (std::size_t i = 0; i < np; i++)
+        for (std::size_t j = 0; j < nsc; j++)
             if (j == 0)
                 res[i] = pol[cubatureNodeIndex(i,j)];
             else
@@ -127,17 +129,17 @@ void Simplex::cubatureLagrangePolynomials(Function::Polynomial<Real>* res,
 }
 
 Real Simplex::integrate(const Function::Polynomial<Real> pol,
-                        const UInt dim,
+                        const std::size_t dim,
                         const Real sizeFactor) const {
     assert(pol.numberOfVariables() == dim + 1);
-    UInt nsc = dim + 1;
+    std::size_t nsc = dim + 1;
     Real sum = 0.0;
     Real auxNum;
-    UInt auxDen;
-    for (UInt i = 0; i < pol.numberOfMonomials(); i++) {
+    std::size_t auxDen;
+    for (std::size_t i = 0; i < pol.numberOfMonomials(); i++) {
         auxNum = pol.monomialValue(i);
         auxDen = 0;
-        for (UInt j = 0; j < nsc; j++) {
+        for (std::size_t j = 0; j < nsc; j++) {
             auxNum *= factorial(pol.monomialPower(i,j));
             auxDen += pol.monomialPower(i,j);
         }
