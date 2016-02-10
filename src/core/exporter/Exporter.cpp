@@ -74,7 +74,7 @@ Exporter::~Exporter() {
 //        const Math::Real time,
 //        const FieldR3& electric,
 //        const FieldR3& magnetic) {
-//    for (UInt i = 0; i < result_.size(); i++) {
+//    for (std::size_t i = 0; i < result_.size(); i++) {
 //        result_[i]->write(time, electric, magnetic);
 //    }
 //}
@@ -125,7 +125,7 @@ std::string Exporter::getBoundaryName(
     const Geometry::Element::Model* boundType = mesh->bounds()[i][j];
     std::string boundName;
     if (boundType == NULL) {
-        boundName = "None";
+        boundName = "Undefined";
     } else {
         boundName =
             boundType->castTo<PhysicalModel::PhysicalModel>()->getName();
