@@ -67,20 +67,20 @@ MultiSwitch::~MultiSwitch() {
 
 }
 
-MultiSwitch& MultiSwitch::required(const bool& required) {
+MultiSwitch* MultiSwitch::required(const bool& required) {
     Argument::required(required);
-    return *this;
+    return this;
 }
 
-MultiSwitch& MultiSwitch::help(const std::string& help) {
+MultiSwitch* MultiSwitch::help(const std::string& help) {
     Argument::help(help);
-    return *this;
+    return this;
 }
 
-MultiSwitch& MultiSwitch::defaultVal(const std::size_t& defaultVal) {
+MultiSwitch* MultiSwitch::defaultVal(const std::size_t& defaultVal) {
     hasDefault_ = true;
     default_ = defaultVal;
-    return *this;
+    return this;
 }
 
 void MultiSwitch::parse(Object& out,
@@ -91,11 +91,11 @@ void MultiSwitch::parse(Object& out,
     input.clear();
 }
 
-void MultiSwitch::noParsed(Object& out) const {
+void MultiSwitch::notParsed(Object& out) const {
     if (hasDefault_) {
         out.set(default_);
     } else {
-        Argument::noParsed(out);
+        Argument::notParsed(out);
     }
 }
 

@@ -61,12 +61,12 @@ void Value<V, T1, T...>::parseSingle(Object& out,
 }
 
 template<typename V, typename T1, typename... T>
-void Value<V, T1, T...>::noParsed(Object& out) const {
+void Value<V, T1, T...>::notParsed(Object& out) const {
     const std::list<std::string>& defaultVar = this->getDefault();
     if (!defaultVar.empty()) {
         out.setGenericString(defaultVar);
     } else {
-        Argument::noParsed(out);
+        Argument::notParsed(out);
     }
 }
 

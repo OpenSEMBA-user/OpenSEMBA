@@ -67,20 +67,20 @@ Switch::~Switch() {
 
 }
 
-Switch& Switch::required(const bool& required) {
+Switch* Switch::required(const bool& required) {
     Argument::required(required);
-    return *this;
+    return this;
 }
 
-Switch& Switch::help(const std::string& help) {
+Switch* Switch::help(const std::string& help) {
     Argument::help(help);
-    return *this;
+    return this;
 }
 
-Switch& Switch::defaultVal(const bool& defaultVal) {
+Switch* Switch::defaultVal(const bool& defaultVal) {
     hasDefault_ = true;
     default_ = defaultVal;
-    return *this;
+    return this;
 }
 
 void Switch::parse(Object& out,
@@ -102,7 +102,7 @@ void Switch::parse(Object& out,
     input[0].clear();
 }
 
-void Switch::noParsed(Object& out) const {
+void Switch::notParsed(Object& out) const {
     if (hasDefault_) {
         if (default_) {
             out.setTrue();
@@ -110,7 +110,7 @@ void Switch::noParsed(Object& out) const {
             out.setFalse();
         }
     } else {
-        Argument::noParsed(out);
+        Argument::notParsed(out);
     }
 }
 

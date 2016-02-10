@@ -199,16 +199,20 @@ void GroupBase::parsePostprocess(Object& out) {
         for (std::size_t i = 0; i < positions_.size(); i++) {
             std::string optName = positions_[i]->getName();
             Object aux;
-            positions_[i]->noParsed(aux);
-            out.addMember(optName, std::move(aux));
+            positions_[i]->notParsed(aux);
+            if (!aux.isNull()) {
+                out.addMember(optName, std::move(aux));
+            }
         }
         for (std::map<std::string, OptionBase*>::const_iterator
              it = optionName_.begin(); it != optionName_.end(); ++it) {
             if (!optionParsed_.at(it->first)) {
                 std::string optName = it->second->getName();
                 Object aux;
-                it->second->noParsed(aux);
-                out.addMember(optName, std::move(aux));
+                it->second->notParsed(aux);
+                if (!aux.isNull()) {
+                    out.addMember(optName, std::move(aux));
+                }
             }
         }
     }

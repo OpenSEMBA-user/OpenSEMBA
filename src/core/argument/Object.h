@@ -218,7 +218,10 @@ public:
         return *this;
     }
     bool            existsName(const std::string& name) const {
-        return isObject() && (nameMembers_.count(name) != 0);
+        if (!isObject() || (nameMembers_.count(name) == 0)) {
+            return false;
+        }
+        return !objMembers_.at(nameMembers_.at(name)).isNull();
     }
     const std::string& getName(const std::size_t& i) const {
         return objName_.at(i);

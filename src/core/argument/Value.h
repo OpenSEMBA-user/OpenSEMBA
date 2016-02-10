@@ -42,7 +42,7 @@ public:
                      std::list<std::string>&,
                      std::list<std::string>&) const;
 
-    virtual void noParsed(Object&) const;
+    virtual void notParsed(Object&) const;
 };
 
 namespace Error {

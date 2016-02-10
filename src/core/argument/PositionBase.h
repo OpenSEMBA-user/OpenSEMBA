@@ -33,7 +33,7 @@ public:
     virtual ~PositionBase() {}
 
 protected:
-    Argument& required(const bool&) { return Argument::required(true); }
+    Argument* required(const bool&) { return Argument::required(true); }
     using Argument::getRequired;
 };
 

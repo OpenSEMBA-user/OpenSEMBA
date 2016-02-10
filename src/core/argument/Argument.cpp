@@ -46,33 +46,33 @@ Argument::~Argument() {
 
 }
 
-Argument& Argument::required(const bool& required) {
+Argument* Argument::required(const bool& required) {
     required_ = required;
-    return *this;
+    return this;
 }
 
-Argument& Argument::help(const std::string& help) {
+Argument* Argument::help(const std::string& help) {
     help_ = help;
-    return *this;
+    return this;
 }
 
-Argument& Argument::metavar(const std::list<std::string>& metavar) {
+Argument* Argument::metavar(const std::list<std::string>& metavar) {
     metavar_ = metavar;
-    return *this;
+    return this;
 }
 
-Argument& Argument::defaultVal(const std::list<std::string>& defaultVal) {
+Argument* Argument::defaultVal(const std::list<std::string>& defaultVal) {
     default_ = defaultVal;
-    return *this;
+    return this;
 }
 
-Argument& Argument::choices(
+Argument* Argument::choices(
         const std::vector<std::list<std::string>>& choices) {
     choices_ = choices;
-    return *this;
+    return this;
 }
 
-void Argument::noParsed(Object&) const {
+void Argument::notParsed(Object&) const {
     if (required_) {
         throw Error::Required(*this);
     }

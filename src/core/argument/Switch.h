@@ -41,15 +41,15 @@ public:
     Switch(const Switch&);
     virtual ~Switch();
 
-    Switch& required  (const bool& = true);
-    Switch& help      (const std::string&);
-    Switch& defaultVal(const bool&);
+    Switch* required  (const bool& = true);
+    Switch* help      (const std::string&);
+    Switch* defaultVal(const bool&);
 
     void parse(Object&,
                std::vector<std::list<std::string>>&,
                std::vector<std::list<std::string>>&) const;
 
-    void noParsed(Object&) const;
+    void notParsed(Object&) const;
 
 private:
     bool hasDefault_;

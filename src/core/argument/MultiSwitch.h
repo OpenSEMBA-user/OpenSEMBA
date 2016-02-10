@@ -40,15 +40,15 @@ public:
     MultiSwitch(const MultiSwitch&);
     virtual ~MultiSwitch();
 
-    MultiSwitch& required  (const bool& = true);
-    MultiSwitch& help      (const std::string&);
-    MultiSwitch& defaultVal(const std::size_t&);
+    MultiSwitch* required  (const bool& = true);
+    MultiSwitch* help      (const std::string&);
+    MultiSwitch* defaultVal(const std::size_t&);
 
     void parse(Object&,
                std::vector<std::list<std::string>>&,
                std::vector<std::list<std::string>>&) const;
 
-    void noParsed(Object&) const;
+    void notParsed(Object&) const;
 
 private:
     bool hasDefault_;
