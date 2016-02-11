@@ -274,7 +274,7 @@ inline T Cartesian<T,D>::getMax() const {
 }
 
 template <class T, std::size_t D>
-Cartesian<T,D>& Cartesian<T,D>::setAsBinary(UInt number) {
+Cartesian<T,D>& Cartesian<T,D>::setAsBinary(std::size_t number) {
     assert(number < pow(2,D));
     for (std::size_t d = 0; d < D; d++) {
         val[D-d-1] = number % 2;

@@ -143,11 +143,11 @@ void Matrix<T>::factorizeLU_(std::size_t pivot[]) {
 template <class T>
 void Matrix<T>::invertFactorized_(const std::size_t pivot[]) {
     // Computes inverse of a general matrix factored by factorize.
-    // Input, Int PIVOT(N), the pivot vector from R8GE_FA.
+    // Input, std::size_t PIVOT(N), the pivot vector from R8GE_FA.
     assert(nRows() == nCols());
-    std::size_t n = nRows();
-    std::size_t nn = n * n;
-    Int i, j, k;
+    std::ptrdiff_t n = nRows();
+    std::ptrdiff_t nn = n * n;
+    std::ptrdiff_t i, j, k;
     T temp;
     T *b = new T[nn];
     // Compute Inverse(U).
@@ -183,8 +183,8 @@ void Matrix<T>::invertFactorized_(const std::size_t pivot[]) {
         }
     }
     // Stores inverted matrix in res.
-    for (std::size_t i = 0; i < n; i++) {
-        for (std::size_t j = 0; j < n; j++) {
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
             val(i,j) = (T) b[i+j*n];
         }
     }
@@ -273,10 +273,11 @@ bool Matrix<T>::isLEQ_(const T* x1,
 }
 
 template <class T>
-Int Matrix<T>::partitionRows_(Int p, Int r,
-                              const std::size_t iCol, const std::size_t lCol) {
-    Int j = p - 1;
-    for (Int i = p; i < r; i++) {
+std::size_t Matrix<T>::partitionRows_(std::size_t p, std::size_t r,
+                                      const std::size_t iCol,
+                                      const std::size_t lCol) {
+    std::size_t j = p - 1;
+    for (std::size_t i = p; i < r; i++) {
         bool geq = isGEQ_(&val(r,iCol), &val(i,iCol), lCol - iCol + 1);
         if (geq) {
             j++;
@@ -296,10 +297,10 @@ Int Matrix<T>::partitionRows_(Int p, Int r,
 }
 
 template <class T>
-void Matrix<T>::QSRows_(Int p, Int r,
+void Matrix<T>::QSRows_(std::size_t p, std::size_t r,
                         const std::size_t iCol, const std::size_t lCol) {
     if (p < r) {
-        Int q = partitionRows_(p, r, iCol, lCol);
+        std::size_t q = partitionRows_(p, r, iCol, lCol);
         QSRows_(p, q - 1, iCol, lCol);
         QSRows_(q + 1, r, iCol, lCol);
     }

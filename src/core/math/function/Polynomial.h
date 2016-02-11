@@ -46,19 +46,19 @@ public:
     std::size_t numberOfMonomials() const;
 
     T monomialValue(const std::size_t i) const;
-    std::size_t monomialPower(const std::size_t monomial,
-                              const std::size_t variable) const;
+    Int monomialPower(const std::size_t monomial,
+                      const std::size_t variable) const;
 
     Polynomial<T>& operator=(const Polynomial<T> &param);
 
     bool operator==(const Base& rhs) const;
 
     // Product between polynomials assuming variables are the same.
-    Polynomial<T> operator*(const Polynomial<T> &param ) const;
+    Polynomial<T>  operator* (const Polynomial<T> &param) const;
     Polynomial<T>& operator*=(const Polynomial<T> &param);
 
     // Product between polynomials assuming variables are different.
-    Polynomial<T> operator^(const Polynomial<T> &param);
+    Polynomial<T>  operator^ (const Polynomial<T> &param);
     Polynomial<T>& operator^=(const Polynomial<T> &param);
 
     Polynomial<T>& operator/=(const T param );
@@ -72,9 +72,9 @@ public:
     T eval(const Vector::Cartesian<T,3>& pos) const;
     T eval(const Vector::Cartesian<T,4>& pos) const;
 
-    void derive(Int coord);
+    void derive(std::size_t coord);
 
-    Polynomial<T> vectorToPolynomial(T *v,  Int sv, Int nvar);
+    Polynomial<T> vectorToPolynomial(T *v, std::size_t sv, std::size_t nvar);
     Polynomial<T> matrixToPolynomial(const Matrix::Dynamic<T> &param) const;
     Matrix::Dynamic<T> polynomialToMatrix() const;
     void removeZeros();

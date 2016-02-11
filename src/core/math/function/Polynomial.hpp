@@ -67,7 +67,7 @@ inline T Polynomial<T>::monomialValue(const std::size_t i) const {
 }
 
 template<class T>
-inline std::size_t Polynomial<T>::monomialPower(
+inline Int Polynomial<T>::monomialPower(
         const std::size_t monomial,
         const std::size_t variable) const {
     return mp_[monomial][variable];
@@ -134,7 +134,7 @@ T Polynomial<T>::eval(const Vector::Cartesian<T,4>& pos) const {
 }
 
 template<class T>
-void Polynomial<T>::derive(Int coord) {
+void Polynomial<T>::derive(std::size_t coord) {
     // Performs derivative with respect to coordinate coord.
     for (std::size_t m = 0; m < nm_; m++)
         if (mp_[m][coord] == 0)
@@ -233,10 +233,12 @@ Polynomial<T>& Polynomial<T>::operator/=(const T param) {
 }
 
 template<class T>
-Polynomial<T> Polynomial<T>::vectorToPolynomial (T *v, Int sv, Int nvar) {
+Polynomial<T> Polynomial<T>::vectorToPolynomial(T *v,
+                                                std::size_t sv,
+                                                std::size_t nvar) {
     assert(nvar == 1);
     Polynomial<T> res(1);
-    for (std::size_t i = 0; i < sv; i++)
+    for (Int i = 0; i < sv; i++)
         if (v[i] != 0)
             res.addMonomial(v[i], i);
     return res;

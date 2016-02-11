@@ -92,10 +92,10 @@ protected:
     bool isLEQ_(const T* x1, const T* x2, const std::size_t vS) const;
 
 private:
-    void QSRows_(Int p, Int r,
+    void QSRows_(std::size_t p, std::size_t r,
                  const std::size_t iCol, const std::size_t lCol);
-    Int partitionRows_(Int p, Int r,
-                       const std::size_t iCol, const std::size_t lCol);
+    std::size_t partitionRows_(std::size_t p, std::size_t r,
+                               const std::size_t iCol, const std::size_t lCol);
     std::size_t binarySearch_(const T* key,
                        const std::size_t col,
                        const std::size_t vecSize,
