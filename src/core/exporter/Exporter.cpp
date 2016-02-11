@@ -122,7 +122,7 @@ std::string Exporter::getBoundaryName(
         const Geometry::Mesh::Structured* mesh,
         const std::size_t i,
         const std::size_t j) {
-    const Geometry::Element::Model* boundType = mesh->bounds()[i][j];
+    const Geometry::Element::Model* boundType = mesh->bounds()(i, j);
     std::string boundName;
     if (boundType == NULL) {
         boundName = "Undefined";

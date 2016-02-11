@@ -28,6 +28,7 @@
 
 #include "Mesh.h"
 #include "geometry/Grid.h"
+#include "geometry/BoundTerminations.h"
 #include "geometry/coordinate/Group.h"
 #include "geometry/element/Group.h"
 #include "geometry/layer/Group.h"
@@ -42,19 +43,16 @@ class Structured : public virtual Mesh,
                    public virtual Grid3,
                    public virtual Coordinate::Group<CoordI3>,
                    public virtual Element::Group<ElemI>,
-                   public virtual Layer::Group<Layer::Layer> {
+                   public virtual Layer::Group<Layer::Layer>,
+                   public virtual BoundTerminations3 {
 public:
-    typedef std::array<std::array<const Element::Model*,2>,3>
-                BoundTerminations;
-
     Structured(const Grid3& grid);
     Structured(const Grid3& grid,
                const Coordinate::Group<const CoordI3>& cG,
                const Element::Group<const ElemI>& elem,
                const Layer::Group<const Layer::Layer>& =
                    Layer::Group<const Layer::Layer>(),
-               const BoundTerminations& =
-                   {{{NULL,NULL},{NULL,NULL},{NULL,NULL}}});
+                   const BoundTerminations3& = BoundTerminations3());
     Structured(const Structured& param);
     virtual ~Structured();
 
@@ -62,17 +60,17 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Structured);
 
-    BoundTerminations&          bounds() { return bounds_; }
-    Grid3&                      grid  () { return *this;   }
-    Coordinate::Group<CoordI3>& coords() { return *this;   }
-    Element::Group<ElemI>&      elems () { return *this;   }
-    Layer::Group<>&             layers() { return *this;   }
+    BoundTerminations3&         bounds() { return *this; }
+    Grid3&                      grid  () { return *this; }
+    Coordinate::Group<CoordI3>& coords() { return *this; }
+    Element::Group<ElemI>&      elems () { return *this; }
+    Layer::Group<>&             layers() { return *this; }
 
-    const BoundTerminations&          bounds() const { return bounds_; }
-    const Grid3&                      grid  () const { return *this;   }
-    const Coordinate::Group<CoordI3>& coords() const { return *this;   }
-    const Element::Group<ElemI>&      elems () const { return *this;   }
-    const Layer::Group<>&             layers() const { return *this;   }
+    const BoundTerminations3&         bounds() const { return *this; }
+    const Grid3&                      grid  () const { return *this; }
+    const Coordinate::Group<CoordI3>& coords() const { return *this; }
+    const Element::Group<ElemI>&      elems () const { return *this; }
+    const Layer::Group<>&             layers() const { return *this; }
 
     Unstructured* getMeshUnstructured() const;
     Structured* getConnectivityMesh() const;
@@ -88,9 +86,8 @@ public:
             SEMBA::Group::Identifiable<Element::Model, MatId>());
 
     virtual void printInfo() const;
-private:
-    BoundTerminations bounds_;
 
+private:
     std::vector<HexI8*> discretizeWithinBoundary(
             const Element::Group<const SurfI>& faces);
     std::vector<std::pair<const SurfI*, const SurfI*> >

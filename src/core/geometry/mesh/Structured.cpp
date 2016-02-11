@@ -28,11 +28,7 @@ namespace Mesh {
 
 Structured::Structured(const Grid3& grid)
 :   Grid3(grid) {
-    for (std::size_t d = 0; d < 3; d++) {
-        for (std::size_t p = 0; p < 2; p++) {
-            bounds_[d][p] = NULL;
-        }
-    }
+
 }
 
 Structured::Structured(
@@ -40,17 +36,12 @@ Structured::Structured(
         const Coordinate::Group<const CoordI3>& cG,
         const Element::Group<const ElemI>& elem,
         const Layer::Group<const Layer::Layer>& layers,
-        const BoundTerminations& bounds)
+        const BoundTerminations3& bounds)
 :   Grid3(grid),
     Coordinate::Group<CoordI3>(cG.cloneElems()),
     Element::Group<ElemI>(elem.cloneElems()),
-    Layer::Group<Layer::Layer>(layers.cloneElems()) {
-
-    for (std::size_t d = 0; d < 3; d++) {
-        for (std::size_t p = 0; p < 2; p++) {
-            bounds_[d][p] = bounds[d][p];
-        }
-    }
+    Layer::Group<Layer::Layer>(layers.cloneElems()),
+    BoundTerminations3(bounds) {
 
     Element::Group<ElemI>::reassignPointers(this->coords());
     Element::Group<ElemI>::reassignPointers(this->layers());
@@ -60,9 +51,8 @@ Structured::Structured(const Structured& rhs)
 :   Grid3(rhs),
     Coordinate::Group<CoordI3>(rhs.coords().cloneElems()),
     Element::Group<ElemI>(rhs.elems().cloneElems()),
-    Layer::Group<Layer::Layer>(rhs.layers().cloneElems()) {
-
-    bounds_ = rhs.bounds_;
+    Layer::Group<Layer::Layer>(rhs.layers().cloneElems()),
+    BoundTerminations3(rhs.bounds()) {
 
     Element::Group<ElemI>::reassignPointers(this->coords());
     Element::Group<ElemI>::reassignPointers(this->layers());
@@ -81,8 +71,7 @@ Structured& Structured::operator=(const Structured& rhs) {
     Coordinate::Group<CoordI3>::operator=(rhs.coords().cloneElems());
     Element::Group<ElemI>::operator=(rhs.elems().cloneElems());
     Layer::Group<Layer::Layer>::operator=(rhs.layers().cloneElems());
-
-    bounds_ = rhs.bounds_;
+    BoundTerminations3::operator=(rhs.bounds());
 
     Element::Group<ElemI>::reassignPointers(this->coords());
     Element::Group<ElemI>::reassignPointers(this->layers());

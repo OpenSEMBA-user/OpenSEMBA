@@ -130,7 +130,7 @@ void Exporter::writeMesh_(const Data* smb) {
     if (meshStr != NULL && grid != NULL) {
         for (std::size_t i = 0; i < 3; i++) {
             for (std::size_t j = 0; j < 2; j++) {
-                if (meshStr->bounds()[i][j] != NULL) {
+                if (meshStr->bounds()(i, j) != NULL) {
                     Geometry::CoordR3Group cG;
                     Group::Group<Geometry::ElemR> bound =
                         getBoundary(Math::Constants::CartesianAxis(i),
