@@ -311,11 +311,12 @@ void Parser::readSolverSettings(Solver::Settings& opts,
 //    return res;
 //}
 
-Geometry::Mesh::Unstructured* Parser::readMesh() {
+Geometry::Mesh::Geometric* Parser::readMesh() {
+    const Geometry::Grid3& grid = readCartesianGrid();
     Geometry::Layer::Group<> lG = readLayers();
     Geometry::Coordinate::Group<Geometry::CoordR3> cG = readCoordinates();
     Geometry::Element::Group<Geometry::ElemR> eG = readElements(cG, lG);
-    return new Geometry::Mesh::Unstructured(cG, eG, lG);
+    return new Geometry::Mesh::Geometric(grid, cG, eG, lG);
 }
 
 Source::Group<>* Parser::readEMSources() {
@@ -1178,13 +1179,15 @@ void Parser::getNextLabelAndValue(std::string& label, std::string& value) {
     value = trim(value);
 }
 
-Geometry::Grid3* Parser::readCartesianGrid() {
+Geometry::Grid3 Parser::readCartesianGrid() {
     std::string label, line, value;
+    bool paddingByNumberOfCells;
     bool finished = false;
     bool gridLabelFound = false;
     bool gridFound = false;
-    Geometry::Grid3* grid = NULL;
+    Geometry::Grid3 grid;
     Geometry::BoxR3 bound;
+    std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding, boundaryMeshSize;
     bool stepsByNumberOfCells = true;
     Math::CVecI3 numElems;
     Math::CVecR3 steps;
@@ -1212,6 +1215,16 @@ Geometry::Grid3* Parser::readCartesianGrid() {
                     } else {
                         steps = aux;
                     }
+                } else if (label.compare("Boundary padding type") == 0) {
+                    if (trim(value).compare("by_number_of_cells")==0) {
+                        paddingByNumberOfCells = true;
+                    } else {
+                        paddingByNumberOfCells = false;
+                    }
+                } else if (label.compare("Boundary padding") == 0) {
+                    boundaryPadding = strToBox(value);
+                } else if (label.compare("Boundary mesh size") == 0) {
+                    boundaryMeshSize = strToBox(value);
                 } else if(label.find("End of Grid") != label.npos) {
                     finished = true;
                     if (!gridFound) {
@@ -1226,18 +1239,23 @@ Geometry::Grid3* Parser::readCartesianGrid() {
             }
         }
     }
+    if (paddingByNumberOfCells) {
+        boundaryPadding.first =
+                boundaryPadding.first  * boundaryMeshSize.first;
+        boundaryPadding.second =
+                boundaryPadding.second * boundaryMeshSize.second;
+    }
     // Throws error message if label was not found.
     if (!gridLabelFound) {
         throw std::logic_error("Grid3 label not found.");
     }
     if (gridFound) {
         if (stepsByNumberOfCells) {
-            grid = new Geometry::Grid3(bound, numElems);
+            grid = Geometry::Grid3(bound, numElems);
         } else {
-            grid = new Geometry::Grid3(bound, steps);
+            grid = Geometry::Grid3(bound, steps);
         }
-    } else {
-        grid = NULL;
+        grid.enlarge(boundaryPadding, boundaryMeshSize);
     }
     return grid;
 }

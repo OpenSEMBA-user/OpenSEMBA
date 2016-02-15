@@ -42,7 +42,6 @@ public:
 protected:
     std::ifstream f_in; // Input file stream.
     Math::Real scalingFactor_;
-    std::pair<Math::CVecR3,Math::CVecR3> boundaryPadding_, boundaryMeshSize_;
 
     static Math::CVecR3 strToCartesianVector(const std::string& str);
     static bool strToBool(const std::string& value);

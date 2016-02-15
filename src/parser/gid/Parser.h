@@ -28,7 +28,7 @@
 #include <iostream>
 #include <string>
 
-#include "geometry/mesh/Unstructured.h"
+#include "geometry/mesh/Geometric.h"
 #include "physicalModel/Multiport.h"
 #include "physicalModel/SurfaceMultilayer.h"
 #include "physicalModel/SurfaceSIBC.h"
@@ -82,7 +82,7 @@ private:
     } WaveportShape;
 
     PhysicalModel::Group<>* physicalModels_;
-    Geometry::Mesh::Unstructured* mesh_;
+    Geometry::Mesh::Geometric* mesh_;
     ProblemSize pSize_;
 
     Solver::Info* readSolver();
@@ -93,7 +93,7 @@ private:
     Source::Group<>* readEMSources();
     OutputRequest::Group<>* readOutputRequests();
     PhysicalModel::Group<>* readMaterials();
-    Geometry::Mesh::Unstructured* readMesh();
+    Geometry::Mesh::Geometric* readMesh();
     ProblemSize readProblemSize();
     PhysicalModel::VolumeDispersive* readDispersiveMatFile(
             const MatId id,
@@ -130,7 +130,7 @@ private:
     void readLin2Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
                            std::vector<Geometry::ElemR*>& elems);
-    Geometry::Grid3* readCartesianGrid();
+    Geometry::Grid3 readCartesianGrid();
     void readOutRqInstances(OutputRequest::Group<>* res);
     void getNextLabelAndValue(std::string& label, std::string& value);
     Source::PlaneWave* readPlaneWave();

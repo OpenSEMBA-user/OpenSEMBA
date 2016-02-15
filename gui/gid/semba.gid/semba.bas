@@ -53,9 +53,6 @@ Upper y bound: *GenData(Upper_y_bound)
 Lower y bound: *GenData(Lower_y_bound)
 Upper z bound: *GenData(Upper_z_bound)
 Lower z bound: *GenData(Lower_z_bound)
-Boundary padding type: *GenData(boundary_padding_type)
-Boundary padding: {*GenData(Upper_x_boundary_padding) *GenData(Upper_y_boundary_padding) *GenData(Upper_z_boundary_padding) *GenData(Lower_x_boundary_padding) *GenData(Lower_y_boundary_padding) *GenData(Lower_z_boundary_padding)}
-Boundary mesh size: {*GenData(Upper_x_boundary_mesh_size) *GenData(Upper_y_boundary_mesh_size) *GenData(Upper_z_boundary_mesh_size) *GenData(Lower_x_boundary_mesh_size) *GenData(Lower_y_boundary_mesh_size) *GenData(Lower_z_boundary_mesh_size)}
 Mesher: *GenData(Mesher)
 Brute force volumes: *GenData(Brute_force_volumes)
 VTK Export: *GenData(VTK_Export)
@@ -64,17 +61,6 @@ Mode: *GenData(Mode)
 Forbidden length: *GenData(Forbidden_length)
 Scale factor: *GenData(Scale_factor)
 Scale factor value: *GenData(Scale_factor_value)
-Grid:
-*set elems(all)
-*set Cond Grid
-*if(CondNumEntities(int)>0)
-*loop layers *OnlyInCond
- Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
- Type: *cond(Type)
- Directions: *cond(x_direction) *cond(y_direction) *cond(z_direction)
-*end layers
-*endif
-End of Grid
 End of Mesher options
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
 cudg3d options:
@@ -168,6 +154,21 @@ Ferrite relative permittivity: *matprop(Ferrite_relative_permittivity)
 End of Material:
 *end materials
 End of materials:
+
+Grid:
+*set elems(all)
+*set Cond Grid
+*if(CondNumEntities(int)>0)
+*loop layers *OnlyInCond
+ Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
+ Type: *cond(Type)
+ Directions: *cond(x_direction) *cond(y_direction) *cond(z_direction)
+*end layers
+*endif
+Boundary padding type: *GenData(boundary_padding_type)
+Boundary padding: {*GenData(Upper_x_boundary_padding) *GenData(Upper_y_boundary_padding) *GenData(Upper_z_boundary_padding) *GenData(Lower_x_boundary_padding) *GenData(Lower_y_boundary_padding) *GenData(Lower_z_boundary_padding)}
+Boundary mesh size: {*GenData(Upper_x_boundary_mesh_size) *GenData(Upper_y_boundary_mesh_size) *GenData(Upper_z_boundary_mesh_size) *GenData(Lower_x_boundary_mesh_size) *GenData(Lower_y_boundary_mesh_size) *GenData(Lower_z_boundary_mesh_size)}
+End of Grid
 
 Layers:
 *set elems(all)
