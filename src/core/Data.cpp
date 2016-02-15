@@ -53,6 +53,13 @@ Data::Data(const Data& rhs)
     if (rhs.outputRequests != NULL) {
         outputRequests = rhs.outputRequests->clone();
     }
+    if (mesh != NULL) {
+        if (physicalModels != NULL) {
+            mesh->reassignPointers(*physicalModels);
+        } else {
+            mesh->reassignPointers();
+        }
+    }
 }
 
 Data::~Data() {
@@ -97,6 +104,13 @@ Data& Data::operator=(const Data& rhs) {
     }
     if (rhs.outputRequests != NULL) {
         outputRequests = rhs.outputRequests->clone();
+    }
+    if (mesh != NULL) {
+        if (physicalModels != NULL) {
+            mesh->reassignPointers(*physicalModels);
+        } else {
+            mesh->reassignPointers();
+        }
     }
     return *this;
 }
