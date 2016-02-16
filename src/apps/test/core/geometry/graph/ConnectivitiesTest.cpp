@@ -19,49 +19,58 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "geometry/graphs/Connectivities.h"
+#include "geometry/graph/Connectivities.h"
+#include "geometry/element/Tetrahedron4.h"
+
+using namespace SEMBA;
+using namespace Geometry;
+using namespace Math;
 
 class GeometryConnectivitiesTest : public ::testing::Test {
     void SetUp() {
-        cG_.add(new CoordR3(CoordinateId(1), CVecR3( 0.0, 0.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(2), CVecR3( 0.0, 0.0, 1.0)));
-        cG_.add(new CoordR3(CoordinateId(3), CVecR3( 1.0, 0.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(4), CVecR3( 0.0, 1.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(5), CVecR3(-1.0, 0.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(6), CVecR3( 1.0, 1.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(7), CVecR3( 1.0, 1.0, 1.0)));
-        cG_.add(new CoordR3(CoordinateId(8), CVecR3( 2.0, 0.0, 0.0)));
-        LayerId lId(1);
-        MatId mId(1);
+        cG_.add(new CoordR3(CoordId(1), CVecR3( 0.0, 0.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(2), CVecR3( 0.0, 0.0, 1.0)));
+        cG_.add(new CoordR3(CoordId(3), CVecR3( 1.0, 0.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(4), CVecR3( 0.0, 1.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(5), CVecR3(-1.0, 0.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(6), CVecR3( 1.0, 1.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(7), CVecR3( 1.0, 1.0, 1.0)));
+        cG_.add(new CoordR3(CoordId(8), CVecR3( 2.0, 0.0, 0.0)));
         {
-            CoordinateId vId[4] = {CoordinateId(1), CoordinateId(2),
-                                   CoordinateId(3), CoordinateId(4)};
-            elem_.add(new Tet4(cG_, ElementId(1), vId, lId, mId));
+            const CoordR3* v[4] = {
+                    cG_.getId(CoordId(1)), cG_.getId(CoordId(2)),
+                    cG_.getId(CoordId(3)), cG_.getId(CoordId(4))};
+            elem_.add(new Tet4(ElemId(1), v));
         }
         {
-            CoordinateId vId[4] = {CoordinateId(1), CoordinateId(2),
-                                   CoordinateId(4), CoordinateId(5)};
-            elem_.add(new Tet4(cG_, ElementId(2), vId, lId, mId));
+            const CoordR3* v[4] = {
+                    cG_.getId(CoordId(1)), cG_.getId(CoordId(2)),
+                    cG_.getId(CoordId(4)), cG_.getId(CoordId(5))};
+            elem_.add(new Tet4(ElemId(2), v));
         }
         {
-            CoordinateId vId[4] = {CoordinateId(3), CoordinateId(4),
-                                   CoordinateId(6), CoordinateId(7)};
-            elem_.add(new Tet4(cG_, ElementId(3), vId, lId, mId));
+            const CoordR3* v[4] = {
+                    cG_.getId(CoordId(3)), cG_.getId(CoordId(4)),
+                    cG_.getId(CoordId(6)), cG_.getId(CoordId(7))};
+            elem_.add(new Tet4(ElemId(3), v));
         }
         {
-            CoordinateId vId[4] = {CoordinateId(3), CoordinateId(8),
-                                   CoordinateId(6), CoordinateId(7)};
-            elem_.add(new Tet4(cG_, ElementId(4), vId, lId, mId));
+            const CoordR3* v[4] = {
+                    cG_.getId(CoordId(3)), cG_.getId(CoordId(8)),
+                    cG_.getId(CoordId(6)), cG_.getId(CoordId(7))};
+            elem_.add(new Tet4(ElemId(4), v));
         }
         {
-            CoordinateId vId[3] = {
-                    CoordinateId(3),  CoordinateId(6), CoordinateId(7)};
-            elem_.add(new Tri3(cG_, ElementId(5), vId, lId, mId));
+            const CoordR3* v[3] = {
+                    cG_.getId(CoordId(3)),  cG_.getId(CoordId(6)),
+                    cG_.getId(CoordId(7))};
+            elem_.add(new Tri3(ElemId(5), v));
         }
         {
-            CoordinateId vId[3] = {
-                    CoordinateId(1),  CoordinateId(2), CoordinateId(3)};
-            elem_.add(new Tri3(cG_, ElementId(6), vId, lId, mId));
+            const CoordR3* v[3] = {
+                    cG_.getId(CoordId(1)),  cG_.getId(CoordId(2)),
+                    cG_.getId(CoordId(3))};
+            elem_.add(new Tri3(ElemId(6), v));
         }
     }
     void TearDown() {
@@ -70,22 +79,23 @@ class GeometryConnectivitiesTest : public ::testing::Test {
     }
 protected:
     CoordR3Group cG_;
-    GroupElements<const ElemR> elem_;
+    ElemRGroup elem_;
 };
 
 TEST_F(GeometryConnectivitiesTest, ConnectivtiesReciprocity) {
     //  Creates reciprocal connectivities.
     {
-        Connectivities conn(elem_);
+        Graph::Connectivities conn(elem_);
         EXPECT_EQ(6, conn.size());
         EXPECT_TRUE(conn.existsReciprocity());
     }
     // Creates non recicprocal connectivities.
-    array<CoordinateId,4> vId = {CoordinateId(1), CoordinateId(2),
-                           CoordinateId(4), CoordinateId(5)};
-    elem_.add(new Tet4(cG_, ElementId(7), vId.begin(), LayerId(1), MatId(1)));
+    const CoordR3* v[4] = {
+            cG_.getId(CoordId(1)), cG_.getId(CoordId(2)),
+            cG_.getId(CoordId(4)), cG_.getId(CoordId(5))};
+    elem_.add(new Tet4(ElemId(7), v));
     {
-        Connectivities conn(elem_);
+        Graph::Connectivities conn(elem_);
         EXPECT_EQ(7, conn.size());
         EXPECT_FALSE(conn.existsReciprocity());
     }
@@ -93,20 +103,20 @@ TEST_F(GeometryConnectivitiesTest, ConnectivtiesReciprocity) {
 }
 
 TEST_F(GeometryConnectivitiesTest, InnerOuterFace) {
-    Connectivities conn(elem_);
+    Graph::Connectivities conn(elem_);
     {
-        const Tri3* tri = elem_.getId(ElementId(6))->castTo<Tri3>();
-        EXPECT_EQ(Face(NULL,0),conn.getOuterFace(tri));
+        const Tri3* tri = elem_.getId(ElemId(6))->castTo<Tri3>();
+        EXPECT_EQ(Element::Face(NULL,0), conn.getOuterFace(tri));
         EXPECT_TRUE(conn.isDomainBoundary(conn.getInnerFace(tri)));
     }
 
     {
-        const Tri3* tri = elem_.getId(ElementId(5))->castTo<Tri3>();
+        const Tri3* tri = elem_.getId(ElemId(5))->castTo<Tri3>();
 
-        const Tet4* innerTet = elem_.getId(ElementId(3))->castTo<Tet4>();
+        const Tet4* innerTet = elem_.getId(ElemId(3))->castTo<Tet4>();
         EXPECT_EQ(innerTet, conn.getInnerFace(tri).first);
 
-        const Tet4* outerTet = elem_.getId(ElementId(4))->castTo<Tet4>();
+        const Tet4* outerTet = elem_.getId(ElemId(4))->castTo<Tet4>();
         EXPECT_EQ(outerTet, conn.getOuterFace(tri).first);
     }
 }

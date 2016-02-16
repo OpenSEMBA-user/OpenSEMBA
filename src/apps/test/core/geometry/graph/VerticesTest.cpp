@@ -22,6 +22,7 @@
 #include "geometry/graph/Vertices.h"
 #include "geometry/element/Group.h"
 #include "geometry/element/Triangle3.h"
+#include "geometry/element/Line2.h"
 
 using namespace SEMBA;
 using namespace Geometry;
@@ -36,25 +37,34 @@ class GeometryGraphVerticesTest : public ::testing::Test {
         cG_.add(new CoordR3(CoordId(5), CVecR3(-1.0, 1.0, 0.0)));
         cG_.add(new CoordR3(CoordId(6), CVecR3(-1.0, 0.0, 0.0)));
         {
-            CoordId vId[3] = {CoordId(1), CoordId(2), CoordId(3)};
-            elem_.add(new Tri3(cG_, ElemId(1), vId));
+            const CoordR3* v[3] = {
+                    cG_.getId(CoordId(1)), cG_.getId(CoordId(2)),
+                    cG_.getId(CoordId(3))};
+            elem_.add(new Tri3(ElemId(1), v));
         }
-//        {
-//            CoordId vId[3] = {CoordId(2), CoordId(4), CoordId(3)};
-//            elem_.add(new Tri3(cG_, ElemId(2), vId));
-//        }
-//        {
-//            CoordId vId[3] = {CoordId(1), CoordId(3), CoordId(5)};
-//            elem_.add(new Tri3(cG_, ElemId(3), vId));
-//        }
-//        {
-//            CoordId vId[3] = {CoordId(1), CoordId(5), CoordId(6)};
-//            elem_.add(new Tri3(cG_, ElemId(4), vId));
-//        }
-//        {
-//            CoordId vId[2] = {CoordId(1), CoordId(3)};
-//            elem_.add(new LinR2(cG_, ElemId(5), vId));
-//        }
+        {
+            const CoordR3* v[3] = {
+                    cG_.getId(CoordId(2)), cG_.getId(CoordId(4)),
+                    cG_.getId(CoordId(3))};
+            elem_.add(new Tri3(ElemId(2), v));
+        }
+        {
+            const CoordR3* v[3] = {
+                    cG_.getId(CoordId(1)), cG_.getId(CoordId(3)),
+                    cG_.getId(CoordId(5))};
+            elem_.add(new Tri3(ElemId(3), v));
+        }
+        {
+            const CoordR3* v[3] = {
+                    cG_.getId(CoordId(1)), cG_.getId(CoordId(5)),
+                    cG_.getId(CoordId(6))};
+            elem_.add(new Tri3(ElemId(4), v));
+        }
+        {
+            const CoordR3* v[2] = {
+                    cG_.getId(CoordId(1)), cG_.getId(CoordId(3))};
+            elem_.add(new LinR2(ElemId(5), v));
+        }
     }
     void TearDown() {
         cG_.clear();

@@ -22,8 +22,8 @@
 
 TEST_F(GeometryElementGroupTest, Copy){
     vector<CoordR3*> coords = newCoordR3Vector();
-    GroupCoordinates<>* original = new GroupCoordinates<>(coords);
-    GroupCoordinates<> copied;
+    Coordinate::Group<>* original = new Coordinate::Group<>(coords);
+    Coordinate::Group<> copied;
     copied = *original;
 
     EXPECT_TRUE(checkTypes(*original));
@@ -35,7 +35,7 @@ TEST_F(GeometryElementGroupTest, Copy){
 }
 
 TEST_F(GeometryElementGroupTest, CopyCtor){
-    GroupCoordinates<> grp;
+    Coordinate::Group<> grp;
     {
         vector<CoordR3*> coords = newCoordR3Vector();
         grp.add(coords);
@@ -45,9 +45,9 @@ TEST_F(GeometryElementGroupTest, CopyCtor){
 
 TEST_F(GeometryElementGroupTest, idsConservation){
     vector<CoordR3*> coords = newCoordR3Vector();
-    GroupCoordinates<> grp(coords);
+    Coordinate::Group<> grp(coords);
     EXPECT_EQ(coords.size(), grp.size());
-    for (UInt i = 0; i < grp.size(); i++) {
+    for (size_t i = 0; i < grp.size(); i++) {
         EXPECT_EQ(coords[i]->getId(), grp(i)->getId());
     }
 }
