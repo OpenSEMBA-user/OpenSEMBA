@@ -33,8 +33,8 @@ TEST(MathCartesianVectorTest, Basic) {
 }
 
 TEST(MathCartesianVectorTest, Complex) {
-    complex<double> zero(0.0, 0.0);
-    complex<double> realOne(1.0, 0.0);
+    std::complex<double> zero(0.0, 0.0);
+    std::complex<double> realOne(1.0, 0.0);
     CVecC3 a(realOne, realOne, realOne);
     EXPECT_EQ(a, a);
     EXPECT_EQ(sqrt(3.0), a.norm());

@@ -37,14 +37,15 @@ SRC_DIRS := $(SRC_APP_DIR) $(SRC_CORE_MATH_TESTS_DIRS)
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 # =============================================================================
-LIBS = opensemba
-INCLUDES += $(LIB_DIR)opensemba/include/ $(LIB_DIR)opensemba/include/core/
+LIBS       = opensemba gtest
+LIBRARIES += $(LIB_DIR)opensemba/lib/
+INCLUDES  += $(LIB_DIR)opensemba/include/ $(LIB_DIR)opensemba/include/core/
 # =============================================================================
 .PHONY: default clean clobber print
 
 default: print $(OUT)
 	@echo "======================================================="
-	@echo "           $(OUT) compilation finished             "
+	@echo "           $(OUT) compilation finished"
 	@echo "======================================================="
 		
 clean:

@@ -18,6 +18,9 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+
+#include <utility>
+
 #include "gtest/gtest.h"
 #include "math/matrix/Dynamic.h"
 
@@ -64,7 +67,7 @@ TEST_F(MathDynMatrixTest, BasicOperations) {
    c = a_.kron(b_);
    EXPECT_EQ(c.nRows(), a_.nRows() + b_.nRows());
    EXPECT_EQ(c.nCols(), a_.nCols() + b_.nCols());
-   pair<int,int> fIndices(0,1), sIndices(2,3);
+   std::pair<size_t,size_t> fIndices(0,1), sIndices(2,3);
    EXPECT_EQ(c.sub(fIndices, fIndices), b_ * a_(0,0));
    EXPECT_EQ(c.sub(fIndices, sIndices), b_ * a_(0,1));
    EXPECT_EQ(c.sub(sIndices, fIndices), b_ * a_(1,0));

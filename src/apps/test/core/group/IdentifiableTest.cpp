@@ -27,7 +27,15 @@
 
 #include "gtest/gtest.h"
 #include "class/Identifiable.h"
-#include "geometry/layers/GroupLayers.h"
+#include "geometry/layer/Group.h"
+
+using namespace std;
+
+using namespace SEMBA;
+using namespace Class;
+using namespace Geometry;
+using namespace Layer;
+
 
 class BaseGroupGroupIdTest : public ::testing::Test {
 public:
@@ -43,8 +51,8 @@ protected:
         return res;
     }
 
-    void areEqual(const vector<Layer*>& vec, const GroupLayers<>& layers) {
-        for (UInt i = 0; i < vec.size(); i++) {
+    void areEqual(const vector<Layer*>& vec, const Group<>& layers) {
+        for (size_t i = 0; i < vec.size(); i++) {
             EXPECT_EQ(*vec[i], *layers.getId(vec[i]->getId()));
         }
     }
@@ -52,6 +60,6 @@ protected:
 
 TEST_F(BaseGroupGroupIdTest, ctor) {
     vector<Layer*> vecLayers = newLayersVector();
-    GroupLayers<> layers(vecLayers);
+    Group<> layers(vecLayers);
     areEqual(vecLayers, layers);
 }

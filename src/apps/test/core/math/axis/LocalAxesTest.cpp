@@ -53,18 +53,18 @@ TEST_F(MathLocalAxesTest, BasicIdentities) {
 }
 
 TEST_F(MathLocalAxesTest, VectorTransformation) {
-    LocalAxes global(CVecR3(0.0));
-    LocalAxes local(CVecR3(Constants::pi/2, 0.0, 0.0));
+    Local global(CVecR3(0.0));
+    Local local(CVecR3(Constants::pi/2, 0.0, 0.0));
 
     CVecR3 localV(1.0,1.0,0.0);
     EXPECT_EQ(CVecR3(-1.0,1.0,1.0), local.convertToGlobal(localV));
 }
 
 TEST_F(MathLocalAxesTest, TensorTransformation) {
-    LocalAxes global(CVecR3(0.0));
+    Local global(CVecR3(0.0));
 
     const Int rotations = 3;
-    LocalAxes local(CVecR3(Constants::pi*2.0/((Real)rotations), 0.0, 0.0));
+    Local local(CVecR3(Constants::pi*2.0/((Real)rotations), 0.0, 0.0));
 
     MatR33 original;
 
