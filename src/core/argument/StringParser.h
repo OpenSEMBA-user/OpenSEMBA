@@ -265,17 +265,17 @@ std::tuple<T1, T2, T3, T...> parse(const std::list<std::string>& input) {
 
 template<typename T>
 T parse(const std::string& input) {
-    return parse<T>({res});
+    return parse<T>({input});
 }
 
 template<typename T1, typename T2>
 std::pair<T1, T2> parse(const std::string& input) {
-    return parse<T1, T2>({res});
+    return parse<T1, T2>({input});
 }
 
 template<typename T1, typename T2, typename T3, typename... T>
 std::tuple<T1, T2, T3, T...> parse(const std::string& input) {
-    return parse<T1, T2, T3, T...>({res});
+    return parse<T1, T2, T3, T...>({input});
 }
 
 template<typename T>
