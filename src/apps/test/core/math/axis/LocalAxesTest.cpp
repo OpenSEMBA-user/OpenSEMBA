@@ -25,16 +25,20 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+using namespace SEMBA;
+using namespace Math;
+using namespace Axis;
+
 class MathLocalAxesTest : public ::testing::Test {
 
 };
 
 TEST_F(MathLocalAxesTest, BasicIdentities) {
 
-    SEMBA::Math::Axis global(CVecR3(0.0));
+    Local global(CVecR3(0.0));
 
     CVecR3 localOrigin(3.0,0.0,0.0);
-    LocalAxes local(CVecR3(Constants::pi, Constants::pi_2, Constants::pi / 3.0), localOrigin);
+    Local local(CVecR3(Constants::pi, Constants::pi_2, Constants::pi / 3.0), localOrigin);
 
     MatR33 eye;
     eye.eye();

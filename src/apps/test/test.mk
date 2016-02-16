@@ -35,7 +35,7 @@ SRC_CORE_MATH_TESTS_DIRS = $(shell find $(SRC_APP_DIR)/core/math/ -type d)
 SRC_DIRS := $(SRC_APP_DIR) $(SRC_CORE_MATH_TESTS_DIRS)
 
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
-OBJS_CXX := $(addprefix $(OBJDIR), $(SRCS_CXX:.cpp=.o))
+OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 # =============================================================================
 LIBS = opensemba
 INCLUDES += $(LIB_DIR)opensemba/include/ $(LIB_DIR)opensemba/include/core/
@@ -48,7 +48,7 @@ default: print $(OUT)
 	@echo "======================================================="
 		
 clean:
-	rm -rf $(OBJDIR)
+	rm -rf $(OBJ_DIR)
 
 clobber: clean
 	rm -rf $(BIN_DIR)
@@ -59,9 +59,9 @@ $(OBJ_DIR)%.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
 	
 $(OUT): $(OBJS_CXX)
-	@mkdir -p $(BINDIR)
+	@mkdir -p $(BIN_DIR)
 	@echo "Linking:" $@
-	${CXX} $^ -o $(BINDIR)$(OUT) $(CXXFLAGS) \
+	${CXX} $^ -o $(BIN_DIR)$(OUT) $(CXXFLAGS) \
 	 $(addprefix -D, $(DEFINES)) \
 	 $(addprefix -I, ${INCLUDES}) \
 	 $(addprefix -L, ${LIBRARIES}) $(addprefix -l, ${LIBS})

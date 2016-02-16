@@ -95,7 +95,7 @@ opensemba: check gidpost
 	$(MAKE) -f ./src/apps/opensemba/opensemba.mk
 
 testSemba: check opensemba
-	-mkdir -p  $(BIN_DIR)/test/  
+	-mkdir -p  $(BIN_DIR)/test/
 	$(MAKE) -f ./src/apps/test/test.mk
 
 gidpost: create_dirs check
