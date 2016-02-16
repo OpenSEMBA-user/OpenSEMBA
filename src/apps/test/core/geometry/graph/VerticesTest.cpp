@@ -19,41 +19,42 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "geometry/graphs/GraphVertices.h"
-#include "geometry/elements/GroupElements.h"
+#include "geometry/graph/Vertices.h"
+#include "geometry/element/Group.h"
+#include "geometry/element/Triangle3.h"
+
+using namespace SEMBA;
+using namespace Geometry;
+using namespace Math;
 
 class GeometryGraphVerticesTest : public ::testing::Test {
     void SetUp() {
-        cG_.add(new CoordR3(CoordinateId(1), CVecR3( 0.0, 0.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(2), CVecR3( 1.0, 0.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(3), CVecR3( 0.0, 1.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(4), CVecR3( 1.0, 1.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(5), CVecR3(-1.0, 1.0, 0.0)));
-        cG_.add(new CoordR3(CoordinateId(6), CVecR3(-1.0, 0.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(1), CVecR3( 0.0, 0.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(2), CVecR3( 1.0, 0.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(3), CVecR3( 0.0, 1.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(4), CVecR3( 1.0, 1.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(5), CVecR3(-1.0, 1.0, 0.0)));
+        cG_.add(new CoordR3(CoordId(6), CVecR3(-1.0, 0.0, 0.0)));
         {
-            CoordinateId vId[3] = {
-                    CoordinateId(1), CoordinateId(2), CoordinateId(3)};
-            elem_.add(new Tri3(cG_, ElementId(1), vId));
+            CoordId vId[3] = {CoordId(1), CoordId(2), CoordId(3)};
+            elem_.add(new Tri3(cG_, ElemId(1), vId));
         }
-        {
-            CoordinateId vId[3] = {
-                    CoordinateId(2), CoordinateId(4), CoordinateId(3)};
-            elem_.add(new Tri3(cG_, ElementId(2), vId));
-        }
-        {
-            CoordinateId vId[3] = {
-                    CoordinateId(1), CoordinateId(3), CoordinateId(5)};
-            elem_.add(new Tri3(cG_, ElementId(3), vId));
-        }
-        {
-            CoordinateId vId[3] = {
-                    CoordinateId(1), CoordinateId(5), CoordinateId(6)};
-            elem_.add(new Tri3(cG_, ElementId(4), vId));
-        }
-        {
-            CoordinateId vId[2] = {CoordinateId(1), CoordinateId(3)};
-            elem_.add(new LinR2(cG_, ElementId(5), vId));
-        }
+//        {
+//            CoordId vId[3] = {CoordId(2), CoordId(4), CoordId(3)};
+//            elem_.add(new Tri3(cG_, ElemId(2), vId));
+//        }
+//        {
+//            CoordId vId[3] = {CoordId(1), CoordId(3), CoordId(5)};
+//            elem_.add(new Tri3(cG_, ElemId(3), vId));
+//        }
+//        {
+//            CoordId vId[3] = {CoordId(1), CoordId(5), CoordId(6)};
+//            elem_.add(new Tri3(cG_, ElemId(4), vId));
+//        }
+//        {
+//            CoordId vId[2] = {CoordId(1), CoordId(3)};
+//            elem_.add(new LinR2(cG_, ElemId(5), vId));
+//        }
     }
     void TearDown() {
         cG_.clear();
@@ -66,7 +67,7 @@ protected:
 
 TEST_F(GeometryGraphVerticesTest, Ctor) {
     //  Creates Graph.
-    GraphVertices<ElemR,CoordR3> graph;
+    Graph::Vertices<ElemR,CoordR3> graph;
     graph.init(elem_);
     EXPECT_EQ(5, graph.numElems());
     EXPECT_EQ(6, graph.numBounds());

@@ -18,32 +18,13 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "gtest/gtest.h"
-#include "geometry/Grid.h"
-//#include "apps/ugrMesher/cartesianGrid.h"
 
-class GeometryGridTest : public ::testing::Test {
+#include "GridTest.h"
 
-protected:
-    virtual void SetUp() {
-        min_ = CVecR3(0.0, 0.0, 0.0);
-        max_ = CVecR3(1.0, 1.0, 1.0);
-        step_ = CVecR3(0.05, 0.05, 0.05);
-        grid_ = Grid3(BoxR3(min_, max_), step_);
-
-
-        vector<double> offset_;
-        vector<double> off_;
-        off_.resize(3);
-        CVecR3 offsetIni;
-
-        offsetIni = grid_.getOrigin();
-
-    }
-
-    Grid3 grid_;
-    CVecR3 min_, max_, step_;
-};
+using namespace SEMBA;
+using namespace Geometry;
+using namespace Math;
+using namespace Constants;
 
 TEST_F(GeometryGridTest, BasicOperations) {
     EXPECT_EQ(grid_.getNumCells(), CVecI3(20, 20, 20));
@@ -52,7 +33,7 @@ TEST_F(GeometryGridTest, BasicOperations) {
 }
 
 TEST_F(GeometryGridTest, NaturalCells) {
-    const double tol = step_(x) / 1.0e3;
+    const double tol = step_(CartesianAxis::x) / 1.0e3;
     EXPECT_EQ(grid_.getCell(min_, false, 0.0), CVecI3(0,0,0));
     EXPECT_EQ(grid_.getCell(max_, false, tol), grid_.getNumCells());
 }
@@ -64,7 +45,7 @@ TEST_F(GeometryGridTest, NumberOfCells) {
 }
 
 TEST_F(GeometryGridTest, PosInRange) {
-    vector<Real> posInRange = grid_.getPosInRange(x,0.17,0.27);
+    std::vector<Real> posInRange = grid_.getPosInRange(x,0.17,0.27);
     EXPECT_EQ(2, posInRange.size());
     EXPECT_EQ(0.2, posInRange[0]);
     EXPECT_EQ(0.25, posInRange[1]);
@@ -92,7 +73,7 @@ TEST_F(GeometryGridTest, PosInRange) {
 //}
 
 TEST_F(GeometryGridTest, GetSteps) {
-    EXPECT_NEAR(0.05, grid_.getStep(0,2),MathUtils::tolerance);
-    EXPECT_NEAR(0.05, grid_.getStep(1,5),MathUtils::tolerance);
-    EXPECT_NEAR(0.05, grid_.getStep(2,5),MathUtils::tolerance);
+    EXPECT_NEAR(0.05, grid_.getStep(0,2), Util::tolerance);
+    EXPECT_NEAR(0.05, grid_.getStep(1,5), Util::tolerance);
+    EXPECT_NEAR(0.05, grid_.getStep(2,5), Util::tolerance);
 }

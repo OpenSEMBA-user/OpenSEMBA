@@ -20,10 +20,15 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "CoordinateTest.h"
 
+using namespace std;
+
+using namespace SEMBA;
+using namespace Geometry;
+
 TEST_F(GeometryCoordinateGroupTest, Copy){
     vector<CoordR3*> coords = newCoordR3Vector();
-    GroupCoordinates<>* original = new GroupCoordinates<>(coords);
-    GroupCoordinates<> copied;
+    Coordinate::Group<>* original = new Coordinate::Group<>(coords);
+    Coordinate::Group<> copied;
     copied = *original;
 
     EXPECT_TRUE(checkTypes(*original));
@@ -35,7 +40,7 @@ TEST_F(GeometryCoordinateGroupTest, Copy){
 }
 
 TEST_F(GeometryCoordinateGroupTest, CopyCtor){
-    GroupCoordinates<> grp;
+    Coordinate::Group<> grp;
     {
         vector<CoordR3*> coords = newCoordR3Vector();
         grp.add(coords);
@@ -45,19 +50,19 @@ TEST_F(GeometryCoordinateGroupTest, CopyCtor){
 
 TEST_F(GeometryCoordinateGroupTest, idsConservation){
     vector<CoordR3*> coords = newCoordR3Vector();
-    GroupCoordinates<> grp(coords);
+    Coordinate::Group<> grp(coords);
     EXPECT_EQ(coords.size(), grp.size());
-    for (UInt i = 0; i < grp.size(); i++) {
+    for (size_t i = 0; i < grp.size(); i++) {
         EXPECT_EQ(coords[i]->getId(), grp(i)->getId());
     }
 }
 
 TEST_F(GeometryCoordinateGroupTest, getByPos){
     vector<CoordR3*> coords = newCoordR3Vector();
-    GroupCoordinates<> grp(coords);
+    Coordinate::Group<> grp(coords);
     EXPECT_EQ(coords.size(), grp.size());
-    for (UInt i = 0; i < grp.size(); i++) {
-        CVecR3 pos = coords[i]->pos();
+    for (size_t i = 0; i < grp.size(); i++) {
+        Math::CVecR3 pos = coords[i]->pos();
         const CoordR3* found = grp.getPos(pos);
         EXPECT_EQ(pos, found->pos());
     }

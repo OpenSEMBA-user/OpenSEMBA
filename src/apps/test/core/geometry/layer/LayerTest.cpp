@@ -18,15 +18,11 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GeometryLayersLayerTest.cpp
- *
- *  Created on: Apr 14, 2015
- *      Author: luis
- */
-
 #include "gtest/gtest.h"
-#include "geometry/layers/Layer.h"
+#include "geometry/layer/Layer.h"
+
+using namespace SEMBA;
+using namespace Geometry;
 
 class GeometryLayersLayerTest : public ::testing::Test {
 public:
@@ -38,9 +34,9 @@ protected:
 };
 
 TEST_F(GeometryLayersLayerTest, comparison) {
-    Layer lay1P(LayerId(1), "Patata");
-    Layer lay1T(LayerId(1), "Tomate");
-    Layer lay2T(LayerId(2), "Tomate");
+    Layer::Layer lay1P(LayerId(1), "Patata");
+    Layer::Layer lay1T(LayerId(1), "Tomate");
+    Layer::Layer lay2T(LayerId(2), "Tomate");
 
     EXPECT_EQ(lay1P, lay1P);
     EXPECT_NE(lay1P, lay1T);

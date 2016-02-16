@@ -18,22 +18,19 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "gtest/gtest.h"
-#include "geometry/Box.h"
 
-template <typename T>
-class GeometryBoxTest : public ::testing::Test {
+#include "BoxTest.h"
 
-protected:
-
-};
+using namespace SEMBA;
+using namespace Math;
+using namespace Geometry;
 
 typedef ::testing::Types<Int, Real> MyTypes;
 TYPED_TEST_CASE(GeometryBoxTest, MyTypes);
 
 TYPED_TEST(GeometryBoxTest, VolumeBoxBasicOperations) {
-    CartesianVector<TypeParam,3> min(-0.1, -0.1, -0.1);
-    CartesianVector<TypeParam,3> max(1.0, 1.0, 1.0);
+    Vector::Cartesian<TypeParam,3> min(-0.1, -0.1, -0.1);
+    Vector::Cartesian<TypeParam,3> max(1.0, 1.0, 1.0);
     Box<TypeParam,3> box(min, max);
     EXPECT_EQ(box.getMin(), min);
     EXPECT_EQ(box.getMax(), max);

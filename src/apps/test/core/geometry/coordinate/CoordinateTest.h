@@ -22,26 +22,26 @@
 #define SRC_TEST_COORDINATEGROUPTEST_H_
 
 #include "gtest/gtest.h"
-#include "geometry/coordinates/GroupCoordinates.h"
+#include "geometry/coordinate/Group.h"
 
 class GeometryCoordinateGroupTest : public ::testing::Test {
 
 protected:
-    vector<CoordR3*> newCoordR3Vector() {
-        CoordinateId id(1);
-        CVecR3 one(1.0, 1.0, 1.0);
-        const UInt nCoords = 5;
-        vector<CoordR3*> res;
-        for (UInt i = 0; i < nCoords; i++) {
-            res.push_back(new CoordR3(id++, one * (Real) i));
+    std::vector<SEMBA::Geometry::CoordR3*> newCoordR3Vector() {
+        SEMBA::Geometry::CoordId id(1);
+        SEMBA::Math::CVecR3 one(1.0, 1.0, 1.0);
+        const size_t nCoords = 5;
+        std::vector<SEMBA::Geometry::CoordR3*> res;
+        for (size_t i = 0; i < nCoords; i++) {
+            res.push_back(new SEMBA::Geometry::CoordR3(id++, one * (double) i));
         }
         return res;
     }
 
-    bool checkTypes(const GroupCoordinates<>& rhs) {
+    bool checkTypes(const SEMBA::Geometry::Coordinate::Group<>& rhs) {
         bool res = true;
-        for (UInt i = 0; i < rhs.size(); i++) {
-            res &= rhs(i)->is<Coord>();
+        for (size_t i = 0; i < rhs.size(); i++) {
+            res &= rhs(i)->is<SEMBA::Geometry::Coord>();
         }
         return res;
     }

@@ -35,6 +35,8 @@ namespace OpenFOAM {
 
 Exporter::Exporter() {
     smb_ = NULL;
+    grid_ = NULL;
+    isLocationMesh_ = false;
 }
 
 Exporter::Exporter(const Data* smb,

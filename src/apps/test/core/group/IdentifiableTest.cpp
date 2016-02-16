@@ -18,48 +18,33 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/*
- * GroupIdTest.cpp
- *
- *  Created on: Apr 14, 2015
- *      Author: luis
- */
 
-#include "gtest/gtest.h"
-#include "class/Identifiable.h"
-#include "geometry/layer/Group.h"
+#include "IdentifiableTest.h"
 
 using namespace std;
 
 using namespace SEMBA;
 using namespace Class;
 using namespace Geometry;
-using namespace Layer;
 
+vector<Layer::Layer*> IdentifiableTest::newLayersVector() const {
+    std::vector<Layer::Layer*> res;
+    res.push_back(new Layer::Layer(LayerId(1), "Patata"));
+    res.push_back(new Layer::Layer(LayerId(6), "Cebolla"));
+    res.push_back(new Layer::Layer(LayerId(5), "Huevos"));
+    return res;
+}
 
-class BaseGroupGroupIdTest : public ::testing::Test {
-public:
-    BaseGroupGroupIdTest() {};
-    virtual ~BaseGroupGroupIdTest() {};
-
-protected:
-    vector<Layer*> newLayersVector() const {
-        vector<Layer*> res;
-        res.push_back(new Layer(LayerId(1), "Patata"));
-        res.push_back(new Layer(LayerId(6), "Cebolla"));
-        res.push_back(new Layer(LayerId(5), "Huevos"));
-        return res;
+void IdentifiableTest::areEqual(
+        const std::vector<Layer::Layer*>& vec,
+        const Layer::Group<>& layers) {
+    for (size_t i = 0; i < vec.size(); i++) {
+        EXPECT_EQ(*vec[i], *layers.getId(vec[i]->getId()));
     }
+}
 
-    void areEqual(const vector<Layer*>& vec, const Group<>& layers) {
-        for (size_t i = 0; i < vec.size(); i++) {
-            EXPECT_EQ(*vec[i], *layers.getId(vec[i]->getId()));
-        }
-    }
-};
-
-TEST_F(BaseGroupGroupIdTest, ctor) {
-    vector<Layer*> vecLayers = newLayersVector();
-    Group<> layers(vecLayers);
+TEST_F(IdentifiableTest, ctor) {
+    vector<Layer::Layer*> vecLayers = IdentifiableTest::newLayersVector();
+    Layer::Group<> layers(vecLayers);
     areEqual(vecLayers, layers);
 }

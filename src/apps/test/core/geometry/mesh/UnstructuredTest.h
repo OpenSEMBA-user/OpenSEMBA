@@ -22,13 +22,19 @@
 #define SEMBATEST_H_
 
 #include "gtest/gtest.h"
-#include "ProjectFile.h"
-#include "geometry/MeshUnstructured.h"
+#include "geometry/mesh/Unstructured.h"
+#include "geometry/element/Tetrahedron4.h"
+
+using namespace std;
+
+using namespace SEMBA;
+using namespace Geometry;
+using namespace Math;
 
 class GeometryMeshUnstructuredTest : public ::testing::Test {
     void SetUp() {
         vector<CoordR3*> coord;
-        CoordinateId coordId(1);
+        CoordId coordId(1);
         coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 0.0, 0.0)));
         coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 0.0, 1.0)));
         coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 1.0, 0.0)));
@@ -36,27 +42,27 @@ class GeometryMeshUnstructuredTest : public ::testing::Test {
         CoordR3Group cG(coord);
 
         vector<ElemR*> elems;
-        CoordinateId vIdTet[4] = {
-                CoordinateId(1),
-                CoordinateId(2),
-                CoordinateId(3),
-                CoordinateId(4)};
-        CoordinateId vIdTri[3] = {
-                CoordinateId(2),
-                CoordinateId(1),
-                CoordinateId(3)};
-        elems.push_back(
-                new Tet4(cG, ElementId(1), vIdTet, LayerId(0), MatId(0)));
-        elems.push_back(
-                new Tri3(cG, ElementId(2), vIdTri, LayerId(1), MatId(0)));
+        const CoordR3* vTet[4] = {
+                cG.getId(CoordId(1)),
+                cG.getId(CoordId(2)),
+                cG.getId(CoordId(3)),
+                cG.getId(CoordId(4))
+        };
+        const CoordR3* vTri[3] = {
+                cG.getId(CoordId(2)),
+                cG.getId(CoordId(1)),
+                cG.getId(CoordId(3))
+        };
+        elems.push_back(new Tet4(ElemId(1), vTet));
+        elems.push_back(new Tri3(ElemId(2), vTri));
         ElemRGroup eG(elems);
 
-        GroupLayers<> lG;
-        mesh_ = MeshUnstructured(cG, eG, lG);
+        Layer::Group<> lG;
+        mesh_ = Mesh::Unstructured(cG, eG, lG);
     }
 
 protected:
-    MeshUnstructured mesh_;
+    Mesh::Unstructured mesh_;
 };
 
 #endif

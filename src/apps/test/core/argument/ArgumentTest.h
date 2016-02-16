@@ -18,29 +18,21 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "gtest/gtest.h"
-#include "options/Arguments.h"
 
-class ArgumentsTest :
+#ifndef SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
+#define SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
+
+#include "gtest/gtest.h"
+#include "argument/Argument.h"
+
+class ArgumentTest :
         public ::testing::Test,
         public ::testing::WithParamInterface<const char*> {
 
 };
 
 
-TEST_P(ArgumentsTest, contains){
-    string str = GetParam();
-    str = "EXEC -i ./projects/test/sphere.gid/sphere.smb " + str;
-    Arguments argLHS(str + " -ZZ 0 1 2");
-    Arguments argRHS(str);
-    EXPECT_TRUE(argLHS.contains(argRHS));
-}
 
-INSTANTIATE_TEST_CASE_P(
-      goodArguments,
-      ArgumentsTest,
-      ::testing::Values(
-            "-XX -YY",
-            "-XX 0 1 2",
-            "-abc  -cba"
-            ));
+
+
+#endif /* SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_ */

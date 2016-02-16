@@ -19,15 +19,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "ProjectFile.h"
+#include "filesystem/Project.h"
+
+using namespace SEMBA;
+using namespace FileSystem;
 
 #ifndef _WIN32
 class ProjectTest : public ::testing::Test {
     void SetUp() {
-        file_ = ProjectFile("/usr/bin/ls");
+        file_ = Project("/usr/bin/ls");
     }
 protected:
-    ProjectFile file_;
+    Project file_;
 };
 
 TEST_F(ProjectTest, BasicOperations) {
@@ -35,19 +38,19 @@ TEST_F(ProjectTest, BasicOperations) {
 }
 
 TEST_F(ProjectTest, FolderOperations) {
-    EXPECT_TRUE(ProjectFile("/usr/bin/").isFolder());
-    EXPECT_FALSE(ProjectFile("/non/existing/folder/").isFolder());
+    EXPECT_TRUE(Project("/usr/bin/").isFolder());
+    EXPECT_FALSE(Project("/non/existing/folder/").isFolder());
     EXPECT_EQ(file_.getFolder(), "/usr/bin/");
-    ProjectFile usrFolder(file_.getFolder());
+    Project usrFolder(file_.getFolder());
     EXPECT_EQ("/usr/", usrFolder.getFolder());
-    ProjectFile rootFolder(usrFolder.getFolder());
+    Project rootFolder(usrFolder.getFolder());
     EXPECT_EQ("/", rootFolder.getFolder());
 }
 
 TEST_F(ProjectTest, RelativePaths) {
-    ProjectFile rhs("/usr/");
-    EXPECT_EQ(file_.relativeTo(file_), ProjectFile("ls"));
-    EXPECT_EQ(file_.relativeTo(rhs), ProjectFile("bin/ls"));
+    Project rhs("/usr/");
+    EXPECT_EQ(file_.relativeTo(file_), Project("ls"));
+    EXPECT_EQ(file_.relativeTo(rhs), Project("bin/ls"));
 }
 #else
     #warning "Filesystem::Project tests are not implemented for WIN32."

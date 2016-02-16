@@ -18,15 +18,19 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+#ifndef SRC_APPS_TEST_CORE_GEOMETRY_BOXTEST_H_
+#define SRC_APPS_TEST_CORE_GEOMETRY_BOXTEST_H_
+
 #include "gtest/gtest.h"
-#include "geometry/CVecI3Fractional.h"
+#include "geometry/Box.h"
 
-TEST(GeometryCVecI3FractionalTest, Basic) {
-    CVecI3Frac aux(CVecI3(3),CVecR3(0.4));
-    EXPECT_EQ(aux, aux);
-    CVecI3Frac auxCpy(aux);
-    EXPECT_EQ(aux, auxCpy);
-    auxCpy = aux;
-    EXPECT_EQ(aux, auxCpy);
-}
+template <typename T>
+class GeometryBoxTest : public ::testing::Test {
 
+protected:
+
+};
+
+
+
+#endif /* SRC_APPS_TEST_CORE_GEOMETRY_BOXTEST_H_ */

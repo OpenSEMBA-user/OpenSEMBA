@@ -20,7 +20,7 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "GroupTest.h"
 
-TEST_F(GeometryElementsGroupTest, Copy){
+TEST_F(GeometryElementGroupTest, Copy){
     vector<CoordR3*> coords = newCoordR3Vector();
     GroupCoordinates<>* original = new GroupCoordinates<>(coords);
     GroupCoordinates<> copied;
@@ -34,7 +34,7 @@ TEST_F(GeometryElementsGroupTest, Copy){
     EXPECT_TRUE(checkTypes(copied));
 }
 
-TEST_F(GeometryElementsGroupTest, CopyCtor){
+TEST_F(GeometryElementGroupTest, CopyCtor){
     GroupCoordinates<> grp;
     {
         vector<CoordR3*> coords = newCoordR3Vector();
@@ -43,7 +43,7 @@ TEST_F(GeometryElementsGroupTest, CopyCtor){
     EXPECT_TRUE(checkTypes(grp));
 }
 
-TEST_F(GeometryElementsGroupTest, idsConservation){
+TEST_F(GeometryElementGroupTest, idsConservation){
     vector<CoordR3*> coords = newCoordR3Vector();
     GroupCoordinates<> grp(coords);
     EXPECT_EQ(coords.size(), grp.size());

@@ -18,22 +18,27 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "UnstructuredTest.h"
 
-TEST_F(GeometryMeshUnstructuredTest, ctor) {
-    EXPECT_EQ(mesh_.elems().size(), 2);
-    EXPECT_EQ(mesh_.elems().getOf<Tet>().size(), 1);
-    EXPECT_EQ(mesh_.elems().getOf<Tri>().size(), 1);
-}
+#ifndef SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_
+#define SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_
 
-TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
-    const Tet4* tet = mesh_.elems().getOf<Tet4>()(0);
-    vector<Element::Face> faces;
-    for (size_t f = 0; f < tet->numberOfFaces(); f++) {
-        faces.push_back(Element::Face(tet, f));
-    }
-    Element::Group<const SurfR> matching = mesh_.getSurfsMatching(faces);
-    EXPECT_EQ(matching.size(), 1);
-    const Tri3* tri = mesh_.elems().getOf<Tri3>()(0);
-    EXPECT_EQ(*matching(0), *tri);
-}
+#include "gtest/gtest.h"
+#include "geometry/layer/Group.h"
+
+class IdentifiableTest : public ::testing::Test {
+public:
+    IdentifiableTest() {};
+    virtual ~IdentifiableTest() {};
+
+protected:
+    std::vector<SEMBA::Geometry::Layer::Layer*> newLayersVector() const;
+
+    void areEqual(
+            const std::vector<SEMBA::Geometry::Layer::Layer*>& vec,
+            const SEMBA::Geometry::Layer::Group<>& layers);
+};
+
+
+
+
+#endif /* SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_ */

@@ -18,22 +18,18 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "UnstructuredTest.h"
 
-TEST_F(GeometryMeshUnstructuredTest, ctor) {
-    EXPECT_EQ(mesh_.elems().size(), 2);
-    EXPECT_EQ(mesh_.elems().getOf<Tet>().size(), 1);
-    EXPECT_EQ(mesh_.elems().getOf<Tri>().size(), 1);
-}
+#include "ArgumentTest.h"
 
-TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
-    const Tet4* tet = mesh_.elems().getOf<Tet4>()(0);
-    vector<Element::Face> faces;
-    for (size_t f = 0; f < tet->numberOfFaces(); f++) {
-        faces.push_back(Element::Face(tet, f));
-    }
-    Element::Group<const SurfR> matching = mesh_.getSurfsMatching(faces);
-    EXPECT_EQ(matching.size(), 1);
-    const Tri3* tri = mesh_.elems().getOf<Tri3>()(0);
-    EXPECT_EQ(*matching(0), *tri);
-}
+using namespace SEMBA;
+
+//TEST_P(ArgumentTest, contains){
+//    std::string str = GetParam();
+//    str = "EXEC -i ./projects/test/sphere.gid/sphere.smb " + str;
+//    Argument::Argument argLHS(str + " -ZZ 0 1 2");
+//    Argument::Argument argRHS(str);
+//    EXPECT_TRUE(argLHS.contains(argRHS));
+//}
+//
+//INSTANTIATE_TEST_CASE_P(goodArguments, ArgumentTest,
+//        ::testing::Values("-XX -YY", "-XX 0 1 2", "-abc  -cba"));
