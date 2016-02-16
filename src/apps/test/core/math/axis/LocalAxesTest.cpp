@@ -19,7 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "math/LocalAxes.h"
+#include "math/axis/Local.h"
 #include "math/Constants.h"
 
 #define _USE_MATH_DEFINES
@@ -31,7 +31,7 @@ class MathLocalAxesTest : public ::testing::Test {
 
 TEST_F(MathLocalAxesTest, BasicIdentities) {
 
-    LocalAxes global(CVecR3(0.0));
+    SEMBA::Math::Axis global(CVecR3(0.0));
 
     CVecR3 localOrigin(3.0,0.0,0.0);
     LocalAxes local(CVecR3(Constants::pi, Constants::pi_2, Constants::pi / 3.0), localOrigin);

@@ -26,7 +26,7 @@
  */
 
 #include "gtest/gtest.h"
-#include "base/group/GroupId.h"
+#include "class/Identifiable.h"
 #include "geometry/layers/GroupLayers.h"
 
 class BaseGroupGroupIdTest : public ::testing::Test {

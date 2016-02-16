@@ -19,22 +19,27 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-LIBS += gtest
-
 OUT = test
+
+
+# =============================================================================
+SRC_APP_DIR = $(SRC_DIR)apps/test/
+
 ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 	OUT := $(addsuffix .exe,$(OUT))
 endif
 
 # =============================================================================
-DIR = ./ 
+SRC_CORE_MATH_TESTS_DIRS = $(shell find $(SRC_APP_DIR)/core/math/ -type d)
 
-SOURCE_DIR = $(addprefix $(SRCDIR), ${DIR}) $(addprefix $(SRCDIR)/apps/test/, ${DIR}) $(addprefix $(LIBDIR), ${LIB_DIR})
+SRC_DIRS := $(SRC_APP_DIR) $(SRC_CORE_MATH_TESTS_DIRS)
 
-SRCS_CXX := $(shell find $(SOURCE_DIR) -maxdepth 1 -type f -name "*.cpp" 2>/dev/null)
-SRCS_CXX := $(filter-out $(EXCLUDE), $(SRCS_CXX)) 
+SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJDIR), $(SRCS_CXX:.cpp=.o))
-
+# =============================================================================
+LIBS = opensemba
+INCLUDES += $(LIB_DIR)opensemba/include/ $(LIB_DIR)opensemba/include/core/
+# =============================================================================
 .PHONY: default clean clobber print
 
 default: print $(OUT)
@@ -43,12 +48,12 @@ default: print $(OUT)
 	@echo "======================================================="
 		
 clean:
-	rm -rf *.err *.o *.d $(OBJDIR)
+	rm -rf $(OBJDIR)
 
 clobber: clean
-	rm -rf $(BINDIR)
+	rm -rf $(BIN_DIR)
 
-$(OBJDIR)%.o: %.cpp
+$(OBJ_DIR)%.o: %.cpp
 	@dirname $@ | xargs mkdir -p
 	@echo "Compiling:" $@
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<

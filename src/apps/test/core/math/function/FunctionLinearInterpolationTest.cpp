@@ -19,7 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "math/FunctionLinearInterpolation.h"
+#include "math/function/LinearInterpolation.h"
 
 TEST(MathFuncitonLinearInterpolationTest, Basic) {
     vector<pair<Real,Real>> xy;

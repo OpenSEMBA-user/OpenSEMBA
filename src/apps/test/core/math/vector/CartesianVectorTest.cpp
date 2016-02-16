@@ -19,7 +19,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "math/CartesianVector.h"
+#include "math/vector/Cartesian.h"
+
+using namespace SEMBA;
+using namespace Math;
+using namespace Vector;
 
 TEST(MathCartesianVectorTest, Basic) {
     EXPECT_EQ(CVecR3(2.0, 3.0, 4.0), CVecR3(2.0, 3.0, 4.0));

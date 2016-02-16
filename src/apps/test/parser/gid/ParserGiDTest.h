@@ -22,7 +22,7 @@
 #define PARSERGIDTEST_H_
 
 #include "gtest/gtest.h"
-#include "parser/gid/ParserGiD.h"
+#include "parser/gid/Parser.h"
 
 class ParserGiDTest : public ::testing::Test {
 

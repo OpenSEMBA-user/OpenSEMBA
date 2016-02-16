@@ -19,7 +19,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "math/StaMatrix.h"
+#include "math/matrix/Static.h"
+
+using namespace SEMBA;
+using namespace Math;
+using namespace Matrix;
 
 class MathStaMatrixTest : public ::testing::Test {
 
