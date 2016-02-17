@@ -49,7 +49,7 @@ void Group<T>::printInfo() const {
         wires_[i]->printInfo();
     }
     std::cout << "Mats:" << std::endl;
-    for (map<MatId, PhysicalModel::WireExtremes*>::const_iterator
+    for (std::map<MatId, PhysicalModel::WireExtremes*>::const_iterator
          it = mats_.begin(); it != mats_.end(); ++it) {
         it->second->printInfo();
     }
