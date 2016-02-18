@@ -15,7 +15,7 @@ Default sampling period: *GenData(Default_sampling_period)
 Force restarting: *GenData(Force_restarting)
 Resume simulation: *GenData(Resume_simulation)
 Flush: *GenData(Flush)
-*if(strcmp(*GenData(Additional_arguments),"")!=0)
+*if(strcmp(GenData(Additional_arguments),"")!=0)
 Additional arguments: *GenData(Additional_arguments)
 *endif
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
