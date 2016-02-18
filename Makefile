@@ -91,7 +91,8 @@ cudg3d: gidpost opensemba check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
 opensemba: check gidpost
-	-mkdir -p $(LIB_DIR)/opensemba/lib/ $(LIB_DIR)/opensemba/include/  
+	-mkdir -p $(LIB_DIR)/opensemba/lib/ $(LIB_DIR)/opensemba/include/
+	$(MAKE) -f ./src/apps/opensemba/opensemba.mk print
 	$(MAKE) -f ./src/apps/opensemba/opensemba.mk
 
 testSemba: check opensemba

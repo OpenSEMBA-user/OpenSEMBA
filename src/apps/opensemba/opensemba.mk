@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 # =============================================================================
-out = opensemba
+OUT = opensemba
 static = yes
 
 # -------------------- Paths to directories -----------------------------------
@@ -40,34 +40,30 @@ OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 LIBS = gidpost
 INCLUDES += $(SRC_DIR)core/ $(LIB_DIR)gidpost/include/
 # =============================================================================
-
 .PHONY: default clean clobber print
-
-default: print $(out) 
+	 
+default: $(OUT) 
 	@echo "======================================================="
-	@echo "           $(out) compilation finished             "
+	@echo "           $(OUT) compilation finished             "
 	@echo "======================================================="
-		
-clean:
-	rm -rf *.err *.o *.d $(OBJ_DIR)
 
-clobber: clean
-	rm -rf $(LIB_DIR)
 
 $(OBJ_DIR)%.o: %.cpp
 	@dirname $@ | xargs mkdir -p
-	@echo "Compiling:" $@
+	@echo "Compiling: " $@
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
 	
-$(out): $(OBJS_CXX)
-	@mkdir -p $(LIB_DIR)/$(out)/lib/ 
+$(LIB_DIR)/$(OUT)/lib/lib$(OUT).a: $(OBJS_CXX)
+	@mkdir -p $(LIB_DIR)/$(OUT)/lib/ 
 	@echo "Linking:" $@
-	-ar rvs $(LIB_DIR)/$(out)/lib/lib$(out).a $^
-	-cd $(SRC_DIR); find core/ exporter/ parser/ \( -name "*.h" -o -name "*.hpp" \) -exec cp --parents {} ../$(LIB_DIR)$(out)/include/ \;
+	-ar rs $@ $^
+	-cd $(SRC_DIR); find core/ exporter/ parser/ \( -name "*.h" -o -name "*.hpp" \) -exec cp --parents {} ../$(LIB_DIR)$(OUT)/include/ \;
 
-print:
+$(OUT): $(LIB_DIR)/$(OUT)/lib/lib$(OUT).a
+
+print: 
 	@echo "======================================================="
-	@echo "         ----- Compiling $(out) ------                 "
+	@echo "         ----- Compiling $(OUT) ------                 "
 	@echo "Target:           " $(target)
 	@echo "Compiler:         " $(compiler)
 	@echo "C++ Compiler:     " `which $(CXX)`
