@@ -28,13 +28,13 @@ namespace Util {
 bool equal(const Real lhs, const Real rhs,
            Real rel, const Real tol) {
     if (rel == 0.0) {
-        rel = abs(lhs+rhs);
+        rel = std::abs(lhs+rhs);
     }
-    if ((abs(lhs) <= epsilon) && (abs(rhs) <= epsilon)) {
+    if ((std::abs(lhs) <= epsilon) && (std::abs(rhs) <= epsilon)) {
         return true;
-    } else if ((abs(lhs) <= epsilon) || (abs(rhs) <= epsilon)) {
+    } else if ((std::abs(lhs) <= epsilon) || (std::abs(rhs) <= epsilon)) {
         return false;
-    } else if (abs(lhs-rhs) <= tol*rel) {
+    } else if (std::abs(lhs-rhs) <= tol*rel) {
         return true;
     }
     return false;

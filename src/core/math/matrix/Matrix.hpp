@@ -96,7 +96,7 @@ void Matrix<T>::factorizeLU_(std::size_t pivot[]) {
         //  Find L, the index of the pivot row.
         l = k;
         for (i = k; i < n; i++) {
-            if (abs(val(l,k)) < abs(val(i,k))) {
+            if (std::abs(val(l,k)) < std::abs(val(i,k))) {
                 l = i;
             }
         }

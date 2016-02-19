@@ -259,7 +259,7 @@ bool
 Static<T,ROWS,COLS>::operator==(
         const Static<T,ROWS,COLS>& param) const {
     for (std::size_t i = 0; i < ROWS*COLS; i++) {
-        Real diff = abs(_val[i] -param._val[i]);
+        Real diff = std::abs(_val[i] -param._val[i]);
         if (diff > std::numeric_limits<Real>::epsilon() * 1e2) {
             return false;
         }

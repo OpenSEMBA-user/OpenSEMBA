@@ -75,7 +75,7 @@ MatR33 Local::convertToGlobal(const MatR33& local) const {
 
 CVecR3 Local::convertToGlobal(const CVecR3& local) const {
     MatR33 transformation = getTransformationMatrix();
-    CVecR3 global = transformation * local + origin_;
+    CVecR3 global = transformation.transpose() * local + origin_;
     return global;
 }
 

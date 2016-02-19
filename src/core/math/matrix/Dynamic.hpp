@@ -437,7 +437,7 @@ bool Dynamic<T>::operator==(const Dynamic<T>& param) const {
    if (_nRows == param._nRows && _nCols == param._nCols) {
       for (std::size_t i = 0; i < _nRows; i++) {
          for (std::size_t j = 0; j < _nCols; j++) {
-            T diff = abs(this->operator()(i,j) - param(i,j));
+            T diff = std::abs(this->operator()(i,j) - param(i,j));
             res &= diff < std::numeric_limits<T>::epsilon() * 1e2;
          }
       }

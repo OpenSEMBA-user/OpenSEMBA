@@ -34,4 +34,6 @@ TEST(MathUtilsTest, equal) {
         EXPECT_TRUE(Util::equal(num[i], num[i]));
         EXPECT_TRUE(Util::equal(num[i], num[i], 0.0, 0.25));
     }
+
+    EXPECT_FALSE(Util::equal(0.0, 0.17, 0.5, 0.01));
 }

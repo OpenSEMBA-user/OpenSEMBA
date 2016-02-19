@@ -50,7 +50,7 @@ Numerical::Numerical(const FileSystem::Project& file,
     }
     std::size_t nSteps;
     if (timeStep != 0.0) {
-        nSteps = (std::size_t)abs(finalTime / timeStep);
+        nSteps = (std::size_t)std::abs(finalTime / timeStep);
     } else {
         nSteps = defaultNumberOfSteps;
         std::cerr << "WARNING @ Numerical: "

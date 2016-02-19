@@ -29,11 +29,11 @@ using namespace SEMBA;
 using namespace Math;
 using namespace Axis;
 
-class MathLocalAxesTest : public ::testing::Test {
+class MathAxisLocalTest : public ::testing::Test {
 
 };
 
-TEST_F(MathLocalAxesTest, BasicIdentities) {
+TEST_F(MathAxisLocalTest, BasicIdentities) {
 
     Local global(CVecR3(0.0));
 
@@ -52,15 +52,15 @@ TEST_F(MathLocalAxesTest, BasicIdentities) {
     EXPECT_EQ(localOrigin, local.convertToGlobal(CVecR3(0.0)));
 }
 
-TEST_F(MathLocalAxesTest, VectorTransformation) {
+TEST_F(MathAxisLocalTest, VectorTransformation) {
     Local global(CVecR3(0.0));
     Local local(CVecR3(Constants::pi/2, 0.0, 0.0));
 
     CVecR3 localV(1.0,1.0,0.0);
-    EXPECT_EQ(CVecR3(-1.0,1.0,1.0), local.convertToGlobal(localV));
+    EXPECT_EQ(CVecR3(-1.0,1.0,0.0), local.convertToGlobal(localV));
 }
 
-TEST_F(MathLocalAxesTest, TensorTransformation) {
+TEST_F(MathAxisLocalTest, TensorTransformation) {
     Local global(CVecR3(0.0));
 
     const Int rotations = 3;

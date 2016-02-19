@@ -51,6 +51,11 @@ TEST_F(GeometryGridTest, PosInRange) {
     EXPECT_EQ(0.25, posInRange[1]);
 }
 
+TEST_F(GeometryGridTest, OutOfRange) {
+    std::vector<Real> posInRange = grid_.getPosInRange(x,1.025,1.5);
+    EXPECT_EQ(0, posInRange.size());
+}
+
 TEST_F(GeometryGridTest, EnlargeBound) {
     CVecR3 padding(0.6, 0.6, 0.6);
     CVecR3 cellSizes(0.2, 0.2, 0.2);

@@ -111,9 +111,9 @@ bool Hexahedron8<T>::isRegular() const {
             first = *getSideV(f, i);
             second = *getSideV(f, (i+1) % numberOfSideVertices());
             inc = (second - first).normalize();
-            if (!((abs(inc.dot(xAxe))-1.0) <= tolerance ||
-            (abs(inc.dot(yAxe))-1.0) <= tolerance ||
-            (abs(inc.dot(zAxe))-1.0) <= tolerance)) {
+            if (!((std::abs(inc.dot(xAxe))-1.0) <= tolerance ||
+            (std::abs(inc.dot(yAxe))-1.0) <= tolerance ||
+            (std::abs(inc.dot(zAxe))-1.0) <= tolerance)) {
 
                 return false;
             }

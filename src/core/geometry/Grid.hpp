@@ -461,9 +461,10 @@ std::vector<Math::Real> Grid<D>::getPosInRange(const std::size_t dir,
         } else {
             step = steps.back();
         }
-        if (Math::Util::equal(pos[i], min, step, tolerance) ||
-                (pos[i] >= min && pos[i] <= max)               ||
-                Math::Util::equal(pos[i], max, step, tolerance)) {
+        const bool inMin = Math::Util::equal(pos[i], min, step, tolerance);
+        const bool inMax = Math::Util::equal(pos[i], max, step, tolerance);
+        const bool inRange = (pos[i] >= min && pos[i] <= max);
+        if (inMin || inMax || inRange) {
             res.push_back(pos[i]);
         }
     }
@@ -687,7 +688,7 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
                            Math::Constants::CartesianBound b,
                            Math::Real pad, Math::Real siz) {
     assert(getNumCells()(d) > 0);
-    if (abs(siz) > abs(pad)) {
+    if (std::abs(siz) > std::abs(pad)) {
         std::cerr << "WARNING @ Grid enlarge bound: "
                 << "std::size_t was larger than padding. Ignoring padding in "
                 << "axe" << d << " and bound " << b << "." << std::endl;
@@ -706,7 +707,7 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
     if (Math::Util::greaterEqual(getStep(d,b), siz) || siz == 0.0) {
         siz = getStep(d,boundCell);
         // Computes enlargement for a padding with same size.
-        Math::Real nCellsFrac = abs(pad/siz);
+        Math::Real nCellsFrac = std::abs(pad/siz);
         const Math::Real tol = 0.01;
         std::size_t nCells = (std::size_t) Math::Util::ceil(nCellsFrac, tol);
         newSteps.resize(nCells, siz);
@@ -714,8 +715,8 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
         // Computes enlargement for padding with different size.
         // Taken from AutoCAD interface programmed in LISP (2001).
         Math::Real d12 = getStep(d,boundCell);
-        Math::Real d14 = abs(pad) + d12 + abs(siz);
-        Math::Real d34 = abs(siz);
+        Math::Real d14 = std::abs(pad) + d12 + std::abs(siz);
+        Math::Real d34 = std::abs(siz);
         Math::Real d13 = d14 - d34;
         Math::Real t0 = d12;
         Math::Real r0 = (d14-d12) / (d14-d34);

@@ -65,7 +65,7 @@ bool Triangle6::isCurved() const {
     pN = (v1 ^ v2).normalize();
     Math::Real curvature = (Math::Real) 0.0;
     for (std::size_t c = 0; c < geo.ncp; c++) {
-        curvature += geo.cw[c] * (1.0 - abs(cn[c].dot(pN)));
+        curvature += geo.cw[c] * (1.0 - std::abs(cn[c].dot(pN)));
     }
     if (Math::Util::notEqual(curvature, 0.0, 1.0)) {
         return true;

@@ -99,7 +99,7 @@ bool VolumeDispersive::isSimplyConductive() const {
     if (!file_.empty()) {
         return false;
     }
-    return (poleResidue_.size() <= 1 && std::abs(getPole(0)) == 0);
+    return (poleResidue_.size() <= 1 && std::std::abs(getPole(0)) == 0);
 }
 
 Math::Real VolumeDispersive::getElectricConductivity() const {
@@ -110,7 +110,7 @@ Math::Real VolumeDispersive::getElectricConductivity() const {
                   << "Returning static limit conductivity." << std::endl;
     }
     for (std::size_t i = 0; i < getPoleNumber(); i++) {
-        if (std::abs(getPole(i)) == 0) {
+        if (std::std::abs(getPole(i)) == 0) {
             return getResidue(i).real() * 2.0 * Math::Constants::eps0;
         }
     }

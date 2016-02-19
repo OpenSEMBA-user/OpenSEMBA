@@ -136,11 +136,11 @@ std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
     vmxy_  = sqrt(vx_*vx_+vy_*vy_);
     alpha_aux = acos(vz_); //acos(Ez) [0, pi]
     if(vy_>0.0){
-        beta_aux = abs(acos(vx_/vmxy_));
+        beta_aux = std::abs(acos(vx_/vmxy_));
     } else if(v(Math::Constants::y)==0.0){
         beta_aux = 0.0;
     } else {
-        beta_aux = -abs(acos(vx_/vmxy_));
+        beta_aux = -std::abs(acos(vx_/vmxy_));
     }
     std::pair<Math::Real,Math::Real> res;
     res.first = reduceRadians(alpha_aux); // alpha_aux % (2*Constants::pi) ?
