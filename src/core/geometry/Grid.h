@@ -23,6 +23,7 @@
 #define SEMBA_GEOMETRY_GRID_H_
 
 #include <vector>
+#include <algorithm>
 
 #include "Box.h"
 #include "math/util/Real.h"

@@ -144,10 +144,11 @@ void Grid<D>::setAdditionalSteps(
         }
         pos_[d].insert(pos_[d].end(), newPos.begin(), newPos.end());
     } else {
-        newPos[nCells-1] = pos_[d].front() - step[0];
-        for (std::size_t i = nCells-2; i >= 0 ; i--) {
-            newPos[i] = newPos[i+1] - step[nCells-1-i];
+        newPos[0] = pos_[d].front() - step[0];
+        for (std::size_t i = 1; i < nCells; i++) {
+            newPos[i] = newPos[i-1] - step[i];
         }
+        std::reverse(newPos.begin(), newPos.end());
         newPos.insert(newPos.end(), pos_[d].begin(), pos_[d].end());
         pos_[d] = newPos;
     }
@@ -705,7 +706,7 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
     if (Math::Util::greaterEqual(getStep(d,b), siz) || siz == 0.0) {
         siz = getStep(d,boundCell);
         // Computes enlargement for a padding with same size.
-        Math::Real nCellsFrac = abs(pad)/abs(siz);
+        Math::Real nCellsFrac = abs(pad/siz);
         const Math::Real tol = 0.01;
         std::size_t nCells = (std::size_t) Math::Util::ceil(nCellsFrac, tol);
         newSteps.resize(nCells, siz);

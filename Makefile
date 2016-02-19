@@ -95,7 +95,7 @@ opensemba: check gidpost
 	$(MAKE) -f ./src/apps/opensemba/opensemba.mk print  
 	$(MAKE) -f ./src/apps/opensemba/opensemba.mk
 
-testSemba: check opensemba
+testSemba: check
 	$(MAKE) -f ./src/apps/test/test.mk print
 	$(MAKE) -f ./src/apps/test/test.mk
 
