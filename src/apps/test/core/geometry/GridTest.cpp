@@ -57,8 +57,8 @@ TEST_F(GeometryGridTest, OutOfRange) {
 }
 
 TEST_F(GeometryGridTest, EnlargeBound) {
-    CVecR3 padding(0.6, 0.6, 0.6);
-    CVecR3 cellSizes(0.2, 0.2, 0.2);
+    CVecR3 padding(0.15);
+    CVecR3 cellSizes(0.05);
     std::pair<CVecR3,CVecR3> pad(padding, padding);
     std::pair<CVecR3,CVecR3> siz(cellSizes, cellSizes);
     CVecI3 numCellsBefore = grid_.getNumCells();
