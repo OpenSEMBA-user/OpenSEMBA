@@ -62,7 +62,7 @@ $(OBJ_DIR)%.o: %.cpp
 $(out): $(OBJS_CXX)
 	@mkdir -p $(LIB_DIR)/$(out)/lib/ 
 	@echo "Linking:" $@
-	-ar rvs $(LIB_DIR)/$(out)/lib/lib$(out).a $^
+	-ar rs $(LIB_DIR)/$(out)/lib/lib$(out).a $^
 	-cd $(SRC_DIR); find core/ exporter/ parser/ \( -name "*.h" -o -name "*.hpp" \) -exec cp --parents {} ../$(LIB_DIR)$(out)/include/ \;
 
 print:

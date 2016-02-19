@@ -705,8 +705,9 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
     if (Math::Util::greaterEqual(getStep(d,b), siz) || siz == 0.0) {
         siz = getStep(d,boundCell);
         // Computes enlargement for a padding with same size.
-        std::size_t nCells = (std::size_t) Math::Util::ceil(abs(pad)/abs(siz),
-                                              (Math::Real) 0.01);
+        Math::Real nCellsFrac = abs(pad)/abs(siz);
+        const Math::Real tol = 0.01;
+        std::size_t nCells = (std::size_t) Math::Util::ceil(nCellsFrac, tol);
         newSteps.resize(nCells, siz);
     } else {
         // Computes enlargement for padding with different size.

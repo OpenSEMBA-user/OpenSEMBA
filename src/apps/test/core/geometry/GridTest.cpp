@@ -51,6 +51,16 @@ TEST_F(GeometryGridTest, PosInRange) {
     EXPECT_EQ(0.25, posInRange[1]);
 }
 
+TEST_F(GeometryGridTest, EnlargeBound) {
+    CVecR3 padding(0.6, 0.6, 0.6);
+    CVecR3 cellSizes(0.2, 0.2, 0.2);
+    std::pair<CVecR3,CVecR3> pad(padding, padding);
+    std::pair<CVecR3,CVecR3> siz(cellSizes, cellSizes);
+    CVecI3 numCellsBefore = grid_.getNumCells();
+    grid_.enlarge(pad, siz);
+    EXPECT_EQ(numCellsBefore + 6, grid_.getNumCells());
+}
+
 //TEST_F(GeometryGridTest, GetCVecI3Fractional) {
 //    bool err;
 //    EXPECT_EQ(CVecI3Frac(CVecI3(0), CVecR3(0.0)),

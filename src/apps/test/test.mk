@@ -44,31 +44,27 @@ LIBS       = opensemba gtest
 LIBRARIES += $(LIB_DIR)opensemba/lib/
 INCLUDES  += $(LIB_DIR)opensemba/include/ $(LIB_DIR)opensemba/include/core/
 # =============================================================================
-.PHONY: default clean clobber print
+.PHONY: default print
 
-default: print $(OUT)
+default: $(OUT)
 	@echo "======================================================="
 	@echo "           $(OUT) compilation finished"
 	@echo "======================================================="
-		
-clean:
-	rm -rf $(OBJ_DIR)
-
-clobber: clean
-	rm -rf $(BIN_DIR)
 
 $(OBJ_DIR)%.o: %.cpp
 	@dirname $@ | xargs mkdir -p
 	@echo "Compiling:" $@
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
 	
-$(OUT): $(OBJS_CXX)
+$(BIN_DIR)$(OUT): $(OBJS_CXX)
 	@mkdir -p $(BIN_DIR)
 	@echo "Linking:" $@
-	${CXX} $^ -o $(BIN_DIR)$(OUT) $(CXXFLAGS) \
+	${CXX} $^ -o $@ $(CXXFLAGS) \
 	 $(addprefix -D, $(DEFINES)) \
 	 $(addprefix -I, ${INCLUDES}) \
 	 $(addprefix -L, ${LIBRARIES}) $(addprefix -l, ${LIBS})
+	 
+$(OUT): $(BIN_DIR)$(OUT)
 	 
 print:
 	@echo "======================================================="

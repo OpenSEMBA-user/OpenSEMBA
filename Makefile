@@ -91,10 +91,12 @@ cudg3d: gidpost opensemba check
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk order=1
 	
 opensemba: check gidpost
-	-mkdir -p $(LIB_DIR)/opensemba/lib/ $(LIB_DIR)/opensemba/include/  
+	-mkdir -p $(LIB_DIR)/opensemba/lib/ $(LIB_DIR)/opensemba/include/
+	$(MAKE) -f ./src/apps/opensemba/opensemba.mk print  
 	$(MAKE) -f ./src/apps/opensemba/opensemba.mk
 
 testSemba: check opensemba
+	$(MAKE) -f ./src/apps/test/test.mk print
 	$(MAKE) -f ./src/apps/test/test.mk
 
 gidpost: create_dirs check
@@ -110,8 +112,7 @@ gidpost: create_dirs check
 repeat: clean default
 
 clean:
-	rm -rf *.err *.o *.mod *.d $(OBJ_DIR)
-	find ./src -name "*.gch" -exec rm {} \;
+	rm -rf $(OBJ_DIR)
 	$(MAKE) -C ./external/gidpost/ -f gidpost.mk clean
 
 clobber: clean
