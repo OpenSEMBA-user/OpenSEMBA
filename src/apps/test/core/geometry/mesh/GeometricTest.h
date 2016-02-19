@@ -18,23 +18,22 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#ifndef PARSERGIDTEST_H_
-#define PARSERGIDTEST_H_
+#ifndef SRC_APPS_TEST_CORE_GEOMETRY_MESH_GEOMETRICTEST_H_
+#define SRC_APPS_TEST_CORE_GEOMETRY_MESH_GEOMETRICTEST_H_
 
-#include "gtest/gtest.h"
-#include "parser/gid/Parser.h"
+#include "MeshTest.h"
+#include "geometry/mesh/Geometric.h"
 
-class ParserGiDTest : public ::testing::Test {
+class GeometryMeshGeometricTest : public ::testing::Test,
+                                  public GeometryMeshTest {
+public:
+    void SetUp() {
+        Grid3 grid;
+        mesh_ = Mesh::Geometric(grid, cG_, eG_, lG_);
+    }
 
 protected:
-
-   ParserGiDTest() {
-   }
-
-   virtual ~ParserGiDTest() {
-   }
-
-    SEMBA::Data* newSmb(const std::string project);
+    Mesh::Geometric mesh_;
 };
 
-#endif
+#endif /* SRC_APPS_TEST_CORE_GEOMETRY_MESH_GEOMETRICTEST_H_ */

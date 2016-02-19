@@ -21,44 +21,14 @@
 #ifndef SEMBATEST_H_
 #define SEMBATEST_H_
 
-#include "gtest/gtest.h"
+#include "MeshTest.h"
 #include "geometry/mesh/Unstructured.h"
-#include "geometry/element/Tetrahedron4.h"
 
-using namespace std;
-
-using namespace SEMBA;
-using namespace Geometry;
-using namespace Math;
-
-class GeometryMeshUnstructuredTest : public ::testing::Test {
+class GeometryMeshUnstructuredTest : public ::testing::Test,
+                                     public GeometryMeshTest {
+public:
     void SetUp() {
-        vector<CoordR3*> coord;
-        CoordId coordId(1);
-        coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 0.0, 0.0)));
-        coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 0.0, 1.0)));
-        coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 1.0, 0.0)));
-        coord.push_back(new CoordR3(coordId++, CVecR3(1.0, 0.0, 0.0)));
-        CoordR3Group cG(coord);
-
-        vector<ElemR*> elems;
-        const CoordR3* vTet[4] = {
-                cG.getId(CoordId(1)),
-                cG.getId(CoordId(2)),
-                cG.getId(CoordId(3)),
-                cG.getId(CoordId(4))
-        };
-        const CoordR3* vTri[3] = {
-                cG.getId(CoordId(2)),
-                cG.getId(CoordId(1)),
-                cG.getId(CoordId(3))
-        };
-        elems.push_back(new Tet4(ElemId(1), vTet));
-        elems.push_back(new Tri3(ElemId(2), vTri));
-        ElemRGroup eG(elems);
-
-        Layer::Group<> lG;
-        mesh_ = Mesh::Unstructured(cG, eG, lG);
+        mesh_ = Mesh::Unstructured(cG_, eG_, lG_);
     }
 
 protected:

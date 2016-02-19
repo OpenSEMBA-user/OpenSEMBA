@@ -21,8 +21,9 @@
 
 OUT = test
 
-TEST_CORE_MATH     = yes
+TEST_CORE_MATH     = no
 TEST_CORE_GEOMETRY = yes
+TEST_PARSER_GID    = no
 
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
@@ -32,22 +33,31 @@ ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 endif
 
 # =============================================================================
+# --- Core ---
 ifeq ($(TEST_CORE_MATH),yes)
 	SRC_CORE_MATH_DIRS     := $(shell find $(SRC_DIR)core/math/ -type d)
 	SRC_CORE_MATH_TESTS_DIRS = $(SRC_CORE_MATH_DIRS) \
-							   $(shell find $(SRC_APP_DIR)/core/math/ -type d)
+							   $(shell find $(SRC_APP_DIR)core/math/ -type d)
 endif
 ifeq ($(TEST_CORE_GEOMETRY),yes)
-	SRC_CORE_GEOMETRY_DIRS     := $(shell find $(SRC_DIR)core/geometry/ -type d)
+	SRC_CORE_GEOMETRY_DIRS     := $(shell find $(SRC_DIR)core/math/ -type d) \
+	 						      $(shell find $(SRC_DIR)core/geometry/ -type d)
 	SRC_CORE_GEOMETRY_TESTS_DIRS = $(SRC_CORE_GEOMETRY_DIRS) \
-							   $(shell find $(SRC_APP_DIR)/core/geometry/ -type d)
+							   $(shell find $(SRC_APP_DIR)core/geometry/ -type d)
 endif
-
 SRC_CORE_TESTS_DIRS = $(SRC_CORE_MATH_TESTS_DIRS) $(SRC_CORE_GEOMETRY_TESTS_DIRS)
-
+# --- Parsers ---
+ifeq ($(TEST_PARSER_GID),yes)
+	SRC_PARSER_GID_DIRS       := $(shell find $(SRC_DIR)core/ -type d) \
+								 $(shell find $(SRC_DIR)parser/gid/ -type d)
+	SRC_PARSER_GID_TESTS_DIRS = $(SRC_PARSER_GID_DIRS) \
+							    $(shell find $(SRC_APP_DIR)parser/gid/ -type d)
+endif
+SRC_PARSER_TESTS_DIRS = $(SRC_PARSER_GID_TESTS_DIRS)
+# ----- Gathers sources ----
 SRC_DIRS := $(SRC_APP_DIR) \
 			$(SRC_CORE_TESTS_DIRS) \
-			$(SRC_PARSER_TEST_DIRS)
+			$(SRC_PARSER_TESTS_DIRS)
 
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))

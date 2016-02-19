@@ -21,12 +21,17 @@
 #include "UnstructuredTest.h"
 
 TEST_F(GeometryMeshUnstructuredTest, ctor) {
-    EXPECT_EQ(mesh_.elems().size(), 2);
-    EXPECT_EQ(mesh_.elems().getOf<Tet>().size(), 1);
-    EXPECT_EQ(mesh_.elems().getOf<Tri>().size(), 1);
+    EXPECT_EQ(4, mesh_.coords().size());
+
+    EXPECT_EQ(2, mesh_.elems().size());
+    EXPECT_EQ(1, mesh_.elems().getOf<Tet>().size());
+    EXPECT_EQ(1, mesh_.elems().getOf<Tri>().size());
+
+    EXPECT_EQ(0, mesh_.layers().size());
 }
 
 TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
+    ASSERT_GT(mesh_.elems().sizeOf<Tet4>(), 0);
     const Tet4* tet = mesh_.elems().getOf<Tet4>()(0);
     vector<Element::Face> faces;
     for (size_t f = 0; f < tet->numberOfFaces(); f++) {

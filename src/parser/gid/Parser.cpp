@@ -50,11 +50,13 @@ namespace GiD {
 
 Parser::Parser() {
     mesh_ = NULL;
+    physicalModels_ = NULL;
 }
 
 Parser::Parser(const std::string& fn)
 :   FileSystem::Project(fn) {
     mesh_ = NULL;
+    physicalModels_ = NULL;
 }
 
 Parser::~Parser() {
@@ -564,7 +566,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                 {
                     getNextLabelAndValue(label,value);
                     Geometry::CoordId coordId(atoi(value.c_str()));
-                    const Geometry::CoordR3* coord = 
+                    const Geometry::CoordR3* coord =
                         mesh_->coords().getId(coordId);
                     Geometry::NodR* node = 
                         new Geometry::NodR(Geometry::ElemId(0), &coord);
