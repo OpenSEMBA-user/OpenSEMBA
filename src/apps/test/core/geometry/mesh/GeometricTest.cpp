@@ -21,11 +21,11 @@
 #include "GeometricTest.h"
 
 TEST_F(GeometryMeshGeometricTest, ctor) {
-    EXPECT_EQ(4, mesh_.coords().size());
+    EXPECT_EQ(cG_.size(), mesh_.coords().size());
 
-    EXPECT_EQ(2, mesh_.elems().size());
-    EXPECT_EQ(1, mesh_.elems().getOf<Tet>().size());
-    EXPECT_EQ(1, mesh_.elems().getOf<Tri>().size());
+    EXPECT_EQ(eG_.size(), mesh_.elems().size());
+    EXPECT_EQ(eG_.sizeOf<Tet>(), mesh_.elems().getOf<Tet>().size());
+    EXPECT_EQ(eG_.sizeOf<Tri>(), mesh_.elems().getOf<Tri>().size());
 
-    EXPECT_EQ(0, mesh_.layers().size());
+    EXPECT_EQ(lG_.size(), mesh_.layers().size());
 }

@@ -37,10 +37,10 @@ namespace Mesh {
 
 class Structured;
 
-class Unstructured : public virtual Mesh,
-                     public virtual Coordinate::Group<CoordR3>,
-                     public virtual Element::Group<ElemR>,
-                     public virtual Layer::Group<Layer::Layer> {
+class Unstructured : public Mesh,
+                     public Coordinate::Group<CoordR3>,
+                     public Element::Group<ElemR>,
+                     public Layer::Group<Layer::Layer> {
 public:
     Unstructured();
     Unstructured(const Coordinate::Group<const CoordR3>& cG,

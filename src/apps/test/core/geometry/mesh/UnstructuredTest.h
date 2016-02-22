@@ -28,6 +28,7 @@ class GeometryMeshUnstructuredTest : public ::testing::Test,
                                      public GeometryMeshTest {
 public:
     void SetUp() {
+        GeometryMeshTest::SetUp();
         mesh_ = Mesh::Unstructured(cG_, eG_, lG_);
     }
 

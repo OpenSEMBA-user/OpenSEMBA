@@ -18,27 +18,29 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "UnstructuredTest.h"
+#include "ParserGiDParserTest.h"
 
-TEST_F(GeometryMeshUnstructuredTest, ctor) {
-    EXPECT_EQ(cG_.size(), mesh_.coords().size());
+using namespace std;
+using namespace SEMBA;
+using namespace Parser;
 
-    EXPECT_EQ(eG_.size(), mesh_.elems().size());
-    EXPECT_EQ(eG_.sizeOf<Tet>(), mesh_.elems().getOf<Tet>().size());
-    EXPECT_EQ(eG_.sizeOf<Tri>(), mesh_.elems().getOf<Tri>().size());
-
-    EXPECT_EQ(lG_.size(), mesh_.layers().size());
+Data* ParserGiDParserTest::newSmb(const string project) {
+    const string testFolder("./testData/");
+    GiD::Parser parser(testFolder + project + ".gid/" + project + ".smb");
+    EXPECT_TRUE(parser.canOpen());
+    Data* res = parser.read();
+    EXPECT_TRUE(res != NULL);
+    if (res != NULL) {
+        EXPECT_TRUE(res->check());
+    }
+    return res;
 }
 
-TEST_F(GeometryMeshUnstructuredTest, matchingFaces) {
-    ASSERT_GT(mesh_.elems().sizeOf<Tet4>(), 0);
-    const Tet4* tet = mesh_.elems().getOf<Tet4>()(0);
-    vector<Element::Face> faces;
-    for (size_t f = 0; f < tet->numberOfFaces(); f++) {
-        faces.push_back(Element::Face(tet, f));
-    }
-    Element::Group<const SurfR> matching = mesh_.getSurfsMatching(faces);
-    EXPECT_EQ(matching.size(), 1);
-    const Tri3* tri = mesh_.elems().getOf<Tri3>()(0);
-    EXPECT_EQ(*matching(0), *tri);
+TEST_F(ParserGiDParserTest, sphere) {
+    Data* smb = newSmb("sphere");
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqNode>().size(), 3);
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqSurface>().size(), 1);
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 2);
+    EXPECT_EQ(smb->sources->size(), 1);
+    delete smb;
 }

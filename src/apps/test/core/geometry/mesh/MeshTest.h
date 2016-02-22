@@ -42,6 +42,7 @@ public:
         coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 0.0, 1.0)));
         coord.push_back(new CoordR3(coordId++, CVecR3(0.0, 1.0, 0.0)));
         coord.push_back(new CoordR3(coordId++, CVecR3(1.0, 0.0, 0.0)));
+        cG_.add(coord);
 
         vector<ElemR*> elems;
         const CoordR3* vTet[4] = {

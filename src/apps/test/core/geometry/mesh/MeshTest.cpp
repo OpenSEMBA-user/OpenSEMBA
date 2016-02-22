@@ -19,4 +19,3 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "MeshTest.h"
-

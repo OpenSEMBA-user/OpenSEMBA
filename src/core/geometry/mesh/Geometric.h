@@ -28,8 +28,8 @@ namespace SEMBA {
 namespace Geometry {
 namespace Mesh {
 
-class Geometric : public virtual Unstructured,
-                  public virtual Grid3 {
+class Geometric : public Unstructured,
+                  public Grid3 {
 public:
     Geometric();
     Geometric(const Grid3& grid,

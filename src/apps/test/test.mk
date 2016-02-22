@@ -23,7 +23,7 @@ OUT = test
 
 TEST_CORE_MATH     = no
 TEST_CORE_GEOMETRY = yes
-TEST_PARSER_GID    = no
+TEST_PARSER_GID    = yes
 
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
