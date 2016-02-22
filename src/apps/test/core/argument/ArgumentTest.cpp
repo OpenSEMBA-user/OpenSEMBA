@@ -22,14 +22,3 @@
 #include "ArgumentTest.h"
 
 using namespace SEMBA;
-
-//TEST_P(ArgumentTest, contains){
-//    std::string str = GetParam();
-//    str = "EXEC -i ./projects/test/sphere.gid/sphere.smb " + str;
-//    Argument::Argument argLHS(str + " -ZZ 0 1 2");
-//    Argument::Argument argRHS(str);
-//    EXPECT_TRUE(argLHS.contains(argRHS));
-//}
-//
-//INSTANTIATE_TEST_CASE_P(goodArguments, ArgumentTest,
-//        ::testing::Values("-XX -YY", "-XX 0 1 2", "-abc  -cba"));
