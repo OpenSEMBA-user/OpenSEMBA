@@ -19,20 +19,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
-#define SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
+#include "OptionBaseTest.h"
 
-#include "gtest/gtest.h"
-#include "argument/Argument.h"
-
-class ArgumentArgumentTest :
-        public ::testing::Test,
-        public ::testing::WithParamInterface<const char*> {
-
-};
-
-
-
-
-
-#endif /* SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_ */
+using namespace SEMBA;
+//
+//TEST_F(ArgumentOptionBaseTest, ctor) {
+//
+//    Argument::OptionBase short
+//}

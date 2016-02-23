@@ -19,20 +19,18 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
-#define SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
+#include "ParserTest.h"
 
-#include "gtest/gtest.h"
-#include "argument/Argument.h"
+using namespace SEMBA;
 
-class ArgumentArgumentTest :
-        public ::testing::Test,
-        public ::testing::WithParamInterface<const char*> {
-
-};
-
-
-
-
-
-#endif /* SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_ */
+TEST_F(ArgumentParserTest, basicOperation) {
+    Argument::Parser args;
+    // Loads available options.
+    Argument::Switch* helpSwitch;
+    EXPECT_NO_THROW(
+            helpSwitch = (new Argument::Switch("Help", 'h', "help"))->defaultVal(false));
+    args.addOption(helpSwitch);
+    // Parses.
+    Argument::Object res;
+    EXPECT_NO_THROW(res = args.parse({"EXEC", "-h"}));
+}

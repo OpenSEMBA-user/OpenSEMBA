@@ -23,9 +23,9 @@
 #define SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
 
 #include "gtest/gtest.h"
-#include "argument/Argument.h"
+#include "argument/Parser.h"
 
-class ArgumentArgumentTest :
+class ArgumentParserTest :
         public ::testing::Test,
         public ::testing::WithParamInterface<const char*> {
 

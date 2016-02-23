@@ -59,7 +59,6 @@ VTK Export: *GenData(VTK_Export)
 postmsh Export: *GenData(postmsh_Export)
 Mode: *GenData(Mode)
 Forbidden length: *GenData(Forbidden_length)
-Scale factor: *GenData(Scale_factor)
 Scale factor value: *GenData(Scale_factor_value)
 End of Mesher options
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)

@@ -19,20 +19,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
-#define SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_
+#include "ObjectTest.h"
 
-#include "gtest/gtest.h"
-#include "argument/Argument.h"
-
-class ArgumentArgumentTest :
-        public ::testing::Test,
-        public ::testing::WithParamInterface<const char*> {
-
-};
+using namespace std;
+using namespace SEMBA;
 
 
+TEST_F(ObjectTest, asDictionary) {
+    Argument::Object dict;
+    EXPECT_NO_THROW(dict("key1").setString("val1"));
+    EXPECT_NO_THROW(dict("key2").setString("val2"));
+    EXPECT_EQ("val1", dict("key1").getString());
+    EXPECT_ANY_THROW(dict("key1").getBool());
+}
 
+TEST_F(ObjectTest, asSet) {
+    Argument::Object obj;
+    obj.set(1, "patata");
+    tuple<int,string> data = obj.get<int,string>();
 
-
-#endif /* SRC_APPS_TEST_CORE_ARGUMENT_ARGUMENTTEST_H_ */
+    EXPECT_EQ(1, get<0>(data));
+    EXPECT_EQ("patata", get<1>(data));
+}

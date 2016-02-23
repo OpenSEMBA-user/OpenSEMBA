@@ -83,7 +83,6 @@ Object& Object::set(const T&... params) {
 template<typename T>
 void Object::set_(const T& param) {
     std::stringstream aux;
-    aux.precision(std::numeric_limits<T>::max_digits10);
     aux << param;
     strValue_.push_back(aux.str());
 }
@@ -91,7 +90,6 @@ void Object::set_(const T& param) {
 template<typename T1, typename T2, typename... T>
 void Object::set_(const T1& param1, const T2& param2, const T&... params) {
     std::stringstream aux;
-    aux.precision(std::numeric_limits<T1>::max_digits10);
     aux << param1;
     strValue_.push_back(aux.str());
     set_(param2, params...);
