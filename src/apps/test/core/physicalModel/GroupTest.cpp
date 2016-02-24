@@ -23,4 +23,11 @@
 
 using namespace std;
 using namespace SEMBA;
+using namespace PhysicalModel;
 
+TEST_F(PhysicalModelGroupTest, ctor) {
+    PMGroup pm;
+    EXPECT_NO_THROW(pm.add(
+            new Volume::Classic(MatId(1), "Classic", 1.0, 1.0, 0.0, 0.0)));
+    EXPECT_NO_THROW(pm.add(new Bound::PEC(MatId(2), "PEC")));
+}

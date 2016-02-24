@@ -25,7 +25,7 @@ using namespace SEMBA;
 using namespace Math;
 using namespace Matrix;
 
-class MathStaMatrixTest : public ::testing::Test {
+class MathMatrixStaticTest : public ::testing::Test {
 
 protected:
    virtual void SetUp() {
@@ -40,7 +40,7 @@ protected:
    Static<double,2,2> b_;
 };
 
-TEST_F(MathStaMatrixTest, BasicOperations) {
+TEST_F(MathMatrixStaticTest, BasicOperations) {
    Static<double,2,2> c;
    // Addition
    c(0,0) = 8.0; c(0,1) = 13.0;
@@ -61,7 +61,7 @@ TEST_F(MathStaMatrixTest, BasicOperations) {
    EXPECT_EQ(a_, a_.transpose().transpose());
 }
 
-TEST_F(MathStaMatrixTest, Inversion) {
+TEST_F(MathMatrixStaticTest, Inversion) {
    // 2x2
    Static<double,2,2> c;
    c(0,0) = -5.0; c(0,1) =  2.0;

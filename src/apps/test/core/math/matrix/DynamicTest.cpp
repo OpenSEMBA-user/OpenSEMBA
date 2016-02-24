@@ -28,7 +28,7 @@ using namespace SEMBA;
 using namespace Math;
 using namespace Matrix;
 
-class MathDynMatrixTest : public ::testing::Test {
+class MathMatrixDynamicTest : public ::testing::Test {
 
 protected:
    virtual void SetUp() {
@@ -45,7 +45,7 @@ protected:
    Dynamic<double> b_;
 };
 
-TEST_F(MathDynMatrixTest, BasicOperations) {
+TEST_F(MathMatrixDynamicTest, BasicOperations) {
    Dynamic<double> c(2,2);
    // Addition
    c(0,0) = 8.0; c(0,1) = 13.0;
@@ -74,7 +74,7 @@ TEST_F(MathDynMatrixTest, BasicOperations) {
    EXPECT_EQ(c.sub(sIndices, sIndices), b_ * a_(1,1));
 }
 
-TEST_F(MathDynMatrixTest, Inversion) {
+TEST_F(MathMatrixDynamicTest, Inversion) {
    // 2x2
    Dynamic<double> c(2,2), aux(2,2);
    c(0,0) = -5.0; c(0,1) =  2.0;

@@ -21,10 +21,11 @@
 
 OUT = test
 
-TEST_CORE_MATH     = yes
-TEST_CORE_GEOMETRY = yes
-TEST_CORE_ARGUMENT = yes
-TEST_PARSER_GID    = yes
+TEST_CORE_MATH          = yes
+TEST_CORE_GEOMETRY      = yes
+TEST_CORE_ARGUMENT      = yes
+TEST_CORE_PHYSICALMODEL = yes 
+TEST_PARSER_GID         = yes
 
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
@@ -51,10 +52,16 @@ ifeq ($(TEST_CORE_ARGUMENT),yes)
 	SRC_CORE_ARGUMENT_TESTS_DIRS := $(SRC_CORE_ARGUMENT_DIRS) \
 								   $(shell find $(SRC_APP_DIR)core/argument/ -type d)
 endif
+ifeq ($(TEST_CORE_PHYSICALMODEL),yes)
+	SRC_CORE_PHYSICALMODEL_DIRS := $(shell find $(SRC_DIR)core/physicalModel/ -type d)
+	SRC_CORE_PHYSICALMODEL_TESTS_DIRS := $(SRC_CORE_PHYSICALMODEL_DIRS) \
+								   $(shell find $(SRC_APP_DIR)core/physicalModel/ -type d)
+endif
 
 SRC_CORE_TESTS_DIRS = $(SRC_CORE_MATH_TESTS_DIRS) \
 	                  $(SRC_CORE_GEOMETRY_TESTS_DIRS) \
-	                  $(SRC_CORE_ARGUMENT_TESTS_DIRS) 
+	                  $(SRC_CORE_ARGUMENT_TESTS_DIRS) \
+	                  $(SRC_CORE_PHYSICALMODEL_TESTS_DIRS) 
 # --- Parsers ---
 ifeq ($(TEST_PARSER_GID),yes)
 	SRC_PARSER_GID_DIRS       := $(shell find $(SRC_DIR)core/ -type d) \
