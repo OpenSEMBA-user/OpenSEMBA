@@ -19,12 +19,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "VolumeAnisotropicCrystal.h"
+#include "physicalModel/volume/AnisotropicCrystal.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
-VolumeAnisotropicCrystal::VolumeAnisotropicCrystal(
+AnisotropicCrystal::AnisotropicCrystal(
         const Id matId,
         const std::string& name,
         const Math::Axis::Local& local,
@@ -32,54 +33,55 @@ VolumeAnisotropicCrystal::VolumeAnisotropicCrystal(
         const Math::Real relativePermeability)
 :   Identifiable<Id>(matId),
     PhysicalModel(name),
-    VolumeAnisotropic(local) {
+    Anisotropic(local) {
     principalAxesRelativePermittivity_ = principalAxesRelativePermittivity;
     relativePermeability_ = relativePermeability;
 }
 
-VolumeAnisotropicCrystal::VolumeAnisotropicCrystal(
-    const VolumeAnisotropicCrystal& rhs)
+AnisotropicCrystal::AnisotropicCrystal(
+    const AnisotropicCrystal& rhs)
 :   Identifiable<Id>(rhs),
     PhysicalModel(rhs),
-    VolumeAnisotropic(rhs) {
+    Anisotropic(rhs) {
     principalAxesRelativePermittivity_ =
         rhs.principalAxesRelativePermittivity_;
     relativePermeability_ = rhs.relativePermeability_;
 }
 
-VolumeAnisotropicCrystal::~VolumeAnisotropicCrystal() {
+AnisotropicCrystal::~AnisotropicCrystal() {
 
 }
 
 const Math::CVecR3
-    VolumeAnisotropicCrystal::getPrincipalAxesRelativePermittivity() const {
+    AnisotropicCrystal::getPrincipalAxesRelativePermittivity() const {
     return principalAxesRelativePermittivity_;
 }
 
-Math::Real VolumeAnisotropicCrystal::getRelativePermeability() const {
+Math::Real AnisotropicCrystal::getRelativePermeability() const {
     return relativePermeability_;
 }
 
 
-Math::MatR33 VolumeAnisotropicCrystal::getRelPermittivityMatR() const {
+Math::MatR33 AnisotropicCrystal::getRelPermittivityMatR() const {
     Math::MatR33 local;
     local.setInDiagonal(principalAxesRelativePermittivity_);
     return getLocalAxe().convertToGlobal(local);
 }
 
-Math::MatR33 VolumeAnisotropicCrystal::getRelPermeabilityMatR() const {
+Math::MatR33 AnisotropicCrystal::getRelPermeabilityMatR() const {
     Math::MatR33 local;
     local.setInDiagonal(Math::CVecR3(relativePermeability_));
     return getLocalAxe().convertToGlobal(local);
 }
 
-Math::MatR33 VolumeAnisotropicCrystal::getElectricConductivityMat() const {
+Math::MatR33 AnisotropicCrystal::getElectricConductivityMat() const {
     return Math::MatR33();
 }
 
-Math::MatR33 VolumeAnisotropicCrystal::getMagneticConductivityMat() const {
+Math::MatR33 AnisotropicCrystal::getMagneticConductivityMat() const {
     return Math::MatR33();
 }
 
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

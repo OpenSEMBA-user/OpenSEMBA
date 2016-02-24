@@ -28,19 +28,20 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
-class VolumeClassic : public virtual Volume {
+class Classic : public virtual Volume {
 public:
-    VolumeClassic(const Id matId,
+    Classic(const Id matId,
                   const std::string& name,
                   const Math::Real relativePermittivity = 1.0,
                   const Math::Real relativePermeability = 1.0,
                   const Math::Real electricConductivity = 0.0,
                   const Math::Real magneticConductivity = 0.0);
-    VolumeClassic(const VolumeClassic&);
-    virtual ~VolumeClassic();
+    Classic(const Classic&);
+    virtual ~Classic();
 
-    SEMBA_CLASS_DEFINE_CLONE(VolumeClassic);
+    SEMBA_CLASS_DEFINE_CLONE(Classic);
 
     Math::Real getRelativePermittivity() const;
     Math::Real getPermittivity() const;
@@ -60,6 +61,7 @@ private:
     Math::Real magneticConudctivity_;
 };
 
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

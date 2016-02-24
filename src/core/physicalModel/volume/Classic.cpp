@@ -19,14 +19,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "VolumeClassic.h"
-
+#include <physicalModel/volume/Classic.h>
 #include <cmath>
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
-VolumeClassic::VolumeClassic(const Id matId,
+Classic::Classic(const Id matId,
                              const std::string& name,
                              const Math::Real relativePermittivity,
                              const Math::Real relativePermeability,
@@ -40,7 +40,7 @@ VolumeClassic::VolumeClassic(const Id matId,
     magneticConudctivity_ = magneticConductivity;
 }
 
-VolumeClassic::VolumeClassic(const VolumeClassic& rhs)
+Classic::Classic(const Classic& rhs)
 :   Identifiable<Id>(rhs),
     PhysicalModel(rhs) {
     rEps_ = rhs.rEps_;
@@ -49,11 +49,11 @@ VolumeClassic::VolumeClassic(const VolumeClassic& rhs)
     magneticConudctivity_ = rhs.magneticConudctivity_;
 }
 
-VolumeClassic::~VolumeClassic() {
+Classic::~Classic() {
 
 }
 
-Math::Real VolumeClassic::getImpedance() const {
+Math::Real Classic::getImpedance() const {
     if (rEps_ <= 0.0) {
         return std::numeric_limits<Math::Real>::infinity();
     }
@@ -61,45 +61,45 @@ Math::Real VolumeClassic::getImpedance() const {
                      (rEps_ * Math::Constants::eps0));
 }
 
-Math::Real VolumeClassic::getAdmitance() const {
+Math::Real Classic::getAdmitance() const {
     if (rMu_ <= 0.0) {
         return std::numeric_limits<Math::Real>::infinity();
     }
     return (1.0 / getImpedance());
 }
 
-Math::Real VolumeClassic::getRelativePermittivity() const {
+Math::Real Classic::getRelativePermittivity() const {
     return rEps_;
 }
 
-Math::Real VolumeClassic::getRelativePermeability() const {
+Math::Real Classic::getRelativePermeability() const {
     return rMu_;
 }
 
-Math::Real VolumeClassic::getPermittivity() const {
+Math::Real Classic::getPermittivity() const {
     return (rEps_ * Math::Constants::eps0);
 }
 
-Math::Real VolumeClassic::getPermeability() const {
+Math::Real Classic::getPermeability() const {
     return (rMu_ * Math::Constants::mu0);
 }
 
-Math::Real VolumeClassic::getElectricConductivity() const {
+Math::Real Classic::getElectricConductivity() const {
     return electricConductivity_;
 }
 
-Math::Real VolumeClassic::getMagneticConductivity() const {
+Math::Real Classic::getMagneticConductivity() const {
     return magneticConudctivity_;
 }
 
-bool VolumeClassic::isVacuum() const {
+bool Classic::isVacuum() const {
     return (rEps_ == 1.0
             && rMu_ == 1.0
             && electricConductivity_ == 0.0
             && magneticConudctivity_ == 0.0);
 }
 
-void VolumeClassic::printInfo() const {
+void Classic::printInfo() const {
     std::cout << "--- VolumeClassic info ---" << std::endl;
     Volume::printInfo();
     std::cout << "Rel. elec. permittivity: "
@@ -112,5 +112,6 @@ void VolumeClassic::printInfo() const {
               << getMagneticConductivity() << std::endl;
 }
 
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

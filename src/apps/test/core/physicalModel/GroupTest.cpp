@@ -19,37 +19,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_PHYSICALMODEL_VOLUMEPML_H_
-#define SEMBA_PHYSICALMODEL_VOLUMEPML_H_
+#include "GroupTest.h"
 
-#include "geometry/Box.h"
-#include "math/axis/Local.h"
+using namespace std;
+using namespace SEMBA;
 
-#include "Volume.h"
-
-namespace SEMBA {
-namespace PhysicalModel {
-
-class VolumePML : public virtual Volume {
-public:
-    VolumePML(const Id id,
-              const std::string& name,
-              const Math::Axis::Local* orientation = NULL);
-    // If no orientation is given. Automatic orientation should be attempted.
-    VolumePML(const VolumePML& rhs);
-    ~VolumePML();
-
-    SEMBA_CLASS_DEFINE_CLONE(VolumePML);
-
-    const Math::Axis::Local* getOrientation() const;
-
-    void printInfo() const;
-
-private:
-    const Math::Axis::Local* orientation_;
-};
-
-} /* namespace PhysicalModel */
-} /* namespace SEMBA */
-
-#endif /* SEMBA_PHYSICALMODEL_VOLUMEPML_H_ */

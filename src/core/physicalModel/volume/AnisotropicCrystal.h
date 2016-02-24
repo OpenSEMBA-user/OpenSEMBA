@@ -22,24 +22,25 @@
 #ifndef SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICCRYSTAL_H_
 #define SEMBA_PHYSICALMODEL_VOLUMEANISOTROPICCRYSTAL_H_
 
-#include "VolumeAnisotropic.h"
+#include <physicalModel/volume/Anisotropic.h>
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
 // Described in: https://courses.cit.cornell.edu/ece303/Lectures/lecture17.pdf
-class VolumeAnisotropicCrystal: public VolumeAnisotropic {
+class AnisotropicCrystal: public Anisotropic {
 public:
-    VolumeAnisotropicCrystal(
+    AnisotropicCrystal(
             const Id matId,
             const std::string& name,
             const Math::Axis::Local& local,
             const Math::CVecR3& principalAxesRelativePermittivity,
             const Math::Real relativePermeability);
-    VolumeAnisotropicCrystal(const VolumeAnisotropicCrystal&);
-    virtual ~VolumeAnisotropicCrystal();
+    AnisotropicCrystal(const AnisotropicCrystal&);
+    virtual ~AnisotropicCrystal();
 
-    SEMBA_CLASS_DEFINE_CLONE(VolumeAnisotropicCrystal);
+    SEMBA_CLASS_DEFINE_CLONE(AnisotropicCrystal);
 
     const Math::CVecR3 getPrincipalAxesRelativePermittivity() const;
     Math::Real getRelativePermeability() const;
@@ -53,6 +54,7 @@ private:
     Math::Real relativePermeability_;
 };
 
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

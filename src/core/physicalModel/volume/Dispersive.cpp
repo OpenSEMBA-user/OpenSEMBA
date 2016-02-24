@@ -19,12 +19,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "VolumeDispersive.h"
+#include <physicalModel/volume/Dispersive.h>
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
-VolumeDispersive::VolumeDispersive(const Id id,
+Dispersive::Dispersive(const Id id,
                                    const std::string& name,
                                    const Math::Real rEps,
                                    const Math::Real rMu,
@@ -49,7 +50,7 @@ VolumeDispersive::VolumeDispersive(const Id id,
     poleResidue_ = poleResidue;
 }
 
-VolumeDispersive::VolumeDispersive(const Id id,
+Dispersive::Dispersive(const Id id,
                                    const std::string& name,
                                    const FileSystem::Project& file)
 :   Identifiable<Id>(id),
@@ -59,7 +60,7 @@ VolumeDispersive::VolumeDispersive(const Id id,
     file_ = file;
 }
 
-VolumeDispersive::VolumeDispersive(const VolumeDispersive& rhs)
+Dispersive::Dispersive(const Dispersive& rhs)
 :   Identifiable<Id>(rhs),
     PhysicalModel(rhs) {
     rEpsInfty_ = rhs.rEpsInfty_;
@@ -68,41 +69,41 @@ VolumeDispersive::VolumeDispersive(const VolumeDispersive& rhs)
     file_ = rhs.file_;
 }
 
-VolumeDispersive::~VolumeDispersive() {
+Dispersive::~Dispersive() {
 
 }
 
-std::size_t VolumeDispersive::getPoleNumber() const {
+std::size_t Dispersive::getPoleNumber() const {
     return poleResidue_.size();
 }
 
-std::complex<Math::Real> VolumeDispersive::getPole(std::size_t p) const {
+std::complex<Math::Real> Dispersive::getPole(std::size_t p) const {
     return poleResidue_[p].first;
 }
 
-std::complex<Math::Real> VolumeDispersive::getResidue(std::size_t p) const {
+std::complex<Math::Real> Dispersive::getResidue(std::size_t p) const {
     return poleResidue_[p].second;
 }
 
-bool VolumeDispersive::isDispersive() const {
+bool Dispersive::isDispersive() const {
     if (poleResidue_.size() > 0) {
         return true;
     }
     return false;
 }
 
-bool VolumeDispersive::isClassic() const {
+bool Dispersive::isClassic() const {
     return isSimplyConductive();
 }
 
-bool VolumeDispersive::isSimplyConductive() const {
+bool Dispersive::isSimplyConductive() const {
     if (!file_.empty()) {
         return false;
     }
     return (poleResidue_.size() <= 1 && std::abs(getPole(0)) == 0);
 }
 
-Math::Real VolumeDispersive::getElectricConductivity() const {
+Math::Real Dispersive::getElectricConductivity() const {
     if (getPoleNumber() > 1) {
         std::cout << std::endl << "WARNING @ getElectricConductivity: "
                   << "This material is dispersive and its effective "
@@ -117,18 +118,18 @@ Math::Real VolumeDispersive::getElectricConductivity() const {
     return 0.0;
 }
 
-void VolumeDispersive::addPole(
+void Dispersive::addPole(
         const std::complex<Math::Real>& pole,
         const std::complex<Math::Real>& res) {
     poleResidue_.push_back(PoleResidue(pole,res));
     return;
 }
 
-const FileSystem::Project VolumeDispersive::getFile() const {
+const FileSystem::Project Dispersive::getFile() const {
     return file_;
 }
 
-void VolumeDispersive::printInfo() const {
+void Dispersive::printInfo() const {
     std::cout << "--- VolumeDispersive info ---" << std::endl;
     Volume::printInfo();
     std::cout << "Type: " << "Dispersive material" << std::endl;
@@ -143,5 +144,6 @@ void VolumeDispersive::printInfo() const {
     }
 }
 
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

@@ -19,37 +19,20 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_
-#define SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_
+#ifndef SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_
+#define SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_
 
-#include "Volume.h"
-#include "math/axis/Local.h"
+#include "gtest/gtest.h"
+#include "physicalModel/Group.h"
 
-namespace SEMBA {
-namespace PhysicalModel {
-
-class VolumeAnisotropic : public virtual Volume {
+class PhysicalModelGroupTest : public ::testing::Test {
 public:
-    enum class Model {
-        crystal,
-        ferrite
-    };
 
-    VolumeAnisotropic(const Math::Axis::Local& local);
-    VolumeAnisotropic(const VolumeAnisotropic& rhs);
-    virtual ~VolumeAnisotropic();
+protected:
 
-    Math::Axis::Local getLocalAxe() const;
-    virtual Math::MatR33 getRelPermittivityMatR() const = 0;
-    virtual Math::MatR33 getRelPermeabilityMatR() const = 0;
-    virtual Math::MatR33 getElectricConductivityMat() const = 0;
-    virtual Math::MatR33 getMagneticConductivityMat() const = 0;
-
-private:
-    Math::Axis::Local localAxe_;
 };
 
-} /* namespace PhysicalModel */
-} /* namespace SEMBA */
 
-#endif /* SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_ */
+
+
+#endif /* SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_ */

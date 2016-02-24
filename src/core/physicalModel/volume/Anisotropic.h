@@ -19,46 +19,39 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "VolumePML.h"
+#ifndef SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_
+#define SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_
+
+#include "Volume.h"
+#include "math/axis/Local.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
-VolumePML::VolumePML(const Id id,
-                     const std::string& name,
-                     const Math::Axis::Local* orientation)
-:   Identifiable<Id>(id),
-    PhysicalModel(name) {
-    orientation_ = orientation;
-}
+class Anisotropic : public virtual Volume {
+public:
+    enum class Model {
+        crystal,
+        ferrite
+    };
 
-VolumePML::VolumePML(const VolumePML& rhs)
-:   Identifiable<Id>(rhs),
-    PhysicalModel(rhs) {
-    if (rhs.orientation_ != NULL) {
-        orientation_ = new Math::Axis::Local(*rhs.orientation_);
-    } else {
-        orientation_ = NULL;
-    }
-}
+    Anisotropic(const Math::Axis::Local& local);
+    Anisotropic(const Anisotropic& rhs);
+    virtual ~Anisotropic();
 
-VolumePML::~VolumePML() {
-    if (orientation_ != NULL) {
-        delete orientation_;
-    }
-}
+    Math::Axis::Local getLocalAxe() const;
+    virtual Math::MatR33 getRelPermittivityMatR() const = 0;
+    virtual Math::MatR33 getRelPermeabilityMatR() const = 0;
+    virtual Math::MatR33 getElectricConductivityMat() const = 0;
+    virtual Math::MatR33 getMagneticConductivityMat() const = 0;
 
-void VolumePML::printInfo() const {
-    std::cout << "--- VolumePML info ---" << std::endl;
-    Volume::printInfo();
-    if (orientation_ != NULL) {
-        orientation_->printInfo();
-    }
+private:
+    Math::Axis::Local localAxe_;
+};
 
-}
-
-const Math::Axis::Local* VolumePML::getOrientation() const {
-    return orientation_;
-}
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_VOLUMEANISOTROPIC_H_ */

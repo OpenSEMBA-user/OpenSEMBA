@@ -32,13 +32,14 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
 typedef std::pair<std::complex<Math::Real>,
                   std::complex<Math::Real>> PoleResidue;
 
-class VolumeDispersive : public virtual Volume {
+class Dispersive : public virtual Volume {
 public:
-    VolumeDispersive(const Id id,
+    Dispersive(const Id id,
                      const std::string& name,
                      const Math::Real rEps,
                      const Math::Real rMu,
@@ -46,13 +47,13 @@ public:
                      const Math::Real magnCond,
                      const std::vector<PoleResidue>& poleResidue =
                         std::vector<PoleResidue>());
-    VolumeDispersive(const Id id,
+    Dispersive(const Id id,
                      const std::string& name,
                      const FileSystem::Project& file);
-    VolumeDispersive(const VolumeDispersive& rhs);
-    virtual ~VolumeDispersive();
+    Dispersive(const Dispersive& rhs);
+    virtual ~Dispersive();
 
-    SEMBA_CLASS_DEFINE_CLONE(VolumeDispersive);
+    SEMBA_CLASS_DEFINE_CLONE(Dispersive);
 
     std::size_t getPoleNumber() const;
     std::complex<Math::Real> getPole(std::size_t p) const;
@@ -75,7 +76,7 @@ protected:
 };
 
 namespace Error {
-namespace VolumeDispersive {
+namespace Dispersive {
 
 class MagneticMaterial : public Error {
 public:
@@ -88,8 +89,9 @@ public:
     }
 };
 
-} /* namespace VolumeDispersive */
+} /* namespace Dispersive */
 } /* namespace Error */
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

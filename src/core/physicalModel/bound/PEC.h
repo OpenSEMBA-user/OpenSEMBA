@@ -19,26 +19,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "VolumeAnisotropic.h"
+#ifndef SEMBA_PHYSICALMODEL_PEC_H_
+#define SEMBA_PHYSICALMODEL_PEC_H_
+
+#include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 
-VolumeAnisotropic::VolumeAnisotropic(const Math::Axis::Local& localAxe) {
-    localAxe_ = localAxe;
-}
+class PEC : public virtual Bound {
+public:
+    PEC(const Id id, const std::string name);
+    PEC(const PEC&);
+    virtual ~PEC();
 
-VolumeAnisotropic::VolumeAnisotropic(const VolumeAnisotropic& rhs) {
-    localAxe_ = rhs.localAxe_;
-}
+    SEMBA_CLASS_DEFINE_CLONE(PEC);
 
-VolumeAnisotropic::~VolumeAnisotropic() {
-
-}
-
-Math::Axis::Local VolumeAnisotropic::getLocalAxe() const {
-    return localAxe_;
-}
+    void printInfo() const;
+};
 
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_PEC_H_ */

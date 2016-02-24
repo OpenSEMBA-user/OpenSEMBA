@@ -383,7 +383,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
     SIBCType surfType = undefinedSIBC;
     std::string layersStr;
     Math::Real rEps, rMu, eC, mC;
-    PhysicalModel::VolumeAnisotropic::Model anisotropicModel;
+    PhysicalModel::Anisotropic::Model anisotropicModel;
     Math::Real crystalRMu, ferriteREps, ferriteRMu;
     Math::CVecR3 rEpsPrincipalAxes;
     Math::Axis::Local localAxes;
@@ -459,14 +459,14 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
                 return new PhysicalModel::VolumeClassic(
                         id, name, rEps, rMu, eC, mC);
             case PhysicalModel::PhysicalModel::elecDispersive:
-                return new PhysicalModel::VolumeDispersive(id, name, file);
+                return new PhysicalModel::Dispersive(id, name, file);
             case PhysicalModel::PhysicalModel::anisotropic:
                 switch (anisotropicModel) {
-                case PhysicalModel::VolumeAnisotropic::Model::crystal:
+                case PhysicalModel::Anisotropic::Model::crystal:
                     return new PhysicalModel::VolumeAnisotropicCrystal(
                             id, name, localAxes,
                             rEpsPrincipalAxes, crystalRMu);
-                case PhysicalModel::VolumeAnisotropic::Model::ferrite:
+                case PhysicalModel::Anisotropic::Model::ferrite:
                     return new PhysicalModel::VolumeAnisotropicFerrite(
                             id, name, localAxes,
                             kappa,ferriteRMu,ferriteREps);
@@ -1054,7 +1054,7 @@ void Parser::readLin2Elements(
     }
 }
 
-PhysicalModel::VolumeDispersive* Parser::readDispersiveMatFile(
+PhysicalModel::Dispersive* Parser::readDispersiveMatFile(
         const MatId id,
         const std::string& name,
         const FileSystem::Project& file) const {
@@ -1072,7 +1072,7 @@ PhysicalModel::VolumeDispersive* Parser::readDispersiveMatFile(
         PhysicalModel::PoleResidue pR = readPoleResiduePair(stream);
         poleResidues.push_back(pR);
     }
-    return new PhysicalModel::VolumeDispersive(id, name,
+    return new PhysicalModel::Dispersive(id, name,
             eps / Math::Constants::eps0,
             mu / Math::Constants::mu0,
             sig, sigM, poleResidues);
@@ -1979,14 +1979,14 @@ PhysicalModel::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
     return res;
 }
 
-PhysicalModel::VolumeAnisotropic::Model Parser::strToAnisotropicModel(
+PhysicalModel::Anisotropic::Model Parser::strToAnisotropicModel(
         std::string label) {
     std::string str = label;
     str = trim(str);
     if (str.compare("Crystal")==0) {
-        return PhysicalModel::VolumeAnisotropic::Model::crystal;
+        return PhysicalModel::Anisotropic::Model::crystal;
     } else if (str.compare("Ferrite")==0) {
-        return PhysicalModel::VolumeAnisotropic::Model::ferrite;
+        return PhysicalModel::Anisotropic::Model::ferrite;
     } else {
         throw std::logic_error("Unrecognized Anisotropic Model: " + str);
     }

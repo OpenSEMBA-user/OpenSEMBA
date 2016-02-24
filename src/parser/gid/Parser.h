@@ -95,7 +95,7 @@ private:
     PhysicalModel::Group<>* readMaterials();
     Geometry::Mesh::Geometric* readMesh();
     ProblemSize readProblemSize();
-    PhysicalModel::VolumeDispersive* readDispersiveMatFile(
+    PhysicalModel::Dispersive* readDispersiveMatFile(
             const MatId id,
             const std::string& name,
             const FileSystem::Project& file) const;
@@ -163,7 +163,7 @@ private:
             std::string label);
     static PhysicalModel::Multiport::Type strToMultiportType(
             std::string label);
-    static PhysicalModel::VolumeAnisotropic::Model strToAnisotropicModel(
+    static PhysicalModel::Anisotropic::Model strToAnisotropicModel(
             std::string label);
 
     //static OptionsSolverFDTD::PMLBacking strToPMLBacking(
