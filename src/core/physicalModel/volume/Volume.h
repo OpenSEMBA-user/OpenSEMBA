@@ -26,6 +26,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
 class Volume : public virtual PhysicalModel {
 public:
@@ -35,6 +36,7 @@ public:
     virtual void printInfo() const;
 };
 
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

@@ -45,7 +45,7 @@ Dispersive::Dispersive(const Id id,
     }
     //
     if (magnCond != 0.0) {
-        throw Error::VolumeDispersive::MagneticMaterial();
+        throw Error::Dispersive::MagneticMaterial();
     }
     poleResidue_ = poleResidue;
 }

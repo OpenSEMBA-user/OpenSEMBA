@@ -19,58 +19,36 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "MultiportRLC.h"
+#include <physicalModel/multiport/Predefined.h>
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Multiport {
 
-MultiportRLC::MultiportRLC(const Id id,
-                           const std::string name,
-                           const Multiport::Type type,
-                           const Math::Real resistance,
-                           const Math::Real inductance,
-                           const Math::Real capacitance)
+Predefined::Predefined(const Id id,
+        const std::string name,
+        const Multiport::Type type)
 :   Identifiable<Id>(id),
     PhysicalModel(name) {
     type_ = type;
-    R_ = resistance;
-    L_ = inductance;
-    C_ = capacitance;
 }
 
-MultiportRLC::MultiportRLC(const MultiportRLC& rhs)
-:   Identifiable<Id>(rhs),
-    PhysicalModel(rhs) {
+Predefined::Predefined(const Predefined& rhs)
+: Identifiable<Id>(rhs),
+  PhysicalModel(rhs) {
     type_ = rhs.type_;
-    R_ = rhs.R_;
-    L_ = rhs.L_;
-    C_ = rhs.C_;
 }
 
-MultiportRLC::~MultiportRLC() {
+Predefined::~Predefined() {
 
 }
 
-Math::Real MultiportRLC::getR() const {
-    return R_;
-}
-
-Math::Real MultiportRLC::getL() const {
-    return L_;
-}
-
-Math::Real MultiportRLC::getC() const {
-    return C_;
-}
-
-void MultiportRLC::printInfo() const {
-    std::cout<< " --- Multiport RLC Info --- " << std::endl;
+void Predefined::printInfo() const {
+    std::cout<< " --- Multiport Info --- " << std::endl;
     Multiport::printInfo();
     std::cout<< " Type: " << getTypeStr() << std::endl;
-    std::cout<< " Resistance: " << R_ << std::endl;
-    std::cout<< " Inductance: " << L_ << std::endl;
-    std::cout<< " Capacitance: " << C_ << std::endl;
 }
 
+} /* namespace Multiport */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

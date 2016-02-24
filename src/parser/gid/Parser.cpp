@@ -476,7 +476,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             case PhysicalModel::PhysicalModel::isotropicsibc:
                 switch (surfType) {
                 case sibc:
-                    return new PhysicalModel::SurfaceSIBC(id, name, file);
+                    return new PhysicalModel::SIBC(id, name, file);
                 case multilayer:
                     return readMultilayerSurf(id, name, layersStr);
                 default:
@@ -490,7 +490,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
                     return new PhysicalModel::MultiportPredefined(
                             id, name, mpType);
                 } else {
-                    return new PhysicalModel::MultiportRLC(
+                    return new PhysicalModel::RLC(
                             id, name, mpType, R, L, C);
                 }
             default:
@@ -1078,7 +1078,7 @@ PhysicalModel::Dispersive* Parser::readDispersiveMatFile(
             sig, sigM, poleResidues);
 }
 
-PhysicalModel::SurfaceMultilayer* Parser::readMultilayerSurf(
+PhysicalModel::Multilayer* Parser::readMultilayerSurf(
         const MatId id,
         const std::string& name,
         const std::string& layersStr) const {
@@ -1101,11 +1101,11 @@ PhysicalModel::SurfaceMultilayer* Parser::readMultilayerSurf(
         eCond.push_back(eCond_);
         mCond.push_back(mCond_);
     }
-    return new PhysicalModel::SurfaceMultilayer(
+    return new PhysicalModel::Multilayer(
             id, name, thick, rEps, rMu, eCond, mCond);
 }
 
-PhysicalModel::SurfaceSIBC* Parser::readIsotropicSurfMatFile(
+PhysicalModel::SIBC* Parser::readIsotropicSurfMatFile(
         const MatId id,
         const std::string& fileName,
         const FileSystem::Project& file) const {
@@ -1166,7 +1166,7 @@ PhysicalModel::SurfaceSIBC* Parser::readIsotropicSurfMatFile(
         Z.push_back(tmpZ);
     }
     // Copies all parsed data into the aux material depending on the model.
-    return new PhysicalModel::SurfaceSIBC(
+    return new PhysicalModel::SIBC(
             id, name, Zinfinite, Zstatic, pole, Z);
 }
 

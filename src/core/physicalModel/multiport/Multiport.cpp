@@ -23,9 +23,10 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Multiport {
 
 Multiport::Multiport() {
-
+    type_ = undefined;
 }
 
 Multiport::~Multiport() {
@@ -79,5 +80,6 @@ std::string Multiport::getTypeStr() const {
     return res;
 }
 
+} /* namespace Multiport */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

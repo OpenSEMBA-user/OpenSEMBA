@@ -25,17 +25,17 @@ namespace SEMBA {
 namespace PhysicalModel {
 
 WireExtremes::WireExtremes(const Wire& wire,
-                           const Multiport* extremeL,
-                           const Multiport* extremeR)
+                           const Multiport::Multiport* extremeL,
+                           const Multiport::Multiport* extremeR)
 :   Identifiable<Id>(wire),
     PhysicalModel(wire),
     Wire(wire) {
     extreme_[0] = extreme_[1] = NULL;
     if (extremeL != NULL) {
-        extreme_[0] = extremeL->cloneTo<Multiport>();
+        extreme_[0] = extremeL->cloneTo<Multiport::Multiport>();
     }
     if (extremeR != NULL) {
-        extreme_[1] = extremeR->cloneTo<Multiport>();
+        extreme_[1] = extremeR->cloneTo<Multiport::Multiport>();
     }
 }
 
@@ -45,10 +45,10 @@ WireExtremes::WireExtremes(const WireExtremes& rhs)
     Wire(rhs) {
     extreme_[0] = extreme_[1] = NULL;
     if (rhs.extreme_[0] != NULL) {
-        extreme_[0] = rhs.extreme_[0]->cloneTo<Multiport>();
+        extreme_[0] = rhs.extreme_[0]->cloneTo<Multiport::Multiport>();
     }
     if (rhs.extreme_[1] != NULL) {
-        extreme_[1] = rhs.extreme_[1]->cloneTo<Multiport>();
+        extreme_[1] = rhs.extreme_[1]->cloneTo<Multiport::Multiport>();
     }
 }
 
@@ -61,13 +61,13 @@ WireExtremes::~WireExtremes() {
     }
 }
 
-void WireExtremes::setExtreme(const std::size_t i, const Multiport* extreme) {
+void WireExtremes::setExtreme(const std::size_t i, const Multiport::Multiport* extreme) {
     if (extreme_[i] != NULL) {
         delete extreme_[i];
     }
     extreme_[i] = NULL;
     if (extreme != NULL) {
-        extreme_[i] = extreme->cloneTo<Multiport>();
+        extreme_[i] = extreme->cloneTo<Multiport::Multiport>();
     }
 }
 

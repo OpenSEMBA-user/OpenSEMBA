@@ -22,10 +22,11 @@
 #ifndef SEMBA_PHYSICALMODEL_MULTIPORT_H_
 #define SEMBA_PHYSICALMODEL_MULTIPORT_H_
 
-#include "PhysicalModel.h"
+#include "physicalModel/PhysicalModel.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Multiport {
 
 class Multiport : public virtual PhysicalModel {
 public:
@@ -55,6 +56,7 @@ protected:
     std::string getTypeStr() const;
 };
 
+} /* namespace Multiport */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

@@ -23,7 +23,7 @@
 #define SEMBA_PHYSICALMODEL_WIREEXTREMES_H_
 
 #include "Wire.h"
-#include "Multiport.h"
+#include "physicalModel/multiport/Multiport.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
@@ -31,23 +31,23 @@ namespace PhysicalModel {
 class WireExtremes : public virtual Wire {
 public:
     WireExtremes(const Wire& wire,
-                 const Multiport* extremeL,
-                 const Multiport* extremeR);
+                 const Multiport::Multiport* extremeL,
+                 const Multiport::Multiport* extremeR);
     WireExtremes(const WireExtremes& rhs);
     virtual ~WireExtremes();
 
     SEMBA_CLASS_DEFINE_CLONE(WireExtremes);
 
-    const Multiport *getExtreme(const std::size_t i) const {
+    const Multiport::Multiport *getExtreme(const std::size_t i) const {
         return extreme_[i];
     }
 
-    void setExtreme(const std::size_t i, const Multiport* extreme);
+    void setExtreme(const std::size_t i, const Multiport::Multiport* extreme);
 
     void printInfo() const;
 
 private:
-    const Multiport* extreme_[2];
+    const Multiport::Multiport* extreme_[2];
 };
 
 } /* namespace PhysicalModel */

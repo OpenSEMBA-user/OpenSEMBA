@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Predefined {
 
 Predefined::Predefined() {
 }
@@ -35,5 +36,6 @@ void Predefined::printInfo() const {
     PhysicalModel::printInfo();
 }
 
+} /* namespace Predefined */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

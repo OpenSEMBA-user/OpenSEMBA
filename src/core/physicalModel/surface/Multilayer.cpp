@@ -19,14 +19,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
+#include <physicalModel/surface/Multilayer.h>
 #include <vector>
 
-#include "SurfaceMultilayer.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Surface {
 
-SurfaceMultilayer::SurfaceMultilayer(
+Multilayer::Multilayer(
         const Id id,
         const std::string& name,
         const std::vector<Math::Real>& thickness,
@@ -50,7 +51,7 @@ SurfaceMultilayer::SurfaceMultilayer(
     }
 }
 
-SurfaceMultilayer::SurfaceMultilayer(const SurfaceMultilayer& rhs)
+Multilayer::Multilayer(const Multilayer& rhs)
 :   Identifiable<Id>(rhs),
     PhysicalModel(rhs) {
     thickness_ = rhs.thickness_;
@@ -67,15 +68,15 @@ SurfaceMultilayer::SurfaceMultilayer(const SurfaceMultilayer& rhs)
     }
 }
 
-SurfaceMultilayer::~SurfaceMultilayer() {
+Multilayer::~Multilayer() {
 
 }
 
-std::size_t SurfaceMultilayer::getNumberOfLayers() const {
+std::size_t Multilayer::getNumberOfLayers() const {
     return thickness_.size();
 }
 
-std::string SurfaceMultilayer::printLayer(const std::size_t i) const {
+std::string Multilayer::printLayer(const std::size_t i) const {
     assert(i < getNumberOfLayers());
     std::stringstream ss;
     ss << elecCond_[i] << " " << relPermittivity_[i]*Math::Constants::eps0
@@ -84,27 +85,27 @@ std::string SurfaceMultilayer::printLayer(const std::size_t i) const {
     return std::string(ss.str());
 }
 
-Math::Real SurfaceMultilayer::getThickness(const std::size_t i) const {
+Math::Real Multilayer::getThickness(const std::size_t i) const {
     return thickness_[i];
 }
 
-Math::Real SurfaceMultilayer::getPermittivity(const std::size_t i) const {
+Math::Real Multilayer::getPermittivity(const std::size_t i) const {
     return relPermittivity_[i] * Math::Constants::eps0;
 }
 
-Math::Real SurfaceMultilayer::getPermeability(const std::size_t i) const {
+Math::Real Multilayer::getPermeability(const std::size_t i) const {
     return relPermeability_[i] * Math::Constants::mu0;
 }
 
-Math::Real SurfaceMultilayer::getElecCond(const std::size_t i) const {
+Math::Real Multilayer::getElecCond(const std::size_t i) const {
     return elecCond_[i];
 }
 
-Math::Real SurfaceMultilayer::getMagnCond(const std::size_t i) const {
+Math::Real Multilayer::getMagnCond(const std::size_t i) const {
     return magnCond_[i];
 }
 
-void SurfaceMultilayer::printInfo() const {
+void Multilayer::printInfo() const {
     std::cout << " --- SurfaceMultilayer info ---" << std::endl;
     Surface::printInfo();
     std::cout << "Number of layers: " << getNumberOfLayers() << std::endl;
@@ -121,5 +122,6 @@ void SurfaceMultilayer::printInfo() const {
     std::cout << " --- End of SurfaceMultilayer info ---" << std::endl;
 }
 
+} /* namespace Surface */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

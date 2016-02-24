@@ -22,14 +22,12 @@
 #ifndef SEMBA_PHYSICALMODEL_PML_H_
 #define SEMBA_PHYSICALMODEL_PML_H_
 
-#include "Predefined.h"
 #include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 
-class PML : public virtual Predefined,
-            public virtual Bound {
+class PML : public virtual Bound {
 public:
     PML(const Id id, const std::string name);
     PML(const PML&);

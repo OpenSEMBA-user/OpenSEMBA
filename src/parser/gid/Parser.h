@@ -99,11 +99,11 @@ private:
             const MatId id,
             const std::string& name,
             const FileSystem::Project& file) const;
-    PhysicalModel::SurfaceSIBC* readIsotropicSurfMatFile(
+    PhysicalModel::SIBC* readIsotropicSurfMatFile(
             const MatId id,
             const std::string& name,
             const FileSystem::Project& file) const;
-    PhysicalModel::SurfaceMultilayer*  readMultilayerSurf(
+    PhysicalModel::Multilayer*  readMultilayerSurf(
             const MatId id,
             const std::string& name,
             const std::string& layersString) const;

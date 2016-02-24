@@ -29,26 +29,26 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Surface {
 
-class SurfaceSIBC : public virtual Surface {
-    friend class DGSIBC;
+class SIBC : public virtual Surface {
 public:
-    SurfaceSIBC();
-    SurfaceSIBC(const Id id,
+    SIBC();
+    SIBC(const Id id,
                 const std::string& name,
                 const Math::MatR22& Zinfinite,
                 const Math::MatR22& Zstatic,
                 const std::vector<Math::Real>& pole,
                 const std::vector<Math::MatR22>& Z);
-    SurfaceSIBC(const Id id,
+    SIBC(const Id id,
                 const std::string& name,
                 const FileSystem::Project& file);
-    SurfaceSIBC(const SurfaceSIBC& rhs);
-    virtual ~SurfaceSIBC();
+    SIBC(const SIBC& rhs);
+    virtual ~SIBC();
 
-    SEMBA_CLASS_DEFINE_CLONE(SurfaceSIBC);
+    SEMBA_CLASS_DEFINE_CLONE(SIBC);
 
-    virtual SurfaceSIBC& operator=(const SurfaceSIBC &param);
+    virtual SIBC& operator=(const SIBC &param);
     void setZInfinity(const Math::MatR22& Zinf);
     void setZStatic(const Math::MatR22& Zsta);
     virtual void addPole(const Math::Real pole, const Math::MatR22& Z);
@@ -63,6 +63,7 @@ protected:
     FileSystem::Project file_;
 };
 
+} /* namespace Surface */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

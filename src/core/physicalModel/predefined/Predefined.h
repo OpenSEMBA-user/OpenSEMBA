@@ -26,6 +26,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Predefined {
 
 class Predefined : public virtual PhysicalModel {
 public:
@@ -35,6 +36,7 @@ public:
     virtual void printInfo() const;
 };
 
+} /* namespace Predefiend */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

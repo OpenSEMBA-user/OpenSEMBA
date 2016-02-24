@@ -19,12 +19,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "SurfaceSIBC.h"
+#include <physicalModel/surface/SIBC.h>
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Surface {
 
-SurfaceSIBC::SurfaceSIBC(const Id id,
+SIBC::SIBC(const Id id,
                          const std::string& name,
                          const Math::MatR22& Zinfinite,
                          const Math::MatR22& Zstatic,
@@ -38,7 +39,7 @@ SurfaceSIBC::SurfaceSIBC(const Id id,
     Z_ = Z;
 }
 
-SurfaceSIBC::SurfaceSIBC(const Id id,
+SIBC::SIBC(const Id id,
                          const std::string& name,
                          const FileSystem::Project& file)
 :   Identifiable<Id>(id),
@@ -46,17 +47,17 @@ SurfaceSIBC::SurfaceSIBC(const Id id,
     file_ = file;
 }
 
-SurfaceSIBC::SurfaceSIBC(const SurfaceSIBC& rhs)
+SIBC::SIBC(const SIBC& rhs)
     : Identifiable<Id>(rhs),
     PhysicalModel(rhs) {
     file_ = rhs.file_;
 }
 
-SurfaceSIBC::~SurfaceSIBC() {
+SIBC::~SIBC() {
 
 }
 
-SurfaceSIBC& SurfaceSIBC::operator=(const SurfaceSIBC &rhs) {
+SIBC& SIBC::operator=(const SIBC &rhs) {
     if (this == &rhs) {
         return *this;
     }
@@ -69,20 +70,20 @@ SurfaceSIBC& SurfaceSIBC::operator=(const SurfaceSIBC &rhs) {
     return *this;
 }
 
-void SurfaceSIBC::setZInfinity(const Math::MatR22& ZInf) {
+void SIBC::setZInfinity(const Math::MatR22& ZInf) {
     ZInfinity_ = ZInf;
 }
 
-void SurfaceSIBC::setZStatic(const Math::MatR22& ZSta) {
+void SIBC::setZStatic(const Math::MatR22& ZSta) {
     ZStatic_ = ZSta;
 }
 
-void SurfaceSIBC::addPole(const Math::Real vP, const Math::MatR22& Z) {
+void SIBC::addPole(const Math::Real vP, const Math::MatR22& Z) {
     pole_.push_back(vP);
     Z_.push_back(Z);
 }
 
-void SurfaceSIBC::printInfo() const {
+void SIBC::printInfo() const {
     std::cout << "--- Physical model information ---"   << std::endl;
     std::cout << "Surface Impedance Boundary Condition" << std::endl;
     Surface::printInfo();
@@ -102,13 +103,14 @@ void SurfaceSIBC::printInfo() const {
     }
 }
 
-std::size_t SurfaceSIBC::getNumberOfPoles() const {
+std::size_t SIBC::getNumberOfPoles() const {
     return pole_.size();
 }
 
-const FileSystem::Project SurfaceSIBC::getFile() const {
+const FileSystem::Project SIBC::getFile() const {
     return file_;
 }
 
+} /* namespace Surface */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Volume {
 
 Volume::Volume() {
 
@@ -37,5 +38,6 @@ void Volume::printInfo() const {
     PhysicalModel::printInfo();
 }
 
+} /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
