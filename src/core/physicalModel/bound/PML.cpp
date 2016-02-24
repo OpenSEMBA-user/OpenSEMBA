@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 PML::PML(const Id id, const std::string name)
 :   Identifiable<Id>(id),
@@ -42,9 +43,9 @@ PML::~PML() {
 
 void PML::printInfo() const {
     std::cout << "--- PML info ---" << std::endl;
-    Predefined::printInfo();
     std::cout << "Perfectly Matched Layer" << std::endl;
 }
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

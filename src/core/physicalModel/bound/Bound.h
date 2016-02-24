@@ -22,10 +22,11 @@
 #ifndef SEMBA_PHYSICALMODEL_BOUND_H_
 #define SEMBA_PHYSICALMODEL_BOUND_H_
 
-#include "PhysicalModel.h"
+#include "physicalModel/PhysicalModel.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 class Bound : public virtual PhysicalModel {
 public:
@@ -33,6 +34,7 @@ public:
     virtual ~Bound();
 };
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

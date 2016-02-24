@@ -22,14 +22,14 @@
 #ifndef SEMBA_PHYSICALMODEL_MUR2_H_
 #define SEMBA_PHYSICALMODEL_MUR2_H_
 
-#include "Predefined.h"
+
 #include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
-class Mur2 : public virtual Predefined,
-            public virtual Bound {
+class Mur2 : public virtual Bound {
 public:
     Mur2(const Id id, const std::string name);
     Mur2(const Mur2&);
@@ -40,6 +40,7 @@ public:
     void printInfo() const;
 };
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

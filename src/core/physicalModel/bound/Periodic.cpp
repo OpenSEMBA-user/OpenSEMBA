@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 Periodic::Periodic(const Id id, const std::string name)
 :   Identifiable<Id>(id),
@@ -42,9 +43,9 @@ Periodic::~Periodic() {
 
 void Periodic::printInfo() const {
     std::cout << "--- Periodic info ---" << std::endl;
-    Predefined::printInfo();
     std::cout << "Periodic Boundary Condition" << std::endl;
 }
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 Mur1::Mur1(const Id id, const std::string name)
 :   Identifiable<Id>(id),
@@ -42,9 +43,9 @@ Mur1::~Mur1() {
 
 void Mur1::printInfo() const {
     std::cout << "--- Mur1 info ---" << std::endl;
-    Predefined::printInfo();
     std::cout << "Mur1 Boundary Condition" << std::endl;
 }
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

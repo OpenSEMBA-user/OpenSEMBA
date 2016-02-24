@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 SMA::SMA(const Id id, const std::string name)
 :   Identifiable<Id>(id), 
@@ -43,8 +44,8 @@ SMA::~SMA() {
 void SMA::printInfo() const {
     std::cout << "--- SMA info ---" << std::endl;
     std::cout << "Silver-Muller Absorbing" << std::endl;
-    Predefined::printInfo();
 }
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

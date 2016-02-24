@@ -45,7 +45,7 @@ Dispersive::Dispersive(const Id id,
     }
     //
     if (magnCond != 0.0) {
-        throw Error::Dispersive::MagneticMaterial();
+        throw std::logic_error("Dispersive magnetic materials not implemented");
     }
     poleResidue_ = poleResidue;
 }

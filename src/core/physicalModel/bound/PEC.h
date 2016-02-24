@@ -26,6 +26,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 class PEC : public virtual Bound {
 public:
@@ -38,6 +39,7 @@ public:
     void printInfo() const;
 };
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

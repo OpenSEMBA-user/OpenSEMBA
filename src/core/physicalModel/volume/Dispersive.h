@@ -75,22 +75,6 @@ protected:
                  const std::complex<Math::Real>& res_);
 };
 
-namespace Error {
-namespace Dispersive {
-
-class MagneticMaterial : public Error {
-public:
-    MagneticMaterial() {}
-    virtual ~MagneticMaterial() throw() {}
-
-    const char* what() const throw() {
-        return ("VolumeDispersive: "
-                "Magnetic conductive materials are not supported.");
-    }
-};
-
-} /* namespace Dispersive */
-} /* namespace Error */
 } /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

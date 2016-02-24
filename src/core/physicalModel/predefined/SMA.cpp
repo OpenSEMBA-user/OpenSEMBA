@@ -19,29 +19,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_PHYSICALMODEL_PMC_H_
-#define SEMBA_PHYSICALMODEL_PMC_H_
-
-
-#include "Bound.h"
+#include "SMA.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
-namespace Bound {
+namespace Predefined {
 
-class PMC : public virtual Bound {
-public:
-    PMC(const Id id, const std::string name);
-    PMC(const PMC&);
-    virtual ~PMC();
+SMA::SMA(const Id id, const std::string name)
+:   Identifiable<Id>(id), 
+    PhysicalModel(name) {
 
-    SEMBA_CLASS_DEFINE_CLONE(PMC);
+}
 
-    void printInfo() const;
-};
+SMA::SMA(const SMA& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
 
-} /* namespace Bound */
+}
+
+SMA::~SMA() {
+
+}
+
+void SMA::printInfo() const {
+    std::cout << "--- SMA info ---" << std::endl;
+    std::cout << "Silver-Muller Absorbing" << std::endl;
+}
+
+} /* namespace Predefined */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
-
-#endif /* SEMBA_PHYSICALMODEL_PMC_H_ */

@@ -22,7 +22,7 @@
 #ifndef SEMBA_PHYSICALMODEL_VOLUME_H_
 #define SEMBA_PHYSICALMODEL_VOLUME_H_
 
-#include "PhysicalModel.h"
+#include "physicalModel/PhysicalModel.h"
 
 namespace SEMBA {
 namespace PhysicalModel {

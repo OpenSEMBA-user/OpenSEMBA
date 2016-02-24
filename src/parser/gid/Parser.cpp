@@ -29,16 +29,16 @@
 #include "geometry/element/Tetrahedron4.h"
 #include "geometry/element/Tetrahedron10.h"
 #include "geometry/element/Hexahedron8.h"
-#include "physicalModel/PEC.h"
-#include "physicalModel/PMC.h"
-#include "physicalModel/SMA.h"
-#include "physicalModel/MultiportPredefined.h"
-#include "physicalModel/MultiportRLC.h"
-#include "physicalModel/VolumeAnisotropicCrystal.h"
-#include "physicalModel/VolumeAnisotropicFerrite.h"
-#include "physicalModel/VolumeClassic.h"
-#include "physicalModel/VolumePML.h"
-#include "physicalModel/Wire.h"
+#include "physicalModel/predefined/PEC.h"
+#include "physicalModel/predefined/PMC.h"
+#include "physicalModel/predefined/SMA.h"
+#include "physicalModel/multiport/Predefined.h"
+#include "physicalModel/multiport/RLC.h"
+#include "physicalModel/volume/AnisotropicCrystal.h"
+#include "physicalModel/volume/AnisotropicFerrite.h"
+#include "physicalModel/volume/Classic.h"
+#include "physicalModel/volume/PML.h"
+#include "physicalModel/wire/Wire.h"
 #include "source/port/WaveguideRectangular.h"
 #include "source/port/TEMCoaxial.h"
 #include "outputRequest/BulkCurrent.h"
@@ -378,12 +378,12 @@ PhysicalModel::Group<>* Parser::readMaterials(){
 PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
     std::string name;
     PhysicalModel::PhysicalModel::Type type;
-    PhysicalModel::Multiport::Type mpType = 
-        PhysicalModel::Multiport::undefined;
+    PhysicalModel::Multiport::Multiport::Type mpType =
+        PhysicalModel::Multiport::Multiport::undefined;
     SIBCType surfType = undefinedSIBC;
     std::string layersStr;
     Math::Real rEps, rMu, eC, mC;
-    PhysicalModel::Anisotropic::Model anisotropicModel;
+    PhysicalModel::Volume::Anisotropic::Model anisotropicModel;
     Math::Real crystalRMu, ferriteREps, ferriteRMu;
     Math::CVecR3 rEpsPrincipalAxes;
     Math::Axis::Local localAxes;
@@ -443,31 +443,31 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             // Creates material.
             switch (type) {
             case PhysicalModel::PhysicalModel::PEC:
-                return new PhysicalModel::PEC(id, name);
+                return new PhysicalModel::Predefined::PEC(id, name);
             case PhysicalModel::PhysicalModel::PMC:
-                return new PhysicalModel::PMC(id, name);
+                return new PhysicalModel::Predefined::PMC(id, name);
             case PhysicalModel::PhysicalModel::SMA:
-                return new PhysicalModel::SMA(id, name);
+                return new PhysicalModel::Predefined::SMA(id, name);
             case PhysicalModel::PhysicalModel::PML:
                 if (pmlAutomaticOrientation) {
-                    return new PhysicalModel::VolumePML(id, name, NULL);
+                    return new PhysicalModel::Volume::PML(id, name, NULL);
                 } else {
-                    return new PhysicalModel::VolumePML(
+                    return new PhysicalModel::Volume::PML(
                             id, name, new Math::Axis::Local(localAxes));
                 }
             case PhysicalModel::PhysicalModel::classic:
-                return new PhysicalModel::VolumeClassic(
+                return new PhysicalModel::Volume::Classic(
                         id, name, rEps, rMu, eC, mC);
             case PhysicalModel::PhysicalModel::elecDispersive:
-                return new PhysicalModel::Dispersive(id, name, file);
+                return new PhysicalModel::Volume::Dispersive(id, name, file);
             case PhysicalModel::PhysicalModel::anisotropic:
                 switch (anisotropicModel) {
-                case PhysicalModel::Anisotropic::Model::crystal:
-                    return new PhysicalModel::VolumeAnisotropicCrystal(
+                case PhysicalModel::Volume::Anisotropic::Model::crystal:
+                    return new PhysicalModel::Volume::AnisotropicCrystal(
                             id, name, localAxes,
                             rEpsPrincipalAxes, crystalRMu);
-                case PhysicalModel::Anisotropic::Model::ferrite:
-                    return new PhysicalModel::VolumeAnisotropicFerrite(
+                case PhysicalModel::Volume::Anisotropic::Model::ferrite:
+                    return new PhysicalModel::Volume::AnisotropicFerrite(
                             id, name, localAxes,
                             kappa,ferriteRMu,ferriteREps);
                 default:
@@ -476,7 +476,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             case PhysicalModel::PhysicalModel::isotropicsibc:
                 switch (surfType) {
                 case sibc:
-                    return new PhysicalModel::SIBC(id, name, file);
+                    return new PhysicalModel::Surface::SIBC(id, name, file);
                 case multilayer:
                     return readMultilayerSurf(id, name, layersStr);
                 default:
@@ -486,11 +486,11 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             case PhysicalModel::PhysicalModel::wire:
                 return new PhysicalModel::Wire(id, name, radius, R, L);
             case PhysicalModel::PhysicalModel::multiport:
-                if (mpType == PhysicalModel::Multiport::shortCircuit) {
-                    return new PhysicalModel::MultiportPredefined(
+                if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
+                    return new PhysicalModel::Multiport::Predefined(
                             id, name, mpType);
                 } else {
-                    return new PhysicalModel::RLC(
+                    return new PhysicalModel::Multiport::RLC(
                             id, name, mpType, R, L, C);
                 }
             default:
@@ -1054,7 +1054,7 @@ void Parser::readLin2Elements(
     }
 }
 
-PhysicalModel::Dispersive* Parser::readDispersiveMatFile(
+PhysicalModel::Volume::Dispersive* Parser::readDispersiveMatFile(
         const MatId id,
         const std::string& name,
         const FileSystem::Project& file) const {
@@ -1067,18 +1067,18 @@ PhysicalModel::Dispersive* Parser::readDispersiveMatFile(
     stream >> sig >> eps >> mu >> sigM;
     std::size_t nPoles, trash;
     stream >> nPoles >> trash >> trash >> trash;
-    std::vector<PhysicalModel::PoleResidue> poleResidues;
+    std::vector<PhysicalModel::Volume::PoleResidue> poleResidues;
     for (std::size_t i = 0; i < nPoles; i++) {
-        PhysicalModel::PoleResidue pR = readPoleResiduePair(stream);
+        PhysicalModel::Volume::PoleResidue pR = readPoleResiduePair(stream);
         poleResidues.push_back(pR);
     }
-    return new PhysicalModel::Dispersive(id, name,
+    return new PhysicalModel::Volume::Dispersive(id, name,
             eps / Math::Constants::eps0,
             mu / Math::Constants::mu0,
             sig, sigM, poleResidues);
 }
 
-PhysicalModel::Multilayer* Parser::readMultilayerSurf(
+PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurf(
         const MatId id,
         const std::string& name,
         const std::string& layersStr) const {
@@ -1101,11 +1101,11 @@ PhysicalModel::Multilayer* Parser::readMultilayerSurf(
         eCond.push_back(eCond_);
         mCond.push_back(mCond_);
     }
-    return new PhysicalModel::Multilayer(
+    return new PhysicalModel::Surface::Multilayer(
             id, name, thick, rEps, rMu, eCond, mCond);
 }
 
-PhysicalModel::SIBC* Parser::readIsotropicSurfMatFile(
+PhysicalModel::Surface::SIBC* Parser::readIsotropicSurfMatFile(
         const MatId id,
         const std::string& fileName,
         const FileSystem::Project& file) const {
@@ -1166,7 +1166,7 @@ PhysicalModel::SIBC* Parser::readIsotropicSurfMatFile(
         Z.push_back(tmpZ);
     }
     // Copies all parsed data into the aux material depending on the model.
-    return new PhysicalModel::SIBC(
+    return new PhysicalModel::Surface::SIBC(
             id, name, Zinfinite, Zstatic, pole, Z);
 }
 
@@ -1636,20 +1636,20 @@ PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
     }
 }
 
-PhysicalModel::Multiport::Type Parser::strToMultiportType(std::string str) {
+PhysicalModel::Multiport::Multiport::Type Parser::strToMultiportType(std::string str) {
     str = trim(str);
     if (str.compare("Conn_short")==0) {
-        return PhysicalModel::Multiport::shortCircuit;
+        return PhysicalModel::Multiport::Multiport::shortCircuit;
     } else if (str.compare("Conn_open")==0) {
-        return PhysicalModel::Multiport::openCircuit;
+        return PhysicalModel::Multiport::Multiport::openCircuit;
     } else if (str.compare("Conn_matched")==0) {
-        return PhysicalModel::Multiport::matched;
+        return PhysicalModel::Multiport::Multiport::matched;
     } else if (str.compare("Conn_sRLC")==0) {
-        return PhysicalModel::Multiport::sRLC;
+        return PhysicalModel::Multiport::Multiport::sRLC;
     } else if (str.compare("Conn_pRLC")==0) {
-        return PhysicalModel::Multiport::pRLC;
+        return PhysicalModel::Multiport::Multiport::pRLC;
     } else if (str.compare("Conn_sLpRC")==0) {
-        return PhysicalModel::Multiport::sLpRC;
+        return PhysicalModel::Multiport::Multiport::sLpRC;
     } else {
         throw std::logic_error("Unrecognized multiport label: " + str);
     }
@@ -1954,7 +1954,7 @@ bool Parser::checkVersionCompatibility(const std::string version) const {
 //    }
 //}
 
-PhysicalModel::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
+PhysicalModel::Volume::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
     std::string line;
     std::getline(stream, line);
     std::size_t prev = 0, pos;
@@ -1969,7 +1969,7 @@ PhysicalModel::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
         wordVector.push_back(line.substr(prev, std::string::npos));
     }
     assert(wordVector.size() == 4);
-    PhysicalModel::PoleResidue res;
+    PhysicalModel::Volume::PoleResidue res;
     res.first = std::complex<Math::Real>(
                     atof(wordVector[0].c_str()),
                     atof(wordVector[1].c_str()));
@@ -1979,14 +1979,14 @@ PhysicalModel::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
     return res;
 }
 
-PhysicalModel::Anisotropic::Model Parser::strToAnisotropicModel(
+PhysicalModel::Volume::Anisotropic::Model Parser::strToAnisotropicModel(
         std::string label) {
     std::string str = label;
     str = trim(str);
     if (str.compare("Crystal")==0) {
-        return PhysicalModel::Anisotropic::Model::crystal;
+        return PhysicalModel::Volume::Anisotropic::Model::crystal;
     } else if (str.compare("Ferrite")==0) {
-        return PhysicalModel::Anisotropic::Model::ferrite;
+        return PhysicalModel::Volume::Anisotropic::Model::ferrite;
     } else {
         throw std::logic_error("Unrecognized Anisotropic Model: " + str);
     }

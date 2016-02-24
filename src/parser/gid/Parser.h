@@ -29,11 +29,11 @@
 #include <string>
 
 #include "geometry/mesh/Geometric.h"
-#include "physicalModel/Multiport.h"
-#include "physicalModel/SurfaceMultilayer.h"
-#include "physicalModel/SurfaceSIBC.h"
-#include "physicalModel/VolumeDispersive.h"
-#include "physicalModel/VolumeAnisotropic.h"
+#include "physicalModel/multiport/Multiport.h"
+#include "physicalModel/surface/Multilayer.h"
+#include "physicalModel/surface/SIBC.h"
+#include "physicalModel/volume/Dispersive.h"
+#include "physicalModel/volume/Anisotropic.h"
 #include "source/Dipole.h"
 #include "source/Generator.h"
 #include "source/OnLine.h"
@@ -95,15 +95,15 @@ private:
     PhysicalModel::Group<>* readMaterials();
     Geometry::Mesh::Geometric* readMesh();
     ProblemSize readProblemSize();
-    PhysicalModel::Dispersive* readDispersiveMatFile(
+    PhysicalModel::Volume::Dispersive* readDispersiveMatFile(
             const MatId id,
             const std::string& name,
             const FileSystem::Project& file) const;
-    PhysicalModel::SIBC* readIsotropicSurfMatFile(
+    PhysicalModel::Surface::SIBC* readIsotropicSurfMatFile(
             const MatId id,
             const std::string& name,
             const FileSystem::Project& file) const;
-    PhysicalModel::Multilayer*  readMultilayerSurf(
+    PhysicalModel::Surface::Multilayer*  readMultilayerSurf(
             const MatId id,
             const std::string& name,
             const std::string& layersString) const;
@@ -161,9 +161,9 @@ private:
     //static OptionsMesher::BoundType strToBoundType(std::string label);
     static PhysicalModel::PhysicalModel::Type strToMaterialType(
             std::string label);
-    static PhysicalModel::Multiport::Type strToMultiportType(
+    static PhysicalModel::Multiport::Multiport::Type strToMultiportType(
             std::string label);
-    static PhysicalModel::Anisotropic::Model strToAnisotropicModel(
+    static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(
             std::string label);
 
     //static OptionsSolverFDTD::PMLBacking strToPMLBacking(
@@ -175,7 +175,7 @@ private:
     //static OptionsSolverFDTD::CompositeModel strToCompositeModel(std::string);
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);
-    static PhysicalModel::PoleResidue readPoleResiduePair(
+    static PhysicalModel::Volume::PoleResidue readPoleResiduePair(
             std::ifstream& stream);
 };
 

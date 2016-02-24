@@ -22,14 +22,14 @@
 #ifndef SEMBA_PHYSICALMODEL_PERIODIC_H_
 #define SEMBA_PHYSICALMODEL_PERIODIC_H_
 
-#include "Predefined.h"
+
 #include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
-class Periodic : public virtual Predefined,
-            public virtual Bound {
+class Periodic : public virtual Bound {
 public:
     Periodic(const Id id, const std::string name);
     Periodic(const Periodic&);
@@ -40,6 +40,7 @@ public:
     void printInfo() const;
 };
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

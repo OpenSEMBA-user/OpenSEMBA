@@ -22,14 +22,14 @@
 #ifndef SEMBA_PHYSICALMODEL_SMA_H_
 #define SEMBA_PHYSICALMODEL_SMA_H_
 
-#include "Predefined.h"
+
 #include "Bound.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
-class SMA : public virtual Predefined,
-            public virtual Bound {
+class SMA : public virtual Bound {
 public:
     SMA(const Id id, const std::string name);
     SMA(const SMA& rhs);
@@ -40,6 +40,7 @@ public:
     void printInfo() const;
 };
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

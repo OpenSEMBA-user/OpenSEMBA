@@ -24,6 +24,7 @@
 
 #include <cassert>
 #include <exception>
+#include <vector>
 
 #include "Surface.h"
 
@@ -34,12 +35,12 @@ namespace Surface {
 class Multilayer : public virtual Surface {
 public:
     Multilayer(const Id id,
-                      const std::string& name,
-                      const std::vector<Math::Real>& thickness,
-                      const std::vector<Math::Real>& relPermittivity,
-                      const std::vector<Math::Real>& relPermeability,
-                      const std::vector<Math::Real>& elecCond,
-                      const std::vector<Math::Real>& magnCond);
+            const std::string& name,
+            const std::vector<Math::Real>& thickness,
+            const std::vector<Math::Real>& relPermittivity,
+            const std::vector<Math::Real>& relPermeability,
+            const std::vector<Math::Real>& elecCond,
+            const std::vector<Math::Real>& magnCond);
     Multilayer(const Multilayer&);
     virtual ~Multilayer();
 
@@ -56,8 +57,8 @@ public:
     void printInfo() const;
 private:
     std::vector<Math::Real> thickness_,
-                            relPermittivity_, relPermeability_,
-                            elecCond_, magnCond_;
+    relPermittivity_, relPermeability_,
+    elecCond_, magnCond_;
 };
 
 namespace Error {
@@ -70,7 +71,7 @@ public:
 
     const char* what() const throw() {
         return "SurfaceMultilayer: "
-               "Incompatible sizes of layers parameters.";
+                "Incompatible sizes of layers parameters.";
     }
 };
 

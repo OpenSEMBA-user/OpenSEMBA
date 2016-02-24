@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 // =============== PEC ======================================================
 PEC::PEC(const Id id, const std::string name)
@@ -43,9 +44,9 @@ PEC::~PEC() {
 
 void PEC::printInfo() const {
     std::cout << "--- PEC info ---" << std::endl;
-    Predefined::printInfo();
     std::cout << "Perfect Electric Conductor" << std::endl;
 }
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

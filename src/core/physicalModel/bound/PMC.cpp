@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Bound {
 
 PMC::PMC(const Id id, const std::string name)
 :   Identifiable<Id>(id),
@@ -42,9 +43,9 @@ PMC::~PMC() {
 
 void PMC::printInfo() const {
     std::cout << "--- PMC info ---" << std::endl;
-    Predefined::printInfo();
     std::cout << "Perfect Magnetic Conductor" << std::endl;
 }
 
+} /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
