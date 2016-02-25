@@ -19,15 +19,17 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "GroupTest.h"
+#ifndef SRC_APPS_TEST_CORE_PHYSICALMODEL_VOLUME_CLASSIC_TEST_H_
+#define SRC_APPS_TEST_CORE_PHYSICALMODEL_VOLUME_CLASSIC_TEST_H_
 
-using namespace std;
-using namespace SEMBA;
-using namespace PhysicalModel;
+#include "gtest/gtest.h"
+#include "physicalModel/volume/Classic.h"
 
-TEST_F(PhysicalModelGroupTest, ctor) {
-    PMGroup pm;
-    EXPECT_NO_THROW(pm.add(
-            new Volume::Classic(Id(1), "Classic", 1.0, 1.0, 0.0, 0.0)));
-    EXPECT_NO_THROW(pm.add(new Bound::PEC(Id(2), "PEC")));
-}
+class PhysicalModelVolumeClassicTest : public ::testing::Test {
+public:
+
+protected:
+
+};
+
+#endif /* SRC_APPS_TEST_CORE_PHYSICALMODEL_VOLUME_CLASSIC_TEST_H_ */

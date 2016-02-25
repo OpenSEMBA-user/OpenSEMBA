@@ -19,11 +19,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_
-#define SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_
+#ifndef SRC_APPS_TEST_CORE_PHYSICALMODEL_GROUP_TEST_H_
+#define SRC_APPS_TEST_CORE_PHYSICALMODEL_GROUP_TEST_H_
 
 #include "gtest/gtest.h"
 #include "physicalModel/Group.h"
+#include "physicalModel/volume/Classic.h"
+#include "physicalModel/bound/PEC.h"
 
 class PhysicalModelGroupTest : public ::testing::Test {
 public:
@@ -32,7 +34,4 @@ protected:
 
 };
 
-
-
-
-#endif /* SRC_APPS_TEST_CORE_GROUP_IDENTIFIABLETEST_H_ */
+#endif /* SRC_APPS_TEST_CORE_PHYSICALMODEL_GROUP_TEST_H_ */
