@@ -104,10 +104,12 @@ $(OBJ_DIR)%.o: %.cpp
 $(BIN_DIR)$(OUT): $(OBJS_CXX)
 	@mkdir -p $(BIN_DIR)
 	@echo "Linking:" $@
-	${CXX} $^ -o $@ $(CXXFLAGS) \
-	 $(addprefix -D, $(DEFINES)) \
-	 $(addprefix -I, ${INCLUDES}) \
-	 $(addprefix -L, ${LIBRARIES}) $(addprefix -l, ${LIBS})
+	${CXX} $^ \
+	-o $@ $(CXXFLAGS) \
+	$(addprefix -D, $(DEFINES)) \
+	$(addprefix -I, ${INCLUDES}) \
+	$(addprefix -L, ${LIBRARIES}) \
+	$(addprefix -l, ${LIBS})
 	 
 $(OUT): $(BIN_DIR)$(OUT)
 	 

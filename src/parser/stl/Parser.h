@@ -28,8 +28,12 @@
 #include <iostream>
 #include <string>
 
-#include "parser/Parser.h"
 #include "Data.h"
+#include "geometry/element/Triangle3.h"
+#include "geometry/mesh/Geometric.h"
+#include "physicalModel/predefined/PEC.h"
+#include "parser/Parser.h"
+
 
 namespace SEMBA {
 namespace Parser {

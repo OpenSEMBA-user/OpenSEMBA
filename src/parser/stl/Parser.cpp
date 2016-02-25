@@ -21,10 +21,6 @@
 
 #include "Parser.h"
 
-#include "geometry/element/Triangle3.h"
-#include "geometry/mesh/Unstructured.h"
-#include "physicalModel/predefined/PEC.h"
-
 namespace SEMBA {
 namespace Parser {
 namespace STL {
@@ -102,13 +98,13 @@ Data* Parser::read() {
     // Stores results and returns.
     Data* res = new Data();
     res->setFilename(getFilename());
-    res->mesh = new Geometry::Mesh::Unstructured(cG, eG, lG);
+    res->mesh = new Geometry::Mesh::Geometric(Geometry::Grid3(), cG, eG, lG);
 
     res->physicalModels = new PhysicalModel::Group<>();
     PhysicalModel::Predefined::PEC* pec =
             new PhysicalModel::Predefined::PEC(PhysicalModel::Id(1));
     res->physicalModels->add(pec);
-    res->mesh->castTo<Geometry::Mesh::Unstructured>()->setModel(pec);
+    res->mesh->castTo<Geometry::Mesh::Geometric>()->setModel(pec);
     res->sources = new Source::Group<>();
     res->outputRequests = new OutputRequest::Group<>();
 
@@ -116,7 +112,7 @@ Data* Parser::read() {
 }
 
 void Parser::printInfo() const {
-    std::cout << " ---- Parser STL info ---- " << std::endl;
+    std::cout << " --- Parser STL info --- " << std::endl;
     std::cout << " --- End of Parser STL info --- " << std::endl;
 }
 
