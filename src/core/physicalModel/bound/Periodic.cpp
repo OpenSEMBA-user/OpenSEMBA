@@ -25,9 +25,9 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Bound {
 
-Periodic::Periodic(const Id id, const std::string name)
+Periodic::Periodic(const Id id)
 :   Identifiable<Id>(id),
-    PhysicalModel(name) {
+    PhysicalModel("Periodic") {
 
 }
 

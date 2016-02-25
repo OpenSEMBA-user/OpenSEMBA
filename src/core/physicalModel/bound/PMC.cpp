@@ -25,9 +25,9 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Bound {
 
-PMC::PMC(const Id id, const std::string name)
+PMC::PMC(const Id id)
 :   Identifiable<Id>(id),
-    PhysicalModel(name) {
+    PhysicalModel("PMC") {
 
 }
 

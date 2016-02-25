@@ -26,9 +26,9 @@ namespace PhysicalModel {
 namespace Bound {
 
 // =============== PEC ======================================================
-PEC::PEC(const Id id, const std::string name)
+PEC::PEC(const Id id)
 :   Identifiable<Id>(id),
-    PhysicalModel(name) {
+    PhysicalModel("PEC") {
 
 }
 

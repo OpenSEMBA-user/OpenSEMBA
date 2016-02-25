@@ -31,7 +31,7 @@ namespace Bound {
 
 class Periodic : public virtual Bound {
 public:
-    Periodic(const Id id, const std::string name);
+    Periodic(const Id id);
     Periodic(const Periodic&);
     virtual ~Periodic();
 

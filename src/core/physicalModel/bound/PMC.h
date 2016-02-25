@@ -31,7 +31,7 @@ namespace Bound {
 
 class PMC : public virtual Bound {
 public:
-    PMC(const Id id, const std::string name);
+    PMC(const Id id);
     PMC(const PMC&);
     virtual ~PMC();
 

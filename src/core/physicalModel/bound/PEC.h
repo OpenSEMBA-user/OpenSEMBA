@@ -30,7 +30,7 @@ namespace Bound {
 
 class PEC : public virtual Bound {
 public:
-    PEC(const Id id, const std::string name);
+    PEC(const Id id);
     PEC(const PEC&);
     virtual ~PEC();
 

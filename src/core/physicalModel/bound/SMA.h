@@ -31,7 +31,7 @@ namespace Bound {
 
 class SMA : public virtual Bound {
 public:
-    SMA(const Id id, const std::string name);
+    SMA(const Id id);
     SMA(const SMA& rhs);
     virtual ~SMA();
 

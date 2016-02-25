@@ -31,7 +31,7 @@ namespace Bound {
 
 class Mur2 : public virtual Bound {
 public:
-    Mur2(const Id id, const std::string name);
+    Mur2(const Id id);
     Mur2(const Mur2&);
     virtual ~Mur2();
 

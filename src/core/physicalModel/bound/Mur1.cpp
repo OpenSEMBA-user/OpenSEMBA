@@ -25,9 +25,9 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Bound {
 
-Mur1::Mur1(const Id id, const std::string name)
+Mur1::Mur1(const Id id)
 :   Identifiable<Id>(id),
-    PhysicalModel(name) {
+    PhysicalModel("Mur1") {
 
 }
 

@@ -30,7 +30,7 @@ namespace Bound {
 
 class PML : public virtual Bound {
 public:
-    PML(const Id id, const std::string name);
+    PML(const Id id);
     PML(const PML&);
     virtual ~PML();
 
