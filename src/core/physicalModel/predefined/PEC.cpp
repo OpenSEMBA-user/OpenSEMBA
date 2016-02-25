@@ -25,7 +25,6 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Predefined {
 
-// =============== PEC ======================================================
 PEC::PEC(const Id id, const std::string name)
 :   Identifiable<Id>(id),
     PhysicalModel(name) {
