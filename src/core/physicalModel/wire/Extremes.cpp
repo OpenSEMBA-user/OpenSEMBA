@@ -19,12 +19,13 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "WireExtremes.h"
+#include <physicalModel/wire/Extremes.h>
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Wire {
 
-WireExtremes::WireExtremes(const Wire& wire,
+Extremes::Extremes(const Wire& wire,
                            const Multiport::Multiport* extremeL,
                            const Multiport::Multiport* extremeR)
 :   Identifiable<Id>(wire),
@@ -39,7 +40,7 @@ WireExtremes::WireExtremes(const Wire& wire,
     }
 }
 
-WireExtremes::WireExtremes(const WireExtremes& rhs)
+Extremes::Extremes(const Extremes& rhs)
 :   Identifiable<Id>(rhs),
     PhysicalModel(rhs),
     Wire(rhs) {
@@ -52,7 +53,7 @@ WireExtremes::WireExtremes(const WireExtremes& rhs)
     }
 }
 
-WireExtremes::~WireExtremes() {
+Extremes::~Extremes() {
     if (extreme_[0] != NULL) {
         delete extreme_[0];
     }
@@ -61,7 +62,7 @@ WireExtremes::~WireExtremes() {
     }
 }
 
-void WireExtremes::setExtreme(const std::size_t i, const Multiport::Multiport* extreme) {
+void Extremes::setExtreme(const std::size_t i, const Multiport::Multiport* extreme) {
     if (extreme_[i] != NULL) {
         delete extreme_[i];
     }
@@ -71,7 +72,7 @@ void WireExtremes::setExtreme(const std::size_t i, const Multiport::Multiport* e
     }
 }
 
-void WireExtremes::printInfo() const {
+void Extremes::printInfo() const {
     std::cout<< " --- WireExtremes info ---" << std::endl;
     Wire::printInfo();
     if (extreme_[0] != NULL) {
@@ -84,5 +85,6 @@ void WireExtremes::printInfo() const {
     }
 }
 
+} /* namespace Wire */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

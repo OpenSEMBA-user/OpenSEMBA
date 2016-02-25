@@ -26,6 +26,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Wire {
 
 class Wire : public virtual PhysicalModel {
 public:
@@ -49,6 +50,7 @@ private:
     Math::Real inductance_; // Inductance per meter.
 };
 
+} /* namespace Wire */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
 

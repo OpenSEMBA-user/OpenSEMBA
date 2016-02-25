@@ -23,6 +23,7 @@
 
 namespace SEMBA {
 namespace PhysicalModel {
+namespace Wire {
 
 Wire::Wire(const Id id,
            const std::string name,
@@ -67,5 +68,6 @@ void Wire::printInfo() const {
               << " Inductance: " << inductance_ << std::endl;
 }
 
+} /* namespace Wire */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
