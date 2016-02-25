@@ -33,7 +33,7 @@
 #include "geometry/graph/Vertices.h"
 #include "geometry/mesh/Structured.h"
 #include "geometry/mesh/Unstructured.h"
-#include "physicalModel/WireExtremes.h"
+#include "physicalModel/wire/Extremes.h"
 
 namespace SEMBA {
 namespace Util {
