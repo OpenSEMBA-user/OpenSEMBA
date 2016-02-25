@@ -54,10 +54,10 @@ public:
         return wires_[i];
     }
 
-    PhysicalModel::WireExtremes*       getMat(const MatId& id) {
+    PhysicalModel::Wire::Extremes*       getMat(const MatId& id) {
         return mats_.at(id);
     }
-    const PhysicalModel::WireExtremes* getMat(const MatId& id) const {
+    const PhysicalModel::Wire::Extremes* getMat(const MatId& id) const {
         return mats_.at(id);
     }
 
@@ -72,7 +72,7 @@ private:
     std::vector<Geometry::Element::Polyline<T>*> wires_;
     std::vector<std::vector<Geometry::ElemId>> wiresIds_;
 
-    std::map<MatId, PhysicalModel::WireExtremes*> mats_;
+    std::map<MatId, PhysicalModel::Wire::Extremes*> mats_;
 
     void init_(const Data&);
     Graph constructGraph_(const Data&);
