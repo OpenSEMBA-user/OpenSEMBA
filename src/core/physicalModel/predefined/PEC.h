@@ -19,8 +19,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_PHYSICALMODEL_PEC_H_
-#define SEMBA_PHYSICALMODEL_PEC_H_
+#ifndef SEMBA_PHYSICALMODEL_PREDEFINED_PEC_H_
+#define SEMBA_PHYSICALMODEL_PREDEFINED_PEC_H_
 
 #include "Predefined.h"
 

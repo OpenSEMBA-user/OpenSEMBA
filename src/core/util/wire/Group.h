@@ -80,9 +80,9 @@ private:
                         const Data&);
     std::vector<std::vector<const Geometry::Element::Line<T>*>>
         getLines_(const Graph&);
-    void getWireMats_(const PhysicalModel::Wire*& wireMat,
-                      const PhysicalModel::Multiport*& extremeL,
-                      const PhysicalModel::Multiport*& extremeR,
+    void getWireMats_(const PhysicalModel::Wire::Wire*& wireMat,
+                      const PhysicalModel::Multiport::Multiport*& extremeL,
+                      const PhysicalModel::Multiport::Multiport*& extremeR,
                       const std::vector<const Geometry::Element::Line<T>*>&,
                       const Data&);
     Geometry::Element::Polyline<T>* newWire_(
