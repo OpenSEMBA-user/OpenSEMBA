@@ -21,11 +21,11 @@
 
 OUT = test
 
-TEST_CORE_MATH          = no#
-TEST_CORE_GEOMETRY      = no#
-TEST_CORE_ARGUMENT      = no#
+TEST_CORE_MATH          = yes#
+TEST_CORE_GEOMETRY      = yes#
+TEST_CORE_ARGUMENT      = yes#
 TEST_CORE_PHYSICALMODEL = yes#
-TEST_PARSER_GID         = no#
+TEST_PARSER_GID         = yes#
 TEST_PARSER_STL         = yes#
 
 # =============================================================================

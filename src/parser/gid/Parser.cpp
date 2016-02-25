@@ -484,7 +484,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
                 }
                 break;
             case PhysicalModel::PhysicalModel::wire:
-                return new PhysicalModel::Wire(id, name, radius, R, L);
+                return new PhysicalModel::Wire::Wire(id, name, radius, R, L);
             case PhysicalModel::PhysicalModel::multiport:
                 if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
                     return new PhysicalModel::Multiport::Predefined(
