@@ -31,6 +31,7 @@ namespace Predefined {
 
 class SMA : public virtual Predefined {
 public:
+    SMA(const Id id);
     SMA(const Id id, const std::string name);
     SMA(const SMA& rhs);
     virtual ~SMA();

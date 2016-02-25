@@ -23,7 +23,7 @@
 
 #include "geometry/element/Triangle3.h"
 #include "geometry/mesh/Unstructured.h"
-#include "physicalModel/PEC.h"
+#include "physicalModel/predefined/PEC.h"
 
 namespace SEMBA {
 namespace Parser {
@@ -105,8 +105,8 @@ Data* Parser::read() {
     res->mesh = new Geometry::Mesh::Unstructured(cG, eG, lG);
 
     res->physicalModels = new PhysicalModel::Group<>();
-    PhysicalModel::PEC* pec = new PhysicalModel::PEC(PhysicalModel::Id(1),
-                                                     "PEC");
+    PhysicalModel::Predefined::PEC* pec =
+            new PhysicalModel::Predefined::PEC(PhysicalModel::Id(1));
     res->physicalModels->add(pec);
     res->mesh->castTo<Geometry::Mesh::Unstructured>()->setModel(pec);
     res->sources = new Source::Group<>();

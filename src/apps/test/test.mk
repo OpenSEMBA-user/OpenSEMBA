@@ -26,6 +26,7 @@ TEST_CORE_GEOMETRY      = no#
 TEST_CORE_ARGUMENT      = no#
 TEST_CORE_PHYSICALMODEL = yes#
 TEST_PARSER_GID         = no#
+TEST_PARSER_STL         = yes#
 
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
@@ -69,7 +70,13 @@ ifeq ($(TEST_PARSER_GID),yes)
 	SRC_PARSER_GID_TESTS_DIRS = $(SRC_PARSER_GID_DIRS) \
 							    $(shell find $(SRC_APP_DIR)parser/gid/ -type d)
 endif
-SRC_PARSER_TESTS_DIRS = $(SRC_PARSER_GID_TESTS_DIRS)
+ifeq ($(TEST_PARSER_STL),yes)
+	SRC_PARSER_STL_DIRS       := $(shell find $(SRC_DIR)core/ -type d) \
+								 $(shell find $(SRC_DIR)parser/stl/ -type d)
+	SRC_PARSER_STL_TESTS_DIRS = $(SRC_PARSER_STL_DIRS) \
+							    $(shell find $(SRC_APP_DIR)parser/stl/ -type d)
+endif
+SRC_PARSER_TESTS_DIRS = $(SRC_PARSER_GID_TESTS_DIRS) $(SRC_PARSER_STL_TESTS_DIRS)
 # ----- Gathers sources ----
 SRC_DIRS := $(SRC_APP_DIR) \
 			$(SRC_CORE_TESTS_DIRS) \

@@ -22,39 +22,24 @@
 #define PARSERGIDTEST_H_
 
 #include "gtest/gtest.h"
+#include "geometry/mesh/Geometric.h"
+#include "geometry/element/Triangle3.h"
 #include "parser/stl/Parser.h"
 #include "exporter/vtk/Exporter.h"
 
-class ParserSTLTest :
-public ::testing::Test,
-public ::testing::WithParamInterface<const char*> {
+using namespace std;
+using namespace SEMBA;
 
-    void SetUp() {
-//        stlFolder_ = "./projects/test/stls/";
-    }
+class ParserSTLParserTest : public ::testing::Test {
 
 protected:
 
-    ParserSTLTest() {
-        stlFolder_ = "./projects/test/stls/";
-    }
+    ParserSTLParserTest();
 
-    virtual ~ParserSTLTest() {
-    }
+    virtual ~ParserSTLParserTest();
 
     string stlFolder_;
-
-    SmbData* parseFromSTL(const string project) const {
-        cout << "STL: " << project << endl;
-        ParserSTL parser(stlFolder_ + project + ".stl");
-        EXPECT_TRUE(parser.canOpen());
-        SmbData* res = parser.read();
-        EXPECT_TRUE(res != NULL);
-        if (res != NULL) {
-            EXPECT_TRUE(res->check());
-        }
-        return res;
-    }
+    Data* parseFromSTL(const string project) const;
 
 };
 

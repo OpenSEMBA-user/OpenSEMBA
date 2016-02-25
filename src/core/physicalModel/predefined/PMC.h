@@ -31,6 +31,7 @@ namespace Predefined {
 
 class PMC : public virtual Predefined {
 public:
+    PMC(const Id id);
     PMC(const Id id, const std::string name);
     PMC(const PMC&);
     virtual ~PMC();

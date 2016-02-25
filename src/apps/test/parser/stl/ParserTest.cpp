@@ -18,43 +18,50 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "ParserSTLTest.h"
+#include "ParserTest.h"
 
-TEST_F(ParserSTLTest, Single) {
+using namespace std;
+using namespace SEMBA;
+
+ParserSTLParserTest::ParserSTLParserTest() {
+    stlFolder_ = "./testData/";
+}
+
+ParserSTLParserTest::~ParserSTLParserTest() {
+}
+
+SEMBA::Data* ParserSTLParserTest::parseFromSTL(const string project) const {
+    Parser::STL::Parser parser(stlFolder_ + project + ".stl");
+    EXPECT_TRUE(parser.canOpen());
+    Data* res = parser.read();
+    EXPECT_TRUE(res != NULL);
+    if (res != NULL) {
+        EXPECT_TRUE(res->check());
+    }
+    return res;
+}
+
+
+TEST_F(ParserSTLParserTest, case_single) {
     string project = "single";
-    SmbData* smb = parseFromSTL(project);
+    Data* smb = parseFromSTL(project);
     EXPECT_TRUE(smb->mesh != NULL);
-    MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
+    Geometry::Mesh::Geometric* mesh =
+            smb->mesh->castTo<Geometry::Mesh::Geometric>();
     if (smb->mesh != NULL) {
-        EXPECT_EQ(mesh->coords().size(), 3);
-        EXPECT_EQ(mesh->elems().getOf<Triangle3>().size(), 1);
+        EXPECT_EQ(3, mesh->coords().size());
+        EXPECT_EQ(1, mesh->elems().getOf<Geometry::Tri3>().size());
     }
 }
 
-TEST_F(ParserSTLTest, B2) {
+TEST_F(ParserSTLParserTest, case_B2) {
     string project = "B2";
-    SmbData* smb = parseFromSTL(project);
+    Data* smb = parseFromSTL(project);
     EXPECT_TRUE(smb->mesh != NULL);
-    MeshUnstructured* mesh = smb->mesh->castTo<MeshUnstructured>();
+    Geometry::Mesh::Geometric* mesh =
+            smb->mesh->castTo<Geometry::Mesh::Geometric>();
     if (smb->mesh != NULL) {
-        EXPECT_EQ(mesh->coords().size(), 1956);
-        EXPECT_EQ(mesh->elems().getOf<Triangle3>().size(), 652);
+        EXPECT_EQ(1956, mesh->coords().size());
+        EXPECT_EQ(652, mesh->elems().getOf<Geometry::Tri3>().size());
     }
 }
-
-TEST_P(ParserSTLTest, ReadsSomething) {
-    string project = GetParam();
-    SmbData* smb = parseFromSTL(project);
-//    ExporterVTK(smb, stlFolder_+project);
-    EXPECT_TRUE(smb->mesh != NULL);
-}
-
-
-INSTANTIATE_TEST_CASE_P(
-        stls, ParserSTLTest, ::testing::Values(
-                "single",
-                "B2",
-                "ev55",
-                "scrub2",
-                "dmcwf"
-        ));
