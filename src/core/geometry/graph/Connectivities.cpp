@@ -113,6 +113,7 @@ Face Connectivities::getMatchingFace_(
             return Face(NULL, 0);
         }
         const ElemR* neigh = neighConn->elem();
+        assert(neigh != NULL);
         if (neigh->is<VolR>()) {
             for (std::size_t f = 0; f < neigh->numberOfFaces(); f++) {
                 std::vector<const CoordR3*> neighSideV =
