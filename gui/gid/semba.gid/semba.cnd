@@ -27,45 +27,46 @@ HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
 VALUE: 6e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
-
 END CONDITION
 
-CONDITION: Planewave_on_volume
-CONDTYPE: over volumes
-CONDMESHTYPE: over body elements
-#Title: Basic
-QUESTION: Direction_x
-VALUE: 1.0
-QUESTION: Direction_y
-VALUE: 0.0
-QUESTION: Direction_z
-VALUE: 0.0
-QUESTION: Polarization_x
-VALUE: 0.0
-QUESTION: Polarization_y
-VALUE: 1.0
-QUESTION: Polarization_z
-VALUE: 0.0
+#CONDITION: Planewave_on_volume
+#CONDTYPE: over volumes
+#CONDMESHTYPE: over body elements
+##Title: Basic
+#QUESTION: Direction_x
+#VALUE: 1.0
+#QUESTION: Direction_y
+#VALUE: 0.0
+#QUESTION: Direction_z
+#VALUE: 0.0
+#QUESTION: Polarization_x
+#VALUE: 0.0
+#QUESTION: Polarization_y
+#VALUE: 1.0
+#QUESTION: Polarization_z
+#VALUE: 0.0
 #Title: Excitation
-QUESTION: Excitation#CB#(Gaussian,File)
-VALUE: Gaussian
-DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds.
-QUESTION: Gaussian_delay
-VALUE: 6e-9
-HELP: Gaussian delay in seconds.
-QUESTION: File
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
-HELP: File containing excitation values. If set, ignores other excitation options.
-END CONDITION
+#QUESTION: Excitation#CB#(Gaussian,File)
+#VALUE: Gaussian
+#DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, #File,#CURRENT#)
+#DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, #RESTORE, File,#CURRENT#)
+#QUESTION: Gaussian_spread
+#VALUE: 2e-9
+#HELP: Gaussian spread in seconds.
+#QUESTION: Gaussian_delay
+#VALUE: 6e-9
+#HELP: Gaussian delay in seconds.
+#IMAGE: images/gauss_excitation.png
+#QUESTION: File
+#VALUE:
+#TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+#HELP: File containing excitation values. If set, ignores other excitation options.
+#END CONDITION
 
 CONDITION: Generator_on_line
 CONDTYPE: over points
@@ -84,6 +85,7 @@ HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
 VALUE: 8e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -109,6 +111,7 @@ HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
 VALUE: 6e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -141,6 +144,7 @@ HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
 VALUE: 6e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -173,6 +177,7 @@ HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
 VALUE: 6e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
