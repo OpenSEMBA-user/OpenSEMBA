@@ -1,8 +1,10 @@
 PROBLEM DATA
 BOOK: Solver_options
 TITLE: Solver
-QUESTION: Solver#CB#(ugrfdtd,cudg3d,none)
+QUESTION: Solver#CB#(ugrfdtd,cudg3d)
 VALUE: ugrfdtd
+QUESTION: Run_simulation#CB#(0,1)
+VALUE: 1
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
 VALUE: Final_time
 DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)
@@ -59,7 +61,7 @@ DEPENDENCIES: (       New, RESTORE,MTLN,1,    RESTORE,Min_distance_wires,0.5, RE
 DEPENDENCIES: (       Old, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
 DEPENDENCIES: (Transition, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
 QUESTION: MTLN#CB#(0,1)
-VALUE: 0
+VALUE: 1
 HELP: Different behavior. "old/transition": uses a pseudo-MTLN (no default). "new" uses a true MTLN (no default, should be enforced)
 QUESTION: Min_distance_wires
 VALUE: 0.5
@@ -99,7 +101,7 @@ QUESTION: PML_correction_factor
 VALUE: 1.0
 HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
 QUESTION: PML_correction_depth
-VALUE: 1.0
+VALUE: 8
 HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
 QUESTION: PML_backing#CB#(None,Mur1,Mur2)
 VALUE: None

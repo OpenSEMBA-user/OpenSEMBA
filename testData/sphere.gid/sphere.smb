@@ -4,6 +4,7 @@ Version: 0.11
 =======================================================================
 
 Solver options: ugrfdtd
+Run simulation: 1
 Final time: 30e-9
 Time step: 0.0
 CFL: 0.8
@@ -18,7 +19,7 @@ Skin depth: 0
 Composites attenuation factor: 1.0
 
 Wires flavor: New
-MTLN: 0
+MTLN: 1
 Min distance wires: 0.5
 New dispersive formulation: 0
 Taparrabos: 0
@@ -30,7 +31,7 @@ Wires attenuation factor: 1.0
 Use default PML: 1
 PML alpha: 0.0 1.0
 PML kappa: 1.0
-PML correction: 1.0 1.0
+PML correction: 1.0 8
 PML backing: None
 
 Map: 0
@@ -51,7 +52,6 @@ VTK Export: 1
 postmsh Export: 1
 Mode: Structured
 Forbidden length: 0
-Scale factor: 0.0
 Scale factor value: 0.0
 End of Mesher options
 End of Solver options
@@ -1753,7 +1753,6 @@ Defined: OnLayers
 Layer Name: pw
 Layer Box: {1.8 1.8 1.8 -1.8 -1.8 -1.8}
 End of Planewave:
-
 
 
 

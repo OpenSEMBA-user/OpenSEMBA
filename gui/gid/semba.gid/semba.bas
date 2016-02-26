@@ -4,6 +4,7 @@ Version: *tcl(set version $semba::VersionNumber)
 =======================================================================
 
 Solver options: *GenData(Solver)
+Run simulation: *GenData(Run_simulation)
 *if(strcasecmp(GenData(Ending),"Final_time")==0)
 Final time: *GenData(Final_time)
 *else

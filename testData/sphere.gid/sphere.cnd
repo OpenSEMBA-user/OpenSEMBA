@@ -22,44 +22,15 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
-NUMBER: 2 CONDITION: Planewave_on_volume
-CONDTYPE: over volumes
-CONDMESHTYPE: over body elements
-QUESTION: Direction_x
-VALUE: 1.0
-QUESTION: Direction_y
-VALUE: 0.0
-QUESTION: Direction_z
-VALUE: 0.0
-QUESTION: Polarization_x
-VALUE: 0.0
-QUESTION: Polarization_y
-VALUE: 1.0
-QUESTION: Polarization_z
-VALUE: 0.0
-QUESTION: Excitation#CB#(Gaussian,File)
-VALUE: Gaussian
-DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds.
-QUESTION: Gaussian_delay
-VALUE: 6e-9
-HELP: Gaussian delay in seconds.
-QUESTION: File
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
-HELP: File containing excitation values. If set, ignores other excitation options.
-END CONDITION
-NUMBER: 3 CONDITION: Generator_on_line
+NUMBER: 2 CONDITION: Generator_on_line
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
 QUESTION: type#CB#(voltage,current)
@@ -69,17 +40,18 @@ VALUE: Gaussian
 DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
 QUESTION: Gaussian_spread
-VALUE: 1.5e-9
+VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 8e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
-NUMBER: 4 CONDITION: Source_on_line
+NUMBER: 3 CONDITION: Source_on_line
 CONDTYPE: over lines
 CONDMESHTYPE: over body elements
 QUESTION: type#CB#(electricField,magneticField)
@@ -94,14 +66,15 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
-NUMBER: 5 CONDITION: Waveguide_port
+NUMBER: 4 CONDITION: Waveguide_port
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 QUESTION: Shape#CB#(Rectangular)
@@ -120,14 +93,15 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
-NUMBER: 6 CONDITION: TEM_port
+NUMBER: 5 CONDITION: TEM_port
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 QUESTION: Shape#CB#(Coaxial)
@@ -149,15 +123,16 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
 BOOK:Output_Requests
-NUMBER: 7 CONDITION: OutRq_on_point
+NUMBER: 6 CONDITION: OutRq_on_point
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
 CANREPEAT: yes
@@ -193,7 +168,7 @@ QUESTION: Transfer_function_file
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
-NUMBER: 8 CONDITION: OutRq_on_surface
+NUMBER: 7 CONDITION: OutRq_on_surface
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
@@ -229,7 +204,7 @@ QUESTION: Transfer_function_file
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
-NUMBER: 9 CONDITION: OutRq_on_volume
+NUMBER: 8 CONDITION: OutRq_on_volume
 CONDTYPE: over layer
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
@@ -265,7 +240,7 @@ QUESTION: Transfer_function_file
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
-NUMBER: 10 CONDITION: Bulk_current_on_surface
+NUMBER: 9 CONDITION: Bulk_current_on_surface
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
@@ -305,7 +280,7 @@ QUESTION: Transfer_function_file
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
-NUMBER: 11 CONDITION: Bulk_current_on_volume
+NUMBER: 10 CONDITION: Bulk_current_on_volume
 CONDTYPE: over layer
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
@@ -345,7 +320,7 @@ QUESTION: Transfer_function_file
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
-NUMBER: 12 CONDITION: Far_field
+NUMBER: 11 CONDITION: Far_field
 CONDTYPE: over layer
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
@@ -406,7 +381,7 @@ VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
 BOOK:Meshing
-NUMBER: 13 CONDITION: Grid
+NUMBER: 12 CONDITION: Grid
 CONDTYPE: over layer
 CONDMESHTYPE: over body elements
 QUESTION: Type#CB#(by_number_of_cells,by_distance)
