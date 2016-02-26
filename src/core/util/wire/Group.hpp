@@ -35,7 +35,7 @@ Group<T>::~Group() {
     for (std::size_t i = 0; i < wires_.size(); i++) {
         delete wires_[i];
     }
-    for (std::map<MatId, PhysicalModel::WireExtremes*>::iterator
+    for (std::map<MatId, PhysicalModel::Wire::Extremes*>::iterator
          it = mats_.begin(); it != mats_.end(); ++it) {
         delete it->second;
     }
@@ -49,7 +49,7 @@ void Group<T>::printInfo() const {
         wires_[i]->printInfo();
     }
     std::cout << "Mats:" << std::endl;
-    for (std::map<MatId, PhysicalModel::WireExtremes*>::const_iterator
+    for (std::map<MatId, PhysicalModel::Wire::Extremes*>::const_iterator
          it = mats_.begin(); it != mats_.end(); ++it) {
         it->second->printInfo();
     }
@@ -75,11 +75,11 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             lines = smb.mesh->castTo<Geometry::Mesh::Structured>()
                 ->elems().getOf<Geometry::Element::Line<T>>();
         }
-        PhysicalModel::Group<const PhysicalModel::Wire> pmwires =
-            smb.physicalModels->getOf<PhysicalModel::Wire>();
+        PhysicalModel::Group<const PhysicalModel::Wire::Wire> pmwires =
+            smb.physicalModels->getOf<PhysicalModel::Wire::Wire>();
         std::vector<MatId> pmwiresIds = pmwires.getIds();
-        PhysicalModel::Group<const PhysicalModel::Multiport> pmmults =
-            mats.getOf<PhysicalModel::Multiport>();
+        PhysicalModel::Group<const PhysicalModel::Multiport::Multiport> pmmults =
+            mats.getOf<PhysicalModel::Multiport::Multiport>();
         std::vector<MatId> pmmultsIds = pmmults.getIds();
         std::vector<MatId> matIds;
         matIds.reserve(pmwiresIds.size() + pmmultsIds.size());
@@ -103,9 +103,9 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             for (std::size_t j = 0; j < 2; j++) {
                 layId[j] = nodePtr->getBound(j)->elem()->getLayerId();
                 matId[j] = nodePtr->getBound(j)->elem()->getMatId();
-                isWireMat[j] = mats.getId(matId[j])->is<PhysicalModel::Wire>();
+                isWireMat[j] = mats.getId(matId[j])->is<PhysicalModel::Wire::Wire>();
                 isWireExtrMat[j] =
-                    mats.getId(matId[j])->is<PhysicalModel::WireExtremes>();
+                    mats.getId(matId[j])->is<PhysicalModel::Wire::Extremes>();
                 if (nodePtr->elem()->getId() !=
                     nodePtr->getBound(j)->getBound(0)->elem()->getId()) {
                     extreme = false;
@@ -145,8 +145,8 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
                               const Data& smb) {
     std::vector<std::vector<const Geometry::Element::Line<T>*>> wires =
         getLines_(graph);
-    const PhysicalModel::Wire* wireMat;
-    const PhysicalModel::Multiport *extremeL, *extremeR;
+    const PhysicalModel::Wire::Wire* wireMat;
+    const PhysicalModel::Multiport::Multiport *extremeL, *extremeR;
     for (std::size_t i = 0; i < wires.size(); i++) {
         wireMat = NULL;
         extremeL = extremeR = NULL;
@@ -154,11 +154,11 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
         if (wireMat == NULL) {
             continue;
         }
-        PhysicalModel::WireExtremes* wireExtremes;
-        if (wireMat->is<PhysicalModel::WireExtremes>()) {
-            wireExtremes = wireMat->cloneTo<PhysicalModel::WireExtremes>();
+        PhysicalModel::Wire::Extremes* wireExtremes;
+        if (wireMat->is<PhysicalModel::Wire::Extremes>()) {
+            wireExtremes = wireMat->cloneTo<PhysicalModel::Wire::Extremes>();
         } else {
-            wireExtremes = new PhysicalModel::WireExtremes(*wireMat,
+            wireExtremes = new PhysicalModel::Wire::Extremes(*wireMat,
                                                            extremeL, extremeR);
         }
         wireExtremes->setId(MatId(i + 1));
@@ -217,9 +217,9 @@ std::vector<std::vector<const Geometry::Element::Line<T>*>>
 
 template<class T>
 void Group<T>::getWireMats_(
-        const PhysicalModel::Wire*& wireMat,
-        const PhysicalModel::Multiport*& extremeL,
-        const PhysicalModel::Multiport*& extremeR,
+        const PhysicalModel::Wire::Wire*& wireMat,
+        const PhysicalModel::Multiport::Multiport*& extremeL,
+        const PhysicalModel::Multiport::Multiport*& extremeR,
         const std::vector<const Geometry::Element::Line<T>*>& lines,
         const Data& smb) {
 
@@ -239,11 +239,11 @@ void Group<T>::getWireMats_(
     extremeL = NULL;
     extremeR = NULL;
     for (std::size_t m = 0; m < matIds.size(); m++) {
-        if (mats.getId(matIds[m])->is<PhysicalModel::Multiport>()) {
+        if (mats.getId(matIds[m])->is<PhysicalModel::Multiport::Multiport>()) {
             if ((extremeL == NULL) &&
                 (wireMat == NULL)) {
                 extremeL =
-                    mats.getId(matIds[m])->castTo<PhysicalModel::Multiport>();
+                    mats.getId(matIds[m])->castTo<PhysicalModel::Multiport::Multiport>();
             } else if ((extremeL != NULL) &&
                        (wireMat == NULL)) {
                 std::cout << "WARNING @ WireGroup: ";
@@ -256,7 +256,7 @@ void Group<T>::getWireMats_(
             } else if ((wireMat != NULL) &&
                        (extremeR == NULL)) {
                 extremeR =
-                    mats.getId(matIds[m])->castTo<PhysicalModel::Multiport>();
+                    mats.getId(matIds[m])->castTo<PhysicalModel::Multiport::Multiport>();
             } else if (extremeR != NULL) {
                 std::cout << "WARNING @ WireGroup: ";
                 std::cout << " Wire: " << wires_.size() + 1;
@@ -266,9 +266,9 @@ void Group<T>::getWireMats_(
                 assert(false);
                 continue;
             }
-        } else if (mats.getId(matIds[m])->is<PhysicalModel::Wire>()) {
+        } else if (mats.getId(matIds[m])->is<PhysicalModel::Wire::Wire>()) {
             if (wireMat == NULL) {
-                wireMat = mats.getId(matIds[m])->castTo<PhysicalModel::Wire>();
+                wireMat = mats.getId(matIds[m])->castTo<PhysicalModel::Wire::Wire>();
             } else if (wireMat != NULL) {
                 std::cout << "WARNING @ WireGroup: ";
                 std::cout << " Wire: " << wires_.size() + 1;
