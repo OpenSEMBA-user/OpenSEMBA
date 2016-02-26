@@ -25,7 +25,7 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
 IMAGE: images/gauss_excitation.png
 QUESTION: File
@@ -59,7 +59,7 @@ END CONDITION
 #VALUE: 2e-9
 #HELP: Gaussian spread in seconds.
 #QUESTION: Gaussian_delay
-#VALUE: 6e-9
+#VALUE: 10e-9
 #HELP: Gaussian delay in seconds.
 #IMAGE: images/gauss_excitation.png
 #QUESTION: File
@@ -80,10 +80,10 @@ VALUE: Gaussian
 DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
 QUESTION: Gaussian_spread
-VALUE: 1.5e-9
+VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 8e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
 IMAGE: images/gauss_excitation.png
 QUESTION: File
@@ -109,7 +109,7 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
 IMAGE: images/gauss_excitation.png
 QUESTION: File
@@ -142,7 +142,7 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
 IMAGE: images/gauss_excitation.png
 QUESTION: File
@@ -175,7 +175,7 @@ QUESTION: Gaussian_spread
 VALUE: 2e-9
 HELP: Gaussian spread in seconds.
 QUESTION: Gaussian_delay
-VALUE: 6e-9
+VALUE: 10e-9
 HELP: Gaussian delay in seconds.
 IMAGE: images/gauss_excitation.png
 QUESTION: File
