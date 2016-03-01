@@ -39,7 +39,7 @@ Map VTK: 0
 NF2FF decimation: 0
 
 Mesher options:
-Geometry scaling factor: 1.0
+Geometry scaling factor: 1e-3
 Upper x bound: PML
 Lower x bound: PML
 Upper y bound: PML

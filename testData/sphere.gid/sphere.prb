@@ -153,14 +153,14 @@ QUESTION: Scale_factor_value
 VALUE: 0.0
 Title: Geometry
 QUESTION: model_units#CB#(m,cm,mm,nm,other)
-VALUE: m
+VALUE: mm
 DEPENDENCIES: (m, SET, scaling_factor, 1.0)
 DEPENDENCIES: (cm, SET, scaling_factor, 1e-2)
 DEPENDENCIES: (mm, SET, scaling_factor, 1e-3)
 DEPENDENCIES: (nm, SET, scaling_factor, 1e-9)
 DEPENDENCIES: (other, RESTORE, scaling_factor, 1.0)
 QUESTION: scaling_factor
-VALUE: 1.0
+VALUE: 1e-3
 QUESTION: Lower_x_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
 VALUE: PML
 QUESTION: Lower_y_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)

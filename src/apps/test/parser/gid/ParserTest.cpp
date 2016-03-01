@@ -42,5 +42,12 @@ TEST_F(ParserGiDParserTest, sphere) {
     EXPECT_EQ(smb->outputRequests->getOf<OutRqSurface>().size(), 1);
     EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 2);
     EXPECT_EQ(smb->sources->size(), 1);
+
+    const Geometry::Mesh::Geometric* mesh;
+    EXPECT_NO_THROW(mesh = smb->mesh->castTo<Geometry::Mesh::Geometric>());
+    const Geometry::CoordR3* coord;
+    EXPECT_NO_THROW(coord =mesh->coords().getId(Geometry::CoordId(1)));
+    EXPECT_EQ(Math::CVecR3(-1.8e-3), coord->pos());
+
     delete smb;
 }
