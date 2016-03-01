@@ -6,6 +6,8 @@ QUESTION: Solver#CB#(ugrfdtd,cudg3d)
 VALUE: ugrfdtd
 QUESTION: Run_simulation#CB#(0,1)
 VALUE: 1
+DEPENDENCIES: (0,     SET,Ending,#CURRENT#, SET,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)
+DEPENDENCIES: (1, RESTORE,Ending,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE,Number_of_time_steps,#CURRENT#)
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
 VALUE: Final_time
 DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)
