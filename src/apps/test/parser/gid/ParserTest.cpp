@@ -51,5 +51,15 @@ TEST_F(ParserGiDParserTest, sphere) {
     EXPECT_NO_THROW(coord =mesh->coords().getId(Geometry::CoordId(1)));
     EXPECT_EQ(Math::CVecR3(-1.8e-3), coord->pos());
 
+    Solver::Settings settings;
+    EXPECT_NO_THROW(settings = smb->solver->getSettings());
+
+    // Checks aplication scaling factor in grid and boundary padding.
+    Geometry::Grid3 grid;
+    EXPECT_NO_THROW(grid =
+            smb->mesh->castTo<Geometry::Mesh::Geometric>()->grid());
+    EXPECT_EQ(Math::CVecR3(-2.1e-3), grid.getFullDomainBoundingBox().getMin());
+
+
     delete smb;
 }

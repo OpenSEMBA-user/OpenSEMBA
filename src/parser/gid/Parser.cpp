@@ -1064,9 +1064,7 @@ Geometry::Grid3 Parser::readCartesianGrid() {
                     }
                 }
                 if (f_in.eof()) {
-                    std::cerr << std::endl
-                              << "ERROR @ Parser()"
-                              << "End of grid label not found" << std::endl;
+                    throw std::logic_error("End of grid label not found");
                 }
             }
         }
