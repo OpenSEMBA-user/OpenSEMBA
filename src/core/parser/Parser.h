@@ -41,7 +41,6 @@ public:
 
 protected:
     std::ifstream f_in; // Input file stream.
-    Math::Real scalingFactor_;
 
     static Math::CVecR3 strToCartesianVector(const std::string& str);
     static bool strToBool(const std::string& value);

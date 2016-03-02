@@ -25,7 +25,6 @@ namespace SEMBA {
 namespace Parser {
 
 Parser::Parser() {
-    scalingFactor_ = 1.0;
 }
 
 Parser::~Parser() {
@@ -52,10 +51,15 @@ bool Parser::strToBool(const std::string& value) {
 }
 
 void Parser::postReadOperations(Data* res) {
-    //TODO
-    //if (res->mesh != NULL) {
-    //    res->mesh->applyScalingFactor(scalingFactor_);
-    //}
+    if (res->mesh != NULL) {
+        if (res->solver != NULL) {
+            Solver::Settings mesherOptions =
+                    res->solver->getSettings()("Mesher options");
+            Math::Real scalingFactor =
+                    mesherOptions("Geometry scaling factor").getReal();
+            res->mesh->applyScalingFactor(scalingFactor);
+        }
+    }
 }
 
 } /* namespace Parser */
