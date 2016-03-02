@@ -18,22 +18,28 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "gtest/gtest.h"
+
+#ifndef SEMBA_MATH_UTIL_DFT_H_
+#define SEMBA_MATH_UTIL_DFT_H_
+
+#include <cmath>
+#include <complex>
+#include <utility>
+#include <vector>
 
 #include "math/vector/Cartesian.h"
+#include "math/Constants.h"
 
-using namespace SEMBA;
-using namespace Math;
+namespace SEMBA {
+namespace Math {
+namespace Util {
 
-TEST(MathUtilsTest, equal) {
-    std::vector<Real> num;
-    num.push_back((Real) -2.69386e-10);
-    num.push_back((Real) 1e-10);
+std::complex<Real> getDTFT(
+        const std::vector<std::pair<Real,std::complex<Real>>>& data,
+        const Real frequency);
 
-    for (UInt i = 0; i < num.size(); i++) {
-        EXPECT_TRUE(Util::equal(num[i], num[i]));
-        EXPECT_TRUE(Util::equal(num[i], num[i], 0.0, 0.25));
-    }
+} /* namespace Util */
+} /* namespace Math */
+} /* namespace SEMBA */
 
-    EXPECT_FALSE(Util::equal(0.0, 0.17, 0.5, 0.01));
-}
+#endif /* SEMBA_MATH_UTIL_DFT_H_ */

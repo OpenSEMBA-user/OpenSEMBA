@@ -18,49 +18,34 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+#include <math/util/DTFT.h>
+#include "gtest/gtest.h"
 
-#ifndef SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_
-#define SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_
+#include "math/vector/Cartesian.h"
+#include "math/function/Gaussian.h"
+#include "math/util/SpaceGenerator.h"
 
-#include <complex>
+using namespace std;
 
-#include "Function.h"
+using namespace SEMBA;
+using namespace Math;
 
-namespace SEMBA {
-namespace Math {
-namespace Function {
 
-class Gaussian : public Function<Real,Real> {
-public:
-    Gaussian();
-    Gaussian(const Real spread,
-             const Real delay,
-             const Real freq = 0.0);
-    Gaussian(const Gaussian& rhs);
-    virtual ~Gaussian();
+TEST(MathDTFTTest, gaussian) {
+    const size_t nPoints = 10000;
+    vector<Real> time = Util::linspace(pair<Real,Real>(0,100), nPoints);
+    vector<pair<Real,complex<Real>>> input(nPoints);
+    Function::Gaussian gaussian((Real) 0.5, (Real) 5.0);
+    for (size_t i = 0; i < nPoints; ++i) {
+        complex<Real> dataPoint(gaussian(time[i]), (Real) 0.0);
+        input[i] = pair<Real,complex<Real>>(time[i], dataPoint);
+    }
 
-    SEMBA_MATH_FUNCTION_DEFINE_CLONE(Gaussian);
+    {
+        const Real fq = 0.0;
+        EXPECT_NEAR(gaussian.getFourier(fq).real(), Util::getDTFT(input, fq).real(), 1e-2);
+        EXPECT_NEAR(gaussian.getFourier(fq).imag(), Util::getDTFT(input, fq).imag(), 1e-2);
+    }
 
-    Real operator()(const Real&) const;
+}
 
-    bool operator==(const Base& rhs) const;
-
-    Real getDelay() const;
-    Real getFreq() const;
-    Real getSpread() const;
-
-    std::complex<Real> getFourier(const Real frequency) const;
-
-    void printInfo() const;
-
-private:
-    Real spread_;
-    Real delay_;
-    Real freq_;
-};
-
-} /* namespace Function */
-} /* namespace Math */
-} /* namespace SEMBA */
-
-#endif /* SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_ */

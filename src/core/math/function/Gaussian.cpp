@@ -82,6 +82,14 @@ Real Gaussian::getFreq() const {
    return freq_;
 }
 
+std::complex<Real> Gaussian::getFourier(const Real freq) const {
+    const std::complex<Real> phase(0.0, freq * getDelay());
+    const std::complex<Real> phaseShift = std::exp(phase);
+    return getSpread() * std::sqrt((Real) 2.0 * Constants::pi)
+            * phaseShift
+            * std::exp(- (Real) 0.5 * pow(getSpread()*freq,2));
+}
+
 void Gaussian::printInfo() const {
     std::cout << " --- Function Gaussian info --- " << std::endl;
     FunctionRR::printInfo();

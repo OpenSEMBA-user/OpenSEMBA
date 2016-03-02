@@ -23,6 +23,7 @@
 #define SEMBA_MATH_FUNCTION_FUNCTION_H_
 
 #include "math/Types.h"
+#include "math/Constants.h"
 
 namespace SEMBA {
 namespace Math {

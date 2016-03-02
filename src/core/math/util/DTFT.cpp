@@ -19,41 +19,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "DFT.h"
+#include <math/util/DTFT.h>
 
 namespace SEMBA {
 namespace Math {
 namespace Util {
 
-template<class T>
-std::complex<T> getDFT(const Real frequency,
-                       const std::vector<T>& time,
-                       const std::vector<T>& signal) {
-    const std::size_t N = signal.size();
-    const std::complex<T> constPart(0.0, -(T)(2.0 * Constants::pi*frequency));
-    std::complex<T> res(0.0, 0.0);
-    for (std::size_t i = 0; i < N; i++) {
-        res += signal[i] * exp(constPart * time[i]);
+std::complex<Real> getDTFT(
+        const std::vector<std::pair<Real,std::complex<Real>>>& data,
+        const Real frequency) {
+    const std::size_t N = data.size();
+    const std::complex<Real> constPart(0.0, -(Real)(2.0 * Constants::pi*frequency));
+    std::complex<Real> res(0.0, 0.0);
+    for (std::size_t n = 0; n < N; n++) {
+        res += data[n].second * std::exp(constPart * (Real) n);
     }
     res /= (Real) N;
+    res *= data.back().first - data.front().first;
     return conj(res);
-}
-
-template<class T, std::size_t D>
-Vector::Cartesian<std::complex<T>,D> getDFT(
-        const Real frequency,
-        const std::vector<T>& time,
-        const std::vector<Vector::Cartesian<T,D> >& signal) {
-    Vector::Cartesian<std::complex<T>,D> res;
-    const std::size_t N = signal.size();
-    std::vector<T> auxSignal(N);
-    for (std::size_t d = 0; d < D; d++) {
-        for (std::size_t i = 0; i < N; i++) {
-            auxSignal[i] = signal[i](d);
-        }
-        res(d) = getDFT(frequency, time, auxSignal);
-    }
-    return res;
 }
 
 } /* namespace Util */
