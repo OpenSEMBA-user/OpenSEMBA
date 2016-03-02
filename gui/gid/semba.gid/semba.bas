@@ -45,9 +45,9 @@ PML backing: *GenData(PML_backing)
 Map: *GenData(Map)
 Map VTK: *GenData(Map_VTK)
 NF2FF decimation: *GenData(NF2FF_decimation)
+Geometry scaling factor: *GenData(scaling_factor)
 
 Mesher options:
-Geometry scaling factor: *GenData(scaling_factor)
 Upper x bound: *GenData(Upper_x_bound)
 Lower x bound: *GenData(Lower_x_bound)
 Upper y bound: *GenData(Upper_y_bound)

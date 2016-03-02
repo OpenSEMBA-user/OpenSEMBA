@@ -53,11 +53,12 @@ bool Parser::strToBool(const std::string& value) {
 void Parser::postReadOperations(Data* res) {
     if (res->mesh != NULL) {
         if (res->solver != NULL) {
-            Solver::Settings mesherOptions =
-                    res->solver->getSettings()("Mesher options");
             Math::Real scalingFactor =
-                    mesherOptions("Geometry scaling factor").getReal();
+                    res->solver->getSettings()("Geometry scaling factor").getReal();
             res->mesh->applyScalingFactor(scalingFactor);
+            Solver::Settings settings = res->solver->getSettings();
+            settings("Geometry scaling factor").setReal((Math::Real) 1.0);
+            res->solver->setSettings(settings);
         }
     }
 }
