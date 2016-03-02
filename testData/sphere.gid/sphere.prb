@@ -5,6 +5,8 @@ QUESTION: Solver#CB#(ugrfdtd,cudg3d)
 VALUE: ugrfdtd
 QUESTION: Run_simulation#CB#(0,1)
 VALUE: 1
+DEPENDENCIES: (0,     SET,Ending,#CURRENT#, SET,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)
+DEPENDENCIES: (1, RESTORE,Ending,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE,Number_of_time_steps,#CURRENT#)
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
 VALUE: Final_time
 DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)
@@ -191,6 +193,8 @@ DEPENDENCIES: (PEC,RESTORE,Lower_z_bound,#CURRENT#)
 DEPENDENCIES: (PMC,RESTORE,Lower_z_bound,#CURRENT#)
 DEPENDENCIES: (MUR1,RESTORE,Lower_z_bound,#CURRENT#)
 DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
+QUESTION: Boundary_padding_options#CB#(OPTIONS)
+VALUE: OPTIONS
 QUESTION: boundary_padding_type#CB#(by_number_of_cells,by_distance)
 VALUE: by_number_of_cells
 QUESTION: Lower_x_boundary_padding
@@ -212,22 +216,22 @@ QUESTION: Upper_z_boundary_padding
 VALUE: 3
 HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
 QUESTION: Lower_x_Boundary_mesh_size
-VALUE: 0.2
+VALUE: 0.1
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Lower_y_Boundary_mesh_size
-VALUE: 0.2
+VALUE: 0.1
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Lower_z_Boundary_mesh_size
-VALUE: 0.2
+VALUE: 0.1
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Upper_x_Boundary_mesh_size
-VALUE: 0.2
+VALUE: 0.1
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Upper_y_Boundary_mesh_size
-VALUE: 0.2
+VALUE: 0.1
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 QUESTION: Upper_z_Boundary_mesh_size
-VALUE: 0.2
+VALUE: 0.1
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 END PROBLEM DATA
 INTERVAL DATA
