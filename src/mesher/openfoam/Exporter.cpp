@@ -48,7 +48,7 @@ Exporter::Exporter(const Data* smb,
     isLocationMesh_ = isLocationMesh;
     location_ = location;
     setFilename(smb_->getFolder() + "/openfoam/");
-    deleteDirIfExists(getFilename());
+    deleteDirIfExists_(getFilename());
     createOpenFoamDirs();
     writeOpenFoamDummyFile();
     writeControlDict();
@@ -150,7 +150,7 @@ void Exporter::triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri
         std::string filename;
         filename = folder + type
                 + "." + intToStr(typeId) + "." + intToStr(layerId.toInt());
-        openFile(filename + ".stl", file);
+        openFile_(filename + ".stl", file);
         // Writes data.
         const std::size_t nElem = tri.size();
         std::string solidName(name);
@@ -183,7 +183,7 @@ void Exporter::triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri
 
 void Exporter::writeOpenFoamDummyFile() const {
     std::ofstream file;
-    openFile(getFilename() + "openfoam.foam", file);
+    openFile_(getFilename() + "openfoam.foam", file);
     file.close();
 }
 
@@ -191,7 +191,7 @@ void Exporter::writeControlDict() const {
     std::string name = "controlDict";
     std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     file << writeOpenFoamHeader(std::string("system"), name) << std::endl;
     file << std::endl;
     file << "filestartFrom   startTime;" << std::endl;
@@ -216,7 +216,7 @@ void Exporter::writefvSchemes() const {
     const std::string name = "fvSchemes";
     const std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     file << writeOpenFoamHeader("system", name) << std::endl;
     file << "gradSchemes {}" << std::endl;
     file << "divSchemes {}" << std::endl;
@@ -229,7 +229,7 @@ void Exporter::writefvSolution() const {
     const std::string name = "fvSolution";
     const std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     file << writeOpenFoamHeader("system", name) << std::endl;
     // Closes file.
     file.close();
@@ -278,7 +278,7 @@ Exporter::writeBlockMeshDict() const {
     const std::string name = "blockMeshDict";
     const std::string fileName = dirPolymesh_ + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     // Prepares data.
     const Geometry::Grid3* grid = grid_;
     if (grid->hasZeroSize()) {
@@ -365,9 +365,9 @@ Exporter::writeSurfaceFeatureExtractDict() const {
     std::string name = "surfaceFeatureExtractDict";
     std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     // Prepares data.
-    std::vector<std::string> stlFile = getFilesBasenames(dirTriSurface_, ".stl");
+    std::vector<std::string> stlFile = getFilesBasenames_(dirTriSurface_, ".stl");
     const std::size_t nSTLs = stlFile.size();
     // Writes data.
     file << writeOpenFoamHeader("system", name) << std::endl;
@@ -394,9 +394,9 @@ Exporter::writeSnappyHexMeshDict() const {
     std::string name = "snappyHexMeshDict";
     std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     // Prepares data.
-    std::vector<std::string> stlFile = getFilesBasenames(dirTriSurface_, ".stl");
+    std::vector<std::string> stlFile = getFilesBasenames_(dirTriSurface_, ".stl");
     const std::size_t nSTLs = stlFile.size();
     // Writes data.
     file << writeOpenFoamHeader("system", name) << std::endl;
@@ -409,7 +409,7 @@ Exporter::writeSnappyHexMeshDict() const {
     file << "geometry" << std::endl;
     file << "{" << std::endl;
     for (std::size_t i = 0; i < nSTLs; i++) {
-        std::string matName = removeExtension(stlFile[i]);
+        std::string matName = removeExtension_(stlFile[i]);
         file << "    " << stlFile[i] << std::endl;
         file << "    {" << std::endl;
         file << "        type triSurfaceMesh;" << std::endl;
@@ -444,7 +444,7 @@ Exporter::writeSnappyHexMeshDict() const {
     file << "    refinementSurfaces" << std::endl;
     file << "    {" << std::endl;
     for (std::size_t i = 0; i < nSTLs; i++) {
-        file << "        " << removeExtension(stlFile[i]) << std::endl;
+        file << "        " << removeExtension_(stlFile[i]) << std::endl;
         file << "        {" << std::endl;
         file << "            level (0 0);" << std::endl;
         file << "        }" << std::endl;
@@ -533,7 +533,7 @@ Exporter::writeMeshQualityDict() const {
     std::string name = "meshQualityDict";
     std::string fileName = dirSystem_ + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     // Writes data.
     file << writeOpenFoamHeader("system", name) << std::endl;
     file << std::endl;
@@ -553,7 +553,7 @@ Exporter::writeAllClean() const {
     std::string name = "Allclean";
     std::string fileName = getFilename() + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     file<< "#!/bin/bash" << std::endl;
     file << "source /opt/openfoam230/etc/bashrc" << std::endl;
     file << ". /opt/openfoam230/bin/tools/CleanFunctions" << std::endl;
@@ -574,7 +574,7 @@ Exporter::writeAllRun() const {
     std::string name = "Allrun";
     std::string fileName = getFilename() + "/" + name;
     std::ofstream file;
-    openFile(fileName, file);
+    openFile_(fileName, file);
     file<< "#!/bin/bash" << std::endl;
     file<< "cd \"$(dirname \"$0\")\"" << std::endl;
     file<< "source /opt/openfoam230/etc/bashrc" << std::endl;

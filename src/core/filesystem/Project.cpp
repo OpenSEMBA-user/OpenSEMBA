@@ -23,6 +23,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 
 #ifndef _WIN32
 #include <dirent.h>
@@ -31,6 +32,7 @@
 #else
 #include <direct.h>
 #include <Shlwapi.h>
+#include <unistd.h>
 #endif
 
 namespace SEMBA {
@@ -50,13 +52,33 @@ Project::~Project() {
 
 }
 
-void Project::initDir_(const std::string& fn) {
-    std::string dirname = fn + ".vtk";
+void Project::initDir_(const std::string& fn) const {
+    std::string dirname = fn;
 #ifdef _WIN32
     _mkdir(dirname.c_str());
 #else
-    mkdir(dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    if (mkdir(dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)) {
+        throw std::logic_error("Folder could not be created.");
+    }
 #endif
+}
+
+void Project::makeDir() const {
+    std::string dir = *this;
+    initDir_(dir);
+}
+
+void Project::changeDir() const {
+#ifdef _WIN32
+    _chdir_(this->c_str())
+#else
+    chdir(this->c_str());
+#endif
+}
+
+void Project::rmDir() const {
+    std::string dir = *this;
+    deleteDirIfExists_(dir);
 }
 
 bool Project::canOpen() const {
@@ -118,7 +140,7 @@ std::string Project::getFolder() const {
     }
 #else
     std::string folder(dirname(cstr));
-    folder += "/";
+    delete [] cstr;
 #endif
     if (folder.find_last_of("/\\") != folder.length() - 1) {
 #ifdef _WIN32
@@ -127,7 +149,6 @@ std::string Project::getFolder() const {
         folder += "/";
 #endif
     }
-    delete [] cstr;
     return folder;
 }
 
@@ -143,7 +164,7 @@ void Project::printInfo() const {
     std::cout << "Project file name: " << toStr() << std::endl;
 }
 
-std::vector<std::string> Project::getFilesBasenames(
+std::vector<std::string> Project::getFilesBasenames_(
         const std::string& directory,
         const std::string& extension) const {
     std::vector<std::string> files;
@@ -185,10 +206,10 @@ std::vector<std::string> Project::getFilesBasenames(
 }
 
 void Project::openFile(std::ofstream& file) const {
-    openFile(*this, file);
+    openFile_(*this, file);
 }
 
-void Project::openFile(const std::string& fileName,
+void Project::openFile_(const std::string& fileName,
                        std::ofstream& file) const {
     try {
         file.open(fileName.c_str());
@@ -197,7 +218,7 @@ void Project::openFile(const std::string& fileName,
     }
 }
 
-std::string Project::removeExtension(const std::string& fName) const {
+std::string Project::removeExtension_(const std::string& fName) const {
     size_t pos = fName.rfind(".");
     if (pos == std::string::npos) { //No extension.
         return fName;
@@ -208,7 +229,7 @@ std::string Project::removeExtension(const std::string& fName) const {
     return fName.substr(0, pos);
 }
 
-void Project::deleteDirIfExists(const std::string& directory) const {
+void Project::deleteDirIfExists_(const std::string& directory) const {
 #ifdef _WIN32
     bool exists = false;;
     DWORD atrib = GetFileAttributesA(directory.c_str());

@@ -29,6 +29,11 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#ifndef _WIN32
+    #include <unistd.h>
+#else
+    #include <direct.h>
+#endif
 
 namespace SEMBA {
 namespace FileSystem {
@@ -55,7 +60,7 @@ public:
         return getProjectName();
     }
     std::string getProjectName() const {
-        return removeExtension(getBasename());
+        return removeExtension_(getBasename());
     }
     Project relativeTo(const Project& rhs) const;
 
@@ -72,14 +77,18 @@ public:
         return os << toStr();
     }
 
+    void makeDir() const;
+    void changeDir() const;
+    void rmDir() const;
+
 protected:
-    std::vector<std::string> getFilesBasenames(
+    std::vector<std::string> getFilesBasenames_(
             const std::string& directory,
             const std::string& extension) const;
-    void openFile(const std::string& fileName, std::ofstream& file) const;
-    std::string removeExtension(const std::string& filename) const;
-    void deleteDirIfExists(const std::string& directory) const;
-    void initDir_(const std::string& fn);
+    void openFile_(const std::string& fileName, std::ofstream& file) const;
+    std::string removeExtension_(const std::string& filename) const;
+    void deleteDirIfExists_(const std::string& directory) const;
+    void initDir_(const std::string& fn) const;
 };
 
 } /* namespace FileSystem */

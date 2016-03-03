@@ -41,7 +41,7 @@ namespace VTK {
 Exporter::Exporter(const Data* smb,
                    const std::string& fn)
 :   SEMBA::Exporter::Exporter(fn) {
-    initDir_(fn);
+    initDir_(fn + ".vtk");
     writeMesh_(smb);
 }
 
