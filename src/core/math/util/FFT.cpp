@@ -55,7 +55,8 @@ std::vector<std::pair<Real,std::complex<Real>>> getFFT(
         res[i].first = ((Real) i) / averageSamplingPeriod;
 
         std::complex<Real> dataPoint(out[i][0], out[i][1]);
-        res[i].second = dataPoint / (Real) N;
+        Real L = data.back().first - data.front().first;
+        res[i].second = dataPoint * L / (Real) N ;
     }
 
     fftw_destroy_plan(p);
