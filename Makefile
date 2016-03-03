@@ -27,6 +27,8 @@ target   = release
 compiler = gnu
 APP_VERSION=\"0.11\"
 
+FFTW3_SUPPORT=yes#
+
 DEFINES += APP_VERSION=$(APP_VERSION)
 # ==================== Intel Compiler =========================================
 ifeq ($(compiler),intel) 
@@ -64,6 +66,10 @@ ifeq ($(target),debug)
 endif
 ifeq ($(target),release)
    	CXXFLAGS +=-O2 
+endif
+ifeq ($(FFTW3_SUPPORT),yes)
+	DEFINES +=FFTW3_SUPPORT
+	LIBS += fftw3
 endif
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------

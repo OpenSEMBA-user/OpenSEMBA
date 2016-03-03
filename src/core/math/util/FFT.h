@@ -19,27 +19,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_MATH_UTIL_DTFT_H_
-#define SEMBA_MATH_UTIL_DTFT_H_
+#ifndef SEMBA_MATH_UTIL_FFT_H_
+#define SEMBA_MATH_UTIL_FFT_H_
+
+#ifdef FFTW3_SUPPORT
 
 #include <cmath>
 #include <complex>
 #include <utility>
 #include <vector>
+#include <fftw3.h>
 
 #include "math/vector/Cartesian.h"
 #include "math/Constants.h"
+
 
 namespace SEMBA {
 namespace Math {
 namespace Util {
 
-std::complex<Real> getDTFT(
+std::vector<std::pair<Real,std::complex<Real>>> getFFT(
         const std::vector<std::pair<Real,std::complex<Real>>>& data,
-        const Real frequency);
+        const bool inverse = false);
 
 } /* namespace Util */
 } /* namespace Math */
 } /* namespace SEMBA */
+
+#endif
 
 #endif /* SEMBA_MATH_UTIL_DFT_H_ */

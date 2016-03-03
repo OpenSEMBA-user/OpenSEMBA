@@ -85,7 +85,7 @@ SRC_DIRS := $(SRC_APP_DIR) \
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 # =============================================================================
-LIBS       = gtest
+LIBS      += gtest
 LIBRARIES += 
 INCLUDES  += $(SRC_DIR) $(SRC_DIR)core/
 # =============================================================================
