@@ -203,10 +203,10 @@ VALUE: OPTIONS
 QUESTION: boundary_padding_type#CB#(by_number_of_cells,by_distance)
 VALUE: by_distance
 QUESTION: Lower_x_boundary_padding
-VALUE: 0
+VALUE: 0.0
 HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
 QUESTION: Lower_y_boundary_padding
-VALUE: 0
+VALUE: 0.0
 HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
 QUESTION: Lower_z_boundary_padding
 VALUE: 0.0
