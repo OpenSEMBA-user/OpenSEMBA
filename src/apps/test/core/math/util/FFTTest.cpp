@@ -34,9 +34,9 @@ using namespace Math;
 
 TEST(MathFFTTest, gaussian) {
     const size_t nPoints = 10000;
-    vector<Real> time = Util::linspace(pair<Real,Real>(0,10), nPoints);
+    vector<Real> time = Util::linspace(pair<Real,Real>(-10,10), nPoints);
     vector<pair<Real,complex<Real>>> input(nPoints);
-    Function::Gaussian gaussian((Real) 0.25, (Real) 5.0);
+    Function::Gaussian gaussian((Real) 0.25, (Real) 0.0);
     for (size_t i = 0; i < nPoints; ++i) {
         complex<Real> dataPoint(gaussian(time[i]), (Real) 0.0);
         input[i] = pair<Real,complex<Real>>(time[i], dataPoint);

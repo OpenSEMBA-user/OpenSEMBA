@@ -53,7 +53,7 @@ Gaussian::~Gaussian() {
 }
 
 Real Gaussian::operator ()(const Real& time) const {
-    static const Real pi    = acos(-1.0);
+    static const Real pi    = Constants::pi;
     static const Real sqrt2 = sqrt(2.0);
     Real expArg = (time - delay_) / (spread_ * sqrt2);
 
@@ -83,11 +83,12 @@ Real Gaussian::getFreq() const {
 }
 
 std::complex<Real> Gaussian::getFourier(const Real freq) const {
-    const std::complex<Real> phase(0.0, freq * getDelay());
+    const Real pi2 = (Real) 2.0 * Constants::pi;
+    const std::complex<Real> phase(0.0, getDelay() *pi2*freq);
     const std::complex<Real> phaseShift = std::exp(phase);
-    return getSpread() * std::sqrt((Real) 2.0 * Constants::pi)
+    return getSpread() * std::sqrt(pi2)
             * phaseShift
-            * std::exp(- (Real) 0.5 * pow(getSpread()*freq,2));
+            * std::exp(- (Real) 0.5 * pow(getSpread()*pi2*freq,2));
 }
 
 void Gaussian::printInfo() const {
