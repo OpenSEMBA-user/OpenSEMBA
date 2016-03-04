@@ -35,9 +35,12 @@ SRC_DIRS = $(SRC_CORE_DIRS) \
 
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
-
+ifeq ($(FFTW3_SUPPORT),yes)
+	DEFINES +=FFTW3_SUPPORT
+	LIBS += fftw3
+endif
 # =============================================================================
-LIBS = gidpost
+LIBS += gidpost
 INCLUDES += $(SRC_DIR)core/ $(LIB_DIR)gidpost/include/
 # =============================================================================
 .PHONY: default print

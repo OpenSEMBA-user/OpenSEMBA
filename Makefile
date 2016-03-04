@@ -67,10 +67,6 @@ endif
 ifeq ($(target),release)
    	CXXFLAGS +=-O2 
 endif
-ifeq ($(FFTW3_SUPPORT),yes)
-	DEFINES +=FFTW3_SUPPORT
-	LIBS += fftw3
-endif
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
 BUILD_DIR = ./build/

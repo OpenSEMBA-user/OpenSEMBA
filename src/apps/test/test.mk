@@ -35,7 +35,10 @@ SRC_APP_DIR = $(SRC_DIR)apps/test/
 ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 	OUT := $(addsuffix .exe,$(OUT))
 endif
-
+ifeq ($(FFTW3_SUPPORT),yes)
+	DEFINES +=FFTW3_SUPPORT
+	LIBS += fftw3
+endif
 # =============================================================================
 # --- Core ---
 ifeq ($(TEST_CORE_MATH),yes)
