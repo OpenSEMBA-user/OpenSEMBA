@@ -55,8 +55,14 @@ Project::~Project() {
 void Project::initDir_(const std::string& fn) const {
     std::string dirname = fn;
 #ifdef _WIN32
+    if (checkExistance_(dirname)) {
+        return;
+    }
     _mkdir(dirname.c_str());
 #else
+    if (checkExistance_(dirname)) {
+        return;
+    }
     if (mkdir(dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)) {
         throw std::logic_error("Folder could not be created.");
     }
@@ -64,8 +70,8 @@ void Project::initDir_(const std::string& fn) const {
 }
 
 void Project::makeDir() const {
-    std::string dir = *this;
-    initDir_(dir);
+
+    initDir_(*this);
 }
 
 void Project::changeDir() const {
@@ -231,14 +237,7 @@ std::string Project::removeExtension_(const std::string& fName) const {
 
 void Project::deleteDirIfExists_(const std::string& directory) const {
 #ifdef _WIN32
-    bool exists = false;;
-    DWORD atrib = GetFileAttributesA(directory.c_str());
-    if (atrib == INVALID_FILE_ATTRIBUTES) {
-        exists = false;
-    } else if (atrib & FILE_ATTRIBUTE_DIRECTORY) {
-        exists = true;
-    }
-    if (exists) {
+    if (checkExistance_(directory)) {
         char *cstr = new char[directory.size() + 2];
         std::strcpy(cstr, directory.c_str());
         cstr[directory.size()  ] = 0;
@@ -256,12 +255,9 @@ void Project::deleteDirIfExists_(const std::string& directory) const {
         delete [] cstr;
     }
 #else
-    // Checks existence
-    struct stat sb;
-    bool exists = (stat(directory.c_str(), &sb) == 0);
-    exists &= S_ISDIR(sb.st_mode);
+
     // Deletes if exists.
-    if (exists) {
+    if (checkExistance_(directory)) {
         std::string command = "rm -r ";
         command += directory;
         if (system(command.c_str())) {
@@ -271,6 +267,24 @@ void Project::deleteDirIfExists_(const std::string& directory) const {
         }
     }
 #endif
+}
+
+bool Project::checkExistance_(const std::string& fn) const {
+    bool exists;
+#ifdef _WIN32
+    exists = false;;
+    DWORD atrib = GetFileAttributesA(fn.c_str());
+    if (atrib == INVALID_FILE_ATTRIBUTES) {
+        exists = false;
+    } else if (atrib & FILE_ATTRIBUTE_DIRECTORY) {
+        exists = true;
+    }
+#else
+    struct stat sb;
+    exists = (stat(fn.c_str(), &sb) == 0);
+    exists &= S_ISDIR(sb.st_mode);
+#endif
+    return exists;
 }
 
 Project Project::relativeTo(const Project& rhs) const {
@@ -332,3 +346,4 @@ std::string Project::getExtension() const {
 
 } /* namespace FileSystem */
 } /* namespace SEMBA */
+

@@ -88,6 +88,7 @@ protected:
     void openFile_(const std::string& fileName, std::ofstream& file) const;
     std::string removeExtension_(const std::string& filename) const;
     void deleteDirIfExists_(const std::string& directory) const;
+    bool checkExistance_(const std::string& fn) const;
     void initDir_(const std::string& fn) const;
 };
 
