@@ -33,6 +33,8 @@
 #include <sys/time.h>
 #endif
 
+#include "filesystem/Project.h"
+
 namespace SEMBA {
 namespace Solver {
 
@@ -42,6 +44,7 @@ public:
     virtual ~Solver();
     virtual bool run() = 0;
     virtual bool canRun() const = 0;
+    virtual FileSystem::Project getFolder() const = 0;
 protected:
     static const std::size_t printStep = 100;
     void printTime(const double originalSeconds) const;

@@ -49,6 +49,7 @@ public:
     bool canExecute() const;
     bool isFolder() const;
 
+    std::string getFullPath() const;
     std::string getFilename() const;
     std::string getBasename() const;
     std::string getFolder() const;

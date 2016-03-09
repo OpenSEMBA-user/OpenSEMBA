@@ -344,6 +344,17 @@ std::string Project::getExtension() const {
     return this->substr(pos, std::string::npos);
 }
 
+std::string Project::getFullPath() const {
+    std::string res;
+#ifndef _WIN32
+    res = (const char*) realpath(this->getFilename().c_str(), NULL);
+
+#else
+    #error "Not implemented." // TODO: Dani
+#endif
+    return res;
+}
+
+
 } /* namespace FileSystem */
 } /* namespace SEMBA */
-
