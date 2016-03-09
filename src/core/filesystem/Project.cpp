@@ -348,12 +348,24 @@ std::string Project::getFullPath() const {
     std::string res;
 #ifndef _WIN32
     res = (const char*) realpath(this->getFilename().c_str(), NULL);
-
 #else
     #error "Not implemented." // TODO: Dani
 #endif
     return res;
 }
+
+void Project::setToCurrentWorkingDir() {
+#ifndef _WIN32
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        std::string cwdStr = cwd;
+        *this = cwdStr;
+    }
+#else
+    #error "Not implemented." // TODO: Dani
+#endif
+}
+
 
 
 } /* namespace FileSystem */

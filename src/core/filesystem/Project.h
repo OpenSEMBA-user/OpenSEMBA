@@ -66,6 +66,7 @@ public:
     Project relativeTo(const Project& rhs) const;
 
     void setFilename(const std::string& filename);
+    void setToCurrentWorkingDir();
     void openFile(std::ofstream& file) const;
     void openAsInput(std::ifstream& file) const;
 
