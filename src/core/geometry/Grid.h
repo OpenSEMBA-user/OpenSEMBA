@@ -61,15 +61,6 @@ public:
                             const Math::Constants::CartesianBound b,
                             const std::vector<Math::Real>& step);
 
-    // TODO To be deleted >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    bool getNaturalCellx (const double &x, long int &i,
-                          double &relativeLen) const;
-    bool getNaturalCelly (const double &y, long int &j,
-                          double &relativeLen) const;
-    bool getNaturalCellz (const double &z, long int &k,
-                          double &relativeLen) const;
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
     bool hasZeroSize() const;
 
     bool isInto(const CVecRD& pos) const;
@@ -85,6 +76,11 @@ public:
     CVecID getNumCells() const;
     CVecID getOffset()   const;
     CVecRD getOrigin()   const;
+    bool getNaturalCell(
+            const Math::Constants::CartesianAxis dir,
+            const Math::Real& x,
+            long int& i,
+            Math::Real& relativeLen) const;
 
     std::vector<Math::Real> getStep(const std::size_t dir) const;
     Math::Real              getStep(const std::size_t dir,

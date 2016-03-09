@@ -171,76 +171,27 @@ bool Grid<D>::isInto(const std::size_t dir, const Math::Real pos) const {
     return false;
 }
 
-//template<std::size_t D>
-//bool Grid<D>::isIntoDir(const std::size_t dir, const double val) const {
-//    if(val < pos_[dir].front()){return false;}
-//    if(val > pos_[dir].back()){return false;}
-//    return true;
-//}
-
 template<std::size_t D>
-bool Grid<D>::getNaturalCellx(
-        const double &x,long int &i, double &relativeLen) const {
-    long int n = 0;
+bool Grid<D>::getNaturalCell(
+        const Math::Constants::CartesianAxis dir,
+        const Math::Real& x,
+        long int& i,
+        Math::Real& relativeLen) const {
+    size_t n = 0;
     relativeLen = -1.0;
-    if (x < getPos(Math::Constants::x,0)) {
+    if (x < getPos(dir,0)) {
         i = 0;
         return false;
-    } else if (getPos(Math::Constants::x,
-                      getNumCells()(Math::Constants::x)) <= x) {
-        i = getNumCells()(Math::Constants::x);
+    } else if (getPos(dir, getNumCells()(dir)) <= x) {
+        i = getNumCells()(dir);
         return false;
     }
-    while (getPos(Math::Constants::x)[n] <=x ){
+    while (getPos(dir)[n] <=x ){
         n++;
     }  /*mod this: use sort*/
     i = n-1;
-    relativeLen = (x - getPos(Math::Constants::x)[i])/
-                  getStep(Math::Constants::x,i);
-    return true;
-}
-
-template<std::size_t D>
-bool Grid<D>::getNaturalCelly(
-        const double &y,long int &i, double &relativeLen) const {
-    long int n = 0;
-    relativeLen = -1.0;
-    if (y < getPos(Math::Constants::y,0)) {
-        i = 0;
-        return false;
-    } else if (getPos(Math::Constants::y,
-                      getNumCells()(Math::Constants::y)) <= y) {
-        i = getNumCells()(Math::Constants::y);
-        return false;
-    }
-    while (getPos(Math::Constants::y,n) <= y) {
-        n++;
-    }  /*mod this: use sort*/
-    i = n-1;
-    relativeLen = (y-getPos(Math::Constants::y,i))/
-                  getStep(Math::Constants::y,i);
-    return true;
-}
-
-template<std::size_t D>
-bool Grid<D>::getNaturalCellz(
-        const double &z,long int &i, double &relativeLen)const{
-    long int n = 0;
-    relativeLen = -1.0;
-    if (z<getPos(Math::Constants::z,0)) {
-        i=0;
-        return false;
-    } else if(getPos(Math::Constants::z,
-                     getNumCells()(Math::Constants::z)) <=z ) {
-        i=getNumCells()(Math::Constants::z);
-        return false;
-    }
-    while (getPos(Math::Constants::z,n) <= z){
-        n++;
-    }  /*mod this: use sort*/
-    i = n-1;
-    relativeLen = (z-getPos(Math::Constants::z,i))/
-                  getStep(Math::Constants::z,i);
+    relativeLen = (x - getPos(dir)[i])/
+                  getStep(dir,i);
     return true;
 }
 
