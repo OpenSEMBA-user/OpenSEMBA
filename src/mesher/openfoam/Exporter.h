@@ -22,8 +22,13 @@
 #ifndef SEMBA_MESHER_OPENFOAM_EXPORTER_H_
 #define SEMBA_MESHER_OPENFOAM_EXPORTER_H_
 
+#include <sys/stat.h>
+
 #include "Data.h"
+#include "geometry/mesh/Unstructured.h"
 #include "geometry/element/Triangle.h"
+#include "physicalModel/predefined/PEC.h"
+#include "physicalModel/predefined/SMA.h"
 
 namespace SEMBA {
 namespace Mesher {
@@ -42,8 +47,7 @@ private:
     const Geometry::Grid3* grid_;
     bool isLocationMesh_;
     Math::CVecR3 location_;
-	std::string dirConstant_, dirPolymesh_, dirTriSurface_;
-    std::string dirSystem_;
+	FileSystem::Project dirConstant_, dirPolymesh_, dirTriSurface_, dirSystem_;
 	typedef enum {
 		dictionary,
 	} classes;

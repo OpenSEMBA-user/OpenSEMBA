@@ -25,10 +25,6 @@
 #include <direct.h>
 #endif
 
-#include "geometry/mesh/Unstructured.h"
-#include "physicalModel/PEC.h"
-#include "physicalModel/SMA.h"
-
 namespace SEMBA {
 namespace Mesher {
 namespace OpenFOAM {
@@ -55,12 +51,7 @@ Exporter::Exporter(const Data* smb,
     writefvSchemes();
     writefvSolution();
     writeAllClean();
-    //   if (smb_->solverParams->numberOfProcesses == 1) {
     writeAllRun();
-    //   } else {
-    //      writeDecomposeParDict();
-    //      writeAllRunParallel();
-    //   }
     writeSTLs();
     writeBlockMeshDict();
     writeSurfaceFeatureExtractDict();
@@ -83,11 +74,11 @@ void Exporter::createOpenFoamDirs() {
     mkdir(dirTriSurface_.c_str());
     mkdir(dirSystem_.c_str());
 #else
-    mkdir(getFilename().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir(dirConstant_.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir(dirPolymesh_.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir(dirTriSurface_.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir(dirSystem_.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    this->makeDir();
+    dirConstant_.makeDir();
+    dirPolymesh_.makeDir();
+    dirTriSurface_.makeDir();
+    dirSystem_.makeDir();
 #endif
 }
 
@@ -95,11 +86,11 @@ void Exporter::writeSTLs() const {
     // Writes materials.
     for (std::size_t i = 0; i < smb_->physicalModels->size(); i++) {
         const PhysicalModel::PhysicalModel* mat = (*smb_->physicalModels)(i);
-        if (!mat->is<PhysicalModel::SMA>()) {
+        if (!mat->is<PhysicalModel::Predefined::SMA>()) {
             //TODO
             //bool includeTets = !smb_->mesherOptions->isBruteForceVolumes();
             bool includeTets = false;
-            if (mat->is<PhysicalModel::PEC>()) {
+            if (mat->is<PhysicalModel::Predefined::PEC>()) {
                 includeTets = true;
             }
             MatId matId = mat->getId();
@@ -272,8 +263,7 @@ std::string Exporter::writeAllBoundary() const {
 //   file.close();
 //}
 
-void
-Exporter::writeBlockMeshDict() const {
+void Exporter::writeBlockMeshDict() const {
     // Opens file for writing.
     const std::string name = "blockMeshDict";
     const std::string fileName = dirPolymesh_ + "/" + name;
@@ -340,8 +330,7 @@ Exporter::writeBlockMeshDict() const {
     file.close();
 }
 
-std::string
-Exporter::writeOpenFoamHeader(
+std::string Exporter::writeOpenFoamHeader(
         const std::string& location,
         const std::string& object) const {
     std::string res;
@@ -359,8 +348,7 @@ Exporter::writeOpenFoamHeader(
     return res;
 }
 
-void
-Exporter::writeSurfaceFeatureExtractDict() const {
+void Exporter::writeSurfaceFeatureExtractDict() const {
     // Opens file.
     std::string name = "surfaceFeatureExtractDict";
     std::string fileName = dirSystem_ + "/" + name;
@@ -388,8 +376,7 @@ Exporter::writeSurfaceFeatureExtractDict() const {
     file.close();
 }
 
-void
-Exporter::writeSnappyHexMeshDict() const {
+void Exporter::writeSnappyHexMeshDict() const {
     // Opens file.
     std::string name = "snappyHexMeshDict";
     std::string fileName = dirSystem_ + "/" + name;
@@ -527,8 +514,7 @@ Exporter::writeSnappyHexMeshDict() const {
     file.close();
 }
 
-void
-Exporter::writeMeshQualityDict() const {
+void Exporter::writeMeshQualityDict() const {
     // Opens file.
     std::string name = "meshQualityDict";
     std::string fileName = dirSystem_ + "/" + name;
@@ -548,8 +534,7 @@ Exporter::writeMeshQualityDict() const {
     file.close();
 }
 
-void
-Exporter::writeAllClean() const {
+void Exporter::writeAllClean() const {
     std::string name = "Allclean";
     std::string fileName = getFilename() + "/" + name;
     std::ofstream file;
@@ -569,8 +554,7 @@ Exporter::writeAllClean() const {
 #endif
 }
 
-void
-Exporter::writeAllRun() const {
+void Exporter::writeAllRun() const {
     std::string name = "Allrun";
     std::string fileName = getFilename() + "/" + name;
     std::ofstream file;
@@ -589,35 +573,7 @@ Exporter::writeAllRun() const {
 #endif
 }
 
-//void
-//Exporter::writeAllRunParallel() const {
-//   // blockMesh can not run in parallel. Because of this reason we have to
-//   // create an initial mesh with nCells/nProc processors and then
-//   // use refineMesh. Therefore the following equality must be true:
-//   //                 (nCellsX / nProc) % 2 == 0
-//   std::string name = "Allrun";
-//   std::string fileName = getFilename() + "/" + name;
-//   std::ofstream file;
-//   openFile(fileName, file);
-//   const std::size_t nProc = smb_->solverParams->numberOfProcesses;
-//   file<< "#!/bin/bash" << std::endl;
-//   file<< "source /opt/openfoam230/etc/bashrc" << std::endl;
-//   file<< ". /opt/openfoam230/bin/tools/RunFunctions" << std::endl;
-//   file<< "runApplication blockMesh" << std::endl;
-//   //file<< "runApplication surfaceFeatureExtract" << std::endl;
-//   file<< "runApplication decomposePar" << std::endl;
-//   file<< "runParallel refineMesh " << nProc << " -overwrite" << std::endl;
-//   file<< "runParallel snappyHexMesh " << nProc << " -overwrite" << std::endl;
-//   file<< "runApplication reconstructParMesh -constant" << std::endl;
-//   // Closes file.
-//   file.close();
-//#ifndef _WIN32
-//   chmod(fileName.c_str(), ALLPERMS);
-//#endif
-//}
-
-std::size_t
-Exporter::computeRefinableCellDim(
+std::size_t Exporter::computeRefinableCellDim(
         const std::size_t originalCellDim,
         const std::size_t nProc) const {
     if (nProc == 1) {
@@ -639,15 +595,13 @@ Exporter::computeRefinableCellDim(
     return (res/2);
 }
 
-std::string
-Exporter::intToStr(const std::size_t i) const {
+std::string Exporter::intToStr(const std::size_t i) const {
     std::stringstream ss;
     ss << i;
     return ss.str();
 }
 
-std::string
-Exporter::boolToStr(const bool constBool) const {
+std::string Exporter::boolToStr(const bool constBool) const {
     if (constBool) {
         return std::string("true");
     } else {
