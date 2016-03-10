@@ -24,14 +24,16 @@ static = yes
 
 # -------------------- Paths to directories -----------------------------------
 SRC_CORE_DIRS     := $(shell find $(SRC_DIR)core/ -type d)
-SRC_EXPORTER_DIRS := $(shell find $(SRC_DIR)exporter/ -type d)
-SRC_MESHER_DIRS   := $(shell find $(SRC_DIR)mesher/ -type d)
 SRC_PARSER_DIRS   := $(shell find $(SRC_DIR)parser/ -type d)
+SRC_MESHER_DIRS   := $(shell find $(SRC_DIR)mesher/ -type d)
+SRC_SOLVER_DIRS   := $(shell find $(SRC_DIR)solver/ -type d)
+SRC_EXPORTER_DIRS := $(shell find $(SRC_DIR)exporter/ -type d)
 
 SRC_DIRS = $(SRC_CORE_DIRS) \
            $(SRC_EXPORTER_DIRS) \
            $(SRC_MESHER_DIRS) \
-           $(SRC_PARSER_DIRS)
+           $(SRC_PARSER_DIRS) \
+           $(SRC_SOLVER_DIRS) 
 
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
@@ -59,7 +61,7 @@ $(LIB_DIR)/$(OUT)/lib/lib$(OUT).a: $(OBJS_CXX)
 	@mkdir -p $(LIB_DIR)/$(OUT)/lib/ 
 	@echo "Linking:" $@
 	-ar rs $@ $^
-	-cd $(SRC_DIR); find core/ exporter/ parser/ \( -name "*.h" -o -name "*.hpp" \) -exec cp --parents {} ../$(LIB_DIR)$(OUT)/include/ \;
+	-cd $(SRC_DIR); find core/ exporter/ parser/ mesher/ solver/ \( -name "*.h" -o -name "*.hpp" \) -exec cp --parents {} ../$(LIB_DIR)$(OUT)/include/ \;
 
 $(OUT): $(LIB_DIR)/$(OUT)/lib/lib$(OUT).a
 
