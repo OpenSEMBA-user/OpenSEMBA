@@ -83,7 +83,7 @@ LIB_DIR = $(BUILD_DIR)lib/
 default: all
 	@echo "======>>>>> Done <<<<<======"
 
-all: check opensemba cudg3d test 
+all: check gidpost opensemba cudg3d test 
 
 create_dirs:
 	@echo 'Creating directories to store binaries and intermediate objects'
