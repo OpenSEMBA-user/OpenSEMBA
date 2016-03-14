@@ -32,7 +32,6 @@
 #else
 #include <direct.h>
 #include <Shlwapi.h>
-#include <unistd.h>
 #endif
 
 namespace SEMBA {
@@ -76,7 +75,7 @@ void Project::makeDir() const {
 
 void Project::changeDir() const {
 #ifdef _WIN32
-    _chdir_(this->c_str())
+    _chdir(this->c_str());
 #else
     chdir(this->c_str());
 #endif
@@ -349,7 +348,9 @@ std::string Project::getFullPath() const {
 #ifndef _WIN32
     res = (const char*) realpath(this->getFilename().c_str(), NULL);
 #else
-    #error "Not implemented." // TODO: Dani
+    TCHAR fullPath[MAX_PATH];
+    GetFullPathName(this->c_str(), MAX_PATH, fullPath, NULL);
+    res = fullPath;
 #endif
     return res;
 }
@@ -362,7 +363,11 @@ void Project::setToCurrentWorkingDir() {
         *this = cwdStr;
     }
 #else
-    #error "Not implemented." // TODO: Dani
+    char cwd[1024];
+    if (!_getcwd(cwd, sizeof(cwd))) {
+        std::string cwdStr = cwd;
+        *this = cwdStr;
+    }
 #endif
 }
 
