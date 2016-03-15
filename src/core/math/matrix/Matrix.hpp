@@ -22,6 +22,7 @@
 #include "Matrix.h"
 
 #include <cassert>
+#include <stdexcept>
 
 namespace SEMBA {
 namespace Math {
