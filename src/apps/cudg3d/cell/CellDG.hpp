@@ -19,34 +19,21 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef FIELD_H_
-#define FIELD_H_
-
-#include <cstdlib>
-
-#include "math/vector/Cartesian.h"
+#include "Cell.h"
 
 namespace SEMBA {
-namespace Math {
+namespace Cudg3d {
+namespace Cell {
 
-template <class T, std::size_t D, std::size_t N>
-class Field {
-public:
-    Field();
-    virtual ~Field();
+CellDG::CellDG() {
+    // TODO Auto-generated constructor stub
 
-    T*       operator()(const std::size_t i);
-    const T* operator()(const std::size_t i) const;
+}
 
-    Vector::Cartesian<T,D> getCVec(const std::size_t i) const;
+CellDG::~CellDG() {
+    // TODO Auto-generated destructor stub
+}
 
-private:
-    array<T, D*N> val_;
-};
-
-} /* namespace Math */
-} /* namespace SEMBA */
-
-#include "Field.hpp"
-
-#endif /* FIELD_H_ */
+}
+}
+}
