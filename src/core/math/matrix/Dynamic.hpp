@@ -22,7 +22,6 @@
 #include "Dynamic.h"
 
 #include <iomanip>
-#include <numeric>
 
 namespace SEMBA {
 namespace Math {
@@ -626,71 +625,6 @@ Dynamic<T>& Dynamic<T>::transpose() {
       }
    }
    return *this;
-}
-
-/**
- * Gram-Schmidt process to compute QR factorization
- * Algorithm and notation taken from http://sl.ugr.es/GramSchmidtProcess
- */
-template<class T>
-bool Dynamic<T>::factorizeQR_(Dynamic<T>& Q, Dynamic<T>& R) {
-    assert(nRows() == nCols());
-
-    int nCols = this->nCols();
-
-    std::vector< std::vector<T> > a;
-    std::vector< std::vector<T> > u;
-    std::vector< std::vector<T> > e;
-    std::vector<T> aux_dot;
-
-    T dot;
-
-    for (int i = 0; i < nCols; i++) {
-        // u_i = a_i
-        a.push_back(this->cpRowToVector(i));
-        u.push_back(a[i]);
-
-        for (int j = 0; j <= i-1; j++) {
-            // <a_i, e_j>
-            dot = std::inner_product(a[i].begin(), a[i].end(), e[j].begin(), 0.0);
-
-            aux_dot = e[j];
-
-            // u_i -= <a_i, e_j> * e_j
-            for (size_t k = 0; k < nCols; k++) {
-                aux_dot[k] *= dot;
-                u[i][k] -= aux_dot[k];
-            }
-        }
-
-        // Compute e_i
-        T norm_u = sqrt(std::inner_product(u[i].begin(), u[i].end(), u[i].begin(), 0.0));
-
-        std::vector<T> ei;
-        for (size_t j = 0; j < nCols; j++) {
-            ei.push_back(u[i][j] / norm_u);
-        }
-
-        e.push_back(ei);
-    }
-
-    // Compute final Q and R matrices
-    for (int i = 0; i < nCols; i++) {
-        for (int j = 0; j < i; j++) {
-            Q(j,i) = e[i][j];
-            R(i,j) = 0;
-        }
-
-        for (int j = i; j < nCols; j++) {
-            Q(j,i) = e[i][j];
-
-            // <a_j, e_i>
-            dot = std::inner_product(a[j].begin(), a[j].end(), e[i].begin(), 0.0);
-            R(i,j) = dot;
-        }
-    }
-
-    return true;
 }
 
 } /* namespace Matrix */

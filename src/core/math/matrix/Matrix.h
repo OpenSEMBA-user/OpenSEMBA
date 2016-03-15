@@ -82,6 +82,7 @@ public:
 
     bool isSquare() const;
     bool isSymmetric() const;
+    bool factorizeQR_(Matrix<T>& Q, Matrix<T>& R);
 
     virtual void printInfo() const = 0;
 
