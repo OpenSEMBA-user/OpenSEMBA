@@ -89,3 +89,16 @@ TEST_F(MathMatrixDynamicTest, Inversion) {
    d(2,0) = 3.0; d(2,1) = 11.0; d(2,2) = 19.0;
    EXPECT_EQ(d, d.invert().invert());
 }
+
+TEST_F(MathMatrixDynamicTest, QRdecomposition) {
+    Dynamic<double> d(3,3);
+    d(0,0) = 1.0; d(0,1) = 1.0; d(0,2) = 0.0;
+    d(1,0) = 1.0; d(1,1) = 0.0; d(1,2) = 1.0;
+    d(2,0) = 0.0; d(2,1) = 1.0; d(2,2) = 1.0;
+
+    Dynamic<double> Q(3,3);
+    Dynamic<double> R(3,3);
+
+    d.factorizeQR_(Q, R);
+    EXPECT_EQ(Q*R, d);
+}

@@ -76,6 +76,7 @@ public:
    Dynamic<T> reshape(std::size_t rows, std::size_t cols, Int order);
    Dynamic<T> eliminateColumns(std::size_t first, std::size_t last) const;
    Dynamic<T>& sortAndRemoveRepeatedRows_omp();
+   
    void sortAndRemoveRepeatedRows();
    void removeRepeatedSortedRows();
    void sortRows_omp(const std::size_t iCol, const std::size_t lCol);
@@ -88,6 +89,7 @@ public:
                   std::size_t lastRow,
                   std::size_t firstCol,
                   std::size_t lastCol) const;
+
 private:
    T* _val;
    std::size_t _nRows, _nCols;
