@@ -30,73 +30,63 @@ namespace SEMBA {
 namespace Math {
 namespace Simplex {
 
-template <Int SIMPLIN_N>
+template <size_t N>
 class Line : public Simplex {
-    #define SIMPLIN_NP (SIMPLIN_N + 1)
-    #define SIMPLIN_NFP (1)
-    #define SIMPLIN_FACES (2)
 public:
-    static const std::size_t faces = 2;
-    static const std::size_t nsc = 2;
-    static const std::size_t n = SIMPLIN_N;
-    static const std::size_t np = SIMPLIN_NP;
-    static const std::size_t nfp = SIMPLIN_NFP;
-    static const std::size_t nc = SIMPLEX_CUBATURE_ORDER;
-    static const std::size_t ncp = SIMPLEX_CUBATURE_ORDER + 1;
-    // ------- Methods ------------------------------------------------
+
     Line();
     std::size_t vertex(const std::size_t) const;
     std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
-    std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
-    std::size_t cubatureNodeIndex(const std::size_t i,
-                                  const std::size_t j) const;
     std::size_t sideNode(const std::size_t f, const std::size_t i) const;
+    std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
+
     const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
     const Function::Polynomial<Real>& getDLagr(const std::size_t i,
                                                const std::size_t f) const;
-    void     printInfo() const;
+    void printInfo() const;
+
 private:
-    // --- Rotation and extraction matrices ---------------------------
-    Matrix::Static<Int,np,np> P[faces];
-    Matrix::Static<Int,nfp,np> R[faces];
+    static const std::size_t nsc = 2;
+    static const std::size_t np = N+1;
+    static const std::size_t nfp = 1;
+
     Vector::Cartesian<Int,nsc> nId[np];
-    Matrix::Static<Int,faces,nfp> sNId;
-    // --- Lagrange polynomials ---------------------------------------
+    Matrix::Static<Int,nsc,nfp> sNId;
+
     Function::Polynomial<Real> lagr[np];
-    Function::Polynomial<Real> dLagr[np][faces];
-    // --- ca: Cubatured alpha, cda: cub. derived, cwaa: cub. weighted
+    Function::Polynomial<Real> dLagr[np][nsc];
+
     static const Real sizeFactor;
-    static const std::size_t dimension = 1;
-    Vector::Cartesian<Int,nsc> cId[ncp];
-    Vector::Cartesian<Real,nsc> cPos[ncp];
-    Real cw[ncp];
-    Real ca[np][ncp];
-    Real cda[np][faces][ncp];
-    Matrix::Static<Real,np,np> cwaa[ncp];
-    Matrix::Static<Real,np,np> cwada[ncp][faces];
-    // =========== Methods ============================================
-    Matrix::Static<Int, SIMPLIN_NFP, SIMPLIN_NP> RMatrix(
-            const std::size_t s) const;
+
+    Vector::Cartesian<Real,nsc> cPos[np];
+    Real cw[np];
+    Real ca[np][np];
+    Real cda[np][nsc][np];
+    Matrix::Static<Real,np,np> cwaa[np];
+    Matrix::Static<Real,np,np> cwada[np][nsc];
+
+    Matrix::Static<Int,nfp,np> RMatrix(const std::size_t s) const;
     Matrix::Dynamic<Int> PMatrix(const std::size_t n,
                                  const std::size_t s) const;
+
     void buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
                           const std::size_t order,
                           const std::size_t nNodes) const;
     void buildSideNodeIndices();
-    std::size_t numberOfNodes(const std::size_t order) const;
-    // --- Cubature build functions -----------------------------------
+
+    static std::size_t numberOfNodes(size_t order);
+
     void buildCubaturePositionsAndWeights();
     void buildCubatureLagrange();
 };
 
-template <Int SIMPLIN_N>
-const Real Line<SIMPLIN_N>::sizeFactor = 1.0;
-// ====================================================================
+template <Int N>
+const Real Line<N>::sizeFactor = 1.0;
 
 } /* namespace Simplex */
 } /* namespace Math */
 } /* namespace SEMBA */
 
 #include "Line.hpp"
-// ====================================================================
+
 #endif /* SEMBA_MATH_SIMPLEX_LINE_H_ */

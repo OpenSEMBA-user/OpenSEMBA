@@ -24,6 +24,9 @@
 using namespace SEMBA;
 using namespace Math;
 
-TEST(MathMatrixSimplexTetrahedronTest, BasicOperations) {
-    // TODO
+TEST(MathMatrixSimplexLineTest, BasicOperations) {
+    static const size_t N = 1;
+    Simplex::Line<N> line;
+
+    EXPECT_EQ(2, Simplex::Line<N>::faces);
 }
