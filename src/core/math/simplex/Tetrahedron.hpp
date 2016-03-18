@@ -25,17 +25,9 @@ namespace SEMBA {
 namespace Math {
 namespace Simplex {
 
-// =============== Tetrahedron ================================================
-// =-=-=-=-=-=-=-= Constructors =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-template <Int SIMPTET_N>
-Tetrahedron<SIMPTET_N>::Tetrahedron() {
-    for (std::size_t s = 0; s < nsc; s++) {
-        P[s] = PMatrix(n,s);
-    }
-    buildNodeIndices(nId,n,np);
-    for (std::size_t s = 0; s < nsc; s++) {
-        R[s] = RMatrix(s);
-    }
+template <size_t N>
+Tetrahedron<N>::Tetrahedron() {
+
     buildSideNodeIndices();
     lagrangePolynomials(lagr,n,np,nsc);
     for (std::size_t i = 0; i < np; i++) {
@@ -44,32 +36,25 @@ Tetrahedron<SIMPTET_N>::Tetrahedron() {
             dLagr[i][s].derive(s);
         }
     }
-    // ----------- Cubature positions and weights -----------------------------
     buildCubaturePositionsAndWeights();
-    // ----------- Cubature lagranges -----------------------------------------
-    buildCubatureLagrange();
+    buildCubedLagrange_();
     buildLIFTMatrix();
 }
 
-template <Int SIMPTET_N>
-void Tetrahedron<SIMPTET_N>::buildCubaturePositionsAndWeights() {
-    buildNodeIndices(cId,nc,ncp);
-    Vector::Cartesian<Real,nsc> aux;
-    for (std::size_t i = 0; i < ncp; i++) {
-        aux = cId[i];
-        cPos[i] = aux / (Real) nc;
+template <size_t N>
+void Tetrahedron<N>::buildCubaturePositionsAndWeights() {
+    for (std::size_t i = 0; i < np; i++) {
+        cPos[i] = nId[i] / (Real) n;
     }
-    Function::Polynomial<Real> cubLagr[ncp];
-    cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
-    for (std::size_t i = 0; i < ncp; i++) {
-        cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
+    for (std::size_t i = 0; i < np; i++) {
+        cw[i] = integrate(lagr[i], dimension, sizeFactor) / sizeFactor;
     }
 }
 
-template <Int SIMPTET_N>
-void Tetrahedron<SIMPTET_N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                                              const std::size_t order,
-                                              const std::size_t nNodes) const {
+template <size_t N>
+void Tetrahedron<N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
+        const std::size_t order,
+        const std::size_t nNodes) const {
     // Computes first coordinate indices vector.
     Matrix::Dynamic<Int> ini(nNodes,nsc);
     for (std::size_t i = 0; i <= order; i++) {
@@ -80,7 +65,7 @@ void Tetrahedron<SIMPTET_N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
     // Computes ordered nodal simplex coordinates.
     Matrix::Dynamic<Int> ord(nNodes,nsc);
     for (std::size_t i = 0; i < nsc; i++) {
-        ord = PMatrix(order,i) * ini;
+        ord = PMatrix_(order,i) * ini;
         // Stores in nId matrix.
         for (std::size_t j = 0; j < nNodes; j++) {
             res[j](i) = ord(j,0);
@@ -89,81 +74,74 @@ void Tetrahedron<SIMPTET_N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
 }
 
 
-template<Int SIMPTET_N>
-void Tetrahedron<SIMPTET_N>::buildCubatureLagrange() {
+template<size_t N>
+void Tetrahedron<N>::buildCubedLagrange_() {
     std::size_t i, j, k, c;
     // Evaluates Lagrange and Lagrange derived polynomials in cubature points.
     for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t c = 0; c < np; c++) {
             ca[i][c] = lagr[i].eval(cPos[c]);
         }
     }
     for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t j = 0; j < faces; j++) {
-            for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t j = 0; j < nsc; j++) {
+            for (std::size_t c = 0; c < np; c++) {
                 cda[i][j][c] = dLagr[i][j].eval(cPos[c]);
             }
         }
     }
     // Computes Cubature weighted alpha by alpha products.
-    for (c = 0; c < ncp; c++) {
+    for (c = 0; c < np; c++) {
         for (i = 0; i < np; i++)
             for (j = 0; j < np; j++)
                 cwaa[c](i,j) = cw[c] * ca[i][c] * ca[j][c];
         // Computes Cubature weighted alpha by alpha derivatives products.
-        for (k = 0; k < faces; k++)
+        for (k = 0; k < nsc; k++)
             for (i = 0; i < np; i++)
                 for (j = 0; j < np; j++)
                     cwada[c][k](i,j) = cw[c] * ca[i][c] * cda[j][k][c];
     }
 }
 
-template <Int SIMPTET_N>
-inline std::size_t Tetrahedron<SIMPTET_N>::nodeIndex(
+template <size_t N>
+inline std::size_t Tetrahedron<N>::nodeIndex(
         const std::size_t i,
         const std::size_t j) const {
     return nId[i](j);
 }
 
-template <Int SIMPTET_N>
-inline std::size_t Tetrahedron<SIMPTET_N>::cubatureNodeIndex(
-        const std::size_t i,
-        const std::size_t j) const {
-    return cId[i](j);
-}
-
-template <Int SIMPTET_N>
-inline const Function::Polynomial<Real>& Tetrahedron<SIMPTET_N>::getLagr(
+template <size_t N>
+inline const Function::Polynomial<Real>& Tetrahedron<N>::getLagr(
         const std::size_t i) const {
     return lagr[i];
 }
 
-template <Int SIMPTET_N>
-inline const Function::Polynomial<Real>& Tetrahedron<SIMPTET_N>::getDLagr(
+template <size_t N>
+inline const Function::Polynomial<Real>& Tetrahedron<N>::getDLagr(
         const std::size_t i,
         const std::size_t f) const {
     return dLagr[i][f];
 }
 
-template <Int SIMPTET_N>
-Real Tetrahedron<SIMPTET_N>::getCda(std::size_t i,
-                                    std::size_t j,
-                                    std::size_t k) const {
+template <size_t N>
+Real Tetrahedron<N>::getCda(std::size_t i,
+        std::size_t j,
+        std::size_t k) const {
     return cda[i][j][k];
 }
 
-template <Int SIMPTET_N>
-Matrix::Static<Real, SIMPTET_NP, SIMPTET_NP>
-        Tetrahedron<SIMPTET_N>::getMassMatrix() const {
+template <size_t N>
+Matrix::Static<Real, Tetrahedron<N>::np, Tetrahedron<N>::np>
+Tetrahedron<N>::getMassMatrix() const {
     Matrix::Static<Real,np,np> res;
-    for (std::size_t c = 0; c < ncp; c++) {
+    for (std::size_t c = 0; c < np; c++) {
         res += cwaa[c];
     }
     return res;
 }
 
-template <Int SIMPTET_N>
-void Tetrahedron<SIMPTET_N>::buildLIFTMatrix() {
+template <size_t N>
+void Tetrahedron<N>::buildLIFTMatrix() {
     // Obtains mass matrix for the tetrahedron.
     Matrix::Static<Real,np,np> invM;
     invM = getMassMatrix().invert();
@@ -173,38 +151,39 @@ void Tetrahedron<SIMPTET_N>::buildLIFTMatrix() {
     // Computes LIFT matrix.
     Matrix::Static<Int, np, nfp> RtrInt;
     Matrix::Static<Real, np, nfp> RtrDbl;
-    for (std::size_t f = 0; f < faces; f++) {
-        RtrInt = R[f].transpose();
+    for (std::size_t f = 0; f < nsc; f++) {
+        RtrInt = RMatrix(f).transpose();
         RtrDbl.assign(RtrInt);
         LIFT[f] = RtrDbl * sM;
         LIFT[f] = invM * LIFT[f];
     }
 }
 
-template <Int SIMPTET_N>
-inline std::size_t Tetrahedron<SIMPTET_N>::vertex(
+template <size_t N>
+inline std::size_t Tetrahedron<N>::vertex(
         const std::size_t vertexNum) const {
     return sideNode(vertexNum,0);
 }
 
-template <Int SIMPTET_N>
-inline std::size_t Tetrahedron<SIMPTET_N>::sideVertex(
+template <size_t N>
+inline std::size_t Tetrahedron<N>::sideVertex(
         const std::size_t face,
         const std::size_t vertexNum) const {
     return sideNode(face, tri.vertex(vertexNum));
 }
 
-template <Int SIMPTET_N>
-inline std::size_t Tetrahedron<SIMPTET_N>::sideNode(
+template <size_t N>
+inline std::size_t Tetrahedron<N>::sideNode(
         const std::size_t face,
         const std::size_t num) const {
     return sNId(face, num);
 }
 
-template <Int SIMPTET_N>
-Real Tetrahedron<SIMPTET_N>::integrateScalarsOnFace(const Real x[SIMPTET_NP],
-                                                    const std::size_t f,
-                                                    const Real area) const {
+template <size_t N>
+Real Tetrahedron<N>::integrateScalarsOnFace(
+        const Real x[Tetrahedron<N>::np],
+        const std::size_t f,
+        const Real area) const {
     // Takes an array of np scalars, a face number f and an area.
     // Returns a vector that is the result of integrating over the face of
     // the simplex and multiply the result by the area.
@@ -214,30 +193,30 @@ Real Tetrahedron<SIMPTET_N>::integrateScalarsOnFace(const Real x[SIMPTET_NP],
     // Computes result.
     Real res;
     for (std::size_t i = 0; i < nfp; i++) {
-        for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t c = 0; c < np; c++) {
             res += tri.cw[c] * faceX[i];
         }
     }
     res *= area;
     throw std::logic_error(
-              "Tetrahedron::integrateScalarsOnFace not implemented");
+            "Tetrahedron::integrateScalarsOnFace not implemented");
     return res;
 }
 
-template <Int SIMPTET_N>
-Real Tetrahedron<SIMPTET_N>::integrateScalars(const Real x[SIMPTET_NP],
-                                              const Real volume) const {
+template <size_t N>
+Real Tetrahedron<N>::integrateScalars(const Real x[Tetrahedron<N>::np],
+        const Real volume) const {
     Real res = 0.0;
     for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t c = 0; c < np; c++) {
             res += cw[c] * ca[i][c] * x[i];
         }
     }
     return (res*volume);
 }
 
-template <Int SIMPTET_N>
-Vector::Cartesian<Real,4> Tetrahedron<SIMPTET_N>::coordinate(
+template <size_t N>
+Vector::Cartesian<Real,4> Tetrahedron<N>::coordinate(
         const std::size_t i) const {
     Vector::Cartesian<Real,4> res;
     res = nId[i];
@@ -245,40 +224,40 @@ Vector::Cartesian<Real,4> Tetrahedron<SIMPTET_N>::coordinate(
     return res;
 }
 
-template <Int SIMPTET_N>
-Vector::Cartesian<Real,4> Tetrahedron<SIMPTET_N>::sideCoordinate(
+template <size_t N>
+Vector::Cartesian<Real,4> Tetrahedron<N>::sideCoordinate(
         const std::size_t f,
         const std::size_t i) const {
     return coordinate(sideNode(f,i));
 }
 
-template <Int SIMPTET_N>
-void Tetrahedron<SIMPTET_N>::buildSideNodeIndices() {
-    Matrix::Static<Int,np,1> nList;
-    Matrix::Static<Int,nfp,1> aux;
+template <size_t N>
+void Tetrahedron<N>::buildSideNodeIndices() {
     // Initializes node list.
+    Matrix::Static<Int,np,1> nList;
     for (std::size_t i = 0; i < np; i++) {
         nList(i,0) = i;
     }
     // Creates aux matrix to store the computed sNId.
-    for (std::size_t f = 0; f < faces; f++) {
-        aux = R[f] * nList;
+    for (std::size_t f = 0; f < nsc; f++) {
+        Matrix::Static<Int,nfp,1> aux = RMatrix(f) * nList;
         for (std::size_t i = 0; i < nfp; i++)
             sNId(f,i) = aux(i,0);
     }
 }
 
-template<Int SIMPTET_N>
-Int Tetrahedron<SIMPTET_N>::numberOfNodes(Int order) const {
+template<size_t N>
+size_t Tetrahedron<N>::numberOfNodes(size_t order) {
     Int res = 1;
-    for (Int i = 1; i < Int(nsc); i++)
+    for (Int i = 1; i < Int(nsc); i++) {
         res *= (order + i);
+    }
     res /= factorial(nsc - 1);
     return res;
 }
 
-template <Int SIMPTET_N>
-Matrix::Dynamic<Int> Tetrahedron<SIMPTET_N>::PMatrix(
+template <size_t N>
+Matrix::Dynamic<Int> Tetrahedron<N>::PMatrix_(
         const std::size_t n,
         std::size_t s) const {
     // Purpose: Creates indices rotation matrix for a simplex tetrahedral
@@ -310,9 +289,9 @@ Matrix::Dynamic<Int> Tetrahedron<SIMPTET_N>::PMatrix(
         // Computes final indices positions.
         fiVec = P2Dall * orVec;
         // Assigns ones to the Q1 matrix.
-        Matrix::Dynamic<Int> Q[faces];
+        Matrix::Dynamic<Int> Q[nsc];
         Matrix::Dynamic<Int> QInit(np,np);
-        for (std::size_t i = 0; i < faces; i++) {
+        for (std::size_t i = 0; i < nsc; i++) {
             Q[i] = QInit;
         }
         for (std::size_t i = 0; i < np; i++) {
@@ -368,12 +347,12 @@ Matrix::Dynamic<Int> Tetrahedron<SIMPTET_N>::PMatrix(
     return res;
 }
 
-template <Int SIMPTET_N>
-Matrix::Static<Int,SIMPTET_NFP,SIMPTET_NP> Tetrahedron<SIMPTET_N>::RMatrix(
-        const std::size_t s) const {
+template <size_t N>
+Matrix::Static<Int,Tetrahedron<N>::nfp,Tetrahedron<N>::np>
+Tetrahedron<N>::RMatrix(const std::size_t s) const {
     // Creates node indices vector with node indices on face 1.
     std::size_t last = 0;
-    Matrix::Static<Int,SIMPTET_NFP,1> nodeVec;
+    Matrix::Static<Int,nfp,1> nodeVec;
     for (std::size_t i = 1; i <= n + 1; i++) {
         std::size_t nsp = (i-1) * (i) * (i+1) / 6;
         for (std::size_t j = 0; j<i; j++) {
@@ -382,81 +361,37 @@ Matrix::Static<Int,SIMPTET_NFP,SIMPTET_NP> Tetrahedron<SIMPTET_N>::RMatrix(
         last += i;
     }
     // Creates extraction matrix R for face 1.
-    Matrix::Static<Int,SIMPTET_NFP,SIMPTET_NP> Raux;
+    Matrix::Static<Int,nfp,np> Raux;
     for (std::size_t i = 0; i < nfp; i++) {
         Raux(i,nodeVec(i,0)-1) = 1;
     }
     // Returns final form of R.
-    Matrix::Static<Int,SIMPTET_NFP,SIMPTET_NP> res = Raux * P[s];
+    Matrix::Static<Int,np,np> P;
+    P = PMatrix_(N,s);
+    Matrix::Static<Int,nfp,np> res = Raux * P;
     return res;
 }
 
-template <Int SIMPTET_N>
-void Tetrahedron<SIMPTET_N>::printInfo() const {
-    std::cout << " --- Tetrahedron Information --- " << std::endl;
-    std::cout << " Number of coordinates:         " << faces << std::endl;
-    std::cout << " Order:                         " << n << std::endl;
-    std::cout << " Number of nodes:               " << np << std::endl;
-    std::cout << " Number of face nodes:          " << nfp << std::endl;
+template <size_t N>
+inline Real Tetrahedron<N>::getWeight(const std::size_t i) const {
+    return cw[i];
+}
+
+template <size_t N>
+void Tetrahedron<N>::printInfo() const {
+    std::cout << " --- Simplex::Tetrahedron info --- " << std::endl;
+    Simplex::printInfo();
     std::cout << " Rotation matrices:             " << std::endl;
-    for (std::size_t i = 0; i < faces; i++) {
+    for (std::size_t i = 0; i < nsc; i++) {
         std::cout << "Rotation around simplex coordinate #" << i << std::endl;
-        P[i].printInfo();
+        PMatrix_(N,i).printInfo();
     }
     std::cout << " Extraction matrices:           " << std::endl;
-    for (std::size_t i = 0; i < faces; i++) {
+    for (std::size_t i = 0; i < nsc; i++) {
         std::cout << "Extraction matrices for face #" << i << std::endl;
-        R[i].printInfo();
+        RMatrix(i).printInfo();
     }
-    std::cout << " List of node indices: " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        nId[i].printInfo();
-        std::cout << std::endl;
-    }
-    std::cout << " List of node coordinates: " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        coordinate(i).printInfo();
-        std::cout << std::endl;
-    }
-    std::cout << " List of side nodes indices:    " << std::endl;
-    sNId.printInfo();
-    std::cout << " List of side nodes coordinates: " << std::endl;
-    for (std::size_t f = 0; f < faces; f++) {
-        std::cout << "Face #" << f << std::endl;
-        for (std::size_t i = 0; i < nfp; i++) {
-            sideCoordinate(f,i).printInfo();
-            std::cout << std::endl;
-        }
-    }
-    std::cout << " Lagrange polynomials:          " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        std::cout << "Lagrange polynomial of node #" << i << std::endl;
-        lagr[i].printInfo();
-    }
-    std::cout << " Lagrange polynomials derivatives: " << std::endl;
-    for (std::size_t i = 0; i < np; i++)
-        for (std::size_t j = 0; j < faces; j++) {
-            std::cout << "Pol. " << i 
-                      << " derived w.r.t. var." << j << std::endl;
-            dLagr[i][j].printInfo();
-        }
-    std::cout << " LIFT Matrices" << std::endl;
-    for (std::size_t i = 0; i < faces; i++)
-        LIFT[i].printInfo();
-    std::cout << " Order of cubature: " << nc << std::endl;
-    std::cout << " Number of cub. points: " << ncp << std::endl;
-    std::cout << " Cubature positions and weights: " << std::endl;
-    for (std::size_t i = 0; i < ncp; i++) {
-        std::cout << "#" << i << " ";
-        cPos[i].printInfo();
-        std::cout << " " << cw[i] << std::endl;
-    }
-    Real sum = 0.0;
-    for (std::size_t i = 0; i < ncp; i++) {
-        sum += cw[i];
-    }
-    std::cout << " The sum of cubature weights is: " << sum << std::endl;
-    std::cout << " --- End of simplex information --- "   << std::endl;
+    std::cout << " --- End of Simplex::Tetrahedron info --- "   << std::endl;
 }
 
 } /* namespace Simplex */

@@ -24,12 +24,22 @@
 using namespace SEMBA;
 using namespace Math;
 
-TEST(MathMatrixSimplexLineTest, BasicOperations) {
+template <size_t N>
+class MathMatrixSimplexLineTest : public ::testing::TestWithParam<size_t> {
+};
+
+typedef ::testing::Types<size_t> MyTypes;
+TYPED_TEST_CASE_P(MathMatrixSimplexLineTest, MyTypes);
+
+TYPED_TEST_CASE_P(RawTypesTest);
+
+TYPED_TEST_P(MathMatrixSimplexLineTest, BasicOperations) {
     static constexpr size_t N = 1;
     Simplex::Line<N> line;
 
     EXPECT_EQ(Simplex::Line<N>::n, line.order());
-    EXPECT_EQ(2, line.numberOfSimplexCoordinates());
-
-    line.printInfo();
+    EXPECT_EQ(Simplex::Line<N>::nsc, line.numberOfSimplexCoordinates());
 }
+
+
+REGISTER_TYPED_TEST_CASE_P(MathMatrixSimplexLineTest, BasicOperations);

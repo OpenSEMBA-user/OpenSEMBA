@@ -40,7 +40,7 @@ public:
             const std::size_t node) const = 0;
     virtual const Function::Polynomial<Real>& getDLagr(
             const std::size_t node,
-            const std::size_t derivedVariable) const;
+            const std::size_t derivedVariable) const = 0;
     virtual std::size_t nodeIndex(
             const std::size_t node,
             const std::size_t index) const = 0;
@@ -57,14 +57,14 @@ public:
 protected:
     static Function::Polynomial<Real> silvesterPol(const std::size_t m,
             const std::size_t n);
-    static void lagrangePolynomials(Function::Polynomial<Real>* lagr,
+    void lagrangePolynomials(Function::Polynomial<Real>* lagr,
             const std::size_t n,
             const std::size_t np,
-            const std::size_t nsc);
+            const std::size_t nsc) const;
     Real integrate(const Function::Polynomial<Real> pol,
             const std::size_t dimension,
             const Real sizeFactor) const;
-    std::size_t factorial(std::size_t n) const;
+    static std::size_t factorial(std::size_t n);
 
     void printInfo() const;
 };

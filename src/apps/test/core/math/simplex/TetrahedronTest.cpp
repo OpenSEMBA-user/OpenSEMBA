@@ -19,11 +19,15 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
-#include "math/simplex/Line.h"
+#include "math/simplex/Tetrahedron.h"
 
 using namespace SEMBA;
 using namespace Math;
 
 TEST(MathMatrixSimplexTetrahedronTest, BasicOperations) {
-    // TODO
+    static constexpr size_t N = 1;
+    Simplex::Tetrahedron<N> tet;
+
+    EXPECT_EQ(Simplex::Tetrahedron<N>::n, tet.order());
+    EXPECT_EQ(Simplex::Tetrahedron<N>::nsc, tet.numberOfSimplexCoordinates());
 }

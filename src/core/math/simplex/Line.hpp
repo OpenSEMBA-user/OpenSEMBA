@@ -42,6 +42,12 @@ Line<N>::Line() {
 };
 
 template <size_t N>
+inline Real Line<N>::getWeight(const std::size_t i) const {
+    return cw[i];
+}
+
+
+template <size_t N>
 inline std::size_t Line<N>::nodeIndex(
         const std::size_t i, const std::size_t j) const {
     return nId[i](j);

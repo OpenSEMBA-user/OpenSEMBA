@@ -35,17 +35,7 @@ Simplex::~Simplex() {
 
 }
 
-const Function::Polynomial<Real>& Simplex::getLagr(const std::size_t i) const {
-    exit(EXIT_FAILURE);
-}
-
-const Function::Polynomial<Real>& Simplex::getDLagr(
-        const std::size_t i,
-        const std::size_t f) const {
-    exit(EXIT_FAILURE);
-}
-
-std::size_t Simplex::factorial(std::size_t n) const {
+std::size_t Simplex::factorial(std::size_t n) {
     return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
 
@@ -80,7 +70,7 @@ Function::Polynomial<Real> Simplex::silvesterPol(const std::size_t m,
 void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
                                   const std::size_t n,
                                   const std::size_t np,
-                                  const std::size_t nsc) {
+                                  const std::size_t nsc) const {
     // Computes Sylvester's polynomials.
     std::vector<Function::Polynomial<Real>> pol(n+1);
     for (std::size_t i = 0; i < (n + 1); i++) {
@@ -90,9 +80,9 @@ void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
     for (std::size_t i = 0; i < np; i++) {
         for (std::size_t j = 0; j < nsc; j++) {
             if (j == 0) {
-                res[i] = pol[nodeIndex(i,j)];
+                res[i] = pol[this->nodeIndex(i,j)];
             } else {
-                res[i] ^= pol[nodeIndex(i,j)];
+                res[i] ^= pol[this->nodeIndex(i,j)];
             }
         }
     }

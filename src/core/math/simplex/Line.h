@@ -54,17 +54,18 @@ public:
     const Function::Polynomial<Real>& getDLagr(const std::size_t i,
             const std::size_t f) const;
 
+    Real getWeight(const size_t node) const;
+
     void printInfo() const;
 
 private:
+    static const Real sizeFactor_;
     static const std::size_t dimension = 1;
 
     Vector::Cartesian<Int,nsc> nId[np];
     Matrix::Static<Int,nsc,nfp> sNId;
     Function::Polynomial<Real> lagr[np];
     Function::Polynomial<Real> dLagr[np][nsc];
-
-    static const Real sizeFactor_;
 
     Vector::Cartesian<Real,nsc> cPos[np];
     Real cw[np];
