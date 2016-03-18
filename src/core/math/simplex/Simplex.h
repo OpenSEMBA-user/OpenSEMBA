@@ -46,6 +46,7 @@ public:
                                   const std::size_t j) const;
     virtual std::size_t cubatureNodeIndex(const std::size_t i,
                                           const std::size_t j) const;
+    virtual std::size_t order() const = 0;
 protected:
     Function::Polynomial<Real> silvesterPol(const std::size_t m,
                                             const std::size_t n) const;
@@ -61,6 +62,8 @@ protected:
                    const std::size_t dimension,
                    const Real sizeFactor) const;
     std::size_t factorial(std::size_t n) const;
+
+    void printInfo() const;
 };
 
 } /* namespace Simplex */

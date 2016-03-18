@@ -27,10 +27,10 @@ namespace Simplex {
 
 template <size_t N>
 Line<N>::Line() {
-    buildNodeIndices(nId, n, np);
+    buildNodeIndices(nId, N, np);
     buildSideNodeIndices();
 
-    lagrangePolynomials(lagr,n,np,nsc);
+    lagrangePolynomials(lagr,N,np,nsc);
     for (std::size_t i = 0; i < np; i++) {
         for (std::size_t s = 0; s < nsc; s++) {
             dLagr[i][s] = lagr[i];
@@ -38,7 +38,7 @@ Line<N>::Line() {
         }
     }
 
-    buildCubatureWeights();
+    buildCubaturePositionsAndWeights();
 };
 
 template <size_t N>
@@ -83,15 +83,14 @@ void Line<N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
 
 template <size_t N>
 void Line<N>::buildSideNodeIndices() {
-    Matrix::Static<Int,np,1> nList;
-    Matrix::Static<Int,nfp,1> aux;
     // Initializes node list.
+    Matrix::Static<Int,np,1> nList;
     for (std::size_t i = 0; i < np; i++) {
         nList(i,0) = i;
     }
     // Creates aux matrix to store the computed sNId.
     for (std::size_t f = 0; f < nsc; f++) {
-        aux = R[f] * nList;
+        Matrix::Static<Int,nfp,1> aux = RMatrix(f) * nList;
         for (std::size_t i = 0; i < nfp; i++) {
             sNId(f,i) = aux(i,0);
         }
@@ -100,21 +99,18 @@ void Line<N>::buildSideNodeIndices() {
 
 template <size_t N>
 void Line<N>::buildCubaturePositionsAndWeights() {
-    buildNodeIndices(cId,nc,ncp);
     Vector::Cartesian<Real,nsc> aux;
-    for (std::size_t i = 0; i < ncp; i++) {
-        aux = cId[i];
-        cPos[i] = aux / (Real) nc;
+    for (std::size_t i = 0; i < np; i++) {
+        aux = nId[i];
+        cPos[i] = aux / (Real) N;
     }
-    Function::Polynomial<Real> cubLagr[ncp];
-    cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
-    for (std::size_t i = 0; i < ncp; i++) {
-        cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
+    for (std::size_t i = 0; i < np; i++) {
+        cw[i] = integrate(lagr[i], dimension, sizeFactor_) / sizeFactor_;
     }
 }
 
 template<size_t N>
-void Line<N>::buildCubatureLagrange() {
+void Line<N>::buildCubedLagrange_() {
     // Evaluates Lagrange and Lagrange derived polynomials in cubature points.
     for (std::size_t i = 0; i < np; i++) {
         for (std::size_t c = 0; c < np; c++) {
@@ -142,14 +138,22 @@ void Line<N>::buildCubatureLagrange() {
 }
 
 template<size_t N>
-std::size_t Line<N>::numberOfNodes() {
-    return N + 1;
+std::size_t Line<N>::numberOfNodes_(size_t order) {
+    return order + 1;
 }
 
 template <size_t N>
-Matrix::Dynamic<Int> Line<N>::PMatrix(const std::size_t n,
-                                              const std::size_t s) const {
-    std::size_t np = numberOfNodes(n);
+Matrix::Static<Int,Line<N>::np,Line<N>::np> Line<N>::PMatrix(
+        const std::size_t s){
+    Matrix::Static<Int,np,np> res;
+    res = PMatrix_(N,s);
+    return res;
+}
+
+template <size_t N>
+Matrix::Dynamic<Int> Line<N>::PMatrix_(const std::size_t n,
+                                              const std::size_t s){
+    std::size_t np = numberOfNodes_(n);
     Matrix::Dynamic<Int> res(np,np);
     if (s == 0) {
         res.eye();
@@ -164,30 +168,29 @@ Matrix::Dynamic<Int> Line<N>::PMatrix(const std::size_t n,
 
 template <size_t N>
 Matrix::Static<Int,Line<N>::nfp,Line<N>::np> Line<N>::RMatrix(
-        const std::size_t s) const {
+        const std::size_t s) {
     // Creates extraction matrix R for face 1.
     Matrix::Static<Int,nfp,np> Raux;
     Raux.zeros();
     Raux(0,0) = (Int) 1;
-    Matrix::Static<Int,nfp,np> res = Raux * P[s];
+    Matrix::Static<Int,np,np> P = PMatrix(s);
+    Matrix::Static<Int,nfp,np> res = Raux * P;
     return res;
 }
 
 template <size_t N>
 void Line<N>::printInfo() const {
     std::cout << " --- Line Information --- " << std::endl;
-    std::cout << " Order:                         " << n << std::endl;
-    std::cout << " Number of nodes:               " << np << std::endl;
-    std::cout << " Number of face nodes:          " << nfp << std::endl;
+    Simplex::printInfo();
     std::cout << " Rotation matrices:             " << std::endl;
     for (std::size_t i = 0; i < nsc; i++) {
         std::cout << "Rotation around simplex coordinate #" << i << std::endl;
-        P[i].printInfo();
+        PMatrix_(N, i).printInfo();
     }
     std::cout << " Extraction matrices:           " << std::endl;
     for (std::size_t i = 0; i < nsc; i++) {
         std::cout << "Extraction matrices for face #" << i << std::endl;
-        R[i].printInfo();
+        RMatrix(i).printInfo();
     }
     std::cout << " List of node indices:          " << std::endl;
     for (std::size_t i = 0; i < np; i++) {

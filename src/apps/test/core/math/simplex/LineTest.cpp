@@ -28,5 +28,8 @@ TEST(MathMatrixSimplexLineTest, BasicOperations) {
     static const size_t N = 1;
     Simplex::Line<N> line;
 
-    EXPECT_EQ(2, Simplex::Line<N>::faces);
+    EXPECT_EQ(Simplex::Line<N>::n, line.order());
+    EXPECT_EQ(2, line.numberOfSimplexCoordinates());
+
+    line.printInfo();
 }

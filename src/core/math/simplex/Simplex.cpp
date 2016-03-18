@@ -116,16 +116,20 @@ void Simplex::cubatureLagrangePolynomials(Function::Polynomial<Real>* res,
                                           const std::size_t np,
                                           const std::size_t nsc) const {
     // Computes Sylvester's polynomials.
-    Function::Polynomial<Real> pol[10+1];
-    for (std::size_t i = 0; i < (n + 1); i++)
+    Function::Polynomial<Real> pol[n+1];
+    for (std::size_t i = 0; i < (n + 1); i++) {
         pol[i] = silvesterPol(i,n);
+    }
     // Computes Lagrange's polynomials.
-    for (std::size_t i = 0; i < np; i++)
-        for (std::size_t j = 0; j < nsc; j++)
-            if (j == 0)
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t j = 0; j < nsc; j++) {
+            if (j == 0) {
                 res[i] = pol[cubatureNodeIndex(i,j)];
-            else
+            } else {
                 res[i] ^= pol[cubatureNodeIndex(i,j)];
+            }
+        }
+    }
 }
 
 Real Simplex::integrate(const Function::Polynomial<Real> pol,
@@ -148,6 +152,14 @@ Real Simplex::integrate(const Function::Polynomial<Real> pol,
     return (sizeFactor * sum);
 }
 
+void Simplex::printInfo() const {
+    std::cout << " Order:                         " << order() << std::endl;
+//    std::cout << " Number of nodes:               " << np << std::endl;
+//    std::cout << " Number of face nodes:          " << nfp << std::endl;
+}
+
+
 } /* namespace Simplex */
 } /* namespace Math */
 } /* namespace SEMBA */
+
