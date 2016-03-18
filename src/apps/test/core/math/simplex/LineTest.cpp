@@ -25,7 +25,7 @@ using namespace SEMBA;
 using namespace Math;
 
 TEST(MathMatrixSimplexLineTest, BasicOperations) {
-    static const size_t N = 1;
+    static constexpr size_t N = 1;
     Simplex::Line<N> line;
 
     EXPECT_EQ(Simplex::Line<N>::n, line.order());

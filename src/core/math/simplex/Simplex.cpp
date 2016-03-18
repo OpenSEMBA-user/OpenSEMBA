@@ -45,25 +45,12 @@ const Function::Polynomial<Real>& Simplex::getDLagr(
     exit(EXIT_FAILURE);
 }
 
-Real Simplex::getCda(std::size_t i, std::size_t j, std::size_t k) const {
-    exit(EXIT_FAILURE);
-}
-
-inline std::size_t Simplex::nodeIndex(std::size_t i, std::size_t j) const {
-    exit(EXIT_FAILURE);
-}
-
-inline std::size_t Simplex::cubatureNodeIndex(std::size_t i,
-                                              std::size_t j) const {
-    exit(EXIT_FAILURE);
-}
-
 std::size_t Simplex::factorial(std::size_t n) const {
     return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
 
 Function::Polynomial<Real> Simplex::silvesterPol(const std::size_t m,
-                                                 const std::size_t n) const {
+                                                 const std::size_t n) {
     // Purpose: Generates coefficients of the R polynomial as are defined in
     // Sylvester's book page 130. These polynomials have m equispace zeros to
     // the left of m/n and none to the right. These are necessary to build
@@ -93,7 +80,7 @@ Function::Polynomial<Real> Simplex::silvesterPol(const std::size_t m,
 void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
                                   const std::size_t n,
                                   const std::size_t np,
-                                  const std::size_t nsc) const {
+                                  const std::size_t nsc) {
     // Computes Sylvester's polynomials.
     std::vector<Function::Polynomial<Real>> pol(n+1);
     for (std::size_t i = 0; i < (n + 1); i++) {
@@ -106,27 +93,6 @@ void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
                 res[i] = pol[nodeIndex(i,j)];
             } else {
                 res[i] ^= pol[nodeIndex(i,j)];
-            }
-        }
-    }
-}
-
-void Simplex::cubatureLagrangePolynomials(Function::Polynomial<Real>* res,
-                                          const std::size_t n,
-                                          const std::size_t np,
-                                          const std::size_t nsc) const {
-    // Computes Sylvester's polynomials.
-    Function::Polynomial<Real> pol[n+1];
-    for (std::size_t i = 0; i < (n + 1); i++) {
-        pol[i] = silvesterPol(i,n);
-    }
-    // Computes Lagrange's polynomials.
-    for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t j = 0; j < nsc; j++) {
-            if (j == 0) {
-                res[i] = pol[cubatureNodeIndex(i,j)];
-            } else {
-                res[i] ^= pol[cubatureNodeIndex(i,j)];
             }
         }
     }
@@ -156,6 +122,38 @@ void Simplex::printInfo() const {
     std::cout << " Order: " << order() << std::endl;
     std::cout << " Number of nodes: " << numberOfNodes() << std::endl;
     std::cout << " Number of face nodes: " << numberOfFaceNodes() << std::endl;
+    std::cout << " Lagrange polynomials derivatives: " << std::endl;
+    std::cout << " Lagrange polynomials: " << std::endl;
+    for (std::size_t i = 0; i < numberOfNodes(); i++) {
+        std::cout << "Lagrange polynomial of node #" <<  i << std::endl;
+        getLagr(i).printInfo();
+    }
+    for (std::size_t i = 0; i < numberOfNodes(); i++) {
+        for (std::size_t j = 0; j < numberOfFaceNodes(); j++) {
+            std::cout << "Pol. " << i << " derived w.r.t. var."
+                    << j << std::endl;
+            getDLagr(i,j).printInfo();
+        }
+    }
+    std::cout << " List of node indices: " << std::endl;
+    for (std::size_t i = 0; i < numberOfNodes(); i++) {
+        for (std::size_t j = 0; j < numberOfSimplexCoordinates(); j++) {
+            std::cout << " " << nodeIndex(i,j);
+        }
+        std::cout << std::endl;
+    }
+    std::cout << " List of side nodes:    " << std::endl;
+    for (std::size_t f = 0; f < numberOfSimplexCoordinates(); f++) {
+        std::cout << "Face #" << f << ": ";
+        for (std::size_t i = 0; i < numberOfFaceNodes(); i++) {
+            sideNode(f, i);
+        }
+        std::cout << std::endl;
+    }
+    std::cout << " Cubature weights: " << std::endl;
+    for (std::size_t i = 0; i < numberOfNodes(); i++) {
+        std::cout << "Node #" << i << ": " << getWeight(i) << std::endl;
+    }
 }
 
 

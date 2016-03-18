@@ -36,32 +36,31 @@ class Simplex {
 public:
     Simplex();
     virtual ~Simplex();
-    virtual Real getCda(std::size_t i, std::size_t j, std::size_t k) const;
     virtual const Function::Polynomial<Real>& getLagr(
-            const std::size_t i) const;
+            const std::size_t node) const = 0;
     virtual const Function::Polynomial<Real>& getDLagr(
-            const std::size_t i,
-            const std::size_t f) const;
-    virtual std::size_t nodeIndex(const std::size_t i, 
-            const std::size_t j) const;
-    virtual std::size_t cubatureNodeIndex(const std::size_t i,
-            const std::size_t j) const;
+            const std::size_t node,
+            const std::size_t derivedVariable) const;
+    virtual std::size_t nodeIndex(
+            const std::size_t node,
+            const std::size_t index) const = 0;
+    virtual std::size_t sideNode(
+            const std::size_t f,
+            const std::size_t i) const = 0;
+
+    virtual Real getWeight(const size_t node) const = 0;
 
     virtual std::size_t order() const = 0;
     virtual std::size_t numberOfSimplexCoordinates() const = 0;
     virtual std::size_t numberOfNodes() const = 0;
     virtual std::size_t numberOfFaceNodes() const = 0;
 protected:
-    Function::Polynomial<Real> silvesterPol(const std::size_t m,
-            const std::size_t n) const;
-    void lagrangePolynomials(Function::Polynomial<Real>* lagr,
+    static Function::Polynomial<Real> silvesterPol(const std::size_t m,
+            const std::size_t n);
+    static void lagrangePolynomials(Function::Polynomial<Real>* lagr,
             const std::size_t n,
             const std::size_t np,
-            const std::size_t nsc) const;
-    void cubatureLagrangePolynomials(Function::Polynomial<Real>* lagr,
-            const std::size_t n,
-            const std::size_t np,
-            const std::size_t nsc) const;
+            const std::size_t nsc);
     Real integrate(const Function::Polynomial<Real> pol,
             const std::size_t dimension,
             const Real sizeFactor) const;

@@ -33,17 +33,17 @@ namespace Simplex {
 template <size_t N>
 class Line : public Simplex {
 public:
-    static const std::size_t n;
-    static const std::size_t np;
-    static const std::size_t nfp;
-    static const std::size_t nsc;
+    static const std::size_t n = N;
+    static const std::size_t np = N+1;
+    static const std::size_t nfp = 1;
+    static const std::size_t nsc = 2;
 
     Line();
 
     std::size_t order() const {return n;}
-    std::size_t numberOfSimplexCoordinates() {return nsc;}
-    std::size_t numberOfNodes() {return np;}
-    std::size_t numberOfFaceNodes() {return nfp;}
+    std::size_t numberOfSimplexCoordinates() const {return nsc;}
+    std::size_t numberOfNodes() const {return np;}
+    std::size_t numberOfFaceNodes() const {return nfp;}
 
     std::size_t vertex(const std::size_t) const;
     std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
@@ -52,7 +52,8 @@ public:
 
     const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
     const Function::Polynomial<Real>& getDLagr(const std::size_t i,
-                                               const std::size_t f) const;
+            const std::size_t f) const;
+
     void printInfo() const;
 
 private:
@@ -72,15 +73,16 @@ private:
     Matrix::Static<Real,np,np> cwaa[np];
     Matrix::Static<Real,np,np> cwada[np][nsc];
 
-    static Matrix::Static<Int,np,np> PMatrix(const std::size_t s);
-    static Matrix::Static<Int,nfp,np> RMatrix(const std::size_t s);
+    Matrix::Static<Int,np,np> PMatrix(const std::size_t s) const ;
+    Matrix::Static<Int,nfp,np> RMatrix(const std::size_t s) const;
+    Matrix::Dynamic<Int> PMatrix_(
+            const std::size_t n,
+            const std::size_t s) const;
 
-    static Matrix::Dynamic<Int> PMatrix_(const std::size_t n,
-                                 const std::size_t s);
-
-    void buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                          const std::size_t order,
-                          const std::size_t nNodes) const;
+    void buildNodeIndices(
+            Vector::Cartesian<Int,nsc> *res,
+            const std::size_t order,
+            const std::size_t nNodes) const;
     void buildSideNodeIndices();
 
     static std::size_t numberOfNodes_(size_t order);
@@ -90,16 +92,13 @@ private:
 };
 
 template <size_t N>
-const size_t Line<N>::n = N;
-
+const size_t Line<N>::n;
 template <size_t N>
-const size_t Line<N>::np = N + 1;
-
+const size_t Line<N>::np;
 template <size_t N>
-const size_t Line<N>::nfp = 1;
-
+const size_t Line<N>::nfp;
 template <size_t N>
-const size_t Line<N>::nsc = 2;
+const size_t Line<N>::nsc;
 
 template <size_t N>
 const Real Line<N>::sizeFactor_ = 1.0;

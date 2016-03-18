@@ -54,7 +54,7 @@ inline std::size_t Line<N>::vertex(const std::size_t vertexNum) const {
 
 template <size_t N>
 inline std::size_t Line<N>::sideNode(const std::size_t face,
-                                             const std::size_t num) const {
+        const std::size_t num) const {
     return sNId(face, num);
 }
 
@@ -73,8 +73,8 @@ const Function::Polynomial<Real>& Line<N>::getDLagr(
 
 template <size_t N>
 void Line<N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                                       const std::size_t order,
-                                       const std::size_t nNodes) const {
+        const std::size_t order,
+        const std::size_t nNodes) const {
     for (std::size_t i = 0; i < nNodes; i++) {
         res[i](0) = order - i;
         res[i](1) = i;
@@ -144,15 +144,16 @@ std::size_t Line<N>::numberOfNodes_(size_t order) {
 
 template <size_t N>
 Matrix::Static<Int,Line<N>::np,Line<N>::np> Line<N>::PMatrix(
-        const std::size_t s){
+        const std::size_t s) const {
     Matrix::Static<Int,np,np> res;
     res = PMatrix_(N,s);
     return res;
 }
 
 template <size_t N>
-Matrix::Dynamic<Int> Line<N>::PMatrix_(const std::size_t n,
-                                              const std::size_t s){
+Matrix::Dynamic<Int> Line<N>::PMatrix_(
+        const std::size_t n,
+        const std::size_t s) const {
     std::size_t np = numberOfNodes_(n);
     Matrix::Dynamic<Int> res(np,np);
     if (s == 0) {
@@ -168,7 +169,7 @@ Matrix::Dynamic<Int> Line<N>::PMatrix_(const std::size_t n,
 
 template <size_t N>
 Matrix::Static<Int,Line<N>::nfp,Line<N>::np> Line<N>::RMatrix(
-        const std::size_t s) {
+        const std::size_t s) const {
     // Creates extraction matrix R for face 1.
     Matrix::Static<Int,nfp,np> Raux;
     Raux.zeros();
@@ -180,45 +181,19 @@ Matrix::Static<Int,Line<N>::nfp,Line<N>::np> Line<N>::RMatrix(
 
 template <size_t N>
 void Line<N>::printInfo() const {
-    std::cout << " --- Line Information --- " << std::endl;
+    std::cout << " --- Simplex::Line Info --- " << std::endl;
     Simplex::printInfo();
     std::cout << " Rotation matrices:             " << std::endl;
     for (std::size_t i = 0; i < nsc; i++) {
         std::cout << "Rotation around simplex coordinate #" << i << std::endl;
-        PMatrix_(N, i).printInfo();
+        PMatrix(i).printInfo();
     }
     std::cout << " Extraction matrices:           " << std::endl;
     for (std::size_t i = 0; i < nsc; i++) {
         std::cout << "Extraction matrices for face #" << i << std::endl;
         RMatrix(i).printInfo();
     }
-    std::cout << " List of node indices:          " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        nId[i].printInfo();
-        std::cout << std::endl;
-    }
-    std::cout << " List of side nodes indices:    " << std::endl;
-    sNId.printInfo();
-    std::cout << " Lagrange polynomials:          " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        std::cout << "Lagrange polynomial of node #" <<  i << std::endl;
-        lagr[i].printInfo();
-    }
-    std::cout << " Lagrange polynomials derivatives: " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t j = 0; j < nsc; j++) {
-            std::cout << "Pol. " << i << " derived w.r.t. var." 
-                      << j << std::endl;
-            dLagr[i][j].printInfo();
-        }
-    }
-    std::cout << " Cubature positions and weights: " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        std::cout << "#" << i << " ";
-        cPos[i].printInfo();
-        std::cout << " " << cw[i] << std::endl;
-    }
-    std::cout << " --- End of simplex information --- " << std::endl;
+    std::cout << " --- End of Simplex::Line info --- " << std::endl;
 }
 
 } /* namespace Simplex */
