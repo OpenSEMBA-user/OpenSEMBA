@@ -34,13 +34,16 @@ template <size_t N>
 class Line : public Simplex {
 public:
     static const std::size_t n;
+    static const std::size_t np;
+    static const std::size_t nfp;
+    static const std::size_t nsc;
 
     Line();
 
-    virtual std::size_t order() const {return N;}
-    static std::size_t numberOfSimplexCoordinates() {return nsc;}
-    static std::size_t numberOfNodes() {return np;}
-    static std::size_t numberOfFaceNodes() {return nfp;}
+    std::size_t order() const {return n;}
+    std::size_t numberOfSimplexCoordinates() {return nsc;}
+    std::size_t numberOfNodes() {return np;}
+    std::size_t numberOfFaceNodes() {return nfp;}
 
     std::size_t vertex(const std::size_t) const;
     std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
@@ -53,9 +56,6 @@ public:
     void printInfo() const;
 
 private:
-    static const std::size_t np = N+1;
-    static const std::size_t nfp = 1;
-    static const std::size_t nsc = 2;
     static const std::size_t dimension = 1;
 
     Vector::Cartesian<Int,nsc> nId[np];
@@ -91,6 +91,15 @@ private:
 
 template <size_t N>
 const size_t Line<N>::n = N;
+
+template <size_t N>
+const size_t Line<N>::np = N + 1;
+
+template <size_t N>
+const size_t Line<N>::nfp = 1;
+
+template <size_t N>
+const size_t Line<N>::nsc = 2;
 
 template <size_t N>
 const Real Line<N>::sizeFactor_ = 1.0;

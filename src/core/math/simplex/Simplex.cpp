@@ -153,9 +153,9 @@ Real Simplex::integrate(const Function::Polynomial<Real> pol,
 }
 
 void Simplex::printInfo() const {
-    std::cout << " Order:                         " << order() << std::endl;
-//    std::cout << " Number of nodes:               " << np << std::endl;
-//    std::cout << " Number of face nodes:          " << nfp << std::endl;
+    std::cout << " Order: " << order() << std::endl;
+    std::cout << " Number of nodes: " << numberOfNodes() << std::endl;
+    std::cout << " Number of face nodes: " << numberOfFaceNodes() << std::endl;
 }
 
 
