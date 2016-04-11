@@ -159,6 +159,8 @@ namespace Geometry {
 typedef Element::Group<      ElemR>      ElemRGroup;
 typedef Element::Group<const ElemR> ConstElemRGroup;
 
+typedef Element::Group<      SurfR>      SurfRGroup;
+
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
