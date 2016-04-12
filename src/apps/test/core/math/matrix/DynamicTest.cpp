@@ -102,3 +102,51 @@ TEST_F(MathMatrixDynamicTest, QRdecomposition) {
     d.factorizeQR_(Q, R);
     EXPECT_EQ(Q*R, d);
 }
+
+TEST_F(MathMatrixDynamicTest, HessenbergForm) {
+    Dynamic<double> d(3,3);
+    d(0,0) = 1.0; d(0,1) = 5.0; d(0,2) = 13.0;
+    d(1,0) = 2.0; d(1,1) = 7.0; d(1,2) = 17.0;
+    d(2,0) = 3.0; d(2,1) = 11.0; d(2,2) = 19.0;
+
+    Dynamic<double> H = d.hessenbergForm();
+
+    for (size_t i = 0; i < H.nRows(); i++) {
+        for (size_t j = 0; j < i; j++) {
+            EXPECT_EQ(0.0, H.val(i,j));
+        }
+    }
+
+    H.printInfo();
+}
+
+TEST_F(MathMatrixDynamicTest, QRiterativeAlgorithm) {
+    Dynamic<double> d(2,2);
+    std::vector<double> d_expectedEigen, d_actualEigen;
+    d(0,0) = 2.0; d(0,1) = 1.0;
+    d(1,0) = 1.0; d(1,1) = 2.0;
+
+    d_expectedEigen.push_back(3.0);
+    d_expectedEigen.push_back(1.0);
+
+    d_actualEigen = d.computeEigenvalues_();
+
+    for (size_t i = 0; i < d_expectedEigen.size(); i++) {
+        EXPECT_NEAR(d_expectedEigen[i], d_actualEigen[i], 1e-8);
+    }
+
+    Dynamic<double> c(3,3);
+    std::vector<double> c_expectedEigen, c_actualEigen;
+    c(0,0) = 3.0; c(0,1) = 2.0; c(0,2) = 4.0;
+    c(1,0) = 2.0; c(1,1) = 0.0; c(1,2) = 2.0;
+    c(2,0) = 4.0; c(2,1) = 2.0; c(2,2) = 3.0;
+
+    c_expectedEigen.push_back(8.0);
+    c_expectedEigen.push_back(-1.0);
+    c_expectedEigen.push_back(-1.0);
+    c_actualEigen = c.computeEigenvalues_();
+
+    for (int i = 0; i < c_expectedEigen.size(); i++) {
+        EXPECT_NEAR(c_expectedEigen[i], c_actualEigen[i], 1e-10);
+    }
+}
