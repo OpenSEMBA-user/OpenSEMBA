@@ -109,6 +109,8 @@ TEST_F(MathMatrixDynamicTest, HessenbergForm) {
     d(1,0) = 2.0; d(1,1) = 7.0; d(1,2) = 17.0;
     d(2,0) = 3.0; d(2,1) = 11.0; d(2,2) = 19.0;
 
+    //d.printInfo();
+
     Dynamic<double> H = d.hessenbergForm();
 
     for (size_t i = 0; i < H.nRows(); i++) {
@@ -117,7 +119,7 @@ TEST_F(MathMatrixDynamicTest, HessenbergForm) {
         }
     }
 
-    H.printInfo();
+    //H.printInfo();
 }
 
 TEST_F(MathMatrixDynamicTest, QRiterativeAlgorithm) {

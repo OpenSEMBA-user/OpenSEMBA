@@ -27,7 +27,7 @@ target   = release
 compiler = gnu
 APP_VERSION=\"0.11\"
 
-FFTW3_SUPPORT=yes#
+FFTW3_SUPPORT=no#
 
 DEFINES += APP_VERSION=$(APP_VERSION)
 # ==================== Intel Compiler =========================================
