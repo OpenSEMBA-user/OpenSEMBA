@@ -518,6 +518,26 @@ bool Matrix<T>::factorizeQR_(Matrix<T>& Q, Matrix<T>& R) {
     return true;
 }
 
+/**
+ * Sums the absolute values of all the elements below the diagonal.
+ * Currently (mis)used in computeEigenvalues_ function.
+ * @returns An element of class T with the sum of the absolute (or norm
+ *             if the elements are complex numbers) values of all the
+ *             elements below the diagonal.
+ */
+template <class T>
+T Matrix<T>::belowDiagonalAbsSum_(){
+    T sum = abs(val(1,0));
+
+    for (size_t i = 2; i < nRows(); i++) {
+        for (size_t j = 0; j < i; j++) {
+            sum += abs(this->val(i,j));
+        }
+    }
+
+    return sum;
+}
+
 } /* namespace MAtrix */
 } /* namespace Math */
 } /* namespace SEMBA */

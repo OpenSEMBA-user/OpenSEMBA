@@ -91,6 +91,7 @@ protected:
     bool isEQ_(const T* x1, const T* x2, const std::size_t vS) const;
     bool isGEQ_(const T* x1, const T* x2, const std::size_t vS) const;
     bool isLEQ_(const T* x1, const T* x2, const std::size_t vS) const;
+    T belowDiagonalAbsSum_();
 
 private:
     void QSRows_(std::size_t p, std::size_t r,
