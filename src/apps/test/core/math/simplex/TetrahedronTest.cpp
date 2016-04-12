@@ -24,23 +24,23 @@
 using namespace SEMBA;
 using namespace Math;
 
-TEST_F(MathMatrixSimplexTetrahedronTest, BasicOperations) {
-   Static<double,2,2> c;
-   // Addition
-   c(0,0) = 8.0; c(0,1) = 13.0;
-   c(1,0) = 16.0; c(1,1) = 22.0;
-   EXPECT_EQ(c, a_ + b_);
-   // Product
-   c(0,0) = 33.0; c(0,1) = 45.0;
-   c(1,0) = 86.0; c(1,1) = 118.0;
-   EXPECT_EQ(c, a_ * b_);
-   // Operator+=
-   c.zeros();
-   Static<double,2,2> def;
-   EXPECT_EQ(c, def);
-   c += a_;
-   EXPECT_EQ(c, a_);
-   EXPECT_EQ(c *= 2.0, a_ * 2.0);
-   // Transpose
-   EXPECT_EQ(a_, a_.transpose().transpose());
-}
+//TEST_F(MathMatrixSimplexTetrahedronTest, BasicOperations) {
+//   Static<double,2,2> c;
+//   // Addition
+//   c(0,0) = 8.0; c(0,1) = 13.0;
+//   c(1,0) = 16.0; c(1,1) = 22.0;
+//   EXPECT_EQ(c, a_ + b_);
+//   // Product
+//   c(0,0) = 33.0; c(0,1) = 45.0;
+//   c(1,0) = 86.0; c(1,1) = 118.0;
+//   EXPECT_EQ(c, a_ * b_);
+//   // Operator+=
+//   c.zeros();
+//   Static<double,2,2> def;
+//   EXPECT_EQ(c, def);
+//   c += a_;
+//   EXPECT_EQ(c, a_);
+//   EXPECT_EQ(c *= 2.0, a_ * 2.0);
+//   // Transpose
+//   EXPECT_EQ(a_, a_.transpose().transpose());
+//}
