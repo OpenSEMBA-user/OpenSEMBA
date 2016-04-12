@@ -18,35 +18,29 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+#include "gtest/gtest.h"
+#include "math/simplex/Tetrahedron.h"
 
-#ifndef FIELD_H_
-#define FIELD_H_
+using namespace SEMBA;
+using namespace Math;
 
-#include <cstdlib>
-
-#include "math/vector/Cartesian.h"
-
-namespace SEMBA {
-namespace Math {
-
-template <class T, std::size_t D, std::size_t N>
-class Field {
-public:
-    Field();
-    virtual ~Field();
-
-    T*       operator()(const std::size_t i);
-    const T* operator()(const std::size_t i) const;
-
-    Vector::Cartesian<T,D> getCVec(const std::size_t i) const;
-
-private:
-    array<T, D*N> val_;
-};
-
-} /* namespace Math */
-} /* namespace SEMBA */
-
-#include "Field.hpp"
-
-#endif /* FIELD_H_ */
+TEST_F(MathMatrixSimplexTetrahedronTest, BasicOperations) {
+   Static<double,2,2> c;
+   // Addition
+   c(0,0) = 8.0; c(0,1) = 13.0;
+   c(1,0) = 16.0; c(1,1) = 22.0;
+   EXPECT_EQ(c, a_ + b_);
+   // Product
+   c(0,0) = 33.0; c(0,1) = 45.0;
+   c(1,0) = 86.0; c(1,1) = 118.0;
+   EXPECT_EQ(c, a_ * b_);
+   // Operator+=
+   c.zeros();
+   Static<double,2,2> def;
+   EXPECT_EQ(c, def);
+   c += a_;
+   EXPECT_EQ(c, a_);
+   EXPECT_EQ(c *= 2.0, a_ * 2.0);
+   // Transpose
+   EXPECT_EQ(a_, a_.transpose().transpose());
+}

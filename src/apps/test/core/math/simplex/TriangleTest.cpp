@@ -18,35 +18,16 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
+#include "gtest/gtest.h"
+#include "math/simplex/Triangle.h"
 
-#ifndef FIELD_H_
-#define FIELD_H_
+using namespace SEMBA;
+using namespace Math;
 
-#include <cstdlib>
+TEST(MathMatrixSimplexTriangleTest, BasicOperations) {
+    static constexpr size_t N = 1;
+    Simplex::Triangle<N> tri;
 
-#include "math/vector/Cartesian.h"
-
-namespace SEMBA {
-namespace Math {
-
-template <class T, std::size_t D, std::size_t N>
-class Field {
-public:
-    Field();
-    virtual ~Field();
-
-    T*       operator()(const std::size_t i);
-    const T* operator()(const std::size_t i) const;
-
-    Vector::Cartesian<T,D> getCVec(const std::size_t i) const;
-
-private:
-    array<T, D*N> val_;
-};
-
-} /* namespace Math */
-} /* namespace SEMBA */
-
-#include "Field.hpp"
-
-#endif /* FIELD_H_ */
+    EXPECT_EQ(Simplex::Triangle<N>::n, tri.order());
+    EXPECT_EQ(Simplex::Triangle<N>::nsc, tri.numberOfSimplexCoordinates());
+}

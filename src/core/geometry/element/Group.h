@@ -160,6 +160,7 @@ typedef Element::Group<      ElemR>      ElemRGroup;
 typedef Element::Group<const ElemR> ConstElemRGroup;
 
 typedef Element::Group<      SurfR>      SurfRGroup;
+typedef Element::Group<       VolR>      VolRGroup;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
