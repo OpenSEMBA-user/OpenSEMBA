@@ -93,7 +93,7 @@ private:
     Source::Group<>* readEMSources();
     OutputRequest::Group<>* readOutputRequests();
     PhysicalModel::Group<>* readMaterials();
-    Geometry::Mesh::Geometric* readMesh();
+    Geometry::Mesh::Geometric* readGeometricMesh();
     ProblemSize readProblemSize();
     PhysicalModel::Volume::Dispersive* readDispersiveMatFile(
             const MatId id,

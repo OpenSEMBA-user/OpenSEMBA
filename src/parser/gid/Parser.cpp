@@ -83,7 +83,7 @@ Data* Parser::read() {
     pSize_ = readProblemSize();
     physicalModels_ = readMaterials();
     res->physicalModels = physicalModels_;
-    mesh_ = readMesh();
+    mesh_ = readGeometricMesh();
     res->mesh = mesh_;
     res->sources = readEMSources();
     res->outputRequests = readOutputRequests();
@@ -143,7 +143,7 @@ void Parser::readSolverSettings(Solver::Settings& opts,
     }
 }
 
-Geometry::Mesh::Geometric* Parser::readMesh() {
+Geometry::Mesh::Geometric* Parser::readGeometricMesh() {
     const Geometry::Grid3& grid = readCartesianGrid();
     Geometry::Layer::Group<> lG = readLayers();
     Geometry::Coordinate::Group<Geometry::CoordR3> cG = readCoordinates();
@@ -1060,7 +1060,7 @@ Geometry::Grid3 Parser::readCartesianGrid() {
                 } else if(label.find("End of Grid") != label.npos) {
                     finished = true;
                     if (!gridFound) {
-                        return NULL;
+                        throw std::logic_error("Grid not found");
                     }
                 }
                 if (f_in.eof()) {
