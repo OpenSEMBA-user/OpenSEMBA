@@ -70,9 +70,17 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ${CMAKE_CURRENT_LIST_DIR})
+include_directories(${gtest_SOURCE_DIR}/include
+                    ${gtest_SOURCE_DIR}
+                    ${CMAKE_CURRENT_LIST_DIR})
 add_sources(. SRCS)
 
+enable_testing() 
 add_executable(opensemba_test ${SRCS})
-target_link_libraries(opensemba_test opensemba parserGiD adapterFDTD gtest gtest_main)
-set_target_properties(opensemba_test PROPERTIES OUTPUT_NAME test)
+target_link_libraries(opensemba_test opensemba_core_argument
+                                     opensemba_core_data
+                                     opensemba_parser_gid
+                                     opensemba_parser_stl
+                                     gtest
+                                     gtest_main)
+add_test(opensemba_test opensemba_test)

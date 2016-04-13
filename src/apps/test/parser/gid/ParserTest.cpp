@@ -27,7 +27,11 @@ using namespace Parser;
 Data* ParserGiDParserTest::newSmb(const string project) {
     const string testFolder("./testData/");
     const string testFile = testFolder + project + ".gid/" + project + ".smb";
+#ifndef _WIN32
     string fullPath((const char*) realpath(testFile.c_str(), NULL));
+#else
+    string fullPath = testFile;
+#endif
     GiD::Parser parser(fullPath);
     EXPECT_TRUE(parser.canOpen());
     Data* res = parser.read();

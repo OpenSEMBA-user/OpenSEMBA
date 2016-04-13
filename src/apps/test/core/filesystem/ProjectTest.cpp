@@ -74,5 +74,5 @@ TEST_F(ProjectTest, createDirs) {
 }
 
 #else
-    #warning "Filesystem::Project tests are not implemented for WIN32."
+#pragma message("Filesystem::Project tests are not implemented for WIN32.")
 #endif

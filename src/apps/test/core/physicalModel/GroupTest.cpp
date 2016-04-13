@@ -38,6 +38,6 @@ TEST_F(PhysicalModelGroupTest, bound) {
     bounds.add(new Bound::PMC(Id(2)));
 
     EXPECT_NO_THROW(bounds.get(0));
-    const PhysicalModel::PhysicalModel& bound = *bounds.get(0);
+    const SEMBA::PhysicalModel::PhysicalModel& bound = *bounds.get(0);
     EXPECT_TRUE(bound.is<Bound::PEC>());
 }
