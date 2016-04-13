@@ -75,7 +75,6 @@ include_directories(${gtest_SOURCE_DIR}/include
                     ${CMAKE_CURRENT_LIST_DIR})
 add_sources(. SRCS)
 
-enable_testing() 
 add_executable(opensemba_test ${SRCS})
 target_link_libraries(opensemba_test opensemba_core_argument
                                      opensemba_core_data
@@ -83,4 +82,3 @@ target_link_libraries(opensemba_test opensemba_core_argument
                                      opensemba_parser_stl
                                      gtest
                                      gtest_main)
-add_test(opensemba_test opensemba_test)
