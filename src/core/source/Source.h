@@ -71,11 +71,10 @@ public:
     Magnitude::Numerical* exportToFile(const FileSystem::Project& file,
                                        const Math::Real step,
                                        const Math::Real finalTime) const;
+    const Magnitude::Magnitude* getMagnitude() const;
 
     virtual void printInfo() const;
 
-protected:
-    const Magnitude::Magnitude* getMagnitude() const;
 
 private:
     const Magnitude::Magnitude* magnitude_;
