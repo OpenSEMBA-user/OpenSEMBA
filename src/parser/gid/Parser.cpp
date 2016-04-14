@@ -1044,6 +1044,12 @@ Geometry::Grid3 Parser::readCartesianGrid() {
                         numElems(0) = (Math::Int) aux(0);
                         numElems(1) = (Math::Int) aux(1);
                         numElems(2) = (Math::Int) aux(2);
+                        if (numElems == Math::CVecR3()) {
+                            std::cerr << "WARNING @ Parser: "
+                                 << "Number of grid cells is zero. "
+                                 << "Definition by number of cells was used. "
+                                 << std::endl;
+                        }
                     } else {
                         steps = aux;
                     }
