@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(gidpost C)
+project(gidpost C CXX)
 
 file(GLOB_RECURSE HDRS RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.h)
 file(GLOB_RECURSE SRCS RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.c)
