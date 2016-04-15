@@ -135,15 +135,25 @@ std::string Project::getBasename() const {
 }
 
 std::string Project::getFolder() const {
-    char *cstr = new char[length() + 1];
-    strcpy(cstr, c_str());
 #ifdef _WIN32
+    std::string aux;
+    for (std::size_t i = 0; i < this->size(); i++) {
+        if ((*this)[i] == '/') {
+            aux.push_back('\\');
+        } else {
+            aux.push_back((*this)[i]);
+        }
+    }
+    char *cstr = new char[aux.length() + 1];
+    strcpy(cstr, aux.c_str());
     PathRemoveFileSpec(cstr);
     std::string folder(cstr);
     if (!folder.empty()) {
         folder += "\\";
     }
 #else
+    char *cstr = new char[length() + 1];
+    strcpy(cstr, c_str());
     std::string folder(dirname(cstr));
     delete [] cstr;
 #endif
