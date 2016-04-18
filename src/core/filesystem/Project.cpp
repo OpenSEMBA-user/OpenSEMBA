@@ -124,10 +124,10 @@ std::string Project::getFilename() const {
 
 std::string Project::getBasename() const {
 #ifdef _WIN32
-    char *cstr = new char[getFilename().length() + 1];
-    std::strcpy(cstr, getFilename().c_str());
-    PathFindFileName(cstr);
-    std::string res(cstr);
+    char* fname = new char[getFilename().size() + 1];
+    char* ext   = new char[getFilename().size() + 1];
+    _splitpath(getFilename().c_str(), NULL, NULL, fname, ext);
+    std::string res = std::string(fname) + ext;
 #else
     std::string res(basename(const_cast<char*>(c_str())));
 #endif
@@ -136,16 +136,8 @@ std::string Project::getBasename() const {
 
 std::string Project::getFolder() const {
 #ifdef _WIN32
-    std::string aux;
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if ((*this)[i] == '/') {
-            aux.push_back('\\');
-        } else {
-            aux.push_back((*this)[i]);
-        }
-    }
-    char *cstr = new char[aux.length() + 1];
-    strcpy(cstr, aux.c_str());
+    char *cstr = new char[getFilename().length() + 1];
+    strcpy(cstr, getFilename().c_str());
     PathRemoveFileSpec(cstr);
     std::string folder(cstr);
     if (!folder.empty()) {
