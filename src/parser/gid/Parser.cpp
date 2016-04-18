@@ -515,7 +515,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                     Math::Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
-                    OutputRequest::FarField* oRFF = 
+                    OutputRequest::FarField* oRFF =
                         new OutputRequest::FarField(
                             domain, name, elems,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi);

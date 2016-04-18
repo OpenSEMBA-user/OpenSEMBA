@@ -58,7 +58,8 @@ public:
         nortonCurrentGenerator,
         couplingCrossSection,
         poyntingVector,
-        energy
+        energy,
+        electricFarField
     };
 
     Base();

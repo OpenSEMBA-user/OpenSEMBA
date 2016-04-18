@@ -27,11 +27,11 @@
 namespace SEMBA {
 namespace OutputRequest {
 
-class FarField : public virtual OutputRequest<Geometry::Elem> {
+class FarField : public virtual OutputRequest<Geometry::Vol> {
 public:
     FarField(const Domain& domain,
              const std::string& name,
-             const Geometry::Element::Group<Geometry::Elem>& box,
+             const Geometry::Element::Group<Geometry::Vol>& box,
              const Math::Real iTh, const Math::Real fTh, const Math::Real sTh,
              const Math::Real iPhi, const Math::Real fPhi,
              const Math::Real sPhi);
@@ -49,6 +49,7 @@ public:
     Math::Real getFinalPhi() const;
     Math::Real getStepPhi() const;
 
+    void printInfo() const;
 private:
     Math::Real initialTheta_, finalTheta_, stepTheta_;
     Math::Real initialPhi_, finalPhi_, stepPhi_;

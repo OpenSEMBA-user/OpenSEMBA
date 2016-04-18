@@ -26,14 +26,14 @@ namespace OutputRequest {
 
 FarField::FarField(const Domain& domain,
                    const std::string& name,
-                   const Geometry::Element::Group<Geometry::Elem>& elem,
+                   const Geometry::Element::Group<Geometry::Vol>& elem,
                    const Math::Real iTh, const Math::Real fTh,
                    const Math::Real sTh,
                    const Math::Real iPhi, const Math::Real fPhi,
                    const Math::Real sPhi)
 :   Domain(domain),
-    SEMBA::OutputRequest::Base(electric, name),
-    Geometry::Element::Group<const Geometry::Elem>(elem) {
+    SEMBA::OutputRequest::Base(electricFarField, name),
+    Geometry::Element::Group<const Geometry::Vol>(elem) {
 
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
@@ -41,7 +41,7 @@ FarField::FarField(const Domain& domain,
 FarField::FarField(const FarField& rhs)
 :   Domain(rhs),
     SEMBA::OutputRequest::Base(rhs),
-    Geometry::Element::Group<const Geometry::Elem>(rhs) {
+    Geometry::Element::Group<const Geometry::Vol>(rhs) {
 
     initialTheta_ = rhs.initialTheta_;
     finalTheta_ = rhs.finalTheta_;
@@ -93,6 +93,16 @@ Math::Real FarField::getFinalPhi() const {
 
 Math::Real FarField::getStepPhi() const {
     return stepPhi_;
+}
+
+void FarField::printInfo() const {
+    OutputRequest<Geometry::Vol>::printInfo();
+    std::cout << "Initial theta: " << getInitialTheta() << std::endl;
+    std::cout << "Final theta: " << getFinalTheta() << std::endl;
+    std::cout << "Step theta: " << getStepTheta() << std::endl;
+    std::cout << "Initial phi: " << getInitialPhi() << std::endl;
+    std::cout << "Final phi: " << getFinalPhi() << std::endl;
+    std::cout << "Step phi: " << getStepPhi() << std::endl;
 }
 
 void FarField::setThetaAndPhi(
