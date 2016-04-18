@@ -152,3 +152,39 @@ TEST_F(MathMatrixDynamicTest, QRiterativeAlgorithm) {
         EXPECT_NEAR(c_expectedEigen[i], c_actualEigen[i], 1e-10);
     }
 }
+
+#ifdef EIGEN_SUPPORT
+
+#include <Eigen/Dense>
+#include <Eigen/Eigenvalues>
+
+TEST_F(MathMatrixDynamicTest, eigenLibraryPOC) {
+	Eigen::Matrix2d A;
+
+	A <<	3, -2,
+			4, -1;
+
+	Eigen::ComplexEigenSolver<Eigen::Matrix2d> eigenSolver;
+	eigenSolver.compute(A);
+
+    EXPECT_NEAR(eigenSolver.eigenvalues()[0].real(), 1.0, 1e-10);
+    EXPECT_NEAR(eigenSolver.eigenvalues()[0].imag(), -2.0, 1e-10);
+
+    EXPECT_NEAR(eigenSolver.eigenvalues()[1].real(), 1.0, 1e-10);
+    EXPECT_NEAR(eigenSolver.eigenvalues()[1].imag(), 2.0, 1e-10);
+
+	Eigen::Matrix2cd actual_A = eigenSolver.eigenvectors() * eigenSolver.eigenvalues().asDiagonal() * eigenSolver.eigenvectors().inverse();
+
+    for (size_t i = 0; i < 2; i++) {
+        for (size_t j = 0; j < 2; j++) {
+            std::complex<double> actual_elem = actual_A(i, j);
+            std::complex<double> expect_elem = A(i, j);
+
+            EXPECT_NEAR(actual_elem.real(), expect_elem.real(), 1e-10);
+            EXPECT_NEAR(actual_elem.imag(), expect_elem.imag(), 1e-10);
+        }
+    }
+	// EXPECT_EQ(A, computedA);
+}
+
+#endif
