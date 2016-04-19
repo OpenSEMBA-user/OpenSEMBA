@@ -33,7 +33,7 @@ namespace Mesher {
 
 Options::Options() {
     locationInMeshSet_ = false;
-    mesher_ = Mesher::ugrMesher;
+    mesher_ = Mesher::zMesher;
     mode_ = Mode::conformal;
     bruteForceVolumes_ = false;
     scalingFactor_ = 1.0;
@@ -299,8 +299,8 @@ bool Options::isGridStepSet() const {
 }
 
 Options::Mesher Options::strToMesher(std::string str) {
-    if (str.compare("ugrMesher")==0) {
-        return Mesher::ugrMesher;
+    if (str.compare("ConformalMesher")==0) {
+        return Mesher::conformalMesher;
     } else if (str.compare("zMesher")==0) {
         return Mesher::zMesher;
     } else if (str.compare("OpenFOAM")==0) {

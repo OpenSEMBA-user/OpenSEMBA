@@ -90,8 +90,9 @@ public:
                   std::size_t firstCol,
                   std::size_t lastCol) const;
 
+#ifdef EIGEN_SUPPORT
+#endif
 
-    Dynamic<T> hessenbergForm();
     std::vector<T> computeEigenvalues_(int maxIter = 5000, float tol = 1e-50);
 
 private:

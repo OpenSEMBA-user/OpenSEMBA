@@ -21,8 +21,13 @@
 
 #include <utility>
 
+#ifdef EIGEN_SUPPORT
+#include <eigen3/Eigen/Dense>
+#endif
+
 #include "gtest/gtest.h"
 #include "math/matrix/Dynamic.h"
+
 
 using namespace SEMBA;
 using namespace Math;
@@ -122,33 +127,34 @@ TEST_F(MathMatrixDynamicTest, HessenbergForm) {
     //H.printInfo();
 }
 
-TEST_F(MathMatrixDynamicTest, QRiterativeAlgorithm) {
-    Dynamic<double> d(2,2);
-    std::vector<double> d_expectedEigen, d_actualEigen;
-    d(0,0) = 2.0; d(0,1) = 1.0;
-    d(1,0) = 1.0; d(1,1) = 2.0;
+#ifdef EIGEN_SUPPORT
+TEST_F(MathMatrixDynamicTest, eigenLibraryPOC) {
+	Eigen::Matrix2d A;
 
-    d_expectedEigen.push_back(3.0);
-    d_expectedEigen.push_back(1.0);
+	A <<	3, -2,
+			4, -1;
 
-    d_actualEigen = d.computeEigenvalues_();
+	Eigen::ComplexEigenSolver<Eigen::Matrix2d> eigenSolver;
+	eigenSolver.compute(A);
 
-    for (size_t i = 0; i < d_expectedEigen.size(); i++) {
-        EXPECT_NEAR(d_expectedEigen[i], d_actualEigen[i], 1e-8);
+    EXPECT_NEAR(eigenSolver.eigenvalues()[0].real(), 1.0, 1e-10);
+    EXPECT_NEAR(eigenSolver.eigenvalues()[0].imag(), -2.0, 1e-10);
+
+    EXPECT_NEAR(eigenSolver.eigenvalues()[1].real(), 1.0, 1e-10);
+    EXPECT_NEAR(eigenSolver.eigenvalues()[1].imag(), 2.0, 1e-10);
+
+	Eigen::Matrix2cd actual_A = eigenSolver.eigenvectors() * eigenSolver.eigenvalues().asDiagonal() * eigenSolver.eigenvectors().inverse();
+
+    for (size_t i = 0; i < 2; i++) {
+        for (size_t j = 0; j < 2; j++) {
+            std::complex<double> actual_elem = actual_A(i, j);
+            std::complex<double> expect_elem = A(i, j);
+
+            EXPECT_NEAR(actual_elem.real(), expect_elem.real(), 1e-10);
+            EXPECT_NEAR(actual_elem.imag(), expect_elem.imag(), 1e-10);
+        }
     }
-
-    Dynamic<double> c(3,3);
-    std::vector<double> c_expectedEigen, c_actualEigen;
-    c(0,0) = 3.0; c(0,1) = 2.0; c(0,2) = 4.0;
-    c(1,0) = 2.0; c(1,1) = 0.0; c(1,2) = 2.0;
-    c(2,0) = 4.0; c(2,1) = 2.0; c(2,2) = 3.0;
-
-    c_expectedEigen.push_back(8.0);
-    c_expectedEigen.push_back(-1.0);
-    c_expectedEigen.push_back(-1.0);
-    c_actualEigen = c.computeEigenvalues_();
-
-    for (int i = 0; i < c_expectedEigen.size(); i++) {
-        EXPECT_NEAR(c_expectedEigen[i], c_actualEigen[i], 1e-10);
-    }
+	// EXPECT_EQ(A, computedA);
 }
+
+#endif

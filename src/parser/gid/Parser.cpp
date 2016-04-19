@@ -515,7 +515,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                     Math::Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
                     getline(f_in, line);
-                    OutputRequest::FarField* oRFF = 
+                    OutputRequest::FarField* oRFF =
                         new OutputRequest::FarField(
                             domain, name, elems,
                             iTh, fTh, sTh, iPhi, fPhi, sPhi);
@@ -574,17 +574,14 @@ ProblemSize Parser::readProblemSize() {
                     finished = true;
                 }
                 if (f_in.eof()) {
-                    std::cerr << std::endl 
-                              << "ERROR @ Parser::readProblemSize(): "
-                              << "End of problem size label not found"
-                              << std::endl;
+                    throw std::logic_error(
+                            "End of problem size label not found");
                 }
             }
         }
     }
     if (!problemSizeFound) {
-        std::cerr << std::endl << "ERROR @ Parser::readProblemSize: "
-                  << "Problem size label not found." << std::endl;
+        throw std::logic_error("End of problem size label not found");
     }
     return res;
 }
@@ -1424,25 +1421,6 @@ Source::Generator::Hardness Parser::strToGeneratorHardness(std::string str) {
     }
 }
 
-//OptionsMesher::BoundType Parser::strToBoundType(std::string str) {
-//    str = trim(str);
-//    if (str.compare("PEC")==0) {
-//        return OptionsMesher::pec;
-//    } else if (str.compare("PMC")==0) {
-//        return OptionsMesher::pmc;
-//    } else if (str.compare("PML")==0) {
-//        return OptionsMesher::pml;
-//    } else if (str.compare("Periodic")==0) {
-//        return OptionsMesher::periodic;
-//    } else if (str.compare("MUR1")==0) {
-//        return OptionsMesher::mur1;
-//    } else if (str.compare("MUR2")==0) {
-//        return OptionsMesher::mur2;
-//    } else {
-//        throw std::logic_error("Unrecognized bound label: " + str);
-//    }
-//}
-
 PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
     str = trim(str);
     if (str.compare("PEC")==0) {
@@ -1657,90 +1635,6 @@ Source::Magnitude::Magnitude* Parser::readMagnitude(const std::string typeIn) {
             "Unable to recognize magnitude type when reading excitation.");
 }
 
-//OptionsMesher::Mesher Parser::strToMesher(std::string str) {
-//    str = trim(str);
-//    if (str.compare("ugrMesher")==0) {
-//        return OptionsMesher::ugrMesher;
-//    } else if (str.compare("zMesher")==0) {
-//        return OptionsMesher::zMesher;
-//    } else if (str.compare("OpenFOAM")==0) {
-//        return OptionsMesher::openfoam;
-//    } else if (str.compare("None")==0) {
-//        return OptionsMesher::none;
-//    } else {
-//        throw std::logic_error("Unreckognized label: " + str);
-//    }
-//}
-//
-//OptionsMesher::Mode Parser::strToMesherMode(std::string str)  {
-//    str = trim(str);
-//    if (str.compare("Structured")==0) {
-//        return OptionsMesher::structured;
-//    } else if (str.compare("Relaxed")==0) {
-//        return OptionsMesher::relaxed;
-//    } else if (str.compare("Slanted")==0) {
-//        return OptionsMesher::slanted;
-//    } else if (str.compare("Conformal")==0) {
-//        return OptionsMesher::conformal;
-//    } else {
-//        throw std::logic_error("Unreckognized label: " + str);
-//    }
-//}
-//
-//OptionsSolver::Solver Parser::strToSolver(std::string str) {
-//    str = trim(str);
-//    if (str.compare("ugrfdtd")==0) {
-//        return OptionsSolver::Solver::ugrfdtd;
-//    } else if (str.compare("cudg3d")==0) {
-//        return OptionsSolver::Solver::cudg3d;
-//    } else if (str.compare("none")==0) {
-//        return OptionsSolver::Solver::none;
-//    } else {
-//        throw std::logic_error("Unreckognized label: " + str);
-//    }
-//}
-//
-//OptionsSolverFDTD::CompositeModel Parser::strToCompositeModel(std::string str) {
-//    str = trim(str);
-//    if (str.compare("None")==0) {
-//        return OptionsSolverFDTD::CompositeModel::none;
-//    } else if (str.compare("DigFilt")==0) {
-//        return OptionsSolverFDTD::CompositeModel::digFilt;
-//    } else if (str.compare("MIBC")==0) {
-//        return OptionsSolverFDTD::CompositeModel::mibc;
-//    } else if (str.compare("ADE")==0) {
-//        return OptionsSolverFDTD::CompositeModel::ade;
-//    } else {
-//        throw std::logic_error("Unreckognized label: " + str);
-//    }
-//}
-//
-//OptionsSolverFDTD::WireModel Parser::strToWireModel(std::string str) {
-//    str = trim(str);
-//    if (str.compare("Old")==0) {
-//        return OptionsSolverFDTD::WireModel::oldWireModel;
-//    } else if (str.compare("Transition")==0) {
-//        return OptionsSolverFDTD::WireModel::transitionWireModel;
-//    } else if (str.compare("New")==0) {
-//        return OptionsSolverFDTD::WireModel::newWireModel;
-//    } else {
-//        throw std::logic_error("Unrecognized label: " + str);
-//    }
-//}
-//
-//OptionsSolverFDTD::InductanceModel Parser::strToInductanceModel(std::string str) {
-//    str = trim(str);
-//    if (str.compare("Boutayeb")==0) {
-//        return OptionsSolverFDTD::InductanceModel::boutayeb;
-//    } else if (str.compare("Ledfelt")==0) {
-//        return OptionsSolverFDTD::InductanceModel::ledfelt;
-//    } else if (str.compare("Berenger")==0) {
-//        return OptionsSolverFDTD::InductanceModel::berenger;
-//    } else {
-//        throw std::logic_error("Unrecognized Inductance model label: " + str);
-//    }
-//}
-
 bool Parser::checkVersionCompatibility(const std::string version) const {
     bool versionMatches =
             atof(version.c_str()) == atof(std::string(APP_VERSION).c_str());
@@ -1750,43 +1644,6 @@ bool Parser::checkVersionCompatibility(const std::string version) const {
     }
     return versionMatches;
 }
-
-//OptionsSolverFDTD::PMLBacking Parser::strToPMLBacking(const std::string& inStr) {
-//    std::string str = inStr;
-//    str = trim(str);
-//    if (str.compare("None")==0) {
-//        return OptionsSolverFDTD::PMLBacking::none;
-//    } else if (str.compare("Mur1")==0) {
-//        return OptionsSolverFDTD::PMLBacking::mur1;
-//    } else if (str.compare("Mur2")==0) {
-//        return OptionsSolverFDTD::PMLBacking::mur2;
-//    } else {
-//        throw std::logic_error("Unrecognized PML Backing label: " + str);
-//    }
-//}
-//
-//OptionsSolverFDTD::NoNF2FF Parser::strToNoNF2FF(const std::string& inStr) {
-//    std::string str = inStr;
-//    str = trim(str);
-//    if (str.compare("None")==0) {
-//        return OptionsSolverFDTD::NoNF2FF::none;
-//    } else if (str.compare("back")==0) {
-//        return OptionsSolverFDTD::NoNF2FF::back;
-//    } else if (str.compare("front")==0) {
-//        return OptionsSolverFDTD::NoNF2FF::front;
-//    } else if (str.compare("left")==0) {
-//        return OptionsSolverFDTD::NoNF2FF::left;
-//    } else if (str.compare("right")==0) {
-//        return OptionsSolverFDTD::NoNF2FF::right;
-//    } else if (str.compare("down")==0) {
-//        return OptionsSolverFDTD::NoNF2FF::down;
-//    } else if (str.compare("up")==0) {
-//        return OptionsSolverFDTD::NoNF2FF::up;
-//    } else {
-//        throw std::logic_error("Unrecognized No NF2FF label: " + str);
-//        return OptionsSolverFDTD::NoNF2FF::none;
-//    }
-//}
 
 PhysicalModel::Volume::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
     std::string line;
