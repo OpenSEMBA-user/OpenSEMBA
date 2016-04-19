@@ -41,7 +41,6 @@ ifeq ($(FFTW3_SUPPORT),yes)
 endif
 ifeq ($(EIGEN_SUPPORT),yes)
 	DEFINES += EIGEN_SUPPORT
-	INCLUDES +=  $(SRC_DIR)../external
 endif
 # =============================================================================
 # --- Core ---

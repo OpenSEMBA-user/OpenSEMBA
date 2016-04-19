@@ -21,8 +21,13 @@
 
 #include <utility>
 
+#ifdef EIGEN_SUPPORT
+#include <eigen3/Eigen/Dense>
+#endif
+
 #include "gtest/gtest.h"
 #include "math/matrix/Dynamic.h"
+
 
 using namespace SEMBA;
 using namespace Math;
@@ -154,10 +159,6 @@ TEST_F(MathMatrixDynamicTest, QRiterativeAlgorithm) {
 }
 
 #ifdef EIGEN_SUPPORT
-
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
-
 TEST_F(MathMatrixDynamicTest, eigenLibraryPOC) {
 	Eigen::Matrix2d A;
 
