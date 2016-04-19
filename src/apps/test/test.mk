@@ -39,6 +39,10 @@ ifeq ($(FFTW3_SUPPORT),yes)
 	DEFINES +=FFTW3_SUPPORT
 	LIBS += fftw3
 endif
+ifeq ($(EIGEN_SUPPORT),yes)
+	DEFINES += EIGEN_SUPPORT
+	INCLUDES +=  $(SRC_DIR)../external
+endif
 # =============================================================================
 # --- Core ---
 ifeq ($(TEST_CORE_MATH),yes)
@@ -96,7 +100,7 @@ SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 # =============================================================================
 LIBS      += gtest
-LIBRARIES += 
+LIBRARIES +=
 INCLUDES  += $(SRC_DIR) $(SRC_DIR)core/
 # =============================================================================
 .PHONY: default print
@@ -110,7 +114,7 @@ $(OBJ_DIR)%.o: %.cpp
 	@dirname $@ | xargs mkdir -p
 	@echo "Compiling:" $@
 	$(CXX) $(CXXFLAGS) $(addprefix -D, $(DEFINES)) $(addprefix -I,$(INCLUDES)) -c -o $@ $<
-	
+
 $(BIN_DIR)$(OUT): $(OBJS_CXX)
 	@mkdir -p $(BIN_DIR)
 	@echo "Linking:" $@
@@ -120,9 +124,9 @@ $(BIN_DIR)$(OUT): $(OBJS_CXX)
 	$(addprefix -I, ${INCLUDES}) \
 	$(addprefix -L, ${LIBRARIES}) \
 	$(addprefix -l, ${LIBS})
-	 
+
 $(OUT): $(BIN_DIR)$(OUT)
-	 
+
 print:
 	@echo "======================================================="
 	@echo "         ----- Compiling $(OUT) ------        "

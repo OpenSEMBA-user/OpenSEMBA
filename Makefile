@@ -28,10 +28,11 @@ compiler = gnu
 APP_VERSION=\"0.11\"
 
 FFTW3_SUPPORT=no#
+EIGEN_SUPPORT=no#
 
 DEFINES += APP_VERSION=$(APP_VERSION)
 # ==================== Intel Compiler =========================================
-ifeq ($(compiler),intel) 
+ifeq ($(compiler),intel)
 	CC       = icc
 	CXX      = icpc
 	CCFLAGS  +=
@@ -39,7 +40,7 @@ ifeq ($(compiler),intel)
 endif # end of If choosing Intel compiler.
 #===================== GNU Compiler ===========================================
 ifeq ($(compiler),gnu)
-	CC = gcc 
+	CC = gcc
 	CXX = g++
 	CCFLAGS +=
 	CXXFLAGS += -std=c++0x -static -pthread -fopenmp
@@ -60,12 +61,12 @@ ifeq ($(compiler),mingw64)
 endif # endif choosing the MinGW64 compiler.
 # ================= Optimization target =======================================
 ifeq ($(target),debug)
-	CXXFLAGS +=-O0 -g3 -Wall -Wno-write-strings 
+	CXXFLAGS +=-O0 -g3 -Wall -Wno-write-strings
 	# Other options: -Wconversion -fprofile-arcs -ftest-coverage
 	DEFINES +=_DEBUG
 endif
 ifeq ($(target),release)
-   	CXXFLAGS +=-O2 
+   	CXXFLAGS +=-O2
 endif
 # =============================================================================
 # -------------------- Paths to directories -----------------------------------
@@ -83,7 +84,7 @@ LIB_DIR = $(BUILD_DIR)lib/
 default: all
 	@echo "======>>>>> Done <<<<<======"
 
-all: check gidpost opensemba cudg3d test 
+all: check gidpost opensemba cudg3d test
 
 create_dirs:
 	@echo 'Creating directories to store binaries and intermediate objects'
@@ -92,10 +93,10 @@ create_dirs:
 cudg3d: check opensemba
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk print
 	$(MAKE) -f ./src/apps/cudg3d/cudg3d.mk
-	
+
 opensemba: check gidpost
 	-mkdir -p $(LIB_DIR)/opensemba/lib/ $(LIB_DIR)/opensemba/include/
-	$(MAKE) -f ./src/apps/opensemba/opensemba.mk print  
+	$(MAKE) -f ./src/apps/opensemba/opensemba.mk print
 	$(MAKE) -f ./src/apps/opensemba/opensemba.mk
 
 testSemba: check
@@ -119,27 +120,27 @@ clean:
 	$(MAKE) -C ./external/gidpost/ -f gidpost.mk clean
 
 clobber: clean
-	rm -rf $(BUILD_DIR) 
+	rm -rf $(BUILD_DIR)
 
 check:
-ifneq ($(target),release) 
-ifneq ($(target),debug) 
-	@echo "Invalid build target."  
-	@echo "Please use 'make target=release' or 'make target=debug'"  
+ifneq ($(target),release)
+ifneq ($(target),debug)
+	@echo "Invalid build target."
+	@echo "Please use 'make target=release' or 'make target=debug'"
 	@exit 1
-endif 
-endif 
-ifneq ($(compiler),intel) 
-ifneq ($(compiler),gnu) 
-ifneq ($(compiler),mingw32) 
-ifneq ($(compiler),mingw64) 
-	@echo "Invalid build compiler"  
-	@echo "Please use 'make compiler= intel|gnu|mingw32|mingw64'" 
+endif
+endif
+ifneq ($(compiler),intel)
+ifneq ($(compiler),gnu)
+ifneq ($(compiler),mingw32)
+ifneq ($(compiler),mingw64)
+	@echo "Invalid build compiler"
+	@echo "Please use 'make compiler= intel|gnu|mingw32|mingw64'"
 	@exit 2
-endif 
-endif 
-endif 
-endif 
+endif
+endif
+endif
+endif
 
 # Exports current variables when other makefiles are called.
 export
