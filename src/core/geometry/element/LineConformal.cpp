@@ -64,7 +64,9 @@ LineConformal::~LineConformal() {
 }
 
 const CoordConf* LineConformal::getV(const std::size_t i) const {
-    return this->getV(i)->castTo<CoordConf>();
+	const Coordinate::Coordinate<Math::Int,3>* coord;
+	coord = Line2<Math::Int>::getV(i);
+    return coord->castTo<CoordConf>();
 }
 
 void LineConformal::setV(const std::size_t i, const CoordI3* coord) {
