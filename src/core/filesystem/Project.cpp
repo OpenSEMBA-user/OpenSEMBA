@@ -101,8 +101,8 @@ bool Project::canOpen() const {
 
 bool Project::canExecute() const {
 #ifdef _WIN32
-    LPDWORD aux = NULL;
-    if(GetBinaryTypeA(c_str(), aux) != 0) {
+    DWORD aux;
+    if(GetBinaryTypeA(c_str(), &aux) != 0) {
         return true;
     }
     return false;
