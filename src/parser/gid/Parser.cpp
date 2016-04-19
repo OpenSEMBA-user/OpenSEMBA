@@ -80,6 +80,7 @@ Data* Parser::read() {
     Data* res = new Data();
     res->setFilename(getFilename());
     res->solver = readSolver();
+    mesherOptions_.set(res->solver->getSettings());
     pSize_ = readProblemSize();
     physicalModels_ = readMaterials();
     res->physicalModels = physicalModels_;
@@ -1220,7 +1221,8 @@ Source::Port::Waveguide* Parser::readPortWaveguide() {
     }
     if (shape == WaveportShape::rectangular) {
         return new Source::Port::WaveguideRectangular(
-            mag, surfs, excitationMode, mode);
+            mag, surfs, excitationMode, mode,
+            mesherOptions_.getBoundTerminations());
     } else {
         throw std::logic_error("Unsupported Waveport shape.");
     }

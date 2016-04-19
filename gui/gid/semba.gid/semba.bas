@@ -296,7 +296,8 @@ End of Source_on_line:
 *set var HEADER = 0
 *loop elems *onlyInCond
 *if(HEADER == 0)
- Waveguide_port: 
+ Waveguide_port:
+ Shape: *cond(Shape)
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
@@ -328,6 +329,7 @@ End of Source_on_line:
 *loop elems *onlyInCond
 *if(HEADER == 0)
  Waveguide_port: 
+ Shape: *cond(Shape)
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)

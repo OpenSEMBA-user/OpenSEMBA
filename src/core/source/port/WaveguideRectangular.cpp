@@ -28,10 +28,11 @@ namespace Port {
 WaveguideRectangular::WaveguideRectangular(Magnitude::Magnitude* magn,
         const Geometry::Element::Group<const Geometry::Surf>& elem,
         const ExcitationMode excMode,
-        const std::pair<Math::UInt,Math::UInt> mode)
+        const std::pair<Math::UInt,Math::UInt> mode,
+        const Geometry::BoundTerminations3 bounds)
 :   SEMBA::Source::Base(magn),
     Geometry::Element::Group<const Geometry::Surf>(elem),
-    Waveguide(magn, elem, excMode, mode) {
+    Waveguide(magn, elem, excMode, mode, bounds) {
 
     box_ = this->getBound();
 

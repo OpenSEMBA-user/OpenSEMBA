@@ -123,6 +123,7 @@ private:
     bool vtkExport_;
     bool postmshExport_;
     Math::CVecR3 gridStep_;
+
     Geometry::BoundTerminations3 boundTermination_;
 
     static Mesher strToMesher(std::string);

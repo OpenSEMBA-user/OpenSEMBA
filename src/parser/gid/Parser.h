@@ -83,6 +83,7 @@ private:
 
     PhysicalModel::Group<>* physicalModels_;
     Geometry::Mesh::Geometric* mesh_;
+    Mesher::Options mesherOptions_;
     ProblemSize pSize_;
 
     Solver::Info* readSolver();

@@ -21,12 +21,13 @@
 
 OUT = test
 
-TEST_CORE_MATH          = yes#
+TEST_CORE_MATH          = no#
 TEST_CORE_GEOMETRY      = no#
 TEST_CORE_ARGUMENT      = no#
 TEST_CORE_PHYSICALMODEL = no#
+TEST_CORE_SOURCE        = yes#
 TEST_CORE_FILESYSTEM    = no#
-TEST_PARSER_GID         = no#
+TEST_PARSER_GID         = yes#
 TEST_PARSER_STL         = no#
 
 # =============================================================================
@@ -65,6 +66,11 @@ ifeq ($(TEST_CORE_PHYSICALMODEL),yes)
 	SRC_CORE_PHYSICALMODEL_TESTS_DIRS := $(SRC_CORE_PHYSICALMODEL_DIRS) \
 								   $(shell find $(SRC_APP_DIR)core/physicalModel/ -type d)
 endif
+ifeq ($(TEST_CORE_SOURCE),yes)
+	SRC_CORE_SOURCE_DIRS = $(shell find $(SRC_DIR)core/ -type d)
+	SRC_CORE_SOURCE_TESTS_DIRS := $(SRC_CORE_SOURCE_DIRS) \
+								   $(shell find $(SRC_APP_DIR)core/source/ -type d)
+endif
 ifeq ($(TEST_CORE_FILESYSTEM),yes)
 	SRC_CORE_FILESYSTEM_DIRS = $(shell find $(SRC_DIR)core/filesystem/ -type d)
 	SRC_CORE_FILESYSTEM_TESTS_DIRS := $(SRC_CORE_FILESYSTEM_DIRS) \
@@ -75,6 +81,7 @@ SRC_CORE_TESTS_DIRS = $(SRC_CORE_MATH_TESTS_DIRS) \
 	                  $(SRC_CORE_GEOMETRY_TESTS_DIRS) \
 	                  $(SRC_CORE_ARGUMENT_TESTS_DIRS) \
 	                  $(SRC_CORE_PHYSICALMODEL_TESTS_DIRS) \
+	                  $(SRC_CORE_SOURCE_TESTS_DIRS) \
 	                  $(SRC_CORE_FILESYSTEM_TESTS_DIRS)
 # --- Parsers ---
 ifeq ($(TEST_PARSER_GID),yes)

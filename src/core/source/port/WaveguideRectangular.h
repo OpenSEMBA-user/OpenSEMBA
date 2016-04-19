@@ -34,7 +34,8 @@ public:
             Magnitude::Magnitude* magnitude,
             const Geometry::Element::Group<const Geometry::Surf>& elem,
             const ExcitationMode excMode,
-            const std::pair<Math::UInt,Math::UInt> mode);
+            const std::pair<Math::UInt,Math::UInt> mode,
+            const Geometry::BoundTerminations3 bounds);
     WaveguideRectangular(const WaveguideRectangular&);
     virtual ~WaveguideRectangular();
 
@@ -45,13 +46,11 @@ public:
     void set(const Geometry::Element::Group<const Geometry::Elem>&);
 
     const std::string& getName() const;
-//    Math::Real getWidth(const BoundTerminations& sym) const;
-//    Math::Real getHeight(const BoundTerminations& sym) const;
+    Math::Real getWidth() const;
+    Math::Real getHeight() const;
 
-//    Math::CVecR3 getOrigin(const BoundTerminations& sym) const;
-//    Math::CVecR3 getWeight(
-//            const Math::CVecR3& pos,
-//            const BoundTerminations& sym) const;
+    Math::CVecR3 getOrigin() const;
+    Math::CVecR3 getWeight(const Math::CVecR3& pos) const;
 private:
     Geometry::BoxR3 box_; // This has been included for performance.
 };

@@ -22,7 +22,7 @@
 #ifndef SEMBA_SOURCE_PORT_PORT_H_
 #define SEMBA_SOURCE_PORT_PORT_H_
 
-#include "../Source.h"
+#include "source/Source.h"
 
 namespace SEMBA {
 namespace Source {

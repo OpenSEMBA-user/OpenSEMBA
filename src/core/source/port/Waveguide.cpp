@@ -28,11 +28,13 @@ namespace Port {
 Waveguide::Waveguide(Magnitude::Magnitude* magnitude,
         const Geometry::Element::Group<const Geometry::Surf>& elem,
         const ExcitationMode excMode,
-        const std::pair<Math::UInt,Math::UInt> mode)
+        const std::pair<size_t,size_t> mode,
+        const Geometry::BoundTerminations3 bounds)
 :   Port(magnitude, elem) {
 
     excitationMode_ = excMode;
     mode_ = mode;
+    bounds_ = bounds;
     // Performs checks
     if (!this->getBound().isSurface()) {
         throw std::logic_error("Waveport elements must be contained "
@@ -78,7 +80,7 @@ Waveguide::ExcitationMode Waveguide::getExcitationMode() const {
     return excitationMode_;
 }
 
-std::pair<Math::UInt, Math::UInt> Waveguide::getMode() const {
+std::pair<size_t,size_t> Waveguide::getMode() const {
     return mode_;
 }
 
