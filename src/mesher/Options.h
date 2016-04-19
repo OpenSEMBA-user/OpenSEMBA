@@ -47,7 +47,7 @@ class Options {
 public:
     enum class Mesher {
         openfoam,
-        ugrMesher,
+        conformalMesher,
         zMesher,
         none
     };
