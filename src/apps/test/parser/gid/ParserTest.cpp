@@ -66,11 +66,11 @@ TEST_F(ParserGiDParserTest, sphere) {
             smb->mesh->castTo<Geometry::Mesh::Geometric>()->grid());
     EXPECT_EQ(Math::CVecR3(-2.1e-3), grid.getFullDomainBoundingBox().getMin());
 
-    delete smb;
+    EXPECT_NO_THROW(delete smb);
 }
 
 TEST_F(ParserGiDParserTest, dmcwf) {
     Data* smb;
     EXPECT_NO_THROW(smb = newSmb("dmcwf"));
-    delete smb;
+    EXPECT_NO_THROW(delete smb);
 }

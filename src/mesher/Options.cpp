@@ -198,33 +198,27 @@ void Options::set(const Solver::Settings& opts) {
     }
     if (opts.existsName("Upper x bound")) {
         setBoundTermination(Math::Constants::x, Math::Constants::U,
-                            PhysicalModel::Bound::strToBoundType(
-                                    opts("Upper x bound").getString()));
+                            strToBoundType(opts("Upper x bound").getString()));
     }
     if (opts.existsName("Lower x bound")) {
         setBoundTermination(Math::Constants::x, Math::Constants::L,
-                            PhysicalModel::Bound::(
-                                    opts("Lower x bound").getString()));
+                            strToBoundType(opts("Lower x bound").getString()));
     }
     if (opts.existsName("Upper y bound")) {
         setBoundTermination(Math::Constants::y, Math::Constants::U,
-                            PhysicalModel::Bound::(
-                                    opts("Upper y bound").getString()));
+                            strToBoundType(opts("Upper y bound").getString()));
     }
     if (opts.existsName("Lower y bound")) {
         setBoundTermination(Math::Constants::y, Math::Constants::L,
-                            PhysicalModel::Bound::(
-                                    opts("Lower y bound").getString()));
+                            strToBoundType(opts("Lower y bound").getString()));
     }
     if (opts.existsName("Upper z bound")) {
         setBoundTermination(Math::Constants::z, Math::Constants::U,
-                            PhysicalModel::Bound::(
-                                    opts("Upper z bound").getString()));
+                            strToBoundType(opts("Upper z bound").getString()));
     }
     if (opts.existsName("Lower z bound")) {
         setBoundTermination(Math::Constants::z, Math::Constants::L,
-                            PhysicalModel::Bound::(
-                                    opts("Lower z bound").getString()));
+                            strToBoundType(opts("Lower z bound").getString()));
     }
 }
 
@@ -356,6 +350,24 @@ std::pair<Math::CVecR3, Math::CVecR3> Options::strToBox(
     }
     std::pair<Math::CVecR3, Math::CVecR3> bound(min, max);
     return bound;
+}
+
+const PhysicalModel::Bound::Bound* Options::strToBoundType(std::string str) {
+    if (str.compare("PEC") == 0) {
+        return new PhysicalModel::Bound::PEC(MatId(0));
+    } else if (str.compare("PMC") == 0) {
+        return new PhysicalModel::Bound::PMC(MatId(0));
+    } else if (str.compare("PML") == 0) {
+        return new PhysicalModel::Bound::PML(MatId(0));
+    } else if (str.compare("Periodic") == 0) {
+        return new PhysicalModel::Bound::Periodic(MatId(0));
+    } else if (str.compare("MUR1") == 0) {
+        return new PhysicalModel::Bound::Mur1(MatId(0));
+    } else if (str.compare("MUR2") == 0) {
+        return new PhysicalModel::Bound::Mur2(MatId(0));
+    } else {
+        throw std::logic_error("Unrecognized bound label: " + str);
+    }
 }
 
 }

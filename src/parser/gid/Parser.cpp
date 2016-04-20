@@ -1222,8 +1222,18 @@ Source::Port::Waveguide* Parser::readPortWaveguide() {
     }
 
     Geometry::BoundTerminations3 boundTerminations;
-    settings_.printInfo();
-//    boundTerminations.setBound(0,0, PhysicalModel::Bound::strToBoundType()
+    boundTerminations.setBound(0,0, strToBoundType(
+            settings_("Mesher options")("Lower x bound").getString()));
+    boundTerminations.setBound(0,1, strToBoundType(
+            settings_("Mesher options")("Upper x bound").getString()));
+    boundTerminations.setBound(1,0, strToBoundType(
+            settings_("Mesher options")("Lower y bound").getString()));
+    boundTerminations.setBound(1,1, strToBoundType(
+            settings_("Mesher options")("Upper y bound").getString()));
+    boundTerminations.setBound(2,0, strToBoundType(
+            settings_("Mesher options")("Lower z bound").getString()));
+    boundTerminations.setBound(2,1, strToBoundType(
+            settings_("Mesher options")("Upper z bound").getString()));
 
     if (shape == WaveportShape::rectangular) {
         return new Source::Port::WaveguideRectangular(mag, surfs,
@@ -1698,6 +1708,24 @@ Math::Axis::Local Parser::strToLocalAxes(const std::string& str) {
     end = str.find_last_of("}");
     Math::CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
     return Math::Axis::Local(eulerAngles, origin);
+}
+
+const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
+    if (str.compare("PEC") == 0) {
+        return new PhysicalModel::Bound::PEC(MatId(0));
+    } else if (str.compare("PMC") == 0) {
+        return new PhysicalModel::Bound::PMC(MatId(0));
+    } else if (str.compare("PML") == 0) {
+        return new PhysicalModel::Bound::PML(MatId(0));
+    } else if (str.compare("Periodic") == 0) {
+        return new PhysicalModel::Bound::Periodic(MatId(0));
+    } else if (str.compare("MUR1") == 0) {
+        return new PhysicalModel::Bound::Mur1(MatId(0));
+    } else if (str.compare("MUR2") == 0) {
+        return new PhysicalModel::Bound::Mur2(MatId(0));
+    } else {
+        throw std::logic_error("Unrecognized bound label: " + str);
+    }
 }
 
 } /* namespace GiD */

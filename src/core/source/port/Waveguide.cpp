@@ -50,9 +50,6 @@ Waveguide::Waveguide(Magnitude::Magnitude* magnitude,
     if (this->size() == 0) {
         throw std::logic_error("Waveport must contain some elements.");
     }
-
-
-    check();
 }
 
 Waveguide::Waveguide(const Waveguide& rhs) :

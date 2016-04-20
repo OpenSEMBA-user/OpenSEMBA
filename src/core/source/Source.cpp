@@ -48,11 +48,6 @@ Base::~Base() {
     }
 }
 
-bool Base::check() const {
-// TODO Redo this function
-    throw std::logic_error("Source::Base::check() not implemented");
-}
-
 bool Base::hasSameProperties(const Base& rhs) const {
     if (typeid(*this) != typeid(rhs)) {
         return false;

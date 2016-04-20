@@ -29,6 +29,12 @@
 #include <string>
 
 #include "geometry/mesh/Geometric.h"
+#include "physicalModel/bound/PEC.h"
+#include "physicalModel/bound/PMC.h"
+#include "physicalModel/bound/PML.h"
+#include "physicalModel/bound/Periodic.h"
+#include "physicalModel/bound/Mur1.h"
+#include "physicalModel/bound/Mur2.h"
 #include "physicalModel/multiport/Multiport.h"
 #include "physicalModel/surface/Multilayer.h"
 #include "physicalModel/surface/SIBC.h"
@@ -178,6 +184,8 @@ private:
             const std::string& str);
     static PhysicalModel::Volume::PoleResidue readPoleResiduePair(
             std::ifstream& stream);
+
+    static const PhysicalModel::Bound::Bound* strToBoundType(std::string str);
 };
 
 } /* namespace GiD */

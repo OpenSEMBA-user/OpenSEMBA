@@ -21,13 +21,6 @@
 
 #include "Bound.h"
 
-#include "PEC.h"
-#include "PMC.h"
-#include "PML.h"
-#include "Periodic.h"
-#include "Mur1.h"
-#include "Mur2.h"
-
 namespace SEMBA {
 namespace PhysicalModel {
 namespace Bound {
@@ -38,24 +31,6 @@ Bound::Bound() {
 
 Bound::~Bound() {
 
-}
-
-const Bound* strToBoundType(std::string str) {
-    if (str.compare("PEC") == 0) {
-        return new PEC(Id(0));
-    } else if (str.compare("PMC") == 0) {
-        return new PMC(Id(0));
-    } else if (str.compare("PML") == 0) {
-        return new PML(Id(0));
-    } else if (str.compare("Periodic") == 0) {
-        return new Periodic(Id(0));
-    } else if (str.compare("MUR1") == 0) {
-        return new Mur1(Id(0));
-    } else if (str.compare("MUR2") == 0) {
-        return new Mur2(Id(0));
-    } else {
-        throw std::logic_error("Unrecognized bound label: " + str);
-    }
 }
 
 } /* namespace Bound */
