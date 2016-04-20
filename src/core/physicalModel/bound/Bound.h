@@ -32,7 +32,9 @@ class Bound : public virtual PhysicalModel {
 public:
     Bound();
     virtual ~Bound();
+    static const Bound* strToBoundType(std::string str);
 };
+
 
 } /* namespace Bound */
 } /* namespace PhysicalModel */

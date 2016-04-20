@@ -131,7 +131,6 @@ private:
     static Math::CVecR3 strToCVecR3(const std::string& str);
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);
-    static const PhysicalModel::Bound::Bound* strToBoundType(std::string label);
 };
 
 }

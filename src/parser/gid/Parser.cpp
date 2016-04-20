@@ -29,6 +29,7 @@
 #include "geometry/element/Tetrahedron4.h"
 #include "geometry/element/Tetrahedron10.h"
 #include "geometry/element/Hexahedron8.h"
+#include "physicalModel/bound/Bound.h"
 #include "physicalModel/predefined/PEC.h"
 #include "physicalModel/predefined/PMC.h"
 #include "physicalModel/predefined/SMA.h"
@@ -80,7 +81,7 @@ Data* Parser::read() {
     Data* res = new Data();
     res->setFilename(getFilename());
     res->solver = readSolver();
-    mesherOptions_.set(res->solver->getSettings());
+    settings_ = res->solver->getSettings();
     pSize_ = readProblemSize();
     physicalModels_ = readMaterials();
     res->physicalModels = physicalModels_;
@@ -1219,10 +1220,14 @@ Source::Port::Waveguide* Parser::readPortWaveguide() {
     if (!finished) {
         throw std::logic_error("End of excitation type label not found.");
     }
+
+    Geometry::BoundTerminations3 boundTerminations;
+    settings_.printInfo();
+//    boundTerminations.setBound(0,0, PhysicalModel::Bound::strToBoundType()
+
     if (shape == WaveportShape::rectangular) {
-        return new Source::Port::WaveguideRectangular(
-            mag, surfs, excitationMode, mode,
-            mesherOptions_.getBoundTerminations());
+        return new Source::Port::WaveguideRectangular(mag, surfs,
+                excitationMode, mode, boundTerminations);
     } else {
         throw std::logic_error("Unsupported Waveport shape.");
     }

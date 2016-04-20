@@ -1,0 +1,37 @@
+BeginZE /home/luis/workspace/semba/projects/test/dmcwf.gid/dmcwf.vv
+   x -0.0104671977460384369 0.0287591405212879181
+   y 0.0741249918937683105 0.041254628449678421
+   z -0.548644065856933594 0.386644095182418823
+   e 0.155881360173225403
+   v 0.4999999999999995 0.500000021855695032 0.4999999999999995
+   r 0.499999978144304968
+   m -4.37113882867379289e-08 4.37113882867379289e-08 1 0 1 1.99840144432528177e-15 4.37113882867379289e-08 0 -5.5511151231257827e-17 1 -4.37113882867379289e-08 0 0 0 0 1
+   c 0.00600000005215406418 0.00600000005215406418 0.0810000002384185791
+   pd 0
+   pno 0
+   pfo 0
+   pf 4
+   pv 0
+   NowUse 0
+   DrawingType 0
+   LightVector -15.7709999084472656 1.26903998851776123 149.001998901367188 0
+   OGLShadow(UseShadows) 0
+   OGLShadow(RenderMode) RenderNice
+   OGLShadow(ShadowBias) -0.002
+   OGLShadow(AmbientShadows) 1
+   OGLShadow(UseFBO) 0
+   OGLShadow(FBOSize) 2048
+   OGLShadow(DimmedLightFactor) 0.02
+   OGLStereo(UseStereo) 0
+   OGLStereo(RelativeEyeDistance) 1
+   OGLStereo(FlipEyes) 0
+   OGLStereo(StereoMode) AnaglyphColors
+   OGLStereo(EyeDistance) 0.075
+   OGLStereo(LeftEyeDistance) 1 0 0 1
+   OGLStereo(RightEyeDistance) 0 1 1 1
+EndZE /home/luis/workspace/semba/projects/test/dmcwf.gid/dmcwf.vv
+
+BeginMirror
+   Mirror 0 Angle 0.0 AngleFake -15.0 SizeFactor 2.0 HeightOffset 0.25 Color #d9e5f24d Backlight Off EdgeStyle No Type Scene DrawMode Mirror
+EndMirror
+

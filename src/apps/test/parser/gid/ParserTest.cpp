@@ -43,18 +43,20 @@ Data* ParserGiDParserTest::newSmb(const string project) {
 }
 
 TEST_F(ParserGiDParserTest, sphere) {
-    Data* smb = newSmb("sphere");
+    Data* smb;
+    EXPECT_NO_THROW(smb = newSmb("sphere"));
     EXPECT_EQ(smb->outputRequests->getOf<OutRqNode>().size(), 3);
     EXPECT_EQ(smb->outputRequests->getOf<OutRqSurface>().size(), 1);
-    EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 2);
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 3);
     EXPECT_EQ(smb->sources->size(), 1);
 
     const Geometry::Mesh::Geometric* mesh;
     EXPECT_NO_THROW(mesh = smb->mesh->castTo<Geometry::Mesh::Geometric>());
     const Geometry::CoordR3* coord;
     EXPECT_NO_THROW(coord =mesh->coords().getId(Geometry::CoordId(1)));
-    EXPECT_EQ(Math::CVecR3(-1.8e-3), coord->pos());
-
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(0), coord->pos()(0), 1e-2);
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(1), coord->pos()(1), 1e-2);
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(2), coord->pos()(2), 1e-2);
     Solver::Settings settings;
     EXPECT_NO_THROW(settings = smb->solver->getSettings());
 
@@ -64,6 +66,11 @@ TEST_F(ParserGiDParserTest, sphere) {
             smb->mesh->castTo<Geometry::Mesh::Geometric>()->grid());
     EXPECT_EQ(Math::CVecR3(-2.1e-3), grid.getFullDomainBoundingBox().getMin());
 
+    delete smb;
+}
 
+TEST_F(ParserGiDParserTest, dmcwf) {
+    Data* smb;
+    EXPECT_NO_THROW(smb = newSmb("dmcwf"));
     delete smb;
 }
