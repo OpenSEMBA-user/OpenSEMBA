@@ -28,11 +28,11 @@ namespace Port {
 WaveguideRectangular::WaveguideRectangular(Magnitude::Magnitude* magn,
         const Geometry::Element::Group<const Geometry::Surf>& elem,
         const ExcitationMode excMode,
-        const std::pair<Math::UInt,Math::UInt> mode,
-        const Geometry::BoundTerminations3 bounds)
+        const std::pair<size_t,size_t> mode,
+        const Bound3& bounds)
 :   SEMBA::Source::Base(magn),
     Geometry::Element::Group<const Geometry::Surf>(elem),
-    Waveguide(magn, elem, excMode, mode, bounds) {
+    Waveguide(magn, elem, excMode, mode) {
 
     box_ = this->getBound();
 
@@ -40,6 +40,31 @@ WaveguideRectangular::WaveguideRectangular(Magnitude::Magnitude* magn,
         printInfo();
         throw std::logic_error("At least one mode must be non-zero.");
     }
+
+    // Computes origin.
+    origin_ = box_.getMin();
+    const PhysicalModel::Bound::Bound* bound;
+    bound = bounds[Math::Constants::x][Math::Constants::L];
+    if (bound->is<PhysicalModel::Bound::PMC>()) {
+        origin_(Math::Constants::x) = - box_.getMax()(Math::Constants::x);
+    }
+    if (!bound->is<PhysicalModel::Bound::PML>() &&
+        !bound->is<PhysicalModel::Bound::PMC>()) {
+        throw std::logic_error(
+                "Bound termination must be  PML or PMC in the x lower axis"
+                " of the WaveguideRectangular port.");
+    }
+    bound = bounds[Math::Constants::y][Math::Constants::L];
+    if (bound->is<PhysicalModel::Bound::PEC>()) {
+        origin_(Math::Constants::y) = - box_.getMax()(Math::Constants::y);
+    }
+    if (!bound->is<PhysicalModel::Bound::PML>() &&
+        !bound->is<PhysicalModel::Bound::PEC>()) {
+        throw std::logic_error(
+                "Bound termination must be  PML or PEC in the y lower axis"
+                " of the WaveguideRectangular port.");
+    }
+
 }
 
 WaveguideRectangular::WaveguideRectangular(const WaveguideRectangular& rhs)
@@ -66,53 +91,50 @@ const std::string& WaveguideRectangular::getName() const {
     return res;
 }
 
-//Math::CVecR3 WaveguideRectangular::getWeight(
-//        const Math::CVecR3& pos,
-//        const BoundTerminations& sym) const {
-//    // Return normalized weights for electric field components.
-//    static const Math::Real pi = acos(-1.0);
-//    Math::CVecR3 res;
-//    Math::CVecR3 rPos = pos - getOrigin(sym);
-//    const Math::Real m = pi * getMode().first / getWidth(sym);
-//    const Math::Real n = pi * getMode().second / getHeight(sym);
-//    Math::Real normFactor = m;
-//    if (n > m) {
-//        normFactor = n;
-//    }
-//    //const Math::Real betaC = sqrt(pow(m,2) + pow(n,2));
-//    if (getExcitationMode() == Waveguide::TE) {
-//        res(Math::Constants::x) =   n * cos(m * rPos(Math::Constants::x)) *
-//                                        sin(n * rPos(Math::Constants::y)) /
-//                                        normFactor;
-//        res(Math::Constants::y) = - m * sin(m * rPos(Math::Constants::x)) *
-//                                        cos(n * rPos(Math::Constants::y)) /
-//                                        normFactor;
-//        res(Math::Constants::z) = (Math::Real) 0.0;
-//    } else {
-//        res(Math::Constants::x) = - m * cos(m * rPos(Math::Constants::x)) *
-//                                        sin(n * rPos(Math::Constants::y)) /
-//                                        normFactor;
-//        res(Math::Constants::y) = - m * sin(m * rPos(Math::Constants::x)) *
-//                                        cos(n * rPos(Math::Constants::y)) /
-//                                        normFactor;
-//        res(Math::Constants::z) = (Math::Real) 0.0;
-//    }
-//    return res;
-//}
-//
-//Math::Real WaveguideRectangular::getWidth(
-//        const BoundTerminations& sym) const {
-//    Math::CVecR3 origin = getOrigin(sym);
-//    Math::CVecR3 max = box_.getMax();
-//    return max(Math::Constants::x) - origin(Math::Constants::x);
-//}
-//
-//Math::Real WaveguideRectangular::getHeight(
-//        const BoundTerminations& sym) const {
-//    Math::CVecR3 origin = getOrigin(sym);
-//    Math::CVecR3 max = box_.getMax();
-//    return max(Math::Constants::y) - origin(Math::Constants::y);
-//}
+Math::CVecR3 WaveguideRectangular::getWeight(
+        const Math::CVecR3& pos) const {
+    // Return normalized weights for electric field components.
+    static const Math::Real pi = acos(-1.0);
+    Math::CVecR3 res;
+    Math::CVecR3 rPos = pos - getOrigin();
+    const Math::Real m = pi * getMode().first / getWidth();
+    const Math::Real n = pi * getMode().second / getHeight();
+    Math::Real normFactor = m;
+    if (n > m) {
+        normFactor = n;
+    }
+    //const Math::Real betaC = sqrt(pow(m,2) + pow(n,2));
+    if (getExcitationMode() == Waveguide::TE) {
+        res(Math::Constants::x) =   n * cos(m * rPos(Math::Constants::x)) *
+                                        sin(n * rPos(Math::Constants::y)) /
+                                        normFactor;
+        res(Math::Constants::y) = - m * sin(m * rPos(Math::Constants::x)) *
+                                        cos(n * rPos(Math::Constants::y)) /
+                                        normFactor;
+        res(Math::Constants::z) = (Math::Real) 0.0;
+    } else {
+        res(Math::Constants::x) = - m * cos(m * rPos(Math::Constants::x)) *
+                                        sin(n * rPos(Math::Constants::y)) /
+                                        normFactor;
+        res(Math::Constants::y) = - m * sin(m * rPos(Math::Constants::x)) *
+                                        cos(n * rPos(Math::Constants::y)) /
+                                        normFactor;
+        res(Math::Constants::z) = (Math::Real) 0.0;
+    }
+    return res;
+}
+
+Math::Real WaveguideRectangular::getWidth() const {
+    Math::CVecR3 origin = getOrigin();
+    Math::CVecR3 max = box_.getMax();
+    return max(Math::Constants::x) - origin(Math::Constants::x);
+}
+
+Math::Real WaveguideRectangular::getHeight() const {
+    Math::CVecR3 origin = getOrigin();
+    Math::CVecR3 max = box_.getMax();
+    return max(Math::Constants::y) - origin(Math::Constants::y);
+}
 
 void WaveguideRectangular::set(
     const Geometry::Element::Group<const Geometry::Elem>& constGroupElems) {
@@ -120,29 +142,9 @@ void WaveguideRectangular::set(
     box_ = this->getBound();
 }
 
-//Math::CVecR3 WaveguideRectangular::getOrigin(
-//        const BoundTerminations& sym) const {
-//    if (sym[Math::Constants::x].first != OptionsMesher::pml &&
-//        sym[Math::Constants::x].first != OptionsMesher::pmc) {
-//        throw std::logic_error("Waveport must have PML or PMC "
-//                               "boundary in the x lower axis");
-//    }
-//    if (sym[Math::Constants::y].first != OptionsMesher::pml &&
-//        sym[Math::Constants::y].first != OptionsMesher::pec) {
-//        throw std::logic_error("Waveport must have PML or PEC "
-//                               "boundary in the y lower axis");
-//    }
-//    Math::CVecR3 min = box_.getMin();
-//    Math::CVecR3 max = box_.getMax();
-//    Math::CVecR3 res = min;
-//    if (sym[Math::Constants::x].first == OptionsMesher::pmc) {
-//        res(x) = - max(x);
-//    }
-//    if (sym[Math::Constants::y].first == OptionsMesher::pec) {
-//        res(y) = - max(y);
-//    }
-//    return res;
-//}
+Math::CVecR3 WaveguideRectangular::getOrigin() const {
+    return origin_;
+}
 
 } /* namespace Port */
 } /* namespace Source */

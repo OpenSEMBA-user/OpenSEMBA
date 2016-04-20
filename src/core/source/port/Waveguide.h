@@ -23,7 +23,7 @@
 #define SEMBA_SOURCE_PORT_WAVEPORT_H_
 
 #include "Port.h"
-#include "geometry/BoundTerminations.h"
+
 
 namespace SEMBA {
 namespace Source {
@@ -39,8 +39,7 @@ public:
     Waveguide(Magnitude::Magnitude* magnitude,
               const Geometry::Element::Group<const Geometry::Surf>& elem,
               const ExcitationMode excMode,
-              const std::pair<size_t,size_t> mode,
-              const Geometry::BoundTerminations3 bounds);
+              const std::pair<size_t,size_t> mode);
     Waveguide(const Waveguide& rhs);
     virtual ~Waveguide();
 
@@ -53,7 +52,6 @@ public:
 private:
     ExcitationMode excitationMode_;
     std::pair<size_t,size_t> mode_;
-    Geometry::BoundTerminations3 bounds_;
 };
 
 } /* namespace Port */

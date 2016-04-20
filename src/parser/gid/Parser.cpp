@@ -1221,19 +1221,19 @@ Source::Port::Waveguide* Parser::readPortWaveguide() {
         throw std::logic_error("End of excitation type label not found.");
     }
 
-    Geometry::BoundTerminations3 boundTerminations;
-    boundTerminations.setBound(0,0, strToBoundType(
-            settings_("Mesher options")("Lower x bound").getString()));
-    boundTerminations.setBound(0,1, strToBoundType(
-            settings_("Mesher options")("Upper x bound").getString()));
-    boundTerminations.setBound(1,0, strToBoundType(
-            settings_("Mesher options")("Lower y bound").getString()));
-    boundTerminations.setBound(1,1, strToBoundType(
-            settings_("Mesher options")("Upper y bound").getString()));
-    boundTerminations.setBound(2,0, strToBoundType(
-            settings_("Mesher options")("Lower z bound").getString()));
-    boundTerminations.setBound(2,1, strToBoundType(
-            settings_("Mesher options")("Upper z bound").getString()));
+    Source::Port::Bound3 boundTerminations;
+    boundTerminations[0][0] = strToBoundType(
+            settings_("Mesher options")("Lower x bound").getString());
+    boundTerminations[1][1] = strToBoundType(
+            settings_("Mesher options")("Upper x bound").getString());
+    boundTerminations[2][0] = strToBoundType(
+            settings_("Mesher options")("Lower y bound").getString());
+    boundTerminations[0][1] = strToBoundType(
+            settings_("Mesher options")("Upper y bound").getString());
+    boundTerminations[1][0] = strToBoundType(
+            settings_("Mesher options")("Lower z bound").getString());
+    boundTerminations[2][1] = strToBoundType(
+            settings_("Mesher options")("Upper z bound").getString());
 
     if (shape == WaveportShape::rectangular) {
         return new Source::Port::WaveguideRectangular(mag, surfs,

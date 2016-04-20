@@ -48,11 +48,8 @@ public:
 
     const std::string& getName() const;
 
-//    Math::CVecR3 getOrigin(
-//            const BoundTerminations& sym = BoundTerminations()) const;
-//    Math::CVecR3 getWeight(
-//            const Math::CVecR3& pos,
-//            const BoundTerminations& sym = BoundTerminations()) const;
+    Math::CVecR3 getOrigin() const;
+    Math::CVecR3 getWeight(const Math::CVecR3& pos) const;
 
     void printInfo() const;
 private:

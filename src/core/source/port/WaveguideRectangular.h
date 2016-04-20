@@ -23,6 +23,9 @@
 #define SEMBA_SOURCE_PORT_WAVEGUIDERECTANGULAR_H_
 
 #include "Waveguide.h"
+#include "physicalModel/bound/PEC.h"
+#include "physicalModel/bound/PMC.h"
+#include "physicalModel/bound/PML.h"
 
 namespace SEMBA {
 namespace Source {
@@ -34,8 +37,8 @@ public:
             Magnitude::Magnitude* magnitude,
             const Geometry::Element::Group<const Geometry::Surf>& elem,
             const ExcitationMode excMode,
-            const std::pair<Math::UInt,Math::UInt> mode,
-            const Geometry::BoundTerminations3 bounds);
+            const std::pair<size_t,size_t> mode,
+            const Bound3& bounds);
     WaveguideRectangular(const WaveguideRectangular&);
     virtual ~WaveguideRectangular();
 
@@ -53,6 +56,7 @@ public:
     Math::CVecR3 getWeight(const Math::CVecR3& pos) const;
 private:
     Geometry::BoxR3 box_; // This has been included for performance.
+    Math::CVecR3 origin_;
 };
 
 } /* namespace Port */

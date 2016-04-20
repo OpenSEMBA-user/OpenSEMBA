@@ -53,9 +53,9 @@ TEMCoaxial::TEMCoaxial(
 TEMCoaxial::~TEMCoaxial() {
 }
 
-//Math::CVecR3 TEMCoaxial::getOrigin(const BoundTerminations& sym) const {
-//    return origin_;
-//}
+Math::CVecR3 TEMCoaxial::getOrigin() const {
+    return origin_;
+}
 
 bool TEMCoaxial::hasSameProperties(const TEMCoaxial& rhs) const {
     bool res = true;
@@ -71,26 +71,25 @@ const std::string& TEMCoaxial::getName() const {
     return res;
 }
 
-//Math::CVecR3 TEMCoaxial::getWeight(
-//        const Math::CVecR3& pos,
-//        const BoundTerminations& sym) const {
-//    // Return normalized weights for electric field components.
-//    const Math::Real rho = (pos - getOrigin()).norm();
-//    switch (getExcitationMode()) {
-//    case ExcitationMode::voltage:
-//    {
-//        const Math::CVecR3 rhoHat = (pos - getOrigin()).normalize();
-//        return rhoHat / (rho * log(outerRadius_/innerRadius_));
-//    }
-//    case ExcitationMode::current:
-//    {
-//        const Math::CVecR3 phiHat = (Math::CVecR3(0,0,1) ^ pos).normalize();
-//        return phiHat / (2.0 * Math::Constants::pi * rho);
-//    }
-//    default:
-//        throw Error("Unsupported excitation mode.");
-//    }
-//}
+Math::CVecR3 TEMCoaxial::getWeight(
+        const Math::CVecR3& pos) const {
+    // Return normalized weights for electric field components.
+    const Math::Real rho = (pos - getOrigin()).norm();
+    switch (getExcitationMode()) {
+    case ExcitationMode::voltage:
+    {
+        const Math::CVecR3 rhoHat = (pos - getOrigin()).normalize();
+        return rhoHat / (rho * log(outerRadius_/innerRadius_));
+    }
+    case ExcitationMode::current:
+    {
+        const Math::CVecR3 phiHat = (Math::CVecR3(0,0,1) ^ pos).normalize();
+        return phiHat / (2.0 * Math::Constants::pi * rho);
+    }
+    default:
+        throw std::logic_error("Unsupported excitation mode.");
+    }
+}
 
 void TEMCoaxial::printInfo() const {
     std::cout << " --- Coaxial TEM Port --- " << std::endl;
