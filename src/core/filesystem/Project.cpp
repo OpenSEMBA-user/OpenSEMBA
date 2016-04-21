@@ -349,10 +349,16 @@ std::string Project::getFullPath() const {
     std::string res;
 #ifndef _WIN32
     res = (const char*) realpath(this->getFilename().c_str(), NULL);
+    if (Project(res).isFolder()) {
+        res += "/";
+    }
 #else
     TCHAR fullPath[MAX_PATH];
     GetFullPathName(this->c_str(), MAX_PATH, fullPath, NULL);
     res = fullPath;
+    if (Project(res).isFolder()) {
+        res += "\\";
+    }
 #endif
     return res;
 }
