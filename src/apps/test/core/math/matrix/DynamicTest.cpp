@@ -108,25 +108,6 @@ TEST_F(MathMatrixDynamicTest, QRdecomposition) {
     EXPECT_EQ(Q*R, d);
 }
 
-TEST_F(MathMatrixDynamicTest, HessenbergForm) {
-    Dynamic<double> d(3,3);
-    d(0,0) = 1.0; d(0,1) = 5.0; d(0,2) = 13.0;
-    d(1,0) = 2.0; d(1,1) = 7.0; d(1,2) = 17.0;
-    d(2,0) = 3.0; d(2,1) = 11.0; d(2,2) = 19.0;
-
-    //d.printInfo();
-
-    Dynamic<double> H = d.hessenbergForm();
-
-    for (size_t i = 0; i < H.nRows(); i++) {
-        for (size_t j = 0; j < i; j++) {
-            EXPECT_EQ(0.0, H.val(i,j));
-        }
-    }
-
-    //H.printInfo();
-}
-
 #ifdef EIGEN_SUPPORT
 TEST_F(MathMatrixDynamicTest, eigenLibraryPOC) {
 	Eigen::Matrix2d A;
