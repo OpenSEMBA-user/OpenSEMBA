@@ -29,9 +29,6 @@ Port::Port(Magnitude::Magnitude* magnitude,
            const Geometry::Element::Group<const Geometry::Surf>& elem)
 :   SEMBA::Source::Base(magnitude),
     Geometry::Element::Group<const Geometry::Surf>(elem) {
-    for (size_t i = 0; i < size(); i++) {
-        (*this)(i)->printInfo();
-    }
 }
 
 Port::Port(const Port& rhs) :

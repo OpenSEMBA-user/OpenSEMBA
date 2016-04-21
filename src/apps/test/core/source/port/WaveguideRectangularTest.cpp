@@ -42,6 +42,9 @@ class SourceWaveportRectangularTest : public ::testing::Test {
         for (size_t i = 0; i < quadBoxes.size(); i++) {
             surfs_.add(new Geometry::QuaI4(cG, ++id,quadBoxes[i], NULL, NULL));
         }
+
+        surfs_.getBound().printInfo();
+
         excMode_ = Port::Waveguide::TE;
         mode_ = pair<size_t,size_t>(1,0);
 
@@ -73,7 +76,6 @@ protected:
 
 TEST_F(SourceWaveportRectangularTest, withoutSymmetries) {
     Port::WaveguideRectangular(NULL, surfs_, excMode_, mode_, bounds_);
-
 }
 
 TEST_F(SourceWaveportRectangularTest, withSymmetry) {

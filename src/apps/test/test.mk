@@ -27,7 +27,7 @@ TEST_CORE_ARGUMENT      = no#
 TEST_CORE_PHYSICALMODEL = no#
 TEST_CORE_SOURCE        = yes#
 TEST_CORE_FILESYSTEM    = no#
-TEST_PARSER_GID         = yes#
+TEST_PARSER_GID         = no#
 TEST_PARSER_STL         = no#
 
 # =============================================================================
@@ -67,7 +67,11 @@ ifeq ($(TEST_CORE_PHYSICALMODEL),yes)
 								   $(shell find $(SRC_APP_DIR)core/physicalModel/ -type d)
 endif
 ifeq ($(TEST_CORE_SOURCE),yes)
-	SRC_CORE_SOURCE_DIRS = $(shell find $(SRC_DIR)core/ -type d)
+	SRC_CORE_SOURCE_DIRS = $(shell find $(SRC_DIR)core/math/ -type d) \
+						   $(shell find $(SRC_DIR)core/filesystem/ -type d) \
+	 					   $(shell find $(SRC_DIR)core/geometry/ -type d) \
+	 					   $(shell find $(SRC_DIR)core/physicalModel/ -type d) \
+	 					   $(shell find $(SRC_DIR)core/source/ -type d) 
 	SRC_CORE_SOURCE_TESTS_DIRS := $(SRC_CORE_SOURCE_DIRS) \
 								   $(shell find $(SRC_APP_DIR)core/source/ -type d)
 endif
