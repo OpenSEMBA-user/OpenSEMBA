@@ -34,18 +34,18 @@ Waveguide::Waveguide(Magnitude::Magnitude* magnitude,
     excitationMode_ = excMode;
     mode_ = mode;
     // Performs checks
-    if (!this->getBound().isSurface()) {
+    if (!elem.getBound().isSurface()) {
         throw std::logic_error("Waveport elements must be contained "
                                "in a coplanar Geometry::Surface");
     }
 
-    Math::CVecR3 diagonal = this->getBound().getMax() - 
-                            this->getBound().getMin();
+    Math::CVecR3 diagonal = elem.getBound().getMax() -
+                            elem.getBound().getMin();
     if (!diagonal.isContainedInPlane(Math::Constants::xy)) {
         throw std::logic_error("Waveport must be contained in plane xy.");
     }
 
-    if (this->size() == 0) {
+    if (elem.size() == 0) {
         throw std::logic_error("Waveport must contain some elements.");
     }
 }
