@@ -108,7 +108,7 @@ Math::CVecR3 WaveguideRectangular::getWeight(
         res(Math::Constants::x) =   n * cos(m * rPos(Math::Constants::x)) *
                                         sin(n * rPos(Math::Constants::y)) /
                                         normFactor;
-        res(Math::Constants::y) = - m * sin(m * rPos(Math::Constants::x)) *
+        res(Math::Constants::y) =   m * sin(m * rPos(Math::Constants::x)) *
                                         cos(n * rPos(Math::Constants::y)) /
                                         normFactor;
         res(Math::Constants::z) = (Math::Real) 0.0;
