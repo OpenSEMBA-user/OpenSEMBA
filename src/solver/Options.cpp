@@ -195,28 +195,27 @@ void Options::setResumeSimulation(bool resumeSimulation) {
 //    }
 //}
 
-//std::string Options::toArgsStr() const {
-//    // DEPRECATED
-//    Options defaultOptions;
-//    std::stringstream ss;
-//    if (getCFL() != defaultOptions.getCFL()) {
-//        ss << " -cfl " << getCFL();
-//    }
-//    if (isResumeSimulation()) {
-//        if (getTimeStep() != 0.0) {
-//            ss << " -r " << (std::size_t)floor(getFinalTime() / getTimeStep());
-//        } else {
-//            ss << " -r " << (std::size_t)floor(getFinalTime());
-//        }
-//    }
-//    if (isForceRestarting()) {
-//        ss << " -s";
-//    }
-//    if (getFlush() != defaultOptions.getFlush()) {
-//        ss << " -flush " << getFlush();
-//    }
-//    return ss.str();
-//}
+std::string Options::toArgsStr() const {
+    Options defaultOptions;
+    std::stringstream ss;
+    if (getCFL() != defaultOptions.getCFL()) {
+        ss << " -cfl " << getCFL();
+    }
+    if (isResumeSimulation()) {
+        if (getTimeStep() != 0.0) {
+            ss << " -r " << (std::size_t)floor(getFinalTime() / getTimeStep());
+        } else {
+            ss << " -r " << (std::size_t)floor(getFinalTime());
+        }
+    }
+    if (isForceRestarting()) {
+        ss << " -s";
+    }
+    if (getFlush() != defaultOptions.getFlush()) {
+        ss << " -flush " << getFlush();
+    }
+    return ss.str();
+}
 
 //Options::Solver Options::getSolver() const {
 //    return solver_;
