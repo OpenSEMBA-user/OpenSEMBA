@@ -88,28 +88,28 @@ HELP: Inductance Model
 QUESTION: Wires_attenuation_factor
 VALUE: 1.0
 HELP: Positive factor from 0 (full attenuation) to 1 (no attenuation) for enhancing stability in wires. Defaults to 1.0.
-QUESTION: Use_default_PML#CB#(0,1)
-VALUE: 1
-DEPENDENCIES: (1,   SET,PML_alpha_factor,0.0,    SET,PML_alpha_order,1.0,    SET,PML_kappa,1.0,    SET,PML_correction_factor,1.0,    SET,PML_correction_depth,8,    SET,PML_backing,None)
-DEPENDENCIES: (0, RESTORE,PML_alpha_factor,0.0, RESTORE,PML_alpha_order,1.0, RESTORE,PML_kappa,1.0, RESTORE,PML_correction_factor,1.0, RESTORE,PML_correction_depth,8, RESTORE,PML_backing,None)
-QUESTION: PML_alpha_factor
-VALUE: 0.0
-HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
-QUESTION: PML_alpha_order
-VALUE: 1.0
-HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
-QUESTION: PML_kappa
-VALUE: 1.0
-HELP: CPML Kappa (>=1)
-QUESTION: PML_correction_factor
-VALUE: 1.0
-HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
-QUESTION: PML_correction_depth
-VALUE: 8
-HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
-QUESTION: PML_backing#CB#(None,Mur1,Mur2)
-VALUE: None
-HELP: Supplement PMLs with Mur ABCs
+#QUESTION: Use_default_PML#CB#(0,1)
+#VALUE: 1
+#DEPENDENCIES: (1,   SET,PML_alpha_factor,0.0,    SET,PML_alpha_order,1.0,    SET,PML_kappa,1.0,    SET,PML_correction_factor,1.0,    SET,PML_correction_depth,8,    SET,PML_backing,None)
+#DEPENDENCIES: (0, RESTORE,PML_alpha_factor,0.0, RESTORE,PML_alpha_order,1.0, RESTORE,PML_kappa,1.0, RESTORE,PML_correction_factor,1.0, RESTORE,PML_correction_depth,8, RESTORE,PML_backing,None)
+#QUESTION: PML_alpha_factor
+#VALUE: 0.0
+#HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
+#QUESTION: PML_alpha_order
+#VALUE: 1.0
+#HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
+#QUESTION: PML_kappa
+#VALUE: 1.0
+#HELP: CPML Kappa (>=1)
+#QUESTION: PML_correction_factor
+#VALUE: 1.0
+#HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
+#QUESTION: PML_correction_depth
+#VALUE: 8
+#HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
+#QUESTION: PML_backing#CB#(None,Mur1,Mur2)
+#VALUE: None
+#HELP: Supplement PMLs with Mur ABCs
 QUESTION: Map#CB#(0,1)
 VALUE: 0
 HELP: Creates map ASCII files of the geometry and a .dxf file with wires and PEC (in conjunction with -n 0 only creates the maps)
