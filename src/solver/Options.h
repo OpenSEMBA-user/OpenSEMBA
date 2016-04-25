@@ -74,7 +74,7 @@ public:
     void printHelp() const;
 
 //    static std::string toStr(const Options::Solver& solver);
-//    virtual std::string toArgsStr() const; // DEPRECATED
+    virtual std::string toArgsStr() const;
     bool isRunSimulation() const;
     void setRunSimulation(bool runSimulation);
 
