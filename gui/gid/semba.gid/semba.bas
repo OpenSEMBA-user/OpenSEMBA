@@ -36,12 +36,6 @@ Ground wires: *GenData(Ground_wires)
 Inductance model: *GenData(Inductance_model)
 Wires attenuation factor: *GenData(Wires_attenuation_factor)
 
-Use default PML: *GenData(Use_default_PML)
-PML alpha: *GenData(PML_alpha_factor) *GenData(PML_alpha_order)
-PML kappa: *GenData(PML_kappa)
-PML correction: *GenData(PML_correction_factor) *GenData(PML_correction_depth)
-PML backing: *GenData(PML_backing)
-
 Map: *GenData(Map)
 Map VTK: *GenData(Map_VTK)
 NF2FF decimation: *GenData(NF2FF_decimation)
