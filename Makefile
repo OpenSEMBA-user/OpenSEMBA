@@ -45,20 +45,6 @@ ifeq ($(compiler),gnu)
 	CCFLAGS +=
 	CXXFLAGS += -std=c++0x -static -pthread -fopenmp
 endif # endif choosing the GNU compiler.
-#===================== MinGW32 Compiler =======================================
-ifeq ($(compiler),mingw32)
-	CC = i686-w64-mingw32-gcc
-	CXX = i686-w64-mingw32-g++
-	CCFLAGS +=
-	CXXFLAGS += -std=c++0x -static
-endif # endif choosing the MinGW32 compiler.
-#===================== MinGW64 Compiler =======================================
-ifeq ($(compiler),mingw64)
-	CC = x86_64-w64-mingw32-gcc
-	CXX = x86_64-w64-mingw32-g++
-	CCFLAGS +=
-	CXXFLAGS += -std=c++0x -static
-endif # endif choosing the MinGW64 compiler.
 # ================= Optimization target =======================================
 ifeq ($(target),debug)
 	CXXFLAGS +=-O0 -g3 -Wall -Wno-write-strings

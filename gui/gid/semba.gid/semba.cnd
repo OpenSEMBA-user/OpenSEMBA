@@ -232,7 +232,7 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_surface_outRq#WIDTH#(18)
-QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,bulkCurrentElectric,bulkCurrentMagnetic)
+QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals)
 VALUE: electricField
 #Title: Domain
 QUESTION: Time#CB#(0,1)
