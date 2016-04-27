@@ -31,9 +31,10 @@ namespace Wire {
 
 class Extremes : public virtual Wire {
 public:
-    Extremes(const Wire& wire,
-                 const Multiport::Multiport* extremeL,
-                 const Multiport::Multiport* extremeR);
+    Extremes(const std::string&,
+             const Wire& wire,
+             const Multiport::Multiport* extremeL,
+             const Multiport::Multiport* extremeR);
     Extremes(const Extremes& rhs);
     virtual ~Extremes();
 

@@ -25,11 +25,12 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Wire {
 
-Extremes::Extremes(const Wire& wire,
-                           const Multiport::Multiport* extremeL,
-                           const Multiport::Multiport* extremeR)
+Extremes::Extremes(const std::string& name,
+                   const Wire& wire,
+                   const Multiport::Multiport* extremeL,
+                   const Multiport::Multiport* extremeR)
 :   Identifiable<Id>(wire),
-    PhysicalModel(wire),
+    PhysicalModel(name),
     Wire(wire) {
     extreme_[0] = extreme_[1] = NULL;
     if (extremeL != NULL) {

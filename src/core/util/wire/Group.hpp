@@ -70,16 +70,16 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
         Geometry::Element::Group<const Geometry::Element::Line<T>> lines;
         if (std::is_floating_point<T>::value) {
             lines = smb.mesh->castTo<Geometry::Mesh::Unstructured>()
-                ->elems().getOf<Geometry::Element::Line<T>>();
+                        ->elems().getOf<Geometry::Element::Line<T>>();
         } else if (std::is_integral<T>::value) {
             lines = smb.mesh->castTo<Geometry::Mesh::Structured>()
-                ->elems().getOf<Geometry::Element::Line<T>>();
+                        ->elems().getOf<Geometry::Element::Line<T>>();
         }
-        PhysicalModel::Group<const PhysicalModel::Wire::Wire> pmwires =
-            smb.physicalModels->getOf<PhysicalModel::Wire::Wire>();
+        PhysicalModel::Group<const PhysicalModel::Wire::Wire>
+            pmwires = mats.getOf<PhysicalModel::Wire::Wire>();
         std::vector<MatId> pmwiresIds = pmwires.getIds();
-        PhysicalModel::Group<const PhysicalModel::Multiport::Multiport> pmmults =
-            mats.getOf<PhysicalModel::Multiport::Multiport>();
+        PhysicalModel::Group<const PhysicalModel::Multiport::Multiport>
+            pmmults = mats.getOf<PhysicalModel::Multiport::Multiport>();
         std::vector<MatId> pmmultsIds = pmmults.getIds();
         std::vector<MatId> matIds;
         matIds.reserve(pmwiresIds.size() + pmmultsIds.size());
@@ -99,40 +99,39 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             MatId matId[2];
             bool isWireMat[2];
             bool isWireExtrMat[2];
-            bool extreme = true;
+            bool leaving[2];
             for (std::size_t j = 0; j < 2; j++) {
                 layId[j] = nodePtr->getBound(j)->elem()->getLayerId();
                 matId[j] = nodePtr->getBound(j)->elem()->getMatId();
-                isWireMat[j] = mats.getId(matId[j])->is<PhysicalModel::Wire::Wire>();
+                isWireMat[j] =
+                    mats.getId(matId[j])->is<PhysicalModel::Wire::Wire>();
                 isWireExtrMat[j] =
                     mats.getId(matId[j])->is<PhysicalModel::Wire::Extremes>();
-                if (nodePtr->elem()->getId() !=
-                    nodePtr->getBound(j)->getBound(0)->elem()->getId()) {
-                    extreme = false;
+                if (nodePtr->elem()->getId() ==
+                        nodePtr->getBound(j)->getBound(0)->elem()->getId()) {
+                    leaving[j] = true;
+                } else {
+                    leaving[j] = false;
                 }
             }
+            bool extreme = leaving[0] && leaving[1];
             if (layId[0] != layId[1]) {
                 graph.splitBound(i);
             } else if (isWireExtrMat[0] || isWireExtrMat[1]) {
                 if ((!isWireExtrMat[0] || !isWireExtrMat[1]) ||
-                    (matId[0] != matId[1])) {
+                    (matId[0] != matId[1]) || (leaving[0] == leaving[1])) {
                     graph.splitBound(i);
                 }
             } else if (isWireMat[0] && isWireMat[1]) {
-                if (matId[0] != matId[1]) {
+                if ((matId[0] != matId[1]) || (leaving[0] == leaving[1])) {
                     graph.splitBound(i);
                 }
             } else if (!isWireMat[0] && !isWireMat[1]) {
                 if ((matId[0] != matId[1]) || extreme) {
                     graph.splitBound(i);
                 }
-            } else if (!isWireMat[0] &&
-                       (nodePtr->elem()->getId() ==
-                       nodePtr->getBound(0)->getBound(0)->elem()->getId())) {
-                graph.splitBound(i);
-            } else if (!isWireMat[1] &&
-                       (nodePtr->elem()->getId() ==
-                       nodePtr->getBound(1)->getBound(0)->elem()->getId())) {
+            } else if ((!isWireMat[0] && leaving[0]) ||
+                       (!isWireMat[1] && leaving[1])) {
                 graph.splitBound(i);
             }
         }
@@ -147,6 +146,7 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
         getLines_(graph);
     const PhysicalModel::Wire::Wire* wireMat;
     const PhysicalModel::Multiport::Multiport *extremeL, *extremeR;
+    std::map<const PhysicalModel::Wire::Wire*, std::size_t> numWireMat;
     for (std::size_t i = 0; i < wires.size(); i++) {
         wireMat = NULL;
         extremeL = extremeR = NULL;
@@ -158,8 +158,15 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
         if (wireMat->is<PhysicalModel::Wire::Extremes>()) {
             wireExtremes = wireMat->cloneTo<PhysicalModel::Wire::Extremes>();
         } else {
-            wireExtremes = new PhysicalModel::Wire::Extremes(*wireMat,
-                                                           extremeL, extremeR);
+            if (numWireMat.count(wireMat) == 0) {
+                numWireMat[wireMat] = 0;
+            }
+            std::stringstream aux;
+            aux << wireMat->getName() << "_" << ++numWireMat[wireMat];
+            wireExtremes = new PhysicalModel::Wire::Extremes(aux.str(),
+                                                             *wireMat,
+                                                             extremeL,
+                                                             extremeR);
         }
         wireExtremes->setId(MatId(i + 1));
         mats_[wireExtremes->getId()] = wireExtremes;
@@ -181,9 +188,8 @@ std::vector<std::vector<const Geometry::Element::Line<T>*>>
     Geometry::ElemId prvNodeId;
     for (std::size_t n = 1; n < 3; n++) {
         for (std::size_t i = 0; i < graph.numElems(); i++) {
-            if ((graph.elem(i)->numNeighbors() == n) &&
+            if ((graph.elem(i)->getBound(0)->numBounds() == n) &&
                 (visLines.count(graph.elem(i)->elem()->getId()) == 0)) {
-
                 std::vector<const Geometry::Element::Line<T>*> wireLines;
                 nextSegment = graph.elem(i);
                 while (nextSegment != NULL) {
@@ -194,11 +200,11 @@ std::vector<std::vector<const Geometry::Element::Line<T>*>>
                     visLines.insert(nextSegment->elem()->getId());
                     prevSegment = nextSegment;
                     nextSegment = NULL;
-                    for (std::size_t j = 0; j < prevSegment->numNeighbors();
-                         j++) {
+                    for (std::size_t
+                         j = 0; j < prevSegment->numNeighbors(); j++) {
                         if (visLines.count(
-                            prevSegment->getNeighbor(j)
-                            ->elem()->getId()) == 0) {
+                                prevSegment->getNeighbor(j)
+                                    ->elem()->getId()) == 0) {
                             nextSegment = prevSegment->getNeighbor(j);
                         }
                     }
@@ -243,50 +249,43 @@ void Group<T>::getWireMats_(
             if ((extremeL == NULL) &&
                 (wireMat == NULL)) {
                 extremeL =
-                    mats.getId(matIds[m])->castTo<PhysicalModel::Multiport::Multiport>();
+                    mats.getId(matIds[m])->castTo<
+                        PhysicalModel::Multiport::Multiport>();
             } else if ((extremeL != NULL) &&
                        (wireMat == NULL)) {
-                std::cout << "WARNING @ WireGroup: ";
-                std::cout << " Wire: " << wires_.size() + 1;
-                std::cout << ". Two node materials together. ";
-                std::cout << "Ignoring second.";
-                std::cout << std::endl;
-                assert(false);
-                continue;
+                //Never happens
             } else if ((wireMat != NULL) &&
                        (extremeR == NULL)) {
                 extremeR =
-                    mats.getId(matIds[m])->castTo<PhysicalModel::Multiport::Multiport>();
+                    mats.getId(matIds[m])->castTo<
+                        PhysicalModel::Multiport::Multiport>();
             } else if (extremeR != NULL) {
-                std::cout << "WARNING @ WireGroup: ";
-                std::cout << " Wire: " << wires_.size() + 1;
-                std::cout << ". Two node materials together. ";
-                std::cout << "Ignoring second.";
-                std::cout << std::endl;
-                assert(false);
-                continue;
+                //Never happens
             }
         } else if (mats.getId(matIds[m])->is<PhysicalModel::Wire::Wire>()) {
             if (wireMat == NULL) {
-                wireMat = mats.getId(matIds[m])->castTo<PhysicalModel::Wire::Wire>();
+                wireMat =
+                    mats.getId(matIds[m])->castTo<PhysicalModel::Wire::Wire>();
             } else if (wireMat != NULL) {
-                std::cout << "WARNING @ WireGroup: ";
-                std::cout << " Wire: " << wires_.size() + 1;
-                std::cout << ". Too many wire materials. ";
-                std::cout << "Ignoring last.";
-                std::cout << std::endl;
-                assert(false);
-                continue;
+                //Never happens
             }
         }
     }
     if (wireMat == NULL) {
-        std::cout << "WARNING @ WireGroup: ";
-        std::cout << " Wire: " << wires_.size() + 1;
-        std::cout << ". No wire material. Ignoring wire.";
-        std::cout << std::endl;
-        assert(false);
-        return;
+        std::stringstream aux;
+        aux << "ERROR @ Wire::Group: Lines with ids";
+        for (std::size_t i = 0; i < lines.size(); i++) {
+            if (i == 0) {
+                aux << " ";
+            } else if (i + 1 == lines.size()) {
+                aux << " and ";
+            } else {
+                aux << ", ";
+            }
+            aux << lines[i]->getId();
+        }
+        aux << " specify a incorrect Wire";
+        throw std::logic_error(aux.str());
     }
 }
 
