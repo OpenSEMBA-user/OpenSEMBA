@@ -70,7 +70,7 @@ Cartesian<T,D>::Cartesian(const T x, const T y, const T z) {
 
 template <class T, std::size_t D>
 Cartesian<T,D>::Cartesian(const Cartesian<T,D>& begin,
-                          const Cartesian<T,D>& end) {
+        const Cartesian<T,D>& end) {
     for (std::size_t i = 0; i < D; i++) {
         val[i] = end.val[i]-begin.val[i];
     }
@@ -394,6 +394,32 @@ inline Real Cartesian<T,D>::norm() const {
     return sqrt(sum);
 }
 
+template <class T, std::size_t D>
+inline bool Cartesian<T,D>::isInCartesianAxis() const {
+    try {
+        getCartesianAxis();
+    }
+    catch (const std::logic_error& e) {
+        return false;
+    }
+    return true;
+}
+
+template <class T, std::size_t D>
+inline Constants::CartesianAxis Cartesian<T,D>::getCartesianAxis() const {
+    assert(D <= 3);
+    for (size_t dir = 0; dir < D; dir++) {
+        Cartesian<T,D> axis;
+        axis(dir) = (T) 1.0;
+        Real dotProduct = std::abs(this->dot(axis));
+        Real norm = this->norm();
+        if (Util::equal(dotProduct, norm, 1e-2)) {
+            return Constants::CartesianAxis(dir);
+        }
+    }
+    throw std::logic_error("Vector is not in Cartesian Axis");
+}
+
 
 template <class T, std::size_t D>
 Cartesian<T,D>& Cartesian<T,D>::cyclicPermutation(const std::size_t n) {
@@ -468,7 +494,7 @@ void Cartesian<T,D>::printInfo() const {
 
 template<std::size_t D>
 Cartesian<Real,D> operator+(const Cartesian<Int ,D> & lhs,
-                            const Cartesian<Real,D>& rhs) {
+        const Cartesian<Real,D>& rhs) {
     Cartesian<Real,D> res;
     for (std::size_t i = 0; i < D; i++) {
         res(i) = lhs(i) + rhs(i);
@@ -478,7 +504,7 @@ Cartesian<Real,D> operator+(const Cartesian<Int ,D> & lhs,
 
 template<std::size_t D>
 Cartesian<Real,D> operator/(const Cartesian<Int,D>& lhs,
-                            const Real rhs) {
+        const Real rhs) {
     Cartesian<Real,D> res;
     for (std::size_t i = 0; i < D; i++) {
         res(i) = (Real) lhs(i) / rhs;
@@ -488,7 +514,7 @@ Cartesian<Real,D> operator/(const Cartesian<Int,D>& lhs,
 
 template<class T, std::size_t D>
 bool operator< (const Cartesian<T,D>& lhs,
-                const Cartesian<T,D>& rhs) {
+        const Cartesian<T,D>& rhs) {
     for (std::size_t i = 0; i < D; i++) {
         if (Util::lower  (lhs(i), rhs(i))) {
             return true;
@@ -502,19 +528,19 @@ bool operator< (const Cartesian<T,D>& lhs,
 
 template<class T, std::size_t D>
 bool operator<=(const Cartesian<T,D>& lhs,
-                const Cartesian<T,D>& rhs) {
+        const Cartesian<T,D>& rhs) {
     return !(rhs < lhs);
 }
 
 template<class T, std::size_t D>
 bool operator> (const Cartesian<T,D>& lhs,
-                const Cartesian<T,D>& rhs) {
+        const Cartesian<T,D>& rhs) {
     return rhs < lhs;
 }
 
 template<class T, std::size_t D>
 bool operator>=(const Cartesian<T,D>& lhs,
-                const Cartesian<T,D>& rhs) {
+        const Cartesian<T,D>& rhs) {
     return !(lhs < rhs);
 }
 

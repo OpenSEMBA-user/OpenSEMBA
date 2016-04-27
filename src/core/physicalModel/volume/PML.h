@@ -43,6 +43,7 @@ public:
     SEMBA_CLASS_DEFINE_CLONE(PML);
 
     const Math::Axis::Local* getOrientation() const;
+    const Math::CVecR3 getGlobalZAxis() const;
 
     void printInfo() const;
 

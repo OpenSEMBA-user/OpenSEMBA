@@ -62,6 +62,14 @@ const Math::Axis::Local* PML::getOrientation() const {
     return orientation_;
 }
 
+const Math::CVecR3 PML::getGlobalZAxis() const {
+    Math::CVecR3 localZ(0.0,0.0,1.0);
+    Math::CVecR3 res = getOrientation()->convertToGlobal(localZ)
+            - getOrientation()->getOrigin();
+    return res;
+}
+
 } /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
+

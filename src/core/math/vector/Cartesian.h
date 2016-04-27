@@ -22,8 +22,9 @@
 #ifndef SEMBA_MATH_VECTOR_CARTESIAN_H_
 #define SEMBA_MATH_VECTOR_CARTESIAN_H_
 
-#include <complex>
 #include <iostream>
+#include <complex>
+#include <stdexcept>
 
 #include "math/Types.h"
 #include "math/Constants.h"
@@ -79,6 +80,9 @@ public:
     virtual bool isContainedInPlane(
             const Constants::CartesianPlane plane) const;
     virtual bool isCoplanar(const Cartesian<T,D>& param) const;
+
+    virtual bool                     isInCartesianAxis() const;
+    virtual Constants::CartesianAxis getCartesianAxis() const;
 
     virtual T& operator() (std::size_t pos);
     virtual T  operator() (std::size_t pos) const;
