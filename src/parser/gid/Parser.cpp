@@ -65,11 +65,11 @@ Parser::~Parser() {
 }
 
 Data* Parser::read() {
-    if (isFolder()) {
-        throw std::logic_error(getFilename() + " is a directory.");
-    }
     if (!canOpen()) {
         throw std::logic_error("Can not openfile: " + getFilename());
+    }
+    if (isFolder()) {
+        throw std::logic_error(getFilename() + " is a directory.");
     }
     openAsInput(f_in);
     std::string version = readVersion();
