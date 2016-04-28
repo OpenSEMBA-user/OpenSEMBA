@@ -25,6 +25,8 @@
 #include <vector>
 #include <complex>
 
+#ifdef EIGEN_SUPPORT
+
 namespace SEMBA {
 namespace Math {
 namespace Fitting {
@@ -55,4 +57,6 @@ private:
 } /* namespace Math */
 } /* namespace SEMBA */
 
-#endif
+#endif // EIGEN_SUPPORT
+
+#endif // SEMBA_MATH_FITTING_VECTOR_H_
