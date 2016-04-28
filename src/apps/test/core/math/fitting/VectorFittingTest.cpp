@@ -19,41 +19,42 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "VectorFitting.h"
-
 #ifdef EIGEN_SUPPORT
 
-namespace SEMBA {
-namespace Math {
-namespace Fitting {
+#include "gtest/gtest.h"
+#include "math/fitting/VectorFitting.h"
+#include "math/util/SpaceGenerator.h"
 
-VectorFitting::VectorFitting(
-        const std::vector<Sample>& samples) {
+using namespace SEMBA;
+using namespace Math;
+using namespace Fitting;
+
+using namespace std;
+
+class MathFittingVectorFittingTest : public ::testing::Test {
+
+};
+
+TEST_F(MathFittingVectorFittingTest, ex1) {
+    const size_t nS = 101;
+    vector<Real> sImag = Util::logspace(pair<Real,Real>(0.0,4.0), nS);
+    vector<VectorFitting::Sample> samples(nS);
+    for (size_t i = 0; i < nS; i++) {
+        samples[i].first =
+                complex<Real>(0.0, - 2.0 * Constants::pi * sImag[i]);
+
+        const complex<Real> sk = samples[i].first;
+        vector<complex<Real>> f(1);
+        f[0] =  2.0 /(sk+5.0)
+                + complex<Real>(30.0,40.0) / (sk-(complex<Real>(-100.0,500.0)))
+                + complex<Real>(30.0,-40.0)/ (sk-(complex<Real>(-100.0,-500.0)))
+                + 0.5;
+        samples[i].second = f;
+    }
+
+    VectorFitting fitting(samples);
+    fitting.fit();
+
+    EXPECT_NEAR(0.0, fitting.getRMS(), 1e-3);
 }
-
-void VectorFitting::fit() {
-}
-
-std::vector<VectorFitting::Sample> VectorFitting::getFittedSamples(
-        const std::vector<std::complex<Real> >& frequencies) const {
-
-}
-
-std::vector<std::complex<Real> > VectorFitting::getPoles() {
-
-}
-
-std::vector<std::complex<Real> > VectorFitting::getResidues() {
-
-}
-
-Real VectorFitting::getRMS() {
-
-}
-
-} /* namespace Fitting */
-} /* namespace Math */
-} /* namespace SEMBA */
-
 #endif
-
