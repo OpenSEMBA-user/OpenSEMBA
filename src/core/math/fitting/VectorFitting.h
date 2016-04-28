@@ -22,10 +22,10 @@
 #ifndef SEMBA_MATH_FITTING_VECTOR_H_
 #define SEMBA_MATH_FITTING_VECTOR_H_
 
+#ifdef EIGEN_SUPPORT
+
 #include <vector>
 #include <complex>
-
-#ifdef EIGEN_SUPPORT
 
 namespace SEMBA {
 namespace Math {
@@ -33,24 +33,29 @@ namespace Fitting {
 
 class VectorFitting {
 public:
+    typedef std::pair<std::complex<Real>,
+                      std::vector<std::complex<Real> > > Sample;
+
     // TODO: manage options in constructor.
-    VectorFitting(  std::vector< std::vector<std::complex<double> > > data,
-                    std::vector<double> samples,
-                    std::vector<std::complex<double> > poles,
-                    std::vector< std::vector<std::complex<double> > > weights);
+    VectorFitting(const std::vector<Sample>& samples);
 
     // This could be called from the constructor, but if an iterative algorithm
     // is preferred, it's a good idea to have it as a public method
     void fit();
 
-    std::vector<std::complex<double> > getPoles();
-    std::vector<std::complex<double> > getResidues();
-
-    // TODO: declare getters of A,B,C,D,E matrices
+    std::vector<Sample> getFittedSamples(
+            const std::vector<std::complex<Real>>& frequencies) const;
+    std::vector<std::complex<Real> > getPoles();
+    std::vector<std::complex<Real> > getResidues();
+    Real getRMS();
 
 private:
-    // TODO: define class attributes to store: input data, output data,
-    // ¿intermediate poles iterations?, options.
+    std::vector<Sample> samples_;
+
+    std::vector<std::complex<Real>> poles_, residues_;
+
+    Matrix::Dynamic<std::complex<Real>>  A_, C_;
+    std::vector<Real>  B_, D_, E_;
 };
 
 } /* namespace Fitting */
