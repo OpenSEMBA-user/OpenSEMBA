@@ -399,7 +399,7 @@ inline bool Cartesian<T,D>::isInCartesianAxis() const {
     try {
         getCartesianAxis();
     }
-    catch (const std::logic_error& e) {
+    catch (const std::logic_error&) {
         return false;
     }
     return true;
