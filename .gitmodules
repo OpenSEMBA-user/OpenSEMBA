@@ -1,3 +1,0 @@
-[submodule "external/--force"]
-	path = external/--force
-	url = https://github.com/google/googletest
