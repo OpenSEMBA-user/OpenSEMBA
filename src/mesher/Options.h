@@ -76,6 +76,7 @@ public:
     const std::string& getMeshOutputName() const;
     bool isGridStepSet() const;
     bool isVtkExport() const;
+    bool isSlantedWires() const;
     bool isPostmshExport() const;
     const Math::CVecR3& getGridStep() const;
     const std::pair<Math::CVecR3, Math::CVecR3>& getBoundaryMeshSize() const;
@@ -101,6 +102,7 @@ public:
     void setScaleFactorValue(const std::string& scaleFactorValue);
     void setScalingFactor(const Math::Real& scalingFactor);
     void setVtkExport(bool vtkExport);
+    void setSlantedWires(bool slantedWires);
 
     void applyGeometricScalingFactor(const Math::Real& factor);
 
@@ -122,6 +124,7 @@ private:
 
     bool vtkExport_;
     bool postmshExport_;
+    bool slantedWires_;
     Math::CVecR3 gridStep_;
 
     Geometry::BoundTerminations3 boundTermination_;

@@ -181,6 +181,9 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName("postmsh Export")) {
         setPostmshExport(opts("postmsh Export").getBool());
     }
+    if (opts.existsName("Slanted Wires")) {
+        setSlantedWires(opts("Slanted Wires").getBool());
+    }
     if (opts.existsName("Mode")) {
         setMode(strToMesherMode(opts("Mode").getString()));
     }
@@ -282,6 +285,10 @@ bool Options::isVtkExport() const {
     return vtkExport_;
 }
 
+bool Options::isSlantedWires() const {
+    return slantedWires_;
+}
+
 bool Options::isPostmshExport() const {
     return postmshExport_;
 }
@@ -292,6 +299,10 @@ void Options::setPostmshExport(bool postmshExport) {
 
 void Options::setVtkExport(bool vtkExport) {
     vtkExport_ = vtkExport;
+}
+
+void Options::setSlantedWires(bool slantedWires) {
+    slantedWires_ = slantedWires;
 }
 
 bool Options::isGridStepSet() const {
