@@ -89,6 +89,8 @@ endif()
 
 add_definitions(-DAPP_VERSION="0.11")
 
+find_package(GTest)
+
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
                     ${CMAKE_CURRENT_LIST_DIR}
                     ${CMAKE_CURRENT_LIST_DIR}/core/)
@@ -99,3 +101,8 @@ add_subdirectories(exporter obj/src)
 add_subdirectories(adapter  obj/src)
 add_subdirectory  (solver   obj/src/solver)
 add_subdirectories(apps     obj/src)
+
+if (GTEST_FOUND)
+    enable_testing()
+    add_test(opensemba_test opensemba_test)
+endif()

@@ -21,64 +21,15 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-function(add_sources dir srcs)
-    set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
-    file(GLOB children RELATIVE ${curdir} ${curdir}/*)
-    foreach(child ${children})
-        if(IS_DIRECTORY ${curdir}/${child})
-            if (dir STREQUAL ".")
-                add_sources(${child} ${srcs})
-            else()
-                add_sources(${dir}/${child} ${srcs})
-            endif()
-        endif()
-    endforeach()
-    file(GLOB HDRS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.h)
-    file(GLOB TMPL_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.hpp)
-    file(GLOB SRCS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.cpp)
-    set(SRCS_LOCAL_ALL ${HDRS_LOCAL} ${TMPL_LOCAL} ${SRCS_LOCAL})
-    set(${srcs} ${${srcs}} ${SRCS_LOCAL_ALL} PARENT_SCOPE)
-    if (NOT dir STREQUAL ".")
-        string(REPLACE "/" "\\\\" src_grp ${dir})
-        source_group(${src_grp} FILES ${SRCS_LOCAL_ALL})
-    endif()
-endfunction()
+if (GTEST_FOUND)
+    include_directories(${GTEST_INCLUDE_DIRS}
+                        ${CMAKE_CURRENT_LIST_DIR})
+    add_sources(. SRCS)
 
-project(opensemba_test CXX)
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-find_package(OpenMP)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    add_executable(opensemba_test ${SRCS})
+    target_link_libraries(opensemba_test opensemba_core_argument
+                                         opensemba_core_data
+                                         opensemba_parser_gid
+                                         opensemba_parser_stl
+                                         ${GTEST_BOTH_LIBRARIES})
 endif()
-
-if (CMAKE_COMPILER_IS_GNUCXX)
-    include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag("-std=c++11" compiler_supports_cxx11)
-    check_cxx_compiler_flag("-std=c++0x" compiler_supports_cxx0X)
-    if(compiler_supports_cxx11)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    elseif(compiler_supports_cxx0X)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-    else()
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. "
-                            "Please use a different C++ compiler.")
-    endif()
-endif()
-
-include_directories(${gtest_SOURCE_DIR}/include
-                    ${gtest_SOURCE_DIR}
-                    ${CMAKE_CURRENT_LIST_DIR})
-add_sources(. SRCS)
-
-add_executable(opensemba_test ${SRCS})
-target_link_libraries(opensemba_test opensemba_core_argument
-                                     opensemba_core_data
-                                     opensemba_parser_gid
-                                     opensemba_parser_stl
-                                     gtest
-                                     gtest_main)
