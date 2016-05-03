@@ -136,13 +136,9 @@ std::string Project::getBasename() const {
 
 std::string Project::getFolder() const {
 #ifdef _WIN32
-    char *cstr = new char[getFilename().length() + 1];
-    strcpy(cstr, getFilename().c_str());
-    PathRemoveFileSpec(cstr);
-    std::string folder(cstr);
-    if (!folder.empty()) {
-        folder += "\\";
-    }
+    char* dir = new char[getFilename().size() + 1];
+    _splitpath(getFilename().c_str(), NULL, dir, NULL, NULL);
+    std::string folder(dir);
 #else
     char *cstr = new char[length() + 1];
     strcpy(cstr, c_str());
