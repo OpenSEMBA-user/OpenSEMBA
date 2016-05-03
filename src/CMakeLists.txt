@@ -101,8 +101,3 @@ add_subdirectories(exporter obj/src)
 add_subdirectories(adapter  obj/src)
 add_subdirectory  (solver   obj/src/solver)
 add_subdirectories(apps     obj/src)
-
-if (GTEST_FOUND)
-    enable_testing()
-    add_test(opensemba_test opensemba_test)
-endif()
