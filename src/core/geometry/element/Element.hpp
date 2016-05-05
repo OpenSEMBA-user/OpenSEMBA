@@ -263,18 +263,18 @@ const CoordR3** Element<T>::vertexToUnstructured(
     if (!this->is<ElemI>()) {
         return NULL;
     }
-    Math::CVecR3 pos;
     const CoordR3** coords = new const CoordR3*[this->numberOfCoordinates()];
     CoordId coordId;
     for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
-        pos = grid.getPos(*this->getV(i));
         coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
             delete [] coords;
             throw Error::Coord::NotFound(coordId);
         }
         coords[i] = cG.getId(coordId);
-        if (coords[i]->pos() != pos) {
+        const CoordR3* unsCoord = this->getV(i)->toUnstructured(grid);
+        if (coords[i]->pos() != unsCoord->pos()) {
+            delete unsCoord;
             delete [] coords;
             throw Error::Coord::NotCoincident(coordId);
         }

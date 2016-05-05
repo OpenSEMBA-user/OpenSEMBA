@@ -53,9 +53,6 @@ public:
 
     void setV(const std::size_t i, const CoordI3* coord);
 
-    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
-                          const Grid3&) const;
-
     void printInfo() const;
 
 private:

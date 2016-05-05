@@ -74,41 +74,6 @@ void LineConformal::setV(const std::size_t i, const CoordI3* coord) {
     checkCoordinates();
 }
 
-ElemR* LineConformal::toUnstructured(const Coordinate::Group<CoordR3>& cG,
-                                     const Grid3& grid) const {
-    const CoordConf* vConf[2];
-    vConf[0] = getV(0);
-    vConf[1] = getV(1);
-
-    Math::CVecR3 pos;
-    const CoordR3* coord[2];
-    CoordId coordId;
-    for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
-        pos = grid.getPos(vConf[i]->pos());
-        if (Math::Util::greater(vConf[i]->getLength(), 0.0, 1.0)) {
-            Math::Int dir = vConf[i]->getDir();
-            Math::Real length = vConf[i]->getLength();
-            Math::CVecI3 cellAux = vConf[i]->pos();
-            cellAux(dir)++;
-            Math::CVecR3 posAux = grid.getPos(cellAux);
-            Math::Real step = posAux(dir)-pos(dir);
-            pos(dir) += step*length;
-        }
-        coordId = this->getV(i)->getId();
-        if (!cG.existId(coordId)) {
-            throw Error::Coord::NotFound(coordId);
-        }
-        coord[i] = cG.getId(coordId);
-        if (coord[i]->pos() != pos) {
-            throw Error::Coord::NotCoincident(coordId);
-        }
-    }
-    return new LinR2(this->getId(),
-                     coord,
-                     this->getLayer(),
-                     this->getModel());
-}
-
 void LineConformal::printInfo() const {
     std::cout << "--- LineConformal info ---" << std::endl;
     std::cout << "Id: " << this->getId() << std::endl;
