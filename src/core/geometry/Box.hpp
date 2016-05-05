@@ -420,9 +420,9 @@ std::vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
     res.reserve(numBoxes(Math::Constants::x)*
                 numBoxes(Math::Constants::y)*
                 numBoxes(Math::Constants::z));
-    for (std::size_t i = 0; i < numBoxes(Math::Constants::x); i++) {
-        for (std::size_t j = 0; j < numBoxes(Math::Constants::y); j++) {
-            for (std::size_t k = 0; k < numBoxes(Math::Constants::z); k++) {
+    for (Math::Int i = 0; i < numBoxes(Math::Constants::x); i++) {
+        for (Math::Int j = 0; j < numBoxes(Math::Constants::y); j++) {
+            for (Math::Int k = 0; k < numBoxes(Math::Constants::z); k++) {
                 CVecTD minP = subGrid.getPos(CVecTD(i,j,k));
                 CVecTD maxP = subGrid.getPos(CVecTD(i+1,j+1,k+1));
                 CVecTD minT, maxT;

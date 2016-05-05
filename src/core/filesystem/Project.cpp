@@ -136,9 +136,10 @@ std::string Project::getBasename() const {
 
 std::string Project::getFolder() const {
 #ifdef _WIN32
+    char* drive = new char[getFilename().size() + 1];
     char* dir = new char[getFilename().size() + 1];
-    _splitpath(getFilename().c_str(), NULL, dir, NULL, NULL);
-    std::string folder(dir);
+    _splitpath(getFilename().c_str(), drive, dir, NULL, NULL);
+    std::string folder = std::string(drive) + dir;
 #else
     char *cstr = new char[length() + 1];
     strcpy(cstr, c_str());

@@ -264,9 +264,6 @@ void ProgressBar::printSize_(const std::size_t size) const {
     } else if (size < 1000000000000UL) {
         print = size/1000000000UL;
         unit  = "G";
-    } else if (size < 1000000000000000UL) {
-        print = size/1000000000000UL;
-        unit  = "G";
     }
     std::cout << std::right << std::setw(3) << std::setfill(' ') << print;
     std::cout << unit;
