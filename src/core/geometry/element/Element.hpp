@@ -278,6 +278,7 @@ const CoordR3** Element<T>::vertexToUnstructured(
             delete [] coords;
             throw Error::Coord::NotCoincident(coordId);
         }
+        delete unsCoord;
     }
     return coords;
 }
