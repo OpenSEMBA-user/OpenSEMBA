@@ -39,6 +39,7 @@ Options::Options() {
     scalingFactor_ = 1.0;
     postmshExport_ = true;
     vtkExport_ = false;
+    slantedWires_ = false;
     gridStep_ = Math::CVecR3(0.0);
     forbiddenLength_ = (Math::Real) (1.0 / 3.0);
 }
