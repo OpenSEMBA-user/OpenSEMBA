@@ -91,7 +91,8 @@ public:
                   std::size_t lastCol) const;
 
 #ifdef EIGEN_SUPPORT
-    std::vector<std::complex<T>> computeEigenvalues();
+    std::vector<std::complex<T>> eigenValues();
+    Dynamic<std::complex<T>> eigenVectors();
 #endif
 
 private:

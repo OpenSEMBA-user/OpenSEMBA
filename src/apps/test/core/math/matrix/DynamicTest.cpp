@@ -114,7 +114,7 @@ TEST_F(MathMatrixDynamicTest, eigenValues) {
     d(0,0) = 3.0; d(0,1) = -2.0;
     d(1,0) = 4.0; d(1,1) = -1.0;
 
-    std::vector<std::complex<double>> eigenValues = d.computeEigenvalues();
+    std::vector<std::complex<double>> eigenValues = d.eigenValues();
 
     EXPECT_NEAR(eigenValues[0].real(), 1.0, 1e-5);
     EXPECT_NEAR(eigenValues[0].imag(), 2.0, 1e-5);
@@ -123,4 +123,11 @@ TEST_F(MathMatrixDynamicTest, eigenValues) {
     EXPECT_NEAR(eigenValues[1].imag(), -2.0, 1e-5);
 }
 
+TEST_F(MathMatrixDynamicTest, eigenVectors) {
+    Dynamic<double> d(2,2);
+    d(0,0) = 3.0; d(0,1) = -2.0;
+    d(1,0) = 4.0; d(1,1) = -1.0;
+
+    Dynamic<std::complex<double>> eigenVectors = d.eigenVectors();
+}
 #endif

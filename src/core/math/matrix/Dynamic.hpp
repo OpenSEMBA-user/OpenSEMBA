@@ -638,7 +638,7 @@ Dynamic<T>& Dynamic<T>::transpose() {
  * @return         Returns a std vector of complex filled with the eigen values
  */
 template<class T>
-std::vector<std::complex<T>> Dynamic<T>::computeEigenvalues() {
+std::vector<std::complex<T>> Dynamic<T>::eigenValues() {
     // Creates an Eigen object reusing the memory allocated for the matrix
     Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>> eigenMat(this->_val, nRows(), nCols());
 
@@ -653,6 +653,36 @@ std::vector<std::complex<T>> Dynamic<T>::computeEigenvalues() {
     for (size_t i = 0; i < eigenvalues.size(); i++) {
         result.push_back(eigenvalues[i]);
     }
+
+    return result;
+}
+
+/**
+ * Computes the eigen vectors of the caller, using an interface to Eigen
+ * library that re-uses the memory allocated for this object
+ * @return         Returns a Dynamic matrix of complex filled with the eigen values
+ */
+template<class T>
+Dynamic<std::complex<T>> Dynamic<T>::eigenVectors() {
+    // Creates an Eigen object reusing the memory allocated for the matrix
+    Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>> eigenMat(this->_val, nRows(), nCols());
+
+    // Calls Eigen to compute eigen values
+    Eigen::ComplexEigenSolver<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic>> eigenSolver;
+    eigenSolver.compute(eigenMat);
+    Eigen::Matrix<std::complex<T>, Eigen::Dynamic, Eigen::Dynamic> eigenvectors = eigenSolver.eigenvectors();
+
+    // Matrix of complex to store the computed eigen vectors
+    Dynamic<std::complex<T>> result(nRows(),nCols());
+
+    for (size_t j = 0; j < nCols(); j++) {
+        for (size_t i = 0; i < nRows(); i++) {
+            result(i,j) = eigenvectors(i,j);
+        }
+    }
+
+    std::cout << eigenvectors << std::endl;
+    result.printInfo();
 
     return result;
 }
