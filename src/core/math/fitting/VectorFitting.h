@@ -36,11 +36,17 @@ namespace Fitting {
 
 class VectorFitting {
 public:
-    typedef std::pair<std::complex<Real>,
-                      std::vector<std::complex<Real> > > Sample;
+    typedef std::complex<Real> complex;
+    typedef std::pair<complex, std::vector<complex>> Sample;
 
     // TODO: manage options in constructor.
-    VectorFitting(const std::vector<Sample>& samples);
+    // TODO: Add parameter to control order of approximation (now hard-coded in
+    // the implementation)
+    /**
+     * @param samples   Data to be fitted.
+     * @param N         Order of approximation. It shall be an even number.
+     */
+    VectorFitting(const std::vector<Sample>& samples, size_t order = 20);
 
     // This could be called from the constructor, but if an iterative algorithm
     // is preferred, it's a good idea to have it as a public method
@@ -59,6 +65,8 @@ private:
 
     Matrix::Dynamic<std::complex<Real>>  A_, C_;
     std::vector<Real>  B_, D_, E_;
+
+    size_t order_;
 };
 
 } /* namespace Fitting */
