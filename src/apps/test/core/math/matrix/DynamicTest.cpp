@@ -109,33 +109,50 @@ TEST_F(MathMatrixDynamicTest, QRdecomposition) {
 }
 
 #ifdef EIGEN_SUPPORT
-TEST_F(MathMatrixDynamicTest, eigenLibraryPOC) {
-	Eigen::Matrix2d A;
+TEST_F(MathMatrixDynamicTest, eigenValues) {
+    Dynamic<double> d(2,2);
+    d(0,0) = 3.0; d(0,1) = -2.0;
+    d(1,0) = 4.0; d(1,1) = -1.0;
 
-	A <<	3, -2,
-			4, -1;
+    std::vector<std::complex<double>> eigenValues = d.eigenValues();
 
-	Eigen::ComplexEigenSolver<Eigen::Matrix2d> eigenSolver;
-	eigenSolver.compute(A);
+    EXPECT_NEAR(eigenValues[0].real(), 1.0, 1e-10);
+    EXPECT_NEAR(eigenValues[0].imag(), 2.0, 1e-10);
 
-    EXPECT_NEAR(eigenSolver.eigenvalues()[0].real(), 1.0, 1e-10);
-    EXPECT_NEAR(eigenSolver.eigenvalues()[0].imag(), -2.0, 1e-10);
-
-    EXPECT_NEAR(eigenSolver.eigenvalues()[1].real(), 1.0, 1e-10);
-    EXPECT_NEAR(eigenSolver.eigenvalues()[1].imag(), 2.0, 1e-10);
-
-	Eigen::Matrix2cd actual_A = eigenSolver.eigenvectors() * eigenSolver.eigenvalues().asDiagonal() * eigenSolver.eigenvectors().inverse();
-
-    for (size_t i = 0; i < 2; i++) {
-        for (size_t j = 0; j < 2; j++) {
-            std::complex<double> actual_elem = actual_A(i, j);
-            std::complex<double> expect_elem = A(i, j);
-
-            EXPECT_NEAR(actual_elem.real(), expect_elem.real(), 1e-10);
-            EXPECT_NEAR(actual_elem.imag(), expect_elem.imag(), 1e-10);
-        }
-    }
-	// EXPECT_EQ(A, computedA);
+    EXPECT_NEAR(eigenValues[1].real(), 1.0, 1e-10);
+    EXPECT_NEAR(eigenValues[1].imag(), -2.0, 1e-10);
 }
 
+TEST_F(MathMatrixDynamicTest, eigenVectors) {
+    Dynamic<double> d(2,2);
+    d(0,0) = 3.0; d(0,1) = -2.0;
+    d(1,0) = 4.0; d(1,1) = -1.0;
+
+    // Compute the eigen values
+    std::vector<std::complex<double>> eigenValues = d.eigenValues();
+
+    // Store them as a diagonal matrix
+    Dynamic <std::complex<double>> eigValDiag(2,2);
+    eigValDiag(0,0) = eigenValues[0];
+    eigValDiag(0,1) = std::complex<double>(0.0, 0.0);
+    eigValDiag(1,0) = std::complex<double>(0.0, 0.0);
+    eigValDiag(1,1) = eigenValues[1];
+
+    // Compute the eigenvectors
+    Dynamic<std::complex<double>> eigVec = d.eigenVectors();
+    Dynamic<std::complex<double>> eigVecInv = eigVec.invert();
+
+    // The eigendecomposition has to verify D = PLP^{-1}, where D
+    // is the original matrix, L the diagonal matrix whose entries are
+    // the eigen values and P the matrix whose columns are the eigenvectors
+    Dynamic<std::complex<double>> eigenDecomp = eigVec * eigValDiag * eigVecInv;
+
+    for (size_t i = 0; i < d.nRows(); i++) {
+        for (size_t j = 0; j < d.nCols(); j++) {
+            std::complex<double> val = eigenDecomp(i,j);
+            EXPECT_NEAR(val.real(), d(i,j), 1e-10);
+            EXPECT_NEAR(val.imag(), 0, 1e-10);
+        }
+    }
+}
 #endif

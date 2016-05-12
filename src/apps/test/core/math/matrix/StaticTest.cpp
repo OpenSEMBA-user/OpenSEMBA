@@ -99,22 +99,3 @@ TEST_F(MathMatrixStaticTest, complexInversion) {
 	d(2,0) = std::complex<double>(50.0,-50.0);  d(2,1) = std::complex<double>(1.0,1.0);     d(2,2) = std::complex<double>(1.0,1.0);
 	EXPECT_EQ(d, d.invert().invert());
 }
-
-//TEST_F(MathMatrixStaticTest, Eigenvalues) {
-//    std::array<std::complex<Real>,2> eig;
-//    {
-//        eig = a_.getEigenvalues();
-//        sort(eig.begin(), eig.end(), complexLT<Real>);
-//        EXPECT_EQ(3.0 - sqrt(10.0), eig[0].real());
-//        EXPECT_EQ(3.0 + sqrt(10.0), eig[1].real());
-//    }
-//    {
-//        MatR22 mat;
-//        mat(0,0) = 3.0; mat(0,1) = - 9.0;
-//        mat(1,0) = 4.0; mat(1,1) = - 3.0;
-//        eig = mat.getEigenvalues();
-//        sort(eig.begin(), eig.end(), complexLT<Real>);
-//        EXPECT_EQ(complex<Real>(0.0, -sqrt(3.0)), eig[0]);
-//        EXPECT_EQ(complex<Real>(0.0,  sqrt(3.0)), eig[1]);
-//    }
-//}

@@ -21,6 +21,10 @@
 
 #include "Dynamic.h"
 
+#ifdef EIGEN_SUPPORT
+#include <eigen3/Eigen/Dense>
+#endif
+
 #include <iomanip>
 
 namespace SEMBA {
@@ -627,39 +631,60 @@ Dynamic<T>& Dynamic<T>::transpose() {
    return *this;
 }
 
+#ifdef EIGEN_SUPPORT
 /**
- * Computes the eigen values of the caller, using no more than maxIter
- * iterations and trying to get an error of tol
- * @param  maxIter Maximum number of iterations in the QR iterative algorithm
- * @param  tol     Accepted error between in the eigenvalues <- TODO
- * @return         Returns a std vector filled with the eigenvalues in descending
- *                 order.
+ * Computes the eigen values of the caller, using an interface to Eigen
+ * library that re-uses the memory allocated for this object
+ * @return         Returns a std vector of complex values filled with the eigen values
  */
 template<class T>
-std::vector<T> Dynamic<T>::computeEigenvalues_(int maxIter, float tol) {
-    assert(nRows() == nCols());
+std::vector<std::complex<Real>> Dynamic<T>::eigenValues() {
+    // Creates an Eigen object reusing the memory allocated for the matrix
+    Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>> eigenMat(this->_val, nRows(), nCols());
 
-    Dynamic<T> A = *this;
+    // Calls Eigen to compute eigen values
+    Eigen::ComplexEigenSolver<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic>> eigenSolver;
+    eigenSolver.compute(eigenMat);
+    Eigen::Matrix<std::complex<Real>, Eigen::Dynamic, 1> eigenvalues = eigenSolver.eigenvalues();
 
-    Dynamic<T> Q(_nRows, _nCols);
-    Dynamic<T> R(_nRows, _nCols);
+    // Vector of complex to store the computed eigen values
+    std::vector<std::complex<Real>> result;
 
-    for (size_t i = 0; i < maxIter /*&& A.belowDiagonalAbsSum_() > tol*/; i++) {
-        A.factorizeQR_(Q, R);
-        A = R*Q;
+    for (size_t i = 0; i < eigenvalues.size(); i++) {
+        result.push_back(eigenvalues[i]);
     }
 
-    std::vector<T> eigenvalues;
-
-    for (size_t i = 0; i < _nCols; i++) {
-        eigenvalues.push_back(A.val(i, i));
-    }
-
-    return eigenvalues;
+    return result;
 }
+
+/**
+ * Computes the eigen vectors of the caller, using an interface to Eigen
+ * library that re-uses the memory allocated for this object
+ * @return         Returns a Dynamic matrix of complex values filled with the eigen values
+ */
+template<class T>
+Dynamic<std::complex<Real>> Dynamic<T>::eigenVectors() {
+    // Creates an Eigen object reusing the memory allocated for the matrix
+    Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>> eigenMat(this->_val, nRows(), nCols());
+
+    // Calls Eigen to compute eigen vectors
+    Eigen::ComplexEigenSolver<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic>> eigenSolver;
+    eigenSolver.compute(eigenMat);
+    Eigen::Matrix<std::complex<Real>, Eigen::Dynamic, Eigen::Dynamic> eigenvectors = eigenSolver.eigenvectors();
+
+    // Matrix of complex to store the computed eigen vectors
+    Dynamic<std::complex<Real>> result(nRows(),nCols());
+
+    for (size_t j = 0; j < nCols(); j++) {
+        for (size_t i = 0; i < nRows(); i++) {
+            result(i,j) = eigenvectors(i,j);
+        }
+    }
+
+    return result;
+}
+#endif // EIGEN_SUPPORT
 
 } /* namespace Matrix */
 } /* namespace Math */
 } /* namespace SEMBA */
-
-// a\[([^\[]*)\]\[([^\[]*)\]
