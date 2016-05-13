@@ -91,9 +91,9 @@ public:
                   std::size_t lastCol) const;
 
 #ifdef EIGEN_SUPPORT
+    std::vector<std::complex<Real>> eigenValues();
+    Dynamic<std::complex<Real>> eigenVectors();
 #endif
-
-    std::vector<T> computeEigenvalues_(int maxIter = 5000, float tol = 1e-50);
 
 private:
    T* _val;

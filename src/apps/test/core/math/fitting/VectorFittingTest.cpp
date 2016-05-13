@@ -52,7 +52,8 @@ TEST_F(MathFittingVectorFittingTest, ex1) {
         samples[i].second = f;
     }
 
-    VectorFitting fitting(samples);
+    size_t approximationOrder = 20;
+    VectorFitting fitting(samples, approximationOrder);
     fitting.fit();
 
     EXPECT_NEAR(0.0, fitting.getRMS(), 1e-3);
