@@ -72,6 +72,14 @@ Data* Parser::read() {
         throw std::logic_error(getFilename() + " is a directory.");
     }
     openAsInput(f_in);
+    std::size_t numLines = 0;
+    std::string line;
+    while (std::getline(f_in, line)) {
+        numLines++;
+    }
+    f_in.close();
+    openAsInput(f_in);
+    progress_.init("Parsing", numLines, 0);
     std::string version = readVersion();
     if (!checkVersionCompatibility(version)) {
         throw std::logic_error("File version " + version + 
@@ -89,8 +97,10 @@ Data* Parser::read() {
     res->mesh = mesh_;
     res->sources = readEMSources();
     res->outputRequests = readOutputRequests();
-
+    
     postReadOperations(res);
+
+    progress_.end();
 
     return res;
 }
@@ -431,7 +441,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                 }
                 case Parser::outRqOnVolume:
                 {
-                    getline(f_in, line);
+                    getline_(line);
                     Geometry::Element::Group<> elems = boxToElemGroup(line);
                     if (elems.getOf<Geometry::Vol>().size()) {
                         res->add(
@@ -469,7 +479,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                     }
                     getNextLabelAndValue(label,value);
                     skip = atoi(value.c_str());
-                    getline(f_in, line);
+                    getline_(line);
                     std::vector<Geometry::ElemId> ids;
                     ids.push_back(Geometry::ElemId(atoi(line.c_str())));
                     Geometry::Element::Group<Geometry::ElemR> elems = 
@@ -501,7 +511,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                     }
                     getNextLabelAndValue(label,value);
                     skip = atoi(value.c_str());
-                    getline(f_in, line);
+                    getline_(line);
                     Geometry::Element::Group<Geometry::Vol> elems = 
                         boxToElemGroup(line);
                     res->add(
@@ -511,12 +521,12 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                 }
                 case Parser::farField:
                 {
-                    getline(f_in, line);
+                    getline_(line);
                     Geometry::Element::Group<Geometry::Vol> elems =
                         boxToElemGroup(line);
                     Math::Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
                     f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
-                    getline(f_in, line);
+                    getline_(line);
                     OutputRequest::FarField* oRFF =
                         new OutputRequest::FarField(
                             domain, name, elems,
@@ -544,7 +554,7 @@ ProblemSize Parser::readProblemSize() {
     ProblemSize res;
     // Runs until "Problem Size" is found or eof is reached.
     while (!problemSizeFound && !f_in.eof()) {
-        getline(f_in, line);
+        getline_(line);
         if (line.find("Problem size:") != line.npos ) {
             problemSizeFound = true;
             while(!finished) {
@@ -629,18 +639,19 @@ Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates() {
     bool finished = false;
     bool found = false;
     while (!found && !f_in.eof() && !finished) {
-        getline(f_in, line);
+        getline_(line);
         if (line.find("Coordinates:") != line.npos) {
             found = true;
             // Reads coordinates.
             for (std::size_t i = 0; i < pSize_.v; i++) {
                 f_in >> id >> pos(0) >> pos(1) >> pos(2);
+                progress_.advance();
                 coord.push_back(new Geometry::CoordR3(id, pos));
             }
             // Checks "end of coordinates" label.
             finished = false;
-            while(!finished && !f_in.eof()) {
-                getline(f_in, line);
+            while (!finished && !f_in.eof()) {
+                getline_(line);
                 if (line.find("End of coordinates") != line.npos) {
                     finished = true;
                 }
@@ -664,7 +675,7 @@ Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
     bool found = false;
     std::vector<Geometry::ElemR*> elems;
     while (!finished && !f_in.eof()) {
-        getline(f_in, line);
+        getline_(line);
         if (line.find("Elements:") != line.npos) {
             found = true;
         }
@@ -717,6 +728,7 @@ void Parser::readHex8Elements(
             v[j] = cG.getId(vId);
         }
         f_in >> matId;
+        progress_.advance();
         const PhysicalModel::PhysicalModel* mat;
         if (matId != MatId(0)) {
             mat = physicalModels_->getId(matId);
@@ -742,6 +754,7 @@ void Parser::readTet10Elements(
             v[j] = cG.getId(vId);
         }
         f_in >> matId;
+        progress_.advance();
         const PhysicalModel::PhysicalModel* mat;
         if (matId != MatId(0)) {
             mat = physicalModels_->getId(matId);
@@ -769,6 +782,7 @@ void Parser::readTet4Elements(
             v[j] = cG.getId(vId);
         }
         f_in >> matId >> layerId;
+        progress_.advance();
         const Geometry::Layer::Layer* lay;
         if (layerId != Geometry::LayerId(0)) {
             lay = lG.getId(layerId);
@@ -803,6 +817,7 @@ void Parser::readTri6Elements(
             v[j] = cG.getId(vId);
         }
         f_in >> matId;
+        progress_.advance();
         const PhysicalModel::PhysicalModel* mat;
         if (matId != MatId(0)) {
             mat = physicalModels_->getId(matId);
@@ -831,6 +846,7 @@ void Parser::readTri3Elements(
             v[j] = cG.getId(vId);
         }
         f_in >> matId >> layerId;
+        progress_.advance();
         const Geometry::Layer::Layer* lay;
         if (layerId != Geometry::LayerId(0)) {
             lay = lG.getId(layerId);
@@ -865,6 +881,7 @@ void Parser::readLin2Elements(
             v[j] = cG.getId(vId);
         }
         f_in >> matId >> layerId;
+        progress_.advance();
         const Geometry::Layer::Layer* lay;
         if (layerId != Geometry::LayerId(0)) {
             lay = lG.getId(layerId);
@@ -1001,7 +1018,7 @@ PhysicalModel::Surface::SIBC* Parser::readIsotropicSurfMatFile(
 
 void Parser::getNextLabelAndValue(std::string& label, std::string& value) {
     std::string line;
-    getline(f_in, line);
+    getline_(line);
     line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
     line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
     label = line.substr(0, line.find(LABEL_ENDING));
@@ -1023,7 +1040,7 @@ Geometry::Grid3 Parser::readCartesianGrid() {
     Math::CVecI3 numElems;
     Math::CVecR3 steps;
     while (!gridLabelFound && !f_in.eof()) {
-        getline(f_in, line);
+        getline_(line);
         if (line.find("Grid:") != line.npos ) {
             gridLabelFound = true;
             while(!finished) {
@@ -1118,6 +1135,7 @@ Source::PlaneWave* Parser::readPlaneWave() {
             for (std::size_t i = 0; i < nE; i++) {
                 Geometry::ElemId id;
                 f_in >> id;
+                progress_.advance();
                 elems.add(mesh_->elems().getId(id));
             }
         } else if (label.compare("End of Planewave")==0) {
@@ -1191,6 +1209,7 @@ Source::Port::Waveguide* Parser::readPortWaveguide() {
             std::vector<Geometry::Element::Face> faces;
             for (std::size_t i = 0; i < numElements; i++) {
                 f_in >> e >> f;
+                progress_.advance();
                 const Geometry::ElemR* elem = 
                     mesh_->elems().getId(Geometry::ElemId(e));
                 if (elem->is<Geometry::VolR>()) {
@@ -1275,6 +1294,7 @@ Source::Port::TEM* Parser::readPortTEM() {
             std::vector<Geometry::Element::Face> faces;
             for (std::size_t i = 0; i < numElements; i++) {
                 f_in >> e >> f;
+                progress_.advance();
                 const Geometry::ElemR* elem = 
                     mesh_->elems().getId(Geometry::ElemId(e));
                 if (elem->is<Geometry::VolR>()) {
@@ -1329,6 +1349,7 @@ Source::Generator* Parser::readGenerator() {
             for (std::size_t i = 0; i < nE; i++) {
                 std::size_t e;
                 f_in >> e;
+                progress_.advance();
                 Geometry::CoordId id = Geometry::CoordId(e);
                 const Geometry::CoordR3* coord = mesh_->coords().getId(id);
                 Geometry::NodR* node = 
@@ -1365,6 +1386,7 @@ Source::OnLine* Parser::readSourceOnLine() {
             for (size_t i = 0; i < nE; i++) {
                 size_t e;
                 f_in >> e;
+                progress_.advance();
                 ids.push_back(Geometry::ElemId(e));
             }
         } else if (label.compare("End of Source_on_line")==0) {
@@ -1726,6 +1748,11 @@ const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
     } else {
         throw std::logic_error("Unrecognized bound label: " + str);
     }
+}
+
+void Parser::getline_(std::string& line) {
+    getline(f_in, line);
+    progress_.advance();
 }
 
 } /* namespace GiD */

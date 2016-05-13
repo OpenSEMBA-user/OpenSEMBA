@@ -49,6 +49,8 @@
 #include "Data.h"
 #include "ProblemSize.h"
 
+#include "util/ProgressBar.h"
+
 #include "parser/Parser.h"
 
 #define LABEL_ENDING ':'
@@ -86,6 +88,8 @@ private:
         rectangular,
         undefined
     } WaveportShape;
+
+    Util::ProgressBar progress_;
 
     PhysicalModel::Group<>* physicalModels_;
     Geometry::Mesh::Geometric* mesh_;
@@ -186,6 +190,8 @@ private:
             std::ifstream& stream);
 
     static const PhysicalModel::Bound::Bound* strToBoundType(std::string str);
+
+    void getline_(std::string&);
 };
 
 } /* namespace GiD */
