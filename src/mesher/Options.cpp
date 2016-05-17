@@ -39,7 +39,11 @@ Options::Options() {
     scalingFactor_ = 1.0;
     postmshExport_ = true;
     vtkExport_ = false;
-    slantedWires_ = false;
+    slanted_ = false;
+    slantedCoordCriterion_ = SlantedCoordCriterion::structured;
+    slantedRelaxedLength_ = 0.0;
+    slantedGenerateIntermedial_ = false;
+    slantedThreshold_ = 0.0;
     gridStep_ = Math::CVecR3(0.0);
     forbiddenLength_ = (Math::Real) (1.0 / 3.0);
 }
@@ -50,29 +54,28 @@ void Options::printInfo() const {
         std::cout << " Using openfoam mesher." << std::endl;
         if (locationInMeshSet_) {
             std::cout << " Location in mesh:   "
-                      << locationInMesh_ << std::endl;
+                << locationInMesh_ << std::endl;
         }
     }
     if (isStructured()) {
         std::cout << " Generating structured mesh." << std::endl;
     }
     std::cout << "Lower X Bound: "
-              << toStr(getBoundTermination(0, 0)) << std::endl;
-    std::cout << "Upper X Bound: " 
-              << toStr(getBoundTermination(0, 1)) << std::endl;
+        << toStr(getBoundTermination(0, 0)) << std::endl;
+    std::cout << "Upper X Bound: "
+        << toStr(getBoundTermination(0, 1)) << std::endl;
     std::cout << "Lower Y Bound: "
-              << toStr(getBoundTermination(1, 0)) << std::endl;
+        << toStr(getBoundTermination(1, 0)) << std::endl;
     std::cout << "Upper Y Bound: "
-              << toStr(getBoundTermination(1, 1)) << std::endl;
+        << toStr(getBoundTermination(1, 1)) << std::endl;
     std::cout << "Lower Z Bound: "
-              << toStr(getBoundTermination(2, 0)) << std::endl;
+        << toStr(getBoundTermination(2, 0)) << std::endl;
     std::cout << "Upper Z Bound: "
-              << toStr(getBoundTermination(2, 1)) << std::endl;
+        << toStr(getBoundTermination(2, 1)) << std::endl;
     std::cout << " --- End of Meshing parameters info ---" << std::endl;
 }
 
-void Options::printHelp() const {
-}
+void Options::printHelp() const {}
 
 std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
     if (val == NULL) {
@@ -136,8 +139,8 @@ Options::Mesher Options::getMesher() const {
 }
 
 const PhysicalModel::Bound::Bound* Options::getBoundTermination(
-        const std::size_t d,
-        const std::size_t p) const {
+    const std::size_t d,
+    const std::size_t p) const {
     assert(d < 3);
     assert(p < 2);
     return dynamic_cast<const PhysicalModel::Bound::Bound*>(boundTermination_(d, p));
@@ -148,9 +151,9 @@ const Geometry::BoundTerminations3& Options::getBoundTerminations() const {
 }
 
 void Options::setBoundTermination(
-        const std::size_t d,
-        const std::size_t p,
-        const PhysicalModel::Bound::Bound* bound) {
+    const std::size_t d,
+    const std::size_t p,
+    const PhysicalModel::Bound::Bound* bound) {
     assert(d < 3);
     assert(p < 2);
     boundTermination_.setBound(d, p, bound);
@@ -159,7 +162,7 @@ void Options::addArguments(Argument::Group& args) const {
     args.addOption(new Argument::Option<std::string>("Mesher", "mesher"))
         .choices({{"openfoam"}, {"zMesher"}, {"confMesher"}});
     args.addOption(new Argument::Switch("Brute force volumes",
-                                        "bruteForceVolumes"));
+        "bruteForceVolumes"));
     args.addOption(new Argument::Switch("VTK Export", "vtkexport"));
     args.addOption(
         new Argument::Option<Math::Real, Math::Real, Math::Real>("gridstep"));
@@ -182,8 +185,24 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName("postmsh Export")) {
         setPostmshExport(opts("postmsh Export").getBool());
     }
-    if (opts.existsName("Slanted Wires")) {
-        setSlantedWires(opts("Slanted Wires").getBool());
+    if (opts.existsName("Slanted wires")) {
+        setSlanted(opts("Slanted wires").getBool());
+    }
+    if (opts.existsName("Slanted coordinate criterion")) {
+        setSlantedCoordCriterion(
+            strToCoordCriterion(
+                opts("Slanted coordinate criterion").getString()));
+    }
+    if (opts.existsName("Slanted relaxed length")) {
+        setSlantedRelaxedLength(
+            opts("Slanted relaxed length").get<Math::Real>());
+    }
+    if (opts.existsName("Slanted generate intermedial coords")) {
+        setSlantedGenerateIntermedialCoords(
+            opts("Slanted generate intermedial coords").getBool());
+    }
+    if (opts.existsName("Slanted threshold")) {
+        setSlantedThreshold(opts("Slanted threshold").get<Math::Real>());
     }
     if (opts.existsName("Mode")) {
         setMode(strToMesherMode(opts("Mode").getString()));
@@ -255,12 +274,11 @@ void Options::setScalingFactor(const Math::Real& scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
 
-void Options::setForbiddenLength(const Math::Real& edgeFraction) {
-}
+void Options::setForbiddenLength(const Math::Real& edgeFraction) {}
 
 Math::Real Options::getForbiddenLength() const {
     if (mode_ == Mode::slanted) {
-        return - 1.0;
+        return -1.0;
     } else {
         return forbiddenLength_;
     }
@@ -286,8 +304,31 @@ bool Options::isVtkExport() const {
     return vtkExport_;
 }
 
-bool Options::isSlantedWires() const {
-    return slantedWires_;
+bool Options::isSlanted() const {
+    return slanted_;
+}
+
+Options::SlantedCoordCriterion Options::getSlantedCoordCriterion() const {
+    return slantedCoordCriterion_;
+}
+
+Math::Real Options::getSlantedRelaxedLength() const {
+    return slantedRelaxedLength_;
+}
+
+bool Options::isSlantedGenerateIntermedialCoords() const {
+    return slantedGenerateIntermedial_;
+}
+
+bool Options::isSlantedThreshold() const {
+    if (Math::Util::lowerEqual(slantedThreshold_, 0.0)) {
+        return false;
+    }
+    return true;
+}
+
+Math::Real Options::getSlantedThreshold() const {
+    return slantedThreshold_;
 }
 
 bool Options::isPostmshExport() const {
@@ -302,9 +343,27 @@ void Options::setVtkExport(bool vtkExport) {
     vtkExport_ = vtkExport;
 }
 
-void Options::setSlantedWires(bool slantedWires) {
-    slantedWires_ = slantedWires;
+void Options::setSlanted(const bool& slanted) {
+    slanted_ = slanted;
 }
+
+void Options::setSlantedCoordCriterion(
+        const Options::SlantedCoordCriterion& slantedCoordCriterion) {
+    slantedCoordCriterion_ = slantedCoordCriterion;
+}
+
+void Options::setSlantedRelaxedLength(const Math::Real& slantedRelaxedLength) {
+    slantedRelaxedLength_ = slantedRelaxedLength;
+}
+
+void Options::setSlantedGenerateIntermedialCoords(const bool& genInt) {
+    slantedGenerateIntermedial_ = genInt;
+}
+
+void Options::setSlantedThreshold(const Math::Real& slantedThreshold) {
+    slantedThreshold_ = slantedThreshold;
+}
+
 
 bool Options::isGridStepSet() const {
     return (gridStep_ != Math::CVecR3(0.0));
@@ -379,6 +438,21 @@ const PhysicalModel::Bound::Bound* Options::strToBoundType(std::string str) {
         return new PhysicalModel::Bound::Mur2(MatId(0));
     } else {
         throw std::logic_error("Unrecognized bound label: " + str);
+    }
+}
+
+Options::SlantedCoordCriterion Options::strToCoordCriterion(
+        const std::string& str) {
+    if (str.compare("Structured") == 0) {
+        return SlantedCoordCriterion::structured;
+    } else if (str.compare("RelaxedPlane") == 0) {
+        return SlantedCoordCriterion::relaxedPlane;
+    } else if (str.compare("Relaxed") == 0) {
+        return SlantedCoordCriterion::relaxed;
+    } else if (str.compare("Raw") == 0) {
+        return SlantedCoordCriterion::raw;
+    } else {
+        throw std::logic_error("Unrecognized Slanted Coord Criterion: " + str);
     }
 }
 

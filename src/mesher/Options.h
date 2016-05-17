@@ -57,6 +57,12 @@ public:
         slanted,
         conformal
     };
+    enum class SlantedCoordCriterion {
+        raw,
+        relaxed,
+        relaxedPlane,
+        structured
+    };
 
     Options();
 
@@ -76,13 +82,19 @@ public:
     const std::string& getMeshOutputName() const;
     bool isGridStepSet() const;
     bool isVtkExport() const;
-    bool isSlantedWires() const;
     bool isPostmshExport() const;
     const Math::CVecR3& getGridStep() const;
     const std::pair<Math::CVecR3, Math::CVecR3>& getBoundaryMeshSize() const;
     const PhysicalModel::Bound::Bound* getBoundTermination(const std::size_t d,
                                                     const std::size_t p) const;
     const Geometry::BoundTerminations3& getBoundTerminations() const;
+
+    bool                   isSlanted() const;
+    SlantedCoordCriterion getSlantedCoordCriterion() const;
+    Math::Real            getSlantedRelaxedLength() const;
+    bool                   isSlantedGenerateIntermedialCoords() const;
+    bool                   isSlantedThreshold() const;
+    Math::Real            getSlantedThreshold() const;
 
     const std::string& getOutputName() const;
 
@@ -102,7 +114,12 @@ public:
     void setScaleFactorValue(const std::string& scaleFactorValue);
     void setScalingFactor(const Math::Real& scalingFactor);
     void setVtkExport(bool vtkExport);
-    void setSlantedWires(bool slantedWires);
+
+    void setSlanted(const bool&);
+    void setSlantedCoordCriterion(const SlantedCoordCriterion&);
+    void setSlantedRelaxedLength(const Math::Real&);
+    void setSlantedGenerateIntermedialCoords(const bool&);
+    void setSlantedThreshold(const Math::Real&);
 
     void applyGeometricScalingFactor(const Math::Real& factor);
 
@@ -124,17 +141,23 @@ private:
 
     bool vtkExport_;
     bool postmshExport_;
-    bool slantedWires_;
     Math::CVecR3 gridStep_;
 
     Geometry::BoundTerminations3 boundTermination_;
+
+    bool slanted_;
+    SlantedCoordCriterion slantedCoordCriterion_;
+    Math::Real slantedRelaxedLength_;
+    bool slantedGenerateIntermedial_;
+    Math::Real slantedThreshold_;
 
     static Mesher strToMesher(std::string);
     static Mode strToMesherMode(std::string);
     static Math::CVecR3 strToCVecR3(const std::string& str);
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);
-    static const PhysicalModel::Bound::Bound* strToBoundType(std::string label);
+    static const PhysicalModel::Bound::Bound* strToBoundType(std::string);
+    static SlantedCoordCriterion strToCoordCriterion(const std::string& str);
 };
 
 }

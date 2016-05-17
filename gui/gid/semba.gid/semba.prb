@@ -146,8 +146,6 @@ QUESTION: VTK_Export#CB#(0,1)
 VALUE: 0
 QUESTION: postmsh_Export#CB#(0,1)
 VALUE: 1
-QUESTION: Slanted_Wires#CB#(0,1)
-VALUE: 0
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
 VALUE: Structured
 DEPENDENCIES: (Structured, SET, Forbidden_length, 0.0, HIDE, Forbidden_length,0.0)
@@ -160,6 +158,23 @@ DEPENDENCIES: (0,     HIDE,Scale_factor_value,0.0)
 DEPENDENCIES: (1,  RESTORE,Scale_factor_value,0.0)
 QUESTION: Scale_factor_value
 VALUE: 0.0
+Title: Wires
+QUESTION: Slanted#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0, SET,     Coordinate_criterion, Structured, SET,     Generate_intermedial_Coordinates, #CURRENT#, SET,     Segments_filter_threshold, #CURRENT#)
+DEPENDENCIES: (1, RESTORE, Coordinate_criterion, #CURRENT#,  RESTORE, Generate_intermedial_Coordinates, #CURRENT#, RESTORE, Segments_filter_threshold, #CURRENT#)
+QUESTION: Coordinate_criterion#CB#(Structured,RelaxedPlane,Relaxed,Raw)
+VALUE: Structured
+DEPENDENCIES: (Structured,   SET,     Relaxed_length, 1.0)
+DEPENDENCIES: (RelaxedPlane, RESTORE, Relaxed_length, 0.4)
+DEPENDENCIES: (Relaxed,      RESTORE, Relaxed_length, 0.4)
+DEPENDENCIES: (Raw,          SET,     Relaxed_length, 0.0)
+QUESTION: Relaxed_length
+VALUE: 0.5
+QUESTION: Generate_intermedial_Coordinates#CB#(0,1)
+VALUE: 1
+QUESTION: Segments_filter_threshold
+VALUE: 1.0
 Title: Geometry
 QUESTION: model_units#CB#(m,cm,mm,nm,other)
 VALUE: m
