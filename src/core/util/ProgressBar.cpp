@@ -89,6 +89,7 @@ void ProgressBar::end() {
     if (!init_) {
         return;
     }
+    step_ = size_;
     printLine_();
     std::cout << std::endl;
     init_ = false;

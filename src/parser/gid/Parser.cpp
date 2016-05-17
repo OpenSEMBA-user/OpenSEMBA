@@ -79,7 +79,7 @@ Data* Parser::read() {
     }
     f_in.close();
     openAsInput(f_in);
-    progress_.init("Parsing", numLines, 0);
+    progress_.init("Parser GiD", numLines, 0);
     std::string version = readVersion();
     if (!checkVersionCompatibility(version)) {
         throw std::logic_error("File version " + version + 
