@@ -106,7 +106,7 @@ void ProgressBar::printLine_() const {
         sizeName = 0;
     }
     std::size_t sizeSpaces = std::max(std::min(sizeCon/20, (size_t) 5), (size_t) 1);
-    std::size_t sizeStep   = 9;
+    std::size_t sizeStep   = 13;
     std::size_t sizeTime   = 8;
     std::size_t sizeBar    = 0;
     std::size_t sizePorc   = 4;
@@ -253,20 +253,20 @@ void ProgressBar::printSpaces_(const std::size_t spaces) const {
 void ProgressBar::printSize_(const std::size_t size) const {
     std::size_t print = 0;
     std::string unit;
-    if (size < 1000UL) {
+    if (size < 100000UL) {
         print = size;
         unit  = " ";
-    } else if (size < 1000000UL) {
+    } else if (size < 100000000UL) {
         print = size/1000UL;
         unit  = "K";
-    } else if (size < 1000000000UL) {
+    } else if (size < 100000000000UL) {
         print = size/1000000UL;
         unit  = "M";
-    } else if (size < 1000000000000UL) {
+    } else if (size < 100000000000000UL) {
         print = size/1000000000UL;
         unit  = "G";
     }
-    std::cout << std::right << std::setw(3) << std::setfill(' ') << print;
+    std::cout << std::right << std::setw(5) << std::setfill(' ') << print;
     std::cout << unit;
 }
 
