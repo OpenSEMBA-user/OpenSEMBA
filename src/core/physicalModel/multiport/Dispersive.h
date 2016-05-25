@@ -19,70 +19,35 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
+#ifndef SEMBA_PHYSICALMODEL_MULTIPORT_DISPERSIVE_H_
+#define SEMBA_PHYSICALMODEL_MULTIPORT_DISPERSIVE_H_
+
 #include "Multiport.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 namespace Multiport {
 
-Multiport::Multiport() {
-    type_ = undefined;
-}
+class Dispersive : public virtual Multiport {
+public:
+    Dispersive(const Id idIn,
+               const std::string nameIn,
+               const std::string filename);
+    Dispersive(const Dispersive&);
+    virtual ~Dispersive();
 
-Multiport::~Multiport() {
+    SEMBA_CLASS_DEFINE_CLONE(Dispersive);
 
-}
+    std::string getFilename() const;
 
-Multiport::Type Multiport::getType() const {
-    return type_;
-}
+    virtual void printInfo() const;
 
-std::string Multiport::getTypeStr() const {
-    std::string res;
-    switch (type_) {
-    case shortCircuit:
-        res = "Short circuit";
-        break;
-    case openCircuit:
-        res = "Open circuit";
-        break;
-    case matched:
-        res = "Matched";
-        break;
-    case sRLC:
-        res = "Series RLC";
-        break;
-    case sRLpC:
-        res = "Series RL Parallel C";
-        break;
-    case sRCpL:
-        res = "Series RC Parallel L";
-        break;
-    case sRpLC:
-        res = "Series R Parallel C";
-        break;
-    case sLCpR:
-        res = "Series LC Parallel R";
-        break;
-    case sLpRC:
-        res = "Series L Parallel RC";
-        break;
-    case sCpLR:
-        res = "Series C Parallel LR";
-        break;
-    case pRLC:
-        res = "Parallel RLC";
-        break;
-    case dispersive:
-        res = "Dispersive";
-        break;
-    default:
-        res = "Undefined";
-        break;
-    }
-    return res;
-}
+private:
+    std::string filename_;
+};
 
 } /* namespace Multiport */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
+
+#endif /* SEMBA_PHYSICALMODEL_MULTIPORTPREDEFINED_H_ */

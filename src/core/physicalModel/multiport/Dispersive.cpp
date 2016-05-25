@@ -19,68 +19,40 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "Multiport.h"
+#include "Dispersive.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 namespace Multiport {
 
-Multiport::Multiport() {
-    type_ = undefined;
+Dispersive::Dispersive(const Id id,
+                       const std::string name,
+                       const std::string filename)
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
+    filename_ = filename;
+    type_ = dispersive;
 }
 
-Multiport::~Multiport() {
+Dispersive::Dispersive(const Dispersive& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    filename_ = rhs.filename_;
+    type_ = rhs.type_;
+}
+
+Dispersive::~Dispersive() {
 
 }
 
-Multiport::Type Multiport::getType() const {
-    return type_;
+std::string Dispersive::getFilename() const {
+    return filename_;
 }
 
-std::string Multiport::getTypeStr() const {
-    std::string res;
-    switch (type_) {
-    case shortCircuit:
-        res = "Short circuit";
-        break;
-    case openCircuit:
-        res = "Open circuit";
-        break;
-    case matched:
-        res = "Matched";
-        break;
-    case sRLC:
-        res = "Series RLC";
-        break;
-    case sRLpC:
-        res = "Series RL Parallel C";
-        break;
-    case sRCpL:
-        res = "Series RC Parallel L";
-        break;
-    case sRpLC:
-        res = "Series R Parallel C";
-        break;
-    case sLCpR:
-        res = "Series LC Parallel R";
-        break;
-    case sLpRC:
-        res = "Series L Parallel RC";
-        break;
-    case sCpLR:
-        res = "Series C Parallel LR";
-        break;
-    case pRLC:
-        res = "Parallel RLC";
-        break;
-    case dispersive:
-        res = "Dispersive";
-        break;
-    default:
-        res = "Undefined";
-        break;
-    }
-    return res;
+void Dispersive::printInfo() const {
+    std::cout<< " --- Multiport Info --- " << std::endl;
+    Multiport::printInfo();
+    std::cout<< " Type: " << getTypeStr() << std::endl;
 }
 
 } /* namespace Multiport */

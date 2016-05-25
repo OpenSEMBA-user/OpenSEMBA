@@ -44,6 +44,8 @@ public:
         sLpRC = 16,   // L + (R//C).
         sCpLR = 17,   // C + (L//R).
         pRLC = 18,     // R//L//C.
+        // Dispersive
+        dispersive = 100,
         undefined = 0
     };
     Multiport();

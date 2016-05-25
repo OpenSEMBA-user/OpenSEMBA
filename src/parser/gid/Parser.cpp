@@ -33,6 +33,7 @@
 #include "physicalModel/predefined/PEC.h"
 #include "physicalModel/predefined/PMC.h"
 #include "physicalModel/predefined/SMA.h"
+#include "physicalModel/multiport/Dispersive.h"
 #include "physicalModel/multiport/Predefined.h"
 #include "physicalModel/multiport/RLC.h"
 #include "physicalModel/volume/AnisotropicCrystal.h"
@@ -231,7 +232,9 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
     Math::Axis::Local localAxes;
     bool pmlAutomaticOrientation;
     Math::Real kappa;
-    Math::Real radius, R, L, C;
+    Math::Real radius, R, L, C, P_R, P_L, P_C;
+    bool wireDispersive = false;
+    bool wireSeriesParallel = false;
     FileSystem::Project file;
     while (!f_in.eof()) {
         std::string label, value;
@@ -253,6 +256,13 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             mC = atof(value.c_str());
         } else if (label.compare("Automatic Orientation")==0) {
             pmlAutomaticOrientation = strToBool(value);
+        } else if (label.compare("WireType") == 0) {
+            if (value == "SeriesParallel") {
+                wireSeriesParallel = true;
+            } else if (value == "Dispersive") {
+                wireDispersive = true;
+            }
+            radius = atof(value.c_str());
         } else if (label.compare("Radius")==0) {
             radius = atof(value.c_str());
         } else if (label.compare("Resistance")==0) {
@@ -261,6 +271,12 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             L = atof(value.c_str());
         } else if (label.compare("Capacitance")==0) {
             C = atof(value.c_str());
+        } else if (label.compare("Parallel Resistance") == 0) {
+            P_R = atof(value.c_str());
+        } else if (label.compare("Parallel Inductance") == 0) {
+            P_L = atof(value.c_str());
+        } else if (label.compare("Parallel Capacitance") == 0) {
+            P_C = atof(value.c_str());
         } else if (label.compare("SurfaceType")==0) {
             surfType = strToSIBCType(value);
         } else if (label.compare("Filename")==0) {
@@ -326,11 +342,25 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
                 }
                 break;
             case PhysicalModel::PhysicalModel::wire:
+                if (wireSeriesParallel) {
+                    return new PhysicalModel::Wire::Wire(id, name, radius,
+                                                         R, L, C,
+                                                         P_R, P_L, P_C);
+                }
+                if (wireDispersive) {
+                    return new PhysicalModel::Wire::Wire(id, name,
+                                                         radius, file);
+                }
                 return new PhysicalModel::Wire::Wire(id, name, radius, R, L);
             case PhysicalModel::PhysicalModel::multiport:
-                if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
+                if (mpType ==
+                        PhysicalModel::Multiport::Multiport::shortCircuit) {
                     return new PhysicalModel::Multiport::Predefined(
                             id, name, mpType);
+                } else if (mpType ==
+                            PhysicalModel::Multiport::Multiport::dispersive) {
+                    return new PhysicalModel::Multiport::Dispersive(
+                            id, name, file);
                 } else {
                     return new PhysicalModel::Multiport::RLC(
                             id, name, mpType, R, L, C);
@@ -1501,6 +1531,8 @@ PhysicalModel::Multiport::Multiport::Type Parser::strToMultiportType(std::string
         return PhysicalModel::Multiport::Multiport::pRLC;
     } else if (str.compare("Conn_sLpRC")==0) {
         return PhysicalModel::Multiport::Multiport::sLpRC;
+    } else if (str.compare("Conn_dispersive") == 0) {
+        return PhysicalModel::Multiport::Multiport::dispersive;
     } else {
         throw std::logic_error("Unrecognized multiport label: " + str);
     }
