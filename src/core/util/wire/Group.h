@@ -65,12 +65,16 @@ public:
             getIdsOfWire(const std::size_t& i) const {
         return wiresIds_[i];
     }
+    const std::vector<bool>& getRevOfWire(const std::size_t& i) const {
+        return wiresRev_[i];
+    }
 
     void printInfo() const;
 
 private:
     std::vector<Geometry::Element::Polyline<T>*> wires_;
     std::vector<std::vector<Geometry::ElemId>> wiresIds_;
+    std::vector<std::vector<bool>>             wiresRev_;
 
     std::map<MatId, PhysicalModel::Wire::Extremes*> mats_;
 

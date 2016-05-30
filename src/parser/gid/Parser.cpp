@@ -262,7 +262,6 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             } else if (value == "Dispersive") {
                 wireDispersive = true;
             }
-            radius = atof(value.c_str());
         } else if (label.compare("Radius")==0) {
             radius = atof(value.c_str());
         } else if (label.compare("Resistance")==0) {

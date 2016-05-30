@@ -320,6 +320,65 @@ Geometry::Element::Polyline<T>*
     }
     const Geometry::Layer::Layer* lay = lines[0]->getLayer();
     wiresIds_.push_back(wireIds);
+    std::vector<bool> wireRev;
+    wireRev.resize(lines.size());
+    bool rev = false;
+    if (lines.size() == 1) {
+        wireRev[0] = false;
+    } else {
+        for (std::size_t i = 0; i < lines.size(); i++) {
+            if (lines[i]->getModel()->is<PhysicalModel::Wire::Wire>()) {
+                if (i == 0) {
+                    std::size_t j = i + 1;
+                    if ((lines[i]->getV(0)->getId() ==
+                            lines[j]->getV(0)->getId()) ||
+                        (lines[i]->getV(0)->getId() ==
+                            lines[j]->getV(1)->getId())) {
+                        rev = true;
+                    } else {
+                        rev = false;
+                    }
+                } else {
+                    std::size_t j = i - 1;
+                    if ((lines[i]->getV(0)->getId() ==
+                            lines[j]->getV(0)->getId()) ||
+                        (lines[i]->getV(0)->getId() ==
+                            lines[j]->getV(1)->getId())) {
+                        rev = false;
+                    } else {
+                        rev = true;
+                    }
+                }
+                break;
+            }
+        }
+        for (std::size_t i = 0; i < lines.size(); i++) {
+            wireRev[i] = false;
+            if (i == 0) {
+                std::size_t j = i + 1;
+                if (rev ==
+                    ((lines[i]->getV(1)->getId() ==
+                        lines[j]->getV(0)->getId()) ||
+                     (lines[i]->getV(1)->getId() ==
+                        lines[j]->getV(1)->getId()))) {
+                    wireRev[i] = true;
+                }
+            } else {
+                std::size_t j = i - 1;
+                if (rev ==
+                    ((lines[i]->getV(0)->getId() ==
+                        lines[j]->getV(0)->getId()) ||
+                     (lines[i]->getV(0)->getId() ==
+                        lines[j]->getV(1)->getId()))) {
+                    wireRev[i] = true;
+                }
+            }
+        }
+    }
+    wiresRev_.push_back(wireRev);
+    if (rev) {
+        std::reverse(v.begin(), v.end());
+    }
     return new Geometry::Element::Polyline<T>(
                     Geometry::ElemId(wires_.size() + 1), v, lay, mat);
 }
