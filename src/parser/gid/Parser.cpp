@@ -181,7 +181,7 @@ Source::Group<>* Parser::readEMSources() {
                     res->add(readDipole());
                 } else if (label.compare("Planewave")==0) {
                     res->add(readPlaneWave());
-                } else if (label.compare("Source::Generator")==0) {
+                } else if (label.compare("Generator")==0) {
                     res->add(readGenerator());
                 } else if (label.compare("Waveguide_port")==0) {
                     res->add(readPortWaveguide());
@@ -1387,7 +1387,7 @@ Source::Generator* Parser::readGenerator() {
                 nodes.push_back(node->getId());
             }
             elems = mesh_->elems().getId(nodes);
-        } else if (label.compare("End of Source::Generator")==0) {
+        } else if (label.compare("End of Generator")==0) {
             return new Source::Generator(mag, elems, type, hardness);
         }
     }
