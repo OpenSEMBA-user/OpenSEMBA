@@ -22,6 +22,7 @@
 #ifndef SEMBA_GEOMETRY_BOX_BOX_H_
 #define SEMBA_GEOMETRY_BOX_BOX_H_
 
+#include <algorithm>
 #include <exception>
 #include <utility>
 

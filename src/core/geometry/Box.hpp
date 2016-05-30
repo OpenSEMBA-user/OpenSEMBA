@@ -32,15 +32,13 @@ Box<T,D>::Box() {
 }
 
 template<class T, std::size_t D>
-Box<T,D>::Box(
-        const std::pair<CVecTD, CVecTD>& bounds) {
+Box<T,D>::Box(const std::pair<CVecTD, CVecTD>& bounds) {
     set(bounds);
 }
 
 template<class T, std::size_t D>
-Box<T,D>::Box(const CVecTD& min, const CVecTD& max) {
-    min_ = min;
-    max_ = max;
+Box<T,D>::Box(const CVecTD& minB, const CVecTD& maxB) {
+    set(std::make_pair(minB, maxB));
 }
 
 template<class T, std::size_t D>
@@ -447,8 +445,10 @@ std::vector<Box<T,D>> Box<T,D>::chop(const Grid<D>& grid) const {
 
 template<class T, std::size_t D>
 void Box<T,D>::set(const std::pair<CVecTD, CVecTD>& minMax) {
-    min_ = minMax.first;
-    max_ = minMax.second;
+    for (std::size_t d = 0; d < D; d++) {
+        min_(d) = std::min(minMax.first(d), minMax.second(d));
+        max_(d) = std::max(minMax.first(d), minMax.second(d));
+    }
 }
 
 template<class T, std::size_t D>

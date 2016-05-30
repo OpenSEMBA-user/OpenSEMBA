@@ -83,7 +83,7 @@ Grid<D>::Grid(const std::vector<Math::Real> step[D],
         pos_[d].resize(step[d].size()+1);
         pos_[d][0] = origin(d);
         for (std::size_t i = 0; i < step[d].size(); i++) {
-            pos_[d][i+1] = pos_[d][i] + step[d][i];
+            pos_[d][i+1] = pos_[d][i] + std::abs(step[d][i]);
         }
     }
 }
