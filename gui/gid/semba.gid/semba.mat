@@ -135,7 +135,7 @@ MATERIAL: Cable
 QUESTION: TypeId
 VALUE: Wire
 STATE: HIDDEN
-QUESTION: WireType#CB#(Standard, SeriesParallel, Dispersive)
+QUESTION: WireType#CB#(Standard,SeriesParallel,Dispersive)
 VALUE: Standard
 DEPENDENCIES:(Standard,      RESTORE,Resistance,#CURRENT#,RESTORE,Inductance,#CURRENT#,HIDE,   Capacitance,#CURRENT#,HIDE,   Parallel_Resistance,#CURRENT#,HIDE,   Parallel_Inductance,#CURRENT#,HIDE,   Parallel_Capacitance,#CURRENT#,HIDE,   File,#CURRENT#)
 DEPENDENCIES:(SeriesParallel,RESTORE,Resistance,#CURRENT#,RESTORE,Inductance,#CURRENT#,RESTORE,Capacitance,#CURRENT#,RESTORE,Parallel_Resistance,#CURRENT#,RESTORE,Parallel_Inductance,#CURRENT#,RESTORE,Parallel_Capacitance,#CURRENT#,HIDE,   File,#CURRENT#)
