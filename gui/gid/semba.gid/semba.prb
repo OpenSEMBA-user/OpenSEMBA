@@ -59,11 +59,12 @@ HELP: Uses a HF MIBC correction for multilayered lossy materials. Requires a pre
 QUESTION: Composites_attenuation_factor
 VALUE: 1.0
 HELP: Positive factor (under 1) for enhancing stability in composites.
-QUESTION: Wires_flavor#CB#(New,Old,Transition)
+QUESTION: Wires_flavor#CB#(New,Old,Transition,Experimental)
 VALUE: New
-DEPENDENCIES: (       New, RESTORE,MTLN,1,    RESTORE,Min_distance_wires,0.5, RESTORE,New_dispersive_formulation,0, SET,Taparrabos,0)
-DEPENDENCIES: (       Old, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
-DEPENDENCIES: (Transition, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
+DEPENDENCIES: (         New, RESTORE,MTLN,1,    RESTORE,Min_distance_wires,0.5, RESTORE,New_dispersive_formulation,0, SET,Taparrabos,0)
+DEPENDENCIES: (         Old, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
+DEPENDENCIES: (  Transition, RESTORE,MTLN,0,    SET,Min_distance_wires,0.5,    SET,New_dispersive_formulation,0, RESTORE, Taparrabos,0)
+DEPENDENCIES: (Experimental, RESTORE,MTLN,0,    RESTORE,Min_distance_wires,0.5,SET,New_dispersive_formulation,0, SET,     Taparrabos,0)
 QUESTION: MTLN#CB#(0,1)
 VALUE: 0
 HELP: Different behavior. "old/transition": uses a pseudo-MTLN (no default). "new" uses a true MTLN (no default, should be enforced)
