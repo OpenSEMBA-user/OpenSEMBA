@@ -327,7 +327,8 @@ Geometry::Element::Polyline<T>*
         wireRev[0] = false;
     } else {
         for (std::size_t i = 0; i < lines.size(); i++) {
-            if (lines[i]->getModel()->is<PhysicalModel::Wire::Wire>()) {
+            if (dynamic_cast<const PhysicalModel::Wire::Wire*>(
+                    lines[i]->getModel()) != NULL) {
                 if (i == 0) {
                     std::size_t j = i + 1;
                     if ((lines[i]->getV(0)->getId() ==
