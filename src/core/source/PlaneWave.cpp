@@ -43,9 +43,8 @@ PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
     if (direction_.norm() == 0) {
         throw Error::PlaneWave::ZeroMagnitude();
     }
-    //
-    if ((direction ^ polarization).norm() !=
-         direction.norm() * polarization.norm()) {
+    Math::Real dotProd = direction.dot(polarization);
+    if (Math::Util::notEqual(dotProd, 0.0)) {
         throw Error::PlaneWave::NotPerpendicular();
     }
 }
