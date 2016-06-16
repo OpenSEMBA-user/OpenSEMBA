@@ -34,6 +34,7 @@ Taparrabos: *GenData(Taparrabos)
 Make holes: *GenData(Make_holes)
 Ground wires: *GenData(Ground_wires)
 Inductance model: *GenData(Inductance_model)
+Inductance order: *GenData(Inductance_order)
 Wires attenuation factor: *GenData(Wires_attenuation_factor)
 
 Map: *GenData(Map)

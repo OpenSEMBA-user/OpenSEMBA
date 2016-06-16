@@ -86,6 +86,9 @@ HELP: Ground wires touching/embedded/crossing PEC/Lossy. Use with CAUTION. Revis
 QUESTION: Inductance_model#CB#(Boutayeb,Ledfelt,Berenger)
 VALUE: Boutayeb
 HELP: Inductance Model
+QUESTION: Inductance_order
+VALUE: 8
+HELP: Inductance Order
 QUESTION: Wires_attenuation_factor
 VALUE: 1.0
 HELP: Positive factor from 0 (full attenuation) to 1 (no attenuation) for enhancing stability in wires. Defaults to 1.0.
