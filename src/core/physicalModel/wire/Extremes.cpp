@@ -63,7 +63,8 @@ Extremes::~Extremes() {
     }
 }
 
-void Extremes::setExtreme(const std::size_t i, const Multiport::Multiport* extreme) {
+void Extremes::setExtreme(const std::size_t i,
+                          const Multiport::Multiport* extreme) {
     if (extreme_[i] != NULL) {
         delete extreme_[i];
     }
@@ -71,6 +72,10 @@ void Extremes::setExtreme(const std::size_t i, const Multiport::Multiport* extre
     if (extreme != NULL) {
         extreme_[i] = extreme->cloneTo<Multiport::Multiport>();
     }
+}
+
+void Extremes::swapExtremes() {
+    std::swap(extreme_[0], extreme_[1]);
 }
 
 void Extremes::printInfo() const {

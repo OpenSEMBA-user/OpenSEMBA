@@ -91,7 +91,7 @@ private:
                       const Data&);
     Geometry::Element::Polyline<T>* newWire_(
             const std::vector<const Geometry::Element::Line<T>*>& lines,
-            const PhysicalModel::PhysicalModel* mat);
+            PhysicalModel::Wire::Extremes* mat);
 };
 
 }

@@ -293,7 +293,7 @@ template<class T>
 Geometry::Element::Polyline<T>*
     Group<T>::newWire_(
         const std::vector<const Geometry::Element::Line<T>*>& lines,
-        const PhysicalModel::PhysicalModel* mat) {
+        PhysicalModel::Wire::Extremes* mat) {
     if (lines.empty()) {
         return NULL;
     }
@@ -379,6 +379,7 @@ Geometry::Element::Polyline<T>*
     wiresRev_.push_back(wireRev);
     if (rev) {
         std::reverse(v.begin(), v.end());
+        mat->swapExtremes();
     }
     return new Geometry::Element::Polyline<T>(
                     Geometry::ElemId(wires_.size() + 1), v, lay, mat);
