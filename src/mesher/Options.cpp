@@ -274,14 +274,12 @@ void Options::setScalingFactor(const Math::Real& scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
 
-void Options::setForbiddenLength(const Math::Real& edgeFraction) {}
+void Options::setForbiddenLength(const Math::Real& forbiddenLength) {
+    forbiddenLength_ = forbiddenLength;
+}
 
 Math::Real Options::getForbiddenLength() const {
-    if (mode_ == Mode::slanted) {
-        return -1.0;
-    } else {
-        return forbiddenLength_;
-    }
+    return forbiddenLength_;
 }
 
 const std::string& Options::getOutputName() const {
