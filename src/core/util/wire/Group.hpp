@@ -150,7 +150,7 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
     for (std::size_t i = 0; i < wires.size(); i++) {
         wireMat = NULL;
         extremeL = extremeR = NULL;
-        getWireMats_(wireMat, extremeL, extremeR, wires[i], smb);
+        getWireMats_(wireMat, extremeL, extremeR, wires[i], smb, graph);
         if (wireMat == NULL) {
             continue;
         }
@@ -227,7 +227,8 @@ void Group<T>::getWireMats_(
         const PhysicalModel::Multiport::Multiport*& extremeL,
         const PhysicalModel::Multiport::Multiport*& extremeR,
         const std::vector<const Geometry::Element::Line<T>*>& lines,
-        const Data& smb) {
+        const Data& smb,
+        const Graph& graph) {
 
     const PhysicalModel::Group<>& mats = *smb.physicalModels;
     if (lines.empty()) {
@@ -235,7 +236,10 @@ void Group<T>::getWireMats_(
     }
     std::vector<MatId> matIds;
     matIds.push_back(lines[0]->getMatId());
+    std::set<Geometry::ElemId> linesIds;
+    linesIds.insert(lines[0]->getId());
     for (std::size_t i = 1; i < lines.size(); i++) {
+        linesIds.insert(lines[i]->getId());
         if (lines[i]->getMatId() != matIds.back()) {
             matIds.push_back(lines[i]->getMatId());
         }
@@ -284,7 +288,34 @@ void Group<T>::getWireMats_(
             }
             aux << lines[i]->getId();
         }
-        aux << " specify a incorrect Wire";
+        aux << " specify a incorrect Connector. ";
+        for (std::size_t i = 0; i < graph.numElems(); i++) {
+            Geometry::ElemId elemId = graph.elem(i)->elem()->getId();
+            const Graph::GraphElem* elem = graph.elem(i);
+            if ((linesIds.count(elemId) == 0) ||
+                (elem->numNeighbors() != 1)) {
+                continue;
+            }
+            for (std::size_t k = 0; k < 2; k++) {
+                Geometry::CoordId vId = elem->getBound(k)->elem()->getId();
+                for (std::size_t j = 0; j < graph.numBounds(); j++) {
+                    const Graph::GraphBound* v = graph.bound(j);
+                    if ((v->elem()->getId() != vId) ||
+                        (v->numBounds() != 1)) {
+                        continue;
+                    }
+                    if (v->getBound(0)->elem()->getId() == elemId) {
+                        continue;
+                    }
+                    if (v->getBound(0)->elem()->getModel()
+                            ->is<PhysicalModel::Wire::Wire>()) {
+                        aux << "Incorrect Normal.";
+                        throw std::logic_error(aux.str());
+                    }
+                }
+            }
+        }
+        aux << "Not attached to a Wire Material.";
         throw std::logic_error(aux.str());
     }
 }

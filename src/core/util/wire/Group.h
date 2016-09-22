@@ -88,7 +88,8 @@ private:
                       const PhysicalModel::Multiport::Multiport*& extremeL,
                       const PhysicalModel::Multiport::Multiport*& extremeR,
                       const std::vector<const Geometry::Element::Line<T>*>&,
-                      const Data&);
+                      const Data&,
+                      const Graph&);
     Geometry::Element::Polyline<T>* newWire_(
             const std::vector<const Geometry::Element::Line<T>*>& lines,
             PhysicalModel::Wire::Extremes* mat);
