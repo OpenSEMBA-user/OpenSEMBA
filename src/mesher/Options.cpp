@@ -160,7 +160,7 @@ void Options::setBoundTermination(
 }
 void Options::addArguments(Argument::Group& args) const {
     args.addOption(new Argument::Option<std::string>("Mesher", "mesher"))
-        .choices({{"openfoam"}, {"zMesher"}, {"confMesher"}});
+        .choices({{"openfoam"}, {"zMesher"}, {"cMesher"}, {"confMesher"}});
     args.addOption(new Argument::Switch("Brute force volumes",
         "bruteForceVolumes"));
     args.addOption(new Argument::Switch("VTK Export", "vtkexport"));
@@ -372,6 +372,8 @@ Options::Mesher Options::strToMesher(std::string str) {
         return Mesher::conformalMesher;
     } else if (str.compare("zMesher")==0) {
         return Mesher::zMesher;
+    } else if (str.compare("cMesher") == 0) {
+        return Mesher::cMesher;
     } else if (str.compare("OpenFOAM")==0) {
         return Mesher::openfoam;
     } else if (str.compare("None")==0) {

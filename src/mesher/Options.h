@@ -49,6 +49,7 @@ public:
         openfoam,
         conformalMesher,
         zMesher,
+        cMesher,
         none
     };
     enum class Mode {
