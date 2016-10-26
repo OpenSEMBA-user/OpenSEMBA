@@ -370,10 +370,10 @@ bool Options::isGridStepSet() const {
 Options::Mesher Options::strToMesher(std::string str) {
     if (str.compare("ConformalMesher")==0) {
         return Mesher::conformalMesher;
-    } else if (str.compare("zMesher")==0) {
+    } else if (str.compare("ZMesher")==0) {
         return Mesher::zMesher;
-    } else if (str.compare("cMesher") == 0) {
-        return Mesher::cMesher;
+    } else if (str.compare("DMesher")==0) {
+        return Mesher::dMesher;
     } else if (str.compare("OpenFOAM")==0) {
         return Mesher::openfoam;
     } else if (str.compare("None")==0) {
