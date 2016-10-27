@@ -291,7 +291,7 @@ void Group<T>::getWireMats_(
         aux << " specify a incorrect Connector. ";
         for (std::size_t i = 0; i < graph.numElems(); i++) {
             Geometry::ElemId elemId = graph.elem(i)->elem()->getId();
-            const Graph::GraphElem* elem = graph.elem(i);
+            const typename Graph::GraphElem* elem = graph.elem(i);
             if ((linesIds.count(elemId) == 0) ||
                 (elem->numNeighbors() != 1)) {
                 continue;
@@ -299,7 +299,7 @@ void Group<T>::getWireMats_(
             for (std::size_t k = 0; k < 2; k++) {
                 Geometry::CoordId vId = elem->getBound(k)->elem()->getId();
                 for (std::size_t j = 0; j < graph.numBounds(); j++) {
-                    const Graph::GraphBound* v = graph.bound(j);
+                    const typename Graph::GraphBound* v = graph.bound(j);
                     if ((v->elem()->getId() != vId) ||
                         (v->numBounds() != 1)) {
                         continue;
@@ -307,8 +307,9 @@ void Group<T>::getWireMats_(
                     if (v->getBound(0)->elem()->getId() == elemId) {
                         continue;
                     }
-                    if (v->getBound(0)->elem()->getModel()
-                            ->is<PhysicalModel::Wire::Wire>()) {
+                    const Geometry::Element::Model* model =
+                        v->getBound(0)->elem()->getModel();
+                    if (model->is<PhysicalModel::Wire::Wire>()) {
                         aux << "Incorrect Normal.";
                         throw std::logic_error(aux.str());
                     }
