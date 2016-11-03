@@ -4,18 +4,32 @@ CONDITION: Planewave
 CONDTYPE: over layers
 CONDMESHTYPE: over body elements
 #Title: Basic
-QUESTION: Direction_x
-VALUE: 1.0
-QUESTION: Direction_y
+QUESTION: Definition_mode#CB#(by_vectors,by_angles)
+VALUE: by_vectors
+DEPENDENCIES:(by_vectors, RESTORE,Direction_vector,#CURRENT#, RESTORE,Polarization_vector,#CURRENT#,    HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#)
+DEPENDENCIES:(by_angles,     HIDE,Direction_vector,#CURRENT#,    HIDE,Polarization_vector,#CURRENT#, RESTORE,Direction_theta,#CURRENT#, RESTORE,Direction_phi,#CURRENT#, RESTORE,Polarization_alpha,#CURRENT#, RESTORE,Polarization_beta,#CURRENT#)
+QUESTION: Direction_vector
+VALUE: 1.0 0.0 0.0
+HELP: Direction of the plane wave incident vector in cartesian coordinates.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Polarization_vector
+VALUE: 0.0 1.0 0.0
+HELP: Direction of the plane wave electric field vector in cartesian coordinates.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+
+QUESTION: Direction_theta
 VALUE: 0.0
-QUESTION: Direction_z
+HELP: The polar angle (degrees) of the plane wave incident vector.
+QUESTION: Direction_phi
 VALUE: 0.0
-QUESTION: Polarization_x
+HELP: The azimuthal angle (degrees) of the plane wave incident vector.
+QUESTION: Polarization_alpha
 VALUE: 0.0
-QUESTION: Polarization_y
-VALUE: 1.0
-QUESTION: Polarization_z
+HELP: The polar angle (degrees) of the plane wave electric field vector.
+QUESTION: Polarization_beta
 VALUE: 0.0
+HELP: The azimuthal angle (degrees) of the plane wave electric field vector.
+
 #Title: Excitation
 QUESTION: Excitation#CB#(Gaussian,File)
 VALUE: Gaussian
@@ -33,40 +47,6 @@ VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
-
-#CONDITION: Planewave_on_volume
-#CONDTYPE: over volumes
-#CONDMESHTYPE: over body elements
-##Title: Basic
-#QUESTION: Direction_x
-#VALUE: 1.0
-#QUESTION: Direction_y
-#VALUE: 0.0
-#QUESTION: Direction_z
-#VALUE: 0.0
-#QUESTION: Polarization_x
-#VALUE: 0.0
-#QUESTION: Polarization_y
-#VALUE: 1.0
-#QUESTION: Polarization_z
-#VALUE: 0.0
-#Title: Excitation
-#QUESTION: Excitation#CB#(Gaussian,File)
-#VALUE: Gaussian
-#DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, #File,#CURRENT#)
-#DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, #RESTORE, File,#CURRENT#)
-#QUESTION: Gaussian_spread
-#VALUE: 2e-9
-#HELP: Gaussian spread in seconds.
-#QUESTION: Gaussian_delay
-#VALUE: 10e-9
-#HELP: Gaussian delay in seconds.
-#IMAGE: images/gauss_excitation.png
-#QUESTION: File
-#VALUE:
-#TKWIDGET: GidUtils::TkwidgetGetFilenameButton
-#HELP: File containing excitation values. If set, ignores other excitation options.
-#END CONDITION
 
 CONDITION: Generator_on_line
 CONDTYPE: over points

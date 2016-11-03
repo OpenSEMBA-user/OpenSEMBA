@@ -88,7 +88,10 @@ private:
         rectangular,
         undefined
     } WaveportShape;
-
+    typedef enum {
+        byVectors,
+        byDegrees
+    } DefinitionMode;
     Util::ProgressBar progress_;
 
     PhysicalModel::Group<>* physicalModels_;
@@ -161,6 +164,7 @@ private:
     static OutputRequest::Base::Type strToOutputType(std::string label);
     static SIBCType strToSIBCType(std::string str);
     static GiDOutputType strToGidOutputType(std::string label);
+    static DefinitionMode strToDefinitionMode(std::string label);
     static OutputRequest::Domain strToDomain(std::string line);
     //static OptionsMesher::Mesher strToMesher(std::string);
     //static OptionsMesher::Mode strToMesherMode(std::string);

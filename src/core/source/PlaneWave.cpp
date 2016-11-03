@@ -35,19 +35,24 @@ PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
 :   SEMBA::Source::Base(magnitude),
     Geometry::Element::Group<const Geometry::Vol>(elem) {
 
-    direction_ = direction;
-    polarization_ = polarization;
-    if (polarization_.norm() == 0) {
-        throw Error::PlaneWave::ZeroPolarization();
-    }
-    if (direction_.norm() == 0) {
-        throw Error::PlaneWave::ZeroMagnitude();
-    }
-    Math::Real dotProd = direction.dot(polarization);
-    if (Math::Util::notEqual(dotProd, 0.0)) {
-        throw Error::PlaneWave::NotPerpendicular();
-    }
+    init_(direction, polarization);
 }
+
+PlaneWave::PlaneWave(
+        Magnitude::Magnitude* magnitude,
+        Geometry::Element::Group<Geometry::Vol> elem,
+        Math::Real theta,
+        Math::Real phi,
+        Math::Real alpha,
+        Math::Real beta)
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Vol>(elem) {
+
+    Math::CVecR3 dirVec = polarToCartesian(theta, phi);
+    Math::CVecR3 polVec = polarToCartesian(alpha, beta);
+    init_(dirVec, polVec);
+}
+
 
 PlaneWave::PlaneWave(const PlaneWave& rhs)
 :   SEMBA::Source::Base(rhs),
@@ -123,7 +128,7 @@ void PlaneWave::printInfo() const {
 }
 
 std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
-        const Math::CVecR3& v) const {
+        const Math::CVecR3& v) {
     Math::Real vx_, vy_,vz_;
     Math::Real vmxyz, vmxy_, alpha_aux, beta_aux;
     vmxyz = std::sqrt(v(Math::Constants::x)*v(Math::Constants::x)+
@@ -147,7 +152,29 @@ std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
     return res;
 }
 
-Math::Real PlaneWave::reduceRadians(const Math::Real radianIn) const {
+void PlaneWave::init_(Math::CVecR3 direction, Math::CVecR3 polarization) {
+    direction_ = direction;
+    polarization_ = polarization;
+    if (polarization_.norm() == 0) {
+        throw Error::PlaneWave::ZeroPolarization();
+    }
+    if (direction_.norm() == 0) {
+        throw Error::PlaneWave::ZeroMagnitude();
+    }
+    Math::Real dotProd = direction.dot(polarization);
+    if (Math::Util::notEqual(dotProd, 0.0)) {
+        throw Error::PlaneWave::NotPerpendicular();
+    }
+}
+
+Math::CVecR3 PlaneWave::polarToCartesian(Math::Real theta, Math::Real phi) {
+    return Math::CVecR3(
+            std::sin(theta)*std::cos(phi),
+            std::sin(theta)*std::sin(phi),
+            std::cos(phi));
+}
+
+Math::Real PlaneWave::reduceRadians(const Math::Real radianIn) {
     Math::Real nVueltas, nVueltasComp, radianOut, Val2Pi;
     Val2Pi = (Math::Real) 2.0 * (Math::Real) acos((Math::Real) 0.0);
     nVueltas = radianIn/(Val2Pi);

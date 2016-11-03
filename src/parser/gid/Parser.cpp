@@ -1153,15 +1153,27 @@ Geometry::Grid3 Parser::readCartesianGrid() {
 Source::PlaneWave* Parser::readPlaneWave() {
     std::string filename;
     std::string label, value;
+    DefinitionMode definitionMode;
     Math::CVecR3 dir, pol;
+    Math::Real theta, phi, alpha, beta;
     Geometry::Element::Group<Geometry::Vol> elems;
     Source::Magnitude::Magnitude* mag;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
-        if (label.compare("Direction")==0) {
+        if (label.compare("Definition mode")==0) {
+            definitionMode = strToDefinitionMode(value);
+        } else if (label.compare("Direction vector")==0) {
             dir = strToCartesianVector(value);
-        } else if (label.compare("Polarization") == 0) {
+        } else if (label.compare("Polarization vector") == 0) {
             pol = strToCartesianVector(value);
+        } else if (label.compare("Direction theta")==0) {
+            theta = atof(value.c_str());
+        } else if (label.compare("Direction phi")==0) {
+            phi = atof(value.c_str());
+        } else if (label.compare("Polarization alpha")==0) {
+            alpha = atof(value.c_str());
+        } else if (label.compare("Polarization beta")==0) {
+            beta = atof(value.c_str());
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
@@ -1177,7 +1189,13 @@ Source::PlaneWave* Parser::readPlaneWave() {
                 elems.add(mesh_->elems().getId(id));
             }
         } else if (label.compare("End of Planewave")==0) {
-            return new Source::PlaneWave(mag, elems, dir, pol);
+            switch (definitionMode) {
+            case DefinitionMode::byVectors:
+                return new Source::PlaneWave(mag, elems, dir, pol);
+            case DefinitionMode::byDegrees:
+                return new Source::PlaneWave(mag, elems, theta,phi, alpha,beta);
+            }
+
         }
     }
     throw std::logic_error("End of Planewave label not found.");
@@ -1642,6 +1660,18 @@ Parser::GiDOutputType Parser::strToGidOutputType(std::string str) {
     } else {
         throw std::logic_error("Unrecognized label " + str);
         return Parser::outRqOnPoint;
+    }
+}
+
+Parser::DefinitionMode Parser::strToDefinitionMode(std::string str) {
+    str = trim(str);
+    if (str.compare("by_vectors")==0) {
+        return Parser::byVectors;
+    } else if (str.compare("byDegrees")==0) {
+        return Parser::byDegrees;
+    } else {
+        throw std::logic_error("Unrecognized label " + str);
+        return Parser::byVectors;
     }
 }
 

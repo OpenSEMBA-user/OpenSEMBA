@@ -36,6 +36,12 @@ public:
               Geometry::Element::Group<Geometry::Vol> elem,
               Math::CVecR3 direction,
               Math::CVecR3 polarization);
+    PlaneWave(Magnitude::Magnitude* magnitude,
+                  Geometry::Element::Group<Geometry::Vol> elem,
+                  Math::Real directionTheta,
+                  Math::Real directionPhi,
+                  Math::Real polarizationAlpha,
+                  Math::Real polarizationBeta);
     PlaneWave(const PlaneWave& rhs);
     virtual ~PlaneWave();
 
@@ -60,9 +66,11 @@ private:
     Math::CVecR3 direction_;
     Math::CVecR3 polarization_;
 
-    std::pair<Math::Real,Math::Real> cartesianToPolar(
-            const Math::CVecR3& vec) const;
-    Math::Real reduceRadians(const Math::Real radianIn) const;
+    void init_(Math::CVecR3 direction, Math::CVecR3 polarization);
+    static std::pair<Math::Real,Math::Real> cartesianToPolar(
+            const Math::CVecR3& vec);
+    static Math::CVecR3 polarToCartesian(Math::Real theta, Math::Real phi);
+    static Math::Real reduceRadians(const Math::Real radianIn);
 };
 
 namespace Error {

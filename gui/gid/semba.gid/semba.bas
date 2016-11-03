@@ -230,8 +230,13 @@ Excitations:
 *if(CondNumEntities(int)>0)
 Planewave: 
 *loop layers *OnlyInCond
-Direction: *cond(Direction_x) *cond(Direction_y) *cond(Direction_z) 
-Polarization: *cond(Polarization_x) *cond(Polarization_y) *cond(Polarization_z) 
+Definition mode: *cond(Definition_mode)
+Direction vector: *cond(Direction_vector) 
+Polarization vector: *cond(Polarization_vector)
+Direction theta: *cond(Direction_theta)
+Direction phi: *cond(Direction_phi)
+Polarization alpha: *cond(Polarization_alpha)
+Polarization beta: *cond(Polarization_beta)
 Excitation: *cond(Excitation)
 Gaussian spread: *cond(Gaussian_spread)
 Gaussian delay: *cond(Gaussian_delay)
