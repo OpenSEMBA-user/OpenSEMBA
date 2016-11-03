@@ -22,7 +22,7 @@
 #ifndef SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
 #define SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
 
-
+#include <iomanip>
 
 #include "Magnitude.h"
 #include "filesystem/Project.h"
