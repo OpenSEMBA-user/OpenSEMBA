@@ -553,13 +553,22 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                     getline_(line);
                     Geometry::Element::Group<Geometry::Vol> elems =
                         boxToElemGroup(line);
-                    Math::Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
-                    f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
+                    Math::Real iThDeg, fThDeg, sThDeg, iPhiDeg, fPhiDeg, sPhiDeg;
+                    f_in >> iThDeg >> fThDeg >> sThDeg
+                        >> iPhiDeg >> fPhiDeg >> sPhiDeg;
                     getline_(line);
+                    Math::Real iThRad, fThRad, sThRad, iPhiRad, fPhiRad, sPhiRad;
+                    static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
+                    iThRad = iThDeg * degToRad;
+                    fThRad = fThDeg * degToRad;
+                    sThRad = sThDeg * degToRad;
+                    iPhiRad = iPhiDeg * degToRad;
+                    fPhiRad = fPhiDeg * degToRad;
+                    sPhiRad = sPhiDeg * degToRad;
                     OutputRequest::FarField* oRFF =
                         new OutputRequest::FarField(
                             domain, name, elems,
-                            iTh, fTh, sTh, iPhi, fPhi, sPhi);
+                            iThRad, fThRad, sThRad, iPhiRad, fPhiRad, sPhiRad);
                     res->add(oRFF);
                     break;
                 }

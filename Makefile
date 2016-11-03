@@ -25,7 +25,7 @@
 # ==================== Default values =========================================
 target   = release
 compiler = gnu
-APP_VERSION=\"0.11\"
+APP_VERSION=\"0.12\"
 
 FFTW3_SUPPORT=no#
 EIGEN_SUPPORT=no#

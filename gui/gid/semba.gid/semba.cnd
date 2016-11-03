@@ -400,22 +400,22 @@ QUESTION: Type#CB#(farField)
 VALUE: farField
 QUESTION: Initial_theta
 VALUE: 0
-HELP: Angle in pi radians, min = 0 and max = 1.
+HELP: Angle in degrees, min = 0 and max = 180.
 QUESTION: Final_theta
 VALUE: 0
-HELP: Angle in pi radians, min = 0 and max = 1.
+HELP: Angle in degrees, min = 0 and max = 180.
 QUESTION: Step_theta
-VALUE: 1
-HELP: Angle in pi radians.
+VALUE: 10
+HELP: Angle in degrees.
 QUESTION: Initial_phi
 VALUE: 0
-HELP: Angle in pi radians, min = 0 and max = 2.
+HELP: Angle in degrees, min = 0 and max = 360.
 QUESTION: Final_phi
 VALUE: 0
-HELP: Angle in pi radians, min = 0 and max = 2.
+HELP: Angle in degrees, min = 0 and max = 360.
 QUESTION: Step_phi
-VALUE: 1
-HELP: Angle in pi radians.
+VALUE: 10
+HELP: Angle in degrees.
 #Title: Domain
 QUESTION: Time#CB#(0,1)
 VALUE: 0
