@@ -171,7 +171,7 @@ Math::CVecR3 PlaneWave::polarToCartesian(Math::Real theta, Math::Real phi) {
     return Math::CVecR3(
             std::sin(theta)*std::cos(phi),
             std::sin(theta)*std::sin(phi),
-            std::cos(phi));
+            std::cos(theta));
 }
 
 Math::Real PlaneWave::reduceRadians(const Math::Real radianIn) {

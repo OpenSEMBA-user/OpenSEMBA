@@ -9,16 +9,16 @@ VALUE: by_vectors
 DEPENDENCIES:(by_vectors, RESTORE,Direction_vector,#CURRENT#, RESTORE,Polarization_vector,#CURRENT#,    HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#)
 DEPENDENCIES:(by_angles,     HIDE,Direction_vector,#CURRENT#,    HIDE,Polarization_vector,#CURRENT#, RESTORE,Direction_theta,#CURRENT#, RESTORE,Direction_phi,#CURRENT#, RESTORE,Polarization_alpha,#CURRENT#, RESTORE,Polarization_beta,#CURRENT#)
 QUESTION: Direction_vector
-VALUE: 1.0 0.0 0.0
+VALUE: 0.0 0.0 1.0
 HELP: Direction of the plane wave incident vector in cartesian coordinates.
 TKWIDGET: GidUtils::TkwidgetGetVector3D
 QUESTION: Polarization_vector
-VALUE: 0.0 1.0 0.0
+VALUE: 1.0 0.0 0.0
 HELP: Direction of the plane wave electric field vector in cartesian coordinates.
 TKWIDGET: GidUtils::TkwidgetGetVector3D
 
 QUESTION: Direction_theta
-VALUE: 0.0
+VALUE: 90
 HELP: The polar angle (degrees) of the plane wave incident vector.
 QUESTION: Direction_phi
 VALUE: 0.0
