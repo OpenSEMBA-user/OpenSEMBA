@@ -78,7 +78,6 @@ public:
     bool isBruteForceVolumes() const;
     Math::Real getForbiddenLength() const;
     Math::Real getScalingFactor() const;
-    std::string getScaleFactor() const;
     const std::string& getMeshOutputName() const;
     bool isGridStepSet() const;
     bool isVtkExport() const;
@@ -111,7 +110,6 @@ public:
     void setMode(Mode mode);
     void setPostmshExport(bool postmshExport);
     void setOutputName(const std::string& outputName);
-    void setScaleFactorValue(const std::string& scaleFactorValue);
     void setScalingFactor(const Math::Real& scalingFactor);
     void setVtkExport(bool vtkExport);
 

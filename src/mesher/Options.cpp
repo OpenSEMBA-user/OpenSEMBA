@@ -126,10 +126,6 @@ bool Options::isRelaxed() const {
     return false;
 }
 
-std::string Options::getScaleFactor() const {
-    return scaleFactorValue_;
-}
-
 Math::Real Options::getScalingFactor() const {
     return scalingFactor_;
 }
@@ -169,7 +165,7 @@ void Options::addArguments(Argument::Group& args) const {
     args.addOption(new Argument::Option<std::string>("Mode", "mode"))
         .choices({{"Structured"}, {"Relaxed"}, {"Slanted"}, {"Conformal"}});
     args.addOption(
-        new Argument::Option<Math::Real>("Forbidden length", "lenght"));
+        new Argument::Option<Math::Real>("Forbidden length", "length"));
 }
 
 void Options::set(const Solver::Settings& opts) {
@@ -209,9 +205,6 @@ void Options::set(const Solver::Settings& opts) {
     }
     if (opts.existsName("Forbidden length")) {
         setForbiddenLength(opts("Forbidden length").getReal());
-    }
-    if (opts.existsName("Scale factor value")) {
-        setScaleFactorValue(opts("Scale factor value").getString());
     }
     if (opts.existsName("Location in mesh")) {
         setLocationInMesh(strToCVecR3(opts("Location in mesh").getString()));
@@ -264,10 +257,6 @@ void Options::setMesher(Mesher mesher) {
 
 void Options::setMode(Mode mode) {
     mode_ = mode;
-}
-
-void Options::setScaleFactorValue(const std::string& scaleFactorValue) {
-    scaleFactorValue_ = scaleFactorValue;
 }
 
 void Options::setScalingFactor(const Math::Real& scalingFactor) {
