@@ -163,7 +163,7 @@ VALUE: 0.0
 HELP: Wire capacitance (Farads/meter)
 QUESTION: File
 VALUE: 
-HELP: Path to file containing dispersive wire properties.
+HELP: Path to file containing dispersive wire properties in pole/residue format.
 END MATERIAL
 
 MATERIAL: Connector_short
@@ -231,5 +231,5 @@ VALUE: Conn_dispersive
 STATE: HIDDEN
 QUESTION: File
 VALUE: 
-HELP: Path to file containing dispersive connector properties.
+HELP: Path to file containing dispersive connector properties in pole/residue format.
 END MATERIAL
