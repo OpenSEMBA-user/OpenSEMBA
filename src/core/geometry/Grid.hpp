@@ -642,7 +642,7 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
     if (std::abs(siz) > std::abs(pad)) {
         std::cerr << "WARNING @ Grid enlarge bound: "
                 << "std::size_t was larger than padding. Ignoring padding in "
-                << "axe" << d << " and bound " << b << "." << std::endl;
+                << "axis " << d << " and bound " << b << "." << std::endl;
         return;
     }
     if (pad == 0.0) {
@@ -677,7 +677,9 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
         if (n > 1) {
             // Newton method to adjust the sum of available space.
             Math::Real f = 1;
-            while (!Math::Util::equal(f, 0.0)) {
+            const Math::Real threshold =
+                    std::numeric_limits<Math::Real>::epsilon()*1.0e6;
+            while (std::abs(f) >= threshold) {
                 f = t0 * (1-pow(r,n)) / (1-r) - d13;
                 Math::Real df = t0*(1-pow(r,n))/pow(1-r,2) - 
                                 t0*n*pow(r,n-1)/(1-r);

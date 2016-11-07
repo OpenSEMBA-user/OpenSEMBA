@@ -57,35 +57,24 @@ TEST_F(GeometryGridTest, OutOfRange) {
 }
 
 TEST_F(GeometryGridTest, EnlargeBound) {
-    CVecR3 padding(0.15);
-    CVecR3 cellSizes(0.05);
-    std::pair<CVecR3,CVecR3> pad(padding, padding);
-    std::pair<CVecR3,CVecR3> siz(cellSizes, cellSizes);
-    CVecI3 numCellsBefore = grid_.getNumCells();
-    grid_.enlarge(pad, siz);
-    EXPECT_EQ(numCellsBefore + 6, grid_.getNumCells());
+        CVecR3 padding(0.15);
+        CVecR3 cellSizes(0.05);
+        std::pair<CVecR3,CVecR3> pad(padding, padding);
+        std::pair<CVecR3,CVecR3> siz(cellSizes, cellSizes);
+        CVecI3 numCellsBefore = grid_.getNumCells();
+        grid_.enlarge(pad, siz);
+        EXPECT_EQ(numCellsBefore + 6, grid_.getNumCells());
 }
 
-//TEST_F(GeometryGridTest, GetCVecI3Fractional) {
-//    bool err;
-//    EXPECT_EQ(CVecI3Frac(CVecI3(0), CVecR3(0.0)),
-//               grid_.getCVecI3Fractional(CVecR3(0.0), err));
-//    EXPECT_TRUE(err);
-//
-//    EXPECT_EQ(CVecI3Frac(CVecI3(3), CVecR3(0.02/0.05)),
-//               grid_.getCVecI3Fractional(CVecR3(0.17), err));
-//    EXPECT_TRUE(err);
-//
-//    EXPECT_EQ(CVecI3Frac(CVecI3(4), CVecR3(0.0)),
-//               grid_.getCVecI3Fractional(CVecR3(0.2), err));
-//    EXPECT_TRUE(err);
-//
-//    grid_.getCVecI3Fractional(CVecR3(1.01), err);
-//    EXPECT_FALSE(err);
-//
-//    grid_.getCVecI3Fractional(CVecR3(-0.01), err);
-//    EXPECT_FALSE(err);
-//}
+TEST_F(GeometryGridTest, EnlargeBound2) {
+        CVecR3 padding(50.0);
+        CVecR3 cellSizes(5);
+        std::pair<CVecR3,CVecR3> pad(padding, padding);
+        std::pair<CVecR3,CVecR3> siz(cellSizes, cellSizes);
+        CVecI3 numCellsBefore = grid_.getNumCells();
+        grid_.enlarge(pad, siz);
+        EXPECT_EQ(numCellsBefore + 94, grid_.getNumCells());
+}
 
 TEST_F(GeometryGridTest, GetSteps) {
     EXPECT_NEAR(0.05, grid_.getStep(0,2), Math::Util::tolerance);
