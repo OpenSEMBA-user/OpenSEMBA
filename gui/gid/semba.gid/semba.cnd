@@ -4,10 +4,11 @@ CONDITION: Planewave
 CONDTYPE: over layers
 CONDMESHTYPE: over body elements
 #Title: Basic
-QUESTION: Definition_mode#CB#(by_vectors,by_angles)
+QUESTION: Definition_mode#CB#(by_vectors,by_angles,randomized_multisource)
 VALUE: by_vectors
-DEPENDENCIES:(by_vectors, RESTORE,Direction_vector,#CURRENT#, RESTORE,Polarization_vector,#CURRENT#,    HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#)
-DEPENDENCIES:(by_angles,     HIDE,Direction_vector,#CURRENT#,    HIDE,Polarization_vector,#CURRENT#, RESTORE,Direction_theta,#CURRENT#, RESTORE,Direction_phi,#CURRENT#, RESTORE,Polarization_alpha,#CURRENT#, RESTORE,Polarization_beta,#CURRENT#)
+DEPENDENCIES:(by_vectors,             RESTORE,Direction_vector,#CURRENT#, RESTORE,Polarization_vector,#CURRENT#,    HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#,    HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
+DEPENDENCIES:(by_angles,                 HIDE,Direction_vector,#CURRENT#,    HIDE,Polarization_vector,#CURRENT#, RESTORE,Direction_theta,#CURRENT#, RESTORE,Direction_phi,#CURRENT#, RESTORE,Polarization_alpha,#CURRENT#, RESTORE,Polarization_beta,#CURRENT#,    HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
+DEPENDENCIES:(randomized_multisource,    HIDE,Direction_vector,#CURRENT#,    HIDE,Polarization_vector,#CURRENT#,    HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#, RESTORE,Number_of_random_planewaves,#CURRENT#, RESTORE,Relative_variation_of_random_delay,#CURRENT#)
 QUESTION: Direction_vector
 VALUE: 0.0 0.0 1.0
 HELP: Direction of the plane wave incident vector in cartesian coordinates.
@@ -16,6 +17,12 @@ QUESTION: Polarization_vector
 VALUE: 1.0 0.0 0.0
 HELP: Direction of the plane wave electric field vector in cartesian coordinates.
 TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Number_of_random_planewaves
+VALUE: 200
+HELP: Number of random planewaves
+QUESTION: Relative_variation_of_random_delay
+VALUE: 0.3
+HELP: Variation of delays in the planewave magnitudes expressed in parts per unit.
 
 QUESTION: Direction_theta
 VALUE: 90

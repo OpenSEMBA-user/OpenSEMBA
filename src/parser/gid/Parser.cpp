@@ -1161,7 +1161,9 @@ Source::PlaneWave* Parser::readPlaneWave() {
     std::string label, value;
     DefinitionMode definitionMode;
     Math::CVecR3 dir, pol;
-    Math::Real theta, phi, alpha, beta;
+    std::pair<Math::Real,Math::Real> directionAngles, polarizationAngles;
+    Math::Int numberOfRandomPlanewaves;
+    Math::Real relativeVariationOfRandomDelay;
     static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
     Geometry::Element::Group<Geometry::Vol> elems;
     Source::Magnitude::Magnitude* mag;
@@ -1174,13 +1176,17 @@ Source::PlaneWave* Parser::readPlaneWave() {
         } else if (label.compare("Polarization vector") == 0) {
             pol = strToCartesianVector(value);
         } else if (label.compare("Direction theta")==0) {
-            theta = atof(value.c_str()) * degToRad;
+            directionAngles.first = atof(value.c_str()) * degToRad;
         } else if (label.compare("Direction phi")==0) {
-            phi = atof(value.c_str()) * degToRad;
+            directionAngles.second = atof(value.c_str()) * degToRad;
         } else if (label.compare("Polarization alpha")==0) {
-            alpha = atof(value.c_str()) * degToRad;
+            polarizationAngles.first = atof(value.c_str()) * degToRad;
         } else if (label.compare("Polarization beta")==0) {
-            beta = atof(value.c_str()) * degToRad;
+            polarizationAngles.second = atof(value.c_str()) * degToRad;
+        } else if (label.compare("Number of random planewaves")==0) {
+            numberOfRandomPlanewaves = atoi(value.c_str());
+        } else if (label.compare("Relative variation of random delay")==0) {
+            relativeVariationOfRandomDelay = atof(value.c_str());
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
@@ -1200,7 +1206,12 @@ Source::PlaneWave* Parser::readPlaneWave() {
             case DefinitionMode::byVectors:
                 return new Source::PlaneWave(mag, elems, dir, pol);
             case DefinitionMode::byAngles:
-                return new Source::PlaneWave(mag, elems, theta,phi, alpha,beta);
+                return new Source::PlaneWave(mag, elems, directionAngles,
+                        polarizationAngles);
+            case DefinitionMode::randomizedMultisource:
+                return new Source::PlaneWave(mag, elems,
+                        numberOfRandomPlanewaves,
+                        relativeVariationOfRandomDelay);
             }
 
         }
@@ -1706,6 +1717,8 @@ Parser::DefinitionMode Parser::strToDefinitionMode(std::string str) {
         return Parser::byVectors;
     } else if (str.compare("by_angles")==0) {
         return Parser::byAngles;
+    } else if (str.compare("randomized_multisource")==0) {
+        return Parser::randomizedMultisource;
     } else {
         throw std::logic_error("Unrecognized label " + str);
         return Parser::byVectors;

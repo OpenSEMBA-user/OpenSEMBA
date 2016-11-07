@@ -90,7 +90,8 @@ private:
     } WaveportShape;
     typedef enum {
         byVectors,
-        byAngles
+        byAngles,
+        randomizedMultisource
     } DefinitionMode;
     Util::ProgressBar progress_;
 

@@ -239,6 +239,8 @@ Direction theta: *cond(Direction_theta)
 Direction phi: *cond(Direction_phi)
 Polarization alpha: *cond(Polarization_alpha)
 Polarization beta: *cond(Polarization_beta)
+Number of random planewaves: *cond(Number_of_random_planewaves)
+Relative variation of random delay: *cond(Relative_variation_of_random_delay)
 Excitation: *cond(Excitation)
 Gaussian spread: *cond(Gaussian_spread)
 Gaussian delay: *cond(Gaussian_delay)
@@ -249,24 +251,6 @@ Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
 *end layers
 End of Planewave:
 *endif
-
-*loop conditions *bodyElements
-*if((strcasecmp(condName,"planewave_on_volume")==0)&&CondNumEntities(int)>0)
- Planewave: 
- Direction: *cond(Direction_x) *cond(Direction_y) *cond(Direction_z) 
- Polarization: *cond(Polarization_x) *cond(Polarization_y) *cond(Polarization_z) 
- Excitation: *cond(Excitation)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
- Filename: *cond(File)
- Defined: OnElements
- Number of elements: *CondNumEntities(int)
-*loop elems *OnlyInCond
-  *elemsNum
-*end elems
-End of Planewave:
-*endif
-*end conditions
 
 *Set Cond Source_on_line *bodyElements
 *set var HEADER=0

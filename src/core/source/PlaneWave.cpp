@@ -25,7 +25,9 @@ namespace SEMBA {
 namespace Source {
 
 PlaneWave::PlaneWave() {
-
+    randomic_ = false;
+    numberOfRandomPlanewaves_ = 0;
+    relativeVariationOfRandomDelay_ = 0.0;
 }
 
 PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
@@ -41,16 +43,32 @@ PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
 PlaneWave::PlaneWave(
         Magnitude::Magnitude* magnitude,
         Geometry::Element::Group<Geometry::Vol> elem,
-        Math::Real theta,
-        Math::Real phi,
-        Math::Real alpha,
-        Math::Real beta)
+        std::pair<Math::Real, Math::Real> directionAngles,
+        std::pair<Math::Real, Math::Real> polarizationAngles)
 :   SEMBA::Source::Base(magnitude),
     Geometry::Element::Group<const Geometry::Vol>(elem) {
+
+    Math::Real theta = directionAngles.first;
+    Math::Real phi   = directionAngles.second;
+    Math::Real alpha = polarizationAngles.first;
+    Math::Real beta  = polarizationAngles.second;
 
     Math::CVecR3 dirVec = polarToCartesian(theta, phi);
     Math::CVecR3 polVec = polarToCartesian(alpha, beta);
     init_(dirVec, polVec);
+}
+
+PlaneWave::PlaneWave(
+        Magnitude::Magnitude* magnitude,
+        Geometry::Element::Group<Geometry::Vol> elem,
+        Math::Int numberOfRandomPlanewaves,
+        Math::Real relativeVariationOfRandomDelay)
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Vol>(elem) {
+
+    randomic_ = true;
+    numberOfRandomPlanewaves_ = numberOfRandomPlanewaves;
+    relativeVariationOfRandomDelay_ = relativeVariationOfRandomDelay;
 }
 
 
@@ -60,6 +78,9 @@ PlaneWave::PlaneWave(const PlaneWave& rhs)
 
     direction_ = rhs.direction_;
     polarization_ = rhs.polarization_;
+    randomic_ = rhs.randomic_;
+    numberOfRandomPlanewaves_ = rhs.numberOfRandomPlanewaves_;
+    relativeVariationOfRandomDelay_ = rhs.relativeVariationOfRandomDelay_;
 }
 
 PlaneWave::~PlaneWave() {
@@ -86,7 +107,7 @@ const Math::CVecR3& PlaneWave::getPolarization() const {
     return polarization_;
 }
 
-const Math::CVecR3& PlaneWave::getWaveDirection() const {
+const Math::CVecR3& PlaneWave::getDirection() const {
     return direction_;
 }
 
@@ -106,8 +127,19 @@ Math::Real PlaneWave::getBeta() const {
     return cartesianToPolar (polarization_).second;
 }
 
-Math::CVecR3
-PlaneWave::getElectricField(const Math::Real time) const {
+bool PlaneWave::isRandomic() const {
+    return randomic_;
+}
+
+Math::Int PlaneWave::getNumberOfRandomPlanewaves() const {
+    return numberOfRandomPlanewaves_;
+}
+
+Math::Real PlaneWave::getRelativeVariationOfRandomDelay() const {
+    return relativeVariationOfRandomDelay_;
+}
+
+Math::CVecR3 PlaneWave::getElectricField(const Math::Real time) const {
     Math::CVecR3 res = polarization_ * getMagnitude()->evaluate(time);
     return res;
 }
@@ -151,6 +183,11 @@ std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
 void PlaneWave::init_(Math::CVecR3 direction, Math::CVecR3 polarization) {
     direction_ = direction;
     polarization_ = polarization;
+
+    randomic_ = false;
+    numberOfRandomPlanewaves_ = 0;
+    relativeVariationOfRandomDelay_ = 0.0;
+
     if (polarization_.norm() == 0) {
         throw Error::PlaneWave::ZeroPolarization();
     }
