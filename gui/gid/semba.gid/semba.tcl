@@ -196,7 +196,7 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
 		                       [list -np- GidOpenMaterials "Predefined_materials"] \
 		                       [list -np- GidOpenMaterials "Basic_materials"] \
 		                       [list -np- GidOpenMaterials "Advanced_materials"] \
-		                       [list -np- GidOpenMaterials "Wires"] \
+		                       [list -np- GidOpenMaterials "Wires_and_thin_gaps"] \
 		                       [list -np- GidOpenConditions "Electromagnetic_sources"] \
 		                       [list -np- GidOpenConditions "Output_Requests"] \
 		                                           [list -np- semba::generateStructuredMesh $_dir] \
@@ -210,7 +210,7 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
 		                   [= "Predefined Materials"] \
 		                   [= "Basic Materials"] \
 		                   [= "Advanced Materials"] \
-		                   [= "Wires and terminations"] \
+		                   [= "Wires, wires terminations, and thin gaps"] \
 		                   [= "Electromagnetic sources"] \
 		                   [= "Output Requests"] \
 		                   [= "Generate .smb"] \

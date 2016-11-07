@@ -127,9 +127,7 @@ VALUE: 1.0
 #VALUE: Classic
 END MATERIAL
 
-
-
-BOOK: Wires
+BOOK: Wires_and_thin_gaps
 
 MATERIAL: Cable
 QUESTION: TypeId
@@ -232,4 +230,13 @@ STATE: HIDDEN
 QUESTION: File
 VALUE: 
 HELP: Path to file containing dispersive connector properties in pole/residue format.
+END MATERIAL
+
+MATERIAL: Thin_gap
+	QUESTION: TypeId
+	VALUE: Thin_gap
+	STATE: HIDDEN
+	QUESTION: Width
+	VALUE: 0.0
+	HELP: Thin gap width (meters)
 END MATERIAL

@@ -137,6 +137,9 @@ Resistance: *matprop(Resistance)
 Inductance: *matprop(Inductance)
 Capacitance: *matprop(Capacitance)
 *endif
+*if(strcmp(Matprop(TypeId),"Thin_gap")==0)
+Width: *matprop(Width)
+*endif
 *if(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
 Filename: *matprop(File)
 *endif

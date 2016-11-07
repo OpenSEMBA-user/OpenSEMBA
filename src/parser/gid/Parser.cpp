@@ -41,6 +41,7 @@
 #include "physicalModel/volume/Classic.h"
 #include "physicalModel/volume/PML.h"
 #include "physicalModel/wire/Wire.h"
+#include "physicalModel/gap/Gap.h"
 #include "source/port/WaveguideRectangular.h"
 #include "source/port/TEMCoaxial.h"
 #include "outputRequest/BulkCurrent.h"
@@ -233,6 +234,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
     bool pmlAutomaticOrientation;
     Math::Real kappa;
     Math::Real radius, R, L, C, P_R, P_L, P_C;
+    Math::Real width;
     bool wireDispersive = false;
     bool wireSeriesParallel = false;
     FileSystem::Project file;
@@ -276,6 +278,8 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             P_L = atof(value.c_str());
         } else if (label.compare("Parallel Capacitance") == 0) {
             P_C = atof(value.c_str());
+        } else if (label.compare("Width") == 0) {
+            width = atof(value.c_str());
         } else if (label.compare("SurfaceType")==0) {
             surfType = strToSIBCType(value);
         } else if (label.compare("Filename")==0) {
@@ -351,6 +355,8 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
                                                          radius, file);
                 }
                 return new PhysicalModel::Wire::Wire(id, name, radius, R, L);
+            case PhysicalModel::PhysicalModel::gap:
+                return new PhysicalModel::Gap::Gap(id, name, width);
             case PhysicalModel::PhysicalModel::multiport:
                 if (mpType ==
                         PhysicalModel::Multiport::Multiport::shortCircuit) {
@@ -1567,6 +1573,8 @@ PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
         return PhysicalModel::PhysicalModel::wire;
     } else if (str.find("Conn_") != std::string::npos) {
         return PhysicalModel::PhysicalModel::multiport;
+    } else if (str.find("Thin_gap")==0) {
+        return PhysicalModel::PhysicalModel::gap;
     } else {
         throw std::logic_error("Unrecognized material label: " + str);
     }
