@@ -129,27 +129,23 @@ void PlaneWave::printInfo() const {
 
 std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
         const Math::CVecR3& v) {
-    Math::Real vx_, vy_,vz_;
-    Math::Real vmxyz, vmxy_, alpha_aux, beta_aux;
-    vmxyz = std::sqrt(v(Math::Constants::x)*v(Math::Constants::x)+
-                      v(Math::Constants::y)*v(Math::Constants::y)+
-                      v(Math::Constants::z)*v(Math::Constants::z));
-    vx_ = v(Math::Constants::x)/vmxyz;
-    vy_ = v(Math::Constants::y)/vmxyz;
-    vz_ = v(Math::Constants::z)/vmxyz;
-    vmxy_  = sqrt(vx_*vx_+vy_*vy_);
-    alpha_aux = acos(vz_); //acos(Ez) [0, pi]
-    if(vy_>0.0){
-        beta_aux = std::abs(acos(vx_/vmxy_));
-    } else if(v(Math::Constants::y)==0.0){
-        beta_aux = 0.0;
-    } else {
-        beta_aux = -std::abs(acos(vx_/vmxy_));
+    if (v.norm() == 0.0) {
+        return std::pair<Math::Real,Math::Real>(0.0, 0.0);
     }
-    std::pair<Math::Real,Math::Real> res;
-    res.first = reduceRadians(alpha_aux); // alpha_aux % (2*Constants::pi) ?
-    res.second = reduceRadians(beta_aux);  // beta_aux % (2*Constants::pi) ?
-    return res;
+    Math::Real theta, phi;
+    theta = std::acos(v(Math::Constants::z) / v.norm());
+    if (v(Math::Constants::x) == 0.0) {
+        if (v(Math::Constants::y) == 0.0) {
+            phi = 0.0;
+        } else if (v(Math::Constants::y) > 0.0) {
+            phi = Math::Constants::pi_2;
+        } else {
+            phi = 3.0 * Math::Constants::pi_2;
+        }
+    } else {
+        phi = std::atan2(v(Math::Constants::y), v(Math::Constants::x));
+    }
+    return std::pair<Math::Real,Math::Real>(theta,phi);
 }
 
 void PlaneWave::init_(Math::CVecR3 direction, Math::CVecR3 polarization) {
