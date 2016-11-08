@@ -25,7 +25,9 @@ namespace SEMBA {
 namespace Source {
 
 PlaneWave::PlaneWave() {
-
+    randomic_ = false;
+    numberOfRandomPlanewaves_ = 0;
+    relativeVariationOfRandomDelay_ = 0.0;
 }
 
 PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
@@ -35,19 +37,40 @@ PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
 :   SEMBA::Source::Base(magnitude),
     Geometry::Element::Group<const Geometry::Vol>(elem) {
 
-    direction_ = direction;
-    polarization_ = polarization;
-    if (polarization_.norm() == 0) {
-        throw Error::PlaneWave::ZeroPolarization();
-    }
-    if (direction_.norm() == 0) {
-        throw Error::PlaneWave::ZeroMagnitude();
-    }
-    Math::Real dotProd = direction.dot(polarization);
-    if (Math::Util::notEqual(dotProd, 0.0)) {
-        throw Error::PlaneWave::NotPerpendicular();
-    }
+    init_(direction, polarization);
 }
+
+PlaneWave::PlaneWave(
+        Magnitude::Magnitude* magnitude,
+        Geometry::Element::Group<Geometry::Vol> elem,
+        std::pair<Math::Real, Math::Real> directionAngles,
+        std::pair<Math::Real, Math::Real> polarizationAngles)
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Vol>(elem) {
+
+    Math::Real theta = directionAngles.first;
+    Math::Real phi   = directionAngles.second;
+    Math::Real alpha = polarizationAngles.first;
+    Math::Real beta  = polarizationAngles.second;
+
+    Math::CVecR3 dirVec = polarToCartesian(theta, phi);
+    Math::CVecR3 polVec = polarToCartesian(alpha, beta);
+    init_(dirVec, polVec);
+}
+
+PlaneWave::PlaneWave(
+        Magnitude::Magnitude* magnitude,
+        Geometry::Element::Group<Geometry::Vol> elem,
+        Math::Int numberOfRandomPlanewaves,
+        Math::Real relativeVariationOfRandomDelay)
+:   SEMBA::Source::Base(magnitude),
+    Geometry::Element::Group<const Geometry::Vol>(elem) {
+
+    randomic_ = true;
+    numberOfRandomPlanewaves_ = numberOfRandomPlanewaves;
+    relativeVariationOfRandomDelay_ = relativeVariationOfRandomDelay;
+}
+
 
 PlaneWave::PlaneWave(const PlaneWave& rhs)
 :   SEMBA::Source::Base(rhs),
@@ -55,6 +78,9 @@ PlaneWave::PlaneWave(const PlaneWave& rhs)
 
     direction_ = rhs.direction_;
     polarization_ = rhs.polarization_;
+    randomic_ = rhs.randomic_;
+    numberOfRandomPlanewaves_ = rhs.numberOfRandomPlanewaves_;
+    relativeVariationOfRandomDelay_ = rhs.relativeVariationOfRandomDelay_;
 }
 
 PlaneWave::~PlaneWave() {
@@ -81,7 +107,7 @@ const Math::CVecR3& PlaneWave::getPolarization() const {
     return polarization_;
 }
 
-const Math::CVecR3& PlaneWave::getWaveDirection() const {
+const Math::CVecR3& PlaneWave::getDirection() const {
     return direction_;
 }
 
@@ -101,8 +127,19 @@ Math::Real PlaneWave::getBeta() const {
     return cartesianToPolar (polarization_).second;
 }
 
-Math::CVecR3
-PlaneWave::getElectricField(const Math::Real time) const {
+bool PlaneWave::isRandomic() const {
+    return randomic_;
+}
+
+Math::Int PlaneWave::getNumberOfRandomPlanewaves() const {
+    return numberOfRandomPlanewaves_;
+}
+
+Math::Real PlaneWave::getRelativeVariationOfRandomDelay() const {
+    return relativeVariationOfRandomDelay_;
+}
+
+Math::CVecR3 PlaneWave::getElectricField(const Math::Real time) const {
     Math::CVecR3 res = polarization_ * getMagnitude()->evaluate(time);
     return res;
 }
@@ -123,31 +160,54 @@ void PlaneWave::printInfo() const {
 }
 
 std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
-        const Math::CVecR3& v) const {
-    Math::Real vx_, vy_,vz_;
-    Math::Real vmxyz, vmxy_, alpha_aux, beta_aux;
-    vmxyz = std::sqrt(v(Math::Constants::x)*v(Math::Constants::x)+
-                      v(Math::Constants::y)*v(Math::Constants::y)+
-                      v(Math::Constants::z)*v(Math::Constants::z));
-    vx_ = v(Math::Constants::x)/vmxyz;
-    vy_ = v(Math::Constants::y)/vmxyz;
-    vz_ = v(Math::Constants::z)/vmxyz;
-    vmxy_  = sqrt(vx_*vx_+vy_*vy_);
-    alpha_aux = acos(vz_); //acos(Ez) [0, pi]
-    if(vy_>0.0){
-        beta_aux = std::abs(acos(vx_/vmxy_));
-    } else if(v(Math::Constants::y)==0.0){
-        beta_aux = 0.0;
-    } else {
-        beta_aux = -std::abs(acos(vx_/vmxy_));
+        const Math::CVecR3& v) {
+    if (v.norm() == 0.0) {
+        return std::pair<Math::Real,Math::Real>(0.0, 0.0);
     }
-    std::pair<Math::Real,Math::Real> res;
-    res.first = reduceRadians(alpha_aux); // alpha_aux % (2*Constants::pi) ?
-    res.second = reduceRadians(beta_aux);  // beta_aux % (2*Constants::pi) ?
-    return res;
+    Math::Real theta, phi;
+    theta = std::acos(v(Math::Constants::z) / v.norm());
+    if (v(Math::Constants::x) == 0.0) {
+        if (v(Math::Constants::y) == 0.0) {
+            phi = 0.0;
+        } else if (v(Math::Constants::y) > 0.0) {
+            phi = Math::Constants::pi_2;
+        } else {
+            phi = 3.0 * Math::Constants::pi_2;
+        }
+    } else {
+        phi = std::atan2(v(Math::Constants::y), v(Math::Constants::x));
+    }
+    return std::pair<Math::Real,Math::Real>(theta,phi);
 }
 
-Math::Real PlaneWave::reduceRadians(const Math::Real radianIn) const {
+void PlaneWave::init_(Math::CVecR3 direction, Math::CVecR3 polarization) {
+    direction_ = direction;
+    polarization_ = polarization;
+
+    randomic_ = false;
+    numberOfRandomPlanewaves_ = 0;
+    relativeVariationOfRandomDelay_ = 0.0;
+
+    if (polarization_.norm() == 0) {
+        throw Error::PlaneWave::ZeroPolarization();
+    }
+    if (direction_.norm() == 0) {
+        throw Error::PlaneWave::ZeroMagnitude();
+    }
+    Math::Real dotProd = direction.dot(polarization);
+    if (Math::Util::notEqual(dotProd, 0.0)) {
+        throw Error::PlaneWave::NotPerpendicular();
+    }
+}
+
+Math::CVecR3 PlaneWave::polarToCartesian(Math::Real theta, Math::Real phi) {
+    return Math::CVecR3(
+            std::sin(theta)*std::cos(phi),
+            std::sin(theta)*std::sin(phi),
+            std::cos(theta));
+}
+
+Math::Real PlaneWave::reduceRadians(const Math::Real radianIn) {
     Math::Real nVueltas, nVueltasComp, radianOut, Val2Pi;
     Val2Pi = (Math::Real) 2.0 * (Math::Real) acos((Math::Real) 0.0);
     nVueltas = radianIn/(Val2Pi);

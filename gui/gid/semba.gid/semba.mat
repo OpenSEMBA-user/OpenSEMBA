@@ -127,9 +127,7 @@ VALUE: 1.0
 #VALUE: Classic
 END MATERIAL
 
-
-
-BOOK: Wires
+BOOK: Wires_and_thin_gaps
 
 MATERIAL: Cable
 QUESTION: TypeId
@@ -142,20 +140,28 @@ DEPENDENCIES:(SeriesParallel,RESTORE,Resistance,#CURRENT#,RESTORE,Inductance,#CU
 DEPENDENCIES:(Dispersive,    HIDE,   Resistance,#CURRENT#,HIDE,   Inductance,#CURRENT#,HIDE,   Capacitance,#CURRENT#,HIDE,   Parallel_Resistance,#CURRENT#,HIDE,   Parallel_Inductance,#CURRENT#,HIDE,   Parallel_Capacitance,#CURRENT#,RESTORE,File,#CURRENT#)
 QUESTION: Radius
 VALUE: 0.0
+HELP: Wire radius (meters)
 QUESTION: Resistance
 VALUE: 0.0
+HELP: Wire resistance (Ohms/meter)
 QUESTION: Inductance
 VALUE: 0.0
+HELP: Wire self-inductance (Henrys/meter)
 QUESTION: Capacitance
 VALUE: 0.0
+HELP: Wire capacitance (Farads/meter)
 QUESTION: Parallel_Resistance
 VALUE: 0.0
+HELP: Wire resistance (Ohms/meter)
 QUESTION: Parallel_Inductance
 VALUE: 0.0
+HELP: Wire self-inductance (Henrys/meter)
 QUESTION: Parallel_Capacitance
 VALUE: 0.0
+HELP: Wire capacitance (Farads/meter)
 QUESTION: File
 VALUE: 
+HELP: Path to file containing dispersive wire properties in pole/residue format.
 END MATERIAL
 
 MATERIAL: Connector_short
@@ -176,10 +182,13 @@ VALUE: Conn_sRLC
 STATE: HIDDEN
 QUESTION: Resistance
 VALUE: 0.0
+HELP: Connector resistance (Ohms/meter)
 QUESTION: Inductance
 VALUE: 0.0
+HELP: Connector self-inductance (Henrys/meter)
 QUESTION: Capacitance
 VALUE: 0.0
+HELP: Wire capacitance (Farads/meter)
 IMAGE: RLC_series.gif
 END MATERIAL
 
@@ -189,8 +198,10 @@ END MATERIAL
 #STATE: HIDDEN
 #QUESTION: Resistance
 #VALUE: 0.0
+#HELP: Connector resistance (Ohms/meter)
 #QUESTION: Inductance
 #VALUE: 0.0
+#HELP: Connector self-inductance (Henrys/meter)
 #QUESTION: Capacitance
 #VALUE: 0.0
 #IMAGE: RLC_parallel.gif
@@ -202,10 +213,13 @@ VALUE: Conn_sLpRC
 STATE: HIDDEN
 QUESTION: Resistance
 VALUE: 0.0
+HELP: Connector resistance (Ohms/meter)
 QUESTION: Inductance
 VALUE: 0.0
+HELP: Connector self-inductance (Henrys/meter)
 QUESTION: Capacitance
 VALUE: 0.0
+HELP: Wire capacitance (Farads/meter)
 IMAGE: L_series_RC_parallel.gif
 END MATERIAL
 
@@ -215,4 +229,14 @@ VALUE: Conn_dispersive
 STATE: HIDDEN
 QUESTION: File
 VALUE: 
+HELP: Path to file containing dispersive connector properties in pole/residue format.
+END MATERIAL
+
+MATERIAL: Thin_gap
+	QUESTION: TypeId
+	VALUE: Thin_gap
+	STATE: HIDDEN
+	QUESTION: Width
+	VALUE: 0.0
+	HELP: Thin gap width (meters)
 END MATERIAL

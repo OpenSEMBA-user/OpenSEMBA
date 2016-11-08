@@ -19,46 +19,32 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
-#define SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
+#ifndef SEMBA_PHYSICALMODEL_GAP_H_
+#define SEMBA_PHYSICALMODEL_GAP_H_
 
-#include <iomanip>
-
-#include "Magnitude.h"
-#include "filesystem/Project.h"
+#include "physicalModel/PhysicalModel.h"
 
 namespace SEMBA {
-namespace Source {
-namespace Magnitude {
+namespace PhysicalModel {
+namespace Gap {
 
-class Numerical : public virtual Magnitude,
-                  public virtual FileSystem::Project {
+class Gap : public virtual PhysicalModel {
 public:
-    Numerical();
-    Numerical(const FileSystem::Project& filename);
-    Numerical(const FileSystem::Project& filename,
-              const Magnitude& mag,
-              const Math::Real timeStep,
-              const Math::Real finalTime);
-    virtual ~Numerical();
+    Gap(const Id id, const std::string name, const Math::Real width);
+    Gap(const Gap&);
+    virtual ~Gap();
 
-    SEMBA_CLASS_DEFINE_CLONE(Numerical);
-
-    Numerical& operator=(const Numerical& rhs);
-
-    bool operator==(const Magnitude&) const;
-    Math::Real evaluate(const Math::Real time) const;
+    SEMBA_CLASS_DEFINE_CLONE(Gap);
 
     void printInfo() const;
+    Math::Real getWidth() const;
 
 private:
-    static const std::size_t defaultNumberOfSteps = 1000;
-
-
+    Math::Real width_;
 };
 
-} /* namespace Magnitude */
-} /* namespace Source */
+} /* namespace Gap */
+} /* namespace PhysicalModel */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_ */
+#endif /* SEMBA_PHYSICALMODEL_GAP_H_ */

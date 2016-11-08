@@ -41,6 +41,7 @@
 #include "physicalModel/volume/Classic.h"
 #include "physicalModel/volume/PML.h"
 #include "physicalModel/wire/Wire.h"
+#include "physicalModel/gap/Gap.h"
 #include "source/port/WaveguideRectangular.h"
 #include "source/port/TEMCoaxial.h"
 #include "outputRequest/BulkCurrent.h"
@@ -233,6 +234,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
     bool pmlAutomaticOrientation;
     Math::Real kappa;
     Math::Real radius, R, L, C, P_R, P_L, P_C;
+    Math::Real width;
     bool wireDispersive = false;
     bool wireSeriesParallel = false;
     FileSystem::Project file;
@@ -276,6 +278,8 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
             P_L = atof(value.c_str());
         } else if (label.compare("Parallel Capacitance") == 0) {
             P_C = atof(value.c_str());
+        } else if (label.compare("Width") == 0) {
+            width = atof(value.c_str());
         } else if (label.compare("SurfaceType")==0) {
             surfType = strToSIBCType(value);
         } else if (label.compare("Filename")==0) {
@@ -351,6 +355,8 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
                                                          radius, file);
                 }
                 return new PhysicalModel::Wire::Wire(id, name, radius, R, L);
+            case PhysicalModel::PhysicalModel::gap:
+                return new PhysicalModel::Gap::Gap(id, name, width);
             case PhysicalModel::PhysicalModel::multiport:
                 if (mpType ==
                         PhysicalModel::Multiport::Multiport::shortCircuit) {
@@ -553,13 +559,22 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                     getline_(line);
                     Geometry::Element::Group<Geometry::Vol> elems =
                         boxToElemGroup(line);
-                    Math::Real iTh, fTh, sTh, iPhi, fPhi, sPhi;
-                    f_in >> iTh >> fTh >> sTh >> iPhi >> fPhi >> sPhi;
+                    Math::Real iThDeg, fThDeg, sThDeg, iPhiDeg, fPhiDeg, sPhiDeg;
+                    f_in >> iThDeg >> fThDeg >> sThDeg
+                        >> iPhiDeg >> fPhiDeg >> sPhiDeg;
                     getline_(line);
+                    Math::Real iThRad, fThRad, sThRad, iPhiRad, fPhiRad, sPhiRad;
+                    static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
+                    iThRad = iThDeg * degToRad;
+                    fThRad = fThDeg * degToRad;
+                    sThRad = sThDeg * degToRad;
+                    iPhiRad = iPhiDeg * degToRad;
+                    fPhiRad = fPhiDeg * degToRad;
+                    sPhiRad = sPhiDeg * degToRad;
                     OutputRequest::FarField* oRFF =
                         new OutputRequest::FarField(
                             domain, name, elems,
-                            iTh, fTh, sTh, iPhi, fPhi, sPhi);
+                            iThRad, fThRad, sThRad, iPhiRad, fPhiRad, sPhiRad);
                     res->add(oRFF);
                     break;
                 }
@@ -1144,15 +1159,34 @@ Geometry::Grid3 Parser::readCartesianGrid() {
 Source::PlaneWave* Parser::readPlaneWave() {
     std::string filename;
     std::string label, value;
+    DefinitionMode definitionMode;
     Math::CVecR3 dir, pol;
+    std::pair<Math::Real,Math::Real> directionAngles, polarizationAngles;
+    Math::Int numberOfRandomPlanewaves;
+    Math::Real relativeVariationOfRandomDelay;
+    static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
     Geometry::Element::Group<Geometry::Vol> elems;
     Source::Magnitude::Magnitude* mag;
     while(!f_in.eof()) {
         getNextLabelAndValue(label, value);
-        if (label.compare("Direction")==0) {
+        if (label.compare("Definition mode")==0) {
+            definitionMode = strToDefinitionMode(value);
+        } else if (label.compare("Direction vector")==0) {
             dir = strToCartesianVector(value);
-        } else if (label.compare("Polarization") == 0) {
+        } else if (label.compare("Polarization vector") == 0) {
             pol = strToCartesianVector(value);
+        } else if (label.compare("Direction theta")==0) {
+            directionAngles.first = atof(value.c_str()) * degToRad;
+        } else if (label.compare("Direction phi")==0) {
+            directionAngles.second = atof(value.c_str()) * degToRad;
+        } else if (label.compare("Polarization alpha")==0) {
+            polarizationAngles.first = atof(value.c_str()) * degToRad;
+        } else if (label.compare("Polarization beta")==0) {
+            polarizationAngles.second = atof(value.c_str()) * degToRad;
+        } else if (label.compare("Number of random planewaves")==0) {
+            numberOfRandomPlanewaves = atoi(value.c_str());
+        } else if (label.compare("Relative variation of random delay")==0) {
+            relativeVariationOfRandomDelay = atof(value.c_str());
         } else if (label.compare("Excitation") == 0) {
             mag = readMagnitude(value);
         } else if (label.compare("Layer Box") == 0) {
@@ -1168,7 +1202,18 @@ Source::PlaneWave* Parser::readPlaneWave() {
                 elems.add(mesh_->elems().getId(id));
             }
         } else if (label.compare("End of Planewave")==0) {
-            return new Source::PlaneWave(mag, elems, dir, pol);
+            switch (definitionMode) {
+            case DefinitionMode::byVectors:
+                return new Source::PlaneWave(mag, elems, dir, pol);
+            case DefinitionMode::byAngles:
+                return new Source::PlaneWave(mag, elems, directionAngles,
+                        polarizationAngles);
+            case DefinitionMode::randomizedMultisource:
+                return new Source::PlaneWave(mag, elems,
+                        numberOfRandomPlanewaves,
+                        relativeVariationOfRandomDelay);
+            }
+
         }
     }
     throw std::logic_error("End of Planewave label not found.");
@@ -1270,19 +1315,47 @@ Source::Port::Waveguide* Parser::readPortWaveguide() {
     }
 
     Source::Port::Bound3 boundTerminations;
-    boundTerminations[0][0] = strToBoundType(
-            settings_("Mesher options")("Lower x bound").getString());
-    boundTerminations[1][1] = strToBoundType(
-            settings_("Mesher options")("Upper x bound").getString());
-    boundTerminations[2][0] = strToBoundType(
-            settings_("Mesher options")("Lower y bound").getString());
-    boundTerminations[0][1] = strToBoundType(
-            settings_("Mesher options")("Upper y bound").getString());
-    boundTerminations[1][0] = strToBoundType(
-            settings_("Mesher options")("Lower z bound").getString());
-    boundTerminations[2][1] = strToBoundType(
-            settings_("Mesher options")("Upper z bound").getString());
+    // X bounds
+    if (settings_("Mesher options")("Lower x bound").isString()) {
+        boundTerminations[0][0] = strToBoundType(
+                settings_("Mesher options")("Lower x bound").getString());
+    } else {
+        boundTerminations[0][0] = new PhysicalModel::Bound::PML(MatId(0));
+    }
+    if (settings_("Mesher options")("Upper x bound").isString()) {
+        boundTerminations[0][1] = strToBoundType(
+                    settings_("Mesher options")("Upper x bound").getString());
+    } else {
+        boundTerminations[0][1] = new PhysicalModel::Bound::PML(MatId(0));
+    }
+    // Y bounds
+    if (settings_("Mesher options")("Lower y bound").isString()) {
+        boundTerminations[1][0] = strToBoundType(
+                    settings_("Mesher options")("Lower y bound").getString());
+    } else {
+        boundTerminations[1][0] = new PhysicalModel::Bound::PML(MatId(0));
+    }
+    if (settings_("Mesher options")("Upper y bound").isString()) {
+        boundTerminations[1][1] = strToBoundType(
+                    settings_("Mesher options")("Upper y bound").getString());
+    } else {
+        boundTerminations[1][1] = new PhysicalModel::Bound::PML(MatId(0));
+    }
+    // Z bounds
+    if (settings_("Mesher options")("Lower z bound").isString()) {
+        boundTerminations[2][0] = strToBoundType(
+                    settings_("Mesher options")("Lower z bound").getString());
+    } else {
+        boundTerminations[2][0] = new PhysicalModel::Bound::PML(MatId(0));
+    }
+    if (settings_("Mesher options")("Upper z bound").isString()) {
+        boundTerminations[2][1] = strToBoundType(
+                    settings_("Mesher options")("Upper z bound").getString());
+    } else {
+        boundTerminations[2][1] = new PhysicalModel::Bound::PML(MatId(0));
+    }
 
+    // Waveport shape.
     if (shape == WaveportShape::rectangular) {
         return new Source::Port::WaveguideRectangular(mag, surfs,
                 excitationMode, mode, boundTerminations);
@@ -1511,6 +1584,8 @@ PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
         return PhysicalModel::PhysicalModel::wire;
     } else if (str.find("Conn_") != std::string::npos) {
         return PhysicalModel::PhysicalModel::multiport;
+    } else if (str.find("Thin_gap")==0) {
+        return PhysicalModel::PhysicalModel::gap;
     } else {
         throw std::logic_error("Unrecognized material label: " + str);
     }
@@ -1633,6 +1708,20 @@ Parser::GiDOutputType Parser::strToGidOutputType(std::string str) {
     } else {
         throw std::logic_error("Unrecognized label " + str);
         return Parser::outRqOnPoint;
+    }
+}
+
+Parser::DefinitionMode Parser::strToDefinitionMode(std::string str) {
+    str = trim(str);
+    if (str.compare("by_vectors")==0) {
+        return Parser::byVectors;
+    } else if (str.compare("by_angles")==0) {
+        return Parser::byAngles;
+    } else if (str.compare("randomized_multisource")==0) {
+        return Parser::randomizedMultisource;
+    } else {
+        throw std::logic_error("Unrecognized label " + str);
+        return Parser::byVectors;
     }
 }
 

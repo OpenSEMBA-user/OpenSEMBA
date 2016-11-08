@@ -34,8 +34,16 @@ public:
     PlaneWave();
     PlaneWave(Magnitude::Magnitude* magnitude,
               Geometry::Element::Group<Geometry::Vol> elem,
-              Math::CVecR3 direction,
-              Math::CVecR3 polarization);
+              Math::CVecR3 directionVector,
+              Math::CVecR3 polarizationVector);
+    PlaneWave(Magnitude::Magnitude* magnitude,
+              Geometry::Element::Group<Geometry::Vol> elem,
+              std::pair<Math::Real, Math::Real> directionAngles,
+              std::pair<Math::Real, Math::Real> polarizationAngles);
+    PlaneWave(Magnitude::Magnitude* magnitude,
+              Geometry::Element::Group<Geometry::Vol> elem,
+              Math::Int numberOfRandomPlanewaves,
+              Math::Real relativeVariationOfRandomDelay);
     PlaneWave(const PlaneWave& rhs);
     virtual ~PlaneWave();
 
@@ -45,11 +53,15 @@ public:
 
     const std::string& getName() const;
     const Math::CVecR3& getPolarization() const;
-    const Math::CVecR3& getWaveDirection() const;
+    const Math::CVecR3& getDirection() const;
     Math::Real getTheta() const;
     Math::Real getPhi() const;
     Math::Real getAlpha() const;
     Math::Real getBeta() const;
+    bool isRandomic() const;
+    Math::Int getNumberOfRandomPlanewaves() const;
+    Math::Real getRelativeVariationOfRandomDelay() const;
+
     Math::CVecR3 getElectricField(const Math::Real time) const;
     std::pair<Math::CVecR3,Math::CVecR3> getElectromagneticField(
             const Math::Real time) const;
@@ -60,9 +72,15 @@ private:
     Math::CVecR3 direction_;
     Math::CVecR3 polarization_;
 
-    std::pair<Math::Real,Math::Real> cartesianToPolar(
-            const Math::CVecR3& vec) const;
-    Math::Real reduceRadians(const Math::Real radianIn) const;
+    bool randomic_;
+    Math::Int numberOfRandomPlanewaves_;
+    Math::Real relativeVariationOfRandomDelay_;
+
+    void init_(Math::CVecR3 direction, Math::CVecR3 polarization);
+    static std::pair<Math::Real,Math::Real> cartesianToPolar(
+            const Math::CVecR3& vec);
+    static Math::CVecR3 polarToCartesian(Math::Real theta, Math::Real phi);
+    static Math::Real reduceRadians(const Math::Real radianIn);
 };
 
 namespace Error {

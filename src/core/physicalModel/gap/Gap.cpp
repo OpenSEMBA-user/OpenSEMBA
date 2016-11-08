@@ -19,46 +19,40 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
-#define SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_
-
-#include <iomanip>
-
-#include "Magnitude.h"
-#include "filesystem/Project.h"
+#include <physicalModel/gap/Gap.h>
 
 namespace SEMBA {
-namespace Source {
-namespace Magnitude {
+namespace PhysicalModel {
+namespace Gap {
 
-class Numerical : public virtual Magnitude,
-                  public virtual FileSystem::Project {
-public:
-    Numerical();
-    Numerical(const FileSystem::Project& filename);
-    Numerical(const FileSystem::Project& filename,
-              const Magnitude& mag,
-              const Math::Real timeStep,
-              const Math::Real finalTime);
-    virtual ~Numerical();
+Gap::Gap(const Id id,
+           const std::string name,
+           const Math::Real width)
+:   Identifiable<Id>(id),
+    PhysicalModel(name) {
+    width_ = width;
+}
 
-    SEMBA_CLASS_DEFINE_CLONE(Numerical);
+Gap::Gap(const Gap& rhs)
+:   Identifiable<Id>(rhs),
+    PhysicalModel(rhs) {
+    width_ = rhs.width_;
+}
 
-    Numerical& operator=(const Numerical& rhs);
+Gap::~Gap() {
 
-    bool operator==(const Magnitude&) const;
-    Math::Real evaluate(const Math::Real time) const;
+}
 
-    void printInfo() const;
+Math::Real Gap::getWidth() const {
+    return width_;
+}
 
-private:
-    static const std::size_t defaultNumberOfSteps = 1000;
+void Gap::printInfo() const {
+    std::cout<< " --- Gap info ---" << std::endl;
+    PhysicalModel::printInfo();
+    std::cout << " Width: " << width_ << std::endl;
+}
 
-
-};
-
-} /* namespace Magnitude */
-} /* namespace Source */
+} /* namespace Gap */
+} /* namespace PhysicalModel */
 } /* namespace SEMBA */
-
-#endif /* SEMBA_SOURCE_MAGNITUDE_NUMERICAL_H_ */

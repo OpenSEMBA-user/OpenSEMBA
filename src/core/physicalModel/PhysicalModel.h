@@ -53,6 +53,7 @@ public:
         isotropicsibc,
         PML,
         wire,
+        gap,
         multiport
     };
 
