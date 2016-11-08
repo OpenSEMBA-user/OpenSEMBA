@@ -435,6 +435,19 @@ Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period)
 *end nodes
 End of Output request instance: 
 *endif
+*Set cond OutRq_on_line
+*if(CondNumEntities(int)>0)
+Output request instance: 
+GiDOutputType: OutRq_on_line
+Number of elements: *CondNumEntities(int)
+*loop elems OnlyInCond
+Name: *cond(Name) 
+Type: *cond(Type) 
+Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
+*elemsNum
+*end elems
+End of Output request instance:
+*end if
 *Set cond OutRq_on_surface
 *if(CondNumEntities(int)>0)
 Output request instance: 
