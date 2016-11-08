@@ -454,24 +454,28 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                             domain, type, name, elems));
                     break;
                 }
-                //case Parser::outRqOnLine:
-                //    getNextLabelAndValue(label,value);
-                //    elem.clear();
-                //    elem.push_back(Geometry::ElemId(atoi(value.c_str())));
-                //    res->add(new OutRq(elem, domain, type, name));
-                //    break;
-                case Parser::outRqOnSurface:
+                case Parser::outRqOnLine:
                 {
                     getNextLabelAndValue(label,value);
                     std::vector<Geometry::ElemId> ids;
                     ids.push_back(Geometry::ElemId(atoi(value.c_str())));
                     Geometry::Element::Group<Geometry::ElemR> elems = 
                         mesh_->elems().getId(ids);
-                    Geometry::Element::Group<Geometry::Surf> surfs = 
-                        elems.getOf<Geometry::Surf>();
-                    res->add(
-                        new OutputRequest::OutputRequest<Geometry::Surf>(
-                            domain, type, name, surfs));
+                    Geometry::Element::Group<Geometry::Lin> lines =
+                        elems.getOf<Geometry::Lin>();
+                    res->add(new OutRqLine(domain, type, name, lines));
+                    break;
+                }
+                case Parser::outRqOnSurface:
+                {
+                    getNextLabelAndValue(label,value);
+                    std::vector<Geometry::ElemId> ids;
+                    ids.push_back(Geometry::ElemId(atoi(value.c_str())));
+                    Geometry::Element::Group<Geometry::ElemR> elems =
+                            mesh_->elems().getId(ids);
+                    Geometry::Element::Group<Geometry::Surf> surfs =
+                            elems.getOf<Geometry::Surf>();
+                    res->add(new OutRqSurface(domain, type, name, surfs));
                     break;
                 }
                 case Parser::outRqOnVolume:
@@ -1510,10 +1514,6 @@ OutputRequest::Base::Type Parser::strToOutputType(std::string str) {
         return OutputRequest::Base::electricFieldNormals;
     } else if (str.compare("magneticFieldNormals")==0) {
         return OutputRequest::Base::magneticFieldNormals;
-        //	} else if (str.compare("powerDensity")==0) {
-        //		return OutputRequest::powerDensity;
-        //	} else if (str.compare("power")==0) {
-        //		return OutputRequest::power;
     } else if (str.compare("current")==0) {
         return OutputRequest::Base::current;
     } else if (str.compare("voltage")==0) {
@@ -1796,7 +1796,7 @@ Source::Magnitude::Magnitude* Parser::readMagnitude(const std::string typeIn) {
 
 bool Parser::checkVersionCompatibility(const std::string version) const {
     bool versionMatches =
-            atof(version.c_str()) == atof(std::string(APP_VERSION).c_str());
+            atof(version.c_str()) == atof(std::string(OPENSEMBA_VERSION).c_str());
     if (!versionMatches) {
         throw std::logic_error(
                 "File version " + version + " is not supported.");

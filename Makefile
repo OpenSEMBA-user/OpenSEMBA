@@ -25,12 +25,12 @@
 # ==================== Default values =========================================
 target   = release
 compiler = gnu
-APP_VERSION=\"0.12\"
+OPENSEMBA_VERSION=\"0.12\"
 
 FFTW3_SUPPORT=no#
 EIGEN_SUPPORT=no#
 
-DEFINES += APP_VERSION=$(APP_VERSION)
+DEFINES += OPENSEMBA_VERSION=$(OPENSEMBA_VERSION)
 # ==================== Intel Compiler =========================================
 ifeq ($(compiler),intel)
 	CC       = icc
