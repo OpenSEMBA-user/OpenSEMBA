@@ -8,8 +8,8 @@ QUESTION: Run_simulation#CB#(0,1)
 VALUE: 1
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
 VALUE: Final_time
-DEPENDENCIES: (          Final_time, RESTORE,Final_time,#CURRENT#, SET,Number_of_time_steps,#CURRENT#)
-DEPENDENCIES: (Number_of_time_steps, SET,Final_time,#CURRENT#, RESTORE,Number_of_time_steps,#CURRENT#)
+DEPENDENCIES: (          Final_time, RESTORE, Final_time, #CURRENT#, SET,     Number_of_time_steps,#CURRENT#)
+DEPENDENCIES: (Number_of_time_steps, SET,     Final_time, #CURRENT#, RESTORE, Number_of_time_steps,#CURRENT#)
 QUESTION: Final_time
 VALUE: 30e-9
 HELP: Final time in seconds.
@@ -41,10 +41,10 @@ HELP: Minutes between data flush of restarting fields. Necessary to resume a sto
 TITLE: ugrfdtd
 QUESTION: Composites_model#CB#(MIBC,ADE,DigFilt,None)
 VALUE: MIBC
-DEPENDENCIES: (MIBC, RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
-DEPENDENCIES: (ADE,  RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
-DEPENDENCIES: (DigFilt, SET, Conformal_skin,         0,    SET, No_compo_Mur,         0,    SET, Skin_depth,         0, RESTORE, Composites_attenuation_factor, 1.0)
-DEPENDENCIES: (None,    SET, Conformal_skin,         0,    SET, No_compo_Mur,         0,    SET, Skin_depth,         0,    SET, Composites_attenuation_factor, 1.0)
+DEPENDENCIES: (MIBC,    RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
+DEPENDENCIES: (ADE,     RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
+DEPENDENCIES: (DigFilt, SET,     Conformal_skin,         0, SET,     No_compo_Mur,         0, SET,     Skin_depth,         0, RESTORE, Composites_attenuation_factor, 1.0)
+DEPENDENCIES: (None,    SET,     Conformal_skin,         0, SET,     No_compo_Mur,         0, SET,     Skin_depth,         0, SET,     Composites_attenuation_factor, 1.0)
 QUESTION: Conformal_skin#CB#(0,1)
 VALUE: 0
 HELP: Uses a conformal correction
@@ -59,10 +59,10 @@ VALUE: 1.0
 HELP: Positive factor (under 1) for enhancing stability in composites.
 QUESTION: Wires_flavor#CB#(New,Old,Transition,Experimental)
 VALUE: New
-DEPENDENCIES: (         New, RESTORE, MTLN,1,    RESTORE, Min_distance_wires,0.5,    RESTORE, Taparrabos,0)
-DEPENDENCIES: (         Old, RESTORE, MTLN,0,    SET,     Min_distance_wires,0.5,    RESTORE, Taparrabos,0)
-DEPENDENCIES: (  Transition, RESTORE, MTLN,0,    SET,     Min_distance_wires,0.5,    RESTORE, Taparrabos,0)
-DEPENDENCIES: (Experimental, SET,     MTLN,0,    RESTORE, Min_distance_wires,0.5,    SET,     Taparrabos,0)
+DEPENDENCIES: (New,          RESTORE, MTLN, 1, RESTORE, Min_distance_wires, 0.5, RESTORE, Taparrabos,0, RESTORE, Slanted, 0)
+DEPENDENCIES: (Old,          RESTORE, MTLN, 0, HIDE,    Min_distance_wires, 0.5, RESTORE, Taparrabos,0, RESTORE, Slanted, 0)
+DEPENDENCIES: (Transition,   RESTORE, MTLN, 0, HIDE,    Min_distance_wires, 0.5, RESTORE, Taparrabos,0, RESTORE, Slanted, 0)
+DEPENDENCIES: (Experimental, HIDE,    MTLN, 0, HIDE,    Min_distance_wires, 0.5, HIDE,    Taparrabos,0, RESTORE, Slanted, 1)
 QUESTION: MTLN#CB#(0,1)
 VALUE: 0
 HELP: Different behavior. "old/transition": uses a pseudo-MTLN (no default). "new" uses a true MTLN (no default, should be enforced)
@@ -89,8 +89,8 @@ VALUE: 1.0
 HELP: Positive factor from 0 (full attenuation) to 1 (no attenuation) for enhancing stability in wires. Defaults to 1.0.
 #QUESTION: Use_default_PML#CB#(0,1)
 #VALUE: 1
-#DEPENDENCIES: (1,   SET,PML_alpha_factor,0.0,    SET,PML_alpha_order,1.0,    SET,PML_kappa,1.0,    SET,PML_correction_factor,1.0,    SET,PML_correction_depth,8,    SET,PML_backing,None)
-#DEPENDENCIES: (0, RESTORE,PML_alpha_factor,0.0, RESTORE,PML_alpha_order,1.0, RESTORE,PML_kappa,1.0, RESTORE,PML_correction_factor,1.0, RESTORE,PML_correction_depth,8, RESTORE,PML_backing,None)
+#DEPENDENCIES: (1, SET,     PML_alpha_factor,0.0, SET,     PML_alpha_order,1.0, SET,     PML_kappa,1.0, SET,     PML_correction_factor,1.0, SET,     PML_correction_depth,8, SET,     PML_backing,None)
+#DEPENDENCIES: (0, RESTORE, PML_alpha_factor,0.0, RESTORE, PML_alpha_order,1.0, RESTORE, PML_kappa,1.0, RESTORE, PML_correction_factor,1.0, RESTORE, PML_correction_depth,8, RESTORE, PML_backing,None)
 #QUESTION: PML_alpha_factor
 #VALUE: 0.0
 #HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
@@ -135,10 +135,10 @@ BOOK: Mesher_options
 Title: Mesher
 QUESTION: Mesher#CB#(ConformalMesher,zMesher,None)
 VALUE: zMesher
-DEPENDENCIES: (OpenFOAM,        HIDE,Mode,Structured,    HIDE,Forbidden_length,0, RESTORE,Brute_force_volumes,1)
-DEPENDENCIES: (ConformalMesher, RESTORE,Mode,Structured, RESTORE,Forbidden_length,0, RESTORE,Brute_force_volumes,1)
-DEPENDENCIES: (zMesher,         HIDE,Mode,Structured,    HIDE,Forbidden_length,0,    HIDE,Brute_force_volumes,1)
-DEPENDENCIES: (None,            HIDE,Mode,Structured,    HIDE,Forbidden_length,0,    HIDE,Brute_force_volumes,1)
+DEPENDENCIES: (OpenFOAM,        HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, RESTORE, Brute_force_volumes,1)
+DEPENDENCIES: (ConformalMesher, RESTORE, Mode,Structured, RESTORE, Forbidden_length,0, RESTORE, Brute_force_volumes,1)
+DEPENDENCIES: (zMesher,         HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, HIDE,    Brute_force_volumes,1)
+DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, HIDE,    Brute_force_volumes,1)
 QUESTION: Brute_force_volumes#CB#(0,1)
 VALUE: 1
 QUESTION: VTK_Export#CB#(0,1)
@@ -149,10 +149,10 @@ VALUE: 1
 HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
 VALUE: Structured
-DEPENDENCIES: (Structured, HIDE, Forbidden_length,0.0)
+DEPENDENCIES: (Structured, HIDE,    Forbidden_length,0.0)
 DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length,0.25)
-DEPENDENCIES: (Slanted,    HIDE, Forbidden_length,-1.0)
-DEPENDENCIES: (Conformal,  HIDE, Forbidden_length,0.0)
+DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length,-1.0)
+DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length,0.0)
 QUESTION: Forbidden_length
 VALUE: 0.0
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
@@ -161,30 +161,30 @@ Title: Wires
 QUESTION: Slanted#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
-DEPENDENCIES: (0, SET,     Coordinate_criterion, Structured, SET,     Generate_intermedial_Coordinates, #CURRENT#, SET,     Segments_filter_threshold, #CURRENT#)
-DEPENDENCIES: (1, RESTORE, Coordinate_criterion, #CURRENT#,  RESTORE, Generate_intermedial_Coordinates, #CURRENT#, RESTORE, Segments_filter_threshold, #CURRENT#)
-QUESTION: Coordinate_criterion#CB#(Structured,RelaxedPlane,Relaxed,Raw)
-VALUE: Structured
+DEPENDENCIES: (0, HIDE,    Coordinate_criterion, Raw, HIDE,    Generate_intermedial_Coordinates, 0, HIDE,    Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, New)
+DEPENDENCIES: (1, RESTORE, Coordinate_criterion, Raw, RESTORE, Generate_intermedial_Coordinates, 0, RESTORE, Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, Experimental)
+QUESTION: Coordinate_criterion#CB#(Raw,Relaxed,RelaxedPlane,Structured)
+VALUE: Raw
 HELP: Sets the criterion to snap the original wire coordinates to the grid during the meshing. 
-DEPENDENCIES: (Structured,   SET,     Relaxed_length, 1.0)
-DEPENDENCIES: (RelaxedPlane, RESTORE, Relaxed_length, 0.4)
+DEPENDENCIES: (Raw,          HIDE,    Relaxed_length, 0.0)
 DEPENDENCIES: (Relaxed,      RESTORE, Relaxed_length, 0.4)
-DEPENDENCIES: (Raw,          SET,     Relaxed_length, 0.0)
+DEPENDENCIES: (RelaxedPlane, RESTORE, Relaxed_length, 0.4)
+DEPENDENCIES: (Structured,   HIDE,    Relaxed_length, 1.0)
 QUESTION: Relaxed_length
 VALUE: 0.5
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
 QUESTION: Generate_intermedial_Coordinates#CB#(0,1)
-VALUE: 1
+VALUE: 0
 HELP: Divides segments at the points they cross grid cells faces.
 QUESTION: Segments_filter_threshold
-VALUE: 1.0
-HELP: Sets the allowed minimum relative size for the slanted wire segments.
+VALUE: 0.0
+HELP: Sets the allowed minimum relative size for the slanted wire segments (0.0 to allow all segments).
 
 Title: Geometry
 QUESTION: model_units#CB#(m,cm,mm,nm,other)
 VALUE: m
 HELP: Sets the scaling factor assuming that geometric and grid info are in the selected model units.
-DEPENDENCIES: (m, SET, scaling_factor, 1.0)
+DEPENDENCIES: (m,  SET, scaling_factor, 1.0)
 DEPENDENCIES: (cm, SET, scaling_factor, 1e-2)
 DEPENDENCIES: (mm, SET, scaling_factor, 1e-3)
 DEPENDENCIES: (nm, SET, scaling_factor, 1e-9)
@@ -200,28 +200,28 @@ QUESTION: Lower_z_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
 VALUE: PML
 QUESTION: Upper_x_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
 VALUE: PML
-DEPENDENCIES: (Periodic,SET,Lower_x_bound,Periodic)
-DEPENDENCIES: (PML,RESTORE,Lower_x_bound,#CURRENT#)
-DEPENDENCIES: (PEC,RESTORE,Lower_x_bound,#CURRENT#)
-DEPENDENCIES: (PMC,RESTORE,Lower_x_bound,#CURRENT#)
-DEPENDENCIES: (MUR1,RESTORE,Lower_z_bound,#CURRENT#)
-DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (Periodic, SET,    Lower_x_bound,Periodic)
+DEPENDENCIES: (PML,      RESTORE,Lower_x_bound,#CURRENT#)
+DEPENDENCIES: (PEC,      RESTORE,Lower_x_bound,#CURRENT#)
+DEPENDENCIES: (PMC,      RESTORE,Lower_x_bound,#CURRENT#)
+DEPENDENCIES: (MUR1,     RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR2,     RESTORE,Lower_z_bound,#CURRENT#)
 QUESTION: Upper_y_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
 VALUE: PML
-DEPENDENCIES: (Periodic,SET,Lower_y_bound,Periodic)
-DEPENDENCIES: (PML,RESTORE,Lower_y_bound,#CURRENT#)
-DEPENDENCIES: (PEC,RESTORE,Lower_y_bound,#CURRENT#)
-DEPENDENCIES: (PMC,RESTORE,Lower_y_bound,#CURRENT#)
-DEPENDENCIES: (MUR1,RESTORE,Lower_z_bound,#CURRENT#)
-DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (Periodic, SET,    Lower_y_bound,Periodic)
+DEPENDENCIES: (PML,      RESTORE,Lower_y_bound,#CURRENT#)
+DEPENDENCIES: (PEC,      RESTORE,Lower_y_bound,#CURRENT#)
+DEPENDENCIES: (PMC,      RESTORE,Lower_y_bound,#CURRENT#)
+DEPENDENCIES: (MUR1,     RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR2,     RESTORE,Lower_z_bound,#CURRENT#)
 QUESTION: Upper_z_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
 VALUE: PML
-DEPENDENCIES: (Periodic,SET,Lower_z_bound,Periodic)
-DEPENDENCIES: (PML,RESTORE,Lower_z_bound,#CURRENT#)
-DEPENDENCIES: (PEC,RESTORE,Lower_z_bound,#CURRENT#)
-DEPENDENCIES: (PMC,RESTORE,Lower_z_bound,#CURRENT#)
-DEPENDENCIES: (MUR1,RESTORE,Lower_z_bound,#CURRENT#)
-DEPENDENCIES: (MUR2,RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (Periodic, SET,    Lower_z_bound,Periodic)
+DEPENDENCIES: (PML,      RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (PEC,      RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (PMC,      RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR1,     RESTORE,Lower_z_bound,#CURRENT#)
+DEPENDENCIES: (MUR2,     RESTORE,Lower_z_bound,#CURRENT#)
 QUESTION: Boundary_padding_options#CB#(OPTIONS)
 VALUE: OPTIONS
 QUESTION: boundary_padding_type#CB#(by_number_of_cells,by_distance)
