@@ -135,10 +135,10 @@ BOOK: Mesher_options
 Title: Mesher
 QUESTION: Mesher#CB#(ConformalMesher,zMesher,None)
 VALUE: zMesher
-DEPENDENCIES: (OpenFOAM,        HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, RESTORE, Brute_force_volumes,1)
-DEPENDENCIES: (ConformalMesher, RESTORE, Mode,Structured, RESTORE, Forbidden_length,0, RESTORE, Brute_force_volumes,1)
-DEPENDENCIES: (zMesher,         HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, HIDE,    Brute_force_volumes,1)
-DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, HIDE,    Brute_force_volumes,1)
+DEPENDENCIES: (OpenFOAM,        HIDE,    Mode,#CURRENT#, HIDE,    Forbidden_length,#CURRENT#, RESTORE, Brute_force_volumes,#CURRENT#)
+DEPENDENCIES: (ConformalMesher, RESTORE, Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, RESTORE, Brute_force_volumes,#CURRENT#)
+DEPENDENCIES: (zMesher,         HIDE,    Mode,#CURRENT#, HIDE,    Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,#CURRENT#)
+DEPENDENCIES: (None,            HIDE,    Mode,#CURRENT#, HIDE,    Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,#CURRENT#)
 QUESTION: Brute_force_volumes#CB#(0,1)
 VALUE: 1
 QUESTION: VTK_Export#CB#(0,1)
