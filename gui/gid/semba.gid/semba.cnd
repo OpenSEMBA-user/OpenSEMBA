@@ -111,7 +111,7 @@ CONDMESHTYPE: over body elements
 #Title: Basic
 Question: Shape#CB#(Rectangular)
 VALUE: Rectangular
-Question: Mode#CB#(TE,TM)
+Question: Mode#CB#(TE)
 VALUE: TE
 Question: FirstMode
 VALUE: 1
