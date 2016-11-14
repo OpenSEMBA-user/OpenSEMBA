@@ -74,9 +74,9 @@ private:
         outRqOnPoint,
         outRqOnLine,
         outRqOnSurface,
-        outRqOnVolume,
+        outRqOnLayer,
         bulkCurrentOnSurface,
-        bulkCurrentOnVolume,
+        bulkCurrentOnLayer,
         farField
     } GiDOutputType;
     typedef enum {

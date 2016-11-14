@@ -461,10 +461,10 @@ Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period)
 *end elems
 End of Output request instance:
 *end if
-*Set cond OutRq_on_volume
+*Set cond OutRq_on_layer
 *if(CondNumEntities(int)>0)
 Output request instance: 
-GiDOutputType: OutRq_on_volume
+GiDOutputType: OutRq_on_layer
 Number of elements: *CondNumEntities(int)
 *loop layers *OnlyInCond
 Name: *cond(Name) 
@@ -489,10 +489,10 @@ Skip: *cond(Skip)
 *end elems
 End of Output request instance:
 *end if
-*Set cond Bulk_current_on_volume
+*Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
 Output request instance: 
-GiDOutputType: Bulk_current_on_volume
+GiDOutputType: Bulk_current_on_layer
 Number of elements: *CondNumEntities(int)
 *loop layers *OnlyInCond
 Name: *cond(Name) 

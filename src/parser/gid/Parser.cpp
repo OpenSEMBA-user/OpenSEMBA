@@ -479,7 +479,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                     res->add(new OutRqSurface(domain, type, name, surfs));
                     break;
                 }
-                case Parser::outRqOnVolume:
+                case Parser::outRqOnLayer:
                 {
                     getline_(line);
                     Geometry::Element::Group<> elems = boxToElemGroup(line);
@@ -494,7 +494,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                                 domain, type, name,
                                 elems.getOf<Geometry::Surf>()));
                     } else {
-                        throw std::logic_error("Layer for OutRq on volume must"
+                        throw std::logic_error("Layer for OutRq on Layer must"
                                                " be volume or surface");
                     }
                     break;
@@ -531,7 +531,7 @@ void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
                             domain, name, surfs, dir, skip));
                     break;
                 }
-                case Parser::bulkCurrentOnVolume:
+                case Parser::bulkCurrentOnLayer:
                 {
                     Math::Constants::CartesianAxis dir;
                     std::size_t skip;
@@ -1694,12 +1694,12 @@ Parser::GiDOutputType Parser::strToGidOutputType(std::string str) {
         return Parser::outRqOnLine;
     } else if (str.compare("OutRq_on_surface")==0) {
         return Parser::outRqOnSurface;
-    } else if (str.compare("OutRq_on_volume")==0) {
-        return Parser::outRqOnVolume;
+    } else if (str.compare("OutRq_on_layer")==0) {
+        return Parser::outRqOnLayer;
     } else if (str.compare("Bulk_current_on_surface")==0) {
         return Parser::bulkCurrentOnSurface;
-    } else if (str.compare("Bulk_current_on_volume")==0) {
-        return Parser::bulkCurrentOnVolume;
+    } else if (str.compare("Bulk_current_on_layer")==0) {
+        return Parser::bulkCurrentOnLayer;
     } else if (str.compare("Far_field")==0) {
         return Parser::farField;
     } else {
