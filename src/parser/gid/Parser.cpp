@@ -159,10 +159,11 @@ void Parser::readSolverSettings(Solver::Settings& opts,
 
 Geometry::Mesh::Geometric* Parser::readGeometricMesh() {
     const Geometry::Grid3& grid = readCartesianGrid();
-    Geometry::Layer::Group<> lG = readLayers();
-    Geometry::Coordinate::Group<Geometry::CoordR3> cG = readCoordinates();
-    Geometry::Element::Group<Geometry::ElemR> eG = readElements(cG, lG);
-    return new Geometry::Mesh::Geometric(grid, cG, eG, lG);
+    Geometry::Mesh::Geometric* res = new Geometry::Mesh::Geometric(grid);
+    readLayers(res->layers());
+    readCoordinates(res->coords());
+    readElements(res->coords(), res->layers(), res->elems());
+    return res;
 }
 
 Source::Group<>* Parser::readEMSources() {
@@ -646,12 +647,11 @@ ProblemSize Parser::readProblemSize() {
     return res;
 }
 
-Geometry::Layer::Group<> Parser::readLayers() {
+void Parser::readLayers(Geometry::Layer::Group<>& layers) {
     bool finished = false;
     bool found = false;
     std::string label, value;
     Geometry::Layer::Id id;
-    Geometry::Layer::Group<> res;
     while (!found && !f_in.eof() ) {
         getNextLabelAndValue(label, value);
         if (label.compare("Layers")==0) {
@@ -667,7 +667,7 @@ Geometry::Layer::Group<> Parser::readLayers() {
                     std::string name;
                     name = line.substr(line.find_first_of(" ") + 1,
                                        line.length());
-                    res.add(new Geometry::Layer::Layer(id, name));
+                    layers.add(new Geometry::Layer::Layer(id, name));
                 }
             }
         }
@@ -675,15 +675,14 @@ Geometry::Layer::Group<> Parser::readLayers() {
     if (!found) {
         throw std::logic_error("Layers label was not found.");
     }
-    return res;
 }
 
-Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates() {
+void Parser::readCoordinates(
+        Geometry::Coordinate::Group<Geometry::CoordR3>& coords) {
     std::string line;
     Geometry::CoordId id;
     Math::CVecR3 pos;
-    std::vector<Geometry::CoordR3*> coord;
-    coord.reserve(pSize_.v);
+    coords.reserve(pSize_.v);
     bool finished = false;
     bool found = false;
     while (!found && !f_in.eof() && !finished) {
@@ -694,7 +693,7 @@ Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates() {
             for (std::size_t i = 0; i < pSize_.v; i++) {
                 f_in >> id >> pos(0) >> pos(1) >> pos(2);
                 progress_.advance();
-                coord.push_back(new Geometry::CoordR3(id, pos));
+                coords.add(new Geometry::CoordR3(id, pos));
             }
             // Checks "end of coordinates" label.
             finished = false;
@@ -712,16 +711,15 @@ Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates() {
     if (!finished) {
         throw std::logic_error("End of coordinates label not found.");
     }
-    return Geometry::Coordinate::Group<Geometry::CoordR3>(coord);
 }
 
-Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
+void Parser::readElements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
-        const Geometry::Layer::Group<>& lG) {
+        const Geometry::Layer::Group<>& lG,
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
     std::string line, label;
     bool finished = false;
     bool found = false;
-    std::vector<Geometry::ElemR*> elems;
     while (!finished && !f_in.eof()) {
         getline_(line);
         if (line.find("Elements:") != line.npos) {
@@ -758,13 +756,12 @@ Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
         throw std::logic_error("\"End of elements\" label was not found.");
     }
     //
-    return Geometry::Element::Group<Geometry::ElemR>(elems);
 }
 
 void Parser::readHex8Elements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
         const Geometry::Layer::Group<>& lG,
-        std::vector<Geometry::ElemR*>& elems) {
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
     Geometry::ElemId id;
     Geometry::CoordId vId;
     const Geometry::CoordR3* v[8];
@@ -783,14 +780,14 @@ void Parser::readHex8Elements(
         } else {
             mat = NULL;
         }
-        elems.push_back(new Geometry::HexR8(id, v, NULL, mat));
+        elems.add(new Geometry::HexR8(id, v, NULL, mat));
     }
 }
 
 void Parser::readTet10Elements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
         const Geometry::Layer::Group<>& lG,
-        std::vector<Geometry::ElemR*>& elems) {
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
     Geometry::ElemId id;
     Geometry::CoordId vId;
     const Geometry::CoordR3* v[10];
@@ -810,14 +807,14 @@ void Parser::readTet10Elements(
         else {
             mat = NULL;
         }
-        elems.push_back(new Geometry::Tet10(id, v, NULL, mat));
+        elems.add(new Geometry::Tet10(id, v, NULL, mat));
     }
 }
 
 void Parser::readTet4Elements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
         const Geometry::Layer::Group<>& lG,
-        std::vector<Geometry::ElemR*>& elems) {
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
     Geometry::ElemId id;
     Geometry::CoordId vId;
     const Geometry::CoordR3* v[4];
@@ -845,14 +842,14 @@ void Parser::readTet4Elements(
         else {
             mat = NULL;
         }
-        elems.push_back(new Geometry::Tet4(id, v, lay, mat));
+        elems.add(new Geometry::Tet4(id, v, lay, mat));
     }
 }
 
 void Parser::readTri6Elements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
         const Geometry::Layer::Group<>& lG,
-        std::vector<Geometry::ElemR*>& elems) {
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
     Geometry::ElemId id;
     Geometry::CoordId vId;
     const Geometry::CoordR3* v[6];
@@ -873,14 +870,14 @@ void Parser::readTri6Elements(
         else {
             mat = NULL;
         }
-        elems.push_back(new Geometry::Tri6(id, v, NULL, mat));
+        elems.add(new Geometry::Tri6(id, v, NULL, mat));
     }
 }
 
 void Parser::readTri3Elements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
         const Geometry::Layer::Group<>& lG,
-        std::vector<Geometry::ElemR*>& elems) {
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
     Geometry::ElemId id;
     Geometry::CoordId vId;
     const Geometry::CoordR3* v[3];
@@ -909,14 +906,14 @@ void Parser::readTri3Elements(
         else {
             mat = NULL;
         }
-        elems.push_back(new Geometry::Tri3(id, v, lay, mat));
+        elems.add(new Geometry::Tri3(id, v, lay, mat));
     }
 }
 
 void Parser::readLin2Elements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
         const Geometry::Layer::Group<>& lG,
-        std::vector<Geometry::ElemR*>& elems) {
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
     Geometry::ElemId id;
     Geometry::CoordId vId;
     const Geometry::CoordR3* v[2];
@@ -944,7 +941,7 @@ void Parser::readLin2Elements(
         else {
             mat = NULL;
         }
-        elems.push_back(new Geometry::LinR2(id, v, lay, mat));
+        elems.add(new Geometry::LinR2(id, v, lay, mat));
     }
 }
 
