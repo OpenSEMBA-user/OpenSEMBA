@@ -29,6 +29,11 @@ Geometric::Geometric() {
 
 }
 
+Geometric::Geometric(const Grid3& grid)
+:   Grid3(grid) {
+
+}
+
 Geometric::Geometric(const Grid3& grid,
                      const Coordinate::Group<const CoordR3>& cG,
                      const Element::Group<const ElemR>& elem,

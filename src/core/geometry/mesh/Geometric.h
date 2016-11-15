@@ -32,6 +32,7 @@ class Geometric : public Unstructured,
                   public Grid3 {
 public:
     Geometric();
+    Geometric(const Grid3& grid);
     Geometric(const Grid3& grid,
               const Coordinate::Group<const CoordR3>& cG,
               const Element::Group<const ElemR>& elem,

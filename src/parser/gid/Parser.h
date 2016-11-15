@@ -74,9 +74,9 @@ private:
         outRqOnPoint,
         outRqOnLine,
         outRqOnSurface,
-        outRqOnVolume,
+        outRqOnLayer,
         bulkCurrentOnSurface,
-        bulkCurrentOnVolume,
+        bulkCurrentOnLayer,
         farField
     } GiDOutputType;
     typedef enum {
@@ -122,29 +122,29 @@ private:
             const MatId id,
             const std::string& name,
             const std::string& layersString) const;
-    Geometry::Layer::Group<> readLayers();
-    Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates();
-    Geometry::Element::Group<Geometry::ElemR> readElements(
-            const Geometry::CoordR3Group&,
-            const Geometry::Layer::Group<>&);
+    void readLayers(Geometry::Layer::Group<>&);
+    void readCoordinates(Geometry::Coordinate::Group<Geometry::CoordR3>&);
+    void readElements(const Geometry::CoordR3Group&,
+                      const Geometry::Layer::Group<>&,
+                      Geometry::Element::Group<Geometry::ElemR>&);
     void readHex8Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
-                           std::vector<Geometry::ElemR*>& elems);
+                           Geometry::Element::Group<Geometry::ElemR>& elems);
     void readTet10Elements(const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
-                           std::vector<Geometry::ElemR*>& elems);
+                           Geometry::Element::Group<Geometry::ElemR>& elems);
     void readTet4Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
-                           std::vector<Geometry::ElemR*>& elems);
+                           Geometry::Element::Group<Geometry::ElemR>& elems);
     void readTri6Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
-                           std::vector<Geometry::ElemR*>& elems);
+                           Geometry::Element::Group<Geometry::ElemR>& elems);
     void readTri3Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
-                           std::vector<Geometry::ElemR*>& elems);
+                           Geometry::Element::Group<Geometry::ElemR>& elems);
     void readLin2Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
-                           std::vector<Geometry::ElemR*>& elems);
+                           Geometry::Element::Group<Geometry::ElemR>& elems);
     Geometry::Grid3 readCartesianGrid();
     void readOutRqInstances(OutputRequest::Group<>* res);
     void getNextLabelAndValue(std::string& label, std::string& value);

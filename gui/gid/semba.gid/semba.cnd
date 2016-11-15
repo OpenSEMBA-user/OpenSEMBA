@@ -111,7 +111,7 @@ CONDMESHTYPE: over body elements
 #Title: Basic
 Question: Shape#CB#(Rectangular)
 VALUE: Rectangular
-Question: Mode#CB#(TE,TM)
+Question: Mode#CB#(TE)
 VALUE: TE
 Question: FirstMode
 VALUE: 1
@@ -290,13 +290,13 @@ VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
 
-CONDITION: OutRq_on_volume
+CONDITION: OutRq_on_layer
 CONDTYPE: over layers
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
-VALUE: Unnamed_volume_outRq#WIDTH#(18)
+VALUE: Unnamed_outRq_on_layer#WIDTH#(18)
 QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
 #Title: Domain
@@ -372,13 +372,13 @@ VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
 
-CONDITION: Bulk_current_on_volume
+CONDITION: Bulk_current_on_layer
 CONDTYPE: over layers
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
-VALUE: Unnamed_bulkCurrent_on_volume_outRq#WIDTH#(18)
+VALUE: Unnamed_bulkCurrent_on_layer_outRq#WIDTH#(18)
 QUESTION: Type#CB#(bulkCurrentElectric)
 VALUE: bulkCurrentElectric
 QUESTION: Direction#CB#(x,y,z)
