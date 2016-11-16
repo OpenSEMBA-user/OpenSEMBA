@@ -50,6 +50,7 @@ Options::Options() {
 
 void Options::printInfo() const {
     std::cout << " --- Meshing parameters info --- " << std::endl;
+    std::cout << "Mesher: " << toStr(mesher_) << std::endl;
     if (mesher_ == Mesher::openfoam) {
         std::cout << " Using openfoam mesher." << std::endl;
         if (locationInMeshSet_) {
@@ -440,6 +441,20 @@ Options::SlantedCoordCriterion Options::strToCoordCriterion(
         return SlantedCoordCriterion::raw;
     } else {
         throw std::logic_error("Unrecognized Slanted Coord Criterion: " + str);
+    }
+}
+
+std::string Options::toStr(const Options::Mesher mesher) {
+    switch (mesher) {
+    case Options::Mesher::zMesher:
+        return "ZMesher";
+    case Options::Mesher::conformalMesher:
+        return "ConformalMesher";
+    case Options::Mesher::openfoam:
+        return "OpenFOAM";
+    case Options::Mesher::none:
+    default:
+        return "None";
     }
 }
 
