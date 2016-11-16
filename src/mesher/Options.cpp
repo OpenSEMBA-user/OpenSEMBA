@@ -115,6 +115,10 @@ bool Options::isBruteForceVolumes() const {
     return bruteForceVolumes_;
 }
 
+Options::Mode Options::getMode() const {
+    return mode_;
+}
+
 bool Options::isStructured() const {
     return (mode_ == Mode::structured);
 }
