@@ -156,7 +156,7 @@ void Options::setBoundTermination(
 }
 void Options::addArguments(Argument::Group& args) const {
     args.addOption(new Argument::Option<std::string>("Mesher", "mesher"))
-        .choices({{"openfoam"}, {"zMesher"}, {"confMesher"}});
+        .choices({{"openfoam"}, {"zMesher"}, {"ConformalMesher"}});
     args.addOption(new Argument::Switch("Brute force volumes",
         "bruteForceVolumes"));
     args.addOption(new Argument::Switch("VTK Export", "vtkexport"));

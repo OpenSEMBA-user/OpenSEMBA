@@ -21,24 +21,13 @@ Additional arguments: *GenData(Additional_arguments)
 *endif
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 Composites model: *GenData(Composites_model)
-Conformal skin: *GenData(Conformal_skin)
-No compo Mur: *GenData(No_compo_mur)
-Skin depth: *GenData(Skin_depth)
-Composites attenuation factor: *GenData(Composites_attenuation_factor)
 
 Wires flavor: *GenData(Wires_flavor)
 MTLN: *GenData(MTLN)
 Min distance wires: *GenData(Min_distance_wires)
-Taparrabos: *GenData(Taparrabos)
-Make holes: *GenData(Make_holes)
-Ground wires: *GenData(Ground_wires)
-Inductance model: *GenData(Inductance_model)
-Inductance order: *GenData(Inductance_order)
-Wires attenuation factor: *GenData(Wires_attenuation_factor)
 
-Map: *GenData(Map)
+
 Map VTK: *GenData(Map_VTK)
-NF2FF decimation: *GenData(NF2FF_decimation)
 Geometry scaling factor: *GenData(scaling_factor)
 
 Mesher options:
