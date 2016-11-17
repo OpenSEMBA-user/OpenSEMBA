@@ -82,18 +82,30 @@ END MATERIAL
 
 BOOK: Advanced_materials
 MATERIAL: Surface_Impedance
-QUESTION: TypeId
-VALUE: SIBC
-STATE: HIDDEN
-QUESTION: SurfaceType#CB#(File,Layers)
-VALUE: Layers
-DEPENDENCIES:(File, RESTORE, File,#CURRENT#, HIDE, Layers, #CURRENT# )
-DEPENDENCIES:(Layers, RESTORE,Layers,#CURRENT#, SET, File, , HIDE, File, )
-QUESTION: File
-VALUE: 
-HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
-QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
-VALUE: #N# 5 0.0 1.0 1.0 0.0 0.0 
+	QUESTION: TypeId
+	VALUE: SIBC
+	STATE: HIDDEN
+	QUESTION: SurfaceType#CB#(File,Layers)
+	VALUE: Layers
+	DEPENDENCIES:(File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT# )
+	DEPENDENCIES:(Layers, RESTORE, Layers,#CURRENT#, HIDE, File,  )
+	QUESTION: File
+	VALUE: 
+	HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
+	QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
+	VALUE: #N# 5 0.0 1.0 1.0 0.0 0.0 
+	QUESTION: Freq_min
+	VALUE: 1e5
+	HELP: For MIBC Only. Minimum frequency to which the vector fitting will be performed.
+	QUESTION: Freq_max
+	VALUE: 1e9
+	HELP: For MIBC Only. Maximum frequency to which the vector fitting will be performed.
+	QUESTION: Number_of_poles
+	VALUE: 24
+	HELP: For MIBC Only. Number of poles to which the vector fitting will be performed.
+	QUESTION: Create_file_for_UGRMAT
+	VALUE:
+	TKWIDGET: semba::TkwidgetCreateFilesForUGRMAT
 END MATERIAL
 
 MATERIAL: Anisotropic
@@ -165,31 +177,31 @@ HELP: Path to file containing dispersive wire properties in pole/residue format.
 END MATERIAL
 
 MATERIAL: Connector_short
-QUESTION: TypeId
-VALUE: Conn_short
-STATE: HIDDEN
+	QUESTION: TypeId
+	VALUE: Conn_short
+	STATE: HIDDEN
 END MATERIAL
 
 MATERIAL: Connector_open
-QUESTION: TypeId
-VALUE: Conn_open
-STATE: HIDDEN
+	QUESTION: TypeId
+	VALUE: Conn_open
+	STATE: HIDDEN
 END MATERIAL
 
 MATERIAL: Connector_series_RLC
-QUESTION: TypeId
-VALUE: Conn_sRLC
-STATE: HIDDEN
-QUESTION: Resistance
-VALUE: 0.0
-HELP: Connector resistance (Ohms/meter)
-QUESTION: Inductance
-VALUE: 0.0
-HELP: Connector self-inductance (Henrys/meter)
-QUESTION: Capacitance
-VALUE: 0.0
-HELP: Wire capacitance (Farads/meter)
-IMAGE: RLC_series.gif
+	QUESTION: TypeId
+	VALUE: Conn_sRLC
+	STATE: HIDDEN
+	QUESTION: Resistance
+	VALUE: 0.0
+	HELP: Connector resistance (Ohms/meter)
+	QUESTION: Inductance
+	VALUE: 0.0
+	HELP: Connector self-inductance (Henrys/meter)
+	QUESTION: Capacitance
+	VALUE: 0.0
+	HELP: Wire capacitance (Farads/meter)
+	IMAGE: RLC_series.gif
 END MATERIAL
 
 #MATERIAL: Connector_parallel_RLC
@@ -208,28 +220,28 @@ END MATERIAL
 #END MATERIAL
 
 MATERIAL: Connector_series_L_parallel_RC
-QUESTION: TypeId
-VALUE: Conn_sLpRC
-STATE: HIDDEN
-QUESTION: Resistance
-VALUE: 0.0
-HELP: Connector resistance (Ohms/meter)
-QUESTION: Inductance
-VALUE: 0.0
-HELP: Connector self-inductance (Henrys/meter)
-QUESTION: Capacitance
-VALUE: 0.0
-HELP: Wire capacitance (Farads/meter)
-IMAGE: L_series_RC_parallel.gif
+	QUESTION: TypeId
+	VALUE: Conn_sLpRC
+	STATE: HIDDEN
+	QUESTION: Resistance
+	VALUE: 0.0
+	HELP: Connector resistance (Ohms/meter)
+	QUESTION: Inductance
+	VALUE: 0.0
+	HELP: Connector self-inductance (Henrys/meter)
+	QUESTION: Capacitance
+	VALUE: 0.0
+	HELP: Wire capacitance (Farads/meter)
+	IMAGE: L_series_RC_parallel.gif
 END MATERIAL
 
 MATERIAL: Connector_dispersive
-QUESTION: TypeId
-VALUE: Conn_dispersive
-STATE: HIDDEN
-QUESTION: File
-VALUE: 
-HELP: Path to file containing dispersive connector properties in pole/residue format.
+	QUESTION: TypeId
+	VALUE: Conn_dispersive
+	STATE: HIDDEN
+	QUESTION: File
+	VALUE: 
+	HELP: Path to file containing dispersive connector properties in pole/residue format.
 END MATERIAL
 
 MATERIAL: Thin_gap

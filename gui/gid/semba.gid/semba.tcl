@@ -434,3 +434,54 @@ proc semba::CloseBoundingBoxData { } {
 	}
 }
 
+proc semba::TkwidgetCreateFilesForUGRMAT { event args } {
+    global tkwidgedprivmaterial
+    switch $event {
+	INIT {
+	    lassign $args PARENT current_row_variable GDN STRUCT QUESTION    
+	    upvar $current_row_variable ROW            
+	    set entry $PARENT.e$ROW
+	    set width 9
+	    set materialName [lindex [split $STRUCT ,] 1]
+	    set tkwidgedprivmaterial($QUESTION) [ttk::button $PARENT.cmaterial$QUESTION \
+		    -text "Export file" \
+		    -command "semba::writeLayersFile" \
+		    ] 
+	    grid remove $entry
+	    grid $tkwidgedprivmaterial($QUESTION) -row [expr $ROW-1] -column 1 -sticky ew -columnspan 1
+	}
+	SYNC {         
+	    lassign $args GDN STRUCT QUESTION            
+	}
+	DEPEND {            
+	    lassign $args GDN STRUCT QUESTION ACTION VALUE           
+	    if { [info exists tkwidgedprivmaterial($QUESTION)] && \
+		    [winfo exists $tkwidgedprivmaterial($QUESTION)] } {
+		if { $ACTION == "HIDE" } {
+		    grid remove $tkwidgedprivmaterial($QUESTION)
+		} else {
+		    #RESTORE
+		    grid $tkwidgedprivmaterial($QUESTION)
+		}
+	    } else {
+
+	    }
+	}
+	CLOSE {
+	    #array unset tkwidgedprivmaterial
+	}
+	default {
+	    return [list ERROR [_ "Unexpected tkwidget event"]]
+	}
+    }
+    #a tkwidget procedure must return "" if Ok or [list ERROR $description] or [list WARNING $description]
+    return ""
+}
+
+proc semba::writeLayersFile {} {
+	set modelDir [GiD_Info Project ModelName].gid/
+	set modelName [file tail [GiD_Info Project ModelName] ]
+    GiD_Process Mescape Files WriteForBAS \
+	[file join $semba::_dir/multilayer.bas] \
+	[file join $modelDir $modelName.layers]
+}
