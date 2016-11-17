@@ -123,9 +123,10 @@ public:
     void applyGeometricScalingFactor(const Math::Real& factor);
 
     void printHelp() const;
-    void printInfo() const;
+    virtual void printInfo() const;
 
     static std::string toStr(const PhysicalModel::Bound::Bound*);
+    static std::string toStr(const Mesher);
 
 private:
     Mesher mesher_;

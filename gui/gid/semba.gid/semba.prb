@@ -39,85 +39,22 @@ VALUE: 0
 HELP: Minutes between data flush of restarting fields. Necessary to resume a stopped problem. A 0 means no flushing.
 
 TITLE: ugrfdtd
-QUESTION: Composites_model#CB#(MIBC,ADE,DigFilt,None)
+QUESTION: Composites_model#CB#(MIBC,SGBC)
 VALUE: MIBC
-DEPENDENCIES: (MIBC,    RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
-DEPENDENCIES: (ADE,     RESTORE, Conformal_skin, #CURRENT#, RESTORE, No_compo_Mur, #CURRENT#, RESTORE, Skin_depth, #CURRENT#, RESTORE, Composites_attenuation_factor, #CURRENT#)
-DEPENDENCIES: (DigFilt, SET,     Conformal_skin,         0, SET,     No_compo_Mur,         0, SET,     Skin_depth,         0, RESTORE, Composites_attenuation_factor, 1.0)
-DEPENDENCIES: (None,    SET,     Conformal_skin,         0, SET,     No_compo_Mur,         0, SET,     Skin_depth,         0, SET,     Composites_attenuation_factor, 1.0)
-QUESTION: Conformal_skin#CB#(0,1)
-VALUE: 0
-HELP: Uses a conformal correction
-QUESTION: No_compo_Mur#CB#(0,1)
-VALUE: 0
-HELP: Prevents a causal correction
-QUESTION: Skin_depth#CB#(0,1)
-VALUE: 0
-HELP: Uses a HF MIBC correction for multilayered lossy materials. Requires a previous run with -skindepthpre and a Matlab preprocessing with UGRmat_multilayer.
-QUESTION: Composites_attenuation_factor
-VALUE: 1.0
-HELP: Positive factor (under 1) for enhancing stability in composites.
-QUESTION: Wires_flavor#CB#(New,Old,Transition,Experimental)
-VALUE: New
-DEPENDENCIES: (New,          RESTORE, MTLN, 1, RESTORE, Min_distance_wires, 0.5, RESTORE, Taparrabos,0, RESTORE, Slanted, 0)
-DEPENDENCIES: (Old,          RESTORE, MTLN, 0, HIDE,    Min_distance_wires, 0.5, RESTORE, Taparrabos,0, RESTORE, Slanted, 0)
-DEPENDENCIES: (Transition,   RESTORE, MTLN, 0, HIDE,    Min_distance_wires, 0.5, RESTORE, Taparrabos,0, RESTORE, Slanted, 0)
-DEPENDENCIES: (Experimental, HIDE,    MTLN, 0, HIDE,    Min_distance_wires, 0.5, HIDE,    Taparrabos,0, RESTORE, Slanted, 1)
+QUESTION: Wires_flavor#CB#(berenger,holland,guiffaut)
+VALUE: berenger
+DEPENDENCIES: (berenger, RESTORE, MTLN, #CURRENT#, RESTORE, Min_distance_wires,#CURRENT#)
+DEPENDENCIES: (holland,  RESTORE, MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#)
+DEPENDENCIES: (guiffaut, HIDE,    MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#)
 QUESTION: MTLN#CB#(0,1)
 VALUE: 0
-HELP: Different behavior. "old/transition": uses a pseudo-MTLN (no default). "new" uses a true MTLN (no default, should be enforced)
+HELP: Different behavior. "holland": uses a pseudo-MTLN (no default). "berenger" uses a true MTLN (no default, should be enforced)
 QUESTION: Min_distance_wires
 VALUE: 0.5
 HELP: minimum distance among multi-wires (default 0.5)
-QUESTION: Taparrabos#CB#(0,1)
-VALUE: 0
-HELP: Remove extra double tails at the end of the wires
-QUESTION: Make_holes#CB#(0,1)
-VALUE: 0
-HELP: Create a void 2-cell area around wire segments Use with CAUTION. Revise Warnings.txt
-QUESTION: Ground_wires#CB#(0,1)
-VALUE: 0
-HELP: Ground wires touching/embedded/crossing PEC/Lossy. Use with CAUTION. Revise Warnings.txt
-QUESTION: Inductance_model#CB#(Boutayeb,Ledfelt,Berenger)
-VALUE: Boutayeb
-HELP: Inductance Model
-QUESTION: Inductance_order
-VALUE: 8
-HELP: Inductance Order
-QUESTION: Wires_attenuation_factor
-VALUE: 1.0
-HELP: Positive factor from 0 (full attenuation) to 1 (no attenuation) for enhancing stability in wires. Defaults to 1.0.
-#QUESTION: Use_default_PML#CB#(0,1)
-#VALUE: 1
-#DEPENDENCIES: (1, SET,     PML_alpha_factor,0.0, SET,     PML_alpha_order,1.0, SET,     PML_kappa,1.0, SET,     PML_correction_factor,1.0, SET,     PML_correction_depth,8, SET,     PML_backing,None)
-#DEPENDENCIES: (0, RESTORE, PML_alpha_factor,0.0, RESTORE, PML_alpha_order,1.0, RESTORE, PML_kappa,1.0, RESTORE, PML_correction_factor,1.0, RESTORE, PML_correction_depth,8, RESTORE, PML_backing,None)
-#QUESTION: PML_alpha_factor
-#VALUE: 0.0
-#HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
-#QUESTION: PML_alpha_order
-#VALUE: 1.0
-#HELP: CPML Alpha factor (>=0, <1 sug.) and polyn. grading. alpha=factor*maximum_PML_sigma, order=polynom.
-#QUESTION: PML_kappa
-#VALUE: 1.0
-#HELP: CPML Kappa (>=1)
-#QUESTION: PML_correction_factor
-#VALUE: 1.0
-#HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
-#QUESTION: PML_correction_depth
-#VALUE: 8
-#HELP: Factor for CPML enhanced stability (default none). sigma=factor * maximum_PML_sigma, depth= # layers
-#QUESTION: PML_backing#CB#(None,Mur1,Mur2)
-#VALUE: None
-#HELP: Supplement PMLs with Mur ABCs
-QUESTION: Map#CB#(0,1)
-VALUE: 0
-HELP: Creates map ASCII files of the geometry and a .dxf file with wires and PEC (in conjunction with -n 0 only creates the maps)
 QUESTION: Map_VTK#CB#(0,1)
 VALUE: 0
 HELP: reates .VTK map of the PEC/wires/Surface geometry
-QUESTION: NF2FF_decimation#CB#(0,1)
-VALUE: 0
-HELP: Uses decimation in NF2FF calculation (faster). WARNING: High-freq aliasing may occur.
 QUESTION: Additional_arguments
 VALUE: 
 
@@ -162,8 +99,8 @@ Title: Wires
 QUESTION: Slanted#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
-DEPENDENCIES: (0, HIDE,    Coordinate_criterion, Raw, HIDE,    Generate_intermedial_Coordinates, 0, HIDE,    Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, New)
-DEPENDENCIES: (1, RESTORE, Coordinate_criterion, Raw, RESTORE, Generate_intermedial_Coordinates, 0, RESTORE, Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, Experimental)
+DEPENDENCIES: (0, HIDE,    Coordinate_criterion, Raw, HIDE,    Generate_intermedial_Coordinates, 0, HIDE,    Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, berenger)
+DEPENDENCIES: (1, RESTORE, Coordinate_criterion, Raw, RESTORE, Generate_intermedial_Coordinates, 0, RESTORE, Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, guiffaut)
 QUESTION: Coordinate_criterion#CB#(Raw,Relaxed,RelaxedPlane,Structured)
 VALUE: Raw
 HELP: Sets the criterion to snap the original wire coordinates to the grid during the meshing. 

@@ -70,7 +70,7 @@ public:
     bool isResumeSimulation() const;
 
     std::string toStr() const;
-    void printInfo() const;
+    virtual void printInfo() const;
     void printHelp() const;
 
 //    static std::string toStr(const Options::Solver& solver);
