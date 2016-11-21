@@ -440,15 +440,27 @@ proc semba::TkwidgetCreateFilesForUGRMAT { event args } {
 	INIT {
 	    lassign $args PARENT current_row_variable GDN STRUCT QUESTION    
 	    upvar $current_row_variable ROW            
-	    set entry $PARENT.e$ROW
+		set entry ""
+        foreach item [grid slaves $PARENT -row [expr $ROW-1]] {
+            if { [winfo class $item] == "Entry"  || [winfo class $item] == "TEntry" } {
+                #assumed that it is the only entry of this row
+                set entry $item
+                break
+            }
+        }     
 	    set width 9
 	    set materialName [lindex [split $STRUCT ,] 1]
 	    set tkwidgedprivmaterial($QUESTION) [ttk::button $PARENT.cmaterial$QUESTION \
 		    -text "Export file" \
 		    -command "semba::writeLayersFile" \
 		    ] 
-	    grid remove $entry
 	    grid $tkwidgedprivmaterial($QUESTION) -row [expr $ROW-1] -column 1 -sticky ew -columnspan 1
+	    if { $entry != "" } {
+            grid remove $entry
+        } else {
+            #assumed that entry is hidden and then hide the usurpating frame
+            #grid remove $w
+        }
 	}
 	SYNC {         
 	    lassign $args GDN STRUCT QUESTION            

@@ -45,6 +45,12 @@ SIBC::SIBC(const Id id,
 :   Identifiable<Id>(id),
     PhysicalModel(name) {
     file_ = file;
+    std::string extension = file_.getExtension();
+    if (extension.compare(".mibc") != 0) {
+        printInfo();
+        throw std::logic_error("File extension must be .mibc in file: "
+                + file_);
+    }
 }
 
 SIBC::SIBC(const SIBC& rhs)

@@ -87,10 +87,11 @@ MATERIAL: Surface_Impedance
 	STATE: HIDDEN
 	QUESTION: SurfaceType#CB#(File,Layers)
 	VALUE: Layers
-	DEPENDENCIES:(File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT# )
-	DEPENDENCIES:(Layers, RESTORE, Layers,#CURRENT#, HIDE, File,  )
+	DEPENDENCIES:(File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT#, HIDE,   Create_file_for_UGRMAT,#CURRENT#, HIDE,Freq_min,#CURRENT#, HIDE,Freq_max,#CURRENT#, HIDE,Number_of_poles,#CURRENT#)
+	DEPENDENCIES:(Layers, RESTORE, Layers,#CURRENT#, HIDE, File,   #CURRENT#, RESTORE,Create_file_for_UGRMAT,#CURRENT#, RESTORE,Freq_min,#CURRENT#, RESTORE,Freq_max,#CURRENT#, RESTORE,Number_of_poles,#CURRENT# )
 	QUESTION: File
-	VALUE: 
+	VALUE:
+	TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 	HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
 	QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
 	VALUE: #N# 5 0.0 1.0 1.0 0.0 0.0 
