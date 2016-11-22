@@ -198,21 +198,27 @@ void Exporter::writeElements_(
     Math::UInt tmpCounter = coordCounter_;
     std::vector<int> nId(nV);
     beginMesh(name, GiD_3D, type, nV);
-    std::vector<Math::CVecR3> pos;
+    std::map<Geometry::CoordId, Geometry::CoordR3*> pos;
     for(std::size_t i = 0; i < elem.size(); i++) {
         for (Math::Int j = 0; j < nV; j++) {
-            pos.push_back(elem(i)->getVertex(j)->pos());
+            if (pos.count(elem(i)->getVertex(j)->getId()) == 0) {
+                pos[elem(i)->getVertex(j)->getId()] =
+                    elem(i)->getVertex(j)->clone();
+            }
         }
     }
     Geometry::CoordR3Group cG;
-    cG.addPos(pos);
+    std::map<Geometry::CoordId, Math::UInt> mapCoords;
+    for (std::map<Geometry::CoordId, Geometry::CoordR3*>::const_iterator
+         it = pos.begin(); it != pos.end(); ++it) {
+        cG.add(it->second);
+        mapCoords[it->first] = cG.size();
+    }
     writeCoordinates_(cG);
     beginElements_();
     for (std::size_t j = 0; j < elem.size(); j++) {
         for (Math::Int k = 0; k < nV; k++) {
-            const Geometry::CoordR3* coordInCG =
-            		cG.getPos(elem(j)->getVertex(k)->pos());
-            nId[k] = tmpCounter + coordInCG->getId().toInt();
+            nId[k] = tmpCounter + mapCoords[elem(j)->getVertex(k)->getId()];
         }
         writeElement_(++elemCounter_, &nId[0]);
 
