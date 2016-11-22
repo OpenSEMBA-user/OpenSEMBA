@@ -434,3 +434,66 @@ proc semba::CloseBoundingBoxData { } {
 	}
 }
 
+proc semba::TkwidgetCreateFilesForUGRMAT { event args } {
+    global tkwidgedprivmaterial
+    switch $event {
+	INIT {
+	    lassign $args PARENT current_row_variable GDN STRUCT QUESTION    
+	    upvar $current_row_variable ROW            
+		set entry ""
+        foreach item [grid slaves $PARENT -row [expr $ROW-1]] {
+            if { [winfo class $item] == "Entry"  || [winfo class $item] == "TEntry" } {
+                #assumed that it is the only entry of this row
+                set entry $item
+                break
+            }
+        }     
+	    set width 9
+	    set materialName [lindex [split $STRUCT ,] 1]
+	    set tkwidgedprivmaterial($QUESTION) [ttk::button $PARENT.cmaterial$QUESTION \
+		    -text "Export file" \
+		    -command "semba::writeLayersFile" \
+		    ] 
+	    grid $tkwidgedprivmaterial($QUESTION) -row [expr $ROW-1] -column 1 -sticky ew -columnspan 1
+	    if { $entry != "" } {
+            grid remove $entry
+        } else {
+            #assumed that entry is hidden and then hide the usurpating frame
+            #grid remove $w
+        }
+	}
+	SYNC {         
+	    lassign $args GDN STRUCT QUESTION            
+	}
+	DEPEND {            
+	    lassign $args GDN STRUCT QUESTION ACTION VALUE           
+	    if { [info exists tkwidgedprivmaterial($QUESTION)] && \
+		    [winfo exists $tkwidgedprivmaterial($QUESTION)] } {
+		if { $ACTION == "HIDE" } {
+		    grid remove $tkwidgedprivmaterial($QUESTION)
+		} else {
+		    #RESTORE
+		    grid $tkwidgedprivmaterial($QUESTION)
+		}
+	    } else {
+
+	    }
+	}
+	CLOSE {
+	    #array unset tkwidgedprivmaterial
+	}
+	default {
+	    return [list ERROR [_ "Unexpected tkwidget event"]]
+	}
+    }
+    #a tkwidget procedure must return "" if Ok or [list ERROR $description] or [list WARNING $description]
+    return ""
+}
+
+proc semba::writeLayersFile {} {
+	set modelDir [GiD_Info Project ModelName].gid/
+	set modelName [file tail [GiD_Info Project ModelName] ]
+    GiD_Process Mescape Files WriteForBAS \
+	[file join $semba::_dir/multilayer.bas] \
+	[file join $modelDir $modelName.layers]
+}

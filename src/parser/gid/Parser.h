@@ -149,7 +149,6 @@ private:
     void readOutRqInstances(OutputRequest::Group<>* res);
     void getNextLabelAndValue(std::string& label, std::string& value);
     Source::PlaneWave* readPlaneWave();
-    Source::Dipole* readDipole();
     Source::Port::Waveguide* readPortWaveguide();
     Source::Port::TEM* readPortTEM();
     Source::Generator* readGenerator();

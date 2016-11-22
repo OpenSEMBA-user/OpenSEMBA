@@ -180,7 +180,7 @@ Source::Group<>* Parser::readEMSources() {
             while (!finished && !f_in.eof() ) {
                 getNextLabelAndValue(label,value);
                 if (label.compare("Puntual excitation")==0) {
-                    res->add(readDipole());
+//                    res->add(readDipole());
                 } else if (label.compare("Planewave")==0) {
                     res->add(readPlaneWave());
                 } else if (label.compare("Generator")==0) {
@@ -284,7 +284,18 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
         } else if (label.compare("SurfaceType")==0) {
             surfType = strToSIBCType(value);
         } else if (label.compare("Filename")==0) {
-            file = FileSystem::Project(getFolder() + trim(value));
+            FileSystem::Project fileInFolder(getFolder() + trim(value));
+            FileSystem::Project fileGeneral(trim(value));;
+            if (!fileInFolder.canOpen() && !fileGeneral.canOpen()) {
+                throw std::logic_error("Unable to open file, tried:" + fileInFolder
+                        + " and " + fileGeneral);
+            }
+            if (fileInFolder.canOpen()) {
+                file = fileInFolder;
+            }
+            if (fileGeneral.canOpen()) {
+                file = fileGeneral;
+            }
         } else if (label.compare("Layers")==0) {
             layersStr = value;
         } else if (label.compare("Anisotropic model") == 0) {
@@ -1218,33 +1229,6 @@ Source::PlaneWave* Parser::readPlaneWave() {
         }
     }
     throw std::logic_error("End of Planewave label not found.");
-}
-
-Source::Dipole* Parser::readDipole() {
-    //    Geometry::Element::Group<Vol> elems;
-    //    Math::Real length = 0.0;
-    //    Math::CVecR3 orientation;
-    //    Math::CVecR3 position;
-    //    MagnitudeGaussian* mag = NULL;
-    //
-    //    std::string line;
-    //    bool finished = false;
-    //    char* pEnd;
-    //    while(!finished && !f_in.eof()) {
-    //        getline(f_in, line);
-    //        if (line.find("End of puntual excitation") == line.npos) {
-    //            Geometry::ElemId id = Geometry::ElemId(strtol(line.c_str(), &pEnd, 10));
-    //            //            Volume<>* elem = mesh_->elems().get(id);
-    //            //            elems.add(elem);
-    //        } else
-    //            finished = true;
-    //    }
-    //    if (!finished) {
-    //        throw std::logic_error("End of excitation type label not found.");
-    //    }
-    //    //
-    //    return new Dipole(mag, elems, length, orientation, position);
-    return NULL;
 }
 
 Source::Port::Waveguide* Parser::readPortWaveguide() {

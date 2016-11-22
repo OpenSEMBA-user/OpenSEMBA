@@ -35,13 +35,5 @@
              * Structured mesher limited to 1000 nodes.
              * FDTD solver limited to structured meshes, no sub-cell materials, and 64 MCells.
         </Description>
-	<NewsInVersion version="0.10.1" date="2015-11-29">
-	 * Fixed bug happening when projects were named using blank spaces.
-         * Fixed bug happening when far field labels were used.
-	</NewsInVersion>
-	<NewsInVersion version="0.10" date="2015-11-27">
-	 * Included support for waveguide ports.
-         * Electromagnetic source files optimized.
-	</NewsInVersion>
     </Program>
 </Infoproblemtype>
