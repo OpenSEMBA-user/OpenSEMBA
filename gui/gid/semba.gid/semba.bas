@@ -109,7 +109,9 @@ Capacitance: *matprop(Capacitance)
 Parallel Resistance: *matprop(Parallel_Resistance)
 Parallel Inductance: *matprop(Parallel_Inductance)
 Parallel Capacitance: *matprop(Parallel_Capacitance)
+*if(strcmp(Matprop(WireType),"Dispersive")==0)
 Filename: *matprop(File)
+*endif
 *endif
 *if(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
 Resistance: *matprop(Resistance)
