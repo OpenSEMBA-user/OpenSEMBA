@@ -367,7 +367,7 @@ Options::Mesher Options::strToMesher(std::string str) {
         return Mesher::conformalMesher;
     } else if (str.compare("ZMesher")==0) {
         return Mesher::zMesher;
-    } else if (str.compare("DMesher")==0) {
+    } else if (str.compare("DMesheR")==0) {
         return Mesher::dMesher;
     } else if (str.compare("OpenFOAM")==0) {
         return Mesher::openfoam;
@@ -456,7 +456,7 @@ std::string Options::toStr(const Options::Mesher mesher) {
     case Options::Mesher::zMesher:
         return "ZMesher";
     case Options::Mesher::dMesher:
-        return "DMesher";
+        return "DMesheR";
     case Options::Mesher::conformalMesher:
         return "ConformalMesher";
     case Options::Mesher::openfoam:
