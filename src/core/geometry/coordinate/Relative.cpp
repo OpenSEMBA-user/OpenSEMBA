@@ -46,6 +46,13 @@ Relative::Relative(const Id id,
     rel_ = rel;
 }
 
+Relative::Relative(const Math::CVecR3& rel) {
+    for (std::size_t d = 0; d < 3; d++) {
+        this->pos()(d) = (int)std::floor(rel(d));
+        this->rel_(d) = rel(d) - this->pos()(d);
+    }
+}
+
 Relative::Relative(const Relative& rhs)
 :   Identifiable<Id>(rhs),
     Math::CVecI3(rhs) {

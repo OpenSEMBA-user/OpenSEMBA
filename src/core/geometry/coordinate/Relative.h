@@ -36,6 +36,7 @@ public:
     Relative(const Id,
              const Math::CVecI3&,
              const Math::CVecR3&);
+    Relative(const Math::CVecR3&);
     Relative(const Relative&);
     virtual ~Relative();
 
