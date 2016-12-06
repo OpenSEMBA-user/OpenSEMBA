@@ -175,45 +175,42 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
     global GIDDEFAULT
     # List of bitmaps.
     set sembaBitmapsNames(0) [ list \
-		                                         images/icons/data.gif \
-		                     images/icons/meshingConfiguration.gif \
-		                                         images/icons/boundingbox.gif \
-		                                         images/icons/meshing.gif \
-		                                         images/icons/predefinedMaterials.gif \
-		                                         images/icons/materials.gif \
-		                     images/icons/advancedMaterials.gif \
-		                     images/icons/wires.gif \
-		                     images/icons/sources.gif \
-		                     images/icons/requests.gif \
-		                                         images/icons/structured.gif \
-		                    ]
+                            images/icons/data.gif \
+         					images/icons/meshingConfiguration.gif \
+                            images/icons/boundingbox.gif \
+                            images/icons/meshing.gif \
+                            images/icons/predefinedMaterials.gif \
+                            images/icons/materials.gif \
+		                    images/icons/advancedMaterials.gif \
+		                    images/icons/wires.gif \
+		                    images/icons/sources.gif \
+		                    images/icons/requests.gif \
+        ]
     # List of commands.
     set sembaBitmapsCommands(0) [list \
-		                       [list -np- GidOpenProblemData "Solver_options"] \
-		                       [list -np- GidOpenProblemData "Mesher_options"] \
-		                                           [list -np- semba::OpenBoundingBoxData] \
-		                                           [list -np- GidOpenConditions "Meshing"] \
-		                       [list -np- GidOpenMaterials "Predefined_materials"] \
-		                       [list -np- GidOpenMaterials "Basic_materials"] \
-		                       [list -np- GidOpenMaterials "Advanced_materials"] \
-		                       [list -np- GidOpenMaterials "Wires_and_thin_gaps"] \
-		                       [list -np- GidOpenConditions "Electromagnetic_sources"] \
-		                       [list -np- GidOpenConditions "Output_Requests"] \
-		                                           [list -np- semba::generateStructuredMesh $_dir] \
-		                      ]
+		                    [list -np- GidOpenProblemData "Solver_options"] \
+		                    [list -np- GidOpenProblemData "Mesher_options"] \
+		                    [list -np- semba::OpenBoundingBoxData] \
+		                    [list -np- GidOpenConditions "Meshing"] \
+		                    [list -np- GidOpenMaterials "Predefined_materials"] \
+		                    [list -np- GidOpenMaterials "Basic_materials"] \
+		                    [list -np- GidOpenMaterials "Advanced_materials"] \
+		                    [list -np- GidOpenMaterials "Wires_and_thin_gaps"] \
+		                    [list -np- GidOpenConditions "Electromagnetic_sources"] \
+	                		[list -np- GidOpenConditions "Output_Requests"] \
+		                ]
     
     set sembaBitmapsHelp(0) [list \
 		                   [= "Solver options"] \
 		                   [= "Mesher options"] \
-		                                   [= "Create bounding box"] \
-		                                   [= "Grid"] \
+		                   [= "Create bounding box"] \
+		                   [= "Grid"] \
 		                   [= "Predefined Materials"] \
 		                   [= "Basic Materials"] \
 		                   [= "Advanced Materials"] \
 		                   [= "Wires, wires terminations, and thin gaps"] \
 		                   [= "Electromagnetic sources"] \
 		                   [= "Output Requests"] \
-		                   [= "Generate .smb"] \
 		                  ]
     # prefix values:
     # Pre        Only active in the preprocessor
