@@ -41,7 +41,7 @@ HELP: Minutes between data flush of restarting fields. Necessary to resume a sto
 TITLE: ugrfdtd
 QUESTION: Composites_model#CB#(MIBC,SGBC)
 VALUE: MIBC
-QUESTION: Wires_flavor#CB#(berenger,guiffaut)
+QUESTION: Wires_flavor#CB#(holland,berenger,guiffaut)
 VALUE: berenger
 DEPENDENCIES: (berenger, RESTORE, MTLN, #CURRENT#, RESTORE, Min_distance_wires,#CURRENT#)
 #DEPENDENCIES: (holland,  RESTORE, MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#)
