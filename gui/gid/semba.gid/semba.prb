@@ -42,9 +42,9 @@ TITLE: ugrfdtd
 QUESTION: Composites_model#CB#(MIBC,SGBC)
 VALUE: MIBC
 QUESTION: Wires_flavor#CB#(holland,berenger,guiffaut)
-VALUE: berenger
-DEPENDENCIES: (berenger, RESTORE, MTLN, #CURRENT#, RESTORE, Min_distance_wires,#CURRENT#)
-#DEPENDENCIES: (holland,  RESTORE, MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#)
+VALUE: holland
+DEPENDENCIES: (holland,  RESTORE, MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#, RESTORE, Slanted, 0)
+DEPENDENCIES: (berenger, RESTORE, MTLN, #CURRENT#, RESTORE, Min_distance_wires,#CURRENT#, RESTORE, Slanted, 0)
 DEPENDENCIES: (guiffaut, HIDE,    MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#)
 QUESTION: MTLN#CB#(0,1)
 VALUE: 0
@@ -72,11 +72,11 @@ BOOK: Mesher_options
 Title: Mesher
 QUESTION: Mesher#CB#(ConformalMesher,ZMesher,DMesheR,None)
 VALUE: ZMesher
-DEPENDENCIES: (OpenFOAM,        HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, RESTORE, Brute_force_volumes,1)
-DEPENDENCIES: (ConformalMesher, RESTORE, Mode,Structured, RESTORE, Forbidden_length,0, RESTORE, Brute_force_volumes,1)
-DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, HIDE,    Brute_force_volumes,1)
-DEPENDENCIES: (DMesheR,         RESTORE, Mode,Structured, RESTORE, Forbidden_length,0, HIDE,    Brute_force_volumes,1)
-DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE,    Forbidden_length,0, HIDE,    Brute_force_volumes,1)
+#DEPENDENCIES: (OpenFOAM,        HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, RESTORE, Brute_force_volumes,#CURRENT#)
+DEPENDENCIES: (ConformalMesher, RESTORE, Mode,#CURRENT#,                                    RESTORE, Brute_force_volumes,#CURRENT#)
+DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
+DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,                                    HIDE,    Brute_force_volumes,1)
+DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
 QUESTION: Brute_force_volumes#CB#(0,1)
 VALUE: 1
 QUESTION: VTK_Export#CB#(0,1)
@@ -87,10 +87,10 @@ VALUE: 1
 HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
 VALUE: Structured
-DEPENDENCIES: (Structured, HIDE,    Forbidden_length,0.0)
-DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length,0.25)
-DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length,-1.0)
-DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length,0.0)
+DEPENDENCIES: (Structured, HIDE,    Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length,#CURRENT#)
 QUESTION: Forbidden_length
 VALUE: 0.0
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
@@ -99,15 +99,15 @@ Title: Wires
 QUESTION: Slanted#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
-DEPENDENCIES: (0, HIDE,    Coordinate_criterion, Raw, HIDE,    Generate_intermedial_Coordinates, 0, HIDE,    Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, berenger)
-DEPENDENCIES: (1, RESTORE, Coordinate_criterion, Raw, RESTORE, Generate_intermedial_Coordinates, 0, RESTORE, Segments_filter_threshold, 0.0, RESTORE, Wires_flavor, guiffaut)
+DEPENDENCIES: (0, HIDE,    Coordinate_criterion, #CURRENT#, HIDE,    Generate_intermedial_Coordinates, #CURRENT#, HIDE,    Segments_filter_threshold, #CURRENT#)
+DEPENDENCIES: (1, RESTORE, Coordinate_criterion, #CURRENT#, RESTORE, Generate_intermedial_Coordinates, #CURRENT#, RESTORE, Segments_filter_threshold, #CURRENT#, RESTORE, Wires_flavor, guiffaut)
 QUESTION: Coordinate_criterion#CB#(Raw,Relaxed,RelaxedPlane,Structured)
 VALUE: Raw
 HELP: Sets the criterion to snap the original wire coordinates to the grid during the meshing. 
-DEPENDENCIES: (Raw,          HIDE,    Relaxed_length, 0.0)
-DEPENDENCIES: (Relaxed,      RESTORE, Relaxed_length, 0.4)
-DEPENDENCIES: (RelaxedPlane, RESTORE, Relaxed_length, 0.4)
-DEPENDENCIES: (Structured,   HIDE,    Relaxed_length, 1.0)
+DEPENDENCIES: (Raw,          HIDE,    Relaxed_length, #CURRENT#)
+DEPENDENCIES: (Relaxed,      RESTORE, Relaxed_length, #CURRENT#)
+DEPENDENCIES: (RelaxedPlane, RESTORE, Relaxed_length, #CURRENT#)
+DEPENDENCIES: (Structured,   HIDE,    Relaxed_length, #CURRENT#)
 QUESTION: Relaxed_length
 VALUE: 0.5
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
