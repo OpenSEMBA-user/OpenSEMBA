@@ -22,6 +22,7 @@ HELP: Time step in seconds. A zero value lets solver to choose the default time 
 QUESTION: CFL
 VALUE: 0.8
 HELP: Courant number (suggested <= 0.8; ignored if 0.0).
+STATE: HIDDEN
 QUESTION: Default_sampling_period
 VALUE: 1e-10
 HELP: Zero means every time step.
