@@ -99,7 +99,7 @@ Title: Wires
 QUESTION: Slanted#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
-DEPENDENCIES: (0, HIDE,    Coordinate_criterion, #CURRENT#, HIDE,    Generate_intermedial_Coordinates, #CURRENT#, HIDE,    Segments_filter_threshold, #CURRENT#)
+DEPENDENCIES: (0, HIDE,    Coordinate_criterion, Raw,       HIDE,    Generate_intermedial_Coordinates, #CURRENT#, HIDE,    Segments_filter_threshold, #CURRENT#)
 DEPENDENCIES: (1, RESTORE, Coordinate_criterion, #CURRENT#, RESTORE, Generate_intermedial_Coordinates, #CURRENT#, RESTORE, Segments_filter_threshold, #CURRENT#, RESTORE, Wires_flavor, guiffaut)
 QUESTION: Coordinate_criterion#CB#(Raw,Relaxed,RelaxedPlane,Structured)
 VALUE: Raw
