@@ -116,7 +116,7 @@ QUESTION: Generate_intermedial_Coordinates#CB#(0,1)
 VALUE: 0
 HELP: Divides segments at the points they cross grid cells faces.
 QUESTION: Segments_filter_threshold
-VALUE: 0.0
+VALUE: 0.4
 HELP: Sets the allowed minimum relative size for the slanted wire segments (0.0 to allow all segments).
 
 Title: Geometry
