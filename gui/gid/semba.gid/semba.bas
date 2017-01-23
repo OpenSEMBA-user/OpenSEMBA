@@ -136,7 +136,9 @@ Filename: *matprop(File)
 *endif
 *if(strcmp(Matprop(TypeId),"SIBC")==0)
 SurfaceType: *matprop(SurfaceType)
+*if(strcmp(Matprop(SurfaceType),"File")==0)
 Filename: *matprop(File)
+*endif
 Layers: *matprop
 *endif
 *if(strcmp(Matprop(TypeId),"Anisotropic")==0)
@@ -235,7 +237,9 @@ Relative variation of random delay: *cond(Relative_variation_of_random_delay)
 Excitation: *cond(Excitation)
 Gaussian spread: *cond(Gaussian_spread)
 Gaussian delay: *cond(Gaussian_delay)
+*if(strcmp(cond(Excitation),"File")==0)
 Filename: *cond(File)
+*endif
 Defined: OnLayers
 Layer Name: *layerName
 Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
@@ -254,7 +258,9 @@ End of Planewave:
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
+*if(strcmp(cond(Excitation),"File")==0)
  Filename: *cond(File)
+*endif
  Defined: OnElements
  Number of elements: *CondNumEntities(int)
 *endif
@@ -272,7 +278,9 @@ End of Source_on_line:
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
+*if(strcmp(cond(Excitation),"File")==0)
  Filename: *cond(File)
+*endif
  Defined: OnNodes
  Number of elements: 1
  *NodesNum
@@ -291,7 +299,9 @@ End of Source_on_line:
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
+*if(strcmp(cond(Excitation),"File")==0)
  Filename: *cond(File)
+*endif
  ExcitationMode: *cond(Mode)
  FirstMode: *cond(FirstMode)
  SecondMode: *cond(SecondMode)
@@ -323,7 +333,9 @@ End of Source_on_line:
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
+*if(strcmp(cond(Excitation),"File")==0)
  Filename: *cond(File)
+*endif
  ExcitationMode: *cond(Mode)
  FirstMode: *cond(FirstMode)
  SecondMode: *cond(SecondMode)
@@ -354,7 +366,9 @@ End of Source_on_line:
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
+*if(strcmp(cond(Excitation),"File")==0)
  Filename: *cond(File)
+*endif
  Origin: *cond(Origin)
  Inner radius: *cond(Inner_radius)
  Outer radius: *cond(Outer_radius)
@@ -386,7 +400,9 @@ End of Source_on_line:
  Excitation: *cond(Excitation)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
+*if(strcmp(cond(Excitation),"File")==0)
  Filename: *cond(File)
+*endif
  Origin: *cond(Origin)
  Inner radius: *cond(Inner_radius)
  Outer radius: *cond(Outer_radius)
