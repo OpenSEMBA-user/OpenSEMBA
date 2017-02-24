@@ -108,12 +108,12 @@ void FarField::printInfo() const {
 void FarField::setThetaAndPhi(
         Math::Real iTh, Math::Real fTh, Math::Real sTh,
         Math::Real iPhi, Math::Real fPhi, Math::Real sPhi) {
-    initialTheta_ = iTh * acos(-1.0);
-    finalTheta_ = fTh * acos(-1.0);
-    stepTheta_ = sTh * acos(-1.0);
-    initialPhi_ = iPhi * acos(-1.0);
-    finalPhi_ = fPhi * acos(-1.0);
-    stepPhi_ = sPhi* acos(-1.0);
+    initialTheta_ = iTh;
+    finalTheta_ = fTh;
+    stepTheta_ = sTh;
+    initialPhi_ = iPhi;
+    finalPhi_ = fPhi;
+    stepPhi_ = sPhi;
 }
 
 } /* namespace OutputRequest */
