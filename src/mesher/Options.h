@@ -58,12 +58,6 @@ public:
         slanted,
         conformal
     };
-    enum class SlantedCoordCriterion {
-        raw,
-        relaxed,
-        relaxedPlane,
-        structured
-    };
 
     Options();
 
@@ -89,12 +83,8 @@ public:
                                                     const std::size_t p) const;
     const Geometry::BoundTerminations3& getBoundTerminations() const;
 
-    bool                   isSlanted() const;
-    SlantedCoordCriterion getSlantedCoordCriterion() const;
-    Math::Real            getSlantedRelaxedLength() const;
-    bool                   isSlantedGenerateIntermedialCoords() const;
-    bool                   isSlantedThreshold() const;
-    Math::Real            getSlantedThreshold() const;
+    bool        isSlanted() const;
+    Math::Real getSlantedThreshold() const;
 
     const std::string& getOutputName() const;
 
@@ -115,9 +105,6 @@ public:
     void setVtkExport(bool vtkExport);
 
     void setSlanted(const bool&);
-    void setSlantedCoordCriterion(const SlantedCoordCriterion&);
-    void setSlantedRelaxedLength(const Math::Real&);
-    void setSlantedGenerateIntermedialCoords(const bool&);
     void setSlantedThreshold(const Math::Real&);
 
     void applyGeometricScalingFactor(const Math::Real& factor);
@@ -146,9 +133,6 @@ private:
     Geometry::BoundTerminations3 boundTermination_;
 
     bool slanted_;
-    SlantedCoordCriterion slantedCoordCriterion_;
-    Math::Real slantedRelaxedLength_;
-    bool slantedGenerateIntermedial_;
     Math::Real slantedThreshold_;
 
     static Mesher strToMesher(std::string);
@@ -157,7 +141,6 @@ private:
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);
     static const PhysicalModel::Bound::Bound* strToBoundType(std::string);
-    static SlantedCoordCriterion strToCoordCriterion(const std::string& str);
 };
 
 }

@@ -40,10 +40,7 @@ Options::Options() {
     postmshExport_ = true;
     vtkExport_ = false;
     slanted_ = false;
-    slantedCoordCriterion_ = SlantedCoordCriterion::structured;
-    slantedRelaxedLength_ = 0.0;
-    slantedGenerateIntermedial_ = false;
-    slantedThreshold_ = 0.0;
+    slantedThreshold_ = 1.0;
     gridStep_ = Math::CVecR3(0.0);
     forbiddenLength_ = (Math::Real) (1.0 / 3.0);
 }
@@ -190,19 +187,6 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName("Slanted wires")) {
         setSlanted(opts("Slanted wires").getBool());
     }
-    if (opts.existsName("Slanted coordinate criterion")) {
-        setSlantedCoordCriterion(
-            strToCoordCriterion(
-                opts("Slanted coordinate criterion").getString()));
-    }
-    if (opts.existsName("Slanted relaxed length")) {
-        setSlantedRelaxedLength(
-            opts("Slanted relaxed length").get<Math::Real>());
-    }
-    if (opts.existsName("Slanted generate intermedial coords")) {
-        setSlantedGenerateIntermedialCoords(
-            opts("Slanted generate intermedial coords").getBool());
-    }
     if (opts.existsName("Slanted threshold")) {
         setSlantedThreshold(opts("Slanted threshold").get<Math::Real>());
     }
@@ -301,25 +285,6 @@ bool Options::isSlanted() const {
     return slanted_;
 }
 
-Options::SlantedCoordCriterion Options::getSlantedCoordCriterion() const {
-    return slantedCoordCriterion_;
-}
-
-Math::Real Options::getSlantedRelaxedLength() const {
-    return slantedRelaxedLength_;
-}
-
-bool Options::isSlantedGenerateIntermedialCoords() const {
-    return slantedGenerateIntermedial_;
-}
-
-bool Options::isSlantedThreshold() const {
-    if (Math::Util::lowerEqual(slantedThreshold_, 0.0)) {
-        return false;
-    }
-    return true;
-}
-
 Math::Real Options::getSlantedThreshold() const {
     return slantedThreshold_;
 }
@@ -338,19 +303,6 @@ void Options::setVtkExport(bool vtkExport) {
 
 void Options::setSlanted(const bool& slanted) {
     slanted_ = slanted;
-}
-
-void Options::setSlantedCoordCriterion(
-        const Options::SlantedCoordCriterion& slantedCoordCriterion) {
-    slantedCoordCriterion_ = slantedCoordCriterion;
-}
-
-void Options::setSlantedRelaxedLength(const Math::Real& slantedRelaxedLength) {
-    slantedRelaxedLength_ = slantedRelaxedLength;
-}
-
-void Options::setSlantedGenerateIntermedialCoords(const bool& genInt) {
-    slantedGenerateIntermedial_ = genInt;
 }
 
 void Options::setSlantedThreshold(const Math::Real& slantedThreshold) {
@@ -433,21 +385,6 @@ const PhysicalModel::Bound::Bound* Options::strToBoundType(std::string str) {
         return new PhysicalModel::Bound::Mur2(MatId(0));
     } else {
         throw std::logic_error("Unrecognized bound label: " + str);
-    }
-}
-
-Options::SlantedCoordCriterion Options::strToCoordCriterion(
-        const std::string& str) {
-    if (str.compare("Structured") == 0) {
-        return SlantedCoordCriterion::structured;
-    } else if (str.compare("RelaxedPlane") == 0) {
-        return SlantedCoordCriterion::relaxedPlane;
-    } else if (str.compare("Relaxed") == 0) {
-        return SlantedCoordCriterion::relaxed;
-    } else if (str.compare("Raw") == 0) {
-        return SlantedCoordCriterion::raw;
-    } else {
-        throw std::logic_error("Unrecognized Slanted Coord Criterion: " + str);
     }
 }
 

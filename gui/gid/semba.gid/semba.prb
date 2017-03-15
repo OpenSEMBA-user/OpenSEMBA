@@ -100,23 +100,10 @@ Title: Wires
 QUESTION: Slanted#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
-DEPENDENCIES: (0, HIDE,    Coordinate_criterion, Raw,       HIDE,    Generate_intermedial_Coordinates, #CURRENT#, HIDE,    Segments_filter_threshold, #CURRENT#)
-DEPENDENCIES: (1, RESTORE, Coordinate_criterion, #CURRENT#, RESTORE, Generate_intermedial_Coordinates, #CURRENT#, RESTORE, Segments_filter_threshold, #CURRENT#, RESTORE, Wires_flavor, guiffaut)
-QUESTION: Coordinate_criterion#CB#(Raw,Relaxed,RelaxedPlane,Structured)
-VALUE: Raw
-HELP: Sets the criterion to snap the original wire coordinates to the grid during the meshing. 
-DEPENDENCIES: (Raw,          HIDE,    Relaxed_length, #CURRENT#)
-DEPENDENCIES: (Relaxed,      RESTORE, Relaxed_length, #CURRENT#)
-DEPENDENCIES: (RelaxedPlane, RESTORE, Relaxed_length, #CURRENT#)
-DEPENDENCIES: (Structured,   HIDE,    Relaxed_length, #CURRENT#)
-QUESTION: Relaxed_length
-VALUE: 0.5
-HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
-QUESTION: Generate_intermedial_Coordinates#CB#(0,1)
-VALUE: 0
-HELP: Divides segments at the points they cross grid cells faces.
+DEPENDENCIES: (0, HIDE,    Segments_filter_threshold, #CURRENT#)
+DEPENDENCIES: (1, RESTORE, Segments_filter_threshold, #CURRENT#, RESTORE, Wires_flavor, guiffaut)
 QUESTION: Segments_filter_threshold
-VALUE: 0.4
+VALUE: 1.0
 HELP: Sets the allowed minimum relative size for the slanted wire segments (0.0 to allow all segments).
 
 Title: Geometry
