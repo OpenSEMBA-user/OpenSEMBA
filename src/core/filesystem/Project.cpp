@@ -209,14 +209,20 @@ std::vector<std::string> Project::getFilesBasenames_(
     return res;
 }
 
-void Project::openFile(std::ofstream& file) const {
-    openFile_(*this, file);
+void Project::openFile(std::ofstream& file,
+                       const bool& textMode) const {
+    openFile_(*this, file, textMode);
 }
 
 void Project::openFile_(const std::string& fileName,
-                       std::ofstream& file) const {
+                        std::ofstream& file,
+                        const bool& textMode) const {
     try {
-        file.open(fileName.c_str());
+        if (textMode) {
+            file.open(fileName.c_str());
+        } else {
+            file.open(fileName.c_str(), std::ios::binary);
+        }
     } catch(const std::exception&) {
         throw std::ios_base::failure(fileName + std::string(" not exists"));
     }

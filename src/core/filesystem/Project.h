@@ -67,7 +67,8 @@ public:
 
     void setFilename(const std::string& filename);
     void setToCurrentWorkingDir();
-    void openFile(std::ofstream& file) const;
+    void openFile(std::ofstream& file,
+                  const bool& = true) const;
     void openAsInput(std::ifstream& file) const;
 
     void exec(const std::string arguments = std::string()) const;
@@ -87,7 +88,9 @@ protected:
     std::vector<std::string> getFilesBasenames_(
             const std::string& directory,
             const std::string& extension) const;
-    void openFile_(const std::string& fileName, std::ofstream& file) const;
+    void openFile_(const std::string& fileName,
+                   std::ofstream& file,
+                   const bool& = true) const;
     std::string removeExtension_(const std::string& filename) const;
     void deleteDirIfExists_(const std::string& directory) const;
     bool checkExistance_(const std::string& fn) const;
