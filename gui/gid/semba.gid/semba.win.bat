@@ -7,7 +7,7 @@ echo Path to command: %SEMBA% > %1.log
 echo Project name: %1 >> %1.log
 echo Project path: %2 >> %1.log
 echo Problem type path: %3 >> %1.log
-
+echo WARNING: Program will not start if no valid licence/dongle is present...
 set SEMBA_ARGS1 = -i
 set SEMBA_ARGS2 = %1.dat
 cd %2
