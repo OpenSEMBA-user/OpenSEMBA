@@ -39,6 +39,21 @@ namespace SEMBA {
 namespace Util {
 namespace Wire {
 
+/* Clase empleada para obtener los hilos a partir contenidos en un SEMBA::Data.
+ *
+ * Se construye con un SEMBA::Data. Esta templarizado de tal forma que:
+ * - T = Math::Int: el SEMBA::Data contiene una malla estructurada.
+ * - T = Math::Real: en este caso la malla es no estructurada.
+ *
+ * Una vez construido la información viene dada en las siguientes funciones:
+ * - numberOfWires(): el numero de hilos
+ * - getWire(i): obtener el hilo i
+ * - getMat(matId): obtener el material de hilo con id matId
+ * - getIdsOfWire(i): obtiene los Ids de los elementos que conforman el hilo i
+ * - getRevOfWire(i): para cada uno de los elementos anteriores informa de si
+ *                    el elemento esta orientado de forma inversa en el
+ *                    SEMBA::Data.
+ */
 template<class T>
 class Group {
 public:

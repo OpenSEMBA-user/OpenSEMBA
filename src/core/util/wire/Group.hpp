@@ -57,13 +57,15 @@ void Group<T>::printInfo() const {
 
 template<class T>
 void Group<T>::init_(const Data& smb) {
+    // Primero se construye el grafo
     const Graph& graph = constructGraph_(smb);
+    // A partir del grafo se obtiene la información.
     fillWiresInfo_(graph, smb);
 }
 
 template<class T>
 typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
-
+    // Obtenemos las lineas con material de hilo o de union
     Geometry::Element::Group<const Geometry::Element::Line<T>> wires;
     const PhysicalModel::Group<>& mats = *smb.physicalModels;
     {
@@ -87,20 +89,34 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
         matIds.insert(matIds.end(), pmmultsIds.begin(), pmmultsIds.end());
         wires = lines.getMatId(matIds);
     }
+    // Se crea el grafo de dichas lineas
     Graph graph;
     graph.init(wires);
     const typename Graph::GraphBound* nodePtr;
+    // Se postprocesa dicho grafo para desunir las lineas de hilos distintos.
     for (std::size_t i = 0; i < graph.numBounds(); i++) {
         nodePtr = graph.bound(i);
         if (nodePtr->numBounds() > 2) {
+            // Si 3 o mas lineas inciden en un nodo entonces todos son hilos
+            // distintos
             graph.splitBound(i);
         } else if (nodePtr->numBounds() == 2) {
+            // En el caso de 2 lineas incidentes a un nodo pueden pertenecer
+            // al mismo hilo o a distintos.
+            // El siguiente codigo comprueba si son distintos, y en caso
+            // afirmativo los desune.
             Geometry::LayerId layId[2];
             MatId matId[2];
             bool isWireMat[2];
             bool isWireExtrMat[2];
             bool leaving[2];
             for (std::size_t j = 0; j < 2; j++) {
+                // Para cada linea incidente a la coordenada obtenemos
+                // - layId[j]: el LayerId de la linea
+                // - matId[j]: el MatId
+                // - isWireMat[j]: si es un material de hilo
+                // - isWireExtrMat[j]: si es un material de hilo con extremos
+                // - leaving[j]: si esa linea esta "saliendo" de la coordenada
                 layId[j] = nodePtr->getBound(j)->elem()->getLayerId();
                 matId[j] = nodePtr->getBound(j)->elem()->getMatId();
                 isWireMat[j] =
@@ -116,22 +132,36 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             }
             bool extreme = leaving[0] && leaving[1];
             if (layId[0] != layId[1]) {
+                // Si las lineas tienen distinto LayerId entonces son hilos
+                // distintos
                 graph.splitBound(i);
             } else if (isWireExtrMat[0] || isWireExtrMat[1]) {
                 if ((!isWireExtrMat[0] || !isWireExtrMat[1]) ||
                     (matId[0] != matId[1]) || (leaving[0] == leaving[1])) {
+                    // Si solo una linea tiene material de hilo con extremos
+                    // o si ambas tienen material de hilo con extremos y o son
+                    // materiales distintos o la direccion de los hilos no
+                    // concuerda entonces son hilos distintos.
                     graph.splitBound(i);
                 }
             } else if (isWireMat[0] && isWireMat[1]) {
                 if ((matId[0] != matId[1]) || (leaving[0] == leaving[1])) {
+                    // Si ambas lineas tienen materiales de hilo y o son
+                    // distintos o las direcciones no concuerdan entonces son
+                    // hilos distintos
                     graph.splitBound(i);
                 }
             } else if (!isWireMat[0] && !isWireMat[1]) {
                 if ((matId[0] != matId[1]) || extreme) {
+                    // Si ambas tienen materiales de union y o son distintos o
+                    // las direcciones no concuerdan entonces son hilos
+                    // distintos
                     graph.splitBound(i);
                 }
             } else if ((!isWireMat[0] && leaving[0]) ||
                        (!isWireMat[1] && leaving[1])) {
+                // Si cualquiera de ellas esta "saliendo" y tiene material de
+                // union entonces son hilos distintos.
                 graph.splitBound(i);
             }
         }
@@ -142,18 +172,23 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
 template<class T>
 void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
                               const Data& smb) {
+    // Primero obtenemos los distintos hilos y las lineas que compone cada uno
     std::vector<std::vector<const Geometry::Element::Line<T>*>> wires =
         getLines_(graph);
     const PhysicalModel::Wire::Wire* wireMat;
     const PhysicalModel::Multiport::Multiport *extremeL, *extremeR;
+    // Mapeo que para cada material de hilo con extremos que se crea se le dice
+    // el numero de materiales con ese mismo nombre
     std::map<const PhysicalModel::Wire::Wire*, std::size_t> numWireMat;
     for (std::size_t i = 0; i < wires.size(); i++) {
         wireMat = NULL;
         extremeL = extremeR = NULL;
+        // Obtenemos los materiales de extremo y de hilo que conforman el hilo
         getWireMats_(wireMat, extremeL, extremeR, wires[i], smb, graph);
         if (wireMat == NULL) {
             continue;
         }
+        // Obtenemos el material con extremos del hilo, creandolo si no existe.
         PhysicalModel::Wire::Extremes* wireExtremes;
         if (wireMat->is<PhysicalModel::Wire::Extremes>()) {
             wireExtremes = wireMat->cloneTo<PhysicalModel::Wire::Extremes>();
@@ -170,6 +205,7 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
         }
         wireExtremes->setId(MatId(i + 1));
         mats_[wireExtremes->getId()] = wireExtremes;
+        // Se crea el hilo y se alamacena
         Geometry::Element::Polyline<T>* newWire = newWire_(wires[i],
                                                            wireExtremes);
         if (newWire != NULL) {
@@ -182,16 +218,27 @@ template<class T>
 std::vector<std::vector<const Geometry::Element::Line<T>*>>
     Group<T>::getLines_(
         const typename Group<T>::Graph& graph) {
+    // Esta funcion separa las lineas del grafo en hilos con las lineas que
+    // componen cada una
     std::vector<std::vector<const Geometry::Element::Line<T>*>> res;
     std::set<Geometry::ElemId> visLines;
+    // Ese set de visita lo empleo mucho. Indica que elementos se han visitado
+    // ya
     const typename Graph::GraphElem *prevSegment, *nextSegment;
     Geometry::ElemId prvNodeId;
     for (std::size_t n = 1; n < 3; n++) {
+        // Primero buscamos coordenadas con solo una linea incidente (n == 1)
+        // que no haya sido visitado. Despues (n == 2) buscamos los hilos
+        // circulares
         for (std::size_t i = 0; i < graph.numElems(); i++) {
             if ((graph.elem(i)->getBound(0)->numBounds() == n) &&
                 (visLines.count(graph.elem(i)->elem()->getId()) == 0)) {
+                // Entra aqui cuando encuentra una linea no visitada cuya
+                // primera coordenada tenga un numero n de lineas incidentes
                 std::vector<const Geometry::Element::Line<T>*> wireLines;
                 nextSegment = graph.elem(i);
+                // Buscamos todas las lineas que conforman el hilo a partir de
+                // la linea obtenida (wireLines)
                 while (nextSegment != NULL) {
                     if (visLines.count(nextSegment->elem()->getId()) != 0) {
                         break;
@@ -238,6 +285,8 @@ void Group<T>::getWireMats_(
     matIds.push_back(lines[0]->getMatId());
     std::set<Geometry::ElemId> linesIds;
     linesIds.insert(lines[0]->getId());
+    // Obtenemos los distintos materiales de forma ordenada que componen el
+    // hilo y los ElementId de los elementos.
     for (std::size_t i = 1; i < lines.size(); i++) {
         linesIds.insert(lines[i]->getId());
         if (lines[i]->getMatId() != matIds.back()) {
@@ -248,6 +297,10 @@ void Group<T>::getWireMats_(
     wireMat = NULL;
     extremeL = NULL;
     extremeR = NULL;
+    // Casuistica que rellena extremeL, wireMat y extremeR.
+    // - extremeL: primera union (antes del material de hilo)
+    // - wireMat: material de hilo
+    // - extremeR: segunda union (despues del material de hilo)
     for (std::size_t m = 0; m < matIds.size(); m++) {
         if (mats.getId(matIds[m])->is<PhysicalModel::Multiport::Multiport>()) {
             if ((extremeL == NULL) &&
@@ -276,8 +329,10 @@ void Group<T>::getWireMats_(
         }
     }
     if (wireMat == NULL) {
+        // Si no se ha encontrado un material de hilo entonces hay un error.
         std::stringstream aux;
         aux << "ERROR @ Wire::Group: Lines with ids";
+        // Se obtienen los ElementId de los elementos que conforman el hilo.
         for (std::size_t i = 0; i < lines.size(); i++) {
             if (i == 0) {
                 aux << " ";
@@ -289,6 +344,10 @@ void Group<T>::getWireMats_(
             aux << lines[i]->getId();
         }
         aux << " specify a incorrect Connector. ";
+        // El error se debe a que solo hay material de union. Se busca si hay
+        // alguna linea adyacente a las lineas del hilo. Si es asi el problema
+        // es de normal incorrecta, en caso contrario es que no hay material
+        // de hilo.
         for (std::size_t i = 0; i < graph.numElems(); i++) {
             Geometry::ElemId elemId = graph.elem(i)->elem()->getId();
             const typename Graph::GraphElem* elem = graph.elem(i);
@@ -326,12 +385,17 @@ Geometry::Element::Polyline<T>*
     Group<T>::newWire_(
         const std::vector<const Geometry::Element::Line<T>*>& lines,
         PhysicalModel::Wire::Extremes* mat) {
+    // Esta funcion crea la polilinea del hilo y tambien rellena la informacion
+    // de los ElementIds que la conforman y si los segmentos estan invertidos
+    // en la malla original
     if (lines.empty()) {
         return NULL;
     }
+    // Obtenemos las coordenadas que conforman la polilinea (v)
     std::vector<const Geometry::Coordinate::Coordinate<T, 3>*> v;
     std::vector<Geometry::ElemId> wireIds;
     wireIds.reserve(lines.size());
+    // Vemos cual es el primer extremo
     const Geometry::Coordinate::Coordinate<T, 3>* prev = lines[0]->getV(0);
     if (lines.size() > 1) {
         if ((lines[0]->getV(0)->getId() == lines[1]->getV(0)->getId()) ||
@@ -340,6 +404,8 @@ Geometry::Element::Polyline<T>*
         }
     }
     v.push_back(prev);
+    // A partir del primer extremo obtenemos el resto de coordenadas de forma
+    // ordenada
     for (std::size_t i = 0; i < lines.size(); i++) {
         wireIds.push_back(lines[i]->getId());
         if (prev->getId() != lines[i]->getV(0)->getId()) {
@@ -358,6 +424,8 @@ Geometry::Element::Polyline<T>*
     if (lines.size() == 1) {
         wireRev[0] = false;
     } else {
+        // Comprobamos si los segmentos con material de hilo estan invertidos
+        // (rev) en cuyo caso invertiremos todas las coordenadas.
         for (std::size_t i = 0; i < lines.size(); i++) {
             if (dynamic_cast<const PhysicalModel::Wire::Wire*>(
                     lines[i]->getModel()) != NULL) {
@@ -385,6 +453,8 @@ Geometry::Element::Polyline<T>*
                 break;
             }
         }
+        // Comprobamos si los segmentos estan invertidos respecto a las
+        // direcciones de los segmentos con material de hilo
         for (std::size_t i = 0; i < lines.size(); i++) {
             wireRev[i] = false;
             if (i == 0) {
