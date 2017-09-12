@@ -63,8 +63,11 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_subdirectory  (../external obj/external)
-
+option(SEPARATE_INCLUDES "Compiles with separated includes and libs" OFF)
+if(NOT SEPARATE_INCLUDES)
+    add_subdirectory  (../external obj/external)
+else()
+endif()
 project(opensemba CXX)
 
 find_package(OpenMP)
@@ -91,13 +94,18 @@ add_definitions(-DOPENSEMBA_VERSION="0.12")
 
 find_package(GTest)
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
-                    ${CMAKE_CURRENT_LIST_DIR}
-                    ${CMAKE_CURRENT_LIST_DIR}/core/)
-add_subdirectory  (core     obj/src/core)
-add_subdirectories(parser   obj/src)
-add_subdirectory  (mesher   obj/src/mesher)
-add_subdirectories(exporter obj/src)
-add_subdirectories(adapter  obj/src)
-add_subdirectory  (solver   obj/src/solver)
-add_subdirectories(apps     obj/src)
+
+if(NOT SEPARATE_INCLUDES)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
+                        ${CMAKE_CURRENT_LIST_DIR}
+                        ${CMAKE_CURRENT_LIST_DIR}/core/)
+    add_subdirectory  (core     obj/src/core)
+    add_subdirectories(parser   obj/src)
+    add_subdirectory  (mesher   obj/src/mesher)
+    add_subdirectories(exporter obj/src)
+    add_subdirectories(adapter  obj/src)
+    add_subdirectory  (solver   obj/src/solver)
+    add_subdirectories(apps     obj/src)
+else()
+
+endif()
