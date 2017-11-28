@@ -1,7 +1,7 @@
 // OpenSEMBA
 // Copyright (C) 2015 Salvador Gonzalez Garcia        (salva@ugr.es)
 //                    Luis Manuel Diaz Angulo         (lmdiazangulo@semba.guru)
-//                    Miguel David Ruiz-Cabello Nuñez (miguel@semba.guru)
+//                    Miguel David Ruiz-Cabello Nuï¿½ez (miguel@semba.guru)
 //                    Daniel Mateos Romero            (damarro@semba.guru)
 //
 // This file is part of OpenSEMBA.
@@ -79,7 +79,7 @@ void ProgressBar::advance(const std::size_t& size) {
     }
     Clock::time_point timeAct = Clock::now();
     if (std::chrono::duration_cast<Milliseconds>(timeAct-timeAct_).count() >=
-            200) {
+            1000) {
         timeAct_ = timeAct;
         printLine_();
     }
