@@ -700,13 +700,11 @@ void Parser::readCoordinates(
         getline_(line);
         if (line.find("Coordinates:") != line.npos) {
             found = true;
-            // Reads coordinates.
             for (std::size_t i = 0; i < pSize_.v; i++) {
                 f_in >> id >> pos(0) >> pos(1) >> pos(2);
                 progress_.advance();
                 coords.add(new Geometry::CoordR3(id, pos));
             }
-            // Checks "end of coordinates" label.
             finished = false;
             while (!finished && !f_in.eof()) {
                 getline_(line);

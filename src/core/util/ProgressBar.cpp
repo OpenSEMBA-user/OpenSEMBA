@@ -81,7 +81,7 @@ void ProgressBar::advance(const std::size_t& size) {
     if (std::chrono::duration_cast<Milliseconds>(timeAct-timeAct_).count() >=
             1000) {
         timeAct_ = timeAct;
-        printLine_();
+//        printLine_();
     }
 }
 
