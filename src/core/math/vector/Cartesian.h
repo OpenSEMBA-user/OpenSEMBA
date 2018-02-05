@@ -74,26 +74,26 @@ public:
     T dot(const Cartesian<T,D>& param) const;
     T getMax() const;
 
-    virtual bool operator==(const Cartesian<T,D>& param) const;
-    virtual bool operator!=(const Cartesian<T,D>& param) const;
-    virtual bool isContainedInPlane() const;
-    virtual bool isContainedInPlane(
+    bool operator==(const Cartesian<T,D>& param) const;
+    bool operator!=(const Cartesian<T,D>& param) const;
+    bool isContainedInPlane() const;
+    bool isContainedInPlane(
             const Constants::CartesianPlane plane) const;
-    virtual bool isCoplanar(const Cartesian<T,D>& param) const;
+    bool isCoplanar(const Cartesian<T,D>& param) const;
 
-    virtual bool                     isInCartesianAxis() const;
-    virtual Constants::CartesianAxis getCartesianAxis() const;
+    bool                     isInCartesianAxis() const;
+    Constants::CartesianAxis getCartesianAxis() const;
 
-    virtual T& operator() (std::size_t pos);
-    virtual T  operator() (std::size_t pos) const;
+    T& operator() (std::size_t pos);
+    T  operator() (std::size_t pos) const;
 
-    virtual T& operator[] (std::size_t pos);
-    virtual T  operator[] (std::size_t pos) const;
+    T& operator[] (std::size_t pos);
+    T  operator[] (std::size_t pos) const;
 
     Cartesian<T,D>& setAsBinary(std::size_t number);
     Cartesian<T,D>& setWithMinimalComponents(const Cartesian<T,D>& rhs);
 
-    virtual Real norm() const;
+    Real norm() const;
 
     Cartesian<T,D>& abs();
     Cartesian<T,D>& normalize();
@@ -102,8 +102,8 @@ public:
 
     Cartesian<T,D>& cyclicPermutation(const std::size_t n=1);
 
-    virtual std::string toStr() const;
-    virtual void printInfo() const;
+    std::string toStr() const;
+    void printInfo() const;
 };
 
 template<std::size_t D>
