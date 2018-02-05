@@ -71,10 +71,10 @@ HELP: 0.0 for centered, 1.0 for full upwinding.
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(ConformalMesher,ZMesher,DMesheR,None)
+QUESTION: Mesher#CB#(ZMesher,DMesheR,None)
 VALUE: ZMesher
 #DEPENDENCIES: (OpenFOAM,        HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, RESTORE, Brute_force_volumes,#CURRENT#)
-DEPENDENCIES: (ConformalMesher, RESTORE, Mode,#CURRENT#,                                    RESTORE, Brute_force_volumes,#CURRENT#)
+#DEPENDENCIES: (ConformalMesher, RESTORE, Mode,#CURRENT#,                                    RESTORE, Brute_force_volumes,#CURRENT#)
 DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
 DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,                                    HIDE,    Brute_force_volumes,1)
 DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
