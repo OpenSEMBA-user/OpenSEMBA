@@ -18,9 +18,6 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-// File: Simplex.cpp
-// =============== Includes headers ===========================================
-
 #include "Simplex.h"
 
 namespace SEMBA {
@@ -33,29 +30,6 @@ Simplex::Simplex() {
 
 Simplex::~Simplex() {
 
-}
-
-const Function::Polynomial<Real>& Simplex::getLagr(const std::size_t i) const {
-    exit(EXIT_FAILURE);
-}
-
-const Function::Polynomial<Real>& Simplex::getDLagr(
-        const std::size_t i,
-        const std::size_t f) const {
-    exit(EXIT_FAILURE);
-}
-
-Real Simplex::getCda(std::size_t i, std::size_t j, std::size_t k) const {
-    exit(EXIT_FAILURE);
-}
-
-inline std::size_t Simplex::nodeIndex(std::size_t i, std::size_t j) const {
-    exit(EXIT_FAILURE);
-}
-
-inline std::size_t Simplex::cubatureNodeIndex(std::size_t i,
-                                              std::size_t j) const {
-    exit(EXIT_FAILURE);
 }
 
 std::size_t Simplex::factorial(std::size_t n) const {
@@ -83,8 +57,9 @@ Function::Polynomial<Real> Simplex::silvesterPol(const std::size_t m,
         }
         // Computes factorial and divides by it.
         Real fact = 1.0;
-        for (std::size_t k = 1; k <= m; k++)
+        for (std::size_t k = 1; k <= m; k++) {
             fact *= k;
+        }
         res /= fact;
     }
     return res;
@@ -117,15 +92,19 @@ void Simplex::cubatureLagrangePolynomials(Function::Polynomial<Real>* res,
                                           const std::size_t nsc) const {
     // Computes Sylvester's polynomials.
     Function::Polynomial<Real> pol[10+1];
-    for (std::size_t i = 0; i < (n + 1); i++)
+    for (std::size_t i = 0; i < (n + 1); i++) {
         pol[i] = silvesterPol(i,n);
+    }
     // Computes Lagrange's polynomials.
-    for (std::size_t i = 0; i < np; i++)
-        for (std::size_t j = 0; j < nsc; j++)
-            if (j == 0)
-                res[i] = pol[cubatureNodeIndex(i,j)];
-            else
-                res[i] ^= pol[cubatureNodeIndex(i,j)];
+    for (std::size_t i = 0; i < np; i++) {
+        for (std::size_t j = 0; j < nsc; j++) {
+            if (j == 0) {
+                res[i] = pol[nodeIndex(i,j)];
+            } else {
+                res[i] ^= pol[nodeIndex(i,j)];
+            }
+        }
+    }
 }
 
 Real Simplex::integrate(const Function::Polynomial<Real> pol,

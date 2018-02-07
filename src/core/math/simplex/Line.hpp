@@ -28,13 +28,10 @@ namespace Simplex {
 template <size_t N>
 Line<N>::Line() {
 
-    buildNodeIndices(nId, n, np);
-    for (std::size_t s = 0; s < nsc; s++) {
-        R[s] = RMatrix(s);
-    }
+    buildNodeIndices();
     buildSideNodeIndices();
 
-    lagrangePolynomials(lagr,n,np,nsc);
+    lagrangePolynomials(lagr,N,np,nsc);
     for (std::size_t i = 0; i < np; i++) {
         for (std::size_t s = 0; s < nsc; s++) {
             dLagr[i][s] = lagr[i];
@@ -43,12 +40,11 @@ Line<N>::Line() {
     }
 
     buildCubaturePositionsAndWeights();
-    buildCubatureLagrange();
 };
 
 template <size_t N>
 inline std::size_t Line<N>::nodeIndex(const std::size_t i,
-                                              const std::size_t j) const {
+                                      const std::size_t j) const {
     return nId[i](j);
 }
 
@@ -77,26 +73,22 @@ const Function::Polynomial<Real>& Line<N>::getDLagr(
 }
 
 template <size_t N>
-void Line<N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                                       const std::size_t order,
-                                       const std::size_t nNodes) const {
-    // Computes first coordinate indices vector.
-    for (std::size_t i = 0; i < nNodes; i++) {
-        res[i](0) = order - i;
-        res[i](1) = i;
+void Line<N>::buildNodeIndices() {
+    for (std::size_t i = 0; i < nId.size(); i++) {
+        nId[i](0) = N - i;
+        nId[i](1) = i;
     }
 }
 
 template <size_t N>
 void Line<N>::buildSideNodeIndices() {
     Matrix::Static<Int,np,1> nList;
-    Matrix::Static<Int,nfp,1> aux;
-    // Initializes node list.
-    for (std::size_t i = 0; i < np; i++)
+    for (std::size_t i = 0; i < np; i++) {
         nList(i,0) = i;
-    // Creates aux matrix to store the computed sNId.
+    }
+
     for (std::size_t f = 0; f < faces; f++) {
-        aux = R[f] * nList;
+        Matrix::Static<Int,nfp,1> aux = RMatrix(f) * nList;
         for (std::size_t i = 0; i < nfp; i++) {
             sNId(f,i) = aux(i,0);
         }
@@ -105,61 +97,23 @@ void Line<N>::buildSideNodeIndices() {
 
 template <size_t N>
 void Line<N>::buildCubaturePositionsAndWeights() {
-    buildNodeIndices(nId,N,np);
     Vector::Cartesian<Real,nsc> aux;
     for (std::size_t i = 0; i < np; i++) {
         aux = nId[i];
         cPos[i] = aux / (Real) N;
     }
-    Function::Polynomial<Real> cubLagr[np];
-    cubatureLagrangePolynomials(cubLagr,N,np,nsc);
     for (std::size_t i = 0; i < np; i++) {
-        cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
+        weights[i] = integrate(lagr[i], dimension, sizeFactor) / sizeFactor;
     }
-}
-
-template<size_t N>
-void Line<N>::buildCubatureLagrange() {
-    std::size_t i, j, k, c;
-    // Evaluates Lagrange and Lagrange derived polynomials in cubature points.
-    for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t c = 0; c < np; c++) {
-            ca[i][c] = lagr[i].eval(cPos[c]);
-        }
-    }
-    for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t j = 0; j < faces; j++) {
-            for (std::size_t c = 0; c < np; c++) {
-                cda[i][j][c] = dLagr[i][j].eval(cPos[c]);
-            }
-        }
-    }
-    // Computes Cubature weighted alpha by alpha products.
-    for (c = 0; c < np; c++) {
-        for (i = 0; i < np; i++)
-            for (j = 0; j < np; j++)
-                cwaa[c](i,j) = cw[c] * ca[i][c] * ca[j][c];
-        // Computes Cubature weighted alpha by alpha derivatives products.
-        for (k = 0; k < faces; k++)
-            for (i = 0; i < np; i++)
-                for (j = 0; j < np; j++)
-                    cwada[c][k](i,j) = cw[c] * ca[i][c] * cda[j][k][c];
-    }
-}
-
-template<size_t N>
-std::size_t Line<N>::numberOfNodes(const std::size_t order) const {
-    return (order + 1);
 }
 
 template <size_t N>
-Matrix::Dynamic<Int> Line<N>::PMatrix(const std::size_t n,
-                                              const std::size_t s) const {
-    std::size_t np = numberOfNodes(n);
-    Matrix::Dynamic<Int> res(np,np);
+Matrix::Static<Int, Line<N>::np, Line<N>::np>
+        Line<N>::PMatrix(const std::size_t s) const {
+    Matrix::Static<Int,np,np> res;
     if (s == 0) {
         res.eye();
-    } else  {
+    } else {
         res.zeros();
         for (std::size_t i = 0; i < np; i++) {
             res(i, np-i-1) = (Int) 1;
@@ -171,31 +125,24 @@ Matrix::Dynamic<Int> Line<N>::PMatrix(const std::size_t n,
 template <size_t N>
 Matrix::Static<Int, Line<N>::nfp, Line<N>::np>
         Line<N>::RMatrix(const std::size_t s) const {
-    // Creates extraction matrix R for face 1.
+
     Matrix::Static<Int,nfp,np> Raux;
     Raux.zeros();
     Raux(0,0) = (Int) 1;
-    Matrix::Static<Int,nfp,np> res = Raux * P[s];
+    Matrix::Static<Int,np,np> P;
+    P = PMatrix(s);
+    Matrix::Static<Int,nfp,np> res = Raux * P;
     return res;
 }
 
 template <size_t N>
 void Line<N>::printInfo() const {
     std::cout << " --- Line Information --- " << std::endl;
+    std::cout << " Order:                         " << N << std::endl;
     std::cout << " Number of coordinates:         " << nsc << std::endl;
-    std::cout << " Order:                         " << n << std::endl;
     std::cout << " Number of nodes:               " << np << std::endl;
     std::cout << " Number of face nodes:          " << nfp << std::endl;
     std::cout << " Rotation matrices:             " << std::endl;
-    for (std::size_t i = 0; i < faces; i++) {
-        std::cout << "Rotation around simplex coordinate #" << i << std::endl;
-        P[i].printInfo();
-    }
-    std::cout << " Extraction matrices:           " << std::endl;
-    for (std::size_t i = 0; i < faces; i++) {
-        std::cout << "Extraction matrices for face #" << i << std::endl;
-        R[i].printInfo();
-    }
     std::cout << " List of node indices:          " << std::endl;
     for (std::size_t i = 0; i < np; i++) {
         nId[i].printInfo();
@@ -220,7 +167,7 @@ void Line<N>::printInfo() const {
     for (std::size_t i = 0; i < np; i++) {
         std::cout << "#" << i << " ";
         cPos[i].printInfo();
-        std::cout << " " << cw[i] << std::endl;
+        std::cout << " " << weights[i] << std::endl;
     }
     std::cout << " --- End of simplex information --- " << std::endl;
 }

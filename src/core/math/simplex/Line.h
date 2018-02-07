@@ -36,10 +36,11 @@ public:
     static const std::size_t faces = 2;
     static const std::size_t dimension = 1;
     static const std::size_t nsc = 2;
-    static const std::size_t n = N;
     static const std::size_t nfp = 1;
     static constexpr std::size_t np = (N + 1);
     static constexpr Real sizeFactor = 1.0;
+
+    typedef Vector::Cartesian<size_t,nsc> Index;
 
     Line();
     std::size_t vertex(const std::size_t) const;
@@ -52,33 +53,21 @@ public:
     void  printInfo() const;
 
 private:
-    Matrix::Static<Int,np,np> P[faces];
-    Matrix::Static<Int,nfp,np> R[faces];
-    Vector::Cartesian<Int,nsc> nId[np];
+    std::array<Index,np> nId;
     Matrix::Static<Int,faces,nfp> sNId;
 
     Function::Polynomial<Real> lagr[np];
     Function::Polynomial<Real> dLagr[np][faces];
 
     Vector::Cartesian<Real,nsc> cPos[np];
-    Real cw[np];
-    Real ca[np][np];
-    Real cda[np][faces][np];
-    Matrix::Static<Real,np,np> cwaa[np];
-    Matrix::Static<Real,np,np> cwada[np][faces];
+    Real weights[np];
 
     Matrix::Static<Int, nfp, np> RMatrix(const std::size_t s) const;
-    Matrix::Dynamic<Int> PMatrix(const std::size_t n,
-                                 const std::size_t s) const;
+    Matrix::Static<Int,  np, np> PMatrix(const std::size_t s) const;
 
-    void buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                          const std::size_t order,
-                          const std::size_t nNodes) const;
+    void buildNodeIndices();
     void buildSideNodeIndices();
-    std::size_t numberOfNodes(const std::size_t order) const;
-
     void buildCubaturePositionsAndWeights();
-    void buildCubatureLagrange();
 };
 
 } /* namespace Simplex */

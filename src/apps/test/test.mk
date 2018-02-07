@@ -29,9 +29,10 @@ TEST_CORE_SOURCE        = no#
 TEST_CORE_FILESYSTEM    = no#
 TEST_PARSER_GID         = no#
 TEST_PARSER_STL         = no#
-
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
+
+CXXFLAGS := $(filter-out -static,$(CXXFLAGS))
 
 ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 	OUT := $(addsuffix .exe,$(OUT))
@@ -44,7 +45,6 @@ ifeq ($(EIGEN_SUPPORT),yes)
 	DEFINES += EIGEN_SUPPORT
 endif
 # =============================================================================
-# --- Core ---
 ifeq ($(TEST_CORE_MATH),yes)
 	SRC_CORE_MATH_DIRS     := $(shell find $(SRC_DIR)core/math/ -type d)
 	SRC_CORE_MATH_TESTS_DIRS := $(SRC_CORE_MATH_DIRS) \

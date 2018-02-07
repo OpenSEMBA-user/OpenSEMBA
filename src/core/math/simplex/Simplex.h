@@ -35,19 +35,13 @@ class Simplex {
 public:
     Simplex();
     virtual ~Simplex();
-    virtual Real getCda(std::size_t i, std::size_t j, std::size_t k) const;
     virtual const Function::Polynomial<Real>& getLagr(
-        const std::size_t i) const;
+        const std::size_t i) const = 0;
     virtual const Function::Polynomial<Real>& getDLagr(
         const std::size_t i,
-        const std::size_t f) const;
+        const std::size_t f) const = 0;
     virtual std::size_t nodeIndex(const std::size_t i, 
-                                  const std::size_t j) const;
-    virtual std::size_t cubatureNodeIndex(const std::size_t i,
-                                          const std::size_t j) const;
-    virtual const CVecR4 cubatureCoordinate(const std::size_t c) const {
-        throw std::logic_error("Simplex::cubatureCoordinate not implemented");
-    }
+                                  const std::size_t j) const = 0;
 protected:
     Function::Polynomial<Real> silvesterPol(const std::size_t m,
                                             const std::size_t n) const;
