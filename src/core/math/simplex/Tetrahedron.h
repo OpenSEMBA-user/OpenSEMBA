@@ -29,31 +29,24 @@ namespace SEMBA {
 namespace Math {
 namespace Simplex {
 
-template <Int SIMPTET_N>
+template <size_t N>
 class Tetrahedron : public Simplex {
-    #define SIMPTET_NP ((SIMPTET_N+1)*(SIMPTET_N+2)*(SIMPTET_N+3)/6)
-    #define SIMPTET_NFP ((SIMPTET_N+1)*(SIMPTET_N+2)/2)
-    #define SIMPTET_FACES (4)
 public:
     static const std::size_t faces = 4;
     static const std::size_t nsc = 4;
-    static const std::size_t n = SIMPTET_N;
-    static const std::size_t np = SIMPTET_NP;
-    static const std::size_t nfp = SIMPTET_NFP;
-    const Triangle<SIMPTET_N> tri;
+    static const std::size_t n = N;
+    static constexpr std::size_t np = ((N+1)*(N+2)*(N+3)/6);
+    static constexpr std::size_t nfp = ((N+1)*(N+2)/2);
+
+    const Triangle<N> tri;
     Matrix::Static<Real,np,nfp> LIFT[faces];
-    static const std::size_t nc = SIMPLEX_CUBATURE_ORDER;
-    static const std::size_t ncp = (SIMPLEX_CUBATURE_ORDER + 1)*
-                                   (SIMPLEX_CUBATURE_ORDER+2)*
-                                   (SIMPLEX_CUBATURE_ORDER+3)/6;
-    Real cw[ncp];
-    Matrix::Static<Real,np,np> cwaa[ncp];
-    Matrix::Static<Real,np,np> cwada[ncp][faces];
-    // R: Extraction matrices.
+    Real cw[np];
+    Matrix::Static<Real,np,np> cwaa[np];
+    Matrix::Static<Real,np,np> cwada[np][faces];
     Matrix::Static<Int,nfp,np> R[faces];
-    // ------- Methods --------------------------------------------------------
+
     Tetrahedron();
-    Matrix::Static<Real,SIMPTET_NP,SIMPTET_NP> getMassMatrix() const;
+    Matrix::Static<Real,np,np> getMassMatrix() const;
     std::size_t vertex(const std::size_t) const;
     std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
     std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
@@ -66,10 +59,10 @@ public:
     Real getCda(std::size_t i, std::size_t j, std::size_t k) const;
     CVecR4 coordinate(const std::size_t i) const;
     CVecR4 sideCoordinate(const std::size_t f, const std::size_t i) const;
-    Real integrateScalarsOnFace(const Real x[SIMPTET_NP],
+    Real integrateScalarsOnFace(const Real x[np],
                                 const std::size_t f,
                                 const Real area) const;
-    Real integrateScalars(const Real x[SIMPTET_NP],
+    Real integrateScalars(const Real x[np],
                           const Real volume) const;
     void printInfo() const;
     const Vector::Cartesian<Real, nsc> cubatureCoordinate(
@@ -78,15 +71,11 @@ public:
     }
 private:
     Matrix::Static<Int,np,np> P[faces]; // P: Rotation matrices.
-    // lagr: Non-zero Lagrange's pol. coeffs.
     Function::Polynomial<Real> lagr[np];
-    // Non-zero Lagrange's pol. coeffs of derivatives. uint is NP, NFACES.
     Function::Polynomial<Real> dLagr[np][faces];
-    // nId: List of node indices.
     Vector::Cartesian<Int,nsc> nId[np];
-    // sNId: List of side nodes.
     Matrix::Static<Int,faces,nfp> sNId;
-    Matrix::Static<Int,SIMPTET_NFP,SIMPTET_NP> RMatrix(
+    Matrix::Static<Int,nfp,np> RMatrix(
             const std::size_t s) const;
     Matrix::Dynamic<Int> PMatrix(const std::size_t n,
                                  const std::size_t s) const;
@@ -96,10 +85,10 @@ private:
     void buildSideNodeIndices();
     static const Real sizeFactor;
     static const std::size_t dimension = 3;
-    Vector::Cartesian<Int,nsc> cId[ncp];
-    Vector::Cartesian<Real,nsc> cPos[ncp];
-    Real ca[np][ncp];
-    Real cda[np][faces][ncp];
+    Vector::Cartesian<Int,nsc> cId[np];
+    Vector::Cartesian<Real,nsc> cPos[np];
+    Real ca[np][np];
+    Real cda[np][faces][np];
     // --- Cubature build functions -------------------------------------------
     void buildCubaturePositionsAndWeights();
     void buildCubatureLagrange();
@@ -107,8 +96,8 @@ private:
     Int numberOfNodes(Int order) const ;
 };
 
-template<Int SIMPTET_N>
-const Real Tetrahedron<SIMPTET_N>::sizeFactor = 1.0 / 6.0;
+template<size_t N>
+const Real Tetrahedron<N>::sizeFactor = 1.0 / 6.0;
 
 } /* namespace Simplex */
 } /* namespace Math */

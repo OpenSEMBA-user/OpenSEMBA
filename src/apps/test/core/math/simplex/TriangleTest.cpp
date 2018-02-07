@@ -24,10 +24,7 @@
 using namespace SEMBA;
 using namespace Math;
 
-//TEST(MathMatrixSimplexTriangleTest, BasicOperations) {
-//    static constexpr size_t N = 1;
-//    Simplex::Triangle<N> tri;
-//
-//    EXPECT_EQ(Simplex::Triangle<N>::n, tri.order());
-//    EXPECT_EQ(Simplex::Triangle<N>::nsc, tri.numberOfSimplexCoordinates());
-//}
+TEST(MathMatrixSimplexTriangleTest, BasicOperations) {
+    static constexpr size_t N = 1;
+    Simplex::Triangle<N> tri;
+}

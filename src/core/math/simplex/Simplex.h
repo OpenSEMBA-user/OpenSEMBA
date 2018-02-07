@@ -18,12 +18,6 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-/* =============== Simplex procedures =========================================
- * PURPOSE:
- * - Simplex indices numeration methods.
- * - Simplex Lagrange's polynomial related methods.
-========================================================================= */
-
 #ifndef SEMBA_MATH_SIMPLEX_SIMPLEX_H_
 #define SEMBA_MATH_SIMPLEX_SIMPLEX_H_
 
@@ -32,13 +26,6 @@
 
 #include "math/vector/Cartesian.h"
 #include "math/function/Polynomial.h"
-
-#ifndef SIMPLEX_CUBATURE_ORDER
-#   define SIMPLEX_CUBATURE_ORDER 5 // Tested to work up to 7.
-#   if SIMPLEX_CUBATURE_ORDER != 5
-#       warning "Simplex cubature order is not standard."
-#   endif
-#endif
 
 namespace SEMBA {
 namespace Math {
@@ -62,7 +49,6 @@ public:
         throw std::logic_error("Simplex::cubatureCoordinate not implemented");
     }
 protected:
-    static const std::size_t cubatureOrder = SIMPLEX_CUBATURE_ORDER;
     Function::Polynomial<Real> silvesterPol(const std::size_t m,
                                             const std::size_t n) const;
     void lagrangePolynomials(Function::Polynomial<Real>* lagr,

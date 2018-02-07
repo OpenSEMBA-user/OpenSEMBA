@@ -25,18 +25,17 @@ namespace SEMBA {
 namespace Math {
 namespace Simplex {
 
-// =============== Triangle methods =========================================
-template <Int SIMPTRI_N>
-Triangle<SIMPTRI_N>::Triangle() {
+template <size_t N>
+Triangle<N>::Triangle() {
     for (std::size_t s = 0; s < nsc; s++) {
-        P[s] = PMatrix(n,s);
+        P[s] = PMatrix(N,s);
     }
-    buildNodeIndices(nId, n, np);
+    buildNodeIndices(nId, N, np);
     for (std::size_t s = 0; s < nsc; s++) {
         R[s] = RMatrix(s);
     }
     buildSideNodeIndices();
-    lagrangePolynomials(lagr,n,np,nsc);
+    lagrangePolynomials(lagr,N,np,nsc);
     for (std::size_t i = 0; i < np; i++) {
         for (std::size_t s = 0; s < nsc; s++) {
             dLagr[i][s] = lagr[i];
@@ -48,49 +47,50 @@ Triangle<SIMPTRI_N>::Triangle() {
 }
 
 
-template <Int SIMPTRI_N>
-void Triangle<SIMPTRI_N>::buildCubaturePositionsAndWeights() {
-    buildNodeIndices(cId,nc,ncp);
+template <size_t N>
+void Triangle<N>::buildCubaturePositionsAndWeights() {
+    buildNodeIndices(nId,N,np);
     Vector::Cartesian<Real,nsc> aux;
-    for (std::size_t i = 0; i < ncp; i++) {
-        aux = cId[i];
-        cPos[i] = aux / (Real) nc;
+    for (std::size_t i = 0; i < np; i++) {
+        aux = nId[i];
+        cPos[i] = aux / (Real) N;
     }
-    Function::Polynomial<Real> cubLagr[ncp];
-    cubatureLagrangePolynomials(cubLagr,nc,ncp,nsc);
-    for (std::size_t i = 0; i < ncp; i++) {
+    Function::Polynomial<Real> cubLagr[np];
+    cubatureLagrangePolynomials(cubLagr,N,np,nsc);
+    for (std::size_t i = 0; i < np; i++) {
         cw[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
     }
 }
 
-template <Int SIMPTRI_N>
-Matrix::Static<Real, SIMPTRI_NP, SIMPTRI_NP>
-        Triangle<SIMPTRI_N>::getMassMatrix() const {
+template <size_t N>
+Matrix::Static<Real, Triangle<N>::np, Triangle<N>::np>
+        Triangle<N>::getMassMatrix() const {
+
     Matrix::Static<Real,np,np> res;
-    for (std::size_t c = 0; c < ncp; c++) {
+    for (std::size_t c = 0; c < np; c++) {
         res += cwaa[c];
     }
     return res;
 }
 
-template<Int SIMPTRI_N>
-void Triangle<SIMPTRI_N>::buildCubatureLagrange() {
+template<size_t N>
+void Triangle<N>::buildCubatureLagrange() {
     std::size_t i, j, k, c;
     // Evaluates Lagrange and Lagrange derived polynomials in cubature points.
     for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t c = 0; c < ncp; c++) {
+        for (std::size_t c = 0; c < np; c++) {
             ca[i][c] = lagr[i].eval(cPos[c]);
         }
     }
     for (std::size_t i = 0; i < np; i++) {
         for (std::size_t j = 0; j < faces; j++) {
-            for (std::size_t c = 0; c < ncp; c++) {
+            for (std::size_t c = 0; c < np; c++) {
                 cda[i][j][c] = dLagr[i][j].eval(cPos[c]);
             }
         }
     }
     // Computes Cubature weighted alpha by alpha products.
-    for (c = 0; c < ncp; c++) {
+    for (c = 0; c < np; c++) {
         for (i = 0; i < np; i++)
             for (j = 0; j < np; j++)
                 cwaa[c](i,j) = cw[c] * ca[i][c] * ca[j][c];
@@ -102,60 +102,60 @@ void Triangle<SIMPTRI_N>::buildCubatureLagrange() {
     }
 }
 
-template <Int SIMPTRI_N>
-inline std::size_t Triangle<SIMPTRI_N>::nodeIndex(const std::size_t i,
+template <size_t N>
+inline std::size_t Triangle<N>::nodeIndex(const std::size_t i,
                                                   const std::size_t j) const {
     return nId[i](j);
 }
 
-template <Int SIMPTRI_N>
-inline std::size_t Triangle<SIMPTRI_N>::cubatureNodeIndex(
+template <size_t N>
+inline std::size_t Triangle<N>::cubatureNodeIndex(
         std::size_t i,
         std::size_t j) const {
-    return cId[i](j);
+    return nId[i](j);
 }
 
-template <Int SIMPTRI_N>
-const Function::Polynomial<Real>& Triangle<SIMPTRI_N>::getLagr(
+template <size_t N>
+const Function::Polynomial<Real>& Triangle<N>::getLagr(
         const std::size_t i) const {
     return lagr[i];
 }
 
-template <Int SIMPTRI_N>
-const Function::Polynomial<Real>& Triangle<SIMPTRI_N>::getDLagr(
+template <size_t N>
+const Function::Polynomial<Real>& Triangle<N>::getDLagr(
         const std::size_t i,
         const std::size_t f) const {
     return dLagr[i][f];
 }
 
-template<Int SIMPTRI_N>
-inline std::size_t Triangle<SIMPTRI_N>::vertex(std::size_t i) const {
+template<size_t N>
+inline std::size_t Triangle<N>::vertex(std::size_t i) const {
     return sideNode(i,0);
 }
 
-template<Int SIMPTRI_N>
-inline std::size_t Triangle<SIMPTRI_N>::sideVertex(const std::size_t f,
+template<size_t N>
+inline std::size_t Triangle<N>::sideVertex(const std::size_t f,
                                                    const std::size_t i) const {
     return sideNode(f,i);
 }
 
-template <Int SIMPTRI_N>
-inline std::size_t Triangle<SIMPTRI_N>::sideNode(
+template <size_t N>
+inline std::size_t Triangle<N>::sideNode(
 const std::size_t face, const std::size_t num) const {
     return sNId(face, num);
 }
 
-template <Int SIMPTRI_N>
-Vector::Cartesian<Real,3> Triangle<SIMPTRI_N>::coordinate(
+template <size_t N>
+Vector::Cartesian<Real,3> Triangle<N>::coordinate(
         const std::size_t i) const {
     Vector::Cartesian<Real,3> res;
     res = nId[i];
-    res /= (Real) n;
+    res /= (Real) N;
     return res;
 }
 
-template <Int SIMPTRI_N>
-std::size_t Triangle<SIMPTRI_N>::numberOfNodes(const std::size_t order) const {
+template <size_t N>
+std::size_t Triangle<N>::numberOfNodes(const std::size_t order) const {
     Int res = 1;
     for (std::size_t i = 1; i < nsc; i++)
         res *= (order + i);
@@ -163,8 +163,8 @@ std::size_t Triangle<SIMPTRI_N>::numberOfNodes(const std::size_t order) const {
     return res;
 }
 
-template <Int SIMPTRI_N>
-void Triangle<SIMPTRI_N>::buildSideNodeIndices() {
+template <size_t N>
+void Triangle<N>::buildSideNodeIndices() {
     Matrix::Static<Int,np,1> nList;
     Matrix::Static<Int,nfp,1> aux;
     // Initializes node list.
@@ -178,8 +178,8 @@ void Triangle<SIMPTRI_N>::buildSideNodeIndices() {
     }
 }
 
-template <Int SIMPTRI_N>
-Matrix::Dynamic<Int> Triangle<SIMPTRI_N>::PMatrix(std::size_t order,
+template <size_t N>
+Matrix::Dynamic<Int> Triangle<N>::PMatrix(std::size_t order,
                                                   std::size_t s) const {
     // Creates indices rotation matrix for a simplex triangle element.
     // Rotation is clockwise.
@@ -219,13 +219,13 @@ Matrix::Dynamic<Int> Triangle<SIMPTRI_N>::PMatrix(std::size_t order,
     return res;
 }
 
-template <Int SIMPTRI_N>
-Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
+template <size_t N>
+Matrix::Static<Int, Triangle<N>::nfp, Triangle<N>::np> Triangle<N>::RMatrix(
         const std::size_t s) const {
     // Creates node indices vector with node indices on face 1.
     Matrix::Static<Int,nfp,1> nodeVec;
     std::size_t last = 0;
-    for (std::size_t i = 0; i < n + 1; i++) {
+    for (std::size_t i = 0; i < N + 1; i++) {
         last += i;
         nodeVec(i,0) = last;
     }
@@ -238,9 +238,9 @@ Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
     return res;
 }
 
-//template <Int SIMPTRI_N>
+//template <size_t N>
 //Matrix::Static<Real, SIMPTRI_NP, SIMPTRI_NP>
-//Triangle<SIMPTRI_N>::getMassMatrix() const {
+//Triangle<N>::getMassMatrix() const {
 //    vector<Matrix::Static<Real,np,np> > cwaa;
 //    cwaa = cubatureLagrangeProducts();
 //    Matrix::Static<Real,np,np> res;
@@ -250,47 +250,47 @@ Matrix::Static<Int, SIMPTRI_NFP, SIMPTRI_NP> Triangle<SIMPTRI_N>::RMatrix(
 //    return res;
 //}
 
-//template <Int SIMPTRI_N> inline
+//template <size_t N> inline
 //vector<vector<Real> >
-//Triangle<SIMPTRI_N>::cubatureLagrange() const {
+//Triangle<N>::cubatureLagrange() const {
 //    // PURPOSE:
 //    // - Evaluates Lagrange and Lagrange derived polynomials in cubature
 //    //   points.
 //    TriangleRule triRule(3);
-//    vector<Evaluation> ca(np, Evaluation(triRule.ncp));
+//    vector<Evaluation> ca(np, Evaluation(triRule.np));
 //    for (std::size_t i = 0; i < np; i++)
 //        ca[i] = triRule.eval(lagr[i]);
 //    return ca;
 //}
 // 
-//template <Int SIMPTRI_N> inline
+//template <size_t N> inline
 //vector<Matrix::Static<Real, SIMPTRI_NP, SIMPTRI_NP> >
-//Triangle<SIMPTRI_N>::cubatureLagrangeProducts() const {
+//Triangle<N>::cubatureLagrangeProducts() const {
 //    // PURPOSE:
 //    // - Gets cubatured alpha and derived alpha for simplex element
 //    std::size_t i, j, c;
 //    TriangleRule triRule(3);
 //    Matrix::Static<Real, np, np> zero;
-//    vector<Matrix::Static<Real, np, np> > res(triRule.ncp,  zero);
-//    vector<Evaluation> ca(np, Evaluation(triRule.ncp));
+//    vector<Matrix::Static<Real, np, np> > res(triRule.np,  zero);
+//    vector<Evaluation> ca(np, Evaluation(triRule.np));
 //    ca = cubatureLagrange();
 //    // Computes Cubature weighted alpha by alpha products.
-//    for (c = 0; c < triRule.ncp; c++)
+//    for (c = 0; c < triRule.np; c++)
 //        for (i = 0; i < np; i++)
 //            for (j = 0; j < np; j++)
 //                res[c](i,j) = triRule.w[c] * ca[i].val[c] * ca[j].val[c];
 //    return res;
 //}
 // 
-//template <Int SIMPTRI_N> inline
+//template <size_t N> inline
 //void
-//Triangle<SIMPTRI_N>::computeWeights() {
+//Triangle<N>::computeWeights() {
 //    for (std::size_t i = 0; i < np; i++)
 //        weight[i] = lagr[i].integrateInSimplexSpace();
 //}
 
-template <Int SIMPTRI_N>
-void Triangle<SIMPTRI_N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
+template <size_t N>
+void Triangle<N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
                                            const std::size_t order,
                                            const std::size_t nNodes) const {
     // Computes first coordinate indices vector.
@@ -309,10 +309,10 @@ void Triangle<SIMPTRI_N>::buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
     }
 }
 
-template <Int SIMPTRI_N>
-void Triangle<SIMPTRI_N>::printInfo() const {
+template <size_t N>
+void Triangle<N>::printInfo() const {
     std::cout << " --- Triangle Information --- "   << std::endl;
-    std::cout << " Order:                         " <<   n << std::endl;
+    std::cout << " Order:                         " <<   N << std::endl;
     std::cout << " Number of nodes:               " <<  np << std::endl;
     std::cout << " Number of face nodes:          " << nfp << std::endl;
     std::cout << " Number of coordinates:         " << nsc << std::endl;
@@ -348,10 +348,8 @@ void Triangle<SIMPTRI_N>::printInfo() const {
     //        totalWeight += weight[i];
     //    }
     //    std::cout << " Weights sum: " << totalWeight          << std::endl;
-    std::cout << " Order of cubature: " << nc << std::endl;
-    std::cout << " Number of cub. points: " << ncp << std::endl;
     std::cout << " Cubature positions and weights: " << std::endl;
-    for (std::size_t i = 0; i < ncp; i++) {
+    for (std::size_t i = 0; i < np; i++) {
         std::cout << "#" << i << " ";
         cPos[i].printInfo();
         std::cout << " " << cw[i] << std::endl;
