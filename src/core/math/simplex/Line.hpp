@@ -45,7 +45,7 @@ Line<N>::Line() {
 template <size_t N>
 inline std::size_t Line<N>::nodeIndex(const std::size_t i,
                                       const std::size_t j) const {
-    return nId[i](j);
+    return indices[i](j);
 }
 
 template <size_t N>
@@ -56,7 +56,7 @@ inline std::size_t Line<N>::vertex(const std::size_t vertexNum) const {
 template <size_t N>
 inline std::size_t Line<N>::sideNode(const std::size_t face,
                                              const std::size_t num) const {
-    return sNId(face, num);
+    return sideNodes(face, num);
 }
 
 template <size_t N>
@@ -74,9 +74,9 @@ const Function::Polynomial<Real>& Line<N>::getDLagr(
 
 template <size_t N>
 void Line<N>::buildNodeIndices() {
-    for (std::size_t i = 0; i < nId.size(); i++) {
-        nId[i](0) = N - i;
-        nId[i](1) = i;
+    for (std::size_t i = 0; i < indices.size(); i++) {
+        indices[i](0) = N - i;
+        indices[i](1) = i;
     }
 }
 
@@ -90,7 +90,7 @@ void Line<N>::buildSideNodeIndices() {
     for (std::size_t f = 0; f < faces; f++) {
         Matrix::Static<Int,nfp,1> aux = RMatrix(f) * nList;
         for (std::size_t i = 0; i < nfp; i++) {
-            sNId(f,i) = aux(i,0);
+            sideNodes(f,i) = aux(i,0);
         }
     }
 }
@@ -99,8 +99,8 @@ template <size_t N>
 void Line<N>::buildCubaturePositionsAndWeights() {
     Vector::Cartesian<Real,nsc> aux;
     for (std::size_t i = 0; i < np; i++) {
-        aux = nId[i];
-        cPos[i] = aux / (Real) N;
+        aux = indices[i];
+        nodePositions[i] = aux / (Real) N;
     }
     for (std::size_t i = 0; i < np; i++) {
         weights[i] = integrate(lagr[i], dimension, sizeFactor) / sizeFactor;
@@ -145,11 +145,11 @@ void Line<N>::printInfo() const {
     std::cout << " Rotation matrices:             " << std::endl;
     std::cout << " List of node indices:          " << std::endl;
     for (std::size_t i = 0; i < np; i++) {
-        nId[i].printInfo();
+        indices[i].printInfo();
         std::cout << std::endl;
     }
     std::cout << " List of side nodes indices:    " << std::endl;
-    sNId.printInfo();
+    sideNodes.printInfo();
     std::cout << " Lagrange polynomials:          " << std::endl;
     for (std::size_t i = 0; i < np; i++) {
         std::cout << "Lagrange polynomial of node #" <<  i << std::endl;
@@ -166,7 +166,7 @@ void Line<N>::printInfo() const {
     std::cout << " Cubature positions and weights: " << std::endl;
     for (std::size_t i = 0; i < np; i++) {
         std::cout << "#" << i << " ";
-        cPos[i].printInfo();
+        nodePositions[i].printInfo();
         std::cout << " " << weights[i] << std::endl;
     }
     std::cout << " --- End of simplex information --- " << std::endl;

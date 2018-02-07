@@ -45,22 +45,32 @@ public:
     Line();
     std::size_t vertex(const std::size_t) const;
     std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
+    std::size_t sideNode( const std::size_t f, const std::size_t i) const;
+
     std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
-    std::size_t sideNode(const std::size_t f, const std::size_t i) const;
-    const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
+
+    const Function::Polynomial<Real>& getLagr(
+            const std::size_t node) const;
     const Function::Polynomial<Real>& getDLagr(
-            const std::size_t i, const std::size_t f) const;
+            const std::size_t node, const std::size_t simplex) const;
+
+    std::vector<Real> getWeights() const {
+        std::vector<Real> res(np);
+        std::copy_n(weights.begin(), np, res.begin());
+        return res;
+    }
+
     void  printInfo() const;
 
 private:
-    std::array<Index,np> nId;
-    Matrix::Static<Int,faces,nfp> sNId;
+    std::array<Index,np> indices;
+    Matrix::Static<Int,faces,nfp> sideNodes;
 
     Function::Polynomial<Real> lagr[np];
     Function::Polynomial<Real> dLagr[np][faces];
 
-    Vector::Cartesian<Real,nsc> cPos[np];
-    Real weights[np];
+    std::array<Vector::Cartesian<Real,nsc>, np> nodePositions;
+    std::array<Real,np>                         weights;
 
     Matrix::Static<Int, nfp, np> RMatrix(const std::size_t s) const;
     Matrix::Static<Int,  np, np> PMatrix(const std::size_t s) const;
