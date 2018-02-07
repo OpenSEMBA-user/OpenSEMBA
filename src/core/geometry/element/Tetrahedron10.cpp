@@ -95,14 +95,7 @@ const CoordR3* Tetrahedron10::getSideVertex(const std::size_t f,
 }
 
 Math::Real Tetrahedron10::getVolume() const {
-    Math::Real cJDet[Math::Simplex::Tetrahedron<2>::ncp];
-    getCubatureJacobianDeterminant(cJDet);
-    Math::Real res = 0.0;
-    for (std::size_t c = 0; c < Math::Simplex::Tetrahedron<2>::ncp; c++) {
-        res += tet.cw[c] * cJDet[c];
-    }
-    res *= Math::Real(1.0 / 6.0);
-    return res;
+    throw std::logic_error("Get volume not implemented");
 }
 
 Math::Real Tetrahedron10::getAreaOfFace(const std::size_t f) const {

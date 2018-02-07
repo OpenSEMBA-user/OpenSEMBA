@@ -57,39 +57,15 @@ Triangle6::~Triangle6() {
 }
 
 bool Triangle6::isCurved() const {
-    Math::CVecR3 cn[geo.ncp];
-    getCubatureNormals(cn);
-    Math::CVecR3 v1,v2,pN;
-    v1 = getVertex(1)->pos() - getVertex(0)->pos();
-    v2 = getVertex(2)->pos() - getVertex(0)->pos();
-    pN = (v1 ^ v2).normalize();
-    Math::Real curvature = (Math::Real) 0.0;
-    for (std::size_t c = 0; c < geo.ncp; c++) {
-        curvature += geo.cw[c] * (1.0 - std::abs(cn[c].dot(pN)));
-    }
-    if (Math::Util::notEqual(curvature, 0.0, 1.0)) {
-        return true;
+    for (std::size_t s = 0; s < geo.faces; s++) {
+        Math::CVecR3 midPoint =
+                (getSideV(s,2)->pos() + getSideV(s,0)->pos())
+                / (Math::Real) 2.0;
+        if(midPoint != getSideV(s,1)->pos()) {
+            return true;
+        }
     }
     return false;
-// The strategy to determine curvature is to check if side base nodes are
-// Aligned using std::vector product.
-//  CartesianVector<Math::Real,3> vec2, vec1;
-//  bool aligned;
-//  Math::Real alignement;
-//  for (std::size_t s = 0; s < tri.faces; s++) {
-//      vec1 = *v[tri.sideNode(s,1)] - *v[tri.sideNode(s,0)];
-//      vec2 = *v[tri.sideNode(s,2)] - *v[tri.sideNode(s,0)];
-//      vec1.normalize();
-//      vec2.normalize();
-//      alignement = 1 - vec1.scalarProd(vec2);
-//      aligned = (alignement <= curvatureTolerance);
-//      if(!aligned) {
-//          return true;
-//      }
-//  }
-//  return false;
-//  return true;
-//  #warning "Every tri6 surface is always treated as curved."
 }
 
 const CoordR3* Triangle6::getSideV(const std::size_t face,
@@ -111,42 +87,7 @@ const CoordR3* Triangle6::getSideVertex(const std::size_t face,
 }
 
 Math::Real Triangle6::getArea() const {
-    Math::Real csdf[geo.ncp];
-    getCubatureDifferentials(csdf);
-    Math::Real res = 0.0;
-    for (std::size_t c = 0; c < geo.ncp; c++) {
-        res += geo.cw[c] * csdf[c];
-    }
-    res *= 0.5;
-    return res;
-}
-
-void Triangle6::getCubatureDifferentials(
-        Math::Real csdf[Math::Simplex::Triangle<2>::ncp]) const {
-    Math::CVecR3 csTanVec[geo.ncp];
-    getCubatureTangentsVecProds(csTanVec);
-    for (std::size_t c = 0; c < geo.ncp; c++) {
-        csdf[c] = csTanVec[c].norm();
-    }
-}
-
-void Triangle6::getCubatureNormals(
-        Math::CVecR3 csdn[Math::Simplex::Triangle<2>::ncp]) const {
-    Math::CVecR3 cTanVec[geo.ncp];
-    getCubatureTangentsVecProds(cTanVec);
-    for (std::size_t c = 0; c < geo.ncp; c++) {
-        csdn[c] = cTanVec[c].normalize();
-    }
-}
-
-void Triangle6::getCubatureNodes(
-        Math::CVecR3 cNode[Math::Simplex::Triangle<2>::ncp]) const {
-    // Evaluates Lagrange's functions in positions specified by the
-    for (std::size_t i = 0; i < geo.np; i++) {
-        for (std::size_t c = 0; c < geo.ncp; c++) {
-            cNode[c] += *getV(i) * geo.ca[i][c];
-        }
-    }
+    throw std::logic_error("Triangle6::getArea()");
 }
 
 void Triangle6::setV(const std::size_t i, const CoordR3* vNew) {
@@ -167,35 +108,6 @@ void Triangle6::printInfo() const {
     std::cout << "Coordinates:" << std::endl;
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i]->printInfo();
-    }
-}
-
-void
-Triangle6::getCubatureTangentsVecProds(
-    Math::CVecR3 cTanVecProd[Math::Simplex::Triangle<2>::ncp]) const {
-
-    Math::Matrix::Static<Math::Real,3,3> csJ;
-    std::size_t j, i, c;
-    // Gets cubature points for base Lagrange polynomials.
-    Math::CVecR3 auxPos, ct1, ct2;
-    for (c = 0; c < geo.ncp; c++) {
-        csJ.zeros();
-        for (i = 0; i < geo.np; i++) {
-            for (j = 0; j < geo.nsc; j++) {
-                auxPos = *v_[i] * geo.getDLagr(i,j).eval(geo.cPos[c]);
-                csJ(0,j) += auxPos(0);
-                csJ(1,j) += auxPos(1);
-                csJ(2,j) += auxPos(2);
-            }
-        }
-        // Tangential vectors on cubature points.
-        // Computes tangent vectors on cubature points.
-        for (j = 0; j < geo.nsc; j++) {
-            ct1(j) = csJ(j,0) - csJ(j,2);
-            ct2(j) = csJ(j,1) - csJ(j,2);
-        }
-        // Surface differential is the norm of the std::vector product.
-        cTanVecProd[c] = (ct1 ^ ct2);
     }
 }
 

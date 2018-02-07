@@ -59,13 +59,6 @@ public:
 
     Math::Real getArea() const;
 
-    void getCubatureDifferentials(
-            Math::Real  csdf[Math::Simplex::Triangle<2>::ncp]) const;
-    void getCubatureNormals      (
-            Math::CVecR3    cn[Math::Simplex::Triangle<2>::ncp]) const;
-    void getCubatureNodes        (
-            Math::CVecR3 nodes[Math::Simplex::Triangle<2>::ncp]) const;
-
     void setV(const std::size_t i, const CoordR3*);
 
     Triangle3* linearize() const;
@@ -75,8 +68,6 @@ public:
 protected:
     static const Math::Simplex::Triangle<2> geo;
     const CoordR3* v_[6];
-    void getCubatureTangentsVecProds(
-        Math::CVecR3 csTanVecProd[Math::Simplex::Triangle<2>::ncp]) const;
 };
 
 } /* namespace Element */

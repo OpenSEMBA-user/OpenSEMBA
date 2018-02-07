@@ -51,18 +51,18 @@ public:
     virtual Triangle3* getTri3Face(const std::size_t f) const;
     void getCubaturePositions(
             Math::CVecR3 cubaturePositions[
-                            Math::Simplex::Tetrahedron<1>::ncp]) const;
+                            Math::Simplex::Tetrahedron<1>::np]) const;
     void getCubatureJacobian(
-            Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::ncp]) const;
+            Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::np]) const;
     void getCubatureJacobianDeterminant(
-            Math::Real cJDet[Math::Simplex::Tetrahedron<2>::ncp],
-            const Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::ncp]) const;
+            Math::Real cJDet[Math::Simplex::Tetrahedron<2>::np],
+            const Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::np]) const;
     void getCubatureJacobianDeterminant(
-            Math::Real cJDet[Math::Simplex::Tetrahedron<2>::ncp]) const;
+            Math::Real cJDet[Math::Simplex::Tetrahedron<2>::np]) const;
     void getCubatureJacobianHat(
-            Math::MatR43 cJHat[Math::Simplex::Tetrahedron<2>::ncp],
-            const Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::ncp],
-            const Math::Real cJDet[Math::Simplex::Tetrahedron<2>::ncp]) const;
+            Math::MatR43 cJHat[Math::Simplex::Tetrahedron<2>::np],
+            const Math::MatR44 cJ[Math::Simplex::Tetrahedron<2>::np],
+            const Math::Real cJDet[Math::Simplex::Tetrahedron<2>::np]) const;
 };
 
 } /* namespace Element */

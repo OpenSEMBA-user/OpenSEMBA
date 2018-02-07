@@ -81,34 +81,6 @@ Math::Real Triangle3::getArea() const {
     return ((Math::Real) 0.5 * (v1 ^ v2).norm());
 }
 
-void Triangle3::getCubatureDifferentials(
-        Math::Real csdf[Math::Simplex::Triangle<1>::ncp]) const {
-    Math::CVecR3 csTanVec[geo.ncp];
-    getCubatureTangentsVecProds(csTanVec);
-    for (std::size_t c = 0; c < geo.ncp; c++) {
-        csdf[c] = csTanVec[c].norm();
-    }
-}
-
-void Triangle3::getCubatureNormals(
-        Math::CVecR3 csdn[Math::Simplex::Triangle<1>::ncp]) const {
-    Math::CVecR3 cTanVec[geo.ncp];
-    getCubatureTangentsVecProds(cTanVec);
-    for (std::size_t c = 0; c < geo.ncp; c++) {
-        csdn[c] = cTanVec[c].normalize();
-    }
-}
-
-void Triangle3::getCubatureNodes(
-        Math::CVecR3 cNode[Math::Simplex::Triangle<1>::ncp]) const {
-    // Evaluates Lagrange's functions in positions specified by the
-    for (std::size_t i = 0; i < geo.np; i++) {
-        for (std::size_t c = 0; c < geo.ncp; c++) {
-            cNode[c] += *getV(i) * geo.ca[i][c];
-        }
-    }
-}
-
 void Triangle3::setV(const std::size_t i, const CoordR3* vNew) {
     v_[i] = vNew;
 }
@@ -128,34 +100,6 @@ void Triangle3::printInfo() const {
 
 Triangle3* Triangle3::linearize() const {
     return new Triangle3(*this);
-}
-
-void Triangle3::getCubatureTangentsVecProds(
-    Math::CVecR3 cTanVecProd[Math::Simplex::Triangle<2>::ncp]) const {
-
-    Math::Matrix::Static<Math::Real,3,3> csJ;
-    std::size_t j, i, c;
-    // Gets cubature points for base Lagrange polynomials.
-    Math::CVecR3 auxPos, ct1, ct2;
-    for (c = 0; c < geo.ncp; c++) {
-        csJ.zeros();
-        for (i = 0; i < geo.np; i++) {
-            for (j = 0; j < geo.nsc; j++) {
-                auxPos = *v_[i] * geo.getDLagr(i,j).eval(geo.cPos[c]);
-                csJ(0,j) += auxPos(0);
-                csJ(1,j) += auxPos(1);
-                csJ(2,j) += auxPos(2);
-            }
-        }
-        // Tangential vectors on cubature points.
-        // Computes tangent vectors on cubature points.
-        for (j = 0; j < geo.nsc; j++) {
-            ct1(j) = csJ(j,0) - csJ(j,2);
-            ct2(j) = csJ(j,1) - csJ(j,2);
-        }
-        // Surface differential is the norm of the std::vector product.
-        cTanVecProd[c] = (ct1 ^ ct2);
-    }
 }
 
 } /* namespace Element */
