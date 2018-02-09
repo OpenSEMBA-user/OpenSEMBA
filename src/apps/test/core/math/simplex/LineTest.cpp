@@ -25,13 +25,13 @@
 using namespace SEMBA;
 using namespace Math;
 
-template<size_t N>
-class MathSimplexLineTest : public ::testing::TestWithParam<size_t> {
+class MathSimplexLineTest : public ::testing::Test {
 
 };
 
-TEST_P(MathSimplexLineTest, BasicOperations) {
-    Simplex::Line<TypeParam> lin;
+
+TEST(MathSimplexLineTest, BasicOperations) {
+    Simplex::Line<3> lin;
 
     Real sum = 0.0;
     std::vector<Real> weights = lin.getWeights();
@@ -40,6 +40,3 @@ TEST_P(MathSimplexLineTest, BasicOperations) {
     }
     EXPECT_NEAR(1.0, sum, 1e-8);
 }
-
-
-INSTANTIATE_TEST_CASE_P(Prueba, MathSimplexLineTest, ::testing::Values(1, 2));

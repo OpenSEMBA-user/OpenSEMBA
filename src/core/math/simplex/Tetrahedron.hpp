@@ -45,7 +45,6 @@ Tetrahedron<N>::Tetrahedron() {
     buildCubaturePositionsAndWeights();
 
     buildCubatureLagrange();
-    buildLIFTMatrix();
 }
 
 template <size_t N>
@@ -157,25 +156,6 @@ Matrix::Static<Real, Tetrahedron<N>::np, Tetrahedron<N>::np>
         res += cwaa[c];
     }
     return res;
-}
-
-template <size_t N>
-void Tetrahedron<N>::buildLIFTMatrix() {
-
-    Matrix::Static<Real,np,np> invM;
-    invM = getMassMatrix().invert();
-
-    Matrix::Static<Real, nfp, nfp> sM;
-    sM = tri.getMassMatrix();
-
-    Matrix::Static<Int, np, nfp> RtrInt;
-    Matrix::Static<Real, np, nfp> RtrDbl;
-    for (std::size_t f = 0; f < faces; f++) {
-        RtrInt = R[f].transpose();
-        RtrDbl.assign(RtrInt);
-        LIFT[f] = RtrDbl * sM;
-        LIFT[f] = invM * LIFT[f];
-    }
 }
 
 template <size_t N>

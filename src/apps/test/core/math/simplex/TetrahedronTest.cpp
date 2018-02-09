@@ -25,6 +25,12 @@ using namespace SEMBA;
 using namespace Math;
 
 TEST(MathSimplexTetrahedronTest, BasicOperations) {
-    static constexpr size_t N = 1;
-    Simplex::Tetrahedron<N> tri;
+    Simplex::Tetrahedron<3> tet;
+
+    Real sum = 0.0;
+//    std::vector<Real> weights = tet.getWeights();
+//    for (size_t i = 0; i < weights.size(); ++i) {
+//        sum += weights[i];
+//    }
+//    EXPECT_NEAR(1.0, sum, 1e-8);
 }

@@ -25,6 +25,12 @@ using namespace SEMBA;
 using namespace Math;
 
 TEST(MathMatrixSimplexTriangleTest, BasicOperations) {
-    static constexpr size_t N = 1;
-    Simplex::Triangle<N> tri;
+    Simplex::Triangle<3> tri;
+
+    Real sum = 0.0;
+    std::vector<Real> weights = tri.getWeights();
+    for (size_t i = 0; i < weights.size(); ++i) {
+        sum += weights[i];
+    }
+    EXPECT_NEAR(1.0, sum, 1e-8);
 }

@@ -56,7 +56,7 @@ protected:
     Real integrate(const Function::Polynomial<Real> pol,
                    const std::size_t dimension,
                    const Real sizeFactor) const;
-    std::size_t factorial(std::size_t n) const;
+    static std::size_t factorial(std::size_t n);
 };
 
 } /* namespace Simplex */

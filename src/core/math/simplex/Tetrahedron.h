@@ -31,6 +31,7 @@ namespace Simplex {
 
 template <size_t N>
 class Tetrahedron : public Simplex {
+    friend class Triangle<N>;
 public:
     static const std::size_t faces = 4;
     static const std::size_t nsc = 4;
@@ -89,10 +90,9 @@ private:
     Vector::Cartesian<Real,nsc> cPos[np];
     Real ca[np][np];
     Real cda[np][faces][np];
-    // --- Cubature build functions -------------------------------------------
+
     void buildCubaturePositionsAndWeights();
     void buildCubatureLagrange();
-    void buildLIFTMatrix();
     Int numberOfNodes(Int order) const ;
 };
 
