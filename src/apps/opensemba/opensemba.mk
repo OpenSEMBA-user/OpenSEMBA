@@ -47,7 +47,7 @@ INCLUDES += $(SRC_DIR)core/ $(LIB_DIR)gidpost/include/
 # =============================================================================
 .PHONY: default print
 
-default: print $(OUT) 
+default: $(OUT) 
 	@echo "======================================================="
 	@echo "           $(OUT) compilation finished             "
 	@echo "======================================================="

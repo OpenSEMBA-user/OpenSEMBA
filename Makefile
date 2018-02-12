@@ -43,7 +43,7 @@ ifeq ($(compiler),gnu)
 	CC = gcc
 	CXX = g++
 	CCFLAGS +=
-	CXXFLAGS += -std=c++0x -static -pthread -fopenmp
+	CXXFLAGS += -std=c++11 -static -pthread -fopenmp
 endif # endif choosing the GNU compiler.
 # ================= Optimization target =======================================
 ifeq ($(target),debug)
