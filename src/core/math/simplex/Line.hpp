@@ -138,7 +138,6 @@ void Line<N>::printInfo() const {
     }
     std::cout << " List of side nodes indices:    " << std::endl;
     sideNodes.printInfo();
-    }
     std::cout << " Cubature positions and weights: " << std::endl;
     for (std::size_t i = 0; i < np; i++) {
         std::cout << "#" << i << " ";

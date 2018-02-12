@@ -20,18 +20,29 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
 #include "math/simplex/Line.h"
-#include <list>
+
+#include <type_traits>
 
 using namespace SEMBA;
 using namespace Math;
 
+template <typename T>
 class MathSimplexLineTest : public ::testing::Test {
 
 };
 
+using test_types = ::testing::Types<
+    std::integral_constant<std::size_t,2>,
+    std::integral_constant<std::size_t,3>,
+    std::integral_constant<std::size_t,5>,
+    std::integral_constant<std::size_t,8>,
+    std::integral_constant<std::size_t,12>>;
 
-TEST(MathSimplexLineTest, BasicOperations) {
-    Simplex::Line<3> lin;
+TYPED_TEST_CASE(MathSimplexLineTest, test_types);
+
+TYPED_TEST(MathSimplexLineTest, BasicOperations) {
+    static constexpr std::size_t n = TypeParam::value;
+    Simplex::Line<n> lin;
 
     Real sum = 0.0;
     std::vector<Real> weights = lin.getWeights();
