@@ -28,9 +28,11 @@ TEST(MathSimplexTetrahedronTest, BasicOperations) {
     Simplex::Tetrahedron<3> tet;
 
     Real sum = 0.0;
-//    std::vector<Real> weights = tet.getWeights();
-//    for (size_t i = 0; i < weights.size(); ++i) {
-//        sum += weights[i];
-//    }
-//    EXPECT_NEAR(1.0, sum, 1e-8);
+    std::vector<Real> weights = tet.getWeights();
+    for (size_t i = 0; i < weights.size(); ++i) {
+        sum += weights[i];
+    }
+    EXPECT_NEAR(1.0, sum, 1e-8);
+
+    EXPECT_EQ(tet.coordinate(0), tet.sideCoordinate(0,0));
 }

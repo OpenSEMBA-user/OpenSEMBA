@@ -25,9 +25,9 @@
 #include "math/matrix/Static.h"
 #include "math/function/Polynomial.h"
 
-#include <algorithm>
-
 #include "Simplex.h"
+
+#include <algorithm>
 
 namespace SEMBA {
 namespace Math {
@@ -52,39 +52,33 @@ public:
     std::size_t sideNode  (const std::size_t f, const std::size_t i) const;
 
     std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
+
     Vector::Cartesian<Real,nsc> coordinate(const std::size_t i) const;
+
     const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
     const Function::Polynomial<Real>& getDLagr(const std::size_t i,
                                                const std::size_t f) const;
-    std::vector<Real> getWeights() const {
-        std::vector<Real> res(np);
-        std::copy_n(weights.begin(), np, res.begin());
-        return res;
-    }
+    std::vector<Real> getWeights() const;
 
     void printInfo() const;
 
     static Matrix::Dynamic<Int> PMatrix(const std::size_t n,
                                         const std::size_t s);
+
 private:
-    Vector::Cartesian<Real,nsc> cPos[np];
-    Matrix::Static<Int,nfp,np>  R[faces];
-    Index nId[np];
-    Matrix::Static<Int,faces,nfp> sNId;
+    Index indices[np];
+    Matrix::Static<Int,faces,nfp> sideNodes;
+
     Function::Polynomial<Real> lagr[np];
     Function::Polynomial<Real> dLagr[np][faces];
-    std::array<Real,np> weights;
 
-    Matrix::Static<Int,nfp,np> RMatrix(
-            const std::size_t s) const;
-    void buildNodeIndices();
-    void buildSideNodeIndices();
+    Vector::Cartesian<Real,nsc> nodePositions[np];
+    std::array<Real,np>         weights;
+
+    Matrix::Static<Int,nfp,np> RMatrix(const std::size_t s) const;
+
     static size_t numberOfNodes(size_t order);
-    void buildCubaturePositionsAndWeights();
-    void buildCubatureLagrange();
 };
-
-
 
 } /* namespace Simplex */
 } /* namespace Math */

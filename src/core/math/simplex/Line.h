@@ -54,11 +54,7 @@ public:
     const Function::Polynomial<Real>& getDLagr(
             const std::size_t node, const std::size_t simplex) const;
 
-    std::vector<Real> getWeights() const {
-        std::vector<Real> res(np);
-        std::copy_n(weights.begin(), np, res.begin());
-        return res;
-    }
+    std::vector<Real> getWeights() const;
 
     void  printInfo() const;
 
@@ -74,10 +70,6 @@ private:
 
     Matrix::Static<Int, nfp, np> RMatrix(const std::size_t s) const;
     Matrix::Static<Int,  np, np> PMatrix(const std::size_t s) const;
-
-    void buildNodeIndices();
-    void buildSideNodeIndices();
-    void buildCubaturePositionsAndWeights();
 };
 
 } /* namespace Simplex */

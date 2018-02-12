@@ -86,27 +86,6 @@ void Simplex::lagrangePolynomials(Function::Polynomial<Real>* res,
     }
 }
 
-void Simplex::cubatureLagrangePolynomials(Function::Polynomial<Real>* res,
-                                          const std::size_t n,
-                                          const std::size_t np,
-                                          const std::size_t nsc) const {
-    // Computes Sylvester's polynomials.
-    Function::Polynomial<Real> pol[10+1];
-    for (std::size_t i = 0; i < (n + 1); i++) {
-        pol[i] = silvesterPol(i,n);
-    }
-    // Computes Lagrange's polynomials.
-    for (std::size_t i = 0; i < np; i++) {
-        for (std::size_t j = 0; j < nsc; j++) {
-            if (j == 0) {
-                res[i] = pol[nodeIndex(i,j)];
-            } else {
-                res[i] ^= pol[nodeIndex(i,j)];
-            }
-        }
-    }
-}
-
 Real Simplex::integrate(const Function::Polynomial<Real> pol,
                         const std::size_t dim,
                         const Real sizeFactor) const {

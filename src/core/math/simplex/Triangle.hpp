@@ -27,11 +27,33 @@ namespace Simplex {
 
 template <size_t N>
 Triangle<N>::Triangle() {
-    buildNodeIndices();
-    for (std::size_t s = 0; s < nsc; s++) {
-        R[s] = RMatrix(s);
+    Matrix::Dynamic<Int> ini(np,nsc);
+    for (std::size_t i = 0; i <= N; i++) {
+        for (std::size_t j = numberOfNodes(std::size_t(i-1)); j < np; j++) {
+            ini(j,0) = N - i;
+        }
     }
-    buildSideNodeIndices();
+
+    Matrix::Dynamic<Int> ord(np,nsc);
+    for (std::size_t i = 0; i < nsc; i++) {
+        ord = PMatrix(N,i) * ini;
+        for (std::size_t j = 0; j < np; j++) {
+            indices[j](i) = ord(j,0);
+        }
+    }
+
+    Matrix::Static<Int,np,1> nList;
+    for (std::size_t i = 0; i < np; i++) {
+        nList(i,0) = i;
+    }
+
+    for (std::size_t f = 0; f < faces; f++) {
+        Matrix::Static<Int,nfp,1> aux = RMatrix(f) * nList;
+        for (std::size_t i = 0; i < nfp; i++) {
+            sideNodes(f,i) = aux(i,0);
+        }
+    }
+
     lagrangePolynomials(lagr,N,np,nsc);
     for (std::size_t i = 0; i < np; i++) {
         for (std::size_t s = 0; s < nsc; s++) {
@@ -39,27 +61,27 @@ Triangle<N>::Triangle() {
             dLagr[i][s].derive(s);
         }
     }
-    buildCubaturePositionsAndWeights();
+
+    for (std::size_t i = 0; i < np; i++) {
+        Vector::Cartesian<Real,nsc> aux = indices[i];
+        nodePositions[i] = aux / (Real) N;
+    }
+    for (std::size_t i = 0; i < np; i++) {
+        weights[i] = integrate(lagr[i], dimension, sizeFactor) / sizeFactor;
+    }
 }
 
-
 template <size_t N>
-void Triangle<N>::buildCubaturePositionsAndWeights() {
-    for (std::size_t i = 0; i < np; i++) {
-        Vector::Cartesian<Real,nsc> aux = nId[i];
-        cPos[i] = aux / (Real) N;
-    }
-    Function::Polynomial<Real> cubLagr[np];
-    cubatureLagrangePolynomials(cubLagr,N,np,nsc);
-    for (std::size_t i = 0; i < np; i++) {
-        weights[i] = integrate(cubLagr[i], dimension, sizeFactor) / sizeFactor;
-    }
+inline std::vector<Real> Triangle<N>::getWeights() const {
+    std::vector<Real> res(np);
+    std::copy_n(weights.begin(), np, res.begin());
+    return res;
 }
 
 template <size_t N>
 inline std::size_t Triangle<N>::nodeIndex(const std::size_t i,
                                                   const std::size_t j) const {
-    return nId[i](j);
+    return indices[i](j);
 }
 
 template <size_t N>
@@ -89,14 +111,14 @@ inline std::size_t Triangle<N>::sideVertex(const std::size_t f,
 template <size_t N>
 inline std::size_t Triangle<N>::sideNode(
 const std::size_t face, const std::size_t num) const {
-    return sNId(face, num);
+    return sideNodes(face, num);
 }
 
 template <size_t N>
 Vector::Cartesian<Real,3> Triangle<N>::coordinate(
         const std::size_t i) const {
     Vector::Cartesian<Real,3> res;
-    res = nId[i];
+    res = indices[i];
     res /= (Real) N;
     return res;
 }
@@ -109,23 +131,6 @@ std::size_t Triangle<N>::numberOfNodes(const std::size_t order) {
     }
     res /= factorial(nsc-1);
     return res;
-}
-
-template <size_t N>
-void Triangle<N>::buildSideNodeIndices() {
-    Matrix::Static<Int,np,1> nList;
-    Matrix::Static<Int,nfp,1> aux;
-    // Initializes node list.
-    for (std::size_t i = 0; i < np; i++) {
-        nList(i,0) = i;
-    }
-    // Creates aux matrix to store the computed sNId.
-    for (std::size_t f = 0; f < faces; f++) {
-        aux = R[f] * nList;
-        for (std::size_t i = 0; i < nfp; i++) {
-            sNId(f,i) = aux(i,0);
-        }
-    }
 }
 
 template <size_t N>
@@ -191,43 +196,18 @@ Matrix::Static<Int, Triangle<N>::nfp, Triangle<N>::np> Triangle<N>::RMatrix(
 }
 
 template <size_t N>
-void Triangle<N>::buildNodeIndices() {
-    Matrix::Dynamic<Int> ini(np,nsc);
-    for (std::size_t i = 0; i <= N; i++) {
-        for (std::size_t j = numberOfNodes(std::size_t(i-1)); j < np; j++) {
-            ini(j,0) = N - i;
-        }
-    }
-    // Computes ordered nodal simplex coordinates.
-    Matrix::Dynamic<Int> ord(np,nsc);
-    for (std::size_t i = 0; i < nsc; i++) {
-        ord = PMatrix(N,i) * ini;
-        for (std::size_t j = 0; j < np; j++) {
-            nId[j](i) = ord(j,0);
-        }
-    }
-}
-
-template <size_t N>
 void Triangle<N>::printInfo() const {
     std::cout << " --- Triangle Information --- "   << std::endl;
-    std::cout << " Order:                         " <<   N << std::endl;
-    std::cout << " Number of nodes:               " <<  np << std::endl;
-    std::cout << " Number of face nodes:          " << nfp << std::endl;
-    std::cout << " Number of coordinates:         " << nsc << std::endl;
-    std::cout << " List of node indices:          "        << std::endl;
+    std::cout << " Order:                         " << N << std::endl;
+    std::cout << " List of node indices:          " << std::endl;
     for (std::size_t i = 0; i < np; i++) {
-        nId[i].printInfo();
+        indices[i].printInfo();
         std::cout << std::endl;
     }
-    std::cout << " List of side nodes indices:    "        << std::endl;
-    sNId.printInfo();
-    std::cout << " Lagrange polynomials:          "        << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        std::cout << "Lagrange polynomial of node #" <<  i << std::endl;
-        lagr[i].printInfo();
-    }
-    std::cout << " --- End of simplex information --- "   << std::endl;
+    std::cout << " List of side nodes indices:    " << std::endl;
+    sideNodes.printInfo();
+    std::cout << " Lagrange polynomials:          " << std::endl;
+    std::cout << " --- End of simplex information --- "  << std::endl;
 }
 
 } /* namespace Simplex */

@@ -39,65 +39,48 @@ public:
     static constexpr std::size_t np = ((N+1)*(N+2)*(N+3)/6);
     static constexpr std::size_t nfp = ((N+1)*(N+2)/2);
 
-    const Triangle<N> tri;
-    Matrix::Static<Real,np,nfp> LIFT[faces];
-    Real cw[np];
-    Matrix::Static<Real,np,np> cwaa[np];
-    Matrix::Static<Real,np,np> cwada[np][faces];
-    Matrix::Static<Int,nfp,np> R[faces];
+    static const std::size_t dimension = 3;
+    static constexpr Real sizeFactor = 1.0 / 6.0;
+
+    typedef Vector::Cartesian<size_t,nsc> Index;
 
     Tetrahedron();
-    Matrix::Static<Real,np,np> getMassMatrix() const;
+
     std::size_t vertex(const std::size_t) const;
     std::size_t sideVertex(const std::size_t f, const std::size_t i) const;
-    std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
-    std::size_t cubatureNodeIndex(const std::size_t i,
-                                  const std::size_t j) const;
     std::size_t sideNode(const std::size_t f, const std::size_t i) const;
+
+    std::size_t nodeIndex(const std::size_t node,
+                          const std::size_t coordinate) const;
+
     const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
     const Function::Polynomial<Real>& getDLagr(const std::size_t i, 
                                                const std::size_t f) const;
-    Real getCda(std::size_t i, std::size_t j, std::size_t k) const;
+    std::vector<Real> getWeights() const;
+
     CVecR4 coordinate(const std::size_t i) const;
     CVecR4 sideCoordinate(const std::size_t f, const std::size_t i) const;
-    Real integrateScalarsOnFace(const Real x[np],
-                                const std::size_t f,
-                                const Real area) const;
-    Real integrateScalars(const Real x[np],
-                          const Real volume) const;
+
     void printInfo() const;
-    const Vector::Cartesian<Real, nsc> cubatureCoordinate(
-            const std::size_t c) const {
-        return cPos[c];
-    }
+
 private:
-    Matrix::Static<Int,np,np> P[faces]; // P: Rotation matrices.
+    const Triangle<N> tri;
+
+    std::array<Index,np> indices;
+    Vector::Cartesian<Real,nsc> nodePositions[np];
+    std::array<Real,np> weights;
+
     Function::Polynomial<Real> lagr[np];
     Function::Polynomial<Real> dLagr[np][faces];
-    Vector::Cartesian<Int,nsc> nId[np];
-    Matrix::Static<Int,faces,nfp> sNId;
-    Matrix::Static<Int,nfp,np> RMatrix(
-            const std::size_t s) const;
-    Matrix::Dynamic<Int> PMatrix(const std::size_t n,
-                                 const std::size_t s) const;
-    void buildNodeIndices(Vector::Cartesian<Int,nsc> *res,
-                          const std::size_t order,
-                          const std::size_t nNodes) const;
-    void buildSideNodeIndices();
-    static const Real sizeFactor;
-    static const std::size_t dimension = 3;
-    Vector::Cartesian<Int,nsc> cId[np];
-    Vector::Cartesian<Real,nsc> cPos[np];
-    Real ca[np][np];
-    Real cda[np][faces][np];
 
-    void buildCubaturePositionsAndWeights();
-    void buildCubatureLagrange();
-    Int numberOfNodes(Int order) const ;
+    Matrix::Static<Int,faces,nfp> sNId;
+    Matrix::Static<Int,nfp,np> RMatrix(const std::size_t s) const;
+    Matrix::Static<Int,np,np>  PMatrix(const std::size_t s) const;
+
+    static size_t numberOfNodes(size_t order);
 };
 
-template<size_t N>
-const Real Tetrahedron<N>::sizeFactor = 1.0 / 6.0;
+
 
 } /* namespace Simplex */
 } /* namespace Math */
@@ -105,5 +88,4 @@ const Real Tetrahedron<N>::sizeFactor = 1.0 / 6.0;
 
 #include "Tetrahedron.hpp"
 
-// ========================================================================
 #endif /* SEMBA_MATH_SIMPLEX_TETRAHEDRON_H_ */
