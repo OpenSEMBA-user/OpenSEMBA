@@ -20,12 +20,12 @@
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
 # -- USAGE --------------------------------------------------------------------
-# make target     = {debug, release}
+# make target   = {debug, release}
 #      compiler = {intel, gnu, ...}
 # ==================== Default values =========================================
 target   = release
 compiler = gnu
-OPENSEMBA_VERSION=\"0.12\"
+OPENSEMBA_VERSION=\"0.13\"
 
 FFTW3_SUPPORT=no#
 EIGEN_SUPPORT=no#

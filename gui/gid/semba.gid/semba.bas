@@ -62,6 +62,8 @@ Problem size:
 Hexahedral elements: *nelem
 *set elems(Tetrahedra)
 Tetrahedral elements: *nelem
+*set elems(Quadrilateral)
+Quadrilateral elements: *nelem
 *set elems(Triangle)
 Triangular elements: *nelem
 *set elems(Linear)
@@ -69,7 +71,7 @@ Line elements: *nelem
 *set elems(all)
 Number of points: *npoin
 Number of materials: *nmats
-End of problem size:
+End of problem size
 
 Materials:
 *loop materials
@@ -151,11 +153,12 @@ Kappa: *matprop(Kappa)
 Ferrite relative permeability: *matprop(Ferrite_relative_permeability)
 Ferrite relative permittivity: *matprop(Ferrite_relative_permittivity)
 *endif
-End of Material:
+End of Material
 *end materials
-End of materials:
+End of Materials
 
 Grid:
+*if(strcasecmp(GenData(Mesher),"None")!=0)
 *set elems(all)
 *set Cond Grid
 *if(CondNumEntities(int)>0)
@@ -168,6 +171,12 @@ Grid:
 Boundary padding type: *GenData(boundary_padding_type)
 Boundary padding: {*GenData(Upper_x_boundary_padding) *GenData(Upper_y_boundary_padding) *GenData(Upper_z_boundary_padding) *GenData(Lower_x_boundary_padding) *GenData(Lower_y_boundary_padding) *GenData(Lower_z_boundary_padding)}
 Boundary mesh size: {*GenData(Upper_x_boundary_mesh_size) *GenData(Upper_y_boundary_mesh_size) *GenData(Upper_z_boundary_mesh_size) *GenData(Lower_x_boundary_mesh_size) *GenData(Lower_y_boundary_mesh_size) *GenData(Lower_z_boundary_mesh_size)}
+*else
+# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ *WarnXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ 
+# AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+*endif
 End of Grid
 
 Layers:
@@ -175,7 +184,7 @@ Layers:
 *loop layers
 *LayerNum *LayerName
 *end layers
-End of layers
+End of Layers
 
 Coordinates:
 *set elems(all)
@@ -183,7 +192,7 @@ Coordinates:
 *format "%7i %+14.8e %+14.8e %+14.8e"
 *NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)
 *end nodes
-End of coordinates
+End of Coordinates
 
 Elements:
 *set elems(Hexahedra)

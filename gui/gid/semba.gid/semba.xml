@@ -2,12 +2,12 @@
 <Infoproblemtype version="1.0">
     <Program>
         <Name>Semba</Name>
-        <Version>0.12</Version>
+        <Version>0.13</Version>
 	<EngineVersion>XXXX</EngineVersion>
         <MinimumGiDVersion>11.1.5d</MinimumGiDVersion>
 	<ImageFileBrowser>images/ico.png</ImageFileBrowser>        
         <Maintainer>GEG - University of Granada</Maintainer>
-        <Homepage>http://www.sembahome.org</Homepage>
+        <Homepage>http://www.sembahome.com</Homepage>
         <ShortDescription>Full-wave FDTD Electromagnetic solver (Evaluation)</ShortDescription>
         <Description>
           This is the evaluation version of the SEMBA FDTD Electromagnetic simulator having the following features. 
