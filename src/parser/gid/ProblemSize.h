@@ -42,7 +42,7 @@ public:
     std::size_t mat;   // # materials.
 
     ProblemSize();
-    ProblemSize operator=(const ProblemSize& rhs);
+
     void printInfo() const;
 };
 

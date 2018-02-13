@@ -40,26 +40,7 @@ ProblemSize::ProblemSize() {
     mat = 0;
 }
 
-ProblemSize
-ProblemSize::operator=(const ProblemSize& rhs) {
-    if (&rhs == this) {
-        return *this;
-    }
-    v = rhs.v;
-    lin2 = rhs.lin2;
-    lin3 = rhs.lin3;
-    tri3 = rhs.tri3;
-    tri6 = rhs.tri6;
-    qua4 = rhs.qua4;
-    tet4 = rhs.tet4;
-    tet10 = rhs.tet10;
-    hex8 = rhs.hex8;
-    mat = rhs.mat;
-    return *this;
-}
-
-void
-ProblemSize::printInfo() const {
+void ProblemSize::printInfo() const {
     std::cout << " --- Problem size --- " << std::endl;
     std::cout << "Number of coordinates:  " << v << std::endl;
     std::cout << "Number of materials:    " << mat << std::endl;
