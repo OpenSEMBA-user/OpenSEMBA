@@ -171,14 +171,16 @@ Grid:
 Boundary padding type: *GenData(boundary_padding_type)
 Boundary padding: {*GenData(Upper_x_boundary_padding) *GenData(Upper_y_boundary_padding) *GenData(Upper_z_boundary_padding) *GenData(Lower_x_boundary_padding) *GenData(Lower_y_boundary_padding) *GenData(Lower_z_boundary_padding)}
 Boundary mesh size: {*GenData(Upper_x_boundary_mesh_size) *GenData(Upper_y_boundary_mesh_size) *GenData(Upper_z_boundary_mesh_size) *GenData(Lower_x_boundary_mesh_size) *GenData(Lower_y_boundary_mesh_size) *GenData(Lower_z_boundary_mesh_size)}
-*else
-*if(*tcl(GiD_Cartesian get iscartesian)==1)
+*elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
 GiD Native Cartesian Mesher: *tcl(GiD_Cartesian get iscartesian)
 Corner:       *tcl(GiD_Cartesian get corner) 
 BoxSize:      *tcl(GiD_Cartesian get boxsize)
 NGridPoints:  *tcl(GiD_Cartesian get ngridpoints) 
 Dimension:    *tcl(GiD_Cartesian get dimension)
 Coordinates:  *tcl(GiD_Cartesian get coordinates)
+*else 
+*if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
+*WarningBox "No grid defined"
 *endif
 *endif
 End of Grid
