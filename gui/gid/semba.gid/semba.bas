@@ -215,6 +215,13 @@ Tetrahedral Elements:
 *ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum
 *end elems
 End of Tetrahedral Elements
+*set elems(Quadrilateral)
+Quadrilateral Elements:
+*loop elems
+*format "%8i %7i %7i %7i %7i %3i %3i"
+*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum 
+*end elems
+End of Quadrilateral Elements
 *set elems(Triangle)
 Triangle Elements:
 *loop elems
