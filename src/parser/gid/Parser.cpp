@@ -632,6 +632,8 @@ ProblemSize Parser::readProblemSize() {
                 } else if (label.compare("Linear Triangular elements")==0
                         || label.compare("Triangular elements")==0) {
                     res.tri3 = atoi(value.c_str());
+                } else if (label.compare("Quadrilateral elements")==0) {
+                    res.qua4 = atoi(value.c_str());
                 } else if (label.compare("Quadratic Line elements")==0) {
                     res.lin3 = atoi(value.c_str());
                 } else if (

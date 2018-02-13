@@ -33,6 +33,7 @@ ProblemSize::ProblemSize() {
     lin3 = 0;
     tri3 = 0;
     tri6 = 0;
+    qua4 = 0;
     tet4 = 0;
     tet10 = 0;
     hex8 = 0;
@@ -49,6 +50,7 @@ ProblemSize::operator=(const ProblemSize& rhs) {
     lin3 = rhs.lin3;
     tri3 = rhs.tri3;
     tri6 = rhs.tri6;
+    qua4 = rhs.qua4;
     tet4 = rhs.tet4;
     tet10 = rhs.tet10;
     hex8 = rhs.hex8;
