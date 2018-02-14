@@ -86,6 +86,14 @@ Real round(Real v) {
     }
 }
 
-} /* namespace Constant */
+Real sign(Real val) {
+    if (val < 0.0) {
+        return -1.0;
+    } else {
+        return  1.0;
+    }
+}
+
+} /* namespace Util */
 } /* namespace Math */
 } /* namespace SEMBA */
