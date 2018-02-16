@@ -47,6 +47,7 @@ bool greater     (const Real lhs, const Real rhs,
 bool greaterEqual(const Real lhs, const Real rhs,
                   Real rel = 0.0, const Real tol = tolerance);
 
+Real sign(Real val);
 Real ceil(const Real v, Real rel = 0.0);
 Real round(Real v);
 
