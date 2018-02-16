@@ -1,12 +1,12 @@
-BeginZE /home/luis/workspace/semba/projects/test/dmcwf.gid/dmcwf.vv
-   x -0.0104671977460384369 0.0287591405212879181
-   y 0.0741249918937683105 0.041254628449678421
-   z -0.548644065856933594 0.386644095182418823
+BeginZE /home/luis/workspace/semba/external/opensemba/testData/dmcwf.gid/dmcwf.vv
+   x -0.0297421123832464218 0.0660383924841880798
+   y 0.0368720926344394684 -0.0397046953439712524
+   z -0.438418954610824585 0.156018942594528198
    e 0.155881360173225403
-   v 0.4999999999999995 0.500000021855695032 0.4999999999999995
-   r 0.499999978144304968
+   v 0.5 0.5 0.5
+   r 0.499999970197677612
    m -4.37113882867379289e-08 4.37113882867379289e-08 1 0 1 1.99840144432528177e-15 4.37113882867379289e-08 0 -5.5511151231257827e-17 1 -4.37113882867379289e-08 0 0 0 0 1
-   c 0.00600000005215406418 0.00600000005215406418 0.0810000002384185791
+   c 0.00500941276550292969 0.00371141266077756882 0.141200006008148193
    pd 0
    pno 0
    pfo 0
@@ -29,7 +29,7 @@ BeginZE /home/luis/workspace/semba/projects/test/dmcwf.gid/dmcwf.vv
    OGLStereo(EyeDistance) 0.075
    OGLStereo(LeftEyeDistance) 1 0 0 1
    OGLStereo(RightEyeDistance) 0 1 1 1
-EndZE /home/luis/workspace/semba/projects/test/dmcwf.gid/dmcwf.vv
+EndZE /home/luis/workspace/semba/external/opensemba/testData/dmcwf.gid/dmcwf.vv
 
 BeginMirror
    Mirror 0 Angle 0.0 AngleFake -15.0 SizeFactor 2.0 HeightOffset 0.25 Color #d9e5f24d Backlight Off EdgeStyle No Type Scene DrawMode Mirror

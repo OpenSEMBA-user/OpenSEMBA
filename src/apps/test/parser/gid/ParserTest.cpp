@@ -18,49 +18,56 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "ParserTest.h"
+#include "gtest/gtest.h"
+#include "parser/gid/Parser.h"
 
 using namespace std;
 using namespace SEMBA;
 using namespace Parser;
 
-Data* ParserGiDParserTest::newSmb(const string project) {
-    const string testFolder("./testData/");
-    const string testFile = testFolder + project + ".gid/" + project + ".smb";
-#ifndef _WIN32
-    string fullPath((const char*) realpath(testFile.c_str(), NULL));
-#else
-    string fullPath = testFile;
-#endif
-    GiD::Parser parser(fullPath);
-    EXPECT_TRUE(parser.canOpen());
-    Data* res = parser.read();
-    EXPECT_TRUE(res != NULL);
-    if (res != NULL) {
-        EXPECT_TRUE(res->check());
-    }
-    return res;
-}
+class ParserGiDParserTest : public ::testing::Test {
+protected:
+    static constexpr Math::Real tol_ = 1e-4;
 
-TEST_F(ParserGiDParserTest, sphere) {
+    SEMBA::Data* newSmb(const std::string project) {
+        const string testFolder("./testData/");
+            const string testFile = testFolder +
+                    project + ".gid/" + project + ".dat";
+        #ifndef _WIN32
+            string fullPath((const char*) realpath(testFile.c_str(), nullptr));
+        #else
+            string fullPath = testFile;
+        #endif
+            GiD::Parser parser(fullPath);
+            EXPECT_TRUE(parser.canOpen());
+            Data* res = parser.read();
+            EXPECT_TRUE(res != nullptr);
+            if (res != nullptr) {
+                EXPECT_TRUE(res->check());
+            }
+            return res;
+    }
+};
+
+TEST_F(ParserGiDParserTest, Cartesian) {
     Data* smb;
-    EXPECT_NO_THROW(smb = newSmb("sphere"));
-    EXPECT_EQ(smb->outputRequests->getOf<OutRqNode>().size(), 3);
-    EXPECT_EQ(smb->outputRequests->getOf<OutRqSurface>().size(), 1);
-    EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 3);
-    EXPECT_EQ(smb->sources->size(), 1);
+    EXPECT_NO_THROW(smb = newSmb("cartesian"));
+    if (smb == nullptr) {
+        return;
+    }
 
     const Geometry::Mesh::Geometric* mesh;
     EXPECT_NO_THROW(mesh = smb->mesh->castTo<Geometry::Mesh::Geometric>());
+
     const Geometry::CoordR3* coord;
-    EXPECT_NO_THROW(coord =mesh->coords().getId(Geometry::CoordId(1)));
-    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(0), coord->pos()(0), 1e-2);
-    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(1), coord->pos()(1), 1e-2);
-    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(2), coord->pos()(2), 1e-2);
+    EXPECT_NO_THROW(coord = mesh->coords().getId(Geometry::CoordId(1)));
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(0), coord->pos()(0), tol_);
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(1), coord->pos()(1), tol_);
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(2), coord->pos()(2), tol_);
+
     Solver::Settings settings;
     EXPECT_NO_THROW(settings = smb->solver->getSettings());
 
-    // Checks aplication scaling factor in grid and boundary padding.
     Geometry::Grid3 grid;
     EXPECT_NO_THROW(grid =
             smb->mesh->castTo<Geometry::Mesh::Geometric>()->grid());
@@ -69,8 +76,42 @@ TEST_F(ParserGiDParserTest, sphere) {
     EXPECT_NO_THROW(delete smb);
 }
 
-TEST_F(ParserGiDParserTest, dmcwf) {
+TEST_F(ParserGiDParserTest, Sphere) {
+    Data* smb;
+    EXPECT_NO_THROW(smb = newSmb("sphere"));
+    if (smb == nullptr) {
+        return;
+    }
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqNode>().size(), 3);
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqSurface>().size(), 1);
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 3);
+    EXPECT_EQ(smb->sources->size(), 1);
+
+    const Geometry::Mesh::Geometric* mesh;
+    EXPECT_NO_THROW(mesh = smb->mesh->castTo<Geometry::Mesh::Geometric>());
+
+    const Geometry::CoordR3* coord;
+    EXPECT_NO_THROW(coord =mesh->coords().getId(Geometry::CoordId(1)));
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(0), coord->pos()(0), tol_);
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(1), coord->pos()(1), tol_);
+    EXPECT_NEAR(Math::CVecR3(-1.8e-3)(2), coord->pos()(2), tol_);
+
+    Solver::Settings settings;
+    EXPECT_NO_THROW(settings = smb->solver->getSettings());
+
+    Geometry::Grid3 grid;
+    EXPECT_NO_THROW(grid =
+            smb->mesh->castTo<Geometry::Mesh::Geometric>()->grid());
+    EXPECT_EQ(Math::CVecR3(-2.1e-3), grid.getFullDomainBoundingBox().getMin());
+
+    EXPECT_NO_THROW(delete smb);
+}
+
+TEST_F(ParserGiDParserTest, DMCWF) {
     Data* smb;
     EXPECT_NO_THROW(smb = newSmb("dmcwf"));
+    if (smb == nullptr) {
+        return;
+    }
     EXPECT_NO_THROW(delete smb);
 }

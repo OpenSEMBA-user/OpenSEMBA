@@ -1,6 +1,6 @@
 =======================================================================
 Format: Semba Data File
-Version: 0.11
+Version: 0.13
 =======================================================================
 
 Solver options: ugrfdtd
@@ -13,30 +13,13 @@ Force restarting: 0
 Resume simulation: 0
 Flush: 0
 Composites model: MIBC
-Conformal skin: 0
-No compo Mur: 0
-Skin depth: 0
-Composites attenuation factor: 1.0
 
-Wires flavor: New
+Wires flavor: holland
 MTLN: 1
 Min distance wires: 0.5
-New dispersive formulation: 0
-Taparrabos: 0
-Make holes: 0
-Ground wires: 0
-Inductance model: Boutayeb
-Wires attenuation factor: 1.0
 
-Use default PML: 1
-PML alpha: 0.0 1.0
-PML kappa: 1.0
-PML correction: 1.0 8
-PML backing: None
 
-Map: 0
 Map VTK: 0
-NF2FF decimation: 0
 Geometry scaling factor: 1.0
 
 Mesher options:
@@ -46,43 +29,45 @@ Upper y bound: PML
 Lower y bound: PEC
 Upper z bound: PML
 Lower z bound: PML
-Mesher: zMesher
+Mesher: None
 Brute force volumes: 1
 VTK Export: 0
 postmsh Export: 1
 Mode: Structured
 Forbidden length: 0
-Scale factor value: 0.0
+Slanted wires: 0
+Slanted threshold: 1.0
 End of Mesher options
 End of Solver options
 
 Problem size:
 Hexahedral elements: 0
 Tetrahedral elements: 0
+Quadrilateral elements: 0
 Triangular elements: 734
 Line elements: 0
 Number of points: 369
 Number of materials: 2
-End of problem size:
+End of problem size
 
 Materials:
 Material: 1
 Name: PEC
 TypeId: PEC
-End of Material:
+End of Material
 Material: 2
 Name: SMA
 TypeId: SMA
-End of Material:
-End of materials:
+End of Material
+End of Materials
 
 Grid:
- Layer Box: {0.012000000000002719 0.012 0.192 -0.0 -2.6938558154998571e-10 -0.029999999999999999}
- Type: by_distance
- Directions: 5e-4 5e-4 5e-4
-Boundary padding type: by_distance
-Boundary padding: {0.0 0.0 0.0 0.0 0.0 0.0}
-Boundary mesh size: {0.0 0.0 0.0 0.0 0.0 0.0}
+GiD Native Cartesian Mesher: 0
+Corner:       0.0 0.0 0.0 
+BoxSize:      0.0 0.0 0.0
+NGridPoints:  0 0 0 
+Dimension:    3
+Coordinates:  
 End of Grid
 
 Layers:
@@ -94,7 +79,7 @@ Layers:
 8 ports
 9 filter
 10 ports//waveport
-End of layers
+End of Layers
 
 Coordinates:
       1  -0.00000000e+00  +0.00000000e+00  +2.22000000e-01
@@ -466,13 +451,15 @@ Coordinates:
     367  +4.76250000e-03  +2.38125000e-03  -6.00000000e-02
     368  +9.52500000e-03  +0.00000000e+00  -6.00000000e-02
     369  +9.52500000e-03  +4.76250000e-03  -6.00000000e-02
-End of coordinates
+End of Coordinates
 
 Elements:
 Hexahedral Elements:
 End of Hexahedral Elements
 Tetrahedral Elements:
 End of Tetrahedral Elements
+Quadrilateral Elements:
+End of Quadrilateral Elements
 Triangle Elements:
        1       75       61       72    0    5 
        2       65       78       72    0    5 
@@ -1216,13 +1203,11 @@ End of Elements
 Excitations:
 
 
-
  Waveguide_port: 
  Shape: Rectangular
  Excitation: Gaussian
  Gaussian spread: 2e-9
  Gaussian delay: 6e-9
- Filename: 
  ExcitationMode: TE
  FirstMode: 1
  SecondMode: 0
@@ -1240,6 +1225,7 @@ Excitations:
 
 
 
+
 End of Excitations:
 
 Output Requests:
@@ -1248,15 +1234,15 @@ GiDOutputType: OutRq_on_point
 Number of elements: 3
 Name: out
 Type: electricField 
-Domain: 1 0.0 45e-9 2e-11 0 0.0 0.0 0.0 1 0 "" 
+Domain: 1 0.0 45e-9 2e-11 0 0.0 0.0 0.0 0 0 "" 
 37
 Name: mid
 Type: electricField 
-Domain: 1 0.0 45e-9 2e-11 0 0.0 0.0 0.0 1 0 "" 
+Domain: 1 0.0 45e-9 2e-11 0 0.0 0.0 0.0 0 0 "" 
 175
 Name: init
 Type: electricField 
-Domain: 1 0.0 45e-9 2e-11 0 0.0 0.0 0.0 1 0 "" 
+Domain: 1 0.0 45e-9 2e-11 0 0.0 0.0 0.0 0 0 "" 
 319
 End of Output request instance: 
 End of Output Requests:
