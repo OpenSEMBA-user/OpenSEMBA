@@ -67,6 +67,8 @@ public:
 
     std::vector<Vector::Cartesian<T,3> > convertToCartesianVector() const;
     std::vector<T> cpRowToVector(const std::size_t row) const;
+    void cpToCol(const size_t col, const std::vector<T>& vec);
+    void cpToRow(const size_t row, const std::vector<T>& vec);
 
     T getDeterminant3x3() const;
     T getDeterminant4x4() const;

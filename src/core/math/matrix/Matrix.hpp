@@ -443,6 +443,22 @@ std::vector<T> Matrix<T>::cpRowToVector(const std::size_t row) const {
 }
 
 template <class T>
+void Matrix<T>::cpToCol(const size_t col, const std::vector<T>& vec) {
+    assert(nRows() == vec.size());
+    for (size_t i = 0; i < vec.size(); ++i) {
+        val(i, col) = vec[i];
+    }
+}
+
+template <class T>
+void Matrix<T>::cpToRow(const size_t row, const std::vector<T>& vec) {
+    assert(nCols() == vec.size());
+    for (size_t i = 0; i < vec.size(); ++i) {
+        val(row, i) = vec[i];
+    }
+}
+
+template <class T>
 std::vector<Vector::Cartesian<T,3> >
         Matrix<T>::convertToCartesianVector() const {
     assert(nCols() == 3);
