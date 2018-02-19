@@ -25,7 +25,7 @@ static = yes
 # -------------------- Paths to directories -----------------------------------
 SRC_CORE_DIRS     := $(shell find $(SRC_DIR)core/ -type d)
 SRC_PARSER_DIRS   := $(shell find $(SRC_DIR)parser/ -type d)
-SRC_MESHER_DIRS   := $(shell find $(SRC_DIR)mesher/ -type d)
+#SRC_MESHER_DIRS   := $(shell find $(SRC_DIR)mesher/ -type d)
 SRC_SOLVER_DIRS   := $(shell find $(SRC_DIR)solver/ -type d)
 SRC_EXPORTER_DIRS := $(shell find $(SRC_DIR)exporter/ -type d)
 
@@ -35,7 +35,7 @@ SRC_DIRS = $(SRC_CORE_DIRS) \
            $(SRC_PARSER_DIRS) \
            $(SRC_SOLVER_DIRS) 
 
-SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
+SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")	
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 ifeq ($(FFTW3_SUPPORT),yes)
 	DEFINES +=FFTW3_SUPPORT
@@ -49,7 +49,7 @@ INCLUDES += $(SRC_DIR)core/ $(LIB_DIR)gidpost/include/
 
 default: $(OUT) 
 	@echo "======================================================="
-	@echo "           $(OUT) compilation finished             "
+	@echo "           $(OUT) compilation finished                 "
 	@echo "======================================================="
 
 $(OBJ_DIR)%.o: %.cpp
