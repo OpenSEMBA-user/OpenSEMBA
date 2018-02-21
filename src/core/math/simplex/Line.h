@@ -26,6 +26,8 @@
 
 #include "Simplex.h"
 
+#include <algorithm>
+
 namespace SEMBA {
 namespace Math {
 namespace Simplex {

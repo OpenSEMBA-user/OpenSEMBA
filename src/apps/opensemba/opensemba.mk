@@ -25,7 +25,7 @@ static = yes
 # -------------------- Paths to directories -----------------------------------
 SRC_CORE_DIRS     := $(shell find $(SRC_DIR)core/ -type d)
 SRC_PARSER_DIRS   := $(shell find $(SRC_DIR)parser/ -type d)
-#SRC_MESHER_DIRS   := $(shell find $(SRC_DIR)mesher/ -type d)
+SRC_MESHER_DIRS   := $(SRC_DIR)mesher/
 SRC_SOLVER_DIRS   := $(shell find $(SRC_DIR)solver/ -type d)
 SRC_EXPORTER_DIRS := $(shell find $(SRC_DIR)exporter/ -type d)
 
