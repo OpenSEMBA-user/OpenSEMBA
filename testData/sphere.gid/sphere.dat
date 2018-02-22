@@ -29,7 +29,7 @@ Upper y bound: PML
 Lower y bound: PML
 Upper z bound: PML
 Lower z bound: PML
-Mesher: None
+Mesher: ZMesher
 Brute force volumes: 1
 VTK Export: 1
 postmsh Export: 1
@@ -62,12 +62,12 @@ End of Material
 End of Materials
 
 Grid:
-GiD Native Cartesian Mesher: 0
-Corner:       0.0 0.0 0.0 
-BoxSize:      0.0 0.0 0.0
-NGridPoints:  0 0 0 
-Dimension:    3
-Coordinates:  
+ Layer Box: {1.8 1.8 1.8 -1.8 -1.8 -1.8}
+ Type: by_distance
+ Directions: 0.1 0.1 0.1
+Boundary padding type: by_number_of_cells
+Boundary padding: {3 3 3 3 3 3}
+Boundary mesh size: {0.1 0.1 0.1 0.1 0.1 0.1}
 End of Grid
 
 Layers:

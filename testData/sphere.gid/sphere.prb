@@ -67,7 +67,7 @@ HELP: 0.0 for centered, 1.0 for full upwinding.
 BOOK: Mesher_options
 Title: Mesher
 QUESTION: Mesher#CB#(ZMesher,DMesheR,None)
-VALUE: None
+VALUE: ZMesher
 DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
 DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,                                    HIDE,    Brute_force_volumes,1)
 DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
