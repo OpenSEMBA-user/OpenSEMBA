@@ -20,7 +20,6 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Parser.h"
-
 #include "math/function/Gaussian.h"
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
@@ -76,10 +75,10 @@ Data* Parser::read() {
     openAsInput(f_in);
     std::size_t numLines = 0;
     std::string line;
-    while (std::getline(f_in, line)) {
-        numLines++;
-    }
-    f_in.close();
+    while (std::getline(f_in, line)) {  //
+        numLines++;						//
+    }                                   //obtains number of lines of input file
+    f_in.close();						//
     openAsInput(f_in);
     progress_.init("Parser GiD", numLines, 0);
     std::string version = readVersion();
@@ -619,8 +618,8 @@ ProblemSize Parser::readProblemSize() {
             problemSizeFound = true;
             while(!finished) {
                 getNextLabelAndValue(label, value);
-                if (label.compare("Hexahedral elements")==0) {
-                    res.hex8 = atoi(value.c_str());
+                if (label.compare("Hexahedral elements")==0) /*==0 if compared strings are equal*/ {
+                    res.hex8 = atoi(value.c_str());//constant char string to integer
                 } else if (label.compare("Quadratic Tetrahedral elements")==0) {
                     res.tet10 = atoi(value.c_str());
                 } else if (
@@ -632,7 +631,7 @@ ProblemSize Parser::readProblemSize() {
                 } else if (label.compare("Linear Triangular elements")==0
                         || label.compare("Triangular elements")==0) {
                     res.tri3 = atoi(value.c_str());
-                } else if (label.compare("Quadrilateral elements")==0) {
+                } else if (label.compare("Quadrilateral elements")==0)/*!!*/ {
                     res.qua4 = atoi(value.c_str());
                 } else if (label.compare("Quadratic Line elements")==0) {
                     res.lin3 = atoi(value.c_str());

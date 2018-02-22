@@ -30,15 +30,15 @@ namespace GiD {
 
 class ProblemSize {
 public:
-    std::size_t v;	    // Number of coordinate points.
+    std::size_t v;	   // # Number of coordinate points.
     std::size_t lin2;  // # linear segment lines.
     std::size_t lin3;  // # quadratic segment lines.
     std::size_t tri3;  // # triangular elements.
     std::size_t tri6;  // #
-    std::size_t qua4;
+    std::size_t qua4;  // # cartesian elements.
     std::size_t tet4;  // # tetrahedron elements.
     std::size_t tet10; // #
-    std::size_t hex8;
+    std::size_t hex8;  // #
     std::size_t mat;   // # materials.
 
     ProblemSize();
