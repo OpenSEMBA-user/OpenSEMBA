@@ -37,8 +37,8 @@ Mode: Structured
 Forbidden length: 0.0
 Slanted wires: 0
 Slanted threshold: 1.0
-End of Mesher options
-End of Solver options
+End of Mesher options:
+End of Solver options:
 
 Problem size:
 Hexahedral elements: 119
@@ -48,14 +48,14 @@ Triangular elements: 0
 Line elements: 35
 Number of points: 296
 Number of materials: 1
-End of problem size
+End of Problem size:
 
 Materials:
 Material: 1
 Name: PEC
 TypeId: PEC
-End of Material
-End of Materials
+End of Material:
+End of Materials:
 
 Grid:
 GiD Native Cartesian Mesher: 1
@@ -64,11 +64,11 @@ BoxSize:      7.799999999999999 9.75 4.55
 NGridPoints:  13 16 8 
 Dimension:    3
 Coordinates:  
-End of Grid
+End of Grid:
 
 Layers:
 1 Layer0
-End of Layers
+End of Layers:
 
 Coordinates:
       1  -2.70649000e-01  -6.43784000e+00  -3.25000000e-01
@@ -367,7 +367,7 @@ Coordinates:
     294  -2.70649000e-01  +2.01216000e+00  -3.25000000e-01
     295  -9.20649000e-01  +2.01216000e+00  +3.25000000e-01
     296  -2.70649000e-01  +2.01216000e+00  +3.25000000e-01
-End of Coordinates
+End of Coordinates:
 
 Elements:
 Hexahedral Elements:
@@ -490,9 +490,9 @@ Hexahedral Elements:
      117      124     295      48     121     126     138      47     125    1    1 
      118      295     296     231      48     138     158     153      47    1    1 
      119      296     159     154     231     158     173     233     153    1    1 
-End of Hexahedral Elements
+End of Hexahedral Elements:
 Tetrahedral Elements:
-End of Tetrahedral Elements
+End of Tetrahedral Elements:
 Quadrilateral Elements:
      120      239       33      235      117    1    1 
      121      123      246      146      243    1    1 
@@ -513,9 +513,9 @@ Quadrilateral Elements:
      136       67       68       49      214    1    1 
      137      219      214       51      218    1    1 
      138      215      218       53       54    1    1 
-End of Quadrilateral Elements
+End of Quadrilateral Elements:
 Triangle Elements:
-End of Triangle Elements
+End of Triangle Elements:
 Line Elements:
      139        1      185    1    1
      140      185      186    1    1
@@ -552,8 +552,8 @@ Line Elements:
      171      212        6    1    1
      172        6      213    1    1
      173      213        7    1    1
-End of Line Elements
-End of Elements
+End of Line Elements:
+End of Elements:
 
 Excitations:
 
