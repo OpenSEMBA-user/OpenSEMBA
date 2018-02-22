@@ -40,6 +40,11 @@ Matrix<T>::~Matrix() {
 }
 
 template <class T>
+std::size_t Matrix<T>::size() const {
+    return (this->nRows()*this->nCols());
+}
+
+template <class T>
 T Matrix<T>::getDeterminant3x3() const {
     assert(nRows() == 3 && nCols() == 3);
     return + val(0,0) * (val(1,1)*val(2,2) - val(2,1)*val(1,2))

@@ -54,6 +54,8 @@ public:
                           const std::size_t col) const = 0;
     virtual T& operator()(const std::size_t row,
                           const std::size_t col) = 0;
+
+    std::size_t size() const;
     virtual T& val(const std::size_t ind) = 0;
     virtual T val(const std::size_t row, const std::size_t col) const = 0;
     virtual T& val(const std::size_t row, const std::size_t col) = 0;

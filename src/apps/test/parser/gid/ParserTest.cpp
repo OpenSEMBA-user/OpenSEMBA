@@ -19,7 +19,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
+
 #include "parser/gid/Parser.h"
+
+#include "geometry/element/Line2.h"
+#include "geometry/element/Triangle3.h"
+#include "geometry/element/Tetrahedron4.h"
 
 using namespace std;
 using namespace SEMBA;
@@ -28,8 +33,9 @@ using namespace Parser;
 class ParserGiDParserTest : public ::testing::Test {
 protected:
     static constexpr Math::Real tol_ = 1e-4;
+    GiD::ProblemSize pSize_;
 
-    SEMBA::Data* newSmb(const std::string project) {
+    Data* newSmb(const std::string project) {
         const string testFolder("./testData/");
             const string testFile = testFolder +
                     project + ".gid/" + project + ".dat";
@@ -39,13 +45,29 @@ protected:
             string fullPath = testFile;
         #endif
             GiD::Parser parser(fullPath);
-            EXPECT_TRUE(parser.canOpen());
+            EXPECT_TRUE(parser.canOpen()) << "Can't open: " << fullPath;
             Data* res = parser.read();
             EXPECT_TRUE(res != nullptr);
             if (res != nullptr) {
                 EXPECT_TRUE(res->check());
             }
+
+            pSize_ = parser.getProblemSize();
+
             return res;
+    }
+
+    static void checkMatchBetweenProblemSizesAndReadSizes(
+            const GiD::ProblemSize& pSize,
+            const Geometry::Mesh::Geometric* mesh) {
+
+        using namespace SEMBA::Geometry;
+
+        // NOTE: Not all sizes will match after parsing.
+        //       Some elements are added by others (grid, outRq, planewave...)
+        EXPECT_EQ(pSize.tri3, mesh->elems().sizeOf<Tri3>());
+        EXPECT_EQ(pSize.tet4, mesh->elems().sizeOf<Tet4>());
+        EXPECT_EQ(pSize.lin2, mesh->elems().sizeOf<LinR2>());
     }
 };
 
@@ -58,6 +80,7 @@ TEST_F(ParserGiDParserTest, Cartesian) {
 
     const Geometry::Mesh::Geometric* mesh;
     EXPECT_NO_THROW(mesh = smb->mesh->castTo<Geometry::Mesh::Geometric>());
+    checkMatchBetweenProblemSizesAndReadSizes(pSize_, mesh);
 
     const Geometry::CoordR3* coord;
     EXPECT_NO_THROW(coord = mesh->coords().getId(Geometry::CoordId(1)));
@@ -82,13 +105,16 @@ TEST_F(ParserGiDParserTest, Sphere) {
     if (smb == nullptr) {
         return;
     }
-    EXPECT_EQ(smb->outputRequests->getOf<OutRqNode>().size(), 3);
-    EXPECT_EQ(smb->outputRequests->getOf<OutRqSurface>().size(), 1);
-    EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 3);
-    EXPECT_EQ(smb->sources->size(), 1);
 
     const Geometry::Mesh::Geometric* mesh;
     EXPECT_NO_THROW(mesh = smb->mesh->castTo<Geometry::Mesh::Geometric>());
+    checkMatchBetweenProblemSizesAndReadSizes(pSize_, mesh);
+
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqNode>().size(), 3);
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqSurface>().size(), 1);
+    EXPECT_EQ(smb->outputRequests->getOf<OutRqVolume>().size(), 1);
+    EXPECT_EQ(smb->sources->size(), 1);
+
 
     const Geometry::CoordR3* coord;
     EXPECT_NO_THROW(coord =mesh->coords().getId(Geometry::CoordId(1)));

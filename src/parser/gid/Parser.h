@@ -65,7 +65,7 @@ public:
     Parser(const std::string& fn);
     virtual ~Parser();
 
-    const ProblemSize* getProblemSize() const;
+    ProblemSize getProblemSize() const {return pSize_;}
 
     virtual Data* read();
     void printInfo() const;

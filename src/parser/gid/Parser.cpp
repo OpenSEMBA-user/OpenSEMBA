@@ -207,7 +207,7 @@ PhysicalModel::Group<>* Parser::readMaterials(){
     PhysicalModel::Group<>* res = new PhysicalModel::Group<>();
     std::string label, value;
     std::size_t materialCount = 0;
-    while (!f_in.eof() && label.compare("End of materials")!=0) {
+    while (!f_in.eof() && label.compare("End of Materials")!=0) {
         getNextLabelAndValue(label, value);
         if (label.compare("Material")==0) {
             materialCount++;
@@ -643,7 +643,7 @@ ProblemSize Parser::readProblemSize() {
                     res.v = atoi(value.c_str());
                 } else if (label.compare("Number of materials")==0) {
                     res.mat = atoi(value.c_str());
-                } else if(label.find("End of problem size") != label.npos) {
+                } else if(label.find("End of Problem size") != label.npos) {
                     finished = true;
                 }
                 if (f_in.eof()) {
@@ -671,7 +671,7 @@ void Parser::readLayers(Geometry::Layer::Group<>& layers) {
             while(!finished && !f_in.eof()) {
                 std::string line;
                 getline(f_in, line);
-                if (line.find("End of layers") != line.npos) {
+                if (line.find("End of Layers") != line.npos) {
                     finished = true;
                 } else {
                     std::stringstream ss(line);
@@ -709,7 +709,7 @@ void Parser::readCoordinates(
             finished = false;
             while (!finished && !f_in.eof()) {
                 getline_(line);
-                if (line.find("End of coordinates") != line.npos) {
+                if (line.find("End of Coordinates") != line.npos) {
                     finished = true;
                 }
             }

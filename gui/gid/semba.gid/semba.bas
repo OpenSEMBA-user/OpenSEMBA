@@ -45,7 +45,7 @@ Mode: *GenData(Mode)
 Forbidden length: *GenData(Forbidden_length)
 Slanted wires: *GenData(Slanted)
 Slanted threshold: *GenData(Segments_filter_threshold)
-End of Mesher options
+End of Mesher options:
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
 cudg3d options:
 Time integrator: *GenData(Time_integrator)
@@ -55,7 +55,7 @@ Upwinding: *GenData(Upwinding)
 *else
 *WarningBox Unrecognized solver
 *endif
-End of Solver options
+End of Solver options:
 
 Problem size:
 *set elems(Hexahedra)
@@ -71,7 +71,7 @@ Line elements: *nelem
 *set elems(all)
 Number of points: *npoin
 Number of materials: *nmats
-End of problem size
+End of Problem size:
 
 Materials:
 *loop materials
@@ -153,9 +153,9 @@ Kappa: *matprop(Kappa)
 Ferrite relative permeability: *matprop(Ferrite_relative_permeability)
 Ferrite relative permittivity: *matprop(Ferrite_relative_permittivity)
 *endif
-End of Material
+End of Material:
 *end materials
-End of Materials
+End of Materials:
 
 Grid:
 *if(strcasecmp(GenData(Mesher),"None")!=0)
@@ -183,14 +183,14 @@ Coordinates:  *tcl(GiD_Cartesian get coordinates)
 *WarningBox "No grid defined"
 *endif
 *endif
-End of Grid
+End of Grid:
 
 Layers:
 *set elems(all)
 *loop layers
 *LayerNum *LayerName
 *end layers
-End of Layers
+End of Layers:
 
 Coordinates:
 *set elems(all)
@@ -198,7 +198,7 @@ Coordinates:
 *format "%7i %+14.8e %+14.8e %+14.8e"
 *NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)
 *end nodes
-End of Coordinates
+End of Coordinates:
 
 Elements:
 *set elems(Hexahedra)
@@ -207,36 +207,36 @@ Hexahedral Elements:
 *format "%8i %7i %7i %7i %7i %7i %7i %7i %7i %3i %3i"
 *ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum 
 *end elems
-End of Hexahedral Elements
+End of Hexahedral Elements:
 *set elems(Tetrahedra)
 Tetrahedral Elements:
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
 *ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum
 *end elems
-End of Tetrahedral Elements
+End of Tetrahedral Elements:
 *set elems(Quadrilateral)
 Quadrilateral Elements:
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
 *ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum 
 *end elems
-End of Quadrilateral Elements
+End of Quadrilateral Elements:
 *set elems(Triangle)
 Triangle Elements:
 *loop elems
 *format "%8i %7i %7i %7i %3i %3i"
 *ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum 
 *end elems
-End of Triangle Elements
+End of Triangle Elements:
 *set elems(Linear)
 Line Elements:
 *loop elems
 *format "%8i %7i %7i %3i %3i"
 *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum
 *End elems
-End of Line Elements
-End of Elements
+End of Line Elements:
+End of Elements:
 
 Excitations:
 *set elems(all)
