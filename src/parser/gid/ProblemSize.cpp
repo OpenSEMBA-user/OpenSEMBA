@@ -47,6 +47,7 @@ void ProblemSize::printInfo() const {
     std::cout << "Number of hex8:         " << hex8 << std::endl;
     std::cout << "Number of tet10:        " << tet10 << std::endl;
     std::cout << "Number of tet4:         " << tet4 << std::endl;
+    std::cout << "Number of qua4:         " << qua4 << std::endl;
     std::cout << "Number of tri6:         " << tri6 << std::endl;
     std::cout << "Number of tri3:         " << tri3 << std::endl;
     std::cout << "Number of lin3:         " << lin3 << std::endl;
