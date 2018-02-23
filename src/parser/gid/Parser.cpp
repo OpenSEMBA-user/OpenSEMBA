@@ -732,11 +732,11 @@ void Parser::readElements(
     bool found = false;
     while (!finished && !f_in.eof()) {
         getline_(line);
-        if (line.find("Elements:") != line.npos) {
+        if (line.find("Elements:") != line.npos)/*if finds something*/ {
             found = true;
         }
         // Stores data label in labelStr std::string.
-        label = line.substr(0, line.find(LABEL_ENDING));
+        label = line.substr(0, line.find(LABEL_ENDING))/*removes colon from label*/;
         if (label.compare("Linear Hexahedral Elements")==0 ||
                 label.compare("Hexahedral Elements")==0) {
             readHex8Elements(cG, lG, elems);
@@ -745,6 +745,8 @@ void Parser::readElements(
         } else if (label.compare("Linear Tetrahedral Elements")==0 ||
                    label.compare("Tetrahedral Elements")==0) {
             readTet4Elements(cG, lG, elems);
+        } else if(label.compare("Quadrilateral Elements")==0) {
+        	//readQua4Elements(cG, lG, elems);
         } else if (label.compare("Quadratic Triangle Elements")==0) {
             readTri6Elements(cG, lG, elems);
         } else if (label.compare("Linear Triangle Elements")==0 ||
@@ -841,8 +843,7 @@ void Parser::readTet4Elements(
         const Geometry::Layer::Layer* lay;
         if (layerId != Geometry::LayerId(0)) {
             lay = lG.getId(layerId);
-        }
-        else {
+        } else {
             lay = NULL;
         }
         const PhysicalModel::PhysicalModel* mat;
@@ -853,6 +854,41 @@ void Parser::readTet4Elements(
             mat = NULL;
         }
         elems.add(new Geometry::Tet4(id, v, lay, mat));
+    }
+}
+void Parser::readQua4Elements(
+        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
+        const Geometry::Layer::Group<>& lG,
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
+    Geometry::ElemId id;
+    Geometry::CoordId vId;
+    const Geometry::CoordR3* v[4];
+    Geometry::Layer::Id layerId;
+    MatId matId;
+    Math::CVecR3 normal;
+    for (std::size_t i = 0; i < pSize_.tri6; i++) {
+        f_in >> id;
+        for (std::size_t j = 0; j < 4; j++) {
+            f_in >> vId;
+            v[j] = cG.getId(vId);
+        }
+        f_in >> matId >> layerId;
+        progress_.advance();
+        const Geometry::Layer::Layer* lay;
+               if (layerId != Geometry::LayerId(0)) {
+                   lay = lG.getId(layerId);
+               }
+               else {
+                   lay = NULL;
+               }
+        const PhysicalModel::PhysicalModel* mat;
+        if (matId != MatId(0)) {
+            mat = physicalModels_->getId(matId);
+        }
+        else {
+            mat = NULL;
+        }
+        elems.add(new Geometry::QuaR4(id, v, lay, mat));
     }
 }
 
