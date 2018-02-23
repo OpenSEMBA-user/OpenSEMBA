@@ -163,7 +163,7 @@
         "gridCondition": {
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
             "type": "*cond(Type)",
-            "directions": "*cond(x_direction) *cond(y_direction) *cond(z_direction)",
+            "directions": "{*cond(x_direction) *cond(y_direction) *cond(z_direction)}",
             "boundaryPaddingType": "*cond(boundary_padding_type)",
             "boundaryPadding": "{*cond(Upper_x_boundary_padding) *cond(Upper_y_boundary_padding) *cond(Upper_z_boundary_padding) *cond(Lower_x_boundary_padding) *cond(Lower_y_boundary_padding) *cond(Lower_z_boundary_padding)}",
             "boundaryMeshSize": "{*cond(Upper_x_boundary_mesh_size) *cond(Upper_y_boundary_mesh_size) *cond(Upper_z_boundary_mesh_size) *cond(Lower_x_boundary_mesh_size) *cond(Lower_y_boundary_mesh_size) *cond(Lower_z_boundary_mesh_size)}"
@@ -174,7 +174,7 @@
         "nativeGiD": {
             "corner": "*tcl(GiD_Cartesian get corner)",
             "boxSize": "*tcl(GiD_Cartesian get boxsize)",
-            "nGridPoints": *tcl(GiD_Cartesian get ngridpoints),
+            "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
             "coordinates": "*tcl(GiD_Cartesian get coordinates)"
         }
 *else 
@@ -182,60 +182,60 @@
 *WarningBox "No grid defined"
 *endif
 *endif
-    }
+    },
 
-Layers:
+    "layers": {
 *set elems(all)
 *loop layers
-*LayerNum *LayerName
+        "layer": {"id": *LayerNum, "name": "*LayerName"}
 *end layers
-End of Layers:
+    }
 
-Coordinates:
+    "coordinates": [
 *set elems(all)
 *loop nodes
 *format "%7i %+14.8e %+14.8e %+14.8e"
-*NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)
+        *NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)
 *end nodes
-End of Coordinates:
+    ]
 
-Elements:
+    "elements": {
 *set elems(Hexahedra)
-Hexahedral Elements:
+        "hexahedra": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %7i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum 
+        *ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum 
 *end elems
-End of Hexahedral Elements:
+        ],
 *set elems(Tetrahedra)
-Tetrahedral Elements:
+        "tetrahedra": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum
+        *ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum
 *end elems
-End of Tetrahedral Elements:
+        ],
 *set elems(Quadrilateral)
-Quadrilateral Elements:
+        "quadrilateral": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum 
+        *ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum 
 *end elems
-End of Quadrilateral Elements:
+        ],
 *set elems(Triangle)
-Triangle Elements:
+        "triangle": [
 *loop elems
 *format "%8i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum 
+        *ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum 
 *end elems
-End of Triangle Elements:
+        ],
 *set elems(Linear)
-Line Elements:
+        "line": [
 *loop elems
 *format "%8i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum
+        *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum
 *End elems
-End of Line Elements:
-End of Elements:
+        ]
+    }
 
 Excitations:
 *set elems(all)
