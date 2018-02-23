@@ -66,120 +66,123 @@
         "linear2": *nelem,
 *set elems(all)
         "coordinates": *npoin,
-        "materials": *nmats,
+        "materials": *nmats
     },
 
     "materials": {
 *loop materials
-        "materialId": *matnum(),
-        "name": "*MatProp(0)",
-        "materialTypeId": *MatProp(TypeId),
+        "material": {
+            "materialId": *matnum(),
+            "name": "*MatProp(0)",
+            "materialTypeId": "*MatProp(TypeId)",
 *if(strcmp(MatProp(TypeId),"PEC")==0)
 *endif
 *if(strcmp(MatProp(TypeId),"PMC")==0)
 *endif
 *if(strcmp(MatProp(TypeId),"PML")==0)
-        "automaticOrientation": *matprop(Automatic_orientation),
+            "automaticOrientation": *matprop(Automatic_orientation),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
-        "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
+            "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
-        "localAxes: "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
+            "localAxes: "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
 *endif
 *endif
 *if(strcmp(Matprop(TypeId),"Classic")==0)
-Permittivity: *matprop(Permittivity)
-Permeability: *matprop(Permeability)
-Electric Conductivity: *matprop(ElecCond)
-Magnetic Conductivity: *matprop(MagnCond)
+            "permittivity": *matprop(Permittivity),
+            "permeability": *matprop(Permeability),
+            "electricConductivity": *matprop(ElecCond),
+            "magneticConductivity": *matprop(MagnCond),
 *endif
 *if(strcmp(Matprop(TypeId),"Dispersive")==0)
-Filename: *matprop(File)
+            "filename": "*matprop(File)",
 *endif
 *if(strcmp(Matprop(TypeId),"Wire")==0)
-Radius: *matprop(Radius)
-WireType: *matprop(WireType)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
-Parallel Resistance: *matprop(Parallel_Resistance)
-Parallel Inductance: *matprop(Parallel_Inductance)
-Parallel Capacitance: *matprop(Parallel_Capacitance)
+            "radius": *matprop(Radius),
+            "wireType": "*matprop(WireType)",
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance),   
+            "parallelResistance": *matprop(Parallel_Resistance),
+            "parallelInductance": *matprop(Parallel_Inductance),
+            "parallelCapacitance": *matprop(Parallel_Capacitance),
 *if(strcmp(Matprop(WireType),"Dispersive")==0)
-Filename: *matprop(File)
+            "filename": *matprop(File),
 *endif
 *endif
 *if(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance),
 *endif
 *if(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance),
 *endif
 *if(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance),
 *endif
 *if(strcmp(Matprop(TypeId),"Thin_gap")==0)
-Width: *matprop(Width)
+            "width": *matprop(Width),
 *endif
 *if(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
-Filename: *matprop(File)
+            "filename": "*matprop(File)",
 *endif
 *if(strcmp(Matprop(TypeId),"SIBC")==0)
-SurfaceType: *matprop(SurfaceType)
+            "surfaceType": "*matprop(SurfaceType)",
 *if(strcmp(Matprop(SurfaceType),"File")==0)
-Filename: *matprop(File)
+            "filename": "*matprop(File)"
 *endif
-Layers: *matprop
+            "layers": "*matprop",
 *endif
 *if(strcmp(Matprop(TypeId),"Anisotropic")==0)
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
-Local Axes: {0.0 0.0 0.0} {0.0 0.0 0.0}
+            "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
-Local Axes: *tcl(GiD_Info localaxes *matprop(Local_Axes))
+            "localAxes": "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
 *endif
-Anisotropic model: *matprop(Anisotropic_model)
-Relative permittivity principal axes: *matprop(Relative_permittivity_principal_axes)
-Crystal relative permeability: *matprop(Crystal_relative_permeability)
-Kappa: *matprop(Kappa)
-Ferrite relative permeability: *matprop(Ferrite_relative_permeability)
-Ferrite relative permittivity: *matprop(Ferrite_relative_permittivity)
+            "anisotropicModel": "*matprop(Anisotropic_model)",
+            "relativePermittivityPrincipalAxes": "*matprop(Relative_permittivity_principal_axes)",
+            "crystalRelativePermeability": *matprop(Crystal_relative_permeability),
+            "kappa": *matprop(Kappa),
+            "ferriteRelativePermeability": *matprop(Ferrite_relative_permeability),
+            "ferriteRelativePermittivity": *matprop(Ferrite_relative_permittivity)
 *endif
-End of Material:
+        }
 *end materials
-}
+    },
 
-Grid:
+    "grids": { 
 *if(strcasecmp(GenData(Mesher),"None")!=0)
 *set elems(all)
 *set Cond Grid
 *if(CondNumEntities(int)>0)
 *loop layers *OnlyInCond
- Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
- Type: *cond(Type)
- Directions: *cond(x_direction) *cond(y_direction) *cond(z_direction)
+        "gridCondition": {
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
+            "type": "*cond(Type)",
+            "directions": "*cond(x_direction) *cond(y_direction) *cond(z_direction)",
+            "boundaryPaddingType": "*cond(boundary_padding_type)",
+            "boundaryPadding": "{*cond(Upper_x_boundary_padding) *cond(Upper_y_boundary_padding) *cond(Upper_z_boundary_padding) *cond(Lower_x_boundary_padding) *cond(Lower_y_boundary_padding) *cond(Lower_z_boundary_padding)}",
+            "boundaryMeshSize": "{*cond(Upper_x_boundary_mesh_size) *cond(Upper_y_boundary_mesh_size) *cond(Upper_z_boundary_mesh_size) *cond(Lower_x_boundary_mesh_size) *cond(Lower_y_boundary_mesh_size) *cond(Lower_z_boundary_mesh_size)}"
+        }
 *end layers
 *endif
-Boundary padding type: *GenData(boundary_padding_type)
-Boundary padding: {*GenData(Upper_x_boundary_padding) *GenData(Upper_y_boundary_padding) *GenData(Upper_z_boundary_padding) *GenData(Lower_x_boundary_padding) *GenData(Lower_y_boundary_padding) *GenData(Lower_z_boundary_padding)}
-Boundary mesh size: {*GenData(Upper_x_boundary_mesh_size) *GenData(Upper_y_boundary_mesh_size) *GenData(Upper_z_boundary_mesh_size) *GenData(Lower_x_boundary_mesh_size) *GenData(Lower_y_boundary_mesh_size) *GenData(Lower_z_boundary_mesh_size)}
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
-GiD Native Cartesian Mesher: *tcl(GiD_Cartesian get iscartesian)
-Corner:       *tcl(GiD_Cartesian get corner) 
-BoxSize:      *tcl(GiD_Cartesian get boxsize)
-NGridPoints:  *tcl(GiD_Cartesian get ngridpoints) 
-Dimension:    *tcl(GiD_Cartesian get dimension)
-Coordinates:  *tcl(GiD_Cartesian get coordinates)
+        "nativeGiD": {
+            "corner": "*tcl(GiD_Cartesian get corner)",
+            "boxSize": "*tcl(GiD_Cartesian get boxsize)",
+            "nGridPoints": *tcl(GiD_Cartesian get ngridpoints),
+            "coordinates": "*tcl(GiD_Cartesian get coordinates)"
+        }
 *else 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 *WarningBox "No grid defined"
 *endif
 *endif
-End of Grid:
+    }
 
 Layers:
 *set elems(all)
