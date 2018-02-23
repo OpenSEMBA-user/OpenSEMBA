@@ -36,13 +36,13 @@
             "upperZBound": "*GenData(Upper_z_bound)",
             "lowerZBound": "*GenData(Lower_z_bound)",
             "mesher": "*GenData(Mesher)",
-            Brute force volumes: *GenData(Brute_force_volumes)
-            VTK Export: *GenData(VTK_Export)
-            postmsh Export: *GenData(postmsh_Export)
-            Mode: *GenData(Mode)
-            Forbidden length: *GenData(Forbidden_length)
-            Slanted wires: *GenData(Slanted)
-            Slanted threshold: *GenData(Segments_filter_threshold)
+            "bruteForceVolumes": *GenData(Brute_force_volumes),
+            "vtkExport": *GenData(VTK_Export),
+            "postmshExport": *GenData(postmsh_Export),
+            "mode": "*GenData(Mode)",
+            "forbiddenLength": *GenData(Forbidden_length),
+            "slantedWires": *GenData(Slanted),
+            "slantedThreshold": *GenData(Segments_filter_threshold)
         }
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
         "timeIntegrator": *GenData(Time_integrator),
@@ -51,40 +51,39 @@
 *else
 *WarningBox Unrecognized solver
 *endif
-    }
-    
-    
-Problem size:
+    },
+     
+    "problemSize": {
 *set elems(Hexahedra)
-Hexahedral elements: *nelem
+        "hexahedra8": *nelem,
 *set elems(Tetrahedra)
-Tetrahedral elements: *nelem
+        "tetrahedra4": *nelem,
 *set elems(Quadrilateral)
-Quadrilateral elements: *nelem
+        "quadrilateral4": *nelem,
 *set elems(Triangle)
-Triangular elements: *nelem
+        "triangle3": *nelem,
 *set elems(Linear)
-Line elements: *nelem
+        "linear2": *nelem,
 *set elems(all)
-Number of points: *npoin
-Number of materials: *nmats
-End of Problem size:
+        "coordinates": *npoin,
+        "materials": *nmats,
+    },
 
-Materials:
+    "materials": {
 *loop materials
-Material: *matnum()
-Name: *MatProp(0)
-TypeId: *MatProp(TypeId)
+        "materialId": *matnum(),
+        "name": "*MatProp(0)",
+        "materialTypeId": *MatProp(TypeId),
 *if(strcmp(MatProp(TypeId),"PEC")==0)
 *endif
 *if(strcmp(MatProp(TypeId),"PMC")==0)
 *endif
 *if(strcmp(MatProp(TypeId),"PML")==0)
-Autmatic Orientation: *matprop(Automatic_orientation)
+        "automaticOrientation": *matprop(Automatic_orientation),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
-Local Axes: {0.0 0.0 0.0} {0.0 0.0 0.0}
+        "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
-Local Axes: *tcl(GiD_Info localaxes *matprop(Local_Axes))
+        "localAxes: "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
 *endif
 *endif
 *if(strcmp(Matprop(TypeId),"Classic")==0)
@@ -152,7 +151,7 @@ Ferrite relative permittivity: *matprop(Ferrite_relative_permittivity)
 *endif
 End of Material:
 *end materials
-End of Materials:
+}
 
 Grid:
 *if(strcasecmp(GenData(Mesher),"None")!=0)
