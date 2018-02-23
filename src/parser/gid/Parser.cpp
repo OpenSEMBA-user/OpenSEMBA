@@ -746,7 +746,7 @@ void Parser::readElements(
                    label.compare("Tetrahedral Elements")==0) {
             readTet4Elements(cG, lG, elems);
         } else if(label.compare("Quadrilateral Elements")==0) {
-        	//readQua4Elements(cG, lG, elems);
+        	readQua4Elements(cG, lG, elems);
         } else if (label.compare("Quadratic Triangle Elements")==0) {
             readTri6Elements(cG, lG, elems);
         } else if (label.compare("Linear Triangle Elements")==0 ||
