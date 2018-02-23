@@ -21,39 +21,33 @@
 *endif
 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
-Composites model: *GenData(Composites_model)
-Wires flavor: *GenData(Wires_flavor)
-MTLN: *GenData(MTLN)
-Min distance wires: *GenData(Min_distance_wires)
+        "compositesModel": "*GenData(Composites_model)",
+        "wiresFlavor: "*GenData(Wires_flavor)",
+        "mtln": *GenData(MTLN),
+        "minDistanceWires": *GenData(Min_distance_wires),
+        "mapVTK": *GenData(Map_VTK),
+        "geometryScalingFactor": *GenData(scaling_factor),
 
-
-Map VTK: *GenData(Map_VTK)
-Geometry scaling factor: *GenData(scaling_factor)
-
-
-
-Mesher options:
-Upper x bound: *GenData(Upper_x_bound)
-Lower x bound: *GenData(Lower_x_bound)
-Upper y bound: *GenData(Upper_y_bound)
-Lower y bound: *GenData(Lower_y_bound)
-Upper z bound: *GenData(Upper_z_bound)
-Lower z bound: *GenData(Lower_z_bound)
-Mesher: *GenData(Mesher)
-Brute force volumes: *GenData(Brute_force_volumes)
-VTK Export: *GenData(VTK_Export)
-postmsh Export: *GenData(postmsh_Export)
-Mode: *GenData(Mode)
-Forbidden length: *GenData(Forbidden_length)
-Slanted wires: *GenData(Slanted)
-Slanted threshold: *GenData(Segments_filter_threshold)
-End of Mesher options:
+        "mesherOptions": {
+            "upperXBound": "*GenData(Upper_x_bound)",
+            "lowerXBound": "*GenData(Lower_x_bound)",
+            "upperYBound": "*GenData(Upper_y_bound)",
+            "lowerYBound": "*GenData(Lower_y_bound)",
+            "upperZBound": "*GenData(Upper_z_bound)",
+            "lowerZBound": "*GenData(Lower_z_bound)",
+            "mesher": "*GenData(Mesher)",
+            Brute force volumes: *GenData(Brute_force_volumes)
+            VTK Export: *GenData(VTK_Export)
+            postmsh Export: *GenData(postmsh_Export)
+            Mode: *GenData(Mode)
+            Forbidden length: *GenData(Forbidden_length)
+            Slanted wires: *GenData(Slanted)
+            Slanted threshold: *GenData(Segments_filter_threshold)
+        }
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
-    "cudg3d": {
         "timeIntegrator": *GenData(Time_integrator),
         "useLTS": *GenData(Use_LTS),
         "upwinding": *GenData(Upwinding)
-    }
 *else
 *WarningBox Unrecognized solver
 *endif
