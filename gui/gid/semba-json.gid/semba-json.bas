@@ -19,7 +19,7 @@
 *if(strcmp(GenData(Additional_arguments),"")!=0)
         "additionalArguments": *GenData(Additional_arguments),
 *endif
-    }
+
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 Composites model: *GenData(Composites_model)
 Wires flavor: *GenData(Wires_flavor)
@@ -49,16 +49,17 @@ Slanted wires: *GenData(Slanted)
 Slanted threshold: *GenData(Segments_filter_threshold)
 End of Mesher options:
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
-cudg3d options:
-Time integrator: *GenData(Time_integrator)
-Use LTS: *GenData(Use_LTS)
-
-Upwinding: *GenData(Upwinding)
+    "cudg3d": {
+        "timeIntegrator": *GenData(Time_integrator),
+        "useLTS": *GenData(Use_LTS),
+        "upwinding": *GenData(Upwinding)
+    }
 *else
 *WarningBox Unrecognized solver
 *endif
-End of Solver options:
-
+    }
+    
+    
 Problem size:
 *set elems(Hexahedra)
 Hexahedral elements: *nelem
