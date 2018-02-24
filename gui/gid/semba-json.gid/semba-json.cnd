@@ -37,8 +37,8 @@ QUESTION: Polarization_beta
 VALUE: 0.0
 HELP: The azimuthal angle (degrees) of the plane wave electric field vector.
 
-#Title: Excitation
-QUESTION: Excitation#CB#(Gaussian,File)
+#Title: Magnitude
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -61,8 +61,8 @@ CONDMESHTYPE: over nodes
 #Title: Basic
 QUESTION: type#CB#(voltage,current)
 VALUE: voltage
-#Title: Excitation
-QUESTION: Excitation#CB#(Gaussian,File)
+#Title: Magnitude
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -87,8 +87,8 @@ QUESTION: type#CB#(electricField,magneticField)
 VALUE: electricField
 QUESTION: Hardness#CB#(soft,hard)
 VALUE: soft
-#Title: Excitation
-QUESTION: Excitation#CB#(Gaussian,File)
+#Title: Magnitude
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -120,8 +120,8 @@ VALUE: 0
 #Question: Electric_field_direction
 #VALUE: #WIDTH#(5)
 #TKWIDGET: GidUtils::TkwidgetGetVector3D
-##Title: Excitation
-QUESTION: Excitation#CB#(Gaussian,File)
+##Title: Magnitude
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -153,8 +153,8 @@ Question: Inner_radius
 Value: 0.0
 Question: Outer_radius
 Value: 0.0
-##Title: Excitation
-QUESTION: Excitation#CB#(Gaussian,File)
+##Title: Magnitude
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)

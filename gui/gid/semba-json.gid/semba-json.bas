@@ -239,33 +239,40 @@
         ]
     },
 
-    "electromagneticSources": [
+    "sources": [
 *set elems(all)
 *Set Cond Planewave
 *if(CondNumEntities(int)>0)
         {
-            "type": "planewave", 
+            "sourceType": "planewave", 
 *loop layers *OnlyInCond
             "definitionMode": "*cond(Definition_mode)",
-            "directionVector": "{*cond(Direction_vector)}", 
+*if(strcmp(cond(Definition_mode),"by_vectors")==0)
+            "directionVector"   : "{*cond(Direction_vector)}", 
             "polarizationVector": "{*cond(Polarization_vector)}",
-            "directionTheta": *cond(Direction_theta)
-        Direction phi: *cond(Direction_phi)
-        Polarization alpha: *cond(Polarization_alpha)
-        Polarization beta: *cond(Polarization_beta)
-        Number of random planewaves: *cond(Number_of_random_planewaves)
-        Relative variation of random delay: *cond(Relative_variation_of_random_delay)
-        Excitation: *cond(Excitation)
-        Gaussian spread: *cond(Gaussian_spread)
-        Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
-        Filename: *cond(File)
+*elseif(strcmp(cond(Definition_mode),"by_angles")==0)
+            "directionTheta"    : *cond(Direction_theta),
+            "directionPhi"      : *cond(Direction_phi),
+            "polarizationAlpha" : *cond(Polarization_alpha),
+            "polarizationBeta"  : *cond(Polarization_beta),
+*else
+            "numberOfRandomPlanewaves": *cond(Number_of_random_planewaves),
+            "relativeVariationOfRandomDelay": *cond(Relative_variation_of_random_delay),
+*endif            
+            "magnitude": {
+                "type": "*cond(magnitude)",
+*if(strcmp(cond(Magnitude),"File")==0)
+                "filename": "*cond(file)"
+*else
+                "gaussianSpread": *cond(Gaussian_spread),
+                "gaussianDelay": *cond(Gaussian_delay)
 *endif
-        Defined: OnLayers
-        Layer Name: *layerName
-        Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
+            },
+            "defined": "OnLayers",
+            "layerName": "*layerName",
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *end layers
-End of Planewave:
+        },
 *endif
 
 *Set Cond Source_on_line *bodyElements
@@ -273,13 +280,14 @@ End of Planewave:
 *loop elems *OnlyInCond
 *if(HEADER==0) 
 *set var HEADER=1
- Source_on_line:
- Type: *cond(Type) 
- Hardness: *cond(Hardness) 
- Excitation: *cond(Excitation)
+        {
+            "sourceType": "sourceOnLine",
+            "type": "*cond(Type)", 
+            "hardness": "*cond(Hardness)",
+ Magnitude: *cond(Magnitude)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
+*if(strcmp(cond(Magnitude),"File")==0)
  Filename: *cond(File)
 *endif
  Defined: OnElements
@@ -296,10 +304,10 @@ End of Source_on_line:
 *loop nodes *OnlyInCond
  Generator:
  Type: *cond(Type)
- Excitation: *cond(Excitation)
+ Magnitude: *cond(Magnitude)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
+*if(strcmp(cond(Magnitude),"File")==0)
  Filename: *cond(File)
 *endif
  Defined: OnNodes
@@ -317,10 +325,10 @@ End of Source_on_line:
 *if(HEADER == 0)
  Waveguide_port:
  Shape: *cond(Shape)
- Excitation: *cond(Excitation)
+ Magnitude: *cond(Magnitude)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
+*if(strcmp(cond(Magnitude),"File")==0)
  Filename: *cond(File)
 *endif
  ExcitationMode: *cond(Mode)
@@ -351,10 +359,10 @@ End of Source_on_line:
 *if(HEADER == 0)
  Waveguide_port: 
  Shape: *cond(Shape)
- Excitation: *cond(Excitation)
+ Magnitude: *cond(Magnitude)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
+*if(strcmp(cond(Magnitude),"File")==0)
  Filename: *cond(File)
 *endif
  ExcitationMode: *cond(Mode)
@@ -384,10 +392,10 @@ End of Source_on_line:
 *loop elems *onlyInCond
 *if(HEADER == 0)
  TEM_port: 
- Excitation: *cond(Excitation)
+ Magnitude: *cond(Magnitude)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
+*if(strcmp(cond(Magnitude),"File")==0)
  Filename: *cond(File)
 *endif
  Origin: *cond(Origin)
@@ -418,10 +426,10 @@ End of Source_on_line:
 *loop elems *onlyInCond
 *if(HEADER == 0)
  TEM_port: 
- Excitation: *cond(Excitation)
+ Magnitude: *cond(Magnitude)
  Gaussian spread: *cond(Gaussian_spread)
  Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
+*if(strcmp(cond(Magnitude),"File")==0)
  Filename: *cond(File)
 *endif
  Origin: *cond(Origin)
