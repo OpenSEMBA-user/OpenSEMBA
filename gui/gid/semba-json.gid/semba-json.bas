@@ -284,19 +284,24 @@
             "sourceType": "sourceOnLine",
             "type": "*cond(Type)", 
             "hardness": "*cond(Hardness)",
- Magnitude: *cond(Magnitude)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
+            "magnitude": {
+                "type": "*cond(magnitude)",
 *if(strcmp(cond(Magnitude),"File")==0)
- Filename: *cond(File)
+                "filename": "*cond(file)"
+*else
+                "gaussianSpread": *cond(Gaussian_spread),
+                "gaussianDelay": *cond(Gaussian_delay)
 *endif
- Defined: OnElements
- Number of elements: *CondNumEntities(int)
+            },
+            "defined": "OnElements",
+            "numberOfElements": *CondNumEntities(int),
+            "elemIds": [
 *endif
   *elemsNum
 *end elems
+        ]
 *if(HEADER==1)
-End of Source_on_line:
+}
 *endif
 
 *loop conditions *nodes
