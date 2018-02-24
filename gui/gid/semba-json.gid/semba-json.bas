@@ -22,7 +22,7 @@
 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
         "compositesModel": "*GenData(Composites_model)",
-        "wiresFlavor: "*GenData(Wires_flavor)",
+        "wiresFlavor": "*GenData(Wires_flavor)",
         "mtln": *GenData(MTLN),
         "minDistanceWires": *GenData(Min_distance_wires),
         "mapVTK": *GenData(Map_VTK),
@@ -50,6 +50,7 @@
         "upwinding": *GenData(Upwinding)
 *else
 *WarningBox Unrecognized solver
+        "_error": "invalidSolver"
 *endif
     },
      
@@ -69,9 +70,9 @@
         "materials": *nmats
     },
 
-    "materials": {
+    "materials": [
 *loop materials
-        "material": {
+        {
             "materialId": *matnum(),
             "name": "*MatProp(0)",
             "materialTypeId": "*MatProp(TypeId)",
@@ -150,11 +151,11 @@
             "ferriteRelativePermeability": *matprop(Ferrite_relative_permeability),
             "ferriteRelativePermittivity": *matprop(Ferrite_relative_permittivity)
 *endif
-        }
+        },
 *end materials
-    },
+    ],
 
-    "grids": { 
+    "grids": {
 *if(strcasecmp(GenData(Mesher),"None")!=0)
 *set elems(all)
 *set Cond Grid
@@ -167,7 +168,7 @@
             "boundaryPaddingType": "*cond(boundary_padding_type)",
             "boundaryPadding": "{*cond(Upper_x_boundary_padding) *cond(Upper_y_boundary_padding) *cond(Upper_z_boundary_padding) *cond(Lower_x_boundary_padding) *cond(Lower_y_boundary_padding) *cond(Lower_z_boundary_padding)}",
             "boundaryMeshSize": "{*cond(Upper_x_boundary_mesh_size) *cond(Upper_y_boundary_mesh_size) *cond(Upper_z_boundary_mesh_size) *cond(Lower_x_boundary_mesh_size) *cond(Lower_y_boundary_mesh_size) *cond(Lower_z_boundary_mesh_size)}"
-        }
+        },
 *end layers
 *endif
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
@@ -179,17 +180,18 @@
         }
 *else 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
-*WarningBox "No grid defined"
+*WarningBox "No grid defined. Define grid condition or use GiD native mesher."
+        "_error": "gridError"
 *endif
 *endif
     },
 
-    "layers": {
+    "layers": [
 *set elems(all)
 *loop layers
-        "layer": {"id": *LayerNum, "name": "*LayerName"}
+        {"id": *LayerNum, "name": "*LayerName"},
 *end layers
-    }
+    ]
 
     "coordinates": [
 *set elems(all)
@@ -235,32 +237,33 @@
         *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum
 *End elems
         ]
-    }
+    },
 
-Excitations:
+    "electromagneticSources": [
 *set elems(all)
 *Set Cond Planewave
 *if(CondNumEntities(int)>0)
-Planewave: 
+        {
+            "type": "planewave", 
 *loop layers *OnlyInCond
-Definition mode: *cond(Definition_mode)
-Direction vector: *cond(Direction_vector) 
-Polarization vector: *cond(Polarization_vector)
-Direction theta: *cond(Direction_theta)
-Direction phi: *cond(Direction_phi)
-Polarization alpha: *cond(Polarization_alpha)
-Polarization beta: *cond(Polarization_beta)
-Number of random planewaves: *cond(Number_of_random_planewaves)
-Relative variation of random delay: *cond(Relative_variation_of_random_delay)
-Excitation: *cond(Excitation)
-Gaussian spread: *cond(Gaussian_spread)
-Gaussian delay: *cond(Gaussian_delay)
+            "definitionMode": "*cond(Definition_mode)",
+            "directionVector": "{*cond(Direction_vector)}", 
+            "polarizationVector": "{*cond(Polarization_vector)}",
+            "directionTheta": *cond(Direction_theta)
+        Direction phi: *cond(Direction_phi)
+        Polarization alpha: *cond(Polarization_alpha)
+        Polarization beta: *cond(Polarization_beta)
+        Number of random planewaves: *cond(Number_of_random_planewaves)
+        Relative variation of random delay: *cond(Relative_variation_of_random_delay)
+        Excitation: *cond(Excitation)
+        Gaussian spread: *cond(Gaussian_spread)
+        Gaussian delay: *cond(Gaussian_delay)
 *if(strcmp(cond(Excitation),"File")==0)
-Filename: *cond(File)
+        Filename: *cond(File)
 *endif
-Defined: OnLayers
-Layer Name: *layerName
-Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
+        Defined: OnLayers
+        Layer Name: *layerName
+        Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
 *end layers
 End of Planewave:
 *endif
@@ -443,8 +446,7 @@ End of Source_on_line:
 *endif 
 
 *end conditions
-
-End of Excitations:
+    ]
 
 Output Requests:
 *Set Cond OutRq_on_point
