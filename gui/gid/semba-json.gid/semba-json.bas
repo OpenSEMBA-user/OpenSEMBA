@@ -389,76 +389,162 @@
         },
 *endif 
 *end conditions
-    ]
+    ],
 
-Output Requests:
+# ================================================
+    "outputRequests": {
 *Set Cond OutRq_on_point
 *if(CondNumEntities(int)>0)
-Output request instance:
-GiDOutputType: OutRq_on_point
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "OutRq_on_point",
+            "numberOfElements": *CondNumEntities(int),
 *loop nodes *OnlyInCond
-Name: *cond(Name)
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*NodesNum
-*end nodes
-End of Output request instance: 
+            "name": "*cond(Name)",
+            "type": "*cond(Type)",
+            "domain": {
+*if(strcmp(cond(Time),"1")==0)
+                "time": "*cond(Time)",
+                "initialTime": *cond(Initial_time),
+                "finalTime": *cond(Final_time),
+                "samplingPeriod": *cond(Sampling_period),
 *endif
+*if(strcmp(cond(Frequency),"1")==0)
+                "frequency": *cond(Frequency),
+                "initialFrequency": *cond(Initial_Frequency),
+                "finalFrequency": *cond(Final_Frequency),
+                "frequencyStep": *cond(Frequency_step),
+                "logFrequencySweep": *cond(Log_frequency_sweep),
+                "useTransferFunction": *cond(Use_transfer_function),
+                "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
+            },                
+            "CoordId": *NodesNum
+*end nodes
+        },
+*endif
+# -----------------------------------
 *Set cond OutRq_on_line
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: OutRq_on_line
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "OutRq_on_line",
+            "numberOfElements": *CondNumEntities(int),
 *loop elems OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*elemsNum
+            "name": *cond(Name),
+            "type": *cond(Type),
+            "domain": {
+*if(strcmp(cond(Time),"1")==0)
+                "time": "*cond(Time)",
+                "initialTime": *cond(Initial_time),
+                "finalTime": *cond(Final_time),
+                "samplingPeriod": *cond(Sampling_period),
+*endif
+*if(strcmp(cond(Frequency),"1")==0)
+                "frequency": *cond(Frequency),
+                "initialFrequency": *cond(Initial_Frequency),
+                "finalFrequency": *cond(Final_Frequency),
+                "frequencyStep": *cond(Frequency_step),
+                "logFrequencySweep": *cond(Log_frequency_sweep),
+                "useTransferFunction": *cond(Use_transfer_function),
+                "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
+            },                
+            "elemId": *elemsNum
 *end elems
-End of Output request instance:
+        },
 *end if
+# -----------------------------------
 *Set cond OutRq_on_surface
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: OutRq_on_surface
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "OutRq_on_surface",
+            "numberOfElements": *CondNumEntities(int),
 *loop elems OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*elemsNum
+            "name": *cond(Name),
+            "type": *cond(Type),
+            "domain": {
+*if(strcmp(cond(Time),"1")==0)
+                "time": "*cond(Time)",
+                "initialTime": *cond(Initial_time),
+                "finalTime": *cond(Final_time),
+                "samplingPeriod": *cond(Sampling_period),
+*endif
+*if(strcmp(cond(Frequency),"1")==0)
+                "frequency": *cond(Frequency),
+                "initialFrequency": *cond(Initial_Frequency),
+                "finalFrequency": *cond(Final_Frequency),
+                "frequencyStep": *cond(Frequency_step),
+                "logFrequencySweep": *cond(Log_frequency_sweep),
+                "useTransferFunction": *cond(Use_transfer_function),
+                "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
+            },                
+            "elemId": *elemsNum
 *end elems
-End of Output request instance:
+        },
 *end if
+# -----------------------------------
 *Set cond OutRq_on_layer
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: OutRq_on_layer
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "OutRq_on_layer",
+            "numberOfElements": *CondNumEntities(int),
 *loop layers *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)"
-*tcl(GiD_Info layer -bbox -use geometry *layerName)
+            "name": *cond(Name),
+            "type": *cond(Type),
+            "domain": {
+*if(strcmp(cond(Time),"1")==0)
+                "time": "*cond(Time)",
+                "initialTime": *cond(Initial_time),
+                "finalTime": *cond(Final_time),
+                "samplingPeriod": *cond(Sampling_period),
+*endif
+*if(strcmp(cond(Frequency),"1")==0)
+                "frequency": *cond(Frequency),
+                "initialFrequency": *cond(Initial_Frequency),
+                "finalFrequency": *cond(Final_Frequency),
+                "frequencyStep": *cond(Frequency_step),
+                "logFrequencySweep": *cond(Log_frequency_sweep),
+                "useTransferFunction": *cond(Use_transfer_function),
+                "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
+            },                
+            "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}"
 *end layers
-End of Output request instance: 
+        },
 *end if
+# -----------------------------------
 *Set cond Bulk_current_on_surface
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: Bulk_current_on_surface
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "Bulk_current_on_surface",
+            "numberOfElements": *CondNumEntities(int),
 *loop elems *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)"
-Direction: *cond(Direction)
-Skip: *cond(Skip)
-*elemsNum
+            "name": *cond(Name),
+            "type": *cond(Type),
+            "domain": {
+*if(strcmp(cond(Time),"1")==0)
+                "time": "*cond(Time)",
+                "initialTime": *cond(Initial_time),
+                "finalTime": *cond(Final_time),
+                "samplingPeriod": *cond(Sampling_period),
+*endif
+*if(strcmp(cond(Frequency),"1")==0)
+                "frequency": *cond(Frequency),
+                "initialFrequency": *cond(Initial_Frequency),
+                "finalFrequency": *cond(Final_Frequency),
+                "frequencyStep": *cond(Frequency_step),
+                "logFrequencySweep": *cond(Log_frequency_sweep),
+                "useTransferFunction": *cond(Use_transfer_function),
+                "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
+            },                
+            "direction": "{*cond(Direction)}",
+            "skip": *cond(Skip),
+            "elemId": *elemsNum
 *end elems
-End of Output request instance:
+        },
 *end if
+# -----------------------------------
 *Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
 Output request instance: 
@@ -474,6 +560,7 @@ Skip: *cond(Skip)
 *end layers
 End of Output request instance: 
 *end if
+# -----------------------------------
 *Set cond Far_field
 *if(CondNumEntities(int)>0)
 Output request instance: 
