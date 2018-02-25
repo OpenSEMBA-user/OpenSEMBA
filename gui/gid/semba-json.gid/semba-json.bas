@@ -547,33 +547,72 @@
 # -----------------------------------
 *Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: Bulk_current_on_layer
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "Bulk_current_on_layer",
+            "numberOfElements": *CondNumEntities(int),
 *loop layers *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)"
-Direction: *cond(Direction)
-Skip: *cond(Skip)
-*tcl(GiD_Info layer -bbox -use geometry *layerName)
+            "name": *cond(Name),
+            "type": *cond(Type),
+            "domain": {
+*if(strcmp(cond(Time),"1")==0)
+                "time": "*cond(Time)",
+                "initialTime": *cond(Initial_time),
+                "finalTime": *cond(Final_time),
+                "samplingPeriod": *cond(Sampling_period),
+*endif
+*if(strcmp(cond(Frequency),"1")==0)
+                "frequency": *cond(Frequency),
+                "initialFrequency": *cond(Initial_Frequency),
+                "finalFrequency": *cond(Final_Frequency),
+                "frequencyStep": *cond(Frequency_step),
+                "logFrequencySweep": *cond(Log_frequency_sweep),
+                "useTransferFunction": *cond(Use_transfer_function),
+                "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
+            },                
+            "direction": "{*cond(Direction)}",
+            "skip": *cond(Skip),
+            "box": {*tcl(GiD_Info layer -bbox -use geometry *layerName)}
 *end layers
-End of Output request instance: 
+        },
 *end if
 # -----------------------------------
 *Set cond Far_field
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: Far_field
-Number of elements: *CondNumEntities(int)
+        { 
+            "gidOutputType": "Far_field",
+            "numberOfElements": *CondNumEntities(int),
 *loop layers *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*tcl(GiD_Info layer -bbox -use geometry *layerName)
-*cond(Initial_theta) *cond(Final_theta) *cond(Step_theta) *cond(Initial_phi) *cond(Final_phi) *cond(Step_phi)
+            "name": *cond(Name),
+            "type": *cond(Type),
+            "domain": {
+*if(strcmp(cond(Time),"1")==0)
+                "time": "*cond(Time)",
+                "initialTime": *cond(Initial_time),
+                "finalTime": *cond(Final_time),
+                "samplingPeriod": *cond(Sampling_period),
+*endif
+*if(strcmp(cond(Frequency),"1")==0)
+                "frequency": *cond(Frequency),
+                "initialFrequency": *cond(Initial_Frequency),
+                "finalFrequency": *cond(Final_Frequency),
+                "frequencyStep": *cond(Frequency_step),
+                "logFrequencySweep": *cond(Log_frequency_sweep),
+                "useTransferFunction": *cond(Use_transfer_function),
+                "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
+            },                
+            "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
+            "farPoints": {
+                "initialTheta": *cond(Initial_theta),
+                "finalTheta": *cond(Final_theta),
+                "stepTheta":*cond(Step_theta),
+                "initialPhi": *cond(Initial_phi),
+                "finalPhi": *cond(Final_phi),
+                "stepPhi": *cond(Step_phi)
+            }
 *end layers
-End of Output request instance: 
+        }
 *end if
-End of Output Requests:
+    }
 }
