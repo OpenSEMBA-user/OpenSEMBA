@@ -56,18 +56,18 @@
      
     "problemSize": {
 *set elems(Hexahedra)
-        "hexahedra8": *nelem,
+        "hexahedra8":     *nelem,
 *set elems(Tetrahedra)
-        "tetrahedra4": *nelem,
+        "tetrahedra4":    *nelem,
 *set elems(Quadrilateral)
         "quadrilateral4": *nelem,
 *set elems(Triangle)
-        "triangle3": *nelem,
+        "triangle3":      *nelem,
 *set elems(Linear)
-        "linear2": *nelem,
+        "linear2":        *nelem,
 *set elems(all)
-        "coordinates": *npoin,
-        "materials": *nmats
+        "coordinates":    *npoin,
+        "materials":      *nmats
     },
 
     "materials": [
@@ -243,6 +243,7 @@
 *set elems(all)
 *Set Cond Planewave
 *if(CondNumEntities(int)>0)
+# ------------------------
         {
             "sourceType": "planewave", 
 *loop layers *OnlyInCond
@@ -274,7 +275,7 @@
 *end layers
         },
 *endif
-
+# ------------------------
 *Set Cond Source_on_line *bodyElements
 *set var HEADER=0
 *loop elems *OnlyInCond
@@ -297,97 +298,64 @@
             "numberOfElements": *CondNumEntities(int),
             "elemIds": [
 *endif
-  *elemsNum
+                *elemsNum
 *end elems
-        ]
+            ]
 *if(HEADER==1)
 }
 *endif
-
+# ------------------------
 *loop conditions *nodes
 *if(strcasecmp(condName,"Generator_on_line")==0&&CondNumEntities(int)>0)
 *loop nodes *OnlyInCond
- Generator:
- Type: *cond(Type)
- Magnitude: *cond(Magnitude)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Magnitude),"File")==0)
- Filename: *cond(File)
-*endif
- Defined: OnNodes
- Number of elements: 1
- *NodesNum
- End of Generator:
+        {
+            "sourceType": "generator",
+            "type": "*cond(Type)",
+            "magnitude": {
+                "type": "*cond(magnitude)",
+            *if(strcmp(cond(Magnitude),"File")==0)
+                "filename": "*cond(file)"
+            *else
+                "gaussianSpread": *cond(Gaussian_spread),
+                "gaussianDelay": *cond(Gaussian_delay)
+            *endif
+            },
+            "defined": "OnNodes",
+            "numberOfElements": 1,
+            "elemIds": [ *NodesNum ]
+        },
 *end nodes
-
 *endif
 *end conditions
-*loop conditions *faceElements
-*if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
-*set var HEADER = 0
-*loop elems *onlyInCond
-*if(HEADER == 0)
- Waveguide_port:
- Shape: *cond(Shape)
- Magnitude: *cond(Magnitude)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Magnitude),"File")==0)
- Filename: *cond(File)
-*endif
- ExcitationMode: *cond(Mode)
- FirstMode: *cond(FirstMode)
- SecondMode: *cond(SecondMode)
- Number of elements: *CondNumEntities(int)
- Elements:
-*set var HEADER = 1
-*endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
-*else
-  *ElemsNum 3
-*endif
-*end elems
- End of Waveguide_port:
-*endif 
-
-*end conditions
+# ------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
 *set var HEADER = 0
 *loop elems *onlyInCond
 *if(HEADER == 0)
- Waveguide_port: 
- Shape: *cond(Shape)
- Magnitude: *cond(Magnitude)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Magnitude),"File")==0)
- Filename: *cond(File)
-*endif
- ExcitationMode: *cond(Mode)
- FirstMode: *cond(FirstMode)
- SecondMode: *cond(SecondMode)
- Number of elements: *CondNumEntities(int)
- Elements:
+        {
+            "sourceType": "waveguidePort",
+            "shape": "*cond(Shape)"
+            "magnitude": {
+                "type": "*cond(magnitude)",
+            *if(strcmp(cond(Magnitude),"File")==0)
+                "filename": "*cond(file)"
+            *else
+                "gaussianSpread": *cond(Gaussian_spread),
+                "gaussianDelay": *cond(Gaussian_delay)
+            *endif
+            },
+            "excitationMode": "*cond(Mode)",
+            "firstMode": *cond(FirstMode),
+            "secondMode": *cond(SecondMode),
+            "numberOfElements": *CondNumEntities(int),
+            "elemIds": [
 *set var HEADER = 1
 *endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
-*else
-  *ElemsNum 3
-*endif
+                *ElemsNum
 *end elems
- End of Waveguide port:
+            ]
+        },
 *endif 
 *end conditions
 
@@ -396,68 +364,30 @@
 *set var HEADER = 0
 *loop elems *onlyInCond
 *if(HEADER == 0)
- TEM_port: 
- Magnitude: *cond(Magnitude)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Magnitude),"File")==0)
- Filename: *cond(File)
-*endif
- Origin: *cond(Origin)
- Inner radius: *cond(Inner_radius)
- Outer radius: *cond(Outer_radius)
- ExcitationMode: *cond(Mode)
- Number of elements: *CondNumEntities(int)
- Elements:
+        {
+            "sourceType": "temPort",
+            "magnitude": {
+                "type": "*cond(magnitude)",
+            *if(strcmp(cond(Magnitude),"File")==0)
+                "filename": "*cond(file)"
+            *else
+                "gaussianSpread": *cond(Gaussian_spread),
+                "gaussianDelay": *cond(Gaussian_delay)
+            *endif
+            },
+            "origin": "{*cond(Origin)}",
+            "innerRadius": *cond(Inner_radius),
+            "outerRadius": *cond(Outer_radius),
+            "excitationMode": "*cond(Mode)",
+            "numberOfElements": *CondNumEntities(int)
+            "elemIds": [
 *set var HEADER = 1
 *endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
-*else
-  *ElemsNum 3
-*endif
+                *ElemsNum,
 *end elems
- End of Waveguide_port:
+            ]
+        },
 *endif 
-
-*end conditions
-*loop conditions *bodyElements
-*if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
-*set var HEADER = 0
-*loop elems *onlyInCond
-*if(HEADER == 0)
- TEM_port: 
- Magnitude: *cond(Magnitude)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Magnitude),"File")==0)
- Filename: *cond(File)
-*endif
- Origin: *cond(Origin)
- Inner radius: *cond(Inner_radius)
- Outer radius: *cond(Outer_radius)
- ExcitationMode: *cond(Mode)
- Number of elements: *CondNumEntities(int)
- Elements:
-*set var HEADER = 1
-*endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
-*else
-  *ElemsNum 3
-*endif
-*end elems
- End of TEM port:
-*endif 
-
 *end conditions
     ]
 
