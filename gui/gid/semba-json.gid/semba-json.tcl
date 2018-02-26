@@ -491,6 +491,6 @@ proc semba::writeLayersFile {} {
 	set modelDir [GiD_Info Project ModelName].gid/
 	set modelName [file tail [GiD_Info Project ModelName] ]
     GiD_Process Mescape Files WriteForBAS \
-	[file join $semba::_dir/multilayer.bas] \
+	[file join $semba::_dir/includes/multilayer.bas] \
 	[file join $modelDir $modelName.layers]
 }

@@ -281,6 +281,18 @@
         ]
     },
 
+*# ----------------------------------------------------------
+*# ---------------------- SOURCES ---------------------------
+*# ----------------------------------------------------------
+*# --- Precounts sources ---
+*set var nSources = 0
+*set elems(all)
+*set Cond Planewave
+*loop layers *OnlyInCond
+*set var nSources = nSources + 1
+*end layers
+*# ----------------------------------------------------------
+*set var sourceNum = 0
     "sources": [
 *set elems(all)
 *Set Cond Planewave
@@ -301,20 +313,17 @@
             "numberOfRandomPlanewaves": *cond(Number_of_random_planewaves),
             "relativeVariationOfRandomDelay": *cond(Relative_variation_of_random_delay),
 *endif            
-            "magnitude": {
-                "type": "*cond(magnitude)",
-*if(strcmp(cond(Magnitude),"File")==0)
-                "filename": "*cond(file)"
-*else
-                "gaussianSpread": *cond(Gaussian_spread),
-                "gaussianDelay": *cond(Gaussian_delay)
-*endif
-            },
+*include includes/magnitude.bas
             "defined": "OnLayers",
             "layerName": "*layerName",
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *end layers
+*set var sourceNum = sourceNum + 1
+*if(sourceNum == nSources) 
+        }
+*else
         },
+*endif
 *endif
 *# ----------------------------------------------------------
 *Set Cond Source_on_line *bodyElements
@@ -326,15 +335,7 @@
             "sourceType": "sourceOnLine",
             "type": "*cond(Type)", 
             "hardness": "*cond(Hardness)",
-            "magnitude": {
-                "type": "*cond(magnitude)",
-*if(strcmp(cond(Magnitude),"File")==0)
-                "filename": "*cond(file)"
-*else
-                "gaussianSpread": *cond(Gaussian_spread),
-                "gaussianDelay": *cond(Gaussian_delay)
-*endif
-            },
+*include includes/magnitude.bas
             "defined": "OnElements",
             "numberOfElements": *CondNumEntities(int),
             "elemIds": [
@@ -352,15 +353,7 @@
         {
             "sourceType": "generator",
             "type": "*cond(Type)",
-            "magnitude": {
-                "type": "*cond(magnitude)",
-            *if(strcmp(cond(Magnitude),"File")==0)
-                "filename": "*cond(file)"
-            *else
-                "gaussianSpread": *cond(Gaussian_spread),
-                "gaussianDelay": *cond(Gaussian_delay)
-            *endif
-            },
+*include includes/magnitude.bas
             "defined": "OnNodes",
             "numberOfElements": 1,
             "elemIds": [ *NodesNum ]
@@ -377,15 +370,7 @@
         {
             "sourceType": "waveguidePort",
             "shape": "*cond(Shape)"
-            "magnitude": {
-                "type": "*cond(magnitude)",
-            *if(strcmp(cond(Magnitude),"File")==0)
-                "filename": "*cond(file)"
-            *else
-                "gaussianSpread": *cond(Gaussian_spread),
-                "gaussianDelay": *cond(Gaussian_delay)
-            *endif
-            },
+*include includes/magnitude.bas
             "excitationMode": "*cond(Mode)",
             "firstMode": *cond(FirstMode),
             "secondMode": *cond(SecondMode),
@@ -407,15 +392,7 @@
 *if(HEADER == 0)
         {
             "sourceType": "temPort",
-            "magnitude": {
-                "type": "*cond(magnitude)",
-            *if(strcmp(cond(Magnitude),"File")==0)
-                "filename": "*cond(file)"
-            *else
-                "gaussianSpread": *cond(Gaussian_spread),
-                "gaussianDelay": *cond(Gaussian_delay)
-            *endif
-            },
+*include includes/magnitude.bas
             "origin": "{*cond(Origin)}",
             "innerRadius": *cond(Inner_radius),
             "outerRadius": *cond(Outer_radius),
@@ -441,23 +418,7 @@
 *loop nodes *OnlyInCond
             "name": "*cond(Name)",
             "type": "*cond(Type)",
-            "domain": {
-*if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
-                "initialTime": *cond(Initial_time),
-                "finalTime": *cond(Final_time),
-                "samplingPeriod": *cond(Sampling_period),
-*endif
-*if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
-                "initialFrequency": *cond(Initial_Frequency),
-                "finalFrequency": *cond(Final_Frequency),
-                "frequencyStep": *cond(Frequency_step),
-                "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
-                "transferFunctionFile": "*cond(transfer_function_file)"
-*endif
-            },                
+*include includes/domain.bas
             "CoordId": *NodesNum
 *end nodes
         },
@@ -471,23 +432,7 @@
 *loop elems OnlyInCond
             "name": *cond(Name),
             "type": *cond(Type),
-            "domain": {
-*if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
-                "initialTime": *cond(Initial_time),
-                "finalTime": *cond(Final_time),
-                "samplingPeriod": *cond(Sampling_period),
-*endif
-*if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
-                "initialFrequency": *cond(Initial_Frequency),
-                "finalFrequency": *cond(Final_Frequency),
-                "frequencyStep": *cond(Frequency_step),
-                "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
-                "transferFunctionFile": "*cond(transfer_function_file)"
-*endif
-            },                
+*include includes/domain.bas
             "elemId": *elemsNum
 *end elems
         },
@@ -501,23 +446,7 @@
 *loop elems OnlyInCond
             "name": *cond(Name),
             "type": *cond(Type),
-            "domain": {
-*if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
-                "initialTime": *cond(Initial_time),
-                "finalTime": *cond(Final_time),
-                "samplingPeriod": *cond(Sampling_period),
-*endif
-*if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
-                "initialFrequency": *cond(Initial_Frequency),
-                "finalFrequency": *cond(Final_Frequency),
-                "frequencyStep": *cond(Frequency_step),
-                "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
-                "transferFunctionFile": "*cond(transfer_function_file)"
-*endif
-            },                
+*include includes/domain.bas
             "elemId": *elemsNum
 *end elems
         },
@@ -531,23 +460,7 @@
 *loop layers *OnlyInCond
             "name": *cond(Name),
             "type": *cond(Type),
-            "domain": {
-*if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
-                "initialTime": *cond(Initial_time),
-                "finalTime": *cond(Final_time),
-                "samplingPeriod": *cond(Sampling_period),
-*endif
-*if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
-                "initialFrequency": *cond(Initial_Frequency),
-                "finalFrequency": *cond(Final_Frequency),
-                "frequencyStep": *cond(Frequency_step),
-                "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
-                "transferFunctionFile": "*cond(transfer_function_file)"
-*endif
-            },                
+*include includes/domain.bas
             "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}"
 *end layers
         },
@@ -561,23 +474,7 @@
 *loop elems *OnlyInCond
             "name": *cond(Name),
             "type": *cond(Type),
-            "domain": {
-*if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
-                "initialTime": *cond(Initial_time),
-                "finalTime": *cond(Final_time),
-                "samplingPeriod": *cond(Sampling_period),
-*endif
-*if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
-                "initialFrequency": *cond(Initial_Frequency),
-                "finalFrequency": *cond(Final_Frequency),
-                "frequencyStep": *cond(Frequency_step),
-                "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
-                "transferFunctionFile": "*cond(transfer_function_file)"
-*endif
-            },                
+*include includes/domain.bas
             "direction": "{*cond(Direction)}",
             "skip": *cond(Skip),
             "elemId": *elemsNum
@@ -593,23 +490,7 @@
 *loop layers *OnlyInCond
             "name": *cond(Name),
             "type": *cond(Type),
-            "domain": {
-*if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
-                "initialTime": *cond(Initial_time),
-                "finalTime": *cond(Final_time),
-                "samplingPeriod": *cond(Sampling_period),
-*endif
-*if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
-                "initialFrequency": *cond(Initial_Frequency),
-                "finalFrequency": *cond(Final_Frequency),
-                "frequencyStep": *cond(Frequency_step),
-                "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
-                "transferFunctionFile": "*cond(transfer_function_file)"
-*endif
-            },                
+*include includes/domain.bas
             "direction": "{*cond(Direction)}",
             "skip": *cond(Skip),
             "box": {*tcl(GiD_Info layer -bbox -use geometry *layerName)}
@@ -625,23 +506,7 @@
 *loop layers *OnlyInCond
             "name": *cond(Name),
             "type": *cond(Type),
-            "domain": {
-*if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
-                "initialTime": *cond(Initial_time),
-                "finalTime": *cond(Final_time),
-                "samplingPeriod": *cond(Sampling_period),
-*endif
-*if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
-                "initialFrequency": *cond(Initial_Frequency),
-                "finalFrequency": *cond(Final_Frequency),
-                "frequencyStep": *cond(Frequency_step),
-                "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
-                "transferFunctionFile": "*cond(transfer_function_file)"
-*endif
-            },                
+*include includes/domain.bas
             "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
             "farPoints": {
                 "initialTheta": *cond(Initial_theta),
