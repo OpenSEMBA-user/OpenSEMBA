@@ -1,6 +1,6 @@
 {
-    "format": "Semba Data File",
-    "version": "*tcl(set version $semba::VersionNumber)",
+    "_format": "Semba Data File in JSON format ",
+    "_version": "*tcl(set version $semba::VersionNumber)",
 
     "solverOptions": {
         "solverName": "*GenData(Solver)",
@@ -75,29 +75,29 @@
         {
             "materialId": *matnum(),
             "name": "*MatProp(0)",
-            "materialTypeId": "*MatProp(TypeId)",
 *if(strcmp(MatProp(TypeId),"PEC")==0)
-*endif
-*if(strcmp(MatProp(TypeId),"PMC")==0)
-*endif
-*if(strcmp(MatProp(TypeId),"PML")==0)
+            "materialTypeId": "*MatProp(TypeId)"
+*elseif(strcmp(MatProp(TypeId),"PMC")==0)
+            "materialTypeId": "*MatProp(TypeId)"
+*elseif(strcmp(MatProp(TypeId),"PML")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "automaticOrientation": *matprop(Automatic_orientation),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
             "localAxes: "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
 *endif
-*endif
-*if(strcmp(Matprop(TypeId),"Classic")==0)
+*elseif(strcmp(Matprop(TypeId),"Classic")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "permittivity": *matprop(Permittivity),
             "permeability": *matprop(Permeability),
             "electricConductivity": *matprop(ElecCond),
             "magneticConductivity": *matprop(MagnCond),
-*endif
-*if(strcmp(Matprop(TypeId),"Dispersive")==0)
+*elseif(strcmp(Matprop(TypeId),"Dispersive")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "filename": "*matprop(File)",
-*endif
-*if(strcmp(Matprop(TypeId),"Wire")==0)
+*elseif(strcmp(Matprop(TypeId),"Wire")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "radius": *matprop(Radius),
             "wireType": "*matprop(WireType)",
             "resistance": *matprop(resistance),
@@ -109,36 +109,37 @@
 *if(strcmp(Matprop(WireType),"Dispersive")==0)
             "filename": *matprop(File),
 *endif
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
+*elseif(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance),
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
+*elseif(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance),
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
+*elseif(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance),
-*endif
-*if(strcmp(Matprop(TypeId),"Thin_gap")==0)
+*elseif(strcmp(Matprop(TypeId),"Thin_gap")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "width": *matprop(Width),
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
+*elseif(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "filename": "*matprop(File)",
-*endif
-*if(strcmp(Matprop(TypeId),"SIBC")==0)
+*elseif(strcmp(Matprop(TypeId),"SIBC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
             "surfaceType": "*matprop(SurfaceType)",
 *if(strcmp(Matprop(SurfaceType),"File")==0)
+            "materialTypeId": "*MatProp(TypeId)",   
             "filename": "*matprop(File)"
 *endif
             "layers": "*matprop",
-*endif
-*if(strcmp(Matprop(TypeId),"Anisotropic")==0)
+*elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
+            "materialTypeId": "*MatProp(TypeId)",
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
@@ -150,8 +151,14 @@
             "kappa": *matprop(Kappa),
             "ferriteRelativePermeability": *matprop(Ferrite_relative_permeability),
             "ferriteRelativePermittivity": *matprop(Ferrite_relative_permittivity)
+*else
+*warningBox "Unrecognized material label"
+            "_error": "Unrecognized material label"
 *endif
+*if(nmats != loopvar)
         },
+*else
+        }
 *end materials
     ],
 
@@ -168,7 +175,11 @@
             "boundaryPaddingType": "*cond(boundary_padding_type)",
             "boundaryPadding": "{*cond(Upper_x_boundary_padding) *cond(Upper_y_boundary_padding) *cond(Upper_z_boundary_padding) *cond(Lower_x_boundary_padding) *cond(Lower_y_boundary_padding) *cond(Lower_z_boundary_padding)}",
             "boundaryMeshSize": "{*cond(Upper_x_boundary_mesh_size) *cond(Upper_y_boundary_mesh_size) *cond(Upper_z_boundary_mesh_size) *cond(Lower_x_boundary_mesh_size) *cond(Lower_y_boundary_mesh_size) *cond(Lower_z_boundary_mesh_size)}"
+*if(CondNumEntities(int)!=loopVar)
         },
+*else
+        }
+*endif
 *end layers
 *endif
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
@@ -189,52 +200,83 @@
     "layers": [
 *set elems(all)
 *loop layers
-        {"id": *LayerNum, "name": "*LayerName"},
+*set var NUMBER_OF_LAYERS = loopVar
 *end layers
-    ]
+*loop layers
+*if(NUMBER_OF_LAYERS != loopVar)
+        {"id": *LayerNum, "name": "*LayerName"},
+*else
+        {"id": *LayerNum, "name": "*LayerName"}
+*endif
+*end layers
+    ],
 
     "coordinates": [
 *set elems(all)
 *loop nodes
 *format "%7i %+14.8e %+14.8e %+14.8e"
-        *NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)
+*if(npoin != loopVar)
+        "*NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)",
+*else
+        "*NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)"
+*endif
 *end nodes
-    ]
+    ],
 
     "elements": {
 *set elems(Hexahedra)
         "hexahedra": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %7i %7i %7i %7i %3i %3i"
-        *ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum 
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum"
+*endif        
 *end elems
         ],
 *set elems(Tetrahedra)
         "tetrahedra": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
-        *ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+*endif        
 *end elems
         ],
 *set elems(Quadrilateral)
         "quadrilateral": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
-        *ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum 
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+*endif
 *end elems
         ],
 *set elems(Triangle)
         "triangle": [
 *loop elems
 *format "%8i %7i %7i %7i %3i %3i"
-        *ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum 
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum"
+*endif
 *end elems
         ],
 *set elems(Linear)
         "line": [
 *loop elems
 *format "%8i %7i %7i %3i %3i"
-        *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum"
+*endif        
 *End elems
         ]
     },
@@ -243,7 +285,6 @@
 *set elems(all)
 *Set Cond Planewave
 *if(CondNumEntities(int)>0)
-# ------------------------
         {
             "sourceType": "planewave", 
 *loop layers *OnlyInCond
@@ -275,7 +316,7 @@
 *end layers
         },
 *endif
-# ------------------------
+*# ----------------------------------------------------------
 *Set Cond Source_on_line *bodyElements
 *set var HEADER=0
 *loop elems *OnlyInCond
@@ -300,11 +341,11 @@
 *endif
                 *elemsNum
 *end elems
-            ]
 *if(HEADER==1)
-}
+            ]
+        }
 *endif
-# ------------------------
+*# ----------------------------------------------------------
 *loop conditions *nodes
 *if(strcasecmp(condName,"Generator_on_line")==0&&CondNumEntities(int)>0)
 *loop nodes *OnlyInCond
@@ -327,7 +368,7 @@
 *end nodes
 *endif
 *end conditions
-# ------------------------
+*# ----------------------------------------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
 *set var HEADER = 0
@@ -358,7 +399,7 @@
         },
 *endif 
 *end conditions
-
+*# ----------------------------------------------------------
 *loop conditions *faceElements
 *if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
 *set var HEADER = 0
@@ -386,13 +427,12 @@
                 *ElemsNum,
 *end elems
             ]
-        },
+        }, 
 *endif 
 *end conditions
     ],
 
-# ================================================
-    "outputRequests": {
+    "outputRequests": [
 *Set Cond OutRq_on_point
 *if(CondNumEntities(int)>0)
         {
@@ -422,7 +462,7 @@
 *end nodes
         },
 *endif
-# -----------------------------------
+*# ----------------------------------------------------------
 *Set cond OutRq_on_line
 *if(CondNumEntities(int)>0)
         {
@@ -452,7 +492,7 @@
 *end elems
         },
 *end if
-# -----------------------------------
+*# ----------------------------------------------------------
 *Set cond OutRq_on_surface
 *if(CondNumEntities(int)>0)
         {
@@ -482,7 +522,7 @@
 *end elems
         },
 *end if
-# -----------------------------------
+*# ----------------------------------------------------------
 *Set cond OutRq_on_layer
 *if(CondNumEntities(int)>0)
         {
@@ -512,7 +552,7 @@
 *end layers
         },
 *end if
-# -----------------------------------
+*# ----------------------------------------------------------
 *Set cond Bulk_current_on_surface
 *if(CondNumEntities(int)>0)
         {
@@ -544,7 +584,7 @@
 *end elems
         },
 *end if
-# -----------------------------------
+*# ----------------------------------------------------------
 *Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
         {
@@ -576,7 +616,7 @@
 *end layers
         },
 *end if
-# -----------------------------------
+*# ----------------------------------------------------------
 *Set cond Far_field
 *if(CondNumEntities(int)>0)
         { 
@@ -606,13 +646,13 @@
             "farPoints": {
                 "initialTheta": *cond(Initial_theta),
                 "finalTheta": *cond(Final_theta),
-                "stepTheta":*cond(Step_theta),
+                "stepTheta": *cond(Step_theta),
                 "initialPhi": *cond(Initial_phi),
                 "finalPhi": *cond(Final_phi),
                 "stepPhi": *cond(Step_phi)
             }
 *end layers
-        }
+        },
 *end if
-    }
+    ]
 }
