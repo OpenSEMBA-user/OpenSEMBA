@@ -6,4 +6,6 @@ external/gidpost/release/
 .settings
 .project
 .cproject
+.externalToolBuilders
+.Makefile.swp
 
