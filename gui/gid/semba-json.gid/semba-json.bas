@@ -171,10 +171,11 @@
         "gridCondition": {
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
             "type": "*cond(Type)",
-            "directions": "{*cond(x_direction) *cond(y_direction) *cond(z_direction)}",
+            "directions": "{*cond(Size)}",
+*if(strcasecmp(cond(boundary_padding_type),"None")!=0)       
             "boundaryPaddingType": "*cond(boundary_padding_type)",
-            "boundaryPadding": "{*cond(Upper_x_boundary_padding) *cond(Upper_y_boundary_padding) *cond(Upper_z_boundary_padding) *cond(Lower_x_boundary_padding) *cond(Lower_y_boundary_padding) *cond(Lower_z_boundary_padding)}",
-            "boundaryMeshSize": "{*cond(Upper_x_boundary_mesh_size) *cond(Upper_y_boundary_mesh_size) *cond(Upper_z_boundary_mesh_size) *cond(Lower_x_boundary_mesh_size) *cond(Lower_y_boundary_mesh_size) *cond(Lower_z_boundary_mesh_size)}"
+            "boundaryPadding": "{*cond(Upper_padding) *cond(Lower_padding)}",
+            "boundaryMeshSize": "{*cond(Upper_padding_mesh_size) *cond(Lower_padding_mesh_size)}"
 *if(CondNumEntities(int)!=loopVar)
         },
 *else
@@ -423,17 +424,36 @@
 *end nodes
         },
 *endif
-*# ----------------------------------------------------------
-*Set cond OutRq_on_line
+
+*# --- Precounts ---
+*set var nOutputRequests = 0
+*tcl(semba::setStr "_NONAME")
+*set cond OutRq_on_line
+*loop elems *onlyInCond
+*if(tcl(string equal "*cond(Name)" semba::getStr))
+VERDAD
+*else 
+MENTIRA
+*tcl(semba::getStr)
+*tcl(puts "*cond(Name)")
+*endif
+*end elems
+
+
+*nOutputRequests
+
+
+*# --- Prints ---
+*set cond OutRq_on_line
 *if(CondNumEntities(int)>0)
+*loop elems *onlyInCond
         {
             "gidOutputType": "OutRq_on_line",
-            "numberOfElements": *CondNumEntities(int),
-*loop elems OnlyInCond
             "name": *cond(Name),
             "type": *cond(Type),
 *include includes/domain.bas
-            "elemId": *elemsNum
+            "elemId": [
+               *elemsNum
 *end elems
         },
 *end if

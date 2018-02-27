@@ -64,8 +64,16 @@ proc InitGIDProject { dir } {
 	GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
     GiDMenu::InsertOption "Help" [list [concat [_ "About"] " " $::semba::ProgramName]...] end PREPOST semba::About "" "" insertafter
 
-    # Update the menu properties
+    # Update the menu properties.
     ::GiDMenu::UpdateMenus
+
+    # Removes unsupported options for materials.
+    GiD_DataBehaviour material  "Surface_Impedance" geomlist {surfaces}
+    GiD_DataBehaviour material  "Anisotropic" geomlist {lines surfaces volumes}
+
+    GiD_DataBehaviour materials "Predefined_materials" geomlist {lines surfaces volumes}
+    GiD_DataBehaviour materials "Basic_materials" geomlist {lines surfaces volumes}
+    GiD_DataBehaviour materials "Wires_and_thin_gaps" geomlist {lines}
 }
 
 proc EndGIDProject {} {
@@ -493,4 +501,15 @@ proc semba::writeLayersFile {} {
     GiD_Process Mescape Files WriteForBAS \
 	[file join $semba::_dir/includes/multilayer.bas] \
 	[file join $modelDir $modelName.layers]
+}
+
+proc semba::setStr {stringFromTemplate} {
+	global auxStringTemplate
+	set auxStringTemplate $stringFromTemplate; list
+	return
+}
+
+proc semba::getStr {} {
+	global auxStringTemplate
+	return $auxStringTemplate 
 }
