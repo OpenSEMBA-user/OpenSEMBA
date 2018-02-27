@@ -136,6 +136,9 @@ private:
     void readTet4Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
                            Geometry::Element::Group<Geometry::ElemR>& elems);
+    void readQua4Elements (const Geometry::CoordR3Group& cG,
+    					   const Geometry::Layer::Group<>&,
+						   Geometry::Element::Group<Geometry::ElemR>& elems);
     void readTri6Elements (const Geometry::CoordR3Group& cG,
                            const Geometry::Layer::Group<>&,
                            Geometry::Element::Group<Geometry::ElemR>& elems);

@@ -71,6 +71,7 @@ protected:
     }
 };
 
+
 TEST_F(ParserGiDParserTest, Cartesian) {
     Data* smb;
     EXPECT_NO_THROW(smb = newSmb("cartesian"));

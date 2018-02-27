@@ -20,7 +20,6 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Parser.h"
-
 #include "math/function/Gaussian.h"
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
@@ -69,7 +68,8 @@ Parser::~Parser() {
 Data* Parser::read() {
     if (!canOpen()) {
         throw std::logic_error("Can not openfile: " + getFilename());
-    }
+
+}
     if (isFolder()) {
         throw std::logic_error(getFilename() + " is a directory.");
     }
@@ -619,7 +619,7 @@ ProblemSize Parser::readProblemSize() {
             problemSizeFound = true;
             while(!finished) {
                 getNextLabelAndValue(label, value);
-                if (label.compare("Hexahedral elements")==0) {
+                if (label.compare("Hexahedral elements")==0){
                     res.hex8 = atoi(value.c_str());
                 } else if (label.compare("Quadratic Tetrahedral elements")==0) {
                     res.tet10 = atoi(value.c_str());
@@ -746,6 +746,8 @@ void Parser::readElements(
         } else if (label.compare("Linear Tetrahedral Elements")==0 ||
                    label.compare("Tetrahedral Elements")==0) {
             readTet4Elements(cG, lG, elems);
+        } else if(label.compare("Quadrilateral Elements")==0) {
+        	readQua4Elements(cG, lG, elems);
         } else if (label.compare("Quadratic Triangle Elements")==0) {
             readTri6Elements(cG, lG, elems);
         } else if (label.compare("Linear Triangle Elements")==0 ||
@@ -854,6 +856,41 @@ void Parser::readTet4Elements(
             mat = NULL;
         }
         elems.add(new Geometry::Tet4(id, v, lay, mat));
+    }
+}
+void Parser::readQua4Elements(
+        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
+        const Geometry::Layer::Group<>& lG,
+        Geometry::Element::Group<Geometry::ElemR>& elems) {
+    Geometry::ElemId id;
+    Geometry::CoordId vId;
+    const Geometry::CoordR3* v[4];
+    Geometry::Layer::Id layerId;
+    MatId matId;
+    Math::CVecR3 normal;
+    for (std::size_t i = 0; i < pSize_.tri6; i++) {
+        f_in >> id;
+        for (std::size_t j = 0; j < 4; j++) {
+            f_in >> vId;
+            v[j] = cG.getId(vId);
+        }
+        f_in >> matId >> layerId;
+        progress_.advance();
+        const Geometry::Layer::Layer* lay;
+               if (layerId != Geometry::LayerId(0)) {
+                   lay = lG.getId(layerId);
+               }
+               else {
+                   lay = NULL;
+               }
+        const PhysicalModel::PhysicalModel* mat;
+        if (matId != MatId(0)) {
+            mat = physicalModels_->getId(matId);
+        }
+        else {
+            mat = NULL;
+        }
+        elems.add(new Geometry::QuaR4(id, v, lay, mat));
     }
 }
 
