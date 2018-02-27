@@ -59,7 +59,7 @@ namespace SEMBA {
 namespace Parser {
 namespace GiD {
 
-class Parser : public SEMBA::Parser::Parser/*hereda de la clase virtual del core*/, public FileSystem::Project {
+class Parser : public SEMBA::Parser::Parser, public FileSystem::Project {
 public:
     Parser();
     Parser(const std::string& fn);

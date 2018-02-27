@@ -71,7 +71,8 @@ protected:
     }
 };
 
-/*TEST_F(ParserGiDParserTest, Cartesian) {
+
+TEST_F(ParserGiDParserTest, Cartesian) {
     Data* smb;
     EXPECT_NO_THROW(smb = newSmb("cartesian"));
     if (smb == nullptr) {
@@ -97,7 +98,7 @@ protected:
     EXPECT_EQ(Math::CVecR3(-2.1e-3), grid.getFullDomainBoundingBox().getMin());
 
     EXPECT_NO_THROW(delete smb);
-}*/
+}
 
 TEST_F(ParserGiDParserTest, Sphere) {
     Data* smb;

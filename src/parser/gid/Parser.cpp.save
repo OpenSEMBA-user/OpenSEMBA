@@ -68,18 +68,17 @@ Parser::~Parser() {
 Data* Parser::read() {
     if (!canOpen()) {
         throw std::logic_error("Can not openfile: " + getFilename());
-
-}
+    }
     if (isFolder()) {
         throw std::logic_error(getFilename() + " is a directory.");
     }
     openAsInput(f_in);
     std::size_t numLines = 0;
     std::string line;
-    while (std::getline(f_in, line)) {
-        numLines++;
-    }
-    f_in.close();
+    while (std::getline(f_in, line)) {  //
+        numLines++;						//
+    }                                   //obtains number of lines of input file
+    f_in.close();						//
     openAsInput(f_in);
     progress_.init("Parser GiD", numLines, 0);
     std::string version = readVersion();
@@ -619,8 +618,8 @@ ProblemSize Parser::readProblemSize() {
             problemSizeFound = true;
             while(!finished) {
                 getNextLabelAndValue(label, value);
-                if (label.compare("Hexahedral elements")==0){
-                    res.hex8 = atoi(value.c_str());
+                if (label.compare("Hexahedral elements")==0) /*==0 if compared strings are equal*/ {
+                    res.hex8 = atoi(value.c_str());//constant char string to integer
                 } else if (label.compare("Quadratic Tetrahedral elements")==0) {
                     res.tet10 = atoi(value.c_str());
                 } else if (
@@ -632,7 +631,7 @@ ProblemSize Parser::readProblemSize() {
                 } else if (label.compare("Linear Triangular elements")==0
                         || label.compare("Triangular elements")==0) {
                     res.tri3 = atoi(value.c_str());
-                } else if (label.compare("Quadrilateral elements")==0) {
+                } else if (label.compare("Quadrilateral elements")==0)/*!!*/ {
                     res.qua4 = atoi(value.c_str());
                 } else if (label.compare("Quadratic Line elements")==0) {
                     res.lin3 = atoi(value.c_str());
@@ -733,11 +732,11 @@ void Parser::readElements(
     bool found = false;
     while (!finished && !f_in.eof()) {
         getline_(line);
-        if (line.find("Elements:") != line.npos) {
+        if (line.find("Elements:") != line.npos)/*if finds something*/ {
             found = true;
         }
         // Stores data label in labelStr std::string.
-        label = line.substr(0, line.find(LABEL_ENDING));
+        label = line.substr(0, line.find(LABEL_ENDING))/*removes colon from label*/;
         if (label.compare("Linear Hexahedral Elements")==0 ||
                 label.compare("Hexahedral Elements")==0) {
             readHex8Elements(cG, lG, elems);
@@ -747,7 +746,7 @@ void Parser::readElements(
                    label.compare("Tetrahedral Elements")==0) {
             readTet4Elements(cG, lG, elems);
         } else if(label.compare("Quadrilateral Elements")==0) {
-        	readQua4Elements(cG, lG, elems);
+        	//readQua4Elements(cG, lG, elems);
         } else if (label.compare("Quadratic Triangle Elements")==0) {
             readTri6Elements(cG, lG, elems);
         } else if (label.compare("Linear Triangle Elements")==0 ||
@@ -844,8 +843,7 @@ void Parser::readTet4Elements(
         const Geometry::Layer::Layer* lay;
         if (layerId != Geometry::LayerId(0)) {
             lay = lG.getId(layerId);
-        }
-        else {
+        } else {
             lay = NULL;
         }
         const PhysicalModel::PhysicalModel* mat;
@@ -924,7 +922,7 @@ void Parser::readTri6Elements(
 
 void Parser::readTri3Elements(
         const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
-        const Geometry::Layer::Group<>& lG,
+q        const Geometry::Layer::Group<>& lG,
         Geometry::Element::Group<Geometry::ElemR>& elems) {
     Geometry::ElemId id;
     Geometry::CoordId vId;
