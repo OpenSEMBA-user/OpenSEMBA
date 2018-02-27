@@ -171,11 +171,14 @@
         "gridCondition": {
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
             "type": "*cond(Type)",
+*if(strcasecmp(cond(boundary_padding_type),"None")==0)
+            "directions": "{*cond(Size)}"       
+*else
             "directions": "{*cond(Size)}",
-*if(strcasecmp(cond(boundary_padding_type),"None")!=0)       
             "boundaryPaddingType": "*cond(boundary_padding_type)",
             "boundaryPadding": "{*cond(Upper_padding) *cond(Lower_padding)}",
             "boundaryMeshSize": "{*cond(Upper_padding_mesh_size) *cond(Lower_padding_mesh_size)}"
+*endif
 *if(CondNumEntities(int)!=loopVar)
         },
 *else
@@ -425,23 +428,9 @@
         },
 *endif
 
-*# --- Precounts ---
-*set var nOutputRequests = 0
-*tcl(semba::setStr "_NONAME")
-*set cond OutRq_on_line
-*loop elems *onlyInCond
-*if(tcl(string equal "*cond(Name)" semba::getStr))
-VERDAD
-*else 
-MENTIRA
-*tcl(semba::getStr)
-*tcl(puts "*cond(Name)")
-*endif
-*end elems
+*# --- EXPERIMENT EXPERIMENT EXPERIMENT ---
 
-
-*nOutputRequests
-
+*tcl(semba::writeOutputRequestBAS OutRq_on_line)
 
 *# --- Prints ---
 *set cond OutRq_on_line

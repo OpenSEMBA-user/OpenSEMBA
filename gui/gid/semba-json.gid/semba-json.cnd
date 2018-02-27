@@ -487,11 +487,11 @@ VALUE: by_number_of_cells
 QUESTION: Size
 VALUE: 20 20 20
 TKWIDGET: GidUtils::TkwidgetGetVector3D
-QUESTION: boundary_padding_type#CB#(None,By_number_of_cells,By_distance)
+QUESTION: boundary_padding_type#CB#(None,by_number_of_cells,by_distance)
 VALUE: by_distance
 DEPENDENCIES:(None,               HIDE,Lower_padding,#CURRENT#, HIDE,Upper_padding,#CURRENT#,HIDE,Lower_padding_mesh_size,#CURRENT#, HIDE,Upper_padding_mesh_size,#CURRENT#)
-DEPENDENCIES:(By_number_of_cells, RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
-DEPENDENCIES:(By_distance,        RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
+DEPENDENCIES:(by_number_of_cells, RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
+DEPENDENCIES:(by_distance,        RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
 QUESTION: Lower_padding
 VALUE: 0.0 0.0 0.0 
 HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
@@ -508,6 +508,5 @@ TKWIDGET: GidUtils::TkwidgetGetVector3D
 QUESTION: Upper_padding_mesh_size
 VALUE: 0.0 0.0 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
-END CONDITION
 TKWIDGET: GidUtils::TkwidgetGetVector3D
-#END CONDITION
+END CONDITION

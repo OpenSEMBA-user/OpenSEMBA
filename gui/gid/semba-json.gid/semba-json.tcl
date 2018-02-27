@@ -88,28 +88,6 @@ proc LoadGIDProject { filespd } {
     }
 }
 
-proc BeforeMeshGeneration { elementSize } {
-    # This checks that there is a layer called Grid.
-    # DBG: WarnWin [GiD_Info layers] 
-    #    set gridPresent 0
-    #   foreach layer [GiD_Info layers] {
-    #if {[string equal -nocase $layer "Grid"]} {
-    # DBG: WarnWin [= "Grid layer has been detected"]
-    #        set gridPresent 0
-    # Does further checkings on grid.
-    # TODO Further checkings on grid before mesh generation.
-    # Turns off grid layer.
-    # TODO For performance, on mesh visualization, grid is turned off.
-    #}
-    #    }
-    #    if {$gridPresent == 0} {
-    #            return $elementSize
-    #    } else {
-    #            WarnWin [= "Mesh generation has been canceled because there is no Grid layer present."]
-    #            return "-cancel-"
-    #    }
-}
-
 namespace eval semba {
     variable ProgramName ;
     variable VersionNumber ; # Read from .xml
@@ -254,10 +232,6 @@ proc semba::generateStructuredMesh { dir } {
     GiD_Process Mescape Files WriteForBAS \
 	[file join $dir/semba.bas] \
 	[file join $modelDir $modelName.smb]
-#    # Launches script.
-#    exec $dir/scripts/generateNFDE.sh \
-#        $dir $modelDir $modelName \
-#        > $modelDir/log.generateNFDE
 }
 
 proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} {
@@ -271,17 +245,7 @@ proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} 
     set zmax [lindex $positions 2]
     set xmin [lindex $positions 3]
     set ymin [lindex $positions 4]
-    set zmin [lindex $positions 5]
-    
-#     foreach layer $layers {
-#         set positions [join [GiD_Info layer -bbox -use geometry $layer]]
-#         set xmax [::math::max $xmax [lindex $positions 0]]
-#         set ymax [::math::max $ymax [lindex $positions 1]]
-#         set zmax [::math::max $zmax [lindex $positions 2]]
-#         set xmin [::math::min $xmin [lindex $positions 3]]
-#         set ymin [::math::min $ymin [lindex $positions 4]]
-#         set zmin [::math::min $zmin [lindex $positions 5]]
-#     }
+    set zmin [lindex $positions 5]  
     
     set xmax [expr {$xmax + $xMaxPad}]
     set ymax [expr {$ymax + $yMaxPad}]
@@ -305,25 +269,8 @@ proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} 
 	    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
 		         Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax end escape   
 	} else {
-#                 # Determines if there is a surface containing all the points.
-#                 set surfaceFound 0
-#                 foreach surf [GiD_Geometry list surface 1:end] {
-#                         set allInside true
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmin $ymin $zmin}]]
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmin $ymax $zmin}]]
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmax $ymin $zmin}]]
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmax $ymax $zmin}]]
-#                         if {$allInside} {
-#                                 set surfaceFound $surf
-#                         }
-#                 }
-#                 if {$surfaceFound != 0} {
-#                         GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
-#                                  Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax $surfaceFound escape   
-#                 } else {
-		        GiD_Process Mescape
-		        WarnWin [=  "Unable to create automatic bounding box"]
-#                 }
+        GiD_Process Mescape
+        WarnWin [=  "Unable to create automatic bounding box"]
 	}
 
 	# Restores status of createAlwaysNewPoint.
@@ -503,13 +450,29 @@ proc semba::writeLayersFile {} {
 	[file join $modelDir $modelName.layers]
 }
 
-proc semba::setStr {stringFromTemplate} {
-	global auxStringTemplate
-	set auxStringTemplate $stringFromTemplate; list
-	return
-}
+proc semba::writeOutputRequestBAS { condition_name } {
+    set result ""
+    foreach item [GiD_Info conditions $condition_name mesh] {
+        set element_id [lindex $item 1]
+        set name_id    [lindex $item 3]
+        lappend elements_of_cond($name_id) $element_id
+        set properties_of_cond($name_id) [lrange $item 3 end]
+    }
 
-proc semba::getStr {} {
-	global auxStringTemplate
-	return $auxStringTemplate 
+    foreach name_id [lsort [array names elements_of_cond]] {
+        append result \
+        "        {\n"\
+		"            \"gidOutputType\": \"$condition_name\",\n"\
+		"            \n"\
+		"            \"name\": \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
+		"            \"type\": \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
+		"            \"domain\": {\n"\
+		"             },\n"\
+		"     		\"elemIds\": \[\n"\
+		"                [join $elements_of_cond($name_id) ",\n                "]\n"\
+		"           \]\n"\
+		"        },\n"
+    }
+
+    return $result
 }
