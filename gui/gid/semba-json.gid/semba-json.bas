@@ -159,6 +159,7 @@
         },
 *else
         }
+*endif
 *end materials
     ],
 
@@ -175,9 +176,11 @@
             "directions": "{*cond(Size)}"       
 *else
             "directions": "{*cond(Size)}",
-            "boundaryPaddingType": "*cond(boundary_padding_type)",
-            "boundaryPadding": "{*cond(Upper_padding) *cond(Lower_padding)}",
-            "boundaryMeshSize": "{*cond(Upper_padding_mesh_size) *cond(Lower_padding_mesh_size)}"
+            "boundaryPaddingType" : "*cond(boundary_padding_type)",
+            "upperPadding"        : "{*cond(Upper_padding)}",
+            "lowerPadding"        : "{*cond(Lower_padding)}",
+            "upperPaddingMeshSize": "{*cond(Upper_padding_mesh_size)}",
+            "lowerPaddingMeshSize": "{*cond(Lower_padding_mesh_size)}"
 *endif
 *if(CondNumEntities(int)!=loopVar)
         },
@@ -188,8 +191,8 @@
 *endif
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
         "nativeGiD": {
-            "corner": "*tcl(GiD_Cartesian get corner)",
-            "boxSize": "*tcl(GiD_Cartesian get boxsize)",
+            "corner"     : "{*tcl(GiD_Cartesian get corner)}",
+            "boxSize"    : "{*tcl(GiD_Cartesian get boxsize)}",
             "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
             "coordinates": "*tcl(GiD_Cartesian get coordinates)"
         }
@@ -333,7 +336,6 @@
 *Set Cond Source_on_line *bodyElements
 *set var HEADER=0
 *loop elems *OnlyInCond
-*if(HEADER==0) 
 *set var HEADER=1
         {
             "sourceType": "sourceOnLine",
@@ -341,15 +343,9 @@
             "hardness": "*cond(Hardness)",
 *include includes/magnitude.bas
             "defined": "OnElements",
-            "numberOfElements": *CondNumEntities(int),
-            "elemIds": [
-*endif
-                *elemsNum
+            "elemIds": *elemsNum
+        },
 *end elems
-*if(HEADER==1)
-            ]
-        }
-*endif
 *# ----------------------------------------------------------
 *loop conditions *nodes
 *if(strcasecmp(condName,"Generator_on_line")==0&&CondNumEntities(int)>0)
@@ -359,7 +355,6 @@
             "type": "*cond(Type)",
 *include includes/magnitude.bas
             "defined": "OnNodes",
-            "numberOfElements": 1,
             "elemIds": [ *NodesNum ]
         },
 *end nodes
@@ -378,7 +373,6 @@
             "excitationMode": "*cond(Mode)",
             "firstMode": *cond(FirstMode),
             "secondMode": *cond(SecondMode),
-            "numberOfElements": *CondNumEntities(int),
             "elemIds": [
 *set var HEADER = 1
 *endif
@@ -401,7 +395,6 @@
             "innerRadius": *cond(Inner_radius),
             "outerRadius": *cond(Outer_radius),
             "excitationMode": "*cond(Mode)",
-            "numberOfElements": *CondNumEntities(int)
             "elemIds": [
 *set var HEADER = 1
 *endif
@@ -413,53 +406,14 @@
 *end conditions
     ],
 
-    "outputRequests": [
-*Set Cond OutRq_on_point
-*if(CondNumEntities(int)>0)
-        {
-            "gidOutputType": "OutRq_on_point",
-            "numberOfElements": *CondNumEntities(int),
-*loop nodes *OnlyInCond
-            "name": "*cond(Name)",
-            "type": "*cond(Type)",
-*include includes/domain.bas
-            "CoordId": *NodesNum
-*end nodes
-        },
-*endif
-
-*# --- EXPERIMENT EXPERIMENT EXPERIMENT ---
-
-*tcl(semba::writeOutputRequestBAS OutRq_on_line)
-
-*# --- Prints ---
-*set cond OutRq_on_line
-*if(CondNumEntities(int)>0)
-*loop elems *onlyInCond
-        {
-            "gidOutputType": "OutRq_on_line",
-            "name": *cond(Name),
-            "type": *cond(Type),
-*include includes/domain.bas
-            "elemId": [
-               *elemsNum
-*end elems
-        },
-*end if
 *# ----------------------------------------------------------
-*Set cond OutRq_on_surface
-*if(CondNumEntities(int)>0)
-        {
-            "gidOutputType": "OutRq_on_surface",
-            "numberOfElements": *CondNumEntities(int),
-*loop elems OnlyInCond
-            "name": *cond(Name),
-            "type": *cond(Type),
-*include includes/domain.bas
-            "elemId": *elemsNum
-*end elems
-        },
-*end if
+*# ------------------ OUTPUT REQUESTS -----------------------
+*# ----------------------------------------------------------
+    "outputRequests": [
+*# ----------------------------------------------------------
+*tcl(semba::writeOutputRequestBAS OutRq_on_point)
+*tcl(semba::writeOutputRequestBAS OutRq_on_line)
+*tcl(semba::writeOutputRequestBAS OutRq_on_surface)
 *# ----------------------------------------------------------
 *Set cond OutRq_on_layer
 *if(CondNumEntities(int)>0)
@@ -475,21 +429,7 @@
         },
 *end if
 *# ----------------------------------------------------------
-*Set cond Bulk_current_on_surface
-*if(CondNumEntities(int)>0)
-        {
-            "gidOutputType": "Bulk_current_on_surface",
-            "numberOfElements": *CondNumEntities(int),
-*loop elems *OnlyInCond
-            "name": *cond(Name),
-            "type": *cond(Type),
-*include includes/domain.bas
-            "direction": "{*cond(Direction)}",
-            "skip": *cond(Skip),
-            "elemId": *elemsNum
-*end elems
-        },
-*end if
+*tcl(writeOutputRequestBulkCurrentBAS Bulk_current_on_surface)
 *# ----------------------------------------------------------
 *Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
@@ -519,11 +459,11 @@
             "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
             "farPoints": {
                 "initialTheta": *cond(Initial_theta),
-                "finalTheta": *cond(Final_theta),
-                "stepTheta": *cond(Step_theta),
-                "initialPhi": *cond(Initial_phi),
-                "finalPhi": *cond(Final_phi),
-                "stepPhi": *cond(Step_phi)
+                "finalTheta":   *cond(Final_theta),
+                "stepTheta":    *cond(Step_theta),
+                "initialPhi":   *cond(Initial_phi),
+                "finalPhi":     *cond(Final_phi),
+                "stepPhi":      *cond(Step_phi)
             }
 *end layers
         },
