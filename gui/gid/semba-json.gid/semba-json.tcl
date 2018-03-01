@@ -539,19 +539,3 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 
     return $result
 }
-
-proc semba::sourcesSortedByField { conditionName field_index } {
-     set result ""
-     set index [expr $field_index+3]
-     foreach item [GiD_Info conditions $condition_name mesh] {
-         set element_id [lindex $item 1]
-         set geometry_id [lindex $item $index]
-         lappend elements_of_value($geometry_id) $element_id
-     }
-
-     foreach geometry_id [lsort -integer [array names elements_of_value]] {
-         append result "linea_$geometry_id\nelementos:[join $elements_of_value($geometry_id) ,].\n"
-    }
-
-    return $result
-}

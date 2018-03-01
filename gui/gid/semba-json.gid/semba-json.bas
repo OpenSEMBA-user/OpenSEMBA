@@ -237,6 +237,9 @@
 *endif
     ],
 
+*# ----------------------------------------------------------
+*# -------------------- LAYERS ------------------------------
+*# ----------------------------------------------------------
     "layers": [
 *set elems(all)
 *loop layers
@@ -251,6 +254,9 @@
 *end layers
     ],
 
+*# ----------------------------------------------------------
+*# ----------------- COORDINATES ----------------------------
+*# ----------------------------------------------------------
     "coordinates": [
 *set elems(all)
 *loop nodes
@@ -338,6 +344,23 @@
 *end nodes
 *endif
 *end conditions
+*Set Cond Source_on_line *bodyElements
+*loop elems *OnlyInCond
+*set var nSources = nSources + 1
+*end elems
+*loop conditions *bodyElements
+*if(strcasecmp(condName,"Waveguide_port")==0)
+*loop elems *onlyInCond
+*set var nSources = nSources + 1
+*endif 
+*end conditions
+*loop conditions *bodyElements
+*if(strcasecmp(condName,"TEM_port"))
+*set var nSources = nSources + 1
+*loop elems *onlyInCond
+*end elems
+*endif 
+*end conditions
 *# ----------------------------------------------------------
 *set var sourceNum = 0
     "sources": [
@@ -390,6 +413,7 @@
 *Set Cond Source_on_line *bodyElements
 *set var HEADER=0
 *loop elems *OnlyInCond
+*if(HEADER == 0)
 *set var HEADER=1
         {
             "sourceType": "sourceOnLine",
@@ -397,15 +421,23 @@
             "hardness": "*cond(Hardness)",
 *include includes/magnitude.bas
             "defined": "OnElements",
-            "elemIds": *elemsNum
-        },
+            "elemIds": [
+*endif
+*if(loopVar != condNumEntities)
+                *elemsNum,
+*else
+                *elemsNum
+*endif
 *end elems
+            ]
+        },
 *# ----------------------------------------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
 *set var HEADER = 0
 *loop elems *onlyInCond
 *if(HEADER == 0)
+*set var HEADER = 1
         {
             "sourceType": "waveguidePort",
             "shape": "*cond(Shape)",
@@ -414,9 +446,12 @@
             "firstMode":  *cond(FirstMode),
             "secondMode": *cond(SecondMode),
             "elemIds": [
-*set var HEADER = 1
 *endif
+*if(loopVar != condNumEntities)
+                *ElemsNum,
+*else
                 *ElemsNum
+*endif
 *end elems
             ]
         },
@@ -425,20 +460,24 @@
 *# ----------------------------------------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
-*set var HEADER = 0
+*set var ENTITY = 0
 *loop elems *onlyInCond
-*if(HEADER == 0)
+*if(ENTITY == 0)
+*set var ENTITY = cond(entityId,INT)
         {
             "sourceType": "temPort",
 *include includes/magnitude.bas
-            "origin": "{*cond(Origin)}",
+            "origin": "*tcl(GiD_Info Coordinates *cond(Origin) geometry)",
             "innerRadius": *cond(Inner_radius),
             "outerRadius": *cond(Outer_radius),
             "excitationMode": "*cond(Mode)",
             "elemIds": [
-*set var HEADER = 1
 *endif
+*if(loopVar != condNumEntities)
                 *ElemsNum,
+*else
+                *ElemsNum
+*endif
 *end elems
             ]
         }, 

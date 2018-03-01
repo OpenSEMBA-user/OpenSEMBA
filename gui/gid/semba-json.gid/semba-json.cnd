@@ -1,5 +1,9 @@
+# =====================================================================
+# =====================================================================
+# =========================== SOURCES =================================
+# =====================================================================
+# =====================================================================
 BOOK: Electromagnetic_sources
-
 CONDITION: Planewave
 CONDTYPE: over layers
 CONDMESHTYPE: over body elements
@@ -83,6 +87,9 @@ CONDITION: Source_on_line
 CONDTYPE: over lines
 CONDMESHTYPE: over body elements
 #Title: Basic
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
 QUESTION: type#CB#(electricField,magneticField)
 VALUE: electricField
 QUESTION: Hardness#CB#(soft,hard)
@@ -109,6 +116,9 @@ CONDITION: Waveguide_port
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 #Title: Basic
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
 Question: Shape#CB#(Rectangular)
 VALUE: Rectangular
 Question: Mode#CB#(TE)
@@ -142,13 +152,16 @@ CONDITION: TEM_port
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
 #Title: Basic
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
 Question: Shape#CB#(Coaxial)
 VALUE: Coaxial
 Question: Mode#CB#(Voltage,Current)
 VALUE: Voltage
 Question: Origin
-Value: 
-TKWIDGET: GidUtils::TkwidgetGetVector3D
+Value: 0
+TKWIDGET: GidUtils::TkwidgetPickPoint
 Question: Inner_radius
 Value: 0.0
 Question: Outer_radius
@@ -171,8 +184,12 @@ TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: File containing excitation values. If set, ignores other excitation options.
 END CONDITION
 
+# =====================================================================
+# =====================================================================
+# ===================== OUTPUT REQUESTS ===============================
+# =====================================================================
+# =====================================================================
 BOOK: Output_Requests
-
 CONDITION: OutRq_on_point
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
@@ -478,6 +495,11 @@ VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 END CONDITION
 
+# =====================================================================
+# =====================================================================
+# =========================== MESHING =================================
+# =====================================================================
+# =====================================================================
 BOOK: Meshing
 CONDITION: Grid
 CONDTYPE: over layer
