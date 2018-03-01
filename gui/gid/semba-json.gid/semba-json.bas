@@ -1,7 +1,9 @@
 {
     "_format": "Semba Data File in JSON format ",
     "_version": "*tcl(set version $semba::VersionNumber)",
-
+*# ----------------------------------------------------------
+*# ------------------ SOLVER OPTIONS ------------------------
+*# ----------------------------------------------------------
     "solverOptions": {
         "solverName": "*GenData(Solver)",
         "runSimulation": *GenData(Run_simulation),
@@ -19,7 +21,7 @@
 *if(strcmp(GenData(Additional_arguments),"")!=0)
         "additionalArguments": *GenData(Additional_arguments),
 *endif
-
+*# ----
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
         "compositesModel": "*GenData(Composites_model)",
         "wiresFlavor": "*GenData(Wires_flavor)",
@@ -27,14 +29,13 @@
         "minDistanceWires": *GenData(Min_distance_wires),
         "mapVTK": *GenData(Map_VTK),
         "geometryScalingFactor": *GenData(scaling_factor),
-
         "mesherOptions": {
-            "upperXBound": "*GenData(Upper_x_bound)",
             "lowerXBound": "*GenData(Lower_x_bound)",
-            "upperYBound": "*GenData(Upper_y_bound)",
             "lowerYBound": "*GenData(Lower_y_bound)",
-            "upperZBound": "*GenData(Upper_z_bound)",
             "lowerZBound": "*GenData(Lower_z_bound)",
+            "upperXBound": "*GenData(Upper_x_bound)",
+            "upperYBound": "*GenData(Upper_y_bound)",          
+            "upperZBound": "*GenData(Upper_z_bound)",
             "mesher": "*GenData(Mesher)",
             "bruteForceVolumes": *GenData(Brute_force_volumes),
             "vtkExport": *GenData(VTK_Export),
@@ -54,6 +55,9 @@
 *endif
     },
      
+*# ----------------------------------------------------------
+*# ------------------ PROBLEM SIZE --------------------------
+*# ----------------------------------------------------------
     "problemSize": {
 *set elems(Hexahedra)
         "hexahedra8":     *nelem,
@@ -70,6 +74,9 @@
         "materials":      *nmats
     },
 
+*# ----------------------------------------------------------
+*# -------------------- MATERIALS ---------------------------
+*# ----------------------------------------------------------
     "materials": [
 *loop materials
         {
@@ -156,8 +163,11 @@
                 }
 *endif
 *end for
-            ]
-*endif 
+            ],
+*endif
+            "freqMin": *matProp(freq_min),
+            "freqMax": *matProp(freq_max),
+            "numberOfPoles": *matProp(number_Of_Poles)
 *elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
             "materialTypeId": "*MatProp(TypeId)",
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
@@ -183,22 +193,26 @@
 *end materials
     ],
 
-    "grids": {
+*# ----------------------------------------------------------
+*# -------------------- GRIDS -------------------------------
+*# ----------------------------------------------------------
+    "grids": [
 *if(strcasecmp(GenData(Mesher),"None")!=0)
 *set elems(all)
 *set Cond Grid
 *if(CondNumEntities(int)>0)
 *loop layers *OnlyInCond
-        "gridCondition": {
+        {
+            "gridType": "gridCondition",
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
             "type": "*cond(Type)",
 *if(strcasecmp(cond(boundary_padding_type),"None")==0)
             "directions": "{*cond(Size)}"       
 *else
             "directions": "{*cond(Size)}",
-            "boundaryPaddingType" : "*cond(boundary_padding_type)",
-            "upperPadding"        : "{*cond(Upper_padding)}",
-            "lowerPadding"        : "{*cond(Lower_padding)}",
+            "boundaryPaddingType":  "*cond(boundary_padding_type)",
+            "upperPadding":         "{*cond(Upper_padding)}",
+            "lowerPadding":         "{*cond(Lower_padding)}",
             "upperPaddingMeshSize": "{*cond(Upper_padding_mesh_size)}",
             "lowerPaddingMeshSize": "{*cond(Lower_padding_mesh_size)}"
 *endif
@@ -210,19 +224,18 @@
 *end layers
 *endif
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
-        "nativeGiD": {
-            "corner"     : "{*tcl(GiD_Cartesian get corner)}",
-            "boxSize"    : "{*tcl(GiD_Cartesian get boxsize)}",
+            "gridType": "nativeGiD",
+            "corner":      "{*tcl(GiD_Cartesian get corner)}",
+            "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
             "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
             "coordinates": "*tcl(GiD_Cartesian get coordinates)"
         }
 *else 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 *WarningBox "No grid defined. Define grid condition or use GiD native mesher."
-        "_error": "gridError"
 *endif
 *endif
-    },
+    ],
 
     "layers": [
 *set elems(all)
@@ -318,40 +331,61 @@
 *loop layers *OnlyInCond
 *set var nSources = nSources + 1
 *end layers
+*loop conditions *nodes
+*if(strcasecmp(condName,"Generator_on_line")==0)
+*loop nodes *OnlyInCond
+*set var nSources = nSources + 1
+*end nodes
+*endif
+*end conditions
 *# ----------------------------------------------------------
 *set var sourceNum = 0
     "sources": [
 *set elems(all)
 *Set Cond Planewave
-*if(CondNumEntities(int)>0)
+*loop layers *OnlyInCond
         {
             "sourceType": "planewave", 
-*loop layers *OnlyInCond
             "definitionMode": "*cond(Definition_mode)",
 *if(strcmp(cond(Definition_mode),"by_vectors")==0)
-            "directionVector"   : "{*cond(Direction_vector)}", 
+            "directionVector": "{*cond(Direction_vector)}", 
             "polarizationVector": "{*cond(Polarization_vector)}",
 *elseif(strcmp(cond(Definition_mode),"by_angles")==0)
-            "directionTheta"    : *cond(Direction_theta),
-            "directionPhi"      : *cond(Direction_phi),
-            "polarizationAlpha" : *cond(Polarization_alpha),
-            "polarizationBeta"  : *cond(Polarization_beta),
+            "directionTheta": *cond(Direction_theta),
+            "directionPhi": *cond(Direction_phi),
+            "polarizationAlpha": *cond(Polarization_alpha),
+            "polarizationBeta": *cond(Polarization_beta),
 *else
             "numberOfRandomPlanewaves": *cond(Number_of_random_planewaves),
             "relativeVariationOfRandomDelay": *cond(Relative_variation_of_random_delay),
 *endif            
 *include includes/magnitude.bas
-            "defined": "OnLayers",
             "layerName": "*layerName",
-            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
-*end layers
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
 *set var sourceNum = sourceNum + 1
 *if(sourceNum == nSources) 
         }
 *else
         },
 *endif
+*end layers
+*# ----------------------------------------------------------
+*loop conditions *nodes
+*if(strcasecmp(condName,"Generator_on_line")==0)
+*loop nodes *OnlyInCond
+        {
+            "sourceType": "generator",
+            "type": "*cond(Type)",
+*include includes/magnitude.bas
+            "coordIds": [ *NodesNum ]
+*if(sourceNum == nSources) 
+        }
+*else
+        },
 *endif
+*end nodes
+*endif
+*end conditions
 *# ----------------------------------------------------------
 *Set Cond Source_on_line *bodyElements
 *set var HEADER=0
@@ -367,20 +401,6 @@
         },
 *end elems
 *# ----------------------------------------------------------
-*loop conditions *nodes
-*if(strcasecmp(condName,"Generator_on_line")==0&&CondNumEntities(int)>0)
-*loop nodes *OnlyInCond
-        {
-            "sourceType": "generator",
-            "type": "*cond(Type)",
-*include includes/magnitude.bas
-            "defined": "OnNodes",
-            "elemIds": [ *NodesNum ]
-        },
-*end nodes
-*endif
-*end conditions
-*# ----------------------------------------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
 *set var HEADER = 0
@@ -388,10 +408,10 @@
 *if(HEADER == 0)
         {
             "sourceType": "waveguidePort",
-            "shape": "*cond(Shape)"
+            "shape": "*cond(Shape)",
 *include includes/magnitude.bas
             "excitationMode": "*cond(Mode)",
-            "firstMode": *cond(FirstMode),
+            "firstMode":  *cond(FirstMode),
             "secondMode": *cond(SecondMode),
             "elemIds": [
 *set var HEADER = 1
@@ -403,7 +423,7 @@
 *endif 
 *end conditions
 *# ----------------------------------------------------------
-*loop conditions *faceElements
+*loop conditions *bodyElements
 *if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
 *set var HEADER = 0
 *loop elems *onlyInCond
