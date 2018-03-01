@@ -35,13 +35,13 @@ public:
     virtual ~Parser();
     virtual void printInfo() const = 0;
 
+    virtual Data* read() const;
+
     static inline std::string& trim(std::string &s) {
         return ltrim(rtrim(s));
     }
 
 protected:
-    std::ifstream f_in; // Input file stream.
-
     static Math::CVecR3 strToCartesianVector(const std::string& str);
     static bool strToBool(const std::string& value);
 
