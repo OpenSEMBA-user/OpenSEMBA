@@ -137,13 +137,33 @@
             "materialTypeId": "*MatProp(TypeId)",   
             "filename": "*matprop(File)"
 *endif
-            "layers": "*matprop",
+*if(matprop(Layers,int)==1)
+*warningbox "Multilayer did not contain layers"
+            "_error": "Multilayer did not contain layers",
+*else
+*set var num_values(int)=matprop(Layers,int)
+            "layers": [
+*for(i=1;i<=num_values(int);i=i+5)
+                {
+                    "thickness": *matprop(Layers,*i),
+                    "permittivity": *matprop(Layers,*operation(i+1)),
+                    "permeability": *matprop(Layers,*operation(i+2)),
+                    "elecCond": *matprop(Layers,*operation(i+3)),
+                    "magnCond": *matprop(Layers,*operation(i+4))
+*if(operation(i+4)!=num_values(int))
+                },
+*else
+                }
+*endif
+*end for
+            ]
+*endif 
 *elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
             "materialTypeId": "*MatProp(TypeId)",
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
-            "localAxes": "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
+            "localAxes": "*tcl([lindex [GiD_Info localaxes *matprop(Local_Axes)] 9])",
 *endif
             "anisotropicModel": "*matprop(Anisotropic_model)",
             "relativePermittivityPrincipalAxes": "*matprop(Relative_permittivity_principal_axes)",
@@ -429,7 +449,7 @@
         },
 *end if
 *# ----------------------------------------------------------
-*tcl(writeOutputRequestBulkCurrentBAS Bulk_current_on_surface)
+*tcl(semba::writeOutputRequestBulkCurrentBAS Bulk_current_on_surface)
 *# ----------------------------------------------------------
 *Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
