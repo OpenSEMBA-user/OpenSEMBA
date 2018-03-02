@@ -60,12 +60,8 @@ using json = nlohmann::json;
 
 class Parser : public SEMBA::Parser::Parser {
 public:
-    Parser();
-    virtual ~Parser();
+    Data* read(std::istream& inputFileStream) const;
 
-    Data* read(std::ifstream& inputFileStream);
-
-    void printInfo() const;
 private:
     typedef enum {
         outRqOnPoint,

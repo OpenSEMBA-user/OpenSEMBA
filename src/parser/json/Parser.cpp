@@ -51,11 +51,10 @@ namespace SEMBA {
 namespace Parser {
 namespace JSON {
 
-Data* Parser::read(std::ifstream& inputFileStream) {
+Data* Parser::read(std::istream& stream) const {
 
     json input;
-    inputFileStream >> input;
-
+    stream >> input;
     Util::ProgressBar progress;
     progress.init("Parser GiD-JSON", 7, 0);
 

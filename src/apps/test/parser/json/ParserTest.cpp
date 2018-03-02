@@ -27,24 +27,19 @@
 #include "geometry/element/Tetrahedron4.h"
 
 using namespace SEMBA;
-using namespace Parser;
+using namespace Parser::JSON;
 
 class ParserJSONParserTest : public ::testing::Test {
-protected:
-    static constexpr Math::Real tol_ = 1e-4;
-
-
 };
 
 
 TEST_F(ParserJSONParserTest, Basic) {
-    std::string str =
+    std::istringstream sStream(
             "{\n"
-            "   \"prueba\": true\n"
-            "}";
+            "\"_test\": true\n"
+            "}"
+    );
 
-    std::ifstream ifs(str.c_str());
-
-    JSON::Parser jsonParser;
-    jsonParser.read(ifs);
+    SEMBA::Parser::JSON::Parser jsonParser;
+    Data* data = jsonParser.read(sStream);
 }
