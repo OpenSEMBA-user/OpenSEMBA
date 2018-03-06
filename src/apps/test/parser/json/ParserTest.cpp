@@ -36,7 +36,7 @@ class ParserJSONParserTest : public ::testing::Test {
 TEST_F(ParserJSONParserTest, Basic) {
     std::istringstream sStream(
             "{\n"
-            "\"_test\": true\n"
+            "   \"_version\": \"" OPENSEMBA_VERSION "\"\n"
             "}"
     );
 

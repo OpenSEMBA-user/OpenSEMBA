@@ -87,8 +87,8 @@ private:
         randomizedMultisource
     } DefinitionMode;
 
-//    Solver::Info* readSolver();
-//    void readSolverSettings(Solver::Settings&, const std::string&);
+    static Solver::Info* readSolver(const json& input);
+    void readSolverSettings(Solver::Settings&, const std::string&);
 //    Source::Group<>* readEMSources();
 //    OutputRequest::Group<>* readOutputRequests();
 //    PhysicalModel::Group<>* readMaterials();
@@ -146,8 +146,7 @@ private:
 //    Source::Magnitude::Magnitude* readMagnitude(const std::string type);
 //    static Math::Axis::Local strToLocalAxes(const std::string& str);
 //
-//    std::string readVersion();
-//    static bool checkVersionCompatibility(const std::string version);
+    static bool checkVersionCompatibility(const std::string& version);
 //    Geometry::Element::Group<> boxToElemGroup(const std::string& line);
 //    static OutputRequest::Base::Type strToOutputType(std::string label);
 //    static SIBCType strToSIBCType(std::string str);

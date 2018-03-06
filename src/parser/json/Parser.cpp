@@ -53,21 +53,21 @@ namespace JSON {
 
 Data* Parser::read(std::istream& stream) const {
 
-    json input;
-    stream >> input;
+    json j;
+    stream >> j;
     Util::ProgressBar progress;
     progress.init("Parser GiD-JSON", 7, 0);
 
-//    std::string version = readVersion();
-//    if (!checkVersionCompatibility(version)) {
-//        throw std::logic_error(
-//                "File version " + version + " is not supported.");
-//    }
+    std::string version = j.at("_version").get<std::string>();
+    if (!checkVersionCompatibility(version)) {
+        throw std::logic_error(
+                "File version " + version + " is not supported.");
+    }
     progress.advance();
 
     Data* res = new Data();
 
-//    res->solver = readSolver();
+    res->solver = readSolver(j);
 //    Solver::Settings settings = res->solver->getSettings();
 //    progress.advance();
 //
@@ -91,50 +91,38 @@ Data* Parser::read(std::istream& stream) const {
     return res;
 }
 
-//Solver::Info* Parser::readSolver() {
-//    Solver::Info* res = nullptr;
-//    bool optionsFound = false;
-//    while (!optionsFound && !f_in.eof()) {
-//        std::string label, value;
-//        getNextLabelAndValue(label, value);
-//        if (label.compare("Solver options") == 0) {
-//            optionsFound = true;
-//            Solver::Settings opts;
-//            readSolverSettings(opts, "Solver options");
-//            res = new Solver::Info(value, std::move(opts));
-//            return res;
-//        } // Closes problem data found if.
-//    } // Closes problemDataFound while.
-//    // Throws error messages if a problem was detected.
-//    if (res != nullptr) {
-//        delete res;
-//    }
-//    throw std::logic_error("No solver options were found.");
-//}
-//
-//void Parser::readSolverSettings(Solver::Settings& opts,
-//                                const std::string& sect) {
-//    std::string endSect = std::string("End of ") + sect;
-//    std::string label, value;
-//    opts.setObject();
-//    while (!f_in.eof()) {
-//        getNextLabelAndValue(label, value);
-//        if (trim(label).empty()) {
-//            continue;
-//        }
-//        if (label.find(endSect) != std::string::npos) {
-//            return;
-//        } else if (trim(value).empty()) {
-//            Solver::Settings aux;
-//            readSolverSettings(aux, label);
-//            opts.addMember(label, std::move(aux));
-//        } else {
-//            Solver::Settings aux;
-//            aux.setString(value);
-//            opts.addMember(label, std::move(aux));
-//        }
-//    }
-//}
+Solver::Info* Parser::readSolver(const json& j) {
+    json solverOptions = j.at("solverOptions").get<json>();
+    Solver::Settings opts;
+    readSolverSettings(opts, solverOptions);
+    return new Solver::Info(
+            solverOptions.at("solverName").get<std::string>(),
+            std::move(opts));
+}
+
+void Parser::readSolverSettings(Solver::Settings& opts,
+                                const std::string& sect) {
+    std::string endSect = std::string("End of ") + sect;
+    std::string label, value;
+    opts.setObject();
+    while (!f_in.eof()) {
+        getNextLabelAndValue(label, value);
+        if (trim(label).empty()) {
+            continue;
+        }
+        if (label.find(endSect) != std::string::npos) {
+            return;
+        } else if (trim(value).empty()) {
+            Solver::Settings aux;
+            readSolverSettings(aux, label);
+            opts.addMember(label, std::move(aux));
+        } else {
+            Solver::Settings aux;
+            aux.setString(value);
+            opts.addMember(label, std::move(aux));
+        }
+    }
+}
 //
 //Geometry::Mesh::Geometric* Parser::readGeometricMesh() {
 //    const Geometry::Grid3& grid = readCartesianGrid();
@@ -1605,33 +1593,6 @@ Data* Parser::read(std::istream& stream) const {
 //    }
 //}
 //
-//std::string Parser::readVersion() {
-//    std::string line, label, value;
-//    bool formatFound = false;
-//    bool versionFound = false;
-//    std::string format, version;
-//    while ((!formatFound || !versionFound) && !f_in.eof()) {
-//        getNextLabelAndValue(label, value);
-//        if (label.compare("Format") == 0) {
-//            formatFound = true;
-//            format = trim(value);
-//        }
-//        if (label.compare("Version") == 0) {
-//            versionFound = true;
-//            version = trim(value);
-//        }
-//    }
-//    // Shows error messages.
-//    if (!formatFound) {
-//        throw std::logic_error(
-//                "EoF was reached but format label was not found.");
-//    }
-//    if (!versionFound) {
-//        throw std::logic_error(
-//                "EoF was reached but version label was not found.");
-//    }
-//    return version;
-//}
 //
 //Parser::OutputType Parser::strToGidOutputType(std::string str) {
 //    str = trim(str);
@@ -1738,14 +1699,14 @@ Data* Parser::read(std::istream& stream) const {
 //            "Unable to recognize magnitude type when reading excitation.");
 //}
 //
-//bool Parser::checkVersionCompatibility(const std::string version) {
-//    bool versionMatches = (version == std::string(OPENSEMBA_VERSION));
-//    if (!versionMatches) {
-//        throw std::logic_error(
-//                "File version " + version + " is not supported.");
-//    }
-//    return versionMatches;
-//}
+bool Parser::checkVersionCompatibility(const std::string& version) {
+    bool versionMatches = (version == std::string(OPENSEMBA_VERSION));
+    if (!versionMatches) {
+        throw std::logic_error(
+                "File version " + version + " is not supported.");
+    }
+    return versionMatches;
+}
 //
 //PhysicalModel::Volume::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
 //    std::string line;
