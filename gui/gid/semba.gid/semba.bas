@@ -269,6 +269,9 @@
 *end nodes
     ],
 
+*# ----------------------------------------------------------
+*# ------------------- ELEMENTS -----------------------------
+*# ----------------------------------------------------------
     "elements": {
 *set elems(Hexahedra)
         "hexahedra": [
@@ -498,10 +501,9 @@
 *if(CondNumEntities(int)>0)
         {
             "gidOutputType": "OutRq_on_layer",
-            "numberOfElements": *CondNumEntities(int),
 *loop layers *OnlyInCond
-            "name": *cond(Name),
-            "type": *cond(Type),
+            "name": "*cond(Name)",
+            "type": "*cond(Type)",
 *include includes/domain.bas
             "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}"
 *end layers
@@ -514,10 +516,9 @@
 *if(CondNumEntities(int)>0)
         {
             "gidOutputType": "Bulk_current_on_layer",
-            "numberOfElements": *CondNumEntities(int),
 *loop layers *OnlyInCond
-            "name": *cond(Name),
-            "type": *cond(Type),
+            "name": "*cond(Name)",
+            "type": "*cond(Type)",
 *include includes/domain.bas
             "direction": "{*cond(Direction)}",
             "skip": *cond(Skip),
@@ -530,10 +531,9 @@
 *if(CondNumEntities(int)>0)
         { 
             "gidOutputType": "Far_field",
-            "numberOfElements": *CondNumEntities(int),
 *loop layers *OnlyInCond
-            "name": *cond(Name),
-            "type": *cond(Type),
+            "name": "*cond(Name)",
+            "type": "*cond(Type)",
 *include includes/domain.bas
             "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
             "farPoints": {
