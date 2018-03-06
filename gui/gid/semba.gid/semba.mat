@@ -202,7 +202,7 @@ MATERIAL: Connector_series_RLC
 	QUESTION: Capacitance
 	VALUE: 0.0
 	HELP: Wire capacitance (Farads/meter)
-	IMAGE: RLC_series.gif
+	IMAGE: images/RLC_series.gif
 END MATERIAL
 
 #MATERIAL: Connector_parallel_RLC
@@ -217,7 +217,7 @@ END MATERIAL
 #HELP: Connector self-inductance (Henrys/meter)
 #QUESTION: Capacitance
 #VALUE: 0.0
-#IMAGE: RLC_parallel.gif
+#IMAGE: images/RLC_parallel.gif
 #END MATERIAL
 
 MATERIAL: Connector_series_L_parallel_RC
@@ -233,7 +233,7 @@ MATERIAL: Connector_series_L_parallel_RC
 	QUESTION: Capacitance
 	VALUE: 0.0
 	HELP: Wire capacitance (Farads/meter)
-	IMAGE: L_series_RC_parallel.gif
+	IMAGE: images/L_series_RC_parallel.gif
 END MATERIAL
 
 MATERIAL: Connector_dispersive
