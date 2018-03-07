@@ -49,7 +49,7 @@
         {
             "materialId": 1,
             "name": "eps50",
-            "materialTypeId": "Classic",
+            "materialType": "Classic",
             "permittivity": 50,
             "permeability": 1.0,
             "electricConductivity": 0.0,
