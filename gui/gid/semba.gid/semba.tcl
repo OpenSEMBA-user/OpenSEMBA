@@ -64,8 +64,16 @@ proc InitGIDProject { dir } {
 	GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
     GiDMenu::InsertOption "Help" [list [concat [_ "About"] " " $::semba::ProgramName]...] end PREPOST semba::About "" "" insertafter
 
-    # Update the menu properties
+    # Update the menu properties.
     ::GiDMenu::UpdateMenus
+
+    # Removes unsupported options for materials.
+    GiD_DataBehaviour material  "Surface_Impedance" geomlist {surfaces}
+    GiD_DataBehaviour material  "Anisotropic" geomlist {lines surfaces volumes}
+
+    GiD_DataBehaviour materials "Predefined_materials" geomlist {lines surfaces volumes}
+    GiD_DataBehaviour materials "Basic_materials" geomlist {lines surfaces volumes}
+    GiD_DataBehaviour materials "Wires_and_thin_gaps" geomlist {lines}
 }
 
 proc EndGIDProject {} {
@@ -78,28 +86,6 @@ proc LoadGIDProject { filespd } {
 		set filename [file rootname $filespd].xml
 		#set model_problemtype_version_number [OpenFoam::ReadXml $filename]            
     }
-}
-
-proc BeforeMeshGeneration { elementSize } {
-    # This checks that there is a layer called Grid.
-    # DBG: WarnWin [GiD_Info layers] 
-    #    set gridPresent 0
-    #   foreach layer [GiD_Info layers] {
-    #if {[string equal -nocase $layer "Grid"]} {
-    # DBG: WarnWin [= "Grid layer has been detected"]
-    #        set gridPresent 0
-    # Does further checkings on grid.
-    # TODO Further checkings on grid before mesh generation.
-    # Turns off grid layer.
-    # TODO For performance, on mesh visualization, grid is turned off.
-    #}
-    #    }
-    #    if {$gridPresent == 0} {
-    #            return $elementSize
-    #    } else {
-    #            WarnWin [= "Mesh generation has been canceled because there is no Grid layer present."]
-    #            return "-cancel-"
-    #    }
 }
 
 namespace eval semba {
@@ -246,10 +232,6 @@ proc semba::generateStructuredMesh { dir } {
     GiD_Process Mescape Files WriteForBAS \
 	[file join $dir/semba.bas] \
 	[file join $modelDir $modelName.smb]
-#    # Launches script.
-#    exec $dir/scripts/generateNFDE.sh \
-#        $dir $modelDir $modelName \
-#        > $modelDir/log.generateNFDE
 }
 
 proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} {
@@ -263,17 +245,7 @@ proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} 
     set zmax [lindex $positions 2]
     set xmin [lindex $positions 3]
     set ymin [lindex $positions 4]
-    set zmin [lindex $positions 5]
-    
-#     foreach layer $layers {
-#         set positions [join [GiD_Info layer -bbox -use geometry $layer]]
-#         set xmax [::math::max $xmax [lindex $positions 0]]
-#         set ymax [::math::max $ymax [lindex $positions 1]]
-#         set zmax [::math::max $zmax [lindex $positions 2]]
-#         set xmin [::math::min $xmin [lindex $positions 3]]
-#         set ymin [::math::min $ymin [lindex $positions 4]]
-#         set zmin [::math::min $zmin [lindex $positions 5]]
-#     }
+    set zmin [lindex $positions 5]  
     
     set xmax [expr {$xmax + $xMaxPad}]
     set ymax [expr {$ymax + $yMaxPad}]
@@ -297,25 +269,8 @@ proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} 
 	    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
 		         Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax end escape   
 	} else {
-#                 # Determines if there is a surface containing all the points.
-#                 set surfaceFound 0
-#                 foreach surf [GiD_Geometry list surface 1:end] {
-#                         set allInside true
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmin $ymin $zmin}]]
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmin $ymax $zmin}]]
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmax $ymin $zmin}]]
-#                         set allInside [expr $allInside && [GiD_Info IsPointInside Surface $surf {$xmax $ymax $zmin}]]
-#                         if {$allInside} {
-#                                 set surfaceFound $surf
-#                         }
-#                 }
-#                 if {$surfaceFound != 0} {
-#                         GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
-#                                  Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax $surfaceFound escape   
-#                 } else {
-		        GiD_Process Mescape
-		        WarnWin [=  "Unable to create automatic bounding box"]
-#                 }
+        GiD_Process Mescape
+        WarnWin [=  "Unable to create automatic bounding box"]
 	}
 
 	# Restores status of createAlwaysNewPoint.
@@ -491,6 +446,96 @@ proc semba::writeLayersFile {} {
 	set modelDir [GiD_Info Project ModelName].gid/
 	set modelName [file tail [GiD_Info Project ModelName] ]
     GiD_Process Mescape Files WriteForBAS \
-	[file join $semba::_dir/multilayer.bas] \
+	[file join $semba::_dir/includes/multilayer.bas] \
 	[file join $modelDir $modelName.layers]
+}
+
+proc semba::writeOutputRequestBAS { condition_name } {
+    set result ""
+    foreach item [GiD_Info conditions $condition_name mesh] {
+        set element_id [lindex $item 1]
+        set name_id    [lindex $item 3]
+        lappend elements_of_cond($name_id) $element_id
+        set properties_of_cond($name_id) [lrange $item 3 end]
+    }
+
+    foreach name_id [lsort [array names elements_of_cond]] {
+        append result \
+        "        {\n"\
+		"            \"gidOutputType\": \"$condition_name\",\n"\
+		"            \"name\": \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
+		"            \"type\": \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
+		"            \"domain\": {\n"
+        if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
+            append result \
+        "                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 3]\",\n"\
+        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 4]\",\n"\
+        "                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 5]\",\n"
+        }
+        if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
+            append result \
+        "                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  7]\",\n"\
+        "                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)"  8]\",\n"\
+        "                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
+        "                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 10]\",\n"
+        }
+        if {[lindex "$properties_of_cond($name_id)" 11] == 1} {
+            append result \
+        "                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 13]\",\n"
+        }
+		append result \
+        "            },\n"\
+		"     		\"elemIds\": \[\n"\
+		"                [join $elements_of_cond($name_id) ",\n                "]\n"\
+		"            \]\n"\
+		"        },\n"
+    }
+
+    return $result
+}
+
+proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
+    set result ""
+    foreach item [GiD_Info conditions $condition_name mesh] {
+        set element_id [lindex $item 1]
+        set name_id    [lindex $item 3]
+        lappend elements_of_cond($name_id) $element_id
+        set properties_of_cond($name_id) [lrange $item 3 end]
+    }
+
+    foreach name_id [lsort [array names elements_of_cond]] {
+        append result \
+        "        {\n"\
+		"            \"gidOutputType\": \"$condition_name\",\n"\
+		"            \"name\":      \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
+		"            \"type\":      \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
+        "            \"direction\": \"[lindex "$properties_of_cond($name_id)" 2]\",\n"\
+        "            \"skip\":      \"[lindex "$properties_of_cond($name_id)" 3]\",\n"\
+		"            \"domain\": {\n"
+        if {[lindex "$properties_of_cond($name_id)" 4] == 1} {
+            append result \
+        "                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 5]\",\n"\
+        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"\
+        "                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"
+        }
+        if {[lindex "$properties_of_cond($name_id)" 8] == 1} {
+            append result \
+        "                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
+        "                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)" 10]\",\n"\
+        "                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)" 11]\",\n"\
+        "                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 12]\",\n"
+        }
+        if {[lindex "$properties_of_cond($name_id)" 13] == 1} {
+            append result \
+        "                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\",\n"
+        }
+		append result \
+        "            },\n"\
+		"     		\"elemIds\": \[\n"\
+		"                [join $elements_of_cond($name_id) ",\n                "]\n"\
+		"            \]\n"\
+		"        },\n"
+    }
+
+    return $result
 }

@@ -27,12 +27,12 @@ TEST_CORE_ARGUMENT      = no#
 TEST_CORE_PHYSICALMODEL = no#
 TEST_CORE_SOURCE        = no#
 TEST_CORE_FILESYSTEM    = no#
-TEST_PARSER_GID         =yes#
-TEST_PARSER_STL         =yes#
+TEST_PARSER_JSON        = no#
+TEST_PARSER_STL         = no#
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
 
-CXXFLAGS := $(filter-out -static,$(CXXFLAGS))
+#CXXFLAGS := $(filter-out -static,$(CXXFLAGS))
 
 ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 	OUT := $(addsuffix .exe,$(OUT))
@@ -88,11 +88,11 @@ SRC_CORE_TESTS_DIRS = $(SRC_CORE_MATH_TESTS_DIRS) \
 	                  $(SRC_CORE_SOURCE_TESTS_DIRS) \
 	                  $(SRC_CORE_FILESYSTEM_TESTS_DIRS)
 # --- Parsers ---
-ifeq ($(TEST_PARSER_GID),yes)
-	SRC_PARSER_GID_DIRS       := $(shell find $(SRC_DIR)core/ -type d) \
-								 $(shell find $(SRC_DIR)parser/gid/ -type d)
-	SRC_PARSER_GID_TESTS_DIRS = $(SRC_PARSER_GID_DIRS) \
-							    $(shell find $(SRC_APP_DIR)parser/gid/ -type d)
+ifeq ($(TEST_PARSER_JSON),yes)
+	SRC_PARSER_JSON_DIRS       := $(shell find $(SRC_DIR)core/ -type d) \
+								 $(shell find $(SRC_DIR)parser/json/ -type d)
+	SRC_PARSER_JSON_TESTS_DIRS = $(SRC_PARSER_JSON_DIRS) \
+							    $(shell find $(SRC_APP_DIR)parser/json/ -type d)
 endif
 ifeq ($(TEST_PARSER_STL),yes)
 	SRC_PARSER_STL_DIRS       := $(shell find $(SRC_DIR)core/ -type d) \
@@ -100,7 +100,7 @@ ifeq ($(TEST_PARSER_STL),yes)
 	SRC_PARSER_STL_TESTS_DIRS = $(SRC_PARSER_STL_DIRS) \
 							    $(shell find $(SRC_APP_DIR)parser/stl/ -type d)
 endif
-SRC_PARSER_TESTS_DIRS = $(SRC_PARSER_GID_TESTS_DIRS) $(SRC_PARSER_STL_TESTS_DIRS)
+SRC_PARSER_TESTS_DIRS = $(SRC_PARSER_JSON_TESTS_DIRS) $(SRC_PARSER_STL_TESTS_DIRS)
 # ----- Gathers sources ----
 SRC_DIRS := $(SRC_APP_DIR) \
 			$(SRC_CORE_TESTS_DIRS) \
@@ -110,8 +110,8 @@ SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 # =============================================================================
 LIBS      += gtest
-LIBRARIES +=
-INCLUDES  += $(SRC_DIR) $(SRC_DIR)core/
+LIBRARIES += 
+INCLUDES  += $(SRC_DIR) $(SRC_DIR)core/ $(EXTERNAL_DIR)/json/
 # =============================================================================
 .PHONY: default print
 

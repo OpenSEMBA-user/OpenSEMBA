@@ -1,547 +1,552 @@
-=======================================================================
-Format: Semba Data File
-Version: *tcl(set version $semba::VersionNumber)
-=======================================================================
+{
+    "_format": "Semba Data File in JSON format ",
+    "_version": "*tcl(set version $semba::VersionNumber)",
 
-Solver options: *GenData(Solver)
-Run simulation: *GenData(Run_simulation)
+*# ----------------------------------------------------------
+*# ------------------ SOLVER OPTIONS ------------------------
+*# ----------------------------------------------------------
+    "solverOptions": {
+        "solverName": "*GenData(Solver)",
+        "runSimulation": *GenData(Run_simulation),
 *if(strcasecmp(GenData(Ending),"Final_time")==0)
-Final time: *GenData(Final_time)
+        "finalTime": *GenData(Final_time),
 *else
-Number of time steps: *GenData(Number_of_time_steps)
+        "numberOfTimeSteps": *GenData(Number_of_time_steps),
 *endif
-Time step: *GenData(Time_step)
-CFL: *GenData(CFL)
-Default sampling period: *GenData(Default_sampling_period)
-Force restarting: *GenData(Force_restarting)
-Resume simulation: *GenData(Resume_simulation)
-Flush: *GenData(Flush)
+        "timeStep": *GenData(Time_step),
+        "cfl": *GenData(CFL),
+        "defaultSamplingPeriod": *GenData(Default_sampling_period),
+        "forceRestarting": *GenData(Force_restarting),
+        "resumeSimulation": *GenData(Resume_simulation),
+        "flush": *GenData(Flush),
 *if(strcmp(GenData(Additional_arguments),"")!=0)
-Additional arguments: *GenData(Additional_arguments)
+        "additionalArguments": *GenData(Additional_arguments),
 *endif
+*# ----
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
-Composites model: *GenData(Composites_model)
-
-Wires flavor: *GenData(Wires_flavor)
-MTLN: *GenData(MTLN)
-Min distance wires: *GenData(Min_distance_wires)
-
-
-Map VTK: *GenData(Map_VTK)
-Geometry scaling factor: *GenData(scaling_factor)
-
-Mesher options:
-Upper x bound: *GenData(Upper_x_bound)
-Lower x bound: *GenData(Lower_x_bound)
-Upper y bound: *GenData(Upper_y_bound)
-Lower y bound: *GenData(Lower_y_bound)
-Upper z bound: *GenData(Upper_z_bound)
-Lower z bound: *GenData(Lower_z_bound)
-Mesher: *GenData(Mesher)
-Brute force volumes: *GenData(Brute_force_volumes)
-VTK Export: *GenData(VTK_Export)
-postmsh Export: *GenData(postmsh_Export)
-Mode: *GenData(Mode)
-Forbidden length: *GenData(Forbidden_length)
-Slanted wires: *GenData(Slanted)
-Slanted threshold: *GenData(Segments_filter_threshold)
-End of Mesher options:
+        "compositesModel": "*GenData(Composites_model)",
+        "wiresFlavor": "*GenData(Wires_flavor)",
+        "mtln": *GenData(MTLN),
+        "minDistanceWires": *GenData(Min_distance_wires),
+        "mapVTK": *GenData(Map_VTK),
+        "geometryScalingFactor": *GenData(scaling_factor),
+        "mesherOptions": {
+            "lowerXBound": "*GenData(Lower_x_bound)",
+            "lowerYBound": "*GenData(Lower_y_bound)",
+            "lowerZBound": "*GenData(Lower_z_bound)",
+            "upperXBound": "*GenData(Upper_x_bound)",
+            "upperYBound": "*GenData(Upper_y_bound)",          
+            "upperZBound": "*GenData(Upper_z_bound)",
+            "mesher": "*GenData(Mesher)",
+            "bruteForceVolumes": *GenData(Brute_force_volumes),
+            "vtkExport": *GenData(VTK_Export),
+            "postmshExport": *GenData(postmsh_Export),
+            "mode": "*GenData(Mode)",
+            "forbiddenLength": *GenData(Forbidden_length),
+            "slantedWires": *GenData(Slanted),
+            "slantedThreshold": *GenData(Segments_filter_threshold)
+        }
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
-cudg3d options:
-Time integrator: *GenData(Time_integrator)
-Use LTS: *GenData(Use_LTS)
-
-Upwinding: *GenData(Upwinding)
+        "timeIntegrator": *GenData(Time_integrator),
+        "useLTS": *GenData(Use_LTS),
+        "upwinding": *GenData(Upwinding)
 *else
 *WarningBox Unrecognized solver
+        "_error": "invalidSolver"
 *endif
-End of Solver options:
-
-Problem size:
+    },
+     
+*# ----------------------------------------------------------
+*# ------------------ PROBLEM SIZE --------------------------
+*# ----------------------------------------------------------
+    "problemSize": {
 *set elems(Hexahedra)
-Hexahedral elements: *nelem
+        "hexahedra8":     *nelem,
 *set elems(Tetrahedra)
-Tetrahedral elements: *nelem
+        "tetrahedra4":    *nelem,
 *set elems(Quadrilateral)
-Quadrilateral elements: *nelem
+        "quadrilateral4": *nelem,
 *set elems(Triangle)
-Triangular elements: *nelem
+        "triangle3":      *nelem,
 *set elems(Linear)
-Line elements: *nelem
+        "linear2":        *nelem,
 *set elems(all)
-Number of points: *npoin
-Number of materials: *nmats
-End of Problem size:
+        "coordinates":    *npoin,
+        "materials":      *nmats
+    },
 
-Materials:
+*# ----------------------------------------------------------
+*# -------------------- MATERIALS ---------------------------
+*# ----------------------------------------------------------
+    "materials": [
 *loop materials
-Material: *matnum()
-Name: *MatProp(0)
-TypeId: *MatProp(TypeId)
+        {
+            "materialId": *matnum(),
+            "name": "*MatProp(0)",
 *if(strcmp(MatProp(TypeId),"PEC")==0)
-*endif
-*if(strcmp(MatProp(TypeId),"PMC")==0)
-*endif
-*if(strcmp(MatProp(TypeId),"PML")==0)
-Autmatic Orientation: *matprop(Automatic_orientation)
+            "materialTypeId": "*MatProp(TypeId)"
+*elseif(strcmp(MatProp(TypeId),"PMC")==0)
+            "materialTypeId": "*MatProp(TypeId)"
+*elseif(strcmp(MatProp(TypeId),"PML")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "automaticOrientation": *matprop(Automatic_orientation),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
-Local Axes: {0.0 0.0 0.0} {0.0 0.0 0.0}
+            "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
-Local Axes: *tcl(GiD_Info localaxes *matprop(Local_Axes))
+            "localAxes: "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
 *endif
-*endif
-*if(strcmp(Matprop(TypeId),"Classic")==0)
-Permittivity: *matprop(Permittivity)
-Permeability: *matprop(Permeability)
-Electric Conductivity: *matprop(ElecCond)
-Magnetic Conductivity: *matprop(MagnCond)
-*endif
-*if(strcmp(Matprop(TypeId),"Dispersive")==0)
-Filename: *matprop(File)
-*endif
-*if(strcmp(Matprop(TypeId),"Wire")==0)
-Radius: *matprop(Radius)
-WireType: *matprop(WireType)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
-Parallel Resistance: *matprop(Parallel_Resistance)
-Parallel Inductance: *matprop(Parallel_Inductance)
-Parallel Capacitance: *matprop(Parallel_Capacitance)
+*elseif(strcmp(Matprop(TypeId),"Classic")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "permittivity": *matprop(Permittivity),
+            "permeability": *matprop(Permeability),
+            "electricConductivity": *matprop(ElecCond),
+            "magneticConductivity": *matprop(MagnCond)
+*elseif(strcmp(Matprop(TypeId),"Dispersive")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "filename": "*matprop(File)"
+*elseif(strcmp(Matprop(TypeId),"Wire")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "radius": *matprop(Radius),
+            "wireType": "*matprop(WireType)",
 *if(strcmp(Matprop(WireType),"Dispersive")==0)
-Filename: *matprop(File)
+            "filename": *matprop(File),
 *endif
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
-Resistance: *matprop(Resistance)
-Inductance: *matprop(Inductance)
-Capacitance: *matprop(Capacitance)
-*endif
-*if(strcmp(Matprop(TypeId),"Thin_gap")==0)
-Width: *matprop(Width)
-*endif
-*if(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
-Filename: *matprop(File)
-*endif
-*if(strcmp(Matprop(TypeId),"SIBC")==0)
-SurfaceType: *matprop(SurfaceType)
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance),   
+            "parallelResistance": *matprop(Parallel_Resistance),
+            "parallelInductance": *matprop(Parallel_Inductance),
+            "parallelCapacitance": *matprop(Parallel_Capacitance)
+*elseif(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance)
+*elseif(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance)
+*elseif(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance),
+            "capacitance": *matprop(capacitance)
+*elseif(strcmp(Matprop(TypeId),"Thin_gap")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "width": *matprop(Width)
+*elseif(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "filename": "*matprop(File)"
+*elseif(strcmp(Matprop(TypeId),"SIBC")==0)
+            "materialTypeId": "*MatProp(TypeId)",
+            "surfaceType": "*matprop(SurfaceType)"
 *if(strcmp(Matprop(SurfaceType),"File")==0)
-Filename: *matprop(File)
+            "materialTypeId": "*MatProp(TypeId)",   
+            "filename": "*matprop(File)"
 *endif
-Layers: *matprop
-*endif
-*if(strcmp(Matprop(TypeId),"Anisotropic")==0)
-*if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
-Local Axes: {0.0 0.0 0.0} {0.0 0.0 0.0}
+*if(matprop(Layers,int)==1)
+*warningbox "Multilayer did not contain layers"
+            "_error": "Multilayer did not contain layers",
 *else
-Local Axes: *tcl(GiD_Info localaxes *matprop(Local_Axes))
+*set var num_values(int)=matprop(Layers,int)
+            "layers": [
+*for(i=1;i<=num_values(int);i=i+5)
+                {
+                    "thickness": *matprop(Layers,*i),
+                    "permittivity": *matprop(Layers,*operation(i+1)),
+                    "permeability": *matprop(Layers,*operation(i+2)),
+                    "elecCond": *matprop(Layers,*operation(i+3)),
+                    "magnCond": *matprop(Layers,*operation(i+4))
+*if(operation(i+4)!=num_values(int))
+                },
+*else
+                }
 *endif
-Anisotropic model: *matprop(Anisotropic_model)
-Relative permittivity principal axes: *matprop(Relative_permittivity_principal_axes)
-Crystal relative permeability: *matprop(Crystal_relative_permeability)
-Kappa: *matprop(Kappa)
-Ferrite relative permeability: *matprop(Ferrite_relative_permeability)
-Ferrite relative permittivity: *matprop(Ferrite_relative_permittivity)
+*end for
+            ],
 *endif
-End of Material:
+            "freqMin": *matProp(freq_min),
+            "freqMax": *matProp(freq_max),
+            "numberOfPoles": *matProp(number_Of_Poles)
+*elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
+            "materialTypeId": "*MatProp(TypeId)"
+*if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
+            "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
+*else
+            "localAxes": "*tcl([lindex [GiD_Info localaxes *matprop(Local_Axes)] 9])",
+*endif
+            "anisotropicModel": "*matprop(Anisotropic_model)",
+            "relativePermittivityPrincipalAxes": "*matprop(Relative_permittivity_principal_axes)",
+            "crystalRelativePermeability": *matprop(Crystal_relative_permeability),
+            "kappa": *matprop(Kappa),
+            "ferriteRelativePermeability": *matprop(Ferrite_relative_permeability),
+            "ferriteRelativePermittivity": *matprop(Ferrite_relative_permittivity)
+*else
+*warningBox "Unrecognized material label"
+            "_error": "Unrecognized material label"
+*endif
+*if(nmats != loopvar)
+        },
+*else
+        }
+*endif
 *end materials
-End of Materials:
+    ],
 
-Grid:
+*# ----------------------------------------------------------
+*# -------------------- GRIDS -------------------------------
+*# ----------------------------------------------------------
+    "grids": [
 *if(strcasecmp(GenData(Mesher),"None")!=0)
 *set elems(all)
 *set Cond Grid
 *if(CondNumEntities(int)>0)
 *loop layers *OnlyInCond
- Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
- Type: *cond(Type)
- Directions: *cond(x_direction) *cond(y_direction) *cond(z_direction)
+        {
+            "gridType": "gridCondition",
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
+            "type": "*cond(Type)",
+*if(strcasecmp(cond(boundary_padding_type),"None")==0)
+            "directions": "{*cond(Size)}"       
+*else
+            "directions": "{*cond(Size)}",
+            "boundaryPaddingType":  "*cond(boundary_padding_type)",
+            "upperPadding":         "{*cond(Upper_padding)}",
+            "lowerPadding":         "{*cond(Lower_padding)}",
+            "upperPaddingMeshSize": "{*cond(Upper_padding_mesh_size)}",
+            "lowerPaddingMeshSize": "{*cond(Lower_padding_mesh_size)}"
+*endif
+*if(CondNumEntities(int)!=loopVar)
+        },
+*else
+        }
+*endif
 *end layers
 *endif
-Boundary padding type: *GenData(boundary_padding_type)
-Boundary padding: {*GenData(Upper_x_boundary_padding) *GenData(Upper_y_boundary_padding) *GenData(Upper_z_boundary_padding) *GenData(Lower_x_boundary_padding) *GenData(Lower_y_boundary_padding) *GenData(Lower_z_boundary_padding)}
-Boundary mesh size: {*GenData(Upper_x_boundary_mesh_size) *GenData(Upper_y_boundary_mesh_size) *GenData(Upper_z_boundary_mesh_size) *GenData(Lower_x_boundary_mesh_size) *GenData(Lower_y_boundary_mesh_size) *GenData(Lower_z_boundary_mesh_size)}
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
-GiD Native Cartesian Mesher: *tcl(GiD_Cartesian get iscartesian)
-Corner:       *tcl(GiD_Cartesian get corner) 
-BoxSize:      *tcl(GiD_Cartesian get boxsize)
-NGridPoints:  *tcl(GiD_Cartesian get ngridpoints) 
-Dimension:    *tcl(GiD_Cartesian get dimension)
-Coordinates:  *tcl(GiD_Cartesian get coordinates)
+            "gridType": "nativeGiD",
+            "corner":      "{*tcl(GiD_Cartesian get corner)}",
+            "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
+            "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
+            "coordinates": "*tcl(GiD_Cartesian get coordinates)"
+        }
 *else 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
-*WarningBox "No grid defined"
+*WarningBox "No grid defined. Define grid condition or use GiD native mesher."
 *endif
 *endif
-End of Grid:
+    ],
 
-Layers:
+*# ----------------------------------------------------------
+*# -------------------- LAYERS ------------------------------
+*# ----------------------------------------------------------
+    "layers": [
 *set elems(all)
 *loop layers
-*LayerNum *LayerName
+*set var NUMBER_OF_LAYERS = loopVar
 *end layers
-End of Layers:
+*loop layers
+*if(NUMBER_OF_LAYERS != loopVar)
+        {"id": *LayerNum, "name": "*LayerName"},
+*else
+        {"id": *LayerNum, "name": "*LayerName"}
+*endif
+*end layers
+    ],
 
-Coordinates:
+*# ----------------------------------------------------------
+*# ----------------- COORDINATES ----------------------------
+*# ----------------------------------------------------------
+    "coordinates": [
 *set elems(all)
 *loop nodes
 *format "%7i %+14.8e %+14.8e %+14.8e"
-*NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)
+*if(npoin != loopVar)
+        "*NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)",
+*else
+        "*NodesNum *NodesCoord(1,real) *NodesCoord(2,real) *NodesCoord(3,real)"
+*endif
 *end nodes
-End of Coordinates:
+    ],
 
-Elements:
+*# ----------------------------------------------------------
+*# ------------------- ELEMENTS -----------------------------
+*# ----------------------------------------------------------
+    "elements": {
 *set elems(Hexahedra)
-Hexahedral Elements:
+        "hexahedra": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %7i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum 
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum"
+*endif        
 *end elems
-End of Hexahedral Elements:
+        ],
 *set elems(Tetrahedra)
-Tetrahedral Elements:
+        "tetrahedra": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+*endif        
 *end elems
-End of Tetrahedral Elements:
+        ],
 *set elems(Quadrilateral)
-Quadrilateral Elements:
+        "quadrilateral": [
 *loop elems
 *format "%8i %7i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum 
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+*endif
 *end elems
-End of Quadrilateral Elements:
+        ],
 *set elems(Triangle)
-Triangle Elements:
+        "triangle": [
 *loop elems
 *format "%8i %7i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum 
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum"
+*endif
 *end elems
-End of Triangle Elements:
+        ],
 *set elems(Linear)
-Line Elements:
+        "line": [
 *loop elems
 *format "%8i %7i %7i %3i %3i"
-*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum
+*if(nelem != loopvar)
+        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum",
+*else
+        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum"
+*endif        
 *End elems
-End of Line Elements:
-End of Elements:
+        ]
+    },
 
-Excitations:
+*# ----------------------------------------------------------
+*# ---------------------- SOURCES ---------------------------
+*# ----------------------------------------------------------
+*# --- Precounts sources ---
+*set var nSources = 0
+*set elems(all)
+*set Cond Planewave
+*loop layers *OnlyInCond
+*set var nSources = nSources + 1
+*end layers
+*loop conditions *nodes
+*if(strcasecmp(condName,"Generator_on_line")==0)
+*loop nodes *OnlyInCond
+*set var nSources = nSources + 1
+*end nodes
+*endif
+*end conditions
+*Set Cond Source_on_line *bodyElements
+*loop elems *OnlyInCond
+*set var nSources = nSources + 1
+*end elems
+*loop conditions *bodyElements
+*if(strcasecmp(condName,"Waveguide_port")==0)
+*loop elems *onlyInCond
+*set var nSources = nSources + 1
+*endif 
+*end conditions
+*loop conditions *bodyElements
+*if(strcasecmp(condName,"TEM_port"))
+*set var nSources = nSources + 1
+*loop elems *onlyInCond
+*end elems
+*endif 
+*end conditions
+*# ----------------------------------------------------------
+*set var sourceNum = 0
+    "sources": [
 *set elems(all)
 *Set Cond Planewave
-*if(CondNumEntities(int)>0)
-Planewave: 
 *loop layers *OnlyInCond
-Definition mode: *cond(Definition_mode)
-Direction vector: *cond(Direction_vector) 
-Polarization vector: *cond(Polarization_vector)
-Direction theta: *cond(Direction_theta)
-Direction phi: *cond(Direction_phi)
-Polarization alpha: *cond(Polarization_alpha)
-Polarization beta: *cond(Polarization_beta)
-Number of random planewaves: *cond(Number_of_random_planewaves)
-Relative variation of random delay: *cond(Relative_variation_of_random_delay)
-Excitation: *cond(Excitation)
-Gaussian spread: *cond(Gaussian_spread)
-Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
-Filename: *cond(File)
+        {
+            "sourceType": "planewave", 
+            "definitionMode": "*cond(Definition_mode)",
+*if(strcmp(cond(Definition_mode),"by_vectors")==0)
+            "directionVector": "{*cond(Direction_vector)}", 
+            "polarizationVector": "{*cond(Polarization_vector)}",
+*elseif(strcmp(cond(Definition_mode),"by_angles")==0)
+            "directionTheta": *cond(Direction_theta),
+            "directionPhi": *cond(Direction_phi),
+            "polarizationAlpha": *cond(Polarization_alpha),
+            "polarizationBeta": *cond(Polarization_beta),
+*else
+            "numberOfRandomPlanewaves": *cond(Number_of_random_planewaves),
+            "relativeVariationOfRandomDelay": *cond(Relative_variation_of_random_delay),
+*endif            
+*include includes/magnitude.bas
+            "layerName": "*layerName",
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
+*set var sourceNum = sourceNum + 1
+*if(sourceNum == nSources) 
+        }
+*else
+        },
 *endif
-Defined: OnLayers
-Layer Name: *layerName
-Layer Box: *tcl(GiD_Info layer -bbox -use geometry *layerName)
 *end layers
-End of Planewave:
+*# ----------------------------------------------------------
+*loop conditions *nodes
+*if(strcasecmp(condName,"Generator_on_line")==0)
+*loop nodes *OnlyInCond
+        {
+            "sourceType": "generator",
+            "type": "*cond(Type)",
+*include includes/magnitude.bas
+            "coordIds": [ *NodesNum ]
+*if(sourceNum == nSources) 
+        }
+*else
+        },
 *endif
-
+*end nodes
+*endif
+*end conditions
+*# ----------------------------------------------------------
 *Set Cond Source_on_line *bodyElements
 *set var HEADER=0
 *loop elems *OnlyInCond
-*if(HEADER==0) 
+*if(HEADER == 0)
 *set var HEADER=1
- Source_on_line:
- Type: *cond(Type) 
- Hardness: *cond(Hardness) 
- Excitation: *cond(Excitation)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
- Filename: *cond(File)
+        {
+            "sourceType": "sourceOnLine",
+            "type": "*cond(Type)", 
+            "hardness": "*cond(Hardness)",
+*include includes/magnitude.bas
+            "defined": "OnElements",
+            "elemIds": [
 *endif
- Defined: OnElements
- Number of elements: *CondNumEntities(int)
-*endif
-  *elemsNum
-*end elems
-*if(HEADER==1)
-End of Source_on_line:
-*endif
-
-*loop conditions *nodes
-*if(strcasecmp(condName,"Generator_on_line")==0&&CondNumEntities(int)>0)
-*loop nodes *OnlyInCond
- Generator:
- Type: *cond(Type)
- Excitation: *cond(Excitation)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
- Filename: *cond(File)
-*endif
- Defined: OnNodes
- Number of elements: 1
- *NodesNum
- End of Generator:
-*end nodes
-
-*endif
-*end conditions
-*loop conditions *faceElements
-*if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
-*set var HEADER = 0
-*loop elems *onlyInCond
-*if(HEADER == 0)
- Waveguide_port:
- Shape: *cond(Shape)
- Excitation: *cond(Excitation)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
- Filename: *cond(File)
-*endif
- ExcitationMode: *cond(Mode)
- FirstMode: *cond(FirstMode)
- SecondMode: *cond(SecondMode)
- Number of elements: *CondNumEntities(int)
- Elements:
-*set var HEADER = 1
-*endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
+*if(loopVar != condNumEntities)
+                *elemsNum,
 *else
-  *ElemsNum 3
+                *elemsNum
 *endif
 *end elems
- End of Waveguide_port:
-*endif 
-
-*end conditions
+            ]
+        },
+*# ----------------------------------------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
 *set var HEADER = 0
 *loop elems *onlyInCond
 *if(HEADER == 0)
- Waveguide_port: 
- Shape: *cond(Shape)
- Excitation: *cond(Excitation)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
- Filename: *cond(File)
-*endif
- ExcitationMode: *cond(Mode)
- FirstMode: *cond(FirstMode)
- SecondMode: *cond(SecondMode)
- Number of elements: *CondNumEntities(int)
- Elements:
 *set var HEADER = 1
+        {
+            "sourceType": "waveguidePort",
+            "shape": "*cond(Shape)",
+*include includes/magnitude.bas
+            "excitationMode": "*cond(Mode)",
+            "firstMode":  *cond(FirstMode),
+            "secondMode": *cond(SecondMode),
+            "elemIds": [
 *endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
+*if(loopVar != condNumEntities)
+                *ElemsNum,
 *else
-  *ElemsNum 3
+                *ElemsNum
 *endif
 *end elems
- End of Waveguide port:
+            ]
+        },
 *endif 
 *end conditions
-
-*loop conditions *faceElements
-*if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
-*set var HEADER = 0
-*loop elems *onlyInCond
-*if(HEADER == 0)
- TEM_port: 
- Excitation: *cond(Excitation)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
- Filename: *cond(File)
-*endif
- Origin: *cond(Origin)
- Inner radius: *cond(Inner_radius)
- Outer radius: *cond(Outer_radius)
- ExcitationMode: *cond(Mode)
- Number of elements: *CondNumEntities(int)
- Elements:
-*set var HEADER = 1
-*endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
-*else
-  *ElemsNum 3
-*endif
-*end elems
- End of Waveguide_port:
-*endif 
-
-*end conditions
+*# ----------------------------------------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
-*set var HEADER = 0
+*set var ENTITY = 0
 *loop elems *onlyInCond
-*if(HEADER == 0)
- TEM_port: 
- Excitation: *cond(Excitation)
- Gaussian spread: *cond(Gaussian_spread)
- Gaussian delay: *cond(Gaussian_delay)
-*if(strcmp(cond(Excitation),"File")==0)
- Filename: *cond(File)
+*if(ENTITY == 0)
+*set var ENTITY = cond(entityId,INT)
+        {
+            "sourceType": "temPort",
+*include includes/magnitude.bas
+            "origin": "*tcl(GiD_Info Coordinates *cond(Origin) geometry)",
+            "innerRadius": *cond(Inner_radius),
+            "outerRadius": *cond(Outer_radius),
+            "excitationMode": "*cond(Mode)",
+            "elemIds": [
 *endif
- Origin: *cond(Origin)
- Inner radius: *cond(Inner_radius)
- Outer radius: *cond(Outer_radius)
- ExcitationMode: *cond(Mode)
- Number of elements: *CondNumEntities(int)
- Elements:
-*set var HEADER = 1
-*endif
-*if(CondElemFace==1)
-  *ElemsNum 1
-*elseif(CondElemFace==2)
-  *ElemsNum 4
-*elseif(CondElemFace==3)
-  *ElemsNum 2
+*if(loopVar != condNumEntities)
+                *ElemsNum,
 *else
-  *ElemsNum 3
+                *ElemsNum
 *endif
 *end elems
- End of TEM port:
+            ]
+        }, 
 *endif 
-
 *end conditions
+    ],
 
-End of Excitations:
-
-Output Requests:
-*Set Cond OutRq_on_point
-*if(CondNumEntities(int)>0)
-Output request instance:
-GiDOutputType: OutRq_on_point
-Number of elements: *CondNumEntities(int)
-*loop nodes *OnlyInCond
-Name: *cond(Name)
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*NodesNum
-*end nodes
-End of Output request instance: 
-*endif
-*Set cond OutRq_on_line
-*if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: OutRq_on_line
-Number of elements: *CondNumEntities(int)
-*loop elems OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*elemsNum
-*end elems
-End of Output request instance:
-*end if
-*Set cond OutRq_on_surface
-*if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: OutRq_on_surface
-Number of elements: *CondNumEntities(int)
-*loop elems OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*elemsNum
-*end elems
-End of Output request instance:
-*end if
+*# ----------------------------------------------------------
+*# ------------------ OUTPUT REQUESTS -----------------------
+*# ----------------------------------------------------------
+    "outputRequests": [
+*# ----------------------------------------------------------
+*tcl(semba::writeOutputRequestBAS OutRq_on_point)
+*tcl(semba::writeOutputRequestBAS OutRq_on_line)
+*tcl(semba::writeOutputRequestBAS OutRq_on_surface)
+*# ----------------------------------------------------------
 *Set cond OutRq_on_layer
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: OutRq_on_layer
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "OutRq_on_layer",
 *loop layers *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)"
-*tcl(GiD_Info layer -bbox -use geometry *layerName)
+            "name": "*cond(Name)",
+            "type": "*cond(Type)",
+*include includes/domain.bas
+            "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}"
 *end layers
-End of Output request instance: 
+        },
 *end if
-*Set cond Bulk_current_on_surface
-*if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: Bulk_current_on_surface
-Number of elements: *CondNumEntities(int)
-*loop elems *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)"
-Direction: *cond(Direction)
-Skip: *cond(Skip)
-*elemsNum
-*end elems
-End of Output request instance:
-*end if
+*# ----------------------------------------------------------
+*tcl(semba::writeOutputRequestBulkCurrentBAS Bulk_current_on_surface)
+*# ----------------------------------------------------------
 *Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: Bulk_current_on_layer
-Number of elements: *CondNumEntities(int)
+        {
+            "gidOutputType": "Bulk_current_on_layer",
 *loop layers *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)"
-Direction: *cond(Direction)
-Skip: *cond(Skip)
-*tcl(GiD_Info layer -bbox -use geometry *layerName)
+            "name": "*cond(Name)",
+            "type": "*cond(Type)",
+*include includes/domain.bas
+            "direction": "{*cond(Direction)}",
+            "skip": *cond(Skip),
+            "box": {*tcl(GiD_Info layer -bbox -use geometry *layerName)}
 *end layers
-End of Output request instance: 
+        },
 *end if
+*# ----------------------------------------------------------
 *Set cond Far_field
 *if(CondNumEntities(int)>0)
-Output request instance: 
-GiDOutputType: Far_field
-Number of elements: *CondNumEntities(int)
+        { 
+            "gidOutputType": "Far_field",
 *loop layers *OnlyInCond
-Name: *cond(Name) 
-Type: *cond(Type) 
-Domain: *cond(Time) *cond(Initial_time) *cond(Final_time) *cond(Sampling_period) *cond(Frequency) *cond(Initial_Frequency) *cond(Final_Frequency) *cond(Frequency_step) *cond(Log_frequency_sweep) *cond(Use_transfer_function) "*cond(transfer_function_file)" 
-*tcl(GiD_Info layer -bbox -use geometry *layerName)
-*cond(Initial_theta) *cond(Final_theta) *cond(Step_theta) *cond(Initial_phi) *cond(Final_phi) *cond(Step_phi)
+            "name": "*cond(Name)",
+            "type": "*cond(Type)",
+*include includes/domain.bas
+            "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
+            "farPoints": {
+                "initialTheta": *cond(Initial_theta),
+                "finalTheta":   *cond(Final_theta),
+                "stepTheta":    *cond(Step_theta),
+                "initialPhi":   *cond(Initial_phi),
+                "finalPhi":     *cond(Final_phi),
+                "stepPhi":      *cond(Step_phi)
+            }
 *end layers
-End of Output request instance: 
+        },
 *end if
-End of Output Requests:
+    ]
+}
