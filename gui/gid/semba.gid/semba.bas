@@ -1,6 +1,7 @@
 {
     "_format": "Semba Data File in JSON format ",
     "_version": "*tcl(set version $semba::VersionNumber)",
+
 *# ----------------------------------------------------------
 *# ------------------ SOLVER OPTIONS ------------------------
 *# ----------------------------------------------------------
@@ -99,47 +100,47 @@
             "permittivity": *matprop(Permittivity),
             "permeability": *matprop(Permeability),
             "electricConductivity": *matprop(ElecCond),
-            "magneticConductivity": *matprop(MagnCond),
+            "magneticConductivity": *matprop(MagnCond)
 *elseif(strcmp(Matprop(TypeId),"Dispersive")==0)
             "materialTypeId": "*MatProp(TypeId)",
-            "filename": "*matprop(File)",
+            "filename": "*matprop(File)"
 *elseif(strcmp(Matprop(TypeId),"Wire")==0)
             "materialTypeId": "*MatProp(TypeId)",
             "radius": *matprop(Radius),
             "wireType": "*matprop(WireType)",
+*if(strcmp(Matprop(WireType),"Dispersive")==0)
+            "filename": *matprop(File),
+*endif
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance),   
             "parallelResistance": *matprop(Parallel_Resistance),
             "parallelInductance": *matprop(Parallel_Inductance),
-            "parallelCapacitance": *matprop(Parallel_Capacitance),
-*if(strcmp(Matprop(WireType),"Dispersive")==0)
-            "filename": *matprop(File),
-*endif
+            "parallelCapacitance": *matprop(Parallel_Capacitance)
 *elseif(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
             "materialTypeId": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
-            "capacitance": *matprop(capacitance),
+            "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
             "materialTypeId": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
-            "capacitance": *matprop(capacitance),
+            "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
             "materialTypeId": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
-            "capacitance": *matprop(capacitance),
+            "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Thin_gap")==0)
             "materialTypeId": "*MatProp(TypeId)",
-            "width": *matprop(Width),
+            "width": *matprop(Width)
 *elseif(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
             "materialTypeId": "*MatProp(TypeId)",
-            "filename": "*matprop(File)",
+            "filename": "*matprop(File)"
 *elseif(strcmp(Matprop(TypeId),"SIBC")==0)
             "materialTypeId": "*MatProp(TypeId)",
-            "surfaceType": "*matprop(SurfaceType)",
+            "surfaceType": "*matprop(SurfaceType)"
 *if(strcmp(Matprop(SurfaceType),"File")==0)
             "materialTypeId": "*MatProp(TypeId)",   
             "filename": "*matprop(File)"
@@ -169,7 +170,7 @@
             "freqMax": *matProp(freq_max),
             "numberOfPoles": *matProp(number_Of_Poles)
 *elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialTypeId": "*MatProp(TypeId)"
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else

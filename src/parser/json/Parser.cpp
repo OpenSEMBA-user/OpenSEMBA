@@ -54,7 +54,13 @@ namespace JSON {
 Data* Parser::read(std::istream& stream) const {
 
     json j;
-    stream >> j;
+    try {
+        stream >> j;
+    }
+    catch( const std::exception & ex ) {
+        std::cerr << ex.what() << std::endl;
+    }
+
     Util::ProgressBar progress;
     progress.init("Parser GiD-JSON", 7, 0);
 
@@ -68,6 +74,7 @@ Data* Parser::read(std::istream& stream) const {
     Data* res = new Data();
 
     res->solver = readSolver(j);
+
 //    Solver::Settings settings = res->solver->getSettings();
 //    progress.advance();
 //
@@ -92,36 +99,24 @@ Data* Parser::read(std::istream& stream) const {
 }
 
 Solver::Info* Parser::readSolver(const json& j) {
+    if (j.find("solverOptions") == j.end()) {
+        return nullptr;
+    }
     json solverOptions = j.at("solverOptions").get<json>();
-    Solver::Settings opts;
-    readSolverSettings(opts, solverOptions);
+    Solver::Settings opts = readSolverSettings(solverOptions);
     return new Solver::Info(
             solverOptions.at("solverName").get<std::string>(),
             std::move(opts));
 }
 
-void Parser::readSolverSettings(Solver::Settings& opts,
-                                const std::string& sect) {
-    std::string endSect = std::string("End of ") + sect;
-    std::string label, value;
+Solver::Settings Parser::readSolverSettings(const json& j) {
+    Solver::Settings opts;
     opts.setObject();
-    while (!f_in.eof()) {
-        getNextLabelAndValue(label, value);
-        if (trim(label).empty()) {
-            continue;
-        }
-        if (label.find(endSect) != std::string::npos) {
-            return;
-        } else if (trim(value).empty()) {
-            Solver::Settings aux;
-            readSolverSettings(aux, label);
-            opts.addMember(label, std::move(aux));
-        } else {
-            Solver::Settings aux;
-            aux.setString(value);
-            opts.addMember(label, std::move(aux));
-        }
+    for (json::const_iterator it = j.begin(); it != j.end(); ++it) {
+      std::cout << it.key() << ": " << it.value() << '\n';
     }
+
+    return opts;
 }
 //
 //Geometry::Mesh::Geometric* Parser::readGeometricMesh() {

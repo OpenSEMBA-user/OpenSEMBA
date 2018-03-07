@@ -53,7 +53,7 @@
             "permittivity": 50,
             "permeability": 1.0,
             "electricConductivity": 0.0,
-            "magneticConductivity": 0.0,
+            "magneticConductivity": 0.0
         }
     ],
 
@@ -1118,10 +1118,8 @@
                 "gaussianDelay": 6e-9
             },
             "layerName": "pw",
-            "layerBox": "{1.8 1.8 1.8 -1.8 -1.8 -1.8}",
-        },
-            ]
-        },
+            "layerBox": "{1.8 1.8 1.8 -1.8 -1.8 -1.8}"
+        }
     ],
 
     "outputRequests": [
@@ -1132,7 +1130,7 @@
             "domain": {
                 "initialTime":    "0.0",
                 "finalTime":      "0.0",
-                "samplingPeriod": "0.0",
+                "samplingPeriod": "0.0"
             },
      		"elemIds": [
                 170
@@ -1145,7 +1143,7 @@
             "domain": {
                 "initialTime":    "0.0",
                 "finalTime":      "0.0",
-                "samplingPeriod": "0.0",
+                "samplingPeriod": "0.0"
             },
      		"elemIds": [
                 14
@@ -1158,7 +1156,7 @@
             "domain": {
                 "initialTime":    "0.0",
                 "finalTime":      "0.0",
-                "samplingPeriod": "0.0",
+                "samplingPeriod": "0.0"
             },
      		"elemIds": [
                 168
@@ -1173,7 +1171,7 @@
             "domain": {
                 "initialTime":    "0.0",
                 "finalTime":      "0.0",
-                "samplingPeriod": "0.0",
+                "samplingPeriod": "0.0"
             },
      		"elemIds": [
                 800,
@@ -1190,7 +1188,7 @@
             "domain": {
                 "initialTime":    "0.0",
                 "finalTime":      "0.0",
-                "samplingPeriod": "0.0",
+                "samplingPeriod": "0.0"
             },
      		"elemIds": [
                 800,
@@ -1220,6 +1218,6 @@
                 "finalPhi":     0,
                 "stepPhi":      1
             }
-        },
+        }
     ]
 }

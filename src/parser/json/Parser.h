@@ -88,7 +88,7 @@ private:
     } DefinitionMode;
 
     static Solver::Info* readSolver(const json& input);
-    void readSolverSettings(Solver::Settings&, const std::string&);
+    static Solver::Settings readSolverSettings(const json& j);
 //    Source::Group<>* readEMSources();
 //    OutputRequest::Group<>* readOutputRequests();
 //    PhysicalModel::Group<>* readMaterials();

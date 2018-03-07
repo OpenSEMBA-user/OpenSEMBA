@@ -32,14 +32,21 @@ using namespace Parser::JSON;
 class ParserJSONParserTest : public ::testing::Test {
 };
 
-
 TEST_F(ParserJSONParserTest, Basic) {
-    std::istringstream sStream(
+    std::istringstream stream(
             "{\n"
             "   \"_version\": \"" OPENSEMBA_VERSION "\"\n"
             "}"
     );
 
     SEMBA::Parser::JSON::Parser jsonParser;
-    Data* data = jsonParser.read(sStream);
+    EXPECT_NO_THROW(jsonParser.read(stream));
+}
+
+TEST_F(ParserJSONParserTest, Sphere) {
+    std::ifstream stream("testData/sphere.gid/sphere.dat");
+    EXPECT_TRUE(stream.is_open());
+
+    SEMBA::Parser::JSON::Parser jsonParser;
+    EXPECT_NO_THROW(jsonParser.read(stream));
 }
