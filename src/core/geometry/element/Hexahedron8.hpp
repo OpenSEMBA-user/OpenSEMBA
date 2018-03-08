@@ -35,7 +35,7 @@ Hexahedron8<T>::Hexahedron8() {
 
 template<class T>
 Hexahedron8<T>::Hexahedron8(const Id id,
-                            const Coordinate::Coordinate<T,3>* v[8],//std::array<const Coordinate::Coordinate<T,3>*, 8> v,
+                            std::array<const Coordinate::Coordinate<T,3>*, 8> v,
                             const Layer* lay,
                             const Model* mat)
 :   Identifiable<Id>(id),
