@@ -73,13 +73,11 @@ Data* Parser::read(std::istream& stream) const {
 
     Data* res = new Data();
 
-    res->solver = readSolver(j);
+    res->solver = readSolver( j );
+    progress.advance();
 
-//    Solver::Settings settings = res->solver->getSettings();
-//    progress.advance();
-//
-//    res->physicalModels = readMaterials();
-//    progress.advance();
+    res->physicalModels = readPhysicalModels( j );
+    progress.advance();
 //
 //    res->mesh = readGeometricMesh();;
 //    progress.advance();
@@ -113,9 +111,17 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
     Solver::Settings opts;
     opts.setObject();
     for (json::const_iterator it = j.begin(); it != j.end(); ++it) {
-      std::cout << it.key() << ": " << it.value() << '\n';
+        if (it->is_object()) {
+            Solver::Settings aux = readSolverSettings(*it);
+            opts.addMember(it.key(), std::move(aux));
+        } else {
+            Solver::Settings aux;
+            std::stringstream value;
+            value << *it;
+            aux.setString(value.str());
+            opts.addMember(it.key(), std::move(aux));
+        }
     }
-
     return opts;
 }
 //
@@ -165,193 +171,125 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
 //    //
 //    return res;
 //}
-//
-//PhysicalModel::Group<>* Parser::readMaterials(){
-//    PhysicalModel::Group<>* res = new PhysicalModel::Group<>();
-//    std::string label, value;
-//    std::size_t materialCount = 0;
-//    while (!f_in.eof() && label.compare("End of Materials")!=0) {
-//        getNextLabelAndValue(label, value);
-//        if (label.compare("Material")==0) {
-//            materialCount++;
-//            MatId id = MatId(atoi(value.c_str()));
-//            res->add(readPhysicalModel(id));
+
+PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j){
+    if (j.find("materials") == j.end()) {
+        return nullptr;
+    }
+    PhysicalModel::Group<>* res = new PhysicalModel::Group<>();
+    json materials = j.at("materials");
+    for (json::const_iterator it = materials.begin();
+            it != materials.end(); ++it) {
+        res->add(readPhysicalModel( *it ));
+    }
+    return res;
+}
+
+PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
+    PhysicalModel::PhysicalModel::Type type =
+                strToMaterialType( mat.at("materialType").get<std::string>() );
+    MatId id = MatId(mat.at("materialId").get<int>());
+    std::string name = mat.at("name").get<std::string>();
+
+    switch (type) {
+    case PhysicalModel::PhysicalModel::PEC:
+        return new PhysicalModel::Predefined::PEC (id, name);
+
+    case PhysicalModel::PhysicalModel::PMC:
+        return new PhysicalModel::Predefined::PMC(id, name);
+
+    case PhysicalModel::PhysicalModel::SMA:
+        return new PhysicalModel::Predefined::SMA(id, name);
+
+    case PhysicalModel::PhysicalModel::PML:
+        if (mat.at("automaticOrientation").get<bool>()) {
+            return new PhysicalModel::Volume::PML(id, name, nullptr);
+        } else {
+            Math::Axis::Local* localAxes;
+            localAxes = new Math::Axis::Local(
+                    strToLocalAxes(mat.at("localAxes").get<std::string>()))
+            return new PhysicalModel::Volume::PML(id, name, localAxes);
+        }
+
+    case PhysicalModel::PhysicalModel::classic:
+        return new PhysicalModel::Volume::Classic(id, name,
+                mat.at("permittivity").get<double>(),
+                mat.at("permeability").get<double>(),
+                mat.at("electricConductivity").get<double>(),
+                mat.at("magneticConductivity").get<double>());
+
+    case PhysicalModel::PhysicalModel::elecDispersive:
+        return new PhysicalModel::Volume::Dispersive(id, name,
+                mat.at("filename").get<std::string>());
+
+    case PhysicalModel::PhysicalModel::wire:
+        const std::string wireType = mat.at("wireType").get<std::string>();
+        if (wireType == "Dispersive") {
+            return new PhysicalModel::Wire::Wire(id, name,
+                    mat.at("radius").get<double>(),
+                    mat.at("filename").get<std::string>());
+        } else if(mat.at("wireType").get<std::string>() == "SeriesParallel") {
+            return new PhysicalModel::Wire::Wire(id, name,
+                    mat.at("radius").get<double>(),
+                    mat.at("resistance").get<double>(),
+                    mat.at("inductance").get<double>(),
+                    mat.at("capacitance").get<double>(),
+                    mat.at("parallelResistance").get<double>(),
+                    mat.at("parallelInductance").get<double>(),
+                    mat.at("parallelCapacitance").get<double>());
+        } else if(mat.at("wireType").get<std::string>() == "Standard") {
+            return new PhysicalModel::Wire::Wire(id, name,
+                    mat.at("resistance")
+                    mat.at("inductance"));
+        } else {
+            throw std::logic_error("Unrecognized wire type");
+        }
+//    case PhysicalModel::PhysicalModel::anisotropic:
+//        switch (anisotropicModel) {
+//        case PhysicalModel::Volume::Anisotropic::Model::crystal:
+//            return new PhysicalModel::Volume::AnisotropicCrystal(
+//                    id, name, localAxes,
+//                    rEpsPrincipalAxes, crystalRMu);
+//        case PhysicalModel::Volume::Anisotropic::Model::ferrite:
+//            return new PhysicalModel::Volume::AnisotropicFerrite(
+//                    id, name, localAxes,
+//                    kappa,ferriteRMu,ferriteREps);
+//        default:
+//            throw std::logic_error("Material type not recognized.");
 //        }
-//    }
-//    assert(materialCount == pSize_.mat);
-//    return res;
-//}
-//
-//PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const MatId id) {
-//    std::string name;
-//    PhysicalModel::PhysicalModel::Type type;
-//    PhysicalModel::Multiport::Multiport::Type mpType =
-//        PhysicalModel::Multiport::Multiport::undefined;
-//    SIBCType surfType = undefinedSIBC;
-//    std::string layersStr;
-//    Math::Real rEps, rMu, eC, mC;
-//    PhysicalModel::Volume::Anisotropic::Model anisotropicModel;
-//    Math::Real crystalRMu, ferriteREps, ferriteRMu;
-//    Math::CVecR3 rEpsPrincipalAxes;
-//    Math::Axis::Local localAxes;
-//    bool pmlAutomaticOrientation;
-//    Math::Real kappa;
-//    Math::Real radius, R, L, C, P_R, P_L, P_C;
-//    Math::Real width;
-//    bool wireDispersive = false;
-//    bool wireSeriesParallel = false;
-//    FileSystem::Project file;
-//    while (!f_in.eof()) {
-//        std::string label, value;
-//        getNextLabelAndValue(label, value);
-//        if (label.compare("Name")==0) {
-//            name = trim(value);
-//        } else if (label.compare("TypeId")==0) {
-//            type = strToMaterialType(value);
-//            if (type == PhysicalModel::PhysicalModel::multiport) {
-//                mpType = strToMultiportType(value);
-//            }
-//        } else if (label.compare("Permittivity")==0) {
-//            rEps = atof(value.c_str());
-//        } else if (label.compare("Permeability")==0) {
-//            rMu = atof(value.c_str());
-//        } else if (label.compare("Electric Conductivity")==0) {
-//            eC = atof(value.c_str());
-//        } else if (label.compare("Magnetic Conductivity")==0) {
-//            mC = atof(value.c_str());
-//        } else if (label.compare("Automatic Orientation")==0) {
-//            pmlAutomaticOrientation = strToBool(value);
-//        } else if (label.compare("WireType") == 0) {
-//            if (value == "SeriesParallel") {
-//                wireSeriesParallel = true;
-//            } else if (value == "Dispersive") {
-//                wireDispersive = true;
-//            }
-//        } else if (label.compare("Radius")==0) {
-//            radius = atof(value.c_str());
-//        } else if (label.compare("Resistance")==0) {
-//            R = atof(value.c_str());
-//        } else if (label.compare("Inductance")==0) {
-//            L = atof(value.c_str());
-//        } else if (label.compare("Capacitance")==0) {
-//            C = atof(value.c_str());
-//        } else if (label.compare("Parallel Resistance") == 0) {
-//            P_R = atof(value.c_str());
-//        } else if (label.compare("Parallel Inductance") == 0) {
-//            P_L = atof(value.c_str());
-//        } else if (label.compare("Parallel Capacitance") == 0) {
-//            P_C = atof(value.c_str());
-//        } else if (label.compare("Width") == 0) {
-//            width = atof(value.c_str());
-//        } else if (label.compare("SurfaceType")==0) {
-//            surfType = strToSIBCType(value);
-//        } else if (label.compare("Filename")==0) {
-//            FileSystem::Project fileInFolder(getFolder() + trim(value));
-//            FileSystem::Project fileGeneral(trim(value));;
-//            if (!fileInFolder.canOpen() && !fileGeneral.canOpen()) {
-//                throw std::logic_error("Unable to open file, tried:" + fileInFolder
-//                        + " and " + fileGeneral);
-//            }
-//            if (fileInFolder.canOpen()) {
-//                file = fileInFolder;
-//            }
-//            if (fileGeneral.canOpen()) {
-//                file = fileGeneral;
-//            }
-//        } else if (label.compare("Layers")==0) {
-//            layersStr = value;
-//        } else if (label.compare("Anisotropic model") == 0) {
-//            anisotropicModel = strToAnisotropicModel(value);
-//        } else if (label.compare("Local Axes") == 0) {
-//            localAxes = strToLocalAxes(value);
-//        } else if (label.compare("Relative permittivity principal axes") == 0) {
-//            rEpsPrincipalAxes = strToCVecR3(value);
-//        } else if (label.compare("Crystal relative permeability") == 0) {
-//            crystalRMu = atof(value.c_str());
-//        } else if (label.compare("Kappa") == 0) {
-//            kappa = atof(value.c_str());
-//        } else if (label.compare("Ferrite relative permeability") == 0) {
-//            ferriteRMu = atof(value.c_str());
-//        } else if (label.compare("Ferrite relative permittivity") == 0) {
-//            ferriteREps = atof(value.c_str());
-//        } else if (label.compare("End of Material")==0) {
-//            // Creates material.
-//            switch (type) {
-//            case PhysicalModel::PhysicalModel::PEC:
-//                return new PhysicalModel::Predefined::PEC(id, name);
-//            case PhysicalModel::PhysicalModel::PMC:
-//                return new PhysicalModel::Predefined::PMC(id, name);
-//            case PhysicalModel::PhysicalModel::SMA:
-//                return new PhysicalModel::Predefined::SMA(id, name);
-//            case PhysicalModel::PhysicalModel::PML:
-//                if (pmlAutomaticOrientation) {
-//                    return new PhysicalModel::Volume::PML(id, name, nullptr);
-//                } else {
-//                    return new PhysicalModel::Volume::PML(
-//                            id, name, new Math::Axis::Local(localAxes));
-//                }
-//            case PhysicalModel::PhysicalModel::classic:
-//                return new PhysicalModel::Volume::Classic(
-//                        id, name, rEps, rMu, eC, mC);
-//            case PhysicalModel::PhysicalModel::elecDispersive:
-//                return new PhysicalModel::Volume::Dispersive(id, name, file);
-//            case PhysicalModel::PhysicalModel::anisotropic:
-//                switch (anisotropicModel) {
-//                case PhysicalModel::Volume::Anisotropic::Model::crystal:
-//                    return new PhysicalModel::Volume::AnisotropicCrystal(
-//                            id, name, localAxes,
-//                            rEpsPrincipalAxes, crystalRMu);
-//                case PhysicalModel::Volume::Anisotropic::Model::ferrite:
-//                    return new PhysicalModel::Volume::AnisotropicFerrite(
-//                            id, name, localAxes,
-//                            kappa,ferriteRMu,ferriteREps);
-//                default:
-//                    throw std::logic_error("Material type not recognized.");
-//                }
-//            case PhysicalModel::PhysicalModel::isotropicsibc:
-//                switch (surfType) {
-//                case sibc:
-//                    return new PhysicalModel::Surface::SIBC(id, name, file);
-//                case multilayer:
-//                    return readMultilayerSurf(id, name, layersStr);
-//                default:
-//                    throw std::logic_error("Undefined SIBC Type.");
-//                }
-//                break;
-//            case PhysicalModel::PhysicalModel::wire:
-//                if (wireSeriesParallel) {
-//                    return new PhysicalModel::Wire::Wire(id, name, radius,
-//                                                         R, L, C,
-//                                                         P_R, P_L, P_C);
-//                }
-//                if (wireDispersive) {
-//                    return new PhysicalModel::Wire::Wire(id, name,
-//                                                         radius, file);
-//                }
-//                return new PhysicalModel::Wire::Wire(id, name, radius, R, L);
-//            case PhysicalModel::PhysicalModel::gap:
-//                return new PhysicalModel::Gap::Gap(id, name, width);
-//            case PhysicalModel::PhysicalModel::multiport:
-//                if (mpType ==
-//                        PhysicalModel::Multiport::Multiport::shortCircuit) {
-//                    return new PhysicalModel::Multiport::Predefined(
-//                            id, name, mpType);
-//                } else if (mpType ==
-//                            PhysicalModel::Multiport::Multiport::dispersive) {
-//                    return new PhysicalModel::Multiport::Dispersive(
-//                            id, name, file);
-//                } else {
-//                    return new PhysicalModel::Multiport::RLC(
-//                            id, name, mpType, R, L, C);
-//                }
-//            default:
-//                throw std::logic_error("Material type not recognized.");
-//            }
+//    case PhysicalModel::PhysicalModel::isotropicsibc:
+//        switch (surfType) {
+//        case sibc:
+//            return new PhysicalModel::Surface::SIBC(id, name, file);
+//        case multilayer:
+//            return readMultilayerSurf(id, name, layersStr);
+//        default:
+//            throw std::logic_error("Undefined SIBC Type.");
 //        }
-//    }
-//    return nullptr;
-//}
-//
+
+    case PhysicalModel::PhysicalModel::gap:
+        return new PhysicalModel::Gap::Gap(id, name,
+                mat.at("width").get<double>());
+
+    case PhysicalModel::PhysicalModel::multiport:
+        PhysicalModel::Multiport::Multiport::Type mpType =
+                strToMultiportType(mat.at("connectorType").get<std::string>());
+        if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
+            return new PhysicalModel::Multiport::Predefined(id, name, mpType);
+        } else if (mpType == PhysicalModel::Multiport::Multiport::dispersive) {
+            return new PhysicalModel::Multiport::Dispersive(id, name,
+                    mat.at("filename").get<std::string>());
+        } else {
+            return new PhysicalModel::Multiport::RLC(id, name, mpType,
+                    mat.at("resistance").get<std::string>(),
+                    mat.at("inductance").get<std::string>(),
+                    mat.at("capacitance").get<std::string>());
+        }
+    default:
+        throw std::logic_error("Material type not recognized.");
+    }
+}
+
 //OutputRequest::Group<>* Parser::readOutputRequests() {
 //    OutputRequest::Group<>* res = new OutputRequest::Group<>();
 //    bool finished;
@@ -1455,176 +1393,176 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
 //        throw std::logic_error("Unrecognized output type: " + str);
 //    }
 //}
-//
-//Parser::SIBCType Parser::strToSIBCType(std::string str) {
-//    str = trim(str);
-//    if (str.compare("File")==0) {
-//        return sibc;
-//    } else if (str.compare("Layers")==0) {
-//        return multilayer;
-//    } else {
-//        throw std::logic_error("Unrecognized SIBC type: " + str);
-//    }
-//}
-//
-//Source::Generator::Type Parser::strToGeneratorType(std::string str) {
-//    str = trim(str);
-//    if (str.compare("voltage")==0) {
-//        return Source::Generator::voltage;
-//    } else if (str.compare("current")==0) {
-//        return Source::Generator::current;
-//    } else {
-//        throw std::logic_error("Unrecognized generator type: " + str);
-//    }
-//}
-//
-//Source::Generator::Hardness Parser::strToGeneratorHardness(std::string str) {
-//    str = trim(str);
-//    if (str.compare("soft")==0) {
-//        return Source::Generator::soft;
-//    } else if (str.compare("hard")==0) {
-//        return Source::Generator::hard;
-//    } else {
-//        throw std::logic_error("Unrecognized generator hardness: " + str);
-//    }
-//}
-//
-//PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
-//    str = trim(str);
-//    if (str.compare("PEC")==0) {
-//        return PhysicalModel::PhysicalModel::PEC;
-//    } else if (str.compare("PMC")==0) {
-//        return PhysicalModel::PhysicalModel::PMC;
-//    } else if (str.compare("PML")==0) {
-//        return PhysicalModel::PhysicalModel::PML;
-//    } else if (str.compare("SMA")==0) {
-//        return PhysicalModel::PhysicalModel::SMA;
-//    } else if (str.compare("Classic")==0) {
-//        return PhysicalModel::PhysicalModel::classic;
-//    } else if (str.compare("Dispersive")==0) {
-//        return PhysicalModel::PhysicalModel::elecDispersive;
-//    } else if (str.compare("Anisotropic")==0) {
-//        return PhysicalModel::PhysicalModel::anisotropic;
-//    } else if (str.compare("SIBC")==0) {
-//        return PhysicalModel::PhysicalModel::isotropicsibc;
-//    } else if (str.compare("Wire")==0) {
-//        return PhysicalModel::PhysicalModel::wire;
-//    } else if (str.find("Conn_") != std::string::npos) {
-//        return PhysicalModel::PhysicalModel::multiport;
-//    } else if (str.find("Thin_gap")==0) {
-//        return PhysicalModel::PhysicalModel::gap;
-//    } else {
-//        throw std::logic_error("Unrecognized material label: " + str);
-//    }
-//}
-//
-//PhysicalModel::Multiport::Multiport::Type Parser::strToMultiportType(std::string str) {
-//    str = trim(str);
-//    if (str.compare("Conn_short")==0) {
-//        return PhysicalModel::Multiport::Multiport::shortCircuit;
-//    } else if (str.compare("Conn_open")==0) {
-//        return PhysicalModel::Multiport::Multiport::openCircuit;
-//    } else if (str.compare("Conn_matched")==0) {
-//        return PhysicalModel::Multiport::Multiport::matched;
-//    } else if (str.compare("Conn_sRLC")==0) {
-//        return PhysicalModel::Multiport::Multiport::sRLC;
-//    } else if (str.compare("Conn_pRLC")==0) {
-//        return PhysicalModel::Multiport::Multiport::pRLC;
-//    } else if (str.compare("Conn_sLpRC")==0) {
-//        return PhysicalModel::Multiport::Multiport::sLpRC;
-//    } else if (str.compare("Conn_dispersive") == 0) {
-//        return PhysicalModel::Multiport::Multiport::dispersive;
-//    } else {
-//        throw std::logic_error("Unrecognized multiport label: " + str);
-//    }
-//}
-//
-//std::pair<Math::CVecR3, Math::CVecR3> Parser::strToBox(
-//        const std::string& value) {
-//    std::size_t begin = value.find_first_of("{");
-//    std::size_t end = value.find_last_of("}");
-//    std::string aux = value.substr(begin+1,end-1);
-//    std::stringstream iss(aux);
-//    Math::CVecR3 max, min;
-//    for (std::size_t i = 0; i < 3; i++) {
-//        iss >> max(i);
-//    }
-//    for (std::size_t i = 0; i < 3; i++) {
-//        iss >> min(i);
-//    }
-//    std::pair<Math::CVecR3,Math::CVecR3> bound(min, max);
-//    return bound;
-//}
-//
-//Math::CVecR3 Parser::strToCVecR3(const std::string& str) {
-//    std::stringstream ss(str);
-//    Math::CVecR3 res;
-//    ss >> res(Math::Constants::x)
-//       >> res(Math::Constants::y)
-//       >> res(Math::Constants::z);
-//    return res;
-//}
-//
-//Source::OnLine::Type Parser::strToNodalType(std::string str) {
-//    str = trim(str);
-//    if (str.compare("electricField")==0) {
-//        return Source::OnLine::electric;
-//    } else if (str.compare("magneticField")==0) {
-//        return Source::OnLine::magnetic;
-//    } else {
-//        throw std::logic_error("Unrecognized nodal type: " + str);
-//    }
-//}
-//
-//Source::OnLine::Hardness Parser::strToNodalHardness(std::string str) {
-//    str = trim(str);
-//    if (str.compare("soft")==0) {
-//        return Source::OnLine::soft;
-//    } else if (str.compare("hard")==0) {
-//        return Source::OnLine::hard;
-//    } else {
-//        throw std::logic_error("Unrecognized nodal hardness: " + str);
-//        return Source::OnLine::soft;
-//    }
-//}
-//
-//
-//Parser::OutputType Parser::strToGidOutputType(std::string str) {
-//    str = trim(str);
-//    if (str.compare("OutRq_on_point")==0) {
-//        return Parser::outRqOnPoint;
-//    } else if (str.compare("OutRq_on_line")==0) {
-//        return Parser::outRqOnLine;
-//    } else if (str.compare("OutRq_on_surface")==0) {
-//        return Parser::outRqOnSurface;
-//    } else if (str.compare("OutRq_on_layer")==0) {
-//        return Parser::outRqOnLayer;
-//    } else if (str.compare("Bulk_current_on_surface")==0) {
-//        return Parser::bulkCurrentOnSurface;
-//    } else if (str.compare("Bulk_current_on_layer")==0) {
-//        return Parser::bulkCurrentOnLayer;
-//    } else if (str.compare("Far_field")==0) {
-//        return Parser::farField;
-//    } else {
-//        throw std::logic_error("Unrecognized label " + str);
-//        return Parser::outRqOnPoint;
-//    }
-//}
-//
-//Parser::DefinitionMode Parser::strToDefinitionMode(std::string str) {
-//    str = trim(str);
-//    if (str.compare("by_vectors")==0) {
-//        return Parser::byVectors;
-//    } else if (str.compare("by_angles")==0) {
-//        return Parser::byAngles;
-//    } else if (str.compare("randomized_multisource")==0) {
-//        return Parser::randomizedMultisource;
-//    } else {
-//        throw std::logic_error("Unrecognized label " + str);
-//        return Parser::byVectors;
-//    }
-//}
-//
+
+Parser::SIBCType Parser::strToSIBCType(std::string str) {
+    str = trim(str);
+    if (str.compare("File")==0) {
+        return sibc;
+    } else if (str.compare("Layers")==0) {
+        return multilayer;
+    } else {
+        throw std::logic_error("Unrecognized SIBC type: " + str);
+    }
+}
+
+Source::Generator::Type Parser::strToGeneratorType(std::string str) {
+    str = trim(str);
+    if (str.compare("voltage")==0) {
+        return Source::Generator::voltage;
+    } else if (str.compare("current")==0) {
+        return Source::Generator::current;
+    } else {
+        throw std::logic_error("Unrecognized generator type: " + str);
+    }
+}
+
+Source::Generator::Hardness Parser::strToGeneratorHardness(std::string str) {
+    str = trim(str);
+    if (str.compare("soft")==0) {
+        return Source::Generator::soft;
+    } else if (str.compare("hard")==0) {
+        return Source::Generator::hard;
+    } else {
+        throw std::logic_error("Unrecognized generator hardness: " + str);
+    }
+}
+
+PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
+    str = trim(str);
+    if (str.compare("PEC")==0) {
+        return PhysicalModel::PhysicalModel::PEC;
+    } else if (str.compare("PMC")==0) {
+        return PhysicalModel::PhysicalModel::PMC;
+    } else if (str.compare("PML")==0) {
+        return PhysicalModel::PhysicalModel::PML;
+    } else if (str.compare("SMA")==0) {
+        return PhysicalModel::PhysicalModel::SMA;
+    } else if (str.compare("Classic")==0) {
+        return PhysicalModel::PhysicalModel::classic;
+    } else if (str.compare("Dispersive")==0) {
+        return PhysicalModel::PhysicalModel::elecDispersive;
+    } else if (str.compare("Anisotropic")==0) {
+        return PhysicalModel::PhysicalModel::anisotropic;
+    } else if (str.compare("SIBC")==0) {
+        return PhysicalModel::PhysicalModel::isotropicsibc;
+    } else if (str.compare("Wire")==0) {
+        return PhysicalModel::PhysicalModel::wire;
+    } else if (str.compare("Connector")==0) {
+        return PhysicalModel::PhysicalModel::multiport;
+    } else if (str.find("Thin_gap")==0) {
+        return PhysicalModel::PhysicalModel::gap;
+    } else {
+        throw std::logic_error("Unrecognized material label: " + str);
+    }
+}
+
+PhysicalModel::Multiport::Multiport::Type Parser::strToMultiportType(
+        std::string str) {
+    str = trim(str);
+    if (str.compare("Conn_short")==0) {
+        return PhysicalModel::Multiport::Multiport::shortCircuit;
+    } else if (str.compare("Conn_open")==0) {
+        return PhysicalModel::Multiport::Multiport::openCircuit;
+    } else if (str.compare("Conn_matched")==0) {
+        return PhysicalModel::Multiport::Multiport::matched;
+    } else if (str.compare("Conn_sRLC")==0) {
+        return PhysicalModel::Multiport::Multiport::sRLC;
+    } else if (str.compare("Conn_pRLC")==0) {
+        return PhysicalModel::Multiport::Multiport::pRLC;
+    } else if (str.compare("Conn_sLpRC")==0) {
+        return PhysicalModel::Multiport::Multiport::sLpRC;
+    } else if (str.compare("Conn_dispersive") == 0) {
+        return PhysicalModel::Multiport::Multiport::dispersive;
+    } else {
+        throw std::logic_error("Unrecognized multiport label: " + str);
+    }
+}
+
+std::pair<Math::CVecR3, Math::CVecR3> Parser::strToBox(
+        const std::string& value) {
+    std::size_t begin = value.find_first_of("{");
+    std::size_t end = value.find_last_of("}");
+    std::string aux = value.substr(begin+1,end-1);
+    std::stringstream iss(aux);
+    Math::CVecR3 max, min;
+    for (std::size_t i = 0; i < 3; i++) {
+        iss >> max(i);
+    }
+    for (std::size_t i = 0; i < 3; i++) {
+        iss >> min(i);
+    }
+    std::pair<Math::CVecR3,Math::CVecR3> bound(min, max);
+    return bound;
+}
+
+Math::CVecR3 Parser::strToCVecR3(const std::string& str) {
+    std::stringstream ss(str);
+    Math::CVecR3 res;
+    ss >> res(Math::Constants::x)
+       >> res(Math::Constants::y)
+       >> res(Math::Constants::z);
+    return res;
+}
+
+Source::OnLine::Type Parser::strToNodalType(std::string str) {
+    str = trim(str);
+    if (str.compare("electricField")==0) {
+        return Source::OnLine::electric;
+    } else if (str.compare("magneticField")==0) {
+        return Source::OnLine::magnetic;
+    } else {
+        throw std::logic_error("Unrecognized nodal type: " + str);
+    }
+}
+
+Source::OnLine::Hardness Parser::strToNodalHardness(std::string str) {
+    str = trim(str);
+    if (str.compare("soft")==0) {
+        return Source::OnLine::soft;
+    } else if (str.compare("hard")==0) {
+        return Source::OnLine::hard;
+    } else {
+        throw std::logic_error("Unrecognized nodal hardness: " + str);
+        return Source::OnLine::soft;
+    }
+}
+
+Parser::OutputType Parser::strToGidOutputType(std::string str) {
+    str = trim(str);
+    if (str.compare("OutRq_on_point")==0) {
+        return Parser::outRqOnPoint;
+    } else if (str.compare("OutRq_on_line")==0) {
+        return Parser::outRqOnLine;
+    } else if (str.compare("OutRq_on_surface")==0) {
+        return Parser::outRqOnSurface;
+    } else if (str.compare("OutRq_on_layer")==0) {
+        return Parser::outRqOnLayer;
+    } else if (str.compare("Bulk_current_on_surface")==0) {
+        return Parser::bulkCurrentOnSurface;
+    } else if (str.compare("Bulk_current_on_layer")==0) {
+        return Parser::bulkCurrentOnLayer;
+    } else if (str.compare("Far_field")==0) {
+        return Parser::farField;
+    } else {
+        throw std::logic_error("Unrecognized label " + str);
+        return Parser::outRqOnPoint;
+    }
+}
+
+Parser::DefinitionMode Parser::strToDefinitionMode(std::string str) {
+    str = trim(str);
+    if (str.compare("by_vectors")==0) {
+        return Parser::byVectors;
+    } else if (str.compare("by_angles")==0) {
+        return Parser::byAngles;
+    } else if (str.compare("randomized_multisource")==0) {
+        return Parser::randomizedMultisource;
+    } else {
+        throw std::logic_error("Unrecognized label " + str);
+        return Parser::byVectors;
+    }
+}
+
 //OutputRequest::Domain Parser::strToDomain(std::string line) {
 //    std::size_t timeDomain;
 //    Math::Real initialTime;
@@ -1652,7 +1590,7 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
 //            frequencyStep,	toBool(logFrequencySweep),
 //            toBool(usingTransferFunction), transferFunctionFile);
 //}
-//
+
 //Source::Magnitude::Magnitude* Parser::readMagnitude(const std::string typeIn) {
 //    std::string type = typeIn;
 //    type = trim(type);
@@ -1693,7 +1631,7 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
 //    throw std::logic_error(
 //            "Unable to recognize magnitude type when reading excitation.");
 //}
-//
+
 bool Parser::checkVersionCompatibility(const std::string& version) {
     bool versionMatches = (version == std::string(OPENSEMBA_VERSION));
     if (!versionMatches) {
@@ -1702,7 +1640,7 @@ bool Parser::checkVersionCompatibility(const std::string& version) {
     }
     return versionMatches;
 }
-//
+
 //PhysicalModel::Volume::PoleResidue Parser::readPoleResiduePair(std::ifstream& stream) {
 //    std::string line;
 //    std::getline(stream, line);
@@ -1728,46 +1666,46 @@ bool Parser::checkVersionCompatibility(const std::string& version) {
 //    return res;
 //}
 //
-//PhysicalModel::Volume::Anisotropic::Model Parser::strToAnisotropicModel(
-//        std::string label) {
-//    std::string str = label;
-//    str = trim(str);
-//    if (str.compare("Crystal")==0) {
-//        return PhysicalModel::Volume::Anisotropic::Model::crystal;
-//    } else if (str.compare("Ferrite")==0) {
-//        return PhysicalModel::Volume::Anisotropic::Model::ferrite;
-//    } else {
-//        throw std::logic_error("Unrecognized Anisotropic Model: " + str);
-//    }
-//}
-//
-//Math::Axis::Local Parser::strToLocalAxes(const std::string& str) {
-//    std::size_t begin = str.find_first_of("{");
-//    std::size_t end = str.find_first_of("}");
-//    Math::CVecR3 eulerAngles = strToCVecR3(str.substr(begin+1,end-1));
-//    begin = str.find_last_of("{");
-//    end = str.find_last_of("}");
-//    Math::CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
-//    return Math::Axis::Local(eulerAngles, origin);
-//}
-//
-//const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
-//    if (str.compare("PEC") == 0) {
-//        return new PhysicalModel::Bound::PEC(MatId(0));
-//    } else if (str.compare("PMC") == 0) {
-//        return new PhysicalModel::Bound::PMC(MatId(0));
-//    } else if (str.compare("PML") == 0) {
-//        return new PhysicalModel::Bound::PML(MatId(0));
-//    } else if (str.compare("Periodic") == 0) {
-//        return new PhysicalModel::Bound::Periodic(MatId(0));
-//    } else if (str.compare("MUR1") == 0) {
-//        return new PhysicalModel::Bound::Mur1(MatId(0));
-//    } else if (str.compare("MUR2") == 0) {
-//        return new PhysicalModel::Bound::Mur2(MatId(0));
-//    } else {
-//        throw std::logic_error("Unrecognized bound label: " + str);
-//    }
-//}
+PhysicalModel::Volume::Anisotropic::Model Parser::strToAnisotropicModel(
+        std::string label) {
+    std::string str = label;
+    str = trim(str);
+    if (str.compare("Crystal")==0) {
+        return PhysicalModel::Volume::Anisotropic::Model::crystal;
+    } else if (str.compare("Ferrite")==0) {
+        return PhysicalModel::Volume::Anisotropic::Model::ferrite;
+    } else {
+        throw std::logic_error("Unrecognized Anisotropic Model: " + str);
+    }
+}
+
+Math::Axis::Local Parser::strToLocalAxes(const std::string& str) {
+    std::size_t begin = str.find_first_of("{");
+    std::size_t end = str.find_first_of("}");
+    Math::CVecR3 eulerAngles = strToCVecR3(str.substr(begin+1,end-1));
+    begin = str.find_last_of("{");
+    end = str.find_last_of("}");
+    Math::CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
+    return Math::Axis::Local(eulerAngles, origin);
+}
+
+const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
+    if (str.compare("PEC") == 0) {
+        return new PhysicalModel::Bound::PEC(MatId(0));
+    } else if (str.compare("PMC") == 0) {
+        return new PhysicalModel::Bound::PMC(MatId(0));
+    } else if (str.compare("PML") == 0) {
+        return new PhysicalModel::Bound::PML(MatId(0));
+    } else if (str.compare("Periodic") == 0) {
+        return new PhysicalModel::Bound::Periodic(MatId(0));
+    } else if (str.compare("MUR1") == 0) {
+        return new PhysicalModel::Bound::Mur1(MatId(0));
+    } else if (str.compare("MUR2") == 0) {
+        return new PhysicalModel::Bound::Mur2(MatId(0));
+    } else {
+        throw std::logic_error("Unrecognized bound label: " + str);
+    }
+}
 
 } /* namespace JSON */
 } /* namespace Parser */

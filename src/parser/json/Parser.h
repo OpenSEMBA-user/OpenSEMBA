@@ -91,7 +91,7 @@ private:
     static Solver::Settings readSolverSettings(const json& j);
 //    Source::Group<>* readEMSources();
 //    OutputRequest::Group<>* readOutputRequests();
-//    PhysicalModel::Group<>* readMaterials();
+    static PhysicalModel::Group<>* readPhysicalModels(const json&);
 //    Geometry::Mesh::Geometric* readGeometricMesh();
 //
 //    PhysicalModel::Volume::Dispersive* readDispersiveMatFile(
@@ -142,36 +142,37 @@ private:
 //    Source::Port::TEM* readPortTEM();
 //    Source::Generator* readGenerator();
 //    Source::OnLine* readSourceOnLine();
-//    PhysicalModel::PhysicalModel* readPhysicalModel(const MatId id);
+    static PhysicalModel::PhysicalModel* readPhysicalModel(
+            const json& material);
 //    Source::Magnitude::Magnitude* readMagnitude(const std::string type);
-//    static Math::Axis::Local strToLocalAxes(const std::string& str);
-//
+    static Math::Axis::Local strToLocalAxes(const std::string& str);
+
     static bool checkVersionCompatibility(const std::string& version);
 //    Geometry::Element::Group<> boxToElemGroup(const std::string& line);
-//    static OutputRequest::Base::Type strToOutputType(std::string label);
-//    static SIBCType strToSIBCType(std::string str);
-//    static OutputType strToGidOutputType(std::string label);
-//    static DefinitionMode strToDefinitionMode(std::string label);
+    static OutputRequest::Base::Type strToOutputType(std::string label);
+    static SIBCType strToSIBCType(std::string str);
+    static OutputType strToGidOutputType(std::string label);
+    static DefinitionMode strToDefinitionMode(std::string label);
 //    static OutputRequest::Domain strToDomain(std::string line);
+
+    static Math::CVecR3 strToCVecR3(const std::string& str);
+    static Source::Generator::Type strToGeneratorType(std::string label);
+    static Source::Generator::Hardness strToGeneratorHardness(std::string str);
+    static Source::OnLine::Type strToNodalType(std::string label);
+    static Source::OnLine::Hardness strToNodalHardness(std::string label);
 //
-//    static Math::CVecR3 strToCVecR3(const std::string& str);
-//    static Source::Generator::Type strToGeneratorType(std::string label);
-//    static Source::Generator::Hardness strToGeneratorHardness(std::string str);
-//    static Source::OnLine::Type strToNodalType(std::string label);
-//    static Source::OnLine::Hardness strToNodalHardness(std::string label);
-//
-//    static PhysicalModel::PhysicalModel::Type strToMaterialType(
-//            std::string label);
-//    static PhysicalModel::Multiport::Multiport::Type strToMultiportType(
-//            std::string label);
-//    static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(
-//            std::string label);
-//    static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
-//            const std::string& str);
+    static PhysicalModel::PhysicalModel::Type strToMaterialType(
+            std::string label);
+    static PhysicalModel::Multiport::Multiport::Type strToMultiportType(
+            std::string label);
+    static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(
+            std::string label);
+    static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
+            const std::string& str);
 //    static PhysicalModel::Volume::PoleResidue readPoleResiduePair(
 //            std::ifstream& stream);
 //
-//    static const PhysicalModel::Bound::Bound* strToBoundType(std::string str);
+    static const PhysicalModel::Bound::Bound* strToBoundType(std::string str);
 };
 
 } /* namespace GiD */

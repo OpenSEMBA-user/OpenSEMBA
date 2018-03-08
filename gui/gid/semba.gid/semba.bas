@@ -84,11 +84,11 @@
             "materialId": *matnum(),
             "name": "*MatProp(0)",
 *if(strcmp(MatProp(TypeId),"PEC")==0)
-            "materialTypeId": "*MatProp(TypeId)"
+            "materialType": "*MatProp(TypeId)"
 *elseif(strcmp(MatProp(TypeId),"PMC")==0)
-            "materialTypeId": "*MatProp(TypeId)"
+            "materialType": "*MatProp(TypeId)"
 *elseif(strcmp(MatProp(TypeId),"PML")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "automaticOrientation": *matprop(Automatic_orientation),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
@@ -96,53 +96,63 @@
             "localAxes: "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
 *endif
 *elseif(strcmp(Matprop(TypeId),"Classic")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "permittivity": *matprop(Permittivity),
             "permeability": *matprop(Permeability),
             "electricConductivity": *matprop(ElecCond),
             "magneticConductivity": *matprop(MagnCond)
 *elseif(strcmp(Matprop(TypeId),"Dispersive")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "filename": "*matprop(File)"
 *elseif(strcmp(Matprop(TypeId),"Wire")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "radius": *matprop(Radius),
             "wireType": "*matprop(WireType)",
 *if(strcmp(Matprop(WireType),"Dispersive")==0)
-            "filename": *matprop(File),
-*endif
+            "filename": *matprop(File)
+*elseif(strcmp(Matprop(WireType),"Standard")==0)
+            "resistance": *matprop(resistance),
+            "inductance": *matprop(inductance)
+*elseif(strcmp(Matprop(WireType),"SeriesParallel")==0)
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance),   
             "parallelResistance": *matprop(Parallel_Resistance),
             "parallelInductance": *matprop(Parallel_Inductance),
             "parallelCapacitance": *matprop(Parallel_Capacitance)
+*else
+            "_error": "Invalid wireType"
+*endif
 *elseif(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Thin_gap")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "width": *matprop(Width)
 *elseif(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "filename": "*matprop(File)"
 *elseif(strcmp(Matprop(TypeId),"SIBC")==0)
-            "materialTypeId": "*MatProp(TypeId)",
+            "materialType": "*MatProp(TypeId)",
             "surfaceType": "*matprop(SurfaceType)"
 *if(strcmp(Matprop(SurfaceType),"File")==0)
-            "materialTypeId": "*MatProp(TypeId)",   
+            "materialType": "*MatProp(TypeId)",   
             "filename": "*matprop(File)"
 *endif
 *if(matprop(Layers,int)==1)
@@ -170,7 +180,7 @@
             "freqMax": *matProp(freq_max),
             "numberOfPoles": *matProp(number_Of_Poles)
 *elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
-            "materialTypeId": "*MatProp(TypeId)"
+            "materialType": "*MatProp(TypeId)"
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
