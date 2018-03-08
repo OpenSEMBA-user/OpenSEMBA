@@ -87,26 +87,19 @@ private:
         randomizedMultisource
     } DefinitionMode;
 
-    static Solver::Info* readSolver(const json& input);
-    static Solver::Settings readSolverSettings(const json& j);
-//    Source::Group<>* readEMSources();
-//    OutputRequest::Group<>* readOutputRequests();
-    static PhysicalModel::Group<>* readPhysicalModels(const json&);
-//    Geometry::Mesh::Geometric* readGeometricMesh();
-//
-//    PhysicalModel::Volume::Dispersive* readDispersiveMatFile(
-//            const MatId id,
-//            const std::string& name,
-//            const FileSystem::Project& file) const;
-//    PhysicalModel::Surface::SIBC* readIsotropicSurfMatFile(
-//            const MatId id,
-//            const std::string& name,
-//            const FileSystem::Project& file) const;
-//    PhysicalModel::Surface::Multilayer*  readMultilayerSurf(
-//            const MatId id,
-//            const std::string& name,
-//            const std::string& layersString) const;
-//
+    static Solver::Info*              readSolver(const json&);
+    static Solver::Settings           readSolverSettings(const json&);
+    static PhysicalModel::Group<>*    readPhysicalModels(const json&);
+    static Geometry::Mesh::Geometric* readGeometricMesh(const json&);
+    static Source::Group<>*           readSources(const json&);
+    static OutputRequest::Group<>*    readOutputRequests(const json&);
+
+    PhysicalModel::Surface::Multilayer*  readMultilayerSurface(
+            const MatId id,
+            const std::string& name,
+            const json& layers) const;
+
+    static Geometry::Grid3 readGrids(const json&);
 //    void readLayers(Geometry::Layer::Group<>&);
 //    void readCoordinates(Geometry::Coordinate::Group<Geometry::CoordR3>&);
 //    void readElements(const Geometry::CoordR3Group&,
@@ -134,7 +127,6 @@ private:
 //                           const Geometry::Layer::Group<>&,
 //                           Geometry::Element::Group<Geometry::ElemR>& elems);
 //
-//    Geometry::Grid3 readCartesianGrid();
 //    void readOutRqInstances(OutputRequest::Group<>* res);
 //    void getNextLabelAndValue(std::string& label, std::string& value);
 //    Source::PlaneWave* readPlaneWave();

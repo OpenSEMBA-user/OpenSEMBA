@@ -78,14 +78,14 @@ Data* Parser::read(std::istream& stream) const {
 
     res->physicalModels = readPhysicalModels( j );
     progress.advance();
-//
-//    res->mesh = readGeometricMesh();;
+
+    res->mesh = readGeometricMesh( j );
+    progress.advance();
+
+//    res->sources = readSources( j );
 //    progress.advance();
 //
-//    res->sources = readEMSources();
-//    progress.advance();
-//
-//    res->outputRequests = readOutputRequests();
+//    res->outputRequests = readOutputRequests( j );
 //    progress.advance();
 //
 //    postReadOperations(res);
@@ -124,17 +124,16 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
     }
     return opts;
 }
-//
-//Geometry::Mesh::Geometric* Parser::readGeometricMesh() {
-//    const Geometry::Grid3& grid = readCartesianGrid();
-//    Geometry::Mesh::Geometric* res = new Geometry::Mesh::Geometric(grid);
+
+Geometry::Mesh::Geometric* Parser::readGeometricMesh(const json& j) {
+    const Geometry::Grid3& grid = readGrids(j);
 //    readLayers(res->layers());
 //    readCoordinates(res->coords());
 //    readElements(res->coords(), res->layers(), res->elems());
-//    return res;
-//}
-//
-//Source::Group<>* Parser::readEMSources() {
+//    return new Geometry::Mesh::Geometric(grid);
+}
+
+//Source::Group<>* Parser::readSources() {
 //    Source::Group<>* res = new Source::Group<>();
 //    bool finished = false;
 //    bool found = false;
@@ -207,7 +206,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
         } else {
             Math::Axis::Local* localAxes;
             localAxes = new Math::Axis::Local(
-                    strToLocalAxes(mat.at("localAxes").get<std::string>()))
+                    strToLocalAxes(mat.at("localAxes").get<std::string>()));
             return new PhysicalModel::Volume::PML(id, name, localAxes);
         }
 
@@ -223,12 +222,13 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
                 mat.at("filename").get<std::string>());
 
     case PhysicalModel::PhysicalModel::wire:
-        const std::string wireType = mat.at("wireType").get<std::string>();
-        if (wireType == "Dispersive") {
+    {
+        std::string wireType = mat.at("wireType").get<std::string>();
+        if (wireType.compare("Dispersive") == 0) {
             return new PhysicalModel::Wire::Wire(id, name,
                     mat.at("radius").get<double>(),
                     mat.at("filename").get<std::string>());
-        } else if(mat.at("wireType").get<std::string>() == "SeriesParallel") {
+        } else if(wireType.compare("SeriesParallel") == 0) {
             return new PhysicalModel::Wire::Wire(id, name,
                     mat.at("radius").get<double>(),
                     mat.at("resistance").get<double>(),
@@ -237,41 +237,55 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
                     mat.at("parallelResistance").get<double>(),
                     mat.at("parallelInductance").get<double>(),
                     mat.at("parallelCapacitance").get<double>());
-        } else if(mat.at("wireType").get<std::string>() == "Standard") {
+        } else if(wireType.compare("Standard") == 0) {
             return new PhysicalModel::Wire::Wire(id, name,
-                    mat.at("resistance")
+                    mat.at("resistance"),
                     mat.at("inductance"));
         } else {
-            throw std::logic_error("Unrecognized wire type");
+            throw std::logic_error("Unrecognized wire type" + wireType);
         }
-//    case PhysicalModel::PhysicalModel::anisotropic:
-//        switch (anisotropicModel) {
-//        case PhysicalModel::Volume::Anisotropic::Model::crystal:
-//            return new PhysicalModel::Volume::AnisotropicCrystal(
-//                    id, name, localAxes,
-//                    rEpsPrincipalAxes, crystalRMu);
-//        case PhysicalModel::Volume::Anisotropic::Model::ferrite:
-//            return new PhysicalModel::Volume::AnisotropicFerrite(
-//                    id, name, localAxes,
-//                    kappa,ferriteRMu,ferriteREps);
-//        default:
-//            throw std::logic_error("Material type not recognized.");
-//        }
-//    case PhysicalModel::PhysicalModel::isotropicsibc:
-//        switch (surfType) {
-//        case sibc:
-//            return new PhysicalModel::Surface::SIBC(id, name, file);
-//        case multilayer:
-//            return readMultilayerSurf(id, name, layersStr);
-//        default:
-//            throw std::logic_error("Undefined SIBC Type.");
-//        }
+    }
+
+    case PhysicalModel::PhysicalModel::anisotropic:
+    {
+        std::string str = mat.at("anisotropicModel").get<std::string>();
+        if (str.compare("Crystal")==0) {
+            return new PhysicalModel::Volume::AnisotropicCrystal(id, name,
+                    strToLocalAxes(mat.at("localAxes").get<std::string>()),
+                    strToCVecR3(
+                            mat.at("relativePermittiviy").get<std::string>()),
+                    mat.at("crystalRelativePermeability").get<double>());
+        } else if (str.compare("Ferrite")==0) {
+            return new PhysicalModel::Volume::AnisotropicFerrite(id, name,
+                    strToLocalAxes(mat.at("localAxes").get<std::string>()),
+                    mat.at("kappa").get<double>(),
+                    mat.at("ferriteRelativePermeability").get<double>(),
+                    mat.at("ferriteRelativePermittivity").get<double>());
+        } else {
+            throw std::logic_error("Unrecognized Anisotropic Model: " + str);
+        }
+    }
+
+    case PhysicalModel::PhysicalModel::isotropicsibc:
+    {
+        std::string sibcType = mat.at("surfaceType").get<std::string>();
+        if (sibcType.compare("File")==0) {
+            return new PhysicalModel::Surface::SIBC(id, name,
+                    mat.at("filename").get<std::string>() );
+        } else if (sibcType.compare("Layers")==0) {
+            return readMultilayerSurface(id, name,
+                    mat.at("layers"));
+        } else {
+            throw std::logic_error("Unrecognized SIBC type: " + sibcType);
+        }
+    }
 
     case PhysicalModel::PhysicalModel::gap:
         return new PhysicalModel::Gap::Gap(id, name,
                 mat.at("width").get<double>());
 
     case PhysicalModel::PhysicalModel::multiport:
+    {
         PhysicalModel::Multiport::Multiport::Type mpType =
                 strToMultiportType(mat.at("connectorType").get<std::string>());
         if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
@@ -281,12 +295,14 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
                     mat.at("filename").get<std::string>());
         } else {
             return new PhysicalModel::Multiport::RLC(id, name, mpType,
-                    mat.at("resistance").get<std::string>(),
-                    mat.at("inductance").get<std::string>(),
-                    mat.at("capacitance").get<std::string>());
+                    mat.at("resistance").get<double>(),
+                    mat.at("inductance").get<double>(),
+                    mat.at("capacitance").get<double>());
         }
+    }
+
     default:
-        throw std::logic_error("Material type not recognized.");
+        throw std::logic_error("Material type not recognized for: " + name);
     }
 }
 
@@ -840,217 +856,72 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
 //    }
 //}
 //
-//PhysicalModel::Volume::Dispersive* Parser::readDispersiveMatFile(
-//        const MatId id,
-//        const std::string& name,
-//        const FileSystem::Project& file) const {
-//    if (!file.canOpen()) {
-//        throw std::ios_base::failure(file);
-//    }
-//    std::ifstream stream;
-//    file.openAsInput(stream);
-//    Math::Real sig, eps, mu, sigM;
-//    stream >> sig >> eps >> mu >> sigM;
-//    std::size_t nPoles, trash;
-//    stream >> nPoles >> trash >> trash >> trash;
-//    std::vector<PhysicalModel::Volume::PoleResidue> poleResidues;
-//    for (std::size_t i = 0; i < nPoles; i++) {
-//        PhysicalModel::Volume::PoleResidue pR = readPoleResiduePair(stream);
-//        poleResidues.push_back(pR);
-//    }
-//    return new PhysicalModel::Volume::Dispersive(id, name,
-//            eps / Math::Constants::eps0,
-//            mu / Math::Constants::mu0,
-//            sig, sigM, poleResidues);
-//}
-//
-//PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurf(
-//        const MatId id,
-//        const std::string& name,
-//        const std::string& layersStr) const {
-//    std::size_t begin = layersStr.find_first_of("\"");
-//    std::size_t end = layersStr.find_last_of("\"");
-//    std::istringstream ss(layersStr.substr(begin+1,end-2));
-//    std::string sub;
-//    std::vector<Math::Real> thick, rEps, rMu, eCond, mCond;
-//    std::size_t parameters;
-//    std::string trash;
-//    ss >> trash >> parameters;
-//    const std::size_t nLayers = parameters / 5;
-//    for (std::size_t i = 0; i < nLayers; i++) {
-//        // Thickness, Permittivity, Permeability, ElecCond, MagnCond.
-//        Math::Real thick_, rEps_, rMu_, eCond_, mCond_;
-//        ss >> thick_ >> rEps_ >> rMu_ >> eCond_ >> mCond_;
-//        thick.push_back(thick_);
-//        rEps.push_back(rEps_);
-//        rMu.push_back(rMu_);
-//        eCond.push_back(eCond_);
-//        mCond.push_back(mCond_);
-//    }
-//    return new PhysicalModel::Surface::Multilayer(
-//            id, name, thick, rEps, rMu, eCond, mCond);
-//}
-//
-//PhysicalModel::Surface::SIBC* Parser::readIsotropicSurfMatFile(
-//        const MatId id,
-//        const std::string& fileName,
-//        const FileSystem::Project& file) const {
-//    std::ifstream matFile;
-//    std::string line, label, value;
-//    std::string name, model;
-//    char *pEnd;
-//    Math::Matrix::Static<Math::Real,2,2> Zstatic, Zinfinite;
-//    std::vector<Math::Real> pole;
-//    std::vector<Math::Matrix::Static<Math::Real,2,2> > Z;
-//    Math::Real tmpP;
-//    // Opens file, read only mode.
-//    matFile.open(fileName.c_str(), std::ifstream::in);
-//    if (matFile.fail()) {
-//        throw std::logic_error("Problem opening file: " + fileName);
-//    }
-//    // Parses first line, containing material name.
-//    getline(matFile, line);
-//    if (line.find("#PANEL#") == std::string::npos) {
-//        throw std::logic_error("#PANEL# label has not been found in first line");
-//    }
-//    name = line.substr(8, line.length()-9);
-//    getline(matFile, line);
-//    std::size_t nPoles = 0;
-//    // Gets number of poles.
-//    label = line.substr(0, line.find(":"));
-//    if(!label.compare("N")) {
-//        value  = line.substr(line.find(":")+2, line.length());
-//        nPoles = atoi(value.c_str());
-//    }
-//    // Gets Zinfinite.
-//    getline(matFile, line);
-//    label = line.substr(0, line.find(":"));
-//    if(!label.compare("Zinf")) {
-//        value  = line.substr(line.find(":")+2, line.length());
-//        Zinfinite(0,0) = strtod(value.c_str(), &pEnd);
-//        Zinfinite(0,1) = strtod(pEnd, &pEnd);
-//        Zinfinite(1,0) = strtod(pEnd, &pEnd);
-//        Zinfinite(1,1) = strtod(pEnd, &pEnd);
-//    }
-//    // Gets Zstatic.
-//    getline(matFile, line);
-//    label = line.substr(0, line.find(":"));
-//    if(!label.compare("Zstatic")) {
-//        value  = line.substr(line.find(":")+2, line.length());
-//        Zstatic(0,0) = strtod(value.c_str(), &pEnd);
-//        Zstatic(0,1) = strtod(pEnd, &pEnd);
-//        Zstatic(1,0) = strtod(pEnd, &pEnd);
-//        Zstatic(1,1) = strtod(pEnd, &pEnd);
-//    }
-//    // Parses poles.
-//    // Stores in line the file line containing headers.
-//    getline(matFile, line);
-//    for (std::size_t i = 0; i < nPoles; i++) {
-//        Math::MatR22 tmpZ;
-//        matFile >> tmpP >> tmpZ(0,0) >> tmpZ(0,1) >> tmpZ(1,0) >> tmpZ(1,1);
-//        pole.push_back(tmpP);
-//        Z.push_back(tmpZ);
-//    }
-//    // Copies all parsed data into the aux material depending on the model.
-//    return new PhysicalModel::Surface::SIBC(
-//            id, name, Zinfinite, Zstatic, pole, Z);
-//}
-//
-//void Parser::getNextLabelAndValue(std::string& label, std::string& value) {
-//    std::string line;
-//    getline_(line);
-//    line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
-//    line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
-//    label = line.substr(0, line.find(LABEL_ENDING));
-//    label = trim(label);
-//    value = line.substr(line.find(LABEL_ENDING) + 1, line.length());
-//    value = trim(value);
-//}
-//
-//Geometry::Grid3 Parser::readCartesianGrid() {
-//    std::string label, line, value;
-//    bool paddingByNumberOfCells;
-//    bool finished = false;
-//    bool gridLabelFound = false;
-//    bool gridFound = false;
-//    Geometry::Grid3 grid;
-//    Geometry::BoxR3 bound;
-//    std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding, boundaryMeshSize;
-//    bool stepsByNumberOfCells = true;
-//    Math::CVecI3 numElems;
-//    Math::CVecR3 steps;
-//    while (!gridLabelFound && !f_in.eof()) {
-//        getline_(line);
-//        if (line.find("Grid:") != line.npos ) {
-//            gridLabelFound = true;
-//            while(!finished) {
-//                getNextLabelAndValue(label, value);
-//                if (label.compare("Layer Box")==0) {
-//                    gridFound = true;
-//                    bound = Geometry::BoxR3(strToBox(value));
-//                } else if (label.compare("Type")==0) {
-//                    if (trim(value).compare("by_number_of_cells")==0) {
-//                        stepsByNumberOfCells = true;
-//                    } else {
-//                        stepsByNumberOfCells = false;
-//                    }
-//                } else if (label.compare("Directions")==0) {
-//                    Math::CVecR3 aux = strToCartesianVector(value);
-//                    if (stepsByNumberOfCells) {
-//                        numElems(0) = (Math::Int) aux(0);
-//                        numElems(1) = (Math::Int) aux(1);
-//                        numElems(2) = (Math::Int) aux(2);
-//                        if (numElems == Math::CVecR3()) {
-//                            std::cerr << "WARNING @ Parser: "
-//                                 << "Number of grid cells is zero. "
-//                                 << "Definition by number of cells was used. "
-//                                 << std::endl;
-//                        }
-//                    } else {
-//                        steps = aux;
-//                    }
-//                } else if (label.compare("Boundary padding type") == 0) {
-//                    if (trim(value).compare("by_number_of_cells")==0) {
-//                        paddingByNumberOfCells = true;
-//                    } else {
-//                        paddingByNumberOfCells = false;
-//                    }
-//                } else if (label.compare("Boundary padding") == 0) {
-//                    boundaryPadding = strToBox(value);
-//                } else if (label.compare("Boundary mesh size") == 0) {
-//                    boundaryMeshSize = strToBox(value);
-//                } else if(label.find("End of Grid") != label.npos) {
-//                    finished = true;
-//                    if (!gridFound) {
-//                        throw std::logic_error("Grid not found");
-//                    }
-//                }
-//                if (f_in.eof()) {
-//                    throw std::logic_error("End of grid label not found");
-//                }
-//            }
-//        }
-//    }
-//    if (paddingByNumberOfCells) {
-//        boundaryPadding.first =
-//                boundaryPadding.first  * boundaryMeshSize.first;
-//        boundaryPadding.second =
-//                boundaryPadding.second * boundaryMeshSize.second;
-//    }
-//    // Throws error message if label was not found.
-//    if (!gridLabelFound) {
-//        throw std::logic_error("Grid3 label not found.");
-//    }
-//    if (gridFound) {
-//        if (stepsByNumberOfCells) {
-//            grid = Geometry::Grid3(bound, numElems);
-//        } else {
-//            grid = Geometry::Grid3(bound, steps);
-//        }
-//        grid.enlarge(boundaryPadding, boundaryMeshSize);
-//    }
-//    return grid;
-//}
+
+PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(
+        const MatId id,
+        const std::string& name,
+        const json& layers) const {
+    std::vector<Math::Real> thick, relEp, relMu, eCond, mCond;
+    for (json::const_iterator it = layers.begin(); it != layers.end(); ++it) {
+        thick.push_back( it->at("thickness").get<double>() );
+        relEp.push_back( it->at("permittivity").get<double>() );
+        relMu.push_back( it->at("permeability").get<double>() );
+        eCond.push_back( it->at("elecCond").get<double>() );
+        mCond.push_back( it->at("magnCond").get<double>() );
+    }
+    return new PhysicalModel::Surface::Multilayer(
+            id, name, thick, relEp, relMu, eCond, mCond);
+}
+
+Geometry::Grid3 Parser::readGrids(const json& j) {
+    if (j.find("grids") == j.end()) {
+        throw std::logic_error("Grids object not found.");
+    }
+    if (j.count("grids") != 1) {
+        throw std::logic_error("Only one grid must be defined.");
+    }
+
+    json grid = j.at("grids").front();
+    std::string gridType = grid.at("gridType").get<std::string>();
+    if (gridType.compare("gridCondition") == 0) {
+        Geometry::BoxR3 bound = Geometry::BoxR3(strToBox(
+                grid.at("layerBox").get<std::string>()));
+
+        std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding;
+        std::pair<Math::CVecR3, Math::CVecR3> boundaryMeshSize;
+        bool stepsByNumberOfCells = true;
+        Math::CVecI3 numElems;
+        Math::CVecR3 steps;
+
+        Geometry::Grid3 res;
+        if (paddingByNumberOfCells) {
+            boundaryPadding.first =
+                    boundaryPadding.first  * boundaryMeshSize.first;
+            boundaryPadding.second =
+                    boundaryPadding.second * boundaryMeshSize.second;
+        }
+
+        if (gridFound) {
+            if (stepsByNumberOfCells) {
+                grid = Geometry::Grid3(bound, numElems);
+            } else {
+                grid = Geometry::Grid3(bound, steps);
+            }
+            grid.enlarge(boundaryPadding, boundaryMeshSize);
+        }
+        return res;
+
+    } else if (gridType.compare("nativeGiD") == 0) {
+
+        // TODO
+        // TODO
+        // TODO
+
+    } else {
+        throw std::logic_error("Unrecognized grid type: " + gridType);
+    }
+
+}
 //
 //Source::PlaneWave* Parser::readPlaneWave() {
 //    std::string filename;
@@ -1394,17 +1265,6 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
 //    }
 //}
 
-Parser::SIBCType Parser::strToSIBCType(std::string str) {
-    str = trim(str);
-    if (str.compare("File")==0) {
-        return sibc;
-    } else if (str.compare("Layers")==0) {
-        return multilayer;
-    } else {
-        throw std::logic_error("Unrecognized SIBC type: " + str);
-    }
-}
-
 Source::Generator::Type Parser::strToGeneratorType(std::string str) {
     str = trim(str);
     if (str.compare("voltage")==0) {
@@ -1666,18 +1526,6 @@ bool Parser::checkVersionCompatibility(const std::string& version) {
 //    return res;
 //}
 //
-PhysicalModel::Volume::Anisotropic::Model Parser::strToAnisotropicModel(
-        std::string label) {
-    std::string str = label;
-    str = trim(str);
-    if (str.compare("Crystal")==0) {
-        return PhysicalModel::Volume::Anisotropic::Model::crystal;
-    } else if (str.compare("Ferrite")==0) {
-        return PhysicalModel::Volume::Anisotropic::Model::ferrite;
-    } else {
-        throw std::logic_error("Unrecognized Anisotropic Model: " + str);
-    }
-}
 
 Math::Axis::Local Parser::strToLocalAxes(const std::string& str) {
     std::size_t begin = str.find_first_of("{");

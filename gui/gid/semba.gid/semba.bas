@@ -187,11 +187,16 @@
             "localAxes": "*tcl([lindex [GiD_Info localaxes *matprop(Local_Axes)] 9])",
 *endif
             "anisotropicModel": "*matprop(Anisotropic_model)",
+*if(strcmp(MatProp(anisotropicModel),"Crystal")==0)
             "relativePermittivityPrincipalAxes": "*matprop(Relative_permittivity_principal_axes)",
-            "crystalRelativePermeability": *matprop(Crystal_relative_permeability),
+            "crystalRelativePermeability": *matprop(Crystal_relative_permeability)
+*elseif(strcmp(MatProp(anisotropicModel),"Ferrite")==0)
             "kappa": *matprop(Kappa),
             "ferriteRelativePermeability": *matprop(Ferrite_relative_permeability),
             "ferriteRelativePermittivity": *matprop(Ferrite_relative_permittivity)
+*else
+            "_error": "Unrecognized anisotropic model"
+*endif
 *else
 *warningBox "Unrecognized material label"
             "_error": "Unrecognized material label"
@@ -216,7 +221,6 @@
         {
             "gridType": "gridCondition",
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
-            "type": "*cond(Type)",
 *if(strcasecmp(cond(boundary_padding_type),"None")==0)
             "directions": "{*cond(Size)}"       
 *else
@@ -235,7 +239,7 @@
 *end layers
 *endif
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
-            "gridType": "nativeGiD",
+            "gridType":    "nativeGiD",
             "corner":      "{*tcl(GiD_Cartesian get corner)}",
             "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
             "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
