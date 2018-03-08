@@ -55,7 +55,7 @@ class Hexahedron8 : public virtual Volume<T>,
 public:
     Hexahedron8();
     Hexahedron8(const Id id,
-                const Coordinate::Coordinate<T,3>* v[8], //std::array<const Coordinate::Coordinate<T,3>*, 8> v,
+                std::array<const Coordinate::Coordinate<T,3>*, 8> v,
                 const Model* mat = NULL);
     Hexahedron8(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                 const Id id,
@@ -101,7 +101,7 @@ public:
     void printInfo() const;
 
 private:
-    const Coordinate::Coordinate<T,3>* v_[8];//std::array<const Coordinate::Coordinate<T,3>*, 8> v_;
+    std::array<const Coordinate::Coordinate<T,3>*, 8> v_;
 
     const static Math::Real tolerance;
 };
