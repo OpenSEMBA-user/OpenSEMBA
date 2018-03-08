@@ -266,22 +266,25 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
 //        default:
 //            throw std::logic_error("Undefined SIBC Type.");
 //        }
-//        break;
-//    case PhysicalModel::PhysicalModel::gap:
-//        return new PhysicalModel::Gap::Gap(id, name, width);
-//    case PhysicalModel::PhysicalModel::multiport:
-//        if (mpType ==
-//                PhysicalModel::Multiport::Multiport::shortCircuit) {
-//            return new PhysicalModel::Multiport::Predefined(
-//                    id, name, mpType);
-//        } else if (mpType ==
-//                    PhysicalModel::Multiport::Multiport::dispersive) {
-//            return new PhysicalModel::Multiport::Dispersive(
-//                    id, name, file);
-//        } else {
-//            return new PhysicalModel::Multiport::RLC(
-//                    id, name, mpType, R, L, C);
-//        }
+
+    case PhysicalModel::PhysicalModel::gap:
+        return new PhysicalModel::Gap::Gap(id, name,
+                mat.at("width").get<double>());
+
+    case PhysicalModel::PhysicalModel::multiport:
+        PhysicalModel::Multiport::Multiport::Type mpType =
+                strToMultiportType(mat.at("connectorType").get<std::string>());
+        if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
+            return new PhysicalModel::Multiport::Predefined(id, name, mpType);
+        } else if (mpType == PhysicalModel::Multiport::Multiport::dispersive) {
+            return new PhysicalModel::Multiport::Dispersive(id, name,
+                    mat.at("filename").get<std::string>());
+        } else {
+            return new PhysicalModel::Multiport::RLC(id, name, mpType,
+                    mat.at("resistance").get<std::string>(),
+                    mat.at("inductance").get<std::string>(),
+                    mat.at("capacitance").get<std::string>());
+        }
     default:
         throw std::logic_error("Material type not recognized.");
     }
@@ -1444,7 +1447,7 @@ PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
         return PhysicalModel::PhysicalModel::isotropicsibc;
     } else if (str.compare("Wire")==0) {
         return PhysicalModel::PhysicalModel::wire;
-    } else if (str.find("Conn_") != std::string::npos) {
+    } else if (str.compare("Connector")==0) {
         return PhysicalModel::PhysicalModel::multiport;
     } else if (str.find("Thin_gap")==0) {
         return PhysicalModel::PhysicalModel::gap;

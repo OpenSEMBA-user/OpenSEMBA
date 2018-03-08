@@ -124,16 +124,20 @@
             "_error": "Invalid wireType"
 *endif
 *elseif(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
-            "materialType": "*MatProp(TypeId)",
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Conn_pRLC")==0)
-            "materialType": "*MatProp(TypeId)",
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance)
 *elseif(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)",
             "materialType": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
