@@ -243,11 +243,14 @@
 *endif
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
 *set var NGRIDS = NGRIDS + 1
+        {
             "gridType":    "nativeGiD",
- *#           "corner":      "{*tcl(GiD_Cartesian get corner)}",
- *#           "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
-            "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
-            "coordinates": "*tcl(GiD_Cartesian get coordinates)"
+*#            "corner":      "{*tcl(GiD_Cartesian get corner)}",
+*#            "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
+*#            "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
+            "xCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 0),
+            "yCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 1),
+            "zCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 2)
         }
 *else 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)

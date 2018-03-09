@@ -179,7 +179,7 @@ HELP: Connector self-inductance (Henrys/meter)
 QUESTION: Capacitance
 VALUE: 0.0
 HELP: Wire capacitance (Farads/meter)
-IMAGE: RLC_series.gif
+IMAGE: images/RLC_series.gif
 END MATERIAL
 NUMBER: 16 MATERIAL: Connector_series_L_parallel_RC
 QUESTION: TypeId
@@ -194,7 +194,7 @@ HELP: Connector self-inductance (Henrys/meter)
 QUESTION: Capacitance
 VALUE: 0.0
 HELP: Wire capacitance (Farads/meter)
-IMAGE: L_series_RC_parallel.gif
+IMAGE: images/L_series_RC_parallel.gif
 END MATERIAL
 NUMBER: 17 MATERIAL: Connector_dispersive
 QUESTION: TypeId

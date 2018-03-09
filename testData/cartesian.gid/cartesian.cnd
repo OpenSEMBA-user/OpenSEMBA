@@ -4,9 +4,9 @@ CONDTYPE: over layer
 CONDMESHTYPE: over body elements
 QUESTION: Definition_mode#CB#(by_vectors,by_angles,randomized_multisource)
 VALUE: by_vectors
-DEPENDENCIES: (by_vectors,             RESTORE,Direction_vector,#CURRENT#, RESTORE,Polarization_vector,#CURRENT#,    HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#,    HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
-DEPENDENCIES: (by_angles,                 HIDE,Direction_vector,#CURRENT#,    HIDE,Polarization_vector,#CURRENT#, RESTORE,Direction_theta,#CURRENT#, RESTORE,Direction_phi,#CURRENT#, RESTORE,Polarization_alpha,#CURRENT#, RESTORE,Polarization_beta,#CURRENT#,    HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
-DEPENDENCIES: (randomized_multisource,    HIDE,Direction_vector,#CURRENT#,    HIDE,Polarization_vector,#CURRENT#,    HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#, RESTORE,Number_of_random_planewaves,#CURRENT#, RESTORE,Relative_variation_of_random_delay,#CURRENT#)
+DEPENDENCIES: (by_vectors,             RESTORE,Direction_vector,#CURRENT#,  RESTORE,Polarization_vector,#CURRENT#,         HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#,    HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
+DEPENDENCIES: (by_angles,              HIDE,Direction_vector,#CURRENT#,     HIDE,Polarization_vector,#CURRENT#,            RESTORE,Direction_theta,#CURRENT#, RESTORE,Direction_phi,#CURRENT#, RESTORE,Polarization_alpha,#CURRENT#, RESTORE,Polarization_beta,#CURRENT#, HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
+DEPENDENCIES: (randomized_multisource, HIDE,Direction_vector,#CURRENT#,     HIDE,Polarization_vector,#CURRENT#,            HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#,    RESTORE,Number_of_random_planewaves,#CURRENT#, RESTORE,Relative_variation_of_random_delay,#CURRENT#)
 QUESTION: Direction_vector
 VALUE: 0.0 0.0 1.0
 HELP: Direction of the plane wave incident vector in cartesian coordinates.
@@ -33,7 +33,7 @@ HELP: The polar angle (degrees) of the plane wave electric field vector.
 QUESTION: Polarization_beta
 VALUE: 0.0
 HELP: The azimuthal angle (degrees) of the plane wave electric field vector.
-QUESTION: Excitation#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -54,7 +54,7 @@ CONDTYPE: over points
 CONDMESHTYPE: over nodes
 QUESTION: type#CB#(voltage,current)
 VALUE: voltage
-QUESTION: Excitation#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -73,11 +73,14 @@ END CONDITION
 NUMBER: 3 CONDITION: Source_on_line
 CONDTYPE: over lines
 CONDMESHTYPE: over body elements
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
 QUESTION: type#CB#(electricField,magneticField)
 VALUE: electricField
 QUESTION: Hardness#CB#(soft,hard)
 VALUE: soft
-QUESTION: Excitation#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -96,6 +99,9 @@ END CONDITION
 NUMBER: 4 CONDITION: Waveguide_port
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
 QUESTION: Shape#CB#(Rectangular)
 VALUE: Rectangular
 QUESTION: Mode#CB#(TE)
@@ -104,7 +110,7 @@ QUESTION: FirstMode
 VALUE: 1
 QUESTION: SecondMode
 VALUE: 0
-QUESTION: Excitation#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -123,18 +129,21 @@ END CONDITION
 NUMBER: 5 CONDITION: TEM_port
 CONDTYPE: over surfaces
 CONDMESHTYPE: over body elements
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
 QUESTION: Shape#CB#(Coaxial)
 VALUE: Coaxial
 QUESTION: Mode#CB#(Voltage,Current)
 VALUE: Voltage
 QUESTION: Origin
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetVector3D
+VALUE: 0
+TKWIDGET: GidUtils::TkwidgetPickPoint
 QUESTION: Inner_radius
 VALUE: 0.0
 QUESTION: Outer_radius
 VALUE: 0.0
-QUESTION: Excitation#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,File)
 VALUE: Gaussian
 DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
 DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
@@ -441,10 +450,29 @@ CONDTYPE: over layer
 CONDMESHTYPE: over body elements
 QUESTION: Type#CB#(by_number_of_cells,by_distance)
 VALUE: by_number_of_cells
-QUESTION: x_direction
-VALUE: 20
-QUESTION: y_direction
-VALUE: 20
-QUESTION: z_direction
-VALUE: 20
+QUESTION: Size
+VALUE: 20 20 20
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: boundary_padding_type#CB#(None,by_number_of_cells,by_distance)
+VALUE: by_distance
+DEPENDENCIES: (None,               HIDE,Lower_padding,#CURRENT#, HIDE,Upper_padding,#CURRENT#,HIDE,Lower_padding_mesh_size,#CURRENT#, HIDE,Upper_padding_mesh_size,#CURRENT#)
+DEPENDENCIES: (by_number_of_cells, RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
+DEPENDENCIES: (by_distance,        RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
+QUESTION: Lower_padding
+VALUE: 0.0 0.0 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Upper_padding
+VALUE: 0.0 0.0 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Lower_padding_mesh_size
+VALUE: 0.0 0.0 0.0
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Upper_padding_mesh_size
+VALUE: 0.0 0.0 0.0
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
 END CONDITION

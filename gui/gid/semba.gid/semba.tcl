@@ -539,3 +539,8 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 
     return $result
 }
+
+proc semba::getGridCoordinatesAsJSONArrayBAS { dir } {
+	set coords [lindex [GiD_Cartesian get coordinates] $dir]
+    return [append " " "\[" [join $coords ",\n                             "] "\]"]
+}
