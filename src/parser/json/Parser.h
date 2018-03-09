@@ -147,6 +147,7 @@ private:
     static DefinitionMode strToDefinitionMode(std::string label);
 //    static OutputRequest::Domain strToDomain(std::string line);
 
+    static Math::CVecI3 strToCVecI3(const std::string& str);
     static Math::CVecR3 strToCVecR3(const std::string& str);
     static Source::Generator::Type strToGeneratorType(std::string label);
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);

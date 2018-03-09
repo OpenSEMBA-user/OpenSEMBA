@@ -877,38 +877,35 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
     if (j.find("grids") == j.end()) {
         throw std::logic_error("Grids object not found.");
     }
-    if (j.count("grids") != 1) {
-        throw std::logic_error("Only one grid must be defined.");
-    }
 
-    json grid = j.at("grids").front();
-    std::string gridType = grid.at("gridType").get<std::string>();
+    json g = j.at("grids").front();
+    std::string gridType = g.at("gridType").get<std::string>();
     if (gridType.compare("gridCondition") == 0) {
-        Geometry::BoxR3 bound = Geometry::BoxR3(strToBox(
-                grid.at("layerBox").get<std::string>()));
-
-        std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding;
-        std::pair<Math::CVecR3, Math::CVecR3> boundaryMeshSize;
-        bool stepsByNumberOfCells = true;
-        Math::CVecI3 numElems;
-        Math::CVecR3 steps;
-
+        // Initializes basic grid.
         Geometry::Grid3 res;
-        if (paddingByNumberOfCells) {
-            boundaryPadding.first =
-                    boundaryPadding.first  * boundaryMeshSize.first;
-            boundaryPadding.second =
-                    boundaryPadding.second * boundaryMeshSize.second;
+        if (g.at("type").get<std::string>().compare("by_number_of_cells") == 0) {
+            res = Geometry::Grid3(
+                    strToBox(g.at("layerBox").get<std::string>()),
+                    strToCVecI3(g.at("directions").get<std::string>()));
+        } else {
+            res = Geometry::Grid3(
+                    strToBox(g.at("layerBox").get<std::string>()),
+                    strToCVecR3(g.at("directions").get<std::string>()));
         }
 
-        if (gridFound) {
-            if (stepsByNumberOfCells) {
-                grid = Geometry::Grid3(bound, numElems);
-            } else {
-                grid = Geometry::Grid3(bound, steps);
-            }
-            grid.enlarge(boundaryPadding, boundaryMeshSize);
+        // Applies boundary padding operations.
+        std::pair<Math::CVecR3, Math::CVecR3> boundaryMeshSize(
+                strToCVecR3(g.at("lowerPaddingMeshSize").get<std::string>()),
+                strToCVecR3(g.at("upperPaddingMeshSize").get<std::string>()));
+        std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding(
+                strToCVecR3(g.at("lowerPadding").get<std::string>()),
+                strToCVecR3(g.at("upperPadding").get<std::string>()));
+        if (g.at("boundaryPaddingType").get<std::string>().compare(
+                "by_number_of_cells") == 0) {
+            boundaryPadding.first  *= boundaryMeshSize.first;
+            boundaryPadding.second *= boundaryMeshSize.second;
         }
+        res.enlarge(boundaryPadding, boundaryMeshSize);
         return res;
 
     } else if (gridType.compare("nativeGiD") == 0) {
@@ -920,7 +917,6 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
     } else {
         throw std::logic_error("Unrecognized grid type: " + gridType);
     }
-
 }
 //
 //Source::PlaneWave* Parser::readPlaneWave() {
@@ -1353,6 +1349,15 @@ std::pair<Math::CVecR3, Math::CVecR3> Parser::strToBox(
     }
     std::pair<Math::CVecR3,Math::CVecR3> bound(min, max);
     return bound;
+}
+
+Math::CVecI3 Parser::strToCVecI3(const std::string& str) {
+    std::stringstream ss(str);
+    Math::CVecI3 res;
+    ss >> res(Math::Constants::x)
+       >> res(Math::Constants::y)
+       >> res(Math::Constants::z);
+    return res;
 }
 
 Math::CVecR3 Parser::strToCVecR3(const std::string& str) {

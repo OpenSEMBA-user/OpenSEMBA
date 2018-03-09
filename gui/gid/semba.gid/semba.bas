@@ -213,14 +213,17 @@
 *# -------------------- GRIDS -------------------------------
 *# ----------------------------------------------------------
     "grids": [
+*set var NGRIDS = 0
 *if(strcasecmp(GenData(Mesher),"None")!=0)
 *set elems(all)
 *set Cond Grid
 *if(CondNumEntities(int)>0)
 *loop layers *OnlyInCond
         {
+*set var NGRIDS = NGRIDS + 1
             "gridType": "gridCondition",
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
+            "type": "*cond(Type)",
 *if(strcasecmp(cond(boundary_padding_type),"None")==0)
             "directions": "{*cond(Size)}"       
 *else
@@ -239,15 +242,19 @@
 *end layers
 *endif
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
+*set var NGRIDS = NGRIDS + 1
             "gridType":    "nativeGiD",
-            "corner":      "{*tcl(GiD_Cartesian get corner)}",
-            "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
+ *#           "corner":      "{*tcl(GiD_Cartesian get corner)}",
+ *#           "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
             "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
             "coordinates": "*tcl(GiD_Cartesian get coordinates)"
         }
 *else 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 *WarningBox "No grid defined. Define grid condition or use GiD native mesher."
+*if(NGRIDS!=1)
+*WarningBox "Several grids defined. Only one grid is allowed for UGRFDTD"
+*endif
 *endif
 *endif
     ],
