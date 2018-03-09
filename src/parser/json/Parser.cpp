@@ -126,11 +126,12 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
 }
 
 Geometry::Mesh::Geometric* Parser::readGeometricMesh(const json& j) {
-    const Geometry::Grid3& grid = readGrids(j);
-//    readLayers(res->layers());
-//    readCoordinates(res->coords());
-//    readElements(res->coords(), res->layers(), res->elems());
-//    return new Geometry::Mesh::Geometric(grid);
+    Geometry::Grid3 grid = readGrids(j);
+    Geometry::Layer::Group<> layers = readLayers(j);
+    Geometry::Coordinate::Group<Geometry::CoordR3> coords = readCoordinates(j);
+    Geometry::Element::Group<Geometry::ElemR> elements =
+            readElements(coords, layers, j);
+    return new Geometry::Mesh::Geometric(grid, coords, elements, layers);
 }
 
 //Source::Group<>* Parser::readSources() {
@@ -274,7 +275,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
                     mat.at("filename").get<std::string>() );
         } else if (sibcType.compare("Layers")==0) {
             return readMultilayerSurface(id, name,
-                    mat.at("layers"));
+                    mat.at("layers").get<json>());
         } else {
             throw std::logic_error("Unrecognized SIBC type: " + sibcType);
         }
@@ -522,70 +523,55 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
 //        } // End of condition comparing labels.
 //    }
 //}
-//
-//void Parser::readLayers(Geometry::Layer::Group<>& layers) {
-//    bool finished = false;
-//    bool found = false;
-//    std::string label, value;
-//    Geometry::Layer::Id id;
-//    while (!found && !f_in.eof() ) {
-//        getNextLabelAndValue(label, value);
-//        if (label.compare("Layers")==0) {
-//            found = true;
-//            while(!finished && !f_in.eof()) {
-//                std::string line;
-//                getline(f_in, line);
-//                if (line.find("End of Layers") != line.npos) {
-//                    finished = true;
-//                } else {
-//                    std::stringstream ss(line);
-//                    ss >> id;;
-//                    std::string name;
-//                    name = line.substr(line.find_first_of(" ") + 1,
-//                                       line.length());
-//                    layers.add(new Geometry::Layer::Layer(id, name));
-//                }
-//            }
-//        }
-//    }
-//    if (!found) {
-//        throw std::logic_error("Layers label was not found.");
-//    }
-//}
-//
-//void Parser::readCoordinates(
-//        Geometry::Coordinate::Group<Geometry::CoordR3>& coords) {
-//    std::string line;
-//    Geometry::CoordId id;
-//    Math::CVecR3 pos;
-//    coords.reserve(pSize_.v);
-//    bool finished = false;
-//    bool found = false;
-//    while (!found && !f_in.eof() && !finished) {
-//        getline_(line);
-//        if (line.find("Coordinates:") != line.npos) {
-//            found = true;
-//            for (std::size_t i = 0; i < pSize_.v; i++) {
-//                f_in >> id >> pos(0) >> pos(1) >> pos(2);
-//                progress_.advance();
-//                coords.add(new Geometry::CoordR3(id, pos));
-//            }
-//            finished = false;
-//            while (!finished && !f_in.eof()) {
-//                getline_(line);
-//                if (line.find("End of Coordinates") != line.npos) {
-//                    finished = true;
-//                }
-//            }
-//        }
-//    }
-//    if (!found) {
-//        throw std::logic_error("Coordinates label was not found.");
-//    }
-//    if (!finished) {
-//        throw std::logic_error("End of coordinates label not found.");
-//    }
-//}
+
+Geometry::Layer::Group<> Parser::readLayers(const json& j) {
+    if (j.find("layers") == j.end()) {
+        throw std::logic_error("layers object was not found.");
+    }
+
+    Geometry::Layer::Group<> res;
+    const json layers = j.at("layers");
+    for (json::const_iterator it = layers.begin(); it != layers.end(); ++it) {
+        res.add(new Geometry::Layer::Layer(
+                Geometry::Layer::Id(it->at("id").get<int>()),
+                it->at("name").get<std::string>()));
+    }
+    return res;
+}
+
+Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates(
+        const json& j) {
+    std::string line;
+    Geometry::CoordId id;
+    Math::CVecR3 pos;
+    coords.reserve(pSize_.v);
+    bool finished = false;
+    bool found = false;
+    while (!found && !f_in.eof() && !finished) {
+        getline_(line);
+        if (line.find("Coordinates:") != line.npos) {
+            found = true;
+            for (std::size_t i = 0; i < pSize_.v; i++) {
+                f_in >> id >> pos(0) >> pos(1) >> pos(2);
+                progress_.advance();
+                coords.add(new Geometry::CoordR3(id, pos));
+            }
+            finished = false;
+            while (!finished && !f_in.eof()) {
+                getline_(line);
+                if (line.find("End of Coordinates") != line.npos) {
+                    finished = true;
+                }
+            }
+        }
+    }
+    if (!found) {
+        throw std::logic_error("Coordinates label was not found.");
+    }
+    if (!finished) {
+        throw std::logic_error("End of coordinates label not found.");
+    }
+}
 //
 //void Parser::readElements(
 //        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
@@ -909,10 +895,11 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
         return res;
 
     } else if (gridType.compare("nativeGiD") == 0) {
-
-        // TODO
-        // TODO
-        // TODO
+        std::vector<Math::Real> pos[3];
+        pos[0] = g.at("xCoordinates").get<std::vector<double>>();
+        pos[1] = g.at("yCoordinates").get<std::vector<double>>();
+        pos[2] = g.at("zCoordinates").get<std::vector<double>>();
+        return Geometry::Grid3(pos);
 
     } else {
         throw std::logic_error("Unrecognized grid type: " + gridType);

@@ -100,11 +100,13 @@ private:
             const json& layers) const;
 
     static Geometry::Grid3 readGrids(const json&);
-//    void readLayers(Geometry::Layer::Group<>&);
-//    void readCoordinates(Geometry::Coordinate::Group<Geometry::CoordR3>&);
-//    void readElements(const Geometry::CoordR3Group&,
-//                      const Geometry::Layer::Group<>&,
-//                      Geometry::Element::Group<Geometry::ElemR>&);
+    static Geometry::Layer::Group<> readLayers(const json&);
+    static Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates(
+            const json&);
+    static Geometry::Element::Group<Geometry::ElemR>readElements(
+            const Geometry::CoordR3Group&,
+            const Geometry::Layer::Group<>&,
+            const json&);
 //    void readHex8Elements (const Geometry::CoordR3Group& cG,
 //                           const Geometry::Layer::Group<>&,
 //                           Geometry::Element::Group<Geometry::ElemR>& elems);

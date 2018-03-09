@@ -38,7 +38,6 @@ template<std::size_t D>
 Grid<D>::Grid(const BoxRD& box,
               const CVecRD& dxyz) {
     CVecRD origin = box.getMin();
-    offset_ = CVecID(0, 0, 0);
     for (std::size_t i = 0; i < D; i++) {
         Math::Real boxLength = box.getMax()(i) - box.getMin()(i);
         std::size_t nCells;
@@ -62,7 +61,6 @@ template<std::size_t D>
 Grid<D>::Grid(const BoxRD &boundingBox,
               const CVecID& dims) {
     CVecRD origin = boundingBox.getMin();
-    offset_ = CVecID(0, 0, 0);
     for (std::size_t i = 0; i < D; i++) {
         Math::Real step =
                 (boundingBox.getMax()(i) - boundingBox.getMin()(i)) / dims(i);
@@ -75,23 +73,15 @@ Grid<D>::Grid(const BoxRD &boundingBox,
 }
 
 template<std::size_t D>
-Grid<D>::Grid(const std::vector<Math::Real> step[D],
-        const CVecID& offset,
-        const CVecRD& origin) {
-    offset_ = offset;
+Grid<D>::Grid(const std::vector<Math::Real> pos[D]) {
     for(std::size_t d = 0; d < D; d++) {
-        pos_[d].resize(step[d].size()+1);
-        pos_[d][0] = origin(d);
-        for (std::size_t i = 0; i < step[d].size(); i++) {
-            pos_[d][i+1] = pos_[d][i] + std::abs(step[d][i]);
-        }
+        pos_[d] = pos[D];
     }
 }
 
 
 template<std::size_t D>
 Grid<D>::Grid(const Grid<D>& grid) {
-    offset_ = grid.offset_;
     for (std::size_t i = 0; i < D; i++) {
         pos_[i] = grid.pos_[i];
     }
@@ -107,7 +97,6 @@ Grid<D>& Grid<D>::operator=(const Grid<D>& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    offset_ = rhs.offset_;
     for (std::size_t i = 0; i < D; i++) {
         pos_[i] = rhs.pos_[i];
     }
@@ -115,9 +104,7 @@ Grid<D>& Grid<D>::operator=(const Grid<D>& rhs) {
 }
 
 template<std::size_t D>
-void Grid<D>::setPos(const std::vector<Math::Real> pos[D],
-                     const CVecID& offset) {
-    offset_ = offset;
+void Grid<D>::setPos(const std::vector<Math::Real> pos[D]) {
     for(std::size_t d = 0; d < D; d++) {
         if (pos[d].size() == 0) {
             throw std::out_of_range(
@@ -268,7 +255,7 @@ Math::Vector::Cartesian<Math::Int,D> Grid<D>::getNumCells() const {
 
 template<std::size_t D>
 Math::Vector::Cartesian<Math::Int,D> Grid<D>::getOffset() const {
-    return offset_;
+    return CVecID(0,0,0);
 }
 
 template<std::size_t D>
@@ -327,19 +314,17 @@ Math::Real Grid<D>::getMinimumSpaceStep() const {
 template<std::size_t D>
 Box<Math::Real,D> Grid<D>::getFullDomainBoundingBox() const {
     return getBoundingBox(
-            std::pair<CVecID,CVecID> (offset_, offset_+getNumCells()) );
+            std::pair<CVecID,CVecID> (CVecID(0,0,0), getNumCells()));
 }
 
 template<std::size_t D>
 Box<Math::Int,D> Grid<D>::getFullDomainBoundingCellBox() const {
-
     CVecID min, max, dims;
     for (std::size_t n=0; n<D; n++){
         dims[n] = pos_[n].size();
     }
 
-    BoxID res(offset_, offset_ + dims);
-    return res;
+    return BoxID(CVecID(0,0,0), dims);
 }
 
 template<std::size_t D>
@@ -450,19 +435,16 @@ std::vector<Math::Real> Grid<D>::getPos(const std::size_t direction) const {
 template<std::size_t D>
 Math::Vector::Cartesian<Math::Real,D> Grid<D>::getPos(
         const CVecID& ijk) const {
-    CVecID dims = getNumCells();
     CVecRD res;
     for (std::size_t i = 0; i < D; i++) {
-//        assert((ijk(i) - offsetGrid_(i))>=0 &&
-//                (ijk(i) - offsetGrid_(i))<dims(i));
-        res(i) = pos_[i][ijk(i) - offset_(i)];
+        res(i) = pos_[i][ijk(i)];
     }
     return res;
 };
 
 template<std::size_t D>
 Math::Real Grid<D>::getPos(const std::size_t dir, const Math::Int i) const {
-    return  pos_[dir][i-offset_[dir]];
+    return  pos_[dir][i];
 }
 
 template<std::size_t D>
@@ -482,7 +464,7 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
     assert(pos_[dir].size() >= 1);
     // Checks if it is below the grid.
     if (Math::Util::lower(x, pos[0], steps[0], tol)) {
-        cell = offset_(dir);
+        cell = 0;
         dist = (x-pos[0])/steps[0];
         if (err != NULL) {
             *err = true;
@@ -499,14 +481,14 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
             step = steps.back();
         }
         if (Math::Util::equal(x, pos[i], step, tol)) {
-            cell = i + offset_(dir);
+            cell = i;
             dist = 0.0;
             if (err != NULL) {
                 *err = false;
             }
             return std::make_pair(cell, dist);
         } else if (Math::Util::lower(x, pos[i], step, tol)) {
-            cell = i - 1 + offset_(dir);
+            cell = i - 1;
             dist = (x - pos[i-1])/step;
             if(Math::Util::equal(Math::Util::round(dist),1.0) && approx) {
                 cell++;
@@ -518,7 +500,7 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
             return std::make_pair(cell, dist);
         }
     }
-    cell = getNumCells()(dir) + offset_(dir);
+    cell = getNumCells()(dir);
     dist = (x - pos.back())/steps.back();
     if (err != NULL) {
         *err = true;
@@ -562,7 +544,7 @@ Math::CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
          if(!pos_[dir].empty()){
             if(xyz(dir) <= pos_[dir].front()){
                 if(Math::Util::equal(pos_[dir].front(),xyz(dir))){
-                    ijk(dir) = offset_[dir];
+                    ijk(dir) = 0;
                     length(dir) = 0.0;
                 }else{
                     isInto = false;
@@ -570,7 +552,7 @@ Math::CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
                 }
             }else if(pos_[dir].back()<=xyz(dir)) {
                 if(Math::Util::equal(pos_[dir].back(),xyz(dir))){
-                    ijk(dir) = offset_[dir]+pos_[dir].size()-1;
+                    ijk(dir) = pos_[dir].size()-1;
                     length(dir) = 0.0;
                 }else{
                     isInto = false;
@@ -581,7 +563,7 @@ Math::CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
                 while(pos_[dir][n] <= xyz(dir)){
                     ++n;
                 }
-                ijk(dir) = n-1 + offset_[dir];
+                ijk(dir) = n-1;
                 length(dir) = (xyz(dir)-pos_[dir][ijk(dir)])
                                /getStep(dir,ijk(dir));
             }
@@ -702,7 +684,6 @@ void Grid<D>::printInfo() const {
     CVecID numCells = getNumCells();
     BoxRD bound = getFullDomainBoundingBox();
     std::cout << "-- Cartesian Grid<" << D << "> --" << std::endl;
-    std::cout << "Offset: " << offset_.toStr() << std::endl;
     std::cout << "Dims: " << numCells.toStr() << std::endl;
     std::cout << "Min val: " << bound.getMin().toStr() << std::endl;
     std::cout << "Max val: " << bound.getMax().toStr() << std::endl;

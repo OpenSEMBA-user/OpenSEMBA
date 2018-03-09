@@ -48,9 +48,7 @@ public:
          const CVecRD& dxyz);
     Grid(const BoxRD&  boundingBox,
          const CVecID& dims);
-    Grid(const std::vector<Math::Real> step[D],
-         const CVecID& offset = CVecID(0),
-         const CVecRD& origin = CVecRD(0.0));
+    Grid(const std::vector<Math::Real> positions[D]);
     Grid(const Grid& grid);
     ~Grid ();
 
@@ -74,7 +72,9 @@ public:
                 const Math::Real tol = tolerance) const;
 
     CVecID getNumCells() const;
-    CVecID getOffset()   const;
+
+    CVecID getOffset()   const; // DEPRECATED
+
     CVecRD getOrigin()   const;
     bool getNaturalCell(
             const Math::Constants::CartesianAxis dir,
@@ -145,7 +145,6 @@ public:
     void printInfo() const;
 
 private:
-    CVecID offset_;
     std::vector<Math::Real> pos_[D];
 };
 
