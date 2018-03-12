@@ -41,7 +41,7 @@ public:
 
     SEMBA_MATH_FUNCTION_DEFINE_CLONE(Gaussian);
 
-    Real operator()(const Real&) const;
+    virtual Real operator()(const Real&) const;
 
     bool operator==(const Base& rhs) const;
 
@@ -53,7 +53,7 @@ public:
 
     void printInfo() const;
 
-private:
+protected:
     Real spread_;
     Real delay_;
     Real freq_;
