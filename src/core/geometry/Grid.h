@@ -53,8 +53,7 @@ public:
     ~Grid ();
 
     Grid& operator=(const Grid& cGrid);
-    void setPos(const std::vector<Math::Real> pos[D],
-                const CVecID& offset = CVecID(0));
+    void setPos(const std::vector<Math::Real> pos[D]);
     void setAdditionalSteps(const Math::Constants::CartesianAxis d,
                             const Math::Constants::CartesianBound b,
                             const std::vector<Math::Real>& step);

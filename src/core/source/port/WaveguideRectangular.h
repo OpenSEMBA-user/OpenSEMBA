@@ -37,8 +37,7 @@ public:
             Magnitude::Magnitude* magnitude,
             const Geometry::Element::Group<const Geometry::Surf>& elem,
             const ExcitationMode excMode,
-            const std::pair<size_t,size_t> mode,
-            const Bound3& bounds);
+            const std::pair<size_t,size_t> mode);
     WaveguideRectangular(const WaveguideRectangular&);
     virtual ~WaveguideRectangular();
 

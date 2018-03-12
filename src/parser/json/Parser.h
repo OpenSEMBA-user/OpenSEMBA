@@ -60,7 +60,7 @@ using json = nlohmann::json;
 
 class Parser : public SEMBA::Parser::Parser {
 public:
-    Data* read(std::istream& inputFileStream) const;
+    Data read(std::istream& inputFileStream) const;
 
 private:
     typedef enum {
@@ -81,11 +81,6 @@ private:
         rectangular,
         undefined
     } WaveportShape;
-    typedef enum {
-        byVectors,
-        byAngles,
-        randomizedMultisource
-    } DefinitionMode;
 
     struct ParsedElementIds {
         Geometry::ElemId elemId;
@@ -103,14 +98,17 @@ private:
     static Solver::Info*              readSolver(const json&);
     static Solver::Settings           readSolverSettings(const json&);
     static PhysicalModel::Group<>*    readPhysicalModels(const json&);
-    static Geometry::Mesh::Geometric* readGeometricMesh(const json&);
-    static Source::Group<>*           readSources(const json&);
-    static OutputRequest::Group<>*    readOutputRequests(const json&);
+    static Geometry::Mesh::Geometric* readGeometricMesh(
+            const PhysicalModel::Group<>&, const json&);
+    static Source::Group<>*           readSources(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static OutputRequest::Group<>*    readOutputRequests(
+            Geometry::Mesh::Geometric& mesh, const json&);
 
-    PhysicalModel::Surface::Multilayer*  readMultilayerSurface(
+    static PhysicalModel::Surface::Multilayer* readMultilayerSurface(
             const MatId id,
             const std::string& name,
-            const json& layers) const;
+            const json& layers);
 
     static Geometry::Grid3 readGrids(const json&);
     static Geometry::Layer::Group<> readLayers(const json&);
@@ -129,25 +127,31 @@ private:
             const Geometry::Layer::Group<>& layers,
             const Geometry::Coordinate::Group<Geometry::CoordR3>& coords);
 
-//    void readOutRqInstances(OutputRequest::Group<>* res);
-//    void getNextLabelAndValue(std::string& label, std::string& value);
-//    Source::PlaneWave* readPlaneWave();
-//    Source::Port::Waveguide* readPortWaveguide();
-//    Source::Port::TEM* readPortTEM();
-//    Source::Generator* readGenerator();
-//    Source::OnLine* readSourceOnLine();
+    static Source::PlaneWave* readPlanewave(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Port::Waveguide* readPortWaveguide(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Port::TEM* readPortTEM(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Generator* readGenerator(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::OnLine* readSourceOnLine(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Magnitude::Magnitude* readMagnitude(const json&);
+
     static PhysicalModel::PhysicalModel* readPhysicalModel(
             const json& material);
-//    Source::Magnitude::Magnitude* readMagnitude(const std::string type);
+//    void readOutRqInstances(OutputRequest::Group<>* res);
+    static OutputRequest::Domain strToDomain(std::string line);
     static Math::Axis::Local strToLocalAxes(const std::string& str);
 
     static bool checkVersionCompatibility(const std::string& version);
-//    Geometry::Element::Group<> boxToElemGroup(const std::string& line);
+    static Geometry::Element::Group<> boxToElemGroup(
+            Geometry::Mesh::Geometric& mesh,
+            const std::string& line);
     static OutputRequest::Base::Type strToOutputType(std::string label);
     static SIBCType strToSIBCType(std::string str);
     static OutputType strToGidOutputType(std::string label);
-    static DefinitionMode strToDefinitionMode(std::string label);
-//    static OutputRequest::Domain strToDomain(std::string line);
 
     static Math::CVecI3 strToCVecI3(const std::string& str);
     static Math::CVecR3 strToCVecR3(const std::string& str);
@@ -155,7 +159,7 @@ private:
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);
     static Source::OnLine::Type strToNodalType(std::string label);
     static Source::OnLine::Hardness strToNodalHardness(std::string label);
-//
+
     static PhysicalModel::PhysicalModel::Type strToMaterialType(
             std::string label);
     static PhysicalModel::Multiport::Multiport::Type strToMultiportType(
@@ -164,9 +168,7 @@ private:
             std::string label);
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);
-//    static PhysicalModel::Volume::PoleResidue readPoleResiduePair(
-//            std::ifstream& stream);
-//
+
     static const PhysicalModel::Bound::Bound* strToBoundType(std::string str);
 };
 

@@ -59,6 +59,7 @@ public:
     Cartesian<T,D>& operator-=(const T param);
     Cartesian<T,D>& operator-=(const Cartesian<T,D>&);
     Cartesian<T,D>& operator*=(const T param);
+    Cartesian<T,D>& operator*=(const Cartesian<T,D>&);
     Cartesian<T,D>& operator/=(const T param);
 
     Cartesian<T,D>  operator+(const T param) const;

@@ -34,7 +34,7 @@ public:
     Parser();
     virtual ~Parser();
 
-    virtual Data* read(std::istream& inputStream) const = 0;
+    virtual Data read(std::istream& inputStream) const = 0;
 
 protected:
     static inline std::string& trim(std::string &s) {

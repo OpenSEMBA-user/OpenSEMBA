@@ -411,8 +411,7 @@
             "relativeVariationOfRandomDelay": *cond(Relative_variation_of_random_delay),
 *endif            
 *include includes/magnitude.bas
-            "layerName": "*layerName",
-            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *set var sourceNum = sourceNum + 1
 *if(sourceNum == nSources) 
         }
