@@ -37,7 +37,7 @@ Real GaussDerivative::operator ()(const Real& time) const {
     static const Real pi    = Constants::pi;
     static const Real sqrt2 = sqrt(2.0);
     Real expArg = (time - delay_) / (spread_ * sqrt2);
-    Real factor = (time - delay_) / pow(spread_, 2);
+    Real factor = -(time - delay_) / pow(spread_, 2);
 
     return factor * exp(-expArg * expArg) * cos(freq_ * pi * 2.0 * time);
 }
