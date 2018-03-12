@@ -22,45 +22,48 @@
 #ifndef SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_
 #define SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_
 
-#include <complex>
-
 #include "Function.h"
 
-namespace SEMBA {
-namespace Math {
-namespace Function {
+#include <complex>
 
-class Gaussian : public Function<Real,Real> {
+namespace SEMBA{
+namespace Math{
+namespace Function{
+
+class GaussianDerivative : public Function<Real, Real>{
 public:
-    Gaussian();
-    Gaussian(const Real spread,
-             const Real delay,
-             const Real freq = 0.0);
-    Gaussian(const Gaussian& rhs);
-    virtual ~Gaussian();
+	GaussianDerivative();
+	GaussianDerivative(const Real spread,
+					   const Real delay,
+					   const Real freq = 0.0);
+	GaussianDerivative(const GaussianDerivative& rhs);
+	virtual ~GaussianDerivative();
 
-    SEMBA_MATH_FUNCTION_DEFINE_CLONE(Gaussian);
+	SEMBA_MATH_FUNCTION_DEFINE_CLONE(GaussianDerivative);
 
-    virtual Real operator()(const Real&) const;
+	virtual Real operator()(const Real&) const;
 
-    bool operator==(const Base& rhs) const;
+	bool operator==(const Base& rhs) const;
 
-    Real getDelay() const;
-    Real getFreq() const;
-    Real getSpread() const;
+	Real getDelay() const;
+	Real getFreq() const;
+	Real getSpread() const;
 
-    std::complex<Real> getFourier(const Real frequency) const;
+	std::complex<Real> getFourier(const Real frequency) const;
 
-    void printInfo() const;
+	void printInfo() const;
 
 private:
-    Real spread_;
-    Real delay_;
-    Real freq_;
+	    Real spread_;
+	    Real delay_;
+	    Real freq_;
 };
 
-} /* namespace Function */
-} /* namespace Math */
-} /* namespace SEMBA */
+}/*namespace Function*/
+}/*namespace Math*/
+}/*namespace SEMBA*/
 
 #endif /* SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_ */
+
+
+
