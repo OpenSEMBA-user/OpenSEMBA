@@ -85,7 +85,7 @@ Data Parser::read(std::istream& stream) const {
     res.sources = readSources(*res.mesh, j);
     progress.advance();
 
-    res.outputRequests = readOutputRequests(j);
+    res.outputRequests = readOutputRequests(*res.mesh, j);
     progress.advance();
 
     postReadOperations(res);
@@ -176,11 +176,11 @@ PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j){
     return res;
 }
 
-PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
+PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
     PhysicalModel::PhysicalModel::Type type =
-                strToMaterialType( mat.at("materialType").get<std::string>() );
-    MatId id = MatId(mat.at("materialId").get<int>());
-    std::string name = mat.at("name").get<std::string>();
+                strToMaterialType( j.at("materialType").get<std::string>() );
+    MatId id = MatId(j.at("materialId").get<int>());
+    std::string name = j.at("name").get<std::string>();
 
     switch (type) {
     case PhysicalModel::PhysicalModel::PEC:
@@ -193,46 +193,46 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
         return new PhysicalModel::Predefined::SMA(id, name);
 
     case PhysicalModel::PhysicalModel::PML:
-        if (mat.at("automaticOrientation").get<bool>()) {
+        if (j.at("automaticOrientation").get<bool>()) {
             return new PhysicalModel::Volume::PML(id, name, nullptr);
         } else {
             Math::Axis::Local* localAxes;
             localAxes = new Math::Axis::Local(
-                    strToLocalAxes(mat.at("localAxes").get<std::string>()));
+                    strToLocalAxes(j.at("localAxes").get<std::string>()));
             return new PhysicalModel::Volume::PML(id, name, localAxes);
         }
 
     case PhysicalModel::PhysicalModel::classic:
         return new PhysicalModel::Volume::Classic(id, name,
-                mat.at("permittivity").get<double>(),
-                mat.at("permeability").get<double>(),
-                mat.at("electricConductivity").get<double>(),
-                mat.at("magneticConductivity").get<double>());
+                j.at("permittivity").get<double>(),
+                j.at("permeability").get<double>(),
+                j.at("electricConductivity").get<double>(),
+                j.at("magneticConductivity").get<double>());
 
     case PhysicalModel::PhysicalModel::elecDispersive:
         return new PhysicalModel::Volume::Dispersive(id, name,
-                mat.at("filename").get<std::string>());
+                j.at("filename").get<std::string>());
 
     case PhysicalModel::PhysicalModel::wire:
     {
-        std::string wireType = mat.at("wireType").get<std::string>();
+        std::string wireType = j.at("wireType").get<std::string>();
         if (wireType.compare("Dispersive") == 0) {
             return new PhysicalModel::Wire::Wire(id, name,
-                    mat.at("radius").get<double>(),
-                    mat.at("filename").get<std::string>());
+                    j.at("radius").get<double>(),
+                    j.at("filename").get<std::string>());
         } else if(wireType.compare("SeriesParallel") == 0) {
             return new PhysicalModel::Wire::Wire(id, name,
-                    mat.at("radius").get<double>(),
-                    mat.at("resistance").get<double>(),
-                    mat.at("inductance").get<double>(),
-                    mat.at("capacitance").get<double>(),
-                    mat.at("parallelResistance").get<double>(),
-                    mat.at("parallelInductance").get<double>(),
-                    mat.at("parallelCapacitance").get<double>());
+                    j.at("radius").get<double>(),
+                    j.at("resistance").get<double>(),
+                    j.at("inductance").get<double>(),
+                    j.at("capacitance").get<double>(),
+                    j.at("parallelResistance").get<double>(),
+                    j.at("parallelInductance").get<double>(),
+                    j.at("parallelCapacitance").get<double>());
         } else if(wireType.compare("Standard") == 0) {
             return new PhysicalModel::Wire::Wire(id, name,
-                    mat.at("resistance"),
-                    mat.at("inductance"));
+                    j.at("resistance"),
+                    j.at("inductance"));
         } else {
             throw std::logic_error("Unrecognized wire type" + wireType);
         }
@@ -240,19 +240,19 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
 
     case PhysicalModel::PhysicalModel::anisotropic:
     {
-        std::string str = mat.at("anisotropicModel").get<std::string>();
+        std::string str = j.at("anisotropicModel").get<std::string>();
         if (str.compare("Crystal")==0) {
             return new PhysicalModel::Volume::AnisotropicCrystal(id, name,
-                    strToLocalAxes(mat.at("localAxes").get<std::string>()),
+                    strToLocalAxes(j.at("localAxes").get<std::string>()),
                     strToCVecR3(
-                            mat.at("relativePermittiviy").get<std::string>()),
-                    mat.at("crystalRelativePermeability").get<double>());
+                            j.at("relativePermittiviy").get<std::string>()),
+                    j.at("crystalRelativePermeability").get<double>());
         } else if (str.compare("Ferrite")==0) {
             return new PhysicalModel::Volume::AnisotropicFerrite(id, name,
-                    strToLocalAxes(mat.at("localAxes").get<std::string>()),
-                    mat.at("kappa").get<double>(),
-                    mat.at("ferriteRelativePermeability").get<double>(),
-                    mat.at("ferriteRelativePermittivity").get<double>());
+                    strToLocalAxes(j.at("localAxes").get<std::string>()),
+                    j.at("kappa").get<double>(),
+                    j.at("ferriteRelativePermeability").get<double>(),
+                    j.at("ferriteRelativePermittivity").get<double>());
         } else {
             throw std::logic_error("Unrecognized Anisotropic Model: " + str);
         }
@@ -260,13 +260,13 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
 
     case PhysicalModel::PhysicalModel::isotropicsibc:
     {
-        std::string sibcType = mat.at("surfaceType").get<std::string>();
+        std::string sibcType = j.at("surfaceType").get<std::string>();
         if (sibcType.compare("File")==0) {
             return new PhysicalModel::Surface::SIBC(id, name,
-                    mat.at("filename").get<std::string>() );
+                    j.at("filename").get<std::string>() );
         } else if (sibcType.compare("Layers")==0) {
             return readMultilayerSurface(id, name,
-                    mat.at("layers").get<json>());
+                    j.at("layers").get<json>());
         } else {
             throw std::logic_error("Unrecognized SIBC type: " + sibcType);
         }
@@ -274,22 +274,22 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
 
     case PhysicalModel::PhysicalModel::gap:
         return new PhysicalModel::Gap::Gap(id, name,
-                mat.at("width").get<double>());
+                j.at("width").get<double>());
 
     case PhysicalModel::PhysicalModel::multiport:
     {
         PhysicalModel::Multiport::Multiport::Type mpType =
-                strToMultiportType(mat.at("connectorType").get<std::string>());
+                strToMultiportType(j.at("connectorType").get<std::string>());
         if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
             return new PhysicalModel::Multiport::Predefined(id, name, mpType);
         } else if (mpType == PhysicalModel::Multiport::Multiport::dispersive) {
             return new PhysicalModel::Multiport::Dispersive(id, name,
-                    mat.at("filename").get<std::string>());
+                    j.at("filename").get<std::string>());
         } else {
             return new PhysicalModel::Multiport::RLC(id, name, mpType,
-                    mat.at("resistance").get<double>(),
-                    mat.at("inductance").get<double>(),
-                    mat.at("capacitance").get<double>());
+                    j.at("resistance").get<double>(),
+                    j.at("inductance").get<double>(),
+                    j.at("capacitance").get<double>());
         }
     }
 
@@ -298,28 +298,19 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& mat) {
     }
 }
 
-//OutputRequest::Group<>* Parser::readOutputRequests() {
-//    OutputRequest::Group<>* res = new OutputRequest::Group<>();
-//    bool finished;
-//    bool found = false;
-//    std::string line, label, value;
-//    while (!found && !f_in.eof() ) {
-//        getNextLabelAndValue(label, value);
-//        if (label.compare("Output Requests")==0) {
-//            found = true;
-//            finished = false;
-//            while (!finished && !f_in.eof() ) {
-//                getNextLabelAndValue(label, value);
-//                if (label.compare("Output request instance")==0) {
-//                    readOutRqInstances(res);
-//                } else if (label.compare("End of Output Requests")==0) {
-//                    finished = true;
-//                }
-//            }
-//        }
-//    }
-//    return res;
-//}
+OutputRequest::Group<>* Parser::readOutputRequests(
+        Geometry::Mesh::Geometric& mesh, const json& j) {
+    if (j.find("outputRequests") == j.end()) {
+        throw std::logic_error("Output requests label was not found.");
+    }
+
+    OutputRequest::Group<>* res = new OutputRequest::Group<>();
+    const json& outs = j.at("outputRequests").get<json>();
+    for (json::const_iterator it = outs.begin(); it != outs.end(); ++it) {
+        res->add(readOutputRequest(*it));
+    }
+    return res;
+}
 
 Geometry::Element::Group<> Parser::boxToElemGroup(
         Geometry::Mesh::Geometric& mesh,
@@ -343,177 +334,138 @@ Geometry::Element::Group<> Parser::boxToElemGroup(
     }
 }
 
-void Parser::readOutRqInstances(OutputRequest::Group<>* res) {
-    bool finished = false;
-    OutputType outputType;
-    while (!finished && !f_in.eof()) {
-        std::string line, label, value;
-        getNextLabelAndValue(label,value);
-        if (label.compare("GiDOutputType")==0) {
-            outputType = strToGidOutputType(trim(value));
-        } else if (label.compare("Number of elements")==0) {
-            std::size_t nE = atoi(value.c_str());
-            for (std::size_t i = 0; i < nE; i++) {
-                getNextLabelAndValue(label,value);
-                std::string name = trim(value);
-                getNextLabelAndValue(label,value);
-                OutputRequest::Base::Type type = strToOutputType(trim(value));
-                getNextLabelAndValue(label,value);
-                OutputRequest::Domain domain = strToDomain(value);
-                switch (outputType) {
-                case Parser::outRqOnPoint:
-                {
-                    getNextLabelAndValue(label,value);
-                    Geometry::CoordId coordId(atoi(value.c_str()));
-                    const Geometry::CoordR3* coord =
-                        mesh_->coords().getId(coordId);
-                    Geometry::NodR* node =
-                        new Geometry::NodR(Geometry::ElemId(0), &coord);
-                    mesh_->elems().addId(node);
-                    Geometry::Element::Group<Geometry::Nod> elems(node);
-                    res->add(
-                        new OutputRequest::OutputRequest<Geometry::Nod>(
-                            domain, type, name, elems));
-                    break;
-                }
-                case Parser::outRqOnLine:
-                {
-                    getNextLabelAndValue(label,value);
-                    std::vector<Geometry::ElemId> ids;
-                    ids.push_back(Geometry::ElemId(atoi(value.c_str())));
-                    Geometry::Element::Group<Geometry::ElemR> elems =
-                        mesh_->elems().getId(ids);
-                    Geometry::Element::Group<Geometry::Lin> lines =
-                        elems.getOf<Geometry::Lin>();
-                    res->add(new OutRqLine(domain, type, name, lines));
-                    break;
-                }
-                case Parser::outRqOnSurface:
-                {
-                    getNextLabelAndValue(label,value);
-                    std::vector<Geometry::ElemId> ids;
-                    ids.push_back(Geometry::ElemId(atoi(value.c_str())));
-                    Geometry::Element::Group<Geometry::ElemR> elems =
-                            mesh_->elems().getId(ids);
-                    Geometry::Element::Group<Geometry::Surf> surfs =
-                            elems.getOf<Geometry::Surf>();
-                    res->add(new OutRqSurface(domain, type, name, surfs));
-                    break;
-                }
-                case Parser::outRqOnLayer:
-                {
-                    getline_(line);
-                    Geometry::Element::Group<> elems = boxToElemGroup(line);
-                    if (elems.getOf<Geometry::Vol>().size()) {
-                        res->add(
-                            new OutputRequest::OutputRequest<Geometry::Vol>(
-                                domain, type, name,
-                                elems.getOf<Geometry::Vol>()));
-                    } else if (elems.getOf<Geometry::Surf>().size()) {
-                        res->add(
-                            new OutputRequest::OutputRequest<Geometry::Surf>(
-                                domain, type, name,
-                                elems.getOf<Geometry::Surf>()));
-                    } else {
-                        throw std::logic_error("Layer for OutRq on Layer must"
-                                               " be volume or surface");
-                    }
-                    break;
-                }
-                case Parser::bulkCurrentOnSurface:
-                {
-                    Math::Constants::CartesianAxis dir;
-                    std::size_t skip;
-                    getNextLabelAndValue(label,value);
-                    switch (value[0]) {
-                    case 'x':
-                        dir = Math::Constants::x;
-                        break;
-                    case 'y':
-                        dir = Math::Constants::y;
-                        break;
-                    case 'z':
-                        dir = Math::Constants::z;
-                        break;
-                    default:
-                        dir = Math::Constants::x;
-                    }
-                    getNextLabelAndValue(label,value);
-                    skip = atoi(value.c_str());
-                    getline_(line);
-                    std::vector<Geometry::ElemId> ids;
-                    ids.push_back(Geometry::ElemId(atoi(line.c_str())));
-                    Geometry::Element::Group<Geometry::ElemR> elems =
-                        mesh_->elems().getId(ids);
-                    Geometry::Element::Group<Geometry::Surf> surfs =
-                        elems.getOf<Geometry::Surf>();
-                    res->add(
-                        new OutputRequest::BulkCurrent(
-                            domain, name, surfs, dir, skip));
-                    break;
-                }
-                case Parser::bulkCurrentOnLayer:
-                {
-                    Math::Constants::CartesianAxis dir;
-                    std::size_t skip;
-                    getNextLabelAndValue(label,value);
-                    switch (value[0]) {
-                    case 'x':
-                        dir = Math::Constants::x;
-                        break;
-                    case 'y':
-                        dir = Math::Constants::y;
-                        break;
-                    case 'z':
-                        dir = Math::Constants::z;
-                        break;
-                    default:
-                        dir = Math::Constants::x;
-                    }
-                    getNextLabelAndValue(label,value);
-                    skip = atoi(value.c_str());
-                    getline_(line);
-                    Geometry::Element::Group<Geometry::Vol> elems =
-                        boxToElemGroup(line);
-                    res->add(
-                        new OutputRequest::BulkCurrent(
-                            domain, name, elems, dir, skip));
-                    break;
-                }
-                case Parser::farField:
-                {
-                    getline_(line);
-                    Geometry::Element::Group<Geometry::Vol> elems =
-                        boxToElemGroup(line);
-                    Math::Real iThDeg, fThDeg, sThDeg, iPhiDeg, fPhiDeg, sPhiDeg;
-                    f_in >> iThDeg >> fThDeg >> sThDeg
-                        >> iPhiDeg >> fPhiDeg >> sPhiDeg;
-                    getline_(line);
-                    Math::Real iThRad, fThRad, sThRad, iPhiRad, fPhiRad, sPhiRad;
-                    static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
-                    iThRad = iThDeg * degToRad;
-                    fThRad = fThDeg * degToRad;
-                    sThRad = sThDeg * degToRad;
-                    iPhiRad = iPhiDeg * degToRad;
-                    fPhiRad = fPhiDeg * degToRad;
-                    sPhiRad = sPhiDeg * degToRad;
-                    OutputRequest::FarField* oRFF =
-                        new OutputRequest::FarField(
-                            domain, name, elems,
-                            iThRad, fThRad, sThRad, iPhiRad, fPhiRad, sPhiRad);
-                    res->add(oRFF);
-                    break;
-                }
-                default:
-                    throw std::logic_error(
-                            "Unrecognized GiD Output request type:" + type);
-                }
-            } // End of loop running over the elements.
-        } else if (label.compare("End of Output request instance")==0) {
-            finished = true;
+OutputRequest::Base* Parser::readOutputRequest(
+            Geometry::Mesh::Geometric& mesh, const json& j) {
+
+    std::string gidOutputTypeStr = j.at("gidOutputType").get<std::string>();
+    const OutputType gidOutputType = strToGidOutputType(gidOutputTypeStr);
+
+    std::string name = j.at("name").get<std::string>();
+    OutputRequest::OutputRequest::Type type =
+            strToOutputType(j.at("type").get<std::string>());
+    OutputRequest::Domain domain =
+            readDomain(j.at("domain").get<json>());
+
+    switch (gidOutputType) {
+    case Parser::outRqOnPoint:
+    {
+        // TODO Extract function from source generator.
+        // TODO Extract function from source generator.
+        // TODO Extract function from source generator.
+        Geometry::CoordId coordId(atoi(value.c_str()));
+        const Geometry::CoordR3* coord =
+                mesh_->coords().getId(coordId);
+        Geometry::NodR* node =
+                new Geometry::NodR(Geometry::ElemId(0), &coord);
+        mesh_->elems().addId(node);
+        Geometry::Element::Group<Geometry::Nod> elems(node);
+        return new OutputRequest::OutputRequest<Geometry::Nod>(
+                domain, type, name, elems);
+    }
+    case Parser::outRqOnLine:
+    {
+        std::vector<Geometry::ElemId> ids;
+        ids.push_back(Geometry::ElemId(atoi(value.c_str())));
+        Geometry::Element::Group<Geometry::ElemR> elems =
+                mesh_->elems().getId(ids);
+        Geometry::Element::Group<Geometry::Lin> lines =
+                elems.getOf<Geometry::Lin>();
+        return new OutRqLine(domain, type, name, lines);
+    }
+    case Parser::outRqOnSurface:
+    {
+        std::vector<Geometry::ElemId> ids;
+        ids.push_back(Geometry::ElemId(atoi(value.c_str())));
+        Geometry::Element::Group<Geometry::ElemR> elems =
+                mesh_->elems().getId(ids);
+        Geometry::Element::Group<Geometry::Surf> surfs =
+                elems.getOf<Geometry::Surf>();
+        return new OutRqSurface(domain, type, name, surfs);
+    }
+    case Parser::outRqOnLayer:
+    {
+        Geometry::Element::Group<> elems =
+                boxToElemGroup(mesh, j.at("box").get<std::string>());
+        if (elems.getOf<Geometry::Vol>().size()) {
+            return new OutputRequest::OutputRequest<Geometry::Vol>(
+                    domain, type, name, elems.getOf<Geometry::Vol>());
+        } else if (elems.getOf<Geometry::Surf>().size()) {
+            return new OutputRequest::OutputRequest<Geometry::Surf>(
+                    domain, type, name, elems.getOf<Geometry::Surf>());
         } else {
-            throw std::logic_error("Label not identified: " + label);
-        } // End of condition comparing labels.
+            throw std::logic_error(
+                    "Layer for OutRqOnLayer must be volume or surface");
+        }
+    }
+    case Parser::bulkCurrentOnSurface:
+    {
+        Math::Constants::CartesianAxis dir;
+        std::size_t skip;
+        switch (value[0]) {
+        case 'x':
+        dir = Math::Constants::x;
+        break;
+        case 'y':
+        dir = Math::Constants::y;
+        break;
+        case 'z':
+        dir = Math::Constants::z;
+        break;
+        default:
+            dir = Math::Constants::x;
+        }
+        getNextLabelAndValue(label,value);
+        skip = atoi(value.c_str());
+        getline_(line);
+        std::vector<Geometry::ElemId> ids;
+        ids.push_back(Geometry::ElemId(atoi(line.c_str())));
+        Geometry::Element::Group<Geometry::ElemR> elems =
+                mesh_->elems().getId(ids);
+        Geometry::Element::Group<Geometry::Surf> surfs =
+                elems.getOf<Geometry::Surf>();
+        return new OutputRequest::BulkCurrent(domain, name, surfs, dir, skip);
+    }
+    case Parser::bulkCurrentOnLayer:
+    {
+        Math::Constants::CartesianAxis dir;
+        std::size_t skip;
+        getNextLabelAndValue(label,value);
+        switch (value[0]) {
+        case 'x':
+        dir = Math::Constants::x;
+        break;
+        case 'y':
+            dir = Math::Constants::y;
+            break;
+        case 'z':
+            dir = Math::Constants::z;
+            break;
+        default:
+            dir = Math::Constants::x;
+        }
+        getNextLabelAndValue(label,value);
+        skip = atoi(value.c_str());
+        getline_(line);
+        Geometry::Element::Group<Geometry::Vol> elems =
+                boxToElemGroup(line);
+        return new OutputRequest::BulkCurrent(domain, name, elems, dir, skip);
+    }
+    case Parser::farField:
+    {
+        Geometry::Element::Group<Geometry::Vol> elems =
+                boxToElemGroup(mesh, j.at("box").get<std::string>());
+        static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
+        return new OutputRequest::FarField(domain, name, elems,
+                j.at("initialTheta").get<double>() * degToRad,
+                j.at("finalTheta").get<double>()   * degToRad,
+                j.at("stepTheta").get<double>()    * degToRad,
+                j.at("initialPhi").get<double>()   * degToRad,
+                j.at("finalPhi").get<double>()     * degToRad,
+                j.at("stepPhi").get<double>()      * degToRad);
+    }
+    default:
+        throw std::logic_error(
+                "Unrecognized GiD Output request type: " + gidOutputTypeStr);
     }
 }
 
@@ -760,69 +712,32 @@ Source::Port::Waveguide* Parser::readPortWaveguide(
     }
 }
 
-Source::Port::TEM* Parser::readPortTEM() {
-    std::size_t numElements = 0;
-    Source::Magnitude::Magnitude* mag;
-    Source::Port::TEM::ExcitationMode excitationMode = Source::Port::TEM::voltage;
-    Math::CVecR3 origin;
-    Math::Real innerRadius, outerRadius;
-    std::string line, label, value;
+Source::Port::TEM* Parser::readPortTEM(
+        Geometry::Mesh::Geometric& mesh, const json& j) {
+
     Geometry::Element::Group<const Geometry::Surf> surfs;
-    bool finished = false;
-    while (!finished && !f_in.eof()) {
-        getNextLabelAndValue(label,value);
-        if (label.compare("Excitation") == 0) {
-            mag = readMagnitude(value);
-        } else if (!label.compare("ExcitationMode")) {
-            if (value.find("Voltage") != value.npos) {
-                excitationMode = Source::Port::TEM::voltage;
-            } else if (value.find("Current") != value.npos) {
-                excitationMode = Source::Port::TEM::current;
-            }
-        } else if (!label.compare("Origin")) {
-            origin = strToCVecR3(value);
-        } else if (!label.compare("Inner radius")) {
-            innerRadius = atof(value.c_str());
-        } else if (!label.compare("Outer radius")) {
-            outerRadius = atof(value.c_str());
-        } else if (!label.compare("Number of elements")) {
-            numElements = atoi(value.c_str());
-        } else if (!label.compare("Elements")) {
-            std::size_t e, f;
-            std::vector<Geometry::Element::Face> faces;
-            for (std::size_t i = 0; i < numElements; i++) {
-                f_in >> e >> f;
-                progress_.advance();
-                const Geometry::ElemR* elem =
-                    mesh_->elems().getId(Geometry::ElemId(e));
-                if (elem->is<Geometry::VolR>()) {
-                    const Geometry::VolR* vol = elem->castTo<Geometry::VolR>();
-                    faces.push_back(Geometry::Element::Face(vol,f-1));
-                } else if (elem->is<Geometry::SurfR>()) {
-                    surfs.add(elem->castTo<Geometry::SurfR>());
-                }
-            }
-            surfs.add(mesh_->getSurfsMatching(faces));
-            if (surfs.size() < faces.size()) {
-                surfs.printInfo();
-                throw std::logic_error("Could not find surfaces matching element faces.");
-            }
-            if (surfs.size() == 0) {
-                throw std::logic_error("No surfaces read on TEM port.");
-            }
-        } else if (label.find("End of TEM port") != label.npos) {
-            finished = true;
-        }
-        if (f_in.eof()) {
-            throw std::logic_error("End of TEM port not found");
-        }
+    const json& elemIds = j.at("elemIds").get<json>();
+    for (auto it = elemIds.begin(); it != elemIds.end(); ++it) {
+        surfs.add(mesh.elems().getId(Geometry::ElemId(it->get<int>())));
     }
-    // Throws error message if finished was not updated.
-    if (!finished) {
-        throw std::logic_error("End of excitation type label not found.");
+
+    Source::Port::TEM::ExcitationMode excMode;
+    std::string excModeStr = j.at("excitationMode").get<std::string>();
+    if (excModeStr.compare("Voltage") == 0) {
+        excMode = Source::Port::TEM::voltage;
+    } else if (excModeStr.compare("Current") == 0) {
+        excMode = Source::Port::TEM::current;
+    } else {
+        throw std::logic_error("Unrecognized exc. mode label: " + excModeStr);
     }
-    return new Source::Port::TEMCoaxial(mag, surfs, excitationMode, origin,
-            innerRadius, outerRadius);
+
+    return new Source::Port::TEMCoaxial(
+            readMagnitude(j.at("magnitude").get<json>()),
+            surfs,
+            excMode,
+            strToCVecR3(j.at("origin").get<std::string>()),
+            j.at("innerRadius").get<double>(),
+            j.at("outerRadius").get<double>());
 }
 
 Source::Generator* Parser::readGenerator(
@@ -1012,7 +927,6 @@ Source::OnLine::Hardness Parser::strToNodalHardness(std::string str) {
         return Source::OnLine::hard;
     } else {
         throw std::logic_error("Unrecognized nodal hardness: " + str);
-        return Source::OnLine::soft;
     }
 }
 
@@ -1034,36 +948,48 @@ Parser::OutputType Parser::strToGidOutputType(std::string str) {
         return Parser::farField;
     } else {
         throw std::logic_error("Unrecognized label " + str);
-        return Parser::outRqOnPoint;
     }
 }
 
-OutputRequest::Domain Parser::strToDomain(const json& j) {
-    std::size_t timeDomain;
-    Math::Real initialTime;
-    Math::Real finalTime;
-    Math::Real samplingPeriod;
-    std::size_t frequencyDomain;
-    Math::Real initialFrequency;
-    Math::Real finalFrequency;
-    Math::Real frequencyStep;
-    std::size_t logFrequencySweep;
-    std::size_t usingTransferFunction;
+OutputRequest::Domain Parser::readDomain(const json& j) {
+    bool timeDomain;
+    Math::Real initialTime, finalTime, samplingPeriod;
+
+    bool frequencyDomain, logFrequencySweep, usingTransferFunction;
+    Math::Real initialFrequency, finalFrequency, frequencyStep;
     std::string transferFunctionFile;
-    std::stringstream ss(line);
-    ss >> timeDomain >> initialTime >> finalTime >> samplingPeriod
-       >> frequencyDomain >> initialFrequency >> finalFrequency >>frequencyStep
-       >> logFrequencySweep >> usingTransferFunction >> transferFunctionFile;
-    //
-    transferFunctionFile.erase(std::remove( transferFunctionFile.begin(),
-            transferFunctionFile.end(), '\"' ),transferFunctionFile.end());
-    //
-    return
-        OutputRequest::Domain(
-            toBool(timeDomain), initialTime, finalTime, samplingPeriod,
-            toBool(frequencyDomain), initialFrequency, finalFrequency,
-            frequencyStep,	toBool(logFrequencySweep),
-            toBool(usingTransferFunction), transferFunctionFile);
+
+    if (j.find("initialTime") != j.end()) {
+        timeDomain     = true;
+        initialTime    = j.at("initialTime").get<double>();
+        finalTime      = j.at("finalTime").get<double>();
+        samplingPeriod = j.at("samplingPeriod").get<double>();
+    } else {
+        timeDomain     = false;
+    }
+
+    if (j.find("initialFrequency") != j.end()) {
+        frequencyDomain   = true;
+        initialFrequency  = j.at("initialFrequency").get<double>();
+        finalFrequency    = j.at("finalFrequency").get<double>();
+        frequencyStep     = j.at("frequencyStep").get<double>();
+        logFrequencySweep = j.at("logFrequencySweep").get<bool>();
+        if (j.find("transferFunctionFile") != j.end()) {
+            usingTransferFunction = true;
+            transferFunctionFile =
+                    j.at("transferFunctionFile").get<std::string>();
+        } else {
+            usingTransferFunction = false;
+        }
+    } else {
+        frequencyDomain = false;
+    }
+
+    return OutputRequest::Domain(
+            timeDomain, initialTime, finalTime, samplingPeriod,
+            frequencyDomain, initialFrequency, finalFrequency,
+            frequencyStep, logFrequencySweep,
+            usingTransferFunction, transferFunctionFile);
 }
 
 Source::Magnitude::Magnitude* Parser::readMagnitude(const json& j) {

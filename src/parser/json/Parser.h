@@ -95,14 +95,14 @@ private:
         std::vector<const Geometry::CoordR3*> vPtr;
     };
 
-    static Solver::Info*              readSolver(const json&);
-    static Solver::Settings           readSolverSettings(const json&);
-    static PhysicalModel::Group<>*    readPhysicalModels(const json&);
+    static Solver::Info* readSolver(const json&);
+    static Solver::Settings readSolverSettings(const json&);
+    static PhysicalModel::Group<>* readPhysicalModels(const json&);
     static Geometry::Mesh::Geometric* readGeometricMesh(
             const PhysicalModel::Group<>&, const json&);
-    static Source::Group<>*           readSources(
+    static Source::Group<>* readSources(
             Geometry::Mesh::Geometric& mesh, const json&);
-    static OutputRequest::Group<>*    readOutputRequests(
+    static OutputRequest::Group<>* readOutputRequests(
             Geometry::Mesh::Geometric& mesh, const json&);
 
     static PhysicalModel::Surface::Multilayer* readMultilayerSurface(
@@ -141,8 +141,11 @@ private:
 
     static PhysicalModel::PhysicalModel* readPhysicalModel(
             const json& material);
-//    void readOutRqInstances(OutputRequest::Group<>* res);
-    static OutputRequest::Domain strToDomain(std::string line);
+
+    static OutputRequest::Base* readOutputRequest(
+            Geometry::Mesh::Geometric& mesh, const json&);
+
+    static OutputRequest::Domain readDomain(const json&);
     static Math::Axis::Local strToLocalAxes(const std::string& str);
 
     static bool checkVersionCompatibility(const std::string& version);

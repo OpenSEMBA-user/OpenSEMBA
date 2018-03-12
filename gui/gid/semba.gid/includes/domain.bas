@@ -1,6 +1,5 @@
             "domain": {
 *if(strcmp(cond(Time),"1")==0)
-                "time": "*cond(Time)",
                 "initialTime": *cond(Initial_time),
                 "finalTime": *cond(Final_time),
 *if(strcmp(cond(Frequency),"1")!=0)
@@ -10,12 +9,12 @@
 *endif
 *endif
 *if(strcmp(cond(Frequency),"1")==0)
-                "frequency": *cond(Frequency),
                 "initialFrequency": *cond(Initial_Frequency),
                 "finalFrequency": *cond(Final_Frequency),
                 "frequencyStep": *cond(Frequency_step),
                 "logFrequencySweep": *cond(Log_frequency_sweep),
-                "useTransferFunction": *cond(Use_transfer_function),
+*if(strcmp(cond(Use_transfer_function),"1")==0)
                 "transferFunctionFile": "*cond(transfer_function_file)"
+*endif
 *endif
             }, 

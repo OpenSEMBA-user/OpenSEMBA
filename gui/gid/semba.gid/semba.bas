@@ -1,5 +1,5 @@
 {
-    "_format": "Semba Data File in JSON format ",
+    "_format": "Semba Data File in JSON format",
     "_version": "*tcl(set version $semba::VersionNumber)",
 
 *# ----------------------------------------------------------
@@ -518,7 +518,9 @@
     "outputRequests": [
 *# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBAS OutRq_on_point)
+*# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBAS OutRq_on_line)
+*# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBAS OutRq_on_surface)
 *# ----------------------------------------------------------
 *Set cond OutRq_on_layer
@@ -560,16 +562,15 @@
             "type": "*cond(Type)",
 *include includes/domain.bas
             "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
-            "farPoints": {
-                "initialTheta": *cond(Initial_theta),
-                "finalTheta":   *cond(Final_theta),
-                "stepTheta":    *cond(Step_theta),
-                "initialPhi":   *cond(Initial_phi),
-                "finalPhi":     *cond(Final_phi),
-                "stepPhi":      *cond(Step_phi)
-            }
+            "initialTheta": *cond(Initial_theta),
+            "finalTheta":   *cond(Final_theta),
+            "stepTheta":    *cond(Step_theta),
+            "initialPhi":   *cond(Initial_phi),
+            "finalPhi":     *cond(Final_phi),
+            "stepPhi":      *cond(Step_phi)
 *end layers
         },
 *end if
     ]
+*# ----------------------------------------------------------
 }
