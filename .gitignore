@@ -9,3 +9,5 @@ external/gidpost/release/
 .externalToolBuilders
 .Makefile.swp
 src/parser/gid/Parser.cpp.save
+Debug/
+Release/

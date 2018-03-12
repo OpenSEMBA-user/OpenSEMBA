@@ -22,7 +22,7 @@
 OUT = test
 
 TEST_CORE_MATH          = no#
-TEST_CORE_GEOMETRY      = no#
+TEST_CORE_GEOMETRY      = yes#
 TEST_CORE_ARGUMENT      = no#
 TEST_CORE_PHYSICALMODEL = no#
 TEST_CORE_SOURCE        = no#
@@ -32,7 +32,7 @@ TEST_PARSER_STL         = no#
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
 
-#CXXFLAGS := $(filter-out -static,$(CXXFLAGS))
+CXXFLAGS := $(filter-out -static,$(CXXFLAGS))
 
 ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 	OUT := $(addsuffix .exe,$(OUT))
