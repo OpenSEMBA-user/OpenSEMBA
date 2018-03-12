@@ -301,55 +301,55 @@
 *set elems(Hexahedra)
         "hexahedra": [
 *loop elems
-*format "%8i %7i %7i %7i %7i %7i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i %7i %7i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec",
 *else
-        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec"
 *endif        
 *end elems
         ],
 *set elems(Tetrahedra)
         "tetrahedra": [
 *loop elems
-*format "%8i %7i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4)",
 *else
-        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4)"
 *endif        
 *end elems
         ],
 *set elems(Quadrilateral)
         "quadrilateral": [
 *loop elems
-*format "%8i %7i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4)",
 *else
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4)"
 *endif
 *end elems
         ],
 *set elems(Triangle)
         "triangle": [
 *loop elems
-*format "%8i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3)",
 *else
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3)"
 *endif
 *end elems
         ],
 *set elems(Linear)
         "line": [
 *loop elems
-*format "%8i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *ElemsConec(2)",
 *else
-        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *ElemsConec(2)"
 *endif        
 *End elems
         ]

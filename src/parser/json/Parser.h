@@ -87,6 +87,19 @@ private:
         randomizedMultisource
     } DefinitionMode;
 
+    struct ParsedElementIds {
+        Geometry::ElemId elemId;
+        MatId mat;
+        Geometry::Layer::Id layer;
+        std::vector<Geometry::CoordId> v;
+    };
+
+    struct ParsedElementPtrs {
+        const Geometry::Layer::Layer* layerPtr;
+        const PhysicalModel::PhysicalModel* matPtr;
+        std::vector<const Geometry::CoordR3*> vPtr;
+    };
+
     static Solver::Info*              readSolver(const json&);
     static Solver::Settings           readSolverSettings(const json&);
     static PhysicalModel::Group<>*    readPhysicalModels(const json&);
@@ -103,32 +116,19 @@ private:
     static Geometry::Layer::Group<> readLayers(const json&);
     static Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates(
             const json&);
-    static Geometry::Element::Group<Geometry::ElemR>readElements(
-            const Geometry::CoordR3Group&,
+    static Geometry::Element::Group<Geometry::ElemR> readElements(
+            const PhysicalModel::Group<>& physicalModels,
             const Geometry::Layer::Group<>&,
+            const Geometry::CoordR3Group&,
             const json&);
-//    void readHex8Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTet10Elements(const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTet4Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readQua4Elements (const Geometry::CoordR3Group& cG,
-//    					   const Geometry::Layer::Group<>&,
-//						   Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTri6Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTri3Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readLin2Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//
+    static ParsedElementIds readElementIds(
+            const std::string& str, size_t numberOfVertices);
+    static ParsedElementPtrs convertElementIdsToPtrs(
+            const ParsedElementIds& elemIds,
+            const PhysicalModel::Group<>& physicalModels,
+            const Geometry::Layer::Group<>& layers,
+            const Geometry::Coordinate::Group<Geometry::CoordR3>& coords);
+
 //    void readOutRqInstances(OutputRequest::Group<>* res);
 //    void getNextLabelAndValue(std::string& label, std::string& value);
 //    Source::PlaneWave* readPlaneWave();

@@ -541,52 +541,45 @@ Geometry::Layer::Group<> Parser::readLayers(const json& j) {
 
 Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates(
         const json& j) {
-    std::string line;
-    Geometry::CoordId id;
-    Math::CVecR3 pos;
-    coords.reserve(pSize_.v);
-    bool finished = false;
-    bool found = false;
-    while (!found && !f_in.eof() && !finished) {
-        getline_(line);
-        if (line.find("Coordinates:") != line.npos) {
-            found = true;
-            for (std::size_t i = 0; i < pSize_.v; i++) {
-                f_in >> id >> pos(0) >> pos(1) >> pos(2);
-                progress_.advance();
-                coords.add(new Geometry::CoordR3(id, pos));
-            }
-            finished = false;
-            while (!finished && !f_in.eof()) {
-                getline_(line);
-                if (line.find("End of Coordinates") != line.npos) {
-                    finished = true;
-                }
-            }
-        }
-    }
-    if (!found) {
+
+    if (j.find("coordinates") == j.end()) {
         throw std::logic_error("Coordinates label was not found.");
     }
-    if (!finished) {
-        throw std::logic_error("End of coordinates label not found.");
+
+    Geometry::Coordinate::Group<Geometry::CoordR3> res;
+    const json& c = j.at("coordinates").get<json>();
+    for (json::const_iterator it = c.begin(); it != c.end(); ++it) {
+        Geometry::CoordId id;
+        Math::CVecR3 pos;
+        std::stringstream ss(it->get<std::string>());
+        ss >> id >> pos(0) >> pos(1) >> pos(2);
+        res.add(new Geometry::CoordR3(id, pos));
     }
+    return res;
 }
-//
-//void Parser::readElements(
-//        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
-//        const Geometry::Layer::Group<>& lG,
-//        Geometry::Element::Group<Geometry::ElemR>& elems) {
-//    std::string line, label;
-//    bool finished = false;
-//    bool found = false;
-//    while (!finished && !f_in.eof()) {
-//        getline_(line);
-//        if (line.find("Elements:") != line.npos) {
-//            found = true;
-//        }
-//        // Stores data label in labelStr std::string.
-//        label = line.substr(0, line.find(LABEL_ENDING));
+
+Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
+        const PhysicalModel::Group<>& mG,
+        const Geometry::Layer::Group<>& lG,
+        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
+        const json& j) {
+
+    if (j.find("elements") == j.end()) {
+        throw std::logic_error("Elements label was not found.");
+    }
+
+    Geometry::Element::Group<Geometry::ElemR> res;
+    const json& elems = j.at("elements").get<json>();
+
+    const json& hex = elems.at("hexahedra").get<json>();
+    for (json::const_iterator it = hex.begin(); it != hex.end(); ++it) {
+        ParsedElementIds elemIds = readElementIds(it->get<std::string>(), 8);
+        ParsedElementPtrs elemPtrs =
+                convertElementIdsToPtrs(elemIds, lG, mG, cG);
+        res.add(new Geometry::HexR8(elemIds.elemId,
+                elemPtrs.vPtr.data(), elemPtrs.layerPtr, elemPtrs.matPtr));
+    }
+
 //        if (label.compare("Linear Hexahedral Elements")==0 ||
 //                label.compare("Hexahedral Elements")==0) {
 //            readHex8Elements(cG, lG, elems);
@@ -618,7 +611,7 @@ Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates(
 //        throw std::logic_error("\"End of elements\" label was not found.");
 //    }
 //    //
-//}
+}
 //
 //void Parser::readHex8Elements(
 //        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
@@ -645,34 +638,6 @@ Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates(
 //        elems.add(new Geometry::HexR8(id, v, nullptr, mat));
 //    }
 //}
-//
-//void Parser::readTet10Elements(
-//        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
-//        const Geometry::Layer::Group<>& lG,
-//        Geometry::Element::Group<Geometry::ElemR>& elems) {
-//    Geometry::ElemId id;
-//    Geometry::CoordId vId;
-//    const Geometry::CoordR3* v[10];
-//    MatId matId;
-//    for (std::size_t i = 0; i < pSize_.tet10; i++) {
-//        f_in >> id;
-//        for (std::size_t j = 0; j < 10; j++) {
-//            f_in >> vId;
-//            v[j] = cG.getId(vId);
-//        }
-//        f_in >> matId;
-//        progress_.advance();
-//        const PhysicalModel::PhysicalModel* mat;
-//        if (matId != MatId(0)) {
-//            mat = physicalModels_->getId(matId);
-//        }
-//        else {
-//            mat = nullptr;
-//        }
-//        elems.add(new Geometry::Tet10(id, v, nullptr, mat));
-//    }
-//}
-//
 //void Parser::readTet4Elements(
 //        const Geometry::Coordinate::Group<Geometry::CoordR3>& cG,
 //        const Geometry::Layer::Group<>& lG,
@@ -1527,6 +1492,50 @@ Math::Axis::Local Parser::strToLocalAxes(const std::string& str) {
     end = str.find_last_of("}");
     Math::CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
     return Math::Axis::Local(eulerAngles, origin);
+}
+
+Parser::ParsedElementIds Parser::readElementIds(
+        const std::string& str,
+        size_t numberOfVertices) {
+    Parser::ParsedElementIds res;
+    std::stringstream ss(str);
+
+    ss >> res.elemId >> res.mat >> res.layer;
+    res.v.resize(8);
+    for (std::size_t j = 0; j < numberOfVertices; j++) {
+        ss >> res.v[j];
+    }
+
+    return res;
+}
+
+Parser::ParsedElementPtrs Parser::convertElementIdsToPtrs(
+        const ParsedElementIds& elemIds,
+        const PhysicalModel::Group<>& physicalModels,
+        const Geometry::Layer::Group<>& layers,
+        const Geometry::Coordinate::Group<Geometry::CoordR3>& coords) {
+
+    ParsedElementPtrs res;
+
+    if (elemIds.mat != MatId(0)) {
+        res.matPtr = physicalModels.getId(elemIds.mat);
+    } else {
+        res.matPtr = nullptr;
+    }
+
+    if (elemIds.layer != Geometry::LayerId(0)) {
+        res.layerPtr = layers.getId(elemIds.layer);
+    }
+    else {
+        res.layerPtr = nullptr;
+    }
+
+    res.vPtr.resize(elemIds.v.size(), nullptr);
+    for (size_t i = 0; i < elemIds.v.size(); ++i) {
+        res.vPtr[i] = coords.getId(elemIds.v[i]);
+    }
+
+    return res;
 }
 
 const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
