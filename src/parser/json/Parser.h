@@ -149,30 +149,48 @@ private:
     static Math::Axis::Local strToLocalAxes(const std::string& str);
 
     static bool checkVersionCompatibility(const std::string& version);
+
+
     static Geometry::Element::Group<> boxToElemGroup(
             Geometry::Mesh::Geometric& mesh,
             const std::string& line);
+
+    static Geometry::Element::Group<Geometry::Nod> readAsNodes(
+            Geometry::Mesh::Geometric& mesh, const json&);
+
+    // TODO Templarize this.
+    static Geometry::Element::Group<const Geometry::Lin> readAsLines(
+                Geometry::Mesh::Geometric& mesh, const json&);
+    static Geometry::Element::Group<const Geometry::Surf> readAsSurfaces(
+            Geometry::Mesh::Geometric& mesh, const json&);
+
     static OutputRequest::Base::Type strToOutputType(std::string label);
-    static SIBCType strToSIBCType(std::string str);
-    static OutputType strToGidOutputType(std::string label);
+    static SIBCType                  strToSIBCType(std::string str);
+    static OutputType                strToGiDOutputType(std::string label);
 
-    static Math::CVecI3 strToCVecI3(const std::string& str);
-    static Math::CVecR3 strToCVecR3(const std::string& str);
-    static Source::Generator::Type strToGeneratorType(std::string label);
+    static Source::Generator::Type     strToGeneratorType(std::string label);
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);
-    static Source::OnLine::Type strToNodalType(std::string label);
-    static Source::OnLine::Hardness strToNodalHardness(std::string label);
+    static Source::OnLine::Type        strToNodalType(std::string label);
+    static Source::OnLine::Hardness    strToNodalHardness(std::string label);
+    static Source::Port::TEM::ExcitationMode
+                                       strToTEMMode(std::string);
+    static Source::Port::Waveguide::ExcitationMode
+                                       strToWaveguideMode(std::string);
 
-    static PhysicalModel::PhysicalModel::Type strToMaterialType(
+    static PhysicalModel::PhysicalModel::Type        strToMaterialType(
             std::string label);
     static PhysicalModel::Multiport::Multiport::Type strToMultiportType(
             std::string label);
     static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(
             std::string label);
+
+    static Math::CVecI3 strToCVecI3(const std::string& str);
+    static Math::CVecR3 strToCVecR3(const std::string& str);
+    static Math::Constants::CartesianAxis strToCartesianAxis(std::string);
+
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);
-
-    static const PhysicalModel::Bound::Bound* strToBoundType(std::string str);
+    static const PhysicalModel::Bound::Bound*    strToBoundType(std::string str);
 };
 
 } /* namespace GiD */

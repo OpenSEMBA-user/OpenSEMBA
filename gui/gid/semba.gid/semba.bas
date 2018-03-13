@@ -546,7 +546,7 @@
             "name": "*cond(Name)",
             "type": "*cond(Type)",
 *include includes/domain.bas
-            "direction": "{*cond(Direction)}",
+            "direction": "*cond(Direction)",
             "skip": *cond(Skip),
             "box": {*tcl(GiD_Info layer -bbox -use geometry *layerName)}
 *end layers
