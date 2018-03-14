@@ -60,7 +60,7 @@ using json = nlohmann::json;
 
 class Parser : public SEMBA::Parser::Parser {
 public:
-    Data* read(std::istream& inputFileStream) const;
+    Data read(std::istream& inputFileStream) const;
 
 private:
     typedef enum {
@@ -74,100 +74,122 @@ private:
     } OutputType;
     typedef enum {
         sibc,
-        multilayer,
-        undefinedSIBC
+        multilayer
     } SIBCType;
     typedef enum {
-        rectangular,
-        undefined
+        rectangular
     } WaveportShape;
-    typedef enum {
-        byVectors,
-        byAngles,
-        randomizedMultisource
-    } DefinitionMode;
 
-    static Solver::Info*              readSolver(const json&);
-    static Solver::Settings           readSolverSettings(const json&);
-    static PhysicalModel::Group<>*    readPhysicalModels(const json&);
-    static Geometry::Mesh::Geometric* readGeometricMesh(const json&);
-    static Source::Group<>*           readSources(const json&);
-    static OutputRequest::Group<>*    readOutputRequests(const json&);
+    struct ParsedElementIds {
+        Geometry::ElemId elemId;
+        MatId mat;
+        Geometry::Layer::Id layer;
+        std::vector<Geometry::CoordId> v;
+    };
 
-    PhysicalModel::Surface::Multilayer*  readMultilayerSurface(
+    struct ParsedElementPtrs {
+        const Geometry::Layer::Layer* layerPtr;
+        const PhysicalModel::PhysicalModel* matPtr;
+        std::vector<const Geometry::CoordR3*> vPtr;
+    };
+
+    static Solver::Info* readSolver(const json&);
+    static Solver::Settings readSolverSettings(const json&);
+    static PhysicalModel::Group<>* readPhysicalModels(const json&);
+    static Geometry::Mesh::Geometric* readGeometricMesh(
+            const PhysicalModel::Group<>&, const json&);
+    static Source::Group<>* readSources(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static OutputRequest::Group<>* readOutputRequests(
+            Geometry::Mesh::Geometric& mesh, const json&);
+
+    static PhysicalModel::Surface::Multilayer* readMultilayerSurface(
             const MatId id,
             const std::string& name,
-            const json& layers) const;
+            const json& layers);
 
     static Geometry::Grid3 readGrids(const json&);
     static Geometry::Layer::Group<> readLayers(const json&);
     static Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates(
             const json&);
-    static Geometry::Element::Group<Geometry::ElemR>readElements(
-            const Geometry::CoordR3Group&,
+    static Geometry::Element::Group<Geometry::ElemR> readElements(
+            const PhysicalModel::Group<>& physicalModels,
             const Geometry::Layer::Group<>&,
+            const Geometry::CoordR3Group&,
             const json&);
-//    void readHex8Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTet10Elements(const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTet4Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readQua4Elements (const Geometry::CoordR3Group& cG,
-//    					   const Geometry::Layer::Group<>&,
-//						   Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTri6Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readTri3Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//    void readLin2Elements (const Geometry::CoordR3Group& cG,
-//                           const Geometry::Layer::Group<>&,
-//                           Geometry::Element::Group<Geometry::ElemR>& elems);
-//
-//    void readOutRqInstances(OutputRequest::Group<>* res);
-//    void getNextLabelAndValue(std::string& label, std::string& value);
-//    Source::PlaneWave* readPlaneWave();
-//    Source::Port::Waveguide* readPortWaveguide();
-//    Source::Port::TEM* readPortTEM();
-//    Source::Generator* readGenerator();
-//    Source::OnLine* readSourceOnLine();
+    static ParsedElementIds readElementIds(
+            const std::string& str, size_t numberOfVertices);
+    static ParsedElementPtrs convertElementIdsToPtrs(
+            const ParsedElementIds& elemIds,
+            const PhysicalModel::Group<>& physicalModels,
+            const Geometry::Layer::Group<>& layers,
+            const Geometry::Coordinate::Group<Geometry::CoordR3>& coords);
+
+    static Source::PlaneWave* readPlanewave(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Port::Waveguide* readPortWaveguide(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Port::TEM* readPortTEM(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Generator* readGenerator(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::OnLine* readSourceOnLine(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Magnitude::Magnitude* readMagnitude(const json&);
+
     static PhysicalModel::PhysicalModel* readPhysicalModel(
             const json& material);
-//    Source::Magnitude::Magnitude* readMagnitude(const std::string type);
+
+    static OutputRequest::Base* readOutputRequest(
+            Geometry::Mesh::Geometric& mesh, const json&);
+
+    static OutputRequest::Domain readDomain(const json&);
     static Math::Axis::Local strToLocalAxes(const std::string& str);
 
     static bool checkVersionCompatibility(const std::string& version);
-//    Geometry::Element::Group<> boxToElemGroup(const std::string& line);
-    static OutputRequest::Base::Type strToOutputType(std::string label);
-    static SIBCType strToSIBCType(std::string str);
-    static OutputType strToGidOutputType(std::string label);
-    static DefinitionMode strToDefinitionMode(std::string label);
-//    static OutputRequest::Domain strToDomain(std::string line);
 
-    static Math::CVecI3 strToCVecI3(const std::string& str);
-    static Math::CVecR3 strToCVecR3(const std::string& str);
-    static Source::Generator::Type strToGeneratorType(std::string label);
+    static Geometry::Element::Group<> boxToElemGroup(
+            Geometry::Mesh::Geometric& mesh,
+            const std::string& line);
+
+    static Geometry::Element::Group<const Geometry::Nod> readAsNodes(
+            Geometry::Mesh::Geometric& mesh, const json&);
+
+    // TODO Templarize this.
+    static Geometry::Element::Group<const Geometry::Lin> readAsLines(
+                Geometry::Mesh::Geometric& mesh, const json&);
+    static Geometry::Element::Group<const Geometry::Surf> readAsSurfaces(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Geometry::Element::Group<const Geometry::Elem> readAsElements(
+            Geometry::Mesh::Geometric& mesh, const json&);
+
+    static OutputRequest::Base::Type strToOutputType(std::string label);
+    static SIBCType                  strToSIBCType(std::string str);
+    static OutputType                strToGiDOutputType(std::string label);
+
+    static Source::Generator::Type     strToGeneratorType(std::string label);
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);
-    static Source::OnLine::Type strToNodalType(std::string label);
-    static Source::OnLine::Hardness strToNodalHardness(std::string label);
-//
-    static PhysicalModel::PhysicalModel::Type strToMaterialType(
+    static Source::OnLine::Type        strToNodalType(std::string label);
+    static Source::OnLine::Hardness    strToNodalHardness(std::string label);
+    static Source::Port::TEM::ExcitationMode
+                                       strToTEMMode(std::string);
+    static Source::Port::Waveguide::ExcitationMode
+                                       strToWaveguideMode(std::string);
+
+    static PhysicalModel::PhysicalModel::Type        strToMaterialType(
             std::string label);
     static PhysicalModel::Multiport::Multiport::Type strToMultiportType(
             std::string label);
     static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(
             std::string label);
+
+    static Math::CVecI3 strToCVecI3(const std::string& str);
+    static Math::CVecR3 strToCVecR3(const std::string& str);
+    static Math::Constants::CartesianAxis strToCartesianAxis(std::string);
+
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);
-//    static PhysicalModel::Volume::PoleResidue readPoleResiduePair(
-//            std::ifstream& stream);
-//
-    static const PhysicalModel::Bound::Bound* strToBoundType(std::string str);
+    static const PhysicalModel::Bound::Bound*    strToBoundType(std::string str);
 };
 
 } /* namespace GiD */

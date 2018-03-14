@@ -25,11 +25,11 @@ namespace SEMBA {
 namespace Source {
 namespace Port {
 
-WaveguideRectangular::WaveguideRectangular(Magnitude::Magnitude* magn,
+WaveguideRectangular::WaveguideRectangular(
+        Magnitude::Magnitude* magn,
         const Geometry::Element::Group<const Geometry::Surf>& elem,
         const ExcitationMode excMode,
-        const std::pair<size_t,size_t> mode,
-        const Bound3& bounds)
+        const std::pair<size_t,size_t> mode)
 :   SEMBA::Source::Base(magn),
     Geometry::Element::Group<const Geometry::Surf>(elem),
     Waveguide(magn, elem, excMode, mode) {
@@ -44,26 +44,26 @@ WaveguideRectangular::WaveguideRectangular(Magnitude::Magnitude* magn,
     // Computes origin.
     origin_ = box_.getMin();
     const PhysicalModel::Bound::Bound* bound;
-    bound = bounds[Math::Constants::x][Math::Constants::L];
-    if (bound->is<PhysicalModel::Bound::PMC>()) {
-        origin_(Math::Constants::x) = - box_.getMax()(Math::Constants::x);
-    }
-    if (!bound->is<PhysicalModel::Bound::PML>() &&
-        !bound->is<PhysicalModel::Bound::PMC>()) {
-        throw std::logic_error(
-                "Bound termination must be  PML or PMC in the x lower axis"
-                " of the WaveguideRectangular port.");
-    }
-    bound = bounds[Math::Constants::y][Math::Constants::L];
-    if (bound->is<PhysicalModel::Bound::PEC>()) {
-        origin_(Math::Constants::y) = - box_.getMax()(Math::Constants::y);
-    }
-    if (!bound->is<PhysicalModel::Bound::PML>() &&
-        !bound->is<PhysicalModel::Bound::PEC>()) {
-        throw std::logic_error(
-                "Bound termination must be  PML or PEC in the y lower axis"
-                " of the WaveguideRectangular port.");
-    }
+//    bound = bounds[Math::Constants::x][Math::Constants::L];
+//    if (bound->is<PhysicalModel::Bound::PMC>()) {
+//        origin_(Math::Constants::x) = - box_.getMax()(Math::Constants::x);
+//    }
+//    if (!bound->is<PhysicalModel::Bound::PML>() &&
+//        !bound->is<PhysicalModel::Bound::PMC>()) {
+//        throw std::logic_error(
+//                "Bound termination must be  PML or PMC in the x lower axis"
+//                " of the WaveguideRectangular port.");
+//    }
+//    bound = bounds[Math::Constants::y][Math::Constants::L];
+//    if (bound->is<PhysicalModel::Bound::PEC>()) {
+//        origin_(Math::Constants::y) = - box_.getMax()(Math::Constants::y);
+//    }
+//    if (!bound->is<PhysicalModel::Bound::PML>() &&
+//        !bound->is<PhysicalModel::Bound::PEC>()) {
+//        throw std::logic_error(
+//                "Bound termination must be  PML or PEC in the y lower axis"
+//                " of the WaveguideRectangular port.");
+//    }
 
 }
 

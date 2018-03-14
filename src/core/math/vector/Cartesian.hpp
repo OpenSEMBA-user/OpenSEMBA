@@ -155,6 +155,14 @@ inline Cartesian<T,D>& Cartesian<T,D>::operator*=(const T param) {
 }
 
 template <class T, std::size_t D>
+inline Cartesian<T,D>& Cartesian<T,D>::operator*=(const Cartesian<T,D>& param) {
+    for (std::size_t i = 0; i < D; i++) {
+        val[i] *= param.val[i];
+    }
+    return *this;
+}
+
+template <class T, std::size_t D>
 inline Cartesian<T,D>& Cartesian<T,D>::operator/=(const T param) {
     for (std::size_t i = 0; i < D; i++) {
         val[i] /= param;

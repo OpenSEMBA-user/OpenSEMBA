@@ -25,7 +25,7 @@ namespace SEMBA {
 namespace Source {
 
 OnLine::OnLine(const Magnitude::Magnitude* magnitude,
-               const Geometry::Element::Group<Geometry::Lin>& elem,
+               const Geometry::Element::Group<const Geometry::Lin>& elem,
                const Type& sourceType,
                const Hardness& sourceHardness)
 :   SEMBA::Source::Base(magnitude),

@@ -1,5 +1,5 @@
 {
-    "_format": "Semba Data File in JSON format ",
+    "_format": "Semba Data File in JSON format",
     "_version": "*tcl(set version $semba::VersionNumber)",
 
 *# ----------------------------------------------------------
@@ -301,55 +301,55 @@
 *set elems(Hexahedra)
         "hexahedra": [
 *loop elems
-*format "%8i %7i %7i %7i %7i %7i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i %7i %7i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec",
 *else
-        "*ElemsNum *ElemsConec *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec"
 *endif        
 *end elems
         ],
 *set elems(Tetrahedra)
         "tetrahedra": [
 *loop elems
-*format "%8i %7i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4)",
 *else
-        "*ElemsNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(3) *elemsconec(2) *elemsconec(4)"
 *endif        
 *end elems
         ],
 *set elems(Quadrilateral)
         "quadrilateral": [
 *loop elems
-*format "%8i %7i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4)",
 *else
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *elemsconec(4)"
 *endif
 *end elems
         ],
 *set elems(Triangle)
         "triangle": [
 *loop elems
-*format "%8i %7i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3)",
 *else
-        "*ElemsNum *ElemsConec(1) *elemsconec(2) *elemsconec(3) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *elemsconec(2) *elemsconec(3)"
 *endif
 *end elems
         ],
 *set elems(Linear)
         "line": [
 *loop elems
-*format "%8i %7i %7i %3i %3i"
+*format "%8i %3i %3i %7i %7i"
 *if(nelem != loopvar)
-        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum",
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *ElemsConec(2)",
 *else
-        "*ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsMat *ElemsLayerNum"
+        "*ElemsNum *ElemsMat *ElemsLayerNum *ElemsConec(1) *ElemsConec(2)"
 *endif        
 *End elems
         ]
@@ -411,8 +411,7 @@
             "relativeVariationOfRandomDelay": *cond(Relative_variation_of_random_delay),
 *endif            
 *include includes/magnitude.bas
-            "layerName": "*layerName",
-            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *set var sourceNum = sourceNum + 1
 *if(sourceNum == nSources) 
         }
@@ -519,7 +518,9 @@
     "outputRequests": [
 *# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBAS OutRq_on_point)
+*# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBAS OutRq_on_line)
+*# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBAS OutRq_on_surface)
 *# ----------------------------------------------------------
 *Set cond OutRq_on_layer
@@ -545,7 +546,7 @@
             "name": "*cond(Name)",
             "type": "*cond(Type)",
 *include includes/domain.bas
-            "direction": "{*cond(Direction)}",
+            "direction": "*cond(Direction)",
             "skip": *cond(Skip),
             "box": {*tcl(GiD_Info layer -bbox -use geometry *layerName)}
 *end layers
@@ -561,16 +562,15 @@
             "type": "*cond(Type)",
 *include includes/domain.bas
             "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
-            "farPoints": {
-                "initialTheta": *cond(Initial_theta),
-                "finalTheta":   *cond(Final_theta),
-                "stepTheta":    *cond(Step_theta),
-                "initialPhi":   *cond(Initial_phi),
-                "finalPhi":     *cond(Final_phi),
-                "stepPhi":      *cond(Step_phi)
-            }
+            "initialTheta": *cond(Initial_theta),
+            "finalTheta":   *cond(Final_theta),
+            "stepTheta":    *cond(Step_theta),
+            "initialPhi":   *cond(Initial_phi),
+            "finalPhi":     *cond(Final_phi),
+            "stepPhi":      *cond(Step_phi)
 *end layers
         },
 *end if
     ]
+*# ----------------------------------------------------------
 }

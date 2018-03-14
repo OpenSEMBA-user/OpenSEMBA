@@ -510,7 +510,7 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 		"            \"name\":      \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
 		"            \"type\":      \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
         "            \"direction\": \"[lindex "$properties_of_cond($name_id)" 2]\",\n"\
-        "            \"skip\":      \"[lindex "$properties_of_cond($name_id)" 3]\",\n"\
+        "            \"skip\":      [lindex "$properties_of_cond($name_id)" 3],\n"\
 		"            \"domain\": {\n"
         if {[lindex "$properties_of_cond($name_id)" 4] == 1} {
             append result \

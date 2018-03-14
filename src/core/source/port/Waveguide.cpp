@@ -25,7 +25,7 @@ namespace SEMBA {
 namespace Source {
 namespace Port {
 
-Waveguide::Waveguide(Magnitude::Magnitude* magnitude,
+Waveguide::Waveguide(SEMBA::Source::Magnitude::Magnitude* magnitude,
         const Geometry::Element::Group<const Geometry::Surf>& elem,
         const ExcitationMode excMode,
         const std::pair<size_t,size_t> mode)
