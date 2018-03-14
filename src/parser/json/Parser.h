@@ -52,6 +52,7 @@
 #include "parser/Parser.h"
 #include "json.hpp"
 
+
 namespace SEMBA {
 namespace Parser {
 namespace JSON {
@@ -155,14 +156,6 @@ private:
     static Geometry::Element::Group<const Geometry::Nod> readAsNodes(
             Geometry::Mesh::Geometric& mesh, const json&);
 
-    // TODO Templarize this.
-    static Geometry::Element::Group<const Geometry::Lin> readAsLines(
-                Geometry::Mesh::Geometric& mesh, const json&);
-    static Geometry::Element::Group<const Geometry::Surf> readAsSurfaces(
-            Geometry::Mesh::Geometric& mesh, const json&);
-    static Geometry::Element::Group<const Geometry::Elem> readAsElements(
-            Geometry::Mesh::Geometric& mesh, const json&);
-
     static OutputRequest::Base::Type strToOutputType(std::string label);
     static SIBCType                  strToSIBCType(std::string str);
     static OutputType                strToGiDOutputType(std::string label);
@@ -170,6 +163,7 @@ private:
     static Source::Generator::Type     strToGeneratorType(std::string label);
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);
     static Source::OnLine::Type        strToNodalType(std::string label);
+
     static Source::OnLine::Hardness    strToNodalHardness(std::string label);
     static Source::Port::TEM::ExcitationMode
                                        strToTEMMode(std::string);
@@ -191,6 +185,16 @@ private:
             const std::string& str);
     static const PhysicalModel::Bound::Bound*    strToBoundType(std::string str);
 };
+
+template<typename T>
+Geometry::Element::Group<T> readElemIdsAsGroupOf(
+		Geometry::Mesh::Geometric& mesh, const json& j) {
+	Geometry::Element::Group<T> geometricElements;
+	for (auto it = j.begin(); it != j.end(); ++it) {
+		geometricElements.add(mesh.elems().getId(Geometry::ElemId(it->get<int>()) ));
+	}
+	return geometricElements;
+}
 
 } /* namespace GiD */
 } /* namespace Parser */
