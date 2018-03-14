@@ -2,7 +2,7 @@
 *if(strcmp(cond(Time),"1")==0)
                 "initialTime": *cond(Initial_time),
                 "finalTime": *cond(Final_time),
-*if(strcmp(cond(Frequency),"1")!=0)
+*if(strcmp(cond(Frequency),"0")==0)
                 "samplingPeriod": *cond(Sampling_period)
 *else
 				"samplingPeriod": *cond(Sampling_period),

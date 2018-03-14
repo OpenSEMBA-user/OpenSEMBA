@@ -82,11 +82,15 @@ Data Parser::read(std::istream& stream) const {
     res.mesh = readGeometricMesh(*res.physicalModels, j);
     progress.advance();
 
-    res.sources = readSources(*res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
-    progress.advance();
+    if (res.mesh != nullptr) {
+        res.sources = readSources(
+                *res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
+        progress.advance();
 
-    res.outputRequests = readOutputRequests(*res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
-    progress.advance();
+        res.outputRequests = readOutputRequests(
+                *res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
+        progress.advance();
+    }
 
     postReadOperations(res);
     progress.advance();
@@ -127,18 +131,23 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
 
 Geometry::Mesh::Geometric* Parser::readGeometricMesh(
         const PhysicalModel::Group<>& physicalModels, const json& j) {
-    Geometry::Grid3 grid = readGrids(j);
-    Geometry::Layer::Group<> layers = readLayers(j);
-    Geometry::Coordinate::Group<Geometry::CoordR3> coords = readCoordinates(j);
-    Geometry::Element::Group<Geometry::ElemR> elements =
-            readElements(physicalModels, layers, coords, j);
-    return new Geometry::Mesh::Geometric(grid, coords, elements, layers);
+    try {
+        Geometry::Grid3 grid = readGrids(j);
+        Geometry::Layer::Group<> layers = readLayers(j);
+        Geometry::Coordinate::Group<Geometry::CoordR3> coords = readCoordinates(j);
+        Geometry::Element::Group<Geometry::ElemR> elements =
+                readElements(physicalModels, layers, coords, j);
+        return new Geometry::Mesh::Geometric(grid, coords, elements, layers);
+    }
+    catch (...) {
+        return nullptr;
+    }
 }
 
 Source::Group<>* Parser::readSources(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     if (j.find("sources") == j.end()) {
-        throw std::logic_error("Sources label was not found.");
+        return nullptr;
     }
 
     Source::Group<>* res = new Source::Group<>();
@@ -300,7 +309,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
 OutputRequest::Group<>* Parser::readOutputRequests(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     if (j.find("outputRequests") == j.end()) {
-        throw std::logic_error("Output requests label was not found.");
+        return nullptr;
     }
 
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
@@ -347,7 +356,7 @@ OutputRequest::Base* Parser::readOutputRequest(
     switch (gidOutputType) {
     case Parser::outRqOnPoint:
         return new OutRqNode(domain, type, name,
-                readAsNodes(mesh, j.at("elemIds").get<json>()));
+                readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnLine:
         return new OutRqLine(domain, type, name,
         		readElemIdsAsGroupOf<const Geometry::Lin>(
@@ -654,7 +663,7 @@ Source::Generator* Parser::readGenerator(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     return new Source::Generator(
             readMagnitude(     j.at("magnitude").get<json>() ),
-            readAsNodes( mesh, j.at("coordIds").get<json>() ),
+            readCoordIdAsNodes( mesh, j.at("coordIds").get<json>() ),
             strToGeneratorType(j.at("type").get<std::string>() ),
             strToGeneratorHardness(j.at("hardness").get<std::string>()) );
 }
@@ -947,14 +956,11 @@ Parser::ParsedElementPtrs Parser::convertElementIdsToPtrs(
     } else {
         res.matPtr = nullptr;
     }
-
     if (elemIds.layer != Geometry::LayerId(0)) {
         res.layerPtr = layers.getId(elemIds.layer);
-    }
-    else {
+    } else {
         res.layerPtr = nullptr;
     }
-
     res.vPtr.resize(elemIds.v.size(), nullptr);
     for (size_t i = 0; i < elemIds.v.size(); ++i) {
         res.vPtr[i] = coords.getId(elemIds.v[i]);
@@ -1004,7 +1010,7 @@ const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
     }
 }
 
-Geometry::Element::Group<const Geometry::Nod> Parser::readAsNodes(
+Geometry::Element::Group<const Geometry::Nod> Parser::readCoordIdAsNodes(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     std::vector<Geometry::ElemId> nodeIds;
     for (auto it = j.begin(); it != j.end(); ++it) {

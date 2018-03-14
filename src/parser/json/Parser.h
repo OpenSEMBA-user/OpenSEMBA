@@ -153,7 +153,7 @@ private:
             Geometry::Mesh::Geometric& mesh,
             const std::string& line);
 
-    static Geometry::Element::Group<const Geometry::Nod> readAsNodes(
+    static Geometry::Element::Group<const Geometry::Nod> readCoordIdAsNodes(
             Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Base::Type strToOutputType(std::string label);
@@ -196,7 +196,7 @@ Geometry::Element::Group<T> readElemIdsAsGroupOf(
 	return geometricElements;
 }
 
-} /* namespace GiD */
+} /* namespace JSON */
 } /* namespace Parser */
 } /* namespace SEMBA */
 

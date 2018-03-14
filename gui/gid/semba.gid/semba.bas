@@ -438,6 +438,7 @@
 *end conditions
 *# ----------------------------------------------------------
 *Set Cond Source_on_line *bodyElements
+*if(condNumEntities!=0)
 *set var HEADER=0
 *loop elems *OnlyInCond
 *if(HEADER == 0)
@@ -458,6 +459,7 @@
 *end elems
             ]
         },
+*endif
 *# ----------------------------------------------------------
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)

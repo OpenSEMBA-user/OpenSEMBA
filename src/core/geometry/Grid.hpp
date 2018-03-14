@@ -75,7 +75,7 @@ Grid<D>::Grid(const BoxRD &boundingBox,
 template<std::size_t D>
 Grid<D>::Grid(const std::vector<Math::Real> pos[D]) {
     for(std::size_t d = 0; d < D; d++) {
-        pos_[d] = pos[D];
+        pos_[d] = pos[d];
     }
 }
 
