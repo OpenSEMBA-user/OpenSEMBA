@@ -19,7 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include "../json/Parser.h"
+#include "Parser.h"
 
 #include "math/function/Gaussian.h"
 #include "geometry/element/Line2.h"
@@ -350,10 +350,12 @@ OutputRequest::Base* Parser::readOutputRequest(
                 readAsNodes(mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnLine:
         return new OutRqLine(domain, type, name,
-                readAsLines(mesh, j.at("elemIds").get<json>()));
+        		readElemIdsAsGroupOf<const Geometry::Lin>(
+        				mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnSurface:
         return new OutRqSurface(domain, type, name,
-                readAsSurfaces(mesh, j.at("elemIds").get<json>()));
+        		readElemIdsAsGroupOf<const Geometry::Surf>(
+                		mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnLayer:
     {
         Geometry::Element::Group<> elems =
@@ -372,7 +374,8 @@ OutputRequest::Base* Parser::readOutputRequest(
     case Parser::bulkCurrentOnSurface:
     {
         return new OutputRequest::BulkCurrent(domain, name,
-                readAsElements(mesh, j.at("elemIds").get<json>()),
+        		readElemIdsAsGroupOf<const Geometry::Elem>(
+        				mesh, j.at("elemIds").get<json>()),
                 strToCartesianAxis(j.at("direction").get<std::string>()),
                 j.at("skip").get<int>());
     }
@@ -626,7 +629,7 @@ Source::Port::Waveguide* Parser::readPortWaveguide(
     if (shape.compare("Rectangular") == 0) {
         return new Source::Port::WaveguideRectangular(
                 readMagnitude(       j.at("magnitude").get<json>()),
-                readAsSurfaces(mesh, j.at("elemIds").get<json>()),
+                readElemIdsAsGroupOf<const Geometry::Surf>(mesh, j.at("elemIds").get<json>()),
                 strToWaveguideMode(  j.at("excitationMode").get<std::string>()),
                 std::pair<Math::UInt,Math::UInt>(
                                      j.at("firstMode").get<int>(),
@@ -640,7 +643,7 @@ Source::Port::TEM* Parser::readPortTEM(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     return new Source::Port::TEMCoaxial(
             readMagnitude(       j.at("magnitude").get<json>()),
-            readAsSurfaces(mesh, j.at("elemIds").get<json>()),
+            readElemIdsAsGroupOf<const Geometry::Surf>(mesh, j.at("elemIds").get<json>()),
             strToTEMMode(        j.at("excitationMode").get<std::string>()),
             strToCVecR3(         j.at("origin").get<std::string>()),
                                  j.at("innerRadius").get<double>(),
@@ -660,7 +663,8 @@ Source::OnLine* Parser::readSourceOnLine(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     return new Source::OnLine(
             readMagnitude(     j.at("magnitude").get<json>()),
-            readAsLines(mesh,  j.at("elemIds").get<json>()),
+			readElemIdsAsGroupOf<const Geometry::Lin>(
+					mesh, j.at("elemIds").get<json>()),
             strToNodalType(    j.at("type").get<std::string>()),
             strToNodalHardness(j.at("hardness").get<std::string>()) );
 }
@@ -1011,33 +1015,6 @@ Geometry::Element::Group<const Geometry::Nod> Parser::readAsNodes(
         nodeIds.push_back(node->getId());
     }
     return mesh.elems().getId(nodeIds);
-}
-
-Geometry::Element::Group<const Geometry::Lin> Parser::readAsLines(
-            Geometry::Mesh::Geometric& mesh, const json& j) {
-    Geometry::Element::Group<const Geometry::Lin> surfs;
-    for (auto it = j.begin(); it != j.end(); ++it) {
-        surfs.add(mesh.elems().getId(Geometry::ElemId(it->get<int>())));
-    }
-    return surfs;
-}
-
-Geometry::Element::Group<const Geometry::Surf> Parser::readAsSurfaces(
-            Geometry::Mesh::Geometric& mesh, const json& j) {
-    Geometry::Element::Group<const Geometry::Surf> surfs;
-    for (auto it = j.begin(); it != j.end(); ++it) {
-        surfs.add(mesh.elems().getId(Geometry::ElemId(it->get<int>())));
-    }
-    return surfs;
-}
-
-Geometry::Element::Group<const Geometry::Elem> Parser::readAsElements(
-            Geometry::Mesh::Geometric& mesh, const json& j) {
-    Geometry::Element::Group<const Geometry::Elem> surfs;
-    for (auto it = j.begin(); it != j.end(); ++it) {
-        surfs.add(mesh.elems().getId(Geometry::ElemId(it->get<int>())));
-    }
-    return surfs;
 }
 
 } /* namespace JSON */
