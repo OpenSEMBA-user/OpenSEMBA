@@ -137,10 +137,10 @@ public:
 
 namespace SEMBA {
 
-typedef OutputRequest::OutputRequest<Geometry::Nod > OutRqNode;
-typedef OutputRequest::OutputRequest<Geometry::Lin > OutRqLine;
-typedef OutputRequest::OutputRequest<Geometry::Surf> OutRqSurface;
-typedef OutputRequest::OutputRequest<Geometry::Vol > OutRqVolume;
+typedef OutputRequest::OutputRequest<const Geometry::Nod > OutRqNode;
+typedef OutputRequest::OutputRequest<const Geometry::Lin > OutRqLine;
+typedef OutputRequest::OutputRequest<const Geometry::Surf> OutRqSurface;
+typedef OutputRequest::OutputRequest<const Geometry::Vol > OutRqVolume;
 
 } /* namespace SEMBA */
 

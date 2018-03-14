@@ -74,12 +74,10 @@ private:
     } OutputType;
     typedef enum {
         sibc,
-        multilayer,
-        undefinedSIBC
+        multilayer
     } SIBCType;
     typedef enum {
-        rectangular,
-        undefined
+        rectangular
     } WaveportShape;
 
     struct ParsedElementIds {
@@ -150,18 +148,19 @@ private:
 
     static bool checkVersionCompatibility(const std::string& version);
 
-
     static Geometry::Element::Group<> boxToElemGroup(
             Geometry::Mesh::Geometric& mesh,
             const std::string& line);
 
-    static Geometry::Element::Group<Geometry::Nod> readAsNodes(
+    static Geometry::Element::Group<const Geometry::Nod> readAsNodes(
             Geometry::Mesh::Geometric& mesh, const json&);
 
     // TODO Templarize this.
     static Geometry::Element::Group<const Geometry::Lin> readAsLines(
                 Geometry::Mesh::Geometric& mesh, const json&);
     static Geometry::Element::Group<const Geometry::Surf> readAsSurfaces(
+            Geometry::Mesh::Geometric& mesh, const json&);
+    static Geometry::Element::Group<const Geometry::Elem> readAsElements(
             Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Base::Type strToOutputType(std::string label);

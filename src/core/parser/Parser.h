@@ -69,7 +69,7 @@ protected:
         }
     }
 
-    void postReadOperations(Data* res);
+    void postReadOperations(Data& res) const;
 };
 
 } /* namespace Parser */

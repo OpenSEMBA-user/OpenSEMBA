@@ -104,8 +104,7 @@ Grid<D>& Grid<D>::operator=(const Grid<D>& rhs) {
 }
 
 template<std::size_t D>
-void Grid<D>::setPos(const std::vector<Math::Real> pos[D],
-					 const CVecID& offset) {
+void Grid<D>::setPos(const std::vector<Math::Real> pos[D]) {
     for(std::size_t d = 0; d < D; d++) {
         if (pos[d].size() == 0) {
             throw std::out_of_range(

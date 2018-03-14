@@ -31,7 +31,7 @@ class BulkCurrent : public virtual OutputRequest<Geometry::Elem> {
 public:
     BulkCurrent(const Domain& domain,
                 const std::string& name,
-                const Geometry::Element::Group<Geometry::Elem>& box,
+                const Geometry::Element::Group<const Geometry::Elem>& box,
                 const Math::Constants::CartesianAxis& dir,
                 const Math::UInt& skip);
     BulkCurrent(const BulkCurrent& rhs);

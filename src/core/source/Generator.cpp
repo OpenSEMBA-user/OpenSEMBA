@@ -29,8 +29,8 @@ Generator::Generator() {
     hardness_ = soft;
 }
 
-Generator::Generator(const Magnitude::Magnitude* magnitude,
-                     Geometry::Element::Group<Geometry::Nod>& elems,
+Generator::Generator(Magnitude::Magnitude* magnitude,
+                     Geometry::Element::Group<const Geometry::Nod> elems,
                      const Type& generatorType,
                      const Hardness& hardness)
 :   SEMBA::Source::Base(magnitude),
@@ -68,20 +68,17 @@ const std::string& Generator::getName() const {
     return res;
 }
 
-Generator::Type
-Generator::getType() const {
+Generator::Type Generator::getType() const {
     return type_;
 }
 
-void
-Generator::printInfo() const {
+void Generator::printInfo() const {
     std::cout<< " --- Generator info --- " << std::endl;
     SEMBA::Source::Base::printInfo();
     std::cout<< "Type: " << getTypeStr() << std::endl;
 }
 
-std::string
-Generator::getTypeStr() const {
+std::string Generator::getTypeStr() const {
     switch (type_) {
     case voltage:
         return "Voltage";

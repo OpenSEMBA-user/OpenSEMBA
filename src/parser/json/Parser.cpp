@@ -82,10 +82,10 @@ Data Parser::read(std::istream& stream) const {
     res.mesh = readGeometricMesh(*res.physicalModels, j);
     progress.advance();
 
-    res.sources = readSources(*res.mesh, j);
+    res.sources = readSources(*res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
     progress.advance();
 
-    res.outputRequests = readOutputRequests(*res.mesh, j);
+    res.outputRequests = readOutputRequests(*res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
     progress.advance();
 
     postReadOperations(res);
@@ -145,17 +145,16 @@ Source::Group<>* Parser::readSources(
     const json& sources = j.at("sources").get<json>();
     for (json::const_iterator it = sources.begin(); it != sources.end(); ++it) {
         std::string sourceType = it->at("sourceType").get<std::string>();
-
         if (sourceType.compare("planewave") == 0) {
             res->add(readPlanewave(mesh, *it));
         } else if (sourceType.compare("generator") == 0) {
-            res->add(readGenerator(*it));
+            res->add(readGenerator(mesh, *it));
         } else if (sourceType.compare("sourceOnLine") == 0) {
-            res->add(readSourceOnLine(*it));
+            res->add(readSourceOnLine(mesh, *it));
         } else if (sourceType.compare("waveguidePort") == 0) {
-            res->add(readPortWaveguide(*it));
+            res->add(readPortWaveguide(mesh, *it));
         } else if (sourceType.compare("temPort") == 0) {
-            res->add(readPortTEM(*it));
+            res->add(readPortTEM(mesh, *it));
         } else {
             throw std::logic_error("Unrecognized source type: " + sourceType);
         }
@@ -307,7 +306,7 @@ OutputRequest::Group<>* Parser::readOutputRequests(
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
     const json& outs = j.at("outputRequests").get<json>();
     for (json::const_iterator it = outs.begin(); it != outs.end(); ++it) {
-        res->add(readOutputRequest(*it));
+        res->add(readOutputRequest(mesh, *it));
     }
     return res;
 }
@@ -341,14 +340,13 @@ OutputRequest::Base* Parser::readOutputRequest(
     const OutputType gidOutputType = strToGiDOutputType(gidOutputTypeStr);
 
     std::string name = j.at("name").get<std::string>();
-    OutputRequest::OutputRequest::Type type =
+    OutputRequest::Base::Type type =
             strToOutputType(j.at("type").get<std::string>());
     OutputRequest::Domain domain = readDomain(j.at("domain").get<json>());
 
     switch (gidOutputType) {
     case Parser::outRqOnPoint:
-        return new OutputRequest::OutputRequest<Geometry::Nod>(
-                domain, type, name,
+        return new OutRqNode(domain, type, name,
                 readAsNodes(mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnLine:
         return new OutRqLine(domain, type, name,
@@ -372,10 +370,12 @@ OutputRequest::Base* Parser::readOutputRequest(
         }
     }
     case Parser::bulkCurrentOnSurface:
+    {
         return new OutputRequest::BulkCurrent(domain, name,
-                readAsSurfaces(mesh, j.at("elemIds").get<json>()),
+                readAsElements(mesh, j.at("elemIds").get<json>()),
                 strToCartesianAxis(j.at("direction").get<std::string>()),
                 j.at("skip").get<int>());
+    }
     case Parser::bulkCurrentOnLayer:
         return new OutputRequest::BulkCurrent(domain, name,
                 boxToElemGroup(mesh, j.at("box").get<std::string>()),
@@ -588,7 +588,7 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
 Source::PlaneWave* Parser::readPlanewave(
         Geometry::Mesh::Geometric& mesh, const json& j) {
 
-    Source::Magnitude::Magnitude magnitude =
+    Source::Magnitude::Magnitude* magnitude =
             readMagnitude(j.at("magnitude").get<json>());
     Geometry::Element::Group<Geometry::Vol> elems =
             boxToElemGroup( mesh, j.at("layerBox").get<std::string>() );
@@ -653,7 +653,7 @@ Source::Generator* Parser::readGenerator(
             readMagnitude(     j.at("magnitude").get<json>() ),
             readAsNodes( mesh, j.at("coordIds").get<json>() ),
             strToGeneratorType(j.at("type").get<std::string>() ),
-            strToNodalHardness(j.at("hardness").get<std::string>() ) );
+            strToGeneratorHardness(j.at("hardness").get<std::string>()) );
 }
 
 Source::OnLine* Parser::readSourceOnLine(
@@ -1000,7 +1000,7 @@ const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
     }
 }
 
-Geometry::Element::Group<Geometry::Nod> Parser::readAsNodes(
+Geometry::Element::Group<const Geometry::Nod> Parser::readAsNodes(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     std::vector<Geometry::ElemId> nodeIds;
     for (auto it = j.begin(); it != j.end(); ++it) {
@@ -1025,6 +1025,15 @@ Geometry::Element::Group<const Geometry::Lin> Parser::readAsLines(
 Geometry::Element::Group<const Geometry::Surf> Parser::readAsSurfaces(
             Geometry::Mesh::Geometric& mesh, const json& j) {
     Geometry::Element::Group<const Geometry::Surf> surfs;
+    for (auto it = j.begin(); it != j.end(); ++it) {
+        surfs.add(mesh.elems().getId(Geometry::ElemId(it->get<int>())));
+    }
+    return surfs;
+}
+
+Geometry::Element::Group<const Geometry::Elem> Parser::readAsElements(
+            Geometry::Mesh::Geometric& mesh, const json& j) {
+    Geometry::Element::Group<const Geometry::Elem> surfs;
     for (auto it = j.begin(); it != j.end(); ++it) {
         surfs.add(mesh.elems().getId(Geometry::ElemId(it->get<int>())));
     }

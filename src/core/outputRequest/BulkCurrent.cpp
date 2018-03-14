@@ -24,11 +24,12 @@
 namespace SEMBA {
 namespace OutputRequest {
 
-BulkCurrent::BulkCurrent(const Domain& domain,
-                         const std::string& name,
-                         const Geometry::Element::Group<Geometry::Elem>& elem,
-                         const Math::Constants::CartesianAxis& dir,
-                         const Math::UInt& skip)
+BulkCurrent::BulkCurrent(
+        const Domain& domain,
+        const std::string& name,
+        const Geometry::Element::Group<const Geometry::Elem>& elem,
+        const Math::Constants::CartesianAxis& dir,
+        const Math::UInt& skip)
 :   Domain(domain),
     SEMBA::OutputRequest::Base(bulkCurrentElectric, name),
     Geometry::Element::Group<const Geometry::Elem>(elem) {

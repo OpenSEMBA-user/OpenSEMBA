@@ -39,8 +39,8 @@ public:
     } Hardness;
 
     Generator();
-    Generator(const Magnitude::Magnitude* magnitude,
-              Geometry::Element::Group<Geometry::Nod>& elem,
+    Generator(Magnitude::Magnitude* magnitude,
+              Geometry::Element::Group<const Geometry::Nod> elem,
               const Type& generatorType,
               const Hardness& hardness);
     Generator(const Generator& rhs);

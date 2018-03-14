@@ -22,7 +22,7 @@
 OUT = test
 
 TEST_CORE_MATH          = no#
-TEST_CORE_GEOMETRY      = yes#
+TEST_CORE_GEOMETRY      = no#
 TEST_CORE_ARGUMENT      = no#
 TEST_CORE_PHYSICALMODEL = no#
 TEST_CORE_SOURCE        = no#
