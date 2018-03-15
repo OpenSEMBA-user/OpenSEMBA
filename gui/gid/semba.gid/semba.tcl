@@ -20,7 +20,9 @@
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
 proc InitGIDProject { dir } {
-    set ::semba::_dir $dir
+    set ::semba::_dir $dir    
+    set ::semba::nOutputRequests 0
+    set ::semba::writtenOutputRequests 0
 
 	# Reads .xml
 	if { [info procs ::ReadProblemtypeXml] == "" } {
@@ -95,6 +97,8 @@ namespace eval semba {
     variable Web ;
 	variable Maintainer ;
     variable _dir ;#path to the problemtype
+    variable nOutputRequests
+    variable writtenOutputRequests
 }
 
 proc semba::Splash { } {
@@ -161,17 +165,17 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
     global GIDDEFAULT
     # List of bitmaps.
     set sembaBitmapsNames(0) [ list \
-                            images/icons/data.gif \
-         					images/icons/meshingConfiguration.gif \
-                            images/icons/boundingbox.gif \
-                            images/icons/meshing.gif \
-                            images/icons/predefinedMaterials.gif \
-                            images/icons/materials.gif \
+		            images/icons/data.gif \
+		                                 images/icons/meshingConfiguration.gif \
+		            images/icons/boundingbox.gif \
+		            images/icons/meshing.gif \
+		            images/icons/predefinedMaterials.gif \
+		            images/icons/materials.gif \
 		                    images/icons/advancedMaterials.gif \
 		                    images/icons/wires.gif \
 		                    images/icons/sources.gif \
 		                    images/icons/requests.gif \
-        ]
+	]
     # List of commands.
     set sembaBitmapsCommands(0) [list \
 		                    [list -np- GidOpenProblemData "Solver_options"] \
@@ -183,7 +187,7 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
 		                    [list -np- GidOpenMaterials "Advanced_materials"] \
 		                    [list -np- GidOpenMaterials "Wires_and_thin_gaps"] \
 		                    [list -np- GidOpenConditions "Electromagnetic_sources"] \
-	                		[list -np- GidOpenConditions "Output_Requests"] \
+		                        [list -np- GidOpenConditions "Output_Requests"] \
 		                ]
     
     set sembaBitmapsHelp(0) [list \
@@ -269,8 +273,8 @@ proc semba::createBoundingBox {xMaxPad yMaxPad zMaxPad xMinPad yMinPad zMinPad} 
 	    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces \
 		         Translation FNoJoin 0.0 0.0 $zmin FNoJoin 0.0 0.0 $zmax end escape   
 	} else {
-        GiD_Process Mescape
-        WarnWin [=  "Unable to create automatic bounding box"]
+	GiD_Process Mescape
+	WarnWin [=  "Unable to create automatic bounding box"]
 	}
 
 	# Restores status of createAlwaysNewPoint.
@@ -393,13 +397,13 @@ proc semba::TkwidgetCreateFilesForUGRMAT { event args } {
 	    lassign $args PARENT current_row_variable GDN STRUCT QUESTION    
 	    upvar $current_row_variable ROW            
 		set entry ""
-        foreach item [grid slaves $PARENT -row [expr $ROW-1]] {
-            if { [winfo class $item] == "Entry"  || [winfo class $item] == "TEntry" } {
-                #assumed that it is the only entry of this row
-                set entry $item
-                break
-            }
-        }     
+	foreach item [grid slaves $PARENT -row [expr $ROW-1]] {
+	    if { [winfo class $item] == "Entry"  || [winfo class $item] == "TEntry" } {
+		#assumed that it is the only entry of this row
+		set entry $item
+		break
+	    }
+	}     
 	    set width 9
 	    set materialName [lindex [split $STRUCT ,] 1]
 	    set tkwidgedprivmaterial($QUESTION) [ttk::button $PARENT.cmaterial$QUESTION \
@@ -408,11 +412,11 @@ proc semba::TkwidgetCreateFilesForUGRMAT { event args } {
 		    ] 
 	    grid $tkwidgedprivmaterial($QUESTION) -row [expr $ROW-1] -column 1 -sticky ew -columnspan 1
 	    if { $entry != "" } {
-            grid remove $entry
-        } else {
-            #assumed that entry is hidden and then hide the usurpating frame
-            #grid remove $w
-        }
+	    grid remove $entry
+	} else {
+	    #assumed that entry is hidden and then hide the usurpating frame
+	    #grid remove $w
+	}
 	}
 	SYNC {         
 	    lassign $args GDN STRUCT QUESTION            
@@ -453,71 +457,85 @@ proc semba::writeLayersFile {} {
 proc semba::countElementsInConditionBAS { condition_name } {
 	foreach item [GiD_Info conditions $condition_name mesh] {
 		set element_id [lindex $item 1]
-        lappend elements_of_cond $element_id
+	lappend elements_of_cond $element_id
     }
     if {[info exists elements_of_cond]} {
-    	return [llength $elements_of_cond]
+	    return [llength $elements_of_cond]
     } else { 
-    	return 0
+	    return 0
     }
 }
 
 proc semba::countAllElementsInOutputRequestsBAS { } {
-	set nOutputRequests [expr { \
+	variable ::semba::writtenOutputRequests
+	variable ::semba::nOutputRequests
+
+	set ::semba::writtenOutputRequests 0
+	
+	set semba::nOutputRequests [expr { \
 		[semba::countElementsInConditionBAS "OutRq_on_point"] + \
-		[semba::countElementsInConditionBAS "OutRq_on_line")] + \
+		[semba::countElementsInConditionBAS "OutRq_on_line"] + \
 		[semba::countElementsInConditionBAS "OutRq_on_surface"] + \
-		[semba::countElementsInConditionBAS "OutRq_on_layer")] + \
-		[semba::countElementsInConditionBAS "Bulk_current_on_surface")] + \
-		[semba::countElementsInConditionBAS "Bulk_current_on_layer")] + \
-        [semba::countElementsInConditionBAS "Far_field")] } ]
-	return $nOutputRequests
+		[semba::countElementsInConditionBAS "OutRq_on_layer"] + \
+		[semba::countElementsInConditionBAS "Bulk_current_on_surface"] + \
+		[semba::countElementsInConditionBAS "Bulk_current_on_layer"] + \
+	    [semba::countElementsInConditionBAS "Far_field"] } ]
+
+	return " "
 }
 
 proc semba::writeOutputRequestBAS { condition_name } {
     set result ""
     foreach item [GiD_Info conditions $condition_name mesh] {
-        set element_id [lindex $item 1]
-        set name_id    [lindex $item 3]
-        lappend elements_of_cond($name_id) $element_id
-        set properties_of_cond($name_id) [lrange $item 3 end]
+	set element_id [lindex $item 1]
+	set name_id    [lindex $item 3]
+
+	lappend elements_of_cond($name_id) $element_id
+	set semba::writtenOutputRequests [expr {$semba::writtenOutputRequests + 1}]
+
+	set properties_of_cond($name_id) [lrange $item 3 end]
     }
 
     foreach name_id [lsort [array names elements_of_cond]] {
-        append result \
-        "        {\n"\
+	append result \
+	"        {\n"\
 		"            \"gidOutputType\": \"$condition_name\",\n"\
 		"            \"name\": \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
 		"            \"type\": \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
 		"            \"domain\": {\n"
-        if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
-            append result \
-        "                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 3]\",\n"\
-        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
-    	}
-    	if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
-    	    append result \
-    	"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
-        } else {
-		"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"   	
-        }
-        if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
-            append result \
-        "                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  7]\",\n"\
-        "                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)"  8]\",\n"\
-        "                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
-        "                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 10]\",\n"
-        }
-        if {[lindex "$properties_of_cond($name_id)" 11] == 1} {
-            append result \
-        "                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 13]\",\n"
-        }
+	if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
+	    append result \
+	"                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 3]\",\n"\
+	"                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
+	    }
+	    if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
 		append result \
-        "            },\n"\
-		"     		\"elemIds\": \[\n"\
+	    "                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
+	} else {
+		"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"           
+	}
+	if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
+	    append result \
+	"                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  7]\",\n"\
+	"                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)"  8]\",\n"\
+	"                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
+	"                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 10]\",\n"
+	}
+	if {[lindex "$properties_of_cond($name_id)" 11] == 1} {
+	    append result \
+	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 13]\",\n"
+	}
+		append result \
+	"            },\n"\
+		"                     \"elemIds\": \[\n"\
 		"                [join $elements_of_cond($name_id) ",\n                "]\n"\
 		"            \]\n"\
-		"        },\n"
+		"        }"
+	if {$semba::writtenOutputRequests != $semba::nOutputRequests} {
+	    append result ",\n"
+	} else {
+	    append result "\n"
+	}
     }
 
     return $result
@@ -526,51 +544,72 @@ proc semba::writeOutputRequestBAS { condition_name } {
 proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
     set result ""
     foreach item [GiD_Info conditions $condition_name mesh] {
-        set element_id [lindex $item 1]
-        set name_id    [lindex $item 3]
-        lappend elements_of_cond($name_id) $element_id
-        set properties_of_cond($name_id) [lrange $item 3 end]
+	set element_id [lindex $item 1]
+	set name_id    [lindex $item 3]
+
+	lappend elements_of_cond($name_id) $element_id
+	set semba::writtenOutputRequests [expr {$semba::writtenOutputRequests + 1}]
+
+	set properties_of_cond($name_id) [lrange $item 3 end]
     }
 
     foreach name_id [lsort [array names elements_of_cond]] {
-        append result \
-        "        {\n"\
+	append result \
+	"        {\n"\
 		"            \"gidOutputType\": \"$condition_name\",\n"\
 		"            \"name\":      \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
 		"            \"type\":      \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
-        "            \"direction\": \"[lindex "$properties_of_cond($name_id)" 2]\",\n"\
-        "            \"skip\":      [lindex "$properties_of_cond($name_id)" 3],\n"\
+	"            \"direction\": \"[lindex "$properties_of_cond($name_id)" 2]\",\n"\
+	"            \"skip\":      [lindex "$properties_of_cond($name_id)" 3],\n"\
 		"            \"domain\": {\n"
-        if {[lindex "$properties_of_cond($name_id)" 4] == 1} {
-            append result \
-        "                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 5]\",\n"\
-        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
-    	}
-    	if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
-    	    append result \
-    	"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
-        } else {
-		"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"   	
-        }
-        if {[lindex "$properties_of_cond($name_id)" 8] == 1} {
-            append result \
-        "                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
-        "                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)" 10]\",\n"\
-        "                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)" 11]\",\n"\
-        "                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 12]\",\n"
-        }
-        if {[lindex "$properties_of_cond($name_id)" 13] == 1} {
-            append result \
-        "                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\",\n"
-        }
+	if {[lindex "$properties_of_cond($name_id)" 4] == 1} {
+	    append result \
+	"                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 5]\",\n"\
+	"                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
+	    }
+	    if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
 		append result \
-        "            },\n"\
-		"     		\"elemIds\": \[\n"\
+	    "                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
+	} else {
+		"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"           
+	}
+	if {[lindex "$properties_of_cond($name_id)" 8] == 1} {
+	    append result \
+	"                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
+	"                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)" 10]\",\n"\
+	"                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)" 11]\",\n"\
+	"                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 12]\",\n"
+	}
+	if {[lindex "$properties_of_cond($name_id)" 13] == 1} {
+	    append result \
+	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\",\n"
+	}
+		append result \
+	"            },\n"\
+		"                     \"elemIds\": \[\n"\
 		"                [join $elements_of_cond($name_id) ",\n                "]\n"\
 		"            \]\n"\
-		"        },\n"
+		"        }"
+	if {$semba::writtenOutputRequests != $semba::nOutputRequests} {
+	    append result ",\n"
+	} else {
+	    append result "\n"
+	}
     }
+    
+    return $result
+}
 
+proc semba::printCommaIfPendingOutRq {} {
+    set semba::writtenOutputRequests [expr {$semba::writtenOutputRequests + 1}]
+    set result ""
+    if {$semba::writtenOutputRequests != $semba::nOutputRequests} {
+	append result ",\n"
+    } else {
+	append result "\n"
+    }
+    set localWrittenOutRq $semba::writtenOutputRequests
+    set localnOutRq $semba::nOutputRequests
     return $result
 }
 
@@ -578,3 +617,4 @@ proc semba::getGridCoordinatesAsJSONArrayBAS { dir } {
 	set coords [lindex [GiD_Cartesian get coordinates] $dir]
     return [append " " "\[" [join $coords ",\n                             "] "\]"]
 }
+

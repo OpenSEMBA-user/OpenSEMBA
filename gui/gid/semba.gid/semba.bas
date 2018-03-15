@@ -524,15 +524,7 @@
 *# ------------------ OUTPUT REQUESTS -----------------------
 *# ----------------------------------------------------------
 *# --- Precounts output requests ----------------------------
-OutRq_on_point:            *tcl(semba::countElementsInConditionBAS OutRq_on_point)
-OutRq_on_line:             *tcl(semba::countElementsInConditionBAS OutRq_on_line)
-OutRq_on_surface:          *tcl(semba::countElementsInConditionBAS OutRq_on_surface)
-OutRq_on_layer:            *tcl(semba::countElementsInConditionBAS OutRq_on_layer)
-Bulk_current_on_surface:   *tcl(semba::countElementsInConditionBAS Bulk_current_on_surface)
-Bulk_current_on_layer:     *tcl(semba::countElementsInConditionBAS Bulk_current_on_layer)
-Far_field:                 *tcl(semba::countElementsInConditionBAS Far_field)
-
-
+*tcl(semba::countAllElementsInOutputRequestsBAS)
 *# --- Writes output requests -------------------------------
     "outputRequests": [
 *# ----------------------------------------------------------
@@ -552,7 +544,7 @@ Far_field:                 *tcl(semba::countElementsInConditionBAS Far_field)
 *include includes/domain.bas
             "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *end layers
-        },
+        }*tcl(semba::printCommaIfPendingOutRq)
 *end if
 *# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBulkCurrentBAS Bulk_current_on_surface)
@@ -569,7 +561,7 @@ Far_field:                 *tcl(semba::countElementsInConditionBAS Far_field)
             "skip": *cond(Skip),
             "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *end layers
-        },
+        }*tcl(semba::printCommaIfPendingOutRq)
 *end if
 *# ----------------------------------------------------------
 *Set cond Far_field
@@ -588,7 +580,7 @@ Far_field:                 *tcl(semba::countElementsInConditionBAS Far_field)
             "finalPhi":     *cond(Final_phi),
             "stepPhi":      *cond(Step_phi)
 *end layers
-        },
+        }*tcl(semba::printCommaIfPendingOutRq)
 *end if
     ]
 *# ----------------------------------------------------------
