@@ -364,28 +364,33 @@
 *set Cond Planewave
 *loop layers *OnlyInCond
 *set var nSources = nSources + 1
+*#DEBUG Planewave *nSources
 *end layers
 *loop conditions *nodes
 *if(strcasecmp(condName,"Generator_on_line")==0)
 *loop nodes *OnlyInCond
 *set var nSources = nSources + 1
+*#DEBUG Generator *nSources
 *end nodes
 *endif
 *end conditions
 *Set Cond Source_on_line *bodyElements
 *loop elems *OnlyInCond
 *set var nSources = nSources + 1
+*#DEBUG Source_on_line *nSources
 *end elems
 *loop conditions *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0)
 *loop elems *onlyInCond
 *set var nSources = nSources + 1
+*#DEBUG Waveguide_port *nSources
 *endif 
 *end conditions
 *loop conditions *bodyElements
-*if(strcasecmp(condName,"TEM_port"))
-*set var nSources = nSources + 1
+*if(strcasecmp(condName,"TEM_port")==0)
 *loop elems *onlyInCond
+*set var nSources = nSources + 1
+*#DEBUG TEM_port *nSources
 *end elems
 *endif 
 *end conditions
@@ -413,6 +418,7 @@
 *include includes/magnitude.bas
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *set var sourceNum = sourceNum + 1
+*#DEBUG Source number: *sourceNum of *nSources
 *if(sourceNum == nSources) 
         }
 *else
@@ -517,6 +523,17 @@
 *# ----------------------------------------------------------
 *# ------------------ OUTPUT REQUESTS -----------------------
 *# ----------------------------------------------------------
+*# --- Precounts output requests ----------------------------
+OutRq_on_point:            *tcl(semba::countElementsInConditionBAS OutRq_on_point)
+OutRq_on_line:             *tcl(semba::countElementsInConditionBAS OutRq_on_line)
+OutRq_on_surface:          *tcl(semba::countElementsInConditionBAS OutRq_on_surface)
+OutRq_on_layer:            *tcl(semba::countElementsInConditionBAS OutRq_on_layer)
+Bulk_current_on_surface:   *tcl(semba::countElementsInConditionBAS Bulk_current_on_surface)
+Bulk_current_on_layer:     *tcl(semba::countElementsInConditionBAS Bulk_current_on_layer)
+Far_field:                 *tcl(semba::countElementsInConditionBAS Far_field)
+
+
+*# --- Writes output requests -------------------------------
     "outputRequests": [
 *# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBAS OutRq_on_point)
@@ -533,7 +550,7 @@
             "name": "*cond(Name)",
             "type": "*cond(Type)",
 *include includes/domain.bas
-            "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}"
+            "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *end layers
         },
 *end if
@@ -550,7 +567,7 @@
 *include includes/domain.bas
             "direction": "*cond(Direction)",
             "skip": *cond(Skip),
-            "box": {*tcl(GiD_Info layer -bbox -use geometry *layerName)}
+            "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *end layers
         },
 *end if
@@ -563,7 +580,7 @@
             "name": "*cond(Name)",
             "type": "*cond(Type)",
 *include includes/domain.bas
-            "box": "{*tcl(GiD_Info layer -bbox -use geometry *layerName)}",
+            "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
             "initialTheta": *cond(Initial_theta),
             "finalTheta":   *cond(Final_theta),
             "stepTheta":    *cond(Step_theta),

@@ -450,6 +450,30 @@ proc semba::writeLayersFile {} {
 	[file join $modelDir $modelName.layers]
 }
 
+proc semba::countElementsInConditionBAS { condition_name } {
+	foreach item [GiD_Info conditions $condition_name mesh] {
+		set element_id [lindex $item 1]
+        lappend elements_of_cond $element_id
+    }
+    if {[info exists elements_of_cond]} {
+    	return [llength $elements_of_cond]
+    } else { 
+    	return 0
+    }
+}
+
+proc semba::countAllElementsInOutputRequestsBAS { } {
+	set nOutputRequests [expr { \
+		[semba::countElementsInConditionBAS "OutRq_on_point"] + \
+		[semba::countElementsInConditionBAS "OutRq_on_line")] + \
+		[semba::countElementsInConditionBAS "OutRq_on_surface"] + \
+		[semba::countElementsInConditionBAS "OutRq_on_layer")] + \
+		[semba::countElementsInConditionBAS "Bulk_current_on_surface")] + \
+		[semba::countElementsInConditionBAS "Bulk_current_on_layer")] + \
+        [semba::countElementsInConditionBAS "Far_field")] } ]
+	return $nOutputRequests
+}
+
 proc semba::writeOutputRequestBAS { condition_name } {
     set result ""
     foreach item [GiD_Info conditions $condition_name mesh] {
@@ -469,8 +493,13 @@ proc semba::writeOutputRequestBAS { condition_name } {
         if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
             append result \
         "                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 3]\",\n"\
-        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 4]\",\n"\
-        "                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 5]\",\n"
+        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
+    	}
+    	if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
+    	    append result \
+    	"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
+        } else {
+		"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"   	
         }
         if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
             append result \
@@ -515,8 +544,13 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
         if {[lindex "$properties_of_cond($name_id)" 4] == 1} {
             append result \
         "                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 5]\",\n"\
-        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"\
-        "                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"
+        "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
+    	}
+    	if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
+    	    append result \
+    	"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
+        } else {
+		"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"   	
         }
         if {[lindex "$properties_of_cond($name_id)" 8] == 1} {
             append result \
