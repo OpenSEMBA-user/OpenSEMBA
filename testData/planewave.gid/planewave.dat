@@ -31,10 +31,25 @@
 
     "grids": [
         {
-            "gridType":    "nativeGiD",
-            "xCoordinates": [],
-            "yCoordinates": [],
-            "zCoordinates": []
+            "gridType": "nativeGiD",
+            "xCoordinates": [0.0,
+                             0.2,
+                             0.4,
+                             0.6,
+                             0.8,
+                             1.0],
+            "yCoordinates": [0.0,
+                             0.2,
+                             0.4,
+                             0.6,
+                             0.8,
+                             1.0],
+            "zCoordinates": [0.0,
+                             0.2,
+                             0.4,
+                             0.6,
+                             0.8,
+                             1.0]
         }
     ],
 
@@ -81,7 +96,6 @@
             "layerBox": "{1.0 1.0 1.0 0.0 0.0 0.0}"
         }
     ],
-
  
     "outputRequests": [
 

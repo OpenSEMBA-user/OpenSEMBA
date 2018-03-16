@@ -238,8 +238,9 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
                     j.at("parallelCapacitance").get<double>());
         } else if(wireType.compare("Standard") == 0) {
             return new PhysicalModel::Wire::Wire(id, name,
-                    j.at("resistance"),
-                    j.at("inductance"));
+                    j.at("radius").get<double>(),
+                    j.at("resistance").get<double>(),
+                    j.at("inductance").get<double>());
         } else {
             throw std::logic_error("Unrecognized wire type" + wireType);
         }
