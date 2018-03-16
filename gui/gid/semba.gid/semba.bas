@@ -47,7 +47,7 @@
             "slantedThreshold": *GenData(Segments_filter_threshold)
         }
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
-        "timeIntegrator": *GenData(Time_integrator),
+        "timeIntegrator": "*GenData(Time_integrator)",
         "useLTS": *GenData(Use_LTS),
         "upwinding": *GenData(Upwinding)
 *else
@@ -59,22 +59,22 @@
 *# ----------------------------------------------------------
 *# ------------------ PROBLEM SIZE --------------------------
 *# ----------------------------------------------------------
-    "problemSize": {
-*set elems(Hexahedra)
-        "hexahedra8":     *nelem,
-*set elems(Tetrahedra)
-        "tetrahedra4":    *nelem,
-*set elems(Quadrilateral)
-        "quadrilateral4": *nelem,
-*set elems(Triangle)
-        "triangle3":      *nelem,
-*set elems(Linear)
-        "linear2":        *nelem,
-*set elems(all)
-        "coordinates":    *npoin,
-        "materials":      *nmats
-    },
-
+*#    "problemSize": {
+*#*set elems(Hexahedra)
+*#        "hexahedra8":     *nelem,
+*#*set elems(Tetrahedra)
+*#        "tetrahedra4":    *nelem,
+*#*set elems(Quadrilateral)
+*#        "quadrilateral4": *nelem,
+*#*set elems(Triangle)
+*#        "triangle3":      *nelem,
+*#*set elems(Linear)
+*#        "linear2":        *nelem,
+*#*set elems(all)
+*#        "coordinates":    *npoin,
+*#        "materials":      *nmats
+*#    },
+*#
 *# ----------------------------------------------------------
 *# -------------------- MATERIALS ---------------------------
 *# ----------------------------------------------------------
@@ -87,13 +87,15 @@
             "materialType": "*MatProp(TypeId)"
 *elseif(strcmp(MatProp(TypeId),"PMC")==0)
             "materialType": "*MatProp(TypeId)"
+*elseif(strcmp(MatProp(TypeId),"SMA")==0)
+            "materialType": "*MatProp(TypeId)"
 *elseif(strcmp(MatProp(TypeId),"PML")==0)
             "materialType": "*MatProp(TypeId)",
             "automaticOrientation": *matprop(Automatic_orientation),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
 *else
-            "localAxes: "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
+            "localAxes": "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
 *endif
 *elseif(strcmp(Matprop(TypeId),"Classic")==0)
             "materialType": "*MatProp(TypeId)",
@@ -198,8 +200,8 @@
             "_error": "Unrecognized anisotropic model"
 *endif
 *else
-*warningBox "Unrecognized material label"
-            "_error": "Unrecognized material label"
+            "_error": "Unrecognized material label: *Matprop(TypeId)"
+*warningBox "Unrecognized material label " 
 *endif
 *if(nmats != loopvar)
         },
@@ -364,36 +366,36 @@
 *set Cond Planewave
 *loop layers *OnlyInCond
 *set var nSources = nSources + 1
-*#DEBUG Planewave *nSources
+#DEBUG   Planewave *nSources
 *end layers
 *loop conditions *nodes
 *if(strcasecmp(condName,"Generator_on_line")==0)
 *loop nodes *OnlyInCond
 *set var nSources = nSources + 1
-*#DEBUG Generator *nSources
+#DEBUG   Generator *nSources
 *end nodes
 *endif
 *end conditions
 *Set Cond Source_on_line *bodyElements
 *loop elems *OnlyInCond
 *set var nSources = nSources + 1
-*#DEBUG Source_on_line *nSources
+#DEBUG   Source_on_line *nSources
 *end elems
-*loop conditions *bodyElements
+*Set Cond Waveguide_port *bodyElements
+*loop elems *OnlyInCond
 *if(strcasecmp(condName,"Waveguide_port")==0)
-*loop elems *onlyInCond
+Waveguide_port 
 *set var nSources = nSources + 1
-*#DEBUG Waveguide_port *nSources
+#DEBUG   Waveguide_port *nSources
 *endif 
-*end conditions
-*loop conditions *bodyElements
-*if(strcasecmp(condName,"TEM_port")==0)
-*loop elems *onlyInCond
-*set var nSources = nSources + 1
-*#DEBUG TEM_port *nSources
 *end elems
+*Set Cond TEM_port
+*loop elems *OnlyInCond
+*if(strcasecmp(condName,"TEM_port")==0)
+*set var nSources = nSources + 1
+#DEBUG   TEM_port *nSources
 *endif 
-*end conditions
+*end elems
 *# ----------------------------------------------------------
 *set var sourceNum = 0
     "sources": [
@@ -418,7 +420,7 @@
 *include includes/magnitude.bas
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *set var sourceNum = sourceNum + 1
-*#DEBUG Source number: *sourceNum of *nSources
+#DEBUG   Source number: *sourceNum of *nSources
 *if(sourceNum == nSources) 
         }
 *else

@@ -36,16 +36,6 @@
         }
     },
      
-    "problemSize": {
-        "hexahedra8":     0,
-        "tetrahedra4":    599,
-        "quadrilateral4": 0,
-        "triangle3":      202,
-        "linear2":        44,
-        "coordinates":    171,
-        "materials":      1
-    },
-
     "materials": [
         {
             "materialId": 1,
