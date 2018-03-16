@@ -366,34 +366,33 @@
 *set Cond Planewave
 *loop layers *OnlyInCond
 *set var nSources = nSources + 1
-#DEBUG   Planewave *nSources
+*#DEBUG     Planewave *nSources
 *end layers
 *loop conditions *nodes
 *if(strcasecmp(condName,"Generator_on_line")==0)
 *loop nodes *OnlyInCond
 *set var nSources = nSources + 1
-#DEBUG   Generator *nSources
+*#DEBUG     Generator *nSources
 *end nodes
 *endif
 *end conditions
 *Set Cond Source_on_line *bodyElements
 *loop elems *OnlyInCond
 *set var nSources = nSources + 1
-#DEBUG   Source_on_line *nSources
+*#DEBUG     Source_on_line *nSources
 *end elems
 *Set Cond Waveguide_port *bodyElements
 *loop elems *OnlyInCond
 *if(strcasecmp(condName,"Waveguide_port")==0)
-Waveguide_port 
 *set var nSources = nSources + 1
-#DEBUG   Waveguide_port *nSources
+*#DEBUG     Waveguide_port *nSources
 *endif 
 *end elems
 *Set Cond TEM_port
 *loop elems *OnlyInCond
 *if(strcasecmp(condName,"TEM_port")==0)
 *set var nSources = nSources + 1
-#DEBUG   TEM_port *nSources
+*#DEBUG     TEM_port *nSources
 *endif 
 *end elems
 *# ----------------------------------------------------------
@@ -420,7 +419,7 @@ Waveguide_port
 *include includes/magnitude.bas
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *set var sourceNum = sourceNum + 1
-#DEBUG   Source number: *sourceNum of *nSources
+*#DEBUG     Source number: *sourceNum of *nSources
 *if(sourceNum == nSources) 
         }
 *else
@@ -464,12 +463,18 @@ Waveguide_port
 *else
                 *elemsNum
 *endif
+*set var sourceNum = sourceNum + 1
 *end elems
             ]
+*#DEBUG     Source number: *sourceNum of *nSources
+*if(sourceNum == nSources) 
+        }
+*else
         },
 *endif
+*endif
 *# ----------------------------------------------------------
-*loop conditions *bodyElements
+*set cond Waveguide_port *bodyElements
 *if(strcasecmp(condName,"Waveguide_port")==0&&condNumEntities>0)
 *set var HEADER = 0
 *loop elems *onlyInCond
@@ -489,13 +494,17 @@ Waveguide_port
 *else
                 *ElemsNum
 *endif
+*set var sourceNum = sourceNum + 1
 *end elems
             ]
+*if(sourceNum == nSources) 
+        }
+*else
         },
+*endif
 *endif 
-*end conditions
 *# ----------------------------------------------------------
-*loop conditions *bodyElements
+*set cond TEM_port *bodyElements
 *if(strcasecmp(condName,"TEM_port")==0&&condNumEntities>0)
 *set var ENTITY = 0
 *loop elems *onlyInCond
@@ -515,13 +524,16 @@ Waveguide_port
 *else
                 *ElemsNum
 *endif
+*set var sourceNum = sourceNum + 1
 *end elems
             ]
-        }, 
+*if(sourceNum == nSources) 
+        }
+*else
+        },
+*endif
 *endif 
-*end conditions
     ],
-
 *# ----------------------------------------------------------
 *# ------------------ OUTPUT REQUESTS -----------------------
 *# ----------------------------------------------------------
