@@ -1,4 +1,4 @@
-/openfoam/
-*.msh
+*.png
+*.tree
+*.vv
 *.rdr
-*.smb

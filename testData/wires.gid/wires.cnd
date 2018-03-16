@@ -1,0 +1,478 @@
+BOOK:Electromagnetic_sources
+NUMBER: 1 CONDITION: Planewave
+CONDTYPE: over layer
+CONDMESHTYPE: over body elements
+QUESTION: Definition_mode#CB#(by_vectors,by_angles,randomized_multisource)
+VALUE: by_vectors
+DEPENDENCIES: (by_vectors,             RESTORE,Direction_vector,#CURRENT#,  RESTORE,Polarization_vector,#CURRENT#,         HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#,    HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
+DEPENDENCIES: (by_angles,              HIDE,Direction_vector,#CURRENT#,     HIDE,Polarization_vector,#CURRENT#,            RESTORE,Direction_theta,#CURRENT#, RESTORE,Direction_phi,#CURRENT#, RESTORE,Polarization_alpha,#CURRENT#, RESTORE,Polarization_beta,#CURRENT#, HIDE,Number_of_random_planewaves,#CURRENT#,    HIDE,Relative_variation_of_random_delay,#CURRENT#)
+DEPENDENCIES: (randomized_multisource, HIDE,Direction_vector,#CURRENT#,     HIDE,Polarization_vector,#CURRENT#,            HIDE,Direction_theta,#CURRENT#,    HIDE,Direction_phi,#CURRENT#,    HIDE,Polarization_alpha,#CURRENT#,    HIDE,Polarization_beta,#CURRENT#,    RESTORE,Number_of_random_planewaves,#CURRENT#, RESTORE,Relative_variation_of_random_delay,#CURRENT#)
+QUESTION: Direction_vector
+VALUE: 0.0 0.0 1.0
+HELP: Direction of the plane wave incident vector in cartesian coordinates.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Polarization_vector
+VALUE: 1.0 0.0 0.0
+HELP: Direction of the plane wave electric field vector in cartesian coordinates.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Number_of_random_planewaves
+VALUE: 200
+HELP: Number of random planewaves
+QUESTION: Relative_variation_of_random_delay
+VALUE: 0.3
+HELP: Variation of delays in the planewave magnitudes expressed in parts per unit.
+QUESTION: Direction_theta
+VALUE: 90
+HELP: The polar angle (degrees) of the plane wave incident vector.
+QUESTION: Direction_phi
+VALUE: 0.0
+HELP: The azimuthal angle (degrees) of the plane wave incident vector.
+QUESTION: Polarization_alpha
+VALUE: 0.0
+HELP: The polar angle (degrees) of the plane wave electric field vector.
+QUESTION: Polarization_beta
+VALUE: 0.0
+HELP: The azimuthal angle (degrees) of the plane wave electric field vector.
+QUESTION: Magnitude#CB#(Gaussian,File)
+VALUE: Gaussian
+DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
+DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Gaussian_spread
+VALUE: 2e-9
+HELP: Gaussian spread in seconds.
+QUESTION: Gaussian_delay
+VALUE: 10e-9
+HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
+QUESTION: File
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+HELP: File containing excitation values. If set, ignores other excitation options.
+END CONDITION
+NUMBER: 2 CONDITION: Generator_on_line
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+QUESTION: type#CB#(voltage,current)
+VALUE: voltage
+QUESTION: Magnitude#CB#(Gaussian,File)
+VALUE: Gaussian
+DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
+DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Gaussian_spread
+VALUE: 2e-9
+HELP: Gaussian spread in seconds.
+QUESTION: Gaussian_delay
+VALUE: 10e-9
+HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
+QUESTION: File
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+HELP: File containing excitation values. If set, ignores other excitation options.
+END CONDITION
+NUMBER: 3 CONDITION: Source_on_line
+CONDTYPE: over lines
+CONDMESHTYPE: over body elements
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
+QUESTION: type#CB#(electricField,magneticField)
+VALUE: electricField
+QUESTION: Hardness#CB#(soft,hard)
+VALUE: soft
+QUESTION: Magnitude#CB#(Gaussian,File)
+VALUE: Gaussian
+DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
+DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Gaussian_spread
+VALUE: 2e-9
+HELP: Gaussian spread in seconds.
+QUESTION: Gaussian_delay
+VALUE: 10e-9
+HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
+QUESTION: File
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+HELP: File containing excitation values. If set, ignores other excitation options.
+END CONDITION
+NUMBER: 4 CONDITION: Waveguide_port
+CONDTYPE: over surfaces
+CONDMESHTYPE: over body elements
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
+QUESTION: Shape#CB#(Rectangular)
+VALUE: Rectangular
+QUESTION: Mode#CB#(TE)
+VALUE: TE
+QUESTION: FirstMode
+VALUE: 1
+QUESTION: SecondMode
+VALUE: 0
+QUESTION: Magnitude#CB#(Gaussian,File)
+VALUE: Gaussian
+DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
+DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Gaussian_spread
+VALUE: 2e-9
+HELP: Gaussian spread in seconds.
+QUESTION: Gaussian_delay
+VALUE: 10e-9
+HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
+QUESTION: File
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+HELP: File containing excitation values. If set, ignores other excitation options.
+END CONDITION
+NUMBER: 5 CONDITION: TEM_port
+CONDTYPE: over surfaces
+CONDMESHTYPE: over body elements
+QUESTION: entityId#FUNC#(NumEntity)
+VALUE: 0
+STATE: HIDDEN
+QUESTION: Shape#CB#(Coaxial)
+VALUE: Coaxial
+QUESTION: Mode#CB#(Voltage,Current)
+VALUE: Voltage
+QUESTION: Origin
+VALUE: 0
+TKWIDGET: GidUtils::TkwidgetPickPoint
+QUESTION: Inner_radius
+VALUE: 0.0
+QUESTION: Outer_radius
+VALUE: 0.0
+QUESTION: Magnitude#CB#(Gaussian,File)
+VALUE: Gaussian
+DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
+DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Gaussian_spread
+VALUE: 2e-9
+HELP: Gaussian spread in seconds.
+QUESTION: Gaussian_delay
+VALUE: 10e-9
+HELP: Gaussian delay in seconds.
+IMAGE: images/gauss_excitation.png
+QUESTION: File
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+HELP: File containing excitation values. If set, ignores other excitation options.
+END CONDITION
+BOOK:Output_Requests
+NUMBER: 6 CONDITION: OutRq_on_point
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+CANREPEAT: yes
+QUESTION: Name
+VALUE: Unnamed_point_outRq#WIDTH#(18)
+QUESTION: Type#CB#(electricField,magneticField,current)
+VALUE: electricField
+QUESTION: Time#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+QUESTION: Initial_time
+VALUE: 0.0
+QUESTION: Final_time
+VALUE: 0.0
+QUESTION: Sampling_period
+VALUE: 0.0
+QUESTION: Frequency#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+QUESTION: Initial_Frequency
+VALUE: 0.0
+QUESTION: Final_Frequency
+VALUE: 0.0
+QUESTION: Frequency_step
+VALUE: 0.0
+QUESTION: Log_frequency_sweep#CB#(0,1)
+VALUE: 0
+QUESTION: Use_transfer_function#CB#(0,1)
+VALUE: 0
+QUESTION: Transfer_function_file
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+END CONDITION
+NUMBER: 7 CONDITION: OutRq_on_line
+CONDTYPE: over lines
+CONDMESHTYPE: over body elements
+CANREPEAT: yes
+QUESTION: Name
+VALUE: Unnamed_point_outRq#WIDTH#(18)
+QUESTION: Type#CB#(voltage)
+VALUE: electricField
+QUESTION: Time#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+QUESTION: Initial_time
+VALUE: 0.0
+QUESTION: Final_time
+VALUE: 0.0
+QUESTION: Sampling_period
+VALUE: 0.0
+QUESTION: Frequency#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+QUESTION: Initial_Frequency
+VALUE: 0.0
+QUESTION: Final_Frequency
+VALUE: 0.0
+QUESTION: Frequency_step
+VALUE: 0.0
+QUESTION: Log_frequency_sweep#CB#(0,1)
+VALUE: 0
+QUESTION: Use_transfer_function#CB#(0,1)
+VALUE: 0
+QUESTION: Transfer_function_file
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+END CONDITION
+NUMBER: 8 CONDITION: OutRq_on_surface
+CONDTYPE: over surfaces
+CONDMESHTYPE: over body elements
+CANREPEAT: yes
+QUESTION: Name
+VALUE: Unnamed_surface_outRq#WIDTH#(18)
+QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals)
+VALUE: electricField
+QUESTION: Time#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+QUESTION: Initial_time
+VALUE: 0.0
+QUESTION: Final_time
+VALUE: 0.0
+QUESTION: Sampling_period
+VALUE: 0.0
+QUESTION: Frequency#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+QUESTION: Initial_Frequency
+VALUE: 0.0
+QUESTION: Final_Frequency
+VALUE: 0.0
+QUESTION: Frequency_step
+VALUE: 0.0
+QUESTION: Log_frequency_sweep#CB#(0,1)
+VALUE: 0
+QUESTION: Use_transfer_function#CB#(0,1)
+VALUE: 0
+QUESTION: Transfer_function_file
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+END CONDITION
+NUMBER: 9 CONDITION: OutRq_on_layer
+CONDTYPE: over layer
+CONDMESHTYPE: over body elements
+CANREPEAT: yes
+QUESTION: Name
+VALUE: Unnamed_outRq_on_layer#WIDTH#(18)
+QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,bulkCurrentElectric,bulkCurrentMagnetic)
+VALUE: electricField
+QUESTION: Time#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+QUESTION: Initial_time
+VALUE: 0.0
+QUESTION: Final_time
+VALUE: 0.0
+QUESTION: Sampling_period
+VALUE: 0.0
+QUESTION: Frequency#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+QUESTION: Initial_Frequency
+VALUE: 0.0
+QUESTION: Final_Frequency
+VALUE: 0.0
+QUESTION: Frequency_step
+VALUE: 0.0
+QUESTION: Log_frequency_sweep#CB#(0,1)
+VALUE: 0
+QUESTION: Use_transfer_function#CB#(0,1)
+VALUE: 0
+QUESTION: Transfer_function_file
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+END CONDITION
+NUMBER: 10 CONDITION: Bulk_current_on_surface
+CONDTYPE: over surfaces
+CONDMESHTYPE: over body elements
+CANREPEAT: yes
+QUESTION: Name
+VALUE: Unnamed_bulkCurrent_on_surface_outRq#WIDTH#(18)
+QUESTION: Type#CB#(bulkCurrentElectric)
+VALUE: bulkCurrentElectric
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
+QUESTION: Time#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+QUESTION: Initial_time
+VALUE: 0.0
+QUESTION: Final_time
+VALUE: 0.0
+QUESTION: Sampling_period
+VALUE: 0.0
+QUESTION: Frequency#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+QUESTION: Initial_Frequency
+VALUE: 0.0
+QUESTION: Final_Frequency
+VALUE: 0.0
+QUESTION: Frequency_step
+VALUE: 0.0
+QUESTION: Log_frequency_sweep#CB#(0,1)
+VALUE: 0
+QUESTION: Use_transfer_function#CB#(0,1)
+VALUE: 0
+QUESTION: Transfer_function_file
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+END CONDITION
+NUMBER: 11 CONDITION: Bulk_current_on_layer
+CONDTYPE: over layer
+CONDMESHTYPE: over body elements
+CANREPEAT: yes
+QUESTION: Name
+VALUE: Unnamed_bulkCurrent_on_layer_outRq#WIDTH#(18)
+QUESTION: Type#CB#(bulkCurrentElectric)
+VALUE: bulkCurrentElectric
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
+QUESTION: Time#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+QUESTION: Initial_time
+VALUE: 0.0
+QUESTION: Final_time
+VALUE: 0.0
+QUESTION: Sampling_period
+VALUE: 0.0
+QUESTION: Frequency#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+QUESTION: Initial_Frequency
+VALUE: 0.0
+QUESTION: Final_Frequency
+VALUE: 0.0
+QUESTION: Frequency_step
+VALUE: 0.0
+QUESTION: Log_frequency_sweep#CB#(0,1)
+VALUE: 0
+QUESTION: Use_transfer_function#CB#(0,1)
+VALUE: 0
+QUESTION: Transfer_function_file
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+END CONDITION
+NUMBER: 12 CONDITION: Far_field
+CONDTYPE: over layer
+CONDMESHTYPE: over body elements
+CANREPEAT: yes
+QUESTION: Name
+VALUE: Farfield_outRq#WIDTH#(18)
+QUESTION: Type#CB#(farField)
+VALUE: farField
+QUESTION: Initial_theta
+VALUE: 0
+HELP: Angle in degrees, min = 0 and max = 180.
+QUESTION: Final_theta
+VALUE: 0
+HELP: Angle in degrees, min = 0 and max = 180.
+QUESTION: Step_theta
+VALUE: 10
+HELP: Angle in degrees.
+QUESTION: Initial_phi
+VALUE: 0
+HELP: Angle in degrees, min = 0 and max = 360.
+QUESTION: Final_phi
+VALUE: 0
+HELP: Angle in degrees, min = 0 and max = 360.
+QUESTION: Step_phi
+VALUE: 10
+HELP: Angle in degrees.
+QUESTION: Time#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+STATE: HIDDEN
+QUESTION: Initial_time
+VALUE: 0.0
+STATE: HIDDEN
+QUESTION: Final_time
+VALUE: 0.0
+STATE: HIDDEN
+QUESTION: Sampling_period
+VALUE: 0.0
+STATE: HIDDEN
+QUESTION: Frequency#CB#(0,1)
+VALUE: 1
+STATE: HIDDEN
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+QUESTION: Initial_Frequency
+VALUE: 0.0
+QUESTION: Final_Frequency
+VALUE: 0.0
+QUESTION: Frequency_step
+VALUE: 0.0
+QUESTION: Log_frequency_sweep#CB#(0,1)
+VALUE: 0
+QUESTION: Use_transfer_function#CB#(0,1)
+VALUE: 1
+STATE: HIDDEN
+QUESTION: Transfer_function_file
+VALUE: 
+TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+END CONDITION
+BOOK:Meshing
+NUMBER: 13 CONDITION: Grid
+CONDTYPE: over layer
+CONDMESHTYPE: over body elements
+QUESTION: Type#CB#(by_number_of_cells,by_distance)
+VALUE: by_number_of_cells
+QUESTION: Size
+VALUE: 20 20 20
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: boundary_padding_type#CB#(None,by_number_of_cells,by_distance)
+VALUE: by_distance
+DEPENDENCIES: (None,               HIDE,Lower_padding,#CURRENT#, HIDE,Upper_padding,#CURRENT#,HIDE,Lower_padding_mesh_size,#CURRENT#, HIDE,Upper_padding_mesh_size,#CURRENT#)
+DEPENDENCIES: (by_number_of_cells, RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
+DEPENDENCIES: (by_distance,        RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
+QUESTION: Lower_padding
+VALUE: 0.0 0.0 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+QUESTION: Upper_padding
+VALUE: 0.0 0.0 0.0
+HELP: This value establishes a padding of empty computational domain between the bounding box and the boundaries
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Lower_padding_mesh_size
+VALUE: 0.0 0.0 0.0
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Upper_padding_mesh_size
+VALUE: 0.0 0.0 0.0
+HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+END CONDITION

@@ -176,9 +176,8 @@ PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j){
         return nullptr;
     }
     PhysicalModel::Group<>* res = new PhysicalModel::Group<>();
-    json materials = j.at("materials");
-    for (json::const_iterator it = materials.begin();
-            it != materials.end(); ++it) {
+    json mats = j.at("materials");
+    for (json::const_iterator it = mats.begin(); it != mats.end(); ++it) {
         res->add(readPhysicalModel( *it ));
     }
     return res;
@@ -792,7 +791,9 @@ std::pair<Math::CVecR3, Math::CVecR3> Parser::strToBox(
     return std::pair<Math::CVecR3,Math::CVecR3>(min, max);
 }
 
-Math::CVecI3 Parser::strToCVecI3(const std::string& str) {
+Math::CVecI3 Parser::strToCVecI3(std::string str) {
+    str.erase(std::remove(str.begin(), str.end(), '{'), str.end());
+    str.erase(std::remove(str.begin(), str.end(), '}'), str.end());
     std::stringstream ss(str);
     Math::CVecI3 res;
     ss >> res(Math::Constants::x)
@@ -801,7 +802,9 @@ Math::CVecI3 Parser::strToCVecI3(const std::string& str) {
     return res;
 }
 
-Math::CVecR3 Parser::strToCVecR3(const std::string& str) {
+Math::CVecR3 Parser::strToCVecR3(std::string str) {
+    str.erase(std::remove(str.begin(), str.end(), '{'), str.end());
+    str.erase(std::remove(str.begin(), str.end(), '}'), str.end());
     std::stringstream ss(str);
     Math::CVecR3 res;
     ss >> res(Math::Constants::x)

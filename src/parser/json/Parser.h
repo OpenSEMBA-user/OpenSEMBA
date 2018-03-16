@@ -27,6 +27,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include "geometry/mesh/Geometric.h"
 #include "physicalModel/bound/PEC.h"
@@ -177,8 +178,8 @@ private:
     static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(
             std::string label);
 
-    static Math::CVecI3 strToCVecI3(const std::string& str);
-    static Math::CVecR3 strToCVecR3(const std::string& str);
+    static Math::CVecI3 strToCVecI3(std::string str);
+    static Math::CVecR3 strToCVecR3(std::string str);
     static Math::Constants::CartesianAxis strToCartesianAxis(std::string);
 
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(

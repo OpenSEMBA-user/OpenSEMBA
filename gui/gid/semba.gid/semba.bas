@@ -152,7 +152,7 @@
             "filename": "*matprop(File)"
 *elseif(strcmp(Matprop(TypeId),"SIBC")==0)
             "materialType": "*MatProp(TypeId)",
-            "surfaceType": "*matprop(SurfaceType)"
+            "surfaceType": "*matprop(SurfaceType)",
 *if(strcmp(Matprop(SurfaceType),"File")==0)
             "materialType": "*MatProp(TypeId)",   
             "filename": "*matprop(File)"
@@ -230,9 +230,9 @@
             "directions": "{*cond(Size)}"       
 *else
             "directions": "{*cond(Size)}",
-            "boundaryPaddingType":  "*cond(boundary_padding_type)",
-            "upperPadding":         "{*cond(Upper_padding)}",
-            "lowerPadding":         "{*cond(Lower_padding)}",
+            "boundaryPaddingType": "*cond(boundary_padding_type)",
+            "upperPadding": "{*cond(Upper_padding)}",
+            "lowerPadding": "{*cond(Lower_padding)}",
             "upperPaddingMeshSize": "{*cond(Upper_padding_mesh_size)}",
             "lowerPaddingMeshSize": "{*cond(Lower_padding_mesh_size)}"
 *endif
@@ -246,9 +246,9 @@
 *elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
 *set var NGRIDS = NGRIDS + 1
         {
-            "gridType":    "nativeGiD",
-*#            "corner":      "{*tcl(GiD_Cartesian get corner)}",
-*#            "boxSize":     "{*tcl(GiD_Cartesian get boxsize)}",
+            "gridType": "nativeGiD",
+*#            "corner": "{*tcl(GiD_Cartesian get corner)}",
+*#            "boxSize": "{*tcl(GiD_Cartesian get boxsize)}",
 *#            "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
             "xCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 0),
             "yCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 1),

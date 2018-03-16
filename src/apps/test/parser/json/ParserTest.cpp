@@ -43,6 +43,22 @@ TEST_F(ParserJSONParserTest, Basic) {
     EXPECT_NO_THROW(jsonParser.read(stream));
 }
 
+//TEST_F(ParserJSONParserTest, Planewave) {
+//    std::ifstream stream("testData/planewave.gid/planewave.dat");
+//    EXPECT_TRUE(stream.is_open());
+//
+//    SEMBA::Parser::JSON::Parser jsonParser;
+//    EXPECT_NO_THROW(jsonParser.read(stream));
+//}
+
+TEST_F(ParserJSONParserTest, DMCWF) {
+    std::ifstream stream("testData/dmcwf.gid/dmcwf.dat");
+    EXPECT_TRUE(stream.is_open());
+
+    SEMBA::Parser::JSON::Parser jsonParser;
+    EXPECT_NO_THROW(jsonParser.read(stream));
+}
+
 TEST_F(ParserJSONParserTest, Sphere) {
     std::ifstream stream("testData/sphere.gid/sphere.dat");
     EXPECT_TRUE(stream.is_open());
