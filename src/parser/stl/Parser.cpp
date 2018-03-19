@@ -36,10 +36,8 @@ Parser::~Parser() {
 
 }
 
-Data* Parser::read() {
+Data Parser::read(std::istream& stl) const {
     // Reads coordinates.
-    std::ifstream stl;
-    openAsInput(stl);
     std::string label;
     std::vector<Math::CVecR3> vertices;
     std::size_t nLines = std::count(std::istreambuf_iterator<char>(stl),
@@ -58,12 +56,10 @@ Data* Parser::read() {
     }
     Geometry::Coordinate::Group<Geometry::CoordR3> cG;
     cG.addPos(vertices);
-    stl.close();
 
     // Reads Elements and Layers.
     Geometry::Layer::Group<Geometry::Layer::Layer> lG;
     Geometry::Element::Group<Geometry::ElemR> eG;
-    openAsInput(stl);
     while (!stl.eof()) {
         stl >> label;
         if (label == "solid") {
@@ -96,17 +92,17 @@ Data* Parser::read() {
     }
 
     // Stores results and returns.
-    Data* res = new Data();
-    res->setFilename(getFilename());
-    res->mesh = new Geometry::Mesh::Geometric(Geometry::Grid3(), cG, eG, lG);
+    Data res;
+    res.setFilename(getFilename());
+    res.mesh = new Geometry::Mesh::Geometric(Geometry::Grid3(), cG, eG, lG);
 
-    res->physicalModels = new PhysicalModel::Group<>();
+    res.physicalModels = new PhysicalModel::Group<>();
     PhysicalModel::Predefined::PEC* pec =
             new PhysicalModel::Predefined::PEC(PhysicalModel::Id(1));
-    res->physicalModels->add(pec);
-    res->mesh->castTo<Geometry::Mesh::Geometric>()->setModel(pec);
-    res->sources = new Source::Group<>();
-    res->outputRequests = new OutputRequest::Group<>();
+    res.physicalModels->add(pec);
+    res.mesh->castTo<Geometry::Mesh::Geometric>()->setModel(pec);
+    res.sources = new Source::Group<>();
+    res.outputRequests = new OutputRequest::Group<>();
 
     return res;
 }

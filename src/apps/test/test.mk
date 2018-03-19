@@ -29,6 +29,17 @@ TEST_CORE_SOURCE        = no#
 TEST_CORE_FILESYSTEM    = no#
 TEST_PARSER_JSON        = no#
 TEST_PARSER_STL         = no#
+
+ifeq ($(TEST_ALL),yes)
+	TEST_CORE_MATH          =yes#
+	TEST_CORE_GEOMETRY      =yes#
+	TEST_CORE_ARGUMENT      =yes#
+	TEST_CORE_PHYSICALMODEL =yes#
+	TEST_CORE_SOURCE        =yes#
+	TEST_CORE_FILESYSTEM    =yes#
+	TEST_PARSER_JSON        =yes#
+	TEST_PARSER_STL         =yes#
+endif
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
 
@@ -111,7 +122,7 @@ OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
 # =============================================================================
 LIBS      += gtest
 LIBRARIES += 
-INCLUDES  += $(SRC_DIR) $(SRC_DIR)core/ $(EXTERNAL_DIR)/json/
+INCLUDES  += $(SRC_DIR) $(SRC_DIR)core/ $(EXTERNAL_DIR)json/
 # =============================================================================
 .PHONY: default print
 

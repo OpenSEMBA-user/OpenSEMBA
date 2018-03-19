@@ -18,37 +18,41 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-#include "ParserTest.h"
+#include "gtest/gtest.h"
+#include "geometry/mesh/Geometric.h"
+#include "geometry/element/Triangle3.h"
+#include "parser/stl/Parser.h"
+#include "exporter/vtk/Exporter.h"
 
 using namespace std;
 using namespace SEMBA;
 
-ParserSTLParserTest::ParserSTLParserTest() {
-    stlFolder_ = "./testData/";
-}
-
-ParserSTLParserTest::~ParserSTLParserTest() {
-}
-
-SEMBA::Data* ParserSTLParserTest::parseFromSTL(const string project) const {
-    Parser::STL::Parser parser(stlFolder_ + project + ".stl");
-    EXPECT_TRUE(parser.canOpen());
-    Data* res = parser.read();
-    EXPECT_TRUE(res != NULL);
-    if (res != NULL) {
-        EXPECT_TRUE(res->check());
+class ParserSTLParserTest : public ::testing::Test {
+protected:
+    ParserSTLParserTest() {
+        stlFolder_ = "./testData/";
     }
+
+    string stlFolder_;
+    Data parseFromSTL(const string project) const;
+};
+
+SEMBA::Data ParserSTLParserTest::parseFromSTL(string project) const {
+    Parser::STL::Parser parser;
+    ifstream input(stlFolder_ + project + ".stl");
+    Data res;
+    EXPECT_NO_THROW(res = parser.read(input));
     return res;
 }
 
 
 TEST_F(ParserSTLParserTest, case_single) {
     string project = "single";
-    Data* smb = parseFromSTL(project);
-    EXPECT_TRUE(smb->mesh != NULL);
+    Data smb = parseFromSTL(project);
+    EXPECT_TRUE(smb.mesh != NULL);
     Geometry::Mesh::Geometric* mesh =
-            smb->mesh->castTo<Geometry::Mesh::Geometric>();
-    if (smb->mesh != NULL) {
+            smb.mesh->castTo<Geometry::Mesh::Geometric>();
+    if (smb.mesh != NULL) {
         EXPECT_EQ(3, mesh->coords().size());
         EXPECT_EQ(1, mesh->elems().getOf<Geometry::Tri3>().size());
     }
@@ -56,11 +60,11 @@ TEST_F(ParserSTLParserTest, case_single) {
 
 TEST_F(ParserSTLParserTest, case_B2) {
     string project = "B2";
-    Data* smb = parseFromSTL(project);
-    EXPECT_TRUE(smb->mesh != NULL);
+    Data smb = parseFromSTL(project);
+    EXPECT_TRUE(smb.mesh != NULL);
     Geometry::Mesh::Geometric* mesh =
-            smb->mesh->castTo<Geometry::Mesh::Geometric>();
-    if (smb->mesh != NULL) {
+            smb.mesh->castTo<Geometry::Mesh::Geometric>();
+    if (smb.mesh != NULL) {
         EXPECT_EQ(1956, mesh->coords().size());
         EXPECT_EQ(652, mesh->elems().getOf<Geometry::Tri3>().size());
     }

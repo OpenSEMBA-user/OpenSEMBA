@@ -45,7 +45,7 @@ public:
     Parser(const std::string& fn);
     virtual ~Parser();
 
-    Data* read();
+    Data read(std::istream& inputStream) const;
 
     void printInfo() const;
 };

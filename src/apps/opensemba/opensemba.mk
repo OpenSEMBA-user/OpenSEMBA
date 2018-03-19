@@ -43,7 +43,7 @@ ifeq ($(FFTW3_SUPPORT),yes)
 endif
 # =============================================================================
 LIBS += gidpost
-INCLUDES += $(SRC_DIR)core/ $(LIB_DIR)gidpost/include/
+INCLUDES += $(SRC_DIR)core/ $(LIB_DIR)gidpost/include/ $(EXTERNAL_DIR)json/
 # =============================================================================
 .PHONY: default print
 
