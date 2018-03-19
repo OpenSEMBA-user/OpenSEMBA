@@ -44,35 +44,35 @@ void Options::addArguments(Argument::Group& args) const {
 }
 
 void Options::set(const Settings& opts) {
-    if (opts.existsName("Run simulation")) {
-        setRunSimulation(opts("Run simulation").getBool());
+    if (opts.existsName(      "runSimulation")) {
+        setRunSimulation(opts("runSimulation").getBool());
     }
-    if (opts.existsName("Final time")) {
-        setFinalTime(opts("Final time").getReal());
+    if (opts.existsName(  "finalTime")) {
+        setFinalTime(opts("finalTime").getReal());
     }
-    if (opts.existsName("Number of time steps")) {
-        setNumberOfTimeSteps(opts("Number of time steps").getInt());
+    if (opts.existsName(          "numberOfTimeSteps")) {
+        setNumberOfTimeSteps(opts("numberOfTimeSteps").getInt());
     }
-    if (opts.existsName("Time step")) {
-        setTimeStep(opts("Time step").getReal());
+    if (opts.existsName( "timeStep")) {
+        setTimeStep(opts("timeStep").getReal());
     }
-    if (opts.existsName("CFL")) {
-        setCFL(opts("CFL").getReal());
+    if (opts.existsName("cfl")) {
+        setCFL(opts(    "cfl").getReal());
     }
-    if (opts.existsName("Default sampling period")) {
-        setSamplingPeriod(opts("Default sampling period").getReal());
+    if (opts.existsName(       "defaultSamplingPeriod")) {
+        setSamplingPeriod(opts("defaultSamplingPeriod").getReal());
     }
-    if (opts.existsName("Force restarting")) {
-        setForceRestarting(opts("Force restarting").getBool());
+    if (opts.existsName(        "forceRestarting")) {
+        setForceRestarting(opts("forceRestarting").getBool());
     }
-    if (opts.existsName("Resume simulation")) {
-        setResumeSimulation(opts("Resume simulation").getBool());
+    if (opts.existsName(         "resumeSimulation")) {
+        setResumeSimulation(opts("resumeSimulation").getBool());
     }
-    if (opts.existsName("Flush")) {
-        setFlush(opts("Flush").getReal());
+    if (opts.existsName("flush")) {
+        setFlush(opts(  "flush").getReal());
     }
-    if (opts.existsName("Additional arguments")) {
-        setAdditionalArguments(opts("Additional arguments").getString());
+    if (opts.existsName(            "additionalArguments")) {
+        setAdditionalArguments(opts("additionalArguments").getString());
     }
 }
 

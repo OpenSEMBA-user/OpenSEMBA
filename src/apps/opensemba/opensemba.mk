@@ -62,6 +62,7 @@ $(LIB_DIR)/$(OUT)/lib/lib$(OUT).a: $(OBJS_CXX)
 	@echo "Linking:" $@
 	-ar rs $@ $^
 	-cd $(SRC_DIR); find core/ exporter/ parser/ mesher/ solver/ \( -name "*.h" -o -name "*.hpp" \) -exec cp --parents {} ../$(LIB_DIR)$(OUT)/include/ \;
+	cp $(EXTERNAL_DIR)json/*.hpp $(LIB_DIR)$(OUT)/include/parser/json/
 
 $(OUT): $(LIB_DIR)/$(OUT)/lib/lib$(OUT).a
 
