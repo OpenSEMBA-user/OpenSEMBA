@@ -19,6 +19,7 @@
         "forceRestarting": *GenData(Force_restarting),
         "resumeSimulation": *GenData(Resume_simulation),
         "flush": *GenData(Flush),
+        "geometryScalingFactor": *GenData(scaling_factor),
 *if(strcmp(GenData(Additional_arguments),"")!=0)
         "additionalArguments": *GenData(Additional_arguments),
 *endif
@@ -29,7 +30,6 @@
         "mtln": *GenData(MTLN),
         "minDistanceWires": *GenData(Min_distance_wires),
         "mapVTK": *GenData(Map_VTK),
-        "geometryScalingFactor": *GenData(scaling_factor),
         "mesherOptions": {
             "lowerXBound": "*GenData(Lower_x_bound)",
             "lowerYBound": "*GenData(Lower_y_bound)",

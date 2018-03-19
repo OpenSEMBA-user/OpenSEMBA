@@ -12,6 +12,7 @@
         "forceRestarting": 0,
         "resumeSimulation": 0,
         "flush": 0,
+        "geometryScalingFactor": 1.0,
         "timeIntegrator": "lserk4",
         "useLTS": 0,
         "upwinding": 1.0
@@ -32,24 +33,9 @@
     "grids": [
         {
             "gridType": "nativeGiD",
-            "xCoordinates": [0.0,
-                             0.2,
-                             0.4,
-                             0.6,
-                             0.8,
-                             1.0],
-            "yCoordinates": [0.0,
-                             0.2,
-                             0.4,
-                             0.6,
-                             0.8,
-                             1.0],
-            "zCoordinates": [0.0,
-                             0.2,
-                             0.4,
-                             0.6,
-                             0.8,
-                             1.0]
+            "xCoordinates": [],
+            "yCoordinates": [],
+            "zCoordinates": []
         }
     ],
 

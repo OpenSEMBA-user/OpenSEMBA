@@ -58,14 +58,14 @@ void Parser::postReadOperations(Data& res) const {
                         res.solver->getSettings()("geometryScalingFactor").getReal();
                 res.mesh->applyScalingFactor(scalingFactor);
                 Solver::Settings settings = res.solver->getSettings();
-                settings("Geometry scaling factor").setReal((Math::Real) 1.0);
+                settings("geometryScalingFactor").setReal((Math::Real) 1.0);
                 res.solver->setSettings(settings);
             }
             catch (...) {
-                std::cerr << "Unable to find geometryScalingFactor"
+                std::cerr << "Unable to find geometryScalingFactor "
                              "during postReadOperations" << std::endl;
                 throw std::logic_error(
-                        "Unable to find geometryScalingFactor"
+                        "Unable to find geometryScalingFactor "
                         "during postReadOperations");
             }
         }

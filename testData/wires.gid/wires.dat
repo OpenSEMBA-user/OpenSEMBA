@@ -12,12 +12,12 @@
         "forceRestarting": 0,
         "resumeSimulation": 0,
         "flush": 0,
+        "geometryScalingFactor": 1.0,
         "compositesModel": "SGBC",
         "wiresFlavor": "berenger",
         "mtln": 0,
         "minDistanceWires": 0.5,
         "mapVTK": 0,
-        "geometryScalingFactor": 1.0,
         "mesherOptions": {
             "lowerXBound": "PML",
             "lowerYBound": "PML",
@@ -2548,9 +2548,9 @@
             "name": "Current",
             "type": "current",
             "domain": {
-                "initialTime":    "0.0",
-                "finalTime":      "0",
-                "samplingPeriod": "0.0"
+                "initialTime":    0.0,
+                "finalTime":      0,
+                "samplingPeriod": 0.0
             },
             "elemIds": [
                 394

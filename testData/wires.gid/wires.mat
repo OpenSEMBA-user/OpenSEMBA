@@ -241,7 +241,7 @@ VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
 QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
-VALUE: #N# 5 0.0018 1.0 1.0 7e4 0.0 
+VALUE: #N# 5 0.0018 1.0 1.0 7e4 0.0
 QUESTION: Freq_min
 VALUE: 1e5
 HELP: For MIBC Only. Minimum frequency to which the vector fitting will be performed.
