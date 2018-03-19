@@ -55,9 +55,9 @@
             "layerBox": "{0.012000000000002719 0.012 0.192 -0.0 -2.693855815499857e-10 -0.03}",
             "type": "by_number_of_cells",
             "directions": "{20 20 20}",
-            "boundaryPaddingType":  "by_distance",
-            "upperPadding":         "{0.0 0.0 0.0}",
-            "lowerPadding":         "{0.0 0.0 0.0}",
+            "boundaryPaddingType": "by_distance",
+            "upperPadding": "{0.0 0.0 0.0}",
+            "lowerPadding": "{0.0 0.0 0.0}",
             "upperPaddingMeshSize": "{0.0 0.0 0.0}",
             "lowerPaddingMeshSize": "{0.0 0.0 0.0}"
         }
@@ -4364,9 +4364,9 @@
             "name": "init",
             "type": "electricField",
             "domain": {
-                "initialTime":    "0.0",
-                "finalTime":      "0",
-                "samplingPeriod": "0.0"
+                "initialTime":    0.0,
+                "finalTime":      0,
+                "samplingPeriod": 0.0
             },
             "elemIds": [
                 1150
@@ -4377,9 +4377,9 @@
             "name": "mid",
             "type": "electricField",
             "domain": {
-                "initialTime":    "0.0",
-                "finalTime":      "0",
-                "samplingPeriod": "0.0"
+                "initialTime":    0.0,
+                "finalTime":      0,
+                "samplingPeriod": 0.0
             },
             "elemIds": [
                 597
@@ -4390,9 +4390,9 @@
             "name": "out",
             "type": "electricField",
             "domain": {
-                "initialTime":    "0.0",
-                "finalTime":      "0",
-                "samplingPeriod": "0.0"
+                "initialTime":    0.0,
+                "finalTime":      0,
+                "samplingPeriod": 0.0
             },
             "elemIds": [
                 76

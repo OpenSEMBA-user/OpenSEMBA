@@ -38,9 +38,11 @@ public:
     Triangle3(const Triangle3& rhs);
     virtual ~Triangle3();
 
+    static const std::size_t sizeOfCoordinates = 3;
+
     SEMBA_CLASS_DEFINE_CLONE(Triangle3);
 
-    std::size_t numberOfCoordinates() const { return 3; }
+    std::size_t numberOfCoordinates() const { return sizeOfCoordinates; }
 
     std::size_t numberOfSideCoordinates(const std::size_t f = 0) const {
         return 2;

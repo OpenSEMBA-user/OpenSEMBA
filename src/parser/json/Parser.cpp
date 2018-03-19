@@ -471,65 +471,12 @@ Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
     Geometry::Element::Group<Geometry::ElemR> res;
     const json& elems = j.at("elements").get<json>();
 
-    {
-        const json& e = elems.at("hexahedra").get<json>();
-        for (json::const_iterator it = e.begin(); it != e.end(); ++it) {
-            ParsedElementIds elemIds =
-                    readElementIds(it->get<std::string>(), 8);
-            ParsedElementPtrs elemPtrs =
-                    convertElementIdsToPtrs(elemIds, mG, lG, cG);
-            res.add(new Geometry::HexR8(elemIds.elemId,
-                    elemPtrs.vPtr.data(), elemPtrs.layerPtr, elemPtrs.matPtr));
-        }
-    }
 
-    {
-        const json& e = elems.at("tetrahedra").get<json>();
-        for (json::const_iterator it = e.begin(); it != e.end(); ++it) {
-            ParsedElementIds elemIds =
-                    readElementIds(it->get<std::string>(), 4);
-            ParsedElementPtrs elemPtrs =
-                    convertElementIdsToPtrs(elemIds, mG, lG, cG);
-            res.add(new Geometry::Tet4(elemIds.elemId,
-                    elemPtrs.vPtr.data(), elemPtrs.layerPtr, elemPtrs.matPtr));
-        }
-    }
-
-    {
-        const json& e = elems.at("quadrilateral").get<json>();
-        for (json::const_iterator it = e.begin(); it != e.end(); ++it) {
-            ParsedElementIds elemIds =
-                    readElementIds(it->get<std::string>(), 4);
-            ParsedElementPtrs elemPtrs =
-                    convertElementIdsToPtrs(elemIds, mG, lG, cG);
-            res.add(new Geometry::QuaR4(elemIds.elemId,
-                    elemPtrs.vPtr.data(), elemPtrs.layerPtr, elemPtrs.matPtr));
-        }
-    }
-
-    {
-        const json& e = elems.at("triangle").get<json>();
-        for (json::const_iterator it = e.begin(); it != e.end(); ++it) {
-            ParsedElementIds elemIds =
-                    readElementIds(it->get<std::string>(), 3);
-            ParsedElementPtrs elemPtrs =
-                    convertElementIdsToPtrs(elemIds, mG, lG, cG);
-            res.add(new Geometry::Tri3(elemIds.elemId,
-                    elemPtrs.vPtr.data(), elemPtrs.layerPtr, elemPtrs.matPtr));
-        }
-    }
-
-    {
-        const json& e = elems.at("line").get<json>();
-        for (json::const_iterator it = e.begin(); it != e.end(); ++it) {
-            ParsedElementIds elemIds =
-                    readElementIds(it->get<std::string>(), 4);
-            ParsedElementPtrs elemPtrs =
-                    convertElementIdsToPtrs(elemIds, mG, lG, cG);
-            res.add(new Geometry::LinR2(elemIds.elemId,
-                    elemPtrs.vPtr.data(), elemPtrs.layerPtr, elemPtrs.matPtr));
-        }
-    }
+    res.add(readElemStrAs<Geometry::HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
+    res.add(readElemStrAs<Geometry::Tet4> (mG, lG, cG, elems.at("tetrahedra").get<json>()));
+    res.add(readElemStrAs<Geometry::QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
+    res.add(readElemStrAs<Geometry::Tri3> (mG, lG, cG, elems.at("triangle").get<json>()));
+    res.add(readElemStrAs<Geometry::LinR2> (mG, lG, cG, elems.at("line").get<json>()));
 
     return res;
 }
@@ -638,11 +585,10 @@ Source::Port::Waveguide* Parser::readPortWaveguide(
     if (shape.compare("Rectangular") == 0) {
         return new Source::Port::WaveguideRectangular(
                 readMagnitude(       j.at("magnitude").get<json>()),
-                readElemIdsAsGroupOf<const Geometry::Surf>(mesh, j.at("elemIds").get<json>()),
+                readElemIdsAsGroupOf<const Geometry::Surf>(
+                             mesh, j.at("elemIds").get<json>()),
                 strToWaveguideMode(  j.at("excitationMode").get<std::string>()),
-                std::pair<Math::UInt,Math::UInt>(
-                                     j.at("firstMode").get<int>(),
-                                     j.at("secondMode").get<int>()) );
+                {j.at("firstMode").get<int>(), j.at("secondMode").get<int>()} );
     } else {
         throw std::logic_error("Unrecognized waveguide port shape: " + shape);
     }
@@ -930,47 +876,6 @@ Math::Axis::Local Parser::strToLocalAxes(const std::string& str) {
     end = str.find_last_of("}");
     Math::CVecR3 origin = strToCVecR3(str.substr(begin+1,end-1));
     return Math::Axis::Local(eulerAngles, origin);
-}
-
-Parser::ParsedElementIds Parser::readElementIds(
-        const std::string& str,
-        size_t numberOfVertices) {
-    Parser::ParsedElementIds res;
-    std::stringstream ss(str);
-
-    ss >> res.elemId >> res.mat >> res.layer;
-    res.v.resize(8);
-    for (std::size_t j = 0; j < numberOfVertices; j++) {
-        ss >> res.v[j];
-    }
-
-    return res;
-}
-
-Parser::ParsedElementPtrs Parser::convertElementIdsToPtrs(
-        const ParsedElementIds& elemIds,
-        const PhysicalModel::Group<>& physicalModels,
-        const Geometry::Layer::Group<>& layers,
-        const Geometry::CoordR3Group& coords) {
-
-    ParsedElementPtrs res;
-
-    if (elemIds.mat != MatId(0)) {
-        res.matPtr = physicalModels.getId(elemIds.mat);
-    } else {
-        res.matPtr = nullptr;
-    }
-    if (elemIds.layer != Geometry::LayerId(0)) {
-        res.layerPtr = layers.getId(elemIds.layer);
-    } else {
-        res.layerPtr = nullptr;
-    }
-    res.vPtr.resize(elemIds.v.size(), nullptr);
-    for (size_t i = 0; i < elemIds.v.size(); ++i) {
-        res.vPtr[i] = coords.getId(elemIds.v[i]);
-    }
-
-    return res;
 }
 
 Source::Port::TEM::ExcitationMode Parser::strToTEMMode(std::string str) {

@@ -30,10 +30,12 @@ namespace Element {
 
 class Line2Base : public virtual LineBase {
 public:
+    static const std::size_t sizeOfCoordinates = 2;
+
     Line2Base() {};
     virtual ~Line2Base() {};
 
-    inline std::size_t numberOfCoordinates() const { return 2; }
+    inline std::size_t numberOfCoordinates() const { return sizeOfCoordinates; }
 };
 
 template<class T>

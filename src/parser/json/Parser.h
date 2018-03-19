@@ -82,18 +82,6 @@ private:
         rectangular
     } WaveportShape;
 
-    struct ParsedElementIds {
-        Geometry::ElemId elemId;
-        MatId mat;
-        Geometry::Layer::Id layer;
-        std::vector<Geometry::CoordId> v;
-    };
-
-    struct ParsedElementPtrs {
-        const Geometry::Layer::Layer* layerPtr;
-        const PhysicalModel::PhysicalModel* matPtr;
-        std::vector<const Geometry::CoordR3*> vPtr;
-    };
 
     static Solver::Info* readSolver(const json&);
     static Solver::Settings readSolverSettings(const json&);
@@ -119,13 +107,6 @@ private:
             const Geometry::Layer::Group<>&,
             const Geometry::CoordR3Group&,
             const json&);
-    static ParsedElementIds readElementIds(
-            const std::string& str, size_t numberOfVertices);
-    static ParsedElementPtrs convertElementIdsToPtrs(
-            const ParsedElementIds& elemIds,
-            const PhysicalModel::Group<>& physicalModels,
-            const Geometry::Layer::Group<>& layers,
-            const Geometry::Coordinate::Group<Geometry::CoordR3>& coords);
 
     static Source::PlaneWave* readPlanewave(
             Geometry::Mesh::Geometric& mesh, const json&);
@@ -195,6 +176,53 @@ Geometry::Element::Group<T> readElemIdsAsGroupOf(
 		geometricElements.add(mesh.elems().getId(Geometry::ElemId(it->get<int>()) ));
 	}
 	return geometricElements;
+}
+
+template<typename T>
+Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
+        const PhysicalModel::Group<>& mG,
+        const Geometry::Layer::Group<>& lG,
+        const Geometry::CoordR3Group& cG,
+        const json& e) {
+    Geometry::Element::Group<Geometry::ElemR> res;
+
+    for (json::const_iterator it = e.begin(); it != e.end(); ++it) {
+
+        Geometry::ElemId elemId;
+        MatId matId;
+        Geometry::Layer::Id layerId;
+        std::vector<Geometry::CoordId> vId;
+
+        std::stringstream ss(it->get<std::string>());
+        ss >> elemId >> matId >> layerId;
+        vId.resize(T::sizeOfCoordinates);
+        for (std::size_t j = 0; j < T::sizeOfCoordinates; j++) {
+            ss >> vId[j];
+        }
+
+        const Geometry::Layer::Layer* layerPtr;
+        const PhysicalModel::PhysicalModel* matPtr;
+        std::vector<const Geometry::CoordR3*> vPtr;
+
+        if (matId != MatId(0)) {
+            matPtr = mG.getId(matId);
+        } else {
+            matPtr = nullptr;
+        }
+        if (layerId != Geometry::LayerId(0)) {
+            layerPtr = lG.getId(layerId);
+        } else {
+            layerPtr = nullptr;
+        }
+        vPtr.resize(vId.size(), nullptr);
+        for (size_t i = 0; i < vId.size(); ++i) {
+            vPtr[i] = cG.getId(vId[i]);
+        }
+
+        res.add(new T(elemId, vPtr.data(), layerPtr, matPtr));
+    }
+
+    return res;
 }
 
 } /* namespace JSON */

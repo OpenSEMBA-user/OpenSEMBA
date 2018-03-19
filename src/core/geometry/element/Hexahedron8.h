@@ -32,6 +32,8 @@ namespace Element {
 
 class Hexahedron8Base : public virtual VolumeBase {
 public:
+    static const std::size_t sizeOfCoordinates = 8;
+
     Hexahedron8Base() {}
     virtual ~Hexahedron8Base() {}
 
@@ -39,7 +41,7 @@ public:
 
     inline std::size_t numberOfFaces      () const { return 6; }
     inline std::size_t numberOfVertices   () const { return 8; }
-    inline std::size_t numberOfCoordinates() const { return 8; }
+    inline std::size_t numberOfCoordinates() const { return sizeOfCoordinates; }
 
     inline std::size_t numberOfSideVertices   (const std::size_t f = 0) const {
         return 4;

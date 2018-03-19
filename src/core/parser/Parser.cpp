@@ -53,12 +53,21 @@ bool Parser::strToBool(const std::string& value) {
 void Parser::postReadOperations(Data& res) const {
     if (res.mesh != nullptr) {
         if (res.solver != nullptr) {
-            Math::Real scalingFactor =
-                    res.solver->getSettings()("Geometry scaling factor").getReal();
-            res.mesh->applyScalingFactor(scalingFactor);
-            Solver::Settings settings = res.solver->getSettings();
-            settings("Geometry scaling factor").setReal((Math::Real) 1.0);
-            res.solver->setSettings(settings);
+            try {
+                Math::Real scalingFactor =
+                        res.solver->getSettings()("geometryScalingFactor").getReal();
+                res.mesh->applyScalingFactor(scalingFactor);
+                Solver::Settings settings = res.solver->getSettings();
+                settings("Geometry scaling factor").setReal((Math::Real) 1.0);
+                res.solver->setSettings(settings);
+            }
+            catch (...) {
+                std::cerr << "Unable to find geometryScalingFactor"
+                             "during postReadOperations" << std::endl;
+                throw std::logic_error(
+                        "Unable to find geometryScalingFactor"
+                        "during postReadOperations");
+            }
         }
     }
 }

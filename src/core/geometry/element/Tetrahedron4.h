@@ -30,6 +30,8 @@ namespace Element {
 
 class Tetrahedron4 : public Tetrahedron {
 public:
+    static const std::size_t sizeOfCoordinates = 4;
+
     Tetrahedron4();
     Tetrahedron4(const Id id,
                  const CoordR3* v[4],
@@ -46,7 +48,7 @@ public:
             const std::size_t face,
             const Math::Constants::CartesianPlane plane) const;
 
-    std::size_t numberOfCoordinates() const { return 4; }
+    std::size_t numberOfCoordinates() const { return sizeOfCoordinates; }
 
     std::size_t numberOfSideCoordinates(const std::size_t f = 0) const {
         return 3;

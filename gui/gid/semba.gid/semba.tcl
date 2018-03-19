@@ -503,21 +503,21 @@ proc semba::writeOutputRequestBAS { condition_name } {
 	"            \"domain\": {\n"
 	if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
 	    append result \
-	"                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 3]\",\n"\
-	"                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
+	"                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 3],\n"\
+	"                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 6],\n"
 	    }
 	    if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
 		append result \
-	"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
+	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
 	} else {
-	"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"           
+	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
 	}
 	if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
 	    append result \
-	"                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  7]\",\n"\
-	"                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)"  8]\",\n"\
-	"                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
-	"                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 10]\",\n"
+	"                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)"  7],\n"\
+	"                \"finalFrequency\":    [lindex "$properties_of_cond($name_id)"  8],\n"\
+	"                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)"  9],\n"\
+	"                \"logFrequencySweep\": [lindex "$properties_of_cond($name_id)" 10],\n"
 	}
 	if {[lindex "$properties_of_cond($name_id)" 11] == 1} {
 	    append result \
@@ -560,21 +560,21 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 		"            \"domain\": {\n"
 	if {[lindex "$properties_of_cond($name_id)" 4] == 1} {
 	    append result \
-	    "                \"initialTime\":    \"[lindex "$properties_of_cond($name_id)" 5]\",\n"\
-	    "                \"finalTime\":      \"[lindex "$properties_of_cond($name_id)" 6]\",\n"
+	    "                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 5],\n"\
+	    "                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 6],\n"
 	    }
 	    if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
 		append result \
-	    "                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\"\n"
+	    "                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
 	} else {
-		"                \"samplingPeriod\": \"[lindex "$properties_of_cond($name_id)" 7]\",\n"           
+		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
 	}
 	if {[lindex "$properties_of_cond($name_id)" 8] == 1} {
 	    append result \
-	    "                \"initialFrequency\":  \"[lindex "$properties_of_cond($name_id)"  9]\",\n"\
-	    "                \"finalFrequency\":    \"[lindex "$properties_of_cond($name_id)" 10]\",\n"\
-    	"                \"frequencyStep\":     \"[lindex "$properties_of_cond($name_id)" 11]\",\n"\
-	    "                \"logFrequencySweep\": \"[lindex "$properties_of_cond($name_id)" 12]\",\n"
+	    "                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)"  9],\n"\
+	    "                \"finalFrequency\":    [lindex "$properties_of_cond($name_id)" 10],\n"\
+    	"                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)" 11],\n"\
+	    "                \"logFrequencySweep\": [lindex "$properties_of_cond($name_id)" 12],\n"
 	}
 	if {[lindex "$properties_of_cond($name_id)" 13] == 1} {
 	    append result \

@@ -30,10 +30,12 @@ namespace Element {
 
 class Quadrilateral4Base : public virtual SurfaceBase {
 public:
+    static const std::size_t sizeOfCoordinates = 4;
+
     Quadrilateral4Base() {}
     virtual ~Quadrilateral4Base() {}
 
-    std::size_t numberOfCoordinates() const { return 4; }
+    std::size_t numberOfCoordinates() const { return sizeOfCoordinates; }
 
     std::size_t numberOfSideCoordinates(const std::size_t f = 0) const { 
         return 2; 
