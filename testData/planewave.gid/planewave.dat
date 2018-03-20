@@ -3,7 +3,7 @@
     "_version": "0.13",
 
     "solverOptions": {
-        "solverName": "cudg3d",
+        "solver": "cudg3d",
         "runSimulation": 1,
         "finalTime": 30e-9,
         "timeStep": 0,

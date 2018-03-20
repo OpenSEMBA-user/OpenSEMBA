@@ -3,7 +3,7 @@
     "_version": "0.13",
 
     "solverOptions": {
-        "solverName": "ugrfdtd",
+        "solver": "ugrfdtd",
         "runSimulation": 0,
         "numberOfTimeSteps": 100000,
         "timeStep": 7.7e-12,
@@ -2549,7 +2549,7 @@
             "type": "current",
             "domain": {
                 "initialTime":    0.0,
-                "finalTime":      0,
+                "finalTime":      0.0,
                 "samplingPeriod": 0.0
             },
             "elemIds": [

@@ -3,7 +3,7 @@
     "_version": "0.13",
 
     "solverOptions": {
-        "solverName": "ugrfdtd",
+        "solver": "ugrfdtd",
         "runSimulation": 0,
         "finalTime": 45e-9,
         "timeStep": 0.0,
@@ -12,12 +12,12 @@
         "forceRestarting": 0,
         "resumeSimulation": 0,
         "flush": 0,
+        "geometryScalingFactor": 1.0,
         "compositesModel": "MIBC",
         "wiresFlavor": "holland",
         "mtln": 1,
         "minDistanceWires": 0.5,
         "mapVTK": 0,
-        "geometryScalingFactor": 1.0,
         "mesherOptions": {
             "lowerXBound": "PMC",
             "lowerYBound": "PEC",
@@ -4365,8 +4365,8 @@
             "type": "electricField",
             "domain": {
                 "initialTime":    0.0,
-                "finalTime":      0,
-                "samplingPeriod": 0.0
+                "finalTime":      45e-9,
+                "samplingPeriod": 2e-11
             },
             "elemIds": [
                 1150
@@ -4378,8 +4378,8 @@
             "type": "electricField",
             "domain": {
                 "initialTime":    0.0,
-                "finalTime":      0,
-                "samplingPeriod": 0.0
+                "finalTime":      45e-9,
+                "samplingPeriod": 2e-11
             },
             "elemIds": [
                 597
@@ -4391,8 +4391,8 @@
             "type": "electricField",
             "domain": {
                 "initialTime":    0.0,
-                "finalTime":      0,
-                "samplingPeriod": 0.0
+                "finalTime":      45e-9,
+                "samplingPeriod": 2e-11
             },
             "elemIds": [
                 76
