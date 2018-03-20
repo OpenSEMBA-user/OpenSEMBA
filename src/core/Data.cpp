@@ -33,33 +33,50 @@ Data::Data() {
 
 Data::Data(const Data& rhs)
 :   FileSystem::Project(rhs) {
+
     solver = nullptr;
     mesh = nullptr;
     physicalModels = nullptr;
     sources = nullptr;
     outputRequests = nullptr;
+
     if (rhs.solver != nullptr) {
         solver = new Solver::Info(*rhs.solver);
     }
-    if (rhs.mesh != nullptr) {
-        mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
-    }
+
     if (rhs.physicalModels != nullptr) {
         physicalModels = rhs.physicalModels->clone();
     }
-    if (rhs.sources != nullptr) {
-        sources = rhs.sources->clone();
-    }
-    if (rhs.outputRequests != nullptr) {
-        outputRequests = rhs.outputRequests->clone();
-    }
-    if (mesh != nullptr) {
+
+    if (rhs.mesh != nullptr) {
+        mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
         if (physicalModels != nullptr) {
             mesh->reassignPointers(*physicalModels);
         } else {
             mesh->reassignPointers();
         }
+
+        if (rhs.outputRequests != nullptr) {
+            outputRequests = rhs.outputRequests->clone();
+            for (size_t i = 0; i < outputRequests->size(); ++i) {
+                Geometry::Element::Group<const Geometry::Elem> outRqElems =
+                        (*outputRequests)(i)->elems();
+                mesh->reassign(outRqElems);
+                (*outputRequests)(i)->set(outRqElems);
+            }
+        }
+
+        if (rhs.sources != nullptr) {
+            sources = rhs.sources->clone();
+            for (size_t i = 0; i < sources->size(); ++i) {
+                Geometry::Element::Group<const Geometry::Elem> sourceElems =
+                        (*sources)(i)->elems();
+                mesh->reassign(sourceElems);
+                (*sources)(i)->set(sourceElems);
+            }
+        }
     }
+
 }
 
 Data::~Data() {
@@ -90,28 +107,44 @@ Data& Data::operator=(const Data& rhs) {
     physicalModels = nullptr;
     sources = nullptr;
     outputRequests = nullptr;
+
     if (rhs.solver != nullptr) {
         solver = new Solver::Info(*rhs.solver);
     }
-    if (rhs.mesh != nullptr) {
-        mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
-    }
+
     if (rhs.physicalModels != nullptr) {
         physicalModels = rhs.physicalModels->clone();
     }
-    if (rhs.sources != nullptr) {
-        sources = rhs.sources->clone();
-    }
-    if (rhs.outputRequests != nullptr) {
-        outputRequests = rhs.outputRequests->clone();
-    }
-    if (mesh != nullptr) {
+
+    if (rhs.mesh != nullptr) {
+        mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
         if (physicalModels != nullptr) {
             mesh->reassignPointers(*physicalModels);
         } else {
             mesh->reassignPointers();
         }
+
+        if (rhs.outputRequests != nullptr) {
+            outputRequests = rhs.outputRequests->clone();
+            for (size_t i = 0; i < outputRequests->size(); ++i) {
+                Geometry::Element::Group<const Geometry::Elem> outRqElems =
+                        (*outputRequests)(i)->elems();
+                mesh->reassign(outRqElems);
+                (*outputRequests)(i)->set(outRqElems);
+            }
+        }
+
+        if (rhs.sources != nullptr) {
+            sources = rhs.sources->clone();
+            for (size_t i = 0; i < sources->size(); ++i) {
+                Geometry::Element::Group<const Geometry::Elem> sourceElems =
+                        (*sources)(i)->elems();
+                mesh->reassign(sourceElems);
+                (*sources)(i)->set(sourceElems);
+            }
+        }
     }
+
     return *this;
 }
 

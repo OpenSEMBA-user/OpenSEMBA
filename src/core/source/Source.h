@@ -92,7 +92,7 @@ public:
     }
 
     bool isSimilar(const SEMBA::Source::Base& rhs) const;
-    void printInfo() const;
+    virtual void printInfo() const;
 };
 
 } /* namespace Source */

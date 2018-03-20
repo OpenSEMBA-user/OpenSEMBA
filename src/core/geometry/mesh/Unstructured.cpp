@@ -259,6 +259,15 @@ BoxR3 Unstructured::getBoundingBox() const {
     return elems().getBound();
 }
 
+void Unstructured::reassign( Element::Group<const Elem>& inGroup ) {
+    Element::Group<const Elem> res;
+    for (std::size_t i = 0; i < inGroup.size(); i++) {
+        ElemId id = inGroup(i)->getId();
+        res.add(this->elems().getId(id));
+    }
+    inGroup = res;
+}
+
 } /* namespace Mesh */
 } /* namespace Geometry */
 } /* namespace SEMBA */

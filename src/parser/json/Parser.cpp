@@ -100,11 +100,6 @@ Data Parser::read(std::istream& stream) const {
 
     progress.end();
 
-    for (size_t i = 0;i < res.outputRequests->size(); ++i) {
-        (*res.outputRequests)(i)->printInfo();
-    }
-    std::cout << std::flush;
-
     return res;
 }
 

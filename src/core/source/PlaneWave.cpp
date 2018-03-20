@@ -143,7 +143,7 @@ PlaneWave::getElectromagneticField(const Math::Real time) const {
 
 void PlaneWave::printInfo() const {
     std::cout<< " --- PlaneWave info --- " << std::endl;
-    SEMBA::Source::Base::printInfo();
+    SEMBA::Source::Source<Geometry::Vol>::printInfo();
     std::cout<< " - Polarization vector: " << polarization_ << std::endl;
     std::cout<< " - Wave direction vector: " << direction_ << std::endl;
 }

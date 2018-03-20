@@ -39,8 +39,7 @@ void Source<T>::add(
 template<class T>
 void Source<T>::printInfo() const {
     Base::printInfo();
-    std::cout << "std::size_t of element group: "
-              << this->Geometry::Element::Group<const T>::size() << std::endl;
+    this->Geometry::Element::Group<const T>::printInfo();
 }
 
 } /* namespace Source */

@@ -93,6 +93,8 @@ public:
         const SEMBA::Group::Identifiable<Element::Model, MatId>& =
             SEMBA::Group::Identifiable<Element::Model, MatId>());
 
+    virtual void reassign( Element::Group<const Elem>& );
+
     void printInfo() const;
 };
 

@@ -31,6 +31,7 @@
 #include "class/Printable.h"
 
 #include "geometry/element/Element.h"
+#include "geometry/element/Group.h"
 
 namespace SEMBA {
 namespace Geometry {
@@ -49,6 +50,8 @@ public:
     virtual void reassignPointers(
             const SEMBA::Group::Identifiable<Element::Model, MatId>& =
                 SEMBA::Group::Identifiable<Element::Model, MatId>()) = 0;
+
+    virtual void reassign( Element::Group<const Elem>& ) = 0;
 };
 
 } /* namespace Mesh */
