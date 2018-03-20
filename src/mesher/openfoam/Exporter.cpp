@@ -30,8 +30,8 @@ namespace Mesher {
 namespace OpenFOAM {
 
 Exporter::Exporter() {
-    smb_ = NULL;
-    grid_ = NULL;
+    smb_ = nullptr;
+    grid_ = nullptr;
     isLocationMesh_ = false;
 }
 
@@ -147,7 +147,7 @@ void Exporter::triToSTL(const Geometry::Element::Group<const Geometry::Tri>& tri
         std::string solidName(name);
         const Geometry::Mesh::Unstructured* mesh = 
             smb_->mesh->castTo<Geometry::Mesh::Unstructured>();
-        if (mesh->layers().getId(layerId) != NULL) {
+        if (mesh->layers().getId(layerId) != nullptr) {
             solidName += "@" + mesh->layers().getId(layerId)->getName();
         }
         file << "solid " << solidName << std::endl;

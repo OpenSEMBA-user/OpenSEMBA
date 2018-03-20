@@ -60,17 +60,6 @@ Waveguide::~Waveguide() {
 
 }
 
-bool Waveguide::hasSameProperties(const SEMBA::Source::Base& rhs) const {
-    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
-        return false;
-    }
-    const Waveguide* rhsPtr = rhs.castTo<Waveguide>();
-    bool hasSameProperties = true;
-    hasSameProperties &= mode_ == rhsPtr->mode_;
-    hasSameProperties &= excitationMode_ == rhsPtr->excitationMode_;
-    return hasSameProperties;
-}
-
 Waveguide::ExcitationMode Waveguide::getExcitationMode() const {
     return excitationMode_;
 }

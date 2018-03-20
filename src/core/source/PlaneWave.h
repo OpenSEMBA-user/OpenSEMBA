@@ -49,8 +49,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(PlaneWave);
 
-    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
-
     const std::string& getName() const;
     const Math::CVecR3& getPolarization() const;
     const Math::CVecR3& getDirection() const;

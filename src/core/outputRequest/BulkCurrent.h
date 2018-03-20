@@ -39,8 +39,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(BulkCurrent);
 
-    bool hasSameProperties(const SEMBA::OutputRequest::Base& rhs) const;
-
     Math::Constants::CartesianAxis getDir() const;
     Math::UInt                     getSkip() const;
 

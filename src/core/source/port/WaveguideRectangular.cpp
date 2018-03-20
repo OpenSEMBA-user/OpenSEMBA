@@ -78,14 +78,6 @@ WaveguideRectangular::~WaveguideRectangular() {
 
 }
 
-bool WaveguideRectangular::hasSameProperties(
-        const SEMBA::Source::Base& rhs) const {
-    bool res = true;
-    res &= rhs.is<WaveguideRectangular>();
-    res &= Waveguide::hasSameProperties(rhs);
-    return res;
-}
-
 const std::string& WaveguideRectangular::getName() const {
     const static std::string res = "Rectangular_waveguide_port";
     return res;

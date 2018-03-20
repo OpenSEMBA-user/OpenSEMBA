@@ -36,15 +36,15 @@ PML::PML(const Id id,
 PML::PML(const PML& rhs)
 :   Identifiable<Id>(rhs),
     PhysicalModel(rhs) {
-    if (rhs.orientation_ != NULL) {
+    if (rhs.orientation_ != nullptr) {
         orientation_ = new Math::Axis::Local(*rhs.orientation_);
     } else {
-        orientation_ = NULL;
+        orientation_ = nullptr;
     }
 }
 
 PML::~PML() {
-    if (orientation_ != NULL) {
+    if (orientation_ != nullptr) {
         delete orientation_;
     }
 }
@@ -52,7 +52,7 @@ PML::~PML() {
 void PML::printInfo() const {
     std::cout << "--- VolumePML info ---" << std::endl;
     Volume::printInfo();
-    if (orientation_ != NULL) {
+    if (orientation_ != nullptr) {
         orientation_->printInfo();
     }
 

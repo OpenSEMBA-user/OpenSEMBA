@@ -55,22 +55,6 @@ FarField::~FarField() {
 
 }
 
-bool FarField::hasSameProperties(
-        const SEMBA::OutputRequest::Base& rhs) const {
-    if(!SEMBA::OutputRequest::Base::hasSameProperties(rhs)) {
-        return false;
-    }
-    const FarField* rhsPtr = rhs.castTo<FarField>();
-    bool hasSameProperties = true;
-    hasSameProperties &= initialTheta_ == rhsPtr->initialTheta_;
-    hasSameProperties &= finalTheta_ == rhsPtr->finalTheta_;
-    hasSameProperties &= stepTheta_ == rhsPtr->stepTheta_;
-    hasSameProperties &= initialPhi_ == rhsPtr->initialPhi_;
-    hasSameProperties &= finalPhi_ == rhsPtr->finalPhi_;
-    hasSameProperties &= stepPhi_ == rhsPtr->stepPhi_;
-    return hasSameProperties;
-}
-
 Math::Real FarField::getInitialTheta() const {
     return initialTheta_;
 }

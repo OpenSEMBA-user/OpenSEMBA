@@ -55,7 +55,7 @@ Node<T>::Node(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
     std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
-        if (v_[i] == NULL) {
+        if (v_[i] == nullptr) {
             v_[i] = cG.addPos(pos[i]);
         }
     }
@@ -127,8 +127,8 @@ template<class T>
 ElemI* Node<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
                              const Grid3& grid, const Math::Real tol) const {
     const CoordI3** v = this->vertexToStructured(cG, grid, tol);
-    if (v == NULL) {
-        return NULL;
+    if (v == nullptr) {
+        return nullptr;
     }
     ElemI* res =  new NodI(this->getId(),
                            v,
@@ -142,8 +142,8 @@ template<class T>
 ElemR* Node<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
                                const Grid3& grid) const {
     const CoordR3** v = this->vertexToUnstructured(cG, grid);
-    if (v == NULL) {
-        return NULL;
+    if (v == nullptr) {
+        return nullptr;
     }
     ElemR* res =  new NodR(this->getId(),
                            v,

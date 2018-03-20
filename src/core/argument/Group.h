@@ -58,7 +58,7 @@ public:
     void parsePostprocess(Object&);
 
 protected:
-    Group(GroupBase* = NULL,
+    Group(GroupBase* = nullptr,
           const std::string& = std::string(),
           const std::string& = std::string());
 

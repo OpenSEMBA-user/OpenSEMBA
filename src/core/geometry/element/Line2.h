@@ -45,13 +45,13 @@ public:
     Line2();
     Line2(const Id id,
           const Coordinate::Coordinate<T,3>* v[2],
-          const Layer* lay = NULL,
-          const Model* mat = NULL);
+          const Layer* lay = nullptr,
+          const Model* mat = nullptr);
     Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
           const Id id,
           const Box<T,3>& box,
-          const Layer* lay = NULL,
-          const Model* mat = NULL);
+          const Layer* lay = nullptr,
+          const Model* mat = nullptr);
     Line2(const Coordinate::Coordinate<T,3>* v[2]);
     Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
           const Box<T,3>& box);

@@ -26,7 +26,7 @@ namespace Source {
 namespace Magnitude {
 
 Magnitude::Magnitude() {
-    mathFunction_ = NULL;
+    mathFunction_ = nullptr;
 }
 
 Magnitude::Magnitude(Math::FunctionRR* mathFunction) {
@@ -39,7 +39,7 @@ Magnitude::Magnitude(const Magnitude& rhs) {
 }
 
 Magnitude::~Magnitude() {
-    if (mathFunction_ != NULL) {
+    if (mathFunction_ != nullptr) {
         delete mathFunction_;
     }
 }

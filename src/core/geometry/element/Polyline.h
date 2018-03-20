@@ -43,8 +43,8 @@ public:
     Polyline();
     Polyline(const Id id,
              const std::vector<const Coordinate::Coordinate<T,3>*>& v,
-             const Layer* lay = NULL,
-             const Model* mat = NULL);
+             const Layer* lay = nullptr,
+             const Model* mat = nullptr);
     Polyline(const Polyline<T>& rhs);
     virtual ~Polyline();
     

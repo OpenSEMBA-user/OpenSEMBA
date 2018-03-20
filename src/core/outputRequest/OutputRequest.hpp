@@ -52,22 +52,6 @@ OutputRequest<T>::~OutputRequest() {
 
 }
 
-template<class T>
-bool OutputRequest<T>::isSimilar(
-        const SEMBA::OutputRequest::Base& rhs) const {
-    if (!this->hasSameProperties(rhs)) {
-        return false;
-    }
-    std::size_t sizeLhs = this->elems().size();
-    std::size_t sizeRhs = rhs.elems().size();
-    if ((sizeLhs == 0) && (sizeRhs == 0)) {
-        return true;
-    } else if ((sizeLhs == 0) || (sizeRhs == 0)) {
-        return false;
-    }
-    return true;
-}
-
 template <class T>
 void OutputRequest<T>::set(
         const Geometry::Element::Group<const Geometry::Elem>& elems) {

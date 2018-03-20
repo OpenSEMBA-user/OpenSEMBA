@@ -76,25 +76,25 @@ void Options::printInfo() const {
 void Options::printHelp() const {}
 
 std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
-    if (val == NULL) {
+    if (val == nullptr) {
         return "Undefined";
     }
-    if (dynamic_cast<const PhysicalModel::Bound::PEC*>(val) != NULL) {
+    if (dynamic_cast<const PhysicalModel::Bound::PEC*>(val) != nullptr) {
         return "PEC";
     }
-    if (dynamic_cast<const PhysicalModel::Bound::PMC*>(val) != NULL) {
+    if (dynamic_cast<const PhysicalModel::Bound::PMC*>(val) != nullptr) {
         return "PMC";
     }
-    if (dynamic_cast<const PhysicalModel::Bound::PML*>(val) != NULL) {
+    if (dynamic_cast<const PhysicalModel::Bound::PML*>(val) != nullptr) {
         return "PML";
     }
-    if (dynamic_cast<const PhysicalModel::Bound::Periodic*>(val) != NULL) {
+    if (dynamic_cast<const PhysicalModel::Bound::Periodic*>(val) != nullptr) {
         return "Periodic";
     }
-    if (dynamic_cast<const PhysicalModel::Bound::Mur1*>(val) != NULL) {
+    if (dynamic_cast<const PhysicalModel::Bound::Mur1*>(val) != nullptr) {
         return "MUR1";
     }
-    if (dynamic_cast<const PhysicalModel::Bound::Mur2*>(val) != NULL) {
+    if (dynamic_cast<const PhysicalModel::Bound::Mur2*>(val) != nullptr) {
         return "MUR2";
     }
     return "Undefined";

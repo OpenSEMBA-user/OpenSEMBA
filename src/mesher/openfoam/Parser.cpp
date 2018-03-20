@@ -304,7 +304,7 @@ Geometry::Layer::Group<> Parser::assignAsLayers(
             const Geometry::Layer::Layer* lay =
                 layers.addId(new Geometry::Layer::Layer(bound[b]))(0);
             MatId matId = bound[b].getMaterialIdFromName();
-            const PhysicalModel::PhysicalModel* mat = NULL; //TODO
+            const PhysicalModel::PhysicalModel* mat = nullptr; //TODO
             Geometry::LayerId layId = bound[b].getId();
             for (std::size_t i = 0; i < bound[b].getFaces(); i++) {
                 Geometry::ElemId id(bound[b].getStartFace() + i + 1);

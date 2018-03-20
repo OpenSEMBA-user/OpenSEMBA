@@ -27,7 +27,7 @@ namespace SEMBA {
 namespace Source {
 
 Base::Base() {
-    magnitude_ = NULL;
+    magnitude_ = nullptr;
 }
 
 Base::Base(const Magnitude::Magnitude* magnitude) {
@@ -35,7 +35,7 @@ Base::Base(const Magnitude::Magnitude* magnitude) {
 }
 
 Base::Base(const Base& rhs) {
-    if (rhs.magnitude_ != NULL) {
+    if (rhs.magnitude_ != nullptr) {
         magnitude_ = rhs.magnitude_->cloneTo<Magnitude::Magnitude>();
     } else {
         magnitude_ = rhs.magnitude_;
@@ -43,22 +43,15 @@ Base::Base(const Base& rhs) {
 }
 
 Base::~Base() {
-    if (magnitude_ != NULL) {
+    if (magnitude_ != nullptr) {
         delete magnitude_;
     }
-}
-
-bool Base::hasSameProperties(const Base& rhs) const {
-    if (typeid(*this) != typeid(rhs)) {
-        return false;
-    }
-    return (*magnitude_ == *rhs.magnitude_);
 }
 
 std::string Base::getMagnitudeFilename() const {
     const Magnitude::Numerical* mag =
             dynamic_cast<const Magnitude::Numerical*>(magnitude_);
-    if (mag != NULL) {
+    if (mag != nullptr) {
         return mag->getFilename();
     }
     return std::string();
@@ -86,7 +79,7 @@ Magnitude::Numerical* Base::exportToFile(const FileSystem::Project& file,
 
 void Base::printInfo() const {
     std::cout << " --- EMSource Base Info ---" << std::endl;
-    if (magnitude_ != NULL) {
+    if (magnitude_ != nullptr) {
         magnitude_->printInfo();
     } else {
         std::cout << "No magnitude defined." << std::endl;

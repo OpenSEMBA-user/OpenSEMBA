@@ -73,7 +73,7 @@ const SurfR* Connectivities::getNeighSurf(const Face& face) const {
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 Face Connectivities::getInnerFace(const SurfR* surf) const {
@@ -93,15 +93,15 @@ Face Connectivities::getOuterFace(const SurfR* surf) const {
 }
 
 bool Connectivities::isDomainBoundary(const SurfR* surf) const {
-    return (getInnerFace(surf).first == NULL
-            || getOuterFace(surf).first == NULL);
+    return (getInnerFace(surf).first == nullptr
+            || getOuterFace(surf).first == nullptr);
 }
 
 bool Connectivities::isDomainBoundary(Face face) const {
-    if (face.first == NULL) {
+    if (face.first == nullptr) {
         return true;
     }
-    return (getNeighFace(face).first == NULL);
+    return (getNeighFace(face).first == nullptr);
 }
 
 Face Connectivities::getMatchingFace_(
@@ -109,11 +109,11 @@ Face Connectivities::getMatchingFace_(
         const std::vector<const CoordR3*> localSideV) const {
     for (std::size_t i = 0; i < local->numNeighbors(); i++) {
         const GraphElem* neighConn = local->getNeighbor(i);
-        if (neighConn->elem() == NULL) {
-            return Face(NULL, 0);
+        if (neighConn->elem() == nullptr) {
+            return Face(nullptr, 0);
         }
         const ElemR* neigh = neighConn->elem();
-        assert(neigh != NULL);
+        assert(neigh != nullptr);
         if (neigh->is<VolR>()) {
             for (std::size_t f = 0; f < neigh->numberOfFaces(); f++) {
                 std::vector<const CoordR3*> neighSideV =
@@ -125,7 +125,7 @@ Face Connectivities::getMatchingFace_(
             }
         }
     }
-    return Face(NULL, 0);
+    return Face(nullptr, 0);
 }
 
 std::size_t Connectivities::size() const {
@@ -142,7 +142,7 @@ bool Connectivities::existsReciprocity() const {
                 Face local(vol, f);
                 Face neigh = this->getNeighFace(local);
                 if (this->isDomainBoundary(local)) {
-                    if (neigh != Face(NULL, 0)) {
+                    if (neigh != Face(nullptr, 0)) {
                         return false;
                     }
                 } else {
@@ -157,7 +157,7 @@ bool Connectivities::existsReciprocity() const {
         if (elem->is<SurfR>()) {
             const SurfR* surf = elem->castTo<SurfR>();
             Face inner = this->getInnerFace(surf);
-            if (inner.first != NULL) {
+            if (inner.first != nullptr) {
                 Face outer = this->getOuterFace(surf);
                 Face inNeigh = this->getNeighFace(inner);
                 if (outer != inNeigh) {

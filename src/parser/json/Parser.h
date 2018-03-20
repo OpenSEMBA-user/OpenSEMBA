@@ -135,7 +135,7 @@ private:
             Geometry::Mesh::Geometric& mesh,
             const std::string& line);
 
-    static Geometry::Element::Group<const Geometry::Nod> readCoordIdAsNodes(
+    static Geometry::Element::Group<Geometry::Nod> readCoordIdAsNodes(
             Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Base::Type strToOutputType(std::string label);

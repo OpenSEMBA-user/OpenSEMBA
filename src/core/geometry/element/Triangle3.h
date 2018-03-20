@@ -33,8 +33,8 @@ public:
     Triangle3();
     Triangle3(const Id id,
               const CoordR3* v[3],
-              const Layer* lay = NULL,
-              const Model* mat = NULL);
+              const Layer* lay = nullptr,
+              const Model* mat = nullptr);
     Triangle3(const Triangle3& rhs);
     virtual ~Triangle3();
 

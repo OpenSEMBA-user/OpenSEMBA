@@ -45,17 +45,6 @@ Base::~Base() {
 
 }
 
-bool Base::hasSameProperties(const Base& rhs) const {
-    if (typeid(*this) != typeid(rhs)) {
-        return false;
-    }
-    bool hasSameProperties = true;
-    hasSameProperties &= getName() == rhs.getName();
-    hasSameProperties &= getOutputType() == rhs.getOutputType();
-    hasSameProperties &= Domain::operator==(rhs);
-    return hasSameProperties;
-}
-
 const std::string& Base::getName() const {
     return name_;
 }

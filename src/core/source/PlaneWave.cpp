@@ -87,17 +87,6 @@ PlaneWave::~PlaneWave() {
 
 }
 
-bool PlaneWave::hasSameProperties(const SEMBA::Source::Base& rhs) const {
-    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
-        return false;
-    }
-    const PlaneWave* rhsPtr = rhs.castTo<PlaneWave>();
-    bool hasSameProperties = true;
-    hasSameProperties &= direction_ == rhsPtr->direction_;
-    hasSameProperties &= polarization_ == rhsPtr->polarization_;
-    return hasSameProperties;
-}
-
 const std::string& PlaneWave::getName() const {
     const static std::string res = "PlaneWave";
     return res;

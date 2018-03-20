@@ -53,7 +53,7 @@ Exporter::~Exporter() {
 //        const char * fName = "Electric Field";
 //        const char * tName = "Time";
 //        GiD_BeginResult(fName, tName, time,
-//                GiD_Vector, GiD_OnNodes, NULL, NULL, 4, compv);
+//                GiD_Vector, GiD_OnNodes, nullptr, nullptr, 4, compv);
 //        writeAllFields(electric);
 //        GiD_EndResult();
 //    }
@@ -62,7 +62,7 @@ Exporter::~Exporter() {
 //        const char * fName = "Magnetic Field";
 //        const char * tName = "Time";
 //        GiD_BeginResult(fName, tName, time,
-//                GiD_Vector, GiD_OnNodes, NULL, NULL, 4, compv);
+//                GiD_Vector, GiD_OnNodes, nullptr, nullptr, 4, compv);
 //        writeAllFields(magnetic);
 //        GiD_EndResult();
 //    }
@@ -106,7 +106,7 @@ Group::Group<Geometry::ElemR> Exporter::getBoundary(
         const Geometry::Grid3* grid,
         const Geometry::Mesh::Mesh* mesh) const {
     Geometry::BoxR3 box;
-    if (grid != NULL) {
+    if (grid != nullptr) {
         box = grid->getFullDomainBoundingBox();
     } else {
         box = mesh->getBoundingBox();
@@ -124,7 +124,7 @@ std::string Exporter::getBoundaryName(
         const std::size_t j) {
     const Geometry::Element::Model* boundType = mesh->bounds()(i, j);
     std::string boundName;
-    if (boundType == NULL) {
+    if (boundType == nullptr) {
         boundName = "Undefined";
     } else {
         boundName =
@@ -138,12 +138,12 @@ std::string Exporter::getBoundaryName(
 Group::Group<Geometry::ElemR> Exporter::getGridElems(
         Geometry::CoordR3Group& cG,
         const Geometry::Grid3* grid) const {
-    if (grid == NULL) {
+    if (grid == nullptr) {
         return Group::Group<Geometry::ElemR>();
     }
     Group::Group<Geometry::ElemR> elem;
     Geometry::BoxR3 box = grid->getFullDomainBoundingBox();
-    if (grid != NULL) {
+    if (grid != nullptr) {
         for (std::size_t d = 0; d < 3; d++) {
             // Generates grid as lines.
             for (std::size_t i = 0; i < 2; i++) {

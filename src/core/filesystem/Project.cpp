@@ -126,7 +126,7 @@ std::string Project::getBasename() const {
 #ifdef _WIN32
     char* fname = new char[getFilename().size() + 1];
     char* ext   = new char[getFilename().size() + 1];
-    _splitpath(getFilename().c_str(), NULL, NULL, fname, ext);
+    _splitpath(getFilename().c_str(), nullptr, nullptr, fname, ext);
     std::string res = std::string(fname) + ext;
 #else
     std::string res(basename(const_cast<char*>(c_str())));
@@ -138,7 +138,7 @@ std::string Project::getFolder() const {
 #ifdef _WIN32
     char* drive = new char[getFilename().size() + 1];
     char* dir = new char[getFilename().size() + 1];
-    _splitpath(getFilename().c_str(), drive, dir, NULL, NULL);
+    _splitpath(getFilename().c_str(), drive, dir, nullptr, nullptr);
     std::string folder = std::string(drive) + dir;
 #else
     char *cstr = new char[length() + 1];
@@ -187,8 +187,8 @@ std::vector<std::string> Project::getFilesBasenames_(
     DIR *dir;
     struct dirent *ent;
     // Retrieves names of all files.
-    if ((dir = opendir(directory.c_str())) != NULL) {
-        while ((ent = readdir (dir)) != NULL) {
+    if ((dir = opendir(directory.c_str())) != nullptr) {
+        while ((ent = readdir (dir)) != nullptr) {
             files.push_back(ent->d_name);
         }
         closedir(dir);
@@ -247,7 +247,7 @@ void Project::deleteDirIfExists_(const std::string& directory) const {
         cstr[directory.size()  ] = 0;
         cstr[directory.size()+1] = 0;
         SHFILEOPSTRUCT strOper = { 0 };
-        strOper.hwnd = NULL;
+        strOper.hwnd = nullptr;
         strOper.wFunc = FO_DELETE;
         strOper.pFrom = cstr;
         strOper.fFlags = FOF_SILENT | FOF_NOCONFIRMATION;
@@ -351,13 +351,13 @@ std::string Project::getExtension() const {
 std::string Project::getFullPath() const {
     std::string res;
 #ifndef _WIN32
-    res = (const char*) realpath(this->getFilename().c_str(), NULL);
+    res = (const char*) realpath(this->getFilename().c_str(), nullptr);
     if (Project(res).isFolder()) {
         res += "/";
     }
 #else
     TCHAR fullPath[MAX_PATH];
-    GetFullPathName(this->c_str(), MAX_PATH, fullPath, NULL);
+    GetFullPathName(this->c_str(), MAX_PATH, fullPath, nullptr);
     res = fullPath;
     if (Project(res).isFolder()) {
         res += "\\";
@@ -369,7 +369,7 @@ std::string Project::getFullPath() const {
 void Project::setToCurrentWorkingDir() {
 #ifndef _WIN32
     char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+    if (getcwd(cwd, sizeof(cwd)) != nullptr) {
         std::string cwdStr = cwd;
         *this = cwdStr;
     }

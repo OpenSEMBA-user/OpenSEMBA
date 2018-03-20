@@ -110,12 +110,12 @@ public:
             const Math::Real x,
             const bool approx = true,
             const Math::Real tol = tolerance,
-            bool* err = NULL) const;
+            bool* err = nullptr) const;
     std::pair<CVecID, CVecRD>        getCellPair(
             const CVecRD& pos,
             const bool approx = true,
             const Math::Real tol = tolerance,
-            bool* err = NULL) const;
+            bool* err = nullptr) const;
 
     Math::CVecI3Fractional getCVecI3Fractional (const CVecRD& xyz,
                                                 bool& err) const;
@@ -124,11 +124,11 @@ public:
                       const Math::Real  x,
                       const bool  approx = true,
                       const Math::Real  tol = tolerance,
-                      bool* err = NULL) const;
+                      bool* err = nullptr) const;
     CVecID    getCell(const CVecRD& pos,
                       const bool  approx = true,
                       const Math::Real tol = tolerance,
-                      bool* err = NULL) const;
+                      bool* err = nullptr) const;
     CVecID    getCell(const CVecID& pos,
                       const bool approx = true,
                       const Math::Real tol = tolerance) const { return pos; }

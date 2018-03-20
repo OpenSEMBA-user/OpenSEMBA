@@ -46,8 +46,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(OnLine);
 
-    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
-
     const std::string& getName() const;
     Type getType() const;
     Hardness getHardness() const;

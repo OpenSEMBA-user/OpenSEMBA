@@ -44,8 +44,6 @@ public:
 
     void set(const Geometry::Element::Group<const Geometry::Elem>&);
 
-    bool hasSameProperties(const TEMCoaxial& rhs) const;
-
     const std::string& getName() const;
 
     Math::CVecR3 getOrigin() const;

@@ -90,12 +90,20 @@ Data Parser::read(std::istream& stream) const {
         res.outputRequests = readOutputRequests(
                 *res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
         progress.advance();
+    } else {
+        res.sources = new Source::Group<>();
+        res.outputRequests = new OutputRequest::Group<>();
     }
 
     postReadOperations(res);
     progress.advance();
 
     progress.end();
+
+    for (size_t i = 0;i < res.outputRequests->size(); ++i) {
+        (*res.outputRequests)(i)->printInfo();
+    }
+    std::cout << std::flush;
 
     return res;
 }
@@ -121,7 +129,11 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
         } else {
             Solver::Settings aux;
             std::stringstream value;
-            value << *it;
+            if (it->type() == json::value_t::string) {
+                value << it->get<std::string>();
+            } else {
+                value << *it;
+            }
             aux.setString(value.str());
             opts.addMember(it.key(), std::move(aux));
         }
@@ -146,11 +158,8 @@ Geometry::Mesh::Geometric* Parser::readGeometricMesh(
 
 Source::Group<>* Parser::readSources(
         Geometry::Mesh::Geometric& mesh, const json& j) {
-    if (j.find("sources") == j.end()) {
-        return nullptr;
-    }
-
     Source::Group<>* res = new Source::Group<>();
+
     const json& sources = j.at("sources").get<json>();
     for (json::const_iterator it = sources.begin(); it != sources.end(); ++it) {
         std::string sourceType = it->at("sourceType").get<std::string>();
@@ -308,9 +317,6 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
 
 OutputRequest::Group<>* Parser::readOutputRequests(
         Geometry::Mesh::Geometric& mesh, const json& j) {
-    if (j.find("outputRequests") == j.end()) {
-        return nullptr;
-    }
 
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
     const json& outs = j.at("outputRequests").get<json>();
@@ -326,16 +332,12 @@ Geometry::Element::Group<> Parser::boxToElemGroup(
     Geometry::BoxR3 box = strToBox(line);
     if (box.isVolume()) {
         Geometry::HexR8* hex =
-            new Geometry::HexR8(mesh, Geometry::ElemId(0), box);
-        mesh.elems().addId(hex);
-        Geometry::Element::Group<> elems(hex);
-        return elems;
+            new Geometry::HexR8(mesh.coords(), Geometry::ElemId(0), box);
+        return mesh.elems().addId(hex);
     } else if (box.isSurface()) {
         Geometry::QuaR4* qua =
-            new Geometry::QuaR4(mesh, Geometry::ElemId(0), box);
-        mesh.elems().addId(qua);
-        Geometry::Element::Group<> elems(qua);
-        return elems;
+            new Geometry::QuaR4(mesh.coords(), Geometry::ElemId(0), box);
+        return mesh.elems().addId(qua);
     } else {
         throw std::logic_error(
                 "Box to Elem Group only works for volumes and surfaces");
@@ -359,11 +361,11 @@ OutputRequest::Base* Parser::readOutputRequest(
                 readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnLine:
         return new OutRqLine(domain, type, name,
-        		readElemIdsAsGroupOf<const Geometry::Lin>(
+        		readElemIdsAsGroupOf<Geometry::Lin>(
         				mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnSurface:
         return new OutRqSurface(domain, type, name,
-        		readElemIdsAsGroupOf<const Geometry::Surf>(
+        		readElemIdsAsGroupOf<Geometry::Surf>(
                 		mesh, j.at("elemIds").get<json>()));
     case Parser::outRqOnLayer:
     {
@@ -735,7 +737,7 @@ std::pair<Math::CVecR3, Math::CVecR3> Parser::strToBox(
     for (std::size_t i = 0; i < 3; i++) {
         iss >> min(i);
     }
-    return std::pair<Math::CVecR3,Math::CVecR3>(min, max);
+    return {min, max};
 }
 
 Math::CVecI3 Parser::strToCVecI3(std::string str) {
@@ -896,8 +898,7 @@ Source::Port::Waveguide::ExcitationMode Parser::strToWaveguideMode(
     } else if (str.compare("TM") == 0) {
         return Source::Port::Waveguide::TM;
     } else {
-        throw std::logic_error(
-                "Unrecognized excitation mode: " + str);
+        throw std::logic_error("Unrecognized exc. mode label: " + str);
     }
 }
 
@@ -919,7 +920,7 @@ const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
     }
 }
 
-Geometry::Element::Group<const Geometry::Nod> Parser::readCoordIdAsNodes(
+Geometry::Element::Group<Geometry::Nod> Parser::readCoordIdAsNodes(
         Geometry::Mesh::Geometric& mesh, const json& j) {
     std::vector<Geometry::ElemId> nodeIds;
     for (auto it = j.begin(); it != j.end(); ++it) {

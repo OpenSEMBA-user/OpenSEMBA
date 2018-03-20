@@ -57,8 +57,6 @@ public:
 
     Data& operator=(const Data& rhs);
 
-    bool check() const;
-
     void printInfo() const;
 };
 

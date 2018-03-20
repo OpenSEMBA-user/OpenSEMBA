@@ -48,8 +48,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Generator);
 
-    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
-
     const std::string& getName() const;
     Type getType() const;
 

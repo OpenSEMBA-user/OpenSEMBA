@@ -122,7 +122,7 @@ const CoordR3* Group<C>::getPos(const Math::CVecR3& position) const {
     if (it != indexUnstr_.end()) {
         return *it;
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -134,7 +134,7 @@ const CoordI3* Group<C>::getPos(const Math::CVecI3& position) const {
     if (it != indexStr_.end()) {
         return *it;
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -173,7 +173,7 @@ SEMBA::Group::Group<C> Group<C>::addPos(
     std::vector<C*> newCoords;
     newCoords.reserve(newPos.size());
     for(std::size_t i = 0; i < newPos.size(); i++) {
-        if (canOverlap || (getPos(newPos[i]) == NULL)) {
+        if (canOverlap || (getPos(newPos[i]) == nullptr)) {
             CoordR3* newCoord = new CoordR3(newPos[i]);
             if (newCoord->template is<C>()) {
                 newCoords.push_back(newCoord->castTo<C>());
@@ -203,7 +203,7 @@ SEMBA::Group::Group<C> Group<C>::addPos(
         const bool canOverlap) {
     std::vector<C*> newCoords;
     for(std::size_t i = 0; i < newPos.size(); i++) {
-        if (canOverlap || (getPos(newPos[i]) == NULL)) {
+        if (canOverlap || (getPos(newPos[i]) == nullptr)) {
             CoordI3* newCoord = new CoordI3(newPos[i]);
             if (newCoord->template is<C>()) {
                 newCoords.push_back(newCoord->template castTo<C>());

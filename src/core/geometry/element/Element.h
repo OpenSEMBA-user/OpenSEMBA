@@ -61,8 +61,8 @@ class Base : public virtual Class::Class,
              public virtual Class::Printable,
              public virtual Class::Identifiable<Id> {
 public:
-    Base(const Layer* lay = NULL,
-         const Model* mat = NULL);
+    Base(const Layer* lay = nullptr,
+         const Model* mat = nullptr);
     Base(const Base& rhs);
     virtual ~Base();
 

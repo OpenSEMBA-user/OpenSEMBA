@@ -86,7 +86,7 @@ Box<T,3> Element<T>::getBound() const {
 
 template<class T>
 const Coordinate::Coordinate<T,3>* Element<T>::getMinV() const {
-    assert(getV(0) != NULL);
+    assert(getV(0) != nullptr);
     const Coordinate::Coordinate<T,3>* res = getVertex(0);
     for (std::size_t i = 1; i < numberOfVertices(); i++) {
         if(res->pos() == getVertex(i)->pos()) {
@@ -106,7 +106,7 @@ const Coordinate::Coordinate<T,3>* Element<T>::getMinV() const {
 
 template<class T>
 const Coordinate::Coordinate<T,3>* Element<T>::getMaxV() const {
-    assert(getV(0) != NULL);
+    assert(getV(0) != nullptr);
     const Coordinate::Coordinate<T,3>* res = getVertex(0);
     for (std::size_t i = 1; i < numberOfVertices(); i++) {
         if(res->pos() == getVertex(i)->pos()) {
@@ -178,13 +178,13 @@ template<class T>
 ElemI* Element<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
                                 const Grid3& grid,
                                 const Math::Real tol) const {
-    return NULL;
+    return nullptr;
 }
 
 template<class T>
 ElemR* Element<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
                                   const Grid3& grid) const {
-    return NULL;
+    return nullptr;
 }
 
 template<class T>
@@ -231,10 +231,10 @@ const CoordI3** Element<T>::vertexToStructured(
         const Grid3& grid,
         const Math::Real tol) const {
     if (!this->is<ElemR>()) {
-        return NULL;
+        return nullptr;
     }
     if (!this->isStructured(grid, tol)) {
-        return NULL;
+        return nullptr;
     }
     Math::CVecI3 cell;
     const CoordI3** coords = new const CoordI3*[this->numberOfCoordinates()];
@@ -261,7 +261,7 @@ const CoordR3** Element<T>::vertexToUnstructured(
         const Coordinate::Group<CoordR3>& cG,
         const Grid3& grid) const {
     if (!this->is<ElemI>()) {
-        return NULL;
+        return nullptr;
     }
     const CoordR3** coords = new const CoordR3*[this->numberOfCoordinates()];
     CoordId coordId;

@@ -36,12 +36,12 @@ public:
     LineConformal(const Id id,
                   const CoordI3* v[2],
                   const Math::CVecR3& norm,
-                  const Layer* lay = NULL,
-                  const Model* mat = NULL);
+                  const Layer* lay = nullptr,
+                  const Model* mat = nullptr);
     LineConformal(const CoordI3* v[2],
                   const Math::CVecR3& norm,
-                  const Layer* lay = NULL,
-                  const Model* mat = NULL);
+                  const Layer* lay = nullptr,
+                  const Model* mat = nullptr);
     LineConformal(const LineConformal& rhs);
     virtual ~LineConformal();
 

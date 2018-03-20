@@ -47,17 +47,6 @@ OnLine::~OnLine() {
 
 }
 
-bool OnLine::hasSameProperties(const SEMBA::Source::Base& rhs) const {
-    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
-        return false;
-    }
-    const OnLine* rhsPtr = rhs.castTo<OnLine>();
-    bool hasSameProperties = true;
-    hasSameProperties &= type_ == rhsPtr->type_;
-    hasSameProperties &= hardness_ == rhsPtr->hardness_;
-    return hasSameProperties;
-}
-
 const std::string& OnLine::getName() const {
     const static std::string res = "OnLine";
     return res;

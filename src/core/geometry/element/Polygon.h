@@ -33,8 +33,8 @@ public:
     Polygon();
     Polygon(const Id id,
             const std::vector<const CoordR3*>& v,
-            const Layer* lay = NULL,
-            const Model* mat = NULL);
+            const Layer* lay = nullptr,
+            const Model* mat = nullptr);
     Polygon(const Polygon& rhs);
     virtual ~Polygon();
     

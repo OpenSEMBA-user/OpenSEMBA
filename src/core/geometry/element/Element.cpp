@@ -50,14 +50,14 @@ bool Base::operator==(const Base& rhs) const {
 }
 
 LayerId Base::getLayerId() const {
-    if (lay_ == NULL) {
+    if (lay_ == nullptr) {
         return LayerId(0);
     }
     return lay_->getId();
 }
 
 MatId Base::getMatId  () const {
-    if (mat_ == NULL) {
+    if (mat_ == nullptr) {
         return MatId(0);
     }
     return mat_->getId();

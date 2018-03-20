@@ -35,7 +35,7 @@ public:
     bool isMutuallyExclusive() const { return true; }
 
 protected:
-    MutuallyExclusiveGroup(GroupBase* = NULL,
+    MutuallyExclusiveGroup(GroupBase* = nullptr,
                            const std::string& = std::string(),
                            const std::string& = std::string());
 

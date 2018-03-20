@@ -26,7 +26,7 @@ namespace Math {
 
 template<class T, std::size_t D>
 Field<T,D>::Field() {
-    val_ = NULL;
+    val_ = nullptr;
     size_ = 0;
 }
 
@@ -38,7 +38,7 @@ Field<T,D>::Field(std::size_t size) {
 
 template<class T, std::size_t D>
 Field<T,D>::~Field() {
-    if (val_ != NULL) {
+    if (val_ != nullptr) {
         delete [] val_;
     }
 }

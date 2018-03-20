@@ -219,11 +219,11 @@ void GroupBase::parsePostprocess(Object& out) {
 }
 
 PositionBase& GroupBase::addPosition(PositionBase* arg) {
-    if (arg == NULL) {
+    if (arg == nullptr) {
         throw Error::Group::NullArgument();
     }
     try {
-        addPositionProcess(NULL, arg);
+        addPositionProcess(nullptr, arg);
     } catch (...) {
         delete arg;
         throw;
@@ -232,11 +232,11 @@ PositionBase& GroupBase::addPosition(PositionBase* arg) {
 }
 
 OptionBase& GroupBase::addOption(OptionBase* arg) {
-    if (arg == NULL) {
+    if (arg == nullptr) {
         throw Error::Group::NullArgument();
     }
     try {
-        addOptionProcess(NULL, arg);
+        addOptionProcess(nullptr, arg);
     } catch (...) {
         delete arg;
         throw;
@@ -246,20 +246,20 @@ OptionBase& GroupBase::addOption(OptionBase* arg) {
 
 void GroupBase::addPositionProcess(GroupBase* child, PositionBase* pos) {
     try {
-        if (child == NULL) {
+        if (child == nullptr) {
             insertName(pos->getName());
             positions_.push_back(pos);
         } else if (child->isMutuallyExclusive()) {
             insertName(pos->getName());
         }
-        if (parent_ != NULL) {
+        if (parent_ != nullptr) {
             parent_->addPositionProcess(this, pos);
         }
     } catch (...) {
         if (names_.count(pos->getName()) != 0) {
             names_.erase(pos->getName());
         }
-        if ((child == NULL) && !positions_.empty()) {
+        if ((child == nullptr) && !positions_.empty()) {
             if (positions_.back() == pos) {
                 positions_.pop_back();
             }
@@ -282,7 +282,7 @@ void GroupBase::addOptionProcess(GroupBase* child, OptionBase* opt) {
         if (opt->hasLongIdentifier()) {
             insertLongOpt(opt->getLongIdentifier(), name);
         }
-        if (child == NULL) {
+        if (child == nullptr) {
             insertName(opt->getName());
             if (optionName_.count(name) == 0) {
                 options_.push_back(opt);
@@ -294,7 +294,7 @@ void GroupBase::addOptionProcess(GroupBase* child, OptionBase* opt) {
         } else if (child->isMutuallyExclusive()) {
             insertName(opt->getName());
         }
-        if (parent_ != NULL) {
+        if (parent_ != nullptr) {
             parent_->addOptionProcess(this, opt);
         }
     } catch (...) {
@@ -309,7 +309,7 @@ void GroupBase::addOptionProcess(GroupBase* child, OptionBase* opt) {
             (longOpts_.count(opt->getLongIdentifier()))) {
             longOpts_.erase(opt->getLongIdentifier());
         }
-        if ((child == NULL) && !options_.empty()) {
+        if ((child == nullptr) && !options_.empty()) {
             if (options_.back() == opt) {
                 options_.pop_back();
                 if (optionName_.count(name) != 0) {

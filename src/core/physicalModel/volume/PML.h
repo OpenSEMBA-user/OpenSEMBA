@@ -35,7 +35,7 @@ class PML : public virtual Volume {
 public:
     PML(const Id id,
               const std::string& name,
-              const Math::Axis::Local* orientation = NULL);
+              const Math::Axis::Local* orientation = nullptr);
     // If no orientation is given. Automatic orientation should be attempted.
     PML(const PML& rhs);
     ~PML();

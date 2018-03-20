@@ -57,15 +57,6 @@ Math::CVecR3 TEMCoaxial::getOrigin() const {
     return origin_;
 }
 
-bool TEMCoaxial::hasSameProperties(const TEMCoaxial& rhs) const {
-    bool res = true;
-    res &= TEM::hasSameProperties(rhs);
-    res &= origin_ == rhs.origin_;
-    res &= innerRadius_ == rhs.innerRadius_;
-    res &= outerRadius_ == rhs.outerRadius_;
-    return res;
-}
-
 const std::string& TEMCoaxial::getName() const {
     const static std::string res = "Coaxial_TEM_port";
     return res;

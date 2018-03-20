@@ -114,9 +114,9 @@ void Exporter::writeMesh_(const Data* smb) {
     const PhysicalModel::Group<>* mat = smb->physicalModels;
     const Source::Group<>* srcs = smb->sources;
     const OutputRequest::Group<>* oRqs = smb->outputRequests;
-    const Geometry::Grid3* grid = NULL;
-    assert(inMesh != NULL);
-    assert(mat != NULL);
+    const Geometry::Grid3* grid = nullptr;
+    assert(inMesh != nullptr);
+    assert(mat != nullptr);
     const Geometry::Mesh::Unstructured* mesh;
     std::string preName;
     if (inMesh->is<Geometry::Mesh::Structured>()) {
@@ -125,7 +125,7 @@ void Exporter::writeMesh_(const Data* smb) {
         grid = inMesh->castTo<Geometry::Grid3>();
     } else {
         mesh = inMesh->castTo<Geometry::Mesh::Unstructured>();
-        grid = NULL;
+        grid = nullptr;
     }
     // Writes materials.
     const Geometry::Layer::Group<>& lay = mesh->layers();
@@ -141,7 +141,7 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes EM Sources.
-    if (srcs != NULL) {
+    if (srcs != nullptr) {
         for (std::size_t i = 0; i < srcs->size(); i++) {
             const Source::Base* src =  (*srcs)(i);
             const std::string name = preName + "EMSource_" + src->getName();
@@ -151,7 +151,7 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes output requests.
-    if (oRqs != NULL) {
+    if (oRqs != nullptr) {
         for (std::size_t i = 0; i < oRqs->size(); i++) {
             const OutputRequest::Base* oRq = (*oRqs)(i);
             const std::string name = preName + "OutRq_" + oRq->getName();
@@ -161,7 +161,7 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes boundaries.
-    if (grid != NULL) {
+    if (grid != nullptr) {
         for (Math::UInt i = 0; i < 3; i++) {
             for (Math::UInt j = 0; j < 2; j++) {
                 Geometry::CoordR3Group cG;
@@ -261,7 +261,7 @@ void Exporter::beginResult(
     }
     GiD_fBeginResult(
         resultFile_, fieldName.c_str(), timeName.c_str(), time, resultType,
-        getGiDResultLocation_(), gaussPointType.c_str(), NULL,
+        getGiDResultLocation_(), gaussPointType.c_str(), nullptr,
         componentsNames.size(), &compv[0]);
 }
 

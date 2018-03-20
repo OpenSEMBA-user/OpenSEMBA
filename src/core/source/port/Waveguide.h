@@ -43,8 +43,6 @@ public:
     Waveguide(const Waveguide& rhs);
     virtual ~Waveguide();
 
-    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
-
     ExcitationMode getExcitationMode() const;
     std::pair<size_t, size_t> getMode() const;
 

@@ -61,13 +61,13 @@ const Bound* BoundTerminations<D>::operator()(std::size_t d,
     if (bounds_[d][p]) {
         return bounds_[d][p].get();
     }
-    return NULL;
+    return nullptr;
 }
 
 template <std::size_t D>
 void BoundTerminations<D>::setBound(std::size_t d, std::size_t p,
                                     const Bound* bound) {
-    if (bound != NULL) {
+    if (bound != nullptr) {
         bounds_[d][p] =
             std::dynamic_pointer_cast<const Bound>(bound->getSharedPtr());
     } else {
@@ -80,7 +80,7 @@ void BoundTerminations<D>::setBounds(
         const std::array<std::array<const Bound*, 2>, D>& bounds) {
     for (std::size_t d = 0; d < D; d++) {
         for (std::size_t p = 0; p < 2; p++) {
-            if (bounds[d][p] != NULL) {
+            if (bounds[d][p] != nullptr) {
                 bounds_[d][p] = bounds->getSharedPtr();
             }
         }

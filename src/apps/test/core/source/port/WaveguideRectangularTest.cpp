@@ -38,7 +38,7 @@ class SourcePortWaveguideRectangularTest : public ::testing::Test {
         vector<Geometry::BoxI3> quadBoxes = plane.chop();
         Geometry::ElemId id(0);
         for (size_t i = 0; i < quadBoxes.size(); i++) {
-            surfs_.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], NULL, NULL));
+            surfs_.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], nullptr, nullptr));
         }
 
         excMode_ = Port::Waveguide::TE;
@@ -72,7 +72,7 @@ protected:
 };
 
 TEST_F(SourcePortWaveguideRectangularTest, withoutSymmetries) {
-    Port::WaveguideRectangular wp(NULL, surfs_, excMode_, mode_);
+    Port::WaveguideRectangular wp(nullptr, surfs_, excMode_, mode_);
 
     EXPECT_EQ(Math::CVecR3(0.0), wp.getOrigin());
     EXPECT_EQ(30.0, wp.getWidth());
@@ -91,7 +91,7 @@ TEST_F(SourcePortWaveguideRectangularTest, withSymmetry) {
                     ->castTo<PhysicalModel::Bound::Bound>();
     bounds_[1][0] = boundType_.getId(MatId(3))
                     ->castTo<PhysicalModel::Bound::Bound>();
-    Port::WaveguideRectangular wp(NULL, surfs_, excMode_, mode_);
+    Port::WaveguideRectangular wp(nullptr, surfs_, excMode_, mode_);
 
     EXPECT_EQ(Math::CVecR3(-wp.getWidth()/2.0, -wp.getHeight()/2.0, 0.0),
               wp.getOrigin());
@@ -114,5 +114,5 @@ TEST_F(SourcePortWaveguideRectangularTest, notValidSymmetry) {
     bounds_[1][0] = boundType_.getId(MatId(3))
                     ->castTo<PhysicalModel::Bound::Bound>();
     EXPECT_ANY_THROW(
-            Port::WaveguideRectangular(NULL, surfs_, excMode_, mode_));
+            Port::WaveguideRectangular(nullptr, surfs_, excMode_, mode_));
 }

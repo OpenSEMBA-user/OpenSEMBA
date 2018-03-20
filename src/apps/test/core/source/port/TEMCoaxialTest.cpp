@@ -34,7 +34,7 @@ class SourcePortTEMCoaxialTest : public ::testing::Test {
         vector<Geometry::BoxI3> quadBoxes = plane.chop();
         Geometry::ElemId id(0);
         for (size_t i = 0; i < quadBoxes.size(); i++) {
-            surfs_.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], NULL, NULL));
+            surfs_.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], nullptr, nullptr));
         }
 
         excMode_ = Port::TEM::voltage;
@@ -50,7 +50,7 @@ protected:
 };
 
 TEST_F(SourcePortTEMCoaxialTest, basic) {
-    Port::TEMCoaxial port(NULL, surfs_, excMode_,
+    Port::TEMCoaxial port(nullptr, surfs_, excMode_,
             Math::CVecR3(0.0), innerRadius_, outerRadius_);
 
     EXPECT_EQ(Math::CVecR3(0.0,1.0,0.0),

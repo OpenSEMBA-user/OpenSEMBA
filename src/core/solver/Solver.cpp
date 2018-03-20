@@ -32,13 +32,13 @@ Solver::~Solver() {
 
 double Solver::storeCPUTime() const {
 #ifdef _WIN32
-    LPFILETIME tim = NULL;
+    LPFILETIME tim = nullptr;
     GetSystemTimeAsFileTime(tim);
     return tim->dwLowDateTime;
 
 #else
     timeval tim;
-    gettimeofday(&tim, NULL);
+    gettimeofday(&tim, nullptr);
     return tim.tv_sec + (tim.tv_usec/1000000.0);
 #endif
 }
@@ -105,7 +105,7 @@ Solver::printTime(const double originalSeconds) const {
 //  tv.tv_usec = 0;
 //  FD_ZERO(&fds);
 //  FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
-//  select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+//  select(STDIN_FILENO+1, &fds, nullptr, nullptr, &tv);
 //  return FD_ISSET(STDIN_FILENO, &fds);
 //}
 

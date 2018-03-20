@@ -35,8 +35,8 @@ public:
     Tetrahedron4();
     Tetrahedron4(const Id id,
                  const CoordR3* v[4],
-                 const Layer* lay = NULL,
-                 const Model* mat = NULL);
+                 const Layer* lay = nullptr,
+                 const Model* mat = nullptr);
     Tetrahedron4(const Tetrahedron4& rhs);
     virtual ~Tetrahedron4();
 

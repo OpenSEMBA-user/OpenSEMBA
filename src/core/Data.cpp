@@ -24,37 +24,37 @@
 namespace SEMBA {
 
 Data::Data() {
-    solver = NULL;
-    mesh = NULL;
-    physicalModels = NULL;
-    sources = NULL;
-    outputRequests = NULL;
+    solver = nullptr;
+    mesh = nullptr;
+    physicalModels = nullptr;
+    sources = nullptr;
+    outputRequests = nullptr;
 }
 
 Data::Data(const Data& rhs)
 :   FileSystem::Project(rhs) {
-    solver = NULL;
-    mesh = NULL;
-    physicalModels = NULL;
-    sources = NULL;
-    outputRequests = NULL;
-    if (rhs.solver != NULL) {
+    solver = nullptr;
+    mesh = nullptr;
+    physicalModels = nullptr;
+    sources = nullptr;
+    outputRequests = nullptr;
+    if (rhs.solver != nullptr) {
         solver = new Solver::Info(*rhs.solver);
     }
-    if (rhs.mesh != NULL) {
+    if (rhs.mesh != nullptr) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
     }
-    if (rhs.physicalModels != NULL) {
+    if (rhs.physicalModels != nullptr) {
         physicalModels = rhs.physicalModels->clone();
     }
-    if (rhs.sources != NULL) {
+    if (rhs.sources != nullptr) {
         sources = rhs.sources->clone();
     }
-    if (rhs.outputRequests != NULL) {
+    if (rhs.outputRequests != nullptr) {
         outputRequests = rhs.outputRequests->clone();
     }
-    if (mesh != NULL) {
-        if (physicalModels != NULL) {
+    if (mesh != nullptr) {
+        if (physicalModels != nullptr) {
             mesh->reassignPointers(*physicalModels);
         } else {
             mesh->reassignPointers();
@@ -63,19 +63,19 @@ Data::Data(const Data& rhs)
 }
 
 Data::~Data() {
-    if (solver != NULL) {
+    if (solver != nullptr) {
         delete solver;
     }
-    if (mesh != NULL) {
+    if (mesh != nullptr) {
         delete mesh;
     }
-    if (physicalModels != NULL) {
+    if (physicalModels != nullptr) {
         delete physicalModels;
     }
-    if (sources != NULL) {
+    if (sources != nullptr) {
         delete sources;
     }
-    if (outputRequests != NULL) {
+    if (outputRequests != nullptr) {
         delete outputRequests;
     }
 }
@@ -85,28 +85,28 @@ Data& Data::operator=(const Data& rhs) {
         return *this;
     }
     FileSystem::Project::operator=(rhs);
-    solver = NULL;
-    mesh = NULL;
-    physicalModels = NULL;
-    sources = NULL;
-    outputRequests = NULL;
-    if (rhs.solver != NULL) {
+    solver = nullptr;
+    mesh = nullptr;
+    physicalModels = nullptr;
+    sources = nullptr;
+    outputRequests = nullptr;
+    if (rhs.solver != nullptr) {
         solver = new Solver::Info(*rhs.solver);
     }
-    if (rhs.mesh != NULL) {
+    if (rhs.mesh != nullptr) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
     }
-    if (rhs.physicalModels != NULL) {
+    if (rhs.physicalModels != nullptr) {
         physicalModels = rhs.physicalModels->clone();
     }
-    if (rhs.sources != NULL) {
+    if (rhs.sources != nullptr) {
         sources = rhs.sources->clone();
     }
-    if (rhs.outputRequests != NULL) {
+    if (rhs.outputRequests != nullptr) {
         outputRequests = rhs.outputRequests->clone();
     }
-    if (mesh != NULL) {
-        if (physicalModels != NULL) {
+    if (mesh != nullptr) {
+        if (physicalModels != nullptr) {
             mesh->reassignPointers(*physicalModels);
         } else {
             mesh->reassignPointers();
@@ -117,43 +117,32 @@ Data& Data::operator=(const Data& rhs) {
 
 void Data::printInfo() const {
     std::cout << " --- SEMBA data --- " << std::endl;
-    if (solver != NULL) {
+    if (solver != nullptr) {
         solver->printInfo();
     }
     else {
         std::cout << "No info about solver options." << std::endl;
     }
-    if (mesh != NULL) {
+    if (mesh != nullptr) {
         mesh->printInfo();
     } else {
         std::cout << "No info about mesh." << std::endl;
     }
-    if (physicalModels != NULL) {
+    if (physicalModels != nullptr) {
         physicalModels->printInfo();
     } else {
         std::cout << "No info about physical models." << std::endl;
     }
-    if (sources != NULL) {
+    if (sources != nullptr) {
         sources->printInfo();
     } else {
         std::cout << "No info about sources." << std::endl;
     }
-    if (outputRequests != NULL) {
+    if (outputRequests != nullptr) {
         outputRequests->printInfo();
     } else {
         std::cout << "No info about output requests." << std::endl;
     }
-}
-
-bool Data::check() const {
-    bool res = true;
-    if (sources != NULL) {
-//        res &= sources->check();
-    }
-    if (outputRequests != NULL) {
-//        res &= outputRequests->check();
-    }
-    return res;
 }
 
 } /* namespace SEMBA */

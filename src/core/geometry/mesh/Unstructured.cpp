@@ -79,7 +79,7 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid,
     newCoords.reserve(coords().size());
     for (std::size_t i = 0; i < coords().size(); i++) {
         CoordI3* newCoord = coords()(i)->toStructured(grid);
-        if (newCoord != NULL) {
+        if (newCoord != nullptr) {
             newCoords.push_back(newCoord);
         }
     }
@@ -89,7 +89,7 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid,
     newElems.reserve(elems().size());
     for (std::size_t i = 0; i < elems().size(); i++) {
         ElemI* newElem = elems()(i)->toStructured(*res, grid, tol);
-        if (newElem != NULL) {
+        if (newElem != nullptr) {
             newElems.push_back(newElem);
         }
     }

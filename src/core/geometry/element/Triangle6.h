@@ -34,8 +34,8 @@ public:
     Triangle6();
     Triangle6(const Id id,
               const CoordR3*[6],
-              const Layer* lay = NULL,
-              const Model* mat = NULL);
+              const Layer* lay = nullptr,
+              const Model* mat = nullptr);
     Triangle6(const Triangle6& rhs);
     virtual ~Triangle6();
 

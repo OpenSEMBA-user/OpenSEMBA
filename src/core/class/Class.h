@@ -34,7 +34,7 @@ public:
 
     template<typename T>
     bool is() const {
-        if(dynamic_cast<const T*>(this) != NULL) {
+        if(dynamic_cast<const T*>(this) != nullptr) {
             return true;
         }
         return false;

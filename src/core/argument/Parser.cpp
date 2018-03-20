@@ -28,7 +28,7 @@ namespace SEMBA {
 namespace Argument {
 
 Parser::Parser()
-:   Group(NULL, "") {
+:   Group(nullptr, "") {
     initDefault_();
 }
 

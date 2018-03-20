@@ -50,7 +50,7 @@ const L* Group<L>::getName(const std::string name) const {
             return this->get(i);
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 template<typename L>

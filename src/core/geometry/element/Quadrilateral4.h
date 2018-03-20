@@ -49,13 +49,13 @@ public:
     Quadrilateral4();
     Quadrilateral4(const Id id,
                    const Coordinate::Coordinate<T,3>* coords[4],
-                   const Layer* lay = NULL,
-                   const Model* mat = NULL);
+                   const Layer* lay = nullptr,
+                   const Model* mat = nullptr);
     Quadrilateral4(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                    const Id id,
                    const Box<T,3>& box,
-                   const Layer* lay = NULL,
-                   const Model* mat = NULL);
+                   const Layer* lay = nullptr,
+                   const Model* mat = nullptr);
     Quadrilateral4(const Quadrilateral4<T>& rhs);
     virtual ~Quadrilateral4();
 

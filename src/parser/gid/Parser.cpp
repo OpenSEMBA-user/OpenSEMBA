@@ -51,14 +51,14 @@
 //namespace GiD {
 //
 //Parser::Parser() {
-//    mesh_ = NULL;
-//    physicalModels_ = NULL;
+//    mesh_ = nullptr;
+//    physicalModels_ = nullptr;
 //}
 //
 //Parser::Parser(const std::string& fn)
 //:   FileSystem::Project(fn) {
-//    mesh_ = NULL;
-//    physicalModels_ = NULL;
+//    mesh_ = nullptr;
+//    physicalModels_ = nullptr;
 //}
 //
 //Parser::~Parser() {
@@ -113,7 +113,7 @@
 //}
 //
 //Solver::Info* Parser::readSolver() {
-//    Solver::Info* res = NULL;
+//    Solver::Info* res = nullptr;
 //    bool optionsFound = false;
 //    while (!optionsFound && !f_in.eof()) {
 //        std::string label, value;
@@ -127,7 +127,7 @@
 //        } // Closes problem data found if.
 //    } // Closes problemDataFound while.
 //    // Throws error messages if a problem was detected.
-//    if (res != NULL) {
+//    if (res != nullptr) {
 //        delete res;
 //    }
 //    throw std::logic_error("No solver options were found.");
@@ -323,7 +323,7 @@
 //                return new PhysicalModel::Predefined::SMA(id, name);
 //            case PhysicalModel::PhysicalModel::PML:
 //                if (pmlAutomaticOrientation) {
-//                    return new PhysicalModel::Volume::PML(id, name, NULL);
+//                    return new PhysicalModel::Volume::PML(id, name, nullptr);
 //                } else {
 //                    return new PhysicalModel::Volume::PML(
 //                            id, name, new Math::Axis::Local(localAxes));
@@ -387,7 +387,7 @@
 //            }
 //        }
 //    }
-//    return NULL;
+//    return nullptr;
 //}
 //
 //OutputRequest::Group<>* Parser::readOutputRequests() {
@@ -791,9 +791,9 @@
 //        if (matId != MatId(0)) {
 //            mat = physicalModels_->getId(matId);
 //        } else {
-//            mat = NULL;
+//            mat = nullptr;
 //        }
-//        elems.add(new Geometry::HexR8(id, v, NULL, mat));
+//        elems.add(new Geometry::HexR8(id, v, nullptr, mat));
 //    }
 //}
 //
@@ -818,9 +818,9 @@
 //            mat = physicalModels_->getId(matId);
 //        }
 //        else {
-//            mat = NULL;
+//            mat = nullptr;
 //        }
-//        elems.add(new Geometry::Tet10(id, v, NULL, mat));
+//        elems.add(new Geometry::Tet10(id, v, nullptr, mat));
 //    }
 //}
 //
@@ -846,14 +846,14 @@
 //            lay = lG.getId(layerId);
 //        }
 //        else {
-//            lay = NULL;
+//            lay = nullptr;
 //        }
 //        const PhysicalModel::PhysicalModel* mat;
 //        if (matId != MatId(0)) {
 //            mat = physicalModels_->getId(matId);
 //        }
 //        else {
-//            mat = NULL;
+//            mat = nullptr;
 //        }
 //        elems.add(new Geometry::Tet4(id, v, lay, mat));
 //    }
@@ -881,14 +881,14 @@
 //                   lay = lG.getId(layerId);
 //               }
 //               else {
-//                   lay = NULL;
+//                   lay = nullptr;
 //               }
 //        const PhysicalModel::PhysicalModel* mat;
 //        if (matId != MatId(0)) {
 //            mat = physicalModels_->getId(matId);
 //        }
 //        else {
-//            mat = NULL;
+//            mat = nullptr;
 //        }
 //        elems.add(new Geometry::QuaR4(id, v, lay, mat));
 //    }
@@ -916,9 +916,9 @@
 //            mat = physicalModels_->getId(matId);
 //        }
 //        else {
-//            mat = NULL;
+//            mat = nullptr;
 //        }
-//        elems.add(new Geometry::Tri6(id, v, NULL, mat));
+//        elems.add(new Geometry::Tri6(id, v, nullptr, mat));
 //    }
 //}
 //
@@ -945,14 +945,14 @@
 //            lay = lG.getId(layerId);
 //        }
 //        else {
-//            lay = NULL;
+//            lay = nullptr;
 //        }
 //        const PhysicalModel::PhysicalModel* mat;
 //        if (matId != MatId(0)) {
 //            mat = physicalModels_->getId(matId);
 //        }
 //        else {
-//            mat = NULL;
+//            mat = nullptr;
 //        }
 //        elems.add(new Geometry::Tri3(id, v, lay, mat));
 //    }
@@ -980,14 +980,14 @@
 //            lay = lG.getId(layerId);
 //        }
 //        else {
-//            lay = NULL;
+//            lay = nullptr;
 //        }
 //        const PhysicalModel::PhysicalModel* mat;
 //        if (matId != MatId(0)) {
 //            mat = physicalModels_->getId(matId);
 //        }
 //        else {
-//            mat = NULL;
+//            mat = nullptr;
 //        }
 //        elems.add(new Geometry::LinR2(id, v, lay, mat));
 //    }

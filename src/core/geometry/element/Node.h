@@ -51,13 +51,13 @@ public:
     Node();
     Node(const Id id,
          const Coordinate::Coordinate<T,3>* v[1],
-         const Layer* lay = NULL,
-         const Model* mat = NULL);
+         const Layer* lay = nullptr,
+         const Model* mat = nullptr);
     Node(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
          const Id id,
          const Box<T,3>& box,
-         const Layer* lay = NULL,
-         const Model* mat = NULL);
+         const Layer* lay = nullptr,
+         const Model* mat = nullptr);
     Node(const Node<T>& rhs);
     virtual ~Node();
     

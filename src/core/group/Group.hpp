@@ -55,7 +55,7 @@ const T* Base<T>::operator()(const std::size_t pos) const {
 template<typename T> template<typename T2>
 Group<T>::Group(T2* elem) {
     element_.reserve(1);
-    if (dynamic_cast<const T*>(elem) != NULL) {
+    if (dynamic_cast<const T*>(elem) != nullptr) {
         element_.push_back(getSharedPtr(elem));
     }
 }
@@ -64,7 +64,7 @@ template<typename T> template<typename T2>
 Group<T>::Group(const std::vector<T2*>& elems) {
     element_.reserve(elems.size());
     for (std::size_t i = 0; i < elems.size(); i++) {
-        if (dynamic_cast<const T*>(elems[i]) != NULL) {
+        if (dynamic_cast<const T*>(elems[i]) != nullptr) {
             element_.push_back(getSharedPtr(elems[i]));
         }
     }
@@ -74,7 +74,7 @@ template<typename T> template<typename T2>
 Group<T>::Group(Group<T2>& rhs) {
     element_.reserve(rhs.size());
     for (std::size_t i = 0; i < rhs.size(); i++) {
-        if (dynamic_cast<const T*>(rhs(i)) != NULL) {
+        if (dynamic_cast<const T*>(rhs(i)) != nullptr) {
             element_.push_back(getSharedPtr(rhs(i)));
         }
     }
@@ -84,7 +84,7 @@ template<typename T> template<typename T2>
 Group<T>::Group(Group<T2>&& rhs) {
     element_.reserve(rhs.size());
     for (std::size_t i = 0; i < rhs.size(); i++) {
-        if (dynamic_cast<const T*>(rhs(i)) != NULL) {
+        if (dynamic_cast<const T*>(rhs(i)) != nullptr) {
             element_.push_back(std::move(getSharedPtr(rhs(i))));
         }
     }
@@ -95,7 +95,7 @@ Group<T>::Group(const Group<T2>& rhs) {
     static_assert(std::is_const<T>::value, "Template parameter must be const");
     element_.reserve(rhs.size());
     for (std::size_t i = 0; i < rhs.size(); i++) {
-        if (dynamic_cast<const T*>(rhs(i)) != NULL) {
+        if (dynamic_cast<const T*>(rhs(i)) != nullptr) {
             element_.push_back(getSharedPtr(rhs(i)));
         }
     }

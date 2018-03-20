@@ -90,7 +90,7 @@ Unstructured* Structured::getMeshUnstructured() const {
     newCoords.reserve(coords().size());
     for (std::size_t i = 0; i < coords().size(); i++) {
         CoordR3* newCoord = coords()(i)->toUnstructured(*this);
-        if (newCoord != NULL) {
+        if (newCoord != nullptr) {
             newCoords.push_back(newCoord);
         }
     }
@@ -100,7 +100,7 @@ Unstructured* Structured::getMeshUnstructured() const {
     newElems.reserve(elems().size());
     for (std::size_t i = 0; i < elems().size(); i++) {
         ElemR* newElem = elems()(i)->toUnstructured(*res, *this);
-        if (newElem != NULL) {
+        if (newElem != nullptr) {
             newElems.push_back(newElem);
         }
     }

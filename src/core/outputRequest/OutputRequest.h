@@ -74,9 +74,6 @@ public:
     virtual void add(
             const Geometry::Element::Group<const Geometry::Elem>&) = 0;
 
-    virtual bool hasSameProperties(const Base& rhs) const;
-    virtual bool isSimilar(const Base& rhs) const = 0;
-
     const std::string& getName() const;
     Type getOutputType() const;
     Domain getDomain() const;
@@ -113,7 +110,7 @@ public:
     void set(const Geometry::Element::Group<const Geometry::Elem>&);
     void add(const Geometry::Element::Group<const Geometry::Elem>&);
 
-    void printInfo() const;
+    virtual void printInfo() const;
 };
 
 namespace Error {
@@ -137,10 +134,10 @@ public:
 
 namespace SEMBA {
 
-typedef OutputRequest::OutputRequest<const Geometry::Nod > OutRqNode;
-typedef OutputRequest::OutputRequest<const Geometry::Lin > OutRqLine;
-typedef OutputRequest::OutputRequest<const Geometry::Surf> OutRqSurface;
-typedef OutputRequest::OutputRequest<const Geometry::Vol > OutRqVolume;
+typedef OutputRequest::OutputRequest<Geometry::Nod > OutRqNode;
+typedef OutputRequest::OutputRequest<Geometry::Lin > OutRqLine;
+typedef OutputRequest::OutputRequest<Geometry::Surf> OutRqSurface;
+typedef OutputRequest::OutputRequest<Geometry::Vol > OutRqVolume;
 
 } /* namespace SEMBA */
 

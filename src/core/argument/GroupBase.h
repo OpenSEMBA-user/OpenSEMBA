@@ -86,7 +86,7 @@ public:
     virtual void parsePostprocess(Object&);
 
 protected:
-    GroupBase(GroupBase* = NULL,
+    GroupBase(GroupBase* = nullptr,
               const std::string& = std::string(),
               const std::string& = std::string());
 
@@ -129,7 +129,7 @@ namespace Group {
 
 class NullArgument : public Error {
 public:
-    NullArgument() : str_("Argument must not be NULL") {}
+    NullArgument() : str_("Argument must not be nullptr") {}
     virtual ~NullArgument() throw() {}
 
     const char* what() const throw() { return str_.c_str(); }

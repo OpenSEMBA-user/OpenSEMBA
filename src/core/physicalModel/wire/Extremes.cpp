@@ -32,11 +32,11 @@ Extremes::Extremes(const std::string& name,
 :   Identifiable<Id>(wire),
     PhysicalModel(name),
     Wire(wire) {
-    extreme_[0] = extreme_[1] = NULL;
-    if (extremeL != NULL) {
+    extreme_[0] = extreme_[1] = nullptr;
+    if (extremeL != nullptr) {
         extreme_[0] = extremeL->cloneTo<Multiport::Multiport>();
     }
-    if (extremeR != NULL) {
+    if (extremeR != nullptr) {
         extreme_[1] = extremeR->cloneTo<Multiport::Multiport>();
     }
 }
@@ -45,31 +45,31 @@ Extremes::Extremes(const Extremes& rhs)
 :   Identifiable<Id>(rhs),
     PhysicalModel(rhs),
     Wire(rhs) {
-    extreme_[0] = extreme_[1] = NULL;
-    if (rhs.extreme_[0] != NULL) {
+    extreme_[0] = extreme_[1] = nullptr;
+    if (rhs.extreme_[0] != nullptr) {
         extreme_[0] = rhs.extreme_[0]->cloneTo<Multiport::Multiport>();
     }
-    if (rhs.extreme_[1] != NULL) {
+    if (rhs.extreme_[1] != nullptr) {
         extreme_[1] = rhs.extreme_[1]->cloneTo<Multiport::Multiport>();
     }
 }
 
 Extremes::~Extremes() {
-    if (extreme_[0] != NULL) {
+    if (extreme_[0] != nullptr) {
         delete extreme_[0];
     }
-    if (extreme_[1] != NULL) {
+    if (extreme_[1] != nullptr) {
         delete extreme_[1];
     }
 }
 
 void Extremes::setExtreme(const std::size_t i,
                           const Multiport::Multiport* extreme) {
-    if (extreme_[i] != NULL) {
+    if (extreme_[i] != nullptr) {
         delete extreme_[i];
     }
-    extreme_[i] = NULL;
-    if (extreme != NULL) {
+    extreme_[i] = nullptr;
+    if (extreme != nullptr) {
         extreme_[i] = extreme->cloneTo<Multiport::Multiport>();
     }
 }
@@ -81,11 +81,11 @@ void Extremes::swapExtremes() {
 void Extremes::printInfo() const {
     std::cout<< " --- WireExtremes info ---" << std::endl;
     Wire::printInfo();
-    if (extreme_[0] != NULL) {
+    if (extreme_[0] != nullptr) {
         std::cout << "ExtremeL:" << std::endl;
         extreme_[0]->printInfo();
     }
-    if (extreme_[1] != NULL) {
+    if (extreme_[1] != nullptr) {
         std::cout << "ExtremeR:" << std::endl;
         extreme_[1]->printInfo();
     }

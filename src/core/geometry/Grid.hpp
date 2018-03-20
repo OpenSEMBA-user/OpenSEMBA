@@ -453,7 +453,7 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
                                                       const bool approx,
                                                       const Math::Real tol,
                                                       bool* err) const {
-    if (err != NULL) {
+    if (err != nullptr) {
         *err = false;
     }
 
@@ -466,7 +466,7 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
     if (Math::Util::lower(x, pos[0], steps[0], tol)) {
         cell = 0;
         dist = (x-pos[0])/steps[0];
-        if (err != NULL) {
+        if (err != nullptr) {
             *err = true;
         }
         return std::make_pair(cell, dist);
@@ -483,7 +483,7 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
         if (Math::Util::equal(x, pos[i], step, tol)) {
             cell = i;
             dist = 0.0;
-            if (err != NULL) {
+            if (err != nullptr) {
                 *err = false;
             }
             return std::make_pair(cell, dist);
@@ -494,7 +494,7 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
                 cell++;
                 dist -= 1.0;
             }
-            if (err != NULL) {
+            if (err != nullptr) {
                 *err = false;
             }
             return std::make_pair(cell, dist);
@@ -502,7 +502,7 @@ std::pair<Math::Int, Math::Real> Grid<D>::getCellPair(const std::size_t dir,
     }
     cell = getNumCells()(dir);
     dist = (x - pos.back())/steps.back();
-    if (err != NULL) {
+    if (err != nullptr) {
         *err = true;
     }
     return std::make_pair(cell, dist);
@@ -515,7 +515,7 @@ std::pair<Math::Vector::Cartesian<Math::Int,D>,
                                const bool approx,
                                const Math::Real tol,
                                bool* err) const {
-    if (err != NULL) {
+    if (err != nullptr) {
         *err = false;
     }
     bool stepErr = false;
@@ -527,7 +527,7 @@ std::pair<Math::Vector::Cartesian<Math::Int,D>,
             getCellPair(dir,xyz(dir),approx,tol,&stepErr);
         cell(dir) = res.first;
         dist(dir) = res.second;
-        if (err != NULL) {
+        if (err != nullptr) {
             *err = *err || stepErr;
         }
     }

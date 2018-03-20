@@ -51,18 +51,6 @@ BulkCurrent::~BulkCurrent() {
 
 }
 
-bool BulkCurrent::hasSameProperties(
-        const SEMBA::OutputRequest::Base& rhs) const {
-    if(!SEMBA::OutputRequest::Base::hasSameProperties(rhs)) {
-        return false;
-    }
-    const BulkCurrent* rhsPtr = rhs.castTo<BulkCurrent>();
-    bool hasSameProperties = true;
-    hasSameProperties &= dir_ == rhsPtr->dir_;
-    hasSameProperties &= skip_ == rhsPtr->skip_;
-    return hasSameProperties;
-}
-
 Math::Constants::CartesianAxis BulkCurrent::getDir() const {
     return dir_;
 }

@@ -123,7 +123,7 @@ std::string Formatter::generatePosition_(const PositionBase& arg) {
     std::string res;
     std::string metavar = generateMetavar_(arg);
     res = metavar;
-    if (dynamic_cast<const ValueMulti*>(&arg) != NULL) {
+    if (dynamic_cast<const ValueMulti*>(&arg) != nullptr) {
         res += std::string(" [") + metavar + std::string(" ...]");
     }
     return res;
@@ -138,15 +138,15 @@ std::string Formatter::generateOption_(const OptionBase& arg, bool req) {
         id = std::string("--") + arg.getLongIdentifier();
     }
     res += id;
-    if (dynamic_cast<const SwitchBase*>(&arg) != NULL) {
-        if (dynamic_cast<const MultiSwitch*>(&arg) != NULL) {
+    if (dynamic_cast<const SwitchBase*>(&arg) != nullptr) {
+        if (dynamic_cast<const MultiSwitch*>(&arg) != nullptr) {
             res += std::string(" [") + id + std::string(" ...]");
         }
     } else {
         const OptionValue& value = dynamic_cast<const OptionValue&>(arg);
         std::string metavar = generateMetavar_(value);
         res += std::string(" ") + metavar;
-        if (dynamic_cast<const ValueMulti*>(&value) != NULL) {
+        if (dynamic_cast<const ValueMulti*>(&value) != nullptr) {
             res += std::string(" [") + metavar + std::string(" ...]");
         }
     }
@@ -331,7 +331,7 @@ void Formatter::printGroup_(const GroupBase& group,
         help = group.option(i).getHelp();
         def.clear();
         choices.clear();
-        if (dynamic_cast<const ValueBase*>(&group.option(i)) != NULL) {
+        if (dynamic_cast<const ValueBase*>(&group.option(i)) != nullptr) {
             const ValueBase& value = dynamic_cast<const ValueBase&>(
                                          group.option(i));
             def     = value.getDefault();

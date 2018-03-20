@@ -33,7 +33,7 @@ namespace Matrix {
 
 template <class T>
 Dynamic<T>::Dynamic() {
-   _val = NULL;
+   _val = nullptr;
    _nRows = 0;
    _nCols = 0;
    for (std::size_t i = 0; i < _nRows*_nCols; i++) {
@@ -66,7 +66,7 @@ template <class T>
 Dynamic<T>::Dynamic(std::size_t rows, std::size_t cols, T** values) {
    _nRows = rows;
    _nCols = cols;
-   assert(values != NULL);
+   assert(values != nullptr);
    for (std::size_t i = 0; i < _nRows; i++) {
       for (std::size_t j = 0; j < _nCols; j++) {
          val(i,j) = values[i][j];
@@ -76,7 +76,7 @@ Dynamic<T>::Dynamic(std::size_t rows, std::size_t cols, T** values) {
 
 template <class T>
 Dynamic<T>::~Dynamic() {
-   if (_val != NULL) {
+   if (_val != nullptr) {
       delete [] _val;
    }
 }
@@ -126,7 +126,7 @@ inline void Dynamic<T>::resizeVal(const std::size_t rows,
                                   const std::size_t cols) {
    _nRows = rows;
    _nCols = cols;
-   if (_val != NULL) {
+   if (_val != nullptr) {
       delete [] _val;
    }
    _val = new T[_nRows*_nCols];

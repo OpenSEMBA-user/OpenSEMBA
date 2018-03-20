@@ -54,9 +54,9 @@ void Exporter::writeMesh_(const Data* smb) {
     const PhysicalModel::Group<>* mat = smb->physicalModels;
     const Source::Group<>* srcs = smb->sources;
     const OutputRequest::Group<>* oRqs = smb->outputRequests;
-    const Geometry::Grid3* grid = NULL;
-    assert(inMesh != NULL);
-    assert(mat != NULL);
+    const Geometry::Grid3* grid = nullptr;
+    assert(inMesh != nullptr);
+    assert(mat != nullptr);
     const Geometry::Mesh::Unstructured* mesh;
     const Geometry::Mesh::Structured* meshStr;
     std::string preName;
@@ -66,9 +66,9 @@ void Exporter::writeMesh_(const Data* smb) {
         preName = "str_";
         grid = inMesh->castTo<Geometry::Grid3>();
     } else {
-        meshStr = NULL;
+        meshStr = nullptr;
         mesh = inMesh->cloneTo<Geometry::Mesh::Unstructured>();
-        grid = NULL;
+        grid = nullptr;
     }
 
     std::string filename = getFilename() + ".pvd";
@@ -107,7 +107,7 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes EM Sources.
-    if (srcs != NULL) {
+    if (srcs != nullptr) {
         for (std::size_t i = 0; i < srcs->size(); i++) {
             const Source::Base* src =  (*srcs)(i);
             const std::string name = preName + "EMSource_" + src->getName();
@@ -117,7 +117,7 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes output requests.
-    if (oRqs != NULL) {
+    if (oRqs != nullptr) {
         for (std::size_t i = 0; i < oRqs->size(); i++) {
             const OutputRequest::Base* oRq = (*oRqs)(i);
             const std::string name = preName + "OutRq_" + oRq->getName();
@@ -127,10 +127,10 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes boundaries.
-    if (meshStr != NULL && grid != NULL) {
+    if (meshStr != nullptr && grid != nullptr) {
         for (std::size_t i = 0; i < 3; i++) {
             for (std::size_t j = 0; j < 2; j++) {
-                if (meshStr->bounds()(i, j) != NULL) {
+                if (meshStr->bounds()(i, j) != nullptr) {
                     Geometry::CoordR3Group cG;
                     Group::Group<Geometry::ElemR> bound =
                         getBoundary(Math::Constants::CartesianAxis(i),
@@ -143,7 +143,7 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes grid.
-    if (grid != NULL) {
+    if (grid != nullptr) {
         Geometry::CoordR3Group cG;
         Group::Group<Geometry::ElemR> gridAux = getGridElems(cG, grid);
         writeFile_(gridAux, makeValid_("Grid"), outFile, part);

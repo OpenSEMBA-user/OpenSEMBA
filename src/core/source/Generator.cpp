@@ -52,17 +52,6 @@ Generator::~Generator() {
 
 }
 
-bool Generator::hasSameProperties(const SEMBA::Source::Base& rhs) const {
-    if(!SEMBA::Source::Base::hasSameProperties(rhs)) {
-        return false;
-    }
-    const Generator* rhsPtr = rhs.castTo<Generator>();
-    bool hasSameProperties = true;
-    hasSameProperties &= type_ == rhsPtr->type_;
-    hasSameProperties &= hardness_ == rhsPtr->hardness_;
-    return hasSameProperties;
-}
-
 const std::string& Generator::getName() const {
     const static std::string res = "Generator";
     return res;

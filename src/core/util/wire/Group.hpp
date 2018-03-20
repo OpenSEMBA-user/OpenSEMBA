@@ -182,11 +182,11 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
     // told the number of materials with the same name
     std::map<const PhysicalModel::Wire::Wire*, std::size_t> numWireMat;
     for (std::size_t i = 0; i < wires.size(); i++) {
-        wireMat = NULL;
-        extremeL = extremeR = NULL;
+        wireMat = nullptr;
+        extremeL = extremeR = nullptr;
         // We get the wire and union materials that make up the wire.
         getWireMats_(wireMat, extremeL, extremeR, wires[i], smb, graph);
-        if (wireMat == NULL) {
+        if (wireMat == nullptr) {
             continue;
         }
         // We get the wire material with extremes of the wire, creating it if
@@ -210,7 +210,7 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
         // The wire is created and stored
         Geometry::Element::Polyline<T>* newWire = newWire_(wires[i],
                                                            wireExtremes);
-        if (newWire != NULL) {
+        if (newWire != nullptr) {
             wires_.push_back(newWire);
         }
     }
@@ -239,14 +239,14 @@ std::vector<std::vector<const Geometry::Element::Line<T>*>>
                 nextSegment = graph.elem(i);
                 // We search every line that make up the wire from the line
                 // obtained (wireLines)
-                while (nextSegment != NULL) {
+                while (nextSegment != nullptr) {
                     if (visLines.count(nextSegment->elem()->getId()) != 0) {
                         break;
                     }
                     wireLines.push_back(nextSegment->elem());
                     visLines.insert(nextSegment->elem()->getId());
                     prevSegment = nextSegment;
-                    nextSegment = NULL;
+                    nextSegment = nullptr;
                     for (std::size_t
                          j = 0; j < prevSegment->numNeighbors(); j++) {
                         if (visLines.count(
@@ -255,7 +255,7 @@ std::vector<std::vector<const Geometry::Element::Line<T>*>>
                             nextSegment = prevSegment->getNeighbor(j);
                         }
                     }
-                    if (nextSegment == NULL) {
+                    if (nextSegment == nullptr) {
                         break;
                     }
                 }
@@ -294,41 +294,41 @@ void Group<T>::getWireMats_(
         }
     }
 
-    wireMat = NULL;
-    extremeL = NULL;
-    extremeR = NULL;
+    wireMat = nullptr;
+    extremeL = nullptr;
+    extremeR = nullptr;
     // Algorithm that fills extremeL, wireMat and extremeR.
     // - extremeL: first union material (before wire material)
     // - wireMat: wire material
     // - extremeR: second union material (after the wire material)
     for (std::size_t m = 0; m < matIds.size(); m++) {
         if (mats.getId(matIds[m])->is<PhysicalModel::Multiport::Multiport>()) {
-            if ((extremeL == NULL) &&
-                (wireMat == NULL)) {
+            if ((extremeL == nullptr) &&
+                (wireMat == nullptr)) {
                 extremeL =
                     mats.getId(matIds[m])->castTo<
                         PhysicalModel::Multiport::Multiport>();
-            } else if ((extremeL != NULL) &&
-                       (wireMat == NULL)) {
+            } else if ((extremeL != nullptr) &&
+                       (wireMat == nullptr)) {
                 // Never happens
-            } else if ((wireMat != NULL) &&
-                       (extremeR == NULL)) {
+            } else if ((wireMat != nullptr) &&
+                       (extremeR == nullptr)) {
                 extremeR =
                     mats.getId(matIds[m])->castTo<
                         PhysicalModel::Multiport::Multiport>();
-            } else if (extremeR != NULL) {
+            } else if (extremeR != nullptr) {
                 // Never happens
             }
         } else if (mats.getId(matIds[m])->is<PhysicalModel::Wire::Wire>()) {
-            if (wireMat == NULL) {
+            if (wireMat == nullptr) {
                 wireMat =
                     mats.getId(matIds[m])->castTo<PhysicalModel::Wire::Wire>();
-            } else if (wireMat != NULL) {
+            } else if (wireMat != nullptr) {
                 // Never happens
             }
         }
     }
-    if (wireMat == NULL) {
+    if (wireMat == nullptr) {
         // If a wire material has not been found then there is an error.
         std::stringstream aux;
         aux << "ERROR @ Wire::Group: Lines with ids";
@@ -388,7 +388,7 @@ Geometry::Element::Polyline<T>*
     // information of the ElementIds that make it up and if the segments are
     // inverted in the original mesh
     if (lines.empty()) {
-        return NULL;
+        return nullptr;
     }
     // We get the coordinates that make up the polyline (v)
     std::vector<const Geometry::Coordinate::Coordinate<T, 3>*> v;
@@ -426,7 +426,7 @@ Geometry::Element::Polyline<T>*
         // which case we will reverse all the coordinates.
         for (std::size_t i = 0; i < lines.size(); i++) {
             if (dynamic_cast<const PhysicalModel::Wire::Wire*>(
-                    lines[i]->getModel()) != NULL) {
+                    lines[i]->getModel()) != nullptr) {
                 if (i == 0) {
                     std::size_t j = i + 1;
                     if ((lines[i]->getV(0)->getId() ==

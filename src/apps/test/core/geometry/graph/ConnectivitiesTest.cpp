@@ -44,7 +44,7 @@ TEST_F(GeometryGraphConnectivitiesTest, innerOuterFace) {
     Graph::Connectivities conn(elem_);
     {
         const Tri3* tri = elem_.getId(ElemId(6))->castTo<Tri3>();
-        EXPECT_EQ(Element::Face(NULL,0), conn.getOuterFace(tri));
+        EXPECT_EQ(Element::Face(nullptr,0), conn.getOuterFace(tri));
         EXPECT_TRUE(conn.isDomainBoundary(conn.getInnerFace(tri)));
     }
 

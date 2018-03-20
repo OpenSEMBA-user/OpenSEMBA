@@ -43,8 +43,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(WaveguideRectangular);
 
-    bool hasSameProperties(const SEMBA::Source::Base& rhs) const;
-
     void set(const Geometry::Element::Group<const Geometry::Elem>&);
 
     const std::string& getName() const;

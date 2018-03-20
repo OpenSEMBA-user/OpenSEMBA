@@ -314,7 +314,7 @@ inline T Polynomial<T>::operator ()(const T& arg) const {
 
 template<class T>
 inline bool Polynomial<T>::operator ==(const Base& rhs) const {
-    if (dynamic_cast<const Polynomial<T>*>(&rhs) == NULL) {
+    if (dynamic_cast<const Polynomial<T>*>(&rhs) == nullptr) {
         return false;
     }
     const Polynomial<T>* rhsPol = dynamic_cast<const Polynomial<T>*>(&rhs);

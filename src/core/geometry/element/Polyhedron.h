@@ -34,8 +34,8 @@ public:
     Polyhedron();
     Polyhedron(const Id id,
                const std::vector<const Polygon*>& faces,
-               const Layer* lay = NULL,
-               const Model* mat = NULL);
+               const Layer* lay = nullptr,
+               const Model* mat = nullptr);
     Polyhedron(const Polyhedron& rhs);
     virtual ~Polyhedron();
 

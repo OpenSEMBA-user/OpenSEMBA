@@ -59,12 +59,12 @@ public:
     Hexahedron8(const Id id,
                 const Coordinate::Coordinate<T,3>* v[8],
 				const Layer* lay,
-                const Model* mat = NULL);
+                const Model* mat = nullptr);
     Hexahedron8(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                 const Id id,
                 const Box<T,3>& box,
-                const Layer* lay = NULL,
-                const Model* mat = NULL);
+                const Layer* lay = nullptr,
+                const Model* mat = nullptr);
     Hexahedron8(const Hexahedron8<T>& rhs);
     virtual ~Hexahedron8();
 

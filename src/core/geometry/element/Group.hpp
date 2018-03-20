@@ -233,7 +233,7 @@ BoxR3 Group<E>::getBound(const std::vector<Face>& border) const {
 
 template<typename E>
 const CoordR3* Group<E>::getClosestVertex(const Math::CVecR3 pos) const {
-    const CoordR3* res = NULL;
+    const CoordR3* res = nullptr;
     Math::Real minDist = std::numeric_limits<Math::Real>::infinity();
     Group<const ElemR> elems = this->template getOf<ElemR>();
     for (std::size_t b = 0; b < elems.size(); b++) {
@@ -305,7 +305,7 @@ template<typename E>
 void Group<E>::reassignPointers(
         const SEMBA::Geometry::Layer::Group<Layer>& lNew) {
     for (std::size_t i = 0; i < this->size(); i++) {
-        if (this->get(i)->getLayer() != NULL) {
+        if (this->get(i)->getLayer() != nullptr) {
             this->get(i)->setLayer(lNew.getId(this->get(i)->getLayerId()));
         }
     }
@@ -315,7 +315,7 @@ template<typename E>
 void Group<E>::reassignPointers(
         const SEMBA::Group::Identifiable<Model,MatId>& mNew) {
     for (std::size_t i = 0; i < this->size(); i++) {
-        if (this->get(i)->getModel() != NULL) {
+        if (this->get(i)->getModel() != nullptr) {
             this->get(i)->setModel(mNew.getId(this->get(i)->getMatId()));
         }
     }
@@ -357,6 +357,9 @@ void Group<E>::linearize() {
 template<typename E>
 void Group<E>::printInfo() const {
     std::cout << "--- Group info ---" << std::endl;
+    for (std::size_t i = 0; i < this->size(); i++) {
+        (*this)(i)->printInfo();
+    }
 }
 
 template<typename E>

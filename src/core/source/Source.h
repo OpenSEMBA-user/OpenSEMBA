@@ -46,10 +46,6 @@ public:
     Base(const Base& rhs);
     virtual ~Base();
 
-    virtual bool hasSameProperties(const Base& rhs) const;
-    virtual bool isSimilar(const Base& rhs) const = 0;
-    bool check() const;
-
     virtual Geometry::Element::Group<const Geometry::Elem> elems() const = 0;
 
     virtual void set(

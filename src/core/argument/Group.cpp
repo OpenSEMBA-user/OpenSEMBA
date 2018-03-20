@@ -67,14 +67,14 @@ const PositionBase& Group::childPosition(const std::size_t& i) const {
             numSameGroup++;
         }
     }
-    if (*aux == NULL) {
+    if (*aux == nullptr) {
         return position(numSameGroup);
     }
     return (*aux)->childPosition(numSameGroup);
 }
 
 const OptionBase& Group::childOption(const std::string& name) const {
-    if (options_.at(name) == NULL) {
+    if (options_.at(name) == nullptr) {
         return GroupBase::childOption(name);
     }
     return options_.at(name)->childOption(name);
@@ -117,7 +117,7 @@ void Group::parsePreprocess(Object& out) {
 void Group::parsePosition(Object& out,
                           std::vector<std::list<std::string>>& output,
                           std::vector<std::list<std::string>>& input) {
-    if (positions_.at(lastPosParsed_) != NULL) {
+    if (positions_.at(lastPosParsed_) != nullptr) {
         const std::string& name = positions_.at(lastPosParsed_)->getName();
         if (positions_.at(lastPosParsed_)->isMutuallyExclusive()) {
             positions_.at(lastPosParsed_)->parsePosition(out, output, input);
@@ -135,7 +135,7 @@ void Group::parseOption(const std::string& name,
                         Object& out,
                         std::vector<std::list<std::string>>& output,
                         std::vector<std::list<std::string>>& input) {
-    if (options_.at(name) != NULL) {
+    if (options_.at(name) != nullptr) {
         GroupBase* child = options_.at(name);
         std::string childName = child->getName();
         if (child->isMutuallyExclusive()) {

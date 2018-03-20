@@ -40,8 +40,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(FarField);
 
-    bool hasSameProperties(const SEMBA::OutputRequest::Base& rhs) const;
-
     Math::Real getInitialTheta() const;
     Math::Real getFinalTheta() const;
     Math::Real getStepTheta() const;
