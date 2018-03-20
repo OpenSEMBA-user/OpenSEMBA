@@ -6,7 +6,7 @@
 *# ------------------ SOLVER OPTIONS ------------------------
 *# ----------------------------------------------------------
     "solverOptions": {
-        "solverName": "*GenData(Solver)",
+        "solver": "*GenData(Solver)",
         "runSimulation": *GenData(Run_simulation),
 *if(strcasecmp(GenData(Ending),"Final_time")==0)
         "finalTime": *GenData(Final_time),

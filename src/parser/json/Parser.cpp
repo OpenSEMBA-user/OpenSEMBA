@@ -115,7 +115,7 @@ Solver::Info* Parser::readSolver(const json& j) {
     json solverOptions = j.at("solverOptions").get<json>();
     Solver::Settings opts = readSolverSettings(solverOptions);
     return new Solver::Info(
-            solverOptions.at("solverName").get<std::string>(),
+            solverOptions.at("solver").get<std::string>(),
             std::move(opts));
 }
 
@@ -520,18 +520,20 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
         }
 
         // Applies boundary padding operations.
-        std::pair<Math::CVecR3, Math::CVecR3> boundaryMeshSize(
-                strToCVecR3(g.at("lowerPaddingMeshSize").get<std::string>()),
-                strToCVecR3(g.at("upperPaddingMeshSize").get<std::string>()));
-        std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding(
-                strToCVecR3(g.at("lowerPadding").get<std::string>()),
-                strToCVecR3(g.at("upperPadding").get<std::string>()));
-        if (g.at("boundaryPaddingType").get<std::string>().compare(
-                "by_number_of_cells") == 0) {
-            boundaryPadding.first  *= boundaryMeshSize.first;
-            boundaryPadding.second *= boundaryMeshSize.second;
+        if (g.find("lowerPaddingMeshSize") != g.end()) {
+            std::pair<Math::CVecR3, Math::CVecR3> boundaryMeshSize(
+                    strToCVecR3(g.at("lowerPaddingMeshSize").get<std::string>()),
+                    strToCVecR3(g.at("upperPaddingMeshSize").get<std::string>()));
+            std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding(
+                    strToCVecR3(g.at("lowerPadding").get<std::string>()),
+                    strToCVecR3(g.at("upperPadding").get<std::string>()));
+            if (g.at("boundaryPaddingType").get<std::string>().compare(
+                    "by_number_of_cells") == 0) {
+                boundaryPadding.first  *= boundaryMeshSize.first;
+                boundaryPadding.second *= boundaryMeshSize.second;
+            }
+            res.enlarge(boundaryPadding, boundaryMeshSize);
         }
-        res.enlarge(boundaryPadding, boundaryMeshSize);
         return res;
 
     } else if (gridType.compare("nativeGiD") == 0) {

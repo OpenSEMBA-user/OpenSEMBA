@@ -72,7 +72,13 @@ TEST_F(ParserJSONParserTest, Sphere) {
     EXPECT_TRUE(stream.is_open());
 
     SEMBA::Parser::JSON::Parser jsonParser;
-    EXPECT_NO_THROW(jsonParser.read(stream));
+    SEMBA::Data data;
+    EXPECT_NO_THROW(data = jsonParser.read(stream));
+
+    for (size_t i = 0;i < data.outputRequests->size(); ++i) {
+        (*data.outputRequests)(i)->printInfo();
+    }
+    std::cout << std::flush;
 }
 
 TEST_F(ParserJSONParserTest, Wires) {
@@ -82,3 +88,4 @@ TEST_F(ParserJSONParserTest, Wires) {
     SEMBA::Parser::JSON::Parser jsonParser;
     EXPECT_NO_THROW(jsonParser.read(stream));
 }
+
