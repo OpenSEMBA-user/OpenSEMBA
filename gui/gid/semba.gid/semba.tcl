@@ -494,8 +494,8 @@ proc semba::writeOutputRequestBAS { condition_name } {
     }
 
     foreach name_id [lsort [array names elements_of_cond]] {
-        set semba::writtenOutputRequests \
-            [expr {$semba::writtenOutputRequests + [llength $elements_of_cond($name_id)]}]
+	set semba::writtenOutputRequests \
+	    [expr {$semba::writtenOutputRequests + [llength $elements_of_cond($name_id)]}]
 	    append result \
 	"        {\n"\
 	"            \"gidOutputType\": \"$condition_name\",\n"\
@@ -503,30 +503,30 @@ proc semba::writeOutputRequestBAS { condition_name } {
 	"            \"type\": \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
 	"            \"domain\": {\n"
 	    if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
-	        append result \
+		append result \
 	"                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 3],\n"\
 	"                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 4],\n"
 	    }
 	    if {[lindex "$properties_of_cond($name_id)" 6] == 0} {
-	   	    append result \
+		       append result \
     "                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 5]\n"
 	    } else {
-            append result \
+	    append result \
 	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 5],\n"           
 	    }
 	    if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
-	        append result \
+		append result \
 	"                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)"  7],\n"\
 	"                \"finalFrequency\":    [lindex "$properties_of_cond($name_id)"  8],\n"\
 	"                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)"  9],\n"
-            if {[lindex "$properties_of_cond($name_id)" 11] == 0} {
-                append result \
-    "                \"logFrequencySweep\": [lindex "$properties_of_cond($name_id)" 10]\n"
-    	    } else {
-                append result \
-    "                \"logFrequencySweep\": [lindex "$properties_of_cond($name_id)" 10],\n" \
+	    if {[lindex "$properties_of_cond($name_id)" 11] == 0} {
+		append result \
+    "                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 10]]\n"
+		} else {
+		append result \
+    "                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 10]],\n" \
 	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 13]\",\n"
-            }
+	    }
 	    }
 		append result \
 	"            },\n"\
@@ -554,10 +554,10 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
     }
 
     foreach name_id [lsort [array names elements_of_cond]] {
-        set semba::writtenOutputRequests \
-            [expr {$semba::writtenOutputRequests + [llength $elements_of_cond($name_id)]}]
-        append result \
-        "        {\n"\
+	set semba::writtenOutputRequests \
+	    [expr {$semba::writtenOutputRequests + [llength $elements_of_cond($name_id)]}]
+	append result \
+	"        {\n"\
 		"            \"gidOutputType\": \"$condition_name\",\n"\
 		"            \"name\":      \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
 		"            \"type\":      \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
@@ -568,28 +568,28 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 	       append result \
 	    "                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 5],\n"\
 	    "                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 6],\n"
-    	    if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
-    		    append result \
-    	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
-        	} else {
-                append result \
-        "                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
-        	}
-        }
+		if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
+		        append result \
+	    "                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
+		} else {
+		append result \
+	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
+		}
+	}
 	    if {[lindex "$properties_of_cond($name_id)" 8] == 1} { ; # if use frequency
 	       append result \
 	    "                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)"  9],\n"\
 	    "                \"finalFrequency\":    [lindex "$properties_of_cond($name_id)" 10],\n"\
-    	"                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)" 11],\n"
-            if {[lindex "$properties_of_cond($name_id)" 13] == 0} {
-                append result \
-        "                \"logFrequencySweep\": [lindex "$properties_of_cond($name_id)" 12]\n"
-            } else {
-                append result \
-        "                \"logFrequencySweep\": [lindex "$properties_of_cond($name_id)" 12],\n"
-        "                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\",\n"
-            }
-        }
+	    "                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)" 11],\n"
+	    if {[lindex "$properties_of_cond($name_id)" 13] == 0} {
+		append result \
+	"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]]\n"
+	    } else {
+		append result \
+	"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]],\n"
+	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\",\n"
+	    }
+	}
 
 		append result \
 	    "            },\n"\
@@ -623,3 +623,10 @@ proc semba::getGridCoordinatesAsJSONArrayBAS { dir } {
     return [append " " "\[" [join $coords ",\n                             "] "\]"]
 }
 
+proc semba::intToBool { arg } {
+    if {$arg == "0"} {
+	return "false"
+    } else {
+	return "true"
+    }
+}
