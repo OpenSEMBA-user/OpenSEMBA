@@ -172,59 +172,56 @@ void Options::addArguments(Argument::Group& args) const {
 }
 
 void Options::set(const Solver::Settings& opts) {
-    if (opts.existsName("Mesher")) {
-        setMesher(strToMesher(opts("Mesher").getString()));
+    if (           opts.existsName("mesher")) {
+        setMesher(strToMesher(opts("mesher").getString()));
     }
-    if (opts.existsName("Brute force volumes")) {
-        setBruteForceVolumes(opts("Brute force volumes").getBool());
+    if (opts.existsName(          "bruteForceVolumes")) {
+        setBruteForceVolumes(opts("bruteForceVolumes").getBool());
     }
-    if (opts.existsName("VTK Export")) {
-        setVtkExport(opts("VTK Export").getBool());
+    if (opts.existsName(  "vtkExport")) {
+        setVtkExport(opts("vtkExport").getBool());
     }
-    if (opts.existsName("postmsh Export")) {
-        setPostmshExport(opts("postmsh Export").getBool());
+    if (opts.existsName(      "postmshExport")) {
+        setPostmshExport(opts("postmshExport").getBool());
     }
-    if (opts.existsName("Slanted wires")) {
-        setSlanted(opts("Slanted wires").getBool());
+    if (opts.existsName("slantedWires")) {
+        setSlanted(opts("slantedWires").getBool());
     }
-    if (opts.existsName("Slanted threshold")) {
-        setSlantedThreshold(opts("Slanted threshold").get<Math::Real>());
+    if (opts.existsName(         "slantedThreshold")) {
+        setSlantedThreshold(opts("slantedThreshold").get<Math::Real>());
     }
-    if (opts.existsName("Mode")) {
-        setMode(strToMesherMode(opts("Mode").getString()));
+    if (opts.existsName(             "mode")) {
+        setMode(strToMesherMode(opts("mode").getString()));
     }
-    if (opts.existsName("Forbidden length")) {
-        setForbiddenLength(opts("Forbidden length").getReal());
+    if (opts.existsName(        "forbiddenLength")) {
+        setForbiddenLength(opts("forbiddenLength").getReal());
     }
-    if (opts.existsName("Location in mesh")) {
-        setLocationInMesh(strToCVecR3(opts("Location in mesh").getString()));
+    if (opts.existsName(      "geometryScalingFactor")) {
+        setScalingFactor(opts("geometryScalingFactor").getReal());
     }
-    if (opts.existsName("Geometry scaling factor")) {
-        setScalingFactor(opts("Geometry scaling factor").getReal());
-    }
-    if (opts.existsName("Upper x bound")) {
+    if (opts.existsName(                        "upperXBound")) {
         setBoundTermination(Math::Constants::x, Math::Constants::U,
-                            strToBoundType(opts("Upper x bound").getString()));
+                            strToBoundType(opts("upperXBound").getString()));
     }
-    if (opts.existsName("Lower x bound")) {
+    if (opts.existsName(                        "lowerXBound")) {
         setBoundTermination(Math::Constants::x, Math::Constants::L,
-                            strToBoundType(opts("Lower x bound").getString()));
+                            strToBoundType(opts("lowerXBound").getString()));
     }
-    if (opts.existsName("Upper y bound")) {
+    if (opts.existsName(                        "upperYBound")) {
         setBoundTermination(Math::Constants::y, Math::Constants::U,
-                            strToBoundType(opts("Upper y bound").getString()));
+                            strToBoundType(opts("upperYBound").getString()));
     }
-    if (opts.existsName("Lower y bound")) {
+    if (opts.existsName(                        "lowerYBound")) {
         setBoundTermination(Math::Constants::y, Math::Constants::L,
-                            strToBoundType(opts("Lower y bound").getString()));
+                            strToBoundType(opts("lowerYBound").getString()));
     }
-    if (opts.existsName("Upper z bound")) {
+    if (opts.existsName(                        "upperZBound")) {
         setBoundTermination(Math::Constants::z, Math::Constants::U,
-                            strToBoundType(opts("Upper z bound").getString()));
+                            strToBoundType(opts("upperZBound").getString()));
     }
-    if (opts.existsName("Lower z bound")) {
+    if (opts.existsName(                        "lowerZBound")) {
         setBoundTermination(Math::Constants::z, Math::Constants::L,
-                            strToBoundType(opts("Lower z bound").getString()));
+                            strToBoundType(opts("lowerZBound").getString()));
     }
 }
 
@@ -326,7 +323,7 @@ Options::Mesher Options::strToMesher(std::string str) {
     } else if (str.compare("None")==0) {
         return Mesher::none;
     } else {
-        throw std::logic_error("Unreckognized label: " + str);
+        throw std::logic_error("Unrecognized label: " + str);
     }
 }
 
@@ -345,9 +342,9 @@ Options::Mode Options::strToMesherMode(std::string str) {
 }
 
 Math::CVecR3 Options::strToCVecR3(const std::string& str) {
-    std::stringstream ss(str);
+    std::stringstream sts(str);
     Math::CVecR3 res;
-    ss >> res(Math::Constants::x)
+    sts >> res(Math::Constants::x)
         >> res(Math::Constants::y)
         >> res(Math::Constants::z);
     return res;
@@ -366,8 +363,7 @@ std::pair<Math::CVecR3, Math::CVecR3> Options::strToBox(
     for (std::size_t i = 0; i < 3; i++) {
         iss >> min(i);
     }
-    std::pair<Math::CVecR3, Math::CVecR3> bound(min, max);
-    return bound;
+    return {min, max};
 }
 
 const PhysicalModel::Bound::Bound* Options::strToBoundType(std::string str) {

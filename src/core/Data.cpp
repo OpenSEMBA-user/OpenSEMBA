@@ -31,8 +31,7 @@ Data::Data() {
     outputRequests = nullptr;
 }
 
-Data::Data(const Data& rhs)
-:   FileSystem::Project(rhs) {
+Data::Data(const Data& rhs) {
 
     solver = nullptr;
     mesh = nullptr;
@@ -101,7 +100,7 @@ Data& Data::operator=(const Data& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    FileSystem::Project::operator=(rhs);
+
     solver = nullptr;
     mesh = nullptr;
     physicalModels = nullptr;

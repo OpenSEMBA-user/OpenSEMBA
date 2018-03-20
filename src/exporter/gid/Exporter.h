@@ -39,9 +39,6 @@ public:
 
     Exporter(
             const Data* smb,
-            GiD_PostMode mode = GiD_PostAscii);
-    Exporter(
-            const Data* smb,
             const std::string& fn,
             GiD_PostMode mode = GiD_PostAscii);
     virtual ~Exporter();

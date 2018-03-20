@@ -93,7 +93,6 @@ Data Parser::read(std::istream& stl) const {
 
     // Stores results and returns.
     Data res;
-    res.setFilename(getFilename());
     res.mesh = new Geometry::Mesh::Geometric(Geometry::Grid3(), cG, eG, lG);
 
     res.physicalModels = new PhysicalModel::Group<>();
