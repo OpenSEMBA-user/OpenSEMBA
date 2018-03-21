@@ -19,16 +19,16 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_
-#define SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_
+#ifndef SRC_COMMON_MATH_FUNCTIONGAUSSIANDERIVATIVE_H_
+#define SRC_COMMON_MATH_FUNCTIONGAUSSIANDERIVATIVE_H_
 
 #include "Function.h"
 
 #include <complex>
 
-namespace SEMBA{
-namespace Math{
-namespace Function{
+namespace SEMBA {
+namespace Math {
+namespace Function {
 
 class GaussianDerivative : public Function<Real, Real>{
 public:
@@ -63,7 +63,7 @@ private:
 }/*namespace Math*/
 }/*namespace SEMBA*/
 
-#endif /* SRC_COMMON_MATH_FUNCTIONGAUSSIAN_H_ */
+#endif /* SRC_COMMON_MATH_FUNCTIONGAUSSIANDERIVATIVE_H_ */
 
 
 
