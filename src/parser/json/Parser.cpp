@@ -22,6 +22,7 @@
 #include "Parser.h"
 
 #include "math/function/Gaussian.h"
+#include "math/function/GaussianDerivative.h"
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Triangle6.h"
@@ -852,6 +853,11 @@ Source::Magnitude::Magnitude* Parser::readMagnitude(const json& j) {
        return new Source::Magnitude::Magnitude(new Math::Function::Gaussian(
                        j.at("gaussianSpread").get<double>(),
                        j.at("gaussianDelay").get<double>()));
+    } else if (type.compare("Gaussian_derivative") == 0) {
+    	return new Source::Magnitude::Magnitude(
+    			new Math::Function::GaussianDerivative(
+    				   j.at("gaussianSpread").get<double>(),
+					   j.at("gaussianDelay").get<double>()));
     } else {
         throw std::logic_error(
             "Unable to recognize magnitude type when reading excitation.");
