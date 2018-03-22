@@ -43,8 +43,6 @@ endif
 # =============================================================================
 SRC_APP_DIR = $(SRC_DIR)apps/test/
 
-CXXFLAGS := $(filter-out -static,$(CXXFLAGS))
-
 ifeq ($(compiler),$(filter $(compiler),mingw32 mingw64))
 	OUT := $(addsuffix .exe,$(OUT))
 endif
@@ -119,6 +117,7 @@ SRC_DIRS := $(SRC_APP_DIR) \
 
 SRCS_CXX := $(shell find $(SRC_DIRS) -maxdepth 1 -type f -name "*.cpp")
 OBJS_CXX := $(addprefix $(OBJ_DIR), $(SRCS_CXX:.cpp=.o))
+
 # =============================================================================
 LIBS      += gtest
 LIBRARIES += 

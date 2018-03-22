@@ -32,6 +32,12 @@ TEST(MathCartesianVectorTest, Basic) {
     EXPECT_EQ(CVecR3(0.0, 0.0, 1.0), CVecR3(1.0,0.0,0.0) ^ CVecR3(0.0,1.0,0.0));
 }
 
+TEST(MathCartesianVectorTest, InitializerList) {
+    CVecR3 a = {1.0, 2.0, 3.0};
+    EXPECT_EQ(a, a);
+    EXPECT_EQ(sqrt(3.0), a.norm());
+}
+
 TEST(MathCartesianVectorTest, Complex) {
     std::complex<double> zero(0.0, 0.0);
     std::complex<double> realOne(1.0, 0.0);
