@@ -41,9 +41,9 @@ WaveguideRectangular::WaveguideRectangular(
         throw std::logic_error("At least one mode must be non-zero.");
     }
 
-    // Computes origin.
-    origin_ = box_.getMin();
-    const PhysicalModel::Bound::Bound* bound;
+//    // Computes origin.
+//
+//    const PhysicalModel::Bound::Bound* bound;
 //    bound = bounds[Math::Constants::x][Math::Constants::L];
 //    if (bound->is<PhysicalModel::Bound::PMC>()) {
 //        origin_(Math::Constants::x) = - box_.getMax()(Math::Constants::x);
@@ -135,7 +135,7 @@ void WaveguideRectangular::set(
 }
 
 Math::CVecR3 WaveguideRectangular::getOrigin() const {
-    return origin_;
+    return box_.getMin();
 }
 
 } /* namespace Port */

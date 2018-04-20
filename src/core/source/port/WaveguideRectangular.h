@@ -53,7 +53,6 @@ public:
     Math::CVecR3 getWeight(const Math::CVecR3& pos) const;
 private:
     Geometry::BoxR3 box_; // This has been included for performance.
-    Math::CVecR3 origin_;
 };
 
 } /* namespace Port */
