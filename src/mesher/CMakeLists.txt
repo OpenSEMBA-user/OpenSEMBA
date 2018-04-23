@@ -24,4 +24,7 @@ cmake_minimum_required(VERSION 2.8)
 project(opensemba_mesher CXX)
 
 add_sources(. SRCS)
+
+#list(REMOVE_ITEM SRCS ${CMAKE_CURRENT_SOURCE_DIR}/openfoam/*)
+
 add_library(opensemba_mesher STATIC ${SRCS})

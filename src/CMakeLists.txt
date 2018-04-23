@@ -98,6 +98,7 @@ find_package(GTest)
 
 if(NOT SEPARATE_INCLUDES)
     include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
+                        ${CMAKE_CURRENT_LIST_DIR}/../external/json/
                         ${CMAKE_CURRENT_LIST_DIR}
                         ${CMAKE_CURRENT_LIST_DIR}/core/)
     add_subdirectory  (core     obj/src/core)
@@ -109,6 +110,7 @@ if(NOT SEPARATE_INCLUDES)
     add_subdirectories(apps     obj/src)
 else()
     include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
+                        ${CMAKE_CURRENT_LIST_DIR}/../external/json/
                         ${CMAKE_CURRENT_LIST_DIR}
                         ${CMAKE_CURRENT_LIST_DIR}/core/)
     add_subdirectory  (core     obj/src/core)

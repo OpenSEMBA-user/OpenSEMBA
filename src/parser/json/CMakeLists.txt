@@ -21,7 +21,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(opensemba_parser_gid CXX)
+project(opensemba_parser_json CXX)
 
 add_sources(. SRCS)
 add_library(opensemba_parser_json STATIC ${SRCS})

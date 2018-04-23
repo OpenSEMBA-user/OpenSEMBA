@@ -29,7 +29,7 @@ if (GTEST_FOUND)
     add_executable(opensemba_test ${SRCS})
     target_link_libraries(opensemba_test opensemba_core_argument
                                          opensemba_core_data
-                                         opensemba_parser_gid
+                                         opensemba_parser_json
                                          opensemba_parser_stl
                                          ${GTEST_BOTH_LIBRARIES})
 endif()
