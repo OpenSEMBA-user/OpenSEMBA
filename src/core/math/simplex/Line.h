@@ -70,8 +70,8 @@ private:
     std::array<Vector::Cartesian<Real,nsc>, np> nodePositions;
     std::array<Real,np>                         weights;
 
-    Matrix::Static<Int, nfp, np> RMatrix(const std::size_t s) const;
-    Matrix::Static<Int,  np, np> PMatrix(const std::size_t s) const;
+    Matrix::Static<Int, 1, (N+1)> RMatrix(const std::size_t s) const;
+    Matrix::Static<Int, (N+1), (N+1)> PMatrix(const std::size_t s) const;
 };
 
 } /* namespace Simplex */

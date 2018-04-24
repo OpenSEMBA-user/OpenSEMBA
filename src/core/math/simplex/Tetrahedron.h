@@ -36,11 +36,12 @@ public:
     static const std::size_t faces = 4;
     static const std::size_t nsc = 4;
     static const std::size_t n = N;
-    static constexpr std::size_t np = ((N+1)*(N+2)*(N+3)/6);
-    static constexpr std::size_t nfp = ((N+1)*(N+2)/2);
-
-    static const std::size_t dimension = 3;
-    static constexpr Real sizeFactor = 1.0 / 6.0;
+	static const std::size_t dimension = 3;
+	#define TET_NP ((N + 1)*(N + 2)*(N + 3) / 6)
+	static const std::size_t np = TET_NP;
+	#define TET_NFP ((N+1)*(N+2)/2)
+	static const std::size_t nfp = TET_NFP;
+	static constexpr Real sizeFactor = 1.0 / 6.0;
 
     typedef Vector::Cartesian<size_t,nsc> Index;
 
@@ -73,14 +74,12 @@ private:
     Function::Polynomial<Real> lagr[np];
     Function::Polynomial<Real> dLagr[np][faces];
 
-    Matrix::Static<Int,faces,nfp> sNId;
-    Matrix::Static<Int,nfp,np> RMatrix(const std::size_t s) const;
-    Matrix::Static<Int,np,np>  PMatrix(const std::size_t s) const;
+    Matrix::Static<Int, faces, TET_NFP> sNId;
+    Matrix::Static<Int, TET_NFP, TET_NP> RMatrix(const std::size_t s) const;
+    Matrix::Static<Int, TET_NP,  TET_NP> PMatrix(const std::size_t s) const;
 
     static size_t numberOfNodes(size_t order);
 };
-
-
 
 } /* namespace Simplex */
 } /* namespace Math */

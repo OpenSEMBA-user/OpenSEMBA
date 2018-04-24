@@ -143,7 +143,7 @@ size_t Tetrahedron<N>::numberOfNodes(size_t order) {
 }
 
 template <size_t N>
-Matrix::Static<Int,Tetrahedron<N>::np,Tetrahedron<N>::np>
+Matrix::Static<Int, TET_NP, TET_NP>
         Tetrahedron<N>::PMatrix(std::size_t s) const {
     Matrix::Static<Int,np,np> res;
     if (s == 0) {
@@ -231,7 +231,7 @@ Matrix::Static<Int,Tetrahedron<N>::np,Tetrahedron<N>::np>
 }
 
 template <size_t N>
-Matrix::Static<Int, Tetrahedron<N>::nfp, Tetrahedron<N>::np>
+Matrix::Static<Int, TET_NFP, TET_NP>
         Tetrahedron<N>::RMatrix(const std::size_t s) const {
     std::size_t last = 0;
     Matrix::Static<Int,nfp,1> nodeVec;
@@ -272,6 +272,7 @@ void Tetrahedron<N>::printInfo() const {
     }
     std::cout << " --- End of simplex information --- "   << std::endl;
 }
+
 
 } /* namespace Simplex */
 } /* namespace Math */

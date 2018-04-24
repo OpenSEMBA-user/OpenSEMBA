@@ -100,9 +100,8 @@ inline std::vector<Real> Line<N>::getWeights() const {
     return res;
 }
 
-template <size_t N>
-Matrix::Static<Int, Line<N>::np, Line<N>::np>
-        Line<N>::PMatrix(const std::size_t s) const {
+template <std::size_t N>
+Matrix::Static<Int, (N+1), (N+1)> Line<N>::PMatrix(const std::size_t s) const {
     Matrix::Static<Int,np,np> res;
     if (s == 0) {
         res.eye();
@@ -116,8 +115,7 @@ Matrix::Static<Int, Line<N>::np, Line<N>::np>
 }
 
 template <size_t N>
-Matrix::Static<Int, Line<N>::nfp, Line<N>::np>
-        Line<N>::RMatrix(const std::size_t s) const {
+Matrix::Static<Int, 1, (N+1)> Line<N>::RMatrix(const std::size_t s) const {
     Matrix::Static<Int,nfp,np> Raux;
     Raux.zeros();
     Raux(0,0) = (Int) 1;

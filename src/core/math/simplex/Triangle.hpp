@@ -173,7 +173,7 @@ Matrix::Dynamic<Int> Triangle<N>::PMatrix(std::size_t order,
 }
 
 template <size_t N>
-Matrix::Static<Int, Triangle<N>::nfp, Triangle<N>::np> Triangle<N>::RMatrix(
+Matrix::Static<Int, TRI_NFP, TRI_NP> Triangle<N>::RMatrix(
         const std::size_t s) const {
 
     Matrix::Static<Int,nfp,1> nodeVec;

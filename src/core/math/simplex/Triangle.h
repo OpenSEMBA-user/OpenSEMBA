@@ -40,8 +40,10 @@ public:
     static const std::size_t nsc = 3;
     static const std::size_t dimension = 2;
     static const std::size_t vertices = 3;
-    static constexpr std::size_t np  = (N + 1)*(N + 2) / 2;
-    static constexpr std::size_t nfp = N + 1;
+#define TRI_NFP (N+1)
+    static constexpr std::size_t nfp = TRI_NFP;
+#define TRI_NP ((N + 1)*(N + 2) / 2)
+    static constexpr std::size_t np  = TRI_NP;
     static constexpr Real sizeFactor = 1.0 / 2.0;
 
     typedef Vector::Cartesian<size_t,nsc> Index;
@@ -53,7 +55,7 @@ public:
 
     std::size_t nodeIndex(const std::size_t i, const std::size_t j) const;
 
-    Vector::Cartesian<Real,nsc> coordinate(const std::size_t i) const;
+    Math::CVecR3 coordinate(const std::size_t i) const;
 
     const Function::Polynomial<Real>& getLagr(const std::size_t i) const;
     const Function::Polynomial<Real>& getDLagr(const std::size_t i,
@@ -75,7 +77,7 @@ private:
     Vector::Cartesian<Real,nsc> nodePositions[np];
     std::array<Real,np>         weights;
 
-    Matrix::Static<Int,nfp,np> RMatrix(const std::size_t s) const;
+    Matrix::Static<Int,TRI_NFP,TRI_NP> RMatrix(const std::size_t s) const;
 
     static size_t numberOfNodes(size_t order);
 };
