@@ -48,7 +48,7 @@ public:
     Grid3&       grid()       { return *this; }
     const Grid3& grid() const { return *this; }
 
-    Structured* getMeshStructured(const Math::Real = Grid3::tolerance) const;
+    //Structured* getMeshStructured(const Math::Real = Grid3::tolerance) const;
 
     void applyScalingFactor(const Math::Real factor);
 

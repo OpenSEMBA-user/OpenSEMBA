@@ -50,7 +50,7 @@ public:
     Unstructured(const Unstructured& param);
     virtual ~Unstructured();
 
-    Unstructured& operator=(const Unstructured& rhs);
+    //Unstructured& operator=(const Unstructured& rhs);
 
     SEMBA_CLASS_DEFINE_CLONE(Unstructured);
 
@@ -62,30 +62,30 @@ public:
     const Element::Group<ElemR>&      elems () const { return *this; }
     const Layer::Group<Layer::Layer>& layers() const { return *this; }
 
-    Structured* getMeshStructured(
-            const Grid3& grid,
-            const Math::Real tol = Grid3::tolerance) const;
-    Unstructured* getConnectivityMesh() const;
+    //Structured* getMeshStructured(
+    //        const Grid3& grid,
+    //        const Math::Real tol = Grid3::tolerance) const;
+    //Unstructured* getConnectivityMesh() const;
 
-    std::vector<Element::Face> getBorderWithNormal(
-            const std::vector<Element::Face>& border,
-            const Math::CVecR3& normal);
+    //std::vector<Element::Face> getBorderWithNormal(
+    //        const std::vector<Element::Face>& border, 
+    //        const Math::CVecR3& normal);
 
-    bool isFloatingCoordinate(const CoordR3* coordinate) const;
+    //bool isFloatingCoordinate(const CoordR3* coordinate) const;
 
-    Element::Group<const SurfR> getMaterialBoundary(const MatId   matId,
-                                                    const LayerId layId) const;
-    Element::Group<const SurfR> getSurfsMatching(
-            const std::vector<Element::Face>& faces) const;
-    Element::Group<const Tri> convertToTri(
-            const Element::Group<const ElemR>& region,
-            bool ignoreTets) const;
-    std::vector<Element::Face> getInternalBorder(
-            const Element::Group<const ElemR>& region) const;
-    std::vector<Element::Face> getExternalBorder(
-            const Element::Group<const ElemR>& region) const;
-    Element::Group<const VolR> getAdjacentRegion(
-            const Element::Group<const VolR>& region) const;
+    //Element::Group<const SurfR> getMaterialBoundary(const MatId   matId,
+    //                                                const LayerId layId) const;
+    //Element::Group<const SurfR> getSurfsMatching(
+    //        const std::vector<Element::Face>& faces) const;
+    //Element::Group<const Tri> convertToTri(
+    //        const Element::Group<const ElemR>& region,
+    //        bool ignoreTets) const;
+    //std::vector<Element::Face> getInternalBorder(
+    //        const Element::Group<const ElemR>& region) const;
+    //std::vector<Element::Face> getExternalBorder(
+    //        const Element::Group<const ElemR>& region) const;
+    //Element::Group<const VolR> getAdjacentRegion(
+    //        const Element::Group<const VolR>& region) const;
     void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
 

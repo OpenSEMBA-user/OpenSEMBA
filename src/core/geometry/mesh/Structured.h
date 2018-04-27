@@ -72,11 +72,11 @@ public:
     const Element::Group<ElemI>&      elems () const { return *this; }
     const Layer::Group<>&             layers() const { return *this; }
 
-    Unstructured* getMeshUnstructured() const;
-    Structured* getConnectivityMesh() const;
-
-    void convertToHex(Element::Group<const SurfI> surfs);
-    void addAsHex(Element::Group<const VolR> vols);
+//    //Unstructured* getMeshUnstructured() const;
+//    //Structured* getConnectivityMesh() const;
+//
+//    void convertToHex(Element::Group<const SurfI> surfs);
+//    void addAsHex(Element::Group<const VolR> vols);
 
     Math::Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Math::Real factor);
@@ -90,11 +90,11 @@ public:
     virtual void printInfo() const;
 
 private:
-    std::vector<HexI8*> discretizeWithinBoundary(
-            const Element::Group<const SurfI>& faces);
-    std::vector<std::pair<const SurfI*, const SurfI*> >
-        getPairsDefiningVolumeWithin(
-            const Element::Group<const SurfI>& faces) const;
+    //std::vector<HexI8*> discretizeWithinBoundary(
+    //        const Element::Group<const SurfI>& faces);
+    //std::vector<std::pair<const SurfI*, const SurfI*> >
+    //    getPairsDefiningVolumeWithin(
+    //        const Element::Group<const SurfI>& faces) const;
 };
 
 namespace Error {

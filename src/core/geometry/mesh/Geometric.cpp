@@ -63,9 +63,9 @@ Geometric& Geometric::operator=(const Geometric& rhs) {
     return *this;
 }
 
-Structured* Geometric::getMeshStructured(const Math::Real tol) const {
-    return Unstructured::getMeshStructured(*this, tol);
-}
+//Structured* Geometric::getMeshStructured(const Math::Real tol) const {
+//    return Unstructured::getMeshStructured(*this, tol);
+//}
 
 void Geometric::applyScalingFactor(const Math::Real factor) {
     Unstructured::applyScalingFactor(factor);
