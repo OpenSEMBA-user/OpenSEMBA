@@ -27,7 +27,7 @@ namespace Geometry {
 namespace Mesh {
 
 Structured::Structured(const Grid3& grid)
-:   Grid3(grid) {
+:   grid_(grid) {
 
 }
 
@@ -37,25 +37,25 @@ Structured::Structured(
         const Element::Group<const ElemI>& elem,
         const Layer::Group<const Layer::Layer>& layers,
         const BoundTerminations3& bounds)
-:   Grid3(grid),
-    Coordinate::Group<CoordI3>(cG.cloneElems()),
-    Element::Group<ElemI>(elem.cloneElems()),
-    Layer::Group<Layer::Layer>(layers.cloneElems()),
-    BoundTerminations3(bounds) {
+:   grid_(grid),
+    coords_(cG.cloneElems()),
+    elems_(elem.cloneElems()),
+    layers_(layers.cloneElems()),
+    bounds_(bounds) {
 
-    Element::Group<ElemI>::reassignPointers(this->coords());
-    Element::Group<ElemI>::reassignPointers(this->layers());
+    elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
 }
 
 Structured::Structured(const Structured& rhs)
-:   Grid3(rhs),
-    Coordinate::Group<CoordI3>(rhs.coords().cloneElems()),
-    Element::Group<ElemI>(rhs.elems().cloneElems()),
-    Layer::Group<Layer::Layer>(rhs.layers().cloneElems()),
-    BoundTerminations3(rhs.bounds()) {
+:   grid_(rhs.grid_),
+    coords_(rhs.coords().cloneElems()),
+    elems_(rhs.elems().cloneElems()),
+    layers_(rhs.layers().cloneElems()),
+    bounds_(rhs.bounds()) {
 
-    Element::Group<ElemI>::reassignPointers(this->coords());
-    Element::Group<ElemI>::reassignPointers(this->layers());
+    elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
 }
 
 Structured::~Structured() {
@@ -67,48 +67,48 @@ Structured& Structured::operator=(const Structured& rhs) {
         return *this;
     }
 
-    Grid3::operator=(rhs);
-    Coordinate::Group<CoordI3>::operator=(rhs.coords().cloneElems());
-    Element::Group<ElemI>::operator=(rhs.elems().cloneElems());
-    Layer::Group<Layer::Layer>::operator=(rhs.layers().cloneElems());
-    BoundTerminations3::operator=(rhs.bounds());
+    grid_ = rhs.grid_;
+    coords_ = rhs.coords().cloneElems();
+    elems_ = rhs.elems().cloneElems();
+    layers_ = rhs.layers().cloneElems();
+    bounds_ = rhs.bounds();
 
-    Element::Group<ElemI>::reassignPointers(this->coords());
-    Element::Group<ElemI>::reassignPointers(this->layers());
+    elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
 
     return *this;
 }
 
 void Structured::applyScalingFactor(const Math::Real factor) {
-    Grid3::applyScalingFactor(factor);
+    grid_.applyScalingFactor(factor);
 }
 
-//Unstructured* Structured::getMeshUnstructured() const {
-//    Unstructured* res = new Unstructured;
-//
-//    std::vector<CoordR3*> newCoords;
-//    newCoords.reserve(coords().size());
-//    for (std::size_t i = 0; i < coords().size(); i++) {
-//        CoordR3* newCoord = coords()(i)->toUnstructured(*this);
-//        if (newCoord != nullptr) {
-//            newCoords.push_back(newCoord);
-//        }
-//    }
-//    res->coords().add(newCoords);
-//
-//    std::vector<ElemR*> newElems;
-//    newElems.reserve(elems().size());
-//    for (std::size_t i = 0; i < elems().size(); i++) {
-//        ElemR* newElem = elems()(i)->toUnstructured(*res, *this);
-//        if (newElem != nullptr) {
-//            newElems.push_back(newElem);
-//        }
-//    }
-//    res->elems().add(newElems);
-//    res->layers() = layers().cloneElems();
-//    return res;
-//}
-//
+Unstructured* Structured::getMeshUnstructured() const {
+    Unstructured* res = new Unstructured;
+
+    std::vector<CoordR3*> newCoords;
+    newCoords.reserve(coords().size());
+    for (std::size_t i = 0; i < coords().size(); i++) {
+        CoordR3* newCoord = coords()(i)->toUnstructured(grid_);
+        if (newCoord != nullptr) {
+            newCoords.push_back(newCoord);
+        }
+    }
+    res->coords().add(newCoords);
+
+    std::vector<ElemR*> newElems;
+    newElems.reserve(elems().size());
+    for (std::size_t i = 0; i < elems().size(); i++) {
+        ElemR* newElem = elems()(i)->toUnstructured(res->coords(), grid_);
+        if (newElem != nullptr) {
+            newElems.push_back(newElem);
+        }
+    }
+    res->elems().add(newElems);
+    res->layers() = layers().cloneElems();
+    return res;
+}
+
 //Structured* Structured::getConnectivityMesh() const {
 //    Structured* res = new Structured(grid());
 //    res->coords() = coords().cloneElems();
@@ -138,24 +138,24 @@ void Structured::applyScalingFactor(const Math::Real factor) {
 
 void Structured::reassignPointers(
     const SEMBA::Group::Identifiable<Element::Model, MatId>& matGr) {
-    Element::Group<ElemI>::reassignPointers(this->coords());
-    Element::Group<ElemI>::reassignPointers(this->layers());
+    elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
     if (!matGr.empty()) {
-        Element::Group<ElemI>::reassignPointers(matGr);
+        elems_.reassignPointers(matGr);
     }
 }
 
 void Structured::printInfo() const {
     std::cout << " --- Mesh structured info --- " << std::endl;
-    Grid3::printInfo();
+    grid_.printInfo();
     std::cout << "Number of coordinates: " << coords().size() << std::endl;
     std::cout << "Number of elements: " << elems().size() << std::endl;
-    Layer::Group<>::printInfo();
+    layers().printInfo();
 }
-//
+
 //void Structured::convertToHex(Element::Group<const SurfI> surfs) {
 //    std::vector<HexI8*> hexes = discretizeWithinBoundary(surfs);
-//    this->Element::Group<ElemI>::removeId(surfs.getIds());
+//    this->elems_.removeId(surfs.getIds());
 //    elems().addId(hexes);
 //}
 //
@@ -171,7 +171,7 @@ void Structured::printInfo() const {
 //                BoxI3 box = getBoxIContaining(center[i]);
 //                const Layer::Layer* lay = region(j)->getLayer();
 //                const Element::Model* mat = region(j)->getModel();
-//                hexes.push_back(new HexI8(coords(), id, box, lay, mat));
+//				hexes.push_back(new HexI8(coords(), id, box, lay, mat));
 //                break;
 //            }
 //        }
@@ -249,11 +249,11 @@ void Structured::printInfo() const {
 //}
 
 Math::Real Structured::getMinimumSpaceStep() const {
-    return Grid3::getMinimumSpaceStep();
+    return grid_.getMinimumSpaceStep();
 }
 
 BoxR3 Structured::getBoundingBox() const {
-    return Grid3::getFullDomainBoundingBox();
+    return grid_.getFullDomainBoundingBox();
 }
 
 void Structured::reassign( Element::Group<const Elem>& inGroup ) {

@@ -30,7 +30,7 @@ Geometric::Geometric() {
 }
 
 Geometric::Geometric(const Grid3& grid)
-:   Grid3(grid) {
+:   grid_(grid) {
 
 }
 
@@ -39,13 +39,13 @@ Geometric::Geometric(const Grid3& grid,
                      const Element::Group<const ElemR>& elem,
                      const Layer::Group<const Layer::Layer>& layers)
 :   Unstructured(cG, elem, layers),
-    Grid3(grid) {
+    grid_(grid) {
 
 }
 
 Geometric::Geometric(const Geometric& rhs)
 :   Unstructured(rhs),
-    Grid3(rhs) {
+    grid_(rhs.grid_) {
 
 }
 
@@ -58,24 +58,24 @@ Geometric& Geometric::operator=(const Geometric& rhs) {
         return *this;
     }
     Unstructured::operator=(rhs);
-    Grid3::operator=(rhs);
+    grid_ = rhs.grid_;
 
     return *this;
 }
 
-//Structured* Geometric::getMeshStructured(const Math::Real tol) const {
-//    return Unstructured::getMeshStructured(*this, tol);
-//}
+Structured* Geometric::getMeshStructured(const Math::Real tol) const {
+    return Unstructured::getMeshStructured(grid_, tol);
+}
 
 void Geometric::applyScalingFactor(const Math::Real factor) {
     Unstructured::applyScalingFactor(factor);
-    Grid3::applyScalingFactor(factor);
+    grid_.applyScalingFactor(factor);
 }
 
 void Geometric::printInfo() const {
     std::cout << " --- Mesh geometric Info --- " << std::endl;
     Unstructured::printInfo();
-    Grid3::printInfo();
+    grid_.printInfo();
 }
 
 } /* namespace Mesh */

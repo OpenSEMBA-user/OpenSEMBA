@@ -135,12 +135,12 @@ public:
 
     void printInfo() const;
 
-protected:
     template<class T>
     void reassignPointers(
             const Coordinate::Group<Coordinate::Coordinate<T,3>>& vNew);
     void reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew);
     void reassignPointers(const SEMBA::Group::Identifiable<Model,MatId>& mNew);
+
 private:
     std::vector<std::size_t> getElemsWith_(const std::vector<MatId>&) const;
     std::vector<std::size_t> getElemsWith_(const std::vector<LayerId>&) const;

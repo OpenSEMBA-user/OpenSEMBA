@@ -37,10 +37,7 @@ namespace Mesh {
 
 class Structured;
 
-class Unstructured : public Mesh,
-                     public Coordinate::Group<CoordR3>,
-                     public Element::Group<ElemR>,
-                     public Layer::Group<Layer::Layer> {
+class Unstructured : public Mesh {
 public:
     Unstructured();
     Unstructured(const Coordinate::Group<const CoordR3>& cG,
@@ -50,22 +47,22 @@ public:
     Unstructured(const Unstructured& param);
     virtual ~Unstructured();
 
-    //Unstructured& operator=(const Unstructured& rhs);
+    Unstructured& operator=(const Unstructured& rhs);
 
     SEMBA_CLASS_DEFINE_CLONE(Unstructured);
 
-    Coordinate::Group<CoordR3>& coords() { return *this; }
-    Element::Group<ElemR>&      elems () { return *this; }
-    Layer::Group<Layer::Layer>& layers() { return *this; }
+    Coordinate::Group<CoordR3>& coords() { return coords_; }
+    Element::Group<ElemR>&      elems () { return elems_; }
+    Layer::Group<Layer::Layer>& layers() { return layers_; }
 
-    const Coordinate::Group<CoordR3>& coords() const { return *this; }
-    const Element::Group<ElemR>&      elems () const { return *this; }
-    const Layer::Group<Layer::Layer>& layers() const { return *this; }
+    const Coordinate::Group<CoordR3>& coords() const { return coords_; }
+    const Element::Group<ElemR>&      elems () const { return elems_; }
+    const Layer::Group<Layer::Layer>& layers() const { return layers_; }
 
-    //Structured* getMeshStructured(
-    //        const Grid3& grid,
-    //        const Math::Real tol = Grid3::tolerance) const;
-    //Unstructured* getConnectivityMesh() const;
+    Structured* getMeshStructured(
+            const Grid3& grid,
+            const Math::Real tol = Grid3::tolerance) const;
+    Unstructured* getConnectivityMesh() const;
 
     //std::vector<Element::Face> getBorderWithNormal(
     //        const std::vector<Element::Face>& border, 
@@ -96,6 +93,11 @@ public:
     virtual void reassign( Element::Group<const Elem>& );
 
     void printInfo() const;
+
+private:
+	Coordinate::Group<CoordR3> coords_;
+	Element::Group<ElemR> elems_;
+	Layer::Group<Layer::Layer> layers_;
 };
 
 } /* namespace Mesh */

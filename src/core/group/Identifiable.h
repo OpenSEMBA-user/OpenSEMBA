@@ -73,7 +73,7 @@ public:
     template<typename T2>
     Group<T> addId(Group<T2>&);
     Group<T> addId(Group<T>&);
-    Group<T> addId(Group<T>&&);
+    //Group<T> addId(Group<T>&&);
 
     virtual void remove(const std::size_t&);
     virtual void remove(const std::vector<std::size_t>&);

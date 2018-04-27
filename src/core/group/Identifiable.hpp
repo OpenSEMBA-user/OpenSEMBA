@@ -194,13 +194,13 @@ Group<T> Identifiable<T,Id>::addId(Group<T>& rhs) {
     return add(rhs);
 }
 
-template<typename T, class Id>
-Group<T> Identifiable<T,Id>::addId(Group<T>&& rhs) {
-    for (std::size_t i = 0; i < rhs.size(); i++) {
-        rhs(i)->setId(++lastId_);
-    }
-    return add(std::move(rhs));
-}
+//template<typename T, class Id>
+//Group<T> Identifiable<T,Id>::addId(Group<T>&& rhs) {
+//    for (std::size_t i = 0; i < rhs.size(); i++) {
+//        rhs(i)->setId(++lastId_);
+//    }
+//    return add(std::move(rhs));
+//}
 
 template<typename T, class Id>
 void Identifiable<T,Id>::remove(const std::size_t& pos) {

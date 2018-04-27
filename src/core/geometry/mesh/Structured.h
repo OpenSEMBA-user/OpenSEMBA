@@ -39,12 +39,7 @@ namespace Mesh {
 
 class Unstructured;
 
-class Structured : public virtual Mesh,
-                   public virtual Grid3,
-                   public virtual Coordinate::Group<CoordI3>,
-                   public virtual Element::Group<ElemI>,
-                   public virtual Layer::Group<Layer::Layer>,
-                   public virtual BoundTerminations3 {
+class Structured : public virtual Mesh {
 public:
     Structured(const Grid3& grid);
     Structured(const Grid3& grid,
@@ -60,23 +55,23 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Structured);
 
-    BoundTerminations3&         bounds() { return *this; }
-    Grid3&                      grid  () { return *this; }
-    Coordinate::Group<CoordI3>& coords() { return *this; }
-    Element::Group<ElemI>&      elems () { return *this; }
-    Layer::Group<>&             layers() { return *this; }
+    BoundTerminations3&         bounds() { return bounds_; }
+    Grid3&                      grid  () { return grid_; }
+    Coordinate::Group<CoordI3>& coords() { return coords_; }
+    Element::Group<ElemI>&      elems () { return elems_; }
+    Layer::Group<>&             layers() { return layers_; }
 
-    const BoundTerminations3&         bounds() const { return *this; }
-    const Grid3&                      grid  () const { return *this; }
-    const Coordinate::Group<CoordI3>& coords() const { return *this; }
-    const Element::Group<ElemI>&      elems () const { return *this; }
-    const Layer::Group<>&             layers() const { return *this; }
+    const BoundTerminations3&         bounds() const { return bounds_; }
+    const Grid3&                      grid  () const { return grid_; }
+    const Coordinate::Group<CoordI3>& coords() const { return coords_; }
+    const Element::Group<ElemI>&      elems () const { return elems_; }
+    const Layer::Group<>&             layers() const { return layers_; }
 
-//    //Unstructured* getMeshUnstructured() const;
-//    //Structured* getConnectivityMesh() const;
-//
-//    void convertToHex(Element::Group<const SurfI> surfs);
-//    void addAsHex(Element::Group<const VolR> vols);
+    Unstructured* getMeshUnstructured() const;
+    //Structured* getConnectivityMesh() const;
+
+    //void convertToHex(Element::Group<const SurfI> surfs);
+    //void addAsHex(Element::Group<const VolR> vols);
 
     Math::Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Math::Real factor);
@@ -95,6 +90,12 @@ private:
     //std::vector<std::pair<const SurfI*, const SurfI*> >
     //    getPairsDefiningVolumeWithin(
     //        const Element::Group<const SurfI>& faces) const;
+
+	Grid3 grid_;
+	Coordinate::Group<CoordI3> coords_;
+	Element::Group<ElemI> elems_;
+	Layer::Group<> layers_;
+	BoundTerminations3 bounds_;
 };
 
 namespace Error {

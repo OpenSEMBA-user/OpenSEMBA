@@ -35,95 +35,95 @@ Unstructured::Unstructured() {
 Unstructured::Unstructured(const Coordinate::Group<const CoordR3>& cG,
                            const Element::Group<const ElemR>& elem,
                            const Layer::Group<const Layer::Layer>& layers)
-:   Coordinate::Group<CoordR3>(cG.cloneElems()),
-    Element::Group<ElemR>(elem.cloneElems()),
-    Layer::Group<Layer::Layer>(layers.cloneElems()) {
+:   coords_(cG.cloneElems()),
+    elems_(elem.cloneElems()),
+    layers_(layers.cloneElems()) {
 
-    Element::Group<ElemR>::reassignPointers(this->coords());
-    Element::Group<ElemR>::reassignPointers(this->layers());
+    elems_.reassignPointers( coords_ );
+    elems_.reassignPointers( layers_ );
 }
 
 Unstructured::Unstructured(const Unstructured& rhs)
-:   Coordinate::Group<CoordR3>(rhs.coords().cloneElems()),
-    Element::Group<ElemR>(rhs.elems().cloneElems()),
-    Layer::Group<Layer::Layer>(rhs.layers().cloneElems()) {
+:   coords_(rhs.coords().cloneElems()),
+    elems_(rhs.elems().cloneElems()),
+    layers_(rhs.layers().cloneElems()) {
 
-    Element::Group<ElemR>::reassignPointers(this->coords());
-    Element::Group<ElemR>::reassignPointers(this->layers());
+    elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
 }
 
 Unstructured::~Unstructured() {
 
 }
-//
-//Unstructured& Unstructured::operator=(const Unstructured& rhs) {
-//    if(this == &rhs) {
-//        return *this;
-//    }
-//
-//    Coordinate::Group<CoordR3>::operator=(rhs.coords().cloneElems());
-//    Element::Group<ElemR>::operator=(rhs.elems().cloneElems());
-//    Layer::Group<Layer::Layer>::operator=(rhs.layers().cloneElems());
-//
-//    Element::Group<ElemR>::reassignPointers(this->coords());
-//    Element::Group<ElemR>::reassignPointers(this->layers());
-//
-//    return *this;
-//}
-//
-////Structured* Unstructured::getMeshStructured(const Grid3& grid,
-////        const Math::Real tol) const {
-////    Structured* res = new Structured(grid);
-////
-////    std::vector<CoordI3*> newCoords;
-////    newCoords.reserve(coords().size());
-////    for (std::size_t i = 0; i < coords().size(); i++) {
-////        CoordI3* newCoord = coords()(i)->toStructured(grid);
-////        if (newCoord != nullptr) {
-////            newCoords.push_back(newCoord);
-////        }
-////    }
-////    res->coords().add(newCoords);
-////
-////    std::vector<ElemI*> newElems;
-////    newElems.reserve(elems().size());
-////    for (std::size_t i = 0; i < elems().size(); i++) {
-////        ElemI* newElem = elems()(i)->toStructured(*res, grid, tol);
-////        if (newElem != nullptr) {
-////            newElems.push_back(newElem);
-////        }
-////    }
-////    res->elems().add(newElems);
-////    res->layers() = layers().cloneElems();
-////    return res;
-////}
-////
-////Unstructured* Unstructured::getConnectivityMesh() const {
-////    Unstructured* res = new Unstructured;
-////    res->coords() = coords().cloneElems();
-////    Element::Group<const ElemR> elems = this->elems();
-////    elems.removeMatId(MatId(0));
-////    Graph::Vertices<ElemR, CoordR3> graphLayer;
-////    graphLayer.init(elems);
-////    std::vector<std::vector<const ElemR*>> comps =
-////        graphLayer.getConnectedComponents();
-////    for (std::size_t c = 0; c < comps.size(); c++) {
-////        std::stringstream layerName;
-////        layerName << "Component " << c+1;
-////        Layer::Layer* newLayer =
-////            res->layers().addId(new Layer::Layer(layerName.str()))(0);
-////        std::vector<ElemR*> newElemsLayer;
-////        newElemsLayer.resize(comps[c].size());
-////        for (std::size_t e = 0; e < comps[c].size(); e++) {
-////            newElemsLayer[e] = comps[c][e]->cloneTo<ElemR>();
-////            newElemsLayer[e]->setLayer(newLayer);
-////        }
-////        res->elems().add(newElemsLayer);
-////    }
-////    res->reassignPointers(res->coords());
-////    res->reassignPointers(res->layers());
-////    return res;
-////}
+
+Unstructured& Unstructured::operator=(const Unstructured& rhs) {
+    if(this == &rhs) {
+        return *this;
+    }
+
+    coords_ = rhs.coords().cloneElems();
+    elems_ = rhs.elems().cloneElems();
+    layers_ = rhs.layers().cloneElems();
+
+    elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
+
+    return *this;
+}
+
+Structured* Unstructured::getMeshStructured(const Grid3& grid,
+        const Math::Real tol) const {
+    Structured* res = new Structured(grid);
+
+    std::vector<CoordI3*> newCoords;
+    newCoords.reserve(coords().size());
+    for (std::size_t i = 0; i < coords().size(); i++) {
+        CoordI3* newCoord = coords()(i)->toStructured(grid);
+        if (newCoord != nullptr) {
+            newCoords.push_back(newCoord);
+        }
+    }
+    res->coords().add(newCoords);
+
+    std::vector<ElemI*> newElems;
+    newElems.reserve(elems().size());
+    for (std::size_t i = 0; i < elems().size(); i++) {
+		ElemI* newElem = elems()(i)->toStructured(res->coords(), grid, tol);
+        if (newElem != nullptr) {
+            newElems.push_back(newElem);
+        }
+    }
+    res->elems().add(newElems);
+    res->layers() = layers().cloneElems();
+    return res;
+}
+
+Unstructured* Unstructured::getConnectivityMesh() const {
+    Unstructured* res = new Unstructured;
+    res->coords() = coords().cloneElems();
+    Element::Group<const ElemR> elems = this->elems();
+    elems.removeMatId(MatId(0));
+    Graph::Vertices<ElemR, CoordR3> graphLayer;
+    graphLayer.init(elems);
+    std::vector<std::vector<const ElemR*>> comps =
+        graphLayer.getConnectedComponents();
+    for (std::size_t c = 0; c < comps.size(); c++) {
+        std::stringstream layerName;
+        layerName << "Component " << c+1;
+        Layer::Layer* newLayer =
+            res->layers_.addId(new Layer::Layer(layerName.str()))(0);
+        std::vector<ElemR*> newElemsLayer;
+        //newElemsLayer.resize(comps[c].size());
+        //for (std::size_t e = 0; e < comps[c].size(); e++) {
+        //    newElemsLayer[e] = comps[c][e]->cloneTo<ElemR>();
+        //    newElemsLayer[e]->setLayer(newLayer);
+        //}
+        //res->elems().add(newElemsLayer);
+    }
+    res->reassignPointers(res->coords());
+    res->reassignPointers(res->layers());
+    return res;
+}
 //
 //std::vector<Element::Face> Unstructured::getBorderWithNormal(
 //        const std::vector<Element::Face>& border,
@@ -217,25 +217,24 @@ Unstructured::~Unstructured() {
 //}
 //
 void Unstructured::applyScalingFactor(const Math::Real factor) {
-    Coordinate::Group<CoordR3>::applyScalingFactor(factor);
+    coords_.applyScalingFactor(factor);
 }
 
 void Unstructured::reassignPointers(
     const SEMBA::Group::Identifiable<Element::Model, MatId>& matGr) {
-        Element::Group<ElemR>::reassignPointers(this->coords());
-        Element::Group<ElemR>::reassignPointers(this->layers());
+        elems_.reassignPointers(this->coords());
+        elems_.reassignPointers(this->layers());
     if (!matGr.empty()) {
-        Element::Group<ElemR>::reassignPointers(matGr);
+        elems_.reassignPointers(matGr);
     }
 }
 
 void Unstructured::printInfo() const {
     std::cout << " --- Mesh unstructured Info --- " << std::endl;
-    std::cout << "Number of coordinates: "
-              << Coordinate::Group<CoordR3>::size() << std::endl;
-    std::cout << "Number of elements: " << Element::Group<ElemR>::size()
+    std::cout << "Number of coordinates: " << coords_.size() << std::endl;
+    std::cout << "Number of elements: " << elems_.size()
               << std::endl;
-    Layer::Group<>::printInfo();
+    layers_.printInfo();
 }
 //
 //Element::Group<const SurfR> Unstructured::getSurfsMatching(

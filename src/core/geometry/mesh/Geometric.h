@@ -28,8 +28,7 @@ namespace SEMBA {
 namespace Geometry {
 namespace Mesh {
 
-class Geometric : public Unstructured,
-                  public Grid3 {
+class Geometric : public Unstructured {
 public:
     Geometric();
     Geometric(const Grid3& grid);
@@ -45,14 +44,17 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Geometric);
 
-    Grid3&       grid()       { return *this; }
-    const Grid3& grid() const { return *this; }
+    Grid3&       grid()       { return grid_; }
+    const Grid3& grid() const { return grid_; }
 
-    //Structured* getMeshStructured(const Math::Real = Grid3::tolerance) const;
+    Structured* getMeshStructured(const Math::Real = Grid3::tolerance) const;
 
     void applyScalingFactor(const Math::Real factor);
 
     void printInfo() const;
+
+private:
+	Grid3 grid_;
 };
 
 } /* namespace Mesh */

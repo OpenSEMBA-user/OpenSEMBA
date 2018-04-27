@@ -99,7 +99,7 @@ Data Parser::read(std::istream& stl) const {
     PhysicalModel::Predefined::PEC* pec =
             new PhysicalModel::Predefined::PEC(PhysicalModel::Id(1));
     res.physicalModels->add(pec);
-    res.mesh->castTo<Geometry::Mesh::Geometric>()->setModel(pec);
+    res.mesh->castTo<Geometry::Mesh::Geometric>()->elems().setModel(pec);
     res.sources = new Source::Group<>();
     res.outputRequests = new OutputRequest::Group<>();
 
