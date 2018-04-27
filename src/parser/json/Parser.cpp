@@ -804,11 +804,17 @@ Parser::OutputType Parser::strToGiDOutputType(std::string str) {
 }
 
 OutputRequest::Domain Parser::readDomain(const json& j) {
-    bool timeDomain;
-    Math::Real initialTime, finalTime, samplingPeriod;
+    bool timeDomain = false;
+	Math::Real initialTime = 0.0;
+	Math::Real finalTime = 0.0;
+	Math::Real samplingPeriod = 0.0;
 
-    bool frequencyDomain, logFrequencySweep, usingTransferFunction;
-    Math::Real initialFrequency, finalFrequency, frequencyStep;
+	bool frequencyDomain = false;
+	bool logFrequencySweep = false;
+	bool usingTransferFunction = false;
+	Math::Real initialFrequency = 0.0;
+	Math::Real finalFrequency = 0.0;
+	Math::Real frequencyStep = 0.0;
     std::string transferFunctionFile;
 
     if (j.find("initialTime") != j.end()) {
@@ -816,8 +822,6 @@ OutputRequest::Domain Parser::readDomain(const json& j) {
         initialTime    = j.at("initialTime").get<double>();
         finalTime      = j.at("finalTime").get<double>();
         samplingPeriod = j.at("samplingPeriod").get<double>();
-    } else {
-        timeDomain     = false;
     }
 
     if (j.find("initialFrequency") != j.end()) {
@@ -830,11 +834,7 @@ OutputRequest::Domain Parser::readDomain(const json& j) {
             usingTransferFunction = true;
             transferFunctionFile =
                     j.at("transferFunctionFile").get<std::string>();
-        } else {
-            usingTransferFunction = false;
         }
-    } else {
-        frequencyDomain = false;
     }
 
     return OutputRequest::Domain(

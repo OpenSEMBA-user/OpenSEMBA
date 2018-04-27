@@ -91,7 +91,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
-add_definitions(-DOPENSEMBA_VERSION="0.12")
+add_definitions(-DOPENSEMBA_VERSION="0.13")
 
 find_package(GTest)
 

@@ -525,7 +525,7 @@ proc semba::writeOutputRequestBAS { condition_name } {
 		} else {
 		append result \
     "                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 10]],\n" \
-	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 13]\",\n"
+	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 13]\"\n"
 	    }
 	    }
 		append result \
@@ -587,7 +587,7 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 	    } else {
 		append result \
 	"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]],\n"
-	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\",\n"
+	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\"\n"
 	    }
 	}
 
