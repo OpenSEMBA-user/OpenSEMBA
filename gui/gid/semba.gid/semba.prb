@@ -71,13 +71,11 @@ HELP: 0.0 for centered, 1.0 for full upwinding.
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(ZMesher,DMesheR,None)
-VALUE: None
-DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
-DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,                                    HIDE,    Brute_force_volumes,1)
-DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
-QUESTION: Brute_force_volumes#CB#(0,1)
-VALUE: 1
+QUESTION: Mesher#CB#(ZMesher,DMesheR,Native)
+VALUE: Native
+DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE,    Forbidden_length, #CURRENT#)
+DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,  RESTORE, Forbidden_length, #CURRENT#)
+DEPENDENCIES: (Native,          HIDE,    Mode,Structured, HIDE,    Forbidden_length, #CURRENT#)
 QUESTION: VTK_Export#CB#(0,1)
 VALUE: 0
 HELP: Exports generated meshes in VTK format which can be visualized with external tools, e.g. Paraview. Useful for very large meshes.
@@ -86,10 +84,10 @@ VALUE: 1
 HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
 VALUE: Structured
-DEPENDENCIES: (Structured, HIDE,    Forbidden_length,#CURRENT#)
-DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length,#CURRENT#)
-DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length,#CURRENT#)
-DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Structured, HIDE,    Forbidden_length, #CURRENT#)
+DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length, #CURRENT#)
+DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length, #CURRENT#)
+DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length, #CURRENT#)
 QUESTION: Forbidden_length
 VALUE: 0.0
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5

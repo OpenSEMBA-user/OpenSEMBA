@@ -38,7 +38,6 @@
             "upperYBound": "*GenData(Upper_y_bound)",          
             "upperZBound": "*GenData(Upper_z_bound)",
             "mesher": "*GenData(Mesher)",
-            "bruteForceVolumes": *GenData(Brute_force_volumes),
             "vtkExport": *GenData(VTK_Export),
             "postmshExport": *GenData(postmsh_Export),
             "mode": "*GenData(Mode)",
