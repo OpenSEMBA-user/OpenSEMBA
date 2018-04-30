@@ -54,26 +54,7 @@
         "_error": "invalidSolver"
 *endif
     },
-     
-*# ----------------------------------------------------------
-*# ------------------ PROBLEM SIZE --------------------------
-*# ----------------------------------------------------------
-*#    "problemSize": {
-*#*set elems(Hexahedra)
-*#        "hexahedra8":     *nelem,
-*#*set elems(Tetrahedra)
-*#        "tetrahedra4":    *nelem,
-*#*set elems(Quadrilateral)
-*#        "quadrilateral4": *nelem,
-*#*set elems(Triangle)
-*#        "triangle3":      *nelem,
-*#*set elems(Linear)
-*#        "linear2":        *nelem,
-*#*set elems(all)
-*#        "coordinates":    *npoin,
-*#        "materials":      *nmats
-*#    },
-*#
+    
 *# ----------------------------------------------------------
 *# -------------------- MATERIALS ---------------------------
 *# ----------------------------------------------------------
@@ -215,7 +196,6 @@
 *# ----------------------------------------------------------
     "grids": [
 *set var NGRIDS = 0
-*if(strcasecmp(GenData(Mesher),"None")!=0)
 *set elems(all)
 *set Cond Grid
 *if(CondNumEntities(int)>0)
@@ -242,24 +222,26 @@
 *endif
 *end layers
 *endif
-*elseif(tcl(expr [GiD_Cartesian get dimension] != -1))
+*if(tcl(expr [GiD_Cartesian get dimension] != -1))
 *set var NGRIDS = NGRIDS + 1
         {
             "gridType": "nativeGiD",
-*#            "corner": "{*tcl(GiD_Cartesian get corner)}",
-*#            "boxSize": "{*tcl(GiD_Cartesian get boxsize)}",
-*#            "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
+            "corner": "{*tcl(GiD_Cartesian get corner)}",
+            "boxSize": "{*tcl(GiD_Cartesian get boxsize)}",
+            "nGridPoints": "{*tcl(GiD_Cartesian get ngridpoints)}",
             "xCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 0),
             "yCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 1),
             "zCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 2)
         }
-*else 
+*endif 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
-*WarningBox "No grid defined. Define grid condition or use GiD native mesher."
-*if(NGRIDS!=1)
-*WarningBox "Several grids defined. Only one grid is allowed for UGRFDTD"
+*if(NGRIDS==0)
+*WarningBox "No grids defined. Only one grid is allowed for UGRFDTD"
 *endif
+*if(NGRIDS>1)
+*WarningBox "Multiple grids defined. Only one grid is allowed for UGRFDTD"
 *endif
+
 *endif
     ],
 

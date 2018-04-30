@@ -71,11 +71,10 @@ HELP: 0.0 for centered, 1.0 for full upwinding.
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(ZMesher,DMesheR,Native)
+QUESTION: Mesher#CB#(ZMesher,DMesheR)
 VALUE: Native
 DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE,    Forbidden_length, #CURRENT#)
 DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,  RESTORE, Forbidden_length, #CURRENT#)
-DEPENDENCIES: (Native,          HIDE,    Mode,Structured, HIDE,    Forbidden_length, #CURRENT#)
 QUESTION: VTK_Export#CB#(0,1)
 VALUE: 0
 HELP: Exports generated meshes in VTK format which can be visualized with external tools, e.g. Paraview. Useful for very large meshes.
