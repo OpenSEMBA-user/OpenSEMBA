@@ -41,29 +41,10 @@ Multilayer::Multilayer(
     relPermittivity_ = relPermittivity;
     relPermeability_ = relPermeability;
     elecCond_ = elecCond;
-    magnCond_ = magnCond;
     const std::size_t nLayers = thickness_.size();
     if (relPermittivity_.size() != nLayers ||
         relPermeability_.size() != nLayers ||
-        elecCond_.size() != nLayers ||
-        magnCond_.size() != nLayers) {
-        throw Error::SurfaceMultilayer::IncompatibleSizes();
-    }
-}
-
-Multilayer::Multilayer(const Multilayer& rhs)
-:   Identifiable<Id>(rhs),
-    PhysicalModel(rhs) {
-    thickness_ = rhs.thickness_;
-    relPermittivity_ = rhs.relPermittivity_;
-    relPermeability_ = rhs.relPermeability_;
-    elecCond_ = rhs.elecCond_;
-    magnCond_ = rhs.magnCond_;
-    const std::size_t nLayers = thickness_.size();
-    if (relPermittivity_.size() != nLayers ||
-        relPermeability_.size() != nLayers ||
-        elecCond_.size() != nLayers ||
-        magnCond_.size() != nLayers) {
+        elecCond_.size() != nLayers) {
         throw Error::SurfaceMultilayer::IncompatibleSizes();
     }
 }
@@ -79,9 +60,10 @@ std::size_t Multilayer::getNumberOfLayers() const {
 std::string Multilayer::printLayer(const std::size_t i) const {
     assert(i < getNumberOfLayers());
     std::stringstream ss;
-    ss << elecCond_[i] << " " << relPermittivity_[i]*Math::Constants::eps0
-       << " " << relPermeability_[i] * Math::Constants::mu0 << " "
-       << magnCond_[i] << " " << thickness_[i];
+    ss << elecCond_[i] <<
+            " " << relPermittivity_[i]*Math::Constants::eps0 <<
+            " " << relPermeability_[i] * Math::Constants::mu0 <<
+            " " << thickness_[i];
     return std::string(ss.str());
 }
 
@@ -101,23 +83,18 @@ Math::Real Multilayer::getElecCond(const std::size_t i) const {
     return elecCond_[i];
 }
 
-Math::Real Multilayer::getMagnCond(const std::size_t i) const {
-    return magnCond_[i];
-}
-
 void Multilayer::printInfo() const {
     std::cout << " --- SurfaceMultilayer info ---" << std::endl;
     Surface::printInfo();
     std::cout << "Number of layers: " << getNumberOfLayers() << std::endl;
-    std::cout << "#, Thickness, Permittivity, Permeability, ElecCond, MagnCond"
+    std::cout << "#, Thickness, Permittivity, Permeability, ElecCond"
               << std::endl;
     for (std::size_t i = 0; i < getNumberOfLayers(); i++) {
         std::cout<< i << ": "
         << thickness_[i] << " "
         << relPermittivity_[i] << " "
         << relPermeability_[i] << " "
-        << elecCond_[i] << " "
-        << magnCond_[i] << std::endl;
+        << elecCond_[i] << std::endl;
     }
     std::cout << " --- End of SurfaceMultilayer info ---" << std::endl;
 }

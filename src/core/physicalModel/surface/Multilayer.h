@@ -39,8 +39,7 @@ public:
             const std::vector<Math::Real>& thickness,
             const std::vector<Math::Real>& relPermittivity,
             const std::vector<Math::Real>& relPermeability,
-            const std::vector<Math::Real>& elecCond,
-            const std::vector<Math::Real>& magnCond);
+            const std::vector<Math::Real>& elecCond);
     Multilayer(const Multilayer&);
     virtual ~Multilayer();
 
@@ -52,13 +51,14 @@ public:
     Math::Real getPermittivity(const std::size_t i) const;
     Math::Real getPermeability(const std::size_t i) const;
     Math::Real getElecCond(const std::size_t i) const;
-    Math::Real getMagnCond(const std::size_t i) const;
 
     void printInfo() const;
+
 private:
-    std::vector<Math::Real> thickness_,
-    relPermittivity_, relPermeability_,
-    elecCond_, magnCond_;
+    std::vector<Math::Real> thickness_;
+    std::vector<Math::Real> relPermittivity_;
+    std::vector<Math::Real> relPermeability_;
+    std::vector<Math::Real> elecCond_;
 };
 
 namespace Error {

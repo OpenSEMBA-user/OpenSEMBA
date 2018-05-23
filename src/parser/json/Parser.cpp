@@ -483,16 +483,21 @@ PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(
         const MatId id,
         const std::string& name,
         const json& layers) {
-    std::vector<Math::Real> thick, relEp, relMu, eCond, mCond;
+    std::vector<Math::Real> thick, relEp, relMu, eCond;
     for (json::const_iterator it = layers.begin(); it != layers.end(); ++it) {
         thick.push_back( it->at("thickness").get<double>() );
         relEp.push_back( it->at("permittivity").get<double>() );
         relMu.push_back( it->at("permeability").get<double>() );
         eCond.push_back( it->at("elecCond").get<double>() );
-        mCond.push_back( it->at("magnCond").get<double>() );
     }
-    return new PhysicalModel::Surface::Multilayer(
-            id, name, thick, relEp, relMu, eCond, mCond);
+
+    if (layers.at("useSembaVectorFitting").get<int>() == 1) {
+        // TODO Handle options for vector fitting.
+        throw std::runtime_error("Use semba vector fitting not implemented");
+    } else {
+        return new PhysicalModel::Surface::Multilayer(
+                    id, name, thick, relEp, relMu, eCond);
+    }
 }
 
 Geometry::Grid3 Parser::readGrids(const json& j) {

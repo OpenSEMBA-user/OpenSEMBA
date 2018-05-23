@@ -143,13 +143,12 @@
 *else
 *set var num_values(int)=matprop(Layers,int)
             "layers": [
-*for(i=1;i<=num_values(int);i=i+5)
+*for(i=1;i<=num_values(int);i=i+4)
                 {
-                    "thickness": *matprop(Layers,*i),
+                    "thickness":    *matprop(Layers,*i),
                     "permittivity": *matprop(Layers,*operation(i+1)),
                     "permeability": *matprop(Layers,*operation(i+2)),
-                    "elecCond": *matprop(Layers,*operation(i+3)),
-                    "magnCond": *matprop(Layers,*operation(i+4))
+                    "elecCond":     *matprop(Layers,*operation(i+3))
 *if(operation(i+4)!=num_values(int))
                 },
 *else
@@ -160,7 +159,8 @@
 *endif
             "freqMin": *matProp(freq_min),
             "freqMax": *matProp(freq_max),
-            "numberOfPoles": *matProp(number_Of_Poles)
+            "numberOfPoles": *matProp(number_Of_Poles),
+            "useSembaVectorFitting": *matProp(Use_semba_vector_fitting)
 *elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
             "materialType": "*MatProp(TypeId)"
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
@@ -222,7 +222,9 @@
 *endif
 *end layers
 *endif
-*if(tcl(expr [GiD_Cartesian get dimension] != -1))
+*if(tcl(expr [lindex [GiD_Cartesian get boxsize] 0] != 0.0))
+*if(tcl(expr [lindex [GiD_Cartesian get boxsize] 1] != 0.0))
+*if(tcl(expr [lindex [GiD_Cartesian get boxsize] 2] != 0.0))
 *set var NGRIDS = NGRIDS + 1
         {
             "gridType": "nativeGiD",
@@ -233,6 +235,8 @@
             "yCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 1),
             "zCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 2)
         }
+*endif
+*endif
 *endif 
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 *if(NGRIDS==0)

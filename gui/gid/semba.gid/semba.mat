@@ -87,14 +87,14 @@ MATERIAL: Surface_Impedance
 	STATE: HIDDEN
 	QUESTION: SurfaceType#CB#(File,Layers)
 	VALUE: Layers
-	DEPENDENCIES:(File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT#, HIDE,   Create_file_for_UGRMAT,#CURRENT#, HIDE,Freq_min,#CURRENT#, HIDE,Freq_max,#CURRENT#, HIDE,Number_of_poles,#CURRENT#)
-	DEPENDENCIES:(Layers, RESTORE, Layers,#CURRENT#, HIDE, File,   #CURRENT#, RESTORE,Create_file_for_UGRMAT,#CURRENT#, RESTORE,Freq_min,#CURRENT#, RESTORE,Freq_max,#CURRENT#, RESTORE,Number_of_poles,#CURRENT# )
+	DEPENDENCIES:(File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT#, HIDE,   Create_file_for_UGRMAT,#CURRENT#, HIDE,Freq_min,#CURRENT#, HIDE,Freq_max,#CURRENT#, HIDE,Number_of_poles,#CURRENT#,HIDE,Use_semba_vector_fitting,#CURRENT#)
+	DEPENDENCIES:(Layers, RESTORE, Layers,#CURRENT#, HIDE, File,   #CURRENT#, RESTORE,Create_file_for_UGRMAT,#CURRENT#, RESTORE,Freq_min,#CURRENT#, RESTORE,Freq_max,#CURRENT#, RESTORE,Number_of_poles,#CURRENT#, RESTORE,Use_semba_vector_fitting,#CURRENT#)
 	QUESTION: File
 	VALUE:
 	TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 	HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
-	QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
-	VALUE: #N# 5 0.0 1.0 1.0 0.0 0.0 
+	QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond)
+	VALUE: #N# 4 0.0 1.0 1.0 0.0  
 	QUESTION: Freq_min
 	VALUE: 1e5
 	HELP: For MIBC Only. Minimum frequency to which the vector fitting will be performed.
@@ -104,6 +104,8 @@ MATERIAL: Surface_Impedance
 	QUESTION: Number_of_poles
 	VALUE: 24
 	HELP: For MIBC Only. Number of poles to which the vector fitting will be performed.
+	QUESTION: Use_semba_vector_fitting#CB#(1,0)
+	VALUE: 0
 	QUESTION: Create_file_for_UGRMAT
 	VALUE:
 	TKWIDGET: semba::TkwidgetCreateFilesForUGRMAT
