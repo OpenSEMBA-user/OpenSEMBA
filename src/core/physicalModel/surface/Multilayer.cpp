@@ -33,8 +33,7 @@ Multilayer::Multilayer(
         const std::vector<Math::Real>& thickness,
         const std::vector<Math::Real>& relPermittivity,
         const std::vector<Math::Real>& relPermeability,
-        const std::vector<Math::Real>& elecCond,
-        const std::vector<Math::Real>& magnCond)
+        const std::vector<Math::Real>& elecCond)
 :   Identifiable<Id>(id),
     PhysicalModel(name) {
     thickness_ = thickness;
