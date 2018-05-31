@@ -115,9 +115,10 @@ void Exporter::writeMesh_(const Data* smb) {
     const Geometry::Mesh::Unstructured* mesh;
     std::string preName;
     if (inMesh->is<Geometry::Mesh::Structured>()) {
+
         mesh = inMesh->castTo<Geometry::Mesh::Structured>()->getMeshUnstructured();
         preName = "str_";
-        grid = inMesh->castTo<Geometry::Grid3>();
+        grid = &inMesh->castTo<Geometry::Mesh::Structured>()->grid();
     } else {
         mesh = inMesh->castTo<Geometry::Mesh::Unstructured>();
         grid = nullptr;
