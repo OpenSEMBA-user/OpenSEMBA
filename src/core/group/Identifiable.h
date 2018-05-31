@@ -73,7 +73,9 @@ public:
     template<typename T2>
     Group<T> addId(Group<T2>&);
     Group<T> addId(Group<T>&);
-    //Group<T> addId(Group<T>&&);
+#ifdef __GNUC__
+    Group<T> addId(Group<T>&&);
+#endif
 
     virtual void remove(const std::size_t&);
     virtual void remove(const std::vector<std::size_t>&);
