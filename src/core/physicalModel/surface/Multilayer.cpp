@@ -82,6 +82,10 @@ Math::Real Multilayer::getElecCond(const std::size_t i) const {
     return elecCond_[i];
 }
 
+Math::Real Multilayer::getMagnCond(const std::size_t i) const {
+    return 0.0;
+}
+
 void Multilayer::printInfo() const {
     std::cout << " --- SurfaceMultilayer info ---" << std::endl;
     Surface::printInfo();

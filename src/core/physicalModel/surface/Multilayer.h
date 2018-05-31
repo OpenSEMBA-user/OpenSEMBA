@@ -40,7 +40,6 @@ public:
             const std::vector<Math::Real>& relPermittivity,
             const std::vector<Math::Real>& relPermeability,
             const std::vector<Math::Real>& elecCond);
-    Multilayer(const Multilayer&);
     virtual ~Multilayer();
 
     SEMBA_CLASS_DEFINE_CLONE(Multilayer);
@@ -51,6 +50,7 @@ public:
     Math::Real getPermittivity(const std::size_t i) const;
     Math::Real getPermeability(const std::size_t i) const;
     Math::Real getElecCond(const std::size_t i) const;
+    Math::Real getMagnCond(const std::size_t i) const;
 
     void printInfo() const;
 
