@@ -21,6 +21,8 @@
 
 cmake_minimum_required(VERSION 2.8)
 
+find_package(GTest)
+
 if (GTEST_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS}
                         ${CMAKE_CURRENT_LIST_DIR})

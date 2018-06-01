@@ -63,12 +63,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option(SEPARATE_INCLUDES "Compiles with separated includes and libs" OFF)
-if(NOT SEPARATE_INCLUDES)
-    add_subdirectory  (../external obj/external)
-else()
-    add_subdirectory  (../external/ obj/external/)
-endif()
+add_subdirectory  (../external obj/external)
+
+
 project(opensemba CXX)
 
 find_package(OpenMP)
@@ -93,45 +90,14 @@ endif()
 
 add_definitions(-DOPENSEMBA_VERSION="0.13")
 
-find_package(GTest)
-
-
-if(NOT SEPARATE_INCLUDES)
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
-                        ${CMAKE_CURRENT_LIST_DIR}/../external/json/
-                        ${CMAKE_CURRENT_LIST_DIR}
-                        ${CMAKE_CURRENT_LIST_DIR}/core/)
-    add_subdirectory  (core     obj/src/core)
-    add_subdirectories(parser   obj/src)
-    add_subdirectory  (mesher   obj/src/mesher)
-    add_subdirectories(exporter obj/src)
-    add_subdirectories(adapter  obj/src)
-    add_subdirectory  (solver   obj/src/solver)
-    add_subdirectories(apps     obj/src)
-else()
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
-                        ${CMAKE_CURRENT_LIST_DIR}/../external/json/
-                        ${CMAKE_CURRENT_LIST_DIR}
-                        ${CMAKE_CURRENT_LIST_DIR}/core/)
-    add_subdirectory  (core     obj/src/core)
-    add_subdirectories(parser   obj/src)
-    add_subdirectory  (mesher   obj/src/mesher)
-    add_subdirectories(exporter obj/src)
-    add_subdirectories(adapter  obj/src)
-    add_subdirectory  (solver   obj/src/solver)
-    add_subdirectories(apps     obj/src)
-    
-    project(opensemba C CXX)
-    add_sources(. SRCS)
-    add_library(opensemba STATIC ${HDRS} ${SRCS})
-    include_directories(../external/gidpost
-                        ../src)
-    target_link_libraries(opensemba gidpost)
-
-    install(DIRECTORY "../src/" 
-            DESTINATION "opensemba/include" 
-            FILES_MATCHING REGEX ".*\\.(hpp|h)"
-            PATTERN "apps" EXCLUDE 
-            )
-    install(TARGETS opensemba DESTINATION "opensemba/lib")
-endif()
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
+                    ${CMAKE_CURRENT_LIST_DIR}/../external/json/
+                    ${CMAKE_CURRENT_LIST_DIR}
+                    ${CMAKE_CURRENT_LIST_DIR}/core/)
+add_subdirectory  (core     obj/src/core)
+add_subdirectories(parser   obj/src)
+add_subdirectory  (mesher   obj/src/mesher)
+add_subdirectories(exporter obj/src)
+add_subdirectories(adapter  obj/src)
+add_subdirectory  (solver   obj/src/solver)
+add_subdirectories(apps     obj/src)
