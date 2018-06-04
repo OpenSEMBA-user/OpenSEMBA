@@ -94,8 +94,6 @@ private:
             Geometry::Mesh::Geometric& mesh, const json&);
 
     static PhysicalModel::Surface::Multilayer* readMultilayerSurface(
-            const MatId id,
-            const std::string& name,
             const json& layers);
 
     static Geometry::Grid3 readGrids(const json&);

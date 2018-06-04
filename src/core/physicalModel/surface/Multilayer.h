@@ -34,31 +34,81 @@ namespace Surface {
 
 class Multilayer : public virtual Surface {
 public:
+    class Layer {
+    public:
+        Layer(Math::Real thickness, Math::Real relPermittivity,
+                Math::Real relPermeability, Math::Real elecCond) :
+                thickness_(thickness), relPermittivity_(relPermittivity),
+                relPermeability_(relPermeability), elecCond_(elecCond) { }
+
+        Math::Real getThickness() const {return thickness_;}
+        Math::Real getRelPermittivity() const {return relPermittivity_;}
+        Math::Real getPermittivity() const {
+            return relPermittivity_ * Math::Constants::eps0;
+        }
+        Math::Real getRelPermeability() const {return relPermeability_;}
+        Math::Real getPermeability() const {
+            return relPermeability_ * Math::Constants::mu0;
+        }
+        Math::Real getElecCond() const {return elecCond_;}
+    private:
+        Math::Real thickness_;
+        Math::Real relPermittivity_;
+        Math::Real relPermeability_;
+        Math::Real elecCond_;
+    };
+
+    class FittingOptions {
+    public:
+        FittingOptions(
+                std::pair<Math::Real, Math::Real> minMaxFreq,
+                size_t numberOfPoles ) :
+                    minMaxFreq_(minMaxFreq), numberOfPoles_(numberOfPoles) { }
+
+        std::pair<Math::Real, Math::Real> getMinMaxFreq() const {
+            return minMaxFreq_;
+        }
+
+        std::size_t getNumberOfPoles() const {
+            return numberOfPoles_;
+        }
+
+    private:
+        std::pair<Math::Real, Math::Real> minMaxFreq_;
+        std::size_t numberOfPoles_;
+    };
+
     Multilayer(const Id id,
             const std::string& name,
-            const std::vector<Math::Real>& thickness,
-            const std::vector<Math::Real>& relPermittivity,
-            const std::vector<Math::Real>& relPermeability,
-            const std::vector<Math::Real>& elecCond);
+            const std::vector<Layer>& layers,
+            const std::vector<FittingOptions>& options = {});
     virtual ~Multilayer();
 
     SEMBA_CLASS_DEFINE_CLONE(Multilayer);
 
-    std::size_t getNumberOfLayers() const;
-    std::string printLayer(const std::size_t i) const;
-    Math::Real getThickness(const std::size_t i) const;
-    Math::Real getPermittivity(const std::size_t i) const;
-    Math::Real getPermeability(const std::size_t i) const;
-    Math::Real getElecCond(const std::size_t i) const;
-    Math::Real getMagnCond(const std::size_t i) const;
+    Layer getLayer(size_t i) const {
+        return layers_[i];
+    }
+    std::size_t getNumberOfLayers() const {
+        return layers_.size();
+    }
 
+    Math::Real Multilayer::getThickness   (const std::size_t i) const;
+    Math::Real Multilayer::getPermittivity(const std::size_t i) const;
+    Math::Real Multilayer::getPermeability(const std::size_t i) const;
+    Math::Real Multilayer::getElecCond    (const std::size_t i) const;
+    Math::Real Multilayer::getMagnCond    (const std::size_t i) const;
+
+    bool hasFittingOptions() const;
+    FittingOptions getFittingOptions() const;
+
+    std::string printLayer(const std::size_t i) const;
     void printInfo() const;
 
 private:
-    std::vector<Math::Real> thickness_;
-    std::vector<Math::Real> relPermittivity_;
-    std::vector<Math::Real> relPermeability_;
-    std::vector<Math::Real> elecCond_;
+    std::vector<Layer> layers_;
+
+    std::vector<FittingOptions> options_; // optional (0 or 1 size).
 };
 
 namespace Error {

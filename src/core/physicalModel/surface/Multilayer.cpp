@@ -30,21 +30,16 @@ namespace Surface {
 Multilayer::Multilayer(
         const Id id,
         const std::string& name,
-        const std::vector<Math::Real>& thickness,
-        const std::vector<Math::Real>& relPermittivity,
-        const std::vector<Math::Real>& relPermeability,
-        const std::vector<Math::Real>& elecCond)
+        const std::vector<Layer>& layers,
+        const std::vector<FittingOptions>& options)
 :   Identifiable<Id>(id),
-    PhysicalModel(name) {
-    thickness_ = thickness;
-    relPermittivity_ = relPermittivity;
-    relPermeability_ = relPermeability;
-    elecCond_ = elecCond;
-    const std::size_t nLayers = thickness_.size();
-    if (relPermittivity_.size() != nLayers ||
-        relPermeability_.size() != nLayers ||
-        elecCond_.size() != nLayers) {
-        throw Error::SurfaceMultilayer::IncompatibleSizes();
+    PhysicalModel(name),
+    layers_(layers),
+    options_(options) {
+
+    if (options_.size() > 1) {
+        throw std::runtime_error(
+                "Multilayer Fitting options may contain up to one element");
     }
 }
 
@@ -52,38 +47,48 @@ Multilayer::~Multilayer() {
 
 }
 
-std::size_t Multilayer::getNumberOfLayers() const {
-    return thickness_.size();
-}
-
 std::string Multilayer::printLayer(const std::size_t i) const {
     assert(i < getNumberOfLayers());
     std::stringstream ss;
-    ss << elecCond_[i] <<
-            " " << relPermittivity_[i]*Math::Constants::eps0 <<
-            " " << relPermeability_[i] * Math::Constants::mu0 <<
-            " " << thickness_[i];
+    ss << getElecCond(i) << " " << getPermittivity(i) <<
+            " " << getPermeability(i) << " " << getThickness(i);
     return std::string(ss.str());
 }
 
 Math::Real Multilayer::getThickness(const std::size_t i) const {
-    return thickness_[i];
+    return layers_[i].getThickness();
 }
 
 Math::Real Multilayer::getPermittivity(const std::size_t i) const {
-    return relPermittivity_[i] * Math::Constants::eps0;
+    return layers_[i].getRelPermittivity() * Math::Constants::eps0;
 }
 
 Math::Real Multilayer::getPermeability(const std::size_t i) const {
-    return relPermeability_[i] * Math::Constants::mu0;
+    return layers_[i].getRelPermeability() * Math::Constants::mu0;
 }
 
 Math::Real Multilayer::getElecCond(const std::size_t i) const {
-    return elecCond_[i];
+    return layers_[i].getElecCond();
 }
 
 Math::Real Multilayer::getMagnCond(const std::size_t i) const {
     return 0.0;
+}
+
+bool Multilayer::hasFittingOptions() const {
+    if (options_.size() == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Multilayer::FittingOptions Multilayer::getFittingOptions() const {
+    if (options_.size() != 1) {
+        throw std::runtime_error(
+                "Trying to access a corrupt fitting options value");
+    }
+    return options_.front();
 }
 
 void Multilayer::printInfo() const {
@@ -93,11 +98,7 @@ void Multilayer::printInfo() const {
     std::cout << "#, Thickness, Permittivity, Permeability, ElecCond"
               << std::endl;
     for (std::size_t i = 0; i < getNumberOfLayers(); i++) {
-        std::cout<< i << ": "
-        << thickness_[i] << " "
-        << relPermittivity_[i] << " "
-        << relPermeability_[i] << " "
-        << elecCond_[i] << std::endl;
+        std::cout<< i << printLayer(i) << std::endl;
     }
     std::cout << " --- End of SurfaceMultilayer info ---" << std::endl;
 }
@@ -105,3 +106,5 @@ void Multilayer::printInfo() const {
 } /* namespace Surface */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */
+
+

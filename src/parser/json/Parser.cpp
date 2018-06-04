@@ -278,8 +278,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
             return new PhysicalModel::Surface::SIBC(id, name,
                     j.at("filename").get<std::string>() );
         } else if (sibcType.compare("Layers")==0) {
-            return readMultilayerSurface(id, name,
-                    j.at("layers").get<json>());
+            return readMultilayerSurface(j);
         } else {
             throw std::logic_error("Unrecognized SIBC type: " + sibcType);
         }
@@ -480,23 +479,29 @@ Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
 }
 
 PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(
-        const MatId id,
-        const std::string& name,
-        const json& layers) {
-    std::vector<Math::Real> thick, relEp, relMu, eCond;
-    for (json::const_iterator it = layers.begin(); it != layers.end(); ++it) {
-        thick.push_back( it->at("thickness").get<double>() );
-        relEp.push_back( it->at("permittivity").get<double>() );
-        relMu.push_back( it->at("permeability").get<double>() );
-        eCond.push_back( it->at("elecCond").get<double>() );
+        const json& mat) {
+    MatId id = MatId(mat.at("materialId").get<int>());
+    std::string name = mat.at("name").get<std::string>();
+
+    std::vector<PhysicalModel::Surface::Multilayer::Layer> layers;
+    for (json::const_iterator it = mat.at("layers").begin();
+            it != mat.at("layers").end(); ++it) {
+        layers.push_back(
+                PhysicalModel::Surface::Multilayer::Layer(
+                        it->at("thickness").get<double>(),
+                        it->at("permittivity").get<double>(),
+                        it->at("permeability").get<double>(),
+                        it->at("elecCond").get<double>() );
     }
 
-    if (layers.at("useSembaVectorFitting").get<int>() == 1) {
-        // TODO Handle options for vector fitting.
-        throw std::runtime_error("Use semba vector fitting not implemented");
+    if (mat.at("useSembaVectorFitting").get<int>() == 1) {
+        PhysicalModel::Surface::Multilayer::FittingOptions opts(
+                std::make_pair(mat.at("freqMin").get<double>(),
+                        mat.at("freqMax").get<double>()),
+                        mat.at("numberOfPoles").get<int>());
+        return new PhysicalModel::Surface::Multilayer(id, name, layers, {opts});
     } else {
-        return new PhysicalModel::Surface::Multilayer(
-                    id, name, thick, relEp, relMu, eCond);
+        return new PhysicalModel::Surface::Multilayer(id, name, layers);
     }
 }
 
