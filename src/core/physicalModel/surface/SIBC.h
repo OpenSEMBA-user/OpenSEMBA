@@ -48,6 +48,10 @@ public:
 
     virtual void printInfo() const;
 
+    std::vector<PoleResidue> getPoleZ() const {return poleZ_;}
+    Math::MatC22 getZInfinity() const {return ZInfinity_;}
+    Math::MatC22 getZLinear() const {return ZLinear_;}
+
 private:
     Math::MatC22 ZInfinity_, ZLinear_;
     std::vector<PoleResidue> poleZ_;
