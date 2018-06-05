@@ -149,7 +149,7 @@
                     "permittivity": *matprop(Layers,*operation(i+1)),
                     "permeability": *matprop(Layers,*operation(i+2)),
                     "elecCond":     *matprop(Layers,*operation(i+3))
-*if(operation(i+4)!=num_values(int))
+*if(operation(i+3)!=num_values(int))
                 },
 *else
                 }

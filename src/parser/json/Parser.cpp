@@ -31,12 +31,12 @@
 #include "geometry/element/Tetrahedron10.h"
 #include "geometry/element/Hexahedron8.h"
 #include "physicalModel/bound/Bound.h"
-#include "physicalModel/predefined/PEC.h"
-#include "physicalModel/predefined/PMC.h"
-#include "physicalModel/predefined/SMA.h"
 #include "physicalModel/multiport/Dispersive.h"
 #include "physicalModel/multiport/Predefined.h"
 #include "physicalModel/multiport/RLC.h"
+#include "physicalModel/predefined/PEC.h"
+#include "physicalModel/predefined/PMC.h"
+#include "physicalModel/predefined/SMA.h"
 #include "physicalModel/volume/AnisotropicCrystal.h"
 #include "physicalModel/volume/AnisotropicFerrite.h"
 #include "physicalModel/volume/Classic.h"
@@ -275,7 +275,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
     {
         std::string sibcType = j.at("surfaceType").get<std::string>();
         if (sibcType.compare("File")==0) {
-            return new PhysicalModel::Surface::SIBC(id, name,
+            return new PhysicalModel::Surface::SIBCFile(id, name,
                     j.at("filename").get<std::string>() );
         } else if (sibcType.compare("Layers")==0) {
             return readMultilayerSurface(j);
@@ -491,7 +491,7 @@ PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(
                         it->at("thickness").get<double>(),
                         it->at("permittivity").get<double>(),
                         it->at("permeability").get<double>(),
-                        it->at("elecCond").get<double>() );
+                        it->at("elecCond").get<double>() ));
     }
 
     if (mat.at("useSembaVectorFitting").get<int>() == 1) {

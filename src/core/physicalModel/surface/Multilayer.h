@@ -93,11 +93,11 @@ public:
         return layers_.size();
     }
 
-    Math::Real Multilayer::getThickness   (const std::size_t i) const;
-    Math::Real Multilayer::getPermittivity(const std::size_t i) const;
-    Math::Real Multilayer::getPermeability(const std::size_t i) const;
-    Math::Real Multilayer::getElecCond    (const std::size_t i) const;
-    Math::Real Multilayer::getMagnCond    (const std::size_t i) const;
+    Math::Real getThickness   (const std::size_t i) const;
+    Math::Real getPermittivity(const std::size_t i) const;
+    Math::Real getPermeability(const std::size_t i) const;
+    Math::Real getElecCond    (const std::size_t i) const;
+    Math::Real getMagnCond    (const std::size_t i) const;
 
     bool hasFittingOptions() const;
     FittingOptions getFittingOptions() const;

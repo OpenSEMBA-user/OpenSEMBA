@@ -38,7 +38,7 @@
 #include "physicalModel/bound/Mur2.h"
 #include "physicalModel/multiport/Multiport.h"
 #include "physicalModel/surface/Multilayer.h"
-#include "physicalModel/surface/SIBC.h"
+#include "physicalModel/surface/SIBCFile.h"
 #include "physicalModel/volume/Dispersive.h"
 #include "physicalModel/volume/Anisotropic.h"
 #include "source/Dipole.h"

@@ -27,3 +27,4 @@ add_sources(. SRCS)
 add_library(opensemba_parser_json STATIC ${SRCS})
 target_link_libraries(opensemba_parser_json opensemba_core_parser
                                            opensemba_core_util)
+target_include_directories(opensemba_parser_json PUBLIC ../../../external/json)

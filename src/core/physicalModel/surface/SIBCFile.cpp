@@ -19,51 +19,39 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#include <physicalModel/surface/SIBC.h>
+#include <physicalModel/surface/SIBCFile.h>
 
 namespace SEMBA {
 namespace PhysicalModel {
 namespace Surface {
 
-SIBC::SIBC(const Id id,
-        const std::string& name,
-        const Math::MatC22& Zinfinite,
-        const Math::MatC22& ZLinear,
-        const std::vector<PoleResidue>& poleImpedance)
+SIBCFile::SIBCFile(const Id id,
+                         const std::string& name,
+                         const FileSystem::Project& file)
 :   Identifiable<Id>(id),
     PhysicalModel(name),
-    ZInfinity_(Zinfinite),
-    ZLinear_(ZLinear),
-    poleZ_(poleImpedance) {
+    file_(file) {
+    std::string extension = file_.getExtension();
+    if (extension.compare(".mibc") != 0) {
+        printInfo();
+        throw std::logic_error("File extension must be .mibc in file: "
+                + file_);
+    }
 }
 
-SIBC::~SIBC() {
+SIBCFile::~SIBCFile() {
 
 }
 
-void SIBC::printInfo() const {
+void SIBCFile::printInfo() const {
     std::cout << "--- Physical model information ---"   << std::endl;
-    std::cout << "Surface Impedance Boundary Condition" << std::endl;
-    Surface::printInfo();
-    std::cout << "Impedance @ infininite freq.:";
-    ZInfinity_.printInfo();
-    std::cout << "Impedance @ zero freq.:";
-    ZLinear_.printInfo();
-    if (poleZ_.size()) {
-        std::cout << "Number of poles: " << poleZ_.size() << std::endl;
-        std::cout << "# Pole Z11 Z12 Z21 Z22 " << std::endl;
-    }
-    for (register std::size_t i = 0; i < poleZ_.size(); i++) {
-        const std::complex<Math::Real>& pole = poleZ_[i].first;
-        const Math::MatC22& Z = poleZ_[i].second;
-        std::cout << i << " " << pole << " "
-                << Z(0,0) << " " << Z(0,1) << " "
-                << Z(1,0) << " " << Z(1,1) << std::endl;
-    }
+    std::cout << "Surface Impedance Boundary Condition File" << std::endl;
+    std::cout << file_ << std::endl;
+
 }
 
-std::size_t SIBC::getNumberOfPoles() const {
-    return poleZ_.size();
+const FileSystem::Project SIBCFile::getFile() const {
+    return file_;
 }
 
 } /* namespace Surface */

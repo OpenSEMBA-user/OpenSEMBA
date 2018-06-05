@@ -19,8 +19,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_PHYSICALMODEL_SURFACESIBC_H_
-#define SEMBA_PHYSICALMODEL_SURFACESIBC_H_
+#ifndef SEMBA_PHYSICALMODEL_SURFACESIBCFILE_H_
+#define SEMBA_PHYSICALMODEL_SURFACESIBCFILE_H_
 
 #include "math/matrix/Static.h"
 #include "filesystem/Project.h"
@@ -31,26 +31,21 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Surface {
 
-class SIBC : public virtual Surface {
+class SIBCFile : public virtual Surface {
 public:
-    typedef std::pair<std::complex<Math::Real>, Math::MatC22> PoleResidue;
+    SIBCFile();
+    SIBCFile(const Id id,
+             const std::string& name,
+             const FileSystem::Project& file);
+    virtual ~SIBCFile();
 
-    SIBC(const Id id,
-            const std::string& name,
-            const Math::MatC22& Zinfinite,
-            const Math::MatC22& Zstatic,
-            const std::vector<PoleResidue>& poleImpedance);
-    virtual ~SIBC();
+    SEMBA_CLASS_DEFINE_CLONE(SIBCFile);
 
-    SEMBA_CLASS_DEFINE_CLONE(SIBC);
-
-    virtual std::size_t getNumberOfPoles() const;
-
+    const FileSystem::Project getFile() const;
     virtual void printInfo() const;
 
-private:
-    Math::MatC22 ZInfinity_, ZLinear_;
-    std::vector<PoleResidue> poleZ_;
+protected:
+    FileSystem::Project file_;
 };
 
 } /* namespace Surface */
