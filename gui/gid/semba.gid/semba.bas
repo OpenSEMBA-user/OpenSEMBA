@@ -21,7 +21,7 @@
         "flush": *GenData(Flush),
         "geometryScalingFactor": *GenData(scaling_factor),
 *if(strcmp(GenData(Additional_arguments),"")!=0)
-        "additionalArguments": *GenData(Additional_arguments),
+        "additionalArguments": *tcl(json::write string *GenData(Additional_arguments)),
 *endif
 *# ----
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
@@ -85,13 +85,13 @@
             "magneticConductivity": *matprop(MagnCond)
 *elseif(strcmp(Matprop(TypeId),"Dispersive")==0)
             "materialType": "*MatProp(TypeId)",
-            "filename": "*matprop(File)"
+            "filename": *tcl(json::write string *matprop(File))
 *elseif(strcmp(Matprop(TypeId),"Wire")==0)
             "materialType": "*MatProp(TypeId)",
             "radius": *matprop(Radius),
             "wireType": "*matprop(WireType)",
 *if(strcmp(Matprop(WireType),"Dispersive")==0)
-            "filename": *matprop(File)
+            "filename": *tcl(json::write string *matprop(File))
 *elseif(strcmp(Matprop(WireType),"Standard")==0)
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance)
@@ -129,13 +129,13 @@
             "width": *matprop(Width)
 *elseif(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
             "materialType": "*MatProp(TypeId)",
-            "filename": "*matprop(File)"
+            "filename": *tcl(json::write string *matprop(File))
 *elseif(strcmp(Matprop(TypeId),"SIBC")==0)
             "materialType": "*MatProp(TypeId)",
             "surfaceType": "*matprop(SurfaceType)",
 *if(strcmp(Matprop(SurfaceType),"File")==0)
             "materialType": "*MatProp(TypeId)",   
-            "filename": "*matprop(File)"
+            "filename": *tcl(json::write string *matprop(File))
 *endif
 *if(matprop(Layers,int)==1)
 *warningbox "Multilayer did not contain layers"

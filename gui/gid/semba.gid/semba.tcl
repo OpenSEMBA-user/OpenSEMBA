@@ -58,6 +58,8 @@ proc InitGIDProject { dir } {
     # Checks packages
     package require treectrl
     package require math
+    package require json::write
+        
     # Modifies menus available to the user.
     semba::AddToolbar
 
