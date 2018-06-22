@@ -64,7 +64,7 @@ void Exporter::writeMesh_(const Data* smb) {
         meshStr = inMesh->castTo<Geometry::Mesh::Structured>();
         mesh = meshStr->getMeshUnstructured();
         preName = "str_";
-        grid = inMesh->castTo<Geometry::Grid3>();
+        grid = &inMesh->castTo<Geometry::Mesh::Structured>()->grid();
     } else {
         meshStr = nullptr;
         mesh = inMesh->cloneTo<Geometry::Mesh::Unstructured>();

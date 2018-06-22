@@ -415,6 +415,7 @@
 *loop conditions *nodes
 *if(strcasecmp(condName,"Generator_on_line")==0)
 *loop nodes *OnlyInCond
+*set var sourceNum = sourceNum + 1
         {
             "sourceType": "generator",
             "type": "*cond(Type)",

@@ -629,11 +629,12 @@ Source::Port::TEM* Parser::readPortTEM(
 
 Source::Generator* Parser::readGenerator(
         Geometry::Mesh::Geometric& mesh, const json& j) {
-    return new Source::Generator(
-            readMagnitude(     j.at("magnitude").get<json>() ),
-            readCoordIdAsNodes( mesh, j.at("coordIds").get<json>() ),
-            strToGeneratorType(j.at("type").get<std::string>() ),
-            strToGeneratorHardness(j.at("hardness").get<std::string>()) );
+	return new Source::Generator(
+			readMagnitude(j.at("magnitude").get<json>()),
+			readCoordIdAsNodes(mesh, j.at("coordIds").get<json>()),
+			strToGeneratorType(j.at("type").get<std::string>()),
+			Source::Generator::soft);
+            //strToGeneratorHardness(j.at("hardness").get<std::string>()) );
 }
 
 Source::OnLine* Parser::readSourceOnLine(
