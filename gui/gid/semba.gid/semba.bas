@@ -536,32 +536,32 @@
 *# ----------------------------------------------------------
 *Set cond OutRq_on_layer
 *if(CondNumEntities(int)>0)
+*loop layers *OnlyInCond
         {
             "gidOutputType": "OutRq_on_layer",
-*loop layers *OnlyInCond
             "name": "*cond(Name)",
             "type": "*cond(Type)",
 *include includes/domain.bas
             "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
-*end layers
         }*tcl(semba::printCommaIfPendingOutRq)
+*end layers
 *end if
 *# ----------------------------------------------------------
 *tcl(semba::writeOutputRequestBulkCurrentBAS Bulk_current_on_surface)
 *# ----------------------------------------------------------
 *Set cond Bulk_current_on_layer
 *if(CondNumEntities(int)>0)
+*loop layers *OnlyInCond
         {
             "gidOutputType": "Bulk_current_on_layer",
-*loop layers *OnlyInCond
             "name": "*cond(Name)",
             "type": "*cond(Type)",
 *include includes/domain.bas
             "direction": "*cond(Direction)",
             "skip": *cond(Skip),
             "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
-*end layers
         }*tcl(semba::printCommaIfPendingOutRq)
+*end layers
 *end if
 *# ----------------------------------------------------------
 *Set cond Far_field
