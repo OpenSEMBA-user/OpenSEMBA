@@ -505,17 +505,18 @@ proc semba::writeOutputRequestBAS { condition_name } {
 	"            \"type\": \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
 	"            \"domain\": {\n"
 	    if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
-		append result \
+			append result \
 	"                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 3],\n"\
 	"                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 4],\n"
-	    }
-	    if {[lindex "$properties_of_cond($name_id)" 6] == 0} {
-		       append result \
-    "                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 5]\n"
-	    } else {
-	    append result \
+			if {[lindex "$properties_of_cond($name_id)" 6] == 0} {
+				append result \
+	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 5]\n"
+			} else {
+				append result \
 	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 5],\n"           
+			}
 	    }
+
 	    if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
 		append result \
 	"                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)"  7],\n"\
@@ -570,12 +571,12 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 	       append result \
 	    "                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 5],\n"\
 	    "                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 6],\n"
-		if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
-		        append result \
-	    "                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
-		} else {
-		append result \
-	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
+			if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
+					append result \
+			"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
+			} else {
+				append result \
+			"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
 		}
 	}
 	    if {[lindex "$properties_of_cond($name_id)" 8] == 1} { ; # if use frequency
