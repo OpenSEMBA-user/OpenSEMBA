@@ -89,7 +89,7 @@ DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length, #CURRENT#)
 DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length, #CURRENT#)
 DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length, #CURRENT#)
 QUESTION: Forbidden_length
-VALUE: 0.0
+VALUE: 0.25
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
 
 Title: Wires
