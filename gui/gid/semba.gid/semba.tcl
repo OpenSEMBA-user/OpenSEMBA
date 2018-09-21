@@ -595,11 +595,11 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 	}
 
 		append result \
-	    "            },\n"\
-	    "            \"elemIds\": \[\n"\
-	    "                [join $elements_of_cond($name_id) ",\n                "]\n"\
-	    "            \]\n"\
-	    "        }"
+	"            },\n"\
+	"            \"elemIds\": \[\n"\
+	"                [join $elements_of_cond($name_id) ",\n                "]\n"\
+	"            \]\n"\
+	"        }"
 	    if {$semba::writtenOutputRequests != $semba::nOutputRequests} {
 	       append result ",\n"
 	    } else {
