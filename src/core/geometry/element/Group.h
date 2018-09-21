@@ -114,8 +114,8 @@ public:
     std::vector<Id> getIdsWithoutMaterialId(const MatId matId) const;
     Group<const ElemR> getInsideBound(const BoxR3& bound) const;
 
-    std::vector<std::pair<const E*,std::size_t>> getElementsWithVertex(
-            const CoordId) const;
+    //std::vector<std::pair<const E*,std::size_t>> getElementsWithVertex(
+    //        const CoordId) const;
     BoxR3 getBound() const;
     BoxR3 getBound(const std::vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const Math::CVecR3 pos) const;

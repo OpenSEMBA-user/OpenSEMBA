@@ -292,8 +292,10 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
     {
         PhysicalModel::Multiport::Multiport::Type mpType =
                 strToMultiportType(j.at("connectorType").get<std::string>());
-        if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
-            return new PhysicalModel::Multiport::Predefined(id, name, mpType);
+		if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
+			return new PhysicalModel::Multiport::Predefined(id, name, mpType);
+		} else if (mpType == PhysicalModel::Multiport::Multiport::openCircuit) {
+			return new PhysicalModel::Multiport::Predefined(id, name, mpType);
         } else if (mpType == PhysicalModel::Multiport::Multiport::dispersive) {
             return new PhysicalModel::Multiport::Dispersive(id, name,
                     j.at("filename").get<std::string>());

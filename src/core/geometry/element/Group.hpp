@@ -156,37 +156,37 @@ Group<const ElemR> Group<E>::getInsideBound(
     return res;
 }
 
-template<typename E>
-std::vector<std::pair<const E*, std::size_t> > Group<E>::getElementsWithVertex(
-        const CoordId vertexId) const {
-
-    std::vector<std::pair<const E*, std::size_t> > res;
-    Group<ElemR> elemsR = this->template getGroupOf<ElemR>();
-    for (std::size_t i = 0; i < elemsR.size(); i++) {
-        for (std::size_t j = 0; j < elemsR(i)->numberOfVertices(); j++) {
-            if ((elemsR(i)->getVertex(j)->getId() == vertexId) &&
-                    elemsR(i)->template is<E>()) {
-
-                std::pair<const E*, std::size_t> aux(
-                    elemsR(i)->template castTo<E>(), j);
-                res.push_back(aux);
-            }
-        }
-    }
-    Group<ElemI> elemsI = this->template getGroupOf<ElemI>();
-    for (std::size_t i = 0; i < elemsI.size(); i++) {
-        for (std::size_t j = 0; j < elemsI(i)->numberOfVertices(); j++) {
-            if ((elemsI(i)->getVertex(j)->getId() == vertexId) &&
-                    elemsI(i)->template is<E>()) {
-
-                std::pair<const E*, std::size_t> aux(
-                    elemsI(i)->template castTo<E>(), j);
-                res.push_back(aux);
-            }
-        }
-    }
-    return res;
-}
+//template<typename E>
+//std::vector<std::pair<const E*, std::size_t> > Group<E>::getElementsWithVertex(
+//        const CoordId vertexId) const {
+//
+//    std::vector<std::pair<const E*, std::size_t> > res;
+//    Group<ElemR> elemsR = this->template getGroupOf<ElemR>();
+//    for (std::size_t i = 0; i < elemsR.size(); i++) {
+//        for (std::size_t j = 0; j < elemsR(i)->numberOfVertices(); j++) {
+//            if ((elemsR(i)->getVertex(j)->getId() == vertexId) &&
+//                    elemsR(i)->template is<E>()) {
+//
+//                std::pair<const E*, std::size_t> aux(
+//                    elemsR(i)->template castTo<E>(), j);
+//                res.push_back(aux);
+//            }
+//        }
+//    }
+//    Group<ElemI> elemsI = this->template getGroupOf<ElemI>();
+//    for (std::size_t i = 0; i < elemsI.size(); i++) {
+//        for (std::size_t j = 0; j < elemsI(i)->numberOfVertices(); j++) {
+//            if ((elemsI(i)->getVertex(j)->getId() == vertexId) &&
+//                    elemsI(i)->template is<E>()) {
+//
+//                std::pair<const E*, std::size_t> aux(
+//                    elemsI(i)->template castTo<E>(), j);
+//                res.push_back(aux);
+//            }
+//        }
+//    }
+//    return res;
+//}
 
 template<typename E>
 BoxR3 Group<E>::getBound() const {

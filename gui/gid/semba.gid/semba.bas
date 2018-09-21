@@ -105,6 +105,12 @@
 *else
             "_error": "Invalid wireType"
 *endif
+*elseif(strcmp(Matprop(TypeId),"Conn_short")==0)
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)"
+*elseif(strcmp(Matprop(TypeId),"Conn_open")==0)
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)"
 *elseif(strcmp(Matprop(TypeId),"Conn_sRLC")==0)
             "materialType": "Connector",
             "connectorType": "*MatProp(TypeId)",
@@ -128,7 +134,8 @@
             "materialType": "*MatProp(TypeId)",
             "width": *matprop(Width)
 *elseif(strcmp(Matprop(TypeId),"Conn_dispersive")==0)
-            "materialType": "*MatProp(TypeId)",
+            "materialType": "Connector",
+            "connectorType": "*MatProp(TypeId)",
             "filename": *tcl(json::write string *matprop(File))
 *elseif(strcmp(Matprop(TypeId),"SIBC")==0)
             "materialType": "*MatProp(TypeId)",

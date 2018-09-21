@@ -4,6 +4,7 @@ BOOK: Solver_options
 TITLE: Solver
 QUESTION: Solver#CB#(ugrfdtd,cudg3d)
 VALUE: ugrfdtd
+STATE: HIDDEN
 QUESTION: Run_simulation#CB#(0,1)
 VALUE: 1
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
@@ -59,15 +60,15 @@ HELP: reates .VTK map of the PEC/wires/Surface geometry
 QUESTION: Additional_arguments
 VALUE: 
 
-TITLE: cudg3d
-QUESTION: Time_integrator#CB#(lserk4,lf2,lf2full)
-VALUE: lserk4
-QUESTION: Use_LTS#CB#(0,1)
-VALUE: 1
+# TITLE: cudg3d
+# QUESTION: Time_integrator#CB#(lserk4,lf2,lf2full)
+# VALUE: lserk4
+# QUESTION: Use_LTS#CB#(0,1)
+# VALUE: 1
 
-QUESTION: Upwinding
-VALUE: 1.0
-HELP: 0.0 for centered, 1.0 for full upwinding.
+# QUESTION: Upwinding
+# VALUE: 1.0
+# HELP: 0.0 for centered, 1.0 for full upwinding.
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
