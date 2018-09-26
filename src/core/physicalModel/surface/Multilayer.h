@@ -39,7 +39,16 @@ public:
         Layer(Math::Real thickness, Math::Real relPermittivity,
                 Math::Real relPermeability, Math::Real elecCond) :
                 thickness_(thickness), relPermittivity_(relPermittivity),
-                relPermeability_(relPermeability), elecCond_(elecCond) { }
+                relPermeability_(relPermeability), elecCond_(elecCond) {
+			if (relPermittivity_ == 0.0) {
+				throw std::logic_error(
+					"Layer relative permittivity must be greater than zero.");
+			}
+			if (relPermeability_ == 0.0) {
+				throw std::logic_error(
+					"Layer relative permeability must be greater than zero.");
+			}
+		}
 
         Math::Real getThickness() const {return thickness_;}
         Math::Real getRelPermittivity() const {return relPermittivity_;}
