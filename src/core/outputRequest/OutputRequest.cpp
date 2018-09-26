@@ -57,7 +57,6 @@ Domain Base::getDomain() const {
     return *this;
 }
 
-
 void Base::printInfo() const {
     std::cout<< "Name: " << name_.c_str() << std::endl;
     std::cout<< "Type: " << getTypeStr() << std::endl;
@@ -70,20 +69,44 @@ std::string Base::getTypeStr() const {
         return "Electric field";
     case magnetic:
         return "Magnetic field";
+	case bulkCurrentElectric:
+		return "Bulk current electric";
+	case bulkCurrentMagnetic:
+		return "Bulk current magnetic";
     case electricFieldNormals:
         return "Electric field normals";
     case magneticFieldNormals:
         return "Magnetic field normals";
     case powerDensity:
         return "Power density";
-    case power:
-        return "Power";
+	case planeWaveDecomposition:
+		return "Plane wave decomposition";
     case current:
         return "Current";
     case voltage:
         return "Voltage";
+	case power:
+        return "Power";
+	case sParameter:
+		return "S parameter";
+	case zParameter:
+		return "Z parameter";
+	case yParameter:
+		return "Y parameter";
+	case theveninVoltageGenerator:
+		return "Thevenin voltage generator";
+	case nortonCurrentGenerator:
+		return "Norton current generator";
+	case couplingCrossSection:
+		return "Coupling cross section";
+	case poyntingVector:
+		return "Poynting vector";
+	case energy:
+		return "Energy";
+	case electricFarField:
+		return "Electric far field";
     default:
-        return "Undefined";
+        throw std::logic_error("Unrecognized output type");
     }
 }
 
