@@ -548,24 +548,11 @@
             "gidOutputType": "OutRq_on_layer",
             "name": "*cond(Name)",
             "type": "*cond(Type)",
-*include includes/domain.bas
-            "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
-        }*tcl(semba::printCommaIfPendingOutRq)
-*end layers
-*end if
-*# ----------------------------------------------------------
-*tcl(semba::writeOutputRequestBulkCurrentBAS Bulk_current_on_surface)
-*# ----------------------------------------------------------
-*Set cond Bulk_current_on_layer
-*if(CondNumEntities(int)>0)
-*loop layers *OnlyInCond
-        {
-            "gidOutputType": "Bulk_current_on_layer",
-            "name": "*cond(Name)",
-            "type": "*cond(Type)",
-*include includes/domain.bas
-            "direction": "*cond(Direction)",
+*if(strcasecmp(Cond(Type),"bulkCurrentElectric")==0 || strcasecmp(Cond(Type),"bulkCurrentMagnetic"))
             "skip": *cond(Skip),
+            "direction": "*cond(Direction)",
+*endif
+*include includes/domain.bas
             "box": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
         }*tcl(semba::printCommaIfPendingOutRq)
 *end layers

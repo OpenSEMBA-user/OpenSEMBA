@@ -65,24 +65,6 @@ public:
     Data read(std::istream& inputFileStream) const;
 
 private:
-    typedef enum {
-        outRqOnPoint,
-        outRqOnLine,
-        outRqOnSurface,
-        outRqOnLayer,
-        bulkCurrentOnSurface,
-        bulkCurrentOnLayer,
-        farField
-    } OutputType;
-    typedef enum {
-        sibc,
-        multilayer
-    } SIBCType;
-    typedef enum {
-        rectangular
-    } WaveportShape;
-
-
     static Solver::Info* readSolver(const json&);
     static Solver::Settings readSolverSettings(const json&);
     static PhysicalModel::Group<>* readPhysicalModels(const json&);
@@ -137,9 +119,6 @@ private:
             Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Base::Type strToOutputType(std::string label);
-    static SIBCType                  strToSIBCType(std::string str);
-    static OutputType                strToGiDOutputType(std::string label);
-
     static Source::Generator::Type     strToGeneratorType(std::string label);
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);
     static Source::OnLine::Type        strToNodalType(std::string label);

@@ -43,19 +43,6 @@ Group<O>& Group<O>::operator=(SEMBA::Group::Group<O>&& rhs) {
 }
 
 template<typename O>
-bool Group<O>::isSimilar(const Group& rhs) const {
-    if (this->size() != rhs.size()) {
-        return false;
-    }
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (!this->get(i)->isSimilar(*rhs(i))) {
-            return false;
-        }
-     }
-    return true;
-}
-
-template<typename O>
 void Group<O>::printInfo() const {
     std::cout<< " --- OutputRequestGroup info ---" << std::endl;
     SEMBA::Group::Printable<O>::printInfo();

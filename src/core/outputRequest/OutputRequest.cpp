@@ -73,36 +73,16 @@ std::string Base::getTypeStr() const {
 		return "Bulk current electric";
 	case bulkCurrentMagnetic:
 		return "Bulk current magnetic";
+	case surfaceCurrentDensity:
+		return "Surface current density";
     case electricFieldNormals:
         return "Electric field normals";
     case magneticFieldNormals:
         return "Magnetic field normals";
-    case powerDensity:
-        return "Power density";
-	case planeWaveDecomposition:
-		return "Plane wave decomposition";
     case current:
         return "Current";
     case voltage:
         return "Voltage";
-	case power:
-        return "Power";
-	case sParameter:
-		return "S parameter";
-	case zParameter:
-		return "Z parameter";
-	case yParameter:
-		return "Y parameter";
-	case theveninVoltageGenerator:
-		return "Thevenin voltage generator";
-	case nortonCurrentGenerator:
-		return "Norton current generator";
-	case couplingCrossSection:
-		return "Coupling cross section";
-	case poyntingVector:
-		return "Poynting vector";
-	case energy:
-		return "Energy";
 	case electricFarField:
 		return "Electric far field";
     default:

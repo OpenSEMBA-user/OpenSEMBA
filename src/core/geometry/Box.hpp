@@ -47,7 +47,7 @@ Box<T,D>::~Box() {
 
 template<class T, std::size_t D>
 Box<T,D>& Box<T,D>::operator=(const Box<T,D> &rhs) {
-    if (&rhs == this) {
+	if (&rhs == this) {
         return *this;
     }
     min_ = rhs.min_;

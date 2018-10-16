@@ -202,8 +202,20 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_point_outRq#WIDTH#(18)
-QUESTION: Type#CB#(electricField,magneticField,current)
+#Title: Type
+QUESTION: Type#CB#(electricField,magneticField,current,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
+# Bulk current stuff
+DEPENDENCIES:(electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(current,               HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(surfaceCurrentDensity, HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
 #Title: Domain
 QUESTION: Time#CB#(0,1)
 VALUE: 1
@@ -241,8 +253,18 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_point_outRq#WIDTH#(18)
-QUESTION: Type#CB#(voltage)
+#Title: Type
+QUESTION: Type#CB#(electricField,magneticField,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
+# Bulk current stuff
+DEPENDENCIES:(electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
 #Title: Domain
 QUESTION: Time#CB#(0,1)
 VALUE: 1
@@ -280,8 +302,21 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_surface_outRq#WIDTH#(18)
-QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals)
+#Title: Type
+QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,surfaceCurrentDensity,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
+# Bulk current stuff
+DEPENDENCIES:(electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(electricFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(magneticFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(surfaceCurrentDensity, HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
 #Title: Domain
 QUESTION: Time#CB#(0,1)
 VALUE: 1
@@ -319,90 +354,17 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_outRq_on_layer#WIDTH#(18)
-QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,bulkCurrentElectric,bulkCurrentMagnetic)
+#Title: Type
+QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,surfaceCurrentDensity,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
-#Title: Domain
-QUESTION: Time#CB#(0,1)
-VALUE: 1
-DEPENDENCIES:(1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
-QUESTION: Initial_time
-VALUE: 0.0
-QUESTION: Final_time
-VALUE: 0.0
-QUESTION: Sampling_period
-VALUE: 0.0
-QUESTION: Frequency#CB#(0,1)
-VALUE: 0
-DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
-QUESTION: Initial_Frequency
-VALUE: 0.0
-QUESTION: Final_Frequency
-VALUE: 0.0
-QUESTION: Frequency_step
-VALUE: 0.0
-QUESTION: Log_frequency_sweep#CB#(0,1)
-VALUE: 0
-QUESTION: Use_transfer_function#CB#(0,1)
-VALUE: 0
-QUESTION: Transfer_function_file
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
-END CONDITION
-
-CONDITION: Bulk_current_on_surface
-CONDTYPE: over surfaces
-CONDMESHTYPE: over body elements
-CANREPEAT: yes
-#Title: Basic
-QUESTION: Name
-VALUE: Unnamed_bulkCurrent_on_surface_outRq#WIDTH#(18)
-QUESTION: Type#CB#(bulkCurrentElectric)
-VALUE: bulkCurrentElectric
-QUESTION: Direction#CB#(x,y,z)
-VALUE: x
-QUESTION: Skip
-VALUE: 1
-#Title: Domain
-QUESTION: Time#CB#(0,1)
-VALUE: 1
-DEPENDENCIES:(1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
-QUESTION: Initial_time
-VALUE: 0.0
-QUESTION: Final_time
-VALUE: 0.0
-QUESTION: Sampling_period
-VALUE: 0.0
-QUESTION: Frequency#CB#(0,1)
-VALUE: 0
-DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
-QUESTION: Initial_Frequency
-VALUE: 0.0
-QUESTION: Final_Frequency
-VALUE: 0.0
-QUESTION: Frequency_step
-VALUE: 0.0
-QUESTION: Log_frequency_sweep#CB#(0,1)
-VALUE: 0
-QUESTION: Use_transfer_function#CB#(0,1)
-VALUE: 0
-QUESTION: Transfer_function_file
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
-END CONDITION
-
-CONDITION: Bulk_current_on_layer
-CONDTYPE: over layers
-CONDMESHTYPE: over body elements
-CANREPEAT: yes
-#Title: Basic
-QUESTION: Name
-VALUE: Unnamed_bulkCurrent_on_layer_outRq#WIDTH#(18)
-QUESTION: Type#CB#(bulkCurrentElectric)
-VALUE: bulkCurrentElectric
+# Bulk current stuff
+DEPENDENCIES:(electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(electricFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(magneticFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(surfaceCurrentDensity, HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES:(bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
 QUESTION: Direction#CB#(x,y,z)
 VALUE: x
 QUESTION: Skip
@@ -446,6 +408,7 @@ QUESTION: Name
 VALUE: Farfield_outRq#WIDTH#(18)
 QUESTION: Type#CB#(farField)
 VALUE: farField
+STATE: HIDDEN
 QUESTION: Initial_theta
 VALUE: 0
 HELP: Angle in degrees, min = 0 and max = 180.

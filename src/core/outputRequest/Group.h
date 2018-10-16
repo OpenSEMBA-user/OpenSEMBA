@@ -58,8 +58,6 @@ public:
     Group& operator=(SEMBA::Group::Group<O>&);
     Group& operator=(SEMBA::Group::Group<O>&&);
 
-    bool isSimilar(const Group& rhs) const;
-
     void printInfo() const;
 };
 

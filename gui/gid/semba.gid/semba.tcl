@@ -479,75 +479,12 @@ proc semba::countAllElementsInOutputRequestsBAS { } {
 		[semba::countElementsInConditionBAS "OutRq_on_line"] + \
 		[semba::countElementsInConditionBAS "OutRq_on_surface"] + \
 		[semba::countElementsInConditionBAS "OutRq_on_layer"] + \
-		[semba::countElementsInConditionBAS "Bulk_current_on_surface"] + \
-		[semba::countElementsInConditionBAS "Bulk_current_on_layer"] + \
 	    [semba::countElementsInConditionBAS "Far_field"] } ]
 
 	return " "
 }
 
 proc semba::writeOutputRequestBAS { condition_name } {
-    set result ""
-    foreach item [GiD_Info conditions $condition_name mesh] {
-	set element_id [lindex $item 1]
-	set name_id    [lindex $item 3]
-	lappend elements_of_cond($name_id) $element_id
-	set properties_of_cond($name_id) [lrange $item 3 end]
-    }
-
-    foreach name_id [lsort [array names elements_of_cond]] {
-	set semba::writtenOutputRequests \
-	    [expr {$semba::writtenOutputRequests + [llength $elements_of_cond($name_id)]}]
-	    append result \
-	"        {\n"\
-	"            \"gidOutputType\": \"$condition_name\",\n"\
-	"            \"name\": \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
-	"            \"type\": \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
-	"            \"domain\": {\n"
-	    if {[lindex "$properties_of_cond($name_id)" 2] == 1} {
-			append result \
-	"                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 3],\n"\
-	"                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 4],\n"
-			if {[lindex "$properties_of_cond($name_id)" 6] == 0} {
-				append result \
-	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 5]\n"
-			} else {
-				append result \
-	"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 5],\n"           
-			}
-	    }
-
-	    if {[lindex "$properties_of_cond($name_id)" 6] == 1} {
-		append result \
-	"                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)"  7],\n"\
-	"                \"finalFrequency\":    [lindex "$properties_of_cond($name_id)"  8],\n"\
-	"                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)"  9],\n"
-	    if {[lindex "$properties_of_cond($name_id)" 11] == 0} {
-		append result \
-    "                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 10]]\n"
-		} else {
-		append result \
-    "                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 10]],\n" \
-	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 13]\"\n"
-	    }
-	    }
-		append result \
-	"            },\n"\
-	"            \"elemIds\": \[\n"\
-	"                [join $elements_of_cond($name_id) ",\n                "]\n"\
-	"            \]\n"\
-	"        }"
-	if {$semba::writtenOutputRequests != $semba::nOutputRequests} {
-	    append result ",\n"
-	} else {
-	    append result "\n"
-	}
-    }
-
-    return $result
-}
-
-proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
     set result ""
     foreach item [GiD_Info conditions $condition_name mesh] {
 	set element_id [lindex $item 1]
@@ -560,12 +497,17 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 	set semba::writtenOutputRequests \
 	    [expr {$semba::writtenOutputRequests + [llength $elements_of_cond($name_id)]}]
 	append result \
-	"        {\n"\
+		"        {\n"\
 		"            \"gidOutputType\": \"$condition_name\",\n"\
 		"            \"name\":      \"[lindex "$properties_of_cond($name_id)" 0]\",\n"\
-		"            \"type\":      \"[lindex "$properties_of_cond($name_id)" 1]\",\n"\
-	    "            \"direction\": \"[lindex "$properties_of_cond($name_id)" 2]\",\n"\
-	    "            \"skip\":      [lindex "$properties_of_cond($name_id)" 3],\n"\
+		"            \"type\":      \"[lindex "$properties_of_cond($name_id)" 1]\",\n"
+		if {[lindex "$properties_of_cond($name_id)" 1] == "bulkCurrentElectric" ||
+		    [lindex "$properties_of_cond($name_id)" 1] == "bulkCurrentMagnetic"} {
+	append result \
+		"            \"direction\": \"[lindex "$properties_of_cond($name_id)" 2]\",\n"\
+	    "            \"skip\":      [lindex "$properties_of_cond($name_id)" 3],\n"
+		}
+	append result \
 		"            \"domain\": {\n"
 	    if {[lindex "$properties_of_cond($name_id)" 4] == 1} { ;# if use time
 	       append result \
@@ -573,10 +515,10 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 	    "                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 6],\n"
 			if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
 					append result \
-			"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
+		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
 			} else {
 				append result \
-			"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
+		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
 		}
 	}
 	    if {[lindex "$properties_of_cond($name_id)" 8] == 1} { ; # if use frequency
@@ -586,20 +528,20 @@ proc semba::writeOutputRequestBulkCurrentBAS { condition_name } {
 	    "                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)" 11],\n"
 	    if {[lindex "$properties_of_cond($name_id)" 13] == 0} {
 		append result \
-	"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]]\n"
+		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]]\n"
 	    } else {
 		append result \
-	"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]],\n"
-	"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\"\n"
+		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]],\n"
+		"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\"\n"
 	    }
 	}
 
 		append result \
-	"            },\n"\
-	"            \"elemIds\": \[\n"\
-	"                [join $elements_of_cond($name_id) ",\n                "]\n"\
-	"            \]\n"\
-	"        }"
+		"            },\n"\
+		"            \"elemIds\": \[\n"\
+		"                [join $elements_of_cond($name_id) ",\n                "]\n"\
+		"            \]\n"\
+		"        }"
 	    if {$semba::writtenOutputRequests != $semba::nOutputRequests} {
 	       append result ",\n"
 	    } else {

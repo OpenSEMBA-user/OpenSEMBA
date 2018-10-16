@@ -41,9 +41,27 @@ public:
     Box();
     Box(const std::pair<CVecTD,CVecTD>& boundsMinMax);
     Box(const CVecTD& min, const CVecTD& max);
+
+	template <typename T2>
+	Box<T,D>(const Box<T2, D>& rhs) {
+		for (size_t i = 0; i < D; ++i) {
+			min_(i) = (T)rhs.getMin()(i);
+			max_(i) = (T)rhs.getMax()(i);
+		}
+	}
+
     virtual ~Box();
 
     Box<T,D>& operator= (const Box<T,D>& lBoxMin);
+	
+	template <typename T2>
+	Box<T,D>& operator= (const Box<T2, D>& rhs) {
+		for (size_t i = 0; i < D; ++i) {
+			min_(i) = (T) rhs.getMin()(i);
+			max_(i) = (T) rhs.getMax()(i);
+		}
+		return *this;
+	}
 
     bool operator>(const Box<T,D>& lBoxMin) const;
     bool operator<(const Box<T,D>& lBoxMax) const;

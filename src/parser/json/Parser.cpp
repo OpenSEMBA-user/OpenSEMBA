@@ -328,14 +328,18 @@ Geometry::Element::Group<> Parser::boxToElemGroup(
         const std::string& line) {
     Geometry::BoxR3 box = strToBox(line);
     if (box.isVolume()) {
-        Geometry::HexR8* hex =
-            new Geometry::HexR8(mesh.coords(), Geometry::ElemId(0), box);
-        return mesh.elems().addId(hex);
+        return mesh.elems().addId(
+			new Geometry::HexR8(mesh.coords(), Geometry::ElemId(0), box));
     } else if (box.isSurface()) {
-        Geometry::QuaR4* qua =
-            new Geometry::QuaR4(mesh.coords(), Geometry::ElemId(0), box);
-        return mesh.elems().addId(qua);
-    } else {
+        return mesh.elems().addId(
+			new Geometry::QuaR4(mesh.coords(), Geometry::ElemId(0), box));
+    } else if (box.isLine()) {
+		return mesh.elems().addId(
+			new Geometry::LinR2(mesh.coords(), Geometry::ElemId(0), box));
+	} else if (box.isPoint()) {
+		return mesh.elems().addId(
+			new Geometry::NodR(mesh.coords(), Geometry::ElemId(0), box));
+	} else {
         throw std::logic_error(
                 "Box to Elem Group only works for volumes and surfaces");
     }
@@ -344,70 +348,60 @@ Geometry::Element::Group<> Parser::boxToElemGroup(
 OutputRequest::Base* Parser::readOutputRequest(
             Geometry::Mesh::Geometric& mesh, const json& j) {
 
-    std::string gidOutputTypeStr = j.at("gidOutputType").get<std::string>();
-    const OutputType gidOutputType = strToGiDOutputType(gidOutputTypeStr);
-
     std::string name = j.at("name").get<std::string>();
     OutputRequest::Base::Type type =
             strToOutputType(j.at("type").get<std::string>());
+    std::string gidOutputType = j.at("gidOutputType").get<std::string>();
     OutputRequest::Domain domain = readDomain(j.at("domain").get<json>());
 
-    switch (gidOutputType) {
-    case Parser::outRqOnPoint:
-        return new OutRqNode(domain, type, name,
-                readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()));
-    case Parser::outRqOnLine:
-        return new OutRqLine(domain, type, name,
-        		readElemIdsAsGroupOf<Geometry::Lin>(
-        				mesh, j.at("elemIds").get<json>()));
-    case Parser::outRqOnSurface:
-        return new OutRqSurface(domain, type, name,
+	if (type == OutputRequest::Base::Type::bulkCurrentElectric ||
+		type == OutputRequest::Base::Type::bulkCurrentMagnetic) {
+		if (gidOutputType.compare("OutRq_on_layer") == 0) {
+			return new OutputRequest::BulkCurrent(domain, name,
+				boxToElemGroup(mesh, j.at("box").get<std::string>()),
+				strToCartesianAxis(j.at("direction").get<std::string>()),
+				j.at("skip").get<int>());
+		} else if (gidOutputType.compare("OutRq_on_point") == 0) {
+			return new OutputRequest::BulkCurrent(domain, name,
+				readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()),
+				strToCartesianAxis(j.at("direction").get<std::string>()),
+				j.at("skip").get<int>());
+		} else {
+			return new OutputRequest::BulkCurrent(domain, name,
+				readElemIdsAsGroupOf<const Geometry::Elem>(
+					mesh, j.at("elemIds").get<json>()),
+				strToCartesianAxis(j.at("direction").get<std::string>()),
+				j.at("skip").get<int>());
+		}
+	}
+
+	if (gidOutputType.compare("OutRq_on_point") == 0) {
+		return new OutRqElemR(domain, type, name,
+			readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()));
+	} else if (gidOutputType.compare("OutRq_on_line") == 0) {
+		return new OutRqElemR(domain, type, name,
+			readElemIdsAsGroupOf<Geometry::Lin>(
+				mesh, j.at("elemIds").get<json>()));
+	} else if (gidOutputType.compare("OutRq_on_surface") == 0) {
+		return new OutRqElemR(domain, type, name,
         		readElemIdsAsGroupOf<Geometry::Surf>(
                 		mesh, j.at("elemIds").get<json>()));
-    case Parser::outRqOnLayer:
-    {
-        Geometry::Element::Group<> elems =
-                boxToElemGroup(mesh, j.at("box").get<std::string>());
-        if (elems.sizeOf<Geometry::Vol>()) {
-            return new OutputRequest::OutputRequest<Geometry::Vol>(
-                    domain, type, name, elems.getOf<Geometry::Vol>());
-        } else if (elems.sizeOf<Geometry::Surf>()) {
-            return new OutputRequest::OutputRequest<Geometry::Surf>(
-                    domain, type, name, elems.getOf<Geometry::Surf>());
-        } else {
-            throw std::logic_error(
-                    "Layer for OutRqOnLayer must be volume or surface");
-        }
-    }
-    case Parser::bulkCurrentOnSurface:
-    {
-        return new OutputRequest::BulkCurrent(domain, name,
-        		readElemIdsAsGroupOf<const Geometry::Elem>(
-        				mesh, j.at("elemIds").get<json>()),
-                strToCartesianAxis(j.at("direction").get<std::string>()),
-                j.at("skip").get<int>());
-    }
-    case Parser::bulkCurrentOnLayer:
-        return new OutputRequest::BulkCurrent(domain, name,
-                boxToElemGroup(mesh, j.at("box").get<std::string>()),
-                strToCartesianAxis(j.at("direction").get<std::string>()),
-                j.at("skip").get<int>());
-
-    case Parser::farField:
-    {
-        static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
-        return new OutputRequest::FarField(domain, name,
-                boxToElemGroup(mesh, j.at("box").get<std::string>()),
-                j.at("initialTheta").get<double>() * degToRad,
-                j.at("finalTheta").get<double>()   * degToRad,
-                j.at("stepTheta").get<double>()    * degToRad,
-                j.at("initialPhi").get<double>()   * degToRad,
-                j.at("finalPhi").get<double>()     * degToRad,
-                j.at("stepPhi").get<double>()      * degToRad);
-    }
-    default:
+	} else if (gidOutputType.compare("OutRq_on_layer") == 0) {
+        return new OutRqElemR(domain, type, name, 
+			boxToElemGroup(mesh, j.at("box").get<std::string>()));
+	} else if (gidOutputType.compare("Far_field") == 0) {
+		static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
+		return new OutputRequest::FarField(domain, name,
+			boxToElemGroup(mesh, j.at("box").get<std::string>()),
+			j.at("initialTheta").get<double>() * degToRad,
+			j.at("finalTheta").get<double>()   * degToRad,
+			j.at("stepTheta").get<double>()    * degToRad,
+			j.at("initialPhi").get<double>()   * degToRad,
+			j.at("finalPhi").get<double>()     * degToRad,
+			j.at("stepPhi").get<double>()      * degToRad);
+    } else {
         throw std::logic_error(
-                "Unrecognized GiD Output request type: " + gidOutputTypeStr);
+                "Unrecognized GiD Output request type: " + gidOutputType);
     }
 }
 
@@ -573,9 +567,11 @@ Source::PlaneWave* Parser::readPlanewave(
 
     Source::Magnitude::Magnitude* magnitude =
             readMagnitude(j.at("magnitude").get<json>());
-    Geometry::Element::Group<Geometry::Vol> elems =
-            boxToElemGroup( mesh, j.at("layerBox").get<std::string>() );
-
+	auto elems = boxToElemGroup(mesh, j.at("layerBox").get<std::string>());
+	if (elems.sizeOf<Geometry::Vol>() == 0) {
+		throw std::logic_error("Plane wave layer must define a volume");
+	}
+    
     std::string definitionMode = j.at("definitionMode").get<std::string>();
     if (definitionMode.compare("by_vectors")==0) {
         Math::CVecR3 dir =
@@ -660,13 +656,13 @@ OutputRequest::Base::Type Parser::strToOutputType(std::string str) {
     } else if (str.compare("magneticFieldNormals")==0) {
         return OutputRequest::Base::magneticFieldNormals;
     } else if (str.compare("current")==0) {
-        return OutputRequest::Base::current;
-    } else if (str.compare("voltage")==0) {
-        return OutputRequest::Base::voltage;
+        return OutputRequest::Base::current;;
     } else if (str.compare("bulkCurrentElectric")==0) {
         return OutputRequest::Base::bulkCurrentElectric;
     } else if (str.compare("bulkCurrentMagnetic")==0) {
         return OutputRequest::Base::bulkCurrentMagnetic;
+	} else if (str.compare("surfaceCurrentDensity") == 0) {
+		return OutputRequest::Base::surfaceCurrentDensity;
     } else if (str.compare("farField")==0) {
         return OutputRequest::Base::electric;
     } else {
@@ -804,27 +800,6 @@ Source::OnLine::Hardness Parser::strToNodalHardness(std::string str) {
         return Source::OnLine::hard;
     } else {
         throw std::logic_error("Unrecognized nodal hardness: " + str);
-    }
-}
-
-Parser::OutputType Parser::strToGiDOutputType(std::string str) {
-    str = trim(str);
-    if (str.compare("OutRq_on_point")==0) {
-        return Parser::outRqOnPoint;
-    } else if (str.compare("OutRq_on_line")==0) {
-        return Parser::outRqOnLine;
-    } else if (str.compare("OutRq_on_surface")==0) {
-        return Parser::outRqOnSurface;
-    } else if (str.compare("OutRq_on_layer")==0) {
-        return Parser::outRqOnLayer;
-    } else if (str.compare("Bulk_current_on_surface")==0) {
-        return Parser::bulkCurrentOnSurface;
-    } else if (str.compare("Bulk_current_on_layer")==0) {
-        return Parser::bulkCurrentOnLayer;
-    } else if (str.compare("Far_field")==0) {
-        return Parser::farField;
-    } else {
-        throw std::logic_error("Unrecognized label " + str);
     }
 }
 

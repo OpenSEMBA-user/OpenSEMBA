@@ -44,21 +44,11 @@ public:
         magnetic,
         electricFieldNormals,
         magneticFieldNormals,
+		surfaceCurrentDensity,
         bulkCurrentElectric,
         bulkCurrentMagnetic,
-        powerDensity,
-        planeWaveDecomposition,
         current,
-        voltage,
-        power,
-        sParameter,
-        zParameter,
-        yParameter,
-        theveninVoltageGenerator,
-        nortonCurrentGenerator,
-        couplingCrossSection,
-        poyntingVector,
-        energy,
+		voltage,
         electricFarField
     };
 
@@ -101,8 +91,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(OutputRequest<T>);
 
-    bool isSimilar(const SEMBA::OutputRequest::Base& rhs) const;
-
     Geometry::Element::Group<const Geometry::Elem> elems() const {
         return *this;
     }
@@ -134,10 +122,8 @@ public:
 
 namespace SEMBA {
 
-typedef OutputRequest::OutputRequest<Geometry::Nod > OutRqNode;
-typedef OutputRequest::OutputRequest<Geometry::Lin > OutRqLine;
-typedef OutputRequest::OutputRequest<Geometry::Surf> OutRqSurface;
-typedef OutputRequest::OutputRequest<Geometry::Vol > OutRqVolume;
+typedef OutputRequest::OutputRequest<Geometry::ElemR> OutRqElemR;
+typedef OutputRequest::OutputRequest<Geometry::ElemI> OutRqElemI;
 
 } /* namespace SEMBA */
 
