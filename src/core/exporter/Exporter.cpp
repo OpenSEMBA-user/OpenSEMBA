@@ -130,8 +130,31 @@ std::string Exporter::getBoundaryName(
         boundName =
             boundType->castTo<PhysicalModel::PhysicalModel>()->getName();
     }
-    std::stringstream name;
-    name << boundName + "@Boundary" << i << j;
+    std::string dir;
+	switch (i) {
+	case 0:
+		dir = "X";
+		break;
+	case 1:
+		dir = "Y";
+		break;
+	case 2:
+	default:
+		dir = "Z";
+		break;
+	}
+	std::string pos;
+	switch (j) {
+	case 0:
+		pos = "L";
+		break;
+	case 1:
+	default:
+		pos = "U";
+		break;
+	}
+	std::stringstream name;
+    name << boundName + "@Boundary_" << dir << "_" << pos;
     return name.str();
 }
 
