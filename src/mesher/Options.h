@@ -46,8 +46,6 @@ namespace Mesher {
 class Options {
 public:
     enum class Mesher {
-        openfoam,
-        conformalMesher,
         zMesher,
         dMesher,
         none
@@ -65,12 +63,9 @@ public:
     void set(const Solver::Settings& opts);
 
     Mesher getMesher() const;
-    virtual const Math::CVecR3& getLocationInMesh() const;
-    virtual bool isLocationInMeshSet() const;
     Mode getMode() const;
     bool isStructured() const;
     bool isRelaxed() const;
-    bool isBruteForceVolumes() const;
     Math::Real getForbiddenLength() const;
     Math::Real getScalingFactor() const;
     const std::string& getMeshOutputName() const;
@@ -92,11 +87,8 @@ public:
     void setBoundTermination(const std::size_t d,
                              const std::size_t p,
                              const PhysicalModel::Bound::Bound*);
-    void setBruteForceVolumes(bool bruteForceVolumes);
     void setForbiddenLength(const Math::Real& edgeFraction);
     void setGridStep(const Math::CVecR3& gridStep);
-    void setLocationInMesh(const Math::CVecR3& locationInMesh);
-    void setLocationInMeshSet(bool locationInMeshSet);
     void setMesher(Mesher mesher);
     void setMode(Mode mode);
     void setPostmshExport(bool postmshExport);
@@ -119,11 +111,8 @@ private:
     Mesher mesher_;
     Math::Real scalingFactor_;
     Mode mode_;
-    bool bruteForceVolumes_;
     Math::Real forbiddenLength_;
     std::string scaleFactorValue_;
-    bool locationInMeshSet_;
-    Math::CVecR3 locationInMesh_;
     std::string outputName_;
 
     bool vtkExport_;

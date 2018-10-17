@@ -32,10 +32,8 @@ namespace SEMBA {
 namespace Mesher {
 
 Options::Options() {
-    locationInMeshSet_ = false;
     mesher_ = Mesher::zMesher;
     mode_ = Mode::conformal;
-    bruteForceVolumes_ = false;
     scalingFactor_ = 1.0;
     postmshExport_ = true;
     vtkExport_ = false;
@@ -48,13 +46,6 @@ Options::Options() {
 void Options::printInfo() const {
     std::cout << " --- Meshing parameters info --- " << std::endl;
     std::cout << "Mesher: " << toStr(mesher_) << std::endl;
-    if (mesher_ == Mesher::openfoam) {
-        std::cout << " Using openfoam mesher." << std::endl;
-        if (locationInMeshSet_) {
-            std::cout << " Location in mesh:   "
-                << locationInMesh_ << std::endl;
-        }
-    }
     if (isStructured()) {
         std::cout << " Generating structured mesh." << std::endl;
     }
@@ -99,18 +90,6 @@ std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
     }
     return "Undefined";
 
-}
-
-const Math::CVecR3& Options::getLocationInMesh() const {
-    return locationInMesh_;
-}
-
-bool Options::isLocationInMeshSet() const {
-    return locationInMeshSet_;
-}
-
-bool Options::isBruteForceVolumes() const {
-    return bruteForceVolumes_;
 }
 
 Options::Mode Options::getMode() const {
@@ -175,9 +154,6 @@ void Options::set(const Solver::Settings& opts) {
     if (           opts.existsName("mesher")) {
         setMesher(strToMesher(opts("mesher").getString()));
     }
-    if (opts.existsName(          "bruteForceVolumes")) {
-        setBruteForceVolumes(opts("bruteForceVolumes").getBool());
-    }
     if (opts.existsName(  "vtkExport")) {
         setVtkExport(opts("vtkExport").getBool());
     }
@@ -223,19 +199,6 @@ void Options::set(const Solver::Settings& opts) {
         setBoundTermination(Math::Constants::z, Math::Constants::L,
                             strToBoundType(opts("lowerZBound").getString()));
     }
-}
-
-void Options::setBruteForceVolumes(bool bruteForceVolumes) {
-    bruteForceVolumes_ = bruteForceVolumes;
-}
-
-void Options::setLocationInMesh(const Math::CVecR3& locationInMesh) {
-    locationInMeshSet_ = true;
-    locationInMesh_ = locationInMesh;
-}
-
-void Options::setLocationInMeshSet(bool locationInMeshSet) {
-    locationInMeshSet_ = locationInMeshSet;
 }
 
 void Options::setMesher(Mesher mesher) {
@@ -312,14 +275,10 @@ bool Options::isGridStepSet() const {
 }
 
 Options::Mesher Options::strToMesher(std::string str) {
-    if (str.compare("ConformalMesher")==0) {
-        return Mesher::conformalMesher;
-    } else if (str.compare("ZMesher")==0) {
+    if (str.compare("ZMesher")==0) {
         return Mesher::zMesher;
     } else if (str.compare("DMesheR")==0) {
         return Mesher::dMesher;
-    } else if (str.compare("OpenFOAM")==0) {
-        return Mesher::openfoam;
     } else if (str.compare("None")==0) {
         return Mesher::none;
     } else {
@@ -390,10 +349,6 @@ std::string Options::toStr(const Options::Mesher mesher) {
         return "ZMesher";
     case Options::Mesher::dMesher:
         return "DMesheR";
-    case Options::Mesher::conformalMesher:
-        return "ConformalMesher";
-    case Options::Mesher::openfoam:
-        return "OpenFOAM";
     case Options::Mesher::none:
     default:
         return "None";

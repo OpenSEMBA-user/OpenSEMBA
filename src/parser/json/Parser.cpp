@@ -127,7 +127,13 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
             std::stringstream value;
             if (it->type() == json::value_t::string) {
                 value << it->get<std::string>();
-            } else {
+            } else if (it->type() == json::value_t::boolean) {
+				if (*it) {
+					value << 1;
+				} else {
+					value << 0;
+				}
+			} else {
                 value << *it;
             }
             aux.setString(value.str());
@@ -490,7 +496,7 @@ PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(
                         it->at("elecCond").get<double>() ));
     }
 
-    if (mat.at("useSembaVectorFitting").get<int>() == 1) {
+    if (mat.at("useSembaVectorFitting").get<bool>()) {
         PhysicalModel::Surface::Multilayer::FittingOptions opts(
                 std::make_pair(mat.at("freqMin").get<double>(),
                         mat.at("freqMax").get<double>()),

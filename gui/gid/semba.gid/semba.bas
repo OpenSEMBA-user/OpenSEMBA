@@ -7,7 +7,7 @@
 *# ----------------------------------------------------------
     "solverOptions": {
         "solver": "*GenData(Solver)",
-        "runSimulation": *GenData(Run_simulation),
+        "runSimulation": *tcl(semba::intToBool *GenData(Run_simulation)),
 *if(strcasecmp(GenData(Ending),"Final_time")==0)
         "finalTime": *GenData(Final_time),
 *else
@@ -16,8 +16,8 @@
         "timeStep": *GenData(Time_step),
         "cfl": *GenData(CFL),
         "defaultSamplingPeriod": *GenData(Default_sampling_period),
-        "forceRestarting": *GenData(Force_restarting),
-        "resumeSimulation": *GenData(Resume_simulation),
+        "forceRestarting": *tcl(semba::intToBool *GenData(Force_restarting)),
+        "resumeSimulation": *tcl(semba::intToBool *GenData(Resume_simulation)),
         "flush": *GenData(Flush),
         "geometryScalingFactor": *GenData(scaling_factor),
 *if(strcmp(GenData(Additional_arguments),"")!=0)
@@ -27,9 +27,9 @@
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
         "compositesModel": "*GenData(Composites_model)",
         "wiresFlavor": "*GenData(Wires_flavor)",
-        "mtln": *GenData(MTLN),
+        "mtln": *tcl(semba::intToBool *GenData(MTLN)),
         "minDistanceWires": *GenData(Min_distance_wires),
-        "mapVTK": *GenData(Map_VTK),
+        "mapVTK": *tcl(semba::intToBool *GenData(Map_VTK)),
         "mesherOptions": {
             "lowerXBound": "*GenData(Lower_x_bound)",
             "lowerYBound": "*GenData(Lower_y_bound)",
@@ -38,11 +38,11 @@
             "upperYBound": "*GenData(Upper_y_bound)",          
             "upperZBound": "*GenData(Upper_z_bound)",
             "mesher": "*GenData(Mesher)",
-            "vtkExport": *GenData(VTK_Export),
-            "postmshExport": *GenData(postmsh_Export),
+            "vtkExport": *tcl(semba::intToBool *GenData(VTK_Export)),
+            "postmshExport": *tcl(semba::intToBool *GenData(postmsh_Export)),
             "mode": "*GenData(Mode)",
             "forbiddenLength": *GenData(Forbidden_length),
-            "slantedWires": *GenData(Slanted),
+            "slantedWires": *tcl(semba::intToBool *GenData(Slanted)),
             "slantedThreshold": *GenData(Segments_filter_threshold)
         }
 *elseif(strcasecmp(GenData(Solver),"cudg3d")==0)
@@ -167,7 +167,7 @@
             "freqMin": *matProp(freq_min),
             "freqMax": *matProp(freq_max),
             "numberOfPoles": *matProp(number_Of_Poles),
-            "useSembaVectorFitting": *matProp(Use_semba_vector_fitting)
+            "useSembaVectorFitting": *tcl(semba::intToBool *matProp(Use_semba_vector_fitting))
 *elseif(strcmp(Matprop(TypeId),"Anisotropic")==0)
             "materialType": "*MatProp(TypeId)"
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
