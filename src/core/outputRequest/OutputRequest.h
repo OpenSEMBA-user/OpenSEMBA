@@ -33,8 +33,7 @@
 namespace SEMBA {
 namespace OutputRequest {
 
-class Base : public virtual Domain,
-             public virtual Class::Class,
+class Base : public virtual Class::Class,
              public virtual Class::Cloneable,
              public virtual Class::Shareable,
              public virtual Class::Printable {
@@ -53,7 +52,7 @@ public:
     };
 
     Base();
-    Base(const Type outputType, const std::string& name);
+    Base(const Type outputType, const std::string& name, const Domain& domain);
     Base(const Base& rhs);
     virtual ~Base();
 
@@ -65,14 +64,16 @@ public:
             const Geometry::Element::Group<const Geometry::Elem>&) = 0;
 
     const std::string& getName() const;
-    Type getOutputType() const;
-    Domain getDomain() const;
+    Type getType() const;
+    const Domain& domain() const;
+	Domain& domain();
 
     virtual void printInfo() const = 0;
 
 private:
     std::string name_;
-    Type outputType_;
+    Type type_;
+	Domain domain_;
 
     std::string getTypeStr() const;
 };
@@ -86,6 +87,7 @@ public:
                   const Type outputType,
                   const std::string& name,
                   const Geometry::Element::Group<T>& elems);
+	OutputRequest(const OutputRequest::Base& rhs);
     OutputRequest(const OutputRequest& rhs);
     virtual ~OutputRequest();
 
@@ -122,8 +124,7 @@ public:
 
 namespace SEMBA {
 
-typedef OutputRequest::OutputRequest<Geometry::ElemR> OutRqElemR;
-typedef OutputRequest::OutputRequest<Geometry::ElemI> OutRqElemI;
+typedef OutputRequest::OutputRequest<Geometry::Elem> OutRqElem;
 
 } /* namespace SEMBA */
 

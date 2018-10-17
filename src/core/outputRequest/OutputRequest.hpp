@@ -29,8 +29,7 @@ OutputRequest<T>::OutputRequest(const Domain& domain,
                                 const Type type,
                                 const std::string& name,
                                 const Geometry::Element::Group<T>& elems)
-:   Domain(domain),
-    Base(type, name),
+:   Base(type, name, domain),
     Geometry::Element::Group<const T>(elems) {
     if (type == bulkCurrentElectric || type == bulkCurrentMagnetic) {
         if (this->getMatId(MatId(0)).size() != this->size()) {
@@ -41,10 +40,14 @@ OutputRequest<T>::OutputRequest(const Domain& domain,
 
 template<class T>
 OutputRequest<T>::OutputRequest(const OutputRequest<T>& rhs)
-:   Domain(rhs),
-    Base(rhs),
+:   Base(rhs),
     Geometry::Element::Group<const T>(rhs) {
 
+}
+
+template<class T>
+OutputRequest<T>::OutputRequest(const OutputRequest::Base& rhs)
+	: Base(rhs) {
 }
 
 template<class T>

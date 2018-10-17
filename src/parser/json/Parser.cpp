@@ -376,18 +376,18 @@ OutputRequest::Base* Parser::readOutputRequest(
 	}
 
 	if (gidOutputType.compare("OutRq_on_point") == 0) {
-		return new OutRqElemR(domain, type, name,
+		return new OutRqElem(domain, type, name,
 			readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()));
 	} else if (gidOutputType.compare("OutRq_on_line") == 0) {
-		return new OutRqElemR(domain, type, name,
+		return new OutRqElem(domain, type, name,
 			readElemIdsAsGroupOf<Geometry::Lin>(
 				mesh, j.at("elemIds").get<json>()));
 	} else if (gidOutputType.compare("OutRq_on_surface") == 0) {
-		return new OutRqElemR(domain, type, name,
+		return new OutRqElem(domain, type, name,
         		readElemIdsAsGroupOf<Geometry::Surf>(
                 		mesh, j.at("elemIds").get<json>()));
 	} else if (gidOutputType.compare("OutRq_on_layer") == 0) {
-        return new OutRqElemR(domain, type, name, 
+        return new OutRqElem(domain, type, name, 
 			boxToElemGroup(mesh, j.at("box").get<std::string>()));
 	} else if (gidOutputType.compare("Far_field") == 0) {
 		static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;

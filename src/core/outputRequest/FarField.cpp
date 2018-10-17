@@ -31,16 +31,14 @@ FarField::FarField(const Domain& domain,
                    const Math::Real sTh,
                    const Math::Real iPhi, const Math::Real fPhi,
                    const Math::Real sPhi)
-:   Domain(domain),
-    SEMBA::OutputRequest::Base(electricFarField, name),
+:   SEMBA::OutputRequest::Base(electricFarField, name, domain),
     Geometry::Element::Group<const Geometry::Vol>(elem) {
 
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }
 
 FarField::FarField(const FarField& rhs)
-:   Domain(rhs),
-    SEMBA::OutputRequest::Base(rhs),
+:   SEMBA::OutputRequest::Base(rhs),
     Geometry::Element::Group<const Geometry::Vol>(rhs) {
 
     initialTheta_ = rhs.initialTheta_;

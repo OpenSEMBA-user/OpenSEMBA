@@ -30,8 +30,7 @@ BulkCurrent::BulkCurrent(
         const Geometry::Element::Group<const Geometry::Elem>& elem,
         const Math::Constants::CartesianAxis& dir,
         const Math::UInt& skip)
-:   Domain(domain),
-    SEMBA::OutputRequest::Base(bulkCurrentElectric, name),
+:   SEMBA::OutputRequest::Base(bulkCurrentElectric, name, domain),
     Geometry::Element::Group<const Geometry::Elem>(elem) {
 
     dir_ = dir;
@@ -39,8 +38,7 @@ BulkCurrent::BulkCurrent(
 }
 
 BulkCurrent::BulkCurrent(const BulkCurrent& rhs)
-:   Domain(rhs),
-    SEMBA::OutputRequest::Base(rhs),
+:   SEMBA::OutputRequest::Base(rhs),
     Geometry::Element::Group<const Geometry::Elem>(rhs) {
 
     dir_ = rhs.dir_;

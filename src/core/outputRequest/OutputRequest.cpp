@@ -31,14 +31,17 @@ Base::Base() {
 }
 
 Base::Base(const Type outputType,
-           const std::string& name) {
+           const std::string& name,
+		   const Domain& domain) {
     name_ = name;
-    outputType_ = outputType;
+    type_ = outputType;
+	domain_ = domain;
 }
 
 Base::Base(const Base& rhs) {
     name_ = rhs.name_;
-    outputType_ = rhs.outputType_;
+    type_ = rhs.type_;
+	domain_ = rhs.domain_;
 }
 
 Base::~Base() {
@@ -49,22 +52,26 @@ const std::string& Base::getName() const {
     return name_;
 }
 
-Base::Type Base::getOutputType() const {
-    return outputType_;
+Base::Type Base::getType() const {
+    return type_;
 }
 
-Domain Base::getDomain() const {
-    return *this;
+const Domain& Base::domain() const {
+    return domain_;
+}
+
+Domain& Base::domain() {
+	return domain_;
 }
 
 void Base::printInfo() const {
     std::cout<< "Name: " << name_.c_str() << std::endl;
     std::cout<< "Type: " << getTypeStr() << std::endl;
-    Domain::printInfo();
+    domain_.printInfo();
 }
 
 std::string Base::getTypeStr() const {
-    switch (outputType_) {
+    switch (type_) {
     case electric:
         return "Electric field";
     case magnetic:
