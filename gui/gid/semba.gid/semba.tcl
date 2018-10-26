@@ -509,30 +509,30 @@ proc semba::writeOutputRequestBAS { condition_name } {
 		}
 	append result \
 		"            \"domain\": {\n"
-	    if {[lindex "$properties_of_cond($name_id)" 4] == 1} { ;# if use time
+	    if {[lindex "$properties_of_cond($name_id)" 5] == 1} { ;# if use time
 	       append result \
-	    "                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 5],\n"\
-	    "                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 6],\n"
-			if {[lindex "$properties_of_cond($name_id)" 8] == 0} {
+	    "                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 6],\n"\
+	    "                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 7],\n"
+			if {[lindex "$properties_of_cond($name_id)" 9] == 0} {
 					append result \
-		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7]\n"
+		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 8]\n"
 			} else {
 				append result \
-		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 7],\n"           
+		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 8],\n"           
 		}
 	}
-	    if {[lindex "$properties_of_cond($name_id)" 8] == 1} { ; # if use frequency
+	    if {[lindex "$properties_of_cond($name_id)" 9] == 1} { ; # if use frequency
 	       append result \
-	    "                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)"  9],\n"\
-	    "                \"finalFrequency\":    [lindex "$properties_of_cond($name_id)" 10],\n"\
-	    "                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)" 11],\n"
-	    if {[lindex "$properties_of_cond($name_id)" 13] == 0} {
+	    "                \"initialFrequency\":  [lindex "$properties_of_cond($name_id)" 10],\n"\
+	    "                \"finalFrequency\":    [lindex "$properties_of_cond($name_id)" 11],\n"\
+	    "                \"frequencyStep\":     [lindex "$properties_of_cond($name_id)" 12],\n"
+	    if {[lindex "$properties_of_cond($name_id)" 14] == 0} {
 		append result \
-		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]]\n"
+		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 13]]\n"
 	    } else {
 		append result \
-		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 12]],\n"
-		"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 14]\"\n"
+		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 13]],\n"
+		"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 15]\"\n"
 	    }
 	}
 

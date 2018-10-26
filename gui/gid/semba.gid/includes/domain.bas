@@ -1,4 +1,10 @@
             "domain": {
+*if(strcmp(cond(Time),"0")==0)
+*if(strcmp(cond(Frequency),"0")==0)       
+*WarningBox "Domain must be Time and/or Frequency"
+        "_error": "invalidDomain"
+*endif
+*endif
 *if(strcmp(cond(Time),"1")==0)
                 "initialTime": *cond(Initial_time),
                 "finalTime": *cond(Final_time),

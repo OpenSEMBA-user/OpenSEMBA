@@ -50,7 +50,7 @@
         "useLTS": *GenData(Use_LTS),
         "upwinding": *GenData(Upwinding)
 *else
-*WarningBox Unrecognized solver
+*WarningBox "Unrecognized solver"
         "_error": "invalidSolver"
 *endif
     },
