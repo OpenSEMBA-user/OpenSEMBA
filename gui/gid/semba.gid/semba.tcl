@@ -59,7 +59,7 @@ proc InitGIDProject { dir } {
     package require treectrl
     package require math
     package require json::write
-        
+	
     # Modifies menus available to the user.
     semba::AddToolbar
 
@@ -513,11 +513,11 @@ proc semba::writeOutputRequestBAS { condition_name } {
 	       append result \
 	    "                \"initialTime\":    [lindex "$properties_of_cond($name_id)" 6],\n"\
 	    "                \"finalTime\":      [lindex "$properties_of_cond($name_id)" 7],\n"
-			if {[lindex "$properties_of_cond($name_id)" 9] == 0} {
-					append result \
+		        if {[lindex "$properties_of_cond($name_id)" 9] == 0} {
+		                        append result \
 		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 8]\n"
-			} else {
-				append result \
+		        } else {
+		                append result \
 		"                \"samplingPeriod\": [lindex "$properties_of_cond($name_id)" 8],\n"           
 		}
 	}
@@ -531,8 +531,8 @@ proc semba::writeOutputRequestBAS { condition_name } {
 		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 13]]\n"
 	    } else {
 		append result \
-		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 13]],\n"
-		"                \"transferFunctionFile\": \"[lindex "$properties_of_cond($name_id)" 15]\"\n"
+		"                \"logFrequencySweep\": [semba::intToBool [lindex "$properties_of_cond($name_id)" 13]],\n"\
+		"                \"transferFunctionFile\": \"[lindex $properties_of_cond($name_id) 15]\"\n"
 	    }
 	}
 

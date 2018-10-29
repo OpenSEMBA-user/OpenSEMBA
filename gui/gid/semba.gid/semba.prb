@@ -91,15 +91,13 @@ DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length, #CURRENT#)
 QUESTION: Forbidden_length
 VALUE: 0.25
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
-
-Title: Wires
-QUESTION: Slanted#CB#(0,1)
+QUESTION: Slanted_wires#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
 DEPENDENCIES: (0, HIDE,    Segments_filter_threshold, #CURRENT#)
 DEPENDENCIES: (1, RESTORE, Segments_filter_threshold, #CURRENT#, RESTORE, Wires_flavor, guiffaut)
 QUESTION: Segments_filter_threshold
-VALUE: 1.0
+VALUE: 0.25
 HELP: Sets the allowed minimum relative size for the slanted wire segments (0.0 to allow all segments).
 
 Title: Geometry

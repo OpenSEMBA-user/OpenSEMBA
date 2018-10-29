@@ -248,6 +248,8 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -304,6 +306,8 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -363,6 +367,8 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -422,6 +428,8 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -487,6 +495,8 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
