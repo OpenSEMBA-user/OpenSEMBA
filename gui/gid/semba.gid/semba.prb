@@ -83,7 +83,7 @@ QUESTION: postmsh_Export#CB#(0,1)
 VALUE: 1
 HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
-VALUE: Structured
+VALUE: Relaxed
 DEPENDENCIES: (Structured, HIDE,    Forbidden_length, #CURRENT#)
 DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length, #CURRENT#)
 DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length, #CURRENT#)

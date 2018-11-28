@@ -163,10 +163,10 @@ Question: Shape#CB#(Coaxial)
 VALUE: Coaxial
 Question: Mode#CB#(Voltage,Current)
 VALUE: Voltage
-Question: Origin
-Value: 0
-TKWIDGET: GidUtils::TkwidgetPickPoint
-Question: Inner_radius
+QUESTION: Origin
+VALUE: 0
+TKWIDGET: GidUtils::TkwidgetPickPointOrNode
+QUESTION: Inner_radius
 Value: 0.0
 Question: Outer_radius
 Value: 0.0
