@@ -41,19 +41,23 @@ VALUE: 0
 HELP: Minutes between data flush of restarting fields. Necessary to resume a stopped problem. A 0 means no flushing.
 
 TITLE: ugrfdtd
-QUESTION: Composites_model#CB#(MIBC,SGBC)
+#QUESTION: Composites_model#CB#(MIBC,SGBC)
+QUESTION: Composites_model#CB#(MIBC)
 VALUE: MIBC
-QUESTION: Wires_flavor#CB#(holland,berenger,guiffaut)
+#QUESTION: Wires_flavor#CB#(holland,berenger,guiffaut)
+QUESTION: Wires_flavor#CB#(holland)
 VALUE: holland
 DEPENDENCIES: (holland,  RESTORE, MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#, RESTORE, Slanted, 0)
-DEPENDENCIES: (berenger, RESTORE, MTLN, #CURRENT#, RESTORE, Min_distance_wires,#CURRENT#, RESTORE, Slanted, 0)
-DEPENDENCIES: (guiffaut, HIDE,    MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#)
+#DEPENDENCIES: (berenger, RESTORE, MTLN, #CURRENT#, RESTORE, Min_distance_wires,#CURRENT#, RESTORE, Slanted, 0)
+#DEPENDENCIES: (guiffaut, HIDE,    MTLN, #CURRENT#, HIDE,    Min_distance_wires,#CURRENT#)
 QUESTION: MTLN#CB#(0,1)
 VALUE: 0
 HELP: Different behavior. "holland": uses a pseudo-MTLN (no default). "berenger" uses a true MTLN (no default, should be enforced)
+STATE: HIDDEN
 QUESTION: Min_distance_wires
 VALUE: 0.5
 HELP: minimum distance among multi-wires (default 0.5)
+STATE: HIDDEN
 QUESTION: Map_VTK#CB#(0,1)
 VALUE: 0
 HELP: reates .VTK map of the PEC/wires/Surface geometry
@@ -72,33 +76,38 @@ VALUE:
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(ZMesher,DMesheR)
-VALUE: ZMesher
-DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE,    Forbidden_length, #CURRENT#)
+QUESTION: Mesher#CB#(DMesheR)
+VALUE: DMesheR
+#DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE,    Forbidden_length, #CURRENT#)
 DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,  RESTORE, Forbidden_length, #CURRENT#)
+STATE: HIDDEN
 QUESTION: VTK_Export#CB#(0,1)
 VALUE: 0
 HELP: Exports generated meshes in VTK format which can be visualized with external tools, e.g. Paraview. Useful for very large meshes.
 QUESTION: postmsh_Export#CB#(0,1)
 VALUE: 1
 HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
-QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
-VALUE: Relaxed
+QUESTION: Mode#CB#(Structured)
+VALUE: Structured
 DEPENDENCIES: (Structured, HIDE,    Forbidden_length, #CURRENT#)
-DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length, #CURRENT#)
-DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length, #CURRENT#)
-DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length, #CURRENT#)
+#DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length, #CURRENT#)
+#DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length, #CURRENT#)
+#DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length, #CURRENT#)
+STATE: HIDDEN
 QUESTION: Forbidden_length
-VALUE: 0.25
+VALUE: 1.0
+STATE: HIDDEN
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
 QUESTION: Slanted_wires#CB#(0,1)
 VALUE: 0
+STATE: HIDDEN
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
 DEPENDENCIES: (0, HIDE,    Segments_filter_threshold, #CURRENT#)
 DEPENDENCIES: (1, RESTORE, Segments_filter_threshold, #CURRENT#, RESTORE, Wires_flavor, guiffaut)
 QUESTION: Segments_filter_threshold
 VALUE: 0.25
 HELP: Sets the allowed minimum relative size for the slanted wire segments (0.0 to allow all segments).
+STATE: HIDDEN
 
 Title: Geometry
 QUESTION: model_units#CB#(m,cm,mm,nm,other)
@@ -145,4 +154,3 @@ DEPENDENCIES: (MUR2,     RESTORE,Lower_z_bound,#CURRENT#)
 END PROBLEM DATA
 INTERVAL DATA
 END INTERVAL DATA
-
