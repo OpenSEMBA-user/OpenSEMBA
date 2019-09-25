@@ -27,17 +27,26 @@ namespace PhysicalModel {
 namespace Volume {
 
 Classic::Classic(const Id matId,
-                             const std::string& name,
-                             const Math::Real relativePermittivity,
-                             const Math::Real relativePermeability,
-                             const Math::Real electricConductivity,
-                             const Math::Real magneticConductivity)
+                 const std::string& name,
+                 const Math::Real relativePermittivity,
+                 const Math::Real relativePermeability,
+                 const Math::Real electricConductivity,
+                 const Math::Real magneticConductivity)
 :   Identifiable<Id>(matId), 
     PhysicalModel(name) {
     rEps_ = relativePermittivity;
     rMu_ = relativePermeability;
     electricConductivity_ = electricConductivity;
     magneticConudctivity_ = magneticConductivity;
+    if (relativePermittivity< 1.0 ||
+        relativePermeability < 1.0 ||
+        electricConductivity < 0.0 ||
+        magneticConductivity < 0.0
+     ) {
+        std::cerr << std::endl << "WARNING: "
+            << "Material " << matId << ": " << name << " has wrong "
+            << "permittivity, permeability, or conductivity." << std::endl;
+    }
 }
 
 Classic::Classic(const Classic& rhs)
