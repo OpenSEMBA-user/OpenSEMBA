@@ -109,7 +109,7 @@ void LinearInterpolation<S, T>::initFromFile(
     iStream.open(file, std::ifstream::in);
     if (iStream.fail()) {
         throw std::ios_base::failure(std::string("File: ") + file +
-                                     std::string(" not exists"));
+                                     std::string(" does not exist"));
     }
 
     while (!iStream.eof()) {

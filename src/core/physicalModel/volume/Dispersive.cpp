@@ -51,12 +51,16 @@ Dispersive::Dispersive(const Id id,
 }
 
 Dispersive::Dispersive(const Id id,
-                                   const std::string& name,
-                                   const FileSystem::Project& file)
+                       const std::string& name,
+                       const FileSystem::Project& file)
 :   Identifiable<Id>(id),
     PhysicalModel(name) {
-    rEpsInfty_ = 1.0;
+	rEpsInfty_ = 1.0;
     rMuInfty_ = 1.0;
+	if (!file.canOpen()) {
+		throw std::ios_base::failure(std::string("File: ") + file +
+			std::string(" does not exist"));
+	}
     file_ = file;
 }
 
