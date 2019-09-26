@@ -202,7 +202,7 @@ MATERIAL: Connector_series_RLC
 	VALUE: 0.0
 	HELP: Connector self-inductance (Henrys/meter)
 	QUESTION: Capacitance
-	VALUE: 0.0
+	VALUE: 1E22
 	HELP: Wire capacitance (Farads/meter)
 	IMAGE: images/RLC_series.gif
 END MATERIAL
