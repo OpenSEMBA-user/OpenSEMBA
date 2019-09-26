@@ -236,8 +236,8 @@ VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
 STATE: HIDDEN
-DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -251,8 +251,9 @@ VALUE: 0
 DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
 DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 
 CONDITION: OutRq_on_line
@@ -294,8 +295,8 @@ VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
 STATE: HIDDEN
-DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -309,8 +310,9 @@ VALUE: 0
 DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
 DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 
 CONDITION: OutRq_on_surface
@@ -355,8 +357,8 @@ VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
 STATE: HIDDEN
-DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -370,8 +372,9 @@ VALUE: 0
 DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
 DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 
 CONDITION: OutRq_on_layer
@@ -416,8 +419,8 @@ VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
 STATE: HIDDEN
-DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -431,8 +434,9 @@ VALUE: 0
 DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
 DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 
 CONDITION: Far_field
@@ -483,8 +487,8 @@ VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
 STATE: HIDDEN
-DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+DEPENDENCIES:(1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES:(0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -498,8 +502,9 @@ VALUE: 0
 DEPENDENCIES:(0, HIDE, Transfer_function_file,#CURRENT#)
 DEPENDENCIES:(1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE:
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 
 # =====================================================================
