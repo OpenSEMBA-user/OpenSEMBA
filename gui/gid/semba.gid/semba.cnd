@@ -49,11 +49,11 @@ DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Ga
 DEPENDENCIES:(File,                HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
 QUESTION: Gaussian_spread
 VALUE: 2e-9
-HELP: Gaussian spread in seconds.
+HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
 QUESTION: Gaussian_delay
 VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
+#IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -74,11 +74,11 @@ DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Ga
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
 QUESTION: Gaussian_spread
 VALUE: 2e-9
-HELP: Gaussian spread in seconds.
+HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
 QUESTION: Gaussian_delay
 VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
+#IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -104,11 +104,11 @@ DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Ga
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
 QUESTION: Gaussian_spread
 VALUE: 2e-9
-HELP: Gaussian spread in seconds.
+HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
 QUESTION: Gaussian_delay
 VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
+#IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -141,11 +141,11 @@ DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Ga
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
 QUESTION: Gaussian_spread
 VALUE: 2e-9
-HELP: Gaussian spread in seconds.
+HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
 QUESTION: Gaussian_delay
 VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
+#IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -178,11 +178,11 @@ DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Ga
 DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
 QUESTION: Gaussian_spread
 VALUE: 2e-9
-HELP: Gaussian spread in seconds.
+HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
 QUESTION: Gaussian_delay
 VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
+#IMAGE: images/gauss_excitation.png
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
