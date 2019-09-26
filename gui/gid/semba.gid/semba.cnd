@@ -40,20 +40,18 @@ HELP: The polar angle (degrees) of the plane wave electric field vector.
 QUESTION: Polarization_beta
 VALUE: 0.0
 HELP: The azimuthal angle (degrees) of the plane wave electric field vector.
-
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Gaussian_derivative,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian,            RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(File,                HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
-#IMAGE: images/gauss_excitation.png
+DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -67,18 +65,17 @@ CONDMESHTYPE: over nodes
 QUESTION: type#CB#(voltage,current)
 VALUE: voltage
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Gaussian_derivative,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
-#IMAGE: images/gauss_excitation.png
+DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -97,18 +94,17 @@ VALUE: electricField
 QUESTION: Hardness#CB#(soft,hard)
 VALUE: soft
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Gaussian_derivative,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
-#IMAGE: images/gauss_excitation.png
+DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -133,19 +129,18 @@ VALUE: 0
 #Question: Electric_field_direction
 #VALUE: #WIDTH#(5)
 #TKWIDGET: GidUtils::TkwidgetGetVector3D
-##Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Gaussian_derivative,File)
+#Title: Magnitude
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
-#IMAGE: images/gauss_excitation.png
+DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -170,19 +165,18 @@ QUESTION: Inner_radius
 Value: 0.0
 Question: Outer_radius
 Value: 0.0
-##Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Gaussian_derivative,File)
+#Title: Magnitude
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES:(File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds. Spread must be smaller than 0.2 times the maximum frequency of interest.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds. Gaussian delay should be at least 5 times the spread.
-#IMAGE: images/gauss_excitation.png
+DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE:
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton

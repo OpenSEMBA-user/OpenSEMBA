@@ -88,7 +88,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     endif()
 endif()
 
-add_definitions(-DOPENSEMBA_VERSION="0.13")
+add_definitions(-DOPENSEMBA_VERSION="0.14")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
                     ${CMAKE_CURRENT_LIST_DIR}/../external/json/

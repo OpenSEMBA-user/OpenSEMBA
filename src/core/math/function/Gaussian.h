@@ -39,6 +39,8 @@ public:
     Gaussian(const Gaussian& rhs);
     virtual ~Gaussian();
 
+   static Gaussian buildFromMaximumFrequency(const Real  maximumFrequency);
+
     SEMBA_MATH_FUNCTION_DEFINE_CLONE(Gaussian);
 
     virtual Real operator()(const Real&) const;
@@ -58,6 +60,18 @@ private:
     Real delay_;
     Real freq_;
 };
+
+inline Gaussian Gaussian::buildFromMaximumFrequency(
+    const Real  maximumFrequency) {
+    if (maximumFrequency <= 0.0) {
+        throw std::logic_error(
+            "Maximum frequency must be a positive real number."
+        );
+    }
+    Real spread = 0.2 / maximumFrequency;
+    Real delay = 6.0 * spread;
+    return Gaussian(spread, delay);
+}
 
 } /* namespace Function */
 } /* namespace Math */

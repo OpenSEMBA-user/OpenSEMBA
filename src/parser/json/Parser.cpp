@@ -22,7 +22,7 @@
 #include "Parser.h"
 
 #include "math/function/Gaussian.h"
-#include "math/function/GaussianDerivative.h"
+#include "math/function/BandLimited.h"
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Triangle6.h"
@@ -475,7 +475,7 @@ Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
     res.add(readElemStrAs<Geometry::Tet4> (mG, lG, cG, elems.at("tetrahedra").get<json>()));
     res.add(readElemStrAs<Geometry::QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
     res.add(readElemStrAs<Geometry::Tri3> (mG, lG, cG, elems.at("triangle").get<json>()));
-    res.add(readElemStrAs<Geometry::LinR2> (mG, lG, cG, elems.at("line").get<json>()));
+    res.add(readElemStrAs<Geometry::LinR2>(mG, lG, cG, elems.at("line").get<json>()));
 
     return res;
 }
@@ -856,14 +856,18 @@ Source::Magnitude::Magnitude* Parser::readMagnitude(const json& j) {
        return new Source::Magnitude::Numerical(
                j.at("filename").get<std::string>());
     } else if (type.compare("Gaussian") == 0) {
-       return new Source::Magnitude::Magnitude(new Math::Function::Gaussian(
-                       j.at("gaussianSpread").get<double>(),
-                       j.at("gaussianDelay").get<double>()));
-    } else if (type.compare("Gaussian_derivative") == 0) {
-    	return new Source::Magnitude::Magnitude(
-    			new Math::Function::GaussianDerivative(
-    				   j.at("gaussianSpread").get<double>(),
-					   j.at("gaussianDelay").get<double>()));
+       return new Source::Magnitude::Magnitude(
+           new Math::Function::Gaussian(
+              Math::Function::Gaussian::buildFromMaximumFrequency(
+                  j.at("frequencyMaximum").get<double>()
+              )
+           )
+       );
+    } else if (type.compare("Band_limited") == 0) {
+        return new Source::Magnitude::Magnitude(
+            new Math::Function::BandLimited(
+                       j.at("frequencyMinimum").get<double>(),
+                       j.at("frequencyMaximum").get<double>()));
     } else {
         throw std::logic_error(
             "Unable to recognize magnitude type when reading excitation.");
