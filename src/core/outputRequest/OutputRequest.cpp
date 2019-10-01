@@ -52,6 +52,11 @@ const std::string& Base::getName() const {
     return name_;
 }
 
+void Base::setName(std::string name) {
+    name_ = name;
+}
+
+
 Base::Type Base::getType() const {
     return type_;
 }

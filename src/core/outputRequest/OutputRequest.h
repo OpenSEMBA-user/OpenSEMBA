@@ -64,6 +64,7 @@ public:
             const Geometry::Element::Group<const Geometry::Elem>&) = 0;
 
     const std::string& getName() const;
+    void setName(std::string name);
     Type getType() const;
     const Domain& domain() const;
 	Domain& domain();
