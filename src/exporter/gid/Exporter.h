@@ -35,7 +35,7 @@ namespace GiD {
 class Exporter : public SEMBA::Exporter::Exporter {
 public:
     static const Math::CVecR3 pecColor, pmcColor, smaColor, pmlColor,
-    sibcColor, emSourceColor;
+        sibcColor, emSourceColor;
 
     Exporter(
             const Data* smb,
@@ -58,6 +58,7 @@ public:
             const std::string gaussPointType,
             const std::vector<std::string>& componentsNames) const;
     void flushPostFile() const;
+
 private:
     static Math::Int coordCounter_;
     static Math::Int elemCounter_;
@@ -97,6 +98,7 @@ private:
 
     static std::string makeValid_(std::string name);
 };
+
 
 } /* namespace GiD */
 } /* namespace Exporter */

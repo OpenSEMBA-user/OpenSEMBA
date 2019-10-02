@@ -130,32 +130,7 @@ std::string Exporter::getBoundaryName(
         boundName =
             boundType->castTo<PhysicalModel::PhysicalModel>()->getName();
     }
-    std::string dir;
-	switch (i) {
-	case 0:
-		dir = "X";
-		break;
-	case 1:
-		dir = "Y";
-		break;
-	case 2:
-	default:
-		dir = "Z";
-		break;
-	}
-	std::string pos;
-	switch (j) {
-	case 0:
-		pos = "L";
-		break;
-	case 1:
-	default:
-		pos = "U";
-		break;
-	}
-	std::stringstream name;
-    name << boundName + "@Boundary_" << dir << "_" << pos;
-    return name.str();
+    return boundName + "@Boundary";
 }
 
 Group::Group<Geometry::ElemR> Exporter::getGridElems(
@@ -187,7 +162,7 @@ Group::Group<Geometry::ElemR> Exporter::getGridElems(
     } else {
         elem.add(new Geometry::QuaR4(cG, Geometry::ElemId(0), box));
     }
-    elem.add(new Geometry::HexR8(cG, Geometry::ElemId(0), box));
+    //elem.add(new Geometry::HexR8(cG, Geometry::ElemId(0), box));
     return elem;
 }
 

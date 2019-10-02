@@ -31,7 +31,7 @@
 namespace SEMBA {
 namespace Exporter {
 namespace GiD {
-
+    
 Math::Int Exporter::numberOfOutputGiD_ = 0;
 Math::Int Exporter::coordCounter_ = 0;
 Math::Int Exporter::elemCounter_ = 0;
@@ -96,11 +96,11 @@ Exporter::~Exporter() {
 void Exporter::writeAllElements_(
 		const Group::Group<const Geometry::ElemR>& elem,
         const std::string& name) {
-    writeElements_(elem.getOf<Geometry::NodR>(), name, GiD_Point, 1);
+    writeElements_(elem.getOf<Geometry::NodR>(),  name, GiD_Point, 1);
     writeElements_(elem.getOf<Geometry::LinR2>(), name, GiD_Linear, 2);
     writeElements_(elem.getOf<Geometry::Tri3>() , name, GiD_Triangle, 3);
     writeElements_(elem.getOf<Geometry::QuaR4>(), name, GiD_Quadrilateral, 4);
-    writeElements_(elem.getOf<Geometry::Tet4>(), name, GiD_Tetrahedra, 4);
+    writeElements_(elem.getOf<Geometry::Tet4>(),  name, GiD_Tetrahedra, 4);
     writeElements_(elem.getOf<Geometry::HexR8>(), name, GiD_Hexahedra, 8);
 }
 
@@ -158,17 +158,20 @@ void Exporter::writeMesh_(const Data* smb) {
     }
     // Writes boundaries.
     if (grid != nullptr) {
+        Geometry::CoordR3Group cG;
+        std::map<std::string, Geometry::ElemRGroup> bounds;
         for (Math::UInt i = 0; i < 3; i++) {
             for (Math::UInt j = 0; j < 2; j++) {
-                Geometry::CoordR3Group cG;
-                const Group::Group<Geometry::ElemR>& bound =
-                        getBoundary(Math::Constants::CartesianAxis(i),
-                        		    Math::Constants::CartesianBound(j),
-                                    cG, grid, mesh);
+                Geometry::ElemRGroup elems;
+                elems.addId(getBoundary(Math::Constants::CartesianAxis(i),
+                    Math::Constants::CartesianBound(j), cG, grid, mesh));
                 std::string name = getBoundaryName(
                 		inMesh->castTo<Geometry::Mesh::Structured>(), i, j);
-                writeAllElements_(bound, name);
+                bounds[name].addId(elems);
             }
+        }
+        for (auto it = bounds.begin(); it != bounds.end(); ++it) {
+              writeAllElements_(it->second, it->first);
         }
     }
     // Writes grid.
