@@ -61,7 +61,10 @@ Numerical::Numerical(const FileSystem::Project& file,
         mag.printInfo();
     }
     std::ofstream out;
+    out << std::scientific;
+    out.precision(10);
     out.open(file.c_str());
+
     Math::Real time = 0.0;
     for (std::size_t i = 0; i < nSteps; i++) {
         // Determines if neigh values are aligned with current.
@@ -78,10 +81,10 @@ Numerical::Numerical(const FileSystem::Project& file,
         const Math::Real current = mag.evaluate(time);
         bool isAligned = Math::Util::equal(current, interpolated,
                 0.0, std::numeric_limits<Math::Real>::epsilon());
-//        bool isAligned = (current == interpolated);
-        //
         if (!isAligned || i == nSteps-1) {
-            out <<  time << " " << current << std::endl;
+            out << std::setw(16) << std::setfill(' ') << time 
+                << std::setw(18) << std::setfill(' ') << current 
+                << std::endl;
         }
         //
         time += timeStep;
