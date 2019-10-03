@@ -59,6 +59,7 @@ proc InitGIDProject { dir } {
     package require treectrl
     package require math
     package require json::write
+	package require wcb
 	
     # Modifies menus available to the user.
     semba::AddToolbar
@@ -390,6 +391,62 @@ proc semba::CloseBoundingBoxData { } {
 	if { [winfo exists $w] } {        
 		destroy $w
 	}
+}
+
+
+#to be used by TKWIDGET to set the entry configure options like width
+#e.g.
+#QUESTION: your_question
+#VALUE: 
+proc semba::TkwidgetEntryValidation { event args } {    
+    switch $event {
+	INIT {            
+	    lassign $args PARENT current_row_variable GDN STRUCT QUESTION    
+	    upvar $current_row_variable ROW      
+	    set entry ""
+	    foreach item [grid slaves $PARENT -row [expr $ROW-1]] {
+		        if { [winfo class $item] == "Entry"  || [winfo class $item] == "TEntry" } {
+		                #assumed that it is the only entry of this row
+		                set entry $item
+		                break
+		        }
+	    }
+	    if {![string length $entry]} {
+	      wcb::callback $entry before insert semba::beforeInsertCallback
+	      wcb::callback $entry before delete semba::beforeDeleteCallback
+	      semba::isNumber $entry [$entry get]
+	    }
+	}
+	SYNC {
+	}
+	DEPEND {
+	}
+	CLOSE {
+	}
+	default {
+	    return [list ERROR [_ "Unexpected tkwidget event"]]
+	}
+    }
+    #a tkwidget procedure must return "" if Ok or [list ERROR $description] or [list WARNING $description] 
+    return ""
+}
+
+proc semba::beforeInsertCallback {w idx str} {
+    set newText [wcb::postInsertEntryText $w $idx $str]
+    semba::isNumber $w $newText
+}
+
+proc semba::beforeDeleteCallback {w args} {
+    set newText [eval [list wcb::postDeleteEntryText $w] $args]
+    semba::isNumber $w $newText  
+}
+
+proc semba::isNumber {w newText} {
+    if {![catch {expr $newText}]} {
+      $w configure -foreground DarkGreen
+    } else {
+      $w configure -foreground red
+    }
 }
 
 proc semba::TkwidgetCreateFilesForUGRMAT { event args } {
