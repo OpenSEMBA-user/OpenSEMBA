@@ -196,6 +196,7 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_point_outRq#WIDTH#(18)
+TKWIDGET: GidUtils::TkwidgetGetLayername
 #Title: Type
 QUESTION: Type#CB#(electricField,magneticField,current,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
@@ -257,6 +258,7 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_point_outRq#WIDTH#(18)
+TKWIDGET: GidUtils::TkwidgetGetLayername
 #Title: Type
 QUESTION: Type#CB#(electricField,magneticField,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
@@ -316,6 +318,7 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_surface_outRq#WIDTH#(18)
+TKWIDGET: GidUtils::TkwidgetGetLayername
 #Title: Type
 QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,surfaceCurrentDensity,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
@@ -378,6 +381,7 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Unnamed_outRq_on_layer#WIDTH#(18)
+TKWIDGET: GidUtils::TkwidgetGetLayername
 #Title: Type
 QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,surfaceCurrentDensity,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
@@ -440,6 +444,7 @@ CANREPEAT: yes
 #Title: Basic
 QUESTION: Name
 VALUE: Farfield_outRq#WIDTH#(18)
+TKWIDGET: GidUtils::TkwidgetGetLayername
 QUESTION: Type#CB#(farField)
 VALUE: farField
 STATE: HIDDEN
