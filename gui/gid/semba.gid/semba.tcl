@@ -411,7 +411,7 @@ proc semba::TkwidgetEntryValidation { event args } {
 		                break
 		        }
 	    }
-	    if {![string length $entry]} {
+	    if {[string length $entry]} {
 	      wcb::callback $entry before insert semba::beforeInsertCallback
 	      wcb::callback $entry before delete semba::beforeDeleteCallback
 	      semba::isNumber $entry [$entry get]
