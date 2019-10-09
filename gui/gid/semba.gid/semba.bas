@@ -210,11 +210,21 @@
         {
 *set var NGRIDS = NGRIDS + 1
             "gridType": "gridCondition",
-            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
             "type": "*cond(Type)",
-*if(strcasecmp(cond(boundary_padding_type),"None")==0)
-            "directions": "{*cond(Size)}"       
+*if(strcasecmp(cond(Type),"Number_of_cells")==0)
+            "numberOfCells": "{*cond(Number_of_cells)}",
 *else
+            "stepSize": "{*cond(Step_size)}",
+*if(strcmp(cond(Fit_size_to_box),"1")==0)
+            "fitSizeToBox": true,
+*else
+            "fitSizeToBox": false,
+*endif
+*endif   
+*if(strcasecmp(cond(boundary_padding_type),"None")==0)      
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
+*else
+            "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
             "directions": "{*cond(Size)}",
             "boundaryPaddingType": "*cond(boundary_padding_type)",
             "upperPadding": "{*cond(Upper_padding)}",

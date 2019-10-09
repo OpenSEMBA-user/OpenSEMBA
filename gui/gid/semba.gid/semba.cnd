@@ -515,11 +515,20 @@ BOOK: Meshing
 CONDITION: Grid
 CONDTYPE: over layer
 CONDMESHTYPE: over body elements
-QUESTION: Type#CB#(by_number_of_cells,by_distance)
-VALUE: by_number_of_cells
-QUESTION: Size
+QUESTION: Type#CB#(Number_of_cells,Step_size)
+VALUE: Number_of_cells
+DEPENDENCIES:(Number_of_cells, RESTORE,Number_of_cells,#CURRENT#, HIDE,    Step_size,#CURRENT#, HIDE,    Fit_size_to_box,#CURRENT#)
+DEPENDENCIES:(Step_size,       HIDE,   Number_of_cells,#CURRENT#, RESTORE, Step_size,#CURRENT#, RESTORE, Fit_size_to_box,#CURRENT#)
+QUESTION: Number_of_cells
 VALUE: 20 20 20
 TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Step_size
+VALUE: 0.1 0.1 0.1
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Fit_size_to_box#CB#(0,1)
+VALUE: 1
+HELP: When activated, the actual step size will be reduced so the bounding box is an integer number of steps.
+
 QUESTION: boundary_padding_type#CB#(None,by_number_of_cells,by_distance)
 VALUE: None
 DEPENDENCIES:(None,               HIDE,Lower_padding,#CURRENT#, HIDE,Upper_padding,#CURRENT#,HIDE,Lower_padding_mesh_size,#CURRENT#, HIDE,Upper_padding_mesh_size,#CURRENT#)

@@ -517,14 +517,21 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
     if (gridType.compare("gridCondition") == 0) {
         // Initializes basic grid.
         Geometry::Grid3 res;
-        if (g.at("type").get<std::string>().compare("by_number_of_cells") == 0) {
+        if (g.at("type").get<std::string>().compare("Number_of_cells") == 0) {
             res = Geometry::Grid3(
                     strToBox(g.at("layerBox").get<std::string>()),
-                    strToCVecI3(g.at("directions").get<std::string>()));
+                    strToCVecI3(g.at("numberOfCells").get<std::string>()));
         } else {
-            res = Geometry::Grid3(
-                    strToBox(g.at("layerBox").get<std::string>()),
-                    strToCVecR3(g.at("directions").get<std::string>()));
+            Geometry::BoxR3 box = strToBox(g.at("layerBox").get<std::string>());
+            Math::CVecR3 stepSize = 
+                strToCVecR3(g.at("stepSize").get<std::string>());
+            if (g.at("fitSizeToBox").get<bool>()) {
+                for (std::size_t i = 0; i < 3; i++) {
+                    std::size_t n = std::ceil(box.getLength()[i] / stepSize[i]);
+                    stepSize[i] = box.getLength()[i] / n;
+                }
+            }
+            res = Geometry::Grid3(box, stepSize);
         }
 
         // Applies boundary padding operations.
