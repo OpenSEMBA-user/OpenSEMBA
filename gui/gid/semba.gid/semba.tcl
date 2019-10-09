@@ -1,8 +1,7 @@
 # OpenSEMBA
 # Copyright (C) 2015 Salvador Gonzalez Garcia        (salva@ugr.es)
-#                    Luis Manuel Diaz Angulo         (lmdiazangulo@semba.guru)
-#                    Miguel David Ruiz-Cabello Nuñez (miguel@semba.guru)
-#                    Daniel Mateos Romero            (damarro@semba.guru)
+#                    Luis Manuel Diaz Angulo         (lmdiazangulo@ugr.es)
+#                    Miguel David Ruiz-Cabello Nuñez (mcabello@ugr.es)
 #
 # This file is part of OpenSEMBA.
 #
@@ -64,9 +63,12 @@ proc InitGIDProject { dir } {
     # Modifies menus available to the user.
     semba::AddToolbar
 
-	GidChangeDataLabel "Interval" ""
+    GidChangeDataLabel "Interval" ""
 
-	GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
+    GiDMenu::InsertOption "Mesh" [list [concat [_ "SEMBA Cartesian Grid"]...]] 0 PRE  {CartesianGrid::CartesianGridWin} "" "" insert
+    GiDMenu::InsertOption "Mesh" [list ---] 0 PRE {} "" "" insertafter
+  
+    GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
     GiDMenu::InsertOption "Help" [list [concat [_ "About"] " " $::semba::ProgramName]...] end PREPOST semba::About "" "" insertafter
 
     # Update the menu properties.
