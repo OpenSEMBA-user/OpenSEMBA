@@ -447,32 +447,10 @@
 *# ----------------------------------------------------------
 *Set Cond Source_on_line *bodyElements
 *if(condNumEntities!=0)
-*set var HEADER=0
 *loop elems *OnlyInCond
-*if(HEADER == 0)
-*set var HEADER=1
-        {
-            "sourceType": "sourceOnLine",
-            "type": "*cond(Type)", 
-            "hardness": "*cond(Hardness)",
-*include includes/magnitude.bas
-            "defined": "OnElements",
-            "elemIds": [
-*endif
-*if(loopVar != condNumEntities)
-                *elemsNum,
-*else
-                *elemsNum
-*endif
 *set var sourceNum = sourceNum + 1
 *end elems
-            ]
-*#DEBUG     Source number: *sourceNum of *nSources
-*if(sourceNum == nSources) 
-        }
-*else
-        },
-*endif
+*tcl(semba::writeSourceOnLineBAS)
 *endif
 *# ----------------------------------------------------------
 *set cond Waveguide_port *bodyElements

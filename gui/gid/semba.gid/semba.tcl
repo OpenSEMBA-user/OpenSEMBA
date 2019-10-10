@@ -515,6 +515,73 @@ proc semba::writeLayersFile {} {
 	[file join $modelDir $modelName.layers]
 }
 
+proc semba::countDifferentConditionEntriesBAS { condition_name } {
+	foreach item [GiD_Info conditions $condition_name mesh] {
+		set element [lindex $item 1]
+		set remainder [lreplace $item 1 3]
+		lappend conditions($remainder) $element
+	}
+	return [array size conditions]
+}
+
+proc semba::writeSourceOnLineBAS {} {
+	foreach item [GiD_Info conditions Source_on_line mesh] {
+		set element [lindex $item 1]
+		set remainder [lreplace $item 0 3]
+		lappend conditions($remainder) $element
+	}
+
+	set result ""
+	set property_counter 0
+	foreach properties [array names conditions] {
+		set type                        [lindex "$properties" 0]
+		set hardness                    [lindex "$properties" 1]
+		set magnitude_type              [lindex "$properties" 2]
+		set magnitude_frequency_maximum [lindex "$properties" 3]
+		set magnitude_frequency_minimum [lindex "$properties" 4]
+		set magnitude_file              [lindex "$properties" 5]
+
+		append result \
+		"        {\n"\
+		"            \"sourceType\": \"sourceOnLine\",\n"\
+		"            \"type\": \"$type\",\n"\
+		"            \"hardness\": \"$hardness\",\n"
+
+		append result \
+		"            \"magnitude\": {\n"\
+		"                \"type\": \"$magnitude_type\",\n"
+		if {$magnitude_type == "Band_limited"} {
+		        append result \
+		"                \"frequencyMaximum\": $magnitude_frequency_maximum,\n"\
+		"                \"frequencyMinimum\": $magnitude_frequency_minimum\n"
+		} elseif {$magnitude_type == "Gaussian"} {
+		        append result \
+		"                \"frequencyMaximum\": $magnitude_frequency_maximum\n"
+		} elseif {$magnitude_type == "File"} {
+		        append result \
+		"                \"File\": $magnitude_file\n"
+		}
+		append result \
+		"            },\n"
+
+		 append result \
+		"            \"defined\": \"OnElements\",\n"\
+		"            \"elemIds\": \[\n"\
+		"                [join $conditions($properties) ",\n                "]\n"\
+		"            \]\n"\
+		"        }"
+
+		incr property_counter
+		if {$property_counter != [array size conditions]} {
+		   append result ",\n"
+		} else {
+		   append result "\n"
+		}
+	}
+
+	return $result
+}
+
 proc semba::countElementsInConditionBAS { condition_name } {
 	foreach item [GiD_Info conditions $condition_name mesh] {
 		set element_id [lindex $item 1]
@@ -546,10 +613,10 @@ proc semba::countAllElementsInOutputRequestsBAS { } {
 proc semba::writeOutputRequestBAS { condition_name } {
     set result ""
     foreach item [GiD_Info conditions $condition_name mesh] {
-	set element_id [lindex $item 1]
-	set name_id    [lindex $item 3]
-    lappend elements_of_cond($name_id) $element_id
-	set properties_of_cond($name_id) [lrange $item 3 end]
+		set element_id [lindex $item 1]
+		set name_id    [lindex $item 3]
+		lappend elements_of_cond($name_id) $element_id
+		set properties_of_cond($name_id) [lrange $item 3 end]
     }
 
     foreach name_id [lsort [array names elements_of_cond]] {
