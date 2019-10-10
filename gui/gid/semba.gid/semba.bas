@@ -253,7 +253,9 @@
             "zCoordinates": *tcl(semba::getGridCoordinatesAsJSONArrayBAS 2)
         }
 *if(strcasecmp(GenData(Mesher),"DMesheR")==0 && strcasecmp(GenData(Mode),"Structured")!=0)
+*if(tcl(expr [GiD_Set MeshType]==1))
 *WarningBox "Native GiD meshing can not be used in combination with conformal meshing."
+*endif
 *endif
 *endif
 *endif
