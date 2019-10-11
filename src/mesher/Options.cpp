@@ -32,7 +32,6 @@ namespace SEMBA {
 namespace Mesher {
 
 Options::Options() {
-    mesher_ = Mesher::zMesher;
     mode_ = Mode::conformal;
     scalingFactor_ = 1.0;
     postmshExport_ = true;
@@ -45,7 +44,6 @@ Options::Options() {
 
 void Options::printInfo() const {
     std::cout << " --- Meshing parameters info --- " << std::endl;
-    std::cout << "Mesher: " << toStr(mesher_) << std::endl;
     if (isStructured()) {
         std::cout << " Generating structured mesh." << std::endl;
     }
@@ -111,10 +109,6 @@ Math::Real Options::getScalingFactor() const {
     return scalingFactor_;
 }
 
-Options::Mesher Options::getMesher() const {
-    return mesher_;
-}
-
 const PhysicalModel::Bound::Bound* Options::getBoundTermination(
     const std::size_t d,
     const std::size_t p) const {
@@ -136,11 +130,6 @@ void Options::setBoundTermination(
     boundTermination_.setBound(d, p, bound);
 }
 void Options::addArguments(Argument::Group& args) const {
-    args.addOption(new Argument::Option<std::string>("Mesher", "mesher"))
-        .choices({{"OpenFOAM"}, {"ZMesher"},
-                  {"DMesher"}, {"ConformalMesher"}});
-    args.addOption(new Argument::Switch("Brute force volumes",
-                                        "bruteForceVolumes"));
     args.addOption(new Argument::Switch("VTK Export", "vtkexport"));
     args.addOption(
         new Argument::Option<Math::Real, Math::Real, Math::Real>("gridstep"));
@@ -151,9 +140,6 @@ void Options::addArguments(Argument::Group& args) const {
 }
 
 void Options::set(const Solver::Settings& opts) {
-    if (           opts.existsName("mesher")) {
-        setMesher(strToMesher(opts("mesher").getString()));
-    }
     if (opts.existsName(  "vtkExport")) {
         setVtkExport(opts("vtkExport").getBool());
     }
@@ -199,10 +185,6 @@ void Options::set(const Solver::Settings& opts) {
         setBoundTermination(Math::Constants::z, Math::Constants::L,
                             strToBoundType(opts("lowerZBound").getString()));
     }
-}
-
-void Options::setMesher(Mesher mesher) {
-    mesher_ = mesher;
 }
 
 void Options::setMode(Mode mode) {
@@ -274,18 +256,6 @@ bool Options::isGridStepSet() const {
     return (gridStep_ != Math::CVecR3(0.0));
 }
 
-Options::Mesher Options::strToMesher(std::string str) {
-    if (str.compare("ZMesher")==0) {
-        return Mesher::zMesher;
-    } else if (str.compare("DMesheR")==0) {
-        return Mesher::dMesher;
-    } else if (str.compare("None")==0) {
-        return Mesher::none;
-    } else {
-        throw std::logic_error("Unrecognized label: " + str);
-    }
-}
-
 Options::Mode Options::strToMesherMode(std::string str) {
     if (str.compare("Structured")==0) {
         return Mode::structured;
@@ -341,18 +311,6 @@ const PhysicalModel::Bound::Bound* Options::strToBoundType(std::string str) {
     } else {
         throw std::logic_error("Unrecognized bound label: " + str);
     }
-}
-
-std::string Options::toStr(const Options::Mesher mesher) {
-    switch (mesher) {
-    case Options::Mesher::zMesher:
-        return "ZMesher";
-    case Options::Mesher::dMesher:
-        return "DMesheR";
-    case Options::Mesher::none:
-    default:
-        return "None";
-}
 }
 
 }

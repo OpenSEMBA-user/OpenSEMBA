@@ -45,11 +45,6 @@ namespace Mesher {
 
 class Options {
 public:
-    enum class Mesher {
-        zMesher,
-        dMesher,
-        none
-    };
     enum class Mode {
         structured,
         relaxed,
@@ -62,18 +57,15 @@ public:
     void addArguments(Argument::Group& args) const;
     void set(const Solver::Settings& opts);
 
-    Mesher getMesher() const;
     Mode getMode() const;
     bool isStructured() const;
     bool isRelaxed() const;
     Math::Real getForbiddenLength() const;
     Math::Real getScalingFactor() const;
-    const std::string& getMeshOutputName() const;
     bool isGridStepSet() const;
     bool isVtkExport() const;
     bool isPostmshExport() const;
     const Math::CVecR3& getGridStep() const;
-    const std::pair<Math::CVecR3, Math::CVecR3>& getBoundaryMeshSize() const;
     const PhysicalModel::Bound::Bound* getBoundTermination(const std::size_t d,
                                                     const std::size_t p) const;
     const Geometry::BoundTerminations3& getBoundTerminations() const;
@@ -83,13 +75,11 @@ public:
 
     const std::string& getOutputName() const;
 
-    void setBoundaryMeshSize(const std::pair<Math::CVecR3, Math::CVecR3>&);
     void setBoundTermination(const std::size_t d,
                              const std::size_t p,
                              const PhysicalModel::Bound::Bound*);
     void setForbiddenLength(const Math::Real& edgeFraction);
     void setGridStep(const Math::CVecR3& gridStep);
-    void setMesher(Mesher mesher);
     void setMode(Mode mode);
     void setPostmshExport(bool postmshExport);
     void setOutputName(const std::string& outputName);
@@ -99,16 +89,12 @@ public:
     void setSlanted(const bool&);
     void setSlantedThreshold(const Math::Real&);
 
-    void applyGeometricScalingFactor(const Math::Real& factor);
-
     void printHelp() const;
     virtual void printInfo() const;
 
     static std::string toStr(const PhysicalModel::Bound::Bound*);
-    static std::string toStr(const Mesher);
-
+    
 private:
-    Mesher mesher_;
     Math::Real scalingFactor_;
     Mode mode_;
     Math::Real forbiddenLength_;
@@ -124,7 +110,6 @@ private:
     bool slanted_;
     Math::Real slantedThreshold_;
 
-    static Mesher strToMesher(std::string);
     static Mode strToMesherMode(std::string);
     static Math::CVecR3 strToCVecR3(const std::string& str);
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(

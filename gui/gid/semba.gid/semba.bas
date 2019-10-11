@@ -37,7 +37,6 @@
             "upperXBound": "*GenData(Upper_x_bound)",
             "upperYBound": "*GenData(Upper_y_bound)",          
             "upperZBound": "*GenData(Upper_z_bound)",
-            "mesher": "*GenData(Mesher)",
             "vtkExport": *tcl(semba::intToBool *GenData(VTK_Export)),
             "postmshExport": *tcl(semba::intToBool *GenData(postmsh_Export)),
             "mode": "*GenData(Mode)",
