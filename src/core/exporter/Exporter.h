@@ -54,7 +54,7 @@ protected:
             const Math::Real dt) const;
 protected:
     std::string getOutputfilename() const;
-    Group::Group<Geometry::ElemR> getBoundary(
+	Geometry::ElemR* getBoundary(
             const Math::Constants::CartesianAxis dir,
             const Math::Constants::CartesianBound bound,
             Geometry::CoordR3Group& cG,
@@ -67,8 +67,6 @@ protected:
             const Geometry::Mesh::Structured* mesh,
             const std::size_t i,
             const std::size_t j);
-private:
-    //   void writeAllFields(const FieldR3& field) const;
 };
 
 } /* namespace Exporter */

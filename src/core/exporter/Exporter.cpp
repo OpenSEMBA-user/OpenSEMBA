@@ -99,7 +99,7 @@ std::string Exporter::getOutputfilename() const {
 }
 
 
-Group::Group<Geometry::ElemR> Exporter::getBoundary(
+Geometry::ElemR* Exporter::getBoundary(
         const Math::Constants::CartesianAxis dir,
         const Math::Constants::CartesianBound pos,
         Geometry::CoordR3Group& cG,
@@ -111,11 +111,8 @@ Group::Group<Geometry::ElemR> Exporter::getBoundary(
     } else {
         box = mesh->getBoundingBox();
     }
-    Group::Group<Geometry::ElemR> elem;
     Geometry::BoxR3 quadBox = box.getBoundAsBox(dir,pos);
-    elem.add(new Geometry::QuaR4(cG, Geometry::ElemId(0), quadBox));
-    assert(elem.size() != 0);
-    return elem;
+    return new Geometry::QuaR4(cG, Geometry::ElemId(0), quadBox);
 }
 
 std::string Exporter::getBoundaryName(

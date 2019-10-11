@@ -159,19 +159,22 @@ void Exporter::writeMesh_(const Data* smb) {
     // Writes boundaries.
     if (grid != nullptr) {
         Geometry::CoordR3Group cG;
-        std::map<std::string, Geometry::ElemRGroup> bounds;
+        std::map<std::string, std::vector<Geometry::ElemR*>> bounds;
         for (Math::UInt i = 0; i < 3; i++) {
             for (Math::UInt j = 0; j < 2; j++) {
-                Geometry::ElemRGroup elems;
-                elems.addId(getBoundary(Math::Constants::CartesianAxis(i),
-                    Math::Constants::CartesianBound(j), cG, grid, mesh));
+				Geometry::ElemR* bound = getBoundary(
+					Math::Constants::CartesianAxis(i),
+					Math::Constants::CartesianBound(j), 
+					cG, grid, mesh);
                 std::string name = getBoundaryName(
                 		inMesh->castTo<Geometry::Mesh::Structured>(), i, j);
-                bounds[name].addId(elems);
+				bounds[name].push_back(bound);
             }
         }
         for (auto it = bounds.begin(); it != bounds.end(); ++it) {
-              writeAllElements_(it->second, it->first);
+			Geometry::ElemRGroup boundElems;
+			boundElems.addId(it->second);
+			writeAllElements_(boundElems, it->first);
         }
     }
     // Writes grid.

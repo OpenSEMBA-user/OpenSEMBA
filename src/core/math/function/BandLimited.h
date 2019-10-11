@@ -2,7 +2,6 @@
 // Copyright (C) 2019 Salvador Gonzalez Garcia        (salva@ugr.es)
 //                    Luis Manuel Diaz Angulo         (lmdiazangulo@semba.guru)
 //                    Miguel David Ruiz-Cabello Nuñez (miguel@semba.guru)
-//                    Daniel Mateos Romero            (damarro@semba.guru)
 //
 // This file is part of OpenSEMBA.
 //
@@ -23,6 +22,7 @@
 #define SRC_COMMON_MATH_FUNCTION_BANDLIMITED_H_
 
 #include <complex>
+#include <limits>
 
 #include "Function.h"
 
