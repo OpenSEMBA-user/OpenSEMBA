@@ -43,8 +43,9 @@ Data Parser::read(std::istream& stl) const {
     std::size_t nLines = std::count(std::istreambuf_iterator<char>(stl),
                                     std::istreambuf_iterator<char>(), '\n');
     vertices.reserve(nLines);
+	
     stl.seekg(0); // Rewinds.
-    while (!stl.eof()) {
+    while (stl.peek() != EOF) {
         stl >> label;
         if (label == "vertex") {
             Math::CVecR3 vertex;
@@ -58,9 +59,11 @@ Data Parser::read(std::istream& stl) const {
     cG.addPos(vertices);
 
     // Reads Elements and Layers.
-    Geometry::Layer::Group<Geometry::Layer::Layer> lG;
+	stl.clear();
+	stl.seekg(0); // Rewinds.
+	Geometry::Layer::Group<Geometry::Layer::Layer> lG;
     Geometry::Element::Group<Geometry::ElemR> eG;
-    while (!stl.eof()) {
+    while (stl.peek() != EOF) {
         stl >> label;
         if (label == "solid") {
             std::string layerName;
@@ -68,12 +71,12 @@ Data Parser::read(std::istream& stl) const {
             Geometry::Layer::Layer* lay = 
                 lG.addId(new Geometry::Layer::Layer(layerName))(0);
             std::string line;
-            while (!stl.eof()) {
+            while (stl.peek() != EOF) {
                 std::getline(stl, line);
                 if (trim(line) == "outer loop") {
                     std::vector<const Geometry::CoordR3*> coord;
                     coord.reserve(3);
-                    while (!stl.eof() && label != "endloop") {
+                    while (stl.peek() != EOF && label != "endloop") {
                         stl >> label;
                         if (label == "vertex") {
                             Math::CVecR3 pos;
