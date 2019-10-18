@@ -45,7 +45,7 @@ TEST_F(ParserJSONParserTest, Basic) {
 
 TEST_F(ParserJSONParserTest, Cartesian) {
     std::ifstream stream("testData/cartesian.gid/cartesian.dat");
-    EXPECT_TRUE(stream.is_open());
+    ASSERT_TRUE(stream.is_open());
 
     SEMBA::Parser::JSON::Parser jsonParser;
     EXPECT_NO_THROW(jsonParser.read(stream));

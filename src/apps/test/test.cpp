@@ -19,12 +19,12 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
-#include <gtest/gtest.h>
 #include <string>
+#include "gtest/gtest.h"
 
 using namespace std;
 
 GTEST_API_ int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  return RUN_ALL_TESTS(); 
 }

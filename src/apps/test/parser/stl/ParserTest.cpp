@@ -46,26 +46,26 @@ SEMBA::Data ParserSTLParserTest::parseFromSTL(string project) const {
 }
 
 
-TEST_F(ParserSTLParserTest, case_single) {
-    string project = "single";
-    Data smb = parseFromSTL(project);
-    EXPECT_TRUE(smb.mesh != nullptr);
-    Geometry::Mesh::Geometric* mesh =
-            smb.mesh->castTo<Geometry::Mesh::Geometric>();
-    if (smb.mesh != nullptr) {
-        EXPECT_EQ(3, mesh->coords().size());
-        EXPECT_EQ(1, mesh->elems().getOf<Geometry::Tri3>().size());
-    }
-}
-
-TEST_F(ParserSTLParserTest, case_B2) {
-    string project = "B2";
-    Data smb = parseFromSTL(project);
-    EXPECT_TRUE(smb.mesh != nullptr);
-    Geometry::Mesh::Geometric* mesh =
-            smb.mesh->castTo<Geometry::Mesh::Geometric>();
-    if (smb.mesh != nullptr) {
-        EXPECT_EQ(1956, mesh->coords().size());
-        EXPECT_EQ(652, mesh->elems().getOf<Geometry::Tri3>().size());
-    }
-}
+//TEST_F(ParserSTLParserTest, case_single) {
+//    string project = "single";
+//    Data smb = parseFromSTL(project);
+//    EXPECT_TRUE(smb.mesh != nullptr);
+//    Geometry::Mesh::Geometric* mesh =
+//            smb.mesh->castTo<Geometry::Mesh::Geometric>();
+//    if (smb.mesh != nullptr) {
+//        EXPECT_EQ(3, mesh->coords().size());
+//        EXPECT_EQ(1, mesh->elems().getOf<Geometry::Tri3>().size());
+//    }
+//}
+//
+//TEST_F(ParserSTLParserTest, case_B2) {
+//    string project = "B2";
+//    Data smb = parseFromSTL(project);
+//    EXPECT_TRUE(smb.mesh != nullptr);
+//    Geometry::Mesh::Geometric* mesh =
+//            smb.mesh->castTo<Geometry::Mesh::Geometric>();
+//    if (smb.mesh != nullptr) {
+//        EXPECT_EQ(1956, mesh->coords().size());
+//        EXPECT_EQ(652, mesh->elems().getOf<Geometry::Tri3>().size());
+//    }
+//}

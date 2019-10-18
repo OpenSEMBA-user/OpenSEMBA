@@ -1,6 +1,6 @@
 {
     "_format": "Semba Data File in JSON format",
-    "_version": "0.13",
+    "_version": "0.14",
 
     "solverOptions": {
         "solver": "ugrfdtd",
@@ -71,7 +71,8 @@
             ],
             "freqMin": 1e5,
             "freqMax": 1e9,
-            "numberOfPoles": 24
+            "numberOfPoles": 24,
+            "useSembaVectorFitting":  false
         }
     ],
 

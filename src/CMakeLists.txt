@@ -100,4 +100,11 @@ add_subdirectory  (mesher   obj/src/mesher)
 add_subdirectories(exporter obj/src)
 add_subdirectories(adapter  obj/src)
 add_subdirectory  (solver   obj/src/solver)
-add_subdirectories(apps     obj/src)
+
+option(COMPILE_TESTS OFF)
+
+if(COMPILE_TESTS)
+	add_subdirectories(apps     obj/src)
+	enable_testing()
+	add_test(opensemba ${CMAKE_BINARY_DIR}/bin/opensemba)
+endif()
