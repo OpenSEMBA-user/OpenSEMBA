@@ -98,32 +98,32 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid,
     return res;
 }
 
-Unstructured* Unstructured::getConnectivityMesh() const {
-    Unstructured* res = new Unstructured;
-    res->coords() = coords().cloneElems();
-    Element::Group<const ElemR> elems = this->elems();
-    elems.removeMatId(MatId(0));
-    Graph::Vertices<ElemR, CoordR3> graphLayer;
-    graphLayer.init(elems);
-    std::vector<std::vector<const ElemR*>> comps =
-        graphLayer.getConnectedComponents();
-    for (std::size_t c = 0; c < comps.size(); c++) {
-        std::stringstream layerName;
-        layerName << "Component " << c+1;
-        Layer::Layer* newLayer =
-            res->layers_.addId(new Layer::Layer(layerName.str()))(0);
-        std::vector<ElemR*> newElemsLayer;
-        //newElemsLayer.resize(comps[c].size());
-        //for (std::size_t e = 0; e < comps[c].size(); e++) {
-        //    newElemsLayer[e] = comps[c][e]->cloneTo<ElemR>();
-        //    newElemsLayer[e]->setLayer(newLayer);
-        //}
-        //res->elems().add(newElemsLayer);
-    }
-    res->reassignPointers(res->coords());
-    res->reassignPointers(res->layers());
-    return res;
-}
+//Unstructured* Unstructured::getConnectivityMesh() const {
+//    Unstructured* res = new Unstructured;
+//    res->coords() = coords().cloneElems();
+//    Element::Group<const ElemR> elems = this->elems();
+//    elems.removeMatId(MatId(0));
+//    Graph::Vertices<ElemR, CoordR3> graphLayer;
+//    graphLayer.init(elems);
+//    std::vector<std::vector<const ElemR*>> comps =
+//        graphLayer.getConnectedComponents();
+//    for (std::size_t c = 0; c < comps.size(); c++) {
+//        std::stringstream layerName;
+//        layerName << "Component " << c+1;
+//        Layer::Layer* newLayer =
+//            res->layers_.addId(new Layer::Layer(layerName.str()))(0);
+//        std::vector<ElemR*> newElemsLayer;
+//        //newElemsLayer.resize(comps[c].size());
+//        //for (std::size_t e = 0; e < comps[c].size(); e++) {
+//        //    newElemsLayer[e] = comps[c][e]->cloneTo<ElemR>();
+//        //    newElemsLayer[e]->setLayer(newLayer);
+//        //}
+//        //res->elems().add(newElemsLayer);
+//    }
+//    res->reassignPointers(res->coords());
+//    res->reassignPointers(res->layers());
+//    return res;
+//}
 //
 //std::vector<Element::Face> Unstructured::getBorderWithNormal(
 //        const std::vector<Element::Face>& border,

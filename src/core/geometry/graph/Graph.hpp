@@ -47,14 +47,14 @@ Graph<ELEM,BOUND>::~Graph() {
     }
 }
 
-template<class ELEM, class BOUND>
-Graph<ELEM,BOUND>& Graph<ELEM,BOUND>::operator=(const Graph& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    cloneInfo(rhs);
-    return *this;
-}
+//template<class ELEM, class BOUND>
+//Graph<ELEM,BOUND>& Graph<ELEM,BOUND>::operator=(const Graph& rhs) {
+//    if (this == &rhs) {
+//        return *this;
+//    }
+//    cloneInfo(rhs);
+//    return *this;
+//}
 
 template<class ELEM, class BOUND>
 void Graph<ELEM,BOUND>::printInfo() const {

@@ -46,7 +46,7 @@ public:
 
     virtual Graph& init(const Group::Group<const Elem>& elems) = 0;
 
-    Graph& operator=(const Graph&);
+    //Graph& operator=(const Graph&);
 
     std::size_t numElems () const { return elems_.size();  }
     std::size_t numBounds() const { return bounds_.size(); }

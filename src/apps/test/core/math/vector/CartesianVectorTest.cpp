@@ -35,7 +35,7 @@ TEST(MathCartesianVectorTest, Basic) {
 TEST(MathCartesianVectorTest, InitializerList) {
     CVecR3 a = {1.0, 2.0, 3.0};
     EXPECT_EQ(a, a);
-    EXPECT_EQ(sqrt(3.0), a.norm());
+    EXPECT_EQ(sqrt(14.0), a.norm());
 }
 
 TEST(MathCartesianVectorTest, Complex) {

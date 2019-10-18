@@ -59,19 +59,14 @@ TEST_F(GeometryGraphConnectivitiesTest, innerOuterFace) {
     }
 }
 
-
-TEST_F(GeometryGraphConnectivitiesTest, assignation) {
-    Graph::Connectivities copied;
-    const Tri3* tri = elem_.getId(ElemId(5))->castTo<Tri3>();
-    {
-       Graph::Connectivities conn(elem_);
-       copied = conn;
-
-       EXPECT_NO_THROW(conn.getInnerFace(tri));
-       EXPECT_NO_THROW(copied.getInnerFace(tri));
-       EXPECT_EQ(conn.getInnerFace(tri), copied.getInnerFace(tri));
-    }
-    ASSERT_DEATH(copied.getInnerFace(tri), "Assignation is failing, #193");
-    // EXPECT_NO_THROW(conn.getInnerFace(tri)); TODO Replace with this to fix #193
-}
+//TEST_F(GeometryGraphConnectivitiesTest, assignation) {
+//    Graph::Connectivities copied;
+//    const Tri3* tri = elem_.getId(ElemId(5))->castTo<Tri3>();
+//    Graph::Connectivities conn(elem_);
+//    copied = conn;
+//
+//    EXPECT_NO_THROW(conn.getInnerFace(tri));
+//    EXPECT_NO_THROW(copied.getInnerFace(tri));
+//    EXPECT_EQ(conn.getInnerFace(tri), copied.getInnerFace(tri));
+//}
 

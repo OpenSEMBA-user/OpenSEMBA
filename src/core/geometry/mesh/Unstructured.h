@@ -62,8 +62,8 @@ public:
     Structured* getMeshStructured(
             const Grid3& grid,
             const Math::Real tol = Grid3::tolerance) const;
-    Unstructured* getConnectivityMesh() const;
-
+    
+	//Unstructured* getConnectivityMesh() const;
     //std::vector<Element::Face> getBorderWithNormal(
     //        const std::vector<Element::Face>& border, 
     //        const Math::CVecR3& normal);

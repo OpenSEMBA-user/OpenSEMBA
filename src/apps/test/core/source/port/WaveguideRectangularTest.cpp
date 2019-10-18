@@ -85,34 +85,3 @@ TEST_F(SourcePortWaveguideRectangularTest, withoutSymmetries) {
 
     EXPECT_EQ(Math::CVecR3(0.0),         wp.getWeight(wp.getOrigin()));
 }
-
-TEST_F(SourcePortWaveguideRectangularTest, withSymmetry) {
-    bounds_[0][0] = boundType_.getId(MatId(2))
-                    ->castTo<PhysicalModel::Bound::Bound>();
-    bounds_[1][0] = boundType_.getId(MatId(3))
-                    ->castTo<PhysicalModel::Bound::Bound>();
-    Port::WaveguideRectangular wp(nullptr, surfs_, excMode_, mode_);
-
-    EXPECT_EQ(Math::CVecR3(-wp.getWidth()/2.0, -wp.getHeight()/2.0, 0.0),
-              wp.getOrigin());
-    EXPECT_EQ(60.0, wp.getWidth());
-    EXPECT_EQ(20.0, wp.getHeight());
-
-    Math::CVecR3 midPoint = wp.getOrigin();
-    midPoint(Math::Constants::x) += wp.getWidth() / 2.0;
-    midPoint(Math::Constants::y) += wp.getHeight() / 2.0;
-    EXPECT_EQ(Math::CVecR3(0.0), midPoint);
-
-    EXPECT_EQ(Math::CVecR3(0.0,1.0,0.0), wp.getWeight(midPoint));
-
-    EXPECT_EQ(Math::CVecR3(0.0),         wp.getWeight(wp.getOrigin()));
-}
-
-TEST_F(SourcePortWaveguideRectangularTest, notValidSymmetry) {
-    bounds_[0][0] = boundType_.getId(MatId(3))
-                    ->castTo<PhysicalModel::Bound::Bound>();
-    bounds_[1][0] = boundType_.getId(MatId(3))
-                    ->castTo<PhysicalModel::Bound::Bound>();
-    EXPECT_ANY_THROW(
-            Port::WaveguideRectangular(nullptr, surfs_, excMode_, mode_));
-}

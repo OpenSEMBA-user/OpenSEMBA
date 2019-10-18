@@ -40,31 +40,6 @@ WaveguideRectangular::WaveguideRectangular(
         printInfo();
         throw std::logic_error("At least one mode must be non-zero.");
     }
-
-//    // Computes origin.
-//
-//    const PhysicalModel::Bound::Bound* bound;
-//    bound = bounds[Math::Constants::x][Math::Constants::L];
-//    if (bound->is<PhysicalModel::Bound::PMC>()) {
-//        origin_(Math::Constants::x) = - box_.getMax()(Math::Constants::x);
-//    }
-//    if (!bound->is<PhysicalModel::Bound::PML>() &&
-//        !bound->is<PhysicalModel::Bound::PMC>()) {
-//        throw std::logic_error(
-//                "Bound termination must be  PML or PMC in the x lower axis"
-//                " of the WaveguideRectangular port.");
-//    }
-//    bound = bounds[Math::Constants::y][Math::Constants::L];
-//    if (bound->is<PhysicalModel::Bound::PEC>()) {
-//        origin_(Math::Constants::y) = - box_.getMax()(Math::Constants::y);
-//    }
-//    if (!bound->is<PhysicalModel::Bound::PML>() &&
-//        !bound->is<PhysicalModel::Bound::PEC>()) {
-//        throw std::logic_error(
-//                "Bound termination must be  PML or PEC in the y lower axis"
-//                " of the WaveguideRectangular port.");
-//    }
-
 }
 
 WaveguideRectangular::WaveguideRectangular(const WaveguideRectangular& rhs)

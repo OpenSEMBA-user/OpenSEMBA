@@ -54,7 +54,7 @@ TEST_F(MathAxisLocalTest, BasicIdentities) {
 
 TEST_F(MathAxisLocalTest, VectorTransformation) {
     Local global(CVecR3(0.0));
-    Local local(CVecR3(Constants::pi/2, 0.0, 0.0));
+    Local local(CVecR3(-Constants::pi/2, 0.0, 0.0));
 
     CVecR3 localV(1.0,1.0,0.0);
     EXPECT_EQ(CVecR3(-1.0,1.0,0.0), local.convertToGlobal(localV));
