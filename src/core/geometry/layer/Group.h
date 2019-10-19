@@ -67,6 +67,9 @@ public:
 };
 
 } /* namespace Layer */
+
+typedef Layer::Group<> LayerGroup;
+
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
