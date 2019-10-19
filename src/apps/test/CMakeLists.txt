@@ -21,8 +21,6 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-
-
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .

@@ -101,9 +101,9 @@ add_subdirectories(exporter obj/src)
 add_subdirectories(adapter  obj/src)
 add_subdirectory  (solver   obj/src/solver)
 
-option(COMPILE_TESTS OFF)
+option(OPENSEMBA_TESTS OFF)
 
-if(COMPILE_TESTS)
+if(OPENSEMBA_TESTS)
 	add_subdirectories(apps     obj/src)
 	enable_testing()
 	add_test(opensemba ${CMAKE_BINARY_DIR}/bin/opensemba)
