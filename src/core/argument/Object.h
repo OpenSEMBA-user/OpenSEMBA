@@ -265,7 +265,15 @@ public:
     bool     isNumber() const          { return isType(Type::Number); }
     bool     isInt   () const          { return is <Int >();          }
     bool     isReal  () const          { return is <Real>();          }
-    Int     getInt   () const          { return get<Int >();          }
+    Int     getInt   () const          { 
+		Real val = getReal();
+		if (std::numeric_limits<Int>::max() < std::abs(val)) {
+			std::stringstream msg;
+			msg << "Integer value overflow: " << val;
+			throw std::logic_error(msg.str());
+		}
+		return (Int) std::floor(val); 
+	}
     Real    getReal  () const          { return get<Real>();          }
     Object& setInt   (const Int&  val) { return set(val);             }
     Object& setReal  (const Real& val) { return set(val);             }
