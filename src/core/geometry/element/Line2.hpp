@@ -45,6 +45,17 @@ Line2<T>::Line2(const Id id,
 }
 
 template<class T>
+Line2<T>::Line2(const Id id,
+	std::array<const Coordinate::Coordinate<T, 3>*,2> v,
+	const Layer* lay,
+	const Model* mat)
+	: Identifiable<Id>(id),
+	Elem(lay, mat) {
+
+	setCoordinates(&v[0]);
+}
+
+template<class T>
 Line2<T>::Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
                 const Id id,
                 const Box<T,3>& box,

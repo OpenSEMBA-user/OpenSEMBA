@@ -47,6 +47,10 @@ public:
           const Coordinate::Coordinate<T,3>* v[2],
           const Layer* lay = nullptr,
           const Model* mat = nullptr);
+	Line2(const Id id,
+		std::array<const Coordinate::Coordinate<T, 3>*,2> v,
+		const Layer* lay = nullptr,
+		const Model* mat = nullptr);
     Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
           const Id id,
           const Box<T,3>& box,
