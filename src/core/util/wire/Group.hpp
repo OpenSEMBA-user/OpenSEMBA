@@ -108,9 +108,10 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             // split them.
             Geometry::LayerId layId[2];
             MatId matId[2];
-            bool isWireMat[2];
-            bool isWireExtrMat[2];
-            bool leaving[2];
+            bool isWireMat[2] = { false, false };
+            bool isWireExtrMat[2] = { false, false };
+			bool leaving[2] = { false, false };
+			bool neighEnd[2] = { false, false };
             for (std::size_t j = 0; j < 2; j++) {
                 // For each line we obtain:
                 // - layId[j]: the LayerId of the line
@@ -120,6 +121,8 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
                 // - leaving[j]: if this line is "going out" of the coordinate
                 layId[j] = nodePtr->getBound(j)->elem()->getLayerId();
                 matId[j] = nodePtr->getBound(j)->elem()->getMatId();
+				neighEnd[j] = (nodePtr->getBound(j)->getBound(0)->numBounds() == 1) ||
+					          (nodePtr->getBound(j)->getBound(1)->numBounds() == 1);
                 isWireMat[j] =
                     mats.getId(matId[j])->is<PhysicalModel::Wire::Wire>();
                 isWireExtrMat[j] =
@@ -131,12 +134,23 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
                     leaving[j] = false;
                 }
             }
-            bool extreme = leaving[0] && leaving[1];
-            if (layId[0] != layId[1]) {
-                // IF the lines have different LayerId, then they are different
-                // wires
-                graph.splitBound(i);
-            } else if (isWireExtrMat[0] || isWireExtrMat[1]) {
+			bool extreme = (leaving[0] && leaving[1]);
+
+			if (layId[0] != layId[1]) {
+				// If the lines have different LayerId, then they are different
+				// wires
+				graph.splitBound(i);
+				continue;
+			}
+
+			if (!isWireMat[1] && neighEnd[1] && !leaving[0] &&  leaving[1]) {
+				continue;
+			}
+			if (!isWireMat[1] && neighEnd[1] &&  leaving[0] && leaving[1]) {
+				continue;
+			}
+
+            if (isWireExtrMat[0] || isWireExtrMat[1]) {
                 if ((!isWireExtrMat[0] || !isWireExtrMat[1]) ||
                     (matId[0] != matId[1]) || (leaving[0] == leaving[1])) {
                     // If only a line has a wire material with extremes, or if
@@ -161,9 +175,9 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
                 }
             } else if ((!isWireMat[0] && leaving[0]) ||
                        (!isWireMat[1] && leaving[1])) {
-                // If any of them are "coming out" and have union material then
-                // they are different wires.
-                graph.splitBound(i);
+					// If any of them are "coming out" and have union material 
+					// then they are different wires.
+					graph.splitBound(i);
             }
         }
     }
