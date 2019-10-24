@@ -41,8 +41,20 @@ Quadrilateral4<T>::Quadrilateral4(const Id id,
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = coords[i];
     }
-    // TODO Normals are not handled.
-    check();
+     check();
+}
+
+template<class T>
+Quadrilateral4<T>::Quadrilateral4(const Id id,
+	std::array<const Coordinate::Coordinate<T, 3>*, 4> v,
+	const Layer* lay,
+	const Model* mat)
+	: Identifiable<Id>(id),
+	Elem(lay, mat) {
+
+	for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
+		v_[i] = v[i];
+	}
 }
 
 template<class T>

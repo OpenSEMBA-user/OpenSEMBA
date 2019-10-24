@@ -128,19 +128,19 @@ Group<const E> Group<E>::getMatLayerId(const MatId   matId,
     return this->get(getElemsWith_(matId, layId));
 }
 
-template<typename E>
-std::vector<Id> Group<E>::getIdsWithoutMaterialId(
-        const MatId matId) const {
-
-    std::vector<Id> res;
-    res.reserve(this->size());
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (this->get(i)->getMatId() != matId) {
-            res.push_back(this->get(i)->getId());
-        }
-    }
-    return res;
-}
+//template<typename E>
+//std::vector<Id> Group<E>::getIdsWithoutMaterialId(
+//        const MatId matId) const {
+//
+//    std::vector<Id> res;
+//    res.reserve(this->size());
+//    for (std::size_t i = 0; i < this->size(); i++) {
+//        if (this->get(i)->getMatId() != matId) {
+//            res.push_back(this->get(i)->getId());
+//        }
+//    }
+//    return res;
+//}
 
 template<typename E>
 Group<const ElemR> Group<E>::getInsideBound(

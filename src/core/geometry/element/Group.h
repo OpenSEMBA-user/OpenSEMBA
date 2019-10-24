@@ -110,8 +110,8 @@ public:
     Group<E>       getMatLayerId(const MatId, const LayerId);
     Group<const E> getMatLayerId(const MatId, const LayerId) const;
 
-    std::vector<Id> getIdsWithMaterialId   (const MatId matId) const;
-    std::vector<Id> getIdsWithoutMaterialId(const MatId matId) const;
+    //std::vector<Id> getIdsWithMaterialId   (const MatId matId) const;
+    //std::vector<Id> getIdsWithoutMaterialId(const MatId matId) const;
     Group<const ElemR> getInsideBound(const BoxR3& bound) const;
 
     //std::vector<std::pair<const E*,std::size_t>> getElementsWithVertex(

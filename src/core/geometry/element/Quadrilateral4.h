@@ -51,6 +51,10 @@ public:
                    const Coordinate::Coordinate<T,3>* coords[4],
                    const Layer* lay = nullptr,
                    const Model* mat = nullptr);
+	Quadrilateral4(const Id id,
+		std::array<const Coordinate::Coordinate<T, 3>*, 4> v,
+		const Layer* lay,
+		const Model* mat);
     Quadrilateral4(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                    const Id id,
                    const Box<T,3>& box,
