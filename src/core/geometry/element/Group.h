@@ -97,12 +97,14 @@ public:
 
     bool isLinear() const;
 
-    Group<E>       getMatId(const MatId matId);
+	Group<const E> getCoordId(const CoordId) const;
+	
+	Group<E>       getMatId(const MatId matId);
     Group<E>       getMatId(const std::vector<MatId>& matId);
     Group<const E> getMatId(const MatId matId) const;
     Group<const E> getMatId(const std::vector<MatId>& matId) const;
 
-    Group<E>       getLayerId(const LayerId layerId);
+	Group<E>       getLayerId(const LayerId layerId);
     Group<E>       getLayerId(const std::vector<LayerId>& layerId);
     Group<const E> getLayerId(const LayerId layerId) const;
     Group<const E> getLayerId(const std::vector<LayerId>& layerId) const;
@@ -140,7 +142,7 @@ public:
             const Coordinate::Group<Coordinate::Coordinate<T,3>>& vNew);
     void reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew);
     void reassignPointers(const SEMBA::Group::Identifiable<Model,MatId>& mNew);
-
+	
 private:
     std::vector<std::size_t> getElemsWith_(const std::vector<MatId>&) const;
     std::vector<std::size_t> getElemsWith_(const std::vector<LayerId>&) const;
@@ -158,6 +160,9 @@ namespace Geometry {
 
 typedef Element::Group<      ElemR>      ElemRGroup;
 typedef Element::Group<const ElemR> ConstElemRGroup;
+
+typedef Element::Group<      ElemI>      ElemIGroup;
+typedef Element::Group<const ElemI> ConstElemIGroup;
 
 typedef Element::Group<      SurfR>      SurfRGroup;
 typedef Element::Group<       VolR>      VolRGroup;

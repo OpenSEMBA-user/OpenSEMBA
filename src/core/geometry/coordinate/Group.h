@@ -77,6 +77,9 @@ public:
     const CoordR3* getPos(const Math::CVecR3& pos) const;
     const CoordI3* getPos(const Math::CVecI3& pos) const;
 
+	SEMBA::Group::Group<C> getAllInPos(const Math::CVecI3& pos) const;
+
+
     using SEMBA::Group::Identifiable<C,Id>::add;
     SEMBA::Group::Group<C> add(SEMBA::Group::Group<C>&);
     SEMBA::Group::Group<C> add(SEMBA::Group::Group<C>&&);

@@ -113,6 +113,9 @@ public:
 } /* namespace Error */
 } /* namespace Mesh */
 } /* namespace Geometry */
+
+typedef Geometry::Mesh::Structured StructuredMesh;
+
 } /* namespace SEMBA */
 
 #endif /* SEMBA_GEOMETRY_MESH_STRUCTURED_H_ */
