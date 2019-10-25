@@ -139,15 +139,19 @@ const CoordI3* Group<C>::getPos(const Math::CVecI3& position) const {
 }
 
 template<typename C>
-SEMBA::Group::Group<C> Group<C>::getAllInPos(
+SEMBA::Group::Group<const C> Group<C>::getAllInPos(
 	const Math::CVecI3& pos) const {
 	std::multiset<const CoordI3*, CoordComparator>::iterator it;
 	CoordI3 aux(pos);
-	SEMBA::Group::Group<C> res;
+	SEMBA::Group::Group<const C> res;
 	it = indexStr_.find(&aux);
-	while (it != indexStr_.end() || *it->pos() == pos) {
-		res.add(*it);
-		++it;
+	while (it != indexStr_.end()) {
+		if ((*it)->pos() == pos) {
+			res.add(*it);
+			++it;
+		} else {
+			break;
+		}
 	}
 	return res;
 }

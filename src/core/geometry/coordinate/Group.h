@@ -77,7 +77,7 @@ public:
     const CoordR3* getPos(const Math::CVecR3& pos) const;
     const CoordI3* getPos(const Math::CVecI3& pos) const;
 
-	SEMBA::Group::Group<C> getAllInPos(const Math::CVecI3& pos) const;
+	SEMBA::Group::Group<const C> getAllInPos(const Math::CVecI3& pos) const;
 
 
     using SEMBA::Group::Identifiable<C,Id>::add;
@@ -111,6 +111,7 @@ private:
 
 typedef Coordinate::Group<CoordR3> CoordR3Group;
 typedef Coordinate::Group<CoordI3> CoordI3Group;
+typedef Coordinate::Group<const CoordI3> ConstCoordI3Group;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */

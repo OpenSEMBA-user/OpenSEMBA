@@ -59,6 +59,20 @@ bool Group<E>::isLinear() const {
 }
 
 template<typename E>
+Group<const E> Group<E>::getCoordId(const CoordId id) const {
+	Group<const E> res;
+	for (size_t i = 0; i < this->size(); i++) { 
+		const E* elem = this->get(i);
+		for (size_t j = 0; j < elem->numberOfCoordinates(); j++) {
+			if (elem->getV(j)->getId() == id) {
+				res.add(elem);
+			}
+		}
+	}
+	return res;
+}
+
+template<typename E>
 Group<E> Group<E>::getMatId(const MatId matId) {
     std::vector<MatId> aux;
     aux.push_back(matId);
