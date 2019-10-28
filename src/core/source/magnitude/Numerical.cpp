@@ -81,7 +81,7 @@ Numerical::Numerical(const FileSystem::Project& file,
         const Math::Real current = mag.evaluate(time);
         bool isAligned = Math::Util::equal(current, interpolated,
                 0.0, std::numeric_limits<Math::Real>::epsilon());
-        if (!isAligned || i == nSteps-1) {
+        if (!isAligned) {
             out << std::setw(16) << std::setfill(' ') << time 
                 << std::setw(18) << std::setfill(' ') << current 
                 << std::endl;
