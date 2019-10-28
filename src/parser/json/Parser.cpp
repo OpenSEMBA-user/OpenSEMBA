@@ -211,14 +211,8 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
         return new PhysicalModel::Predefined::SMA(id, name);
 
     case PhysicalModel::PhysicalModel::PML:
-        if (j.at("automaticOrientation").get<bool>()) {
-            return new PhysicalModel::Volume::PML(id, name, nullptr);
-        } else {
-            Math::Axis::Local* localAxes;
-            localAxes = new Math::Axis::Local(
-                    strToLocalAxes(j.at("localAxes").get<std::string>()));
-            return new PhysicalModel::Volume::PML(id, name, localAxes);
-        }
+        return new PhysicalModel::Volume::PML(id, name, 
+			strToLocalAxes(j.at("localAxes").get<std::string>()));
 
     case PhysicalModel::PhysicalModel::classic:
         return new PhysicalModel::Volume::Classic(id, name,

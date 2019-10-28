@@ -26,46 +26,36 @@ namespace PhysicalModel {
 namespace Volume {
 
 PML::PML(const Id id,
-                     const std::string& name,
-                     const Math::Axis::Local* orientation)
+         const std::string& name,
+         const Math::Axis::Local orientation)
 :   Identifiable<Id>(id),
-    PhysicalModel(name) {
-    orientation_ = orientation;
+    PhysicalModel(name),
+    orientation_(orientation) {
 }
 
 PML::PML(const PML& rhs)
 :   Identifiable<Id>(rhs),
-    PhysicalModel(rhs) {
-    if (rhs.orientation_ != nullptr) {
-        orientation_ = new Math::Axis::Local(*rhs.orientation_);
-    } else {
-        orientation_ = nullptr;
-    }
+    PhysicalModel(rhs),
+    orientation_(rhs.orientation_) {
 }
 
 PML::~PML() {
-    if (orientation_ != nullptr) {
-        delete orientation_;
-    }
 }
 
 void PML::printInfo() const {
     std::cout << "--- VolumePML info ---" << std::endl;
     Volume::printInfo();
-    if (orientation_ != nullptr) {
-        orientation_->printInfo();
-    }
-
+    orientation_.printInfo();
 }
 
-const Math::Axis::Local* PML::getOrientation() const {
+const Math::Axis::Local PML::getOrientation() const {
     return orientation_;
 }
 
 const Math::CVecR3 PML::getGlobalZAxis() const {
     Math::CVecR3 localZ(0.0,0.0,1.0);
-    Math::CVecR3 res = getOrientation()->convertToGlobal(localZ)
-            - getOrientation()->getOrigin();
+    Math::CVecR3 res = getOrientation().convertToGlobal(localZ)
+            - getOrientation().getOrigin();
     return res;
 }
 
