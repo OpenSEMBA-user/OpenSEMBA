@@ -124,7 +124,6 @@
 *elseif(strcmp(Matprop(TypeId),"Conn_sLpRC")==0)
             "materialType": "Connector",
             "connectorType": "*MatProp(TypeId)",
-            "materialType": "*MatProp(TypeId)",
             "resistance": *matprop(resistance),
             "inductance": *matprop(inductance),
             "capacitance": *matprop(capacitance)
@@ -363,68 +362,72 @@
     },
 
 *# ----------------------------------------------------------
-*# ------------------ CONNECTOR ON POINT --------------------
+*# ------------------ CONNECTOR ON POINT -------------------
 *# ----------------------------------------------------------
 *# --- Precounts ---
 *set var nShort = 0
 *set elems(all)
-*set Cond Short_connector_on_point
+*set Cond Short
 *loop nodes *OnlyInCond
 *set var nShort = nShort + 1
 *end nodes
 *set var nOpen = 0
-*set Cond Open_connector_on_point
+*set Cond Open
 *loop nodes *OnlyInCond
 *set var nShort = nShort + 1
 *end nodes
 *set var nRLC = 0
-*set Cond RLC_connector_on_point
+*set Cond RLC
 *loop nodes *OnlyInCond
 *set var nRLC = nRLC + 1
 *end nodes
 *set var nConns = nShort + nOpen + nRLC
-"connectorOnPoint": [
+    "connectorOnPoint": [
 *set var nConnsWritten = 0
-*set Cond Short_connector_on_point
+*set Cond Short
 *loop nodes *OnlyInCond
 *set var nConnsWritten = nConnsWritten + 1
-    {        
-        "type": "*cond(Type)",
-        "coordIds": [*NodesNum]
-*if(nConnsWritten + 1 != nConns )
-    },
+        {    
+            "materialType": "Connector",
+            "connectorType": "*cond(TypeId)",
+            "coordIds": *NodesNum
+*if(nConnsWritten != nConns )
+        },
 *else
-    }
+        }
 *endif 
 *end loop
-*set Cond Open_connector_on_point
+*set Cond Open
 *loop nodes *OnlyInCond
 *set var nConnsWritten = nConnsWritten + 1
-    {        
-        "type": "*cond(Type)",
-        "coordIds": [*NodesNum]
-*if(nConnsWritten + 1 != nConns )
-    },
+        {        
+            "materialType": "Connector",
+            "connectorType": "*cond(TypeId)",
+            "coordIds": *NodesNum
+*if(nConnsWritten != nConns )
+        },
 *else
-    }
+        }
 *endif 
 *end loop
-*set Cond RLC_connector_on_point
+*set Cond RLC
 *loop nodes *OnlyInCond
 *set var nConnsWritten = nConnsWritten + 1
-    {
-        "connectorType": "*cond(TypeId)",
-        "resistance": *cond(resistance),
-        "inductance": *cond(inductance),
-        "capacitance": *cond(capacitance),
-        "coordId": [*NodesNum]
-*if(nConnsWritten + 1 != nConns )
-    },
+        {
+            "materialType": "Connector",
+            "connectorType": "*cond(TypeId)",
+            "resistance": *cond(resistance),
+            "inductance": *cond(inductance),
+            "capacitance": *cond(capacitance),
+            "coordIds": *NodesNum
+*if(nConnsWritten != nConns )
+        },
 *else
-    }
+        }
 *endif 
 *end loop
-],
+    ],
+
 *# ----------------------------------------------------------
 *# ---------------------- SOURCES ---------------------------
 *# ----------------------------------------------------------

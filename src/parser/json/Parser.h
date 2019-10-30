@@ -70,6 +70,10 @@ private:
     static PhysicalModel::Group<>* readPhysicalModels(const json&);
     static Geometry::Mesh::Geometric* readGeometricMesh(
             const PhysicalModel::Group<>&, const json&);
+	static void readConnectorOnPoint(
+			PMGroup& pMG,
+			Geometry::Mesh::Geometric& mesh, 
+		    const json&);
     static Source::Group<>* readSources(
             Geometry::Mesh::Geometric& mesh, const json&);
     static OutputRequest::Group<>* readOutputRequests(

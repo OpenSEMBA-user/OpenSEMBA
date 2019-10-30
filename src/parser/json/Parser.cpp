@@ -84,6 +84,11 @@ Data Parser::read(std::istream& stream) const {
     progress.advance();
 
     if (res.mesh != nullptr) {
+		readConnectorOnPoint(
+			*res.physicalModels,
+			*res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
+		progress.advance();
+
         res.sources = readSources(
                 *res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
         progress.advance();
@@ -197,8 +202,16 @@ PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j){
 PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
     PhysicalModel::PhysicalModel::Type type =
                 strToMaterialType( j.at("materialType").get<std::string>() );
-    MatId id = MatId(j.at("materialId").get<int>());
-    std::string name = j.at("name").get<std::string>();
+	MatId id;
+	if (j.find("materialId") != j.end()) {
+		id = MatId(j.at("materialId").get<int>());
+	} else {
+		id = MatId(0);
+	}
+	std::string name;
+	if (j.find("name") != j.end()) {
+		name = j.at("name").get<std::string>();
+	}
 
     switch (type) {
     case PhysicalModel::PhysicalModel::PEC:
@@ -321,6 +334,26 @@ OutputRequest::Group<>* Parser::readOutputRequests(
         res->add(readOutputRequest(mesh, *it));
     }
     return res;
+}
+
+void Parser::readConnectorOnPoint(
+	PMGroup& pMG,
+	Geometry::Mesh::Geometric& mesh, 
+	const json& j) {
+	const json& conns = j.at("connectorOnPoint").get<json>();
+	for (auto it = conns.begin(); it != conns.end(); it++) {
+		PhysicalModel::PhysicalModel* mat = readPhysicalModel(*it);
+		PMGroup addedMat = pMG.addId(mat);
+		MatId mId = addedMat.get(0)->getId();
+		
+		Geometry::CoordId cId( it->at("coordIds").get<int>() );
+		const Geometry::CoordR3* coord[1] = { mesh.coords().getId(cId) };
+		Geometry::ElemId eId(0);
+		Geometry::NodR* node = 
+			new Geometry::NodR(eId, coord, nullptr, pMG.getId(mId));
+		
+		mesh.elems().addId(node);
+	}
 }
 
 Geometry::Element::Group<> Parser::boxToElemGroup(
