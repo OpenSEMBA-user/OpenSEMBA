@@ -31,6 +31,7 @@
 #include <tuple>
 #include <type_traits>
 #include <vector>
+#include <cmath>
 
 #include "StringParser.h"
 
@@ -272,7 +273,7 @@ public:
 			msg << "Integer value overflow: " << val;
 			throw std::logic_error(msg.str());
 		}
-		return (Int) std::floor(val); 
+		return (Int) std::floor(val);
 	}
     Real    getReal  () const          { return get<Real>();          }
     Object& setInt   (const Int&  val) { return set(val);             }
