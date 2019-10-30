@@ -363,6 +363,69 @@
     },
 
 *# ----------------------------------------------------------
+*# ------------------ CONNECTOR ON POINT --------------------
+*# ----------------------------------------------------------
+*# --- Precounts ---
+*set var nShort = 0
+*set elems(all)
+*set Cond Short_connector_on_point
+*loop nodes *OnlyInCond
+*set var nShort = nShort + 1
+*end nodes
+*set var nOpen = 0
+*set Cond Open_connector_on_point
+*loop nodes *OnlyInCond
+*set var nShort = nShort + 1
+*end nodes
+*set var nRLC = 0
+*set Cond RLC_connector_on_point
+*loop nodes *OnlyInCond
+*set var nRLC = nRLC + 1
+*end nodes
+*set var nConns = nShort + nOpen + nRLC
+"connectorOnPoint": [
+*set var nConnsWritten = 0
+*set Cond Short_connector_on_point
+*loop nodes *OnlyInCond
+*set var nConnsWritten = nConnsWritten + 1
+    {        
+        "type": "*cond(Type)",
+        "coordIds": [*NodesNum]
+*if(nConnsWritten + 1 != nConns )
+    },
+*else
+    }
+*endif 
+*end loop
+*set Cond Open_connector_on_point
+*loop nodes *OnlyInCond
+*set var nConnsWritten = nConnsWritten + 1
+    {        
+        "type": "*cond(Type)",
+        "coordIds": [*NodesNum]
+*if(nConnsWritten + 1 != nConns )
+    },
+*else
+    }
+*endif 
+*end loop
+*set Cond RLC_connector_on_point
+*loop nodes *OnlyInCond
+*set var nConnsWritten = nConnsWritten + 1
+    {
+        "connectorType": "*cond(TypeId)",
+        "resistance": *cond(resistance),
+        "inductance": *cond(inductance),
+        "capacitance": *cond(capacitance),
+        "coordId": [*NodesNum]
+*if(nConnsWritten + 1 != nConns )
+    },
+*else
+    }
+*endif 
+*end loop
+],
+*# ----------------------------------------------------------
 *# ---------------------- SOURCES ---------------------------
 *# ----------------------------------------------------------
 *# --- Precounts sources ---

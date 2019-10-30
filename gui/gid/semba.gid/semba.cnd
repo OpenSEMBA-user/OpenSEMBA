@@ -552,3 +552,46 @@ VALUE: 0.0 0.0 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 TKWIDGET: GidUtils::TkwidgetGetVector3D
 END CONDITION
+
+# =====================================================================
+# =====================================================================
+# ===================== Connector on point ============================
+# =====================================================================
+# =====================================================================
+BOOK: Connector_on_point
+CONDITION: Short
+    CONDTYPE: over points
+    CONDMESHTYPE: over nodes
+    CANREPEAT: yes
+    QUESTION: TypeId
+    VALUE: Conn_short
+    STATE: HIDDEN
+END CONDITION
+
+CONDITION: Open
+    CONDTYPE: over points
+    CONDMESHTYPE: over nodes
+    CANREPEAT: yes
+    QUESTION: TypeId
+    VALUE: Conn_open
+    STATE: HIDDEN
+END CONDITION
+
+CONDITION: RLC
+    CONDTYPE: over points
+    CONDMESHTYPE: over nodes
+    CANREPEAT: yes
+    QUESTION: TypeId
+	VALUE: Conn_sRLC
+	STATE: HIDDEN
+	QUESTION: Resistance
+	VALUE: 0.0
+	HELP: Connector resistance (Ohms/meter)
+	QUESTION: Inductance
+	VALUE: 0.0
+	HELP: Connector self-inductance (Henrys/meter)
+	QUESTION: Capacitance
+	VALUE: 1E22
+	HELP: Wire capacitance (Farads/meter)
+	IMAGE: images/RLC_series.gif
+END CONDITION
