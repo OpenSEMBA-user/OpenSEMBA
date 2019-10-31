@@ -30,6 +30,7 @@
 
 #include "Data.h"
 #include "geometry/element/Polyline.h"
+#include "geometry/element/Line2.h"
 #include "geometry/graph/Vertices.h"
 #include "geometry/mesh/Structured.h"
 #include "geometry/mesh/Unstructured.h"

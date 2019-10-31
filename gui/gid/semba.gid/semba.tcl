@@ -171,15 +171,16 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
     # List of bitmaps.
     set sembaBitmapsNames(0) [ list \
 		            images/icons/data.gif \
-		                                 images/icons/meshingConfiguration.gif \
+		            images/icons/meshingConfiguration.gif \
 		            images/icons/boundingbox.gif \
 		            images/icons/meshing.gif \
 		            images/icons/predefinedMaterials.gif \
 		            images/icons/materials.gif \
-		                    images/icons/advancedMaterials.gif \
-		                    images/icons/wires.gif \
-		                    images/icons/sources.gif \
-		                    images/icons/requests.gif \
+		            images/icons/advancedMaterials.gif \
+		            images/icons/wires.gif \
+					images/icons/connectorOnPoint.gif \
+		            images/icons/sources.gif \
+		            images/icons/requests.gif \
 	]
     # List of commands.
     set sembaBitmapsCommands(0) [list \
@@ -191,8 +192,9 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
 		                    [list -np- GidOpenMaterials "Basic_materials"] \
 		                    [list -np- GidOpenMaterials "Advanced_materials"] \
 		                    [list -np- GidOpenMaterials "Wires_and_thin_gaps"] \
+							[list -np- GidOpenConditions "Connector_on_point"] \
 		                    [list -np- GidOpenConditions "Electromagnetic_sources"] \
-		                        [list -np- GidOpenConditions "Output_Requests"] \
+		                    [list -np- GidOpenConditions "Output_Requests"] \
 		                ]
     
     set sembaBitmapsHelp(0) [list \
@@ -204,6 +206,7 @@ proc semba::AddToolbar { { type "DEFAULT INSIDELEFT"} } {
 		                   [= "Basic Materials"] \
 		                   [= "Advanced Materials"] \
 		                   [= "Wires, wires terminations, and thin gaps"] \
+						   [= "Connector on point"] \
 		                   [= "Electromagnetic sources"] \
 		                   [= "Output Requests"] \
 		                  ]

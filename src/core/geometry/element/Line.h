@@ -44,6 +44,7 @@ public:
     inline std::size_t numberOfSideCoordinates(const std::size_t f = 0) const { 
         return 1; 
     }
+
 };
 
 template<class T>
