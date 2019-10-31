@@ -73,9 +73,9 @@
             "materialType": "*MatProp(TypeId)",
             "automaticOrientation": *matprop(Automatic_orientation),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
-            "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}",
+            "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}"
 *else
-            "localAxes": "*tcl(GiD_Info localaxes *matprop(Local_Axes))",
+            "localAxes": "*tcl(GiD_Info localaxes *matprop(Local_Axes))"
 *endif
 *elseif(strcmp(Matprop(TypeId),"Classic")==0)
             "materialType": "*MatProp(TypeId)",
