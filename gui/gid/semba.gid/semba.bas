@@ -71,7 +71,7 @@
             "materialType": "*MatProp(TypeId)"
 *elseif(strcmp(MatProp(TypeId),"PML")==0)
             "materialType": "*MatProp(TypeId)",
-            "automaticOrientation": *matprop(Automatic_orientation),
+            "automaticOrientation": *tcl(semba::intToBool *GenData(Slanted)),
 *if(strcmp(MatProp(Local_Axes),"-GLOBAL-")==0)
             "localAxes": "{0.0 0.0 0.0} {0.0 0.0 0.0}"
 *else
