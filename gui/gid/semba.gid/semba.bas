@@ -18,7 +18,11 @@
         "defaultSamplingPeriod": *GenData(Default_sampling_period),
         "forceRestarting": *tcl(semba::intToBool *GenData(Force_restarting)),
         "resumeSimulation": *tcl(semba::intToBool *GenData(Resume_simulation)),
+*if(strcasecmp(GenData(Flush),"")==0)
+        "flush": 0,
+*else
         "flush": *GenData(Flush),
+*endif
         "geometryScalingFactor": *GenData(scaling_factor),
 *if(strcmp(GenData(Additional_arguments),"")!=0)
         "additionalArguments": *tcl(json::write string *GenData(Additional_arguments)),
