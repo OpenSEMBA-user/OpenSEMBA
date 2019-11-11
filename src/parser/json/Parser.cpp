@@ -554,7 +554,10 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
                 strToCVecR3(g.at("stepSize").get<std::string>());
             if (g.at("fitSizeToBox").get<bool>()) {
                 for (std::size_t i = 0; i < 3; i++) {
-                    std::size_t n = std::ceil(box.getLength()[i] / stepSize[i]);
+					std::size_t n = std::round(box.getLength()[i] / stepSize[i]);
+					if (n == 0) {
+						n = 1;
+					}
                     stepSize[i] = box.getLength()[i] / n;
                 }
             }
@@ -576,6 +579,10 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
             }
             res.enlarge(boundaryPadding, boundaryMeshSize);
         }
+
+		if (res.hasZeroSize()) {
+			throw std::logic_error("Grid has zero size.");
+		}
         return res;
 
     } else if (gridType.compare("nativeGiD") == 0) {
