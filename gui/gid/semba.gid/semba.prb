@@ -62,7 +62,8 @@ HELP: minimum distance among multi-wires (default 0.5)
 TKWIDGET: semba::TkwidgetEntryValidation
 QUESTION: Map_VTK#CB#(0,1)
 VALUE: 0
-HELP: reates .VTK map of the PEC/wires/Surface geometry
+STATE: HIDDEN
+HELP: Creates .VTK map of the PEC/wires/Surface geometry
 QUESTION: Additional_arguments
 VALUE: 
 
