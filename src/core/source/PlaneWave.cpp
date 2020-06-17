@@ -50,11 +50,11 @@ PlaneWave::PlaneWave(
 
     Math::Real theta = directionAngles.first;
     Math::Real phi   = directionAngles.second;
-    Math::Real alpha = polarizationAngles.first;
-    Math::Real beta  = polarizationAngles.second;
+    Math::Real alpha_ = polarizationAngles.first;
+    Math::Real beta_  = polarizationAngles.second;
 
     Math::CVecR3 dirVec = polarToCartesian(theta, phi);
-    Math::CVecR3 polVec = polarToCartesian(alpha, beta);
+    Math::CVecR3 polVec = polarToCartesian(alpha_, beta_);
     init_(dirVec, polVec);
 }
 

@@ -41,11 +41,17 @@ QUESTION: Polarization_beta
 VALUE: 0.0
 HELP: The azimuthal angle (degrees) of the plane wave electric field vector.
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
 QUESTION: Frequency_maximum
 VALUE: 1.0e9
 HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
@@ -65,11 +71,17 @@ CONDMESHTYPE: over nodes
 QUESTION: type#CB#(voltage,current)
 VALUE: voltage
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
 QUESTION: Frequency_maximum
 VALUE: 1.0e9
 HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
@@ -94,11 +106,17 @@ VALUE: electricField
 QUESTION: Hardness#CB#(soft,hard)
 VALUE: soft
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
 QUESTION: Frequency_maximum
 VALUE: 1.0e9
 HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
@@ -130,11 +148,17 @@ VALUE: 0
 #VALUE: #WIDTH#(5)
 #TKWIDGET: GidUtils::TkwidgetGetVector3D
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
 QUESTION: Frequency_maximum
 VALUE: 1.0e9
 HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
@@ -166,11 +190,17 @@ Value: 0.0
 Question: Outer_radius
 Value: 0.0
 #Title: Magnitude
-QUESTION: Magnitude#CB#(Gaussian,Band_limited,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES:(Gaussian,            RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(Band_limited,        RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
-DEPENDENCIES:(File,                HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES:(File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES:(Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
 QUESTION: Frequency_maximum
 VALUE: 1.0e9
 HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.

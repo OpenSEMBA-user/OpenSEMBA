@@ -28,36 +28,12 @@ namespace SEMBA {
 namespace Math {
 namespace Function {
 
-Gaussian::Gaussian() {
-    spread_ = 0.0;
-    delay_  = 0.0;
-    freq_   = 0.0;
-}
-
-Gaussian::Gaussian(const Real spread,
-                   const Real delay,
-                   const Real freq) {
-    spread_ = spread;
-    delay_  = delay;
-    freq_   = freq;
-}
-
-Gaussian::Gaussian(const Gaussian& rhs) {
-    spread_ = rhs.spread_;
-    delay_  = rhs.delay_;
-    freq_   = rhs.freq_;
-}
-
-Gaussian::~Gaussian() {
-
-}
-
 Real Gaussian::operator ()(const Real& time) const {
     static const Real pi    = Constants::pi;
     static const Real sqrt2 = sqrt(2.0);
     Real expArg = (time - delay_) / (spread_ * sqrt2);
 
-    return exp(-expArg * expArg) * cos(freq_ * pi * 2.0 * time);
+    return amplitude_ * exp(-expArg * expArg) * cos(freq_ * pi * 2.0 * time);
 }
 
 bool Gaussian::operator==(const Base& rhs) const {
@@ -65,28 +41,17 @@ bool Gaussian::operator==(const Base& rhs) const {
         return false;
     }
     const Gaussian* rhsPtr = dynamic_cast<const Gaussian*>(&rhs);
-    return ((this->getSpread() == rhsPtr->getSpread()) &&
-            (this->getDelay()  == rhsPtr->getDelay())  &&
-            (this->getFreq()   == rhsPtr->getFreq()));
-}
-
-Real Gaussian::getSpread() const {
-   return spread_;
-}
-
-Real Gaussian::getDelay() const {
-   return delay_;
-}
-
-Real Gaussian::getFreq() const {
-   return freq_;
+    return ((this->getSpread()    == rhsPtr->getSpread()) &&
+            (this->getDelay()     == rhsPtr->getDelay()) &&
+            (this->getAmplitude() == rhsPtr->getAmplitude()) &&
+            (this->getFreq()      == rhsPtr->getFreq()));
 }
 
 std::complex<Real> Gaussian::getFourier(const Real freq) const {
     const Real pi2 = (Real) 2.0 * Constants::pi;
     const std::complex<Real> phase(0.0, getDelay() *pi2*freq);
     const std::complex<Real> phaseShift = std::exp(phase);
-    return getSpread() * std::sqrt(pi2)
+    return getAmplitude() * getSpread() * std::sqrt(pi2)
             * phaseShift
             * std::exp(- (Real) 0.5 * pow(getSpread()*pi2*freq,2));
 }
@@ -94,6 +59,7 @@ std::complex<Real> Gaussian::getFourier(const Real freq) const {
 void Gaussian::printInfo() const {
     std::cout << " --- Function Gaussian info --- " << std::endl;
     FunctionRR::printInfo();
+    std::cout << "Ampliude:  " << amplitude_ << std::endl;
     std::cout << "Spread:    " << spread_ << std::endl;
     std::cout << "Delay:     " << delay_ << std::endl;
     std::cout << "Frequency: " << freq_ << std::endl;

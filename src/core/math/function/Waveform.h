@@ -18,8 +18,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_COMMON_MATH_FUNCTION_BANDLIMITED_H_
-#define SRC_COMMON_MATH_FUNCTION_BANDLIMITED_H_
+#ifndef SRC_COMMON_MATH_FUNCTION_WAVEFORM_H_
+#define SRC_COMMON_MATH_FUNCTION_WAVEFORM_H_
 
 #include <complex>
 #include <limits>
@@ -27,26 +27,33 @@
 #include "Function.h"
 
 namespace SEMBA {
-namespace Math {
-namespace Function {
+    namespace Math {
+        namespace Function {
 
-    class BandLimited : public Function<Real, Real> {
-    public:
-        BandLimited(Real minimumFrequency, Real maximumFrequency, Real amplitude);
+            class Waveform : public Function<Real, Real> {
+            public:
+                enum Type {
+                    A,
+                    D,
+                    H
+                } class;
+                Waveform(Type type);
                 
-        SEMBA_MATH_FUNCTION_DEFINE_CLONE(BandLimited);
+                SEMBA_MATH_FUNCTION_DEFINE_CLONE(Waveform);
 
-        Real operator()(const Real& t) const;
-        bool operator==(const Base& rhs) const;
+                Real operator()(const Real& t) const;
+                bool operator==(const Base& rhs) const;
 
-        void printInfo() const;
-    private:
-        Real minimumFrequency_;
-        Real maximumFrequency_;
-    };
+                void printInfo() const;
+            private:
+                Real I0_;
+                Real alpha_;
+                Real beta_;
+                Real gamma_;
+            };
 
-} /* namespace Function */
-} /* namespace Math */
+        } /* namespace Function */
+    } /* namespace Math */
 } /* namespace SEMBA */
 
-#endif /* SRC_COMMON_MATH_FUNCTION_BANDLIMITED_H_ */
+#endif /* SRC_COMMON_MATH_FUNCTION_WAVEFORM_H_ */
