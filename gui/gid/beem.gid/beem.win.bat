@@ -2,7 +2,7 @@ rem OutputFile: %1.log
 rem Errorfile: %1.err
 
 doskey cd = cd /d $*
-set SEMBA = %3\bin\semba.exe
+set SEMBA = %3\bin\BEEM.exe
 echo Path to command: %SEMBA% > %1.log
 echo Project name: %1 >> %1.log
 echo Project path: %2 >> %1.log

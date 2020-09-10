@@ -29,7 +29,7 @@ proc InitGIDProject { dir } {
 	return 1
     }
     
-    set xmlfile [file join $dir semba.xml]
+    set xmlfile [file join $dir beem.xml]
     set data [ReadProblemtypeXml $xmlfile Infoproblemtype {Version EngineVersion MinimumGiDVersion Name Homepage Maintainer}]
     if { $data == "" } {
 	if { [ file exists $xmlfile]} {
@@ -89,7 +89,7 @@ proc EndGIDProject {} {
 
 proc LoadGIDProject { filespd } {        
     set pt [GiD_Info project ProblemType]
-    if { $pt == "semba" } {
+    if { $pt == "beem" } {
 		set filename [file rootname $filespd].xml
 		#set model_problemtype_version_number [OpenFoam::ReadXml $filename]            
     }

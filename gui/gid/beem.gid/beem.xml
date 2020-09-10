@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Infoproblemtype version="1.0">
     <Program>
-        <Name>Semba</Name>
+        <Name>beem</Name>
         <Version>0.14</Version>
 	<EngineVersion>XXXX</EngineVersion>
         <MinimumGiDVersion>11.1.5d</MinimumGiDVersion>
@@ -10,7 +10,7 @@
         <Homepage>http://www.sembahome.com</Homepage>
         <ShortDescription>Full-wave FDTD Electromagnetic solver (Evaluation)</ShortDescription>
         <Description>
-          This is the evaluation version of the SEMBA FDTD Electromagnetic simulator having the following features. 
+          This is the evaluation version of the BEEM FDTD Electromagnetic simulator having the following features. 
 	     * Cluster working capabilites through MPI.
              * Multiple threads per processor through OpenMP.
 	     * Closed/symmetric problems by means of PEC and PMC conditions.
