@@ -562,7 +562,7 @@ proc semba::writeSourceOnLineBAS {} {
 		"                \"frequencyMaximum\": $magnitude_frequency_maximum\n"
 		} elseif {$magnitude_type == "File"} {
 		        append result \
-		"                \"File\": $magnitude_file\n"
+		"                \"filename\": $magnitude_file\n"
 		}
 		append result \
 		"            },\n"
