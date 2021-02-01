@@ -36,6 +36,7 @@ Options::Options() {
     scalingFactor_ = 1.0;
     postmshExport_ = true;
     vtkExport_ = false;
+    contourRefinement_ = false;
     slanted_ = false;
     slantedThreshold_ = 1.0;
     gridStep_ = Math::CVecR3(0.0);
@@ -140,6 +141,9 @@ void Options::addArguments(Argument::Group& args) const {
 }
 
 void Options::set(const Solver::Settings& opts) {
+    if (opts.existsName("contourRefinement")) {
+        setContourRefinement(opts("contourRefinement").getBool());
+    }
     if (opts.existsName(  "vtkExport")) {
         setVtkExport(opts("vtkExport").getBool());
     }
@@ -219,6 +223,10 @@ void Options::setGridStep(const Math::CVecR3& gridStep) {
     gridStep_ = gridStep;
 }
 
+bool Options::isContourRefinement() const {
+    return contourRefinement_;
+}
+
 bool Options::isVtkExport() const {
     return vtkExport_;
 }
@@ -237,6 +245,10 @@ bool Options::isPostmshExport() const {
 
 void Options::setPostmshExport(bool postmshExport) {
     postmshExport_ = postmshExport;
+}
+
+void Options::setContourRefinement(bool contourRefinement) {
+    contourRefinement_ = contourRefinement;
 }
 
 void Options::setVtkExport(bool vtkExport) {

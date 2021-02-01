@@ -65,6 +65,7 @@ public:
     bool isGridStepSet() const;
     bool isVtkExport() const;
     bool isPostmshExport() const;
+    bool isContourRefinement() const;
     const Math::CVecR3& getGridStep() const;
     const PhysicalModel::Bound::Bound* getBoundTermination(const std::size_t d,
                                                     const std::size_t p) const;
@@ -85,6 +86,7 @@ public:
     void setOutputName(const std::string& outputName);
     void setScalingFactor(const Math::Real& scalingFactor);
     void setVtkExport(bool vtkExport);
+    void setContourRefinement(bool contourRefinement);
 
     void setSlanted(const bool&);
     void setSlantedThreshold(const Math::Real&);
@@ -101,6 +103,7 @@ private:
     std::string scaleFactorValue_;
     std::string outputName_;
 
+    bool contourRefinement_;
     bool vtkExport_;
     bool postmshExport_;
     Math::CVecR3 gridStep_;
