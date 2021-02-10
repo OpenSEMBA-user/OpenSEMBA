@@ -343,14 +343,13 @@ void Parser::readConnectorOnPoint(
 	const json& conns = j.at("connectorOnPoint").get<json>();
 	for (auto it = conns.begin(); it != conns.end(); it++) {
 		PhysicalModel::PhysicalModel* mat = readPhysicalModel(*it);
-		PMGroup addedMat = pMG.addId(mat);
-		MatId mId = addedMat.get(0)->getId();
-		
+		pMG.addId(mat);
+				
 		Geometry::CoordId cId( it->at("coordIds").get<int>() );
 		const Geometry::CoordR3* coord[1] = { mesh.coords().getId(cId) };
 		Geometry::ElemId eId(0);
 		Geometry::NodR* node = 
-			new Geometry::NodR(eId, coord, nullptr, pMG.getId(mId));
+			new Geometry::NodR(eId, coord, nullptr, pMG.getId(mat->getId()));
 		
 		mesh.elems().addId(node);
 	}
