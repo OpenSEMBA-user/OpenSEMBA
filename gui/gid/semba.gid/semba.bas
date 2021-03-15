@@ -241,6 +241,21 @@
 *endif
 *end layers
 *endif
+*set elems(all)
+*set Cond GridFromFile
+*if(CondNumEntities(int)>0)
+*loop layers *OnlyInCond
+        {
+*set var NGRIDS = NGRIDS + 1
+            "gridType": "positionsFromFile",
+            "filename": "*cond(File)"
+*if(CondNumEntities(int)!=loopVar)
+        },
+*else
+        }
+*endif
+*end layers
+*endif
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 0] != 0.0))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 1] != 0.0))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 2] != 0.0))
