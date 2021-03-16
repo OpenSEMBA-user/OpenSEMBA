@@ -38,6 +38,7 @@ Options::Options() {
     vtkExport_ = false;
     contourRefinement_ = false;
     unwantedConnectionsInfo_ = false;
+    structuredCellsInfo_ = false;
     slanted_ = false;
     slantedThreshold_ = 1.0;
     gridStep_ = Math::CVecR3(0.0);
@@ -148,6 +149,9 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName("unwantedConnectionsInfo")) {
         setUnwantedConnectionsInfo(opts("unwantedConnectionsInfo").getBool());
     }
+    if (opts.existsName("structuredCellsInfo")) {
+        setStructuredCellsInfo(opts("structuredCellsInfo").getBool());
+    }
     if (opts.existsName(  "vtkExport")) {
         setVtkExport(opts("vtkExport").getBool());
     }
@@ -235,6 +239,10 @@ bool Options::isUnwantedConnectionsInfo() const {
     return unwantedConnectionsInfo_;
 }
 
+bool Options::isStructuredCellsInfo() const {
+    return structuredCellsInfo_;
+}
+
 bool Options::isVtkExport() const {
     return vtkExport_;
 }
@@ -261,6 +269,10 @@ void Options::setContourRefinement(bool contourRefinement) {
 
 void Options::setUnwantedConnectionsInfo(bool rhs) {
     unwantedConnectionsInfo_ = rhs;
+}
+
+void Options::setStructuredCellsInfo(bool rhs) {
+    structuredCellsInfo_ = rhs;
 }
 
 void Options::setVtkExport(bool vtkExport) {

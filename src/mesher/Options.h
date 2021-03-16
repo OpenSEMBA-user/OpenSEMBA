@@ -67,6 +67,7 @@ public:
     bool isPostmshExport() const;
     bool isContourRefinement() const;
     bool isUnwantedConnectionsInfo() const;
+    bool isStructuredCellsInfo() const;
     const Math::CVecR3& getGridStep() const;
     const PhysicalModel::Bound::Bound* getBoundTermination(const std::size_t d,
                                                     const std::size_t p) const;
@@ -88,7 +89,8 @@ public:
     void setScalingFactor(const Math::Real& scalingFactor);
     void setVtkExport(bool vtkExport);
     void setContourRefinement(bool contourRefinement);
-    void setUnwantedConnectionsInfo(bool unwantedConnectionsInfo);
+    void setUnwantedConnectionsInfo(bool rhs);
+    void setStructuredCellsInfo(bool rhs);
 
     void setSlanted(const bool&);
     void setSlantedThreshold(const Math::Real&);
@@ -107,6 +109,7 @@ private:
 
     bool contourRefinement_;
     bool unwantedConnectionsInfo_;
+    bool structuredCellsInfo_;
     bool vtkExport_;
     bool postmshExport_;
     Math::CVecR3 gridStep_;

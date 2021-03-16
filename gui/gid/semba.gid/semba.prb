@@ -76,6 +76,8 @@ QUESTION: Contour_refinement#CB#(0,1)
 VALUE: 0
 QUESTION: Unwanted_connections_info#CB#(0,1)
 VALUE: 0
+QUESTION: Structured_Cells_info#CB#(0,1)
+VALUE: 0
 HELP: Refines the open contours of entitities with the same material and layer to ensure conductivity if distance between conturs is below half-cell.
 DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,  RESTORE, Forbidden_length, #CURRENT#)
 QUESTION: VTK_Export#CB#(0,1)

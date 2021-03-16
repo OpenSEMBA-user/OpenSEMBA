@@ -43,6 +43,7 @@
             "upperZBound": "*GenData(Upper_z_bound)",
             "contourRefinement": *tcl(semba::intToBool *GenData(Contour_refinement)),
             "unwantedConnectionsInfo": *tcl(semba::intToBool *GenData(Unwanted_connections_info)),
+            "structuredCellsInfo": *tcl(semba::intToBool *GenData(Structured_Cells_info)),
             "vtkExport": *tcl(semba::intToBool *GenData(VTK_Export)),
             "postmshExport": *tcl(semba::intToBool *GenData(postmsh_Export)),
             "mode": "*GenData(Mode)",
