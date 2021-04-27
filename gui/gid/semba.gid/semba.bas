@@ -258,6 +258,7 @@
 *endif
 *end layers
 *endif
+*if(tcl(expr [::GidUtils::VersionCmp 14] == -1 ))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 0] != 0.0))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 1] != 0.0))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 2] != 0.0))
@@ -278,7 +279,8 @@
 *endif
 *endif
 *endif
-*endif 
+*endif
+*endif
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 *if(NGRIDS==0)
 *WarningBox "No grids defined. Only one grid is allowed for UGRFDTD"
