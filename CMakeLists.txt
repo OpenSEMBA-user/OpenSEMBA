@@ -87,10 +87,10 @@ endif()
 
 add_definitions(-DOPENSEMBA_VERSION="0.14")
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
-                    ${CMAKE_CURRENT_LIST_DIR}/../external/json/
-                    ${CMAKE_CURRENT_LIST_DIR}
-                    ${CMAKE_CURRENT_LIST_DIR}/core/)
+include_directories(external/
+                    external/json/
+                    src/
+                    src/core/)
 add_subdirectory  (src/core     obj/src/core)
 add_subdirectories(src/parser   obj/src)
 add_subdirectory  (src/mesher   obj/src/mesher)
@@ -98,12 +98,12 @@ add_subdirectories(src/exporter obj/src)
 add_subdirectories(src/adapter  obj/src)
 add_subdirectory  (src/solver   obj/src/solver)
 
-#option(OPENSEMBA_TESTS OFF)
-#if(OPENSEMBA_TESTS)
-#    add_definitions(-DSEMBA_TESTS)
-#	enable_testing()
-#    find_package(GTest CONFIG REQUIRED)
-#    include_directories(${GTEST_INCLUDE_DIRS})
-#	add_subdirectories(test/     obj/test/)
-#	add_test(opensemba ${CMAKE_BINARY_DIR}/bin/opensemba)
-#endif()
+option(OPENSEMBA_TESTS OFF)
+if(OPENSEMBA_TESTS)
+    add_definitions(-DSEMBA_TESTS)
+	enable_testing()
+    find_package(GTest CONFIG REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+	add_subdirectories(test/     obj/test/)
+	add_test(opensemba ${CMAKE_BINARY_DIR}/bin/opensemba)
+endif()
