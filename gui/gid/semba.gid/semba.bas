@@ -46,6 +46,7 @@
             "structuredCellsInfo": *tcl(semba::intToBool *GenData(Structured_Cells_info)),
             "vtkExport": *tcl(semba::intToBool *GenData(VTK_Export)),
             "postmshExport": *tcl(semba::intToBool *GenData(postmsh_Export)),
+            "mesher": "*GenData(Mesher)",
             "mode": "*GenData(Mode)",
             "forbiddenLength": *GenData(Forbidden_length),
             "slantedWires": *tcl(semba::intToBool *GenData(Slanted)),

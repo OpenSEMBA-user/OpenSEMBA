@@ -32,6 +32,7 @@ namespace SEMBA {
 namespace Mesher {
 
 Options::Options() {
+    mesher_ = Mesher::AMesher;
     mode_ = Mode::conformal;
     scalingFactor_ = 1.0;
     postmshExport_ = true;
@@ -93,6 +94,10 @@ std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
 
 }
 
+Options::Mesher Options::getMesher() const {
+    return mesher_;
+}
+
 Options::Mode Options::getMode() const {
     return mode_;
 }
@@ -122,6 +127,10 @@ const PhysicalModel::Bound::Bound* Options::getBoundTermination(
 
 const Geometry::BoundTerminations3& Options::getBoundTerminations() const {
     return boundTermination_;
+}
+
+void Options::setMesher(const Mesher mesher) {
+    mesher_ = mesher;
 }
 
 void Options::setBoundTermination(
@@ -163,6 +172,9 @@ void Options::set(const Solver::Settings& opts) {
     }
     if (opts.existsName(         "slantedThreshold")) {
         setSlantedThreshold(opts("slantedThreshold").get<Math::Real>());
+    }
+    if (opts.existsName("mesher")) {
+        setMesher(strToMesher(opts("mesher").getString()));
     }
     if (opts.existsName(             "mode")) {
         setMode(strToMesherMode(opts("mode").getString()));
@@ -290,6 +302,16 @@ void Options::setSlantedThreshold(const Math::Real& slantedThreshold) {
 
 bool Options::isGridStepSet() const {
     return (gridStep_ != Math::CVecR3(0.0));
+}
+
+Options::Mesher Options::strToMesher(std::string str) {
+    if (str.compare("AMesher") == 0) {
+        return Mesher::AMesher;
+    } else if (str.compare("DMesher") == 0) {
+        return Mesher::DMesher;
+    } else {
+        throw std::logic_error("Unreckognized label: " + str);
+    }
 }
 
 Options::Mode Options::strToMesherMode(std::string str) {

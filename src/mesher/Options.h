@@ -45,6 +45,11 @@ namespace Mesher {
 
 class Options {
 public:
+    enum class Mesher {
+        AMesher,
+        DMesher
+    };
+
     enum class Mode {
         structured,
         relaxed,
@@ -57,6 +62,7 @@ public:
     void addArguments(Argument::Group& args) const;
     void set(const Solver::Settings& opts);
 
+    Mesher getMesher() const;
     Mode getMode() const;
     bool isStructured() const;
     bool isRelaxed() const;
@@ -78,6 +84,7 @@ public:
 
     const std::string& getOutputName() const;
 
+    void setMesher(const Mesher);
     void setBoundTermination(const std::size_t d,
                              const std::size_t p,
                              const PhysicalModel::Bound::Bound*);
@@ -101,12 +108,14 @@ public:
     static std::string toStr(const PhysicalModel::Bound::Bound*);
     
 private:
-    Math::Real scalingFactor_;
+    Mesher mesher_;
+    
     Mode mode_;
     Math::Real forbiddenLength_;
     std::string scaleFactorValue_;
+    
     std::string outputName_;
-
+    Math::Real scalingFactor_;
     bool contourRefinement_;
     bool unwantedConnectionsInfo_;
     bool structuredCellsInfo_;
@@ -119,6 +128,7 @@ private:
     bool slanted_;
     Math::Real slantedThreshold_;
 
+    static Mesher strToMesher(std::string);
     static Mode strToMesherMode(std::string);
     static Math::CVecR3 strToCVecR3(const std::string& str);
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(

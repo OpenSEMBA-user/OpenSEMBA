@@ -70,8 +70,8 @@ VALUE:
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(DMesheR)
-VALUE: DMesheR
+QUESTION: Mesher#CB#(DMesher, AMesher)
+VALUE: DMesher
 QUESTION: Contour_refinement#CB#(0,1)
 VALUE: 0
 QUESTION: Unwanted_connections_info#CB#(0,1)
