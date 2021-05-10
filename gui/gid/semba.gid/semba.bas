@@ -48,6 +48,7 @@
             "postmshExport": *tcl(semba::intToBool *GenData(postmsh_Export)),
             "mesher": "*GenData(Mesher)",
             "mode": "*GenData(Mode)",
+            "subgridPoints": *GenData(Subgrid_points),
             "forbiddenLength": *GenData(Forbidden_length),
             "slantedWires": *tcl(semba::intToBool *GenData(Slanted)),
             "slantedThreshold": *GenData(Segments_filter_threshold)

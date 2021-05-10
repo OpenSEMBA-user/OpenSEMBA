@@ -66,6 +66,7 @@ public:
     Mode getMode() const;
     bool isStructured() const;
     bool isRelaxed() const;
+    Math::Int getSubgridPoints() const;
     Math::Real getForbiddenLength() const;
     Math::Real getScalingFactor() const;
     bool isGridStepSet() const;
@@ -88,6 +89,7 @@ public:
     void setBoundTermination(const std::size_t d,
                              const std::size_t p,
                              const PhysicalModel::Bound::Bound*);
+    void setSubgridPoints(const Math::Int&);
     void setForbiddenLength(const Math::Real& edgeFraction);
     void setGridStep(const Math::CVecR3& gridStep);
     void setMode(Mode mode);
@@ -110,6 +112,7 @@ public:
 private:
     Mesher mesher_;
     
+    Math::UInt subgridPoints_;
     Mode mode_;
     Math::Real forbiddenLength_;
     std::string scaleFactorValue_;

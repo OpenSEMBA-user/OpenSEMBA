@@ -32,8 +32,10 @@ namespace SEMBA {
 namespace Mesher {
 
 Options::Options() {
-    mesher_ = Mesher::AMesher;
-    mode_ = Mode::conformal;
+    mesher_ = Mesher::DMesher;
+    mode_ = Mode::structured;
+    forbiddenLength_ = 1.0;
+    subgridPoints_ = 0;
     scalingFactor_ = 1.0;
     postmshExport_ = true;
     vtkExport_ = false;
@@ -43,7 +45,6 @@ Options::Options() {
     slanted_ = false;
     slantedThreshold_ = 1.0;
     gridStep_ = Math::CVecR3(0.0);
-    forbiddenLength_ = (Math::Real) (1.0 / 3.0);
 }
 
 void Options::printInfo() const {
@@ -113,6 +114,10 @@ bool Options::isRelaxed() const {
     return false;
 }
 
+Math::Int Options::getSubgridPoints() const {
+    return subgridPoints_;
+}
+
 Math::Real Options::getScalingFactor() const {
     return scalingFactor_;
 }
@@ -141,6 +146,11 @@ void Options::setBoundTermination(
     assert(p < 2);
     boundTermination_.setBound(d, p, bound);
 }
+
+void Options::setSubgridPoints(const Math::Int& sg) {
+    subgridPoints_ = sg;
+}
+
 void Options::addArguments(Argument::Group& args) const {
     args.addOption(new Argument::Switch("VTK Export", "vtkexport"));
     args.addOption(
@@ -152,13 +162,13 @@ void Options::addArguments(Argument::Group& args) const {
 }
 
 void Options::set(const Solver::Settings& opts) {
-    if (opts.existsName("contourRefinement")) {
+    if (opts.existsName(          "contourRefinement")) {
         setContourRefinement(opts("contourRefinement").getBool());
     }
-    if (opts.existsName("unwantedConnectionsInfo")) {
+    if (opts.existsName(                "unwantedConnectionsInfo")) {
         setUnwantedConnectionsInfo(opts("unwantedConnectionsInfo").getBool());
     }
-    if (opts.existsName("structuredCellsInfo")) {
+    if (opts.existsName(            "structuredCellsInfo")) {
         setStructuredCellsInfo(opts("structuredCellsInfo").getBool());
     }
     if (opts.existsName(  "vtkExport")) {
@@ -173,11 +183,14 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(         "slantedThreshold")) {
         setSlantedThreshold(opts("slantedThreshold").get<Math::Real>());
     }
-    if (opts.existsName("mesher")) {
+    if (opts.existsName(           "mesher")) {
         setMesher(strToMesher(opts("mesher").getString()));
     }
     if (opts.existsName(             "mode")) {
         setMode(strToMesherMode(opts("mode").getString()));
+    }
+    if (opts.existsName("subgridPoints")) {
+        setSubgridPoints(opts("subgridPoints").getInt());
     }
     if (opts.existsName(        "forbiddenLength")) {
         setForbiddenLength(opts("forbiddenLength").getReal());
