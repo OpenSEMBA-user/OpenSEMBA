@@ -322,6 +322,8 @@ Options::Mesher Options::strToMesher(std::string str) {
         return Mesher::AMesher;
     } else if (str.compare("DMesher") == 0) {
         return Mesher::DMesher;
+    } else if (str.compare("HMesher") == 0) {
+        return Mesher::HMesher;
     } else {
         throw std::logic_error("Unreckognized label: " + str);
     }

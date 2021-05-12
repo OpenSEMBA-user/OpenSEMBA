@@ -47,7 +47,8 @@ class Options {
 public:
     enum class Mesher {
         AMesher,
-        DMesher
+        DMesher,
+        HMesher
     };
 
     enum class Mode {
