@@ -165,6 +165,9 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(          "contourRefinement")) {
         setContourRefinement(opts("contourRefinement").getBool());
     }
+    if (opts.existsName("snap")) {
+        setSnap(opts("snap").getBool());
+    }
     if (opts.existsName(                "unwantedConnectionsInfo")) {
         setUnwantedConnectionsInfo(opts("unwantedConnectionsInfo").getBool());
     }
@@ -228,6 +231,10 @@ void Options::setMode(Mode mode) {
     mode_ = mode;
 }
 
+void Options::setSnap(bool snap) {
+    snap_ = snap;
+}
+
 void Options::setScalingFactor(const Math::Real& scalingFactor) {
     scalingFactor_ = scalingFactor;
 }
@@ -282,6 +289,10 @@ Math::Real Options::getSlantedThreshold() const {
 
 bool Options::isPostmshExport() const {
     return postmshExport_;
+}
+
+bool Options::isSnap() const {
+    return snap_;
 }
 
 void Options::setPostmshExport(bool postmshExport) {

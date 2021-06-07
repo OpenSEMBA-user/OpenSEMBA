@@ -70,6 +70,7 @@ public:
     Math::Int getSubgridPoints() const;
     Math::Real getForbiddenLength() const;
     Math::Real getScalingFactor() const;
+    bool isSnap() const;
     bool isGridStepSet() const;
     bool isVtkExport() const;
     bool isPostmshExport() const;
@@ -94,6 +95,7 @@ public:
     void setForbiddenLength(const Math::Real& edgeFraction);
     void setGridStep(const Math::CVecR3& gridStep);
     void setMode(Mode mode);
+    void setSnap(bool snap);
     void setPostmshExport(bool postmshExport);
     void setOutputName(const std::string& outputName);
     void setScalingFactor(const Math::Real& scalingFactor);
@@ -115,6 +117,7 @@ private:
     
     Math::UInt subgridPoints_;
     Mode mode_;
+    bool snap_;
     Math::Real forbiddenLength_;
     std::string scaleFactorValue_;
     
