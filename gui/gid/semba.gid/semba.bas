@@ -49,7 +49,7 @@
             "mesher": "*GenData(Mesher)",
             "mode": "*GenData(Mode)",
             "subgridPoints": *GenData(Subgrid_points),
-            "snap": *tcl(semba:intToBool *GenData(snap)),
+            "snap": *tcl(semba::intToBool *GenData(snap)),
             "forbiddenLength": *GenData(Forbidden_length),
             "slantedWires": *tcl(semba::intToBool *GenData(Slanted)),
             "slantedThreshold": *GenData(Segments_filter_threshold)
