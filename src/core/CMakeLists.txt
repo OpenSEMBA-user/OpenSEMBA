@@ -21,6 +21,7 @@
 
 cmake_minimum_required(VERSION 3.0)
 
+
 macro(add_subdirectories dir bin)
     set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
     file(GLOB children RELATIVE ${curdir} ${curdir}/*)
@@ -76,7 +77,9 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
+
 add_subdirectories(. .)
+
 if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
     add_library(opensemba_core_data STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h

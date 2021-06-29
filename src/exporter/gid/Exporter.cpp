@@ -67,6 +67,12 @@ void Exporter::init_(
     default:
         throw std::logic_error("Invalid GiD exporting mode.");
     }
+
+    Math::Real scalingFactor =
+        smb->solver->getSettings()("geometryScalingFactor").getReal();
+    if (scalingFactor != 0.0) {
+        smb->mesh->applyScalingFactor(1.0 / scalingFactor);
+    }
     writeMesh_(smb);
 }
 

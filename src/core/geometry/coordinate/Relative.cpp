@@ -86,7 +86,13 @@ CoordR3* Relative::toUnstructured(const Grid3& grid) const {
     Math::CVecR3 pos = grid.getPos(*this);
     for (std::size_t d = 0; d < 3; d++) {
         Math::Real length = rel_(d);
-        Math::Int cellDir = this->pos()(d) + 1;
+        Math::Int cellDir;
+        if (this->pos()(d) == grid.getNumCells()(d)) {
+            cellDir = this->pos()(d);
+        }
+        else {
+            cellDir = this->pos()(d) + 1;
+        }
         Math::Real posAux = grid.getPos(d, cellDir);
         Math::Real step = posAux - pos(d);
         pos(d) += step * length;
