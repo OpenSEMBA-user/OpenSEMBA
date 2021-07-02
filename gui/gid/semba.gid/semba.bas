@@ -232,7 +232,6 @@
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *else
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
-            "directions": "{*cond(Size)}",
             "boundaryPaddingType": "*cond(boundary_padding_type)",
             "upperPadding": "{*cond(Upper_padding)}",
             "lowerPadding": "{*cond(Lower_padding)}",
