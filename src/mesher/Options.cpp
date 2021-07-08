@@ -38,6 +38,7 @@ Options::Options() {
     subgridPoints_ = 0;
     scalingFactor_ = 1.0;
     postmshExport_ = true;
+    postsmbExport_ = false;
     vtkExport_ = false;
     contourRefinement_ = false;
     unwantedConnectionsInfo_ = false;
@@ -180,6 +181,9 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(      "postmshExport")) {
         setPostmshExport(opts("postmshExport").getBool());
     }
+    if (opts.existsName("postsmbExport")) {
+        setPostsmbExport(opts("postsmbExport").getBool());
+    }
     if (opts.existsName("slantedWires")) {
         setSlanted(opts("slantedWires").getBool());
     }
@@ -291,12 +295,20 @@ bool Options::isPostmshExport() const {
     return postmshExport_;
 }
 
+bool Options::isPostsmbExport() const {
+    return postsmbExport_;
+}
+
 bool Options::isSnap() const {
     return snap_;
 }
 
 void Options::setPostmshExport(bool postmshExport) {
     postmshExport_ = postmshExport;
+}
+
+void Options::setPostsmbExport(bool postsmbExport) {
+    postsmbExport_ = postsmbExport;
 }
 
 void Options::setContourRefinement(bool contourRefinement) {
