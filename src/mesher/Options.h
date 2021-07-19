@@ -46,7 +46,6 @@ namespace Mesher {
 class Options {
 public:
     enum class Mesher {
-        AMesher,
         DMesher,
         HMesher
     };
@@ -58,12 +57,18 @@ public:
         conformal
     };
 
+    enum class HMesherMode {
+        raw,
+        adapted
+    };
+
     Options();
 
     void addArguments(Argument::Group& args) const;
     void set(const Solver::Settings& opts);
 
     Mesher getMesher() const;
+    HMesherMode getHMesherMode() const;
     Mode getMode() const;
     bool isStructured() const;
     bool isRelaxed() const;
@@ -83,20 +88,21 @@ public:
                                                     const std::size_t p) const;
     const Geometry::BoundTerminations3& getBoundTerminations() const;
 
-    bool        isSlanted() const;
+    bool       isSlanted() const;
     Math::Real getSlantedThreshold() const;
 
     const std::string& getOutputName() const;
 
     void setMesher(const Mesher);
+    void setHMesherMode(const HMesherMode);
     void setBoundTermination(const std::size_t d,
                              const std::size_t p,
                              const PhysicalModel::Bound::Bound*);
     void setSubgridPoints(const Math::Int&);
     void setForbiddenLength(const Math::Real& edgeFraction);
     void setGridStep(const Math::CVecR3& gridStep);
-    void setMode(Mode mode);
-    void setSnap(bool snap);
+    void setMode(const Mode mode);
+    void setSnap(const bool snap);
     void setPostmshExport(bool postmshExport);
     void setPostsmbExport(bool postmshExport);
     void setOutputName(const std::string& outputName);
@@ -119,6 +125,7 @@ private:
     
     Math::UInt subgridPoints_;
     Mode mode_;
+    HMesherMode hMesherMode_;
     bool snap_;
     Math::Real forbiddenLength_;
     std::string scaleFactorValue_;
@@ -140,6 +147,7 @@ private:
 
     static Mesher strToMesher(std::string);
     static Mode strToMesherMode(std::string);
+    static HMesherMode strToHMesherMode(std::string);
     static Math::CVecR3 strToCVecR3(const std::string& str);
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
             const std::string& str);

@@ -34,6 +34,7 @@ namespace Mesher {
 Options::Options() {
     mesher_ = Mesher::DMesher;
     mode_ = Mode::structured;
+    hMesherMode_ = HMesherMode::adapted;
     forbiddenLength_ = 1.0;
     subgridPoints_ = 0;
     scalingFactor_ = 1.0;
@@ -98,6 +99,10 @@ std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
 
 Options::Mesher Options::getMesher() const {
     return mesher_;
+}
+
+Options::HMesherMode Options::getHMesherMode() const {
+    return hMesherMode_;
 }
 
 Options::Mode Options::getMode() const {
@@ -166,8 +171,11 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(          "contourRefinement")) {
         setContourRefinement(opts("contourRefinement").getBool());
     }
+    if (opts.existsName("hMesherMode")) {
+        setHMesherMode(strToHMesherMode(opts("hMesherMode").getString()));
+    }
     if (opts.existsName("snap")) {
-        setSnap(opts("snap").getBool());
+        setSnap(opts(   "snap").getBool());
     }
     if (opts.existsName(                "unwantedConnectionsInfo")) {
         setUnwantedConnectionsInfo(opts("unwantedConnectionsInfo").getBool());
@@ -231,12 +239,16 @@ void Options::set(const Solver::Settings& opts) {
     }
 }
 
-void Options::setMode(Mode mode) {
+void Options::setMode(const Mode mode) {
     mode_ = mode;
 }
 
-void Options::setSnap(bool snap) {
+void Options::setSnap(const bool snap) {
     snap_ = snap;
+}
+
+void Options::setHMesherMode(const HMesherMode rhs) {
+    hMesherMode_ = rhs;
 }
 
 void Options::setScalingFactor(const Math::Real& scalingFactor) {
@@ -341,13 +353,23 @@ bool Options::isGridStepSet() const {
 }
 
 Options::Mesher Options::strToMesher(std::string str) {
-    if (str.compare("AMesher") == 0) {
-        return Mesher::AMesher;
-    } else if (str.compare("DMesher") == 0) {
+    if (str.compare("DMesher") == 0) {
         return Mesher::DMesher;
     } else if (str.compare("HMesher") == 0) {
         return Mesher::HMesher;
     } else {
+        throw std::logic_error("Unreckognized label: " + str);
+    }
+}
+
+Options::HMesherMode Options::strToHMesherMode(std::string str) {
+    if (str.compare("Raw") == 0) {
+        return HMesherMode::raw;
+    }
+    else if (str.compare("Adapted") == 0) {
+        return HMesherMode::adapted;
+    }
+    else {
         throw std::logic_error("Unreckognized label: " + str);
     }
 }
