@@ -48,6 +48,7 @@
             "postmshExport": *tcl(semba::intToBool *GenData(postmsh_Export)),
             "postsmbExport": *tcl(semba::intToBool *GenData(postsmb_Export)),
             "mesher": "*GenData(Mesher)",
+            "hwMeshExport": *tcl(semba::intToBool *GenData(HWMesh_Export)),
             "hMesherMode": "*GenData(HMesher_mode)",
             "mode": "*GenData(Mode)",
             "subgridPoints": *GenData(Subgrid_points),

@@ -77,9 +77,12 @@ public:
     Math::Real getScalingFactor() const;
     bool isSnap() const;
     bool isGridStepSet() const;
-    bool isVtkExport() const;
+
+    bool isHWMeshExport() const;
     bool isPostmshExport() const;
     bool isPostsmbExport() const;
+    bool isVtkExport() const;
+
     bool isContourRefinement() const;
     bool isUnwantedConnectionsInfo() const;
     bool isStructuredCellsInfo() const;
@@ -103,11 +106,14 @@ public:
     void setGridStep(const Math::CVecR3& gridStep);
     void setMode(const Mode mode);
     void setSnap(const bool snap);
+
+    void setHWMeshExport(bool);
     void setPostmshExport(bool postmshExport);
     void setPostsmbExport(bool postmshExport);
+    void setVtkExport(bool vtkExport);
+
     void setOutputName(const std::string& outputName);
     void setScalingFactor(const Math::Real& scalingFactor);
-    void setVtkExport(bool vtkExport);
     void setContourRefinement(bool contourRefinement);
     void setUnwantedConnectionsInfo(bool rhs);
     void setStructuredCellsInfo(bool rhs);
@@ -135,9 +141,12 @@ private:
     bool contourRefinement_;
     bool unwantedConnectionsInfo_;
     bool structuredCellsInfo_;
-    bool vtkExport_;
+    
+    bool hwMeshExport_;
     bool postmshExport_;
     bool postsmbExport_;
+    bool vtkExport_;
+
     Math::CVecR3 gridStep_;
 
     Geometry::BoundTerminations3 boundTermination_;

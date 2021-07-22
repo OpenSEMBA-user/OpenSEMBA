@@ -38,6 +38,7 @@ Options::Options() {
     forbiddenLength_ = 1.0;
     subgridPoints_ = 0;
     scalingFactor_ = 1.0;
+    hwMeshExport_ = false;
     postmshExport_ = true;
     postsmbExport_ = false;
     vtkExport_ = false;
@@ -183,14 +184,17 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(            "structuredCellsInfo")) {
         setStructuredCellsInfo(opts("structuredCellsInfo").getBool());
     }
-    if (opts.existsName(  "vtkExport")) {
-        setVtkExport(opts("vtkExport").getBool());
+    if (opts.existsName(     "hwMeshExport")) {
+        setHWMeshExport(opts("hwMeshExport").getBool());
     }
     if (opts.existsName(      "postmshExport")) {
         setPostmshExport(opts("postmshExport").getBool());
     }
     if (opts.existsName("postsmbExport")) {
         setPostsmbExport(opts("postsmbExport").getBool());
+    }
+    if (opts.existsName(  "vtkExport")) {
+        setVtkExport(opts("vtkExport").getBool());
     }
     if (opts.existsName("slantedWires")) {
         setSlanted(opts("slantedWires").getBool());
@@ -291,6 +295,10 @@ bool Options::isStructuredCellsInfo() const {
     return structuredCellsInfo_;
 }
 
+bool Options::isHWMeshExport() const {
+    return hwMeshExport_;
+}
+
 bool Options::isVtkExport() const {
     return vtkExport_;
 }
@@ -333,6 +341,10 @@ void Options::setUnwantedConnectionsInfo(bool rhs) {
 
 void Options::setStructuredCellsInfo(bool rhs) {
     structuredCellsInfo_ = rhs;
+}
+
+void Options::setHWMeshExport(bool hwMeshExport) {
+    hwMeshExport_ = hwMeshExport;
 }
 
 void Options::setVtkExport(bool vtkExport) {
