@@ -72,17 +72,14 @@ BOOK: Mesher_options
 Title: Mesher
 QUESTION: Mesher#CB#(DMesher,HMesher)
 VALUE: DMesher
-DEPENDENCIES: (DMesher, HIDE,   HWMesh_Export,0,         HIDE,   HMesher_mode, Adapted,   HIDE,    Subgrid_points, #CURRENT#, HIDE,    Snap, #CURRENT#, RESTORE,    Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, RESTORE,Contour_refinement,#CURRENT#)
-DEPENDENCIES: (HMesher, RESTORE,HWMesh_Export,#CURRENT#, RESTORE,HMesher_mode, #CURRENT#, RESTORE, Subgrid_points, #CURRENT#, RESTORE, Snap, #CURRENT#, HIDE,       Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, HIDE,   Contour_refinement,#CURRENT#)
-QUESTION: HWMesh_Export#CB#(0,1)
-VALUE: 0
-QUESTION: HMesher_mode#CB#(Raw,Adapted)
+DEPENDENCIES: (DMesher, HIDE,   HWMesh_Export,0,         HIDE,   HMesher_mode, Adapted,   HIDE,    Edge_points, #CURRENT#, RESTORE,    Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, RESTORE,Contour_refinement,#CURRENT#)
+DEPENDENCIES: (HMesher, RESTORE,HWMesh_Export,#CURRENT#, RESTORE,HMesher_mode, #CURRENT#, RESTORE, Edge_points, #CURRENT#, HIDE,       Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, HIDE,   Contour_refinement,#CURRENT#)
+QUESTION: HMesher_mode#CB#(Raw,Adapted,Snap)
 VALUE: Raw
-DEPENDENCIES: (Raw,     HIDE,    Subgrid_points, #CURRENT#, HIDE,    Snap, #CURRENT#, HIDE,Mode,#CURRENT#, HIDE,Forbidden_length,#CURRENT#)
-DEPENDENCIES: (Adapted, RESTORE, Subgrid_points, #CURRENT#, RESTORE, Snap, #CURRENT#, HIDE,Mode,#CURRENT#, RESTORE,Forbidden_length,#CURRENT#)
-QUESTION: Snap#CB#(0,1)
-VALUE: 1
-QUESTION: Subgrid_points
+DEPENDENCIES: (Raw,     HIDE,    Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, HIDE,Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Adapted, HIDE,    Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, HIDE,Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Snap,    RESTORE, Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, RESTORE,Forbidden_length,#CURRENT#)
+QUESTION: Edge_points
 VALUE: 0
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
 VALUE: Relaxed
@@ -119,7 +116,9 @@ HELP: Exports generated meshes in the native GiD formats for their visualization
 QUESTION: postsmb_Export#CB#(0,1)
 VALUE: 0
 HELP: Exports readed meshes in the native GiD formats for their visualization when the postprocessing is activated.
-
+QUESTION: HWMesh_Export#CB#(0,1)
+VALUE: 0
+HELP: Exports readed meshes asserialized HWMesh classes.
 Title: Geometry
 QUESTION: model_units#CB#(m,cm,mm,nm,other)
 VALUE: m

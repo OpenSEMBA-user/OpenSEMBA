@@ -51,8 +51,7 @@
             "hwMeshExport": *tcl(semba::intToBool *GenData(HWMesh_Export)),
             "hMesherMode": "*GenData(HMesher_mode)",
             "mode": "*GenData(Mode)",
-            "subgridPoints": *GenData(Subgrid_points),
-            "snap": *tcl(semba::intToBool *GenData(snap)),
+            "edgePoints": *GenData(Edge_points),
             "forbiddenLength": *GenData(Forbidden_length),
             "slantedWires": *tcl(semba::intToBool *GenData(Slanted)),
             "slantedThreshold": *GenData(Segments_filter_threshold)

@@ -59,7 +59,8 @@ public:
 
     enum class HMesherMode {
         raw,
-        adapted
+        adapted,
+        snap
     };
 
     Options();
@@ -72,10 +73,9 @@ public:
     Mode getMode() const;
     bool isStructured() const;
     bool isRelaxed() const;
-    Math::Int getSubgridPoints() const;
+    Math::Int getEdgePoints() const;
     Math::Real getForbiddenLength() const;
     Math::Real getScalingFactor() const;
-    bool isSnap() const;
     bool isGridStepSet() const;
 
     bool isHWMeshExport() const;
@@ -101,12 +101,11 @@ public:
     void setBoundTermination(const std::size_t d,
                              const std::size_t p,
                              const PhysicalModel::Bound::Bound*);
-    void setSubgridPoints(const Math::Int&);
+    void setEdgePoints(const Math::Int&);
     void setForbiddenLength(const Math::Real& edgeFraction);
     void setGridStep(const Math::CVecR3& gridStep);
     void setMode(const Mode mode);
-    void setSnap(const bool snap);
-
+    
     void setHWMeshExport(bool);
     void setPostmshExport(bool postmshExport);
     void setPostsmbExport(bool postmshExport);
@@ -129,7 +128,7 @@ public:
 private:
     Mesher mesher_;
     
-    Math::UInt subgridPoints_;
+    Math::UInt edgePoints_;
     Mode mode_;
     HMesherMode hMesherMode_;
     bool snap_;

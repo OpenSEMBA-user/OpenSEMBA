@@ -36,7 +36,7 @@ Options::Options() {
     mode_ = Mode::structured;
     hMesherMode_ = HMesherMode::adapted;
     forbiddenLength_ = 1.0;
-    subgridPoints_ = 0;
+    edgePoints_ = 0;
     scalingFactor_ = 1.0;
     hwMeshExport_ = false;
     postmshExport_ = true;
@@ -121,8 +121,8 @@ bool Options::isRelaxed() const {
     return false;
 }
 
-Math::Int Options::getSubgridPoints() const {
-    return subgridPoints_;
+Math::Int Options::getEdgePoints() const {
+    return edgePoints_;
 }
 
 Math::Real Options::getScalingFactor() const {
@@ -154,8 +154,8 @@ void Options::setBoundTermination(
     boundTermination_.setBound(d, p, bound);
 }
 
-void Options::setSubgridPoints(const Math::Int& sg) {
-    subgridPoints_ = sg;
+void Options::setEdgePoints(const Math::Int& sg) {
+    edgePoints_ = sg;
 }
 
 void Options::addArguments(Argument::Group& args) const {
@@ -174,9 +174,6 @@ void Options::set(const Solver::Settings& opts) {
     }
     if (opts.existsName("hMesherMode")) {
         setHMesherMode(strToHMesherMode(opts("hMesherMode").getString()));
-    }
-    if (opts.existsName("snap")) {
-        setSnap(opts(   "snap").getBool());
     }
     if (opts.existsName(                "unwantedConnectionsInfo")) {
         setUnwantedConnectionsInfo(opts("unwantedConnectionsInfo").getBool());
@@ -208,8 +205,8 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(             "mode")) {
         setMode(strToMesherMode(opts("mode").getString()));
     }
-    if (opts.existsName("subgridPoints")) {
-        setSubgridPoints(opts("subgridPoints").getInt());
+    if (opts.existsName("edgePoints")) {
+        setEdgePoints(opts("edgePoints").getInt());
     }
     if (opts.existsName(        "forbiddenLength")) {
         setForbiddenLength(opts("forbiddenLength").getReal());
@@ -245,10 +242,6 @@ void Options::set(const Solver::Settings& opts) {
 
 void Options::setMode(const Mode mode) {
     mode_ = mode;
-}
-
-void Options::setSnap(const bool snap) {
-    snap_ = snap;
 }
 
 void Options::setHMesherMode(const HMesherMode rhs) {
@@ -319,10 +312,6 @@ bool Options::isPostsmbExport() const {
     return postsmbExport_;
 }
 
-bool Options::isSnap() const {
-    return snap_;
-}
-
 void Options::setPostmshExport(bool postmshExport) {
     postmshExport_ = postmshExport;
 }
@@ -380,6 +369,9 @@ Options::HMesherMode Options::strToHMesherMode(std::string str) {
     }
     else if (str.compare("Adapted") == 0) {
         return HMesherMode::adapted;
+    }
+    else if (str.compare("Snap") == 0) {
+        return HMesherMode::snap;
     }
     else {
         throw std::logic_error("Unreckognized label: " + str);
