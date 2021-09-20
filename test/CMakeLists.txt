@@ -38,6 +38,7 @@ target_link_libraries(opensemba_tests
                         opensemba_core_data
                         opensemba_parser_json
                         opensemba_parser_stl)
+target_link_libraries(opensemba_tests -static)
 
 add_test(opensemba  ${CMAKE_BINARY_DIR}/bin/opensemba_tests)
 
