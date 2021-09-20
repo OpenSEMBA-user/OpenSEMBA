@@ -19,7 +19,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
+
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{CMAKE_TOOLCHAIN_FILE})
+   set(CMAKE_TOOLCHAIN_FILE $ENV{CMAKE_TOOLCHAIN_FILE})
+endif()
 
 macro(add_subdirectories dir bin)
     set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
@@ -63,16 +67,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_subdirectory  (../external obj/external)
-
+add_subdirectory  (external obj/external)
 
 project(opensemba CXX)
-
-find_package(OpenMP)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)
@@ -90,21 +87,22 @@ endif()
 
 add_definitions(-DOPENSEMBA_VERSION="0.14")
 
-include_directories(${CMAKE_CURRENT_LIST_DIR}/../external/
-                    ${CMAKE_CURRENT_LIST_DIR}/../external/json/
-                    ${CMAKE_CURRENT_LIST_DIR}
-                    ${CMAKE_CURRENT_LIST_DIR}/core/)
-add_subdirectory  (core     obj/src/core)
-add_subdirectories(parser   obj/src)
-add_subdirectory  (mesher   obj/src/mesher)
-add_subdirectories(exporter obj/src)
-add_subdirectories(adapter  obj/src)
-add_subdirectory  (solver   obj/src/solver)
+include_directories(external/
+                    external/json/
+                    src/
+                    src/core/)
+add_subdirectory  (src/core     obj/src/core)
+add_subdirectories(src/parser   obj/src)
+add_subdirectory  (src/mesher   obj/src/mesher)
+add_subdirectories(src/exporter obj/src)
+add_subdirectories(src/adapter  obj/src)
+add_subdirectory  (src/solver   obj/src/solver)
 
 option(OPENSEMBA_TESTS OFF)
-
 if(OPENSEMBA_TESTS)
-	add_subdirectories(apps     obj/src)
+    add_definitions(-DOPENSEMBA_TESTS)
 	enable_testing()
-	add_test(opensemba ${CMAKE_BINARY_DIR}/bin/opensemba)
+    #find_package(GTest CONFIG REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+	add_subdirectories(test/     obj/test/)
 endif()

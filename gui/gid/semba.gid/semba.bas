@@ -41,9 +41,17 @@
             "upperXBound": "*GenData(Upper_x_bound)",
             "upperYBound": "*GenData(Upper_y_bound)",          
             "upperZBound": "*GenData(Upper_z_bound)",
+            "contourRefinement": *tcl(semba::intToBool *GenData(Contour_refinement)),
+            "unwantedConnectionsInfo": *tcl(semba::intToBool *GenData(Unwanted_connections_info)),
+            "structuredCellsInfo": *tcl(semba::intToBool *GenData(Structured_Cells_info)),
             "vtkExport": *tcl(semba::intToBool *GenData(VTK_Export)),
             "postmshExport": *tcl(semba::intToBool *GenData(postmsh_Export)),
+            "postsmbExport": *tcl(semba::intToBool *GenData(postsmb_Export)),
+            "mesher": "*GenData(Mesher)",
+            "hwMeshExport": *tcl(semba::intToBool *GenData(HWMesh_Export)),
+            "hMesherMode": "*GenData(HMesher_mode)",
             "mode": "*GenData(Mode)",
+            "edgePoints": *GenData(Edge_points),
             "forbiddenLength": *GenData(Forbidden_length),
             "slantedWires": *tcl(semba::intToBool *GenData(Slanted)),
             "slantedThreshold": *GenData(Segments_filter_threshold)
@@ -226,7 +234,6 @@
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)"
 *else
             "layerBox": "*tcl(GiD_Info layer -bbox -use geometry *layerName)",
-            "directions": "{*cond(Size)}",
             "boundaryPaddingType": "*cond(boundary_padding_type)",
             "upperPadding": "{*cond(Upper_padding)}",
             "lowerPadding": "{*cond(Lower_padding)}",
@@ -240,6 +247,22 @@
 *endif
 *end layers
 *endif
+*set elems(all)
+*set Cond GridFromFile
+*if(CondNumEntities(int)>0)
+*loop layers *OnlyInCond
+        {
+*set var NGRIDS = NGRIDS + 1
+            "gridType": "positionsFromFile",
+            "filename": "*cond(File)"
+*if(CondNumEntities(int)!=loopVar)
+        },
+*else
+        }
+*endif
+*end layers
+*endif
+*if(tcl(expr [::GidUtils::VersionCmp 14] == -1 ))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 0] != 0.0))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 1] != 0.0))
 *if(tcl(expr [lindex [GiD_Cartesian get boxsize] 2] != 0.0))
@@ -260,7 +283,8 @@
 *endif
 *endif
 *endif
-*endif 
+*endif
+*endif
 *if(strcasecmp(GenData(Solver),"ugrfdtd")==0)
 *if(NGRIDS==0)
 *WarningBox "No grids defined. Only one grid is allowed for UGRFDTD"

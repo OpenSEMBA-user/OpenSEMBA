@@ -32,14 +32,22 @@ namespace SEMBA {
 namespace Mesher {
 
 Options::Options() {
-    mode_ = Mode::conformal;
+    mesher_ = Mesher::DMesher;
+    mode_ = Mode::structured;
+    hMesherMode_ = HMesherMode::adapted;
+    forbiddenLength_ = 1.0;
+    edgePoints_ = 0;
     scalingFactor_ = 1.0;
+    hwMeshExport_ = false;
     postmshExport_ = true;
+    postsmbExport_ = false;
     vtkExport_ = false;
+    contourRefinement_ = false;
+    unwantedConnectionsInfo_ = false;
+    structuredCellsInfo_ = false;
     slanted_ = false;
     slantedThreshold_ = 1.0;
     gridStep_ = Math::CVecR3(0.0);
-    forbiddenLength_ = (Math::Real) (1.0 / 3.0);
 }
 
 void Options::printInfo() const {
@@ -90,6 +98,14 @@ std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
 
 }
 
+Options::Mesher Options::getMesher() const {
+    return mesher_;
+}
+
+Options::HMesherMode Options::getHMesherMode() const {
+    return hMesherMode_;
+}
+
 Options::Mode Options::getMode() const {
     return mode_;
 }
@@ -103,6 +119,10 @@ bool Options::isRelaxed() const {
         return true;
     }
     return false;
+}
+
+Math::Int Options::getEdgePoints() const {
+    return edgePoints_;
 }
 
 Math::Real Options::getScalingFactor() const {
@@ -121,6 +141,10 @@ const Geometry::BoundTerminations3& Options::getBoundTerminations() const {
     return boundTermination_;
 }
 
+void Options::setMesher(const Mesher mesher) {
+    mesher_ = mesher;
+}
+
 void Options::setBoundTermination(
     const std::size_t d,
     const std::size_t p,
@@ -129,6 +153,11 @@ void Options::setBoundTermination(
     assert(p < 2);
     boundTermination_.setBound(d, p, bound);
 }
+
+void Options::setEdgePoints(const Math::Int& sg) {
+    edgePoints_ = sg;
+}
+
 void Options::addArguments(Argument::Group& args) const {
     args.addOption(new Argument::Switch("VTK Export", "vtkexport"));
     args.addOption(
@@ -140,11 +169,29 @@ void Options::addArguments(Argument::Group& args) const {
 }
 
 void Options::set(const Solver::Settings& opts) {
-    if (opts.existsName(  "vtkExport")) {
-        setVtkExport(opts("vtkExport").getBool());
+    if (opts.existsName(          "contourRefinement")) {
+        setContourRefinement(opts("contourRefinement").getBool());
+    }
+    if (opts.existsName("hMesherMode")) {
+        setHMesherMode(strToHMesherMode(opts("hMesherMode").getString()));
+    }
+    if (opts.existsName(                "unwantedConnectionsInfo")) {
+        setUnwantedConnectionsInfo(opts("unwantedConnectionsInfo").getBool());
+    }
+    if (opts.existsName(            "structuredCellsInfo")) {
+        setStructuredCellsInfo(opts("structuredCellsInfo").getBool());
+    }
+    if (opts.existsName(     "hwMeshExport")) {
+        setHWMeshExport(opts("hwMeshExport").getBool());
     }
     if (opts.existsName(      "postmshExport")) {
         setPostmshExport(opts("postmshExport").getBool());
+    }
+    if (opts.existsName("postsmbExport")) {
+        setPostsmbExport(opts("postsmbExport").getBool());
+    }
+    if (opts.existsName(  "vtkExport")) {
+        setVtkExport(opts("vtkExport").getBool());
     }
     if (opts.existsName("slantedWires")) {
         setSlanted(opts("slantedWires").getBool());
@@ -152,8 +199,14 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(         "slantedThreshold")) {
         setSlantedThreshold(opts("slantedThreshold").get<Math::Real>());
     }
+    if (opts.existsName(           "mesher")) {
+        setMesher(strToMesher(opts("mesher").getString()));
+    }
     if (opts.existsName(             "mode")) {
         setMode(strToMesherMode(opts("mode").getString()));
+    }
+    if (opts.existsName("edgePoints")) {
+        setEdgePoints(opts("edgePoints").getInt());
     }
     if (opts.existsName(        "forbiddenLength")) {
         setForbiddenLength(opts("forbiddenLength").getReal());
@@ -187,8 +240,12 @@ void Options::set(const Solver::Settings& opts) {
     }
 }
 
-void Options::setMode(Mode mode) {
+void Options::setMode(const Mode mode) {
     mode_ = mode;
+}
+
+void Options::setHMesherMode(const HMesherMode rhs) {
+    hMesherMode_ = rhs;
 }
 
 void Options::setScalingFactor(const Math::Real& scalingFactor) {
@@ -219,6 +276,22 @@ void Options::setGridStep(const Math::CVecR3& gridStep) {
     gridStep_ = gridStep;
 }
 
+bool Options::isContourRefinement() const {
+    return contourRefinement_;
+}
+
+bool Options::isUnwantedConnectionsInfo() const {
+    return unwantedConnectionsInfo_;
+}
+
+bool Options::isStructuredCellsInfo() const {
+    return structuredCellsInfo_;
+}
+
+bool Options::isHWMeshExport() const {
+    return hwMeshExport_;
+}
+
 bool Options::isVtkExport() const {
     return vtkExport_;
 }
@@ -235,8 +308,32 @@ bool Options::isPostmshExport() const {
     return postmshExport_;
 }
 
+bool Options::isPostsmbExport() const {
+    return postsmbExport_;
+}
+
 void Options::setPostmshExport(bool postmshExport) {
     postmshExport_ = postmshExport;
+}
+
+void Options::setPostsmbExport(bool postsmbExport) {
+    postsmbExport_ = postsmbExport;
+}
+
+void Options::setContourRefinement(bool contourRefinement) {
+    contourRefinement_ = contourRefinement;
+}
+
+void Options::setUnwantedConnectionsInfo(bool rhs) {
+    unwantedConnectionsInfo_ = rhs;
+}
+
+void Options::setStructuredCellsInfo(bool rhs) {
+    structuredCellsInfo_ = rhs;
+}
+
+void Options::setHWMeshExport(bool hwMeshExport) {
+    hwMeshExport_ = hwMeshExport;
 }
 
 void Options::setVtkExport(bool vtkExport) {
@@ -254,6 +351,31 @@ void Options::setSlantedThreshold(const Math::Real& slantedThreshold) {
 
 bool Options::isGridStepSet() const {
     return (gridStep_ != Math::CVecR3(0.0));
+}
+
+Options::Mesher Options::strToMesher(std::string str) {
+    if (str.compare("DMesher") == 0) {
+        return Mesher::DMesher;
+    } else if (str.compare("HMesher") == 0) {
+        return Mesher::HMesher;
+    } else {
+        throw std::logic_error("Unreckognized label: " + str);
+    }
+}
+
+Options::HMesherMode Options::strToHMesherMode(std::string str) {
+    if (str.compare("Raw") == 0) {
+        return HMesherMode::raw;
+    }
+    else if (str.compare("Adapted") == 0) {
+        return HMesherMode::adapted;
+    }
+    else if (str.compare("Snap") == 0) {
+        return HMesherMode::snap;
+    }
+    else {
+        throw std::logic_error("Unreckognized label: " + str);
+    }
 }
 
 Options::Mode Options::strToMesherMode(std::string str) {

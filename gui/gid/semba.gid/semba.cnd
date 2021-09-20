@@ -558,7 +558,6 @@ TKWIDGET: GidUtils::TkwidgetGetVector3D
 QUESTION: Fit_size_to_box#CB#(0,1)
 VALUE: 1
 HELP: When activated, the actual step size will be rounded so the bounding box is an integer number of steps.
-
 QUESTION: boundary_padding_type#CB#(None,by_number_of_cells,by_distance)
 VALUE: None
 DEPENDENCIES:(None,               HIDE,Lower_padding,#CURRENT#, HIDE,Upper_padding,#CURRENT#,HIDE,Lower_padding_mesh_size,#CURRENT#, HIDE,Upper_padding_mesh_size,#CURRENT#)
@@ -581,6 +580,13 @@ QUESTION: Upper_padding_mesh_size
 VALUE: 0.0 0.0 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 TKWIDGET: GidUtils::TkwidgetGetVector3D
+END CONDITION
+
+CONDITION: GridFromFile
+CONDTYPE: over layer
+CONDMESHTYPE: over body elements
+QUESTION: File#CB#(grid.json)
+VALUE: grid.json
 END CONDITION
 
 # =====================================================================

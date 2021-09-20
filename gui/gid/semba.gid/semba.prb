@@ -70,25 +70,34 @@ VALUE:
 # =============================================================================
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(DMesheR)
-VALUE: DMesheR
-DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,  RESTORE, Forbidden_length, #CURRENT#)
-QUESTION: VTK_Export#CB#(0,1)
+QUESTION: Mesher#CB#(DMesher,HMesher)
+VALUE: DMesher
+DEPENDENCIES: (DMesher, HIDE,   HWMesh_Export,0,         HIDE,   HMesher_mode, Adapted,   HIDE,    Edge_points, #CURRENT#, RESTORE,    Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, RESTORE,Contour_refinement,#CURRENT#)
+DEPENDENCIES: (HMesher, RESTORE,HWMesh_Export,#CURRENT#, RESTORE,HMesher_mode, #CURRENT#, RESTORE, Edge_points, #CURRENT#, HIDE,       Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, HIDE,   Contour_refinement,#CURRENT#)
+QUESTION: HMesher_mode#CB#(Raw,Adapted,Snap)
+VALUE: Raw
+DEPENDENCIES: (Raw,     HIDE,    Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, HIDE,Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Adapted, HIDE,    Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, HIDE,Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Snap,    RESTORE, Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, RESTORE,Forbidden_length,#CURRENT#)
+QUESTION: Edge_points
 VALUE: 0
-HELP: Exports generated meshes in VTK format which can be visualized with external tools, e.g. Paraview. Useful for very large meshes.
-QUESTION: postmsh_Export#CB#(0,1)
-VALUE: 1
-HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
 VALUE: Relaxed
-DEPENDENCIES: (Structured, HIDE,    Forbidden_length, #CURRENT#)
-DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length, #CURRENT#)
-DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length, #CURRENT#)
-DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length, #CURRENT#)
+#DEPENDENCIES: (Structured, HIDE,    Forbidden_length, #CURRENT#)
+#DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length, #CURRENT#)
+#DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length, #CURRENT#)
+#DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length, #CURRENT#)
 QUESTION: Forbidden_length
 VALUE: 0.25
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
+QUESTION: Contour_refinement#CB#(0,1)
+VALUE: 0
+HELP: Refines the open contours of entitities with the same material and layer to ensure conductivity if distance between conturs is below half-cell.
 TKWIDGET: semba::TkwidgetEntryValidation
+QUESTION: Unwanted_connections_info#CB#(0,1)
+VALUE: 0
+QUESTION: Structured_Cells_info#CB#(0,1)
+VALUE: 0
 QUESTION: Slanted_wires#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
@@ -98,7 +107,18 @@ QUESTION: Segments_filter_threshold
 VALUE: 0.25
 HELP: Sets the allowed minimum relative size for the slanted wire segments (0.0 to allow all segments).
 TKWIDGET: semba::TkwidgetEntryValidation
-
+QUESTION: VTK_Export#CB#(0,1)
+VALUE: 0
+HELP: Exports generated meshes in VTK format which can be visualized with external tools, e.g. Paraview. Useful for very large meshes.
+QUESTION: postmsh_Export#CB#(0,1)
+VALUE: 1
+HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
+QUESTION: postsmb_Export#CB#(0,1)
+VALUE: 0
+HELP: Exports readed meshes in the native GiD formats for their visualization when the postprocessing is activated.
+QUESTION: HWMesh_Export#CB#(0,1)
+VALUE: 0
+HELP: Exports readed meshes asserialized HWMesh classes.
 Title: Geometry
 QUESTION: model_units#CB#(m,cm,mm,nm,other)
 VALUE: m

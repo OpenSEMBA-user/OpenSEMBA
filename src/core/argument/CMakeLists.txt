@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 function(add_sources dir srcs)
     set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
@@ -45,12 +45,6 @@ function(add_sources dir srcs)
 endfunction()
 
 project(opensemba_core_argument CXX)
-
-find_package(OpenMP)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)

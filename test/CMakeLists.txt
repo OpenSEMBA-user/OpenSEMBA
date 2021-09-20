@@ -21,9 +21,16 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-project(opensemba_core_source CXX)
+add_executable(opensemba_tests ${SRCS})
 
-add_sources(. SRCS)
-add_library(opensemba_core_source STATIC ${SRCS})
-target_link_libraries(opensemba_core_source opensemba_core_geometry
-                                            opensemba_core_filesystem)
+target_link_libraries(opensemba 
+                        GTest::gtest 
+		                GTest::gtest_main
+                        opensemba_core_argument
+                        opensemba_core_data
+                        opensemba_parser_json
+                        opensemba_parser_stl)
+
+add_test(opensemba  ${CMAKE_BINARY_DIR}/bin/opensemba_tests)
+
+

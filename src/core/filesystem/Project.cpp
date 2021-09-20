@@ -375,7 +375,7 @@ void Project::setToCurrentWorkingDir() {
     }
 #else
     char cwd[1024];
-    if (!_getcwd(cwd, sizeof(cwd))) {
+    if (_getcwd(cwd, sizeof(cwd))) {
         std::string cwdStr = cwd;
         *this = cwdStr;
     }

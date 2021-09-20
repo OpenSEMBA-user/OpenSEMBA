@@ -19,7 +19,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
+
 
 macro(add_subdirectories dir bin)
     set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
@@ -61,12 +62,6 @@ endfunction()
 
 project(opensemba_core CXX)
 
-find_package(OpenMP)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
-
 if (CMAKE_COMPILER_IS_GNUCXX)
     include(CheckCXXCompilerFlag)
     check_cxx_compiler_flag("-std=c++11" compiler_supports_cxx11)
@@ -82,7 +77,9 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
+
 add_subdirectories(. .)
+
 if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
     add_library(opensemba_core_data STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h
