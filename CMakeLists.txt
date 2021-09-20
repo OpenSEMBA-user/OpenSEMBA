@@ -21,9 +21,9 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{CMAKE_TOOLCHAIN_FILE})
-   set(CMAKE_TOOLCHAIN_FILE $ENV{CMAKE_TOOLCHAIN_FILE})
-endif()
+#if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{CMAKE_TOOLCHAIN_FILE})
+#   set(CMAKE_TOOLCHAIN_FILE $ENV{CMAKE_TOOLCHAIN_FILE})
+#endif()
 
 macro(add_subdirectories dir bin)
     set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
@@ -102,7 +102,7 @@ option(OPENSEMBA_TESTS OFF)
 if(OPENSEMBA_TESTS)
     add_definitions(-DOPENSEMBA_TESTS)
 	enable_testing()
-    #find_package(GTest CONFIG REQUIRED)
+    find_package(GTest CONFIG REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
 	add_subdirectories(test/     obj/test/)
 endif()
