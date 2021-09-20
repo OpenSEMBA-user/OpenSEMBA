@@ -928,7 +928,8 @@ Source::Magnitude::Magnitude* Parser::readMagnitude(const json& j) {
        return new Source::Magnitude::Magnitude(
            new Math::Function::Gaussian(
               Math::Function::Gaussian::buildFromMaximumFrequency(
-                  j.at("frequencyMaximum").get<double>()
+                  j.at("frequencyMaximum").get<double>(),
+                  1.0
               )
            )
        );

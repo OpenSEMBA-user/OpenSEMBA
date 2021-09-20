@@ -50,7 +50,7 @@ namespace SEMBA {
             Real Waveform::operator ()(const Real& t) const {
                 return I0_ * 
                     (std::exp(-alpha_*t) - std::exp(-beta_*t)) *
-                    std::pow((1 - np.exp(-gamma_*t)), 2);
+                    std::pow((1 - std::exp(-gamma_*t)), 2);
             }
 
             bool Waveform::operator==(const Base& rhs) const {
@@ -62,7 +62,6 @@ namespace SEMBA {
                     this->alpha_ == rhsPtr->alpha_ &&
                     this->beta_ == rhsPtr->beta_ &&
                     this->gamma_ == rhsPtr->gamma_;
-                );
             }
 
             void Waveform::printInfo() const {

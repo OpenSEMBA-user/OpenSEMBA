@@ -1,13 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(gidpost C CXX)
+project(gidpost C)
+add_sources(. SRCS)
+add_library(gidpost STATIC ${SRCS})
 
-file(GLOB_RECURSE HDRS RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.h)
-file(GLOB_RECURSE SRCS RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.c)
-
-add_library(gidpost STATIC ${HDRS} ${SRCS})
-
-
-install(FILES ${HDRS} DESTINATION "gidpost/include")
-install(TARGETS gidpost DESTINATION "gidpost/lib")
 

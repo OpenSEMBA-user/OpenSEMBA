@@ -53,7 +53,7 @@ TEST(MathDTFTTest, gaussian) {
     const size_t nPoints = 10000;
     vector<Real> time = Util::linspace(pair<Real,Real>(-10,10), nPoints);
     vector<pair<Real,complex<Real>>> input(nPoints);
-    Function::Gaussian gaussian((Real) 0.25, (Real) 0);
+    Function::Gaussian gaussian((Real) 0.25, (Real) 0, (Real) 1.0);
     for (size_t i = 0; i < nPoints; ++i) {
         complex<Real> dataPoint(gaussian(time[i]), (Real) 0.0);
         input[i] = pair<Real,complex<Real>>(time[i], dataPoint);

@@ -32,11 +32,11 @@ namespace SEMBA {
 
             class Waveform : public Function<Real, Real> {
             public:
-                enum Type {
+                enum class Type {
                     A,
                     D,
                     H
-                } class;
+                };
                 Waveform(Type type);
                 
                 SEMBA_MATH_FUNCTION_DEFINE_CLONE(Waveform);

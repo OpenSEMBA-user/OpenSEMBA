@@ -21,35 +21,13 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-function(add_sources dir srcs)
-    set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
-    file(GLOB children RELATIVE ${curdir} ${curdir}/*)
-    foreach(child ${children})
-        if(IS_DIRECTORY ${curdir}/${child})
-            if (dir STREQUAL ".")
-                add_sources(${child} ${srcs})
-            else()
-                add_sources(${dir}/${child} ${srcs})
-            endif()
-        endif()
-    endforeach()
-    file(GLOB HDRS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.h)
-    file(GLOB TMPL_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.hpp)
-    file(GLOB SRCS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.cpp)
-    set(SRCS_LOCAL_ALL ${HDRS_LOCAL} ${TMPL_LOCAL} ${SRCS_LOCAL})
-    set(${srcs} ${${srcs}} ${SRCS_LOCAL_ALL} PARENT_SCOPE)
-    if (NOT dir STREQUAL ".")
-        string(REPLACE "/" "\\\\" src_grp ${dir})
-        source_group(${src_grp} FILES ${SRCS_LOCAL_ALL})
-    endif()
-endfunction()
-
 project(opensemba_core_filesystem CXX)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 add_sources(. SRCS)
 add_library(opensemba_core_filesystem STATIC ${SRCS})
+
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     TARGET_LINK_LIBRARIES(opensemba_core_filesystem shlwapi)
 endif()

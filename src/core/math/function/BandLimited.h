@@ -32,7 +32,7 @@ namespace Function {
 
     class BandLimited : public Function<Real, Real> {
     public:
-        BandLimited(Real minimumFrequency, Real maximumFrequency, Real amplitude);
+        BandLimited(Real minimumFrequency, Real maximumFrequency);
                 
         SEMBA_MATH_FUNCTION_DEFINE_CLONE(BandLimited);
 

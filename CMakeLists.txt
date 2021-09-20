@@ -21,9 +21,9 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-#if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{CMAKE_TOOLCHAIN_FILE})
-#   set(CMAKE_TOOLCHAIN_FILE $ENV{CMAKE_TOOLCHAIN_FILE})
-#endif()
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND DEFINED ENV{CMAKE_TOOLCHAIN_FILE})
+    set(CMAKE_TOOLCHAIN_FILE $ENV{CMAKE_TOOLCHAIN_FILE})
+endif()
 
 macro(add_subdirectories dir bin)
     set(curdir ${CMAKE_CURRENT_LIST_DIR}/${dir})
@@ -55,6 +55,7 @@ function(add_sources dir srcs)
     file(GLOB HDRS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.h)
     file(GLOB TMPL_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.hpp)
     file(GLOB SRCS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${curdir}/*.cpp)
+    file(GLOB SRCS_LOCAL RELATIVE ${CMAKE_CURRENT_LIST_DIR} ${SRCS_LOCAL} ${curdir}/*.c)
     set(SRCS_LOCAL_ALL ${HDRS_LOCAL} ${TMPL_LOCAL} ${SRCS_LOCAL})
     set(${srcs} ${${srcs}} ${SRCS_LOCAL_ALL} PARENT_SCOPE)
     if (NOT dir STREQUAL ".")
@@ -67,32 +68,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_subdirectory  (external obj/external)
-
 project(opensemba CXX)
-
-if (CMAKE_COMPILER_IS_GNUCXX)
-    include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag("-std=c++11" compiler_supports_cxx11)
-    check_cxx_compiler_flag("-std=c++0x" compiler_supports_cxx0X)
-    if(compiler_supports_cxx11)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    elseif(compiler_supports_cxx0X)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-    else()
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. "
-                            "Please use a different C++ compiler.")
-    endif()
-endif()
 
 add_definitions(-DOPENSEMBA_VERSION="0.14")
 
-include_directories(external/
-                    external/json/
+add_subdirectory(external/gidpost/ obj/external/gidpost/)
+
+include_directories(external/json/
                     src/
                     src/core/)
+
 add_subdirectory  (src/core     obj/src/core)
-add_subdirectories(src/parser   obj/src)
+add_subdirectories(src/parser   obj/src/parser)
 add_subdirectory  (src/mesher   obj/src/mesher)
 add_subdirectories(src/exporter obj/src)
 add_subdirectories(src/adapter  obj/src)
@@ -102,7 +89,5 @@ option(OPENSEMBA_TESTS OFF)
 if(OPENSEMBA_TESTS)
     add_definitions(-DOPENSEMBA_TESTS)
 	enable_testing()
-    find_package(GTest CONFIG REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
-	add_subdirectories(test/     obj/test/)
+	add_subdirectory(test/     obj/test/)
 endif()

@@ -12,4 +12,4 @@ src/parser/gid/Parser.cpp.save
 Debug/
 Release/
 .vs/
-src/CMakeSettings.json
+CMakeSettings.json
