@@ -69,8 +69,7 @@ TEST_F(ParserSTLParserTest, case_B2) {
 	ifstream input(getCaseName(project));
 	Data smb = parser.read(input);
     ASSERT_TRUE(smb.mesh != nullptr);
-    Geometry::Mesh::Geometric* mesh =
-            smb.mesh->castTo<Geometry::Mesh::Geometric>();
+    Geometry::Mesh::Geometric* mesh = smb.mesh->castTo<Geometry::Mesh::Geometric>();
     if (smb.mesh != nullptr) {
         EXPECT_EQ(1956, mesh->coords().size());
         EXPECT_EQ(652, mesh->elems().getOf<Geometry::Tri3>().size());

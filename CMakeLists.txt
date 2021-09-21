@@ -87,7 +87,6 @@ add_subdirectory  (src/solver   obj/src/solver)
 
 option(OPENSEMBA_TESTS OFF)
 if(OPENSEMBA_TESTS)
-    add_definitions(-DOPENSEMBA_TESTS)
 	enable_testing()
-	add_subdirectory(test/     obj/test/)
+    add_subdirectory(test/     obj/test/)
 endif()

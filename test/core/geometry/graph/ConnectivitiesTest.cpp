@@ -39,34 +39,3 @@ TEST_F(GeometryGraphConnectivitiesTest, connectivtiesReciprocity) {
     }
 
 }
-
-TEST_F(GeometryGraphConnectivitiesTest, innerOuterFace) {
-    Graph::Connectivities conn(elem_);
-    {
-        const Tri3* tri = elem_.getId(ElemId(6))->castTo<Tri3>();
-        EXPECT_EQ(Element::Face(nullptr,0), conn.getOuterFace(tri));
-        EXPECT_TRUE(conn.isDomainBoundary(conn.getInnerFace(tri)));
-    }
-
-    {
-        const Tri3* tri = elem_.getId(ElemId(5))->castTo<Tri3>();
-
-        const Tet4* innerTet = elem_.getId(ElemId(3))->castTo<Tet4>();
-        EXPECT_EQ(innerTet, conn.getInnerFace(tri).first);
-
-        const Tet4* outerTet = elem_.getId(ElemId(4))->castTo<Tet4>();
-        EXPECT_EQ(outerTet, conn.getOuterFace(tri).first);
-    }
-}
-
-//TEST_F(GeometryGraphConnectivitiesTest, assignation) {
-//    Graph::Connectivities copied;
-//    const Tri3* tri = elem_.getId(ElemId(5))->castTo<Tri3>();
-//    Graph::Connectivities conn(elem_);
-//    copied = conn;
-//
-//    EXPECT_NO_THROW(conn.getInnerFace(tri));
-//    EXPECT_NO_THROW(copied.getInnerFace(tri));
-//    EXPECT_EQ(conn.getInnerFace(tri), copied.getInnerFace(tri));
-//}
-

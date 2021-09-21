@@ -68,8 +68,8 @@ Data Parser::read(std::istream& stl) const {
         if (label == "solid") {
             std::string layerName;
             stl >> layerName;
-            Geometry::Layer::Layer* lay = 
-                lG.addId(new Geometry::Layer::Layer(layerName))(0);
+            Geometry::Layer::Layer* lay = new Geometry::Layer::Layer(layerName);
+            lG.addId(lay);
             std::string line;
             while (stl.peek() != EOF) {
                 std::getline(stl, line);
