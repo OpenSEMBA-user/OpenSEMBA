@@ -74,9 +74,10 @@ add_definitions(-DOPENSEMBA_VERSION="0.14")
 
 add_subdirectory(external/gidpost/ obj/external/gidpost/)
 add_subdirectory(external/json/ obj/external/json/)
+include_directories(${json_INCLUDES})
 
-include_directories(src/
-                    src/core/)
+
+include_directories(src/ src/core/)
 
 add_subdirectory  (src/core      obj/src/core)
 add_subdirectory  (src/parsers   obj/src/parsers)
