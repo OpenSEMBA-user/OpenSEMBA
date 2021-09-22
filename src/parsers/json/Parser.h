@@ -65,20 +65,15 @@ private:
             const json&) const;
 
     static Source::PlaneWave* readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::Port::Waveguide* readPortWaveguide(
-            Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::Port::TEM* readPortTEM(
-            Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::Generator* readGenerator(
-            Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::OnLine* readSourceOnLine(
-            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Port::Waveguide* readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Port::TEM* readPortTEM(Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::Generator* readGenerator(Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::OnLine* readSourceOnLine(Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Magnitude::Magnitude* readMagnitude(const json&);
 
     PhysicalModel::PhysicalModel* readPhysicalModel(const json& material) const;
 
-    static OutputRequest::Base* readOutputRequest(
-            Geometry::Mesh::Geometric& mesh, const json&);
+    static OutputRequest::Base* readOutputRequest(Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Domain readDomain(const json&);
     static Math::Axis::Local strToLocalAxes(const std::string& str);
@@ -93,22 +88,17 @@ private:
             Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Base::Type strToOutputType(std::string label);
-    static Source::Generator::Type     strToGeneratorType(std::string label);
+    static Source::Generator::Type strToGeneratorType(std::string label);
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);
-    static Source::OnLine::Type        strToNodalType(std::string label);
+    static Source::OnLine::Type strToNodalType(std::string label);
 
-    static Source::OnLine::Hardness    strToNodalHardness(std::string label);
-    static Source::Port::TEM::ExcitationMode
-                                       strToTEMMode(std::string);
-    static Source::Port::Waveguide::ExcitationMode
-                                       strToWaveguideMode(std::string);
+    static Source::OnLine::Hardness strToNodalHardness(std::string label);
+    static Source::Port::TEM::ExcitationMode strToTEMMode(std::string);
+    static Source::Port::Waveguide::ExcitationMode strToWaveguideMode(std::string);
 
-    static PhysicalModel::PhysicalModel::Type        strToMaterialType(
-            std::string label);
-    static PhysicalModel::Multiport::Multiport::Type strToMultiportType(
-            std::string label);
-    static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(
-            std::string label);
+    static PhysicalModel::PhysicalModel::Type strToMaterialType(std::string label);
+    static PhysicalModel::Multiport::Multiport::Type strToMultiportType(std::string label);
+    static PhysicalModel::Volume::Anisotropic::Model strToAnisotropicModel(std::string label);
 
     static Math::CVecI3 strToCVecI3(std::string str);
     static Math::CVecR3 strToCVecR3(std::string str);

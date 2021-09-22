@@ -67,17 +67,14 @@ Data Parser::read() const {
     progress.advance();
 
     if (res.mesh != nullptr) {
-		readConnectorOnPoint(
-			*res.physicalModels,
-			*res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
+        Geometry::Mesh::Geometric* geometricMesh = res.mesh->castTo<Geometry::Mesh::Geometric>();
+		readConnectorOnPoint(*res.physicalModels, *geometricMesh, j);
 		progress.advance();
 
-        res.sources = readSources(
-                *res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
+        res.sources = readSources(*geometricMesh, j);
         progress.advance();
 
-        res.outputRequests = readOutputRequests(
-                *res.mesh->castTo<Geometry::Mesh::Geometric>(), j);
+        res.outputRequests = readOutputRequests(*geometricMesh, j);
         progress.advance();
     } else {
         res.sources = new Source::Group<>();
@@ -149,20 +146,19 @@ Geometry::Mesh::Geometric* Parser::readGeometricMesh(
 Source::Group<>* Parser::readSources(
         Geometry::Mesh::Geometric& mesh, const json& j) const {
     Source::Group<>* res = new Source::Group<>();
-
-    const json& sources = j.at("sources").get<json>();
-    for (json::const_iterator it = sources.begin(); it != sources.end(); ++it) {
-        std::string sourceType = it->at("sourceType").get<std::string>();
+    
+    for (auto const& it: j.at("sources").get<json>()) {
+        std::string sourceType = it.at("sourceType").get<std::string>();
         if (sourceType.compare("planewave") == 0) {
-            res->add(readPlanewave(mesh, *it));
+            res->add(readPlanewave(mesh, it));
         } else if (sourceType.compare("generator") == 0) {
-            res->add(readGenerator(mesh, *it));
+            res->add(readGenerator(mesh, it));
         } else if (sourceType.compare("sourceOnLine") == 0) {
-            res->add(readSourceOnLine(mesh, *it));
+            res->add(readSourceOnLine(mesh, it));
         } else if (sourceType.compare("waveguidePort") == 0) {
-            res->add(readPortWaveguide(mesh, *it));
+            res->add(readPortWaveguide(mesh, it));
         } else if (sourceType.compare("temPort") == 0) {
-            res->add(readPortTEM(mesh, *it));
+            res->add(readPortTEM(mesh, it));
         } else {
             throw std::logic_error("Unrecognized source type: " + sourceType);
         }
@@ -321,12 +317,15 @@ OutputRequest::Group<>* Parser::readOutputRequests(
 
 void Parser::readConnectorOnPoint(PMGroup& pMG, 
         Geometry::Mesh::Geometric& mesh, const json& j) const {
-	const json& conns = j.at("connectorOnPoint").get<json>();
-	for (auto it = conns.begin(); it != conns.end(); it++) {
-		PhysicalModel::PhysicalModel* mat = readPhysicalModel(*it);
+    
+    auto conns = j.find("connectorOnPoint");
+    if (conns == j.end()) {
+        return;
+    }
+	for (auto const& it: conns->get<json>()) {
+		PhysicalModel::PhysicalModel* mat = readPhysicalModel(it);
 		pMG.addId(mat);
-				
-		Geometry::CoordId cId( it->at("coordIds").get<int>() );
+		Geometry::CoordId cId( it.at("coordIds").get<int>() );
 		const Geometry::CoordR3* coord[1] = { mesh.coords().getId(cId) };
 		Geometry::ElemId eId(0);
 		Geometry::NodR* node = 
@@ -337,48 +336,51 @@ void Parser::readConnectorOnPoint(PMGroup& pMG,
 }
 
 Geometry::Element::Group<> Parser::boxToElemGroup(
-        Geometry::Mesh::Geometric& mesh,
-        const std::string& line) {
+    Geometry::Mesh::Geometric& mesh, const std::string& line) {
+    
     Geometry::BoxR3 box = strToBox(line);
+    Geometry::Elem* elem;
     if (box.isVolume()) {
-        return mesh.elems().addId(
-			new Geometry::HexR8(mesh.coords(), Geometry::ElemId(0), box));
+        elem = new Geometry::HexR8(mesh.coords(), Geometry::ElemId(0), box);
     } else if (box.isSurface()) {
-        return mesh.elems().addId(
-			new Geometry::QuaR4(mesh.coords(), Geometry::ElemId(0), box));
+        elem = new Geometry::QuaR4(mesh.coords(), Geometry::ElemId(0), box);
     } else if (box.isLine()) {
-		return mesh.elems().addId(
-			new Geometry::LinR2(mesh.coords(), Geometry::ElemId(0), box));
+		elem = new Geometry::LinR2(mesh.coords(), Geometry::ElemId(0), box);
 	} else if (box.isPoint()) {
-		return mesh.elems().addId(
-			new Geometry::NodR(mesh.coords(), Geometry::ElemId(0), box));
+		elem = new Geometry::NodR(mesh.coords(), Geometry::ElemId(0), box);
 	} else {
-        throw std::logic_error(
-                "Box to Elem Group only works for volumes and surfaces");
+        throw std::logic_error("Box to Elem Group only works for volumes and surfaces");
     }
+    mesh.elems().addId(elem);
+    return mesh.elems().getId(elem->getId());
 }
 
 OutputRequest::Base* Parser::readOutputRequest(
             Geometry::Mesh::Geometric& mesh, const json& j) {
 
     std::string name = j.at("name").get<std::string>();
-    OutputRequest::Base::Type type =
-            strToOutputType(j.at("type").get<std::string>());
+    OutputRequest::Base::Type type = strToOutputType(j.at("type").get<std::string>());
     std::string gidOutputType = j.at("gidOutputType").get<std::string>();
     OutputRequest::Domain domain = readDomain(j.at("domain").get<json>());
 
 	if (type == OutputRequest::Base::Type::bulkCurrentElectric ||
 		type == OutputRequest::Base::Type::bulkCurrentMagnetic) {
 		if (gidOutputType.compare("OutRq_on_layer") == 0) {
-			return new OutputRequest::BulkCurrent(domain, name,
+			return new OutputRequest::BulkCurrent(
+                domain, 
+                name,
 				boxToElemGroup(mesh, j.at("box").get<std::string>()),
 				strToCartesianAxis(j.at("direction").get<std::string>()),
-				j.at("skip").get<int>());
+				j.at("skip").get<int>()
+            );
 		} else if (gidOutputType.compare("OutRq_on_point") == 0) {
-			return new OutputRequest::BulkCurrent(domain, name,
+			return new OutputRequest::BulkCurrent(
+                domain, 
+                name,
 				readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()),
 				strToCartesianAxis(j.at("direction").get<std::string>()),
-				j.at("skip").get<int>());
+				j.at("skip").get<int>()
+            );
 		} else {
 			return new OutputRequest::BulkCurrent(domain, name,
 				readElemIdsAsGroupOf<const Geometry::Elem>(
@@ -621,11 +623,9 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
     }
 }
 
-Source::PlaneWave* Parser::readPlanewave(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
-
-    Source::Magnitude::Magnitude* magnitude =
-            readMagnitude(j.at("magnitude").get<json>());
+Source::PlaneWave* Parser::readPlanewave(Geometry::Mesh::Geometric& mesh, const json& j) {
+    
+    Source::Magnitude::Magnitude* magnitude = readMagnitude(j.at("magnitude").get<json>());
 	auto elems = boxToElemGroup(mesh, j.at("layerBox").get<std::string>());
 	if (elems.sizeOf<Geometry::Vol>() == 0) {
 		throw std::logic_error("Plane wave layer must define a volume");
@@ -633,12 +633,9 @@ Source::PlaneWave* Parser::readPlanewave(
     
     std::string definitionMode = j.at("definitionMode").get<std::string>();
     if (definitionMode.compare("by_vectors")==0) {
-        Math::CVecR3 dir =
-                strToCVecR3(j.at("directionVector").get<std::string>());
-        Math::CVecR3 pol =
-                strToCVecR3(j.at("polarizationVector").get<std::string>());
+        Math::CVecR3 dir = strToCVecR3(j.at("directionVector").get<std::string>());
+        Math::CVecR3 pol = strToCVecR3(j.at("polarizationVector").get<std::string>());
         return new Source::PlaneWave(magnitude, elems, dir, pol);
-
     } else if (definitionMode.compare("by_angles")==0) {
         static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
         std::pair<Math::Real,Math::Real> dirAngles, polAngles;
@@ -649,10 +646,12 @@ Source::PlaneWave* Parser::readPlanewave(
         return new Source::PlaneWave(magnitude, elems, dirAngles, polAngles);
 
     } else if (definitionMode.compare("randomized_multisource")==0) {
-        return new Source::PlaneWave(magnitude, elems,
-                j.at("numberOfRandomPlanewaves").get<int>(),
-                j.at("relativeVariationOfRandomDelay").get<double>());
-
+        return new Source::PlaneWave(
+            magnitude, 
+            elems,
+            j.at("numberOfRandomPlanewaves").get<int>(),
+            j.at("relativeVariationOfRandomDelay").get<double>()
+        );
     } else {
         throw std::logic_error("Unrecognized label: " + definitionMode);
     }
