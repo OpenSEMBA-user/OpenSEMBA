@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_MESH_MESH_H_
-#define SEMBA_GEOMETRY_MESH_MESH_H_
+#pragma once
 
 #include "math/Types.h"
 #include "geometry/Box.h"
@@ -58,4 +57,3 @@ public:
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_GEOMETRY_MESH_MESH_H_ */

@@ -18,8 +18,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_COMMON_MATH_FUNCTION_WAVEFORM_H_
-#define SRC_COMMON_MATH_FUNCTION_WAVEFORM_H_
+#pragma once
 
 #include <complex>
 #include <limits>
@@ -56,4 +55,3 @@ namespace SEMBA {
     } /* namespace Math */
 } /* namespace SEMBA */
 
-#endif /* SRC_COMMON_MATH_FUNCTION_WAVEFORM_H_ */

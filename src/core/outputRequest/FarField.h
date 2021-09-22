@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_OUTPUTREQUEST_FARFIELD_H_
-#define SEMBA_OUTPUTREQUEST_FARFIELD_H_
+#pragma once
 
 #include "OutputRequest.h"
 
@@ -59,4 +58,3 @@ private:
 } /* namespace OutputRequest */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_OUTPUTREQUEST_FARFIELD_H_ */

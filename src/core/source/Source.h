@@ -20,8 +20,7 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 // File: electromagneticsource.h
 
-#ifndef SEMBA_SOURCE_SOURCE_H_
-#define SEMBA_SOURCE_SOURCE_H_
+#pragma once
 
 #include "geometry/element/Group.h"
 #include "magnitude/Magnitude.h"
@@ -100,4 +99,3 @@ public:
 
 #include "Source.hpp"
 
-#endif /* SEMBA_SOURCE_SOURCE_H_ */

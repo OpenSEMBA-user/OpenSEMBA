@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_SOURCE_GENERATOR_H_
-#define SEMBA_SOURCE_GENERATOR_H_
+#pragma once
 
 #include "Source.h"
 
@@ -63,4 +62,3 @@ private:
 } /* namespace Source */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_SOURCE_GENERATOR_H_ */

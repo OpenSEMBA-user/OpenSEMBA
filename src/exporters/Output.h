@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SRC_CORE_EXPORTER_OUTPUT_H_
-#define SRC_CORE_EXPORTER_OUTPUT_H_
+#pragma once
 //
 //#include "base/class/ClassBase.h"
 //#include "outRq/OutRq.h"
@@ -56,4 +55,3 @@
 //    //!      Tet (2)      |       10
 //};
 //
-#endif /* SRC_CORE_EXPORTER_OUTPUT_H_ */

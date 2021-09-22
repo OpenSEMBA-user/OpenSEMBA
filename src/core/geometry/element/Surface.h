@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_ELEMENT_SURFACE_H_
-#define SEMBA_GEOMETRY_ELEMENT_SURFACE_H_
+#pragma once
 
 #include "Element.h"
 
@@ -61,4 +60,3 @@ typedef Element::Surface<Math::Int > SurfI;
 
 #include "Surface.hpp"
 
-#endif /* SEMBA_GEOMETRY_ELEMENT_SURFACE_H_ */

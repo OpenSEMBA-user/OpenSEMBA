@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_ELEMENT_LINE2_H_
-#define SEMBA_GEOMETRY_ELEMENT_LINE2_H_
+#pragma once
 
 #include "Line.h"
 
@@ -106,4 +105,3 @@ typedef Element::Line2<Math::Int > LinI2;
 
 #include "Line2.hpp"
 
-#endif /* SEMBA_GEOMETRY_ELEMENT_LINE2_H_ */

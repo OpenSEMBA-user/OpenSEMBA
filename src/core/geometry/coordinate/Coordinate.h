@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_COORDINATE_COORDINATE_H_
-#define SEMBA_GEOMETRY_COORDINATE_COORDINATE_H_
+#pragma once
 
 #include "geometry/Grid.h"
 #include "math/vector/Cartesian.h"
@@ -93,4 +92,3 @@ typedef Coordinate::Coordinate<Math::Int ,3> CoordI3;
 
 #include "Coordinate.hpp"
 
-#endif /* SEMBA_GEOMETRY_COORDINATE_COORDINATE_H_ */

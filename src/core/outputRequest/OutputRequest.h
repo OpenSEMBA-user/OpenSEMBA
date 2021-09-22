@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_OUTPUTREQUEST_OUTPUTREQUEST_H_
-#define SEMBA_OUTPUTREQUEST_OUTPUTREQUEST_H_
+#pragma once
 
 #include "Domain.h"
 #include "geometry/element/Group.h"
@@ -129,4 +128,3 @@ typedef OutputRequest::OutputRequest<Geometry::Elem> OutRqElem;
 
 } /* namespace SEMBA */
 
-#endif /* SEMBA_OUTPUTREQUEST_OUTPUTREQUEST_H_ */

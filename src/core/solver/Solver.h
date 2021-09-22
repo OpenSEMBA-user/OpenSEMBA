@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_SOLVER_SOLVER_H_
-#define SEMBA_SOLVER_SOLVER_H_
+#pragma once
 
 #include <iostream>
 
@@ -67,4 +66,3 @@ protected:
 } /* namespace Solver */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_SOLVER_SOLVER_H_ */

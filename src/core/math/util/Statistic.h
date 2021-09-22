@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_MATH_UTIL_STATISTIC_H_
-#define SEMBA_MATH_UTIL_STATISTIC_H_
+#pragma once
 
 #include <vector>
 
@@ -45,4 +44,3 @@ T sum(const std::vector<T>& vec);
 
 #include "Statistic.hpp"
 
-#endif /* SEMBA_MATH_UTIL_STATISTIC_H_ */

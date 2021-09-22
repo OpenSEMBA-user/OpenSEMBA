@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_ARGUMENT_VALUEBASE_H_
-#define SEMBA_ARGUMENT_VALUEBASE_H_
+#pragma once
 
 #include "Argument.h"
 
@@ -36,4 +35,3 @@ public:
 } /* namespace Argument */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_ARGUMENT_VALUEBASE_H_ */

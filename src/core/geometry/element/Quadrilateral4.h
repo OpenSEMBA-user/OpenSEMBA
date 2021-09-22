@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL4_H_
-#define SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL4_H_
+#pragma once
 
 #include "Quadrilateral.h"
 
@@ -103,4 +102,3 @@ typedef Element::Quadrilateral4<Math::Int > QuaI4;
 
 #include "Quadrilateral4.hpp"
 
-#endif /* SEMBA_GEOMETRY_ELEMENT_QUADRILATERAL4_H_ */

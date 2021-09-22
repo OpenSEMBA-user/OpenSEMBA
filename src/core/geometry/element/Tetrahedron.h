@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_ELEMENT_TETRAHEDRON_H_
-#define SEMBA_GEOMETRY_ELEMENT_TETRAHEDRON_H_
+#pragma once
 
 #include "math/simplex/Tetrahedron.h"
 #include "Triangle6.h"
@@ -59,4 +58,3 @@ typedef Element::Tetrahedron Tet;
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_GEOMETRY_ELEMENT_TETRAHEDRON_H_ */

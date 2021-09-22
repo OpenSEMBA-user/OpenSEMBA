@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GROUP_CLONEABLE_H_
-#define SEMBA_GROUP_CLONEABLE_H_
+#pragma once
 
 #include <type_traits>
 
@@ -51,4 +50,3 @@ public:
     }
 #endif
 
-#endif /* SEMBA_GROUP_CLONEABLE_H_ */

@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_MATH_UTIL_SPACEGENERATOR_H_
-#define SEMBA_MATH_UTIL_SPACEGENERATOR_H_
+#pragma once
 
 #include <utility>
 #include <vector>
@@ -45,4 +44,3 @@ std::vector<T> linspace(const std::pair<T,T>& range,
 
 #include "SpaceGenerator.hpp"
 
-#endif /* SEMBA_MATH_UTIL_SPACEGENERATOR_H_ */

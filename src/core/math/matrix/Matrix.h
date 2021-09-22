@@ -25,8 +25,7 @@
      - Static  (Static  matrices): std::size_t set at compilation time.
    ============================================================== */
 
-#ifndef SEMBA_MATH_MATRIX_MATRIX_H_
-#define SEMBA_MATH_MATRIX_MATRIX_H_
+#pragma once
 
 #ifndef MATRICES_MODES
 #   define MATRICES_MODES
@@ -136,4 +135,3 @@ public:
 
 #include "Matrix.hpp"
 
-#endif

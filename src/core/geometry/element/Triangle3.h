@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_ELEMENT_TRIANGLE3_H_
-#define SEMBA_GEOMETRY_ELEMENT_TRIANGLE3_H_
+#pragma once
 
 #include "Triangle.h"
 
@@ -77,4 +76,3 @@ typedef Element::Triangle3 Tri3;
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_GEOMETRY_ELEMENT_TRIANGLE3_H_ */

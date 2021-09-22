@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_FILESYSTEM_PROJECT_H_
-#define SEMBA_FILESYSTEM_PROJECT_H_
+#pragma once
 
 #ifdef _MSC_VER
 #pragma warning(disable:4996)
@@ -100,4 +99,3 @@ protected:
 } /* namespace FileSystem */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_FILESYSTEM_PROJECT_H_ */

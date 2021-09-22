@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_ELEMENT_VOLUME_H_
-#define SEMBA_GEOMETRY_ELEMENT_VOLUME_H_
+#pragma once
 
 #include <exception>
 
@@ -106,4 +105,3 @@ typedef Element::Volume<Math::Int > VolI;
 
 #include "Volume.hpp"
 
-#endif /* SEMBA_GEOMETRY_ELEMENT_VOLUME_H_ */

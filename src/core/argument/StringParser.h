@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_ARGUMENT_STRINGPARSER_H_
-#define SEMBA_ARGUMENT_STRINGPARSER_H_
+#pragma once
 
 #include <algorithm>
 #include <cctype>
@@ -312,4 +311,3 @@ std::tuple<T1, T2, T3, T...> parse(std::list<std::string>& input,
 } /* namespace Objects */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_ARGUMENT_STRINGPARSER_H_ */

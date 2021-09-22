@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_UTIL_WIRE_GROUP_H_
-#define SEMBA_UTIL_WIRE_GROUP_H_
+#pragma once
 
 #include <algorithm>
 #include <iostream>
@@ -116,4 +115,3 @@ private:
 
 #include "Group.hpp"
 
-#endif

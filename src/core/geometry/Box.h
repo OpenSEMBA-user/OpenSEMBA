@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_BOX_BOX_H_
-#define SEMBA_GEOMETRY_BOX_BOX_H_
+#pragma once
 
 #include <algorithm>
 #include <exception>
@@ -173,4 +172,3 @@ typedef Box<Math::Int, 3> BoxI3;
 
 #include "Box.hpp"
 
-#endif /* SEMBA_GEOMETRY_BOX_BOX_H_ */

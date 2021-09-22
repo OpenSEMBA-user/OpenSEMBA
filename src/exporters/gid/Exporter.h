@@ -22,8 +22,7 @@
  *  Created on: Aug 23, 2012
  *      Author: luis
  */
-#ifndef SEMBA_EXPORTER_GID_EXPORTER_H_
-#define SEMBA_EXPORTER_GID_EXPORTER_H_
+#pragma once
 
 #include "exporters/Exporter.h"
 #include "gidpost.h"
@@ -101,4 +100,3 @@ private:
 } /* namespace Exporters */
 } /* namespace SEMBA */
 
-#endif /* EXPORTER_GID_EXPORTERGID_H_ */

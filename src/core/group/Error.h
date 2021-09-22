@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GROUP_ERROR_H_
-#define SEMBA_GROUP_ERROR_H_
+#pragma once
 
 #include <exception>
 #include <sstream>
@@ -89,4 +88,3 @@ private:
 } /* namespace Group */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_GROUP_ERROR_H_ */

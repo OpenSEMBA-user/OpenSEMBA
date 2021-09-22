@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_BOUNDTERMINATIONS_H_
-#define SEMBA_GEOMETRY_BOUNDTERMINATIONS_H_
+#pragma once
 
 #include <array>
 #include <memory>
@@ -57,4 +56,3 @@ typedef BoundTerminations<3> BoundTerminations3;
 
 #include "BoundTerminations.hpp"
 
-#endif /* SEMBA_GEOMETRY_BOUNDTERMINATIONS_H_ */

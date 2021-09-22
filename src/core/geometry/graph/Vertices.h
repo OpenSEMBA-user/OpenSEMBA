@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_
-#define COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_
+#pragma once
 
 #include "Graph.h"
 #include "geometry/coordinate/Coordinate.h"
@@ -56,4 +55,3 @@ public:
 
 #include "Vertices.hpp"
 
-#endif /* COMMON_GEOMETRY_MAPS_GRAPHVERTICES_H_ */

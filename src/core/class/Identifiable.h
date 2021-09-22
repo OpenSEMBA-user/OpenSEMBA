@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_CLASS_IDENTIFIABLE_H_
-#define SEMBA_CLASS_IDENTIFIABLE_H_
+#pragma once
 
 #include "Class.h"
 #include "Shareable.h"
@@ -51,4 +50,3 @@ private:
 
 #include "Identifiable.hpp"
 
-#endif /* SEMBA_CLASS_IDENTIFIABLE_H_ */

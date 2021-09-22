@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_COORDINATE_GROUP_H_
-#define SEMBA_GEOMETRY_COORDINATE_GROUP_H_
+#pragma once
 
 #include <set>
 
@@ -118,4 +117,3 @@ typedef Coordinate::Group<const CoordI3> ConstCoordI3Group;
 
 #include "Group.hpp"
 
-#endif /* SEMBA_GEOMETRY_COORDINATE_GROUP_H_ */

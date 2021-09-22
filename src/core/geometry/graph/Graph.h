@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_GEOMETRY_GRAPH_GRAPH_H_
-#define SEMBA_GEOMETRY_GRAPH_GRAPH_H_
+#pragma once
 
 #include <vector>
 
@@ -75,4 +74,3 @@ private:
 
 #include "Graph.hpp"
 
-#endif /* SEMBA_GEOMETRY_GRAPH_GRAPH_H_ */

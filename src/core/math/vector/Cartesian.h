@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_MATH_VECTOR_CARTESIAN_H_
-#define SEMBA_MATH_VECTOR_CARTESIAN_H_
+#pragma once
 
 #include <iostream>
 #include <complex>
@@ -159,4 +158,3 @@ typedef Vector::Cartesian<std::complex<Real>,3> CVecC3;
 } /* namespace Math */
 } /* namespace SEMBA */
 
-#endif /* SEMBA_MATH_VECTOR_CARTESIAN_H_ */

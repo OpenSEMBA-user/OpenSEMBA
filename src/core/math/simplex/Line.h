@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_MATH_SIMPLEX_LINE_H_
-#define SEMBA_MATH_SIMPLEX_LINE_H_
+#pragma once
 
 #include "math/matrix/Static.h"
 
@@ -80,4 +79,3 @@ private:
 
 #include "Line.hpp"
 
-#endif /* SEMBA_MATH_SIMPLEX_LINE_H_ */
