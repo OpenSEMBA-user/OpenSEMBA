@@ -62,38 +62,31 @@ using json = nlohmann::json;
 
 class Parser : public SEMBA::Parser::Parser {
 public:
-    Data read(std::istream& inputFileStream) const;
-
+    Parser(const std::string& filename) : SEMBA::Parser::Parser(filename) {};
+    Data read() const;
+    
 private:
-    static Solver::Info* readSolver(const json&);
-    static Solver::Settings readSolverSettings(const json&);
-    static PhysicalModel::Group<>* readPhysicalModels(const json&);
-    static Geometry::Mesh::Geometric* readGeometricMesh(
-            const PhysicalModel::Group<>&, const json&);
-	static void readConnectorOnPoint(
-			PMGroup& pMG,
-			Geometry::Mesh::Geometric& mesh, 
-		    const json&);
-    static Source::Group<>* readSources(
-            Geometry::Mesh::Geometric& mesh, const json&);
-    static OutputRequest::Group<>* readOutputRequests(
-            Geometry::Mesh::Geometric& mesh, const json&);
+    Solver::Info* readSolver(const json&) const;
+    Solver::Settings readSolverSettings(const json&) const;
+    PhysicalModel::Group<>* readPhysicalModels(const json&) const;
+    Geometry::Mesh::Geometric* readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
+	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
+    Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;
+    OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Geometric& mesh, const json&) const;
 
-    static PhysicalModel::Surface::Multilayer* readMultilayerSurface(
-            const json& layers);
+    PhysicalModel::Surface::Multilayer* readMultilayerSurface(const json& layers) const;
 
-    static Geometry::Grid3 readGrids(const json&);
-    static Geometry::Layer::Group<> readLayers(const json&);
-    static Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates(
-            const json&);
-    static Geometry::Element::Group<Geometry::ElemR> readElements(
+    Geometry::Grid3 readGrids(const json&) const;
+    Geometry::Layer::Group<> readLayers(const json&) const;
+    
+    Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates(const json&) const;
+    Geometry::Element::Group<Geometry::ElemR> readElements(
             const PhysicalModel::Group<>& physicalModels,
             const Geometry::Layer::Group<>&,
             const Geometry::CoordR3Group&,
-            const json&);
+            const json&) const;
 
-    static Source::PlaneWave* readPlanewave(
-            Geometry::Mesh::Geometric& mesh, const json&);
+    static Source::PlaneWave* readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Port::Waveguide* readPortWaveguide(
             Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Port::TEM* readPortTEM(
@@ -104,8 +97,7 @@ private:
             Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Magnitude::Magnitude* readMagnitude(const json&);
 
-    static PhysicalModel::PhysicalModel* readPhysicalModel(
-            const json& material);
+    PhysicalModel::PhysicalModel* readPhysicalModel(const json& material) const;
 
     static OutputRequest::Base* readOutputRequest(
             Geometry::Mesh::Geometric& mesh, const json&);
@@ -144,8 +136,7 @@ private:
     static Math::CVecR3 strToCVecR3(std::string str);
     static Math::Constants::CartesianAxis strToCartesianAxis(std::string);
 
-    static std::pair<Math::CVecR3, Math::CVecR3> strToBox(
-            const std::string& str);
+    static std::pair<Math::CVecR3, Math::CVecR3> strToBox(const std::string& str);
     static const PhysicalModel::Bound::Bound*    strToBoundType(std::string str);
 };
 

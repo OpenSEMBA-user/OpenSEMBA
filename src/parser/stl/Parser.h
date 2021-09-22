@@ -39,13 +39,10 @@ namespace SEMBA {
 namespace Parser {
 namespace STL {
 
-class Parser : public SEMBA::Parser::Parser, public FileSystem::Project {
+class Parser : public SEMBA::Parser::Parser {
 public:
-    Parser();
-    Parser(const std::string& fn);
-    virtual ~Parser();
-
-    Data read(std::istream& inputStream) const;
+    Parser(const std::string& fn) : SEMBA::Parser::Parser(fn) {};
+    Data read() const;
 
     void printInfo() const;
 };

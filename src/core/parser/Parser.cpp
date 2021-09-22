@@ -24,13 +24,6 @@
 namespace SEMBA {
 namespace Parser {
 
-Parser::Parser() {
-}
-
-Parser::~Parser() {
-
-}
-
 Math::CVecR3 Parser::strToCartesianVector(const std::string& str) {
     std::stringstream iss(str);
     std::string sub;

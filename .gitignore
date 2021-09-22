@@ -13,3 +13,7 @@ Debug/
 Release/
 .vs/
 CMakeSettings.json
+*.vv
+*.tree
+*.png
+*.msh

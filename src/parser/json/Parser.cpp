@@ -52,8 +52,10 @@ namespace SEMBA {
 namespace Parser {
 namespace JSON {
 
-Data Parser::read(std::istream& stream) const {
-
+Data Parser::read() const {
+    
+    std::ifstream stream(this->filename);
+    
     json j;
     try {
         stream >> j;
@@ -109,7 +111,7 @@ Data Parser::read(std::istream& stream) const {
     return res;
 }
 
-Solver::Info* Parser::readSolver(const json& j) {
+Solver::Info* Parser::readSolver(const json& j) const {
     if (j.find("solverOptions") == j.end()) {
         return nullptr;
     }
@@ -120,7 +122,7 @@ Solver::Info* Parser::readSolver(const json& j) {
             std::move(opts));
 }
 
-Solver::Settings Parser::readSolverSettings(const json& j) {
+Solver::Settings Parser::readSolverSettings(const json& j) const {
     Solver::Settings opts;
     opts.setObject();
     for (json::const_iterator it = j.begin(); it != j.end(); ++it) {
@@ -149,7 +151,7 @@ Solver::Settings Parser::readSolverSettings(const json& j) {
 }
 
 Geometry::Mesh::Geometric* Parser::readGeometricMesh(
-        const PhysicalModel::Group<>& physicalModels, const json& j) {
+    const PhysicalModel::Group<>& physicalModels, const json& j) const {
     try {
         Geometry::Grid3 grid = readGrids(j);
         Geometry::Layer::Group<> layers = readLayers(j);
@@ -164,7 +166,7 @@ Geometry::Mesh::Geometric* Parser::readGeometricMesh(
 }
 
 Source::Group<>* Parser::readSources(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
+        Geometry::Mesh::Geometric& mesh, const json& j) const {
     Source::Group<>* res = new Source::Group<>();
 
     const json& sources = j.at("sources").get<json>();
@@ -187,7 +189,7 @@ Source::Group<>* Parser::readSources(
     return res;
 }
 
-PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j){
+PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j) const{
     if (j.find("materials") == j.end()) {
         return nullptr;
     }
@@ -199,7 +201,7 @@ PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j){
     return res;
 }
 
-PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
+PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
     PhysicalModel::PhysicalModel::Type type =
                 strToMaterialType( j.at("materialType").get<std::string>() );
 	MatId id;
@@ -326,7 +328,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) {
 }
 
 OutputRequest::Group<>* Parser::readOutputRequests(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
+        Geometry::Mesh::Geometric& mesh, const json& j) const {
 
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
     const json& outs = j.at("outputRequests").get<json>();
@@ -336,10 +338,8 @@ OutputRequest::Group<>* Parser::readOutputRequests(
     return res;
 }
 
-void Parser::readConnectorOnPoint(
-	PMGroup& pMG,
-	Geometry::Mesh::Geometric& mesh, 
-	const json& j) {
+void Parser::readConnectorOnPoint(PMGroup& pMG, 
+        Geometry::Mesh::Geometric& mesh, const json& j) const {
 	const json& conns = j.at("connectorOnPoint").get<json>();
 	for (auto it = conns.begin(); it != conns.end(); it++) {
 		PhysicalModel::PhysicalModel* mat = readPhysicalModel(*it);
@@ -449,7 +449,7 @@ Math::Constants::CartesianAxis Parser::strToCartesianAxis(std::string str) {
     }
 }
 
-Geometry::Layer::Group<> Parser::readLayers(const json& j) {
+Geometry::Layer::Group<> Parser::readLayers(const json& j) const {
     if (j.find("layers") == j.end()) {
         throw std::logic_error("layers object was not found.");
     }
@@ -464,8 +464,7 @@ Geometry::Layer::Group<> Parser::readLayers(const json& j) {
     return res;
 }
 
-Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates(
-        const json& j) {
+Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates(const json& j) const {
 
     if (j.find("coordinates") == j.end()) {
         throw std::logic_error("Coordinates label was not found.");
@@ -487,7 +486,7 @@ Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
         const PhysicalModel::Group<>& mG,
         const Geometry::Layer::Group<>& lG,
         const Geometry::CoordR3Group& cG,
-        const json& j) {
+        const json& j) const {
 
     if (j.find("elements") == j.end()) {
         throw std::logic_error("Elements label was not found.");
@@ -506,20 +505,18 @@ Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
     return res;
 }
 
-PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(
-        const json& mat) {
+PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(const json& mat) const {
     MatId id = MatId(mat.at("materialId").get<int>());
     std::string name = mat.at("name").get<std::string>();
 
     std::vector<PhysicalModel::Surface::Multilayer::Layer> layers;
-    for (json::const_iterator it = mat.at("layers").begin();
-            it != mat.at("layers").end(); ++it) {
-        layers.push_back(
-                PhysicalModel::Surface::Multilayer::Layer(
-                        it->at("thickness").get<double>(),
-                        it->at("permittivity").get<double>(),
-                        it->at("permeability").get<double>(),
-                        it->at("elecCond").get<double>() ));
+    for (json::const_iterator it = mat.at("layers").begin(); it != mat.at("layers").end(); ++it) {
+        layers.push_back(PhysicalModel::Surface::Multilayer::Layer(
+            it->at("thickness").get<double>(),
+            it->at("permittivity").get<double>(),
+            it->at("permeability").get<double>(),
+            it->at("elecCond").get<double>() )
+        );
     }
 
     if (mat.at("useSembaVectorFitting").get<bool>()) {
@@ -533,7 +530,7 @@ PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(
     }
 }
 
-Geometry::Grid3 Parser::readGrids(const json& j) {
+Geometry::Grid3 Parser::readGrids(const json& j) const {
     if (j.find("grids") == j.end()) {
         throw std::logic_error("Grids object not found.");
     }
@@ -605,7 +602,13 @@ Geometry::Grid3 Parser::readGrids(const json& j) {
     } else if (gridType.compare("positionsFromFile") == 0) {
         /** Reads grid lines positions from a json file. Positions must be 
         * labeled with: xs, ys, and zs. */
-        FileSystem::Project file(g.at("filename").get<std::string>());
+        FileSystem::Project folder = this->filename.getFolder();
+        FileSystem::Project file(folder + g.at("filename").get<std::string>());
+        if (!file.canOpen()) {
+            throw std::logic_error(
+                "ERROR @ Parser::JSON"
+                " Unable to open grid.json file");
+        }
         std::ifstream fileStream(file);
         std::stringstream ss;
         ss << "{";

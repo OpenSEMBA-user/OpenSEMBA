@@ -31,12 +31,14 @@ namespace Parser {
 
 class Parser {
 public:
-    Parser();
-    virtual ~Parser();
-
-    virtual Data read(std::istream& inputStream) const = 0;
+    Parser(const std::string& filenameIn) : 
+        filename(filenameIn) {};
+    
+    virtual Data read() const = 0;
 
 protected:
+    FileSystem::Project filename;
+
     static inline std::string& trim(std::string &s) {
         return ltrim(rtrim(s));
     }

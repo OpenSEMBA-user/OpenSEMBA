@@ -25,18 +25,10 @@ namespace SEMBA {
 namespace Parser {
 namespace STL {
 
-Parser::Parser() {
-}
+Data Parser::read() const {
+    
+    std::ifstream stl(this->filename);
 
-Parser::Parser(const std::string& fn)
-:   Project(fn) {
-}
-
-Parser::~Parser() {
-
-}
-
-Data Parser::read(std::istream& stl) const {
     // Reads coordinates.
     std::string label;
     std::vector<Math::CVecR3> vertices;
