@@ -49,7 +49,7 @@
 #include "outputRequest/FarField.h"
 
 namespace SEMBA {
-namespace Parser {
+namespace Parsers {
 namespace JSON {
 
 Data Parser::read() const {

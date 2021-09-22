@@ -26,7 +26,7 @@
 #include "geometry/element/Hexahedron8.h"
 
 namespace SEMBA {
-namespace Exporter {
+namespace Exporters {
 
 Exporter::Exporter()  {
 }
@@ -35,49 +35,6 @@ Exporter::Exporter(const std::string& name)
 :   Project(name) {
 
 }
-
-Exporter::~Exporter() {
-
-}
-
-//void
-//Output::writeResumeFile(
-//        const Real time, const FieldR3& electric, const FieldR3& magnetic) {
-//    string auxStr = getFolder() + getProjectName() + ".resume";
-//    char *auxChar;
-//    auxChar = new char[auxStr.length() + 1];
-//    strcpy(auxChar, auxStr.c_str());
-//    GiD_OpenPostResultFile(auxChar, GiD_PostAscii);
-//    {
-//        const char * compv[] = {"Ex", "Ey", "Ez", "|E|"};
-//        const char * fName = "Electric Field";
-//        const char * tName = "Time";
-//        GiD_BeginResult(fName, tName, time,
-//                GiD_Vector, GiD_OnNodes, nullptr, nullptr, 4, compv);
-//        writeAllFields(electric);
-//        GiD_EndResult();
-//    }
-//    {
-//        const char * compv[] = {"Hx", "Hy", "Hz", "|H|"};
-//        const char * fName = "Magnetic Field";
-//        const char * tName = "Time";
-//        GiD_BeginResult(fName, tName, time,
-//                GiD_Vector, GiD_OnNodes, nullptr, nullptr, 4, compv);
-//        writeAllFields(magnetic);
-//        GiD_EndResult();
-//    }
-//    GiD_ClosePostResultFile();
-//    cout << " - File for resuming was succesfully written." << endl;
-//}
-
-//void Exporter::process(
-//        const Math::Real time,
-//        const FieldR3& electric,
-//        const FieldR3& magnetic) {
-//    for (std::size_t i = 0; i < result_.size(); i++) {
-//        result_[i]->write(time, electric, magnetic);
-//    }
-//}
 
 void Exporter::deleteExistentOutputFiles() const {
     std::string file;
@@ -88,8 +45,8 @@ void Exporter::deleteExistentOutputFiles() const {
 }
 
 void Exporter::printInfo() const {
-    std::cout << " --- Exporter info --- " << std::endl;
-    std::cout << " --- End of Exporter info --- " << std::endl;
+    std::cout << " --- Exporters info --- " << std::endl;
+    std::cout << " --- End of Exporters info --- " << std::endl;
 }
 
 std::string Exporter::getOutputfilename() const {
@@ -163,5 +120,5 @@ Group::Group<Geometry::ElemR> Exporter::getGridElems(
     return elem;
 }
 
-} /* namespace Exporter */
+} /* namespace Exporters */
 } /* namespace SEMBA */

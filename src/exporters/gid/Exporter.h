@@ -25,22 +25,19 @@
 #ifndef SEMBA_EXPORTER_GID_EXPORTER_H_
 #define SEMBA_EXPORTER_GID_EXPORTER_H_
 
-#include "exporter/Exporter.h"
+#include "exporters/Exporter.h"
 #include "gidpost.h"
 
 namespace SEMBA {
-namespace Exporter {
+namespace Exporters {
 namespace GiD {
 
-class Exporter : public SEMBA::Exporter::Exporter {
+class Exporter : public SEMBA::Exporters::Exporter {
 public:
     static const Math::CVecR3 pecColor, pmcColor, smaColor, pmlColor,
         sibcColor, emSourceColor;
 
-    Exporter(
-            const Data* smb,
-            const std::string& fn,
-            GiD_PostMode mode = GiD_PostAscii);
+    Exporter(const Data* smb, const std::string& fn, GiD_PostMode mode = GiD_PostAscii);
     virtual ~Exporter();
 
     void beginMesh(
@@ -101,7 +98,7 @@ private:
 
 
 } /* namespace GiD */
-} /* namespace Exporter */
+} /* namespace Exporters */
 } /* namespace SEMBA */
 
 #endif /* EXPORTER_GID_EXPORTERGID_H_ */

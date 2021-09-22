@@ -38,8 +38,7 @@ target_link_libraries(opensemba_tests
 		                GTest::gtest_main
                         opensemba_core_argument
                         opensemba_core_data
-                        opensemba_parser_json
-                        opensemba_parser_stl)
+                        opensemba_parsers)
 
 add_test(opensemba  ${CMAKE_BINARY_DIR}/bin/opensemba_tests)
 

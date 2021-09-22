@@ -35,18 +35,14 @@ namespace {
 }
 
 namespace SEMBA {
-namespace Exporter {
+namespace Exporters {
 namespace VTK {
 
 Exporter::Exporter(const Data* smb,
                    const std::string& fn)
-:   SEMBA::Exporter::Exporter(fn) {
+:   SEMBA::Exporters::Exporter(fn) {
     initDir_(fn + ".vtk");
     writeMesh_(smb);
-}
-
-Exporter::~Exporter() {
-
 }
 
 void Exporter::writeMesh_(const Data* smb) {
@@ -295,5 +291,5 @@ std::string Exporter::makeValid_(const std::string& allocator) {
 }
 
 } /* namespace VTK */
-} /* namespace Exporter */
+} /* namespace Exporters */
 } /* namespace SEMBA */

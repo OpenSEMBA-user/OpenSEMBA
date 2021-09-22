@@ -26,19 +26,17 @@
 #include <utility>
 #include <algorithm>
 
-#include "exporter/Exporter.h"
+#include "exporters/Exporter.h"
 #include "Data.h"
 
 namespace SEMBA {
-namespace Exporter {
+namespace Exporters {
 namespace VTK {
 
-class Exporter : public SEMBA::Exporter::Exporter {
+class Exporter : public SEMBA::Exporters::Exporter {
 public:
-    Exporter(const Data* smb,
-                const std::string& fn);
-    virtual ~Exporter();
-
+    Exporter(const Data* smb, const std::string& fn);
+    
 private:
     enum CELL_TYPES {
         VTK_VERTEX               = 1,
@@ -80,7 +78,7 @@ private:
 };
 
 } /* namespace VTK */
-} /* namespace Exporter */
+} /* namespace Exporters */
 } /* namespace SEMBA */
 
 #endif /* SEMBA_EXPORTER_VTK_EXPORTER_H_ */

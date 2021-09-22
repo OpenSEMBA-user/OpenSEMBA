@@ -29,7 +29,7 @@
 #include "geometry/mesh/Unstructured.h"
 
 namespace SEMBA {
-namespace Exporter {
+namespace Exporters {
 namespace GiD {
     
 Math::Int Exporter::numberOfOutputGiD_ = 0;
@@ -76,11 +76,8 @@ void Exporter::init_(
     writeMesh_(smb);
 }
 
-Exporter::Exporter(
-        const Data* smb,
-        const std::string& fn,
-        GiD_PostMode mode)
-: 	SEMBA::Exporter::Exporter(fn) {
+Exporter::Exporter(const Data* smb, const std::string& fn, GiD_PostMode mode)
+: 	SEMBA::Exporters::Exporter(fn) {
     init_(smb, mode, fn);
 }
 
@@ -360,5 +357,5 @@ void Exporter::endMesh_() const {
 }
 
 } /* namespace GiD */
-} /* namespace Exporter */
+} /* namespace Exporters */
 } /* namespace SEMBA */

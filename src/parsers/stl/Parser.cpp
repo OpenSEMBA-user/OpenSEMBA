@@ -22,7 +22,7 @@
 #include "Parser.h"
 
 namespace SEMBA {
-namespace Parser {
+namespace Parsers {
 namespace STL {
 
 Data Parser::read() const {

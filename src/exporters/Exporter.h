@@ -31,20 +31,13 @@
 #include "geometry/mesh/Structured.h"
 
 namespace SEMBA {
-namespace Exporter {
+namespace Exporters {
 
 class Exporter : public FileSystem::Project {
 public:
     Exporter();
     Exporter(const std::string& name);
-    virtual ~Exporter();
-
-//    virtual void process(
-//            const Real time,
-//            const Group<Output>& outputs) = 0;
-//    virtual void setOutputs(
-//            const Group<Output>& outputs) = 0;
-
+    
     virtual void printInfo() const;
 
 protected:
@@ -69,7 +62,7 @@ protected:
             const std::size_t j);
 };
 
-} /* namespace Exporter */
+} /* namespace Exporters */
 } /* namespace SEMBA */
 
 #endif /* COMMON_EXPORTER_EXPORTER_H_ */

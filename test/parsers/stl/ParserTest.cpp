@@ -21,8 +21,8 @@
 #include "gtest/gtest.h"
 #include "geometry/mesh/Geometric.h"
 #include "geometry/element/Triangle3.h"
-#include "parser/stl/Parser.h"
-#include "exporter/vtk/Exporter.h"
+#include "parsers/stl/Parser.h"
+#include "exporters/vtk/Exporter.h"
 
 using namespace std;
 using namespace SEMBA;
@@ -40,14 +40,14 @@ protected:
 };
 
 TEST_F(ParserSTLParserTest, case_nofile) {
-	Parser::STL::Parser parser("nofile");
+	Parsers::STL::Parser parser("nofile");
 	Data smb;
 	ASSERT_NO_THROW(smb = parser.read());
 	EXPECT_TRUE(smb.mesh != nullptr);
 }
 
 TEST_F(ParserSTLParserTest, case_single) {
-    Parser::STL::Parser parser(getCaseName("single"));
+    Parsers::STL::Parser parser(getCaseName("single"));
 	Data smb = parser.read();
     ASSERT_TRUE(smb.mesh != nullptr);
     Geometry::Mesh::Geometric* mesh = smb.mesh->castTo<Geometry::Mesh::Geometric>();
@@ -58,7 +58,7 @@ TEST_F(ParserSTLParserTest, case_single) {
 }
 
 TEST_F(ParserSTLParserTest, case_B2) {
-    Parser::STL::Parser parser(getCaseName("B2"));
+    Parsers::STL::Parser parser(getCaseName("B2"));
 	Data smb = parser.read();
     ASSERT_TRUE(smb.mesh != nullptr);
     Geometry::Mesh::Geometric* mesh = smb.mesh->castTo<Geometry::Mesh::Geometric>();

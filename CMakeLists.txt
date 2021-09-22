@@ -73,17 +73,17 @@ project(opensemba CXX)
 add_definitions(-DOPENSEMBA_VERSION="0.14")
 
 add_subdirectory(external/gidpost/ obj/external/gidpost/)
+add_subdirectory(external/json/ obj/external/json/)
 
-include_directories(external/json/
-                    src/
+include_directories(src/
                     src/core/)
 
-add_subdirectory  (src/core     obj/src/core)
-add_subdirectories(src/parser   obj/src/parser)
-add_subdirectory  (src/mesher   obj/src/mesher)
-add_subdirectories(src/exporter obj/src)
-add_subdirectories(src/adapter  obj/src)
-add_subdirectory  (src/solver   obj/src/solver)
+add_subdirectory  (src/core      obj/src/core)
+add_subdirectory  (src/parsers   obj/src/parsers)
+add_subdirectory  (src/mesher    obj/src/mesher)
+add_subdirectory  (src/exporters obj/src/exporters)
+add_subdirectories(src/adapter   obj/src)
+add_subdirectory  (src/solver    obj/src/solver)
 
 option(OPENSEMBA_TESTS OFF)
 if(OPENSEMBA_TESTS)

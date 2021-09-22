@@ -20,46 +20,46 @@
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 #include "gtest/gtest.h"
 
-#include "parser/json/Parser.h"
+#include "parsers/json/Parser.h"
 
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Tetrahedron4.h"
 
 using namespace SEMBA;
-using namespace SEMBA::Parser::JSON;
+using namespace SEMBA::Parsers::JSON;
 using namespace Geometry::Mesh;
 
 class ParserJSONParserTest : public ::testing::Test {
 };
 
 TEST_F(ParserJSONParserTest, Cartesian) {
-    SEMBA::Parser::JSON::Parser jsonParser("testData/cartesian.gid/cartesian.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/cartesian.gid/cartesian.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
 TEST_F(ParserJSONParserTest, DMCWF) {
-    SEMBA::Parser::JSON::Parser jsonParser("testData/dmcwf.gid/dmcwf.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/dmcwf.gid/dmcwf.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
 TEST_F(ParserJSONParserTest, Planewave) {
-    SEMBA::Parser::JSON::Parser jsonParser("testData/planewave.gid/planewave.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/planewave.gid/planewave.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
 TEST_F(ParserJSONParserTest, Sphere) {
-    SEMBA::Parser::JSON::Parser jsonParser("testData/sphere.gid/sphere.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
 TEST_F(ParserJSONParserTest, Wires) {
-    SEMBA::Parser::JSON::Parser jsonParser("testData/wires.gid/wires.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/wires.gid/wires.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
 TEST_F(ParserJSONParserTest, Bowtie) {
-    SEMBA::Parser::JSON::Parser jsonParser("testData/bowtie.gid/bowtie.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/bowtie.gid/bowtie.dat");
     Data data;
     EXPECT_NO_THROW(data = jsonParser.read());
 

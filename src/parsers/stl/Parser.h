@@ -19,8 +19,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef SEMBA_PARSER_STL_PARSER_H_
-#define SEMBA_PARSER_STL_PARSER_H_
+#pragma once
 
 #include <cstdio>
 #include <cstdlib>
@@ -32,23 +31,21 @@
 #include "geometry/element/Triangle3.h"
 #include "geometry/mesh/Geometric.h"
 #include "physicalModel/predefined/PEC.h"
-#include "parser/Parser.h"
+#include "parsers/Parser.h"
 
 
 namespace SEMBA {
-namespace Parser {
+namespace Parsers {
 namespace STL {
 
-class Parser : public SEMBA::Parser::Parser {
+class Parser : public SEMBA::Parsers::Parser {
 public:
-    Parser(const std::string& fn) : SEMBA::Parser::Parser(fn) {};
+    Parser(const std::string& fn) : SEMBA::Parsers::Parser(fn) {};
     Data read() const;
 
     void printInfo() const;
 };
 
 } /* namespace STL */
-} /* namespace Parser */
+} /* namespace Parsers */
 } /* namespace SEMBA */
-
-#endif /* SEMBA_PARSER_STL_PARSER_H_ */

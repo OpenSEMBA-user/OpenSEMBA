@@ -18,9 +18,7 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with OpenSEMBA. If not, see <http://www.gnu.org/licenses/>.
-
-#ifndef SEMBA_PARSER_JSON_PARSER_H_
-#define SEMBA_PARSER_JSON_PARSER_H_
+#pragma once
 
 #include <cstdio>
 #include <cstdlib>
@@ -50,19 +48,18 @@
 #include "Data.h"
 #include "util/ProgressBar.h"
 
-#include "parser/Parser.h"
+#include "parsers/Parser.h"
 #include "json.hpp"
 
-
 namespace SEMBA {
-namespace Parser {
+namespace Parsers {
 namespace JSON {
 
 using json = nlohmann::json;
 
-class Parser : public SEMBA::Parser::Parser {
+class Parser : public SEMBA::Parsers::Parser {
 public:
-    Parser(const std::string& filename) : SEMBA::Parser::Parser(filename) {};
+    Parser(const std::string& filename) : SEMBA::Parsers::Parser(filename) {};
     Data read() const;
     
 private:
@@ -200,5 +197,3 @@ Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
 } /* namespace JSON */
 } /* namespace Parser */
 } /* namespace SEMBA */
-
-#endif /* SEMBA_PARSER_GID_PARSER_H_ */
