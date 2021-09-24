@@ -20,11 +20,8 @@ class Data : public virtual Class::Class,
              public virtual Class::Printable {
 public:
     Solver::Info*           solver;
-
     Geometry::Mesh::Mesh*   mesh;
-
     PhysicalModel::Group<>* physicalModels;
-
     Source::Group<>*        sources;
     OutputRequest::Group<>* outputRequests;
 

@@ -547,10 +547,12 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
         if (g.find("lowerPaddingMeshSize") != g.end()) {
             std::pair<Math::CVecR3, Math::CVecR3> boundaryMeshSize(
                     strToCVecR3(g.at("lowerPaddingMeshSize").get<std::string>()),
-                    strToCVecR3(g.at("upperPaddingMeshSize").get<std::string>()));
+                    strToCVecR3(g.at("upperPaddingMeshSize").get<std::string>())
+            );
             std::pair<Math::CVecR3, Math::CVecR3> boundaryPadding(
                     strToCVecR3(g.at("lowerPadding").get<std::string>()),
-                    strToCVecR3(g.at("upperPadding").get<std::string>()));
+                    strToCVecR3(g.at("upperPadding").get<std::string>())
+            );
             if (g.at("boundaryPaddingType").get<std::string>().compare(
                     "by_number_of_cells") == 0) {
                 boundaryPadding.first  *= boundaryMeshSize.first;
@@ -565,12 +567,9 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
         return res;
 
     } else if (gridType.compare("nativeGiD") == 0) {
-        Math::CVecR3 corner =
-            strToCVecR3(g.at("corner").get<std::string>());
-        Math::CVecR3 boxSize =
-            strToCVecR3(g.at("boxSize").get<std::string>());
-        Math::CVecI3 nGridPoints =
-            strToCVecI3(g.at("nGridPoints").get<std::string>());
+        Math::CVecR3 corner = strToCVecR3(g.at("corner").get<std::string>());
+        Math::CVecR3 boxSize = strToCVecR3(g.at("boxSize").get<std::string>());
+        Math::CVecI3 nGridPoints = strToCVecI3(g.at("nGridPoints").get<std::string>());
         std::vector<Math::Real> pos[3];
         pos[0] = g.at("xCoordinates").get<std::vector<double>>();
         pos[1] = g.at("yCoordinates").get<std::vector<double>>();
@@ -583,43 +582,44 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
             return Geometry::Grid3(box, nGridPoints);
         }
     } else if (gridType.compare("positionsFromFile") == 0) {
-        /** Reads grid lines positions from a json file. Positions must be 
-        * labeled with: xs, ys, and zs. */
-        FileSystem::Project folder = this->filename.getFolder();
-        FileSystem::Project file(folder + g.at("filename").get<std::string>());
-        if (!file.canOpen()) {
-            throw std::logic_error(
-                "ERROR @ Parser::JSON"
-                " Unable to open grid.json file");
-        }
-        std::ifstream fileStream(file);
-        std::stringstream ss;
-        ss << "{";
-        if (fileStream) {
-            ss << fileStream.rdbuf();
-            fileStream.close();
-        }
-        ss << "}";
-        json jsonGridPos;
-        try {
-            ss >> jsonGridPos;
-        }
-        catch (const std::exception& ex) {
-            std::cerr << ex.what() << std::endl;
-        }
-        std::vector<Math::Real> pos[3];
-        pos[0] = jsonGridPos.at("xs").get<std::vector<double>>();
-        pos[1] = jsonGridPos.at("ys").get<std::vector<double>>();
-        pos[2] = jsonGridPos.at("zs").get<std::vector<double>>();
-        if (!pos[0].empty() && !pos[1].empty() && !pos[2].empty()) {
-            return Geometry::Grid3(pos);
-        } else {
-            throw std::logic_error(
-                "Grid file had empty positions in at least one direction");
-        }
-
+        std::string folder = this->filename.getFolder();
+        std::string projectName = this->filename.getProjectName();
+        return buildGridFromFile(folder + projectName + ".grid.json");
     } else {
         throw std::logic_error("Unrecognized grid type: " + gridType);
+    }
+}
+
+Geometry::Grid3 Parser::buildGridFromFile(const FileSystem::Project& jsonFile) const
+{
+    if (!jsonFile.canOpen()) {
+        throw std::logic_error("ERROR @ Parser::JSON: Unable to open grid file");
+    }
+    std::ifstream fileStream(jsonFile);
+    json jsonObj;
+    try {
+        fileStream >> jsonObj;
+    }
+    catch (const std::exception& ex) {
+        std::cerr << ex.what() << std::endl;
+    }
+    
+    auto gridIt = jsonObj.find("grid");
+    if (gridIt != jsonObj.end()) {
+        std::vector<Math::Real> pos[3] = {
+            gridIt->at("xs").get<std::vector<double>>(),
+            gridIt->at("ys").get<std::vector<double>>(),
+            gridIt->at("zs").get<std::vector<double>>()
+        };
+        if (!pos[0].empty() && !pos[1].empty() && !pos[2].empty()) {
+            return Geometry::Grid3(pos);
+        }
+        else {
+            throw std::logic_error("Grid file had empty positions in at least one direction");
+        }
+    }
+    else {
+        throw std::logic_error("Grid file did not contain a grid label");
     }
 }
 

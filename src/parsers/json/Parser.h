@@ -55,6 +55,8 @@ private:
     PhysicalModel::Surface::Multilayer* readMultilayerSurface(const json& layers) const;
 
     Geometry::Grid3 readGrids(const json&) const;
+    Geometry::Grid3 buildGridFromFile(const FileSystem::Project& file) const;
+
     Geometry::Layer::Group<> readLayers(const json&) const;
     
     Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates(const json&) const;
