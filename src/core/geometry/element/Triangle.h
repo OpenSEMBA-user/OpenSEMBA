@@ -26,6 +26,7 @@ public:
 } /* namespace Element */
 
 typedef Element::Triangle Tri;
+typedef std::array<CoordId, 3> TriIds;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
