@@ -42,27 +42,7 @@ public:
     Structured* getMeshStructured(
             const Grid3& grid,
             const Math::Real tol = Grid3::tolerance) const;
-    
-	//Unstructured* getConnectivityMesh() const;
-    //std::vector<Element::Face> getBorderWithNormal(
-    //        const std::vector<Element::Face>& border, 
-    //        const Math::CVecR3& normal);
 
-    //bool isFloatingCoordinate(const CoordR3* coordinate) const;
-
-    //Element::Group<const SurfR> getMaterialBoundary(const MatId   matId,
-    //                                                const LayerId layId) const;
-    //Element::Group<const SurfR> getSurfsMatching(
-    //        const std::vector<Element::Face>& faces) const;
-    //Element::Group<const Tri> convertToTri(
-    //        const Element::Group<const ElemR>& region,
-    //        bool ignoreTets) const;
-    //std::vector<Element::Face> getInternalBorder(
-    //        const Element::Group<const ElemR>& region) const;
-    //std::vector<Element::Face> getExternalBorder(
-    //        const Element::Group<const ElemR>& region) const;
-    //Element::Group<const VolR> getAdjacentRegion(
-    //        const Element::Group<const VolR>& region) const;
     void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
 

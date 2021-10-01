@@ -56,10 +56,8 @@ public:
     virtual std::size_t numberOfVertices   () const = 0;
     virtual std::size_t numberOfCoordinates() const = 0;
 
-    virtual std::size_t numberOfSideVertices   (
-            const std::size_t f = 0) const = 0;
-    virtual std::size_t numberOfSideCoordinates(
-            const std::size_t f = 0) const = 0;
+    virtual std::size_t numberOfSideVertices(const std::size_t f = 0) const = 0;
+    virtual std::size_t numberOfSideCoordinates(const std::size_t f = 0) const = 0;
 
     LayerId getLayerId() const;
     MatId   getMatId  () const;
@@ -67,8 +65,7 @@ public:
     const Layer* getLayer() const { return lay_; }
     const Model* getModel() const { return mat_; }
 
-    static std::vector<CoordId> ascendingIdOrder(
-            const std::vector<CoordId>& rhs);
+    static std::vector<CoordId> ascendingIdOrder(const std::vector<CoordId>& rhs);
 
     template<class T1, class T2>
     static bool areSameCoords(
