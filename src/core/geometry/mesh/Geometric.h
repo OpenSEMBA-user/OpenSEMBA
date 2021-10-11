@@ -31,8 +31,6 @@ public:
 
     void applyScalingFactor(const Math::Real factor);
 
-    void printInfo() const;
-
 private:
 	Grid3 grid_;
 };

@@ -18,8 +18,6 @@ Options::Options() {
     flush_ = 0.0;
 }
 
-Options::~Options() {}
-
 void Options::addArguments(Argument::Group& args) const {
 
 }
@@ -55,10 +53,6 @@ void Options::set(const Settings& opts) {
     if (opts.existsName(            "additionalArguments")) {
         setAdditionalArguments(opts("additionalArguments").getString());
     }
-}
-
-void Options::printHelp() const {
-    // TODO Options printHelp
 }
 
 Math::Real Options::getFinalTime() const {
@@ -113,23 +107,6 @@ std::size_t Options::getNumberOfTimeSteps() const {
 void Options::setNumberOfTimeSteps(std::size_t numberOfTimeSteps) {
     endingCondition_ = EndingCondition::numberOfTimeSteps;
     finalTime_ = (Math::Real)numberOfTimeSteps;
-}
-
-void Options::printInfo() const {
-    std::cout << " --- Solver parameters --- " << std::endl;
-//    std::cout << "Solver:                  " << toStr(solver_) << std::endl;
-
-    std::cout << "Run simulation:          " << isRunSimulation() << std::endl;
-
-    std::cout << "Final time:              " << getFinalTime() << std::endl;
-    std::cout << "Time step:               " << getTimeStep() << std::endl;
-    std::cout << "CFL:                     " << getCFL() << std::endl;
-
-    std::cout << "Default sampling period: " << getSamplingPeriod() << std::endl;
-    std::cout << "Force restarting:        " << isForceRestarting() << std::endl;
-    std::cout << "Resume simulation:       " << isResumeSimulation() << std::endl;
-    std::cout << "Flush:                   " << getFlush() << std::endl;
-    std::cout << "Additional arguments:    " << getAdditionalArguments() << std::endl;
 }
 
 const std::string& Options::getAdditionalArguments() const {

@@ -22,8 +22,7 @@ public:
         ugrfdtd, cudg3d, none
     };
     Options();
-    virtual ~Options();
-
+    
     virtual void addArguments(Argument::Group& args) const;
     virtual void set(const Settings& args);
 
@@ -36,7 +35,6 @@ public:
     void setTimeStep(Math::Real timeStep);
     void setResumeSimulation(bool resumeSimulation);
     void setAdditionalArguments(const std::string& additionalArguments);
-//    void setSolver(Solver solver);
 
     Math::Real getFinalTime() const;
     Math::Real getSamplingPeriod() const;
@@ -45,22 +43,16 @@ public:
     Math::Real getFlush() const;
     bool isForceRestarting() const;
     std::size_t getNumberOfTimeSteps() const;
-//    Solver getSolver() const;
     const std::string& getAdditionalArguments() const;
     bool isResumeSimulation() const;
 
     std::string toStr() const;
-    virtual void printInfo() const;
-    void printHelp() const;
 
-//    static std::string toStr(const Options::Solver& solver);
     virtual std::string toArgsStr() const;
     bool isRunSimulation() const;
     void setRunSimulation(bool runSimulation);
 
 private:
-    // Global
-//    Solver solver_;
 
     bool runSimulation_;
     EndingCondition endingCondition_;

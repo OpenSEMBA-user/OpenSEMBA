@@ -17,11 +17,5 @@ void Source<T>::add(
     Geometry::Element::Group<const T>::add(elems);
 }
 
-template<class T>
-void Source<T>::printInfo() const {
-    Base::printInfo();
-    this->Geometry::Element::Group<const T>::printInfo();
-}
-
 } /* namespace Source */
 } /* namespace SEMBA */

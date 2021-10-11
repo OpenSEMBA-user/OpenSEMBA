@@ -52,8 +52,6 @@ public:
 
     virtual void reassign( Element::Group<const Elem>& );
 
-    void printInfo() const;
-
 private:
 	Coordinate::Group<CoordR3> coords_;
 	Element::Group<ElemR> elems_;

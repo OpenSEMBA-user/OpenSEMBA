@@ -41,13 +41,6 @@ OnLine::Hardness OnLine::getHardness() const {
     return hardness_;
 }
 
-void OnLine::printInfo() const {
-    std::cout<< " --- Nodal info --- " << std::endl;
-    SEMBA::Source::Base::printInfo();
-    std::cout<< "Type: " << getTypeStr() << std::endl;
-    std::cout<< "Hardness: " << getHardnessStr() << std::endl;
-}
-
 std::string OnLine::getTypeStr() const {
     switch (type_) {
     case electric:

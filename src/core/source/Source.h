@@ -11,15 +11,13 @@
 #include "class/Class.h"
 #include "class/Cloneable.h"
 #include "class/Shareable.h"
-#include "class/Printable.h"
 
 namespace SEMBA {
 namespace Source {
 
 class Base : public virtual Class::Class,
              public virtual Class::Cloneable,
-             public virtual Class::Shareable,
-             public virtual Class::Printable {
+             public virtual Class::Shareable {
 public:
     Base();
     Base(const Magnitude::Magnitude* magnitude);
@@ -28,10 +26,8 @@ public:
 
     virtual Geometry::Element::Group<const Geometry::Elem> elems() const = 0;
 
-    virtual void set(
-            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
-    virtual void add(
-            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual void set(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual void add(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
 
     template<class T>
     bool magnitudeIs() const {
@@ -48,9 +44,6 @@ public:
                                        const Math::Real step,
                                        const Math::Real finalTime) const;
     const Magnitude::Magnitude* getMagnitude() const;
-
-    virtual void printInfo() const;
-
 
 private:
     const Magnitude::Magnitude* magnitude_;
@@ -72,7 +65,6 @@ public:
     }
 
     bool isSimilar(const SEMBA::Source::Base& rhs) const;
-    virtual void printInfo() const;
 };
 
 } /* namespace Source */

@@ -7,7 +7,6 @@
 #include "class/Class.h"
 #include "class/Cloneable.h"
 #include "class/Shareable.h"
-#include "class/Printable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 
@@ -21,7 +20,6 @@ typedef Class::Identification<Layer> Id;
 class Layer : public virtual Class::Class,
               public virtual Class::Cloneable,
               public virtual Class::Shareable,
-              public virtual Class::Printable,
               public virtual Class::Identifiable<Id> {
 public:
     Layer();

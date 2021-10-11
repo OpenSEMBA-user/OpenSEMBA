@@ -53,12 +53,6 @@ const L* Group<L>::getName(const std::string name) const {
     return nullptr;
 }
 
-template<typename L>
-void Group<L>::printInfo() const {
-    std::cout<< "--- Group info ---" << std::endl;
-    SEMBA::Group::Printable<L>::printInfo();
-}
-
 } /* namespace Layer */
 } /* namespace Geometry */
 } /* namespace SEMBA */

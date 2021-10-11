@@ -82,11 +82,6 @@ Data Parser::read() const {
     return res;
 }
 
-void Parser::printInfo() const {
-    std::cout << " --- Parser STL info --- " << std::endl;
-    std::cout << " --- End of Parser STL info --- " << std::endl;
-}
-
 } /* namespace STL */
 } /* namespace Parser */
 } /* namespace SEMBA */

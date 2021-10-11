@@ -9,7 +9,6 @@
 #include "Volume.h"
 
 #include "group/Cloneable.h"
-#include "group/Printable.h"
 #include "group/Identifiable.h"
 
 namespace SEMBA {
@@ -46,7 +45,6 @@ typedef std::map<std::vector<CoordId>,const Elem*,CompVecIds> IndexByVertexId;
 
 template<typename E = Elem>
 class Group : public SEMBA::Group::Cloneable<E>,
-              public SEMBA::Group::Printable<E>,
               public SEMBA::Group::Identifiable<E, Id> {
 public:
     Group() {}

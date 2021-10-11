@@ -29,6 +29,8 @@
 #include "outputRequest/BulkCurrent.h"
 #include "outputRequest/FarField.h"
 
+using namespace SEMBA::Geometry;
+
 namespace SEMBA {
 namespace Parsers {
 namespace JSON {
@@ -36,6 +38,10 @@ namespace JSON {
 Data Parser::read() const {
     
     std::ifstream stream(this->filename);
+
+    if (!stream.is_open()) {
+        throw std::logic_error("Can not open file: " + this->filename);
+    }
     
     json j;
     try {
@@ -50,8 +56,7 @@ Data Parser::read() const {
 
     std::string version = j.at("_version").get<std::string>();
     if (!checkVersionCompatibility(version)) {
-        throw std::logic_error(
-                "File version " + version + " is not supported.");
+        throw std::logic_error("File version " + version + " is not supported.");
     }
     progress.advance();
 
@@ -67,7 +72,7 @@ Data Parser::read() const {
     progress.advance();
 
     if (res.mesh != nullptr) {
-        Geometry::Mesh::Geometric* geometricMesh = res.mesh->castTo<Geometry::Mesh::Geometric>();
+        Mesh::Geometric* geometricMesh = res.mesh->castTo<Mesh::Geometric>();
 		readConnectorOnPoint(*res.physicalModels, *geometricMesh, j);
 		progress.advance();
 
@@ -128,23 +133,18 @@ Solver::Settings Parser::readSolverSettings(const json& j) const {
     return opts;
 }
 
-Geometry::Mesh::Geometric* Parser::readGeometricMesh(
-    const PhysicalModel::Group<>& physicalModels, const json& j) const {
-    try {
-        Geometry::Grid3 grid = readGrids(j);
-        Geometry::Layer::Group<> layers = readLayers(j);
-        Geometry::Coordinate::Group<Geometry::CoordR3> coords = readCoordinates(j);
-        Geometry::Element::Group<Geometry::ElemR> elements =
-                readElements(physicalModels, layers, coords, j);
-        return new Geometry::Mesh::Geometric(grid, coords, elements, layers);
-    }
-    catch (...) {
-        return nullptr;
-    }
+Mesh::Geometric* Parser::readGeometricMesh(const PMGroup& physicalModels, const json& j) const 
+{
+    Grid3 grid = readGrids(j);
+    Layer::Group<> layers = readLayers(j);
+    Coordinate::Group<CoordR3> coords = readCoordinates(j);
+    Element::Group<ElemR> elements =
+            readElements(physicalModels, layers, coords, j);
+    return new Mesh::Geometric(grid, coords, elements, layers);
 }
 
-Source::Group<>* Parser::readSources(
-        Geometry::Mesh::Geometric& mesh, const json& j) const {
+Source::Group<>* Parser::readSources(Mesh::Geometric& mesh, const json& j) const 
+{
     Source::Group<>* res = new Source::Group<>();
     
     for (auto const& it: j.at("sources").get<json>()) {
@@ -166,7 +166,8 @@ Source::Group<>* Parser::readSources(
     return res;
 }
 
-PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j) const{
+PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j) const 
+{
     if (j.find("materials") == j.end()) {
         return nullptr;
     }
@@ -304,9 +305,8 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
     }
 }
 
-OutputRequest::Group<>* Parser::readOutputRequests(
-        Geometry::Mesh::Geometric& mesh, const json& j) const {
-
+OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Geometric& mesh, const json& j) const 
+{
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
     const json& outs = j.at("outputRequests").get<json>();
     for (json::const_iterator it = outs.begin(); it != outs.end(); ++it) {
@@ -315,9 +315,8 @@ OutputRequest::Group<>* Parser::readOutputRequests(
     return res;
 }
 
-void Parser::readConnectorOnPoint(PMGroup& pMG, 
-        Geometry::Mesh::Geometric& mesh, const json& j) const {
-    
+void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Geometric& mesh, const json& j) const 
+{
     auto conns = j.find("connectorOnPoint");
     if (conns == j.end()) {
         return;
@@ -325,29 +324,27 @@ void Parser::readConnectorOnPoint(PMGroup& pMG,
 	for (auto const& it: conns->get<json>()) {
 		PhysicalModel::PhysicalModel* mat = readPhysicalModel(it);
 		pMG.addId(mat);
-		Geometry::CoordId cId( it.at("coordIds").get<int>() );
-		const Geometry::CoordR3* coord[1] = { mesh.coords().getId(cId) };
-		Geometry::ElemId eId(0);
-		Geometry::NodR* node = 
-			new Geometry::NodR(eId, coord, nullptr, pMG.getId(mat->getId()));
+		CoordId cId( it.at("coordIds").get<int>() );
+		const CoordR3* coord[1] = { mesh.coords().getId(cId) };
+		ElemId eId(0);
+		NodR* node = new NodR(eId, coord, nullptr, pMG.getId(mat->getId()));
 		
 		mesh.elems().addId(node);
 	}
 }
 
-Geometry::Element::Group<> Parser::boxToElemGroup(
-    Geometry::Mesh::Geometric& mesh, const std::string& line) {
-    
-    Geometry::BoxR3 box = strToBox(line);
-    Geometry::Elem* elem;
+Element::Group<> Parser::boxToElemGroup(Mesh::Geometric& mesh, const std::string& line) 
+{
+    BoxR3 box = strToBox(line);
+    Elem* elem;
     if (box.isVolume()) {
-        elem = new Geometry::HexR8(mesh.coords(), Geometry::ElemId(0), box);
+        elem = new HexR8(mesh.coords(), ElemId(0), box);
     } else if (box.isSurface()) {
-        elem = new Geometry::QuaR4(mesh.coords(), Geometry::ElemId(0), box);
+        elem = new QuaR4(mesh.coords(), ElemId(0), box);
     } else if (box.isLine()) {
-		elem = new Geometry::LinR2(mesh.coords(), Geometry::ElemId(0), box);
+		elem = new LinR2(mesh.coords(), ElemId(0), box);
 	} else if (box.isPoint()) {
-		elem = new Geometry::NodR(mesh.coords(), Geometry::ElemId(0), box);
+		elem = new NodR(mesh.coords(), ElemId(0), box);
 	} else {
         throw std::logic_error("Box to Elem Group only works for volumes and surfaces");
     }
@@ -355,8 +352,7 @@ Geometry::Element::Group<> Parser::boxToElemGroup(
     return mesh.elems().getId(elem->getId());
 }
 
-OutputRequest::Base* Parser::readOutputRequest(
-            Geometry::Mesh::Geometric& mesh, const json& j) {
+OutputRequest::Base* Parser::readOutputRequest(Mesh::Geometric& mesh, const json& j) {
 
     std::string name = j.at("name").get<std::string>();
     OutputRequest::Base::Type type = strToOutputType(j.at("type").get<std::string>());
@@ -383,8 +379,7 @@ OutputRequest::Base* Parser::readOutputRequest(
             );
 		} else {
 			return new OutputRequest::BulkCurrent(domain, name,
-				readElemIdsAsGroupOf<const Geometry::Elem>(
-					mesh, j.at("elemIds").get<json>()),
+				readElemIdsAsGroupOf<const Elem>(mesh, j.at("elemIds").get<json>()),
 				strToCartesianAxis(j.at("direction").get<std::string>()),
 				j.at("skip").get<int>());
 		}
@@ -395,15 +390,15 @@ OutputRequest::Base* Parser::readOutputRequest(
 			readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()));
 	} else if (gidOutputType.compare("OutRq_on_line") == 0) {
 		return new OutRqElem(domain, type, name,
-			readElemIdsAsGroupOf<Geometry::Lin>(
-				mesh, j.at("elemIds").get<json>()));
+			readElemIdsAsGroupOf<Lin>(mesh, j.at("elemIds").get<json>()));
 	} else if (gidOutputType.compare("OutRq_on_surface") == 0) {
-		return new OutRqElem(domain, type, name,
-        		readElemIdsAsGroupOf<Geometry::Surf>(
-                		mesh, j.at("elemIds").get<json>()));
+		return new OutRqElem(
+            domain, type, name, readElemIdsAsGroupOf<Surf>(mesh, j.at("elemIds").get<json>())
+        );
 	} else if (gidOutputType.compare("OutRq_on_layer") == 0) {
-        return new OutRqElem(domain, type, name, 
-			boxToElemGroup(mesh, j.at("box").get<std::string>()));
+        return new OutRqElem(
+            domain, type, name, boxToElemGroup(mesh, j.at("box").get<std::string>())
+        );
 	} else if (gidOutputType.compare("Far_field") == 0) {
 		static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
 		return new OutputRequest::FarField(domain, name,
@@ -415,8 +410,7 @@ OutputRequest::Base* Parser::readOutputRequest(
 			j.at("finalPhi").get<double>()     * degToRad,
 			j.at("stepPhi").get<double>()      * degToRad);
     } else {
-        throw std::logic_error(
-                "Unrecognized GiD Output request type: " + gidOutputType);
+        throw std::logic_error("Unrecognized GiD Output request type: " + gidOutputType);
     }
 }
 
@@ -432,58 +426,58 @@ Math::Constants::CartesianAxis Parser::strToCartesianAxis(std::string str) {
     }
 }
 
-Geometry::Layer::Group<> Parser::readLayers(const json& j) const {
+Layer::Group<> Parser::readLayers(const json& j) const {
     if (j.find("layers") == j.end()) {
         throw std::logic_error("layers object was not found.");
     }
 
-    Geometry::Layer::Group<> res;
+    Layer::Group<> res;
     const json layers = j.at("layers");
     for (json::const_iterator it = layers.begin(); it != layers.end(); ++it) {
-        res.add(new Geometry::Layer::Layer(
-                Geometry::Layer::Id(it->at("id").get<int>()),
+        res.add(new Layer::Layer(
+                Layer::Id(it->at("id").get<int>()),
                 it->at("name").get<std::string>()));
     }
     return res;
 }
 
-Geometry::Coordinate::Group<Geometry::CoordR3> Parser::readCoordinates(const json& j) const {
+Coordinate::Group<CoordR3> Parser::readCoordinates(const json& j) const {
 
     if (j.find("coordinates") == j.end()) {
         throw std::logic_error("Coordinates label was not found.");
     }
 
-    Geometry::Coordinate::Group<Geometry::CoordR3> res;
+    Coordinate::Group<CoordR3> res;
     const json& c = j.at("coordinates").get<json>();
     for (json::const_iterator it = c.begin(); it != c.end(); ++it) {
-        Geometry::CoordId id;
+        CoordId id;
         Math::CVecR3 pos;
         std::stringstream ss(it->get<std::string>());
         ss >> id >> pos(0) >> pos(1) >> pos(2);
-        res.add(new Geometry::CoordR3(id, pos));
+        res.add(new CoordR3(id, pos));
     }
     return res;
 }
 
-Geometry::Element::Group<Geometry::ElemR> Parser::readElements(
+Element::Group<ElemR> Parser::readElements(
         const PhysicalModel::Group<>& mG,
-        const Geometry::Layer::Group<>& lG,
-        const Geometry::CoordR3Group& cG,
+        const Layer::Group<>& lG,
+        const CoordR3Group& cG,
         const json& j) const {
 
     if (j.find("elements") == j.end()) {
         throw std::logic_error("Elements label was not found.");
     }
 
-    Geometry::Element::Group<Geometry::ElemR> res;
+    Element::Group<ElemR> res;
     const json& elems = j.at("elements").get<json>();
 
 
-    res.add(readElemStrAs<Geometry::HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
-    res.add(readElemStrAs<Geometry::Tet4> (mG, lG, cG, elems.at("tetrahedra").get<json>()));
-    res.add(readElemStrAs<Geometry::QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
-    res.add(readElemStrAs<Geometry::Tri3> (mG, lG, cG, elems.at("triangle").get<json>()));
-    res.add(readElemStrAs<Geometry::LinR2>(mG, lG, cG, elems.at("line").get<json>()));
+    res.add(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
+    res.add(readElemStrAs<Tet4> (mG, lG, cG, elems.at("tetrahedra").get<json>()));
+    res.add(readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
+    res.add(readElemStrAs<Tri3> (mG, lG, cG, elems.at("triangle").get<json>()));
+    res.add(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
 
     return res;
 }
@@ -513,7 +507,7 @@ PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(const json& ma
     }
 }
 
-Geometry::Grid3 Parser::readGrids(const json& j) const {
+Grid3 Parser::readGrids(const json& j) const {
     if (j.find("grids") == j.end()) {
         throw std::logic_error("Grids object not found.");
     }
@@ -522,13 +516,13 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
     std::string gridType = g.at("gridType").get<std::string>();
     if (gridType.compare("gridCondition") == 0) {
         // Initializes basic grid.
-        Geometry::Grid3 res;
+        Grid3 res;
         if (g.at("type").get<std::string>().compare("Number_of_cells") == 0) {
-            res = Geometry::Grid3(
+            res = Grid3(
                     strToBox(g.at("layerBox").get<std::string>()),
                     strToCVecI3(g.at("numberOfCells").get<std::string>()));
         } else {
-            Geometry::BoxR3 box = strToBox(g.at("layerBox").get<std::string>());
+            BoxR3 box = strToBox(g.at("layerBox").get<std::string>());
             Math::CVecR3 stepSize = 
                 strToCVecR3(g.at("stepSize").get<std::string>());
             if (g.at("fitSizeToBox").get<bool>()) {
@@ -540,7 +534,7 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
                     stepSize[i] = box.getLength()[i] / n;
                 }
             }
-            res = Geometry::Grid3(box, stepSize);
+            res = Grid3(box, stepSize);
         }
 
         // Applies boundary padding operations.
@@ -575,11 +569,11 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
         pos[1] = g.at("yCoordinates").get<std::vector<double>>();
         pos[2] = g.at("zCoordinates").get<std::vector<double>>();
         if (!pos[0].empty()) {
-            return Geometry::Grid3(pos);
+            return Grid3(pos);
         } else {
             std::pair<Math::CVecR3, Math::CVecR3> box =
             { corner, corner + boxSize };
-            return Geometry::Grid3(box, nGridPoints);
+            return Grid3(box, nGridPoints);
         }
     } else if (gridType.compare("positionsFromFile") == 0) {
         std::string folder = this->filename.getFolder();
@@ -590,7 +584,7 @@ Geometry::Grid3 Parser::readGrids(const json& j) const {
     }
 }
 
-Geometry::Grid3 Parser::buildGridFromFile(const FileSystem::Project& jsonFile) const
+Grid3 Parser::buildGridFromFile(const FileSystem::Project& jsonFile) const
 {
     if (!jsonFile.canOpen()) {
         throw std::logic_error("ERROR @ Parser::JSON: Unable to open grid file");
@@ -612,7 +606,7 @@ Geometry::Grid3 Parser::buildGridFromFile(const FileSystem::Project& jsonFile) c
             gridIt->at("zs").get<std::vector<double>>()
         };
         if (!pos[0].empty() && !pos[1].empty() && !pos[2].empty()) {
-            return Geometry::Grid3(pos);
+            return Grid3(pos);
         }
         else {
             throw std::logic_error("Grid file had empty positions in at least one direction");
@@ -623,11 +617,11 @@ Geometry::Grid3 Parser::buildGridFromFile(const FileSystem::Project& jsonFile) c
     }
 }
 
-Source::PlaneWave* Parser::readPlanewave(Geometry::Mesh::Geometric& mesh, const json& j) {
+Source::PlaneWave* Parser::readPlanewave(Mesh::Geometric& mesh, const json& j) {
     
     Source::Magnitude::Magnitude* magnitude = readMagnitude(j.at("magnitude").get<json>());
 	auto elems = boxToElemGroup(mesh, j.at("layerBox").get<std::string>());
-	if (elems.sizeOf<Geometry::Vol>() == 0) {
+	if (elems.sizeOf<Vol>() == 0) {
 		throw std::logic_error("Plane wave layer must define a volume");
 	}
     
@@ -658,12 +652,12 @@ Source::PlaneWave* Parser::readPlanewave(Geometry::Mesh::Geometric& mesh, const 
 }
 
 Source::Port::Waveguide* Parser::readPortWaveguide(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
+        Mesh::Geometric& mesh, const json& j) {
     std::string shape = j.at("shape").get<std::string>();
     if (shape.compare("Rectangular") == 0) {
         return new Source::Port::WaveguideRectangular(
                 readMagnitude(       j.at("magnitude").get<json>()),
-                readElemIdsAsGroupOf<const Geometry::Surf>(
+                readElemIdsAsGroupOf<const Surf>(
                              mesh, j.at("elemIds").get<json>()),
                 strToWaveguideMode(  j.at("excitationMode").get<std::string>()),
                 {j.at("firstMode").get<int>(), j.at("secondMode").get<int>()} );
@@ -673,10 +667,10 @@ Source::Port::Waveguide* Parser::readPortWaveguide(
 }
 
 Source::Port::TEM* Parser::readPortTEM(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
+        Mesh::Geometric& mesh, const json& j) {
     return new Source::Port::TEMCoaxial(
             readMagnitude(       j.at("magnitude").get<json>()),
-            readElemIdsAsGroupOf<const Geometry::Surf>(mesh, j.at("elemIds").get<json>()),
+            readElemIdsAsGroupOf<const Surf>(mesh, j.at("elemIds").get<json>()),
             strToTEMMode(        j.at("excitationMode").get<std::string>()),
             strToCVecR3(         j.at("origin").get<std::string>()),
                                  j.at("innerRadius").get<double>(),
@@ -684,7 +678,7 @@ Source::Port::TEM* Parser::readPortTEM(
 }
 
 Source::Generator* Parser::readGenerator(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
+        Mesh::Geometric& mesh, const json& j) {
 	return new Source::Generator(
 			readMagnitude(j.at("magnitude").get<json>()),
 			readCoordIdAsNodes(mesh, j.at("coordIds").get<json>()),
@@ -694,10 +688,10 @@ Source::Generator* Parser::readGenerator(
 }
 
 Source::OnLine* Parser::readSourceOnLine(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
+        Mesh::Geometric& mesh, const json& j) {
     return new Source::OnLine(
             readMagnitude(     j.at("magnitude").get<json>()),
-			readElemIdsAsGroupOf<const Geometry::Lin>(
+			readElemIdsAsGroupOf<const Lin>(
 					mesh, j.at("elemIds").get<json>()),
             strToNodalType(    j.at("type").get<std::string>()),
             strToNodalHardness(j.at("hardness").get<std::string>()) );
@@ -986,13 +980,13 @@ const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
     }
 }
 
-Geometry::Element::Group<Geometry::Nod> Parser::readCoordIdAsNodes(
-        Geometry::Mesh::Geometric& mesh, const json& j) {
-    std::vector<Geometry::ElemId> nodeIds;
+Element::Group<Nod> Parser::readCoordIdAsNodes(
+        Mesh::Geometric& mesh, const json& j) {
+    std::vector<ElemId> nodeIds;
     for (auto it = j.begin(); it != j.end(); ++it) {
-        Geometry::CoordId coordId( it->get<int>() );
-        const Geometry::CoordR3* coord = mesh.coords().getId(coordId);
-        Geometry::NodR* node = new Geometry::NodR(Geometry::ElemId(0), &coord);
+        CoordId coordId( it->get<int>() );
+        const CoordR3* coord = mesh.coords().getId(coordId);
+        NodR* node = new NodR(ElemId(0), &coord);
         mesh.elems().addId(node);
         nodeIds.push_back(node->getId());
     }

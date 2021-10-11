@@ -7,7 +7,7 @@ namespace Geometry {
 namespace Coordinate {
 
 Conformal::Conformal() {
-    dir_ = Math::Constants::x;
+    dir_ = Math::Constants::CartesianAxis::x;
     length_ = 0.0;
 }
 

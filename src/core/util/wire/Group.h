@@ -64,8 +64,6 @@ public:
         return wiresRev_[i];
     }
 
-    void printInfo() const;
-
 private:
     std::vector<Geometry::Element::Polyline<T>*> wires_;
     std::vector<std::vector<Geometry::ElemId>> wiresIds_;

@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "math/vector/Cartesian.h"
@@ -11,7 +9,6 @@
 #include "class/Class.h"
 #include "class/Cloneable.h"
 #include "class/Shareable.h"
-#include "class/Printable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 
@@ -38,7 +35,6 @@ typedef Class::Identification<Base> Id;
 class Base : public virtual Class::Class,
              public virtual Class::Cloneable,
              public virtual Class::Shareable,
-             public virtual Class::Printable,
              public virtual Class::Identifiable<Id> {
 public:
     Base(const Layer* lay = nullptr,

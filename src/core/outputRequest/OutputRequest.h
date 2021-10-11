@@ -8,15 +8,13 @@
 #include "class/Class.h"
 #include "class/Cloneable.h"
 #include "class/Shareable.h"
-#include "class/Printable.h"
 
 namespace SEMBA {
 namespace OutputRequest {
 
 class Base : public virtual Class::Class,
              public virtual Class::Cloneable,
-             public virtual Class::Shareable,
-             public virtual Class::Printable {
+             public virtual Class::Shareable {
 public:
     enum Type {
         electric,

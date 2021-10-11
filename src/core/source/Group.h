@@ -6,15 +6,13 @@
 
 #include "group/Group.h"
 #include "group/Cloneable.h"
-#include "group/Printable.h"
 
 namespace SEMBA {
 namespace Source {
 
 template<typename S = Base>
 class Group : public SEMBA::Group::Group<S>,
-              public SEMBA::Group::Cloneable<S>,
-              public SEMBA::Group::Printable<S> {
+              public SEMBA::Group::Cloneable<S> {
 public:
     Group() {}
     template<typename S2>

@@ -29,18 +29,12 @@ Magnitude& Magnitude::operator=(const Magnitude& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    mathFunction_ =
-        dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
+    mathFunction_ = dynamic_cast<Math::FunctionRR*>(rhs.mathFunction_->clone());
     return *this;
 }
 
 bool Magnitude::operator ==(const Magnitude& rhs) const {
     return *mathFunction_ == *rhs.mathFunction_;
-}
-
-void Magnitude::printInfo() const {
-    std::cout << " --- Magnitude ---" << std::endl;
-    mathFunction_->printInfo();
 }
 
 Math::Real Magnitude::evaluate(const Math::Real time) const {

@@ -16,8 +16,6 @@ public:
     Exporter();
     Exporter(const std::string& name);
     
-    virtual void printInfo() const;
-
 protected:
     void deleteExistentOutputFiles() const;
     std::size_t determineStepsSaved(

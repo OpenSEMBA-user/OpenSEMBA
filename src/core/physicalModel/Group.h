@@ -5,7 +5,6 @@
 #include "PhysicalModel.h"
 
 #include "group/Cloneable.h"
-#include "group/Printable.h"
 #include "group/Identifiable.h"
 
 namespace SEMBA {
@@ -13,7 +12,6 @@ namespace PhysicalModel {
 
 template<typename P = PhysicalModel>
 class Group : public SEMBA::Group::Cloneable<P>,
-              public SEMBA::Group::Printable<P>,
               public SEMBA::Group::Identifiable<P, Id> {
 public:
     Group() {}

@@ -128,34 +128,4 @@ Data& Data::operator=(const Data& rhs) {
     return *this;
 }
 
-void Data::printInfo() const {
-    std::cout << " --- SEMBA data --- " << std::endl;
-    if (solver != nullptr) {
-        solver->printInfo();
-    }
-    else {
-        std::cout << "No info about solver options." << std::endl;
-    }
-    if (mesh != nullptr) {
-        mesh->printInfo();
-    } else {
-        std::cout << "No info about mesh." << std::endl;
-    }
-    if (physicalModels != nullptr) {
-        physicalModels->printInfo();
-    } else {
-        std::cout << "No info about physical models." << std::endl;
-    }
-    if (sources != nullptr) {
-        sources->printInfo();
-    } else {
-        std::cout << "No info about sources." << std::endl;
-    }
-    if (outputRequests != nullptr) {
-        outputRequests->printInfo();
-    } else {
-        std::cout << "No info about output requests." << std::endl;
-    }
-}
-
 } /* namespace SEMBA */

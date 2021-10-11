@@ -20,8 +20,7 @@ public:
               const Magnitude& mag,
               const Math::Real timeStep,
               const Math::Real finalTime);
-    virtual ~Numerical();
-
+    
     SEMBA_CLASS_DEFINE_CLONE(Numerical);
 
     Numerical& operator=(const Numerical& rhs);
@@ -29,8 +28,7 @@ public:
     bool operator==(const Magnitude&) const;
     Math::Real evaluate(const Math::Real time) const;
 
-    void printInfo() const;
-
+    
 private:
     static const std::size_t defaultNumberOfSteps = 1000;
 

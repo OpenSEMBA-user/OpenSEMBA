@@ -7,7 +7,6 @@
 #include "class/Class.h"
 #include "class/Cloneable.h"
 #include "class/Shareable.h"
-#include "class/Printable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 
@@ -20,7 +19,6 @@ typedef Class::Identification<PhysicalModel> Id;
 class PhysicalModel : public virtual Class::Class,
                       public virtual Class::Cloneable,
                       public virtual Class::Shareable,
-                      public virtual Class::Printable,
                       public virtual Class::Identifiable<Id> {
 public:
     enum Type {

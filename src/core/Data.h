@@ -11,13 +11,11 @@
 #include "filesystem/Project.h"
 #include "class/Class.h"
 #include "class/Cloneable.h"
-#include "class/Printable.h"
 
 namespace SEMBA {
 
 class Data : public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Printable {
+             public virtual Class::Cloneable {
 public:
     Solver::Info*           solver;
     Geometry::Mesh::Mesh*   mesh;
@@ -32,8 +30,6 @@ public:
     SEMBA_CLASS_DEFINE_CLONE(Data);
 
     Data& operator=(const Data& rhs);
-
-    void printInfo() const;
 };
 
 } /* namespace SEMBA */

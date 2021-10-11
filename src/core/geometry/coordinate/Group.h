@@ -10,7 +10,6 @@
 
 #include "Coordinate.h"
 #include "group/Cloneable.h"
-#include "group/Printable.h"
 #include "group/Identifiable.h"
 
 namespace SEMBA {
@@ -27,7 +26,6 @@ struct CoordComparator {
 
 template<typename C = Coord>
 class Group : public SEMBA::Group::Cloneable<C>,
-              public SEMBA::Group::Printable<C>,
               public SEMBA::Group::Identifiable<C, Id> {
 public:
     Group();

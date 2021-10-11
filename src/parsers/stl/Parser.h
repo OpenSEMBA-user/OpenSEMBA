@@ -23,8 +23,6 @@ class Parser : public SEMBA::Parsers::Parser {
 public:
     Parser(const std::string& fn) : SEMBA::Parsers::Parser(fn) {};
     Data read() const;
-
-    void printInfo() const;
 };
 
 } /* namespace STL */

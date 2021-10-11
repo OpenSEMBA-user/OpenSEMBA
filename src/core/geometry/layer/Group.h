@@ -4,7 +4,6 @@
 
 #include "Layer.h"
 #include "group/Cloneable.h"
-#include "group/Printable.h"
 #include "group/Identifiable.h"
 
 namespace SEMBA {
@@ -13,7 +12,6 @@ namespace Layer {
 
 template<typename L = Layer>
 class Group : public SEMBA::Group::Cloneable<L>,
-              public SEMBA::Group::Printable<L>,
               public SEMBA::Group::Identifiable<L, Id>  {
 public:
     Group() {}

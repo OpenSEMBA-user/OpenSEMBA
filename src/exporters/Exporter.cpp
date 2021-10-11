@@ -25,11 +25,6 @@ void Exporter::deleteExistentOutputFiles() const {
     std::remove(file.c_str());
 }
 
-void Exporter::printInfo() const {
-    std::cout << " --- Exporters info --- " << std::endl;
-    std::cout << " --- End of Exporters info --- " << std::endl;
-}
-
 std::string Exporter::getOutputfilename() const {
     std::string folder = getFolder();
     std::string output = getOutputName();

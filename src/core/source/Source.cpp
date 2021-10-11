@@ -58,15 +58,6 @@ Magnitude::Numerical* Base::exportToFile(const FileSystem::Project& file,
     return new Magnitude::Numerical(file, *magnitude_, step, finalTime);
 }
 
-void Base::printInfo() const {
-    std::cout << " --- EMSource Base Info ---" << std::endl;
-    if (magnitude_ != nullptr) {
-        magnitude_->printInfo();
-    } else {
-        std::cout << "No magnitude defined." << std::endl;
-    }
-}
-
 const Magnitude::Magnitude* Base::getMagnitude() const {
     return magnitude_;
 }

@@ -7,7 +7,6 @@
 #include "class/Class.h"
 #include "class/Cloneable.h"
 #include "class/Shareable.h"
-#include "class/Printable.h"
 
 namespace SEMBA {
 namespace Source {
@@ -15,8 +14,7 @@ namespace Magnitude {
 
 class Magnitude : public virtual Class::Class,
                   public virtual Class::Cloneable,
-                  public virtual Class::Shareable,
-                  public virtual Class::Printable {
+                  public virtual Class::Shareable {
 public:
     Magnitude();
     Magnitude(Math::FunctionRR* mathFunction);
@@ -30,8 +28,6 @@ public:
     virtual bool operator==(const Magnitude&) const;
 
     Math::Real evaluate(const Math::Real time) const;
-
-    virtual void printInfo() const;
 
 private:
     Math::FunctionRR* mathFunction_;

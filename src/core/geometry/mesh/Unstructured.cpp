@@ -210,31 +210,6 @@ void Unstructured::reassignPointers(
     }
 }
 
-void Unstructured::printInfo() const {
-    std::cout << " --- Mesh unstructured Info --- " << std::endl;
-    std::cout << "Number of coordinates: " << coords_.size() << std::endl;
-    std::cout << "Number of elements: " << elems_.size()
-              << std::endl;
-    layers_.printInfo();
-}
-//
-//Element::Group<const SurfR> Unstructured::getSurfsMatching(
-//        const std::vector<Element::Face>& faces) const {
-//    std::vector<const SurfR*> res;
-//    Element::IndexByVertexId index = getIndexByVertexId();
-//    for (std::size_t i = 0; i < faces.size(); i++) {
-//        const VolR* vol = faces[i].first;
-//        const std::size_t f = faces[i].second;
-//        std::vector<const CoordR3*> vertices = vol->getSideVertices(f);
-//        std::vector<CoordId> ids = Element::Base::getIds(vertices);
-//        Element::IndexByVertexId::const_iterator it = index.find(ids);
-//        if (it != index.end()) {
-//            res.push_back(it->second->castTo<SurfR>());
-//        }
-//    }
-//    return Element::Group<const SurfR>(res);
-//}
-//
 BoxR3 Unstructured::getBoundingBox() const {
     return elems().getBound();
 }

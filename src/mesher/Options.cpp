@@ -31,28 +31,6 @@ Options::Options() {
     gridStep_ = Math::CVecR3(0.0);
 }
 
-void Options::printInfo() const {
-    std::cout << " --- Meshing parameters info --- " << std::endl;
-    if (isStructured()) {
-        std::cout << " Generating structured mesh." << std::endl;
-    }
-    std::cout << "Lower X Bound: "
-        << toStr(getBoundTermination(0, 0)) << std::endl;
-    std::cout << "Upper X Bound: "
-        << toStr(getBoundTermination(0, 1)) << std::endl;
-    std::cout << "Lower Y Bound: "
-        << toStr(getBoundTermination(1, 0)) << std::endl;
-    std::cout << "Upper Y Bound: "
-        << toStr(getBoundTermination(1, 1)) << std::endl;
-    std::cout << "Lower Z Bound: "
-        << toStr(getBoundTermination(2, 0)) << std::endl;
-    std::cout << "Upper Z Bound: "
-        << toStr(getBoundTermination(2, 1)) << std::endl;
-    std::cout << " --- End of Meshing parameters info ---" << std::endl;
-}
-
-void Options::printHelp() const {}
-
 std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
     if (val == nullptr) {
         return "Undefined";

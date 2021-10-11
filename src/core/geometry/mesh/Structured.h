@@ -48,10 +48,6 @@ public:
     const Layer::Group<>&             layers() const { return layers_; }
 
     Unstructured* getMeshUnstructured() const;
-    //Structured* getConnectivityMesh() const;
-
-    //void convertToHex(Element::Group<const SurfI> surfs);
-    //void addAsHex(Element::Group<const VolR> vols);
 
     Math::Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Math::Real factor);
@@ -62,16 +58,8 @@ public:
 
     virtual void reassign( Element::Group<const Elem>& );
 
-    virtual void printInfo() const;
-
 private:
-    //std::vector<HexI8*> discretizeWithinBoundary(
-    //        const Element::Group<const SurfI>& faces);
-    //std::vector<std::pair<const SurfI*, const SurfI*> >
-    //    getPairsDefiningVolumeWithin(
-    //        const Element::Group<const SurfI>& faces) const;
-
-	Grid3 grid_;
+    Grid3 grid_;
 	Coordinate::Group<CoordI3> coords_;
 	Element::Group<ElemI> elems_;
 	Layer::Group<> layers_;
@@ -79,7 +67,6 @@ private:
 };
 
 namespace Error {
-
 class InvalidBoundary : public std::exception {
 public:
     InvalidBoundary() {}
@@ -89,8 +76,8 @@ public:
         return "Invalid boundary to discretize";
     }
 };
-
 } /* namespace Error */
+
 } /* namespace Mesh */
 } /* namespace Geometry */
 

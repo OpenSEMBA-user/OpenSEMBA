@@ -18,8 +18,6 @@ Dipole::Dipole(const Magnitude::Magnitude* magnitude,
     position_ = position;
     gaussDelay_ = 0.0;
     spreadSqrt2_ = 0.0;
-//    gaussDelay_ = magnitude.getDelay();
-//    spreadSqrt2_ = magnitude.getSpread() * sqrt(2.0);
 }
 
 Dipole::Dipole(const Dipole& rhs)
@@ -33,25 +31,9 @@ Dipole::Dipole(const Dipole& rhs)
     spreadSqrt2_ = rhs.spreadSqrt2_;
 }
 
-Dipole::~Dipole() {
-
-}
-
 const std::string& Dipole::getName() const {
     const static std::string res = "Dipole";
     return res;
-}
-
-void Dipole::printInfo() const {
-    std::cout << " ---- Dipole information ---- " << std::endl;
-    SEMBA::Source::Base::printInfo();
-    std::cout << " - Length: " << length_ << std::endl;
-    std::cout << " - Orientation vector:";;
-    orientation_.printInfo();
-    std::cout << std::endl;
-    std::cout << " - Position vector:";
-    position_.printInfo();
-    std::cout << std::endl;
 }
 
 } /* namespace Source */

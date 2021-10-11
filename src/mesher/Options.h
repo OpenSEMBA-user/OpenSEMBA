@@ -100,9 +100,6 @@ public:
     void setSlanted(const bool&);
     void setSlantedThreshold(const Math::Real&);
 
-    void printHelp() const;
-    virtual void printInfo() const;
-
     static std::string toStr(const PhysicalModel::Bound::Bound*);
     
 private:

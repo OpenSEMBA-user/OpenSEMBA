@@ -53,12 +53,6 @@ void Geometric::applyScalingFactor(const Math::Real factor) {
     grid_.applyScalingFactor(factor);
 }
 
-void Geometric::printInfo() const {
-    std::cout << " --- Mesh geometric Info --- " << std::endl;
-    Unstructured::printInfo();
-    grid_.printInfo();
-}
-
 } /* namespace Mesh */
 } /* namespace Geometry */
 } /* namespace SEMBA */

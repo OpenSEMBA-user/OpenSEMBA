@@ -42,12 +42,6 @@ Generator::Type Generator::getType() const {
     return type_;
 }
 
-void Generator::printInfo() const {
-    std::cout<< " --- Generator info --- " << std::endl;
-    SEMBA::Source::Base::printInfo();
-    std::cout<< "Type: " << getTypeStr() << std::endl;
-}
-
 std::string Generator::getTypeStr() const {
     switch (type_) {
     case voltage:

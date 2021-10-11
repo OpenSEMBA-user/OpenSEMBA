@@ -8,7 +8,6 @@
 #include "class/Class.h"
 #include "class/Cloneable.h"
 #include "class/Shareable.h"
-#include "class/Printable.h"
 
 #include "geometry/element/Element.h"
 #include "geometry/element/Group.h"
@@ -19,8 +18,7 @@ namespace Mesh {
 
 class Mesh : public virtual Class::Class,
              public virtual Class::Cloneable,
-             public virtual Class::Shareable,
-             public virtual Class::Printable {
+             public virtual Class::Shareable {
 public:
     Mesh();
     virtual ~Mesh();

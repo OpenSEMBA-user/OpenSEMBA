@@ -23,20 +23,6 @@ Group<T>::~Group() {
 }
 
 template<class T>
-void Group<T>::printInfo() const {
-    std::cout << "--- Group Info ---" << std::endl;
-    std::cout << "Wires:" << std::endl;
-    for (std::size_t i = 0; i < wires_.size(); i++) {
-        wires_[i]->printInfo();
-    }
-    std::cout << "Mats:" << std::endl;
-    for (std::map<MatId, PhysicalModel::Wire::Extremes*>::const_iterator
-         it = mats_.begin(); it != mats_.end(); ++it) {
-        it->second->printInfo();
-    }
-}
-
-template<class T>
 void Group<T>::init_(const Data& smb) {
     // First, the graph is constructed
     const Graph& graph = constructGraph_(smb);

@@ -30,7 +30,6 @@ public:
     Type getType() const;
     Hardness getHardness() const;
 
-    virtual void printInfo() const;
 private:
     Type type_;
     Hardness hardness_;

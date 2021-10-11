@@ -39,7 +39,6 @@ Numerical::Numerical(const FileSystem::Project& file,
                   << "numerical magnitude with a 0.0 step."
                   << "Using default number of steps instead: " << nSteps
                   << std::endl;
-        mag.printInfo();
     }
     std::ofstream out;
     out << std::scientific;
@@ -78,12 +77,8 @@ Numerical::Numerical(const FileSystem::Project& file,
                 file)));
 }
 
-Numerical::~Numerical() {
-
-}
-
-Numerical& Numerical::operator=(
-        const Numerical& rhs) {
+Numerical& Numerical::operator=(const Numerical& rhs)
+{
     if (this == &rhs) {
         return *this;
     }
@@ -107,12 +102,6 @@ bool Numerical::operator==(const Magnitude& rhs) const {
 Math::Real Numerical::evaluate(const Math::Real time) const {
     throw std::logic_error("Numerical::evaluate not implemented");
     return 0.0;
-}
-
-void Numerical::printInfo() const {
-    std::cout << " --- Magnitude Numerical Info --- " << std::endl;
-    Magnitude::printInfo();
-    FileSystem::Project::printInfo();
 }
 
 } /* namespace Magnitude */

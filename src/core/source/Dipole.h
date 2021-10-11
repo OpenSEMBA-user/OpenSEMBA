@@ -15,12 +15,10 @@ public:
            Math::CVecR3 orientation,
            Math::CVecR3 position);
     Dipole(const Dipole& rhs);
-    virtual ~Dipole();
-
+    
     SEMBA_CLASS_DEFINE_CLONE(Dipole);
 
     const std::string& getName() const;
-    void printInfo() const;
 protected:
     Math::Real length_;
     Math::CVecR3 orientation_;
