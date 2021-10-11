@@ -56,7 +56,6 @@ public:
     virtual Coordinate<Math::Int ,D>* toStructured  (const Grid<D>&) const;
     virtual Coordinate<Math::Real,D>* toUnstructured(const Grid<D>&) const;
 
-    void printInfo() const;
 };
 
 } /* namespace Coordinate */

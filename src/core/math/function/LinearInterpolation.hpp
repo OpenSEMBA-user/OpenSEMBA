@@ -31,11 +31,6 @@ inline LinearInterpolation<S, T>::~LinearInterpolation() {
 }
 
 template<class S, class T>
-inline void LinearInterpolation<S, T>::printInfo() const {
-    Function<S,T>::printInfo();
-}
-
-template<class S, class T>
 inline T LinearInterpolation<S, T>::operator ()(const S& pos) const {
     if (value_.empty()) {
         throw std::out_of_range("Attempting to interpolate with no data.");

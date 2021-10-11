@@ -47,8 +47,6 @@ public:
     const Domain& domain() const;
 	Domain& domain();
 
-    virtual void printInfo() const = 0;
-
 private:
     std::string name_;
     Type type_;
@@ -79,7 +77,6 @@ public:
     void set(const Geometry::Element::Group<const Geometry::Elem>&);
     void add(const Geometry::Element::Group<const Geometry::Elem>&);
 
-    virtual void printInfo() const;
 };
 
 namespace Error {
@@ -90,8 +87,7 @@ public:
     virtual ~Material() throw() {}
 
     const char* what() const throw() {
-        return ("Bulk currents have to be defined "
-                "over elements with no material assigned.");
+        return ("Bulk currents have to be defined over elements with no material assigned.");
     }
 };
 

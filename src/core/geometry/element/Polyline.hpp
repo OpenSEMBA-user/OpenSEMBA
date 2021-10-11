@@ -76,15 +76,6 @@ void Polyline<T>::setV(const std::size_t i,
     v_[i] = coord;
 }
 
-template<class T>
-void Polyline<T>::printInfo() const {
-    std::cout << "--- Polyline info ---" << std::endl;
-    Line<T>::printInfo();
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */

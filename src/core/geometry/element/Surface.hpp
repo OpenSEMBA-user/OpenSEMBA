@@ -44,9 +44,7 @@ bool Surface<T>::isContainedInPlane() const {
 }
 
 template<class T>
-bool Surface<T>::isContainedInPlane(
-        const Math::Constants::CartesianPlane plane) const {
-    // Checks if any vertex lies out of the plane.
+bool Surface<T>::isContainedInPlane(const Math::Constants::CartesianPlane plane) const {
     for (std::size_t i = 1; i < this->numberOfCoordinates(); i++) {
         if (!(*this->getV(i) - *this->getV(0)).isContainedInPlane(plane)) {
             return false;
@@ -62,13 +60,6 @@ Math::Vector::Cartesian<T,3> Surface<T>::getNormal() const {
     Math::Vector::Cartesian<T,3> v1 = this->getVertex(2)->pos() -
                                       this->getVertex(0)->pos();
     return (v0 ^ v1).normalize();
-}
-
-template<class T>
-void Surface<T>::printInfo() const {
-    std::cout << " --- Surface Info ---" << std::endl;
-    std::cout << getNormal() << std::endl;
-    Element<T>::printInfo();
 }
 
 } /* namespace Element */

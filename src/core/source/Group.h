@@ -36,7 +36,6 @@ public:
     Group& operator=(SEMBA::Group::Group<S>&);
     Group& operator=(SEMBA::Group::Group<S>&&);
 
-    void printInfo() const;
 };
 
 } /* namespace Source */

@@ -305,21 +305,6 @@ inline bool Polynomial<T>::operator ==(const Base& rhs) const {
     return areEqual;
 }
 
-template<class T>
-void Polynomial<T>::printInfo() const {
-    std::cout << " -- Polynomial<T> -- " << std::endl;
-    std::cout << "Number of variables: " << nv_ << std::endl;
-    std::cout << "Number of monomials: " << nm_ << std::endl;
-    std::cout << "Value             Powers" << std::endl;
-    std::size_t i, j;
-    for (i = 0; i < nm_; i++) {
-        std::cout << mv_[i] << "               ";
-        for (j = 0; j < nv_; j++)
-            std::cout << mp_[i][j] << " ";
-        std::cout << std::endl;
-    }
-}
-
 } /* namespace Function */
 } /* namespace Math */
 } /* namespace SEMBA */

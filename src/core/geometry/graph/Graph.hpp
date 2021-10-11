@@ -28,30 +28,9 @@ Graph<ELEM,BOUND>::~Graph() {
     }
 }
 
-//template<class ELEM, class BOUND>
-//Graph<ELEM,BOUND>& Graph<ELEM,BOUND>::operator=(const Graph& rhs) {
-//    if (this == &rhs) {
-//        return *this;
-//    }
-//    cloneInfo(rhs);
-//    return *this;
-//}
-
 template<class ELEM, class BOUND>
-void Graph<ELEM,BOUND>::printInfo() const {
-    std::cout << "--- Graph Info ---" << std::endl;
-    std::cout << "Elems: " << elems_.size() << std::endl;
-    for (std::size_t i = 0; i < elems_.size(); i++) {
-        elems_[i]->printInfo();
-    }
-    std::cout << "Bounds: " << bounds_.size() << std::endl;
-    for (std::size_t i = 0; i < bounds_.size(); i++) {
-        bounds_[i]->printInfo();
-    }
-}
-
-template<class ELEM, class BOUND>
-void Graph<ELEM,BOUND>::resetVisited() {
+void Graph<ELEM,BOUND>::resetVisited() 
+{
     for (std::size_t i = 0; i < elems_.size(); i++) {
         elems_[i]->unmarkVisited();
     }
@@ -61,8 +40,8 @@ void Graph<ELEM,BOUND>::resetVisited() {
 }
 
 template<class ELEM, class BOUND>
-std::vector<std::vector<const ELEM*>>
-        Graph<ELEM,BOUND>::getConnectedComponents() {
+std::vector<std::vector<const ELEM*>> Graph<ELEM,BOUND>::getConnectedComponents() 
+{
     resetVisited();
     std::vector<std::vector<const Elem*>> res;
     for (std::size_t i = 0; i < elems_.size(); i++) {

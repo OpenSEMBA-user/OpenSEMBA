@@ -127,15 +127,6 @@ void Tetrahedron4::check() const {
     }
 }
 
-void Tetrahedron4::printInfo() const {
-    std::cout << "--- Tet4 info ---" << std::endl;
-    std::cout << "Id: " << getId() << std::endl;
-    std::cout << "Coordinates:" << std::endl;
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
 bool Tetrahedron4::hasZeroVolume() const {
     bool zeroVolume;
     Math::CVecR3 initialVCoord, otherVCoord;

@@ -18,14 +18,6 @@ PMC::PMC(const PMC& rhs)
 
 }
 
-PMC::~PMC() {
-
-}
-
-void PMC::printInfo() const {
-    std::cout << "--- PMC info ---" << std::endl;
-    std::cout << "Perfect Magnetic Conductor" << std::endl;
-}
 
 } /* namespace Bound */
 } /* namespace PhysicalModel */

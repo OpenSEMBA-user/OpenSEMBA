@@ -75,9 +75,7 @@ public:
     void remove(const std::vector<std::size_t>&);
 
     void applyScalingFactor(const Math::Real factor);
-    
-    void printInfo() const;
-
+   
 private:
     std::multiset<const CoordR3*, CoordComparator> indexUnstr_;
     std::multiset<const CoordI3*, CoordComparator> indexStr_;

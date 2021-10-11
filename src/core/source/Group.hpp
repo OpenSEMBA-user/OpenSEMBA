@@ -23,11 +23,5 @@ Group<S>& Group<S>::operator=(SEMBA::Group::Group<S>&& rhs) {
     return *this;
 }
 
-template<typename S>
-void Group<S>::printInfo() const {
-    std::cout<< " --- SourceGroup info ---" << std::endl;
-    SEMBA::Group::Printable<S>::printInfo();
-}
-
 } /* namespace Source */
 } /* namespace SEMBA */

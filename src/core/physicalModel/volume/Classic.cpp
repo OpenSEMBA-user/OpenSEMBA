@@ -89,19 +89,6 @@ bool Classic::isVacuum() const {
             && magneticConudctivity_ == 0.0);
 }
 
-void Classic::printInfo() const {
-    std::cout << "--- VolumeClassic info ---" << std::endl;
-    Volume::printInfo();
-    std::cout << "Rel. elec. permittivity: "
-              << getRelativePermittivity() << std::endl;
-    std::cout << "Rel. magn. permeability: "
-              << getRelativePermeability() << std::endl;
-    std::cout << "Electric conductivity: "
-              << getElectricConductivity() << std::endl;
-    std::cout << "Magnetic conductivity: "
-              << getMagneticConductivity() << std::endl;
-}
-
 } /* namespace Volume */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

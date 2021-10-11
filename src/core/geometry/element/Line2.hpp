@@ -154,15 +154,6 @@ ElemR* Line2<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
 }
 
 template<class T>
-void Line2<T>::printInfo() const {
-    std::cout << "--- Lin2 info ---" << std::endl;
-    Line<T>::printInfo();
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
-template<class T>
 void Line2<T>::setCoordinates(const Coordinate::Coordinate<T,3>* v[2]) {
     for (std::size_t i = 0; i < lin.np; i++) {
         v_[i] = v[i];

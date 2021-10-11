@@ -42,8 +42,6 @@ public:
                                                const std::size_t f) const;
     std::vector<Real> getWeights() const;
 
-    void printInfo() const;
-
     static Matrix::Dynamic<Int> PMatrix(const std::size_t n,
                                         const std::size_t s);
 

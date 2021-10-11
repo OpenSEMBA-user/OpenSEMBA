@@ -20,15 +20,7 @@ Predefined::Predefined(const Predefined& rhs)
     type_ = rhs.type_;
 }
 
-Predefined::~Predefined() {
 
-}
-
-void Predefined::printInfo() const {
-    std::cout<< " --- Multiport Info --- " << std::endl;
-    Multiport::printInfo();
-    std::cout<< " Type: " << getTypeStr() << std::endl;
-}
 
 } /* namespace Multiport */
 } /* namespace PhysicalModel */

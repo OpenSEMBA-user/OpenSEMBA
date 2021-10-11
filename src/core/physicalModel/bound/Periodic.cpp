@@ -18,14 +18,6 @@ Periodic::Periodic(const Periodic& rhs)
 
 }
 
-Periodic::~Periodic() {
-
-}
-
-void Periodic::printInfo() const {
-    std::cout << "--- Periodic info ---" << std::endl;
-    std::cout << "Periodic Boundary Condition" << std::endl;
-}
 
 } /* namespace Bound */
 } /* namespace PhysicalModel */

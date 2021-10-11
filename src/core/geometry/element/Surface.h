@@ -27,7 +27,6 @@ public:
 
     virtual Math::Vector::Cartesian<T,3> getNormal() const;
 
-    virtual void printInfo() const;
 };
 
 } /* namespace Element */

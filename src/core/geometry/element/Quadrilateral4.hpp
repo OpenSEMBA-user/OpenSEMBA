@@ -159,15 +159,6 @@ ElemR* Quadrilateral4<T>::toUnstructured(
 }
 
 template<class T>
-void Quadrilateral4<T>::printInfo() const {
-    std::cout << "--- Quad4 info ---" << std::endl;
-    Quadrilateral<T>::printInfo();
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
-template<class T>
 void Quadrilateral4<T>::check() const {
 
 }

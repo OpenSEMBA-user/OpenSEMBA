@@ -45,14 +45,6 @@ Math::Real RLC::getC() const {
     return C_;
 }
 
-void RLC::printInfo() const {
-    std::cout<< " --- Multiport RLC Info --- " << std::endl;
-    Multiport::printInfo();
-    std::cout<< " Type: " << getTypeStr() << std::endl;
-    std::cout<< " Resistance: " << R_ << std::endl;
-    std::cout<< " Inductance: " << L_ << std::endl;
-    std::cout<< " Capacitance: " << C_ << std::endl;
-}
 
 } /* namespace Multiport */
 } /* namespace PhysicalModel */

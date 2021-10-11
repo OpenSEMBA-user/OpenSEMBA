@@ -44,8 +44,6 @@ public:
     std::pair<Math::CVecR3,Math::CVecR3> getElectromagneticField(
             const Math::Real time) const;
 
-    void printInfo() const;
-
 private:
     Math::CVecR3 direction_;
     Math::CVecR3 polarization_;

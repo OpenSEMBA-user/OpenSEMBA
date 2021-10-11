@@ -55,12 +55,6 @@ std::vector<CoordId> Base::ascendingIdOrder(
     return res;
 }
 
-void Base::printInfo() const {
-    std::cout << "Element. Id: " << this->getId()
-              << " MatId: " << this->getMatId()
-              << " LayerId: " << this->getLayerId() << std::endl;
-}
-
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */

@@ -134,15 +134,6 @@ ElemR* Node<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
     return res;
 }
 
-template<class T>
-void Node<T>::printInfo() const {
-    std::cout << "--- Node info ---" << std::endl;
-    Element<T>::printInfo();
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */

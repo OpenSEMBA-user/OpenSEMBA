@@ -13,11 +13,9 @@ public:
     PEC(const Id id);
     PEC(const Id id, const std::string name);
     PEC(const PEC&);
-    virtual ~PEC();
-
+    
     SEMBA_CLASS_DEFINE_CLONE(PEC);
 
-    void printInfo() const;
 };
 
 } /* namespace Predefined */

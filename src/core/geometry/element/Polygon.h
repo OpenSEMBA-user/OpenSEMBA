@@ -38,13 +38,9 @@ public:
     Math::Real getArea() const;
 
     void setV(const std::size_t i, const CoordR3*);
-    
-    void printInfo() const;
 
 private:
     std::vector<const CoordR3*> v_;
-    // TODO void checkVertexCoplanarity() const;
-
 };
 
 } /* namespace Element */

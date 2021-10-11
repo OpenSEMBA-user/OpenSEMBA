@@ -70,15 +70,6 @@ void Triangle3::check() const {
 
 }
 
-void Triangle3::printInfo() const {
-    std::cout << "--- Tri3 info ---" << std::endl;
-    Base::printInfo();
-    std::cout << "Coordinates:" << std::endl;
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
 Triangle3* Triangle3::linearize() const {
     return new Triangle3(*this);
 }

@@ -14,11 +14,9 @@ public:
                         const std::string nameIn,
                         const Multiport::Type);
     Predefined(const Predefined&);
-    virtual ~Predefined();
 
     SEMBA_CLASS_DEFINE_CLONE(Predefined);
 
-    virtual void printInfo() const;
 };
 
 } /* namespace Multiport */

@@ -17,14 +17,12 @@ public:
         const std::string& name,
         const Math::Axis::Local orientation);
     PML(const PML& rhs);
-    ~PML();
+  
 
     SEMBA_CLASS_DEFINE_CLONE(PML);
 
     const Math::Axis::Local getOrientation() const;
     const Math::CVecR3 getGlobalZAxis() const;
-
-    void printInfo() const;
 
 private:
     const Math::Axis::Local orientation_;

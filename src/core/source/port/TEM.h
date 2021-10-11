@@ -23,8 +23,6 @@ public:
 
     ExcitationMode getExcitationMode() const;
 
-    void printInfo() const;
-
     static std::string toStr(const ExcitationMode& excitationMode);
 private:
     ExcitationMode excitationMode_;

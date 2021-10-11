@@ -74,14 +74,6 @@ namespace SEMBA {
                 );
             }
 
-            void BandLimited::printInfo() const {
-                std::cout << " --- Function BandLimited info --- " << std::endl;
-                FunctionRR::printInfo();
-                std::cout << "Minimum frequency: " <<
-                    minimumFrequency_ << std::endl;
-                std::cout << "Maximum frequency: " << 
-                    maximumFrequency_<< std::endl;
-            }
 
         } /* namespace Function */
     } /* namespace Math */

@@ -121,8 +121,6 @@ public:
                       Math::Constants::CartesianBound b,
                       Math::Real pad, Math::Real siz);
 
-    void printInfo() const;
-
 private:
     std::vector<Math::Real> pos_[D];
 };

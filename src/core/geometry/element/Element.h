@@ -91,8 +91,6 @@ public:
     virtual void setLayer(const Layer* lay) { lay_ = lay; }
     virtual void setModel(const Model* mat) { mat_ = mat; }
 
-    virtual void printInfo() const = 0;
-
 private:
     const Layer* lay_;
     const Model* mat_;

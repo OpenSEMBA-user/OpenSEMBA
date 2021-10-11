@@ -23,11 +23,5 @@ Group<P>& Group<P>::operator=(SEMBA::Group::Group<P>&& rhs) {
     return *this;
 }
 
-template<typename P>
-void Group<P>::printInfo() const {
-    std::cout << "---- Group info ----" << std::endl;
-    std::cout << "Number of physical models: " << this->size() << std::endl;
-}
-
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

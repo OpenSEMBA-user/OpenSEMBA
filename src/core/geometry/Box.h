@@ -84,7 +84,6 @@ public:
     Box<T,D>& setInfinity();
     void scale(const Math::Real factor);
 
-    void printInfo() const;
 private:
     CVecTD min_, max_;
 

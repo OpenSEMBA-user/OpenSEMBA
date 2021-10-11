@@ -31,8 +31,6 @@ public:
     const std::string& getName() const;
     Type getType() const;
 
-    void printInfo() const;
-
 private:
     Type type_;
     Hardness hardness_;

@@ -39,8 +39,6 @@ public:
     Math::Real getAreaOfFace(const std::size_t f) const;
     Math::Real getVolume() const;
 
-    void printInfo() const;
-
 private:
     std::vector<const CoordR3*> v_;
     std::vector<const Polygon*> face_;

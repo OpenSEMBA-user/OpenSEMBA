@@ -54,8 +54,6 @@ public:
    void copy(std::vector<std::vector<T> > values);
    bool operator==(const Static<T,ROWS,COLS>& rhs) const;
    bool operator<(const Static<T,ROWS,COLS>& rhs) const;
-   void printInfo() const;
-   void printInfo(std::size_t, std::size_t) const;
 
 private:
    T _val[ROWS*COLS];

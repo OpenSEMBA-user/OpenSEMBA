@@ -104,15 +104,6 @@ Tetrahedron4* Tetrahedron10::linearize() const {
     return new Tetrahedron4(getId(), vertex, getLayer(), getModel());
 }
 
-void Tetrahedron10::printInfo() const {
-    std::cout << "--- Tet10 info ---" << std::endl;
-    std::cout << "Id: " << getId() << std::endl;
-    std::cout << "Coordinates:" << std::endl;
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
 void Tetrahedron10::check() const {
 
 }

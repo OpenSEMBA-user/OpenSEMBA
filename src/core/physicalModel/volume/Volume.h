@@ -8,13 +8,7 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Volume {
 
-class Volume : public virtual PhysicalModel {
-public:
-    Volume();
-    virtual ~Volume();
-
-    virtual void printInfo() const;
-};
+class Volume : public virtual PhysicalModel {};
 
 } /* namespace Volume */
 } /* namespace PhysicalModel */

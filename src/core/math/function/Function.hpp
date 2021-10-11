@@ -24,12 +24,6 @@ inline T Function<S, T>::eval(const S& arg) const {
     return this->operator ()(arg);
 }
 
-template<class S, class T>
-inline void Function<S, T>::printInfo() const {
-    std::cout << " --- Function from " << typeid(S).name()
-              << " to " << typeid(T).name() << " --- " << std::endl;
-}
-
 } /* namespace Function */
 } /* namespace Math */
 } /* namespace SEMBA */

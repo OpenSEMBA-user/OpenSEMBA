@@ -249,13 +249,6 @@ void Group<C>::applyScalingFactor(const Math::Real factor) {
 }
 
 template<typename C>
-void Group<C>::printInfo() const {
-    std::cout<< "--- Group info ---" << std::endl;
-    std::cout<< "Total: " << this->size() << " coordinates." << std::endl;
-    SEMBA::Group::Printable<C>::printInfo();
-}
-
-template<typename C>
 void Group<C>::postprocess_(const std::size_t fistStep) {
     for (std::size_t i = fistStep; i < this->size(); i++) {
         if (this->get(i)->template is<CoordR3>()) {

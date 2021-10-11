@@ -318,14 +318,6 @@ void Group<E>::linearize() {
 }
 
 template<typename E>
-void Group<E>::printInfo() const {
-    std::cout << "--- Group info ---" << std::endl;
-    for (std::size_t i = 0; i < this->size(); i++) {
-        (*this)(i)->printInfo();
-    }
-}
-
-template<typename E>
 std::vector<std::size_t> Group<E>::getElemsWith_(
         const std::vector<MatId>& mats) const {
 

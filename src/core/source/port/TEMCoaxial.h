@@ -29,7 +29,6 @@ public:
     Math::CVecR3 getOrigin() const;
     Math::CVecR3 getWeight(const Math::CVecR3& pos) const;
 
-    void printInfo() const;
 private:
     Math::CVecR3 origin_;
     Math::Real innerRadius_, outerRadius_;

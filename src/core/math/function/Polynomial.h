@@ -59,7 +59,6 @@ public:
     Matrix::Dynamic<T> polynomialToMatrix() const;
     void removeZeros();
 
-    void printInfo() const;
 private:
     std::size_t nv_; // Number of variables.
     std::size_t nm_; // Number of monomials.

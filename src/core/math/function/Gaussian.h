@@ -29,9 +29,6 @@ public:
     Real getAmplitude() const { return amplitude_; }
     Real getFreq() const { return freq_; }
 
-
-    void printInfo() const;
-
 private:
     Real spread_;
     Real delay_;

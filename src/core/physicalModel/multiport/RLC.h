@@ -24,7 +24,6 @@ public:
     virtual Math::Real getR() const;
     virtual Math::Real getL() const;
     virtual Math::Real getC() const;
-    virtual void printInfo() const;
 private:
     Math::Real R_, L_, C_;
 };

@@ -60,12 +60,6 @@ CVecR3 Local::convertToGlobal(const CVecR3& local) const {
     return global;
 }
 
-void Local::printInfo() const {
-    std::cout << " --- Local Axes Info --- " << std::endl;
-    std::cout << "Euler angles: " << eulerAngles_ << std::endl;
-    std::cout << "Origin:       " << origin_ << std::endl;
-}
-
 } /* namespace Axis */
 } /* namespace Math */
 } /* namespace SEMBA */

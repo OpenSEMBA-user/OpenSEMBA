@@ -77,20 +77,6 @@ CoordR3* Conformal::toUnstructured(const Grid3& grid) const {
     return new CoordR3(this->getId(), pos);
 }
 
-void Conformal::printInfo() const {
-    CoordI3::printInfo();
-    std::cout << " Dir: (";
-    if(Math::Util::equal(length_, 0.0)) {
-        std::cout << "0";
-    } else {
-        std::cout << ('x'+dir_);
-    }
-    std::cout << ")";
-    if(Math::Util::notEqual(length_, 0.0)) {
-        std::cout << " Length: (" << length_ << ")";
-    }
-}
-
 } /* namespace Coordinate */
 } /* namespace Geometry */
 } /* namespace SEMBA */

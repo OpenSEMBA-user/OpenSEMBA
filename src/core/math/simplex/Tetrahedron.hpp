@@ -232,29 +232,6 @@ Matrix::Static<Int, TET_NFP, TET_NP>
     return Raux * PMatrix(s);
 }
 
-template <size_t N>
-void Tetrahedron<N>::printInfo() const {
-    std::cout << " --- Tetrahedron Information --- " << std::endl;
-    std::cout << " Order:                         " << n << std::endl;
-    std::cout << " List of node indices: " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        indices[i].printInfo();
-        std::cout << std::endl;
-    }
-    std::cout << " List of side nodes indices:    " << std::endl;
-    sNId.printInfo();
-    std::cout << " List of side nodes coordinates: " << std::endl;
-    for (std::size_t f = 0; f < faces; f++) {
-        std::cout << "Face #" << f << std::endl;
-        for (std::size_t i = 0; i < nfp; i++) {
-            sideCoordinate(f,i).printInfo();
-            std::cout << std::endl;
-        }
-    }
-    std::cout << " --- End of simplex information --- "   << std::endl;
-}
-
-
 } /* namespace Simplex */
 } /* namespace Math */
 } /* namespace SEMBA */

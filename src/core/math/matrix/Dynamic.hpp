@@ -462,38 +462,6 @@ Dynamic<T> Dynamic<T>::convolute(const Dynamic<T> &param) const {
 }
 
 template <class T>
-void Dynamic<T>::printInfo() const {
-   printInfo(_nRows, _nCols);
-}
-
-template <class T>
-void Dynamic<T>::printInfo(std::size_t rows, std::size_t cols) const {
-   std::size_t i, j;
-   if (rows > _nRows || cols > _nCols) {
-       throw typename Error::Size();
-   }
-   std::cout << "Dimensions: " << _nRows << "x" << _nCols << std::endl;
-   std::cout << "Stored values: " << std::endl;
-   for (i = 0; i < rows; i++) {
-      for (j = 0; j < cols; j++)
-          std::cout << std::setprecision(16) << val(i,j) << " ";
-      std::cout << std::endl;
-   }
-}
-
-template <class T>
-void Dynamic<T>::printInfo(std::size_t fr, std::size_t lr,
-                           std::size_t fc, std::size_t lc) const {
-   std::cout << "Dimensions: " << _nRows << "x" << _nCols << std::endl;
-   std::cout << "Stored values: " << std::endl;
-   for (std::size_t i = fr; i <= lr; i++) {
-      for (std::size_t j = fc; j < lc; j++)
-          std::cout << _val[i][j] << " ";
-      std::cout << std::endl;
-   }
-}
-
-template <class T>
 Dynamic<T> Dynamic<T>::reshape(std::size_t rows, std::size_t cols) {
    Dynamic<T> res(rows, cols);
    res = reshape(rows,cols,1);
@@ -611,60 +579,6 @@ Dynamic<T>& Dynamic<T>::transpose() {
    }
    return *this;
 }
-
-#ifdef EIGEN_SUPPORT
-/**
- * Computes the eigen values of the caller, using an interface to Eigen
- * library that re-uses the memory allocated for this object
- * @return         Returns a std vector of complex values filled with the eigen values
- */
-template<class T>
-std::vector<std::complex<Real>> Dynamic<T>::eigenValues() {
-    // Creates an Eigen object reusing the memory allocated for the matrix
-    Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>> eigenMat(this->_val, nRows(), nCols());
-
-    // Calls Eigen to compute eigen values
-    Eigen::ComplexEigenSolver<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic>> eigenSolver;
-    eigenSolver.compute(eigenMat);
-    Eigen::Matrix<std::complex<Real>, Eigen::Dynamic, 1> eigenvalues = eigenSolver.eigenvalues();
-
-    // Vector of complex to store the computed eigen values
-    std::vector<std::complex<Real>> result;
-
-    for (size_t i = 0; i < eigenvalues.size(); i++) {
-        result.push_back(eigenvalues[i]);
-    }
-
-    return result;
-}
-
-/**
- * Computes the eigen vectors of the caller, using an interface to Eigen
- * library that re-uses the memory allocated for this object
- * @return         Returns a Dynamic matrix of complex values filled with the eigen values
- */
-template<class T>
-Dynamic<std::complex<Real>> Dynamic<T>::eigenVectors() {
-    // Creates an Eigen object reusing the memory allocated for the matrix
-    Eigen::Map<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic,Eigen::RowMajor>> eigenMat(this->_val, nRows(), nCols());
-
-    // Calls Eigen to compute eigen vectors
-    Eigen::ComplexEigenSolver<Eigen::Matrix<T,Eigen::Dynamic,Eigen::Dynamic>> eigenSolver;
-    eigenSolver.compute(eigenMat);
-    Eigen::Matrix<std::complex<Real>, Eigen::Dynamic, Eigen::Dynamic> eigenvectors = eigenSolver.eigenvectors();
-
-    // Matrix of complex to store the computed eigen vectors
-    Dynamic<std::complex<Real>> result(nRows(),nCols());
-
-    for (size_t j = 0; j < nCols(); j++) {
-        for (size_t i = 0; i < nRows(); i++) {
-            result(i,j) = eigenvectors(i,j);
-        }
-    }
-
-    return result;
-}
-#endif // EIGEN_SUPPORT
 
 } /* namespace Matrix */
 } /* namespace Math */

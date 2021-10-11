@@ -14,21 +14,8 @@ SIBCFile::SIBCFile(const Id id,
     file_(file) {
     std::string extension = file_.getExtension();
     if (extension.compare(".mibc") != 0) {
-        printInfo();
-        throw std::logic_error("File extension must be .mibc in file: "
-                + file_);
+        throw std::logic_error("File extension must be .mibc in file: " + file_);
     }
-}
-
-SIBCFile::~SIBCFile() {
-
-}
-
-void SIBCFile::printInfo() const {
-    std::cout << "--- Physical model information ---"   << std::endl;
-    std::cout << "Surface Impedance Boundary Condition File" << std::endl;
-    std::cout << file_ << std::endl;
-
 }
 
 const FileSystem::Project SIBCFile::getFile() const {

@@ -20,15 +20,6 @@ PML::PML(const PML& rhs)
     orientation_(rhs.orientation_) {
 }
 
-PML::~PML() {
-}
-
-void PML::printInfo() const {
-    std::cout << "--- VolumePML info ---" << std::endl;
-    Volume::printInfo();
-    orientation_.printInfo();
-}
-
 const Math::Axis::Local PML::getOrientation() const {
     return orientation_;
 }

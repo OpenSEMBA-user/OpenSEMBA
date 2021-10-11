@@ -37,15 +37,6 @@ std::complex<Real> Gaussian::getFourier(const Real freq) const {
             * std::exp(- (Real) 0.5 * pow(getSpread()*pi2*freq,2));
 }
 
-void Gaussian::printInfo() const {
-    std::cout << " --- Function Gaussian info --- " << std::endl;
-    FunctionRR::printInfo();
-    std::cout << "Ampliude:  " << amplitude_ << std::endl;
-    std::cout << "Spread:    " << spread_ << std::endl;
-    std::cout << "Delay:     " << delay_ << std::endl;
-    std::cout << "Frequency: " << freq_ << std::endl;
-}
-
 } /* namespace Function */
 } /* namespace Math */
 } /* namespace SEMBA */

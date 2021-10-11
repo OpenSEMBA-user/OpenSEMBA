@@ -12,11 +12,9 @@ class PEC : public virtual Bound {
 public:
     PEC(const Id id);
     PEC(const PEC&);
-    virtual ~PEC();
 
     SEMBA_CLASS_DEFINE_CLONE(PEC);
 
-    void printInfo() const;
 };
 
 } /* namespace Bound */

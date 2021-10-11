@@ -37,22 +37,13 @@ OutputRequest<T>::~OutputRequest() {
 }
 
 template <class T>
-void OutputRequest<T>::set(
-        const Geometry::Element::Group<const Geometry::Elem>& elems) {
+void OutputRequest<T>::set(const Geometry::Element::Group<const Geometry::Elem>& elems) {
     Geometry::Element::Group<const T>::operator=(elems);
 }
 
 template <class T>
-void OutputRequest<T>::add(
-        const Geometry::Element::Group<const Geometry::Elem>& elems) {
+void OutputRequest<T>::add(const Geometry::Element::Group<const Geometry::Elem>& elems) {
     Geometry::Element::Group<const T>::add(elems);
-}
-
-template<class T>
-inline void OutputRequest<T>::printInfo() const {
-    std::cout << " --- Output request instance --- " << std::endl;
-    Base::printInfo();
-    Geometry::Element::Group<const T>::printInfo();
 }
 
 } /* namespace OutputRequest */

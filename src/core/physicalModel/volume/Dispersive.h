@@ -44,7 +44,6 @@ public:
     bool isSimplyConductive() const;
     bool isDispersive() const;
 
-    void printInfo() const;
     const FileSystem::Project getFile() const;
 
 protected:

@@ -171,28 +171,5 @@ void Domain::setSamplingPeriod(const Math::Real samplingPeriod) {
     samplingPeriod_ = samplingPeriod;
 }
 
-void Domain::printInfo() const {
-    std::cout << "-- Domain info: " << std::endl;
-    if (timeDomain_) {
-        std::cout << "Requesting time output: ";
-        std::cout << initialTime_ << " " << finalTime_ << " "
-                  << samplingPeriod_ << std::endl;
-    }
-    if (frequencyDomain_) {
-        std::cout << "Requesting frequency output: " << initialFrequency_
-                  << " " << finalFrequency_ << " " << frequencyStep_
-                  << std::endl;
-        if (logFrequencySweep_) {
-            std::cout << "Logarithmic frequency sweep." << std::endl;
-        } else {
-            std::cout << "Linear frequency sweep." << std::endl;
-        }
-        if (usingTransferFunction_) {
-            std::cout << "Using transfer function file: "
-                      << transferFunctionFile_ << std::endl;
-        }
-    }
-}
-
 } /* namespace OutputRequest */
 } /* namespace SEMBA */

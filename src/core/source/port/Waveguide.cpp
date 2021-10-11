@@ -49,18 +49,6 @@ std::pair<size_t,size_t> Waveguide::getMode() const {
     return mode_;
 }
 
-void Waveguide::printInfo() const {
-    std::cout << "--- Waveguide port info ---" << std::endl;
-    std::cout << "Mode: ";
-    if (excitationMode_ == TE) {
-        std::cout << "TE ";
-    } else {
-        std::cout << "TM ";
-    }
-    std::cout << mode_.first << ", " << mode_.second << std::endl;
-    Port::printInfo();
-}
-
 } /* namespace Port */
 } /* namespace Source */
 } /* namespace SEMBA */

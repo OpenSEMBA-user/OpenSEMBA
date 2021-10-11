@@ -63,14 +63,6 @@ Math::CVecR3 TEMCoaxial::getWeight(
     }
 }
 
-void TEMCoaxial::printInfo() const {
-    std::cout << " --- Coaxial TEM Port --- " << std::endl;
-    std::cout << "Origin: " << origin_ << std::endl;
-    std::cout << "Inner/Outer radii: "
-            << innerRadius_ << "/" << outerRadius_ << std::endl;
-    TEM::printInfo();
-}
-
 void TEMCoaxial::set(
         const Geometry::Element::Group<const Geometry::Elem>& elemGroup) {
     // Reescales internal dimensions.

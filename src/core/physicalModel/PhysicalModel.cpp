@@ -31,12 +31,6 @@ void PhysicalModel::setName(const std::string& newName) {
     name_ = newName;
 }
 
-void
-PhysicalModel::printInfo() const {
-    std::cout << " --- Physical Model Info ---" << std::endl;
-    std::cout << "Id: " << getId() << std::endl;
-    std::cout << "Name: " << name_ << std::endl;
-}
 
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

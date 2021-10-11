@@ -1,5 +1,3 @@
-
-
 #include "FarField.h"
 
 namespace SEMBA {
@@ -56,16 +54,6 @@ Math::Real FarField::getFinalPhi() const {
 
 Math::Real FarField::getStepPhi() const {
     return stepPhi_;
-}
-
-void FarField::printInfo() const {
-    OutputRequest<Geometry::Vol>::printInfo();
-    std::cout << "Initial theta: " << getInitialTheta() << std::endl;
-    std::cout << "Final theta: " << getFinalTheta() << std::endl;
-    std::cout << "Step theta: " << getStepTheta() << std::endl;
-    std::cout << "Initial phi: " << getInitialPhi() << std::endl;
-    std::cout << "Final phi: " << getFinalPhi() << std::endl;
-    std::cout << "Step phi: " << getStepPhi() << std::endl;
 }
 
 void FarField::setThetaAndPhi(

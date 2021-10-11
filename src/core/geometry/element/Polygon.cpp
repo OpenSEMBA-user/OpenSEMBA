@@ -88,18 +88,6 @@ void Polygon::setV(const std::size_t i, const CoordR3* coord) {
     v_[i] = coord;
 }
 
-void Polygon::printInfo() const {
-    std::cout << "--- Polygon info ---" << std::endl
-              << "Number of coordinates: " << numberOfCoordinates()
-              << std::endl;
-    std::cout<< "Id: " << getId() << ", MatId: " << getMatId() << std::endl;
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        std::cout<< "#" << i << ": ";
-        v_[i]->printInfo();
-    }
-    std::cout<< "--- End of polygon info ---" << std::endl;
-}
-
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */

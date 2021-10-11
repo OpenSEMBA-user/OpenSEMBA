@@ -84,7 +84,6 @@ public:
     Cartesian<T,D>& cyclicPermutation(const std::size_t n=1);
 
     std::string toStr() const;
-    void printInfo() const;
 };
 
 template<std::size_t D>

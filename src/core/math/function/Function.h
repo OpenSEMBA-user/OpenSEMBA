@@ -17,7 +17,6 @@ public:
     virtual Base* clone() const = 0;
 
     virtual bool operator==(const Base& rhs) const = 0;
-    virtual void printInfo() const = 0;
 };
 
 template<class S, class T>
@@ -28,8 +27,6 @@ public:
 
     virtual T operator()(const S& arg) const = 0;
     T eval(const S& arg) const;
-
-    void printInfo() const;
 };
 
 } /* namespace Function */

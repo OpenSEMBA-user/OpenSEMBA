@@ -60,10 +60,6 @@ std::string Layer::getChildName() const {
    return std::string();
 }
 
-void Layer::printInfo() const {
-    std::cout << toStr() << std::endl;
-}
-
 std::string Layer::toStr() const {
     std::stringstream ss;
     ss << "Layer. Id: " << getId() << " Name: " << getName();

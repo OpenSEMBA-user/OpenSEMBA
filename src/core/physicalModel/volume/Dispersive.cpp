@@ -114,20 +114,6 @@ const FileSystem::Project Dispersive::getFile() const {
     return file_;
 }
 
-void Dispersive::printInfo() const {
-    std::cout << "--- VolumeDispersive info ---" << std::endl;
-    Volume::printInfo();
-    std::cout << "Type: " << "Dispersive material" << std::endl;
-    std::cout << "Number of pole residue pairs: " << poleResidue_.size()
-              << std::endl;
-    std::cout << "# " << " re_a " << " im_a " << " re_c " << " im_c "
-              << std::endl;
-    for (std::size_t i = 0; i < poleResidue_.size(); i++) {
-        std::cout << i << " " << getPole(i).real() << " " << getPole(i).imag()
-                  << " " << getResidue(i).real() << " " << getResidue(i).imag()
-                  << std::endl;
-    }
-}
 
 } /* namespace Volume */
 } /* namespace PhysicalModel */

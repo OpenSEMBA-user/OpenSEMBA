@@ -39,13 +39,6 @@ public:
         return Info(getName(), getSettings() + opts);
     }
 
-    void printInfo() const {
-        std::cout << "--- Solver Data ---" << std::endl;
-        std::cout << "Solver name: " << solverName_ << std::endl;
-        std::cout << "Solver settings:" << std::endl;
-        solverSett_.printInfo();
-    }
-
 private:
     std::string solverName_;
     Settings    solverSett_;

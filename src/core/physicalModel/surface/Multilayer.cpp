@@ -72,18 +72,6 @@ Multilayer::FittingOptions Multilayer::getFittingOptions() const {
     return options_.front();
 }
 
-void Multilayer::printInfo() const {
-    std::cout << " --- SurfaceMultilayer info ---" << std::endl;
-    Surface::printInfo();
-    std::cout << "Number of layers: " << getNumberOfLayers() << std::endl;
-    std::cout << "#, Thickness, Permittivity, Permeability, ElecCond"
-              << std::endl;
-    for (std::size_t i = 0; i < getNumberOfLayers(); i++) {
-        std::cout<< i << printLayer(i) << std::endl;
-    }
-    std::cout << " --- End of SurfaceMultilayer info ---" << std::endl;
-}
-
 } /* namespace Surface */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

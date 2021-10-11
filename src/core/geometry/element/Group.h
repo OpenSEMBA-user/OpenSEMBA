@@ -113,8 +113,6 @@ public:
 
     void linearize();
 
-    void printInfo() const;
-
     template<class T>
     void reassignPointers(
             const Coordinate::Group<Coordinate::Coordinate<T,3>>& vNew);

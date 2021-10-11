@@ -54,10 +54,6 @@ Real Spherical::norm() const {
     return radius;
 }
 
-void Spherical::printInfo() const {
-    std::cout << "(" << radius << ", " << theta << ", " << phi << ") ";
-}
-
 } /* namespace Vector */
 } /* namespace Math */
 } /* namespace SEMBA */

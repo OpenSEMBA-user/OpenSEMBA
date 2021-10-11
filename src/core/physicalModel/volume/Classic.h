@@ -33,7 +33,6 @@ public:
     Math::Real getMagneticConductivity() const;
     bool isVacuum() const;
 
-    void printInfo() const;
 private:
     Math::Real rEps_; // Rel. permittivity @ infte. freq.
     Math::Real rMu_; // Rel. permeability @ infte. freq.

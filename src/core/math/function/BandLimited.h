@@ -37,8 +37,6 @@ namespace Function {
 
         Real operator()(const Real& t) const;
         bool operator==(const Base& rhs) const;
-
-        void printInfo() const;
     private:
         Real minimumFrequency_;
         Real maximumFrequency_;

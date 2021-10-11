@@ -20,19 +20,12 @@ Gap::Gap(const Gap& rhs)
     width_ = rhs.width_;
 }
 
-Gap::~Gap() {
-
-}
 
 Math::Real Gap::getWidth() const {
     return width_;
 }
 
-void Gap::printInfo() const {
-    std::cout<< " --- Gap info ---" << std::endl;
-    PhysicalModel::printInfo();
-    std::cout << " Width: " << width_ << std::endl;
-}
+
 
 } /* namespace Gap */
 } /* namespace PhysicalModel */

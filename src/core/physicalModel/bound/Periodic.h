@@ -1,7 +1,4 @@
-
-
 #pragma once
-
 
 #include "Bound.h"
 
@@ -13,11 +10,9 @@ class Periodic : public virtual Bound {
 public:
     Periodic(const Id id);
     Periodic(const Periodic&);
-    virtual ~Periodic();
 
     SEMBA_CLASS_DEFINE_CLONE(Periodic);
 
-    void printInfo() const;
 };
 
 } /* namespace Bound */

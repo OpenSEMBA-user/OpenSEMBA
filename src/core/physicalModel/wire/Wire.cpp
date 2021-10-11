@@ -123,29 +123,6 @@ std::string Wire::getFilename() const {
     return filename_;
 }
 
-
-void Wire::printInfo() const {
-    std::cout<< " --- Wire info ---" << std::endl;
-    PhysicalModel::printInfo();
-    std::cout << " Radius: " << radius_ << std::endl;
-    if (isDispersive_) {
-        std::cout << " Dispersive Filename: " << filename_ << std::endl;
-    } else if (isSeriesParallel_) {
-        std::cout << " Series Resistance: " << seriesResistance_ << std::endl
-                  << " Series Inductance: " << seriesInductance_ << std::endl
-                  << " Series Capacitance: " << seriesCapacitance_ << std::endl
-                  << " Parallel Resistance: " << parallelResistance_
-                  << std::endl
-                  << " Parallel Inductance: " << parallelInductance_
-                  << std::endl
-                  << " Parallel Capacitance: " << parallelCapacitance_
-                  << std::endl;
-    } else {
-        std::cout << " Resistance: " << seriesResistance_ << std::endl
-                  << " Inductance: " << seriesInductance_ << std::endl;
-    }
-}
-
 } /* namespace Wire */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

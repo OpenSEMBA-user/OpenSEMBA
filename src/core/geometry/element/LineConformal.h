@@ -33,8 +33,6 @@ public:
 
     void setV(const std::size_t i, const CoordI3* coord);
 
-    void printInfo() const;
-
 private:
     void checkCoordinates();
     Math::CVecR3 norm_;

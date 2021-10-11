@@ -53,7 +53,6 @@ public:
 
     void exec(const std::string arguments = std::string()) const;
 
-    void printInfo() const;
     std::string toStr() const;
 
     std::ostream& operator<<(std::ostream& os) {

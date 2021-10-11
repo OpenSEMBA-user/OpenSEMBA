@@ -48,8 +48,6 @@ public:
     Math::Real getAreaOfFace(const std::size_t face) const;
 
     void setV(const std::size_t i, const CoordR3*);
-
-    void printInfo() const;
     void check() const;
 
 private:

@@ -122,13 +122,6 @@ PlaneWave::getElectromagneticField(const Math::Real time) const {
     return std::pair<Math::CVecR3,Math::CVecR3>(electric, magnetic);
 }
 
-void PlaneWave::printInfo() const {
-    std::cout<< " --- PlaneWave info --- " << std::endl;
-    SEMBA::Source::Source<Geometry::Vol>::printInfo();
-    std::cout<< " - Polarization vector: " << polarization_ << std::endl;
-    std::cout<< " - Wave direction vector: " << direction_ << std::endl;
-}
-
 std::pair<Math::Real,Math::Real> PlaneWave::cartesianToPolar(
         const Math::CVecR3& v) {
     if (v.norm() == 0.0) {

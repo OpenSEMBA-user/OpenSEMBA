@@ -41,7 +41,6 @@ public:
 
     const L* getName(const std::string name) const;
 
-    void printInfo() const;
 };
 
 } /* namespace Layer */

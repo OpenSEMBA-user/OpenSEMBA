@@ -18,7 +18,6 @@ WaveguideRectangular::WaveguideRectangular(
     box_ = this->getBound();
 
     if (mode.first == 0 && mode.second == 0) {
-        printInfo();
         throw std::logic_error("At least one mode must be non-zero.");
     }
 }

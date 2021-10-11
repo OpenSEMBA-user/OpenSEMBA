@@ -31,8 +31,6 @@ public:
 
     CoordR3* toUnstructured(const Grid3&) const;
 
-    void printInfo() const;
-
 private:
     Math::CVecR3 rel_;
 };

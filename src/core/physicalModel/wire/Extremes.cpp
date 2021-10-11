@@ -59,19 +59,6 @@ void Extremes::swapExtremes() {
     std::swap(extreme_[0], extreme_[1]);
 }
 
-void Extremes::printInfo() const {
-    std::cout<< " --- WireExtremes info ---" << std::endl;
-    Wire::printInfo();
-    if (extreme_[0] != nullptr) {
-        std::cout << "ExtremeL:" << std::endl;
-        extreme_[0]->printInfo();
-    }
-    if (extreme_[1] != nullptr) {
-        std::cout << "ExtremeR:" << std::endl;
-        extreme_[1]->printInfo();
-    }
-}
-
 } /* namespace Wire */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

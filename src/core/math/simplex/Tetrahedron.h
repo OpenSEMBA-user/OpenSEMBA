@@ -42,8 +42,6 @@ public:
     CVecR4 coordinate(const std::size_t i) const;
     CVecR4 sideCoordinate(const std::size_t f, const std::size_t i) const;
 
-    void printInfo() const;
-
 private:
     const Triangle<N> tri;
 

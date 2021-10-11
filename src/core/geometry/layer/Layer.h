@@ -39,7 +39,6 @@ public:
     virtual std::string getChildName() const;
     std::string toStr() const;
 
-    virtual void printInfo() const;
     friend std::ostream& operator<<(std::ostream& os, const Layer& lay) {
        return os << lay.toStr();
     }

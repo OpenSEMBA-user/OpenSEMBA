@@ -91,7 +91,6 @@ void Matrix<T>::factorizeLU_(std::size_t pivot[]) {
         pivot[k] = l;
         //  If the pivot index is zero, the algorithm has failed.
         if (val(l,k) == (T) 0.0) {
-            printInfo();
             std::stringstream ss;
             ss << "Zero pivot on step " << k;
             throw std::out_of_range(ss.str());
@@ -122,7 +121,6 @@ void Matrix<T>::factorizeLU_(std::size_t pivot[]) {
     if (val(n-1,n-1) == (T) 0.0) {
         std::cout << "ERROR@Matrix<T>::factorizeToArray" << std::endl;
         std::cout << "  Zero pivot on step " << n-1 << std::endl;
-        printInfo();
         assert(false);
         exit (EXIT_FAILURE);
     }

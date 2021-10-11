@@ -97,16 +97,6 @@ Math::Real Polyhedron::getAreaOfFace(const std::size_t f) const {
     return getFace(f)->getArea();
 }
 
-void Polyhedron::printInfo() const {
-    std::cout << "--- Polyhedron info ---" << std::endl
-              << "Number of vertices: " << numberOfVertices() << std::endl
-              << "Number of faces: " << numberOfFaces() << std::endl;
-    for (std::size_t i = 0; i < numberOfFaces(); i++) {
-        std::cout<< "Face #" << i << std::endl;
-        getFace(i)->printInfo();
-    }
-}
-
 void Polyhedron::addV(const CoordR3* v) {
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         if (*v_[i] == *v) {

@@ -25,12 +25,6 @@ TEM::ExcitationMode TEM::getExcitationMode() const {
     return excitationMode_;
 }
 
-void TEM::printInfo() const {
-    std::cout << " --- TEM Port --- " << std::endl;
-    std::cout << "Excitation mode: " << toStr(excitationMode_) << std::endl;
-    Port::printInfo();
-}
-
 std::string TEM::toStr(const ExcitationMode& excitationMode) {
     switch (excitationMode) {
     case ExcitationMode::voltage:

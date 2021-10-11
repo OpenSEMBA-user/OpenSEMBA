@@ -47,8 +47,6 @@ public:
 
     std::string getFilename() const;
 
-    void printInfo() const;
-
 private:
     Math::Real radius_;
     bool isSeriesParallel_;

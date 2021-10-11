@@ -24,9 +24,6 @@ public:
 
     T operator()(const S& arg) const;
     bool operator==(const Base& arg) const;
-
-    void printInfo() const;
-
 private:
     std::map<S,T> value_;
 

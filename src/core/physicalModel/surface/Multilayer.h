@@ -92,7 +92,6 @@ public:
     FittingOptions getFittingOptions() const;
 
     std::string printLayer(const std::size_t i) const;
-    void printInfo() const;
 
 private:
     std::vector<Layer> layers_;

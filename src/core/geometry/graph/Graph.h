@@ -26,8 +26,6 @@ public:
 
     virtual Graph& init(const Group::Group<const Elem>& elems) = 0;
 
-    //Graph& operator=(const Graph&);
-
     std::size_t numElems () const { return elems_.size();  }
     std::size_t numBounds() const { return bounds_.size(); }
 
@@ -38,8 +36,6 @@ public:
 
     void resetVisited();
     std::vector<std::vector<const Elem*>> getConnectedComponents();
-
-    void printInfo() const;
 
 protected:
     std::vector<GraphElem* > elems_;

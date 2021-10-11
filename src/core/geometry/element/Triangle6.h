@@ -43,8 +43,6 @@ public:
 
     Triangle3* linearize() const;
 
-    void printInfo() const;
-
 protected:
     static const Math::Simplex::Triangle<2> geo;
     const CoordR3* v_[6];

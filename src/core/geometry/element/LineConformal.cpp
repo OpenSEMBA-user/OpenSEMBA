@@ -55,15 +55,6 @@ void LineConformal::setV(const std::size_t i, const CoordI3* coord) {
     checkCoordinates();
 }
 
-void LineConformal::printInfo() const {
-    std::cout << "--- LineConformal info ---" << std::endl;
-    std::cout << "Id: " << this->getId() << std::endl;
-    for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
-        getV(i)->printInfo();
-        std::cout << std::endl;
-    }
-}
-
 void LineConformal::checkCoordinates() {
     for(std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
         if (!this->getV(i)->is<CoordConf>()) {

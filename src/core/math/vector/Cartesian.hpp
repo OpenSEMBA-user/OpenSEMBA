@@ -476,11 +476,6 @@ std::string Cartesian<T,D>::toStr() const {
     return ss.str();
 }
 
-template <class T, std::size_t D>
-void Cartesian<T,D>::printInfo() const {
-    std::cout << toStr() << std::flush;
-}
-
 template<std::size_t D>
 Cartesian<Real,D> operator+(const Cartesian<Int ,D> & lhs,
         const Cartesian<Real,D>& rhs) {

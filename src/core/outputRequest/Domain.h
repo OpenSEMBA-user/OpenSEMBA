@@ -52,8 +52,6 @@ public:
 
     Type getDomainType() const;
 
-    void printInfo() const;
-
 private:
     bool        timeDomain_;
     Math::Real  initialTime_;

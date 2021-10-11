@@ -145,10 +145,6 @@ std::string Project::toStr() const {
     return *this;
 }
 
-void Project::printInfo() const {
-    std::cout << "Project file name: " << toStr() << std::endl;
-}
-
 std::vector<std::string> Project::getFilesBasenames_(
         const std::string& directory,
         const std::string& extension) const {

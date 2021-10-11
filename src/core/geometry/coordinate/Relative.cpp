@@ -81,12 +81,6 @@ CoordR3* Relative::toUnstructured(const Grid3& grid) const {
     return new CoordR3(this->getId(), pos);
 }
 
-void Relative::printInfo() const {
-    CoordI3::printInfo();
-    std::cout << " Relative: ";
-    rel_.printInfo();
-}
-
 } /* namespace Coordinate */
 } /* namespace Geometry */
 } /* namespace SEMBA */

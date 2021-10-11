@@ -25,15 +25,8 @@ PEC::PEC(const PEC& rhs)
 
 }
 
-PEC::~PEC() {
 
-}
 
-void PEC::printInfo() const {
-    std::cout << "--- PEC info ---" << std::endl;
-    Predefined::printInfo();
-    std::cout << "Perfect Electric Conductor" << std::endl;
-}
 
 } /* namespace Predefined */
 } /* namespace PhysicalModel */

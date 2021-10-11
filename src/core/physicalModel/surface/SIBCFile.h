@@ -17,12 +17,10 @@ public:
     SIBCFile(const Id id,
              const std::string& name,
              const FileSystem::Project& file);
-    virtual ~SIBCFile();
-
+    
     SEMBA_CLASS_DEFINE_CLONE(SIBCFile);
 
     const FileSystem::Project getFile() const;
-    virtual void printInfo() const;
 
 protected:
     FileSystem::Project file_;

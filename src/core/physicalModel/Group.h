@@ -39,7 +39,6 @@ public:
     Group& operator=(SEMBA::Group::Group<P>&);
     Group& operator=(SEMBA::Group::Group<P>&&);
 
-    void printInfo() const;
 };
 
 } /* namespace PhysicalModel */

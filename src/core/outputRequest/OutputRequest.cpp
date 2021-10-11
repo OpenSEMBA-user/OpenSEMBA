@@ -50,12 +50,6 @@ Domain& Base::domain() {
 	return domain_;
 }
 
-void Base::printInfo() const {
-    std::cout<< "Name: " << name_.c_str() << std::endl;
-    std::cout<< "Type: " << getTypeStr() << std::endl;
-    domain_.printInfo();
-}
-
 std::string Base::getTypeStr() const {
     switch (type_) {
     case electric:

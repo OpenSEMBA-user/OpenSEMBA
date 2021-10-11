@@ -18,14 +18,6 @@ PML::PML(const PML& rhs)
 
 }
 
-PML::~PML() {
-
-}
-
-void PML::printInfo() const {
-    std::cout << "--- PML info ---" << std::endl;
-    std::cout << "Perfectly Matched Layer" << std::endl;
-}
 
 } /* namespace Bound */
 } /* namespace PhysicalModel */

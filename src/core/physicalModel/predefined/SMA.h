@@ -14,11 +14,9 @@ public:
     SMA(const Id id);
     SMA(const Id id, const std::string name);
     SMA(const SMA& rhs);
-    virtual ~SMA();
 
     SEMBA_CLASS_DEFINE_CLONE(SMA);
 
-    void printInfo() const;
 };
 
 } /* namespace Predefined */

@@ -51,8 +51,6 @@ public:
 
     void constructNeighbors();
 
-    void printInfo() const;
-
 private:
     bool vis_;
 

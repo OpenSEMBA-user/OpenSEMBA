@@ -450,14 +450,6 @@ void Box<T,D>::scale(const Math::Real factor) {
 }
 
 template<class T, std::size_t D>
-void Box<T,D>::printInfo() const {
-    std::cout<< "Box info" << std::endl;
-    std::cout<< "Min: " << min_.toStr() << std::endl;
-    std::cout<< "Max: " << max_.toStr() << std::endl;
-    std::cout<< std::endl;
-}
-
-template<class T, std::size_t D>
 std::size_t Box<T,D>::numberOfDifferentCoords() const {
     std::size_t res = 0;
     for(std::size_t d = 0; d < D; d++) {

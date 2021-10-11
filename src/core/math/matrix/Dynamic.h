@@ -63,17 +63,6 @@ public:
    void mergeSortedRows(const Dynamic<T>& a,
                         const std::size_t iCol,
                         const std::size_t lCol);
-   void printInfo() const;
-   void printInfo(std::size_t, std::size_t) const;
-   void printInfo(std::size_t firstRow,
-                  std::size_t lastRow,
-                  std::size_t firstCol,
-                  std::size_t lastCol) const;
-
-#ifdef EIGEN_SUPPORT
-    std::vector<std::complex<Real>> eigenValues();
-    Dynamic<std::complex<Real>> eigenVectors();
-#endif
 
 private:
    T* _val;

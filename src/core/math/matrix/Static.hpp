@@ -118,30 +118,9 @@ inline Static<T, ROWS, COLS> Static<T,ROWS,COLS>::operator+(
     return res;
 }
 
-template <class T, std::size_t ROWS, std::size_t COLS>
-void Static<T,ROWS,COLS>::printInfo() const {
-    printInfo(ROWS, COLS);
-}
-
 template<class T, std::size_t ROWS, std::size_t COLS>
 std::array<std::complex<Real>, ROWS>
         Static<T,ROWS,COLS>::getEigenvalues() const {
-}
-
-template <class T, std::size_t ROWS, std::size_t COLS>
-void Static<T,ROWS,COLS>::printInfo(std::size_t rows, std::size_t cols) const {
-    std::size_t i, j;
-    if (rows > ROWS || cols > COLS) {
-        throw typename Error::Size();
-    }
-    std::cout << "Matrix type: Double";
-    std::cout << "Dimensions: " << ROWS << "x" << COLS << std::endl;
-    std::cout << "Stored values: " << std::endl;
-    for (i = 0; i < rows; i++) {
-        for (j = 0; j < cols; j++)
-            std::cout << val(i,j) << " ";
-        std::cout << std::endl;
-    }
 }
 
 template<class T, std::size_t ROWS, std::size_t COLS>

@@ -65,7 +65,6 @@ public:
     ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
                           const Grid3&) const;
 
-    void printInfo() const;
     void check() const;
 
 private:

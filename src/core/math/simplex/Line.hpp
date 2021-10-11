@@ -106,26 +106,6 @@ Matrix::Static<Int, 1, (N+1)> Line<N>::RMatrix(const std::size_t s) const {
     return res;
 }
 
-template <size_t N>
-void Line<N>::printInfo() const {
-    std::cout << " --- Line Information --- " << std::endl;
-    std::cout << " Order:                         " << N << std::endl;
-    std::cout << " List of node indices:          " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        indices[i].printInfo();
-        std::cout << std::endl;
-    }
-    std::cout << " List of side nodes indices:    " << std::endl;
-    sideNodes.printInfo();
-    std::cout << " Cubature positions and weights: " << std::endl;
-    for (std::size_t i = 0; i < np; i++) {
-        std::cout << "#" << i << " ";
-        nodePositions[i].printInfo();
-        std::cout << " " << weights[i] << std::endl;
-    }
-    std::cout << " --- End of simplex information --- " << std::endl;
-}
-
 } /* namespace Simplex */
 } /* namespace Math */
 } /* namespace SEMBA */

@@ -24,16 +24,6 @@ SMA::SMA(const SMA& rhs)
 
 }
 
-SMA::~SMA() {
-
-}
-
-void SMA::printInfo() const {
-    std::cout << "--- SMA info ---" << std::endl;
-    Predefined::printInfo();
-    std::cout << "Silver-Muller Absorbing" << std::endl;
-}
-
 } /* namespace Predefined */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

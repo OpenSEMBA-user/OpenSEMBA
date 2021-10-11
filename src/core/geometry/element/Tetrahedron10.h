@@ -52,7 +52,6 @@ public:
 
     Tetrahedron4* linearize() const;
 
-    void printInfo() const;
     void check() const;
 
 private:

@@ -660,15 +660,5 @@ void Grid<D>::enlargeBound(Math::Constants::CartesianAxis d,
     setAdditionalSteps(d, b, newSteps);
 }
 
-template<std::size_t D>
-void Grid<D>::printInfo() const {
-    CVecID numCells = getNumCells();
-    BoxRD bound = getFullDomainBoundingBox();
-    std::cout << "-- Cartesian Grid<" << D << "> --" << std::endl;
-    std::cout << "Dims: " << numCells.toStr() << std::endl;
-    std::cout << "Min val: " << bound.getMin().toStr() << std::endl;
-    std::cout << "Max val: " << bound.getMax().toStr() << std::endl;
-}
-
 } /* namespace Geometry */
 } /* namespace SEMBA */

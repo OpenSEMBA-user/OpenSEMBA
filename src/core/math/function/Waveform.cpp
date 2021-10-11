@@ -64,11 +64,6 @@ namespace SEMBA {
                     this->gamma_ == rhsPtr->gamma_;
             }
 
-            void Waveform::printInfo() const {
-                std::cout << " --- Function Waveform info --- " << std::endl;
-                FunctionRR::printInfo();
-            }
-
         } /* namespace Function */
     } /* namespace Math */
 } /* namespace SEMBA */

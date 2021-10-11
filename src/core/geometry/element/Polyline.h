@@ -44,8 +44,6 @@ public:
 
     void setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord);
 
-    void printInfo() const;
-
 private:
     std::vector<const Coordinate::Coordinate<T,3>*> v_;
 };

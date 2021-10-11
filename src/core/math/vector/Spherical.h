@@ -25,7 +25,6 @@ public:
 
     Real norm() const;
 
-    void printInfo() const;
 };
 
 } /* namespace Vector */

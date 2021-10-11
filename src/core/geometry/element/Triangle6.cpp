@@ -83,15 +83,6 @@ Triangle3* Triangle6::linearize() const {
     return new Triangle3(getId(), vertex, getLayer(), getModel());
 }
 
-void Triangle6::printInfo() const {
-    std::cout << "--- Tri6 info ---" << std::endl;
-    std::cout << "Id: " << getId() << "  Mat Id: " << getMatId() << std::endl;
-    std::cout << "Coordinates:" << std::endl;
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i]->printInfo();
-    }
-}
-
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */

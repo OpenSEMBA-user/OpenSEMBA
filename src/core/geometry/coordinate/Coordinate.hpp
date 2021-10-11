@@ -90,18 +90,6 @@ Coordinate<Math::Real,D>* Coordinate<T,D>::toUnstructured(
     return new Coordinate<Math::Real,D>(this->getId(), grid.getPos(*this));
 }
 
-template<class T, std::size_t D>
-void Coordinate<T,D>::printInfo() const {
-    std::cout << "Id: ("<< getId() << ")  Pos: (";
-    for (std::size_t i = 0; i < D; i++) {
-        std::cout << this->val[i];
-        if (i < D-1) {
-            std::cout << " , ";
-        }
-    }
-    std::cout << ")" << std::endl;
-}
-
 } /* namespace Coordinate */
 } /* namespace Geometry */
 } /* namespace SEMBA */

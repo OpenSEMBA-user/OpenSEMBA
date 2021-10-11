@@ -43,7 +43,6 @@ namespace SEMBA {
                 Real operator()(const Real& t) const;
                 bool operator==(const Base& rhs) const;
 
-                void printInfo() const;
             private:
                 Real I0_;
                 Real alpha_;

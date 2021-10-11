@@ -17,7 +17,6 @@ public:
 
     SEMBA_CLASS_DEFINE_CLONE(Mur2);
 
-    void printInfo() const;
 };
 
 } /* namespace Bound */

@@ -27,8 +27,6 @@ public:
     void setExtreme(const std::size_t i, const Multiport::Multiport* extreme);
     void swapExtremes();
 
-    void printInfo() const;
-
 private:
     const Multiport::Multiport* extreme_[2];
 };

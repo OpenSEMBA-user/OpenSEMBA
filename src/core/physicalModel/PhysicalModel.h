@@ -43,8 +43,6 @@ public:
     const std::string& getName() const;
     void setName(const std::string& newName);
 
-    virtual void printInfo() const;
-
 private:
     std::string name_;
 };

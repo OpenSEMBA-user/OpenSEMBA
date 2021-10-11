@@ -27,7 +27,6 @@ public:
     Math::Real getFinalPhi() const;
     Math::Real getStepPhi() const;
 
-    void printInfo() const;
 private:
     Math::Real initialTheta_, finalTheta_, stepTheta_;
     Math::Real initialPhi_, finalPhi_, stepPhi_;

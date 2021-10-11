@@ -22,11 +22,6 @@ Mur1::~Mur1() {
 
 }
 
-void Mur1::printInfo() const {
-    std::cout << "--- Mur1 info ---" << std::endl;
-    std::cout << "Mur1 Boundary Condition" << std::endl;
-}
-
 } /* namespace Bound */
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

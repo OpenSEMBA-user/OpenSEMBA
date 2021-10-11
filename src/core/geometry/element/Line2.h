@@ -64,8 +64,6 @@ public:
     ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
                           const Grid3&) const;
 
-    void printInfo() const;
-
 private:
     static const Math::Simplex::Line<1> lin;
     const Coordinate::Coordinate<T,3>* v_[2];

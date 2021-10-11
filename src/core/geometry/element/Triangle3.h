@@ -42,7 +42,6 @@ public:
 
     Triangle3* linearize() const;
 
-    void printInfo() const;
     void check() const;
 
 protected:

@@ -190,21 +190,6 @@ ElemR* Hexahedron8<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
     return res;
 }
 
-template<class T>
-void Hexahedron8<T>::printInfo() const {
-    std::cout << "--- Hex8 Info ---" << std::endl;
-    std::cout << "Id: " << this->getId() << std::endl;
-    std::cout << "Coordinates:" << std::endl;
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        getV(i)->printInfo();
-    }
-    if (isRegular()) {
-        std::cout << "Is regular Hex." << std::endl;
-    } else {
-        std::cout << "Is not a regular Hex." << std::endl;
-    }
-}
-
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */

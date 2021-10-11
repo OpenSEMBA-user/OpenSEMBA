@@ -31,8 +31,6 @@ public:
 
     CoordR3* toUnstructured(const Grid3&) const;
 
-    void printInfo() const;
-
 private:
     Math::Constants::CartesianAxis dir_;
     Math::Real                     length_;

@@ -150,7 +150,6 @@ std::vector<const Coordinate::Coordinate<T,3>*> Element<T>::getSideVertices(
 template<class T>
 void Element<T>::setV(const std::size_t i,
                       const Coordinate::Coordinate<T,3>* coord) {
-    printInfo();
     throw std::logic_error(
               "Setting coordinates is not allowed for this element");
 }

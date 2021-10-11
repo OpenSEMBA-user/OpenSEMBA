@@ -74,32 +74,6 @@ void Element<ELEM,BOUND>::constructNeighbors() {
     neighbors_ = std::vector<GraphElem*>(neighbors.begin(), neighbors.end());
 }
 
-template<class ELEM, class BOUND>
-void Element<ELEM,BOUND>::printInfo() const {
-    std::cout << "--- Element Info ---" << std::endl;
-    elem_->printInfo();
-    std::cout << "Bounds:";
-    for (std::size_t i = 0; i < bounds_.size(); ++i) {
-        std::cout << " " << bounds_[i]->elem()->getId();
-    }
-    std::cout << std::endl;
-    if (!neighbors_.empty()) {
-        std::cout << "Neighbors:";
-        for (std::size_t i = 0; i < neighbors_.size(); ++i) {
-            std::cout << " " << neighbors_[i]->elem()->getId();
-        }
-        std::cout << std::endl;
-        std::cout << "Bound Neighbors:" << std::endl;
-        for (std::size_t i = 0; i < boundNeighbors_.size(); ++i) {
-            std::cout << bounds_[i]->elem()->getId() << ":";
-            for (std::size_t j = 0; j < boundNeighbors_[i].size(); ++j) {
-                std::cout << " " << boundNeighbors_[i][j]->elem()->getId();
-            }
-            std::cout << std::endl;
-        }
-    }
-}
-
 } /* namespace Graph */
 } /* namespace Geometry */
 } /* namespace SEMBA */

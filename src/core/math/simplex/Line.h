@@ -38,8 +38,6 @@ public:
 
     std::vector<Real> getWeights() const;
 
-    void  printInfo() const;
-
 private:
     std::array<Index,np> indices;
     Matrix::Static<Int,faces,nfp> sideNodes;

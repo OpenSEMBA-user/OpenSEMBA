@@ -20,8 +20,6 @@ public:
 
     std::string getFilename() const;
 
-    virtual void printInfo() const;
-
 private:
     std::string filename_;
 };

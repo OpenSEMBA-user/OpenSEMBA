@@ -26,7 +26,6 @@ public:
     ExcitationMode getExcitationMode() const;
     std::pair<size_t, size_t> getMode() const;
 
-    void printInfo() const;
 private:
     ExcitationMode excitationMode_;
     std::pair<size_t,size_t> mode_;
