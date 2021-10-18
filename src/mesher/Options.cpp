@@ -29,6 +29,12 @@ Options::Options() {
     slanted_ = false;
     slantedThreshold_ = 1.0;
     gridStep_ = Math::CVecR3(0.0);
+
+    for (std::size_t d = 0; d < 3; d++) {
+        for (std::size_t i = 0; i < 2; i++) {
+            boundTermination_.setBound(d, i, new PhysicalModel::Bound::PEC(PhysicalModel::Id(0)));
+        }
+    }
 }
 
 std::string Options::toStr(const PhysicalModel::Bound::Bound* val) {
