@@ -20,6 +20,7 @@ Options::Options() {
     edgePoints_ = 0;
     scalingFactor_ = 1.0;
     hwMeshExport_ = false;
+    nfdeExport_ = true;
     postmshExport_ = true;
     postsmbExport_ = false;
     vtkExport_ = false;
@@ -146,6 +147,9 @@ void Options::set(const Solver::Settings& opts) {
     if (opts.existsName(            "structuredCellsInfo")) {
         setStructuredCellsInfo(opts("structuredCellsInfo").getBool());
     }
+    if (opts.existsName("nfdeExport")) {
+        setHWMeshExport(opts("nfdeExport").getBool());
+    }
     if (opts.existsName(     "hwMeshExport")) {
         setHWMeshExport(opts("hwMeshExport").getBool());
     }
@@ -253,6 +257,10 @@ bool Options::isStructuredCellsInfo() const {
     return structuredCellsInfo_;
 }
 
+bool Options::isNfdeExport() const {
+    return nfdeExport_;
+}
+
 bool Options::isHWMeshExport() const {
     return hwMeshExport_;
 }
@@ -295,6 +303,10 @@ void Options::setUnwantedConnectionsInfo(bool rhs) {
 
 void Options::setStructuredCellsInfo(bool rhs) {
     structuredCellsInfo_ = rhs;
+}
+
+void Options::setNfdeExport(bool rhs) {
+    nfdeExport_ = rhs;
 }
 
 void Options::setHWMeshExport(bool hwMeshExport) {
@@ -366,8 +378,7 @@ Math::CVecR3 Options::strToCVecR3(const std::string& str) {
     return res;
 }
 
-std::pair<Math::CVecR3, Math::CVecR3> Options::strToBox(
-        const std::string& value) {
+std::pair<Math::CVecR3, Math::CVecR3> Options::strToBox(const std::string& value) {
     std::size_t begin = value.find_first_of("{");
     std::size_t end = value.find_last_of("}");
     std::string aux = value.substr(begin + 1, end - 1);

@@ -1,5 +1,3 @@
-
-
 #include "Parser.h"
 
 #include <cctype>

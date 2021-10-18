@@ -58,6 +58,7 @@ public:
     Math::Real getScalingFactor() const;
     bool isGridStepSet() const;
 
+    bool isNfdeExport() const;
     bool isHWMeshExport() const;
     bool isPostmshExport() const;
     bool isPostsmbExport() const;
@@ -86,6 +87,7 @@ public:
     void setGridStep(const Math::CVecR3& gridStep);
     void setMode(const Mode mode);
     
+    void setNfdeExport(bool);
     void setHWMeshExport(bool);
     void setPostmshExport(bool postmshExport);
     void setPostsmbExport(bool postmshExport);
@@ -119,6 +121,7 @@ private:
     bool structuredCellsInfo_;
     
     bool hwMeshExport_;
+    bool nfdeExport_;
     bool postmshExport_;
     bool postsmbExport_;
     bool vtkExport_;
