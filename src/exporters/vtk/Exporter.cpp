@@ -19,11 +19,11 @@ namespace SEMBA {
 namespace Exporters {
 namespace VTK {
 
-Exporter::Exporter(const Data* smb,
+Exporter::Exporter(const Data& smb,
                    const std::string& fn)
 :   SEMBA::Exporters::Exporter(fn) {
     initDir_(fn + ".vtk");
-    writeMesh_(smb);
+    writeMesh_(&smb);
 }
 
 void Exporter::writeMesh_(const Data* smb) {

@@ -61,6 +61,8 @@ Data Parser::read() const {
     progress.advance();
 
     Data res;
+    
+    res.filename = this->filename;
 
     res.solver = readSolver(j);
     progress.advance();

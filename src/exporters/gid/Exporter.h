@@ -17,7 +17,7 @@ public:
     static const Math::CVecR3 pecColor, pmcColor, smaColor, pmlColor,
         sibcColor, emSourceColor;
 
-    Exporter(const Data* smb, const std::string& fn, GiD_PostMode mode = GiD_PostAscii);
+    Exporter(const Data& smb, const std::string& fn, GiD_PostMode mode = GiD_PostAscii);
     virtual ~Exporter();
 
     void beginMesh(

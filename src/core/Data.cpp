@@ -20,6 +20,8 @@ Data::Data(const Data& rhs) {
     sources = nullptr;
     outputRequests = nullptr;
 
+    filename = rhs.filename;
+
     if (rhs.solver != nullptr) {
         solver = new Solver::Info(*rhs.solver);
     }
@@ -87,6 +89,8 @@ Data& Data::operator=(const Data& rhs) {
     physicalModels = nullptr;
     sources = nullptr;
     outputRequests = nullptr;
+
+    filename = rhs.filename;
 
     if (rhs.solver != nullptr) {
         solver = new Solver::Info(*rhs.solver);

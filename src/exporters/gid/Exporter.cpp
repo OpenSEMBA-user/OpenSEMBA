@@ -57,9 +57,9 @@ void Exporter::init_(
     writeMesh_(smb);
 }
 
-Exporter::Exporter(const Data* smb, const std::string& fn, GiD_PostMode mode)
+Exporter::Exporter(const Data& smb, const std::string& fn, GiD_PostMode mode)
 : 	SEMBA::Exporters::Exporter(fn) {
-    init_(smb, mode, fn);
+    init_(&smb, mode, fn);
 }
 
 Exporter::~Exporter() {

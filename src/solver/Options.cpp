@@ -6,7 +6,7 @@ namespace SEMBA {
 namespace Solver {
 
 Options::Options() {
-//    solver_ = Solver::none;
+//    solver = Solver::none;
     runSimulation_ = true;
     endingCondition_ = EndingCondition::finalTime;
     finalTime_ = 0.0;
@@ -176,11 +176,11 @@ std::string Options::toArgsStr() const {
 }
 
 //Options::Solver Options::getSolver() const {
-//    return solver_;
+//    return solver;
 //}
 //
 //void Options::setSolver(Options::Solver solver) {
-//    solver_ = solver;
+//    solver = solver;
 //}
 
 bool Options::isRunSimulation() const {

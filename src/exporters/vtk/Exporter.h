@@ -15,7 +15,7 @@ namespace VTK {
 
 class Exporter : public SEMBA::Exporters::Exporter {
 public:
-    Exporter(const Data* smb, const std::string& fn);
+    Exporter(const Data& smb, const std::string& fn);
     
 private:
     enum CELL_TYPES {
