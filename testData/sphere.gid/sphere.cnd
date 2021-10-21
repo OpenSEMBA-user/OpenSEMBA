@@ -33,18 +33,23 @@ HELP: The polar angle (degrees) of the plane wave electric field vector.
 QUESTION: Polarization_beta
 VALUE: 0.0
 HELP: The azimuthal angle (degrees) of the plane wave electric field vector.
-QUESTION: Magnitude#CB#(Gaussian,Gaussian_derivative,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES: (Gaussian,            RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES: (Gaussian_derivative, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES: (File,                HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+DEPENDENCIES: (Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES: (Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -55,17 +60,23 @@ CONDTYPE: over points
 CONDMESHTYPE: over nodes
 QUESTION: type#CB#(voltage,current)
 VALUE: voltage
-QUESTION: Magnitude#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+DEPENDENCIES: (Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES: (Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -81,17 +92,23 @@ QUESTION: type#CB#(electricField,magneticField)
 VALUE: electricField
 QUESTION: Hardness#CB#(soft,hard)
 VALUE: soft
-QUESTION: Magnitude#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+DEPENDENCIES: (Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES: (Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -111,17 +128,23 @@ QUESTION: FirstMode
 VALUE: 1
 QUESTION: SecondMode
 VALUE: 0
-QUESTION: Magnitude#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+DEPENDENCIES: (Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES: (Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -139,22 +162,28 @@ QUESTION: Mode#CB#(Voltage,Current)
 VALUE: Voltage
 QUESTION: Origin
 VALUE: 0
-TKWIDGET: GidUtils::TkwidgetPickPoint
+TKWIDGET: GidUtils::TkwidgetPickPointOrNode
 QUESTION: Inner_radius
 VALUE: 0.0
 QUESTION: Outer_radius
 VALUE: 0.0
-QUESTION: Magnitude#CB#(Gaussian,File)
+QUESTION: Magnitude#CB#(Gaussian,Band_limited,Waveform,File)
 VALUE: Gaussian
-DEPENDENCIES: (Gaussian, RESTORE,Gaussian_spread,#CURRENT#, RESTORE,Gaussian_delay,#CURRENT#, HIDE, File,#CURRENT#)
-DEPENDENCIES: (File,        HIDE,Gaussian_spread,#CURRENT#,    HIDE,Gaussian_delay,#CURRENT#, RESTORE, File,#CURRENT#)
-QUESTION: Gaussian_spread
-VALUE: 2e-9
-HELP: Gaussian spread in seconds.
-QUESTION: Gaussian_delay
-VALUE: 10e-9
-HELP: Gaussian delay in seconds.
-IMAGE: images/gauss_excitation.png
+DEPENDENCIES: (Gaussian,            HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (Band_limited,        HIDE, Waveform_type,#CURRENT#,    RESTORE, Amplitude,#CURRENT#,RESTORE, Frequency_maximum,#CURRENT#, RESTORE, Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+DEPENDENCIES: (File,                HIDE, Waveform_type,#CURRENT#,    HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, RESTORE, File,#CURRENT#)
+DEPENDENCIES: (Waveform,            RESTORE, Waveform_type,#CURRENT#, HIDE, Amplitude,#CURRENT#,   HIDE,    Frequency_maximum,#CURRENT#, HIDE,    Frequency_minimum,#CURRENT#, HIDE,    File,#CURRENT#)
+QUESTION: Waveform_type#CB#(A,D,H)
+VALUE: A
+QUESTION: Amplitude
+VALUE: 1.0
+HELP: Multiplier applied to the magnitude of predefined excitations.
+QUESTION: Frequency_maximum
+VALUE: 1.0e9
+HELP: Maximum frequency in Hertz. With Gaussian this implies an spread of 0.2 / f_max and a delay of 6 * spread.
+QUESTION: Frequency_minimum
+VALUE: 0.5e9
+HELP: Minimum frequency in Hertz. For band limited use between 0.25 and 0.75 the maximum frequency. Use a final time at least 60 times the period of the minimum frequency.
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
@@ -167,10 +196,27 @@ CONDMESHTYPE: over nodes
 CANREPEAT: yes
 QUESTION: Name
 VALUE: Unnamed_point_outRq#WIDTH#(18)
-QUESTION: Type#CB#(electricField,magneticField,current)
+TKWIDGET: GidUtils::TkwidgetGetLayername
+QUESTION: Type#CB#(electricField,magneticField,current,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
+DEPENDENCIES: (electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (current,               HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (surfaceCurrentDensity, HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
+QUESTION: Domain#CB#(Time,Frequency,All)
+VALUE: Time
+DEPENDENCIES: (Time,      SET, Time, 1,    SET, Frequency, 0)
+DEPENDENCIES: (Frequency, SET, Time, 0,    SET, Frequency, 1)
+DEPENDENCIES: (All,       SET, Time, 1,    SET, Frequency, 1)
 QUESTION: Time#CB#(0,1)
 VALUE: 1
+STATE: HIDDEN
 DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
 DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
 QUESTION: Initial_time
@@ -181,8 +227,9 @@ QUESTION: Sampling_period
 VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+STATE: HIDDEN
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -193,9 +240,12 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES: (0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES: (1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 NUMBER: 7 CONDITION: OutRq_on_line
 CONDTYPE: over lines
@@ -203,10 +253,25 @@ CONDMESHTYPE: over body elements
 CANREPEAT: yes
 QUESTION: Name
 VALUE: Unnamed_point_outRq#WIDTH#(18)
-QUESTION: Type#CB#(voltage)
+TKWIDGET: GidUtils::TkwidgetGetLayername
+QUESTION: Type#CB#(electricField,magneticField,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
+DEPENDENCIES: (electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
+QUESTION: Domain#CB#(Time,Frequency,All)
+VALUE: Time
+DEPENDENCIES: (Time,      SET, Time, 1,    SET, Frequency, 0)
+DEPENDENCIES: (Frequency, SET, Time, 0,    SET, Frequency, 1)
+DEPENDENCIES: (All,       SET, Time, 1,    SET, Frequency, 1)
 QUESTION: Time#CB#(0,1)
 VALUE: 1
+STATE: HIDDEN
 DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
 DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
 QUESTION: Initial_time
@@ -217,8 +282,9 @@ QUESTION: Sampling_period
 VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+STATE: HIDDEN
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -229,9 +295,12 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES: (0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES: (1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 NUMBER: 8 CONDITION: OutRq_on_surface
 CONDTYPE: over surfaces
@@ -239,10 +308,28 @@ CONDMESHTYPE: over body elements
 CANREPEAT: yes
 QUESTION: Name
 VALUE: Unnamed_surface_outRq#WIDTH#(18)
-QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals)
+TKWIDGET: GidUtils::TkwidgetGetLayername
+QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,surfaceCurrentDensity,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
+DEPENDENCIES: (electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (electricFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (magneticFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (surfaceCurrentDensity, HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+QUESTION: Direction#CB#(x,y,z)
+VALUE: x
+QUESTION: Skip
+VALUE: 1
+QUESTION: Domain#CB#(Time,Frequency,All)
+VALUE: Time
+DEPENDENCIES: (Time,      SET, Time, 1,    SET, Frequency, 0)
+DEPENDENCIES: (Frequency, SET, Time, 0,    SET, Frequency, 1)
+DEPENDENCIES: (All,       SET, Time, 1,    SET, Frequency, 1)
 QUESTION: Time#CB#(0,1)
 VALUE: 1
+STATE: HIDDEN
 DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
 DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
 QUESTION: Initial_time
@@ -253,8 +340,9 @@ QUESTION: Sampling_period
 VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+STATE: HIDDEN
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -265,9 +353,12 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES: (0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES: (1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 NUMBER: 9 CONDITION: OutRq_on_layer
 CONDTYPE: over layer
@@ -275,50 +366,28 @@ CONDMESHTYPE: over body elements
 CANREPEAT: yes
 QUESTION: Name
 VALUE: Unnamed_outRq_on_layer#WIDTH#(18)
-QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,bulkCurrentElectric,bulkCurrentMagnetic)
+TKWIDGET: GidUtils::TkwidgetGetLayername
+QUESTION: Type#CB#(electricField,magneticField,electricFieldNormals,magneticFieldNormals,surfaceCurrentDensity,bulkCurrentElectric,bulkCurrentMagnetic)
 VALUE: electricField
-QUESTION: Time#CB#(0,1)
-VALUE: 1
-DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
-QUESTION: Initial_time
-VALUE: 0.0
-QUESTION: Final_time
-VALUE: 0.0
-QUESTION: Sampling_period
-VALUE: 0.0
-QUESTION: Frequency#CB#(0,1)
-VALUE: 0
-DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
-QUESTION: Initial_Frequency
-VALUE: 0.0
-QUESTION: Final_Frequency
-VALUE: 0.0
-QUESTION: Frequency_step
-VALUE: 0.0
-QUESTION: Log_frequency_sweep#CB#(0,1)
-VALUE: 0
-QUESTION: Use_transfer_function#CB#(0,1)
-VALUE: 0
-QUESTION: Transfer_function_file
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
-END CONDITION
-NUMBER: 10 CONDITION: Bulk_current_on_surface
-CONDTYPE: over surfaces
-CONDMESHTYPE: over body elements
-CANREPEAT: yes
-QUESTION: Name
-VALUE: Unnamed_bulkCurrent_on_surface_outRq#WIDTH#(18)
-QUESTION: Type#CB#(bulkCurrentElectric)
-VALUE: bulkCurrentElectric
+DEPENDENCIES: (electricField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (magneticField,         HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (electricFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (magneticFieldNormals,  HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (surfaceCurrentDensity, HIDE,   Direction,#CURRENT#, HIDE,   Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentElectric,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
+DEPENDENCIES: (bulkCurrentMagnetic,   RESTORE,Direction,#CURRENT#, RESTORE,Skip,#CURRENT#)
 QUESTION: Direction#CB#(x,y,z)
 VALUE: x
 QUESTION: Skip
 VALUE: 1
+QUESTION: Domain#CB#(Time,Frequency,All)
+VALUE: Time
+DEPENDENCIES: (Time,      SET, Time, 1,    SET, Frequency, 0)
+DEPENDENCIES: (Frequency, SET, Time, 0,    SET, Frequency, 1)
+DEPENDENCIES: (All,       SET, Time, 1,    SET, Frequency, 1)
 QUESTION: Time#CB#(0,1)
 VALUE: 1
+STATE: HIDDEN
 DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
 DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
 QUESTION: Initial_time
@@ -329,8 +398,9 @@ QUESTION: Sampling_period
 VALUE: 0.0
 QUESTION: Frequency#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+STATE: HIDDEN
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -341,63 +411,28 @@ QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
 VALUE: 0
+DEPENDENCIES: (0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES: (1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
-NUMBER: 11 CONDITION: Bulk_current_on_layer
-CONDTYPE: over layer
-CONDMESHTYPE: over body elements
-CANREPEAT: yes
-QUESTION: Name
-VALUE: Unnamed_bulkCurrent_on_layer_outRq#WIDTH#(18)
-QUESTION: Type#CB#(bulkCurrentElectric)
-VALUE: bulkCurrentElectric
-QUESTION: Direction#CB#(x,y,z)
-VALUE: x
-QUESTION: Skip
-VALUE: 1
-QUESTION: Time#CB#(0,1)
-VALUE: 1
-DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
-QUESTION: Initial_time
-VALUE: 0.0
-QUESTION: Final_time
-VALUE: 0.0
-QUESTION: Sampling_period
-VALUE: 0.0
-QUESTION: Frequency#CB#(0,1)
-VALUE: 0
-DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
-QUESTION: Initial_Frequency
-VALUE: 0.0
-QUESTION: Final_Frequency
-VALUE: 0.0
-QUESTION: Frequency_step
-VALUE: 0.0
-QUESTION: Log_frequency_sweep#CB#(0,1)
-VALUE: 0
-QUESTION: Use_transfer_function#CB#(0,1)
-VALUE: 0
-QUESTION: Transfer_function_file
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
-END CONDITION
-NUMBER: 12 CONDITION: Far_field
+NUMBER: 10 CONDITION: Far_field
 CONDTYPE: over layer
 CONDMESHTYPE: over body elements
 CANREPEAT: yes
 QUESTION: Name
 VALUE: Farfield_outRq#WIDTH#(18)
+TKWIDGET: GidUtils::TkwidgetGetLayername
 QUESTION: Type#CB#(farField)
 VALUE: farField
+STATE: HIDDEN
 QUESTION: Initial_theta
 VALUE: 0
 HELP: Angle in degrees, min = 0 and max = 180.
 QUESTION: Final_theta
-VALUE: 0
+VALUE: 180
 HELP: Angle in degrees, min = 0 and max = 180.
 QUESTION: Step_theta
 VALUE: 10
@@ -406,30 +441,32 @@ QUESTION: Initial_phi
 VALUE: 0
 HELP: Angle in degrees, min = 0 and max = 360.
 QUESTION: Final_phi
-VALUE: 0
+VALUE: 360
 HELP: Angle in degrees, min = 0 and max = 360.
 QUESTION: Step_phi
 VALUE: 10
 HELP: Angle in degrees.
+QUESTION: Domain#CB#(Time,Frequency,All)
+VALUE: Time
+DEPENDENCIES: (Time,      SET, Time, 1,    SET, Frequency, 0)
+DEPENDENCIES: (Frequency, SET, Time, 0,    SET, Frequency, 1)
+DEPENDENCIES: (All,       SET, Time, 1,    SET, Frequency, 1)
 QUESTION: Time#CB#(0,1)
-VALUE: 0
-DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
-STATE: HIDDEN
-QUESTION: Initial_time
-VALUE: 0.0
-STATE: HIDDEN
-QUESTION: Final_time
-VALUE: 0.0
-STATE: HIDDEN
-QUESTION: Sampling_period
-VALUE: 0.0
-STATE: HIDDEN
-QUESTION: Frequency#CB#(0,1)
 VALUE: 1
 STATE: HIDDEN
-DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#, RESTORE, transfer_function_file, #CURRENT#)
-DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, #CURRENT#, HIDE, transfer_function_file, #CURRENT#)
+DEPENDENCIES: (1, RESTORE,Initial_time,#CURRENT#, RESTORE,Final_time,#CURRENT#, RESTORE, Sampling_period, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_time,#CURRENT#, HIDE,Final_time,#CURRENT#, HIDE, Sampling_period, #CURRENT#)
+QUESTION: Initial_time
+VALUE: 0.0
+QUESTION: Final_time
+VALUE: 0.0
+QUESTION: Sampling_period
+VALUE: 0.0
+QUESTION: Frequency#CB#(0,1)
+VALUE: 0
+STATE: HIDDEN
+DEPENDENCIES: (1, RESTORE,Initial_Frequency,#CURRENT#, RESTORE,Final_Frequency,#CURRENT#, RESTORE, Frequency_step, #CURRENT#, RESTORE, Log_frequency_sweep, #CURRENT#, RESTORE, Use_transfer_function, #CURRENT#)
+DEPENDENCIES: (0, HIDE,Initial_Frequency,#CURRENT#, HIDE,Final_Frequency,#CURRENT#, HIDE, Frequency_step, #CURRENT#, HIDE, Log_frequency_sweep, #CURRENT#, HIDE, Use_transfer_function, 0)
 QUESTION: Initial_Frequency
 VALUE: 0.0
 QUESTION: Final_Frequency
@@ -439,23 +476,33 @@ VALUE: 0.0
 QUESTION: Log_frequency_sweep#CB#(0,1)
 VALUE: 0
 QUESTION: Use_transfer_function#CB#(0,1)
-VALUE: 1
-STATE: HIDDEN
+VALUE: 0
+DEPENDENCIES: (0, HIDE, Transfer_function_file,#CURRENT#)
+DEPENDENCIES: (1, RESTORE, Transfer_function_file,#CURRENT#)
 QUESTION: Transfer_function_file
-VALUE: 
-TKWIDGET: GidUtils::TkwidgetGetFilenameButton
+VALUE: predefinedExcitation.1.exc
+HELP: Uses excitation contained in this file (default: predefinedExcitation.1.exc) to normalize the results of this probe
+STATE: HIDDEN
 END CONDITION
 BOOK:Meshing
-NUMBER: 13 CONDITION: Grid
+NUMBER: 11 CONDITION: Grid
 CONDTYPE: over layer
 CONDMESHTYPE: over body elements
-QUESTION: Type#CB#(by_number_of_cells,by_distance)
-VALUE: by_number_of_cells
-QUESTION: Size
+QUESTION: Type#CB#(Number_of_cells,Step_size)
+VALUE: Number_of_cells
+DEPENDENCIES: (Number_of_cells, RESTORE,Number_of_cells,#CURRENT#, HIDE,    Step_size,#CURRENT#, HIDE,    Fit_size_to_box,#CURRENT#)
+DEPENDENCIES: (Step_size,       HIDE,   Number_of_cells,#CURRENT#, RESTORE, Step_size,#CURRENT#, RESTORE, Fit_size_to_box,#CURRENT#)
+QUESTION: Number_of_cells
 VALUE: 20 20 20
 TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Step_size
+VALUE: 0.1 0.1 0.1
+TKWIDGET: GidUtils::TkwidgetGetVector3D
+QUESTION: Fit_size_to_box#CB#(0,1)
+VALUE: 1
+HELP: When activated, the actual step size will be rounded so the bounding box is an integer number of steps.
 QUESTION: boundary_padding_type#CB#(None,by_number_of_cells,by_distance)
-VALUE: by_distance
+VALUE: None
 DEPENDENCIES: (None,               HIDE,Lower_padding,#CURRENT#, HIDE,Upper_padding,#CURRENT#,HIDE,Lower_padding_mesh_size,#CURRENT#, HIDE,Upper_padding_mesh_size,#CURRENT#)
 DEPENDENCIES: (by_number_of_cells, RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
 DEPENDENCIES: (by_distance,        RESTORE,Lower_padding,#CURRENT#, RESTORE,Upper_padding,#CURRENT#, RESTORE,Lower_padding_mesh_size,#CURRENT#, RESTORE,Upper_padding_mesh_size,#CURRENT#)
@@ -476,4 +523,45 @@ QUESTION: Upper_padding_mesh_size
 VALUE: 0.0 0.0 0.0
 HELP: This lets the user to set the size at the beginning of the PML. The mesh size will change non-uniformly. 0.0 means no change with respect the cell size especified for the bounding box.
 TKWIDGET: GidUtils::TkwidgetGetVector3D
+END CONDITION
+NUMBER: 12 CONDITION: GridFromFile
+CONDTYPE: over layer
+CONDMESHTYPE: over body elements
+QUESTION: File#CB#(grid.json)
+VALUE: grid.json
+END CONDITION
+BOOK:Connector_on_point
+NUMBER: 13 CONDITION: Short
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+CANREPEAT: yes
+QUESTION: TypeId
+VALUE: Conn_short
+STATE: HIDDEN
+END CONDITION
+NUMBER: 14 CONDITION: Open
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+CANREPEAT: yes
+QUESTION: TypeId
+VALUE: Conn_open
+STATE: HIDDEN
+END CONDITION
+NUMBER: 15 CONDITION: RLC
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+CANREPEAT: yes
+QUESTION: TypeId
+VALUE: Conn_sRLC
+STATE: HIDDEN
+QUESTION: Resistance
+VALUE: 0.0
+HELP: Connector resistance (Ohms/meter)
+QUESTION: Inductance
+VALUE: 0.0
+HELP: Connector self-inductance (Henrys/meter)
+QUESTION: Capacitance
+VALUE: 1E22
+HELP: Wire capacitance (Farads/meter)
+IMAGE: images/RLC_series.gif
 END CONDITION

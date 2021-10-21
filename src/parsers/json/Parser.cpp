@@ -38,7 +38,6 @@ namespace JSON {
 Data Parser::read() const {
     
     std::ifstream stream(this->filename);
-
     if (!stream.is_open()) {
         throw std::logic_error("Can not open file: " + this->filename);
     }
@@ -51,47 +50,29 @@ Data Parser::read() const {
         std::cerr << ex.what() << std::endl;
     }
 
-    Util::ProgressBar progress;
-    progress.init("Parser GiD-JSON", 7, 0);
-
     std::string version = j.at("_version").get<std::string>();
     if (!checkVersionCompatibility(version)) {
         throw std::logic_error("File version " + version + " is not supported.");
     }
-    progress.advance();
+
 
     Data res;
-    
     res.filename = this->filename;
-
     res.solver = readSolverOptions(j);
-    progress.advance();
-
     res.physicalModels = readPhysicalModels(j);
-    progress.advance();
-
     res.mesh = readGeometricMesh(*res.physicalModels, j);
-    progress.advance();
-
+        
     if (res.mesh != nullptr) {
         Mesh::Geometric* geometricMesh = res.mesh->castTo<Mesh::Geometric>();
 		readConnectorOnPoint(*res.physicalModels, *geometricMesh, j);
-		progress.advance();
-
         res.sources = readSources(*geometricMesh, j);
-        progress.advance();
-
         res.outputRequests = readOutputRequests(*geometricMesh, j);
-        progress.advance();
     } else {
         res.sources = new Source::Group<>();
         res.outputRequests = new OutputRequest::Group<>();
     }
 
     postReadOperations(res);
-    progress.advance();
-
-    progress.end();
 
     return res;
 }
@@ -99,7 +80,7 @@ Data Parser::read() const {
 Parser::json Parser::readSolverOptions(const json& j) const 
 {
     if (j.find("solverOptions") == j.end()) {
-        return nullptr;
+        return json();
     }
     return j.at("solverOptions").get<json>();
 }
@@ -493,8 +474,7 @@ Grid3 Parser::readGrids(const json& j) const {
                     strToCVecI3(g.at("numberOfCells").get<std::string>()));
         } else {
             BoxR3 box = strToBox(g.at("layerBox").get<std::string>());
-            Math::CVecR3 stepSize = 
-                strToCVecR3(g.at("stepSize").get<std::string>());
+            Math::CVecR3 stepSize = strToCVecR3(g.at("stepSize").get<std::string>());
             if (g.at("fitSizeToBox").get<bool>()) {
                 for (std::size_t i = 0; i < 3; i++) {
 					std::size_t n = std::round(box.getLength()[i] / stepSize[i]);

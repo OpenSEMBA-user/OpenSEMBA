@@ -14,32 +14,26 @@ using namespace Geometry::Mesh;
 class ParserJSONParserTest : public ::testing::Test {
 };
 
-TEST_F(ParserJSONParserTest, Cartesian) {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/cartesian.gid/cartesian.dat");
-    EXPECT_NO_THROW(jsonParser.read());
-}
-
-TEST_F(ParserJSONParserTest, DMCWF) {
+TEST_F(ParserJSONParserTest, DMCWF) 
+{
     SEMBA::Parsers::JSON::Parser jsonParser("testData/dmcwf.gid/dmcwf.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
-TEST_F(ParserJSONParserTest, Planewave) {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/planewave.gid/planewave.dat");
-    EXPECT_NO_THROW(jsonParser.read());
-}
-
-TEST_F(ParserJSONParserTest, Sphere) {
+TEST_F(ParserJSONParserTest, Sphere) 
+{
     SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
-TEST_F(ParserJSONParserTest, Wires) {
+TEST_F(ParserJSONParserTest, Wires) 
+{
     SEMBA::Parsers::JSON::Parser jsonParser("testData/wires.gid/wires.dat");
     EXPECT_NO_THROW(jsonParser.read());
 }
 
-TEST_F(ParserJSONParserTest, Bowtie) {
+TEST_F(ParserJSONParserTest, Bowtie) 
+{
     SEMBA::Parsers::JSON::Parser jsonParser("testData/bowtie.gid/bowtie.dat");
     Data data;
     EXPECT_NO_THROW(data = jsonParser.read());

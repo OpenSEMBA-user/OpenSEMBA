@@ -20,14 +20,15 @@
 #include "physicalModel/surface/SIBCFile.h"
 #include "physicalModel/volume/Dispersive.h"
 #include "physicalModel/volume/Anisotropic.h"
+
 #include "source/Dipole.h"
 #include "source/Generator.h"
 #include "source/OnLine.h"
 #include "source/PlaneWave.h"
 #include "source/port/Waveguide.h"
 #include "source/port/TEM.h"
+
 #include "Data.h"
-#include "util/ProgressBar.h"
 
 #include "parsers/Parser.h"
 
@@ -43,7 +44,7 @@ public:
     
 private:
     json readSolverOptions(const json&) const;
-    PhysicalModel::Group<>* readPhysicalModels(const json&) const;
+    PMGroup* readPhysicalModels(const json&) const;
     Geometry::Mesh::Geometric* readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
 	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
     Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;

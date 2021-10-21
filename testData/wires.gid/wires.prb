@@ -3,6 +3,7 @@ BOOK: Solver_options
 TITLE: Solver
 QUESTION: Solver#CB#(ugrfdtd,cudg3d)
 VALUE: ugrfdtd
+STATE: HIDDEN
 QUESTION: Run_simulation#CB#(0,1)
 VALUE: 0
 QUESTION: Ending#CB#(Final_time,Number_of_time_steps)
@@ -12,19 +13,23 @@ DEPENDENCIES: (Number_of_time_steps, SET,     Final_time, #CURRENT#, RESTORE, Nu
 QUESTION: Final_time
 VALUE: 30e-9
 HELP: Final time in seconds.
+TKWIDGET: semba::TkwidgetEntryValidation
 QUESTION: Number_of_time_steps
 VALUE: 100000
 HELP: Runs until specified time step. Ignored if 0. Overrides final time.
 QUESTION: Time_step
 VALUE: 7.7e-12
 HELP: Time step in seconds. A zero value lets solver to choose the default time step.
+TKWIDGET: semba::TkwidgetEntryValidation
 QUESTION: CFL
 VALUE: 0.8
 HELP: Courant number (suggested <= 0.8; ignored if 0.0).
+TKWIDGET: semba::TkwidgetEntryValidation
 STATE: HIDDEN
 QUESTION: Default_sampling_period
 VALUE: 7.7e-12
 HELP: Zero means every time step.
+TKWIDGET: semba::TkwidgetEntryValidation
 QUESTION: Force_restarting#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (1, SET,Resume_simulation,0)
@@ -37,6 +42,7 @@ HELP: Permits to resume a previous simulation until a final time step. Requires 
 QUESTION: Flush
 VALUE: 0
 HELP: Minutes between data flush of restarting fields. Necessary to resume a stopped problem. A 0 means no flushing.
+TKWIDGET: semba::TkwidgetEntryValidation
 TITLE: ugrfdtd
 QUESTION: Composites_model#CB#(MIBC,SGBC)
 VALUE: SGBC
@@ -51,45 +57,40 @@ HELP: Different behavior. "holland": uses a pseudo-MTLN (no default). "berenger"
 QUESTION: Min_distance_wires
 VALUE: 0.5
 HELP: minimum distance among multi-wires (default 0.5)
+TKWIDGET: semba::TkwidgetEntryValidation
 QUESTION: Map_VTK#CB#(0,1)
 VALUE: 0
-HELP: reates .VTK map of the PEC/wires/Surface geometry
+STATE: HIDDEN
+HELP: Creates .VTK map of the PEC/wires/Surface geometry
 QUESTION: Additional_arguments
 VALUE: 
-TITLE: cudg3d
-QUESTION: Time_integrator#CB#(lserk4,lf2,lf2full)
-VALUE: lserk4
-QUESTION: Use_LTS#CB#(0,1)
-VALUE: 1
-QUESTION: Upwinding
-VALUE: 1.0
-HELP: 0.0 for centered, 1.0 for full upwinding.
 BOOK: Mesher_options
 Title: Mesher
-QUESTION: Mesher#CB#(ZMesher,DMesheR,None)
-VALUE: DMesheR
-DEPENDENCIES: (ZMesher,         HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
-DEPENDENCIES: (DMesheR,         RESTORE, Mode,#CURRENT#,                                    HIDE,    Brute_force_volumes,1)
-DEPENDENCIES: (None,            HIDE,    Mode,Structured, HIDE, Forbidden_length,#CURRENT#, HIDE,    Brute_force_volumes,1)
-QUESTION: Brute_force_volumes#CB#(0,1)
-VALUE: 1
-QUESTION: VTK_Export#CB#(0,1)
+QUESTION: Mesher#CB#(DMesher,HMesher)
+VALUE: DMesher
+DEPENDENCIES: (DMesher, HIDE,   HWMesh_Export,0,         HIDE,   HMesher_mode, Adapted,   HIDE,    Edge_points, #CURRENT#, RESTORE,    Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, RESTORE,Contour_refinement,#CURRENT#)
+DEPENDENCIES: (HMesher, RESTORE,HWMesh_Export,#CURRENT#, RESTORE,HMesher_mode, #CURRENT#, RESTORE, Edge_points, #CURRENT#, HIDE,       Mode,#CURRENT#, RESTORE, Forbidden_length,#CURRENT#, HIDE,   Contour_refinement,#CURRENT#)
+QUESTION: HMesher_mode#CB#(Raw,Adapted,Snap)
+VALUE: Raw
+DEPENDENCIES: (Raw,     HIDE,    Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, HIDE,Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Adapted, HIDE,    Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, HIDE,Forbidden_length,#CURRENT#)
+DEPENDENCIES: (Snap,    RESTORE, Edge_points, #CURRENT#, HIDE,Mode,#CURRENT#, RESTORE,Forbidden_length,#CURRENT#)
+QUESTION: Edge_points
 VALUE: 0
-HELP: Exports generated meshes in VTK format which can be visualized with external tools, e.g. Paraview. Useful for very large meshes.
-QUESTION: postmsh_Export#CB#(0,1)
-VALUE: 1
-HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
 QUESTION: Mode#CB#(Structured,Conformal,Relaxed,Slanted)
 VALUE: Structured
-DEPENDENCIES: (Structured, HIDE,    Forbidden_length,#CURRENT#)
-DEPENDENCIES: (Relaxed,    RESTORE, Forbidden_length,#CURRENT#)
-DEPENDENCIES: (Slanted,    HIDE,    Forbidden_length,#CURRENT#)
-DEPENDENCIES: (Conformal,  HIDE,    Forbidden_length,#CURRENT#)
 QUESTION: Forbidden_length
 VALUE: 0.25
 HELP: Sets the minimum relative distance between conformal intersections and nearest grid vertex. Min: 0.0, Max: 0.5
-Title: Wires
-QUESTION: Slanted#CB#(0,1)
+QUESTION: Contour_refinement#CB#(0,1)
+VALUE: 0
+HELP: Refines the open contours of entitities with the same material and layer to ensure conductivity if distance between conturs is below half-cell.
+TKWIDGET: semba::TkwidgetEntryValidation
+QUESTION: Unwanted_connections_info#CB#(0,1)
+VALUE: 0
+QUESTION: Structured_Cells_info#CB#(0,1)
+VALUE: 0
+QUESTION: Slanted_wires#CB#(0,1)
 VALUE: 0
 HELP: Enables/disables slanted meshing of wires to avoid staircasing effects.
 DEPENDENCIES: (0, HIDE,    Segments_filter_threshold, #CURRENT#)
@@ -97,6 +98,19 @@ DEPENDENCIES: (1, RESTORE, Segments_filter_threshold, #CURRENT#, RESTORE, Wires_
 QUESTION: Segments_filter_threshold
 VALUE: 0.4
 HELP: Sets the allowed minimum relative size for the slanted wire segments (0.0 to allow all segments).
+TKWIDGET: semba::TkwidgetEntryValidation
+QUESTION: VTK_Export#CB#(0,1)
+VALUE: 0
+HELP: Exports generated meshes in VTK format which can be visualized with external tools, e.g. Paraview. Useful for very large meshes.
+QUESTION: postmsh_Export#CB#(0,1)
+VALUE: 1
+HELP: Exports generated meshes in the native GiD formats for their visualization when the postprocessing is activated.
+QUESTION: postsmb_Export#CB#(0,1)
+VALUE: 0
+HELP: Exports readed meshes in the native GiD formats for their visualization when the postprocessing is activated.
+QUESTION: HWMesh_Export#CB#(0,1)
+VALUE: 0
+HELP: Exports readed meshes asserialized HWMesh classes.
 Title: Geometry
 QUESTION: model_units#CB#(m,cm,mm,nm,other)
 VALUE: m
@@ -109,6 +123,7 @@ DEPENDENCIES: (other, RESTORE, scaling_factor, 1.0)
 QUESTION: scaling_factor
 VALUE: 1.0
 HELP: Scaling factor will multiply all the model distances and grid step sizes by the given number. It does NOT affect material info, e.g. wire radius.
+TKWIDGET: semba::TkwidgetEntryValidation
 QUESTION: Lower_x_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)
 VALUE: PML
 QUESTION: Lower_y_bound#CB#(PML,PEC,PMC,MUR1,MUR2,Periodic)

@@ -4,20 +4,20 @@
 
     "solverOptions": {
         "solver": "ugrfdtd",
-        "runSimulation": 0,
+        "runSimulation": false,
         "finalTime": 45e-9,
         "timeStep": 0.0,
         "cfl": 0.8,
         "defaultSamplingPeriod": 2e-11,
-        "forceRestarting": 0,
-        "resumeSimulation": 0,
+        "forceRestarting": false,
+        "resumeSimulation": false,
         "flush": 0,
         "geometryScalingFactor": 1.0,
         "compositesModel": "MIBC",
         "wiresFlavor": "holland",
-        "mtln": 1,
+        "mtln": true,
         "minDistanceWires": 0.5,
-        "mapVTK": 0,
+        "mapVTK": false,
         "mesherOptions": {
             "lowerXBound": "PMC",
             "lowerYBound": "PEC",
@@ -25,17 +25,23 @@
             "upperXBound": "PML",
             "upperYBound": "PML",          
             "upperZBound": "PML",
-            "mesher": "ZMesher",
-            "bruteForceVolumes": 1,
-            "vtkExport": 0,
-            "postmshExport": 1,
+            "contourRefinement": false,
+            "unwantedConnectionsInfo": false,
+            "structuredCellsInfo": false,
+            "vtkExport": false,
+            "postmshExport": true,
+            "postsmbExport": false,
+            "mesher": "DMesher",
+            "hwMeshExport": false,
+            "hMesherMode": "Raw",
             "mode": "Structured",
+            "edgePoints": 0,
             "forbiddenLength": 0,
-            "slantedWires": 0,
+            "slantedWires": false,
             "slantedThreshold": 1.0
         }
     },
-     
+    
     "materials": [
         {
             "materialId": 1,
@@ -52,15 +58,16 @@
     "grids": [
         {
             "gridType": "gridCondition",
+            "type": "Number_of_cells",
+            "numberOfCells": "{20 20 20}",
             "layerBox": "{0.012000000000002719 0.012 0.192 -0.0 -2.693855815499857e-10 -0.03}",
-            "type": "by_number_of_cells",
-            "directions": "{20 20 20}",
             "boundaryPaddingType": "by_distance",
             "upperPadding": "{0.0 0.0 0.0}",
             "lowerPadding": "{0.0 0.0 0.0}",
             "upperPaddingMeshSize": "{0.0 0.0 0.0}",
             "lowerPaddingMeshSize": "{0.0 0.0 0.0}"
         }
+
     ],
 
     "layers": [
@@ -4337,14 +4344,16 @@
         ]
     },
 
+    "connectorOnPoint": [
+    ],
+
     "sources": [
         {
             "sourceType": "waveguidePort",
             "shape": "Rectangular",
             "magnitude": {
                 "type": "Gaussian",
-                "gaussianSpread": 2e-9,
-                "gaussianDelay": 6e-9
+                "frequencyMaximum": 1.0e9
             },
             "excitationMode": "TE",
             "firstMode":  1,
@@ -4361,8 +4370,8 @@
     "outputRequests": [
         {
             "gidOutputType": "OutRq_on_point",
-            "name": "init",
-            "type": "electricField",
+            "name":      "init",
+            "type":      "electricField",
             "domain": {
                 "initialTime":    0.0,
                 "finalTime":      45e-9,
@@ -4374,8 +4383,8 @@
         },
         {
             "gidOutputType": "OutRq_on_point",
-            "name": "mid",
-            "type": "electricField",
+            "name":      "mid",
+            "type":      "electricField",
             "domain": {
                 "initialTime":    0.0,
                 "finalTime":      45e-9,
@@ -4387,8 +4396,8 @@
         },
         {
             "gidOutputType": "OutRq_on_point",
-            "name": "out",
-            "type": "electricField",
+            "name":      "out",
+            "type":      "electricField",
             "domain": {
                 "initialTime":    0.0,
                 "finalTime":      45e-9,
@@ -4398,7 +4407,6 @@
                 76
             ]
         }
-
 
 
 

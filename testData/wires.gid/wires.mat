@@ -9,47 +9,15 @@ QUESTION: TypeId
 VALUE: PMC
 STATE: HIDDEN
 END MATERIAL
-NUMBER: 3 MATERIAL: SMA
-QUESTION: TypeId
-VALUE: SMA
-STATE: HIDDEN
-END MATERIAL
-NUMBER: 4 MATERIAL: PML
+NUMBER: 3 MATERIAL: PML
 QUESTION: TypeId
 VALUE: PML
 STATE: HIDDEN
-QUESTION: Automatic_orientation#CB#(0,1)
-VALUE: 1
-DEPENDENCIES: (1, HIDE, Local_Axes,#CURRENT#)
-DEPENDENCIES: (0, RESTORE, Local_Axes,#CURRENT#)
 QUESTION: Local_Axes#LA#(-GLOBAL-)
 VALUE: -GLOBAL-
 END MATERIAL
-NUMBER: 5 MATERIAL: MUR1
-QUESTION: TypeId
-VALUE: MUR1
-STATE: HIDDEN
-END MATERIAL
-NUMBER: 6 MATERIAL: MUR2
-QUESTION: TypeId
-VALUE: MUR2
-STATE: HIDDEN
-END MATERIAL
-NUMBER: 7 MATERIAL: Vacuum
-QUESTION: TypeId
-VALUE: Classic
-STATE: HIDDEN
-QUESTION: Permittivity
-VALUE: 1.0
-QUESTION: Permeability
-VALUE: 1.0
-QUESTION: ElecCond
-VALUE: 0.0
-QUESTION: MagnCond
-VALUE: 0.0
-END MATERIAL
 BOOK:Basic_materials
-NUMBER: 8 MATERIAL: Classic
+NUMBER: 4 MATERIAL: Classic
 QUESTION: TypeId
 VALUE: Classic
 STATE: HIDDEN
@@ -62,7 +30,7 @@ VALUE: 0.0
 QUESTION: MagnCond
 VALUE: 0.0
 END MATERIAL
-NUMBER: 9 MATERIAL: Dispersive_Material
+NUMBER: 5 MATERIAL: Dispersive_Material
 QUESTION: TypeId
 VALUE: Dispersive
 STATE: HIDDEN
@@ -71,20 +39,20 @@ VALUE:
 HELP: Insert name of dispersive material file. It must be in the project materials folder.
 END MATERIAL
 BOOK:Advanced_materials
-NUMBER: 10 MATERIAL: Surface_Impedance
+NUMBER: 6 MATERIAL: Surface_Impedance
 QUESTION: TypeId
 VALUE: SIBC
 STATE: HIDDEN
 QUESTION: SurfaceType#CB#(File,Layers)
 VALUE: Layers
-DEPENDENCIES: (File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT#, HIDE,   Create_file_for_UGRMAT,#CURRENT#, HIDE,Freq_min,#CURRENT#, HIDE,Freq_max,#CURRENT#, HIDE,Number_of_poles,#CURRENT#)
-DEPENDENCIES: (Layers, RESTORE, Layers,#CURRENT#, HIDE, File,   #CURRENT#, RESTORE,Create_file_for_UGRMAT,#CURRENT#, RESTORE,Freq_min,#CURRENT#, RESTORE,Freq_max,#CURRENT#, RESTORE,Number_of_poles,#CURRENT# )
+DEPENDENCIES: (File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT#, HIDE,   Create_file_for_UGRMAT,#CURRENT#, HIDE,Freq_min,#CURRENT#, HIDE,Freq_max,#CURRENT#, HIDE,Number_of_poles,#CURRENT#,HIDE,Use_semba_vector_fitting,#CURRENT#)
+DEPENDENCIES: (Layers, RESTORE, Layers,#CURRENT#, HIDE, File,   #CURRENT#, RESTORE,Create_file_for_UGRMAT,#CURRENT#, RESTORE,Freq_min,#CURRENT#, RESTORE,Freq_max,#CURRENT#, RESTORE,Number_of_poles,#CURRENT#, RESTORE,Use_semba_vector_fitting,#CURRENT#)
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
-QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
-VALUE: #N# 5 0..0018 1.0 1.0 7e4 0.0
+QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond)
+VALUE: #N# 4 0.0 1.0 1.0 0.0
 QUESTION: Freq_min
 VALUE: 1e5
 HELP: For MIBC Only. Minimum frequency to which the vector fitting will be performed.
@@ -94,11 +62,13 @@ HELP: For MIBC Only. Maximum frequency to which the vector fitting will be perfo
 QUESTION: Number_of_poles
 VALUE: 24
 HELP: For MIBC Only. Number of poles to which the vector fitting will be performed.
+QUESTION: Use_semba_vector_fitting#CB#(1,0)
+VALUE: 0
 QUESTION: Create_file_for_UGRMAT
 VALUE: 
 TKWIDGET: semba::TkwidgetCreateFilesForUGRMAT
 END MATERIAL
-NUMBER: 11 MATERIAL: Anisotropic
+NUMBER: 7 MATERIAL: Anisotropic
 QUESTION: TypeId
 VALUE: Anisotropic
 STATE: HIDDEN
@@ -122,7 +92,7 @@ QUESTION: Ferrite_relative_permittivity
 VALUE: 1.0
 END MATERIAL
 BOOK:Wires_and_thin_gaps
-NUMBER: 12 MATERIAL: Cable
+NUMBER: 8 MATERIAL: Cable
 QUESTION: TypeId
 VALUE: Wire
 STATE: HIDDEN
@@ -156,17 +126,17 @@ QUESTION: File
 VALUE: 
 HELP: Path to file containing dispersive wire properties in pole/residue format.
 END MATERIAL
-NUMBER: 13 MATERIAL: Connector_short
+NUMBER: 9 MATERIAL: Connector_short
 QUESTION: TypeId
 VALUE: Conn_short
 STATE: HIDDEN
 END MATERIAL
-NUMBER: 14 MATERIAL: Connector_open
+NUMBER: 10 MATERIAL: Connector_open
 QUESTION: TypeId
 VALUE: Conn_open
 STATE: HIDDEN
 END MATERIAL
-NUMBER: 15 MATERIAL: Connector_series_RLC
+NUMBER: 11 MATERIAL: Connector_series_RLC
 QUESTION: TypeId
 VALUE: Conn_sRLC
 STATE: HIDDEN
@@ -181,7 +151,7 @@ VALUE: 1e22
 HELP: Wire capacitance (Farads/meter)
 IMAGE: images/RLC_series.gif
 END MATERIAL
-NUMBER: 16 MATERIAL: Connector_series_L_parallel_RC
+NUMBER: 12 MATERIAL: Connector_series_L_parallel_RC
 QUESTION: TypeId
 VALUE: Conn_sLpRC
 STATE: HIDDEN
@@ -196,7 +166,7 @@ VALUE: 0.0
 HELP: Wire capacitance (Farads/meter)
 IMAGE: images/L_series_RC_parallel.gif
 END MATERIAL
-NUMBER: 17 MATERIAL: Connector_dispersive
+NUMBER: 13 MATERIAL: Connector_dispersive
 QUESTION: TypeId
 VALUE: Conn_dispersive
 STATE: HIDDEN
@@ -204,7 +174,7 @@ QUESTION: File
 VALUE: 
 HELP: Path to file containing dispersive connector properties in pole/residue format.
 END MATERIAL
-NUMBER: 18 MATERIAL: Thin_gap
+NUMBER: 14 MATERIAL: Thin_gap
 QUESTION: TypeId
 VALUE: Thin_gap
 STATE: HIDDEN
@@ -212,6 +182,28 @@ QUESTION: Width
 VALUE: 0.0
 HELP: Thin gap width (meters)
 END MATERIAL
+BOOK:Predefined_materials
+NUMBER: 15 MATERIAL: SMA
+QUESTION: TypeId
+VALUE: SMA
+STATE: HIDDEN
+END MATERIAL
+NUMBER: 16 MATERIAL: MUR1
+QUESTION: TypeId
+VALUE: MUR1
+STATE: HIDDEN
+END MATERIAL
+NUMBER: 17 MATERIAL: MUR2
+QUESTION: TypeId
+VALUE: MUR2
+STATE: HIDDEN
+END MATERIAL
+NUMBER: 18 MATERIAL: Vacuum
+QUESTION: TypeId
+VALUE: Classic
+STATE: HIDDEN
+END MATERIAL
+BOOK:Wires_and_thin_gaps
 NUMBER: 19 MATERIAL: RL50
 QUESTION: TypeId
 VALUE: Conn_sRLC
@@ -234,14 +226,14 @@ VALUE: SIBC
 STATE: HIDDEN
 QUESTION: SurfaceType#CB#(File,Layers)
 VALUE: Layers
-DEPENDENCIES: (File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT#, HIDE,   Create_file_for_UGRMAT,#CURRENT#, HIDE,Freq_min,#CURRENT#, HIDE,Freq_max,#CURRENT#, HIDE,Number_of_poles,#CURRENT#)
-DEPENDENCIES: (Layers, RESTORE, Layers,#CURRENT#, HIDE, File,   #CURRENT#, RESTORE,Create_file_for_UGRMAT,#CURRENT#, RESTORE,Freq_min,#CURRENT#, RESTORE,Freq_max,#CURRENT#, RESTORE,Number_of_poles,#CURRENT# )
+DEPENDENCIES: (File,   RESTORE, File,  #CURRENT#, HIDE, Layers, #CURRENT#, HIDE,   Create_file_for_UGRMAT,#CURRENT#, HIDE,Freq_min,#CURRENT#, HIDE,Freq_max,#CURRENT#, HIDE,Number_of_poles,#CURRENT#,HIDE,Use_semba_vector_fitting,#CURRENT#)
+DEPENDENCIES: (Layers, RESTORE, Layers,#CURRENT#, HIDE, File,   #CURRENT#, RESTORE,Create_file_for_UGRMAT,#CURRENT#, RESTORE,Freq_min,#CURRENT#, RESTORE,Freq_max,#CURRENT#, RESTORE,Number_of_poles,#CURRENT#, RESTORE,Use_semba_vector_fitting,#CURRENT#)
 QUESTION: File
 VALUE: 
 TKWIDGET: GidUtils::TkwidgetGetFilenameButton
 HELP: Insert name of Surface Impedance file. It must be in the project materials folder.
-QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond,MagnCond)
-VALUE: #N# 5 0.0018 1.0 1.0 7e4 0.0
+QUESTION: Layers(Thickness,Permittivity,Permeability,ElecCond)
+VALUE: #N# 4 0.0 1.0 1.0 0.0
 QUESTION: Freq_min
 VALUE: 1e5
 HELP: For MIBC Only. Minimum frequency to which the vector fitting will be performed.
@@ -251,6 +243,8 @@ HELP: For MIBC Only. Maximum frequency to which the vector fitting will be perfo
 QUESTION: Number_of_poles
 VALUE: 24
 HELP: For MIBC Only. Number of poles to which the vector fitting will be performed.
+QUESTION: Use_semba_vector_fitting#CB#(1,0)
+VALUE: 0
 QUESTION: Create_file_for_UGRMAT
 VALUE: 
 TKWIDGET: semba::TkwidgetCreateFilesForUGRMAT
