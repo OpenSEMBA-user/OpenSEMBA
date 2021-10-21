@@ -1,3 +1,0 @@
-cmake_minimum_required(VERSION 3.0)
-
-set(json_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)

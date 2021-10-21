@@ -30,22 +30,19 @@
 #include "util/ProgressBar.h"
 
 #include "parsers/Parser.h"
-#include "json.hpp"
 
 namespace SEMBA {
 namespace Parsers {
 namespace JSON {
 
-using json = nlohmann::json;
-
 class Parser : public SEMBA::Parsers::Parser {
+    typedef nlohmann::json json;
 public:
     Parser(const std::string& filename) : SEMBA::Parsers::Parser(filename) {};
     Data read() const;
     
 private:
-    Solver::Info* readSolver(const json&) const;
-    Solver::Settings readSolverSettings(const json&) const;
+    json readSolverOptions(const json&) const;
     PhysicalModel::Group<>* readPhysicalModels(const json&) const;
     Geometry::Mesh::Geometric* readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
 	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
@@ -111,8 +108,9 @@ private:
 };
 
 template<typename T>
-Geometry::Element::Group<T> readElemIdsAsGroupOf(
-		Geometry::Mesh::Geometric& mesh, const json& j) {
+Geometry::Element::Group<T> 
+readElemIdsAsGroupOf(Geometry::Mesh::Geometric& mesh, const Parser::json& j) 
+{
 	Geometry::Element::Group<T> geometricElements;
 	for (auto it = j.begin(); it != j.end(); ++it) {
 		geometricElements.add(mesh.elems().getId(Geometry::ElemId(it->get<int>()) ));
@@ -125,10 +123,10 @@ Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
         const PhysicalModel::Group<>& mG,
         const Geometry::Layer::Group<>& lG,
         const Geometry::CoordR3Group& cG,
-        const json& e) {
+        const Parser::json& e) {
     Geometry::Element::Group<Geometry::ElemR> res;
 
-    for (json::const_iterator it = e.begin(); it != e.end(); ++it) {
+    for (auto it = e.begin(); it != e.end(); ++it) {
 
         Geometry::ElemId elemId;
         MatId matId;

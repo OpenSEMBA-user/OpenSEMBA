@@ -1,26 +1,27 @@
-
-
 #pragma once
 
 #include "geometry/mesh/Mesh.h"
 #include "physicalModel/Group.h"
 #include "outputRequest/Group.h"
 #include "source/Group.h"
-#include "solver/Info.h"
 
 #include "filesystem/Project.h"
 #include "class/Class.h"
 #include "class/Cloneable.h"
 
+#include "nlohmann/json.hpp"
+
 namespace SEMBA {
 
 class Data : public virtual Class::Class,
              public virtual Class::Cloneable {
+
+    typedef nlohmann::json json;
 public:
     FileSystem::Project     filename;
-    Solver::Info*           solver;
+    json                    solver;
     Geometry::Mesh::Mesh*   mesh;
-    PhysicalModel::Group<>* physicalModels;
+    PMGroup*                physicalModels;
     Source::Group<>*        sources;
     OutputRequest::Group<>* outputRequests;
 

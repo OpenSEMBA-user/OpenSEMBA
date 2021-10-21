@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <array>
@@ -7,7 +6,6 @@
 #include <string>
 #include <assert.h>
 
-#include "argument/Parser.h"
 #include "math/vector/Cartesian.h"
 #include "geometry/Grid.h"
 #include "geometry/BoundTerminations.h"
@@ -18,13 +16,17 @@
 #include "physicalModel/bound/Mur1.h"
 #include "physicalModel/bound/Mur2.h"
 #include "physicalModel/bound/Periodic.h"
-#include "solver/Info.h"
+
+#include "nlohmann/json.hpp"
 
 namespace SEMBA {
 namespace Mesher {
 
 class Options {
 public:
+    typedef nlohmann::json json;
+
+    
     enum class Mesher {
         DMesher,
         HMesher
@@ -45,8 +47,7 @@ public:
 
     Options();
 
-    void addArguments(Argument::Group& args) const;
-    void set(const Solver::Settings& opts);
+    void set(const json& opts);
 
     Mesher getMesher() const;
     HMesherMode getHMesherMode() const;

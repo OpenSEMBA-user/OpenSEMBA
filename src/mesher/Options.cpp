@@ -124,88 +124,84 @@ void Options::setEdgePoints(const Math::Int& sg) {
     edgePoints_ = sg;
 }
 
-void Options::addArguments(Argument::Group& args) const {
-    args.addOption(new Argument::Switch("VTK Export", "vtkexport"));
-    args.addOption(
-        new Argument::Option<Math::Real, Math::Real, Math::Real>("gridstep"));
-    args.addOption(new Argument::Option<std::string>("Mode", "mode"))
-        .choices({{"Structured"}, {"Relaxed"}, {"Slanted"}, {"Conformal"}});
-    args.addOption(
-        new Argument::Option<Math::Real>("Forbidden length", "length"));
-}
+void Options::set(const json& opts) {
+    
+    auto exists = [](const json & j, std::string key) 
+    {
+        return j.find(key) != j.end();
+    };
 
-void Options::set(const Solver::Settings& opts) {
-    if (opts.existsName(          "contourRefinement")) {
-        setContourRefinement(opts("contourRefinement").getBool());
+    if (exists(opts, "contourRefinement")) {
+        setContourRefinement(opts.at("contourRefinement").get<bool>());
     }
-    if (opts.existsName("hMesherMode")) {
-        setHMesherMode(strToHMesherMode(opts("hMesherMode").getString()));
+    if (exists(opts, "hMesherMode")) {
+        setHMesherMode(strToHMesherMode(opts.at("hMesherMode").get<std::string>()));
     }
-    if (opts.existsName(                "unwantedConnectionsInfo")) {
-        setUnwantedConnectionsInfo(opts("unwantedConnectionsInfo").getBool());
+    if (exists(opts, "unwantedConnectionsInfo")) {
+        setUnwantedConnectionsInfo(opts.at("unwantedConnectionsInfo").get<bool>());
     }
-    if (opts.existsName(            "structuredCellsInfo")) {
-        setStructuredCellsInfo(opts("structuredCellsInfo").getBool());
+    if (exists(opts, "structuredCellsInfo")) {
+        setStructuredCellsInfo(opts.at("structuredCellsInfo").get<bool>());
     }
-    if (opts.existsName("nfdeExport")) {
-        setHWMeshExport(opts("nfdeExport").getBool());
+    if (exists(opts, "nfdeExport")) {
+        setHWMeshExport(opts.at("nfdeExport").get<bool>());
     }
-    if (opts.existsName(     "hwMeshExport")) {
-        setHWMeshExport(opts("hwMeshExport").getBool());
+    if (exists(opts, "hwMeshExport")) {
+        setHWMeshExport(opts.at("hwMeshExport").get<bool>());
     }
-    if (opts.existsName(      "postmshExport")) {
-        setPostmshExport(opts("postmshExport").getBool());
+    if (exists(opts, "postmshExport")) {
+        setPostmshExport(opts.at("postmshExport").get<bool>());
     }
-    if (opts.existsName("postsmbExport")) {
-        setPostsmbExport(opts("postsmbExport").getBool());
+    if (exists(opts, "postsmbExport")) {
+        setPostsmbExport(opts.at("postsmbExport").get<bool>());
     }
-    if (opts.existsName(  "vtkExport")) {
-        setVtkExport(opts("vtkExport").getBool());
+    if (exists(opts, "vtkExport")) {
+        setVtkExport(opts.at("vtkExport").get<bool>());
     }
-    if (opts.existsName("slantedWires")) {
-        setSlanted(opts("slantedWires").getBool());
+    if (exists(opts, "slantedWires")) {
+        setSlanted(opts.at("slantedWires").get<bool>());
     }
-    if (opts.existsName(         "slantedThreshold")) {
-        setSlantedThreshold(opts("slantedThreshold").get<Math::Real>());
+    if (exists(opts, "slantedThreshold")) {
+        setSlantedThreshold(opts.at("slantedThreshold").get<double>());
     }
-    if (opts.existsName(           "mesher")) {
-        setMesher(strToMesher(opts("mesher").getString()));
+    if (exists(opts, "mesher")) {
+        setMesher(strToMesher(opts.at("mesher").get<std::string>()));
     }
-    if (opts.existsName(             "mode")) {
-        setMode(strToMesherMode(opts("mode").getString()));
+    if (exists(opts, "mode")) {
+        setMode(strToMesherMode(opts.at("mode").get<std::string>()));
     }
-    if (opts.existsName("edgePoints")) {
-        setEdgePoints(opts("edgePoints").getInt());
+    if (exists(opts, "edgePoints")) {
+        setEdgePoints(opts.at("edgePoints").get<int>());
     }
-    if (opts.existsName(        "forbiddenLength")) {
-        setForbiddenLength(opts("forbiddenLength").getReal());
+    if (exists(opts, "forbiddenLength")) {
+        setForbiddenLength(opts.at("forbiddenLength").get<double>());
     }
-    if (opts.existsName(      "geometryScalingFactor")) {
-        setScalingFactor(opts("geometryScalingFactor").getReal());
+    if (exists(opts, "geometryScalingFactor")) {
+        setScalingFactor(opts.at("geometryScalingFactor").get<double>());
     }
-    if (opts.existsName(                        "upperXBound")) {
+    if (exists(opts, "upperXBound")) {
         setBoundTermination(Math::Constants::x, Math::Constants::U,
-                            strToBoundType(opts("upperXBound").getString()));
+                            strToBoundType(opts.at("upperXBound").get<std::string>()));
     }
-    if (opts.existsName(                        "lowerXBound")) {
+    if (exists(opts, "lowerXBound")) {
         setBoundTermination(Math::Constants::x, Math::Constants::L,
-                            strToBoundType(opts("lowerXBound").getString()));
+                            strToBoundType(opts.at("lowerXBound").get<std::string>()));
     }
-    if (opts.existsName(                        "upperYBound")) {
+    if (exists(opts, "upperYBound")) {
         setBoundTermination(Math::Constants::y, Math::Constants::U,
-                            strToBoundType(opts("upperYBound").getString()));
+                            strToBoundType(opts.at("upperYBound").get<std::string>()));
     }
-    if (opts.existsName(                        "lowerYBound")) {
+    if (exists(opts, "lowerYBound")) {
         setBoundTermination(Math::Constants::y, Math::Constants::L,
-                            strToBoundType(opts("lowerYBound").getString()));
+                            strToBoundType(opts.at("lowerYBound").get<std::string>()));
     }
-    if (opts.existsName(                        "upperZBound")) {
+    if (exists(opts, "upperZBound")) {
         setBoundTermination(Math::Constants::z, Math::Constants::U,
-                            strToBoundType(opts("upperZBound").getString()));
+                            strToBoundType(opts.at("upperZBound").get<std::string>()));
     }
-    if (opts.existsName(                        "lowerZBound")) {
+    if (exists(opts, "lowerZBound")) {
         setBoundTermination(Math::Constants::z, Math::Constants::L,
-                            strToBoundType(opts("lowerZBound").getString()));
+                            strToBoundType(opts.at("lowerZBound").get<std::string>()));
     }
 }
 

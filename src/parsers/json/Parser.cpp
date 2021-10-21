@@ -64,7 +64,7 @@ Data Parser::read() const {
     
     res.filename = this->filename;
 
-    res.solver = readSolver(j);
+    res.solver = readSolverOptions(j);
     progress.advance();
 
     res.physicalModels = readPhysicalModels(j);
@@ -96,43 +96,12 @@ Data Parser::read() const {
     return res;
 }
 
-Solver::Info* Parser::readSolver(const json& j) const {
+Parser::json Parser::readSolverOptions(const json& j) const 
+{
     if (j.find("solverOptions") == j.end()) {
         return nullptr;
     }
-    json solverOptions = j.at("solverOptions").get<json>();
-    Solver::Settings opts = readSolverSettings(solverOptions);
-    return new Solver::Info(
-            solverOptions.at("solver").get<std::string>(),
-            std::move(opts));
-}
-
-Solver::Settings Parser::readSolverSettings(const json& j) const {
-    Solver::Settings opts;
-    opts.setObject();
-    for (json::const_iterator it = j.begin(); it != j.end(); ++it) {
-        if (it->is_object()) {
-            Solver::Settings aux = readSolverSettings(*it);
-            opts.addMember(it.key(), std::move(aux));
-        } else {
-            Solver::Settings aux;
-            std::stringstream value;
-            if (it->type() == json::value_t::string) {
-                value << it->get<std::string>();
-            } else if (it->type() == json::value_t::boolean) {
-				if (*it) {
-					value << 1;
-				} else {
-					value << 0;
-				}
-			} else {
-                value << *it;
-            }
-            aux.setString(value.str());
-            opts.addMember(it.key(), std::move(aux));
-        }
-    }
-    return opts;
+    return j.at("solverOptions").get<json>();
 }
 
 Mesh::Geometric* Parser::readGeometricMesh(const PMGroup& physicalModels, const json& j) const 
@@ -140,8 +109,7 @@ Mesh::Geometric* Parser::readGeometricMesh(const PMGroup& physicalModels, const 
     Grid3 grid = readGrids(j);
     Layer::Group<> layers = readLayers(j);
     Coordinate::Group<CoordR3> coords = readCoordinates(j);
-    Element::Group<ElemR> elements =
-            readElements(physicalModels, layers, coords, j);
+    Element::Group<ElemR> elements = readElements(physicalModels, layers, coords, j);
     return new Mesh::Geometric(grid, coords, elements, layers);
 }
 

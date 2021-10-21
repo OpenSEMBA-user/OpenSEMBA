@@ -1,5 +1,3 @@
-
-
 #include "Data.h"
 
 namespace SEMBA {
@@ -21,11 +19,8 @@ Data::Data(const Data& rhs) {
     outputRequests = nullptr;
 
     filename = rhs.filename;
-
-    if (rhs.solver != nullptr) {
-        solver = new Solver::Info(*rhs.solver);
-    }
-
+    solver = rhs.solver;
+    
     if (rhs.physicalModels != nullptr) {
         physicalModels = rhs.physicalModels->clone();
     }
@@ -62,9 +57,6 @@ Data::Data(const Data& rhs) {
 }
 
 Data::~Data() {
-    if (solver != nullptr) {
-        delete solver;
-    }
     if (mesh != nullptr) {
         delete mesh;
     }
@@ -91,11 +83,8 @@ Data& Data::operator=(const Data& rhs) {
     outputRequests = nullptr;
 
     filename = rhs.filename;
-
-    if (rhs.solver != nullptr) {
-        solver = new Solver::Info(*rhs.solver);
-    }
-
+    solver = rhs.solver;
+        
     if (rhs.physicalModels != nullptr) {
         physicalModels = rhs.physicalModels->clone();
     }

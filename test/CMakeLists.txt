@@ -36,7 +36,6 @@ add_executable(opensemba_tests ${SRCS})
 target_link_libraries(opensemba_tests
                         GTest::gtest 
 		                GTest::gtest_main
-                        opensemba_core_argument
                         opensemba_core_data
                         opensemba_parsers)
 
