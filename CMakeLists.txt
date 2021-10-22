@@ -57,7 +57,6 @@ include_directories(src/ src/core/)
 
 add_subdirectory  (src/core      obj/src/core)
 add_subdirectory  (src/parsers   obj/src/parsers)
-add_subdirectory  (src/mesher    obj/src/mesher)
 add_subdirectory  (src/exporters obj/src/exporters)
 add_subdirectories(src/adapter   obj/src)
 

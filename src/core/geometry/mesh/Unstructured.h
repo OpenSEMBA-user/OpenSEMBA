@@ -3,7 +3,7 @@
 #pragma once
 
 #include "geometry/element/Triangle.h"
-#include "geometry/graph/Connectivities.h"
+
 
 #include "Mesh.h"
 #include "geometry/Grid.h"
