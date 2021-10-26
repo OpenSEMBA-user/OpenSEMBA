@@ -14,7 +14,6 @@ add_subdirectory(math/ math/)
 add_subdirectory(outputRequest/ outputRequest/)
 add_subdirectory(physicalModel/ physicalModel/)
 add_subdirectory(source/ source/)
-add_subdirectory(util/ util/)
 
 if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
