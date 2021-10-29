@@ -38,7 +38,7 @@ protected:
     }
 
     template <class T>
-    static void setIfExistsInJSON(const json& j, T& entry, std::string labelToCheck)
+    static void setIfExists(const json& j, T& entry, std::string labelToCheck)
     {
         auto const it = j.find(labelToCheck);
         if (it != j.end()) {
@@ -47,7 +47,7 @@ protected:
     }
 
     template <class T>
-    static void setIfExistsInJSONAs(
+    static void setIfExistsUsingLabelConversion(
         const json& j,
         T& entry,
         std::string labelToCheck,
