@@ -11,13 +11,12 @@
 #include "geometry/element/Tetrahedron4.h"
 #include "geometry/element/Tetrahedron10.h"
 #include "geometry/element/Hexahedron8.h"
-#include "physicalModel/bound/Bound.h"
+#include "physicalModel/Bound.h"
 #include "physicalModel/multiport/Dispersive.h"
 #include "physicalModel/multiport/Predefined.h"
 #include "physicalModel/multiport/RLC.h"
 #include "physicalModel/predefined/PEC.h"
 #include "physicalModel/predefined/PMC.h"
-#include "physicalModel/predefined/SMA.h"
 #include "physicalModel/volume/AnisotropicCrystal.h"
 #include "physicalModel/volume/AnisotropicFerrite.h"
 #include "physicalModel/volume/Classic.h"
@@ -150,9 +149,6 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
 
     case PhysicalModel::PhysicalModel::PMC:
         return new PhysicalModel::Predefined::PMC(id, name);
-
-    case PhysicalModel::PhysicalModel::SMA:
-        return new PhysicalModel::Predefined::SMA(id, name);
 
     case PhysicalModel::PhysicalModel::PML:
         return new PhysicalModel::Volume::PML(id, name, 
@@ -909,24 +905,6 @@ Source::Port::Waveguide::ExcitationMode Parser::strToWaveguideMode(
         return Source::Port::Waveguide::TM;
     } else {
         throw std::logic_error("Unrecognized exc. mode label: " + str);
-    }
-}
-
-const PhysicalModel::Bound::Bound* Parser::strToBoundType(std::string str) {
-    if (str.compare("PEC") == 0) {
-        return new PhysicalModel::Bound::PEC(MatId(0));
-    } else if (str.compare("PMC") == 0) {
-        return new PhysicalModel::Bound::PMC(MatId(0));
-    } else if (str.compare("PML") == 0) {
-        return new PhysicalModel::Bound::PML(MatId(0));
-    } else if (str.compare("Periodic") == 0) {
-        return new PhysicalModel::Bound::Periodic(MatId(0));
-    } else if (str.compare("MUR1") == 0) {
-        return new PhysicalModel::Bound::Mur1(MatId(0));
-    } else if (str.compare("MUR2") == 0) {
-        return new PhysicalModel::Bound::Mur2(MatId(0));
-    } else {
-        throw std::logic_error("Unrecognized bound label: " + str);
     }
 }
 

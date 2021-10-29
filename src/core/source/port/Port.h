@@ -1,15 +1,13 @@
-
-
 #pragma once
 
 #include "source/Source.h"
-#include "physicalModel/bound/Bound.h"
+#include "physicalModel/Bound.h"
 
 namespace SEMBA {
 namespace Source {
 namespace Port {
 
-typedef std::array<std::array<const PhysicalModel::Bound::Bound*,2>,3> Bound3;
+typedef std::array<std::array<const PhysicalModel::Bound*,2>,3> Bound3;
 
 class Port : public Source<Geometry::Surf> {
 public:

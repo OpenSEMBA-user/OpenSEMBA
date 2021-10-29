@@ -3,9 +3,7 @@
 #pragma once
 
 #include "Waveguide.h"
-#include "physicalModel/bound/PEC.h"
-#include "physicalModel/bound/PMC.h"
-#include "physicalModel/bound/PML.h"
+#include "physicalModel/Bound.h"
 
 namespace SEMBA {
 namespace Source {

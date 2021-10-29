@@ -9,12 +9,7 @@
 #include <algorithm>
 
 #include "geometry/mesh/Geometric.h"
-#include "physicalModel/bound/PEC.h"
-#include "physicalModel/bound/PMC.h"
-#include "physicalModel/bound/PML.h"
-#include "physicalModel/bound/Periodic.h"
-#include "physicalModel/bound/Mur1.h"
-#include "physicalModel/bound/Mur2.h"
+#include "physicalModel/Bound.h"
 #include "physicalModel/multiport/Multiport.h"
 #include "physicalModel/surface/Multilayer.h"
 #include "physicalModel/surface/SIBCFile.h"
@@ -105,7 +100,6 @@ private:
     static Math::Constants::CartesianAxis strToCartesianAxis(std::string);
 
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(const std::string& str);
-    static const PhysicalModel::Bound::Bound*    strToBoundType(std::string str);
 };
 
 template<typename T>
