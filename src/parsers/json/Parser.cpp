@@ -15,8 +15,7 @@
 #include "physicalModel/multiport/Dispersive.h"
 #include "physicalModel/multiport/Predefined.h"
 #include "physicalModel/multiport/RLC.h"
-#include "physicalModel/predefined/PEC.h"
-#include "physicalModel/predefined/PMC.h"
+#include "physicalModel/Predefined.h"
 #include "physicalModel/volume/AnisotropicCrystal.h"
 #include "physicalModel/volume/AnisotropicFerrite.h"
 #include "physicalModel/volume/Classic.h"
@@ -144,28 +143,29 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
 	}
 
     switch (type) {
-    case PhysicalModel::PhysicalModel::PEC:
-        return new PhysicalModel::Predefined::PEC (id, name);
+    case PhysicalModel::PhysicalModel::Type::PEC:
+        return new PhysicalModel::Predefined(id, name, PhysicalModel::Predefined::Type::pec);
+    case PhysicalModel::PhysicalModel::Type::PMC:
+        return new PhysicalModel::Predefined(id, name, PhysicalModel::Predefined::Type::pmc);
+    case PhysicalModel::PhysicalModel::Type::SMA:
+        return new PhysicalModel::Predefined(id, name, PhysicalModel::Predefined::Type::sma);
 
-    case PhysicalModel::PhysicalModel::PMC:
-        return new PhysicalModel::Predefined::PMC(id, name);
-
-    case PhysicalModel::PhysicalModel::PML:
+    case PhysicalModel::PhysicalModel::Type::PML:
         return new PhysicalModel::Volume::PML(id, name, 
 			strToLocalAxes(j.at("localAxes").get<std::string>()));
 
-    case PhysicalModel::PhysicalModel::classic:
+    case PhysicalModel::PhysicalModel::Type::classic:
         return new PhysicalModel::Volume::Classic(id, name,
                 j.at("permittivity").get<double>(),
                 j.at("permeability").get<double>(),
                 j.at("electricConductivity").get<double>(),
                 j.at("magneticConductivity").get<double>());
 
-    case PhysicalModel::PhysicalModel::elecDispersive:
+    case PhysicalModel::PhysicalModel::Type::elecDispersive:
         return new PhysicalModel::Volume::Dispersive(id, name,
                 j.at("filename").get<std::string>());
 
-    case PhysicalModel::PhysicalModel::wire:
+    case PhysicalModel::PhysicalModel::Type::wire:
     {
         std::string wireType = j.at("wireType").get<std::string>();
         if (wireType.compare("Dispersive") == 0) {
@@ -191,7 +191,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
         }
     }
 
-    case PhysicalModel::PhysicalModel::anisotropic:
+    case PhysicalModel::PhysicalModel::Type::anisotropic:
     {
         std::string str = j.at("anisotropicModel").get<std::string>();
         if (str.compare("Crystal")==0) {
@@ -211,7 +211,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
         }
     }
 
-    case PhysicalModel::PhysicalModel::isotropicsibc:
+    case PhysicalModel::PhysicalModel::Type::isotropicsibc:
     {
         std::string sibcType = j.at("surfaceType").get<std::string>();
         if (sibcType.compare("File")==0) {
@@ -224,11 +224,11 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
         }
     }
 
-    case PhysicalModel::PhysicalModel::gap:
+    case PhysicalModel::PhysicalModel::Type::gap:
         return new PhysicalModel::Gap::Gap(id, name,
                 j.at("width").get<double>());
 
-    case PhysicalModel::PhysicalModel::multiport:
+    case PhysicalModel::PhysicalModel::Type::multiport:
     {
         PhysicalModel::Multiport::Multiport::Type mpType =
                 strToMultiportType(j.at("connectorType").get<std::string>());
@@ -693,27 +693,27 @@ Source::Generator::Hardness Parser::strToGeneratorHardness(std::string str) {
 PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
     str = trim(str);
     if (str.compare("PEC")==0) {
-        return PhysicalModel::PhysicalModel::PEC;
+        return PhysicalModel::PhysicalModel::Type::PEC;
     } else if (str.compare("PMC")==0) {
-        return PhysicalModel::PhysicalModel::PMC;
+        return PhysicalModel::PhysicalModel::Type::PMC;
     } else if (str.compare("PML")==0) {
-        return PhysicalModel::PhysicalModel::PML;
+        return PhysicalModel::PhysicalModel::Type::PML;
     } else if (str.compare("SMA")==0) {
-        return PhysicalModel::PhysicalModel::SMA;
+        return PhysicalModel::PhysicalModel::Type::SMA;
     } else if (str.compare("Classic")==0) {
-        return PhysicalModel::PhysicalModel::classic;
+        return PhysicalModel::PhysicalModel::Type::classic;
     } else if (str.compare("Dispersive")==0) {
-        return PhysicalModel::PhysicalModel::elecDispersive;
+        return PhysicalModel::PhysicalModel::Type::elecDispersive;
     } else if (str.compare("Anisotropic")==0) {
-        return PhysicalModel::PhysicalModel::anisotropic;
+        return PhysicalModel::PhysicalModel::Type::anisotropic;
     } else if (str.compare("SIBC")==0) {
-        return PhysicalModel::PhysicalModel::isotropicsibc;
+        return PhysicalModel::PhysicalModel::Type::isotropicsibc;
     } else if (str.compare("Wire")==0) {
-        return PhysicalModel::PhysicalModel::wire;
+        return PhysicalModel::PhysicalModel::Type::wire;
     } else if (str.compare("Connector")==0) {
-        return PhysicalModel::PhysicalModel::multiport;
+        return PhysicalModel::PhysicalModel::Type::multiport;
     } else if (str.find("Thin_gap")==0) {
-        return PhysicalModel::PhysicalModel::gap;
+        return PhysicalModel::PhysicalModel::Type::gap;
     } else {
         throw std::logic_error("Unrecognized material label: " + str);
     }
@@ -900,9 +900,9 @@ Source::Port::TEM::ExcitationMode Parser::strToTEMMode(std::string str) {
 Source::Port::Waveguide::ExcitationMode Parser::strToWaveguideMode(
         std::string str) {
     if (str.compare("TE") == 0) {
-        return Source::Port::Waveguide::TE;
+        return Source::Port::Waveguide::ExcitationMode::TE;
     } else if (str.compare("TM") == 0) {
-        return Source::Port::Waveguide::TM;
+        return Source::Port::Waveguide::ExcitationMode::TM;
     } else {
         throw std::logic_error("Unrecognized exc. mode label: " + str);
     }

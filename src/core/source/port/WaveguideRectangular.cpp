@@ -51,7 +51,7 @@ Math::CVecR3 WaveguideRectangular::getWeight(
         normFactor = n;
     }
     //const Math::Real betaC = sqrt(pow(m,2) + pow(n,2));
-    if (getExcitationMode() == Waveguide::TE) {
+    if (getExcitationMode() == Waveguide::ExcitationMode::TE) {
         res(Math::Constants::x) =   n * cos(m * rPos(Math::Constants::x)) *
                                         sin(n * rPos(Math::Constants::y)) /
                                         normFactor;

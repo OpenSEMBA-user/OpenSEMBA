@@ -60,7 +60,10 @@ add_subdirectory  (src/parsers   obj/src/parsers)
 add_subdirectory  (src/exporters obj/src/exporters)
 add_subdirectories(src/adapter   obj/src)
 
+
+message(STATUS "Creating build system for opensemba with the following options:")
 option(OPENSEMBA_TESTS OFF)
+message(STATUS "OPEMSEMBA_TESTS: " ${OPENSEMBA_TESTS})
 if(OPENSEMBA_TESTS)
 	enable_testing()
     add_subdirectory(test/     obj/test/)

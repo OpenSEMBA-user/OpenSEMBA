@@ -11,10 +11,10 @@ namespace Port {
 
 class Waveguide : public Port {
 public:
-    typedef enum {
+    enum class ExcitationMode {
         TE,
         TM
-    } ExcitationMode;
+    };
 
     Waveguide(Magnitude::Magnitude* magnitude,
               const Geometry::Element::Group<const Geometry::Surf>& elem,

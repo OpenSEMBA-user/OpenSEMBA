@@ -1,5 +1,3 @@
-
-
 #include "Bound.h"
 
 namespace SEMBA {
@@ -31,6 +29,10 @@ Bound::Bound(Id id, Type typeIn) : Identifiable<Id>(id), type(typeIn)
     }
     
     setName(boundName + "_Bound");
+}
+
+Bound::Type Bound::getType() const {
+    return type;
 }
 
 } /* namespace PhysicalModel */

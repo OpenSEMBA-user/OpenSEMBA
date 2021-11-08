@@ -11,7 +11,7 @@
 #include "Data.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/mesh/Geometric.h"
-#include "physicalModel/predefined/PEC.h"
+#include "physicalModel/Predefined.h"
 #include "parsers/Parser.h"
 
 

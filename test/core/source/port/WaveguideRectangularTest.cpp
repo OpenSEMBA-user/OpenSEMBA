@@ -5,12 +5,11 @@
 
 #include "geometry/element/Quadrilateral4.h"
 #include "physicalModel/Group.h"
-#include "physicalModel/bound/PML.h"
-#include "physicalModel/bound/PMC.h"
-#include "physicalModel/bound/PEC.h"
+#include "physicalModel/Bound.h"
 
 using namespace SEMBA;
 using namespace Source;
+using namespace PhysicalModel;
 using namespace std;
 
 class SourcePortWaveguideRectangularTest : public ::testing::Test {
@@ -19,41 +18,35 @@ class SourcePortWaveguideRectangularTest : public ::testing::Test {
         vector<Geometry::BoxI3> quadBoxes = plane.chop();
         Geometry::ElemId id(0);
         for (size_t i = 0; i < quadBoxes.size(); i++) {
-            surfs_.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], nullptr, nullptr));
+            surfs.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], nullptr, nullptr));
         }
 
-        excMode_ = Port::Waveguide::TE;
-        mode_ = pair<size_t,size_t>(1,0);
+        excMode = Port::Waveguide::ExcitationMode::TE;
+        mode = pair<size_t,size_t>(1,0);
 
-        boundType_.add(new PhysicalModel::Bound::PML(MatId(1)));
-        boundType_.add(new PhysicalModel::Bound::PMC(MatId(2)));
-        boundType_.add(new PhysicalModel::Bound::PEC(MatId(3)));
+        boundType.add(new Bound(MatId(1), Bound::Type::pml));
+        boundType.add(new Bound(MatId(2), Bound::Type::pmc));
+        boundType.add(new Bound(MatId(3), Bound::Type::pec));
 
-        bounds_[0][0] = boundType_.getId(MatId(1))
-                        ->castTo<PhysicalModel::Bound::Bound>();
-        bounds_[1][1] = boundType_.getId(MatId(1))
-                        ->castTo<PhysicalModel::Bound::Bound>();
-        bounds_[2][0] = boundType_.getId(MatId(1))
-                        ->castTo<PhysicalModel::Bound::Bound>();
-        bounds_[0][1] = boundType_.getId(MatId(1))
-                        ->castTo<PhysicalModel::Bound::Bound>();
-        bounds_[1][0] = boundType_.getId(MatId(1))
-                        ->castTo<PhysicalModel::Bound::Bound>();
-        bounds_[2][1] = boundType_.getId(MatId(1))
-                        ->castTo<PhysicalModel::Bound::Bound>();
+        bounds[0][0] = boundType.getId(MatId(1))->castTo<Bound>();
+        bounds[1][1] = boundType.getId(MatId(1))->castTo<Bound>();
+        bounds[2][0] = boundType.getId(MatId(1))->castTo<Bound>();
+        bounds[0][1] = boundType.getId(MatId(1))->castTo<Bound>();
+        bounds[1][0] = boundType.getId(MatId(1))->castTo<Bound>();
+        bounds[2][1] = boundType.getId(MatId(1))->castTo<Bound>();
     }
 
 protected:
     Geometry::CoordI3Group cG_;
-    Geometry::Element::Group<Geometry::Surf> surfs_;
-    Port::Waveguide::ExcitationMode excMode_;
-    pair<size_t,size_t> mode_;
-    Port::Bound3 bounds_;
-    PMGroup boundType_;
+    Geometry::Element::Group<Geometry::Surf> surfs;
+    Port::Waveguide::ExcitationMode excMode;
+    pair<size_t,size_t> mode;
+    Port::Bound3 bounds;
+    PMGroup boundType;
 };
 
 TEST_F(SourcePortWaveguideRectangularTest, withoutSymmetries) {
-    Port::WaveguideRectangular wp(nullptr, surfs_, excMode_, mode_);
+    Port::WaveguideRectangular wp(nullptr, surfs, excMode, mode);
 
     EXPECT_EQ(Math::CVecR3(0.0), wp.getOrigin());
     EXPECT_EQ(30.0, wp.getWidth());
@@ -64,5 +57,5 @@ TEST_F(SourcePortWaveguideRectangularTest, withoutSymmetries) {
 
     EXPECT_EQ(Math::CVecR3(0.0,1.0,0.0), wp.getWeight(midPoint));
 
-    EXPECT_EQ(Math::CVecR3(0.0),         wp.getWeight(wp.getOrigin()));
+    EXPECT_EQ(Math::CVecR3(0.0), wp.getWeight(wp.getOrigin()));
 }

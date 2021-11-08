@@ -21,7 +21,7 @@ class PhysicalModel : public virtual Class::Class,
                       public virtual Class::Shareable,
                       public virtual Class::Identifiable<Id> {
 public:
-    enum Type {
+    enum class Type {
         PEC,
         PMC,
         SMA,

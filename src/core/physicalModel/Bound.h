@@ -20,9 +20,11 @@ public:
     };
     
     Bound(Id id, Type type);
+    virtual ~Bound() = default;
 
     SEMBA_CLASS_DEFINE_CLONE(Bound);
     
+    Type getType() const;
 private:
     Type type;
 };

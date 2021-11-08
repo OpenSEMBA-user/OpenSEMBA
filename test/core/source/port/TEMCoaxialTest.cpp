@@ -15,23 +15,23 @@ class SourcePortTEMCoaxialTest : public ::testing::Test {
         vector<Geometry::BoxI3> quadBoxes = plane.chop();
         Geometry::ElemId id(0);
         for (size_t i = 0; i < quadBoxes.size(); i++) {
-            surfs_.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], nullptr, nullptr));
+            surfs.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], nullptr, nullptr));
         }
 
-        excMode_ = Port::TEM::voltage;
+        excMode = Port::TEM::voltage;
         innerRadius_ = 1.0;
         outerRadius_ = 3.0;
     }
 
 protected:
     Geometry::CoordI3Group cG_;
-    Geometry::Element::Group<Geometry::Surf> surfs_;
-    Port::TEM::ExcitationMode excMode_;
+    Geometry::Element::Group<Geometry::Surf> surfs;
+    Port::TEM::ExcitationMode excMode;
     Math::Real innerRadius_, outerRadius_;
 };
 
 TEST_F(SourcePortTEMCoaxialTest, basic) {
-    Port::TEMCoaxial port(nullptr, surfs_, excMode_,
+    Port::TEMCoaxial port(nullptr, surfs, excMode,
             Math::CVecR3(0.0), innerRadius_, outerRadius_);
 
     EXPECT_EQ(Math::CVecR3(0.0,1.0,0.0),

@@ -71,9 +71,10 @@ Data Parser::read() const {
     Data res;
     res.mesh = new Geometry::Mesh::Geometric(Geometry::Grid3(), cG, eG, lG);
 
-    res.physicalModels = new PhysicalModel::Group<>();
-    PhysicalModel::Predefined::PEC* pec =
-            new PhysicalModel::Predefined::PEC(PhysicalModel::Id(1));
+    using namespace PhysicalModel;
+
+    res.physicalModels = new PMGroup();
+    Predefined* pec = new Predefined(Id(1), "PEC", Predefined::Type::pec);
     res.physicalModels->add(pec);
     res.mesh->castTo<Geometry::Mesh::Geometric>()->elems().setModel(pec);
     res.sources = new Source::Group<>();
