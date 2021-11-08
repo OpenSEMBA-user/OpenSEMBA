@@ -11,7 +11,7 @@ namespace Multiport {
 class Multiport : public virtual PhysicalModel {
 public:
     enum Type {
-        // Predefined
+        // PredefinedBase
         shortCircuit = 1,
         openCircuit = 2,
         matched = 3,

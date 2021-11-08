@@ -144,11 +144,11 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
 
     switch (type) {
     case PhysicalModel::PhysicalModel::Type::PEC:
-        return new PhysicalModel::Predefined(id, name, PhysicalModel::Predefined::Type::pec);
+        return new PhysicalModel::PEC(id, name);
     case PhysicalModel::PhysicalModel::Type::PMC:
-        return new PhysicalModel::Predefined(id, name, PhysicalModel::Predefined::Type::pmc);
+        return new PhysicalModel::PMC(id, name);
     case PhysicalModel::PhysicalModel::Type::SMA:
-        return new PhysicalModel::Predefined(id, name, PhysicalModel::Predefined::Type::sma);
+        return new PhysicalModel::SMA(id, name);
 
     case PhysicalModel::PhysicalModel::Type::PML:
         return new PhysicalModel::Volume::PML(id, name, 

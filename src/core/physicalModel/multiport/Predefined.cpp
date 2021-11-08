@@ -1,6 +1,4 @@
-
-
-#include <physicalModel/multiport/Predefined.h>
+#include "physicalModel/multiport/Predefined.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
