@@ -79,10 +79,6 @@ Wire::Wire(const Wire& rhs)
     filename_ = rhs.filename_;
 }
 
-Wire::~Wire() {
-
-}
-
 bool Wire::isSeriesParallel() const {
     return isSeriesParallel_;
 }

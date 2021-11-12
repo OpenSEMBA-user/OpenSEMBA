@@ -15,13 +15,12 @@ class Exporter : public FileSystem::Project {
 public:
     Exporter();
     Exporter(const std::string& name);
+    virtual ~Exporter() = default;
     
 protected:
     void deleteExistentOutputFiles() const;
-    std::size_t determineStepsSaved(
-            const Math::Real savingPeriod,
-            const Math::Real dt) const;
-protected:
+    std::size_t determineStepsSaved(const Math::Real savingPeriod, const Math::Real dt) const;
+    
     std::string getOutputfilename() const;
 	Geometry::ElemR* getBoundary(
             const Math::Constants::CartesianAxis dir,

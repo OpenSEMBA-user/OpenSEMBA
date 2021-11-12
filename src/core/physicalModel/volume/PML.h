@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "geometry/Box.h"
@@ -13,12 +11,10 @@ namespace Volume {
 
 class PML : public virtual Volume {
 public:
-    PML(const Id id,
-        const std::string& name,
-        const Math::Axis::Local orientation);
+    PML(const Id id, const std::string& name, const Math::Axis::Local orientation);
     PML(const PML& rhs);
+    virtual ~PML() = default;
   
-
     SEMBA_CLASS_DEFINE_CLONE(PML);
 
     const Math::Axis::Local getOrientation() const;

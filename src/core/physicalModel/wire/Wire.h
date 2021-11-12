@@ -29,7 +29,7 @@ public:
          const Math::Real radius,
          const std::string filename);
     Wire(const Wire&);
-    virtual ~Wire();
+    virtual ~Wire() = default;
 
     SEMBA_CLASS_DEFINE_CLONE(Wire);
 

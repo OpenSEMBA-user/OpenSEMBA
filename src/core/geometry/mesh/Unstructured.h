@@ -25,7 +25,7 @@ public:
                  const Layer::Group<const Layer::Layer>& =
                      Layer::Group<const Layer::Layer>());
     Unstructured(const Unstructured& param);
-    virtual ~Unstructured();
+    virtual ~Unstructured() = default;
 
     Unstructured& operator=(const Unstructured& rhs);
 

@@ -5,8 +5,11 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
+class PredefinedGeneric : public virtual PhysicalModel {
+};
+
 template <class T>
-class Predefined : public virtual PhysicalModel {
+class Predefined : public PredefinedGeneric {
 public:   
     class PEC;
     class PMC;

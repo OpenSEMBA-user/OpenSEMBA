@@ -29,7 +29,7 @@ public:
                    Layer::Group<const Layer::Layer>(),
                    const BoundTerminations3& = BoundTerminations3());
     Structured(const Structured& param);
-    virtual ~Structured();
+    virtual ~Structured() = default;
 
     Structured& operator=(const Structured& rhs);
 

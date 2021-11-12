@@ -33,10 +33,6 @@ Unstructured::Unstructured(const Unstructured& rhs)
     elems_.reassignPointers(this->layers());
 }
 
-Unstructured::~Unstructured() {
-
-}
-
 Unstructured& Unstructured::operator=(const Unstructured& rhs) {
     if(this == &rhs) {
         return *this;

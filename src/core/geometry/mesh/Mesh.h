@@ -20,8 +20,8 @@ class Mesh : public virtual Class::Class,
              public virtual Class::Cloneable,
              public virtual Class::Shareable {
 public:
-    Mesh();
-    virtual ~Mesh();
+    Mesh() = default;
+    virtual ~Mesh() = default;
 
     virtual void applyScalingFactor(const Math::Real factor) = 0;
     virtual BoxR3 getBoundingBox() const = 0;

@@ -21,7 +21,7 @@
 #include "physicalModel/volume/Classic.h"
 #include "physicalModel/volume/PML.h"
 #include "physicalModel/wire/Wire.h"
-#include "physicalModel/gap/Gap.h"
+#include "physicalModel/Gap.h"
 #include "source/port/WaveguideRectangular.h"
 #include "source/port/TEMCoaxial.h"
 #include "outputRequest/BulkCurrent.h"
@@ -225,8 +225,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
     }
 
     case PhysicalModel::PhysicalModel::Type::gap:
-        return new PhysicalModel::Gap::Gap(id, name,
-                j.at("width").get<double>());
+        return new PhysicalModel::Gap(id, name, j.at("width").get<double>());
 
     case PhysicalModel::PhysicalModel::Type::multiport:
     {

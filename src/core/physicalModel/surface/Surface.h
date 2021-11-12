@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "physicalModel/PhysicalModel.h"
@@ -10,8 +8,8 @@ namespace Surface {
 
 class Surface : public virtual PhysicalModel {
 public:
-    Surface();
-    virtual ~Surface();
+    Surface() = default;
+    virtual ~Surface() = default;
 };
 
 } /* namespace Surface */

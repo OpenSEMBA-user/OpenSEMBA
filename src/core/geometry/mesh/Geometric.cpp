@@ -30,10 +30,6 @@ Geometric::Geometric(const Geometric& rhs)
 
 }
 
-Geometric::~Geometric() {
-
-}
-
 Geometric& Geometric::operator=(const Geometric& rhs) {
     if(this == &rhs) {
         return *this;

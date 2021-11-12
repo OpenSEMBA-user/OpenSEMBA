@@ -39,10 +39,6 @@ Structured::Structured(const Structured& rhs)
     elems_.reassignPointers(this->layers());
 }
 
-Structured::~Structured() {
-
-}
-
 Structured& Structured::operator=(const Structured& rhs) {
     if(this == &rhs) {
         return *this;
