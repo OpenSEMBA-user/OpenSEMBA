@@ -271,7 +271,7 @@ void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Geometric& mesh, const jso
 		PhysicalModel::PhysicalModel* mat = readPhysicalModel(it);
 		pMG.addId(mat);
 		CoordId cId( it.at("coordIds").get<int>() );
-		const CoordR3* coord[1] = { mesh.coords().getId(cId) };
+		const CoordR3* coord[1] = { mesh.coords().getId(cId)->get() };
 		ElemId eId(0);
 		NodR* node = new NodR(eId, coord, nullptr, pMG.getId(mat->getId()));
 		
@@ -400,7 +400,7 @@ Coordinate::Group<CoordR3> Parser::readCoordinates(const json& j) const {
         Math::CVecR3 pos;
         std::stringstream ss(it->get<std::string>());
         ss >> id >> pos(0) >> pos(1) >> pos(2);
-        res.add(new CoordR3(id, pos));
+        res.add(std::make_unique<CoordR3>(id, pos));
     }
     return res;
 }

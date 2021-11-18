@@ -19,7 +19,7 @@ Structured::Structured(
         const Layer::Group<const Layer::Layer>& layers,
         const BoundTerminations3& bounds)
 :   grid_(grid),
-    coords_(cG.cloneElems()),
+    coords_(cG),
     elems_(elem.cloneElems()),
     layers_(layers.cloneElems()),
     bounds_(bounds) {
@@ -30,7 +30,7 @@ Structured::Structured(
 
 Structured::Structured(const Structured& rhs)
 :   grid_(rhs.grid_),
-    coords_(rhs.coords().cloneElems()),
+    coords_(rhs.coords()),
     elems_(rhs.elems().cloneElems()),
     layers_(rhs.layers().cloneElems()),
     bounds_(rhs.bounds()) {
@@ -45,7 +45,7 @@ Structured& Structured::operator=(const Structured& rhs) {
     }
 
     grid_ = rhs.grid_;
-    coords_ = rhs.coords().cloneElems();
+    coords_ = rhs.coords();
     elems_ = rhs.elems().cloneElems();
     layers_ = rhs.layers().cloneElems();
     bounds_ = rhs.bounds();
@@ -63,15 +63,10 @@ void Structured::applyScalingFactor(const Math::Real factor) {
 Unstructured* Structured::getMeshUnstructured() const {
     Unstructured* res = new Unstructured;
 
-    std::vector<CoordR3*> newCoords;
-    newCoords.reserve(coords().size());
-    for (std::size_t i = 0; i < coords().size(); i++) {
-        CoordR3* newCoord = coords()(i)->toUnstructured(grid_);
-        if (newCoord != nullptr) {
-            newCoords.push_back(newCoord);
-        }
+    for (auto const& coord : coords()) {
+        auto newCoord = std::make_unique<CoordR3>(coord->toUnstructured(grid_));
+        res->coords().add(newCoord);
     }
-    res->coords().add(newCoords);
 
     std::vector<ElemR*> newElems;
     newElems.reserve(elems().size());

@@ -1,16 +1,14 @@
-
-
 #pragma once
 
 #include <set>
+#include <type_traits>
 
 #ifdef _MSC_VER
 #pragma warning(disable:4250)
 #endif
 
 #include "Coordinate.h"
-#include "group/Cloneable.h"
-#include "group/Identifiable.h"
+#include "group/IdentifiableUnique.h"
 
 namespace SEMBA {
 namespace Geometry {
@@ -25,54 +23,29 @@ struct CoordComparator {
 };
 
 template<typename C = Coord>
-class Group : public SEMBA::Group::Cloneable<C>,
-              public SEMBA::Group::Identifiable<C, Id> {
+class Group : public IdentifiableUnique<C> {
 public:
-    Group();
+    Group() = default;
+    
     Group(const std::vector<Math::CVecR3>&);
     Group(const std::vector<Math::CVecI3>&);
-    template<typename C2>
-    Group(C2*);
-    template<typename C2>
-    Group(const std::vector<C2*>&);
-    template<typename C2>
-    Group(SEMBA::Group::Group<C2>&);
-    template<typename C2>
-    Group(const SEMBA::Group::Group<C2>&);
-    Group(SEMBA::Group::Group<C>&);
-    template<typename C2>
-    Group(SEMBA::Group::Group<C2>&&);
-    Group(SEMBA::Group::Group<C>&&);
-    virtual ~Group();
+    
+    Group(const Group<C>&);
 
-    SEMBA_GROUP_DEFINE_CLONE(Group, C);
+    Group(Group<C>&&);
+    
+    Group<C>& operator=(const Group<C>& rhs);
+    Group<C>& operator=(Group<C>&& rhs);
 
-    Group& operator=(SEMBA::Group::Group<C>&);
-    Group& operator=(SEMBA::Group::Group<C>&&);
-
-    void clear();
+    virtual ~Group() = default;
 
     const CoordR3* getPos(const Math::CVecR3& pos) const;
     const CoordI3* getPos(const Math::CVecI3& pos) const;
 
-	SEMBA::Group::Group<const C> getAllInPos(const Math::CVecI3& pos) const;
+	std::vector<const C*> getAllInPos(const Math::CVecI3& pos) const;
 
-
-    using SEMBA::Group::Identifiable<C,Id>::add;
-    SEMBA::Group::Group<C> add(SEMBA::Group::Group<C>&);
-    SEMBA::Group::Group<C> add(SEMBA::Group::Group<C>&&);
-    
-    const C*               addPos(const Math::CVecR3&,
-                                  const bool = false);
-    SEMBA::Group::Group<C> addPos(const std::vector<Math::CVecR3>&,
-                                  const bool = false);
-    const C*               addPos(const Math::CVecI3&,
-                                  const bool = false);
-    SEMBA::Group::Group<C> addPos(const std::vector<Math::CVecI3>&,
-                                  const bool = false);
-
-    void remove(const std::size_t&);
-    void remove(const std::vector<std::size_t>&);
+    template<typename VEC>
+    void addPos(const VEC&, const bool = false);
 
     void applyScalingFactor(const Math::Real factor);
    

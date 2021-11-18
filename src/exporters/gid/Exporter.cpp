@@ -194,10 +194,9 @@ void Exporter::writeElements_(
     }
     Geometry::CoordR3Group cG;
     std::map<Geometry::CoordId, Math::UInt> mapCoords;
-    for (std::map<Geometry::CoordId, Geometry::CoordR3*>::const_iterator
-         it = pos.begin(); it != pos.end(); ++it) {
-        cG.add(it->second);
-        mapCoords[it->first] = cG.size();
+    for (auto const& entry: pos) {
+        cG.add(std::make_unique<Geometry::CoordR3>(*entry.second));
+        mapCoords[entry.first] = cG.size();
     }
     writeCoordinates_(cG);
     beginElements_();
@@ -298,11 +297,11 @@ GiD_ResultLocation Exporter::getGiDResultLocation_() const {
 
 void Exporter::writeCoordinates_(Geometry::CoordR3Group& cG)  {
     GiD_fBeginCoordinates(meshFile_);
-    for (std::size_t i = 0; i < cG.size(); i++) {
+    for (auto const& c: cG) {
         GiD_fWriteCoordinates(meshFile_, ++coordCounter_,
-                (*cG(i))(Math::Constants::x),
-				(*cG(i))(Math::Constants::y),
-				(*cG(i))(Math::Constants::z));
+                (*c)(Math::Constants::x),
+				(*c)(Math::Constants::y),
+				(*c)(Math::Constants::z));
     }
     GiD_fEndCoordinates(meshFile_);
 }
