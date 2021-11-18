@@ -53,7 +53,7 @@ private:
     std::multiset<const CoordR3*, CoordComparator> indexUnstr_;
     std::multiset<const CoordI3*, CoordComparator> indexStr_;
 
-    void postprocess_(const std::size_t i);
+    void updateIndices();
 };
 
 } /* namespace Coordinate */

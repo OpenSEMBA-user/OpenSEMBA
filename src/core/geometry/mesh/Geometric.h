@@ -13,7 +13,7 @@ public:
     Geometric();
     Geometric(const Grid3& grid);
     Geometric(const Grid3& grid,
-              const Coordinate::Group<const CoordR3>& cG,
+              const Coordinate::Group<CoordR3>& cG,
               const Element::Group<const ElemR>& elem,
               const Layer::Group<const Layer::Layer>& = Layer::Group<const Layer::Layer>());
     Geometric(const Geometric& param);

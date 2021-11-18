@@ -7,15 +7,14 @@ using namespace SEMBA;
 using namespace Geometry;
 
 TEST_F(GeometryCoordinateGroupTest, Copy){
-    Coordinate::Group<>* original = new Coordinate::Group<>(buildCoordGroup());
-    Coordinate::Group<> copied;
-    copied = *original;
+    CoordR3Group copied;
+    {
+        auto original(buildCoordGroup());
+        copied = original;
 
-    EXPECT_TRUE(checkTypes(*original));
-    EXPECT_TRUE(checkTypes(copied));
-
-    delete original;
-
+        EXPECT_TRUE(checkTypes(original));
+        EXPECT_TRUE(checkTypes(copied));
+    }
     EXPECT_TRUE(checkTypes(copied));
 }
 

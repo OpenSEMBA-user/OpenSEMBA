@@ -19,7 +19,7 @@ class Structured;
 
 class Unstructured : public Mesh {
 public:
-    Unstructured();
+    Unstructured() = default;
     Unstructured(const Coordinate::Group<CoordR3>& cG,
                  const Element::Group<const ElemR>& elem,
                  const Layer::Group<const Layer::Layer>& =

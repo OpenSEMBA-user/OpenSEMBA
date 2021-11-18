@@ -86,7 +86,7 @@ IdentifiableUnique<T>::getId(const IdentifiableUnique<T>::Id& id)
         return it;
     }
     else {
-        throw typename Error::Id::NotExists<Id>(id);
+        throw typename Group::Error::Id::NotExists<Id>(id);
     }
 }
 

@@ -17,7 +17,7 @@ protected:
         return res;
     }
 
-    bool checkTypes(const SEMBA::Geometry::Coordinate::Group<>& rhs) {
+    bool checkTypes(const SEMBA::Geometry::CoordR3Group& rhs) {
         bool res = true;
         for (auto const& coord: rhs) {
             res &= coord->is<SEMBA::Geometry::Coord>();

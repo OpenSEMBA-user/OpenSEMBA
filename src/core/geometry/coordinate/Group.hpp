@@ -20,7 +20,7 @@ template<typename C>
 Group<C>::Group(const Group<C>& rhs) : 
     IdentifiableUnique<C>(rhs)
 {
-    postprocess_(0);
+    updateIndices();
 }
 
 template<typename C>
@@ -29,18 +29,14 @@ Group<C>& Group<C>::operator=(const Group<C>& rhs) {
         return *this;
     }
     IdentifiableUnique<C>::operator=(rhs);
-    postprocess_(0);
+    updateIndices();
     return *this;
 }
 
 template<typename C>
 Group<C>::Group(Group&& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
     IdentifiableUnique<C>::operator=(std::move(rhs));
-    postprocess_(0);
-    return *this;
+    updateIndices();
 }
 
 template<typename C>
@@ -49,15 +45,14 @@ Group<C>& Group<C>::operator=(Group<C>&& rhs) {
         return *this;
     }
     IdentifiableUnique<C>::operator=(std::move(rhs));
-    postprocess_(0);
+    updateIndices();
     return *this;
 }
 
 template<typename C>
 const CoordR3* Group<C>::getPos(const Math::CVecR3& position) const {
-    std::multiset<const CoordR3*, CoordComparator>::iterator it;
     CoordR3 aux(position);
-    it = indexUnstr_.find(&aux);
+    auto it = indexUnstr_.find(&aux);
     if (it != indexUnstr_.end()) {
         return *it;
     } else {
@@ -67,9 +62,8 @@ const CoordR3* Group<C>::getPos(const Math::CVecR3& position) const {
 
 template<typename C>
 const CoordI3* Group<C>::getPos(const Math::CVecI3& position) const {
-    std::multiset<const CoordI3*, CoordComparator>::iterator it;
     CoordI3 aux(position);
-    it = indexStr_.find(&aux);
+    auto it = indexStr_.find(&aux);
     if (it != indexStr_.end()) {
         return *it;
     } else {
@@ -111,22 +105,21 @@ void Group<C>::addPos(const VEC& newPosition, const bool canOverlap)
 template<typename C>
 void Group<C>::applyScalingFactor(const Math::Real factor) 
 {
-    for (auto& item : this->items_) {
-        if (this->get(i)->template is<CoordR3>()) {
-            CoordR3* ptr = this->get(i)->template castTo<CoordR3>();
-            *ptr *= factor;
+    for (auto& c : *this) {
+        if (c->is<CoordR3>()) {
+            *c *= factor;
         }
     }
 }
 
 template<typename C>
-void Group<C>::postprocess_(const std::size_t fistStep) {
-    for (std::size_t i = fistStep; i < this->size(); i++) {
-        if (this->get(i)->template is<CoordR3>()) {
-            indexUnstr_.insert(this->get(i)->template castTo<CoordR3>());
+void Group<C>::updateIndices() {
+    for (auto const& c: *this) {
+        if (c->is<CoordR3>()) {
+            indexUnstr_.insert(c.get()->castTo<CoordR3>());
         }
-        if (this->get(i)->template is<CoordI3>()) {
-            indexStr_.insert(this->get(i)->template castTo<CoordI3>());
+        if (c->is<CoordI3>()) {
+            indexStr_.insert(c.get()->castTo<CoordI3>());
         }
     }
 }

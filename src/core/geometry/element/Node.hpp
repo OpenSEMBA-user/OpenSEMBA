@@ -37,7 +37,8 @@ Node<T>::Node(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = cG.getPos(pos[i]);
         if (v_[i] == nullptr) {
-            v_[i] = cG.addPos(pos[i]);
+            cG.addPos(pos[i]);
+            v_[i] = cG.getPos(pos[i]);
         }
     }
 }

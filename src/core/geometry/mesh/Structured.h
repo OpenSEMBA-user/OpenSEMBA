@@ -23,7 +23,7 @@ class Structured : public virtual Mesh {
 public:
     Structured(const Grid3& grid);
     Structured(const Grid3& grid,
-               const Coordinate::Group<const CoordI3>& cG,
+               const Coordinate::Group<CoordI3>& cG,
                const Element::Group<const ElemI>& elem,
                const Layer::Group<const Layer::Layer>& =
                    Layer::Group<const Layer::Layer>(),

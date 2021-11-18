@@ -912,7 +912,7 @@ Element::Group<Nod> Parser::readCoordIdAsNodes(
     std::vector<ElemId> nodeIds;
     for (auto it = j.begin(); it != j.end(); ++it) {
         CoordId coordId( it->get<int>() );
-        const CoordR3* coord = mesh.coords().getId(coordId);
+        const CoordR3* coord = mesh.coords().getId(coordId)->get();
         NodR* node = new NodR(ElemId(0), &coord);
         mesh.elems().addId(node);
         nodeIds.push_back(node->getId());

@@ -49,7 +49,7 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid,
     Structured* res = new Structured(grid);
 
     for (auto const& coord : coords()) {
-        auto newCoord = std::make_unique<CoordI3>(coord->toStructured(grid));
+        auto newCoord = std::make_unique<CoordI3>(*coord->toStructured(grid));
         res->coords().add(newCoord);
     }
 

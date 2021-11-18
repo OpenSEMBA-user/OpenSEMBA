@@ -258,7 +258,7 @@ void Group<E>::reassignPointers(
             Element<T>* elem = this->get(i)->template castTo< Element<T> >();
             for (std::size_t j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordId vId = elem->getV(j)->getId();
-                elem->setV(j, vNew.getId(vId));
+                elem->setV(j, vNew.getId(vId)->get());
             }
         }
     }

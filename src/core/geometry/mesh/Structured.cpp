@@ -14,7 +14,7 @@ Structured::Structured(const Grid3& grid)
 
 Structured::Structured(
         const Grid3& grid,
-        const Coordinate::Group<const CoordI3>& cG,
+        const Coordinate::Group<CoordI3>& cG,
         const Element::Group<const ElemI>& elem,
         const Layer::Group<const Layer::Layer>& layers,
         const BoundTerminations3& bounds)
@@ -64,7 +64,7 @@ Unstructured* Structured::getMeshUnstructured() const {
     Unstructured* res = new Unstructured;
 
     for (auto const& coord : coords()) {
-        auto newCoord = std::make_unique<CoordR3>(coord->toUnstructured(grid_));
+        auto newCoord = std::make_unique<CoordR3>(*coord->toUnstructured(grid_));
         res->coords().add(newCoord);
     }
 

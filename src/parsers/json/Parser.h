@@ -151,7 +151,7 @@ Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
         }
         vPtr.resize(vId.size(), nullptr);
         for (size_t i = 0; i < vId.size(); ++i) {
-            vPtr[i] = cG.getId(vId[i]);
+            vPtr[i] = cG.getId(vId[i])->get();
         }
 
         res.add(new T(elemId, vPtr.data(), layerPtr, matPtr));
