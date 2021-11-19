@@ -34,12 +34,6 @@ Group<C>& Group<C>::operator=(const Group<C>& rhs) {
 }
 
 template<typename C>
-Group<C>::Group(Group&& rhs) {
-    IdentifiableUnique<C>::operator=(std::move(rhs));
-    updateIndices();
-}
-
-template<typename C>
 Group<C>& Group<C>::operator=(Group<C>&& rhs) {
     if (this == &rhs) {
         return *this;

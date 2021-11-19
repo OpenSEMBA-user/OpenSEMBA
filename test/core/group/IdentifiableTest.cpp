@@ -1,6 +1,18 @@
+#include "gtest/gtest.h"
+#include "geometry/layer/Group.h"
 
+class IdentifiableTest : public ::testing::Test {
+public:
+    IdentifiableTest() {};
+    virtual ~IdentifiableTest() {};
 
-#include "IdentifiableTest.h"
+protected:
+    std::vector<SEMBA::Geometry::Layer::Layer*> newLayersVector() const;
+
+    void areEqual(
+        const std::vector<SEMBA::Geometry::Layer::Layer*>& vec,
+        const SEMBA::Geometry::Layer::Group<>& layers);
+};
 
 using namespace std;
 

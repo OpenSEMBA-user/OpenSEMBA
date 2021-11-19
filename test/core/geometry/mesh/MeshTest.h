@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "gtest/gtest.h"
@@ -13,7 +12,7 @@ using namespace SEMBA;
 using namespace Geometry;
 using namespace Math;
 
-class GeometryMeshTest {
+class MeshTest {
 public:
     void SetUp() {
         CoordId coordId(1);

@@ -33,10 +33,11 @@ public:
 
     IdentifiableUnique() = default;
     IdentifiableUnique(const IdentifiableUnique<T>&);
-    
+    IdentifiableUnique(IdentifiableUnique<T>&&) noexcept = default;
     virtual ~IdentifiableUnique() = default;
 
     IdentifiableUnique<T>& operator=(const IdentifiableUnique<T>&);
+    IdentifiableUnique<T>& operator=(IdentifiableUnique<T>&&) = default;
     
     typename Container::iterator begin() { return items_.begin(); }
     typename Container::iterator end() { return items_.end(); }
@@ -49,7 +50,7 @@ public:
     bool existId(const Id& id) const { return items_.count(id) != 0; }
     
     void add(const std::unique_ptr<T>& item);
-    void transfer(std::unique_ptr<T>&& item);
+    void add(std::unique_ptr<T>&& item);
 
     std::size_t size() const { return items_.size(); }
 
@@ -112,7 +113,7 @@ void IdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
 }
 
 template<typename T>
-void IdentifiableUnique<T>::transfer(std::unique_ptr<T>&& elem)
+void IdentifiableUnique<T>::add(std::unique_ptr<T>&& elem)
 {
     if (!items_.insert(std::move(elem)).second) {
         throw Group::Error::Id::Duplicated<Id>(elem->getId());

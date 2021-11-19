@@ -6,10 +6,6 @@ namespace SEMBA {
 namespace Geometry {
 namespace Mesh {
 
-Geometric::Geometric() {
-
-}
-
 Geometric::Geometric(const Grid3& grid)
 :   grid_(grid) {
 

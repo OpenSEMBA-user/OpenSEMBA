@@ -32,7 +32,7 @@ public:
     
     Group(const Group<C>&);
 
-    Group(Group<C>&&);
+    Group(Group<C>&&) noexcept = default;
     
     Group<C>& operator=(const Group<C>& rhs);
     Group<C>& operator=(Group<C>&& rhs);

@@ -10,7 +10,7 @@ namespace Mesh {
 
 class Geometric : public Unstructured {
 public:
-    Geometric();
+    Geometric() = default;
     Geometric(const Grid3& grid);
     Geometric(const Grid3& grid,
               const Coordinate::Group<CoordR3>& cG,

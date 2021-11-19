@@ -1,7 +1,20 @@
+#include "MeshTest.h"
+#include "geometry/mesh/Geometric.h"
 
-#include "GeometricTest.h"
+class MeshGeometricTest : public ::testing::Test,
+    public MeshTest {
+public:
+    void SetUp() {
+        Grid3 grid;
+        MeshTest::SetUp();
+        mesh_ = Mesh::Geometric(grid, cG_, eG_, lG_);
+    }
 
-TEST_F(GeometryMeshGeometricTest, ctor) {
+protected:
+    Mesh::Geometric mesh_;
+};
+
+TEST_F(MeshGeometricTest, ctor) {
     EXPECT_EQ(cG_.size(), mesh_.coords().size());
 
     EXPECT_EQ(eG_.size(), mesh_.elems().size());
