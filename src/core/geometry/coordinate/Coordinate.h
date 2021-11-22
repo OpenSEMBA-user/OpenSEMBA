@@ -38,7 +38,7 @@ public:
     Coordinate(const Id id_, const Math::Vector::Cartesian<T,D>& pos);
     explicit Coordinate(const Math::Vector::Cartesian<T,D>& pos);
     Coordinate(const Coordinate& rhs);
-    virtual ~Coordinate();
+    virtual ~Coordinate() = default;
 
     Coordinate<T,D>* clone() const;
 

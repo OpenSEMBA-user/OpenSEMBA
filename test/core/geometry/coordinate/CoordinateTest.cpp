@@ -22,7 +22,6 @@ protected:
 
 using namespace SEMBA;
 using namespace Geometry;
-
 TEST_F(CoordinateGroupTest, copy_ctor)
 {
     auto original(buildCoordGroup());
@@ -39,26 +38,73 @@ TEST_F(CoordinateGroupTest, copy_ctor)
 TEST_F(CoordinateGroupTest, move_ctor)
 {
     auto original(buildCoordGroup());
-
-    auto pos
-    auto id = original.getPos()
-
-    EXPECT_EQ()
-
     auto origSize = original.size();
+    
     auto moved(std::move(original));
 
     EXPECT_EQ(0, original.size());
     EXPECT_EQ(origSize, moved.size());
 }
 
-TEST_F(CoordinateGroupTest, getByPos)
+TEST_F(CoordinateGroupTest, copy_assignment)
 {
-    auto grp = buildCoordGroup();
+    auto original(buildCoordGroup());
+    auto origSize = original.size();
+    auto copied = original;
+
+    EXPECT_EQ(copied.size(), original.size());
+    for (auto const& c : copied) {
+        auto id = c->getId();
+        EXPECT_EQ(c->pos(), (*original.getId(id))->pos());
+    }
+}
+
+TEST_F(CoordinateGroupTest, move_assignment)
+{
+    auto original(buildCoordGroup());
+    auto origSize = original.size();
+
+    auto moved = std::move(original);
+
+    EXPECT_EQ(0, original.size());
+    EXPECT_EQ(origSize, moved.size());
+}
+
+TEST_F(CoordinateGroupTest, add_and_get_position)
+{
+    auto grp(buildCoordGroup());
+    
+    Math::CVecR3 newPos(11.0);
+    EXPECT_EQ(nullptr, grp.getPos(newPos));
+
+    grp.addPos(newPos);
+    EXPECT_EQ(newPos, grp.getPos(newPos)->pos());
+
+}
+
+TEST_F(CoordinateGroupTest, get_all_positions) 
+{
+    auto grp(buildCoordGroup());
+    
     for (auto const& coord : grp) {
         Math::CVecR3 pos = coord->pos();
         const CoordR3* found = grp.getPos(pos);
         ASSERT_NE(nullptr, found);
         EXPECT_EQ(pos, found->pos());
     }
+}
+
+TEST_F(CoordinateGroupTest, get_positions_after_move)
+{
+    auto original(buildCoordGroup());
+
+    auto pos = original.getId(CoordId(1))->get()->pos();
+    
+    auto coord = original.getPos(pos);
+    EXPECT_EQ(pos, coord->pos());
+
+    auto moved(std::move(original));
+    EXPECT_EQ(pos, coord->pos());
+
+    EXPECT_EQ(nullptr, original.getPos(pos));
 }

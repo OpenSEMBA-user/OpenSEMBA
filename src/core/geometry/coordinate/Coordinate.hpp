@@ -33,17 +33,10 @@ Coordinate<T,D>::Coordinate(const Coordinate& rhs)
 }
 
 template<class T, std::size_t D>
-Coordinate<T,D>::~Coordinate() {
-
-}
-
-template<class T, std::size_t D>
-Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) {
-    if (this == &rhs)
-        return *this;
+Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs) 
+{
     setId(rhs.getId());
     Math::Vector::Cartesian<T,D>::operator=(rhs);
-
     return *this;
 }
 

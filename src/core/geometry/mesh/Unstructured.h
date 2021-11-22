@@ -25,9 +25,11 @@ public:
                  const Layer::Group<const Layer::Layer>& =
                      Layer::Group<const Layer::Layer>());
     Unstructured(const Unstructured& param);
+    Unstructured(Unstructured&&) noexcept;
     virtual ~Unstructured() = default;
 
-    Unstructured& operator=(const Unstructured& rhs);
+    Unstructured& operator=(const Unstructured&);
+    Unstructured& operator=(Unstructured&&) noexcept;
 
     SEMBA_CLASS_DEFINE_CLONE(Unstructured);
 

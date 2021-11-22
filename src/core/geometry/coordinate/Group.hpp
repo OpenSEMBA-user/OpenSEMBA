@@ -17,30 +17,34 @@ Group<C>::Group(const std::vector<Math::CVecI3>& pos)
 }
 
 template<typename C> 
-Group<C>::Group(const Group<C>& rhs) : 
-    IdentifiableUnique<C>(rhs)
+Group<C>::Group(const Group<C>& rhs) 
 {
+    coords_ = rhs.coords_;
     updateIndices();
 }
 
 template<typename C>
 Group<C>& Group<C>::operator=(const Group<C>& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    IdentifiableUnique<C>::operator=(rhs);
+    coords_ = rhs.coords_;
     updateIndices();
     return *this;
 }
 
+
 template<typename C>
-Group<C>& Group<C>::operator=(Group<C>&& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    IdentifiableUnique<C>::operator=(std::move(rhs));
-    updateIndices();
-    return *this;
+void Group<C>::add(const std::unique_ptr<C>& coord)
+{
+    coords_.add(coord);
+    auto it = coords_.getId(coord.get()->getId());
+    updateIndexEntry(it->get());
+}
+
+template<typename C>
+void Group<C>::add(std::unique_ptr<C>&& coord)
+{
+    auto ptr = coord.get();
+    coords_.add(std::move(coord));
+    updateIndexEntry(ptr);
 }
 
 template<typename C>
@@ -65,35 +69,18 @@ const CoordI3* Group<C>::getPos(const Math::CVecI3& position) const {
     }
 }
 
-template<typename C>
-std::vector<const C*> Group<C>::getAllInPos(const Math::CVecI3& pos) const {
-	std::multiset<const CoordI3*, CoordComparator>::iterator it;
-	CoordI3 aux(pos);
-	SEMBA::Group::Group<const C> res;
-	it = indexStr_.find(&aux);
-	while (it != indexStr_.end()) {
-		if ((*it)->pos() == pos) {
-			res.add(*it);
-			++it;
-		} else {
-			break;
-		}
-	}
-	return res;
-}
-
 template<typename C> template<typename VEC>
-void Group<C>::addPos(const VEC& newPosition, const bool canOverlap) 
+void Group<C>::addPos(VEC newPosition) 
 {
-    //if (canOverlap || (getPos(newPosition) == nullptr)) {
-    //    if constexpr ((std::is_same<C, CoordI3> && std::is_same<VEC, Math::CVecI3>) ||
-    //                  (std::is_same<C, CoordR3> && std::is_same<VEC, Math::CVecR3>)) {
-    //        addWithNewId(std::make_unique<C>(newPosition));
-    //    }
-    //    else {
-    //        __builtin_unreachable();
-    //    }
-    //} 
+    CoordId newId;
+    if (this->size() == 0) {
+        newId = CoordId(1);
+    }
+    else {
+        auto backIt = --this->end();
+        newId = ++(backIt->get()->getId());
+    }
+    add(std::make_unique<C>(newId, newPosition));
 }
 
 template<typename C>
@@ -109,12 +96,17 @@ void Group<C>::applyScalingFactor(const Math::Real factor)
 template<typename C>
 void Group<C>::updateIndices() {
     for (auto const& c: *this) {
-        if (c->is<CoordR3>()) {
-            indexUnstr_.insert(c.get()->castTo<CoordR3>());
-        }
-        if (c->is<CoordI3>()) {
-            indexStr_.insert(c.get()->castTo<CoordI3>());
-        }
+        updateIndexEntry(c.get());
+    }
+}
+
+template<typename C>
+void Group<C>::updateIndexEntry(const C* c) {
+    if (c->is<CoordR3>()) {
+        indexUnstr_.insert(c->castTo<CoordR3>());
+    }
+    if (c->is<CoordI3>()) {
+        indexStr_.insert(c->castTo<CoordI3>());
     }
 }
 

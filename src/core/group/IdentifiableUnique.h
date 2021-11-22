@@ -30,6 +30,8 @@ public:
     };
 
     typedef std::set<std::unique_ptr<T>, idComparator> Container;
+    typedef typename std::set<std::unique_ptr<T>, idComparator>::iterator iterator;
+    typedef typename std::set<std::unique_ptr<T>, idComparator>::const_iterator const_iterator;
 
     IdentifiableUnique() = default;
     IdentifiableUnique(const IdentifiableUnique<T>&);
@@ -39,13 +41,14 @@ public:
     IdentifiableUnique<T>& operator=(const IdentifiableUnique<T>&);
     IdentifiableUnique<T>& operator=(IdentifiableUnique<T>&&) = default;
     
-    typename Container::iterator begin() { return items_.begin(); }
-    typename Container::iterator end() { return items_.end(); }
-    typename Container::const_iterator begin() const { return items_.begin(); }
-    typename Container::const_iterator end() const { return items_.end(); }
-
-    typename Container::iterator getId(const Id& id);
-    typename Container::const_iterator getId(const Id& id) const;
+    iterator begin() { return items_.begin(); }
+    iterator end() { return items_.end(); }
+    
+    const_iterator begin() const { return items_.begin(); }
+    const_iterator end() const { return items_.end(); }
+    
+    iterator getId(const Id& id);
+    const_iterator getId(const Id& id) const;
 
     bool existId(const Id& id) const { return items_.count(id) != 0; }
     
@@ -69,9 +72,6 @@ IdentifiableUnique<T>::IdentifiableUnique(const IdentifiableUnique<T>& rhs)
 template<typename T>
 IdentifiableUnique<T>& IdentifiableUnique<T>::operator=(const IdentifiableUnique<T>& rhs)
 {
-    if (this == &rhs) {
-        return *this;
-    }
     for (auto const & elem : rhs) {
         add(elem);
     }

@@ -20,25 +20,41 @@ Unstructured::Unstructured(const Coordinate::Group<CoordR3>& cG,
     elems_.reassignPointers( layers_ );
 }
 
-Unstructured::Unstructured(const Unstructured& rhs)
-:   coords_(rhs.coords()),
+Unstructured::Unstructured(const Unstructured& rhs) :   
+    coords_(rhs.coords()),
     elems_(rhs.elems().cloneElems()),
-    layers_(rhs.layers().cloneElems()) {
-
+    layers_(rhs.layers().cloneElems()) 
+{
     elems_.reassignPointers(this->coords());
     elems_.reassignPointers(this->layers());
 }
 
-Unstructured& Unstructured::operator=(const Unstructured& rhs) {
-    if(this == &rhs) {
-        return *this;
-    }
+Unstructured::Unstructured(Unstructured&& rhs) noexcept : 
+    elems_(rhs.elems().cloneElems()),
+    layers_(rhs.layers().cloneElems())
+{
+    coords_ = std::move(rhs.coords_),
+    elems_.reassignPointers(this->layers());
+}
 
+Unstructured& Unstructured::operator=(const Unstructured& rhs) 
+{
     coords_ = rhs.coords();
     elems_ = rhs.elems().cloneElems();
     layers_ = rhs.layers().cloneElems();
 
     elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
+
+    return *this;
+}
+
+Unstructured& Unstructured::operator=(Unstructured&& rhs) noexcept
+{
+    coords_ = std::move(rhs.coords_);
+    elems_ = rhs.elems().cloneElems();
+    layers_ = rhs.layers().cloneElems();
+
     elems_.reassignPointers(this->layers());
 
     return *this;

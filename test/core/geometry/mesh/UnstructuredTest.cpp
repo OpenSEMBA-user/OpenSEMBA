@@ -26,17 +26,21 @@ TEST_F(MeshUnstructuredTest, ctor)
 TEST_F(MeshUnstructuredTest, copy_assignment)
 {
     Mesh::Unstructured mesh = mesh_;
-    for (auto const& copiedCoord : mesh.coords()) {
-        auto coordPtr = mesh_.coords().getId(copiedCoord->getId());
-        EXPECT_EQ(*coordPtr, copiedCoord);
+    for (auto const& copiedCoordIt : mesh.coords()) {
+        const CoordR3* copiedCoord = copiedCoordIt.get();
+
+        auto id = copiedCoord->getId();
+        auto coordIt = mesh_.coords().getId(id);
+        const CoordR3* originalCoord = coordIt->get();
+
+        EXPECT_EQ(*copiedCoord, *originalCoord);
     }
 }
 
 TEST_F(MeshUnstructuredTest, move_assignment)
 {
     Mesh::Unstructured mesh = std::move(mesh_);
-    for (auto const& copiedCoord : mesh.coords()) {
-        auto coordPtr = mesh_.coords().getId(copiedCoord->getId());
-        EXPECT_EQ(*coordPtr, copiedCoord);
-    }
+    
+    EXPECT_EQ(0, mesh_.coords().size());
+
 }

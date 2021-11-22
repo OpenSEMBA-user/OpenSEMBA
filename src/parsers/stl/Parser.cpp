@@ -12,11 +12,9 @@ Data Parser::read() const {
 
     // Reads coordinates.
     std::string label;
-    std::vector<Math::CVecR3> vertices;
     std::size_t nLines = std::count(std::istreambuf_iterator<char>(stl),
                                     std::istreambuf_iterator<char>(), '\n');
-    vertices.reserve(nLines);
-	
+    Geometry::Coordinate::Group<Geometry::CoordR3> cG;
     stl.seekg(0); // Rewinds.
     while (stl.peek() != EOF) {
         stl >> label;
@@ -25,11 +23,11 @@ Data Parser::read() const {
             stl >> vertex(Math::Constants::x)
                 >> vertex(Math::Constants::y)
                 >> vertex(Math::Constants::z);
-            vertices.push_back(vertex);
+            cG.addPos(vertex);
         }
     }
-    Geometry::Coordinate::Group<Geometry::CoordR3> cG;
-    cG.addPos(vertices);
+    
+    
 
     // Reads Elements and Layers.
 	stl.clear();
