@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "math/Types.h"
@@ -17,8 +15,7 @@ namespace Geometry {
 namespace Mesh {
 
 class Mesh : public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Shareable {
+             public virtual Class::Cloneable {
 public:
     Mesh() = default;
     virtual ~Mesh() = default;

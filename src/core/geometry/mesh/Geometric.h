@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Unstructured.h"
@@ -16,10 +14,12 @@ public:
               const CoordR3Group& cG,
               const Element::Group<const ElemR>& elem,
               const LayerGroup& = LayerGroup());
-    Geometric(const Geometric& param);
+    Geometric(const Geometric&);
+    Geometric(Geometric&&) = default;
     virtual ~Geometric() = default;
 
     Geometric& operator=(const Geometric& rhs);
+    Geometric& operator=(Geometric&&) = default;
 
     SEMBA_CLASS_DEFINE_CLONE(Geometric);
 

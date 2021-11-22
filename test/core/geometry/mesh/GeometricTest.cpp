@@ -23,3 +23,14 @@ TEST_F(MeshGeometricTest, ctor) {
 
     EXPECT_EQ(lG_.size(), mesh_.layers().size());
 }
+
+TEST_F(MeshGeometricTest, move_assignment)
+{
+    Mesh::Geometric mesh = std::move(mesh_);
+
+    EXPECT_EQ(0, mesh_.coords().size());
+
+    EXPECT_EQ(2, mesh.elems().size());
+    EXPECT_EQ(0, mesh_.elems().size());
+
+}

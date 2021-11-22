@@ -20,9 +20,9 @@ class Structured;
 class Unstructured : public Mesh {
 public:
     Unstructured() = default;
-    Unstructured(const Coordinate::Group<CoordR3>& cG,
+    Unstructured(const CoordR3Group& cG,
                  const Element::Group<const ElemR>& elem,
-                 const Layer::Group<Layer::Layer>& = Layer::Group<Layer::Layer>());
+                 const LayerGroup & = LayerGroup());
     Unstructured(const Unstructured& param);
     Unstructured(Unstructured&&) = default;
     virtual ~Unstructured() = default;
