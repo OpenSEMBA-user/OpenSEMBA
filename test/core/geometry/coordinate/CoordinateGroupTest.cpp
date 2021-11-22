@@ -17,7 +17,6 @@ protected:
         }
         return res;
     }
-
 };
 
 using namespace SEMBA;
@@ -107,4 +106,24 @@ TEST_F(CoordinateGroupTest, get_positions_after_move)
     EXPECT_EQ(pos, coord->pos());
 
     EXPECT_EQ(nullptr, original.getPos(pos));
+}
+
+TEST_F(CoordinateGroupTest, polymorphic_add) 
+{
+    Coordinate::Group<> grp;
+    grp.add(std::make_unique<CoordR3>(CoordId(1), Math::CVecR3(1.0)));
+    grp.add(std::make_unique<CoordI3>(CoordId(2), Math::CVecI3(2)));
+
+    EXPECT_EQ(2, grp.size());
+}
+
+TEST_F(CoordinateGroupTest, polymorphic_sizeOf)
+{
+    CoordGroup grp;
+    grp.add(std::make_unique<CoordR3>(CoordId(1), Math::CVecR3(1.0)));
+    grp.add(std::make_unique<CoordI3>(CoordId(2), Math::CVecI3(2)));
+    grp.add(std::make_unique<CoordI3>(CoordId(3), Math::CVecI3(3)));
+
+    EXPECT_EQ(1, grp.sizeOf<CoordR3>());
+    EXPECT_EQ(2, grp.sizeOf<CoordI3>());
 }

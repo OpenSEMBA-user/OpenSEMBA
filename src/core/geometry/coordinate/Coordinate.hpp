@@ -1,15 +1,8 @@
-
-
 #include "Coordinate.h"
 
 namespace SEMBA {
 namespace Geometry {
 namespace Coordinate {
-
-template<class T, std::size_t D>
-Coordinate<T,D>::Coordinate() {
-
-}
 
 template<class T, std::size_t D>
 Coordinate<T,D>::Coordinate(const Id id,

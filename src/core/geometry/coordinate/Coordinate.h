@@ -19,12 +19,10 @@ class Base;
 typedef Class::Identification<Base> Id;
 
 class Base : public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Shareable,
              public virtual Class::Identifiable<Id> {
 public:
-    Base();
-    virtual ~Base();
+    Base() = default;
+    virtual ~Base() = default;
 
     virtual bool operator==(const Base& rhs) const;
     virtual bool operator!=(const Base& rhs) const;
@@ -34,7 +32,7 @@ template <class T, std::size_t D>
 class Coordinate : public virtual Base,
                    public virtual Math::Vector::Cartesian<T,D> {
 public:
-    Coordinate();
+    Coordinate() = default;
     Coordinate(const Id id_, const Math::Vector::Cartesian<T,D>& pos);
     explicit Coordinate(const Math::Vector::Cartesian<T,D>& pos);
     Coordinate(const Coordinate& rhs);

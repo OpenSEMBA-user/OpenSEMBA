@@ -17,34 +17,45 @@ Group<C>::Group(const std::vector<Math::CVecI3>& pos)
 }
 
 template<typename C> 
-Group<C>::Group(const Group<C>& rhs) 
+Group<C>::Group(const Group<C>& rhs) :
+    IdentifiableUnique<C>(rhs)
 {
-    coords_ = rhs.coords_;
     updateIndices();
 }
 
 template<typename C>
 Group<C>& Group<C>::operator=(const Group<C>& rhs) {
-    coords_ = rhs.coords_;
+    IdentifiableUnique<C>::operator=(rhs);
     updateIndices();
     return *this;
 }
 
 
 template<typename C>
-void Group<C>::add(const std::unique_ptr<C>& coord)
+typename IdentifiableUnique<C>::iterator 
+Group<C>::add(const std::unique_ptr<C>& coord)
 {
-    coords_.add(coord);
-    auto it = coords_.getId(coord.get()->getId());
+    auto it = IdentifiableUnique<C>::add(coord);
     updateIndexEntry(it->get());
+    return it;
 }
 
 template<typename C>
-void Group<C>::add(std::unique_ptr<C>&& coord)
+typename IdentifiableUnique<C>::iterator 
+Group<C>::add(std::unique_ptr<C>&& coord)
 {
-    auto ptr = coord.get();
-    coords_.add(std::move(coord));
-    updateIndexEntry(ptr);
+    auto it = IdentifiableUnique<C>::add(std::move(coord));
+    updateIndexEntry(it->get());
+    return it;
+}
+
+template<typename C>
+typename IdentifiableUnique<C>::iterator
+Group<C>::addAndAssignId(std::unique_ptr<C>&& coord)
+{
+    auto it = IdentifiableUnique<C>::addAndAssignId(std::move(coord));
+    updateIndexEntry(it->get());
+    return it;
 }
 
 template<typename C>

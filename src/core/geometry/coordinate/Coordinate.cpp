@@ -1,18 +1,8 @@
-
-
 #include "Coordinate.h"
 
 namespace SEMBA {
 namespace Geometry {
 namespace Coordinate {
-
-Base::Base() {
-
-}
-
-Base::~Base() {
-
-}
 
 bool Base::operator ==(const Base& rhs) const {
     if (typeid(*this) == typeid(rhs)) {
