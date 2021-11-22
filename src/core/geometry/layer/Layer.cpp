@@ -1,5 +1,3 @@
-
-
 #include "Layer.h"
 
 #include <cassert>
@@ -9,10 +7,6 @@
 namespace SEMBA {
 namespace Geometry {
 namespace Layer {
-
-Layer::Layer() {
-
-}
 
 Layer::Layer(const Id id, const std::string& name)
 :   Identifiable<Id>(id) {
@@ -26,10 +20,6 @@ Layer::Layer(const std::string& name) {
 Layer::Layer(const Layer& rhs)
 :   Identifiable<Id>(rhs) {
     name_ = rhs.name_;
-}
-
-Layer::~Layer() {
-
 }
 
 bool Layer::operator ==(const Layer& rhs) const {

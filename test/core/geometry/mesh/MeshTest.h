@@ -6,8 +6,6 @@
 #include "geometry/mesh/Mesh.h"
 #include "geometry/element/Group.h"
 
-using namespace std;
-
 using namespace SEMBA;
 using namespace Geometry;
 using namespace Math;
@@ -21,7 +19,7 @@ public:
         cG_.add(std::make_unique<CoordR3>(coordId++, CVecR3(0.0, 1.0, 0.0)));
         cG_.add(std::make_unique<CoordR3>(coordId++, CVecR3(1.0, 0.0, 0.0)));
         
-        vector<ElemR*> elems;
+        std::vector<ElemR*> elems;
         const CoordR3* vTet[4] = {
                 cG_.getId(CoordId(1))->get(),
                 cG_.getId(CoordId(2))->get(),
@@ -42,7 +40,7 @@ public:
 protected:
     CoordR3Group cG_;
     ElemRGroup eG_;
-    Layer::Group<> lG_;
+    LayerGroup lG_;
 
 };
 

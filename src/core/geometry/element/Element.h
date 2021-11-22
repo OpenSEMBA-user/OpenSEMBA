@@ -137,21 +137,21 @@ public:
     virtual void setV(const std::size_t i, const Coordinate::Coordinate<T,3>*);
 
     virtual Element<Math::Int >* toStructured(
-            const Coordinate::Group<CoordI3>&,
+            const CoordI3Group&,
             const Grid3&,
             const Math::Real = Grid3::tolerance) const;
     virtual Element<Math::Real>* toUnstructured(
-            const Coordinate::Group<CoordR3>&,
+            const CoordR3Group&,
             const Grid3&) const;
 
 protected:
 
     bool vertexInCell (const Grid3& grid, const Math::Real tol) const;
     bool vertexInBound() const;
-    const CoordI3** vertexToStructured(const Coordinate::Group<CoordI3>& cG,
+    const CoordI3** vertexToStructured(const CoordI3Group& cG,
                                        const Grid3& grid,
                                        const Math::Real tol) const;
-    const CoordR3** vertexToUnstructured(const Coordinate::Group<CoordR3>& cG,
+    const CoordR3** vertexToUnstructured(const CoordR3Group& cG,
                                          const Grid3& grid) const;
 
 };

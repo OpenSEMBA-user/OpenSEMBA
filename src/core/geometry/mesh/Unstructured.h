@@ -22,14 +22,13 @@ public:
     Unstructured() = default;
     Unstructured(const Coordinate::Group<CoordR3>& cG,
                  const Element::Group<const ElemR>& elem,
-                 const Layer::Group<const Layer::Layer>& =
-                     Layer::Group<const Layer::Layer>());
+                 const Layer::Group<Layer::Layer>& = Layer::Group<Layer::Layer>());
     Unstructured(const Unstructured& param);
-    Unstructured(Unstructured&&) noexcept;
+    Unstructured(Unstructured&&) = default;
     virtual ~Unstructured() = default;
 
     Unstructured& operator=(const Unstructured&);
-    Unstructured& operator=(Unstructured&&) noexcept;
+    Unstructured& operator=(Unstructured&&) = default;
 
     SEMBA_CLASS_DEFINE_CLONE(Unstructured);
 
@@ -55,9 +54,9 @@ public:
     virtual void reassign( Element::Group<const Elem>& );
 
 private:
-	Coordinate::Group<CoordR3> coords_;
+	CoordR3Group coords_;
 	Element::Group<ElemR> elems_;
-	Layer::Group<Layer::Layer> layers_;
+	LayerGroup layers_;
 };
 
 } /* namespace Mesh */

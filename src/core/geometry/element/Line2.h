@@ -58,10 +58,10 @@ public:
 
     void setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord);
 
-    ElemI* toStructured(const Coordinate::Group<CoordI3>&,
+    ElemI* toStructured(const CoordI3Group&,
                         const Grid3&,
                         const Math::Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
+    ElemR* toUnstructured(const CoordR3Group&,
                           const Grid3&) const;
 
 private:

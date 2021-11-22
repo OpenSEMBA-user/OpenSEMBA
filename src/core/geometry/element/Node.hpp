@@ -106,7 +106,7 @@ void Node<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Node<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
+ElemI* Node<T>::toStructured(const CoordI3Group& cG,
                              const Grid3& grid, const Math::Real tol) const {
     const CoordI3** v = this->vertexToStructured(cG, grid, tol);
     if (v == nullptr) {
@@ -121,7 +121,7 @@ ElemI* Node<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Node<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
+ElemR* Node<T>::toUnstructured(const CoordR3Group& cG,
                                const Grid3& grid) const {
     const CoordR3** v = this->vertexToUnstructured(cG, grid);
     if (v == nullptr) {

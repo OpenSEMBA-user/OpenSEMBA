@@ -145,7 +145,7 @@ Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
             matPtr = nullptr;
         }
         if (layerId != Geometry::LayerId(0)) {
-            layerPtr = lG.getId(layerId);
+            layerPtr = lG.getId(layerId)->get();
         } else {
             layerPtr = nullptr;
         }

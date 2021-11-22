@@ -14,40 +14,37 @@ Structured::Structured(const Grid3& grid)
 
 Structured::Structured(
         const Grid3& grid,
-        const Coordinate::Group<CoordI3>& cG,
+        const CoordI3Group& cG,
         const Element::Group<const ElemI>& elem,
-        const Layer::Group<const Layer::Layer>& layers,
-        const BoundTerminations3& bounds)
-:   grid_(grid),
+        const LayerGroup& layers,
+        const BoundTerminations3& bounds) :   
+    grid_(grid),
     coords_(cG),
     elems_(elem.cloneElems()),
-    layers_(layers.cloneElems()),
-    bounds_(bounds) {
-
+    layers_(layers),
+    bounds_(bounds) 
+{
     elems_.reassignPointers(this->coords());
     elems_.reassignPointers(this->layers());
 }
 
 Structured::Structured(const Structured& rhs)
 :   grid_(rhs.grid_),
-    coords_(rhs.coords()),
+    coords_(rhs.coords_),
     elems_(rhs.elems().cloneElems()),
-    layers_(rhs.layers().cloneElems()),
-    bounds_(rhs.bounds()) {
+    layers_(rhs.layers_),
+    bounds_(rhs.bounds_) {
 
     elems_.reassignPointers(this->coords());
     elems_.reassignPointers(this->layers());
 }
 
-Structured& Structured::operator=(const Structured& rhs) {
-    if(this == &rhs) {
-        return *this;
-    }
-
+Structured& Structured::operator=(const Structured& rhs) 
+{
     grid_ = rhs.grid_;
     coords_ = rhs.coords();
     elems_ = rhs.elems().cloneElems();
-    layers_ = rhs.layers().cloneElems();
+    layers_ = rhs.layers();
     bounds_ = rhs.bounds();
 
     elems_.reassignPointers(this->coords());
@@ -77,7 +74,7 @@ Unstructured* Structured::getMeshUnstructured() const {
         }
     }
     res->elems().add(newElems);
-    res->layers() = layers().cloneElems();
+    res->layers() = layers();
     return res;
 }
 

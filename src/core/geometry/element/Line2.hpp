@@ -124,7 +124,7 @@ void Line2<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Line2<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
+ElemI* Line2<T>::toStructured(const CoordI3Group& cG,
                               const Grid3& grid, const Math::Real tol) const {
     const CoordI3** coords = this->vertexToStructured(cG, grid, tol);
     if (coords == nullptr) {
@@ -139,7 +139,7 @@ ElemI* Line2<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
 }
 
 template<class T>
-ElemR* Line2<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
+ElemR* Line2<T>::toUnstructured(const CoordR3Group& cG,
                                 const Grid3& grid) const {
     const CoordR3** coords = this->vertexToUnstructured(cG, grid);
     if (coords == nullptr) {

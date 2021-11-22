@@ -32,15 +32,15 @@ Data Parser::read() const {
     // Reads Elements and Layers.
 	stl.clear();
 	stl.seekg(0); // Rewinds.
-	Geometry::Layer::Group<Geometry::Layer::Layer> lG;
+	Geometry::LayerGroup lG;
     Geometry::Element::Group<Geometry::ElemR> eG;
     while (stl.peek() != EOF) {
         stl >> label;
         if (label == "solid") {
             std::string layerName;
             stl >> layerName;
-            Geometry::Layer::Layer* lay = new Geometry::Layer::Layer(layerName);
-            lG.addId(lay);
+            auto lay = lG.addAndAssignId(
+                std::make_unique<Geometry::Layer::Layer>(layerName))->get();
             std::string line;
             while (stl.peek() != EOF) {
                 std::getline(stl, line);

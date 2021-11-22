@@ -107,15 +107,13 @@ void Exporter::writeMesh_(const Data* smb) {
         grid = nullptr;
     }
     // Writes materials.
-    const Geometry::Layer::Group<>& lay = mesh->layers();
-    for (std::size_t i = 0; i < lay.size(); i++) {
+    for (auto const& lay : mesh->layers()) {
         for (std::size_t j = 0; j < mat->size(); j++) {
             const MatId matId = (*mat)(j)->getId();
-            const Geometry::LayerId layId = lay(i)->getId();
+            const Geometry::LayerId layId = lay->getId();
             const std::string name =
-            		preName + (*mat)(j)->getName() + "@" + lay(i)->getName();
-            Group::Group<const Geometry::ElemR> elem =
-            		mesh->elems().getMatLayerId(matId, layId);
+            		preName + (*mat)(j)->getName() + "@" + lay->getName();
+            Group::Group<const Geometry::ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
             writeAllElements_(elem, name);
         }
     }

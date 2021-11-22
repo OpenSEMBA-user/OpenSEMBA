@@ -21,29 +21,31 @@ class Unstructured;
 
 class Structured : public virtual Mesh {
 public:
+    Structured() = default;
     Structured(const Grid3& grid);
     Structured(const Grid3& grid,
-               const Coordinate::Group<CoordI3>& cG,
+               const CoordI3Group& cG,
                const Element::Group<const ElemI>& elem,
-               const Layer::Group<const Layer::Layer>& =
-                   Layer::Group<const Layer::Layer>(),
-                   const BoundTerminations3& = BoundTerminations3());
-    Structured(const Structured& param);
+               const LayerGroup& = LayerGroup(), 
+               const BoundTerminations3& = BoundTerminations3());
+    Structured(const Structured&);
+    Structured(Structured&&) = default;
     virtual ~Structured() = default;
 
-    Structured& operator=(const Structured& rhs);
+    Structured& operator=(const Structured&);
+    Structured& operator=(Structured&&) = default;
 
     SEMBA_CLASS_DEFINE_CLONE(Structured);
 
     BoundTerminations3&         bounds() { return bounds_; }
     Grid3&                      grid  () { return grid_; }
-    Coordinate::Group<CoordI3>& coords() { return coords_; }
+    CoordI3Group& coords() { return coords_; }
     Element::Group<ElemI>&      elems () { return elems_; }
     Layer::Group<>&             layers() { return layers_; }
 
     const BoundTerminations3&         bounds() const { return bounds_; }
     const Grid3&                      grid  () const { return grid_; }
-    const Coordinate::Group<CoordI3>& coords() const { return coords_; }
+    const CoordI3Group& coords() const { return coords_; }
     const Element::Group<ElemI>&      elems () const { return elems_; }
     const Layer::Group<>&             layers() const { return layers_; }
 
@@ -60,7 +62,7 @@ public:
 
 private:
     Grid3 grid_;
-	Coordinate::Group<CoordI3> coords_;
+	CoordI3Group coords_;
 	Element::Group<ElemI> elems_;
 	Layer::Group<> layers_;
 	BoundTerminations3 bounds_;

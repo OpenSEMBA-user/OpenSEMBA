@@ -15,17 +15,14 @@ namespace Layer {
 class Layer;
 typedef Class::Identification<Layer> Id;
 
-class Layer : public virtual Class::Class,
-              public virtual Class::Cloneable,
-              public virtual Class::Shareable,
+class Layer final : public virtual Class::Class,
               public virtual Class::Identifiable<Id> {
 public:
-    Layer();
+    Layer() = default;
     Layer(const Id id, const std::string& name);
     Layer(const std::string& name);
     Layer(const Layer& rhs);
-    virtual ~Layer();
-
+    
     SEMBA_CLASS_DEFINE_CLONE(Layer);
 
     virtual bool operator==(const Layer& rhs) const;

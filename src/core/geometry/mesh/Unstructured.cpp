@@ -9,12 +9,12 @@ namespace SEMBA {
 namespace Geometry {
 namespace Mesh {
 
-Unstructured::Unstructured(const Coordinate::Group<CoordR3>& cG,
+Unstructured::Unstructured(const CoordR3Group& cG,
                            const Element::Group<const ElemR>& elem,
-                           const Layer::Group<const Layer::Layer>& layers) :   
+                           const LayerGroup& layers) :   
     coords_(cG),
     elems_(elem.cloneElems()),
-    layers_(layers.cloneElems()) 
+    layers_(layers) 
 {
     elems_.reassignPointers( coords_ );
     elems_.reassignPointers( layers_ );
@@ -23,17 +23,9 @@ Unstructured::Unstructured(const Coordinate::Group<CoordR3>& cG,
 Unstructured::Unstructured(const Unstructured& rhs) :   
     coords_(rhs.coords()),
     elems_(rhs.elems().cloneElems()),
-    layers_(rhs.layers().cloneElems()) 
+    layers_(rhs.layers()) 
 {
     elems_.reassignPointers(this->coords());
-    elems_.reassignPointers(this->layers());
-}
-
-Unstructured::Unstructured(Unstructured&& rhs) noexcept : 
-    elems_(rhs.elems().cloneElems()),
-    layers_(rhs.layers().cloneElems())
-{
-    coords_ = std::move(rhs.coords_),
     elems_.reassignPointers(this->layers());
 }
 
@@ -41,7 +33,7 @@ Unstructured& Unstructured::operator=(const Unstructured& rhs)
 {
     coords_ = rhs.coords();
     elems_ = rhs.elems().cloneElems();
-    layers_ = rhs.layers().cloneElems();
+    layers_ = rhs.layers();
 
     elems_.reassignPointers(this->coords());
     elems_.reassignPointers(this->layers());
@@ -49,19 +41,8 @@ Unstructured& Unstructured::operator=(const Unstructured& rhs)
     return *this;
 }
 
-Unstructured& Unstructured::operator=(Unstructured&& rhs) noexcept
+Structured* Unstructured::getMeshStructured(const Grid3& grid, const Math::Real tol) const 
 {
-    coords_ = std::move(rhs.coords_);
-    elems_ = rhs.elems().cloneElems();
-    layers_ = rhs.layers().cloneElems();
-
-    elems_.reassignPointers(this->layers());
-
-    return *this;
-}
-
-Structured* Unstructured::getMeshStructured(const Grid3& grid,
-        const Math::Real tol) const {
     Structured* res = new Structured(grid);
 
     for (auto const& coord : coords()) {
@@ -78,7 +59,7 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid,
         }
     }
     res->elems().add(newElems);
-    res->layers() = layers().cloneElems();
+    res->layers() = layers();
     return res;
 }
 

@@ -87,7 +87,7 @@ Mesh::Geometric* Parser::readGeometricMesh(const PMGroup& physicalModels, const 
 {
     Grid3 grid = readGrids(j);
     Layer::Group<> layers = readLayers(j);
-    Coordinate::Group<CoordR3> coords = readCoordinates(j);
+    CoordR3Group coords = readCoordinates(j);
     Element::Group<ElemR> elements = readElements(physicalModels, layers, coords, j);
     return new Mesh::Geometric(grid, coords, elements, layers);
 }
@@ -372,28 +372,30 @@ Math::Constants::CartesianAxis Parser::strToCartesianAxis(std::string str) {
     }
 }
 
-Layer::Group<> Parser::readLayers(const json& j) const {
+LayerGroup Parser::readLayers(const json& j) const {
     if (j.find("layers") == j.end()) {
         throw std::logic_error("layers object was not found.");
     }
 
-    Layer::Group<> res;
-    const json layers = j.at("layers");
-    for (json::const_iterator it = layers.begin(); it != layers.end(); ++it) {
-        res.add(new Layer::Layer(
-                Layer::Id(it->at("id").get<int>()),
-                it->at("name").get<std::string>()));
+    LayerGroup res;
+    for (auto const& it: j.at("layers")) {
+        res.add(
+            std::make_unique<Layer::Layer>(
+                Layer::Id(it.at("id").get<int>()),
+                it.at("name").get<std::string>()
+            )
+        );
     }
     return res;
 }
 
-Coordinate::Group<CoordR3> Parser::readCoordinates(const json& j) const {
+CoordR3Group Parser::readCoordinates(const json& j) const {
 
     if (j.find("coordinates") == j.end()) {
         throw std::logic_error("Coordinates label was not found.");
     }
 
-    Coordinate::Group<CoordR3> res;
+    CoordR3Group res;
     const json& c = j.at("coordinates").get<json>();
     for (json::const_iterator it = c.begin(); it != c.end(); ++it) {
         CoordId id;

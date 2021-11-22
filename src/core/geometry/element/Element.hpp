@@ -155,14 +155,14 @@ void Element<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Element<T>::toStructured(const Coordinate::Group<CoordI3>& cG,
+ElemI* Element<T>::toStructured(const CoordI3Group& cG,
                                 const Grid3& grid,
                                 const Math::Real tol) const {
     return nullptr;
 }
 
 template<class T>
-ElemR* Element<T>::toUnstructured(const Coordinate::Group<CoordR3>& cG,
+ElemR* Element<T>::toUnstructured(const CoordR3Group& cG,
                                   const Grid3& grid) const {
     return nullptr;
 }
@@ -207,7 +207,7 @@ bool Element<T>::vertexInBound() const {
 
 template<class T>
 const CoordI3** Element<T>::vertexToStructured(
-        const Coordinate::Group<CoordI3>& cG,
+        const CoordI3Group& cG,
         const Grid3& grid,
         const Math::Real tol) const {
     if (!this->is<ElemR>()) {
@@ -238,7 +238,7 @@ const CoordI3** Element<T>::vertexToStructured(
 
 template<class T>
 const CoordR3** Element<T>::vertexToUnstructured(
-        const Coordinate::Group<CoordR3>& cG,
+        const CoordR3Group& cG,
         const Grid3& grid) const {
     if (!this->is<ElemI>()) {
         return nullptr;

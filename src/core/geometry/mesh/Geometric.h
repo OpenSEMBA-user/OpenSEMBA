@@ -12,10 +12,10 @@ class Geometric : public Unstructured {
 public:
     Geometric() = default;
     Geometric(const Grid3& grid);
-    Geometric(const Grid3& grid,
-              const Coordinate::Group<CoordR3>& cG,
+    Geometric(const Grid3& grid, 
+              const CoordR3Group& cG,
               const Element::Group<const ElemR>& elem,
-              const Layer::Group<const Layer::Layer>& = Layer::Group<const Layer::Layer>());
+              const LayerGroup& = LayerGroup());
     Geometric(const Geometric& param);
     virtual ~Geometric() = default;
 

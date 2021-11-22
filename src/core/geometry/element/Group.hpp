@@ -265,11 +265,12 @@ void Group<E>::reassignPointers(
 }
 
 template<typename E>
-void Group<E>::reassignPointers(
-        const SEMBA::Geometry::Layer::Group<Layer>& lNew) {
+void Group<E>::reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew) 
+{
     for (std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->getLayer() != nullptr) {
-            this->get(i)->setLayer(lNew.getId(this->get(i)->getLayerId()));
+            LayerId layerId = this->get(i)->getLayerId();
+            this->get(i)->setLayer(lNew.getId(layerId)->get());
         }
     }
 }

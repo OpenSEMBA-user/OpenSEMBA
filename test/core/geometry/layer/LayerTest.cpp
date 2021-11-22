@@ -6,12 +6,6 @@ using namespace SEMBA;
 using namespace Geometry;
 
 class GeometryLayersLayerTest : public ::testing::Test {
-public:
-    GeometryLayersLayerTest() {};
-    virtual ~GeometryLayersLayerTest() {};
-
-protected:
-
 };
 
 TEST_F(GeometryLayersLayerTest, comparison) {

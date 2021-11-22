@@ -59,27 +59,24 @@ void Exporter::writeMesh_(const Data* smb) {
             << ">" << std::endl;
     outFile << "  " << "<Collection>" << std::endl;
 
-    const Geometry::Layer::Group<Geometry::Layer::Layer>& lay = mesh->layers();
     std::size_t part = 0;
     // Writes materials.
     if (mat->size() > 0) {
-        for (std::size_t i = 0; i < lay.size(); i++) {
-            const Geometry::LayerId layId = lay(i)->getId();
+        for (auto const& lay: mesh->layers()) {
+            const Geometry::LayerId layId = lay->getId();
             for (std::size_t j = 0; j < mat->size(); j++) {
                 const MatId matId = (*mat)(j)->getId();
-                const std::string name = preName + (*mat)(j)->getName() +
-                                         "@" + lay(i)->getName();
+                const std::string name = preName + (*mat)(j)->getName() + "@" + lay->getName();
                 Group::Group<const Geometry::ElemR> elem = 
                     mesh->elems().getMatLayerId(matId, layId);
                 writeFile_(elem, makeValid_(name), outFile, part);
             }
         }
     } else {
-        for (std::size_t i = 0; i < lay.size(); i++) {
-            const Geometry::LayerId layId = lay(i)->getId();
-            Group::Group<const Geometry::ElemR> elem =
-                mesh->elems().getLayerId(layId);
-            const std::string name = preName + lay(i)->getName();
+        for (auto const& lay: mesh->layers()) {
+            const Geometry::LayerId layId = lay->getId();
+            Group::Group<const Geometry::ElemR> elem = mesh->elems().getLayerId(layId);
+            const std::string name = preName + lay->getName();
             writeFile_(elem, makeValid_(name), outFile, part);
         }
     }

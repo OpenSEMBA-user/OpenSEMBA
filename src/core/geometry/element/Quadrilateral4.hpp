@@ -129,7 +129,7 @@ void Quadrilateral4<T>::setV(const std::size_t i,
 
 template<class T>
 ElemI* Quadrilateral4<T>::toStructured(
-        const Coordinate::Group<CoordI3>& cG,
+        const CoordI3Group& cG,
         const Grid3& grid, const Math::Real tol) const {
     const CoordI3** coords = this->vertexToStructured(cG, grid, tol);
     if (coords == nullptr) {
@@ -145,7 +145,7 @@ ElemI* Quadrilateral4<T>::toStructured(
 
 template<class T>
 ElemR* Quadrilateral4<T>::toUnstructured(
-        const Coordinate::Group<CoordR3>& cG,
+        const CoordR3Group& cG,
         const Grid3& grid) const {
     const CoordR3** coords = this->vertexToUnstructured(cG, grid);
     if (coords == nullptr) {
