@@ -1,11 +1,3 @@
-
-/* =================== Matrix procedures ========================
-   + Mathematical matrices class.
-   + Contains two implementations:
-     - Dynamic (Dynamic matrices): std::size_t can change in run time.
-     - Static  (Static  matrices): std::size_t set at compilation time.
-   ============================================================== */
-
 #pragma once
 
 #ifndef MATRICES_MODES

@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <vector>
@@ -7,7 +5,6 @@
 
 #include "Box.h"
 #include "math/util/Real.h"
-#include "math/vector/CVecI3Fractional.h"
 
 namespace SEMBA {
 namespace Geometry {
@@ -23,14 +20,14 @@ class Grid {
 public:
     static const Math::Real tolerance;
 
-    Grid();
+    Grid() = default;
     Grid(const BoxRD&  boundingBox,
          const CVecRD& dxyz);
     Grid(const BoxRD&  boundingBox,
          const CVecID& dims);
     Grid(const std::vector<Math::Real> positions[D]);
     Grid(const Grid& grid);
-    ~Grid ();
+    virtual ~Grid () = default;
 
     Grid& operator=(const Grid& cGrid);
     void setPos(const std::vector<Math::Real> pos[D]);
@@ -96,9 +93,6 @@ public:
             const bool approx = true,
             const Math::Real tol = tolerance,
             bool* err = nullptr) const;
-
-    Math::CVecI3Fractional getCVecI3Fractional (const CVecRD& xyz,
-                                                bool& err) const;
 
     Math::Int getCell(const std::size_t dir,
                       const Math::Real  x,

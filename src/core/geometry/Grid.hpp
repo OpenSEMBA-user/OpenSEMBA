@@ -11,11 +11,6 @@ template<std::size_t D>
 const Math::Real Grid<D>::tolerance = 1e-2;
 
 template<std::size_t D>
-Grid<D>::Grid() {
-
-}
-
-template<std::size_t D>
 Grid<D>::Grid(const BoxRD& box,
               const CVecRD& dxyz) {
     CVecRD origin = box.getMin();
@@ -66,11 +61,6 @@ Grid<D>::Grid(const Grid<D>& grid) {
     for (std::size_t i = 0; i < D; i++) {
         pos_[i] = grid.pos_[i];
     }
-}
-
-template<std::size_t D>
-Grid<D>::~Grid() {
-
 }
 
 template<std::size_t D>
@@ -513,44 +503,6 @@ std::pair<Math::Vector::Cartesian<Math::Int,D>,
         }
     }
     return std::make_pair(cell, dist);
-}
-
-template<std::size_t D>
-Math::CVecI3Fractional Grid<D>::getCVecI3Fractional (const CVecRD& xyz,
-                                                     bool& isInto) const{
-    Math::CVecI3 ijk   ;
-    Math::CVecR3 length;
-    isInto = true  ;
-    for(std::size_t dir=0; dir<D; ++dir){
-         if(!pos_[dir].empty()){
-            if(xyz(dir) <= pos_[dir].front()){
-                if(Math::Util::equal(pos_[dir].front(),xyz(dir))){
-                    ijk(dir) = 0;
-                    length(dir) = 0.0;
-                }else{
-                    isInto = false;
-                    break;
-                }
-            }else if(pos_[dir].back()<=xyz(dir)) {
-                if(Math::Util::equal(pos_[dir].back(),xyz(dir))){
-                    ijk(dir) = pos_[dir].size()-1;
-                    length(dir) = 0.0;
-                }else{
-                    isInto = false;
-                    break;
-                }
-            }else{
-                long int n = 0;
-                while(pos_[dir][n] <= xyz(dir)){
-                    ++n;
-                }
-                ijk(dir) = n-1;
-                length(dir) = (xyz(dir)-pos_[dir][ijk(dir)])
-                               /getStep(dir,ijk(dir));
-            }
-        }
-    }
-    return Math::CVecI3Fractional (ijk,length);
 }
 
 template<std::size_t D>
