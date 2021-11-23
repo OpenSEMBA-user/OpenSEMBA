@@ -119,14 +119,14 @@ PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j) const
         return nullptr;
     }
     PhysicalModel::Group<>* res = new PhysicalModel::Group<>();
-    json mats = j.at("materials");
-    for (json::const_iterator it = mats.begin(); it != mats.end(); ++it) {
-        res->add(readPhysicalModel( *it ));
+    for (auto const& mat: j.at("materials")) {
+        res->add(readPhysicalModel( mat ));
     }
     return res;
 }
 
-PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
+std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const json& j) const 
+{
     PhysicalModel::PhysicalModel::Type type =
                 strToMaterialType( j.at("materialType").get<std::string>() );
 	MatId id;
@@ -142,36 +142,42 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
 
     switch (type) {
     case PhysicalModel::PhysicalModel::Type::PEC:
-        return new PhysicalModel::PEC(id, name);
+        return std::make_unique<PhysicalModel::PEC>(id, name);
     case PhysicalModel::PhysicalModel::Type::PMC:
-        return new PhysicalModel::PMC(id, name);
+        return std::make_unique<PhysicalModel::PMC>(id, name);
     case PhysicalModel::PhysicalModel::Type::SMA:
-        return new PhysicalModel::SMA(id, name);
+        return std::make_unique<PhysicalModel::SMA>(id, name);
 
     case PhysicalModel::PhysicalModel::Type::PML:
-        return new PhysicalModel::Volume::PML(id, name, 
+        return std::make_unique<PhysicalModel::Volume::PML>(id, name, 
 			strToLocalAxes(j.at("localAxes").get<std::string>()));
 
     case PhysicalModel::PhysicalModel::Type::classic:
-        return new PhysicalModel::Volume::Classic(id, name,
+        return std::make_unique<PhysicalModel::Volume::Classic>(
+                id, 
+                name,
                 j.at("permittivity").get<double>(),
                 j.at("permeability").get<double>(),
                 j.at("electricConductivity").get<double>(),
-                j.at("magneticConductivity").get<double>());
+                j.at("magneticConductivity").get<double>()
+            );
 
     case PhysicalModel::PhysicalModel::Type::elecDispersive:
-        return new PhysicalModel::Volume::Dispersive(id, name,
-                j.at("filename").get<std::string>());
+        return std::make_unique <PhysicalModel::Volume::Dispersive>(
+                id, 
+                name,
+                j.at("filename").get<std::string>()
+            );
 
     case PhysicalModel::PhysicalModel::Type::wire:
     {
         std::string wireType = j.at("wireType").get<std::string>();
         if (wireType.compare("Dispersive") == 0) {
-            return new PhysicalModel::Wire::Wire(id, name,
+            return std::make_unique < PhysicalModel::Wire::Wire>(id, name,
                     j.at("radius").get<double>(),
                     j.at("filename").get<std::string>());
         } else if(wireType.compare("SeriesParallel") == 0) {
-            return new PhysicalModel::Wire::Wire(id, name,
+            return std::make_unique < PhysicalModel::Wire::Wire>(id, name,
                     j.at("radius").get<double>(),
                     j.at("resistance").get<double>(),
                     j.at("inductance").get<double>(),
@@ -180,7 +186,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
                     j.at("parallelInductance").get<double>(),
                     j.at("parallelCapacitance").get<double>());
         } else if(wireType.compare("Standard") == 0) {
-            return new PhysicalModel::Wire::Wire(id, name,
+            return std::make_unique < PhysicalModel::Wire::Wire>(id, name,
                     j.at("radius").get<double>(),
                     j.at("resistance").get<double>(),
                     j.at("inductance").get<double>());
@@ -193,13 +199,13 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
     {
         std::string str = j.at("anisotropicModel").get<std::string>();
         if (str.compare("Crystal")==0) {
-            return new PhysicalModel::Volume::AnisotropicCrystal(id, name,
+            return std::make_unique < PhysicalModel::Volume::AnisotropicCrystal>(id, name,
                     strToLocalAxes(j.at("localAxes").get<std::string>()),
                     strToCVecR3(
                             j.at("relativePermittiviy").get<std::string>()),
                     j.at("crystalRelativePermeability").get<double>());
         } else if (str.compare("Ferrite")==0) {
-            return new PhysicalModel::Volume::AnisotropicFerrite(id, name,
+            return std::make_unique < PhysicalModel::Volume::AnisotropicFerrite>(id, name,
                     strToLocalAxes(j.at("localAxes").get<std::string>()),
                     j.at("kappa").get<double>(),
                     j.at("ferriteRelativePermeability").get<double>(),
@@ -213,7 +219,7 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
     {
         std::string sibcType = j.at("surfaceType").get<std::string>();
         if (sibcType.compare("File")==0) {
-            return new PhysicalModel::Surface::SIBCFile(id, name,
+            return std::make_unique < PhysicalModel::Surface::SIBCFile>(id, name,
                     j.at("filename").get<std::string>() );
         } else if (sibcType.compare("Layers")==0) {
             return readMultilayerSurface(j);
@@ -223,21 +229,21 @@ PhysicalModel::PhysicalModel* Parser::readPhysicalModel(const json& j) const {
     }
 
     case PhysicalModel::PhysicalModel::Type::gap:
-        return new PhysicalModel::Gap(id, name, j.at("width").get<double>());
+        return std::make_unique < PhysicalModel::Gap>(id, name, j.at("width").get<double>());
 
     case PhysicalModel::PhysicalModel::Type::multiport:
     {
         PhysicalModel::Multiport::Multiport::Type mpType =
                 strToMultiportType(j.at("connectorType").get<std::string>());
 		if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
-			return new PhysicalModel::Multiport::Predefined(id, name, mpType);
+			return  std::make_unique < PhysicalModel::Multiport::Predefined>(id, name, mpType);
 		} else if (mpType == PhysicalModel::Multiport::Multiport::openCircuit) {
-			return new PhysicalModel::Multiport::Predefined(id, name, mpType);
+			return  std::make_unique < PhysicalModel::Multiport::Predefined>(id, name, mpType);
         } else if (mpType == PhysicalModel::Multiport::Multiport::dispersive) {
-            return new PhysicalModel::Multiport::Dispersive(id, name,
+            return  std::make_unique < PhysicalModel::Multiport::Dispersive>(id, name,
                     j.at("filename").get<std::string>());
         } else {
-            return new PhysicalModel::Multiport::RLC(id, name, mpType,
+            return  std::make_unique < PhysicalModel::Multiport::RLC>(id, name, mpType,
                     j.at("resistance").get<double>(),
                     j.at("inductance").get<double>(),
                     j.at("capacitance").get<double>());
@@ -266,8 +272,7 @@ void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Geometric& mesh, const jso
         return;
     }
 	for (auto const& it: conns->get<json>()) {
-		PhysicalModel::PhysicalModel* mat = readPhysicalModel(it);
-		pMG.addId(mat);
+		PhysicalModel::PhysicalModel* mat = pMG.addAndAssignId(readPhysicalModel(it))->get();
 		CoordId cId( it.at("coordIds").get<int>() );
 		const CoordR3* coord[1] = { mesh.coords().getId(cId) };
 		ElemId eId(0);
@@ -428,7 +433,9 @@ Element::Group<ElemR> Parser::readElements(
     return res;
 }
 
-PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(const json& mat) const {
+std::unique_ptr<PhysicalModel::Surface::Multilayer> 
+Parser::readMultilayerSurface(const json& mat) const 
+{
     MatId id = MatId(mat.at("materialId").get<int>());
     std::string name = mat.at("name").get<std::string>();
 
@@ -447,9 +454,10 @@ PhysicalModel::Surface::Multilayer* Parser::readMultilayerSurface(const json& ma
                 std::make_pair(mat.at("freqMin").get<double>(),
                         mat.at("freqMax").get<double>()),
                         mat.at("numberOfPoles").get<int>());
-        return new PhysicalModel::Surface::Multilayer(id, name, layers, {opts});
+        std::vector<PhysicalModel::Surface::Multilayer::FittingOptions> optsVec = { opts };
+        return std::make_unique<PhysicalModel::Surface::Multilayer>(id, name, layers, optsVec);
     } else {
-        return new PhysicalModel::Surface::Multilayer(id, name, layers);
+        return std::make_unique < PhysicalModel::Surface::Multilayer>(id, name, layers);
     }
 }
 

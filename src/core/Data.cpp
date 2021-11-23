@@ -22,7 +22,7 @@ Data::Data(const Data& rhs) {
     solver = rhs.solver;
     
     if (rhs.physicalModels != nullptr) {
-        physicalModels = rhs.physicalModels->clone();
+        physicalModels = rhs.physicalModels;
     }
 
     if (rhs.mesh != nullptr) {
@@ -86,7 +86,7 @@ Data& Data::operator=(const Data& rhs) {
     solver = rhs.solver;
         
     if (rhs.physicalModels != nullptr) {
-        physicalModels = rhs.physicalModels->clone();
+        physicalModels = rhs.physicalModels;
     }
 
     if (rhs.mesh != nullptr) {

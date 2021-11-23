@@ -89,12 +89,10 @@ void Exporter::writeAllElements_(
 
 void Exporter::writeMesh_(const Data* smb) {
     const Geometry::Mesh::Mesh* inMesh = smb->mesh;
-    const PhysicalModel::Group<>* mat = smb->physicalModels;
     const Source::Group<>* srcs = smb->sources;
     const OutputRequest::Group<>* oRqs = smb->outputRequests;
     const Geometry::Grid3* grid = nullptr;
     assert(inMesh != nullptr);
-    assert(mat != nullptr);
     const Geometry::Mesh::Unstructured* mesh;
     std::string preName;
     if (inMesh->is<Geometry::Mesh::Structured>()) {
@@ -108,11 +106,10 @@ void Exporter::writeMesh_(const Data* smb) {
     }
     // Writes materials.
     for (auto const& lay : mesh->layers()) {
-        for (std::size_t j = 0; j < mat->size(); j++) {
-            const MatId matId = (*mat)(j)->getId();
+        for (auto const& mat: *smb->physicalModels) {
+            const MatId matId = mat->getId();
             const Geometry::LayerId layId = lay->getId();
-            const std::string name =
-            		preName + (*mat)(j)->getName() + "@" + lay->getName();
+            const std::string name = preName + mat->getName() + "@" + lay->getName();
             Group::Group<const Geometry::ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
             writeAllElements_(elem, name);
         }

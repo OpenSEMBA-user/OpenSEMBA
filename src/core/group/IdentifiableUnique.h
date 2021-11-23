@@ -57,16 +57,17 @@ public:
     
     virtual iterator add(const std::unique_ptr<T>& item);
     virtual iterator add(std::unique_ptr<T>&& item);
-    virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
+virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
 
-    std::size_t size() const { return items_.size(); }
-    bool empty() const { return items_.empty(); }
+std::size_t size() const { return items_.size(); }
+bool empty() const { return items_.empty(); }
 
-    template<class T2>
-    bool emptyOf() const;
-    template<class T2>
-    std::size_t sizeOf() const;
-
+template<typename T2>
+bool emptyOf() const;
+template<typename T2>
+std::size_t sizeOf() const;
+template<typename T2>
+std::vector<const T2*> getOf() const;
 private:
     Container items_;
 };
@@ -82,7 +83,7 @@ IdentifiableUnique<T>::IdentifiableUnique(const IdentifiableUnique<T>& rhs)
 template<typename T>
 IdentifiableUnique<T>& IdentifiableUnique<T>::operator=(const IdentifiableUnique<T>& rhs)
 {
-    for (auto const & elem : rhs) {
+    for (auto const& elem : rhs) {
         add(elem);
     }
     return *this;
@@ -113,11 +114,11 @@ T* IdentifiableUnique<T>::getId(const IdentifiableUnique<T>::Id& id)
 }
 
 template<typename T>
-typename IdentifiableUnique<T>::iterator 
+typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
 {
     auto it = items_.insert(std::make_unique<T>(*elem));
-    if ( it.second ) {
+    if (it.second) {
         return it.first;
     }
     else {
@@ -126,7 +127,7 @@ IdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
 }
 
 template<typename T>
-typename IdentifiableUnique<T>::iterator 
+typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::add(std::unique_ptr<T>&& elem)
 {
     auto it = items_.insert(std::move(elem));
@@ -149,6 +150,18 @@ IdentifiableUnique<T>::addAndAssignId(std::unique_ptr<T>&& elem)
         elem->setId(++items_.rbegin()->get()->getId());
     }
     return add(std::move(elem));
+}
+
+
+template<typename T> template<typename T2>
+std::vector<const T2*> IdentifiableUnique<T>::getOf() const {
+    std::vector<const T2*> res;
+    for (auto const& item : items_) {
+        if (item->is<T2>()) {
+            res.push_back(item->castTo<T2>());
+        }   
+    }
+    return res;
 }
 
 template<typename T> template<typename T2>

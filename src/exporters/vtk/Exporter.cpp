@@ -19,21 +19,20 @@ namespace SEMBA {
 namespace Exporters {
 namespace VTK {
 
-Exporter::Exporter(const Data& smb,
-                   const std::string& fn)
-:   SEMBA::Exporters::Exporter(fn) {
+Exporter::Exporter(const Data& smb, const std::string& fn) :   
+    SEMBA::Exporters::Exporter(fn) 
+{
     initDir_(fn + ".vtk");
     writeMesh_(&smb);
 }
 
-void Exporter::writeMesh_(const Data* smb) {
+void Exporter::writeMesh_(const Data* smb) 
+{
     const Geometry::Mesh::Mesh* inMesh = smb->mesh;
-    const PhysicalModel::Group<>* mat = smb->physicalModels;
     const Source::Group<>* srcs = smb->sources;
     const OutputRequest::Group<>* oRqs = smb->outputRequests;
     const Geometry::Grid3* grid = nullptr;
     assert(inMesh != nullptr);
-    assert(mat != nullptr);
     const Geometry::Mesh::Unstructured* mesh;
     const Geometry::Mesh::Structured* meshStr;
     std::string preName;
@@ -61,12 +60,12 @@ void Exporter::writeMesh_(const Data* smb) {
 
     std::size_t part = 0;
     // Writes materials.
-    if (mat->size() > 0) {
+    if (smb->physicalModels->size() > 0) {
         for (auto const& lay: mesh->layers()) {
             const Geometry::LayerId layId = lay->getId();
-            for (std::size_t j = 0; j < mat->size(); j++) {
-                const MatId matId = (*mat)(j)->getId();
-                const std::string name = preName + (*mat)(j)->getName() + "@" + lay->getName();
+            for (auto const& mat : *smb->physicalModels) {
+                const MatId matId = mat->getId();
+                const std::string name = preName + mat->getName() + "@" + lay->getName();
                 Group::Group<const Geometry::ElemR> elem = 
                     mesh->elems().getMatLayerId(matId, layId);
                 writeFile_(elem, makeValid_(name), outFile, part);

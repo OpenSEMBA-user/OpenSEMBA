@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Element.h"
@@ -90,12 +88,8 @@ public:
     Group<E>       getMatLayerId(const MatId, const LayerId);
     Group<const E> getMatLayerId(const MatId, const LayerId) const;
 
-    //std::vector<Id> getIdsWithMaterialId   (const MatId matId) const;
-    //std::vector<Id> getIdsWithoutMaterialId(const MatId matId) const;
     Group<const ElemR> getInsideBound(const BoxR3& bound) const;
 
-    //std::vector<std::pair<const E*,std::size_t>> getElementsWithVertex(
-    //        const CoordId) const;
     BoxR3 getBound() const;
     BoxR3 getBound(const std::vector<Face>& border) const;
     virtual const CoordR3* getClosestVertex(const Math::CVecR3 pos) const;
@@ -116,8 +110,8 @@ public:
     template<class T>
     void reassignPointers(
             const Coordinate::Group<Coordinate::Coordinate<T,3>>& vNew);
-    void reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew);
-    void reassignPointers(const SEMBA::Group::Identifiable<Model,MatId>& mNew);
+    void reassignPointers(const LayerGroup& lNew);
+    void reassignPointers(const PMGroup& mNew);
 	
 private:
     std::vector<std::size_t> getElemsWith_(const std::vector<MatId>&) const;

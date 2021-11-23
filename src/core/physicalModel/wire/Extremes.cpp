@@ -15,10 +15,10 @@ Extremes::Extremes(const std::string& name,
     Wire(wire) {
     extreme_[0] = extreme_[1] = nullptr;
     if (extremeL != nullptr) {
-        extreme_[0] = extremeL->cloneTo<Multiport::Multiport>();
+        extreme_[0] = new Multiport::Multiport(*extremeL);
     }
     if (extremeR != nullptr) {
-        extreme_[1] = extremeR->cloneTo<Multiport::Multiport>();
+        extreme_[1] = new Multiport::Multiport(*extremeR);
     }
 }
 
@@ -28,10 +28,10 @@ Extremes::Extremes(const Extremes& rhs)
     Wire(rhs) {
     extreme_[0] = extreme_[1] = nullptr;
     if (rhs.extreme_[0] != nullptr) {
-        extreme_[0] = rhs.extreme_[0]->cloneTo<Multiport::Multiport>();
+        extreme_[0] = new Multiport::Multiport(*rhs.extreme_[0]);
     }
     if (rhs.extreme_[1] != nullptr) {
-        extreme_[1] = rhs.extreme_[1]->cloneTo<Multiport::Multiport>();
+        extreme_[1] = new Multiport::Multiport(*rhs.extreme_[1]);
     }
 }
 
@@ -51,7 +51,7 @@ void Extremes::setExtreme(const std::size_t i,
     }
     extreme_[i] = nullptr;
     if (extreme != nullptr) {
-        extreme_[i] = extreme->cloneTo<Multiport::Multiport>();
+        extreme_[i] = new Multiport::Multiport(*extreme);
     }
 }
 

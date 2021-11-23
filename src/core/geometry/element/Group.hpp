@@ -1,5 +1,3 @@
-
-
 #include "Group.h"
 
 namespace SEMBA {
@@ -265,7 +263,7 @@ void Group<E>::reassignPointers(
 }
 
 template<typename E>
-void Group<E>::reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew) 
+void Group<E>::reassignPointers(const LayerGroup& lNew) 
 {
     for (std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->getLayer() != nullptr) {
@@ -276,8 +274,7 @@ void Group<E>::reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew
 }
 
 template<typename E>
-void Group<E>::reassignPointers(
-        const SEMBA::Group::Identifiable<Model,MatId>& mNew) {
+void Group<E>::reassignPointers(const PMGroup& mNew) {
     for (std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->getModel() != nullptr) {
             this->get(i)->setModel(mNew.getId(this->get(i)->getMatId()));

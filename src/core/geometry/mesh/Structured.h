@@ -52,9 +52,7 @@ public:
     Math::Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
-    void reassignPointers(
-        const SEMBA::Group::Identifiable<Element::Model, MatId>& =
-            SEMBA::Group::Identifiable<Element::Model, MatId>());
+    void reassignPointers(const PMGroup& matGr = PMGroup());
 
     virtual void reassign( Element::Group<const Elem>& );
 

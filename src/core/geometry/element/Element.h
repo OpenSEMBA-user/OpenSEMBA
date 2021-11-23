@@ -5,6 +5,7 @@
 #include "geometry/Grid.h"
 #include "geometry/coordinate/Group.h"
 #include "geometry/layer/Group.h"
+#include "physicalModel/Group.h"
 
 #include "class/Class.h"
 #include "class/Cloneable.h"
@@ -14,12 +15,12 @@
 
 namespace SEMBA {
 
-namespace PhysicalModel {
-
-class PhysicalModel;
-typedef Class::Identification<PhysicalModel> Id;
-
-} /* namespace PhysicalModel */
+//namespace PhysicalModel {
+//
+//class PhysicalModel;
+//typedef Class::Identification<PhysicalModel> Id;
+//
+//} /* namespace PhysicalModel */
 
 typedef PhysicalModel::Id MatId;
 

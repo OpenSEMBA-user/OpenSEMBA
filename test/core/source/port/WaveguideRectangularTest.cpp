@@ -24,9 +24,9 @@ class SourcePortWaveguideRectangularTest : public ::testing::Test {
         excMode = Port::Waveguide::ExcitationMode::TE;
         mode = pair<size_t,size_t>(1,0);
 
-        boundType.add(new Bound(MatId(1), Bound::Type::pml));
-        boundType.add(new Bound(MatId(2), Bound::Type::pmc));
-        boundType.add(new Bound(MatId(3), Bound::Type::pec));
+        boundType.add( std::make_unique <Bound>(MatId(1), Bound::Type::pml));
+        boundType.add( std::make_unique <Bound>(MatId(2), Bound::Type::pmc));
+        boundType.add( std::make_unique <Bound>(MatId(3), Bound::Type::pec));
 
         bounds[0][0] = boundType.getId(MatId(1))->castTo<Bound>();
         bounds[1][1] = boundType.getId(MatId(1))->castTo<Bound>();

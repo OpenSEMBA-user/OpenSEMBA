@@ -17,8 +17,8 @@ class PhysicalModel;
 typedef Class::Identification<PhysicalModel> Id;
 
 class PhysicalModel : public virtual Class::Class,
-                      public virtual Class::Cloneable,
-                      public virtual Class::Shareable,
+                      //public virtual Class::Cloneable,
+                      //public virtual Class::Shareable,
                       public virtual Class::Identifiable<Id> {
 public:
     enum class Type {

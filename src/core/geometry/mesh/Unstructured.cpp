@@ -67,10 +67,10 @@ void Unstructured::applyScalingFactor(const Math::Real factor) {
     coords_.applyScalingFactor(factor);
 }
 
-void Unstructured::reassignPointers(
-    const SEMBA::Group::Identifiable<Element::Model, MatId>& matGr) {
-        elems_.reassignPointers(this->coords());
-        elems_.reassignPointers(this->layers());
+void Unstructured::reassignPointers(const PMGroup& matGr) 
+{
+    elems_.reassignPointers(this->coords());
+    elems_.reassignPointers(this->layers());
     if (!matGr.empty()) {
         elems_.reassignPointers(matGr);
     }

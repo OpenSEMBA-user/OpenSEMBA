@@ -29,6 +29,8 @@ public:
     Multiport();
     virtual ~Multiport();
 
+    SEMBA_CLASS_DEFINE_CLONE(Multiport);
+
     virtual Type getType() const;
 
 protected:

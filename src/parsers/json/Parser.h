@@ -45,7 +45,8 @@ private:
     Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;
     OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Geometric& mesh, const json&) const;
 
-    PhysicalModel::Surface::Multilayer* readMultilayerSurface(const json& layers) const;
+    std::unique_ptr<PhysicalModel::Surface::Multilayer> 
+        readMultilayerSurface(const json& layers) const;
 
     Geometry::Grid3 readGrids(const json&) const;
     Geometry::Grid3 buildGridFromFile(const FileSystem::Project& file) const;
@@ -66,7 +67,7 @@ private:
     static Source::OnLine* readSourceOnLine(Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Magnitude::Magnitude* readMagnitude(const json&);
 
-    PhysicalModel::PhysicalModel* readPhysicalModel(const json& material) const;
+    std::unique_ptr<PhysicalModel::PhysicalModel> readPhysicalModel(const json& material) const;
 
     static OutputRequest::Base* readOutputRequest(Geometry::Mesh::Geometric& mesh, const json&);
 
