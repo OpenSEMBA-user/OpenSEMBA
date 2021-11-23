@@ -31,7 +31,7 @@ TEST_F(MeshUnstructuredTest, copy_assignment)
 
         auto id = copiedCoord->getId();
         auto coordIt = mesh_.coords().getId(id);
-        const CoordR3* originalCoord = coordIt->get();
+        const CoordR3* originalCoord = coordIt;
 
         EXPECT_EQ(*copiedCoord, *originalCoord);
     }

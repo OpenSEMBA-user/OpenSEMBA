@@ -1,10 +1,7 @@
-
-
 #pragma once
 
 #include "math/simplex/Tetrahedron.h"
-#include "Triangle6.h"
-
+#include "Triangle3.h"
 #include "Volume.h"
 
 namespace SEMBA {

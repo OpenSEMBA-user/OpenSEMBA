@@ -145,13 +145,13 @@ Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
             matPtr = nullptr;
         }
         if (layerId != Geometry::LayerId(0)) {
-            layerPtr = lG.getId(layerId)->get();
+            layerPtr = lG.getId(layerId);
         } else {
             layerPtr = nullptr;
         }
         vPtr.resize(vId.size(), nullptr);
         for (size_t i = 0; i < vId.size(); ++i) {
-            vPtr[i] = cG.getId(vId[i])->get();
+            vPtr[i] = cG.getId(vId[i]);
         }
 
         res.add(new T(elemId, vPtr.data(), layerPtr, matPtr));

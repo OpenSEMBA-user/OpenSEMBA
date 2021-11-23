@@ -78,8 +78,8 @@ Unstructured* Structured::getMeshUnstructured() const {
     return res;
 }
 
-void Structured::reassignPointers(
-    const SEMBA::Group::Identifiable<Element::Model, MatId>& matGr) {
+void Structured::reassignPointers(const SEMBA::Group::Identifiable<Element::Model, MatId>& matGr) 
+{
     elems_.reassignPointers(this->coords());
     elems_.reassignPointers(this->layers());
     if (!matGr.empty()) {

@@ -258,7 +258,7 @@ void Group<E>::reassignPointers(
             Element<T>* elem = this->get(i)->template castTo< Element<T> >();
             for (std::size_t j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordId vId = elem->getV(j)->getId();
-                elem->setV(j, vNew.getId(vId)->get());
+                elem->setV(j, vNew.getId(vId));
             }
         }
     }
@@ -270,7 +270,7 @@ void Group<E>::reassignPointers(const SEMBA::Geometry::Layer::Group<Layer>& lNew
     for (std::size_t i = 0; i < this->size(); i++) {
         if (this->get(i)->getLayer() != nullptr) {
             LayerId layerId = this->get(i)->getLayerId();
-            this->get(i)->setLayer(lNew.getId(layerId)->get());
+            this->get(i)->setLayer(lNew.getId(layerId));
         }
     }
 }

@@ -47,8 +47,11 @@ public:
     const_iterator begin() const { return items_.begin(); }
     const_iterator end() const { return items_.end(); }
     
-    iterator getId(const Id& id);
-    const_iterator getId(const Id& id) const;
+    iterator findId(const Id& id) { return items_.find(id); };
+    const_iterator findId(const Id& id) const { return items_.find(id); };
+
+    T* getId(const Id& id);
+    const T* getId(const Id& id) const;
 
     bool existId(const Id& id) const { return items_.count(id) != 0; }
     
@@ -72,7 +75,7 @@ template<typename T>
 IdentifiableUnique<T>::IdentifiableUnique(const IdentifiableUnique<T>& rhs)
 {
     for (auto const& elem : rhs) {
-        add(std::make_unique<T>(*elem));
+        add(elem);
     }
 }
 
@@ -86,28 +89,26 @@ IdentifiableUnique<T>& IdentifiableUnique<T>::operator=(const IdentifiableUnique
 }
 
 template<typename T>
-typename IdentifiableUnique<T>::Container::iterator
-IdentifiableUnique<T>::getId(const IdentifiableUnique<T>::Id& id)
+const T* IdentifiableUnique<T>::getId(const IdentifiableUnique<T>::Id& id) const
 {
-    auto it = items_.find(id);
-    if (it != end()) {
-        return it;
+    auto it = findId(id);
+    if (it != this->end()) {
+        return it->get();
     }
     else {
-        throw typename Group::Error::Id::NotExists<Id>(id);
+        return nullptr;
     }
 }
 
 template<typename T>
-typename IdentifiableUnique<T>::Container::const_iterator 
-IdentifiableUnique<T>::getId(const IdentifiableUnique<T>::Id& id) const 
+T* IdentifiableUnique<T>::getId(const IdentifiableUnique<T>::Id& id)
 {
-    auto it = items_.find(id);
-    if (it != end()) {
-        return it;
+    auto it = IdentifiableUnique<T>::findId(id);
+    if (it != this->end()) {
+        return it->get();
     }
     else {
-        throw typename Group::Error::Id::NotExists<Id>(id);
+        return nullptr;
     }
 }
 

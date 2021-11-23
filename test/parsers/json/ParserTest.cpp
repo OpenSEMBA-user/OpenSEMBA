@@ -39,6 +39,6 @@ TEST_F(ParserJSONParserTest, Bowtie)
     EXPECT_NO_THROW(data = jsonParser.read());
 
     ASSERT_TRUE(data.mesh != nullptr);
-    Geometric* unstrMesh = dynamic_cast<Geometric*>(data.mesh);
-    EXPECT_FALSE(unstrMesh->grid().hasZeroSize());
+    Geometric unstrMesh = dynamic_cast<Geometric&>(*data.mesh);
+    EXPECT_FALSE(unstrMesh.grid().hasZeroSize());
 }

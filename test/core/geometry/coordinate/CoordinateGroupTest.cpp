@@ -30,7 +30,7 @@ TEST_F(CoordinateGroupTest, copy_ctor)
     EXPECT_EQ(copied.size(), original.size());
     for (auto const& c : copied) {
         auto id = c->getId();
-        EXPECT_EQ(c->pos(), (*original.getId(id))->pos());
+        EXPECT_EQ(c->pos(), original.getId(id)->pos());
     }
 }
 
@@ -54,7 +54,7 @@ TEST_F(CoordinateGroupTest, copy_assignment)
     EXPECT_EQ(copied.size(), original.size());
     for (auto const& c : copied) {
         auto id = c->getId();
-        EXPECT_EQ(c->pos(), (*original.getId(id))->pos());
+        EXPECT_EQ(c->pos(), original.getId(id)->pos());
     }
 }
 
@@ -97,7 +97,7 @@ TEST_F(CoordinateGroupTest, get_positions_after_move)
 {
     auto original(buildCoordGroup());
 
-    auto pos = original.getId(CoordId(1))->get()->pos();
+    auto pos = original.getId(CoordId(1))->pos();
     
     auto coord = original.getPos(pos);
     EXPECT_EQ(pos, coord->pos());

@@ -21,15 +21,15 @@ public:
         
         std::vector<ElemR*> elems;
         const CoordR3* vTet[4] = {
-                cG_.getId(CoordId(1))->get(),
-                cG_.getId(CoordId(2))->get(),
-                cG_.getId(CoordId(3))->get(),
-                cG_.getId(CoordId(4))->get()
+                cG_.getId(CoordId(1)),
+                cG_.getId(CoordId(2)),
+                cG_.getId(CoordId(3)),
+                cG_.getId(CoordId(4))
         };
         const CoordR3* vTri[3] = {
-                cG_.getId(CoordId(2))->get(),
-                cG_.getId(CoordId(1))->get(),
-                cG_.getId(CoordId(3))->get()
+                cG_.getId(CoordId(2)),
+                cG_.getId(CoordId(1)),
+                cG_.getId(CoordId(3))
         };
         elems.push_back(new Tet4(ElemId(1), vTet));
         elems.push_back(new Tri3(ElemId(2), vTri));

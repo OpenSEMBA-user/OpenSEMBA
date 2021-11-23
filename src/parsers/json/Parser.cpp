@@ -6,10 +6,8 @@
 #include "math/function/BandLimited.h"
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
-#include "geometry/element/Triangle6.h"
 #include "geometry/element/Quadrilateral4.h"
 #include "geometry/element/Tetrahedron4.h"
-#include "geometry/element/Tetrahedron10.h"
 #include "geometry/element/Hexahedron8.h"
 #include "physicalModel/Bound.h"
 #include "physicalModel/multiport/Dispersive.h"
@@ -271,7 +269,7 @@ void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Geometric& mesh, const jso
 		PhysicalModel::PhysicalModel* mat = readPhysicalModel(it);
 		pMG.addId(mat);
 		CoordId cId( it.at("coordIds").get<int>() );
-		const CoordR3* coord[1] = { mesh.coords().getId(cId)->get() };
+		const CoordR3* coord[1] = { mesh.coords().getId(cId) };
 		ElemId eId(0);
 		NodR* node = new NodR(eId, coord, nullptr, pMG.getId(mat->getId()));
 		
@@ -914,7 +912,7 @@ Element::Group<Nod> Parser::readCoordIdAsNodes(
     std::vector<ElemId> nodeIds;
     for (auto it = j.begin(); it != j.end(); ++it) {
         CoordId coordId( it->get<int>() );
-        const CoordR3* coord = mesh.coords().getId(coordId)->get();
+        const CoordR3* coord = mesh.coords().getId(coordId);
         NodR* node = new NodR(ElemId(0), &coord);
         mesh.elems().addId(node);
         nodeIds.push_back(node->getId());
