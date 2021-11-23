@@ -39,7 +39,7 @@ public:
     
 private:
     json readSolverOptions(const json&) const;
-    PMGroup* readPhysicalModels(const json&) const;
+    PMGroup readPhysicalModels(const json&) const;
     Geometry::Mesh::Geometric* readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
 	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
     Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;

@@ -1,10 +1,15 @@
+#include "gtest/gtest.h"
+#include "physicalModel/volume/Classic.h"
 
-
-#include "ClassicTest.h"
-
-using namespace std;
 using namespace SEMBA;
 using namespace PhysicalModel;
+
+class PhysicalModelVolumeClassicTest : public ::testing::Test {
+public:
+
+protected:
+
+};
 
 TEST_F(PhysicalModelVolumeClassicTest, ctor) {
     EXPECT_NO_THROW(Volume::Classic(Id(1), "Classic", 1.0, 1.0, 0.0, 0.0));

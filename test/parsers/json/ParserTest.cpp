@@ -29,7 +29,7 @@ TEST_F(ParserJSONParserTest, Sphere)
 TEST_F(ParserJSONParserTest, Wires) 
 {
     SEMBA::Parsers::JSON::Parser jsonParser("testData/wires.gid/wires.dat");
-    EXPECT_NO_THROW(jsonParser.read());
+    SEMBA::Data data = jsonParser.read();
 }
 
 TEST_F(ParserJSONParserTest, Bowtie) 

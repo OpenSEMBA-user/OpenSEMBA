@@ -56,11 +56,11 @@ Data Parser::read() const {
     res.filename = this->filename;
     res.solver = readSolverOptions(j);
     res.physicalModels = readPhysicalModels(j);
-    res.mesh = readGeometricMesh(*res.physicalModels, j);
+    res.mesh = readGeometricMesh(res.physicalModels, j);
         
     if (res.mesh != nullptr) {
         Mesh::Geometric* geometricMesh = res.mesh->castTo<Mesh::Geometric>();
-		readConnectorOnPoint(*res.physicalModels, *geometricMesh, j);
+		readConnectorOnPoint(res.physicalModels, *geometricMesh, j);
         res.sources = readSources(*geometricMesh, j);
         res.outputRequests = readOutputRequests(*geometricMesh, j);
     } else {
@@ -113,14 +113,11 @@ Source::Group<>* Parser::readSources(Mesh::Geometric& mesh, const json& j) const
     return res;
 }
 
-PhysicalModel::Group<>* Parser::readPhysicalModels(const json& j) const 
+PMGroup Parser::readPhysicalModels(const json& j) const 
 {
-    if (j.find("materials") == j.end()) {
-        return nullptr;
-    }
-    PhysicalModel::Group<>* res = new PhysicalModel::Group<>();
+    PMGroup res;
     for (auto const& mat: j.at("materials")) {
-        res->add(readPhysicalModel( mat ));
+        res.add(readPhysicalModel( mat ));
     }
     return res;
 }

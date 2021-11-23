@@ -35,10 +35,9 @@ public:
         multiport
     };
 
-    PhysicalModel();
+    PhysicalModel() = default;
     PhysicalModel(const std::string& name);
-    PhysicalModel(const PhysicalModel& rhs);
-    virtual ~PhysicalModel();
+    virtual ~PhysicalModel() = default;
 
     const std::string& getName() const;
     void setName(const std::string& newName);

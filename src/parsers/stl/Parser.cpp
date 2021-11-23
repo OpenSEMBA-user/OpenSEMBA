@@ -71,9 +71,8 @@ Data Parser::read() const {
 
     using namespace PhysicalModel;
 
-    res.physicalModels = new PMGroup();
-    res.physicalModels->add(std::make_unique<PEC>(Id(1), "PEC"));
-    auto const* pec = res.physicalModels->getId(Id(1));
+    res.physicalModels.add(std::make_unique<PEC>(Id(1), "PEC"));
+    auto const* pec = res.physicalModels.getId(Id(1));
     res.mesh->castTo<Geometry::Mesh::Geometric>()->elems().setModel(pec);
     res.sources = new Source::Group<>();
     res.outputRequests = new OutputRequest::Group<>();

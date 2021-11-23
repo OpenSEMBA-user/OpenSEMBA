@@ -5,7 +5,6 @@ namespace SEMBA {
 Data::Data() {
     solver = nullptr;
     mesh = nullptr;
-    physicalModels = nullptr;
     sources = nullptr;
     outputRequests = nullptr;
 }
@@ -14,25 +13,18 @@ Data::Data(const Data& rhs) {
 
     solver = nullptr;
     mesh = nullptr;
-    physicalModels = nullptr;
     sources = nullptr;
     outputRequests = nullptr;
 
     filename = rhs.filename;
     solver = rhs.solver;
     
-    if (rhs.physicalModels != nullptr) {
-        physicalModels = rhs.physicalModels;
-    }
-
+    physicalModels = rhs.physicalModels;
+    
     if (rhs.mesh != nullptr) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
-        if (physicalModels != nullptr) {
-            mesh->reassignPointers(*physicalModels);
-        } else {
-            mesh->reassignPointers();
-        }
-
+        mesh->reassignPointers(physicalModels);
+        
         if (rhs.outputRequests != nullptr) {
             outputRequests = rhs.outputRequests->clone();
             for (size_t i = 0; i < outputRequests->size(); ++i) {
@@ -60,9 +52,6 @@ Data::~Data() {
     if (mesh != nullptr) {
         delete mesh;
     }
-    if (physicalModels != nullptr) {
-        delete physicalModels;
-    }
     if (sources != nullptr) {
         delete sources;
     }
@@ -72,31 +61,20 @@ Data::~Data() {
 }
 
 Data& Data::operator=(const Data& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-
     solver = nullptr;
     mesh = nullptr;
-    physicalModels = nullptr;
     sources = nullptr;
     outputRequests = nullptr;
 
     filename = rhs.filename;
     solver = rhs.solver;
         
-    if (rhs.physicalModels != nullptr) {
-        physicalModels = rhs.physicalModels;
-    }
-
+    physicalModels = rhs.physicalModels;
+    
     if (rhs.mesh != nullptr) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
-        if (physicalModels != nullptr) {
-            mesh->reassignPointers(*physicalModels);
-        } else {
-            mesh->reassignPointers();
-        }
-
+        mesh->reassignPointers(physicalModels);
+    
         if (rhs.outputRequests != nullptr) {
             outputRequests = rhs.outputRequests->clone();
             for (size_t i = 0; i < outputRequests->size(); ++i) {

@@ -21,7 +21,7 @@ public:
     FileSystem::Project     filename;
     json                    solver;
     Geometry::Mesh::Mesh*   mesh;
-    PMGroup*                physicalModels;
+    PMGroup physicalModels;
     Source::Group<>*        sources;
     OutputRequest::Group<>* outputRequests;
 

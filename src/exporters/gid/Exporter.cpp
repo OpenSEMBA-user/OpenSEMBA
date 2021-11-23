@@ -106,7 +106,7 @@ void Exporter::writeMesh_(const Data* smb) {
     }
     // Writes materials.
     for (auto const& lay : mesh->layers()) {
-        for (auto const& mat: *smb->physicalModels) {
+        for (auto const& mat: smb->physicalModels) {
             const MatId matId = mat->getId();
             const Geometry::LayerId layId = lay->getId();
             const std::string name = preName + mat->getName() + "@" + lay->getName();

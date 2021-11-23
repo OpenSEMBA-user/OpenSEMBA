@@ -60,10 +60,10 @@ void Exporter::writeMesh_(const Data* smb)
 
     std::size_t part = 0;
     // Writes materials.
-    if (smb->physicalModels->size() > 0) {
+    if (smb->physicalModels.size() > 0) {
         for (auto const& lay: mesh->layers()) {
             const Geometry::LayerId layId = lay->getId();
-            for (auto const& mat : *smb->physicalModels) {
+            for (auto const& mat : smb->physicalModels) {
                 const MatId matId = mat->getId();
                 const std::string name = preName + mat->getName() + "@" + lay->getName();
                 Group::Group<const Geometry::ElemR> elem = 
