@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "physicalModel/PhysicalModel.h"
@@ -8,7 +6,8 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Wire {
 
-class Wire : public virtual PhysicalModel {
+class Wire : public virtual PhysicalModel,
+             public virtual Class::Cloneable {
 public:
     Wire(const Id id,
          const std::string name,

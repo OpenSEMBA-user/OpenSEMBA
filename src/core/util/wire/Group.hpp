@@ -1,5 +1,3 @@
-
-
 #include "Group.h"
 
 namespace SEMBA {
@@ -34,7 +32,7 @@ template<class T>
 typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
     // We get the lines with wire or union materials
     Geometry::Element::Group<const Geometry::Element::Line<T>> wires;
-    const PhysicalModel::Group<>& mats = *smb.physicalModels;
+    auto const& mats = smb.physicalModels;
     {
         Geometry::Element::Group<const Geometry::Element::Line<T>> lines;
         if (std::is_floating_point<T>::value) {
@@ -44,16 +42,15 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             lines = smb.mesh->castTo<Geometry::Mesh::Structured>()
                         ->elems().getOf<Geometry::Element::Line<T>>();
         }
-        PhysicalModel::Group<const PhysicalModel::Wire::Wire>
-            pmwires = mats.getOf<PhysicalModel::Wire::Wire>();
-        std::vector<MatId> pmwiresIds = pmwires.getIds();
-        PhysicalModel::Group<const PhysicalModel::Multiport::Multiport>
-            pmmults = mats.getOf<PhysicalModel::Multiport::Multiport>();
-        std::vector<MatId> pmmultsIds = pmmults.getIds();
+        
         std::vector<MatId> matIds;
-        matIds.reserve(pmwiresIds.size() + pmmultsIds.size());
-        matIds.insert(matIds.end(), pmwiresIds.begin(), pmwiresIds.end());
-        matIds.insert(matIds.end(), pmmultsIds.begin(), pmmultsIds.end());
+        for (auto const& mat : mats.getOf<PhysicalModel::Wire::Wire>()) {
+            matIds.push_back(mat->getId());
+        }
+        for (auto const& mat : mats.getOf<PhysicalModel::Multiport::Multiport>()) {
+            matIds.push_back(mat->getId());
+        }
+        
         wires = lines.getMatId(matIds);
     }
     // The graph of these lines is created
@@ -153,7 +150,7 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
 
 template<class T>
 void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
-                              const Data& smb) {
+                              const Data& smb) { 
     // First we get the different wires and the lines that make up each one.
     std::vector<std::vector<const Geometry::Element::Line<T>*>> wires =
         getLines_(graph);
@@ -174,7 +171,8 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
         // it does not exist.
         PhysicalModel::Wire::Extremes* wireExtremes;
         if (wireMat->is<PhysicalModel::Wire::Extremes>()) {
-            wireExtremes = wireMat->cloneTo<PhysicalModel::Wire::Extremes>();
+            wireExtremes = new PhysicalModel::Wire::Extremes(
+                *wireMat->castTo<PhysicalModel::Wire::Extremes>());
         } else {
             if (numWireMat.count(wireMat) == 0) {
                 numWireMat[wireMat] = 0;
@@ -258,7 +256,7 @@ void Group<T>::getWireMats_(
         const Data& smb,
         const Graph& graph) {
 
-    const PhysicalModel::Group<>& mats = *smb.physicalModels;
+    const PhysicalModel::Group<>& mats = smb.physicalModels;
     if (lines.empty()) {
         return;
     }

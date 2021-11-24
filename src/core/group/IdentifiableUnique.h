@@ -57,7 +57,9 @@ public:
     
     virtual iterator add(const std::unique_ptr<T>& item);
     virtual iterator add(std::unique_ptr<T>&& item);
-virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
+    virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
+
+    void removeId(const Id& id);
 
 std::size_t size() const { return items_.size(); }
 bool empty() const { return items_.empty(); }
@@ -150,6 +152,12 @@ IdentifiableUnique<T>::addAndAssignId(std::unique_ptr<T>&& elem)
         elem->setId(++items_.rbegin()->get()->getId());
     }
     return add(std::move(elem));
+}
+
+template<typename T>
+void IdentifiableUnique<T>::removeId(const IdentifiableUnique<T>::Id& id) {
+    auto it = items_.find(id);
+    items_.erase(it);
 }
 
 

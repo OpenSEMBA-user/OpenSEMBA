@@ -9,7 +9,7 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Wire {
 
-class Extremes : public virtual Wire {
+class Extremes : public virtual Wire  {
 public:
     Extremes(const std::string&,
              const Wire& wire,
