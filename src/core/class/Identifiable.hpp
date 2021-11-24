@@ -6,23 +6,8 @@ namespace SEMBA {
 namespace Class {
 
 template<class Id>
-Identifiable<Id>::Identifiable() {
-    id_ = Id(0);
-}
-
-template<class Id>
 Identifiable<Id>::Identifiable(const Id id) {
     id_ = id;
-}
-
-template<class Id>
-Identifiable<Id>::Identifiable(const Identifiable<Id>& rhs) {
-    id_ = rhs.id_;
-}
-
-template<class Id>
-Identifiable<Id>::~Identifiable() {
-
 }
 
 template<class Id>

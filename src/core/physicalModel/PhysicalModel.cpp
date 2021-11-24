@@ -1,7 +1,3 @@
-
-// File: physicalmodel.cpp
-// =============== Includes headers ===========================================
-
 #include "PhysicalModel.h"
 
 namespace SEMBA {
@@ -19,7 +15,6 @@ const std::string& PhysicalModel::getName() const {
 void PhysicalModel::setName(const std::string& newName) {
     name_ = newName;
 }
-
 
 } /* namespace PhysicalModel */
 } /* namespace SEMBA */

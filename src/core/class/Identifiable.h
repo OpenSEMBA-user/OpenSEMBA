@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Class.h"
@@ -12,10 +10,9 @@ template<class Id>
 class Identifiable : public virtual Class,
                      public virtual Shareable {
 public:
-    Identifiable();
+    Identifiable() = default;
     Identifiable(const Id id);
-    Identifiable(const Identifiable<Id>& rhs);
-    virtual ~Identifiable();
+    virtual ~Identifiable() = default;
 
     Id   getId() const;
     void setId(const Id id);
@@ -23,7 +20,7 @@ public:
     virtual bool operator==(const Identifiable& rhs) const;
 
 private:
-    Id id_;
+    Id id_{0};
 };
 
 } /* namespace Class */

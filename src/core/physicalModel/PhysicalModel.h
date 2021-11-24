@@ -6,7 +6,6 @@
 
 #include "class/Class.h"
 #include "class/Cloneable.h"
-#include "class/Shareable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 
@@ -17,8 +16,6 @@ class PhysicalModel;
 typedef Class::Identification<PhysicalModel> Id;
 
 class PhysicalModel : public virtual Class::Class,
-                      //public virtual Class::Cloneable,
-                      //public virtual Class::Shareable,
                       public virtual Class::Identifiable<Id> {
 public:
     enum class Type {
@@ -43,7 +40,7 @@ public:
     void setName(const std::string& newName);
 
 private:
-    std::string name_;
+    std::string name_ = "";
 };
 
 namespace Error {

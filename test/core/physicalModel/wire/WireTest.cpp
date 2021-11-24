@@ -26,8 +26,19 @@ TEST_F(PhysicalModelWireTest, copy_ctor)
     Wire::Wire copied(orig);
 
     EXPECT_EQ(Id(2), copied.getId());
+}
 
-    auto ptr = std::make_unique<SEMBA::PhysicalModel::PhysicalModel>(orig);
+TEST_F(PhysicalModelWireTest, build_with_base_make_unique_ptr)
+{
+    Wire::Wire orig(Id(2), "Cable", 1.0, 1.0, 1.0);
+
+    auto ptr = std::make_unique<Wire::Wire>(orig);
+
     EXPECT_EQ(Id(2), ptr->getId());
+    EXPECT_EQ(std::string{ "Cable" }, ptr->getName());
 
+    auto ptrCasted = ptr->castTo<Wire::Wire>();
+    EXPECT_EQ(1.0, ptrCasted->getRadius());
+    EXPECT_EQ(1.0, ptrCasted->getSeriesResistance());
+    EXPECT_EQ(1.0, ptrCasted->getSeriesInductance());
 }
