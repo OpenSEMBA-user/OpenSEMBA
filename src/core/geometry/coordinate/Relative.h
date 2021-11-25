@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Coordinate.h"
@@ -10,17 +8,16 @@ namespace Coordinate {
 
 class Relative : public virtual Coordinate<Math::Int,3> {
 public:
-    Relative();
-    Relative(const Id,
-             const Math::CVecR3&);
-    Relative(const Id,
-             const Math::CVecI3&,
-             const Math::CVecR3&);
+    Relative() = default;
+    Relative(const Id, const Math::CVecR3&);
+    Relative(const Id, const Math::CVecI3&, const Math::CVecR3&);
     Relative(const Math::CVecR3&);
     Relative(const Relative&);
-    virtual ~Relative();
+    virtual ~Relative() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Relative);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Relative>(*this);
+    }
 
     Relative& operator=(const Relative& rhs);
 

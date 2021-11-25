@@ -18,7 +18,9 @@ public:
              const std::string& name,
              const FileSystem::Project& file);
     
-    SEMBA_CLASS_DEFINE_CLONE(SIBCFile);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<SIBCFile>(*this);
+    }
 
     const FileSystem::Project getFile() const;
 

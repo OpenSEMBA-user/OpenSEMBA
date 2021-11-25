@@ -1,14 +1,8 @@
-
-
 #include "Relative.h"
 
 namespace SEMBA {
 namespace Geometry {
 namespace Coordinate {
-
-Relative::Relative() {
-
-}
 
 Relative::Relative(const Id id,
                    const Math::CVecR3& rel)
@@ -38,10 +32,6 @@ Relative::Relative(const Relative& rhs)
 :   Identifiable<Id>(rhs),
     Math::CVecI3(rhs) {
     rel_ = rhs.rel_;
-}
-
-Relative::~Relative() {
-
 }
 
 Relative& Relative::operator=(const Relative& rhs) {

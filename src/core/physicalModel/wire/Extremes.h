@@ -18,7 +18,9 @@ public:
     Extremes(const Extremes& rhs);
     virtual ~Extremes();
 
-    SEMBA_CLASS_DEFINE_CLONE(Extremes);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Extremes>(*this);
+    }
 
     const Multiport::Multiport *getExtreme(const std::size_t i) const {
         return extreme_[i];

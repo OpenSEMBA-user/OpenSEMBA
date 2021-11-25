@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Multiport.h"
@@ -15,7 +13,9 @@ public:
                         const Multiport::Type);
     Predefined(const Predefined&);
 
-    SEMBA_CLASS_DEFINE_CLONE(Predefined);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Predefined>(*this);
+    }
 
 };
 

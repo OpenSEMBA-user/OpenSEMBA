@@ -33,7 +33,9 @@ public:
     Dispersive(const Dispersive& rhs);
     virtual ~Dispersive();
 
-    SEMBA_CLASS_DEFINE_CLONE(Dispersive);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Dispersive>(*this);
+    }
 
     std::size_t getPoleNumber() const;
     std::complex<Math::Real> getPole(std::size_t p) const;

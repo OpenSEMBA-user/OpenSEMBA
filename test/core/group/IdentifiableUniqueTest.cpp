@@ -63,3 +63,4 @@ TEST_F(IdentifiableUniqueTest, addAndAssignId)
     auto melonInGroup = orig.addAndAssignId(std::move(melon))->get();
     EXPECT_EQ(LayerId(4), melonInGroup->getId());
 }
+

@@ -11,8 +11,9 @@ public:
     Gap(const Gap&);
     virtual ~Gap() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Gap);
-
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Gap>(*this);
+    }
 
     Math::Real getWidth() const;
 

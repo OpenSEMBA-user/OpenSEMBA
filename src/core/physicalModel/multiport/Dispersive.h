@@ -14,9 +14,11 @@ public:
                const std::string nameIn,
                const std::string filename);
     Dispersive(const Dispersive&);
-    virtual ~Dispersive();
+    virtual ~Dispersive() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Dispersive);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Dispersive>(*this);
+    }
 
     std::string getFilename() const;
 

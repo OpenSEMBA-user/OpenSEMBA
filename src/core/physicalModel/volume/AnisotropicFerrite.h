@@ -21,7 +21,9 @@ public:
     AnisotropicFerrite(const AnisotropicFerrite&);
     virtual ~AnisotropicFerrite();
 
-    SEMBA_CLASS_DEFINE_CLONE(AnisotropicFerrite);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<AnisotropicFerrite>(*this);
+    }
 
     Math::MatR33 getRelPermittivityMatR() const;
 

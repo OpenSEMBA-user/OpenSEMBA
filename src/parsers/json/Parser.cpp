@@ -124,8 +124,9 @@ PMGroup Parser::readPhysicalModels(const json& j) const
 
 std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const json& j) const 
 {
-    PhysicalModel::PhysicalModel::Type type =
-                strToMaterialType( j.at("materialType").get<std::string>() );
+    typedef PhysicalModel::PhysicalModel PM;
+    
+    PM::Type type = strToMaterialType( j.at("materialType").get<std::string>() );
 	MatId id;
 	if (j.find("materialId") != j.end()) {
 		id = MatId(j.at("materialId").get<int>());
@@ -138,18 +139,17 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
 	}
 
     switch (type) {
-    case PhysicalModel::PhysicalModel::Type::PEC:
+    case PM::Type::PEC:
         return std::make_unique<PhysicalModel::PEC>(id, name);
-    case PhysicalModel::PhysicalModel::Type::PMC:
+    case PM::Type::PMC:
         return std::make_unique<PhysicalModel::PMC>(id, name);
-    case PhysicalModel::PhysicalModel::Type::SMA:
+    case PM::Type::SMA:
         return std::make_unique<PhysicalModel::SMA>(id, name);
-
-    case PhysicalModel::PhysicalModel::Type::PML:
+    case PM::Type::PML:
         return std::make_unique<PhysicalModel::Volume::PML>(id, name, 
 			strToLocalAxes(j.at("localAxes").get<std::string>()));
 
-    case PhysicalModel::PhysicalModel::Type::classic:
+    case PM::Type::classic:
         return std::make_unique<PhysicalModel::Volume::Classic>(
                 id, 
                 name,
@@ -159,14 +159,14 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
                 j.at("magneticConductivity").get<double>()
             );
 
-    case PhysicalModel::PhysicalModel::Type::elecDispersive:
+    case PM::Type::elecDispersive:
         return std::make_unique <PhysicalModel::Volume::Dispersive>(
                 id, 
                 name,
                 j.at("filename").get<std::string>()
             );
 
-    case PhysicalModel::PhysicalModel::Type::wire:
+    case PM::Type::wire:
     {
         std::string wireType = j.at("wireType").get<std::string>();
         if (wireType.compare("Dispersive") == 0) {
@@ -192,7 +192,7 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
         }
     }
 
-    case PhysicalModel::PhysicalModel::Type::anisotropic:
+    case PM::Type::anisotropic:
     {
         std::string str = j.at("anisotropicModel").get<std::string>();
         if (str.compare("Crystal")==0) {
@@ -212,7 +212,7 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
         }
     }
 
-    case PhysicalModel::PhysicalModel::Type::isotropicsibc:
+    case PM::Type::isotropicsibc:
     {
         std::string sibcType = j.at("surfaceType").get<std::string>();
         if (sibcType.compare("File")==0) {
@@ -225,22 +225,22 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
         }
     }
 
-    case PhysicalModel::PhysicalModel::Type::gap:
+    case PM::Type::gap:
         return std::make_unique < PhysicalModel::Gap>(id, name, j.at("width").get<double>());
 
-    case PhysicalModel::PhysicalModel::Type::multiport:
+    case PM::Type::multiport:
     {
-        PhysicalModel::Multiport::Multiport::Type mpType =
-                strToMultiportType(j.at("connectorType").get<std::string>());
-		if (mpType == PhysicalModel::Multiport::Multiport::shortCircuit) {
-			return  std::make_unique < PhysicalModel::Multiport::Predefined>(id, name, mpType);
-		} else if (mpType == PhysicalModel::Multiport::Multiport::openCircuit) {
-			return  std::make_unique < PhysicalModel::Multiport::Predefined>(id, name, mpType);
-        } else if (mpType == PhysicalModel::Multiport::Multiport::dispersive) {
-            return  std::make_unique < PhysicalModel::Multiport::Dispersive>(id, name,
-                    j.at("filename").get<std::string>());
-        } else {
-            return  std::make_unique < PhysicalModel::Multiport::RLC>(id, name, mpType,
+        using namespace PhysicalModel::Multiport;
+        auto mpType = strToMultiportType(j.at("connectorType").get<std::string>());
+        switch (mpType) {
+        case Multiport::Type::shortCircuit:
+            return std::make_unique<Predefined>(id, name, mpType);
+        case Multiport::Type::openCircuit:
+			return  std::make_unique<Predefined>(id, name, mpType);
+        case Multiport::Type::dispersive:
+            return  std::make_unique<Dispersive>(id, name, j.at("filename").get<std::string>());
+        default:
+            return  std::make_unique<RLC>(id, name, mpType,
                     j.at("resistance").get<double>(),
                     j.at("inductance").get<double>(),
                     j.at("capacitance").get<double>());
@@ -723,23 +723,24 @@ PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
     }
 }
 
-PhysicalModel::Multiport::Multiport::Type Parser::strToMultiportType(
-        std::string str) {
+PhysicalModel::Multiport::Multiport::Type Parser::strToMultiportType(std::string str) {
+    using namespace PhysicalModel::Multiport;
+
     str = trim(str);
     if (str.compare("Conn_short")==0) {
-        return PhysicalModel::Multiport::Multiport::shortCircuit;
+        return Multiport::Type::shortCircuit;
     } else if (str.compare("Conn_open")==0) {
-        return PhysicalModel::Multiport::Multiport::openCircuit;
+        return Multiport::Type::openCircuit;
     } else if (str.compare("Conn_matched")==0) {
-        return PhysicalModel::Multiport::Multiport::matched;
+        return Multiport::Type::matched;
     } else if (str.compare("Conn_sRLC")==0) {
-        return PhysicalModel::Multiport::Multiport::sRLC;
+        return Multiport::Type::sRLC;
     } else if (str.compare("Conn_pRLC")==0) {
-        return PhysicalModel::Multiport::Multiport::pRLC;
+        return Multiport::Type::pRLC;
     } else if (str.compare("Conn_sLpRC")==0) {
-        return PhysicalModel::Multiport::Multiport::sLpRC;
+        return Multiport::Type::sLpRC;
     } else if (str.compare("Conn_dispersive") == 0) {
-        return PhysicalModel::Multiport::Multiport::dispersive;
+        return Multiport::Type::dispersive;
     } else {
         throw std::logic_error("Unrecognized multiport label: " + str);
     }

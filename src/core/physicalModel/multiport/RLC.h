@@ -19,7 +19,9 @@ public:
     RLC(const RLC&);
     virtual ~RLC();
 
-    SEMBA_CLASS_DEFINE_CLONE(RLC);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<RLC>(*this);
+    }
 
     virtual Math::Real getR() const;
     virtual Math::Real getL() const;

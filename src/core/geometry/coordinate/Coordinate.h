@@ -6,8 +6,6 @@
 #include "math/vector/Cartesian.h"
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Shareable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 
@@ -23,6 +21,14 @@ class Base : public virtual Class::Class,
 public:
     Base() = default;
     virtual ~Base() = default;
+    
+    virtual std::unique_ptr<Base> clone() const = 0;
+    
+    template <class T>
+    std::unique_ptr<T> cloneTo() const {
+        std::unique_ptr<T> res(dynamic_cast<T*>(this->clone().release()));
+        return res;
+    }
 
     virtual bool operator==(const Base& rhs) const;
     virtual bool operator!=(const Base& rhs) const;
@@ -38,7 +44,9 @@ public:
     Coordinate(const Coordinate& rhs);
     virtual ~Coordinate() = default;
 
-    Coordinate<T,D>* clone() const;
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Coordinate<T, D>>(*this);
+    }
 
     Coordinate& operator=(const Coordinate& rhs);
 

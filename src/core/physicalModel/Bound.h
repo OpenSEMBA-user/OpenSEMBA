@@ -22,8 +22,10 @@ public:
     Bound(Id id, Type type);
     virtual ~Bound() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Bound);
-    
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Bound>(*this);
+    }
+
     Type getType() const;
 private:
     Type type;

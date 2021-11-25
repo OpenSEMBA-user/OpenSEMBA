@@ -3,6 +3,7 @@
 #include "physicalModel/Group.h"
 #include "physicalModel/Bound.h"
 #include "physicalModel/volume/Classic.h"
+#include "physicalModel/multiport/Predefined.h"
 
 using namespace SEMBA;
 using namespace PhysicalModel;
@@ -51,4 +52,19 @@ TEST_F(PhysicalModelGroupTest, bound)
 
     const Bound* bound = bounds.getOf<Bound>()[0];
     EXPECT_TRUE(bound->getType() == Bound::Type::pec);
+}
+
+TEST_F(PhysicalModelGroupTest, copy_and_getOf)
+{
+    PMGroup original = buildPMGroup();
+    original.addAndAssignId(std::make_unique<Multiport::Predefined>(
+        Id{ 0 }, "Short", Multiport::Multiport::Type::shortCircuit)
+    );
+
+    EXPECT_EQ(1, original.sizeOf<Volume::Classic>());
+    EXPECT_EQ(1, original.sizeOf<Multiport::Predefined>());
+
+    PMGroup copied(original);
+    EXPECT_EQ(1, copied.sizeOf<Volume::Classic>());
+    EXPECT_EQ(1, copied.sizeOf<Multiport::Predefined>());
 }

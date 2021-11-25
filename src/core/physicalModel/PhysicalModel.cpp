@@ -8,6 +8,13 @@ PhysicalModel::PhysicalModel(const std::string& name)
     name_ = name;
 }
 
+PhysicalModel::PhysicalModel(const Id& id, const std::string& name) :
+    name_{name},
+    Identifiable<Id>{id}
+{
+
+}
+
 const std::string& PhysicalModel::getName() const {
     return name_;
 }

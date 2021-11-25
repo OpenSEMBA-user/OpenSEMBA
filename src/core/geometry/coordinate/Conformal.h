@@ -20,7 +20,9 @@ public:
     Conformal(const Conformal& rhs);
     virtual ~Conformal();
 
-    SEMBA_CLASS_DEFINE_CLONE(Conformal);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Conformal>(*this);
+    }
 
     Conformal& operator=(const Conformal& rhs);
 

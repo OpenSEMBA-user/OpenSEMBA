@@ -22,7 +22,9 @@ public:
             const std::vector<PoleResidue>& poleImpedance);
     virtual ~SIBC();
 
-    SEMBA_CLASS_DEFINE_CLONE(SIBC);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<SIBC>(*this);
+    }
 
     virtual std::size_t getNumberOfPoles() const;
 

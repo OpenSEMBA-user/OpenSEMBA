@@ -110,7 +110,7 @@ TEST_F(CoordinateGroupTest, get_positions_after_move)
 
 TEST_F(CoordinateGroupTest, polymorphic_add) 
 {
-    Coordinate::Group<> grp;
+    CoordGroup grp;
     grp.add(std::make_unique<CoordR3>(CoordId(1), Math::CVecR3(1.0)));
     grp.add(std::make_unique<CoordI3>(CoordId(2), Math::CVecI3(2)));
 
@@ -126,4 +126,8 @@ TEST_F(CoordinateGroupTest, polymorphic_sizeOf)
 
     EXPECT_EQ(1, grp.sizeOf<CoordR3>());
     EXPECT_EQ(2, grp.sizeOf<CoordI3>());
+
+    CoordGroup copied = grp;
+    EXPECT_EQ(1, copied.sizeOf<CoordR3>());
+    EXPECT_EQ(2, copied.sizeOf<CoordI3>());
 }

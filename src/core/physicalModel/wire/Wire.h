@@ -6,8 +6,7 @@ namespace SEMBA {
 namespace PhysicalModel {
 namespace Wire {
 
-class Wire : public virtual PhysicalModel,
-             public virtual Class::Cloneable {
+class Wire : public virtual PhysicalModel {
 public:
     Wire(const Id id,
          const std::string name,
@@ -29,8 +28,10 @@ public:
          const std::string filename);
     Wire(const Wire&);
     virtual ~Wire() = default;
-
-    SEMBA_CLASS_DEFINE_CLONE(Wire);
+    
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Wire>(*this);
+    }
 
     Math::Real getRadius() const;
 

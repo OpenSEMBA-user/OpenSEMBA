@@ -1,16 +1,13 @@
-
-
 #include "Multiport.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 namespace Multiport {
 
-Multiport::Multiport() {
-    type_ = undefined;
-}
-
-Multiport::~Multiport() {
+Multiport::Multiport(const Id& id, const std::string& name, const Type& type) :
+    PhysicalModel(id, name),
+    type_(type)
+{
 
 }
 
@@ -19,49 +16,34 @@ Multiport::Type Multiport::getType() const {
 }
 
 std::string Multiport::getTypeStr() const {
-    std::string res;
     switch (type_) {
-    case shortCircuit:
-        res = "Short circuit";
-        break;
-    case openCircuit:
-        res = "Open circuit";
-        break;
-    case matched:
-        res = "Matched";
-        break;
-    case sRLC:
-        res = "Series RLC";
-        break;
-    case sRLpC:
-        res = "Series RL Parallel C";
-        break;
-    case sRCpL:
-        res = "Series RC Parallel L";
-        break;
-    case sRpLC:
-        res = "Series R Parallel C";
-        break;
-    case sLCpR:
-        res = "Series LC Parallel R";
-        break;
-    case sLpRC:
-        res = "Series L Parallel RC";
-        break;
-    case sCpLR:
-        res = "Series C Parallel LR";
-        break;
-    case pRLC:
-        res = "Parallel RLC";
-        break;
-    case dispersive:
-        res = "Dispersive";
-        break;
+    case Type::shortCircuit:
+        return "Short circuit";
+    case Type::openCircuit:
+        return "Open circuit";
+    case Type::matched:
+        return "Matched";
+    case Type::sRLC:
+        return "Series RLC";
+    case Type::sRLpC:
+        return "Series RL Parallel C";
+    case Type::sRCpL:
+        return "Series RC Parallel L";
+    case Type::sRpLC:
+        return "Series R Parallel C";
+    case Type::sLCpR:
+        return "Series LC Parallel R";
+    case Type::sLpRC:
+        return "Series L Parallel RC";
+    case Type::sCpLR:
+        return "Series C Parallel LR";
+    case Type::pRLC:
+        return "Parallel RLC";
+    case Type::dispersive:
+        return "Dispersive";
     default:
-        res = "Undefined";
-        break;
+        return "Undefined";    
     }
-    return res;
 }
 
 } /* namespace Multiport */

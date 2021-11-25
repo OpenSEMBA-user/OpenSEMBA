@@ -20,7 +20,9 @@ public:
     AnisotropicCrystal(const AnisotropicCrystal&);
     virtual ~AnisotropicCrystal();
 
-    SEMBA_CLASS_DEFINE_CLONE(AnisotropicCrystal);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<AnisotropicCrystal>(*this);
+    }
 
     const Math::CVecR3 getPrincipalAxesRelativePermittivity() const;
     Math::Real getRelativePermeability() const;

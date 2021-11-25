@@ -56,20 +56,23 @@ public:
     bool existId(const Id& id) const { return items_.count(id) != 0; }
     
     virtual iterator add(const std::unique_ptr<T>& item);
-    virtual iterator add(std::unique_ptr<T>&& item);
+    virtual iterator add(std::unique_ptr<T>&& item);    
     virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
 
     void removeId(const Id& id);
 
-std::size_t size() const { return items_.size(); }
-bool empty() const { return items_.empty(); }
+    std::size_t size() const { return items_.size(); }
+    bool empty() const { return items_.empty(); }
 
-template<typename T2>
-bool emptyOf() const;
-template<typename T2>
-std::size_t sizeOf() const;
-template<typename T2>
-std::vector<const T2*> getOf() const;
+    template<typename T2>
+    bool emptyOf() const;
+    template<typename T2>
+    std::size_t sizeOf() const;
+    template<typename T2>
+    std::vector<const T2*> getOf() const;
+
+protected:
+
 private:
     Container items_;
 };
@@ -77,16 +80,16 @@ private:
 template<typename T>
 IdentifiableUnique<T>::IdentifiableUnique(const IdentifiableUnique<T>& rhs)
 {
-    for (auto const& elem : rhs) {
-        add(elem);
+    for (auto const& it: rhs) {
+        add(it);
     }
 }
 
 template<typename T>
 IdentifiableUnique<T>& IdentifiableUnique<T>::operator=(const IdentifiableUnique<T>& rhs)
 {
-    for (auto const& elem : rhs) {
-        add(elem);
+    for (auto const& it: rhs) {
+        add(it);
     }
     return *this;
 }
@@ -115,20 +118,22 @@ T* IdentifiableUnique<T>::getId(const IdentifiableUnique<T>::Id& id)
     }
 }
 
-template<typename T>
+template<typename T> 
 typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
 {
-    auto it = items_.insert(std::make_unique<T>(*elem));
+    auto it = items_.insert(std::move(elem->cloneTo<T>()));
+    
     if (it.second) {
         return it.first;
     }
     else {
         throw Group::Error::Id::Duplicated<Id>(elem->getId());
     }
+
 }
 
-template<typename T>
+template<typename T> 
 typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::add(std::unique_ptr<T>&& elem)
 {
@@ -141,7 +146,7 @@ IdentifiableUnique<T>::add(std::unique_ptr<T>&& elem)
     }
 }
 
-template<typename T>
+template<typename T> 
 typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::addAndAssignId(std::unique_ptr<T>&& elem)
 {

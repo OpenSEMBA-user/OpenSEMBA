@@ -9,10 +9,8 @@ namespace Multiport {
 Dispersive::Dispersive(const Id id,
                        const std::string name,
                        const std::string filename)
-:   Identifiable<Id>(id),
-    PhysicalModel(name) {
+:   Multiport(id, name, Multiport::Type::dispersive) {
     filename_ = filename;
-    type_ = dispersive;
 }
 
 Dispersive::Dispersive(const Dispersive& rhs)
@@ -22,9 +20,6 @@ Dispersive::Dispersive(const Dispersive& rhs)
     type_ = rhs.type_;
 }
 
-Dispersive::~Dispersive() {
-
-}
 
 std::string Dispersive::getFilename() const {
     return filename_;

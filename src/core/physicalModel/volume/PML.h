@@ -15,7 +15,9 @@ public:
     PML(const PML& rhs);
     virtual ~PML() = default;
   
-    SEMBA_CLASS_DEFINE_CLONE(PML);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<PML>(*this);
+    }
 
     const Math::Axis::Local getOrientation() const;
     const Math::CVecR3 getGlobalZAxis() const;

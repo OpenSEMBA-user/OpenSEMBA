@@ -21,7 +21,9 @@ public:
     }
     virtual ~Predefined() = default;
     
-    SEMBA_CLASS_DEFINE_CLONE(Predefined<T>);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Predefined<T>>(*this);
+    }
 };
 
 typedef Predefined<Predefined<void>::PEC> PEC;

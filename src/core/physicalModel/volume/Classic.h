@@ -21,7 +21,9 @@ public:
     Classic(const Classic&);
     virtual ~Classic();
 
-    SEMBA_CLASS_DEFINE_CLONE(Classic);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Classic>(*this);
+    }
 
     Math::Real getRelativePermittivity() const;
     Math::Real getPermittivity() const;

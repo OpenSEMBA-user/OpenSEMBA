@@ -1,11 +1,8 @@
-
-
 #pragma once
 
 #include "math/Constants.h"
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 
@@ -32,8 +29,19 @@ public:
         multiport
     };
 
+    virtual std::unique_ptr<PhysicalModel> clone() const {
+        return std::make_unique<PhysicalModel>(*this);
+    }
+
+    template <class T>
+    std::unique_ptr<T> cloneTo() const {
+        std::unique_ptr<T> res(dynamic_cast<T*>(this->clone().release()));
+        return res;
+    }
+
     PhysicalModel() = default;
     PhysicalModel(const std::string& name);
+    PhysicalModel(const Id& id, const std::string& name);
     virtual ~PhysicalModel() = default;
 
     const std::string& getName() const;

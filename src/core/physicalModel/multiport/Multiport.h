@@ -8,7 +8,7 @@ namespace Multiport {
 
 class Multiport : public virtual PhysicalModel {
 public:
-    enum Type {
+    enum class Type {
         // PredefinedBase
         shortCircuit = 1,
         openCircuit = 2,
@@ -26,15 +26,14 @@ public:
         dispersive = 100,
         undefined = 0
     };
-    Multiport();
-    virtual ~Multiport();
-
-    SEMBA_CLASS_DEFINE_CLONE(Multiport);
+    Multiport() = default;
+    Multiport(const Id& id, const std::string& name, const Type& type);
+    virtual ~Multiport() = default;
 
     virtual Type getType() const;
 
 protected:
-    Type type_;
+    Type type_ = Type::undefined;
     std::string getTypeStr() const;
 };
 

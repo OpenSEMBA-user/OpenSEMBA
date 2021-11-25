@@ -178,12 +178,11 @@ void Exporter::writeElements_(
     Math::UInt tmpCounter = coordCounter_;
     std::vector<int> nId(nV);
     beginMesh(name, GiD_3D, type, nV);
-    std::map<Geometry::CoordId, Geometry::CoordR3*> pos;
+    std::map<Geometry::CoordId, const Geometry::CoordR3*> pos;
     for(std::size_t i = 0; i < elem.size(); i++) {
         for (Math::Int j = 0; j < nV; j++) {
             if (pos.count(elem(i)->getVertex(j)->getId()) == 0) {
-                pos[elem(i)->getVertex(j)->getId()] =
-                    elem(i)->getVertex(j)->clone();
+                pos[elem(i)->getVertex(j)->getId()] = elem(i)->getVertex(j);
             }
         }
     }

@@ -34,11 +34,6 @@ Coordinate<T,D>& Coordinate<T,D>::operator=(const Coordinate& rhs)
 }
 
 template<class T, std::size_t D>
-Coordinate<T,D>* Coordinate<T,D>::clone() const {
-    return new Coordinate<T,D>(*this);
-}
-
-template<class T, std::size_t D>
 bool Coordinate<T,D>::operator==(const Base& rhs) const {
     if(!Base::operator==(rhs)) {
         return false;

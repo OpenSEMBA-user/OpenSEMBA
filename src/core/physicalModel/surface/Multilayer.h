@@ -73,7 +73,9 @@ public:
             const std::vector<FittingOptions>& options = {});
     virtual ~Multilayer();
 
-    SEMBA_CLASS_DEFINE_CLONE(Multilayer);
+    virtual std::unique_ptr<PhysicalModel> clone() const override {
+        return std::make_unique<Multilayer>(*this);
+    }
 
     Layer getLayer(size_t i) const {
         return layers_[i];
