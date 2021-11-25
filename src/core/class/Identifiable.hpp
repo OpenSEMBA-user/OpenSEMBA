@@ -1,12 +1,10 @@
-
-
 #include "Identifiable.h"
 
 namespace SEMBA {
 namespace Class {
 
 template<class Id>
-Identifiable<Id>::Identifiable(const Id id) {
+Identifiable<Id>::Identifiable(const Id& id) {
     id_ = id;
 }
 
@@ -16,7 +14,7 @@ Id Identifiable<Id>::getId() const {
 }
 
 template<class Id>
-void Identifiable<Id>::setId(const Id id) {
+void Identifiable<Id>::setId(const Id& id) {
     this->id_ = id;
 }
 

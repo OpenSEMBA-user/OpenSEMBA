@@ -1,5 +1,3 @@
-
-
 #include "Wire.h"
 
 namespace SEMBA {
@@ -10,18 +8,13 @@ Wire::Wire(const Id id,
            const std::string name,
            const Math::Real radius,
            const Math::Real resistance,
-           const Math::Real inductance)
-:   Identifiable<Id>(id), 
-    PhysicalModel(name) {
+           const Math::Real inductance) :   
+    Identifiable<Id>(id),
+    PhysicalModel(name)
+{
     radius_ = radius;
-    isSeriesParallel_ = false;
-    isDispersive_ = false;
     seriesResistance_ = resistance;
     seriesInductance_ = inductance;
-    seriesCapacitance_ = 0.0;
-    parallelResistance_ = 0.0;
-    parallelInductance_ = 0.0;
-    parallelCapacitance_ = 0.0;
 }
 
 Wire::Wire(const Id id,
@@ -32,9 +25,10 @@ Wire::Wire(const Id id,
            const Math::Real capacitance,
            const Math::Real pResistance,
            const Math::Real pInductance,
-           const Math::Real pCapacitance)
-:   Identifiable<Id>(id),
-    PhysicalModel(name) {
+           const Math::Real pCapacitance) : 
+    Identifiable<Id>(id),
+    PhysicalModel(name)
+{
     radius_ = radius;
     isSeriesParallel_ = true;
     isDispersive_ = false;
@@ -49,24 +43,18 @@ Wire::Wire(const Id id,
 Wire::Wire(const Id id,
            const std::string name,
            const Math::Real radius,
-           const std::string filename)
-:   Identifiable<Id>(id),
-    PhysicalModel(name) {
+           const std::string filename) :
+    Identifiable<Id>(id),
+    PhysicalModel(name)
+{
     radius_ = radius;
-    isSeriesParallel_ = false;
-    isDispersive_ = true;
-    seriesResistance_ = 0.0;
-    seriesInductance_ = 0.0;
-    seriesCapacitance_ = 0.0;
-    parallelResistance_ = 0.0;
-    parallelInductance_ = 0.0;
-    parallelCapacitance_ = 0.0;
     filename_ = filename;
 }
 
-Wire::Wire(const Wire& rhs)
-:   Identifiable<Id>(rhs),
-    PhysicalModel(rhs) {
+Wire::Wire(const Wire& rhs) : 
+    Identifiable<Id>(rhs),
+    PhysicalModel(rhs) 
+{
     radius_ = rhs.radius_;
     isSeriesParallel_ = rhs.isSeriesParallel_;
     isDispersive_ = rhs.isDispersive_;
@@ -79,43 +67,53 @@ Wire::Wire(const Wire& rhs)
     filename_ = rhs.filename_;
 }
 
-bool Wire::isSeriesParallel() const {
+bool Wire::isSeriesParallel() const 
+{
     return isSeriesParallel_;
 }
 
-bool Wire::isDispersive() const {
+bool Wire::isDispersive() const 
+{
     return isDispersive_;
 }
 
-Math::Real Wire::getRadius() const {
+Math::Real Wire::getRadius() const 
+{
     return radius_;
 }
 
-Math::Real Wire::getSeriesResistance() const {
+Math::Real Wire::getSeriesResistance() const 
+{
     return seriesResistance_;
 }
 
-Math::Real Wire::getSeriesInductance() const {
+Math::Real Wire::getSeriesInductance() const 
+{
     return seriesInductance_;
 }
 
-Math::Real Wire::getSeriesCapacitance() const {
+Math::Real Wire::getSeriesCapacitance() const 
+{
     return seriesCapacitance_;
 }
 
-Math::Real Wire::getParallelResistance() const {
+Math::Real Wire::getParallelResistance() const 
+{
     return parallelResistance_;
 }
 
-Math::Real Wire::getParallelInductance() const {
+Math::Real Wire::getParallelInductance() const 
+{
     return parallelInductance_;
 }
 
-Math::Real Wire::getParallelCapacitance() const {
+Math::Real Wire::getParallelCapacitance() const 
+{
     return parallelCapacitance_;
 }
 
-std::string Wire::getFilename() const {
+std::string Wire::getFilename() const 
+{
     return filename_;
 }
 

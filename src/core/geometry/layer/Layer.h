@@ -27,12 +27,6 @@ public:
         return std::make_unique<Layer>(*this);
     }
     
-    template <class T>
-    std::unique_ptr<T> cloneTo() const {
-        std::unique_ptr<T> res(dynamic_cast<T*>(this->clone().release()));
-        return res;
-    }
-
     virtual bool operator==(const Layer& rhs) const;
     virtual bool operator!=(const Layer& rhs) const;
 

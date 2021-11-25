@@ -1,17 +1,9 @@
-
-
 #include "Identification.h"
 
 #include <sstream>
 
 namespace SEMBA {
 namespace Class {
-
-template<typename T>
-Identification<T>::Identification()
-:   id_(0) {
-
-}
 
 template<typename T>
 Identification<T>::Identification(const std::size_t id)
@@ -22,11 +14,6 @@ Identification<T>::Identification(const std::size_t id)
 template<typename T>
 Identification<T>::Identification(const Identification& rhs)
 :   id_(rhs.id_) {
-
-}
-
-template<typename T>
-Identification<T>::~Identification() {
 
 }
 

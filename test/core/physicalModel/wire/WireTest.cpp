@@ -4,12 +4,7 @@
 using namespace SEMBA;
 using namespace PhysicalModel;
 
-class PhysicalModelWireTest : public ::testing::Test {
-public:
-
-protected:
-
-};
+class PhysicalModelWireTest : public ::testing::Test {};
 
 TEST_F(PhysicalModelWireTest, copy_assignment) 
 {
@@ -18,14 +13,19 @@ TEST_F(PhysicalModelWireTest, copy_assignment)
     Wire::Wire copied = orig;
 
     EXPECT_EQ(Id(2), copied.getId());
+    EXPECT_EQ("Cable", copied.getName());
 }
 
 TEST_F(PhysicalModelWireTest, copy_ctor)
 {
     Wire::Wire orig(Id(2), "Cable", 1.0, 1.0, 1.0);
     Wire::Wire copied(orig);
+    
+    EXPECT_EQ(Id(2), orig.getId());
+
 
     EXPECT_EQ(Id(2), copied.getId());
+    EXPECT_EQ("Cable", copied.getName());
 }
 
 TEST_F(PhysicalModelWireTest, build_with_base_make_unique_ptr)

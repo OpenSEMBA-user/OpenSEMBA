@@ -122,7 +122,9 @@ template<typename T>
 typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
 {
-    auto it = items_.insert(std::move(elem->cloneTo<T>()));
+    
+    std::unique_ptr<T> res(dynamic_cast<T*>(elem->clone().release()));
+    auto it = items_.insert(std::move(res));
     
     if (it.second) {
         return it.first;

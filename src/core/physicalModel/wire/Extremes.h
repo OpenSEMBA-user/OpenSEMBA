@@ -16,21 +16,21 @@ public:
              const Multiport::Multiport* extremeL,
              const Multiport::Multiport* extremeR);
     Extremes(const Extremes& rhs);
-    virtual ~Extremes();
+    virtual ~Extremes() = default;
 
     virtual std::unique_ptr<PhysicalModel> clone() const override {
         return std::make_unique<Extremes>(*this);
     }
 
     const Multiport::Multiport *getExtreme(const std::size_t i) const {
-        return extreme_[i];
+        return extreme_[i].get();
     }
 
     void setExtreme(const std::size_t i, const Multiport::Multiport* extreme);
     void swapExtremes();
 
 private:
-    const Multiport::Multiport* extreme_[2];
+    std::unique_ptr<Multiport::Multiport> extreme_[2];
 };
 
 } /* namespace Wire */

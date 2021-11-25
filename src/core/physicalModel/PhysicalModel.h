@@ -12,8 +12,8 @@ namespace PhysicalModel {
 class PhysicalModel;
 typedef Class::Identification<PhysicalModel> Id;
 
-class PhysicalModel : public virtual Class::Class,
-                      public virtual Class::Identifiable<Id> {
+class PhysicalModel : public virtual Class::Identifiable<Id>,
+                      public virtual Class::Class {
 public:
     enum class Type {
         PEC,
@@ -29,19 +29,13 @@ public:
         multiport
     };
 
-    virtual std::unique_ptr<PhysicalModel> clone() const {
-        return std::make_unique<PhysicalModel>(*this);
-    }
-
-    template <class T>
-    std::unique_ptr<T> cloneTo() const {
-        std::unique_ptr<T> res(dynamic_cast<T*>(this->clone().release()));
-        return res;
-    }
-
+    virtual std::unique_ptr<PhysicalModel> clone() const = 0;
+    
     PhysicalModel() = default;
+    PhysicalModel(const PhysicalModel&);
     PhysicalModel(const std::string& name);
-    PhysicalModel(const Id& id, const std::string& name);
+    
+    
     virtual ~PhysicalModel() = default;
 
     const std::string& getName() const;

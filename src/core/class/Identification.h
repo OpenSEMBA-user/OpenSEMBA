@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <cstddef>
@@ -18,10 +16,10 @@ class Identification {
     friend std::ostream& operator<<(std::ostream& output,
                                     const Identification<I>& id);
 public:
-    Identification();
+    Identification() = default;
     explicit Identification(const std::size_t id);
     Identification(const Identification& rhs);
-    virtual ~Identification();
+    virtual ~Identification() = default;
 
     Identification& operator =(const Identification& rhs);
     Identification& operator+=(const Identification& rhs);
@@ -41,7 +39,7 @@ public:
     std::string toStr() const;
 
 private:
-    std::size_t id_;
+    std::size_t id_{ 0 };
 };
 
 } /* namespace Class */

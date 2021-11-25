@@ -26,6 +26,7 @@ public:
          const std::string name,
          const Math::Real radius,
          const std::string filename);
+    
     Wire(const Wire&);
     virtual ~Wire() = default;
     
@@ -48,16 +49,16 @@ public:
     std::string getFilename() const;
 
 private:
-    Math::Real radius_;
-    bool isSeriesParallel_;
-    bool isDispersive_;
-    Math::Real seriesResistance_;    // Resistance per meter.
-    Math::Real seriesInductance_;    // Inductance per meter.
-    Math::Real seriesCapacitance_;   // Capacitance per meter.
-    Math::Real parallelResistance_;  // Resistance per meter.
-    Math::Real parallelInductance_;  // Inductance per meter.
-    Math::Real parallelCapacitance_; // Capacitance per meter.
-    std::string filename_;
+    Math::Real radius_ = 0.0;
+    bool isSeriesParallel_ = false;
+    bool isDispersive_     = false;
+    Math::Real seriesResistance_   = 0.0;    // Resistance per meter.
+    Math::Real seriesInductance_   = 0.0;    // Inductance per meter.
+    Math::Real seriesCapacitance_  = 0.0;   // Capacitance per meter.
+    Math::Real parallelResistance_ = 0.0;  // Resistance per meter.
+    Math::Real parallelInductance_ = 0.0;  // Inductance per meter.
+    Math::Real parallelCapacitance_= 0.0; // Capacitance per meter.
+    std::string filename_ = "";
 };
 
 } /* namespace Wire */

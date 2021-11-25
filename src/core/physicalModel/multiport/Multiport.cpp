@@ -5,7 +5,8 @@ namespace PhysicalModel {
 namespace Multiport {
 
 Multiport::Multiport(const Id& id, const std::string& name, const Type& type) :
-    PhysicalModel(id, name),
+    Identifiable<Id>(id),
+    PhysicalModel(name),
     type_(type)
 {
 

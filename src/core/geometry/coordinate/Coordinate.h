@@ -23,12 +23,6 @@ public:
     virtual ~Base() = default;
     
     virtual std::unique_ptr<Base> clone() const = 0;
-    
-    template <class T>
-    std::unique_ptr<T> cloneTo() const {
-        std::unique_ptr<T> res(dynamic_cast<T*>(this->clone().release()));
-        return res;
-    }
 
     virtual bool operator==(const Base& rhs) const;
     virtual bool operator!=(const Base& rhs) const;
