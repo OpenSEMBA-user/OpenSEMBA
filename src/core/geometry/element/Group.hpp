@@ -5,46 +5,14 @@ namespace Geometry {
 namespace Element {
 
 template<typename E>
-Group<E>& Group<E>::operator=(SEMBA::Group::Group<E>& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    SEMBA::Group::Identifiable<E, Id>::operator=(rhs);
-    return *this;
-}
-
-template<typename E>
-Group<E>& Group<E>::operator=(SEMBA::Group::Group<E>&& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    SEMBA::Group::Identifiable<E, Id>::operator=(std::move(rhs));
-    return *this;
-}
-
-template<typename E>
-Group<E>& Group<E>::operator=(const SEMBA::Group::Group<E>& rhs) {
-    return operator=(SEMBA::Group::Group<E>(rhs));
-}
-
-template<typename E>
-bool Group<E>::isLinear() const {
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (!this->get(i)->isLineal()) {
-            return false;
-        }
-    }
-    return true;
-}
-
-template<typename E>
-Group<const E> Group<E>::getCoordId(const CoordId id) const {
-	Group<const E> res;
-	for (size_t i = 0; i < this->size(); i++) { 
-		const E* elem = this->get(i);
+std::vector<const E*> Group<E>::getCoordId(const CoordId& id) const 
+{
+	std::vector<const E*> res;
+	for (auto const item& : items_) { 
+		const E* elem = item;
 		for (size_t j = 0; j < elem->numberOfCoordinates(); j++) {
 			if (elem->getV(j)->getId() == id) {
-				res.add(elem);
+				res.push_back(elem);
 			}
 		}
 	}
@@ -52,208 +20,68 @@ Group<const E> Group<E>::getCoordId(const CoordId id) const {
 }
 
 template<typename E>
-Group<E> Group<E>::getMatId(const MatId matId) {
-    std::vector<MatId> aux;
-    aux.push_back(matId);
-    return getMatId(aux);
-}
-
-template<typename E>
-Group<E> Group<E>::getMatId(
-        const std::vector<MatId>& matIds) {
-
-    return this->get(getElemsWith_(matIds));
-}
-
-template<typename E>
-Group<const E> Group<E>::getMatId(
-        const MatId matId) const {
-    std::vector<MatId> aux;
-    aux.push_back(matId);
-    return getMatId(aux);
-}
-
-template<typename E>
-Group<const E> Group<E>::getMatId(
-        const std::vector<MatId>& matIds) const {
-
-    return this->get(getElemsWith_(matIds));
-}
-
-template<typename E>
-Group<E> Group<E>::getLayerId(const LayerId layerId) {
-    std::vector<LayerId> aux;
-    aux.push_back(layerId);
-    return getLayerId(aux);
-}
-
-template<typename E>
-Group<E> Group<E>::getLayerId(
-        const std::vector<LayerId>& layIds) {
-
-    return this->get(getElemsWith_(layIds));
-}
-
-template<typename E>
-Group<const E> Group<E>::getLayerId(
-        const LayerId layerId) const {
-    std::vector<LayerId> aux;
-    aux.push_back(layerId);
-    return getLayerId(aux);
-}
-
-template<typename E>
-Group<const E> Group<E>::getLayerId(
-        const std::vector<LayerId>& layIds) const {
-
-    return this->get(getElemsWith_(layIds));
-}
-
-template<typename E>
-Group<E> Group<E>::getMatLayerId(const MatId   matId,
-                                         const LayerId layId) {
-    return this->get(getElemsWith_(matId, layId));
-}
-
-template<typename E>
-Group<const E> Group<E>::getMatLayerId(const MatId   matId,
-                                               const LayerId layId) const {
-    return this->get(getElemsWith_(matId, layId));
-}
-
-//template<typename E>
-//std::vector<Id> Group<E>::getIdsWithoutMaterialId(
-//        const MatId matId) const {
-//
-//    std::vector<Id> res;
-//    res.reserve(this->size());
-//    for (std::size_t i = 0; i < this->size(); i++) {
-//        if (this->get(i)->getMatId() != matId) {
-//            res.push_back(this->get(i)->getId());
-//        }
-//    }
-//    return res;
-//}
-
-template<typename E>
-Group<const ElemR> Group<E>::getInsideBound(
-        const BoxR3& bound) const {
-    Group<const ElemR> res;
-    res.reserve(this->size());
-    for (std::size_t i = 0; i < this->size(); i++) {
-        BoxR3 localBound = this->get(i)->getBound();
-        if (localBound <= bound) {
-            res.add(this->get(i));
+std::vector<const E*> Group<E>::getMatId(const MatId& id) const
+{
+    std::vector<const E*> res;
+    for (auto const item& : items_) {
+        if (item->getMatId() == id) {
+            res.push_back(item);
         }
     }
     return res;
 }
 
 template<typename E>
-BoxR3 Group<E>::getBound() const {
+std::vector<const E*> Group<E>::getLayerId(const LayerId& id) const
+{
+    std::vector<const E*> res;
+    for (auto const item& : items_) {
+        if (item->getLayerId() == id) {
+            res.push_back(item);
+        }
+    }
+    return res;
+}
+
+template<typename E>
+std::vector<const E*> Group<E>::getMatLayerId(const MatId& mId, const LayerId& lId) const
+{
+    std::vector<const E*> res;
+    for (auto const item& : items_) {
+        if (item->getMatId() == mId && item->getLayerId() == lId) {
+            res.push_back(item);
+        }
+    }
+    return res;
+}
+
+template<typename E>
+BoxR3 Group<E>::getBound() const 
+{
     if (this->size() == 0) {
         return BoxR3().setInfinity();
     }
     BoxR3 bound;
-    {
-        Group<const ElemR> elems = this->template getOf<ElemR>();
-        for (std::size_t i = 0; i < elems.size(); i++) {
-            bound << elems(i)->getBound();
-        }
+    for (auto const& elem: this->getOf<ElemR>()) {
+        bound << elem->getBound();
     }
-    {
-        Group<const ElemI> elemsI = this->template getOf<ElemI>();
-        for (std::size_t i = 0; i < elemsI.size(); i++) {
-            BoxI3 boxI = elemsI(i)->getBound();
-            Math::CVecI3 minP = boxI.getMin();
-            Math::CVecI3 maxP = boxI.getMax();
-            bound << BoxR3(Math::CVecR3(minP(Math::Constants::x),
-                                        minP(Math::Constants::y),
-                                        minP(Math::Constants::z)),
-                           Math::CVecR3(maxP(Math::Constants::x),
-                                        maxP(Math::Constants::y),
-                                        maxP(Math::Constants::z)));
-        }
+    for (auto const& elem: this->getOf<ElemI>()) {
+        BoxI3 boxI = elem->getBound();
+        Math::CVecI3 minP = boxI.getMin();
+        Math::CVecI3 maxP = boxI.getMax();
+        using Math::CVecR3;
+        using namespace Math::Constants;
+        bound << BoxR3(CVecR3(minP(x), minP(y), minP(z)), CVecR3(maxP(x), maxP(y), maxP(z)));
     }
     return bound;
-}
-
-template<typename E>
-BoxR3 Group<E>::getBound(const std::vector<Face>& border) const {
-    if (border.size() == 0) {
-        return BoxR3().setInfinity();
-    }
-    BoxR3 bound;
-    for (std::size_t i = 0; i < border.size(); i++) {
-        const VolR* vol = border[i].first;
-        const std::size_t face = border[i].second;
-        bound << vol->getBoundOfFace(face);
-    }
-    return bound;
-}
-
-template<typename E>
-const CoordR3* Group<E>::getClosestVertex(const Math::CVecR3 pos) const {
-    const CoordR3* res = nullptr;
-    Math::Real minDist = std::numeric_limits<Math::Real>::infinity();
-    Group<const ElemR> elems = this->template getOf<ElemR>();
-    for (std::size_t b = 0; b < elems.size(); b++) {
-        for (std::size_t i = 0; i < elems(i)->numberOfCoordinates(); i++) {
-            const CoordR3* candidate = elems(i)->getV(i);
-            if ((candidate->pos() - res->pos()).norm() < minDist) {
-                res = candidate;
-                minDist = (candidate->pos() - res->pos()).norm();
-            }
-        }
-    }
-    return res;
-}
-
-template<typename E>
-void Group<E>::setModel(const Model* newMat) {
-    for (std::size_t i = 0; i < this->size(); i++) {
-        this->get(i)->setModel(newMat);
-    }
-}
-
-template<typename E>
-void Group<E>::setLayer(const Layer* newLay) {
-    for (std::size_t i = 0; i < this->size(); i++) {
-        this->get(i)->setLayer(newLay);
-    }
-}
-
-template<typename E>
-void Group<E>::setModel(const Id id,
-                        const Model* newMat) {
-    this->getId(id)->setModel(newMat);
-}
-
-template<typename E>
-void Group<E>::setLayer(const Id id,
-                        const Layer* newLay) {
-    this->getId(id)->setLayer(newLay);
-}
-
-template<typename E>
-void Group<E>::removeMatId(const MatId matId) {
-    std::vector<MatId> aux;
-    aux.push_back(matId);
-    removeMatId(aux);
-}
-
-template<typename E>
-void Group<E>::removeMatId(const std::vector<MatId>& matId) {
-    Group<E>::remove(getElemsWith_(matId));
 }
 
 template<typename E> template<class T>
-void Group<E>::reassignPointers(
-        const Coordinate::Group< Coordinate::Coordinate<T,3> >& vNew) {
-
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (this->get(i)->template is< Element<T> >()) {
-            Element<T>* elem = this->get(i)->template castTo< Element<T> >();
+void Group<E>::reassignPointers(const Coordinate::Group< Coordinate::Coordinate<T,3> >& vNew) 
+{
+    for (auto const& item: items_) {
+        if (item->is<Element<T>>()) {
+            Element<T>* elem = item->castTo<Element<T>>();
             for (std::size_t j = 0; j < elem->numberOfCoordinates(); j++) {
                 CoordId vId = elem->getV(j)->getId();
                 elem->setV(j, vNew.getId(vId));
@@ -265,114 +93,21 @@ void Group<E>::reassignPointers(
 template<typename E>
 void Group<E>::reassignPointers(const LayerGroup& lNew) 
 {
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (this->get(i)->getLayer() != nullptr) {
-            LayerId layerId = this->get(i)->getLayerId();
-            this->get(i)->setLayer(lNew.getId(layerId));
+    for (auto const& item: items_) {
+        if (item->getLayer() != nullptr) {
+            item->setLayer( lNew.getId( item->getLayerId() ) );
         }
     }
 }
 
 template<typename E>
-void Group<E>::reassignPointers(const PMGroup& mNew) {
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (this->get(i)->getModel() != nullptr) {
-            this->get(i)->setModel(mNew.getId(this->get(i)->getMatId()));
+void Group<E>::reassignPointers(const PMGroup& mNew) 
+{
+    for (auto const& item: items_) {
+        if (item->getModel() != nullptr) {
+            item->setModel( mNew.getId( item->getMatId() ) );
         }
     }
-}
-
-template<typename E>
-std::map<LayerId, std::vector<const E*> >
-        Group<E>::separateByLayers() const {
-    std::map<LayerId, std::vector<const E*> > res;
-    for (std::size_t i = 0; i < this->size(); i++) {
-        const LayerId layerId = this->get(i)->getLayerId();
-        typename std::map<LayerId, std::vector<const E*> >::iterator it =
-            res.find(layerId);
-        if (it == res.end()) {
-            std::pair<LayerId, std::vector<const E*> > newEntry;
-            newEntry.first = layerId;
-            newEntry.second.push_back(this->get(i));
-            res.insert(newEntry);
-        } else {
-            it->second.push_back(this->get(i));
-        }
-    }
-    return res;
-}
-
-template<typename E>
-void Group<E>::linearize() {
-    if (isLinear()) {
-        return;
-    }
-
-    for(std::size_t i = 0; i < this->size(); i++) {
-        if (!this->get(i)->isLineal()) {
-            this->set(i, this->get(i)->linearize());
-        }
-    }
-}
-
-template<typename E>
-std::vector<std::size_t> Group<E>::getElemsWith_(
-        const std::vector<MatId>& mats) const {
-
-    std::set<MatId> matIds(mats.begin(), mats.end());
-    std::vector<std::size_t> elems;
-    elems.reserve(this->size());
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (matIds.count(this->get(i)->getMatId()) == 1) {
-            elems.push_back(i);
-        }
-    }
-    return elems;
-}
-
-template<typename E>
-IndexByVertexId Group<E>::getIndexByVertexId() const {
-    IndexByVertexId res;
-    for (std::size_t i = 0; i < this->size(); i++) {
-        const E* e = this->get(i);
-        std::vector<CoordId> ids(e->numberOfVertices());
-        for (std::size_t j = 0; j < e->numberOfVertices(); j++) {
-            ids[j] = e->getVertex(j)->getId();
-        }
-        res.insert(std::pair<std::vector<CoordId>,const E*>(ids,e));
-    }
-    return res;
-}
-
-
-template<typename E>
-std::vector<std::size_t> Group<E>::getElemsWith_(
-        const std::vector<LayerId>& lays) const {
-
-    std::set<LayerId> layIds(lays.begin(), lays.end());
-    std::vector<std::size_t> elems;
-    elems.reserve(this->size());
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if (layIds.count(this->get(i)->getLayerId()) == 1) {
-            elems.push_back(i);
-        }
-    }
-    return elems;
-}
-
-template<typename E>
-std::vector<std::size_t> Group<E>::getElemsWith_(
-        const MatId& matId, const LayerId& layId) const {
-
-    std::vector<std::size_t> elems;
-    elems.reserve(this->size());
-    for (std::size_t i = 0; i < this->size(); i++) {
-        if ((this->get(i)->getLayerId() == layId) &&
-            (this->get(i)->getMatId()   == matId)) {
-            elems.push_back(i);
-        }
-    }
-    return elems;
 }
 
 } /* namespace Element */

@@ -5,13 +5,13 @@ namespace OutputRequest {
 
 FarField::FarField(const Domain& domain,
                    const std::string& name,
-                   const Geometry::Element::Group<Geometry::Vol>& elem,
+                   const std::vector<const Geometry::Vol*>& elem,
                    const Math::Real iTh, const Math::Real fTh,
                    const Math::Real sTh,
                    const Math::Real iPhi, const Math::Real fPhi,
                    const Math::Real sPhi)
 :   SEMBA::OutputRequest::Base(electricFarField, name, domain),
-    Geometry::Element::Group<const Geometry::Vol>(elem) {
+    Geometry::Element::Group<Geometry::Vol>(elem) {
 
     setThetaAndPhi(iTh, fTh, sTh, iPhi, fPhi, sPhi);
 }

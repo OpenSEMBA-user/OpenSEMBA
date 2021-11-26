@@ -11,7 +11,7 @@ class FarField : public virtual OutputRequest<Geometry::Vol> {
 public:
     FarField(const Domain& domain,
              const std::string& name,
-             const Geometry::Element::Group<Geometry::Vol>& box,
+             const std::vector<const Geometry::Vol*>& box,
              const Math::Real iTh, const Math::Real fTh, const Math::Real sTh,
              const Math::Real iPhi, const Math::Real fPhi,
              const Math::Real sPhi);

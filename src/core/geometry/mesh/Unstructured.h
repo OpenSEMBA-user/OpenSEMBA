@@ -21,7 +21,7 @@ class Unstructured : public Mesh {
 public:
     Unstructured() = default;
     Unstructured(const CoordR3Group& cG,
-                 const Element::Group<const ElemR>& elem,
+                 const ElemRGroup& elem,
                  const LayerGroup & = LayerGroup());
     Unstructured(const Unstructured& param);
     Unstructured(Unstructured&&) = default;

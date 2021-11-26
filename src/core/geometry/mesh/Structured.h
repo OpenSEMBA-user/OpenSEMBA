@@ -23,7 +23,7 @@ public:
     Structured(const Grid3& grid);
     Structured(const Grid3& grid,
                const CoordI3Group& cG,
-               const Element::Group<const ElemI>& elem,
+               const ElemIGroup& elem,
                const LayerGroup& = LayerGroup(), 
                const BoundTerminations3& = BoundTerminations3());
     Structured(const Structured&);
