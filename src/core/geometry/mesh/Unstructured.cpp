@@ -10,10 +10,10 @@ namespace Geometry {
 namespace Mesh {
 
 Unstructured::Unstructured(const CoordR3Group& cG,
-                           const Element::Group<const ElemR>& elem,
+                           const ElemRGroup& elem,
                            const LayerGroup& layers) :   
     coords_(cG),
-    elems_(elem.cloneElems()),
+    elems_(elem),
     layers_(layers) 
 {
     elems_.reassignPointers( coords_ );
@@ -22,7 +22,7 @@ Unstructured::Unstructured(const CoordR3Group& cG,
 
 Unstructured::Unstructured(const Unstructured& rhs) :   
     coords_(rhs.coords()),
-    elems_(rhs.elems().cloneElems()),
+    elems_(rhs.elems()),
     layers_(rhs.layers()) 
 {
     elems_.reassignPointers(this->coords());
@@ -32,7 +32,7 @@ Unstructured::Unstructured(const Unstructured& rhs) :
 Unstructured& Unstructured::operator=(const Unstructured& rhs) 
 {
     coords_ = rhs.coords();
-    elems_ = rhs.elems().cloneElems();
+    elems_ = rhs.elems();
     layers_ = rhs.layers();
 
     elems_.reassignPointers(this->coords());
@@ -50,15 +50,11 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid, const Math::Real 
         res->coords().add(newCoord);
     }
 
-    std::vector<ElemI*> newElems;
-    newElems.reserve(elems().size());
-    for (std::size_t i = 0; i < elems().size(); i++) {
-		ElemI* newElem = elems()(i)->toStructured(res->coords(), grid, tol);
-        if (newElem != nullptr) {
-            newElems.push_back(newElem);
-        }
+    for (auto const& elem : elems()) {
+		auto newElem = std::make_unique<ElemI>(*elem->toStructured(res->coords(), grid, tol));
+        res->elems().add(newElem);
     }
-    res->elems().add(newElems);
+
     res->layers() = layers();
     return res;
 }
@@ -78,15 +74,6 @@ void Unstructured::reassignPointers(const PMGroup& matGr)
 
 BoxR3 Unstructured::getBoundingBox() const {
     return elems().getBound();
-}
-
-void Unstructured::reassign( Element::Group<const Elem>& inGroup ) {
-    Element::Group<const Elem> res;
-    for (std::size_t i = 0; i < inGroup.size(); i++) {
-        ElemId id = inGroup(i)->getId();
-        res.add(this->elems().getId(id));
-    }
-    inGroup = res;
 }
 
 } /* namespace Mesh */

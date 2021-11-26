@@ -60,6 +60,7 @@ public:
     virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
 
     void removeId(const Id& id);
+    void remove(const std::vector<const T*>&);
 
     std::size_t size() const { return items_.size(); }
     bool empty() const { return items_.empty(); }
@@ -167,6 +168,12 @@ void IdentifiableUnique<T>::removeId(const IdentifiableUnique<T>::Id& id) {
     items_.erase(it);
 }
 
+template<typename T>
+void IdentifiableUnique<T>::remove(const std::vector<const T*>& rhs) {
+    for (auto const& it : rhs) {
+        items_.erase(items_.find(it));
+    }
+}
 
 template<typename T> template<typename T2>
 std::vector<const T2*> IdentifiableUnique<T>::getOf() const {

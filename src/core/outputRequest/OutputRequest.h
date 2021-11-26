@@ -12,11 +12,13 @@
 namespace SEMBA {
 namespace OutputRequest {
 
-class Base : public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Shareable {
+class OutputRequest : public virtual Class::Class,
+                      public virtual Class::Cloneable,
+                      public virtual Class::Shareable {
 public:
-    enum Type {
+    typedef typename std::vector<const Geometry::Elem*> TargetElements;
+
+    enum class Type {
         electric,
         magnetic,
         electricFieldNormals,
@@ -29,58 +31,38 @@ public:
         electricFarField
     };
 
-    Base();
-    Base(const Type outputType, const std::string& name, const Domain& domain);
-    Base(const Base& rhs);
-    virtual ~Base();
+    OutputRequest() = default;
+    OutputRequest(const Domain& domain,
+                  const Type outputType,
+                  const std::string& name,
+                  const TargetElements& elems);
 
-    virtual Geometry::Element::Group<const Geometry::Elem> elems() const = 0;
+    OutputRequest(const OutputRequest& rhs) = default;
+    virtual ~OutputRequest() = default;
 
-    virtual void set(
-            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
-    virtual void add(
-            const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    SEMBA_CLASS_DEFINE_CLONE(OutputRequest);
 
-    const std::string& getName() const;
-    void setName(std::string name);
-    Type getType() const;
-    const Domain& domain() const;
-	Domain& domain();
+    std::string getName() const { return name_; }
+    void setName(const std::string& name) { name_ = name; }
+    
+    Type getType() const { return type_; }
+    
+    const Domain& domain() const { return domain_;  }
+    Domain& domain() { return domain_;  };
 
+    TargetElements getTarget() const { return target_; }
+    void setTarget(const TargetElements& target) { target_ = target; }
+
+    std::string getTypeStr() const;
+   
 private:
     std::string name_;
     Type type_;
 	Domain domain_;
-
-    std::string getTypeStr() const;
-};
-
-template<class T>
-class OutputRequest : public virtual Base,
-                      public virtual Geometry::Element::Group<const T> {
-public:
-    OutputRequest() {}
-    OutputRequest(const Domain& domain,
-                  const Type outputType,
-                  const std::string& name,
-                  const Geometry::Element::Group<T>& elems);
-	OutputRequest(const OutputRequest::Base& rhs);
-    OutputRequest(const OutputRequest& rhs);
-    virtual ~OutputRequest();
-
-    SEMBA_CLASS_DEFINE_CLONE(OutputRequest<T>);
-
-    Geometry::Element::Group<const Geometry::Elem> elems() const {
-        return *this;
-    }
-
-    void set(const Geometry::Element::Group<const Geometry::Elem>&);
-    void add(const Geometry::Element::Group<const Geometry::Elem>&);
-
+    TargetElements target_;
 };
 
 namespace Error {
-
 class Material {
 public:
     Material() {}
@@ -98,8 +80,6 @@ public:
 #include "OutputRequest.hpp"
 
 namespace SEMBA {
-
-typedef OutputRequest::OutputRequest<Geometry::Elem> OutRqElem;
 
 } /* namespace SEMBA */
 

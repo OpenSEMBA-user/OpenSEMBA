@@ -1,5 +1,3 @@
-
-
 #include "OutputRequest.h"
 
 #include <iostream>
@@ -7,70 +5,44 @@
 namespace SEMBA {
 namespace OutputRequest {
 
-Base::Base() {
-
+OutputRequest::OutputRequest(
+    const Domain& domain, const Type type, const std::string& name, const TargetElements& target) :
+    domain_(domain),
+    type_(type),
+    name_(name),
+    target_(target)
+{
+    if (type == Type::bulkCurrentElectric || type == Type::bulkCurrentMagnetic) {
+        for (auto const& elem : target) {
+            if (elem->getMatId() != MatId(0)) {
+                throw Error::Material();
+            }
+        }
+    }
 }
 
-Base::Base(const Type outputType,
-           const std::string& name,
-		   const Domain& domain) {
-    name_ = name;
-    type_ = outputType;
-	domain_ = domain;
-}
-
-Base::Base(const Base& rhs) {
-    name_ = rhs.name_;
-    type_ = rhs.type_;
-	domain_ = rhs.domain_;
-}
-
-Base::~Base() {
-
-}
-
-const std::string& Base::getName() const {
-    return name_;
-}
-
-void Base::setName(std::string name) {
-    name_ = name;
-}
-
-
-Base::Type Base::getType() const {
-    return type_;
-}
-
-const Domain& Base::domain() const {
-    return domain_;
-}
-
-Domain& Base::domain() {
-	return domain_;
-}
-
-std::string Base::getTypeStr() const {
+std::string OutputRequest::getTypeStr() const 
+{
     switch (type_) {
-    case electric:
+    case Type::electric:
         return "Electric field";
-    case magnetic:
+    case Type::magnetic:
         return "Magnetic field";
-	case bulkCurrentElectric:
+	case Type::bulkCurrentElectric:
 		return "Bulk current electric";
-	case bulkCurrentMagnetic:
+	case Type::bulkCurrentMagnetic:
 		return "Bulk current magnetic";
-	case surfaceCurrentDensity:
+	case Type::surfaceCurrentDensity:
 		return "Surface current density";
-    case electricFieldNormals:
+    case Type::electricFieldNormals:
         return "Electric field normals";
-    case magneticFieldNormals:
+    case Type::magneticFieldNormals:
         return "Magnetic field normals";
-    case current:
+    case Type::current:
         return "Current";
-    case voltage:
+    case Type::voltage:
         return "Voltage";
-	case electricFarField:
+	case Type::electricFarField:
 		return "Electric far field";
     default:
         throw std::logic_error("Unrecognized output type");

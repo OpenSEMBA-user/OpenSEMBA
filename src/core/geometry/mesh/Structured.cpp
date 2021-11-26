@@ -15,12 +15,12 @@ Structured::Structured(const Grid3& grid)
 Structured::Structured(
         const Grid3& grid,
         const CoordI3Group& cG,
-        const Element::Group<const ElemI>& elem,
+        const ElemIGroup& elem,
         const LayerGroup& layers,
         const BoundTerminations3& bounds) :   
     grid_(grid),
     coords_(cG),
-    elems_(elem.cloneElems()),
+    elems_(elem),
     layers_(layers),
     bounds_(bounds) 
 {
@@ -31,7 +31,7 @@ Structured::Structured(
 Structured::Structured(const Structured& rhs)
 :   grid_(rhs.grid_),
     coords_(rhs.coords_),
-    elems_(rhs.elems().cloneElems()),
+    elems_(rhs.elems()),
     layers_(rhs.layers_),
     bounds_(rhs.bounds_) {
 
@@ -43,7 +43,7 @@ Structured& Structured::operator=(const Structured& rhs)
 {
     grid_ = rhs.grid_;
     coords_ = rhs.coords();
-    elems_ = rhs.elems().cloneElems();
+    elems_ = rhs.elems();
     layers_ = rhs.layers();
     bounds_ = rhs.bounds();
 
@@ -57,7 +57,8 @@ void Structured::applyScalingFactor(const Math::Real factor) {
     grid_.applyScalingFactor(factor);
 }
 
-Unstructured* Structured::getMeshUnstructured() const {
+Unstructured* Structured::getMeshUnstructured() const 
+{
     Unstructured* res = new Unstructured;
 
     for (auto const& coord : coords()) {
@@ -65,15 +66,11 @@ Unstructured* Structured::getMeshUnstructured() const {
         res->coords().add(newCoord);
     }
 
-    std::vector<ElemR*> newElems;
-    newElems.reserve(elems().size());
-    for (std::size_t i = 0; i < elems().size(); i++) {
-        ElemR* newElem = elems()(i)->toUnstructured(res->coords(), grid_);
-        if (newElem != nullptr) {
-            newElems.push_back(newElem);
-        }
+    for (auto const& elem : elems()) {
+        auto newElem = std::make_unique<ElemR>(*elem->toUnstructured(res->coords(), grid_));
+        res->elems().add(newElem);
     }
-    res->elems().add(newElems);
+
     res->layers() = layers();
     return res;
 }
@@ -94,15 +91,6 @@ Math::Real Structured::getMinimumSpaceStep() const {
 
 BoxR3 Structured::getBoundingBox() const {
     return grid_.getFullDomainBoundingBox();
-}
-
-void Structured::reassign( Element::Group<const Elem>& inGroup ) {
-    Element::Group<const Elem> res;
-    for (std::size_t i = 0; i < inGroup.size(); i++) {
-        ElemId id = inGroup(i)->getId();
-        res.add(this->elems().getId(id));
-    }
-    inGroup = res;
 }
 
 } /* namespace Mesh */

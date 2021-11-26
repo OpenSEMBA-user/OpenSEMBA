@@ -25,8 +25,6 @@ public:
     virtual void applyScalingFactor(const Math::Real factor) = 0;
     virtual BoxR3 getBoundingBox() const = 0;
     virtual void reassignPointers(const PMGroup& matGr = PMGroup()) = 0;
-
-    virtual void reassign( Element::Group<const Elem>& ) = 0;
 };
 
 } /* namespace Mesh */
