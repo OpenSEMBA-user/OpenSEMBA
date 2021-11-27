@@ -1,33 +1,24 @@
-
-
 #include "PlaneWave.h"
 
 namespace SEMBA {
 namespace Source {
 
-PlaneWave::PlaneWave() {
-    randomic_ = false;
-    numberOfRandomPlanewaves_ = 0;
-    relativeVariationOfRandomDelay_ = 0.0;
-}
-
-PlaneWave::PlaneWave(Magnitude::Magnitude* magnitude,
-                     Geometry::Element::Group<Geometry::Vol> elem,
-                     Math::CVecR3 direction,
-                     Math::CVecR3 polarization)
-:   SEMBA::Source::Base(magnitude),
-    Geometry::Element::Group<const Geometry::Vol>(elem) {
-
+PlaneWave::PlaneWave(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+                     const Geometry::Element::Group<Geometry::Vol>& elem,
+                     const Math::CVecR3& direction,
+                     const Math::CVecR3& polarization) :   
+    Source(magnitude, elem)
+{
     init_(direction, polarization);
 }
 
 PlaneWave::PlaneWave(
-        Magnitude::Magnitude* magnitude,
-        Geometry::Element::Group<Geometry::Vol> elem,
+        std::unique_ptr<Magnitude::Magnitude> magnitude,
+        const Geometry::Element::Group<Geometry::Vol>& elem,
         std::pair<Math::Real, Math::Real> directionAngles,
-        std::pair<Math::Real, Math::Real> polarizationAngles)
-:   SEMBA::Source::Base(magnitude),
-    Geometry::Element::Group<const Geometry::Vol>(elem) {
+        std::pair<Math::Real, Math::Real> polarizationAngles) :   
+    Source(magnitude, elem) 
+{
 
     Math::Real theta = directionAngles.first;
     Math::Real phi   = directionAngles.second;
@@ -40,37 +31,15 @@ PlaneWave::PlaneWave(
 }
 
 PlaneWave::PlaneWave(
-        Magnitude::Magnitude* magnitude,
-        Geometry::Element::Group<Geometry::Vol> elem,
+        std::unique_ptr<Magnitude::Magnitude> magnitude,
+        const Geometry::Element::Group<Geometry::Vol>& elem,
         Math::Int numberOfRandomPlanewaves,
-        Math::Real relativeVariationOfRandomDelay)
-:   SEMBA::Source::Base(magnitude),
-    Geometry::Element::Group<const Geometry::Vol>(elem) {
-
+        Math::Real relativeVariationOfRandomDelay) :   
+    Source(magnitude, elem) 
+{
     randomic_ = true;
     numberOfRandomPlanewaves_ = numberOfRandomPlanewaves;
     relativeVariationOfRandomDelay_ = relativeVariationOfRandomDelay;
-}
-
-
-PlaneWave::PlaneWave(const PlaneWave& rhs)
-:   SEMBA::Source::Base(rhs),
-    Geometry::Element::Group<const Geometry::Vol>(rhs) {
-
-    direction_ = rhs.direction_;
-    polarization_ = rhs.polarization_;
-    randomic_ = rhs.randomic_;
-    numberOfRandomPlanewaves_ = rhs.numberOfRandomPlanewaves_;
-    relativeVariationOfRandomDelay_ = rhs.relativeVariationOfRandomDelay_;
-}
-
-PlaneWave::~PlaneWave() {
-
-}
-
-const std::string& PlaneWave::getName() const {
-    const static std::string res = "PlaneWave";
-    return res;
 }
 
 const Math::CVecR3& PlaneWave::getPolarization() const {

@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Source.h"
@@ -7,35 +5,30 @@
 namespace SEMBA {
 namespace Source {
 
-class OnLine : public Source<Geometry::Lin> {
+class OnLine : public Source {
 public:
-    enum Type {
+    enum class Type {
         electric = 1,
         magnetic = 2
     };
-    enum Hardness {
+    enum class Hardness {
         hard = 1,
         soft = 2
     };
-    OnLine(const Magnitude::Magnitude* magnitude,
+    
+    OnLine(std::unique_ptr<Magnitude::Magnitude> magnitude,
            const Geometry::Element::Group<const Geometry::Lin>& elem,
            const Type& sourceType,
            const Hardness& sourceHardness);
-    OnLine(const OnLine& rhs);
-    virtual ~OnLine();
-
-    SEMBA_CLASS_DEFINE_CLONE(OnLine);
-
-    const std::string& getName() const;
-    Type getType() const;
-    Hardness getHardness() const;
+    virtual ~OnLine() = default;
+        
+    std::string getName() const { return "OnLine"; };
+    Type getType() const { return type_; };
+    Hardness getHardness() const { return hardness_; };
 
 private:
     Type type_;
     Hardness hardness_;
-
-    std::string getTypeStr() const;
-    std::string getHardnessStr() const;
 };
 
 } /* namespace Source */

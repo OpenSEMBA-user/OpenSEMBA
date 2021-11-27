@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "TEM.h"
@@ -11,20 +9,19 @@ namespace Port {
 class TEMCoaxial : public TEM {
 public:
     TEMCoaxial(
-            Magnitude::Magnitude* magnitude,
+            std::unique_ptr<Magnitude::Magnitude> magnitude,
             const Geometry::Element::Group<const Geometry::Surf>& elem,
             const ExcitationMode excMode,
             const Math::CVecR3& origin,
             const Math::Real innerRadius,
             const Math::Real outerRadius);
     TEMCoaxial(const TEMCoaxial& rhs);
-    virtual ~TEMCoaxial();
+    virtual ~TEMCoaxial() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(TEMCoaxial);
-
+    
     void set(const Geometry::Element::Group<const Geometry::Elem>&);
 
-    const std::string& getName() const;
+    std::string getName() const { return "Coaxial_TEM_port"; }
 
     Math::CVecR3 getOrigin() const;
     Math::CVecR3 getWeight(const Math::CVecR3& pos) const;

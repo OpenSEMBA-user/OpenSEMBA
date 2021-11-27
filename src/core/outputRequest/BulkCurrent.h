@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "OutputRequest.h"
@@ -7,15 +5,15 @@
 namespace SEMBA {
 namespace OutputRequest {
 
-class BulkCurrent : public virtual OutputRequest<Geometry::Elem> {
+class BulkCurrent : public virtual OutputRequest {
 public:
     BulkCurrent(const Domain& domain,
                 const std::string& name,
-                const Geometry::Element::Group<const Geometry::Elem>& box,
+                const Target& box,
                 const Math::Constants::CartesianAxis& dir,
                 const Math::UInt& skip);
     BulkCurrent(const BulkCurrent& rhs);
-    virtual ~BulkCurrent();
+    virtual ~BulkCurrent() = default;
 
     SEMBA_CLASS_DEFINE_CLONE(BulkCurrent);
 

@@ -11,27 +11,26 @@ namespace SEMBA {
 namespace Source {
 namespace Magnitude {
 
-class Numerical : public virtual Magnitude,
-                  public virtual FileSystem::Project {
+class Numerical : public virtual Magnitude {
 public:
-    Numerical();
+    Numerical() = default;
+    Numerical(const Numerical&) = default;
     Numerical(const FileSystem::Project& filename);
     Numerical(const FileSystem::Project& filename,
               const Magnitude& mag,
               const Math::Real timeStep,
               const Math::Real finalTime);
     
-    SEMBA_CLASS_DEFINE_CLONE(Numerical);
+    std::unique_ptr<Magnitude> clone() const override {
+        return std::make_unique<Numerical>(*this);
+    }
 
-    Numerical& operator=(const Numerical& rhs);
-
-    bool operator==(const Magnitude&) const;
+    bool operator==(const Numerical&) const;
     Math::Real evaluate(const Math::Real time) const;
 
-    
 private:
     static const std::size_t defaultNumberOfSteps = 1000;
-
+    FileSystem::Project file;
 
 };
 

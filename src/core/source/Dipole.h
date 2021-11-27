@@ -7,24 +7,19 @@
 namespace SEMBA {
 namespace Source {
 
-class Dipole : public Source<Geometry::Vol> {
+class Dipole : public Source {
 public:
-    Dipole(const Magnitude::Magnitude* magnitude,
-           const Geometry::Element::Group<Geometry::Vol>& elem,
+    Dipole(const std::unique_ptr<Magnitude::Magnitude> magnitude,
+           const Target& elem,
            Math::Real   length,
            Math::CVecR3 orientation,
            Math::CVecR3 position);
-    Dipole(const Dipole& rhs);
     
-    SEMBA_CLASS_DEFINE_CLONE(Dipole);
-
-    const std::string& getName() const;
-protected:
+    std::string getName() const { return "Dipole"; }
+private:
     Math::Real length_;
     Math::CVecR3 orientation_;
     Math::CVecR3 position_;
-    Math::Real gaussDelay_;
-    Math::Real spreadSqrt2_;
 };
 
 } /* namespace Source */

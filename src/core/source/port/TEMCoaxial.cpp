@@ -1,5 +1,3 @@
-
-
 #include "TEMCoaxial.h"
 
 namespace SEMBA {
@@ -7,40 +5,29 @@ namespace Source {
 namespace Port {
 
 TEMCoaxial::TEMCoaxial(
-        Magnitude::Magnitude* magnitude,
+        std::unique_ptr<Magnitude::Magnitude> magnitude,
         const Geometry::Element::Group<const Geometry::Surf>& elem,
         const ExcitationMode excMode,
         const Math::CVecR3& origin,
         const Math::Real innerRadius,
         const Math::Real outerRadius) :
-        SEMBA::Source::Base(magnitude),
-        Geometry::Element::Group<const Geometry::Surf>(elem),
-        TEM(magnitude, elem, excMode) {
+        TEM(magnitude, elem, excMode) 
+{
     origin_ = origin;
     innerRadius_ = innerRadius;
     outerRadius_ = outerRadius;
 }
 
-TEMCoaxial::TEMCoaxial(
-        const TEMCoaxial& rhs) :
-                        SEMBA::Source::Base(rhs),
-                        Geometry::Element::Group<const Geometry::Surf>(rhs),
-                        TEM(rhs) {
+TEMCoaxial::TEMCoaxial(const TEMCoaxial& rhs) : 
+    TEM(rhs) 
+{
     origin_ = rhs.origin_;
     innerRadius_ = rhs.innerRadius_;
     outerRadius_ = rhs.outerRadius_;
 }
 
-TEMCoaxial::~TEMCoaxial() {
-}
-
 Math::CVecR3 TEMCoaxial::getOrigin() const {
     return origin_;
-}
-
-const std::string& TEMCoaxial::getName() const {
-    const static std::string res = "Coaxial_TEM_port";
-    return res;
 }
 
 Math::CVecR3 TEMCoaxial::getWeight(
