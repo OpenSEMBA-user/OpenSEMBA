@@ -38,6 +38,7 @@ public:
 namespace SEMBA {
 namespace Geometry {
 
+typedef Element::Group<Elem> ElemGroup;
 typedef Element::Group<ElemR> ElemRGroup;
 typedef Element::Group<ElemI> ElemIGroup;
 typedef Element::Group<SurfR> SurfRGroup;

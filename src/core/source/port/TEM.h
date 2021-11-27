@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Port.h"
@@ -15,14 +13,13 @@ public:
         current
     } ExcitationMode;
 
-    TEM(Magnitude::Magnitude* magnitude,
-        const Geometry::Element::Group<const Geometry::Surf>& elem,
+    TEM(std::unique_ptr<Magnitude::Magnitude> magnitude,
+        const Geometry::Element::Group<Geometry::Surf>& elem,
         const ExcitationMode excitationMode);
     TEM(const TEM& rhs);
-    virtual ~TEM();
+    virtual ~TEM() = default;
 
     ExcitationMode getExcitationMode() const;
-
     static std::string toStr(const ExcitationMode& excitationMode);
 private:
     ExcitationMode excitationMode_;

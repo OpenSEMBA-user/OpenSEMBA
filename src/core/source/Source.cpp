@@ -1,5 +1,3 @@
-
-
 #include "Source.h"
 
 #include <iostream>
@@ -7,59 +5,49 @@
 namespace SEMBA {
 namespace Source {
 
-Base::Base() {
-    magnitude_ = nullptr;
+Source::Source(const std::unique_ptr<Magnitude::Magnitude>& magnitude, const Target& target) :
+    target_(target),
+    magnitude_(magnitude->clone())
+{
 }
 
-Base::Base(const Magnitude::Magnitude* magnitude) {
-    magnitude_ = magnitude;
-}
-
-Base::Base(const Base& rhs) {
+Source::Source(const Source& rhs) 
+{
+    target_ = rhs.target_;
     if (rhs.magnitude_ != nullptr) {
-        magnitude_ = rhs.magnitude_->cloneTo<Magnitude::Magnitude>();
-    } else {
-        magnitude_ = rhs.magnitude_;
+        magnitude_ = rhs.magnitude_->clone();
     }
 }
 
-Base::~Base() {
-    if (magnitude_ != nullptr) {
-        delete magnitude_;
+Source& Source::operator=(const Source& rhs) const
+{
+    Source res;
+    target_ = rhs.target_;
+    if (rhs.magnitude_ != nullptr) {
+        magnitude_ = rhs.magnitude_->clone();
     }
 }
 
-std::string Base::getMagnitudeFilename() const {
-    const Magnitude::Numerical* mag =
-            dynamic_cast<const Magnitude::Numerical*>(magnitude_);
-    if (mag != nullptr) {
-        return mag->getFilename();
-    }
-    return std::string();
-}
 
-void Base::convertToNumerical(const FileSystem::Project& file,
-                              const Math::Real step,
-                              const Math::Real finalTime) {
+void Source::convertToNumerical(
+    const FileSystem::Project& file,
+    const Math::Real step,
+    const Math::Real finalTime) 
+{
     if(magnitude_->is<Magnitude::Numerical>()) {
         return;
     }
-    const Magnitude::Magnitude* orig = magnitude_;
-    magnitude_ = new Magnitude::Numerical(file, *magnitude_, step, finalTime);
-    delete orig;
+    auto newMagnitude = std::make_unique<Magnitude::Numerical>(file, *magnitude_, step, finalTime);
+    magnitude_ = std::move(newMagnitude);
 }
 
-Magnitude::Numerical* Base::exportToFile(const FileSystem::Project& file,
+Magnitude::Numerical Source::exportToFile(const FileSystem::Project& file,
                                          const Math::Real step,
                                          const Math::Real finalTime) const {
     if(magnitude_->is<Magnitude::Numerical>()) {
-        return magnitude_->cloneTo<Magnitude::Numerical>();
+        return Magnitude::Numerical(*magnitude_->castTo<Magnitude::Numerical>());
     }
-    return new Magnitude::Numerical(file, *magnitude_, step, finalTime);
-}
-
-const Magnitude::Magnitude* Base::getMagnitude() const {
-    return magnitude_;
+    return Magnitude::Numerical(file, *magnitude_, step, finalTime);
 }
 
 } /* namespace Source */

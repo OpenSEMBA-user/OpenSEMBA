@@ -1,27 +1,17 @@
-
-
 #include "Port.h"
 
 namespace SEMBA {
 namespace Source {
 namespace Port {
 
-Port::Port(Magnitude::Magnitude* magnitude,
-           const Geometry::Element::Group<const Geometry::Surf>& elem)
-:   SEMBA::Source::Base(magnitude),
-    Geometry::Element::Group<const Geometry::Surf>(elem) {
-}
-
-Port::Port(const Port& rhs) :
-            SEMBA::Source::Base(rhs),
-            Geometry::Element::Group<const Geometry::Surf>(rhs) {
-}
-
-Port::~Port() {
+Port::Port(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+           const Geometry::Element::Group<Geometry::Surf>& elem) :   
+    Source(magnitude, elem) 
+{
 }
 
 Math::CVecR3 Port::getNormal() const {
-    if (this->getOf<Geometry::Surf>().size() > 0) {
+    if (this->target_.getOf<Geometry::Surf>().size() > 0) {
         if (this->get(0)->is<Geometry::SurfR>()) {
             return this->get(0)->castTo<Geometry::SurfR>()->getNormal();
         } else {

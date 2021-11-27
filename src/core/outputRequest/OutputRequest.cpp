@@ -6,7 +6,7 @@ namespace SEMBA {
 namespace OutputRequest {
 
 OutputRequest::OutputRequest(
-    const Domain& domain, const Type type, const std::string& name, const TargetElements& target) :
+    const Type type, const std::string& name, const Domain& domain, const Target& target) :
     domain_(domain),
     type_(type),
     name_(name),

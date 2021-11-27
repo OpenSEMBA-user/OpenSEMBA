@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Domain.h"
@@ -12,11 +10,9 @@
 namespace SEMBA {
 namespace OutputRequest {
 
-class OutputRequest : public virtual Class::Class,
-                      public virtual Class::Cloneable,
-                      public virtual Class::Shareable {
+class OutputRequest : public virtual Class::Class {
 public:
-    typedef typename std::vector<const Geometry::Elem*> TargetElements;
+    typedef Geometry::ElemGroup Target;
 
     enum class Type {
         electric,
@@ -32,15 +28,14 @@ public:
     };
 
     OutputRequest() = default;
-    OutputRequest(const Domain& domain,
-                  const Type outputType,
+    OutputRequest(const Type outputType,
                   const std::string& name,
-                  const TargetElements& elems);
+                  const Domain& domain,
+                  const Target& elems);
 
-    OutputRequest(const OutputRequest& rhs) = default;
     virtual ~OutputRequest() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(OutputRequest);
+    virtual std::unique_ptr<OutputRequest> clone() const = 0;
 
     std::string getName() const { return name_; }
     void setName(const std::string& name) { name_ = name; }
@@ -50,8 +45,8 @@ public:
     const Domain& domain() const { return domain_;  }
     Domain& domain() { return domain_;  };
 
-    TargetElements getTarget() const { return target_; }
-    void setTarget(const TargetElements& target) { target_ = target; }
+    Target getTarget() const { return target_; }
+    void setTarget(const Target& target) { target_ = target; }
 
     std::string getTypeStr() const;
    
@@ -59,7 +54,7 @@ private:
     std::string name_;
     Type type_;
 	Domain domain_;
-    TargetElements target_;
+    Target target_;
 };
 
 namespace Error {
@@ -75,11 +70,5 @@ public:
 
 } /* namespace Error */
 } /* namespace OutputRequest */
-} /* namespace SEMBA */
-
-#include "OutputRequest.hpp"
-
-namespace SEMBA {
-
 } /* namespace SEMBA */
 

@@ -1,29 +1,25 @@
-
-
 #pragma once
 
 #include "math/function/Function.h"
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Shareable.h"
 
 namespace SEMBA {
 namespace Source {
 namespace Magnitude {
 
-class Magnitude : public virtual Class::Class,
-                  public virtual Class::Cloneable,
-                  public virtual Class::Shareable {
+class Magnitude : public virtual Class::Class {
 public:
-    Magnitude();
+    Magnitude() = default;
     Magnitude(Math::FunctionRR* mathFunction);
     Magnitude(const Magnitude& rhs);
-    virtual ~Magnitude();
-
-    SEMBA_CLASS_DEFINE_CLONE(Magnitude);
+    virtual ~Magnitude() = default;
 
     Magnitude& operator=(const Magnitude& rhs);
+
+    virtual std::unique_ptr<Magnitude> clone() const {
+        return std::make_unique<Magnitude>(*this);
+    }
 
     virtual bool operator==(const Magnitude&) const;
 

@@ -9,13 +9,11 @@ namespace Port {
 
 typedef std::array<std::array<const PhysicalModel::Bound*,2>,3> Bound3;
 
-class Port : public Source<Geometry::Surf> {
+class Port : public Source {
 public:
-
-    Port(Magnitude::Magnitude* magnitude,
-         const Geometry::Element::Group<const Geometry::Surf>& elem);
-    Port(const Port& rhs);
-    virtual ~Port();
+    Port(const std::unique_ptr<Magnitude::Magnitude>& magnitude, 
+         const Geometry::Element::Group<Geometry::Surf>& elem);
+    virtual ~Port() = default;
 
     Math::CVecR3 getNormal() const;
 

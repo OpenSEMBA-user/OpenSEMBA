@@ -1,74 +1,53 @@
-
-// File: electromagneticsource.h
-
 #pragma once
 
 #include "geometry/element/Group.h"
+
 #include "magnitude/Magnitude.h"
 #include "magnitude/Numerical.h"
 #include "filesystem/Project.h"
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Shareable.h"
 
 namespace SEMBA {
 namespace Source {
 
-class Base : public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Shareable {
+class Source : public virtual Class::Class {
 public:
-    Base();
-    Base(const Magnitude::Magnitude* magnitude);
-    Base(const Base& rhs);
-    virtual ~Base();
+    typedef Geometry::ElemGroup Target;
 
-    virtual Geometry::Element::Group<const Geometry::Elem> elems() const = 0;
+    Source() = default;
+    Source(const std::unique_ptr<Magnitude::Magnitude>&, 
+           const Geometry::Element::Group<Geometry::Vol>&);
+    Source(const std::unique_ptr<Magnitude::Magnitude>&,
+           const Geometry::Element::Group<Geometry::Surf>&);
+    Source(const Source&);
 
-    virtual void set(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
-    virtual void add(const Geometry::Element::Group<const Geometry::Elem>&) = 0;
+    virtual ~Source() = default;
 
-    template<class T>
-    bool magnitudeIs() const {
-        return magnitude_->is<T>();
-    }
+    Source& operator=(const Source&) const;
+    
+    virtual Source* clone() const = 0;
 
-    virtual std::string getMagnitudeFilename() const;
-    virtual const std::string& getName() const = 0;
+    virtual std::string getName() const = 0;
 
     void convertToNumerical(const FileSystem::Project& file,
                             const Math::Real step,
                             const Math::Real finalTime);
-    Magnitude::Numerical* exportToFile(const FileSystem::Project& file,
+    
+    Magnitude::Numerical exportToFile(const FileSystem::Project& file,
                                        const Math::Real step,
                                        const Math::Real finalTime) const;
-    const Magnitude::Magnitude* getMagnitude() const;
+    const Magnitude::Magnitude* getMagnitude() const { return magnitude_.get(); }
 
-private:
-    const Magnitude::Magnitude* magnitude_;
-};
+    Target getTarget() const { return target_; }
+    void setTarget(const Target& target) { target_ = target; }
 
-template<class T>
-class Source : public virtual Base,
-               public virtual Geometry::Element::Group<const T> {
-public:
-    Source() {}
-    virtual ~Source() {}
-
-    void set(const Geometry::Element::Group<const Geometry::Elem>&);
-    void add(const Geometry::Element::Group<const Geometry::Elem>&);
-
-    virtual Source* clone() const = 0;
-    Geometry::Element::Group<const Geometry::Elem> elems() const {
-        return *this;
-    }
-
-    bool isSimilar(const SEMBA::Source::Base& rhs) const;
+protected:
+    std::unique_ptr<Magnitude::Magnitude> magnitude_;
+    Target target_;
 };
 
 } /* namespace Source */
 } /* namespace SEMBA */
 
-#include "Source.hpp"
 

@@ -1,5 +1,3 @@
-
-
 #include "Numerical.h"
 
 #include "math/function/LinearInterpolation.h"
@@ -9,22 +7,17 @@ namespace SEMBA {
 namespace Source {
 namespace Magnitude {
 
-Numerical::Numerical() {
-
+Numerical::Numerical(const FileSystem::Project& fileIn)
+:   Magnitude(new Math::Function::LinearInterpolation<Math::Real,Math::Real>(file)),
+    file(fileIn) {
 }
 
-Numerical::Numerical(const FileSystem::Project& file)
-:   Magnitude(
-        new Math::Function::LinearInterpolation<Math::Real,Math::Real>(file)),
-    FileSystem::Project(file) {
-}
-
-Numerical::Numerical(const FileSystem::Project& file,
+Numerical::Numerical(const FileSystem::Project& fileIn,
                      const Magnitude& mag,
                      const Math::Real timeStep,
-                     const Math::Real finalTime)
-:   FileSystem::Project(file) {
-
+                     const Math::Real finalTime) 
+{
+    file = fileIn;
     if(mag.is<Numerical>()) {
         operator=(*mag.castTo<Numerical>());
         return;
@@ -51,10 +44,8 @@ Numerical::Numerical(const FileSystem::Project& file,
         std::vector<std::pair<Math::Real,Math::Real>> preAndPost;
         const Math::Real tPre = time - timeStep;
         const Math::Real tPost = time + timeStep;
-        preAndPost.push_back(
-            std::pair<Math::Real,Math::Real>(tPre, mag.evaluate(tPre)));
-        preAndPost.push_back(
-            std::pair<Math::Real,Math::Real>(tPost, mag.evaluate(tPost)));
+        preAndPost.push_back(std::pair<Math::Real,Math::Real>(tPre, mag.evaluate(tPre)));
+        preAndPost.push_back(std::pair<Math::Real,Math::Real>(tPost, mag.evaluate(tPost)));
         const Math::Real interpolated =
             Math::Function::LinearInterpolation<Math::Real,Math::Real>(
                 preAndPost)(time);
@@ -77,31 +68,15 @@ Numerical::Numerical(const FileSystem::Project& file,
                 file)));
 }
 
-Numerical& Numerical::operator=(const Numerical& rhs)
-{
-    if (this == &rhs) {
-        return *this;
-    }
-    Magnitude::operator=(rhs);
-    FileSystem::Project::operator=(rhs);
-
-    return *this;
-}
-
-bool Numerical::operator==(const Magnitude& rhs) const {
-    if (typeid(*this) != typeid(rhs)) {
-        return false;
-    }
+bool Numerical::operator==(const Numerical& rhs) const {
     bool areEqual = true;
     areEqual &= Magnitude::operator==(rhs);
-    const Numerical* rhsPtr = rhs.castTo<Numerical>();
-    areEqual &= (FileSystem::Project::compare(*rhsPtr) == 0);
+    areEqual &= file.compare(rhs.file);
     return areEqual;
 }
 
 Math::Real Numerical::evaluate(const Math::Real time) const {
     throw std::logic_error("Numerical::evaluate not implemented");
-    return 0.0;
 }
 
 } /* namespace Magnitude */
