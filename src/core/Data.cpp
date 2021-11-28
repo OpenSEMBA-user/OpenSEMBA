@@ -1,21 +1,12 @@
 #include "Data.h"
-
+    
 namespace SEMBA {
-
-Data::Data() {
-    solver = nullptr;
-    mesh = nullptr;
-    sources = nullptr;
-    outputRequests = nullptr;
-}
 
 Data::Data(const Data& rhs) {
 
     solver = nullptr;
     mesh = nullptr;
-    sources = nullptr;
-    outputRequests = nullptr;
-
+    
     filename = rhs.filename;
     solver = rhs.solver;
     
@@ -25,27 +16,20 @@ Data::Data(const Data& rhs) {
         mesh = rhs.mesh->cloneTo<Geometry::Mesh::Mesh>();
         mesh->reassignPointers(physicalModels);
         
-        if (rhs.outputRequests != nullptr) {
-            outputRequests = rhs.outputRequests->clone();
-            for (size_t i = 0; i < outputRequests->size(); ++i) {
-                Geometry::Element::Group<const Geometry::Elem> outRqElems =
-                        (*outputRequests)(i)->elems();
-                mesh->reassign(outRqElems);
-                (*outputRequests)(i)->set(outRqElems);
-            }
+        outputRequests = rhs.outputRequests;
+        for (size_t i = 0; i < outputRequests->size(); ++i) {
+            (*outputRequests)(i)->reassignPointersInTarget(mesh->coords());
         }
-
-        if (rhs.sources != nullptr) {
-            sources = rhs.sources->clone();
-            for (size_t i = 0; i < sources->size(); ++i) {
-                Geometry::Element::Group<const Geometry::Elem> sourceElems =
-                        (*sources)(i)->elems();
-                mesh->reassign(sourceElems);
-                (*sources)(i)->set(sourceElems);
-            }
+        
+        
+        sources = rhs.sources->clone();
+        for (size_t i = 0; i < sources->size(); ++i) {
+            Geometry::Element::Group<const Geometry::Elem> sourceElems =
+                    (*sources)(i)->elems();
+            mesh->reassign(sourceElems);
+            (*sources)(i)->set(sourceElems);
         }
     }
-
 }
 
 Data::~Data() {
