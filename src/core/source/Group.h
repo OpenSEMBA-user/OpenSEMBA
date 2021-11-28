@@ -10,7 +10,7 @@
 namespace SEMBA {
 namespace Source {
 
-template<typename S = Base>
+template<typename S = Source>
 class Group : public SEMBA::Group::Group<S>,
               public SEMBA::Group::Cloneable<S> {
 public:

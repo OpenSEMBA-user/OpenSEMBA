@@ -1,20 +1,8 @@
-
-
 #include "Surface.h"
 
 namespace SEMBA {
 namespace Geometry {
 namespace Element {
-
-template<class T>
-Surface<T>::Surface() {
-
-}
-
-template<class T>
-Surface<T>::~Surface() {
-
-}
 
 template<class T>
 bool Surface<T>::isRectangular() const {
@@ -54,11 +42,10 @@ bool Surface<T>::isContainedInPlane(const Math::Constants::CartesianPlane plane)
 }
 
 template<class T>
-Math::Vector::Cartesian<T,3> Surface<T>::getNormal() const {
-    Math::Vector::Cartesian<T,3> v0 = this->getVertex(1)->pos() -
-                                      this->getVertex(0)->pos();
-    Math::Vector::Cartesian<T,3> v1 = this->getVertex(2)->pos() -
-                                      this->getVertex(0)->pos();
+Math::CVecR3 Surface<T>::getNormal() const 
+{
+    Math::CVecR3 v0 = this->getVertex(1)->pos() - this->getVertex(0)->pos();
+    Math::CVecR3 v1 = this->getVertex(2)->pos() - this->getVertex(0)->pos();
     return (v0 ^ v1).normalize();
 }
 
