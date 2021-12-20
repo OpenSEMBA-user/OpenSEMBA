@@ -16,12 +16,12 @@ add_subdirectory(source/ source/)
 if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
 
-    add_library(opensemba_core_data STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h
+    add_library(opensemba_core STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h
                                            ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
 
     find_package(nlohmann_json CONFIG REQUIRED)
 
-    target_link_libraries(opensemba_core_data opensemba_core_geometry
+    target_link_libraries(opensemba_core opensemba_core_geometry
                                               opensemba_core_physicalmodel
                                               opensemba_core_source
                                               opensemba_core_outputrequest

@@ -9,4 +9,4 @@ add_sources(. SRCS)
 
 include_directories(${gidpost_INCLUDES})
 add_library(opensemba_exporters STATIC ${SRCS})
-target_link_libraries(opensemba_exporters opensemba_core_data gidpost)
+target_link_libraries(opensemba_exporters opensemba_core gidpost)
