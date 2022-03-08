@@ -26,7 +26,8 @@ public:
         PML,
         wire,
         gap,
-        multiport
+        multiport,
+        priorityMaterial
     };
 
     virtual std::unique_ptr<PhysicalModel> clone() const = 0;

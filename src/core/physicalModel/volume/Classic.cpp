@@ -1,5 +1,3 @@
-
-
 #include <physicalModel/volume/Classic.h>
 #include <cmath>
 

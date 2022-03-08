@@ -20,6 +20,7 @@
 #include "physicalModel/volume/PML.h"
 #include "physicalModel/wire/Wire.h"
 #include "physicalModel/Gap.h"
+#include "physicalModel/PriorityMaterial.h"
 #include "source/port/WaveguideRectangular.h"
 #include "source/port/TEMCoaxial.h"
 #include "outputRequest/BulkCurrent.h"
@@ -92,9 +93,14 @@ Mesh::Geometric* Parser::readGeometricMesh(const PMGroup& physicalModels, const 
 
 Source::Group<>* Parser::readSources(Mesh::Geometric& mesh, const json& j) const 
 {
-    Source::Group<>* res = new Source::Group<>();
+    auto sources = j.find("sources");
     
-    for (auto const& it: j.at("sources").get<json>()) {
+    Source::Group<>* res = new Source::Group<>();
+    if (sources == j.end()) {
+        return res;
+    }
+
+    for (auto const& it: sources->get<json>()) {
         std::string sourceType = it.at("sourceType").get<std::string>();
         if (sourceType.compare("planewave") == 0) {
             res->add(readPlanewave(mesh, it));
@@ -247,6 +253,15 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
         }
     }
 
+    case PM::Type::priorityMaterial:
+    {
+        return std::make_unique<PhysicalModel::PriorityMaterial>(
+            id,
+            name,
+            j.at("priority").get<int>()
+        );
+    }
+
     default:
         throw std::logic_error("Material type not recognized for: " + name);
     }
@@ -255,10 +270,16 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
 OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Geometric& mesh, const json& j) const 
 {
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
-    const json& outs = j.at("outputRequests").get<json>();
-    for (json::const_iterator it = outs.begin(); it != outs.end(); ++it) {
-        res->add(readOutputRequest(mesh, *it));
+    
+    auto outs = j.find("outputRequests");
+    if (outs == j.end()) {
+        return res;
     }
+
+    for (auto const& out: outs->get<json>()) {
+        res->add(readOutputRequest(mesh, out));
+    }
+
     return res;
 }
 
@@ -694,30 +715,35 @@ Source::Generator::Hardness Parser::strToGeneratorHardness(std::string str) {
     }
 }
 
-PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) {
+PhysicalModel::PhysicalModel::Type Parser::strToMaterialType(std::string str) 
+{
+    typedef SEMBA::PhysicalModel::PhysicalModel::Type Type;
+
     str = trim(str);
     if (str.compare("PEC")==0) {
-        return PhysicalModel::PhysicalModel::Type::PEC;
+        return Type::PEC;
     } else if (str.compare("PMC")==0) {
-        return PhysicalModel::PhysicalModel::Type::PMC;
+        return Type::PMC;
     } else if (str.compare("PML")==0) {
-        return PhysicalModel::PhysicalModel::Type::PML;
+        return Type::PML;
     } else if (str.compare("SMA")==0) {
-        return PhysicalModel::PhysicalModel::Type::SMA;
+        return Type::SMA;
     } else if (str.compare("Classic")==0) {
-        return PhysicalModel::PhysicalModel::Type::classic;
+        return Type::classic;
     } else if (str.compare("Dispersive")==0) {
-        return PhysicalModel::PhysicalModel::Type::elecDispersive;
+        return Type::elecDispersive;
     } else if (str.compare("Anisotropic")==0) {
-        return PhysicalModel::PhysicalModel::Type::anisotropic;
+        return Type::anisotropic;
     } else if (str.compare("SIBC")==0) {
-        return PhysicalModel::PhysicalModel::Type::isotropicsibc;
+        return Type::isotropicsibc;
     } else if (str.compare("Wire")==0) {
-        return PhysicalModel::PhysicalModel::Type::wire;
+        return Type::wire;
     } else if (str.compare("Connector")==0) {
-        return PhysicalModel::PhysicalModel::Type::multiport;
+        return Type::multiport;
     } else if (str.find("Thin_gap")==0) {
-        return PhysicalModel::PhysicalModel::Type::gap;
+        return Type::gap;
+    } else if (str.find("PriorityMaterial")==0) {
+        return Type::priorityMaterial;
     } else {
         throw std::logic_error("Unrecognized material label: " + str);
     }
