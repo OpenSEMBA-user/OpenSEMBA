@@ -8,6 +8,7 @@
 #include "geometry/element/Tetrahedron4.h"
 #include "geometry/mesh/Structured.h"
 #include "geometry/mesh/Unstructured.h"
+#include "geometry/mesh/Geometric.h"
 
 namespace SEMBA {
 namespace Exporters {
@@ -99,15 +100,25 @@ void Exporter::writeMesh_(const Data* smb) {
     assert(inMesh != nullptr);
     const Geometry::Mesh::Unstructured* mesh;
     std::string preName;
+    
     if (inMesh->is<Geometry::Mesh::Structured>()) {
-
         mesh = inMesh->castTo<Geometry::Mesh::Structured>()->getMeshUnstructured();
         preName = "str_";
         grid = &inMesh->castTo<Geometry::Mesh::Structured>()->grid();
-    } else {
+    }
+    else if (inMesh->is<Geometry::Mesh::Geometric>()) {
+        mesh = inMesh->castTo<Geometry::Mesh::Geometric>();
+        preName = "geo_";
+        grid = &inMesh->castTo<Geometry::Mesh::Geometric>()->grid();
+    }
+    else if (inMesh->is<Geometry::Mesh::Unstructured>()) {
         mesh = inMesh->castTo<Geometry::Mesh::Unstructured>();
         grid = nullptr;
     }
+    else {
+        throw std::runtime_error("Exporting this type of mesh is not supported.");
+    }
+
     // Writes materials.
     for (auto const& lay : mesh->layers()) {
         for (auto const& mat: smb->physicalModels) {
@@ -139,7 +150,7 @@ void Exporter::writeMesh_(const Data* smb) {
         }
     }
     // Writes boundaries.
-    if (grid != nullptr) {
+    if (grid != nullptr && mesh->is<Geometry::Mesh::Structured>()) {
         Geometry::CoordR3Group cG;
         std::map<std::string, std::vector<Geometry::ElemR*>> bounds;
         for (Math::UInt i = 0; i < 3; i++) {
