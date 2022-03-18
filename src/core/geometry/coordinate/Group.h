@@ -45,9 +45,9 @@ public:
     template<typename VEC>
     void addPos(VEC);
 
-    IdentifiableUnique<C>::iterator add(const std::unique_ptr<C>&);
-    IdentifiableUnique<C>::iterator add(std::unique_ptr<C>&&) final;
-    IdentifiableUnique<C>::iterator addAndAssignId(std::unique_ptr<C>&& item) final;
+    typename IdentifiableUnique<C>::iterator add(const std::unique_ptr<C>&);
+    typename IdentifiableUnique<C>::iterator add(std::unique_ptr<C>&&) final;
+    typename IdentifiableUnique<C>::iterator addAndAssignId(std::unique_ptr<C>&& item) final;
 
     void applyScalingFactor(const Math::Real factor);
    

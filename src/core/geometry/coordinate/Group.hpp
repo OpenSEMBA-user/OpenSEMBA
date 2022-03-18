@@ -98,7 +98,7 @@ template<typename C>
 void Group<C>::applyScalingFactor(const Math::Real factor) 
 {
     for (auto& c : *this) {
-        if (c->is<CoordR3>()) {
+        if (c->template is<CoordR3>()) {
             *c *= factor;
         }
     }
@@ -113,11 +113,11 @@ void Group<C>::updateIndices() {
 
 template<typename C>
 void Group<C>::updateIndexEntry(const C* c) {
-    if (c->is<CoordR3>()) {
-        indexUnstr_.insert(c->castTo<CoordR3>());
+    if (c->template is<CoordR3>()) {
+        indexUnstr_.insert(c->template castTo<CoordR3>());
     }
-    if (c->is<CoordI3>()) {
-        indexStr_.insert(c->castTo<CoordI3>());
+    if (c->template is<CoordI3>()) {
+        indexStr_.insert(c->template castTo<CoordI3>());
     }
 }
 

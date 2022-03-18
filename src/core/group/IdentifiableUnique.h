@@ -172,8 +172,8 @@ template<typename T> template<typename T2>
 std::vector<const T2*> IdentifiableUnique<T>::getOf() const {
     std::vector<const T2*> res;
     for (auto const& item : items_) {
-        if (item->is<T2>()) {
-            res.push_back(item->castTo<T2>());
+        if (item->template is<T2>()) {
+            res.push_back(item->template castTo<T2>());
         }   
     }
     return res;
@@ -184,7 +184,7 @@ std::size_t IdentifiableUnique<T>::sizeOf() const
 {
     std::size_t res = 0;
     for (auto const& item : items_) {
-        if (item->is<T2>()) {
+        if (item->template is<T2>()) {
             res++;
         }
     }

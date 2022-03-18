@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Simplex.h"
@@ -21,7 +19,7 @@ public:
 	static const std::size_t np = TET_NP;
 	#define TET_NFP ((N+1)*(N+2)/2)
 	static const std::size_t nfp = TET_NFP;
-	static constexpr Real sizeFactor = 1.0 / 6.0;
+    static Real sizeFactor;
 
     typedef Vector::Cartesian<size_t,nsc> Index;
 
@@ -58,6 +56,9 @@ private:
 
     static size_t numberOfNodes(size_t order);
 };
+
+template<size_t N>
+double Tetrahedron<N>::sizeFactor = 1.0 / 6.0;
 
 } /* namespace Simplex */
 } /* namespace Math */
