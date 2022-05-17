@@ -25,12 +25,46 @@
 #include "source/port/TEMCoaxial.h"
 #include "outputRequest/BulkCurrent.h"
 #include "outputRequest/FarField.h"
+#include "string"
 
 using namespace SEMBA::Geometry;
 
 namespace SEMBA {
 namespace Parsers {
 namespace JSON {
+
+DataExtended Parser::readExtended() const {
+     std::ifstream stream(this->filename);
+     if (!stream.is_open()) {
+         throw std::logic_error("Can not open file: " + this->filename);
+     }
+
+     json j;
+     try {
+         stream >> j;
+     }
+     catch (const std::exception& ex) {
+         std::cerr << ex.what() << std::endl;
+     }
+
+     std::string version = j.at("_version").get<std::string>();
+     if (!checkExtendedVersionCompatibility(version)) {
+         throw std::logic_error("File version " + version + " is not supported for extended version.");
+     }
+
+
+    DataExtended res = DataExtended();
+    // TODO: Parse `analysis`
+    // TODO: Parse `grids`
+    res.grid3 = new Grid3(this->readGrids(j));
+    
+    // TODO: Parse `model`
+    // TODO: Parse `sources`
+    // TODO: Parse `probes`    
+    res.boundary = this->readBoundary(j);
+
+    return res;
+}
 
 Data Parser::read() const {
     
@@ -72,6 +106,23 @@ Data Parser::read() const {
     postReadOperations(res);
 
     return res;
+}
+
+Boundary::Boundary* Parser::readBoundary(const json& j) const {
+    Boundary::Boundary* boundary = new Boundary::Boundary();
+
+    json lower = j.at("boundary").at("lower");
+    json upper = j.at("boundary").at("upper");
+    if (lower.size() != 3 || upper.size() != 3) {
+        throw std::logic_error("Unexpected amount of materials for boundary layers specified. Three layers are expected");
+    }
+
+    for (int i = 0; i < 3; i++) {
+        boundary->lower[i] = lower[i].get<std::string>();
+        boundary->upper[i] = upper[i].get<std::string>();
+    }
+
+    return boundary;
 }
 
 Parser::json Parser::readSolverOptions(const json& j) const 
@@ -902,7 +953,27 @@ bool Parser::checkVersionCompatibility(const std::string& version) {
     bool versionMatches = (version == std::string(OPENSEMBA_VERSION));
     if (!versionMatches) {
         throw std::logic_error(
-                "File version " + version + " is not supported.");
+            "File version " + version + " is not supported.");
+    }
+    return versionMatches;
+}
+
+bool Parser::checkExtendedVersionCompatibility(const std::string& version) {
+    std::string baseVersion = version;
+    const char extended = version.back();
+
+    bool extendedSubversionCheck = true;
+    if (!isdigit(extended)) {
+        // Check for extended availability
+        baseVersion = version.substr(0, version.length() - 1);
+        extendedSubversionCheck = extended == 'e';
+    }
+
+    bool versionMatches = (baseVersion == std::string(OPENSEMBA_VERSION));
+
+    if (!versionMatches || !extendedSubversionCheck) {
+        throw std::logic_error(
+            "File version " + version + " is not supported.");
     }
     return versionMatches;
 }
