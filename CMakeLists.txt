@@ -49,7 +49,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 project(opensemba CXX)
 
-add_definitions(-DOPENSEMBA_VERSION="0.15")
+add_definitions(-DOPENSEMBA_VERSION="0.14")
 
 add_subdirectory(external/gidpost/ obj/external/gidpost/)
 

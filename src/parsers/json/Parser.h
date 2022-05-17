@@ -22,10 +22,8 @@
 #include "source/PlaneWave.h"
 #include "source/port/Waveguide.h"
 #include "source/port/TEM.h"
-#include "boundary/Boundary.h"
 
 #include "Data.h"
-#include "DataExtended.h"
 
 #include "parsers/Parser.h"
 
@@ -38,7 +36,6 @@ class Parser : public SEMBA::Parsers::Parser {
 public:
     Parser(const std::string& filename) : SEMBA::Parsers::Parser(filename) {};
     Data read() const;
-    DataExtended readExtended() const;
     
 private:
     json readSolverOptions(const json&) const;
@@ -63,8 +60,6 @@ private:
             const Geometry::CoordR3Group&,
             const json&) const;
 
-    Boundary::Boundary* readBoundary(const json& j) const;
-
     static Source::PlaneWave* readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Port::Waveguide* readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Port::TEM* readPortTEM(Geometry::Mesh::Geometric& mesh, const json&);
@@ -80,7 +75,6 @@ private:
     static Math::Axis::Local strToLocalAxes(const std::string& str);
 
     static bool checkVersionCompatibility(const std::string& version);
-    static bool checkExtendedVersionCompatibility(const std::string& version);
 
     static Geometry::Element::Group<> boxToElemGroup(
             Geometry::Mesh::Geometric& mesh,
