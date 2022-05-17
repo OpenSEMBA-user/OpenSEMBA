@@ -6,6 +6,7 @@
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Tetrahedron4.h"
+#include "DataExtended.h"
 
 using namespace SEMBA;
 using namespace SEMBA::Parsers::JSON;
@@ -24,6 +25,37 @@ TEST_F(ParserJSONParserTest, Sphere)
 {
     SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere.dat");
     EXPECT_NO_THROW(jsonParser.read());
+}
+
+TEST_F(ParserJSONParserTest, SphereExtended)
+{
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended.dat");
+
+    DataExtended data = jsonParser.readExtended();
+
+    const std::string boundaryLowerMaterials[3] = {"PML", "PEC", "PMC"};
+    for (int i = 0; i < 3; i++) {
+        EXPECT_EQ(data.boundary->lower[i], boundaryLowerMaterials[i]);
+    }
+
+    const std::string boundaryUpperMaterials[3] = {"MUR1", "MUR2", "Periodic"};
+    for (int i = 0; i < 3; i++) {
+        EXPECT_EQ(data.boundary->upper[i], boundaryUpperMaterials[i]);
+    }
+
+    EXPECT_EQ(data.grid3->getNumCells(), Math::CVecR3(51, 23, 15));
+}
+
+TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)
+{
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended-wrong-subversion.dat");
+    try {
+        jsonParser.read();
+        FAIL() << "No exception was thrown";
+    }
+    catch (const std::logic_error& exception) {
+        EXPECT_STREQ(exception.what(), "File version 0.15a is not supported.");
+    }
 }
 
 TEST_F(ParserJSONParserTest, Wires) 

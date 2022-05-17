@@ -4,6 +4,7 @@ project(opensemba_core CXX)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
+add_subdirectory(boundary/ boundary/)
 add_subdirectory(class/ class/)
 add_subdirectory(filesystem/ filesystem/)
 add_subdirectory(geometry/ geometry/)
@@ -17,7 +18,10 @@ if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
 
     add_library(opensemba_core STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h
-                                           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp)
+                                           ${CMAKE_CURRENT_LIST_DIR}/Data.cpp
+                                           ${CMAKE_CURRENT_LIST_DIR}/DataExtended.h
+                                           ${CMAKE_CURRENT_LIST_DIR}/DataExtended.cpp
+    )
 
     find_package(nlohmann_json CONFIG REQUIRED)
 
@@ -26,5 +30,6 @@ if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
                                               opensemba_core_source
                                               opensemba_core_outputrequest
                                               opensemba_core_filesystem
+                                              opensemba_core_boundary
                                               nlohmann_json)
 endif()
