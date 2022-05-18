@@ -60,7 +60,7 @@ DataExtended Parser::readExtended() const {
     DataExtended res = DataExtended();
     // TODO: Parse `analysis`
     // TODO: Parse `grids`
-    res.grid3 = std::make_unique<Grid3>(this->readGrids(j));
+    res.grid3 = this->readGrids(j);
     
     // TODO: Parse `model`
     // TODO: Parse `sources`
