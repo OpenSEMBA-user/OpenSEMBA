@@ -54,7 +54,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
         i++;
     }
 
-    EXPECT_EQ(data.grid3->getNumCells(), Math::CVecR3(51, 23, 15));
+    EXPECT_EQ(data.grid3.getNumCells(), Math::CVecR3(51, 23, 15));
 }
 
 TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)

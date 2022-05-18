@@ -7,8 +7,7 @@ DataExtended::DataExtended(
 	const Geometry::Grid3& grid3
 ) :
 	Data(),
-	boundary(boundary)
-{
-	this->grid3 = std::make_unique<Geometry::Grid3>(grid3);
-}
+	boundary(boundary),
+	grid3(grid3)
+{}
 }
