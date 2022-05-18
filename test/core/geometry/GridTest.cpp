@@ -62,3 +62,10 @@ TEST_F(GeometryGridTest, GetSteps) {
     EXPECT_NEAR(0.05, grid_.getStep(1,5), Math::Util::tolerance);
     EXPECT_NEAR(0.05, grid_.getStep(2,5), Math::Util::tolerance);
 }
+
+TEST_F(GeometryGridTest, Equality) {
+    EXPECT_EQ(
+        grid_, 
+        SEMBA::Geometry::Grid3(SEMBA::Geometry::BoxR3(min_, max_), step_)
+    );
+}

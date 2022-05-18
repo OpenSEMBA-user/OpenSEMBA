@@ -43,7 +43,7 @@ TEST(DataExtendedTest, CanInitializeGrid) {
 		),
 		Math::CVecR3(0.5, 0.5, 0.5)
 	);
-	EXPECT_EQ(grid3, grid3);
+
 	dataExtended.grid3 = grid3;
 
 	EXPECT_TRUE(dataExtended.boundary.empty());
