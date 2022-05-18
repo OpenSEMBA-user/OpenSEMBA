@@ -30,6 +30,7 @@ public:
     virtual ~Grid () = default;
 
     Grid& operator=(const Grid& cGrid);
+    bool operator==(const Grid& rhs) const;
     void setPos(const std::vector<Math::Real> pos[D]);
     void setAdditionalSteps(const Math::Constants::CartesianAxis d,
                             const Math::Constants::CartesianBound b,

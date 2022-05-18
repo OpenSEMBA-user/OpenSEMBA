@@ -36,7 +36,7 @@ TEST(DataExtendedTest, CanInitializeBoundary) {
 TEST(DataExtendedTest, CanInitializeGrid) {
 	DataExtended dataExtended = DataExtended();
 	
-	dataExtended.grid3 = Geometry::Grid3(
+	auto grid3 = Geometry::Grid3(
 		Geometry::BoxR3(
 			Math::CVecR3(0.0, 0.0, 0.0),
 			Math::CVecR3(1, 1, 1)
@@ -44,6 +44,8 @@ TEST(DataExtendedTest, CanInitializeGrid) {
 		Math::CVecR3(0.5, 0.5, 0.5)
 	);
 
+	dataExtended.grid3 = grid3;
+
 	EXPECT_TRUE(dataExtended.boundary.empty());
-	EXPECT_EQ(dataExtended.grid3.getNumCells(), Math::CVecR3(2, 2, 2));
+	EXPECT_EQ(dataExtended.grid3, grid3);
 }
