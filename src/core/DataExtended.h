@@ -9,10 +9,13 @@ namespace SEMBA {
     class DataExtended : public Data {
     public:
         Boundary::Boundary* boundary;
-        Geometry::Grid3* grid3;
+        std::unique_ptr<Geometry::Grid3> grid3;
 
         DataExtended();
-        DataExtended(Boundary::Boundary* boundary, Geometry::Grid3* grid3);
+        DataExtended(
+            Boundary::Boundary* boundary, 
+            const Geometry::Grid3& grid3
+        );
     };
 
 }
