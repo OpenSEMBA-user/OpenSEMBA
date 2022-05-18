@@ -39,11 +39,11 @@ TEST(DataExtendedTest, CanInitializeGrid) {
 	dataExtended.grid3 = Geometry::Grid3(
 		Geometry::BoxR3(
 			Math::CVecR3(0.0, 0.0, 0.0),
-			Math::CVecR3(1.732050807568877, 1.732050807568877, 1.732050807568877)
+			Math::CVecR3(1, 1, 1)
 		),
 		Math::CVecR3(0.5, 0.5, 0.5)
 	);
 
 	EXPECT_TRUE(dataExtended.boundary.empty());
-	EXPECT_EQ(dataExtended.grid3.getNumCells(), Math::CVecR3(4, 4, 4)); // TODO: Check why 4
+	EXPECT_EQ(dataExtended.grid3.getNumCells(), Math::CVecR3(2, 2, 2));
 }
