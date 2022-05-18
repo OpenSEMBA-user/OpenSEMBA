@@ -6,7 +6,6 @@ DataExtended::DataExtended(
 	const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
 	const Geometry::Grid3& grid3
 ) :
-	Data(),
 	boundary(boundary),
 	grid3(grid3)
 {}

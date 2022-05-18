@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Data.h"
 #include "geometry/Grid.h"
 #include "physicalModel/Bound.h"
 
 namespace SEMBA {
 
-    class DataExtended : public Data {
+    class DataExtended {
     public:
         std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> boundary;
         Geometry::Grid3 grid3;
