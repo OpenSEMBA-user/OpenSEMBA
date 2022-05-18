@@ -22,7 +22,6 @@
 #include "source/PlaneWave.h"
 #include "source/port/Waveguide.h"
 #include "source/port/TEM.h"
-#include "boundary/Boundary.h"
 
 #include "Data.h"
 #include "DataExtended.h"
