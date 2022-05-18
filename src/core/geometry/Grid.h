@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <array>
 
 #include "Box.h"
 #include "math/util/Real.h"
@@ -29,7 +30,7 @@ public:
     Grid(const Grid& grid);
     virtual ~Grid () = default;
 
-    Grid& operator=(const Grid& cGrid);
+
     bool operator==(const Grid& rhs) const;
     void setPos(const std::vector<Math::Real> pos[D]);
     void setAdditionalSteps(const Math::Constants::CartesianAxis d,
@@ -117,7 +118,7 @@ public:
                       Math::Real pad, Math::Real siz);
 
 private:
-    std::vector<Math::Real> pos_[D];
+    std::array<std::vector<Math::Real>,D> pos_;
 };
 
 typedef Grid<3> Grid3;
