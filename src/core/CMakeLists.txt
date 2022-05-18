@@ -4,7 +4,6 @@ project(opensemba_core CXX)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-add_subdirectory(boundary/ boundary/)
 add_subdirectory(class/ class/)
 add_subdirectory(filesystem/ filesystem/)
 add_subdirectory(geometry/ geometry/)
@@ -29,6 +28,5 @@ if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
                                               opensemba_core_physicalmodel
                                               opensemba_core_source
                                               opensemba_core_outputrequest
-                                              opensemba_core_boundary
                                               nlohmann_json)
 endif()
