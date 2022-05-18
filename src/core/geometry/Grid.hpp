@@ -64,17 +64,6 @@ Grid<D>::Grid(const Grid<D>& grid) {
 }
 
 template<std::size_t D>
-Grid<D>& Grid<D>::operator=(const Grid<D>& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-    for (std::size_t i = 0; i < D; i++) {
-        pos_[i] = rhs.pos_[i];
-    }
-    return *this;
-}
-
-template<std::size_t D>
 bool Grid<D>::operator==(const Grid& rhs) const {
     return this->pos_ == rhs.pos_;
 }
