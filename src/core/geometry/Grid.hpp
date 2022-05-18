@@ -75,6 +75,11 @@ Grid<D>& Grid<D>::operator=(const Grid<D>& rhs) {
 }
 
 template<std::size_t D>
+bool Grid<D>::operator==(const Grid& rhs) const {
+    return this->pos_ == rhs.pos_;
+}
+
+template<std::size_t D>
 void Grid<D>::setPos(const std::vector<Math::Real> pos[D]) {
     for(std::size_t d = 0; d < D; d++) {
         if (pos[d].size() == 0) {
