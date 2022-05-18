@@ -1,19 +1,20 @@
 #pragma once
 
 #include "Data.h"
-#include "boundary/Boundary.h"
+//#include "boundary/Boundary.h"
 #include "geometry/Grid.h"
+#include "physicalModel/Bound.h"
 
 namespace SEMBA {
 
     class DataExtended : public Data {
     public:
-        Boundary::Boundary* boundary;
+        std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> boundary;
         std::unique_ptr<Geometry::Grid3> grid3;
 
-        DataExtended();
+        DataExtended() = default;
         DataExtended(
-            Boundary::Boundary* boundary, 
+            const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
             const Geometry::Grid3& grid3
         );
     };

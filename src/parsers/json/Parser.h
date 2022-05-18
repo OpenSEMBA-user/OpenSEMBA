@@ -66,7 +66,8 @@ private:
     Geometry::ElemRGroup readElementsFromSTLFile(
         const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&) const;
 
-    Boundary::Boundary* readBoundary(const json& j) const;
+    std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> readBoundary(const json& j) const;
+    PhysicalModel::Bound::Type strToBoundType(const std::string& boundType) const;
 
     static std::unique_ptr<Source::PlaneWave> readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
     static std::unique_ptr<Source::Port::Waveguide> readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);

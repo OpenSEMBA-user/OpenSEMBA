@@ -10,16 +10,27 @@ TEST(DataExtendedTest, CanCreate) {
 	DataExtended dataExtended = DataExtended();
 
 	EXPECT_NE(&dataExtended, nullptr);
-	EXPECT_EQ(dataExtended.boundary, nullptr);
+	EXPECT_TRUE(dataExtended.boundary.empty());
 }
 
 TEST(DataExtendedTest, CanInitializeBoundary) {
-	Boundary::Boundary boundary = Boundary::Boundary();
 	DataExtended dataExtended = DataExtended();
-	dataExtended.boundary = &boundary;
 
-	EXPECT_EQ(dataExtended.boundary, &boundary);
-	EXPECT_EQ(dataExtended.boundary->lower[0], "PML");
+	auto pair = std::make_pair<PhysicalModel::Bound, PhysicalModel::Bound>(
+		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pec),
+		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pml)
+	);
+
+	dataExtended.boundary.push_back(pair);
+
+	EXPECT_EQ(dataExtended.boundary.at(0), pair);
+	auto firstElement = dataExtended.boundary.at(0).first;
+	EXPECT_EQ(firstElement.getType(), PhysicalModel::Bound::Type::pec);
+	EXPECT_EQ(firstElement.getName(), "PEC_Bound");
+
+	auto secondElement = dataExtended.boundary.at(0).second;
+	EXPECT_EQ(secondElement.getType(), PhysicalModel::Bound::Type::pml);
+	EXPECT_EQ(secondElement.getName(), "PML_Bound");
 }
 
 TEST(DataExtendedTest, CanInitializeGrid) {
@@ -34,6 +45,6 @@ TEST(DataExtendedTest, CanInitializeGrid) {
 
 	dataExtended.grid3 = std::make_unique<Geometry::Grid3>(grid3);
 
-	EXPECT_EQ(dataExtended.boundary, nullptr);
+	EXPECT_TRUE(dataExtended.boundary.empty());
 	EXPECT_EQ(dataExtended.grid3->getNumCells(), Math::CVecR3(4, 4, 4)); // TODO: Check why 4
 }

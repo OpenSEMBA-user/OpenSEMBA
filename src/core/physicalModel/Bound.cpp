@@ -25,7 +25,7 @@ Bound::Bound(Id id, Type typeIn) : Identifiable<Id>(id), type(typeIn)
         boundName = "MUR2";
     }
     else {
-        throw std::logic_error("Unrecogized value in Bound ctor.");
+        throw std::logic_error("Unrecognized value in Bound ctor.");
     }
     
     setName(boundName + "_Bound");
