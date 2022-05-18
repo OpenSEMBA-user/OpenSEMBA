@@ -116,8 +116,8 @@ Data Parser::read() const {
     return res;
 }
 
-Boundary::Boundary* Parser::readBoundary(const json& j) const {
-    Boundary::Boundary* boundary = new Boundary::Boundary();
+std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> Parser::readBoundary(const json& j) const {
+    auto boundary = std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>();
 
     json lower = j.at("boundary").at("lower");
     json upper = j.at("boundary").at("upper");
@@ -126,11 +126,42 @@ Boundary::Boundary* Parser::readBoundary(const json& j) const {
     }
 
     for (int i = 0; i < 3; i++) {
-        boundary->lower[i] = lower[i].get<std::string>();
-        boundary->upper[i] = upper[i].get<std::string>();
+        boundary.push_back(
+            std::make_pair<PhysicalModel::Bound, PhysicalModel::Bound>(
+                PhysicalModel::Bound(PhysicalModel::Id(), this->strToBoundType(lower[i].get<std::string>())),
+                PhysicalModel::Bound(PhysicalModel::Id(), this->strToBoundType(upper[i].get<std::string>()))
+            )
+        );
     }
 
     return boundary;
+}
+
+PhysicalModel::Bound::Type Parser::strToBoundType(const std::string& boundType) const {
+    PhysicalModel::Bound::Type type;
+    if (boundType == "PEC") {
+        type = PhysicalModel::Bound::Type::pec;
+    }
+    else if (boundType == "PMC") {
+        type = PhysicalModel::Bound::Type::pmc;
+    }
+    else if (boundType == "PML") {
+        type = PhysicalModel::Bound::Type::pml;
+    }
+    else if (boundType == "Periodic") {
+        type = PhysicalModel::Bound::Type::periodic;
+    }
+    else if (boundType == "MUR1") {
+        type = PhysicalModel::Bound::Type::mur1;
+    }
+    else if (boundType == "MUR2") {
+        type = PhysicalModel::Bound::Type::mur2;
+    }
+    else {
+        throw std::logic_error("Unrecognized value in Bound ctor.");
+    }
+
+    return type;
 }
 
 Parser::json Parser::readSolverOptions(const json& j) const 

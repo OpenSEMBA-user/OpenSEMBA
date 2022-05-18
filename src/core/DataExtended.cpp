@@ -2,13 +2,8 @@
 
 namespace SEMBA {
 
-DataExtended::DataExtended(): Data() {
-	boundary = nullptr;
-	grid3 = nullptr;
-}
-
 DataExtended::DataExtended(
-	Boundary::Boundary* boundary, 
+	const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
 	const Geometry::Grid3& grid3
 ) :
 	Data(),

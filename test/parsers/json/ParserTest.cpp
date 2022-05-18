@@ -36,14 +36,22 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
     DataExtended data = jsonParser.readExtended();
 
-    const std::string boundaryLowerMaterials[3] = {"PML", "PEC", "PMC"};
-    for (int i = 0; i < 3; i++) {
-        EXPECT_EQ(data.boundary->lower[i], boundaryLowerMaterials[i]);
-    }
+    const PhysicalModel::Bound::Type boundaryLowerMaterials[3] = {
+        PhysicalModel::Bound::Type::pml,
+        PhysicalModel::Bound::Type::pec,
+        PhysicalModel::Bound::Type::pmc
+    };
+    const PhysicalModel::Bound::Type boundaryUpperMaterials[3] = {
+        PhysicalModel::Bound::Type::mur1,
+        PhysicalModel::Bound::Type::mur2,
+        PhysicalModel::Bound::Type::periodic
+    };
 
-    const std::string boundaryUpperMaterials[3] = {"MUR1", "MUR2", "Periodic"};
-    for (int i = 0; i < 3; i++) {
-        EXPECT_EQ(data.boundary->upper[i], boundaryUpperMaterials[i]);
+    int i = 0;
+    for (auto& pairs : data.boundary) {
+        EXPECT_EQ(pairs.first.getType(), boundaryLowerMaterials[i]);
+        EXPECT_EQ(pairs.second.getType(), boundaryUpperMaterials[i]);
+        i++;
     }
 
     EXPECT_EQ(data.grid3->getNumCells(), Math::CVecR3(51, 23, 15));
