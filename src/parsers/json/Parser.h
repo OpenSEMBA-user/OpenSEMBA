@@ -44,7 +44,8 @@ private:
     
     json readSolverOptions(const json&) const;
     PMGroup readPhysicalModels(const json&) const;
-    std::unique_ptr<Geometry::Mesh::Geometric> readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
+    PMGroup readExtendedPhysicalModels(const json& j) const;
+    std::unique_ptr<Geometry::Mesh::Geometric> readGeometricMesh(const PhysicalModel::Group<>&, const Geometry::Grid3&, const json&) const;
 	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
     Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;
     OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Geometric& mesh, const json&) const;
