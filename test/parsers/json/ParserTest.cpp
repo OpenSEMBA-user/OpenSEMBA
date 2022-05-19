@@ -6,6 +6,7 @@
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Tetrahedron4.h"
+#include "math/function/Gaussian.h"
 #include "DataExtended.h"
 
 using namespace SEMBA;
@@ -54,7 +55,34 @@ TEST_F(ParserJSONParserTest, SphereExtended)
         i++;
     }
 
-    EXPECT_EQ(data.grid3.getNumCells(), Math::CVecR3(51, 23, 15));
+    EXPECT_EQ(data.grids.getNumCells(), Math::CVecR3(51, 23, 15));
+
+    auto sources = data.sources;
+    EXPECT_EQ(sources->size(), 1);
+
+    Source::PlaneWave* source = sources->get(0)->castTo<Source::PlaneWave>();
+    EXPECT_EQ(
+        source->getPolarization(), 
+        Math::CVecR3(-0.4082482904638631, 0.8164965809277261, -0.4082482904638631)
+    );
+    EXPECT_EQ(
+        source->getDirection(), 
+        Math::CVecR3(1.0, 1.0, 1.0)
+    );
+
+
+    Source::Magnitude::Magnitude magnitude = *source->getMagnitude();
+    EXPECT_EQ(
+        magnitude, 
+        Source::Magnitude::Magnitude(
+            new Math::Function::Gaussian(
+                Math::Function::Gaussian::buildFromMaximumFrequency(
+                    1000000000.0,
+                    1.0
+                )
+            )
+        )
+    );
 }
 
 TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)

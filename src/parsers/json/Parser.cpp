@@ -59,12 +59,14 @@ DataExtended Parser::readExtended() const {
 
     DataExtended res = DataExtended();
     // TODO: Parse `analysis`
-    // TODO: Parse `grids`
-    res.grid3 = this->readGrids(j);
+    res.grids = this->readGrids(j);
     
     // TODO: Parse `model`
-    // TODO: Parse `sources`
     // TODO: Parse `probes`    
+    auto materialsGroup = this->readExtendedPhysicalModels(j);
+    auto mesh = this->readGeometricMesh(materialsGroup, res.grids, j.at("model"));
+
+    res.sources = this->readSources(*mesh, j);
     res.boundary = this->readBoundary(j);
 
     return res;
@@ -99,7 +101,7 @@ Data Parser::read() const {
     res.filename = this->filename;
     res.solver = readSolverOptions(j);
     res.physicalModels = readPhysicalModels(j);
-    res.mesh = readGeometricMesh(res.physicalModels, j);
+    res.mesh = readGeometricMesh(res.physicalModels, this->readGrids(j), j);
         
     if (res.mesh != nullptr) {
         Mesh::Geometric* geometricMesh = res.mesh->castTo<Mesh::Geometric>();
@@ -172,7 +174,7 @@ Parser::json Parser::readSolverOptions(const json& j) const
     return j.at("solverOptions").get<json>();
 }
 
-std::unique_ptr<Mesh::Geometric> Parser::readGeometricMesh(const PMGroup& physicalModels, const json& j) const 
+std::unique_ptr<Mesh::Geometric> Parser::readGeometricMesh(const PMGroup& physicalModels, const Geometry::Grid3& grid, const json& j) const
 {
     Layer::Group<> layers = readLayers(j);
 	CoordR3Group coords = readCoordinates(j);
@@ -219,6 +221,15 @@ PMGroup Parser::readPhysicalModels(const json& j) const
     PMGroup res;
     for (auto const& mat: j.at("materials")) {
         res.addAndAssignId(readPhysicalModel( mat ));
+    }
+    return res;
+}
+
+PMGroup Parser::readExtendedPhysicalModels(const json& j) const
+{
+    PMGroup res;
+    for (auto const& mat: j.at(json::json_pointer("/model/materials"))) {
+        res.add(readPhysicalModel( mat ));
     }
     return res;
 }

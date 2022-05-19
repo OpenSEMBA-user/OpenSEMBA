@@ -4,9 +4,12 @@ namespace SEMBA {
 
 DataExtended::DataExtended(
 	const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
-	const Geometry::Grid3& grid3
+	const Geometry::Grid3& grids,
+	Source::Group<>* sources
 ) :
 	boundary(boundary),
-	grid3(grid3)
-{}
+	grids(grids)
+{
+	this->sources = sources;
+}
 }

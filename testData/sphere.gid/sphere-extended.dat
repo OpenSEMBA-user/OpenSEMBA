@@ -55,13 +55,13 @@
     "materials": [
       {
         "materialId": 1,
-        "name": "thinGap",
-        "materialType": "THINGAP"
+        "name": "pec",
+        "materialType": "PEC"
       },
       {
         "materialId": 2,
-        "name": "pec",
-        "materialType": "PEC"
+        "name": "pmc",
+        "materialType": "PMC"
       }
     ],
     "coordinates": [
@@ -451,6 +451,10 @@
       "      384  +1.28204191e+00  -1.31762123e+01  -1.70370862e-01"
     ],
     "elements": {
+      "hexahedra": [],
+      "tetrahedra": [],
+      "quadrilateral": [],
+      "line": [],
       "triangle": [
         "       1    1    1        1        2        3",
         "       2    1    1        4        5        6",
