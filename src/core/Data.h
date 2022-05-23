@@ -15,9 +15,9 @@ namespace SEMBA {
 
 class Data : public virtual Class::Class,
              public virtual Class::Cloneable {
-
-    typedef nlohmann::json json;
 public:
+    typedef nlohmann::json json;
+
     FileSystem::Project     filename;
     json                    solver;
     Geometry::Mesh::Mesh*   mesh;

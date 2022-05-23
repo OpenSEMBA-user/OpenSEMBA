@@ -32,8 +32,9 @@ namespace Parsers {
 namespace JSON {
 
 class Parser : public SEMBA::Parsers::Parser {
-    typedef nlohmann::json json;
 public:
+    typedef nlohmann::json json;
+
     Parser(const std::string& filename) : SEMBA::Parsers::Parser(filename) {};
     Data read() const;
     
