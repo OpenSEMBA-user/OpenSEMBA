@@ -39,6 +39,7 @@ public:
     Data read() const;
     
 private:
+    
     json readSolverOptions(const json&) const;
     PMGroup readPhysicalModels(const json&) const;
     Geometry::Mesh::Geometric* readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
@@ -52,19 +53,16 @@ private:
     Geometry::Grid3 readGrids(const json&) const;
     Geometry::Grid3 buildGridFromFile(const FileSystem::Project& file) const;
 
-    Geometry::Layer::Group<> readLayers(const json&) const;
+    Geometry::LayerGroup readLayers(const json&) const;
     
-    Geometry::Coordinate::Group<Geometry::CoordR3> readCoordinates(const json&) const;
-    Geometry::Element::Group<Geometry::ElemR> readElements(
-            const PhysicalModel::Group<>& physicalModels,
-            const Geometry::Layer::Group<>&,
-            const Geometry::CoordR3Group&,
-            const json&) const;
-    Geometry::Element::Group<Geometry::ElemR> readElementsFromFile(
-        const PMGroup&,
-        const Geometry::Layer::Group<>&,
-        const Geometry::CoordR3Group&,
-        const json&) const;
+    Geometry::CoordR3Group readCoordinates(const json&) const;
+
+    static Geometry::ElemRGroup readElements(
+        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&);
+    static Geometry::ElemRGroup readElementsFromFile(
+        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&);
+    static Geometry::ElemRGroup readElementsFromSTLFile(
+        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&);
 
     static Source::PlaneWave* readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Port::Waveguide* readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);

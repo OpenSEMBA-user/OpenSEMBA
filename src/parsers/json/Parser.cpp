@@ -1,6 +1,6 @@
-
-
 #include "Parser.h"
+
+#include "parsers/stl/Parser.h"
 
 #include "math/function/Gaussian.h"
 #include "math/function/BandLimited.h"
@@ -428,18 +428,15 @@ CoordR3Group Parser::readCoordinates(const json& j) const {
     return res;
 }
 
-Element::Group<ElemR> Parser::readElements(
-        const PhysicalModel::Group<>& mG,
-        const Layer::Group<>& lG,
-        const CoordR3Group& cG,
-        const json& j) const 
+ElemRGroup Parser::readElements(
+        const PMGroup& mG, LayerGroup& lG, CoordR3Group& cG, const json& j) 
 {
 
     if (j.find("elements") == j.end()) {
         throw std::logic_error("Elements label was not found.");
     }
 
-    Element::Group<ElemR> res;
+    ElemRGroup res;
     const json& elems = j.at("elements").get<json>();
 
 
@@ -456,14 +453,49 @@ Element::Group<ElemR> Parser::readElements(
     return res;
 }
 
-Geometry::Element::Group<Geometry::ElemR> Parser::readElementsFromFile(
-    const PMGroup& mG,
-    const Geometry::Layer::Group<>& lG,
-    const Geometry::CoordR3Group& cG,
-    const json& eFile) const
+ElemRGroup Parser::readElementsFromSTLFile(
+    const PMGroup& mG, LayerGroup& lG, CoordR3Group& cG, const json& f)
 {
-    throw;
+    Mesh::Unstructured m = 
+        Parsers::STL::Parser(f.at("file").get<std::string>()).readAsUnstructuredMesh();
 
+    auto lay = lG.getId( LayerId(f.at("layerId").get<std::size_t>())  );
+    auto mat = mG.getId( MatId(f.at("materialId").get<std::size_t>()) );
+    
+    ElemRGroup res;
+    for (std::size_t e = 0; e < m.elems().size(); e++) {
+        std::vector<const CoordR3*> vs;
+        const ElemR* elem = m.elems()(e);
+        for (std::size_t i = 0; i < elem->numberOfVertices(); i++) {
+            const CoordR3* elemV = elem->getV(i);
+            const CoordR3* newV = cG.addAndAssignId(std::make_unique<CoordR3>(*elemV))->get();
+            vs.push_back(newV);
+        }
+        res.add( new Tri3(ElemId(0), vs.data(), lay, mat) );
+    }
+    return res;
+}
+
+ElemRGroup Parser::readElementsFromFile(
+    const PMGroup& mG,
+    LayerGroup& lG,
+    CoordR3Group& cG,
+    const json& eFile)
+{
+    ElemRGroup res;
+    for (auto const& f : eFile) {
+        if (f.find("format") == f.end()) {
+            throw std::runtime_error("Format label not found when reading elements from file.");
+        }
+        std::string format = f.at("format").get<std::string>();
+        if (format == "STL") {
+            res.add(readElementsFromSTLFile(mG, lG, cG, f));
+        }
+        else {
+            throw std::runtime_error("Unsupported file format when reading elements from file.");
+        }
+    }
+    return res;
 }
 
 std::unique_ptr<PhysicalModel::Surface::Multilayer> 
