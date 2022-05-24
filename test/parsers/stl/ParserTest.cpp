@@ -37,14 +37,3 @@ TEST_F(ParserSTLParserTest, case_single) {
         EXPECT_EQ(1, mesh->elems().getOf<Geometry::Tri3>().size());
     }
 }
-
-TEST_F(ParserSTLParserTest, case_B2) {
-    Parsers::STL::Parser parser(getCaseName("B2"));
-	Data smb = parser.read();
-    ASSERT_TRUE(smb.mesh != nullptr);
-    Geometry::Mesh::Geometric* mesh = smb.mesh->castTo<Geometry::Mesh::Geometric>();
-    if (smb.mesh != nullptr) {
-        EXPECT_EQ(1956, mesh->coords().size());
-        EXPECT_EQ(652, mesh->elems().getOf<Geometry::Tri3>().size());
-    }
-}

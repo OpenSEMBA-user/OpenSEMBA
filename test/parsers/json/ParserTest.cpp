@@ -12,33 +12,45 @@ using namespace SEMBA::Parsers::JSON;
 using namespace Geometry::Mesh;
 
 class ParserJSONParserTest : public ::testing::Test {
+protected:
+    static std::string getFilename(const std::string& name)
+    {
+        return "testData/" + name + ".gid/" + name + ".dat";
+    }
 };
 
 TEST_F(ParserJSONParserTest, DMCWF) 
 {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/dmcwf.gid/dmcwf.dat");
-    EXPECT_NO_THROW(jsonParser.read());
+    ASSERT_NO_THROW(Parser(getFilename("dmcwf")).read());
 }
 
 TEST_F(ParserJSONParserTest, Sphere) 
 {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere.dat");
-    EXPECT_NO_THROW(jsonParser.read());
+    ASSERT_NO_THROW(Parser(getFilename("sphere")).read());
 }
 
 TEST_F(ParserJSONParserTest, Wires) 
 {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/wires.gid/wires.dat");
-    SEMBA::Data data = jsonParser.read();
+    ASSERT_NO_THROW(Parser(getFilename("wires")).read());
 }
 
 TEST_F(ParserJSONParserTest, Bowtie) 
 {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/bowtie.gid/bowtie.dat");
     Data data;
-    EXPECT_NO_THROW(data = jsonParser.read());
+    ASSERT_NO_THROW(data = Parser(getFilename("bowtie")).read());
 
     ASSERT_TRUE(data.mesh != nullptr);
     Geometric unstrMesh = dynamic_cast<Geometric&>(*data.mesh);
     EXPECT_FALSE(unstrMesh.grid().hasZeroSize());
+}
+
+TEST_F(ParserJSONParserTest, B2)
+{
+    Data data;
+    ASSERT_NO_THROW(data = Parser(getFilename("b2")).read());
+
+    ASSERT_TRUE(data.mesh != nullptr);
+    Geometric unstrMesh = dynamic_cast<Geometric&>(*data.mesh);
+    EXPECT_FALSE(unstrMesh.grid().hasZeroSize());
+    EXPECT_EQ(652, unstrMesh.elems().sizeOf<Geometry::Tri3>());
 }

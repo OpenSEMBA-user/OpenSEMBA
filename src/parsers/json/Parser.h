@@ -60,6 +60,11 @@ private:
             const Geometry::Layer::Group<>&,
             const Geometry::CoordR3Group&,
             const json&) const;
+    Geometry::Element::Group<Geometry::ElemR> readElementsFromFile(
+        const PMGroup&,
+        const Geometry::Layer::Group<>&,
+        const Geometry::CoordR3Group&,
+        const json&) const;
 
     static Source::PlaneWave* readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
     static Source::Port::Waveguide* readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);

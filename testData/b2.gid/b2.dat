@@ -1,0 +1,116 @@
+{
+    "_format": "Semba Data File in JSON format",
+    "_version": "0.14",
+
+    "solverOptions": {
+        "solver": "ugrfdtd",
+        "runSimulation": true,
+        "finalTime": 30e-9,
+        "timeStep": 0.0,
+        "cfl": 0.8,
+        "defaultSamplingPeriod": 1e-9,
+        "forceRestarting": false,
+        "resumeSimulation": false,
+        "flush": 0,
+        "geometryScalingFactor": 1e-3,
+        "compositesModel": "MIBC",
+        "wiresFlavor": "holland",
+        "mtln": true,
+        "minDistanceWires": 0.5,
+        "mapVTK": false,
+        "mesherOptions": {
+            "lowerXBound": "PML",
+            "lowerYBound": "PML",
+            "lowerZBound": "PML",
+            "upperXBound": "PML",
+            "upperYBound": "PML",          
+            "upperZBound": "PML",
+            "contourRefinement": false,
+            "unwantedConnectionsInfo": false,
+            "structuredCellsInfo": false,
+            "vtkExport": true,
+            "postmshExport": true,
+            "postsmbExport": false,
+            "mesher": "DMesher",
+            "hwMeshExport": false,
+            "hMesherMode": "Raw",
+            "mode": "Structured",
+            "edgePoints": 0,
+            "forbiddenLength": 0,
+            "slantedWires": false,
+            "slantedThreshold": 1.0
+        }
+    },
+    
+    "materials": [
+      {
+        "materialId": 1,
+        "name": "PEC",
+        "materialType": "PEC"
+      }
+    ],
+
+    "grids": [
+        {
+            "gridType": "gridCondition",
+            "type": "Number_of_cells",
+            "numberOfCells": "{60 60 60}",
+            "layerBox": "{25 25 25 -25 -25 -25}"
+        }
+
+    ],
+
+    "layers": [
+        {"id": 1, "name": "model"}
+    ],
+
+    "coordinates": [
+    ],
+
+    "elements": {
+      "hexahedra": [],
+      "tetrahedra": [],
+      "quadrilateral": [],
+      "triangle": [],
+      "fromFile":
+      [
+        { "format": "STL", "layerId": 1, "materialId": 1, "file": "stl/B2.stl" }
+      ]
+  },
+
+    "sources": [
+        {
+            "sourceType": "planewave", 
+            "definitionMode": "by_vectors",
+            "directionVector": "{0.0 0.0 1.0}", 
+            "polarizationVector": "{1.0 0.0 0.0}",
+            "magnitude": {
+                "type": "Gaussian",
+                "frequencyMaximum": 1.0e9
+            },
+            "layerBox": "{1.8 1.8 1.8 -1.8 -1.8 -1.8}"
+        }
+    ],
+ 
+    "outputRequests": [
+        { 
+            "gidOutputType": "Far_field",
+            "name": "Farfield_outRq",
+            "type": "farField",
+            "domain": {
+                "initialFrequency": 0.0,
+                "finalFrequency": 0.0,
+                "frequencyStep": 0.0,
+                "transferFunctionFile": "",
+                "logFrequencySweep": false
+            }, 
+            "box": "{1.8 1.8 1.8 -1.8 -1.8 -1.8}",
+            "initialTheta": 0,
+            "finalTheta":   0,
+            "stepTheta":    1,
+            "initialPhi":   0,
+            "finalPhi":     0,
+            "stepPhi":      1
+        }
+    ]
+}

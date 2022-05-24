@@ -432,7 +432,8 @@ Element::Group<ElemR> Parser::readElements(
         const PhysicalModel::Group<>& mG,
         const Layer::Group<>& lG,
         const CoordR3Group& cG,
-        const json& j) const {
+        const json& j) const 
+{
 
     if (j.find("elements") == j.end()) {
         throw std::logic_error("Elements label was not found.");
@@ -448,7 +449,21 @@ Element::Group<ElemR> Parser::readElements(
     res.add(readElemStrAs<Tri3> (mG, lG, cG, elems.at("triangle").get<json>()));
     res.add(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
 
+    if (elems.find("fromFile") != elems.end()) {
+        res.add(readElementsFromFile(mG, lG, cG, elems.at("fromFile").get<json>()));
+    }
+
     return res;
+}
+
+Geometry::Element::Group<Geometry::ElemR> Parser::readElementsFromFile(
+    const PMGroup& mG,
+    const Geometry::Layer::Group<>& lG,
+    const Geometry::CoordR3Group& cG,
+    const json& eFile) const
+{
+    throw;
+
 }
 
 std::unique_ptr<PhysicalModel::Surface::Multilayer> 
