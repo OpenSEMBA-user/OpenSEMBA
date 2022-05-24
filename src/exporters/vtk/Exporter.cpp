@@ -1,8 +1,8 @@
-
-
 #include "Exporter.h"
 
 #include "geometry/mesh/Unstructured.h"
+#include "geometry/mesh/Geometric.h"
+
 #include "geometry/element/Triangle.h"
 #include "geometry/element/Quadrilateral.h"
 #include "geometry/element/Tetrahedron.h"
@@ -41,9 +41,16 @@ void Exporter::writeMesh_(const Data* smb)
         mesh = meshStr->getMeshUnstructured();
         preName = "str_";
         grid = &inMesh->castTo<Geometry::Mesh::Structured>()->grid();
-    } else {
+    }
+    else if (inMesh->is<Geometry::Mesh::Geometric>()) {
         meshStr = nullptr;
-        mesh = inMesh->cloneTo<Geometry::Mesh::Unstructured>();
+        mesh = inMesh->castTo<Geometry::Mesh::Geometric>();
+        preName = "geo_";
+        grid = &inMesh->castTo<Geometry::Mesh::Geometric>()->grid();
+    }
+    else {
+        meshStr = nullptr;
+        mesh = inMesh->castTo<Geometry::Mesh::Unstructured>();
         grid = nullptr;
     }
 
@@ -125,7 +132,10 @@ void Exporter::writeMesh_(const Data* smb)
     outFile << "  " << "</Collection>" << std::endl;
     outFile << "</VTKFile>" << std::endl;
 
-    delete mesh;
+    if (inMesh->is<Geometry::Mesh::Structured>()) {
+        delete mesh;
+    }
+
 }
 
 void Exporter::writeFile_(const Group::Group<const Geometry::ElemR>& elems,
