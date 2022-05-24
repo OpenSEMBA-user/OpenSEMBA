@@ -9,7 +9,9 @@ using namespace Math::Constants;
 
 Parser::Parser(const std::string& fn) : 
     SEMBA::Parsers::Parser(fn) 
-{}
+{
+
+}
 
 CoordR3Group readCoordinates(const std::string& fn)
 {
@@ -20,9 +22,11 @@ CoordR3Group readCoordinates(const std::string& fn)
     while (stl.peek() != EOF) {
         stl >> label;
         if (label == "vertex") {
-            Math::CVecR3 vertex;
-            stl >> vertex(x) >> vertex(y) >> vertex(z);
-            cG.addPos(vertex);
+            Math::CVecR3 pos;
+            stl >> pos(x) >> pos(y) >> pos(z);
+            if (cG.getPos(pos) == nullptr) {
+                cG.addPos(pos);
+            }
         }
     }  
     
@@ -49,20 +53,22 @@ std::pair<std::unique_ptr<Layer::Layer>, ElemRGroup> readLayerAndElements(
             while (stl.peek() != EOF) {
                 std::getline(stl, line);
                 if (line.find("outer loop") != std::string::npos) {
-                    std::vector<const Geometry::CoordR3*> coord;
-                    coord.reserve(3);
+                    std::vector<const CoordR3*> coords;
+                    coords.reserve(3);
                     while (stl.peek() != EOF && label != "endloop") {
                         stl >> label;
                         if (label == "vertex") {
                             Math::CVecR3 pos;
-                            stl >> pos(Math::Constants::x)
-                                >> pos(Math::Constants::y)
-                                >> pos(Math::Constants::z);
-                            coord.push_back(cG.getPos(pos));
+                            stl >> pos(x) >> pos(y) >> pos(z);
+                            const CoordR3* coord = cG.getPos(pos);
+                            if (coord == nullptr) {
+                                throw std::runtime_error("Unable to find coordinate during STL reading.");
+                            }
+                            coords.push_back(coord);
                         }
                     }
                     label.clear();
-                    eG.addId(new Tri3(ElemId(0), &coord[0], lay.get()));
+                    eG.addId(new Tri3(ElemId(0), coords.data(), lay.get()));
                 }
             }
         }
