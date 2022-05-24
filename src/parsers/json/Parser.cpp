@@ -544,7 +544,7 @@ ElemRGroup Parser::readElementsFromFile(
         }
         std::string format = f.at("format").get<std::string>();
         if (format == "STL") {
-            res.add(readElementsFromSTLFile(mG, lG, cG, f));
+            res.addId(readElementsFromSTLFile(mG, lG, cG, f));
         }
         else {
             throw std::runtime_error("Unsupported file format when reading elements from file.");
