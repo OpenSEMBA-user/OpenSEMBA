@@ -66,6 +66,10 @@ DataExtended Parser::readExtended() const {
     return res;
 }
 
+Parser::Parser(const std::string& fn) :
+    SEMBA::Parsers::Parser(fn) 
+{}
+
 Data Parser::read() const {
     
     std::ifstream stream(this->filename);
@@ -480,7 +484,7 @@ CoordR3Group Parser::readCoordinates(const json& j) const {
 }
 
 ElemRGroup Parser::readElements(
-        const PMGroup& mG, LayerGroup& lG, CoordR3Group& cG, const json& j) 
+        const PMGroup& mG, LayerGroup& lG, CoordR3Group& cG, const json& j) const
 {
 
     if (j.find("elements") == j.end()) {
@@ -505,10 +509,10 @@ ElemRGroup Parser::readElements(
 }
 
 ElemRGroup Parser::readElementsFromSTLFile(
-    const PMGroup& mG, LayerGroup& lG, CoordR3Group& cG, const json& f)
+    const PMGroup& mG, LayerGroup& lG, CoordR3Group& cG, const json& f) const
 {
-    Mesh::Unstructured m = 
-        Parsers::STL::Parser(f.at("file").get<std::string>()).readAsUnstructuredMesh();
+    std::string fn = this->filename.getFolder() + f.at("file").get<std::string>();
+    Mesh::Unstructured m = Parsers::STL::Parser(fn).readAsUnstructuredMesh();
 
     auto lay = lG.getId( LayerId(f.at("layerId").get<std::size_t>())  );
     auto mat = mG.getId( MatId(f.at("materialId").get<std::size_t>()) );
@@ -522,7 +526,7 @@ ElemRGroup Parser::readElementsFromSTLFile(
             const CoordR3* newV = cG.addAndAssignId(std::make_unique<CoordR3>(*elemV))->get();
             vs.push_back(newV);
         }
-        res.add( new Tri3(ElemId(0), vs.data(), lay, mat) );
+        res.addId( new Tri3(ElemId(0), vs.data(), lay, mat) );
     }
     return res;
 }
@@ -531,7 +535,7 @@ ElemRGroup Parser::readElementsFromFile(
     const PMGroup& mG,
     LayerGroup& lG,
     CoordR3Group& cG,
-    const json& eFile)
+    const json& eFile) const
 {
     ElemRGroup res;
     for (auto const& f : eFile) {

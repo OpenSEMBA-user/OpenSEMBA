@@ -37,7 +37,7 @@ class Parser : public SEMBA::Parsers::Parser {
 public:
     typedef nlohmann::json json;
 
-    Parser(const std::string& filename) : SEMBA::Parsers::Parser(filename) {};
+    Parser(const std::string& filename);
     Data read() const;
     DataExtended readExtended() const;
     
@@ -60,12 +60,12 @@ private:
     
     Geometry::CoordR3Group readCoordinates(const json&) const;
 
-    static Geometry::ElemRGroup readElements(
-        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&);
-    static Geometry::ElemRGroup readElementsFromFile(
-        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&);
-    static Geometry::ElemRGroup readElementsFromSTLFile(
-        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&);
+    Geometry::ElemRGroup readElements(
+        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&) const;
+    Geometry::ElemRGroup readElementsFromFile(
+        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&) const;
+    Geometry::ElemRGroup readElementsFromSTLFile(
+        const PMGroup&, Geometry::LayerGroup&, Geometry::CoordR3Group&, const json&) const;
 
     Boundary::Boundary* readBoundary(const json& j) const;
 

@@ -21,10 +21,7 @@ protected:
 };
 
 TEST_F(ParserSTLParserTest, case_nofile) {
-	Parsers::STL::Parser parser("nofile");
-	Data smb;
-	ASSERT_NO_THROW(smb = parser.read());
-	EXPECT_TRUE(smb.mesh != nullptr);
+    ASSERT_ANY_THROW(Parsers::STL::Parser("nofile"));
 }
 
 TEST_F(ParserSTLParserTest, case_single) {
