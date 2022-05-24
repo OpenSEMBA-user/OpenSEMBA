@@ -10,8 +10,7 @@ namespace Parsers {
 
 class Parser {
 public:
-    Parser(const std::string& filenameIn) : 
-        filename(filenameIn) {};
+    Parser(const std::string& fn);
     
     virtual Data read() const = 0;
 

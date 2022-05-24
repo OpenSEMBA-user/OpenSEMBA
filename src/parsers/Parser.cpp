@@ -1,9 +1,16 @@
-
-
 #include "Parser.h"
 
 namespace SEMBA {
 namespace Parsers {
+
+Parser::Parser(const std::string& fn) :
+    filename(fn)
+{
+    std::ifstream ifs(fn);
+    if (!ifs.is_open()) {
+        throw std::runtime_error("Unable to open file: " + fn);
+    }
+};
 
 Math::CVecR3 Parser::strToCartesianVector(const std::string& str) {
     std::stringstream iss(str);
