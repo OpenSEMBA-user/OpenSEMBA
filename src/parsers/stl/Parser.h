@@ -21,8 +21,9 @@ namespace STL {
 
 class Parser : public SEMBA::Parsers::Parser {
 public:
-    Parser(const std::string& fn) : SEMBA::Parsers::Parser(fn) {};
+    Parser(const std::string& fn);
     Data read() const;
+    Geometry::Mesh::Unstructured readAsUnstructuredMesh() const;
 };
 
 } /* namespace STL */
