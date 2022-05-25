@@ -9,8 +9,8 @@ namespace Port {
 class TEMCoaxial : public TEM {
 public:
     TEMCoaxial(
-            std::unique_ptr<Magnitude::Magnitude> magnitude,
-            const Geometry::Element::Group<const Geometry::Surf>& elem,
+            const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+            const Target& elem,
             const ExcitationMode excMode,
             const Math::CVecR3& origin,
             const Math::Real innerRadius,
@@ -18,8 +18,11 @@ public:
     TEMCoaxial(const TEMCoaxial& rhs);
     virtual ~TEMCoaxial() = default;
 
-    
-    void set(const Geometry::Element::Group<const Geometry::Elem>&);
+    virtual std::unique_ptr<Source> clone() const override {
+        return std::make_unique<TEMCoaxial>(*this);
+    }
+
+    void set(const Target&);
 
     std::string getName() const { return "Coaxial_TEM_port"; }
 

@@ -39,7 +39,7 @@ public:
 
     Parser(const std::string& filename);
     Data read() const;
-    DataExtended readExtended() const;
+    //DataExtended readExtended() const;
     
 private:
     
@@ -78,7 +78,7 @@ private:
 
     std::unique_ptr<PhysicalModel::PhysicalModel> readPhysicalModel(const json& material) const;
 
-    static OutputRequest::Base* readOutputRequest(Geometry::Mesh::Geometric& mesh, const json&);
+    static OutputRequest::OutputRequest* readOutputRequest(Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Domain readDomain(const json&);
     static Math::Axis::Local strToLocalAxes(const std::string& str);
@@ -93,7 +93,7 @@ private:
     static Geometry::Element::Group<Geometry::Nod> readCoordIdAsNodes(
             Geometry::Mesh::Geometric& mesh, const json&);
 
-    static OutputRequest::Base::Type strToOutputType(std::string label);
+    static OutputRequest::OutputRequest::Type strToOutputType(std::string label);
     static Source::Generator::Type strToGeneratorType(std::string label);
     static Source::Generator::Hardness strToGeneratorHardness(std::string str);
     static Source::OnLine::Type strToNodalType(std::string label);

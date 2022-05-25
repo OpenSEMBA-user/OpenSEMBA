@@ -7,29 +7,34 @@
 
 #include "filesystem/Project.h"
 #include "class/Class.h"
-#include "class/Cloneable.h"
+#include "class/Identifiable.h"
+#include "class/Identification.h"
 
 #include "nlohmann/json.hpp"
 
 namespace SEMBA {
 
-class Data : public virtual Class::Class,
-             public virtual Class::Cloneable {
-public:
+class Data;
+    typedef Class::Identification<Data> Id;
     typedef nlohmann::json json;
 
+class Data : public virtual Class::Identifiable<Id>,
+             public virtual Class::Class {
+
+public:
     FileSystem::Project     filename;
     json                    solver;
-    Geometry::Mesh::Mesh*   mesh;
+    std::unique_ptr<Geometry::Mesh::Mesh>   mesh;
     PMGroup physicalModels;
-    Source::Group<>*        sources;
-    OutputRequest::Group<>* outputRequests;
+    SourceGroup        sources;
+    OutputRequestGroup outputRequests;
 
-    Data();
     Data(const Data& rhs);
-    virtual ~Data();
+    virtual ~Data() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Data);
+    virtual std::unique_ptr<Data> clone() const {
+        return std::make_unique<Data>(*this);
+    }
 
     Data& operator=(const Data& rhs);
 };

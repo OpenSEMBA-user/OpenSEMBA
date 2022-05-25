@@ -10,11 +10,6 @@ template<class T>
 const Math::Real Hexahedron8<T>::tolerance = 1e-15;
 
 template<class T>
-Hexahedron8<T>::Hexahedron8() {
-
-}
-
-template<class T>
 Hexahedron8<T>::Hexahedron8(const Id id,
                             const Coordinate::Coordinate<T,3>* v[8],
                             const Layer* lay,
@@ -58,11 +53,6 @@ Hexahedron8<T>::Hexahedron8(const Hexahedron8<T>& rhs)
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
-}
-
-template<class T>
-Hexahedron8<T>::~Hexahedron8() {
-
 }
 
 template<class T>
@@ -161,34 +151,22 @@ void Hexahedron8<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Hexahedron8<T>::toStructured(const CoordI3Group& cG,
-                                    const Grid3& grid,
-                                    const Math::Real tol) const {
-    const CoordI3** v = this->vertexToStructured(cG, grid, tol);
-    if (v == nullptr) {
-        return nullptr;
-    }
-    ElemI* res =  new HexI8(this->getId(),
-                            v,
-                            this->getLayer(),
-                            this->getModel());
-    delete[] v;
-    return res;
+std::unique_ptr<ElemI> Hexahedron8<T>::toStructured(const CoordI3Group& cG,
+    const Grid3& grid,
+    const Math::Real tol) const {
+    return std::make_unique<HexI8>(this->getId(),
+        this->vertexToStructured(cG, grid, tol).data(),
+        this->getLayer(),
+        this->getModel());
 }
 
 template<class T>
-ElemR* Hexahedron8<T>::toUnstructured(const CoordR3Group& cG,
+std::unique_ptr<ElemR> Hexahedron8<T>::toUnstructured(const CoordR3Group& cG,
                                       const Grid3& grid) const {
-    const CoordR3** v = this->vertexToUnstructured(cG, grid);
-    if (v == nullptr) {
-        return nullptr;
-    }
-    ElemR* res =  new HexR8(this->getId(),
-                            v,
-                            this->getLayer(),
-                            this->getModel());
-    delete[] v;
-    return res;
+    return std::make_unique<HexR8>(this->getId(),
+        this->vertexToUnstructured(cG, grid).data(),
+        this->getLayer(),
+        this->getModel());
 }
 
 } /* namespace Element */

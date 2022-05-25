@@ -11,9 +11,8 @@ namespace Geometry {
 namespace Element {
 
 class LineBase : public virtual Base {
-public:
-    LineBase() {}
-    virtual ~LineBase() {}
+public:    
+    virtual ~LineBase() = default;
 
     inline std::size_t numberOfFaces   () const { return 2; }
     inline std::size_t numberOfVertices() const { return 2; }
@@ -31,8 +30,7 @@ template<class T>
 class Line : public virtual Element<T>,
              public virtual LineBase {
 public:
-    Line();
-    virtual ~Line();
+    virtual ~Line() = default;
 };
 
 } /* namespace Element */
@@ -44,5 +42,4 @@ typedef Element::Line<Math::Int > LinI;
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
-#include "Line.hpp"
 

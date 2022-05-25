@@ -4,15 +4,19 @@
 #include "geometry/element/Group.h"
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Shareable.h"
+#include "class/Identifiable.h"
+#include "class/Identification.h"
 
 namespace SEMBA {
 namespace OutputRequest {
 
-class OutputRequest : public virtual Class::Class {
+class OutputRequest;
+    typedef Class::Identification<OutputRequest> Id;
+
+class OutputRequest : public virtual Class::Identifiable<Id>,
+                      public virtual Class::Class {
 public:
-    typedef Geometry::ElemGroup Target;
+    typedef Geometry::ElemView Target;
 
     enum class Type {
         electric,

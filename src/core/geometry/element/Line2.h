@@ -12,8 +12,7 @@ class Line2Base : public virtual LineBase {
 public:
     static const std::size_t sizeOfCoordinates = 2;
 
-    Line2Base() {};
-    virtual ~Line2Base() {};
+    virtual ~Line2Base() = default;
 
     inline std::size_t numberOfCoordinates() const { return sizeOfCoordinates; }
 };
@@ -22,7 +21,6 @@ template<class T>
 class Line2 : public virtual Line<T>,
               public virtual Line2Base {
 public:
-    Line2();
     Line2(const Id id,
           const Coordinate::Coordinate<T,3>* v[2],
           const Layer* lay = nullptr,
@@ -40,9 +38,11 @@ public:
     Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
           const Box<T,3>& box);
     Line2(const Line2<T>& rhs);
-    virtual ~Line2();
+    virtual ~Line2() = default;
     
-    SEMBA_CLASS_DEFINE_CLONE(Line2<T>);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Line2>(*this);
+    }
 
     bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
@@ -58,10 +58,10 @@ public:
 
     void setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord);
 
-    ElemI* toStructured(const CoordI3Group&,
-                        const Grid3&,
-                        const Math::Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const CoordR3Group&,
+    std::unique_ptr<ElemI> toStructured(const CoordI3Group&,
+        const Grid3&,
+        const Math::Real = Grid3::tolerance) const;
+    std::unique_ptr<ElemR> toUnstructured(const CoordR3Group&,
                           const Grid3&) const;
 
 private:

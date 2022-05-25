@@ -12,8 +12,7 @@ namespace Element {
 
 class Triangle : public Surface<Math::Real> {
 public:
-    Triangle();
-    virtual ~Triangle();
+    virtual ~Triangle() = default;
 
     std::size_t numberOfFaces   () const { return 3; }
     std::size_t numberOfVertices() const { return 3; }

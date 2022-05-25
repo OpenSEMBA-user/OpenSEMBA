@@ -12,8 +12,14 @@ typedef std::array<std::array<const PhysicalModel::Bound*,2>,3> Bound3;
 class Port : public Source {
 public:
     Port(const std::unique_ptr<Magnitude::Magnitude>& magnitude, 
-         const Geometry::Element::Group<Geometry::Surf>& elem);
+         const Target& elem);
     virtual ~Port() = default;
+
+    //virtual std::unique_ptr<Source> clone() const override {
+    //    return std::make_unique<Port>(*this);
+    //}
+
+    std::string getName() const { return "Port"; };
 
     Math::CVecR3 getNormal() const;
 

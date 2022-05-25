@@ -7,11 +7,6 @@ namespace Geometry {
 namespace Element {
 
 template<class T>
-Polyline<T>::Polyline() {
-
-}
-
-template<class T>
 Polyline<T>::Polyline(const Id id,
                       const std::vector<const Coordinate::Coordinate<T,3>*>& v,
                       const Layer* lay,
@@ -26,11 +21,6 @@ Polyline<T>::Polyline(const Polyline<T>& rhs)
 :   Identifiable<Id>(rhs),
     Elem(rhs) {
     v_ = rhs.v_;
-}
-
-template<class T>
-Polyline<T>::~Polyline() {
-
 }
 
 template<class T>

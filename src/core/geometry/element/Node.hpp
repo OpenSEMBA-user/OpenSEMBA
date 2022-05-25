@@ -106,33 +106,24 @@ void Node<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Node<T>::toStructured(const CoordI3Group& cG,
-                             const Grid3& grid, const Math::Real tol) const {
-    const CoordI3** v = this->vertexToStructured(cG, grid, tol);
-    if (v == nullptr) {
-        return nullptr;
-    }
-    ElemI* res =  new NodI(this->getId(),
-                           v,
-                           this->getLayer(),
-                           this->getModel());
-    delete[] v;
-    return res;
+std::unique_ptr<ElemI> Node<T>::toStructured(
+    const CoordI3Group& cG,
+    const Grid3& grid, 
+    const Math::Real tol) const {
+    return std::make_unique<NodI>(this->getId(),
+        this->vertexToStructured(cG, grid, tol).data(),
+        this->getLayer(),
+        this->getModel());
 }
 
 template<class T>
-ElemR* Node<T>::toUnstructured(const CoordR3Group& cG,
-                               const Grid3& grid) const {
-    const CoordR3** v = this->vertexToUnstructured(cG, grid);
-    if (v == nullptr) {
-        return nullptr;
-    }
-    ElemR* res =  new NodR(this->getId(),
-                           v,
-                           this->getLayer(),
-                           this->getModel());
-    delete[] v;
-    return res;
+std::unique_ptr<ElemR> Node<T>::toUnstructured(
+    const CoordR3Group& cG,
+    const Grid3& grid) const {
+    return std::make_unique<NodR>(this->getId(),
+        this->vertexToUnstructured(cG, grid).data(),
+        this->getLayer(),
+        this->getModel());
 }
 
 } /* namespace Element */

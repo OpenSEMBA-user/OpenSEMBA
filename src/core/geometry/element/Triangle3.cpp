@@ -8,10 +8,6 @@ namespace Element {
 
 const Math::Simplex::Triangle<1> Triangle3::geo;
 
-Triangle3::Triangle3() {
-
-}
-
 Triangle3::Triangle3(const Id id,
            const CoordR3* v[3],
            const Layer* lay,
@@ -31,10 +27,6 @@ Triangle3::Triangle3(const Triangle3& rhs)
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
-}
-
-Triangle3::~Triangle3() {
-
 }
 
 const CoordR3* Triangle3::getSideV(const std::size_t f,
@@ -70,9 +62,22 @@ void Triangle3::check() const {
 
 }
 
-Triangle3* Triangle3::linearize() const {
-    return new Triangle3(*this);
+std::unique_ptr<ElemI> Triangle3::toStructured(
+    const CoordI3Group& cG,
+    const Grid3& grid, const Math::Real tol) const {
+
+    throw std::logic_error("Triangle3::toStructured operation not permitted");
 }
+
+std::unique_ptr<ElemR> Triangle3::toUnstructured(
+    const CoordR3Group& cG,
+    const Grid3& grid) const {
+    return std::make_unique<Tri3>(this->getId(),
+        this->vertexToUnstructured(cG, grid).data(),
+        this->getLayer(),
+        this->getModel());
+}
+
 
 } /* namespace Element */
 } /* namespace Geometry */

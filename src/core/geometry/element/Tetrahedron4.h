@@ -12,15 +12,16 @@ class Tetrahedron4 : public Tetrahedron {
 public:
     static const std::size_t sizeOfCoordinates = 4;
 
-    Tetrahedron4();
     Tetrahedron4(const Id id,
                  const CoordR3* v[4],
                  const Layer* lay = nullptr,
                  const Model* mat = nullptr);
     Tetrahedron4(const Tetrahedron4& rhs);
-    virtual ~Tetrahedron4();
+    virtual ~Tetrahedron4() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Tetrahedron4);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Tetrahedron4>(*this);
+    }
 
     bool isInnerPoint(const Math::CVecR3& pos) const;
     bool isCurvedFace(const std::size_t face) const;
@@ -49,6 +50,15 @@ public:
 
     void setV(const std::size_t i, const CoordR3*);
     void check() const;
+
+    virtual std::unique_ptr<Element<Math::Int >> toStructured(
+        const CoordI3Group&,
+        const Grid3&,
+        const Math::Real = Grid3::tolerance) const;
+
+    virtual std::unique_ptr<Element<Math::Real>> toUnstructured(
+        const CoordR3Group&,
+        const Grid3&) const;
 
 private:
     static const Math::Simplex::Tetrahedron<1> tet;

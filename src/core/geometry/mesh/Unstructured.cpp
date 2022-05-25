@@ -51,7 +51,7 @@ Structured* Unstructured::getMeshStructured(const Grid3& grid, const Math::Real 
     }
 
     for (auto const& elem : elems()) {
-		auto newElem = std::make_unique<ElemI>(*elem->toStructured(res->coords(), grid, tol));
+        auto newElem = elem->toStructured(res->coords(), grid, tol);
         res->elems().add(newElem);
     }
 
@@ -75,6 +75,7 @@ void Unstructured::reassignPointers(const PMGroup& matGr)
 BoxR3 Unstructured::getBoundingBox() const {
     return elems().getBound();
 }
+
 
 } /* namespace Mesh */
 } /* namespace Geometry */

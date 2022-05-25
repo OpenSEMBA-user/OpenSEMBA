@@ -5,7 +5,9 @@
 namespace SEMBA {
 namespace Source {
 
-Source::Source(const std::unique_ptr<Magnitude::Magnitude>& magnitude, const Target& target) :
+Source::Source(
+    const std::unique_ptr<Magnitude::Magnitude>& magnitude, 
+    const Target& target) :
     target_(target),
     magnitude_(magnitude->clone())
 {
@@ -19,13 +21,14 @@ Source::Source(const Source& rhs)
     }
 }
 
-Source& Source::operator=(const Source& rhs) const
+Source& Source::operator=(const Source& rhs)
 {
-    Source res;
     target_ = rhs.target_;
     if (rhs.magnitude_ != nullptr) {
         magnitude_ = rhs.magnitude_->clone();
     }
+
+    return *this;
 }
 
 

@@ -10,11 +10,6 @@ template<class T>
 const Math::Simplex::Line<1> Line2<T>::lin;
 
 template<class T>
-Line2<T>::Line2() {
-
-}
-
-template<class T>
 Line2<T>::Line2(const Id id,
                 const Coordinate::Coordinate<T,3>* v[2],
                 const Layer* lay,
@@ -72,11 +67,6 @@ Line2<T>::Line2(const Line2<T>& rhs)
 }
 
 template<class T>
-Line2<T>::~Line2() {
-
-}
-
-template<class T>
 bool Line2<T>::isStructured(const Grid3& grid, const Math::Real tol) const {
     if (!this->vertexInCell(grid,tol)) {
         return false;
@@ -124,36 +114,6 @@ void Line2<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Line2<T>::toStructured(const CoordI3Group& cG,
-                              const Grid3& grid, const Math::Real tol) const {
-    const CoordI3** coords = this->vertexToStructured(cG, grid, tol);
-    if (coords == nullptr) {
-        return nullptr;
-    }
-    ElemI* res =  new LinI2(this->getId(),
-                            coords,
-                            this->getLayer(),
-                            this->getModel());
-    delete[] coords;
-    return res;
-}
-
-template<class T>
-ElemR* Line2<T>::toUnstructured(const CoordR3Group& cG,
-                                const Grid3& grid) const {
-    const CoordR3** coords = this->vertexToUnstructured(cG, grid);
-    if (coords == nullptr) {
-        return nullptr;
-    }
-    ElemR* res =  new LinR2(this->getId(),
-                            coords,
-                            this->getLayer(),
-                            this->getModel());
-    delete[] coords;
-    return res;
-}
-
-template<class T>
 void Line2<T>::setCoordinates(const Coordinate::Coordinate<T,3>* v[2]) {
     for (std::size_t i = 0; i < lin.np; i++) {
         v_[i] = v[i];
@@ -175,6 +135,28 @@ void Line2<T>::setCoordinates(
             v_[i] = cG.getPos(pos[i]);
         }
     }
+}
+
+template<class T>
+std::unique_ptr<ElemI> Line2<T>::toStructured(
+    const CoordI3Group& cG,
+    const Grid3& grid, const Math::Real tol) const {
+    return std::make_unique<LinI2>(this->getId(),
+        this->vertexToStructured(cG, grid, tol).data(),
+        this->getLayer(),
+        this->getModel()
+    );
+}
+
+template<class T>
+std::unique_ptr<ElemR> Line2<T>::toUnstructured(
+    const CoordR3Group& cG,
+    const Grid3& grid) const {
+    return std::make_unique<LinR2>(this->getId(),
+        this->vertexToUnstructured(cG, grid).data(),
+        this->getLayer(),
+        this->getModel()
+    );
 }
 
 } /* namespace Element */

@@ -4,8 +4,8 @@
 #include "geometry/Box.h"
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Shareable.h"
+#include "class/Identifiable.h"
+#include "class/Identification.h"
 
 #include "geometry/element/Element.h"
 #include "geometry/element/Group.h"
@@ -16,8 +16,11 @@ namespace SEMBA {
 namespace Geometry {
 namespace Mesh {
 
-class Mesh : public virtual Class::Class,
-             public virtual Class::Cloneable {
+class Mesh;
+    typedef Class::Identification<Mesh> Id;
+
+class Mesh : public virtual Class::Identifiable<Id>,
+             public virtual Class::Class {
 public:
     Mesh() = default;
     virtual ~Mesh() = default;
@@ -25,6 +28,13 @@ public:
     virtual void applyScalingFactor(const Math::Real factor) = 0;
     virtual BoxR3 getBoundingBox() const = 0;
     virtual void reassignPointers(const PMGroup& matGr = PMGroup()) = 0;
+
+    virtual std::unique_ptr<Mesh> clone() const = 0;
+
+    virtual ElemView reassign(const ElemView&);
+
+private:
+    ElemGroup elems_;
 };
 
 } /* namespace Mesh */

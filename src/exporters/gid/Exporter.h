@@ -62,7 +62,7 @@ private:
     void endMesh_() const;
 
     GiD_ResultType getGiDResultType_(
-    		OutputRequest::Base::Type type) const;
+    		OutputRequest::OutputRequest::Type type) const;
     GiD_ResultLocation getGiDResultLocation_() const;
 
     void openPostMeshFile_(const std::string& filename);

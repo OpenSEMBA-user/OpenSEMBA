@@ -7,7 +7,7 @@
 namespace SEMBA {
 namespace Source {
 
-class Generator : public Source<Geometry::Nod> {
+class Generator : public Source {
 public:
     typedef enum {
         voltage = 1,
@@ -19,16 +19,18 @@ public:
     } Hardness;
 
     Generator();
-    Generator(Magnitude::Magnitude* magnitude,
-              Geometry::Element::Group<const Geometry::Nod> elem,
+    Generator(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+              const Target& elem,
               const Type& generatorType,
               const Hardness& hardness);
     Generator(const Generator& rhs);
     virtual ~Generator();
 
-    SEMBA_CLASS_DEFINE_CLONE(Generator);
+    virtual std::unique_ptr<Source> clone() const override {
+        return std::make_unique<Generator>(*this);
+    }
 
-    const std::string& getName() const;
+    std::string getName() const;
     Type getType() const;
 
 private:

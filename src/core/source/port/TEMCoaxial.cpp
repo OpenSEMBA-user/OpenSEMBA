@@ -1,12 +1,13 @@
 #include "TEMCoaxial.h"
+#include "geometry/Bound.h"
 
 namespace SEMBA {
 namespace Source {
 namespace Port {
 
 TEMCoaxial::TEMCoaxial(
-        std::unique_ptr<Magnitude::Magnitude> magnitude,
-        const Geometry::Element::Group<const Geometry::Surf>& elem,
+        const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+        const Target& elem,
         const ExcitationMode excMode,
         const Math::CVecR3& origin,
         const Math::Real innerRadius,
@@ -50,10 +51,10 @@ Math::CVecR3 TEMCoaxial::getWeight(
     }
 }
 
-void TEMCoaxial::set(
-        const Geometry::Element::Group<const Geometry::Elem>& elemGroup) {
+void TEMCoaxial::set(const Target& elemGroup) {
     // Reescales internal dimensions.
-    Geometry::BoxR3 box = elemGroup.getBound();
+    //Geometry::BoxR3 box = elemGroup.getBound();
+    Geometry::BoxR3 box = Geometry::getBound(elemGroup.begin(), elemGroup.end());
     const Math::CVecR3 diagonal = box.getMax()-box.getMin();
     if (!diagonal.isContainedInPlane(Math::Constants::CartesianPlane::xy)) {
         throw std::logic_error("Port is not contained in a XY plane");
@@ -68,7 +69,7 @@ void TEMCoaxial::set(
     const Math::CVecR3 averageNewOrigin = (box.getMax() + box.getMin()) / 2;
     origin_ = averageNewOrigin;
     //
-    Source<Geometry::Surf>::set(elemGroup);
+    Source::setTarget(elemGroup);
 }
 
 } /* namespace Port */

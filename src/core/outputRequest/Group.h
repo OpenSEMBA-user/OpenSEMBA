@@ -1,45 +1,18 @@
-
-
 #pragma once
 
 #include "OutputRequest.h"
-
-#include "group/Group.h"
-#include "group/Cloneable.h"
+#include "group/IdentifiableUnique.h"
 
 namespace SEMBA {
 namespace OutputRequest {
 
-template<typename O = Base>
-class Group : public SEMBA::Group::Group<O>,
-              public SEMBA::Group::Cloneable<O> {
-public:
-    Group() {}
-    template<typename O2>
-    Group(O2* e)                     : SEMBA::Group::Group<O>(e) {}
-    template<typename O2>
-    Group(const std::vector<O2*>& e) : SEMBA::Group::Group<O>(e) {}
-    template<typename O2>
-    Group(SEMBA::Group::Group<O2>&       rhs) : SEMBA::Group::Group<O>(rhs) {}
-    template<typename O2>
-    Group(const SEMBA::Group::Group<O2>& rhs) : SEMBA::Group::Group<O>(rhs) {}
-    Group(SEMBA::Group::Group<O>&        rhs) : SEMBA::Group::Group<O>(rhs) {}
-    template<typename O2>
-    Group(SEMBA::Group::Group<O2>&& rhs)
-    :   SEMBA::Group::Group<O>(std::move(rhs)) {}
-    Group(SEMBA::Group::Group<O >&& rhs)
-    :   SEMBA::Group::Group<O>(std::move(rhs)) {}
-    virtual ~Group() {}
-
-    SEMBA_GROUP_DEFINE_CLONE(Group, O);
-
-    Group& operator=(SEMBA::Group::Group<O>&);
-    Group& operator=(SEMBA::Group::Group<O>&&);
-
+template<typename O = OutputRequest>
+class Group : public IdentifiableUnique<O> {
 };
 
 } /* namespace OutputRequest */
-} /* namespace SEMBA */
 
-#include "Group.hpp"
+typedef OutputRequest::Group<> OutputRequestGroup;
+
+} /* namespace SEMBA */
 

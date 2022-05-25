@@ -12,7 +12,6 @@ namespace Element {
 
 class LineConformal : public virtual Line2<Math::Int> {
 public:
-    LineConformal();
     LineConformal(const Id id,
                   const CoordI3* v[2],
                   const Math::CVecR3& norm,
@@ -23,15 +22,23 @@ public:
                   const Layer* lay = nullptr,
                   const Model* mat = nullptr);
     LineConformal(const LineConformal& rhs);
-    virtual ~LineConformal();
+    virtual ~LineConformal() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(LineConformal);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<LineConformal>(*this);
+    }
 
     Math::CVecR3 getNorm () const { return norm_;  }
 
     const CoordConf* getV(const std::size_t i) const;
 
     void setV(const std::size_t i, const CoordI3* coord);
+
+    std::unique_ptr<ElemI> toStructured(const CoordI3Group&,
+        const Grid3&,
+        const Math::Real = Grid3::tolerance) const;
+    std::unique_ptr<ElemR> toUnstructured(const CoordR3Group&,
+        const Grid3&) const;
 
 private:
     void checkCoordinates();

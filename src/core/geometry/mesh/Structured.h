@@ -33,34 +33,35 @@ public:
     Structured& operator=(const Structured&);
     Structured& operator=(Structured&&) = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Structured);
+    virtual std::unique_ptr<Mesh> clone() const override {
+        return std::make_unique<Structured>(*this);
+    }
 
     BoundTerminations3&         bounds() { return bounds_; }
     Grid3&                      grid  () { return grid_; }
     CoordI3Group& coords() { return coords_; }
-    Element::Group<ElemI>&      elems () { return elems_; }
-    Layer::Group<>&             layers() { return layers_; }
+    ElemIGroup&      elems () { return elems_; }
+    LayerGroup&             layers() { return layers_; }
 
     const BoundTerminations3&         bounds() const { return bounds_; }
     const Grid3&                      grid  () const { return grid_; }
     const CoordI3Group& coords() const { return coords_; }
-    const Element::Group<ElemI>&      elems () const { return elems_; }
-    const Layer::Group<>&             layers() const { return layers_; }
+    const ElemIGroup&      elems () const { return elems_; }
+    const LayerGroup&             layers() const { return layers_; }
 
     Unstructured* getMeshUnstructured() const;
 
     Math::Real getMinimumSpaceStep() const;
     void applyScalingFactor(const Math::Real factor);
     BoxR3 getBoundingBox() const;
-    void reassignPointers(const PMGroup& matGr = PMGroup());
 
-    virtual void reassign( Element::Group<const Elem>& );
+    void reassignPointers(const PMGroup& matGr = PMGroup());
 
 private:
     Grid3 grid_;
 	CoordI3Group coords_;
-	Element::Group<ElemI> elems_;
-	Layer::Group<> layers_;
+    ElemIGroup elems_;
+    LayerGroup layers_;
 	BoundTerminations3 bounds_;
 };
 

@@ -6,13 +6,9 @@ namespace SEMBA {
 namespace Source {
 namespace Port {
 
-TEM::~TEM() {
-
-}
-
 TEM::TEM(
-        Magnitude::Magnitude* magnitude,
-        const Geometry::Element::Group<const Geometry::Surf>& elem,
+        const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+        const Target& elem,
         const ExcitationMode excitationMode) : Port(magnitude, elem) {
     excitationMode_ = excitationMode;
 }

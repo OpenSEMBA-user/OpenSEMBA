@@ -20,15 +20,16 @@ template<class T>
 class Polyline : public virtual Line<T>,
                  public virtual PolylineBase {
 public:
-    Polyline();
     Polyline(const Id id,
              const std::vector<const Coordinate::Coordinate<T,3>*>& v,
              const Layer* lay = nullptr,
              const Model* mat = nullptr);
     Polyline(const Polyline<T>& rhs);
-    virtual ~Polyline();
+    virtual ~Polyline() = default;
     
-    SEMBA_CLASS_DEFINE_CLONE(Polyline);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Polyline>(*this);
+    }
 
     inline std::size_t numberOfCoordinates() const { return v_.size(); }
 

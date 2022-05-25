@@ -10,17 +10,18 @@ namespace Element {
 
 class Triangle3 : public Triangle {
 public:
-    Triangle3();
     Triangle3(const Id id,
               const CoordR3* v[3],
               const Layer* lay = nullptr,
               const Model* mat = nullptr);
     Triangle3(const Triangle3& rhs);
-    virtual ~Triangle3();
+    virtual ~Triangle3() = default;
 
     static const std::size_t sizeOfCoordinates = 3;
 
-    SEMBA_CLASS_DEFINE_CLONE(Triangle3);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Triangle3>(*this);
+    }
 
     std::size_t numberOfCoordinates() const { return sizeOfCoordinates; }
 
@@ -40,9 +41,16 @@ public:
 
     void setV(const std::size_t i, const CoordR3*);
 
-    Triangle3* linearize() const;
-
     void check() const;
+
+    virtual std::unique_ptr<Element<Math::Int >> toStructured(
+        const CoordI3Group&,
+        const Grid3&,
+        const Math::Real = Grid3::tolerance) const;
+
+    virtual std::unique_ptr<Element<Math::Real>> toUnstructured(
+        const CoordR3Group&,
+        const Grid3&) const;
 
 protected:
     static const Math::Simplex::Triangle<1> geo;

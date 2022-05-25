@@ -12,18 +12,20 @@ namespace Port {
 class WaveguideRectangular: public Waveguide {
 public:
     WaveguideRectangular(
-            Magnitude::Magnitude* magnitude,
-            const Geometry::Element::Group<const Geometry::Surf>& elem,
+            const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+            const Target& elem,
             const ExcitationMode excMode,
             const std::pair<size_t,size_t> mode);
     WaveguideRectangular(const WaveguideRectangular&);
     virtual ~WaveguideRectangular();
 
-    SEMBA_CLASS_DEFINE_CLONE(WaveguideRectangular);
+    virtual std::unique_ptr<Source> clone() const override {
+        return std::make_unique<WaveguideRectangular>(*this);
+    }
 
-    void set(const Geometry::Element::Group<const Geometry::Elem>&);
+    void set(const Target&);
 
-    const std::string& getName() const;
+    std::string getName() const;
     Math::Real getWidth() const;
     Math::Real getHeight() const;
 

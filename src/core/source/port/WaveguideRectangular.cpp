@@ -1,21 +1,20 @@
 
 
 #include "WaveguideRectangular.h"
+#include "geometry/Bound.h"
 
 namespace SEMBA {
 namespace Source {
 namespace Port {
 
 WaveguideRectangular::WaveguideRectangular(
-        Magnitude::Magnitude* magn,
-        const Geometry::Element::Group<const Geometry::Surf>& elem,
+        const std::unique_ptr<Magnitude::Magnitude>& magn,
+        const Target& elem,
         const ExcitationMode excMode,
         const std::pair<size_t,size_t> mode)
-:   SEMBA::Source::Base(magn),
-    Geometry::Element::Group<const Geometry::Surf>(elem),
-    Waveguide(magn, elem, excMode, mode) {
+: Waveguide(magn, elem, excMode, mode) {
 
-    box_ = this->getBound();
+    box_ = Geometry::getBound(elem.begin(), elem.end());
 
     if (mode.first == 0 && mode.second == 0) {
         throw std::logic_error("At least one mode must be non-zero.");
@@ -23,8 +22,8 @@ WaveguideRectangular::WaveguideRectangular(
 }
 
 WaveguideRectangular::WaveguideRectangular(const WaveguideRectangular& rhs)
-:   SEMBA::Source::Base(rhs),
-    Geometry::Element::Group<const Geometry::Surf>(rhs),
+:   // SEMBA::Source::Source(rhs),
+    //Geometry::Element::Group<const Geometry::Surf>(rhs),
     Waveguide(rhs) {
     box_ = rhs.box_;
 }
@@ -33,9 +32,8 @@ WaveguideRectangular::~WaveguideRectangular() {
 
 }
 
-const std::string& WaveguideRectangular::getName() const {
-    const static std::string res = "Rectangular_waveguide_port";
-    return res;
+std::string WaveguideRectangular::getName() const {
+    return "Rectangular_waveguide_port";
 }
 
 Math::CVecR3 WaveguideRectangular::getWeight(
@@ -84,9 +82,9 @@ Math::Real WaveguideRectangular::getHeight() const {
 }
 
 void WaveguideRectangular::set(
-    const Geometry::Element::Group<const Geometry::Elem>& constGroupElems) {
-    Waveguide::set(constGroupElems);
-    box_ = this->getBound();
+    const Target& constGroupElems) {
+    Waveguide::setTarget(constGroupElems);
+    box_ = Geometry::getBound(constGroupElems.begin(), constGroupElems.end());
 }
 
 Math::CVecR3 WaveguideRectangular::getOrigin() const {

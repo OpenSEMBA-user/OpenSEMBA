@@ -41,7 +41,9 @@ public:
     Node(const Node<T>& rhs);
     virtual ~Node();
     
-    SEMBA_CLASS_DEFINE_CLONE(Node<T>);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Node>(*this);
+    }
 
     bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
@@ -57,9 +59,9 @@ public:
 
     void setV(const std::size_t i, const Coordinate::Coordinate<T,3>* coord);
 
-    ElemI* toStructured(const CoordI3Group&, const Grid3&,
+    std::unique_ptr<ElemI> toStructured(const CoordI3Group&, const Grid3&,
                         const Math::Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const CoordR3Group&, const Grid3&) const;
+    std::unique_ptr<ElemR> toUnstructured(const CoordR3Group&, const Grid3&) const;
 
 private:
     const Coordinate::Coordinate<T,3>* v_[1];
