@@ -16,12 +16,18 @@ public:
         TM
     };
 
-    Waveguide(Magnitude::Magnitude* magnitude,
-              const Geometry::Element::Group<const Geometry::Surf>& elem,
+    Waveguide(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+              const Target& elem,
               const ExcitationMode excMode,
               const std::pair<size_t,size_t> mode);
     Waveguide(const Waveguide& rhs);
     virtual ~Waveguide();
+
+    //virtual std::unique_ptr<Source> clone() const override {
+    //    return std::make_unique<Waveguide>(*this);
+    //}
+
+    std::string getName() const { return "Waveguide"; };
 
     ExcitationMode getExcitationMode() const;
     std::pair<size_t, size_t> getMode() const;

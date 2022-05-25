@@ -3,7 +3,7 @@
 namespace SEMBA {
 namespace Source {
 
-Dipole::Dipole(const std::unique_ptr<Magnitude::Magnitude> magnitude,
+Dipole::Dipole(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
                const Target& elem,
                Math::Real length,
                Math::CVecR3 orientation,

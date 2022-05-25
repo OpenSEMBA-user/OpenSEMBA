@@ -13,7 +13,7 @@ Geometric::Geometric(const Grid3& grid)
 
 Geometric::Geometric(const Grid3& grid,
                      const CoordR3Group& cG,
-                     const Element::Group<const ElemR>& elem,
+                     const Element::Group<ElemR>& elem,
                      const LayerGroup& layers)
 :   Unstructured(cG, elem, layers),
     grid_(grid) {

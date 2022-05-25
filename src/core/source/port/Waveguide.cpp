@@ -1,13 +1,14 @@
 
 
 #include "Waveguide.h"
+#include "geometry/Bound.h"
 
 namespace SEMBA {
 namespace Source {
 namespace Port {
 
-Waveguide::Waveguide(SEMBA::Source::Magnitude::Magnitude* magnitude,
-        const Geometry::Element::Group<const Geometry::Surf>& elem,
+Waveguide::Waveguide(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+        const Target& elem,
         const ExcitationMode excMode,
         const std::pair<size_t,size_t> mode)
 :   Port(magnitude, elem) {
@@ -15,13 +16,13 @@ Waveguide::Waveguide(SEMBA::Source::Magnitude::Magnitude* magnitude,
     excitationMode_ = excMode;
     mode_ = mode;
     // Performs checks
-    if (!elem.getBound().isSurface()) {
+    if (!Geometry::getBound(elem.begin(), elem.end()).isSurface()) {
         throw std::logic_error("Waveport elements must be contained "
                                "in a coplanar Geometry::Surface");
     }
 
-    Math::CVecR3 diagonal = elem.getBound().getMax() -
-                            elem.getBound().getMin();
+    Math::CVecR3 diagonal = Geometry::getBound(elem.begin(), elem.end()).getMax() -
+        Geometry::getBound(elem.begin(), elem.end()).getMin();
     if (!diagonal.isContainedInPlane(Math::Constants::xy)) {
         throw std::logic_error("Waveport must be contained in plane xy.");
     }

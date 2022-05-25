@@ -288,11 +288,11 @@ void Exporter::flushPostFile() const {
     }
 }
 
-GiD_ResultType Exporter::getGiDResultType_(OutputRequest::Base::Type type) const {
+GiD_ResultType Exporter::getGiDResultType_(OutputRequest::OutputRequest::Type type) const {
     switch (type) {
-    case OutputRequest::Base::electric:
+    case OutputRequest::OutputRequest::Type::electric:
         return GiD_ResultType::GiD_Vector;
-    case OutputRequest::Base::magnetic:
+    case OutputRequest::OutputRequest::Type::magnetic:
         return GiD_ResultType::GiD_Vector;
     default:
         assert(false);

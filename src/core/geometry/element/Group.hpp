@@ -8,7 +8,7 @@ template<typename E>
 std::vector<const E*> Group<E>::getCoordId(const CoordId& id) const 
 {
 	std::vector<const E*> res;
-	for (auto const item& : items_) { 
+	for (auto const item& : *this) { 
 		const E* elem = item;
 		for (size_t j = 0; j < elem->numberOfCoordinates(); j++) {
 			if (elem->getV(j)->getId() == id) {
@@ -23,7 +23,7 @@ template<typename E>
 std::vector<const E*> Group<E>::getMatId(const MatId& id) const
 {
     std::vector<const E*> res;
-    for (auto const item& : items_) {
+    for (auto const item& : *this) {
         if (item->getMatId() == id) {
             res.push_back(item);
         }
@@ -35,7 +35,7 @@ template<typename E>
 std::vector<const E*> Group<E>::getLayerId(const LayerId& id) const
 {
     std::vector<const E*> res;
-    for (auto const item& : items_) {
+    for (auto const item& : *this) {
         if (item->getLayerId() == id) {
             res.push_back(item);
         }
@@ -47,7 +47,7 @@ template<typename E>
 std::vector<const E*> Group<E>::getMatLayerId(const MatId& mId, const LayerId& lId) const
 {
     std::vector<const E*> res;
-    for (auto const item& : items_) {
+    for (auto const item& : *this) {
         if (item->getMatId() == mId && item->getLayerId() == lId) {
             res.push_back(item);
         }
@@ -79,7 +79,7 @@ BoxR3 Group<E>::getBound() const
 template<typename E> template<class T>
 void Group<E>::reassignPointers(const Coordinate::Group< Coordinate::Coordinate<T,3> >& vNew) 
 {
-    for (auto const& item: items_) {
+    for (auto const& item: *this) {
         if (item->is<Element<T>>()) {
             Element<T>* elem = item->castTo<Element<T>>();
             for (std::size_t j = 0; j < elem->numberOfCoordinates(); j++) {
@@ -93,7 +93,7 @@ void Group<E>::reassignPointers(const Coordinate::Group< Coordinate::Coordinate<
 template<typename E>
 void Group<E>::reassignPointers(const LayerGroup& lNew) 
 {
-    for (auto const& item: items_) {
+    for (auto const& item: *this) {
         if (item->getLayer() != nullptr) {
             item->setLayer( lNew.getId( item->getLayerId() ) );
         }
@@ -103,7 +103,7 @@ void Group<E>::reassignPointers(const LayerGroup& lNew)
 template<typename E>
 void Group<E>::reassignPointers(const PMGroup& mNew) 
 {
-    for (auto const& item: items_) {
+    for (auto const& item: *this) {
         if (item->getModel() != nullptr) {
             item->setModel( mNew.getId( item->getMatId() ) );
         }

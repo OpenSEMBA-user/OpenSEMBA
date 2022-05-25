@@ -12,7 +12,7 @@ public:
     Geometric(const Grid3& grid);
     Geometric(const Grid3& grid, 
               const CoordR3Group& cG,
-              const Element::Group<const ElemR>& elem,
+              const Element::Group<ElemR>& elem,
               const LayerGroup& = LayerGroup());
     Geometric(const Geometric&);
     Geometric(Geometric&&) = default;
@@ -21,7 +21,9 @@ public:
     Geometric& operator=(const Geometric& rhs);
     Geometric& operator=(Geometric&&) = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Geometric);
+    virtual std::unique_ptr<Mesh> clone() const override {
+        return std::make_unique<Geometric>(*this);
+    }
 
     Grid3&       grid()       { return grid_; }
     const Grid3& grid() const { return grid_; }

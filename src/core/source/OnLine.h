@@ -16,12 +16,16 @@ public:
         soft = 2
     };
     
-    OnLine(std::unique_ptr<Magnitude::Magnitude> magnitude,
-           const Geometry::Element::Group<const Geometry::Lin>& elem,
+    OnLine(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+           const Target& elem,
            const Type& sourceType,
            const Hardness& sourceHardness);
     virtual ~OnLine() = default;
         
+    virtual std::unique_ptr<Source> clone() const override {
+        return std::make_unique<OnLine>(*this);
+    }
+
     std::string getName() const { return "OnLine"; };
     Type getType() const { return type_; };
     Hardness getHardness() const { return hardness_; };

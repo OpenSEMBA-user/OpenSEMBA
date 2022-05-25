@@ -26,7 +26,6 @@ template<class T>
 class Quadrilateral4: public virtual Quadrilateral<T>,
                       public virtual Quadrilateral4Base {
 public:
-    Quadrilateral4();
     Quadrilateral4(const Id id,
                    const Coordinate::Coordinate<T,3>* coords[4],
                    const Layer* lay = nullptr,
@@ -41,9 +40,11 @@ public:
                    const Layer* lay = nullptr,
                    const Model* mat = nullptr);
     Quadrilateral4(const Quadrilateral4<T>& rhs);
-    virtual ~Quadrilateral4();
+    virtual ~Quadrilateral4() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Quadrilateral4<T>);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Quadrilateral4<T>>(*this);
+    }
 
     bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
@@ -59,10 +60,10 @@ public:
 
     void setV(const std::size_t i, const Coordinate::Coordinate<T,3>*);
 
-    ElemI* toStructured(const CoordI3Group&,
+    std::unique_ptr<ElemI> toStructured(const CoordI3Group&,
                         const Grid3&,
                         const Math::Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const CoordR3Group&,
+    std::unique_ptr<ElemR> toUnstructured(const CoordR3Group&,
                           const Grid3&) const;
 
     void check() const;

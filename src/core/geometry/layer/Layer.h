@@ -3,8 +3,6 @@
 #include <string>
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Shareable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 

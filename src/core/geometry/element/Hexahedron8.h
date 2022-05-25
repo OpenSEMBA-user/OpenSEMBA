@@ -14,8 +14,7 @@ class Hexahedron8Base : public virtual VolumeBase {
 public:
     static const std::size_t sizeOfCoordinates = 8;
 
-    Hexahedron8Base() {}
-    virtual ~Hexahedron8Base() {}
+    virtual ~Hexahedron8Base() = default;
 
     inline bool isQuadratic() const { return false; }
 
@@ -35,7 +34,6 @@ template<class T>
 class Hexahedron8 : public virtual Volume<T>,
               public virtual Hexahedron8Base {
 public:
-    Hexahedron8();
     Hexahedron8(const Id id,
                 const Coordinate::Coordinate<T,3>* v[8],
 				const Layer* lay,
@@ -46,9 +44,11 @@ public:
                 const Layer* lay = nullptr,
                 const Model* mat = nullptr);
     Hexahedron8(const Hexahedron8<T>& rhs);
-    virtual ~Hexahedron8();
+    virtual ~Hexahedron8() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Hexahedron8);
+    virtual std::unique_ptr<Base> clone() const override {
+        return std::make_unique<Hexahedron8>(*this);
+    }
 
     bool isStructured(const Grid3&, const Math::Real = Grid3::tolerance) const;
 
@@ -75,10 +75,10 @@ public:
 
     void setV(const std::size_t i, const Coordinate::Coordinate<T,3>*);
 
-    ElemI* toStructured(const Coordinate::Group<CoordI3>&,
+    std::unique_ptr<ElemI> toStructured(const Coordinate::Group<CoordI3>&,
                         const Grid3&,
                         const Math::Real = Grid3::tolerance) const;
-    ElemR* toUnstructured(const Coordinate::Group<CoordR3>&,
+    std::unique_ptr<ElemR> toUnstructured(const Coordinate::Group<CoordR3>&,
                           const Grid3&) const;
 
 private:

@@ -8,10 +8,6 @@ namespace Element {
 
 const Math::Simplex::Tetrahedron<1> Tetrahedron4::tet;
 
-Tetrahedron4::Tetrahedron4() {
-
-}
-
 Tetrahedron4::Tetrahedron4(const Id id,
            const CoordR3* v[4],
            const Layer* lay,
@@ -32,10 +28,6 @@ Tetrahedron4::Tetrahedron4(const Tetrahedron4& rhs)
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
         v_[i] = rhs.v_[i];
     }
-}
-
-Tetrahedron4::~Tetrahedron4() {
-
 }
 
 bool Tetrahedron4::isInnerPoint(const Math::CVecR3& pos) const {
@@ -142,6 +134,22 @@ bool Tetrahedron4::hasZeroVolume() const {
         }
     }
     return false;
+}
+
+std::unique_ptr<ElemI> Tetrahedron4::toStructured(
+    const CoordI3Group& cG,
+    const Grid3& grid, const Math::Real tol) const {
+
+    throw std::logic_error("Tetrahedron4::toStructured operation not permitted");
+}
+
+std::unique_ptr<ElemR> Tetrahedron4::toUnstructured(
+    const CoordR3Group& cG,
+    const Grid3& grid) const {
+    return std::make_unique<Tet4>(this->getId(),
+        this->vertexToUnstructured(cG, grid).data(),
+        this->getLayer(),
+        this->getModel());
 }
 
 } /* namespace Element */

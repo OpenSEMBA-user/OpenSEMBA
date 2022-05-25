@@ -6,10 +6,6 @@ namespace SEMBA {
 namespace Geometry {
 namespace Element {
 
-LineConformal::LineConformal() {
-    checkCoordinates();
-}
-
 LineConformal::LineConformal(const Id id,
                              const CoordI3* v[2],
                              const Math::CVecR3& norm,
@@ -28,7 +24,7 @@ LineConformal::LineConformal(const CoordI3* v[2],
                              const Math::CVecR3& norm,
                              const Layer* lay,
                              const Model* mat)
-:   Elem(lay, mat) {
+:   LinI2(ElemId(0), v, lay, mat) {
     checkCoordinates();
     norm_  = norm;
 }
@@ -38,10 +34,6 @@ LineConformal::LineConformal(const LineConformal& rhs)
     Elem(rhs),
     LinI2(rhs) {
     norm_  = rhs.norm_;
-}
-
-LineConformal::~LineConformal() {
-
 }
 
 const CoordConf* LineConformal::getV(const std::size_t i) const {
@@ -61,6 +53,23 @@ void LineConformal::checkCoordinates() {
             throw Error::Coord::NotConf(this->getV(i)->getId());
         }
     }
+}
+
+std::unique_ptr<ElemI> LineConformal::toStructured(
+    const CoordI3Group& cG,
+    const Grid3& grid, const Math::Real tol) const {
+
+    return std::make_unique<LineConformal>(this->getId(),
+        this->vertexToStructured(cG, grid, tol).data(),
+        norm_,
+        this->getLayer(),
+        this->getModel());
+}
+
+std::unique_ptr<ElemR> LineConformal::toUnstructured(
+    const CoordR3Group& cG,
+    const Grid3& grid) const {
+    throw std::logic_error("LineConformal::toStructured operation not permitted");
 }
 
 } /* namespace Element */

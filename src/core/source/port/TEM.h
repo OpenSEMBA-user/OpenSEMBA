@@ -13,11 +13,17 @@ public:
         current
     } ExcitationMode;
 
-    TEM(std::unique_ptr<Magnitude::Magnitude> magnitude,
-        const Geometry::Element::Group<Geometry::Surf>& elem,
+    TEM(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+        const Target& elem,
         const ExcitationMode excitationMode);
     TEM(const TEM& rhs);
     virtual ~TEM() = default;
+
+    //virtual std::unique_ptr<Source> clone() const override {
+    //    return std::make_unique<TEM>(*this);
+    //}
+
+    std::string getName() const { return "TEM_Port"; };
 
     ExcitationMode getExcitationMode() const;
     static std::string toStr(const ExcitationMode& excitationMode);

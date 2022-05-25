@@ -7,11 +7,6 @@ namespace Geometry {
 namespace Element {
 
 template<class T>
-Quadrilateral4<T>::Quadrilateral4() {
-
-}
-
-template<class T>
 Quadrilateral4<T>::Quadrilateral4(const Id id,
                                   const Coordinate::Coordinate<T,3>* coords[4],
                                   const Layer* lay,
@@ -71,10 +66,6 @@ Quadrilateral4<T>::Quadrilateral4(const Quadrilateral4<T>& rhs)
     }
 }
 
-template<class T>
-Quadrilateral4<T>::~Quadrilateral4() {
-    
-}
 
 template<class T>
 bool Quadrilateral4<T>::isStructured(const Grid3& grid,
@@ -128,35 +119,23 @@ void Quadrilateral4<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Quadrilateral4<T>::toStructured(
+std::unique_ptr<ElemI> Quadrilateral4<T>::toStructured(
         const CoordI3Group& cG,
         const Grid3& grid, const Math::Real tol) const {
-    const CoordI3** coords = this->vertexToStructured(cG, grid, tol);
-    if (coords == nullptr) {
-        return nullptr;
-    }
-    ElemI* res =  new QuaI4(this->getId(),
-                            coords,
+    return std::make_unique<QuaI4>(this->getId(),
+                            this->vertexToStructured(cG, grid, tol),
                             this->getLayer(),
                             this->getModel());
-    delete[] coords;
-    return res;
 }
 
 template<class T>
-ElemR* Quadrilateral4<T>::toUnstructured(
+std::unique_ptr<ElemR> Quadrilateral4<T>::toUnstructured(
         const CoordR3Group& cG,
         const Grid3& grid) const {
-    const CoordR3** coords = this->vertexToUnstructured(cG, grid);
-    if (coords == nullptr) {
-        return nullptr;
-    }
-    ElemR* res =  new QuaR4(this->getId(),
-                            coords,
+    return std::make_unique<QuaR4>(this->getId(),
+                            this->vertexToUnstructured(cG, grid),
                             this->getLayer(),
                             this->getModel());
-    delete[] coords;
-    return res;
 }
 
 template<class T>

@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "geometry/element/Triangle.h"
@@ -22,7 +20,7 @@ public:
     Unstructured() = default;
     Unstructured(const CoordR3Group& cG,
                  const ElemRGroup& elem,
-                 const LayerGroup & = LayerGroup());
+                 const LayerGroup& = LayerGroup());
     Unstructured(const Unstructured& param);
     Unstructured(Unstructured&&) = default;
     virtual ~Unstructured() = default;
@@ -30,15 +28,17 @@ public:
     Unstructured& operator=(const Unstructured&);
     Unstructured& operator=(Unstructured&&) = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(Unstructured);
+    virtual std::unique_ptr<Mesh> clone() const override {
+        return std::make_unique<Unstructured>(*this);
+    }
 
-    Coordinate::Group<CoordR3>& coords() { return coords_; }
-    Element::Group<ElemR>&      elems () { return elems_; }
-    Layer::Group<Layer::Layer>& layers() { return layers_; }
+    CoordR3Group& coords() { return coords_; }
+    ElemRGroup&      elems () { return elems_; }
+    LayerGroup& layers() { return layers_; }
 
-    const Coordinate::Group<CoordR3>& coords() const { return coords_; }
-    const Element::Group<ElemR>&      elems () const { return elems_; }
-    const Layer::Group<Layer::Layer>& layers() const { return layers_; }
+    const CoordR3Group& coords() const { return coords_; }
+    const ElemRGroup&      elems () const { return elems_; }
+    const LayerGroup& layers() const { return layers_; }
 
     Structured* getMeshStructured(
             const Grid3& grid,
@@ -49,11 +49,9 @@ public:
 
     void reassignPointers(const PMGroup& matGr = PMGroup());
 
-    virtual void reassign( Element::Group<const Elem>& );
-
 private:
 	CoordR3Group coords_;
-	Element::Group<ElemR> elems_;
+    ElemRGroup elems_;
 	LayerGroup layers_;
 };
 

@@ -67,7 +67,7 @@ Unstructured* Structured::getMeshUnstructured() const
     }
 
     for (auto const& elem : elems()) {
-        auto newElem = std::make_unique<ElemR>(*elem->toUnstructured(res->coords(), grid_));
+        auto newElem = elem->toUnstructured(res->coords(), grid_);
         res->elems().add(newElem);
     }
 

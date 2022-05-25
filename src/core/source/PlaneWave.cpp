@@ -4,7 +4,7 @@ namespace SEMBA {
 namespace Source {
 
 PlaneWave::PlaneWave(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
-                     const Geometry::Element::Group<Geometry::Vol>& elem,
+                     const Target& elem,
                      const Math::CVecR3& direction,
                      const Math::CVecR3& polarization) :   
     Source(magnitude, elem)
@@ -13,8 +13,8 @@ PlaneWave::PlaneWave(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
 }
 
 PlaneWave::PlaneWave(
-        std::unique_ptr<Magnitude::Magnitude> magnitude,
-        const Geometry::Element::Group<Geometry::Vol>& elem,
+        const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+        const Target& elem,
         std::pair<Math::Real, Math::Real> directionAngles,
         std::pair<Math::Real, Math::Real> polarizationAngles) :   
     Source(magnitude, elem) 
@@ -31,8 +31,8 @@ PlaneWave::PlaneWave(
 }
 
 PlaneWave::PlaneWave(
-        std::unique_ptr<Magnitude::Magnitude> magnitude,
-        const Geometry::Element::Group<Geometry::Vol>& elem,
+        const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+        const Target& elem,
         Math::Int numberOfRandomPlanewaves,
         Math::Real relativeVariationOfRandomDelay) :   
     Source(magnitude, elem) 

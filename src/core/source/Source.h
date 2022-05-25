@@ -7,26 +7,29 @@
 #include "filesystem/Project.h"
 
 #include "class/Class.h"
+#include "class/Identifiable.h"
+#include "class/Identification.h"
 
 namespace SEMBA {
 namespace Source {
 
-class Source : public virtual Class::Class {
+class Source;
+    typedef Class::Identification<Source> Id;
+
+class Source : public virtual Class::Identifiable<Id>,
+               public virtual Class::Class {
 public:
-    typedef Geometry::ElemGroup Target;
+    typedef Geometry::ElemView Target;
 
     Source() = default;
-    Source(const std::unique_ptr<Magnitude::Magnitude>&, 
-           const Geometry::Element::Group<Geometry::Vol>&);
-    Source(const std::unique_ptr<Magnitude::Magnitude>&,
-           const Geometry::Element::Group<Geometry::Surf>&);
+    Source(const std::unique_ptr<Magnitude::Magnitude>&, const Target&);
     Source(const Source&);
 
     virtual ~Source() = default;
 
-    Source& operator=(const Source&) const;
+    Source& operator=(const Source&);
     
-    virtual Source* clone() const = 0;
+    virtual std::unique_ptr<Source> clone() const = 0;
 
     virtual std::string getName() const = 0;
 

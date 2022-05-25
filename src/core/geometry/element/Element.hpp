@@ -155,19 +155,6 @@ void Element<T>::setV(const std::size_t i,
 }
 
 template<class T>
-ElemI* Element<T>::toStructured(const CoordI3Group& cG,
-                                const Grid3& grid,
-                                const Math::Real tol) const {
-    return nullptr;
-}
-
-template<class T>
-ElemR* Element<T>::toUnstructured(const CoordR3Group& cG,
-                                  const Grid3& grid) const {
-    return nullptr;
-}
-
-template<class T>
 bool Element<T>::vertexInCell(const Grid3& grid, const Math::Real tol) const {
     for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
         if (!grid.isCell(*this->getV(i), tol)) {
@@ -206,61 +193,52 @@ bool Element<T>::vertexInBound() const {
 }
 
 template<class T>
-const CoordI3** Element<T>::vertexToStructured(
+std::vector<const CoordI3*> Element<T>::vertexToStructured(
         const CoordI3Group& cG,
         const Grid3& grid,
         const Math::Real tol) const {
-    if (!this->is<ElemR>()) {
-        return nullptr;
+    if (!this->is<ElemR>() || !this->isStructured(grid, tol)) {
+        throw std::logic_error("Element::vertexToStructured unexpected empty element");
     }
-    if (!this->isStructured(grid, tol)) {
-        return nullptr;
-    }
-    Math::CVecI3 cell;
-    const CoordI3** coords = new const CoordI3*[this->numberOfCoordinates()];
-    CoordId coordId;
+
+    std::vector<const CoordI3*> res(this->numberOfCoordinates());
     for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
-        cell  = grid.getCell(*this->getV(i), true, tol);
-        coordId = this->getV(i)->getId();
+        Math::CVecI3 cell  = grid.getCell(*this->getV(i), true, tol);
+        CoordId coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
-            delete [] coords;
             throw Error::Coord::NotFound(coordId);
         }
-        coords[i] = cG.getId(coordId);
-        if (coords[i]->pos() != cell) {
-            delete [] coords;
+        res[i] = cG.getId(coordId);
+        if (res[i]->pos() != cell) {
             throw Error::Coord::NotCoincident(coordId);
         }
     }
-    return coords;
+
+    return res;
 }
 
 
 template<class T>
-const CoordR3** Element<T>::vertexToUnstructured(
+std::vector<const CoordR3*> Element<T>::vertexToUnstructured(
         const CoordR3Group& cG,
         const Grid3& grid) const {
     if (!this->is<ElemI>()) {
-        return nullptr;
+        throw std::logic_error("Element::vertexToStructured unexpected empty element");
     }
-    const CoordR3** coords = new const CoordR3*[this->numberOfCoordinates()];
-    CoordId coordId;
+
+    std::vector<const CoordR3*> res(this->numberOfCoordinates());
     for (std::size_t i = 0; i < this->numberOfCoordinates(); i++) {
-        coordId = this->getV(i)->getId();
+        CoordId coordId = this->getV(i)->getId();
         if (!cG.existId(coordId)) {
-            delete [] coords;
             throw Error::Coord::NotFound(coordId);
         }
-        coords[i] = cG.getId(coordId);
+        res[i] = cG.getId(coordId);
         const CoordR3* unsCoord = this->getV(i)->toUnstructured(grid);
-        if (coords[i]->pos() != unsCoord->pos()) {
-            delete unsCoord;
-            delete [] coords;
+        if (res[i]->pos() != unsCoord->pos()) {
             throw Error::Coord::NotCoincident(coordId);
         }
-        delete unsCoord;
     }
-    return coords;
+    return res;
 }
 
 } /* namespace Element */

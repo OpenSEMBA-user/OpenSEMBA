@@ -15,7 +15,9 @@ public:
     BulkCurrent(const BulkCurrent& rhs);
     virtual ~BulkCurrent() = default;
 
-    SEMBA_CLASS_DEFINE_CLONE(BulkCurrent);
+    std::unique_ptr<OutputRequest> clone() const override {
+        return std::make_unique<BulkCurrent>(*this);
+    }
 
     Math::Constants::CartesianAxis getDir() const;
     Math::UInt                     getSkip() const;

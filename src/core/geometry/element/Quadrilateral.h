@@ -10,9 +10,7 @@ namespace Element {
 
 class QuadrilateralBase : public virtual SurfaceBase {
 public:
-    QuadrilateralBase() {}
-    virtual ~QuadrilateralBase() {}
-
+    virtual ~QuadrilateralBase() = default;
     std::size_t numberOfFaces   () const { return 4; }
     std::size_t numberOfVertices() const { return 4; }
 
@@ -25,8 +23,7 @@ template<class T>
 class Quadrilateral : public virtual Surface<T>,
                       public virtual QuadrilateralBase {
 public:
-    Quadrilateral();
-    virtual ~Quadrilateral();
+    virtual ~Quadrilateral() = default;
 };
 
 } /* namespace Element */

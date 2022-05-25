@@ -8,19 +8,10 @@
 #include "physicalModel/Group.h"
 
 #include "class/Class.h"
-#include "class/Cloneable.h"
-#include "class/Shareable.h"
 #include "class/Identifiable.h"
 #include "class/Identification.h"
 
 namespace SEMBA {
-
-//namespace PhysicalModel {
-//
-//class PhysicalModel;
-//typedef Class::Identification<PhysicalModel> Id;
-//
-//} /* namespace PhysicalModel */
 
 typedef PhysicalModel::Id MatId;
 
@@ -33,10 +24,8 @@ typedef Class::Identifiable<MatId> Model;
 class Base;
 typedef Class::Identification<Base> Id;
 
-class Base : public virtual Class::Class,
-             public virtual Class::Cloneable,
-             public virtual Class::Shareable,
-             public virtual Class::Identifiable<Id> {
+class Base : public virtual Class::Identifiable<Id>,
+             public virtual Class::Class {
 public:
     Base(const Layer* lay = nullptr,
          const Model* mat = nullptr);
@@ -45,6 +34,7 @@ public:
 
     virtual bool operator==(const Base& rhs) const;
     virtual bool operator!=(const Base& rhs) const;
+    virtual Base& operator=(const Base& rhs) const;
 
     virtual bool isCurved   () const { return false; }
     virtual bool isQuadratic() const { return false; }
@@ -92,6 +82,8 @@ public:
     virtual void setLayer(const Layer* lay) { lay_ = lay; }
     virtual void setModel(const Model* mat) { mat_ = mat; }
 
+    virtual std::unique_ptr<Base> clone() const = 0;
+
 private:
     const Layer* lay_;
     const Model* mat_;
@@ -137,22 +129,22 @@ public:
 
     virtual void setV(const std::size_t i, const Coordinate::Coordinate<T,3>*);
 
-    virtual Element<Math::Int >* toStructured(
+    virtual std::unique_ptr<Element<Math::Int >> toStructured(
             const CoordI3Group&,
             const Grid3&,
-            const Math::Real = Grid3::tolerance) const;
-    virtual Element<Math::Real>* toUnstructured(
+            const Math::Real = Grid3::tolerance) const = 0;
+    virtual std::unique_ptr<Element<Math::Real>> toUnstructured(
             const CoordR3Group&,
-            const Grid3&) const;
+            const Grid3&) const = 0;
 
 protected:
 
     bool vertexInCell (const Grid3& grid, const Math::Real tol) const;
     bool vertexInBound() const;
-    const CoordI3** vertexToStructured(const CoordI3Group& cG,
+    std::vector<const CoordI3*> vertexToStructured(const CoordI3Group& cG,
                                        const Grid3& grid,
                                        const Math::Real tol) const;
-    const CoordR3** vertexToUnstructured(const CoordR3Group& cG,
+    std::vector<const CoordR3*> vertexToUnstructured(const CoordR3Group& cG,
                                          const Grid3& grid) const;
 
 };
@@ -214,6 +206,8 @@ typedef Element::Id                  ElemId;
 typedef Element::Base                Elem;
 typedef Element::Element<Math::Real> ElemR;
 typedef Element::Element<Math::Int>  ElemI;
+
+typedef std::vector<const Geometry::Elem*>  ElemView;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */

@@ -33,38 +33,38 @@ namespace SEMBA {
 namespace Parsers {
 namespace JSON {
 
-DataExtended Parser::readExtended() const {
-     std::ifstream stream(this->filename);
-     if (!stream.is_open()) {
-         throw std::logic_error("Can not open file: " + this->filename);
-     }
-
-     json j;
-     try {
-         stream >> j;
-     }
-     catch (const std::exception& ex) {
-         std::cerr << ex.what() << std::endl;
-     }
-
-     std::string version = j.at("_version").get<std::string>();
-     if (!checkExtendedVersionCompatibility(version)) {
-         throw std::logic_error("File version " + version + " is not supported for extended version.");
-     }
-
-
-    DataExtended res = DataExtended();
-    // TODO: Parse `analysis`
-    // TODO: Parse `grids`
-    res.grid3 = new Grid3(this->readGrids(j));
-    
-    // TODO: Parse `model`
-    // TODO: Parse `sources`
-    // TODO: Parse `probes`    
-    res.boundary = this->readBoundary(j);
-
-    return res;
-}
+//DataExtended Parser::readExtended() const {
+//     std::ifstream stream(this->filename);
+//     if (!stream.is_open()) {
+//         throw std::logic_error("Can not open file: " + this->filename);
+//     }
+//
+//     json j;
+//     try {
+//         stream >> j;
+//     }
+//     catch (const std::exception& ex) {
+//         std::cerr << ex.what() << std::endl;
+//     }
+//
+//     std::string version = j.at("_version").get<std::string>();
+//     if (!checkExtendedVersionCompatibility(version)) {
+//         throw std::logic_error("File version " + version + " is not supported for extended version.");
+//     }
+//
+//
+//    DataExtended res = DataExtended();
+//    // TODO: Parse `analysis`
+//    // TODO: Parse `grids`
+//    res.grid3 = new Grid3(this->readGrids(j));
+//    
+//    // TODO: Parse `model`
+//    // TODO: Parse `sources`
+//    // TODO: Parse `probes`    
+//    res.boundary = this->readBoundary(j);
+//
+//    return res;
+//}
 
 Parser::Parser(const std::string& fn) :
     SEMBA::Parsers::Parser(fn) 
@@ -374,7 +374,7 @@ Element::Group<> Parser::boxToElemGroup(Mesh::Geometric& mesh, const std::string
     return mesh.elems().getId(elem->getId());
 }
 
-OutputRequest::Base* Parser::readOutputRequest(Mesh::Geometric& mesh, const json& j) {
+OutputRequest::OutputRequest* Parser::readOutputRequest(Mesh::Geometric& mesh, const json& j) {
 
     std::string name = j.at("name").get<std::string>();
     OutputRequest::Base::Type type = strToOutputType(j.at("type").get<std::string>());
@@ -773,26 +773,34 @@ Source::OnLine* Parser::readSourceOnLine(
             strToNodalHardness(j.at("hardness").get<std::string>()) );
 }
 
-OutputRequest::Base::Type Parser::strToOutputType(std::string str) {
+OutputRequest::OutputRequest::Type Parser::strToOutputType(std::string str) {
     str = trim(str);
     if (str.compare("electricField")==0) {
-        return OutputRequest::Base::electric;
-    } else if (str.compare("magneticField")==0) {
-        return OutputRequest::Base::magnetic;
-    } else if (str.compare("electricFieldNormals")==0) {
-        return OutputRequest::Base::electricFieldNormals;
-    } else if (str.compare("magneticFieldNormals")==0) {
-        return OutputRequest::Base::magneticFieldNormals;
-    } else if (str.compare("current")==0) {
-        return OutputRequest::Base::current;;
-    } else if (str.compare("bulkCurrentElectric")==0) {
-        return OutputRequest::Base::bulkCurrentElectric;
-    } else if (str.compare("bulkCurrentMagnetic")==0) {
-        return OutputRequest::Base::bulkCurrentMagnetic;
-	} else if (str.compare("surfaceCurrentDensity") == 0) {
-		return OutputRequest::Base::surfaceCurrentDensity;
-    } else if (str.compare("farField")==0) {
-        return OutputRequest::Base::electric;
+        return OutputRequest::OutputRequest::Type::electric;
+    }
+    else if (str.compare("magneticField") == 0) {
+        return OutputRequest::OutputRequest::Type::magnetic;
+    }
+    else if (str.compare("electricFieldNormals") == 0) {
+        return OutputRequest::OutputRequest::Type::electricFieldNormals;
+    }
+    else if (str.compare("magneticFieldNormals") == 0) {
+        return OutputRequest::OutputRequest::Type::magneticFieldNormals;
+    }
+    else if (str.compare("current") == 0) {
+        return OutputRequest::OutputRequest::Type::current;;
+    }
+    else if (str.compare("bulkCurrentElectric") == 0) {
+        return OutputRequest::OutputRequest::Type::bulkCurrentElectric;
+    }
+    else if (str.compare("bulkCurrentMagnetic") == 0) {
+        return OutputRequest::OutputRequest::Type::bulkCurrentMagnetic;
+    }
+    else if (str.compare("surfaceCurrentDensity") == 0) {
+        return OutputRequest::OutputRequest::Type::surfaceCurrentDensity;
+    }
+    else if (str.compare("farField") == 0) {
+        return OutputRequest::OutputRequest::Type::electric;
     } else {
         throw std::logic_error("Unrecognized output type: " + str);
     }

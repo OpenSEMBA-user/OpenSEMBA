@@ -10,20 +10,22 @@ Generator::Generator() {
     hardness_ = soft;
 }
 
-Generator::Generator(Magnitude::Magnitude* magnitude,
-                     Geometry::Element::Group<const Geometry::Nod> elems,
+Generator::Generator(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+                     const Target& elem,
                      const Type& generatorType,
                      const Hardness& hardness)
-:   SEMBA::Source::Base(magnitude),
-    Geometry::Element::Group<const Geometry::Nod>(elems) {
+:   SEMBA::Source::Source(magnitude, elem)
+{
+    //Geometry::Element::Group<const Geometry::Nod>(elems) {
 
     type_ = generatorType;
     hardness_ = hardness;
 }
 
 Generator::Generator(const Generator& rhs)
-:   SEMBA::Source::Base(rhs),
-    Geometry::Element::Group<const Geometry::Nod>(rhs) {
+:   SEMBA::Source::Source(rhs)
+{
+    //Geometry::Element::Group<const Geometry::Nod>(rhs) {
 
     type_ = rhs.type_;
     hardness_ = rhs.hardness_;
@@ -33,9 +35,8 @@ Generator::~Generator() {
 
 }
 
-const std::string& Generator::getName() const {
-    const static std::string res = "Generator";
-    return res;
+std::string Generator::getName() const {
+    return "Generator";
 }
 
 Generator::Type Generator::getType() const {

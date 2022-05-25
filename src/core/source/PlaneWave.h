@@ -13,19 +13,24 @@ class PlaneWave : public Source {
 public:
     PlaneWave() = default;
     PlaneWave(const std::unique_ptr<Magnitude::Magnitude>&,
-              const Geometry::Element::Group<Geometry::Vol>& elem,
+              const Target& elem,
               const Math::CVecR3& directionVector,
               const Math::CVecR3& polarizationVector);
-    PlaneWave(std::unique_ptr<Magnitude::Magnitude> magnitude,
-              const Geometry::Element::Group<Geometry::Vol>& elem,
+    PlaneWave(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+              const Target& elem,
               std::pair<Math::Real, Math::Real> directionAngles,
               std::pair<Math::Real, Math::Real> polarizationAngles);
-    PlaneWave(std::unique_ptr<Magnitude::Magnitude> magnitude,
-              const Geometry::Element::Group<Geometry::Vol>& elem,
+    // TODO: Probably would have sense as another source type
+    PlaneWave(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
+              const Target& elem,
               Math::Int numberOfRandomPlanewaves,
               Math::Real relativeVariationOfRandomDelay);
     
     virtual ~PlaneWave() = default;
+
+    virtual std::unique_ptr<Source> clone() const override {
+        return std::make_unique<PlaneWave>(*this);
+    }
 
     std::string getName() const { return "PlaneWave"; };
     const Math::CVecR3& getPolarization() const;
@@ -57,6 +62,7 @@ private:
     static Math::Real reduceRadians(const Math::Real radianIn);
 };
 
+// TODO: Borrar namespace de error y refactor usos
 namespace Error {
 namespace PlaneWave {
 
