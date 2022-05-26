@@ -546,6 +546,9 @@ ElemRGroup Parser::readElementsFromFile(
         if (format == "STL") {
             res.addId(readElementsFromSTLFile(mG, lG, cG, f));
         }
+	else if (format == "ignore") {
+		// Ignoring file
+	}	
         else {
             throw std::runtime_error("Unsupported file format when reading elements from file.");
         }
