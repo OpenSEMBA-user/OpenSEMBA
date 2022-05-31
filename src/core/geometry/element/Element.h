@@ -34,7 +34,7 @@ public:
 
     virtual bool operator==(const Base& rhs) const;
     virtual bool operator!=(const Base& rhs) const;
-    virtual Base& operator=(const Base& rhs) const;
+    virtual Base& operator=(const Base& rhs);
 
     virtual bool isCurved   () const { return false; }
     virtual bool isQuadratic() const { return false; }
