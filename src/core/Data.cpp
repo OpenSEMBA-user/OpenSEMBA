@@ -21,8 +21,9 @@ Data::Data(const Data& rhs) {
 
     outputRequests = rhs.outputRequests;
     for (auto& outputRequest : outputRequests) {
-        auto outRqElems = outputRequest->getTarget();
-        outputRequest->setTarget(mesh->reassign(outRqElems));
+        outputRequest->setTarget(
+            mesh->reassign(outputRequest->getTarget())
+        );
     }
 
     sources = rhs.sources;

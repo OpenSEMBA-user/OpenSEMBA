@@ -29,6 +29,7 @@ public:
     SourceGroup        sources;
     OutputRequestGroup outputRequests;
 
+    Data() = default;
     Data(const Data& rhs);
     virtual ~Data() = default;
 
