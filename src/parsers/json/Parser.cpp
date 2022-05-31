@@ -37,38 +37,38 @@ namespace SEMBA {
 namespace Parsers {
 namespace JSON {
 
-//DataExtended Parser::readExtended() const {
-//     std::ifstream stream(this->filename);
-//     if (!stream.is_open()) {
-//         throw std::logic_error("Can not open file: " + this->filename);
-//     }
-//
-//     json j;
-//     try {
-//         stream >> j;
-//     }
-//     catch (const std::exception& ex) {
-//         std::cerr << ex.what() << std::endl;
-//     }
-//
-//     std::string version = j.at("_version").get<std::string>();
-//     if (!checkExtendedVersionCompatibility(version)) {
-//         throw std::logic_error("File version " + version + " is not supported for extended version.");
-//     }
-//
-//
-//    DataExtended res = DataExtended();
-//    // TODO: Parse `analysis`
-//    // TODO: Parse `grids`
-//    res.grid3 = new Grid3(this->readGrids(j));
-//    
-//    // TODO: Parse `model`
-//    // TODO: Parse `sources`
-//    // TODO: Parse `probes`    
-//    res.boundary = this->readBoundary(j);
-//
-//    return res;
-//}
+DataExtended Parser::readExtended() const {
+     std::ifstream stream(this->filename);
+     if (!stream.is_open()) {
+         throw std::logic_error("Can not open file: " + this->filename);
+     }
+
+     json j;
+     try {
+         stream >> j;
+     }
+     catch (const std::exception& ex) {
+         std::cerr << ex.what() << std::endl;
+     }
+
+     std::string version = j.at("_version").get<std::string>();
+     if (!checkExtendedVersionCompatibility(version)) {
+         throw std::logic_error("File version " + version + " is not supported for extended version.");
+     }
+
+
+    DataExtended res = DataExtended();
+    // TODO: Parse `analysis`
+    // TODO: Parse `grids`
+    res.grid3 = new Grid3(this->readGrids(j));
+    
+    // TODO: Parse `model`
+    // TODO: Parse `sources`
+    // TODO: Parse `probes`    
+    res.boundary = this->readBoundary(j);
+
+    return res;
+}
 
 Parser::Parser(const std::string& fn) :
     SEMBA::Parsers::Parser(fn) 
