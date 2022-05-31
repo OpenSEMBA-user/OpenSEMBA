@@ -35,5 +35,3 @@ typedef Element::Quadrilateral<Math::Int > QuaI;
 } /* namespace Geometry */
 } /* namespace SEMBA */
 
-#include "Quadrilateral.hpp"
-
