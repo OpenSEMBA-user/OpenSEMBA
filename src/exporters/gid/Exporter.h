@@ -1,8 +1,3 @@
-
-/*
- *  Created on: Aug 23, 2012
- *      Author: luis
- */
 #pragma once
 
 #include "exporters/Exporter.h"
@@ -45,13 +40,15 @@ private:
     GiD_FILE resultFile_;
     GiD_PostMode mode_;
 
-    void init_(const Data* smb, GiD_PostMode mode, const std::string& fn);
-    void writeMesh_(const Data* smb);
+    void init_(const Data& smb, GiD_PostMode mode, const std::string& fn);
+    void writeMesh_(const Data& smb);
+
     void writeElements_(
-            const Group::Group<const Geometry::ElemR>& entities,
+            const ElemRView& elems,
             const std::string& name,
             const GiD_ElementType type,
             const Math::Int nV);
+
     void writeElement_(Math::Int elemId, int nId[]) const;
     void writeCoordinates_(Geometry::CoordR3Group& pos);
 
@@ -70,7 +67,7 @@ private:
 
     void writeMaterialsInLayer_(const Geometry::Layer::Layer* lay);
     void writeAllElements_(
-    		const Group::Group<const Geometry::ElemR>& elem,
+            const ElemRView& elems,
             const std::string& name);
 
     static std::string makeValid_(std::string name);

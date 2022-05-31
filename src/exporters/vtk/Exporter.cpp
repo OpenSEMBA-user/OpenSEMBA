@@ -6,6 +6,7 @@
 #include "geometry/element/Triangle.h"
 #include "geometry/element/Quadrilateral.h"
 #include "geometry/element/Tetrahedron.h"
+#include "group/ViewTools.h"
 
 namespace {
 #ifdef _WIN32
@@ -23,18 +24,21 @@ Exporter::Exporter(const Data& smb, const std::string& fn) :
     SEMBA::Exporters::Exporter(fn) 
 {
     initDir_(fn + ".vtk");
-    writeMesh_(&smb);
+    writeMesh_(smb);
 }
 
-void Exporter::writeMesh_(const Data* smb) 
+void Exporter::writeMesh_(const Data& smb)
 {
-    const Geometry::Mesh::Mesh* inMesh = smb->mesh;
-    const Source::Group<>* srcs = smb->sources;
-    const OutputRequest::Group<>* oRqs = smb->outputRequests;
+    const Geometry::Mesh::Mesh* inMesh = smb.mesh.get();
+    const SourceGroup& srcs = smb.sources;
+    const OutputRequestGroup& oRqs = smb.outputRequests;
+
     const Geometry::Grid3* grid = nullptr;
+
     assert(inMesh != nullptr);
     const Geometry::Mesh::Unstructured* mesh;
     const Geometry::Mesh::Structured* meshStr;
+
     std::string preName;
     if (inMesh->is<Geometry::Mesh::Structured>()) {
         meshStr = inMesh->castTo<Geometry::Mesh::Structured>();
@@ -58,76 +62,86 @@ void Exporter::writeMesh_(const Data* smb)
     std::ofstream outFile(filename.c_str());
     outFile << "<?xml version=\"1.0\"?>" << std::endl;
     outFile << "<VTKFile "
-            << "type=\"Collection\" "
-            << "version=\"0.1\" "
-            << "byte_order=\"LittleEndian\" "
-            << "compressor=\"vtkZLibDataCompressor\""
-            << ">" << std::endl;
+        << "type=\"Collection\" "
+        << "version=\"0.1\" "
+        << "byte_order=\"LittleEndian\" "
+        << "compressor=\"vtkZLibDataCompressor\""
+        << ">" << std::endl;
     outFile << "  " << "<Collection>" << std::endl;
 
     std::size_t part = 0;
     // Writes materials.
-    if (smb->physicalModels.size() > 0) {
-        for (auto const& lay: mesh->layers()) {
-            const Geometry::LayerId layId = lay->getId();
-            for (auto const& mat : smb->physicalModels) {
-                const MatId matId = mat->getId();
-                const std::string name = preName + mat->getName() + "@" + lay->getName();
-                Group::Group<const Geometry::ElemR> elem = 
-                    mesh->elems().getMatLayerId(matId, layId);
-                writeFile_(elem, makeValid_(name), outFile, part);
+    if (smb.physicalModels.size() > 0) {
+        for (auto const& lay : mesh->layers()) {
+            for (auto const& mat : smb.physicalModels) {
+                writeFile_(
+                    mesh->elems().getMatLayerId(mat->getId(), lay->getId()),
+                    makeValid_(preName + mat->getName() + "@" + lay->getName()),
+                    outFile,
+                    part
+                );
             }
         }
-    } else {
-        for (auto const& lay: mesh->layers()) {
-            const Geometry::LayerId layId = lay->getId();
-            Group::Group<const Geometry::ElemR> elem = mesh->elems().getLayerId(layId);
-            const std::string name = preName + lay->getName();
-            writeFile_(elem, makeValid_(name), outFile, part);
+    }
+    else {
+        for (auto const& lay : mesh->layers()) {
+            writeFile_(
+                mesh->elems().getLayerId(lay->getId()),
+                makeValid_(preName + lay->getName()),
+                outFile,
+                part
+            );
         }
     }
     // Writes EM Sources.
-    if (srcs != nullptr) {
-        for (std::size_t i = 0; i < srcs->size(); i++) {
-            const Source::Base* src =  (*srcs)(i);
-            const std::string name = preName + "EMSource_" + src->getName();
-            Group::Group<const Geometry::ElemR> elem =
-                mesh->elems().getId(src->elems().getIds());
-            writeFile_(elem, makeValid_(name), outFile, part);
-        }
+    for (const auto& source : srcs) {
+        writeFile_(
+            //std::vector<const Geometry::ElemR*>(),
+            Group::View::castToReal(source->getTarget()),
+            makeValid_(preName + "EMSource_" + source->getName()),
+            outFile,
+            part
+        );
     }
+
     // Writes output requests.
-    if (oRqs != nullptr) {
-        for (std::size_t i = 0; i < oRqs->size(); i++) {
-            const OutputRequest::Base* oRq = (*oRqs)(i);
-            const std::string name = preName + "OutRq_" + oRq->getName();
-            Group::Group<const Geometry::ElemR> elem =
-                mesh->elems().getId(oRq->elems().getIds());
-            writeFile_(elem, makeValid_(name), outFile, part);
-        }
+    for (const auto& oRq : oRqs) {
+        writeFile_(
+            //std::vector<const Geometry::ElemR*>(),
+            Group::View::castToReal(oRq->getTarget()),
+            makeValid_(preName + "OutRq_" + oRq->getName()),
+            outFile,
+            part
+        );
     }
+
     // Writes boundaries.
     if (meshStr != nullptr && grid != nullptr) {
         for (std::size_t i = 0; i < 3; i++) {
             for (std::size_t j = 0; j < 2; j++) {
                 if (meshStr->bounds()(i, j) != nullptr) {
-                    Geometry::CoordR3Group cG;
-                    Group::Group<Geometry::ElemR> bound =
-                        getBoundary(Math::Constants::CartesianAxis(i),
-                                    Math::Constants::CartesianBound(j),
-                                    cG, grid, meshStr);
-                    std::string name = getBoundaryName(meshStr, i, j);
-                    writeFile_(bound, makeValid_(name), outFile, part);
+                    //Geometry::CoordR3Group cG;
+                    writeFile_(
+                        { getBoundary(
+                        Math::Constants::CartesianAxis(i),
+                        Math::Constants::CartesianBound(j),
+                        Geometry::CoordR3Group(), grid, meshStr
+                        ) },
+                        makeValid_(getBoundaryName(meshStr, i, j)),
+                        outFile,
+                        part
+                    );
                 }
             }
         }
     }
+
     // Writes grid.
     if (grid != nullptr) {
         Geometry::CoordR3Group cG;
-        Group::Group<Geometry::ElemR> gridAux = getGridElems(cG, grid);
-        writeFile_(gridAux, makeValid_("Grid"), outFile, part);
+        writeFile_(getGridElems(cG, grid).get(), makeValid_("Grid"), outFile, part);
     }
+
     // Closes file.
     outFile << "  " << "</Collection>" << std::endl;
     outFile << "</VTKFile>" << std::endl;
@@ -137,8 +151,8 @@ void Exporter::writeMesh_(const Data* smb)
     }
 
 }
-
-void Exporter::writeFile_(const Group::Group<const Geometry::ElemR>& elems,
+// En master, `const Group::Group<const Geometry::ElemR>& elems`
+void Exporter::writeFile_(const ElemRView& elems,
                           const std::string& name,
                           std::ofstream& outMain,
                           std::size_t& part) {
@@ -175,14 +189,14 @@ void Exporter::writeFile_(const Group::Group<const Geometry::ElemR>& elems,
 
 std::pair<std::vector<Math::CVecR3>, std::map<Geometry::CoordId, std::size_t>>
     Exporter::getPoints_(
-        const Group::Group<const Geometry::ElemR>& elems) {
+        const ElemRView& elems) {
     std::map<Geometry::CoordId, std::size_t> mapCoords;
     std::vector<Math::CVecR3> pos;
-    for (std::size_t i = 0; i < elems.size(); i++) {
-        for (std::size_t j = 0; j < elems(i)->numberOfVertices(); j++) {
-            if (mapCoords.count(elems(i)->getVertex(j)->getId()) == 0) {
-                mapCoords[elems(i)->getVertex(j)->getId()] = pos.size();
-                pos.push_back(elems(i)->getVertex(j)->pos());
+    for (const auto& elem: elems) {
+        for (std::size_t j = 0; j < elem->numberOfVertices(); j++) {
+            if (mapCoords.count(elem->getVertex(j)->getId()) == 0) {
+                mapCoords[elem->getVertex(j)->getId()] = pos.size();
+                pos.push_back(elem->getVertex(j)->pos());
             }
         }
     }
@@ -210,7 +224,7 @@ void Exporter::writePoints_(std::ofstream &outFile,
 
 void Exporter::writeCells_(
         std::ofstream& outFile,
-        const Group::Group<const Geometry::ElemR>& elems,
+        const ElemRView& elems,
         std::map<Geometry::CoordId, std::size_t>& mapCoords) {
 
     outFile << "      " << "<Cells>" << std::endl;
@@ -220,9 +234,9 @@ void Exporter::writeCells_(
             << "format=\"ascii\""
             << ">" << std::endl;
     outFile << "         ";
-    for (std::size_t i = 0; i < elems.size(); i++) {
-        for (std::size_t j = 0; j < elems(i)->numberOfVertices(); j++) {
-            outFile << " " << mapCoords.at(elems(i)->getVertex(j)->getId());
+    for (const auto& elem: elems) {
+        for (std::size_t j = 0; j < elem->numberOfVertices(); j++) {
+            outFile << " " << mapCoords.at(elem->getVertex(j)->getId());
         }
     }
     outFile << std::endl;
@@ -235,8 +249,8 @@ void Exporter::writeCells_(
             << ">" << std::endl;
     outFile << "         ";
     std::size_t offset = 0;
-    for (std::size_t i = 0; i < elems.size(); i++) {
-        offset += elems(i)->numberOfVertices();
+    for (const auto& elem : elems) {
+        offset += elem->numberOfVertices();
         outFile << " " << offset;
     }
     outFile << std::endl;
@@ -248,19 +262,19 @@ void Exporter::writeCells_(
             << "format=\"ascii\""
             << ">" << std::endl;
     outFile << "         ";
-    for (std::size_t i = 0; i < elems.size(); i++) {
+    for (const auto& elem : elems) {
         outFile << " ";
-        if (elems(i)->is<Geometry::Nod>()) {
+        if (elem->is<Geometry::Nod>()) {
             outFile << CELL_TYPES::VTK_VERTEX;
-        } else if (elems(i)->is<Geometry::Lin>()) {
+        } else if (elem->is<Geometry::Lin>()) {
             outFile << CELL_TYPES::VTK_LINE;
-        } else if (elems(i)->is<Geometry::Tri>()) {
+        } else if (elem->is<Geometry::Tri>()) {
             outFile << CELL_TYPES::VTK_TRIANGLE;
-        } else if (elems(i)->is<Geometry::Qua>()) {
+        } else if (elem->is<Geometry::Qua>()) {
             outFile << CELL_TYPES::VTK_QUAD;
-        } else if (elems(i)->is<Geometry::Tet>()) {
+        } else if (elem->is<Geometry::Tet>()) {
             outFile << CELL_TYPES::VTK_TETRA;
-        } else if (elems(i)->is<Geometry::Hex8>()) {
+        } else if (elem->is<Geometry::Hex8>()) {
             outFile << CELL_TYPES::VTK_HEXAHEDRON;
         } else {
             outFile << CELL_TYPES::VTK_POLY_LINE;

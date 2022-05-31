@@ -1,5 +1,3 @@
-
-
 #include "Exporter.h"
 
 #include "geometry/element/Line2.h"
@@ -9,6 +7,7 @@
 #include "geometry/mesh/Structured.h"
 #include "geometry/mesh/Unstructured.h"
 #include "geometry/mesh/Geometric.h"
+#include "group/ViewTools.h"
 
 namespace SEMBA {
 namespace Exporters {
@@ -26,7 +25,7 @@ const Math::CVecR3 sibcColor(100, 0, 100);
 const Math::CVecR3 emSourceColor(100, 100, 0);
 
 void Exporter::init_(
-        const Data* smb,
+        const Data& smb,
         GiD_PostMode mode,
         const std::string& fn) {
     // Sets default values.
@@ -50,11 +49,11 @@ void Exporter::init_(
         throw std::logic_error("Invalid GiD exporting mode.");
     }
 
-    auto gSFactor = smb->solver.at("geometryScalingFactor");
+    auto gSFactor = smb.solver.at("geometryScalingFactor");
     if (gSFactor != nullptr) {
         Math::Real scalingFactor = gSFactor.get<double>();
         if (scalingFactor != 0.0) {
-            smb->mesh->applyScalingFactor(1.0 / scalingFactor);
+            smb.mesh->applyScalingFactor(1.0 / scalingFactor);
         }
     }
 
@@ -63,7 +62,7 @@ void Exporter::init_(
 
 Exporter::Exporter(const Data& smb, const std::string& fn, GiD_PostMode mode)
 : 	SEMBA::Exporters::Exporter(fn) {
-    init_(&smb, mode, fn);
+    init_(smb, mode, fn);
 }
 
 Exporter::~Exporter() {
@@ -82,21 +81,77 @@ Exporter::~Exporter() {
 }
 
 void Exporter::writeAllElements_(
-		const Group::Group<const Geometry::ElemR>& elem,
+		const ElemRView& elems,
         const std::string& name) {
-    writeElements_(elem.getOf<Geometry::NodR>(),  name, GiD_Point, 1);
-    writeElements_(elem.getOf<Geometry::LinR2>(), name, GiD_Linear, 2);
-    writeElements_(elem.getOf<Geometry::Tri3>() , name, GiD_Triangle, 3);
-    writeElements_(elem.getOf<Geometry::QuaR4>(), name, GiD_Quadrilateral, 4);
-    writeElements_(elem.getOf<Geometry::Tet4>(),  name, GiD_Tetrahedra, 4);
-    writeElements_(elem.getOf<Geometry::HexR8>(), name, GiD_Hexahedra, 8);
+    writeElements_(
+        Group::View::filterView(
+            elems,
+            [](const Geometry::ElemR* elem) { return elem->is<Geometry::NodR>(); }
+        ),
+        name, 
+        GiD_Point, 
+        1
+    );
+
+    writeElements_(
+        Group::View::filterView(
+            elems,
+            [](const Geometry::ElemR* elem) { return elem->is<Geometry::LinR2>(); }
+        ),
+        name, 
+        GiD_Linear, 
+        2
+    );
+
+    writeElements_(
+        Group::View::filterView(
+            elems,
+            [](const Geometry::ElemR* elem) { return elem->is<Geometry::Tri3>(); }
+        ),
+        name, 
+        GiD_Triangle,
+        3
+    );
+
+    writeElements_(
+        Group::View::filterView(
+            elems,
+            [](const Geometry::ElemR* elem) { return elem->is<Geometry::QuaR4>(); }
+        ),
+        name, 
+        GiD_Quadrilateral,
+        4
+    );
+
+    writeElements_(
+        Group::View::filterView(
+            elems,
+            [](const Geometry::ElemR* elem) { return elem->is<Geometry::Tet4>(); }
+        ),
+        name, 
+        GiD_Tetrahedra,
+        4
+    );
+    
+    writeElements_(
+        Group::View::filterView(
+            elems,
+            [](const Geometry::ElemR* elem) { return elem->is<Geometry::HexR8>(); }
+        ),
+        name, 
+        GiD_Hexahedra,
+        8
+    );
 }
 
-void Exporter::writeMesh_(const Data* smb) {
-    const Geometry::Mesh::Mesh* inMesh = smb->mesh;
-    const Source::Group<>* srcs = smb->sources;
-    const OutputRequest::Group<>* oRqs = smb->outputRequests;
+void Exporter::writeMesh_(const Data& smb) 
+{
+    const Geometry::Mesh::Mesh* inMesh = smb.mesh.get();
+    const SourceGroup& srcs = smb.sources;
+    const OutputRequestGroup& oRqs = smb.outputRequests;
+
     const Geometry::Grid3* grid = nullptr;
+
     assert(inMesh != nullptr);
     const Geometry::Mesh::Unstructured* mesh;
     std::string preName;
@@ -121,38 +176,35 @@ void Exporter::writeMesh_(const Data* smb) {
 
     // Writes materials.
     for (auto const& lay : mesh->layers()) {
-        for (auto const& mat: smb->physicalModels) {
-            const MatId matId = mat->getId();
-            const Geometry::LayerId layId = lay->getId();
-            const std::string name = preName + mat->getName() + "@" + lay->getName();
-            Group::Group<const Geometry::ElemR> elem = mesh->elems().getMatLayerId(matId, layId);
-            writeAllElements_(elem, name);
+        for (auto const& mat: smb.physicalModels) {
+            writeAllElements_(
+                mesh->elems().getMatLayerId(mat->getId(), lay->getId()),
+                preName + mat->getName() + "@" + lay->getName()
+            );
         }
     }
+
     // Writes EM Sources.
-    if (srcs != nullptr) {
-        for (std::size_t i = 0; i < srcs->size(); i++) {
-            const Source::Base* src =  (*srcs)(i);
-            const std::string name = preName + "EMSource_" + src->getName();
-            Group::Group<const Geometry::ElemR> elem =
-                    mesh->elems().getId(src->elems().getIds());
-            writeAllElements_(elem, name);
-        }
+    for (const auto& src: srcs) {
+        writeAllElements_(
+            //std::vector<const Geometry::ElemR*>(),
+            Group::View::castToReal(src->getTarget()),
+            preName + "EMSource_" + src->getName()
+        );
     }
+
     // Writes output requests.
-    if (oRqs != nullptr) {
-        for (std::size_t i = 0; i < oRqs->size(); i++) {
-            const OutputRequest::Base* oRq = (*oRqs)(i);
-            const std::string name = preName + "OutRq_" + oRq->getName();
-            Group::Group<const Geometry::ElemR> elem =
-                    mesh->elems().getId(oRq->elems().getIds());
-            writeAllElements_(elem, name);
-        }
+    for (const auto& oRq: oRqs) {
+        writeAllElements_(
+            Group::View::castToReal(oRq->getTarget()),
+            preName + "OutRq_" + oRq->getName()
+        );
     }
+
     // Writes boundaries.
     if (grid != nullptr && mesh->is<Geometry::Mesh::Structured>()) {
         Geometry::CoordR3Group cG;
-        std::map<std::string, std::vector<Geometry::ElemR*>> bounds;
+        std::map<std::string, ElemRView> bounds;
         for (Math::UInt i = 0; i < 3; i++) {
             for (Math::UInt j = 0; j < 2; j++) {
 				Geometry::ElemR* bound = getBoundary(
@@ -165,15 +217,12 @@ void Exporter::writeMesh_(const Data* smb) {
             }
         }
         for (auto it = bounds.begin(); it != bounds.end(); ++it) {
-			Geometry::ElemRGroup boundElems;
-			boundElems.addId(it->second);
-			writeAllElements_(boundElems, it->first);
+			writeAllElements_(it->second, it->first);
         }
     }
     // Writes grid.
     Geometry::CoordR3Group cG;
-    Group::Group<Geometry::ElemR> gridAux = getGridElems(cG, grid);
-    writeAllElements_(gridAux, "Grid");
+    writeAllElements_(getGridElems(cG, grid).get(), "Grid");
     //
     GiD_FlushPostFile();
     //
@@ -183,24 +232,26 @@ void Exporter::writeMesh_(const Data* smb) {
 }
 
 void Exporter::writeElements_(
-		const Group::Group<const Geometry::ElemR>& elem,
+        const ElemRView& elems,
 		const std::string& name,
 		const GiD_ElementType type,
 		const Math::Int nV) {
-    if (elem.size() == 0) {
+    if (elems.size() == 0) {
         return;
     }
     Math::UInt tmpCounter = coordCounter_;
     std::vector<int> nId(nV);
     beginMesh(name, GiD_3D, type, nV);
     std::map<Geometry::CoordId, const Geometry::CoordR3*> pos;
-    for(std::size_t i = 0; i < elem.size(); i++) {
+
+    for(const auto& elem: elems) {
         for (Math::Int j = 0; j < nV; j++) {
-            if (pos.count(elem(i)->getVertex(j)->getId()) == 0) {
-                pos[elem(i)->getVertex(j)->getId()] = elem(i)->getVertex(j);
+            if (pos.count(elem->getVertex(j)->getId()) == 0) {
+                pos[elem->getVertex(j)->getId()] = elem->getVertex(j);
             }
         }
     }
+
     Geometry::CoordR3Group cG;
     std::map<Geometry::CoordId, Math::UInt> mapCoords;
     for (auto const& entry: pos) {
@@ -209,9 +260,9 @@ void Exporter::writeElements_(
     }
     writeCoordinates_(cG);
     beginElements_();
-    for (std::size_t j = 0; j < elem.size(); j++) {
+    for (const auto& elem : elems) {
         for (Math::Int k = 0; k < nV; k++) {
-            nId[k] = tmpCounter + mapCoords[elem(j)->getVertex(k)->getId()];
+            nId[k] = tmpCounter + mapCoords[elem->getVertex(k)->getId()];
         }
         writeElement_(++elemCounter_, &nId[0]);
 
