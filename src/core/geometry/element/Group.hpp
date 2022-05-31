@@ -8,11 +8,11 @@ template<typename E>
 std::vector<const E*> Group<E>::getCoordId(const CoordId& id) const 
 {
 	std::vector<const E*> res;
-	for (auto const item& : *this) { 
+	for (auto const& item : *this) { 
 		const E* elem = item;
 		for (size_t j = 0; j < elem->numberOfCoordinates(); j++) {
 			if (elem->getV(j)->getId() == id) {
-				res.push_back(elem);
+				res.push_back(elem.get());
 			}
 		}
 	}
@@ -23,9 +23,9 @@ template<typename E>
 std::vector<const E*> Group<E>::getMatId(const MatId& id) const
 {
     std::vector<const E*> res;
-    for (auto const item& : *this) {
+    for (auto const& item : *this) {
         if (item->getMatId() == id) {
-            res.push_back(item);
+            res.push_back(item.get());
         }
     }
     return res;
@@ -35,9 +35,9 @@ template<typename E>
 std::vector<const E*> Group<E>::getLayerId(const LayerId& id) const
 {
     std::vector<const E*> res;
-    for (auto const item& : *this) {
+    for (auto const& item : *this) {
         if (item->getLayerId() == id) {
-            res.push_back(item);
+            res.push_back(item.get());
         }
     }
     return res;
@@ -47,9 +47,9 @@ template<typename E>
 std::vector<const E*> Group<E>::getMatLayerId(const MatId& mId, const LayerId& lId) const
 {
     std::vector<const E*> res;
-    for (auto const item& : *this) {
+    for (auto const& item : *this) {
         if (item->getMatId() == mId && item->getLayerId() == lId) {
-            res.push_back(item);
+            res.push_back(item.get());
         }
     }
     return res;
