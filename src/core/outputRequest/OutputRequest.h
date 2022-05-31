@@ -16,7 +16,7 @@ class OutputRequest;
 class OutputRequest : public virtual Class::Identifiable<Id>,
                       public virtual Class::Class {
 public:
-    typedef Geometry::ElemView Target;
+    using Target = Geometry::ElemView;
 
     enum class Type {
         electric,
@@ -32,7 +32,7 @@ public:
     };
 
     OutputRequest() = default;
-    OutputRequest(const Type outputType,
+    OutputRequest(const Type& outputType,
                   const std::string& name,
                   const Domain& domain,
                   const Target& elems);
