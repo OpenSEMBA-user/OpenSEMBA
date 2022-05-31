@@ -68,14 +68,18 @@ std::pair<std::unique_ptr<Layer::Layer>, ElemRGroup> readLayerAndElements(
                         }
                     }
                     label.clear();
-                    eG.addId(new Tri3(ElemId(0), coords.data(), lay.get()));
+                    eG.addAndAssignId(
+                        std::make_unique<Geometry::Tri3>(
+                            Geometry::Tri3(Geometry::ElemId(0), coords.data(), lay.get())
+                        )
+                    );
                 }
             }
         }
     }
 
     return std::make_pair(std::move(lay), eG);
-}   
+}
 
 Data Parser::read() const 
 {
@@ -88,15 +92,20 @@ Data Parser::read() const
     
     // Stores results and returns.
     Data res;
-    res.mesh = new Geometry::Mesh::Geometric(Geometry::Grid3(), cG, eG, lG);
+    res.mesh = std::make_unique<Geometry::Mesh::Geometric>(
+        Geometry::Mesh::Geometric(Geometry::Grid3(), cG, eG, lG)
+    );
 
-    using namespace PhysicalModel;
 
-    res.physicalModels.add(std::make_unique<PEC>(Id(1), "PEC"));
-    auto const* pec = res.physicalModels.getId(Id(1));
-    res.mesh->castTo<Geometry::Mesh::Geometric>()->elems().setModel(pec);
-    res.sources = new Source::Group<>();
-    res.outputRequests = new OutputRequest::Group<>();
+    res.physicalModels.add(std::make_unique<PhysicalModel::PEC>(PhysicalModel::Id(1), "PEC"));
+    auto const* pec = res.physicalModels.getId(PhysicalModel::Id(1));
+
+    for (auto& elem : res.mesh->castTo<Geometry::Mesh::Geometric>()->elems()) {
+        elem->setModel(pec);
+    }
+
+    res.sources = SourceGroup();
+    res.outputRequests = OutputRequestGroup();
 
     return res;
 }

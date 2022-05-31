@@ -45,13 +45,12 @@ private:
     
     json readSolverOptions(const json&) const;
     PMGroup readPhysicalModels(const json&) const;
-    Geometry::Mesh::Geometric* readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
+    std::unique_ptr<Geometry::Mesh::Geometric> readGeometricMesh(const PhysicalModel::Group<>&, const json&) const;
 	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
     Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;
     OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Geometric& mesh, const json&) const;
 
-    std::unique_ptr<PhysicalModel::Surface::Multilayer> 
-        readMultilayerSurface(const json& layers) const;
+    std::unique_ptr<PhysicalModel::Surface::Multilayer> readMultilayerSurface(const json& layers) const;
 
     Geometry::Grid3 readGrids(const json&) const;
     Geometry::Grid3 buildGridFromFile(const FileSystem::Project& file) const;
@@ -69,16 +68,16 @@ private:
 
     Boundary::Boundary* readBoundary(const json& j) const;
 
-    static Source::PlaneWave* readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::Port::Waveguide* readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::Port::TEM* readPortTEM(Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::Generator* readGenerator(Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::OnLine* readSourceOnLine(Geometry::Mesh::Geometric& mesh, const json&);
-    static Source::Magnitude::Magnitude* readMagnitude(const json&);
+    static std::unique_ptr<Source::PlaneWave> readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<Source::Port::Waveguide> readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<Source::Port::TEM> readPortTEM(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<Source::Generator> readGenerator(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<Source::OnLine> readSourceOnLine(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<Source::Magnitude::Magnitude> readMagnitude(const json&);
 
     std::unique_ptr<PhysicalModel::PhysicalModel> readPhysicalModel(const json& material) const;
 
-    static OutputRequest::OutputRequest* readOutputRequest(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<OutputRequest::OutputRequest> readOutputRequest(Geometry::Mesh::Geometric& mesh, const json&);
 
     static OutputRequest::Domain readDomain(const json&);
     static Math::Axis::Local strToLocalAxes(const std::string& str);
@@ -86,12 +85,14 @@ private:
     static bool checkVersionCompatibility(const std::string& version);
     static bool checkExtendedVersionCompatibility(const std::string& version);
 
-    static Geometry::Element::Group<> boxToElemGroup(
+    static const Geometry::ElemR* boxToElemGroup(
             Geometry::Mesh::Geometric& mesh,
             const std::string& line);
 
-    static Geometry::Element::Group<Geometry::Nod> readCoordIdAsNodes(
-            Geometry::Mesh::Geometric& mesh, const json&);
+    static std::vector<const Geometry::Elem*> readCoordIdAsNodes(
+        Geometry::Mesh::Geometric& mesh, 
+        const json&
+    );
 
     static OutputRequest::OutputRequest::Type strToOutputType(std::string label);
     static Source::Generator::Type strToGeneratorType(std::string label);
@@ -111,18 +112,9 @@ private:
     static Math::Constants::CartesianAxis strToCartesianAxis(std::string);
 
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(const std::string& str);
-};
 
-template<typename T>
-Geometry::Element::Group<T> 
-readElemIdsAsGroupOf(Geometry::Mesh::Geometric& mesh, const Parser::json& j) 
-{
-	Geometry::Element::Group<T> geometricElements;
-	for (auto it = j.begin(); it != j.end(); ++it) {
-		geometricElements.add(mesh.elems().getId(Geometry::ElemId(it->get<int>()) ));
-	}
-	return geometricElements;
-}
+    static Geometry::ElemView readElemIdsAsGroupOf(Geometry::Mesh::Geometric& mesh, const Parser::json& j);
+};
 
 template<typename T>
 Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
@@ -165,7 +157,7 @@ Geometry::Element::Group<Geometry::ElemR> readElemStrAs(
             vPtr[i] = cG.getId(vId[i]);
         }
 
-        res.add(new T(elemId, vPtr.data(), layerPtr, matPtr));
+        res.add(std::make_unique<T>(T(elemId, vPtr.data(), layerPtr, matPtr)));
     }
 
     return res;
