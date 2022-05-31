@@ -19,12 +19,10 @@ class Source;
 class Source : public virtual Class::Identifiable<Id>,
                public virtual Class::Class {
 public:
-    typedef Geometry::ElemView Target;
+    using Target = Geometry::ElemView;
 
-    Source() = default;
     Source(const std::unique_ptr<Magnitude::Magnitude>&, const Target&);
     Source(const Source&);
-
     virtual ~Source() = default;
 
     Source& operator=(const Source&);
