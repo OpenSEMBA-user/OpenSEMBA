@@ -2,10 +2,10 @@
 #include "gtest/gtest.h"
 
 #include "source/port/WaveguideRectangular.h"
-
 #include "geometry/element/Quadrilateral4.h"
 #include "physicalModel/Group.h"
 #include "physicalModel/Bound.h"
+#include "math/function/Gaussian.h"
 
 using namespace SEMBA;
 using namespace Source;
@@ -18,7 +18,7 @@ class SourcePortWaveguideRectangularTest : public ::testing::Test {
         vector<Geometry::BoxI3> quadBoxes = plane.chop();
         Geometry::ElemId id(0);
         for (size_t i = 0; i < quadBoxes.size(); i++) {
-            surfs.add(new Geometry::QuaI4(cG_, ++id,quadBoxes[i], nullptr, nullptr));
+            surfs.add(std::make_unique<Geometry::QuaI4>(cG_, ++id,quadBoxes[i], nullptr, nullptr));
         }
 
         excMode = Port::Waveguide::ExcitationMode::TE;
@@ -43,10 +43,21 @@ protected:
     pair<size_t,size_t> mode;
     Port::Bound3 bounds;
     PMGroup boundType;
+
+    static const std::unique_ptr<Magnitude::Magnitude> buildMagnitude() {
+        return std::make_unique<Magnitude::Magnitude>(Magnitude::Magnitude(
+            new Math::Function::Gaussian(
+                Math::Function::Gaussian::buildFromMaximumFrequency(
+                    1e9,
+                    1.0
+                )
+            )
+        ));
+    }
 };
 
 TEST_F(SourcePortWaveguideRectangularTest, withoutSymmetries) {
-    Port::WaveguideRectangular wp(nullptr, surfs, excMode, mode);
+    Port::WaveguideRectangular wp(buildMagnitude(), surfs.getOf<Geometry::Elem>(), excMode, mode);
 
     EXPECT_EQ(Math::CVecR3(0.0), wp.getOrigin());
     EXPECT_EQ(30.0, wp.getWidth());
