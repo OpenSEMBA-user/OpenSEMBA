@@ -11,11 +11,10 @@ BulkCurrent::BulkCurrent(
         const Target& elem,
         const Math::Constants::CartesianAxis& dir,
         const Math::UInt& skip) :
-    OutputRequest(Type::bulkCurrentElectric, name, domain, elem)
-{
-    dir_ = dir;
-    skip_ = skip;
-}
+    OutputRequest(Type::bulkCurrentElectric, name, domain, elem),
+    dir_(dir),
+    skip_(skip)
+{}
 
 Math::Constants::CartesianAxis BulkCurrent::getDir() const {
     return dir_;

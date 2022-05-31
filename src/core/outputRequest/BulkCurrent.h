@@ -12,7 +12,6 @@ public:
                 const Target& box,
                 const Math::Constants::CartesianAxis& dir,
                 const Math::UInt& skip);
-    BulkCurrent(const BulkCurrent& rhs);
     virtual ~BulkCurrent() = default;
 
     std::unique_ptr<OutputRequest> clone() const override {
