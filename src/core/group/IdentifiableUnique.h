@@ -59,6 +59,8 @@ public:
     virtual iterator add(std::unique_ptr<T>&& item);    
     virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
 
+    std::vector<const T*> get() const;
+
     void removeId(const Id& id);
     void remove(const std::vector<const T*>&);
 
@@ -71,6 +73,8 @@ public:
     std::size_t sizeOf() const;
     template<typename T2>
     std::vector<const T2*> getOf() const;
+    template<typename T2>
+    std::vector<const T*> filterOf() const;
 
 protected:
 
@@ -176,11 +180,31 @@ void IdentifiableUnique<T>::remove(const std::vector<const T*>& rhs) {
 }
 
 template<typename T> template<typename T2>
-std::vector<const T2*> IdentifiableUnique<T>::getOf() const {
+std::vector<const T2*> IdentifiableUnique<T>::getOf() const {    
     std::vector<const T2*> res;
     for (auto const& item : items_) {
         if (item->template is<T2>()) {
             res.push_back(item->template castTo<T2>());
+        }   
+    }
+    return res;
+}
+
+template<typename T>
+std::vector<const T*> IdentifiableUnique<T>::get() const {
+    std::vector<const T*> res;
+    for (auto const& item : items_) {
+        res.push_back(item.get());
+    }
+    return res;
+}
+
+template<typename T> template<typename T2>
+std::vector<const T*> IdentifiableUnique<T>::filterOf() const {
+    std::vector<const T*> res;
+    for (auto const& item : items_) {
+        if (item->template is<T2>()) {
+            res.push_back(item.get());
         }   
     }
     return res;
