@@ -1,5 +1,3 @@
-#pragma once
-
 #include "DataExtended.h"
 
 namespace SEMBA {

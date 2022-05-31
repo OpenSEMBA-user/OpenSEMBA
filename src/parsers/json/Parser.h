@@ -39,7 +39,7 @@ public:
 
     Parser(const std::string& filename);
     Data read() const;
-    //DataExtended readExtended() const;
+    DataExtended readExtended() const;
     
 private:
     
