@@ -7,6 +7,7 @@ namespace Geometry {
 
     template< class It >
 	BoxR3 getBound(It first, It last) {
+        
         if (first == last) {
             return BoxR3().setInfinity();
         }
@@ -27,7 +28,7 @@ namespace Geometry {
                 bound << BoxR3(CVecR3(minP(x), minP(y), minP(z)), CVecR3(maxP(x), maxP(y), maxP(z)));
             }
             
-            std::next(first);
+            first++;
         }
 
         return bound;
