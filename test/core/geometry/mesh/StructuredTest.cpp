@@ -30,8 +30,8 @@ public:
                 cG_.getId(CoordId(1))
         };
 
-        eG_.add(new QuaI4(ElemId(1), vQua, lay));
-        eG_.add(new LinI2(ElemId(2), vLin, lay));
+        eG_.add(std::make_unique<QuaI4>(ElemId(1), vQua, lay));
+        eG_.add(std::make_unique<LinI2>(ElemId(2), vLin, lay));
         
         mesh_ = Mesh::Structured(grid_, cG_, eG_, lG_);
     }
