@@ -123,7 +123,7 @@ std::unique_ptr<ElemI> Quadrilateral4<T>::toStructured(
         const CoordI3Group& cG,
         const Grid3& grid, const Math::Real tol) const {
     return std::make_unique<QuaI4>(this->getId(),
-                            this->vertexToStructured(cG, grid, tol),
+                            this->vertexToStructured(cG, grid, tol).data(),
                             this->getLayer(),
                             this->getModel());
 }
@@ -133,7 +133,7 @@ std::unique_ptr<ElemR> Quadrilateral4<T>::toUnstructured(
         const CoordR3Group& cG,
         const Grid3& grid) const {
     return std::make_unique<QuaR4>(this->getId(),
-                            this->vertexToUnstructured(cG, grid),
+                            this->vertexToUnstructured(cG, grid).data(),
                             this->getLayer(),
                             this->getModel());
 }
