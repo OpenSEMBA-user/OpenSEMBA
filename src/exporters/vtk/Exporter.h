@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <fstream>
@@ -39,19 +37,19 @@ private:
         VTK_QUADRATIC_TETRA      = 24,
         VTK_QUADRATIC_HEXAHEDRON = 25
     };
-    void writeMesh_(const Data* smb);
-    void writeFile_(const Group::Group<const Geometry::ElemR>& elems,
+    void writeMesh_(const Data& smb);
+    void writeFile_(const ElemRView& elems,
                     const std::string& name,
                     std::ofstream& outMain,
                     std::size_t& part);
     std::pair<std::vector<Math::CVecR3>, 
               std::map<Geometry::CoordId, std::size_t>> getPoints_(
-              const Group::Group<const Geometry::ElemR>& elems);
+              const ElemRView& elems);
     void writePoints_(std::ofstream& outFile,
                       const std::vector<Math::CVecR3>& pos);
     void writeCells_(
             std::ofstream& outFile,
-            const Group::Group<const Geometry::ElemR>& elems,
+            const ElemRView& elems,
             std::map<Geometry::CoordId, std::size_t>& mapCoords);
 
     static std::string makeValid_(const std::string&);

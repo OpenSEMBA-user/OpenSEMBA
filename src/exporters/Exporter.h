@@ -10,10 +10,12 @@
 
 namespace SEMBA {
 namespace Exporters {
+    using ElemRGroup = Geometry::Element::Group<Geometry::ElemR>;
+    using ElemRView = std::vector<const Geometry::ElemR*>;
 
 class Exporter : public FileSystem::Project {
+
 public:
-    Exporter();
     Exporter(const std::string& name);
     virtual ~Exporter() = default;
     
@@ -28,7 +30,7 @@ protected:
             Geometry::CoordR3Group& cG,
             const Geometry::Grid3* grid,
             const Geometry::Mesh::Mesh* mesh) const;
-    Group::Group<Geometry::ElemR> getGridElems(
+    ElemRGroup getGridElems(
             Geometry::CoordR3Group& cG,
             const Geometry::Grid3* grid) const;
     static std::string getBoundaryName(

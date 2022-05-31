@@ -9,13 +9,8 @@
 namespace SEMBA {
 namespace Exporters {
 
-Exporter::Exporter()  {
-}
-
 Exporter::Exporter(const std::string& name)
-:   Project(name) {
-
-}
+:   Project(name) {}
 
 void Exporter::deleteExistentOutputFiles() const {
     std::string file;
@@ -30,7 +25,6 @@ std::string Exporter::getOutputfilename() const {
     std::string output = getOutputName();
     return folder + output;
 }
-
 
 Geometry::ElemR* Exporter::getBoundary(
         const Math::Constants::CartesianAxis dir,
@@ -63,36 +57,36 @@ std::string Exporter::getBoundaryName(
     return boundName + "@Boundary";
 }
 
-Group::Group<Geometry::ElemR> Exporter::getGridElems(
+ElemRGroup Exporter::getGridElems(
         Geometry::CoordR3Group& cG,
-        const Geometry::Grid3* grid) const {
+        const Geometry::Grid3* grid
+) const {
+    auto elem = ElemRGroup();
+
     if (grid == nullptr) {
-        return Group::Group<Geometry::ElemR>();
+        return elem;
     }
-    Group::Group<Geometry::ElemR> elem;
+
     Geometry::BoxR3 box = grid->getFullDomainBoundingBox();
-    if (grid != nullptr) {
-        for (std::size_t d = 0; d < 3; d++) {
-            // Generates grid as lines.
-            for (std::size_t i = 0; i < 2; i++) {
-                std::vector<Math::Real> pos = grid->getPos((d+i+1)%3);
-                for (std::size_t j = 0; j < pos.size(); j++) {
-                    Math::CVecR3 pMin, pMax;
-                    pMin(d) = grid->getPos(d,Math::Constants::L);
-                    pMin((d+i+1)%3) = pos[j];
-                    pMax = pMin;
-                    pMin((d-i+2)%3) = grid->getPos((d-i+2)%3).front();
-                    pMax((d-i+2)%3) = grid->getPos((d-i+2)%3).back();
-                    elem.add(new Geometry::LinR2(cG,
-                                                 Geometry::ElemId(0),
-                                                 Geometry::BoxR3(pMin,pMax)));
-                }
+
+    for (std::size_t d = 0; d < 3; d++) {
+        // Generates grid as lines.
+        for (std::size_t i = 0; i < 2; i++) {
+            std::vector<Math::Real> pos = grid->getPos((d+i+1)%3);
+            for (std::size_t j = 0; j < pos.size(); j++) {
+                Math::CVecR3 pMin, pMax;
+                pMin(d) = grid->getPos(d,Math::Constants::L);
+                pMin((d+i+1)%3) = pos[j];
+                pMax = pMin;
+                pMin((d-i+2)%3) = grid->getPos((d-i+2)%3).front();
+                pMax((d-i+2)%3) = grid->getPos((d-i+2)%3).back();
+                elem.addAndAssignId(std::make_unique<Geometry::LinR2>(cG,
+                                                Geometry::ElemId(0),
+                                                Geometry::BoxR3(pMin,pMax)));
             }
         }
-    } else {
-        elem.add(new Geometry::QuaR4(cG, Geometry::ElemId(0), box));
     }
-    //elem.add(new Geometry::HexR8(cG, Geometry::ElemId(0), box));
+
     return elem;
 }
 
