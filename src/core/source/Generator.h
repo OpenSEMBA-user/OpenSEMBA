@@ -18,13 +18,12 @@ public:
         hard
     } Hardness;
 
-    Generator();
     Generator(const std::unique_ptr<Magnitude::Magnitude>& magnitude,
               const Target& elem,
               const Type& generatorType,
               const Hardness& hardness);
     Generator(const Generator& rhs);
-    virtual ~Generator();
+    virtual ~Generator() = default;
 
     virtual std::unique_ptr<Source> clone() const override {
         return std::make_unique<Generator>(*this);
