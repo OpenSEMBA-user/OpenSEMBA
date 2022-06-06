@@ -76,7 +76,7 @@ public:
     template<typename T2>
     std::vector<const T2*> getOf() const;
     template<typename T2>
-    std::vector<const T*> filterOf() const;
+    std::vector<const T*> getByCastingToParent() const;
 
 protected:
 
@@ -214,7 +214,7 @@ std::vector<const T*> IdentifiableUnique<T>::get() const {
 }
 
 template<typename T> template<typename T2>
-std::vector<const T*> IdentifiableUnique<T>::filterOf() const {
+std::vector<const T*> IdentifiableUnique<T>::getByCastingToParent() const {
     std::vector<const T*> res;
     for (auto const& item : items_) {
         if (item->template is<T2>()) {
