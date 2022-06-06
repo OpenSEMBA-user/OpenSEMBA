@@ -15,6 +15,7 @@ public:
               const Element::Group<ElemR>& elem,
               const LayerGroup& = LayerGroup());
     Geometric(const Geometric&);
+    Geometric(const Grid3& grid, const Unstructured& unstructured);
     Geometric(Geometric&&) = default;
     virtual ~Geometric() = default;
 
