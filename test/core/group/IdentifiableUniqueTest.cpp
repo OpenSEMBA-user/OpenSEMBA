@@ -10,7 +10,7 @@ class IdentifiableUniqueTest : public ::testing::Test {
 public:
     
 protected:
-    auto newLayers() const 
+    auto buildGroupOfThreeLayers() const 
     {
         IdentifiableUnique<Layer::Layer> res;
         res.add(std::make_unique<Layer::Layer>(LayerId(1), "Patata"));
@@ -22,7 +22,7 @@ protected:
 
 TEST_F(IdentifiableUniqueTest, copy_and_move_ctor) 
 {
-    auto orig = newLayers();
+    auto orig = buildGroupOfThreeLayers();
     std::size_t origSize = orig.size();
 
     auto copied( orig );
@@ -35,7 +35,7 @@ TEST_F(IdentifiableUniqueTest, copy_and_move_ctor)
 }
 TEST_F(IdentifiableUniqueTest, copy_and_move_assignment) 
 {
-    auto orig = newLayers();
+    auto orig = buildGroupOfThreeLayers();
     std::size_t origSize = orig.size();
     
     auto copied = orig;
@@ -49,7 +49,7 @@ TEST_F(IdentifiableUniqueTest, copy_and_move_assignment)
 
 TEST_F(IdentifiableUniqueTest, deep_copy_and_move_add) 
 {
-    auto orig = newLayers();
+    auto orig = buildGroupOfThreeLayers();
     orig.add(std::make_unique<Layer::Layer>(LayerId(5), "Melon"));
     orig.add(std::move(std::make_unique<Layer::Layer>(LayerId(6), "Sandia")));
 
@@ -58,9 +58,36 @@ TEST_F(IdentifiableUniqueTest, deep_copy_and_move_add)
 
 TEST_F(IdentifiableUniqueTest, addAndAssignId) 
 {
-    auto orig(newLayers());
+    auto orig(buildGroupOfThreeLayers());
     auto melon = std::make_unique<Layer::Layer>("Melon");
     auto melonInGroup = orig.addAndAssignId(std::move(melon))->get();
     EXPECT_EQ(LayerId(4), melonInGroup->getId());
+}
+
+TEST_F(IdentifiableUniqueTest, addAndAssignIds) 
+{    
+	auto orig(buildGroupOfThreeLayers());
+
+	auto melonInGroup = orig.addAndAssignId(std::move(
+		std::make_unique<Layer::Layer>("Melon")
+	))->get();
+
+	auto nisporaInGroup = orig.addAndAssignId(std::move(
+		std::make_unique<Layer::Layer>("Níspora")
+	))->get();
+
+	EXPECT_EQ(LayerId(5), nisporaInGroup->getId());
+
+	IdentifiableUnique<Layer::Layer> another;
+	auto naranjaInGroup = another.addAndAssignId(std::move(
+		std::make_unique<Layer::Layer>("Naranja")
+	))->get();
+
+	another.addAndAssignIds(orig);
+
+	EXPECT_EQ(LayerId(5), nisporaInGroup->getId());
+
+	EXPECT_EQ(6, another.size());
+	EXPECT_EQ("Níspora", another.getId(LayerId(6))->getName());
 }
 

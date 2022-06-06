@@ -57,7 +57,9 @@ public:
     
     virtual iterator add(const std::unique_ptr<T>& item);
     virtual iterator add(std::unique_ptr<T>&& item);    
+
     virtual iterator addAndAssignId(std::unique_ptr<T>&& item);
+    virtual iterator addAndAssignIds(const IdentifiableUnique<T>& items);
 
     std::vector<const T*> get() const;
 
@@ -127,7 +129,6 @@ template<typename T>
 typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
 {
-    
     std::unique_ptr<T> res(dynamic_cast<T*>(elem->clone().release()));
     auto it = items_.insert(std::move(res));
     
@@ -153,7 +154,7 @@ IdentifiableUnique<T>::add(std::unique_ptr<T>&& elem)
     }
 }
 
-template<typename T> 
+template<typename T>
 typename IdentifiableUnique<T>::iterator
 IdentifiableUnique<T>::addAndAssignId(std::unique_ptr<T>&& elem)
 {
@@ -164,6 +165,19 @@ IdentifiableUnique<T>::addAndAssignId(std::unique_ptr<T>&& elem)
         elem->setId(++items_.rbegin()->get()->getId());
     }
     return add(std::move(elem));
+}
+
+template<typename T>
+typename IdentifiableUnique<T>::iterator
+IdentifiableUnique<T>::addAndAssignIds(const IdentifiableUnique<T>& elems) {
+	iterator it;
+
+    for (const auto& elem : elems) {
+        std::unique_ptr<T> res(dynamic_cast<T*>(elem->clone().release()));
+        it = addAndAssignId(std::move(res));
+    }
+
+    return it;
 }
 
 template<typename T>
