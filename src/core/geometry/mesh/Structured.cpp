@@ -93,6 +93,19 @@ BoxR3 Structured::getBoundingBox() const {
     return grid_.getFullDomainBoundingBox();
 }
 
+ElemView Structured::reassign(const ElemView& inGroup) {
+    ElemView res;
+
+    res.reserve(inGroup.size());
+    for (const auto& elem : inGroup) {
+        res.push_back(elems_.getId(
+            elem->getId()
+        ));
+    }
+
+    return res;
+}
+
 } /* namespace Mesh */
 } /* namespace Geometry */
 } /* namespace SEMBA */

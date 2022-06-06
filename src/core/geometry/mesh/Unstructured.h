@@ -49,6 +49,8 @@ public:
 
     void reassignPointers(const PMGroup& matGr = PMGroup());
 
+    virtual ElemView reassign(const ElemView&);
+
 private:
 	CoordR3Group coords_;
     ElemRGroup elems_;
