@@ -26,6 +26,10 @@ Geometric::Geometric(const Geometric& rhs)
 
 }
 
+Geometric::Geometric(const Grid3& grid, const Unstructured& unstructured) :
+	Unstructured(unstructured),
+	grid_(grid) {}
+
 Geometric& Geometric::operator=(const Geometric& rhs) {
     if(this == &rhs) {
         return *this;
