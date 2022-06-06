@@ -31,10 +31,7 @@ public:
 
     virtual std::unique_ptr<Mesh> clone() const = 0;
 
-    virtual ElemView reassign(const ElemView&);
-
-private:
-    ElemGroup elems_;
+    virtual ElemView reassign(const ElemView&) = 0;
 };
 
 } /* namespace Mesh */

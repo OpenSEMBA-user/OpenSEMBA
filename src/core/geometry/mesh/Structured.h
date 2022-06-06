@@ -57,6 +57,8 @@ public:
 
     void reassignPointers(const PMGroup& matGr = PMGroup());
 
+    virtual ElemView reassign(const ElemView&);
+
 private:
     Grid3 grid_;
 	CoordI3Group coords_;

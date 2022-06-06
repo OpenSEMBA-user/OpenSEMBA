@@ -76,6 +76,19 @@ BoxR3 Unstructured::getBoundingBox() const {
     return elems().getBound();
 }
 
+ElemView Unstructured::reassign(const ElemView& inGroup) {
+    ElemView res;
+
+    res.reserve(inGroup.size());
+    for (const auto& elem : inGroup) {
+        res.push_back(elems_.getId(
+            elem->getId()
+        ));
+    }
+
+    return res;
+}
+
 
 } /* namespace Mesh */
 } /* namespace Geometry */
