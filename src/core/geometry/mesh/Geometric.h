@@ -12,7 +12,7 @@ public:
     Geometric(const Grid3& grid);
     Geometric(const Grid3& grid, 
               const CoordR3Group& cG,
-              const Element::Group<ElemR>& elem,
+              const ElemRGroup& elem,
               const LayerGroup& = LayerGroup());
     Geometric(const Geometric&);
     Geometric(const Grid3& grid, const Unstructured& unstructured);
