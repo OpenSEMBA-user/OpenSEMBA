@@ -544,30 +544,14 @@ ElemRGroup Parser::readElements(
     ElemRGroup res;
     const json& elems = j.at("elements").get<json>();
 
-    for (const auto& elem : readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>())) {
-        res.add(elem);
-    }
-
-    for (const auto& elem : readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>())) {
-        res.add(elem);
-    }
-
-    for (const auto& elem : readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>())) {
-        res.add(elem);
-    }
-
-    for (const auto& elem : readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>())) {
-        res.add(elem);
-    }
-
-    for (const auto& elem : readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>())) {
-        res.add(elem);
-    }
+	res.addAndAssignIds(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
+	res.addAndAssignIds(readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>()));
+	res.addAndAssignIds(readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
+	res.addAndAssignIds(readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>()));
+	res.addAndAssignIds(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
 
 	if (elems.find("fromFile") != elems.end()) {
-		for (const auto& elem : readElementsFromFile(mG, lG, cG, elems.at("fromFile").get<json>())) {
-			res.add(elem);
-		}
+		res.addAndAssignIds(readElementsFromFile(mG, lG, cG, elems.at("fromFile").get<json>()));
 	}
 
     return res;
@@ -615,9 +599,7 @@ ElemRGroup Parser::readElementsFromFile(
 
         std::string format = f.at("format").get<std::string>();
         if (format == "STL") {
-            for (const auto& elem : readElementsFromSTLFile(mG, lG, cG, f)) {
-                res.add(elem);
-            }
+            res.addAndAssignIds(readElementsFromSTLFile(mG, lG, cG, f));
 
             continue;
 		}
