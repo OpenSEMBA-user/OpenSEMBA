@@ -48,21 +48,6 @@ bool Base::operator!=(const Base& rhs) const {
     return !(*this == rhs);
 }
 
-Base& Base::operator=(const Base& rhs) {
-    if (this == &rhs) {
-        return *this;
-    }
-
-    delete lay_;
-    delete mat_;
-
-    lay_ = rhs.lay_;
-    mat_ = rhs.mat_;
-    setId(rhs.getId());
-
-    return *this;
-}
-
 std::vector<CoordId> Base::ascendingIdOrder(
         const std::vector<CoordId>& in) {
     std::vector<CoordId> res = in;
