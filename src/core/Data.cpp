@@ -3,7 +3,6 @@
 namespace SEMBA {
 
 Data::Data(const Data& rhs) {
-
     solver = nullptr;
     mesh = nullptr;
     
@@ -28,8 +27,9 @@ Data::Data(const Data& rhs) {
 
     sources = rhs.sources;
     for (auto& source : sources) {
-        auto sourceElems = source->getTarget();
-        source->setTarget(mesh->reassign(sourceElems));
+        source->setTarget(
+            mesh->reassign(source->getTarget())
+        );
     }
 }
 
@@ -51,14 +51,16 @@ Data& Data::operator=(const Data& rhs) {
 
     outputRequests = rhs.outputRequests;
     for (auto& outputRequest : outputRequests) {
-        auto outRqElems = outputRequest->getTarget();
-        outputRequest->setTarget(mesh->reassign(outRqElems));
+        outputRequest->setTarget(
+            mesh->reassign(outputRequest->getTarget())
+        );
     }
 
     sources = rhs.sources;
     for (auto& source : sources) {
-        auto sourceElems = source->getTarget();
-        source->setTarget(mesh->reassign(sourceElems));
+        source->setTarget(
+            mesh->reassign(source->getTarget())
+        );
     }
 
     return *this;

@@ -544,34 +544,31 @@ ElemRGroup Parser::readElements(
     ElemRGroup res;
     const json& elems = j.at("elements").get<json>();
 
-    //res.add(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
     for (const auto& elem : readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>())) {
         res.add(elem);
     }
 
-    //res.add(readElemStrAs<Tet4> (mG, lG, cG, elems.at("tetrahedra").get<json>()));
     for (const auto& elem : readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>())) {
         res.add(elem);
     }
 
-    //res.add(readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
     for (const auto& elem : readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>())) {
         res.add(elem);
     }
 
-    //res.add(readElemStrAs<Tri3> (mG, lG, cG, elems.at("triangle").get<json>()));
     for (const auto& elem : readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>())) {
         res.add(elem);
     }
 
-    //res.add(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
     for (const auto& elem : readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>())) {
         res.add(elem);
     }
 
-    if (elems.find("fromFile") != elems.end()) {
-        res.add(readElementsFromFile(mG, lG, cG, elems.at("fromFile").get<json>()));
-    }
+	if (elems.find("fromFile") != elems.end()) {
+		for (const auto& elem : readElementsFromFile(mG, lG, cG, elems.at("fromFile").get<json>())) {
+			res.add(elem);
+		}
+	}
 
     return res;
 }
@@ -585,17 +582,22 @@ ElemRGroup Parser::readElementsFromSTLFile(
     auto lay = lG.getId( LayerId(f.at("layerId").get<std::size_t>())  );
     auto mat = mG.getId( MatId(f.at("materialId").get<std::size_t>()) );
     
-    ElemRGroup res;
-    for (std::size_t e = 0; e < m.elems().size(); e++) {
-        std::vector<const CoordR3*> vs;
-        const ElemR* elem = m.elems()(e);
-        for (std::size_t i = 0; i < elem->numberOfVertices(); i++) {
-            const CoordR3* elemV = elem->getV(i);
-            const CoordR3* newV = cG.addAndAssignId(std::make_unique<CoordR3>(*elemV))->get();
-            vs.push_back(newV);
-        }
-        res.addId( new Tri3(ElemId(0), vs.data(), lay, mat) );
-    }
+	ElemRGroup res;
+	for (const auto& elem : m.elems()) {
+		std::vector<const CoordR3*> vs;
+		for (std::size_t i = 0; i < elem->numberOfVertices(); i++) {
+			if (!cG.existId(elem->getV(i)->getId())) {
+				cG.addAndAssignId(
+					std::make_unique<CoordR3>(*elem->getV(i))
+				);
+			}
+
+			vs.push_back(cG.getId(elem->getV(i)->getId()));
+		}
+
+		res.addAndAssignId(std::make_unique<Tri3>(ElemId(0), vs.data(), lay, mat));
+	}
+
     return res;
 }
 
@@ -610,17 +612,23 @@ ElemRGroup Parser::readElementsFromFile(
         if (f.find("format") == f.end()) {
             throw std::runtime_error("Format label not found when reading elements from file.");
         }
+
         std::string format = f.at("format").get<std::string>();
         if (format == "STL") {
-            res.addId(readElementsFromSTLFile(mG, lG, cG, f));
-        }
-	else if (format == "ignore") {
-		// Ignoring file
-	}	
-        else {
-            throw std::runtime_error("Unsupported file format when reading elements from file.");
-        }
-    }
+            for (const auto& elem : readElementsFromSTLFile(mG, lG, cG, f)) {
+                res.add(elem);
+            }
+
+            continue;
+		}
+		
+        if (format == "ignore") {
+			// Ignoring file
+            continue;
+		}
+
+		throw std::runtime_error("Unsupported file format when reading elements from file.");
+	}
     return res;
 }
 
