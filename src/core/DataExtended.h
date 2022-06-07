@@ -10,13 +10,13 @@ namespace SEMBA {
 	public:
 		std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> boundary;
 		Geometry::Grid3 grids;
-		Source::Group<>* sources = nullptr;
+		Source::Group<> sources;
 
 		DataExtended() = default;
 		DataExtended(
 			const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
 			const Geometry::Grid3& grids,
-			Source::Group<>* sources
+			const Source::Group<>& sources
 		);
 	};
 
