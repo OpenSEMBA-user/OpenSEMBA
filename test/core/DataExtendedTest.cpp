@@ -87,3 +87,17 @@ TEST(DataExtendedTest, CanInitializeSources) {
 	
 	EXPECT_EQ(*sourceInGroup->getMagnitude(), *planewave.getMagnitude());
 }
+
+
+TEST(DataExtendedTest, CanInitializeAnalysis) {
+	DataExtended dataExtended = DataExtended();
+
+	nlohmann::json analysis = R"({"solver": "ugrfdtd", "someOtherOption": true})"_json;
+
+	dataExtended.analysis = analysis;
+
+
+	EXPECT_EQ(analysis["solver"], dataExtended.analysis["solver"]);
+	EXPECT_EQ(std::string("ugrfdtd"), dataExtended.analysis["solver"].get<std::string>());
+	EXPECT_TRUE(dataExtended.analysis["someOtherOption"].get<bool>());
+}

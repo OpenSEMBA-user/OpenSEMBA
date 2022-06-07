@@ -42,7 +42,7 @@ public:
     
 private:
     
-    json readSolverOptions(const json&) const;
+    json readSolverOptions(const json&, const std::string& key = "solverOptions") const;
     PMGroup readPhysicalModels(const json&) const;
     PMGroup readExtendedPhysicalModels(const json& j) const;
     std::unique_ptr<Geometry::Mesh::Geometric> readGeometricMesh(const PhysicalModel::Group<>&, const Geometry::Grid3&, const json&) const;

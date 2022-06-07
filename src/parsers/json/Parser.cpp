@@ -57,8 +57,8 @@ DataExtended Parser::readExtended() const {
      }
 
 
-    DataExtended res = DataExtended();
-    // TODO: Parse `analysis`
+    DataExtended res = DataExtended();    
+    res.analysis = readSolverOptions(j, "analysis");
     res.grids = this->readGrids(j);
     
     // TODO: Parse `model`
@@ -166,12 +166,12 @@ PhysicalModel::Bound::Type Parser::strToBoundType(const std::string& boundType) 
     return type;
 }
 
-Parser::json Parser::readSolverOptions(const json& j) const 
+Parser::json Parser::readSolverOptions(const json& j, const std::string& key) const
 {
-    if (j.find("solverOptions") == j.end()) {
+    if (j.find(key) == j.end()) {
         return json();
     }
-    return j.at("solverOptions").get<json>();
+    return j.at(key).get<json>();
 }
 
 std::unique_ptr<Mesh::Geometric> Parser::readGeometricMesh(const PMGroup& physicalModels, const Geometry::Grid3& grid, const json& j) const
@@ -586,7 +586,8 @@ ElemRGroup Parser::readElements(
     ElemRGroup res;
     const json& elems = j.at("elements").get<json>();
 
-	res.addAndAssignIds(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
+    // TODO: check if the keys exist
+    res.addAndAssignIds(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));	
 	res.addAndAssignIds(readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>()));
 	res.addAndAssignIds(readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
 	res.addAndAssignIds(readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>()));
