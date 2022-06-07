@@ -3,6 +3,7 @@
 #include "gtest/gtest.h"
 #include "geometry/Grid.h"
 #include "source/PlaneWave.h"
+#include "math/function/Gaussian.h"
 #include "DataExtended.h"
 
 using namespace SEMBA;
@@ -20,7 +21,7 @@ TEST(DataExtendedTest, CanInitializeBoundary) {
 	auto pair = std::make_pair<PhysicalModel::Bound, PhysicalModel::Bound>(
 		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pec),
 		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pml)
-	);
+		);
 
 	dataExtended.boundary.push_back(pair);
 
@@ -33,12 +34,12 @@ TEST(DataExtendedTest, CanInitializeBoundary) {
 	EXPECT_EQ(secondElement.getType(), PhysicalModel::Bound::Type::pml);
 	EXPECT_EQ(secondElement.getName(), "PML_Bound");
 	EXPECT_EQ(dataExtended.grids, Geometry::Grid3());
-	EXPECT_EQ(dataExtended.sources, nullptr);
+	EXPECT_TRUE(dataExtended.sources.empty());
 }
 
 TEST(DataExtendedTest, CanInitializeGrids) {
 	DataExtended dataExtended = DataExtended();
-	
+
 	auto grid3 = Geometry::Grid3(
 		Geometry::BoxR3(
 			Math::CVecR3(0.0, 0.0, 0.0),
@@ -51,26 +52,38 @@ TEST(DataExtendedTest, CanInitializeGrids) {
 
 	EXPECT_TRUE(dataExtended.boundary.empty());
 	EXPECT_EQ(dataExtended.grids, grid3);
-	EXPECT_EQ(dataExtended.sources, nullptr);
+	EXPECT_TRUE(dataExtended.sources.empty());
 }
 
 TEST(DataExtendedTest, CanInitializeSources) {
 	DataExtended dataExtended = DataExtended();
-	
-	Source::Group<>* sources = new Source::Group<>();
+
+	Source::Group<> sources = Source::Group<>();
 
 	Math::CVecR3 dir(1.0, 0.0, 0.0);
 	Math::CVecR3 pol(0.0, 0.0, 1.0);
-	Source::PlaneWave* planewavePointer = new Source::PlaneWave(nullptr, Geometry::ElemRGroup(), dir, pol);
 
-	sources->add(planewavePointer);
+	Source::PlaneWave planewave = Source::PlaneWave(
+		std::make_unique<Source::Magnitude::Magnitude>(
+			new SEMBA::Math::Function::Gaussian(0.5, 0.0, 1.0)
+		),
+		Geometry::ElemView(),
+		dir,
+		pol
+	);
+
+	sources.addAndAssignId(std::make_unique<Source::PlaneWave>(planewave));
 
 	dataExtended.sources = sources;
 
 	EXPECT_TRUE(dataExtended.boundary.empty());
 	EXPECT_EQ(dataExtended.grids, Geometry::Grid3());
 
-	EXPECT_EQ(dataExtended.sources, sources);
-	EXPECT_EQ(dataExtended.sources->size(), 1);
-	EXPECT_EQ(dataExtended.sources->get(0), planewavePointer);
+	EXPECT_EQ(dataExtended.sources.size(), 1);
+
+	auto sourceInGroup = dataExtended.sources.getId(Source::Id(1))->castTo<Source::PlaneWave>();
+	EXPECT_EQ(sourceInGroup->getDirection(), planewave.getDirection());
+	EXPECT_EQ(sourceInGroup->getPolarization(), planewave.getPolarization());
+	
+	EXPECT_EQ(*sourceInGroup->getMagnitude(), *planewave.getMagnitude());
 }

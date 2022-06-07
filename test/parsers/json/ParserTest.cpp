@@ -58,9 +58,9 @@ TEST_F(ParserJSONParserTest, SphereExtended)
     EXPECT_EQ(data.grids.getNumCells(), Math::CVecR3(51, 23, 15));
 
     auto sources = data.sources;
-    EXPECT_EQ(sources->size(), 1);
+    EXPECT_EQ(sources.size(), 1);
 
-    Source::PlaneWave* source = sources->get(0)->castTo<Source::PlaneWave>();
+    const Source::PlaneWave* source = sources.get()[0]->castTo<Source::PlaneWave>();
     EXPECT_EQ(
         source->getPolarization(), 
         Math::CVecR3(-0.4082482904638631, 0.8164965809277261, -0.4082482904638631)
@@ -69,7 +69,6 @@ TEST_F(ParserJSONParserTest, SphereExtended)
         source->getDirection(), 
         Math::CVecR3(1.0, 1.0, 1.0)
     );
-
 
     Source::Magnitude::Magnitude magnitude = *source->getMagnitude();
     EXPECT_EQ(

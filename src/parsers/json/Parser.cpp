@@ -66,7 +66,7 @@ DataExtended Parser::readExtended() const {
     auto materialsGroup = this->readExtendedPhysicalModels(j);
     auto mesh = this->readGeometricMesh(materialsGroup, res.grids, j.at("model"));
 
-    res.sources = this->readSources(*mesh, j);
+    res.sources = *this->readSources(*mesh, j);
     res.boundary = this->readBoundary(j);
 
     return res;
@@ -180,7 +180,7 @@ std::unique_ptr<Mesh::Geometric> Parser::readGeometricMesh(const PMGroup& physic
 	CoordR3Group coords = readCoordinates(j);
 	return std::make_unique<Mesh::Geometric>(
 		Mesh::Geometric(
-			readGrids(j),
+            grid,
 			coords,
 			readElements(physicalModels, layers, coords, j),
 			layers
