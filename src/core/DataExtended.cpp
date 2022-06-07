@@ -5,10 +5,12 @@ namespace SEMBA {
 DataExtended::DataExtended(
 	const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
 	const Geometry::Grid3& grids,
-	const Source::Group<>& sources
+	const SourceGroup& sources,
+	const nlohmann::json& analysis
 ) :
 	boundary(boundary),
 	grids(grids),
-	sources(sources)
+	sources(sources),
+	analysis(analysis)
 {}
 }

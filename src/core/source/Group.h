@@ -12,6 +12,6 @@ class Group : public IdentifiableUnique<S> {
 
 } /* namespace Source */
 
-typedef Source::Group<> SourceGroup;
+using SourceGroup = Source::Group<>;
 
 } /* namespace SEMBA */

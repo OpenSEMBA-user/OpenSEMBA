@@ -82,6 +82,19 @@ TEST_F(ParserJSONParserTest, SphereExtended)
             )
         )
     );
+
+	auto analysis = data.analysis;
+	EXPECT_NE(NULL, analysis);
+
+	std::ifstream input("testData/sphere.gid/sphere-extended.dat");
+	json j;
+	input >> j;
+
+	EXPECT_EQ(j["analysis"], analysis);
+
+	for (auto& element : j["analysis"].items()) {
+		EXPECT_EQ(element.value(), analysis[element.key()]);
+	}
 }
 
 TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)
