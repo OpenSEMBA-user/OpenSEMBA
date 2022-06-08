@@ -6,11 +6,13 @@ DataExtended::DataExtended(
 	const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
 	const Geometry::Grid3& grids,
 	const SourceGroup& sources,
-	const nlohmann::json& analysis
+	const nlohmann::json& analysis,
+	const Model::Model& model
 ) :
 	boundary(boundary),
 	grids(grids),
 	sources(sources),
-	analysis(analysis)
+	analysis(analysis),
+	model(model)
 {}
 }
