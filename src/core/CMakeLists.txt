@@ -9,6 +9,7 @@ add_subdirectory(filesystem/ filesystem/)
 add_subdirectory(geometry/ geometry/)
 add_subdirectory(group/ group/)
 add_subdirectory(math/ math/)
+add_subdirectory(model/ model/)
 add_subdirectory(outputRequest/ outputRequest/)
 add_subdirectory(physicalModel/ physicalModel/)
 add_subdirectory(source/ source/)
@@ -28,5 +29,6 @@ if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
                                               opensemba_core_physicalmodel
                                               opensemba_core_source
                                               opensemba_core_outputrequest
+                                              opensemba_core_model
                                               nlohmann_json)
 endif()
