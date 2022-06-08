@@ -15,8 +15,8 @@
 namespace SEMBA {
 
 class Data;
-    typedef Class::Identification<Data> Id;
-    typedef nlohmann::json json;
+    using Id = Class::Identification<Data> ;
+    using json = nlohmann::json;
 
 class Data : public virtual Class::Identifiable<Id>,
              public virtual Class::Class {

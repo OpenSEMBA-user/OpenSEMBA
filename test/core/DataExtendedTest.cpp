@@ -1,9 +1,10 @@
-#pragma once
-
 #include "gtest/gtest.h"
+
 #include "geometry/Grid.h"
 #include "source/PlaneWave.h"
 #include "math/function/Gaussian.h"
+#include "physicalModel/Predefined.h"
+
 #include "DataExtended.h"
 
 using namespace SEMBA;
@@ -88,7 +89,6 @@ TEST(DataExtendedTest, CanInitializeSources) {
 	EXPECT_EQ(*sourceInGroup->getMagnitude(), *planewave.getMagnitude());
 }
 
-
 TEST(DataExtendedTest, CanInitializeAnalysis) {
 	DataExtended dataExtended = DataExtended();
 
@@ -96,8 +96,58 @@ TEST(DataExtendedTest, CanInitializeAnalysis) {
 
 	dataExtended.analysis = analysis;
 
-
 	EXPECT_EQ(analysis["solver"], dataExtended.analysis["solver"]);
 	EXPECT_EQ(std::string("ugrfdtd"), dataExtended.analysis["solver"].get<std::string>());
 	EXPECT_TRUE(dataExtended.analysis["someOtherOption"].get<bool>());
+}
+
+TEST(DataExtendedTest, CanInitializeModel) {
+	DataExtended dataExtended = DataExtended();
+
+	Geometry::CoordR3Group coordinatesGroup = Geometry::CoordR3Group();
+	coordinatesGroup.addAndAssignId(
+		std::make_unique<Geometry::CoordR3>(
+			Geometry::Coordinate::Id(),
+			Math::CVecR3(0.0, 0.0, 0.0)
+		)
+	);
+	coordinatesGroup.addAndAssignId(
+		std::make_unique<Geometry::CoordR3>(
+			Geometry::Coordinate::Id(),
+			Math::CVecR3(1.0, 2.0, 3.0)
+		)
+	);
+
+	const Geometry::CoordR3* coordinatesArgumentList[1] = { coordinatesGroup.getId(Geometry::Coordinate::Id(1)) };
+	Geometry::ElemRGroup elementsGroup = Geometry::ElemRGroup();
+	elementsGroup.addAndAssignId(
+		std::make_unique<Geometry::NodR>(
+			Geometry::Element::Id(),
+			coordinatesArgumentList
+		)
+	);
+
+	PMGroup physicalModelsGroup = PMGroup();
+	physicalModelsGroup.addAndAssignId(
+		std::make_unique<PhysicalModel::PEC>(
+			PhysicalModel::Id(),
+			"Material PEC"
+		)
+	);
+
+	const Model::Model model = Model::Model(
+		Geometry::Mesh::Unstructured(coordinatesGroup, elementsGroup),
+		physicalModelsGroup
+	);
+
+	dataExtended.model = model;
+
+	EXPECT_FALSE(dataExtended.model.physicalModels.empty());
+	EXPECT_EQ("Material PEC", dataExtended.model.physicalModels.get()[0]->getName());
+
+	EXPECT_FALSE(dataExtended.model.unstructuredMesh.coords().empty());
+	EXPECT_EQ(
+		Math::CVecR3(1.0, 2.0, 3.0),
+		(dataExtended.model.unstructuredMesh.coords().get()[1])->pos()
+	);
 }
