@@ -95,6 +95,22 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 	for (auto& element : j["analysis"].items()) {
 		EXPECT_EQ(element.value(), analysis[element.key()]);
 	}
+
+    auto model = data.model;
+
+    EXPECT_EQ(2, model.physicalModels.size());
+    EXPECT_EQ("pec", model.physicalModels.get()[0]->getName());
+    EXPECT_EQ("pmc", model.physicalModels.get()[1]->getName());
+
+    EXPECT_EQ(384, model.unstructuredMesh.coords().size());
+    EXPECT_EQ(
+        Math::CVecR3(2.33333325, -5.71501865e-16, 1.66666663),
+        model.unstructuredMesh.coords().get()[0]->pos()
+    );
+    EXPECT_EQ(
+        Math::CVecR3(1.28204191, -1.31762123e+01, -1.70370862e-01),
+        model.unstructuredMesh.coords().get()[383]->pos()
+    );
 }
 
 TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)

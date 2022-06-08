@@ -4,6 +4,7 @@
 
 #include "math/function/Gaussian.h"
 #include "math/function/BandLimited.h"
+#include "model/Model.h"
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Quadrilateral4.h"
@@ -61,11 +62,11 @@ DataExtended Parser::readExtended() const {
     res.analysis = readSolverOptions(j, "analysis");
     res.grids = this->readGrids(j);
     
-    // TODO: Parse `model`
     // TODO: Parse `probes`    
     auto materialsGroup = this->readExtendedPhysicalModels(j);
     auto mesh = this->readGeometricMesh(materialsGroup, res.grids, j.at("model"));
 
+    res.model = Model::Model(*mesh, materialsGroup);
     res.sources = *this->readSources(*mesh, j);
     res.boundary = this->readBoundary(j);
 
