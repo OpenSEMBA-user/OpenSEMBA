@@ -20,7 +20,7 @@ protected:
     }
 };
 
-TEST_F(IdentifiableUniqueTest, copy_and_move_ctor) 
+TEST_F(IdentifiableUniqueTest, CopyAndMoveCtor) 
 {
     auto orig = buildGroupOfThreeLayers();
     std::size_t origSize = orig.size();
@@ -33,7 +33,8 @@ TEST_F(IdentifiableUniqueTest, copy_and_move_ctor)
     EXPECT_EQ(origSize, copied.size());
     EXPECT_EQ(0, orig.size());
 }
-TEST_F(IdentifiableUniqueTest, copy_and_move_assignment) 
+
+TEST_F(IdentifiableUniqueTest, CopyAndMoveAssignment) 
 {
     auto orig = buildGroupOfThreeLayers();
     std::size_t origSize = orig.size();
@@ -47,7 +48,7 @@ TEST_F(IdentifiableUniqueTest, copy_and_move_assignment)
     EXPECT_EQ(0, orig.size());
 }
 
-TEST_F(IdentifiableUniqueTest, deep_copy_and_move_add) 
+TEST_F(IdentifiableUniqueTest, DeepCopyAndMoveAdd) 
 {
     auto orig = buildGroupOfThreeLayers();
     orig.add(std::make_unique<Layer::Layer>(LayerId(5), "Melon"));
@@ -56,7 +57,7 @@ TEST_F(IdentifiableUniqueTest, deep_copy_and_move_add)
     EXPECT_EQ(5, orig.size());
 }
 
-TEST_F(IdentifiableUniqueTest, addAndAssignId) 
+TEST_F(IdentifiableUniqueTest, AddAndAssignId) 
 {
     auto orig(buildGroupOfThreeLayers());
     auto melon = std::make_unique<Layer::Layer>("Melon");
@@ -64,8 +65,8 @@ TEST_F(IdentifiableUniqueTest, addAndAssignId)
     EXPECT_EQ(LayerId(4), melonInGroup->getId());
 }
 
-TEST_F(IdentifiableUniqueTest, addAndAssignIds) 
-{    
+TEST_F(IdentifiableUniqueTest, AddAndAssignIds) 
+{
 	auto orig(buildGroupOfThreeLayers());
 
 	auto melonInGroup = orig.addAndAssignId(std::move(
@@ -90,4 +91,3 @@ TEST_F(IdentifiableUniqueTest, addAndAssignIds)
 	EXPECT_EQ(6, another.size());
 	EXPECT_EQ("Níspora", another.getId(LayerId(6))->getName());
 }
-

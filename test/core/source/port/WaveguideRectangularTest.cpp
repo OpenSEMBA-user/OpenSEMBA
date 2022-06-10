@@ -18,7 +18,7 @@ class SourcePortWaveguideRectangularTest : public ::testing::Test {
         vector<Geometry::BoxI3> quadBoxes = plane.chop();
         Geometry::ElemId id(0);
         for (size_t i = 0; i < quadBoxes.size(); i++) {
-            surfs.add(std::make_unique<Geometry::QuaI4>(cG_, ++id,quadBoxes[i], nullptr, nullptr));
+            surfs.add(std::make_unique<Geometry::QuaI4>(cG_, ++id,quadBoxes[i]));
         }
 
         excMode = Port::Waveguide::ExcitationMode::TE;

@@ -33,14 +33,8 @@ Node<T>::Node(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
     if(!box.isPoint()) {
         throw Geometry::Error::Box::NotPoint();
     }
-    std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.getPos(pos[i]);
-        if (v_[i] == nullptr) {
-            cG.addPos(pos[i]);
-            v_[i] = cG.getPos(pos[i]);
-        }
-    }
+
+    v_[0] = cG.addPos(box.getPos()[0])->get();
 }
 
 template<class T>

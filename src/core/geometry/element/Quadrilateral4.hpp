@@ -48,11 +48,7 @@ Quadrilateral4<T>::Quadrilateral4(
     }
     std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
     for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.getPos(pos[i]);
-        if (v_[i] == nullptr) {
-            cG.addPos(pos[i]);
-            v_[i] = cG.getPos(pos[i]);
-        }
+        v_[i] = cG.addPos(pos[i])->get();
     }
 }
 

@@ -9,16 +9,18 @@ using namespace Math::Constants;
 
 Parser::Parser(const std::string& fn) :
 	SEMBA::Parsers::Parser(fn)
-{
-
-}
+{}
 
 CoordR3Group readCoordinates(const std::string& fn)
 {
 	CoordR3Group cG;
 
+    std::map<Math::CVecR3, const CoordR3*> index;
+
+
 	std::ifstream stl(fn);
 	std::string label;
+
 	while (stl.peek() != EOF) {
 		stl >> label;
 		if (label != "vertex") {
@@ -27,9 +29,11 @@ CoordR3Group readCoordinates(const std::string& fn)
 
 		Math::CVecR3 pos;
 		stl >> pos(x) >> pos(y) >> pos(z);
-		if (cG.getPos(pos) == nullptr) {
-			cG.addPos(pos);
-		}
+
+        auto it = index.find(pos);
+        if (it == index.end()) {
+            index.emplace(pos, cG.addPos(pos)->get());
+        }
 	}
 
 	return cG;
@@ -41,6 +45,8 @@ std::pair<std::unique_ptr<Layer::Layer>, ElemRGroup> readLayerAndElements(
 {
     std::unique_ptr<Layer::Layer> lay;
     ElemRGroup eG;
+
+    auto& cGIndex = cG.getIndex<Math::CVecR3>();
     
     std::ifstream stl(fn);
     stl.clear();
@@ -71,12 +77,13 @@ std::pair<std::unique_ptr<Layer::Layer>, ElemRGroup> readLayerAndElements(
 
                 Math::CVecR3 pos;
                 stl >> pos(x) >> pos(y) >> pos(z);
-                const CoordR3* coord = cG.getPos(pos);
-                if (coord == nullptr) {
+
+                auto cIt = cGIndex.find(pos);
+                if (cIt == cGIndex.end() || cIt->second.empty()) {
                     throw std::runtime_error("Unable to find coordinate during STL reading.");
                 }
 
-                coords.push_back(coord);
+                coords.push_back(cIt->second.front());
             }
 
             label.clear();
