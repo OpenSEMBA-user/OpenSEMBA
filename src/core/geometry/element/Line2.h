@@ -77,7 +77,7 @@ private:
 
 typedef Element::Line2Base         Lin2;
 typedef Element::Line2<Math::Real> LinR2;
-typedef Element::Line2<Math::Int > LinI2;
+typedef Element::Line2<Math::Int> LinI2;
 
 } /* namespace Geometry */
 } /* namespace SEMBA */
