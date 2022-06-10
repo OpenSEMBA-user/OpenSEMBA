@@ -7,81 +7,18 @@ namespace Coordinate {
 template<typename C>
 Group<C>::Group(const std::vector<Math::CVecR3>& pos) 
 {
-    addPos(pos, true);
+    addPos(pos);
 }
 
 template<typename C>
 Group<C>::Group(const std::vector<Math::CVecI3>& pos) 
 {
-    addPos(pos, true);
-}
-
-template<typename C> 
-Group<C>::Group(const Group<C>& rhs) :
-    IdentifiableUnique<C>(rhs)
-{
-    updateIndices();
-}
-
-template<typename C>
-Group<C>& Group<C>::operator=(const Group<C>& rhs) {
-    IdentifiableUnique<C>::operator=(rhs);
-    updateIndices();
-    return *this;
-}
-
-
-template<typename C>
-typename IdentifiableUnique<C>::iterator 
-Group<C>::add(const std::unique_ptr<C>& coord)
-{
-    auto it = IdentifiableUnique<C>::add(coord);
-    updateIndexEntry(it->get());
-    return it;
-}
-
-template<typename C>
-typename IdentifiableUnique<C>::iterator 
-Group<C>::add(std::unique_ptr<C>&& coord)
-{
-    auto it = IdentifiableUnique<C>::add(std::move(coord));
-    updateIndexEntry(it->get());
-    return it;
-}
-
-template<typename C>
-typename IdentifiableUnique<C>::iterator
-Group<C>::addAndAssignId(std::unique_ptr<C>&& coord)
-{
-    auto it = IdentifiableUnique<C>::addAndAssignId(std::move(coord));
-    updateIndexEntry(it->get());
-    return it;
-}
-
-template<typename C>
-const CoordR3* Group<C>::getPos(const Math::CVecR3& position) const {
-    CoordR3 aux(position);
-    auto it = indexUnstr_.find(&aux);
-    if (it != indexUnstr_.end()) {
-        return *it;
-    } else {
-        return nullptr;
-    }
-}
-
-template<typename C>
-const CoordI3* Group<C>::getPos(const Math::CVecI3& position) const {
-    CoordI3 aux(position);
-    auto it = indexStr_.find(&aux);
-    if (it != indexStr_.end()) {
-        return *it;
-    } else {
-        return nullptr;
-    }
+    addPos(pos);
 }
 
 template<typename C> template<typename VEC>
-void Group<C>::addPos(VEC newPosition) 
+typename IdentifiableUnique<C>::iterator 
+Group<C>::addPos(VEC newPosition)
 {
     CoordId newId;
     if (this->size() == 0) {
@@ -91,7 +28,7 @@ void Group<C>::addPos(VEC newPosition)
         auto backIt = --this->end();
         newId = ++(backIt->get()->getId());
     }
-    add(std::make_unique<C>(newId, newPosition));
+    return add(std::make_unique<C>(newId, newPosition));
 }
 
 template<typename C>
@@ -104,21 +41,23 @@ void Group<C>::applyScalingFactor(const Math::Real factor)
     }
 }
 
-template<typename C>
-void Group<C>::updateIndices() {
-    for (auto const& c: *this) {
-        updateIndexEntry(c.get());
-    }
-}
+template<typename C> template<typename VEC>
+const std::map<VEC, std::vector<const C*>> Group<C>::getIndex() const {
+    std::map<VEC, std::vector<const C*>> index;
 
-template<typename C>
-void Group<C>::updateIndexEntry(const C* c) {
-    if (c->template is<CoordR3>()) {
-        indexUnstr_.insert(c->template castTo<CoordR3>());
+    for (auto& c : *this) {
+        auto cIt = index.find(c->pos());
+        if (cIt == index.end()) {
+            index.emplace(c->pos(), std::vector<const C*>({ c.get() }));
+
+            continue;
+        }
+
+        auto& vector = cIt->second;
+        vector.push_back(c.get());
     }
-    if (c->template is<CoordI3>()) {
-        indexStr_.insert(c->template castTo<CoordI3>());
-    }
+
+    return index;
 }
 
 } /* namespace Coordinate */
