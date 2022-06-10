@@ -21,7 +21,7 @@ protected:
 
 using namespace SEMBA;
 using namespace Geometry;
-TEST_F(CoordinateGroupTest, copy_ctor)
+TEST_F(CoordinateGroupTest, CopyCtor)
 {
     auto original(buildCoordGroup());
     auto origSize = original.size();
@@ -34,7 +34,7 @@ TEST_F(CoordinateGroupTest, copy_ctor)
     }
 }
 
-TEST_F(CoordinateGroupTest, move_ctor)
+TEST_F(CoordinateGroupTest, MoveCtor)
 {
     auto original(buildCoordGroup());
     auto origSize = original.size();
@@ -45,7 +45,7 @@ TEST_F(CoordinateGroupTest, move_ctor)
     EXPECT_EQ(origSize, moved.size());
 }
 
-TEST_F(CoordinateGroupTest, copy_assignment)
+TEST_F(CoordinateGroupTest, CopyAssignment)
 {
     auto original(buildCoordGroup());
     auto origSize = original.size();
@@ -58,7 +58,7 @@ TEST_F(CoordinateGroupTest, copy_assignment)
     }
 }
 
-TEST_F(CoordinateGroupTest, move_assignment)
+TEST_F(CoordinateGroupTest, MoveAssignment)
 {
     auto original(buildCoordGroup());
     auto origSize = original.size();
@@ -69,46 +69,67 @@ TEST_F(CoordinateGroupTest, move_assignment)
     EXPECT_EQ(origSize, moved.size());
 }
 
-TEST_F(CoordinateGroupTest, add_and_get_position)
+TEST_F(CoordinateGroupTest, AddAndGetPosition)
 {
     auto grp(buildCoordGroup());
     
     Math::CVecR3 newPos(11.0);
-    EXPECT_EQ(nullptr, grp.getPos(newPos));
+
+    auto index = grp.getIndex<Math::CVecR3>();
+
+    EXPECT_EQ(index.find(newPos), index.end());
 
     grp.addPos(newPos);
-    EXPECT_EQ(newPos, grp.getPos(newPos)->pos());
+
+    index = grp.getIndex<Math::CVecR3>();
+    auto it = index.find(newPos);
+    EXPECT_FALSE(it == index.end());
+
+    EXPECT_EQ(1, it->second.size());
+    EXPECT_EQ(newPos, it->second.front()->pos());
 
 }
 
-TEST_F(CoordinateGroupTest, get_all_positions) 
+TEST_F(CoordinateGroupTest, GetAllPositions) 
 {
     auto grp(buildCoordGroup());
     
+    auto index = grp.getIndex<Math::CVecR3>();
+
     for (auto const& coord : grp) {
         Math::CVecR3 pos = coord->pos();
-        const CoordR3* found = grp.getPos(pos);
+
+        auto it = index.find(pos);
+
+        ASSERT_NE(it, index.end());
+
+        const CoordR3* found = it->second.front();
+
         ASSERT_NE(nullptr, found);
         EXPECT_EQ(pos, found->pos());
     }
 }
 
-TEST_F(CoordinateGroupTest, get_positions_after_move)
+TEST_F(CoordinateGroupTest, GetPositionsAfterMove)
 {
     auto original(buildCoordGroup());
 
-    auto pos = original.getId(CoordId(1))->pos();
+    auto& pos = original.getId(CoordId(1))->pos();
     
-    auto coord = original.getPos(pos);
-    EXPECT_EQ(pos, coord->pos());
+    auto index = original.getIndex<Math::CVecR3>();
+
+    auto& coord = index.find(pos)->second;
+    EXPECT_EQ(pos, coord.front()->pos());
 
     auto moved(std::move(original));
-    EXPECT_EQ(pos, coord->pos());
+    EXPECT_EQ(pos, coord.front()->pos());
 
-    EXPECT_EQ(nullptr, original.getPos(pos));
+    index = original.getIndex<Math::CVecR3>();
+    EXPECT_EQ(index.find(pos), index.end());
 }
 
-TEST_F(CoordinateGroupTest, polymorphic_add) 
+
+TEST_F(CoordinateGroupTest, PolymorphicAdd) 
 {
     CoordGroup grp;
     grp.add(std::make_unique<CoordR3>(CoordId(1), Math::CVecR3(1.0)));
@@ -117,7 +138,7 @@ TEST_F(CoordinateGroupTest, polymorphic_add)
     EXPECT_EQ(2, grp.size());
 }
 
-TEST_F(CoordinateGroupTest, polymorphic_sizeOf)
+TEST_F(CoordinateGroupTest, PolymorphicSizeOf)
 {
     CoordGroup grp;
     grp.add(std::make_unique<CoordR3>(CoordId(1), Math::CVecR3(1.0)));
@@ -130,4 +151,29 @@ TEST_F(CoordinateGroupTest, polymorphic_sizeOf)
     CoordGroup copied = grp;
     EXPECT_EQ(1, copied.sizeOf<CoordR3>());
     EXPECT_EQ(2, copied.sizeOf<CoordI3>());
+}
+
+TEST_F(CoordinateGroupTest, AddAndAssignIdShouldUpdateEntryOnce)
+{
+    auto grp(buildCoordGroup());
+
+    EXPECT_EQ(5, grp.size());
+
+    auto index = grp.getIndex<Math::CVecR3>();
+
+    EXPECT_EQ(index.find(Math::CVecR3(3.1416)), index.end());
+
+    SEMBA::Geometry::CoordR3 coord(CoordId(), Math::CVecR3(3.1416));
+
+    grp.addAndAssignId(
+        std::make_unique<SEMBA::Geometry::CoordR3>(coord)
+    );
+
+    EXPECT_EQ(6, grp.size());
+
+    index = grp.getIndex<Math::CVecR3>();
+
+    auto it = index.find(Math::CVecR3(3.1416));
+    EXPECT_FALSE(it == index.end());
+    EXPECT_EQ(1, it->second.size());
 }

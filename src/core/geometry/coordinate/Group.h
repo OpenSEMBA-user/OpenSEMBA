@@ -1,7 +1,7 @@
 #pragma once
 
-#include <set>
 #include <type_traits>
+#include <map>
 
 #ifdef _MSC_VER
 #pragma warning(disable:4250)
@@ -30,33 +30,22 @@ public:
     Group(const std::vector<Math::CVecR3>&);
     Group(const std::vector<Math::CVecI3>&);
     
-    Group(const Group<C>&);
+    Group(const Group<C>&) = default;
 
     Group(Group<C>&&) noexcept = default;
-    
-    Group<C>& operator=(const Group<C>& rhs);
+
+    Group<C>& operator=(const Group<C>& rhs) = default;
     Group<C>& operator=(Group<C>&& rhs) = default;
 
     virtual ~Group() = default;
 
-    const CoordR3* getPos(const Math::CVecR3& pos) const;
-    const CoordI3* getPos(const Math::CVecI3& pos) const;
-
     template<typename VEC>
-    void addPos(VEC);
-
-    typename IdentifiableUnique<C>::iterator add(const std::unique_ptr<C>&);
-    typename IdentifiableUnique<C>::iterator add(std::unique_ptr<C>&&) final;
-    typename IdentifiableUnique<C>::iterator addAndAssignId(std::unique_ptr<C>&& item) final;
+    typename IdentifiableUnique<C>::iterator  addPos(VEC);
 
     void applyScalingFactor(const Math::Real factor);
-   
-private:
-    std::multiset<const CoordR3*, CoordComparator> indexUnstr_;
-    std::multiset<const CoordI3*, CoordComparator> indexStr_;
-    
-    void updateIndices();
-    void updateIndexEntry(const C*);
+
+    template<typename VEC>
+    const std::map<VEC, std::vector<const C*>> getIndex() const;
 };
 
 } /* namespace Coordinate */
