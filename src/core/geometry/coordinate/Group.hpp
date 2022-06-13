@@ -42,7 +42,7 @@ void Group<C>::applyScalingFactor(const Math::Real factor)
 }
 
 template<typename C> template<typename VEC>
-const std::map<VEC, std::vector<const C*>> Group<C>::getIndex() const {
+std::map<VEC, std::vector<const C*>> Group<C>::getIndex() const {
     std::map<VEC, std::vector<const C*>> index;
 
     for (auto& c : *this) {
