@@ -30,15 +30,6 @@ public:
     Group(const std::vector<Math::CVecR3>&);
     Group(const std::vector<Math::CVecI3>&);
     
-    Group(const Group<C>&) = default;
-
-    Group(Group<C>&&) noexcept = default;
-
-    Group<C>& operator=(const Group<C>& rhs) = default;
-    Group<C>& operator=(Group<C>&& rhs) = default;
-
-    virtual ~Group() = default;
-
     template<typename VEC>
     typename IdentifiableUnique<C>::iterator  addPos(VEC);
 
