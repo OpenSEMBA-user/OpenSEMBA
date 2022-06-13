@@ -45,7 +45,7 @@ public:
     void applyScalingFactor(const Math::Real factor);
 
     template<typename VEC>
-    const std::map<VEC, std::vector<const C*>> getIndex() const;
+    std::map<VEC, std::vector<const C*>> getIndex() const;
 };
 
 } /* namespace Coordinate */
