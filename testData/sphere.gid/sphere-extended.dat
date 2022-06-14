@@ -1242,7 +1242,7 @@
         "finalTime": 1e-08,
         "samplingPeriod": 2.5e-09
       },
-      "coordinates": [
+      "positions": [
         [
           -0.8441360141053171,
           12.017228978451016,
@@ -1257,16 +1257,16 @@
       "domain": {
         "initialFrequency": 10000000.0,
         "finalFrequency": 100000000.0,
-        "totalFrequency": 120,
+        "frequencyStep": 750000.0,
         "logFrequencySweep": true
       },
-      "layerBox": "{5.0 4.0 10.0 -7.0 -17.988343845952695 -10.0}",
-      "inititalTheta": 0.0,
+      "box": "{5.0 4.0 10.0 -7.0 -17.988343845952695 -10.0}",
+      "initialTheta": 0.0,
       "finalTheta": 360.0,
-      "totalTheta": 10,
-      "inititalPhi": 0.0,
+      "stepTheta": 36,
+      "initialPhi": 0.0,
       "finalPhi": 90.0,
-      "totalPhi": 3
+      "stepPhi": 30
     }
   ],
   "boundary": {
