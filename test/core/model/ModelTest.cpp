@@ -83,3 +83,70 @@ TEST(ModelTest, CanInitializePhysicalModels) {
 		model.physicalModels.getId(PhysicalModel::Id(1))->getName()
 	);
 }
+
+TEST(ModelTest, CanCopyConstructor) {
+	CoordR3Group coordinatesGroup = CoordR3Group();
+	coordinatesGroup.addAndAssignId(
+		std::make_unique<CoordR3>(
+			Coordinate::Id(),
+			Math::CVecR3(0.0, 0.0, 0.0)
+			)
+	);
+	coordinatesGroup.addAndAssignId(
+		std::make_unique<CoordR3>(
+			Coordinate::Id(),
+			Math::CVecR3(1.0, 2.0, 3.0)
+			)
+	);
+
+	const CoordR3* coordinatesArgumentList[1] = { coordinatesGroup.getId(Coordinate::Id(1)) };
+	ElemRGroup elementsGroup = ElemRGroup();
+	elementsGroup.addAndAssignId(
+		std::make_unique<NodR>(
+			Element::Id(),
+			coordinatesArgumentList
+			)
+	);
+
+	Mesh::Unstructured mesh = Mesh::Unstructured(coordinatesGroup, elementsGroup);
+
+	PMGroup physicalModelsGroup = PMGroup();
+	physicalModelsGroup.addAndAssignId(
+		std::make_unique<PhysicalModel::PEC>(
+			PhysicalModel::Id(),
+			"Material PEC"
+			)
+	);
+
+	ModelObject model = ModelObject(mesh, physicalModelsGroup);
+
+	EXPECT_EQ(
+		model.unstructuredMesh.coords().getId(Coordinate::Id(1)),
+		model.unstructuredMesh.elems().getId(ElemId(1))->getV(0)
+	);
+
+	ModelObject newModel(model);
+
+	ASSERT_EQ(1, newModel.physicalModels.size());
+	ASSERT_EQ(1, model.physicalModels.size());
+	EXPECT_NE(
+		model.physicalModels.get().front(),
+		newModel.physicalModels.get().front()
+	);
+
+	EXPECT_EQ(
+		model.physicalModels.get().front()->getName(),
+		newModel.physicalModels.get().front()->getName()
+	);
+
+	auto newCoordinate1 = newModel.unstructuredMesh.coords().getId(Coordinate::Id(1));
+	EXPECT_EQ(
+		newCoordinate1,
+		newModel.unstructuredMesh.elems().getId(ElemId(1))->getV(0)
+	);
+
+	auto coordinate1 = model.unstructuredMesh.coords().getId(Coordinate::Id(1));
+	EXPECT_NE(coordinate1, newCoordinate1);
+
+	EXPECT_EQ(coordinate1->pos(), newCoordinate1->pos());
+}

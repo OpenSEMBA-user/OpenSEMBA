@@ -35,7 +35,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 {
     SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended.dat");
 
-    DataExtended data = jsonParser.readExtended();
+    auto data = jsonParser.readExtended();
 
     const PhysicalModel::Bound::Type boundaryLowerMaterials[3] = {
         PhysicalModel::Bound::Type::pml,
@@ -57,7 +57,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
     EXPECT_EQ(data.grids.getNumCells(), Math::CVecR3(51, 23, 15));
 
-    auto sources = data.sources;
+    auto& sources = data.sources;
     EXPECT_EQ(sources.size(), 1);
 
     const Source::PlaneWave* source = sources.get()[0]->castTo<Source::PlaneWave>();
@@ -83,7 +83,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
         )
     );
 
-	auto analysis = data.analysis;
+	auto& analysis = data.analysis;
 	EXPECT_NE(NULL, analysis);
 
 	std::ifstream input("testData/sphere.gid/sphere-extended.dat");
@@ -96,13 +96,14 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 		EXPECT_EQ(element.value(), analysis[element.key()]);
 	}
 
-    auto model = data.model;
+    auto& model = data.model;
 
     EXPECT_EQ(2, model.physicalModels.size());
     EXPECT_EQ("pec", model.physicalModels.get()[0]->getName());
     EXPECT_EQ("pmc", model.physicalModels.get()[1]->getName());
 
-    EXPECT_EQ(384, model.unstructuredMesh.coords().size());
+    // 384 coming from grid, 8 from source, 1 from point probe and 8 from far field
+    ASSERT_EQ(384 + 8 + 1 + 8, model.unstructuredMesh.coords().size());
     EXPECT_EQ(
         Math::CVecR3(2.33333325, -5.71501865e-16, 1.66666663),
         model.unstructuredMesh.coords().get()[0]->pos()
@@ -110,6 +111,20 @@ TEST_F(ParserJSONParserTest, SphereExtended)
     EXPECT_EQ(
         Math::CVecR3(1.28204191, -1.31762123e+01, -1.70370862e-01),
         model.unstructuredMesh.coords().get()[383]->pos()
+    );
+
+    auto& probes = data.outputRequests;
+
+    ASSERT_EQ(2, probes.size());
+    EXPECT_EQ(OutputRequest::OutputRequest::Type::electric, probes.get()[0]->getType());
+    EXPECT_EQ(OutputRequest::OutputRequest::Type::electricFarField, probes.get()[1]->getType());
+
+    ASSERT_EQ(1, probes.get()[0]->getTarget().size());
+
+    auto recoveredNode = probes.get()[0]->getTarget().at(0)->castTo<Geometry::NodR>();
+    EXPECT_EQ(
+        Math::CVecR3(-0.8441360141053171, 12.017228978451016, 13.154724231963254),
+        recoveredNode->getV(0)->pos()
     );
 }
 

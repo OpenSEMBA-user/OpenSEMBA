@@ -48,7 +48,7 @@ private:
     std::unique_ptr<Geometry::Mesh::Geometric> readGeometricMesh(const PhysicalModel::Group<>&, const Geometry::Grid3&, const json&) const;
 	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
     Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;
-    OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Geometric& mesh, const json&) const;
+    OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Geometric& mesh, const json&, const std::string& key = "outputRequests") const;
 
     std::unique_ptr<PhysicalModel::Surface::Multilayer> readMultilayerSurface(const json& layers) const;
 
@@ -115,6 +115,8 @@ private:
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(const std::string& str);
 
     static Geometry::ElemView readElemIdsAsGroupOf(Geometry::Mesh::Geometric& mesh, const Parser::json& j);
+
+    static Geometry::ElemView readAndCreateCoordIdAsNodes(Geometry::Mesh::Geometric&, const Parser::json&);
 };
 
 template<typename T>
