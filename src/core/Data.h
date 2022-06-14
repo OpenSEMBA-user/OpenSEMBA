@@ -33,11 +33,7 @@ public:
     Data(const Data& rhs);
     virtual ~Data() = default;
 
-    virtual std::unique_ptr<Data> clone() const {
-        return std::make_unique<Data>(*this);
-    }
-
-    Data& operator=(const Data& rhs);
+	Data& operator=(const Data& rhs);
 };
 
 } /* namespace SEMBA */

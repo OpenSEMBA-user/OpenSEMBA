@@ -57,18 +57,24 @@ DataExtended Parser::readExtended() const {
          throw std::logic_error("File version " + version + " is not supported for extended version.");
      }
 
+    DataExtended res;    
+	res.analysis = readSolverOptions(j, "analysis");
+	res.grids = this->readGrids(j);
 
-    DataExtended res = DataExtended();    
-    res.analysis = readSolverOptions(j, "analysis");
-    res.grids = this->readGrids(j);
-    
-    // TODO: Parse `probes`    
-    auto materialsGroup = this->readExtendedPhysicalModels(j);
-    auto mesh = this->readGeometricMesh(materialsGroup, res.grids, j.at("model"));
+	auto materialsGroup = this->readExtendedPhysicalModels(j);
+    // TODO: Leer directamente la no estructurada
+	auto mesh = this->readGeometricMesh(materialsGroup, res.grids, j.at("model"));
+
+	res.sources = *this->readSources(*mesh, j);
+
+	res.outputRequests = *readOutputRequests(*mesh, j, "probes");
+
+	res.boundary = this->readBoundary(j);
 
     res.model = Model::Model(*mesh, materialsGroup);
-    res.sources = *this->readSources(*mesh, j);
-    res.boundary = this->readBoundary(j);
+
+    // TODO: - Wanted -> `boundaries` should go inside the `model`
+    // this->readBoundary(model, *mesh, j);
 
     return res;
 }
@@ -374,11 +380,11 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
     }
 }
 
-OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Geometric& mesh, const json& j) const 
+OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Geometric& mesh, const json& j, const std::string& key) const 
 {
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
     
-    auto outs = j.find("outputRequests");
+    auto outs = j.find(key);
     if (outs == j.end()) {
         return res;
     }
@@ -445,7 +451,8 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Ge
 				)
 			);
         }
-        else if (gidOutputType.compare("OutRq_on_point") == 0) {
+
+        if (gidOutputType.compare("OutRq_on_point") == 0) {
 			return std::make_unique<OutputRequest::BulkCurrent>(
 				OutputRequest::BulkCurrent(
 					domain,
@@ -456,30 +463,30 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Ge
 				)
 			);
         }
-        else {
-			return std::make_unique<OutputRequest::BulkCurrent>(
-				OutputRequest::BulkCurrent(
-					domain,
-					name,
-					readElemIdsAsGroupOf(mesh, j.at("elemIds").get<json>()),
-					strToCartesianAxis(j.at("direction").get<std::string>()),
-					j.at("skip").get<int>()
-				)
-			);
-        }
-    }
 
-    if (gidOutputType.compare("OutRq_on_point") == 0) {
-		return std::make_unique<OutputRequest::OnPoint>(
-			OutputRequest::OnPoint(
-				type,
+		return std::make_unique<OutputRequest::BulkCurrent>(
+			OutputRequest::BulkCurrent(
 				domain,
 				name,
-				readCoordIdAsNodes(mesh, j.at("elemIds").get<json>())
-		)
-			);
+				readElemIdsAsGroupOf(mesh, j.at("elemIds").get<json>()),
+				strToCartesianAxis(j.at("direction").get<std::string>()),
+				j.at("skip").get<int>()
+			)
+		);
     }
-    else if (gidOutputType.compare("OutRq_on_line") == 0) {
+
+    if (gidOutputType.compare("OutRq_on_point") == 0) {        
+        ElemView target;
+        if (j.contains("positions")) {
+            target = readAndCreateCoordIdAsNodes(mesh, j.at("positions").get<json>());
+        } else {
+            target = readCoordIdAsNodes(mesh, j.at("elemIds").get<json>());
+        }
+        
+		return std::make_unique<OutputRequest::OnPoint>(type, domain, name, target);
+    }
+    
+    if (gidOutputType.compare("OutRq_on_line") == 0) {
 		return std::make_unique<OutputRequest::OnLine>(
 			OutputRequest::OnLine(
 				type,
@@ -489,7 +496,8 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Ge
 			)
 		);
     }
-    else if (gidOutputType.compare("OutRq_on_surface") == 0) {
+
+    if (gidOutputType.compare("OutRq_on_surface") == 0) {
 		return std::make_unique<OutputRequest::OnSurface>(
 			OutputRequest::OnSurface(
 				type,
@@ -499,7 +507,8 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Ge
 			)
 		);
     }
-    else if (gidOutputType.compare("OutRq_on_layer") == 0) {
+
+    if (gidOutputType.compare("OutRq_on_layer") == 0) {
 		return std::make_unique<OutputRequest::OnLayer>(
 			OutputRequest::OnLayer(
 				type,
@@ -509,7 +518,8 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Ge
 			)
 		);
     }
-    else if (gidOutputType.compare("Far_field") == 0) {
+
+    if (gidOutputType.compare("Far_field") == 0) {
 		static const Math::Real degToRad = 2.0 * Math::Constants::pi / 360.0;
 		return std::make_unique<OutputRequest::FarField>(
 			OutputRequest::FarField(
@@ -524,9 +534,30 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Ge
 				j.at("stepPhi").get<double>() * degToRad
             )
 		);
-    } else {
-        throw std::logic_error("Unrecognized GiD Output request type: " + gidOutputType);
     }
+
+    throw std::logic_error("Unrecognized GiD Output request type: " + gidOutputType);
+}
+
+ElemView Parser::readAndCreateCoordIdAsNodes(Geometry::Mesh::Geometric& mesh, const Parser::json& j) {
+	ElemView res;
+
+	for (auto it = j.begin(); it != j.end(); ++it) {
+		auto coordinates = (*it).get<std::vector<Math::Real>>();
+
+        const auto coordIt = mesh.coords().addAndAssignId(
+            std::make_unique<CoordR3>((Math::CVecR3(coordinates.data())))
+        );
+
+        const CoordR3* constCoordPointer[1] = { coordIt->get() };
+		auto itCoord = mesh.elems().addAndAssignId(
+            std::make_unique<NodR>(ElemId(), constCoordPointer)
+        );
+
+		res.push_back(itCoord->get());
+	}
+
+	return res;
 }
 
 Math::Constants::CartesianAxis Parser::strToCartesianAxis(std::string str) {
@@ -1220,11 +1251,11 @@ Source::Port::Waveguide::ExcitationMode Parser::strToWaveguideMode(
     }
 }
 
-std::vector<const Elem*> Parser::readCoordIdAsNodes(
+ElemView Parser::readCoordIdAsNodes(
     Mesh::Geometric& mesh, 
     const json& j
 ) {
-    std::vector<const Elem*> res;
+    ElemView res;
     
     for (auto it = j.begin(); it != j.end(); ++it) {
         const CoordR3* coord = mesh.coords().getId(CoordId(it->get<int>()));

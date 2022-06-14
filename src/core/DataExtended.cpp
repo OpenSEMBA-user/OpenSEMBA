@@ -2,17 +2,49 @@
 
 namespace SEMBA {
 
-DataExtended::DataExtended(
-	const std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>& boundary,
-	const Geometry::Grid3& grids,
-	const SourceGroup& sources,
-	const nlohmann::json& analysis,
-	const Model::Model& model
-) :
-	boundary(boundary),
-	grids(grids),
-	sources(sources),
-	analysis(analysis),
-	model(model)
-{}
+DataExtended::DataExtended(const DataExtended& rhs) {
+    boundary = rhs.boundary;
+    grids = rhs.grids;
+    analysis = rhs.analysis;
+    
+    model = rhs.model;
+    
+    outputRequests = rhs.outputRequests;
+    for (auto& outputRequest : outputRequests) {
+        outputRequest->setTarget(
+            model.unstructuredMesh.reassign(outputRequest->getTarget())
+        );
+    }
+
+    sources = rhs.sources;
+    for (auto& source : sources) {
+        source->setTarget(
+            model.unstructuredMesh.reassign(source->getTarget())
+        );
+    }
+}
+
+DataExtended& DataExtended::operator=(const DataExtended& rhs) {
+    boundary = rhs.boundary;
+    grids = rhs.grids;
+    analysis = rhs.analysis;
+
+    model = rhs.model;
+
+    outputRequests = rhs.outputRequests;
+    for (auto& outputRequest : outputRequests) {
+        outputRequest->setTarget(
+            model.unstructuredMesh.reassign(outputRequest->getTarget())
+        );
+    }
+
+    sources = rhs.sources;
+    for (auto& source : sources) {
+        source->setTarget(
+            model.unstructuredMesh.reassign(source->getTarget())
+        );
+    }
+
+    return *this;
+}
 }
