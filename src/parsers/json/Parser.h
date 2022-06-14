@@ -24,7 +24,7 @@
 #include "source/port/TEM.h"
 
 #include "Data.h"
-#include "DataExtended.h"
+#include "ProblemDescription.h"
 
 #include "parsers/Parser.h"
 
@@ -38,7 +38,7 @@ public:
 
     Parser(const std::string& filename);
     Data read() const;
-    DataExtended readExtended() const;
+    ProblemDescription readExtended() const;
     
 private:
     

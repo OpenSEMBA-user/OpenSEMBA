@@ -9,7 +9,7 @@
 #include "nlohmann/json.hpp"
 
 namespace SEMBA {
-	class DataExtended { // TODO: Wanted - Problem / ProblemDescription
+	class ProblemDescription {
 	public:
 		std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> boundary;
 
@@ -21,9 +21,9 @@ namespace SEMBA {
 
 		OutputRequestGroup outputRequests;
 
-		DataExtended() = default;
-		DataExtended(const DataExtended& rhs);
+		ProblemDescription() = default;
+		ProblemDescription(const ProblemDescription& rhs);
 
-		DataExtended& operator=(const DataExtended& rhs);
+		ProblemDescription& operator=(const ProblemDescription& rhs);
 	};
 }
