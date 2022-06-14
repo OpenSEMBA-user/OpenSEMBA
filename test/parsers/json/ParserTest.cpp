@@ -7,7 +7,7 @@
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Tetrahedron4.h"
 #include "math/function/Gaussian.h"
-#include "DataExtended.h"
+#include "ProblemDescription.h"
 
 using namespace SEMBA;
 using namespace SEMBA::Parsers::JSON;

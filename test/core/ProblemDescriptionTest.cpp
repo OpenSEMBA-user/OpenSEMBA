@@ -6,41 +6,41 @@
 #include "physicalModel/Predefined.h"
 #include "outputRequest/OnPoint.h"
 
-#include "DataExtended.h"
+#include "ProblemDescription.h"
 
 using namespace SEMBA;
 
-TEST(DataExtendedTest, CanCreate) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanCreate) {
+	ProblemDescription problemDescription = ProblemDescription();
 
-	EXPECT_NE(&dataExtended, nullptr);
-	EXPECT_TRUE(dataExtended.boundary.empty());
+	EXPECT_NE(&problemDescription, nullptr);
+	EXPECT_TRUE(problemDescription.boundary.empty());
 }
 
-TEST(DataExtendedTest, CanInitializeBoundary) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanInitializeBoundary) {
+	ProblemDescription problemDescription = ProblemDescription();
 
 	auto pair = std::make_pair<PhysicalModel::Bound, PhysicalModel::Bound>(
 		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pec),
 		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pml)
 		);
 
-	dataExtended.boundary.push_back(pair);
+	problemDescription.boundary.push_back(pair);
 
-	EXPECT_EQ(dataExtended.boundary.at(0), pair);
-	auto& firstElement = dataExtended.boundary.at(0).first;
+	EXPECT_EQ(problemDescription.boundary.at(0), pair);
+	auto& firstElement = problemDescription.boundary.at(0).first;
 	EXPECT_EQ(firstElement.getType(), PhysicalModel::Bound::Type::pec);
 	EXPECT_EQ(firstElement.getName(), "PEC_Bound");
 
-	auto& secondElement = dataExtended.boundary.at(0).second;
+	auto& secondElement = problemDescription.boundary.at(0).second;
 	EXPECT_EQ(secondElement.getType(), PhysicalModel::Bound::Type::pml);
 	EXPECT_EQ(secondElement.getName(), "PML_Bound");
-	EXPECT_EQ(dataExtended.grids, Geometry::Grid3());
-	EXPECT_TRUE(dataExtended.sources.empty());
+	EXPECT_EQ(problemDescription.grids, Geometry::Grid3());
+	EXPECT_TRUE(problemDescription.sources.empty());
 }
 
-TEST(DataExtendedTest, CanInitializeGrids) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanInitializeGrids) {
+	ProblemDescription problemDescription = ProblemDescription();
 
 	auto grid3 = Geometry::Grid3(
 		Geometry::BoxR3(
@@ -50,15 +50,15 @@ TEST(DataExtendedTest, CanInitializeGrids) {
 		Math::CVecR3(0.5, 0.5, 0.5)
 	);
 
-	dataExtended.grids = grid3;
+	problemDescription.grids = grid3;
 
-	EXPECT_TRUE(dataExtended.boundary.empty());
-	EXPECT_EQ(dataExtended.grids, grid3);
-	EXPECT_TRUE(dataExtended.sources.empty());
+	EXPECT_TRUE(problemDescription.boundary.empty());
+	EXPECT_EQ(problemDescription.grids, grid3);
+	EXPECT_TRUE(problemDescription.sources.empty());
 }
 
-TEST(DataExtendedTest, CanInitializeSources) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanInitializeSources) {
+	ProblemDescription problemDescription = ProblemDescription();
 
 	Source::Group<> sources = Source::Group<>();
 
@@ -76,34 +76,34 @@ TEST(DataExtendedTest, CanInitializeSources) {
 
 	sources.addAndAssignId(std::make_unique<Source::PlaneWave>(planewave));
 
-	dataExtended.sources = sources;
+	problemDescription.sources = sources;
 
-	EXPECT_TRUE(dataExtended.boundary.empty());
-	EXPECT_EQ(dataExtended.grids, Geometry::Grid3());
+	EXPECT_TRUE(problemDescription.boundary.empty());
+	EXPECT_EQ(problemDescription.grids, Geometry::Grid3());
 
-	EXPECT_EQ(dataExtended.sources.size(), 1);
+	EXPECT_EQ(problemDescription.sources.size(), 1);
 
-	auto sourceInGroup = dataExtended.sources.getId(Source::Id(1))->castTo<Source::PlaneWave>();
+	auto sourceInGroup = problemDescription.sources.getId(Source::Id(1))->castTo<Source::PlaneWave>();
 	EXPECT_EQ(sourceInGroup->getDirection(), planewave.getDirection());
 	EXPECT_EQ(sourceInGroup->getPolarization(), planewave.getPolarization());
 	
 	EXPECT_EQ(*sourceInGroup->getMagnitude(), *planewave.getMagnitude());
 }
 
-TEST(DataExtendedTest, CanInitializeAnalysis) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanInitializeAnalysis) {
+	ProblemDescription problemDescription = ProblemDescription();
 
 	nlohmann::json analysis = R"({"solver": "ugrfdtd", "someOtherOption": true})"_json;
 
-	dataExtended.analysis = analysis;
+	problemDescription.analysis = analysis;
 
-	EXPECT_EQ(analysis["solver"], dataExtended.analysis["solver"]);
-	EXPECT_EQ(std::string("ugrfdtd"), dataExtended.analysis["solver"].get<std::string>());
-	EXPECT_TRUE(dataExtended.analysis["someOtherOption"].get<bool>());
+	EXPECT_EQ(analysis["solver"], problemDescription.analysis["solver"]);
+	EXPECT_EQ(std::string("ugrfdtd"), problemDescription.analysis["solver"].get<std::string>());
+	EXPECT_TRUE(problemDescription.analysis["someOtherOption"].get<bool>());
 }
 
-TEST(DataExtendedTest, CanInitializeModel) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanInitializeModel) {
+	ProblemDescription problemDescription = ProblemDescription();
 
 	Geometry::CoordR3Group coordinatesGroup = Geometry::CoordR3Group();
 	coordinatesGroup.addAndAssignId(
@@ -141,20 +141,20 @@ TEST(DataExtendedTest, CanInitializeModel) {
 		physicalModelsGroup
 	);
 
-	dataExtended.model = model;
+	problemDescription.model = model;
 
-	EXPECT_FALSE(dataExtended.model.physicalModels.empty());
-	EXPECT_EQ("Material PEC", dataExtended.model.physicalModels.get()[0]->getName());
+	EXPECT_FALSE(problemDescription.model.physicalModels.empty());
+	EXPECT_EQ("Material PEC", problemDescription.model.physicalModels.get()[0]->getName());
 
-	EXPECT_FALSE(dataExtended.model.unstructuredMesh.coords().empty());
+	EXPECT_FALSE(problemDescription.model.unstructuredMesh.coords().empty());
 	EXPECT_EQ(
 		Math::CVecR3(1.0, 2.0, 3.0),
-		(dataExtended.model.unstructuredMesh.coords().get()[1])->pos()
+		(problemDescription.model.unstructuredMesh.coords().get()[1])->pos()
 	);
 }
 
-TEST(DataExtendedTest, CanInitializeOutputRequests) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanInitializeOutputRequests) {
+	ProblemDescription problemDescription = ProblemDescription();
 
 	OutputRequest::OutputRequest::Target target = OutputRequest::OutputRequest::Target();	
 	const Geometry::CoordR3* coords[1] = {new Geometry::CoordR3(Geometry::CoordId(), Math::CVecR3(1.0, 2.0, 3.0))};
@@ -174,23 +174,23 @@ TEST(DataExtendedTest, CanInitializeOutputRequests) {
 		)
 	);
 
-	dataExtended.outputRequests = probes;
+	problemDescription.outputRequests = probes;
 
-	EXPECT_EQ(1, dataExtended.outputRequests.size());
+	EXPECT_EQ(1, problemDescription.outputRequests.size());
 	EXPECT_EQ(
 		"My electric field point probe",
-		dataExtended.outputRequests.get()[0]->getName()
+		problemDescription.outputRequests.get()[0]->getName()
 	);
 	EXPECT_EQ(
 		OutputRequest::OutputRequest::Type::electric,
-		dataExtended.outputRequests.get()[0]->getType()
+		problemDescription.outputRequests.get()[0]->getType()
 	);
 	EXPECT_EQ(
 		1,
-		(dataExtended.outputRequests.get()[0]->getTarget()).size()
+		(problemDescription.outputRequests.get()[0]->getTarget()).size()
 	);
 
-	auto recoveredNode = dataExtended.outputRequests.get()[0]->getTarget().at(0)->castTo<Geometry::NodR>();
+	auto recoveredNode = problemDescription.outputRequests.get()[0]->getTarget().at(0)->castTo<Geometry::NodR>();
 
 	EXPECT_EQ(
 		Math::CVecR3(1.0, 2.0, 3.0),
@@ -198,8 +198,8 @@ TEST(DataExtendedTest, CanInitializeOutputRequests) {
 	);
 }
 
-TEST(DataExtendedTest, CanCopyConstructor) {
-	DataExtended dataExtended = DataExtended();
+TEST(ProblemDescriptionTest, CanCopyConstructor) {
+	ProblemDescription problemDescription = ProblemDescription();
 
 	// Create mesh
 	Geometry::CoordR3Group coordinatesGroup = Geometry::CoordR3Group();
@@ -285,15 +285,15 @@ TEST(DataExtendedTest, CanCopyConstructor) {
 		physicalModelsGroup
 	);
 
-	// Assign to DataExtended
-	dataExtended.sources = sources;
-	dataExtended.outputRequests = probes;
-	dataExtended.model = model;
+	// Assign to ProblemDescription
+	problemDescription.sources = sources;
+	problemDescription.outputRequests = probes;
+	problemDescription.model = model;
 
 	// Call copy constructor and check
-	DataExtended copy(dataExtended);
+	ProblemDescription copy(problemDescription);
 
-	auto originalCoordinatePointer = dataExtended.outputRequests.get().front()->getTarget().front()->castTo<Geometry::NodR>()->getV(0);
+	auto originalCoordinatePointer = problemDescription.outputRequests.get().front()->getTarget().front()->castTo<Geometry::NodR>()->getV(0);
 	auto newCoordinatePointer = copy.outputRequests.get().front()->getTarget().front()->castTo<Geometry::NodR>()->getV(0);
 
 	EXPECT_NE(originalCoordinatePointer, newCoordinatePointer);

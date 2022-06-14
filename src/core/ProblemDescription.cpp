@@ -1,8 +1,8 @@
-#include "DataExtended.h"
+#include "ProblemDescription.h"
 
 namespace SEMBA {
 
-DataExtended::DataExtended(const DataExtended& rhs) {
+ProblemDescription::ProblemDescription(const ProblemDescription& rhs) {
     boundary = rhs.boundary;
     grids = rhs.grids;
     analysis = rhs.analysis;
@@ -24,7 +24,7 @@ DataExtended::DataExtended(const DataExtended& rhs) {
     }
 }
 
-DataExtended& DataExtended::operator=(const DataExtended& rhs) {
+ProblemDescription& ProblemDescription::operator=(const ProblemDescription& rhs) {
     boundary = rhs.boundary;
     grids = rhs.grids;
     analysis = rhs.analysis;

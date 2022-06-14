@@ -38,7 +38,7 @@ namespace SEMBA {
 namespace Parsers {
 namespace JSON {
 
-DataExtended Parser::readExtended() const {
+ProblemDescription Parser::readExtended() const {
      std::ifstream stream(this->filename);
      if (!stream.is_open()) {
          throw std::logic_error("Can not open file: " + this->filename);
@@ -57,7 +57,7 @@ DataExtended Parser::readExtended() const {
          throw std::logic_error("File version " + version + " is not supported for extended version.");
      }
 
-    DataExtended res;    
+    ProblemDescription res;    
 	res.analysis = readSolverOptions(j, "analysis");
 	res.grids = this->readGrids(j);
 
