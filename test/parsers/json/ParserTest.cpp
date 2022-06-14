@@ -151,17 +151,20 @@ TEST_F(ParserJSONParserTest, Bowtie)
     ASSERT_NO_THROW(data = Parser(getFilename("bowtie")).read());
 
     ASSERT_TRUE(data.mesh != nullptr);
-    Geometric unstrMesh = dynamic_cast<Geometric&>(*data.mesh);
-    EXPECT_FALSE(unstrMesh.grid().hasZeroSize());
+    Unstructured unstrMesh = dynamic_cast<Unstructured&>(*data.mesh);
+
+    EXPECT_EQ(422, unstrMesh.coords().size());
+    EXPECT_EQ(836, unstrMesh.elems().size());
 }
 
 TEST_F(ParserJSONParserTest, B2)
 {
-    Data data;
-    ASSERT_NO_THROW(data = Parser(getFilename("b2")).read());
+	Data data;
+	ASSERT_NO_THROW(data = Parser(getFilename("b2")).read());
 
-    ASSERT_TRUE(data.mesh != nullptr);
-    Geometric unstrMesh = dynamic_cast<Geometric&>(*data.mesh);
-    EXPECT_FALSE(unstrMesh.grid().hasZeroSize());
-    EXPECT_EQ(652, unstrMesh.elems().sizeOf<Geometry::Tri3>());
+	ASSERT_TRUE(data.mesh != nullptr);
+	Unstructured unstrMesh = dynamic_cast<Unstructured&>(*data.mesh);
+
+	EXPECT_EQ(361, unstrMesh.coords().size());
+	EXPECT_EQ(652, unstrMesh.elems().sizeOf<Geometry::Tri3>());
 }
