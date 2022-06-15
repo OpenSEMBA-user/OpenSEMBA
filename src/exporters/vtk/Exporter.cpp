@@ -6,7 +6,7 @@
 #include "geometry/element/Triangle.h"
 #include "geometry/element/Quadrilateral.h"
 #include "geometry/element/Tetrahedron.h"
-#include "group/GroupViewTools.h"
+#include "class/GroupViewTools.h"
 
 namespace {
 #ifdef _WIN32
@@ -96,8 +96,7 @@ void Exporter::writeMesh_(const Data& smb)
     // Writes EM Sources.
     for (const auto& source : srcs) {
         writeFile_(
-            //std::vector<const Geometry::ElemR*>(),
-            Group::View::castToReal(source->getTarget()),
+            Class::Group::View::castToReal(source->getTarget()),
             makeValid_(preName + "EMSource_" + source->getName()),
             outFile,
             part
@@ -107,8 +106,7 @@ void Exporter::writeMesh_(const Data& smb)
     // Writes output requests.
     for (const auto& oRq : oRqs) {
         writeFile_(
-            //std::vector<const Geometry::ElemR*>(),
-            Group::View::castToReal(oRq->getTarget()),
+            Class::Group::View::castToReal(oRq->getTarget()),
             makeValid_(preName + "OutRq_" + oRq->getName()),
             outFile,
             part

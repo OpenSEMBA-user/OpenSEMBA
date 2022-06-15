@@ -5,6 +5,8 @@
 #include <iterator>
 
 namespace SEMBA {
+namespace Class {
+namespace Group {
 
 template<typename T>
 class GroupIdentifiableUnique {
@@ -240,5 +242,6 @@ bool GroupIdentifiableUnique<T>::emptyOf() const
     return this->sizeOf<T2>() == 0;
 }
 
-
-}
+} // Namespace Group
+} // Namespace Class
+} // Namespace SEMBA

@@ -5,6 +5,7 @@
 #include <functional>
 
 namespace SEMBA {
+namespace Class {
 namespace Group {
 namespace View {
 
@@ -48,4 +49,5 @@ namespace View {
 
 } // Namespace View
 } // Namespace Group
+} // Namespace Class
 } // Namespace SEMBA

@@ -1,13 +1,13 @@
 #pragma once
 
 #include "PhysicalModel.h"
-#include "group/GroupIdentifiableUnique.h"
+#include "class/GroupIdentifiableUnique.h"
 
 namespace SEMBA {
 namespace PhysicalModel {
 
 template<typename P = PhysicalModel>
-class Group : public GroupIdentifiableUnique<P> {
+class Group : public Class::Group::GroupIdentifiableUnique<P> {
 };
 
 } /* namespace PhysicalModel */
