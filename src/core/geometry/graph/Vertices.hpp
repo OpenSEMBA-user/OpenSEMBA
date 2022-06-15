@@ -1,5 +1,3 @@
-
-
 #include "Vertices.h"
 
 namespace SEMBA {
@@ -7,35 +5,21 @@ namespace Geometry {
 namespace Graph {
 
 template<class ELEM, class BOUND>
-Vertices<ELEM,BOUND>::Vertices() {
-
-}
-
-template<class ELEM, class BOUND>
-Vertices<ELEM,BOUND>::Vertices(const Vertices& rhs)
-:   Graph<ELEM,BOUND>(rhs) {
-
-}
-
-template<class ELEM, class BOUND>
-Vertices<ELEM,BOUND>::~Vertices() {
-
-}
-
-template<class ELEM, class BOUND>
-Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::init(
-        const Group::Group<const ELEM>& elems) {
+Vertices<ELEM,BOUND>::Vertices(const std::vector<const ELEM*>& elems) {
     const Bound* coord;
     GraphElem*   elemPtr;
     GraphBound*  boundPtr;
     std::map<CoordId, GraphBound*> map;
+
     this->elems_.clear();
     this->bounds_.clear();
+
     for (std::size_t s = 0; s < elems.size(); s++) {
-        elemPtr = new GraphElem(elems(s), elems(s)->numberOfCoordinates());
+        elemPtr = new GraphElem(elems[s], elems[s]->numberOfCoordinates());
         this->elems_.push_back(elemPtr);
-        for (std::size_t v = 0; v < elems(s)->numberOfCoordinates(); v++) {
-            coord = elems(s)->getV(v);
+
+        for (std::size_t v = 0; v < elems[s]->numberOfCoordinates(); v++) {
+            coord = elems[s]->getV(v);
             if (map.count(coord->getId()) == 0) {
                 boundPtr = new GraphBound(coord);
                 this->bounds_.push_back(boundPtr);
@@ -53,7 +37,6 @@ Vertices<ELEM,BOUND>& Vertices<ELEM,BOUND>::init(
     for (std::size_t i = 0; i < this->bounds_.size(); i++) {
         this->bounds_[i]->constructNeighbors();
     }
-    return *this;
 }
 
 template<class ELEM, class BOUND>

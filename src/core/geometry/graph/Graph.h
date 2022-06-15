@@ -1,10 +1,7 @@
-
-
 #pragma once
 
 #include <vector>
 
-#include "group/Group.h"
 
 #include "Element.h"
 
@@ -20,11 +17,9 @@ public:
     typedef Element<Elem,Bound> GraphElem;
     typedef Element<Bound,Elem> GraphBound;
 
-    Graph();
+    Graph() = default;
     Graph(const Graph&);
     virtual ~Graph();
-
-    virtual Graph& init(const Group::Group<const Elem>& elems) = 0;
 
     std::size_t numElems () const { return elems_.size();  }
     std::size_t numBounds() const { return bounds_.size(); }
