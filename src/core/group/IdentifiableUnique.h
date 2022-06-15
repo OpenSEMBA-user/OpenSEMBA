@@ -136,7 +136,7 @@ IdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
         return it.first;
     }
     else {
-        throw Group::Error::Id::Duplicated<Id>(elem->getId());
+        throw std::logic_error("Group: Duplicated Id " + elem->getId().toStr());
     }
 
 }
@@ -150,7 +150,7 @@ IdentifiableUnique<T>::add(std::unique_ptr<T>&& elem)
         return it.first;
     }
     else {
-        throw Group::Error::Id::Duplicated<Id>(elem->getId());
+        throw std::logic_error("Group: Duplicated Id " + elem->getId().toStr());
     }
 }
 
