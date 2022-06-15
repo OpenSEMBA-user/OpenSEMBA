@@ -8,7 +8,7 @@
 #endif
 
 #include "Coordinate.h"
-#include "group/IdentifiableUnique.h"
+#include "group/GroupIdentifiableUnique.h"
 
 namespace SEMBA {
 namespace Geometry {
@@ -23,7 +23,7 @@ struct CoordComparator {
 };
 
 template<typename C = Coord>
-class Group final : public IdentifiableUnique<C> {
+class Group final : public GroupIdentifiableUnique<C> {
 public:
     Group() = default;
     
@@ -31,7 +31,7 @@ public:
     Group(const std::vector<Math::CVecI3>&);
     
     template<typename VEC>
-    typename IdentifiableUnique<C>::iterator  addPos(VEC);
+    typename GroupIdentifiableUnique<C>::iterator  addPos(VEC);
 
     void applyScalingFactor(const Math::Real factor);
 

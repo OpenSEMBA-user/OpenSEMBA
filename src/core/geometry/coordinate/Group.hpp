@@ -17,7 +17,7 @@ Group<C>::Group(const std::vector<Math::CVecI3>& pos)
 }
 
 template<typename C> template<typename VEC>
-typename IdentifiableUnique<C>::iterator 
+typename GroupIdentifiableUnique<C>::iterator 
 Group<C>::addPos(VEC newPosition)
 {
     CoordId newId;

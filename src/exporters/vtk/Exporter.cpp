@@ -6,7 +6,7 @@
 #include "geometry/element/Triangle.h"
 #include "geometry/element/Quadrilateral.h"
 #include "geometry/element/Tetrahedron.h"
-#include "group/ViewTools.h"
+#include "group/GroupViewTools.h"
 
 namespace {
 #ifdef _WIN32

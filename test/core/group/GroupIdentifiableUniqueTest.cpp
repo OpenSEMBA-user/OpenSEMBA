@@ -1,19 +1,19 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
-#include "group/IdentifiableUnique.h"
+#include "group/GroupIdentifiableUnique.h"
 #include "geometry/layer/layer.h"
 
 using namespace SEMBA;
 using namespace Geometry;
 
-class IdentifiableUniqueTest : public ::testing::Test {
+class GroupIdentifiableUniqueTest : public ::testing::Test {
 public:
     
 protected:
     auto buildGroupOfThreeLayers() const 
     {
-        IdentifiableUnique<Layer::Layer> res;
+        GroupIdentifiableUnique<Layer::Layer> res;
         res.add(std::make_unique<Layer::Layer>(LayerId(1), "Patata"));
         res.add(std::make_unique<Layer::Layer>(LayerId(2), "Cebolla"));
         res.add(std::make_unique<Layer::Layer>(LayerId(3), "Huevos"));
@@ -21,7 +21,7 @@ protected:
     }
 };
 
-TEST_F(IdentifiableUniqueTest, CopyAndMoveCtor) 
+TEST_F(GroupIdentifiableUniqueTest, CopyAndMoveCtor) 
 {
     auto orig = buildGroupOfThreeLayers();
     std::size_t origSize = orig.size();
@@ -35,7 +35,7 @@ TEST_F(IdentifiableUniqueTest, CopyAndMoveCtor)
     EXPECT_EQ(0, orig.size());
 }
 
-TEST_F(IdentifiableUniqueTest, CopyAndMoveAssignment) 
+TEST_F(GroupIdentifiableUniqueTest, CopyAndMoveAssignment) 
 {
     auto orig = buildGroupOfThreeLayers();
     std::size_t origSize = orig.size();
@@ -49,7 +49,7 @@ TEST_F(IdentifiableUniqueTest, CopyAndMoveAssignment)
     EXPECT_EQ(0, orig.size());
 }
 
-TEST_F(IdentifiableUniqueTest, DeepCopyAndMoveAdd) 
+TEST_F(GroupIdentifiableUniqueTest, DeepCopyAndMoveAdd) 
 {
     auto orig = buildGroupOfThreeLayers();
     orig.add(std::make_unique<Layer::Layer>(LayerId(5), "Melon"));
@@ -58,7 +58,7 @@ TEST_F(IdentifiableUniqueTest, DeepCopyAndMoveAdd)
     EXPECT_EQ(5, orig.size());
 }
 
-TEST_F(IdentifiableUniqueTest, AddAndAssignId) 
+TEST_F(GroupIdentifiableUniqueTest, AddAndAssignId) 
 {
     auto orig(buildGroupOfThreeLayers());
     auto melon = std::make_unique<Layer::Layer>("Melon");
@@ -66,7 +66,7 @@ TEST_F(IdentifiableUniqueTest, AddAndAssignId)
     EXPECT_EQ(LayerId(4), melonInGroup->getId());
 }
 
-TEST_F(IdentifiableUniqueTest, AddAndAssignIds) 
+TEST_F(GroupIdentifiableUniqueTest, AddAndAssignIds) 
 {
 	auto orig(buildGroupOfThreeLayers());
 
@@ -80,7 +80,7 @@ TEST_F(IdentifiableUniqueTest, AddAndAssignIds)
 
 	EXPECT_EQ(LayerId(5), nisporaInGroup->getId());
 
-	IdentifiableUnique<Layer::Layer> another;
+	GroupIdentifiableUnique<Layer::Layer> another;
 	auto naranjaInGroup = another.addAndAssignId(std::move(
 		std::make_unique<Layer::Layer>("Naranja")
 	))->get();
@@ -93,7 +93,7 @@ TEST_F(IdentifiableUniqueTest, AddAndAssignIds)
 	EXPECT_EQ("Níspora", another.getId(LayerId(6))->getName());
 }
 
-TEST_F(IdentifiableUniqueTest, DuplicatedIdShouldTriggerLogicException)
+TEST_F(GroupIdentifiableUniqueTest, DuplicatedIdShouldTriggerLogicException)
 {
     auto orig(buildGroupOfThreeLayers());
 

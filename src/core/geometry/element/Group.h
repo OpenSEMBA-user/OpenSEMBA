@@ -6,14 +6,14 @@
 #include "Surface.h"
 #include "Volume.h"
 
-#include "group/IdentifiableUnique.h"
+#include "group/GroupIdentifiableUnique.h"
 
 namespace SEMBA {
 namespace Geometry {
 namespace Element {
 
 template<typename E = Elem>
-class Group final : public IdentifiableUnique<E> {
+class Group final : public GroupIdentifiableUnique<E> {
 public:
     std::vector<const E*> getCoordId(const CoordId&) const;
 	std::vector<const E*> getMatId(const MatId&) const;
