@@ -41,14 +41,13 @@ public:
     ProblemDescription readExtended() const;
     
 private:
-    
     json readSolverOptions(const json&, const std::string& key = "solverOptions") const;
     PMGroup readPhysicalModels(const json&) const;
     PMGroup readExtendedPhysicalModels(const json& j) const;
-    std::unique_ptr<Geometry::Mesh::Geometric> readGeometricMesh(const PhysicalModel::Group<>&, const Geometry::Grid3&, const json&) const;
-	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Geometric& mesh,  const json&) const;
-    Source::Group<>* readSources(Geometry::Mesh::Geometric& mesh, const json&) const;
-    OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Geometric& mesh, const json&, const std::string& key = "outputRequests") const;
+    std::unique_ptr<Geometry::Mesh::Unstructured> readUnstructuredMesh(const PhysicalModel::Group<>&, const json&) const;
+	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Unstructured& mesh,  const json&) const;
+    Source::Group<>* readSources(Geometry::Mesh::Unstructured& mesh, const json&) const;
+    OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Unstructured& mesh, const json&, const std::string& key = "outputRequests") const;
 
     std::unique_ptr<PhysicalModel::Surface::Multilayer> readMultilayerSurface(const json& layers) const;
 
@@ -69,16 +68,16 @@ private:
     std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> readBoundary(const json& j) const;
     PhysicalModel::Bound::Type strToBoundType(const std::string& boundType) const;
 
-    static std::unique_ptr<Source::PlaneWave> readPlanewave(Geometry::Mesh::Geometric& mesh, const json&);
-    static std::unique_ptr<Source::Port::Waveguide> readPortWaveguide(Geometry::Mesh::Geometric& mesh, const json&);
-    static std::unique_ptr<Source::Port::TEM> readPortTEM(Geometry::Mesh::Geometric& mesh, const json&);
-    static std::unique_ptr<Source::Generator> readGenerator(Geometry::Mesh::Geometric& mesh, const json&);
-    static std::unique_ptr<Source::OnLine> readSourceOnLine(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<Source::PlaneWave> readPlanewave(Geometry::Mesh::Unstructured& mesh, const json&);
+    static std::unique_ptr<Source::Port::Waveguide> readPortWaveguide(Geometry::Mesh::Unstructured& mesh, const json&);
+    static std::unique_ptr<Source::Port::TEM> readPortTEM(Geometry::Mesh::Unstructured& mesh, const json&);
+    static std::unique_ptr<Source::Generator> readGenerator(Geometry::Mesh::Unstructured& mesh, const json&);
+    static std::unique_ptr<Source::OnLine> readSourceOnLine(Geometry::Mesh::Unstructured& mesh, const json&);
     static std::unique_ptr<Source::Magnitude::Magnitude> readMagnitude(const json&);
 
     std::unique_ptr<PhysicalModel::PhysicalModel> readPhysicalModel(const json& material) const;
 
-    static std::unique_ptr<OutputRequest::OutputRequest> readOutputRequest(Geometry::Mesh::Geometric& mesh, const json&);
+    static std::unique_ptr<OutputRequest::OutputRequest> readOutputRequest(Geometry::Mesh::Unstructured& mesh, const json&);
 
     static OutputRequest::Domain readDomain(const json&);
     static Math::Axis::Local strToLocalAxes(const std::string& str);
@@ -87,11 +86,11 @@ private:
     static bool checkExtendedVersionCompatibility(const std::string& version);
 
     static const Geometry::ElemR* boxToElemGroup(
-            Geometry::Mesh::Geometric& mesh,
+            Geometry::Mesh::Unstructured& mesh,
             const std::string& line);
 
     static std::vector<const Geometry::Elem*> readCoordIdAsNodes(
-        Geometry::Mesh::Geometric& mesh, 
+        Geometry::Mesh::Unstructured& mesh, 
         const json&
     );
 
@@ -114,9 +113,9 @@ private:
 
     static std::pair<Math::CVecR3, Math::CVecR3> strToBox(const std::string& str);
 
-    static Geometry::ElemView readElemIdsAsGroupOf(Geometry::Mesh::Geometric& mesh, const Parser::json& j);
+    static Geometry::ElemView readElemIdsAsGroupOf(Geometry::Mesh::Unstructured& mesh, const Parser::json& j);
 
-    static Geometry::ElemView readAndCreateCoordIdAsNodes(Geometry::Mesh::Geometric&, const Parser::json&);
+    static Geometry::ElemView readAndCreateCoordIdAsNodes(Geometry::Mesh::Unstructured&, const Parser::json&);
 };
 
 template<typename T>

@@ -62,8 +62,7 @@ ProblemDescription Parser::readExtended() const {
 	res.grids = this->readGrids(j);
 
 	auto materialsGroup = this->readExtendedPhysicalModels(j);
-    // TODO: Leer directamente la no estructurada
-	auto mesh = this->readGeometricMesh(materialsGroup, res.grids, j.at("model"));
+	auto mesh = this->readUnstructuredMesh(materialsGroup, j.at("model"));
 
 	res.sources = *this->readSources(*mesh, j);
 
@@ -72,9 +71,6 @@ ProblemDescription Parser::readExtended() const {
 	res.boundary = this->readBoundary(j);
 
     res.model = Model::Model(*mesh, materialsGroup);
-
-    // TODO: - Wanted -> `boundaries` should go inside the `model`
-    // this->readBoundary(model, *mesh, j);
 
     return res;
 }
@@ -108,13 +104,13 @@ Data Parser::read() const {
     res.filename = this->filename;
     res.solver = readSolverOptions(j);
     res.physicalModels = readPhysicalModels(j);
-    res.mesh = readGeometricMesh(res.physicalModels, this->readGrids(j), j);
-        
+    res.mesh = readUnstructuredMesh(res.physicalModels, j);
+
     if (res.mesh != nullptr) {
-        Mesh::Geometric* geometricMesh = res.mesh->castTo<Mesh::Geometric>();
-		readConnectorOnPoint(res.physicalModels, *geometricMesh, j);
-        res.sources = *readSources(*geometricMesh, j);
-        res.outputRequests = *readOutputRequests(*geometricMesh, j);
+        Mesh::Unstructured* mesh = res.mesh->castTo<Mesh::Unstructured>();
+		readConnectorOnPoint(res.physicalModels, *mesh, j);
+        res.sources = *readSources(*mesh, j);
+        res.outputRequests = *readOutputRequests(*mesh, j);
     } else {
         res.sources = Source::Group<>();
         res.outputRequests = OutputRequest::Group<>();
@@ -181,21 +177,18 @@ Parser::json Parser::readSolverOptions(const json& j, const std::string& key) co
     return j.at(key).get<json>();
 }
 
-std::unique_ptr<Mesh::Geometric> Parser::readGeometricMesh(const PMGroup& physicalModels, const Geometry::Grid3& grid, const json& j) const
+std::unique_ptr<Mesh::Unstructured> Parser::readUnstructuredMesh(const PMGroup& physicalModels, const json& j) const
 {
     Layer::Group<> layers = readLayers(j);
 	CoordR3Group coords = readCoordinates(j);
-	return std::make_unique<Mesh::Geometric>(
-		Mesh::Geometric(
-            grid,
-			coords,
-			readElements(physicalModels, layers, coords, j),
-			layers
-		)
+	return std::make_unique<Mesh::Unstructured>(
+		coords,
+		readElements(physicalModels, layers, coords, j),
+		layers
 	);
 }
 
-Source::Group<>* Parser::readSources(Mesh::Geometric& mesh, const json& j) const 
+Source::Group<>* Parser::readSources(Mesh::Unstructured& mesh, const json& j) const 
 {
     auto sources = j.find("sources");
     
@@ -380,7 +373,7 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
     }
 }
 
-OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Geometric& mesh, const json& j, const std::string& key) const 
+OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Unstructured& mesh, const json& j, const std::string& key) const 
 {
     OutputRequest::Group<>* res = new OutputRequest::Group<>();
     
@@ -396,7 +389,7 @@ OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Geometric& mesh, const 
     return res;
 }
 
-void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Geometric& mesh, const json& j) const 
+void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Unstructured& mesh, const json& j) const 
 {
     auto conns = j.find("connectorOnPoint");
     if (conns == j.end()) {
@@ -412,7 +405,7 @@ void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Geometric& mesh, const jso
 	}
 }
 
-const ElemR* Parser::boxToElemGroup(Mesh::Geometric& mesh, const std::string& line)
+const ElemR* Parser::boxToElemGroup(Mesh::Unstructured& mesh, const std::string& line)
 {
     BoxR3 box = strToBox(line);
     std::unique_ptr<ElemR> elem;
@@ -431,7 +424,7 @@ const ElemR* Parser::boxToElemGroup(Mesh::Geometric& mesh, const std::string& li
     return mesh.elems().addAndAssignId(std::move(elem))->get();
 }
 
-std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Geometric& mesh, const json& j) {
+std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Unstructured& mesh, const json& j) {
 
     std::string name = j.at("name").get<std::string>();
     OutputRequest::OutputRequest::Type type = strToOutputType(j.at("type").get<std::string>());
@@ -539,7 +532,7 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Ge
     throw std::logic_error("Unrecognized GiD Output request type: " + gidOutputType);
 }
 
-ElemView Parser::readAndCreateCoordIdAsNodes(Geometry::Mesh::Geometric& mesh, const Parser::json& j) {
+ElemView Parser::readAndCreateCoordIdAsNodes(Geometry::Mesh::Unstructured& mesh, const Parser::json& j) {
 	ElemView res;
 
 	for (auto it = j.begin(); it != j.end(); ++it) {
@@ -826,7 +819,7 @@ Grid3 Parser::buildGridFromFile(const FileSystem::Project& jsonFile) const
     }
 }
 
-std::unique_ptr<Source::PlaneWave> Parser::readPlanewave(Mesh::Geometric& mesh, const json& j) {
+std::unique_ptr<Source::PlaneWave> Parser::readPlanewave(Mesh::Unstructured& mesh, const json& j) {
     
     auto magnitude = readMagnitude(j.at("magnitude").get<json>());
     Geometry::ElemView elems = { boxToElemGroup(mesh, j.at("layerBox").get<std::string>()) };
@@ -875,7 +868,7 @@ std::unique_ptr<Source::PlaneWave> Parser::readPlanewave(Mesh::Geometric& mesh, 
 }
 
 std::unique_ptr<Source::Port::Waveguide> Parser::readPortWaveguide(
-    Mesh::Geometric& mesh, 
+    Mesh::Unstructured& mesh, 
     const json& j
 ) {
 	std::string shape = j.at("shape").get<std::string>();
@@ -898,7 +891,7 @@ std::unique_ptr<Source::Port::Waveguide> Parser::readPortWaveguide(
 }
 
 std::unique_ptr<Source::Port::TEM> Parser::readPortTEM(
-	Mesh::Geometric& mesh,
+	Mesh::Unstructured& mesh,
 	const json& j
 ) {
 	return std::make_unique<Source::Port::TEMCoaxial>(
@@ -914,7 +907,7 @@ std::unique_ptr<Source::Port::TEM> Parser::readPortTEM(
 }
 
 std::unique_ptr<Source::Generator> Parser::readGenerator(
-    Mesh::Geometric& mesh, 
+    Mesh::Unstructured& mesh, 
     const json& j
 ) {
 	return std::make_unique<Source::Generator>(
@@ -929,7 +922,7 @@ std::unique_ptr<Source::Generator> Parser::readGenerator(
 }
 
 std::unique_ptr<Source::OnLine> Parser::readSourceOnLine(
-	Mesh::Geometric& mesh, 
+	Mesh::Unstructured& mesh, 
     const json& j) {
 	return std::make_unique<Source::OnLine>(
 		Source::OnLine(
@@ -1252,7 +1245,7 @@ Source::Port::Waveguide::ExcitationMode Parser::strToWaveguideMode(
 }
 
 ElemView Parser::readCoordIdAsNodes(
-    Mesh::Geometric& mesh, 
+    Mesh::Unstructured& mesh, 
     const json& j
 ) {
     ElemView res;
@@ -1268,7 +1261,7 @@ ElemView Parser::readCoordIdAsNodes(
 }
 
 Geometry::ElemView Parser::readElemIdsAsGroupOf(
-    Geometry::Mesh::Geometric& mesh,
+    Geometry::Mesh::Unstructured& mesh,
     const Parser::json& j
 ) {
     Geometry::ElemView geometricElements;
