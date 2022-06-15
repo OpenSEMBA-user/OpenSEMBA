@@ -16,9 +16,8 @@ class Connectivities {
 public:
     typedef Element<ElemR,CoordR3> GraphElem;
 
-    Connectivities();
-    Connectivities(const Group::Group<const ElemR>& eG);
-    virtual ~Connectivities();
+    Connectivities(const std::vector<const ElemR*>& eG);
+    virtual ~Connectivities() = default;
 
     std::size_t size() const;
 

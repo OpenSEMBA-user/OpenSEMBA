@@ -1,5 +1,3 @@
-
-
 #include "Element.h"
 
 #include <set>

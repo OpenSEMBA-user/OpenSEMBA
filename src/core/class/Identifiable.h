@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Class.h"
-#include "Shareable.h"
 
 namespace SEMBA {
 namespace Class {
 
 template<class Id>
-class Identifiable : public virtual Class,
-                     public virtual Shareable {
+class Identifiable : public virtual Class {
 public:
     Identifiable() = default;
     Identifiable(const Id& id);

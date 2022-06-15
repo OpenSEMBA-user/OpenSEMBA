@@ -1,27 +1,13 @@
-
-
 #include "Connectivities.h"
-
-//#include <climits>
-//#include <exception>
-//#include <sstream>
-//#include <utility>
-//#include <vector>
 
 namespace SEMBA {
 namespace Geometry {
 namespace Graph {
 
-Connectivities::Connectivities() {
-
-}
-
-Connectivities::~Connectivities() {
-}
-
-Connectivities::Connectivities(const Group::Group<const ElemR>& eG) {
+Connectivities::Connectivities(const std::vector<const ElemR*>& eG)
+    : graph_(eG) 
+{
     // Generates graph.
-    graph_.init(eG);
     for (std::size_t i = 0; i < graph_.numElems(); i++) {
         GraphElem* graphElem = graph_.elem(i);
         ElemId id = graphElem->elem()->getId();

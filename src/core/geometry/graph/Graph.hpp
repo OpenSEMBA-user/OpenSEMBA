@@ -1,5 +1,3 @@
-
-
 #include <geometry/graph/Graph.h>
 #include <map>
 #include <queue>
@@ -7,11 +5,6 @@
 namespace SEMBA {
 namespace Geometry {
 namespace Graph {
-
-template<class ELEM, class BOUND>
-Graph<ELEM,BOUND>::Graph() {
-
-}
 
 template<class ELEM, class BOUND>
 Graph<ELEM,BOUND>::Graph(const Graph& rhs) {

@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "Graph.h"
@@ -18,12 +16,9 @@ public:
     typedef Element<Elem,Bound> GraphElem;
     typedef Element<Bound,Elem> GraphBound;
 
-    Vertices();
-    Vertices(const Vertices&);
-    Vertices(const Group::Group<const Elem>& elems);
-    virtual ~Vertices();
-
-    Vertices<Elem,Bound>& init(const Group::Group<const Elem>& elems);
+    Vertices(const std::vector<const Elem*>& elems);
+    Vertices(const Vertices&) = default;
+    virtual ~Vertices() = default;
 
     Vertices& operator=(const Vertices&);
 
