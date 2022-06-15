@@ -7,7 +7,7 @@
 #include "geometry/mesh/Structured.h"
 #include "geometry/mesh/Unstructured.h"
 #include "geometry/mesh/Geometric.h"
-#include "group/ViewTools.h"
+#include "group/GroupViewTools.h"
 
 namespace SEMBA {
 namespace Exporters {
