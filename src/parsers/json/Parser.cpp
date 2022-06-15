@@ -103,6 +103,7 @@ Data Parser::read() const {
     Data res;
     res.filename = this->filename;
     res.solver = readSolverOptions(j);
+    res.grids = this->readGrids(j);
     res.physicalModels = readPhysicalModels(j);
     res.mesh = readUnstructuredMesh(res.physicalModels, j);
 

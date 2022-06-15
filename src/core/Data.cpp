@@ -8,6 +8,7 @@ Data::Data(const Data& rhs) {
     
     filename = rhs.filename;
     solver = rhs.solver;
+    grids = rhs.grids;
     
     physicalModels = rhs.physicalModels;
     
@@ -39,6 +40,7 @@ Data& Data::operator=(const Data& rhs) {
 
     filename = rhs.filename;
     solver = rhs.solver;
+    grids = rhs.grids;
         
     physicalModels = rhs.physicalModels;
     

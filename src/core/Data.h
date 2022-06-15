@@ -28,6 +28,7 @@ public:
     PMGroup physicalModels;
     SourceGroup        sources;
     OutputRequestGroup outputRequests;
+    Geometry::Grid3 grids;
 
     Data() = default;
     Data(const Data& rhs);
