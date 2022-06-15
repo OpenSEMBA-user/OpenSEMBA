@@ -4,8 +4,6 @@
 #include <set>
 #include <iterator>
 
-#include "Error.h"
-
 namespace SEMBA {
 
 template<typename T>
