@@ -28,7 +28,10 @@ TEST_F(ParserJSONParserTest, DMCWF)
 
 TEST_F(ParserJSONParserTest, Sphere) 
 {
-    ASSERT_NO_THROW(Parser(getFilename("sphere")).read());
+    Data data;
+    ASSERT_NO_THROW(data = Parser(getFilename("sphere")).read());
+
+    EXPECT_EQ(Math::CVecI3(20), data.grids.getNumCells());
 }
 
 TEST_F(ParserJSONParserTest, SphereExtended)
