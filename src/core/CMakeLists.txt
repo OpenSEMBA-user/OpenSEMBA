@@ -4,13 +4,11 @@ project(opensemba_core CXX)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-add_subdirectory(class/ class/)
-add_subdirectory(filesystem/ filesystem/)
-add_subdirectory(geometry/ geometry/)
-add_subdirectory(group/ group/)
-add_subdirectory(math/ math/)
 add_subdirectory(model/ model/)
+add_subdirectory(math/ math/)
+add_subdirectory(geometry/ geometry/)
 add_subdirectory(outputRequest/ outputRequest/)
+add_subdirectory(filesystem/ filesystem/)
 add_subdirectory(physicalModel/ physicalModel/)
 add_subdirectory(source/ source/)
 
