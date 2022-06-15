@@ -7,7 +7,7 @@
 #include "geometry/mesh/Structured.h"
 #include "geometry/mesh/Unstructured.h"
 #include "geometry/mesh/Geometric.h"
-#include "group/GroupViewTools.h"
+#include "class/GroupViewTools.h"
 
 namespace SEMBA {
 namespace Exporters {
@@ -84,7 +84,7 @@ void Exporter::writeAllElements_(
 		const ElemRView& elems,
         const std::string& name) {
     writeElements_(
-        Group::View::filterView(
+        Class::Group::View::filterView(
             elems,
             [](const Geometry::ElemR* elem) { return elem->is<Geometry::NodR>(); }
         ),
@@ -94,7 +94,7 @@ void Exporter::writeAllElements_(
     );
 
     writeElements_(
-        Group::View::filterView(
+        Class::Group::View::filterView(
             elems,
             [](const Geometry::ElemR* elem) { return elem->is<Geometry::LinR2>(); }
         ),
@@ -104,7 +104,7 @@ void Exporter::writeAllElements_(
     );
 
     writeElements_(
-        Group::View::filterView(
+        Class::Group::View::filterView(
             elems,
             [](const Geometry::ElemR* elem) { return elem->is<Geometry::Tri3>(); }
         ),
@@ -114,7 +114,7 @@ void Exporter::writeAllElements_(
     );
 
     writeElements_(
-        Group::View::filterView(
+        Class::Group::View::filterView(
             elems,
             [](const Geometry::ElemR* elem) { return elem->is<Geometry::QuaR4>(); }
         ),
@@ -124,7 +124,7 @@ void Exporter::writeAllElements_(
     );
 
     writeElements_(
-        Group::View::filterView(
+        Class::Group::View::filterView(
             elems,
             [](const Geometry::ElemR* elem) { return elem->is<Geometry::Tet4>(); }
         ),
@@ -134,7 +134,7 @@ void Exporter::writeAllElements_(
     );
     
     writeElements_(
-        Group::View::filterView(
+        Class::Group::View::filterView(
             elems,
             [](const Geometry::ElemR* elem) { return elem->is<Geometry::HexR8>(); }
         ),
@@ -187,8 +187,7 @@ void Exporter::writeMesh_(const Data& smb)
     // Writes EM Sources.
     for (const auto& src: srcs) {
         writeAllElements_(
-            //std::vector<const Geometry::ElemR*>(),
-            Group::View::castToReal(src->getTarget()),
+            Class::Group::View::castToReal(src->getTarget()),
             preName + "EMSource_" + src->getName()
         );
     }
@@ -196,7 +195,7 @@ void Exporter::writeMesh_(const Data& smb)
     // Writes output requests.
     for (const auto& oRq: oRqs) {
         writeAllElements_(
-            Group::View::castToReal(oRq->getTarget()),
+            Class::Group::View::castToReal(oRq->getTarget()),
             preName + "OutRq_" + oRq->getName()
         );
     }
