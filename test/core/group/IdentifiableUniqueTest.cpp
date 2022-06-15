@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #include "group/IdentifiableUnique.h"
 #include "geometry/layer/layer.h"
@@ -90,4 +91,15 @@ TEST_F(IdentifiableUniqueTest, AddAndAssignIds)
 
 	EXPECT_EQ(6, another.size());
 	EXPECT_EQ("Níspora", another.getId(LayerId(6))->getName());
+}
+
+TEST_F(IdentifiableUniqueTest, DuplicatedIdShouldTriggerLogicException)
+{
+    auto orig(buildGroupOfThreeLayers());
+
+    EXPECT_THAT(
+        [&]() {orig.add(std::make_unique<Layer::Layer>(LayerId(1), "Another Patata")); },
+        testing::ThrowsMessage<std::logic_error>(testing::HasSubstr("Group: Duplicated Id 1"))
+    );
+
 }
