@@ -1257,16 +1257,16 @@
       "domain": {
         "initialFrequency": 10000000.0,
         "finalFrequency": 100000000.0,
-        "frequencyStep": 750000.0,
+        "totalFrequency": 120,
         "logFrequencySweep": true
       },
-      "box": "{5.0 4.0 10.0 -7.0 -17.988343845952695 -10.0}",
+      "layerBox": "{5.0 4.0 10.0 -7.0 -17.988343845952695 -10.0}",
       "initialTheta": 0.0,
       "finalTheta": 360.0,
-      "stepTheta": 36,
+      "totalTheta": 10,
       "initialPhi": 0.0,
       "finalPhi": 90.0,
-      "stepPhi": 30
+      "totalPhi": 3
     }
   ],
   "boundary": {
