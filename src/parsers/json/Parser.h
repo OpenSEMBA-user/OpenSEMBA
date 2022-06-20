@@ -46,8 +46,8 @@ private:
     PMGroup readExtendedPhysicalModels(const json& j) const;
     std::unique_ptr<Geometry::Mesh::Unstructured> readUnstructuredMesh(const PhysicalModel::Group<>&, const json&) const;
 	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Unstructured& mesh,  const json&) const;
-    Source::Group<>* readSources(Geometry::Mesh::Unstructured& mesh, const json&) const;
-    OutputRequest::Group<>* readOutputRequests(Geometry::Mesh::Unstructured& mesh, const json&, const std::string& key = "outputRequests") const;
+    Source::Group<> readSources(Geometry::Mesh::Unstructured& mesh, const json&) const;
+    OutputRequest::Group<> readOutputRequests(Geometry::Mesh::Unstructured& mesh, const json&, const std::string& key = "outputRequests") const;
 
     std::unique_ptr<PhysicalModel::Surface::Multilayer> readMultilayerSurface(const json& layers) const;
 
@@ -89,7 +89,7 @@ private:
             Geometry::Mesh::Unstructured& mesh,
             const std::string& line);
 
-    static std::vector<const Geometry::Elem*> readCoordIdAsNodes(
+    static Geometry::ElemView readCoordIdAsNodes(
         Geometry::Mesh::Unstructured& mesh, 
         const json&
     );
