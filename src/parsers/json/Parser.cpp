@@ -90,20 +90,15 @@ ProblemDescription Parser::readExtended() const {
 	auto materialsGroup = this->readExtendedPhysicalModels(j);
 	auto mesh = this->readUnstructuredMesh(materialsGroup, j.at("model"));
 
-	res.sources = *this->readSources(*mesh, j);
-
-	res.outputRequests = *readOutputRequests(*mesh, j, "probes");
-
+	res.sources = this->readSources(*mesh, j);
+	res.outputRequests = readOutputRequests(*mesh, j, "probes");
 	res.boundary = this->readBoundary(j);
-
     res.model = Model::Model(*mesh, materialsGroup);
 
     return res;
 }
 
-Parser::Parser(const std::string& fn) :
-    SEMBA::Parsers::Parser(fn) 
-{}
+Parser::Parser(const std::string& fn) : SEMBA::Parsers::Parser(fn) {}
 
 Data Parser::read() const {
     
@@ -136,8 +131,8 @@ Data Parser::read() const {
     if (res.mesh != nullptr) {
         Mesh::Unstructured* mesh = res.mesh->castTo<Mesh::Unstructured>();
 		readConnectorOnPoint(res.physicalModels, *mesh, j);
-        res.sources = *readSources(*mesh, j);
-        res.outputRequests = *readOutputRequests(*mesh, j);
+        res.sources = readSources(*mesh, j);
+        res.outputRequests = readOutputRequests(*mesh, j);
     } else {
         res.sources = Source::Group<>();
         res.outputRequests = OutputRequest::Group<>();
@@ -170,38 +165,36 @@ std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> Parser::readB
 }
 
 PhysicalModel::Bound::Type Parser::strToBoundType(const std::string& boundType) const {
-    PhysicalModel::Bound::Type type;
     if (boundType == "PEC") {
-        type = PhysicalModel::Bound::Type::pec;
-    }
-    else if (boundType == "PMC") {
-        type = PhysicalModel::Bound::Type::pmc;
-    }
-    else if (boundType == "PML") {
-        type = PhysicalModel::Bound::Type::pml;
-    }
-    else if (boundType == "Periodic") {
-        type = PhysicalModel::Bound::Type::periodic;
-    }
-    else if (boundType == "MUR1") {
-        type = PhysicalModel::Bound::Type::mur1;
-    }
-    else if (boundType == "MUR2") {
-        type = PhysicalModel::Bound::Type::mur2;
-    }
-    else {
-        throw std::logic_error("Unrecognized value in Bound ctor.");
+        return PhysicalModel::Bound::Type::pec;
     }
 
-    return type;
+    if (boundType == "PMC") {
+        return PhysicalModel::Bound::Type::pmc;
+    }
+    
+    if (boundType == "PML") {
+        return PhysicalModel::Bound::Type::pml;
+    }
+    
+    if (boundType == "Periodic") {
+        return PhysicalModel::Bound::Type::periodic;
+    }
+    
+    if (boundType == "MUR1") {
+        return PhysicalModel::Bound::Type::mur1;
+    }
+    
+    if (boundType == "MUR2") {
+        return PhysicalModel::Bound::Type::mur2;
+    }
+    
+    throw std::logic_error("Unrecognized value in Bound ctor.");
 }
 
 Parser::json Parser::readSolverOptions(const json& j, const std::string& key) const
 {
-    if (j.find(key) == j.end()) {
-        return json();
-    }
-    return j.at(key).get<json>();
+    return j.find(key) == j.end() ? json(): j.at(key).get<json>();
 }
 
 std::unique_ptr<Mesh::Unstructured> Parser::readUnstructuredMesh(const PMGroup& physicalModels, const json& j) const
@@ -215,11 +208,11 @@ std::unique_ptr<Mesh::Unstructured> Parser::readUnstructuredMesh(const PMGroup& 
 	);
 }
 
-Source::Group<>* Parser::readSources(Mesh::Unstructured& mesh, const json& j) const 
+Source::Group<> Parser::readSources(Mesh::Unstructured& mesh, const json& j) const 
 {
     auto sources = j.find("sources");
     
-    Source::Group<>* res = new Source::Group<>();
+    Source::Group<> res = Source::Group<>();
     if (sources == j.end()) {
         return res;
     }
@@ -227,18 +220,32 @@ Source::Group<>* Parser::readSources(Mesh::Unstructured& mesh, const json& j) co
     for (auto const& it: sources->get<json>()) {
         std::string sourceType = it.at("sourceType").get<std::string>();
         if (sourceType.compare("planewave") == 0) {
-            res->addAndAssignId(readPlanewave(mesh, it));
-        } else if (sourceType.compare("generator") == 0) {
-            res->addAndAssignId(readGenerator(mesh, it));
-        } else if (sourceType.compare("sourceOnLine") == 0) {
-            res->addAndAssignId(readSourceOnLine(mesh, it));
-        } else if (sourceType.compare("waveguidePort") == 0) {
-            res->addAndAssignId(readPortWaveguide(mesh, it));
-        } else if (sourceType.compare("temPort") == 0) {
-            res->addAndAssignId(readPortTEM(mesh, it));
-        } else {
-            throw std::logic_error("Unrecognized source type: " + sourceType);
-        }
+            res.addAndAssignId(readPlanewave(mesh, it));
+            continue;
+        } 
+        
+        if (sourceType.compare("generator") == 0) {
+            res.addAndAssignId(readGenerator(mesh, it));
+            continue;
+        } 
+        
+        if (sourceType.compare("sourceOnLine") == 0) {
+            res.addAndAssignId(readSourceOnLine(mesh, it));
+            continue;
+        } 
+        
+        if (sourceType.compare("waveguidePort") == 0) {
+            res.addAndAssignId(readPortWaveguide(mesh, it));
+            continue;
+        } 
+        
+        if (sourceType.compare("temPort") == 0) {
+            res.addAndAssignId(readPortTEM(mesh, it));
+            continue;
+        } 
+
+        throw std::logic_error("Unrecognized source type: " + sourceType);
+        
     }
     return res;
 }
@@ -266,12 +273,11 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
     typedef PhysicalModel::PhysicalModel PM;
     
     PM::Type type = strToMaterialType( j.at("materialType").get<std::string>() );
-	MatId id;
+	MatId id(0);
 	if (j.find("materialId") != j.end()) {
 		id = MatId(j.at("materialId").get<int>());
-	} else {
-		id = MatId(0);
 	}
+
 	std::string name;
 	if (j.find("name") != j.end()) {
 		name = j.at("name").get<std::string>();
@@ -400,9 +406,9 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
     }
 }
 
-OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Unstructured& mesh, const json& j, const std::string& key) const 
+OutputRequest::Group<> Parser::readOutputRequests(Mesh::Unstructured& mesh, const json& j, const std::string& key) const 
 {
-    OutputRequest::Group<>* res = new OutputRequest::Group<>();
+    OutputRequest::Group<> res;
     
     auto outs = j.find(key);
     if (outs == j.end()) {
@@ -410,7 +416,7 @@ OutputRequest::Group<>* Parser::readOutputRequests(Mesh::Unstructured& mesh, con
     }
 
     for (auto const& out: outs->get<json>()) {
-        res->addAndAssignId(readOutputRequest(mesh, out));
+        res.addAndAssignId(readOutputRequest(mesh, out));
     }
 
     return res;
@@ -422,6 +428,7 @@ void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Unstructured& mesh, const 
     if (conns == j.end()) {
         return;
     }
+
 	for (auto const& it: conns->get<json>()) {
 		PhysicalModel::PhysicalModel* mat = pMG.addAndAssignId(readPhysicalModel(it))->get();
 		const CoordR3* coord[1] = { mesh.coords().getId(CoordId(it.at("coordIds").get<int>())) };
@@ -1003,11 +1010,13 @@ Source::Generator::Type Parser::strToGeneratorType(std::string str) {
     str = trim(str);
     if (str.compare("voltage")==0) {
         return Source::Generator::voltage;
-    } else if (str.compare("current")==0) {
-        return Source::Generator::current;
-    } else {
-        throw std::logic_error("Unrecognized generator type: " + str);
     }
+    
+    if (str.compare("current")==0) {
+        return Source::Generator::current;
+    }
+
+    throw std::logic_error("Unrecognized generator type: " + str);
 }
 
 Source::Generator::Hardness Parser::strToGeneratorHardness(std::string str) {
