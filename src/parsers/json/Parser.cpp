@@ -38,6 +38,32 @@ namespace SEMBA {
 namespace Parsers {
 namespace JSON {
 
+double getProgressionStepByTotalNumber(const json& j, const std::string& jsonKey) {
+    if (j.find("total" + jsonKey) != j.end()) {
+        int total = j.at("total" + jsonKey).get<int>();
+
+        auto step = 0.0;
+        if (total > 1) {
+            step = (total - j.at("initial" + jsonKey).get<double>()) / (total - 1);
+        }
+
+        return step;
+
+    }
+
+    if (j.find("step" + jsonKey) != j.end()) {
+        return j.at("step" + jsonKey).get<double>();
+    }
+
+    // TODO: Check better approach
+    std::string toLower = jsonKey;
+    for (auto& c : toLower) {
+        c = tolower(c);
+    }
+
+    return j.at(toLower + "Step").get<double>();
+}
+
 ProblemDescription Parser::readExtended() const {
      std::ifstream stream(this->filename);
      if (!stream.is_open()) {
@@ -519,13 +545,15 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
 			OutputRequest::FarField(
 				domain,
 				name,
-				{ boxToElemGroup(mesh, j.at("box").get<std::string>()) },
+				{ boxToElemGroup(mesh, j.at(
+                    j.find("layerBox") == j.end() ? "box" : "layerBox"
+                ).get<std::string>()) },
 				j.at("initialTheta").get<double>() * degToRad,
 				j.at("finalTheta").get<double>() * degToRad,
-				j.at("stepTheta").get<double>() * degToRad,
+                getProgressionStepByTotalNumber(j, "Theta") * degToRad,
 				j.at("initialPhi").get<double>() * degToRad,
 				j.at("finalPhi").get<double>() * degToRad,
-				j.at("stepPhi").get<double>() * degToRad
+                getProgressionStepByTotalNumber(j, "Phi") * degToRad
             )
 		);
     }
@@ -1135,12 +1163,14 @@ OutputRequest::Domain Parser::readDomain(const json& j) {
         frequencyDomain   = true;
         initialFrequency  = j.at("initialFrequency").get<double>();
         finalFrequency    = j.at("finalFrequency").get<double>();
-        frequencyStep     = j.at("frequencyStep").get<double>();
+        frequencyStep = getProgressionStepByTotalNumber(j, "Frequency");
+
         logFrequencySweep = j.at("logFrequencySweep").get<bool>();
         if (j.find("transferFunctionFile") != j.end()) {
             usingTransferFunction = true;
-            transferFunctionFile =
-                    j.at("transferFunctionFile").get<std::string>();
+            transferFunctionFile = j.at(
+                "transferFunctionFile"
+            ).get<std::string>();
         }
     }
 
@@ -1159,7 +1189,8 @@ std::unique_ptr<Source::Magnitude::Magnitude> Parser::readMagnitude(const json& 
 				j.at("filename").get<std::string>())
 		);
     }
-    else if (type.compare("Gaussian") == 0) {
+
+    if (type.compare("Gaussian") == 0) {
 		return std::make_unique<Source::Magnitude::Magnitude>(
 			Source::Magnitude::Magnitude(
 				new Math::Function::Gaussian(
@@ -1171,17 +1202,17 @@ std::unique_ptr<Source::Magnitude::Magnitude> Parser::readMagnitude(const json& 
 			)
 		);
     }
-    else if (type.compare("Band_limited") == 0) {
+
+    if (type.compare("Band_limited") == 0) {
 		return std::make_unique<Source::Magnitude::Magnitude>(
 			Source::Magnitude::Magnitude(
 				new Math::Function::BandLimited(
 					j.at("frequencyMinimum").get<double>(),
 					j.at("frequencyMaximum").get<double>()))
 		);
-    } else {
-        throw std::logic_error(
-            "Unable to recognize magnitude type when reading excitation.");
     }
+
+    throw std::logic_error("Unable to recognize magnitude type when reading excitation.");
 }
 
 bool Parser::checkVersionCompatibility(const std::string& version) {
