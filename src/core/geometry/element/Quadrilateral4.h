@@ -30,8 +30,8 @@ public:
                    const Model* mat = nullptr);
 	Quadrilateral4(const Id id,
 		std::array<const Coordinate::Coordinate<T, 3>*, 4> v,
-		const Layer* lay,
-		const Model* mat);
+		const Layer* lay = nullptr,
+		const Model* mat = nullptr);
     Quadrilateral4(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                    const Id id,
                    const Box<T,3>& box,
@@ -67,6 +67,7 @@ public:
     void check() const;
 
 private:
+    // TODO: Remove plain array
     const Coordinate::Coordinate<T,3>* v_[4];
 };
 

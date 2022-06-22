@@ -92,7 +92,9 @@ ProblemDescription Parser::readExtended() const {
 
 	res.sources = this->readSources(*mesh, j);
 	res.outputRequests = readOutputRequests(*mesh, j, "probes");
-	res.boundary = this->readBoundary(j);
+
+	this->readBoundary(j, *mesh, materialsGroup, res.grids);
+
     res.model = Model::Model(*mesh, materialsGroup);
 
     return res;
@@ -143,25 +145,62 @@ Data Parser::read() const {
     return res;
 }
 
-std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> Parser::readBoundary(const json& j) const {
-    auto boundary = std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>>();
-
+void Parser::readBoundary(
+    const json& j, 
+    Geometry::Mesh::Unstructured& mesh, 
+    PMGroup& physicalModelGroup, 
+    const Geometry::Grid3& grid
+) const {
     json lower = j.at("boundary").at("lower");
     json upper = j.at("boundary").at("upper");
+
     if (lower.size() != 3 || upper.size() != 3) {
         throw std::logic_error("Unexpected amount of materials for boundary layers specified. Three layers are expected");
     }
 
-    for (int i = 0; i < 3; i++) {
-        boundary.push_back(
-            std::make_pair<PhysicalModel::Bound, PhysicalModel::Bound>(
-                PhysicalModel::Bound(PhysicalModel::Id(), this->strToBoundType(lower[i].get<std::string>())),
-                PhysicalModel::Bound(PhysicalModel::Id(), this->strToBoundType(upper[i].get<std::string>()))
-            )
-        );
-    }
+    const auto& box = grid.getFullDomainBoundingBox();
 
-    return boundary;
+    for (const auto& bound : { Math::Constants::CartesianBound::L, Math::Constants::CartesianBound::U }) {
+        const auto& boundaryResource = bound == Math::Constants::CartesianBound::L ? lower : upper;
+
+        for (const auto& axis : { Math::Constants::CartesianAxis::x,Math::Constants::CartesianAxis::y,Math::Constants::CartesianAxis::z }) {
+            PhysicalModel::Id id(0);
+
+            for (const auto& boundI : physicalModelGroup.getOf<PhysicalModel::Bound>()) {
+                if (boundI->getType() == this->strToBoundType(boundaryResource[axis].get<std::string>())) {
+                    id = boundI->getId();
+                    break;
+                }
+            }
+
+            if (id == PhysicalModel::Id(0)) {
+                auto it = physicalModelGroup.addAndAssignId(
+                    std::make_unique<PhysicalModel::Bound>(PhysicalModel::Id(), this->strToBoundType(boundaryResource[axis].get<std::string>()))
+                );
+
+                id = (*it)->getId();
+            }
+
+            const auto& boxBoundary = box.getPosOfBound(axis, bound);
+            std::array<const CoordR3*, 4> boundCoordinatesArray{};
+            for (std::size_t boxBoundaryIndex = 0; boxBoundaryIndex < boxBoundary.size(); ++boxBoundaryIndex) {
+                const auto& coordIt = mesh.coords().addAndAssignId(
+                    std::make_unique<CoordR3>(boxBoundary[boxBoundaryIndex])
+                );
+
+                boundCoordinatesArray[boxBoundaryIndex] = coordIt->get();
+            }
+
+            mesh.elems().addAndAssignId(
+                std::make_unique<QuaR4>(
+                    ElemId(),
+                    boundCoordinatesArray,
+                    nullptr,
+                    physicalModelGroup.getId(id)
+                )
+            );
+        }
+    }
 }
 
 PhysicalModel::Bound::Type Parser::strToBoundType(const std::string& boundType) const {

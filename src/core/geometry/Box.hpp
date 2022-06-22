@@ -293,28 +293,28 @@ inline std::vector<Math::Vector::Cartesian<T, D> > Box<T,D>::getPosOfBound(
     // TODO: Generalize this...
     {
         CVecTD aux;
-        aux(rX) = getBound(Math::Constants::CartesianBound(p))(rX);
+        aux(rX) = getBound(p)(rX);
         aux(rY) = getBound(Math::Constants::L)(rY);
         aux(rZ) = getBound(Math::Constants::L)(rZ);
         res.push_back(aux);
     }
     {
         CVecTD aux;
-        aux(rX) = getBound(Math::Constants::CartesianBound(p))(rX);
+        aux(rX) = getBound(p)(rX);
         aux(rY) = getBound(Math::Constants::L)(rY);
         aux(rZ) = getBound(Math::Constants::U)(rZ);
         res.push_back(aux);
     }
     {
         CVecTD aux;
-        aux(rX) = getBound(Math::Constants::CartesianBound(p))(rX);
+        aux(rX) = getBound(p)(rX);
         aux(rY) = getBound(Math::Constants::U)(rY);
         aux(rZ) = getBound(Math::Constants::U)(rZ);
         res.push_back(aux);
     }
     {
         CVecTD aux;
-        aux(rX) = getBound(Math::Constants::CartesianBound(p))(rX);
+        aux(rX) = getBound(p)(rX);
         aux(rY) = getBound(Math::Constants::U)(rY);
         aux(rZ) = getBound(Math::Constants::L)(rZ);
         res.push_back(aux);

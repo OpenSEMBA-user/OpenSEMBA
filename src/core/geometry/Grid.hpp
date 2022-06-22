@@ -117,10 +117,7 @@ bool Grid<D>::hasZeroSize() const {
 
 template<std::size_t D>
 bool Grid<D>::isInto(const std::size_t dir, const Math::Real pos) const {
-    if (pos >= getPos(dir)[0] && pos <= getPos(dir).back()) {
-        return true;
-    }
-    return false;
+    return pos >= getPos(dir)[0] && pos <= getPos(dir).back();
 }
 
 template<std::size_t D>

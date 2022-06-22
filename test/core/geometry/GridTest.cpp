@@ -69,3 +69,86 @@ TEST_F(GeometryGridTest, Equality) {
         SEMBA::Geometry::Grid3(SEMBA::Geometry::BoxR3(min_, max_), step_)
     );
 }
+
+TEST_F(GeometryGridTest, BoundCoordinates) {
+    auto box = grid_.getFullDomainBoundingBox();
+
+	using BoundPairType = std::pair<CartesianAxis, std::vector<CVecR3>>;
+    using BoundArrayPairType = std::array<BoundPairType, 3>;
+
+	std::array<std::pair<CartesianBound, BoundArrayPairType>, 2> expectedValues({
+		std::pair<CartesianBound, BoundArrayPairType>(
+			CartesianBound::L,
+			{
+				BoundPairType(
+					CartesianAxis::x,
+					std::vector<CVecR3>({
+						CVecR3(0.0, 0.0, 0.0),
+						CVecR3(0.0, 0.0, 1.0),
+						CVecR3(0.0, 1.0, 1.0),
+						CVecR3(0.0, 1.0, 0.0)
+					})
+				),
+				BoundPairType(
+					CartesianAxis::y,
+					std::vector<CVecR3>({
+						CVecR3(0.0, 0.0, 0.0),
+						CVecR3(1.0, 0.0, 0.0),
+						CVecR3(1.0, 0.0, 1.0),
+						CVecR3(0.0, 0.0, 1.0)
+					})
+				),
+				BoundPairType(
+					CartesianAxis::z,
+					std::vector<CVecR3>({
+						CVecR3(0.0, 0.0, 0.0),
+						CVecR3(0.0, 1.0, 0.0),
+						CVecR3(1.0, 1.0, 0.0),
+						CVecR3(1.0, 0.0, 0.0)
+					})
+				),
+			}
+		),
+		std::pair<CartesianBound, BoundArrayPairType>(
+			CartesianBound::U,
+			{
+				BoundPairType(
+					CartesianAxis::x,
+					std::vector<CVecR3>({
+						CVecR3(1.0, 0.0, 0.0),
+						CVecR3(1.0, 0.0, 1.0),
+						CVecR3(1.0, 1.0, 1.0),
+						CVecR3(1.0, 1.0, 0.0)
+					})
+				),
+				BoundPairType(
+					CartesianAxis::y,
+					std::vector<CVecR3>({
+						CVecR3(0.0, 1.0, 0.0),
+						CVecR3(1.0, 1.0, 0.0),
+						CVecR3(1.0, 1.0, 1.0),
+						CVecR3(0.0, 1.0, 1.0)
+					})
+				),
+				BoundPairType(
+					CartesianAxis::z,
+					std::vector<CVecR3>({
+						CVecR3(0.0, 0.0, 1.0),
+						CVecR3(0.0, 1.0, 1.0),
+						CVecR3(1.0, 1.0, 1.0),
+						CVecR3(1.0, 0.0, 1.0)
+					})
+				),
+			}
+		)
+	});
+
+    for (const auto& bound : { CartesianBound::L, CartesianBound::U }) {
+        for (const auto& axis : { CartesianAxis::x, CartesianAxis::y, CartesianAxis::z }) {
+            EXPECT_EQ(
+				expectedValues[bound].second[axis].second,
+                box.getPosOfBound(axis, bound)
+            );
+        }
+    }
+}
