@@ -62,6 +62,8 @@ public:
 
 private:
     static const Math::Simplex::Tetrahedron<1> tet;
+
+    // TODO: Remove plain array
     const CoordR3* v_[4];
 
     bool hasZeroVolume() const;

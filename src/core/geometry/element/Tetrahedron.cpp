@@ -15,6 +15,7 @@ Tetrahedron::~Tetrahedron() {
 }
 
 Triangle3* Tetrahedron::getTri3Face(const std::size_t f) const {
+    // TODO: Remove plain array
     const CoordR3* coord[3];
     for (std::size_t i = 0; i < 3; i++) {
         coord[i] = getSideVertex(f,i);

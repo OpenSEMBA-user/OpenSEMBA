@@ -28,6 +28,7 @@ Line2<T>::Line2(const Id id,
 	: Identifiable<Id>(id),
 	Elem(lay, mat) {
 
+    // TODO: Remove plain array
 	setCoordinates(&v[0]);
 }
 

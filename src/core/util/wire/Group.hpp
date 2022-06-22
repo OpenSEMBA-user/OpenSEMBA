@@ -70,6 +70,7 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             // to the same or different wires.
             // The following code checks if they are different, and if so,
             // split them.
+            // TODO: Remove plain array
             Geometry::LayerId layId[2];
             MatId matId[2];
             bool isWireMat[2] = { false, false };

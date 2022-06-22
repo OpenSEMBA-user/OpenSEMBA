@@ -17,6 +17,7 @@ namespace Vector {
 template <class T, std::size_t D>
 class Cartesian {
 public:
+    // TODO: Remove plain array
     T val[D];
     Cartesian();
     Cartesian<T,D>(const T val_);

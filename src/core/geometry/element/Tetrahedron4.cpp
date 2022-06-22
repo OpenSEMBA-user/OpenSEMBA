@@ -122,6 +122,8 @@ void Tetrahedron4::check() const {
 bool Tetrahedron4::hasZeroVolume() const {
     bool zeroVolume;
     Math::CVecR3 initialVCoord, otherVCoord;
+
+    // TODO: Remove plain array
     initialVCoord = *v_[0];
     for (std::size_t d = 0; d < 3; d++) {
         zeroVolume = true;
