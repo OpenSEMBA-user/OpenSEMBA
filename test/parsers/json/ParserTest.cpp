@@ -40,24 +40,6 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
     auto data = jsonParser.readExtended();
 
-    const PhysicalModel::Bound::Type boundaryLowerMaterials[3] = {
-        PhysicalModel::Bound::Type::pml,
-        PhysicalModel::Bound::Type::pec,
-        PhysicalModel::Bound::Type::pmc
-    };
-    const PhysicalModel::Bound::Type boundaryUpperMaterials[3] = {
-        PhysicalModel::Bound::Type::mur1,
-        PhysicalModel::Bound::Type::mur2,
-        PhysicalModel::Bound::Type::periodic
-    };
-
-    int i = 0;
-    for (auto& pairs : data.boundary) {
-        EXPECT_EQ(pairs.first.getType(), boundaryLowerMaterials[i]);
-        EXPECT_EQ(pairs.second.getType(), boundaryUpperMaterials[i]);
-        i++;
-    }
-
     EXPECT_EQ(data.grids.getNumCells(), Math::CVecR3(51, 23, 15));
 
     auto& sources = data.sources;
@@ -101,12 +83,34 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
     auto& model = data.model;
 
-    EXPECT_EQ(2, model.physicalModels.size());
+    // 2 predefined + 6 bounds
+    EXPECT_EQ(8, model.physicalModels.size());
     EXPECT_EQ("pec", model.physicalModels.get()[0]->getName());
     EXPECT_EQ("pmc", model.physicalModels.get()[1]->getName());
 
+	const PhysicalModel::Bound::Type boundaryLowerUpperMaterials[6] = {
+	    PhysicalModel::Bound::Type::pml,
+	    PhysicalModel::Bound::Type::pec,
+	    PhysicalModel::Bound::Type::pmc,
+		PhysicalModel::Bound::Type::mur1,
+		PhysicalModel::Bound::Type::mur2,
+		PhysicalModel::Bound::Type::periodic
+    };
+    
+    auto& boundaries = model.physicalModels.getOf<PhysicalModel::Bound>();
+    for (auto& bound : boundaryLowerUpperMaterials) {
+        EXPECT_TRUE(
+            std::find_if(
+                boundaries.cbegin(),
+                boundaries.cend(),
+                [&](const PhysicalModel::Bound* boundI) -> bool {return boundI->getType() == bound; }
+            ) != boundaries.cend()
+        );
+    }
+
     // 384 coming from grid, 8 from source, 1 from point probe and 8 from far field
-    ASSERT_EQ(384 + 8 + 1 + 8, model.unstructuredMesh.coords().size());
+    // New elements added as part of Boundaries: 6 faces * 4 points/face
+    ASSERT_EQ(384 + 8 + 1 + 8 + 24, model.unstructuredMesh.coords().size());
     EXPECT_EQ(
         Math::CVecR3(2.33333325, -5.71501865e-16, 1.66666663),
         model.unstructuredMesh.coords().get()[0]->pos()
