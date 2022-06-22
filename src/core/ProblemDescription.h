@@ -11,8 +11,6 @@
 namespace SEMBA {
 	class ProblemDescription {
 	public:
-		std::vector<std::pair<PhysicalModel::Bound, PhysicalModel::Bound>> boundary;
-
 		Geometry::Grid3 grids;
 		SourceGroup sources;
 		nlohmann::json analysis;

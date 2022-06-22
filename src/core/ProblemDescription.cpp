@@ -3,7 +3,6 @@
 namespace SEMBA {
 
 ProblemDescription::ProblemDescription(const ProblemDescription& rhs) {
-    boundary = rhs.boundary;
     grids = rhs.grids;
     analysis = rhs.analysis;
     
@@ -25,7 +24,6 @@ ProblemDescription::ProblemDescription(const ProblemDescription& rhs) {
 }
 
 ProblemDescription& ProblemDescription::operator=(const ProblemDescription& rhs) {
-    boundary = rhs.boundary;
     grids = rhs.grids;
     analysis = rhs.analysis;
 

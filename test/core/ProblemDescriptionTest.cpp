@@ -14,29 +14,6 @@ TEST(ProblemDescriptionTest, CanCreate) {
 	ProblemDescription problemDescription = ProblemDescription();
 
 	EXPECT_NE(&problemDescription, nullptr);
-	EXPECT_TRUE(problemDescription.boundary.empty());
-}
-
-TEST(ProblemDescriptionTest, CanInitializeBoundary) {
-	ProblemDescription problemDescription = ProblemDescription();
-
-	auto pair = std::make_pair<PhysicalModel::Bound, PhysicalModel::Bound>(
-		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pec),
-		PhysicalModel::Bound(PhysicalModel::Id(), PhysicalModel::Bound::Type::pml)
-		);
-
-	problemDescription.boundary.push_back(pair);
-
-	EXPECT_EQ(problemDescription.boundary.at(0), pair);
-	auto& firstElement = problemDescription.boundary.at(0).first;
-	EXPECT_EQ(firstElement.getType(), PhysicalModel::Bound::Type::pec);
-	EXPECT_EQ(firstElement.getName(), "PEC_Bound");
-
-	auto& secondElement = problemDescription.boundary.at(0).second;
-	EXPECT_EQ(secondElement.getType(), PhysicalModel::Bound::Type::pml);
-	EXPECT_EQ(secondElement.getName(), "PML_Bound");
-	EXPECT_EQ(problemDescription.grids, Geometry::Grid3());
-	EXPECT_TRUE(problemDescription.sources.empty());
 }
 
 TEST(ProblemDescriptionTest, CanInitializeGrids) {
@@ -52,7 +29,6 @@ TEST(ProblemDescriptionTest, CanInitializeGrids) {
 
 	problemDescription.grids = grid3;
 
-	EXPECT_TRUE(problemDescription.boundary.empty());
 	EXPECT_EQ(problemDescription.grids, grid3);
 	EXPECT_TRUE(problemDescription.sources.empty());
 }
@@ -78,7 +54,6 @@ TEST(ProblemDescriptionTest, CanInitializeSources) {
 
 	problemDescription.sources = sources;
 
-	EXPECT_TRUE(problemDescription.boundary.empty());
 	EXPECT_EQ(problemDescription.grids, Geometry::Grid3());
 
 	EXPECT_EQ(problemDescription.sources.size(), 1);
@@ -105,6 +80,18 @@ TEST(ProblemDescriptionTest, CanInitializeAnalysis) {
 TEST(ProblemDescriptionTest, CanInitializeModel) {
 	ProblemDescription problemDescription = ProblemDescription();
 
+	PMGroup physicalModelsGroup = PMGroup();
+	physicalModelsGroup.addAndAssignId(
+		std::make_unique<PhysicalModel::PEC>(
+			PhysicalModel::Id(),
+			"Material PEC"
+		)
+	);
+
+	const auto& physicalModelIt = physicalModelsGroup.addAndAssignId(
+		std::make_unique<PhysicalModel::Bound>(PhysicalModel::Id(), PhysicalModel::Bound::Type::pml)
+	);
+
 	Geometry::CoordR3Group coordinatesGroup = Geometry::CoordR3Group();
 	coordinatesGroup.addAndAssignId(
 		std::make_unique<Geometry::CoordR3>(
@@ -119,6 +106,13 @@ TEST(ProblemDescriptionTest, CanInitializeModel) {
 		)
 	);
 
+	coordinatesGroup.addAndAssignId(
+		std::make_unique<Geometry::CoordR3>(
+			Geometry::Coordinate::Id(),
+			Math::CVecR3(5.0, 5.0, 5.0)
+			)
+	);
+
 	const Geometry::CoordR3* coordinatesArgumentList[1] = { coordinatesGroup.getId(Geometry::Coordinate::Id(1)) };
 	Geometry::ElemRGroup elementsGroup = Geometry::ElemRGroup();
 	elementsGroup.addAndAssignId(
@@ -128,11 +122,22 @@ TEST(ProblemDescriptionTest, CanInitializeModel) {
 		)
 	);
 
-	PMGroup physicalModelsGroup = PMGroup();
-	physicalModelsGroup.addAndAssignId(
-		std::make_unique<PhysicalModel::PEC>(
-			PhysicalModel::Id(),
-			"Material PEC"
+	const Geometry::CoordR3* coordinatesArgumentList2[1] = { coordinatesGroup.getId(Geometry::Coordinate::Id(2)) };
+	elementsGroup.addAndAssignId(
+		std::make_unique<Geometry::NodR>(
+			Geometry::Element::Id(),
+			coordinatesArgumentList2
+		)
+	);
+
+	// Boundaries
+	const Geometry::CoordR3* coordinatesArgumentBoundaryList[1] = { coordinatesGroup.getId(Geometry::Coordinate::Id(3)) };
+	elementsGroup.addAndAssignId(
+		std::make_unique<Geometry::NodR>(
+			Geometry::ElemId(),
+			coordinatesArgumentBoundaryList,
+			nullptr,
+			physicalModelIt->get()
 		)
 	);
 
@@ -143,13 +148,26 @@ TEST(ProblemDescriptionTest, CanInitializeModel) {
 
 	problemDescription.model = model;
 
-	EXPECT_FALSE(problemDescription.model.physicalModels.empty());
+	ASSERT_FALSE(problemDescription.model.physicalModels.empty());
 	EXPECT_EQ("Material PEC", problemDescription.model.physicalModels.get()[0]->getName());
+	EXPECT_EQ("PML_Bound", problemDescription.model.physicalModels.get()[1]->getName());
 
 	EXPECT_FALSE(problemDescription.model.unstructuredMesh.coords().empty());
 	EXPECT_EQ(
 		Math::CVecR3(1.0, 2.0, 3.0),
 		(problemDescription.model.unstructuredMesh.coords().get()[1])->pos()
+	);
+
+	const auto& element = problemDescription.model.unstructuredMesh.elems().getId(Geometry::ElemId(3));
+
+	EXPECT_EQ(
+		element->getMatId(),
+		problemDescription.model.physicalModels.get()[1]->getId()
+	);
+
+	EXPECT_EQ(
+		element->getCoordinates()[0]->pos(),
+		Math::CVecR3(5.0, 5.0, 5.0)
 	);
 }
 
