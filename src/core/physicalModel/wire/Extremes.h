@@ -30,6 +30,7 @@ public:
     void swapExtremes();
 
 private:
+    // TODO: Remove plain array, maybe GroupIdentifiableUnique / Physical Model Group?
     std::unique_ptr<Multiport::Multiport> extreme_[2];
 };
 

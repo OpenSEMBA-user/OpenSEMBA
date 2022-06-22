@@ -64,6 +64,7 @@ public:
     std::unique_ptr<ElemR> toUnstructured(const CoordR3Group&, const Grid3&) const;
 
 private:
+    // TODO: Remove plain array
     const Coordinate::Coordinate<T,3>* v_[1];
 };
 

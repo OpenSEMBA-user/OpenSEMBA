@@ -34,6 +34,7 @@ public:
           const Box<T,3>& box,
           const Layer* lay = nullptr,
           const Model* mat = nullptr);
+    // TODO: Remove plain array
     Line2(const Coordinate::Coordinate<T,3>* v[2]);
     Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
           const Box<T,3>& box);
@@ -66,8 +67,10 @@ public:
 
 private:
     static const Math::Simplex::Line<1> lin;
+    // TODO: Remove plain array
     const Coordinate::Coordinate<T,3>* v_[2];
 
+    // TODO: Remove plain array
     void setCoordinates(const Coordinate::Coordinate<T,3>* v[2]);
     void setCoordinates(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                         const Box<T,3>& box);

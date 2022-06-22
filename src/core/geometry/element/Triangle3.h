@@ -54,6 +54,8 @@ public:
 
 protected:
     static const Math::Simplex::Triangle<1> geo;
+
+    // TODO: Remove plain array
     const CoordR3* v_[3];
 };
 
