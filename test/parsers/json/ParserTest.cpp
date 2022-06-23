@@ -139,7 +139,7 @@ TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)
 {
     SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended-wrong-subversion.dat");
     try {
-        jsonParser.read();
+        jsonParser.readExtended();
         FAIL() << "No exception was thrown";
     }
     catch (const std::logic_error& exception) {
