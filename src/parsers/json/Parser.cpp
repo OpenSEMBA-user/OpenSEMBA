@@ -42,9 +42,10 @@ double getProgressionStepByTotalNumber(const json& j, const std::string& jsonKey
     if (j.find("total" + jsonKey) != j.end()) {
         int total = j.at("total" + jsonKey).get<int>();
 
-        auto step = 0.0;
+        // TODO: Yet to be clarify differences between UI / JSON
+        auto step = j.at("final" + jsonKey) - j.at("initial" + jsonKey).get<double>();
         if (total > 1) {
-            step = (total - j.at("initial" + jsonKey).get<double>()) / (total - 1);
+            step = step / (total - 1);
         }
 
         return step;
@@ -65,25 +66,24 @@ double getProgressionStepByTotalNumber(const json& j, const std::string& jsonKey
 }
 
 ProblemDescription Parser::readExtended() const {
-     std::ifstream stream(this->filename);
-     if (!stream.is_open()) {
-         throw std::logic_error("Can not open file: " + this->filename);
-     }
+	std::ifstream stream(this->filename);
+	if (!stream.is_open()) {
+		throw std::logic_error("Can not open file: " + this->filename);
+	}
 
-     json j;
-     try {
-         stream >> j;
-     }
-     catch (const std::exception& ex) {
-         std::cerr << ex.what() << std::endl;
-     }
+	json j;
+	try {
+		stream >> j;
+	}
+	catch (const std::exception& ex) {
+		std::cerr << ex.what() << std::endl;
+	}
 
-     std::string version = j.at("_version").get<std::string>();
-     if (!checkExtendedVersionCompatibility(version)) {
-         throw std::logic_error("File version " + version + " is not supported for extended version.");
-     }
+	checkExtendedVersionCompatibility(
+        j.at("_version").get<std::string>()
+    );
 
-    ProblemDescription res;    
+	ProblemDescription res;
 	res.analysis = readSolverOptions(j, "analysis");
 	res.grids = this->readGrids(j);
 
@@ -95,9 +95,9 @@ ProblemDescription Parser::readExtended() const {
 
 	this->readBoundary(j, *mesh, materialsGroup, res.grids);
 
-    res.model = Model::Model(*mesh, materialsGroup);
+	res.model = Model::Model(*mesh, materialsGroup);
 
-    return res;
+	return res;
 }
 
 Parser::Parser(const std::string& fn) : SEMBA::Parsers::Parser(fn) {}
@@ -686,12 +686,22 @@ ElemRGroup Parser::readElements(
     ElemRGroup res;
     const json& elems = j.at("elements").get<json>();
 
-    // TODO: check if the keys exist
-    res.addAndAssignIds(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));	
-	res.addAndAssignIds(readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>()));
-	res.addAndAssignIds(readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
-	res.addAndAssignIds(readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>()));
-	res.addAndAssignIds(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
+	// Check how to iterate over, somehow
+	if (elems.find("hexahedra") != elems.end()) {
+		res.addAndAssignIds(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
+	}
+	if (elems.find("tetrahedra") != elems.end()) {
+		res.addAndAssignIds(readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>()));
+	}
+	if (elems.find("quadrilateral") != elems.end()) {
+		res.addAndAssignIds(readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
+	}
+	if (elems.find("triangle") != elems.end()) {
+		res.addAndAssignIds(readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>()));
+	}
+	if (elems.find("line") != elems.end()) {
+		res.addAndAssignIds(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
+	}
 
 	if (elems.find("fromFile") != elems.end()) {
 		res.addAndAssignIds(readElementsFromFile(mG, lG, cG, elems.at("fromFile").get<json>()));
@@ -1272,24 +1282,22 @@ bool Parser::checkVersionCompatibility(const std::string& version) {
     return versionMatches;
 }
 
-bool Parser::checkExtendedVersionCompatibility(const std::string& version) {
-    std::string baseVersion = version;
-    const char extended = version.back();
+void Parser::checkExtendedVersionCompatibility(const std::string& version) {
+	const char extended = version.back();
 
-    bool extendedSubversionCheck = true;
-    if (!isdigit(extended)) {
-        // Check for extended availability
-        baseVersion = version.substr(0, version.length() - 1);
-        extendedSubversionCheck = extended == 'e';
-    }
+	if (isdigit(extended)) {
+		throw std::logic_error(
+			"File version " + version + " is not a valid extended version."
+        );
+	}
 
-    bool versionMatches = (baseVersion == std::string(OPENSEMBA_VERSION));
-
-    if (!versionMatches || !extendedSubversionCheck) {
-        throw std::logic_error(
-            "File version " + version + " is not supported.");
-    }
-    return versionMatches;
+	// Check for extended availability
+	if (version.substr(0, version.length() - 1) != std::string(OPENSEMBA_VERSION) || 
+        extended != 'e') {
+		throw std::logic_error(
+			"File version " + version + " is not supported."
+        );
+	}
 }
 
 Math::Axis::Local Parser::strToLocalAxes(const std::string& str) {
