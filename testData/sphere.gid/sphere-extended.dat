@@ -1,5 +1,5 @@
 {
-  "_version": "0.15",
+  "_version": "0.15e",
   "_format": "Semba Data File in JSON format",
   "analysis": {
     "solver": "ugrfdtd",
