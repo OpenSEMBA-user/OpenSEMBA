@@ -259,10 +259,16 @@ std::unique_ptr<PhysicalModel::PhysicalModel> Parser::readPhysicalModel(const js
 
     case PM::Type::priorityMaterial:
     {
+        bool treatAsVolume{ false };
+        if (j.find("treatAsVolume") != j.end()) {
+            treatAsVolume = j.at("treatAsVolume").get<bool>();
+        }
+        
         return std::make_unique<PhysicalModel::PriorityMaterial>(
             id,
             name,
-            j.at("priority").get<int>()
+            j.at("priority").get<int>(),
+            treatAsVolume
         );
     }
 
