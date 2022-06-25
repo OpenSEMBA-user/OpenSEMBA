@@ -3,17 +3,25 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
-PriorityMaterial::PriorityMaterial(const Id& matId, const std::string& name, int priority) :
+PriorityMaterial::PriorityMaterial(
+	const Id& matId, 
+	const std::string& name, 
+	int priority,
+	bool treatAsVolume) :
 	Identifiable<Id>(matId),
 	PhysicalModel(name),
-	priority_(priority)
+	priority_(priority),
+	treatAsVolume_(treatAsVolume)
 {}
 
-PriorityMaterial::PriorityMaterial(const PriorityMaterial& rhs) :
-	Identifiable<Id>(rhs),
-	PhysicalModel(rhs) 
+bool PriorityMaterial::operator==(const PriorityMaterial& rhs) const
 {
-	priority_ = rhs.priority_;
+	bool res{ true };
+	res &= PhysicalModel::operator==(rhs);
+	res &= priority_ == rhs.priority_;
+	res &= treatAsVolume_ == rhs.treatAsVolume_;
+
+	return res;
 }
 
 }
