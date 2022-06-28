@@ -28,6 +28,8 @@ public:
     bool operator==(const Numerical&) const;
     Math::Real evaluate(const Math::Real time) const;
 
+    FileSystem::Project getFile() const { return file; };
+
 private:
     static const std::size_t defaultNumberOfSteps = 1000;
     FileSystem::Project file;
