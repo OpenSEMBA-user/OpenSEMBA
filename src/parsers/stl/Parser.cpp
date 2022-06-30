@@ -106,9 +106,11 @@ Geometry::Mesh::Unstructured Parser::readAsUnstructuredMesh() const
     Geometry::CoordR3Group cG = readCoordinates(this->filename);
     ElemRGroup eG;
     std::unique_ptr<Layer::Layer> lay;
-    std::tie(lay, eG) = readLayerAndElements(this->filename, cG);
     LayerGroup lG;
-    lG.addAndAssignId(std::move(lay));
+    std::tie(lay, eG) = readLayerAndElements(this->filename, cG);
+    if (lay) {
+        lG.addAndAssignId(std::move(lay));
+    }
 
     return Mesh::Unstructured(cG, eG, lG);
 }
