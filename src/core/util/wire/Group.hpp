@@ -31,10 +31,12 @@ void Group<T>::init_(const Data& smb) {
 template<class T>
 typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
     // We get the lines with wire or union materials
-    Geometry::Element::Group<const Geometry::Element::Line<T>> wires;
+    std::vector<const Geometry::Element::Line<T>*> wires;
+
     auto const& mats = smb.physicalModels;
     {
-        Geometry::Element::Group<const Geometry::Element::Line<T>> lines;
+        std::vector<const Geometry::Element::Line<T>*> lines;
+
         if (std::is_floating_point<T>::value) {
             lines = smb.mesh->castTo<Geometry::Mesh::Unstructured>()
                         ->elems().getOf<Geometry::Element::Line<T>>();
@@ -51,11 +53,22 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             matIds.push_back(mat->getId());
         }
         
-        wires = lines.getMatId(matIds);
+        for (const auto& line : lines) {
+            if (
+                std::all_of(
+                    matIds.begin(), 
+                    matIds.end(), 
+                    [&](const auto& matId) {
+                        return line->getMatId() == matId;
+                    }
+                )
+            ) {
+                wires.push_back(line);
+            }
+        }
     }
     // The graph of these lines is created
-    Graph graph;
-    graph.init(wires);
+    Graph graph(wires);
     const typename Graph::GraphBound* nodePtr;
     // The previous graph is postprecessed to split the lines of different
     // threads.
