@@ -9,10 +9,9 @@ std::vector<const E*> Group<E>::getCoordId(const CoordId& id) const
 {
 	std::vector<const E*> res;
 	for (auto const& item : *this) { 
-		const E* elem = item;
-		for (size_t j = 0; j < elem->numberOfCoordinates(); j++) {
-			if (elem->getV(j)->getId() == id) {
-				res.push_back(elem.get());
+		for (size_t j = 0; j < item->numberOfCoordinates(); j++) {
+			if (item->getV(j)->getId() == id) {
+				res.push_back(item.get());
 			}
 		}
 	}
