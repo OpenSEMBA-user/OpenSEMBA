@@ -66,6 +66,20 @@ void Polyline<T>::setV(const std::size_t i,
     v_[i] = coord;
 }
 
+template<class T>
+std::unique_ptr<ElemI> Polyline<T>::toStructured(
+    const CoordI3Group& cG,
+    const Grid3& grid, const Math::Real tol) const {
+    throw std::logic_error("Polyline::toStructured operation not permitted");
+}
+
+template<class T>
+std::unique_ptr<ElemR> Polyline<T>::toUnstructured(
+    const CoordR3Group& cG,
+    const Grid3& grid) const {
+    throw std::logic_error("Polyline::toUnstructured operation not permitted");
+}
+
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */
