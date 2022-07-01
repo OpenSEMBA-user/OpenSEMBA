@@ -69,7 +69,7 @@ std::unique_ptr<ElemI> LineConformal::toStructured(
 std::unique_ptr<ElemR> LineConformal::toUnstructured(
     const CoordR3Group& cG,
     const Grid3& grid) const {
-    throw std::logic_error("LineConformal::toStructured operation not permitted");
+    throw std::logic_error("LineConformal::toUnstructured operation not permitted");
 }
 
 } /* namespace Element */
