@@ -15,7 +15,7 @@ template <std::size_t D>
 class BoundTerminations {
 public:
     BoundTerminations();
-    BoundTerminations(const std::array<std::array<const Bound*, 2>, D>&);
+    BoundTerminations(const std::array<std::array<std::unique_ptr<Bound>, 2>, D>&);
     BoundTerminations(const BoundTerminations&);
     virtual ~BoundTerminations();
 
@@ -23,11 +23,11 @@ public:
 
     const Bound* operator()(std::size_t d, std::size_t p) const;
 
-    void setBound (std::size_t d, std::size_t p, const Bound*);
-    void setBounds(const std::array<std::array<const Bound*, 2>, D>&);
+    void setBound (std::size_t d, std::size_t p, std::unique_ptr<Bound>&&);
+    void setBounds(const std::array<std::array<std::unique_ptr<Bound>, 2>, D>&);
 
 private:
-    std::array<std::array<std::shared_ptr<const Bound>, 2>, D> bounds_;
+    std::array<std::array<std::unique_ptr<Bound>, 2>, D> bounds_;
 };
 
 typedef BoundTerminations<3> BoundTerminations3;
