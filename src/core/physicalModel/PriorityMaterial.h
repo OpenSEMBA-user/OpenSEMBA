@@ -24,6 +24,8 @@ public:
 	int getPriority() const { return priority_; }
 	bool isTreatAsVolume() const { return treatAsVolume_; }
 
+	void setTreatAsVolume(bool s) { treatAsVolume_ = s; }
+
 private:
 	int priority_{ 0 };
 	bool treatAsVolume_{ false };
