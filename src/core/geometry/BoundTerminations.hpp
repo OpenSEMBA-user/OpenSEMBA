@@ -12,7 +12,7 @@ BoundTerminations<D>::BoundTerminations() {
 
 template <std::size_t D>
 BoundTerminations<D>::BoundTerminations(
-    const std::array<std::array<std::unique_ptr<Bound>, 2>, D>& bounds) {
+    const std::array<std::array<std::unique_ptr<PhysicalModel::Bound>, 2>, D>& bounds) {
     setBounds(bounds);
 }
 
@@ -20,16 +20,11 @@ template <std::size_t D>
 BoundTerminations<D>::BoundTerminations(const BoundTerminations& rhs) {
     for (std::size_t d = 0; d < D; d++) {
         for (std::size_t p = 0; p < 2; p++) {
-            if (bounds_[d][p]) {
-                bounds_[d][p] = std::make_unique<Bound>(*rhs.bounds_[d][p].get());
+            if (rhs.bounds_[d][p]) {
+                bounds_[d][p] = std::make_unique<PhysicalModel::Bound>(*(rhs.bounds_[d][p].get()));
             }
         }
     }
-}
-
-template <std::size_t D>
-BoundTerminations<D>::~BoundTerminations() {
-
 }
 
 template <std::size_t D>
@@ -41,8 +36,8 @@ BoundTerminations<D>& BoundTerminations<D>::operator=(
 
     for (std::size_t d = 0; d < D; d++) {
         for (std::size_t p = 0; p < 2; p++) {
-            if (bounds_[d][p]) {
-                bounds_[d][p] = std::make_unique<Bound>(*rhs.bounds_[d][p].get());
+            if (rhs.bounds_[d][p]) {
+                bounds_[d][p] = std::make_unique<PhysicalModel::Bound>(*(rhs.bounds_[d][p].get()));
             }
         }
     }
@@ -51,7 +46,7 @@ BoundTerminations<D>& BoundTerminations<D>::operator=(
 }
 
 template <std::size_t D>
-const Bound* BoundTerminations<D>::operator()(std::size_t d,
+const PhysicalModel::Bound* BoundTerminations<D>::operator()(std::size_t d,
                                               std::size_t p) const {
     if (bounds_[d][p]) {
         return bounds_[d][p].get();
@@ -64,20 +59,19 @@ template <std::size_t D>
 void BoundTerminations<D>::setBound(
     std::size_t d, 
     std::size_t p,
-    std::unique_ptr<Bound>&& bound
+    std::unique_ptr<PhysicalModel::Bound>&& bound
 ) {
-     
-    bounds_[d][p].reset(std::move(bound).get());
+    bounds_[d][p] = std::move(bound);
 }
 
 template <std::size_t D>
 void BoundTerminations<D>::setBounds(
-        const std::array<std::array<std::unique_ptr<Bound>, 2>, D>& bounds
+        const std::array<std::array<std::unique_ptr<PhysicalModel::Bound>, 2>, D>& bounds
 ) {
     for (std::size_t d = 0; d < D; d++) {
         for (std::size_t p = 0; p < 2; p++) {
             if (bounds_[d][p]) {
-                bounds_[d][p].reset(std::move(bounds[d][p]).get());
+                bounds_[d][p] = std::move(bound);
             }
         }
     }

@@ -3,6 +3,13 @@
 namespace SEMBA {
 namespace PhysicalModel {
 
+Bound::Bound(const Bound& rhs) :
+    Identifiable<Id>(rhs),
+    PhysicalModel(rhs)
+{
+    type = rhs.type;
+}
+
 Bound::Bound(Id id, Type typeIn) : Identifiable<Id>(id), type(typeIn)
 {
     std::string boundName;
