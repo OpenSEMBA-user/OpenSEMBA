@@ -20,6 +20,7 @@ public:
     };
     
     Bound(Id id, Type type);
+    Bound(const Bound&);
     virtual ~Bound() = default;
 
     virtual std::unique_ptr<PhysicalModel> clone() const override {
