@@ -54,16 +54,11 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
         }
         
         for (const auto& line : lines) {
-            if (
-                std::all_of(
-                    matIds.begin(), 
-                    matIds.end(), 
-                    [&](const auto& matId) {
-                        return line->getMatId() == matId;
-                    }
-                )
-            ) {
-                wires.push_back(line);
+            for (const auto& matId : matIds) {
+                if (line->getMatId() == matId) {
+                    wires.push_back(line);
+                    break;
+                }
             }
         }
     }
