@@ -34,7 +34,7 @@ class Hexahedron8 : public virtual Volume<T>,
 public:
     Hexahedron8(const Id id,
                 const Coordinate::Coordinate<T,3>* v[8],
-				const Layer* lay,
+				const Layer* lay = nullptr,
                 const Model* mat = nullptr);
     Hexahedron8(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
                 const Id id,

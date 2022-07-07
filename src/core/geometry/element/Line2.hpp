@@ -32,17 +32,6 @@ Line2<T>::Line2(const Id id,
 	setCoordinates(&v[0]);
 }
 
-template<class T>
-Line2<T>::Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
-                const Id id,
-                const Box<T,3>& box,
-                const Layer* lay,
-                const Model* mat)
-:   Identifiable<Id>(id),
-    Elem(lay, mat) {
-
-    setCoordinates(cG, box);
-}
 
 template<class T>
 Line2<T>::Line2(const Coordinate::Coordinate<T,3>* v[2]) {
@@ -118,19 +107,6 @@ template<class T>
 void Line2<T>::setCoordinates(const Coordinate::Coordinate<T,3>* v[2]) {
     for (std::size_t i = 0; i < lin.np; i++) {
         v_[i] = v[i];
-    }
-}
-
-template<class T>
-void Line2<T>::setCoordinates(
-        Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
-        const Box<T,3>& box) {
-    if(!box.isLine()) {
-        throw Geometry::Error::Box::NotLine();
-    }
-    std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.addPos(pos[i])->get();
     }
 }
 

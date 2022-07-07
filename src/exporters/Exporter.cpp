@@ -39,7 +39,22 @@ Geometry::ElemR* Exporter::getBoundary(
         box = mesh->getBoundingBox();
     }
     Geometry::BoxR3 quadBox = box.getBoundAsBox(dir,pos);
-    return new Geometry::QuaR4(cG, Geometry::ElemId(0), quadBox);
+
+    if (!quadBox.isSurface()) {
+        throw Geometry::Error::Box::NotSurface();
+    }
+
+    auto posVec = quadBox.getPos();
+    std::vector<const Geometry::CoordR3*> coords;
+    for (std::size_t i = 0; i < Geometry::Qua4::sizeOfCoordinates; i++) {
+        coords.push_back(
+            cG.addAndAssignId(
+                std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
+            )->get()
+        );
+    }
+
+    return new Geometry::QuaR4(Geometry::ElemId(0), coords.data());
 }
 
 std::string Exporter::getBoundaryName(
@@ -80,9 +95,28 @@ ElemRGroup Exporter::getGridElems(
                 pMax = pMin;
                 pMin((d-i+2)%3) = grid->getPos((d-i+2)%3).front();
                 pMax((d-i+2)%3) = grid->getPos((d-i+2)%3).back();
-                elem.addAndAssignId(std::make_unique<Geometry::LinR2>(cG,
-                                                Geometry::ElemId(0),
-                                                Geometry::BoxR3(pMin,pMax)));
+
+                auto newBox = Geometry::BoxR3(pMin, pMax);
+                if(!box.isLine()) {
+                    throw Geometry::Error::Box::NotLine();
+                }
+
+                auto posVec = newBox.getPos();
+                std::vector<const Geometry::CoordR3*> coords;
+                for (std::size_t i = 0; i < Geometry::LinR2::sizeOfCoordinates; i++) {
+                    coords.push_back(
+                        cG.addAndAssignId(
+                            std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
+                        )->get()
+                    );
+                }
+
+                elem.addAndAssignId(
+                    std::make_unique<Geometry::LinR2>(
+                        Geometry::ElemId(0),
+                        coords.data()
+                    )
+                );
             }
         }
     }

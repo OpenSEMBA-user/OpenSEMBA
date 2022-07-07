@@ -79,7 +79,7 @@ TEST_F(CoordinateGroupTest, AddAndGetPosition)
 
     EXPECT_EQ(index.find(newPos), index.end());
 
-    grp.addPos(newPos);
+    grp.addAndAssignId(std::make_unique<CoordR3>(CoordId(), newPos));
 
     index = grp.getIndex<Math::CVecR3>();
     auto it = index.find(newPos);

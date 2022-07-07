@@ -32,11 +32,6 @@ public:
 		std::array<const Coordinate::Coordinate<T, 3>*, 4> v,
 		const Layer* lay = nullptr,
 		const Model* mat = nullptr);
-    Quadrilateral4(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
-                   const Id id,
-                   const Box<T,3>& box,
-                   const Layer* lay = nullptr,
-                   const Model* mat = nullptr);
     Quadrilateral4(const Quadrilateral4<T>& rhs);
     virtual ~Quadrilateral4() = default;
 
