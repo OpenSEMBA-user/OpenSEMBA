@@ -29,14 +29,15 @@ public:
     
     Group(const std::vector<Math::CVecR3>&);
     Group(const std::vector<Math::CVecI3>&);
-    
-    template<typename VEC>
-    typename Class::Group::GroupIdentifiableUnique<C>::iterator  addPos(VEC);
 
     void applyScalingFactor(const Math::Real factor);
 
     template<typename VEC>
     std::map<VEC, std::vector<const C*>> getIndex() const;
+
+private:
+    template<typename VEC>
+    typename Class::Group::GroupIdentifiableUnique<C>::iterator  addPos(VEC);
 };
 
 } /* namespace Coordinate */

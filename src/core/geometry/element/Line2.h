@@ -29,11 +29,6 @@ public:
 		std::array<const Coordinate::Coordinate<T, 3>*,2> v,
 		const Layer* lay = nullptr,
 		const Model* mat = nullptr);
-    Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,
-          const Id id,
-          const Box<T,3>& box,
-          const Layer* lay = nullptr,
-          const Model* mat = nullptr);
     // TODO: Remove plain array
     Line2(const Coordinate::Coordinate<T,3>* v[2]);
     Line2(Coordinate::Group<Coordinate::Coordinate<T,3> >&,

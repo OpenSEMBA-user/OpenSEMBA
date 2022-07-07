@@ -482,14 +482,48 @@ const ElemR* Parser::boxToElemGroup(Mesh::Unstructured& mesh, const std::string&
 {
     BoxR3 box = strToBox(line);
     std::unique_ptr<ElemR> elem;
-    if (box.isVolume()) {
-        elem = std::make_unique<HexR8>(mesh.coords(), ElemId(0), box);
+
+    auto posVec = box.getPos();
+    std::vector<const Geometry::CoordR3*> coords;
+
+    if (box.isVolume()) {    
+        for (std::size_t i = 0; i < Geometry::HexR8::sizeOfCoordinates; i++) {
+            coords.push_back(
+                mesh.coords().addAndAssignId(
+                    std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
+                )->get()
+            );
+        }
+
+        elem = std::make_unique<HexR8>(ElemId(0), coords.data());
     } else if (box.isSurface()) {
-        elem = std::make_unique<QuaR4>(mesh.coords(), ElemId(0), box);
+        for (std::size_t i = 0; i < Geometry::QuaR4::sizeOfCoordinates; i++) {
+            coords.push_back(
+                mesh.coords().addAndAssignId(
+                    std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
+                )->get()
+            );
+        }
+
+        elem = std::make_unique<QuaR4>(ElemId(0), coords.data());
     } else if (box.isLine()) {
-		elem = std::make_unique<LinR2>(mesh.coords(), ElemId(0), box);
+        for (std::size_t i = 0; i < Geometry::LinR2::sizeOfCoordinates; i++) {
+            coords.push_back(
+                mesh.coords().addAndAssignId(
+                    std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
+                )->get()
+            );
+        }
+
+		elem = std::make_unique<LinR2>(ElemId(0), coords.data());
 	} else if (box.isPoint()) {
-		elem = std::make_unique<NodR>(mesh.coords(), ElemId(0), box);
+        coords.push_back(
+            mesh.coords().addAndAssignId(
+                std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[0])
+            )->get()
+        );
+
+        elem = std::make_unique<NodR>(ElemId(0), coords.data());
 	} else {
         throw std::logic_error("Box to Elem Group only works for volumes and surfaces");
     }

@@ -34,25 +34,6 @@ Quadrilateral4<T>::Quadrilateral4(const Id id,
 }
 
 template<class T>
-Quadrilateral4<T>::Quadrilateral4(
-        Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
-        const Id id,
-        const Box<T,3>& box,
-        const Layer* lay,
-        const Model* mat)
-:   Identifiable<Id>(id),
-    Elem(lay, mat) {
-
-    if(!box.isSurface()) {
-        throw Geometry::Error::Box::NotSurface();
-    }
-    std::vector<Math::Vector::Cartesian<T,3> > pos = box.getPos();
-    for (std::size_t i = 0; i < numberOfCoordinates(); i++) {
-        v_[i] = cG.addPos(pos[i])->get();
-    }
-}
-
-template<class T>
 Quadrilateral4<T>::Quadrilateral4(const Quadrilateral4<T>& rhs)
 :   Identifiable<Id>(rhs),
     Elem(rhs) {

@@ -21,21 +21,6 @@ Node<T>::Node(const Id id,
 
     v_[0] = v[0];
 }
-template<class T>
-Node<T>::Node(Coordinate::Group<Coordinate::Coordinate<T,3> >& cG,
-              const Id id,
-              const Box<T,3>& box,
-              const Layer* lay,
-              const Model* mat)
-:   Identifiable<Id>(id),
-    Elem(lay, mat) {
-
-    if(!box.isPoint()) {
-        throw Geometry::Error::Box::NotPoint();
-    }
-
-    v_[0] = cG.addPos(box.getPos()[0])->get();
-}
 
 template<class T>
 Node<T>::Node(const Node<T>& rhs)

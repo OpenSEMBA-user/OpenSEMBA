@@ -32,7 +32,12 @@ CoordR3Group readCoordinates(const std::string& fn)
 
         auto it = index.find(pos);
         if (it == index.end()) {
-            index.emplace(pos, cG.addPos(pos)->get());
+            index.emplace(
+                pos, 
+                cG.addAndAssignId(
+                    std::make_unique<CoordR3>(CoordId(), pos)
+                )->get()
+            );
         }
 	}
 
