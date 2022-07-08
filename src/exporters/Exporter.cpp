@@ -97,7 +97,7 @@ ElemRGroup Exporter::getGridElems(
                 pMax((d-i+2)%3) = grid->getPos((d-i+2)%3).back();
 
                 auto newBox = Geometry::BoxR3(pMin, pMax);
-                if(!box.isLine()) {
+                if(!newBox.isLine()) {
                     throw Geometry::Error::Box::NotLine();
                 }
 
