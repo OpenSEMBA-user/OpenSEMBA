@@ -67,8 +67,11 @@ Unstructured* Structured::getMeshUnstructured() const
     }
 
     for (auto const& elem : elems()) {
-        auto newElem = elem->toUnstructured(res->coords(), grid_);
-        res->elems().add(newElem);
+        try {
+            res->elems().add(elem->toUnstructured(res->coords(), grid_));
+        } catch (std::logic_error& e) {
+            continue;
+        }
     }
 
     res->layers() = layers();
