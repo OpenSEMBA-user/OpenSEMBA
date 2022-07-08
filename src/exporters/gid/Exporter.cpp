@@ -144,6 +144,19 @@ void Exporter::writeAllElements_(
     );
 }
 
+ElemRView getElementsByTarget(const Geometry::ElemView& targets, const Geometry::Mesh::Unstructured* mesh) {
+    ElemRView elementsToWrite;
+    for (const auto& elem : mesh->elems()) {
+        for (const auto& target : targets) {
+            if (elem->getId() == target->getId()) {
+                elementsToWrite.push_back(elem.get());
+            }
+        }
+    }
+
+    return elementsToWrite;
+}
+
 void Exporter::writeMesh_(const Data& smb) 
 {
     const Geometry::Mesh::Mesh* inMesh = smb.mesh.get();
@@ -186,18 +199,12 @@ void Exporter::writeMesh_(const Data& smb)
 
     // Writes EM Sources.
     for (const auto& src: srcs) {
-        writeAllElements_(
-            Class::Group::View::castToReal(src->getTarget()),
-            preName + "EMSource_" + src->getName()
-        );
+        writeAllElements_(getElementsByTarget(src->getTarget(), mesh), preName + "EMSource_" + src->getName());
     }
 
     // Writes output requests.
     for (const auto& oRq: oRqs) {
-        writeAllElements_(
-            Class::Group::View::castToReal(oRq->getTarget()),
-            preName + "OutRq_" + oRq->getName()
-        );
+        writeAllElements_(getElementsByTarget(oRq->getTarget(), mesh), preName + "OutRq_" + oRq->getName());
     }
 
     // Writes boundaries.
