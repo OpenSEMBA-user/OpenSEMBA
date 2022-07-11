@@ -65,6 +65,24 @@ double getProgressionStepByTotalNumber(const json& j, const std::string& jsonKey
     return j.at(toLower + "Step").get<double>();
 }
 
+std::vector<const Geometry::CoordR3*> addAngGetCoordView(
+    Mesh::Unstructured& mesh, 
+    const std::vector<Math::CVecR3>& positions,
+    const size_t& numberOfCoordinates
+) {
+    std::vector<const Geometry::CoordR3*> coords;
+
+    for (std::size_t i = 0; i < numberOfCoordinates; i++) {
+        coords.push_back(
+            mesh.coords().addAndAssignId(
+                std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), positions[i])
+            )->get()
+        );
+    }
+
+    return coords;
+}
+
 ProblemDescription Parser::readExtended() const {
 	std::ifstream stream(this->filename);
 	if (!stream.is_open()) {
@@ -484,46 +502,15 @@ const ElemR* Parser::boxToElemGroup(Mesh::Unstructured& mesh, const std::string&
     std::unique_ptr<ElemR> elem;
 
     auto posVec = box.getPos();
-    std::vector<const Geometry::CoordR3*> coords;
 
     if (box.isVolume()) {    
-        for (std::size_t i = 0; i < Geometry::HexR8::sizeOfCoordinates; i++) {
-            coords.push_back(
-                mesh.coords().addAndAssignId(
-                    std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
-                )->get()
-            );
-        }
-
-        elem = std::make_unique<HexR8>(ElemId(0), coords.data());
+        elem = std::make_unique<HexR8>(ElemId(), addAngGetCoordView(mesh, posVec, Geometry::HexR8::sizeOfCoordinates).data());
     } else if (box.isSurface()) {
-        for (std::size_t i = 0; i < Geometry::QuaR4::sizeOfCoordinates; i++) {
-            coords.push_back(
-                mesh.coords().addAndAssignId(
-                    std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
-                )->get()
-            );
-        }
-
-        elem = std::make_unique<QuaR4>(ElemId(0), coords.data());
+        elem = std::make_unique<QuaR4>(ElemId(), addAngGetCoordView(mesh, posVec, Geometry::QuaR4::sizeOfCoordinates).data());
     } else if (box.isLine()) {
-        for (std::size_t i = 0; i < Geometry::LinR2::sizeOfCoordinates; i++) {
-            coords.push_back(
-                mesh.coords().addAndAssignId(
-                    std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[i])
-                )->get()
-            );
-        }
-
-		elem = std::make_unique<LinR2>(ElemId(0), coords.data());
+		elem = std::make_unique<LinR2>(ElemId(), addAngGetCoordView(mesh, posVec, Geometry::LinR2::sizeOfCoordinates).data());
 	} else if (box.isPoint()) {
-        coords.push_back(
-            mesh.coords().addAndAssignId(
-                std::make_unique<Geometry::CoordR3>(Geometry::CoordId(), posVec[0])
-            )->get()
-        );
-
-        elem = std::make_unique<NodR>(ElemId(0), coords.data());
+        elem = std::make_unique<NodR>(ElemId(), addAngGetCoordView(mesh, posVec, 1).data());
 	} else {
         throw std::logic_error("Box to Elem Group only works for volumes and surfaces");
     }
