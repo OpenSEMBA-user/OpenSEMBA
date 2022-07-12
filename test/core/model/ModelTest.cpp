@@ -90,13 +90,13 @@ TEST(ModelTest, CanCopyConstructor) {
 		std::make_unique<CoordR3>(
 			Coordinate::Id(),
 			Math::CVecR3(0.0, 0.0, 0.0)
-			)
+		)
 	);
 	coordinatesGroup.addAndAssignId(
 		std::make_unique<CoordR3>(
 			Coordinate::Id(),
 			Math::CVecR3(1.0, 2.0, 3.0)
-			)
+		)
 	);
 
 	const CoordR3* coordinatesArgumentList[1] = { coordinatesGroup.getId(Coordinate::Id(1)) };
@@ -105,7 +105,7 @@ TEST(ModelTest, CanCopyConstructor) {
 		std::make_unique<NodR>(
 			Element::Id(),
 			coordinatesArgumentList
-			)
+		)
 	);
 
 	Mesh::Unstructured mesh = Mesh::Unstructured(coordinatesGroup, elementsGroup);
@@ -115,10 +115,10 @@ TEST(ModelTest, CanCopyConstructor) {
 		std::make_unique<PhysicalModel::PEC>(
 			PhysicalModel::Id(),
 			"Material PEC"
-			)
+		)
 	);
 
-	ModelObject model = ModelObject(mesh, physicalModelsGroup);
+	ModelObject model(mesh, physicalModelsGroup);
 
 	EXPECT_EQ(
 		model.mesh.coords().getId(Coordinate::Id(1)),
@@ -149,4 +149,93 @@ TEST(ModelTest, CanCopyConstructor) {
 	EXPECT_NE(coordinate1, newCoordinate1);
 
 	EXPECT_EQ(coordinate1->pos(), newCoordinate1->pos());
+}
+
+TEST(ModelTest, IsReassigningPhysicalGroupToMeshOnCopy) {
+	PMGroup physicalModelsGroup = PMGroup();
+	physicalModelsGroup.add(
+		std::make_unique<PhysicalModel::PEC>(
+			PhysicalModel::Id(18),
+			"Material PEC"
+		)
+	);
+
+	CoordR3Group coordinatesGroup = CoordR3Group();
+	auto it = coordinatesGroup.addAndAssignId(
+		std::make_unique<CoordR3>(
+			Coordinate::Id(),
+			Math::CVecR3(0.0, 0.0, 0.0)
+		)
+	);
+
+	const CoordR3* coordinatesArgumentList[1] = { it->get()};
+	ElemRGroup elementsGroup = ElemRGroup();
+	elementsGroup.addAndAssignId(
+		std::make_unique<NodR>(
+			Element::Id(),
+			coordinatesArgumentList,
+			nullptr,
+			physicalModelsGroup.get().front()
+		)
+	);
+
+	ModelObject newModel = ModelObject();
+	{
+		ModelObject model(
+			Mesh::Unstructured(coordinatesGroup, elementsGroup),
+			physicalModelsGroup
+		);
+
+		newModel = model;
+	}
+
+	EXPECT_FALSE(newModel.physicalModels.empty());
+	EXPECT_EQ(
+		newModel.mesh.elems().getId(ElemId(1))->getModel()->getId(),
+		PhysicalModel::Id(18)
+	);
+
+}
+
+TEST(ModelTest, IsReassigningPhysicalGroupToMeshOnConstruct) {
+	PMGroup physicalModelsGroup = PMGroup();
+	physicalModelsGroup.add(
+		std::make_unique<PhysicalModel::PEC>(
+			PhysicalModel::Id(18),
+			"Material PEC"
+		)
+	);
+
+	CoordR3Group coordinatesGroup = CoordR3Group();
+	auto it = coordinatesGroup.addAndAssignId(
+		std::make_unique<CoordR3>(
+			Coordinate::Id(),
+			Math::CVecR3(0.0, 0.0, 0.0)
+		)
+	);
+
+	const CoordR3* coordinatesArgumentList[1] = { it->get()};
+	ElemRGroup elementsGroup = ElemRGroup();
+	elementsGroup.addAndAssignId(
+		std::make_unique<NodR>(
+			Element::Id(),
+			coordinatesArgumentList,
+			nullptr,
+			physicalModelsGroup.get().front()
+		)
+	);
+
+	ModelObject model(
+		Mesh::Unstructured(coordinatesGroup, elementsGroup), 
+		physicalModelsGroup
+	);
+
+	physicalModelsGroup = PMGroup();
+
+	EXPECT_FALSE(model.physicalModels.empty());
+	EXPECT_TRUE(physicalModelsGroup.empty());
+	EXPECT_EQ(
+		model.mesh.elems().getId(ElemId(1))->getModel()->getId(),
+		PhysicalModel::Id(18)
+	);
 }
