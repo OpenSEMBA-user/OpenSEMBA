@@ -15,7 +15,7 @@ namespace SEMBA {
 		SourceGroup sources;
 		nlohmann::json analysis;
 
-		Model::Model model;
+		Model::UnstructuredModel model;
 
 		OutputRequestGroup outputRequests;
 
