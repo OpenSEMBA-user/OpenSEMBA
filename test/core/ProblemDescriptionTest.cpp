@@ -16,6 +16,15 @@ TEST(ProblemDescriptionTest, CanCreate) {
 	EXPECT_NE(&problemDescription, nullptr);
 }
 
+TEST(ProblemDescriptionTest, CanInitializeProject) {
+	const std::string path = "My/Project/Path/File.dat";
+
+	ProblemDescription problemDescription = ProblemDescription();
+	problemDescription.project = FileSystem::Project(path);
+
+	EXPECT_EQ(problemDescription.project, path);
+}
+
 TEST(ProblemDescriptionTest, CanInitializeGrids) {
 	ProblemDescription problemDescription = ProblemDescription();
 
@@ -307,6 +316,7 @@ TEST(ProblemDescriptionTest, CanCopyConstructor) {
 	problemDescription.sources = sources;
 	problemDescription.outputRequests = probes;
 	problemDescription.model = model;
+	problemDescription.project = FileSystem::Project("MyPath");
 
 	// Call copy constructor and check
 	ProblemDescription copy(problemDescription);
@@ -319,4 +329,6 @@ TEST(ProblemDescriptionTest, CanCopyConstructor) {
 
 	EXPECT_NE(newCoordinatePointer, coordinatesGroup.getId(Geometry::CoordId(2)));
 	EXPECT_EQ(*newCoordinatePointer, *coordinatesGroup.getId(Geometry::CoordId(2)));
+
+	EXPECT_EQ(copy.project, problemDescription.project);
 }

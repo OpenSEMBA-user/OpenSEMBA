@@ -20,10 +20,10 @@ namespace FileSystem {
 
 class Project : public std::string {
 public:
-    Project();
+    Project() = default;
     Project(const std::string& filename);
     Project(const Project& rhs);
-    virtual ~Project();
+    virtual ~Project() = default;
 
     bool canOpen() const;
     bool canExecute() const;

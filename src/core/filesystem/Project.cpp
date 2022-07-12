@@ -18,18 +18,10 @@
 namespace SEMBA {
 namespace FileSystem {
 
-Project::Project() {
-
-}
-
 Project::Project(const std::string& filename) : std::string(filename) {
 }
 
 Project::Project(const Project& rhs) : std::string(rhs) {
-}
-
-Project::~Project() {
-
 }
 
 void Project::initDir_(const std::string& fn) const {

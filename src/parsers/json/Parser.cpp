@@ -102,6 +102,7 @@ ProblemDescription Parser::readExtended() const {
     );
 
 	ProblemDescription res;
+    res.project = this->filename;
 	res.analysis = readSolverOptions(j, "analysis");
 	res.grids = this->readGrids(j);
 
