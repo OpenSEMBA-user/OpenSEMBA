@@ -7,10 +7,12 @@
 #include "model/Model.h"
 
 #include "nlohmann/json.hpp"
+#include "filesystem/Project.h"
 
 namespace SEMBA {
 	class ProblemDescription {
 	public:
+		FileSystem::Project project;
 		Geometry::Grid3 grids;
 		SourceGroup sources;
 		nlohmann::json analysis;
