@@ -113,7 +113,7 @@ ProblemDescription Parser::readExtended() const {
 
 	this->readBoundary(j, *mesh, materialsGroup, res.grids);
 
-	res.model = Model::Model(*mesh, materialsGroup);
+	res.model = Model::Model<>(*mesh, materialsGroup);
 
 	return res;
 }

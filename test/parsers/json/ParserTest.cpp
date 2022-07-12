@@ -110,14 +110,14 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
     // 384 coming from grid, 8 from source, 1 from point probe and 8 from far field
     // New elements added as part of Boundaries: 6 faces * 4 points/face
-    ASSERT_EQ(384 + 8 + 1 + 8 + 24, model.unstructuredMesh.coords().size());
+    ASSERT_EQ(384 + 8 + 1 + 8 + 24, model.mesh.coords().size());
     EXPECT_EQ(
         Math::CVecR3(2.33333325, -5.71501865e-16, 1.66666663),
-        model.unstructuredMesh.coords().get()[0]->pos()
+        model.mesh.coords().get()[0]->pos()
     );
     EXPECT_EQ(
         Math::CVecR3(1.28204191, -1.31762123e+01, -1.70370862e-01),
-        model.unstructuredMesh.coords().get()[383]->pos()
+        model.mesh.coords().get()[383]->pos()
     );
 
     auto& probes = data.outputRequests;

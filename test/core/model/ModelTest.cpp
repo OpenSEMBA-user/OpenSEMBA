@@ -3,7 +3,7 @@
 #include "physicalModel/Predefined.h"
 #include "model/Model.h"
 
-using ModelObject = SEMBA::Model::Model;
+using ModelObject = SEMBA::Model::UnstructuredModel;
 
 using namespace SEMBA;
 using namespace Model;
@@ -13,10 +13,10 @@ TEST(ModelTest, CanCreate) {
 
 	EXPECT_NE(&model, nullptr);
 
-	EXPECT_NE(&model.unstructuredMesh, nullptr);
-	EXPECT_TRUE(model.unstructuredMesh.coords().empty());
-	EXPECT_TRUE(model.unstructuredMesh.elems().empty());
-	EXPECT_TRUE(model.unstructuredMesh.layers().empty());
+	EXPECT_NE(&model.mesh, nullptr);
+	EXPECT_TRUE(model.mesh.coords().empty());
+	EXPECT_TRUE(model.mesh.elems().empty());
+	EXPECT_TRUE(model.mesh.layers().empty());
 
 	EXPECT_TRUE(model.physicalModels.empty());
 }
@@ -48,20 +48,20 @@ TEST(ModelTest, CanInitializeGrid) {
 	);
 
 	Mesh::Unstructured mesh = Mesh::Unstructured(coordinatesGroup, elementsGroup);
-	model.unstructuredMesh = mesh;
+	model.mesh = mesh;
 
-	EXPECT_FALSE(model.unstructuredMesh.coords().empty());
-	EXPECT_EQ(2, model.unstructuredMesh.coords().size());
+	EXPECT_FALSE(model.mesh.coords().empty());
+	EXPECT_EQ(2, model.mesh.coords().size());
 
 	EXPECT_EQ(
 		Math::CVecR3(1.0, 2.0, 3.0), 
-		(model.unstructuredMesh.coords()).getId(Coordinate::Id(2))->pos()
+		(model.mesh.coords()).getId(Coordinate::Id(2))->pos()
 	);
 
-	EXPECT_FALSE(model.unstructuredMesh.elems().empty());
-	EXPECT_EQ(1, model.unstructuredMesh.elems().size());
+	EXPECT_FALSE(model.mesh.elems().empty());
+	EXPECT_EQ(1, model.mesh.elems().size());
 
-	EXPECT_TRUE(model.unstructuredMesh.layers().empty());
+	EXPECT_TRUE(model.mesh.layers().empty());
 }
 
 TEST(ModelTest, CanInitializePhysicalModels) {
@@ -121,8 +121,8 @@ TEST(ModelTest, CanCopyConstructor) {
 	ModelObject model = ModelObject(mesh, physicalModelsGroup);
 
 	EXPECT_EQ(
-		model.unstructuredMesh.coords().getId(Coordinate::Id(1)),
-		model.unstructuredMesh.elems().getId(ElemId(1))->getV(0)
+		model.mesh.coords().getId(Coordinate::Id(1)),
+		model.mesh.elems().getId(ElemId(1))->getV(0)
 	);
 
 	ModelObject newModel(model);
@@ -139,13 +139,13 @@ TEST(ModelTest, CanCopyConstructor) {
 		newModel.physicalModels.get().front()->getName()
 	);
 
-	auto newCoordinate1 = newModel.unstructuredMesh.coords().getId(Coordinate::Id(1));
+	auto newCoordinate1 = newModel.mesh.coords().getId(Coordinate::Id(1));
 	EXPECT_EQ(
 		newCoordinate1,
-		newModel.unstructuredMesh.elems().getId(ElemId(1))->getV(0)
+		newModel.mesh.elems().getId(ElemId(1))->getV(0)
 	);
 
-	auto coordinate1 = model.unstructuredMesh.coords().getId(Coordinate::Id(1));
+	auto coordinate1 = model.mesh.coords().getId(Coordinate::Id(1));
 	EXPECT_NE(coordinate1, newCoordinate1);
 
 	EXPECT_EQ(coordinate1->pos(), newCoordinate1->pos());

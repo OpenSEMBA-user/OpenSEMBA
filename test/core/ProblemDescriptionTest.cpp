@@ -141,7 +141,7 @@ TEST(ProblemDescriptionTest, CanInitializeModel) {
 		)
 	);
 
-	const Model::Model model = Model::Model(
+	const Model::UnstructuredModel model = Model::UnstructuredModel(
 		Geometry::Mesh::Unstructured(coordinatesGroup, elementsGroup),
 		physicalModelsGroup
 	);
@@ -152,13 +152,13 @@ TEST(ProblemDescriptionTest, CanInitializeModel) {
 	EXPECT_EQ("Material PEC", problemDescription.model.physicalModels.get()[0]->getName());
 	EXPECT_EQ("PML_Bound", problemDescription.model.physicalModels.get()[1]->getName());
 
-	EXPECT_FALSE(problemDescription.model.unstructuredMesh.coords().empty());
+	EXPECT_FALSE(problemDescription.model.mesh.coords().empty());
 	EXPECT_EQ(
 		Math::CVecR3(1.0, 2.0, 3.0),
-		(problemDescription.model.unstructuredMesh.coords().get()[1])->pos()
+		(problemDescription.model.mesh.coords().get()[1])->pos()
 	);
 
-	const auto& element = problemDescription.model.unstructuredMesh.elems().getId(Geometry::ElemId(3));
+	const auto& element = problemDescription.model.mesh.elems().getId(Geometry::ElemId(3));
 
 	EXPECT_EQ(
 		element->getMatId(),
@@ -298,7 +298,7 @@ TEST(ProblemDescriptionTest, CanCopyConstructor) {
 			)
 	);
 
-	const Model::Model model = Model::Model(
+	const Model::UnstructuredModel model = Model::UnstructuredModel(
 		unstructuredMesh,
 		physicalModelsGroup
 	);

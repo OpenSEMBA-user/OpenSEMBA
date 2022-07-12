@@ -11,14 +11,14 @@ ProblemDescription::ProblemDescription(const ProblemDescription& rhs) {
     outputRequests = rhs.outputRequests;
     for (auto& outputRequest : outputRequests) {
         outputRequest->setTarget(
-            model.unstructuredMesh.reassign(outputRequest->getTarget())
+            model.mesh.reassign(outputRequest->getTarget())
         );
     }
 
     sources = rhs.sources;
     for (auto& source : sources) {
         source->setTarget(
-            model.unstructuredMesh.reassign(source->getTarget())
+            model.mesh.reassign(source->getTarget())
         );
     }
 }
@@ -32,14 +32,14 @@ ProblemDescription& ProblemDescription::operator=(const ProblemDescription& rhs)
     outputRequests = rhs.outputRequests;
     for (auto& outputRequest : outputRequests) {
         outputRequest->setTarget(
-            model.unstructuredMesh.reassign(outputRequest->getTarget())
+            model.mesh.reassign(outputRequest->getTarget())
         );
     }
 
     sources = rhs.sources;
     for (auto& source : sources) {
         source->setTarget(
-            model.unstructuredMesh.reassign(source->getTarget())
+            model.mesh.reassign(source->getTarget())
         );
     }
 
