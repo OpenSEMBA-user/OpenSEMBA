@@ -11,7 +11,7 @@
 using namespace SEMBA;
 
 TEST(ProblemDescriptionTest, CanCreate) {
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 
 	EXPECT_NE(&problemDescription, nullptr);
 }
@@ -19,14 +19,14 @@ TEST(ProblemDescriptionTest, CanCreate) {
 TEST(ProblemDescriptionTest, CanInitializeProject) {
 	const std::string path = "My/Project/Path/File.dat";
 
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 	problemDescription.project = FileSystem::Project(path);
 
 	EXPECT_EQ(problemDescription.project, path);
 }
 
 TEST(ProblemDescriptionTest, CanInitializeGrids) {
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 
 	auto grid3 = Geometry::Grid3(
 		Geometry::BoxR3(
@@ -43,7 +43,7 @@ TEST(ProblemDescriptionTest, CanInitializeGrids) {
 }
 
 TEST(ProblemDescriptionTest, CanInitializeSources) {
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 
 	Source::Group<> sources = Source::Group<>();
 
@@ -75,7 +75,7 @@ TEST(ProblemDescriptionTest, CanInitializeSources) {
 }
 
 TEST(ProblemDescriptionTest, CanInitializeAnalysis) {
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 
 	nlohmann::json analysis = R"({"solver": "ugrfdtd", "someOtherOption": true})"_json;
 
@@ -87,7 +87,7 @@ TEST(ProblemDescriptionTest, CanInitializeAnalysis) {
 }
 
 TEST(ProblemDescriptionTest, CanInitializeModel) {
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 
 	PMGroup physicalModelsGroup = PMGroup();
 	physicalModelsGroup.addAndAssignId(
@@ -181,7 +181,7 @@ TEST(ProblemDescriptionTest, CanInitializeModel) {
 }
 
 TEST(ProblemDescriptionTest, CanInitializeOutputRequests) {
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 
 	OutputRequest::OutputRequest::Target target = OutputRequest::OutputRequest::Target();	
 	const Geometry::CoordR3* coords[1] = {new Geometry::CoordR3(Geometry::CoordId(), Math::CVecR3(1.0, 2.0, 3.0))};
@@ -226,7 +226,7 @@ TEST(ProblemDescriptionTest, CanInitializeOutputRequests) {
 }
 
 TEST(ProblemDescriptionTest, CanCopyConstructor) {
-	ProblemDescription problemDescription = ProblemDescription();
+	UnstructuredProblemDescription problemDescription = UnstructuredProblemDescription();
 
 	// Create mesh
 	Geometry::CoordR3Group coordinatesGroup = Geometry::CoordR3Group();
@@ -304,7 +304,7 @@ TEST(ProblemDescriptionTest, CanCopyConstructor) {
 		std::make_unique<PhysicalModel::PEC>(
 			PhysicalModel::Id(),
 			"Material PEC"
-			)
+		)
 	);
 
 	const Model::UnstructuredModel model = Model::UnstructuredModel(
@@ -319,7 +319,7 @@ TEST(ProblemDescriptionTest, CanCopyConstructor) {
 	problemDescription.project = FileSystem::Project("MyPath");
 
 	// Call copy constructor and check
-	ProblemDescription copy(problemDescription);
+	UnstructuredProblemDescription copy(problemDescription);
 
 	auto originalCoordinatePointer = problemDescription.outputRequests.get().front()->getTarget().front()->castTo<Geometry::NodR>()->getV(0);
 	auto newCoordinatePointer = copy.outputRequests.get().front()->getTarget().front()->castTo<Geometry::NodR>()->getV(0);

@@ -10,20 +10,26 @@
 #include "filesystem/Project.h"
 
 namespace SEMBA {
-	class ProblemDescription {
+	template<typename M = Model::UnstructuredModel>
+	class ProblemDescriptionBase {
 	public:
 		FileSystem::Project project;
 		Geometry::Grid3 grids;
 		SourceGroup sources;
 		nlohmann::json analysis;
 
-		Model::UnstructuredModel model;
+		M model;
 
 		OutputRequestGroup outputRequests;
 
-		ProblemDescription() = default;
-		ProblemDescription(const ProblemDescription& rhs);
+		ProblemDescriptionBase() = default;
+		ProblemDescriptionBase(const ProblemDescriptionBase& rhs);
 
-		ProblemDescription& operator=(const ProblemDescription& rhs);
+		ProblemDescriptionBase& operator=(const ProblemDescriptionBase& rhs);
 	};
+
+	typedef ProblemDescriptionBase<> UnstructuredProblemDescription;
+	typedef ProblemDescriptionBase<Model::StructuredModel> StructuredProblemDescription;
 }
+
+#include "ProblemDescription.hpp"

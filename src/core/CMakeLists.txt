@@ -18,7 +18,7 @@ if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/Data.h AND EXISTS
     add_library(opensemba_core STATIC ${CMAKE_CURRENT_LIST_DIR}/Data.h
                                            ${CMAKE_CURRENT_LIST_DIR}/Data.cpp
                                            ${CMAKE_CURRENT_LIST_DIR}/ProblemDescription.h
-                                           ${CMAKE_CURRENT_LIST_DIR}/ProblemDescription.cpp
+                                           ${CMAKE_CURRENT_LIST_DIR}/ProblemDescription.hpp
     )
 
     find_package(nlohmann_json CONFIG REQUIRED)

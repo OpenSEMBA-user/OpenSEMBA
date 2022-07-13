@@ -2,7 +2,8 @@
 
 namespace SEMBA {
 
-ProblemDescription::ProblemDescription(const ProblemDescription& rhs) {
+template<typename M>
+ProblemDescriptionBase<M>::ProblemDescriptionBase(const ProblemDescriptionBase& rhs) {
     grids = rhs.grids;
     analysis = rhs.analysis;
     project = rhs.project;
@@ -24,7 +25,8 @@ ProblemDescription::ProblemDescription(const ProblemDescription& rhs) {
     }
 }
 
-ProblemDescription& ProblemDescription::operator=(const ProblemDescription& rhs) {
+template<typename M>
+ProblemDescriptionBase<M>& ProblemDescriptionBase<M>::operator=(const ProblemDescriptionBase& rhs) {
     grids = rhs.grids;
     analysis = rhs.analysis;
     project = rhs.project;
