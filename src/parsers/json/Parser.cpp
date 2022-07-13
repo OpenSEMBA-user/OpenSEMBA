@@ -83,7 +83,7 @@ std::vector<const Geometry::CoordR3*> addAngGetCoordView(
     return coords;
 }
 
-ProblemDescription Parser::readExtended() const {
+UnstructuredProblemDescription Parser::readExtended() const {
 	std::ifstream stream(this->filename);
 	if (!stream.is_open()) {
 		throw std::logic_error("Can not open file: " + this->filename);
@@ -101,7 +101,7 @@ ProblemDescription Parser::readExtended() const {
         j.at("_version").get<std::string>()
     );
 
-	ProblemDescription res;
+    UnstructuredProblemDescription res;
     res.project = this->filename;
 	res.analysis = readSolverOptions(j, "analysis");
 	res.grids = this->readGrids(j);

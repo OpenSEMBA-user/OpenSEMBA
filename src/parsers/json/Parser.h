@@ -38,7 +38,7 @@ public:
 
     Parser(const std::string& filename);
     Data read() const;
-    ProblemDescription readExtended() const;
+    UnstructuredProblemDescription readExtended() const;
     
 private:
     json readSolverOptions(const json&, const std::string& key = "solverOptions") const;
