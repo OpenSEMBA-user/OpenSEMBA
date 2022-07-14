@@ -20,16 +20,16 @@ namespace SEMBA {
 namespace Exporters {
 namespace VTK {
 
-Exporter::Exporter(const Data& smb, const std::string& fn) :   
+Exporter::Exporter(const UnstructuredProblemDescription& smb, const std::string& fn) :
     SEMBA::Exporters::Exporter(fn) 
 {
     initDir_(fn + ".vtk");
     writeMesh_(smb);
 }
 
-void Exporter::writeMesh_(const Data& smb)
+void Exporter::writeMesh_(const UnstructuredProblemDescription& smb)
 {
-    const Geometry::Mesh::Mesh* inMesh = smb.mesh.get();
+    const Geometry::Mesh::Unstructured* inMesh = &smb.model.mesh;
     const SourceGroup& srcs = smb.sources;
     const OutputRequestGroup& oRqs = smb.outputRequests;
 
@@ -40,23 +40,9 @@ void Exporter::writeMesh_(const Data& smb)
     const Geometry::Mesh::Structured* meshStr;
 
     std::string preName;
-    if (inMesh->is<Geometry::Mesh::Structured>()) {
-        meshStr = inMesh->castTo<Geometry::Mesh::Structured>();
-        mesh = meshStr->getMeshUnstructured();
-        preName = "str_";
-        grid = &inMesh->castTo<Geometry::Mesh::Structured>()->grid();
-    }
-    else if (inMesh->is<Geometry::Mesh::Geometric>()) {
-        meshStr = nullptr;
-        mesh = inMesh->castTo<Geometry::Mesh::Geometric>();
-        preName = "geo_";
-        grid = &inMesh->castTo<Geometry::Mesh::Geometric>()->grid();
-    }
-    else {
-        meshStr = nullptr;
-        mesh = inMesh->castTo<Geometry::Mesh::Unstructured>();
-        grid = nullptr;
-    }
+    meshStr = nullptr;
+    mesh = inMesh;
+    grid = nullptr;
 
     std::string filename = getFilename() + ".pvd";
     std::ofstream outFile(filename.c_str());
@@ -71,9 +57,9 @@ void Exporter::writeMesh_(const Data& smb)
 
     std::size_t part = 0;
     // Writes materials.
-    if (smb.physicalModels.size() > 0) {
+    if (smb.model.physicalModels.size() > 0) {
         for (auto const& lay : mesh->layers()) {
-            for (auto const& mat : smb.physicalModels) {
+            for (auto const& mat : smb.model.physicalModels) {
                 writeFile_(
                     mesh->elems().getMatLayerId(mat->getId(), lay->getId()),
                     makeValid_(preName + mat->getName() + "@" + lay->getName()),

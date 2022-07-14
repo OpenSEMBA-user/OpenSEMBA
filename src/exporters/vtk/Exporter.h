@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "exporters/Exporter.h"
-#include "Data.h"
+#include "ProblemDescription.h"
 
 namespace SEMBA {
 namespace Exporters {
@@ -13,7 +13,7 @@ namespace VTK {
 
 class Exporter : public SEMBA::Exporters::Exporter {
 public:
-    Exporter(const Data& smb, const std::string& fn);
+    Exporter(const UnstructuredProblemDescription&, const std::string&);
     
 private:
     enum CELL_TYPES {
@@ -37,7 +37,7 @@ private:
         VTK_QUADRATIC_TETRA      = 24,
         VTK_QUADRATIC_HEXAHEDRON = 25
     };
-    void writeMesh_(const Data& smb);
+    void writeMesh_(const UnstructuredProblemDescription&);
     void writeFile_(const ElemRView& elems,
                     const std::string& name,
                     std::ofstream& outMain,
