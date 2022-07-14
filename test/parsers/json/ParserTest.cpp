@@ -35,7 +35,7 @@ TEST_F(ParserJSONParserTest, Sphere)
 
 TEST_F(ParserJSONParserTest, SphereExtended)
 {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended.smb.json");
 
     auto data = jsonParser.readExtended();
 
@@ -70,7 +70,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 	auto& analysis = data.analysis;
 	EXPECT_NE(NULL, analysis);
 
-	std::ifstream input("testData/sphere.gid/sphere-extended.dat");
+	std::ifstream input("testData/sphere.gid/sphere-extended.smb.json");
 	json j;
 	input >> j;
 
@@ -136,7 +136,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
 TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)
 {
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended-wrong-subversion.dat");
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended-wrong-subversion.smb.json");
     try {
         jsonParser.readExtended();
         FAIL() << "No exception was thrown";
