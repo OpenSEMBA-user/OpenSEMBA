@@ -5,8 +5,25 @@ namespace Util {
 namespace Wire {
 
 template<class T>
-Group<T>::Group(const Data& smb) {
-    init_(smb);
+Group<T>::Group(const Model::UnstructuredModel& model) {
+    fillWiresInfo_(
+        constructGraph_(
+            model.mesh.elems().getOf<Geometry::Element::Line<Math::Real>>(),
+            model.physicalModels
+        ),
+        model.physicalModels
+    );
+}
+
+template<class T>
+Group<T>::Group(const Model::StructuredModel& model) {
+    fillWiresInfo_(
+        constructGraph_(
+            model.mesh.elems().getOf<Geometry::Element::Line<Math::Int>>(),
+            model.physicalModels
+        ),
+        model.physicalModels
+    );
 }
 
 template<class T>
@@ -21,30 +38,14 @@ Group<T>::~Group() {
 }
 
 template<class T>
-void Group<T>::init_(const Data& smb) {
-    // First, the graph is constructed
-    const Graph& graph = constructGraph_(smb);
-    // From the graph we obtain the information.
-    fillWiresInfo_(graph, smb);
-}
-
-template<class T>
-typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
+typename Group<T>::Graph Group<T>::constructGraph_(
+    std::vector<const Geometry::Element::Line<T>*>& lines,
+    const PMGroup& mats
+) {
     // We get the lines with wire or union materials
     std::vector<const Geometry::Element::Line<T>*> wires;
 
-    auto const& mats = smb.physicalModels;
-    {
-        std::vector<const Geometry::Element::Line<T>*> lines;
-
-        if (std::is_floating_point<T>::value) {
-            lines = smb.mesh->castTo<Geometry::Mesh::Unstructured>()
-                        ->elems().getOf<Geometry::Element::Line<T>>();
-        } else if (std::is_integral<T>::value) {
-            lines = smb.mesh->castTo<Geometry::Mesh::Structured>()
-                        ->elems().getOf<Geometry::Element::Line<T>>();
-        }
-        
+    {        
         std::vector<MatId> matIds;
         for (auto const& mat : mats.getOf<PhysicalModel::Wire::Wire>()) {
             matIds.push_back(mat->getId());
@@ -62,6 +63,7 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
             }
         }
     }
+
     // The graph of these lines is created
     Graph graph(wires);
     const typename Graph::GraphBound* nodePtr;
@@ -159,7 +161,7 @@ typename Group<T>::Graph Group<T>::constructGraph_(const Data& smb) {
 
 template<class T>
 void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
-                              const Data& smb) { 
+                              const SEMBA::PMGroup& mats) { 
     // First we get the different wires and the lines that make up each one.
     std::vector<std::vector<const Geometry::Element::Line<T>*>> wires =
         getLines_(graph);
@@ -172,7 +174,7 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
         wireMat = nullptr;
         extremeL = extremeR = nullptr;
         // We get the wire and union materials that make up the wire.
-        getWireMats_(wireMat, extremeL, extremeR, wires[i], smb, graph);
+        getWireMats_(wireMat, extremeL, extremeR, wires[i], mats, graph);
         if (wireMat == nullptr) {
             continue;
         }
@@ -262,10 +264,9 @@ void Group<T>::getWireMats_(
         const PhysicalModel::Multiport::Multiport*& extremeL,
         const PhysicalModel::Multiport::Multiport*& extremeR,
         const std::vector<const Geometry::Element::Line<T>*>& lines,
-        const Data& smb,
+        const SEMBA::PMGroup& mats,
         const Graph& graph) {
 
-    const PhysicalModel::Group<>& mats = smb.physicalModels;
     if (lines.empty()) {
         return;
     }
