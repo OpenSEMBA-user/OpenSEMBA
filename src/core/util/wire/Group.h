@@ -6,7 +6,7 @@
 #include <set>
 #include <type_traits>
 
-#include "Data.h"
+#include "ProblemDescription.h"
 #include "geometry/element/Polyline.h"
 #include "geometry/element/Line2.h"
 #include "geometry/graph/Vertices.h"
@@ -39,7 +39,8 @@ public:
                 Geometry::Element::Line<T>,
                 Geometry::Coordinate::Coordinate<T,3>> Graph;
 
-    Group(const Data&);
+    Group(const Model::UnstructuredModel&);
+    Group(const Model::StructuredModel&);
     ~Group();
 
     std::size_t numberOfWires() const { return wires_.size(); }
@@ -69,17 +70,18 @@ private:
 
     std::map<MatId, PhysicalModel::Wire::Extremes*> mats_;
 
-    void init_(const Data&);
-    Graph constructGraph_(const Data&);
-    void fillWiresInfo_(const Graph&,
-                        const Data&);
+    Graph constructGraph_(
+        std::vector<const Geometry::Element::Line<T>*>&,
+        const PMGroup&
+    );
+    void fillWiresInfo_(const Graph&, const SEMBA::PMGroup&);
     std::vector<std::vector<const Geometry::Element::Line<T>*>>
         getLines_(const Graph&);
     void getWireMats_(const PhysicalModel::Wire::Wire*& wireMat,
                       const PhysicalModel::Multiport::Multiport*& extremeL,
                       const PhysicalModel::Multiport::Multiport*& extremeR,
                       const std::vector<const Geometry::Element::Line<T>*>&,
-                      const Data&,
+                      const SEMBA::PMGroup&,
                       const Graph&);
     Geometry::Element::Polyline<T>* newWire_(
             const std::vector<const Geometry::Element::Line<T>*>& lines,
