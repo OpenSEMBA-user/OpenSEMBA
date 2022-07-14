@@ -15,6 +15,8 @@
 #include <Shlwapi.h>
 #endif
 
+#include <filesystem>
+
 namespace SEMBA {
 namespace FileSystem {
 
@@ -307,14 +309,14 @@ void Project::exec(const std::string arguments) const {
 }
 
 std::string Project::getExtension() const {
-    size_t pos = rfind(".");
-    if (pos == std::string::npos) {
+    auto name = std::filesystem::path(this->toStr()).filename().string();
+
+    auto position = name.find_first_of('.');
+    if (position == std::string::npos || position == 0) {
         return *this;
     }
-    if (pos == 0) {
-        return *this;
-    }
-    return this->substr(pos, std::string::npos);
+
+    return name.substr(position, std::string::npos);
 }
 
 std::string Project::getFullPath() const {
