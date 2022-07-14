@@ -25,7 +25,7 @@ const Math::CVecR3 sibcColor(100, 0, 100);
 const Math::CVecR3 emSourceColor(100, 100, 0);
 
 void Exporter::init_(
-        const Data& smb,
+        UnstructuredProblemDescription& smb,
         GiD_PostMode mode,
         const std::string& fn) {
     // Sets default values.
@@ -49,18 +49,18 @@ void Exporter::init_(
         throw std::logic_error("Invalid GiD exporting mode.");
     }
 
-    auto gSFactor = smb.solver.at("geometryScalingFactor");
+    auto gSFactor = smb.analysis.at("geometryScalingFactor");
     if (gSFactor != nullptr) {
         Math::Real scalingFactor = gSFactor.get<double>();
         if (scalingFactor != 0.0) {
-            smb.mesh->applyScalingFactor(1.0 / scalingFactor);
+            smb.model.mesh.applyScalingFactor(1.0 / scalingFactor);
         }
     }
 
     writeMesh_(smb);
 }
 
-Exporter::Exporter(const Data& smb, const std::string& fn, GiD_PostMode mode)
+Exporter::Exporter(UnstructuredProblemDescription& smb, const std::string& fn, GiD_PostMode mode)
 : 	SEMBA::Exporters::Exporter(fn) {
     init_(smb, mode, fn);
 }
@@ -157,9 +157,9 @@ ElemRView getElementsByTarget(const Geometry::ElemView& targets, const Geometry:
     return elementsToWrite;
 }
 
-void Exporter::writeMesh_(const Data& smb) 
+void Exporter::writeMesh_(const UnstructuredProblemDescription& smb)
 {
-    const Geometry::Mesh::Mesh* inMesh = smb.mesh.get();
+    const Geometry::Mesh::Unstructured* inMesh = &smb.model.mesh;
     const SourceGroup& srcs = smb.sources;
     const OutputRequestGroup& oRqs = smb.outputRequests;
 
@@ -169,27 +169,12 @@ void Exporter::writeMesh_(const Data& smb)
     const Geometry::Mesh::Unstructured* mesh;
     std::string preName;
     
-    if (inMesh->is<Geometry::Mesh::Structured>()) {
-        mesh = inMesh->castTo<Geometry::Mesh::Structured>()->getMeshUnstructured();
-        preName = "str_";
-        grid = &inMesh->castTo<Geometry::Mesh::Structured>()->grid();
-    }
-    else if (inMesh->is<Geometry::Mesh::Geometric>()) {
-        mesh = inMesh->castTo<Geometry::Mesh::Geometric>();
-        preName = "geo_";
-        grid = &inMesh->castTo<Geometry::Mesh::Geometric>()->grid();
-    }
-    else if (inMesh->is<Geometry::Mesh::Unstructured>()) {
-        mesh = inMesh->castTo<Geometry::Mesh::Unstructured>();
-        grid = nullptr;
-    }
-    else {
-        throw std::runtime_error("Exporting this type of mesh is not supported.");
-    }
+    mesh = inMesh;
+    grid = nullptr;
 
     // Writes materials.
     for (auto const& lay : mesh->layers()) {
-        for (auto const& mat: smb.physicalModels) {
+        for (auto const& mat: smb.model.physicalModels) {
             writeAllElements_(
                 mesh->elems().getMatLayerId(mat->getId(), lay->getId()),
                 preName + mat->getName() + "@" + lay->getName()
@@ -207,25 +192,6 @@ void Exporter::writeMesh_(const Data& smb)
         writeAllElements_(getElementsByTarget(oRq->getTarget(), mesh), preName + "OutRq_" + oRq->getName());
     }
 
-    // Writes boundaries.
-    if (grid != nullptr && mesh->is<Geometry::Mesh::Structured>()) {
-        Geometry::CoordR3Group cG;
-        std::map<std::string, ElemRView> bounds;
-        for (Math::UInt i = 0; i < 3; i++) {
-            for (Math::UInt j = 0; j < 2; j++) {
-				Geometry::ElemR* bound = getBoundary(
-					Math::Constants::CartesianAxis(i),
-					Math::Constants::CartesianBound(j), 
-					cG, grid, mesh);
-                std::string name = getBoundaryName(
-                		inMesh->castTo<Geometry::Mesh::Structured>(), i, j);
-				bounds[name].push_back(bound);
-            }
-        }
-        for (auto it = bounds.begin(); it != bounds.end(); ++it) {
-			writeAllElements_(it->second, it->first);
-        }
-    }
     // Writes grid.
     Geometry::CoordR3Group cG;
     writeAllElements_(getGridElems(cG, grid).get(), "Grid");

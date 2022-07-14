@@ -5,7 +5,7 @@
 #include <cstring>
 #include <vector>
 
-#include "Data.h"
+#include "ProblemDescription.h"
 #include "geometry/mesh/Structured.h"
 
 namespace SEMBA {
