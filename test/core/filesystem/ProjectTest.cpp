@@ -55,5 +55,30 @@ TEST_F(ProjectTest, createDirs) {
 }
 
 #else
-#pragma message("Filesystem::Project tests are not implemented for WIN32.")
+
+TEST(ProjectTest, canHandleFileExtensions) {
+    Project p;
+
+    std::vector<std::pair<std::string, std::string>> list{
+        std::make_pair("/my/file/extension.program.subprogram", ".program.subprogram"),
+        std::make_pair("/my/file.gid/extension.program.subprogram", ".program.subprogram"),
+        std::make_pair("extension.program.subprogram", ".program.subprogram"),
+        std::make_pair("/my/file/extension.extension", ".extension"),
+        std::make_pair("/my/file.gid/extension.extension", ".extension"),
+        std::make_pair("extension.extension", ".extension"),
+        // Backslashes
+        std::make_pair("C:\\folder\\extension.program.subprogram", ".program.subprogram"),
+        std::make_pair("C:\\folder.gid\\extension.program.subprogram", ".program.subprogram"),
+        std::make_pair("extension.program.subprogram", ".program.subprogram"),
+        std::make_pair("C:\\folder\\extension.extension", ".extension"),
+        std::make_pair("C:\\folder.gid\\extension.extension", ".extension"),
+        std::make_pair("extension.extension", ".extension"),
+    };
+
+    for (const auto& pair : list) {
+        p.setFilename(pair.first);
+        EXPECT_EQ(pair.second, p.getExtension());
+    }
+}
+
 #endif
