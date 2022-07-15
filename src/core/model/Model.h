@@ -13,6 +13,7 @@ class Model {
 public:
 	Model() = default;
 	Model(const M&, const PMGroup&);
+	Model(const Model& rhs);
 	Model& operator=(const Model& rhs);
 
 	M mesh;

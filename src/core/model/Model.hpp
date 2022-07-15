@@ -14,6 +14,14 @@ Model<M>::Model(
 }
 
 template<typename M>
+Model<M>::Model(const Model& rhs) {
+	mesh = rhs.mesh;
+	physicalModels = rhs.physicalModels;
+
+	mesh.reassignPointers(physicalModels);
+}
+
+template<typename M>
 Model<M>& Model<M>::operator=(const Model& rhs) {
 	mesh = rhs.mesh;
 	physicalModels = rhs.physicalModels;
