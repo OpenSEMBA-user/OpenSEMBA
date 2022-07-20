@@ -129,29 +129,42 @@ template<typename T>
 typename GroupIdentifiableUnique<T>::iterator
 GroupIdentifiableUnique<T>::add(const std::unique_ptr<T>& elem)
 {
+    auto iteratorFound = items_.find(elem);
+    if (iteratorFound != items_.end()) {
+        items_.erase(iteratorFound);
+    }
+
     std::unique_ptr<T> res(dynamic_cast<T*>(elem->clone().release()));
     auto it = items_.insert(std::move(res));
     
-    if (it.second) {
-        return it.first;
-    }
-    else {
-        throw std::logic_error("Group: Duplicated Id " + elem->getId().toStr());
+    if (!it.second) {
+        throw std::logic_error(
+            "Group: Could not insert element with Id " + elem->getId().toStr() +
+            ". Another object with the same Id may have or may have not been deleted"
+        );
     }
 
+    return it.first;
 }
 
 template<typename T> 
 typename GroupIdentifiableUnique<T>::iterator
 GroupIdentifiableUnique<T>::add(std::unique_ptr<T>&& elem)
 {
+    auto iteratorFound = items_.find(elem);
+    if (iteratorFound != items_.end()) {
+        items_.erase(iteratorFound);
+    }
+
     auto it = items_.insert(std::move(elem));
-    if (it.second) {
-        return it.first;
+    if (!it.second) {
+        throw std::logic_error(
+            "Group: Could not insert element with Id " + elem->getId().toStr() +
+            ". Another object with the same Id may have or may have not been deleted"
+        );
     }
-    else {
-        throw std::logic_error("Group: Duplicated Id " + elem->getId().toStr());
-    }
+
+    return it.first;
 }
 
 template<typename T>
