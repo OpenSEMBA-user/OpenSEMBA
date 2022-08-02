@@ -472,14 +472,20 @@ ElemRGroup Parser::readElementsFromSTLFile(
     auto lay = lG.getId( LayerId(f.at("layerId").get<std::size_t>())  );
     auto mat = mG.getId( MatId(f.at("materialId").get<std::size_t>()) );
     
+    std::map<const CoordR3*, const CoordR3*> readedToGlobal;
+    for (const auto& c : m.coords()) {
+        const auto it{ cG.addAndAssignId(std::make_unique<CoordR3>(*c)) };
+        readedToGlobal.emplace(c.get(), it->get());
+    }
+
     ElemRGroup res;
     for (std::size_t e = 0; e < m.elems().size(); e++) {
         std::vector<const CoordR3*> vs;
         const ElemR* elem = m.elems()(e);
         for (std::size_t i = 0; i < elem->numberOfVertices(); i++) {
-            const CoordR3* elemV = elem->getV(i);
-            const CoordR3* newV = cG.addAndAssignId(std::make_unique<CoordR3>(*elemV))->get();
-            vs.push_back(newV);
+            auto it{ readedToGlobal.find(elem->getV(i)) };
+            assert(it != readedToGlobal.end());
+            vs.push_back(it->second);
         }
         res.addId( new Tri3(ElemId(0), vs.data(), lay, mat) );
     }
