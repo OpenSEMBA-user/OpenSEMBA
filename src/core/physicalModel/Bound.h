@@ -28,6 +28,8 @@ public:
     }
 
     Type getType() const;
+    std::string getTypeName() const;
+
 private:
     Type type;
 };

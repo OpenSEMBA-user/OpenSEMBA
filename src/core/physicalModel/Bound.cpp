@@ -11,32 +11,34 @@ Bound::Bound(const Bound& rhs) :
 }
 
 Bound::Bound(Id id, Type typeIn) : Identifiable<Id>(id), type(typeIn)
-{
-    std::string boundName;
+{   
+    setName(getTypeName() + "_Bound");
+}
+
+std::string Bound::getTypeName() const {
     if (type == Type::pec) {
-        boundName = "PEC";
+        return "PEC";
     }
     else if (type == Type::pmc) {
-        boundName = "PMC";
+        return "PMC";
     }
     else if (type == Type::pml) {
-        boundName = "PML";
+        return "PML";
     }
     else if (type == Type::periodic) {
-        boundName = "Periodic";
+        return "Periodic";
     }
     else if (type == Type::mur1) {
-        boundName = "MUR1";
+        return "MUR1";
     }
     else if (type == Type::mur2) {
-        boundName = "MUR2";
-    }
+        return "MUR2";
+    }// TODO: What happens with SMA?
     else {
-        throw std::logic_error("Unrecognized value in Bound ctor.");
+        throw std::logic_error("Unrecognized value for Bound type name");
     }
-    
-    setName(boundName + "_Bound");
 }
+
 
 Bound::Type Bound::getType() const {
     return type;
