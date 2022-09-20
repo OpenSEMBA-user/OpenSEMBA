@@ -39,30 +39,36 @@ namespace Parsers {
 namespace JSON {
 
 double getProgressionStepByTotalNumber(const json& j, const std::string& jsonKey) {
-    if (j.find("total" + jsonKey) != j.end()) {
-        int total = j.at("total" + jsonKey).get<int>();
+	if (j.find("total" + jsonKey) != j.end()) {
+		int total = j.at("total" + jsonKey).get<int>();
 
-        // TODO: Yet to be clarify differences between UI / JSON
-        auto step = j.at("final" + jsonKey) - j.at("initial" + jsonKey).get<double>();
-        if (total > 1) {
-            step = step / (total - 1);
-        }
+		// TODO: Yet to be clarify differences between UI / JSON
+		auto step = j.at("final" + jsonKey).get<double>() - j.at("initial" + jsonKey).get<double>();
 
-        return step;
+		if (total == 1 && step == 0.0) {
+			// Need a silly value here for solver to run
+			return 0.1;
+		}
 
-    }
+		if (total > 1) {
+			step = step / (total - 1);
+		}
 
-    if (j.find("step" + jsonKey) != j.end()) {
-        return j.at("step" + jsonKey).get<double>();
-    }
+		return step;
 
-    // TODO: Check better approach
-    std::string toLower = jsonKey;
-    for (auto& c : toLower) {
-        c = tolower(c);
-    }
+	}
 
-    return j.at(toLower + "Step").get<double>();
+	if (j.find("step" + jsonKey) != j.end()) {
+		return j.at("step" + jsonKey).get<double>();
+	}
+
+	// TODO: Check better approach
+	std::string toLower = jsonKey;
+	for (auto& c : toLower) {
+		c = tolower(c);
+	}
+
+	return j.at(toLower + "Step").get<double>();
 }
 
 std::vector<const Geometry::CoordR3*> addAngGetCoordView(
