@@ -7,6 +7,7 @@
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Tetrahedron4.h"
 #include "math/function/Gaussian.h"
+#include "outputRequest/FarField.h"
 
 using namespace SEMBA;
 using namespace SEMBA::Parsers::JSON;
@@ -144,6 +145,20 @@ TEST_F(ParserJSONParserTest, SphereExtendedWithWrongSubversion)
     catch (const std::logic_error& exception) {
         EXPECT_STREQ(exception.what(), "File version 0.15a is not supported.");
     }
+}
+
+TEST_F(ParserJSONParserTest, SphereExtendedWithOnePlaneFarField)
+{
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended-one-plane-farfield.smb.json");
+
+    auto data = jsonParser.readExtended();
+
+    EXPECT_EQ(data.outputRequests.sizeOf<OutputRequest::FarField>(), 1);
+    auto farFieldProbe = data.outputRequests.getOf<OutputRequest::FarField>().front();
+
+    EXPECT_EQ(farFieldProbe->initialPhi, 0.0);
+    EXPECT_EQ(farFieldProbe->finalPhi, 0.0);
+    EXPECT_EQ(farFieldProbe->stepPhi, 0.1 * 2 * Math::Constants::pi / 360.0);
 }
 
 TEST_F(ParserJSONParserTest, Wires) 
