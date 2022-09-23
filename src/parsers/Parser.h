@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "Data.h"
+#include "ProblemDescription.h"
 
 namespace SEMBA {
 namespace Parsers {
@@ -46,6 +47,8 @@ protected:
             return false;
         }
     }
+
+    void postReadOperations(UnstructuredProblemDescription& res) const;
 
     void postReadOperations(Data& res) const;
 };

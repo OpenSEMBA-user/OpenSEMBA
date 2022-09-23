@@ -48,5 +48,19 @@ void Parser::postReadOperations(Data& res) const {
     }
 }
 
+void Parser::postReadOperations(UnstructuredProblemDescription& res) const {
+	try {
+		Math::Real scalingFactor = res.analysis.at("geometryScalingFactor").get<double>();
+		res.model.mesh.applyScalingFactor(scalingFactor);
+        res.grids.applyScalingFactor(scalingFactor);
+	}
+	catch (...) {
+		std::cerr << "Unable to find geometryScalingFactor "
+			"during postReadOperations" << std::endl;
+		throw std::logic_error(
+			"Unable to find geometryScalingFactor during postReadOperations");
+	}
+}
+
 } /* namespace Parser */
 } /* namespace SEMBA */
