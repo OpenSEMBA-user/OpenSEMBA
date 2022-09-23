@@ -12,7 +12,7 @@ public:
     static const Math::CVecR3 pecColor, pmcColor, smaColor, pmlColor,
         sibcColor, emSourceColor;
 
-    Exporter(UnstructuredProblemDescription&, const std::string&, GiD_PostMode mode = GiD_PostAscii);
+    Exporter(const UnstructuredProblemDescription&, const std::string&, GiD_PostMode mode = GiD_PostAscii);
     virtual ~Exporter();
 
     void beginMesh(
@@ -40,7 +40,7 @@ private:
     GiD_FILE resultFile_;
     GiD_PostMode mode_;
 
-    void init_(UnstructuredProblemDescription& smb, GiD_PostMode mode, const std::string& fn);
+    void init_(const UnstructuredProblemDescription& smb, GiD_PostMode mode, const std::string& fn);
     void writeMesh_(const UnstructuredProblemDescription& smb);
 
     void writeElements_(

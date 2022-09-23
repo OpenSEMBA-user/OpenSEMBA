@@ -25,7 +25,7 @@ const Math::CVecR3 sibcColor(100, 0, 100);
 const Math::CVecR3 emSourceColor(100, 100, 0);
 
 void Exporter::init_(
-        UnstructuredProblemDescription& smb,
+        const UnstructuredProblemDescription& smb,
         GiD_PostMode mode,
         const std::string& fn) {
     // Sets default values.
@@ -49,18 +49,20 @@ void Exporter::init_(
         throw std::logic_error("Invalid GiD exporting mode.");
     }
 
-    auto gSFactor = smb.analysis.at("geometryScalingFactor");
+    UnstructuredProblemDescription unstructuredProblemDescription(smb);
+    auto& gSFactor = unstructuredProblemDescription.analysis.at("geometryScalingFactor");
     if (gSFactor != nullptr) {
         Math::Real scalingFactor = gSFactor.get<double>();
         if (scalingFactor != 0.0) {
-            smb.model.mesh.applyScalingFactor(1.0 / scalingFactor);
+            unstructuredProblemDescription.model.mesh.applyScalingFactor(1.0 / scalingFactor);
+            unstructuredProblemDescription.grids.applyScalingFactor(1.0 / scalingFactor);
         }
     }
 
-    writeMesh_(smb);
+    writeMesh_(unstructuredProblemDescription);
 }
 
-Exporter::Exporter(UnstructuredProblemDescription& smb, const std::string& fn, GiD_PostMode mode)
+Exporter::Exporter(const UnstructuredProblemDescription& smb, const std::string& fn, GiD_PostMode mode)
 : 	SEMBA::Exporters::Exporter(fn) {
     init_(smb, mode, fn);
 }
