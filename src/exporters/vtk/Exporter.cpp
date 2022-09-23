@@ -24,7 +24,18 @@ Exporter::Exporter(const UnstructuredProblemDescription& smb, const std::string&
     SEMBA::Exporters::Exporter(fn) 
 {
     initDir_(fn + ".vtk");
-    writeMesh_(smb);
+
+    UnstructuredProblemDescription unstructuredProblemDescription(smb);
+    auto& gSFactor = unstructuredProblemDescription.analysis.at("geometryScalingFactor");
+    if (gSFactor != nullptr) {
+        Math::Real scalingFactor = gSFactor.get<double>();
+        if (scalingFactor != 0.0) {
+            unstructuredProblemDescription.model.mesh.applyScalingFactor(1.0 / scalingFactor);
+            unstructuredProblemDescription.grids.applyScalingFactor(1.0 / scalingFactor);
+        }
+    }
+
+    writeMesh_(unstructuredProblemDescription);
 }
 
 void Exporter::writeMesh_(const UnstructuredProblemDescription& smb)
