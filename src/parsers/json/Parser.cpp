@@ -122,6 +122,8 @@ UnstructuredProblemDescription Parser::readExtended() const {
 
 	res.model = Model::UnstructuredModel(*mesh, materialsGroup);
 
+    this->postReadOperations(res);
+
 	return res;
 }
 
