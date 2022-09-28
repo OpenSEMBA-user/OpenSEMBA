@@ -738,6 +738,9 @@ ElemRGroup Parser::readElements(
 	if (elems.find("line") != elems.end()) {
 		res.addAndAssignIds(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
 	}
+	if (elems.find("node") != elems.end()) {
+		res.addAndAssignIds(readElemStrAs<NodR>(mG, lG, cG, elems.at("node").get<json>()));
+	}
 
 	if (elems.find("fromFile") != elems.end()) {
 		res.addAndAssignIds(readElementsFromFile(mG, lG, cG, elems.at("fromFile").get<json>()));

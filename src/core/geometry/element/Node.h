@@ -10,6 +10,8 @@ namespace Element {
 
 class NodeBase : public virtual Base {
 public:
+	static const std::size_t sizeOfCoordinates = 1;
+
     NodeBase() {};
     virtual ~NodeBase() {};
 
