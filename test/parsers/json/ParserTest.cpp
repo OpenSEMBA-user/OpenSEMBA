@@ -8,6 +8,7 @@
 #include "geometry/element/Tetrahedron4.h"
 #include "math/function/Gaussian.h"
 #include "outputRequest/FarField.h"
+#include "outputRequest/OnPoint.h"
 
 using namespace SEMBA;
 using namespace SEMBA::Parsers::JSON;
@@ -160,6 +161,19 @@ TEST_F(ParserJSONParserTest, SphereExtendedWithOnePlaneFarField)
     EXPECT_EQ(farFieldProbe->finalPhi, 0.0);
     EXPECT_EQ(farFieldProbe->stepPhi, 0.1 * 2 * Math::Constants::pi / 360.0);
 }
+
+
+TEST_F(ParserJSONParserTest, Antennas)
+{
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/antennas.gid/problem.smb.json");
+
+    auto data = jsonParser.readExtended();
+
+    EXPECT_EQ(data.outputRequests.sizeOf<OutputRequest::OnPoint>(), 3);
+    EXPECT_EQ(data.sources.sizeOf<Source::Generator>(), 1);
+    EXPECT_EQ(data.model.mesh.elems().sizeOf<Geometry::NodR>(), 6);
+}
+
 
 TEST_F(ParserJSONParserTest, Wires) 
 {
