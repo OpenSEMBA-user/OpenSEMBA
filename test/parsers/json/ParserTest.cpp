@@ -9,6 +9,8 @@
 #include "math/function/Gaussian.h"
 #include "outputRequest/FarField.h"
 #include "outputRequest/OnPoint.h"
+#include "physicalModel/wire/Wire.h"
+#include "physicalModel/multiport/RLC.h"
 
 using namespace SEMBA;
 using namespace SEMBA::Parsers::JSON;
@@ -172,6 +174,35 @@ TEST_F(ParserJSONParserTest, Antennas)
     EXPECT_EQ(data.outputRequests.sizeOf<OutputRequest::OnPoint>(), 3);
     EXPECT_EQ(data.sources.sizeOf<Source::Generator>(), 1);
     EXPECT_EQ(data.model.mesh.elems().sizeOf<Geometry::NodR>(), 6);
+
+    EXPECT_EQ(data.model.physicalModels.size(), 4); // Cable, connector, 2 bounds (pec and pml)
+
+    auto& materialCableList = data.model.physicalModels.getOf<SEMBA::PhysicalModel::Wire::Wire>();
+    EXPECT_EQ(materialCableList.size(), 1);
+
+    auto& materialPortList = data.model.physicalModels.getOf<SEMBA::PhysicalModel::Multiport::RLC>();
+    EXPECT_EQ(materialPortList.size(), 1);
+
+    auto& materialCable = materialCableList.front();
+    auto& materialPort = materialPortList.front();
+
+    SEMBA::Geometry::ElemView elementsWithCableMaterial;
+    for (auto& elem : data.model.mesh.elems()) {
+        if (elem->getMatId() == materialCable->getId()) {
+            elementsWithCableMaterial.push_back(elem.get());
+        }
+    }
+
+    EXPECT_EQ(elementsWithCableMaterial.size(), 2);
+
+    SEMBA::Geometry::ElemView elementsWithPortMaterial;
+    for (auto& elem : data.model.mesh.elems()) {
+        if (elem->getMatId() == materialPort->getId()) {
+            elementsWithPortMaterial.push_back(elem.get());
+        }
+    }
+
+    EXPECT_EQ(elementsWithPortMaterial.size(), 2);
 }
 
 
