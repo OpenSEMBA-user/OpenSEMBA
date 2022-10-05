@@ -126,8 +126,8 @@
         "logFrequencySweep": true,
         "transferFunctionFile": "predefinedExcitation.1.exc"
       },
-      "elemIds": [
-        7
+      "coordIds": [
+        5
       ]
     },
     {
@@ -144,8 +144,8 @@
         "logFrequencySweep": true,
         "transferFunctionFile": "predefinedExcitation.1.exc"
       },
-      "elemIds": [
-        2
+      "coordIds": [
+        1
       ]
     },
     {
@@ -162,8 +162,8 @@
         "logFrequencySweep": true,
         "transferFunctionFile": "predefinedExcitation.1.exc"
       },
-      "elemIds": [
-        5
+      "coordIds": [
+        3
       ]
     }
   ],
