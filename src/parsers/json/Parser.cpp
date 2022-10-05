@@ -581,10 +581,14 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
         ElemView target;
         if (j.contains("positions")) {
             target = readAndCreateCoordIdAsNodes(mesh, j.at("positions").get<json>());
+        } else if (j.contains("coordIds")) {
+            target = readCoordIdAsNodes(mesh, j.at("coordIds").get<json>());
+        } else if (j.contains("elemIds")) {
+            target = readNodes(mesh, j.at("elemIds").get<json>());
         } else {
-            target = readCoordIdAsNodes(mesh, j.at("elemIds").get<json>());
+            throw std::logic_error("Unrecognized OutRq_on_point key. Available are `positions`, `coordIds` and `elemIds`");
         }
-        
+
 		return std::make_unique<OutputRequest::OnPoint>(type, domain, name, target);
     }
     
@@ -1390,6 +1394,21 @@ ElemView Parser::readCoordIdAsNodes(
 
     return res;
 }
+
+
+ElemView Parser::readNodes(
+    Mesh::Unstructured& mesh,
+    const json& j
+) {
+    ElemView res;
+
+    for (auto it = j.begin(); it != j.end(); ++it) {
+        res.push_back(mesh.elems().getId(ElemId(it->get<int>())));
+    }
+
+    return res;
+}
+
 
 Geometry::ElemView Parser::readElemIdsAsGroupOf(
     Geometry::Mesh::Unstructured& mesh,
