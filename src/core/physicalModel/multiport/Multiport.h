@@ -30,10 +30,6 @@ public:
     Multiport(const Id& id, const std::string& name, const Type& type);
     virtual ~Multiport() = default;
 
-    virtual std::unique_ptr<PhysicalModel> clone() const override {
-        return std::make_unique<Multiport>(*this);
-    }
-
     virtual Type getType() const;
 
 protected:
