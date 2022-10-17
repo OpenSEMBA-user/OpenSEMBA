@@ -716,34 +716,54 @@ CoordR3Group Parser::readCoordinates(const json& j) const {
 }
 
 ElemRGroup Parser::readElements(
-        const PMGroup& mG, LayerGroup& lG, CoordR3Group& cG, const json& j) const
-{
+	const PMGroup& mG,
+	LayerGroup& lG,
+	CoordR3Group& cG,
+	const json& j
+) const {
 
-    if (j.find("elements") == j.end()) {
-        throw std::logic_error("Elements label was not found.");
-    }
+	if (j.find("elements") == j.end()) {
+		throw std::logic_error("Elements label was not found.");
+	}
 
-    ElemRGroup res;
-    const json& elems = j.at("elements").get<json>();
+	ElemRGroup res;
+	const json& elems = j.at("elements").get<json>();
 
-	// Check how to iterate over, somehow
+	// Check how to iterate over `elems` keys, somehow
 	if (elems.find("hexahedra") != elems.end()) {
-		res.addAndAssignIds(readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>()));
+		for (auto& element : readElemStrAs<HexR8>(mG, lG, cG, elems.at("hexahedra").get<json>())) {
+			res.add(std::move(element));
+		}
 	}
+
 	if (elems.find("tetrahedra") != elems.end()) {
-		res.addAndAssignIds(readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>()));
+		for (auto& element : readElemStrAs<Tet4>(mG, lG, cG, elems.at("tetrahedra").get<json>())) {
+			res.add(std::move(element));
+		}
 	}
+
 	if (elems.find("quadrilateral") != elems.end()) {
-		res.addAndAssignIds(readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>()));
+		for (auto& element : readElemStrAs<QuaR4>(mG, lG, cG, elems.at("quadrilateral").get<json>())) {
+			res.add(std::move(element));
+		}
 	}
+
 	if (elems.find("triangle") != elems.end()) {
-		res.addAndAssignIds(readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>()));
+		for (auto& element : readElemStrAs<Tri3>(mG, lG, cG, elems.at("triangle").get<json>())) {
+			res.add(std::move(element));
+		}
 	}
+
 	if (elems.find("line") != elems.end()) {
-		res.addAndAssignIds(readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>()));
+		for (auto& element : readElemStrAs<LinR2>(mG, lG, cG, elems.at("line").get<json>())) {
+			res.add(std::move(element));
+		}
 	}
+
 	if (elems.find("node") != elems.end()) {
-		res.addAndAssignIds(readElemStrAs<NodR>(mG, lG, cG, elems.at("node").get<json>()));
+		for (auto& element : readElemStrAs<NodR>(mG, lG, cG, elems.at("node").get<json>())) {
+			res.add(std::move(element));
+		}
 	}
 
 	if (elems.find("fromFile") != elems.end()) {

@@ -191,9 +191,9 @@ void Group<T>::fillWiresInfo_(const typename Group<T>::Graph& graph,
             std::stringstream aux;
             aux << wireMat->getName() << "_" << ++numWireMat[wireMat];
             wireExtremes = new PhysicalModel::Wire::Extremes(aux.str(),
-                                                             *wireMat,
-                                                             extremeL,
-                                                             extremeR);
+                *wireMat,
+                extremeL,
+                extremeR);
         }
         wireExtremes->setId(MatId(i + 1));
         mats_[wireExtremes->getId()] = wireExtremes;
