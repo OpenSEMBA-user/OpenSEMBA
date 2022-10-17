@@ -60,6 +60,8 @@ public:
     std::unique_ptr<ElemR> toUnstructured(const CoordR3Group&,
                           const Grid3&) const;
 
+    std::vector<std::unique_ptr<const Line2<T>>> splitByMiddle() const;
+
 private:
     static const Math::Simplex::Line<1> lin;
     // TODO: Remove plain array

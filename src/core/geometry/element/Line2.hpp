@@ -132,6 +132,36 @@ std::unique_ptr<ElemR> Line2<T>::toUnstructured(
     );
 }
 
+template<class T>
+std::vector<std::unique_ptr<const Line2<T>>> Line2<T>::splitByMiddle() const {
+    auto vertices = this->getVertices();
+    const Coordinate::Coordinate<T, 3>* left = vertices[0];
+    const Coordinate::Coordinate<T, 3>* right = vertices[1];
+
+    const Coordinate::Coordinate<T, 3>* middleCoordinate = new Coordinate::Coordinate<T, 3>{ CoordId(), (*right - *left) / 2};
+
+    std::vector<std::unique_ptr<const Line2<T>>> result{};
+
+    result.push_back(
+        std::make_unique<const Line2<T>>(
+            ElemId(), 
+            std::array<const Coordinate::Coordinate<T, 3>*, 2>{ left, middleCoordinate },
+            this->getLayer(),
+            this->getModel()
+        )
+    );
+    result.push_back(
+        std::make_unique<const Line2<T>>(
+            ElemId(), 
+            std::array<const Coordinate::Coordinate<T, 3>*, 2>{ middleCoordinate, right },
+            this->getLayer(),
+            this->getModel()
+        )
+    );
+
+    return result;
+}
+
 } /* namespace Element */
 } /* namespace Geometry */
 } /* namespace SEMBA */
