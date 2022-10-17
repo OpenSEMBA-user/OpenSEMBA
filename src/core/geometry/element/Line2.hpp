@@ -138,7 +138,7 @@ std::vector<std::unique_ptr<const Line2<T>>> Line2<T>::splitByMiddle() const {
     const Coordinate::Coordinate<T, 3>* left = vertices[0];
     const Coordinate::Coordinate<T, 3>* right = vertices[1];
 
-    const Coordinate::Coordinate<T, 3>* middleCoordinate = new Coordinate::Coordinate<T, 3>{ CoordId(), (*right - *left) / 2};
+    const Coordinate::Coordinate<T, 3>* middleCoordinate = new Coordinate::Coordinate<T, 3>{ CoordId(), (*right - *left) / 2 + *left};
 
     std::vector<std::unique_ptr<const Line2<T>>> result{};
 
