@@ -914,7 +914,8 @@ Grid3 Parser::readGrids(const json& j) const {
 		}
         return res;
 
-    } else if (gridType.compare("nativeGiD") == 0) {
+    } 
+    if (gridType.compare("nativeGiD") == 0) {
         Math::CVecR3 corner = strToCVecR3(g.at("corner").get<std::string>());
         Math::CVecR3 boxSize = strToCVecR3(g.at("boxSize").get<std::string>());
         Math::CVecI3 nGridPoints = strToCVecI3(g.at("nGridPoints").get<std::string>());
@@ -924,35 +925,37 @@ Grid3 Parser::readGrids(const json& j) const {
         pos[2] = g.at("zCoordinates").get<std::vector<double>>();
         if (!pos[0].empty()) {
             return Grid3(pos);
-        } else {
+        }
+        else {
             std::pair<Math::CVecR3, Math::CVecR3> box =
             { corner, corner + boxSize };
             return Grid3(box, nGridPoints);
         }
-    } else if (gridType.compare("positionsFromFile") == 0) {
+    } 
+    if (gridType.compare("positionsFromFile") == 0) {
         std::string folder = this->filename.getFolder();
         std::string projectName = this->filename.getProjectName();
         return buildGridFromFile(folder + projectName + ".grid.json");
-    } else if (gridType.compare("rectilinear") == 0) {
-        std::map<std::string, std::vector<double>> planes;
+    } 
+    if (gridType.compare("rectilinear") == 0) {
+        std::map<std::string, std::vector<Math::Real>> planes;
         for (const auto& label: { "xs", "ys", "zs"}) {
             auto dir{ g.find(label) };
-            if (dir != g.end()) {
-                auto plane{ dir->get<std::vector<double>>() };
-                if (plane.empty()) {
-                    throw std::logic_error("Grid file had empty positions in at least one direction");
-                }
-                planes.emplace(label, plane);
-            }
-            else {
+            if (dir == g.end()) {
                 throw std::logic_error("Missing position defintion in grid file in at least one direction");
             }
+            auto plane{ dir->get<std::vector<double>>() };
+            if (plane.empty()) {
+                throw std::logic_error("Grid file had empty positions in at least one direction");
+            }
+            planes.emplace(label, plane);
         }
         std::vector<Math::Real> pos[3]{ planes["xs"], planes["ys"],planes["zs"]};
         return Grid3(pos);
-    } else {
-        throw std::logic_error("Unrecognized grid type: " + gridType);
-    }
+    } 
+    
+    throw std::logic_error("Unrecognized grid type: " + gridType);
+    
 }
 
 Grid3 Parser::buildGridFromFile(const FileSystem::Project& jsonFile) const
