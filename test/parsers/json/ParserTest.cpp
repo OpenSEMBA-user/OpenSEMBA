@@ -37,6 +37,13 @@ TEST_F(ParserJSONParserTest, Sphere)
     EXPECT_EQ(Math::CVecI3(20), data.grids.getNumCells());
 }
 
+TEST_F(ParserJSONParserTest, RectlinearGrid) 
+{
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended-rectilinear.smb.json");
+    auto data{ jsonParser.readExtended() };
+    EXPECT_EQ(Math::CVecI3(1,2,3), data.grids.getNumCells());
+}
+
 TEST_F(ParserJSONParserTest, SphereExtended)
 {
     SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended.smb.json");

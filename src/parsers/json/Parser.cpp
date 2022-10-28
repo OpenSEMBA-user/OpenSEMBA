@@ -933,6 +933,23 @@ Grid3 Parser::readGrids(const json& j) const {
         std::string folder = this->filename.getFolder();
         std::string projectName = this->filename.getProjectName();
         return buildGridFromFile(folder + projectName + ".grid.json");
+    } else if (gridType.compare("rectilinear") == 0) {
+        std::map<std::string, std::vector<double>> planes;
+        for (const auto& label: { "xs", "ys", "zs"}) {
+            auto dir{ g.find(label) };
+            if (dir != g.end()) {
+                auto plane{ dir->get<std::vector<double>>() };
+                if (plane.empty()) {
+                    throw std::logic_error("Grid file had empty positions in at least one direction");
+                }
+                planes.emplace(label, plane);
+            }
+            else {
+                throw std::logic_error("Missing position defintion in grid file in at least one direction");
+            }
+        }
+        std::vector<Math::Real> pos[3]{ planes["xs"], planes["ys"],planes["zs"]};
+        return Grid3(pos);
     } else {
         throw std::logic_error("Unrecognized grid type: " + gridType);
     }
