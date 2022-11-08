@@ -559,7 +559,7 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
 				OutputRequest::BulkCurrent(
 					domain,
 					name,
-					readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()),
+                    readNodes(mesh, j.at("elemIds").get<json>()),
 					strToCartesianAxis(j.at("direction").get<std::string>()),
 					j.at("skip").get<int>()
 				)
@@ -1414,22 +1414,6 @@ Source::Port::Waveguide::ExcitationMode Parser::strToWaveguideMode(
     } else {
         throw std::logic_error("Unrecognized exc. mode label: " + str);
     }
-}
-
-ElemView Parser::readCoordIdAsNodes(
-    Mesh::Unstructured& mesh, 
-    const json& j
-) {
-    ElemView res;
-    
-    for (auto it = j.begin(); it != j.end(); ++it) {
-        const CoordR3* coord = mesh.coords().getId(CoordId(it->get<int>()));
-        auto itCoord = mesh.elems().addAndAssignId(std::make_unique<NodR>(ElemId(0), &coord));
-
-        res.push_back(itCoord->get());
-    }
-
-    return res;
 }
 
 

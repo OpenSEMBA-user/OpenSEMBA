@@ -94,11 +94,6 @@ private:
             Geometry::Mesh::Unstructured& mesh,
             const std::string& line);
 
-    static Geometry::ElemView readCoordIdAsNodes(
-        Geometry::Mesh::Unstructured& mesh, 
-        const json&
-    );
-
     static Geometry::ElemView Parser::readNodes(Geometry::Mesh::Unstructured&, const json&);
 
     static OutputRequest::OutputRequest::Type strToOutputType(std::string label);
