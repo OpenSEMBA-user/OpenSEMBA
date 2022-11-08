@@ -88,7 +88,8 @@
         "       3    3    1        2",
         "       5    2    2        3",
         "       6    3    2        4",
-        "       7    0    0        5"
+        "       7    0    0        5",
+        "       8    0    0        1"
       ],
       "line": [
         "       1    1    1        1        2",
@@ -101,7 +102,7 @@
     {
       "sourceType": "generator",
       "type": "voltage",
-      "coordIds": [
+      "elemIds": [
         1
       ],
       "magnitude": {

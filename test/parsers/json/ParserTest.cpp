@@ -143,7 +143,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
     auto recoveredNode = probes.get()[0]->getTarget().at(0)->castTo<Geometry::NodR>();
     EXPECT_EQ(
-        Math::CVecR3(-0.8441360141053171, 12.017228978451016, 13.154724231963254),
+        Math::CVecR3(-0.844136014, 12.0172290, 13.1547242),
         recoveredNode->getV(0)->pos()
     );
 }
@@ -214,49 +214,6 @@ TEST_F(ParserJSONParserTest, Antennas)
 
     EXPECT_EQ(elementsWithPortMaterial.size(), 2);
 }
-
-
-TEST_F(ParserJSONParserTest, AntennasWithProbesUsingCoordIds)
-{
-    SEMBA::Parsers::JSON::Parser jsonParser("testData/antennas.gid/problem-probes-with-coordIds.smb.json");
-
-    auto data = jsonParser.readExtended();
-
-    EXPECT_EQ(data.outputRequests.sizeOf<OutputRequest::OnPoint>(), 3);
-    EXPECT_EQ(data.sources.sizeOf<Source::Generator>(), 1);
-    EXPECT_EQ(data.model.mesh.elems().sizeOf<Geometry::NodR>(), 9);
-
-    EXPECT_EQ(data.model.physicalModels.size(), 5); // Cable, 2 connector, 2 bounds (pec and pml)
-
-    auto& materialCableList = data.model.physicalModels.getOf<SEMBA::PhysicalModel::Wire::Wire>();
-    EXPECT_EQ(materialCableList.size(), 1);
-
-    auto& materialPortList = data.model.physicalModels.getOf<SEMBA::PhysicalModel::Multiport::RLC>();
-    EXPECT_EQ(materialPortList.size(), 1);
-
-    auto& materialCable = materialCableList.front();
-    auto& materialPort = materialPortList.front();
-
-    SEMBA::Geometry::ElemView elementsWithCableMaterial;
-    for (auto& elem : data.model.mesh.elems()) {
-        if (elem->getMatId() == materialCable->getId()) {
-            elementsWithCableMaterial.push_back(elem.get());
-        }
-    }
-
-    EXPECT_EQ(elementsWithCableMaterial.size(), 2);
-
-    SEMBA::Geometry::ElemView elementsWithPortMaterial;
-    for (auto& elem : data.model.mesh.elems()) {
-        if (elem->getMatId() == materialPort->getId()) {
-            elementsWithPortMaterial.push_back(elem.get());
-        }
-    }
-
-    EXPECT_EQ(elementsWithPortMaterial.size(), 2);
-}
-
-
 
 TEST_F(ParserJSONParserTest, Wires) 
 {
