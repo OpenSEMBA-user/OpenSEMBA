@@ -159,7 +159,6 @@ Data Parser::read() const {
 
     if (res.mesh != nullptr) {
         Mesh::Unstructured* mesh = res.mesh->castTo<Mesh::Unstructured>();
-		readConnectorOnPoint(res.physicalModels, *mesh, j);
         res.sources = readSources(*mesh, j);
         res.outputRequests = readOutputRequests(*mesh, j);
     } else {
@@ -492,23 +491,6 @@ OutputRequest::Group<> Parser::readOutputRequests(Mesh::Unstructured& mesh, cons
     }
 
     return res;
-}
-
-void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Unstructured& mesh, const json& j) const 
-{
-    auto conns = j.find("connectorOnPoint");
-    if (conns == j.end()) {
-        return;
-    }
-
-	for (auto const& it: conns->get<json>()) {
-		PhysicalModel::PhysicalModel* mat = pMG.addAndAssignId(readPhysicalModel(it))->get();
-		const CoordR3* coord[1] = { mesh.coords().getId(CoordId(it.at("coordIds").get<int>())) };
-
-		mesh.elems().addAndAssignId(
-            std::make_unique<NodR>(ElemId(0), coord, nullptr, pMG.getId(mat->getId()))
-        );
-	}
 }
 
 const ElemR* Parser::boxToElemGroup(Mesh::Unstructured& mesh, const std::string& line)

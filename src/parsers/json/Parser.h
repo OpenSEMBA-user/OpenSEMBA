@@ -45,7 +45,6 @@ private:
     PMGroup readPhysicalModels(const json&) const;
     PMGroup readExtendedPhysicalModels(const json& j) const;
     std::unique_ptr<Geometry::Mesh::Unstructured> readUnstructuredMesh(const PhysicalModel::Group<>&, const json&) const;
-	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Unstructured& mesh,  const json&) const;
     Source::Group<> readSources(Geometry::Mesh::Unstructured& mesh, const json&) const;
     OutputRequest::Group<> readOutputRequests(Geometry::Mesh::Unstructured& mesh, const json&, const std::string& key = "outputRequests") const;
 
