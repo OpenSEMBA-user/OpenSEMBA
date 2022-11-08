@@ -578,18 +578,11 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
     }
 
     if (gidOutputType.compare("OutRq_on_point") == 0) {        
-        ElemView target;
-        if (j.contains("positions")) {
-            target = readAndCreateCoordIdAsNodes(mesh, j.at("positions").get<json>());
-        } else if (j.contains("coordIds")) {
-            target = readCoordIdAsNodes(mesh, j.at("coordIds").get<json>());
-        } else if (j.contains("elemIds")) {
-            target = readNodes(mesh, j.at("elemIds").get<json>());
-        } else {
-            throw std::logic_error("Unrecognized OutRq_on_point key. Available are `positions`, `coordIds` and `elemIds`");
+        if (!j.contains("elemIds")) {
+            throw std::logic_error("Unrecognized OutRq_on_point key. Available is `elemIds`");
         }
 
-		return std::make_unique<OutputRequest::OnPoint>(type, domain, name, target);
+		return std::make_unique<OutputRequest::OnPoint>(type, domain, name, readNodes(mesh, j.at("elemIds").get<json>()));
     }
     
     if (gidOutputType.compare("OutRq_on_line") == 0) {
@@ -1082,10 +1075,14 @@ std::unique_ptr<Source::Generator> Parser::readGenerator(
     Mesh::Unstructured& mesh, 
     const json& j
 ) {
+    if (!j.contains("elemIds")) {
+        throw std::logic_error("Unrecognized `readGenerator` key. Available is `elemIds`");
+    }
+
 	return std::make_unique<Source::Generator>(
 		Source::Generator(
 			readMagnitude(j.at("magnitude").get<json>()),
-			readCoordIdAsNodes(mesh, j.at("coordIds").get<json>()),
+            readNodes(mesh, j.at("elemIds").get<json>()),
 			strToGeneratorType(j.at("type").get<std::string>()),
 			Source::Generator::soft
         )
