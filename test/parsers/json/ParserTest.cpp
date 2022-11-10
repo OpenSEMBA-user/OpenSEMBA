@@ -1,4 +1,3 @@
-
 #include "gtest/gtest.h"
 
 #include "parsers/json/Parser.h"
@@ -6,9 +5,11 @@
 #include "geometry/element/Line2.h"
 #include "geometry/element/Triangle3.h"
 #include "geometry/element/Tetrahedron4.h"
+#include "geometry/element/Hexahedron8.h"
 #include "math/function/Gaussian.h"
 #include "outputRequest/FarField.h"
 #include "outputRequest/OnPoint.h"
+#include "outputRequest/BulkCurrent.h"
 #include "physicalModel/wire/Wire.h"
 #include "physicalModel/multiport/RLC.h"
 
@@ -174,6 +175,27 @@ TEST_F(ParserJSONParserTest, SphereExtendedWithOnePlaneFarField)
     EXPECT_EQ(farFieldProbe->stepPhi, 0.1 * 2 * Math::Constants::pi / 360.0);
 }
 
+TEST_F(ParserJSONParserTest, SphereExtendedWithBulkCurrentProbe) 
+{
+    SEMBA::Parsers::JSON::Parser jsonParser("testData/sphere.gid/sphere-extended-bulk-current-probe.smb.json");
+
+    auto data = jsonParser.readExtended();
+
+    EXPECT_EQ(data.outputRequests.sizeOf<OutputRequest::BulkCurrent>(), 1);
+    auto bulkCurrentProbe = data.outputRequests.getOf<OutputRequest::BulkCurrent>().front();
+
+    EXPECT_EQ(bulkCurrentProbe->getName(), "Bulk probe");
+    EXPECT_EQ(bulkCurrentProbe->getType(), OutputRequest::OutputRequest::Type::bulkCurrentMagnetic);
+    EXPECT_EQ(bulkCurrentProbe->getDir(), Math::Constants::CartesianAxis::y);
+    EXPECT_EQ(bulkCurrentProbe->getSkip(), 18);
+    EXPECT_EQ(bulkCurrentProbe->getTarget().size(), 1);
+
+    auto bulkTarget = bulkCurrentProbe->getTarget().front()->castTo<Geometry::HexR8>();
+    auto bound = bulkTarget->getBound();
+
+    EXPECT_EQ(bound.getMax(), Math::CVecR3(0.006, 0.003, 0.005)); // There is a scale factor as JSON is specified in mm
+    EXPECT_EQ(bound.getMin(), Math::CVecR3(0.0, -0.002, 0.0));
+}
 
 TEST_F(ParserJSONParserTest, Antennas)
 {
@@ -215,7 +237,6 @@ TEST_F(ParserJSONParserTest, Antennas)
     EXPECT_EQ(elementsWithPortMaterial.size(), 2);
 }
 
-
 TEST_F(ParserJSONParserTest, AntennasWithProbesUsingCoordIds)
 {
     SEMBA::Parsers::JSON::Parser jsonParser("testData/antennas.gid/problem-probes-with-coordIds.smb.json");
@@ -255,8 +276,6 @@ TEST_F(ParserJSONParserTest, AntennasWithProbesUsingCoordIds)
 
     EXPECT_EQ(elementsWithPortMaterial.size(), 2);
 }
-
-
 
 TEST_F(ParserJSONParserTest, Wires) 
 {
