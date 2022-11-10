@@ -549,7 +549,8 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
                     name,
                     { boxToElemGroup(mesh, j.at("box").get<std::string>()) },
                     strToCartesianAxis(j.at("direction").get<std::string>()),
-                    j.at("skip").get<int>()
+                    j.at("skip").get<int>(),
+                    type
                 )
             );
         }
