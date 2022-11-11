@@ -144,7 +144,7 @@ TEST_F(ParserJSONParserTest, SphereExtended)
 
     auto recoveredNode = probes.get()[0]->getTarget().at(0)->castTo<Geometry::NodR>();
     EXPECT_EQ(
-        Math::CVecR3(-0.8441360141053171, 12.017228978451016, 13.154724231963254),
+        Math::CVecR3(-0.844136014, 12.0172290, 13.1547242),
         recoveredNode->getV(0)->pos()
     );
 }

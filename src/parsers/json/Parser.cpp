@@ -159,7 +159,6 @@ Data Parser::read() const {
 
     if (res.mesh != nullptr) {
         Mesh::Unstructured* mesh = res.mesh->castTo<Mesh::Unstructured>();
-		readConnectorOnPoint(res.physicalModels, *mesh, j);
         res.sources = readSources(*mesh, j);
         res.outputRequests = readOutputRequests(*mesh, j);
     } else {
@@ -494,23 +493,6 @@ OutputRequest::Group<> Parser::readOutputRequests(Mesh::Unstructured& mesh, cons
     return res;
 }
 
-void Parser::readConnectorOnPoint(PMGroup& pMG, Mesh::Unstructured& mesh, const json& j) const 
-{
-    auto conns = j.find("connectorOnPoint");
-    if (conns == j.end()) {
-        return;
-    }
-
-	for (auto const& it: conns->get<json>()) {
-		PhysicalModel::PhysicalModel* mat = pMG.addAndAssignId(readPhysicalModel(it))->get();
-		const CoordR3* coord[1] = { mesh.coords().getId(CoordId(it.at("coordIds").get<int>())) };
-
-		mesh.elems().addAndAssignId(
-            std::make_unique<NodR>(ElemId(0), coord, nullptr, pMG.getId(mat->getId()))
-        );
-	}
-}
-
 const ElemR* Parser::boxToElemGroup(Mesh::Unstructured& mesh, const std::string& line)
 {
     BoxR3 box = strToBox(line);
@@ -572,7 +554,7 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
 				OutputRequest::BulkCurrent(
 					domain,
 					name,
-					readCoordIdAsNodes(mesh, j.at("elemIds").get<json>()),
+                    readNodes(mesh, j.at("elemIds").get<json>()),
 					strToCartesianAxis(j.at("direction").get<std::string>()),
 					j.at("skip").get<int>()
 				)
@@ -591,18 +573,11 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
     }
 
     if (gidOutputType.compare("OutRq_on_point") == 0) {        
-        ElemView target;
-        if (j.contains("positions")) {
-            target = readAndCreateCoordIdAsNodes(mesh, j.at("positions").get<json>());
-        } else if (j.contains("coordIds")) {
-            target = readCoordIdAsNodes(mesh, j.at("coordIds").get<json>());
-        } else if (j.contains("elemIds")) {
-            target = readNodes(mesh, j.at("elemIds").get<json>());
-        } else {
-            throw std::logic_error("Unrecognized OutRq_on_point key. Available are `positions`, `coordIds` and `elemIds`");
+        if (!j.contains("elemIds")) {
+            throw std::logic_error("Unrecognized OutRq_on_point key. Available is `elemIds`");
         }
 
-		return std::make_unique<OutputRequest::OnPoint>(type, domain, name, target);
+		return std::make_unique<OutputRequest::OnPoint>(type, domain, name, readNodes(mesh, j.at("elemIds").get<json>()));
     }
     
     if (gidOutputType.compare("OutRq_on_line") == 0) {
@@ -1095,10 +1070,14 @@ std::unique_ptr<Source::Generator> Parser::readGenerator(
     Mesh::Unstructured& mesh, 
     const json& j
 ) {
+    if (!j.contains("elemIds")) {
+        throw std::logic_error("Unrecognized `readGenerator` key. Available is `elemIds`");
+    }
+
 	return std::make_unique<Source::Generator>(
 		Source::Generator(
 			readMagnitude(j.at("magnitude").get<json>()),
-			readCoordIdAsNodes(mesh, j.at("coordIds").get<json>()),
+            readNodes(mesh, j.at("elemIds").get<json>()),
 			strToGeneratorType(j.at("type").get<std::string>()),
 			Source::Generator::soft
         )
@@ -1430,22 +1409,6 @@ Source::Port::Waveguide::ExcitationMode Parser::strToWaveguideMode(
     } else {
         throw std::logic_error("Unrecognized exc. mode label: " + str);
     }
-}
-
-ElemView Parser::readCoordIdAsNodes(
-    Mesh::Unstructured& mesh, 
-    const json& j
-) {
-    ElemView res;
-    
-    for (auto it = j.begin(); it != j.end(); ++it) {
-        const CoordR3* coord = mesh.coords().getId(CoordId(it->get<int>()));
-        auto itCoord = mesh.elems().addAndAssignId(std::make_unique<NodR>(ElemId(0), &coord));
-
-        res.push_back(itCoord->get());
-    }
-
-    return res;
 }
 
 

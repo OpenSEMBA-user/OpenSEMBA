@@ -45,7 +45,6 @@ private:
     PMGroup readPhysicalModels(const json&) const;
     PMGroup readExtendedPhysicalModels(const json& j) const;
     std::unique_ptr<Geometry::Mesh::Unstructured> readUnstructuredMesh(const PhysicalModel::Group<>&, const json&) const;
-	void readConnectorOnPoint(PMGroup& pMG, Geometry::Mesh::Unstructured& mesh,  const json&) const;
     Source::Group<> readSources(Geometry::Mesh::Unstructured& mesh, const json&) const;
     OutputRequest::Group<> readOutputRequests(Geometry::Mesh::Unstructured& mesh, const json&, const std::string& key = "outputRequests") const;
 
@@ -93,11 +92,6 @@ private:
     static const Geometry::ElemR* boxToElemGroup(
             Geometry::Mesh::Unstructured& mesh,
             const std::string& line);
-
-    static Geometry::ElemView readCoordIdAsNodes(
-        Geometry::Mesh::Unstructured& mesh, 
-        const json&
-    );
 
     static Geometry::ElemView Parser::readNodes(Geometry::Mesh::Unstructured&, const json&);
 
