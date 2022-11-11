@@ -524,6 +524,19 @@ std::unique_ptr<OutputRequest::OutputRequest> Parser::readOutputRequest(Mesh::Un
 
 	if (type == OutputRequest::OutputRequest::Type::bulkCurrentElectric ||
 		type == OutputRequest::OutputRequest::Type::bulkCurrentMagnetic) {
+        if (gidOutputType.compare("bounding_box") == 0) {
+            return std::make_unique<OutputRequest::BulkCurrent>(
+                OutputRequest::BulkCurrent(
+                    domain,
+                    name,
+                    { boxToElemGroup(mesh, j.at("box").get<std::string>()) },
+                    strToCartesianAxis(j.at("direction").get<std::string>()),
+                    j.at("skip").get<int>(),
+                    type
+                )
+            );
+        }
+
 		if (gidOutputType.compare("OutRq_on_layer") == 0) {
 			return std::make_unique<OutputRequest::BulkCurrent>(
 				OutputRequest::BulkCurrent(

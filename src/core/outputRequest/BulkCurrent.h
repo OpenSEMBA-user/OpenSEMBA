@@ -11,7 +11,8 @@ public:
                 const std::string& name,
                 const Target& box,
                 const Math::Constants::CartesianAxis& dir,
-                const Math::UInt& skip);
+                const Math::UInt& skip,
+                const Type& type = Type::bulkCurrentElectric);
     virtual ~BulkCurrent() = default;
 
     std::unique_ptr<OutputRequest> clone() const override {
